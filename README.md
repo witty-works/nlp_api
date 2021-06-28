@@ -1,5 +1,5 @@
 # nlp_api
-main.py - main file to run API. Need to change the name of the file for the corresponding API
+#main.py - main file to run API. Need to change the name of the file for the corresponding API
 app_ld.py - API to recognise the language of the user query
 app_male_words_de.py - API to check if the user query have the Male Coded Terms in German. Output: caught word, start, lenght of the word, category, alternatives
 
