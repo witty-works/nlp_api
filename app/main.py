@@ -1,31 +1,75 @@
+import uvicorn
+from fastapi import FastAPI
+
 import os
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
+
+# NLP library
 import pandas as pd
 import spacy
 import re
-from fastapi import FastAPI
 
-# load German spacy pre-built model
-model = spacy.load('de_core_news_sm')
+# Libraries for language Detect
+from langdetect import detect
+from langdetect import DetectorFactory
 
-# load MaleCodedTerms_de
-df_male_ct = pd.read_csv("df_male_ct_new_de.csv")
+# project models
+from app.models import (
+    UserRequestIn,
+    EntityOut,
+    EntitiesOut,
+)
 
+# For the reproducible results
+DetectorFactory.seed = 0
+
+# Model data
+model = {'en': spacy.load("en_core_web_sm"), 'de': spacy.load("de_core_news_sm")}
+df_male_ct = pd.read_csv("app/training_data/df_male_ct_new_de.csv")
+false_positive = ["selbst", "flexible", "Probleme", "Macht", "unabhängig", "international", "Entwickler"]
+exceptions = ["Unternehmen", "Firma", "Gruppe", "Gesellschaft", "Kollektivgesellschaft", "Team"]
+
+# FastAPI Routes
 app = FastAPI()
 
 @app.get('/')
 def get_root():
-    return {'message': 'This is the MaleCodedTerms analysis app'}
+    return {'message': 'Use /docs to get API documentation'}
 
+@app.post("/language_detect", response_model=str())
+async def read_text(user_request_in: UserRequestIn):
+    lang = detect(user_request_in.text)
+    return {"language":lang}
+
+@app.post("/entities", response_model=EntitiesOut)
+async def read_entities(user_request_in: UserRequestIn):
+    lang = user_request_in.lang
+
+    if lang == None or lang == "auto":
+        lang = detect(user_request_in.text)
+
+    if lang != 'en' and lang != 'de':
+        raise HTTPException(status_code=400, detail="Language not supported:" +lang)
+
+    doc = model[lang](user_request_in.text)
+
+    return {
+        "entities": [
+            {
+                "start": ent.start_char,
+                "end": ent.end_char,
+                "type": ent.label_,
+                "text": ent.text,
+            } for ent in doc.ents
+        ],
+        "language": lang
+    }
 
 @app.get('/pos-en/')
 async def query_pos_analysis(text: str):
     return analyze_query(text)
 
-
-false_positive = ["selbst", "flexible", "Probleme", "Macht", "unabhängig", "international", "Entwickler"]
-exceptions = ["Unternehmen", "Firma", "Gruppe", "Gesellschaft", "Kollektivgesellschaft", "Team"]
-
+# Functions
 """Function to catch the words related to False Positive in the user query"""
 def IsItFalsePositive(word):
     for item in false_positive:
@@ -35,7 +79,7 @@ def IsItFalsePositive(word):
 
 """Function to handle dependecies of the adjectives."""
 def TokenAncestors(token):
-    exceptions = ["Unternehmen", "Firma", "Gruppe", "Gesellschaft", "Kollektivgesellschaft", "Team"]
+    exceptions = ["Unternehmen", "Firma", "Gruppe", "Gesellschaft", "Kollektivgesellschaft", "Team", "Organisation"]
     dic_anc = {}
     if token.pos_ == "ADJ":# or token.tag_== "ADJD":
         dic_anc[token.lemma_] = list(token.ancestors)
@@ -44,11 +88,9 @@ def TokenAncestors(token):
                 for item in dic_anc[key]:
                     if item.text in exceptions:
                         print({key: "false positive"})
-        
-
 
 def analyze_male(token):
-    """Get and process result""" 
+    """Get and process result"""
     #check if the user request contains the Male Coded terms from the csv file. Keep the punctuation. Compare the lemma of the token (canonical form) in the user query is the words from csv table
     for index, row in df_male_ct.iterrows():
     	if token.lemma_ == row["MaleCodedWords"]:
@@ -57,8 +99,8 @@ def analyze_male(token):
 
 """Main function to analyse user query. It consists now all functions above"""
 def analyze_query(text):
-#apply SpaCy German pre-built model
-    tokens = model(text)
+    #apply SpaCy German pre-built model
+    tokens = model['de'](text)
     dic_tokens = {}
     dic_anc = {}
     for token in tokens:
@@ -98,4 +140,11 @@ def analyze_query(text):
                     dic_tokens["alternatives"] = row["Alternatives_split"]
                 # Format and return results
                     return dic_tokens
-                    
+
+# want to server to run app.py in the folder app as main app, port=8000 is defaut port for the fast api
+# reload=True is debag mode in Flask is on, to set =False, when deploy the app to the production
+# might be added host="0.0.0.0"
+if __name__ == '__main__':
+    # If this is being ran directly as a script, run an internal uvicorn server
+    # to service API requests
+    uvicorn.run(app, host='0.0.0.0', port=8000)

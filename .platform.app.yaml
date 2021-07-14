@@ -1,0 +1,30 @@
+name: 'app'
+
+type: 'python:3.8'
+
+dependencies:
+  python3:
+    pipenv: '2018.10.13'
+
+web:
+  upstream:
+    socket_family: unix
+  commands:
+    start: 'gunicorn app.main:app -b unix:$SOCKET -w 4 -k uvicorn.workers.UvicornWorker'
+  locations:
+    '/':
+      passthru: true
+
+disk: 4096
+
+hooks:
+  build: |
+    set -e
+    pipenv install --system --deploy
+    pipenv run /opt/python/3.8/bin/python3.8 -m spacy download en_core_web_sm
+    pipenv run /opt/python/3.8/bin/python3.8 -m spacy download de_core_news_sm
+
+size: L
+resources:
+  base_memory: 1000
+  memory_ratio: 1000

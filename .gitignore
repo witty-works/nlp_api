@@ -1,0 +1,11 @@
+.vscode
+.venv
+app/.env
+app/__pycache__
+.idea
+
+# Unit test / coverage reports
+.coverage
+.tox
+nosetests.xml
+

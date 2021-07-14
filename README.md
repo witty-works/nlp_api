@@ -1,16 +1,60 @@
-# nlp_api
-main.py - main file to run API. Need to change the name of the file for the corresponding API
+# NLP API
 
-app_male_words_de_sm_false.py - Main API to analyse the user query icluding rules and NLP to avoid False Positives
+NLP API for inclusive language
 
-app_ld.py - API to recognise the language of the user query
+## Resources
+This project has two key dependencies:
 
-app_male_words_de.py - API to check if the user query have the Male Coded Terms in German. Output: caught word, start, lenght of the word, category, alternatives
+| Dependency Name | Documentation                | Description                                                                            |
+|-----------------|------------------------------|----------------------------------------------------------------------------------------|
+| spaCy           | https://spacy.io             | Industrial-strength Natural Language Processing (NLP) with Python and Cython           |
+| FastAPI         | https://fastapi.tiangolo.com | FastAPI framework, high performance, easy to learn, fast to code, ready for production |
+---
 
-app_pos_er_de.py - API for part-of-the-speach analisys and the named entities recognition extract, German. Output is the list with extracted items
+## Install
 
-app_pos_er_en.py - API for part-of-the-speach analisys and the named entities recognition extract, English. Output is the list with extracted items
+```
+pipenv install
+pipenv shell
+pipenv run python3 -m spacy download en_core_web_sm
+pipenv run python3 -m spacy download de_core_news_sm
+```
 
-app_er_de.py - API for the named entities recognition extraction, German. Output: extracted word, start and the end of the word in the sentence, label 
+Note to uninstall spacy models use
 
-app_er_en.py - API for the named entities recognition extraction, English. Output: extracted word, start and the end of the word in the sentence, label 
+```
+pip uninstall ..
+```
+
+## Install Platform.sh CLI
+
+  * Run `platform login`
+  * Run `platform project:set-remote`
+  * Run `platform list` to find out what commands are available
+  * Run `platform help [command]` to find out details about a command
+
+see https://docs.platform.sh/development/cli.html for details
+
+## Run Locally
+
+```
+pipenv shell
+uvicorn app.main:app --reload
+```
+
+Open your browser to http://localhost:8000/docs to view the OpenAPI UI.
+
+For an alternate view of the docs navigate to http://localhost:8000/redoc
+
+## Example
+
+```
+curl -X 'POST' \
+  'http://127.0.0.1:8000/entities' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "text": "Is London a city in England?",
+  "lang": "auto"
+}'
+```
