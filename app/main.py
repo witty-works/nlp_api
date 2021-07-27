@@ -1,5 +1,6 @@
 import uvicorn
-from fastapi import FastAPI
+
+from fastapi import FastAPI, HTTPException
 
 import os
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
@@ -49,7 +50,7 @@ async def read_entities(user_request_in: UserRequestIn):
         lang = detect(user_request_in.text)
 
     if lang != 'en' and lang != 'de':
-        raise HTTPException(status_code=400, detail="Language not supported:" +lang)
+        raise HTTPException(status_code=400, detail="Language not supported:" + lang)
 
     doc = model[lang](user_request_in.text)
 
