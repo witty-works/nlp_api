@@ -1,6 +1,7 @@
 import uvicorn
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 
 import os
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
@@ -39,8 +40,15 @@ false_positive = ["selbst", "flexible", "Probleme", "Macht", "unabhängig", "int
 exceptions = ["Unternehmen", "Firma", "Gruppe", "Gesellschaft", "Kollektivgesellschaft", "Team", "Organisation"]
 terms = ["Kolleginnen und Kollegen", "Kundinnen und Kunden", "Marketing-Team", "Kolleginnen* und Kollegen", "Kundinnen* und Kunden", "Kolleginnen: und Kollegen", "Kundinnen: und Kunden"]
 
-# FastAPI Routes
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get('/')
 def get_root():
@@ -181,7 +189,7 @@ def analyze_query(text):
                         dic_tokens['length']= len(token.text)
                     #dic_tokens["alternatives"] = row["Alternatives_split"]
                 # Format and return results
-            
+
     if IfPhraseMatcher(tokens):
         dic_tokens["False positives"] = span.text
     else:
