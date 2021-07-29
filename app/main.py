@@ -91,7 +91,7 @@ def IsItFalsePositive(word):
 matcher = PhraseMatcher(model["de"].vocab)
 
 # Only run model.make_doc to speed things up
-patterns = [model.make_doc(text) for text in terms]
+patterns = [model['de'].make_doc(text) for text in terms]
 matcher.add("TerminologyList", patterns)
 
 def IfPhraseMatcher(text):
