@@ -8,6 +8,9 @@ os.environ['KMP_DUPLICATE_LIB_OK']='True'
 # NLP library
 import pandas as pd
 import spacy
+from spacy.matcher import PhraseMatcher
+from spacy.matcher import Matcher
+# Regular expression library
 import re
 
 # Libraries for language Detect
@@ -26,9 +29,15 @@ DetectorFactory.seed = 0
 
 # Model data
 model = {'en': spacy.load("en_core_web_sm"), 'de': spacy.load("de_core_news_sm")}
+# load Male coded terms
 df_male_ct = pd.read_csv("app/training_data/df_male_ct_new_de.csv")
-false_positive = ["selbst", "flexible", "Probleme", "Macht", "unabhängig", "international", "Entwickler"]
-exceptions = ["Unternehmen", "Firma", "Gruppe", "Gesellschaft", "Kollektivgesellschaft", "Team"]
+# load Gender denom_de
+df_gender_ct = pd.read_csv("app/training_data/gendered_denom_de.csv")
+
+# dictionaries to handle false positives
+false_positive = ["selbst", "flexible", "Probleme", "Macht", "unabhängig", "international", "internationale", "Entwickler"]
+exceptions = ["Unternehmen", "Firma", "Gruppe", "Gesellschaft", "Kollektivgesellschaft", "Team", "Organisation"]
+terms = ["Kolleginnen und Kollegen", "Kundinnen und Kunden", "Marketing-Team", "Kolleginnen* und Kollegen", "Kundinnen* und Kunden", "Kolleginnen: und Kollegen", "Kundinnen: und Kunden"]
 
 # FastAPI Routes
 app = FastAPI()
@@ -77,6 +86,22 @@ def IsItFalsePositive(word):
         if word==item:
             return True
     return False
+
+#Phrase matcher part to handle False positives with two words and special simbols
+matcher = PhraseMatcher(model.vocab)
+
+# Only run model.make_doc to speed things up
+patterns = [model.make_doc(text) for text in terms]
+matcher.add("TerminologyList", patterns)
+
+def IfPhraseMatcher(text):
+    #doc = model(text)
+    matches = matcher(text)
+    for match_id, start, end in matches:
+        span = text[start:end]
+        if span.text in (None, ''):
+            return False
+        return True
 
 """Function to handle dependecies of the adjectives."""
 def TokenAncestors(token):
@@ -141,6 +166,36 @@ def analyze_query(text):
                     dic_tokens["alternatives"] = row["Alternatives_split"]
                 # Format and return results
                     return dic_tokens
+
+#check if the user query have "phrase false positives" (two words or more or symbols)
+    matches = matcher(tokens)
+    for match_id, start, end in matches:
+        span = tokens[start:end]
+        if len(span.text)==0:
+            for token in tokens:
+                for index, row in df_gender_ct.iterrows():
+                    if token.lemma_ == row["Denominations-German"]:
+                        dic_tokens['word'] = row["Denominations-German"]
+                        dic_tokens["category"] = "Gendered Denom"
+                        dic_tokens['start']= token.idx
+                        dic_tokens['length']= len(token.text)
+                    #dic_tokens["alternatives"] = row["Alternatives_split"]
+                # Format and return results
+            
+    if IfPhraseMatcher(tokens):
+        dic_tokens["False positives"] = span.text
+    else:
+        for token in tokens:
+            for index, row in df_gender_ct.iterrows():
+                if token.lemma_ == row["Denominations-German"]:
+                    dic_tokens['word'] = row["Denominations-German"]
+                    dic_tokens["category"] = "Gendered Denom"
+                    dic_tokens['start']= token.idx
+                    dic_tokens['length']= len(token.text)
+                    #dic_tokens["alternatives"] = row["Alternatives_split"]
+                # Format and return results
+    return dic_tokens
+
 
 # want to server to run app.py in the folder app as main app, port=8000 is defaut port for the fast api
 # reload=True is debag mode in Flask is on, to set =False, when deploy the app to the production
