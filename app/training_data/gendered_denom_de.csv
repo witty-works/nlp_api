@@ -1,0 +1,31 @@
+Denominations-German,is active,Wordtype,Forms,Alternatives-German in job title | role | requirements
+Arbeitskollege,1,s,n?,Arbeitskolleginnen und Arbeitskollegen | Teammitglieder
+Chef,1,s,s?,die vorgesetzte Person | Vorgesetzte
+Boss,1,s,,die vorgesetzte Person | Vorgesetzte
+Generalist,1,s,(en)?,Generalistinnen und Generalisten | fachlich breit ausgerichtet
+guy,1,s,s?,Team
+Mann,1,s,,Person
+Männer,1,s,,Personen | Leute
+Herr,1,s,(en)?,Personen | Leute
+manpower,1,s,,die Arbeit unserer Angestellten
+männlich,1,a,(e|er|en|em|es|ere|erer|eren|erem|eres|erere|erers|erern|ererm|ste|ster|stes|sten|stem)?,bezüglich einer Person
+Grosskunde,1,s,n?,Grosskundinnen und Grosskunden | Kundschaft
+Kollege,1,s,n?,Kolleginnen und Kollegen | Teammitglied
+Kunde,1,s,n?,Kundinnen und Kunden | Kundschaft
+Entwickler,1,s,n?,Entwicklerinnen und Entwickler | Entwicklungsteam
+Designer,1,s,n?,Designerinnen und Designer | Designteam
+Partner,1,s,n?,Partnerinnen und Parter | Partnerschaften
+Researcher,1,s,n?,Researchteam
+Analyst,1,s,(en)?,Analystinnen und Analysten
+Geschäftsleiter,1,s,n?,Geschäftsleitung | Geschäftsleiterinnen und Geschäftsleiter
+Mitarbeiter,1,s,n?,Mitarbeiterinnen und Mitarbeiter | Mitarbeitenden | Personal
+Student,1,s,(en)?,Studentinnen und Studenten | Studierende
+Lehrling,1,s,e?,Lernende | Auszubildende
+Lehr,,,(tochter|töchter)?,Lernende | Auszubildende
+Kandidat,1,s,(en)?,Kandidatinnen und Kandidaten | Kandidierende
+Arbeitgeber,1,s,n?,Arbeitgebende | Arbeitgeberin (GmbH | Einzelfirma und AG sind weiblich)
+Vermittler,1,s,s?,Vermittlerin und Vermittler | vermittelnde Person
+Brückenbauer,1,s,s?,Brückenbauerinnen und Brückenbauer | vermittelnde Person
+Botschafter,1,s,s?,Botschafterinnen und Botschafter | vermittelnde Person
+Lieferant,1,s,en?,Lieferfirmen
+Dienstleister,1,s,s?,Dienstleistende | Dienstleistungsbetriebe | dienstleistende Personen | Personen im Dienstleistungssektor | Dienstleisterinnen und Dienstleister
