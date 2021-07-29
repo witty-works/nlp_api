@@ -88,7 +88,7 @@ def IsItFalsePositive(word):
     return False
 
 #Phrase matcher part to handle False positives with two words and special simbols
-matcher = PhraseMatcher(model.vocab)
+matcher = PhraseMatcher(model["de"].vocab)
 
 # Only run model.make_doc to speed things up
 patterns = [model.make_doc(text) for text in terms]
