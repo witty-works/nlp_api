@@ -9,6 +9,7 @@ This project has two key dependencies:
 |-----------------|------------------------------|----------------------------------------------------------------------------------------|
 | spaCy           | https://spacy.io             | Industrial-strength Natural Language Processing (NLP) with Python and Cython           |
 | FastAPI         | https://fastapi.tiangolo.com | FastAPI framework, high performance, easy to learn, fast to code, ready for production |
+| HanTa           | https://github.com/wartaal/HanTa | The Hanover Tagger - A simple approach to lemmatization and POS-tagging based on heuristics and hidden markov models of German morphology.         |
 ---
 
 ## Install
