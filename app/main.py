@@ -11,6 +11,8 @@ import pandas as pd
 import spacy
 from spacy.matcher import PhraseMatcher
 from spacy.matcher import Matcher
+#Library for German lemmatization
+from HanTa import HanoverTagger as ht
 # Regular expression library
 import re
 
@@ -35,8 +37,11 @@ df_male_ct = pd.read_csv("app/training_data/df_male_ct_new_de.csv")
 # load Gender denom_de
 df_gender_ct = pd.read_csv("app/training_data/gendered_denom_de.csv")
 
+#Load a Hanover Lab on the TIGER-Corpus trained model.
+tagger = ht.HanoverTagger('morphmodel_ger.pgz')
+
 # dictionaries to handle false positives
-false_positive = ["selbst", "flexible", "Probleme", "Macht", "unabhängig", "international", "internationale", "Entwickler"]
+false_positive = ["selbst", "flexible", "Probleme", "Macht", "unabhängig", "international", "Entwickler"]
 exceptions = ["Unternehmen", "Firma", "Gruppe", "Gesellschaft", "Kollektivgesellschaft", "Team", "Organisation"]
 terms = ["Kolleginnen und Kollegen", "Kundinnen und Kunden", "Marketing-Team", "Kolleginnen* und Kollegen", "Kundinnen* und Kunden", "Kolleginnen: und Kollegen", "Kundinnen: und Kunden"]
 
@@ -116,7 +121,7 @@ def TokenAncestors(token):
     exceptions = ["Unternehmen", "Firma", "Gruppe", "Gesellschaft", "Kollektivgesellschaft", "Team", "Organisation"]
     dic_anc = {}
     if token.pos_ == "ADJ":# or token.tag_== "ADJD":
-        dic_anc[token.lemma_] = list(token.ancestors)
+        dic_anc[tagger.analyze(token.text)[0]] = list(token.ancestors)
         for key in dic_anc.keys():
             if key in false_positive:
                 for item in dic_anc[key]:
@@ -127,7 +132,7 @@ def analyze_male(token):
     """Get and process result"""
     #check if the user request contains the Male Coded terms from the csv file. Keep the punctuation. Compare the lemma of the token (canonical form) in the user query is the words from csv table
     for index, row in df_male_ct.iterrows():
-    	if token.lemma_ == row["MaleCodedWords"]:
+    	if tagger.analyze(token.text)[0] == row["MaleCodedWords"]:
     			# Format and return results
     		return {"word": row["MaleCodedWords"], "category": "Male Coded Terms", "start": token.idx, "length": len(token.text), "alternatives": row["Alternatives_split"]}
 
@@ -139,7 +144,7 @@ def analyze_query(text):
     dic_anc = {}
     for token in tokens:
         #check if the user query have false positives
-        if IsItFalsePositive(token.lemma_):
+        if IsItFalsePositive(tagger.analyze(token.text)[0]):
             #recognise if there is Name of organisation or geographical name in the query
             for entity in tokens.ents:
                 if entity.label_ == 'ORG' or 'GPE':
@@ -152,7 +157,7 @@ def analyze_query(text):
                 return dic_tokens
             # check if the word is adjective and find out how it depends on the other words to feel the contex
             elif token.pos_ == "ADJ":# or token.tag_== "ADJD":
-                dic_anc[token.lemma_] = list(token.ancestors)
+                dic_anc[tagger.analyze(token.text)[0]] = list(token.ancestors)
                 for key in dic_anc.keys():
                     if key in false_positive:
                         for item in dic_anc[key]:
@@ -166,7 +171,7 @@ def analyze_query(text):
                 return dic_tokens
         else:
             for index, row in df_male_ct.iterrows():
-                if token.lemma_ == row["MaleCodedWords"]:
+                if tagger.analyze(token.text)[0] == row["MaleCodedWords"]:
                     dic_tokens['word'] = row["MaleCodedWords"]
                     dic_tokens["category"] = "Male Coded Terms"
                     dic_tokens['start']= token.idx
@@ -182,7 +187,7 @@ def analyze_query(text):
         if len(span.text)==0:
             for token in tokens:
                 for index, row in df_gender_ct.iterrows():
-                    if token.lemma_ == row["Denominations-German"]:
+                    if tagger.analyze(token.text)[0] == row["Denominations-German"]:
                         dic_tokens['word'] = row["Denominations-German"]
                         dic_tokens["category"] = "Gendered Denom"
                         dic_tokens['start']= token.idx
@@ -195,7 +200,7 @@ def analyze_query(text):
     else:
         for token in tokens:
             for index, row in df_gender_ct.iterrows():
-                if token.lemma_ == row["Denominations-German"]:
+                if tagger.analyze(token.text)[0] == row["Denominations-German"]:
                     dic_tokens['word'] = row["Denominations-German"]
                     dic_tokens["category"] = "Gendered Denom"
                     dic_tokens['start']= token.idx
