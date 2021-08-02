@@ -10,6 +10,7 @@ gunicorn = "*"
 spacy = "*"
 langdetect = "*"
 pandas = "*"
+hanta = "*"
 
 [dev-packages]
 
