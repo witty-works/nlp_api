@@ -17,7 +17,7 @@ from HanTa import HanoverTagger as ht
 import re
 
 # Libraries for language Detect
-from langdetect import detect
+from langdetect import detect_langs
 from langdetect import DetectorFactory
 
 # project models
@@ -60,19 +60,14 @@ def get_root():
     return {'message': 'Use /docs to get API documentation'}
 
 @app.post("/language_detect", response_model=str())
-async def read_text(user_request_in: UserRequestIn):
-    lang = detect(user_request_in.text)
+async def language_detect(user_request_in: UserRequestIn):
+    lang = DetectLanguage(user_request_in)
+
     return {"language":lang}
 
 @app.post("/entities", response_model=EntitiesOut)
-async def read_entities(user_request_in: UserRequestIn):
-    lang = user_request_in.lang
-
-    if lang == None or lang == "auto":
-        lang = detect(user_request_in.text)
-
-    if lang != 'en' and lang != 'de':
-        raise HTTPException(status_code=400, detail="Language not supported:" + lang)
+async def entities(user_request_in: UserRequestIn):
+    lang = DetectLanguage(user_request_in)
 
     doc = model[lang](user_request_in.text)
 
@@ -93,6 +88,28 @@ async def query_pos_analysis(text: str):
     return analyze_query(text)
 
 # Functions
+"""Detect the language if none is passed explicitly but only return a language if confidence is high enough"""
+def DetectLanguage(user_request_in: UserRequestIn):
+    allowed_langs = ['en', 'de']
+
+    if user_request_in.lang in allowed_langs:
+        return user_request_in.lang
+
+    if user_request_in.lang == None or user_request_in.lang == "auto":
+        langs = detect_langs(user_request_in.text)
+
+        for language in langs:
+            if language.lang in allowed_langs:
+                return language.lang
+
+    if user_request_in.fallback_lang != None:
+        if user_request_in.fallback_lang in allowed_langs:
+            return user_request_in.fallback_lang
+
+        raise HTTPException(status_code=400, detail="Fallback language not supported: " + user_request_in.fallback_lang)
+
+    raise HTTPException(status_code=400, detail="Language not supported or could not be determined: " + user_request_in.lang)
+
 """Function to catch the words related to False Positive in the user query"""
 def IsItFalsePositive(word):
     for item in false_positive:
