@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "8355083af064d089c4711431c0880010572efbb18e8726aaa557b272dbcbb670"
+            "sha256": "ef36c3391ac0a5b61f5f72883bf58153fe6109f5b1c10321486cec384abb84c0"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,6 +16,14 @@
         ]
     },
     "default": {
+        "aiofiles": {
+            "hashes": [
+                "sha256:a1c4fc9b2ff81568c83e21392a82f344ea9d23da906e4f6a52662764545e19d4",
+                "sha256:c67a6823b5f23fcab0a2595a289cec7d8c863ffcb4322fb8cd6b90400aedfdbc"
+            ],
+            "index": "pypi",
+            "version": "==0.7.0"
+        },
         "asgiref": {
             "hashes": [
                 "sha256:4ef1ab46b484e3c706329cedeff284a5d40824200638503f5768edb6de7d58e9",
@@ -229,7 +237,7 @@
                 "sha256:1f06f2da51e7b56b8f238affdd6b4e2c61e39598a378cc49345bc1bd42a978a4",
                 "sha256:703f484b47a6af502e743c9122595cc812b0271f661722403114f71a79d0f5a4"
             ],
-            "markers": "python_version >= '3.6'",
+            "index": "pypi",
             "version": "==3.0.1"
         },
         "langdetect": {

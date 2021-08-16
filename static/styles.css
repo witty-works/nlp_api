@@ -1,0 +1,18 @@
+h1 {
+    color: green;
+}
+
+.editor {
+    border: 1px solid lightgray;
+    padding: 5px;
+    width: 90%;
+    height: 90%;
+  }
+
+  [contentEditable=true]:empty:not(:focus):before{
+    content:attr(data-placeholder);
+    pointer-events: none;
+    display: block; /* For Firefox */
+    color: grey;
+    font-style: italic;
+  }
