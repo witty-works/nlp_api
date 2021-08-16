@@ -13,6 +13,8 @@ pandas = "*"
 hanta = "*"
 pytest = "*"
 pytest-cov = "*"
+jinja2 = "*"
+aiofiles = "*"
 
 [dev-packages]
 

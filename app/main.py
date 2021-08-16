@@ -1,10 +1,13 @@
 import uvicorn
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 import os
-os.environ['KMP_DUPLICATE_LIB_OK']='True'
+os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 
 # NLP library
 import pandas as pd
@@ -55,9 +58,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+templates = Jinja2Templates(directory="templates")
+
 @app.get('/')
 def get_root():
     return {'message': 'Use /docs to get API documentation'}
+
+@app.get('/form', response_class=HTMLResponse)
+def form(request: Request):
+    return templates.TemplateResponse("form.html", {"request": request})
 
 @app.post("/language_detect", response_model=str())
 async def language_detect(user_request_in: UserRequestIn):
