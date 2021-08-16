@@ -1,38 +1,44 @@
-from starlette.testclient import TestClient
-from app.api import app
+from fastapi.testclient import TestClient
+from app.main import app
 
+client = TestClient(app)
 
-def test_docs_redirect():
-    client = TestClient(app)
+def test_read_main():
     response = client.get("/")
-    assert response.history[0].status_code == 302
     assert response.status_code == 200
-    assert response.url == "http://testserver/docs"
-
+    assert response.json() == {"message": "Use /docs to get API documentation"}
 
 def test_api():
-    client = TestClient(app)
+    request_data = {"text": "Greenpeace is an international company with headquarters in London."}
 
-    text = """Ninja are manager."""
-
-    request_data = {
-        "values": [{"text": text}]
-    }
-
-    response = client.post("/spacy_entities", json=request_data)
+    response = client.post("/entities", json=request_data)
     assert response.status_code == 200
 
-    first_record = response.json()["values"][0]
-    assert first_record["recordId"] == "a1"
-    assert first_record["errors"] == None
-    assert first_record["warnings"] == None
+    first_record = response.json()
+    assert first_record["language"] == "en"
+    assert first_record["entities"] == [{'end': 66, 'start': 60, 'text': 'London', 'type': 'GPE'}]
 
-    assert first_record["data"]["entities"] == [
-        "Alexa",
-        "Amazon",
-        "Apple",
-        "Echo and Dot",
-        "Google",
-        "iPhones",
-        "Siri",
-    ]
+def test_api_missing_data():
+    response = client.post("/entities")
+    assert response.status_code == 422
+
+def test_api_empty_data():
+    request_data = {}
+
+    response = client.post("/entities", json=request_data)
+    assert response.status_code == 422
+
+def test_language_detection_german():
+    request_data = {"text": "Greenpeace ist eine internationale Firma mit Hauptquartier in London."}
+
+    response = client.post("/entities", json=request_data)
+    assert response.status_code == 200
+
+    first_record = response.json()
+    assert first_record["language"] == "de"
+
+def test_language_detection_fail():
+    request_data = {"text": "Voila"}
+
+    response = client.post("/entities", json=request_data)
+    assert response.status_code == 400

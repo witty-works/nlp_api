@@ -59,3 +59,10 @@ curl -X 'POST' \
   "lang": "auto"
 }'
 ```
+
+## Run tests
+
+```
+pipenv shell
+pytest
+```

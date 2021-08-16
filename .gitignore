@@ -6,6 +6,7 @@ app/__pycache__
 
 # Unit test / coverage reports
 .coverage
+coverage_html_report
 .tox
 nosetests.xml
 

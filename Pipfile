@@ -11,6 +11,8 @@ spacy = "*"
 langdetect = "*"
 pandas = "*"
 hanta = "*"
+pytest = "*"
+pytest-cov = "*"
 
 [dev-packages]
 
