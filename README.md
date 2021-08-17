@@ -63,6 +63,27 @@ curl -X 'POST' \
 ## Run tests
 
 ```
-pipenv shell
-pytest
+pipenv run pytest
+```
+
+## Localization
+
+Extract translation messages
+
+```
+pipenv run pybabel extract . -o locales/messages.pot
+```
+
+Initialize po files
+
+```
+pipenv run pybabel init -d locales -i locale/messages.pot -l de_DE
+pipenv run pybabel init -d locales -i locale/messages.pot -l en_GB
+```
+
+Compile po files (done automatically during deployment)
+
+```
+pipenv run pybabel compile -d locales -l de_DE -f
+pipenv run pybabel compile -d locales -l en_GB -f
 ```
