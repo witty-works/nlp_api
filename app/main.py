@@ -166,6 +166,47 @@ def analyze_male(token):
     			# Format and return results
     		return {"word": row["MaleCodedWords"], "category": "Male Coded Terms", "start": token.idx, "length": len(token.text), "alternatives": row["Alternatives_split"]}
 
+# Unified function for rules    
+def RulesBased(text, terms, df, rules_name, category):
+    tokens = model['de'](text)
+    dic_tokens = {}
+    list_tokens = []
+    dic = {}
+    full = []
+    #Phrase matcher part to handle False positives with two words and special simbols
+    matcher = PhraseMatcher(model['de'].vocab)
+
+     # Only run model.make_doc to speed things up
+    patterns = [model['de'].make_doc(text) for text in terms]
+    matcher.add("TerminologyList", patterns)
+
+    for token in tokens:
+        for index, row in df.iterrows():
+            if tagger.analyze(token.text)[0] == row[rules_name]:
+                list_tokens.append('word:')
+                list_tokens.append(row[rules_name])
+                list_tokens.append('start:')
+                list_tokens.append(token.idx)
+                list_tokens.append('length:')
+                list_tokens.append(len(token.text))
+                list_tokens.append("category:")
+                list_tokens.append(category)
+
+    
+    matches = matcher(tokens)
+    for match_id, start, end in matches:
+        span = tokens[start:end]        
+        list_tokens.append('word:')
+        list_tokens.append(span.text)
+        list_tokens.append('start:')
+        list_tokens.append(span.start_char)
+        list_tokens.append('length:')
+        list_tokens.append(span.end_char)
+        list_tokens.append("category:")
+        list_tokens.append(category)
+
+    return list_tokens 
+
 """Main function to analyse user query. It consists now all functions above"""
 def analyze_query(text):
     #apply SpaCy German pre-built model
