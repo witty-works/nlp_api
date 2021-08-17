@@ -1,0 +1,28 @@
+# German (Germany) translations for PROJECT.
+# Copyright (C) 2021 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2021-08-17 14:17+0200\n"
+"PO-Revision-Date: 2021-08-17 14:32+0200\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: de_DE\n"
+"Language-Team: de_DE <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+
+#: app/main.py:95
+msgid "rules.age_reason"
+msgstr "Sie diskriminieren die Bewerber:innen aufgrund ihres Alters."
+
+#: app/main.py:96
+msgid "rules.age_solution"
+msgstr "Lassen Sie diesen Begriff einfach weg."
+

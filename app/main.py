@@ -9,6 +9,8 @@ from fastapi.templating import Jinja2Templates
 import os
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 
+import gettext
+
 # NLP library
 import pandas as pd
 import spacy
@@ -80,6 +82,15 @@ async def language_detect(user_request_in: UserRequestIn):
 async def entities(user_request_in: UserRequestIn):
     lang = DetectLanguage(user_request_in)
 
+    allowed_langs = ['en_GB', 'de_DE']
+
+    if user_request_in.response_lang not in allowed_langs:
+        raise HTTPException(status_code=400, detail="Response language not supported: " + user_request_in.response_lang)
+
+    language = gettext.translation('messages', localedir='locales', languages=[user_request_in.response_lang])
+    language.install()
+    _ = language.gettext
+
     doc = model[lang](user_request_in.text)
 
     return {
@@ -89,8 +100,8 @@ async def entities(user_request_in: UserRequestIn):
                 "end": ent.end_char,
                 "type": ent.label_,
                 "text": ent.text,
-                "reason": "some reason",
-                "solution": "some solution",
+                "reason": _('rules.age_reason'),
+                "solution": _('rules.age_solution'),
             } for ent in doc.ents
         ],
         "language": lang
@@ -115,11 +126,11 @@ def DetectLanguage(user_request_in: UserRequestIn):
             if language.lang in allowed_langs:
                 return language.lang
 
-    if user_request_in.fallback_lang != None:
-        if user_request_in.fallback_lang in allowed_langs:
-            return user_request_in.fallback_lang
+        if user_request_in.fallback_lang != None:
+            if user_request_in.fallback_lang in allowed_langs:
+                return user_request_in.fallback_lang
 
-        raise HTTPException(status_code=400, detail="Fallback language not supported: " + user_request_in.fallback_lang)
+            raise HTTPException(status_code=400, detail="Fallback language not supported: " + user_request_in.fallback_lang)
 
     raise HTTPException(status_code=400, detail="Language not supported or could not be determined: " + user_request_in.lang)
 

@@ -15,6 +15,7 @@ pytest = "*"
 pytest-cov = "*"
 jinja2 = "*"
 aiofiles = "*"
+babel = "*"
 
 [dev-packages]
 

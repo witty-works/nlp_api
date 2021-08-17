@@ -4,6 +4,8 @@ app/.env
 app/__pycache__
 .idea
 
+*.mo
+
 # Unit test / coverage reports
 .coverage
 coverage_html_report

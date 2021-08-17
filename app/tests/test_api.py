@@ -8,6 +8,10 @@ def test_read_main():
     assert response.status_code == 200
     assert response.json() == {"message": "Use /docs to get API documentation"}
 
+def test_read_form():
+    response = client.get("/form")
+    assert response.status_code == 200
+ 
 def test_api():
     request_data = {"text": "Greenpeace is an international company with headquarters in London."}
 
@@ -16,7 +20,23 @@ def test_api():
 
     first_record = response.json()
     assert first_record["language"] == "en"
-    assert first_record["entities"] == [{'end': 66, 'start': 60, 'text': 'London', 'type': 'GPE'}]
+    assert first_record["entities"] == [{'end': 66, 'start': 60, 'text': 'London', 'type': 'GPE', 'reason': 'Sie diskriminieren die Bewerber:innen aufgrund ihres Alters.', 'solution': 'Lassen Sie diesen Begriff einfach weg.'}]
+
+def test_api_response_lang():
+    request_data = {"text": "Greenpeace is an international company with headquarters in London.", "response_lang": "en_GB"}
+
+    response = client.post("/entities", json=request_data)
+    assert response.status_code == 200
+
+    first_record = response.json()
+    assert first_record["language"] == "en"
+    assert first_record["entities"] == [{'end': 66, 'start': 60, 'text': 'London', 'type': 'GPE', 'reason': 'You are discriminating against applicants due to age.', 'solution': 'Simply omit this term.'}]
+
+def test_api_missing_response_lang():
+    request_data = {"text": "Greenpeace is an international company with headquarters in London.", "response_lang": "es_ES"}
+
+    response = client.post("/entities", json=request_data)
+    assert response.status_code == 400
 
 def test_api_missing_data():
     response = client.post("/entities")
@@ -38,7 +58,7 @@ def test_language_detection_german():
     assert first_record["language"] == "de"
 
 def test_language_detection_fail():
-    request_data = {"text": "Voila"}
+    request_data = {"text": "Voila", "lang": "es"}
 
     response = client.post("/entities", json=request_data)
     assert response.status_code == 400
