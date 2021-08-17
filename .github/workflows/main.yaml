@@ -33,4 +33,10 @@ jobs:
 
       - name: Run test suite
         run: |
-          pipenv run pytest --cov-config .coveragerc --cov=app
+          pipenv run pytest --cov-config .coveragerc --cov=app --cov-report html 
+
+      - name: Store code coverage results
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-html-report
+          path: coverage_html_report
