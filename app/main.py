@@ -89,6 +89,8 @@ async def entities(user_request_in: UserRequestIn):
                 "end": ent.end_char,
                 "type": ent.label_,
                 "text": ent.text,
+                "reason": "some reason",
+                "solution": "some solution",
             } for ent in doc.ents
         ],
         "language": lang
