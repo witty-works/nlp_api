@@ -16,6 +16,7 @@ import pandas as pd
 import spacy
 from spacy.matcher import PhraseMatcher
 from spacy.matcher import Matcher
+from spacy.tokens import Doc
 #Library for German lemmatization
 from HanTa import HanoverTagger as ht
 # Regular expression library
@@ -117,7 +118,6 @@ async def entities(user_request_in: UserRequestIn):
 @app.post('/check/')
 async def check_query(text: str):
  """Main function to analyse user query. """
-
     
     #apply SpaCy pre-built model
     tokens = model["de"](text)                 
