@@ -46,9 +46,15 @@ df_gender_ct = pd.read_csv("app/training_data/gendered_denom_de.csv")
 # load Empty words_de
 df_empty_word = pd.read_csv("app/training_data/empty_words_ge.csv")
 df_empty_sentences = pd.read_csv("app/training_data/empty_word_sentences_de.csv")
-
 #list of "empty word" sentences
 terms_empty = list(df_empty_sentences["EmptyWords-German"])
+
+# load Boasting word and sentences de
+df_boast_word = pd.read_csv("app/training_data/BoastingWords_DE.csv")
+df_boast_sentences = pd.read_csv("app/training_data/BoastingSentences_DE.csv")
+#list of "boasting word" sentences
+terms_boast = list(df_boast_sentences["Boasting-German"])
+
 
 #Load a Hanover Lab on the TIGER-Corpus trained model.
 tagger = ht.HanoverTagger('morphmodel_ger.pgz')
@@ -146,9 +152,13 @@ async def check_query(user_request_in: UserRequestIn):
     list_male_coded= MaleCodedWordAnalysis(tokens, "Male Coded Terms")
     # Empty words&sentences catch
     list_empty_words = EmptyWordAnalysis(tokens, terms_empty, df_empty_word, "EmptyWords-German", "Empty words")
+    # gender denom words&sentences catch
     list_gender_denom = GenderedDenomAnalysis(tokens, "Gendered Denom")
-    list_full = list_male_coded+list_empty_words+list_gender_denom
-    #list_full = list_empty_words+list_gender_denom
+    # boasting words&sentences catch
+    list_boast = RulesBasedWordsPhraseMatcher(tokens, terms_boast, df_boast_word, "Boasting-German", "Boasting words")
+    
+    # full list
+    list_full = list_male_coded+list_empty_words+list_gender_denom+list_boast
  
     return list_full
 
@@ -374,8 +384,8 @@ def EmptyWordAnalysis(tokens, terms, df, rules_name, category):
 
 
 # Unified function for rules    
-def RulesBased(text, terms, df, rules_name, category):
-    tokens = model['de'](text)
+def RulesBasedWordsPhraseMatcher(tokens, terms, df, rules_name, category):
+    
     dic_tokens = {}
     list_tokens = []
     dic = {}
@@ -390,27 +400,18 @@ def RulesBased(text, terms, df, rules_name, category):
     for token in tokens:
         for index, row in df.iterrows():
             if tagger.analyze(token.text)[0] == row[rules_name]:
-                list_tokens.append('word:')
-                list_tokens.append(row[rules_name])
-                list_tokens.append('start:')
-                list_tokens.append(token.idx)
-                list_tokens.append('length:')
-                list_tokens.append(len(token.text))
-                list_tokens.append("category:")
-                list_tokens.append(category)
-
+                list_tokens.append({'word': row[rules_name],
+                                               'start': token.idx,
+                                              'length': len(token.text),
+                                            "category": category})
     
     matches = matcher(tokens)
     for match_id, start, end in matches:
-        span = tokens[start:end]        
-        list_tokens.append('word:')
-        list_tokens.append(span.text)
-        list_tokens.append('start:')
-        list_tokens.append(span.start_char)
-        list_tokens.append('length:')
-        list_tokens.append(span.end_char)
-        list_tokens.append("category:")
-        list_tokens.append(category)
+        span = tokens[start:end]
+        list_tokens.append({'word': span.text,
+                            'start': span.start_char,
+                            'length': (span.end_char - span.start_char),
+                            "category": category})        
 
     return list_tokens 
 
