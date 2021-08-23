@@ -116,7 +116,7 @@ async def entities(user_request_in: UserRequestIn):
         "language": lang
     }
 
-@app.post('/check/')
+@app.post('/check')
 async def check_query(text: str):
     #Main function to analyse user query.
     #apply SpaCy pre-built model
