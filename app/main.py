@@ -46,9 +46,15 @@ df_gender_ct = pd.read_csv("app/training_data/gendered_denom_de.csv")
 # load Empty words_de
 df_empty_word = pd.read_csv("app/training_data/empty_words_ge.csv")
 df_empty_sentences = pd.read_csv("app/training_data/empty_word_sentences_de.csv")
-
 #list of "empty word" sentences
 terms_empty = list(df_empty_sentences["EmptyWords-German"])
+
+# load Boasting word and sentences de
+df_boast_word = pd.read_csv("app/training_data/BoastingWords_DE.csv")
+df_boast_sentences = pd.read_csv("app/training_data/BoastingSentences_DE.csv")
+#list of "boasting word" sentences
+terms_boast = list(df_boast_sentences["Boasting-German"])
+
 
 #Load a Hanover Lab on the TIGER-Corpus trained model.
 tagger = ht.HanoverTagger('morphmodel_ger.pgz')
@@ -116,8 +122,19 @@ async def entities(user_request_in: UserRequestIn):
         "language": lang
     }
 
-@app.post('/check')
-async def check_query(text: str):
+@app.post('/check', response_model=EntitiesOut)
+async def check_query(user_request_in: UserRequestIn):
+    lang = DetectLanguage(user_request_in)
+
+    allowed_langs = ['en_GB', 'de_DE']
+
+    if user_request_in.response_lang not in allowed_langs:
+        raise HTTPException(status_code=400, detail="Response language not supported: " + user_request_in.response_lang)
+
+    language = gettext.translation('messages', localedir='locales', languages=[user_request_in.response_lang])
+    language.install()
+    _ = language.gettext
+
     #Main function to analyse user query.
     #apply SpaCy pre-built model
     tokens = model["de"](text)
@@ -132,12 +149,16 @@ async def check_query(text: str):
     #Gendered denom. words catch 
     #list_gender_denom = GenderedDenomAnalysis(tokens)
     #Male coded words and related false positives catch
-    list_male_coded= MaleCodedWordAnalysis(tokens)
+    list_male_coded= MaleCodedWordAnalysis(tokens, "Male Coded Terms")
     # Empty words&sentences catch
     list_empty_words = EmptyWordAnalysis(tokens, terms_empty, df_empty_word, "EmptyWords-German", "Empty words")
-    list_gender_denom = GenderedDenomAnalysis(tokens)
-    list_full = list_male_coded+list_empty_words+list_gender_denom
-    #list_full = list_empty_words+list_gender_denom
+    # gender denom words&sentences catch
+    list_gender_denom = GenderedDenomAnalysis(tokens, "Gendered Denom")
+    # boasting words&sentences catch
+    list_boast = RulesBasedWordsPhraseMatcher(tokens, terms_boast, df_boast_word, "Boasting-German", "Boasting words")
+    
+    # full list
+    list_full = list_male_coded+list_empty_words+list_gender_denom+list_boast
  
     return list_full
 
@@ -207,7 +228,7 @@ def analyze_male(token):
     			# Format and return results
     		return {"word": row["MaleCodedWords"], "category": "Male Coded Terms", "start": token.idx, "length": len(token.text), "alternatives": row["Alternatives_split"]}
 # this function male coded words& related false positives
-def MaleCodedWordAnalysis (tokens):
+def MaleCodedWordAnalysis (tokens, category):
 
     list_tokens = []
     dic_anc = {}     
@@ -244,14 +265,17 @@ def MaleCodedWordAnalysis (tokens):
                     list_tokens.append({'word': row["MaleCodedWords"],
                                     'start': token.idx,
                                     'length': len(token.text),
-                                    "category": "Male Coded Terms",
-                                    "alternatives": row["Alternatives_split"]
+                                    "category": category,
+                                    "alternatives": row["Alternatives_split"],
+                                    "reason_test": "test",
+                                    "reason": _('rules.age_reason'),
+                                    "solution": _('rules.age_solution')
                                     })
             
                     #return dic_tokens
     return list_tokens     
     
-def GenderedDenomAnalysis(tokens):
+def GenderedDenomAnalysis(tokens, category):
 
     list_tokens = []
 
@@ -286,7 +310,10 @@ def GenderedDenomAnalysis(tokens):
                     list_tokens.append({'word': row["Denominations-German"],
                                             'start': token.idx,
                                             'length': len(token.text),
-                                            "category": "Gendered Denom"})
+                                            "category": category,
+                                            "reason_test": "test",
+                                            "reason": _('rules.age_reason'),
+                                          "solution": _('rules.age_solution')})
             
      
        
@@ -299,7 +326,10 @@ def GenderedDenomAnalysis(tokens):
                     list_tokens.append({'word': row["Denominations-German"],
                                             'start': token.idx,
                                             'length': len(token.text),
-                                            "category": "Gendered Denom"})
+                                            "category": category,
+                                            "reason_test": "test",
+                                            "reason": _('rules.age_reason'),
+                                          "solution": _('rules.age_solution')})
          
     return list_tokens
     
@@ -333,7 +363,10 @@ def EmptyWordAnalysis(tokens, terms, df, rules_name, category):
                         list_tokens.append({'word': row[rules_name],
                                                'start': token.idx,
                                               'length': len(token.text),
-                                            "category": category})
+                                            "category": category,
+                                            "reason_test": "test",
+                                            "reason": _('rules.age_reason'),
+                                          "solution": _('rules.age_solution')})
  
     
     matches = matcher(tokens)
@@ -342,14 +375,17 @@ def EmptyWordAnalysis(tokens, terms, df, rules_name, category):
         list_tokens.append({'word': span.text,
                             'start': span.start_char,
                             'length': (span.end_char - span.start_char),
-                            "category": category})        
+                            "category": category,
+                            "reason_test": "test",
+                            "reason": _('rules.age_reason'),
+                           "solution": _('rules.age_solution')})        
 
     return list_tokens 
 
 
 # Unified function for rules    
-def RulesBased(text, terms, df, rules_name, category):
-    tokens = model['de'](text)
+def RulesBasedWordsPhraseMatcher(tokens, terms, df, rules_name, category):
+    
     dic_tokens = {}
     list_tokens = []
     dic = {}
@@ -364,27 +400,18 @@ def RulesBased(text, terms, df, rules_name, category):
     for token in tokens:
         for index, row in df.iterrows():
             if tagger.analyze(token.text)[0] == row[rules_name]:
-                list_tokens.append('word:')
-                list_tokens.append(row[rules_name])
-                list_tokens.append('start:')
-                list_tokens.append(token.idx)
-                list_tokens.append('length:')
-                list_tokens.append(len(token.text))
-                list_tokens.append("category:")
-                list_tokens.append(category)
-
+                list_tokens.append({'word': row[rules_name],
+                                               'start': token.idx,
+                                              'length': len(token.text),
+                                            "category": category})
     
     matches = matcher(tokens)
     for match_id, start, end in matches:
-        span = tokens[start:end]        
-        list_tokens.append('word:')
-        list_tokens.append(span.text)
-        list_tokens.append('start:')
-        list_tokens.append(span.start_char)
-        list_tokens.append('length:')
-        list_tokens.append(span.end_char)
-        list_tokens.append("category:")
-        list_tokens.append(category)
+        span = tokens[start:end]
+        list_tokens.append({'word': span.text,
+                            'start': span.start_char,
+                            'length': (span.end_char - span.start_char),
+                            "category": category})        
 
     return list_tokens 
 
