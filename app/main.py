@@ -44,8 +44,8 @@ df_male_ct = pd.read_csv("app/training_data/df_male_ct_new_de.csv")
 df_gender_ct = pd.read_csv("app/training_data/gendered_denom_de.csv")
 
 # load Empty words_de
-df_empty_word = pd.read_csv("empty_words_ge.csv")
-df_empty_sentences = pd.read_csv("empty_word_sentences_de.csv")
+df_empty_word = pd.read_csv("app/training_data/empty_words_ge.csv")
+df_empty_sentences = pd.read_csv("app/training_data/empty_word_sentences_de.csv")
 
 #list of "empty word" sentences
 terms_empty = list(df_empty_sentences["EmptyWords-German"])
