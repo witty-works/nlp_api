@@ -116,8 +116,8 @@ async def entities(user_request_in: UserRequestIn):
         "language": lang
     }
 
-@app.post('/check/')
-async def check_query(text: str):
+@app.post('/check', response_model=EntitiesOut)
+async def check_query(user_request_in: UserRequestIn):
     lang = DetectLanguage(user_request_in)
 
     allowed_langs = ['en_GB', 'de_DE']
@@ -143,10 +143,10 @@ async def check_query(text: str):
     #Gendered denom. words catch 
     #list_gender_denom = GenderedDenomAnalysis(tokens)
     #Male coded words and related false positives catch
-    list_male_coded= MaleCodedWordAnalysis(tokens)
+    list_male_coded= MaleCodedWordAnalysis(tokens, "Male Coded Terms")
     # Empty words&sentences catch
     list_empty_words = EmptyWordAnalysis(tokens, terms_empty, df_empty_word, "EmptyWords-German", "Empty words")
-    list_gender_denom = GenderedDenomAnalysis(tokens)
+    list_gender_denom = GenderedDenomAnalysis(tokens, "Gendered Denom")
     list_full = list_male_coded+list_empty_words+list_gender_denom
     #list_full = list_empty_words+list_gender_denom
  
@@ -218,7 +218,7 @@ def analyze_male(token):
     			# Format and return results
     		return {"word": row["MaleCodedWords"], "category": "Male Coded Terms", "start": token.idx, "length": len(token.text), "alternatives": row["Alternatives_split"]}
 # this function male coded words& related false positives
-def MaleCodedWordAnalysis (tokens):
+def MaleCodedWordAnalysis (tokens, category):
 
     list_tokens = []
     dic_anc = {}     
@@ -255,7 +255,7 @@ def MaleCodedWordAnalysis (tokens):
                     list_tokens.append({'word': row["MaleCodedWords"],
                                     'start': token.idx,
                                     'length': len(token.text),
-                                    "category": "Male Coded Terms",
+                                    "category": category,
                                     "alternatives": row["Alternatives_split"],
                                     "reason_test": "test",
                                     "reason": _('rules.age_reason'),
@@ -265,7 +265,7 @@ def MaleCodedWordAnalysis (tokens):
                     #return dic_tokens
     return list_tokens     
     
-def GenderedDenomAnalysis(tokens):
+def GenderedDenomAnalysis(tokens, category):
 
     list_tokens = []
 
@@ -300,7 +300,7 @@ def GenderedDenomAnalysis(tokens):
                     list_tokens.append({'word': row["Denominations-German"],
                                             'start': token.idx,
                                             'length': len(token.text),
-                                            "category": "Gendered Denom",
+                                            "category": category,
                                             "reason_test": "test",
                                             "reason": _('rules.age_reason'),
                                           "solution": _('rules.age_solution')})
@@ -316,7 +316,7 @@ def GenderedDenomAnalysis(tokens):
                     list_tokens.append({'word': row["Denominations-German"],
                                             'start': token.idx,
                                             'length': len(token.text),
-                                            "category": "Gendered Denom",
+                                            "category": category,
                                             "reason_test": "test",
                                             "reason": _('rules.age_reason'),
                                           "solution": _('rules.age_solution')})
