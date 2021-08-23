@@ -16,6 +16,7 @@ import pandas as pd
 import spacy
 from spacy.matcher import PhraseMatcher
 from spacy.matcher import Matcher
+from spacy.tokens import Doc
 #Library for German lemmatization
 from HanTa import HanoverTagger as ht
 # Regular expression library
@@ -42,13 +43,21 @@ df_male_ct = pd.read_csv("app/training_data/df_male_ct_new_de.csv")
 # load Gender denom_de
 df_gender_ct = pd.read_csv("app/training_data/gendered_denom_de.csv")
 
+# load Empty words_de
+df_empty_word = pd.read_csv("app/training_data/empty_words_ge.csv")
+df_empty_sentences = pd.read_csv("app/training_data/empty_word_sentences_de.csv")
+
+#list of "empty word" sentences
+terms_empty = list(df_empty_sentences["EmptyWords-German"])
+
 #Load a Hanover Lab on the TIGER-Corpus trained model.
 tagger = ht.HanoverTagger('morphmodel_ger.pgz')
 
 # dictionaries to handle false positives
-false_positive = ["selbst", "flexible", "Probleme", "Macht", "unabhängig", "international", "Entwickler"]
-exceptions = ["Unternehmen", "Firma", "Gruppe", "Gesellschaft", "Kollektivgesellschaft", "Team", "Organisation"]
-terms = ["Kolleginnen und Kollegen", "Kundinnen und Kunden", "Marketing-Team", "Kolleginnen* und Kollegen", "Kundinnen* und Kunden", "Kolleginnen: und Kollegen", "Kundinnen: und Kunden"]
+false_positive_male = ["selbst", "flexible", "Probleme", "Macht", "unabhängig", "Entwickler"]
+false_positive_empty = ["international"]
+exceptions = ["Unternehmen", "Firma", "Gruppe", "Gesellschaft", "Kollektivgesellschaft", "Team", "Organization"]
+terms_false_positive = ["Kolleginnen und Kollegen", "Kundinnen und Kunden", "Marketing-Team", "Kolleginnen* und Kollegen", "Kundinnen* und Kunden", "Kolleginnen: und Kollegen", "Kundinnen: und Kunden"]
 
 app = FastAPI()
 
@@ -107,9 +116,30 @@ async def entities(user_request_in: UserRequestIn):
         "language": lang
     }
 
-@app.post('/pos-en/')
-async def query_pos_analysis(text: str):
-    return analyze_query(text)
+@app.post('/check/')
+async def check_query(text: str):
+    #Main function to analyse user query.
+    #apply SpaCy pre-built model
+    tokens = model["de"](text)
+
+    #Phrase matcher part to handle False positives with two words and special simbols
+    matcher = PhraseMatcher(model['de'].vocab)
+
+    # Only run model.make_doc to speed things up
+    patterns = [model['de'].make_doc(text) for text in terms_false_positive]
+    matcher.add("TerminologyList", patterns)
+
+    #Gendered denom. words catch 
+    #list_gender_denom = GenderedDenomAnalysis(tokens)
+    #Male coded words and related false positives catch
+    list_male_coded= MaleCodedWordAnalysis(tokens)
+    # Empty words&sentences catch
+    list_empty_words = EmptyWordAnalysis(tokens, terms_empty, df_empty_word, "EmptyWords-German", "Empty words")
+    list_gender_denom = GenderedDenomAnalysis(tokens)
+    list_full = list_male_coded+list_empty_words+list_gender_denom
+    #list_full = list_empty_words+list_gender_denom
+ 
+    return list_full
 
 # Functions
 """Detect the language if none is passed explicitly but only return a language if confidence is high enough"""
@@ -135,24 +165,24 @@ def DetectLanguage(user_request_in: UserRequestIn):
     raise HTTPException(status_code=400, detail="Language not supported or could not be determined: " + user_request_in.lang)
 
 """Function to catch the words related to False Positive in the user query"""
-def IsItFalsePositive(word):
+def IsItFalsePositive(word, false_positive):
     for item in false_positive:
         if word==item:
             return True
     return False
 
-#Phrase matcher part to handle False positives with two words and special simbols
-matcher = PhraseMatcher(model["de"].vocab)
+def IfPhraseMatcher(tokens):
+    
+    #Phrase matcher part to handle False positives with two words and special simbols
+    matcher = PhraseMatcher(model['de'].vocab)
 
-# Only run model.make_doc to speed things up
-patterns = [model['de'].make_doc(text) for text in terms]
-matcher.add("TerminologyList", patterns)
+    # Only run model.make_doc to speed things up
+    patterns = [model['de'].make_doc(text) for text in terms_false_positive]
+    matcher.add("TerminologyList", patterns)
 
-def IfPhraseMatcher(text):
-    #doc = model(text)
-    matches = matcher(text)
+    matches = matcher(tokens)
     for match_id, start, end in matches:
-        span = text[start:end]
+        span = tokens[start:end]
         if span.text in (None, ''):
             return False
         return True
@@ -176,6 +206,146 @@ def analyze_male(token):
     	if tagger.analyze(token.text)[0] == row["MaleCodedWords"]:
     			# Format and return results
     		return {"word": row["MaleCodedWords"], "category": "Male Coded Terms", "start": token.idx, "length": len(token.text), "alternatives": row["Alternatives_split"]}
+# this function male coded words& related false positives
+def MaleCodedWordAnalysis (tokens):
+
+    list_tokens = []
+    dic_anc = {}     
+    for token in tokens:
+        #check if the user query have false positives
+        if IsItFalsePositive(tagger.analyze(token.text)[0], false_positive_male):
+            #recognise if there is Name of organisation or geographical name in the query
+            for entity in tokens.ents:
+                if entity.label_ == 'ORG':
+                    list_tokens.append({'organisation': entity.text,
+                                        'FalsePositive': token.text})
+
+            # check if the word is adverb
+            if token.pos_ =="ADV":
+                list_tokens.append({'FalsePositive': token.text})
+
+                #return dic_tokens
+            # check if the word is adjective and find out how it depends on the other words to feel the contex
+            elif token.pos_ == "ADJ":# or token.tag_== "ADJD":
+                dic_anc[tagger.analyze(token.text)[0]] = list(token.ancestors)
+                for key in dic_anc.keys():
+                    if key in false_positive_male:
+                        for item in dic_anc[key]:
+                            if item.text in exceptions:
+                                list_tokens.append({'FalsePositive': token.text})
+            else:
+                list_tokens.append({'word': token.text,
+                                    'start': token.idx,
+                                    'length': len(token.text)})
+            #return list_tokens
+        else:
+            for index, row in df_male_ct.iterrows():
+                if tagger.analyze(token.text)[0] == row["MaleCodedWords"]:
+                    list_tokens.append({'word': row["MaleCodedWords"],
+                                    'start': token.idx,
+                                    'length': len(token.text),
+                                    "category": "Male Coded Terms",
+                                    "alternatives": row["Alternatives_split"]
+                                    })
+            
+                    #return dic_tokens
+    return list_tokens     
+    
+def GenderedDenomAnalysis(tokens):
+
+    list_tokens = []
+
+    matcher = PhraseMatcher(model['de'].vocab)
+
+    # Only run model.make_doc to speed things up
+    patterns = [model['de'].make_doc(text) for text in terms_false_positive]
+    matcher.add("TerminologyList", patterns)
+    matches = matcher(tokens)
+    print(len(matches))
+    old_start = 0
+    #old_end = 0
+    rest_text= []
+    
+    if matches.__len__() != 0:
+        for match_id, start, end in matches:
+            span = tokens[start:end]
+            list_tokens.append({"False positives": span.text})
+            part = tokens[old_start:start]         
+            #old_end = end
+            rest_text.append(part.text)       
+            old_start = end
+            #print(tokens[0:start], tokens[end:len(tokens)])
+        docs = list(model['de'].pipe(rest_text))
+        c_doc = Doc.from_docs(docs)
+        #assert [t.text for t in rest_test]
+        #last_part = tokens[old_start:len(tokens)]
+        
+        for token in c_doc:
+            for index, row in df_gender_ct.iterrows():
+                if tagger.analyze(token.text)[0] == row["Denominations-German"]:
+                    list_tokens.append({'word': row["Denominations-German"],
+                                            'start': token.idx,
+                                            'length': len(token.text),
+                                            "category": "Gendered Denom"})
+            
+     
+       
+    
+    else:
+        print(tokens)
+        for token in tokens:
+            for index, row in df_gender_ct.iterrows():
+                if tagger.analyze(token.text)[0] == row["Denominations-German"]:
+                    list_tokens.append({'word': row["Denominations-German"],
+                                            'start': token.idx,
+                                            'length': len(token.text),
+                                            "category": "Gendered Denom"})
+         
+    return list_tokens
+    
+
+# Unified function for rules    
+def EmptyWordAnalysis(tokens, terms, df, rules_name, category):
+    
+    #dic_tokens = {}
+    list_tokens = []
+    #dic = {}
+    #full = []
+    #Phrase matcher part to handle False positives with two words and special simbols
+    matcher = PhraseMatcher(model['de'].vocab)
+
+     # Only run model.make_doc to speed things up
+    patterns = [model['de'].make_doc(text) for text in terms]
+    matcher.add("TerminologyList", patterns)
+
+    for token in tokens:
+        #check if the user query have false positives
+        if IsItFalsePositive(tagger.analyze(token.text)[0], false_positive_empty):
+            #recognise if there is Name of organisation or geographical name in the query
+            if len(tokens.ents) > 0:
+                #this output will be deleted in production
+                list_tokens.append({'FalsePositive': token.text,
+                                    "category": category})
+            else:
+                
+                for index, row in df.iterrows():
+                    if tagger.analyze(token.text)[0] == row[rules_name]:
+                        list_tokens.append({'word': row[rules_name],
+                                               'start': token.idx,
+                                              'length': len(token.text),
+                                            "category": category})
+ 
+    
+    matches = matcher(tokens)
+    for match_id, start, end in matches:
+        span = tokens[start:end]
+        list_tokens.append({'word': span.text,
+                            'start': span.start_char,
+                            'length': (span.end_char - span.start_char),
+                            "category": category})        
+
+    return list_tokens 
+
 
 # Unified function for rules    
 def RulesBased(text, terms, df, rules_name, category):
@@ -218,79 +388,7 @@ def RulesBased(text, terms, df, rules_name, category):
 
     return list_tokens 
 
-"""Main function to analyse user query. It consists now all functions above"""
-def analyze_query(text):
-    #apply SpaCy German pre-built model
-    tokens = model['de'](text)
-    dic_tokens = {}
-    dic_anc = {}
-    for token in tokens:
-        #check if the user query have false positives
-        if IsItFalsePositive(tagger.analyze(token.text)[0]):
-            #recognise if there is Name of organisation or geographical name in the query
-            for entity in tokens.ents:
-                if entity.label_ == 'ORG' or 'GPE':
-                    dic_tokens['organisation'] = entity.text
-                    dic_tokens['FalsePositive']= token.text
-                    return dic_tokens
-            # check if the word is adverb
-            if token.pos_ =="ADV":
-                dic_tokens['FalsePositive']= token.text
-                return dic_tokens
-            # check if the word is adjective and find out how it depends on the other words to feel the contex
-            elif token.pos_ == "ADJ":# or token.tag_== "ADJD":
-                dic_anc[tagger.analyze(token.text)[0]] = list(token.ancestors)
-                for key in dic_anc.keys():
-                    if key in false_positive:
-                        for item in dic_anc[key]:
-                            if item.text in exceptions:
-                                dic_tokens['FalsePositive']= token.text
-                                return dic_tokens
-            else:
-                dic_tokens['word'] = token.text
-                dic_tokens['start']= token.idx
-                dic_tokens['length']= len(token.text)
-                return dic_tokens
-        else:
-            for index, row in df_male_ct.iterrows():
-                if tagger.analyze(token.text)[0] == row["MaleCodedWords"]:
-                    dic_tokens['word'] = row["MaleCodedWords"]
-                    dic_tokens["category"] = "Male Coded Terms"
-                    dic_tokens['start']= token.idx
-                    dic_tokens['length']= len(token.text)
-                    dic_tokens["alternatives"] = row["Alternatives_split"]
-                # Format and return results
-                    return dic_tokens
-
-#check if the user query have "phrase false positives" (two words or more or symbols)
-    matches = matcher(tokens)
-    for match_id, start, end in matches:
-        span = tokens[start:end]
-        if len(span.text)==0:
-            for token in tokens:
-                for index, row in df_gender_ct.iterrows():
-                    if tagger.analyze(token.text)[0] == row["Denominations-German"]:
-                        dic_tokens['word'] = row["Denominations-German"]
-                        dic_tokens["category"] = "Gendered Denom"
-                        dic_tokens['start']= token.idx
-                        dic_tokens['length']= len(token.text)
-                    #dic_tokens["alternatives"] = row["Alternatives_split"]
-                # Format and return results
-
-    if IfPhraseMatcher(tokens):
-        dic_tokens["False positives"] = span.text
-    else:
-        for token in tokens:
-            for index, row in df_gender_ct.iterrows():
-                if tagger.analyze(token.text)[0] == row["Denominations-German"]:
-                    dic_tokens['word'] = row["Denominations-German"]
-                    dic_tokens["category"] = "Gendered Denom"
-                    dic_tokens['start']= token.idx
-                    dic_tokens['length']= len(token.text)
-                    #dic_tokens["alternatives"] = row["Alternatives_split"]
-                # Format and return results
-    return dic_tokens
-
+  
 
 # want to server to run app.py in the folder app as main app, port=8000 is defaut port for the fast api
 # reload=True is debag mode in Flask is on, to set =False, when deploy the app to the production
