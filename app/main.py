@@ -118,6 +118,18 @@ async def entities(user_request_in: UserRequestIn):
 
 @app.post('/check/')
 async def check_query(text: str):
+    lang = DetectLanguage(user_request_in)
+
+    allowed_langs = ['en_GB', 'de_DE']
+
+    if user_request_in.response_lang not in allowed_langs:
+        raise HTTPException(status_code=400, detail="Response language not supported: " + user_request_in.response_lang)
+
+    language = gettext.translation('messages', localedir='locales', languages=[user_request_in.response_lang])
+    language.install()
+    _ = language.gettext
+
+    doc = model[lang](user_request_in.text)
     #Main function to analyse user query.
     #apply SpaCy pre-built model
     tokens = model["de"](text)
@@ -245,7 +257,9 @@ def MaleCodedWordAnalysis (tokens):
                                     'start': token.idx,
                                     'length': len(token.text),
                                     "category": "Male Coded Terms",
-                                    "alternatives": row["Alternatives_split"]
+                                    "alternatives": row["Alternatives_split"],
+                                    "reason": _('rules.age_reason'),
+                                    "solution": _('rules.age_solution')
                                     })
             
                     #return dic_tokens
@@ -286,7 +300,9 @@ def GenderedDenomAnalysis(tokens):
                     list_tokens.append({'word': row["Denominations-German"],
                                             'start': token.idx,
                                             'length': len(token.text),
-                                            "category": "Gendered Denom"})
+                                            "category": "Gendered Denom",
+                                            "reason": _('rules.age_reason'),
+                                          "solution": _('rules.age_solution')})
             
      
        
@@ -299,7 +315,9 @@ def GenderedDenomAnalysis(tokens):
                     list_tokens.append({'word': row["Denominations-German"],
                                             'start': token.idx,
                                             'length': len(token.text),
-                                            "category": "Gendered Denom"})
+                                            "category": "Gendered Denom",
+                                            "reason": _('rules.age_reason'),
+                                          "solution": _('rules.age_solution')})
          
     return list_tokens
     
@@ -333,7 +351,9 @@ def EmptyWordAnalysis(tokens, terms, df, rules_name, category):
                         list_tokens.append({'word': row[rules_name],
                                                'start': token.idx,
                                               'length': len(token.text),
-                                            "category": category})
+                                            "category": category,
+                                            "reason": _('rules.age_reason'),
+                                          "solution": _('rules.age_solution')})
  
     
     matches = matcher(tokens)
@@ -342,7 +362,9 @@ def EmptyWordAnalysis(tokens, terms, df, rules_name, category):
         list_tokens.append({'word': span.text,
                             'start': span.start_char,
                             'length': (span.end_char - span.start_char),
-                            "category": category})        
+                            "category": category,
+                            "reason": _('rules.age_reason'),
+                           "solution": _('rules.age_solution')})        
 
     return list_tokens 
 
