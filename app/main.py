@@ -117,7 +117,8 @@ async def entities(user_request_in: UserRequestIn):
 @app.post('/check/')
 async def check_query(text: str):
  """Main function to analyse user query. """
-   
+
+    
     #apply SpaCy pre-built model
     tokens = model["de"](text)                 
  
@@ -128,17 +129,15 @@ async def check_query(text: str):
     patterns = [model['de'].make_doc(text) for text in terms_false_positive]
     matcher.add("TerminologyList", patterns)
 
-    
-    
+    #Gendered denom. words catch 
+    #list_gender_denom = GenderedDenomAnalysis(tokens)
     #Male coded words and related false positives catch
-    #list_male_coded= MaleCodedWordAnalysis(tokens)
-    
+    list_male_coded= MaleCodedWordAnalysis(tokens)
     # Empty words&sentences catch
     list_empty_words = EmptyWordAnalysis(tokens, terms_empty, df_empty_word, "EmptyWords-German", "Empty words")
-    #Gendered denom. words catch and related false positives
     list_gender_denom = GenderedDenomAnalysis(tokens)
-    #list_full = list_male_coded+list_empty_words+list_gender_denom
-    list_full = list_empty_words+list_gender_denom
+    list_full = list_male_coded+list_empty_words+list_gender_denom
+    #list_full = list_empty_words+list_gender_denom
  
     return list_full
 
