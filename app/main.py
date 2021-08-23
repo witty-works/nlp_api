@@ -118,12 +118,11 @@ async def entities(user_request_in: UserRequestIn):
 
 @app.post('/check/')
 async def check_query(text: str):
- """Main function to analyse user query. """
-    
+    #Main function to analyse user query.
     #apply SpaCy pre-built model
-    tokens = model["de"](text)                 
- 
-     #Phrase matcher part to handle False positives with two words and special simbols
+    tokens = model["de"](text)
+
+    #Phrase matcher part to handle False positives with two words and special simbols
     matcher = PhraseMatcher(model['de'].vocab)
 
     # Only run model.make_doc to speed things up
