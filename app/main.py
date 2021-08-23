@@ -129,7 +129,6 @@ async def check_query(text: str):
     language.install()
     _ = language.gettext
 
-    doc = model[lang](user_request_in.text)
     #Main function to analyse user query.
     #apply SpaCy pre-built model
     tokens = model["de"](text)
@@ -258,6 +257,7 @@ def MaleCodedWordAnalysis (tokens):
                                     'length': len(token.text),
                                     "category": "Male Coded Terms",
                                     "alternatives": row["Alternatives_split"],
+                                    "reason_test": "test",
                                     "reason": _('rules.age_reason'),
                                     "solution": _('rules.age_solution')
                                     })
@@ -301,6 +301,7 @@ def GenderedDenomAnalysis(tokens):
                                             'start': token.idx,
                                             'length': len(token.text),
                                             "category": "Gendered Denom",
+                                            "reason_test": "test",
                                             "reason": _('rules.age_reason'),
                                           "solution": _('rules.age_solution')})
             
@@ -316,6 +317,7 @@ def GenderedDenomAnalysis(tokens):
                                             'start': token.idx,
                                             'length': len(token.text),
                                             "category": "Gendered Denom",
+                                            "reason_test": "test",
                                             "reason": _('rules.age_reason'),
                                           "solution": _('rules.age_solution')})
          
@@ -352,6 +354,7 @@ def EmptyWordAnalysis(tokens, terms, df, rules_name, category):
                                                'start': token.idx,
                                               'length': len(token.text),
                                             "category": category,
+                                            "reason_test": "test",
                                             "reason": _('rules.age_reason'),
                                           "solution": _('rules.age_solution')})
  
@@ -363,6 +366,7 @@ def EmptyWordAnalysis(tokens, terms, df, rules_name, category):
                             'start': span.start_char,
                             'length': (span.end_char - span.start_char),
                             "category": category,
+                            "reason_test": "test",
                             "reason": _('rules.age_reason'),
                            "solution": _('rules.age_solution')})        
 
