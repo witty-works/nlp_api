@@ -10,12 +10,13 @@ class UserRequestIn(BaseModel):
 
 class EntityOut(BaseModel):
     start: int
-    end: int
-    type: str
+    length: int
+    category: str
     text: str
+    label: str
     reason: str
     solution: str
 
 class EntitiesOut(BaseModel):
-    entities: List[EntityOut]
+    results: List[EntityOut]
     language: str

@@ -18,11 +18,38 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: app/main.py:95
+msgid "rules.age_label"
+msgstr "Alter"
+
 msgid "rules.age_reason"
 msgstr "Sie diskriminieren die Bewerber:innen aufgrund ihres Alters."
 
-#: app/main.py:96
 msgid "rules.age_solution"
 msgstr "Lassen Sie diesen Begriff einfach weg."
 
+msgid "rules.empty_words_label"
+msgstr "Worthülse"
+
+msgid "rules.empty_words_reason"
+msgstr "Dies ist eine Worthülse, die in Stellenanzeigen überstrapaziert wird. Sie wird nicht als konkret genug wahrgenommen, um die Bedeutung in Ihrem Unternehmen zu verstehen und wird von Bewerbern nicht geschätzt."
+
+msgid "rules.empty_words_solution"
+msgstr "Wir empfehlen, dieses Wort zu vermeiden. Erklären Sie stattdessen konkret und anschaulich, was es im Kontext Ihres Unternehmens wirklich bedeutet."
+
+msgid "rules.gendered_denominations_label"
+msgstr "Geschlechtsspezifische Bezeichnungen"
+
+msgid "rules.gendered_denominations_reason"
+msgstr "Diese Bezeichnung ist männlich konnotiert, auch wenn sie sprachlich neutral ist. Aufgrund einer hohen Repräsentation von (weißen) Männern in der Branche entstehen bei diesem Begriff vor allem Bilder von Männern vor dem inneren Auge. Dadurch wird Menschen mit unterschiedlichem Hintergrund das Gefühl vermittelt, dass sie nicht in diese Branche gehören."
+
+msgid "rules.gendered_denominations_solution"
+msgstr "Um ein inklusives Bild zu provozieren, sollten Sie in Ihrer Formulierung nicht nur sprachlich, sondern auch mental neutral sein, indem Sie die verschiedenen Geschlechter ausdrücklich erwähnen oder durch geschlechtslose Worte ersetzen."
+
+msgid "rules.male_coded_terms_label"
+msgstr "Männlich konnotierte Begriffe"
+
+msgid "rules.male_coded_terms_reason"
+msgstr "Dieser Begriff ist männlich konnotiert. Frauen werden sich durch dieses Wort unbewusst abgeschreckt fühlen. Dadurch fällt die Wahrscheinlichkeit, dass sich Frauen bewerben."
+
+msgid "rules.male_coded_terms_solution"
+msgstr "Verwenden Sie eine der vorgeschlagenen Alternativen. Oder schreiben Sie es selbst um, so dass es teamorientierter, weniger wettbewerbsfähig klingt und auf den Sinn in der Arbeit Bezug nimmt."

@@ -31,18 +31,18 @@ jobs:
           pipenv run python -m spacy download en_core_web_sm
           pipenv run python -m spacy download de_core_news_sm
 
-      - id: cache-mo-files
+      - id: cache-po-files
         uses: actions/cache@v1
         with:
           path: ./locales
-          key: ${{ runner.os }}-mo-files-${{ hashFiles('**/*.mo') }}
+          key: ${{ runner.os }}-po-files-${{ hashFiles('**/*.po') }}
 
       - name: Compile translation
-        if: steps.cache-mo-files.outputs.cache-hit != 'true'
+        if: steps.cache-po-files.outputs.cache-hit != 'true'
         run: |
           pipenv run pybabel compile -d locales -l de_DE -f
           pipenv run pybabel compile -d locales -l en_GB -f
 
       - name: Run test suite
         run: |
-          pipenv run pytest --cov-config .coveragerc --cov=app
+          pipenv run pytest --cov-config .coveragerc --cov=app -vv
