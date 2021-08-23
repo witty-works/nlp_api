@@ -54,9 +54,10 @@ terms_empty = list(df_empty_sentences["EmptyWords-German"])
 tagger = ht.HanoverTagger('morphmodel_ger.pgz')
 
 # dictionaries to handle false positives
-false_positive = ["selbst", "flexible", "Probleme", "Macht", "unabhängig", "international", "Entwickler"]
-exceptions = ["Unternehmen", "Firma", "Gruppe", "Gesellschaft", "Kollektivgesellschaft", "Team", "Organisation"]
-terms = ["Kolleginnen und Kollegen", "Kundinnen und Kunden", "Marketing-Team", "Kolleginnen* und Kollegen", "Kundinnen* und Kunden", "Kolleginnen: und Kollegen", "Kundinnen: und Kunden"]
+false_positive_male = ["selbst", "flexible", "Probleme", "Macht", "unabhängig", "Entwickler"]
+false_positive_empty = ["international"]
+exceptions = ["Unternehmen", "Firma", "Gruppe", "Gesellschaft", "Kollektivgesellschaft", "Team", "Organization"]
+terms_false_positive = ["Kolleginnen und Kollegen", "Kundinnen und Kunden", "Marketing-Team", "Kolleginnen* und Kollegen", "Kundinnen* und Kunden", "Kolleginnen: und Kollegen", "Kundinnen: und Kunden"]
 
 app = FastAPI()
 
@@ -165,7 +166,7 @@ def DetectLanguage(user_request_in: UserRequestIn):
     raise HTTPException(status_code=400, detail="Language not supported or could not be determined: " + user_request_in.lang)
 
 """Function to catch the words related to False Positive in the user query"""
-def IsItFalsePositive(word):
+def IsItFalsePositive(word, false_positive):
     for item in false_positive:
         if word==item:
             return True
@@ -324,8 +325,7 @@ def EmptyWordAnalysis(tokens, terms, df, rules_name, category):
             #recognise if there is Name of organisation or geographical name in the query
             if len(tokens.ents) > 0:
                 #this output will be deleted in production
-                list_tokens.append({ "entities": tokens.ents,
-                                   'FalsePositive': token.text,
+                list_tokens.append({'FalsePositive': token.text,
                                     "category": category})
             else:
                 
