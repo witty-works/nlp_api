@@ -9,8 +9,6 @@ from fastapi.templating import Jinja2Templates
 import os
 os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
-import gettext
-
 # NLP library
 import pandas as pd
 import spacy
@@ -22,9 +20,6 @@ from HanTa import HanoverTagger as ht
 # Regular expression library
 import re
 
-# Libraries for language Detect
-from langdetect import detect_langs
-from langdetect import DetectorFactory
 
 # project models
 from app.models import (
@@ -33,8 +28,9 @@ from app.models import (
     EntitiesOut,
 )
 
-# For the reproducible results
-DetectorFactory.seed = 0
+from app.lang import (
+    Lang,
+)
 
 # Model data
 model = {"en": spacy.load("en_core_web_sm"), "de": spacy.load("de_core_news_sm")}
@@ -95,71 +91,43 @@ async def language_detect(user_request_in: UserRequestIn):
 
 @app.post("/check", response_model=EntitiesOut)
 async def check_query(user_request_in: UserRequestIn):
-    lang = DetectLanguage(user_request_in)
-
-    allowed_langs = ["en_GB", "de_DE"]
-
-    if user_request_in.response_lang not in allowed_langs:
-        raise HTTPException(status_code=400, detail="Response language not supported: " + user_request_in.response_lang)
-
-    language = gettext.translation("messages", localedir="locales", languages=[user_request_in.response_lang])
-    language.install()
-    _ = language.gettext
+    try:
+        lang = Lang(user_request_in)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
     #Main function to analyse user query.
     #apply SpaCy pre-built model
-    tokens = model[lang](user_request_in.text)
+    tokens = model[lang.locale](user_request_in.text)
 
     #Phrase matcher part to handle False positives with two words and special simbols
-    matcher = PhraseMatcher(model[lang].vocab)
+    matcher = PhraseMatcher(model[lang.locale].vocab)
 
     # Only run model.make_doc to speed things up
-    patterns = [model[lang].make_doc(user_request_in.text) for text in terms_false_positive]
+    patterns = [model[lang.locale].make_doc(user_request_in.text) for text in terms_false_positive]
     matcher.add("TerminologyList", patterns)
 
     #Male coded words and related false positives catch
-    list_male_coded= MaleCodedWordAnalysis(_, tokens)
+    list_male_coded= MaleCodedWordAnalysis(lang, tokens)
 
     # Empty words&sentences catch
-    list_empty_words = EmptyWordAnalysis(_, lang, tokens, terms_empty, df_empty_word, "EmptyWords-German")
+    list_empty_words = EmptyWordAnalysis(lang, tokens, terms_empty, df_empty_word, "EmptyWords-German")
 
     #Gendered denom. words catch 
-    list_gender_denom = GenderedDenomAnalysis(_, lang, tokens)
+    list_gender_denom = GenderedDenomAnalysis(lang, tokens)
 
     # boasting words&sentences catch
-    list_boast = RulesBasedWordsPhraseMatcher(_, lang, tokens, terms_boast, df_boast_word, "Boasting-German", "boasting_words")
+    list_boast = RulesBasedWordsPhraseMatcher(lang, tokens, terms_boast, df_boast_word, "Boasting-German", "boasting_words")
     
     # full list
     list_full = list_male_coded+list_empty_words+list_gender_denom+list_boast
  
     return {
         "results": list_full,
-        "language": lang
+        "language": lang.locale
     }
 
 # Functions
-"""Detect the language if none is passed explicitly but only return a language if confidence is high enough"""
-def DetectLanguage(user_request_in: UserRequestIn):
-    allowed_langs = ["en", "de"]
-
-    if user_request_in.lang in allowed_langs:
-        return user_request_in.lang
-
-    if user_request_in.lang == None or user_request_in.lang == "auto":
-        langs = detect_langs(user_request_in.text)
-
-        for language in langs:
-            if language.lang in allowed_langs:
-                return language.lang
-
-        if user_request_in.fallback_lang != None:
-            if user_request_in.fallback_lang in allowed_langs:
-                return user_request_in.fallback_lang
-
-            raise HTTPException(status_code=400, detail="Fallback language not supported: " + user_request_in.fallback_lang)
-
-    raise HTTPException(status_code=400, detail="Language not supported or could not be determined: " + user_request_in.lang)
-
 """Function to catch the words related to False Positive in the user query"""
 def IsItFalsePositive(word, false_positive):
     for item in false_positive:
@@ -170,10 +138,10 @@ def IsItFalsePositive(word, false_positive):
 def IfPhraseMatcher(lang, tokens):
     
     #Phrase matcher part to handle False positives with two words and special simbols
-    matcher = PhraseMatcher(model[lang].vocab)
+    matcher = PhraseMatcher(model[lang.locale].vocab)
 
     # Only run model.make_doc to speed things up
-    patterns = [model[lang].make_doc(text) for text in terms_false_positive]
+    patterns = [model[lang.locale].make_doc(text) for text in terms_false_positive]
     matcher.add("TerminologyList", patterns)
 
     matches = matcher(tokens)
@@ -185,7 +153,7 @@ def IfPhraseMatcher(lang, tokens):
 
 """Function to handle dependecies of the adjectives."""
 # this function male coded words& related false positives
-def MaleCodedWordAnalysis(_, tokens):
+def MaleCodedWordAnalysis(lang, tokens):
     category = "male_coded_terms"
     list_tokens = []
     dic_anc = {}     
@@ -200,9 +168,9 @@ def MaleCodedWordAnalysis(_, tokens):
                                     "end": token.idx + len(token.text),
                                     "category": "False Positive",
                                     "alternatives": [],
-                                    "label": _("rules.age_label"),
-                                    "reason": _("rules.age_reason"),
-                                    "solution": _("rules.age_solution")
+                                    "label": lang._("rules.age_label"),
+                                    "reason": lang._("rules.age_reason"),
+                                    "solution": lang._("rules.age_solution")
                                     })
 
             # check if the word is adverb
@@ -212,9 +180,9 @@ def MaleCodedWordAnalysis(_, tokens):
                                     "end": token.idx + len(token.text),
                                     "category": "False Positive",
                                     "alternatives": [],
-                                    "label": _("rules.age_label"),
-                                    "reason": _("rules.age_reason"),
-                                    "solution": _("rules.age_solution")
+                                    "label": lang._("rules.age_label"),
+                                    "reason": lang._("rules.age_reason"),
+                                    "solution": lang._("rules.age_solution")
                                     })
 
                 #return dic_tokens
@@ -230,9 +198,9 @@ def MaleCodedWordAnalysis(_, tokens):
                                     "end": token.idx + len(token.text),
                                     "category": "False Positive",
                                     "alternatives": [],
-                                    "label": _("rules.age_label"),
-                                    "reason": _("rules.age_reason"),
-                                    "solution": _("rules.age_solution")
+                                    "label": lang._("rules.age_label"),
+                                    "reason": lang._("rules.age_reason"),
+                                    "solution": lang._("rules.age_solution")
                                     })
             else:
                 list_tokens.append({"text": token.text,
@@ -240,9 +208,9 @@ def MaleCodedWordAnalysis(_, tokens):
                                     "end": token.idx + len(token.text),
                                     "category": category,
                                     "alternatives": [],
-                                    "label": _("rules." + category + "_label"),
-                                    "reason": _("rules." + category + "_reason"),
-                                    "solution": _("rules." + category + "_solution")
+                                    "label": lang._("rules." + category + "_label"),
+                                    "reason": lang._("rules." + category + "_reason"),
+                                    "solution": lang._("rules." + category + "_solution")
                                     })
         else:
             for index, row in df_male_ct.iterrows():
@@ -253,22 +221,22 @@ def MaleCodedWordAnalysis(_, tokens):
                                     "end": token.idx + len(token.text),
                                     "category": category,
                                     "alternatives": row["Alternatives_split"],
-                                    "label": _("rules." + category + "_label"),
-                                    "reason": _("rules." + category + "_reason"),
-                                    "solution": _("rules." + category + "_solution")
+                                    "label": lang._("rules." + category + "_label"),
+                                    "reason": lang._("rules." + category + "_reason"),
+                                    "solution": lang._("rules." + category + "_solution")
                                     })
             
                     #return dic_tokens
     return list_tokens     
     
-def GenderedDenomAnalysis(_, lang, tokens):
+def GenderedDenomAnalysis(lang, tokens):
     category = "gendered_denominations"
     list_tokens = []
 
-    matcher = PhraseMatcher(model[lang].vocab)
+    matcher = PhraseMatcher(model[lang.locale].vocab)
 
     # Only run model.make_doc to speed things up
-    patterns = [model[lang].make_doc(text) for text in terms_false_positive]
+    patterns = [model[lang.locale].make_doc(text) for text in terms_false_positive]
     matcher.add("TerminologyList", patterns)
     matches = matcher(tokens)
     print(len(matches))
@@ -285,7 +253,7 @@ def GenderedDenomAnalysis(_, lang, tokens):
             rest_text.append(part.text)       
             old_start = end
             #print(tokens[0:start], tokens[end:len(tokens)])
-        docs = list(model[lang].pipe(rest_text))
+        docs = list(model[lang.locale].pipe(rest_text))
         c_doc = Doc.from_docs(docs)
         #assert [t.text for t in rest_test]
         #last_part = tokens[old_start:len(tokens)]
@@ -297,9 +265,9 @@ def GenderedDenomAnalysis(_, lang, tokens):
                                             "start": token.idx,
                                             "end": token.idx + len(token.text),
                                             "category": category,
-                                            "label": _("rules." + category + "_label"),
-                                            "reason": _("rules." + category + "_reason"),
-                                            "solution": _("rules." + category + "_solution")
+                                            "label": lang._("rules." + category + "_label"),
+                                            "reason": lang._("rules." + category + "_reason"),
+                                            "solution": lang._("rules." + category + "_solution")
                                     })
     else:
         print(tokens)
@@ -310,15 +278,15 @@ def GenderedDenomAnalysis(_, lang, tokens):
                                             "start": token.idx,
                                             "end": token.idx + len(token.text),
                                             "category": category,
-                                            "label": _("rules." + category + "_label"),
-                                            "reason": _("rules." + category + "_reason"),
-                                            "solution": _("rules." + category + "_solution")
+                                            "label": lang._("rules." + category + "_label"),
+                                            "reason": lang._("rules." + category + "_reason"),
+                                            "solution": lang._("rules." + category + "_solution")
                                         })
          
     return list_tokens
 
 # Unified function for rules    
-def EmptyWordAnalysis(_, lang, tokens, terms, df, rules_name):
+def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
     category = "empty_words"
 
     #dic_tokens = {}
@@ -326,10 +294,10 @@ def EmptyWordAnalysis(_, lang, tokens, terms, df, rules_name):
     #dic = {}
     #full = []
     #Phrase matcher part to handle False positives with two words and special simbols
-    matcher = PhraseMatcher(model[lang].vocab)
+    matcher = PhraseMatcher(model[lang.locale].vocab)
 
      # Only run model.make_doc to speed things up
-    patterns = [model[lang].make_doc(text) for text in terms]
+    patterns = [model[lang.locale].make_doc(text) for text in terms]
     matcher.add("TerminologyList", patterns)
 
     for token in tokens:
@@ -343,9 +311,9 @@ def EmptyWordAnalysis(_, lang, tokens, terms, df, rules_name):
                                     "end": token.idx + len(token.text),
                                     "category": "False Positive",
                                     "alternatives": [],
-                                    "label": _("rules.age_label"),
-                                    "reason": _("rules.age_reason"),
-                                    "solution": _("rules.age_solution")
+                                    "label": lang._("rules.age_label"),
+                                    "reason": lang._("rules.age_reason"),
+                                    "solution": lang._("rules.age_solution")
                                     })
             else:
                 
@@ -355,9 +323,9 @@ def EmptyWordAnalysis(_, lang, tokens, terms, df, rules_name):
                                             "start": token.idx,
                                             "end": token.idx + len(token.text),
                                             "category": category,
-                                            "label": _("rules." + category + "_label"),
-                                            "reason": _("rules." + category + "_reason"),
-                                            "solution": _("rules." + category + "_solution")
+                                            "label": lang._("rules." + category + "_label"),
+                                            "reason": lang._("rules." + category + "_reason"),
+                                            "solution": lang._("rules." + category + "_solution")
                                         })
  
     
@@ -368,24 +336,24 @@ def EmptyWordAnalysis(_, lang, tokens, terms, df, rules_name):
                             "start": span.start_char,
                             "end": span.end_char,
                             "category": category,
-                            "label": _("rules." + category + "_label"),
-                            "reason": _("rules." + category + "_reason"),
-                            "solution": _("rules." + category + "_solution")
+                            "label": lang._("rules." + category + "_label"),
+                            "reason": lang._("rules." + category + "_reason"),
+                            "solution": lang._("rules." + category + "_solution")
                             })        
 
     return list_tokens 
 
 # Unified function for rules    
-def RulesBasedWordsPhraseMatcher(_, lang, tokens, terms, df, rules_name, category):
+def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, rules_name, category):
     dic_tokens = {}
     list_tokens = []
     dic = {}
     full = []
     #Phrase matcher part to handle False positives with two words and special simbols
-    matcher = PhraseMatcher(model[lang].vocab)
+    matcher = PhraseMatcher(model[lang.locale].vocab)
 
      # Only run model.make_doc to speed things up
-    patterns = [model[lang].make_doc(text) for text in terms]
+    patterns = [model[lang.locale].make_doc(text) for text in terms]
     matcher.add("TerminologyList", patterns)
 
     for token in tokens:
@@ -395,9 +363,9 @@ def RulesBasedWordsPhraseMatcher(_, lang, tokens, terms, df, rules_name, categor
                                     "start": token.idx,
                                     "end": token.idx + len(token.text),
                                     "category": category,
-                                    "label": _("rules." + category + "_label"),
-                                    "reason": _("rules." + category + "_reason"),
-                                    "solution": _("rules." + category + "_solution")
+                                    "label": lang._("rules." + category + "_label"),
+                                    "reason": lang._("rules." + category + "_reason"),
+                                    "solution": lang._("rules." + category + "_solution")
                                     })
     
     matches = matcher(tokens)
@@ -407,9 +375,9 @@ def RulesBasedWordsPhraseMatcher(_, lang, tokens, terms, df, rules_name, categor
                             "start": span.start_char,
                             "end": span.end_char,
                             "category": category,
-                            "label": _("rules." + category + "_label"),
-                            "reason": _("rules." + category + "_reason"),
-                            "solution": _("rules." + category + "_solution")
+                            "label": lang._("rules." + category + "_label"),
+                            "reason": lang._("rules." + category + "_reason"),
+                            "solution": lang._("rules." + category + "_solution")
                             })        
 
     return list_tokens 
