@@ -12,8 +12,7 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 # NLP library
 import pandas as pd
 import spacy
-from spacy.matcher import PhraseMatcher
-from spacy.matcher import Matcher
+from spacy.matcher import PhraseMatcher, Matcher
 from spacy.tokens import Doc
 #Library for German lemmatization
 from HanTa import HanoverTagger as ht
@@ -38,7 +37,8 @@ model = {"en": spacy.load("en_core_web_sm"), "de": spacy.load("de_core_news_sm")
 df_male_ct = pd.read_csv("app/training_data/df_male_ct_new_de.csv")
 # load Gender denom_de
 df_gender_ct = pd.read_csv("app/training_data/gendered_denom_de.csv")
-
+# load discriminating words_de
+df_discrim_words = pd.read_csv("app/training_data/DiscriminatingWords_DE.csv")
 # load Empty words_de
 df_empty_word = pd.read_csv("app/training_data/empty_words_ge.csv")
 df_empty_sentences = pd.read_csv("app/training_data/empty_word_sentences_de.csv")
@@ -119,8 +119,10 @@ async def check_query(user_request_in: UserRequestIn):
     # boasting words&sentences catch
     list_boast = RulesBasedWordsPhraseMatcher(lang, tokens, terms_boast, df_boast_word, "Boasting-German", "boasting_words")
     
+    #discriminating words catch
+    list_discrim = RulesBased(tokens, df_discrim_words, "Jo", "Discriminating Words")
     # full list
-    list_full = list_male_coded+list_empty_words+list_gender_denom+list_boast
+    list_full = list_male_coded+list_empty_words+list_gender_denom+list_boast + list_discrim
  
     return {
         "results": list_full,
@@ -185,7 +187,7 @@ def MaleCodedWordAnalysis(lang, tokens):
                                     "solution": lang._("rules.age_solution")
                                     })
 
-                #return dic_tokens
+                
             # check if the word is adjective and find out how it depends on the other words to feel the contex
             elif token.pos_ == "ADJ":# or token.tag_== "ADJD":
                 dic_anc[tagger.analyze(token.text)[0]] = list(token.ancestors)
@@ -226,7 +228,7 @@ def MaleCodedWordAnalysis(lang, tokens):
                                     "solution": lang._("rules." + category + "_solution")
                                     })
             
-                    #return dic_tokens
+                    
     return list_tokens     
     
 def GenderedDenomAnalysis(lang, tokens):
@@ -239,9 +241,9 @@ def GenderedDenomAnalysis(lang, tokens):
     patterns = [model[lang.locale].make_doc(text) for text in terms_false_positive]
     matcher.add("TerminologyList", patterns)
     matches = matcher(tokens)
-    print(len(matches))
+    
     old_start = 0
-    #old_end = 0
+    
     rest_text= []
     
     if matches.__len__() != 0:
@@ -249,14 +251,13 @@ def GenderedDenomAnalysis(lang, tokens):
             span = tokens[start:end]
             list_tokens.append({"False positives": span.text})
             part = tokens[old_start:start]         
-            #old_end = end
+            
             rest_text.append(part.text)       
             old_start = end
-            #print(tokens[0:start], tokens[end:len(tokens)])
+            
         docs = list(model[lang.locale].pipe(rest_text))
         c_doc = Doc.from_docs(docs)
-        #assert [t.text for t in rest_test]
-        #last_part = tokens[old_start:len(tokens)]
+        
         
         for token in c_doc:
             for index, row in df_gender_ct.iterrows():
@@ -285,14 +286,13 @@ def GenderedDenomAnalysis(lang, tokens):
          
     return list_tokens
 
-# Unified function for rules    
+# Unified function for Emtz words false positives and rules    
 def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
     category = "empty_words"
 
-    #dic_tokens = {}
+    
     list_tokens = []
-    #dic = {}
-    #full = []
+    
     #Phrase matcher part to handle False positives with two words and special simbols
     matcher = PhraseMatcher(model[lang.locale].vocab)
 
@@ -343,7 +343,7 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
 
     return list_tokens 
 
-# Unified function for rules    
+# Unified function for rules and sentence false positives   
 def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, rules_name, category):
     dic_tokens = {}
     list_tokens = []
@@ -380,6 +380,27 @@ def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, rules_name, category):
                             "solution": lang._("rules." + category + "_solution")
                             })        
 
+    return list_tokens 
+
+#Unified function for rules
+def RulesBased(tokens, df, rules_name, category):
+    
+ 
+    list_tokens = []
+    
+    for token in tokens:
+        for index, row in df.iterrows():
+            if tagger.analyze(token.text)[0] == row[rules_name]:
+                list_tokens.append({"text": row[rules_name],
+                                    "start": token.idx,
+                                    "end": token.idx + len(token.text),
+                                    "category": category,
+                                    "label": lang._("rules." + category + "_label"),
+                                    "reason": lang._("rules." + category + "_reason"),
+                                    "solution": lang._("rules." + category + "_solution")
+                                    })
+
+ 
     return list_tokens 
 # want to server to run app.py in the folder app as main app, port=8000 is defaut port for the fast api
 # reload=True is debag mode in Flask is on, to set =False, when deploy the app to the production
