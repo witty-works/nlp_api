@@ -20,7 +20,7 @@ def test_api():
 
     first_record = response.json()
     assert first_record["language"] == "en"
-    assert first_record["results"] == [{'start': 17, 'length': 13, "label": "Alter", "category": "False Positive", 'text': 'international', 'reason': 'Sie diskriminieren die Bewerber:innen aufgrund ihres Alters.', 'solution': 'Lassen Sie diesen Begriff einfach weg.'}]
+    assert first_record["results"] == [{"start": 17, "end": 30, "label": "Alter", "category": "False Positive", "text": "international", "reason": "Sie diskriminieren die Bewerber:innen aufgrund ihres Alters.", "solution": "Lassen Sie diesen Begriff einfach weg."}]
 
 def test_api_response_lang():
     request_data = {"text": "Greenpeace is an international company with headquarters in London.", "response_lang": "en_GB"}
@@ -30,7 +30,7 @@ def test_api_response_lang():
 
     first_record = response.json()
     assert first_record["language"] == "en"
-    assert first_record["results"] == [{'start': 17, 'length': 13, "label": "Age", "category": "False Positive", 'text': 'international', 'reason': 'You are discriminating against applicants due to age.', 'solution': 'Simply omit this term.'}]
+    assert first_record["results"] == [{"start": 17, "end": 30, "label": "Age", "category": "False Positive", "text": "international", "reason": "You are discriminating against applicants due to age.", "solution": "Simply omit this term."}]
 
 def test_api_missing_response_lang():
     request_data = {"text": "Greenpeace is an international company with headquarters in London.", "response_lang": "es_ES"}

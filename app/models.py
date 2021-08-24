@@ -10,7 +10,7 @@ class UserRequestIn(BaseModel):
 
 class EntityOut(BaseModel):
     start: int
-    length: int
+    end: int
     category: str
     text: str
     label: str

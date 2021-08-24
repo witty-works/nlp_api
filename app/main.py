@@ -7,7 +7,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 import os
-os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
+os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
 import gettext
 
@@ -37,7 +37,7 @@ from app.models import (
 DetectorFactory.seed = 0
 
 # Model data
-model = {'en': spacy.load("en_core_web_sm"), 'de': spacy.load("de_core_news_sm")}
+model = {"en": spacy.load("en_core_web_sm"), "de": spacy.load("de_core_news_sm")}
 # load Male coded terms
 df_male_ct = pd.read_csv("app/training_data/df_male_ct_new_de.csv")
 # load Gender denom_de
@@ -57,7 +57,7 @@ terms_boast = list(df_boast_sentences["Boasting-German"])
 
 
 #Load a Hanover Lab on the TIGER-Corpus trained model.
-tagger = ht.HanoverTagger('morphmodel_ger.pgz')
+tagger = ht.HanoverTagger("morphmodel_ger.pgz")
 
 # dictionaries to handle false positives
 false_positive_male = ["selbst", "flexible", "Probleme", "Macht", "unabhängig", "Entwickler"]
@@ -79,11 +79,11 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
 
-@app.get('/')
+@app.get("/")
 def get_root():
-    return {'message': 'Use /docs to get API documentation'}
+    return {"message": "Use /docs to get API documentation"}
 
-@app.get('/form', response_class=HTMLResponse)
+@app.get("/form", response_class=HTMLResponse)
 def form(request: Request):
     return templates.TemplateResponse("form.html", {"request": request})
 
@@ -93,16 +93,16 @@ async def language_detect(user_request_in: UserRequestIn):
 
     return {"language":lang}
 
-@app.post('/check', response_model=EntitiesOut)
+@app.post("/check", response_model=EntitiesOut)
 async def check_query(user_request_in: UserRequestIn):
     lang = DetectLanguage(user_request_in)
 
-    allowed_langs = ['en_GB', 'de_DE']
+    allowed_langs = ["en_GB", "de_DE"]
 
     if user_request_in.response_lang not in allowed_langs:
         raise HTTPException(status_code=400, detail="Response language not supported: " + user_request_in.response_lang)
 
-    language = gettext.translation('messages', localedir='locales', languages=[user_request_in.response_lang])
+    language = gettext.translation("messages", localedir="locales", languages=[user_request_in.response_lang])
     language.install()
     _ = language.gettext
 
@@ -140,7 +140,7 @@ async def check_query(user_request_in: UserRequestIn):
 # Functions
 """Detect the language if none is passed explicitly but only return a language if confidence is high enough"""
 def DetectLanguage(user_request_in: UserRequestIn):
-    allowed_langs = ['en', 'de']
+    allowed_langs = ["en", "de"]
 
     if user_request_in.lang in allowed_langs:
         return user_request_in.lang
@@ -179,7 +179,7 @@ def IfPhraseMatcher(lang, tokens):
     matches = matcher(tokens)
     for match_id, start, end in matches:
         span = tokens[start:end]
-        if span.text in (None, ''):
+        if span.text in (None, ""):
             return False
         return True
 
@@ -194,27 +194,27 @@ def MaleCodedWordAnalysis(_, tokens):
         if IsItFalsePositive(tagger.analyze(token.text)[0], false_positive_male):
             #recognise if there is Name of organisation or geographical name in the query
             for entity in tokens.ents:
-                if entity.label_ == 'ORG':
+                if entity.label_ == "ORG":
                     list_tokens.append({"text": token.text,
-                                    'start': token.idx,
-                                    'length': len(token.text),
+                                    "start": token.idx,
+                                    "end": token.idx + len(token.text),
                                     "category": "False Positive",
                                     "alternatives": [],
-                                    "label": _('rules.age_label'),
-                                    "reason": _('rules.age_reason'),
-                                    "solution": _('rules.age_solution')
+                                    "label": _("rules.age_label"),
+                                    "reason": _("rules.age_reason"),
+                                    "solution": _("rules.age_solution")
                                     })
 
             # check if the word is adverb
             if token.pos_ =="ADV":
                 list_tokens.append({"text": token.text,
-                                    'start': token.idx,
-                                    'length': len(token.text),
+                                    "start": token.idx,
+                                    "end": token.idx + len(token.text),
                                     "category": "False Positive",
                                     "alternatives": [],
-                                    "label": _('rules.age_label'),
-                                    "reason": _('rules.age_reason'),
-                                    "solution": _('rules.age_solution')
+                                    "label": _("rules.age_label"),
+                                    "reason": _("rules.age_reason"),
+                                    "solution": _("rules.age_solution")
                                     })
 
                 #return dic_tokens
@@ -226,36 +226,36 @@ def MaleCodedWordAnalysis(_, tokens):
                         for item in dic_anc[key]:
                             if item.text in exceptions:
                                 list_tokens.append({"text": token.text,
-                                    'start': token.idx,
-                                    'length': len(token.text),
+                                    "start": token.idx,
+                                    "end": token.idx + len(token.text),
                                     "category": "False Positive",
                                     "alternatives": [],
-                                    "label": _('rules.age_label'),
-                                    "reason": _('rules.age_reason'),
-                                    "solution": _('rules.age_solution')
+                                    "label": _("rules.age_label"),
+                                    "reason": _("rules.age_reason"),
+                                    "solution": _("rules.age_solution")
                                     })
             else:
                 list_tokens.append({"text": token.text,
-                                    'start': token.idx,
-                                    'length': len(token.text),
+                                    "start": token.idx,
+                                    "end": token.idx + len(token.text),
                                     "category": category,
                                     "alternatives": [],
-                                    "label": _('rules.' + category + '_label'),
-                                    "reason": _('rules.' + category + '_reason'),
-                                    "solution": _('rules.' + category + '_solution')
+                                    "label": _("rules." + category + "_label"),
+                                    "reason": _("rules." + category + "_reason"),
+                                    "solution": _("rules." + category + "_solution")
                                     })
         else:
             for index, row in df_male_ct.iterrows():
                 if tagger.analyze(token.text)[0] == row["MaleCodedWords"]:
                     list_tokens.append({
-                                    'text': row["MaleCodedWords"],
-                                    'start': token.idx,
-                                    'length': len(token.text),
+                                    "text": row["MaleCodedWords"],
+                                    "start": token.idx,
+                                    "end": token.idx + len(token.text),
                                     "category": category,
                                     "alternatives": row["Alternatives_split"],
-                                    "label": _('rules.' + category + '_label'),
-                                    "reason": _('rules.' + category + '_reason'),
-                                    "solution": _('rules.' + category + '_solution')
+                                    "label": _("rules." + category + "_label"),
+                                    "reason": _("rules." + category + "_reason"),
+                                    "solution": _("rules." + category + "_solution")
                                     })
             
                     #return dic_tokens
@@ -294,12 +294,12 @@ def GenderedDenomAnalysis(_, lang, tokens):
             for index, row in df_gender_ct.iterrows():
                 if tagger.analyze(token.text)[0] == row["Denominations-German"]:
                     list_tokens.append({"text": row["Denominations-German"],
-                                            'start': token.idx,
-                                            'length': len(token.text),
+                                            "start": token.idx,
+                                            "end": token.idx + len(token.text),
                                             "category": category,
-                                            "label": _('rules.' + category + '_label'),
-                                            "reason": _('rules.' + category + '_reason'),
-                                            "solution": _('rules.' + category + '_solution')
+                                            "label": _("rules." + category + "_label"),
+                                            "reason": _("rules." + category + "_reason"),
+                                            "solution": _("rules." + category + "_solution")
                                     })
     else:
         print(tokens)
@@ -307,12 +307,12 @@ def GenderedDenomAnalysis(_, lang, tokens):
             for index, row in df_gender_ct.iterrows():
                 if tagger.analyze(token.text)[0] == row["Denominations-German"]:
                     list_tokens.append({"text": row["Denominations-German"],
-                                            'start': token.idx,
-                                            'length': len(token.text),
+                                            "start": token.idx,
+                                            "end": token.idx + len(token.text),
                                             "category": category,
-                                            "label": _('rules.' + category + '_label'),
-                                            "reason": _('rules.' + category + '_reason'),
-                                            "solution": _('rules.' + category + '_solution')
+                                            "label": _("rules." + category + "_label"),
+                                            "reason": _("rules." + category + "_reason"),
+                                            "solution": _("rules." + category + "_solution")
                                         })
          
     return list_tokens
@@ -339,25 +339,25 @@ def EmptyWordAnalysis(_, lang, tokens, terms, df, rules_name):
             if len(tokens.ents) > 0:
                 #this output will be deleted in production
                 list_tokens.append({"text": token.text,
-                                    'start': token.idx,
-                                    'length': len(token.text),
+                                    "start": token.idx,
+                                    "end": token.idx + len(token.text),
                                     "category": "False Positive",
                                     "alternatives": [],
-                                    "label": _('rules.age_label'),
-                                    "reason": _('rules.age_reason'),
-                                    "solution": _('rules.age_solution')
+                                    "label": _("rules.age_label"),
+                                    "reason": _("rules.age_reason"),
+                                    "solution": _("rules.age_solution")
                                     })
             else:
                 
                 for index, row in df.iterrows():
                     if tagger.analyze(token.text)[0] == row[rules_name]:
                         list_tokens.append({"text": row[rules_name],
-                                            'start': token.idx,
-                                            'length': len(token.text),
+                                            "start": token.idx,
+                                            "end": token.idx + len(token.text),
                                             "category": category,
-                                            "label": _('rules.' + category + '_label'),
-                                            "reason": _('rules.' + category + '_reason'),
-                                            "solution": _('rules.' + category + '_solution')
+                                            "label": _("rules." + category + "_label"),
+                                            "reason": _("rules." + category + "_reason"),
+                                            "solution": _("rules." + category + "_solution")
                                         })
  
     
@@ -365,12 +365,12 @@ def EmptyWordAnalysis(_, lang, tokens, terms, df, rules_name):
     for match_id, start, end in matches:
         span = tokens[start:end]
         list_tokens.append({"text": span.text,
-                            'start': span.start_char,
-                            'length': (span.end_char - span.start_char),
+                            "start": span.start_char,
+                            "end": span.end_char,
                             "category": category,
-                            "label": _('rules.' + category + '_label'),
-                            "reason": _('rules.' + category + '_reason'),
-                            "solution": _('rules.' + category + '_solution')
+                            "label": _("rules." + category + "_label"),
+                            "reason": _("rules." + category + "_reason"),
+                            "solution": _("rules." + category + "_solution")
                             })        
 
     return list_tokens 
@@ -391,32 +391,32 @@ def RulesBasedWordsPhraseMatcher(_, lang, tokens, terms, df, rules_name, categor
     for token in tokens:
         for index, row in df.iterrows():
             if tagger.analyze(token.text)[0] == row[rules_name]:
-                list_tokens.append({'text': row[rules_name],
-                                    'start': token.idx,
-                                    'length': len(token.text),
+                list_tokens.append({"text": row[rules_name],
+                                    "start": token.idx,
+                                    "end": token.idx + len(token.text),
                                     "category": category,
-                                    "label": _('rules.' + category + '_label'),
-                                    "reason": _('rules.' + category + '_reason'),
-                                    "solution": _('rules.' + category + '_solution')
+                                    "label": _("rules." + category + "_label"),
+                                    "reason": _("rules." + category + "_reason"),
+                                    "solution": _("rules." + category + "_solution")
                                     })
     
     matches = matcher(tokens)
     for match_id, start, end in matches:
         span = tokens[start:end]
-        list_tokens.append({'text': span.text,
-                            'start': span.start_char,
-                            'length': (span.end_char - span.start_char),
+        list_tokens.append({"text": span.text,
+                            "start": span.start_char,
+                            "end": span.end_char,
                             "category": category,
-                            "label": _('rules.' + category + '_label'),
-                            "reason": _('rules.' + category + '_reason'),
-                            "solution": _('rules.' + category + '_solution')
+                            "label": _("rules." + category + "_label"),
+                            "reason": _("rules." + category + "_reason"),
+                            "solution": _("rules." + category + "_solution")
                             })        
 
     return list_tokens 
 # want to server to run app.py in the folder app as main app, port=8000 is defaut port for the fast api
 # reload=True is debag mode in Flask is on, to set =False, when deploy the app to the production
 # might be added host="0.0.0.0"
-if __name__ == '__main__':
+if __name__ == "__main__":
     # If this is being ran directly as a script, run an internal uvicorn server
     # to service API requests
-    uvicorn.run(app, host='0.0.0.0', port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000)
