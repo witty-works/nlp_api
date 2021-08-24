@@ -51,19 +51,18 @@ For an alternate view of the docs navigate to http://localhost:8000/redoc
 
 ```
 curl -X 'POST' \
-  'http://127.0.0.1:8000/entities' \
+  'http://127.0.0.1:8000/check' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
-  "text": "Is London a city in England?",
-  "lang": "auto"
+  "text": "Wer sind unsere Kunden?"
 }'
 ```
 
 ## Run tests
 
 ```
-pipenv run pytest
+pipenv run pytest -vv
 ```
 
 ## Localization

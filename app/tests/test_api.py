@@ -15,43 +15,43 @@ def test_read_form():
 def test_api():
     request_data = {"text": "Greenpeace is an international company with headquarters in London."}
 
-    response = client.post("/entities", json=request_data)
+    response = client.post("/check", json=request_data)
     assert response.status_code == 200
 
     first_record = response.json()
     assert first_record["language"] == "en"
-    assert first_record["entities"] == [{'end': 66, 'start': 60, 'text': 'London', 'type': 'GPE', 'reason': 'Sie diskriminieren die Bewerber:innen aufgrund ihres Alters.', 'solution': 'Lassen Sie diesen Begriff einfach weg.'}]
+    assert first_record["results"] == [{'start': 17, 'length': 13, "label": "Alter", "category": "False Positive", 'text': 'international', 'reason': 'Sie diskriminieren die Bewerber:innen aufgrund ihres Alters.', 'solution': 'Lassen Sie diesen Begriff einfach weg.'}]
 
 def test_api_response_lang():
     request_data = {"text": "Greenpeace is an international company with headquarters in London.", "response_lang": "en_GB"}
 
-    response = client.post("/entities", json=request_data)
+    response = client.post("/check", json=request_data)
     assert response.status_code == 200
 
     first_record = response.json()
     assert first_record["language"] == "en"
-    assert first_record["entities"] == [{'end': 66, 'start': 60, 'text': 'London', 'type': 'GPE', 'reason': 'You are discriminating against applicants due to age.', 'solution': 'Simply omit this term.'}]
+    assert first_record["results"] == [{'start': 17, 'length': 13, "label": "Age", "category": "False Positive", 'text': 'international', 'reason': 'You are discriminating against applicants due to age.', 'solution': 'Simply omit this term.'}]
 
 def test_api_missing_response_lang():
     request_data = {"text": "Greenpeace is an international company with headquarters in London.", "response_lang": "es_ES"}
 
-    response = client.post("/entities", json=request_data)
+    response = client.post("/check", json=request_data)
     assert response.status_code == 400
 
 def test_api_missing_data():
-    response = client.post("/entities")
+    response = client.post("/check")
     assert response.status_code == 422
 
 def test_api_empty_data():
     request_data = {}
 
-    response = client.post("/entities", json=request_data)
+    response = client.post("/check", json=request_data)
     assert response.status_code == 422
 
 def test_language_detection_german():
     request_data = {"text": "Greenpeace ist eine internationale Firma mit Hauptquartier in London."}
 
-    response = client.post("/entities", json=request_data)
+    response = client.post("/check", json=request_data)
     assert response.status_code == 200
 
     first_record = response.json()
@@ -60,5 +60,5 @@ def test_language_detection_german():
 def test_language_detection_fail():
     request_data = {"text": "Voila", "lang": "es"}
 
-    response = client.post("/entities", json=request_data)
+    response = client.post("/check", json=request_data)
     assert response.status_code == 400

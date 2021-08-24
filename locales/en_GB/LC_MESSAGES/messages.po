@@ -18,11 +18,38 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: app/main.py:95
+msgid "rules.age_label"
+msgstr "Age"
+
 msgid "rules.age_reason"
 msgstr "You are discriminating against applicants due to age."
 
-#: app/main.py:96
 msgid "rules.age_solution"
 msgstr "Simply omit this term."
 
+msgid "rules.empty_words_label"
+msgstr "Empty words"
+
+msgid "rules.empty_words_reason"
+msgstr "This is a hollow word overused in job ads. It is not perceived as concrete enough to understand its meaning within your particular company and is disliked by applicants."
+
+msgid "rules.empty_words_solution"
+msgstr "We recommend to avoid this word. Instead explain concretely in a descriptive way what it really means within the context of your company."
+
+msgid "rules.gendered_denominations_label"
+msgstr "Gendered Denominations"
+
+msgid "rules.gendered_denominations_reason"
+msgstr "This denomination is male coded, even if linguistically it is neutral. Because of a high representation of (white) men in the field, the inner eye unconsciously produces males behind this term. Thereby making people with diverse background feel that they will not be able to belong in this setting."
+
+msgid "rules.gendered_denominations_solution"
+msgstr "In order to provoke an inclusive image, be not only linguistically, but also mentally neutral in your formulation by explicitly mentioning the different genders or being truly gender neutral by more general words."
+
+msgid "rules.male_coded_terms_label"
+msgstr "Male coded terms"
+
+msgid "rules.male_coded_terms_reason"
+msgstr "This term is male coded. Women unconsciously will feel deterred by this word. Thereby decreasing the probability of their application."
+
+msgid "rules.male_coded_terms_solution"
+msgstr "Use one of the alternative words proposed or paraphrase it yourself so that it sounds more purposeful, more team oriented, less competitive."

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-08-17 14:17+0200\n"
+"POT-Creation-Date: 2021-08-24 08:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,10 +17,38 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: app/main.py:95
+msgid "rules.age_label"
+msgstr ""
+
 msgid "rules.age_reason"
 msgstr ""
 
-#: app/main.py:96
 msgid "rules.age_solution"
+msgstr ""
+
+msgid "rules.empty_words_label"
+msgstr "Alter"
+
+msgid "rules.empty_words_reason"
+msgstr ""
+
+msgid "rules.empty_words_solution"
+msgstr ""
+
+msgid "rules.gendered_denominations_label"
+msgstr "Alter"
+
+msgid "rules.gendered_denominations_reason"
+msgstr ""
+
+msgid "rules.gendered_denominations_solution"
+msgstr ""
+
+msgid "rules.male_coded_terms_label"
+msgstr "Alter"
+
+msgid "rules.male_coded_terms_reason"
+msgstr ""
+
+msgid "rules.male_coded_terms_solution"
 msgstr ""
