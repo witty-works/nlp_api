@@ -110,7 +110,7 @@ async def check_query(user_request_in: UserRequestIn):
     matcher.add("TerminologyList", patterns)
     
     #functions for German rules& false positives
-    if lang.local == "de":
+    if lang.local == "de_DE":
         #Male coded words and related false positives catch
         list_male_coded= MaleCodedWordAnalysis(lang, tokens)
 
@@ -128,7 +128,7 @@ async def check_query(user_request_in: UserRequestIn):
         # full list
         list_full = list_male_coded+list_empty_words+list_gender_denom+list_boast + list_discrim
     #function for English rules
-    elif lang.local == "en":
+    elif lang.local == "en_GB":
 
         list_male_coded_en= RulesBasedEN(tokens, df_male_coded_words, "MaleCodedWords-English", "male_coded_terms")
         list_full = list_male_coded_en
