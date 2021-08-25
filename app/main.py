@@ -85,12 +85,6 @@ def get_root():
 def form(request: Request):
     return templates.TemplateResponse("form.html", {"request": request})
 
-@app.post("/language_detect", response_model=str())
-async def language_detect(user_request_in: UserRequestIn):
-    lang = DetectLanguage(user_request_in)
-
-    return {"language":lang}
-
 @app.post("/check", response_model=EntitiesOut)
 async def check_query(user_request_in: UserRequestIn):
     try:
@@ -124,17 +118,13 @@ async def check_query(user_request_in: UserRequestIn):
         list_boast = RulesBasedWordsPhraseMatcher(lang, tokens, terms_boast, df_boast_word, "Boasting-German", "boasting_words")
     
         #discriminating words catch
-        list_discrim = RulesBased(tokens, df_discrim_words, "Jo", "Discriminating Words")
+        list_discrim = RulesBased(lang, tokens, df_discrim_words, "Jo", "discriminating_words")
         # full list
         list_full = list_male_coded+list_empty_words+list_gender_denom+list_boast + list_discrim
     #function for English rules
     elif lang.locale == "en":
-
-        list_male_coded_en= RulesBasedEN(tokens, df_male_coded_words_en, "MaleCodedWords-English", "male_coded_terms")
-        list_full = list_male_coded_en
-
-
-
+        list_male_coded = RulesBasedEN(lang, tokens, df_male_coded_words_en, "MaleCodedWords-English", "male_coded_terms")
+        list_full = list_male_coded
 
     return {
         "results": list_full,
@@ -340,7 +330,6 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
                                             "solution": lang._("rules." + category + "_solution")
                                         })
  
-    
     matches = matcher(tokens)
     for match_id, start, end in matches:
         span = tokens[start:end]
@@ -395,8 +384,7 @@ def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, rules_name, category):
     return list_tokens 
 
 #Unified function for rules
-def RulesBased(tokens, df, rules_name, category):
-    
+def RulesBased(lang, tokens, df, rules_name, category):
  
     list_tokens = []
     
@@ -413,8 +401,9 @@ def RulesBased(tokens, df, rules_name, category):
                                     })
 
     return list_tokens 
+
 #Rules based english function
-def RulesBasedEN(tokens, df, rules_name, category):
+def RulesBasedEN(lang, tokens, df, rules_name, category):
     
     list_tokens = []
     
@@ -429,9 +418,9 @@ def RulesBasedEN(tokens, df, rules_name, category):
                                     "reason": lang._("rules." + category + "_reason"),
                                     "solution": lang._("rules." + category + "_solution")
                                     })
-
  
     return list_tokens 
+
 # want to server to run app.py in the folder app as main app, port=8000 is defaut port for the fast api
 # reload=True is debag mode in Flask is on, to set =False, when deploy the app to the production
 # might be added host="0.0.0.0"
