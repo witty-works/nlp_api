@@ -53,3 +53,12 @@ msgstr "This term is male coded. Women unconsciously will feel deterred by this 
 
 msgid "rules.male_coded_terms_solution"
 msgstr "Use one of the alternative words proposed or paraphrase it yourself so that it sounds more purposeful, more team oriented, less competitive."
+
+msgid "rules.boasting_words_label"
+msgstr "Boasting terms"
+
+msgid "rules.boasting_words_reason"
+msgstr "With this term you make use of superlative - or also called  boasting - language. Superlative terms in the description of a company discourage many applicants, since because such language unconsciously provokes the feeling within candidates that they will have to comply with and be like the superlatives."
+
+msgid "rules.boasting_words_solution"
+msgstr "It is highly recommended to avoid such terms."

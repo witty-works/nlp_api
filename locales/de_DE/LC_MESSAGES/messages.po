@@ -53,3 +53,12 @@ msgstr "Dieser Begriff ist männlich konnotiert. Frauen werden sich durch dieses
 
 msgid "rules.male_coded_terms_solution"
 msgstr "Verwenden Sie eine der vorgeschlagenen Alternativen. Oder schreiben Sie es selbst um, so dass es teamorientierter, weniger wettbewerbsfähig klingt und auf den Sinn in der Arbeit Bezug nimmt."
+
+msgid "rules.boasting_words_label"
+msgstr "Superlative Wörter"
+
+msgid "rules.boasting_words_reason"
+msgstr "Mit diesem Begriff nutzen Sie die Sprache der Superlative - oder auch Prahlerei - genannt. Superlative Begriffe in der Beschreibung der Firma schrecken viele Bewerber:innen ab, da bei ihnen unbewusst die Empfindung entsteht, im Sinne der Superlative mithalten und so sein zu müssen."
+
+msgid "rules.boasting_words_solution"
+msgstr "Es wird dringend empfohlen, solche Begriffe zu vermeiden."
