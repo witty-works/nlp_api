@@ -34,25 +34,25 @@ from app.lang import (
 # Model data
 model = {"en": spacy.load("en_core_web_sm"), "de": spacy.load("de_core_news_sm")}
 # load Male coded terms
-df_male_ct = pd.read_csv("app/training_data/df_male_ct_new_de.csv")
+df_male_ct = pd.read_csv("training_data/df_male_ct_new_de.csv")
 # load Gender denom_de
-df_gender_ct = pd.read_csv("app/training_data/gendered_denom_de.csv")
+df_gender_ct = pd.read_csv("training_data/gendered_denom_de.csv")
 # load discriminating words_de
-df_discrim_words = pd.read_csv("app/training_data/DiscriminatingWords_DE.csv")
+df_discrim_words = pd.read_csv("training_data/DiscriminatingWords_DE.csv")
 # load Empty words_de
-df_empty_word = pd.read_csv("app/training_data/empty_words_ge.csv")
-df_empty_sentences = pd.read_csv("app/training_data/empty_word_sentences_de.csv")
+df_empty_word = pd.read_csv("training_data/empty_words_ge.csv")
+df_empty_sentences = pd.read_csv("training_data/empty_word_sentences_de.csv")
 #list of "empty word" sentences
 terms_empty = list(df_empty_sentences["EmptyWords-German"])
 
 # load Boasting word and sentences de
-df_boast_word = pd.read_csv("app/training_data/BoastingWords_DE.csv")
-df_boast_sentences = pd.read_csv("app/training_data/BoastingSentences_DE.csv")
+df_boast_word = pd.read_csv("training_data/BoastingWords_DE.csv")
+df_boast_sentences = pd.read_csv("training_data/BoastingSentences_DE.csv")
 #list of "boasting word" sentences
 terms_boast = list(df_boast_sentences["Boasting-German"])
 
 # load male coded English words
-df_male_coded_words_en = pd.read_csv("app/training_data/MaleCodedTerms_EN.csv")
+df_male_coded_words_en = pd.read_csv("training_data/MaleCodedTerms_EN.csv")
 
 #Load a Hanover Lab on the TIGER-Corpus trained model.
 tagger = ht.HanoverTagger("morphmodel_ger.pgz")
