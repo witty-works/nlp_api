@@ -51,7 +51,7 @@ def test_api():
     ]
 
 def test_api_english():
-    request_data = {"text": "We are searching for ninja rockstar programmer for our customers"}
+    request_data = {"text": "We are searching for analytical ninja rockstar programmer for our customers"}
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200

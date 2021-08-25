@@ -70,7 +70,7 @@ pipenv run pytest -vv
 To only run the last failing tests
 
 ```
-pipenv run pytest -vv -lf
+pipenv run pytest -vv --lf
 ```
 
 ## Localization
