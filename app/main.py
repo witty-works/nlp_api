@@ -51,6 +51,8 @@ df_boast_sentences = pd.read_csv("app/training_data/BoastingSentences_DE.csv")
 #list of "boasting word" sentences
 terms_boast = list(df_boast_sentences["Boasting-German"])
 
+# load male coded English words
+df_male_coded_words_en = pd.read_csv("app/training_data/MaleCodedTerms_EN.csv")
 
 #Load a Hanover Lab on the TIGER-Corpus trained model.
 tagger = ht.HanoverTagger("morphmodel_ger.pgz")
@@ -106,24 +108,34 @@ async def check_query(user_request_in: UserRequestIn):
     # Only run model.make_doc to speed things up
     patterns = [model[lang.locale].make_doc(user_request_in.text) for text in terms_false_positive]
     matcher.add("TerminologyList", patterns)
-
-    #Male coded words and related false positives catch
-    list_male_coded= MaleCodedWordAnalysis(lang, tokens)
-
-    # Empty words&sentences catch
-    list_empty_words = EmptyWordAnalysis(lang, tokens, terms_empty, df_empty_word, "EmptyWords-German")
-
-    #Gendered denom. words catch 
-    list_gender_denom = GenderedDenomAnalysis(lang, tokens)
-
-    # boasting words&sentences catch
-    list_boast = RulesBasedWordsPhraseMatcher(lang, tokens, terms_boast, df_boast_word, "Boasting-German", "boasting_words")
     
-    #discriminating words catch
-    list_discrim = RulesBased(tokens, df_discrim_words, "Jo", "Discriminating Words")
-    # full list
-    list_full = list_male_coded+list_empty_words+list_gender_denom+list_boast + list_discrim
- 
+    #functions for German rules& false positives
+    if lang.local == "de":
+        #Male coded words and related false positives catch
+        list_male_coded= MaleCodedWordAnalysis(lang, tokens)
+
+        # Empty words&sentences catch
+        list_empty_words = EmptyWordAnalysis(lang, tokens, terms_empty, df_empty_word, "EmptyWords-German")
+
+        #Gendered denom. words catch 
+        list_gender_denom = GenderedDenomAnalysis(lang, tokens)
+
+        # boasting words&sentences catch
+        list_boast = RulesBasedWordsPhraseMatcher(lang, tokens, terms_boast, df_boast_word, "Boasting-German", "boasting_words")
+    
+        #discriminating words catch
+        list_discrim = RulesBased(tokens, df_discrim_words, "Jo", "Discriminating Words")
+        # full list
+        list_full = list_male_coded+list_empty_words+list_gender_denom+list_boast + list_discrim
+    #function for English rules
+    elif lang.local == "en":
+
+        list_male_coded_en= RulesBasedEN(tokens, df_male_coded_words, "MaleCodedWords-English", "male_coded_terms")
+        list_full = list_male_coded_en
+
+
+
+
     return {
         "results": list_full,
         "language": lang.locale
@@ -391,6 +403,24 @@ def RulesBased(tokens, df, rules_name, category):
     for token in tokens:
         for index, row in df.iterrows():
             if tagger.analyze(token.text)[0] == row[rules_name]:
+                list_tokens.append({"text": row[rules_name],
+                                    "start": token.idx,
+                                    "end": token.idx + len(token.text),
+                                    "category": category,
+                                    "label": lang._("rules." + category + "_label"),
+                                    "reason": lang._("rules." + category + "_reason"),
+                                    "solution": lang._("rules." + category + "_solution")
+                                    })
+
+    return list_tokens 
+#Rules based english function
+def RulesBasedEN(tokens, df, rules_name, category):
+    
+    list_tokens = []
+    
+    for token in tokens:
+        for index, row in df.iterrows():
+            if token.lemma_ == row[rules_name]:
                 list_tokens.append({"text": row[rules_name],
                                     "start": token.idx,
                                     "end": token.idx + len(token.text),
