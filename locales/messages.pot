@@ -27,7 +27,7 @@ msgid "rules.age_solution"
 msgstr ""
 
 msgid "rules.empty_words_label"
-msgstr "Alter"
+msgstr ""
 
 msgid "rules.empty_words_reason"
 msgstr ""
@@ -36,7 +36,7 @@ msgid "rules.empty_words_solution"
 msgstr ""
 
 msgid "rules.gendered_denominations_label"
-msgstr "Alter"
+msgstr ""
 
 msgid "rules.gendered_denominations_reason"
 msgstr ""
@@ -45,10 +45,19 @@ msgid "rules.gendered_denominations_solution"
 msgstr ""
 
 msgid "rules.male_coded_terms_label"
-msgstr "Alter"
+msgstr ""
 
 msgid "rules.male_coded_terms_reason"
 msgstr ""
 
 msgid "rules.male_coded_terms_solution"
+msgstr ""
+
+msgid "rules.boasting_words_label"
+msgstr ""
+
+msgid "rules.boasting_words_reason"
+msgstr ""
+
+msgid "rules.boasting_words_solution"
 msgstr ""
