@@ -61,8 +61,16 @@ curl -X 'POST' \
 
 ## Run tests
 
+To run the entire test suite
+
 ```
 pipenv run pytest -vv
+```
+
+To only run the last failing tests
+
+```
+pipenv run pytest -vv -lf
 ```
 
 ## Localization
@@ -76,8 +84,8 @@ pipenv run pybabel extract . -o locales/messages.pot
 Initialize po files
 
 ```
-pipenv run pybabel init -d locales -i locale/messages.pot -l de_DE
-pipenv run pybabel init -d locales -i locale/messages.pot -l en_GB
+pipenv run pybabel init -d locales -i locales/messages.pot -l de_DE
+pipenv run pybabel init -d locales -i locales/messages.pot -l en_GB
 ```
 
 Compile po files (done automatically during deployment)
