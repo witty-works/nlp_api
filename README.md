@@ -39,8 +39,7 @@ see https://docs.platform.sh/development/cli.html for details
 ## Run Locally
 
 ```
-pipenv shell
-uvicorn app.main:app --reload
+pipenv uvicorn app.main:app --reload
 ```
 
 Open your browser to http://localhost:8000/docs to view the OpenAPI UI.
