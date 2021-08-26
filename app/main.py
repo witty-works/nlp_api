@@ -160,7 +160,8 @@ def IfPhraseMatcher(lang, tokens):
 def MaleCodedWordAnalysis(lang, tokens):
     category = "male_coded_terms"
     list_tokens = []
-    dic_anc = {}     
+    dic_anc = {} 
+    list_false_positives = []    
 
     for token in tokens:
         #check if the user query have false positives
@@ -168,28 +169,16 @@ def MaleCodedWordAnalysis(lang, tokens):
             #recognise if there is Name of organisation or geographical name in the query
             for entity in tokens.ents:
                 if entity.label_ == "ORG":
-                    list_tokens.append({
-                        "text": token.text,
-                        "start": token.idx,
-                        "end": token.idx + len(token.text),
-                        "category": "False Positive",
-                        "alternatives": [],
-                        "label": lang._("rules.age_label"),
-                        "reason": lang._("rules.age_reason"),
-                        "solution": lang._("rules.age_solution")
+                    list_false_positives.append({
+                        "false positives": token.text,
+                        "category": "MaleCodedWords"                    
                     })
 
             # check if the word is adverb
             if token.pos_ =="ADV":
-                list_tokens.append({
-                    "text": token.text,
-                    "start": token.idx,
-                    "end": token.idx + len(token.text),
-                    "category": "False Positive",
-                    "alternatives": [],
-                    "label": lang._("rules.age_label"),
-                    "reason": lang._("rules.age_reason"),
-                    "solution": lang._("rules.age_solution")
+                list_false_positives.append({
+                    "false positives": token.text,
+                    "category": "MaleCodedWords"
                 })
 
                 
@@ -200,15 +189,9 @@ def MaleCodedWordAnalysis(lang, tokens):
                     if key in false_positive_male:
                         for item in dic_anc[key]:
                             if item.text in exceptions:
-                                list_tokens.append({
-                                    "text": token.text,
-                                    "start": token.idx,
-                                    "end": token.idx + len(token.text),
-                                    "category": "False Positive",
-                                    "alternatives": [],
-                                    "label": lang._("rules.age_label"),
-                                    "reason": lang._("rules.age_reason"),
-                                    "solution": lang._("rules.age_solution")
+                                list_false_positives.append({
+                                    "false positives": token.text,
+                                    "category": "MaleCodedWords"
                                 })
             else:
                 list_tokens.append({
@@ -241,7 +224,7 @@ def MaleCodedWordAnalysis(lang, tokens):
 def GenderedDenomAnalysis(lang, tokens):
     category = "gendered_denominations"
     list_tokens = []
-
+    list_false_positives = []    
     matcher = PhraseMatcher(model[lang.locale].vocab)
 
     # Only run model.make_doc to speed things up
@@ -256,7 +239,7 @@ def GenderedDenomAnalysis(lang, tokens):
     if matches.__len__() != 0:
         for match_id, start, end in matches:
             span = tokens[start:end]
-            list_tokens.append({"False positives": span.text})
+            list_false_positives.append({"False positives": span.text})
             part = tokens[old_start:start]         
             
             rest_text.append(part.text)       
@@ -299,7 +282,7 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
     category = "empty_words"
     
     list_tokens = []
-    
+    list_false_positives = []
     #Phrase matcher part to handle False positives with two words and special simbols
     matcher = PhraseMatcher(model[lang.locale].vocab)
 
@@ -313,15 +296,9 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
             #recognise if there is Name of organisation or geographical name in the query
             if len(tokens.ents) > 0:
                 #this output will be deleted in production
-                list_tokens.append({
-                    "text": token.text,
-                    "start": token.idx,
-                    "end": token.idx + len(token.text),
-                    "category": "False Positive",
-                    "alternatives": [],
-                    "label": lang._("rules.age_label"),
-                    "reason": lang._("rules.age_reason"),
-                    "solution": lang._("rules.age_solution")
+                list_false_positives.append({
+                    "false positives": token.text,    
+                    "category": "EmptyWord"                  
                 })
             else:
                 for index, row in df.iterrows():
