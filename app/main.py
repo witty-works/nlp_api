@@ -199,7 +199,7 @@ def MaleCodedWordAnalysis(lang, tokens):
                     "start": token.idx,
                     "end": token.idx + len(token.text),
                     "category": category,
-                    "alternatives": [],
+                    "alternatives": row["Alternatives_split"],
                     "label": lang._("rules." + category + "_label"),
                     "reason": lang._("rules." + category + "_reason"),
                     "solution": lang._("rules." + category + "_solution")
@@ -395,6 +395,7 @@ def RulesBasedEN(lang, tokens, df, rules_name, category):
                     "text": row[rules_name],
                     "start": token.idx,
                     "end": token.idx + len(token.text),
+                    
                     "category": category,
                     "label": lang._("rules." + category + "_label"),
                     "reason": lang._("rules." + category + "_reason"),
