@@ -34,7 +34,7 @@ from app.lang import (
 # Model data
 model = {"en": spacy.load("en_core_web_sm"), "de": spacy.load("de_core_news_sm")}
 # load Male coded terms
-df_male_ct = pd.read_csv("training_data/df_male_ct_new_de.csv")
+df_male_ct = pd.read_csv("training_data/MaleCodedTerms_DE.csv")
 # load Gender denom_de
 df_gender_ct = pd.read_csv("training_data/gendered_denom_de.csv")
 # load discriminating words_de
@@ -196,24 +196,24 @@ def MaleCodedWordAnalysis(lang, tokens):
                                 })
             else:
                 list_tokens.append({
-                    "text": token.text,
+                    "text": row["MaleCodedWords-German"],
                     "start": token.idx,
                     "end": token.idx + len(token.text),
                     "category": category,
-                    "alternatives": ast.literal_eval(row["Alternatives_split"]),
+                    "alternatives": ast.literal_eval(row["Alternatives_split_company"]),
                     "label": lang._("rules." + category + "_label"),
                     "reason": lang._("rules." + category + "_reason"),
                     "solution": lang._("rules." + category + "_solution")
                 })
         else:
             for index, row in df_male_ct.iterrows():
-                if tagger.analyze(token.text)[0] == row["MaleCodedWords"]:
+                if tagger.analyze(token.text)[0] == row["MaleCodedWords-German"]:
                     list_tokens.append({
                         "text": row["MaleCodedWords"],
                         "start": token.idx,
                         "end": token.idx + len(token.text),
                         "category": category,
-                        "alternatives": ast.literal_eval(row["Alternatives_split"]),
+                        "alternatives": ast.literal_eval(row["Alternatives_split_company"]),
                         "label": lang._("rules." + category + "_label"),
                         "reason": lang._("rules." + category + "_reason"),
                         "solution": lang._("rules." + category + "_solution")
