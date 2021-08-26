@@ -18,7 +18,8 @@ from spacy.tokens import Doc
 from HanTa import HanoverTagger as ht
 # Regular expression library
 import re
-
+# convert string of list into list of the strings
+import ast
 # project models
 from app.models import (
     UserRequestIn,
@@ -199,7 +200,7 @@ def MaleCodedWordAnalysis(lang, tokens):
                     "start": token.idx,
                     "end": token.idx + len(token.text),
                     "category": category,
-                    "alternatives": row["Alternatives_split"],
+                    "alternatives": ast.literal_eval(row["Alternatives_split"]),
                     "label": lang._("rules." + category + "_label"),
                     "reason": lang._("rules." + category + "_reason"),
                     "solution": lang._("rules." + category + "_solution")
@@ -212,7 +213,7 @@ def MaleCodedWordAnalysis(lang, tokens):
                         "start": token.idx,
                         "end": token.idx + len(token.text),
                         "category": category,
-                        "alternatives": row["Alternatives_split"],
+                        "alternatives": ast.literal_eval(row["Alternatives_split"]),
                         "label": lang._("rules." + category + "_label"),
                         "reason": lang._("rules." + category + "_reason"),
                         "solution": lang._("rules." + category + "_solution")
