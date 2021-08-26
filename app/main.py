@@ -257,6 +257,7 @@ def GenderedDenomAnalysis(lang, tokens):
                         "start": token.idx,
                         "end": token.idx + len(token.text),
                         "category": category,
+                        "alternatives": [],
                         "label": lang._("rules." + category + "_label"),
                         "reason": lang._("rules." + category + "_reason"),
                         "solution": lang._("rules." + category + "_solution")
@@ -271,6 +272,7 @@ def GenderedDenomAnalysis(lang, tokens):
                         "start": token.idx,
                         "end": token.idx + len(token.text),
                         "category": category,
+                        "alternatives": [],
                         "label": lang._("rules." + category + "_label"),
                         "reason": lang._("rules." + category + "_reason"),
                         "solution": lang._("rules." + category + "_solution")
@@ -309,6 +311,7 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
                             "start": token.idx,
                             "end": token.idx + len(token.text),
                             "category": category,
+                            "alternatives": [],
                             "label": lang._("rules." + category + "_label"),
                             "reason": lang._("rules." + category + "_reason"),
                             "solution": lang._("rules." + category + "_solution")
@@ -322,6 +325,7 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
             "start": span.start_char,
             "end": span.end_char,
             "category": category,
+            "alternatives": [],
             "label": lang._("rules." + category + "_label"),
             "reason": lang._("rules." + category + "_reason"),
             "solution": lang._("rules." + category + "_solution")
@@ -346,6 +350,7 @@ def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, rules_name, category):
                                     "start": token.idx,
                                     "end": token.idx + len(token.text),
                                     "category": category,
+                                    "alternatives": [],
                                     "label": lang._("rules." + category + "_label"),
                                     "reason": lang._("rules." + category + "_reason"),
                                     "solution": lang._("rules." + category + "_solution")
@@ -359,6 +364,7 @@ def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, rules_name, category):
             "start": span.start_char,
             "end": span.end_char,
             "category": category,
+            "alternatives": [],
             "label": lang._("rules." + category + "_label"),
             "reason": lang._("rules." + category + "_reason"),
             "solution": lang._("rules." + category + "_solution")
@@ -378,6 +384,7 @@ def RulesBased(lang, tokens, df, rules_name, category):
                     "start": token.idx,
                     "end": token.idx + len(token.text),
                     "category": category,
+                    "alternatives": [],
                     "label": lang._("rules." + category + "_label"),
                     "reason": lang._("rules." + category + "_reason"),
                     "solution": lang._("rules." + category + "_solution")
@@ -396,8 +403,8 @@ def RulesBasedEN(lang, tokens, df, rules_name, category):
                     "text": row[rules_name],
                     "start": token.idx,
                     "end": token.idx + len(token.text),
-                    
                     "category": category,
+                    "alternatives": [],
                     "label": lang._("rules." + category + "_label"),
                     "reason": lang._("rules." + category + "_reason"),
                     "solution": lang._("rules." + category + "_solution")
