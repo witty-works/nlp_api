@@ -1,9 +1,11 @@
 .vscode
 .venv
-app/.env
-app/__pycache__
 .idea
 
+app/.env
+
+__pycache__/
+*.py[cod]
 *.mo
 
 # Unit test / coverage reports

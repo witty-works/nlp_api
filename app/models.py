@@ -16,6 +16,7 @@ class EntityOut(BaseModel):
     label: str
     reason: str
     solution: str
+    alternatives: List[str]
 
 class EntitiesOut(BaseModel):
     results: List[EntityOut]

@@ -18,8 +18,8 @@ from spacy.tokens import Doc
 from HanTa import HanoverTagger as ht
 # Regular expression library
 import re
-
-
+# convert string of list into list of the strings
+import ast
 # project models
 from app.models import (
     UserRequestIn,
@@ -34,25 +34,25 @@ from app.lang import (
 # Model data
 model = {"en": spacy.load("en_core_web_sm"), "de": spacy.load("de_core_news_sm")}
 # load Male coded terms
-df_male_ct = pd.read_csv("app/training_data/df_male_ct_new_de.csv")
+df_male_ct = pd.read_csv("training_data/df_male_ct_new_de.csv")
 # load Gender denom_de
-df_gender_ct = pd.read_csv("app/training_data/gendered_denom_de.csv")
+df_gender_ct = pd.read_csv("training_data/gendered_denom_de.csv")
 # load discriminating words_de
-df_discrim_words = pd.read_csv("app/training_data/DiscriminatingWords_DE.csv")
+df_discrim_words = pd.read_csv("training_data/DiscriminatingWords_DE.csv")
 # load Empty words_de
-df_empty_word = pd.read_csv("app/training_data/empty_words_ge.csv")
-df_empty_sentences = pd.read_csv("app/training_data/empty_word_sentences_de.csv")
+df_empty_word = pd.read_csv("training_data/empty_words_ge.csv")
+df_empty_sentences = pd.read_csv("training_data/empty_word_sentences_de.csv")
 #list of "empty word" sentences
 terms_empty = list(df_empty_sentences["EmptyWords-German"])
 
 # load Boasting word and sentences de
-df_boast_word = pd.read_csv("app/training_data/BoastingWords_DE.csv")
-df_boast_sentences = pd.read_csv("app/training_data/BoastingSentences_DE.csv")
+df_boast_word = pd.read_csv("training_data/BoastingWords_DE.csv")
+df_boast_sentences = pd.read_csv("training_data/BoastingSentences_DE.csv")
 #list of "boasting word" sentences
 terms_boast = list(df_boast_sentences["Boasting-German"])
 
 # load male coded English words
-df_male_coded_words_en = pd.read_csv("app/training_data/MaleCodedTerms_EN.csv")
+df_male_coded_words_en = pd.read_csv("training_data/MaleCodedTerms_EN.csv")
 
 #Load a Hanover Lab on the TIGER-Corpus trained model.
 tagger = ht.HanoverTagger("morphmodel_ger.pgz")
@@ -121,6 +121,7 @@ async def check_query(user_request_in: UserRequestIn):
         list_discrim = RulesBased(lang, tokens, df_discrim_words, "Jo", "discriminating_words")
         # full list
         list_full = list_male_coded+list_empty_words+list_gender_denom+list_boast + list_discrim
+
     #function for English rules
     elif lang.locale == "en":
         list_male_coded = RulesBasedEN(lang, tokens, df_male_coded_words_en, "MaleCodedWords-English", "male_coded_terms")
@@ -137,10 +138,10 @@ def IsItFalsePositive(word, false_positive):
     for item in false_positive:
         if word == item:
             return True
+
     return False
 
 def IfPhraseMatcher(lang, tokens):
-    
     #Phrase matcher part to handle False positives with two words and special simbols
     matcher = PhraseMatcher(model[lang.locale].vocab)
 
@@ -160,34 +161,26 @@ def IfPhraseMatcher(lang, tokens):
 def MaleCodedWordAnalysis(lang, tokens):
     category = "male_coded_terms"
     list_tokens = []
-    dic_anc = {}     
+    dic_anc = {} 
+    list_false_positives = []    
+
     for token in tokens:
         #check if the user query have false positives
         if IsItFalsePositive(tagger.analyze(token.text)[0], false_positive_male):
             #recognise if there is Name of organisation or geographical name in the query
             for entity in tokens.ents:
                 if entity.label_ == "ORG":
-                    list_tokens.append({"text": token.text,
-                                    "start": token.idx,
-                                    "end": token.idx + len(token.text),
-                                    "category": "False Positive",
-                                    "alternatives": [],
-                                    "label": lang._("rules.age_label"),
-                                    "reason": lang._("rules.age_reason"),
-                                    "solution": lang._("rules.age_solution")
-                                    })
+                    list_false_positives.append({
+                        "false positives": token.text,
+                        "category": "MaleCodedWords"                    
+                    })
 
             # check if the word is adverb
             if token.pos_ =="ADV":
-                list_tokens.append({"text": token.text,
-                                    "start": token.idx,
-                                    "end": token.idx + len(token.text),
-                                    "category": "False Positive",
-                                    "alternatives": [],
-                                    "label": lang._("rules.age_label"),
-                                    "reason": lang._("rules.age_reason"),
-                                    "solution": lang._("rules.age_solution")
-                                    })
+                list_false_positives.append({
+                    "false positives": token.text,
+                    "category": "MaleCodedWords"
+                })
 
                 
             # check if the word is adjective and find out how it depends on the other words to feel the contex
@@ -197,38 +190,34 @@ def MaleCodedWordAnalysis(lang, tokens):
                     if key in false_positive_male:
                         for item in dic_anc[key]:
                             if item.text in exceptions:
-                                list_tokens.append({"text": token.text,
-                                    "start": token.idx,
-                                    "end": token.idx + len(token.text),
-                                    "category": "False Positive",
-                                    "alternatives": [],
-                                    "label": lang._("rules.age_label"),
-                                    "reason": lang._("rules.age_reason"),
-                                    "solution": lang._("rules.age_solution")
-                                    })
+                                list_false_positives.append({
+                                    "false positives": token.text,
+                                    "category": "MaleCodedWords"
+                                })
             else:
-                list_tokens.append({"text": token.text,
-                                    "start": token.idx,
-                                    "end": token.idx + len(token.text),
-                                    "category": category,
-                                    "alternatives": [],
-                                    "label": lang._("rules." + category + "_label"),
-                                    "reason": lang._("rules." + category + "_reason"),
-                                    "solution": lang._("rules." + category + "_solution")
-                                    })
+                list_tokens.append({
+                    "text": token.text,
+                    "start": token.idx,
+                    "end": token.idx + len(token.text),
+                    "category": category,
+                    "alternatives": ast.literal_eval(row["Alternatives_split"]),
+                    "label": lang._("rules." + category + "_label"),
+                    "reason": lang._("rules." + category + "_reason"),
+                    "solution": lang._("rules." + category + "_solution")
+                })
         else:
             for index, row in df_male_ct.iterrows():
                 if tagger.analyze(token.text)[0] == row["MaleCodedWords"]:
                     list_tokens.append({
-                                    "text": row["MaleCodedWords"],
-                                    "start": token.idx,
-                                    "end": token.idx + len(token.text),
-                                    "category": category,
-                                    "alternatives": row["Alternatives_split"],
-                                    "label": lang._("rules." + category + "_label"),
-                                    "reason": lang._("rules." + category + "_reason"),
-                                    "solution": lang._("rules." + category + "_solution")
-                                    })
+                        "text": row["MaleCodedWords"],
+                        "start": token.idx,
+                        "end": token.idx + len(token.text),
+                        "category": category,
+                        "alternatives": ast.literal_eval(row["Alternatives_split"]),
+                        "label": lang._("rules." + category + "_label"),
+                        "reason": lang._("rules." + category + "_reason"),
+                        "solution": lang._("rules." + category + "_solution")
+                    })
             
                     
     return list_tokens     
@@ -236,7 +225,7 @@ def MaleCodedWordAnalysis(lang, tokens):
 def GenderedDenomAnalysis(lang, tokens):
     category = "gendered_denominations"
     list_tokens = []
-
+    list_false_positives = []    
     matcher = PhraseMatcher(model[lang.locale].vocab)
 
     # Only run model.make_doc to speed things up
@@ -251,7 +240,7 @@ def GenderedDenomAnalysis(lang, tokens):
     if matches.__len__() != 0:
         for match_id, start, end in matches:
             span = tokens[start:end]
-            list_tokens.append({"False positives": span.text})
+            list_false_positives.append({"False positives": span.text})
             part = tokens[old_start:start]         
             
             rest_text.append(part.text)       
@@ -260,41 +249,43 @@ def GenderedDenomAnalysis(lang, tokens):
         docs = list(model[lang.locale].pipe(rest_text))
         c_doc = Doc.from_docs(docs)
         
-        
         for token in c_doc:
             for index, row in df_gender_ct.iterrows():
                 if tagger.analyze(token.text)[0] == row["Denominations-German"]:
-                    list_tokens.append({"text": row["Denominations-German"],
-                                            "start": token.idx,
-                                            "end": token.idx + len(token.text),
-                                            "category": category,
-                                            "label": lang._("rules." + category + "_label"),
-                                            "reason": lang._("rules." + category + "_reason"),
-                                            "solution": lang._("rules." + category + "_solution")
-                                    })
+                    list_tokens.append({
+                        "text": row["Denominations-German"],
+                        "start": token.idx,
+                        "end": token.idx + len(token.text),
+                        "category": category,
+                        "alternatives": [],
+                        "label": lang._("rules." + category + "_label"),
+                        "reason": lang._("rules." + category + "_reason"),
+                        "solution": lang._("rules." + category + "_solution")
+                    })
     else:
         print(tokens)
         for token in tokens:
             for index, row in df_gender_ct.iterrows():
                 if tagger.analyze(token.text)[0] == row["Denominations-German"]:
-                    list_tokens.append({"text": row["Denominations-German"],
-                                            "start": token.idx,
-                                            "end": token.idx + len(token.text),
-                                            "category": category,
-                                            "label": lang._("rules." + category + "_label"),
-                                            "reason": lang._("rules." + category + "_reason"),
-                                            "solution": lang._("rules." + category + "_solution")
-                                        })
+                    list_tokens.append({
+                        "text": row["Denominations-German"],
+                        "start": token.idx,
+                        "end": token.idx + len(token.text),
+                        "category": category,
+                        "alternatives": [],
+                        "label": lang._("rules." + category + "_label"),
+                        "reason": lang._("rules." + category + "_reason"),
+                        "solution": lang._("rules." + category + "_solution")
+                    })
          
     return list_tokens
 
 # Unified function for Emtz words false positives and rules    
 def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
     category = "empty_words"
-
     
     list_tokens = []
-    
+    list_false_positives = []
     #Phrase matcher part to handle False positives with two words and special simbols
     matcher = PhraseMatcher(model[lang.locale].vocab)
 
@@ -308,48 +299,43 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
             #recognise if there is Name of organisation or geographical name in the query
             if len(tokens.ents) > 0:
                 #this output will be deleted in production
-                list_tokens.append({"text": token.text,
-                                    "start": token.idx,
-                                    "end": token.idx + len(token.text),
-                                    "category": "False Positive",
-                                    "alternatives": [],
-                                    "label": lang._("rules.age_label"),
-                                    "reason": lang._("rules.age_reason"),
-                                    "solution": lang._("rules.age_solution")
-                                    })
+                list_false_positives.append({
+                    "false positives": token.text,    
+                    "category": "EmptyWord"                  
+                })
             else:
-                
                 for index, row in df.iterrows():
                     if tagger.analyze(token.text)[0] == row[rules_name]:
-                        list_tokens.append({"text": row[rules_name],
-                                            "start": token.idx,
-                                            "end": token.idx + len(token.text),
-                                            "category": category,
-                                            "label": lang._("rules." + category + "_label"),
-                                            "reason": lang._("rules." + category + "_reason"),
-                                            "solution": lang._("rules." + category + "_solution")
-                                        })
+                        list_tokens.append({
+                            "text": row[rules_name],
+                            "start": token.idx,
+                            "end": token.idx + len(token.text),
+                            "category": category,
+                            "alternatives": [],
+                            "label": lang._("rules." + category + "_label"),
+                            "reason": lang._("rules." + category + "_reason"),
+                            "solution": lang._("rules." + category + "_solution")
+                        })
  
     matches = matcher(tokens)
     for match_id, start, end in matches:
         span = tokens[start:end]
-        list_tokens.append({"text": span.text,
-                            "start": span.start_char,
-                            "end": span.end_char,
-                            "category": category,
-                            "label": lang._("rules." + category + "_label"),
-                            "reason": lang._("rules." + category + "_reason"),
-                            "solution": lang._("rules." + category + "_solution")
-                            })        
+        list_tokens.append({
+            "text": span.text,
+            "start": span.start_char,
+            "end": span.end_char,
+            "category": category,
+            "alternatives": [],
+            "label": lang._("rules." + category + "_label"),
+            "reason": lang._("rules." + category + "_reason"),
+            "solution": lang._("rules." + category + "_solution")
+        })        
 
     return list_tokens 
 
 # Unified function for rules and sentence false positives   
 def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, rules_name, category):
-    dic_tokens = {}
     list_tokens = []
-    dic = {}
-    full = []
     #Phrase matcher part to handle False positives with two words and special simbols
     matcher = PhraseMatcher(model[lang.locale].vocab)
 
@@ -364,6 +350,7 @@ def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, rules_name, category):
                                     "start": token.idx,
                                     "end": token.idx + len(token.text),
                                     "category": category,
+                                    "alternatives": [],
                                     "label": lang._("rules." + category + "_label"),
                                     "reason": lang._("rules." + category + "_reason"),
                                     "solution": lang._("rules." + category + "_solution")
@@ -372,52 +359,56 @@ def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, rules_name, category):
     matches = matcher(tokens)
     for match_id, start, end in matches:
         span = tokens[start:end]
-        list_tokens.append({"text": span.text,
-                            "start": span.start_char,
-                            "end": span.end_char,
-                            "category": category,
-                            "label": lang._("rules." + category + "_label"),
-                            "reason": lang._("rules." + category + "_reason"),
-                            "solution": lang._("rules." + category + "_solution")
-                            })        
+        list_tokens.append({
+            "text": span.text,
+            "start": span.start_char,
+            "end": span.end_char,
+            "category": category,
+            "alternatives": [],
+            "label": lang._("rules." + category + "_label"),
+            "reason": lang._("rules." + category + "_reason"),
+            "solution": lang._("rules." + category + "_solution")
+        })        
 
     return list_tokens 
 
 #Unified function for rules
 def RulesBased(lang, tokens, df, rules_name, category):
- 
     list_tokens = []
     
     for token in tokens:
         for index, row in df.iterrows():
             if tagger.analyze(token.text)[0] == row[rules_name]:
-                list_tokens.append({"text": row[rules_name],
-                                    "start": token.idx,
-                                    "end": token.idx + len(token.text),
-                                    "category": category,
-                                    "label": lang._("rules." + category + "_label"),
-                                    "reason": lang._("rules." + category + "_reason"),
-                                    "solution": lang._("rules." + category + "_solution")
-                                    })
+                list_tokens.append({
+                    "text": row[rules_name],
+                    "start": token.idx,
+                    "end": token.idx + len(token.text),
+                    "category": category,
+                    "alternatives": [],
+                    "label": lang._("rules." + category + "_label"),
+                    "reason": lang._("rules." + category + "_reason"),
+                    "solution": lang._("rules." + category + "_solution")
+                })
 
     return list_tokens 
 
 #Rules based english function
 def RulesBasedEN(lang, tokens, df, rules_name, category):
-    
     list_tokens = []
     
     for token in tokens:
         for index, row in df.iterrows():
             if token.lemma_ == row[rules_name]:
-                list_tokens.append({"text": row[rules_name],
-                                    "start": token.idx,
-                                    "end": token.idx + len(token.text),
-                                    "category": category,
-                                    "label": lang._("rules." + category + "_label"),
-                                    "reason": lang._("rules." + category + "_reason"),
-                                    "solution": lang._("rules." + category + "_solution")
-                                    })
+                list_tokens.append({
+                    "text": row[rules_name],
+                    "start": token.idx,
+                    "end": token.idx + len(token.text),
+                    "category": category,
+                    "alternatives": [],
+                    "label": lang._("rules." + category + "_label"),
+                    "reason": lang._("rules." + category + "_reason"),
+                    "solution": lang._("rules." + category + "_solution")
+                })
  
     return list_tokens 
 
