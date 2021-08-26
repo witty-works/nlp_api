@@ -209,7 +209,7 @@ def MaleCodedWordAnalysis(lang, tokens):
             for index, row in df_male_ct.iterrows():
                 if tagger.analyze(token.text)[0] == row["MaleCodedWords-German"]:
                     list_tokens.append({
-                        "text": row["MaleCodedWords"],
+                        "text": row["MaleCodedWords-German"],
                         "start": token.idx,
                         "end": token.idx + len(token.text),
                         "category": category,
