@@ -28,7 +28,7 @@ jobs:
         #if: steps.cache-pipenv.outputs.cache-hit != 'true'
         run: |
           pipenv install --deploy --dev
-          pip install ./blackfire-1.6.1-cp38-cp38-linux_x86_64.whl --force-reinstall
+          pipenv run pip install ./blackfire-1.6.1-cp38-cp38-linux_x86_64.whl --force-reinstall
           pipenv run python -m spacy download en_core_web_sm
           pipenv run python -m spacy download de_core_news_sm
 
