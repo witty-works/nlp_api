@@ -95,9 +95,9 @@ class BlackfireFastAPIMiddleware:
             http_method=method,
             http_uri=path,
             https='1' if scheme == 'https' else '',
-            http_server_addr=server[0],
+            http_server_addr=server[0] if server else '',
             http_server_software='',  # TODO
-            http_server_port=server[1],
+            http_server_port=server[1] if server else '',
             http_header_host=request_headers.get('host'),
             http_header_user_agent=request_headers
             .get('user-agent'),
