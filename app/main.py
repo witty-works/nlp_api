@@ -303,6 +303,19 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
                     "false positives": token.text,    
                     "category": "EmptyWord"                  
                 })
+            else:
+                for index, row in df.iterrows():
+                    if tagger.analyze(token.text)[0] == row[rules_name]:
+                        list_tokens.append({
+                            "text": row[rules_name],
+                            "start": token.idx,
+                            "end": token.idx + len(token.text),
+                            "category": category,
+                            "alternatives": [],
+                            "label": lang._("rules." + category + "_label"),
+                            "reason": lang._("rules." + category + "_reason"),
+                            "solution": lang._("rules." + category + "_solution")
+                            })
         else:
             for index, row in df.iterrows():
                 if tagger.analyze(token.text)[0] == row[rules_name]:
