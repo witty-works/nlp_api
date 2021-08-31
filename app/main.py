@@ -51,6 +51,13 @@ df_boast_sentences = pd.read_csv("training_data/BoastingSentences_DE.csv")
 #list of "boasting word" sentences
 terms_boast = list(df_boast_sentences["Boasting-German"])
 
+# load inslusive words
+df_inclusive_words = pd.read_csv("training_data/inclusive_words_de.csv")
+# load inslusive sentences
+df_inclusive_sentences = pd.read_csv("training_data/invlusive_sentences_de.csv")
+# list of "inclusive word" sentences
+terms_inclusive = list(df_inclusive_sentences["Inclusive-German"])
+
 # load male coded English words
 df_male_coded_words_en = pd.read_csv("training_data/MaleCodedTerms_EN.csv")
 
@@ -119,8 +126,11 @@ async def check_query(user_request_in: UserRequestIn):
     
         #discriminating words catch
         list_discrim = RulesBased(lang, tokens, df_discrim_words, "Jo", "discriminating_words")
+        
+        #inclusive words
+        list_inclusiv = RulesBasedWordsPhraseMatcher(lang, tokens, terms_inclusive, df_inclusive_words, "Inclusive-German", "inclusive_words")
         # full list
-        list_full = list_male_coded+list_empty_words+list_gender_denom+list_boast + list_discrim
+        list_full = list_male_coded+list_empty_words+list_gender_denom+list_boast + list_discrim + list_inclusiv
 
     #function for English rules
     elif lang.locale == "en":
@@ -339,7 +349,7 @@ def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, rules_name, category):
 
     for token in tokens:
         for index, row in df.iterrows():
-            if tagger.analyze(token.text)[0] == row[rules_name]:
+            if token.lemma_ == row[rules_name]:
                 list_tokens.append(
                     ResultOut.factory(
                         lang,
