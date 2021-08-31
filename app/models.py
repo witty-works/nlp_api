@@ -20,7 +20,7 @@ class ResultOut(BaseModel):
 
     def factory(lang, text, category, start, end = None, alternatives = []):
         if end == None:
-             end = start + len(text)
+            end = start + len(text)
 
         label = lang._("rules." + category + "_label")
         reason = lang._("rules." + category + "_reason")
