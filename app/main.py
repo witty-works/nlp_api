@@ -23,8 +23,8 @@ import ast
 # project models
 from app.models import (
     UserRequestIn,
-    EntityOut,
-    EntitiesOut,
+    ResultOut,
+    ResultsOut,
 )
 
 from app.lang import (
@@ -34,7 +34,7 @@ from app.lang import (
 # Model data
 model = {"en": spacy.load("en_core_web_sm"), "de": spacy.load("de_core_news_sm")}
 # load Male coded terms
-df_male_ct = pd.read_csv("training_data/df_male_ct_new_de.csv")
+df_male_ct = pd.read_csv("training_data/MaleCodedTerms_DE.csv")
 # load Gender denom_de
 df_gender_ct = pd.read_csv("training_data/gendered_denom_de.csv")
 # load discriminating words_de
@@ -85,7 +85,7 @@ def get_root():
 def form(request: Request):
     return templates.TemplateResponse("form.html", {"request": request})
 
-@app.post("/check", response_model=EntitiesOut)
+@app.post("/check", response_model=ResultsOut)
 async def check_query(user_request_in: UserRequestIn):
     try:
         lang = Lang(user_request_in)
@@ -194,32 +194,20 @@ def MaleCodedWordAnalysis(lang, tokens):
                                     "false positives": token.text,
                                     "category": "MaleCodedWords"
                                 })
-            else:
-                list_tokens.append({
-                    "text": token.text,
-                    "start": token.idx,
-                    "end": token.idx + len(token.text),
-                    "category": category,
-                    "alternatives": ast.literal_eval(row["Alternatives_split"]),
-                    "label": lang._("rules." + category + "_label"),
-                    "reason": lang._("rules." + category + "_reason"),
-                    "solution": lang._("rules." + category + "_solution")
-                })
         else:
             for index, row in df_male_ct.iterrows():
-                if tagger.analyze(token.text)[0] == row["MaleCodedWords"]:
-                    list_tokens.append({
-                        "text": row["MaleCodedWords"],
-                        "start": token.idx,
-                        "end": token.idx + len(token.text),
-                        "category": category,
-                        "alternatives": ast.literal_eval(row["Alternatives_split"]),
-                        "label": lang._("rules." + category + "_label"),
-                        "reason": lang._("rules." + category + "_reason"),
-                        "solution": lang._("rules." + category + "_solution")
-                    })
+                if tagger.analyze(token.text)[0] == row["MaleCodedWords-German"]:
+                    list_tokens.append(
+                        ResultOut.factory(
+                            lang,
+                            row["MaleCodedWords-German"],
+                            category,
+                            token.idx,
+                            None,
+                            ast.literal_eval(row["Alternatives_split_company"]),
+                        )
+                    )
             
-                    
     return list_tokens     
     
 def GenderedDenomAnalysis(lang, tokens):
@@ -252,31 +240,27 @@ def GenderedDenomAnalysis(lang, tokens):
         for token in c_doc:
             for index, row in df_gender_ct.iterrows():
                 if tagger.analyze(token.text)[0] == row["Denominations-German"]:
-                    list_tokens.append({
-                        "text": row["Denominations-German"],
-                        "start": token.idx,
-                        "end": token.idx + len(token.text),
-                        "category": category,
-                        "alternatives": [],
-                        "label": lang._("rules." + category + "_label"),
-                        "reason": lang._("rules." + category + "_reason"),
-                        "solution": lang._("rules." + category + "_solution")
-                    })
+                    list_tokens.append(
+                        ResultOut.factory(
+                            lang,
+                            row["Denominations-German"],
+                            category,
+                            token.idx
+                        )
+                    )
     else:
         print(tokens)
         for token in tokens:
             for index, row in df_gender_ct.iterrows():
                 if tagger.analyze(token.text)[0] == row["Denominations-German"]:
-                    list_tokens.append({
-                        "text": row["Denominations-German"],
-                        "start": token.idx,
-                        "end": token.idx + len(token.text),
-                        "category": category,
-                        "alternatives": [],
-                        "label": lang._("rules." + category + "_label"),
-                        "reason": lang._("rules." + category + "_reason"),
-                        "solution": lang._("rules." + category + "_solution")
-                    })
+                    list_tokens.append(
+                        ResultOut.factory(
+                            lang,
+                            row["Denominations-German"],
+                            category,
+                            token.idx
+                        )
+                    )
          
     return list_tokens
 
@@ -306,30 +290,40 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
             else:
                 for index, row in df.iterrows():
                     if tagger.analyze(token.text)[0] == row[rules_name]:
-                        list_tokens.append({
-                            "text": row[rules_name],
-                            "start": token.idx,
-                            "end": token.idx + len(token.text),
-                            "category": category,
-                            "alternatives": [],
-                            "label": lang._("rules." + category + "_label"),
-                            "reason": lang._("rules." + category + "_reason"),
-                            "solution": lang._("rules." + category + "_solution")
-                        })
+                        list_tokens.append(
+                            ResultOut.factory(
+                                lang,
+                                row[rules_name],
+                                category,
+                                token.idx,
+                            )
+                        )
+                            
+        else:
+            for index, row in df.iterrows():
+                if tagger.analyze(token.text)[0] == row[rules_name]:
+                    list_tokens.append(
+                        ResultOut.factory(
+                            lang,
+                            row[rules_name],
+                            category,
+                            token.idx,
+                        )
+                    )
+
  
     matches = matcher(tokens)
     for match_id, start, end in matches:
         span = tokens[start:end]
-        list_tokens.append({
-            "text": span.text,
-            "start": span.start_char,
-            "end": span.end_char,
-            "category": category,
-            "alternatives": [],
-            "label": lang._("rules." + category + "_label"),
-            "reason": lang._("rules." + category + "_reason"),
-            "solution": lang._("rules." + category + "_solution")
-        })        
+        list_tokens.append(
+            ResultOut.factory(
+                lang,
+                span.text,
+                category,
+                span.start_char,
+                span.end_char,
+            )
+        )        
 
     return list_tokens 
 
@@ -346,29 +340,27 @@ def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, rules_name, category):
     for token in tokens:
         for index, row in df.iterrows():
             if tagger.analyze(token.text)[0] == row[rules_name]:
-                list_tokens.append({"text": row[rules_name],
-                                    "start": token.idx,
-                                    "end": token.idx + len(token.text),
-                                    "category": category,
-                                    "alternatives": [],
-                                    "label": lang._("rules." + category + "_label"),
-                                    "reason": lang._("rules." + category + "_reason"),
-                                    "solution": lang._("rules." + category + "_solution")
-                                    })
+                list_tokens.append(
+                    ResultOut.factory(
+                        lang,
+                        row[rules_name],
+                        category,
+                        token.idx
+                    )
+                )
     
     matches = matcher(tokens)
     for match_id, start, end in matches:
         span = tokens[start:end]
-        list_tokens.append({
-            "text": span.text,
-            "start": span.start_char,
-            "end": span.end_char,
-            "category": category,
-            "alternatives": [],
-            "label": lang._("rules." + category + "_label"),
-            "reason": lang._("rules." + category + "_reason"),
-            "solution": lang._("rules." + category + "_solution")
-        })        
+        list_tokens.append(
+            ResultOut.factory(
+                lang,
+                span.text,
+                category,
+                span.start_char,
+                span.end_char,
+            )
+        )        
 
     return list_tokens 
 
@@ -379,16 +371,14 @@ def RulesBased(lang, tokens, df, rules_name, category):
     for token in tokens:
         for index, row in df.iterrows():
             if tagger.analyze(token.text)[0] == row[rules_name]:
-                list_tokens.append({
-                    "text": row[rules_name],
-                    "start": token.idx,
-                    "end": token.idx + len(token.text),
-                    "category": category,
-                    "alternatives": [],
-                    "label": lang._("rules." + category + "_label"),
-                    "reason": lang._("rules." + category + "_reason"),
-                    "solution": lang._("rules." + category + "_solution")
-                })
+                list_tokens.append(
+                    ResultOut.factory(
+                        lang,
+                        row[rules_name],
+                        category,
+                        token.idx,
+                    )
+                )
 
     return list_tokens 
 
@@ -399,16 +389,14 @@ def RulesBasedEN(lang, tokens, df, rules_name, category):
     for token in tokens:
         for index, row in df.iterrows():
             if token.lemma_ == row[rules_name]:
-                list_tokens.append({
-                    "text": row[rules_name],
-                    "start": token.idx,
-                    "end": token.idx + len(token.text),
-                    "category": category,
-                    "alternatives": [],
-                    "label": lang._("rules." + category + "_label"),
-                    "reason": lang._("rules." + category + "_reason"),
-                    "solution": lang._("rules." + category + "_solution")
-                })
+                list_tokens.append(
+                    ResultOut.factory(
+                        lang,
+                        row[rules_name],
+                        category,
+                        token.idx,
+                    )
+                )
  
     return list_tokens 
 

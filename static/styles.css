@@ -1,18 +1,91 @@
-h1 {
-    color: green;
+/* Reset */
+html {
+  box-sizing: border-box;
+  font-size: 16px;
 }
 
-.editor {
-    border: 1px solid lightgray;
-    padding: 5px;
-    width: 90%;
-    height: 90%;
-  }
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
 
-  [contentEditable=true]:empty:not(:focus):before{
-    content:attr(data-placeholder);
-    pointer-events: none;
-    display: block; /* For Firefox */
-    color: grey;
-    font-style: italic;
-  }
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+}
+
+/* Styles */
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  color: #323232;
+  background-color: #f3f3f3;
+}
+
+header {
+  background-color: #fff;
+  padding: 1rem 3rem;
+}
+
+.body-container {
+  margin: 0 auto;
+  max-width: 1080px;
+}
+
+section {
+  margin: 0 auto;
+  max-width: 1080px;
+  padding: 3rem;
+}
+
+/* Alert and info boxes */
+.alert {
+  padding: .8rem;
+  color: white;
+  border-radius: 5px;
+  margin-bottom: .8rem;
+  line-height: 1.2rem;
+  opacity: 0.83;
+}
+
+.alert.warning {
+  background-color: rgb(249, 82, 87);
+}
+
+.alert.info {
+  background-color: rgb(13, 58, 70);
+}
+
+.closebtn {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.closebtn:hover {
+  color: #000;
+}
+
+textarea#editor {
+  width: 100%;
+  overflow: auto;
+  outline: none;
+  padding: 0.5rem;
+  margin: 1rem 0;
+  border: 1px solid #999;
+  border-radius: 5px;
+  color: #323232;
+}
