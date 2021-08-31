@@ -1,5 +1,3 @@
-import gettext
-
 from pydantic import BaseModel
 from typing import List
 from typing import Optional
@@ -41,12 +39,6 @@ class ResultOut(BaseModel):
         object.__setattr__(self, 'label', label)
         object.__setattr__(self, 'reason', reason)
         object.__setattr__(self, 'solution', solution)
-
-    @property
-    def get_end(self):
-        
-
-        return self.end
 
 class ResultsOut(BaseModel):
     results: List[ResultOut]
