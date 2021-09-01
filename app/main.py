@@ -31,8 +31,6 @@ from app.lang import (
     Lang,
 )
 
-from platformshconfig import Config
-
 # Model data
 model = {"en": spacy.load("en_core_web_sm"), "de": spacy.load("de_core_news_sm")}
 # load Male coded terms
@@ -84,8 +82,6 @@ app.add_middleware(
 
 from app.middleware import BlackfireFastAPIMiddleware
 
-config = Config()
-#if config.is_valid_platform() and config.variable("BLACKFIRE_ENABLED") == "true":
 if os.environ.get("BLACKFIRE_ENABLED", None) == "true":
     app.add_middleware(BlackfireFastAPIMiddleware)
 

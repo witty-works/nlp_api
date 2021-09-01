@@ -16,7 +16,6 @@ pytest-cov = "*"
 jinja2 = "*"
 aiofiles = "*"
 babel = "*"
-platformshconfig = "*"
 
 [dev-packages]
 
