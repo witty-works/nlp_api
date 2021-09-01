@@ -85,6 +85,7 @@ app.add_middleware(
 from app.middleware import BlackfireFastAPIMiddleware
 
 config = Config()
+print(config.variable("BLACKFIRE_ENABLED"), config.is_valid_platform())
 if config.is_valid_platform() and config.variable("BLACKFIRE_ENABLED") == True:
     app.add_middleware(BlackfireFastAPIMiddleware)
 
