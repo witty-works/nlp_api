@@ -80,6 +80,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from app.middleware import BlackfireFastAPIMiddleware
+
+if os.environ.get("BLACKFIRE_ENABLED", None) == "true":
+    app.add_middleware(BlackfireFastAPIMiddleware)
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.mount("/files", StaticFiles(directory="files"), name="files")

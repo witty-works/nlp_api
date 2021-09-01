@@ -26,6 +26,7 @@ hooks:
   build: |
     set -e
     pipenv install --system --deploy
+    pip install ./blackfire-1.6.1-cp38-cp38-linux_x86_64.whl --force-reinstall
     pipenv run /opt/python/3.8/bin/python3.8 -m spacy download en_core_web_sm
     pipenv run /opt/python/3.8/bin/python3.8 -m spacy download de_core_news_sm
     pipenv run pybabel compile -d locales -l de_DE -f
