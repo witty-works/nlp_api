@@ -31,6 +31,8 @@ from app.lang import (
     Lang,
 )
 
+from platformshconfig import Config
+
 # Model data
 model = {"en": spacy.load("en_core_web_sm"), "de": spacy.load("de_core_news_sm")}
 # load Male coded terms
@@ -81,7 +83,10 @@ app.add_middleware(
 )
 
 from app.middleware import BlackfireFastAPIMiddleware
-app.add_middleware(BlackfireFastAPIMiddleware)
+
+config = Config()
+if config.is_valid_platform() and config.variable("blackfire_enabled") == True:
+    app.add_middleware(BlackfireFastAPIMiddleware)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
