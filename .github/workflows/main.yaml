@@ -25,12 +25,17 @@ jobs:
           key: ${{ runner.os }}-pipenv-${{ hashFiles('**/Pipfile.lock') }}
 
       - name: Install dependencies
-        #if: steps.cache-pipenv.outputs.cache-hit != 'true'
+        if: steps.cache-pipenv.outputs.cache-hit != 'true'
         run: |
           pipenv install --deploy --dev
-          pipenv run pip install ./blackfire-1.6.1-cp38-cp38-linux_x86_64.whl --force-reinstall
           pipenv run python -m spacy download en_core_web_sm
           pipenv run python -m spacy download de_core_news_sm
+      
+      # TODO: Will be removed and pipenv can be used when Blackfire releases a new
+      # version > 1.6.1
+      - name: Install dependencies - Blackfire
+        run: |
+            pipenv run pip install ./blackfire-1.6.1-cp38-cp38-linux_x86_64.whl --force-reinstall
 
       - id: cache-po-files
         uses: actions/cache@v1
