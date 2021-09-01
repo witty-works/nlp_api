@@ -82,7 +82,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-from middleware import BlackfireFastAPIMiddleware
+from app.middleware import BlackfireFastAPIMiddleware
 
 config = Config()
 if config.is_valid_platform() and config.variable("BLACKFIRE_ENABLED") == True:
