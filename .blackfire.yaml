@@ -1,0 +1,15 @@
+scenarios: |
+    #!blackfire-player
+
+    scenario
+        name 'Check Performance and Resource Use'
+
+        visit url('/check')
+            method 'POST'
+            body '{ "text": "Sehr geehrte Teammitglied, Wir sind ein Team, in dem Eifer und Durchhaltevermögen zählt." }'
+
+tests:
+    "Check should be fast enough":
+        assertions:
+            - "main.wall_time < 200ms"
+            - "main.peak_memory < 10mb"

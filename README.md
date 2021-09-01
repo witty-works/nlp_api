@@ -86,6 +86,9 @@ blackfire curl -X 'POST' https://[env subdomain].platformsh.site/check -H 'accep
 
 Then go to https://blackfire.io/ to view the profiler result.
 
+blackfire-player run .blackfire.yaml --endpoint="https://main-bvxea6i-qh3uq7skrqxzg.de-2.platformsh.site" --json
+https://blog.blackfire.io/feature-focus-the-metrics-episode-1.html
+
 ## Benchmarking
 
 Install the Apache HTTP server benchmarking tool:
