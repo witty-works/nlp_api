@@ -15,6 +15,11 @@ web:
     '/':
       passthru: true
 
+mounts:
+  'files':
+    source: local
+    source_path: files
+
 disk: 4096
 
 hooks:
