@@ -93,3 +93,10 @@ Compile po files (done automatically during deployment)
 pipenv run pybabel compile -d locales -l de_DE -f
 pipenv run pybabel compile -d locales -l en_GB -f
 ```
+
+## Update the browser extension
+
+```
+cp [..]/chrome.zip ./files/witty-works-inclusifier.zip
+rsync -avz files/* "$(platform ssh --pipe)":files/.
+```

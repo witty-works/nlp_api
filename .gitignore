@@ -3,6 +3,7 @@
 .idea
 
 app/.env
+files
 
 __pycache__/
 *.py[cod]
