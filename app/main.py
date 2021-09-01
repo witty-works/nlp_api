@@ -82,6 +82,8 @@ app.add_middleware(
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+app.mount("/files", StaticFiles(directory="files"), name="files")
+
 templates = Jinja2Templates(directory="templates")
 
 @app.get("/")
