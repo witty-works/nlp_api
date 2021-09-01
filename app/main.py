@@ -85,7 +85,7 @@ app.add_middleware(
 from middleware import BlackfireFastAPIMiddleware
 
 config = Config()
-if config.is_valid_platform() and config.variable("blackfire_enabled") == True:
+if config.is_valid_platform() and config.variable("BLACKFIRE_ENABLED") == True:
     app.add_middleware(BlackfireFastAPIMiddleware)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
