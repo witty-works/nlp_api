@@ -37,6 +37,7 @@ hooks:
     pipenv run pybabel compile -d locales -l de_DE -f
     pipenv run pybabel compile -d locales -l en_GB -f
     mkdir /var/run/blackfire
+    export BLACKFIRE_AGENT_SOCKET='tcp://127.0.0.1:8307'
 
 size: L
 resources:
