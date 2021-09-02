@@ -30,6 +30,12 @@ jobs:
           pipenv install --deploy --dev
           pipenv run python -m spacy download en_core_web_sm
           pipenv run python -m spacy download de_core_news_sm
+      
+      # TODO: Will be removed and pipenv can be used when Blackfire releases a new
+      # version > 1.6.1
+      - name: Install dependencies - Blackfire
+        run: |
+            pipenv run pip install ./blackfire-1.6.1-cp38-cp38-linux_x86_64.whl --force-reinstall
 
       - id: cache-po-files
         uses: actions/cache@v1
@@ -42,6 +48,10 @@ jobs:
         run: |
           pipenv run pybabel compile -d locales -l de_DE -f
           pipenv run pybabel compile -d locales -l en_GB -f
+
+      - name: Create files directory
+        run: |
+          mkdir files
 
       - name: Run test suite
         run: |

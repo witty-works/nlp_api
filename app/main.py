@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from starlette.responses import RedirectResponse
 
 import os
 os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
@@ -80,6 +81,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from app.middleware import BlackfireFastAPIMiddleware
+
+if os.environ.get("BLACKFIRE_ENABLED", None) == "true":
+    app.add_middleware(BlackfireFastAPIMiddleware)
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.mount("/files", StaticFiles(directory="files"), name="files")
@@ -88,7 +94,8 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/")
 def get_root():
-    return {"message": "Use /docs to get API documentation"}
+    return RedirectResponse(url='/form', status_code=301)
+
 
 @app.get("/form", response_class=HTMLResponse)
 def form(request: Request):
@@ -308,6 +315,8 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
                                 row[rules_name],
                                 category,
                                 token.idx,
+                                None,
+                                ["-"]
                             )
                         )
                             
@@ -320,6 +329,8 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
                             row[rules_name],
                             category,
                             token.idx,
+                            None,
+                            ["-"]
                         )
                     )
 
