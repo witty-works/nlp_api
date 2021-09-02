@@ -1,6 +1,7 @@
 import uvicorn
 import os
 import json
+import secrets
 
 # TODO: This will be removed once blackfire-python includes FastAPI. This function
 # monkey patches FastAPI's middleware stack to ensure Blackfire is on the outermost
@@ -9,13 +10,21 @@ if os.environ.get("BLACKFIRE_ENABLED", None) == "true":
     from app.middleware import patch_fastapi
     patch_fastapi()
 
-from fastapi import FastAPI, Request, HTTPException, BackgroundTasks
+from fastapi import FastAPI, Request, HTTPException, BackgroundTasks, Depends, status
+
+from fastapi.openapi.docs import get_redoc_html, get_swagger_ui_html
+from fastapi.openapi.utils import get_openapi
+
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
+
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.responses import RedirectResponse
 from fastapi.encoders import jsonable_encoder
+
+from typing import Optional
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
@@ -24,7 +33,7 @@ from datetime import datetime
 # NLP library
 import pandas as pd
 import spacy
-from spacy.matcher import PhraseMatcher, Matcher
+from spacy.matcher import PhraseMatcher
 from spacy.tokens import Doc
 
 # Regular expression library
@@ -86,7 +95,21 @@ false_positive_empty = ["international"]
 exceptions = ["Unternehmen", "Firma", "Gruppe", "Gesellschaft", "Kollektivgesellschaft", "Team", "Organization", "Gliederung"]
 terms_false_positive = ["Kolleginnen und Kollegen", "Kundinnen und Kunden", "Marketing-Team", "Kolleginnen* und Kollegen", "Kundinnen* und Kunden", "Kolleginnen: und Kollegen", "Kundinnen: und Kunden"]
 
-app = FastAPI()
+app = FastAPI(
+    title="Inclusifier NLP API",
+    version="0.1.0",
+    docs_url=None,
+    redoc_url=None,
+    openapi_url = None,
+)
+
+security = HTTPBasic(auto_error=False)
+
+basic_auth = {
+    "username": os.environ.get("API_DOCS_USERNAME", None),
+    "password": os.environ.get("API_DOCS_PASSWORD", None),
+    "enabled": os.environ.get("API_DOCS_AUTH_ENABLED", "false"),
+}
 
 app.add_middleware(
     CORSMiddleware,
@@ -96,15 +119,59 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from app.middleware import BlackfireFastAPIMiddleware
+
+if os.environ.get("BLACKFIRE_ENABLED", "false") == "true":
+    app.add_middleware(BlackfireFastAPIMiddleware)
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.mount("/files", StaticFiles(directory="files"), name="files")
 
 templates = Jinja2Templates(directory="templates")
 
+def get_current_username(credentials: Optional[HTTPBasicCredentials] = Depends(security)):
+    # Credentials are missing
+    if credentials is None:
+        # Auth is disabled, just proceed
+        if basic_auth["enabled"] == "false":
+            return "anon"
+       # Auth is enabled, raise 401
+        else:
+           raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            headers={"WWW-Authenticate": "Basic"},
+        )
+
+    # Verify the credentials as usual
+    if (basic_auth["username"] == None or basic_auth["password"] == None):
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Incorrect user configuration",
+        )
+
+    correct_username = secrets.compare_digest(credentials.username, basic_auth["username"])
+    correct_password = secrets.compare_digest(credentials.password, basic_auth["password"])
+    if not (correct_username and correct_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+
+    return credentials.username
+
 @app.get("/")
 def get_root():
     return RedirectResponse(url='/form', status_code=301)
+
+@app.get("/docs", include_in_schema=False)
+async def get_swagger_documentation(username: str = Depends(get_current_username)):
+    return get_swagger_ui_html(openapi_url="/openapi.json", title="docs")
+
+@app.get("/openapi.json", include_in_schema=False)
+async def openapi(username: str = Depends(get_current_username)):
+    return get_openapi(title=app.title, version=app.version, routes=app.routes)
 
 @app.get("/form", response_class=HTMLResponse)
 def form(request: Request):
