@@ -315,6 +315,8 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
                                 row[rules_name],
                                 category,
                                 token.idx,
+                                None,
+                                ["-"]
                             )
                         )
                             
@@ -327,6 +329,8 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
                             row[rules_name],
                             category,
                             token.idx,
+                            None,
+                            ["-"]
                         )
                     )
 
