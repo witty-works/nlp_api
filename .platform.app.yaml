@@ -32,7 +32,6 @@ hooks:
     pipenv run /opt/python/3.8/bin/python3.8 -m spacy download de_core_news_sm
     pipenv run pybabel compile -d locales -l de_DE -f
     pipenv run pybabel compile -d locales -l en_GB -f
-    mkdir -p /var/run/blackfire
 
 size: L
 resources:
