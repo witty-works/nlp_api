@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from starlette.responses import RedirectResponse
 
 import os
 os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
@@ -93,7 +94,7 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/")
 def get_root():
-    return {"message": "Use /docs to get API documentation"}
+    return RedirectResponse(url='/form')
 
 @app.get("/form", response_class=HTMLResponse)
 def form(request: Request):
