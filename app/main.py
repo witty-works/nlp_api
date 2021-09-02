@@ -267,7 +267,6 @@ def GenderedDenomAnalysis(lang, tokens):
                         )
                     )
     else:
-        print(tokens)
         for token in tokens:
             for index, row in df_gender_ct.iterrows():
                 if tagger.analyze(token.text)[0] == row["Denominations-German"]:
