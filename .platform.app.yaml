@@ -5,12 +5,13 @@ type: 'python:3.8'
 dependencies:
   python3:
     pipenv: '2018.10.13'
+    supervisor: '*'
 
 web:
   upstream:
     socket_family: unix
   commands:
-    start: 'gunicorn app.main:app -b unix:$SOCKET -w 4 -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"'
+    start: "supervisord -n -c supervisord.conf"
   locations:
     '/':
       passthru: true
