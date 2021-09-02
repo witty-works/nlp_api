@@ -23,6 +23,10 @@ mounts:
 
 disk: 4096
 
+variables:
+  env:
+    BLACKFIRE_AGENT_SOCKET: 'tcp://127.0.0.1:8307'
+
 hooks:
   build: |
     set -e
