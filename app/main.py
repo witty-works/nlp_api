@@ -94,7 +94,8 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/")
 def get_root():
-    return RedirectResponse(url='/form')
+    return RedirectResponse(url='/form', status_code=301)
+
 
 @app.get("/form", response_class=HTMLResponse)
 def form(request: Request):
@@ -313,6 +314,8 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
                                 row[rules_name],
                                 category,
                                 token.idx,
+                                None,
+                                ["-"]
                             )
                         )
                             
@@ -325,6 +328,8 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
                             row[rules_name],
                             category,
                             token.idx,
+                            None,
+                            ["-"]
                         )
                     )
 

@@ -4,9 +4,8 @@ from app.main import app
 client = TestClient(app)
 
 def test_read_main():
-    response = client.get("/")
-    assert response.status_code == 200
-    assert response.json() == {"message": "Use /docs to get API documentation"}
+    response = client.get("/", allow_redirects=False)
+    assert response.status_code == 301
 
 def test_read_form():
     response = client.get("/form")
