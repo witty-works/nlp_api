@@ -1,4 +1,5 @@
-from blackfire import apm, profiler
+import os
+from blackfire import apm
 from blackfire.hooks.utils import try_enable_probe, try_end_probe
 
 
@@ -15,8 +16,31 @@ def _extract_headers(d):
         return dict((bytes_to_str(k), bytes_to_str(v)) for (k, v) in headers)
     return {}
 
+def _add_header(response, k, v):
+    response['headers'].append(
+                            [
+                                bytes(k, 'ascii'),
+                                bytes(v, 'ascii')
+                            ]
+                        )
+
+def patch_fastapi():
+    if os.environ.get("BLACKFIRE_ENABLED", None) == "true":
+        from fastapi import FastAPI
+        old_bms = FastAPI.build_middleware_stack
+
+        def bms(self, *args, **kwargs):
+            r = old_bms(self, *args, **kwargs)
+            r = BlackfireFastAPIMiddleware(r)
+            return r
+
+        FastAPI.build_middleware_stack = bms
+
+        print('FastAPI patched successfully.')
+
 
 _FRAMEWORK = 'FastAPI'
+
 
 class BlackfireFastAPIMiddleware:
 
@@ -36,6 +60,9 @@ class BlackfireFastAPIMiddleware:
         server = scope.get('server')
         probe_err = probe = None
         request_headers = _extract_headers(scope)
+        endpoint = None
+        if 'endpoint' in scope:
+            endpoint = scope['endpoint'].__name__
 
         if 'x-blackfire-query' in request_headers:
             probe_err, probe = try_enable_probe(
@@ -49,6 +76,8 @@ class BlackfireFastAPIMiddleware:
 
         content_length = status_code = None
         async def wrapped_send(response):
+            nonlocal content_length, status_code
+
             if response.get("type") == "http.response.start":
                 response_headers = {}
                 if "status" in response:
@@ -59,22 +88,15 @@ class BlackfireFastAPIMiddleware:
 
                 if probe:
                     if probe_err:
-                        pass  # TODO: Add response header
+                        _add_header(response, 'X-Blackfire-Error', probe_err[1])
                     else:
-                        # TODO:
-                        # add_probe_response_header(response.headers, probe_resp)
-                        response['headers'].append(
-                            [
-                                b'X-Blackfire-Response',
-                                bytes(probe.get_agent_prolog_response().status_val, 'ascii')
-                            ]
-                        )
+                        _add_header(response, 'X-Blackfire-Response', probe.get_agent_prolog_response().status_val)
                 elif transaction:
                     #apm._stop_and_queue_transaction(
                     transaction.stop()
                     apm._queue_trace(
                         transaction,
-                        controller_name=transaction.name,  # TODO:
+                        controller_name=transaction.name or endpoint,
                         uri=path,
                         framework=_FRAMEWORK,
                         http_host='http_host',  # TODO:
@@ -84,26 +106,27 @@ class BlackfireFastAPIMiddleware:
                     )
             return await send(response)
 
-        r = await self.app(scope, receive, wrapped_send)
-
-        try_end_probe(
-            probe,
-            response_status_code=status_code,
-            response_len=content_length,
-            controller_name='endpoint',  # TODO
-            framework=_FRAMEWORK,
-            http_method=method,
-            http_uri=path,
-            https='1' if scheme == 'https' else '',
-            http_server_addr=server[0] if server else '',
-            http_server_software='',  # TODO
-            http_server_port=server[1] if server else '',
-            http_header_host=request_headers.get('host'),
-            http_header_user_agent=request_headers
-            .get('user-agent'),
-            http_header_x_forwarded_host='',  # TODO
-            http_header_x_forwarded_proto='',  # TODO
-            http_header_x_forwarded_port='',  # TODO
-            http_header_forwarded='',  # TODO
-        )
-        return r
+        try:
+            return await self.app(scope, receive, wrapped_send)
+        finally:
+            if probe:
+                r = try_end_probe(
+                    probe,
+                    response_status_code=status_code,
+                    response_len=content_length,
+                    controller_name=endpoint,
+                    framework=_FRAMEWORK,
+                    http_method=method,
+                    http_uri=path,
+                    https='1' if scheme == 'https' else '',
+                    http_server_addr=server[0] if server else '',
+                    http_server_software='',  # TODO
+                    http_server_port=server[1] if server else '',
+                    http_header_host=request_headers.get('host'),
+                    http_header_user_agent=request_headers
+                    .get('user-agent'),
+                    http_header_x_forwarded_host='',  # TODO
+                    http_header_x_forwarded_proto='',  # TODO
+                    http_header_x_forwarded_port='',  # TODO
+                    http_header_forwarded='',  # TODO
+                )

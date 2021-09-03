@@ -1,4 +1,12 @@
+from logging import raiseExceptions
 import uvicorn
+
+from app.middleware import BlackfireFastAPIMiddleware, patch_fastapi
+
+# TODO: This will be removed once blackfire-python includes FastAPI. This function
+# monkey patches FastAPI's middleware stack to ensure Blackfire is on the outermost
+# level.
+patch_fastapi()
 
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -80,11 +88,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-from app.middleware import BlackfireFastAPIMiddleware
-
-if os.environ.get("BLACKFIRE_ENABLED", None) == "true":
-    app.add_middleware(BlackfireFastAPIMiddleware)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
