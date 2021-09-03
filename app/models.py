@@ -18,9 +18,12 @@ class ResultOut(BaseModel):
     solution: str
     alternatives: List[str]
 
-    def factory(lang, text, category, start, end = None, alternatives = []):
+    def factory(offset, lang, text, category, start, end = None, alternatives = []):
         if end == None:
             end = start + len(text)
+
+        start = start + offset
+        end = end + offset
 
         label = lang._("rules." + category + "_label")
         reason = lang._("rules." + category + "_reason")

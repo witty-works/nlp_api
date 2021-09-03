@@ -220,6 +220,7 @@ def MaleCodedWordAnalysis(lang, tokens):
                 if tagger.analyze(token.text)[0] == row["MaleCodedWords-German"]:
                     list_tokens.append(
                         ResultOut.factory(
+                            offset,
                             lang,
                             row["MaleCodedWords-German"],
                             category,
@@ -263,6 +264,7 @@ def GenderedDenomAnalysis(lang, tokens):
                 if tagger.analyze(token.text)[0] == row["Denominations-German"]:
                     list_tokens.append(
                         ResultOut.factory(
+                            offset,
                             lang,
                             row["Denominations-German"],
                             category,
@@ -275,6 +277,7 @@ def GenderedDenomAnalysis(lang, tokens):
                 if tagger.analyze(token.text)[0] == row["Denominations-German"]:
                     list_tokens.append(
                         ResultOut.factory(
+                            offset,
                             lang,
                             row["Denominations-German"],
                             category,
@@ -312,6 +315,7 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
                     if tagger.analyze(token.text)[0] == row[rules_name]:
                         list_tokens.append(
                             ResultOut.factory(
+                                offset,
                                 lang,
                                 row[rules_name],
                                 category,
@@ -326,6 +330,7 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
                 if tagger.analyze(token.text)[0] == row[rules_name]:
                     list_tokens.append(
                         ResultOut.factory(
+                            offset,
                             lang,
                             row[rules_name],
                             category,
@@ -341,6 +346,7 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
         span = tokens[start:end]
         list_tokens.append(
             ResultOut.factory(
+                offset,
                 lang,
                 span.text,
                 category,
@@ -366,6 +372,7 @@ def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, rules_name, category):
             if token.lemma_ == row[rules_name]:
                 list_tokens.append(
                     ResultOut.factory(
+                        offset,
                         lang,
                         row[rules_name],
                         category,
@@ -378,6 +385,7 @@ def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, rules_name, category):
         span = tokens[start:end]
         list_tokens.append(
             ResultOut.factory(
+                offset,
                 lang,
                 span.text,
                 category,
@@ -397,6 +405,7 @@ def RulesBased(lang, tokens, df, rules_name, category):
             if tagger.analyze(token.text)[0] == row[rules_name]:
                 list_tokens.append(
                     ResultOut.factory(
+                        offset,
                         lang,
                         row[rules_name],
                         category,
@@ -415,6 +424,7 @@ def RulesBasedEN(lang, tokens, df, rules_name, category):
             if token.lemma_ == row[rules_name]:
                 list_tokens.append(
                     ResultOut.factory(
+                        offset,
                         lang,
                         row[rules_name],
                         category,
