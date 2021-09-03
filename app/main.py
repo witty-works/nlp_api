@@ -1,10 +1,12 @@
 import uvicorn
+import os
 
 # TODO: This will be removed once blackfire-python includes FastAPI. This function
 # monkey patches FastAPI's middleware stack to ensure Blackfire is on the outermost
 # level.
-from app.middleware import patch_fastapi
-patch_fastapi()
+if os.environ.get("BLACKFIRE_ENABLED", None) == "true":
+    from app.middleware import patch_fastapi
+    patch_fastapi()
 
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,7 +15,6 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.responses import RedirectResponse
 
-import os
 os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
 # NLP library

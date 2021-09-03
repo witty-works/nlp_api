@@ -25,18 +25,17 @@ def _add_header(response, k, v):
                         )
 
 def patch_fastapi():
-    if os.environ.get("BLACKFIRE_ENABLED", None) == "true":
-        from fastapi import FastAPI
-        old_bms = FastAPI.build_middleware_stack
+    from fastapi import FastAPI
+    old_bms = FastAPI.build_middleware_stack
 
-        def bms(self, *args, **kwargs):
-            r = old_bms(self, *args, **kwargs)
-            r = BlackfireFastAPIMiddleware(r)
-            return r
+    def bms(self, *args, **kwargs):
+        r = old_bms(self, *args, **kwargs)
+        r = BlackfireFastAPIMiddleware(r)
+        return r
 
-        FastAPI.build_middleware_stack = bms
+    FastAPI.build_middleware_stack = bms
 
-        print('FastAPI patched successfully.')
+    print('FastAPI patched successfully.')
 
 
 _FRAMEWORK = 'FastAPI'
