@@ -1,4 +1,3 @@
-from logging import raiseExceptions
 import uvicorn
 
 from app.middleware import BlackfireFastAPIMiddleware, patch_fastapi
