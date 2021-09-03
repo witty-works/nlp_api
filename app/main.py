@@ -112,8 +112,9 @@ async def check_query(user_request_in: UserRequestIn):
 
     #Main function to analyse user query.
     #apply SpaCy pre-built model
-    tokens = model[lang.locale](user_request_in.text)
-
+    #tokens = model[lang.locale](user_request_in.text)
+    # convert user request text into list of sentences
+    list_sentences = TextToList(lang.local, user_request_in.text)
     #Phrase matcher part to handle False positives with two words and special simbols
     matcher = PhraseMatcher(model[lang.locale].vocab)
 
@@ -124,24 +125,24 @@ async def check_query(user_request_in: UserRequestIn):
     #functions for German rules& false positives
     if lang.locale == "de":
         #Male coded words and related false positives catch
-        list_male_coded= MaleCodedWordAnalysis(lang, tokens)
+        list_male_coded= PreprocessPipe(lang, list_sentences) #MaleCodedWordAnalysis(lang, tokens)
 
         # Empty words&sentences catch
-        list_empty_words = EmptyWordAnalysis(lang, tokens, terms_empty, df_empty_word, "EmptyWords-German")
+        #list_empty_words = EmptyWordAnalysis(lang, tokens, terms_empty, df_empty_word, "EmptyWords-German")
 
         #Gendered denom. words catch 
-        list_gender_denom = GenderedDenomAnalysis(lang, tokens)
+        #list_gender_denom = GenderedDenomAnalysis(lang, tokens)
 
         # boasting words&sentences catch
-        list_boast = RulesBasedWordsPhraseMatcher(lang, tokens, terms_boast, df_boast_word, "Boasting-German", "boasting_words")
+        #list_boast = RulesBasedWordsPhraseMatcher(lang, tokens, terms_boast, df_boast_word, "Boasting-German", "boasting_words")
     
         #discriminating words catch
-        list_discrim = RulesBased(lang, tokens, df_discrim_words, "Jo", "discriminating_words")
+        #list_discrim = RulesBased(lang, tokens, df_discrim_words, "Jo", "discriminating_words")
         
         #inclusive words
-        list_inclusiv = RulesBasedWordsPhraseMatcher(lang, tokens, terms_inclusive, df_inclusive_words, "Inclusive-German", "inclusive_words")
+        #list_inclusiv = RulesBasedWordsPhraseMatcher(lang, tokens, terms_inclusive, df_inclusive_words, "Inclusive-German", "inclusive_words")
         # full list
-        list_full = list_male_coded+list_empty_words+list_gender_denom+list_boast + list_discrim + list_inclusiv
+        #list_full = list_male_coded+list_empty_words+list_gender_denom+list_boast + list_discrim + list_inclusiv
 
     #function for English rules
     elif lang.locale == "en":
@@ -154,6 +155,22 @@ async def check_query(user_request_in: UserRequestIn):
     }
 
 # Functions
+#Function to cola
+def TextToList(lang, text):
+    list_sentence=[]
+    doc = model[lang.locale](text)
+    list_doc = list(doc.sents)
+    for sentence in list_doc:
+        list_sentence.append(sentence.text)
+    return list_sentence
+
+#Function for preproseecing pipe
+def PreprocessPipe(lang, list_sentences):
+    preproc_pipe = []
+    for doc in model[lang.locale].pipe(list_sentences, batch_size=20):
+        preproc_pipe.append(MaleCodedWordAnalysis(lang, doc))
+    return preproc_pipe
+
 """Function to catch the words related to False Positive in the user query"""
 def IsItFalsePositive(word, false_positive):
     for item in false_positive:
