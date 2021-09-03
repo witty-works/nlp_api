@@ -1,10 +1,9 @@
 import uvicorn
 
-from app.middleware import BlackfireFastAPIMiddleware, patch_fastapi
-
 # TODO: This will be removed once blackfire-python includes FastAPI. This function
 # monkey patches FastAPI's middleware stack to ensure Blackfire is on the outermost
 # level.
+from app.middleware import patch_fastapi
 patch_fastapi()
 
 from fastapi import FastAPI, Request, HTTPException
