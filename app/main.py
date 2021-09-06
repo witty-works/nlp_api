@@ -135,6 +135,7 @@ async def check_query(user_request_in: UserRequestIn):
 
     #function for English rules
     elif lang.locale == "en":
+        tokens = model["en"](user_request_in.text)
         list_male_coded = RulesBasedEN(lang, tokens, df_male_coded_words_en, "MaleCodedWords-English", "male_coded_terms")
         list_results = list_male_coded
 
