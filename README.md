@@ -72,6 +72,17 @@ To only run the last failing tests
 pipenv run pytest -vv --lf
 ```
 
+## Profiling on Platform.sh
+
+Install the Blackfire CLI:
+https://blackfire.io/docs/up-and-running/installation
+
+```
+blackfire curl -X 'POST' [env subdomain].platformsh.site/check -H 'accept: application/json' -H 'Content-Type: application/json' -d '{"text": "Wer sind unsere Kunden?"}
+```
+
+Then go to https://blackfire.io/ to view the profiler result.
+
 ## Localization
 
 Extract translation messages
