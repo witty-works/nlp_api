@@ -21,10 +21,10 @@ def test_api():
     assert first_record["language"] == "de"
     assert first_record["results"] == [
         {
-            "text": "Kunde",
+            "text": "Kunden",
             "category": "gendered_denominations",
             "start": 51,
-            "end": 56,
+            "end": 57,
             "alternatives": [],
             "label": "Geschlechtsspezifische Bezeichnungen",
             "reason": "Diese Bezeichnung ist männlich konnotiert, auch wenn sie sprachlich neutral ist. Aufgrund einer hohen Repräsentation von (weißen) Männern in der Branche entstehen bei diesem Begriff vor allem Bilder von Männern vor dem inneren Auge. Dadurch wird Menschen mit unterschiedlichem Hintergrund das Gefühl vermittelt, dass sie nicht in diese Branche gehören.",
@@ -83,10 +83,10 @@ def test_api_response_lang():
     assert first_record["language"] == "de"
     assert first_record["results"] == [
         {
-            "text": "Kunde",
+            "text": "Kunden",
             "category": "gendered_denominations",
             "start": 51,
-            "end": 56,
+            "end": 57,
             "alternatives": [],
             "label": "Gendered Denominations",
             "reason": "This denomination is male coded, even if linguistically it is neutral. Because of a high representation of (white) men in the field, the inner eye unconsciously produces males behind this term. Thereby making people with diverse background feel that they will not be able to belong in this setting.",

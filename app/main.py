@@ -168,7 +168,7 @@ def GermanRules(lang, tokens):
     list_empty_words = EmptyWordAnalysis(lang, tokens, terms_empty, df_empty_word, "EmptyWords-German")
 
     #Gendered denom. words catch 
-    #list_gender_denom = GenderedDenomAnalysis(lang, tokens)
+    list_gender_denom = GenderedDenomAnalysis(lang, tokens)
 
     # boasting words&sentences catch
     list_boast = RulesBasedWordsPhraseMatcher(lang, tokens, terms_boast, df_boast_word, "Boasting-German", "boasting_words")
@@ -179,7 +179,7 @@ def GermanRules(lang, tokens):
     #inclusive words
     list_inclusiv = RulesBasedWordsPhraseMatcher(lang, tokens, terms_inclusive, df_inclusive_words, "Inclusive-German", "inclusive_words")
     # full list
-    list_full = list_male_coded+list_empty_words+list_boast + list_discrim + list_inclusiv #list_gender_denom
+    list_full = list_male_coded+list_gender_denom+list_empty_words+list_boast + list_discrim + list_inclusiv #
     
     return list_full
 
