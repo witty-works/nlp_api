@@ -22,8 +22,7 @@ import pandas as pd
 import spacy
 from spacy.matcher import PhraseMatcher, Matcher
 from spacy.tokens import Doc
-#Library for German lemmatization
-from HanTa import HanoverTagger as ht
+
 # Regular expression library
 import re
 # convert string of list into list of the strings
@@ -43,6 +42,7 @@ from app.lang import (
 model = {"en": spacy.load("en_core_web_sm"), "de": spacy.load("de_core_news_sm")}
 # load Male coded terms
 df_male_ct = pd.read_csv("training_data/MaleCodedTerms_DE.csv")
+#list_male = list(df_male_ct["MaleCodedWords-German"])
 # load Gender denom_de
 df_gender_ct = pd.read_csv("training_data/gendered_denom_de.csv")
 # load discriminating words_de
@@ -69,8 +69,6 @@ terms_inclusive = list(df_inclusive_sentences["Inclusive-German"])
 # load male coded English words
 df_male_coded_words_en = pd.read_csv("training_data/MaleCodedTerms_EN.csv")
 
-#Load a Hanover Lab on the TIGER-Corpus trained model.
-tagger = ht.HanoverTagger("morphmodel_ger.pgz")
 
 # dictionaries to handle false positives
 false_positive_male = ["selbst", "flexible", "Probleme", "Macht", "unabhängig", "Entwickler"]
@@ -112,16 +110,16 @@ async def check_query(user_request_in: UserRequestIn):
 
     #Main function to analyse user query.
     #apply SpaCy pre-built model
-    #tokens = model[lang.locale](user_request_in.text)
+    tokens = model[lang.locale](user_request_in.text)
     
     #configuration for text splitting into sentences
-    config = {"punct_chars": [".", "?", "!"]}
-    sentencizer = model[lang.locale].add_pipe("sentencizer", config=config)
+    #config = {"punct_chars": [".", "?", "!"]}
+    #sentencizer = model[lang.locale].add_pipe("sentencizer", config=config)
     
     # convert user request text into list of sentences
-    list_sentences = TextToList(lang.local, user_request_in.text)
+    #list_sentences = TextToList(lang.local, user_request_in.text)
     #Phrase matcher part to handle False positives with two words and special simbols
-    matcher = PhraseMatcher(model[lang.locale].vocab)
+    #matcher = PhraseMatcher(model[lang.locale].vocab)
 
     # Only run model.make_doc to speed things up
     patterns = [model[lang.locale].make_doc(user_request_in.text) for text in terms_false_positive]
@@ -129,13 +127,14 @@ async def check_query(user_request_in: UserRequestIn):
     
     #functions for German rules& false positives
     if lang.locale == "de":
-
+        list_results == GermanRules(lang, tokens)
+          
         #preprocess pipe to stream the sententes analysis 
-        list_results= PreprocessPipe(lang, list_sentences) 
+        #list_results= PreprocessPipe(lang, list_sentences) 
 
     #function for English rules
     elif lang.locale == "en":
-        tokens = model["en"](user_request_in.text)
+        #tokens = model["en"](user_request_in.text)
         list_male_coded = RulesBasedEN(lang, tokens, df_male_coded_words_en, "MaleCodedWords-English", "male_coded_terms")
         list_results = list_male_coded
 
@@ -213,14 +212,14 @@ def IfPhraseMatcher(lang, tokens):
 # this function male coded words& related false positives
 def MaleCodedWordAnalysis(lang, tokens):
     category = "male_coded_terms"
-    offset =0
+    #offset =0
     list_tokens = []
     dic_anc = {} 
     list_false_positives = []    
 
     for token in tokens:
         #check if the user query have false positives
-        if IsItFalsePositive(tagger.analyze(token.text)[0], false_positive_male):
+        if IsItFalsePositive(token.lemma_, false_positive_male):
             #recognise if there is Name of organisation or geographical name in the query
             for entity in tokens.ents:
                 if entity.label_ == "ORG":
@@ -239,7 +238,7 @@ def MaleCodedWordAnalysis(lang, tokens):
                 
             # check if the word is adjective and find out how it depends on the other words to feel the contex
             elif token.pos_ == "ADJ":# or token.tag_== "ADJD":
-                dic_anc[tagger.analyze(token.text)[0]] = list(token.ancestors)
+                dic_anc[token.lemma_] = list(token.ancestors)
                 for key in dic_anc.keys():
                     if key in false_positive_male:
                         for item in dic_anc[key]:
@@ -250,25 +249,25 @@ def MaleCodedWordAnalysis(lang, tokens):
                                 })
         else:
             for index, row in df_male_ct.iterrows():
-                if tagger.analyze(token.text)[0] == row["MaleCodedWords-German"]:
+                if token.lemma_ == row["MaleCodedWords-German"]:
                     list_tokens.append(
                         ResultOut.factory(
                             lang,
-                            row["MaleCodedWords-German"],
+                            token.text,
                             category,
-                            token.idx+offset,
+                            token.idx#+offset,
                             None,
                             ast.literal_eval(row["Alternatives_split_company"]),
                         )
                     )
-    offset = offset+len(tokens.text)+1      
+    #offset = offset+len(tokens.text)+1      
     return list_tokens     
     
 def GenderedDenomAnalysis(lang, tokens):
     category = "gendered_denominations"
     list_tokens = []
     list_false_positives = []  
-    offset = 0  
+    #offset = 0  
     matcher = PhraseMatcher(model[lang.locale].vocab)
 
     # Only run model.make_doc to speed things up
@@ -294,36 +293,36 @@ def GenderedDenomAnalysis(lang, tokens):
         
         for token in c_doc:
             for index, row in df_gender_ct.iterrows():
-                if tagger.analyze(token.text)[0] == row["Denominations-German"]:
+                if token.lemma_== row["Denominations-German"]:
                     list_tokens.append(
                         ResultOut.factory(
                             lang,
-                            row["Denominations-German"],
+                            token.text,
                             category,
-                            token.idx+offset
+                            token.idx#+offset
                         )
                     )
     else:
         for token in tokens:
             for index, row in df_gender_ct.iterrows():
-                if tagger.analyze(token.text)[0] == row["Denominations-German"]:
+                if token.lemma_ == row["Denominations-German"]:
                     list_tokens.append(
                         ResultOut.factory(
                             lang,
-                            row["Denominations-German"],
+                            token.text,
                             category,
-                            token.idx+offset
+                            token.idx#+offset
                         )
                     )
     
-    offset = offset+len(tokens.text)+1      
+    #offset = offset+len(tokens.text)+1      
     return list_tokens
 
 # Unified function for Emtz words false positives and rules    
 def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
     category = "empty_words"
     
-    offset =0
+    #offset =0
     list_tokens = []
     list_false_positives = []
     #Phrase matcher part to handle False positives with two words and special simbols
@@ -335,7 +334,7 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
 
     for token in tokens:
         #check if the user query have false positives
-        if IsItFalsePositive(tagger.analyze(token.text)[0], false_positive_empty):
+        if IsItFalsePositive(token.lemma_, false_positive_empty):
             #recognise if there is Name of organisation or geographical name in the query
             if len(tokens.ents) > 0:
                 #this output will be deleted in production
@@ -345,13 +344,13 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
                 })
             else:
                 for index, row in df.iterrows():
-                    if tagger.analyze(token.text)[0] == row[rules_name]:
+                    if token.lemma_ == row[rules_name]:
                         list_tokens.append(
                             ResultOut.factory(
                                 lang,
-                                row[rules_name],
+                                token.text,
                                 category,
-                                token.idx+offset,
+                                token.idx#+offset,
                                 None,
                                 ["-"]
                             )
@@ -359,13 +358,13 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
                             
         else:
             for index, row in df.iterrows():
-                if tagger.analyze(token.text)[0] == row[rules_name]:
+                if token.lemma_ == row[rules_name]:
                     list_tokens.append(
                         ResultOut.factory(
                             lang,
-                            row[rules_name],
+                            token.text,
                             category,
-                            token.idx+offset,
+                            token.idx#+offset,
                             None,
                             ["-"]
                         )
@@ -380,18 +379,18 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
                 lang,
                 span.text,
                 category,
-                span.start_char+offset,
-                span.end_char+offset,
+                span.start_char#+offset,
+                span.end_char#+offset,
             )
         )        
-    offset = offset+len(tokens.text)+1 
+    #offset = offset+len(tokens.text)+1 
     return list_tokens 
 
 # Unified function for rules and sentence false positives   
 def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, rules_name, category):
 
     list_tokens = []
-    offset =0
+    #offset =0
     #Phrase matcher part to handle False positives with two words and special simbols
     matcher = PhraseMatcher(model[lang.locale].vocab)
 
@@ -405,9 +404,9 @@ def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, rules_name, category):
                 list_tokens.append(
                     ResultOut.factory(
                         lang,
-                        row[rules_name],
+                        token.text,
                         category,
-                        token.idx+offset
+                        token.idx#+offset
                     )
                 )
     
@@ -419,29 +418,29 @@ def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, rules_name, category):
                 lang,
                 span.text,
                 category,
-                span.start_char+offset,
-                span.end_char+offset,
+                span.start_char#+offset,
+                span.end_char#+offset,
             )
         )        
-    offset = offset+len(tokens.text)+1
+    #offset = offset+len(tokens.text)+1
     return list_tokens 
 
 #Unified function for rules
 def RulesBased(lang, tokens, df, rules_name, category):
     list_tokens = []
-    offset =0
+    #offset =0
     for token in tokens:
         for index, row in df.iterrows():
-            if tagger.analyze(token.text)[0] == row[rules_name]:
+            if token.lemma_ == row[rules_name]:
                 list_tokens.append(
                     ResultOut.factory(
                         lang,
-                        row[rules_name],
+                        token.text,
                         category,
-                        token.idx+offset,
+                        token.idx#+offset,
                     )
                 )
-    offset = offset+len(tokens.text)+1
+    #offset = offset+len(tokens.text)+1
     return list_tokens 
 
 #Rules based english function
@@ -454,7 +453,7 @@ def RulesBasedEN(lang, tokens, df, rules_name, category):
                 list_tokens.append(
                     ResultOut.factory(
                         lang,
-                        row[rules_name],
+                        token.text,
                         category,
                         token.idx,
                     )
