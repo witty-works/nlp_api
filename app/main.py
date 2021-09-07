@@ -96,7 +96,6 @@ templates = Jinja2Templates(directory="templates")
 def get_root():
     return RedirectResponse(url='/form', status_code=301)
 
-
 @app.get("/form", response_class=HTMLResponse)
 def form(request: Request):
     return templates.TemplateResponse("form.html", {"request": request})
@@ -119,7 +118,7 @@ async def check_query(user_request_in: UserRequestIn):
     # convert user request text into list of sentences
     #list_sentences = TextToList(lang.local, user_request_in.text)
     #Phrase matcher part to handle False positives with two words and special simbols
-    #matcher = PhraseMatcher(model[lang.locale].vocab)
+    matcher = PhraseMatcher(model[lang.locale].vocab)
 
     # Only run model.make_doc to speed things up
     patterns = [model[lang.locale].make_doc(user_request_in.text) for text in terms_false_positive]
@@ -127,7 +126,7 @@ async def check_query(user_request_in: UserRequestIn):
     
     #functions for German rules& false positives
     if lang.locale == "de":
-        list_results == GermanRules(lang, tokens)
+        list_results = GermanRules(lang, tokens)
           
         #preprocess pipe to stream the sententes analysis 
         #list_results= PreprocessPipe(lang, list_sentences) 
@@ -255,7 +254,7 @@ def MaleCodedWordAnalysis(lang, tokens):
                             lang,
                             token.text,
                             category,
-                            token.idx#+offset,
+                            token.idx,#+offset,
                             None,
                             ast.literal_eval(row["Alternatives_split_company"]),
                         )
@@ -350,7 +349,7 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
                                 lang,
                                 token.text,
                                 category,
-                                token.idx#+offset,
+                                token.idx,#+offset,
                                 None,
                                 ["-"]
                             )
@@ -364,7 +363,7 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
                             lang,
                             token.text,
                             category,
-                            token.idx#+offset,
+                            token.idx,#+offset,
                             None,
                             ["-"]
                         )
@@ -379,7 +378,7 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
                 lang,
                 span.text,
                 category,
-                span.start_char#+offset,
+                span.start_char,#+offset,
                 span.end_char#+offset,
             )
         )        
@@ -418,7 +417,7 @@ def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, rules_name, category):
                 lang,
                 span.text,
                 category,
-                span.start_char#+offset,
+                span.start_char,#+offset,
                 span.end_char#+offset,
             )
         )        
@@ -437,7 +436,7 @@ def RulesBased(lang, tokens, df, rules_name, category):
                         lang,
                         token.text,
                         category,
-                        token.idx#+offset,
+                        token.idx,#+offset,
                     )
                 )
     #offset = offset+len(tokens.text)+1
