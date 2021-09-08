@@ -118,5 +118,5 @@ pipenv run pybabel compile -d locales -l en_GB -f
 
 ```
 mv [..]/chrome.zip ./files/witty-works-inclusifier.zip
-rsync -avz files/* "$(platform ssh --pipe)":files/.
+rsync -avz files/* "$(platform ssh -e main --pipe)":files/.
 ```
