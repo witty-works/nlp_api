@@ -40,6 +40,12 @@ from app.lang import (
 
 # Model data
 model = {"en": spacy.load("en_core_web_sm"), "de": spacy.load("de_core_news_sm")}
+#custom lematizer to correct the lemmas in spacy library, to add to the curent spacy lematizer
+dict_lemma_lookup = {"international": "international", "internationale": "international", "Meister": "Meister", "kämpfend": "kämpfend", "abgebrüht": "abgebrüht", "beherrschend": "beherrschend", "entscheidend": "entscheidend", "entschlossen": "entschlossen"}
+lookup_table = model["de"].get_pipe("lemmatizer").lookups.get_table("lemma_lookup")
+for key in dict_lemma_lookup:
+    lookup_table.set(key, dict_lemma_lookup[key])
+
 # load Male coded terms
 df_male_ct = pd.read_csv("training_data/MaleCodedTerms_DE.csv")
 #list_male = list(df_male_ct["MaleCodedWords-German"])
@@ -119,6 +125,7 @@ async def check_query(user_request_in: UserRequestIn):
     
     #functions for German rules
     if lang.locale == "de":
+        
         list_results = GermanRules(lang, tokens)
 
     #function for English rules
