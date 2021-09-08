@@ -126,7 +126,10 @@ async def check_query(user_request_in: UserRequestIn):
     #functions for German rules
     if lang.locale == "de":
         
-        list_results = GermanRules(lang, tokens)
+        list_de_end = GenderedDenomEnd(lang, user_request_in.text)
+        
+        list_german_rules = GermanRules(lang, tokens)
+        list_results = list_german_rules+list_de_end
 
     #function for English rules
     elif lang.locale == "en":
@@ -141,6 +144,27 @@ async def check_query(user_request_in: UserRequestIn):
     }
 
 # Functions
+# Function to catch ending in German Denom
+def GenderedDenomEnd (lang, text):
+    category = "gendered_language" 
+
+     
+    ending = ["/in", "/-in", "_in", "In"]
+    list_ending = []
+    for item in ending:
+        span = re.search(item, text)
+        if type(span)== re.Match:
+            list_ending.append(ResultOut.factory(
+                lang,
+                item,
+                category,
+                span.start(),
+                span.end(),
+                [":in"])
+             )   
+    return list_ending
+
+    
 
 #Function for all German rules
 def GermanRules(lang, tokens):
@@ -405,6 +429,7 @@ def RulesBased(lang, tokens, df, rules_name, category):
 
     return list_tokens 
 
+#function to catch ending in gendered denom
 #Rules based english function
 def RulesBasedEN(lang, tokens, df, rules_name, category):
     list_tokens = []
