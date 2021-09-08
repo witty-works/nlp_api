@@ -78,7 +78,7 @@ Install the Blackfire CLI:
 https://blackfire.io/docs/up-and-running/installation
 
 ```
-blackfire curl -X 'POST' [env subdomain].platformsh.site/check -H 'accept: application/json' -H 'Content-Type: application/json' -d '{"text": "Wer sind unsere Kunden?"}
+blackfire curl -X 'POST' [env subdomain].platformsh.site/check -H 'accept: application/json' -H 'Content-Type: application/json' -d '{"text": "Wer sind unsere Kunden?"}'
 ```
 
 Then go to https://blackfire.io/ to view the profiler result.
@@ -108,6 +108,6 @@ pipenv run pybabel compile -d locales -l en_GB -f
 ## Update the browser extension
 
 ```
-cp [..]/chrome.zip ./files/witty-works-inclusifier.zip
+mv [..]/chrome.zip ./files/witty-works-inclusifier.zip
 rsync -avz files/* "$(platform ssh --pipe)":files/.
 ```
