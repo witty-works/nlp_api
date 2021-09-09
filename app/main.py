@@ -241,8 +241,8 @@ def MaleCodedWordAnalysis(lang, tokens):
                                     "category": "MaleCodedWords"
                                 })
         else:
-            for index, row in df_male_ct.iterrows():
-                if token.lemma_ == row["MaleCodedWords-German"]:
+            for word, alternative in zip(df_male_ct["MaleCodedWords-German"], df_male_ct["Alternatives_split_company"]):
+                if token.lemma_ == word:
                     list_tokens.append(
                         ResultOut.factory(
                             lang,
@@ -250,9 +250,10 @@ def MaleCodedWordAnalysis(lang, tokens):
                             category,
                             token.idx,
                             None,
-                            ast.literal_eval(row["Alternatives_split_company"]),
+                            ast.literal_eval(alternative)
                         )
                     )
+
 
     return list_tokens     
     
