@@ -1,5 +1,6 @@
 import uvicorn
 import os
+import json
 
 # TODO: This will be removed once blackfire-python includes FastAPI. This function
 # monkey patches FastAPI's middleware stack to ensure Blackfire is on the outermost
@@ -8,14 +9,17 @@ if os.environ.get("BLACKFIRE_ENABLED", None) == "true":
     from app.middleware import patch_fastapi
     patch_fastapi()
 
-from fastapi import FastAPI, Request, HTTPException
+from fastapi import FastAPI, Request, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.responses import RedirectResponse
+from fastapi.encoders import jsonable_encoder
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
+
+from datetime import datetime
 
 # NLP library
 import pandas as pd
@@ -30,6 +34,7 @@ import ast
 # project models
 from app.models import (
     UserRequestIn,
+    UserRequestInEvent,
     ResultOut,
     ResultsOut,
 )
@@ -75,7 +80,6 @@ terms_inclusive = list(df_inclusive_sentences["Inclusive-German"])
 # load male coded English words
 df_male_coded_words_en = pd.read_csv("training_data/MaleCodedTerms_EN.csv")
 
-
 # dictionaries to handle false positives
 false_positive_male = ["selbst", "flexible", "Probleme", "Macht", "unabhängig", "Entwickler"]
 false_positive_empty = ["international"]
@@ -106,8 +110,19 @@ def get_root():
 def form(request: Request):
     return templates.TemplateResponse("form.html", {"request": request})
 
+@app.post("/log")
+async def log(user_request_in: UserRequestInEvent, background_tasks: BackgroundTasks):
+    try:
+        lang = Lang(user_request_in)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+    background_tasks.add_task(log_response, user_request_in)
+
+    return 'ok'
+
 @app.post("/check", response_model=ResultsOut)
-async def check_query(user_request_in: UserRequestIn):
+async def check_query(user_request_in: UserRequestIn, background_tasks: BackgroundTasks):
     try:
         lang = Lang(user_request_in)
     except Exception as e:
@@ -138,12 +153,34 @@ async def check_query(user_request_in: UserRequestIn):
     else:
         list_results = []
 
-    return {
-        "results": list_results,
-        "language": lang.locale
-    }
+    response = ResultsOut.factory(list_results, lang)
+
+    background_tasks.add_task(log_response, user_request_in, response)
+
+    return response
 
 # Functions
+def log_response(user_request_in: UserRequestIn, response: ResultsOut = None):
+    if os.environ.get("LOGGING_ENABLED", None) != "true":
+        return
+
+    if response == None:
+        data = {
+            "event": user_request_in.toDict(),
+        }
+    else:
+        data = {
+            "request": user_request_in.toDict(),
+            "response": response.toDict(),
+        }
+
+    dirname = os.getcwd() + '/logs/' + user_request_in.id
+    filename = dirname + '/' + datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3] + '.json'
+
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+    with open(filename, 'w') as outfile:
+        json.dump(data, outfile)
+
 # Function to catch ending in German Denom
 def GenderedDenomEnd (lang, text):
     category = "gendered_language" 
@@ -163,8 +200,6 @@ def GenderedDenomEnd (lang, text):
                 [":in"])
              )   
     return list_ending
-
-    
 
 #Function for all German rules
 def GermanRules(lang, tokens):
