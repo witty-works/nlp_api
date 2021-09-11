@@ -55,7 +55,7 @@ for key in dict_lemma_lookup:
 df_male_ct = pd.read_csv("training_data/MaleCodedTerms_DE.csv")
 #list_male = list(df_male_ct["MaleCodedWords-German"])
 # load Gender denom_de
-df_gender_ct = pd.read_csv("training_data/gendered_denom_de.csv")
+df_gender_ct = pd.read_csv("training_data/GenderedDenom_DE.csv")
 # load discriminating words_de
 df_discrim_words = pd.read_csv("training_data/DiscriminatingWords_DE.csv")
 # load Empty words_de
@@ -320,28 +320,62 @@ def GenderedDenomAnalysis(lang, tokens):
         c_doc = Doc.from_docs(docs)
         
         for token in c_doc:
-            for index, row in df_gender_ct.iterrows():
-                if token.lemma_== row["Denominations-German"]:
-                    list_tokens.append(
-                        ResultOut.factory(
+            for word, alternative_sing, alternative_plur in zip(df_gender_ct["Denominations-German"], df_gender_ct["Alternative_Singular_split"], df_gender_ct["Alternative_Plural_split"]):
+                if token.lemma_ == word:
+                    if token.morph.get("Number")[0]=="Sing":
+                        list_tokens.append(
+                            ResultOut.factory(
                             lang,
                             token.text,
                             category,
-                            token.idx
+                            token.idx,
+                            None,
+                            ast.literal_eval(alternative_sing)
+                            )
                         )
-                    )
+               
+                    elif token.morph.get("Number")[0]=="Plur":
+                        list_tokens.append(
+                            ResultOut.factory(
+                            lang,
+                            token.text,
+                            category,
+                            token.idx,
+                            None,
+                            ast.literal_eval(alternative_plur)
+                            )
+                        )
+             
+
     else:
         for token in tokens:
-            for index, row in df_gender_ct.iterrows():
-                if token.lemma_ == row["Denominations-German"]:
-                    list_tokens.append(
-                        ResultOut.factory(
+            for word, alternative_sing, alternative_plur in zip(df_gender_ct["Denominations-German"], df_gender_ct["Alternative_Singular_split"], df_gender_ct["Alternative_Plural_split"]):
+                if token.lemma_ == word:
+                    if token.morph.get("Number")[0]=="Sing":
+                        list_tokens.append(
+                            ResultOut.factory(
                             lang,
                             token.text,
                             category,
-                            token.idx
+                            token.idx,
+                            None,
+                            ast.literal_eval(alternative_sing)
+                            )
                         )
-                    )
+               
+                    elif token.morph.get("Number")[0]=="Plur":
+                        list_tokens.append(
+                            ResultOut.factory(
+                            lang,
+                            token.text,
+                            category,
+                            token.idx,
+                            None,
+                            ast.literal_eval(alternative_plur)
+                            )
+                        )
+                            
+              
 
     return list_tokens
 
