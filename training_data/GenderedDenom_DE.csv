@@ -1,0 +1,42 @@
+Denominations-German,is active,Wordtype,Forms,Alternative_Singular,Alternative_Plural,Lemma_spacy,Alternative_Singular_split,Alternative_Plural_split
+Arbeitskollege,1.0,s,n?,,Arbeitskolleginnen und Arbeitskollegen | Teammitglieder,Arbeitskollege,[''],"['Arbeitskolleginnen und Arbeitskollegen', 'Teammitglieder']"
+Chef,1.0,s,s?,die vorgesetzte Person | Vorgesetzte,,Chef,"['die vorgesetzte Person', 'Vorgesetzte']",['']
+Boss,1.0,s,,die vorgesetzte Person | Vorgesetzte,,Boss,"['die vorgesetzte Person', 'Vorgesetzte']",['']
+Generalist,1.0,s,(en)?,,Generalistinnen und Generalisten | fachlich breit ausgerichtet,Generalist,[''],"['Generalistinnen und Generalisten', 'fachlich breit ausgerichtet']"
+guy,1.0,s,s?,,Team,guy,[''],['Team']
+Mann,1.0,s,,Person,Personen | Leute,Mann,['Person'],"['Personen', 'Leute']"
+Herr,1.0,s,(en)?,,Personen | Leute,Herr,[''],"['Personen', 'Leute']"
+manpower,1.0,s,,,die Arbeit unserer Angestellten,manpower,[''],['die Arbeit unserer Angestellten']
+männlich,1.0,a,(e|er|en|em|es|ere|erer|eren|erem|eres|erere|erers|erern|ererm|ste|ster|stes|sten|stem)?,bezüglich einer Person,,männlich,['bezüglich einer Person'],['']
+Großkunde,1.0,s,n?,,Großkundinnen und Großkunden | Kundschaft,Großkunde,[''],"['Großkundinnen und Großkunden', 'Kundschaft']"
+Kollege,1.0,s,n?,,Kolleginnen und Kollegen | Teammitglied,Kollege,[''],"['Kolleginnen und Kollegen', 'Teammitglied']"
+Entwickler,1.0,s,n?,,Entwicklerinnen und Entwickler | Entwicklungsteam,Entwickler,[''],"['Entwicklerinnen und Entwickler', 'Entwicklungsteam']"
+Designer,1.0,s,n?,,Designerinnen und Designer | Designteam,Designer,[''],"['Designerinnen und Designer', 'Designteam']"
+Partner,1.0,s,n?,,Partnerinnen und Partner | Partnerschaften,Partner,[''],"['Partnerinnen und Partner', 'Partnerschaften']"
+Researcher,1.0,s,n?,,Researchteam,Researcher,[''],['Researchteam']
+Analyst,1.0,s,(en)?,,Analystinnen und Analysten,Analyst,[''],['Analystinnen und Analysten']
+Geschäftsleiter,1.0,s,n?,,Geschäftsleitung | Geschäftsleiterinnen und Geschäftsleiter,Geschäftsleiter,[''],"['Geschäftsleitung', 'Geschäftsleiterinnen und Geschäftsleiter']"
+Student,1.0,s,(en)?,,Studentinnen und Studenten | Studierende,Student,[''],"['Studentinnen und Studenten', 'Studierende']"
+Lehrling,1.0,s,e?,,Lernende | Auszubildende,Lehrling,[''],"['Lernende', 'Auszubildende']"
+Lehrtochter,,,(tochter|töchter)?,,Lernende | Auszubildende,Lehrtochter,[''],"['Lernende', 'Auszubildende']"
+Kandidat,1.0,s,(en)?,,Kandidatinnen und Kandidaten | Kandidierende,Kandidat,[''],"['Kandidatinnen und Kandidaten', 'Kandidierende']"
+Arbeitgeber,1.0,s,n?,,"Arbeitgebende | Arbeitgeberin (GmbH, Einzelfirma und AG sind weiblich)",Arbeitgeber,[''],"['Arbeitgebende', 'Arbeitgeberin (GmbH, Einzelfirma und AG sind weiblich)']"
+Vermittler,1.0,s,s?,vermittelnde Person,Vermittlerin und Vermittler,Vermittler,['vermittelnde Person'],['Vermittlerin und Vermittler']
+Brückenbauer,1.0,s,s?,vermittelnde Person,Brückenbauerinnen und Brückenbauer ,Brückenbauer,['vermittelnde Person'],['Brückenbauerinnen und Brückenbauer ']
+Botschafter,1.0,s,s?,vermittelnde Person,Botschafterinnen und Botschafter ,Botschafter,['vermittelnde Person'],['Botschafterinnen und Botschafter ']
+Lieferant,1.0,s,en?,,Lieferfirmen,Lieferant,[''],['Lieferfirmen']
+Dienstleister,1.0,s,s?,,Dienstleistende | Dienstleistungsbetriebe | dienstleistende Personen | Personen im Dienstleistungssektor | Dienstleisterinnen und Dienstleister,Dienstleister,[''],"['Dienstleistende', 'Dienstleistungsbetriebe', 'dienstleistende Personen', 'Personen im Dienstleistungssektor', 'Dienstleisterinnen und Dienstleister']"
+Kunde,,,(e|en),Kundin : Kunde | Kund:in,Kund:innen | Kundinnen und Kunden | Kundschaft ,Kunde,"['Kundin : Kunde', 'Kund:in']","['Kund:innen', 'Kundinnen und Kunden', 'Kundschaft ']"
+Rangierer,,,,Rangiererin : Rangierer | Rangierer:in | Rangierperson,Rangierer:innen  | Rangierpersonal,Rangierer,"['Rangiererin : Rangierer', 'Rangierer:in', 'Rangierperson']","['Rangierer:innen ', 'Rangierpersonal']"
+Mitarbeiter,,,,Mitarbeiterin : Mitarbeiter | Mitarbeiter:in ,Mitarbeitende | Mitarbeiterinnen und Mitarbeiter | Mitarbeiter:innen | Personal,Mitarbeiter,"['Mitarbeiterin : Mitarbeiter', 'Mitarbeiter:in ']","['Mitarbeitende', 'Mitarbeiterinnen und Mitarbeiter', 'Mitarbeiter:innen', 'Personal']"
+Fachmann,,,(mann | männer),Fachperson | Fachfrau : Fachmann | Fachfrau:mann,Fachpersonal,Fachmann,"['Fachperson', 'Fachfrau : Fachmann', 'Fachfrau:mann']",['Fachpersonal']
+Leiter,,,,Leiterin : Leiter | Leiter:in,Leitung ,Leiter,"['Leiterin : Leiter', 'Leiter:in']",['Leitung ']
+Fahrzeugtechniker,,,,Fahrzeugtechnikerin : Fahrzeugtechniker,Fahrzeugtechniker:innen ,Fahrzeugtechniker,['Fahrzeugtechnikerin : Fahrzeugtechniker'],['Fahrzeugtechniker:innen ']
+Nutzer,,,,Nutzerin : Nutzer | Nutzer:in,Nutzende | Nutzer:innen | Nutzerinnen : Nutzer,Nutzer,"['Nutzerin : Nutzer', 'Nutzer:in']","['Nutzende', 'Nutzer:innen', 'Nutzerinnen : Nutzer']"
+Besucher,,,,Besucherin : Besucher | Besucher:in,Gäste | Besucher:innen,Besucher,"['Besucherin : Besucher', 'Besucher:in']","['Gäste', 'Besucher:innen']"
+Verteter,,,,Verteterin : Verteter | Verteter:in,Vertretende | Vertretung | Vertreter:innen,Verteter,"['Verteterin : Verteter', 'Verteter:in']","['Vertretende', 'Vertretung', 'Vertreter:innen']"
+Servicetechniker,,,,Servicetechniker:in,Servicepersonal ,Servicetechniker,['Servicetechniker:in'],['Servicepersonal ']
+Zuhörer,,,,Zuhörerin : Zuhörer | Zuhörer:in,Publikum | Zuhörende | Zuhörer:innen,Zuhörer,"['Zuhörerin : Zuhörer', 'Zuhörer:in']","['Publikum', 'Zuhörende', 'Zuhörer:innen']"
+Bewerber,,,,"Personen, die sich bewerben ... | Bewerber:in",Bewerbende | Bewerber:innen,Bewerber,"['Personen, die sich bewerben ...', 'Bewerber:in']","['Bewerbende', 'Bewerber:innen']"
+Antragssteller,,,,"Personen, die einen Antrag stellen ... | Antragssteller:in ",Antragsstellende |  Antragssteller:innen,Antragssteller,"['Personen, die einen Antrag stellen ...', 'Antragssteller:in ']","['Antragsstellende', ' Antragssteller:innen']"
+Jeder,,,,Jede : Jeder | Jede:r,Alle ,jed,"['Jede : Jeder', 'Jede:r']",['Alle ']
