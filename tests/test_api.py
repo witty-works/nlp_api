@@ -25,7 +25,7 @@ def test_api():
             "category": "gendered_denominations",
             "start": 51,
             "end": 57,
-            "alternatives": [],
+            "alternatives": ['Kund:innen', 'Kundinnen und Kunden', 'Kundschaft '],
             "label": "Geschlechtsspezifische Bezeichnungen",
             "reason": "Diese Bezeichnung ist männlich konnotiert, auch wenn sie sprachlich neutral ist. Aufgrund einer hohen Repräsentation von (weißen) Männern in der Branche entstehen bei diesem Begriff vor allem Bilder von Männern vor dem inneren Auge. Dadurch wird Menschen mit unterschiedlichem Hintergrund das Gefühl vermittelt, dass sie nicht in diese Branche gehören.",
             "solution": "Um ein inklusives Bild zu provozieren, sollten Sie in Ihrer Formulierung nicht nur sprachlich, sondern auch mental neutral sein, indem Sie die verschiedenen Geschlechter ausdrücklich erwähnen oder durch geschlechtslose Worte ersetzen."
@@ -87,7 +87,7 @@ def test_api_response_lang():
             "category": "gendered_denominations",
             "start": 51,
             "end": 57,
-            "alternatives": [],
+            "alternatives": ['Kund:innen', 'Kundinnen und Kunden', 'Kundschaft '],
             "label": "Gendered Denominations",
             "reason": "This denomination is male coded, even if linguistically it is neutral. Because of a high representation of (white) men in the field, the inner eye unconsciously produces males behind this term. Thereby making people with diverse background feel that they will not be able to belong in this setting.",
             "solution": "In order to provoke an inclusive image, be not only linguistically, but also mentally neutral in your formulation by explicitly mentioning the different genders or being truly gender neutral by more general words."
