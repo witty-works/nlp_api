@@ -46,6 +46,10 @@ Open your browser to http://localhost:8000/docs to view the OpenAPI UI.
 
 For an alternate view of the docs navigate to http://localhost:8000/redoc
 
+## Production Deployment
+
+Set an env variable `API_DOCS_AUTH_ENABLED` to `"true"` and for the username/password called `API_DOCS_USERNAME` and `API_DOCS_PASSWORD` for basic auth for the API docs.
+
 ## Example
 
 ```
