@@ -1,23 +1,25 @@
-Boasting-German,Is active,Wordtype,Forms,"Alternatives-German in job title, role, requirements",Alternatives-German in company & company culture
-Alpha-Person,1,s,(en)?,-,-
-belegte Erfolgsgeschichte,1,s,n?,-,-
-bestens etabliert,1,a,,-,-
-mehr erreich,1,v,(st|t|en),umsetzungsorientiert | pragmatisch in der Verwirklichung einer Vision,umsetzungsorientiert | pragmatisch in der Verwirklichung einer Vision
-go getter,1,s,s?,-,-
-goal getter,1,s,s?,-,-
-heller Geist,1,s,,-,-
-hohes Verantwortungsbewusstsein,1,a,,Verantwortung übernehmen,-
-hohe Ziele,1,s,,-,-
-kluge Köpfe,1,s,,"Menschen, die mitdenken | Menschen, die Erfahrung haben | Menschen mit verschiedenen Perspektiven","Menschen, die mitdenken | Menschen, die Erfahrung haben | Menschen mit verschiedenen Perspektiven"
-must have,1,s,s?,-,-
-must-have,1,s,s?,-,-
-nach den Sternen greifen,1,v,,-,-
-Nummer 1,1,s,,-,-
-Nummer eins,1,s,,-,-
-ohne Problem,1,s,e?,-,-
-kein Problem,1,s,,-,-
-schlauer Kopf,1,s,,-,-
-schlaue Köpfe,1,s,,"Menschen, die mitdenken | die Erfahrung haben | Menschen mit verschiedenen Perspektiven","Menschen, die mitdenken | die Erfahrung haben; Menschen mit verschiedenen Perspektiven"
-über dem Durchschnitt,1,a,,-,-
-Winner Typ,1,s,(in|en|innen|s)?,-,-
-Winner-Typ,1,s,(in|en|innen|s)?,-,-
+Boasting-German,Is active,Wordtype,Forms,Alternatives-German,Alternatives-German in company & company culture
+Alpha,1,s,s?,['du nimmst dein Team gerne auf eurem gemeinsamen Weg mit'],-
+Alpha-Person,1,s,(en)?,"['Du inspirierst dein Team', 'Du stehst deinem Team mit Rat und Tat zur Seite', 'Du unterstützt dein Team beim Erreichen von gemeinsamen Zielen']",-
+belegte Erfolgsgeschichte,1,s,n?,"['belegte Gelingen', 'belegt, wir wir selbst gesetzte Ziele erreichen', 'Beweis für den positiven Verlauf', 'Geschichte der positiven Entwicklung', 'Bericht über die positive Unternehmung', 'Beispiel, das zeigt, wie uns das gelungen ist']",-
+bestens etabliert,1,a,,"['anerkannt', 'akzeptiert', 'einen Ruf als (...) erworben', 'verwurzelt', 'eingerichtet', 'eine stabile Grundlage geschaffen', 'eingeführt', 'bekannt', 'erprobt', 'bewährt', 'aufgebaut']",-
+mehr erreich,1,v,(st|t|en),"['umsetzungsorientiert', 'pragmatisch in der Verwirklichung einer Vision']",umsetzungsorientiert | pragmatisch in der Verwirklichung einer Vision
+Go-getter,1,s,s?,"['tatkräftige Person', 'Tatmensch', 'jemand, der unternehmerisch denkt', 'jemand, der Ziele mit Elan verfolgt']",-
+Goal-getter,1,s,s?,"['Mensch, der sich kontinuierlich Ziele setzt und erreicht', 'zielorientierter Mensch', 'Mensch, der bereit ist, sich neuen oder komplexen Situationen zu stellen, um gemeinsame Ziele zu erreichen']",-
+heller Geist,1,s,,"['kreativer Kopf', 'Mensch mit Ideen', 'aufmerksamer Mensch', 'Mensch mit rascher Auffassungsgabe', '| Mensch mit Erfindungsgeist']",-
+hohes Verantwortungsbewusstsein,1,a,,"['Du übernimmst Verantwortung', 'Du gehst Aufgaben mit Umsicht und Sorgfalt an', 'Du behälst beim Betreuen von Aufgaben das große Ganze im Blick']",-
+hohe Ziele,1,s,,['-'],-
+kluge Köpfe,1,s,,"['Menschen, die mitdenken', 'Menschen, die Erfahrung haben', 'Menschen mit verschiedenen Perspektiven']","Menschen, die mitdenken | Menschen, die Erfahrung haben | Menschen mit verschiedenen Perspektiven"
+must have,1,s,s?,['-'],-
+must-have,1,s,s?,['-'],-
+nach den Sternen greifen,1,v,,['-'],-
+Nummer 1,1,s,,['-'],-
+Nummer eins,1,s,,['-'],-
+ohne Problem,1,s,e?,['-'],-
+kein Problem,1,s,,['-'],-
+problemlos,1,a,(e|er|en|em|es|ere|erer|eren|erem|eres|erere|erers|erern|ererm|este|ester|estes|esten|estem)?,['-'],-
+schlauer Kopf,1,s,,['-'],-
+schlaue Köpfe,1,s,,"['Menschen, die mitdenken', 'die Erfahrung haben', 'Menschen mit verschiedenen Perspektiven']","Menschen, die mitdenken | die Erfahrung haben; Menschen mit verschiedenen Perspektiven"
+über dem Durchschnitt,1,a,,['-'],-
+Winner Typ,1,s,(in|en|innen|s)?,['-'],-
+Winner-Typ,1,s,(in|en|innen|s)?,['-'],-
