@@ -279,7 +279,8 @@ def GermanRules(lang, tokens):
     list_gender_denom = GenderedDenomAnalysis(lang, tokens)
 
     # boasting words&sentences catch
-    list_boast = RulesBasedWordsPhraseMatcher(lang, tokens, terms_boast, df_boast_word, "Boasting-German", "boasting_words")
+    list_boast =BoastingWordsSentences(lang, tokens)
+    #list_boast = RulesBasedWordsPhraseMatcher(lang, tokens, terms_boast, df_boast_word, "Boasting-German", "boasting_words")
     
     #discriminating words catch
     list_discrim = RulesBased(lang, tokens, df_discrim_words, "Jo", "discriminating_words")
@@ -446,7 +447,51 @@ def GenderedDenomAnalysis(lang, tokens):
 
     return list_tokens
 
-# Unified function for Emtz words false positives and rules    
+# Boasting words and sentences analisys function, shows alternatives if avalible
+def BoastingWordsSentences(lang, tokens):
+    category = "boasting_words"
+    list_tokens = []
+    #Phrase matcher part to handle False positives with two words and special simbols
+    matcher = PhraseMatcher(model[lang.locale].vocab)
+
+     # Only run model.make_doc to speed things up
+    patterns = [model[lang.locale].make_doc(text) for text in terms_boast]
+    matcher.add("TerminologyList", patterns)
+
+    for token in tokens:
+        for word, alternative in zip(df_boast_word["Boasting-German"], df_boast_word["Alternatives-German"]):
+            if token.lemma_ == word:
+                list_tokens.append(
+                    ResultOut.factory(
+                    lang,
+                    token.text,
+                    category,
+                    token.idx,
+                    None,
+                    ast.literal_eval(alternative)
+                    )
+                )  
+
+    
+    matches = matcher(tokens)
+    for match_id, start, end in matches:
+        for sentence, alternative in zip(df_boast_sentences["Boasting-German"], df_boast_sentences["Alternatives-German"]):
+            span = tokens[start:end]
+            if span.text == sentence:
+                list_tokens.append(
+                    ResultOut.factory(
+                    lang,
+                    span.text,
+                    category,
+                    span.start_char,
+                    span.end_char,
+                    ast.literal_eval(alternative)
+                    )
+                )
+
+    return list_tokens 
+
+# Unified function for Emty words false positives and rules    
 def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
     category = "empty_words"
     list_tokens = []
