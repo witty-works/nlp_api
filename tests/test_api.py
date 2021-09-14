@@ -51,7 +51,7 @@ def test_api():
             "solution": "Es wird dringend empfohlen, solche Begriffe zu vermeiden."
         }
     ]
-
+"""
 def test_api_grammatic():
 
     request_data = {"text": "Die Deutsche Bahn als Partner im öffentlichen Personennahverkehr"}
@@ -70,7 +70,7 @@ def test_api_grammatic():
             "alternatives": "Die Deutsche Bahn als Partnerin"
         }
     ]
-
+"""
 def test_api_english():
     request_data = {"text": "We are searching for analytical ninja rockstar programmer for our customers"}
 
