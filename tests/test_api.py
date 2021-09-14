@@ -52,6 +52,25 @@ def test_api():
         }
     ]
 
+def test_api_grammatic():
+
+    request_data = {"text": "Die Deutsche Bahn als Partner im öffentlichen Personennahverkehr"}
+
+    response = client.post("/check", json=request_data)
+    assert response.status_code == 200
+
+    first_record = response.json()
+    assert first_record["language"] == "de"
+    assert first_record["results"] == [
+        {
+            "text": "Die Deutsche Bahn als Partner",
+            "category": "grammatic",
+            "start": 0,
+            "end": 29,
+            "alternatives": "Die Deutsche Bahn als Partnerin"
+        }
+    ]
+
 def test_api_english():
     request_data = {"text": "We are searching for analytical ninja rockstar programmer for our customers"}
 

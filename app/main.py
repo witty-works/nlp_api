@@ -86,6 +86,11 @@ df_inclusive_sentences = pd.read_csv("training_data/invlusive_sentences_de.csv")
 # list of "inclusive word" sentences
 terms_inclusive = list(df_inclusive_sentences["Inclusive-German"])
 
+#load "grammatic" sentences for DB
+df_grammatic_db = pd.read_csv("training_data/Grammatic_rules_DB.csv")
+#list of "grammatic" sentences
+terms_grammatic = list(df_grammatic_db["Trigger"])
+
 # load male coded English words
 df_male_coded_words_en = pd.read_csv("training_data/MaleCodedTerms_EN.csv")
 
@@ -284,7 +289,10 @@ def GermanRules(lang, tokens):
     
     #discriminating words catch
     list_discrim = RulesBased(lang, tokens, df_discrim_words, "Jo", "discriminating_words")
-        
+    
+    #grammatic issues for DB
+    list_grammatic_db = GrammaticDB(lang, tokens)    
+    
     #inclusive words
     list_inclusiv = RulesBasedWordsPhraseMatcher(lang, tokens, terms_inclusive, df_inclusive_words, "Inclusive-German", "inclusive_words")
 
@@ -554,6 +562,37 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
                 span.end_char
             )
         )
+
+    return list_tokens 
+
+# rules based phrase matcher
+def GrammaticDB(lang, tokens):
+    category = "grammatic"
+    
+    list_tokens = []
+    #Phrase matcher part to handle False positives with two words and special simbols
+    matcher = PhraseMatcher(model[lang.locale].vocab)
+
+     # Only run model.make_doc to speed things up
+    patterns = [model[lang.locale].make_doc(text) for text in terms_grammatic]
+    matcher.add("TerminologyList", patterns)
+
+    
+    matches = matcher(tokens)
+    for match_id, start, end in matches:
+        for sentence, alternative in zip(df_grammatic_db["Trigger"], df_grammatic_db["Alternative"]):
+            span = tokens[start:end]
+            if span.text == sentence:
+                list_tokens.append(
+                    ResultOut.factory(
+                        lang,
+                        span.text,
+                        category,
+                        span.start_char,
+                        span.end_char,
+                        alternative
+                    )
+                )
 
     return list_tokens 
 
