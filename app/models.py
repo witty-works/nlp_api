@@ -43,13 +43,16 @@ class ResultOut(BaseModel):
     solution: str
     alternatives: List[str]
 
-    def factory(lang, text, category, start, end = None, alternatives = []):
+    def factory(lang, text, category, start, end = None, alternatives = [], subcategory = None):
         if end == None:
             end = start + len(text)
 
-        label = lang._("rules." + category + "_label")
-        reason = lang._("rules." + category + "_reason")
-        solution = lang._("rules." + category + "_solution")
+        if subcategory == None:
+            subcategory = category
+
+        label = lang._("rules." + subcategory + "_label")
+        reason = lang._("rules." + subcategory + "_reason")
+        solution = lang._("rules." + subcategory + "_solution")
 
         return ResultOut(text, category, start, end, alternatives, label, reason, solution)
 
