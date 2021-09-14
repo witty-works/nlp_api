@@ -296,7 +296,7 @@ def GermanRules(lang, tokens):
     #inclusive words
     list_inclusiv = RulesBasedWordsPhraseMatcher(lang, tokens, terms_inclusive, df_inclusive_words, "Inclusive-German", "inclusive_words")
 
-    return list_male_coded+list_gender_denom+list_empty_words+list_boast + list_discrim + list_inclusiv
+    return list_male_coded+list_gender_denom+list_empty_words+list_boast + list_discrim + df_grammatic_db + list_inclusiv
 
 #Function for all English rules
 def EnglishRules(lang, tokens):
