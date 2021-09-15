@@ -86,11 +86,6 @@ df_inclusive_sentences = pd.read_csv("training_data/invlusive_sentences_de.csv")
 # list of "inclusive word" sentences
 terms_inclusive = list(df_inclusive_sentences["Inclusive-German"])
 
-#load "grammatic" sentences for DB
-df_grammatic_db = pd.read_csv("training_data/Grammatic_rules_DB.csv")
-#list of "grammatic" sentences
-terms_grammatic = list(df_grammatic_db["Trigger"])
-
 # load male coded English words
 df_male_coded_words_en = pd.read_csv("training_data/MaleCodedTerms_EN.csv")
 
@@ -290,13 +285,10 @@ def GermanRules(lang, tokens):
     #discriminating words catch
     list_discrim = RulesBased(lang, tokens, df_discrim_words, "Jo", "discriminating_words")
     
-    #grammatic issues for DB
-    list_grammatic_db = GrammaticDB(lang, tokens)    
-    
     #inclusive words
     list_inclusiv = RulesBasedWordsPhraseMatcher(lang, tokens, terms_inclusive, df_inclusive_words, "Inclusive-German", "inclusive_words")
 
-    return list_male_coded+list_gender_denom+list_empty_words+list_boast + list_discrim + list_grammatic_db + list_inclusiv
+    return list_male_coded+list_gender_denom+list_empty_words+list_boast + list_discrim + list_inclusiv
 
 #Function for all English rules
 def EnglishRules(lang, tokens):
