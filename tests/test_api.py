@@ -25,7 +25,7 @@ def test_api():
             "category": "gendered_denominations",
             "start": 51,
             "end": 57,
-            "alternatives": [],
+            "alternatives": ["Kund:innen", "Kundinnen und Kunden", "Kundschaft "],
             "label": "Geschlechtsspezifische Bezeichnungen",
             "reason": "Diese Bezeichnung ist männlich konnotiert, auch wenn sie sprachlich neutral ist. Aufgrund einer hohen Repräsentation von (weißen) Männern in der Branche entstehen bei diesem Begriff vor allem Bilder von Männern vor dem inneren Auge. Dadurch wird Menschen mit unterschiedlichem Hintergrund das Gefühl vermittelt, dass sie nicht in diese Branche gehören.",
             "solution": "Um ein inklusives Bild zu provozieren, sollten Sie in Ihrer Formulierung nicht nur sprachlich, sondern auch mental neutral sein, indem Sie die verschiedenen Geschlechter ausdrücklich erwähnen oder durch geschlechtslose Worte ersetzen."
@@ -35,7 +35,7 @@ def test_api():
             "category": "boasting_words",
             "start": 11,
             "end": 16,
-            "alternatives": [],
+            "alternatives": ["jemand, der erfahren und fachkundig ist","jemand mit Know-how und Ausdauer","Mensch, der seine Fachkenntnis ständig vertieft"],
             "label": "Superlative Wörter",
             "reason": "Mit diesem Begriff nutzen Sie die Sprache der Superlative - oder auch Prahlerei - genannt. Superlative Begriffe in der Beschreibung der Firma schrecken viele Bewerber:innen ab, da bei ihnen unbewusst die Empfindung entsteht, im Sinne der Superlative mithalten und so sein zu müssen.",
             "solution": "Es wird dringend empfohlen, solche Begriffe zu vermeiden."
@@ -45,7 +45,7 @@ def test_api():
             "category": "boasting_words",
             "start": 17,
             "end": 25,
-            "alternatives": [],
+            "alternatives": ['jemand, der Meilensteine erreichen will','strebsam','fleißig','jemand, der mit dem Team gemeinsame Ziele verfolgt','du willst mit dem Team etwas erreichen','zielorientierter Mensch','tatkräftige Person','Tatmensch','jemand, der unternehmerisch denkt','jemand, der Ziele mit Elan verfolgt'],
             "label": "Superlative Wörter",
             "reason": "Mit diesem Begriff nutzen Sie die Sprache der Superlative - oder auch Prahlerei - genannt. Superlative Begriffe in der Beschreibung der Firma schrecken viele Bewerber:innen ab, da bei ihnen unbewusst die Empfindung entsteht, im Sinne der Superlative mithalten und so sein zu müssen.",
             "solution": "Es wird dringend empfohlen, solche Begriffe zu vermeiden."
@@ -87,7 +87,11 @@ def test_api_response_lang():
             "category": "gendered_denominations",
             "start": 51,
             "end": 57,
-            "alternatives": [],
+            "alternatives": [
+                "Kund:innen",
+                "Kundinnen und Kunden",
+                "Kundschaft "
+            ],
             "label": "Gendered Denominations",
             "reason": "This denomination is male coded, even if linguistically it is neutral. Because of a high representation of (white) men in the field, the inner eye unconsciously produces males behind this term. Thereby making people with diverse background feel that they will not be able to belong in this setting.",
             "solution": "In order to provoke an inclusive image, be not only linguistically, but also mentally neutral in your formulation by explicitly mentioning the different genders or being truly gender neutral by more general words."
@@ -97,17 +101,32 @@ def test_api_response_lang():
             "category": "boasting_words",
             "start": 11,
             "end": 16,
-            "alternatives": [],
+            "alternatives": [
+                "jemand, der erfahren und fachkundig ist",
+                "jemand mit Know-how und Ausdauer",
+                "Mensch, der seine Fachkenntnis ständig vertieft"
+            ],
             "label": "Boasting terms",
             "reason": "With this term you make use of superlative - or also called  boasting - language. Superlative terms in the description of a company discourage many applicants, since because such language unconsciously provokes the feeling within candidates that they will have to comply with and be like the superlatives.",
             "solution": "It is highly recommended to avoid such terms."
-        },
-        {
+            },
+            {
             "text": "Rockstar",
             "category": "boasting_words",
             "start": 17,
             "end": 25,
-            "alternatives": [],
+            "alternatives": [
+                "jemand, der Meilensteine erreichen will",
+                "strebsam",
+                "fleißig",
+                "jemand, der mit dem Team gemeinsame Ziele verfolgt",
+                "du willst mit dem Team etwas erreichen",
+                "zielorientierter Mensch",
+                "tatkräftige Person",
+                "Tatmensch",
+                "jemand, der unternehmerisch denkt",
+                "jemand, der Ziele mit Elan verfolgt"
+            ],
             "label": "Boasting terms",
             "reason": "With this term you make use of superlative - or also called  boasting - language. Superlative terms in the description of a company discourage many applicants, since because such language unconsciously provokes the feeling within candidates that they will have to comply with and be like the superlatives.",
             "solution": "It is highly recommended to avoid such terms."

@@ -46,6 +46,10 @@ Open your browser to http://localhost:8000/docs to view the OpenAPI UI.
 
 For an alternate view of the docs navigate to http://localhost:8000/redoc
 
+## Production Deployment
+
+Set an env variable `API_DOCS_AUTH_ENABLED` to `"true"` and for the username/password called `API_DOCS_USERNAME` and `API_DOCS_PASSWORD` for basic auth for the API docs.
+
 ## Example
 
 ```
@@ -78,10 +82,19 @@ Install the Blackfire CLI:
 https://blackfire.io/docs/up-and-running/installation
 
 ```
-blackfire curl -X 'POST' [env subdomain].platformsh.site/check -H 'accept: application/json' -H 'Content-Type: application/json' -d '{"text": "Wer sind unsere Kunden?"}
+blackfire curl -X 'POST' https://[env subdomain].platformsh.site/check -H 'accept: application/json' -H 'Content-Type: application/json' -d '{"text": "Wer sind unsere Kunden?"}'
 ```
 
 Then go to https://blackfire.io/ to view the profiler result.
+
+## Benchmarking
+
+Install the Apache HTTP server benchmarking tool:
+https://httpd.apache.org/docs/2.4/programs/ab.html
+
+```
+ab -c 50 -n 100 -p tests/test_small.json -T application/json https://[env subdomain].platformsh.site/check
+```
 
 ## Localization
 
@@ -108,6 +121,6 @@ pipenv run pybabel compile -d locales -l en_GB -f
 ## Update the browser extension
 
 ```
-cp [..]/chrome.zip ./files/witty-works-inclusifier.zip
-rsync -avz files/* "$(platform ssh --pipe)":files/.
+mv [..]/chrome.zip ./files/witty-works-inclusifier.zip
+rsync -avz files/* "$(platform ssh -e main --pipe)":files/.
 ```

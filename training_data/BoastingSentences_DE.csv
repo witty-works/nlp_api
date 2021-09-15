@@ -1,23 +1,31 @@
-Boasting-German,Is active,Wordtype,Forms,"Alternatives-German in job title, role, requirements",Alternatives-German in company & company culture
-Alpha-Person,1,s,(en)?,-,-
-belegte Erfolgsgeschichte,1,s,n?,-,-
-bestens etabliert,1,a,,-,-
-mehr erreich,1,v,(st|t|en),umsetzungsorientiert | pragmatisch in der Verwirklichung einer Vision,umsetzungsorientiert | pragmatisch in der Verwirklichung einer Vision
-go getter,1,s,s?,-,-
-goal getter,1,s,s?,-,-
-heller Geist,1,s,,-,-
-hohes Verantwortungsbewusstsein,1,a,,Verantwortung übernehmen,-
-hohe Ziele,1,s,,-,-
-kluge Köpfe,1,s,,"Menschen, die mitdenken | Menschen, die Erfahrung haben | Menschen mit verschiedenen Perspektiven","Menschen, die mitdenken | Menschen, die Erfahrung haben | Menschen mit verschiedenen Perspektiven"
-must have,1,s,s?,-,-
-must-have,1,s,s?,-,-
-nach den Sternen greifen,1,v,,-,-
-Nummer 1,1,s,,-,-
-Nummer eins,1,s,,-,-
-ohne Problem,1,s,e?,-,-
-kein Problem,1,s,,-,-
-schlauer Kopf,1,s,,-,-
-schlaue Köpfe,1,s,,"Menschen, die mitdenken | die Erfahrung haben | Menschen mit verschiedenen Perspektiven","Menschen, die mitdenken | die Erfahrung haben; Menschen mit verschiedenen Perspektiven"
-über dem Durchschnitt,1,a,,-,-
-Winner Typ,1,s,(in|en|innen|s)?,-,-
-Winner-Typ,1,s,(in|en|innen|s)?,-,-
+Boasting-German,Is active,Wordtype,Forms,Alternatives-German,Alternatives-German in company & company culture
+Alpha,1.0,s,s?,['du nimmst dein Team gerne auf eurem gemeinsamen Weg mit'],du nimmst dein Team gerne auf eurem gemeinsamen Weg mit
+Alpha-Person,1.0,s,(en)?,"['du inspirierst dein Team', 'du stehst deinem Team mit Rat und Tat zur Seite', 'du unterstützt dein Team beim Erreichen von gemeinsamen Zielen']",du inspirierst dein Team | du stehst deinem Team mit Rat und Tat zur Seite | du unterstützt dein Team beim Erreichen von gemeinsamen Zielen
+belegte Erfolgsgeschichte,1.0,s,n?,"['belegte Gelingen', 'belegt, wir wir selbst gesetzte Ziele erreichen', 'Beweis für den positiven Verlauf', 'Geschichte der positiven Entwicklung', 'Bericht über die positive Unternehmung', 'Beispiel, das zeigt, wie uns das gelungen ist']","belegte Gelingen | belegt, wir wir selbst gesetzte Ziele erreichen | Beweis für den positiven Verlauf | Geschichte der positiven Entwicklung | Bericht über die positive Unternehmung | Beispiel, das zeigt, wie uns das gelungen ist"
+bestens etabliert,1.0,a,,"['anerkannt', 'akzeptiert', 'einen Ruf als (...) erworben', 'verwurzelt', 'eingerichtet', 'eine stabile Grundlage geschaffen', 'eingeführt', 'bekannt', 'erprobt', 'bewährt', 'aufgebaut']",anerkannt | akzeptiert | einen Ruf als (...) erworben | verwurzelt | eingerichtet | eine stabile Grundlage geschaffen | eingeführt | bekannt | erprobt | bewährt | aufgebaut
+mehr erreich,1.0,v,(st|t|en),"['umsetzungsorientiert', 'pragmatisch in der Verwirklichung einer Vision']",umsetzungsorientiert | pragmatisch in der Verwirklichung einer Vision
+mehr erreichst,,,,"['umsetzungsorientiert', 'pragmatisch in der Verwirklichung einer Vision']",
+mehr erreicht,,,,"['umsetzungsorientiert', 'pragmatisch in der Verwirklichung einer Vision']",
+Go-getter,1.0,s,s?,"['tatkräftige Person', 'Tatmensch', 'jemand, der unternehmerisch denkt', 'jemand, der Ziele mit Elan verfolgt']","tatkräftige Person | Tatmensch | jemand, der unternehmerisch denkt | jemand, der Ziele mit Elan verfolgt"
+Goal-getter,1.0,s,s?,"['Mensch, der sich kontinuierlich Ziele setzt und erreicht', 'zielorientierter Mensch', 'Mensch, der bereit ist, sich neuen oder komplexen Situationen zu stellen, um gemeinsame Ziele zu erreichen']","Mensch, der sich kontinuierlich Ziele setzt und erreicht | zielorientierter Mensch | Mensch, der bereit ist, sich neuen oder komplexen Situationen zu stellen, um gemeinsame Ziele zu erreichen"
+heller Geist,1.0,s,,"['kreativer Kopf', 'Mensch mit Ideen', 'aufmerksamer Mensch', 'Mensch mit Blick fürs Wesentliche', 'Mensch, der Erlerntes rasch selbst anwenden kann', 'Mensch mit Erfindungsgeist']","kreativer Kopf | Mensch mit Ideen | aufmerksamer Mensch | Mensch mit Blick fürs Wesentliche | Mensch, der Erlerntes rasch selbst anwenden kann | Mensch mit Erfindungsgeist"
+hohes Verantwortungsbewusstsein,1.0,s,,"['Du übernimmst Verantwortung', 'Du gehst Aufgaben mit Umsicht und Sorgfalt an', 'Du behältst beim Betreuen von Aufgaben das große Ganze im Blick']",Du übernimmst Verantwortung | Du gehst Aufgaben mit Umsicht und Sorgfalt an | Du behältst beim Betreuen von Aufgaben das große Ganze im Blick
+hohem Verantwortungsbewusstsein,1.0,s,,"['Du übernimmst Verantwortung', 'Du gehst Aufgaben mit Umsicht und Sorgfalt an', 'Du behältst beim Betreuen von Aufgaben das große Ganze im Blick']",Du übernimmst Verantwortung | Du gehst Aufgaben mit Umsicht und Sorgfalt an | Du behältst beim Betreuen von Aufgaben das große Ganze im Blick
+hohen Verantwortungsbewusstsein,1.0,s,,"['Du übernimmst Verantwortung', 'Du gehst Aufgaben mit Umsicht und Sorgfalt an', 'Du behältst beim Betreuen von Aufgaben das große Ganze im Blick']",Du übernimmst Verantwortung | Du gehst Aufgaben mit Umsicht und Sorgfalt an | Du behältst beim Betreuen von Aufgaben das große Ganze im Blick
+hohen Verantwortungsbewusstseins,1.0,s,,"['Du übernimmst Verantwortung', 'Du gehst Aufgaben mit Umsicht und Sorgfalt an', 'Du behältst beim Betreuen von Aufgaben das große Ganze im Blick']",Du übernimmst Verantwortung | Du gehst Aufgaben mit Umsicht und Sorgfalt an | Du behältst beim Betreuen von Aufgaben das große Ganze im Blick
+hohen Zielen,1.0,s,,"['Meilensteine', 'Etappenziele', 'kontinuierlich Ziele setzen und erreichen', 'zielorientiert', 'vorwärtskommen kommen']",Meilensteine | Etappenziele | kontinuierlich Ziele setzen und erreichen | zielorientiert | vorwärtskommen kommen
+hohe Ziele,1.0,s,,"['Meilensteine', 'Etappenziele', 'kontinuierlich Ziele setzen und erreichen', 'zielorientiert', 'vorwärtskommen kommen']",Meilensteine | Etappenziele | kontinuierlich Ziele setzen und erreichen | zielorientiert | vorwärtskommen kommen
+kluge Köpfe,1.0,s,,"['Menschen, die mitdenken', 'Menschen, die Erfahrung haben', 'Menschen mit verschiedenen Perspektiven']","Menschen, die mitdenken | Menschen, die Erfahrung haben | Menschen mit verschiedenen Perspektiven"
+must have,1.0,s,s?,"['wichtig, um (...)', 'nützlich', 'hilfreich']","wichtig, um (...) | nützlich | hilfreich"
+must-have,1.0,s,s?,"['wichtig, um (...)', 'nützlich', 'hilfreich']","wichtig, um (...) | nützlich | hilfreich"
+nach den Sternen greifen,1.0,v,,"['Du setzt dir Ziele, die dich motivieren', 'ein zielorientierter Mensch sein', 'Du arbeitest beharrlich auf selbst gesteckte Ziele hin']","Du setzt dir Ziele, die dich motivieren | ein zielorientierter Mensch sein | Du arbeitest beharrlich auf selbst gesteckte Ziele hin"
+Nummer 1,1.0,s,,"['Unternehmen, das im Markt Maßstäbe setzt', 'im Markt richtungweisendes Unternehmen', 'Lieblings(...)', 'wichtig', 'du inspirierst dein Team', 'du stehst deinem Team mit Rat und Tat zur Seite']","Unternehmen, das im Markt Maßstäbe setzt | im Markt richtungweisendes Unternehmen | Lieblings(...) | wichtig | du inspirierst dein Team | du stehst deinem Team mit Rat und Tat zur Seite"
+Nummer eins,1.0,s,,"['Unternehmen, das im Markt Maßstäbe setzt', 'im Markt richtungweisendes Unternehmen', 'Lieblings(...)', 'wichtig', 'du inspirierst dein Team', 'du stehst deinem Team mit Rat und Tat zur Seite']","Unternehmen, das im Markt Maßstäbe setzt | im Markt richtungweisendes Unternehmen | Lieblings(...) | wichtig | du inspirierst dein Team | du stehst deinem Team mit Rat und Tat zur Seite"
+ohne Problem,1.0,s,e?,"['einfach', 'leicht', 'reibungslos', 'praktisch', 'bequem', 'ohne großen Aufwand', 'mit Leichtigkeit']",einfach | leicht | reibungslos | praktisch | bequem | ohne großen Aufwand | mit Leichtigkeit
+kein Problem,1.0,s,,"['einfach', 'leicht', 'reibungslos', 'praktisch', 'bequem', 'ohne großen Aufwand', 'mit Leichtigkeit']",einfach | leicht | reibungslos | praktisch | bequem | ohne großen Aufwand | mit Leichtigkeit
+problemlos,1.0,a,(e|er|en|em|es|ere|erer|eren|erem|eres|erere|erers|erern|ererm|este|ester|estes|esten|estem)?,"['einfach', 'leicht', 'reibungslos', 'praktisch', 'bequem', 'ohne großen Aufwand', 'mit Leichtigkeit', 'leicht verständlich']",einfach | leicht | reibungslos | praktisch | bequem | ohne großen Aufwand | mit Leichtigkeit | leicht verständlich
+schlauer Kopf,1.0,s,,"['Mensch, der mitdenkt', 'die Erfahrung hat', 'Mensch mit verschiedenen Perspektiven', 'aufmerksamer Mensch', 'Mensch mit Blick fürs Wesentliche', 'Mensch, der Erlerntes rasch selbst anwenden kann', 'erfindungsreicher Mensch']","Menschen, die mitdenken | die Erfahrung haben | Menschen mit verschiedenen Perspektiven | aufmerksamer Mensch | Mensch mit Blick fürs Wesentliche | Mensch, der Erlerntes rasch selbst anwenden kann | erfindungsreicher Mensch"
+schlaue Köpfe,1.0,s,,"['Menschen, die mitdenken', 'die Erfahrung haben', 'Menschen mit verschiedenen Perspektiven', 'aufmerksame Menschen', 'Menschen mit Blick fürs Wesentliche', 'Menschen, der Erlerntes rasch selbst anwenden kann', 'erfindungsreiche Menschen']","Menschen, die mitdenken | die Erfahrung haben; Menschen mit verschiedenen Perspektiven"
+über dem Durchschnitt,1.0,a,,"['viel', 'ausgesprochen', 'hochgradig', 'mehr als', 'zutiefst', 'ganz', 'mit Feuereifer']",viel | ausgesprochen | hochgradig | mehr als | zutiefst | ganz | mit Feuereifer
+Winner Typ,1.0,s,(in|en|innen|s)?,"['jemand, der Meilensteine erreichen will', 'strebsam', 'fleißig', 'jemand, der mit Team gemeinsame Ziele verfolgt', 'du willst mit Team etwas erreichen', 'zielorientierter Mensch', 'du bist aufmerksam und kommst mit dem neu gewonnen Wissen weiter']","jemand, der Meilensteine erreichen will | strebsam | fleißig | jemand, der mit Team gemeinsame Ziele verfolgt | du willst mit Team etwas erreichen | zielorientierter Mensch | du bist aufmerksam und kommst mit dem neu gewonnen Wissen weiter"
+Winner-Typ,1.0,s,(in|en|innen|s)?,"['jemand, der Meilensteine erreichen will', 'strebsam', 'fleißig', 'jemand, der mit Team gemeinsame Ziele verfolgt', 'du willst mit Team etwas erreichen', 'zielorientierter Mensch', 'du bist aufmerksam und kommst mit dem neu gewonnen Wissen weiter']","jemand, der Meilensteine erreichen will | strebsam | fleißig | jemand, der mit Team gemeinsame Ziele verfolgt | du willst mit Team etwas erreichen | zielorientierter Mensch | du bist aufmerksam und kommst mit dem neu gewonnen Wissen weiter"
