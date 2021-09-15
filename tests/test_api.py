@@ -51,7 +51,7 @@ def test_api():
             "solution": "Es wird dringend empfohlen, solche Begriffe zu vermeiden."
         }
     ]
-"""
+
 def test_api_grammatic():
 
     request_data = {"text": "Die Deutsche Bahn als Partner im öffentlichen Personennahverkehr"}
@@ -63,14 +63,29 @@ def test_api_grammatic():
     assert first_record["language"] == "de"
     assert first_record["results"] == [
         {
+            "text": "Partner",
+            "category": "gendered_denominations",
+            "start": 22,
+            "end": 29,
+            "alternatives": [
+                ""
+            ],
+            "label": "Geschlechtsspezifische Bezeichnungen",
+            "reason": "Diese Bezeichnung ist männlich konnotiert, auch wenn sie sprachlich neutral ist. Aufgrund einer hohen Repräsentation von (weißen) Männern in der Branche entstehen bei diesem Begriff vor allem Bilder von Männern vor dem inneren Auge. Dadurch wird Menschen mit unterschiedlichem Hintergrund das Gefühl vermittelt, dass sie nicht in diese Branche gehören.",
+            "solution": "Um ein inklusives Bild zu provozieren, sollten Sie in Ihrer Formulierung nicht nur sprachlich, sondern auch mental neutral sein, indem Sie die verschiedenen Geschlechter ausdrücklich erwähnen oder durch geschlechtslose Worte ersetzen."
+        },
+        {
             "text": "Die Deutsche Bahn als Partner",
             "category": "grammatic",
             "start": 0,
             "end": 29,
-            "alternatives": "Die Deutsche Bahn als Partnerin"
+            "alternatives": "Die Deutsche Bahn als Partnerin",
+            "label": "rules.grammatic_label",
+            "reason": "rules.grammatic_reason",
+            "solution": "rules.grammatic_solution"
         }
     ]
-"""
+
 def test_api_english():
     request_data = {"text": "We are searching for analytical ninja rockstar programmer for our customers"}
 
@@ -106,7 +121,11 @@ def test_api_response_lang():
             "category": "gendered_denominations",
             "start": 51,
             "end": 57,
-            "alternatives": ["Kund:innen", "Kundinnen und Kunden", "Kundschaft "],
+            "alternatives": [
+                "Kund:innen",
+                "Kundinnen und Kunden",
+                "Kundschaft "
+            ],
             "label": "Gendered Denominations",
             "reason": "This denomination is male coded, even if linguistically it is neutral. Because of a high representation of (white) men in the field, the inner eye unconsciously produces males behind this term. Thereby making people with diverse background feel that they will not be able to belong in this setting.",
             "solution": "In order to provoke an inclusive image, be not only linguistically, but also mentally neutral in your formulation by explicitly mentioning the different genders or being truly gender neutral by more general words."
@@ -116,18 +135,33 @@ def test_api_response_lang():
             "category": "boasting_words",
             "start": 11,
             "end": 16,
-            "alternatives": ["jemand, der erfahren und fachkundig ist","jemand mit Know-how und Ausdauer","Mensch, der seine Fachkenntnis ständig vertieft"],
-            "label": "Superlative Wörter",
+            "alternatives": [
+                "jemand, der erfahren und fachkundig ist",
+                "jemand mit Know-how und Ausdauer",
+                "Mensch, der seine Fachkenntnis ständig vertieft"
+            ],
+            "label": "Boasting terms",
             "reason": "With this term you make use of superlative - or also called  boasting - language. Superlative terms in the description of a company discourage many applicants, since because such language unconsciously provokes the feeling within candidates that they will have to comply with and be like the superlatives.",
             "solution": "It is highly recommended to avoid such terms."
-        },
-        {
+            },
+            {
             "text": "Rockstar",
             "category": "boasting_words",
             "start": 17,
             "end": 25,
-            "alternatives": ['jemand, der Meilensteine erreichen will','strebsam','fleißig','jemand, der mit dem Team gemeinsame Ziele verfolgt','du willst mit dem Team etwas erreichen','zielorientierter Mensch','tatkräftige Person','Tatmensch','jemand, der unternehmerisch denkt','jemand, der Ziele mit Elan verfolgt'],
-            "label": "Superlative Wörter",
+            "alternatives": [
+                "jemand, der Meilensteine erreichen will",
+                "strebsam",
+                "fleißig",
+                "jemand, der mit dem Team gemeinsame Ziele verfolgt",
+                "du willst mit dem Team etwas erreichen",
+                "zielorientierter Mensch",
+                "tatkräftige Person",
+                "Tatmensch",
+                "jemand, der unternehmerisch denkt",
+                "jemand, der Ziele mit Elan verfolgt"
+            ],
+            "label": "Boasting terms",
             "reason": "With this term you make use of superlative - or also called  boasting - language. Superlative terms in the description of a company discourage many applicants, since because such language unconsciously provokes the feeling within candidates that they will have to comply with and be like the superlatives.",
             "solution": "It is highly recommended to avoid such terms."
         }
