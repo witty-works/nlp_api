@@ -1,64 +1,433 @@
-# English (United Kingdom) translations for PROJECT.
-# Copyright (C) 2021 ORGANIZATION
-# This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PROJECT VERSION\n"
-"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-08-17 14:17+0200\n"
-"PO-Revision-Date: 2021-08-17 14:31+0200\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language: en_GB\n"
-"Language-Team: en_GB <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: engineering@witty.works\n"
+"POT-Creation-Date: 2021-09-19 18:18\n"
+"PO-Revision-Date: 2021-09-19 18:18\n"
+"Last-Translator: engineering@witty.works\n"
+"Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.9.1\n"
 
-msgid "rules.age_label"
-msgstr "Age"
+msgid "rules.gendered_roles_label"
+msgstr "Gendered Roles"
 
-msgid "rules.age_reason"
-msgstr "You are discriminating against applicants due to age."
+msgid "rules.gendered_roles_reason"
+msgstr ""
+"The male generic does not speak to all genders or gender identities. Many "
+"people therefore do not feel included in the dialogue."
 
-msgid "rules.age_solution"
-msgstr "Simply omit this term."
+msgid "rules.gendered_roles_solution"
+msgstr ""
+"Use words that address the female gender as well as gender identities that "
+"do not follow a binary understanding of gender."
 
-msgid "rules.empty_words_label"
-msgstr "Empty words"
+msgid "rules.gendered_roles_color"
+msgstr "yellow"
 
-msgid "rules.empty_words_reason"
-msgstr "This is a hollow word overused in job ads. It is not perceived as concrete enough to understand its meaning within your particular company and is disliked by applicants."
+msgid "rules.gendered_roles_hierachy_reason"
+msgstr ""
+"This term communicates an outdated idea of hierarchy and casts the topic of "
+"leadership in stereotypical male terms."
 
-msgid "rules.empty_words_solution"
-msgstr "We recommend to avoid this word. Instead explain concretely in a descriptive way what it really means within the context of your company."
+msgid "rules.gendered_roles_hierachy_solution"
+msgstr ""
+"Use terms that assume a supportive notion of leadership and can mean "
+"different genders."
+
+msgid "rules.gendered_roles_hierachy_color"
+msgstr "yellow"
+
+msgid "rules.gendered_roles_image_reason"
+msgstr ""
+"This term hides a form that is not gender-neutral and therefore calls up "
+"images with masculine connotations in our mind's eye."
+
+msgid "rules.gendered_roles_image_solution"
+msgstr "Use alternatives that are gender neutral while avoiding duplication."
+
+msgid "rules.gendered_roles_image_color"
+msgstr "yellow"
 
 msgid "rules.gendered_denominations_label"
 msgstr "Gendered Denominations"
 
 msgid "rules.gendered_denominations_reason"
-msgstr "This denomination is male coded, even if linguistically it is neutral. Because of a high representation of (white) men in the field, the inner eye unconsciously produces males behind this term. Thereby making people with diverse background feel that they will not be able to belong in this setting."
+msgstr ""
+"For economic-historical reasons, an image of a man is unconsciously evoked "
+"in front of the inner eye, even if the term is linguistically neutral. The "
+"female gender or other gender identities therefore do not become visible. "
+"And they will not feel to belong in this setting."
 
 msgid "rules.gendered_denominations_solution"
-msgstr "In order to provoke an inclusive image, be not only linguistically, but also mentally neutral in your formulation by explicitly mentioning the different genders or being truly gender neutral by more general words."
+msgstr ""
+"In order to provoke an inclusive image, be not only linguistically, but also"
+" mentally neutral in your formulation. Rather use a noun that describes the "
+"activity. Or use a denomination that is truly gender-neutral."
 
-msgid "rules.male_coded_terms_label"
-msgstr "Male coded terms"
+msgid "rules.gendered_denominations_color"
+msgstr "yellow"
 
-msgid "rules.male_coded_terms_reason"
-msgstr "This term is male coded. Women unconsciously will feel deterred by this word. Thereby decreasing the probability of their application."
+msgid "rules.gendered_language_label"
+msgstr "Gendered Language"
 
-msgid "rules.male_coded_terms_solution"
-msgstr "Use one of the alternative words proposed or paraphrase it yourself so that it sounds more purposeful, more team oriented, less competitive."
+msgid "rules.gendered_language_reason"
+msgstr ""
+"For economic-historical reasons, an image of a man is unconsciously evoked "
+"in front of the inner eye, even if the term is linguistically neutral. The "
+"female gender or other gender identities do not become visible. And they "
+"will not feel to belong in this setting."
+
+msgid "rules.gendered_language_solution"
+msgstr ""
+"In order to provoke an inclusive image, be not only linguistically, but also"
+" mentally neutral in your formulation. Rather use a noun that describes the "
+"activity. Or use a denomination that is truly gender-neutral."
+
+msgid "rules.gendered_language_color"
+msgstr "yellow"
+
+msgid "rules.agentic_language_label"
+msgstr "Agentic Language"
+
+msgid "rules.agentic_language_reason"
+msgstr ""
+"This term is agentic, describing attributes that enforce the male stereotype"
+" as the the norm. People not falling into that stereotype (women but also "
+"other underrepresented groups) will feel unconsciously excluded by this "
+"word. "
+
+msgid "rules.agentic_language_solution"
+msgstr ""
+"Use a word combination that sounds more team-oriented and refers to the "
+"purpose in work."
+
+msgid "rules.agentic_language_color"
+msgstr "brown"
+
+msgid "rules.communal_language_label"
+msgstr "Communal Language"
+
+msgid "rules.communal_language_reason"
+msgstr ""
+"This term uses communal language and emphasizes cooperative characteristics "
+"and thus inclusive attributes. People from diverse backgrounds will be "
+"unconsciously attracted by this word."
+
+msgid "rules.communal_language_solution"
+msgstr ""
+"Use more of such words or formulations expressing cooperation, care or "
+"purpose."
+
+msgid "rules.communal_language_color"
+msgstr "green"
+
+msgid "rules.d_and_i_words_label"
+msgstr "Inclusive Words"
+
+msgid "rules.d_and_i_words_reason"
+msgstr ""
+"This term describes that the company values diversity and/or inclusion. Such"
+" a public commitment is appreciated by underrepresented groups."
+
+msgid "rules.d_and_i_words_solution"
+msgstr ""
+"Make it clear through your words, if possible, that diversity is desired in "
+"your company and that you are working towards an inclusive culture."
+
+msgid "rules.d_and_i_words_color"
+msgstr "green"
+
+msgid "rules.empty_words_label"
+msgstr "Empty Words"
+
+msgid "rules.empty_words_reason"
+msgstr ""
+"This is a term that has become a hollow word because it has been overused in"
+" the business environment."
+
+msgid "rules.empty_words_solution"
+msgstr ""
+"Avoid using this word. Instead, explain the situation in a tangible and "
+"descriptive way."
+
+msgid "rules.empty_words_color"
+msgstr "blue"
 
 msgid "rules.boasting_words_label"
-msgstr "Boasting terms"
+msgstr "Boasting Words"
 
 msgid "rules.boasting_words_reason"
-msgstr "With this term you make use of superlative - or also called  boasting - language. Superlative terms in the description of a company discourage many applicants, since because such language unconsciously provokes the feeling within candidates that they will have to comply with and be like the superlatives."
+msgstr ""
+"With this term you use a language of superlatives. Many people perceive this"
+" as negative, as it gives the impression of having to conform in terms of "
+"superlatives."
 
 msgid "rules.boasting_words_solution"
-msgstr "It is highly recommended to avoid such terms."
+msgstr "Use an authentic and honest sounding statement."
+
+msgid "rules.boasting_words_color"
+msgstr "blue"
+
+msgid "rules.gendered_pronouns_label"
+msgstr "Gendered Pronouns"
+
+msgid "rules.gendered_pronouns_reason"
+msgstr ""
+"According to linguistic specifications, masculine pronouns mean all persons."
+" However, behavioural economics shows that this does not work. Women or non-"
+"binary people do not feel addressed by the \"male generic\" and their "
+"engagement decreases."
+
+msgid "rules.gendered_pronouns_solution"
+msgstr ""
+"If possible, use the direct form of address (you). This makes the text more "
+"emotional and eliminates the wrong gender trigger. If you have to write in "
+"the third person, use \"they\". "
+
+msgid "rules.gendered_pronouns_color"
+msgstr "yellow"
+
+msgid "rules.stereotypes_label"
+msgstr "Stereotypes"
+
+msgid "rules.stereotypes_reason"
+msgstr ""
+"This expression uses an outdated and perhaps even discriminatory stereotype "
+"that pigeonholes members of the social group concerned and hinders them to "
+"use their full potential. "
+
+msgid "rules.stereotypes_solution"
+msgstr ""
+"Ask yourself a \"flip it\" question, e.g. \"Would I write the same if this "
+"person was white / young / male / rich, etc.?\" This will trigger a mental "
+"process that will bring you to a better wording."
+
+msgid "rules.stereotypes_color"
+msgstr "orange"
+
+msgid "rules.gendered_stereotypes_label"
+msgstr "Gendered Stereotypes"
+
+msgid "rules.gendered_stereotypes_reason"
+msgstr ""
+"The exclusive use of the feminine form in relation to certain activities "
+"traps women in outdated stereotypes and prevents them from developing their "
+"full potential. This is discriminatory against women AND men and non-binary "
+"people."
+
+msgid "rules.gendered_stereotypes_solution"
+msgstr ""
+"Ask yourself a \"flip it\" question, e.g. \"Would I write the same if this "
+"person was male?\" This triggers a mental process that brining you to a "
+"better wording."
+
+msgid "rules.gendered_stereotypes_color"
+msgstr "yellow"
+
+msgid "rules.biased_language_label"
+msgstr "Biased Language"
+
+msgid "rules.biased_language_reason"
+msgstr ""
+"This expression uses an outdated and perhaps even discriminatory stereotype "
+"that pigeonholes members of the social group concerned and hinders them to "
+"use their full potential. "
+
+msgid "rules.biased_language_solution"
+msgstr ""
+"Ask yourself a \"flip it\" question, e.g. \"Would I write the same if this "
+"person was white / young / male / rich, etc.?\" This triggers a mental "
+"process bringing you to a better wording."
+
+msgid "rules.biased_language_color"
+msgstr "orange"
+
+msgid "rules.ability_bias _reason"
+msgstr ""
+"This expression uses an outdated and perhaps even discriminatory stereotype "
+"that pigeonholes people with disabilities (physical or mental) and hinders "
+"them to use their full potential. "
+
+msgid "rules.ability_bias _solution"
+msgstr ""
+"Ask yourself the \"flip it\" question \"Would I write the same if this "
+"person had no disabilities?\" This triggers a mental process bringing you to"
+" a better wording."
+
+msgid "rules.ability_bias _color"
+msgstr "orange"
+
+msgid "rules.age_bias_old_reason"
+msgstr ""
+"This expression uses an outdated and perhaps even discriminatory stereotype "
+"that pigeonholes people aged 50 and over and hinders them to use their full "
+"potential. "
+
+msgid "rules.age_bias_old_solution"
+msgstr ""
+"Ask yourself the \"flip it\" question \"Would I write the same thing if this"
+" person was 35 years old?\" This triggers a mental process that helps you to"
+" formulate better."
+
+msgid "rules.age_bias_old_color"
+msgstr "orange"
+
+msgid "rules.age_bias_young_reason"
+msgstr ""
+"This expression uses an outdated and perhaps even discriminatory stereotype "
+"that pigeonholes people aged 25 and below and hinders them to use their full"
+" potential. "
+
+msgid "rules.age_bias_young_solution"
+msgstr ""
+"Ask yourself the \"flip it\" question \"Would I write the same thing if this"
+" person was 35 years old?\" This triggers a mental process that helps you to"
+" formulate better."
+
+msgid "rules.age_bias_young_color"
+msgstr "orange"
+
+msgid "rules.culture_bias_reason"
+msgstr ""
+"This expression uses an outdated and perhaps even discriminatory stereotype "
+"that pigeonholes people of a different culture and and hinders them to use "
+"their full potential. "
+
+msgid "rules.culture_bias_solution"
+msgstr ""
+"Ask yourself the \"flip it\" question \"Would I write the same thing if this"
+" person had the same nationality/culture as I?\" This triggers a mental "
+"process that helps you to formulate better."
+
+msgid "rules.culture_bias_color"
+msgstr "orange"
+
+msgid "rules.migration_background_bias_reason"
+msgstr ""
+"This expression can be difficult to understand for people with a migration "
+"background, as they may not understand certain idioms or bureaucratic "
+"language."
+
+msgid "rules.migration_background_bias_solution"
+msgstr ""
+"Rephrase the expression with a simpler choice of words. This makes the text "
+"more easily readable."
+
+msgid "rules.migration_background_bias_color"
+msgstr "orange"
+
+msgid "rules.anti_lgtbqiplus_bias_reason"
+msgstr ""
+"This term describes an outdated and perhaps even discriminatory "
+"understanding of gender or sexual orientation that pigeonholes LGBTQIA+ "
+"people and hinders their fulfilment."
+
+msgid "rules.anti_lgtbqiplus_bias_solution"
+msgstr ""
+"Ask yourself the \"flip it\" question \"Would I write the same thing if this"
+" person were either male/female or heterosexual?\" This triggers a mental "
+"process that helps you to formulate better."
+
+msgid "rules.anti_lgtbqiplus_bias_color"
+msgstr "orange"
+
+msgid "rules.classism_bias_reason"
+msgstr ""
+"Due to their education or economic possibilities, this expression can seem "
+"arrogant or incomprehensible to people as they associate this word "
+"combination with the higher social classes."
+
+msgid "rules.classism_bias_solution"
+msgstr ""
+"Rephrase the expression to make it less complex. This makes the text more "
+"easily readable."
+
+msgid "rules.classism_bias_color"
+msgstr "orange"
+
+msgid "rules.old_language_reason"
+msgstr ""
+"This combination of words may no longer be familiar to young people, as "
+"language is always evolving."
+
+msgid "rules.old_language_solution"
+msgstr ""
+"Reflect on whether this expression is still in use outside your age group. "
+"If not, try to formulate its meaning differently."
+
+msgid "rules.old_language_color"
+msgstr "blue"
+
+msgid "rules.new_language_reason"
+msgstr ""
+"This combination of words may not be comprehensible to older generations, as"
+" language is always being created anew, especially among younger "
+"generations."
+
+msgid "rules.new_language_solution"
+msgstr ""
+"Reflect on whether this expression is still in use outside your age group. "
+"If not, try to formulate its meaning differently."
+
+msgid "rules.new_language_color"
+msgstr "blue"
+
+msgid "rules.job_requirements_bias_label"
+msgstr "Biased Requirements"
+
+msgid "rules.job_requirements_bias_reason"
+msgstr ""
+
+msgid "rules.job_requirements_bias_solution"
+msgstr ""
+
+msgid "rules.job_requirements_bias_color"
+msgstr "orange"
+
+msgid "rules.requirements_overload_reason"
+msgstr ""
+
+msgid "rules.requirements_overload_solution"
+msgstr ""
+
+msgid "rules.requirements_overload_color"
+msgstr "orange"
+
+msgid "rules.education_biased_requirements_reason"
+msgstr ""
+
+msgid "rules.education_biased_requirements_solution"
+msgstr ""
+
+msgid "rules.education_biased_requirements_color"
+msgstr "orange"
+
+msgid "rules.workload_biased_requirements_reason"
+msgstr ""
+
+msgid "rules.workload_biased_requirements_solution"
+msgstr ""
+
+msgid "rules.workload_biased_requirements_color"
+msgstr "orange"
+
+msgid "rules.ethnicity_biased_requirements_reason"
+msgstr ""
+
+msgid "rules.ethnicity_biased_requirements_solution"
+msgstr ""
+
+msgid "rules.ethnicity_biased_requirements_color"
+msgstr "orange"
+
+msgid "rules.age_biased_requirements_reason"
+msgstr ""
+
+msgid "rules.age_biased_requirements_solution"
+msgstr ""
+
+msgid "rules.age_biased_requirements_color"
+msgstr "orange"

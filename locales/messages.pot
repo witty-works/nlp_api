@@ -1,38 +1,44 @@
-# Translations template for PROJECT.
-# Copyright (C) 2021 ORGANIZATION
-# This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PROJECT VERSION\n"
-"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-08-24 08:55+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: engineering@witty.works\n"
+"POT-Creation-Date: 2021-09-19 18:18\n"
+"PO-Revision-Date: 2021-09-19 18:18\n"
+"Last-Translator: engineering@witty.works\n"
+"Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.9.1\n"
 
-msgid "rules.age_label"
+msgid "rules.gendered_roles_label"
 msgstr ""
 
-msgid "rules.age_reason"
+msgid "rules.gendered_roles_reason"
 msgstr ""
 
-msgid "rules.age_solution"
+msgid "rules.gendered_roles_solution"
 msgstr ""
 
-msgid "rules.empty_words_label"
+msgid "rules.gendered_roles_color"
 msgstr ""
 
-msgid "rules.empty_words_reason"
+msgid "rules.gendered_roles_hierachy_reason"
 msgstr ""
 
-msgid "rules.empty_words_solution"
+msgid "rules.gendered_roles_hierachy_solution"
+msgstr ""
+
+msgid "rules.gendered_roles_hierachy_color"
+msgstr ""
+
+msgid "rules.gendered_roles_image_reason"
+msgstr ""
+
+msgid "rules.gendered_roles_image_solution"
+msgstr ""
+
+msgid "rules.gendered_roles_image_color"
 msgstr ""
 
 msgid "rules.gendered_denominations_label"
@@ -44,13 +50,67 @@ msgstr ""
 msgid "rules.gendered_denominations_solution"
 msgstr ""
 
-msgid "rules.male_coded_terms_label"
+msgid "rules.gendered_denominations_color"
 msgstr ""
 
-msgid "rules.male_coded_terms_reason"
+msgid "rules.gendered_language_label"
 msgstr ""
 
-msgid "rules.male_coded_terms_solution"
+msgid "rules.gendered_language_reason"
+msgstr ""
+
+msgid "rules.gendered_language_solution"
+msgstr ""
+
+msgid "rules.gendered_language_color"
+msgstr ""
+
+msgid "rules.agentic_language_label"
+msgstr ""
+
+msgid "rules.agentic_language_reason"
+msgstr ""
+
+msgid "rules.agentic_language_solution"
+msgstr ""
+
+msgid "rules.agentic_language_color"
+msgstr ""
+
+msgid "rules.communal_language_label"
+msgstr ""
+
+msgid "rules.communal_language_reason"
+msgstr ""
+
+msgid "rules.communal_language_solution"
+msgstr ""
+
+msgid "rules.communal_language_color"
+msgstr ""
+
+msgid "rules.d_and_i_words_label"
+msgstr ""
+
+msgid "rules.d_and_i_words_reason"
+msgstr ""
+
+msgid "rules.d_and_i_words_solution"
+msgstr ""
+
+msgid "rules.d_and_i_words_color"
+msgstr ""
+
+msgid "rules.empty_words_label"
+msgstr ""
+
+msgid "rules.empty_words_reason"
+msgstr ""
+
+msgid "rules.empty_words_solution"
+msgstr ""
+
+msgid "rules.empty_words_color"
 msgstr ""
 
 msgid "rules.boasting_words_label"
@@ -60,4 +120,193 @@ msgid "rules.boasting_words_reason"
 msgstr ""
 
 msgid "rules.boasting_words_solution"
+msgstr ""
+
+msgid "rules.boasting_words_color"
+msgstr ""
+
+msgid "rules.gendered_pronouns_label"
+msgstr ""
+
+msgid "rules.gendered_pronouns_reason"
+msgstr ""
+
+msgid "rules.gendered_pronouns_solution"
+msgstr ""
+
+msgid "rules.gendered_pronouns_color"
+msgstr ""
+
+msgid "rules.stereotypes_label"
+msgstr ""
+
+msgid "rules.stereotypes_reason"
+msgstr ""
+
+msgid "rules.stereotypes_solution"
+msgstr ""
+
+msgid "rules.stereotypes_color"
+msgstr ""
+
+msgid "rules.gendered_stereotypes_label"
+msgstr ""
+
+msgid "rules.gendered_stereotypes_reason"
+msgstr ""
+
+msgid "rules.gendered_stereotypes_solution"
+msgstr ""
+
+msgid "rules.gendered_stereotypes_color"
+msgstr ""
+
+msgid "rules.biased_language_label"
+msgstr ""
+
+msgid "rules.biased_language_reason"
+msgstr ""
+
+msgid "rules.biased_language_solution"
+msgstr ""
+
+msgid "rules.biased_language_color"
+msgstr ""
+
+msgid "rules.ability_bias _reason"
+msgstr ""
+
+msgid "rules.ability_bias _solution"
+msgstr ""
+
+msgid "rules.ability_bias _color"
+msgstr ""
+
+msgid "rules.age_bias_old_reason"
+msgstr ""
+
+msgid "rules.age_bias_old_solution"
+msgstr ""
+
+msgid "rules.age_bias_old_color"
+msgstr ""
+
+msgid "rules.age_bias_young_reason"
+msgstr ""
+
+msgid "rules.age_bias_young_solution"
+msgstr ""
+
+msgid "rules.age_bias_young_color"
+msgstr ""
+
+msgid "rules.culture_bias_reason"
+msgstr ""
+
+msgid "rules.culture_bias_solution"
+msgstr ""
+
+msgid "rules.culture_bias_color"
+msgstr ""
+
+msgid "rules.migration_background_bias_reason"
+msgstr ""
+
+msgid "rules.migration_background_bias_solution"
+msgstr ""
+
+msgid "rules.migration_background_bias_color"
+msgstr ""
+
+msgid "rules.anti_lgtbqiplus_bias_reason"
+msgstr ""
+
+msgid "rules.anti_lgtbqiplus_bias_solution"
+msgstr ""
+
+msgid "rules.anti_lgtbqiplus_bias_color"
+msgstr ""
+
+msgid "rules.classism_bias_reason"
+msgstr ""
+
+msgid "rules.classism_bias_solution"
+msgstr ""
+
+msgid "rules.classism_bias_color"
+msgstr ""
+
+msgid "rules.old_language_reason"
+msgstr ""
+
+msgid "rules.old_language_solution"
+msgstr ""
+
+msgid "rules.old_language_color"
+msgstr ""
+
+msgid "rules.new_language_reason"
+msgstr ""
+
+msgid "rules.new_language_solution"
+msgstr ""
+
+msgid "rules.new_language_color"
+msgstr ""
+
+msgid "rules.job_requirements_bias_label"
+msgstr ""
+
+msgid "rules.job_requirements_bias_reason"
+msgstr ""
+
+msgid "rules.job_requirements_bias_solution"
+msgstr ""
+
+msgid "rules.job_requirements_bias_color"
+msgstr ""
+
+msgid "rules.requirements_overload_reason"
+msgstr ""
+
+msgid "rules.requirements_overload_solution"
+msgstr ""
+
+msgid "rules.requirements_overload_color"
+msgstr ""
+
+msgid "rules.education_biased_requirements_reason"
+msgstr ""
+
+msgid "rules.education_biased_requirements_solution"
+msgstr ""
+
+msgid "rules.education_biased_requirements_color"
+msgstr ""
+
+msgid "rules.workload_biased_requirements_reason"
+msgstr ""
+
+msgid "rules.workload_biased_requirements_solution"
+msgstr ""
+
+msgid "rules.workload_biased_requirements_color"
+msgstr ""
+
+msgid "rules.ethnicity_biased_requirements_reason"
+msgstr ""
+
+msgid "rules.ethnicity_biased_requirements_solution"
+msgstr ""
+
+msgid "rules.ethnicity_biased_requirements_color"
+msgstr ""
+
+msgid "rules.age_biased_requirements_reason"
+msgstr ""
+
+msgid "rules.age_biased_requirements_solution"
+msgstr ""
+
+msgid "rules.age_biased_requirements_color"
 msgstr ""

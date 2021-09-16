@@ -18,6 +18,8 @@ aiofiles = "*"
 babel = "*"
 
 [dev-packages]
+click = "*"
+polib = "*"
 
 [requires]
 python_version = "3.8"

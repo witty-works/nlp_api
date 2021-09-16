@@ -211,15 +211,11 @@ async def check_query(user_request_in: UserRequestIn, background_tasks: Backgrou
     
     #functions for German rules
     if lang.locale == "de":
-        
-        list_de_end = GenderedDenomEnd(lang, user_request_in.text)
-        
-        list_german_rules = GermanRules(lang, tokens)
-        list_results = list_german_rules+list_de_end
+        list_results = GermanRules(lang, tokens, user_request_in.text)
 
     #function for English rules
     elif lang.locale == "en":
-        list_results = EnglishRules(lang, tokens)
+        list_results = EnglishRules(lang, tokens, user_request_in.text)
 
     else:
         list_results = []
@@ -254,11 +250,10 @@ def log_response(user_request_in: UserRequestIn, response: ResultsOut = None):
 
 # Function to catch ending in German Denom
 def GenderedDenomEnd (lang, text):
-    category = "gendered_language" 
-
-     
+    category = "gendered_denominations"      
     ending = ["/in", "/-in", "_in"]
     list_ending = []
+
     for item in ending:
         span = re.search(item, text)
         if type(span)== re.Match:
@@ -273,7 +268,9 @@ def GenderedDenomEnd (lang, text):
     return list_ending
 
 #Function for all German rules
-def GermanRules(lang, tokens):
+def GermanRules(lang, tokens, text):
+    list_de_end = GenderedDenomEnd(lang, text)
+
     #Male coded words and related false positives catch
     list_male_coded= MaleCodedWordAnalysis(lang, tokens)
     # Empty words&sentences catch
@@ -287,18 +284,18 @@ def GermanRules(lang, tokens):
     #list_boast = RulesBasedWordsPhraseMatcher(lang, tokens, terms_boast, df_boast_word, "Boasting-German", "boasting_words")
     
     #discriminating words catch
-    list_discrim = RulesBased(lang, tokens, df_discrim_words, "Jo", "discriminating_words")
+    list_discrim = RulesBased(lang, tokens, df_discrim_words, "Jo", "biased_language")
     
     #female terms
     list_female = RulesBased(lang, tokens, df_female_words, "FemaleCodedWords-German", "female_coded_terms")
     #inclusive words
     list_inclusiv = RulesBasedWordsPhraseMatcher(lang, tokens, terms_inclusive, df_inclusive_words, "Inclusive-German", "inclusive_words")
 
-    return list_male_coded+list_gender_denom+list_empty_words+list_boast + list_discrim +list_female + list_inclusiv
+    return list_male_coded+list_gender_denom+list_empty_words+list_boast + list_discrim + list_female + list_inclusiv
 
 #Function for all English rules
-def EnglishRules(lang, tokens):
-    list_male_coded= RulesBasedEN(lang, tokens, df_male_coded_words_en, "MaleCodedWords-English", "male_coded_terms")
+def EnglishRules(lang, tokens, text):
+    list_male_coded= RulesBasedEN(lang, tokens, df_male_coded_words_en, "MaleCodedWords-English", "agentic_language")
 
     list_full = list_male_coded
     
@@ -315,7 +312,7 @@ def IsItFalsePositive(word, false_positive):
 """Function to handle dependecies of the adjectives."""
 # this function male coded words& related false positives
 def MaleCodedWordAnalysis(lang, tokens):
-    category = "male_coded_terms"
+    category = "agentic_language"
     list_tokens = []
     dic_anc = {} 
     list_false_positives = []    
@@ -328,14 +325,14 @@ def MaleCodedWordAnalysis(lang, tokens):
                 if entity.label_ == "ORG":
                     list_false_positives.append({
                         "false positives": token.text,
-                        "category": "MaleCodedWords"                    
+                        "category": "agentic_language"                    
                     })
 
             # check if the word is adverb
             if token.pos_ =="ADV":
                 list_false_positives.append({
                     "false positives": token.text,
-                    "category": "MaleCodedWords"
+                    "category": "agentic_language"
                 })
                 
             # check if the word is adjective and find out how it depends on the other words to feel the contex
@@ -347,7 +344,7 @@ def MaleCodedWordAnalysis(lang, tokens):
                             if item.text in exceptions:
                                 list_false_positives.append({
                                     "false positives": token.text,
-                                    "category": "MaleCodedWords"
+                                    "category": "agentic_language"
                                 })
         else:
             for word, alternative in zip(df_male_ct["MaleCodedWords-German"], df_male_ct["Alternatives_split_company"]):
@@ -562,7 +559,6 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
         )
 
     return list_tokens 
-
 
 # Unified function for rules and sentence false positives   
 def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, rules_name, category):
