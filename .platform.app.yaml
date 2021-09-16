@@ -20,6 +20,9 @@ mounts:
   'files':
     source: local
     source_path: files
+  'logs':
+    source: local
+    source_path: logs
 
 disk: 4096
 
