@@ -228,7 +228,7 @@ async def check_query(user_request_in: UserRequestIn, background_tasks: Backgrou
 
 # Functions
 def log_response(user_request_in: UserRequestIn, response: ResultsOut = None):
-    if os.environ.get("LOGGING_ENABLED", None) != "true":
+    if user_request_in.id == None or os.environ.get("LOGGING_ENABLED", None) != "true":
         return
 
     if response == None:

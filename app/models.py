@@ -7,7 +7,7 @@ class UserRequestIn(BaseModel):
     lang: Optional[str] = "auto"
     fallback_lang: Optional[str] = "de"
     response_lang: Optional[str] = "de_DE"
-    id: Optional[str] = "anon"
+    id: Optional[str] = None
 
     def toDict(self):
         return {
