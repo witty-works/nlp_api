@@ -557,36 +557,6 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
 
     return list_tokens 
 
-# rules based phrase matcher
-def GrammaticDB(lang, tokens):
-    category = "grammatic"
-    
-    list_tokens = []
-    #Phrase matcher part to handle False positives with two words and special simbols
-    matcher = PhraseMatcher(model[lang.locale].vocab)
-
-     # Only run model.make_doc to speed things up
-    patterns = [model[lang.locale].make_doc(text) for text in terms_grammatic]
-    matcher.add("TerminologyList", patterns)
-
-    
-    matches = matcher(tokens)
-    for match_id, start, end in matches:
-        for sentence, alternative in zip(df_grammatic_db["Trigger"], df_grammatic_db["Alternative"]):
-            span = tokens[start:end]
-            if span.text == sentence:
-                list_tokens.append(
-                    ResultOut.factory(
-                        lang,
-                        span.text,
-                        category,
-                        span.start_char,
-                        span.end_char,
-                        alternative
-                    )
-                )
-
-    return list_tokens 
 
 # Unified function for rules and sentence false positives   
 def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, rules_name, category):
