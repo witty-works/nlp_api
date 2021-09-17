@@ -628,8 +628,8 @@ def RulesBasedEN(lang, tokens, df, rules_name, category):
     list_tokens = []
     
     for token in tokens:
-        for index, row in df.iterrows():
-            if token.lemma_ == row[rules_name]:
+        for word in list(df[rules_name]):
+            if token.lemma_ == word:
                 list_tokens.append(
                     ResultOut.factory(
                         lang,
