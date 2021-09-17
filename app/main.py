@@ -253,7 +253,7 @@ def GenderedDenomEnd (lang, text):
     category = "gendered_language" 
 
      
-    ending = ["/in", "/-in", "_in", "In"]
+    ending = ["/in", "/-in", "_in"]
     list_ending = []
     for item in ending:
         span = re.search(item, text)
