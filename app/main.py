@@ -55,7 +55,8 @@ from app.lang import (
 # Model data
 model = {"en": spacy.load("en_core_web_sm"), "de": spacy.load("de_core_news_sm")}
 #custom lematizer to correct the lemmas in spacy library, to add to the curent spacy lematizer
-dict_lemma_lookup = {"international": "international", "internationale": "international", "Meister": "Meister", "kämpfend": "kämpfend", "abgebrüht": "abgebrüht", "beherrschend": "beherrschend", "entscheidend": "entscheidend", "entschlossen": "entschlossen"}
+dict_lemma_lookup = {"international": "international", "internationale": "international", "Meister": "Meister", "kämpfend": "kämpfend", "abgebrüht": "abgebrüht", "beherrschend": "beherrschend", "entscheidend": "entscheidend", "entschlossen": "entschlossen", 'angewiesen': 'angewiesen', 'berührt':'berührt', 'besonnen':'besonnen', 'betreut':'betreut', 'bewegt':'bewegt', 'einfühlend':'einfühlend', 'engagiert':'engagiert', 'entgegenkommend':'entgegenkommend', 'ergreifend':'ergreifend', 'fördernd':'fördernd', 'gerührt':'gerührt', 'heiter':'heiter', 'lieb':'lieb', 'mitfühlend':'mitfühlend', 'mitwirkend':'mitwirkend', 'motiviert':'motiviert', 'nährend':'nährend', 'teilnehmend':'teilnehmend', 'unterstützend':'unterstützend', 'verbindend':'verbindend', 'vermittelnd':'vermittelnd', 'vertraut':'vertraut', 'weich':'weich', 'zusammenhängend':'zusammenhängend', 'zusammenwirkend':'zusammenwirkend', 'zustimmend':'zustimmend'}
+
 lookup_table = model["de"].get_pipe("lemmatizer").lookups.get_table("lemma_lookup")
 for key in dict_lemma_lookup:
     lookup_table.set(key, dict_lemma_lookup[key])
@@ -85,6 +86,9 @@ df_inclusive_words = pd.read_csv("training_data/inclusive_words_de.csv")
 df_inclusive_sentences = pd.read_csv("training_data/invlusive_sentences_de.csv")
 # list of "inclusive word" sentences
 terms_inclusive = list(df_inclusive_sentences["Inclusive-German"])
+
+#load female coded terms
+df_female_words = pd.read_csv("training_data/FemaleCodedWords_DE.csv")
 
 # load male coded English words
 df_male_coded_words_en = pd.read_csv("training_data/MaleCodedTerms_EN.csv")
@@ -285,10 +289,12 @@ def GermanRules(lang, tokens):
     #discriminating words catch
     list_discrim = RulesBased(lang, tokens, df_discrim_words, "Jo", "discriminating_words")
     
+    #female terms
+    list_female = RulesBased(lang, tokens, df_female_words, "FemaleCodedWords-German", "female_coded_terms")
     #inclusive words
     list_inclusiv = RulesBasedWordsPhraseMatcher(lang, tokens, terms_inclusive, df_inclusive_words, "Inclusive-German", "inclusive_words")
 
-    return list_male_coded+list_gender_denom+list_empty_words+list_boast + list_discrim + list_inclusiv
+    return list_male_coded+list_gender_denom+list_empty_words+list_boast + list_discrim +list_female + list_inclusiv
 
 #Function for all English rules
 def EnglishRules(lang, tokens):
@@ -576,7 +582,9 @@ def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, rules_name, category):
                         lang,
                         token.text,
                         category,
-                        token.idx
+                        token.idx,
+                        None,
+                        ["-"]
                     )
                 )
     
@@ -599,14 +607,16 @@ def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, rules_name, category):
 def RulesBased(lang, tokens, df, rules_name, category):
     list_tokens = []
     for token in tokens:
-        for index, row in df.iterrows():
-            if token.lemma_ == row[rules_name]:
+        for word in list(df[rules_name]):
+            if token.lemma_ == word:
                 list_tokens.append(
                     ResultOut.factory(
                         lang,
                         token.text,
                         category,
                         token.idx,
+                        None,
+                        ["-"]
                     )
                 )
 
