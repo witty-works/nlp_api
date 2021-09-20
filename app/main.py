@@ -287,9 +287,10 @@ def GermanRules(lang, tokens, text):
     list_discrim = RulesBased(lang, tokens, df_discrim_words, "Jo", "biased_language")
     
     #female terms
-    list_female = RulesBased(lang, tokens, df_female_words, "FemaleCodedWords-German", "female_coded_terms")
+    list_female = RulesBased(lang, tokens, df_female_words, "FemaleCodedWords-German", "communal_language")
+
     #inclusive words
-    list_inclusiv = RulesBasedWordsPhraseMatcher(lang, tokens, terms_inclusive, df_inclusive_words, "Inclusive-German", "inclusive_words")
+    list_inclusiv = RulesBasedWordsPhraseMatcher(lang, tokens, terms_inclusive, df_inclusive_words, "Inclusive-German", "d_and_i_words")
 
     return list_male_coded+list_gender_denom+list_empty_words+list_boast + list_discrim + list_female + list_inclusiv
 
