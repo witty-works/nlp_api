@@ -14,16 +14,16 @@ This project has two key dependencies:
 ## Install
 
 ```
-pipenv install
+pipenv install --dev
 pipenv shell
-pipenv run python3 -m spacy download en_core_web_sm
-pipenv run python3 -m spacy download de_core_news_sm
+pipenv run python -m spacy download en_core_web_sm
+pipenv run python -m spacy download de_core_news_sm
 ```
 
 Note to uninstall spacy models use
 
 ```
-pip uninstall ..
+pipenv uninstall ..
 ```
 
 ## Install Platform.sh CLI
@@ -97,20 +97,14 @@ ab -c 50 -n 100 -p tests/test_small.json -T application/json https://[env subdom
 
 ## Localization
 
-Extract translation messages
+Go to https://www.notion.so/witty-works/e68e073dd0a342fca2a6683c7a8b2341?v=b54da99f8a6b4e6e8f312a530f653eb0
+Export to CSV
 
 ```
-pipenv run pybabel extract . -o locales/messages.pot
+pipenv run python -m update_locales -i [CSV export]]
 ```
 
-Initialize po files
-
-```
-pipenv run pybabel init -d locales -i locales/messages.pot -l de_DE
-pipenv run pybabel init -d locales -i locales/messages.pot -l en_GB
-```
-
-Compile po files (done automatically during deployment)
+Compile po files (done automatically during deployment and above pot/po file generation)
 
 ```
 pipenv run pybabel compile -d locales -l de_DE -f

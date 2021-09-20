@@ -50,7 +50,7 @@ class ResultOut(BaseModel):
         if subcategory == None:
             subcategory = category
 
-        label = lang._("rules." + subcategory + "_label")
+        label = lang._("rules." + category + "_label")
         reason = lang._("rules." + subcategory + "_reason")
         solution = lang._("rules." + subcategory + "_solution")
 
