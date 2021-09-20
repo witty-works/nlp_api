@@ -16,14 +16,14 @@ This project has two key dependencies:
 ```
 pipenv install --dev
 pipenv shell
-pipenv run python3 -m spacy download en_core_web_sm
-pipenv run python3 -m spacy download de_core_news_sm
+pipenv run python -m spacy download en_core_web_sm
+pipenv run python -m spacy download de_core_news_sm
 ```
 
 Note to uninstall spacy models use
 
 ```
-pip uninstall ..
+pipenv uninstall ..
 ```
 
 ## Install Platform.sh CLI
