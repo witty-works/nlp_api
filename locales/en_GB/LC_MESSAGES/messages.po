@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2021-09-19 18:18\n"
-"PO-Revision-Date: 2021-09-19 18:18\n"
+"POT-Creation-Date: 2021-09-20 09:33\n"
+"PO-Revision-Date: 2021-09-20 09:33\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -25,7 +25,7 @@ msgstr ""
 "do not follow a binary understanding of gender."
 
 msgid "rules.gendered_roles_color"
-msgstr "yellow"
+msgstr "gendered"
 
 msgid "rules.gendered_roles_hierachy_reason"
 msgstr ""
@@ -38,7 +38,7 @@ msgstr ""
 "different genders."
 
 msgid "rules.gendered_roles_hierachy_color"
-msgstr "yellow"
+msgstr "gendered"
 
 msgid "rules.gendered_roles_image_reason"
 msgstr ""
@@ -49,7 +49,7 @@ msgid "rules.gendered_roles_image_solution"
 msgstr "Use alternatives that are gender neutral while avoiding duplication."
 
 msgid "rules.gendered_roles_image_color"
-msgstr "yellow"
+msgstr "gendered"
 
 msgid "rules.gendered_denominations_label"
 msgstr "Gendered Denominations"
@@ -68,7 +68,7 @@ msgstr ""
 "activity. Or use a denomination that is truly gender-neutral."
 
 msgid "rules.gendered_denominations_color"
-msgstr "yellow"
+msgstr "gendered"
 
 msgid "rules.gendered_language_label"
 msgstr "Gendered Language"
@@ -87,7 +87,7 @@ msgstr ""
 "activity. Or use a denomination that is truly gender-neutral."
 
 msgid "rules.gendered_language_color"
-msgstr "yellow"
+msgstr "gendered"
 
 msgid "rules.agentic_language_label"
 msgstr "Agentic Language"
@@ -105,7 +105,7 @@ msgstr ""
 "purpose in work."
 
 msgid "rules.agentic_language_color"
-msgstr "brown"
+msgstr "non-inclusive"
 
 msgid "rules.communal_language_label"
 msgstr "Communal Language"
@@ -122,7 +122,7 @@ msgstr ""
 "purpose."
 
 msgid "rules.communal_language_color"
-msgstr "green"
+msgstr "inclusive"
 
 msgid "rules.d_and_i_words_label"
 msgstr "Inclusive Words"
@@ -138,7 +138,7 @@ msgstr ""
 "your company and that you are working towards an inclusive culture."
 
 msgid "rules.d_and_i_words_color"
-msgstr "green"
+msgstr "inclusive"
 
 msgid "rules.empty_words_label"
 msgstr "Empty Words"
@@ -154,7 +154,7 @@ msgstr ""
 "descriptive way."
 
 msgid "rules.empty_words_color"
-msgstr "blue"
+msgstr "style"
 
 msgid "rules.boasting_words_label"
 msgstr "Boasting Words"
@@ -169,7 +169,7 @@ msgid "rules.boasting_words_solution"
 msgstr "Use an authentic and honest sounding statement."
 
 msgid "rules.boasting_words_color"
-msgstr "blue"
+msgstr "style"
 
 msgid "rules.gendered_pronouns_label"
 msgstr "Gendered Pronouns"
@@ -188,7 +188,7 @@ msgstr ""
 "the third person, use \"they\". "
 
 msgid "rules.gendered_pronouns_color"
-msgstr "yellow"
+msgstr "gendered"
 
 msgid "rules.stereotypes_label"
 msgstr "Stereotypes"
@@ -206,7 +206,7 @@ msgstr ""
 "process that will bring you to a better wording."
 
 msgid "rules.stereotypes_color"
-msgstr "orange"
+msgstr "discriminating"
 
 msgid "rules.gendered_stereotypes_label"
 msgstr "Gendered Stereotypes"
@@ -225,7 +225,7 @@ msgstr ""
 "better wording."
 
 msgid "rules.gendered_stereotypes_color"
-msgstr "yellow"
+msgstr "gendered"
 
 msgid "rules.biased_language_label"
 msgstr "Biased Language"
@@ -243,7 +243,7 @@ msgstr ""
 "process bringing you to a better wording."
 
 msgid "rules.biased_language_color"
-msgstr "orange"
+msgstr "discriminating"
 
 msgid "rules.ability_bias _reason"
 msgstr ""
@@ -258,7 +258,7 @@ msgstr ""
 " a better wording."
 
 msgid "rules.ability_bias _color"
-msgstr "orange"
+msgstr "discriminating"
 
 msgid "rules.age_bias_old_reason"
 msgstr ""
@@ -273,7 +273,7 @@ msgstr ""
 " formulate better."
 
 msgid "rules.age_bias_old_color"
-msgstr "orange"
+msgstr "discriminating"
 
 msgid "rules.age_bias_young_reason"
 msgstr ""
@@ -288,7 +288,7 @@ msgstr ""
 " formulate better."
 
 msgid "rules.age_bias_young_color"
-msgstr "orange"
+msgstr "discriminating"
 
 msgid "rules.culture_bias_reason"
 msgstr ""
@@ -303,7 +303,7 @@ msgstr ""
 "process that helps you to formulate better."
 
 msgid "rules.culture_bias_color"
-msgstr "orange"
+msgstr "discriminating"
 
 msgid "rules.migration_background_bias_reason"
 msgstr ""
@@ -317,7 +317,7 @@ msgstr ""
 "more easily readable."
 
 msgid "rules.migration_background_bias_color"
-msgstr "orange"
+msgstr "discriminating"
 
 msgid "rules.anti_lgtbqiplus_bias_reason"
 msgstr ""
@@ -332,7 +332,7 @@ msgstr ""
 "process that helps you to formulate better."
 
 msgid "rules.anti_lgtbqiplus_bias_color"
-msgstr "orange"
+msgstr "discriminating"
 
 msgid "rules.classism_bias_reason"
 msgstr ""
@@ -346,7 +346,7 @@ msgstr ""
 "easily readable."
 
 msgid "rules.classism_bias_color"
-msgstr "orange"
+msgstr "discriminating"
 
 msgid "rules.old_language_reason"
 msgstr ""
@@ -359,7 +359,7 @@ msgstr ""
 "If not, try to formulate its meaning differently."
 
 msgid "rules.old_language_color"
-msgstr "blue"
+msgstr "style"
 
 msgid "rules.new_language_reason"
 msgstr ""
@@ -373,7 +373,7 @@ msgstr ""
 "If not, try to formulate its meaning differently."
 
 msgid "rules.new_language_color"
-msgstr "blue"
+msgstr "style"
 
 msgid "rules.job_requirements_bias_label"
 msgstr "Biased Requirements"
@@ -385,7 +385,7 @@ msgid "rules.job_requirements_bias_solution"
 msgstr ""
 
 msgid "rules.job_requirements_bias_color"
-msgstr "orange"
+msgstr "discriminating"
 
 msgid "rules.requirements_overload_reason"
 msgstr ""
@@ -394,7 +394,7 @@ msgid "rules.requirements_overload_solution"
 msgstr ""
 
 msgid "rules.requirements_overload_color"
-msgstr "orange"
+msgstr "discriminating"
 
 msgid "rules.education_biased_requirements_reason"
 msgstr ""
@@ -403,7 +403,7 @@ msgid "rules.education_biased_requirements_solution"
 msgstr ""
 
 msgid "rules.education_biased_requirements_color"
-msgstr "orange"
+msgstr "discriminating"
 
 msgid "rules.workload_biased_requirements_reason"
 msgstr ""
@@ -412,7 +412,7 @@ msgid "rules.workload_biased_requirements_solution"
 msgstr ""
 
 msgid "rules.workload_biased_requirements_color"
-msgstr "orange"
+msgstr "discriminating"
 
 msgid "rules.ethnicity_biased_requirements_reason"
 msgstr ""
@@ -421,7 +421,7 @@ msgid "rules.ethnicity_biased_requirements_solution"
 msgstr ""
 
 msgid "rules.ethnicity_biased_requirements_color"
-msgstr "orange"
+msgstr "discriminating"
 
 msgid "rules.age_biased_requirements_reason"
 msgstr ""
@@ -430,4 +430,4 @@ msgid "rules.age_biased_requirements_solution"
 msgstr ""
 
 msgid "rules.age_biased_requirements_color"
-msgstr "orange"
+msgstr "discriminating"

@@ -6,11 +6,11 @@ import polib
 
 def add_entry(poFiles, category, columns, label, column, row):
     colors = {
-        "Gendered": "yellow",
-        "Non-Inclusive": "brown",
-        "Inclusive": "green",
-        "Discriminating": "orange",
-        "Style": "blue",
+        "gendered": "yellow",
+        "non-inclusive": "brown",
+        "inclusive": "green",
+        "discriminating": "orange",
+        "style": "blue",
     }
 
     msgid = u"rules." + category + "_" + label
@@ -18,7 +18,8 @@ def add_entry(poFiles, category, columns, label, column, row):
         if locale == "pot":
             msgstr = u""
         elif label == "color":
-            msgstr = colors[row[columns[column]]]
+            msgstr = row[columns[column]].lower()
+            print(category + ": " + colors[msgstr])
         else:
             msgstr = row[columns[column + " " + locale[0:2].upper()]]
 

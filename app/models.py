@@ -50,6 +50,10 @@ class ResultOut(BaseModel):
         if subcategory == None:
             subcategory = category
 
+        # TODO remove by fixing the call to the factory
+        if category == "communal_language" or category == "d_and_i_words":
+            alternatives = []
+
         label = lang._("rules." + category + "_label")
         reason = lang._("rules." + subcategory + "_reason")
         solution = lang._("rules." + subcategory + "_solution")
