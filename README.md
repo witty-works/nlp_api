@@ -114,6 +114,5 @@ pipenv run pybabel compile -d locales -l en_GB -f
 ## Update the browser extension
 
 ```
-mv [..]/chrome.zip ./files/witty-works-inclusifier.zip
 rsync -avz files/* "$(platform ssh -e main --pipe)":files/.
 ```
