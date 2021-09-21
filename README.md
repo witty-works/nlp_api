@@ -49,6 +49,9 @@ For an alternate view of the docs navigate to http://localhost:8000/redoc
 
 Set an env variable `API_DOCS_AUTH_ENABLED` to `"true"` and for the username/password called `API_DOCS_USERNAME` and `API_DOCS_PASSWORD` for basic auth for the API docs.
 
+If the build fails due to "No space left on device" while installing the dependencies see:
+https://docs.platform.sh/development/troubleshoot.html#clear-the-build-cache
+
 ## Example
 
 ```
@@ -114,6 +117,5 @@ pipenv run pybabel compile -d locales -l en_GB -f
 ## Update the browser extension
 
 ```
-mv [..]/chrome.zip ./files/witty-works-inclusifier.zip
 rsync -avz files/* "$(platform ssh -e main --pipe)":files/.
 ```

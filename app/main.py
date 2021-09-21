@@ -100,7 +100,7 @@ exceptions = ["Unternehmen", "Firma", "Gruppe", "Gesellschaft", "Kollektivgesell
 terms_false_positive = ["Kolleginnen und Kollegen", "Kundinnen und Kunden", "Marketing-Team", "Kolleginnen* und Kollegen", "Kundinnen* und Kunden", "Kolleginnen: und Kollegen", "Kundinnen: und Kunden"]
 
 app = FastAPI(
-    title="Inclusifier NLP API",
+    title="Witty NLP API",
     version="0.1.0",
     docs_url=None,
     redoc_url=None,
