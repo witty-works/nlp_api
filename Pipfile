@@ -16,6 +16,7 @@ pytest-cov = "*"
 jinja2 = "*"
 aiofiles = "*"
 babel = "*"
+language-tool-python = "*"
 
 [dev-packages]
 click = "*"

@@ -2,6 +2,7 @@ import uvicorn
 import os
 import json
 import secrets
+import language_tool_python
 
 # TODO: This will be removed once blackfire-python includes FastAPI. This function
 # monkey patches FastAPI's middleware stack to ensure Blackfire is on the outermost
@@ -170,11 +171,11 @@ def get_root():
     return RedirectResponse(url='/form', status_code=301)
 
 @app.get("/docs", include_in_schema=False)
-async def get_swagger_documentation(username: str = Depends(get_current_username)):
+def get_swagger_documentation(username: str = Depends(get_current_username)):
     return get_swagger_ui_html(openapi_url="/openapi.json", title="docs")
 
 @app.get("/openapi.json", include_in_schema=False)
-async def openapi(username: str = Depends(get_current_username)):
+def openapi(username: str = Depends(get_current_username)):
     return get_openapi(title=app.title, version=app.version, routes=app.routes)
 
 @app.get("/form", response_class=HTMLResponse)
@@ -182,7 +183,7 @@ def form(request: Request):
     return templates.TemplateResponse("form.html", {"request": request})
 
 @app.post("/log")
-async def log(user_request_in: UserRequestInEvent, background_tasks: BackgroundTasks):
+def log(user_request_in: UserRequestInEvent, background_tasks: BackgroundTasks):
     try:
         lang = Lang(user_request_in)
     except Exception as e:
@@ -193,32 +194,15 @@ async def log(user_request_in: UserRequestInEvent, background_tasks: BackgroundT
     return 'ok'
 
 @app.post("/check", response_model=ResultsOut)
-async def check_query(user_request_in: UserRequestIn, background_tasks: BackgroundTasks):
+def check_query(user_request_in: UserRequestIn, background_tasks: BackgroundTasks):
     try:
         lang = Lang(user_request_in)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-    #apply SpaCy pre-built model
-    tokens = model[lang.locale](user_request_in.text)
-    
-    #Phrase matcher part to handle False positives with two words and special simbols
-    matcher = PhraseMatcher(model[lang.locale].vocab)
-
-    # Only run model.make_doc to speed things up
-    patterns = [model[lang.locale].make_doc(user_request_in.text) for text in terms_false_positive]
-    matcher.add("TerminologyList", patterns)
-    
-    #functions for German rules
-    if lang.locale == "de":
-        list_results = GermanRules(lang, tokens, user_request_in.text)
-
-    #function for English rules
-    elif lang.locale == "en":
-        list_results = EnglishRules(lang, tokens, user_request_in.text)
-
-    else:
-        list_results = []
+    languagetools_results = languagetools(lang, user_request_in.text)
+    language_rules_results = language_rules(lang, user_request_in.text)
+    list_results = language_rules_results + languagetools_results
 
     response = ResultsOut.factory(list_results, lang)
 
@@ -227,6 +211,62 @@ async def check_query(user_request_in: UserRequestIn, background_tasks: Backgrou
     return response
 
 # Functions
+def languagetools(lang, text):
+    list_results = []
+
+    url = os.environ.get("LANGUAGETOOL_API", "https://api.languagetool.org/v2")
+    tool = language_tool_python.LanguageTool(lang.locale, remote_server=url)
+
+    matches = tool.check(text)
+    for match in matches:
+        offset = int(match.offset)
+        end = offset + int(match.errorLength)
+        alternatives = []
+        for value in match.replacements:
+            value = value if value != "" else "-"
+            alternatives.append(value)
+
+        list_results.append(
+            ResultOut.factory(
+                lang,
+                text[offset:end],
+                match.category,
+                offset,
+                end,
+                alternatives,
+                None,
+                match.ruleIssueType,
+                "",
+                match.message
+            )
+        )
+
+    return list_results
+
+def language_rules(lang, text):
+    #apply SpaCy pre-built model
+    tokens = model[lang.locale](text)
+
+    #Phrase matcher part to handle False positives with two words and special simbols
+    matcher = PhraseMatcher(model[lang.locale].vocab)
+
+    # Only run model.make_doc to speed things up
+    patterns = [model[lang.locale].make_doc(text) for value in terms_false_positive]
+    matcher.add("TerminologyList", patterns)
+
+    #functions for German rules
+    if lang.locale == "de":
+        list_results = GermanRules(lang, tokens, text)
+
+    #function for English rules
+    elif lang.locale == "en":
+        list_results = EnglishRules(lang, tokens, text)
+
+    else:
+        list_results = []
+
+    return list_results
+
 def log_response(user_request_in: UserRequestIn, response: ResultsOut = None):
     if user_request_in.id == None or os.environ.get("LOGGING_ENABLED", None) != "true":
         return
