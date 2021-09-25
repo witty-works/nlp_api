@@ -71,6 +71,29 @@ def test_api():
         }
     ]
 
+def test_api_typo():
+    request_data = {"text": "Halo Welt"}
+
+    response = client.post("/check", json=request_data)
+    assert response.status_code == 200
+
+    first_record = response.json()
+    assert first_record["language"] == "de"
+    assert first_record["results"] == [
+        {
+        "text": "Halo",
+        "category": "uncategorized",
+        "start": 0,
+        "end": 4,
+        "alternatives": [
+            "Hallo"
+        ],
+        "label": "Mögliche Wortverwechslung: ",
+        "reason": "",
+        "solution": "Meinten Sie die Begrüßung „Hallo“? Ein Halo ist ein Lichteffekt."
+        }
+    ]
+
 def test_api_english():
     request_data = {"text": "We are searching for analytical ninja rockstar programmer for our customers"}
 
