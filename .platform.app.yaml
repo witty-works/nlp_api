@@ -4,7 +4,7 @@ type: 'python:3.8'
 
 dependencies:
   python3:
-    pipenv: '2018.10.13'
+    pipenv: '2021.5.29'
     supervisor: '*'
 
 web:
@@ -23,6 +23,9 @@ mounts:
   'logs':
     source: local
     source_path: logs
+  'languagetool-server':
+    source: local
+    source_path: 'languagetool-server'
 
 disk: 4096
 
@@ -35,6 +38,17 @@ hooks:
     pipenv run /opt/python/3.8/bin/python3.8 -m spacy download de_core_news_sm
     pipenv run pybabel compile -d locales -l de_DE -f
     pipenv run pybabel compile -d locales -l en_GB -f
+  deploy: |
+    set -e
+    export DIR="languagetool-server"
+    export SERVER="${DIR}.jar"
+    export LT="LanguageTool-5.4"
+    if [ ! -f "${DIR}/${LT}/${SERVER}" ]; then
+      export FILE="${DIR}/${LT}.zip"
+      [ ! -f "$FILE" ] && wget -P "${DIR}" https://languagetool.org/download/${LT}.zip
+      [ ! -f "${DIR}/$LT" ] && unzip $FILE -d "${DIR}"
+      rm -rf "${FILE}"
+    fi
 
 size: L
 resources:

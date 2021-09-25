@@ -50,7 +50,6 @@ For an alternate view of the docs navigate to http://localhost:8000/redoc
 Set an env variable `API_DOCS_AUTH_ENABLED` to `"true"` and for the username/password called `API_DOCS_USERNAME` and `API_DOCS_PASSWORD` for basic auth for the API docs.
 
 Set am env variable `LANGUAGETOOL_API` to the URL endpoint of your LanguageTool server.
-Default is `https://api.languagetool.org/v2`.
 
 If the build fails due to "No space left on device" while installing the dependencies see:
 https://docs.platform.sh/development/troubleshoot.html#clear-the-build-cache

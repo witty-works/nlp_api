@@ -213,9 +213,12 @@ async def check_query(user_request_in: UserRequestIn, background_tasks: Backgrou
 
 # Functions
 async def languagetools(lang, text):
+    url = os.environ.get("LANGUAGETOOL_API", "false")
+    if url == "false":
+        return []
+
     list_results = []
 
-    url = os.environ.get("LANGUAGETOOL_API", "https://api.languagetool.org/v2")
     async with aiohttp.ClientSession() as session:
         payload = {"text": text, "language": lang.locale}
         async with session.post(url + "/check", data=payload) as r:
