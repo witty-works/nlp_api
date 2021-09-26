@@ -11,18 +11,12 @@ from app.models import UserRequestIn
 
 class Lang(object):
     def __init__(self, user_request_in: UserRequestIn):
-        allowed_langs = ["en_GB", "de_DE"]
+        self.locale = self.DetectLanguage(user_request_in)
 
-        if user_request_in.response_lang not in allowed_langs:
-            raise Exception("Response language not supported: " + user_request_in.response_lang)
-
-        self.response_lang = user_request_in.response_lang
-
-        language = gettext.translation("messages", localedir="locales", languages=[user_request_in.response_lang])
+        langs = {"en": "en_GB", "de": "de_DE"}
+        language = gettext.translation("messages", localedir="locales", languages=[langs[self.locale]])
         language.install()
         self._ = language.gettext
-
-        self.locale = self.DetectLanguage(user_request_in)
 
     """Detect the language if none is passed explicitly but only return a language if confidence is high enough"""
     def DetectLanguage(self, user_request_in: UserRequestIn):

@@ -109,69 +109,9 @@ def test_api_english():
         "start": 21,
         "end": 31,
         "alternatives": [],
-        "label": "Agentische Sprache",
-        "reason": "Dieser Begriff ist agentisch und beschreibt Eigenschaften, die das männliche Stereotyp als Norm erklären. Menschen, die diesem Stereotyp nicht entsprechen (Frauen, sowie andere unterrepräsentierte Gruppen), fühlen sich durch dieses Wort unbewusst ausgeschlossen.",
-        "solution": "Verwenden Sie eine Wortkombination, die teamorientierter klingt und auf den Sinn in der Arbeit Bezug nimmt."
-        }
-    ]
-
-def test_api_response_lang():
-    request_data = {"text": "Wir suchen Ninja Rockstar Programmierer für unsere Kunden", "response_lang": "en_GB"}
-
-    response = client.post("/check", json=request_data)
-    assert response.status_code == 200
-
-    first_record = response.json()
-    assert first_record["language"] == "de"
-    assert first_record["results"] == [
-        {
-        "text": "Kunden",
-        "category": "gendered_denominations",
-        "start": 51,
-        "end": 57,
-        "alternatives": [
-            "Kund:innen",
-            "Kundinnen und Kunden",
-            "Kundschaft "
-        ],
-        "label": "Gendered Denominations",
-        "reason": "For economic-historical reasons, an image of a man is unconsciously evoked in front of the inner eye, even if the term is linguistically neutral. The female gender or other gender identities therefore do not become visible. And they will not feel to belong in this setting.",
-        "solution": "In order to provoke an inclusive image, be not only linguistically, but also mentally neutral in your formulation. Rather use a noun that describes the activity. Or use a denomination that is truly gender-neutral."
-        },
-        {
-        "text": "Ninja",
-        "category": "boasting_words",
-        "start": 11,
-        "end": 16,
-        "alternatives": [
-            "jemand, der erfahren und fachkundig ist",
-            "jemand mit Know-how und Ausdauer",
-            "Mensch, der seine Fachkenntnis ständig vertieft"
-        ],
-        "label": "Boasting Words",
-        "reason": "With this term you use a language of superlatives. Many people perceive this as negative, as it gives the impression of having to conform in terms of superlatives.",
-        "solution": "Use an authentic and honest sounding statement."
-        },
-        {
-        "text": "Rockstar",
-        "category": "boasting_words",
-        "start": 17,
-        "end": 25,
-        "alternatives": [
-            "jemand, der Meilensteine erreichen will",
-            "strebsam",
-            "fleißig",
-            "jemand, der mit dem Team gemeinsame Ziele verfolgt",
-            "du willst mit dem Team etwas erreichen",
-            "zielorientierter Mensch",
-            "tatkräftige Person",
-            "Tatmensch",
-            "jemand, der unternehmerisch denkt",
-            "jemand, der Ziele mit Elan verfolgt"
-        ],
-        "label": "Boasting Words",
-        "reason": "With this term you use a language of superlatives. Many people perceive this as negative, as it gives the impression of having to conform in terms of superlatives.",
-        "solution": "Use an authentic and honest sounding statement."
+        "label": "Agentic Language",
+        "reason": "This term is agentic, describing attributes that enforce the male stereotype as the the norm. People not falling into that stereotype (women but also other underrepresented groups) will feel unconsciously excluded by this word. ",
+        "solution": "Use a word combination that sounds more team-oriented and refers to the purpose in work."
         }
     ]
 
@@ -184,12 +124,6 @@ def test_api_false_positive():
     first_record = response.json()
     assert first_record["language"] == "en"
     assert first_record["results"] == []
-
-def test_api_missing_response_lang():
-    request_data = {"text": "Greenpeace is an international company with headquarters in London.", "response_lang": "es_ES"}
-
-    response = client.post("/check", json=request_data)
-    assert response.status_code == 400
 
 def test_api_missing_data():
     response = client.post("/check")

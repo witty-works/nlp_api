@@ -213,7 +213,7 @@ async def check_query(user_request_in: UserRequestIn, background_tasks: Backgrou
 
 # Functions
 async def languagetools(lang, text):
-    url = os.environ.get("LANGUAGETOOL_API", "false")
+    url = os.environ.get("LANGUAGETOOL_API", "https://api.languagetool.org/v2")
     if url == "false":
         return []
 

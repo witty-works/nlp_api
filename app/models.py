@@ -6,7 +6,6 @@ class UserRequestIn(BaseModel):
     text: str
     lang: Optional[str] = "auto"
     fallback_lang: Optional[str] = "de"
-    response_lang: Optional[str] = "de_DE"
     id: Optional[str] = None
 
     def toDict(self):
@@ -14,7 +13,6 @@ class UserRequestIn(BaseModel):
             "text": self.text,
             "lang": self.lang,
             "fallback_lang": self.fallback_lang,
-            "response_lang": self.response_lang,
         }
 
 class UserRequestInEvent(UserRequestIn):
@@ -27,7 +25,6 @@ class UserRequestInEvent(UserRequestIn):
             "text": self.text,
             "lang": self.lang,
             "fallback_lang": self.fallback_lang,
-            "response_lang": self.response_lang,
             "alternative": self.alternative,
             "start": self.start,
             "end": self.end,
