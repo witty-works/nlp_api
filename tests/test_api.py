@@ -72,7 +72,7 @@ def test_api():
     ]
 
 def test_api_typo():
-    request_data = {"text": "Halo Welt"}
+    request_data = {"text": "Halo, siehst du die schnellen Hund?"}
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -82,15 +82,29 @@ def test_api_typo():
     assert first_record["results"] == [
         {
         "text": "Halo",
-        "category": "uncategorized",
+        "category": "empty_words",
         "start": 0,
         "end": 4,
         "alternatives": [
             "Hallo"
         ],
         "label": "Mögliche Wortverwechslung: ",
-        "reason": "",
+        "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
         "solution": "Meinten Sie die Begrüßung „Hallo“? Ein Halo ist ein Lichteffekt."
+        },
+        {
+        "text": "die schnellen Hund",
+        "category": "empty_words",
+        "start": 16,
+        "end": 34,
+        "alternatives": [
+            "den schnellen Hund",
+            "dem schnellen Hund",
+            "der schnelle Hund"
+        ],
+        "label": "Evtl. keine Übereinstimmung von Kasus, Numerus oder Genus",
+        "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
+        "solution": "Möglicherweise fehlende grammatische Übereinstimmung von Kasus, Numerus oder Genus. Beispiel: ‚mein kleiner Haus‘ statt ‚mein kleines Haus‘"
         }
     ]
 

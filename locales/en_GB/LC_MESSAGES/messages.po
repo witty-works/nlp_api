@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2021-09-20 09:33\n"
-"PO-Revision-Date: 2021-09-20 09:33\n"
+"POT-Creation-Date: 2021-09-27 19:05\n"
+"PO-Revision-Date: 2021-09-27 19:05\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -387,6 +387,20 @@ msgstr ""
 msgid "rules.job_requirements_bias_color"
 msgstr "discriminating"
 
+msgid "rules.orthography_label"
+msgstr "Orthography"
+
+msgid "rules.orthography_reason"
+msgstr ""
+"Correct any spelling or grammatical errors to maximize the impact of their "
+"writing."
+
+msgid "rules.orthography_solution"
+msgstr ""
+
+msgid "rules.orthography_color"
+msgstr "style"
+
 msgid "rules.requirements_overload_reason"
 msgstr ""
 
@@ -431,3 +445,39 @@ msgstr ""
 
 msgid "rules.age_biased_requirements_color"
 msgstr "discriminating"
+
+msgid "rules.salary_vague_or_misleading_label"
+msgstr ""
+
+msgid "rules.salary_vague_or_misleading_reason"
+msgstr ""
+
+msgid "rules.salary_vague_or_misleading_solution"
+msgstr ""
+
+msgid "rules.salary_vague_or_misleading_color"
+msgstr "style"
+
+msgid "rules.verbose_label"
+msgstr ""
+
+msgid "rules.verbose_reason"
+msgstr ""
+
+msgid "rules.verbose_solution"
+msgstr ""
+
+msgid "rules.verbose_color"
+msgstr "style"
+
+msgid "rules.vague_ambiguous_label"
+msgstr ""
+
+msgid "rules.vague_ambiguous_reason"
+msgstr ""
+
+msgid "rules.vague_ambiguous_solution"
+msgstr ""
+
+msgid "rules.vague_ambiguous_color"
+msgstr "style"

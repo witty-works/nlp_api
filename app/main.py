@@ -240,13 +240,13 @@ async def languagetools(lang, text):
                         ResultOut.factory(
                             lang,
                             context["text"][offset:end],
-                            "empty_words", # TODO adjust category to "orthography"
+                            "orthography",
                             offset,
                             end,
                             alternatives,
                             None,
                             match["shortMessage"],
-                            "Korrigieren sie eventuelle Rechtschreib oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.", #TODO change to None
+                            None,
                             match["message"]
                         )
                     )
