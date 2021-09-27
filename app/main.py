@@ -577,7 +577,7 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
                                 category,
                                 token.idx,
                                 None,
-                                ["-"]
+                                []
                             )
                         )
                             
@@ -591,7 +591,7 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
                             category,
                             token.idx,
                             None,
-                            ["-"]
+                            []
                         )
                     )
 
@@ -631,7 +631,7 @@ def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, rules_name, category):
                         category,
                         token.idx,
                         None,
-                        ["-"]
+                        []
                     )
                 )
     
@@ -663,7 +663,7 @@ def RulesBased(lang, tokens, df, rules_name, category):
                         category,
                         token.idx,
                         None,
-                        ["-"]
+                        []
                     )
                 )
 
