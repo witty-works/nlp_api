@@ -2,6 +2,8 @@ import uvicorn
 import os
 import json
 import secrets
+import asyncio
+import aiohttp
 
 # TODO: This will be removed once blackfire-python includes FastAPI. This function
 # monkey patches FastAPI's middleware stack to ensure Blackfire is on the outermost
@@ -170,11 +172,11 @@ def get_root():
     return RedirectResponse(url='/form', status_code=301)
 
 @app.get("/docs", include_in_schema=False)
-async def get_swagger_documentation(username: str = Depends(get_current_username)):
+def get_swagger_documentation(username: str = Depends(get_current_username)):
     return get_swagger_ui_html(openapi_url="/openapi.json", title="docs")
 
 @app.get("/openapi.json", include_in_schema=False)
-async def openapi(username: str = Depends(get_current_username)):
+def openapi(username: str = Depends(get_current_username)):
     return get_openapi(title=app.title, version=app.version, routes=app.routes)
 
 @app.get("/form", response_class=HTMLResponse)
@@ -182,7 +184,7 @@ def form(request: Request):
     return templates.TemplateResponse("form.html", {"request": request})
 
 @app.post("/log")
-async def log(user_request_in: UserRequestInEvent, background_tasks: BackgroundTasks):
+def log(user_request_in: UserRequestInEvent, background_tasks: BackgroundTasks):
     try:
         lang = Lang(user_request_in)
     except Exception as e:
@@ -199,26 +201,9 @@ async def check_query(user_request_in: UserRequestIn, background_tasks: Backgrou
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-    #apply SpaCy pre-built model
-    tokens = model[lang.locale](user_request_in.text)
-    
-    #Phrase matcher part to handle False positives with two words and special simbols
-    matcher = PhraseMatcher(model[lang.locale].vocab)
-
-    # Only run model.make_doc to speed things up
-    patterns = [model[lang.locale].make_doc(user_request_in.text) for text in terms_false_positive]
-    matcher.add("TerminologyList", patterns)
-    
-    #functions for German rules
-    if lang.locale == "de":
-        list_results = GermanRules(lang, tokens, user_request_in.text)
-
-    #function for English rules
-    elif lang.locale == "en":
-        list_results = EnglishRules(lang, tokens, user_request_in.text)
-
-    else:
-        list_results = []
+    languagetools_results = await languagetools(lang, user_request_in.text)
+    language_rules_results = language_rules(lang, user_request_in.text)
+    list_results = language_rules_results + languagetools_results
 
     response = ResultsOut.factory(list_results, lang)
 
@@ -227,6 +212,71 @@ async def check_query(user_request_in: UserRequestIn, background_tasks: Backgrou
     return response
 
 # Functions
+async def languagetools(lang, text):
+    url = os.environ.get("LANGUAGETOOL_API", "https://api.languagetool.org/v2")
+    if url == "false":
+        return []
+
+    list_results = []
+
+    async with aiohttp.ClientSession() as session:
+        payload = {"text": text, "language": lang.locale}
+        async with session.post(url + "/check", data=payload) as r:
+            result = await r.json()
+
+            if "matches" in result:
+                for match in result["matches"]:
+                    context = match["context"]
+                    offset = int(context["offset"])
+                    end = offset + int(context["length"])
+                    alternatives = []
+                    if "replacements" in match:
+                         for replacement in match["replacements"]:
+                             value = replacement["value"]
+                             value = value if value != "" else "-"
+                             alternatives.append(value)
+
+                    list_results.append(
+                        ResultOut.factory(
+                            lang,
+                            context["text"][offset:end],
+                            match["rule"]["issueType"],
+                            offset,
+                            end,
+                            alternatives,
+                            None,
+                            match["shortMessage"],
+                            "",
+                            match["message"]
+                        )
+                    )
+
+    return list_results
+
+def language_rules(lang, text):
+    #apply SpaCy pre-built model
+    tokens = model[lang.locale](text)
+    
+    #Phrase matcher part to handle False positives with two words and special simbols
+    matcher = PhraseMatcher(model[lang.locale].vocab)
+
+    # Only run model.make_doc to speed things up
+    patterns = [model[lang.locale].make_doc(text) for value in terms_false_positive]
+    matcher.add("TerminologyList", patterns)
+    
+    #functions for German rules
+    if lang.locale == "de":
+        list_results = GermanRules(lang, tokens, text)
+
+    #function for English rules
+    elif lang.locale == "en":
+        list_results = EnglishRules(lang, tokens, text)
+
+    else:
+        list_results = []
+    
+    return list_results
+
 def log_response(user_request_in: UserRequestIn, response: ResultsOut = None):
     if user_request_in.id == None or os.environ.get("LOGGING_ENABLED", None) != "true":
         return
