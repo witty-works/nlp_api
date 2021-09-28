@@ -71,8 +71,8 @@ df_gender_ct = pd.read_csv("training_data/GenderedDenom_DE.csv")
 # load discriminating words_de
 df_discrim_words = pd.read_csv("training_data/DiscriminatingWords_DE.csv")
 # load Empty words_de
-df_empty_word = pd.read_csv("training_data/empty_words_ge.csv")
-df_empty_sentences = pd.read_csv("training_data/empty_word_sentences_de.csv")
+df_empty_word = pd.read_csv("training_data/empty_words_de.csv")
+df_empty_sentences = pd.read_csv("training_data/empty_words_sentences_de.csv")
 #list of "empty word" sentences
 terms_empty = list(df_empty_sentences["EmptyWords-German"])
 
@@ -547,7 +547,7 @@ def BoastingWordsSentences(lang, tokens):
 
 # Unified function for Emty words false positives and rules    
 def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
-    category = "empty_words"
+    category = df_empty_sentences("subcategory")
     list_tokens = []
     list_false_positives = []
     #Phrase matcher part to handle False positives with two words and special simbols
@@ -568,20 +568,9 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
                     "category": "EmptyWord"                  
                 })
             else:
-                for word in list(df_empty_word["EmptyWords-German"]):
-                    if tokens[i].lemma_ == word:
-                        if tokens[i-1].is_stop == True or tokens[i-1].is_punct==True:
-                            list_tokens.append(
-                                ResultOut.factory(
-                                    lang,
-                                    tokens[i-1:i+1].text,
-                                    category,
-                                    tokens[i-1].idx,
-                                    tokens[i-1].idx+len(tokens[i-1:i+1].text),
-                                    []
-                                )
-                            )
-                        else:
+                for word, alternative in zip(df_empty_word["EmptyWords-German"], df_empty_word["Alternative_Singular_split"]):
+                    if len(alternative) >5:
+                        if tokens[i].lemma_ == word:
                             list_tokens.append(
                                 ResultOut.factory(
                                     lang,
@@ -589,47 +578,86 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
                                     category,
                                     tokens[i].idx,
                                     tokens[i].idx+len(tokens[i].text),
-                                    []
+                                    ast.literal_eval(alternative)
                                 )
-                            )
+                            )    
+                    else:
+                        if tokens[i].lemma_ == word:
+                            if tokens[i-1].is_stop == True or tokens[i-1].is_punct==True:
+                                list_tokens.append(
+                                    ResultOut.factory(
+                                        lang,
+                                        tokens[i-1:i+1].text,
+                                        category,
+                                        tokens[i-1].idx,
+                                        tokens[i-1].idx+len(tokens[i-1:i+1].text),
+                                        ["-"]
+                                    )
+                                )
+                            else:
+                                list_tokens.append(
+                                    ResultOut.factory(
+                                        lang,
+                                        tokens[i].text,
+                                        category,
+                                        tokens[i].idx,
+                                        tokens[i].idx+len(tokens[i].text),
+                                        ["-"]
+                                    )
+                                )
                             
         else:
-            for word in list(df_empty_word["EmptyWords-German"]):
-                if tokens[i].lemma_ == word:
-                    if tokens[i-1].is_stop == True or tokens[i-1].is_punct==True:
-                        list_tokens.append(
-                            ResultOut.factory(
-                                lang,
-                                tokens[i-1:i+1].text,
-                                category,
-                                tokens[i-1].idx,
-                                tokens[i-1].idx+len(tokens[i-1:i+1].text),
-                                []
-                            )
-                        )
-                    else:
-                        list_tokens.append(
+            for word, alternative in zip(df_empty_word["EmptyWords-German"], df_empty_word["Alternative_Singular_split"]):
+                    if len(alternative) >5:
+                        if tokens[i].lemma_ == word:
+                            list_tokens.append(
                                 ResultOut.factory(
                                     lang,
                                     tokens[i].text,
                                     category,
                                     tokens[i].idx,
                                     tokens[i].idx+len(tokens[i].text),
-                                    []
+                                    ast.literal_eval(alternative)
                                 )
-                            )
-
+                            )    
+                    else:
+                        if tokens[i].lemma_ == word:
+                            if tokens[i-1].is_stop == True or tokens[i-1].is_punct==True:
+                                list_tokens.append(
+                                    ResultOut.factory(
+                                        lang,
+                                        tokens[i-1:i+1].text,
+                                        category,
+                                        tokens[i-1].idx,
+                                        tokens[i-1].idx+len(tokens[i-1:i+1].text),
+                                        ["-"]
+                                    )
+                                )
+                            else:
+                                list_tokens.append(
+                                    ResultOut.factory(
+                                        lang,
+                                        tokens[i].text,
+                                        category,
+                                        tokens[i].idx,
+                                        tokens[i].idx+len(tokens[i].text),
+                                        ["-"]
+                                    )
+                                )
  
     matches = matcher(tokens)
     for match_id, start, end in matches:
-        span = tokens[start:end]
-        list_tokens.append(
-            ResultOut.factory(
-                lang,
-                span.text,
-                category,
-                span.start_char,
-                span.end_char
+        for sentence, alternative in zip(df_empty_sentences["EmptyWords-German"], df_empty_sentences["Alternative_Singular_split"]):
+            span = tokens[start:end]
+            if span.text == sentence:
+                list_tokens.append(
+                    ResultOut.factory(
+                        lang,
+                        span.text,
+                        category,
+                        span.start_char,
+                        span.end_char,
+                        ast.literal_eval(alternative) 
             )
         )
 
