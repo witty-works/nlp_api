@@ -547,7 +547,7 @@ def BoastingWordsSentences(lang, tokens):
 
 # Unified function for Emty words false positives and rules    
 def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
-    category = df_empty_sentences("subcategory")
+    category = df_empty_sentences(["subcategory"])
     list_tokens = []
     list_false_positives = []
     #Phrase matcher part to handle False positives with two words and special simbols
