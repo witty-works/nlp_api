@@ -23,9 +23,6 @@ mounts:
   'logs':
     source: local
     source_path: logs
-  'languagetool-server':
-    source: local
-    source_path: 'languagetool-server'
 
 disk: 4096
 
@@ -38,17 +35,27 @@ hooks:
     pipenv run /opt/python/3.8/bin/python3.8 -m spacy download de_core_news_sm
     pipenv run pybabel compile -d locales -l de_DE -f
     pipenv run pybabel compile -d locales -l en_GB -f
-  deploy: |
-    set -e
-    export DIR="languagetool-server"
-    export SERVER="${DIR}.jar"
-    export LT="LanguageTool-5.4"
-    if [ ! -f "${DIR}/${LT}/${SERVER}" ]; then
-      export FILE="${DIR}/${LT}.zip"
-      [ ! -f "$FILE" ] && wget -P "${DIR}" https://languagetool.org/download/${LT}.zip
-      [ ! -f "${DIR}/$LT" ] && unzip $FILE -d "${DIR}"
-      rm -rf "${FILE}"
+
+    export SERVER="languagetool-server.jar"
+    export VERSION="5.4"
+    export LT="LanguageTool"
+    if [ ! -d "${PLATFORM_CACHE_DIR}/${LT}-${VERSION}" ]; then
+      echo "Downloading ${LT} ${VERSION} ..."
+      (
+        cd "${PLATFORM_CACHE_DIR}"
+        export FILE="${LT}-${VERSION}.zip"
+        [ ! -f "$FILE" ] && curl -O https://languagetool.org/download/${$FILE}
+        unzip $FILE
+        rm -rf $FILE
+        cd ~
+      )
+    else
+      echo "Using cached archive of ${LT} ${VERSION} ..."
     fi
+
+    echo "Installing archive of ${LT} ${VERSION} ..."
+    mkdir "${LT}"
+    cp -R "${PLATFORM_CACHE_DIR}/${LT}-${VERSION}"/* "${LT}/."
 
 size: L
 resources:
