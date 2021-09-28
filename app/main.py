@@ -557,43 +557,67 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
     patterns = [model[lang.locale].make_doc(text) for text in terms]
     matcher.add("TerminologyList", patterns)
 
-    for token in tokens:
+    for i in range(len(tokens))[1:-1]:
         #check if the user query have false positives
-        if IsItFalsePositive(token.lemma_, false_positive_empty):
+        if IsItFalsePositive(tokens[i].lemma_, false_positive_empty):
             #recognise if there is Name of organisation or geographical name in the query
             if len(tokens.ents) > 0:
                 #this output will be deleted in production
                 list_false_positives.append({
-                    "false positives": token.text,    
+                    "false positives": tokens[i].text,    
                     "category": "EmptyWord"                  
                 })
             else:
-                for index, row in df.iterrows():
-                    if token.lemma_ == row[rules_name]:
+                for word in list(df_empty_word["EmptyWords-German"]):
+                    if tokens[i].lemma_ == word:
+                        if tokens[i-1].is_stop == True or tokens[i-1].is_punct==True:
+                            list_tokens.append(
+                                ResultOut.factory(
+                                    lang,
+                                    tokens[i-1:i+1].text,
+                                    category,
+                                    tokens[i-1].idx,
+                                    tokens[i-1].idx+len(tokens[i-1:i+1].text),
+                                    []
+                                )
+                            )
+                        else:
+                            list_tokens.append(
+                                ResultOut.factory(
+                                    lang,
+                                    tokens[i].text,
+                                    category,
+                                    tokens[i].idx,
+                                    tokens[i].idx+len(tokens[i].text),
+                                    []
+                                )
+                            )
+                            
+        else:
+            for word in list(df_empty_word["EmptyWords-German"]):
+                if tokens[i].lemma_ == word:
+                    if tokens[i-1].is_stop == True or tokens[i-1].is_punct==True:
                         list_tokens.append(
                             ResultOut.factory(
                                 lang,
-                                token.text,
+                                tokens[i-1:i+1].text,
                                 category,
-                                token.idx,
-                                None,
+                                tokens[i-1].idx,
+                                tokens[i-1].idx+len(tokens[i-1:i+1].text),
                                 []
                             )
                         )
-                            
-        else:
-            for index, row in df.iterrows():
-                if token.lemma_ == row[rules_name]:
-                    list_tokens.append(
-                        ResultOut.factory(
-                            lang,
-                            token.text,
-                            category,
-                            token.idx,
-                            None,
-                            []
-                        )
-                    )
+                    else:
+                        list_tokens.append(
+                                ResultOut.factory(
+                                    lang,
+                                    tokens[i].text,
+                                    category,
+                                    tokens[i].idx,
+                                    tokens[i].idx+len(tokens[i].text),
+                                    []
+                                )
+                            )
 
  
     matches = matcher(tokens)
