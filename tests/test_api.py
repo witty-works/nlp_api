@@ -26,9 +26,9 @@ def test_api():
         "start": 51,
         "end": 57,
         "alternatives": [
+            "Kundschaft",
             "Kund:innen",
-            "Kundinnen und Kunden",
-            "Kundschaft "
+            "Kundinnen und Kunden"
         ],
         "label": "Geschlechtsspezifische Rollen",
         "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
