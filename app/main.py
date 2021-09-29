@@ -96,7 +96,7 @@ df_female_words = pd.read_csv("training_data/FemaleCodedWords_DE.csv")
 df_male_coded_words_en = pd.read_csv("training_data/MaleCodedTerms_EN.csv")
 
 # dictionaries to handle false positives
-false_positive_male = ["selbst", "flexible", "Probleme", "Macht", "unabhängig", "Entwickler"]
+false_positive_male = ["selbst", "flexible", "Probleme", "unabhängig", "Entwickler"]
 false_positive_empty = ["international"]
 exceptions = ["Unternehmen", "Firma", "Gruppe", "Gesellschaft", "Kollektivgesellschaft", "Team", "Organization", "Gliederung"]
 terms_false_positive = ["Kolleginnen und Kollegen", "Kundinnen und Kunden", "Marketing-Team", "Kolleginnen* und Kollegen", "Kundinnen* und Kunden", "Kolleginnen: und Kollegen", "Kundinnen: und Kunden"]
