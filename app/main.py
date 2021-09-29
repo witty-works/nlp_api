@@ -68,6 +68,10 @@ df_male_ct = pd.read_csv("training_data/MaleCodedTerms_DE.csv")
 #list_male = list(df_male_ct["MaleCodedWords-German"])
 # load Gender denom_de
 df_gender_ct = pd.read_csv("training_data/GenderedDenom_DE.csv")
+#load Gender denom_de false_positives
+genderdenom_false_positives = pd.read_csv("training_data/genderdenom_false_positives.csv")
+
+
 # load discriminating words_de
 df_discrim_words = pd.read_csv("training_data/DiscriminatingWords_DE.csv")
 # load Empty words_de
@@ -99,7 +103,8 @@ df_male_coded_words_en = pd.read_csv("training_data/MaleCodedTerms_EN.csv")
 false_positive_male = ["selbst", "flexible", "Probleme", "unabhängig", "Entwickler"]
 false_positive_empty = ["international"]
 exceptions = ["Unternehmen", "Firma", "Gruppe", "Gesellschaft", "Kollektivgesellschaft", "Team", "Organization", "Gliederung"]
-terms_false_positive = ["Kolleginnen und Kollegen", "Kundinnen und Kunden", "Marketing-Team", "Kolleginnen* und Kollegen", "Kundinnen* und Kunden", "Kolleginnen: und Kollegen", "Kundinnen: und Kunden"]
+terms_false_positive = genderdenom_false_positives["False_positives"].tolist()
+
 
 app = FastAPI(
     title="Witty NLP API",
