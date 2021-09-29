@@ -6,7 +6,6 @@ class UserRequestIn(BaseModel):
     text: str
     lang: Optional[str] = "auto"
     fallback_lang: Optional[str] = "de"
-    response_lang: Optional[str] = "de_DE"
     id: Optional[str] = None
 
     def toDict(self):
@@ -14,7 +13,6 @@ class UserRequestIn(BaseModel):
             "text": self.text,
             "lang": self.lang,
             "fallback_lang": self.fallback_lang,
-            "response_lang": self.response_lang,
         }
 
 class UserRequestInEvent(UserRequestIn):
@@ -27,7 +25,6 @@ class UserRequestInEvent(UserRequestIn):
             "text": self.text,
             "lang": self.lang,
             "fallback_lang": self.fallback_lang,
-            "response_lang": self.response_lang,
             "alternative": self.alternative,
             "start": self.start,
             "end": self.end,
@@ -43,20 +40,22 @@ class ResultOut(BaseModel):
     solution: str
     alternatives: List[str]
 
-    def factory(lang, text, category, start, end = None, alternatives = [], subcategory = None):
+    def factory(lang, text, category, start, end = None, alternatives = [], subcategory = None, label = None, reason = None, solution = None):
         if end == None:
             end = start + len(text)
 
         if subcategory == None:
             subcategory = category
+        elif category == "empty_words":
+            subcategory = "empty_words"
 
-        # TODO remove by fixing the call to the factory
-        if category == "communal_language" or category == "d_and_i_words":
-            alternatives = []
+        label = label if label != None else lang._("rules." + category + "_label")
+        reason = reason if reason != None else lang._("rules." + subcategory + "_reason")
+        solution = solution if solution != None else lang._("rules." + subcategory + "_solution")
 
-        label = lang._("rules." + category + "_label")
-        reason = lang._("rules." + subcategory + "_reason")
-        solution = lang._("rules." + subcategory + "_solution")
+        # TODO remove as soon as the browser extension can handle the "orthography" category
+        if category == "orthography":
+            category = subcategory = "empty_words"
 
         return ResultOut(text, category, start, end, alternatives, label, reason, solution)
 

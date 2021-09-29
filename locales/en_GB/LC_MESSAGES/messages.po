@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2021-09-20 09:33\n"
-"PO-Revision-Date: 2021-09-20 09:33\n"
+"POT-Creation-Date: 2021-09-29 13:19\n"
+"PO-Revision-Date: 2021-09-29 13:19\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -50,9 +50,6 @@ msgstr "Use alternatives that are gender neutral while avoiding duplication."
 
 msgid "rules.gendered_roles_image_color"
 msgstr "gendered"
-
-msgid "rules.gendered_denominations_label"
-msgstr "Gendered Denominations"
 
 msgid "rules.gendered_denominations_reason"
 msgstr ""
@@ -156,6 +153,33 @@ msgstr ""
 msgid "rules.empty_words_color"
 msgstr "style"
 
+msgid "rules.salary_vague_or_misleading_reason"
+msgstr "Missing"
+
+msgid "rules.salary_vague_or_misleading_solution"
+msgstr "Missing"
+
+msgid "rules.salary_vague_or_misleading_color"
+msgstr "style"
+
+msgid "rules.verbose_reason"
+msgstr "Missing"
+
+msgid "rules.verbose_solution"
+msgstr "Missing"
+
+msgid "rules.verbose_color"
+msgstr "style"
+
+msgid "rules.vague_ambiguous_reason"
+msgstr "Missing"
+
+msgid "rules.vague_ambiguous_solution"
+msgstr "Missing"
+
+msgid "rules.vague_ambiguous_color"
+msgstr "style"
+
 msgid "rules.boasting_words_label"
 msgstr "Boasting Words"
 
@@ -245,19 +269,19 @@ msgstr ""
 msgid "rules.biased_language_color"
 msgstr "discriminating"
 
-msgid "rules.ability_bias _reason"
+msgid "rules.ability_bias_reason"
 msgstr ""
 "This expression uses an outdated and perhaps even discriminatory stereotype "
 "that pigeonholes people with disabilities (physical or mental) and hinders "
 "them to use their full potential. "
 
-msgid "rules.ability_bias _solution"
+msgid "rules.ability_bias_solution"
 msgstr ""
 "Ask yourself the \"flip it\" question \"Would I write the same if this "
 "person had no disabilities?\" This triggers a mental process bringing you to"
 " a better wording."
 
-msgid "rules.ability_bias _color"
+msgid "rules.ability_bias_color"
 msgstr "discriminating"
 
 msgid "rules.age_bias_old_reason"
@@ -386,6 +410,20 @@ msgstr ""
 
 msgid "rules.job_requirements_bias_color"
 msgstr "discriminating"
+
+msgid "rules.orthography_label"
+msgstr "Orthography"
+
+msgid "rules.orthography_reason"
+msgstr ""
+"Correct any spelling or grammatical errors to maximize the impact of their "
+"writing."
+
+msgid "rules.orthography_solution"
+msgstr ""
+
+msgid "rules.orthography_color"
+msgstr "style"
 
 msgid "rules.requirements_overload_reason"
 msgstr ""

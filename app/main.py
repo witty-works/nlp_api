@@ -2,6 +2,8 @@ import uvicorn
 import os
 import json
 import secrets
+import asyncio
+import aiohttp
 
 # TODO: This will be removed once blackfire-python includes FastAPI. This function
 # monkey patches FastAPI's middleware stack to ensure Blackfire is on the outermost
@@ -55,7 +57,7 @@ from app.lang import (
 # Model data
 model = {"en": spacy.load("en_core_web_sm"), "de": spacy.load("de_core_news_sm")}
 #custom lematizer to correct the lemmas in spacy library, to add to the curent spacy lematizer
-dict_lemma_lookup = {"international": "international", "internationale": "international", "Meister": "Meister", "kämpfend": "kämpfend", "abgebrüht": "abgebrüht", "beherrschend": "beherrschend", "entscheidend": "entscheidend", "entschlossen": "entschlossen", 'angewiesen': 'angewiesen', 'berührt':'berührt', 'besonnen':'besonnen', 'betreut':'betreut', 'bewegt':'bewegt', 'einfühlend':'einfühlend', 'engagiert':'engagiert', 'entgegenkommend':'entgegenkommend', 'ergreifend':'ergreifend', 'fördernd':'fördernd', 'gerührt':'gerührt', 'heiter':'heiter', 'lieb':'lieb', 'mitfühlend':'mitfühlend', 'mitwirkend':'mitwirkend', 'motiviert':'motiviert', 'nährend':'nährend', 'teilnehmend':'teilnehmend', 'unterstützend':'unterstützend', 'verbindend':'verbindend', 'vermittelnd':'vermittelnd', 'vertraut':'vertraut', 'weich':'weich', 'zusammenhängend':'zusammenhängend', 'zusammenwirkend':'zusammenwirkend', 'zustimmend':'zustimmend'}
+dict_lemma_lookup = {"international": "international", "internationale": "international", "Meister": "Meister", "kämpfend": "kämpfend", "abgebrüht": "abgebrüht", "beherrschend": "beherrschend", "entscheidend": "entscheidend", "entschlossen": "entschlossen", 'angewiesen': 'angewiesen', 'berührt':'berührt', 'besonnen':'besonnen', 'betreut':'betreut', 'bewegt':'bewegt', 'einfühlend':'einfühlend', 'engagiert':'engagiert', 'entgegenkommend':'entgegenkommend', 'ergreifend':'ergreifend', 'fördernd':'fördernd', 'gerührt':'gerührt', 'heiter':'heiter', 'lieb':'lieb', 'mitfühlend':'mitfühlend', 'mitwirkend':'mitwirkend', 'motiviert':'motiviert', 'nährend':'nährend', 'teilnehmend':'teilnehmend', 'unterstützend':'unterstützend', 'verbindend':'verbindend', 'vermittelnd':'vermittelnd', 'vertraut':'vertraut', 'weich':'weich', 'zusammenhängend':'zusammenhängend', 'zusammenwirkend':'zusammenwirkend', 'zustimmend':'zustimmend', 'jünger':'jünger', 'ausgeprägt': 'ausgeprägt', 'ausgezeichnet':'ausgezeichnet', 'äußerst':'äußerst', 'beeindruckend':'beeindruckend', 'beste':'beste', 'etabliert':'etabliert', 'führend':'führend', 'fundiert':'fundiert', 'gewandt': 'gewandt', 'Götter': 'Götter', 'hervorragend':'hervorragend', 'überzeugend':'überzeugend', 'zwingend':'zwingend'}
 
 lookup_table = model["de"].get_pipe("lemmatizer").lookups.get_table("lemma_lookup")
 for key in dict_lemma_lookup:
@@ -66,11 +68,15 @@ df_male_ct = pd.read_csv("training_data/MaleCodedTerms_DE.csv")
 #list_male = list(df_male_ct["MaleCodedWords-German"])
 # load Gender denom_de
 df_gender_ct = pd.read_csv("training_data/GenderedDenom_DE.csv")
+#load Gender denom_de false_positives
+genderdenom_false_positives = pd.read_csv("training_data/genderdenom_false_positives.csv")
+
+
 # load discriminating words_de
 df_discrim_words = pd.read_csv("training_data/DiscriminatingWords_DE.csv")
 # load Empty words_de
-df_empty_word = pd.read_csv("training_data/empty_words_ge.csv")
-df_empty_sentences = pd.read_csv("training_data/empty_word_sentences_de.csv")
+df_empty_word = pd.read_csv("training_data/empty_words_de.csv")
+df_empty_sentences = pd.read_csv("training_data/empty_words_sentences_de.csv")
 #list of "empty word" sentences
 terms_empty = list(df_empty_sentences["EmptyWords-German"])
 
@@ -94,10 +100,11 @@ df_female_words = pd.read_csv("training_data/FemaleCodedWords_DE.csv")
 df_male_coded_words_en = pd.read_csv("training_data/MaleCodedTerms_EN.csv")
 
 # dictionaries to handle false positives
-false_positive_male = ["selbst", "flexible", "Probleme", "Macht", "unabhängig", "Entwickler"]
+false_positive_male = ["selbst", "flexible", "Probleme", "unabhängig", "Entwickler"]
 false_positive_empty = ["international"]
 exceptions = ["Unternehmen", "Firma", "Gruppe", "Gesellschaft", "Kollektivgesellschaft", "Team", "Organization", "Gliederung"]
-terms_false_positive = ["Kolleginnen und Kollegen", "Kundinnen und Kunden", "Marketing-Team", "Kolleginnen* und Kollegen", "Kundinnen* und Kunden", "Kolleginnen: und Kollegen", "Kundinnen: und Kunden"]
+terms_false_positive = genderdenom_false_positives["False_positives"].tolist()
+
 
 app = FastAPI(
     title="Witty NLP API",
@@ -170,11 +177,11 @@ def get_root():
     return RedirectResponse(url='/form', status_code=301)
 
 @app.get("/docs", include_in_schema=False)
-async def get_swagger_documentation(username: str = Depends(get_current_username)):
+def get_swagger_documentation(username: str = Depends(get_current_username)):
     return get_swagger_ui_html(openapi_url="/openapi.json", title="docs")
 
 @app.get("/openapi.json", include_in_schema=False)
-async def openapi(username: str = Depends(get_current_username)):
+def openapi(username: str = Depends(get_current_username)):
     return get_openapi(title=app.title, version=app.version, routes=app.routes)
 
 @app.get("/form", response_class=HTMLResponse)
@@ -182,7 +189,7 @@ def form(request: Request):
     return templates.TemplateResponse("form.html", {"request": request})
 
 @app.post("/log")
-async def log(user_request_in: UserRequestInEvent, background_tasks: BackgroundTasks):
+def log(user_request_in: UserRequestInEvent, background_tasks: BackgroundTasks):
     try:
         lang = Lang(user_request_in)
     except Exception as e:
@@ -199,26 +206,9 @@ async def check_query(user_request_in: UserRequestIn, background_tasks: Backgrou
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-    #apply SpaCy pre-built model
-    tokens = model[lang.locale](user_request_in.text)
-    
-    #Phrase matcher part to handle False positives with two words and special simbols
-    matcher = PhraseMatcher(model[lang.locale].vocab)
-
-    # Only run model.make_doc to speed things up
-    patterns = [model[lang.locale].make_doc(user_request_in.text) for text in terms_false_positive]
-    matcher.add("TerminologyList", patterns)
-    
-    #functions for German rules
-    if lang.locale == "de":
-        list_results = GermanRules(lang, tokens, user_request_in.text)
-
-    #function for English rules
-    elif lang.locale == "en":
-        list_results = EnglishRules(lang, tokens, user_request_in.text)
-
-    else:
-        list_results = []
+    languagetools_results = await languagetools(lang, user_request_in.text)
+    language_rules_results = language_rules(lang, user_request_in.text)
+    list_results = language_rules_results + languagetools_results
 
     response = ResultsOut.factory(list_results, lang)
 
@@ -227,6 +217,74 @@ async def check_query(user_request_in: UserRequestIn, background_tasks: Backgrou
     return response
 
 # Functions
+async def languagetools(lang, text):
+    url = os.environ.get("LANGUAGETOOL_API", "https://api.languagetool.org/v2")
+    if url == "false":
+        return []
+
+    list_results = []
+
+    async with aiohttp.ClientSession() as session:
+        payload = {
+            "text": text,
+            "language": lang.locale,
+            "disabledRules": "DE_CASE"
+        }
+        async with session.post(url + "/check", data=payload) as r:
+            result = await r.json()
+
+            if "matches" in result:
+                for match in result["matches"]:
+                    offset = int(match["offset"])
+                    end = offset + int(match["length"])
+                    alternatives = []
+                    if "replacements" in match:
+                         for replacement in match["replacements"]:
+                             value = replacement["value"]
+                             value = value if value != "" else "-"
+                             alternatives.append(value)
+
+                    list_results.append(
+                        ResultOut.factory(
+                            lang,
+                            text[offset:end],
+                            "orthography",
+                            offset,
+                            end,
+                            alternatives,
+                            None,
+                            match["shortMessage"],
+                            None,
+                            match["message"]
+                        )
+                    )
+
+    return list_results
+
+def language_rules(lang, text):
+    #apply SpaCy pre-built model
+    tokens = model[lang.locale](text)
+    
+    #Phrase matcher part to handle False positives with two words and special simbols
+    matcher = PhraseMatcher(model[lang.locale].vocab)
+
+    # Only run model.make_doc to speed things up
+    patterns = [model[lang.locale].make_doc(text) for value in terms_false_positive]
+    matcher.add("TerminologyList", patterns)
+    
+    #functions for German rules
+    if lang.locale == "de":
+        list_results = GermanRules(lang, tokens, text)
+
+    #function for English rules
+    elif lang.locale == "en":
+        list_results = EnglishRules(lang, tokens, text)
+
+    else:
+        list_results = []
+    
+    return list_results
+
 def log_response(user_request_in: UserRequestIn, response: ResultsOut = None):
     if user_request_in.id == None or os.environ.get("LOGGING_ENABLED", None) != "true":
         return
@@ -250,7 +308,8 @@ def log_response(user_request_in: UserRequestIn, response: ResultsOut = None):
 
 # Function to catch ending in German Denom
 def GenderedDenomEnd (lang, text):
-    category = "gendered_denominations"      
+    category = "gendered_roles"      
+    subcategory = "gendered_denominations"      
     ending = ["/in", "/-in", "_in"]
     list_ending = []
 
@@ -263,7 +322,8 @@ def GenderedDenomEnd (lang, text):
                 category,
                 span.start(),
                 span.end(),
-                [":in"])
+                [":in"],
+                subcategory)
              )   
     return list_ending
 
@@ -365,7 +425,8 @@ def MaleCodedWordAnalysis(lang, tokens):
     return list_tokens     
     
 def GenderedDenomAnalysis(lang, tokens):
-    category = "gendered_denominations"
+    category = "gendered_roles"      
+    subcategory = "gendered_denominations"      
     list_tokens = []
     list_false_positives = []  
     matcher = PhraseMatcher(model[lang.locale].vocab)
@@ -402,7 +463,8 @@ def GenderedDenomAnalysis(lang, tokens):
                             category,
                             token.idx,
                             None,
-                            ast.literal_eval(alternative_sing)
+                            ast.literal_eval(alternative_sing),
+                            subcategory
                             )
                         )
                
@@ -497,6 +559,7 @@ def BoastingWordsSentences(lang, tokens):
 
 # Unified function for Emty words false positives and rules    
 def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
+    #category = df_empty_sentences(["subcategory"])
     category = "empty_words"
     list_tokens = []
     list_false_positives = []
@@ -507,55 +570,107 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
     patterns = [model[lang.locale].make_doc(text) for text in terms]
     matcher.add("TerminologyList", patterns)
 
-    for token in tokens:
+    for i in range(len(tokens))[1:-1]:
         #check if the user query have false positives
-        if IsItFalsePositive(token.lemma_, false_positive_empty):
+        if IsItFalsePositive(tokens[i].lemma_, false_positive_empty):
             #recognise if there is Name of organisation or geographical name in the query
             if len(tokens.ents) > 0:
                 #this output will be deleted in production
                 list_false_positives.append({
-                    "false positives": token.text,    
+                    "false positives": tokens[i].text,    
                     "category": "EmptyWord"                  
                 })
             else:
-                for index, row in df.iterrows():
-                    if token.lemma_ == row[rules_name]:
-                        list_tokens.append(
-                            ResultOut.factory(
-                                lang,
-                                token.text,
-                                category,
-                                token.idx,
-                                None,
-                                ["-"]
-                            )
-                        )
+                for word, alternative in zip(df_empty_word["EmptyWords-German"], df_empty_word["Alternative_Singular_split"]):
+                    if len(alternative) >5:
+                        if tokens[i].lemma_ == word:
+                            list_tokens.append(
+                                ResultOut.factory(
+                                    lang,
+                                    tokens[i].text,
+                                    category,
+                                    tokens[i].idx,
+                                    tokens[i].idx+len(tokens[i].text),
+                                    ast.literal_eval(alternative)
+                                )
+                            )    
+                    else:
+                        if tokens[i].lemma_ == word:
+                            if tokens[i-1].is_stop == True or tokens[i-1].is_punct==True:
+                                list_tokens.append(
+                                    ResultOut.factory(
+                                        lang,
+                                        tokens[i-1:i+1].text,
+                                        category,
+                                        tokens[i-1].idx,
+                                        tokens[i-1].idx+len(tokens[i-1:i+1].text),
+                                        ["-"]
+                                    )
+                                )
+                            else:
+                                list_tokens.append(
+                                    ResultOut.factory(
+                                        lang,
+                                        tokens[i].text,
+                                        category,
+                                        tokens[i].idx,
+                                        tokens[i].idx+len(tokens[i].text),
+                                        ["-"]
+                                    )
+                                )
                             
         else:
-            for index, row in df.iterrows():
-                if token.lemma_ == row[rules_name]:
-                    list_tokens.append(
-                        ResultOut.factory(
-                            lang,
-                            token.text,
-                            category,
-                            token.idx,
-                            None,
-                            ["-"]
-                        )
-                    )
-
+            for word, alternative in zip(df_empty_word["EmptyWords-German"], df_empty_word["Alternative_Singular_split"]):
+                    if len(alternative) >5:
+                        if tokens[i].lemma_ == word:
+                            list_tokens.append(
+                                ResultOut.factory(
+                                    lang,
+                                    tokens[i].text,
+                                    category,
+                                    tokens[i].idx,
+                                    tokens[i].idx+len(tokens[i].text),
+                                    ast.literal_eval(alternative)
+                                )
+                            )    
+                    else:
+                        if tokens[i].lemma_ == word:
+                            if tokens[i-1].is_stop == True or tokens[i-1].is_punct==True:
+                                list_tokens.append(
+                                    ResultOut.factory(
+                                        lang,
+                                        tokens[i-1:i+1].text,
+                                        category,
+                                        tokens[i-1].idx,
+                                        tokens[i-1].idx+len(tokens[i-1:i+1].text),
+                                        ["-"]
+                                    )
+                                )
+                            else:
+                                list_tokens.append(
+                                    ResultOut.factory(
+                                        lang,
+                                        tokens[i].text,
+                                        category,
+                                        tokens[i].idx,
+                                        tokens[i].idx+len(tokens[i].text),
+                                        ["-"]
+                                    )
+                                )
  
     matches = matcher(tokens)
     for match_id, start, end in matches:
-        span = tokens[start:end]
-        list_tokens.append(
-            ResultOut.factory(
-                lang,
-                span.text,
-                category,
-                span.start_char,
-                span.end_char
+        for sentence, alternative in zip(df_empty_sentences["EmptyWords-German"], df_empty_sentences["Alternative_Singular_split"]):
+            span = tokens[start:end]
+            if span.text == sentence:
+                list_tokens.append(
+                    ResultOut.factory(
+                        lang,
+                        span.text,
+                        category,
+                        span.start_char,
+                        span.end_char,
+                        ast.literal_eval(alternative) 
             )
         )
 
@@ -581,7 +696,7 @@ def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, rules_name, category):
                         category,
                         token.idx,
                         None,
-                        ["-"]
+                        []
                     )
                 )
     
@@ -613,7 +728,7 @@ def RulesBased(lang, tokens, df, rules_name, category):
                         category,
                         token.idx,
                         None,
-                        ["-"]
+                        []
                     )
                 )
 
