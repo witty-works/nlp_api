@@ -220,7 +220,11 @@ async def languagetools(lang, text):
     list_results = []
 
     async with aiohttp.ClientSession() as session:
-        payload = {"text": text, "language": lang.locale}
+        payload = {
+            "text": text,
+            "language": lang.locale,
+            "disabledRules": "DE_CASE"
+        }
         async with session.post(url + "/check", data=payload) as r:
             result = await r.json()
 
