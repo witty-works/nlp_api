@@ -71,8 +71,8 @@ def test_api():
         }
     ]
 
-def test_api_typo():
-    request_data = {"text": "Halo, siehst du die schnellen Hund?"}
+def test_api_orthpgraphy():
+    request_data = {"text": "Halo, siehst du die schnellen Hund!!!"}
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -105,6 +105,18 @@ def test_api_typo():
         "label": "Evtl. keine Übereinstimmung von Kasus, Numerus oder Genus",
         "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
         "solution": "Möglicherweise fehlende grammatische Übereinstimmung von Kasus, Numerus oder Genus. Beispiel: ‚mein kleiner Haus‘ statt ‚mein kleines Haus‘"
+        },
+        {
+        "text": "!!!",
+        "category": "empty_words",
+        "start": 34,
+        "end": 37,
+        "alternatives": [
+            "!"
+        ],
+        "label": "",
+        "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
+        "solution": "Die Verwendung von mehreren Frage- oder Ausrufezeichen wirkt oft übertrieben emphatisch."
         }
     ]
 

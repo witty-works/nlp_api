@@ -230,9 +230,8 @@ async def languagetools(lang, text):
 
             if "matches" in result:
                 for match in result["matches"]:
-                    context = match["context"]
-                    offset = int(context["offset"])
-                    end = offset + int(context["length"])
+                    offset = int(match["offset"])
+                    end = offset + int(match["length"])
                     alternatives = []
                     if "replacements" in match:
                          for replacement in match["replacements"]:
@@ -243,7 +242,7 @@ async def languagetools(lang, text):
                     list_results.append(
                         ResultOut.factory(
                             lang,
-                            context["text"][offset:end],
+                            text[offset:end],
                             "orthography",
                             offset,
                             end,
