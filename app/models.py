@@ -46,6 +46,8 @@ class ResultOut(BaseModel):
 
         if subcategory == None:
             subcategory = category
+        elif category == "empty_words":
+            subcategory = "empty_words"
 
         label = label if label != None else lang._("rules." + category + "_label")
         reason = reason if reason != None else lang._("rules." + subcategory + "_reason")
