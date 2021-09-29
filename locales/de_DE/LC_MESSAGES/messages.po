@@ -429,11 +429,11 @@ msgstr "Orthographie"
 
 msgid "rules.orthography_reason"
 msgstr ""
+"Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die "
+"Wirkung ihrer Texte zu maximieren."
 
 msgid "rules.orthography_solution"
 msgstr ""
-"Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die "
-"Wirkung ihrer Texte zu maximieren."
 
 msgid "rules.orthography_color"
 msgstr "style"

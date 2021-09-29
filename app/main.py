@@ -304,7 +304,8 @@ def log_response(user_request_in: UserRequestIn, response: ResultsOut = None):
 
 # Function to catch ending in German Denom
 def GenderedDenomEnd (lang, text):
-    category = "gendered_denominations"      
+    category = "gendered_roles"      
+    subcategory = "gendered_denominations"      
     ending = ["/in", "/-in", "_in"]
     list_ending = []
 
@@ -317,7 +318,8 @@ def GenderedDenomEnd (lang, text):
                 category,
                 span.start(),
                 span.end(),
-                [":in"])
+                [":in"],
+                subcategory)
              )   
     return list_ending
 
@@ -419,7 +421,8 @@ def MaleCodedWordAnalysis(lang, tokens):
     return list_tokens     
     
 def GenderedDenomAnalysis(lang, tokens):
-    category = "gendered_denominations"
+    category = "gendered_roles"      
+    subcategory = "gendered_denominations"      
     list_tokens = []
     list_false_positives = []  
     matcher = PhraseMatcher(model[lang.locale].vocab)
@@ -456,7 +459,8 @@ def GenderedDenomAnalysis(lang, tokens):
                             category,
                             token.idx,
                             None,
-                            ast.literal_eval(alternative_sing)
+                            ast.literal_eval(alternative_sing),
+                            subcategory
                             )
                         )
                

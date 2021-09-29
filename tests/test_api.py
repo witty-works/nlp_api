@@ -22,7 +22,7 @@ def test_api():
     assert first_record["results"] == [
         {
         "text": "Kunden",
-        "category": "gendered_denominations",
+        "category": "gendered_roles",
         "start": 51,
         "end": 57,
         "alternatives": [
@@ -30,9 +30,9 @@ def test_api():
             "Kundinnen und Kunden",
             "Kundschaft "
         ],
-        "label": "Geschlechtsspezifische Bezeichnungen",
-        "reason": "Aus wirtschaftlich-historischen Gründen wird unbewusst ein Bild eines Mannes vor dem inneren Auge hervorgerufen. Das weibliche Geschlecht oder andere Geschlechtsidentitäten werden also nicht sichtbar. Und sie fühlen sich nicht zugehörig. ",
-        "solution": "Umgehen Sie mit anderen Worten das unbewusst hervorgerufene Bild. Nutzen Sie eher das Nomen, das die Tätigkeit bezeichnet, um das unbewusste Bild zu umgehen. Oder verwenden Sie eine geschlechtsneutrale Bezeichnung."
+        "label": "Geschlechtsspezifische Rollen",
+        "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
+        "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht."
         },
         {
         "text": "Ninja",
