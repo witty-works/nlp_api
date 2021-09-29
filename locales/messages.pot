@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2021-09-27 19:05\n"
-"PO-Revision-Date: 2021-09-27 19:05\n"
+"POT-Creation-Date: 2021-09-29 13:19\n"
+"PO-Revision-Date: 2021-09-29 13:19\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -39,9 +39,6 @@ msgid "rules.gendered_roles_image_solution"
 msgstr ""
 
 msgid "rules.gendered_roles_image_color"
-msgstr ""
-
-msgid "rules.gendered_denominations_label"
 msgstr ""
 
 msgid "rules.gendered_denominations_reason"
@@ -113,6 +110,33 @@ msgstr ""
 msgid "rules.empty_words_color"
 msgstr ""
 
+msgid "rules.salary_vague_or_misleading_reason"
+msgstr ""
+
+msgid "rules.salary_vague_or_misleading_solution"
+msgstr ""
+
+msgid "rules.salary_vague_or_misleading_color"
+msgstr ""
+
+msgid "rules.verbose_reason"
+msgstr ""
+
+msgid "rules.verbose_solution"
+msgstr ""
+
+msgid "rules.verbose_color"
+msgstr ""
+
+msgid "rules.vague_ambiguous_reason"
+msgstr ""
+
+msgid "rules.vague_ambiguous_solution"
+msgstr ""
+
+msgid "rules.vague_ambiguous_color"
+msgstr ""
+
 msgid "rules.boasting_words_label"
 msgstr ""
 
@@ -173,13 +197,13 @@ msgstr ""
 msgid "rules.biased_language_color"
 msgstr ""
 
-msgid "rules.ability_bias _reason"
+msgid "rules.ability_bias_reason"
 msgstr ""
 
-msgid "rules.ability_bias _solution"
+msgid "rules.ability_bias_solution"
 msgstr ""
 
-msgid "rules.ability_bias _color"
+msgid "rules.ability_bias_color"
 msgstr ""
 
 msgid "rules.age_bias_old_reason"
@@ -321,40 +345,4 @@ msgid "rules.age_biased_requirements_solution"
 msgstr ""
 
 msgid "rules.age_biased_requirements_color"
-msgstr ""
-
-msgid "rules.salary_vague_or_misleading_label"
-msgstr ""
-
-msgid "rules.salary_vague_or_misleading_reason"
-msgstr ""
-
-msgid "rules.salary_vague_or_misleading_solution"
-msgstr ""
-
-msgid "rules.salary_vague_or_misleading_color"
-msgstr ""
-
-msgid "rules.verbose_label"
-msgstr ""
-
-msgid "rules.verbose_reason"
-msgstr ""
-
-msgid "rules.verbose_solution"
-msgstr ""
-
-msgid "rules.verbose_color"
-msgstr ""
-
-msgid "rules.vague_ambiguous_label"
-msgstr ""
-
-msgid "rules.vague_ambiguous_reason"
-msgstr ""
-
-msgid "rules.vague_ambiguous_solution"
-msgstr ""
-
-msgid "rules.vague_ambiguous_color"
 msgstr ""

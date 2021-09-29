@@ -45,7 +45,7 @@ def read_csv(in_file):
 
     with open(in_file, newline='') as csvfile:
         columns = {
-            "Category": 0,
+            "Subcategory": 0,
             "Category Label EN": None,
             "Category Label DE": None,
             "Reason EN": None,
@@ -65,7 +65,7 @@ def read_csv(in_file):
                         columns[column] = i
                 line_count += 1
             else:
-                category = row[columns["Category"]]
+                category = row[columns["Subcategory"]].strip()
                 if category == "New Category":
                     continue
 
