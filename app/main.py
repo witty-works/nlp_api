@@ -63,44 +63,43 @@ lookup_table = model["de"].get_pipe("lemmatizer").lookups.get_table("lemma_looku
 for key in dict_lemma_lookup:
     lookup_table.set(key, dict_lemma_lookup[key])
 
-# load Male coded terms
-df_male_ct = pd.read_csv("training_data/MaleCodedTerms_DE.csv")
-#list_male = list(df_male_ct["MaleCodedWords-German"])
+# load agentic language
+df_agentic_ct = pd.read_csv("training_data/agentic_language_DE.csv")
+#list_agentic = list(df_agentic_ct["Lemma"])
 # load Gender denom_de
-df_gender_ct = pd.read_csv("training_data/GenderedDenom_DE.csv")
+df_gender_ct = pd.read_csv("training_data/gendered_denominations_DE.csv")
 #load Gender denom_de false_positives
-genderdenom_false_positives = pd.read_csv("training_data/genderdenom_false_positives.csv")
-
+genderdenom_false_positives = pd.read_csv("training_data/gendered_denominations_false_positives.csv")
 
 # load discriminating words_de
-df_discrim_words = pd.read_csv("training_data/DiscriminatingWords_DE.csv")
+df_discrim_words = pd.read_csv("training_data/biased_language_DE.csv")
 # load Empty words_de
 df_empty_word = pd.read_csv("training_data/empty_words_de.csv")
 df_empty_sentences = pd.read_csv("training_data/empty_words_sentences_de.csv")
 #list of "empty word" sentences
-terms_empty = list(df_empty_sentences["EmptyWords-German"])
+terms_empty = list(df_empty_sentences["Lemma"])
 
 # load Boasting word and sentences de
-df_boast_word = pd.read_csv("training_data/BoastingWords_DE.csv")
-df_boast_sentences = pd.read_csv("training_data/BoastingSentences_DE.csv")
+df_boast_word = pd.read_csv("training_data/boasting_words_DE.csv")
+df_boast_sentences = pd.read_csv("training_data/boasting_words_sentences_DE.csv")
 #list of "boasting word" sentences
-terms_boast = list(df_boast_sentences["Boasting-German"])
+terms_boast = list(df_boast_sentences["Lemma"])
 
 # load inslusive words
-df_inclusive_words = pd.read_csv("training_data/inclusive_words_de.csv")
+df_d_and_i_words = pd.read_csv("training_data/d_and_i_words_de.csv")
 # load inslusive sentences
-df_inclusive_sentences = pd.read_csv("training_data/invlusive_sentences_de.csv")
-# list of "inclusive word" sentences
-terms_inclusive = list(df_inclusive_sentences["Inclusive-German"])
+df_d_and_i_words_sentences = pd.read_csv("training_data/d_and_i_sentences_de.csv")
+# list of "d_and_i_words word" sentences
+terms_d_and_i_words = list(df_d_and_i_words_sentences["Lemma"])
 
-#load female coded terms
-df_female_words = pd.read_csv("training_data/FemaleCodedWords_DE.csv")
+#load communal coded terms
+df_communal_words = pd.read_csv("training_data/communal_language_DE.csv")
 
-# load male coded English words
-df_male_coded_words_en = pd.read_csv("training_data/MaleCodedTerms_EN.csv")
+# load agentic language
+df_agentic_words_en = pd.read_csv("training_data/agentic_language_EN.csv")
 
 # dictionaries to handle false positives
-false_positive_male = ["selbst", "flexible", "Probleme", "unabhängig", "Entwickler"]
+false_positive_agentic = ["selbst", "flexible", "Probleme", "unabhängig", "Entwickler"]
 false_positive_empty = ["international"]
 exceptions = ["Unternehmen", "Firma", "Gruppe", "Gesellschaft", "Kollektivgesellschaft", "Team", "Organization", "Gliederung"]
 terms_false_positive = genderdenom_false_positives["False_positives"].tolist()
@@ -307,10 +306,10 @@ def log_response(user_request_in: UserRequestIn, response: ResultsOut = None):
         json.dump(data, outfile)
 
 # Function to catch ending in German Denom
-def GenderedDenomEnd (lang, text):
+def GenderedDenomEnd(lang, text):
     category = "gendered_roles"      
     subcategory = "gendered_denominations"      
-    ending = ["/in", "/-in", "_in"]
+    ending = ["/in", "/-in", "_in", "\*in"]
     list_ending = []
 
     for item in ending:
@@ -329,36 +328,36 @@ def GenderedDenomEnd (lang, text):
 
 #Function for all German rules
 def GermanRules(lang, tokens, text):
-    list_de_end = GenderedDenomEnd(lang, text)
+    list_gendered_denominations_end = GenderedDenomEnd(lang, text)
 
-    #Male coded words and related false positives catch
-    list_male_coded= MaleCodedWordAnalysis(lang, tokens)
+    #Agentic language and related false positives catch
+    list_agentic = AgenticLanguageAnalysis(lang, tokens)
+
     # Empty words&sentences catch
-    list_empty_words = EmptyWordAnalysis(lang, tokens, terms_empty, df_empty_word, "EmptyWords-German")
+    list_empty_words = EmptyWordAnalysis(lang, tokens, terms_empty, df_empty_word, df_empty_sentences)
 
     #Gendered denom. words catch 
-    list_gender_denom = GenderedDenomAnalysis(lang, tokens)
+    list_gendered_denominations = GenderedDenomAnalysis(lang, tokens)
 
     # boasting words&sentences catch
-    list_boast =BoastingWordsSentences(lang, tokens)
-    #list_boast = RulesBasedWordsPhraseMatcher(lang, tokens, terms_boast, df_boast_word, "Boasting-German", "boasting_words")
+    list_boast = BoastingWordsSentences(lang, tokens)
     
     #discriminating words catch
-    list_discrim = RulesBased(lang, tokens, df_discrim_words, "Jo", "biased_language")
+    list_discrim = RulesBased(lang, tokens, df_discrim_words, "biased_language")
     
-    #female terms
-    list_female = RulesBased(lang, tokens, df_female_words, "FemaleCodedWords-German", "communal_language")
+    #communal terms
+    list_communal = RulesBased(lang, tokens, df_communal_words, "communal_language")
 
-    #inclusive words
-    list_inclusiv = RulesBasedWordsPhraseMatcher(lang, tokens, terms_inclusive, df_inclusive_words, "Inclusive-German", "d_and_i_words")
+    #d_and_i_words words
+    list_d_and_i_words = RulesBasedWordsPhraseMatcher(lang, tokens, terms_d_and_i_words, df_d_and_i_words, "d_and_i_words")
 
-    return list_male_coded+list_gender_denom+list_empty_words+list_boast + list_discrim + list_female + list_inclusiv
+    return list_gendered_denominations_end + list_agentic + list_gendered_denominations + list_empty_words + list_boast + list_discrim + list_communal + list_d_and_i_words
 
 #Function for all English rules
 def EnglishRules(lang, tokens, text):
-    list_male_coded= RulesBasedEN(lang, tokens, df_male_coded_words_en, "MaleCodedWords-English", "agentic_language")
+    list_agentic= RulesBasedEN(lang, tokens, df_agentic_words_en, "agentic_language")
 
-    list_full = list_male_coded
+    list_full = list_agentic
     
     return list_full
 
@@ -371,8 +370,8 @@ def IsItFalsePositive(word, false_positive):
     return False
 
 """Function to handle dependecies of the adjectives."""
-# this function male coded words& related false positives
-def MaleCodedWordAnalysis(lang, tokens):
+# this function agentic language & related false positives
+def AgenticLanguageAnalysis(lang, tokens):
     category = "agentic_language"
     list_tokens = []
     dic_anc = {} 
@@ -380,7 +379,7 @@ def MaleCodedWordAnalysis(lang, tokens):
 
     for token in tokens:
         #check if the user query have false positives
-        if IsItFalsePositive(token.lemma_, false_positive_male):
+        if IsItFalsePositive(token.lemma_, false_positive_agentic):
             #recognise if there is Name of organisation or geographical name in the query
             for entity in tokens.ents:
                 if entity.label_ == "ORG":
@@ -400,7 +399,7 @@ def MaleCodedWordAnalysis(lang, tokens):
             elif token.pos_ == "ADJ":# or token.tag_== "ADJD":
                 dic_anc[token.lemma_] = list(token.ancestors)
                 for key in dic_anc.keys():
-                    if key in false_positive_male:
+                    if key in false_positive_agentic:
                         for item in dic_anc[key]:
                             if item.text in exceptions:
                                 list_false_positives.append({
@@ -408,7 +407,7 @@ def MaleCodedWordAnalysis(lang, tokens):
                                     "category": "agentic_language"
                                 })
         else:
-            for word, alternative in zip(df_male_ct["MaleCodedWords-German"], df_male_ct["Alternatives_split_company"]):
+            for word, alternative in zip(df_agentic_ct["Lemma"], df_agentic_ct["Alternatives_split_company"]):
                 if token.lemma_ == word:
                     list_tokens.append(
                         ResultOut.factory(
@@ -453,7 +452,7 @@ def GenderedDenomAnalysis(lang, tokens):
         c_doc = Doc.from_docs(docs)
         
         for token in c_doc:
-            for word, alternative_sing, alternative_plur in zip(df_gender_ct["Denominations-German"], df_gender_ct["Alternative_Singular_split"], df_gender_ct["Alternative_Plural_split"]):
+            for word, alternative_sing, alternative_plur in zip(df_gender_ct["Lemma"], df_gender_ct["Alternative_Singular_split"], df_gender_ct["Alternative_Plural_split"]):
                 if token.lemma_ == word:
                     if token.morph.get("Number")[0]=="Sing":
                         list_tokens.append(
@@ -483,7 +482,7 @@ def GenderedDenomAnalysis(lang, tokens):
 
     else:
         for token in tokens:
-            for word, alternative_sing, alternative_plur in zip(df_gender_ct["Denominations-German"], df_gender_ct["Alternative_Singular_split"], df_gender_ct["Alternative_Plural_split"]):
+            for word, alternative_sing, alternative_plur in zip(df_gender_ct["Lemma"], df_gender_ct["Alternative_Singular_split"], df_gender_ct["Alternative_Plural_split"]):
                 if token.lemma_ == word:
                     if token.morph.get("Number")[0]=="Sing":
                         list_tokens.append(
@@ -525,7 +524,7 @@ def BoastingWordsSentences(lang, tokens):
     matcher.add("TerminologyList", patterns)
 
     for token in tokens:
-        for word, alternative in zip(df_boast_word["Boasting-German"], df_boast_word["Alternatives-German"]):
+        for word, alternative in zip(df_boast_word["Lemma"], df_boast_word["Alternatives"]):
             if token.lemma_ == word:
                 list_tokens.append(
                     ResultOut.factory(
@@ -541,7 +540,7 @@ def BoastingWordsSentences(lang, tokens):
     
     matches = matcher(tokens)
     for match_id, start, end in matches:
-        for sentence, alternative in zip(df_boast_sentences["Boasting-German"], df_boast_sentences["Alternatives-German"]):
+        for sentence, alternative in zip(df_boast_sentences["Lemma"], df_boast_sentences["Alternatives"]):
             span = tokens[start:end]
             if span.text == sentence:
                 list_tokens.append(
@@ -558,7 +557,7 @@ def BoastingWordsSentences(lang, tokens):
     return list_tokens 
 
 # Unified function for Emty words false positives and rules    
-def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
+def EmptyWordAnalysis(lang, tokens, terms, df, df_sentence):
     #category = df_empty_sentences(["subcategory"])
     category = "empty_words"
     list_tokens = []
@@ -581,7 +580,7 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
                     "category": "EmptyWord"                  
                 })
             else:
-                for word, alternative in zip(df_empty_word["EmptyWords-German"], df_empty_word["Alternative_Singular_split"]):
+                for word, alternative in zip(df["Lemma"], df["Alternative_Singular_split"]):
                     if len(alternative) >5:
                         if tokens[i].lemma_ == word:
                             list_tokens.append(
@@ -620,7 +619,7 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
                                 )
                             
         else:
-            for word, alternative in zip(df_empty_word["EmptyWords-German"], df_empty_word["Alternative_Singular_split"]):
+            for word, alternative in zip(df["Lemma"], df["Alternative_Singular_split"]):
                     if len(alternative) >5:
                         if tokens[i].lemma_ == word:
                             list_tokens.append(
@@ -660,7 +659,7 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
  
     matches = matcher(tokens)
     for match_id, start, end in matches:
-        for sentence, alternative in zip(df_empty_sentences["EmptyWords-German"], df_empty_sentences["Alternative_Singular_split"]):
+        for sentence, alternative in zip(df_sentence["Lemma"], df_sentence["Alternative_Singular_split"]):
             span = tokens[start:end]
             if span.text == sentence:
                 list_tokens.append(
@@ -677,7 +676,7 @@ def EmptyWordAnalysis(lang, tokens, terms, df, rules_name):
     return list_tokens 
 
 # Unified function for rules and sentence false positives   
-def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, rules_name, category):
+def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, category):
     list_tokens = []
     #Phrase matcher part to handle False positives with two words and special simbols
     matcher = PhraseMatcher(model[lang.locale].vocab)
@@ -688,7 +687,7 @@ def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, rules_name, category):
 
     for token in tokens:
         for index, row in df.iterrows():
-            if token.lemma_ == row[rules_name]:
+            if token.lemma_ == row["Lemma"]:
                 list_tokens.append(
                     ResultOut.factory(
                         lang,
@@ -716,10 +715,10 @@ def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, rules_name, category):
     return list_tokens 
 
 #Unified function for rules
-def RulesBased(lang, tokens, df, rules_name, category):
+def RulesBased(lang, tokens, df, category):
     list_tokens = []
     for token in tokens:
-        for word in list(df[rules_name]):
+        for word in list(df["Lemma"]):
             if token.lemma_ == word:
                 list_tokens.append(
                     ResultOut.factory(
@@ -736,11 +735,11 @@ def RulesBased(lang, tokens, df, rules_name, category):
 
 #function to catch ending in gendered denom
 #Rules based english function
-def RulesBasedEN(lang, tokens, df, rules_name, category):
+def RulesBasedEN(lang, tokens, df, category):
     list_tokens = []
     
     for token in tokens:
-        for word in list(df[rules_name]):
+        for word in list(df["Lemma"]):
             if token.lemma_ == word:
                 list_tokens.append(
                     ResultOut.factory(

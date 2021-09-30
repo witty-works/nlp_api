@@ -1,4 +1,4 @@
-Jo,Is active,Wordtype,Forms,Alternatives,"Sub-Category: age, ethnicity, gender, religion, disability & health, sexual orientation"
+Lemma,Is active,Wordtype,Forms,Alternatives,"Sub-Category: age, ethnicity, gender, religion, disability & health, sexual orientation"
 Blacklist,1,s,(ed|ing),denylist | blocklist,ethnicity
 Whitelist,1,s,(ed|ing),allowlist | passlist,ethnicity
 Master,,s,(ed|ing),main | default | primary | root,ethnicity
