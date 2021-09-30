@@ -141,6 +141,29 @@ def test_api_english():
         }
     ]
 
+def test_api_corporate_rule():
+    request_data = {"text": "Kund/in"}
+
+    response = client.post("/check", json=request_data)
+    assert response.status_code == 200
+
+    first_record = response.json()
+    assert first_record["language"] == "de"
+    assert first_record["results"] == [
+        {
+        "text": "/in",
+        "category": "empty_words",
+        "start": 4,
+        "end": 7,
+        "alternatives": [
+            ":in"
+        ],
+        "label": "Firmenrichtlinie",
+        "reason": "Bei der Deutschen Bahn verwenden wir den Doppelpunkt, um geschlechter inklusiv zu schreiben, anstelle von \"*\", \"_\" oder \"/\".",
+        "solution": "Bitte verwenden Sie den Doppelpunkt, um geschlechter inklusive zu schreiben."
+        }
+    ]
+
 def test_api_false_positive():
     request_data = {"text": "Greenpeace is an international company with headquarters in London."}
 

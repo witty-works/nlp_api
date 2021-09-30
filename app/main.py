@@ -307,11 +307,11 @@ def log_response(user_request_in: UserRequestIn, response: ResultsOut = None):
 
 # Function to catch ending in German Denom
 def GenderedDenomEnd(lang, text):
-    category = "gendered_roles"      
-    subcategory = "gendered_denominations"      
+    category = "corporate_rules"      
+    subcategory = "db_gendered_ending"      
     ending = ["/in", "/-in", "_in", "\*in"]
-    list_ending = []
 
+    list_ending = []
     for item in ending:
         span = re.search(item, text)
         if type(span)== re.Match:
@@ -324,6 +324,7 @@ def GenderedDenomEnd(lang, text):
                 [":in"],
                 subcategory)
              )   
+
     return list_ending
 
 #Function for all German rules

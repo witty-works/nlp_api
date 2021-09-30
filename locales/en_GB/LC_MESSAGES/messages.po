@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2021-09-29 13:19\n"
-"PO-Revision-Date: 2021-09-29 13:19\n"
+"POT-Creation-Date: 2021-09-30 08:14\n"
+"PO-Revision-Date: 2021-09-30 08:14\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -469,3 +469,29 @@ msgstr ""
 
 msgid "rules.age_biased_requirements_color"
 msgstr "discriminating"
+
+msgid "rules.corporate_rules_label"
+msgstr "Company guideline"
+
+msgid "rules.corporate_rules_reason"
+msgstr ""
+
+msgid "rules.corporate_rules_solution"
+msgstr ""
+
+msgid "rules.corporate_rules_color"
+msgstr "style"
+
+msgid "rules.db_gendered_ending_label"
+msgstr ""
+
+msgid "rules.db_gendered_ending_reason"
+msgstr ""
+"At Deutsche Bahn we use the colon sign to write gender inclusively "
+"inclusively in place of \"*\", \"_\" or \"/\"."
+
+msgid "rules.db_gendered_ending_solution"
+msgstr "Please use \":\" to write gender inclusively."
+
+msgid "rules.db_gendered_ending_color"
+msgstr "style"
