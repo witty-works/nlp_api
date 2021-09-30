@@ -207,7 +207,7 @@ async def check_query(user_request_in: UserRequestIn, background_tasks: Backgrou
 
     languagetools_results = await languagetools(lang, user_request_in.text)
     language_rules_results = language_rules(lang, user_request_in.text)
-    list_results = language_rules_results + languagetools_results
+    list_results = languagetools_results + language_rules_results
 
     response = ResultsOut.factory(list_results, lang)
 
