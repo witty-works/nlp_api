@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2021-09-29 13:19\n"
-"PO-Revision-Date: 2021-09-29 13:19\n"
+"POT-Creation-Date: 2021-09-30 08:14\n"
+"PO-Revision-Date: 2021-09-30 08:14\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -345,4 +345,28 @@ msgid "rules.age_biased_requirements_solution"
 msgstr ""
 
 msgid "rules.age_biased_requirements_color"
+msgstr ""
+
+msgid "rules.corporate_rules_label"
+msgstr ""
+
+msgid "rules.corporate_rules_reason"
+msgstr ""
+
+msgid "rules.corporate_rules_solution"
+msgstr ""
+
+msgid "rules.corporate_rules_color"
+msgstr ""
+
+msgid "rules.db_gendered_ending_label"
+msgstr ""
+
+msgid "rules.db_gendered_ending_reason"
+msgstr ""
+
+msgid "rules.db_gendered_ending_solution"
+msgstr ""
+
+msgid "rules.db_gendered_ending_color"
 msgstr ""

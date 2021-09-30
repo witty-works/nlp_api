@@ -53,8 +53,8 @@ class ResultOut(BaseModel):
         reason = reason if reason != None else lang._("rules." + subcategory + "_reason")
         solution = solution if solution != None else lang._("rules." + subcategory + "_solution")
 
-        # TODO remove as soon as the browser extension can handle the "orthography" category
-        if category == "orthography":
+        # TODO remove as soon as the browser extension can handle the "orthography" and "corporate_rules" category
+        if category == "orthography" or category == "corporate_rules":
             category = subcategory = "empty_words"
 
         return ResultOut(text, category, start, end, alternatives, label, reason, solution)
