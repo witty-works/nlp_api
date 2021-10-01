@@ -69,7 +69,7 @@ df_agentic_ct = pd.read_csv("training_data/agentic_language_DE.csv")
 # load Gender denom_de
 df_gender_ct = pd.read_csv("training_data/gendered_denominations_DE.csv")
 #load Gender denom_de false_positives
-genderdenom_false_positives = pd.read_csv("training_data/gendered_denominations_false_positives.csv")
+genderdenom_false_positives = pd.read_csv("training_data/genderdenom_false_positives_new.csv")
 
 # load discriminating words_de
 df_discrim_words = pd.read_csv("training_data/biased_language_DE.csv")
