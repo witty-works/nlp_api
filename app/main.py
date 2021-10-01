@@ -57,7 +57,7 @@ from app.lang import (
 # Model data
 model = {"en": spacy.load("en_core_web_sm"), "de": spacy.load("de_core_news_sm")}
 #custom lematizer to correct the lemmas in spacy library, to add to the curent spacy lematizer
-dict_lemma_lookup = {"international": "international", "internationale": "international", "Meister": "Meister", "kämpfend": "kämpfend", "abgebrüht": "abgebrüht", "beherrschend": "beherrschend", "entscheidend": "entscheidend", "entschlossen": "entschlossen", 'angewiesen': 'angewiesen', 'berührt':'berührt', 'besonnen':'besonnen', 'betreut':'betreut', 'bewegt':'bewegt', 'einfühlend':'einfühlend', 'engagiert':'engagiert', 'entgegenkommend':'entgegenkommend', 'ergreifend':'ergreifend', 'fördernd':'fördernd', 'gerührt':'gerührt', 'heiter':'heiter', 'lieb':'lieb', 'mitfühlend':'mitfühlend', 'mitwirkend':'mitwirkend', 'motiviert':'motiviert', 'nährend':'nährend', 'teilnehmend':'teilnehmend', 'unterstützend':'unterstützend', 'verbindend':'verbindend', 'vermittelnd':'vermittelnd', 'vertraut':'vertraut', 'weich':'weich', 'zusammenhängend':'zusammenhängend', 'zusammenwirkend':'zusammenwirkend', 'zustimmend':'zustimmend', 'jünger':'jünger', 'ausgeprägt': 'ausgeprägt', 'ausgezeichnet':'ausgezeichnet', 'äußerst':'äußerst', 'beeindruckend':'beeindruckend', 'beste':'beste', 'etabliert':'etabliert', 'führend':'führend', 'fundiert':'fundiert', 'gewandt': 'gewandt', 'Götter': 'Götter', 'hervorragend':'hervorragend', 'überzeugend':'überzeugend', 'zwingend':'zwingend'}
+dict_lemma_lookup = {"international": "international", "internationale": "international", "Meister": "Meister", "kämpfend": "kämpfend", "abgebrüht": "abgebrüht", "beherrschend": "beherrschend", "entscheidend": "entscheidend", "entschlossen": "entschlossen", 'angewiesen': 'angewiesen', 'berührt':'berührt', 'besonnen':'besonnen', 'betreut':'betreut', 'bewegt':'bewegt', 'einfühlend':'einfühlend', 'engagiert':'engagiert', 'entgegenkommend':'entgegenkommend', 'ergreifend':'ergreifend', 'fördernd':'fördernd', 'gerührt':'gerührt', 'heiter':'heiter', 'lieb':'lieb', 'mitfühlend':'mitfühlend', 'mitwirkend':'mitwirkend', 'motiviert':'motiviert', 'nährend':'nährend', 'teilnehmend':'teilnehmend', 'unterstützend':'unterstützend', 'verbindend':'verbindend', 'vermittelnd':'vermittelnd', 'vertraut':'vertraut', 'weich':'weich', 'zusammenhängend':'zusammenhängend', 'zusammenwirkend':'zusammenwirkend', 'zustimmend':'zustimmend', 'jünger':'jünger', 'ausgeprägt': 'ausgeprägt', 'ausgezeichnet':'ausgezeichnet', 'äußerst':'äußerst', 'beeindruckend':'beeindruckend', 'beste':'beste', 'bester':'beste', 'besten':'beste', 'bestem':'beste', 'bestes':'beste', 'etabliert':'etabliert', 'führend':'führend', 'fundiert':'fundiert', 'gewandt': 'gewandt', 'Götter': 'Götter', 'hervorragend':'hervorragend', 'überzeugend':'überzeugend', 'zwingend':'zwingend'}
 
 lookup_table = model["de"].get_pipe("lemmatizer").lookups.get_table("lemma_lookup")
 for key in dict_lemma_lookup:
@@ -207,7 +207,7 @@ async def check_query(user_request_in: UserRequestIn, background_tasks: Backgrou
 
     languagetools_results = await languagetools(lang, user_request_in.text)
     language_rules_results = language_rules(lang, user_request_in.text)
-    list_results = language_rules_results + languagetools_results
+    list_results = languagetools_results + language_rules_results
 
     response = ResultsOut.factory(list_results, lang)
 
@@ -229,11 +229,18 @@ async def languagetools(lang, text):
             "language": lang.locale,
             "disabledRules": "DE_CASE"
         }
+        rule_ids_ignore = [
+            "SEHR_GEEHRTER_NAME"
+        ]
+
         async with session.post(url + "/check", data=payload) as r:
             result = await r.json()
 
             if "matches" in result:
                 for match in result["matches"]:
+                    if match["rule"]["id"] in rule_ids_ignore:
+                        continue
+
                     offset = int(match["offset"])
                     end = offset + int(match["length"])
                     alternatives = []
