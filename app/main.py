@@ -224,23 +224,20 @@ async def languagetools(lang, text):
     list_results = []
 
     async with aiohttp.ClientSession() as session:
+        langs = {"en": "en-GB", "de": "de-DE"}
+
         payload = {
             "text": text,
-            "language": lang.locale,
-            "disabledRules": "DE_CASE"
+            "language": langs[lang.locale],
+            "disabledRules": "DE_CASE,SEHR_GEEHRTER_NAME",
+            "motherTongue": "de-DE"
         }
-        rule_ids_ignore = [
-            "SEHR_GEEHRTER_NAME"
-        ]
 
         async with session.post(url + "/check", data=payload) as r:
             result = await r.json()
 
             if "matches" in result:
                 for match in result["matches"]:
-                    if match["rule"]["id"] in rule_ids_ignore:
-                        continue
-
                     offset = int(match["offset"])
                     end = offset + int(match["length"])
                     alternatives = []
