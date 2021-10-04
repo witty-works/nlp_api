@@ -2,8 +2,12 @@ import uvicorn
 import os
 import json
 import secrets
-import asyncio
 import aiohttp
+import sentry_sdk
+
+from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
+from sentry_sdk.integrations.aiohttp import AioHttpIntegration
+from sentry_sdk import configure_scope
 
 # TODO: This will be removed once blackfire-python includes FastAPI. This function
 # monkey patches FastAPI's middleware stack to ensure Blackfire is on the outermost
@@ -14,7 +18,7 @@ if os.environ.get("BLACKFIRE_ENABLED", None) == "true":
 
 from fastapi import FastAPI, Request, HTTPException, BackgroundTasks, Depends, status
 
-from fastapi.openapi.docs import get_redoc_html, get_swagger_ui_html
+from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
 
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
@@ -24,7 +28,9 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.responses import RedirectResponse
-from fastapi.encoders import jsonable_encoder
+from fastapi.exception_handlers import (
+    http_exception_handler,
+)
 
 from typing import Optional
 
@@ -53,6 +59,52 @@ from app.models import (
 from app.lang import (
     Lang,
 )
+
+app = FastAPI(
+    title="Witty NLP API",
+    version="1.1.3https://igholacracy.slack.com/",
+    docs_url=None,
+    redoc_url=None,
+    openapi_url = None,
+)
+
+sentry_dsn = os.environ.get("SENTRY_DSN", "false")
+if sentry_dsn != "false":
+    sentry_sdk.init(
+        dsn=sentry_dsn,
+        traces_sample_rate=0.2,
+          integrations=[AioHttpIntegration()]
+    )
+
+@app.exception_handler(HTTPException)
+async def custom_http_exception_handler(request, e):
+    with configure_scope() as scope:
+        scope.set_context("request", request)
+        scope.transaction = request.scope["path"][1:]
+
+        sentry_sdk.capture_exception(e)
+    return await http_exception_handler(request, e)
+
+security = HTTPBasic(auto_error=False)
+
+basic_auth = {
+    "username": os.environ.get("API_DOCS_USERNAME", None),
+    "password": os.environ.get("API_DOCS_PASSWORD", None),
+    "enabled": os.environ.get("API_DOCS_AUTH_ENABLED", "false"),
+}
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+from app.middleware import BlackfireFastAPIMiddleware
+
+if os.environ.get("BLACKFIRE_ENABLED", "false") == "true":
+    app.add_middleware(BlackfireFastAPIMiddleware)
 
 # Model data
 model = {"en": spacy.load("en_core_web_sm"), "de": spacy.load("de_core_news_sm")}
@@ -103,36 +155,6 @@ false_positive_agentic = ["selbst", "flexible", "Probleme", "unabhängig", "Entw
 false_positive_empty = ["international"]
 exceptions = ["Unternehmen", "Firma", "Gruppe", "Gesellschaft", "Kollektivgesellschaft", "Team", "Organization", "Gliederung"]
 terms_false_positive = genderdenom_false_positives["False_positives"].tolist()
-
-
-app = FastAPI(
-    title="Witty NLP API",
-    version="0.1.0",
-    docs_url=None,
-    redoc_url=None,
-    openapi_url = None,
-)
-
-security = HTTPBasic(auto_error=False)
-
-basic_auth = {
-    "username": os.environ.get("API_DOCS_USERNAME", None),
-    "password": os.environ.get("API_DOCS_PASSWORD", None),
-    "enabled": os.environ.get("API_DOCS_AUTH_ENABLED", "false"),
-}
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-from app.middleware import BlackfireFastAPIMiddleware
-
-if os.environ.get("BLACKFIRE_ENABLED", "false") == "true":
-    app.add_middleware(BlackfireFastAPIMiddleware)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
@@ -189,12 +211,16 @@ def form(request: Request):
 
 @app.post("/log")
 def log(user_request_in: UserRequestInEvent, background_tasks: BackgroundTasks):
+    set_sentry_context(user_request_in)
+
     background_tasks.add_task(log_response, user_request_in)
 
     return 'ok'
 
 @app.post("/check", response_model=ResultsOut)
 async def check_query(user_request_in: UserRequestIn, background_tasks: BackgroundTasks):
+    set_sentry_context(user_request_in)
+
     languagetools_results, lang = await languagetools(user_request_in.lang, user_request_in.text)
 
     language_rules_results = language_rules(lang, user_request_in.text)
@@ -208,6 +234,9 @@ async def check_query(user_request_in: UserRequestIn, background_tasks: Backgrou
     return response
 
 # Functions
+def set_sentry_context(user_request_in: UserRequestIn):
+    sentry_sdk.set_context("user", {"id": user_request_in.id})
+
 async def languagetools(lang, text):
     url = os.environ.get("LANGUAGETOOL_API", "https://api.languagetool.org/v2")
     if url == "false":
