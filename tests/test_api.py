@@ -12,7 +12,7 @@ def test_read_form():
     assert response.status_code == 200
 
 def test_api():
-    request_data = {"text": "Wir suchen Ninja Rockstar Programmierer für unsere Kunden"}
+    request_data = {"text": "Wir suchen Ninja Programmierer für unsere Kunden"}
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -23,8 +23,8 @@ def test_api():
         {
         "text": "Kunden",
         "category": "gendered_roles",
-        "start": 51,
-        "end": 57,
+        "start": 42,
+        "end": 48,
         "alternatives": [
             "Kundschaft",
             "Kund:innen",
@@ -47,32 +47,11 @@ def test_api():
         "label": "Superlative Wörter",
         "reason": "Mit diesem Begriff nutzen Sie eine Sprache der Superlative. Viele Menschen empfinden dies als negativ, da der Eindruck entsteht, sich im Sinne der Superlative anpassen zu müssen.",
         "solution": "Verwenden Sie eine authentisch und ehrlich klingende Aussage."
-        },
-        {
-        "text": "Rockstar",
-        "category": "boasting_words",
-        "start": 17,
-        "end": 25,
-        "alternatives": [
-            "jemand, der Meilensteine erreichen will",
-            "strebsam",
-            "fleißig",
-            "jemand, der mit dem Team gemeinsame Ziele verfolgt",
-            "du willst mit dem Team etwas erreichen",
-            "zielorientierter Mensch",
-            "tatkräftige Person",
-            "Tatmensch",
-            "jemand, der unternehmerisch denkt",
-            "jemand, der Ziele mit Elan verfolgt"
-        ],
-        "label": "Superlative Wörter",
-        "reason": "Mit diesem Begriff nutzen Sie eine Sprache der Superlative. Viele Menschen empfinden dies als negativ, da der Eindruck entsteht, sich im Sinne der Superlative anpassen zu müssen.",
-        "solution": "Verwenden Sie eine authentisch und ehrlich klingende Aussage."
         }
     ]
 
 def test_api_orthpgraphy():
-    request_data = {"text": "Halo, siehst du die schnellen Hund!!!"}
+    request_data = {"text": "Ich gehe noch schnell ueber die Strasse!!!"}
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -81,36 +60,72 @@ def test_api_orthpgraphy():
     assert first_record["language"] == "de"
     assert first_record["results"] == [
         {
-        "text": "Halo",
+        "text": "ueber",
         "category": "empty_words",
-        "start": 0,
-        "end": 4,
+        "start": 22,
+        "end": 27,
         "alternatives": [
-            "Hallo"
+            "über",
+            "Weber",
+            "Leber",
+            "Geber",
+            "Heber",
+            "Hueber",
+            "aber",
+            "unter",
+            "neben",
+            "Meter",
+            "eher",
+            "geben",
+            "jeder",
+            "leben",
+            "neuer",
+            "Peter",
+            "jener",
+            "weder",
+            "Meer",
+            "derer"
         ],
-        "label": "Mögliche Wortverwechslung: ",
+        "label": "Rechtschreibfehler",
         "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
-        "solution": "Meinten Sie die Begrüßung „Hallo“? Ein Halo ist ein Lichteffekt."
+        "solution": "Möglicher Tippfehler gefunden."
         },
         {
-        "text": "die schnellen Hund",
+        "text": "Strasse",
         "category": "empty_words",
-        "start": 16,
-        "end": 34,
+        "start": 32,
+        "end": 39,
         "alternatives": [
-            "den schnellen Hund",
-            "dem schnellen Hund",
-            "der schnelle Hund"
+            "Straße",
+            "Straßen",
+            "Strauße",
+            "Ostrasse",
+            "Stresse",
+            "Strapse",
+            "Strass",
+            "Trasse",
+            "Straß",
+            "Adresse",
+            "Sträuße",
+            "Krasse",
+            "Straffe",
+            "Strafe",
+            "Strafte",
+            "Zulasse",
+            "Strauss",
+            "Stramme",
+            "Strauß",
+            "Stanze"
         ],
-        "label": "Evtl. keine Übereinstimmung von Kasus, Numerus oder Genus",
+        "label": "Rechtschreibfehler",
         "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
-        "solution": "Möglicherweise fehlende grammatische Übereinstimmung von Kasus, Numerus oder Genus. Beispiel: ‚mein kleiner Haus‘ statt ‚mein kleines Haus‘"
+        "solution": "Möglicher Tippfehler gefunden."
         },
         {
         "text": "!!!",
         "category": "empty_words",
-        "start": 34,
-        "end": 37,
+        "start": 39,
+        "end": 42,
         "alternatives": [
             "!"
         ],
@@ -121,7 +136,7 @@ def test_api_orthpgraphy():
     ]
 
 def test_api_english():
-    request_data = {"text": "We are searching for analytical ninja rockstar programmer for our customers"}
+    request_data = {"text": "We are searching for analytical ninja programmer for our customers"}
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -138,6 +153,50 @@ def test_api_english():
         "label": "Agentic Language",
         "reason": "This term is agentic, describing attributes that enforce the male stereotype as the the norm. People not falling into that stereotype (women but also other underrepresented groups) will feel unconsciously excluded by this word. ",
         "solution": "Use a word combination that sounds more team-oriented and refers to the purpose in work."
+        }
+    ]
+
+def test_api_orthpgraphy_english():
+    request_data = {"text": "I like all teh colors"}
+
+    response = client.post("/check", json=request_data)
+    assert response.status_code == 200
+
+    first_record = response.json()
+    assert first_record["language"] == "en"
+    assert first_record["results"] == [
+        {
+        "text": "teh",
+        "category": "empty_words",
+        "start": 11,
+        "end": 14,
+        "alternatives": [
+            "the",
+            "ten",
+            "tea",
+            "tech",
+            "tee",
+            "Ted",
+            "eh",
+            "BEH",
+            "GEH",
+            "TEF"
+        ],
+        "label": "Spelling mistake",
+        "reason": "Correct any spelling or grammatical errors to maximize the impact of their writing.",
+        "solution": "Possible spelling mistake found."
+        },
+        {
+        "text": "colors",
+        "category": "empty_words",
+        "start": 15,
+        "end": 21,
+        "alternatives": [
+            "colours"
+        ],
+        "label": "",
+        "reason": "Correct any spelling or grammatical errors to maximize the impact of their writing.",
+        "solution": "Possible spelling mistake. ‘colors’ is American English."
         }
     ]
 
