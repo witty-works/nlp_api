@@ -50,7 +50,7 @@ def test_api():
         }
     ]
 
-def test_api_orthpgraphy():
+def test_api_orthography():
     request_data = {"text": "Ich gehe noch schnell ueber die Strasse!!!"}
 
     response = client.post("/check", json=request_data)
@@ -156,7 +156,7 @@ def test_api_english():
         }
     ]
 
-def test_api_orthpgraphy_english():
+def test_api_orthography_english():
     request_data = {"text": "I like all teh colors"}
 
     response = client.post("/check", json=request_data)

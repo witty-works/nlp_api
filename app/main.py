@@ -336,16 +336,16 @@ def GermanRules(lang, tokens, text):
     list_gendered_denominations_end = GenderedDenomEnd(lang, text)
 
     #Agentic language and related false positives catch
-    list_agentic = AgenticLanguageAnalysis(lang, tokens)
+    list_agentic = AgenticLanguageAnalysis(lang, tokens, df_agentic_ct)
 
     # Empty words&sentences catch
     list_empty_words = EmptyWordAnalysis(lang, tokens, terms_empty, df_empty_word, df_empty_sentences)
 
     #Gendered denom. words catch 
-    list_gendered_denominations = GenderedDenomAnalysis(lang, tokens)
+    list_gendered_denominations = GenderedDenomAnalysis(lang, tokens, df_gender_ct)
 
     # boasting words&sentences catch
-    list_boast = BoastingWordsSentences(lang, tokens)
+    list_boast = BoastingWordsSentences(lang, tokens, df_boast_word, df_boast_sentences)
     
     #discriminating words catch
     list_discrim = RulesBased(lang, tokens, df_discrim_words, "biased_language")
@@ -376,7 +376,7 @@ def IsItFalsePositive(word, false_positive):
 
 """Function to handle dependecies of the adjectives."""
 # this function agentic language & related false positives
-def AgenticLanguageAnalysis(lang, tokens):
+def AgenticLanguageAnalysis(lang, tokens, df):
     category = "agentic_language"
     list_tokens = []
     dic_anc = {} 
@@ -412,7 +412,7 @@ def AgenticLanguageAnalysis(lang, tokens):
                                     "category": "agentic_language"
                                 })
         else:
-            for word, alternative in zip(df_agentic_ct["Lemma"], df_agentic_ct["Alternatives_split_company"]):
+            for word, alternative in zip(df["Lemma"], df["Alternatives_split_company"]):
                 if token.lemma_ == word:
                     list_tokens.append(
                         ResultOut.factory(
@@ -428,7 +428,7 @@ def AgenticLanguageAnalysis(lang, tokens):
 
     return list_tokens     
     
-def GenderedDenomAnalysis(lang, tokens):
+def GenderedDenomAnalysis(lang, tokens, df):
     category = "gendered_roles"      
     subcategory = "gendered_denominations"      
     list_tokens = []
@@ -457,7 +457,7 @@ def GenderedDenomAnalysis(lang, tokens):
         c_doc = Doc.from_docs(docs)
         
         for token in c_doc:
-            for word, alternative_sing, alternative_plur in zip(df_gender_ct["Lemma"], df_gender_ct["Alternative_Singular_split"], df_gender_ct["Alternative_Plural_split"]):
+            for word, alternative_sing, alternative_plur in zip(df["Lemma"], df["Alternative_Singular_split"], df["Alternative_Plural_split"]):
                 if token.lemma_ == word:
                     if token.morph.get("Number")[0]=="Sing":
                         list_tokens.append(
@@ -487,7 +487,7 @@ def GenderedDenomAnalysis(lang, tokens):
 
     else:
         for token in tokens:
-            for word, alternative_sing, alternative_plur in zip(df_gender_ct["Lemma"], df_gender_ct["Alternative_Singular_split"], df_gender_ct["Alternative_Plural_split"]):
+            for word, alternative_sing, alternative_plur in zip(df["Lemma"], df["Alternative_Singular_split"], df["Alternative_Plural_split"]):
                 if token.lemma_ == word:
                     if token.morph.get("Number")[0]=="Sing":
                         list_tokens.append(
@@ -518,7 +518,7 @@ def GenderedDenomAnalysis(lang, tokens):
     return list_tokens
 
 # Boasting words and sentences analisys function, shows alternatives if avalible
-def BoastingWordsSentences(lang, tokens):
+def BoastingWordsSentences(lang, tokens, df, df_sentences):
     category = "boasting_words"
     list_tokens = []
     #Phrase matcher part to handle False positives with two words and special simbols
@@ -529,7 +529,7 @@ def BoastingWordsSentences(lang, tokens):
     matcher.add("TerminologyList", patterns)
 
     for token in tokens:
-        for word, alternative in zip(df_boast_word["Lemma"], df_boast_word["Alternatives"]):
+        for word, alternative in zip(df["Lemma"], df["Alternatives"]):
             if token.lemma_ == word:
                 list_tokens.append(
                     ResultOut.factory(
@@ -545,12 +545,12 @@ def BoastingWordsSentences(lang, tokens):
     
     matches = matcher(tokens)
     for match_id, start, end in matches:
-        for sentence, alternative in zip(df_boast_sentences["Lemma"], df_boast_sentences["Alternatives"]):
+        for sentence, alternative in zip(df_sentences["Lemma"], df_sentences["Alternatives"]):
             span = tokens[start:end]
             if span.text == sentence:
                 list_tokens.append(
                     ResultOut.factory(
-                    lang,
+                    lang, 
                     span.text,
                     category,
                     span.start_char,
