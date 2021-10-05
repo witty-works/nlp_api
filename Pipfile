@@ -16,6 +16,7 @@ jinja2 = "*"
 aiofiles = "*"
 babel = "*"
 aiohttp = "*"
+sentry-sdk = "*"
 
 [dev-packages]
 click = "*"
