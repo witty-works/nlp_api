@@ -2,19 +2,19 @@
 .venv
 .idea
 
-logs
-app/.env
-files
+api/logs
+api/app/.env
+api/files
 
-__pycache__/
+api/__pycache__/
 *.py[cod]
 *.mo
 *Zone.Identifier
 
 # Unit test / coverage reports
-.coverage
-coverage_html_report
-.tox
-nosetests.xml
+api/.coverage
+api/coverage_html_report
+api/.tox
+api/nosetests.xml
 
-python-probe.log
+api/python-probe.log
