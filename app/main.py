@@ -189,24 +189,16 @@ def form(request: Request):
 
 @app.post("/log")
 def log(user_request_in: UserRequestInEvent, background_tasks: BackgroundTasks):
-    try:
-        lang = Lang(user_request_in)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
     background_tasks.add_task(log_response, user_request_in)
 
     return 'ok'
 
 @app.post("/check", response_model=ResultsOut)
 async def check_query(user_request_in: UserRequestIn, background_tasks: BackgroundTasks):
-    try:
-        lang = Lang(user_request_in)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    languagetools_results, lang = await languagetools(user_request_in.lang, user_request_in.text)
 
-    languagetools_results = await languagetools(lang, user_request_in.text)
     language_rules_results = language_rules(lang, user_request_in.text)
+
     list_results = languagetools_results + language_rules_results
 
     response = ResultsOut.factory(list_results, lang)
@@ -224,17 +216,23 @@ async def languagetools(lang, text):
     list_results = []
 
     async with aiohttp.ClientSession() as session:
-        langs = {"en": "en-GB", "de": "de-DE"}
+        langs = {"en": "en-GB", "de": "de-DE", "auto": "auto"}
+        if lang not in langs.keys():
+            raise HTTPException(status_code=400, detail="Language not supported: " + lang)
 
         payload = {
             "text": text,
-            "language": langs[lang.locale],
+            "language": langs[lang],
             "disabledRules": "DE_CASE,SEHR_GEEHRTER_NAME",
             "motherTongue": "de-DE"
         }
 
+        if lang == "auto":
+            payload["preferredVariants"] = "de-DE,en-GB"
+
         async with session.post(url + "/check", data=payload) as r:
             result = await r.json()
+            lang = Lang(result["language"]["code"])
 
             if "matches" in result:
                 for match in result["matches"]:
@@ -262,7 +260,10 @@ async def languagetools(lang, text):
                         )
                     )
 
-    return list_results
+    if isinstance(lang, Lang) != True:
+        raise HTTPException(status_code=400, detail="Language could not be determined")
+
+    return list_results, lang
 
 def language_rules(lang, text):
     #apply SpaCy pre-built model
