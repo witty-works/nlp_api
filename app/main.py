@@ -80,6 +80,14 @@ if sentry_dsn != "false":
         environment= os.environ.get("PLATFORM_ENVIRONMENT", "local")
     )
 
+# Uncaught exceptions (like `raise Exception`) should propagate correctly
+# to Sentry's error handler
+# Middleware will also enable Sentry performance monitoring to work as expected
+app.add_middleware(SentryAsgiMiddleware)
+
+# To catch raised `HTTPException` exceptions as per:
+# https://fastapi.tiangolo.com/tutorial/handling-errors/
+# Might have to add something similar for `RequestValidationError`
 @app.exception_handler(HTTPException)
 async def custom_http_exception_handler(request, e):
     with configure_scope() as scope:
