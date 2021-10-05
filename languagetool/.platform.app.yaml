@@ -1,0 +1,31 @@
+name: languagetool
+type: "java:14"
+
+disk: 2048
+
+hooks:
+    build: |
+        export SERVER="languagetool-server.jar"
+        export VERSION="5.4"
+        export LT="LanguageTool"
+        if [ ! -d "${PLATFORM_CACHE_DIR}/${LT}-${VERSION}" ]; then
+          echo "Downloading ${LT} ${VERSION} ..."
+          (
+            cd "${PLATFORM_CACHE_DIR}"
+            export FILE="${LT}-${VERSION}.zip"
+            [ ! -f "$FILE" ] && curl -O https://languagetool.org/download/${$FILE}
+            unzip $FILE
+            rm -rf $FILE
+            cd ~
+          )
+        else
+          echo "Using cached archive of ${LT} ${VERSION} ..."
+        fi
+
+        echo "Installing archive of ${LT} ${VERSION} ..."
+        cp -R "${PLATFORM_CACHE_DIR}/${LT}-${VERSION}"/* .
+
+web:
+    commands:
+        start: |
+            java -cp languagetool-server.jar org.languagetool.server.HTTPServer --port 8081 --allow-origin "*"

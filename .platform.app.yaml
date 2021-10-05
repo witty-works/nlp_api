@@ -5,13 +5,12 @@ type: 'python:3.8'
 dependencies:
   python3:
     pipenv: '2021.5.29'
-    supervisor: '*'
 
 web:
   upstream:
     socket_family: unix
   commands:
-    start: "supervisord -n -c supervisord.conf"
+    start: 'gunicorn app.main:app -b unix:$SOCKET -w 12 -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"''
   locations:
     '/':
       passthru: true
@@ -30,34 +29,18 @@ hooks:
   build: |
     set -e
     pipenv install --system --deploy
-    pip install ./blackfire-1.6.1-cp38-cp38-linux_x86_64.whl --force-reinstall
     pipenv run /opt/python/3.8/bin/python3.8 -m spacy download en_core_web_sm
     pipenv run /opt/python/3.8/bin/python3.8 -m spacy download de_core_news_sm
     pipenv run pybabel compile -d locales -l de_DE -f
     pipenv run pybabel compile -d locales -l en_GB -f
 
-    export SERVER="languagetool-server.jar"
-    export VERSION="5.4"
-    export LT="LanguageTool"
-    if [ ! -d "${PLATFORM_CACHE_DIR}/${LT}-${VERSION}" ]; then
-      echo "Downloading ${LT} ${VERSION} ..."
-      (
-        cd "${PLATFORM_CACHE_DIR}"
-        export FILE="${LT}-${VERSION}.zip"
-        [ ! -f "$FILE" ] && curl -O https://languagetool.org/download/${$FILE}
-        unzip $FILE
-        rm -rf $FILE
-        cd ~
-      )
-    else
-      echo "Using cached archive of ${LT} ${VERSION} ..."
-    fi
-
-    echo "Installing archive of ${LT} ${VERSION} ..."
-    mkdir "${LT}"
-    cp -R "${PLATFORM_CACHE_DIR}/${LT}-${VERSION}"/* "${LT}/."
-
 size: L
 resources:
   base_memory: 1024
   memory_ratio: 1024
+
+source:
+    root: languagetool
+
+relationships:
+  languagetool: "languagetool:http"

@@ -4,17 +4,11 @@ import json
 import secrets
 import aiohttp
 import sentry_sdk
+import base64 
 
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 from sentry_sdk.integrations.aiohttp import AioHttpIntegration
 from sentry_sdk import configure_scope
-
-# TODO: This will be removed once blackfire-python includes FastAPI. This function
-# monkey patches FastAPI's middleware stack to ensure Blackfire is on the outermost
-# level.
-if os.environ.get("BLACKFIRE_ENABLED", None) == "true":
-    from app.middleware import patch_fastapi
-    patch_fastapi()
 
 from fastapi import FastAPI, Request, HTTPException, BackgroundTasks, Depends, status
 
@@ -97,6 +91,13 @@ async def custom_http_exception_handler(request, e):
         sentry_sdk.capture_exception(e)
     return await http_exception_handler(request, e)
 
+languagetool_url = "https://api.languagetool.org/v2"
+if os.environ.get("LANGUAGETOOL_API", "false") != "false":
+    languagetool_url = os.environ.get("LANGUAGETOOL_API")
+elif os.environ.get("PLATFORM_RELATIONSHIPS", "false") != "false":
+    realtionships = base64.decodestring(os.environ.get("PLATFORM_RELATIONSHIPS"))
+    languagetool_url = realtionships["languagetool"]["scheme"] + "://" + realtionships["languagetool"]["hostname"] + "/v2"
+
 security = HTTPBasic(auto_error=False)
 
 basic_auth = {
@@ -112,11 +113,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-from app.middleware import BlackfireFastAPIMiddleware
-
-if os.environ.get("BLACKFIRE_ENABLED", "false") == "true":
-    app.add_middleware(BlackfireFastAPIMiddleware)
 
 # Model data
 model = {"en": spacy.load("en_core_web_sm"), "de": spacy.load("de_core_news_sm")}
@@ -250,10 +246,6 @@ def set_sentry_context(user_request_in: UserRequestIn):
     sentry_sdk.set_context("user", {"id": user_request_in.id})
 
 async def languagetools(lang, text):
-    url = os.environ.get("LANGUAGETOOL_API", "https://api.languagetool.org/v2")
-    if url == "false":
-        return []
-
     list_results = []
 
     async with aiohttp.ClientSession() as session:
@@ -272,7 +264,7 @@ async def languagetools(lang, text):
             payload["preferredLanguages"] = "de,en"
             payload["preferredVariants"] = "de-DE,en-GB"
 
-        async with session.post(url + "/check", data=payload) as r:
+        async with session.post(languagetool_url + "/check", data=payload) as r:
             result = await r.json()
 
             lang = result["language"]["code"]
