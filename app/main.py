@@ -269,6 +269,7 @@ async def languagetools(lang, text):
         }
 
         if lang == "auto":
+            payload["preferredLanguages"] = "de,en"
             payload["preferredVariants"] = "de-DE,en-GB"
 
         async with session.post(url + "/check", data=payload) as r:
