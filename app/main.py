@@ -265,9 +265,13 @@ async def languagetools(lang, text):
 
         async with session.post(url + "/check", data=payload) as r:
             result = await r.json()
-            lang = Lang(result["language"]["code"])
 
-            if "matches" in result:
+            lang = result["language"]["code"]
+            if lang not in langs.values():
+                lang = None
+            elif "matches" in result:
+                lang = Lang(lang)
+
                 for match in result["matches"]:
                     offset = int(match["offset"])
                     end = offset + int(match["length"])
