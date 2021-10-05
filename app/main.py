@@ -60,9 +60,11 @@ from app.lang import (
     Lang,
 )
 
+version = "1.1.3"
+
 app = FastAPI(
     title="Witty NLP API",
-    version="1.1.3https://igholacracy.slack.com/",
+    version=version,
     docs_url=None,
     redoc_url=None,
     openapi_url = None,
@@ -73,7 +75,9 @@ if sentry_dsn != "false":
     sentry_sdk.init(
         dsn=sentry_dsn,
         traces_sample_rate=0.2,
-          integrations=[AioHttpIntegration()]
+        integrations=[AioHttpIntegration()],
+        release=version,
+        environment= os.environ.get("PLATFORM_ENVIRONMENT", "local")
     )
 
 @app.exception_handler(HTTPException)
