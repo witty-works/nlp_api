@@ -10,8 +10,6 @@ uvicorn = {extras = ["standard"], version = "*"}
 gunicorn = "*"
 spacy = "*"
 pandas = "*"
-pytest = "*"
-pytest-cov = "*"
 jinja2 = "*"
 aiofiles = "*"
 babel = "*"
@@ -21,6 +19,8 @@ sentry-sdk = "*"
 [dev-packages]
 click = "*"
 polib = "*"
+pytest = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.8"
