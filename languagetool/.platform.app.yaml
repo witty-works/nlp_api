@@ -4,7 +4,7 @@ type: "java:8"
 web:
   commands:
     start: |
-      java -noverify -Xms512M -Xmx512M -XX:MaxMetaspaceSize=512m -XX:+UseG1GC -XX:+UseStringDeduplication -cp languagetool-server.jar org.languagetool.server.HTTPServer --port $PORT --allow-origin "*"
+      java -noverify -Xms1024M -Xmx1024M -XX:MaxMetaspaceSize=1024M -XX:+UseG1GC -XX:+UseStringDeduplication -cp languagetool-server.jar org.languagetool.server.HTTPServer --port $PORT --allow-origin "*"
 
 disk: 2048
 
