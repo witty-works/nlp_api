@@ -6,17 +6,18 @@ web:
     start: |
       java -noverify -Xms512M -Xmx512M -XX:MaxMetaspaceSize=512m -XX:+UseG1GC -XX:+UseStringDeduplication -cp languagetool-server.jar org.languagetool.server.HTTPServer --port $PORT --allow-origin "*"
 
-disk: 1024
+disk: 2048
 
 hooks:
     build: |
         export SERVER="languagetool-server.jar"
-        export VERSION="5.4"
+        export VERSION="5.5"
         export LT="LanguageTool"
         if [ ! -d "${PLATFORM_CACHE_DIR}/${LT}-${VERSION}" ]; then
           echo "Downloading ${LT} ${VERSION} ..."
           (
             cd "${PLATFORM_CACHE_DIR}"
+            rm -rf "${LT}*"
             export FILE="${LT}-${VERSION}.zip"
             [ ! -f "$FILE" ] && curl -O https://languagetool.org/download/${FILE}
             unzip $FILE
