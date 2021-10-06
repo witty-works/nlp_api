@@ -44,7 +44,7 @@ hooks:
       (
         cd "${PLATFORM_CACHE_DIR}"
         export FILE="${LT}-${VERSION}.zip"
-        [ ! -f "$FILE" ] && curl -O https://languagetool.org/download/${$FILE}
+        [ ! -f "$FILE" ] && curl -O https://languagetool.org/download/${FILE}
         unzip $FILE
         rm -rf $FILE
         cd ~
