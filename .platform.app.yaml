@@ -23,7 +23,7 @@ mounts:
     source: local
     source_path: logs
 
-disk: 4096
+disk: 3072
 
 hooks:
   build: |
