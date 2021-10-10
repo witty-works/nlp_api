@@ -65,7 +65,7 @@ from app.lang import (
     Lang,
 )
 
-version = "1.1.3"
+version = "1.2.0"
 
 app = FastAPI(
     title = "Witty NLP API",
