@@ -1,32 +1,36 @@
 name: languagetool
 type: "java:8"
 
+disk: 2048
+
+resources:
+  base_memory: 1024
+  memory_ratio: 1024
+
 web:
   commands:
     start: |
-      java -noverify -Xms1024M -Xmx1024M -XX:MaxMetaspaceSize=1024M -XX:+UseG1GC -XX:+UseStringDeduplication -cp languagetool-server.jar org.languagetool.server.HTTPServer --port $PORT --allow-origin "*"
-
-disk: 2048
+      java -noverify -Xms3000M -Xmx3000M -XX:MaxMetaspaceSize=3000M -XX:+UseG1GC -XX:+UseStringDeduplication -cp languagetool-server.jar org.languagetool.server.HTTPServer --port $PORT --allow-origin "*"
 
 hooks:
-    build: |
-        export SERVER="languagetool-server.jar"
-        export VERSION="5.5"
-        export LT="LanguageTool"
-        if [ ! -d "${PLATFORM_CACHE_DIR}/${LT}-${VERSION}" ]; then
-          echo "Downloading ${LT} ${VERSION} ..."
-          (
-            cd "${PLATFORM_CACHE_DIR}"
-            rm -rf "${LT}*"
-            export FILE="${LT}-${VERSION}.zip"
-            [ ! -f "$FILE" ] && curl -O https://languagetool.org/download/${FILE}
-            unzip $FILE
-            rm -rf $FILE
-            cd ~
-          )
-        else
-          echo "Using cached archive of ${LT} ${VERSION} ..."
-        fi
+  build: |
+    export SERVER="languagetool-server.jar"
+    export VERSION="5.5"
+    export LT="LanguageTool"
+    if [ ! -d "${PLATFORM_CACHE_DIR}/${LT}-${VERSION}" ]; then
+      echo "Downloading ${LT} ${VERSION} ..."
+      (
+        cd "${PLATFORM_CACHE_DIR}"
+        rm -rf "${LT}*"
+        export FILE="${LT}-${VERSION}.zip"
+        [ ! -f "$FILE" ] && curl -O https://languagetool.org/download/${FILE}
+        unzip $FILE
+        rm -rf $FILE
+        cd ~
+      )
+    else
+      echo "Using cached archive of ${LT} ${VERSION} ..."
+    fi
 
-        echo "Installing archive of ${LT} ${VERSION} ..."
-        cp -R "${PLATFORM_CACHE_DIR}/${LT}-${VERSION}"/* .
+    echo "Installing archive of ${LT} ${VERSION} ..."
+    cp -R "${PLATFORM_CACHE_DIR}/${LT}-${VERSION}"/* .
