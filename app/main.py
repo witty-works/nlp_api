@@ -239,13 +239,11 @@ def serialize(user_request_in: RequestIn):
     data =  serialize_log_data(user_request_in, ResultsOut([], "en"))
     return data
 
-@app.post("/log")
+@app.post("/log", status_code=201)
 def log(user_request_in: RequestInEvent, background_tasks: BackgroundTasks):
     set_sentry_context(user_request_in)
 
     background_tasks.add_task(log_response, user_request_in)
-
-    return 'ok'
 
 @app.post("/check", response_model=ResultsOut)
 async def check_query(user_request_in: RequestIn, background_tasks: BackgroundTasks):
