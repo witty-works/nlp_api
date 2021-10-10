@@ -50,7 +50,7 @@ def test_api():
         }
     ]
 
-def test_api_orthpgraphy():
+def test_api_orthography():
     request_data = {"text": "Ich gehe noch schnell ueber die Strasse!!!"}
 
     response = client.post("/check", json=request_data)
@@ -156,8 +156,8 @@ def test_api_english():
         }
     ]
 
-def test_api_orthpgraphy_english():
-    request_data = {"text": "I like all teh colors"}
+def test_api_orthography_english():
+    request_data = {"text": "I liki all the colors"}
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -166,21 +166,18 @@ def test_api_orthpgraphy_english():
     assert first_record["language"] == "en"
     assert first_record["results"] == [
         {
-        "text": "teh",
+        "text": "liki",
         "category": "empty_words",
-        "start": 11,
-        "end": 14,
+        "start": 2,
+        "end": 6,
         "alternatives": [
-            "the",
-            "ten",
-            "tea",
-            "tech",
-            "tee",
-            "Ted",
-            "eh",
-            "BEH",
-            "GEH",
-            "TEF"
+            "like",
+            "Loki",
+            "Lili",
+            "tiki",
+            "Niki",
+            "Kiki",
+            "wiki"
         ],
         "label": "Spelling mistake",
         "reason": "Correct any spelling or grammatical errors to maximize the impact of their writing.",
@@ -256,4 +253,10 @@ def test_language_detection_fail():
     request_data = {"text": "Voila", "lang": "es"}
 
     response = client.post("/check", json=request_data)
-    assert response.status_code == 400
+    assert response.status_code == 422
+
+def test_log():
+    request_data = {"text": "Voila", "lang": "auto", "id": "123", "start": 0, "end": 23, "alternative": "test"}
+
+    response = client.post("/log", json=request_data)
+    assert response.status_code == 201

@@ -1,34 +1,45 @@
 import uvicorn
 import os
 import json
+import base64
 import secrets
-import asyncio
 import aiohttp
+import sentry_sdk
 
-# TODO: This will be removed once blackfire-python includes FastAPI. This function
-# monkey patches FastAPI's middleware stack to ensure Blackfire is on the outermost
-# level.
-if os.environ.get("BLACKFIRE_ENABLED", None) == "true":
-    from app.middleware import patch_fastapi
-    patch_fastapi()
+from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
+from sentry_sdk.integrations.aiohttp import AioHttpIntegration
+from sentry_sdk import configure_scope
 
 from fastapi import FastAPI, Request, HTTPException, BackgroundTasks, Depends, status
 
-from fastapi.openapi.docs import get_redoc_html, get_swagger_ui_html
+from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
 
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
+from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from starlette.responses import RedirectResponse
-from fastapi.encoders import jsonable_encoder
+from starlette.responses import RedirectResponse, PlainTextResponse
+from fastapi.exception_handlers import (
+    http_exception_handler,
+)
 
 from typing import Optional
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
+
+# Environment variables
+logging_enabled = os.environ.get("LOGGING_ENABLED", None)
+sentry_dsn = os.environ.get("SENTRY_DSN", "false")
+platform_environment = os.environ.get("PLATFORM_ENVIRONMENT", "local")
+languagetool_api = os.environ.get("LANGUAGETOOL_API", "false")
+platform_relationships = os.environ.get("PLATFORM_RELATIONSHIPS", None)
+basic_auth_username = os.environ.get("API_DOCS_USERNAME", None)
+basic_auth_password = os.environ.get("API_DOCS_PASSWORD", None)
+basic_auth_enabled = os.environ.get("API_DOCS_AUTH_ENABLED", "false")
 
 from datetime import datetime
 
@@ -44,14 +55,74 @@ import re
 import ast
 # project models
 from app.models import (
-    UserRequestIn,
-    UserRequestInEvent,
+    RequestIn,
+    RequestInEvent,
     ResultOut,
     ResultsOut,
 )
 
 from app.lang import (
     Lang,
+)
+
+version = "1.2.0"
+
+app = FastAPI(
+    title = "Witty NLP API",
+    version = version,
+    docs_url = None,
+    redoc_url = None,
+    openapi_url = None,
+)
+
+if sentry_dsn != "false":
+    sentry_sdk.init(
+        dsn = sentry_dsn,
+        traces_sample_rate = 0.2,
+        integrations = [AioHttpIntegration()],
+        release = version,
+        environment = platform_environment
+    )
+
+# Uncaught exceptions (like `raise Exception`) should propagate correctly
+# to Sentry's error handler
+# Middleware will also enable Sentry performance monitoring to work as expected
+app.add_middleware(SentryAsgiMiddleware)
+
+# To catch raised `HTTPException` exceptions as per:
+# https://fastapi.tiangolo.com/tutorial/handling-errors/
+# Might have to add something similar for `RequestValidationError`
+@app.exception_handler(HTTPException)
+async def custom_http_exception_handler(request, e):
+    with configure_scope() as scope:
+        scope.set_context("request", request)
+        scope.transaction = request.scope["path"][1:]
+
+        sentry_sdk.capture_exception(e)
+    return await http_exception_handler(request, e)
+
+languagetool_url = "https://api.languagetool.org/v2"
+if languagetool_api != "false":
+    languagetool_url = languagetool_api
+elif platform_relationships is not None:
+    relationships = json.loads(base64.b64decode(platform_relationships))
+    languagetool = relationships["languagetool"][0]
+    languagetool_url = "%(scheme)s://%(host)s:%(port)d/v2" % languagetool
+
+security = HTTPBasic(auto_error=False)
+
+basic_auth = {
+    "username": basic_auth_username,
+    "password": basic_auth_password,
+    "enabled": basic_auth_enabled,
+}
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Model data
@@ -66,6 +137,7 @@ for key in dict_lemma_lookup:
 # load agentic language
 df_agentic_ct = pd.read_csv("training_data/agentic_language_DE.csv")
 #list_agentic = list(df_agentic_ct["Lemma"])
+
 # load Gender denom_de
 df_gender_ct = pd.read_csv("training_data/gendered_denominations_DE.csv")
 #load Gender denom_de false_positives
@@ -73,6 +145,7 @@ genderdenom_false_positives = pd.read_csv("training_data/genderdenom_false_posit
 
 # load discriminating words_de
 df_discrim_words = pd.read_csv("training_data/biased_language_DE.csv")
+
 # load Empty words_de
 df_empty_word = pd.read_csv("training_data/empty_words_de.csv")
 df_empty_sentences = pd.read_csv("training_data/empty_words_sentences_de.csv")
@@ -104,36 +177,6 @@ false_positive_empty = ["international"]
 exceptions = ["Unternehmen", "Firma", "Gruppe", "Gesellschaft", "Kollektivgesellschaft", "Team", "Organization", "Gliederung"]
 terms_false_positive = genderdenom_false_positives["False_positives"].tolist()
 
-
-app = FastAPI(
-    title="Witty NLP API",
-    version="0.1.0",
-    docs_url=None,
-    redoc_url=None,
-    openapi_url = None,
-)
-
-security = HTTPBasic(auto_error=False)
-
-basic_auth = {
-    "username": os.environ.get("API_DOCS_USERNAME", None),
-    "password": os.environ.get("API_DOCS_PASSWORD", None),
-    "enabled": os.environ.get("API_DOCS_AUTH_ENABLED", "false"),
-}
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-from app.middleware import BlackfireFastAPIMiddleware
-
-if os.environ.get("BLACKFIRE_ENABLED", "false") == "true":
-    app.add_middleware(BlackfireFastAPIMiddleware)
-
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.mount("/files", StaticFiles(directory="files"), name="files")
@@ -154,7 +197,7 @@ def get_current_username(credentials: Optional[HTTPBasicCredentials] = Depends(s
         )
 
     # Verify the credentials as usual
-    if (basic_auth["username"] == None or basic_auth["password"] == None):
+    if (basic_auth["username"] is None or basic_auth["password"] is None):
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Incorrect user configuration",
@@ -175,6 +218,10 @@ def get_current_username(credentials: Optional[HTTPBasicCredentials] = Depends(s
 def get_root():
     return RedirectResponse(url='/form', status_code=301)
 
+@app.get("/lt")
+def get_root():
+    return languagetool_url
+
 @app.get("/docs", include_in_schema=False)
 def get_swagger_documentation(username: str = Depends(get_current_username)):
     return get_swagger_ui_html(openapi_url="/openapi.json", title="docs")
@@ -187,26 +234,25 @@ def openapi(username: str = Depends(get_current_username)):
 def form(request: Request):
     return templates.TemplateResponse("form.html", {"request": request})
 
-@app.post("/log")
-def log(user_request_in: UserRequestInEvent, background_tasks: BackgroundTasks):
-    try:
-        lang = Lang(user_request_in)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+@app.post("/serialize", response_class=PlainTextResponse)
+def serialize(user_request_in: RequestIn):
+    data =  serialize_log_data(user_request_in, ResultsOut([], "en"))
+    return data
+
+@app.post("/log", status_code=201)
+def log(user_request_in: RequestInEvent, background_tasks: BackgroundTasks):
+    set_sentry_context(user_request_in)
 
     background_tasks.add_task(log_response, user_request_in)
 
-    return 'ok'
-
 @app.post("/check", response_model=ResultsOut)
-async def check_query(user_request_in: UserRequestIn, background_tasks: BackgroundTasks):
-    try:
-        lang = Lang(user_request_in)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+async def check_query(user_request_in: RequestIn, background_tasks: BackgroundTasks):
+    set_sentry_context(user_request_in)
 
-    languagetools_results = await languagetools(lang, user_request_in.text)
+    languagetools_results, lang = await languagetools(user_request_in.lang, user_request_in.text)
+
     language_rules_results = language_rules(lang, user_request_in.text)
+
     list_results = languagetools_results + language_rules_results
 
     response = ResultsOut.factory(list_results, lang)
@@ -216,27 +262,34 @@ async def check_query(user_request_in: UserRequestIn, background_tasks: Backgrou
     return response
 
 # Functions
-async def languagetools(lang, text):
-    url = os.environ.get("LANGUAGETOOL_API", "https://api.languagetool.org/v2")
-    if url == "false":
-        return []
+def set_sentry_context(user_request_in: RequestIn):
+    sentry_sdk.set_context("user", {"id": user_request_in.id})
 
+async def languagetools(lang, text):
     list_results = []
 
     async with aiohttp.ClientSession() as session:
-        langs = {"en": "en-GB", "de": "de-DE"}
+        langs = {"en": "en-GB", "de": "de-DE", "auto": "auto"}
 
         payload = {
             "text": text,
-            "language": langs[lang.locale],
-            "disabledRules": "DE_CASE,SEHR_GEEHRTER_NAME",
+            "language": langs[lang],
             "motherTongue": "de-DE"
         }
 
-        async with session.post(url + "/check", data=payload) as r:
+        if lang == "auto":
+            payload["preferredLanguages"] = "de,en"
+            payload["preferredVariants"] = "de-DE,en-GB"
+
+        async with session.post(languagetool_url + "/check", data=payload) as r:
             result = await r.json()
 
-            if "matches" in result:
+            lang = result["language"]["code"]
+            if lang not in langs.values():
+                lang = None
+            elif "matches" in result:
+                lang = Lang(lang)
+
                 for match in result["matches"]:
                     offset = int(match["offset"])
                     end = offset + int(match["length"])
@@ -262,7 +315,10 @@ async def languagetools(lang, text):
                         )
                     )
 
-    return list_results
+    if isinstance(lang, Lang) != True:
+        raise HTTPException(status_code=400, detail="Language could not be determined")
+
+    return list_results, lang
 
 def language_rules(lang, text):
     #apply SpaCy pre-built model
@@ -288,26 +344,30 @@ def language_rules(lang, text):
     
     return list_results
 
-def log_response(user_request_in: UserRequestIn, response: ResultsOut = None):
-    if user_request_in.id == None or os.environ.get("LOGGING_ENABLED", None) != "true":
-        return
-
-    if response == None:
+def serialize_log_data(user_request_in: RequestIn, response: ResultsOut = None):
+    if response is None:
         data = {
-            "event": user_request_in.toDict(),
+            "event": jsonable_encoder(user_request_in),
         }
     else:
         data = {
-            "request": user_request_in.toDict(),
-            "response": response.toDict(),
+            "request": jsonable_encoder(user_request_in),
+            "response": jsonable_encoder(response),
         }
 
+    return json.dumps(data)
+
+def log_response(user_request_in: RequestIn, response: ResultsOut = None):
+    if user_request_in.id is None or logging_enabled is None:
+        return
+
+    data = serialize_log_data(user_request_in, response)
     dirname = os.getcwd() + '/logs/' + user_request_in.id
     filename = dirname + '/' + datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3] + '.json'
 
     os.makedirs(os.path.dirname(filename), exist_ok=True)
-    with open(filename, 'w') as outfile:
-        json.dump(data, outfile)
+    f = open(filename, 'w')
+    f.write(data)
 
 # Function to catch ending in German Denom
 def GenderedDenomEnd(lang, text):
@@ -336,16 +396,16 @@ def GermanRules(lang, tokens, text):
     list_gendered_denominations_end = GenderedDenomEnd(lang, text)
 
     #Agentic language and related false positives catch
-    list_agentic = AgenticLanguageAnalysis(lang, tokens)
+    list_agentic = AgenticLanguageAnalysis(lang, tokens, df_agentic_ct)
 
     # Empty words&sentences catch
     list_empty_words = EmptyWordAnalysis(lang, tokens, terms_empty, df_empty_word, df_empty_sentences)
 
     #Gendered denom. words catch 
-    list_gendered_denominations = GenderedDenomAnalysis(lang, tokens)
+    list_gendered_denominations = GenderedDenomAnalysis(lang, tokens, df_gender_ct)
 
     # boasting words&sentences catch
-    list_boast = BoastingWordsSentences(lang, tokens)
+    list_boast = BoastingWordsSentences(lang, tokens, df_boast_word, df_boast_sentences)
     
     #discriminating words catch
     list_discrim = RulesBased(lang, tokens, df_discrim_words, "biased_language")
@@ -376,7 +436,7 @@ def IsItFalsePositive(word, false_positive):
 
 """Function to handle dependecies of the adjectives."""
 # this function agentic language & related false positives
-def AgenticLanguageAnalysis(lang, tokens):
+def AgenticLanguageAnalysis(lang, tokens, df):
     category = "agentic_language"
     list_tokens = []
     dic_anc = {} 
@@ -412,7 +472,7 @@ def AgenticLanguageAnalysis(lang, tokens):
                                     "category": "agentic_language"
                                 })
         else:
-            for word, alternative in zip(df_agentic_ct["Lemma"], df_agentic_ct["Alternatives_split_company"]):
+            for word, alternative in zip(df["Lemma"], df["Alternatives_split_company"]):
                 if token.lemma_ == word:
                     list_tokens.append(
                         ResultOut.factory(
@@ -428,7 +488,7 @@ def AgenticLanguageAnalysis(lang, tokens):
 
     return list_tokens     
     
-def GenderedDenomAnalysis(lang, tokens):
+def GenderedDenomAnalysis(lang, tokens, df):
     category = "gendered_roles"      
     subcategory = "gendered_denominations"      
     list_tokens = []
@@ -457,7 +517,7 @@ def GenderedDenomAnalysis(lang, tokens):
         c_doc = Doc.from_docs(docs)
         
         for token in c_doc:
-            for word, alternative_sing, alternative_plur in zip(df_gender_ct["Lemma"], df_gender_ct["Alternative_Singular_split"], df_gender_ct["Alternative_Plural_split"]):
+            for word, alternative_sing, alternative_plur in zip(df["Lemma"], df["Alternative_Singular_split"], df["Alternative_Plural_split"]):
                 if token.lemma_ == word:
                     if token.morph.get("Number")[0]=="Sing":
                         list_tokens.append(
@@ -487,7 +547,7 @@ def GenderedDenomAnalysis(lang, tokens):
 
     else:
         for token in tokens:
-            for word, alternative_sing, alternative_plur in zip(df_gender_ct["Lemma"], df_gender_ct["Alternative_Singular_split"], df_gender_ct["Alternative_Plural_split"]):
+            for word, alternative_sing, alternative_plur in zip(df["Lemma"], df["Alternative_Singular_split"], df["Alternative_Plural_split"]):
                 if token.lemma_ == word:
                     if token.morph.get("Number")[0]=="Sing":
                         list_tokens.append(
@@ -518,7 +578,7 @@ def GenderedDenomAnalysis(lang, tokens):
     return list_tokens
 
 # Boasting words and sentences analisys function, shows alternatives if avalible
-def BoastingWordsSentences(lang, tokens):
+def BoastingWordsSentences(lang, tokens, df, df_sentences):
     category = "boasting_words"
     list_tokens = []
     #Phrase matcher part to handle False positives with two words and special simbols
@@ -529,7 +589,7 @@ def BoastingWordsSentences(lang, tokens):
     matcher.add("TerminologyList", patterns)
 
     for token in tokens:
-        for word, alternative in zip(df_boast_word["Lemma"], df_boast_word["Alternatives"]):
+        for word, alternative in zip(df["Lemma"], df["Alternatives"]):
             if token.lemma_ == word:
                 list_tokens.append(
                     ResultOut.factory(
@@ -545,12 +605,12 @@ def BoastingWordsSentences(lang, tokens):
     
     matches = matcher(tokens)
     for match_id, start, end in matches:
-        for sentence, alternative in zip(df_boast_sentences["Lemma"], df_boast_sentences["Alternatives"]):
+        for sentence, alternative in zip(df_sentences["Lemma"], df_sentences["Alternatives"]):
             span = tokens[start:end]
             if span.text == sentence:
                 list_tokens.append(
                     ResultOut.factory(
-                    lang,
+                    lang, 
                     span.text,
                     category,
                     span.start_char,

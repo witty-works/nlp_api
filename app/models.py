@@ -1,34 +1,22 @@
 from pydantic import BaseModel
 from typing import List
 from typing import Optional
+from enum import Enum
 
-class UserRequestIn(BaseModel):
+class LangType(str, Enum):
+    AUTO = "auto"
+    EN = "en"
+    DE = "de"
+
+class RequestIn(BaseModel):
     text: str
-    lang: Optional[str] = "auto"
-    fallback_lang: Optional[str] = "de"
+    lang: Optional[LangType] = "auto"
     id: Optional[str] = None
 
-    def toDict(self):
-        return {
-            "text": self.text,
-            "lang": self.lang,
-            "fallback_lang": self.fallback_lang,
-        }
-
-class UserRequestInEvent(UserRequestIn):
+class RequestInEvent(RequestIn):
     alternative: str
     start: int
     end: int
-
-    def toDict(self):
-        return {
-            "text": self.text,
-            "lang": self.lang,
-            "fallback_lang": self.fallback_lang,
-            "alternative": self.alternative,
-            "start": self.start,
-            "end": self.end,
-        }
 
 class ResultOut(BaseModel):
     start: int
@@ -71,18 +59,6 @@ class ResultOut(BaseModel):
         object.__setattr__(self, 'reason', reason)
         object.__setattr__(self, 'solution', solution)
 
-    def toDict(self):
-        return {
-            "start": self.start,
-            "end": self.end,
-            "category": self.category,
-            "text": self.text,
-            "label": self.label,
-            "reason": self.reason,
-            "solution": self.solution,
-            "alternatives": self.alternatives,
-        }
-
 class ResultsOut(BaseModel):
     results: List[ResultOut]
     language: str
@@ -95,9 +71,3 @@ class ResultsOut(BaseModel):
     def __init__(self, results, language):
         object.__setattr__(self, 'results', results)
         object.__setattr__(self, 'language', language)
-
-    def toDict(self):
-        return {
-            "results": [result.toDict() for result in self.results],
-            "language": self.language,
-        }
