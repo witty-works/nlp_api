@@ -253,4 +253,4 @@ def test_language_detection_fail():
     request_data = {"text": "Voila", "lang": "es"}
 
     response = client.post("/check", json=request_data)
-    assert response.status_code == 400
+    assert response.status_code == 422

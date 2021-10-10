@@ -17,11 +17,12 @@ from fastapi.openapi.utils import get_openapi
 
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
+from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from starlette.responses import RedirectResponse
+from starlette.responses import RedirectResponse, PlainTextResponse
 from fastapi.exception_handlers import (
     http_exception_handler,
 )
@@ -29,6 +30,16 @@ from fastapi.exception_handlers import (
 from typing import Optional
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
+
+# Environment variables
+logging_enabled = os.environ.get("LOGGING_ENABLED", None)
+sentry_dsn = os.environ.get("SENTRY_DSN", "false")
+platform_environment = os.environ.get("PLATFORM_ENVIRONMENT", "local")
+languagetool_api = os.environ.get("LANGUAGETOOL_API", "false")
+platform_relationships = os.environ.get("PLATFORM_RELATIONSHIPS", None)
+basic_auth_username = os.environ.get("API_DOCS_USERNAME", None)
+basic_auth_password = os.environ.get("API_DOCS_PASSWORD", None)
+basic_auth_enabled = os.environ.get("API_DOCS_AUTH_ENABLED", "false")
 
 from datetime import datetime
 
@@ -44,8 +55,8 @@ import re
 import ast
 # project models
 from app.models import (
-    UserRequestIn,
-    UserRequestInEvent,
+    RequestIn,
+    RequestInEvent,
     ResultOut,
     ResultsOut,
 )
@@ -57,21 +68,20 @@ from app.lang import (
 version = "1.1.3"
 
 app = FastAPI(
-    title="Witty NLP API",
-    version=version,
-    docs_url=None,
-    redoc_url=None,
+    title = "Witty NLP API",
+    version = version,
+    docs_url = None,
+    redoc_url = None,
     openapi_url = None,
 )
 
-sentry_dsn = os.environ.get("SENTRY_DSN", "false")
 if sentry_dsn != "false":
     sentry_sdk.init(
-        dsn=sentry_dsn,
-        traces_sample_rate=0.2,
-        integrations=[AioHttpIntegration()],
-        release=version,
-        environment= os.environ.get("PLATFORM_ENVIRONMENT", "local")
+        dsn = sentry_dsn,
+        traces_sample_rate = 0.2,
+        integrations = [AioHttpIntegration()],
+        release = version,
+        environment = platform_environment
     )
 
 # Uncaught exceptions (like `raise Exception`) should propagate correctly
@@ -92,20 +102,19 @@ async def custom_http_exception_handler(request, e):
     return await http_exception_handler(request, e)
 
 languagetool_url = "https://api.languagetool.org/v2"
-if os.environ.get("LANGUAGETOOL_API", "false") != "false":
-    languagetool_url = os.environ.get("LANGUAGETOOL_API")
-elif os.environ.get("PLATFORM_RELATIONSHIPS", "false") != "false":
-    realtionships = os.environ.get("PLATFORM_RELATIONSHIPS")
-    realtionships = json.loads(base64.b64decode(realtionships))
-    languagetool = realtionships["languagetool"][0]
+if languagetool_api != "false":
+    languagetool_url = languagetool_api
+elif platform_relationships is not None:
+    relationships = json.loads(base64.b64decode(platform_relationships))
+    languagetool = relationships["languagetool"][0]
     languagetool_url = "%(scheme)s://%(host)s:%(port)d/v2" % languagetool
 
 security = HTTPBasic(auto_error=False)
 
 basic_auth = {
-    "username": os.environ.get("API_DOCS_USERNAME", None),
-    "password": os.environ.get("API_DOCS_PASSWORD", None),
-    "enabled": os.environ.get("API_DOCS_AUTH_ENABLED", "false"),
+    "username": basic_auth_username,
+    "password": basic_auth_password,
+    "enabled": basic_auth_enabled,
 }
 
 app.add_middleware(
@@ -128,6 +137,7 @@ for key in dict_lemma_lookup:
 # load agentic language
 df_agentic_ct = pd.read_csv("training_data/agentic_language_DE.csv")
 #list_agentic = list(df_agentic_ct["Lemma"])
+
 # load Gender denom_de
 df_gender_ct = pd.read_csv("training_data/gendered_denominations_DE.csv")
 #load Gender denom_de false_positives
@@ -135,6 +145,7 @@ genderdenom_false_positives = pd.read_csv("training_data/genderdenom_false_posit
 
 # load discriminating words_de
 df_discrim_words = pd.read_csv("training_data/biased_language_DE.csv")
+
 # load Empty words_de
 df_empty_word = pd.read_csv("training_data/empty_words_de.csv")
 df_empty_sentences = pd.read_csv("training_data/empty_words_sentences_de.csv")
@@ -186,7 +197,7 @@ def get_current_username(credentials: Optional[HTTPBasicCredentials] = Depends(s
         )
 
     # Verify the credentials as usual
-    if (basic_auth["username"] == None or basic_auth["password"] == None):
+    if (basic_auth["username"] is None or basic_auth["password"] is None):
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Incorrect user configuration",
@@ -223,8 +234,13 @@ def openapi(username: str = Depends(get_current_username)):
 def form(request: Request):
     return templates.TemplateResponse("form.html", {"request": request})
 
+@app.post("/serialize", response_class=PlainTextResponse)
+def serialize(user_request_in: RequestIn):
+    data =  serialize_log_data(user_request_in, ResultsOut([], "en"))
+    return data
+
 @app.post("/log")
-def log(user_request_in: UserRequestInEvent, background_tasks: BackgroundTasks):
+def log(user_request_in: RequestInEvent, background_tasks: BackgroundTasks):
     set_sentry_context(user_request_in)
 
     background_tasks.add_task(log_response, user_request_in)
@@ -232,7 +248,7 @@ def log(user_request_in: UserRequestInEvent, background_tasks: BackgroundTasks):
     return 'ok'
 
 @app.post("/check", response_model=ResultsOut)
-async def check_query(user_request_in: UserRequestIn, background_tasks: BackgroundTasks):
+async def check_query(user_request_in: RequestIn, background_tasks: BackgroundTasks):
     set_sentry_context(user_request_in)
 
     languagetools_results, lang = await languagetools(user_request_in.lang, user_request_in.text)
@@ -248,7 +264,7 @@ async def check_query(user_request_in: UserRequestIn, background_tasks: Backgrou
     return response
 
 # Functions
-def set_sentry_context(user_request_in: UserRequestIn):
+def set_sentry_context(user_request_in: RequestIn):
     sentry_sdk.set_context("user", {"id": user_request_in.id})
 
 async def languagetools(lang, text):
@@ -256,8 +272,6 @@ async def languagetools(lang, text):
 
     async with aiohttp.ClientSession() as session:
         langs = {"en": "en-GB", "de": "de-DE", "auto": "auto"}
-        if lang not in langs.keys():
-            raise HTTPException(status_code=400, detail="Language not supported: " + lang)
 
         payload = {
             "text": text,
@@ -333,26 +347,30 @@ def language_rules(lang, text):
     
     return list_results
 
-def log_response(user_request_in: UserRequestIn, response: ResultsOut = None):
-    if user_request_in.id == None or os.environ.get("LOGGING_ENABLED", None) != "true":
-        return
-
-    if response == None:
+def serialize_log_data(user_request_in: RequestIn, response: ResultsOut = None):
+    if response is None:
         data = {
-            "event": user_request_in.toDict(),
+            "event": jsonable_encoder(user_request_in),
         }
     else:
         data = {
-            "request": user_request_in.toDict(),
-            "response": response.toDict(),
+            "request": jsonable_encoder(user_request_in),
+            "response": jsonable_encoder(response),
         }
 
+    return json.dumps(data)
+
+def log_response(user_request_in: RequestIn, response: ResultsOut = None):
+    if user_request_in.id is None or logging_enabled is None:
+        return
+
+    data = serialize_log_data(user_request_in, response)
     dirname = os.getcwd() + '/logs/' + user_request_in.id
     filename = dirname + '/' + datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3] + '.json'
 
     os.makedirs(os.path.dirname(filename), exist_ok=True)
-    with open(filename, 'w') as outfile:
-        json.dump(data, outfile)
+    f = open(filename, 'w')
+    f.write(data)
 
 # Function to catch ending in German Denom
 def GenderedDenomEnd(lang, text):
