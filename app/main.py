@@ -274,7 +274,6 @@ async def languagetools(lang, text):
         payload = {
             "text": text,
             "language": langs[lang],
-            "disabledRules": "DE_CASE,SEHR_GEEHRTER_NAME",
             "motherTongue": "de-DE"
         }
 
