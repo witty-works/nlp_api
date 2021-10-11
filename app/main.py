@@ -125,6 +125,40 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+categories = {
+  "gendered_roles": { "color": "#E9DBB2", "inclusive": False },
+  "gendered_roles_hierachy": { "color": "#E9DBB2", "inclusive": False },
+  "gendered_roles_image": { "color": "#E9DBB2", "inclusive": False },
+  "gendered_denominations": { "color": "#E9DBB2", "inclusive": False },
+  "gendered_language": { "color": "#E9DBB2", "inclusive": False },
+  "agentic_language": { "color": "#F06464", "inclusive": False },
+  "communal_language": { "color": "#5ACFB9", "inclusive": True },
+  "d_and_i_words": { "color": "#5ACFB9", "inclusive": True },
+  "corporate_rules": { "color": "#37D1E5", "inclusive": False },
+  "empty_words": { "color": "#37D1E5", "inclusive": False },
+  "boasting_words": { "color": "#37D1E5", "inclusive": False },
+  "orthography": { "color": "#37D1E5", "inclusive": False },
+  "gendered_pronouns": { "color": "#E9DBB2", "inclusive": False },
+  "stereotypes": { "color": "#9489DB", "inclusive": False },
+  "gendered_stereotypes": { "color": "#E9DBB2", "inclusive": False },
+  "biased_language": { "color": "#9489DB", "inclusive": False },
+  "ability_bias": { "color": "#9489DB", "inclusive": False },
+  "age_bias_old": { "color": "#9489DB", "inclusive": False },
+  "age_bias_young": { "color": "#9489DB", "inclusive": False },
+  "culture_bias": { "color": "#9489DB", "inclusive": False },
+  "migration_background_bias": { "color": "#9489DB", "inclusive": False },
+  "anti_lgtbqiplus_bias": { "color": "#9489DB", "inclusive": False },
+  "classism_bias": { "color": "#9489DB", "inclusive": False },
+  "old_language": { "color": "#37D1E5", "inclusive": False },
+  "new_language": { "color": "#37D1E5", "inclusive": False },
+  "job_requirements_bias": { "color": "#9489DB", "inclusive": False },
+  "requirements_overload": { "color": "#9489DB", "inclusive": False },
+  "education_biased_requirements": { "color": "#9489DB", "inclusive": False },
+  "workload_biased_requirements": { "color": "#9489DB", "inclusive": False },
+  "ethnicity_biased_requirements": { "color": "#9489DB", "inclusive": False },
+  "age_biased_requirements": { "color": "#9489DB", "inclusive": False },
+}
+
 # Model data
 model = {"en": spacy.load("en_core_web_sm"), "de": spacy.load("de_core_news_sm")}
 #custom lematizer to correct the lemmas in spacy library, to add to the curent spacy lematizer
@@ -234,6 +268,10 @@ def openapi(username: str = Depends(get_current_username)):
 def form(request: Request):
     return templates.TemplateResponse("form.html", {"request": request})
 
+@app.get("/categories")
+def get_categories():
+    return categories
+
 @app.post("/serialize", response_class=PlainTextResponse)
 def serialize(user_request_in: RequestIn):
     data =  serialize_log_data(user_request_in, ResultsOut([], "en"))
@@ -249,9 +287,9 @@ def log(user_request_in: RequestInEvent, background_tasks: BackgroundTasks):
 async def check_query(user_request_in: RequestIn, background_tasks: BackgroundTasks):
     set_sentry_context(user_request_in)
 
-    languagetools_results, lang = await languagetools(user_request_in.lang, user_request_in.text)
+    languagetools_results, lang = await languagetool_rules(user_request_in)
 
-    language_rules_results = language_rules(lang, user_request_in.text)
+    language_rules_results = language_rules(user_request_in, lang)
 
     list_results = languagetools_results + language_rules_results
 
@@ -265,79 +303,82 @@ async def check_query(user_request_in: RequestIn, background_tasks: BackgroundTa
 def set_sentry_context(user_request_in: RequestIn):
     sentry_sdk.set_context("user", {"id": user_request_in.id})
 
-async def languagetools(lang, text):
+async def languagetool_rules(user_request_in: RequestIn):
     list_results = []
 
     async with aiohttp.ClientSession() as session:
-        langs = {"en": "en-GB", "de": "de-DE", "auto": "auto"}
+        langs = ["en", "de", "auto"]
 
         payload = {
-            "text": text,
-            "language": langs[lang],
-            "motherTongue": "de-DE"
+            "text": user_request_in.text,
+            "language": user_request_in.lang,
+            "motherTongue": user_request_in.primary_language
         }
 
-        if lang == "auto":
-            payload["preferredLanguages"] = "de,en"
-            payload["preferredVariants"] = "de-DE,en-GB"
+        if user_request_in.lang == "auto":
+            payload["preferredLanguages"] = user_request_in.preferred_languages
+            payload["preferredVariants"] = user_request_in.preferred_variants
 
         async with session.post(languagetool_url + "/check", data=payload) as r:
+            assert r.status == 200
             result = await r.json()
 
-            lang = result["language"]["code"]
-            if lang not in langs.values():
+            if "language" not in result:
+                lang = None
+            if result["language"]["code"][0:2] not in langs:
                 lang = None
             elif "matches" in result:
-                lang = Lang(lang)
+                lang = Lang(result["language"]["code"])
 
-                for match in result["matches"]:
-                    offset = int(match["offset"])
-                    end = offset + int(match["length"])
-                    alternatives = []
-                    if "replacements" in match:
-                         for replacement in match["replacements"]:
-                             value = replacement["value"]
-                             value = value if value != "" else "-"
-                             alternatives.append(value)
+                if "orthography" not in user_request_in.disabled_categories:
+                    for match in result["matches"]:
+                        offset = int(match["offset"])
+                        end = offset + int(match["length"])
+                        alternatives = []
+                        if "replacements" in match:
+                            for replacement in match["replacements"]:
+                                value = replacement["value"]
+                                value = value if value != "" else "-"
+                                alternatives.append(value)
 
-                    list_results.append(
-                        ResultOut.factory(
-                            lang,
-                            text[offset:end],
-                            "orthography",
-                            offset,
-                            end,
-                            alternatives,
-                            None,
-                            match["shortMessage"],
-                            None,
-                            match["message"]
+                        list_results.append(
+                            ResultOut.factory(
+                                lang,
+                                user_request_in.text[offset:end],
+                                "orthography",
+                                offset,
+                                end,
+                                alternatives,
+                                None,
+                                match["shortMessage"],
+                                None,
+                                match["message"]
+                            )
                         )
-                    )
 
     if isinstance(lang, Lang) != True:
         raise HTTPException(status_code=400, detail="Language could not be determined")
 
     return list_results, lang
 
-def language_rules(lang, text):
+def language_rules(user_request_in: RequestIn, lang: Lang):
     #apply SpaCy pre-built model
-    tokens = model[lang.locale](text)
+    tokens = model[lang.locale](user_request_in.text)
     
     #Phrase matcher part to handle False positives with two words and special simbols
     matcher = PhraseMatcher(model[lang.locale].vocab)
 
     # Only run model.make_doc to speed things up
-    patterns = [model[lang.locale].make_doc(text) for value in terms_false_positive]
+    patterns = [model[lang.locale].make_doc(user_request_in.text) for value in terms_false_positive]
     matcher.add("TerminologyList", patterns)
     
     #functions for German rules
     if lang.locale == "de":
-        list_results = GermanRules(lang, tokens, text)
+        list_results = GermanRules(lang, tokens, user_request_in)
 
     #function for English rules
     elif lang.locale == "en":
-        list_results = EnglishRules(lang, tokens, text)
+        list_results = EnglishRules(lang, tokens, user_request_in)
 
     else:
         list_results = []
@@ -370,14 +411,15 @@ def log_response(user_request_in: RequestIn, response: ResultsOut = None):
     f.write(data)
 
 # Function to catch ending in German Denom
-def GenderedDenomEnd(lang, text):
-    category = "corporate_rules"      
-    subcategory = "db_gendered_ending"      
-    ending = ["/in", "/-in", "_in", "\*in"]
-
+def GenderedDenomEnd(lang, text, gendereddenom_ending, preference = ":in"):
+    category = "corporate_rules"
+    subcategory = "db_gendered_ending"
+ 
     list_ending = []
-    for item in ending:
-        span = re.search(item, text)
+    for item in gendereddenom_ending:
+        if preference == item:
+            continue
+        span = re.search(gendereddenom_ending[item], text)
         if type(span)== re.Match:
             list_ending.append(ResultOut.factory(
                 lang,
@@ -385,44 +427,56 @@ def GenderedDenomEnd(lang, text):
                 category,
                 span.start(),
                 span.end(),
-                [":in"],
+                [preference],
                 subcategory)
              )   
 
     return list_ending
 
 #Function for all German rules
-def GermanRules(lang, tokens, text):
-    list_gendered_denominations_end = GenderedDenomEnd(lang, text)
+def GermanRules(lang, tokens, user_request_in: RequestIn):
+    list_full = []
 
     #Agentic language and related false positives catch
-    list_agentic = AgenticLanguageAnalysis(lang, tokens, df_agentic_ct)
+    if "agentic_language" not in user_request_in.disabled_categories:
+        list_full+= AgenticLanguageAnalysis(lang, tokens, df_agentic_ct)
 
     # Empty words&sentences catch
-    list_empty_words = EmptyWordAnalysis(lang, tokens, terms_empty, df_empty_word, df_empty_sentences)
+    if "empty_words" not in user_request_in.disabled_categories:
+        list_full+= EmptyWordAnalysis(lang, tokens, terms_empty, df_empty_word, df_empty_sentences)
 
-    #Gendered denom. words catch 
-    list_gendered_denominations = GenderedDenomAnalysis(lang, tokens, df_gender_ct)
-
-    # boasting words&sentences catch
-    list_boast = BoastingWordsSentences(lang, tokens, df_boast_word, df_boast_sentences)
+    if "gendered_denominations" not in user_request_in.disabled_categories:
+        list_full+= GenderedDenomEnd(lang, user_request_in.text, user_request_in._gendereddenom_ending, user_request_in.german_gender_ending)
+        list_full+= GenderedDenomAnalysis(lang, tokens, df_gender_ct)
     
     #discriminating words catch
-    list_discrim = RulesBased(lang, tokens, df_discrim_words, "biased_language")
+    if "biased_language" not in user_request_in.disabled_categories:
+        list_full+= RulesBased(lang, tokens, df_discrim_words, "biased_language")
     
     #communal terms
-    list_communal = RulesBased(lang, tokens, df_communal_words, "communal_language")
+    if "communal_language" not in user_request_in.disabled_categories:
+        list_full+= RulesBased(lang, tokens, df_communal_words, "communal_language")
 
     #d_and_i_words words
-    list_d_and_i_words = RulesBasedWordsPhraseMatcher(lang, tokens, terms_d_and_i_words, df_d_and_i_words, "d_and_i_words")
+    if "d_and_i_words" not in user_request_in.disabled_categories:
+        list_full+= RulesBasedWordsPhraseMatcher(lang, tokens, terms_d_and_i_words, df_d_and_i_words, "d_and_i_words")
 
-    return list_gendered_denominations_end + list_agentic + list_gendered_denominations + list_empty_words + list_boast + list_discrim + list_communal + list_d_and_i_words
+    # Empty words&sentences catch
+    if "empty_words" not in user_request_in.disabled_categories:
+        list_full+= EmptyWordAnalysis(lang, tokens, terms_empty, df_empty_word, df_empty_sentences)
+
+    # boasting words&sentences catch
+    if "boasting_words" not in user_request_in.disabled_categories:
+        list_full+= BoastingWordsSentences(lang, tokens, df_boast_word, df_boast_sentences)
+
+    return list_full
 
 #Function for all English rules
-def EnglishRules(lang, tokens, text):
-    list_agentic= RulesBasedEN(lang, tokens, df_agentic_words_en, "agentic_language")
+def EnglishRules(lang, tokens, user_request_in: RequestIn):
+    list_full = []
 
-    list_full = list_agentic
+    if "agentic_language" not in user_request_in.disabled_categories:
+        list_full+= RulesBasedEN(lang, tokens, df_agentic_words_en, "agentic_language")
     
     return list_full
 
