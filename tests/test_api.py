@@ -50,6 +50,30 @@ def test_api():
         }
     ]
 
+def test_api_disabled_categories():
+    request_data = {"text": "Wir suchen Ninja Programmierer für unsere Kunden", "disabled_categories": "boasting_words,empty_words"}
+
+    response = client.post("/check", json=request_data)
+    assert response.status_code == 200
+
+    first_record = response.json()
+    assert first_record["language"] == "de"
+    assert first_record["results"] == [
+        {
+        "text": "Kunden",
+        "category": "gendered_roles",
+        "start": 42,
+        "end": 48,
+        "alternatives": [
+            "Kundschaft",
+            "Kund:innen",
+            "Kundinnen und Kunden"
+        ],
+        "label": "Geschlechtsspezifische Rollen",
+        "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
+        "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht."
+        }
+    ]
 def test_api_orthography():
     request_data = {"text": "Ich gehe noch schnell ueber die Strasse!!!"}
 
@@ -197,7 +221,7 @@ def test_api_orthography_english():
         }
     ]
 
-def test_api_corporate_rule():
+def test_api_gender_ending():
     request_data = {"text": "Kund/in"}
 
     response = client.post("/check", json=request_data)
@@ -219,6 +243,16 @@ def test_api_corporate_rule():
         "solution": "Bitte verwenden Sie den Doppelpunkt, um geschlechter inklusive zu schreiben."
         }
     ]
+
+def test_api_gender_ending():
+    request_data = {"text": "Kund/in", "german_gender_ending": "/in"}
+
+    response = client.post("/check", json=request_data)
+    assert response.status_code == 200
+
+    first_record = response.json()
+    assert first_record["language"] == "de"
+    assert first_record["results"] == []
 
 def test_api_false_positive():
     request_data = {"text": "Greenpeace is an international company with headquarters in London."}
@@ -260,3 +294,11 @@ def test_log():
 
     response = client.post("/log", json=request_data)
     assert response.status_code == 201
+
+def test_categories():
+    response = client.get("/categories")
+    assert response.status_code == 200
+
+    first_record = response.json()
+
+    assert "empty_words" in first_record

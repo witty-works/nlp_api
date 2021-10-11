@@ -1,6 +1,7 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 from typing import List
 from typing import Optional
+from typing_extensions import TypedDict
 from enum import Enum
 
 class LangType(str, Enum):
@@ -12,6 +13,24 @@ class RequestIn(BaseModel):
     text: str
     lang: Optional[LangType] = "auto"
     id: Optional[str] = None
+    primary_language: Optional[str] = "de-DE"
+    preferred_languages: Optional[str] = "de,en"
+    preferred_variants: Optional[str] = "de-DE,en-GB"
+    german_gender_ending: Optional[str] = ":in"
+    _gendereddenom_ending = {"/in": "/in", "/-in": "/-in", "_in": "_in", "*in": "\*in", ":in": ":in"}
+    disabled_categories: Optional[List] = ""
+
+    @validator("german_gender_ending")
+    def valid_german_gender_ending(cls, v: str):
+        if v not in cls._gendereddenom_ending:
+            raise ValueError("Not supported german_gender_ending")
+        return v
+
+    @validator("disabled_categories", pre=True)
+    def split_string_values(cls, v):
+        if isinstance(v, str):
+            return v.split(",")
+        return v
 
 class RequestInEvent(RequestIn):
     alternative: str
