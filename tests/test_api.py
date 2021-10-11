@@ -172,12 +172,12 @@ def test_api_orthography_english():
         "end": 6,
         "alternatives": [
             "like",
+            "wiki",
             "Loki",
-            "Lili",
-            "tiki",
             "Niki",
-            "Kiki",
-            "wiki"
+            "tiki",
+            "Lili",
+            "Kiki"
         ],
         "label": "Spelling mistake",
         "reason": "Correct any spelling or grammatical errors to maximize the impact of their writing.",

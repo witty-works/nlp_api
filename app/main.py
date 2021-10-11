@@ -101,7 +101,7 @@ async def custom_http_exception_handler(request, e):
         sentry_sdk.capture_exception(e)
     return await http_exception_handler(request, e)
 
-languagetool_url = "https://api.languagetool.org/v2"
+languagetool_url = "https://lt.api.witty.works/v2"
 if languagetool_api != "false":
     languagetool_url = languagetool_api
 elif platform_relationships is not None:
