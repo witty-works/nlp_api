@@ -1,18 +1,42 @@
 from pydantic import BaseModel, validator
 from typing import List
 from typing import Optional
-from typing_extensions import TypedDict
 from enum import Enum
+import gettext
+
+class Lang(object):
+    def __init__(self, locale):
+        self.locale = locale[0:2]
+
+        if self.locale == "en":
+            trans_locale = "en_GB"
+        else:
+            trans_locale = "de_DE"
+
+        language = gettext.translation(
+            "messages",
+            localedir="locales",
+            languages=[trans_locale]
+        )
+
+        language.install()
+
+        self.gettext = language.gettext
+
+    def _(self, message: str, placeholders = {}):
+        message = self.gettext(message)
+
+        for key in placeholders:
+            message = message.replace("%" + key, placeholders[key])
+
+        return message
 
 class LangType(str, Enum):
     AUTO = "auto"
     EN = "en"
     DE = "de"
 
-class RequestIn(BaseModel):
-    text: str
-    lang: Optional[LangType] = "auto"
-    id: Optional[str] = None
+class Config(BaseModel):
     primary_language: Optional[str] = "de-DE"
     preferred_languages: Optional[str] = "de,en"
     preferred_variants: Optional[str] = "de-DE,en-GB"
@@ -32,6 +56,12 @@ class RequestIn(BaseModel):
             return v.split(",")
         return v
 
+class RequestIn(BaseModel):
+    text: str
+    lang: Optional[LangType] = "auto"
+    id: Optional[str] = None
+    config: Optional[Config] = Config()
+
 class RequestInEvent(RequestIn):
     alternative: str
     start: int
@@ -47,7 +77,7 @@ class ResultOut(BaseModel):
     solution: str
     alternatives: List[str]
 
-    def factory(lang, text, category, start, end = None, alternatives = [], subcategory = None, label = None, reason = None, solution = None):
+    def factory(config: Config, lang: Lang, text, category, start, end = None, alternatives = [], subcategory = None, label = None, reason = None, solution = None):
         if end == None:
             end = start + len(text)
 
@@ -56,9 +86,13 @@ class ResultOut(BaseModel):
         elif category == "empty_words":
             subcategory = "empty_words"
 
-        label = label if label != None else lang._("rules." + category + "_label")
-        reason = reason if reason != None else lang._("rules." + subcategory + "_reason")
-        solution = solution if solution != None else lang._("rules." + subcategory + "_solution")
+        params = {}
+        if subcategory == "gendered_denominations_ending":
+            params["gendered_denominations_ending"] = config.german_gender_ending
+
+        label = label if label != None else lang._("rules." + category + "_label", params)
+        reason = reason if reason != None else lang._("rules." + subcategory + "_reason", params)
+        solution = solution if solution != None else lang._("rules." + subcategory + "_solution", params)
 
         # TODO remove as soon as the browser extension can handle the "orthography" and "corporate_rules" category
         if category == "orthography" or category == "corporate_rules":

@@ -51,7 +51,7 @@ def test_api():
     ]
 
 def test_api_disabled_categories():
-    request_data = {"text": "Wir suchen Ninja Programmierer für unsere Kunden", "disabled_categories": "boasting_words,empty_words"}
+    request_data = {"text": "Wir suchen Ninja Programmierer für unsere Kunden", "config": {"disabled_categories": "boasting_words,empty_words"}}
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -232,20 +232,20 @@ def test_api_gender_ending():
     assert first_record["results"] == [
         {
         "text": "/in",
-        "category": "empty_words",
+        "category": "gendered_roles",
         "start": 4,
         "end": 7,
         "alternatives": [
             ":in"
         ],
-        "label": "Firmenrichtlinie",
-        "reason": "Bei der Deutschen Bahn verwenden wir den Doppelpunkt, um geschlechter inklusiv zu schreiben, anstelle von \"*\", \"_\" oder \"/\".",
-        "solution": "Bitte verwenden Sie den Doppelpunkt, um geschlechter inklusive zu schreiben."
+        "label": "Geschlechtsspezifische Rollen",
+        "reason": "Eine konsistente Schreibweise wird als vertrausvoller wargenommen und hilft beim Lesen.",
+        "solution": "Zur Konsistenz bitte \":in\" verwenden, um geschlechter inklusive zu schreiben."
         }
     ]
 
-def test_api_gender_ending():
-    request_data = {"text": "Kund/in", "german_gender_ending": "/in"}
+def test_api_gender_ending_custom():
+    request_data = {"text": "Kund/in", "config": {"german_gender_ending": "/in"}}
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
