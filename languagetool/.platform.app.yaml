@@ -10,7 +10,8 @@ resources:
 web:
   commands:
     start: |
-      java -noverify -Xms3000M -Xmx3000M -XX:MaxMetaspaceSize=3000M -XX:+UseG1GC -XX:+UseStringDeduplication -cp languagetool-server.jar org.languagetool.server.HTTPServer --public --config server.properties --port $PORT --allow-origin "*"
+      export MEMORY="$(jq ".info.limits.memory * 0.80 | tonumber | floor" /run/config.json)"
+      java -noverify -Xms${MEMORY}M -Xmx${MEMORY}M -XX:+UseG1GC -XX:+UseStringDeduplication -cp languagetool-server.jar org.languagetool.server.HTTPServer --public --config server.properties --port $PORT --allow-origin "*"
 
 hooks:
   build: |
