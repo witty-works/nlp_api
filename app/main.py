@@ -55,14 +55,12 @@ import re
 import ast
 # project models
 from app.models import (
+    Config,
+    Lang,
     RequestIn,
     RequestInEvent,
     ResultOut,
     ResultsOut,
-)
-
-from app.lang import (
-    Lang,
 )
 
 version = "1.2.0"
@@ -312,12 +310,12 @@ async def languagetool_rules(user_request_in: RequestIn):
         payload = {
             "text": user_request_in.text,
             "language": user_request_in.lang,
-            "motherTongue": user_request_in.primary_language
+            "motherTongue": user_request_in.config.primary_language
         }
 
         if user_request_in.lang == "auto":
-            payload["preferredLanguages"] = user_request_in.preferred_languages
-            payload["preferredVariants"] = user_request_in.preferred_variants
+            payload["preferredLanguages"] = user_request_in.config.preferred_languages
+            payload["preferredVariants"] = user_request_in.config.preferred_variants
 
         async with session.post(languagetool_url + "/check", data=payload) as r:
             assert r.status == 200
@@ -330,7 +328,7 @@ async def languagetool_rules(user_request_in: RequestIn):
             elif "matches" in result:
                 lang = Lang(result["language"]["code"])
 
-                if "orthography" not in user_request_in.disabled_categories:
+                if "orthography" not in user_request_in.config.disabled_categories:
                     for match in result["matches"]:
                         offset = int(match["offset"])
                         end = offset + int(match["length"])
@@ -343,6 +341,7 @@ async def languagetool_rules(user_request_in: RequestIn):
 
                         list_results.append(
                             ResultOut.factory(
+                                user_request_in.config,
                                 lang,
                                 user_request_in.text[offset:end],
                                 "orthography",
@@ -410,64 +409,41 @@ def log_response(user_request_in: RequestIn, response: ResultsOut = None):
     f = open(filename, 'w')
     f.write(data)
 
-# Function to catch ending in German Denom
-def GenderedDenomEnd(lang, text, gendereddenom_ending, preference = ":in"):
-    category = "corporate_rules"
-    subcategory = "db_gendered_ending"
- 
-    list_ending = []
-    for item in gendereddenom_ending:
-        if preference == item:
-            continue
-        span = re.search(gendereddenom_ending[item], text)
-        if type(span)== re.Match:
-            list_ending.append(ResultOut.factory(
-                lang,
-                item,
-                category,
-                span.start(),
-                span.end(),
-                [preference],
-                subcategory)
-             )   
-
-    return list_ending
-
 #Function for all German rules
 def GermanRules(lang, tokens, user_request_in: RequestIn):
     list_full = []
 
     #Agentic language and related false positives catch
-    if "agentic_language" not in user_request_in.disabled_categories:
-        list_full+= AgenticLanguageAnalysis(lang, tokens, df_agentic_ct)
+    if "agentic_language" not in user_request_in.config.disabled_categories:
+        list_full+= AgenticLanguageAnalysis(user_request_in.config, lang, tokens, df_agentic_ct)
 
     # Empty words&sentences catch
-    if "empty_words" not in user_request_in.disabled_categories:
-        list_full+= EmptyWordAnalysis(lang, tokens, terms_empty, df_empty_word, df_empty_sentences)
+    if "empty_words" not in user_request_in.config.disabled_categories:
+        list_full+= EmptyWordAnalysis(user_request_in.config, lang, tokens, terms_empty, df_empty_word, df_empty_sentences)
 
-    if "gendered_denominations" not in user_request_in.disabled_categories:
-        list_full+= GenderedDenomEnd(lang, user_request_in.text, user_request_in._gendereddenom_ending, user_request_in.german_gender_ending)
-        list_full+= GenderedDenomAnalysis(lang, tokens, df_gender_ct)
+    if "gendered_denominations" not in user_request_in.config.disabled_categories:
+        list_full+= GenderedDenomEnd(user_request_in.config, lang, user_request_in.text)
+        list_full+= GenderedDenomAnalysis(user_request_in.config, lang, tokens, df_gender_ct)
     
     #discriminating words catch
-    if "biased_language" not in user_request_in.disabled_categories:
-        list_full+= RulesBased(lang, tokens, df_discrim_words, "biased_language")
+    if "biased_language" not in user_request_in.config.disabled_categories:
+        list_full+= RulesBased(user_request_in.config, lang, tokens, df_discrim_words, "biased_language")
     
     #communal terms
-    if "communal_language" not in user_request_in.disabled_categories:
-        list_full+= RulesBased(lang, tokens, df_communal_words, "communal_language")
+    if "communal_language" not in user_request_in.config.disabled_categories:
+        list_full+= RulesBased(user_request_in.config, lang, tokens, df_communal_words, "communal_language")
 
     #d_and_i_words words
-    if "d_and_i_words" not in user_request_in.disabled_categories:
-        list_full+= RulesBasedWordsPhraseMatcher(lang, tokens, terms_d_and_i_words, df_d_and_i_words, "d_and_i_words")
+    if "d_and_i_words" not in user_request_in.config.disabled_categories:
+        list_full+= RulesBasedWordsPhraseMatcher(user_request_in.config, lang, tokens, terms_d_and_i_words, df_d_and_i_words, "d_and_i_words")
 
     # Empty words&sentences catch
-    if "empty_words" not in user_request_in.disabled_categories:
-        list_full+= EmptyWordAnalysis(lang, tokens, terms_empty, df_empty_word, df_empty_sentences)
+    if "empty_words" not in user_request_in.config.disabled_categories:
+        list_full+= EmptyWordAnalysis(user_request_in.config, lang, tokens, terms_empty, df_empty_word, df_empty_sentences)
 
     # boasting words&sentences catch
-    if "boasting_words" not in user_request_in.disabled_categories:
-        list_full+= BoastingWordsSentences(lang, tokens, df_boast_word, df_boast_sentences)
+    if "boasting_words" not in user_request_in.config.disabled_categories:
+        list_full+= BoastingWordsSentences(user_request_in.config, lang, tokens, df_boast_word, df_boast_sentences)
 
     return list_full
 
@@ -475,8 +451,8 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
 def EnglishRules(lang, tokens, user_request_in: RequestIn):
     list_full = []
 
-    if "agentic_language" not in user_request_in.disabled_categories:
-        list_full+= RulesBasedEN(lang, tokens, df_agentic_words_en, "agentic_language")
+    if "agentic_language" not in user_request_in.config.disabled_categories:
+        list_full+= RulesBasedEN(user_request_in.config, lang, tokens, df_agentic_words_en, "agentic_language")
     
     return list_full
 
@@ -488,9 +464,33 @@ def IsItFalsePositive(word, false_positive):
 
     return False
 
+"""Function to catch ending in German Denom"""
+def GenderedDenomEnd(config: Config, lang, text):
+    category = "gendered_roles"      
+    subcategory = "gendered_denominations_ending"
+ 
+    list_ending = []
+    for item in config._gendereddenom_ending:
+        if config.german_gender_ending == item:
+            continue
+        span = re.search(config._gendereddenom_ending[item], text)
+        if type(span)== re.Match:
+            list_ending.append(ResultOut.factory(
+                config,
+                lang,
+                item,
+                category,
+                span.start(),
+                span.end(),
+                [config.german_gender_ending],
+                subcategory)
+             )   
+
+    return list_ending
+
 """Function to handle dependecies of the adjectives."""
 # this function agentic language & related false positives
-def AgenticLanguageAnalysis(lang, tokens, df):
+def AgenticLanguageAnalysis(config: Config, lang, tokens, df):
     category = "agentic_language"
     list_tokens = []
     dic_anc = {} 
@@ -530,6 +530,7 @@ def AgenticLanguageAnalysis(lang, tokens, df):
                 if token.lemma_ == word:
                     list_tokens.append(
                         ResultOut.factory(
+                            config, 
                             lang,
                             token.text,
                             category,
@@ -542,7 +543,7 @@ def AgenticLanguageAnalysis(lang, tokens, df):
 
     return list_tokens     
     
-def GenderedDenomAnalysis(lang, tokens, df):
+def GenderedDenomAnalysis(config: Config, lang, tokens, df):
     category = "gendered_roles"      
     subcategory = "gendered_denominations"      
     list_tokens = []
@@ -576,25 +577,27 @@ def GenderedDenomAnalysis(lang, tokens, df):
                     if token.morph.get("Number")[0]=="Sing":
                         list_tokens.append(
                             ResultOut.factory(
-                            lang,
-                            token.text,
-                            category,
-                            token.idx,
-                            None,
-                            ast.literal_eval(alternative_sing),
-                            subcategory
+                                config, 
+                                lang,
+                                token.text,
+                                category,
+                                token.idx,
+                                None,
+                                ast.literal_eval(alternative_sing),
+                                subcategory
                             )
                         )
                
                     elif token.morph.get("Number")[0]=="Plur":
                         list_tokens.append(
                             ResultOut.factory(
-                            lang,
-                            token.text,
-                            category,
-                            token.idx,
-                            None,
-                            ast.literal_eval(alternative_plur)
+                                config,
+                                lang,
+                                token.text,
+                                category,
+                                token.idx,
+                                None,
+                                ast.literal_eval(alternative_plur)
                             )
                         )
              
@@ -606,24 +609,26 @@ def GenderedDenomAnalysis(lang, tokens, df):
                     if token.morph.get("Number")[0]=="Sing":
                         list_tokens.append(
                             ResultOut.factory(
-                            lang,
-                            token.text,
-                            category,
-                            token.idx,
-                            None,
-                            ast.literal_eval(alternative_sing)
+                                config,
+                                lang,
+                                token.text,
+                                category,
+                                token.idx,
+                                None,
+                                ast.literal_eval(alternative_sing)
                             )
                         )
                
                     elif token.morph.get("Number")[0]=="Plur":
                         list_tokens.append(
                             ResultOut.factory(
-                            lang,
-                            token.text,
-                            category,
-                            token.idx,
-                            None,
-                            ast.literal_eval(alternative_plur)
+                                config,
+                                lang,
+                                token.text,
+                                category,
+                                token.idx,
+                                None,
+                                ast.literal_eval(alternative_plur)
                             )
                         )
                             
@@ -632,7 +637,7 @@ def GenderedDenomAnalysis(lang, tokens, df):
     return list_tokens
 
 # Boasting words and sentences analisys function, shows alternatives if avalible
-def BoastingWordsSentences(lang, tokens, df, df_sentences):
+def BoastingWordsSentences(config: Config, lang, tokens, df, df_sentences):
     category = "boasting_words"
     list_tokens = []
     #Phrase matcher part to handle False positives with two words and special simbols
@@ -647,12 +652,13 @@ def BoastingWordsSentences(lang, tokens, df, df_sentences):
             if token.lemma_ == word:
                 list_tokens.append(
                     ResultOut.factory(
-                    lang,
-                    token.text,
-                    category,
-                    token.idx,
-                    None,
-                    ast.literal_eval(alternative)
+                        config,
+                        lang,
+                        token.text,
+                        category,
+                        token.idx,
+                        None,
+                        ast.literal_eval(alternative)
                     )
                 )  
 
@@ -664,19 +670,20 @@ def BoastingWordsSentences(lang, tokens, df, df_sentences):
             if span.text == sentence:
                 list_tokens.append(
                     ResultOut.factory(
-                    lang, 
-                    span.text,
-                    category,
-                    span.start_char,
-                    span.end_char,
-                    ast.literal_eval(alternative)
+                        config,
+                        lang, 
+                        span.text,
+                        category,
+                        span.start_char,
+                        span.end_char,
+                        ast.literal_eval(alternative)
                     )
                 )
 
     return list_tokens 
 
 # Unified function for Emty words false positives and rules    
-def EmptyWordAnalysis(lang, tokens, terms, df, df_sentence):
+def EmptyWordAnalysis(config: Config, lang, tokens, terms, df, df_sentence):
     #category = df_empty_sentences(["subcategory"])
     category = "empty_words"
     list_tokens = []
@@ -704,6 +711,7 @@ def EmptyWordAnalysis(lang, tokens, terms, df, df_sentence):
                         if tokens[i].lemma_ == word:
                             list_tokens.append(
                                 ResultOut.factory(
+                                    config,
                                     lang,
                                     tokens[i].text,
                                     category,
@@ -717,6 +725,7 @@ def EmptyWordAnalysis(lang, tokens, terms, df, df_sentence):
                             if tokens[i-1].is_stop == True or tokens[i-1].is_punct==True:
                                 list_tokens.append(
                                     ResultOut.factory(
+                                        config,
                                         lang,
                                         tokens[i-1:i+1].text,
                                         category,
@@ -728,6 +737,7 @@ def EmptyWordAnalysis(lang, tokens, terms, df, df_sentence):
                             else:
                                 list_tokens.append(
                                     ResultOut.factory(
+                                        config,
                                         lang,
                                         tokens[i].text,
                                         category,
@@ -743,6 +753,7 @@ def EmptyWordAnalysis(lang, tokens, terms, df, df_sentence):
                         if tokens[i].lemma_ == word:
                             list_tokens.append(
                                 ResultOut.factory(
+                                    config,
                                     lang,
                                     tokens[i].text,
                                     category,
@@ -756,6 +767,7 @@ def EmptyWordAnalysis(lang, tokens, terms, df, df_sentence):
                             if tokens[i-1].is_stop == True or tokens[i-1].is_punct==True:
                                 list_tokens.append(
                                     ResultOut.factory(
+                                        config,
                                         lang,
                                         tokens[i-1:i+1].text,
                                         category,
@@ -767,6 +779,7 @@ def EmptyWordAnalysis(lang, tokens, terms, df, df_sentence):
                             else:
                                 list_tokens.append(
                                     ResultOut.factory(
+                                        config,
                                         lang,
                                         tokens[i].text,
                                         category,
@@ -783,19 +796,20 @@ def EmptyWordAnalysis(lang, tokens, terms, df, df_sentence):
             if span.text == sentence:
                 list_tokens.append(
                     ResultOut.factory(
+                        config,
                         lang,
                         span.text,
                         category,
                         span.start_char,
                         span.end_char,
                         ast.literal_eval(alternative) 
-            )
-        )
+                    )
+                )
 
     return list_tokens 
 
 # Unified function for rules and sentence false positives   
-def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, category):
+def RulesBasedWordsPhraseMatcher(config: Config, lang, tokens, terms, df, category):
     list_tokens = []
     #Phrase matcher part to handle False positives with two words and special simbols
     matcher = PhraseMatcher(model[lang.locale].vocab)
@@ -809,12 +823,11 @@ def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, category):
             if token.lemma_ == row["Lemma"]:
                 list_tokens.append(
                     ResultOut.factory(
+                        config,
                         lang,
                         token.text,
                         category,
-                        token.idx,
-                        None,
-                        []
+                        token.idx
                     )
                 )
     
@@ -823,6 +836,7 @@ def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, category):
         span = tokens[start:end]
         list_tokens.append(
             ResultOut.factory(
+                config,
                 lang,
                 span.text,
                 category,
@@ -834,19 +848,18 @@ def RulesBasedWordsPhraseMatcher(lang, tokens, terms, df, category):
     return list_tokens 
 
 #Unified function for rules
-def RulesBased(lang, tokens, df, category):
+def RulesBased(config: Config, lang, tokens, df, category):
     list_tokens = []
     for token in tokens:
         for word in list(df["Lemma"]):
             if token.lemma_ == word:
                 list_tokens.append(
                     ResultOut.factory(
+                        config,
                         lang,
                         token.text,
                         category,
-                        token.idx,
-                        None,
-                        []
+                        token.idx
                     )
                 )
 
@@ -854,7 +867,7 @@ def RulesBased(lang, tokens, df, category):
 
 #function to catch ending in gendered denom
 #Rules based english function
-def RulesBasedEN(lang, tokens, df, category):
+def RulesBasedEN(config: Config, lang, tokens, df, category):
     list_tokens = []
     
     for token in tokens:
@@ -862,6 +875,7 @@ def RulesBasedEN(lang, tokens, df, category):
             if token.lemma_ == word:
                 list_tokens.append(
                     ResultOut.factory(
+                        config,
                         lang,
                         token.text,
                         category,

@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2021-09-30 08:14\n"
-"PO-Revision-Date: 2021-09-30 08:14\n"
+"POT-Creation-Date: 2021-10-11 15:09\n"
+"PO-Revision-Date: 2021-10-11 15:09\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -48,6 +48,15 @@ msgid "rules.gendered_denominations_solution"
 msgstr ""
 
 msgid "rules.gendered_denominations_color"
+msgstr ""
+
+msgid "rules.gendered_denominations_ending_reason"
+msgstr ""
+
+msgid "rules.gendered_denominations_ending_solution"
+msgstr ""
+
+msgid "rules.gendered_denominations_ending_color"
 msgstr ""
 
 msgid "rules.gendered_language_label"
@@ -260,6 +269,18 @@ msgstr ""
 msgid "rules.classism_bias_color"
 msgstr ""
 
+msgid "rules.phrases_label"
+msgstr ""
+
+msgid "rules.phrases_reason"
+msgstr ""
+
+msgid "rules.phrases_solution"
+msgstr ""
+
+msgid "rules.phrases_color"
+msgstr ""
+
 msgid "rules.old_language_reason"
 msgstr ""
 
@@ -359,14 +380,14 @@ msgstr ""
 msgid "rules.corporate_rules_color"
 msgstr ""
 
-msgid "rules.db_gendered_ending_label"
+msgid "rules.mixing_english_label"
 msgstr ""
 
-msgid "rules.db_gendered_ending_reason"
+msgid "rules.mixing_english_reason"
 msgstr ""
 
-msgid "rules.db_gendered_ending_solution"
+msgid "rules.mixing_english_solution"
 msgstr ""
 
-msgid "rules.db_gendered_ending_color"
+msgid "rules.mixing_english_color"
 msgstr ""

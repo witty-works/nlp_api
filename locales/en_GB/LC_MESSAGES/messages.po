@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2021-09-30 08:14\n"
-"PO-Revision-Date: 2021-09-30 08:14\n"
+"POT-Creation-Date: 2021-10-11 15:09\n"
+"PO-Revision-Date: 2021-10-11 15:09\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -66,6 +66,15 @@ msgstr ""
 
 msgid "rules.gendered_denominations_color"
 msgstr "gendered"
+
+msgid "rules.gendered_denominations_ending_reason"
+msgstr "-"
+
+msgid "rules.gendered_denominations_ending_solution"
+msgstr "-"
+
+msgid "rules.gendered_denominations_ending_color"
+msgstr "style"
 
 msgid "rules.gendered_language_label"
 msgstr "Gendered Language"
@@ -372,6 +381,18 @@ msgstr ""
 msgid "rules.classism_bias_color"
 msgstr "discriminating"
 
+msgid "rules.phrases_label"
+msgstr ""
+
+msgid "rules.phrases_reason"
+msgstr "Missing"
+
+msgid "rules.phrases_solution"
+msgstr "Missing"
+
+msgid "rules.phrases_color"
+msgstr "discriminating"
+
 msgid "rules.old_language_reason"
 msgstr ""
 "This combination of words may no longer be familiar to young people, as "
@@ -420,7 +441,7 @@ msgstr ""
 "writing."
 
 msgid "rules.orthography_solution"
-msgstr ""
+msgstr "Use LanguageTool \"message\" as the solution"
 
 msgid "rules.orthography_color"
 msgstr "style"
@@ -474,24 +495,22 @@ msgid "rules.corporate_rules_label"
 msgstr "Company guideline"
 
 msgid "rules.corporate_rules_reason"
-msgstr ""
+msgstr "We always use subcategories here and so no need to fill anything in."
 
 msgid "rules.corporate_rules_solution"
-msgstr ""
+msgstr "We always use subcategories here and so no need to fill anything in."
 
 msgid "rules.corporate_rules_color"
 msgstr "style"
 
-msgid "rules.db_gendered_ending_label"
-msgstr ""
+msgid "rules.mixing_english_label"
+msgstr "Mixing English into other Languages"
 
-msgid "rules.db_gendered_ending_reason"
-msgstr ""
-"At Deutsche Bahn we use the colon sign to write gender inclusively "
-"inclusively in place of \"*\", \"_\" or \"/\"."
+msgid "rules.mixing_english_reason"
+msgstr "Missing"
 
-msgid "rules.db_gendered_ending_solution"
-msgstr "Please use \":\" to write gender inclusively."
+msgid "rules.mixing_english_solution"
+msgstr "Missing"
 
-msgid "rules.db_gendered_ending_color"
-msgstr "style"
+msgid "rules.mixing_english_color"
+msgstr "non-inclusive"
