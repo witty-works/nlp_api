@@ -36,6 +36,10 @@ class LangType(str, Enum):
     EN = "en"
     DE = "de"
 
+class GenderedRolesFormatType(str, Enum):
+    INCLUSIVE_GENDER = "inclusive_gender"
+    BINARY_GENDER = "binary_gender"
+
 class Config(BaseModel):
     primary_language: Optional[str] = "de-DE"
     preferred_languages: Optional[str] = "de,en"
@@ -43,6 +47,7 @@ class Config(BaseModel):
     german_gender_ending: Optional[str] = ":in"
     _gendereddenom_ending = {"/in": "/in", "/-in": "/-in", "_in": "_in", "*in": "\*in", ":in": ":in"}
     disabled_categories: Optional[List] = ""
+    gendered_roles_format: Optional[GenderedRolesFormatType] = "inclusive_gender"
 
     @validator("german_gender_ending")
     def valid_german_gender_ending(cls, v: str):
@@ -97,6 +102,16 @@ class ResultOut(BaseModel):
         # TODO remove as soon as the browser extension can handle the "orthography" and "corporate_rules" category
         if category == "orthography" or category == "corporate_rules":
             category = subcategory = "empty_words"
+
+        for key, alternative in enumerate(alternatives):
+            if "~" not in alternative:
+                continue
+
+            if config.gendered_roles_format == "binary_gender":
+                alternatives[key] = alternative.replace("~", "")
+            else:
+                variants = alternative.split("~")
+                alternatives[key] = str(variants[0]) + config.german_gender_ending[0:-2] + str(variants[1])
 
         return ResultOut(text, category, start, end, alternatives, label, reason, solution)
 
