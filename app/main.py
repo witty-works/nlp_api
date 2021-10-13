@@ -5,6 +5,7 @@ import base64
 import secrets
 import aiohttp
 import sentry_sdk
+import copy
 
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 from sentry_sdk.integrations.aiohttp import AioHttpIntegration
@@ -56,6 +57,7 @@ import ast
 # project models
 from app.models import (
     Config,
+    LangType,
     Lang,
     RequestIn,
     RequestInEvent,
@@ -125,9 +127,10 @@ app.add_middleware(
 
 categories = {
   "gendered_roles": { "color": "#E9DBB2", "inclusive": False },
-  "gendered_roles_hierachy": { "color": "#E9DBB2", "inclusive": False },
-  "gendered_roles_image": { "color": "#E9DBB2", "inclusive": False },
-  "gendered_denominations": { "color": "#E9DBB2", "inclusive": False },
+  # skipping "gendered_roles" subcategories
+  #"gendered_roles_hierachy": { "color": "#E9DBB2", "inclusive": False },
+  #"gendered_roles_image": { "color": "#E9DBB2", "inclusive": False },
+  #"gendered_denominations": { "color": "#E9DBB2", "inclusive": False },
   "gendered_language": { "color": "#E9DBB2", "inclusive": False },
   "agentic_language": { "color": "#F06464", "inclusive": False },
   "communal_language": { "color": "#5ACFB9", "inclusive": True },
@@ -140,22 +143,34 @@ categories = {
   "stereotypes": { "color": "#9489DB", "inclusive": False },
   "gendered_stereotypes": { "color": "#E9DBB2", "inclusive": False },
   "biased_language": { "color": "#9489DB", "inclusive": False },
-  "ability_bias": { "color": "#9489DB", "inclusive": False },
-  "age_bias_old": { "color": "#9489DB", "inclusive": False },
-  "age_bias_young": { "color": "#9489DB", "inclusive": False },
-  "culture_bias": { "color": "#9489DB", "inclusive": False },
-  "migration_background_bias": { "color": "#9489DB", "inclusive": False },
-  "anti_lgtbqiplus_bias": { "color": "#9489DB", "inclusive": False },
-  "classism_bias": { "color": "#9489DB", "inclusive": False },
-  "old_language": { "color": "#37D1E5", "inclusive": False },
-  "new_language": { "color": "#37D1E5", "inclusive": False },
-  "job_requirements_bias": { "color": "#9489DB", "inclusive": False },
-  "requirements_overload": { "color": "#9489DB", "inclusive": False },
-  "education_biased_requirements": { "color": "#9489DB", "inclusive": False },
-  "workload_biased_requirements": { "color": "#9489DB", "inclusive": False },
-  "ethnicity_biased_requirements": { "color": "#9489DB", "inclusive": False },
-  "age_biased_requirements": { "color": "#9489DB", "inclusive": False },
+  # skipping "biased_language" subcategories
+  #"ability_bias": { "color": "#9489DB", "inclusive": False },
+  #"age_bias_old": { "color": "#9489DB", "inclusive": False },
+  #"age_bias_young": { "color": "#9489DB", "inclusive": False },
+  #"culture_bias": { "color": "#9489DB", "inclusive": False },
+  #"migration_background_bias": { "color": "#9489DB", "inclusive": False },
+  #"anti_lgtbqiplus_bias": { "color": "#9489DB", "inclusive": False },
+  #"classism_bias": { "color": "#9489DB", "inclusive": False },
+  # skipping old/new language is it is not yet implemented
+  #"old_language": { "color": "#37D1E5", "inclusive": False },
+  #"new_language": { "color": "#37D1E5", "inclusive": False },
+  # skipping "job_requirements_bias" 
+  #"job_requirements_bias": { "color": "#9489DB", "inclusive": False },
+  # skipping "job_requirements_bias" subcategories
+  #"requirements_overload": { "color": "#9489DB", "inclusive": False },
+  #"education_biased_requirements": { "color": "#9489DB", "inclusive": False },
+  #"workload_biased_requirements": { "color": "#9489DB", "inclusive": False },
+  #"ethnicity_biased_requirements": { "color": "#9489DB", "inclusive": False },
+  #"age_biased_requirements": { "color": "#9489DB", "inclusive": False },
 }
+
+categories_with_labels = {}
+languages = ["en", "de"]
+for language in languages:
+    lang = Lang(language)
+    categories_with_labels[language] = copy.deepcopy(categories)
+    for category in categories_with_labels[language]:
+        categories_with_labels[language][category]["label"] = lang._("rules." + category + "_label")
 
 # Model data
 model = {"en": spacy.load("en_core_web_sm"), "de": spacy.load("de_core_news_sm")}
@@ -267,8 +282,8 @@ def form(request: Request):
     return templates.TemplateResponse("form.html", {"request": request})
 
 @app.get("/categories")
-def get_categories():
-    return categories
+def get_categories(lang: LangType = "de"):
+    return categories_with_labels[lang]
 
 @app.post("/serialize", response_class=PlainTextResponse)
 def serialize(user_request_in: RequestIn):

@@ -32,6 +32,10 @@ class Lang(object):
         return message
 
 class LangType(str, Enum):
+    EN = "en"
+    DE = "de"
+
+class LangWithAutoType(str, Enum):
     AUTO = "auto"
     EN = "en"
     DE = "de"
@@ -63,7 +67,7 @@ class Config(BaseModel):
 
 class RequestIn(BaseModel):
     text: str
-    lang: Optional[LangType] = "auto"
+    lang: Optional[LangWithAutoType] = "auto"
     id: Optional[str] = None
     config: Optional[Config] = Config()
 
@@ -95,7 +99,7 @@ class ResultOut(BaseModel):
         if subcategory == "gendered_denominations_ending":
             params["gendered_denominations_ending"] = config.german_gender_ending
 
-        label = label if label != None else lang._("rules." + category + "_label", params)
+        label = label if label != None else lang._("rules." + category + "_label")
         reason = reason if reason != None else lang._("rules." + subcategory + "_reason", params)
         solution = solution if solution != None else lang._("rules." + subcategory + "_solution", params)
 
