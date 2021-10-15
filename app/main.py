@@ -880,6 +880,38 @@ def RulesBased(config: Config, lang, tokens, df, category):
 
     return list_tokens 
 
+# Deutshe Bahn realated rule. Function to catch masculine words in sentences like 
+# Deutshe Bahn als.. Deutshe Bahn ist..
+def DB_Fem(tokens):
+    
+    category = "DB_grammatic"
+    db_match_list = []
+    matcher_db = Matcher(model[lang.locale].vocab)
+    # Add match ID "DB" with no callback and one pattern
+    pattern_db = [{"TEXT": "Deutsche"}, {"TEXT": "Bahn"}, {"LEMMA": "sein", "OP": "*"}, {"POS": "ADV", "OP": "*"}, {"TEXT": "als", "OP": "*"}, {"TAG": "ART", "OP": "*"}, {"POS": "ADJ", "OP": "*"}, {'POS': 'NOUN', "MORPH": {'IS_SUPERSET': ["Gender=Masc"]}}]
+    #use greedy = "LONGEST" to find all matches in the text related to pattern
+    matcher_db.add("DB", [pattern_db], greedy = "LONGEST")
+    matches_db = matcher_db(tokens)
+    
+    for match_id, start, end in matches_db:
+        string_id = model.vocab.strings[match_id]  # Get string representation
+        span = doc[start:end]  # The matched span
+        db_match_list.append(
+            ResultOut.factory(
+                config,
+                lang,
+                span.text,
+                category,
+                span.start_char,
+                span.end_char
+            )
+        )
+    return db_match_list
+    
+
+    
+    
+
 #function to catch ending in gendered denom
 #Rules based english function
 def RulesBasedEN(config: Config, lang, tokens, df, category):
