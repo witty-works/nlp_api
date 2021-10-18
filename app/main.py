@@ -484,7 +484,6 @@ def GenderedDenomEnd(config: Config, lang, text):
     category = "gendered_roles"      
     subcategory = "gendered_denominations_ending"
     
-    #list_ending = ["/in", "/-in", "_in", "\*in", r"In\b"]
     list_ending = []
     for item in config._gendereddenom_ending:
         if config.german_gender_ending == item:

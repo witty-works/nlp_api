@@ -49,7 +49,7 @@ class Config(BaseModel):
     preferred_languages: Optional[str] = "de,en"
     preferred_variants: Optional[str] = "de-DE,en-GB"
     german_gender_ending: Optional[str] = ":in"
-    _gendereddenom_ending = {"/in": "/in", "/-in": "/-in", "_in": "_in", "*in": "\*in", ":in": ":in"}
+    _gendereddenom_ending = {"/in": "/in", "/-in": "/-in", "_in": "_in", "*in": "\*in", ":in": ":in", "In": r"In\b"}
     disabled_categories: Optional[List] = ""
     gendered_roles_format: Optional[GenderedRolesFormatType] = "inclusive_gender"
 
