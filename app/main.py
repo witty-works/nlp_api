@@ -432,15 +432,11 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
     if "agentic_language" not in user_request_in.config.disabled_categories:
         list_full+= AgenticLanguageAnalysis(user_request_in.config, lang, tokens, df_agentic_ct)
 
-    # Empty words&sentences catch
-    if "empty_words" not in user_request_in.config.disabled_categories:
-        list_full+= EmptyWordAnalysis(user_request_in.config, lang, tokens, terms_empty, df_empty_word, df_empty_sentences)
-
     if "gendered_denominations" not in user_request_in.config.disabled_categories:
         list_full+= MisgenderingInstitutions(user_request_in.config, lang, tokens)
         list_full+= GenderedDenomEnd(user_request_in.config, lang, user_request_in.text)
         list_full+= GenderedDenomAnalysis(user_request_in.config, lang, tokens, df_gender_ct)
-    
+
     #discriminating words catch
     if "biased_language" not in user_request_in.config.disabled_categories:
         list_full+= RulesBased(user_request_in.config, lang, tokens, df_discrim_words, "biased_language")
