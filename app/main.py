@@ -47,7 +47,7 @@ from datetime import datetime
 # NLP library
 import pandas as pd
 import spacy
-from spacy.matcher import PhraseMatcher
+from spacy.matcher import PhraseMatcher, Matcher
 from spacy.tokens import Doc
 
 # Regular expression library
@@ -437,6 +437,7 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
         list_full+= EmptyWordAnalysis(user_request_in.config, lang, tokens, terms_empty, df_empty_word, df_empty_sentences)
 
     if "gendered_denominations" not in user_request_in.config.disabled_categories:
+        list_full+= MisgenderingInstitutions(user_request_in.config, lang, tokens)
         list_full+= GenderedDenomEnd(user_request_in.config, lang, user_request_in.text)
         list_full+= GenderedDenomAnalysis(user_request_in.config, lang, tokens, df_gender_ct)
     
@@ -882,9 +883,10 @@ def RulesBased(config: Config, lang, tokens, df, category):
 
 # Deutshe Bahn realated rule. Function to catch masculine words in sentences like 
 # Deutshe Bahn als.. Deutshe Bahn ist..
-def DB_Fem(tokens):
+def MisgenderingInstitutions(config: Config, lang, tokens):
     
-    category = "DB_grammatic"
+    category = "gendered_roles"
+    subcategory = "misgendering_institutions"
     db_match_list = []
     matcher_db = Matcher(model[lang.locale].vocab)
     # Add match ID "DB" with no callback and one pattern
@@ -894,8 +896,7 @@ def DB_Fem(tokens):
     matches_db = matcher_db(tokens)
     
     for match_id, start, end in matches_db:
-        string_id = model.vocab.strings[match_id]  # Get string representation
-        span = doc[start:end]  # The matched span
+        span = tokens[start:end]  # The matched span
         db_match_list.append(
             ResultOut.factory(
                 config,
@@ -903,14 +904,12 @@ def DB_Fem(tokens):
                 span.text,
                 category,
                 span.start_char,
-                span.end_char
+                span.end_char,
+                [span.text + "in"],
+                subcategory
             )
         )
     return db_match_list
-    
-
-    
-    
 
 #function to catch ending in gendered denom
 #Rules based english function
