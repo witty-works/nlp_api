@@ -583,62 +583,113 @@ def GenderedDenomAnalysis(config: Config, lang, tokens, df):
         docs = list(model[lang.locale].pipe(rest_text))
         c_doc = Doc.from_docs(docs)
         
-        for token in c_doc:
+        for i in range(len(c_doc))[1:-1]:
             for word, alternative_sing, alternative_plur in zip(df["Lemma"], df["Alternative_Singular_split"], df["Alternative_Plural_split"]):
-                if token.lemma_ == word:
-                    if token.morph.get("Number")[0]=="Sing":
+                if c_doc[i].lemma_ == word:
+                    if c_doc[i].morph.get("Number")[0]=="Sing":
                         list_tokens.append(
                             ResultOut.factory(
                                 config, 
                                 lang,
-                                token.text,
+                                c_doc[i].text,
                                 category,
-                                token.idx,
+                                c_doc[i].idx,
                                 None,
                                 ast.literal_eval(alternative_sing),
                                 subcategory
                             )
                         )
-               
-                    elif token.morph.get("Number")[0]=="Plur":
+                        if c_doc[i-1].text== "der":
+                            list_tokens.append(
+                                ResultOut.factory(
+                                    config, 
+                                    lang,
+                                    c_doc[i-1].text,
+                                    category,
+                                    c_doc[i-1].idx,
+                                    None,
+                                    ["der~die"],
+                                    subcategory
+                                )
+                            )
+                        elif c_doc[i-1].text== "einer":
+                            list_tokens.append(
+                                ResultOut.factory(
+                                    config, 
+                                    lang,
+                                    c_doc[i-1].text,
+                                    category,
+                                    c_doc[i-1].idx,
+                                    None,
+                                    ["einer~eine"],
+                                    subcategory
+                                )
+                            )
+                    elif c_doc[i].morph.get("Number")[0]=="Plur":
                         list_tokens.append(
                             ResultOut.factory(
                                 config,
                                 lang,
-                                token.text,
+                                c_doc[i].text,
                                 category,
-                                token.idx,
+                                c_doc[i].idx,
                                 None,
-                                ast.literal_eval(alternative_plur)
+                                ast.literal_eval(alternative_plur),
+                                subcategory
                             )
                         )
              
 
     else:
-        for token in tokens:
+        for i in range(len(tokens))[1:-1]:
             for word, alternative_sing, alternative_plur in zip(df["Lemma"], df["Alternative_Singular_split"], df["Alternative_Plural_split"]):
-                if token.lemma_ == word:
-                    if token.morph.get("Number")[0]=="Sing":
+                if tokens[i].lemma_ == word:
+                    if tokens[i].morph.get("Number")[0]=="Sing":
                         list_tokens.append(
                             ResultOut.factory(
                                 config,
                                 lang,
-                                token.text,
+                                tokens[i].text,
                                 category,
-                                token.idx,
+                                tokens[i].idx,
                                 None,
                                 ast.literal_eval(alternative_sing)
                             )
                         )
-               
-                    elif token.morph.get("Number")[0]=="Plur":
+                        if tokens[i-1].text== "der":
+                            list_tokens.append(
+                                ResultOut.factory(
+                                    config, 
+                                    lang,
+                                    tokens[i-1].text,
+                                    category,
+                                    tokens[i-1].idx,
+                                    None,
+                                    ["der~die"],
+                                    subcategory
+                                )
+                            )
+                        elif tokens[i-1].text== "einer":
+                            list_tokens.append(
+                                ResultOut.factory(
+                                    config, 
+                                    lang,
+                                    tokens[i-1].text,
+                                    category,
+                                    tokens[i-1].idx,
+                                    None,
+                                    ["einer~eine"],
+                                    subcategory
+                                )
+                            )               
+                    elif tokens[i].morph.get("Number")[0]=="Plur":
                         list_tokens.append(
                             ResultOut.factory(
                                 config,
                                 lang,
-                                token.text,
+                                tokens[i].text,
                                 category,
-                                token.idx,
+                                tokens[i].idx,
                                 None,
                                 ast.literal_eval(alternative_plur)
                             )
