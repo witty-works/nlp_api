@@ -634,8 +634,7 @@ def GenderedDenomAnalysis(config: Config, lang, tokens, df):
                                 category,
                                 c_doc[i].idx,
                                 None,
-                                ast.literal_eval(alternative_plur),
-                                subcategory
+                                ast.literal_eval(alternative_plur)
                             )
                         )
              
