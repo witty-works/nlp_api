@@ -37,8 +37,6 @@ class LangType(str, Enum):
 
 class LangWithAutoType(str, Enum):
     AUTO = "auto"
-    EN = "en"
-    DE = "de"
 
 class GenderedRolesFormatType(str, Enum):
     INCLUSIVE_GENDER = "inclusive_gender"
