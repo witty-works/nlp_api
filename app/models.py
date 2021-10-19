@@ -113,7 +113,10 @@ class ResultOut(BaseModel):
                 alternatives[key] = alternative.replace("~", "")
             else:
                 variants = alternative.split("~")
-                alternatives[key] = str(variants[0]) + config.german_gender_ending[0:-2] + str(variants[1])
+                if str(variants[1]) == "e":
+                    alternatives[key] = str(variants[0]) + "e" + config.german_gender_ending[0:-2] + "r"
+                else:
+                    alternatives[key] = str(variants[0]) + config.german_gender_ending[0:-2] + "in"
 
         return ResultOut(text, category, start, end, alternatives, label, reason, solution)
 
