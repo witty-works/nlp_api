@@ -29,18 +29,20 @@ from fastapi.exception_handlers import (
 )
 
 from typing import Optional
+from pydantic import BaseSettings
 
-os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
+class Settings(BaseSettings):
+    """Load environment variables to python objects using pydantic."""
+    logging_enabled: bool = False
+    sentry_dsn: bool = False
+    platform_environment: str = "local"
+    languagetool_api: bool = False
+    platform_relationships: str = None
+    api_docs_username: str = None
+    api_docs_password: str = None
+    api_docs_auth_enabled: bool = False
 
-# Environment variables
-logging_enabled = os.environ.get("LOGGING_ENABLED", None)
-sentry_dsn = os.environ.get("SENTRY_DSN", "false")
-platform_environment = os.environ.get("PLATFORM_ENVIRONMENT", "local")
-languagetool_api = os.environ.get("LANGUAGETOOL_API", "false")
-platform_relationships = os.environ.get("PLATFORM_RELATIONSHIPS", None)
-basic_auth_username = os.environ.get("API_DOCS_USERNAME", None)
-basic_auth_password = os.environ.get("API_DOCS_PASSWORD", None)
-basic_auth_enabled = os.environ.get("API_DOCS_AUTH_ENABLED", "false")
+settings = Settings()
 
 from datetime import datetime
 
@@ -75,13 +77,13 @@ app = FastAPI(
     openapi_url = None,
 )
 
-if sentry_dsn != "false":
+if settings.sentry_dsn:
     sentry_sdk.init(
-        dsn = sentry_dsn,
+        dsn = settings.sentry_dsn,
         traces_sample_rate = 0.2,
         integrations = [AioHttpIntegration()],
         release = version,
-        environment = platform_environment
+        environment = settings.platform_environment
     )
 
 # Uncaught exceptions (like `raise Exception`) should propagate correctly
@@ -102,19 +104,19 @@ async def custom_http_exception_handler(request, e):
     return await http_exception_handler(request, e)
 
 languagetool_url = "https://lt.api.witty.works/v2"
-if languagetool_api != "false":
-    languagetool_url = languagetool_api
-elif platform_relationships is not None:
-    relationships = json.loads(base64.b64decode(platform_relationships))
+if settings.languagetool_api:
+    languagetool_url = settings.languagetool_api
+elif settings.platform_relationships is not None:
+    relationships = json.loads(base64.b64decode(settings.platform_relationships))
     languagetool = relationships["languagetool"][0]
     languagetool_url = "%(scheme)s://%(host)s:%(port)d/v2" % languagetool
 
 security = HTTPBasic(auto_error=False)
 
 basic_auth = {
-    "username": basic_auth_username,
-    "password": basic_auth_password,
-    "enabled": basic_auth_enabled,
+    "username": settings.api_docs_username,
+    "password": settings.api_docs_password,
+    "enabled": settings.api_docs_auth_enabled,
 }
 
 app.add_middleware(
@@ -234,7 +236,7 @@ def get_current_username(credentials: Optional[HTTPBasicCredentials] = Depends(s
     # Credentials are missing
     if credentials is None:
         # Auth is disabled, just proceed
-        if basic_auth["enabled"] == "false":
+        if not basic_auth["enabled"]:
             return "anon"
        # Auth is enabled, raise 401
         else:
@@ -413,7 +415,7 @@ def serialize_log_data(user_request_in: RequestIn, response: ResultsOut = None):
     return json.dumps(data)
 
 def log_response(user_request_in: RequestIn, response: ResultsOut = None):
-    if user_request_in.id is None or logging_enabled is None:
+    if user_request_in.id is None or not settings.logging_enabled:
         return
 
     data = serialize_log_data(user_request_in, response)
