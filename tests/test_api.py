@@ -40,8 +40,8 @@ def test_api():
         "start": 11,
         "end": 16,
         "alternatives": [
-            "jemand, der erfahren und fachkundig ist",
-            "jemand mit Know-how und Ausdauer",
+            "Jemand, der erfahren und fachkundig ist",
+            "Jemand mit Know-how und Ausdauer",
             "Mensch, der seine Fachkenntnis ständig vertieft"
         ],
         "label": "Superlative Wörter",

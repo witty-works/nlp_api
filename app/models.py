@@ -2,7 +2,9 @@ from pydantic import BaseModel, validator
 from typing import List
 from typing import Optional
 from enum import Enum
+
 import gettext
+import string
 
 class Lang(object):
     def __init__(self, locale):
@@ -101,11 +103,12 @@ class ResultOut(BaseModel):
         reason = reason if reason != None else lang._("rules." + subcategory + "_reason", params)
         solution = solution if solution != None else lang._("rules." + subcategory + "_solution", params)
 
-        # TODO remove as soon as the browser extension can handle the "orthography" and "corporate_rules" category
-        if category == "orthography" or category == "corporate_rules":
-            category = subcategory = "empty_words"
+        is_upper = text[0:1].isupper()
 
         for key, alternative in enumerate(alternatives):
+            if is_upper and category != "orthography":
+                alternatives[key] = string.capwords(alternatives[key][0:1]) + alternatives[key][1:]
+
             if "~" not in alternative:
                 continue
 
@@ -117,6 +120,10 @@ class ResultOut(BaseModel):
                     alternatives[key] = str(variants[0]) + "e" + config.german_gender_ending[0:-2] + "r"
                 else:
                     alternatives[key] = str(variants[0]) + config.german_gender_ending[0:-2] + str(variants[1])
+
+        # TODO remove as soon as the browser extension can handle the "orthography" and "corporate_rules" category
+        if category == "orthography" or category == "corporate_rules":
+            category = subcategory = "empty_words"
 
         return ResultOut(text, category, start, end, alternatives, label, reason, solution)
 
