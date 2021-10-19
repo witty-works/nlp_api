@@ -74,6 +74,32 @@ def test_api_disabled_categories():
         "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht."
         }
     ]
+
+def test_api_gender_endings():
+    request_data = {"text": "Der Kunde bekommt alles.", "config": {"german_gender_ending": "*in"}}
+
+    response = client.post("/check", json=request_data)
+    assert response.status_code == 200
+
+    first_record = response.json()
+    assert first_record["language"] == "de"
+    assert first_record["results"] == [
+        {
+        "text": "Kunde",
+        "category": "gendered_roles",
+        "start": 4,
+        "end": 9,
+        "alternatives": [
+            "Kundschaft",
+            "Kundin/Kunde",
+            "Kund:in"
+        ],
+        "label": "Geschlechtsspezifische Rollen",
+        "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
+        "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht."
+        }
+    ]
+
 def test_api_orthography():
     request_data = {"text": "Ich gehe noch schnell ueber die Strasse!!!"}
 
