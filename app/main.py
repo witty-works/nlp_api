@@ -583,7 +583,7 @@ def GenderedDenomAnalysis(config: Config, lang, tokens, df):
         docs = list(model[lang.locale].pipe(rest_text))
         c_doc = Doc.from_docs(docs)
         
-        for i in range(len(c_doc))[1:-1]:
+        for i in range(len(c_doc)):
             for word, alternative_sing, alternative_plur in zip(df["Lemma"], df["Alternative_Singular_split"], df["Alternative_Plural_split"]):
                 if c_doc[i].lemma_ == word:
                     if c_doc[i].morph.get("Number")[0]=="Sing":
@@ -640,7 +640,7 @@ def GenderedDenomAnalysis(config: Config, lang, tokens, df):
              
 
     else:
-        for i in range(len(tokens))[1:-1]:
+        for i in range(len(tokens)):
             for word, alternative_sing, alternative_plur in zip(df["Lemma"], df["Alternative_Singular_split"], df["Alternative_Plural_split"]):
                 if tokens[i].lemma_ == word:
                     if tokens[i].morph.get("Number")[0]=="Sing":
