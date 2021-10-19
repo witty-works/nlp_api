@@ -65,6 +65,21 @@ see https://docs.platform.sh/development/cli.html for details
 
 ## Run Locally
 
+---
+
+Note for the Mac users. Set environment variables with the following snippet:
+
+```
+source .env.development.mac
+```
+
+You could alternatively set these variables in:
+
+- when using venv: set variables in a `/path/to/new/virtual/environment/bin/activate` file. This way they will be set each time virtual environment is activated.
+- when using conda: follow instructions in this article: https://guillaume-martin.github.io/saving-environment-variables-in-conda.html
+
+---
+
 ```
 pipenv uvicorn app.main:app --reload
 ```
