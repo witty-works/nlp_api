@@ -16,7 +16,7 @@ web:
   upstream:
     socket_family: unix
   commands:
-    start: 'gunicorn app.main:app -b unix:$SOCKET -w 12 -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"'
+    start: 'gunicorn app.main:app -b unix:$SOCKET -w 4 -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"'
   locations:
     '/':
       passthru: true
