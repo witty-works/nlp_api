@@ -2,6 +2,9 @@
 .venv
 .idea
 
+requirements.txt
+venv-nlp-api/
+
 logs
 app/.env
 files
