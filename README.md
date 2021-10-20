@@ -29,6 +29,7 @@ pipenv run python3.8 -m spacy download de_core_news_sm
 ```
 python3.8 -m venv /path/to/new/virtual/environment
 python3.8 -m source /path/to/new/virtual/environment/bin/active
+python3.8 -m pip freeze > requirements.txt
 python3.8 -m pip install -r requirements.txt
 python3.8 -m spacy download en_core_web_sm
 python3.8 -m spacy download de_core_news_sm
