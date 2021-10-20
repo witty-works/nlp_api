@@ -76,7 +76,7 @@ def test_api_disabled_categories():
     ]
 
 def test_api_gender_endings():
-    request_data = {"text": "Der Kunde bekommt alles.", "config": {"german_gender_ending": "*in"}}
+    request_data = {"text": "Beste Kunden bekommen alles.", "config": {"german_gender_ending": "*in"}}
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -85,18 +85,39 @@ def test_api_gender_endings():
     assert first_record["language"] == "de"
     assert first_record["results"] == [
         {
-        "text": "Kunde",
+        "text": "Kunden",
         "category": "gendered_roles",
-        "start": 4,
-        "end": 9,
+        "start": 6,
+        "end": 12,
         "alternatives": [
             "Kundschaft",
-            "Kundin/Kunde",
-            "Kund:in"
+            "Kund:innen",
+            "Kundinnen und Kunden"
         ],
         "label": "Geschlechtsspezifische Rollen",
         "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
         "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht."
+        },
+        {
+        "text": "Beste",
+        "category": "boasting_words",
+        "start": 0,
+        "end": 5,
+        "alternatives": [
+            "Leicht",
+            "Einfach",
+            "Mühelos",
+            "Als positiv empfunden",
+            "Befriedigend",
+            "Bereichernd",
+            "Schön",
+            "Fein",
+            "Gut",
+            "Passend"
+        ],
+        "label": "Superlative Wörter",
+        "reason": "Mit diesem Begriff nutzen Sie eine Sprache der Superlative. Viele Menschen empfinden dies als negativ, da der Eindruck entsteht, sich im Sinne der Superlative anpassen zu müssen.",
+        "solution": "Verwenden Sie eine authentisch und ehrlich klingende Aussage."
         }
     ]
 

@@ -457,7 +457,15 @@ def log_response(user_request_in: RequestIn, response: ResultsOut = None):
     f.write(data)
 
 # Function for all German rules
+def IsNotNoun(pos):
+    return pos != "NOUN" and pos != "PROPN" and pos != "PRON"
 
+def GetNonNounLowerCased(token):
+    token_word = token.lemma_
+    if IsNotNoun(token.pos_):
+        token_word = token_word.lower()
+
+    return token_word
 
 def GermanRules(lang, tokens, user_request_in: RequestIn):
     list_full = []
@@ -594,7 +602,7 @@ def AgenticLanguageAnalysis(config: Config, lang, tokens, df):
                                 })
         else:
             for word, alternative in zip(df["Lemma"], df["Alternatives_split_company"]):
-                if token.lemma_ == word:
+                if GetNonNounLowerCased(token) == word:
                     list_tokens.append(
                         ResultOut.factory(
                             config,
@@ -766,7 +774,7 @@ def BoastingWordsSentences(config: Config, lang, tokens, df, df_sentences):
 
     for token in tokens:
         for word, alternative in zip(df["Lemma"], df["Alternatives"]):
-            if token.lemma_ == word:
+            if GetNonNounLowerCased(token) == word:
                 list_tokens.append(
                     ResultOut.factory(
                         config,
@@ -940,8 +948,8 @@ def RulesBasedWordsPhraseMatcher(config: Config, lang, tokens, terms, df, catego
     matcher.add("TerminologyList", patterns)
 
     for token in tokens:
-        for index, row in df.iterrows():
-            if token.lemma_ == row["Lemma"]:
+        for word in list(df["Lemma"]):
+            if GetNonNounLowerCased(token) == word:
                 list_tokens.append(
                     ResultOut.factory(
                         config,
@@ -975,7 +983,7 @@ def RulesBased(config: Config, lang, tokens, df, category):
     list_tokens = []
     for token in tokens:
         for word in list(df["Lemma"]):
-            if token.lemma_ == word:
+            if GetNonNounLowerCased(token) == word:
                 list_tokens.append(
                     ResultOut.factory(
                         config,
