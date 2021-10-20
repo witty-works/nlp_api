@@ -248,12 +248,12 @@ def get_current_username(credentials: Optional[HTTPBasicCredentials] = Depends(s
         # Auth is disabled, just proceed
         if not settings.api_docs_auth_enabled:
             return "anon"
+
        # Auth is enabled, raise 401
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                headers={"WWW-Authenticate": "Basic"},
-            )
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            headers={"WWW-Authenticate": "Basic"},
+        )
 
     # Verify the credentials as usual
     if (settings.api_docs_username is None or settings.api_docs_password is None):
