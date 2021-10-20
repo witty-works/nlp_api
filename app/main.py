@@ -22,6 +22,7 @@ import secrets
 import aiohttp
 import sentry_sdk
 import copy
+from typing import Optional
 
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 from sentry_sdk.integrations.aiohttp import AioHttpIntegration
@@ -51,12 +52,12 @@ from pydantic import BaseSettings
 class Settings(BaseSettings):
     """Load environment variables to python objects using pydantic."""
     logging_enabled: bool = False
-    sentry_dsn: bool = False
+    sentry_dsn: Optional[str]
     platform_environment: str = "local"
-    languagetool_api: bool = False
-    platform_relationships: str = None
-    api_docs_username: str = None
-    api_docs_password: str = None
+    languagetool_api: Optional[str]
+    platform_relationships: Optional[str]
+    api_docs_username: Optional[str]
+    api_docs_password: Optional[str]
     api_docs_auth_enabled: bool = False
 
 
@@ -110,7 +111,7 @@ async def custom_http_exception_handler(request, e):
 languagetool_url = "https://lt.api.witty.works/v2"
 if settings.languagetool_api:
     languagetool_url = settings.languagetool_api
-elif settings.platform_relationships is not None:
+elif settings.platform_relationships:
     relationships = json.loads(
         base64.b64decode(settings.platform_relationships))
     languagetool = relationships["languagetool"][0]
