@@ -1,17 +1,77 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 from typing import List
 from typing import Optional
 from enum import Enum
 
+import gettext
+import string
+
+class Lang(object):
+    def __init__(self, locale):
+        self.locale = locale[0:2]
+
+        if self.locale == "en":
+            trans_locale = "en_GB"
+        else:
+            trans_locale = "de_DE"
+
+        language = gettext.translation(
+            "messages",
+            localedir="locales",
+            languages=[trans_locale]
+        )
+
+        language.install()
+
+        self.gettext = language.gettext
+
+    def _(self, message: str, placeholders = {}):
+        message = self.gettext(message)
+
+        for key in placeholders:
+            message = message.replace("%" + key, placeholders[key])
+
+        return message
+
 class LangType(str, Enum):
+    EN = "en"
+    DE = "de"
+
+class LangWithAutoType(str, Enum):
     AUTO = "auto"
     EN = "en"
     DE = "de"
 
+class GenderedRolesFormatType(str, Enum):
+    INCLUSIVE_GENDER = "inclusive_gender"
+    BINARY_GENDER = "binary_gender"
+
+class Config(BaseModel):
+    primary_language: Optional[str] = "de-DE"
+    preferred_languages: Optional[str] = "de,en"
+    preferred_variants: Optional[str] = "de-DE,en-GB"
+    german_gender_ending: Optional[str] = ":in"
+    _gendereddenom_ending = {"/in": "/in", "/-in": "/-in", "_in": "_in", "*in": "\*in", ":in": ":in", "In": r"In\b"}
+    disabled_categories: Optional[List] = ""
+    gendered_roles_format: Optional[GenderedRolesFormatType] = "inclusive_gender"
+
+    @validator("german_gender_ending")
+    def valid_german_gender_ending(cls, v: str):
+        if v not in cls._gendereddenom_ending:
+            raise ValueError("Not supported german_gender_ending")
+        return v
+
+    @validator("disabled_categories", pre=True)
+    def split_string_values(cls, v):
+        if isinstance(v, str):
+            return v.split(",")
+        return v
+
 class RequestIn(BaseModel):
     text: str
-    lang: Optional[LangType] = "auto"
+    lang: Optional[LangWithAutoType] = "auto"
     id: Optional[str] = None
+    config: Optional[Config] = Config()
 
 class RequestInEvent(RequestIn):
     alternative: str
@@ -28,7 +88,7 @@ class ResultOut(BaseModel):
     solution: str
     alternatives: List[str]
 
-    def factory(lang, text, category, start, end = None, alternatives = [], subcategory = None, label = None, reason = None, solution = None):
+    def factory(config: Config, lang: Lang, text, category, start, end = None, alternatives = [], subcategory = None, label = None, reason = None, solution = None):
         if end == None:
             end = start + len(text)
 
@@ -37,9 +97,31 @@ class ResultOut(BaseModel):
         elif category == "empty_words":
             subcategory = "empty_words"
 
+        params = {}
+        if subcategory == "gendered_denominations_ending":
+            params["gendered_denominations_ending"] = config.german_gender_ending
+
         label = label if label != None else lang._("rules." + category + "_label")
-        reason = reason if reason != None else lang._("rules." + subcategory + "_reason")
-        solution = solution if solution != None else lang._("rules." + subcategory + "_solution")
+        reason = reason if reason != None else lang._("rules." + subcategory + "_reason", params)
+        solution = solution if solution != None else lang._("rules." + subcategory + "_solution", params)
+
+        is_upper = text[0:1].isupper()
+
+        for key, alternative in enumerate(alternatives):
+            if is_upper and category != "orthography":
+                alternatives[key] = string.capwords(alternatives[key][0:1]) + alternatives[key][1:]
+
+            if "~" not in alternative:
+                continue
+
+            if config.gendered_roles_format == "binary_gender":
+                alternatives[key] = alternative.replace("~", "")
+            else:
+                variants = alternative.split("~")
+                if str(variants[1]) == "e":
+                    alternatives[key] = str(variants[0]) + "e" + config.german_gender_ending[0:-2] + "r"
+                else:
+                    alternatives[key] = str(variants[0]) + config.german_gender_ending[0:-2] + str(variants[1])
 
         # TODO remove as soon as the browser extension can handle the "orthography" and "corporate_rules" category
         if category == "orthography" or category == "corporate_rules":
