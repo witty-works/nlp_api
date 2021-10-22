@@ -1,13 +1,16 @@
 FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8
+RUN pip install --upgrade pip
+RUN groupadd -g 999 wittyuser && \
+    useradd --create-home -r -u 999 -g wittyuser wittyuser
+USER wittyuser
+WORKDIR /home/wittyuser
 ENV APP_MODULE=app.main:app
+ENV LANGUAGETOOL_API=https://lt.api.witty.works/v2 
+COPY --chown=wittyuser:wittyuser requirements.txt requirements.txt
+ENV PATH="/home/wittyuser/.local/bin:${PATH}"
+RUN pip install -r requirements.txt --user
 RUN mkdir files
-COPY requirements.txt /app
-RUN pip install --upgrade pip && \
-    pip install -r /app/requirements.txt
-RUN python3.8 -m spacy download en_core_web_sm
-RUN python3.8 -m spacy download de_core_news_sm
-COPY ./ /app
-CMD pybabel compile -d locales -l de_DE -f
-CMD pybabel compile -d locales -l en_GB -f
-EXPOSE 8000
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0" ,"--port" ,"8000"]
+RUN spacy download en_core_web_sm
+RUN spacy download de_core_news_sm
+COPY --chown=wittyuser:wittyuser . .
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0"]
