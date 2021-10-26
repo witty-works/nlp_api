@@ -15,6 +15,27 @@ This project has two key dependencies:
 
 # Installation instructions (with python3.8)
 
+## using Docker
+
+1. Install Docker engine - https://docs.docker.com/engine/install/
+2. Pull the image from Github registry:
+
+```
+docker pull ghcr.io/witty-works/test-img:test
+```
+
+3. Run the image:
+
+```
+docker run -p 8000:8000 ghcr.io/witty-works/test-img:test
+```
+
+You can also run it in the interactive mode:
+
+```
+docker run -it -p 3000:8000 ghcr.io/witty-works/test-img:test bash
+```
+
 ## using pipenv
 
 ```
@@ -27,9 +48,8 @@ pipenv run python3.8 -m spacy download de_core_news_sm
 ## using virtual environment (venv)
 
 ```
-python3.8 -m venv /path/to/new/virtual/environment
-python3.8 -m source /path/to/new/virtual/environment/bin/active
-python3.8 -m pip freeze > requirements.txt
+python -m venv /path/to/new/virtual/environment
+source /path/to/new/virtual/environment/bin/active
 python3.8 -m pip install -r requirements.txt
 python3.8 -m spacy download en_core_web_sm
 python3.8 -m spacy download de_core_news_sm
@@ -53,6 +73,16 @@ Note to uninstall spacy models use
 ```
 pipenv uninstall en_core_web_sm
 pipenv uninstall de_core_news_sm
+```
+
+## Docker image
+
+### Build Docker image:
+
+After making change in the code or in the Dockerfile, build new image with the following command:
+
+```
+docker build -t DockerImageName:DockerImageRelease
 ```
 
 ## Install Platform.sh CLI
@@ -83,6 +113,12 @@ You could alternatively set these variables in:
 
 ```
 pipenv uvicorn app.main:app --reload
+```
+
+or
+
+```
+uvicorn app.main:app --reload
 ```
 
 Open your browser to http://localhost:8000/docs to view the OpenAPI UI.
