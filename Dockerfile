@@ -6,6 +6,7 @@ USER wittyuser
 WORKDIR /home/wittyuser
 ENV APP_MODULE=app.main:app
 ENV LANGUAGETOOL_API=https://lt.api.witty.works/v2 
+ENV WORKERS=6
 COPY --chown=wittyuser:wittyuser requirements.txt requirements.txt
 ENV PATH="/home/wittyuser/.local/bin:${PATH}"
 RUN pip install -r requirements.txt --user
@@ -13,5 +14,5 @@ RUN mkdir files
 RUN spacy download en_core_web_sm
 RUN spacy download de_core_news_sm
 COPY --chown=wittyuser:wittyuser . .
-CMD ["gunicorn", "app.main:app",  "-b", "0.0.0.0:8000", "-w", "6",  "-k",  "uvicorn.workers.UvicornWorker",  "--forwarded-allow-ips=\"*\""]
+CMD gunicorn app.main:app -b 0.0.0.0:8000 -w $WORKERS -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
 
