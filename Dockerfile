@@ -13,4 +13,5 @@ RUN mkdir files
 RUN spacy download en_core_web_sm
 RUN spacy download de_core_news_sm
 COPY --chown=wittyuser:wittyuser . .
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0"]
+CMD ["gunicorn", "app.main:app",  "-b", "0.0.0.0:8000", "-w", "6",  "-k",  "uvicorn.workers.UvicornWorker",  "--forwarded-allow-ips=\"*\""]
+
