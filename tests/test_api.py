@@ -349,3 +349,13 @@ def test_categories():
     first_record = response.json()
 
     assert "empty_words" in first_record
+
+def test_api_corporate_false_positives():
+    request_data = {"text": "Die Bahn ist stark auch wegen ihrer Führungskräfte!"}
+
+    response = client.post("/check", json=request_data)
+    assert response.status_code == 200
+
+    first_record = response.json()
+    assert first_record["language"] == "de"
+    assert first_record["results"] == []

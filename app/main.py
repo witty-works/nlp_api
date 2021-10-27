@@ -70,7 +70,7 @@ settings = Settings()
 # convert string of list into list of the strings
 # project models
 
-version = "1.3.0"
+version = "1.3.1"
 
 app = FastAPI(
     title="Witty NLP API",
@@ -224,6 +224,7 @@ terms_d_and_i_words = list(df_d_and_i_words_sentences["Lemma"])
 # load communal coded terms
 df_communal_words = pd.read_csv("training_data/communal_language_DE.csv")
 
+# English
 # load agentic language
 df_agentic_words_en = pd.read_csv("training_data/agentic_language_EN.csv")
 
@@ -233,14 +234,19 @@ false_positive_agentic = ["selbst", "flexible",
 false_positive_empty = ["international"]
 exceptions = ["Unternehmen", "Firma", "Gruppe", "Gesellschaft",
               "Kollektivgesellschaft", "Team", "Organization", "Gliederung"]
-terms_false_positive = genderdenom_false_positives["False_positives"].tolist()
+gender_false_positive = genderdenom_false_positives["False_positives"].tolist()
+
+#corporate false positive
+#DB
+corporate_false_positive = ["stark", "starke", "starkes", "starker", "Führungskraft", "Führungskräfte", "Führungskräften"]
+terms_false_positive = gender_false_positive + corporate_false_positive
+false_positive_agentic += corporate_false_positive
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.mount("/files", StaticFiles(directory="files"), name="files")
 
 templates = Jinja2Templates(directory="templates")
-
 
 def get_current_username(credentials: Optional[HTTPBasicCredentials] = Depends(security)):
     # Credentials are missing
@@ -406,14 +412,6 @@ async def languagetool_rules(user_request_in: RequestIn):
 def language_rules(user_request_in: RequestIn, lang: Lang):
     # apply SpaCy pre-built model
     tokens = model[lang.locale](user_request_in.text)
-
-    # Phrase matcher part to handle False positives with two words and special simbols
-    matcher = PhraseMatcher(model[lang.locale].vocab)
-
-    # Only run model.make_doc to speed things up
-    patterns = [model[lang.locale].make_doc(
-        user_request_in.text) for value in terms_false_positive]
-    matcher.add("TerminologyList", patterns)
 
     # functions for German rules
     if lang.locale == "de":
