@@ -70,7 +70,7 @@ settings = Settings()
 # convert string of list into list of the strings
 # project models
 
-version = "1.3.0"
+version = "1.3.1"
 
 app = FastAPI(
     title="Witty NLP API",
