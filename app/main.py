@@ -238,14 +238,15 @@ gender_false_positive = genderdenom_false_positives["False_positives"].tolist()
 
 #corporate false positive
 #DB
-corporate_false_positive = ["stark", "starkes", "starker", "Führungskraft", "Führungskräfte"]
+corporate_false_positive = ["stark", "starke", "starkes", "starker", "Führungskraft", "Führungskräfte", "Führungskräften"]
 terms_false_positive = gender_false_positive + corporate_false_positive
+false_positive_agentic += corporate_false_positive
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.mount("/files", StaticFiles(directory="files"), name="files")
 
 templates = Jinja2Templates(directory="templates")
-
 
 def get_current_username(credentials: Optional[HTTPBasicCredentials] = Depends(security)):
     # Credentials are missing
