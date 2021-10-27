@@ -413,14 +413,6 @@ def language_rules(user_request_in: RequestIn, lang: Lang):
     # apply SpaCy pre-built model
     tokens = model[lang.locale](user_request_in.text)
 
-    # Phrase matcher part to handle False positives with two words and special simbols
-    matcher = PhraseMatcher(model[lang.locale].vocab)
-
-    # Only run model.make_doc to speed things up
-    patterns = [model[lang.locale].make_doc(
-        user_request_in.text) for value in terms_false_positive]
-    matcher.add("TerminologyList", patterns)
-
     # functions for German rules
     if lang.locale == "de":
         list_results = GermanRules(lang, tokens, user_request_in)
