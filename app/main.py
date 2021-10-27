@@ -224,6 +224,7 @@ terms_d_and_i_words = list(df_d_and_i_words_sentences["Lemma"])
 # load communal coded terms
 df_communal_words = pd.read_csv("training_data/communal_language_DE.csv")
 
+# English
 # load agentic language
 df_agentic_words_en = pd.read_csv("training_data/agentic_language_EN.csv")
 
@@ -233,8 +234,12 @@ false_positive_agentic = ["selbst", "flexible",
 false_positive_empty = ["international"]
 exceptions = ["Unternehmen", "Firma", "Gruppe", "Gesellschaft",
               "Kollektivgesellschaft", "Team", "Organization", "Gliederung"]
-terms_false_positive = genderdenom_false_positives["False_positives"].tolist()
+gender_false_positive = genderdenom_false_positives["False_positives"].tolist()
 
+#corporate false positive
+#DB
+corporate_false_positive = ["stark", "starkes", "starker", "Führungskraft", "Führungskräfte"]
+terms_false_positive = gender_false_positive + corporate_false_positive
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.mount("/files", StaticFiles(directory="files"), name="files")
