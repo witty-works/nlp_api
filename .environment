@@ -1,1 +1,1 @@
-export BLACKFIRE_AGENT_SOCKET="unix:///run/blackfire/agent.sock"
+export BLACKFIRE_AGENT_SOCKET="unix:///run/blackfire.sock"
