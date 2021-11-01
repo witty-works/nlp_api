@@ -143,6 +143,9 @@ curl -X 'POST' \
   "text": "Wer sind unsere Kunden?"
 }'
 ```
+## Cloud deployment
+Test deployment(proof of concept) was done on Azure Kubernetes service with Docker images attached to this repository.
+More about that: https://www.notion.so/witty-works/Cloud-Deployment-Approaches-a5320f3e1b854e1e817909d365118ee7#cd1d5b8f43d449088c59de1b816119fd
 
 ## Run tests
 
