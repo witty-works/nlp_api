@@ -18,22 +18,19 @@ This project has two key dependencies:
 ## using Docker
 
 1. Install Docker engine - https://docs.docker.com/engine/install/
-2. Pull the image from Github registry:
+2. Pull images from Github registry:
 
 ```
 docker pull ghcr.io/witty-works/test-img:test
-```
-
-3. Run the image:
+docker pull ghcr.io/witty-works/languagetool:v1
 
 ```
-docker run -p 8000:8000 ghcr.io/witty-works/test-img:test
-```
 
-You can also run it in the interactive mode:
+3. Run images:
 
 ```
-docker run -it -p 3000:8000 ghcr.io/witty-works/test-img:test bash
+docker run --rm -it -p 8010:8010 ghcr.io/witty-works/languagetool:v1
+docker run  -p 8000:8000 --name nlp --network "bridge" --env languagetool_api=http://172.17.0.1:8010/v2 ghcr.io/test-img:test
 ```
 
 ## using pipenv
