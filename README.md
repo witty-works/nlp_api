@@ -37,7 +37,6 @@ docker run  -p 8000:8000 --name nlp --network "bridge" --env languagetool_api=ht
 
 ```
 pipenv install --dev
-pipenv shell
 pipenv run python3.8 -m spacy download en_core_web_sm
 pipenv run python3.8 -m spacy download de_core_news_sm
 ```
@@ -109,7 +108,7 @@ You could alternatively set these variables in:
 ---
 
 ```
-pipenv uvicorn app.main:app --reload
+pipenv run uvicorn app.main:app --reload
 ```
 
 or
