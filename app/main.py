@@ -20,14 +20,9 @@ import json
 import base64
 import secrets
 import aiohttp
-import sentry_sdk
 import copy
 from typing import Optional
 from functools import lru_cache
-
-from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
-from sentry_sdk.integrations.aiohttp import AioHttpIntegration
-from sentry_sdk import configure_scope
 
 from fastapi import FastAPI, Request, HTTPException, BackgroundTasks, Depends, status
 
@@ -52,7 +47,6 @@ from pydantic import BaseSettings
 class Settings(BaseSettings):
     """Load environment variables to python objects using pydantic."""
     logging_enabled: bool = False
-    sentry_dsn: Optional[str]
     platform_environment: str = "local"
     languagetool_api: Optional[str]
     platform_relationships: Optional[str]
@@ -85,30 +79,13 @@ app = FastAPI(
     openapi_url=None,
 )
 
-if settings.sentry_dsn:
-    sentry_sdk.init(
-        dsn=settings.sentry_dsn,
-        traces_sample_rate=0.2,
-        integrations=[AioHttpIntegration()],
-        release=version,
-        environment=settings.platform_environment
-    )
-
-# Uncaught exceptions (like `raise Exception`) should propagate correctly
-# to Sentry's error handler
-# Middleware will also enable Sentry performance monitoring to work as expected
-app.add_middleware(SentryAsgiMiddleware)
-
 # To catch raised `HTTPException` exceptions as per:
 # https://fastapi.tiangolo.com/tutorial/handling-errors/
 # Might have to add something similar for `RequestValidationError`
 @app.exception_handler(HTTPException)
 async def custom_http_exception_handler(request, e):
-    with configure_scope() as scope:
-        scope.set_context("request", request)
-        scope.transaction = request.scope["path"][1:]
+    log_request(request)
 
-        sentry_sdk.capture_exception(e)
     return await http_exception_handler(request, e)
 
 languagetool_url = "https://lt.api.witty.works/v2"
@@ -323,15 +300,11 @@ def serialize(user_request_in: RequestIn):
 
 @app.post("/log", status_code=201)
 def log(user_request_in: RequestInEvent, background_tasks: BackgroundTasks):
-    set_sentry_context(user_request_in)
-
     background_tasks.add_task(log_response, user_request_in)
 
 
 @app.post("/check", response_model=ResultsOut)
 async def check_query(user_request_in: RequestIn, background_tasks: BackgroundTasks):
-    set_sentry_context(user_request_in)
-
     languagetools_results, lang = await languagetool_rules(user_request_in)
 
     language_rules_results = language_rules(user_request_in, lang)
@@ -345,12 +318,6 @@ async def check_query(user_request_in: RequestIn, background_tasks: BackgroundTa
     return response
 
 # Functions
-
-
-def set_sentry_context(user_request_in: RequestIn):
-    sentry_sdk.set_context("user", {"id": user_request_in.id})
-
-
 async def languagetool_rules(user_request_in: RequestIn):
     list_results = []
 
@@ -394,6 +361,7 @@ async def languagetool_rules(user_request_in: RequestIn):
                                 user_request_in.config,
                                 lang,
                                 user_request_in.text[offset:end],
+                                user_request_in.text,
                                 "orthography",
                                 offset,
                                 end,
@@ -443,13 +411,23 @@ def serialize_log_data(user_request_in: RequestIn, response: ResultsOut = None):
 
     return json.dumps(data)
 
-
 def log_response(user_request_in: RequestIn, response: ResultsOut = None):
     if user_request_in.id is None or not settings.logging_enabled:
         return
 
     data = serialize_log_data(user_request_in, response)
-    dirname = os.getcwd() + '/logs/' + user_request_in.id
+    write_log(data, user_request_in.id)
+
+async def log_request(request):
+    body = await request.json()
+
+    if body.id is None or not settings.logging_enabled:
+        return
+
+    write_log(await request.body(), body.id)
+
+def write_log(data: str, id: str):
+    dirname = os.getcwd() + '/logs/' + id
     filename = dirname + '/' + \
         datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3] + '.json'
 
@@ -474,40 +452,35 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
     # Agentic language and related false positives catch
     if "agentic_language" not in user_request_in.config.disabled_categories:
         list_full += AgenticLanguageAnalysis(
-            user_request_in.config, lang, tokens, df_agentic_ct)
+            user_request_in.config, lang, user_request_in.text, tokens, df_agentic_ct)
 
     if "gendered_denominations" not in user_request_in.config.disabled_categories:
         list_full += MisgenderingInstitutions(
-            user_request_in.config, lang, tokens)
-        list_full += GenderedDenomEnd(user_request_in.config,
-                                      lang, user_request_in.text)
-        list_full += GenderedDenomAnalysis(user_request_in.config,
-                                           lang, tokens, df_gender_ct)
+            user_request_in.config, lang, user_request_in.text, tokens)
+        list_full += GenderedDenomEnd(user_request_in.config, lang, user_request_in.text)
+        list_full += GenderedDenomAnalysis(user_request_in.config, lang, user_request_in.text, tokens, df_gender_ct)
 
     # discriminating words catch
     if "biased_language" not in user_request_in.config.disabled_categories:
-        list_full += RulesBased(user_request_in.config,
-                                lang, tokens, df_discrim_words, "biased_language")
+        list_full += RulesBased(user_request_in.config, lang, user_request_in.text, tokens, df_discrim_words, "biased_language")
 
     # communal terms
     if "communal_language" not in user_request_in.config.disabled_categories:
-        list_full += RulesBased(user_request_in.config, lang,
-                                tokens, df_communal_words, "communal_language")
+        list_full += RulesBased(user_request_in.config, lang, user_request_in.text, tokens, df_communal_words, "communal_language")
 
     # d_and_i_words words
     if "d_and_i_words" not in user_request_in.config.disabled_categories:
         list_full += RulesBasedWordsPhraseMatcher(
-            user_request_in.config, lang, tokens, terms_d_and_i_words, df_d_and_i_words, "d_and_i_words")
+            user_request_in.config, lang, user_request_in.text, tokens, terms_d_and_i_words, df_d_and_i_words, "d_and_i_words")
 
     # Empty words&sentences catch
     if "empty_words" not in user_request_in.config.disabled_categories:
-        list_full += EmptyWordAnalysis(user_request_in.config, lang,
-                                       tokens, terms_empty, df_empty_word, df_empty_sentences)
+        list_full += EmptyWordAnalysis(user_request_in.config, lang, user_request_in.text, tokens, terms_empty, df_empty_word, df_empty_sentences)
 
     # boasting words&sentences catch
     if "boasting_words" not in user_request_in.config.disabled_categories:
         list_full += BoastingWordsSentences(
-            user_request_in.config, lang, tokens, df_boast_word, df_boast_sentences)
+            user_request_in.config, lang, user_request_in.text, tokens, df_boast_word, df_boast_sentences)
 
     return list_full
 
@@ -518,8 +491,7 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
     list_full = []
 
     if "agentic_language" not in user_request_in.config.disabled_categories:
-        list_full += RulesBasedEN(user_request_in.config, lang,
-                                  tokens, df_agentic_words_en, "agentic_language")
+        list_full += RulesBasedEN(user_request_in.config, lang, user_request_in.text, tokens, df_agentic_words_en, "agentic_language")
 
     return list_full
 
@@ -538,7 +510,7 @@ def IsItFalsePositive(word, false_positive):
 """Function to catch ending in German Denom"""
 
 
-def GenderedDenomEnd(config: Config, lang, text):
+def GenderedDenomEnd(config: Config, lang, full_text):
     category = "gendered_roles"
     subcategory = "gendered_denominations_ending"
 
@@ -546,12 +518,13 @@ def GenderedDenomEnd(config: Config, lang, text):
     for item in config._gendereddenom_ending:
         if config.german_gender_ending == item:
             continue
-        span = re.search(config._gendereddenom_ending[item], text)
+        span = re.search(config._gendereddenom_ending[item], full_text)
         if type(span) == re.Match:
             list_ending.append(ResultOut.factory(
                 config,
                 lang,
                 item,
+                full_text,
                 category,
                 span.start(),
                 span.end(),
@@ -566,7 +539,7 @@ def GenderedDenomEnd(config: Config, lang, text):
 # this function agentic language & related false positives
 
 
-def AgenticLanguageAnalysis(config: Config, lang, tokens, df):
+def AgenticLanguageAnalysis(config: Config, lang, full_text, tokens, df):
     category = "agentic_language"
     list_tokens = []
     dic_anc = {}
@@ -609,6 +582,7 @@ def AgenticLanguageAnalysis(config: Config, lang, tokens, df):
                             config,
                             lang,
                             token.text,
+                            full_text,
                             category,
                             token.idx,
                             None,
@@ -619,7 +593,7 @@ def AgenticLanguageAnalysis(config: Config, lang, tokens, df):
     return list_tokens
 
 
-def GenderedDenomAnalysis(config: Config, lang, tokens, df):
+def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
     category = "gendered_roles"
     subcategory = "gendered_denominations"
     list_tokens = []
@@ -657,6 +631,7 @@ def GenderedDenomAnalysis(config: Config, lang, tokens, df):
                                 config,
                                 lang,
                                 c_doc[i].text,
+                                full_text,
                                 category,
                                 c_doc[i].idx,
                                 None,
@@ -670,6 +645,7 @@ def GenderedDenomAnalysis(config: Config, lang, tokens, df):
                                     config,
                                     lang,
                                     c_doc[i-1].text,
+                                    full_text,
                                     category,
                                     c_doc[i-1].idx,
                                     None,
@@ -683,6 +659,7 @@ def GenderedDenomAnalysis(config: Config, lang, tokens, df):
                                     config,
                                     lang,
                                     c_doc[i-1].text,
+                                    full_text,
                                     category,
                                     c_doc[i-1].idx,
                                     None,
@@ -696,6 +673,7 @@ def GenderedDenomAnalysis(config: Config, lang, tokens, df):
                                 config,
                                 lang,
                                 c_doc[i].text,
+                                full_text,
                                 category,
                                 c_doc[i].idx,
                                 None,
@@ -713,6 +691,7 @@ def GenderedDenomAnalysis(config: Config, lang, tokens, df):
                                 config,
                                 lang,
                                 tokens[i].text,
+                                full_text,
                                 category,
                                 tokens[i].idx,
                                 None,
@@ -725,6 +704,7 @@ def GenderedDenomAnalysis(config: Config, lang, tokens, df):
                                     config,
                                     lang,
                                     tokens[i-1].text,
+                                    full_text,
                                     category,
                                     tokens[i-1].idx,
                                     None,
@@ -738,6 +718,7 @@ def GenderedDenomAnalysis(config: Config, lang, tokens, df):
                                     config,
                                     lang,
                                     tokens[i-1].text,
+                                    full_text,
                                     category,
                                     tokens[i-1].idx,
                                     None,
@@ -751,6 +732,7 @@ def GenderedDenomAnalysis(config: Config, lang, tokens, df):
                                 config,
                                 lang,
                                 tokens[i].text,
+                                full_text,
                                 category,
                                 tokens[i].idx,
                                 None,
@@ -763,7 +745,7 @@ def GenderedDenomAnalysis(config: Config, lang, tokens, df):
 # Boasting words and sentences analisys function, shows alternatives if avalible
 
 
-def BoastingWordsSentences(config: Config, lang, tokens, df, df_sentences):
+def BoastingWordsSentences(config: Config, lang, full_text, tokens, df, df_sentences):
     category = "boasting_words"
     list_tokens = []
     # Phrase matcher part to handle False positives with two words and special simbols
@@ -781,6 +763,7 @@ def BoastingWordsSentences(config: Config, lang, tokens, df, df_sentences):
                         config,
                         lang,
                         token.text,
+                        full_text,
                         category,
                         token.idx,
                         None,
@@ -798,6 +781,7 @@ def BoastingWordsSentences(config: Config, lang, tokens, df, df_sentences):
                         config,
                         lang,
                         span.text,
+                        full_text,
                         category,
                         span.start_char,
                         span.end_char,
@@ -810,7 +794,7 @@ def BoastingWordsSentences(config: Config, lang, tokens, df, df_sentences):
 # Unified function for Emty words false positives and rules
 
 
-def EmptyWordAnalysis(config: Config, lang, tokens, terms, df, df_sentence):
+def EmptyWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_sentence):
     #category = df_empty_sentences(["subcategory"])
     category = "empty_words"
     list_tokens = []
@@ -841,6 +825,7 @@ def EmptyWordAnalysis(config: Config, lang, tokens, terms, df, df_sentence):
                                     config,
                                     lang,
                                     tokens[i].text,
+                                    full_text,
                                     category,
                                     tokens[i].idx,
                                     tokens[i].idx+len(tokens[i].text),
@@ -855,6 +840,7 @@ def EmptyWordAnalysis(config: Config, lang, tokens, terms, df, df_sentence):
                                         config,
                                         lang,
                                         tokens[i-1:i+1].text,
+                                        full_text,
                                         category,
                                         tokens[i-1].idx,
                                         tokens[i-1].idx +
@@ -868,6 +854,7 @@ def EmptyWordAnalysis(config: Config, lang, tokens, terms, df, df_sentence):
                                         config,
                                         lang,
                                         tokens[i].text,
+                                        full_text,
                                         category,
                                         tokens[i].idx,
                                         tokens[i].idx+len(tokens[i].text),
@@ -884,6 +871,7 @@ def EmptyWordAnalysis(config: Config, lang, tokens, terms, df, df_sentence):
                                 config,
                                 lang,
                                 tokens[i].text,
+                                full_text,
                                 category,
                                 tokens[i].idx,
                                 tokens[i].idx+len(tokens[i].text),
@@ -898,6 +886,7 @@ def EmptyWordAnalysis(config: Config, lang, tokens, terms, df, df_sentence):
                                     config,
                                     lang,
                                     tokens[i-1:i+1].text,
+                                    full_text,
                                     category,
                                     tokens[i-1].idx,
                                     tokens[i-1].idx+len(tokens[i-1:i+1].text),
@@ -910,6 +899,7 @@ def EmptyWordAnalysis(config: Config, lang, tokens, terms, df, df_sentence):
                                     config,
                                     lang,
                                     tokens[i].text,
+                                    full_text,
                                     category,
                                     tokens[i].idx,
                                     tokens[i].idx+len(tokens[i].text),
@@ -927,6 +917,7 @@ def EmptyWordAnalysis(config: Config, lang, tokens, terms, df, df_sentence):
                         config,
                         lang,
                         span.text,
+                        full_text,
                         category,
                         span.start_char,
                         span.end_char,
@@ -939,7 +930,7 @@ def EmptyWordAnalysis(config: Config, lang, tokens, terms, df, df_sentence):
 # Unified function for rules and sentence false positives
 
 
-def RulesBasedWordsPhraseMatcher(config: Config, lang, tokens, terms, df, category):
+def RulesBasedWordsPhraseMatcher(config: Config, lang, full_text, tokens, terms, df, category):
     list_tokens = []
     # Phrase matcher part to handle False positives with two words and special simbols
     matcher = PhraseMatcher(model[lang.locale].vocab)
@@ -956,6 +947,7 @@ def RulesBasedWordsPhraseMatcher(config: Config, lang, tokens, terms, df, catego
                         config,
                         lang,
                         token.text,
+                        full_text,
                         category,
                         token.idx
                     )
@@ -969,6 +961,7 @@ def RulesBasedWordsPhraseMatcher(config: Config, lang, tokens, terms, df, catego
                 config,
                 lang,
                 span.text,
+                text,
                 category,
                 span.start_char,
                 span.end_char
@@ -980,7 +973,7 @@ def RulesBasedWordsPhraseMatcher(config: Config, lang, tokens, terms, df, catego
 # Unified function for rules
 
 
-def RulesBased(config: Config, lang, tokens, df, category):
+def RulesBased(config: Config, lang, full_text, tokens, df, category):
     list_tokens = []
     for token in tokens:
         for word in list(df["Lemma"]):
@@ -990,6 +983,7 @@ def RulesBased(config: Config, lang, tokens, df, category):
                         config,
                         lang,
                         token.text,
+                        full_text,
                         category,
                         token.idx
                     )
@@ -1001,7 +995,7 @@ def RulesBased(config: Config, lang, tokens, df, category):
 # Deutshe Bahn als.. Deutshe Bahn ist..
 
 
-def MisgenderingInstitutions(config: Config, lang, tokens):
+def MisgenderingInstitutions(config: Config, lang, full_text, tokens):
 
     category = "gendered_roles"
     subcategory = "misgendering_institutions"
@@ -1021,6 +1015,7 @@ def MisgenderingInstitutions(config: Config, lang, tokens):
                 config,
                 lang,
                 span.text,
+                text,
                 category,
                 span.start_char,
                 span.end_char,
@@ -1034,7 +1029,7 @@ def MisgenderingInstitutions(config: Config, lang, tokens):
 # Rules based english function
 
 
-def RulesBasedEN(config: Config, lang, tokens, df, category):
+def RulesBasedEN(config: Config, lang, full_text, tokens, df, category):
     list_tokens = []
 
     for token in tokens:
@@ -1045,6 +1040,7 @@ def RulesBasedEN(config: Config, lang, tokens, df, category):
                         config,
                         lang,
                         token.text,
+                        full_text,
                         category,
                         token.idx,
                     )

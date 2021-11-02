@@ -12,7 +12,7 @@ def test_read_form():
     assert response.status_code == 200
 
 def test_api():
-    request_data = {"text": "Wir suchen Ninja Programmierer für unsere Kunden"}
+    request_data = {"text": "Wir suchen Ninja Programmierer für unsere Kunden", "config": { "store_context": False } }
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -23,6 +23,7 @@ def test_api():
         {
         "text": "Kunden",
         "category": "gendered_roles",
+        "context": "",
         "start": 42,
         "end": 48,
         "alternatives": [
@@ -37,6 +38,7 @@ def test_api():
         {
         "text": "Ninja",
         "category": "boasting_words",
+        "context": "",
         "start": 11,
         "end": 16,
         "alternatives": [
@@ -50,8 +52,34 @@ def test_api():
         }
     ]
 
+def test_api_context():
+    request_data = {"text": "Wir suchen Kunden"}
+
+    response = client.post("/check", json=request_data)
+    assert response.status_code == 200
+
+    first_record = response.json()
+    assert first_record["language"] == "de"
+    assert first_record["results"] == [
+        {
+        "text": "Kunden",
+        "context": "Wir suchen Kunden",
+        "category": "gendered_roles",
+        "start": 11,
+        "end": 17,
+        "alternatives": [
+            "Kundschaft",
+            "Kund:innen",
+            "Kundinnen und Kunden"
+        ],
+        "label": "Geschlechtsspezifische Rollen",
+        "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
+        "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht."
+        }
+    ]
+
 def test_api_disabled_categories():
-    request_data = {"text": "Wir suchen Ninja Programmierer für unsere Kunden", "config": {"disabled_categories": "boasting_words,empty_words"}}
+    request_data = {"text": "Wir suchen Ninja Programmierer für unsere Kunden", "config": { "store_context": False, "disabled_categories": "boasting_words,empty_words" } }
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -62,6 +90,7 @@ def test_api_disabled_categories():
         {
         "text": "Kunden",
         "category": "gendered_roles",
+        "context": "",
         "start": 42,
         "end": 48,
         "alternatives": [
@@ -76,7 +105,7 @@ def test_api_disabled_categories():
     ]
 
 def test_api_gender_endings():
-    request_data = {"text": "Beste Kunden bekommen alles.", "config": {"german_gender_ending": "*in"}}
+    request_data = {"text": "Beste Kunden bekommen alles.", "config": { "store_context": False, "german_gender_ending": "*in" } }
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -87,6 +116,7 @@ def test_api_gender_endings():
         {
         "text": "Kunden",
         "category": "gendered_roles",
+        "context": "",
         "start": 6,
         "end": 12,
         "alternatives": [
@@ -101,6 +131,7 @@ def test_api_gender_endings():
         {
         "text": "Beste",
         "category": "boasting_words",
+        "context": "",
         "start": 0,
         "end": 5,
         "alternatives": [
@@ -122,7 +153,7 @@ def test_api_gender_endings():
     ]
 
 def test_api_orthography():
-    request_data = {"text": "Ich gehe noch schnell ueber die Strasse!!!"}
+    request_data = {"text": "Ich gehe noch schnell ueber die Strasse!!!", "config": { "store_context": False } }
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -133,6 +164,7 @@ def test_api_orthography():
         {
         "text": "ueber",
         "category": "empty_words",
+        "context": "",
         "start": 22,
         "end": 27,
         "alternatives": [
@@ -164,6 +196,7 @@ def test_api_orthography():
         {
         "text": "Strasse",
         "category": "empty_words",
+        "context": "",
         "start": 32,
         "end": 39,
         "alternatives": [
@@ -195,6 +228,7 @@ def test_api_orthography():
         {
         "text": "!!!",
         "category": "empty_words",
+        "context": "",
         "start": 39,
         "end": 42,
         "alternatives": [
@@ -207,7 +241,7 @@ def test_api_orthography():
     ]
 
 def test_api_english():
-    request_data = {"text": "We are searching for analytical ninja programmer for our customers"}
+    request_data = {"text": "We are searching for analytical ninja programmer for our customers", "config": { "store_context": False } }
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -218,6 +252,7 @@ def test_api_english():
         {
         "text": "analytical",
         "category": "agentic_language",
+        "context": "",
         "start": 21,
         "end": 31,
         "alternatives": [],
@@ -228,7 +263,7 @@ def test_api_english():
     ]
 
 def test_api_orthography_english():
-    request_data = {"text": "I liki all the colors"}
+    request_data = {"text": "I liki all the colors", "config": { "store_context": False } }
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -239,6 +274,7 @@ def test_api_orthography_english():
         {
         "text": "liki",
         "category": "empty_words",
+        "context": "",
         "start": 2,
         "end": 6,
         "alternatives": [
@@ -257,6 +293,7 @@ def test_api_orthography_english():
         {
         "text": "colors",
         "category": "empty_words",
+        "context": "",
         "start": 15,
         "end": 21,
         "alternatives": [
@@ -269,7 +306,7 @@ def test_api_orthography_english():
     ]
 
 def test_api_gender_ending():
-    request_data = {"text": "Kund/in"}
+    request_data = {"text": "Kund/in", "config": { "store_context": False } }
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -280,6 +317,7 @@ def test_api_gender_ending():
         {
         "text": "/in",
         "category": "gendered_roles",
+        "context": "",
         "start": 4,
         "end": 7,
         "alternatives": [
@@ -292,7 +330,7 @@ def test_api_gender_ending():
     ]
 
 def test_api_gender_ending_custom():
-    request_data = {"text": "Kund/in", "config": {"german_gender_ending": "/in"}}
+    request_data = {"text": "Kund/in", "config": { "store_context": False, "german_gender_ending": "/in" } }
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -302,7 +340,7 @@ def test_api_gender_ending_custom():
     assert first_record["results"] == []
 
 def test_api_false_positive():
-    request_data = {"text": "Greenpeace is an international company with headquarters in London."}
+    request_data = {"text": "Greenpeace is an international company with headquarters in London.", "config": { "store_context": False } }
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -322,7 +360,7 @@ def test_api_empty_data():
     assert response.status_code == 422
 
 def test_language_detection_german():
-    request_data = {"text": "Greenpeace ist eine internationale Firma mit Hauptquartier in London."}
+    request_data = {"text": "Greenpeace ist eine internationale Firma mit Hauptquartier in London.", "config": { "store_context": False } }
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -337,7 +375,7 @@ def test_language_detection_fail():
     assert response.status_code == 422
 
 def test_log():
-    request_data = {"text": "Voila", "lang": "auto", "id": "123", "start": 0, "end": 23, "alternative": "test"}
+    request_data = {"text": "Voila", "context": "Voila", "lang": "auto", "id": "123", "start": 0, "end": 23, "type": "alternative", "details": { "text": "test" } }
 
     response = client.post("/log", json=request_data)
     assert response.status_code == 201
@@ -351,7 +389,7 @@ def test_categories():
     assert "empty_words" in first_record
 
 def test_api_corporate_false_positives():
-    request_data = {"text": "Die Bahn ist stark auch wegen ihrer Führungskräfte!"}
+    request_data = {"text": "Die Bahn ist stark auch wegen ihrer Führungskräfte!", "config": { "store_context": False } }
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200

@@ -34,6 +34,7 @@ class Lang(object):
         return message
 
 class EventType(str, Enum):
+    ID = "id"
     SIGNIN = "signin"
     IGNORE = "ignore"
     ALTERNATIVE = "alternative"
@@ -53,6 +54,7 @@ class GenderedRolesFormatType(str, Enum):
     BINARY_GENDER = "binary_gender"
 
 class Config(BaseModel):
+    store_context: Optional[bool] = True
     primary_language: Optional[str] = "de-DE"
     preferred_languages: Optional[str] = "de,en"
     preferred_variants: Optional[str] = "de-DE,en-GB"
@@ -81,10 +83,10 @@ class RequestIn(BaseModel):
 
 class RequestInEvent(RequestIn):
     type: EventType
-    context: str
-    details: Dict[str]
-    start: int
-    end: int
+    context: Optional[str]
+    details: Dict[str, str]
+    start: Optional[int]
+    end: Optional[int]
 
 class ResultOut(BaseModel):
     start: int
@@ -101,7 +103,12 @@ class ResultOut(BaseModel):
         if end == None:
             end = start + len(text)
 
-        context = full_text[max(start-100, 0):max(end+100, len(full_text))]
+        if config.store_context:
+            context_start = max(int(start) - 100, 0)
+            context_end = min(int(end) + 100, len(full_text))
+            context = full_text[context_start:context_end]
+        else:
+            context = ""
 
         if subcategory == None:
             subcategory = category
@@ -144,7 +151,7 @@ class ResultOut(BaseModel):
 
     def __init__(self, text, context, category, start, end, alternatives, label, reason, solution):
         object.__setattr__(self, 'text', text)
-        object.__setattr__(self, 'context', text)
+        object.__setattr__(self, 'context', context)
         object.__setattr__(self, 'category', category)
         object.__setattr__(self, 'start', start)
         object.__setattr__(self, 'end', end)
