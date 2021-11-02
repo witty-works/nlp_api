@@ -1,5 +1,5 @@
 from pydantic import BaseModel, validator
-from typing import List
+from typing import Dict, List
 from typing import Optional
 from enum import Enum
 
@@ -32,6 +32,12 @@ class Lang(object):
             message = message.replace("%" + key, placeholders[key])
 
         return message
+
+class EventType(str, Enum):
+    SIGNIN = "signin"
+    IGNORE = "ignore"
+    ALTERNATIVE = "alternative"
+    ERROR = "error"
 
 class LangType(str, Enum):
     EN = "en"
@@ -74,7 +80,9 @@ class RequestIn(BaseModel):
     config: Optional[Config] = Config()
 
 class RequestInEvent(RequestIn):
-    alternative: str
+    type: EventType
+    context: str
+    details: Dict[str]
     start: int
     end: int
 
@@ -83,14 +91,17 @@ class ResultOut(BaseModel):
     end: int
     category: str
     text: str
+    context: str
     label: str
     reason: str
     solution: str
     alternatives: List[str]
 
-    def factory(config: Config, lang: Lang, text, category, start, end = None, alternatives = [], subcategory = None, label = None, reason = None, solution = None):
+    def factory(config: Config, lang: Lang, text, full_text, category, start, end = None, alternatives = [], subcategory = None, label = None, reason = None, solution = None):
         if end == None:
             end = start + len(text)
+
+        context = full_text[max(start-100, 0):max(end+100, len(full_text))]
 
         if subcategory == None:
             subcategory = category
@@ -127,12 +138,13 @@ class ResultOut(BaseModel):
         if category == "orthography" or category == "corporate_rules":
             category = subcategory = "empty_words"
 
-        return ResultOut(text, category, start, end, alternatives, label, reason, solution)
+        return ResultOut(text, context, category, start, end, alternatives, label, reason, solution)
 
     factory = staticmethod(factory)
 
-    def __init__(self, text, category, start, end, alternatives, label, reason, solution):
+    def __init__(self, text, context, category, start, end, alternatives, label, reason, solution):
         object.__setattr__(self, 'text', text)
+        object.__setattr__(self, 'context', text)
         object.__setattr__(self, 'category', category)
         object.__setattr__(self, 'start', start)
         object.__setattr__(self, 'end', end)
