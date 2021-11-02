@@ -21,6 +21,7 @@ click = "*"
 polib = "*"
 pytest = "*"
 pytest-cov = "*"
+python-dotenv = "*"
 
 [requires]
 python_version = "3.8"

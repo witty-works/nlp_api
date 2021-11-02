@@ -23,6 +23,7 @@ import aiohttp
 import sentry_sdk
 import copy
 from typing import Optional
+from functools import lru_cache
 
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 from sentry_sdk.integrations.aiohttp import AioHttpIntegration
@@ -48,7 +49,6 @@ from fastapi.exception_handlers import (
 from typing import Optional
 from pydantic import BaseSettings
 
-
 class Settings(BaseSettings):
     """Load environment variables to python objects using pydantic."""
     logging_enabled: bool = False
@@ -60,9 +60,14 @@ class Settings(BaseSettings):
     api_docs_password: Optional[str]
     api_docs_auth_enabled: bool = False
 
+    class Config:
+        env_file = ".env"
 
-settings = Settings()
+@lru_cache()
+def get_settings():
+    return Settings()
 
+settings = get_settings()
 
 # NLP library
 
@@ -97,8 +102,6 @@ app.add_middleware(SentryAsgiMiddleware)
 # To catch raised `HTTPException` exceptions as per:
 # https://fastapi.tiangolo.com/tutorial/handling-errors/
 # Might have to add something similar for `RequestValidationError`
-
-
 @app.exception_handler(HTTPException)
 async def custom_http_exception_handler(request, e):
     with configure_scope() as scope:
