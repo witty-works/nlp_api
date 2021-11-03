@@ -441,8 +441,10 @@ def IsNotNoun(pos):
 
 def GetNonNounLowerCased(token):
     token_word = token.lemma_
-    if IsNotNoun(token.pos_):
-        token_word = token_word.lower()
+    if token.is_sent_start == True:
+        if IsNotNoun(token.pos_):
+            token_model = model[lang.locale](token.text.lower())
+            token_word = token_model[0].lemma_
 
     return token_word
 
