@@ -5,80 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Witty Works - Sprache bewegt</title>
     <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', path='/favicon.png') }}" rel="icon" type="image/png" >
+    <link href="{{ url_for('static', path='/manifest.json') }}" rel="manifest"" >
 </head>
 <body>
   <header>
-    <img src="{{ url_for('static', path='/ww-logo-diversifier.svg') }}" alt="Logo Witty Works">
+    <img src="{{ url_for('static', path='/witty-logo.svg') }}" alt="Logo Witty" width="30">
   </header>
   <div class="body-container">
-    <section>
-      <div class="alert info">
-        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-          Es dürfen <strong>keine</strong> Texte mit <strong>personenbezogenen Daten</strong> in die Eingabemaske eingegeben werden.
-          Die Texte dürfen die Vertraulichkeitsstufe „DB intern“ nicht übersteigen, also <strong>keine „vertraulichen“ oder „streng vertraulichen“ Inhalte</strong>.
-      </div>
-      <div class="alert warning">
-        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-         Bei der Nutzung von "Witty" wird die IP-Adresse temporär gespeichert, um die Funktionsfähigkeit der Lösung sicherzustellen. Die IP-Adresse und andere personenbezogenen Daten von Nutzer:innen werden aber niemals gemeinsam mit statistischen Daten zur Nutzung von Witty gespeichert.
-      </div>
-
       <textarea id="editor" rows="25" spellcheck="false" placeholder="Bitte hier Text eingeben oder per Copy&Paste hineinkopieren."></textarea>
-    </section>
-    <section>
-      <h2>Wie kann "Witty" installiert werden?</h2>
-      <div>
-        <ol>
-          <li>
-            Browser Erweiterung <a href="{{ url_for('files', path='/witty-works-inclusifier.zip') }}">herunterladen.</a>
-            <img src="{{ url_for('static', path='/Bild1.png') }}" width="900" />
-          </li>
-          <li>
-            Download wird angezeigt…
-            <img src="{{ url_for('static', path='/Bild2.png') }}" width="900" />
-          </li>
-          <li>
-            Download in Ordner anzeigen…
-            <img src="{{ url_for('static', path='/Bild3.png') }}" width="900" />
-          </li>
-          <li>
-            Rechtsklick auf den Download und Datei extrahieren
-            <img src="{{ url_for('static', path='/Bild4.png') }}" width="900" />
-          </li>
-          <li>
-            Wunschziel eingeben, Download-Ordner ist ausreichend
-            <img src="{{ url_for('static', path='/Bild5.png') }}" width="900" />
-          </li>
-          <li>
-            Anzeige, wenn Extrahieren geklappt hat – kann geschlossen werden
-            <img src="{{ url_for('static', path='/Bild6.png') }}" width="900" />
-          </li>
-          <li>
-            Auf Puzzle-Symbol (Erweiterungen) klicken…
-            <img src="{{ url_for('static', path='/Bild7.png') }}" width="900" />
-          </li>
-          <li>
-            „Änderungen verwalten“ anklicken…
-            <img src="{{ url_for('static', path='/Bild8.png') }}" width="900" />
-          </li>
-          <li>
-            Rechts oben „Entwicklermodus“ aktiviren und dann links oben auf „Entpackte Erweiterung laden“ klicken…
-            <img src="{{ url_for('static', path='/Bild9.png') }}" width="900" />
-          </li>
-          <li>
-            Datei auswählen, z.B. Downloadordner
-            <img src="{{ url_for('static', path='/Bild10.png') }}" width="900" />
-          </li>
-          <li>
-            Dann sollte die Extension angezeigt werden…
-            <img src="{{ url_for('static', path='/Bild11.png') }}" width="900" />
-          </li>
-          <li>
-            Browser Erweiterung aktivieren (bzw. bei Bedarf deaktivieren) durch klicken auf das Puzzle-Symbol und die Stecknadel beim "W"-Symbol und schliesslich auf das "W"-Symbol klicken und den Scheiberegeler in die korrekte Position bringen …
-            <img src="{{ url_for('static', path='/Bild12.png') }}" width="900" />
-          </li>
-        </ol>
-      </div>
     </section>
   </div>
 </body>
