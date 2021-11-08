@@ -49,4 +49,5 @@ jobs:
 
       - name: Run test suite
         run: |
+          export testing=True
           pipenv run pytest --cov-config .coveragerc --cov=app -vv

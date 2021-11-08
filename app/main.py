@@ -1,3 +1,5 @@
+import platformshconfig
+from pydantic.types import Json
 from app.models import (
     Config,
     LangType,
@@ -6,6 +8,7 @@ from app.models import (
     RequestInEvent,
     ResultOut,
     ResultsOut,
+    ConfRequest,
 )
 import ast
 import re
@@ -58,6 +61,11 @@ import logging
 from opencensus.ext.azure.log_exporter import AzureLogHandler
 
 
+from redis import Redis
+import platformshconfig
+from fakeredis import FakeStrictRedis
+
+
 class Settings(BaseSettings):
     """Load environment variables to python objects using pydantic."""
 
@@ -70,6 +78,7 @@ class Settings(BaseSettings):
     api_docs_password: Optional[str]
     api_docs_auth_enabled: bool = False
     instrumentation_key: str = ""
+    testing: bool = False
 
     class Config:
         env_file = ".env"
@@ -272,6 +281,20 @@ gender_false_positive = genderdenom_false_positives["False_positives"].tolist()
 
 # corporate false positive
 # DB
+
+
+@app.get("/companyRules")
+async def get_redis(user: str):
+    try:
+        keys = redis.keys("*")
+        for key in keys:
+            user_list = json.loads(redis.get(key))["users"]
+            if user in user_list:
+                return json.loads(redis.get(key))
+    except Exception as e:
+        return e
+
+
 corporate_false_positive = [
     "stark",
     "starke",
@@ -285,6 +308,15 @@ terms_false_positive = gender_false_positive + corporate_false_positive
 false_positive_agentic += corporate_false_positive
 
 favicon_path = "static/favicon.ico"
+
+# read redis configuration
+
+if settings.testing == True:
+    redis = FakeStrictRedis()
+else:
+    redis_config = platformshconfig.Config()
+    credentials = redis_config.credentials("rediscache")
+    redis = Redis(credentials["host"], credentials["port"])
 
 
 @app.get("/favicon.ico", include_in_schema=False)
@@ -382,6 +414,8 @@ def log(
 async def check_query(
     request: Request, user_request_in: RequestIn, background_tasks: BackgroundTasks
 ):
+    await set_rules(user_request_in)
+
     languagetools_results, lang = await languagetool_rules(user_request_in)
 
     language_rules_results = language_rules(user_request_in, lang)
@@ -395,7 +429,79 @@ async def check_query(
     return response
 
 
+@app.post("/storeRules")
+async def store_redis(corporate_rules: ConfRequest):
+    try:
+        company_object = {
+            "users": corporate_rules.users,
+            "config": {
+                "forced": dict(corporate_rules.forced),
+                "suggestion": dict(corporate_rules.suggestion),
+            },
+        }
+
+        # Set a value
+        redis.set(str(corporate_rules.company), json.dumps(company_object))
+    except Exception as e:
+        return e
+    return company_object
+
+
 # Functions
+
+
+async def set_rules(user_request_in: RequestIn):
+    general_config = Config()
+    corporate_rules = await get_redis(user_request_in.id)
+    if corporate_rules and type(corporate_rules) is dict:
+        user_rules = user_request_in.config.__dict__
+        forced_config = corporate_rules["config"]["forced"]
+        default_config = corporate_rules["config"]["suggestion"]
+        forced_filtered = {
+            k: v
+            for (k, v) in forced_config.items()
+            if v != "" and v is not None and v != []
+        }
+        default_filtered = {
+            k: v
+            for (k, v) in default_config.items()
+            if v != "" and v is not None and v != []
+        }
+        company_config = {**default_filtered, **forced_filtered}
+
+        for config_value in vars(general_config):
+            # user set a value (change, if user not give a key)
+            if user_rules[config_value] is not None:
+
+                # company set a value and user can't change it
+                if config_value in company_config and config_value in forced_filtered:
+                    # overwrite user value
+                    setattr(
+                        user_request_in.config,
+                        config_value,
+                        forced_config[config_value],
+                    )
+                # company set a value on default, user can change it
+                elif (
+                    config_value in company_config and config_value in default_filtered
+                ):
+                    # set user value
+                    setattr(
+                        user_request_in.config, config_value, user_rules[config_value]
+                    )
+                else:
+                    # company does not set a value, user can set a value
+                    setattr(
+                        user_request_in.config, config_value, user_rules[config_value]
+                    )
+            else:
+                # user does not set a value, but company did
+                if config_value in company_config:
+                    setattr(
+                        user_request_in.config,
+                        config_value,
+                        company_config[config_value],
+                    )
 
 
 async def languagetool_rules(user_request_in: RequestIn):
@@ -415,13 +521,12 @@ async def languagetool_rules(user_request_in: RequestIn):
         if user_request_in.lang == "auto":
             payload["preferredLanguages"] = user_request_in.config.preferred_languages
             payload["preferredVariants"] = user_request_in.config.preferred_variants
-
         async with session.post(languagetool_url + "/check", data=payload) as r:
             assert r.status == 200
             result = await r.json()
-
             if "language" not in result:
                 lang = None
+
             if result["language"]["code"][0:2] not in langs:
                 lang = None
             elif "matches" in result:

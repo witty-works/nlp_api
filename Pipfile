@@ -16,6 +16,8 @@ babel = "*"
 aiohttp = "*"
 sentry-sdk = "*"
 opencensus-ext-azure = "*"
+redis = "*"
+platformshconfig = "*"
 
 [dev-packages]
 click = "*"
@@ -25,6 +27,8 @@ pytest-cov = "*"
 python-dotenv = "*"
 black = "*"
 opencensus-ext-azure = "*"
+pytest-asyncio = "*"
+fakeredis = "*"
 
 [requires]
 python_version = "3.9"
