@@ -23,21 +23,23 @@ def test_api():
         {
         "text": "Kunden",
         "context": "",
-        "category": "gendered_roles",
+        "category": "gendered",
+        "subcategory": "titles",
         "start": 42,
         "end": 48,
         "alternatives": [
             "Kundschaft",
             "Kund:innen"
         ],
-        "label": "Geschlechtsspezifische Rollen",
+        "label": "Geschlechtsspezifisch: Titel",
         "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
         "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht."
         },
         {
         "text": "Ninja",
         "context": "",
-        "category": "boasting_words",
+        "category": "style",
+        "subcategory": "exaggerating",
         "start": 11,
         "end": 16,
         "alternatives": [
@@ -45,8 +47,8 @@ def test_api():
             "Jemand mit Know-how und Ausdauer",
             "Mensch, der seine Fachkenntnis ständig vertieft"
         ],
-        "label": "Superlative Wörter",
-        "reason": "Mit diesem Begriff nutzen Sie eine Sprache der Superlative. Viele Menschen empfinden dies als negativ, da der Eindruck entsteht, sich im Sinne der Superlative anpassen zu müssen.",
+        "label": "Stil: Superlative",
+        "reason": "Kommuniziert, dass sich Menschen sich im Sinne der Superlative anpassen müssen.",
         "solution": "Verwenden Sie eine authentisch und ehrlich klingende Aussage."
         }
     ]
@@ -63,21 +65,22 @@ def test_api_context():
         {
         "text": "Kunden",
         "context": "Wir suchen Kunden",
-        "category": "gendered_roles",
+        "category": "gendered",
+        "subcategory": "titles",
         "start": 11,
         "end": 17,
         "alternatives": [
             "Kundschaft",
             "Kund:innen"
         ],
-        "label": "Geschlechtsspezifische Rollen",
+        "label": "Geschlechtsspezifisch: Titel",
         "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
         "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht."
         }
     ]
 
 def test_api_disabled_categories():
-    request_data = {"text": "Wir suchen Ninja Programmierer für unsere Kunden", "config": { "store_context": False, "disabled_categories": "boasting_words,empty_words" } }
+    request_data = {"text": "Wir suchen Ninja Programmierer für unsere Kunden", "config": { "store_context": False, "disabled_categories": "exaggerating,hollow" } }
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -88,14 +91,15 @@ def test_api_disabled_categories():
         {
         "text": "Kunden",
         "context": "",
-        "category": "gendered_roles",
+        "category": "gendered",
+        "subcategory": "titles",
         "start": 42,
         "end": 48,
         "alternatives": [
             "Kundschaft",
             "Kund:innen"
         ],
-        "label": "Geschlechtsspezifische Rollen",
+        "label": "Geschlechtsspezifisch: Titel",
         "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
         "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht."
         }
@@ -113,14 +117,15 @@ def test_api_gender_endings():
         {
         "text": "Kunden",
         "context": "",
-        "category": "gendered_roles",
+        "category": "gendered",
+        "subcategory": "titles",
         "start": 18,
         "end": 24,
         "alternatives": [
             "Kundschaft",
             "Kund*innen"
         ],
-        "label": "Geschlechtsspezifische Rollen",
+        "label": "Geschlechtsspezifisch: Titel",
         "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
         "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht."
         }
@@ -137,8 +142,9 @@ def test_api_orthography():
     assert first_record["results"] == [
         {
         "text": "ueber",
-        "category": "empty_words",
         "context": "",
+        "category": "orthography",
+        "subcategory": "orthography",
         "start": 22,
         "end": 27,
         "alternatives": [
@@ -169,8 +175,9 @@ def test_api_orthography():
         },
         {
         "text": "Strasse",
-        "category": "empty_words",
         "context": "",
+        "category": "orthography",
+        "subcategory": "orthography",
         "start": 32,
         "end": 39,
         "alternatives": [
@@ -201,8 +208,9 @@ def test_api_orthography():
         },
         {
         "text": "!!!",
-        "category": "empty_words",
         "context": "",
+        "category": "orthography",
+        "subcategory": "orthography",
         "start": 39,
         "end": 42,
         "alternatives": [
@@ -225,14 +233,15 @@ def test_api_english():
     assert first_record["results"] == [
         {
         "text": "analytical",
-        "category": "agentic_language",
         "context": "",
+        "category": "unconscious_bias",
+        "subcategory": "agentic",
         "start": 21,
         "end": 31,
         "alternatives": [],
-        "label": "Agentic Language",
-        "reason": "This term is agentic, describing attributes that enforce the male stereotype as the the norm. People not falling into that stereotype (women but also other underrepresented groups) will feel unconsciously excluded by this word. ",
-        "solution": "Use a word combination that sounds more team-oriented and refers to the purpose in work."
+        "label": "Biased language: Agentic",
+        "reason": "Unconsciously attributed to the male stereotype. Many do not feel attracted by these terms.",
+        "solution": "Use team-oriented wording or referring to purpose."
         }
     ]
 
@@ -247,8 +256,9 @@ def test_api_orthography_english():
     assert first_record["results"] == [
         {
         "text": "liki",
-        "category": "empty_words",
         "context": "",
+        "category": "orthography",
+        "subcategory": "orthography",
         "start": 2,
         "end": 6,
         "alternatives": [
@@ -266,8 +276,9 @@ def test_api_orthography_english():
         },
         {
         "text": "colors",
-        "category": "empty_words",
         "context": "",
+        "category": "orthography",
+        "subcategory": "orthography",
         "start": 15,
         "end": 21,
         "alternatives": [
@@ -290,16 +301,17 @@ def test_api_gender_ending():
     assert first_record["results"] == [
         {
         "text": "/in",
-        "category": "gendered_roles",
         "context": "",
+        "category": "gendered",
+        "subcategory": "gendered_denominations_ending",
         "start": 4,
         "end": 7,
         "alternatives": [
             ":in"
         ],
-        "label": "Geschlechtsspezifische Rollen",
-        "reason": "Eine konsistente Schreibweise wird als vertrausvoller wargenommen und hilft beim Lesen.",
-        "solution": "Zur Konsistenz bitte \":in\" verwenden, um geschlechter inklusive zu schreiben."
+        "label": "Geschlechtsspezifisch: Inklusive Endung",
+        "reason": "Konsistente Schreibweise ist vertrauenserweckender.",
+        "solution": "Nutzen Sie den Genderstern oder -doppelpunkt, um durchgehend inklusiv zu sein."
         }
     ]
 
@@ -360,7 +372,7 @@ def test_categories():
 
     first_record = response.json()
 
-    assert "empty_words" in first_record
+    assert "hollow" in first_record
 
 def test_api_corporate_false_positives():
     request_data = {"text": "Die Bahn ist stark auch wegen ihrer Führungskräfte!", "config": { "store_context": False } }
