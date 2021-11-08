@@ -36,7 +36,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from starlette.responses import RedirectResponse, PlainTextResponse
+from starlette.responses import RedirectResponse, PlainTextResponse, FileResponse
+
 from fastapi.exception_handlers import (
     http_exception_handler,
 )
@@ -221,6 +222,12 @@ gender_false_positive = genderdenom_false_positives["False_positives"].tolist()
 corporate_false_positive = ["stark", "starke", "starkes", "starker", "Führungskraft", "Führungskräfte", "Führungskräften"]
 terms_false_positive = gender_false_positive + corporate_false_positive
 false_positive_agentic += corporate_false_positive
+
+favicon_path = 'static/favicon.ico'
+
+@app.get('/favicon.ico', include_in_schema=False)
+async def favicon():
+    return FileResponse(favicon_path)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
