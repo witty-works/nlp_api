@@ -404,6 +404,21 @@ def language_rules(user_request_in: RequestIn, lang: Lang):
 
     return list_results
 
+def serialize_request_data(user_request_in: RequestIn):
+    data = {}
+    data["text"] = {
+        "length": len(user_request_in.text),
+        "words": len(user_request_in.text.split(" ")),
+        "sentences": len(user_request_in.text.split(".")),
+    }
+    data["id"] = user_request_in.id
+    data["lang"] = user_request_in.lang
+    data["config"] = user_request_in.config
+
+    return data
+
+def serialize_response_data(response: ResultsOut = None):
+    return jsonable_encoder(response)
 
 def serialize_log_data(user_request_in: RequestIn, response: ResultsOut = None):
     if response is None:
@@ -412,8 +427,8 @@ def serialize_log_data(user_request_in: RequestIn, response: ResultsOut = None):
         }
     else:
         data = {
-            "request": jsonable_encoder(user_request_in),
-            "response": jsonable_encoder(response),
+            "request": serialize_request_data(user_request_in),
+            "response": serialize_response_data(response),
         }
 
     return json.dumps(data)
