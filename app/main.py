@@ -24,7 +24,7 @@ import copy
 from typing import Optional
 from functools import lru_cache
 
-from fastapi import FastAPI, Request, HTTPException, BackgroundTasks, Depends, status
+from fastapi import FastAPI, Request, Header, HTTPException, BackgroundTasks, Depends, status
 
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
@@ -273,7 +273,6 @@ def get_current_username(credentials: Optional[HTTPBasicCredentials] = Depends(s
 def get_root():
     return RedirectResponse(url='/form', status_code=301)
 
-
 @app.get("/lt")
 def get_root():
     return languagetool_url
@@ -306,12 +305,12 @@ def serialize(user_request_in: RequestIn):
 
 
 @app.post("/log", status_code=201)
-def log(user_request_in: RequestInEvent, background_tasks: BackgroundTasks):
-    background_tasks.add_task(log_response, user_request_in)
+def log(request: Request, user_request_in: RequestInEvent, background_tasks: BackgroundTasks):
+    background_tasks.add_task(log_message, request, user_request_in)
 
 
 @app.post("/check", response_model=ResultsOut)
-async def check_query(user_request_in: RequestIn, background_tasks: BackgroundTasks):
+async def check_query(request: Request, user_request_in: RequestIn, background_tasks: BackgroundTasks):
     languagetools_results, lang = await languagetool_rules(user_request_in)
 
     language_rules_results = language_rules(user_request_in, lang)
@@ -320,7 +319,7 @@ async def check_query(user_request_in: RequestIn, background_tasks: BackgroundTa
 
     response = ResultsOut.factory(list_results, lang)
 
-    background_tasks.add_task(log_response, user_request_in, response)
+    background_tasks.add_task(log_message, request, user_request_in, response)
 
     return response
 
@@ -404,40 +403,44 @@ def language_rules(user_request_in: RequestIn, lang: Lang):
 
     return list_results
 
-def serialize_request_data(user_request_in: RequestIn):
-    data = {}
+def serialize_event_data(user_request_in: RequestIn):
+    data = user_request_in.dict()
+
+    return jsonable_encoder(data)
+
+def serialize_request_data(request: Request, user_request_in: RequestIn):
+    data = user_request_in.dict(exclude={'text'})
     data["text"] = {
         "length": len(user_request_in.text),
-        "words": len(user_request_in.text.split(" ")),
-        "sentences": len(user_request_in.text.split(".")),
     }
-    data["id"] = user_request_in.id
-    data["lang"] = user_request_in.lang
-    data["config"] = user_request_in.config
+    data["user_agent"] = request.headers.get('user-agent')
+    data["origin"] = request.headers.get('origin')
 
-    return data
+    return jsonable_encoder(data)
 
-def serialize_response_data(response: ResultsOut = None):
-    return jsonable_encoder(response)
+def serialize_response_data(response: ResultsOut):
+    data = response.dict(exclude={'results': {'__all__': {'context'}}})
 
-def serialize_log_data(user_request_in: RequestIn, response: ResultsOut = None):
+    return jsonable_encoder(data)
+
+def serialize_log_data(request: Request, user_request_in: RequestIn, response: ResultsOut = None):
     if response is None:
         data = {
-            "event": jsonable_encoder(user_request_in),
+            "event": serialize_event_data(user_request_in),
         }
     else:
         data = {
-            "request": serialize_request_data(user_request_in),
+            "request": serialize_request_data(request, user_request_in),
             "response": serialize_response_data(response),
         }
 
     return json.dumps(data)
 
-def log_response(user_request_in: RequestIn, response: ResultsOut = None):
+def log_message(request: Request, user_request_in: RequestIn, response: ResultsOut = None):
     if user_request_in.id is None or not settings.logging_enabled:
         return
 
-    data = serialize_log_data(user_request_in, response)
+    data = serialize_log_data(request, user_request_in, response)
     write_log(data, user_request_in.id)
 
 async def log_request(request):
