@@ -22,14 +22,13 @@ def test_api():
     assert first_record["results"] == [
         {
         "text": "Kunden",
-        "category": "gendered_roles",
         "context": "",
+        "category": "gendered_roles",
         "start": 42,
         "end": 48,
         "alternatives": [
             "Kundschaft",
-            "Kund:innen",
-            "Kundinnen und Kunden"
+            "Kund:innen"
         ],
         "label": "Geschlechtsspezifische Rollen",
         "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
@@ -37,8 +36,8 @@ def test_api():
         },
         {
         "text": "Ninja",
-        "category": "boasting_words",
         "context": "",
+        "category": "boasting_words",
         "start": 11,
         "end": 16,
         "alternatives": [
@@ -69,8 +68,7 @@ def test_api_context():
         "end": 17,
         "alternatives": [
             "Kundschaft",
-            "Kund:innen",
-            "Kundinnen und Kunden"
+            "Kund:innen"
         ],
         "label": "Geschlechtsspezifische Rollen",
         "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
@@ -89,14 +87,13 @@ def test_api_disabled_categories():
     assert first_record["results"] == [
         {
         "text": "Kunden",
-        "category": "gendered_roles",
         "context": "",
+        "category": "gendered_roles",
         "start": 42,
         "end": 48,
         "alternatives": [
             "Kundschaft",
-            "Kund:innen",
-            "Kundinnen und Kunden"
+            "Kund:innen"
         ],
         "label": "Geschlechtsspezifische Rollen",
         "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
@@ -105,7 +102,7 @@ def test_api_disabled_categories():
     ]
 
 def test_api_gender_endings():
-    request_data = {"text": "Beste Kunden bekommen alles.", "config": { "store_context": False, "german_gender_ending": "*in" } }
+    request_data = {"text": "Wir geben unseren Kunden alles.", "config": { "store_context": False, "german_gender_ending": "*in" } }
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -115,40 +112,17 @@ def test_api_gender_endings():
     assert first_record["results"] == [
         {
         "text": "Kunden",
-        "category": "gendered_roles",
         "context": "",
-        "start": 6,
-        "end": 12,
+        "category": "gendered_roles",
+        "start": 18,
+        "end": 24,
         "alternatives": [
             "Kundschaft",
-            "Kund:innen",
-            "Kundinnen und Kunden"
+            "Kund*innen"
         ],
         "label": "Geschlechtsspezifische Rollen",
         "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
         "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht."
-        },
-        {
-        "text": "Beste",
-        "category": "boasting_words",
-        "context": "",
-        "start": 0,
-        "end": 5,
-        "alternatives": [
-            "Leicht",
-            "Einfach",
-            "Mühelos",
-            "Als positiv empfunden",
-            "Befriedigend",
-            "Bereichernd",
-            "Schön",
-            "Fein",
-            "Gut",
-            "Passend"
-        ],
-        "label": "Superlative Wörter",
-        "reason": "Mit diesem Begriff nutzen Sie eine Sprache der Superlative. Viele Menschen empfinden dies als negativ, da der Eindruck entsteht, sich im Sinne der Superlative anpassen zu müssen.",
-        "solution": "Verwenden Sie eine authentisch und ehrlich klingende Aussage."
         }
     ]
 

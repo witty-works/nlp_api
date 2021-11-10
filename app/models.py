@@ -59,7 +59,7 @@ class Config(BaseModel):
     preferred_languages: Optional[str] = "de,en"
     preferred_variants: Optional[str] = "de-DE,en-GB"
     german_gender_ending: Optional[str] = ":in"
-    _gendereddenom_ending = {"/in": "/in", "/-in": "/-in", "_in": "_in", "*in": "\*in", ":in": ":in", "In": r"In\b"}
+    _gendereddenom_ending = {"/in": "/in", "/-in": "/-in", "_in": "_in", "*in": "\\*in", ":in": ":in", "In": r"In\b"}
     disabled_categories: Optional[List] = ""
     gendered_roles_format: Optional[GenderedRolesFormatType] = "inclusive_gender"
 
@@ -84,20 +84,20 @@ class RequestIn(BaseModel):
 class RequestInEvent(RequestIn):
     type: EventType
     context: Optional[str]
-    details: Dict[str, str]
     start: Optional[int]
     end: Optional[int]
+    details: Dict[str, str]
 
 class ResultOut(BaseModel):
-    start: int
-    end: int
-    category: str
     text: str
     context: str
+    category: str
+    start: int
+    end: int
+    alternatives: List[str]
     label: str
     reason: str
     solution: str
-    alternatives: List[str]
 
     def factory(config: Config, lang: Lang, text, full_text, category, start, end = None, alternatives = [], subcategory = None, label = None, reason = None, solution = None):
         if end == None:
