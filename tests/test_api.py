@@ -12,7 +12,7 @@ def test_read_form():
     assert response.status_code == 200
 
 def test_api():
-    request_data = {"text": "Wir suchen Ninja Programmierer für unsere Kunden"}
+    request_data = {"text": "Wir suchen Ninja Programmierer für unsere Kunden", "config": { "store_context": False } }
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -22,21 +22,24 @@ def test_api():
     assert first_record["results"] == [
         {
         "text": "Kunden",
-        "category": "gendered_roles",
+        "context": "",
+        "category": "gendered",
+        "subcategory": "titles",
         "start": 42,
         "end": 48,
         "alternatives": [
             "Kundschaft",
-            "Kund:innen",
-            "Kundinnen und Kunden"
+            "Kund:innen"
         ],
-        "label": "Geschlechtsspezifische Rollen",
+        "label": "Geschlechtsspezifisch: Titel",
         "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
         "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht."
         },
         {
         "text": "Ninja",
-        "category": "boasting_words",
+        "context": "",
+        "category": "style",
+        "subcategory": "exaggerating",
         "start": 11,
         "end": 16,
         "alternatives": [
@@ -44,14 +47,14 @@ def test_api():
             "Jemand mit Know-how und Ausdauer",
             "Mensch, der seine Fachkenntnis ständig vertieft"
         ],
-        "label": "Superlative Wörter",
-        "reason": "Mit diesem Begriff nutzen Sie eine Sprache der Superlative. Viele Menschen empfinden dies als negativ, da der Eindruck entsteht, sich im Sinne der Superlative anpassen zu müssen.",
+        "label": "Stil: Superlative",
+        "reason": "Kommuniziert, dass sich Menschen sich im Sinne der Superlative anpassen müssen.",
         "solution": "Verwenden Sie eine authentisch und ehrlich klingende Aussage."
         }
     ]
 
-def test_api_disabled_categories():
-    request_data = {"text": "Wir suchen Ninja Programmierer für unsere Kunden", "config": {"disabled_categories": "boasting_words,empty_words"}}
+def test_api_context():
+    request_data = {"text": "Wir suchen Kunden"}
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -61,22 +64,49 @@ def test_api_disabled_categories():
     assert first_record["results"] == [
         {
         "text": "Kunden",
-        "category": "gendered_roles",
+        "context": "Wir suchen Kunden",
+        "category": "gendered",
+        "subcategory": "titles",
+        "start": 11,
+        "end": 17,
+        "alternatives": [
+            "Kundschaft",
+            "Kund:innen"
+        ],
+        "label": "Geschlechtsspezifisch: Titel",
+        "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
+        "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht."
+        }
+    ]
+
+def test_api_disabled_categories():
+    request_data = {"text": "Wir suchen Ninja Programmierer für unsere Kunden", "config": { "store_context": False, "disabled_categories": "exaggerating,hollow" } }
+
+    response = client.post("/check", json=request_data)
+    assert response.status_code == 200
+
+    first_record = response.json()
+    assert first_record["language"] == "de"
+    assert first_record["results"] == [
+        {
+        "text": "Kunden",
+        "context": "",
+        "category": "gendered",
+        "subcategory": "titles",
         "start": 42,
         "end": 48,
         "alternatives": [
             "Kundschaft",
-            "Kund:innen",
-            "Kundinnen und Kunden"
+            "Kund:innen"
         ],
-        "label": "Geschlechtsspezifische Rollen",
+        "label": "Geschlechtsspezifisch: Titel",
         "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
         "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht."
         }
     ]
 
 def test_api_gender_endings():
-    request_data = {"text": "Beste Kunden bekommen alles.", "config": {"german_gender_ending": "*in"}}
+    request_data = {"text": "Wir geben unseren Kunden alles.", "config": { "store_context": False, "german_gender_ending": "*in" } }
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -86,43 +116,23 @@ def test_api_gender_endings():
     assert first_record["results"] == [
         {
         "text": "Kunden",
-        "category": "gendered_roles",
-        "start": 6,
-        "end": 12,
+        "context": "",
+        "category": "gendered",
+        "subcategory": "titles",
+        "start": 18,
+        "end": 24,
         "alternatives": [
             "Kundschaft",
-            "Kund:innen",
-            "Kundinnen und Kunden"
+            "Kund*innen"
         ],
-        "label": "Geschlechtsspezifische Rollen",
+        "label": "Geschlechtsspezifisch: Titel",
         "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
         "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht."
-        },
-        {
-        "text": "Beste",
-        "category": "boasting_words",
-        "start": 0,
-        "end": 5,
-        "alternatives": [
-            "Leicht",
-            "Einfach",
-            "Mühelos",
-            "Als positiv empfunden",
-            "Befriedigend",
-            "Bereichernd",
-            "Schön",
-            "Fein",
-            "Gut",
-            "Passend"
-        ],
-        "label": "Superlative Wörter",
-        "reason": "Mit diesem Begriff nutzen Sie eine Sprache der Superlative. Viele Menschen empfinden dies als negativ, da der Eindruck entsteht, sich im Sinne der Superlative anpassen zu müssen.",
-        "solution": "Verwenden Sie eine authentisch und ehrlich klingende Aussage."
         }
     ]
 
 def test_api_orthography():
-    request_data = {"text": "Ich gehe noch schnell ueber die Strasse!!!"}
+    request_data = {"text": "Ich gehe noch schnell ueber die Strasse!!!", "config": { "store_context": False } }
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -132,7 +142,9 @@ def test_api_orthography():
     assert first_record["results"] == [
         {
         "text": "ueber",
-        "category": "empty_words",
+        "context": "",
+        "category": "orthography",
+        "subcategory": "orthography",
         "start": 22,
         "end": 27,
         "alternatives": [
@@ -163,7 +175,9 @@ def test_api_orthography():
         },
         {
         "text": "Strasse",
-        "category": "empty_words",
+        "context": "",
+        "category": "orthography",
+        "subcategory": "orthography",
         "start": 32,
         "end": 39,
         "alternatives": [
@@ -194,7 +208,9 @@ def test_api_orthography():
         },
         {
         "text": "!!!",
-        "category": "empty_words",
+        "context": "",
+        "category": "orthography",
+        "subcategory": "orthography",
         "start": 39,
         "end": 42,
         "alternatives": [
@@ -207,7 +223,7 @@ def test_api_orthography():
     ]
 
 def test_api_english():
-    request_data = {"text": "We are searching for analytical ninja programmer for our customers"}
+    request_data = {"text": "We are searching for analytical ninja programmer for our customers", "config": { "store_context": False } }
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -217,18 +233,20 @@ def test_api_english():
     assert first_record["results"] == [
         {
         "text": "analytical",
-        "category": "agentic_language",
+        "context": "",
+        "category": "unconscious_bias",
+        "subcategory": "agentic",
         "start": 21,
         "end": 31,
         "alternatives": [],
-        "label": "Agentic Language",
-        "reason": "This term is agentic, describing attributes that enforce the male stereotype as the the norm. People not falling into that stereotype (women but also other underrepresented groups) will feel unconsciously excluded by this word. ",
-        "solution": "Use a word combination that sounds more team-oriented and refers to the purpose in work."
+        "label": "Biased language: Agentic",
+        "reason": "Unconsciously attributed to the male stereotype. Many do not feel attracted by these terms.",
+        "solution": "Use team-oriented wording or referring to purpose."
         }
     ]
 
 def test_api_orthography_english():
-    request_data = {"text": "I liki all the colors"}
+    request_data = {"text": "I liki all the colors", "config": { "store_context": False } }
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -238,7 +256,9 @@ def test_api_orthography_english():
     assert first_record["results"] == [
         {
         "text": "liki",
-        "category": "empty_words",
+        "context": "",
+        "category": "orthography",
+        "subcategory": "orthography",
         "start": 2,
         "end": 6,
         "alternatives": [
@@ -256,7 +276,9 @@ def test_api_orthography_english():
         },
         {
         "text": "colors",
-        "category": "empty_words",
+        "context": "",
+        "category": "orthography",
+        "subcategory": "orthography",
         "start": 15,
         "end": 21,
         "alternatives": [
@@ -269,7 +291,7 @@ def test_api_orthography_english():
     ]
 
 def test_api_gender_ending():
-    request_data = {"text": "Kund/in"}
+    request_data = {"text": "Kund/in", "config": { "store_context": False } }
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -279,20 +301,22 @@ def test_api_gender_ending():
     assert first_record["results"] == [
         {
         "text": "/in",
-        "category": "gendered_roles",
+        "context": "",
+        "category": "gendered",
+        "subcategory": "gendered_denominations_ending",
         "start": 4,
         "end": 7,
         "alternatives": [
             ":in"
         ],
-        "label": "Geschlechtsspezifische Rollen",
-        "reason": "Eine konsistente Schreibweise wird als vertrausvoller wargenommen und hilft beim Lesen.",
-        "solution": "Zur Konsistenz bitte \":in\" verwenden, um geschlechter inklusive zu schreiben."
+        "label": "Geschlechtsspezifisch: Inklusive Endung",
+        "reason": "Konsistente Schreibweise ist vertrauenserweckender.",
+        "solution": "Nutzen Sie den Genderstern oder -doppelpunkt, um durchgehend inklusiv zu sein."
         }
     ]
 
 def test_api_gender_ending_custom():
-    request_data = {"text": "Kund/in", "config": {"german_gender_ending": "/in"}}
+    request_data = {"text": "Kund/in", "config": { "store_context": False, "german_gender_ending": "/in" } }
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -302,7 +326,7 @@ def test_api_gender_ending_custom():
     assert first_record["results"] == []
 
 def test_api_false_positive():
-    request_data = {"text": "Greenpeace is an international company with headquarters in London."}
+    request_data = {"text": "Greenpeace is an international company with headquarters in London.", "config": { "store_context": False } }
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -322,7 +346,7 @@ def test_api_empty_data():
     assert response.status_code == 422
 
 def test_language_detection_german():
-    request_data = {"text": "Greenpeace ist eine internationale Firma mit Hauptquartier in London."}
+    request_data = {"text": "Greenpeace ist eine internationale Firma mit Hauptquartier in London.", "config": { "store_context": False } }
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -337,7 +361,7 @@ def test_language_detection_fail():
     assert response.status_code == 422
 
 def test_log():
-    request_data = {"text": "Voila", "lang": "auto", "id": "123", "start": 0, "end": 23, "alternative": "test"}
+    request_data = {"text": "Voila", "context": "Voila", "lang": "auto", "id": "123", "start": 0, "end": 23, "type": "alternative", "details": { "text": "test" } }
 
     response = client.post("/log", json=request_data)
     assert response.status_code == 201
@@ -348,10 +372,10 @@ def test_categories():
 
     first_record = response.json()
 
-    assert "empty_words" in first_record
+    assert "hollow" in first_record
 
 def test_api_corporate_false_positives():
-    request_data = {"text": "Die Bahn ist stark auch wegen ihrer Führungskräfte!"}
+    request_data = {"text": "Die Bahn ist stark auch wegen ihrer Führungskräfte!", "config": { "store_context": False } }
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200

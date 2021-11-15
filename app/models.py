@@ -1,5 +1,5 @@
 from pydantic import BaseModel, validator
-from typing import List
+from typing import Dict, List
 from typing import Optional
 from enum import Enum
 
@@ -33,6 +33,13 @@ class Lang(object):
 
         return message
 
+class EventType(str, Enum):
+    ID = "id"
+    SIGNIN = "signin"
+    IGNORE = "ignore"
+    ALTERNATIVE = "alternative"
+    ERROR = "error"
+
 class LangType(str, Enum):
     EN = "en"
     DE = "de"
@@ -47,11 +54,12 @@ class GenderedRolesFormatType(str, Enum):
     BINARY_GENDER = "binary_gender"
 
 class Config(BaseModel):
+    store_context: Optional[bool] = True
     primary_language: Optional[str] = "de-DE"
     preferred_languages: Optional[str] = "de,en"
     preferred_variants: Optional[str] = "de-DE,en-GB"
     german_gender_ending: Optional[str] = ":in"
-    _gendereddenom_ending = {"/in": "/in", "/-in": "/-in", "_in": "_in", "*in": "\*in", ":in": ":in", "In": r"In\b"}
+    _gendereddenom_ending = {"/in": "/in", "/-in": "/-in", "_in": "_in", "*in": "\\*in", ":in": ":in", "In": r"In\b"}
     disabled_categories: Optional[List] = ""
     gendered_roles_format: Optional[GenderedRolesFormatType] = "inclusive_gender"
 
@@ -74,34 +82,43 @@ class RequestIn(BaseModel):
     config: Optional[Config] = Config()
 
 class RequestInEvent(RequestIn):
-    alternative: str
-    start: int
-    end: int
+    type: EventType
+    context: Optional[str]
+    start: Optional[int]
+    end: Optional[int]
+    details: Dict[str, str]
 
 class ResultOut(BaseModel):
+    text: str
+    context: str
+    category: str
+    subcategory: str
     start: int
     end: int
-    category: str
-    text: str
+    alternatives: List[str]
     label: str
     reason: str
     solution: str
-    alternatives: List[str]
 
-    def factory(config: Config, lang: Lang, text, category, start, end = None, alternatives = [], subcategory = None, label = None, reason = None, solution = None):
+    def factory(config: Config, lang: Lang, text, full_text, category, subcategory, start, end = None, alternatives = [], label = None, reason = None, solution = None):
         if end == None:
             end = start + len(text)
 
-        if subcategory == None:
-            subcategory = category
-        elif category == "empty_words":
-            subcategory = "empty_words"
+        if config.store_context:
+            context_start = max(int(start) - 100, 0)
+            context_end = min(int(end) + 100, len(full_text))
+            context = full_text[context_start:context_end]
+        else:
+            context = ""
 
         params = {}
         if subcategory == "gendered_denominations_ending":
             params["gendered_denominations_ending"] = config.german_gender_ending
 
         label = label if label != None else lang._("rules." + category + "_label")
+        if category != subcategory:
+            label+= ": " + lang._("rules." + subcategory + "_label")
+
         reason = reason if reason != None else lang._("rules." + subcategory + "_reason", params)
         solution = solution if solution != None else lang._("rules." + subcategory + "_solution", params)
 
@@ -123,17 +140,15 @@ class ResultOut(BaseModel):
                 else:
                     alternatives[key] = str(variants[0]) + config.german_gender_ending[0:-2] + str(variants[1])
 
-        # TODO remove as soon as the browser extension can handle the "orthography" and "corporate_rules" category
-        if category == "orthography" or category == "corporate_rules":
-            category = subcategory = "empty_words"
-
-        return ResultOut(text, category, start, end, alternatives, label, reason, solution)
+        return ResultOut(text, context, category, subcategory, start, end, alternatives, label, reason, solution)
 
     factory = staticmethod(factory)
 
-    def __init__(self, text, category, start, end, alternatives, label, reason, solution):
+    def __init__(self, text, context, category, subcategory, start, end, alternatives, label, reason, solution):
         object.__setattr__(self, 'text', text)
+        object.__setattr__(self, 'context', context)
         object.__setattr__(self, 'category', category)
+        object.__setattr__(self, 'subcategory', subcategory)
         object.__setattr__(self, 'start', start)
         object.__setattr__(self, 'end', end)
         object.__setattr__(self, 'alternatives', alternatives)

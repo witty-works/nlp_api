@@ -3,25 +3,15 @@ from datetime import datetime
 import click
 import csv
 import polib
+import re
 
 def add_entry(poFiles, category, columns, label, column, row):
-    colors = {
-        "gendered": "yellow",
-        "non-inclusive": "brown",
-        "inclusive": "green",
-        "discriminating": "orange",
-        "style": "blue",
-    }
-
     msgid = u"rules." + category + "_" + label
     for locale in poFiles:
         if locale == "pot":
             msgstr = u""
-        elif label == "color":
-            msgstr = row[columns[column]].lower()
-            print(category + ": " + colors[msgstr])
         else:
-            msgstr = row[columns[column + " " + locale[0:2].upper()]]
+            msgstr = row[columns[column + " " + locale[0:2].upper()]].strip()
 
         entry = polib.POEntry(msgid=msgid,msgstr=msgstr)
         poFiles[locale].append(entry)
@@ -46,6 +36,7 @@ def read_csv(in_file):
     with open(in_file, newline='') as csvfile:
         columns = {
             "Subcategory": 0,
+            "Category": None,
             "Category Label EN": None,
             "Category Label DE": None,
             "Reason EN": None,
@@ -53,7 +44,23 @@ def read_csv(in_file):
             "Solution EN": None,
             "Solution DE": None,
             "Color Scheme": None,
+            "Status English": None,
+            "Status German": None,
+            "Inclusive?": None,
+            "Gravity": None,
         }
+
+        colors = {
+            "Style": "blue",
+            "UB / Stereotypes": "orange",
+            "Openly discriminating": "brown",
+            "Gendered": "yellow",
+            "Inclusive": "green",
+            "Non-Inclusive": "yellow",
+            "": "yellow",
+        }
+
+        categories = {}
 
         line_count = 0
         reader = csv.reader(csvfile, skipinitialspace=True)
@@ -65,16 +72,26 @@ def read_csv(in_file):
                         columns[column] = i
                 line_count += 1
             else:
+                if row[columns["Status English"]] not in ["Ready to deploy", "Deployed"] and row[columns["Status German"]] not in ["Ready to deploy", "Deployed"]:
+                    continue
+
                 category = row[columns["Subcategory"]].strip()
                 if category == "New Category":
                     continue
 
-                if row[columns["Category Label EN"]] != "-" or row[columns["Category Label DE"]] != "-":
-                    add_entry(poFiles, category, columns, "label", "Category Label", row)
-
+                categories[category] = {}
+                add_entry(poFiles, category, columns, "label", "Category Label", row)
                 add_entry(poFiles, category, columns, "reason", "Reason", row)
                 add_entry(poFiles, category, columns, "solution", "Solution", row)
-                add_entry(poFiles, category, columns, "color", "Color Scheme", row)
+ 
+                categories[category]["color"] = colors[row[columns["Color Scheme"]]]
+                categories[category]["inclusive"] = row[columns["Inclusive?"]] == "👍"
+                categories[category]["category"] = re.sub('https://www\.notion\.so\/([_a-z]+)-[a-z0-9]+', '\\1', row[columns["Category"]])
+                try:
+                    gravity = int(row[columns["Gravity"]])
+                except:
+                    gravity = 5
+                categories[category]["gravity"] = gravity
 
     locales_path = os.path.dirname(__file__) + "/locales"
 
@@ -88,6 +105,10 @@ def read_csv(in_file):
             poFiles[locale].save(locale_path + "/messages.po")
             poFiles[locale].to_binary()
             poFiles[locale].save_as_mofile(locale_path + "/messages.mo")
+
+    f = open( 'app/categories.py', 'w' )
+    f.write( 'categories = ' + repr(categories) + '\n' )
+    f.close()
 
 @click.command()
 @click.option("--in", "-i", "in_file", required=True,

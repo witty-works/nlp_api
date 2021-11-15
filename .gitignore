@@ -20,3 +20,4 @@ coverage_html_report
 nosetests.xml
 
 python-probe.log
+.env
