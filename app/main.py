@@ -44,6 +44,7 @@ from fastapi.exception_handlers import (
 
 from typing import Optional
 from pydantic import BaseSettings
+from app.categories import categories
 
 class Settings(BaseSettings):
     """Load environment variables to python objects using pydantic."""
@@ -108,45 +109,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-categories = {
-    "gendered_roles": {"color": "#E9DBB2", "inclusive": False},
-    # skipping "gendered_roles" subcategories
-    # "gendered_roles_hierachy": { "color": "#E9DBB2", "inclusive": False },
-    # "gendered_roles_image": { "color": "#E9DBB2", "inclusive": False },
-    # "gendered_denominations": { "color": "#E9DBB2", "inclusive": False },
-    "gendered_language": {"color": "#E9DBB2", "inclusive": False},
-    "agentic_language": {"color": "#F06464", "inclusive": False},
-    "communal_language": {"color": "#5ACFB9", "inclusive": True},
-    "d_and_i_words": {"color": "#5ACFB9", "inclusive": True},
-    "corporate_rules": {"color": "#37D1E5", "inclusive": False},
-    "empty_words": {"color": "#37D1E5", "inclusive": False},
-    "boasting_words": {"color": "#37D1E5", "inclusive": False},
-    "orthography": {"color": "#37D1E5", "inclusive": False},
-    "gendered_pronouns": {"color": "#E9DBB2", "inclusive": False},
-    "stereotypes": {"color": "#9489DB", "inclusive": False},
-    "gendered_stereotypes": {"color": "#E9DBB2", "inclusive": False},
-    "biased_language": {"color": "#9489DB", "inclusive": False},
-    # skipping "biased_language" subcategories
-    # "ability_bias": { "color": "#9489DB", "inclusive": False },
-    # "age_bias_old": { "color": "#9489DB", "inclusive": False },
-    # "age_bias_young": { "color": "#9489DB", "inclusive": False },
-    # "culture_bias": { "color": "#9489DB", "inclusive": False },
-    # "migration_background_bias": { "color": "#9489DB", "inclusive": False },
-    # "anti_lgtbqiplus_bias": { "color": "#9489DB", "inclusive": False },
-    # "classism_bias": { "color": "#9489DB", "inclusive": False },
-    # skipping old/new language is it is not yet implemented
-    # "old_language": { "color": "#37D1E5", "inclusive": False },
-    # "new_language": { "color": "#37D1E5", "inclusive": False },
-    # skipping "job_requirements_bias"
-    # "job_requirements_bias": { "color": "#9489DB", "inclusive": False },
-    # skipping "job_requirements_bias" subcategories
-    # "requirements_overload": { "color": "#9489DB", "inclusive": False },
-    # "education_biased_requirements": { "color": "#9489DB", "inclusive": False },
-    # "workload_biased_requirements": { "color": "#9489DB", "inclusive": False },
-    # "ethnicity_biased_requirements": { "color": "#9489DB", "inclusive": False },
-    # "age_biased_requirements": { "color": "#9489DB", "inclusive": False },
-}
-
 categories_with_labels = {}
 languages = ["en", "de"]
 for language in languages:
@@ -169,50 +131,50 @@ for key in dict_lemma_lookup:
     lookup_table.set(key, dict_lemma_lookup[key])
 
 # load agentic language
-df_agentic_ct = pd.read_csv("training_data/agentic_language_DE.csv")
+df_agentic_ct = pd.read_csv("training_data/agentic_DE.csv")
 #list_agentic = list(df_agentic_ct["Lemma"])
 
 # load Gender denom_de
-df_gender_ct = pd.read_csv("training_data/gendered_denominations_DE.csv")
+df_gender_ct = pd.read_csv("training_data/titles_DE.csv")
 # load Gender denom_de false_positives
 genderdenom_false_positives = pd.read_csv(
-    "training_data/genderdenom_false_positives_new.csv")
+    "training_data/titles_false_positives_DE.csv")
 
 # load discriminating words_de
-df_discrim_words = pd.read_csv("training_data/biased_language_DE.csv")
+df_discrim_words = pd.read_csv("training_data/unconscious_bias_DE.csv")
 
-# load Empty words_de
-df_empty_word = pd.read_csv("training_data/empty_words_de.csv")
-df_empty_sentences = pd.read_csv("training_data/empty_words_sentences_de.csv")
-# list of "empty word" sentences
-terms_empty = list(df_empty_sentences["Lemma"])
+# load hollow words_de
+df_hollow_word = pd.read_csv("training_data/hollow_words_DE.csv")
+df_hollow_sentences = pd.read_csv("training_data/hollow_sentences_DE.csv")
+# list of "hollow word" sentences
+terms_hollow = list(df_hollow_sentences["Lemma"])
 
-# load Boasting word and sentences de
-df_boast_word = pd.read_csv("training_data/boasting_words_DE.csv")
-df_boast_sentences = pd.read_csv(
-    "training_data/boasting_words_sentences_DE.csv")
-# list of "boasting word" sentences
-terms_boast = list(df_boast_sentences["Lemma"])
+# load Exaggerating word and sentences de
+df_exaggerating = pd.read_csv("training_data/exaggerating_words_DE.csv")
+df_exaggerating_sentences = pd.read_csv(
+    "training_data/exaggerating_sentences_DE.csv")
+# list of "exaggerating word" sentences
+terms_exaggerating = list(df_exaggerating_sentences["Lemma"])
 
 # load inslusive words
-df_d_and_i_words = pd.read_csv("training_data/d_and_i_words_de.csv")
+df_d_and_i_words = pd.read_csv("training_data/d_and_i_words_DE.csv")
 # load inslusive sentences
 df_d_and_i_words_sentences = pd.read_csv(
-    "training_data/d_and_i_sentences_de.csv")
+    "training_data/d_and_i_sentences_DE.csv")
 # list of "d_and_i_words word" sentences
 terms_d_and_i_words = list(df_d_and_i_words_sentences["Lemma"])
 
 # load communal coded terms
-df_communal_words = pd.read_csv("training_data/communal_language_DE.csv")
+df_communal_words = pd.read_csv("training_data/communal_DE.csv")
 
 # English
 # load agentic language
-df_agentic_words_en = pd.read_csv("training_data/agentic_language_EN.csv")
+df_agentic_words_en = pd.read_csv("training_data/agentic_EN.csv")
 
 # dictionaries to handle false positives
 false_positive_agentic = ["selbst", "flexible",
                           "Probleme", "unabhängig", "Entwickler"]
-false_positive_empty = ["international"]
+false_positive_hollow = ["international"]
 exceptions = ["Unternehmen", "Firma", "Gruppe", "Gesellschaft",
               "Kollektivgesellschaft", "Team", "Organization", "Gliederung"]
 gender_false_positive = genderdenom_false_positives["False_positives"].tolist()
@@ -369,10 +331,10 @@ async def languagetool_rules(user_request_in: RequestIn):
                                 user_request_in.text[offset:end],
                                 user_request_in.text,
                                 "orthography",
+                                "orthography",
                                 offset,
                                 end,
                                 alternatives,
-                                None,
                                 match["shortMessage"],
                                 None,
                                 match["message"]
@@ -477,37 +439,41 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
     list_full = []
 
     # Agentic language and related false positives catch
-    if "agentic_language" not in user_request_in.config.disabled_categories:
+    if "agentic" not in user_request_in.config.disabled_categories:
         list_full += AgenticLanguageAnalysis(
             user_request_in.config, lang, user_request_in.text, tokens, df_agentic_ct)
 
-    if "gendered_denominations" not in user_request_in.config.disabled_categories:
-        list_full += MisgenderingInstitutions(
-            user_request_in.config, lang, user_request_in.text, tokens)
-        list_full += GenderedDenomEnd(user_request_in.config, lang, user_request_in.text)
+    if "gendered" not in user_request_in.config.disabled_categories:
         list_full += GenderedDenomAnalysis(user_request_in.config, lang, user_request_in.text, tokens, df_gender_ct)
 
+    if "misgendered_institutions" not in user_request_in.config.disabled_categories:
+        list_full += MisgenderingInstitutions(
+            user_request_in.config, lang, user_request_in.text, tokens)
+
+    if "gendered_denomination_ending" not in user_request_in.config.disabled_categories:
+        list_full += GenderedDenomEnd(user_request_in.config, lang, user_request_in.text)
+
     # discriminating words catch
-    if "biased_language" not in user_request_in.config.disabled_categories:
-        list_full += RulesBased(user_request_in.config, lang, user_request_in.text, tokens, df_discrim_words, "biased_language")
+    if "unconscious_bias" not in user_request_in.config.disabled_categories:
+        list_full += RulesBased(user_request_in.config, lang, user_request_in.text, tokens, df_discrim_words, "unconscious_bias", "unconscious_bias")
 
     # communal terms
-    if "communal_language" not in user_request_in.config.disabled_categories:
-        list_full += RulesBased(user_request_in.config, lang, user_request_in.text, tokens, df_communal_words, "communal_language")
+    if "communal" not in user_request_in.config.disabled_categories:
+        list_full += RulesBased(user_request_in.config, lang, user_request_in.text, tokens, df_communal_words, "inclusive", "communal")
 
     # d_and_i_words words
-    if "d_and_i_words" not in user_request_in.config.disabled_categories:
+    if "d_and_i" not in user_request_in.config.disabled_categories:
         list_full += RulesBasedWordsPhraseMatcher(
-            user_request_in.config, lang, user_request_in.text, tokens, terms_d_and_i_words, df_d_and_i_words, "d_and_i_words")
+            user_request_in.config, lang, user_request_in.text, tokens, terms_d_and_i_words, df_d_and_i_words, "inclusive", "d_and_i")
 
-    # Empty words&sentences catch
-    if "empty_words" not in user_request_in.config.disabled_categories:
-        list_full += EmptyWordAnalysis(user_request_in.config, lang, user_request_in.text, tokens, terms_empty, df_empty_word, df_empty_sentences)
+    # hollow words&sentences catch
+    if "hollow" not in user_request_in.config.disabled_categories:
+        list_full += HollowWordAnalysis(user_request_in.config, lang, user_request_in.text, tokens, terms_hollow, df_hollow_word, df_hollow_sentences)
 
-    # boasting words&sentences catch
-    if "boasting_words" not in user_request_in.config.disabled_categories:
-        list_full += BoastingWordsSentences(
-            user_request_in.config, lang, user_request_in.text, tokens, df_boast_word, df_boast_sentences)
+    # exaggerating words&sentences catch
+    if "exaggerating" not in user_request_in.config.disabled_categories:
+        list_full += ExaggeratingWordsSentences(
+            user_request_in.config, lang, user_request_in.text, tokens, df_exaggerating, df_exaggerating_sentences)
 
     return list_full
 
@@ -517,8 +483,8 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
 def EnglishRules(lang, tokens, user_request_in: RequestIn):
     list_full = []
 
-    if "agentic_language" not in user_request_in.config.disabled_categories:
-        list_full += RulesBasedEN(user_request_in.config, lang, user_request_in.text, tokens, df_agentic_words_en, "agentic_language")
+    if "agentic" not in user_request_in.config.disabled_categories:
+        list_full += RulesBasedEN(user_request_in.config, lang, user_request_in.text, tokens, df_agentic_words_en, "unconscious_bias", "agentic")
 
     return list_full
 
@@ -538,7 +504,7 @@ def IsItFalsePositive(word, false_positive):
 
 
 def GenderedDenomEnd(config: Config, lang, full_text):
-    category = "gendered_roles"
+    category = "gendered"
     subcategory = "gendered_denominations_ending"
 
     list_ending = []
@@ -553,11 +519,11 @@ def GenderedDenomEnd(config: Config, lang, full_text):
                 item,
                 full_text,
                 category,
+                subcategory,
                 span.start(),
                 span.end(),
-                [config.german_gender_ending],
-                subcategory)
-            )
+                [config.german_gender_ending]
+            ))
 
     return list_ending
 
@@ -567,7 +533,8 @@ def GenderedDenomEnd(config: Config, lang, full_text):
 
 
 def AgenticLanguageAnalysis(config: Config, lang, full_text, tokens, df):
-    category = "agentic_language"
+    category = "unconscious_bias"
+    subcategory = "agentic"
     list_tokens = []
     dic_anc = {}
     list_false_positives = []
@@ -580,14 +547,14 @@ def AgenticLanguageAnalysis(config: Config, lang, full_text, tokens, df):
                 if entity.label_ == "ORG":
                     list_false_positives.append({
                         "false positives": token.text,
-                        "category": "agentic_language"
+                        "category": subcategory
                     })
 
             # check if the word is adverb
             if token.pos_ == "ADV":
                 list_false_positives.append({
                     "false positives": token.text,
-                    "category": "agentic_language"
+                    "category": subcategory
                 })
 
             # check if the word is adjective and find out how it depends on the other words to feel the contex
@@ -599,7 +566,7 @@ def AgenticLanguageAnalysis(config: Config, lang, full_text, tokens, df):
                             if item.text in exceptions:
                                 list_false_positives.append({
                                     "false positives": token.text,
-                                    "category": "agentic_language"
+                                    "category": subcategory
                                 })
         else:
             for word, alternative in zip(df["Lemma"], df["Alternatives_split_company"]):
@@ -611,6 +578,7 @@ def AgenticLanguageAnalysis(config: Config, lang, full_text, tokens, df):
                             token.text,
                             full_text,
                             category,
+                            subcategory,
                             token.idx,
                             None,
                             ast.literal_eval(alternative)
@@ -621,8 +589,8 @@ def AgenticLanguageAnalysis(config: Config, lang, full_text, tokens, df):
 
 
 def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
-    category = "gendered_roles"
-    subcategory = "gendered_denominations"
+    category = "gendered"
+    subcategory = "titles"
     list_tokens = []
     list_false_positives = []
     matcher = PhraseMatcher(model[lang.locale].vocab)
@@ -660,10 +628,10 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
                                 c_doc[i].text,
                                 full_text,
                                 category,
+                                subcategory,
                                 c_doc[i].idx,
                                 None,
-                                ast.literal_eval(alternative_sing),
-                                subcategory
+                                ast.literal_eval(alternative_sing)
                             )
                         )
                         if c_doc[i-1].text == "der":
@@ -674,10 +642,10 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
                                     c_doc[i-1].text,
                                     full_text,
                                     category,
+                                    subcategory,
                                     c_doc[i-1].idx,
                                     None,
-                                    ["der~die"],
-                                    subcategory
+                                    ["der~die"]
                                 )
                             )
                         elif c_doc[i-1].text == "einer":
@@ -688,10 +656,10 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
                                     c_doc[i-1].text,
                                     full_text,
                                     category,
+                                    subcategory,
                                     c_doc[i-1].idx,
                                     None,
-                                    ["einer~eine"],
-                                    subcategory
+                                    ["einer~eine"]
                                 )
                             )
                     elif c_doc[i].morph.get("Number")[0] == "Plur":
@@ -702,6 +670,7 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
                                 c_doc[i].text,
                                 full_text,
                                 category,
+                                subcategory,
                                 c_doc[i].idx,
                                 None,
                                 ast.literal_eval(alternative_plur)
@@ -720,6 +689,7 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
                                 tokens[i].text,
                                 full_text,
                                 category,
+                                subcategory,
                                 tokens[i].idx,
                                 None,
                                 ast.literal_eval(alternative_sing)
@@ -733,10 +703,10 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
                                     tokens[i-1].text,
                                     full_text,
                                     category,
+                                    subcategory,
                                     tokens[i-1].idx,
                                     None,
-                                    ["der~die"],
-                                    subcategory
+                                    ["der~die"]
                                 )
                             )
                         elif tokens[i-1].text == "einer":
@@ -747,10 +717,10 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
                                     tokens[i-1].text,
                                     full_text,
                                     category,
+                                    subcategory,
                                     tokens[i-1].idx,
                                     None,
-                                    ["einer~eine"],
-                                    subcategory
+                                    ["einer~eine"]
                                 )
                             )
                     elif tokens[i].morph.get("Number")[0] == "Plur":
@@ -761,6 +731,7 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
                                 tokens[i].text,
                                 full_text,
                                 category,
+                                subcategory,
                                 tokens[i].idx,
                                 None,
                                 ast.literal_eval(alternative_plur)
@@ -769,17 +740,18 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
 
     return list_tokens
 
-# Boasting words and sentences analisys function, shows alternatives if avalible
+# Exaggerating words and sentences analisys function, shows alternatives if avalible
 
 
-def BoastingWordsSentences(config: Config, lang, full_text, tokens, df, df_sentences):
-    category = "boasting_words"
+def ExaggeratingWordsSentences(config: Config, lang, full_text, tokens, df, df_sentences):
+    category = "style"
+    subcategory = "exaggerating"
     list_tokens = []
     # Phrase matcher part to handle False positives with two words and special simbols
     matcher = PhraseMatcher(model[lang.locale].vocab)
 
     # Only run model.make_doc to speed things up
-    patterns = [model[lang.locale].make_doc(text) for text in terms_boast]
+    patterns = [model[lang.locale].make_doc(text) for text in terms_exaggerating]
     matcher.add("TerminologyList", patterns)
 
     for token in tokens:
@@ -792,6 +764,7 @@ def BoastingWordsSentences(config: Config, lang, full_text, tokens, df, df_sente
                         token.text,
                         full_text,
                         category,
+                        subcategory,
                         token.idx,
                         None,
                         ast.literal_eval(alternative)
@@ -810,6 +783,7 @@ def BoastingWordsSentences(config: Config, lang, full_text, tokens, df, df_sente
                         span.text,
                         full_text,
                         category,
+                        subcategory,
                         span.start_char,
                         span.end_char,
                         ast.literal_eval(alternative)
@@ -821,9 +795,10 @@ def BoastingWordsSentences(config: Config, lang, full_text, tokens, df, df_sente
 # Unified function for Emty words false positives and rules
 
 
-def EmptyWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_sentence):
-    #category = df_empty_sentences(["subcategory"])
-    category = "empty_words"
+def HollowWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_sentence):
+    #category = df_hollow_sentences(["subcategory"])
+    category = "style"
+    subcategory = "hollow"
     list_tokens = []
     list_false_positives = []
     # Phrase matcher part to handle False positives with two words and special simbols
@@ -835,13 +810,13 @@ def EmptyWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_sen
 
     for i in range(len(tokens))[1:-1]:
         # check if the user query have false positives
-        if IsItFalsePositive(tokens[i].lemma_, false_positive_empty):
+        if IsItFalsePositive(tokens[i].lemma_, false_positive_hollow):
             # recognise if there is Name of organisation or geographical name in the query
             if len(tokens.ents) > 0:
                 # this output will be deleted in production
                 list_false_positives.append({
                     "false positives": tokens[i].text,
-                    "category": "EmptyWord"
+                    "category": subcategory
                 })
             else:
                 for word, alternative in zip(df["Lemma"], df["Alternative_Singular_split"]):
@@ -854,6 +829,7 @@ def EmptyWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_sen
                                     tokens[i].text,
                                     full_text,
                                     category,
+                                    subcategory,
                                     tokens[i].idx,
                                     tokens[i].idx+len(tokens[i].text),
                                     ast.literal_eval(alternative)
@@ -869,6 +845,7 @@ def EmptyWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_sen
                                         tokens[i-1:i+1].text,
                                         full_text,
                                         category,
+                                        subcategory,
                                         tokens[i-1].idx,
                                         tokens[i-1].idx +
                                         len(tokens[i-1:i+1].text),
@@ -883,6 +860,7 @@ def EmptyWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_sen
                                         tokens[i].text,
                                         full_text,
                                         category,
+                                        subcategory,
                                         tokens[i].idx,
                                         tokens[i].idx+len(tokens[i].text),
                                         ["-"]
@@ -900,6 +878,7 @@ def EmptyWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_sen
                                 tokens[i].text,
                                 full_text,
                                 category,
+                                subcategory,
                                 tokens[i].idx,
                                 tokens[i].idx+len(tokens[i].text),
                                 ast.literal_eval(alternative)
@@ -915,6 +894,7 @@ def EmptyWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_sen
                                     tokens[i-1:i+1].text,
                                     full_text,
                                     category,
+                                    subcategory,
                                     tokens[i-1].idx,
                                     tokens[i-1].idx+len(tokens[i-1:i+1].text),
                                     ["-"]
@@ -928,6 +908,7 @@ def EmptyWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_sen
                                     tokens[i].text,
                                     full_text,
                                     category,
+                                    subcategory,
                                     tokens[i].idx,
                                     tokens[i].idx+len(tokens[i].text),
                                     ["-"]
@@ -946,6 +927,7 @@ def EmptyWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_sen
                         span.text,
                         full_text,
                         category,
+                        subcategory,
                         span.start_char,
                         span.end_char,
                         ast.literal_eval(alternative)
@@ -957,7 +939,7 @@ def EmptyWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_sen
 # Unified function for rules and sentence false positives
 
 
-def RulesBasedWordsPhraseMatcher(config: Config, lang, full_text, tokens, terms, df, category):
+def RulesBasedWordsPhraseMatcher(config: Config, lang, full_text, tokens, terms, df, category, subcategory):
     list_tokens = []
     # Phrase matcher part to handle False positives with two words and special simbols
     matcher = PhraseMatcher(model[lang.locale].vocab)
@@ -976,7 +958,10 @@ def RulesBasedWordsPhraseMatcher(config: Config, lang, full_text, tokens, terms,
                         token.text,
                         full_text,
                         category,
-                        token.idx
+                        subcategory,
+                        token.idx,
+                        None,
+                        []
                     )
                 )
 
@@ -988,10 +973,12 @@ def RulesBasedWordsPhraseMatcher(config: Config, lang, full_text, tokens, terms,
                 config,
                 lang,
                 span.text,
-                text,
+                full_text,
                 category,
+                subcategory,
                 span.start_char,
-                span.end_char
+                span.end_char,
+                []
             )
         )
 
@@ -1000,7 +987,7 @@ def RulesBasedWordsPhraseMatcher(config: Config, lang, full_text, tokens, terms,
 # Unified function for rules
 
 
-def RulesBased(config: Config, lang, full_text, tokens, df, category):
+def RulesBased(config: Config, lang, full_text, tokens, df, category, subcategory):
     list_tokens = []
     for token in tokens:
         for word in list(df["Lemma"]):
@@ -1012,7 +999,10 @@ def RulesBased(config: Config, lang, full_text, tokens, df, category):
                         token.text,
                         full_text,
                         category,
-                        token.idx
+                        subcategory,
+                        token.idx,
+                        None,
+                        []
                     )
                 )
 
@@ -1023,8 +1013,7 @@ def RulesBased(config: Config, lang, full_text, tokens, df, category):
 
 
 def MisgenderingInstitutions(config: Config, lang, full_text, tokens):
-
-    category = "gendered_roles"
+    category = "style"
     subcategory = "misgendering_institutions"
     db_match_list = []
     matcher_db = Matcher(model[lang.locale].vocab)
@@ -1042,12 +1031,12 @@ def MisgenderingInstitutions(config: Config, lang, full_text, tokens):
                 config,
                 lang,
                 span.text,
-                text,
+                full_text,
                 category,
+                subcategory,
                 span.start_char,
                 span.end_char,
-                [span.text + "in"],
-                subcategory
+                [span.text + "in"]
             )
         )
     return db_match_list
@@ -1056,7 +1045,7 @@ def MisgenderingInstitutions(config: Config, lang, full_text, tokens):
 # Rules based english function
 
 
-def RulesBasedEN(config: Config, lang, full_text, tokens, df, category):
+def RulesBasedEN(config: Config, lang, full_text, tokens, df, category, subcategory):
     list_tokens = []
 
     for token in tokens:
@@ -1069,7 +1058,10 @@ def RulesBasedEN(config: Config, lang, full_text, tokens, df, category):
                         token.text,
                         full_text,
                         category,
+                        subcategory,
                         token.idx,
+                        None,
+                        [],
                     )
                 )
 

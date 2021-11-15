@@ -3,451 +3,162 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2021-10-11 15:09\n"
-"PO-Revision-Date: 2021-10-11 15:09\n"
+"POT-Creation-Date: 2021-11-15 15:04\n"
+"PO-Revision-Date: 2021-11-15 15:04\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "rules.gendered_roles_label"
-msgstr "Geschlechtsspezifische Rollen"
+msgid "rules.gendered_label"
+msgstr "Geschlechtsspezifisch"
 
-msgid "rules.gendered_roles_reason"
+msgid "rules.gendered_reason"
+msgstr ""
+"Ausdruck oder Transport von entweder überholten geschlechtsspezifischen "
+"Rollen oder Bedeutungen oder einer binären Auffassung von Geschlecht."
+
+msgid "rules.gendered_solution"
+msgstr ""
+"Versuchen Sie, über geschlechtsspezifische Rollen hinauszudenken oder eine "
+"nicht-binäre Perspektive einzunehmen."
+
+msgid "rules.titles_label"
+msgstr "Titel"
+
+msgid "rules.titles_reason"
 msgstr ""
 "Das männliche Generikum spricht nicht alle Geschlechter oder "
 "Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den "
 "Dialog einbezogen."
 
-msgid "rules.gendered_roles_solution"
+msgid "rules.titles_solution"
 msgstr ""
 "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch "
 "andere Geschlechteridentitäten, die nicht einem binären Verständnis von "
 "Geschlecht folgen, anspricht."
 
-msgid "rules.gendered_roles_color"
-msgstr "gendered"
-
-msgid "rules.gendered_roles_hierachy_reason"
-msgstr ""
-"Dieser Begriff kommuniziert eine veraltete Hierarchievorstellung und besetzt"
-" das Thema der Führung stereotyp männlich."
-
-msgid "rules.gendered_roles_hierachy_solution"
-msgstr ""
-"Verwenden Sie Begriffe, die von einer unterstützenden Vorstellung der "
-"Führung ausgeht und verschiedene Geschlechter meinen kann."
-
-msgid "rules.gendered_roles_hierachy_color"
-msgstr "gendered"
-
-msgid "rules.gendered_roles_image_reason"
-msgstr ""
-"Dieser Begriff verbirgt eine nicht geschlechtsneutrale Form und ruft daher "
-"männlich konnotierte Bilder vor unserem inneren Auge auf."
-
-msgid "rules.gendered_roles_image_solution"
-msgstr ""
-"Verwenden Sie Alternativen, die geschlechtsneutral sind und gleichzeitig "
-"Doppelnennungen vermeiden."
-
-msgid "rules.gendered_roles_image_color"
-msgstr "gendered"
-
-msgid "rules.gendered_denominations_reason"
-msgstr ""
-"Aus wirtschaftlich-historischen Gründen wird unbewusst ein Bild eines Mannes"
-" vor dem inneren Auge hervorgerufen. Das weibliche Geschlecht oder andere "
-"Geschlechtsidentitäten werden also nicht sichtbar. Und sie fühlen sich nicht"
-" zugehörig. "
-
-msgid "rules.gendered_denominations_solution"
-msgstr ""
-"Umgehen Sie mit anderen Worten das unbewusst hervorgerufene Bild. Nutzen Sie"
-" eher das Nomen, das die Tätigkeit bezeichnet, um das unbewusste Bild zu "
-"umgehen. Oder verwenden Sie eine geschlechtsneutrale Bezeichnung."
-
-msgid "rules.gendered_denominations_color"
-msgstr "gendered"
+msgid "rules.gendered_denominations_ending_label"
+msgstr "Inklusive Endung"
 
 msgid "rules.gendered_denominations_ending_reason"
-msgstr ""
-"Eine konsistente Schreibweise wird als vertrausvoller wargenommen und hilft "
-"beim Lesen."
+msgstr "Konsistente Schreibweise ist vertrauenserweckender."
 
 msgid "rules.gendered_denominations_ending_solution"
 msgstr ""
-"Zur Konsistenz bitte \"%gendered_denominations_ending\" verwenden, um "
-"geschlechter inklusive zu schreiben."
+"Nutzen Sie den Genderstern oder -doppelpunkt, um durchgehend inklusiv zu "
+"sein."
 
-msgid "rules.gendered_denominations_ending_color"
-msgstr "style"
+msgid "rules.style_label"
+msgstr "Stil"
 
-msgid "rules.gendered_language_label"
-msgstr "Geschlechtsspezifische Sprache"
-
-msgid "rules.gendered_language_reason"
+msgid "rules.style_reason"
 msgstr ""
-"Aus wirtschaftlich-historischen Gründen wird unbewusst ein Bild eines Mannes"
-" vor dem inneren Auge hervorgerufen. Das weibliche Geschlecht oder andere "
-"Geschlechtsidentitäten werden nicht sichtbar. Und sie fühlen sich nicht "
-"zugehörig. "
+"Schwierig verständlich oder begrenzt die Nahbarkeit und Emotionalität."
 
-msgid "rules.gendered_language_solution"
+msgid "rules.style_solution"
 msgstr ""
-"Umgehen Sie mit anderen Worten das unbewusst hervorgerufene Bild. Nutzen Sie"
-" eher das Nomen, das die Tätigkeit bezeichnet, um das unbewusste Bild zu "
-"umgehen. Oder verwenden Sie eine geschlechtsneutrale Bezeichnung."
+"Formulieren Sie einfacher; versuchen Sie, mehr Emotionalität einzubringen."
 
-msgid "rules.gendered_language_color"
-msgstr "gendered"
+msgid "rules.misgendering_institutions_label"
+msgstr "Geschlecht von Institutionen"
 
-msgid "rules.agentic_language_label"
-msgstr "Agentische Sprache"
-
-msgid "rules.agentic_language_reason"
+msgid "rules.misgendering_institutions_reason"
 msgstr ""
-"Dieser Begriff ist agentisch und beschreibt Eigenschaften, die das männliche"
-" Stereotyp als Norm erklären. Menschen, die diesem Stereotyp nicht "
-"entsprechen (Frauen, sowie andere unterrepräsentierte Gruppen), fühlen sich "
-"durch dieses Wort unbewusst ausgeschlossen."
+"Sind Institutionen weiblich, dann werden auch sich darauf beziehende Nomen "
+"weiblich formuliert."
 
-msgid "rules.agentic_language_solution"
+msgid "rules.misgendering_institutions_solution"
+msgstr "Wählen Sie die grammatikalisch richtige Form."
+
+msgid "rules.unconscious_bias_label"
+msgstr "Sprachliche Voreingenommenheit"
+
+msgid "rules.unconscious_bias_reason"
 msgstr ""
-"Verwenden Sie eine Wortkombination, die teamorientierter klingt und auf den "
-"Sinn in der Arbeit Bezug nimmt."
+"Überholtes und vielleicht sogar diskriminierendes Stereotyp, das Mitglieder "
+"der betroffenen sozialen Gruppe in Schubladen steckt."
 
-msgid "rules.agentic_language_color"
-msgstr "non-inclusive"
-
-msgid "rules.communal_language_label"
-msgstr "Kommunale Sprache"
-
-msgid "rules.communal_language_reason"
+msgid "rules.unconscious_bias_solution"
 msgstr ""
-"Dieser Begriff bedient sich der kommunalen Sprache und hebt kooperative "
-"Charakteristiken und somit inklusive Attribute hervor. Menschen mit diversem"
-" Hintergrund werden sich durch dieses Wort unbewusst angezogen fühlen. "
+"Fragen Sie sich: \"Was würde ich schreiben, wenn diese Person aus einer "
+"starken sozialen Gruppe stammt?\""
 
-msgid "rules.communal_language_solution"
+msgid "rules.agentic_label"
+msgstr "Agentisch"
+
+msgid "rules.agentic_reason"
 msgstr ""
-"Verwenden Sie mehr solcher Wörter oder Formulierungen, die Kooperation, "
-"Sorgfalt/Pflege oder Sinnhaftigkeit zum Ausdruck bringen."
+"Unbewusst dem männlichen Geschlecht zugeschrieben. Viele werden davon "
+"abgestossen."
 
-msgid "rules.communal_language_color"
-msgstr "inclusive"
-
-msgid "rules.d_and_i_words_label"
-msgstr "Inklusive Wörter"
-
-msgid "rules.d_and_i_words_reason"
+msgid "rules.agentic_solution"
 msgstr ""
-"Dieser Begriff beschreibt im Guten, dass das Unternehmen Wert auf Diversität"
-" und/oder Inklusion legt. Eine solch öffentliche Stellungnahme wird von "
-"unterrepräsentierten Gruppen geschätzt."
+"Teamorientierte Formulierung nutzen oder auf Sinnhaftigkeit einzahlend."
 
-msgid "rules.d_and_i_words_solution"
+msgid "rules.inclusive_label"
+msgstr "Inklusiv"
+
+msgid "rules.inclusive_reason"
+msgstr ""
+"Wortwahl, mit der Menschen sich ermutigt fühlen und ein Zugehörigkeitsgefühl"
+" entwickeln."
+
+msgid "rules.inclusive_solution"
+msgstr ""
+"Verwenden Sie mehr solcher Formulierungen, um Kooperation, Unterstützung, "
+"Sinnhaftigkeit und das Ziel von Diversität und Inklusion auszudrücken."
+
+msgid "rules.communal_label"
+msgstr "Kommunal"
+
+msgid "rules.communal_reason"
+msgstr ""
+"Betont kooperative, mitfühlende oder unterstützende Eigenschaften und damit "
+"inklusive Attribute."
+
+msgid "rules.communal_solution"
+msgstr ""
+"Verwenden Sie mehr solcher Formulierungen, um Kooperation, Unterstützung "
+"oder Sinnhaftigkeit auszudrücken."
+
+msgid "rules.d_and_i_label"
+msgstr "Diversität & Inklusion"
+
+msgid "rules.d_and_i_reason"
+msgstr ""
+"Beschreibt, dass auf Diversität und Inklusion Wert gelegt. Als öffentliche "
+"Stellungnahme wird dies von unterrepräsentierten Gruppen geschätzt."
+
+msgid "rules.d_and_i_solution"
 msgstr ""
 "Machen Sie durch Ihre Worte klar, wenn möglich, dass in Ihrem Unternehmen "
-"Diversität erwünscht ist und Sie auf eine inklusive Kultur hin arbeiten. "
+"Diversität erwünscht ist und Sie auf eine inklusive Kultur hin arbeiten."
 
-msgid "rules.d_and_i_words_color"
-msgstr "inclusive"
+msgid "rules.hollow_label"
+msgstr "Worthülsen"
 
-msgid "rules.empty_words_label"
-msgstr "Worthülse"
-
-msgid "rules.empty_words_reason"
+msgid "rules.hollow_reason"
 msgstr ""
-"Dies ist ein Begriff, der zur Worthülse wurde, da er im Geschäftsumfeld "
-"überstrapaziert wurde. "
+"Ist eine Worthülse, da die Formulierung im Geschäftsumfeld überstrapaziert "
+"wurde."
 
-msgid "rules.empty_words_solution"
+msgid "rules.hollow_solution"
 msgstr ""
 "Vermeiden Sie dieses Wort. Erklären Sie stattdessen die Situation in einer "
 "fassbaren und anschaulichen Weise."
 
-msgid "rules.empty_words_color"
-msgstr "style"
+msgid "rules.exaggerating_label"
+msgstr "Superlative"
 
-msgid "rules.salary_vague_or_misleading_reason"
-msgstr "Missing"
-
-msgid "rules.salary_vague_or_misleading_solution"
-msgstr "Missing"
-
-msgid "rules.salary_vague_or_misleading_color"
-msgstr "style"
-
-msgid "rules.verbose_reason"
-msgstr "Missing"
-
-msgid "rules.verbose_solution"
-msgstr "Missing"
-
-msgid "rules.verbose_color"
-msgstr "style"
-
-msgid "rules.vague_ambiguous_reason"
-msgstr "Missing"
-
-msgid "rules.vague_ambiguous_solution"
-msgstr "Missing"
-
-msgid "rules.vague_ambiguous_color"
-msgstr "style"
-
-msgid "rules.boasting_words_label"
-msgstr "Superlative Wörter"
-
-msgid "rules.boasting_words_reason"
+msgid "rules.exaggerating_reason"
 msgstr ""
-"Mit diesem Begriff nutzen Sie eine Sprache der Superlative. Viele Menschen "
-"empfinden dies als negativ, da der Eindruck entsteht, sich im Sinne der "
-"Superlative anpassen zu müssen."
+"Kommuniziert, dass sich Menschen sich im Sinne der Superlative anpassen "
+"müssen."
 
-msgid "rules.boasting_words_solution"
+msgid "rules.exaggerating_solution"
 msgstr "Verwenden Sie eine authentisch und ehrlich klingende Aussage."
-
-msgid "rules.boasting_words_color"
-msgstr "style"
-
-msgid "rules.gendered_pronouns_label"
-msgstr "Geschlechtsspezifische Pronomen"
-
-msgid "rules.gendered_pronouns_reason"
-msgstr ""
-"Gemäss den linguistischen Vorgaben meinen männliche Pronomen alle Personen "
-"zu bezeichnen. Aus der Verhaltensökonomie geht jedoch hervor, dass dies "
-"nicht funktioniert. Frauen oder non-binäre Menschen fühlen sich durch das "
-"\"männliche Generikum\" nicht adressiert und ihr Engagement sinkt."
-
-msgid "rules.gendered_pronouns_solution"
-msgstr ""
-"Nutzen Sie möglichst die direkte Ansprache (Du oder das höfliche Sie). So "
-"ist der Text emotionaler und der geschlechtliche Falsch-Auslöser aus dem Weg"
-" geräumt. Falls Sie in der dritten Person schreiben müssen, verwenden Sie "
-"die Mehrzahl \"sie\". "
-
-msgid "rules.gendered_pronouns_color"
-msgstr "gendered"
-
-msgid "rules.stereotypes_label"
-msgstr "Stereotypen"
-
-msgid "rules.stereotypes_reason"
-msgstr ""
-"Dieser Ausdruck verwendet ein veraltetes und vielleicht sogar "
-"diskriminierendes Stereotyp, das Mitglieder der betroffenen sozialen Gruppe "
-"in Schubladen steckt und ihre Entfaltung behindert.  "
-
-msgid "rules.stereotypes_solution"
-msgstr ""
-"Stellen Sie sich eine \"Flip it\"-Frage, z. B. \"Würde ich das Gleiche "
-"schreiben, wenn diese Person weiß / jung / männlich / reich usw. wäre?\" "
-"Dies löst einen mentalen Prozess aus, der Ihnen zu einer besseren "
-"Formulierung verhilft."
-
-msgid "rules.stereotypes_color"
-msgstr "discriminating"
-
-msgid "rules.gendered_stereotypes_label"
-msgstr "Geschlechtsspezifische Stereotypen"
-
-msgid "rules.gendered_stereotypes_reason"
-msgstr ""
-"Die ausschliessliche Nutzung der weiblichen Form in Bezug auf gewisse "
-"Tätigkeiten hält Frauen in veralteten Stereotypen gefangen und hindert sie "
-"an der freien Entfaltung. Dies ist diskriminierend für Frauen UND Männer "
-"sowie non-binären Menschen."
-
-msgid "rules.gendered_stereotypes_solution"
-msgstr ""
-"Stellen Sie sich eine \"Flip it\"-Frage, z. B. \"Würde ich das Gleiche "
-"schreiben, wenn diese Person männlich wäre?\" Dies löst einen mentalen "
-"Prozess aus, der Ihnen zu einer besseren Formulierung verhilft."
-
-msgid "rules.gendered_stereotypes_color"
-msgstr "gendered"
-
-msgid "rules.biased_language_label"
-msgstr "Voreingenommene Sprache"
-
-msgid "rules.biased_language_reason"
-msgstr ""
-"Dieser Ausdruck verwendet ein veraltetes und vielleicht sogar "
-"diskriminierendes Stereotyp, das Mitglieder der betroffenen sozialen Gruppe "
-"in Schubladen steckt und ihre Entfaltung behindert.  "
-
-msgid "rules.biased_language_solution"
-msgstr ""
-"Stellen Sie sich eine \"Flip it\"-Frage, z. B. \"Würde ich das Gleiche "
-"schreiben, wenn diese Person weiß / jung / männlich / reich usw. wäre?\" "
-"Dies löst einen mentalen Prozess aus, der Ihnen zu einer besseren "
-"Formulierung verhilft."
-
-msgid "rules.biased_language_color"
-msgstr "discriminating"
-
-msgid "rules.ability_bias_reason"
-msgstr ""
-"Dieser Ausdruck verwendet ein veraltetes und vielleicht sogar "
-"diskriminierendes Stereotyp, das Menschen mit Beeinträchtigungen (physisch "
-"oder mental) in Schubladen steckt und ihre Entfaltung behindert.  "
-
-msgid "rules.ability_bias_solution"
-msgstr ""
-"Stellen Sie sich die \"Flip it\"-Frage \"Würde ich das Gleiche schreiben, "
-"wenn diese Person keine Beeinträchtigung hätte?\" Dies löst einen mentalen "
-"Prozess aus, der Ihnen zu einer besseren Formulierung verhilft."
-
-msgid "rules.ability_bias_color"
-msgstr "discriminating"
-
-msgid "rules.age_bias_old_reason"
-msgstr ""
-"Dieser Ausdruck verwendet ein veraltetes und vielleicht sogar "
-"diskriminierendes Stereotyp, das Menschen ab 50 Jahren in Schubladen steckt "
-"und ihre Entfaltung behindert.  "
-
-msgid "rules.age_bias_old_solution"
-msgstr ""
-"Stellen Sie sich die \"Flip it\"-Frage \"Würde ich das Gleiche schreiben, "
-"wenn diese Person 35 Jahre alt wäre?\" Dies löst einen mentalen Prozess aus,"
-" der Ihnen zu einer besseren Formulierung verhilft."
-
-msgid "rules.age_bias_old_color"
-msgstr "discriminating"
-
-msgid "rules.age_bias_young_reason"
-msgstr ""
-"Dieser Ausdruck verwendet ein veraltetes und vielleicht sogar "
-"diskriminierendes Stereotyp, das Menschen unter 25 Jahren in Schubladen "
-"steckt und ihre Entfaltung behindert.  "
-
-msgid "rules.age_bias_young_solution"
-msgstr ""
-"Stellen Sie sich die \"Flip it\"-Frage \"Würde ich das Gleiche schreiben, "
-"wenn diese Person 35 Jahre alt wäre?\" Dies löst einen mentalen Prozess aus,"
-" der Ihnen zu einer besseren Formulierung verhilft."
-
-msgid "rules.age_bias_young_color"
-msgstr "discriminating"
-
-msgid "rules.culture_bias_reason"
-msgstr ""
-"Dieser Ausdruck verwendet ein veraltetes und vielleicht sogar "
-"diskriminierendes Stereotyp, das Menschen einer anderen Kultur in Schubladen"
-" steckt und ihre Entfaltung behindert.  "
-
-msgid "rules.culture_bias_solution"
-msgstr ""
-"Stellen Sie sich die \"Flip it\"-Frage \"Würde ich das Gleiche schreiben, "
-"wenn diese Person die gleiche Nationalität/Kultur wie ich hätte?\" Dies löst"
-" einen mentalen Prozess aus, der Ihnen zu einer besseren Formulierung "
-"verhilft."
-
-msgid "rules.culture_bias_color"
-msgstr "discriminating"
-
-msgid "rules.migration_background_bias_reason"
-msgstr ""
-"Dieser Ausdruck kann für Menschen mit Migrationshintergrund schwer "
-"verständlich sein, da sie eventuell gewisse Redewendungen oder bürokratische"
-" Sprache nicht verstehen. "
-
-msgid "rules.migration_background_bias_solution"
-msgstr ""
-"Formulieren Sie den Ausdruck neu in einer Fremdsprache, in der Sie sich nur "
-"in bescheidenem Masse ausdrücken können. Übersetzen Sie dann diese Version."
-
-msgid "rules.migration_background_bias_color"
-msgstr "discriminating"
-
-msgid "rules.anti_lgtbqiplus_bias_reason"
-msgstr ""
-"Dieser Ausdruck beschreibt ein veraltetes und vielleicht sogar "
-"diskriminierendes Verständnis des Geschlechts oder der sexuellen "
-"Orientierung, das LGBTQIA+ Menschen in Schubladen steckt und ihre Entfaltung"
-" behindert.  "
-
-msgid "rules.anti_lgtbqiplus_bias_solution"
-msgstr ""
-"Stellen Sie sich die \"Flip it\"-Frage \"Würde ich das Gleiche schreiben, "
-"wenn diese Person männlich bzw. weiblich oder heterosexuell wäre?\" Dies "
-"löst einen mentalen Prozess aus, der Ihnen zu einer besseren Formulierung "
-"verhilft."
-
-msgid "rules.anti_lgtbqiplus_bias_color"
-msgstr "discriminating"
-
-msgid "rules.classism_bias_reason"
-msgstr ""
-"Dieser Ausdruck kann für Menschen - aufgrund ihrer Bildung oder ihren "
-"wirtschaftlichen Möglichkeiten - arrogant oder unverständlich wirken, da sie"
-" diese Wortkombination den höheren sozialen Klassen zuordnen. "
-
-msgid "rules.classism_bias_solution"
-msgstr ""
-"Formulieren Sie den Ausdruck neu, um ihn in Komplexität zu reduzieren. Dies "
-"macht den Text lesbarer. "
-
-msgid "rules.classism_bias_color"
-msgstr "discriminating"
-
-msgid "rules.phrases_label"
-msgstr ""
-
-msgid "rules.phrases_reason"
-msgstr "Missing"
-
-msgid "rules.phrases_solution"
-msgstr "Missing"
-
-msgid "rules.phrases_color"
-msgstr "discriminating"
-
-msgid "rules.old_language_reason"
-msgstr ""
-"Diese Wortkombination ist jungen Menschen vielleicht nicht mehr bekannt, da "
-"sich Sprache immer weiter entwickelt. "
-
-msgid "rules.old_language_solution"
-msgstr ""
-"Reflektieren Sie, ob diese Redewendung ausserhalb ihrer Altersgruppe noch in"
-" Gebrauch ist. Falls nicht, versuchen Sie deren Bedeutung anders zu "
-"formulieren."
-
-msgid "rules.old_language_color"
-msgstr "style"
-
-msgid "rules.new_language_reason"
-msgstr ""
-"Diese Wortkombination ist älteren Generationen vielleicht nicht "
-"verständlich, da Sprache vor allem bei jungen Generationen stets neu "
-"entsteht."
-
-msgid "rules.new_language_solution"
-msgstr ""
-"Reflektieren Sie, ob diese Redewendung ausserhalb ihrer Altersgruppe noch in"
-" Gebrauch ist. Falls nicht, versuchen Sie deren Bedeutung anders zu "
-"formulieren."
-
-msgid "rules.new_language_color"
-msgstr "style"
-
-msgid "rules.job_requirements_bias_label"
-msgstr "Voreingenommene Anforderungen"
-
-msgid "rules.job_requirements_bias_reason"
-msgstr ""
-
-msgid "rules.job_requirements_bias_solution"
-msgstr ""
-
-msgid "rules.job_requirements_bias_color"
-msgstr "discriminating"
 
 msgid "rules.orthography_label"
 msgstr "Orthographie"
@@ -460,74 +171,11 @@ msgstr ""
 msgid "rules.orthography_solution"
 msgstr "Use LanguageTool \"message\" as the solution"
 
-msgid "rules.orthography_color"
-msgstr "style"
-
-msgid "rules.requirements_overload_reason"
-msgstr ""
-
-msgid "rules.requirements_overload_solution"
-msgstr ""
-
-msgid "rules.requirements_overload_color"
-msgstr "discriminating"
-
-msgid "rules.education_biased_requirements_reason"
-msgstr ""
-
-msgid "rules.education_biased_requirements_solution"
-msgstr ""
-
-msgid "rules.education_biased_requirements_color"
-msgstr "discriminating"
-
-msgid "rules.workload_biased_requirements_reason"
-msgstr ""
-
-msgid "rules.workload_biased_requirements_solution"
-msgstr ""
-
-msgid "rules.workload_biased_requirements_color"
-msgstr "discriminating"
-
-msgid "rules.ethnicity_biased_requirements_reason"
-msgstr ""
-
-msgid "rules.ethnicity_biased_requirements_solution"
-msgstr ""
-
-msgid "rules.ethnicity_biased_requirements_color"
-msgstr "discriminating"
-
-msgid "rules.age_biased_requirements_reason"
-msgstr ""
-
-msgid "rules.age_biased_requirements_solution"
-msgstr ""
-
-msgid "rules.age_biased_requirements_color"
-msgstr "discriminating"
-
 msgid "rules.corporate_rules_label"
-msgstr "Firmenrichtlinie"
+msgstr "Firmenleitlinie"
 
 msgid "rules.corporate_rules_reason"
 msgstr "We always use subcategories here and so no need to fill anything in."
 
 msgid "rules.corporate_rules_solution"
 msgstr "We always use subcategories here and so no need to fill anything in."
-
-msgid "rules.corporate_rules_color"
-msgstr "style"
-
-msgid "rules.mixing_english_label"
-msgstr "Denglish"
-
-msgid "rules.mixing_english_reason"
-msgstr "Missing"
-
-msgid "rules.mixing_english_solution"
-msgstr "Missing"
-
-msgid "rules.mixing_english_color"
-msgstr "non-inclusive"

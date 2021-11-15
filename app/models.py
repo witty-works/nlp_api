@@ -92,6 +92,7 @@ class ResultOut(BaseModel):
     text: str
     context: str
     category: str
+    subcategory: str
     start: int
     end: int
     alternatives: List[str]
@@ -99,7 +100,7 @@ class ResultOut(BaseModel):
     reason: str
     solution: str
 
-    def factory(config: Config, lang: Lang, text, full_text, category, start, end = None, alternatives = [], subcategory = None, label = None, reason = None, solution = None):
+    def factory(config: Config, lang: Lang, text, full_text, category, subcategory, start, end = None, alternatives = [], label = None, reason = None, solution = None):
         if end == None:
             end = start + len(text)
 
@@ -110,16 +111,14 @@ class ResultOut(BaseModel):
         else:
             context = ""
 
-        if subcategory == None:
-            subcategory = category
-        elif category == "empty_words":
-            subcategory = "empty_words"
-
         params = {}
         if subcategory == "gendered_denominations_ending":
             params["gendered_denominations_ending"] = config.german_gender_ending
 
         label = label if label != None else lang._("rules." + category + "_label")
+        if category != subcategory:
+            label+= ": " + lang._("rules." + subcategory + "_label")
+
         reason = reason if reason != None else lang._("rules." + subcategory + "_reason", params)
         solution = solution if solution != None else lang._("rules." + subcategory + "_solution", params)
 
@@ -141,18 +140,15 @@ class ResultOut(BaseModel):
                 else:
                     alternatives[key] = str(variants[0]) + config.german_gender_ending[0:-2] + str(variants[1])
 
-        # TODO remove as soon as the browser extension can handle the "orthography" and "corporate_rules" category
-        if category == "orthography" or category == "corporate_rules":
-            category = subcategory = "empty_words"
-
-        return ResultOut(text, context, category, start, end, alternatives, label, reason, solution)
+        return ResultOut(text, context, category, subcategory, start, end, alternatives, label, reason, solution)
 
     factory = staticmethod(factory)
 
-    def __init__(self, text, context, category, start, end, alternatives, label, reason, solution):
+    def __init__(self, text, context, category, subcategory, start, end, alternatives, label, reason, solution):
         object.__setattr__(self, 'text', text)
         object.__setattr__(self, 'context', context)
         object.__setattr__(self, 'category', category)
+        object.__setattr__(self, 'subcategory', subcategory)
         object.__setattr__(self, 'start', start)
         object.__setattr__(self, 'end', end)
         object.__setattr__(self, 'alternatives', alternatives)

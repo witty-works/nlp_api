@@ -177,9 +177,3 @@ Export to CSV
 ```
 pipenv run python -m update_locales -i [CSV export]]
 ```
-
-## Update the browser extension
-
-```
-rsync -avz files/* "$(platform ssh -e main --pipe)":files/.
-```
