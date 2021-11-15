@@ -71,7 +71,7 @@ settings = get_settings()
 # convert string of list into list of the strings
 # project models
 
-version = "1.3.1"
+version = "1.4.0"
 
 app = FastAPI(
     title="Witty NLP API",
