@@ -1,4 +1,4 @@
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.9
 RUN pip install --upgrade pip
 RUN groupadd -g 999 wittyuser && \
     useradd --create-home -r -u 999 -g wittyuser wittyuser
