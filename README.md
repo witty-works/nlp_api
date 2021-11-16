@@ -13,7 +13,7 @@ This project has two key dependencies:
 
 ---
 
-# Installation instructions (with python3.8)
+# Installation instructions (with python3.9)
 
 ## using Docker
 
@@ -37,8 +37,8 @@ docker run  -p 8000:8000 --name nlp --network "bridge" --env languagetool_api=ht
 
 ```
 pipenv install --dev
-pipenv run python3.8 -m spacy download en_core_web_sm
-pipenv run python3.8 -m spacy download de_core_news_sm
+pipenv run python3.9 -m spacy download en_core_web_sm
+pipenv run python3.9 -m spacy download de_core_news_sm
 ```
 
 ## using virtual environment (venv)
@@ -46,9 +46,9 @@ pipenv run python3.8 -m spacy download de_core_news_sm
 ```
 python -m venv /path/to/new/virtual/environment
 source /path/to/new/virtual/environment/bin/active
-python3.8 -m pip install -r requirements.txt
-python3.8 -m spacy download en_core_web_sm
-python3.8 -m spacy download de_core_news_sm
+python3.9 -m pip install -r requirements.txt
+python3.9 -m spacy download en_core_web_sm
+python3.9 -m spacy download de_core_news_sm
 ```
 
 Compile PO files (done automatically during deployment and above pot/po file generation)
