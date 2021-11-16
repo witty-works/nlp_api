@@ -46,4 +46,3 @@ relationships:
 variables:
     env:
         BLACKFIRE_AGENT_SOCKET: 'unix:///run/blackfire.sock'
-        BLACKFIRE_LOG_FILE: '/tmp/blackfire.log'
