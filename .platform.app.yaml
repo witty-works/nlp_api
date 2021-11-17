@@ -17,7 +17,8 @@ web:
     socket_family: unix
   commands:
     start: |
-      gunicorn app.main:app -b unix:$SOCKET -w ${WORKERS} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
+      [ $PLATFORM_ENVIRONMENT_TYPE == "development" ] && WORKERS="6" || WORKERS="$(jq ".info.limits.memory / 250 | tonumber | floor" /run/config.json)"
+      blackfire-python gunicorn app.main:app -b unix:$SOCKET -w ${WORKERS} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
   locations:
     '/':
       passthru: true
@@ -34,6 +35,7 @@ hooks:
   build: |
     set -e
     pipenv install --system --deploy
+    pipenv run /opt/python/3.9/bin/python3.9 -m pip install blackfire==1.8.0
     pipenv run /opt/python/3.9/bin/python3.9 -m spacy download en_core_web_sm
     pipenv run /opt/python/3.9/bin/python3.9 -m spacy download de_core_news_sm
     pipenv run pybabel compile -d locales -l de_DE -f
@@ -41,3 +43,8 @@ hooks:
 
 relationships:
   languagetool: "languagetool:http"
+
+variables:
+    env:
+        BLACKFIRE_AGENT_SOCKET: 'unix:///run/blackfire.sock'
+        BLACKFIRE_LOG_FILE: '/tmp/blackfire.log'

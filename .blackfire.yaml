@@ -1,0 +1,13 @@
+name "Check Performance Regression"
+
+# Default endpoint
+# Can be override with option "--endpoint=http://newendpoint.com"
+endpoint "https://api.witty.works/"
+
+scenario
+    name "Check"
+
+    visit url('/check')
+        method 'POST'
+        param text "Halo, lieber Kunde!"
+        json true
