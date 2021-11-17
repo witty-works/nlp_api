@@ -1,0 +1,31 @@
+on: [push]
+name: Build a Docker image and Push it to ACR
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+      
+      # build nlp api
+      - run: |
+          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:${{ github.sha }}
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:${{ github.sha }}
+          # release version
+          docker tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:${{ github.sha }} ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:${{ github.ref_name }}
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:${{ github.ref_name }}
+
+      # build languagetool
+      - run: |
+          cd languagetool
+          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/languagetool:${{ github.sha }}
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/languagetool:${{ github.sha }}
+          # release version
+          docker tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/languagetool:${{ github.sha }} ${{ secrets.REGISTRY_LOGIN_SERVER }}/languagetool:${{ github.ref_name }}
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/languagetool:${{ github.ref_name }}
+
