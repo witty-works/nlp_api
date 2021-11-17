@@ -13,6 +13,9 @@ RUN chmod +x /entrypoint.sh
 ENV PORT 8000
 EXPOSE 8000
 
+# the percentage of heap size to use for languagetool
+ENV HEAP_PERCENTAGE 80 
+
 USER languagetool
 
 CMD [ "bash", "/entrypoint.sh" ]
