@@ -16,6 +16,6 @@ jobs:
           docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:${{ github.sha }}
           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:${{ github.sha }}
           # release version
-          docker tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:${{ github.sha }} ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:${{ env.GITHUB_REF_NAME }}
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:${{ env.GITHUB_REF_NAME }}
+          docker tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:${{ github.sha }} ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:${{ github.ref_name }}
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:${{ github.ref_name }}
 
