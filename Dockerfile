@@ -19,7 +19,7 @@ USER wittyuser
 WORKDIR /home/wittyuser
 ENV APP_MODULE=app.main:app
 # app service in azure allows access to containers via localhost
-ENV LANGUAGETOOL_API=http://localhost:8088 
+ENV LANGUAGETOOL_API=http://localhost:8000 
 ENV WORKERS=6
 COPY --chown=wittyuser:wittyuser requirements.txt requirements.txt
 ENV PATH="/home/wittyuser/.local/bin:${PATH}"
@@ -31,11 +31,16 @@ COPY --chown=wittyuser:wittyuser . .
 RUN pybabel compile -d locales -l de_DE -f \
   && pybabel compile -d locales -l en_GB -f
 
+# azure app services needs port 80 or 8080 exposed
+ENV PORT 8080
+EXPOSE 8080 
+
 USER root
 # setup custom entrypoint to allow the start of sshd as root
 # and the start of gunicorn as wittyuser
 COPY ops/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
-EXPOSE 80 2222
+# app services need the port 2222 exposed for ssh access
+EXPOSE 2222
 
 CMD [ "/entrypoint.sh" ]

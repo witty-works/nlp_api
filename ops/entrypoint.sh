@@ -8,7 +8,7 @@ set -e
 gosu wittyuser \
     gunicorn \
         app.main:app \
-        -b 0.0.0.0:8000 \
-        -w $WORKERS \
+        -b 0.0.0.0:${PORT} \
+        -w ${WORKERS} \
         -k uvicorn.workers.UvicornWorker \
         --forwarded-allow-ips="*"

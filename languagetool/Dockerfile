@@ -10,8 +10,8 @@ COPY --chown=languagetool server.properties /LanguageTool
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-ENV PORT 8088
-EXPOSE 8088
+ENV PORT 8000
+EXPOSE 8000
 
 USER languagetool
 
