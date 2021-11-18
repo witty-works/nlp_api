@@ -19,7 +19,7 @@ USER wittyuser
 WORKDIR /home/wittyuser
 ENV APP_MODULE=app.main:app
 # app service in azure allows access to containers via localhost
-ENV LANGUAGETOOL_API=http://localhost:8000 
+ENV LANGUAGETOOL_API=http://languagetool:8000 
 ENV WORKERS=6
 COPY --chown=wittyuser:wittyuser requirements.txt requirements.txt
 ENV PATH="/home/wittyuser/.local/bin:${PATH}"

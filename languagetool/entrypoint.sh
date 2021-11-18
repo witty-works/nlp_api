@@ -5,6 +5,11 @@ set -e
 avail_mem=$(free -m | awk '/Mem:/ {print $2}')
 heap=$(echo -n "${avail_mem}/100*${HEAP_PERCENTAGE}" | bc)
 
+echo "==== initializing language tool ===="
+echo "Found available memory: ${avail_mem}"
+echo "Calculated heap size (by percentage ${HEAP_PERCENTAGE}): ${heap}" 
+echo ""
+
 java -noverify \
     -Xms${heap}M \
     -Xmx${heap}M \
