@@ -79,6 +79,7 @@ class RequestIn(BaseModel):
     text: str
     lang: Optional[LangWithAutoType] = "auto"
     id: Optional[str] = None
+    client: Optional[str] = None
     config: Optional[Config] = Config()
 
 class RequestInEvent(RequestIn):
