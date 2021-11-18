@@ -1,18 +1,46 @@
 FROM tiangolo/uvicorn-gunicorn-fastapi:python3.9
+
+# setup ssh for app service ssh connection
+RUN apt-get update \
+    && apt-get install -y openssh-server gosu \
+    && echo "root:Docker!" | chpasswd
+
+COPY ops/sshd_config /etc/ssh/
+RUN mkdir -p /tmp
+COPY ops/ssh_setup.sh /tmp
+RUN chmod +x /tmp/ssh_setup.sh \
+    && (sleep 1;/tmp/ssh_setup.sh 2>&1 > /dev/null)
+
+# setup nlp api
 RUN pip install --upgrade pip
 RUN groupadd -g 999 wittyuser && \
     useradd --create-home -r -u 999 -g wittyuser wittyuser
 USER wittyuser
 WORKDIR /home/wittyuser
 ENV APP_MODULE=app.main:app
-ENV LANGUAGETOOL_API=https://lt.api.witty.works/v2 
+# app service in azure allows access to containers via localhost
+ENV LANGUAGETOOL_API=http://languagetool:8000/v2 
 ENV WORKERS=6
 COPY --chown=wittyuser:wittyuser requirements.txt requirements.txt
 ENV PATH="/home/wittyuser/.local/bin:${PATH}"
 RUN pip install -r requirements.txt --user
-RUN mkdir files
-RUN spacy download en_core_web_sm
-RUN spacy download de_core_news_sm
+RUN mkdir files \
+  && spacy download en_core_web_sm \
+  && spacy download de_core_news_sm
 COPY --chown=wittyuser:wittyuser . .
-CMD gunicorn app.main:app -b 0.0.0.0:8000 -w $WORKERS -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
+RUN pybabel compile -d locales -l de_DE -f \
+  && pybabel compile -d locales -l en_GB -f
 
+# azure app services needs port 80 or 8080 exposed
+ENV PORT 8080
+EXPOSE 8080 
+
+USER root
+# setup custom entrypoint to allow the start of sshd as root
+# and the start of gunicorn as wittyuser
+COPY ops/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+# app services need the port 2222 exposed for ssh access
+EXPOSE 2222
+
+CMD [ "/entrypoint.sh" ]
