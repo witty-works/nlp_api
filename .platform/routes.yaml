@@ -2,6 +2,10 @@
   type: upstream
   upstream: "app:http"
 
+"https://default.{default}/":
+  type: upstream
+  upstream: "app:http"
+
 "https://lt.{default}/":
     type: upstream
     upstream: "languagetool:http"
