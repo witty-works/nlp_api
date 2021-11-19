@@ -2,7 +2,7 @@ name "Check Performance Regression"
 
 # Default endpoint
 # Can be override with option "--endpoint=http://newendpoint.com"
-endpoint "https://api.witty.works/"
+endpoint "https://default.api.witty.works/"
 
 scenario
     name "Check"
