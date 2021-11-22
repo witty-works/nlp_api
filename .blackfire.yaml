@@ -1,13 +1,11 @@
-name "Check Performance Regression"
+scenarios: |
+    #!blackfire-player
 
-# Default endpoint
-# Can be override with option "--endpoint=http://newendpoint.com"
-endpoint "https://default.api.witty.works/"
+    scenario
+        name "Check Performance Regression"
 
-scenario
-    name "Check"
-
-    visit url('/check')
-        method 'POST'
-        param text "Halo, lieber Kunde!"
-        json true
+        visit url('/check')
+            method 'POST'
+            param text "Sehr geehrte Kollegen,\nWir sind ein Mannschaft, in dem Ehrgeiz und Durchhaltevermögen zählen. Wir suchen die Herausgeforderung.\nIch zähle auf euch.\nFreundliche Grüße\nArnau"
+            json true
+            assert "main.wall_time <= 50ms"
