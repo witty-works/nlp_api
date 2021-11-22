@@ -51,6 +51,7 @@ class Settings(BaseSettings):
     logging_enabled: bool = False
     platform_environment: str = "local"
     languagetool_api: Optional[str]
+    languagetool_verify_ssl: Optional[bool] = False
     platform_relationships: Optional[str]
     api_docs_username: Optional[str]
     api_docs_password: Optional[str]
@@ -90,7 +91,7 @@ async def custom_http_exception_handler(request, e):
 
     return await http_exception_handler(request, e)
 
-languagetool_url = "https://lt.api.witty.works/v2"
+languagetool_url = "https://lt.default.api.witty.works/v2"
 if settings.languagetool_api:
     languagetool_url = settings.languagetool_api
 elif settings.platform_relationships:
@@ -287,7 +288,7 @@ async def check_query(request: Request, user_request_in: RequestIn, background_t
 async def languagetool_rules(user_request_in: RequestIn):
     list_results = []
 
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(verify_ssl=settings.languagetool_verify_ssl)) as session:
         langs = ["en", "de", "auto"]
 
         payload = {
