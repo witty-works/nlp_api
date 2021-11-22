@@ -1,1 +1,76 @@
-categories = {'gendered': {'color': 'yellow', 'inclusive': False, 'category': 'gendered', 'gravity': 2}, 'titles': {'color': 'yellow', 'inclusive': False, 'category': 'gendered', 'gravity': 2}, 'gendered_denominations_ending': {'color': 'yellow', 'inclusive': False, 'category': 'gendered', 'gravity': 2}, 'style': {'color': 'blue', 'inclusive': False, 'category': 'style', 'gravity': 3}, 'misgendering_institutions': {'color': 'blue', 'inclusive': False, 'category': 'style', 'gravity': 3}, 'unconscious_bias': {'color': 'orange', 'inclusive': False, 'category': 'unconscious_bias', 'gravity': 2}, 'agentic': {'color': 'brown', 'inclusive': False, 'category': 'unconscious_bias', 'gravity': 2}, 'inclusive': {'color': 'green', 'inclusive': True, 'category': 'inclusive', 'gravity': 2}, 'communal': {'color': 'green', 'inclusive': True, 'category': 'inclusive', 'gravity': 2}, 'd_and_i': {'color': 'green', 'inclusive': True, 'category': 'inclusive', 'gravity': 2}, 'hollow': {'color': 'blue', 'inclusive': False, 'category': 'style', 'gravity': 3}, 'exaggerating': {'color': 'blue', 'inclusive': False, 'category': 'unconscious_bias', 'gravity': 2}, 'orthography': {'color': 'blue', 'inclusive': False, 'category': 'style', 'gravity': 3}, 'corporate_rules': {'color': 'blue', 'inclusive': False, 'category': 'corporate_rules', 'gravity': 2}}
+categories = {
+    "gendered": {
+        "color": "yellow",
+        "inclusive": False,
+        "category": "gendered",
+        "gravity": 2,
+    },
+    "titles": {
+        "color": "yellow",
+        "inclusive": False,
+        "category": "gendered",
+        "gravity": 2,
+    },
+    "gendered_denominations_ending": {
+        "color": "yellow",
+        "inclusive": False,
+        "category": "gendered",
+        "gravity": 2,
+    },
+    "style": {"color": "blue", "inclusive": False, "category": "style", "gravity": 3},
+    "misgendering_institutions": {
+        "color": "blue",
+        "inclusive": False,
+        "category": "style",
+        "gravity": 3,
+    },
+    "unconscious_bias": {
+        "color": "orange",
+        "inclusive": False,
+        "category": "unconscious_bias",
+        "gravity": 2,
+    },
+    "agentic": {
+        "color": "brown",
+        "inclusive": False,
+        "category": "unconscious_bias",
+        "gravity": 2,
+    },
+    "inclusive": {
+        "color": "green",
+        "inclusive": True,
+        "category": "inclusive",
+        "gravity": 2,
+    },
+    "communal": {
+        "color": "green",
+        "inclusive": True,
+        "category": "inclusive",
+        "gravity": 2,
+    },
+    "d_and_i": {
+        "color": "green",
+        "inclusive": True,
+        "category": "inclusive",
+        "gravity": 2,
+    },
+    "hollow": {"color": "blue", "inclusive": False, "category": "style", "gravity": 3},
+    "exaggerating": {
+        "color": "blue",
+        "inclusive": False,
+        "category": "unconscious_bias",
+        "gravity": 2,
+    },
+    "orthography": {
+        "color": "blue",
+        "inclusive": False,
+        "category": "style",
+        "gravity": 3,
+    },
+    "corporate_rules": {
+        "color": "blue",
+        "inclusive": False,
+        "category": "corporate_rules",
+        "gravity": 2,
+    },
+}
