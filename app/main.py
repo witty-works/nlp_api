@@ -46,6 +46,7 @@ from typing import Optional
 from pydantic import BaseSettings
 from app.categories import categories
 
+
 class Settings(BaseSettings):
     """Load environment variables to python objects using pydantic."""
     logging_enabled: bool = False
@@ -60,9 +61,11 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
 
+
 @lru_cache()
 def get_settings():
     return Settings()
+
 
 settings = get_settings()
 
@@ -85,6 +88,8 @@ app = FastAPI(
 # To catch raised `HTTPException` exceptions as per:
 # https://fastapi.tiangolo.com/tutorial/handling-errors/
 # Might have to add something similar for `RequestValidationError`
+
+
 @app.exception_handler(HTTPException)
 async def custom_http_exception_handler(request, e):
     log_request(request)
@@ -180,13 +185,15 @@ exceptions = ["Unternehmen", "Firma", "Gruppe", "Gesellschaft",
               "Kollektivgesellschaft", "Team", "Organization", "Gliederung"]
 gender_false_positive = genderdenom_false_positives["False_positives"].tolist()
 
-#corporate false positive
-#DB
-corporate_false_positive = ["stark", "starke", "starkes", "starker", "Führungskraft", "Führungskräfte", "Führungskräften"]
+# corporate false positive
+# DB
+corporate_false_positive = ["stark", "starke", "starkes",
+                            "starker", "Führungskraft", "Führungskräfte", "Führungskräften"]
 terms_false_positive = gender_false_positive + corporate_false_positive
 false_positive_agentic += corporate_false_positive
 
 favicon_path = 'static/favicon.ico'
+
 
 @app.get('/favicon.ico', include_in_schema=False)
 async def favicon():
@@ -195,6 +202,7 @@ async def favicon():
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
+
 
 def get_current_username(credentials: Optional[HTTPBasicCredentials] = Depends(security)):
     # Credentials are missing
@@ -233,6 +241,7 @@ def get_current_username(credentials: Optional[HTTPBasicCredentials] = Depends(s
 @app.get("/")
 def get_root():
     return RedirectResponse(url='/form', status_code=301)
+
 
 @app.get("/lt")
 def get_root():
@@ -285,6 +294,8 @@ async def check_query(request: Request, user_request_in: RequestIn, background_t
     return response
 
 # Functions
+
+
 async def languagetool_rules(user_request_in: RequestIn):
     list_results = []
 
@@ -364,10 +375,12 @@ def language_rules(user_request_in: RequestIn, lang: Lang):
 
     return list_results
 
+
 def serialize_event_data(user_request_in: RequestIn):
     data = user_request_in.dict()
 
     return jsonable_encoder(data)
+
 
 def serialize_request_data(request: Request, user_request_in: RequestIn):
     data = user_request_in.dict(exclude={'text'})
@@ -379,10 +392,12 @@ def serialize_request_data(request: Request, user_request_in: RequestIn):
 
     return jsonable_encoder(data)
 
+
 def serialize_response_data(response: ResultsOut):
     data = response.dict(exclude={'results': {'__all__': {'context'}}})
 
     return jsonable_encoder(data)
+
 
 def serialize_log_data(request: Request, user_request_in: RequestIn, response: ResultsOut = None):
     if response is None:
@@ -397,12 +412,14 @@ def serialize_log_data(request: Request, user_request_in: RequestIn, response: R
 
     return json.dumps(data)
 
+
 def log_message(request: Request, user_request_in: RequestIn, response: ResultsOut = None):
     if user_request_in.id is None or not settings.logging_enabled:
         return
 
     data = serialize_log_data(request, user_request_in, response)
     write_log(data, user_request_in.id)
+
 
 async def log_request(request):
     body = await request.json()
@@ -411,6 +428,7 @@ async def log_request(request):
         return
 
     write_log(await request.body(), body.id)
+
 
 def write_log(data: str, id: str):
     dirname = os.getcwd() + '/logs/' + id
@@ -422,8 +440,11 @@ def write_log(data: str, id: str):
     f.write(data)
 
 # Function for all German rules
+
+
 def IsNotNoun(pos):
     return pos != "NOUN" and pos != "PROPN" and pos != "PRON"
+
 
 def GetNonNounLowerCased(token):
     token_word = token.lemma_
@@ -431,6 +452,7 @@ def GetNonNounLowerCased(token):
         token_word = token_word.lower()
 
     return token_word
+
 
 def GermanRules(lang, tokens, user_request_in: RequestIn):
     list_full = []
@@ -441,22 +463,26 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             user_request_in.config, lang, user_request_in.text, tokens, df_agentic_ct)
 
     if "gendered" not in user_request_in.config.disabled_categories:
-        list_full += GenderedDenomAnalysis(user_request_in.config, lang, user_request_in.text, tokens, df_gender_ct)
+        list_full += GenderedDenomAnalysis(user_request_in.config,
+                                           lang, user_request_in.text, tokens, df_gender_ct)
 
     if "misgendered_institutions" not in user_request_in.config.disabled_categories:
         list_full += MisgenderingInstitutions(
             user_request_in.config, lang, user_request_in.text, tokens)
 
     if "gendered_denomination_ending" not in user_request_in.config.disabled_categories:
-        list_full += GenderedDenomEnd(user_request_in.config, lang, user_request_in.text)
+        list_full += GenderedDenomEnd(user_request_in.config,
+                                      lang, user_request_in.text)
 
     # discriminating words catch
     if "unconscious_bias" not in user_request_in.config.disabled_categories:
-        list_full += RulesBased(user_request_in.config, lang, user_request_in.text, tokens, df_discrim_words, "unconscious_bias", "unconscious_bias")
+        list_full += RulesBased(user_request_in.config, lang, user_request_in.text,
+                                tokens, df_discrim_words, "unconscious_bias", "unconscious_bias")
 
     # communal terms
     if "communal" not in user_request_in.config.disabled_categories:
-        list_full += RulesBased(user_request_in.config, lang, user_request_in.text, tokens, df_communal_words, "inclusive", "communal")
+        list_full += RulesBased(user_request_in.config, lang, user_request_in.text,
+                                tokens, df_communal_words, "inclusive", "communal")
 
     # d_and_i_words words
     if "d_and_i" not in user_request_in.config.disabled_categories:
@@ -465,7 +491,8 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
 
     # hollow words&sentences catch
     if "hollow" not in user_request_in.config.disabled_categories:
-        list_full += HollowWordAnalysis(user_request_in.config, lang, user_request_in.text, tokens, terms_hollow, df_hollow_word, df_hollow_sentences)
+        list_full += HollowWordAnalysis(user_request_in.config, lang, user_request_in.text,
+                                        tokens, terms_hollow, df_hollow_word, df_hollow_sentences)
 
     # exaggerating words&sentences catch
     if "exaggerating" not in user_request_in.config.disabled_categories:
@@ -481,7 +508,8 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
     list_full = []
 
     if "agentic" not in user_request_in.config.disabled_categories:
-        list_full += RulesBasedEN(user_request_in.config, lang, user_request_in.text, tokens, df_agentic_words_en, "unconscious_bias", "agentic")
+        list_full += RulesBasedEN(user_request_in.config, lang, user_request_in.text,
+                                  tokens, df_agentic_words_en, "unconscious_bias", "agentic")
 
     return list_full
 
@@ -748,7 +776,8 @@ def ExaggeratingWordsSentences(config: Config, lang, full_text, tokens, df, df_s
     matcher = PhraseMatcher(model[lang.locale].vocab)
 
     # Only run model.make_doc to speed things up
-    patterns = [model[lang.locale].make_doc(text) for text in terms_exaggerating]
+    patterns = [model[lang.locale].make_doc(
+        text) for text in terms_exaggerating]
     matcher.add("TerminologyList", patterns)
 
     for token in tokens:
