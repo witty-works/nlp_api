@@ -1,3 +1,4 @@
+from numpy import array
 from pydantic import BaseModel, validator
 from typing import Dict, List
 from typing import Optional
@@ -71,7 +72,7 @@ class Config(BaseModel):
         ":in": ":in",
         "In": r"In\b",
     }
-    disabled_categories: Optional[List] = ""
+    disabled_categories: Optional[List] = []
     gendered_roles_format: Optional[GenderedRolesFormatType] = "inclusive_gender"
 
     @validator("german_gender_ending")
@@ -85,6 +86,44 @@ class Config(BaseModel):
         if isinstance(v, str):
             return v.split(",")
         return v
+
+
+class ForcedConfig(BaseModel):
+    store_context: Optional[bool]
+    primary_language: Optional[str]
+    preferred_languages: Optional[str]
+    preferred_variants: Optional[str]
+    german_gender_ending: Optional[str]
+    _gendereddenom_ending = {
+        "/in": "/in",
+        "/-in": "/-in",
+        "_in": "_in",
+        "*in": "\\*in",
+        ":in": ":in",
+        "In": r"In\b",
+    }
+    disabled_categories: Optional[List]
+    gendered_roles_format: Optional[GenderedRolesFormatType]
+    corporate_false_positive: Optional[List] = []
+
+    @validator("german_gender_ending")
+    def valid_german_gender_ending(cls, v: str):
+        if v not in cls._gendereddenom_ending:
+            raise ValueError("Not supported german_gender_ending")
+        return v
+
+    @validator("disabled_categories", pre=True)
+    def split_string_values(cls, v):
+        if isinstance(v, str):
+            return v.split(",")
+        return v
+
+
+class ConfRequest(BaseModel):
+    company: str
+    users: list
+    forced: ForcedConfig
+    suggestion: Config
 
 
 class RequestIn(BaseModel):
