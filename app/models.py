@@ -17,9 +17,7 @@ class Lang(object):
             trans_locale = "de_DE"
 
         language = gettext.translation(
-            "messages",
-            localedir="locales",
-            languages=[trans_locale]
+            "messages", localedir="locales", languages=[trans_locale]
         )
 
         language.install()
@@ -65,8 +63,14 @@ class Config(BaseModel):
     preferred_languages: Optional[str] = "de,en"
     preferred_variants: Optional[str] = "de-DE,en-GB"
     german_gender_ending: Optional[str] = ":in"
-    _gendereddenom_ending = {"/in": "/in", "/-in": "/-in",
-                             "_in": "_in", "*in": "\\*in", ":in": ":in", "In": r"In\b"}
+    _gendereddenom_ending = {
+        "/in": "/in",
+        "/-in": "/-in",
+        "_in": "_in",
+        "*in": "\\*in",
+        ":in": ":in",
+        "In": r"In\b",
+    }
     disabled_categories: Optional[List] = ""
     gendered_roles_format: Optional[GenderedRolesFormatType] = "inclusive_gender"
 
@@ -111,7 +115,20 @@ class ResultOut(BaseModel):
     reason: str
     solution: str
 
-    def factory(config: Config, lang: Lang, text, full_text, category, subcategory, start, end=None, alternatives=[], label=None, reason=None, solution=None):
+    def factory(
+        config: Config,
+        lang: Lang,
+        text,
+        full_text,
+        category,
+        subcategory,
+        start,
+        end=None,
+        alternatives=[],
+        label=None,
+        reason=None,
+        solution=None,
+    ):
         if end == None:
             end = start + len(text)
 
@@ -126,22 +143,28 @@ class ResultOut(BaseModel):
         if subcategory == "gendered_denominations_ending":
             params["gendered_denominations_ending"] = config.german_gender_ending
 
-        label = label if label != None else lang._(
-            "rules." + category + "_label")
+        label = label if label != None else lang._("rules." + category + "_label")
         if category != subcategory:
             label += ": " + lang._("rules." + subcategory + "_label")
 
-        reason = reason if reason != None else lang._(
-            "rules." + subcategory + "_reason", params)
-        solution = solution if solution != None else lang._(
-            "rules." + subcategory + "_solution", params)
+        reason = (
+            reason
+            if reason != None
+            else lang._("rules." + subcategory + "_reason", params)
+        )
+        solution = (
+            solution
+            if solution != None
+            else lang._("rules." + subcategory + "_solution", params)
+        )
 
         is_upper = text[0:1].isupper()
 
         for key, alternative in enumerate(alternatives):
             if is_upper and category != "orthography":
-                alternatives[key] = string.capwords(
-                    alternatives[key][0:1]) + alternatives[key][1:]
+                alternatives[key] = (
+                    string.capwords(alternatives[key][0:1]) + alternatives[key][1:]
+                )
 
             if "~" not in alternative:
                 continue
@@ -151,27 +174,54 @@ class ResultOut(BaseModel):
             else:
                 variants = alternative.split("~")
                 if str(variants[1]) == "e":
-                    alternatives[key] = str(
-                        variants[0]) + "e" + config.german_gender_ending[0:-2] + "r"
+                    alternatives[key] = (
+                        str(variants[0]) + "e" + config.german_gender_ending[0:-2] + "r"
+                    )
                 else:
-                    alternatives[key] = str(
-                        variants[0]) + config.german_gender_ending[0:-2] + str(variants[1])
+                    alternatives[key] = (
+                        str(variants[0])
+                        + config.german_gender_ending[0:-2]
+                        + str(variants[1])
+                    )
 
-        return ResultOut(text, context, category, subcategory, start, end, alternatives, label, reason, solution)
+        return ResultOut(
+            text,
+            context,
+            category,
+            subcategory,
+            start,
+            end,
+            alternatives,
+            label,
+            reason,
+            solution,
+        )
 
     factory = staticmethod(factory)
 
-    def __init__(self, text, context, category, subcategory, start, end, alternatives, label, reason, solution):
-        object.__setattr__(self, 'text', text)
-        object.__setattr__(self, 'context', context)
-        object.__setattr__(self, 'category', category)
-        object.__setattr__(self, 'subcategory', subcategory)
-        object.__setattr__(self, 'start', start)
-        object.__setattr__(self, 'end', end)
-        object.__setattr__(self, 'alternatives', alternatives)
-        object.__setattr__(self, 'label', label)
-        object.__setattr__(self, 'reason', reason)
-        object.__setattr__(self, 'solution', solution)
+    def __init__(
+        self,
+        text,
+        context,
+        category,
+        subcategory,
+        start,
+        end,
+        alternatives,
+        label,
+        reason,
+        solution,
+    ):
+        object.__setattr__(self, "text", text)
+        object.__setattr__(self, "context", context)
+        object.__setattr__(self, "category", category)
+        object.__setattr__(self, "subcategory", subcategory)
+        object.__setattr__(self, "start", start)
+        object.__setattr__(self, "end", end)
+        object.__setattr__(self, "alternatives", alternatives)
+        object.__setattr__(self, "label", label)
+        object.__setattr__(self, "reason", reason)
+        object.__setattr__(self, "solution", solution)
 
 
 class ResultsOut(BaseModel):
@@ -184,5 +234,5 @@ class ResultsOut(BaseModel):
     factory = staticmethod(factory)
 
     def __init__(self, results, language):
-        object.__setattr__(self, 'results', results)
-        object.__setattr__(self, 'language', language)
+        object.__setattr__(self, "results", results)
+        object.__setattr__(self, "language", language)
