@@ -1,7 +1,4 @@
-on: 
-  push:
-    branches:
-      - fix/fix-Docker-tag
+on: [push] 
 name: Build a Docker image and Push it to ACR
 jobs:
   build:
