@@ -54,6 +54,9 @@ from typing import Optional
 from pydantic import BaseSettings
 from app.categories import categories
 
+import logging
+from opencensus.ext.azure.log_exporter import AzureLogHandler
+
 
 class Settings(BaseSettings):
     """Load environment variables to python objects using pydantic."""
@@ -66,6 +69,7 @@ class Settings(BaseSettings):
     api_docs_username: Optional[str]
     api_docs_password: Optional[str]
     api_docs_auth_enabled: bool = False
+    instrumentation_key: str = ""
 
     class Config:
         env_file = ".env"
@@ -78,6 +82,23 @@ def get_settings():
 
 settings = get_settings()
 
+# Logging set up
+def set_up_logger():
+    logging.basicConfig(level=logging.INFO)
+    logging.getLogger().handlers.clear()
+    if settings.logging_enabled and settings.instrumentation_key:
+        logging.getLogger().addHandler(
+            AzureLogHandler(
+                connection_string="InstrumentationKey={}".format(
+                    settings.instrumentation_key
+                )
+            )
+        )
+    else:
+        logging.getLogger().addHandler(logging.NullHandler())
+
+
+set_up_logger()
 # NLP library
 
 # Regular expression library
@@ -517,6 +538,7 @@ async def log_request(request):
 
 
 def write_log(data: str, id: str):
+    logging.info(data)
     dirname = os.getcwd() + "/logs/" + id
     filename = (
         dirname

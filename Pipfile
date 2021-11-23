@@ -15,6 +15,7 @@ aiofiles = "*"
 babel = "*"
 aiohttp = "*"
 sentry-sdk = "*"
+opencensus-ext-azure = "*"
 
 [dev-packages]
 click = "*"
@@ -23,6 +24,7 @@ pytest = "*"
 pytest-cov = "*"
 python-dotenv = "*"
 black = "*"
+opencensus-ext-azure = "*"
 
 [requires]
 python_version = "3.9"
