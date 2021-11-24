@@ -300,9 +300,6 @@ exceptions = [
 ]
 gender_false_positive = genderdenom_false_positives["False_positives"].tolist()
 
-# corporate false positive
-# DB
-
 
 @app.get("/companyRules")
 async def get_redis(user: str):
@@ -316,6 +313,7 @@ async def get_redis(user: str):
         return e
 
 
+# corporate false positive DB
 corporate_false_positive = [
     "stark",
     "starke",
