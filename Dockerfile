@@ -2,25 +2,26 @@ FROM tiangolo/uvicorn-gunicorn-fastapi:python3.9
 
 # setup ssh for app service ssh connection
 RUN apt-get update \
-    && apt-get install -y openssh-server gosu \
-    && echo "root:Docker!" | chpasswd
+  && apt-get install -y openssh-server gosu \
+  && echo "root:Docker!" | chpasswd
 
 COPY ops/sshd_config /etc/ssh/
 RUN mkdir -p /tmp
 COPY ops/ssh_setup.sh /tmp
 RUN chmod +x /tmp/ssh_setup.sh \
-    && (sleep 1;/tmp/ssh_setup.sh 2>&1 > /dev/null)
+  && (sleep 1;/tmp/ssh_setup.sh 2>&1 > /dev/null)
 
 # setup nlp api
 RUN pip install --upgrade pip
 RUN groupadd -g 999 wittyuser && \
-    useradd --create-home -r -u 999 -g wittyuser wittyuser
+  useradd --create-home -r -u 999 -g wittyuser wittyuser
 USER wittyuser
 WORKDIR /home/wittyuser
 ENV APP_MODULE=app.main:app
 # app service in azure allows access to containers via localhost
 ENV LANGUAGETOOL_API=http://languagetool:8000/v2 
-ENV WORKERS=6
+ENV WORKERS 6
+ENV LOGGING_CONFIG_LEVEL ERROR
 COPY --chown=wittyuser:wittyuser requirements.txt requirements.txt
 ENV PATH="/home/wittyuser/.local/bin:${PATH}"
 RUN pip install -r requirements.txt --user

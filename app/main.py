@@ -1417,4 +1417,4 @@ def RulesBasedEN(config: Config, lang, full_text, tokens, df, category, subcateg
 if __name__ == "__main__":
     # If this is being ran directly as a script, run an internal uvicorn server
     # to service API requests
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000, log_level=settings.logging_config_level)
