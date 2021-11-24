@@ -72,7 +72,7 @@ class Settings(BaseSettings):
     logging_enabled: bool = False
     platform_environment: str = "local"
     languagetool_api: Optional[str]
-    languagetool_verify_ssl: Optional[bool] = False
+    languagetool_verify_ssl: bool = True
     platform_relationships: Optional[str]
     api_docs_username: Optional[str]
     api_docs_password: Optional[str]
