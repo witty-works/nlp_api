@@ -1,6 +1,6 @@
-name: 'app'
+name: "app"
 
-type: 'python:3.9'
+type: "python:3.9"
 
 disk: 3072
 
@@ -10,7 +10,7 @@ resources:
 
 dependencies:
   python3:
-    pipenv: '2021.5.29'
+    pipenv: "2021.5.29"
 
 web:
   upstream:
@@ -20,20 +20,20 @@ web:
       [ $PLATFORM_ENVIRONMENT_TYPE == "development" ] && WORKERS="6" || WORKERS="$(jq ".info.limits.memory / 250 | tonumber | floor" /run/config.json)"
       blackfire-python gunicorn app.main:app -b unix:$SOCKET -w ${WORKERS} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
   locations:
-    '/':
-      root: 'favicon'
+    "/":
+      root: "favicon"
       rules:
         '\.ico$':
           expires: 3600m
       passthru: true
-    '/static':
-      root: 'static'
+    "/static":
+      root: "static"
       rules:
         '\.(css|js|ico)$':
           expires: 10m
 
 mounts:
-  'logs':
+  "logs":
     source: local
     source_path: logs
 
@@ -54,8 +54,6 @@ relationships:
   rediscache: "cacheredis:redis"
 
 variables:
-    env:
-        BLACKFIRE_AGENT_SOCKET: 'unix:///run/blackfire.sock'
-        BLACKFIRE_LOG_FILE: '/tmp/blackfire.log'
-
-  
+  env:
+    BLACKFIRE_AGENT_SOCKET: "unix:///run/blackfire.sock"
+    BLACKFIRE_LOG_FILE: "/tmp/blackfire.log"
