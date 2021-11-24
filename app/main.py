@@ -1,5 +1,4 @@
 import platformshconfig
-from pydantic.types import Json
 from app.models import (
     Config,
     LangType,
@@ -58,8 +57,6 @@ from pydantic import BaseSettings
 from app.categories import categories
 
 import logging
-from opencensus.ext.azure.log_exporter import AzureLogHandler
-
 
 from redis import Redis
 import platformshconfig
@@ -70,9 +67,12 @@ class Settings(BaseSettings):
     """Load environment variables to python objects using pydantic."""
 
     logging_enabled: bool = False
+    logging_config_filename: str = "./logs/error.log"
+    logging_config_level: str = "ERROR"
+    collect_user_training_data: bool = False
     platform_environment: str = "local"
     languagetool_api: Optional[str]
-    languagetool_verify_ssl: Optional[bool] = False
+    languagetool_verify_ssl: bool = False
     platform_relationships: Optional[str]
     api_docs_username: Optional[str]
     api_docs_password: Optional[str]
@@ -92,23 +92,52 @@ def get_settings():
 settings = get_settings()
 
 # Logging set up
+@lru_cache()
 def set_up_logger():
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=settings.logging_config_level)
     logging.getLogger().handlers.clear()
-    if settings.logging_enabled and settings.instrumentation_key:
-        logging.getLogger().addHandler(
-            AzureLogHandler(
+    formatter = logging.Formatter("[%(asctime)s] %(name)s %(levelname)s - %(message)s")
+
+    if settings.logging_enabled:
+        if settings.instrumentation_key:
+            from opencensus.ext.azure.log_exporter import AzureLogHandler
+
+            ah = AzureLogHandler(
                 connection_string="InstrumentationKey={}".format(
                     settings.instrumentation_key
                 )
             )
-        )
+            ah.setFormatter(formatter)
+            logging.getLogger().addHandler(ah)
+        else:
+            filename = os.path.abspath(settings.logging_config_filename)
+            os.makedirs(os.path.dirname(filename), exist_ok=True)
+            fh = logging.FileHandler(filename=filename)
+            fh.setFormatter(formatter)
+            logging.getLogger().addHandler(fh)
+
     else:
         logging.getLogger().addHandler(logging.NullHandler())
 
 
 set_up_logger()
-# NLP library
+logging.debug("app started with settings: %s", settings)
+
+# Languagetool URL
+@lru_cache()
+def get_languagetool_url():
+    if settings.languagetool_api:
+        return settings.languagetool_api
+
+    if settings.platform_relationships:
+        relationships = json.loads(base64.b64decode(settings.platform_relationships))
+        languagetool = relationships["languagetool"][0]
+        return "%(scheme)s://%(host)s:%(port)d/v2" % languagetool
+
+    return "https://lt.default.api.witty.works/v2"
+
+
+languagetool_url = get_languagetool_url()
 
 # Regular expression library
 # convert string of list into list of the strings
@@ -131,18 +160,10 @@ app = FastAPI(
 
 @app.exception_handler(HTTPException)
 async def custom_http_exception_handler(request, e):
-    log_request(request)
+    logging.exception("Exception logging message")
 
     return await http_exception_handler(request, e)
 
-
-languagetool_url = "https://lt.default.api.witty.works/v2"
-if settings.languagetool_api:
-    languagetool_url = settings.languagetool_api
-elif settings.platform_relationships:
-    relationships = json.loads(base64.b64decode(settings.platform_relationships))
-    languagetool = relationships["languagetool"][0]
-    languagetool_url = "%(scheme)s://%(host)s:%(port)d/v2" % languagetool
 
 security = HTTPBasic(auto_error=False)
 
@@ -367,6 +388,11 @@ def get_current_username(
     return credentials.username
 
 
+@app.get("/exception")
+def get_root():
+    raise HTTPException(status_code=500)
+
+
 @app.get("/")
 def get_root():
     return RedirectResponse(url="/form", status_code=301)
@@ -399,7 +425,7 @@ def get_categories(lang: LangType = "de"):
 
 @app.post("/serialize", response_class=PlainTextResponse)
 def serialize(user_request_in: RequestIn):
-    data = serialize_log_data(user_request_in, ResultsOut([], "en"))
+    data = serialize_user_training_data(user_request_in, ResultsOut([], "en"))
     return data
 
 
@@ -407,7 +433,7 @@ def serialize(user_request_in: RequestIn):
 def log(
     request: Request, user_request_in: RequestInEvent, background_tasks: BackgroundTasks
 ):
-    background_tasks.add_task(log_message, request, user_request_in)
+    background_tasks.add_task(write_user_training_data, request, user_request_in)
 
 
 @app.post("/check", response_model=ResultsOut)
@@ -424,7 +450,9 @@ async def check_query(
 
     response = ResultsOut.factory(list_results, lang)
 
-    background_tasks.add_task(log_message, request, user_request_in, response)
+    background_tasks.add_task(
+        write_user_training_data, request, user_request_in, response
+    )
 
     return response
 
@@ -607,7 +635,7 @@ def serialize_response_data(response: ResultsOut):
     return jsonable_encoder(data)
 
 
-def serialize_log_data(
+def serialize_user_training_data(
     request: Request, user_request_in: RequestIn, response: ResultsOut = None
 ):
     if response is None:
@@ -623,28 +651,15 @@ def serialize_log_data(
     return json.dumps(data)
 
 
-def log_message(
+def write_user_training_data(
     request: Request, user_request_in: RequestIn, response: ResultsOut = None
 ):
-    if user_request_in.id is None or not settings.logging_enabled:
+    if user_request_in.id is None or not settings.collect_user_training_data:
         return
 
-    data = serialize_log_data(request, user_request_in, response)
-    write_log(data, user_request_in.id)
+    data = serialize_user_training_data(request, user_request_in, response)
 
-
-async def log_request(request):
-    body = await request.json()
-
-    if body.id is None or not settings.logging_enabled:
-        return
-
-    write_log(await request.body(), body.id)
-
-
-def write_log(data: str, id: str):
-    logging.info(data)
-    dirname = os.getcwd() + "/logs/" + id
+    dirname = os.getcwd() + "/user_training_data/" + user_request_in.id
     filename = (
         dirname
         + "/"
