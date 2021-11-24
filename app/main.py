@@ -79,6 +79,7 @@ class Settings(BaseSettings):
     api_docs_auth_enabled: bool = False
     instrumentation_key: str = ""
     testing: bool = False
+    read_rules_from_redis: bool = False
 
     class Config:
         env_file = ".env"
@@ -412,7 +413,8 @@ def log(
 async def check_query(
     request: Request, user_request_in: RequestIn, background_tasks: BackgroundTasks
 ):
-    await set_rules(user_request_in)
+    if settings.read_rules_from_redis:
+        await set_rules(user_request_in)
 
     languagetools_results, lang = await languagetool_rules(user_request_in)
 
