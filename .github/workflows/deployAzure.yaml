@@ -1,4 +1,4 @@
-on: [push]
+on: [push] 
 name: Build a Docker image and Push it to ACR
 jobs:
   build:
@@ -17,8 +17,11 @@ jobs:
           docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:${{ github.sha }}
           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:${{ github.sha }}
           # release version
-          docker tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:${{ github.sha }} ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:${{ github.ref_name }}
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:${{ github.ref_name }}
+          ref=${{ github.ref_name }}
+          tag=${ref////-}
+          echo $tag
+          docker tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:${{ github.sha }} ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:$tag
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:$tag
 
       # build languagetool
       - run: |
@@ -26,6 +29,9 @@ jobs:
           docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/languagetool:${{ github.sha }}
           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/languagetool:${{ github.sha }}
           # release version
-          docker tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/languagetool:${{ github.sha }} ${{ secrets.REGISTRY_LOGIN_SERVER }}/languagetool:${{ github.ref_name }}
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/languagetool:${{ github.ref_name }}
-
+          ref=${{ github.ref_name }}
+          tag=${ref////-}
+          echo $tag
+          docker tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/languagetool:${{ github.sha }} ${{ secrets.REGISTRY_LOGIN_SERVER }}/languagetool:$tag
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/languagetool:$tag
+      
