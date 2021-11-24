@@ -1,3 +1,4 @@
+import platformshconfig
 from app.models import (
     Config,
     LangType,
@@ -6,6 +7,7 @@ from app.models import (
     RequestInEvent,
     ResultOut,
     ResultsOut,
+    ConfRequest,
 )
 import ast
 import re
@@ -24,7 +26,15 @@ import copy
 from typing import Optional
 from functools import lru_cache
 
-from fastapi import FastAPI, Request, Header, HTTPException, BackgroundTasks, Depends, status
+from fastapi import (
+    FastAPI,
+    Request,
+    Header,
+    HTTPException,
+    BackgroundTasks,
+    Depends,
+    status,
+)
 
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
@@ -46,32 +56,95 @@ from typing import Optional
 from pydantic import BaseSettings
 from app.categories import categories
 
+import logging
+
+from redis import Redis
+import platformshconfig
+from fakeredis import FakeStrictRedis
+
+
 class Settings(BaseSettings):
     """Load environment variables to python objects using pydantic."""
+
     logging_enabled: bool = False
+    logging_config_filename: str = "./logs/error.log"
+    logging_config_level: str = "ERROR"
+    collect_user_training_data: bool = False
     platform_environment: str = "local"
     languagetool_api: Optional[str]
+    languagetool_verify_ssl: bool = True
     platform_relationships: Optional[str]
     api_docs_username: Optional[str]
     api_docs_password: Optional[str]
     api_docs_auth_enabled: bool = False
+    instrumentation_key: str = ""
+    testing: bool = False
+    read_rules_from_redis: bool = False
 
     class Config:
         env_file = ".env"
+
 
 @lru_cache()
 def get_settings():
     return Settings()
 
+
 settings = get_settings()
 
-# NLP library
+# Logging set up
+@lru_cache()
+def set_up_logger():
+    logging.basicConfig(level=settings.logging_config_level)
+    logging.getLogger().handlers.clear()
+    formatter = logging.Formatter("[%(asctime)s] %(name)s %(levelname)s - %(message)s")
+
+    if settings.logging_enabled:
+        if settings.instrumentation_key:
+            from opencensus.ext.azure.log_exporter import AzureLogHandler
+
+            ah = AzureLogHandler(
+                connection_string="InstrumentationKey={}".format(
+                    settings.instrumentation_key
+                )
+            )
+            ah.setFormatter(formatter)
+            logging.getLogger().addHandler(ah)
+        else:
+            filename = os.path.abspath(settings.logging_config_filename)
+            os.makedirs(os.path.dirname(filename), exist_ok=True)
+            fh = logging.FileHandler(filename=filename)
+            fh.setFormatter(formatter)
+            logging.getLogger().addHandler(fh)
+
+    else:
+        logging.getLogger().addHandler(logging.NullHandler())
+
+
+set_up_logger()
+logging.debug("app started with settings: %s", settings)
+
+# Languagetool URL
+@lru_cache()
+def get_languagetool_url():
+    if settings.languagetool_api:
+        return settings.languagetool_api
+
+    if settings.platform_relationships:
+        relationships = json.loads(base64.b64decode(settings.platform_relationships))
+        languagetool = relationships["languagetool"][0]
+        return "%(scheme)s://%(host)s:%(port)d/v2" % languagetool
+
+    return "https://lt.default.api.witty.works/v2"
+
+
+languagetool_url = get_languagetool_url()
 
 # Regular expression library
 # convert string of list into list of the strings
 # project models
 
-version = "1.4.4"
+version = "1.4.5"
 
 app = FastAPI(
     title="Witty NLP API",
@@ -84,20 +157,14 @@ app = FastAPI(
 # To catch raised `HTTPException` exceptions as per:
 # https://fastapi.tiangolo.com/tutorial/handling-errors/
 # Might have to add something similar for `RequestValidationError`
+
+
 @app.exception_handler(HTTPException)
 async def custom_http_exception_handler(request, e):
-    log_request(request)
+    logging.exception("Exception logging message")
 
     return await http_exception_handler(request, e)
 
-languagetool_url = "https://lt.api.witty.works/v2"
-if settings.languagetool_api:
-    languagetool_url = settings.languagetool_api
-elif settings.platform_relationships:
-    relationships = json.loads(
-        base64.b64decode(settings.platform_relationships))
-    languagetool = relationships["languagetool"][0]
-    languagetool_url = "%(scheme)s://%(host)s:%(port)d/v2" % languagetool
 
 security = HTTPBasic(auto_error=False)
 
@@ -116,29 +183,79 @@ for language in languages:
     categories_with_labels[language] = copy.deepcopy(categories)
     for category in categories_with_labels[language]:
         categories_with_labels[language][category]["label"] = lang._(
-            "rules." + category + "_label")
+            "rules." + category + "_label"
+        )
 
 # Model data
-model = {"en": spacy.load("en_core_web_sm"),
-         "de": spacy.load("de_core_news_sm")}
+model = {"en": spacy.load("en_core_web_sm"), "de": spacy.load("de_core_news_sm")}
 # custom lematizer to correct the lemmas in spacy library, to add to the curent spacy lematizer
-dict_lemma_lookup = {"international": "international", "internationale": "international", "Meister": "Meister", "kämpfend": "kämpfend", "abgebrüht": "abgebrüht", "beherrschend": "beherrschend", "entscheidend": "entscheidend", "entschlossen": "entschlossen", 'angewiesen': 'angewiesen', 'berührt': 'berührt', 'besonnen': 'besonnen', 'betreut': 'betreut', 'bewegt': 'bewegt', 'einfühlend': 'einfühlend', 'engagiert': 'engagiert', 'entgegenkommend': 'entgegenkommend', 'ergreifend': 'ergreifend', 'fördernd': 'fördernd', 'gerührt': 'gerührt', 'heiter': 'heiter', 'lieb': 'lieb', 'mitfühlend': 'mitfühlend', 'mitwirkend': 'mitwirkend', 'motiviert': 'motiviert', 'nährend': 'nährend',
-                     'teilnehmend': 'teilnehmend', 'unterstützend': 'unterstützend', 'verbindend': 'verbindend', 'vermittelnd': 'vermittelnd', 'vertraut': 'vertraut', 'weich': 'weich', 'zusammenhängend': 'zusammenhängend', 'zusammenwirkend': 'zusammenwirkend', 'zustimmend': 'zustimmend', 'jünger': 'jünger', 'ausgeprägt': 'ausgeprägt', 'ausgezeichnet': 'ausgezeichnet', 'äußerst': 'äußerst', 'beeindruckend': 'beeindruckend', 'beste': 'beste', 'bester': 'beste', 'besten': 'beste', 'bestem': 'beste', 'bestes': 'beste', 'etabliert': 'etabliert', 'führend': 'führend', 'fundiert': 'fundiert', 'gewandt': 'gewandt', 'Götter': 'Götter', 'hervorragend': 'hervorragend', 'überzeugend': 'überzeugend', 'zwingend': 'zwingend'}
+dict_lemma_lookup = {
+    "international": "international",
+    "internationale": "international",
+    "Meister": "Meister",
+    "kämpfend": "kämpfend",
+    "abgebrüht": "abgebrüht",
+    "beherrschend": "beherrschend",
+    "entscheidend": "entscheidend",
+    "entschlossen": "entschlossen",
+    "angewiesen": "angewiesen",
+    "berührt": "berührt",
+    "besonnen": "besonnen",
+    "betreut": "betreut",
+    "bewegt": "bewegt",
+    "einfühlend": "einfühlend",
+    "engagiert": "engagiert",
+    "entgegenkommend": "entgegenkommend",
+    "ergreifend": "ergreifend",
+    "fördernd": "fördernd",
+    "gerührt": "gerührt",
+    "heiter": "heiter",
+    "lieb": "lieb",
+    "mitfühlend": "mitfühlend",
+    "mitwirkend": "mitwirkend",
+    "motiviert": "motiviert",
+    "nährend": "nährend",
+    "teilnehmend": "teilnehmend",
+    "unterstützend": "unterstützend",
+    "verbindend": "verbindend",
+    "vermittelnd": "vermittelnd",
+    "vertraut": "vertraut",
+    "weich": "weich",
+    "zusammenhängend": "zusammenhängend",
+    "zusammenwirkend": "zusammenwirkend",
+    "zustimmend": "zustimmend",
+    "jünger": "jünger",
+    "ausgeprägt": "ausgeprägt",
+    "ausgezeichnet": "ausgezeichnet",
+    "äußerst": "äußerst",
+    "beeindruckend": "beeindruckend",
+    "beste": "beste",
+    "bester": "beste",
+    "besten": "beste",
+    "bestem": "beste",
+    "bestes": "beste",
+    "etabliert": "etabliert",
+    "führend": "führend",
+    "fundiert": "fundiert",
+    "gewandt": "gewandt",
+    "Götter": "Götter",
+    "hervorragend": "hervorragend",
+    "überzeugend": "überzeugend",
+    "zwingend": "zwingend",
+}
 
-lookup_table = model["de"].get_pipe(
-    "lemmatizer").lookups.get_table("lemma_lookup")
+lookup_table = model["de"].get_pipe("lemmatizer").lookups.get_table("lemma_lookup")
 for key in dict_lemma_lookup:
     lookup_table.set(key, dict_lemma_lookup[key])
 
 # load agentic language
 df_agentic_ct = pd.read_csv("training_data/agentic_DE.csv")
-#list_agentic = list(df_agentic_ct["Lemma"])
+# list_agentic = list(df_agentic_ct["Lemma"])
 
 # load Gender denom_de
 df_gender_ct = pd.read_csv("training_data/titles_DE.csv")
 # load Gender denom_de false_positives
-genderdenom_false_positives = pd.read_csv(
-    "training_data/titles_false_positives_DE.csv")
+genderdenom_false_positives = pd.read_csv("training_data/titles_false_positives_DE.csv")
 
 # load discriminating words_de
 df_discrim_words = pd.read_csv("training_data/unconscious_bias_DE.csv")
@@ -151,16 +268,14 @@ terms_hollow = list(df_hollow_sentences["Lemma"])
 
 # load Exaggerating word and sentences de
 df_exaggerating = pd.read_csv("training_data/exaggerating_words_DE.csv")
-df_exaggerating_sentences = pd.read_csv(
-    "training_data/exaggerating_sentences_DE.csv")
+df_exaggerating_sentences = pd.read_csv("training_data/exaggerating_sentences_DE.csv")
 # list of "exaggerating word" sentences
 terms_exaggerating = list(df_exaggerating_sentences["Lemma"])
 
 # load inslusive words
 df_d_and_i_words = pd.read_csv("training_data/d_and_i_words_DE.csv")
 # load inslusive sentences
-df_d_and_i_words_sentences = pd.read_csv(
-    "training_data/d_and_i_sentences_DE.csv")
+df_d_and_i_words_sentences = pd.read_csv("training_data/d_and_i_sentences_DE.csv")
 # list of "d_and_i_words word" sentences
 terms_d_and_i_words = list(df_d_and_i_words_sentences["Lemma"])
 
@@ -172,55 +287,96 @@ df_communal_words = pd.read_csv("training_data/communal_DE.csv")
 df_agentic_words_en = pd.read_csv("training_data/agentic_EN.csv")
 
 # dictionaries to handle false positives
-false_positive_agentic = ["selbst", "flexible",
-                          "Probleme", "unabhängig", "Entwickler"]
+false_positive_agentic = ["selbst", "flexible", "Probleme", "unabhängig", "Entwickler"]
 false_positive_hollow = ["international"]
-exceptions = ["Unternehmen", "Firma", "Gruppe", "Gesellschaft",
-              "Kollektivgesellschaft", "Team", "Organization", "Gliederung"]
+exceptions = [
+    "Unternehmen",
+    "Firma",
+    "Gruppe",
+    "Gesellschaft",
+    "Kollektivgesellschaft",
+    "Team",
+    "Organization",
+    "Gliederung",
+]
 gender_false_positive = genderdenom_false_positives["False_positives"].tolist()
 
-#corporate false positive
-#DB
-corporate_false_positive = ["stark", "starke", "starkes", "starker", "Führungskraft", "Führungskräfte", "Führungskräften"]
+
+@app.get("/companyRules")
+async def get_redis(user: str):
+    try:
+        keys = redis.keys("*")
+        for key in keys:
+            user_list = json.loads(redis.get(key))["users"]
+            if user in user_list:
+                return json.loads(redis.get(key))
+    except Exception as e:
+        return e
+
+
+# corporate false positive DB
+corporate_false_positive = [
+    "stark",
+    "starke",
+    "starkes",
+    "starker",
+    "Führungskraft",
+    "Führungskräfte",
+    "Führungskräften",
+]
 terms_false_positive = gender_false_positive + corporate_false_positive
 false_positive_agentic += corporate_false_positive
 
-favicon_path = 'static/favicon.ico'
+favicon_path = "static/favicon.ico"
 
-@app.get('/favicon.ico', include_in_schema=False)
+# read redis configuration
+
+if settings.testing == True:
+    redis = FakeStrictRedis()
+else:
+    redis_config = platformshconfig.Config()
+    credentials = redis_config.credentials("rediscache")
+    redis = Redis(credentials["host"], credentials["port"])
+
+
+@app.get("/favicon.ico", include_in_schema=False)
 async def favicon():
     return FileResponse(favicon_path)
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
 
-app.mount("/files", StaticFiles(directory="files"), name="files")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
 
-def get_current_username(credentials: Optional[HTTPBasicCredentials] = Depends(security)):
+
+def get_current_username(
+    credentials: Optional[HTTPBasicCredentials] = Depends(security),
+):
     # Credentials are missing
     if credentials is None:
         # Auth is disabled, just proceed
         if not settings.api_docs_auth_enabled:
             return "anon"
 
-       # Auth is enabled, raise 401
+        # Auth is enabled, raise 401
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             headers={"WWW-Authenticate": "Basic"},
         )
 
     # Verify the credentials as usual
-    if (settings.api_docs_username is None or settings.api_docs_password is None):
+    if settings.api_docs_username is None or settings.api_docs_password is None:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Incorrect user configuration",
         )
 
     correct_username = secrets.compare_digest(
-        credentials.username, settings.api_docs_username)
+        credentials.username, settings.api_docs_username
+    )
     correct_password = secrets.compare_digest(
-        credentials.password, settings.api_docs_password)
+        credentials.password, settings.api_docs_password
+    )
     if not (correct_username and correct_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -233,10 +389,16 @@ def get_current_username(credentials: Optional[HTTPBasicCredentials] = Depends(s
 
 @app.get("/")
 def get_root():
-    return RedirectResponse(url='/form', status_code=301)
+    return RedirectResponse(url="/form", status_code=301)
+
+
+@app.get("/exception")
+def get_root(username: str = Depends(get_current_username)):
+    raise HTTPException(status_code=500)
+
 
 @app.get("/lt")
-def get_root():
+def get_lt(username: str = Depends(get_current_username)):
     return languagetool_url
 
 
@@ -261,18 +423,27 @@ def get_categories(lang: LangType = "de"):
 
 
 @app.post("/serialize", response_class=PlainTextResponse)
-def serialize(user_request_in: RequestIn):
-    data = serialize_log_data(user_request_in, ResultsOut([], "en"))
+def serialize(
+    user_request_in: RequestIn, username: str = Depends(get_current_username)
+):
+    data = serialize_user_training_data(user_request_in, ResultsOut([], "en"))
     return data
 
 
 @app.post("/log", status_code=201)
-def log(request: Request, user_request_in: RequestInEvent, background_tasks: BackgroundTasks):
-    background_tasks.add_task(log_message, request, user_request_in)
+def log(
+    request: Request, user_request_in: RequestInEvent, background_tasks: BackgroundTasks
+):
+    background_tasks.add_task(write_user_training_data, request, user_request_in)
 
 
 @app.post("/check", response_model=ResultsOut)
-async def check_query(request: Request, user_request_in: RequestIn, background_tasks: BackgroundTasks):
+async def check_query(
+    request: Request, user_request_in: RequestIn, background_tasks: BackgroundTasks
+):
+    if settings.read_rules_from_redis:
+        await set_rules(user_request_in)
+
     languagetools_results, lang = await languagetool_rules(user_request_in)
 
     language_rules_results = language_rules(user_request_in, lang)
@@ -281,33 +452,111 @@ async def check_query(request: Request, user_request_in: RequestIn, background_t
 
     response = ResultsOut.factory(list_results, lang)
 
-    background_tasks.add_task(log_message, request, user_request_in, response)
+    background_tasks.add_task(
+        write_user_training_data, request, user_request_in, response
+    )
 
     return response
 
+
+@app.post("/storeRules")
+async def store_redis(corporate_rules: ConfRequest):
+    try:
+        company_object = {
+            "users": corporate_rules.users,
+            "config": {
+                "forced": dict(corporate_rules.forced),
+                "suggestion": dict(corporate_rules.suggestion),
+            },
+        }
+
+        # Set a value
+        redis.set(str(corporate_rules.company), json.dumps(company_object))
+    except Exception as e:
+        return e
+    return company_object
+
+
 # Functions
+
+
+async def set_rules(user_request_in: RequestIn):
+    general_config = Config()
+    corporate_rules = await get_redis(user_request_in.id)
+    if corporate_rules and type(corporate_rules) is dict:
+        user_rules = user_request_in.config.__dict__
+        forced_config = corporate_rules["config"]["forced"]
+        default_config = corporate_rules["config"]["suggestion"]
+        forced_filtered = {
+            k: v
+            for (k, v) in forced_config.items()
+            if v != "" and v is not None and v != []
+        }
+        default_filtered = {
+            k: v
+            for (k, v) in default_config.items()
+            if v != "" and v is not None and v != []
+        }
+        company_config = {**default_filtered, **forced_filtered}
+
+        for config_value in vars(general_config):
+            # user set a value (change, if user not give a key)
+            if user_rules[config_value] is not None:
+
+                # company set a value and user can't change it
+                if config_value in company_config and config_value in forced_filtered:
+                    # overwrite user value
+                    setattr(
+                        user_request_in.config,
+                        config_value,
+                        forced_config[config_value],
+                    )
+                # company set a value on default, user can change it
+                elif (
+                    config_value in company_config and config_value in default_filtered
+                ):
+                    # set user value
+                    setattr(
+                        user_request_in.config, config_value, user_rules[config_value]
+                    )
+                else:
+                    # company does not set a value, user can set a value
+                    setattr(
+                        user_request_in.config, config_value, user_rules[config_value]
+                    )
+            else:
+                # user does not set a value, but company did
+                if config_value in company_config:
+                    setattr(
+                        user_request_in.config,
+                        config_value,
+                        company_config[config_value],
+                    )
+
+
 async def languagetool_rules(user_request_in: RequestIn):
     list_results = []
 
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(
+        connector=aiohttp.TCPConnector(verify_ssl=settings.languagetool_verify_ssl)
+    ) as session:
         langs = ["en", "de", "auto"]
 
         payload = {
             "text": user_request_in.text,
             "language": user_request_in.lang,
-            "motherTongue": user_request_in.config.primary_language
+            "motherTongue": user_request_in.config.primary_language,
         }
 
         if user_request_in.lang == "auto":
             payload["preferredLanguages"] = user_request_in.config.preferred_languages
             payload["preferredVariants"] = user_request_in.config.preferred_variants
-
         async with session.post(languagetool_url + "/check", data=payload) as r:
             assert r.status == 200
             result = await r.json()
-
             if "language" not in result:
                 lang = None
+
             if result["language"]["code"][0:2] not in langs:
                 lang = None
             elif "matches" in result:
@@ -337,13 +586,12 @@ async def languagetool_rules(user_request_in: RequestIn):
                                 alternatives,
                                 match["shortMessage"],
                                 None,
-                                match["message"]
+                                match["message"],
                             )
                         )
 
     if isinstance(lang, Lang) != True:
-        raise HTTPException(
-            status_code=400, detail="Language could not be determined")
+        raise HTTPException(status_code=400, detail="Language could not be determined")
 
     return list_results, lang
 
@@ -365,27 +613,33 @@ def language_rules(user_request_in: RequestIn, lang: Lang):
 
     return list_results
 
+
 def serialize_event_data(user_request_in: RequestIn):
     data = user_request_in.dict()
 
     return jsonable_encoder(data)
 
+
 def serialize_request_data(request: Request, user_request_in: RequestIn):
-    data = user_request_in.dict(exclude={'text'})
+    data = user_request_in.dict(exclude={"text"})
     data["text"] = {
         "length": len(user_request_in.text),
     }
-    data["user_agent"] = request.headers.get('user-agent')
-    data["origin"] = request.headers.get('origin')
+    data["user_agent"] = request.headers.get("user-agent")
+    data["origin"] = request.headers.get("origin")
 
     return jsonable_encoder(data)
+
 
 def serialize_response_data(response: ResultsOut):
-    data = response.dict(exclude={'results': {'__all__': {'context'}}})
+    data = response.dict(exclude={"results": {"__all__": {"context"}}})
 
     return jsonable_encoder(data)
 
-def serialize_log_data(request: Request, user_request_in: RequestIn, response: ResultsOut = None):
+
+def serialize_user_training_data(
+    request: Request, user_request_in: RequestIn, response: ResultsOut = None
+):
     if response is None:
         data = {
             "event": serialize_event_data(user_request_in),
@@ -398,33 +652,34 @@ def serialize_log_data(request: Request, user_request_in: RequestIn, response: R
 
     return json.dumps(data)
 
-def log_message(request: Request, user_request_in: RequestIn, response: ResultsOut = None):
-    if user_request_in.id is None or not settings.logging_enabled:
+
+def write_user_training_data(
+    request: Request, user_request_in: RequestIn, response: ResultsOut = None
+):
+    if user_request_in.id is None or not settings.collect_user_training_data:
         return
 
-    data = serialize_log_data(request, user_request_in, response)
-    write_log(data, user_request_in.id)
+    data = serialize_user_training_data(request, user_request_in, response)
 
-async def log_request(request):
-    body = await request.json()
-
-    if body.id is None or not settings.logging_enabled:
-        return
-
-    write_log(await request.body(), body.id)
-
-def write_log(data: str, id: str):
-    dirname = os.getcwd() + '/logs/' + id
-    filename = dirname + '/' + \
-        datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3] + '.json'
+    dirname = os.getcwd() + "/user_training_data/" + user_request_in.id
+    filename = (
+        dirname
+        + "/"
+        + datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+        + ".json"
+    )
 
     os.makedirs(os.path.dirname(filename), exist_ok=True)
-    f = open(filename, 'w')
+    f = open(filename, "w")
     f.write(data)
 
+
 # Function for all German rules
+
+
 def IsNotNoun(pos):
     return pos != "NOUN" and pos != "PROPN" and pos != "PRON"
+
 
 def GetNonNounLowerCased(token):
     token_word = token.lemma_
@@ -433,47 +688,93 @@ def GetNonNounLowerCased(token):
 
     return token_word
 
+
 def GermanRules(lang, tokens, user_request_in: RequestIn):
     list_full = []
 
     # Agentic language and related false positives catch
     if "agentic" not in user_request_in.config.disabled_categories:
         list_full += AgenticLanguageAnalysis(
-            user_request_in.config, lang, user_request_in.text, tokens, df_agentic_ct)
+            user_request_in.config, lang, user_request_in.text, tokens, df_agentic_ct
+        )
 
     if "gendered" not in user_request_in.config.disabled_categories:
-        list_full += GenderedDenomAnalysis(user_request_in.config, lang, user_request_in.text, tokens, df_gender_ct)
+        list_full += GenderedDenomAnalysis(
+            user_request_in.config, lang, user_request_in.text, tokens, df_gender_ct
+        )
 
     if "misgendered_institutions" not in user_request_in.config.disabled_categories:
         list_full += MisgenderingInstitutions(
-            user_request_in.config, lang, user_request_in.text, tokens)
+            user_request_in.config, lang, user_request_in.text, tokens
+        )
 
     if "gendered_denomination_ending" not in user_request_in.config.disabled_categories:
-        list_full += GenderedDenomEnd(user_request_in.config, lang, user_request_in.text)
+        list_full += GenderedDenomEnd(
+            user_request_in.config, lang, user_request_in.text
+        )
 
     # discriminating words catch
     if "unconscious_bias" not in user_request_in.config.disabled_categories:
-        list_full += RulesBased(user_request_in.config, lang, user_request_in.text, tokens, df_discrim_words, "unconscious_bias", "unconscious_bias")
+        list_full += RulesBased(
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            df_discrim_words,
+            "unconscious_bias",
+            "unconscious_bias",
+        )
 
     # communal terms
     if "communal" not in user_request_in.config.disabled_categories:
-        list_full += RulesBased(user_request_in.config, lang, user_request_in.text, tokens, df_communal_words, "inclusive", "communal")
+        list_full += RulesBased(
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            df_communal_words,
+            "inclusive",
+            "communal",
+        )
 
     # d_and_i_words words
     if "d_and_i" not in user_request_in.config.disabled_categories:
         list_full += RulesBasedWordsPhraseMatcher(
-            user_request_in.config, lang, user_request_in.text, tokens, terms_d_and_i_words, df_d_and_i_words, "inclusive", "d_and_i")
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            terms_d_and_i_words,
+            df_d_and_i_words,
+            "inclusive",
+            "d_and_i",
+        )
 
     # hollow words&sentences catch
     if "hollow" not in user_request_in.config.disabled_categories:
-        list_full += HollowWordAnalysis(user_request_in.config, lang, user_request_in.text, tokens, terms_hollow, df_hollow_word, df_hollow_sentences)
+        list_full += HollowWordAnalysis(
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            terms_hollow,
+            df_hollow_word,
+            df_hollow_sentences,
+        )
 
     # exaggerating words&sentences catch
     if "exaggerating" not in user_request_in.config.disabled_categories:
         list_full += ExaggeratingWordsSentences(
-            user_request_in.config, lang, user_request_in.text, tokens, df_exaggerating, df_exaggerating_sentences)
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            df_exaggerating,
+            df_exaggerating_sentences,
+        )
 
     return list_full
+
 
 # Function for all English rules
 
@@ -482,7 +783,15 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
     list_full = []
 
     if "agentic" not in user_request_in.config.disabled_categories:
-        list_full += RulesBasedEN(user_request_in.config, lang, user_request_in.text, tokens, df_agentic_words_en, "unconscious_bias", "agentic")
+        list_full += RulesBasedEN(
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            df_agentic_words_en,
+            "unconscious_bias",
+            "agentic",
+        )
 
     return list_full
 
@@ -511,17 +820,19 @@ def GenderedDenomEnd(config: Config, lang, full_text):
             continue
         span = re.search(config._gendereddenom_ending[item], full_text)
         if type(span) == re.Match:
-            list_ending.append(ResultOut.factory(
-                config,
-                lang,
-                item,
-                full_text,
-                category,
-                subcategory,
-                span.start(),
-                span.end(),
-                [config.german_gender_ending]
-            ))
+            list_ending.append(
+                ResultOut.factory(
+                    config,
+                    lang,
+                    item,
+                    full_text,
+                    category,
+                    subcategory,
+                    span.start(),
+                    span.end(),
+                    [config.german_gender_ending],
+                )
+            )
 
     return list_ending
 
@@ -543,17 +854,15 @@ def AgenticLanguageAnalysis(config: Config, lang, full_text, tokens, df):
             # recognise if there is Name of organisation or geographical name in the query
             for entity in tokens.ents:
                 if entity.label_ == "ORG":
-                    list_false_positives.append({
-                        "false positives": token.text,
-                        "category": subcategory
-                    })
+                    list_false_positives.append(
+                        {"false positives": token.text, "category": subcategory}
+                    )
 
             # check if the word is adverb
             if token.pos_ == "ADV":
-                list_false_positives.append({
-                    "false positives": token.text,
-                    "category": subcategory
-                })
+                list_false_positives.append(
+                    {"false positives": token.text, "category": subcategory}
+                )
 
             # check if the word is adjective and find out how it depends on the other words to feel the contex
             elif token.pos_ == "ADJ":  # or token.tag_== "ADJD":
@@ -562,10 +871,12 @@ def AgenticLanguageAnalysis(config: Config, lang, full_text, tokens, df):
                     if key in false_positive_agentic:
                         for item in dic_anc[key]:
                             if item.text in exceptions:
-                                list_false_positives.append({
-                                    "false positives": token.text,
-                                    "category": subcategory
-                                })
+                                list_false_positives.append(
+                                    {
+                                        "false positives": token.text,
+                                        "category": subcategory,
+                                    }
+                                )
         else:
             for word, alternative in zip(df["Lemma"], df["Alternatives_split_company"]):
                 if GetNonNounLowerCased(token) == word:
@@ -579,7 +890,7 @@ def AgenticLanguageAnalysis(config: Config, lang, full_text, tokens, df):
                             subcategory,
                             token.idx,
                             None,
-                            ast.literal_eval(alternative)
+                            ast.literal_eval(alternative),
                         )
                     )
 
@@ -594,8 +905,7 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
     matcher = PhraseMatcher(model[lang.locale].vocab)
 
     # Only run model.make_doc to speed things up
-    patterns = [model[lang.locale].make_doc(
-        text) for text in terms_false_positive]
+    patterns = [model[lang.locale].make_doc(text) for text in terms_false_positive]
     matcher.add("TerminologyList", patterns)
     matches = matcher(tokens)
 
@@ -616,7 +926,11 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
         c_doc = Doc.from_docs(docs)
 
         for i in range(len(c_doc)):
-            for word, alternative_sing, alternative_plur in zip(df["Lemma"], df["Alternative_Singular_split"], df["Alternative_Plural_split"]):
+            for word, alternative_sing, alternative_plur in zip(
+                df["Lemma"],
+                df["Alternative_Singular_split"],
+                df["Alternative_Plural_split"],
+            ):
                 if c_doc[i].lemma_ == word:
                     if c_doc[i].morph.get("Number")[0] == "Sing":
                         list_tokens.append(
@@ -629,35 +943,35 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
                                 subcategory,
                                 c_doc[i].idx,
                                 None,
-                                ast.literal_eval(alternative_sing)
+                                ast.literal_eval(alternative_sing),
                             )
                         )
-                        if c_doc[i-1].text == "der":
+                        if c_doc[i - 1].text == "der":
                             list_tokens.append(
                                 ResultOut.factory(
                                     config,
                                     lang,
-                                    c_doc[i-1].text,
+                                    c_doc[i - 1].text,
                                     full_text,
                                     category,
                                     subcategory,
-                                    c_doc[i-1].idx,
+                                    c_doc[i - 1].idx,
                                     None,
-                                    ["der~die"]
+                                    ["der~die"],
                                 )
                             )
-                        elif c_doc[i-1].text == "einer":
+                        elif c_doc[i - 1].text == "einer":
                             list_tokens.append(
                                 ResultOut.factory(
                                     config,
                                     lang,
-                                    c_doc[i-1].text,
+                                    c_doc[i - 1].text,
                                     full_text,
                                     category,
                                     subcategory,
-                                    c_doc[i-1].idx,
+                                    c_doc[i - 1].idx,
                                     None,
-                                    ["einer~eine"]
+                                    ["einer~eine"],
                                 )
                             )
                     elif c_doc[i].morph.get("Number")[0] == "Plur":
@@ -671,13 +985,17 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
                                 subcategory,
                                 c_doc[i].idx,
                                 None,
-                                ast.literal_eval(alternative_plur)
+                                ast.literal_eval(alternative_plur),
                             )
                         )
 
     else:
         for i in range(len(tokens)):
-            for word, alternative_sing, alternative_plur in zip(df["Lemma"], df["Alternative_Singular_split"], df["Alternative_Plural_split"]):
+            for word, alternative_sing, alternative_plur in zip(
+                df["Lemma"],
+                df["Alternative_Singular_split"],
+                df["Alternative_Plural_split"],
+            ):
                 if tokens[i].lemma_ == word:
                     if tokens[i].morph.get("Number")[0] == "Sing":
                         list_tokens.append(
@@ -690,35 +1008,35 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
                                 subcategory,
                                 tokens[i].idx,
                                 None,
-                                ast.literal_eval(alternative_sing)
+                                ast.literal_eval(alternative_sing),
                             )
                         )
-                        if tokens[i-1].text == "der":
+                        if tokens[i - 1].text == "der":
                             list_tokens.append(
                                 ResultOut.factory(
                                     config,
                                     lang,
-                                    tokens[i-1].text,
+                                    tokens[i - 1].text,
                                     full_text,
                                     category,
                                     subcategory,
-                                    tokens[i-1].idx,
+                                    tokens[i - 1].idx,
                                     None,
-                                    ["der~die"]
+                                    ["der~die"],
                                 )
                             )
-                        elif tokens[i-1].text == "einer":
+                        elif tokens[i - 1].text == "einer":
                             list_tokens.append(
                                 ResultOut.factory(
                                     config,
                                     lang,
-                                    tokens[i-1].text,
+                                    tokens[i - 1].text,
                                     full_text,
                                     category,
                                     subcategory,
-                                    tokens[i-1].idx,
+                                    tokens[i - 1].idx,
                                     None,
-                                    ["einer~eine"]
+                                    ["einer~eine"],
                                 )
                             )
                     elif tokens[i].morph.get("Number")[0] == "Plur":
@@ -732,16 +1050,19 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
                                 subcategory,
                                 tokens[i].idx,
                                 None,
-                                ast.literal_eval(alternative_plur)
+                                ast.literal_eval(alternative_plur),
                             )
                         )
 
     return list_tokens
 
+
 # Exaggerating words and sentences analisys function, shows alternatives if avalible
 
 
-def ExaggeratingWordsSentences(config: Config, lang, full_text, tokens, df, df_sentences):
+def ExaggeratingWordsSentences(
+    config: Config, lang, full_text, tokens, df, df_sentences
+):
     category = "style"
     subcategory = "exaggerating"
     list_tokens = []
@@ -765,13 +1086,15 @@ def ExaggeratingWordsSentences(config: Config, lang, full_text, tokens, df, df_s
                         subcategory,
                         token.idx,
                         None,
-                        ast.literal_eval(alternative)
+                        ast.literal_eval(alternative),
                     )
                 )
 
     matches = matcher(tokens)
     for match_id, start, end in matches:
-        for sentence, alternative in zip(df_sentences["Lemma"], df_sentences["Alternatives"]):
+        for sentence, alternative in zip(
+            df_sentences["Lemma"], df_sentences["Alternatives"]
+        ):
             span = tokens[start:end]
             if span.text == sentence:
                 list_tokens.append(
@@ -784,17 +1107,18 @@ def ExaggeratingWordsSentences(config: Config, lang, full_text, tokens, df, df_s
                         subcategory,
                         span.start_char,
                         span.end_char,
-                        ast.literal_eval(alternative)
+                        ast.literal_eval(alternative),
                     )
                 )
 
     return list_tokens
 
+
 # Unified function for Emty words false positives and rules
 
 
 def HollowWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_sentence):
-    #category = df_hollow_sentences(["subcategory"])
+    # category = df_hollow_sentences(["subcategory"])
     category = "style"
     subcategory = "hollow"
     list_tokens = []
@@ -812,12 +1136,13 @@ def HollowWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_se
             # recognise if there is Name of organisation or geographical name in the query
             if len(tokens.ents) > 0:
                 # this output will be deleted in production
-                list_false_positives.append({
-                    "false positives": tokens[i].text,
-                    "category": subcategory
-                })
+                list_false_positives.append(
+                    {"false positives": tokens[i].text, "category": subcategory}
+                )
             else:
-                for word, alternative in zip(df["Lemma"], df["Alternative_Singular_split"]):
+                for word, alternative in zip(
+                    df["Lemma"], df["Alternative_Singular_split"]
+                ):
                     if len(alternative) > 5:
                         if tokens[i].lemma_ == word:
                             list_tokens.append(
@@ -829,25 +1154,28 @@ def HollowWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_se
                                     category,
                                     subcategory,
                                     tokens[i].idx,
-                                    tokens[i].idx+len(tokens[i].text),
-                                    ast.literal_eval(alternative)
+                                    tokens[i].idx + len(tokens[i].text),
+                                    ast.literal_eval(alternative),
                                 )
                             )
                     else:
                         if tokens[i].lemma_ == word:
-                            if tokens[i-1].is_stop == True or tokens[i-1].is_punct == True:
+                            if (
+                                tokens[i - 1].is_stop == True
+                                or tokens[i - 1].is_punct == True
+                            ):
                                 list_tokens.append(
                                     ResultOut.factory(
                                         config,
                                         lang,
-                                        tokens[i-1:i+1].text,
+                                        tokens[i - 1 : i + 1].text,
                                         full_text,
                                         category,
                                         subcategory,
-                                        tokens[i-1].idx,
-                                        tokens[i-1].idx +
-                                        len(tokens[i-1:i+1].text),
-                                        ["-"]
+                                        tokens[i - 1].idx,
+                                        tokens[i - 1].idx
+                                        + len(tokens[i - 1 : i + 1].text),
+                                        ["-"],
                                     )
                                 )
                             else:
@@ -860,8 +1188,8 @@ def HollowWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_se
                                         category,
                                         subcategory,
                                         tokens[i].idx,
-                                        tokens[i].idx+len(tokens[i].text),
-                                        ["-"]
+                                        tokens[i].idx + len(tokens[i].text),
+                                        ["-"],
                                     )
                                 )
 
@@ -878,24 +1206,27 @@ def HollowWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_se
                                 category,
                                 subcategory,
                                 tokens[i].idx,
-                                tokens[i].idx+len(tokens[i].text),
-                                ast.literal_eval(alternative)
+                                tokens[i].idx + len(tokens[i].text),
+                                ast.literal_eval(alternative),
                             )
                         )
                 else:
                     if tokens[i].lemma_ == word:
-                        if tokens[i-1].is_stop == True or tokens[i-1].is_punct == True:
+                        if (
+                            tokens[i - 1].is_stop == True
+                            or tokens[i - 1].is_punct == True
+                        ):
                             list_tokens.append(
                                 ResultOut.factory(
                                     config,
                                     lang,
-                                    tokens[i-1:i+1].text,
+                                    tokens[i - 1 : i + 1].text,
                                     full_text,
                                     category,
                                     subcategory,
-                                    tokens[i-1].idx,
-                                    tokens[i-1].idx+len(tokens[i-1:i+1].text),
-                                    ["-"]
+                                    tokens[i - 1].idx,
+                                    tokens[i - 1].idx + len(tokens[i - 1 : i + 1].text),
+                                    ["-"],
                                 )
                             )
                         else:
@@ -908,14 +1239,16 @@ def HollowWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_se
                                     category,
                                     subcategory,
                                     tokens[i].idx,
-                                    tokens[i].idx+len(tokens[i].text),
-                                    ["-"]
+                                    tokens[i].idx + len(tokens[i].text),
+                                    ["-"],
                                 )
                             )
 
     matches = matcher(tokens)
     for match_id, start, end in matches:
-        for sentence, alternative in zip(df_sentence["Lemma"], df_sentence["Alternative_Singular_split"]):
+        for sentence, alternative in zip(
+            df_sentence["Lemma"], df_sentence["Alternative_Singular_split"]
+        ):
             span = tokens[start:end]
             if span.text == sentence:
                 list_tokens.append(
@@ -928,16 +1261,19 @@ def HollowWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_se
                         subcategory,
                         span.start_char,
                         span.end_char,
-                        ast.literal_eval(alternative)
+                        ast.literal_eval(alternative),
                     )
                 )
 
     return list_tokens
 
+
 # Unified function for rules and sentence false positives
 
 
-def RulesBasedWordsPhraseMatcher(config: Config, lang, full_text, tokens, terms, df, category, subcategory):
+def RulesBasedWordsPhraseMatcher(
+    config: Config, lang, full_text, tokens, terms, df, category, subcategory
+):
     list_tokens = []
     # Phrase matcher part to handle False positives with two words and special simbols
     matcher = PhraseMatcher(model[lang.locale].vocab)
@@ -959,7 +1295,7 @@ def RulesBasedWordsPhraseMatcher(config: Config, lang, full_text, tokens, terms,
                         subcategory,
                         token.idx,
                         None,
-                        []
+                        [],
                     )
                 )
 
@@ -976,11 +1312,12 @@ def RulesBasedWordsPhraseMatcher(config: Config, lang, full_text, tokens, terms,
                 subcategory,
                 span.start_char,
                 span.end_char,
-                []
+                [],
             )
         )
 
     return list_tokens
+
 
 # Unified function for rules
 
@@ -1000,11 +1337,12 @@ def RulesBased(config: Config, lang, full_text, tokens, df, category, subcategor
                         subcategory,
                         token.idx,
                         None,
-                        []
+                        [],
                     )
                 )
 
     return list_tokens
+
 
 # Deutshe Bahn realated rule. Function to catch masculine words in sentences like
 # Deutshe Bahn als.. Deutshe Bahn ist..
@@ -1016,8 +1354,16 @@ def MisgenderingInstitutions(config: Config, lang, full_text, tokens):
     db_match_list = []
     matcher_db = Matcher(model[lang.locale].vocab)
     # Add match ID "DB" with no callback and one pattern
-    pattern_db = [{"TEXT": "Deutsche"}, {"TEXT": "Bahn"}, {"LEMMA": "sein", "OP": "*"}, {"POS": "ADV", "OP": "*"}, {"TEXT": "als",
-                                                                                                                    "OP": "*"}, {"TAG": "ART", "OP": "*"}, {"POS": "ADJ", "OP": "*"}, {'POS': 'NOUN', "MORPH": {'IS_SUPERSET': ["Gender=Masc"]}}]
+    pattern_db = [
+        {"TEXT": "Deutsche"},
+        {"TEXT": "Bahn"},
+        {"LEMMA": "sein", "OP": "*"},
+        {"POS": "ADV", "OP": "*"},
+        {"TEXT": "als", "OP": "*"},
+        {"TAG": "ART", "OP": "*"},
+        {"POS": "ADJ", "OP": "*"},
+        {"POS": "NOUN", "MORPH": {"IS_SUPERSET": ["Gender=Masc"]}},
+    ]
     # use greedy = "LONGEST" to find all matches in the text related to pattern
     matcher_db.add("DB", [pattern_db], greedy="LONGEST")
     matches_db = matcher_db(tokens)
@@ -1034,10 +1380,11 @@ def MisgenderingInstitutions(config: Config, lang, full_text, tokens):
                 subcategory,
                 span.start_char,
                 span.end_char,
-                [span.text + "in"]
+                [span.text + "in"],
             )
         )
     return db_match_list
+
 
 # function to catch ending in gendered denom
 # Rules based english function
@@ -1072,4 +1419,4 @@ def RulesBasedEN(config: Config, lang, full_text, tokens, df, category, subcateg
 if __name__ == "__main__":
     # If this is being ran directly as a script, run an internal uvicorn server
     # to service API requests
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000, log_level=settings.logging_config_level)

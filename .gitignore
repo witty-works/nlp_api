@@ -4,6 +4,7 @@
 
 venv-nlp-api/
 
+user_training_data
 logs
 app/.env
 files

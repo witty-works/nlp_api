@@ -11,4 +11,5 @@ gosu wittyuser \
         -b 0.0.0.0:${PORT} \
         -w ${WORKERS} \
         -k uvicorn.workers.UvicornWorker \
-        --forwarded-allow-ips="*"
+        --forwarded-allow-ips="*" \
+        --log-level "${LOGGING_CONFIG_LEVEL,,}"

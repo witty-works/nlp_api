@@ -1,3 +1,4 @@
+from numpy import array
 from pydantic import BaseModel, validator
 from typing import Dict, List
 from typing import Optional
@@ -5,6 +6,7 @@ from enum import Enum
 
 import gettext
 import string
+
 
 class Lang(object):
     def __init__(self, locale):
@@ -16,22 +18,21 @@ class Lang(object):
             trans_locale = "de_DE"
 
         language = gettext.translation(
-            "messages",
-            localedir="locales",
-            languages=[trans_locale]
+            "messages", localedir="locales", languages=[trans_locale]
         )
 
         language.install()
 
         self.gettext = language.gettext
 
-    def _(self, message: str, placeholders = {}):
+    def _(self, message: str, placeholders={}):
         message = self.gettext(message)
 
         for key in placeholders:
             message = message.replace("%" + key, placeholders[key])
 
         return message
+
 
 class EventType(str, Enum):
     ID = "id"
@@ -40,18 +41,22 @@ class EventType(str, Enum):
     ALTERNATIVE = "alternative"
     ERROR = "error"
 
+
 class LangType(str, Enum):
     EN = "en"
     DE = "de"
+
 
 class LangWithAutoType(str, Enum):
     AUTO = "auto"
     EN = "en"
     DE = "de"
 
+
 class GenderedRolesFormatType(str, Enum):
     INCLUSIVE_GENDER = "inclusive_gender"
     BINARY_GENDER = "binary_gender"
+
 
 class Config(BaseModel):
     store_context: Optional[bool] = True
@@ -59,8 +64,15 @@ class Config(BaseModel):
     preferred_languages: Optional[str] = "de,en"
     preferred_variants: Optional[str] = "de-DE,en-GB"
     german_gender_ending: Optional[str] = ":in"
-    _gendereddenom_ending = {"/in": "/in", "/-in": "/-in", "_in": "_in", "*in": "\\*in", ":in": ":in", "In": r"In\b"}
-    disabled_categories: Optional[List] = ""
+    _gendereddenom_ending = {
+        "/in": "/in",
+        "/-in": "/-in",
+        "_in": "_in",
+        "*in": "\\*in",
+        ":in": ":in",
+        "In": r"In\b",
+    }
+    disabled_categories: Optional[List] = []
     gendered_roles_format: Optional[GenderedRolesFormatType] = "inclusive_gender"
 
     @validator("german_gender_ending")
@@ -75,6 +87,45 @@ class Config(BaseModel):
             return v.split(",")
         return v
 
+
+class ForcedConfig(BaseModel):
+    store_context: Optional[bool]
+    primary_language: Optional[str]
+    preferred_languages: Optional[str]
+    preferred_variants: Optional[str]
+    german_gender_ending: Optional[str]
+    _gendereddenom_ending = {
+        "/in": "/in",
+        "/-in": "/-in",
+        "_in": "_in",
+        "*in": "\\*in",
+        ":in": ":in",
+        "In": r"In\b",
+    }
+    disabled_categories: Optional[List]
+    gendered_roles_format: Optional[GenderedRolesFormatType]
+    corporate_false_positive: Optional[List] = []
+
+    @validator("german_gender_ending")
+    def valid_german_gender_ending(cls, v: str):
+        if v not in cls._gendereddenom_ending:
+            raise ValueError("Not supported german_gender_ending")
+        return v
+
+    @validator("disabled_categories", pre=True)
+    def split_string_values(cls, v):
+        if isinstance(v, str):
+            return v.split(",")
+        return v
+
+
+class ConfRequest(BaseModel):
+    company: str
+    users: list
+    forced: ForcedConfig
+    suggestion: Config
+
+
 class RequestIn(BaseModel):
     text: str
     lang: Optional[LangWithAutoType] = "auto"
@@ -82,12 +133,14 @@ class RequestIn(BaseModel):
     client: Optional[str] = None
     config: Optional[Config] = Config()
 
+
 class RequestInEvent(RequestIn):
     type: EventType
     context: Optional[str]
     start: Optional[int]
     end: Optional[int]
     details: Dict[str, str]
+
 
 class ResultOut(BaseModel):
     text: str
@@ -101,7 +154,20 @@ class ResultOut(BaseModel):
     reason: str
     solution: str
 
-    def factory(config: Config, lang: Lang, text, full_text, category, subcategory, start, end = None, alternatives = [], label = None, reason = None, solution = None):
+    def factory(
+        config: Config,
+        lang: Lang,
+        text,
+        full_text,
+        category,
+        subcategory,
+        start,
+        end=None,
+        alternatives=[],
+        label=None,
+        reason=None,
+        solution=None,
+    ):
         if end == None:
             end = start + len(text)
 
@@ -118,16 +184,26 @@ class ResultOut(BaseModel):
 
         label = label if label != None else lang._("rules." + category + "_label")
         if category != subcategory:
-            label+= ": " + lang._("rules." + subcategory + "_label")
+            label += ": " + lang._("rules." + subcategory + "_label")
 
-        reason = reason if reason != None else lang._("rules." + subcategory + "_reason", params)
-        solution = solution if solution != None else lang._("rules." + subcategory + "_solution", params)
+        reason = (
+            reason
+            if reason != None
+            else lang._("rules." + subcategory + "_reason", params)
+        )
+        solution = (
+            solution
+            if solution != None
+            else lang._("rules." + subcategory + "_solution", params)
+        )
 
         is_upper = text[0:1].isupper()
 
         for key, alternative in enumerate(alternatives):
             if is_upper and category != "orthography":
-                alternatives[key] = string.capwords(alternatives[key][0:1]) + alternatives[key][1:]
+                alternatives[key] = (
+                    string.capwords(alternatives[key][0:1]) + alternatives[key][1:]
+                )
 
             if "~" not in alternative:
                 continue
@@ -137,25 +213,55 @@ class ResultOut(BaseModel):
             else:
                 variants = alternative.split("~")
                 if str(variants[1]) == "e":
-                    alternatives[key] = str(variants[0]) + "e" + config.german_gender_ending[0:-2] + "r"
+                    alternatives[key] = (
+                        str(variants[0]) + "e" + config.german_gender_ending[0:-2] + "r"
+                    )
                 else:
-                    alternatives[key] = str(variants[0]) + config.german_gender_ending[0:-2] + str(variants[1])
+                    alternatives[key] = (
+                        str(variants[0])
+                        + config.german_gender_ending[0:-2]
+                        + str(variants[1])
+                    )
 
-        return ResultOut(text, context, category, subcategory, start, end, alternatives, label, reason, solution)
+        return ResultOut(
+            text,
+            context,
+            category,
+            subcategory,
+            start,
+            end,
+            alternatives,
+            label,
+            reason,
+            solution,
+        )
 
     factory = staticmethod(factory)
 
-    def __init__(self, text, context, category, subcategory, start, end, alternatives, label, reason, solution):
-        object.__setattr__(self, 'text', text)
-        object.__setattr__(self, 'context', context)
-        object.__setattr__(self, 'category', category)
-        object.__setattr__(self, 'subcategory', subcategory)
-        object.__setattr__(self, 'start', start)
-        object.__setattr__(self, 'end', end)
-        object.__setattr__(self, 'alternatives', alternatives)
-        object.__setattr__(self, 'label', label)
-        object.__setattr__(self, 'reason', reason)
-        object.__setattr__(self, 'solution', solution)
+    def __init__(
+        self,
+        text,
+        context,
+        category,
+        subcategory,
+        start,
+        end,
+        alternatives,
+        label,
+        reason,
+        solution,
+    ):
+        object.__setattr__(self, "text", text)
+        object.__setattr__(self, "context", context)
+        object.__setattr__(self, "category", category)
+        object.__setattr__(self, "subcategory", subcategory)
+        object.__setattr__(self, "start", start)
+        object.__setattr__(self, "end", end)
+        object.__setattr__(self, "alternatives", alternatives)
+        object.__setattr__(self, "label", label)
+        object.__setattr__(self, "reason", reason)
+        object.__setattr__(self, "solution", solution)
+
 
 class ResultsOut(BaseModel):
     results: List[ResultOut]
@@ -167,5 +273,5 @@ class ResultsOut(BaseModel):
     factory = staticmethod(factory)
 
     def __init__(self, results, language):
-        object.__setattr__(self, 'results', results)
-        object.__setattr__(self, 'language', language)
+        object.__setattr__(self, "results", results)
+        object.__setattr__(self, "language", language)
