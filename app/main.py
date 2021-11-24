@@ -387,18 +387,18 @@ def get_current_username(
     return credentials.username
 
 
-@app.get("/exception")
-def get_root():
-    raise HTTPException(status_code=500)
-
-
 @app.get("/")
 def get_root():
     return RedirectResponse(url="/form", status_code=301)
 
 
+@app.get("/exception")
+def get_root(username: str = Depends(get_current_username)):
+    raise HTTPException(status_code=500)
+
+
 @app.get("/lt")
-def get_root():
+def get_lt(username: str = Depends(get_current_username)):
     return languagetool_url
 
 
@@ -423,7 +423,9 @@ def get_categories(lang: LangType = "de"):
 
 
 @app.post("/serialize", response_class=PlainTextResponse)
-def serialize(user_request_in: RequestIn):
+def serialize(
+    user_request_in: RequestIn, username: str = Depends(get_current_username)
+):
     data = serialize_user_training_data(user_request_in, ResultsOut([], "en"))
     return data
 
