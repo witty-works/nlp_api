@@ -36,6 +36,9 @@ mounts:
   "logs":
     source: local
     source_path: logs
+  "user_training_data":
+    source: local
+    source_path: user_training_data
 
 hooks:
   build: |
