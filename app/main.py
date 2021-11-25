@@ -144,7 +144,7 @@ languagetool_url = get_languagetool_url()
 # convert string of list into list of the strings
 # project models
 
-version = "1.4.6"
+version = "1.4.7"
 
 app = FastAPI(
     title="Witty NLP API",
