@@ -144,7 +144,7 @@ languagetool_url = get_languagetool_url()
 # convert string of list into list of the strings
 # project models
 
-version = "1.4.6"
+version = "1.4.7"
 
 app = FastAPI(
     title="Witty NLP API",
@@ -161,7 +161,8 @@ app = FastAPI(
 
 @app.exception_handler(HTTPException)
 async def custom_http_exception_handler(request, e):
-    logging.exception("Exception logging message")
+    if e.status_code >= 500:
+        logging.exception("Exception logging message")
 
     return await http_exception_handler(request, e)
 
@@ -393,8 +394,15 @@ def get_root():
 
 
 @app.get("/exception")
-def get_root(username: str = Depends(get_current_username)):
-    raise HTTPException(status_code=500)
+def raise_exception(
+    exception_type: str = None,
+    status_code: int = 500,
+    username: str = Depends(get_current_username),
+):
+    if exception_type == "http":
+        raise HTTPException(status_code=status_code)
+
+    raise Exception("Example exception")
 
 
 @app.get("/lt")
