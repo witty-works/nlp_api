@@ -69,7 +69,7 @@ class Settings(BaseSettings):
     logging_enabled: bool = False
     logging_config_filename: str = "./logs/error.log"
     logging_config_level: str = "ERROR"
-    collect_user_training_data: bool = False
+    training_data_enabled: bool = False
     platform_environment: str = "local"
     languagetool_api: Optional[str]
     languagetool_verify_ssl: bool = True
@@ -144,7 +144,7 @@ languagetool_url = get_languagetool_url()
 # convert string of list into list of the strings
 # project models
 
-version = "1.4.7"
+version = "1.4.8"
 
 app = FastAPI(
     title="Witty NLP API",
@@ -664,7 +664,7 @@ def serialize_user_training_data(
 def write_user_training_data(
     request: Request, user_request_in: RequestIn, response: ResultsOut = None
 ):
-    if user_request_in.id is None or not settings.collect_user_training_data:
+    if user_request_in.id is None or not settings.training_data_enabled:
         return
 
     data = serialize_user_training_data(request, user_request_in, response)
