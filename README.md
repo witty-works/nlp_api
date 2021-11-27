@@ -186,3 +186,29 @@ CLick on "File" -> "Download" -> CSV
 ```
 pipenv run python -m analyze_rules -i [CSV export]]
 ```
+
+## Collect statistics
+
+Number if installations
+
+```
+platform ssh -e main -A app "ls user_training_data/ | wc -l"
+```
+
+Number of total requests and click on alternatives/ignores
+
+````
+platform ssh -e main -A app "find user_training_data -type f | wc -l"
+````
+
+Number of clicks on an alternative
+
+```
+platform ssh -e main -A app "ls user_training_data/ | grep -r '\"alternative\"' | wc -l"
+```
+
+Number of clicks on ignore
+
+```
+platform ssh -e main -A app "ls user_training_data/ | grep -r '\"igore\"' | wc -l"
+```
