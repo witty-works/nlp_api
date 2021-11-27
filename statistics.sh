@@ -1,19 +1,33 @@
+#!/bin/bash
 
+set -e;
 
+descriptions=(
+    "Number of installations"
+    "Number of total requests and click on alternatives/ignores"
+    "Number of clicks on an alternative"
+    "Number of clicks on ignore"
+)
 
-echo "Number if installations"
+cmds=(
+    "ls user_training_data/ | wc -l"
+    "find user_training_data -type f | wc -l"
+    "ls user_training_data/ | grep -r '\"alternative\"' | wc -l"
+    "ls user_training_data/ | grep -r '\"igore\"' | wc -l"
+)
 
-platform ssh -e main -A app "ls user_training_data/ | wc -l"
+for i in ${!descriptions[@]};
+do
+    description=${descriptions[$i]}
+    cmd=${cmds[$i]};
 
-echo "Number of total requests and click on alternatives/ignores"
+    echo $description;
 
-platform ssh -e main -A app "find user_training_data -type f | wc -l"
+    if [[ -z "${PLATFORM_PROJECT}" ]];
+    then
+        platform ssh -e main -A app "$cmd";
+    else
+        eval $cmd;
+    fi
 
-echo "Number of clicks on an alternative"
-
-
-platform ssh -e main -A app "ls user_training_data/ | grep -r '\"alternative\"' | wc -l"
-
-echo "Number of clicks on ignore"
-
-platform ssh -e main -A app "ls user_training_data/ | grep -r '\"igore\"' | wc -l"
+done

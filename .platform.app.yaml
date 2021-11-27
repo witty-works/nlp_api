@@ -60,3 +60,11 @@ variables:
   env:
     BLACKFIRE_AGENT_SOCKET: "unix:///run/blackfire.sock"
     BLACKFIRE_LOG_FILE: "/tmp/blackfire.log"
+
+crons:
+  review-requests-reset:
+    spec: "55 0 * * *"
+    cmd: |
+      if [ "$PLATFORM_BRANCH" = master ]; then
+          php send_statistics.php
+      fi
