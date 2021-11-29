@@ -43,6 +43,9 @@ hooks:
     pipenv run /opt/python/3.9/bin/python3.9 -m spacy download de_core_news_sm
     pipenv run pybabel compile -d locales -l de_DE -f
     pipenv run pybabel compile -d locales -l en_GB -f
+    git clone https://github.com/facebookresearch/fastText.git
+    cd fastText
+    make 
 
 relationships:
   languagetool: "languagetool:http"
