@@ -65,6 +65,6 @@ crons:
   review-requests-reset:
     spec: "55 0 * * *"
     cmd: |
-      if [ "$PLATFORM_BRANCH" = master ]; then
+      if [ "$PLATFORM_BRANCH" = main ]; then
           php send_statistics.php
       fi
