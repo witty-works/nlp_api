@@ -39,7 +39,8 @@ def test_api():
             "end": 48,
             "alternatives": [
                 "Auftraggebende",
-                "Bestellende",
+                "Bestellende, Kund:innen",
+                "Kundinnen und Kunden",
                 "Kundschaft",
                 "Klientel, beziehende Personen",
                 "Personen, die (…) kaufen",
@@ -86,7 +87,8 @@ def test_api_context():
             "end": 17,
             "alternatives": [
                 "Auftraggebende",
-                "Bestellende",
+                "Bestellende, Kund:innen",
+                "Kundinnen und Kunden",
                 "Kundschaft",
                 "Klientel, beziehende Personen",
                 "Personen, die (…) kaufen",
@@ -123,7 +125,8 @@ def test_api_disabled_categories():
             "end": 48,
             "alternatives": [
                 "Auftraggebende",
-                "Bestellende",
+                "Bestellende, Kund:innen",
+                "Kundinnen und Kunden",
                 "Kundschaft",
                 "Klientel, beziehende Personen",
                 "Personen, die (…) kaufen",
@@ -138,7 +141,7 @@ def test_api_disabled_categories():
 
 def test_api_gender_endings():
     request_data = {
-        "text": "Wir geben unseren Kunden alles.",
+        "text": "Hallo Kunde. Wir geben unseren Kunden alles.",
         "config": {"store_context": False, "german_gender_ending": "*in"},
     }
 
@@ -149,15 +152,35 @@ def test_api_gender_endings():
     assert first_record["language"] == "de"
     assert first_record["results"] == [
         {
+            "text": "Kunde",
+            "context": "",
+            "category": "gendered",
+            "subcategory": "titles",
+            "start": 6,
+            "end": 11,
+            "alternatives": [
+                "Kund*in",
+                "Kundschaft",
+                "Klientel, Auftraggebende",
+                "Bestellende, beziehende Person",
+                "Person, die (…) kauft",
+                "Beauftragende Firma",
+            ],
+            "label": "Geschlechtsspezifisch: Titel",
+            "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
+            "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht.",
+        },
+        {
             "text": "Kunden",
             "context": "",
             "category": "gendered",
             "subcategory": "titles",
-            "start": 18,
-            "end": 24,
+            "start": 31,
+            "end": 37,
             "alternatives": [
                 "Auftraggebende",
-                "Bestellende",
+                "Bestellende, Kund*innen",
+                "Kundinnen und Kunden",
                 "Kundschaft",
                 "Klientel, beziehende Personen",
                 "Personen, die (…) kaufen",
@@ -166,7 +189,7 @@ def test_api_gender_endings():
             "label": "Geschlechtsspezifisch: Titel",
             "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
             "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht.",
-        }
+        },
     ]
 
 
