@@ -906,8 +906,8 @@ def AgenticLanguageAnalysis(config: Config, lang, full_text, tokens, df):
 
 
 def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
-    category = "gendered"
-    subcategory = "titles"
+    category = df["Category"]
+    subcategory = df["Primary_subcategory"]
     list_tokens = []
     list_false_positives = []
     matcher = PhraseMatcher(model[lang.locale].vocab)
@@ -936,8 +936,8 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
         for i in range(len(c_doc)):
             for word, alternative_sing, alternative_plur in zip(
                 df["Lemma"],
-                df["Alternative_Singular_split"],
-                df["Alternative_Plural_split"],
+                df["Sg_all_clean"],
+                df["Pl_all_clean"],
             ):
                 if c_doc[i].lemma_ == word:
                     if c_doc[i].morph.get("Number")[0] == "Sing":
@@ -1001,8 +1001,8 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
         for i in range(len(tokens)):
             for word, alternative_sing, alternative_plur in zip(
                 df["Lemma"],
-                df["Alternative_Singular_split"],
-                df["Alternative_Plural_split"],
+                df["Sg_all_clean"],
+                df["Pl_all_clean"],
             ):
                 if tokens[i].lemma_ == word:
                     if tokens[i].morph.get("Number")[0] == "Sing":
