@@ -25,19 +25,24 @@ p {
 
 /* Styles */
 body {
-  font-family: Helvetica, Arial, sans-serif;
-  color: #323232;
-  background-color: #f3f3f3;
+  font-family: 'Lato',Helvetica,sans-serif;
+  color: #000;
+  background-color: #f9f9f9;
+  font-size: 1.125rem;
+  line-height: 1.875rem;
+  letter-spacing: 0;
 }
 
 header {
   background-color: #fff;
   padding: 1rem 3rem;
+  border-bottom: 1px solid #eee;
 }
 
 .body-container {
   margin: 0 auto;
   max-width: 1080px;
+
 }
 
 section {
@@ -46,8 +51,38 @@ section {
   padding: 3rem;
 }
 
+textarea#editor {
+  width: 100%;
+  resize: vertical;
+  min-height: 200px;
+  max-height: 600px;
+  overflow: auto;
+  outline: none;
+  padding: 0.5rem;
+  /* margin: 1rem 0; */
+  border: 2px solid #ddd;
+  margin-bottom: 4rem;
+  border-radius: 5px;
+  color: #323232;
+}
+
+h2.support-title {
+  font-family: 'Ibarra Real Nova', serif;
+  font-weight: 300;
+  font-size: 3rem;
+  letter-spacing: -1.2px;
+  line-height: 1.1;
+  margin-bottom: 2rem;
+}
+
+a.support-link {
+  color: #F06464;
+  text-decoration: none;
+}
+
 /* Alert and info boxes */
-.alert {
+
+/* .alert {
   padding: .8rem;
   color: white;
   border-radius: 5px;
@@ -77,15 +112,4 @@ section {
 
 .closebtn:hover {
   color: #000;
-}
-
-textarea#editor {
-  width: 100%;
-  overflow: auto;
-  outline: none;
-  padding: 0.5rem;
-  margin: 1rem 0;
-  border: 1px solid #999;
-  border-radius: 5px;
-  color: #323232;
-}
+} */
