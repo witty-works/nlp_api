@@ -254,7 +254,7 @@ df_agentic_ct = pd.read_csv("training_data/agentic_DE.csv")
 # list_agentic = list(df_agentic_ct["Lemma"])
 
 # load Gender denom_de
-df_gender_ct = pd.read_csv("training_data/titles_DE.csv")
+df_gender_ct = pd.read_csv("training_data/GenderedNoun_DE.csv")
 # load Gender denom_de false_positives
 genderdenom_false_positives = pd.read_csv("training_data/titles_false_positives_DE.csv")
 
