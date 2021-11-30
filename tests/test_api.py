@@ -37,7 +37,14 @@ def test_api():
             "subcategory": "titles",
             "start": 42,
             "end": 48,
-            "alternatives": ["Kundschaft", "Kund:innen"],
+            "alternatives": [
+                "Auftraggebende",
+                "Bestellende, Kund:innen",
+                "Kundschaft",
+                "Klientel, beziehende Personen",
+                "Personen, die (…) kaufen",
+                "Beauftragende Firmen",
+            ],
             "label": "Geschlechtsspezifisch: Titel",
             "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
             "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht.",
@@ -61,6 +68,65 @@ def test_api():
     ]
 
 
+def test_api_gendered_subcategories():
+    request_data = {
+        "text": "Ich bin hier der Manager und dein Boss!",
+        "config": {"store_context": False},
+    }
+
+    response = client.post("/check", json=request_data)
+    assert response.status_code == 200
+
+    first_record = response.json()
+    assert first_record["language"] == "de"
+    assert first_record["results"] == [
+        {
+            "text": "Manager",
+            "context": "",
+            "category": "gendered",
+            "subcategory": "function",
+            "start": 17,
+            "end": 24,
+            "alternatives": ["Management, Manager:in"],
+            "label": "Geschlechtsspezifisch: Spezielle Funktionen",
+            "reason": "Aus wirtschaftlich-historischen Gründen wird unbewusst ein Bild eines Mannes vor dem inneren Auge hervorgerufen. Das weibliche Geschlecht oder andere Geschlechtsidentitäten werden nicht sichtbar. Und sie fühlen sich nicht zugehörig.",
+            "solution": "Umgehen Sie mit anderen Worten das unbewusst hervorgerufene Bild. Nutzen Sie eher das Nomen, das die Tätigkeit bezeichnet, um das unbewusste Bild zu umgehen. Oder verwenden Sie eine geschlechtsneutrale Bezeichnung.",
+        },
+        {
+            "text": "der",
+            "context": "",
+            "category": "gendered",
+            "subcategory": "function",
+            "start": 13,
+            "end": 16,
+            "alternatives": ["der:die"],
+            "label": "Geschlechtsspezifisch: Spezielle Funktionen",
+            "reason": "Aus wirtschaftlich-historischen Gründen wird unbewusst ein Bild eines Mannes vor dem inneren Auge hervorgerufen. Das weibliche Geschlecht oder andere Geschlechtsidentitäten werden nicht sichtbar. Und sie fühlen sich nicht zugehörig.",
+            "solution": "Umgehen Sie mit anderen Worten das unbewusst hervorgerufene Bild. Nutzen Sie eher das Nomen, das die Tätigkeit bezeichnet, um das unbewusste Bild zu umgehen. Oder verwenden Sie eine geschlechtsneutrale Bezeichnung.",
+        },
+        {
+            "text": "Boss",
+            "context": "",
+            "category": "gendered",
+            "subcategory": "leadership",
+            "start": 34,
+            "end": 38,
+            "alternatives": [
+                "Leitende Kraft",
+                "Leitungsperson, Leitung, Vorgesetzte:r",
+                "Leitende Kräfte",
+                "Leitungskräfte",
+                "Leitungspersonen",
+                "Vorgesetzte, entscheidungsbefugte Person",
+                "Verantwortliche Person",
+            ],
+            "label": "Geschlechtsspezifisch: Führungsstereotyp",
+            "reason": "Besetzt das Thema der Führung stereotyp männlich und traditionell hierarchisch.",
+            "solution": "Verwenden Sie Begriffe, die von einer unterstützenden Vorstellung der Führung ausgeht und verschiedene Geschlechter meinen kann.",
+        },
+    ]
+
+
 def test_api_context():
     request_data = {"text": "Wir suchen Kunden"}
 
@@ -77,7 +143,14 @@ def test_api_context():
             "subcategory": "titles",
             "start": 11,
             "end": 17,
-            "alternatives": ["Kundschaft", "Kund:innen"],
+            "alternatives": [
+                "Auftraggebende",
+                "Bestellende, Kund:innen",
+                "Kundschaft",
+                "Klientel, beziehende Personen",
+                "Personen, die (…) kaufen",
+                "Beauftragende Firmen",
+            ],
             "label": "Geschlechtsspezifisch: Titel",
             "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
             "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht.",
@@ -107,7 +180,14 @@ def test_api_disabled_categories():
             "subcategory": "titles",
             "start": 42,
             "end": 48,
-            "alternatives": ["Kundschaft", "Kund:innen"],
+            "alternatives": [
+                "Auftraggebende",
+                "Bestellende, Kund:innen",
+                "Kundschaft",
+                "Klientel, beziehende Personen",
+                "Personen, die (…) kaufen",
+                "Beauftragende Firmen",
+            ],
             "label": "Geschlechtsspezifisch: Titel",
             "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
             "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht.",
@@ -117,7 +197,7 @@ def test_api_disabled_categories():
 
 def test_api_gender_endings():
     request_data = {
-        "text": "Wir geben unseren Kunden alles.",
+        "text": "Hallo Kunde. Wir geben unseren Kunden alles.",
         "config": {"store_context": False, "german_gender_ending": "*in"},
     }
 
@@ -128,18 +208,58 @@ def test_api_gender_endings():
     assert first_record["language"] == "de"
     assert first_record["results"] == [
         {
+            "text": "Kunde",
+            "context": "",
+            "category": "gendered",
+            "subcategory": "titles",
+            "start": 6,
+            "end": 11,
+            "alternatives": [
+                "Kund*in",
+                "Kundschaft",
+                "Klientel, Auftraggebende",
+                "Bestellende, beziehende Person",
+                "Person, die (…) kauft",
+                "Beauftragende Firma",
+            ],
+            "label": "Geschlechtsspezifisch: Titel",
+            "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
+            "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht.",
+        },
+        {
             "text": "Kunden",
             "context": "",
             "category": "gendered",
             "subcategory": "titles",
-            "start": 18,
-            "end": 24,
-            "alternatives": ["Kundschaft", "Kund*innen"],
+            "start": 31,
+            "end": 37,
+            "alternatives": [
+                "Auftraggebende",
+                "Bestellende, Kund*innen",
+                "Kundschaft",
+                "Klientel, beziehende Personen",
+                "Personen, die (…) kaufen",
+                "Beauftragende Firmen",
+            ],
             "label": "Geschlechtsspezifisch: Titel",
             "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
             "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht.",
-        }
+        },
     ]
+
+
+def test_api_gender_endings_do_not_trigger_spellchecker():
+    request_data = {
+        "text": "Wie geht es dir? Bis du unser Matros/-in?",
+        "config": {"store_context": False, "german_gender_ending": "/-in"},
+    }
+
+    response = client.post("/check", json=request_data)
+    assert response.status_code == 200
+
+    first_record = response.json()
+    assert first_record["language"] == "de"
+    assert first_record["results"] == []
 
 
 def test_api_orthography():
@@ -409,7 +529,7 @@ def test_categories():
 
 def test_api_corporate_false_positives():
     request_data = {
-        "text": "Die Bahn ist stark auch wegen ihrer Führungskräfte!",
+        "text": "Die Bahn ist stark wegen ihrer Führungskräfte!",
         "config": {"store_context": False},
     }
 

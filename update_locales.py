@@ -72,8 +72,8 @@ def read_csv(in_file):
                         columns[column] = i
                 line_count += 1
             else:
-                if row[columns["Status English"]] not in ["Ready to deploy", "Deployed"] and row[columns["Status German"]] not in ["Ready to deploy", "Deployed"]:
-                    continue
+                #if row[columns["Status English"]] not in ["Ready to deploy", "Deployed"] and row[columns["Status German"]] not in ["Ready to deploy", "Deployed"]:
+                #    continue
 
                 category = row[columns["Subcategory"]].strip()
                 if category == "New Category":

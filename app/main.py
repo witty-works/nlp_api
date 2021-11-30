@@ -144,7 +144,7 @@ languagetool_url = get_languagetool_url()
 # convert string of list into list of the strings
 # project models
 
-version = "1.4.10"
+version = "1.5.0"
 
 app = FastAPI(
     title="Witty NLP API",
@@ -254,18 +254,18 @@ df_agentic_ct = pd.read_csv("training_data/agentic_DE.csv")
 # list_agentic = list(df_agentic_ct["Lemma"])
 
 # load Gender denom_de
-df_gender_ct = pd.read_csv("training_data/titles_DE.csv")
+df_gender_ct = pd.read_csv("training_data/GenderedNoun_DE.csv")
 # load Gender denom_de false_positives
 genderdenom_false_positives = pd.read_csv("training_data/titles_false_positives_DE.csv")
 
 # load discriminating words_de
 df_discrim_words = pd.read_csv("training_data/unconscious_bias_DE.csv")
 
-# load hollow words_de
-df_hollow_word = pd.read_csv("training_data/hollow_words_DE.csv")
-df_hollow_sentences = pd.read_csv("training_data/hollow_sentences_DE.csv")
+# load style words_de
+df_style_word = pd.read_csv("training_data/style_words_DE.csv")
+df_style_sentences = pd.read_csv("training_data/style_sentences_DE.csv")
 # list of "hollow word" sentences
-terms_hollow = list(df_hollow_sentences["Lemma"])
+terms_style = list(df_style_sentences["Lemma"])
 
 # load Exaggerating word and sentences de
 df_exaggerating = pd.read_csv("training_data/exaggerating_words_DE.csv")
@@ -289,7 +289,7 @@ df_agentic_words_en = pd.read_csv("training_data/agentic_EN.csv")
 
 # dictionaries to handle false positives
 false_positive_agentic = ["selbst", "flexible", "Probleme", "unabhängig", "Entwickler"]
-false_positive_hollow = ["international"]
+false_positive_style = ["international"]
 exceptions = [
     "Unternehmen",
     "Firma",
@@ -328,8 +328,6 @@ corporate_false_positive = [
 terms_false_positive = gender_false_positive + corporate_false_positive
 false_positive_agentic += corporate_false_positive
 
-favicon_path = "static/favicon.ico"
-
 # read redis configuration
 
 if settings.testing == True:
@@ -338,11 +336,6 @@ else:
     redis_config = platformshconfig.Config()
     credentials = redis_config.credentials("rediscache")
     redis = Redis(credentials["host"], credentials["port"])
-
-
-@app.get("/favicon.ico", include_in_schema=False)
-async def favicon():
-    return FileResponse(favicon_path)
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -569,11 +562,20 @@ async def languagetool_rules(user_request_in: RequestIn):
                 lang = None
             elif "matches" in result:
                 lang = Lang(result["language"]["code"])
+                german_gender_ending = user_request_in.config.german_gender_ending
 
                 if "orthography" not in user_request_in.config.disabled_categories:
                     for match in result["matches"]:
                         offset = int(match["offset"])
                         end = offset + int(match["length"])
+                        if (
+                            german_gender_ending
+                            == user_request_in.text[
+                                end : end + len(german_gender_ending)
+                            ]
+                        ):
+                            continue
+
                         alternatives = []
                         if "replacements" in match:
                             for replacement in match["replacements"]:
@@ -758,16 +760,16 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             "d_and_i",
         )
 
-    # hollow words&sentences catch
-    if "hollow" not in user_request_in.config.disabled_categories:
-        list_full += HollowWordAnalysis(
+    # style words&sentences catch
+    if "style" not in user_request_in.config.disabled_categories:
+        list_full += StyleWordAnalysis(
             user_request_in.config,
             lang,
             user_request_in.text,
             tokens,
-            terms_hollow,
-            df_hollow_word,
-            df_hollow_sentences,
+            terms_style,
+            df_style_word,
+            df_style_sentences,
         )
 
     # exaggerating words&sentences catch
@@ -907,7 +909,7 @@ def AgenticLanguageAnalysis(config: Config, lang, full_text, tokens, df):
 
 def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
     category = "gendered"
-    subcategory = "titles"
+
     list_tokens = []
     list_false_positives = []
     matcher = PhraseMatcher(model[lang.locale].vocab)
@@ -934,10 +936,11 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
         c_doc = Doc.from_docs(docs)
 
         for i in range(len(c_doc)):
-            for word, alternative_sing, alternative_plur in zip(
+            for word, alternative_sing, alternative_plur, subcategory in zip(
                 df["Lemma"],
-                df["Alternative_Singular_split"],
-                df["Alternative_Plural_split"],
+                df["Sg_all_clean"],
+                df["Pl_all_clean"],
+                df["Primary_subcategory"],
             ):
                 if c_doc[i].lemma_ == word:
                     if c_doc[i].morph.get("Number")[0] == "Sing":
@@ -999,10 +1002,11 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
 
     else:
         for i in range(len(tokens)):
-            for word, alternative_sing, alternative_plur in zip(
+            for word, alternative_sing, alternative_plur, subcategory in zip(
                 df["Lemma"],
-                df["Alternative_Singular_split"],
-                df["Alternative_Plural_split"],
+                df["Sg_all_clean"],
+                df["Pl_all_clean"],
+                df["Primary_subcategory"],
             ):
                 if tokens[i].lemma_ == word:
                     if tokens[i].morph.get("Number")[0] == "Sing":
@@ -1125,10 +1129,10 @@ def ExaggeratingWordsSentences(
 # Unified function for Emty words false positives and rules
 
 
-def HollowWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_sentence):
-    # category = df_hollow_sentences(["subcategory"])
+def StyleWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_sentence):
+    # category = df_style_sentences(["subcategory"])
     category = "style"
-    subcategory = "hollow"
+    # subcategory = ""
     list_tokens = []
     list_false_positives = []
     # Phrase matcher part to handle False positives with two words and special simbols
@@ -1140,16 +1144,16 @@ def HollowWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_se
 
     for i in range(len(tokens))[1:-1]:
         # check if the user query have false positives
-        if IsItFalsePositive(tokens[i].lemma_, false_positive_hollow):
+        if IsItFalsePositive(tokens[i].lemma_, false_positive_style):
             # recognise if there is Name of organisation or geographical name in the query
             if len(tokens.ents) > 0:
                 # this output will be deleted in production
                 list_false_positives.append(
-                    {"false positives": tokens[i].text, "category": subcategory}
+                    {"false positives": tokens[i].text, "category": category}
                 )
             else:
-                for word, alternative in zip(
-                    df["Lemma"], df["Alternative_Singular_split"]
+                for word, alternative, subcategory in zip(
+                    df["Lemma"], df["Alt_split"], df["Primary_subcategory"]
                 ):
                     if len(alternative) > 5:
                         if tokens[i].lemma_ == word:
@@ -1202,7 +1206,9 @@ def HollowWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_se
                                 )
 
         else:
-            for word, alternative in zip(df["Lemma"], df["Alternative_Singular_split"]):
+            for word, alternative, subcategory in zip(
+                df["Lemma"], df["Alt_split"], df["Primary_subcategory"]
+            ):
                 if len(alternative) > 5:
                     if tokens[i].lemma_ == word:
                         list_tokens.append(
@@ -1254,8 +1260,8 @@ def HollowWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_se
 
     matches = matcher(tokens)
     for match_id, start, end in matches:
-        for sentence, alternative in zip(
-            df_sentence["Lemma"], df_sentence["Alternative_Singular_split"]
+        for sentence, alternative, subcategory in zip(
+            df_sentence["Lemma"], df["Alt_split"], df["Primary_subcategory"]
         ):
             span = tokens[start:end]
             if span.text == sentence:
