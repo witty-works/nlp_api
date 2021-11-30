@@ -17,7 +17,7 @@ web:
     socket_family: unix
   commands:
     start: |
-      [ $PLATFORM_ENVIRONMENT_TYPE == "development" ] && WORKERS="6" || WORKERS="$(jq ".info.limits.memory / 250 | tonumber | floor" /run/config.json)"
+      WORKERS="$(jq ".info.limits.memory / 250 | tonumber | floor" /run/config.json)"
       blackfire-python gunicorn app.main:app -b unix:$SOCKET -w ${WORKERS} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
   locations:
     "/static":
