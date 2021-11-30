@@ -40,7 +40,6 @@ def test_api():
             "alternatives": [
                 "Auftraggebende",
                 "Bestellende, Kund:innen",
-                "Kundinnen und Kunden",
                 "Kundschaft",
                 "Klientel, beziehende Personen",
                 "Personen, die (…) kaufen",
@@ -88,7 +87,6 @@ def test_api_context():
             "alternatives": [
                 "Auftraggebende",
                 "Bestellende, Kund:innen",
-                "Kundinnen und Kunden",
                 "Kundschaft",
                 "Klientel, beziehende Personen",
                 "Personen, die (…) kaufen",
@@ -126,7 +124,6 @@ def test_api_disabled_categories():
             "alternatives": [
                 "Auftraggebende",
                 "Bestellende, Kund:innen",
-                "Kundinnen und Kunden",
                 "Kundschaft",
                 "Klientel, beziehende Personen",
                 "Personen, die (…) kaufen",
@@ -180,7 +177,6 @@ def test_api_gender_endings():
             "alternatives": [
                 "Auftraggebende",
                 "Bestellende, Kund*innen",
-                "Kundinnen und Kunden",
                 "Kundschaft",
                 "Klientel, beziehende Personen",
                 "Personen, die (…) kaufen",
