@@ -1,4 +1,4 @@
-from numpy import array
+f=from numpy import array
 from pydantic import BaseModel, validator
 from typing import Dict, List
 from typing import Optional
@@ -123,6 +123,7 @@ class ConfRequest(BaseModel):
     users: list
     forced: ForcedConfig
     suggestion: Config
+    false_positive: list
 
 
 class RequestIn(BaseModel):

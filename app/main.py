@@ -326,19 +326,45 @@ exceptions = [
 ]
 gender_false_positive = genderdenom_false_positives["False_positives"].tolist()
 
+# read redis configuration
+
+if settings.testing == True:
+    redis = FakeStrictRedis()
+else:
+    platform_config = platformshconfig.Config()
+    if platform_config.is_valid_platform():
+        redis_credentials = platform_config.credentials("rediscache")
+        redis = Redis(redis_credentials["host"], redis_credentials["port"])
+
 # corporate false positive DB
-corporate_false_positive = [
-    "stark",
-    "starke",
-    "starkes",
-    "starker",
-    "Führungskraft",
-    "Führungskräfte",
-    "Führungskräften",
-]
+def get_false_positive(userId: str):
+    keys = redis.keys("*")
+    for key in keys:
+        user_list = json.loads(redis.get(key))["users"]
+        if userId in user_list:
+            return json.loads(redis.get(key))["false_positive"]
+        else:
+            return []
+
+
+# this information will be taken from the authentication token
+# userId = "karolina.bozek@witty.works"
+userId = ""
+if userId:
+    corporate_false_positive = get_false_positive(userId)
+else:
+    corporate_false_positive = [
+        "stark",
+        "starke",
+        "starkes",
+        "starker",
+        "Führungskraft",
+        "Führungskräfte",
+        "Führungskräften",
+    ]
+
 terms_false_positive = gender_false_positive + corporate_false_positive
 false_positive_agentic += corporate_false_positive
-
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
@@ -471,6 +497,7 @@ async def store_redis(corporate_rules: ConfRequest):
                 "forced": dict(corporate_rules.forced),
                 "suggestion": dict(corporate_rules.suggestion),
             },
+            "false_positive": corporate_rules.false_positive,
         }
 
         # Set a value
@@ -488,6 +515,9 @@ async def get_redis(user: str):
             user_list = json.loads(redis.get(key))["users"]
             if user in user_list:
                 return json.loads(redis.get(key))
+            # test
+            else:
+                return []
     except Exception as e:
         return e
 
