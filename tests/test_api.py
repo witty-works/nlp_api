@@ -189,6 +189,19 @@ def test_api_gender_endings():
     ]
 
 
+def test_api_gender_endings_do_not_trigger_spellchecker():
+    request_data = {
+        "text": "Wie geht es dir? Bis du unser Matros/-in?",
+        "config": {"store_context": False, "german_gender_ending": "/-in"},
+    }
+
+    response = client.post("/check", json=request_data)
+    assert response.status_code == 200
+
+    first_record = response.json()
+    assert first_record["language"] == "de"
+    assert first_record["results"] == []
+
 def test_api_orthography():
     request_data = {
         "text": "Ich gehe noch schnell ueber die Strasse!!!",
