@@ -35,3 +35,7 @@ hooks:
 
     echo "Installing archive of ${LT} ${VERSION} ..."
     cp -R "${PLATFORM_CACHE_DIR}/${LT}-${VERSION}"/* .
+
+    git clone https://github.com/facebookresearch/fastText.git
+    cd fastText
+    make
