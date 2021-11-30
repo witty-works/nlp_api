@@ -906,7 +906,7 @@ def AgenticLanguageAnalysis(config: Config, lang, full_text, tokens, df):
 
 
 def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
-    category = df["Category"]
+    category = "gendered"
     subcategory = df["Primary_subcategory"]
     list_tokens = []
     list_false_positives = []
