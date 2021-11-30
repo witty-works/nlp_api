@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2021-11-15 15:04\n"
-"PO-Revision-Date: 2021-11-15 15:04\n"
+"POT-Creation-Date: 2021-11-30 09:53\n"
+"PO-Revision-Date: 2021-11-30 09:53\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -29,6 +29,33 @@ msgstr ""
 msgid "rules.titles_solution"
 msgstr ""
 
+msgid "rules.function_label"
+msgstr ""
+
+msgid "rules.function_reason"
+msgstr ""
+
+msgid "rules.function_solution"
+msgstr ""
+
+msgid "rules.leadership_label"
+msgstr ""
+
+msgid "rules.leadership_reason"
+msgstr ""
+
+msgid "rules.leadership_solution"
+msgstr ""
+
+msgid "rules.hidden_image_label"
+msgstr ""
+
+msgid "rules.hidden_image_reason"
+msgstr ""
+
+msgid "rules.hidden_image_solution"
+msgstr ""
+
 msgid "rules.gendered_denominations_ending_label"
 msgstr ""
 
@@ -45,6 +72,15 @@ msgid "rules.style_reason"
 msgstr ""
 
 msgid "rules.style_solution"
+msgstr ""
+
+msgid "rules.passive_voice_label"
+msgstr ""
+
+msgid "rules.passive_voice_reason"
+msgstr ""
+
+msgid "rules.passive_voice_solution"
 msgstr ""
 
 msgid "rules.misgendering_institutions_label"
@@ -110,6 +146,69 @@ msgstr ""
 msgid "rules.hollow_solution"
 msgstr ""
 
+msgid "rules.filler_label"
+msgstr ""
+
+msgid "rules.filler_reason"
+msgstr ""
+
+msgid "rules.filler_solution"
+msgstr ""
+
+msgid "rules.job_requirements_label"
+msgstr ""
+
+msgid "rules.job_requirements_reason"
+msgstr ""
+
+msgid "rules.job_requirements_solution"
+msgstr ""
+
+msgid "rules.salary_vague_label"
+msgstr ""
+
+msgid "rules.salary_vague_reason"
+msgstr ""
+
+msgid "rules.salary_vague_solution"
+msgstr ""
+
+msgid "rules.abbreviation_label"
+msgstr ""
+
+msgid "rules.abbreviation_reason"
+msgstr ""
+
+msgid "rules.abbreviation_solution"
+msgstr ""
+
+msgid "rules.verbose_label"
+msgstr ""
+
+msgid "rules.verbose_reason"
+msgstr ""
+
+msgid "rules.verbose_solution"
+msgstr ""
+
+msgid "rules.plain_language_word_length_label"
+msgstr ""
+
+msgid "rules.plain_language_word_length_reason"
+msgstr ""
+
+msgid "rules.plain_language_word_length_solution"
+msgstr ""
+
+msgid "rules.plain_language_sentence_length_label"
+msgstr ""
+
+msgid "rules.plain_language_sentence_length_reason"
+msgstr ""
+
+msgid "rules.plain_language_sentence_length_solution"
+msgstr ""
+
 msgid "rules.exaggerating_label"
 msgstr ""
 
@@ -117,6 +216,141 @@ msgid "rules.exaggerating_reason"
 msgstr ""
 
 msgid "rules.exaggerating_solution"
+msgstr ""
+
+msgid "rules.binary_pronouns_label"
+msgstr ""
+
+msgid "rules.binary_pronouns_reason"
+msgstr ""
+
+msgid "rules.binary_pronouns_solution"
+msgstr ""
+
+msgid "rules.age_label"
+msgstr ""
+
+msgid "rules.age_reason"
+msgstr ""
+
+msgid "rules.age_solution"
+msgstr ""
+
+msgid "rules.age_old_label"
+msgstr ""
+
+msgid "rules.age_old_reason"
+msgstr ""
+
+msgid "rules.age_old_solution"
+msgstr ""
+
+msgid "rules.age_young_label"
+msgstr ""
+
+msgid "rules.age_young_reason"
+msgstr ""
+
+msgid "rules.age_young_solution"
+msgstr ""
+
+msgid "rules.culture_label"
+msgstr ""
+
+msgid "rules.culture_reason"
+msgstr ""
+
+msgid "rules.culture_solution"
+msgstr ""
+
+msgid "rules.migration_label"
+msgstr ""
+
+msgid "rules.migration_reason"
+msgstr ""
+
+msgid "rules.migration_solution"
+msgstr ""
+
+msgid "rules.sexual_orientation_label"
+msgstr ""
+
+msgid "rules.sexual_orientation_reason"
+msgstr ""
+
+msgid "rules.sexual_orientation_solution"
+msgstr ""
+
+msgid "rules.gender_identity_label"
+msgstr ""
+
+msgid "rules.gender_identity_reason"
+msgstr ""
+
+msgid "rules.gender_identity_solution"
+msgstr ""
+
+msgid "rules.racist_source_label"
+msgstr ""
+
+msgid "rules.racist_source_reason"
+msgstr ""
+
+msgid "rules.racist_source_solution"
+msgstr ""
+
+msgid "rules.classism_label"
+msgstr ""
+
+msgid "rules.classism_reason"
+msgstr ""
+
+msgid "rules.classism_solution"
+msgstr ""
+
+msgid "rules.belief_label"
+msgstr ""
+
+msgid "rules.belief_reason"
+msgstr ""
+
+msgid "rules.belief_solution"
+msgstr ""
+
+msgid "rules.female_stereotype_label"
+msgstr ""
+
+msgid "rules.female_stereotype_reason"
+msgstr ""
+
+msgid "rules.female_stereotype_solution"
+msgstr ""
+
+msgid "rules.male_stereotype_label"
+msgstr ""
+
+msgid "rules.male_stereotype_reason"
+msgstr ""
+
+msgid "rules.male_stereotype_solution"
+msgstr ""
+
+msgid "rules.gen_boomer_label"
+msgstr ""
+
+msgid "rules.gen_boomer_reason"
+msgstr ""
+
+msgid "rules.gen_boomer_solution"
+msgstr ""
+
+msgid "rules.gen_z_label"
+msgstr ""
+
+msgid "rules.gen_z_reason"
+msgstr ""
+
+msgid "rules.gen_z_solution"
 msgstr ""
 
 msgid "rules.orthography_label"
@@ -128,6 +362,60 @@ msgstr ""
 msgid "rules.orthography_solution"
 msgstr ""
 
+msgid "rules.overload_label"
+msgstr ""
+
+msgid "rules.overload_reason"
+msgstr ""
+
+msgid "rules.overload_solution"
+msgstr ""
+
+msgid "rules.education_label"
+msgstr ""
+
+msgid "rules.education_reason"
+msgstr ""
+
+msgid "rules.education_solution"
+msgstr ""
+
+msgid "rules.workload_label"
+msgstr ""
+
+msgid "rules.workload_reason"
+msgstr ""
+
+msgid "rules.workload_solution"
+msgstr ""
+
+msgid "rules.ethnicity_label"
+msgstr ""
+
+msgid "rules.ethnicity_reason"
+msgstr ""
+
+msgid "rules.ethnicity_solution"
+msgstr ""
+
+msgid "rules.age_in_jobs_label"
+msgstr ""
+
+msgid "rules.age_in_jobs_reason"
+msgstr ""
+
+msgid "rules.age_in_jobs_solution"
+msgstr ""
+
+msgid "rules.technical_frameworks_label"
+msgstr ""
+
+msgid "rules.technical_frameworks_reason"
+msgstr ""
+
+msgid "rules.technical_frameworks_solution"
+msgstr ""
+
 msgid "rules.corporate_rules_label"
 msgstr ""
 
@@ -135,4 +423,220 @@ msgid "rules.corporate_rules_reason"
 msgstr ""
 
 msgid "rules.corporate_rules_solution"
+msgstr ""
+
+msgid "rules.americanism_label"
+msgstr ""
+
+msgid "rules.americanism_reason"
+msgstr ""
+
+msgid "rules.americanism_solution"
+msgstr ""
+
+msgid "rules.pressure_label"
+msgstr ""
+
+msgid "rules.pressure_reason"
+msgstr ""
+
+msgid "rules.pressure_solution"
+msgstr ""
+
+msgid "rules.visual_impairment_label"
+msgstr ""
+
+msgid "rules.visual_impairment_reason"
+msgstr ""
+
+msgid "rules.visual_impairment_solution"
+msgstr ""
+
+msgid "rules.medical_condition_label"
+msgstr ""
+
+msgid "rules.medical_condition_reason"
+msgstr ""
+
+msgid "rules.medical_condition_solution"
+msgstr ""
+
+msgid "rules.intellectual_impairment_label"
+msgstr ""
+
+msgid "rules.intellectual_impairment_reason"
+msgstr ""
+
+msgid "rules.intellectual_impairment_solution"
+msgstr ""
+
+msgid "rules.hearing_speech_impairment_label"
+msgstr ""
+
+msgid "rules.hearing_speech_impairment_reason"
+msgstr ""
+
+msgid "rules.hearing_speech_impairment_solution"
+msgstr ""
+
+msgid "rules.mobility_impairment_label"
+msgstr ""
+
+msgid "rules.mobility_impairment_reason"
+msgstr ""
+
+msgid "rules.mobility_impairment_solution"
+msgstr ""
+
+msgid "rules.mental_impairment_label"
+msgstr ""
+
+msgid "rules.mental_impairment_reason"
+msgstr ""
+
+msgid "rules.mental_impairment_solution"
+msgstr ""
+
+msgid "rules.ability_label"
+msgstr ""
+
+msgid "rules.ability_reason"
+msgstr ""
+
+msgid "rules.ability_solution"
+msgstr ""
+
+msgid "rules.formality_label"
+msgstr ""
+
+msgid "rules.formality_reason"
+msgstr ""
+
+msgid "rules.formality_solution"
+msgstr ""
+
+msgid "rules.false_friends_en_ge_label"
+msgstr ""
+
+msgid "rules.false_friends_en_ge_reason"
+msgstr ""
+
+msgid "rules.false_friends_en_ge_solution"
+msgstr ""
+
+msgid "rules.openly_discriminating_label"
+msgstr ""
+
+msgid "rules.openly_discriminating_reason"
+msgstr ""
+
+msgid "rules.openly_discriminating_solution"
+msgstr ""
+
+msgid "rules.racism_label"
+msgstr ""
+
+msgid "rules.racism_reason"
+msgstr ""
+
+msgid "rules.racism_solution"
+msgstr ""
+
+msgid "rules.sexism_label"
+msgstr ""
+
+msgid "rules.sexism_reason"
+msgstr ""
+
+msgid "rules.sexism_solution"
+msgstr ""
+
+msgid "rules.transphobia_label"
+msgstr ""
+
+msgid "rules.transphobia_reason"
+msgstr ""
+
+msgid "rules.transphobia_solution"
+msgstr ""
+
+msgid "rules.homophobia_label"
+msgstr ""
+
+msgid "rules.homophobia_reason"
+msgstr ""
+
+msgid "rules.homophobia_solution"
+msgstr ""
+
+msgid "rules.anti_semitism_label"
+msgstr ""
+
+msgid "rules.anti_semitism_reason"
+msgstr ""
+
+msgid "rules.anti_semitism_solution"
+msgstr ""
+
+msgid "rules.anti_muslim_label"
+msgstr ""
+
+msgid "rules.anti_muslim_reason"
+msgstr ""
+
+msgid "rules.anti_muslim_solution"
+msgstr ""
+
+msgid "rules.xenophobia_label"
+msgstr ""
+
+msgid "rules.xenophobia_reason"
+msgstr ""
+
+msgid "rules.xenophobia_solution"
+msgstr ""
+
+msgid "rules.ableism_label"
+msgstr ""
+
+msgid "rules.ableism_reason"
+msgstr ""
+
+msgid "rules.ableism_solution"
+msgstr ""
+
+msgid "rules.openly discriminating_label"
+msgstr ""
+
+msgid "rules.openly discriminating_reason"
+msgstr ""
+
+msgid "rules.openly discriminating_solution"
+msgstr ""
+
+msgid "rules.style_label"
+msgstr ""
+
+msgid "rules.style_reason"
+msgstr ""
+
+msgid "rules.style_solution"
+msgstr ""
+
+msgid "rules.unconscious bias / stereotypes_label"
+msgstr ""
+
+msgid "rules.unconscious bias / stereotypes_reason"
+msgstr ""
+
+msgid "rules.unconscious bias / stereotypes_solution"
+msgstr ""
+
+msgid "rules.inclusive_label"
+msgstr ""
+
+msgid "rules.inclusive_reason"
+msgstr ""
+
+msgid "rules.inclusive_solution"
 msgstr ""

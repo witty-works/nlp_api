@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2021-11-15 15:04\n"
-"PO-Revision-Date: 2021-11-15 15:04\n"
+"POT-Creation-Date: 2021-11-30 09:53\n"
+"PO-Revision-Date: 2021-11-30 09:53\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -39,6 +39,48 @@ msgstr ""
 "andere Geschlechteridentitäten, die nicht einem binären Verständnis von "
 "Geschlecht folgen, anspricht."
 
+msgid "rules.function_label"
+msgstr "Spezielle Funktionen"
+
+msgid "rules.function_reason"
+msgstr ""
+"Aus wirtschaftlich-historischen Gründen wird unbewusst ein Bild eines Mannes"
+" vor dem inneren Auge hervorgerufen. Das weibliche Geschlecht oder andere "
+"Geschlechtsidentitäten werden nicht sichtbar. Und sie fühlen sich nicht "
+"zugehörig."
+
+msgid "rules.function_solution"
+msgstr ""
+"Umgehen Sie mit anderen Worten das unbewusst hervorgerufene Bild. Nutzen Sie"
+" eher das Nomen, das die Tätigkeit bezeichnet, um das unbewusste Bild zu "
+"umgehen. Oder verwenden Sie eine geschlechtsneutrale Bezeichnung."
+
+msgid "rules.leadership_label"
+msgstr "Führungsstereotyp"
+
+msgid "rules.leadership_reason"
+msgstr ""
+"Besetzt das Thema der Führung stereotyp männlich und traditionell "
+"hierarchisch."
+
+msgid "rules.leadership_solution"
+msgstr ""
+"Verwenden Sie Begriffe, die von einer unterstützenden Vorstellung der "
+"Führung ausgeht und verschiedene Geschlechter meinen kann."
+
+msgid "rules.hidden_image_label"
+msgstr "Versteckter Ausdruck"
+
+msgid "rules.hidden_image_reason"
+msgstr ""
+"Verborgen, nicht-geschlechtsneutrale Form. Ruft daher männlich konnotierte "
+"Bilder vor unserem inneren Auge auf."
+
+msgid "rules.hidden_image_solution"
+msgstr ""
+"Verwenden Sie Alternativen, die geschlechtsneutral sind und gleichzeitig "
+"Doppelnennungen vermeiden."
+
 msgid "rules.gendered_denominations_ending_label"
 msgstr "Inklusive Endung"
 
@@ -60,6 +102,15 @@ msgstr ""
 msgid "rules.style_solution"
 msgstr ""
 "Formulieren Sie einfacher; versuchen Sie, mehr Emotionalität einzubringen."
+
+msgid "rules.passive_voice_label"
+msgstr "Passiv-Form"
+
+msgid "rules.passive_voice_reason"
+msgstr "Begrenzt die Nahbarkeit und Emotionalität."
+
+msgid "rules.passive_voice_solution"
+msgstr "Schreiben Sie es in der aktiven Form."
 
 msgid "rules.misgendering_institutions_label"
 msgstr "Geschlecht von Institutionen"
@@ -149,6 +200,70 @@ msgstr ""
 "Vermeiden Sie dieses Wort. Erklären Sie stattdessen die Situation in einer "
 "fassbaren und anschaulichen Weise."
 
+msgid "rules.filler_label"
+msgstr "Füllwörter"
+
+msgid "rules.filler_reason"
+msgstr ""
+"Erschwert die Struktur des Satzes und macht ihn dadurch weniger lesbar."
+
+msgid "rules.filler_solution"
+msgstr "Füllwörter löschen."
+
+msgid "rules.job_requirements_label"
+msgstr "Voreingenommene Anforderungen"
+
+msgid "rules.job_requirements_reason"
+msgstr "Missing"
+
+msgid "rules.job_requirements_solution"
+msgstr "Missing"
+
+msgid "rules.salary_vague_label"
+msgstr "Missing"
+
+msgid "rules.salary_vague_reason"
+msgstr "Missing"
+
+msgid "rules.salary_vague_solution"
+msgstr "Missing"
+
+msgid "rules.abbreviation_label"
+msgstr "Missing"
+
+msgid "rules.abbreviation_reason"
+msgstr "Missing"
+
+msgid "rules.abbreviation_solution"
+msgstr "Missing"
+
+msgid "rules.verbose_label"
+msgstr "Missing"
+
+msgid "rules.verbose_reason"
+msgstr "Missing"
+
+msgid "rules.verbose_solution"
+msgstr "Missing"
+
+msgid "rules.plain_language_word_length_label"
+msgstr ""
+
+msgid "rules.plain_language_word_length_reason"
+msgstr ""
+
+msgid "rules.plain_language_word_length_solution"
+msgstr ""
+
+msgid "rules.plain_language_sentence_length_label"
+msgstr ""
+
+msgid "rules.plain_language_sentence_length_reason"
+msgstr ""
+
+msgid "rules.plain_language_sentence_length_solution"
+msgstr ""
+
 msgid "rules.exaggerating_label"
 msgstr "Superlative"
 
@@ -159,6 +274,204 @@ msgstr ""
 
 msgid "rules.exaggerating_solution"
 msgstr "Verwenden Sie eine authentisch und ehrlich klingende Aussage."
+
+msgid "rules.binary_pronouns_label"
+msgstr "Binäre Pronomen"
+
+msgid "rules.binary_pronouns_reason"
+msgstr ""
+"Frauen oder non-binäre Menschen fühlen sich durch das \"männliche "
+"Generikum\" nicht adressiert und ihr Engagement sinkt."
+
+msgid "rules.binary_pronouns_solution"
+msgstr ""
+"Nutzen Sie die direkte Ansprache (Du oder das höfliche Sie). Falls Sie in "
+"der dritten Person schreiben müssen, verwenden Sie die Mehrzahl \"sie\"."
+
+msgid "rules.age_label"
+msgstr "Altersangabe"
+
+msgid "rules.age_reason"
+msgstr ""
+"Die Frage nach dem Alter von Personen bringt sie in eine heikle Lage und "
+"kann eine Stereotyp-Bedrohung hervorrufen."
+
+msgid "rules.age_solution"
+msgstr "Vielleicht brauchen Sie die Altersangabe nicht?"
+
+msgid "rules.age_old_label"
+msgstr "50 Jahre und älter"
+
+msgid "rules.age_old_reason"
+msgstr ""
+"Überholte oder diskriminierende Formulierung, die Menschen über 50 "
+"schubladisiert."
+
+msgid "rules.age_old_solution"
+msgstr ""
+"Fragen Sie sich: \"Was würde ich schreiben, wenn diese Person 35 Jahre alt "
+"wäre?\""
+
+msgid "rules.age_young_label"
+msgstr "25 Jahre und jünger"
+
+msgid "rules.age_young_reason"
+msgstr ""
+"Überholte oder diskriminierende Formulierung, die Menschen unter 25 "
+"schubladisiert."
+
+msgid "rules.age_young_solution"
+msgstr ""
+"Fragen Sie sich: \"Was würde ich schreiben, wenn diese Person 45 Jahre alt "
+"wäre?\""
+
+msgid "rules.culture_label"
+msgstr "Kultur"
+
+msgid "rules.culture_reason"
+msgstr ""
+"Ist eine Pauschalisierung und hält Menschen in veralteten Stereotypen "
+"gefangen."
+
+msgid "rules.culture_solution"
+msgstr ""
+"Fragen Sie sich: \"Was würde ich schreiben, wenn diese Person den hier "
+"üblichen nationalen Hintergrund hätte?\""
+
+msgid "rules.migration_label"
+msgstr "Migrationshintergrund"
+
+msgid "rules.migration_reason"
+msgstr ""
+"Schwierig verständlich für Menschen mit Migrationshintergrund , da sie "
+"eventuell gewisse Redewendungen oder bürokratische Sprache nicht verstehen. "
+"Ist eine Pauschalisierung und hält Menschen in veralteten Stereotypen "
+"gefangen."
+
+msgid "rules.migration_solution"
+msgstr ""
+"Formulieren Sie den Ausdruck neu mit einfacheren Worten und kurzen Sätzen. "
+"Fragen Sie sich: \"Was würde ich schreiben, wenn diese Person den hier "
+"üblichen nationalen Hintergrund hätte?\""
+
+msgid "rules.sexual_orientation_label"
+msgstr "Sexuelle Orientierung"
+
+msgid "rules.sexual_orientation_reason"
+msgstr ""
+"Überholtes und vielleicht sogar diskriminierendes Verständnis der sexuellen "
+"Orientierung, das LGBTQIA+ Menschen schubladisiert."
+
+msgid "rules.sexual_orientation_solution"
+msgstr ""
+"Fragen Sie sich: \"Was würde ich schreiben, wenn diese Person heterosexuell "
+"wäre?\""
+
+msgid "rules.gender_identity_label"
+msgstr "Geschlechtsidentität"
+
+msgid "rules.gender_identity_reason"
+msgstr ""
+"Überholtes und vielleicht sogar diskriminierendes Verständnis des "
+"Geschlechts, das LGBTQIA+ Menschen schubladisiert."
+
+msgid "rules.gender_identity_solution"
+msgstr ""
+"Fragen Sie sich: \"Was würde ich schreiben, wenn diese Person weiblich oder "
+"männlich wäre?\""
+
+msgid "rules.racist_source_label"
+msgstr "Rassistische Wurzel"
+
+msgid "rules.racist_source_reason"
+msgstr ""
+"Überholte oder diskriminierende Formulierung, die Menschen eines bestimmten "
+"ethnischen Hintergrundes schubladisiert."
+
+msgid "rules.racist_source_solution"
+msgstr ""
+"Fragen Sie sich: \"Was würde ich schreiben, wenn diese Person zur "
+"dominanten, ethnischen Gruppe in meiner Gesellschaft gehören würde?\""
+
+msgid "rules.classism_label"
+msgstr "Klassismus"
+
+msgid "rules.classism_reason"
+msgstr ""
+"Kann arrogant oder unverständlich wirken, da die Formulierung mit einem "
+"Machtgefälle und/oder einem deutlichen Unterschied in der sozialen Schicht "
+"verbunden sein kann."
+
+msgid "rules.classism_solution"
+msgstr "Umformulieren mit einer Wortwahl, die auf Augenhöhe ist."
+
+msgid "rules.belief_label"
+msgstr "Glauben"
+
+msgid "rules.belief_reason"
+msgstr ""
+"Formulierungen, die Menschen eines bestimmten Glaubens in eine Schublade "
+"stecken oder unbewusst einen bestimmten Glauben zum Standard erheben und "
+"damit andere Glaubensrichtungen abwerten."
+
+msgid "rules.belief_solution"
+msgstr ""
+"Umformulieren Sie mit Worten, die keine Vorstellung von Glauben oder "
+"Religion transportieren."
+
+msgid "rules.female_stereotype_label"
+msgstr "Weiblicher Stereotyp"
+
+msgid "rules.female_stereotype_reason"
+msgstr ""
+"Hält Frauen in überholten Stereotypen gefangen. Hindert Menschen daran, sich"
+" so zu entwickeln, wie sie wollen."
+
+msgid "rules.female_stereotype_solution"
+msgstr ""
+"Fragen Sie sich: \"Was würde ich schreiben, wenn diese Person männlich "
+"wäre?\""
+
+msgid "rules.male_stereotype_label"
+msgstr "Männlicher Stereotyp"
+
+msgid "rules.male_stereotype_reason"
+msgstr ""
+"Hält Männer in überholten Stereotypen gefangen. Hindert Menschen daran, sich"
+" so zu entwickeln, wie sie wollen."
+
+msgid "rules.male_stereotype_solution"
+msgstr ""
+"Fragen Sie sich: \"Was würde ich schreiben, wenn diese Person weiblich "
+"wäre?\""
+
+msgid "rules.gen_boomer_label"
+msgstr "Sprache Generation Boomer & X"
+
+msgid "rules.gen_boomer_reason"
+msgstr ""
+"Diese Wortkombination ist jungen Menschen vielleicht nicht mehr bekannt, da "
+"sich Sprache immer weiter entwickelt."
+
+msgid "rules.gen_boomer_solution"
+msgstr ""
+"Reflektieren Sie, ob diese Redewendung ausserhalb ihrer Altersgruppe noch in"
+" Gebrauch ist. Falls nicht, versuchen Sie deren Bedeutung anders zu "
+"formulieren."
+
+msgid "rules.gen_z_label"
+msgstr "Gen Z Language"
+
+msgid "rules.gen_z_reason"
+msgstr ""
+"Vielleicht nicht verständlich für ältere Generationen, da es typischerweise "
+"von der Generation Z gebraucht wird."
+
+msgid "rules.gen_z_solution"
+msgstr ""
+"Reflektieren Sie, ob diese Redewendung ausserhalb ihrer Altersgruppe noch in"
+" Gebrauch ist. Falls nicht, versuchen Sie deren Bedeutung anders zu "
+"formulieren."
 
 msgid "rules.orthography_label"
 msgstr "Orthographie"
@@ -171,6 +484,60 @@ msgstr ""
 msgid "rules.orthography_solution"
 msgstr "Use LanguageTool \"message\" as the solution"
 
+msgid "rules.overload_label"
+msgstr "Missing"
+
+msgid "rules.overload_reason"
+msgstr "Missing"
+
+msgid "rules.overload_solution"
+msgstr "Missing"
+
+msgid "rules.education_label"
+msgstr "Missing"
+
+msgid "rules.education_reason"
+msgstr "Missing"
+
+msgid "rules.education_solution"
+msgstr "Missing"
+
+msgid "rules.workload_label"
+msgstr "Missing"
+
+msgid "rules.workload_reason"
+msgstr "Missing"
+
+msgid "rules.workload_solution"
+msgstr "Missing"
+
+msgid "rules.ethnicity_label"
+msgstr "Missing"
+
+msgid "rules.ethnicity_reason"
+msgstr "Missing"
+
+msgid "rules.ethnicity_solution"
+msgstr "Missing"
+
+msgid "rules.age_in_jobs_label"
+msgstr "Missing"
+
+msgid "rules.age_in_jobs_reason"
+msgstr "Missing"
+
+msgid "rules.age_in_jobs_solution"
+msgstr "Missing"
+
+msgid "rules.technical_frameworks_label"
+msgstr "Missing"
+
+msgid "rules.technical_frameworks_reason"
+msgstr "Missing"
+
+msgid "rules.technical_frameworks_solution"
+msgstr "Missing"
+
 msgid "rules.corporate_rules_label"
 msgstr "Firmenleitlinie"
 
@@ -179,3 +546,256 @@ msgstr "We always use subcategories here and so no need to fill anything in."
 
 msgid "rules.corporate_rules_solution"
 msgstr "We always use subcategories here and so no need to fill anything in."
+
+msgid "rules.americanism_label"
+msgstr "Amerikanismen / Anglizismen"
+
+msgid "rules.americanism_reason"
+msgstr ""
+"Wird von Personen ohne englische Sprachausbildung eventuell nicht "
+"verstanden."
+
+msgid "rules.americanism_solution"
+msgstr "Nutzen Sie ein deutsches Wort."
+
+msgid "rules.pressure_label"
+msgstr "Druck"
+
+msgid "rules.pressure_reason"
+msgstr ""
+"Kommuniziert Druck und ist damit ein Zeichen, dass sich alle anpassen "
+"müssen."
+
+msgid "rules.pressure_solution"
+msgstr ""
+"Formulieren Sie auf Augenhöhe. Sie sind ein gleichwertiges Teil Ihres Teams."
+
+msgid "rules.visual_impairment_label"
+msgstr "Seh-Beinträchtigung"
+
+msgid "rules.visual_impairment_reason"
+msgstr ""
+"Versteckte, überholte oder diskriminierende Formulierung, die Menschen mit "
+"Seh-Beeinträchtigung schubladisiert."
+
+msgid "rules.visual_impairment_solution"
+msgstr ""
+"Fragen Sie sich: \"Was würde ich schreiben, wenn diese Person volle Sicht-"
+"Kapazität hätte?\""
+
+msgid "rules.medical_condition_label"
+msgstr "Gesundheitliche Einschränkung"
+
+msgid "rules.medical_condition_reason"
+msgstr ""
+"Versteckte, überholte oder diskriminierende Formulierung über Menschen, "
+"deren Gesundheitszustand beeinträchtigt ist."
+
+msgid "rules.medical_condition_solution"
+msgstr ""
+"Fragen Sie sich: \"Was würde ich schreiben, wenn diese Person völlig gesund "
+"wäre?\""
+
+msgid "rules.intellectual_impairment_label"
+msgstr "Intellektuelle Beeinträchtigung"
+
+msgid "rules.intellectual_impairment_reason"
+msgstr ""
+"Versteckte, überholte oder diskriminierende Formulierung, die Menschen mit "
+"einer intellektuellen Beeinträchtigung schubladisiert."
+
+msgid "rules.intellectual_impairment_solution"
+msgstr ""
+"Fragen Sie sich: \"Was würde ich schreiben, wenn diese Person ihre volle "
+"intellektuelle Kapazität hätte?\""
+
+msgid "rules.hearing_speech_impairment_label"
+msgstr "Hör- und Sprachbeeinträchtigung"
+
+msgid "rules.hearing_speech_impairment_reason"
+msgstr ""
+"Versteckte, überholte oder diskriminierende Formulierung, die Menschen mit "
+"Hör- und Sprachbeeinträchtigung schubladisiert."
+
+msgid "rules.hearing_speech_impairment_solution"
+msgstr ""
+"Fragen Sie sich: \"Was würde ich schreiben, wenn diese Person ihre volle "
+"Hör- und Sprachkapazität hätte?\""
+
+msgid "rules.mobility_impairment_label"
+msgstr "Mobilitätsbeeinträchtigung"
+
+msgid "rules.mobility_impairment_reason"
+msgstr ""
+"Versteckte, überholte oder diskriminierende Formulierung, die Menschen mit "
+"Mobilitätsbeeinträchtigung schubladisiert."
+
+msgid "rules.mobility_impairment_solution"
+msgstr ""
+"Fragen Sie sich: \"Was würde ich schreiben, wenn diese Person ihre  volle "
+"Kapazität der Glieder hätte?\""
+
+msgid "rules.mental_impairment_label"
+msgstr "Mentale Beeinträchtigung"
+
+msgid "rules.mental_impairment_reason"
+msgstr ""
+"Versteckte, überholte oder diskriminierende Formulierung, die Menschen mit "
+"mentaler Beeinträchtigung schubladisiert."
+
+msgid "rules.mental_impairment_solution"
+msgstr ""
+"Fragen Sie sich: \"Was würde ich schreiben, wenn diese Person mental völlig "
+"gesund wäre?\""
+
+msgid "rules.ability_label"
+msgstr "Fähigkeiten"
+
+msgid "rules.ability_reason"
+msgstr ""
+"Kommuniziert Ausgrenzung, indem die Fähigkeiten einer Person als außerhalb "
+"einer Norm beschrieben werden."
+
+msgid "rules.ability_solution"
+msgstr ""
+"Beschreiben Sie die Fähigkeit der Person so, ohne Andersartigkeit oder "
+"Beeinträchtigung anzudeuten."
+
+msgid "rules.formality_label"
+msgstr "Formalität"
+
+msgid "rules.formality_reason"
+msgstr ""
+"Je nach Arbeitsumfeld kann eine solche förmliche Formulierung zu mehr "
+"Distanz führen und ist der Zusammenarbeit auf Augenhöhe nicht zuträglich."
+
+msgid "rules.formality_solution"
+msgstr ""
+"Versuchen Sie, so zu schreiben, als ob Sie einer Freundin etwas schreiben "
+"würden."
+
+msgid "rules.false_friends_en_ge_label"
+msgstr ""
+
+msgid "rules.false_friends_en_ge_reason"
+msgstr ""
+
+msgid "rules.false_friends_en_ge_solution"
+msgstr ""
+
+msgid "rules.openly_discriminating_label"
+msgstr "Offen diskriminierend"
+
+msgid "rules.openly_discriminating_reason"
+msgstr ""
+
+msgid "rules.openly_discriminating_solution"
+msgstr ""
+
+msgid "rules.racism_label"
+msgstr "Rassismus"
+
+msgid "rules.racism_reason"
+msgstr "-"
+
+msgid "rules.racism_solution"
+msgstr "Schreiben Sie das niemals. Sie verletzen Menschen stark."
+
+msgid "rules.sexism_label"
+msgstr "Sexismus"
+
+msgid "rules.sexism_reason"
+msgstr "-"
+
+msgid "rules.sexism_solution"
+msgstr "Schreiben Sie das niemals. Sie verletzen Menschen stark."
+
+msgid "rules.transphobia_label"
+msgstr "Transphobie"
+
+msgid "rules.transphobia_reason"
+msgstr "-"
+
+msgid "rules.transphobia_solution"
+msgstr "Schreiben Sie das niemals. Sie verletzen Menschen stark."
+
+msgid "rules.homophobia_label"
+msgstr "Homophobie"
+
+msgid "rules.homophobia_reason"
+msgstr "-"
+
+msgid "rules.homophobia_solution"
+msgstr "Schreiben Sie das niemals. Sie verletzen Menschen stark."
+
+msgid "rules.anti_semitism_label"
+msgstr "Anti-Semitismus"
+
+msgid "rules.anti_semitism_reason"
+msgstr "-"
+
+msgid "rules.anti_semitism_solution"
+msgstr "Schreiben Sie das niemals. Sie verletzen Menschen stark."
+
+msgid "rules.anti_muslim_label"
+msgstr "Islamophobie"
+
+msgid "rules.anti_muslim_reason"
+msgstr "-"
+
+msgid "rules.anti_muslim_solution"
+msgstr "Schreiben Sie das niemals. Sie verletzen Menschen stark."
+
+msgid "rules.xenophobia_label"
+msgstr "Xenophobie/Fremdenfeindlichkeit"
+
+msgid "rules.xenophobia_reason"
+msgstr "-"
+
+msgid "rules.xenophobia_solution"
+msgstr "Schreiben Sie das niemals. Sie verletzen Menschen stark."
+
+msgid "rules.ableism_label"
+msgstr "Behindertenfeindlichkeit"
+
+msgid "rules.ableism_reason"
+msgstr "-"
+
+msgid "rules.ableism_solution"
+msgstr "Schreiben Sie das niemals. Sie verletzen Menschen stark."
+
+msgid "rules.openly discriminating_label"
+msgstr ""
+
+msgid "rules.openly discriminating_reason"
+msgstr ""
+
+msgid "rules.openly discriminating_solution"
+msgstr ""
+
+msgid "rules.style_label"
+msgstr ""
+
+msgid "rules.style_reason"
+msgstr ""
+
+msgid "rules.style_solution"
+msgstr ""
+
+msgid "rules.unconscious bias / stereotypes_label"
+msgstr ""
+
+msgid "rules.unconscious bias / stereotypes_reason"
+msgstr ""
+
+msgid "rules.unconscious bias / stereotypes_solution"
+msgstr ""
+
+msgid "rules.inclusive_label"
+msgstr ""
+
+msgid "rules.inclusive_reason"
+msgstr ""
+
+msgid "rules.inclusive_solution"
+msgstr ""
