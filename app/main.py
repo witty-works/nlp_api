@@ -328,8 +328,6 @@ corporate_false_positive = [
 terms_false_positive = gender_false_positive + corporate_false_positive
 false_positive_agentic += corporate_false_positive
 
-favicon_path = "static/favicon.ico"
-
 # read redis configuration
 
 if settings.testing == True:
@@ -338,11 +336,6 @@ else:
     redis_config = platformshconfig.Config()
     credentials = redis_config.credentials("rediscache")
     redis = Redis(credentials["host"], credentials["port"])
-
-
-@app.get("/favicon.ico", include_in_schema=False)
-async def favicon():
-    return FileResponse(favicon_path)
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
