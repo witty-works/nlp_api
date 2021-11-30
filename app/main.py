@@ -569,11 +569,15 @@ async def languagetool_rules(user_request_in: RequestIn):
                 lang = None
             elif "matches" in result:
                 lang = Lang(result["language"]["code"])
+                german_gender_ending = user_request_in.config.german_gender_ending
 
                 if "orthography" not in user_request_in.config.disabled_categories:
                     for match in result["matches"]:
                         offset = int(match["offset"])
                         end = offset + int(match["length"])
+                        if german_gender_ending == user_request_in.text[end:end+len(german_gender_ending)]:
+                            continue
+
                         alternatives = []
                         if "replacements" in match:
                             for replacement in match["replacements"]:
