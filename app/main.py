@@ -907,7 +907,7 @@ def AgenticLanguageAnalysis(config: Config, lang, full_text, tokens, df):
 
 def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
     category = "gendered"
-    subcategory = df["Primary_subcategory"]
+    subcategory = "titles"
     list_tokens = []
     list_false_positives = []
     matcher = PhraseMatcher(model[lang.locale].vocab)
