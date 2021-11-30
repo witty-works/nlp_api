@@ -1,48 +1,52 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="./static/favicon.ico"/>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Ibarra+Real+Nova&family=Lato&display=swap" rel="stylesheet">
-    <title>Witty Works - Sprache bewegt</title>
-    <link href="./static/styles.css" rel="stylesheet">
-  </head>
 
-  <body>
-    <header>
-      <img src="./static/witty-logo-color.svg" alt="Logo Witty" height="20">
-    </header>
-    <div class="body-container">
-      <section>
-        <textarea id="editor" rows="25" spellcheck="false"></textarea>
-        <div>
-          <h2 class="support-title">How to use this form?</h2>
-          <p>
-            If Witty <a class="support-link" href="https://www.witty.works/en/help/where-can-i-use-witty" target="_blank">doesn't work yet</a> on
-            the website you need, you can always copy&paste your text into this text field to use Witty.
-          </p>
-          <ol>
-            <li>
-              <a class="support-link" href="https://www.witty.works/get" target="_blank">
-                Register
-              </a> to get the installation link.
-            </li>
-            <li>
-              <a class="support-link" href="https://www.witty.works/en/help/how-do-i-install-witty" target="_blank">
-                Install Witty
-              </a> into your browser.
-            </li>
-            <li>
-              <a class="support-link" href="https://en.wikipedia.org/wiki/Cut,_copy,_and_paste#Cut_and_paste" target="_blank">
-                Copy&paste your text
-              </a> into the above form.
-            </li>
-          </ol>
-        </div>
-      </section>
-    </div>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="{{ url_for('static', path='/favicon.ico') }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Ibarra+Real+Nova&family=Lato&display=swap" rel="stylesheet">
+  <title>Witty Works - Sprache bewegt</title>
+  <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
+</head>
+
+<body>
+  <header>
+    <img src="{{ url_for('static', path='/witty-logo-color.svg') }}" alt="Logo Witty" height="20">
+  </header>
+  <div class="body-container">
+    <section>
+      <textarea id="editor" rows="25" spellcheck="false"></textarea>
+      <div>
+        <h2 class="support-title">How to use this form?</h2>
+        <p>
+          If Witty <a class="support-link" href="https://www.witty.works/en/help/where-can-i-use-witty"
+            target="_blank">doesn't work yet</a> on
+          the website you need, you can always copy&paste your text into this text field to use Witty.
+        </p>
+        <ol>
+          <li>
+            <a class="support-link" href="https://www.witty.works/get" target="_blank">
+              Register
+            </a> to get the installation link.
+          </li>
+          <li>
+            <a class="support-link" href="https://www.witty.works/en/help/how-do-i-install-witty" target="_blank">
+              Install Witty
+            </a> into your browser.
+          </li>
+          <li>
+            <a class="support-link" href="https://en.wikipedia.org/wiki/Cut,_copy,_and_paste#Cut_and_paste"
+              target="_blank">
+              Copy&paste your text
+            </a> into the above form.
+          </li>
+        </ol>
+      </div>
+    </section>
+  </div>
+</body>
+
 </html>
