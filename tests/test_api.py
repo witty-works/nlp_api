@@ -529,7 +529,7 @@ def test_categories():
 
 def test_api_corporate_false_positives():
     request_data = {
-        "text": "Die Bahn ist stark auch wegen ihrer Führungskräfte!",
+        "text": "Die Bahn ist stark wegen ihrer Führungskräfte!",
         "config": {"store_context": False},
     }
 
