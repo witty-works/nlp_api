@@ -36,6 +36,9 @@ hooks:
     echo "Installing archive of ${LT} ${VERSION} ..."
     cp -R "${PLATFORM_CACHE_DIR}/${LT}-${VERSION}"/* .
 
+    sed "s/^#fasttext/fasttext/" server.properties > server.properties.fasttext
+    mv server.properties.fasttext server.properties
+
     export FT_VERSION="0.9.2"
     export FT="fastText"
     export FT_DIR="${FT}-${FT_VERSION}"

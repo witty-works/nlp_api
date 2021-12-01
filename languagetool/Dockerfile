@@ -18,7 +18,7 @@ USER root
 
 # Add server properties, when we use fasttext change to previous command 
 #COPY --chown=languagetool server.properties /LanguageTool
-COPY --chown=languagetool properties_docker/server.properties /LanguageTool/server.properties
+COPY --chown=languagetool server.properties /LanguageTool
 
 #Add fasttext model
 #lid.175.bin use a lot 126MB space, disable it when we will be using Docker images for production service.
