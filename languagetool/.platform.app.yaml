@@ -35,3 +35,38 @@ hooks:
 
     echo "Installing archive of ${LT} ${VERSION} ..."
     cp -R "${PLATFORM_CACHE_DIR}/${LT}-${VERSION}"/* .
+
+    sed "s/^#fasttext/fasttext/" server.properties > server.properties.fasttext
+    mv server.properties.fasttext server.properties
+
+    export FT_VERSION="0.9.2"
+    export FT="fastText"
+    export FT_DIR="${FT}-${FT_VERSION}"
+    echo "Directory = ${FT_DIR}"
+    if [ ! -d "${PLATFORM_CACHE_DIR}/${FT_DIR}" ]; then
+    echo "Downloading ${FT} ${FT_VERSION} ..."
+    (
+      cd "${PLATFORM_CACHE_DIR}"
+      rm -rf "${FT}*"
+      export FT_FILE="v${FT_VERSION}.zip"
+      [ ! -f "$FT_FILE" ] && curl -L https://github.com/facebookresearch/fastText/archive/refs/tags/${FT_FILE} --output ${FT_FILE}
+      unzip $FT_FILE
+      rm -rf $FT_FILE
+      cd $FT_DIR
+      make
+      cd ~
+      mkdir $FT
+    )
+    else
+      echo "Using cached archive of ${FT} ${FT_VERSION} ..."
+    fi
+    echo "Installing archive of ${FT} ${FT_VERSION} ..."
+    cp -R "${PLATFORM_CACHE_DIR}/${FT_DIR}"/* ./"${FT}"
+
+    export FT_MODEL="lid.176.bin"
+    if [ ! -f "$FT_MODEL" ]; then
+      echo "Download ${FT_MODEL} ..."
+      curl https://dl.fbaipublicfiles.com/fasttext/supervised-models/${FT_MODEL} --output ${FT_MODEL}
+    else
+      echo "using ${FT_MODEL} model ..."
+    fi
