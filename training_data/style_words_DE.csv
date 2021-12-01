@@ -212,7 +212,7 @@ zweifellos,,style,filler,['-']
 zweifelsfrei,,style,filler,['-']
 zweifelsohne,,style,filler,['-']
 aktiv,,style,hollow,"['lebendig', 'tatkräftig', 'lebhaft', 'enthusiastisch', 'engagiert', 'energiegeladen', 'vital', 'eifrig', 'anpassungsfähig', 'schwungvoll']"
-Arbeitskraft,,style,hollow,"['Arbeitsleistung, Personal, Mitarbeiter~in~/~Mitarbeiter, menschliche Kraft zu geistiger/körperlicher Arbeit, Personal, Mitarbeitende, Mitarbeiter~innen~/~Mitarbeiter', 'Mitarbeiterinnen und Mitarbeiter']"
+Arbeitskraft,,style,hollow,"['Arbeitsleistung', 'Personal', 'Mitarbeiter~in~/~Mitarbeiter', 'menschliche Kraft zu geistiger/körperlicher Arbeit', 'Personal', 'Mitarbeitende', 'Mitarbeiter~innen~ und ~Mitarbeiter']"
 dynamisch,,style,hollow,"['lebendig', 'tatkräftig', 'lebhaft', 'enthusiastisch', 'engagiert', 'energiegeladen', 'vital', 'eifrig', 'anpassungsfähig', 'schwungvoll']"
 flexibel,,style,hollow,"['anpassungsfähig', 'bei Entscheidungen wendig', 'pragmatisch', 'offen', 'beweglich', 'agil', 'variabel', 'mobil', 'durch nutzende Personen definiert']"
 Flexibilität,,style,hollow,"['Anpassungsfähigkeit', 'Aufgeschlossenheit gegenüber Wandel', 'Bereitschaft für Veränderung', 'Mobilität', 'Fähigkeit, sich schnell auf Neues umzustellen']"
@@ -231,7 +231,7 @@ Organisationstalent,,style,hollow,"['Organisationsfähigkeit', 'Geübtheit, ande
 quer-denken,,style,hollow,"['in neuen Mustern denken', 'parallel/lateral/kreativ/divergent denken', 'über den eigenen Tellerrand blicken', 'brainstormen']"
 Querdenken,,style,hollow,"['die Fähigkeit, in neuen Mustern zu denken', 'die Fähigkeit, parallel/lateral/kreativ/divergent zu denken', 'die Fähigkeit, über den eigenen Tellerrand zu blicken', 'die Fähigkeit zum Brainstormen']"
 state-of-the-art,,style,hollow,"['auf dem neuesten/letzten Stand der Technik', 'dem aktuellen Stand der Forschung/Technologie entsprechend', 'fachüblich']"
-Team-player,,style,hollow,"['Zusammenarbeit über das eigene Streben stellen', 'Team', 'Teammitglieder', 'Teamplayer~innen', 'Teamplayer~in, Team-player~in~/~Team-player']"
+Team-player,,style,hollow,"['Zusammenarbeit über das eigene Streben stellen', 'Team', 'Teammitglieder', 'Teamplayer~innen', 'Teamplayer~in', 'Team-player~in~/~Team-player']"
 teamfähig,,style,hollow,"['kooperationsfähig', 'offen gegenüber verschiedenen Menschen und Verhaltensweisen', 'fähig mit Unterschieden und Gemeinsamkeiten umzugehen', 'kommunikationsfähig', 'kompromissbereit zugunsten des gemeinsamen Ziels']"
 Teamfähigkeit,,style,hollow,"['Kooperationsfähigkeit', 'Akzeptanz gegenüber verschiedenen Menschen und Verhaltensweisen', 'Fähigkeit mit Unterschieden und Gemeinsamkeiten umzugehen', 'Kommunikationsfähigkeit', 'Kompromissbereitschaft zugunsten des gemeinsamen Ziels']"
 vorallem,,style,hollow,"['als Wichtigstes', 'namentlich', 'vorrangig']"

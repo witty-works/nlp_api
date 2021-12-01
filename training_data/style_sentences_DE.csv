@@ -23,6 +23,9 @@ samt und sonders,,style,filler,['-']
 sowohl als auch,,style,filler,['-']
 voll und ganz,,style,filler,['-']
 von neuem,,style,filler,['-']
+Sehr geehrte,,style,formality,"['Guten Tag', 'Liebe alle,', 'Hallo zusammen', 'Sehr geehrte Zuhörende und Lesende']"
+Sehr geehrte Frau,,style,formality,"['Liebe~r Herr/Frau (Familienname)', 'Guten Tag, (Vorname) (Familienname)', 'Hallo (Vorname) (Familienname)', 'Liebe~r (Vorname) (Familienname)', 'Guten Tag, liebe~r (Vorname) (Familienname)']"
+Sehr geehrter Herr,,style,formality,"['Liebe~r Herr/Frau (Familienname)', 'Guten Tag, (Vorname) (Familienname)', 'Hallo (Vorname) (Familienname)', 'Liebe~r (Vorname) (Familienname)', 'Guten Tag, liebe~r (Vorname) (Familienname)']"
 flache Hierarchie,,style,hollow,"['kurze Entscheidungswege', 'verantwortliche und eigenorganisierte Arbeitsweise', 'Raum für Eigeninitiative', 'kurze Kommunikationswege', 'Mitgestaltungsmöglichkeiten für Mitarbeitende', 'Betriebsebene mit viel Kompetenzen und Entscheidungsmöglichkeiten']"
 flache Organisation,,style,hollow,"['kurze Entscheidungswege', 'verantwortliche und eigenorganisierte Arbeitsweise', 'Raum für Eigeninitiative', 'kurze Kommunikationswege', 'Mitgestaltungsmöglichkeiten für Mitarbeitende', 'Betriebsebene mit viel Kompetenzen und Entscheidungsmöglichkeiten']"
 outside the box,,style,hollow,"['in neuen Mustern denken', 'parallel/lateral/kreativ/divergent denken', 'über den eigenen Tellerrand blicken', 'brainstormen']"
