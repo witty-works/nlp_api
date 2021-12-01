@@ -33,7 +33,7 @@ hooks:
       echo "Using cached archive of ${LT} ${VERSION} ..."
     fi
 
-    echo "Installing archive of ${LT} ${VERSION} ..."
+    echo "Installing archive of ${LT} ${VERSION} from '${PLATFORM_CACHE_DIR}/${LT}-${VERSION}' ..."
     cp -R "${PLATFORM_CACHE_DIR}/${LT}-${VERSION}"/* .
 
     sed "s/^#fasttext/fasttext/" server.properties > server.properties.fasttext
@@ -60,7 +60,7 @@ hooks:
     else
       echo "Using cached archive of ${FT} ${FT_VERSION} ..."
     fi
-    echo "Installing archive of ${FT} ${FT_VERSION} ..."
+    echo "Installing archive of ${FT} ${FT_VERSION} from '${PLATFORM_CACHE_DIR}/${FT_DIR}' ..."
     cp -R "${PLATFORM_CACHE_DIR}/${FT_DIR}"/* ./"${FT}"
 
     export FT_MODEL="lid.176.bin"
