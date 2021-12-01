@@ -2,7 +2,7 @@ name: "app"
 
 type: "python:3.9"
 
-disk: 3072
+disk: 6144
 
 resources:
   base_memory: 1024
