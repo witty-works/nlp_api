@@ -432,7 +432,7 @@ def test_api_orthography_english():
 
 
 def test_api_gender_ending():
-    request_data = {"text": "Kund/in", "config": {"store_context": False}}
+    request_data = {"text": "Sie ist eine Kund/in.", "config": {"store_context": False}}
 
     response = client.post("/check", json=request_data)
     assert response.status_code == 200
@@ -445,8 +445,8 @@ def test_api_gender_ending():
             "context": "",
             "category": "gendered",
             "subcategory": "gendered_denominations_ending",
-            "start": 4,
-            "end": 7,
+            "start": 17,
+            "end": 20,
             "alternatives": [":in"],
             "label": "Geschlechtsspezifisch: Inklusive Endung",
             "reason": "Konsistente Schreibweise ist vertrauenserweckender.",
@@ -457,7 +457,7 @@ def test_api_gender_ending():
 
 def test_api_gender_ending_custom():
     request_data = {
-        "text": "Kund/in",
+        "text": "Es ist eine Kund/in.",
         "config": {"store_context": False, "german_gender_ending": "/in"},
     }
 
