@@ -1156,61 +1156,6 @@ def StyleWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_sen
                 for word, alternative, subcategory in zip(
                     df["Lemma"], df["Alt_split"], df["Primary_subcategory"]
                 ):
-                    if len(alternative) > 5:
-                        if tokens[i].lemma_ == word:
-                            list_tokens.append(
-                                ResultOut.factory(
-                                    config,
-                                    lang,
-                                    tokens[i].text,
-                                    full_text,
-                                    category,
-                                    subcategory,
-                                    tokens[i].idx,
-                                    tokens[i].idx + len(tokens[i].text),
-                                    ast.literal_eval(alternative),
-                                )
-                            )
-                    else:
-                        if tokens[i].lemma_ == word:
-                            if (
-                                tokens[i - 1].is_stop == True
-                                or tokens[i - 1].is_punct == True
-                            ):
-                                list_tokens.append(
-                                    ResultOut.factory(
-                                        config,
-                                        lang,
-                                        tokens[i - 1 : i + 1].text,
-                                        full_text,
-                                        category,
-                                        subcategory,
-                                        tokens[i - 1].idx,
-                                        tokens[i - 1].idx
-                                        + len(tokens[i - 1 : i + 1].text),
-                                        ["-"],
-                                    )
-                                )
-                            else:
-                                list_tokens.append(
-                                    ResultOut.factory(
-                                        config,
-                                        lang,
-                                        tokens[i].text,
-                                        full_text,
-                                        category,
-                                        subcategory,
-                                        tokens[i].idx,
-                                        tokens[i].idx + len(tokens[i].text),
-                                        ["-"],
-                                    )
-                                )
-
-        else:
-            for word, alternative, subcategory in zip(
-                df["Lemma"], df["Alt_split"], df["Primary_subcategory"]
-            ):
-                if len(alternative) > 5:
                     if tokens[i].lemma_ == word:
                         list_tokens.append(
                             ResultOut.factory(
@@ -1225,39 +1170,25 @@ def StyleWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_sen
                                 ast.literal_eval(alternative),
                             )
                         )
-                else:
-                    if tokens[i].lemma_ == word:
-                        if (
-                            tokens[i - 1].is_stop == True
-                            or tokens[i - 1].is_punct == True
-                        ):
-                            list_tokens.append(
-                                ResultOut.factory(
-                                    config,
-                                    lang,
-                                    tokens[i - 1 : i + 1].text,
-                                    full_text,
-                                    category,
-                                    subcategory,
-                                    tokens[i - 1].idx,
-                                    tokens[i - 1].idx + len(tokens[i - 1 : i + 1].text),
-                                    ["-"],
-                                )
-                            )
-                        else:
-                            list_tokens.append(
-                                ResultOut.factory(
-                                    config,
-                                    lang,
-                                    tokens[i].text,
-                                    full_text,
-                                    category,
-                                    subcategory,
-                                    tokens[i].idx,
-                                    tokens[i].idx + len(tokens[i].text),
-                                    ["-"],
-                                )
-                            )
+
+        else:
+            for word, alternative, subcategory in zip(
+                df["Lemma"], df["Alt_split"], df["Primary_subcategory"]
+            ):
+                if tokens[i].lemma_ == word:
+                    list_tokens.append(
+                        ResultOut.factory(
+                            config,
+                            lang,
+                            tokens[i].text,
+                            full_text,
+                            category,
+                            subcategory,
+                            tokens[i].idx,
+                            tokens[i].idx + len(tokens[i].text),
+                            ast.literal_eval(alternative),
+                        )
+                    )
 
     matches = matcher(tokens)
     for match_id, start, end in matches:
