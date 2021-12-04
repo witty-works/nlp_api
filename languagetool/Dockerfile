@@ -32,7 +32,8 @@ RUN chmod +x /entrypoint.sh
 COPY ssh_setup.sh /tmp/sshd_setup.sh
 RUN apk add --no-cache --update openssh-server su-exec \
   && bash /tmp/sshd_setup.sh \
-  && rm -f /tmp/sshd_setup.sh
+  && rm -f /tmp/sshd_setup.sh \
+  && echo "root:Docker!" | chpasswd
 COPY sshd_config /etc/ssh/sshd_config
 
 ENV PORT 8000
