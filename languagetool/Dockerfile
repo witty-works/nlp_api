@@ -14,7 +14,7 @@ USER root
 #WORKDIR fastText
 #RUN make
 #WORKDIR ..
-#RUN ls
+#RUN l
 
 # Add server properties, when we use fasttext change to previous command 
 #COPY --chown=languagetool server.properties /LanguageTool
@@ -28,12 +28,17 @@ COPY --chown=languagetool server.properties /LanguageTool
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
+# setup sshd for ssh access in app services
+COPY ssh_setup.sh /tmp/sshd_setup.sh
+RUN apk add --no-cache --update openssh-server su-exec \
+  && bash /tmp/sshd_setup.sh \
+  && rm -f /tmp/sshd_setup.sh
+COPY sshd_config /etc/ssh/sshd_config
+
 ENV PORT 8000
-EXPOSE 8000
+EXPOSE 8000 2222
 
 # the percentage of heap size to use for languagetool
 ENV HEAP_PERCENTAGE 80 
-
-USER languagetool
 
 CMD [ "bash", "/entrypoint.sh" ]
