@@ -671,7 +671,8 @@ def write_user_training_data(
 
     data = serialize_user_training_data(request, user_request_in, response)
 
-    dirname = os.getcwd() + "/user_training_data/" + user_request_in.id
+    date = datetime.utcnow().strftime("%Y-%m-%d")
+    dirname = os.getcwd() + "/user_training_data/" + date + "/" + user_request_in.id
     filename = (
         dirname
         + "/"
