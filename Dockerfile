@@ -22,6 +22,7 @@ ENV APP_MODULE=app.main:app
 ENV LANGUAGETOOL_API=http://languagetool:8000/v2 
 ENV WORKERS 6
 ENV LOGGING_CONFIG_LEVEL ERROR
+ENV TESTING True
 COPY --chown=wittyuser:wittyuser requirements.txt requirements.txt
 ENV PATH="/home/wittyuser/.local/bin:${PATH}"
 RUN pip install -r requirements.txt --user

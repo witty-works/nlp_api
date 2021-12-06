@@ -35,7 +35,7 @@ categories = {
         "category": "gendered",
         "gravity": 2,
     },
-    "style": {"color": "yellow", "inclusive": False, "category": "style", "gravity": 5},
+    "style": {"color": "blue", "inclusive": False, "category": "style", "gravity": 3},
     "passive_voice": {
         "color": "blue",
         "inclusive": False,
@@ -64,7 +64,7 @@ categories = {
         "color": "green",
         "inclusive": True,
         "category": "inclusive",
-        "gravity": 5,
+        "gravity": 2,
     },
     "communal": {
         "color": "green",
@@ -99,18 +99,6 @@ categories = {
         "gravity": 4,
     },
     "verbose": {"color": "blue", "inclusive": False, "category": "style", "gravity": 5},
-    "plain_language_word_length": {
-        "color": "yellow",
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 5,
-    },
-    "plain_language_sentence_length": {
-        "color": "yellow",
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 5,
-    },
     "exaggerating": {
         "color": "blue",
         "inclusive": False,
@@ -310,71 +298,53 @@ categories = {
         "category": "style",
         "gravity": 3,
     },
-    "false_friends_en_ge": {
-        "color": "yellow",
-        "inclusive": False,
-        "category": "style",
-        "gravity": 5,
-    },
     "openly_discriminating": {
         "color": "brown",
         "inclusive": False,
-        "category": "openly-c37935a7016049489727eab9e32e56c3",
+        "category": "openly_discriminating",
         "gravity": 1,
     },
     "racism": {"color": "brown", "inclusive": False, "category": "", "gravity": 1},
     "sexism": {
         "color": "brown",
         "inclusive": False,
-        "category": "openly-c37935a7016049489727eab9e32e56c3",
+        "category": "openly_discriminating",
         "gravity": 1,
     },
     "transphobia": {
         "color": "brown",
         "inclusive": False,
-        "category": "openly-c37935a7016049489727eab9e32e56c3",
+        "category": "openly_discriminating",
         "gravity": 1,
     },
     "homophobia": {
         "color": "brown",
         "inclusive": False,
-        "category": "openly-c37935a7016049489727eab9e32e56c3",
+        "category": "openly_discriminating",
         "gravity": 1,
     },
-    "anti_semitism": {
+    "antisemitism": {
         "color": "brown",
         "inclusive": False,
-        "category": "openly-c37935a7016049489727eab9e32e56c3",
+        "category": "openly_discriminating",
         "gravity": 1,
     },
-    "anti_muslim": {
+    "antimuslim": {
         "color": "brown",
         "inclusive": False,
-        "category": "openly-c37935a7016049489727eab9e32e56c3",
+        "category": "openly_discriminating",
         "gravity": 1,
     },
     "xenophobia": {
         "color": "brown",
         "inclusive": False,
-        "category": "openly-c37935a7016049489727eab9e32e56c3",
+        "category": "openly_discriminating",
         "gravity": 1,
     },
     "ableism": {
         "color": "brown",
         "inclusive": False,
-        "category": "openly-c37935a7016049489727eab9e32e56c3",
+        "category": "openly_discriminating",
         "gravity": 1,
-    },
-    "openly discriminating": {
-        "color": "yellow",
-        "inclusive": False,
-        "category": "openly-c37935a7016049489727eab9e32e56c3",
-        "gravity": 5,
-    },
-    "unconscious bias / stereotypes": {
-        "color": "yellow",
-        "inclusive": False,
-        "category": "",
-        "gravity": 5,
     },
 }
