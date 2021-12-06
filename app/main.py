@@ -145,7 +145,7 @@ languagetool_url = get_languagetool_url()
 # convert string of list into list of the strings
 # project models
 
-version = "1.6.3"
+version = "1.6.4"
 
 app = FastAPI(
     title="Witty NLP API",
@@ -677,7 +677,13 @@ def write_user_training_data(
     data = serialize_user_training_data(request, user_request_in, response)
 
     date = datetime.utcnow().strftime("%Y-%m-%d")
+
+    dirname = os.getcwd() + "/user_training_data/installs/" + user_request_in.id
+    os.makedirs(dirname, exist_ok=True)
+
     dirname = os.getcwd() + "/user_training_data/" + date + "/" + user_request_in.id
+    os.makedirs(dirname, exist_ok=True)
+
     filename = (
         dirname
         + "/"
@@ -685,7 +691,6 @@ def write_user_training_data(
         + ".json"
     )
 
-    os.makedirs(os.path.dirname(filename), exist_ok=True)
     f = open(filename, "w")
     f.write(data)
 
