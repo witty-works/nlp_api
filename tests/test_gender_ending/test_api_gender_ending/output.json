@@ -1,0 +1,19 @@
+{
+    "language": "de",
+    "results": [
+        {
+            "alternatives": [
+                ":in"
+            ],
+            "category": "gendered",
+            "context": "",
+            "end": 20,
+            "label": "Geschlechtsspezifisch: Inklusive Endung",
+            "reason": "Konsistente Schreibweise ist vertrauenserweckender.",
+            "solution": "Nutzen Sie den Genderstern oder -doppelpunkt, um durchgehend inklusiv zu sein.",
+            "start": 17,
+            "subcategory": "gendered_denominations_ending",
+            "text": "/in"
+        }
+    ]
+}
