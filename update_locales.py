@@ -5,6 +5,7 @@ import csv
 import polib
 import re
 
+
 def add_entry(poFiles, category, columns, label, column, row):
     msgid = u"rules." + category + "_" + label
     for locale in poFiles:
@@ -13,27 +14,28 @@ def add_entry(poFiles, category, columns, label, column, row):
         else:
             msgstr = row[columns[column + " " + locale[0:2].upper()]].strip()
 
-        entry = polib.POEntry(msgid=msgid,msgstr=msgstr)
+        entry = polib.POEntry(msgid=msgid, msgstr=msgstr)
         poFiles[locale].append(entry)
 
+
 def read_csv(in_file):
-    poFiles = { "pot": polib.POFile(), "en_GB": polib.POFile(), "de_DE": polib.POFile() }
+    poFiles = {"pot": polib.POFile(), "en_GB": polib.POFile(), "de_DE": polib.POFile()}
     for locale in poFiles:
         current_date = datetime.utcnow().strftime("%Y-%m-%d %H:%M")
 
         poFiles[locale].metadata = {
-            'Project-Id-Version': '1.0',
-            'Report-Msgid-Bugs-To': 'engineering@witty.works',
-            'POT-Creation-Date': current_date,
-            'PO-Revision-Date': current_date,
-            'Last-Translator': 'engineering@witty.works',
-            'Language-Team': 'engineering@witty.works',
-            'MIME-Version': '1.0',
-            'Content-Type': 'text/plain; charset=utf-8',
-            'Content-Transfer-Encoding': '8bit',
+            "Project-Id-Version": "1.0",
+            "Report-Msgid-Bugs-To": "engineering@witty.works",
+            "POT-Creation-Date": current_date,
+            "PO-Revision-Date": current_date,
+            "Last-Translator": "engineering@witty.works",
+            "Language-Team": "engineering@witty.works",
+            "MIME-Version": "1.0",
+            "Content-Type": "text/plain; charset=utf-8",
+            "Content-Transfer-Encoding": "8bit",
         }
 
-    with open(in_file, newline='') as csvfile:
+    with open(in_file, newline="") as csvfile:
         columns = {
             "Subcategory": 0,
             "Category": None,
@@ -72,8 +74,11 @@ def read_csv(in_file):
                         columns[column] = i
                 line_count += 1
             else:
-                #if row[columns["Status English"]] not in ["Ready to deploy", "Deployed"] and row[columns["Status German"]] not in ["Ready to deploy", "Deployed"]:
-                #    continue
+                if (
+                    row[columns["Category Label EN"]] == ""
+                    and row[columns["Category Label DE"]] == ""
+                ):
+                    continue
 
                 category = row[columns["Subcategory"]].strip()
                 if category == "New Category":
@@ -83,10 +88,14 @@ def read_csv(in_file):
                 add_entry(poFiles, category, columns, "label", "Category Label", row)
                 add_entry(poFiles, category, columns, "reason", "Reason", row)
                 add_entry(poFiles, category, columns, "solution", "Solution", row)
- 
+
                 categories[category]["color"] = colors[row[columns["Color Scheme"]]]
                 categories[category]["inclusive"] = row[columns["Inclusive?"]] == "👍"
-                categories[category]["category"] = re.sub('https://www\.notion\.so\/([_a-z]+)-[a-z0-9]+', '\\1', row[columns["Category"]])
+                categories[category]["category"] = re.sub(
+                    "https://www\.notion\.so\/([_a-z]+)-[a-z0-9]+",
+                    "\\1",
+                    row[columns["Category"]],
+                )
                 try:
                     gravity = int(row[columns["Gravity"]])
                 except:
@@ -106,18 +115,25 @@ def read_csv(in_file):
             poFiles[locale].to_binary()
             poFiles[locale].save_as_mofile(locale_path + "/messages.mo")
 
-    f = open( 'app/categories.py', 'w' )
-    f.write( 'categories = ' + repr(categories) + '\n' )
+    f = open("app/categories.py", "w")
+    f.write("categories = " + repr(categories) + "\n")
     f.close()
 
+
 @click.command()
-@click.option("--in", "-i", "in_file", required=True,
+@click.option(
+    "--in",
+    "-i",
+    "in_file",
+    required=True,
     help="Path to csv fle to be processed",
-    type=click.Path(exists=True, dir_okay=False, readable=True))
+    type=click.Path(exists=True, dir_okay=False, readable=True),
+)
 def process(in_file):
-    """ Processes the input file to generate new .pot and .po files """
+    """Processes the input file to generate new .pot and .po files"""
     input = read_csv(in_file)
     print(in_file)
+
 
 if __name__ == "__main__":
     process()
