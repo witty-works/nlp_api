@@ -30,7 +30,6 @@ from functools import lru_cache
 from fastapi import (
     FastAPI,
     Request,
-    Header,
     HTTPException,
     BackgroundTasks,
     Depends,
@@ -338,9 +337,10 @@ false_positive_agentic += corporate_false_positive
 if settings.testing == True:
     redis = FakeStrictRedis()
 else:
-    redis_config = platformshconfig.Config()
-    credentials = redis_config.credentials("rediscache")
-    redis = Redis(credentials["host"], credentials["port"])
+    platform_config = platformshconfig.Config()
+    if platform_config.is_valid_platform():
+        redis_credentials = platform_config.credentials("rediscache")
+        redis = Redis(redis_credentials["host"], redis_credentials["port"])
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
