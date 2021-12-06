@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2021-11-30 09:53\n"
-"PO-Revision-Date: 2021-11-30 09:53\n"
+"POT-Creation-Date: 2021-12-06 11:32\n"
+"PO-Revision-Date: 2021-12-06 11:32\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -189,24 +189,6 @@ msgid "rules.verbose_reason"
 msgstr ""
 
 msgid "rules.verbose_solution"
-msgstr ""
-
-msgid "rules.plain_language_word_length_label"
-msgstr ""
-
-msgid "rules.plain_language_word_length_reason"
-msgstr ""
-
-msgid "rules.plain_language_word_length_solution"
-msgstr ""
-
-msgid "rules.plain_language_sentence_length_label"
-msgstr ""
-
-msgid "rules.plain_language_sentence_length_reason"
-msgstr ""
-
-msgid "rules.plain_language_sentence_length_solution"
 msgstr ""
 
 msgid "rules.exaggerating_label"
@@ -515,15 +497,6 @@ msgstr ""
 msgid "rules.formality_solution"
 msgstr ""
 
-msgid "rules.false_friends_en_ge_label"
-msgstr ""
-
-msgid "rules.false_friends_en_ge_reason"
-msgstr ""
-
-msgid "rules.false_friends_en_ge_solution"
-msgstr ""
-
 msgid "rules.openly_discriminating_label"
 msgstr ""
 
@@ -569,22 +542,22 @@ msgstr ""
 msgid "rules.homophobia_solution"
 msgstr ""
 
-msgid "rules.anti_semitism_label"
+msgid "rules.antisemitism_label"
 msgstr ""
 
-msgid "rules.anti_semitism_reason"
+msgid "rules.antisemitism_reason"
 msgstr ""
 
-msgid "rules.anti_semitism_solution"
+msgid "rules.antisemitism_solution"
 msgstr ""
 
-msgid "rules.anti_muslim_label"
+msgid "rules.antimuslim_label"
 msgstr ""
 
-msgid "rules.anti_muslim_reason"
+msgid "rules.antimuslim_reason"
 msgstr ""
 
-msgid "rules.anti_muslim_solution"
+msgid "rules.antimuslim_solution"
 msgstr ""
 
 msgid "rules.xenophobia_label"
@@ -603,40 +576,4 @@ msgid "rules.ableism_reason"
 msgstr ""
 
 msgid "rules.ableism_solution"
-msgstr ""
-
-msgid "rules.openly discriminating_label"
-msgstr ""
-
-msgid "rules.openly discriminating_reason"
-msgstr ""
-
-msgid "rules.openly discriminating_solution"
-msgstr ""
-
-msgid "rules.style_label"
-msgstr ""
-
-msgid "rules.style_reason"
-msgstr ""
-
-msgid "rules.style_solution"
-msgstr ""
-
-msgid "rules.unconscious bias / stereotypes_label"
-msgstr ""
-
-msgid "rules.unconscious bias / stereotypes_reason"
-msgstr ""
-
-msgid "rules.unconscious bias / stereotypes_solution"
-msgstr ""
-
-msgid "rules.inclusive_label"
-msgstr ""
-
-msgid "rules.inclusive_reason"
-msgstr ""
-
-msgid "rules.inclusive_solution"
 msgstr ""
