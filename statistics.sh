@@ -91,7 +91,7 @@ data_dir="user_training_data";
 date_dir="$data_dir/$DATE";
 
 cmds=(
-    "ls $data_dir/ | wc -l"
+    "ls $data_dir/installs | wc -l"
     "find $date_dir -type f | wc -l"
     "ls $date_dir/ | grep -r '\"alternative\"' | wc -l"
     "ls $date_dir/ | grep -r '\"igore\"' | wc -l"
@@ -122,6 +122,6 @@ done
 if $BACKUP;
 then
     cd $data_dir;
-    tar -czf "$DATE.tar.gz" $DATE;
+    tar -czvf "$DATE.tar.gz" $DATE;
     rm -rf $DATE;
 fi

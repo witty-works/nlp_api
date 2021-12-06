@@ -145,7 +145,7 @@ languagetool_url = get_languagetool_url()
 # convert string of list into list of the strings
 # project models
 
-version = "1.6.3"
+version = "1.6.4"
 
 app = FastAPI(
     title="Witty NLP API",
@@ -287,6 +287,10 @@ df_communal_words = pd.read_csv("training_data/communal_DE.csv")
 # English
 # load agentic language
 df_agentic_words_en = pd.read_csv("training_data/agentic_EN.csv")
+
+# load openly discriminating words
+df_open_dis_word_en = pd.read_csv("training_data/open_dis_words_EN.csv")
+df_open_dis_sentence_en = pd.read_csv("training_data/open_dis_sentences_EN.csv")
 
 # dictionaries to handle false positives
 false_positive_agentic = ["selbst", "flexible", "Probleme", "unabhängig", "Entwickler"]
@@ -673,7 +677,13 @@ def write_user_training_data(
     data = serialize_user_training_data(request, user_request_in, response)
 
     date = datetime.utcnow().strftime("%Y-%m-%d")
+
+    dirname = os.getcwd() + "/user_training_data/installs/" + user_request_in.id
+    os.makedirs(dirname, exist_ok=True)
+
     dirname = os.getcwd() + "/user_training_data/" + date + "/" + user_request_in.id
+    os.makedirs(dirname, exist_ok=True)
+
     filename = (
         dirname
         + "/"
@@ -681,7 +691,6 @@ def write_user_training_data(
         + ".json"
     )
 
-    os.makedirs(os.path.dirname(filename), exist_ok=True)
     f = open(filename, "w")
     f.write(data)
 
@@ -803,6 +812,17 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
             df_agentic_words_en,
             "unconscious_bias",
             "agentic",
+        )
+
+    if "openly_discriminating" not in user_request_in.config.disabled_categories:
+        list_full += RulesBasedWordsPhraseMatcherEN(
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            df_open_dis_word_en,
+            df_open_dis_sentence_en,
+            "openly_discriminating",
         )
 
     return list_full
@@ -1194,7 +1214,9 @@ def StyleWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_sen
     matches = matcher(tokens)
     for match_id, start, end in matches:
         for sentence, alternative, subcategory in zip(
-            df_sentence["Lemma"], df["Alt_split"], df["Primary_subcategory"]
+            df_sentence["Lemma"],
+            df_sentence["Alt_split"],
+            df_sentence["Primary_subcategory"],
         ):
             span = tokens[start:end]
             if span.text == sentence:
@@ -1221,6 +1243,7 @@ def StyleWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_sen
 def RulesBasedWordsPhraseMatcher(
     config: Config, lang, full_text, tokens, terms, df, category, subcategory
 ):
+
     list_tokens = []
     # Phrase matcher part to handle False positives with two words and special simbols
     matcher = PhraseMatcher(model[lang.locale].vocab)
@@ -1354,6 +1377,65 @@ def RulesBasedEN(config: Config, lang, full_text, tokens, df, category, subcateg
                         token.idx,
                         None,
                         [],
+                    )
+                )
+
+    return list_tokens
+
+
+# English function
+def RulesBasedWordsPhraseMatcherEN(
+    config: Config, lang, full_text, tokens, df, df_sentence, category
+):
+    list_tokens = []
+    # Phrase matcher part to handle False positives with two words and special simbols
+    matcher = PhraseMatcher(model[lang.locale].vocab)
+
+    # Only run model.make_doc to speed things up
+    patterns = [
+        model[lang.locale].make_doc(text) for text in list(df_sentence["Lemma"])
+    ]
+    matcher.add("TerminologyList", patterns)
+
+    for token in tokens:
+        for word, alternative, subcategory in zip(
+            df["Lemma"], df["Alt_split"], df["Primary_subcategory"]
+        ):
+            if token.lemma_ == word:
+                list_tokens.append(
+                    ResultOut.factory(
+                        config,
+                        lang,
+                        token.text,
+                        full_text,
+                        category,
+                        subcategory,
+                        token.idx,
+                        token.idx + len(token.text),
+                        ast.literal_eval(alternative),
+                    )
+                )
+
+    matches = matcher(tokens)
+    for match_id, start, end in matches:
+        for sentence, alternative, subcategory in zip(
+            df_sentence["Lemma"],
+            df_sentence["Alt_split"],
+            df_sentence["Primary_subcategory"],
+        ):
+            span = tokens[start:end]
+            if span.text == sentence:
+                list_tokens.append(
+                    ResultOut.factory(
+                        config,
+                        lang,
+                        span.text,
+                        full_text,
+                        category,
+                        subcategory,
+                        span.start_char,
+                        span.end_char,
+                        ast.literal_eval(alternative),
                     )
                 )
 
