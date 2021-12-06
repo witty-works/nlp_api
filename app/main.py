@@ -24,7 +24,6 @@ import base64
 import secrets
 import aiohttp
 import copy
-from typing import Optional
 from functools import lru_cache
 
 from fastapi import (
@@ -52,7 +51,7 @@ from fastapi.exception_handlers import (
     http_exception_handler,
 )
 
-from typing import Optional
+from typing import List, Optional
 from pydantic import BaseSettings
 from app.categories import categories
 
@@ -61,6 +60,8 @@ import logging
 from redis import Redis
 import platformshconfig
 from fakeredis import FakeStrictRedis
+
+import posthog
 
 
 class Settings(BaseSettings):
@@ -80,6 +81,9 @@ class Settings(BaseSettings):
     instrumentation_key: str = ""
     testing: bool = False
     read_rules_from_redis: bool = False
+    posthog_api_key: Optional[str]
+    posthog_host: Optional[str]
+    posthog_ids: List[str] = []
 
     class Config:
         env_file = ".env"
@@ -116,13 +120,30 @@ def set_up_logger():
             fh = logging.FileHandler(filename=filename)
             fh.setFormatter(formatter)
             logging.getLogger().addHandler(fh)
-
     else:
         logging.getLogger().addHandler(logging.NullHandler())
 
 
 set_up_logger()
 logging.debug("app started with settings: %s", settings)
+
+
+@lru_cache()
+def setup_posthog():
+    if not settings.training_data_enabled:
+        return
+
+    posthog.api_key = settings.posthog_api_key
+    posthog.host = settings.posthog_host
+
+    if settings.logging_enabled:
+        posthog.debug = True
+
+    if settings.testing:
+        posthog.disabled = True
+
+
+setup_posthog()
 
 # Languagetool URL
 @lru_cache()
@@ -440,8 +461,8 @@ def get_categories(lang: LangType = "de"):
 def serialize(
     user_request_in: RequestIn, username: str = Depends(get_current_username)
 ):
-    data = serialize_user_training_data(user_request_in, ResultsOut([], "en"))
-    return data
+    data = collect_user_training_data(user_request_in, ResultsOut([], "en"))
+    return json.dumps(data)
 
 
 @app.post("/log", status_code=201)
@@ -637,13 +658,13 @@ def language_rules(user_request_in: RequestIn, lang: Lang):
     return list_results
 
 
-def serialize_event_data(user_request_in: RequestIn):
+def clean_event_data(user_request_in: RequestIn):
     data = user_request_in.dict()
 
-    return jsonable_encoder(data)
+    return data
 
 
-def serialize_request_data(request: Request, user_request_in: RequestIn):
+def clean_request_data(request: Request, user_request_in: RequestIn):
     data = user_request_in.dict(exclude={"text"})
     data["text"] = {
         "length": len(user_request_in.text),
@@ -651,29 +672,29 @@ def serialize_request_data(request: Request, user_request_in: RequestIn):
     data["user_agent"] = request.headers.get("user-agent")
     data["origin"] = request.headers.get("origin")
 
-    return jsonable_encoder(data)
+    return data
 
 
-def serialize_response_data(response: ResultsOut):
+def clean_response_data(response: ResultsOut):
     data = response.dict(exclude={"results": {"__all__": {"context"}}})
 
-    return jsonable_encoder(data)
+    return data
 
 
-def serialize_user_training_data(
+def collect_user_training_data(
     request: Request, user_request_in: RequestIn, response: ResultsOut = None
 ):
     if response is None:
         data = {
-            "event": serialize_event_data(user_request_in),
+            "event": clean_event_data(user_request_in),
         }
     else:
         data = {
-            "request": serialize_request_data(request, user_request_in),
-            "response": serialize_response_data(response),
+            "request": clean_request_data(request, user_request_in),
+            "response": clean_response_data(response),
         }
 
-    return json.dumps(data)
+    return data
 
 
 def write_user_training_data(
@@ -682,25 +703,28 @@ def write_user_training_data(
     if user_request_in.id is None or not settings.training_data_enabled:
         return
 
-    data = serialize_user_training_data(request, user_request_in, response)
+    data = collect_user_training_data(request, user_request_in, response)
 
-    date = datetime.utcnow().strftime("%Y-%m-%d")
+    if user_request_in.id in settings.posthog_ids:
+        posthog.capture(user_request_in.id, user_request_in.type, data)
+    else:
+        date = datetime.utcnow().strftime("%Y-%m-%d")
 
-    dirname = os.getcwd() + "/user_training_data/installs/" + user_request_in.id
-    os.makedirs(dirname, exist_ok=True)
+        dirname = os.getcwd() + "/user_training_data/installs/" + user_request_in.id
+        os.makedirs(dirname, exist_ok=True)
 
-    dirname = os.getcwd() + "/user_training_data/" + date + "/" + user_request_in.id
-    os.makedirs(dirname, exist_ok=True)
+        dirname = os.getcwd() + "/user_training_data/" + date + "/" + user_request_in.id
+        os.makedirs(dirname, exist_ok=True)
 
-    filename = (
-        dirname
-        + "/"
-        + datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
-        + ".json"
-    )
+        filename = (
+            dirname
+            + "/"
+            + datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+            + ".json"
+        )
 
-    f = open(filename, "w")
-    f.write(data)
+        f = open(filename, "w")
+        f.write(json.dumps(data))
 
 
 # Function for all German rules
