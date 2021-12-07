@@ -1,13 +1,8 @@
-import json
-import os
-
 import pytest
 from pathlib import Path
-
 from fastapi.applications import FastAPI
 from fastapi.testclient import TestClient
-from app.main import app
-from app.main import redis, set_rules
+from app.main import app, redis, set_rules
 import json
 from app.models import RequestIn
 

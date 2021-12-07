@@ -19,7 +19,6 @@ opencensus-ext-azure = "*"
 redis = "*"
 platformshconfig = "*"
 fakeredis = "*"
-pytest-snapshot = "*"
 
 [dev-packages]
 click = "*"
@@ -30,6 +29,7 @@ python-dotenv = "*"
 black = "*"
 opencensus-ext-azure = "*"
 pytest-asyncio = "*"
+pytest-snapshot = "*"
 
 [requires]
 python_version = "3.9"
