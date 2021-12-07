@@ -22,7 +22,7 @@ Scientist,s,,gendered,function,americanism,"['Science', 'Wissenschaft', 'Wissens
 Scrum Master,s,,gendered,function,,"['Scrum Mastering', 'Scrum Master~in~/~Scrum Master']",['Scrum Mastering']
 Steward,s,,gendered,function,,"['Bordgastronomie', 'Flugbegleitung', 'Zugsteward~ess~/~Zugsteward', 'Flugbegleiter~in~/~Flugbegleiter']","['Zugsteward~essen~ und ~Zugstewards', 'Flugbegleiter~innen~ und ~Flugbegleiter', 'Bordgastronomie', 'Flugbegleitung']"
 Student,s,,gendered,function,,"['Studi', 'Mitglied der Studentenschaft', 'Studium', 'Student~in~/~Student', 'Student~innenschaft', 'Studierende', 'Studis', 'Person, die (noch) studiert']","['Studierende', 'Studis', 'Student~innen~ und ~Studenten', 'Student~innenschaft', 'Studium', 'Personen, die studieren']"
-Supporter,s,,gendered,function,,"['Support', 'Supporterin~/~Supporter', 'Supportleistende']","['Supportleistende', 'Support', 'Supporterin~/~Supporter']"
+Supporter,s,,gendered,function,,"['Support', 'Supporter~in~/~Supporter', 'Supportleistende']","['Supportleistende', 'Support', 'Supporter~in~/~Supporter']"
 Teilnehmer,s,,gendered,function,,"['Teilnahme', 'Teilnehmer~in~/~Teilnehmer', 'Teilnehmende']","['Teilnehmende', 'Teilnehmer~innen~ und ~Teilnehmer', 'Teilnahme']"
 Tester,s,,gendered,function,,"['Testing', 'Test', 'Tester~in~/~Tester', 'Testende']","['Testende', 'Testing', 'Test']"
 User,s,,gendered,function,,"['Nutzung', 'Nutzer~in~/~Nutzer', 'Nutzende']","['Nutzende', 'Nutzerinnen~ und ~Nutzer', 'Nutzung']"
