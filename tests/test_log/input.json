@@ -1,0 +1,12 @@
+{
+    "text": "Voila",
+    "context": "Voila",
+    "lang": "auto",
+    "id": "123",
+    "start": 0,
+    "end": 23,
+    "type": "alternative",
+    "details": {
+        "text": "test"
+    }
+}

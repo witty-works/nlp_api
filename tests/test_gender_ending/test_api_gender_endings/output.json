@@ -1,0 +1,47 @@
+{
+    "language": "de",
+    "results": [
+        {
+            "alternatives": [
+                "Kund*in",
+                "Kundschaft",
+                "Klientel",
+                "Auftraggebende",
+                "Bestellende",
+                "Beziehende Person",
+                "Person, die (…) kauft",
+                "Beauftragende Firma"
+            ],
+            "category": "gendered",
+            "context": "",
+            "end": 11,
+            "label": "Geschlechtsspezifisch: Titel",
+            "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
+            "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht.",
+            "start": 6,
+            "subcategory": "titles",
+            "text": "Kunde"
+        },
+        {
+            "alternatives": [
+                "Auftraggebende",
+                "Bestellende",
+                "Kund*innen",
+                "Kundschaft",
+                "Klientel",
+                "Beziehende Personen",
+                "Personen, die (…) kaufen",
+                "Beauftragende Firmen"
+            ],
+            "category": "gendered",
+            "context": "",
+            "end": 37,
+            "label": "Geschlechtsspezifisch: Titel",
+            "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
+            "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht.",
+            "start": 31,
+            "subcategory": "titles",
+            "text": "Kunden"
+        }
+    ]
+}

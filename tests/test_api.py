@@ -1,9 +1,11 @@
+import pytest
+from pathlib import Path
 from fastapi.applications import FastAPI
 from fastapi.testclient import TestClient
-from app.main import app
-from app.main import redis, set_rules
+from app.main import app, redis, set_rules
 import json
 from app.models import RequestIn
+
 
 client = TestClient(app)
 
@@ -18,469 +20,58 @@ def test_read_form():
     assert response.status_code == 200
 
 
-def test_api():
-    request_data = {
-        "text": "Wir suchen Ninja Programmierer für unsere Kunden",
-        "config": {"store_context": False},
-    }
+@pytest.mark.parametrize(
+    "general_case_dir",
+    list(Path("tests/test_general_cases").iterdir()),
+)
+def test_json(general_case_dir, snapshot):
 
-    response = client.post("/check", json=request_data)
+    # Read input files from the case directory.
+    input_json = general_case_dir.joinpath("input.json").read_text()
+    # Call the tested endpoint.
+    response = client.post("/check", json=json.loads(input_json))
     assert response.status_code == 200
-
-    first_record = response.json()
-    assert first_record["language"] == "de"
-    assert first_record["results"] == [
-        {
-            "text": "Kunden",
-            "context": "",
-            "category": "gendered",
-            "subcategory": "titles",
-            "start": 42,
-            "end": 48,
-            "alternatives": [
-                "Auftraggebende",
-                "Bestellende",
-                "Kund:innen",
-                "Kundschaft",
-                "Klientel",
-                "Beziehende Personen",
-                "Personen, die (…) kaufen",
-                "Beauftragende Firmen",
-            ],
-            "label": "Geschlechtsspezifisch: Titel",
-            "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
-            "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht.",
-        },
-        {
-            "text": "Ninja",
-            "context": "",
-            "category": "style",
-            "subcategory": "exaggerating",
-            "start": 11,
-            "end": 16,
-            "alternatives": [
-                "Jemand, der erfahren und fachkundig ist",
-                "Jemand mit Know-how und Ausdauer",
-                "Mensch, der seine Fachkenntnis ständig vertieft",
-            ],
-            "label": "Stil: Superlative",
-            "reason": "Kommuniziert, dass sich Menschen sich im Sinne der Superlative anpassen müssen.",
-            "solution": "Verwenden Sie eine authentisch und ehrlich klingende Aussage.",
-        },
-    ]
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    # Snapshot the return value.
+    snapshot.snapshot_dir = general_case_dir
+    snapshot.assert_match(output, "output.json")
 
 
-def test_api_gendered_subcategories():
-    request_data = {
-        "text": "Ich bin hier der Manager und dein Boss!",
-        "config": {"store_context": False},
-    }
+@pytest.mark.parametrize(
+    "orthoraphy_case_dir",
+    list(Path("tests/test_orthography").iterdir()),
+)
+def test_orthoraphy(orthoraphy_case_dir, snapshot):
 
-    response = client.post("/check", json=request_data)
+    # Read input files from the case directory.
+    input_json = orthoraphy_case_dir.joinpath("input.json").read_text()
+    # Call the tested endpoint.
+    response = client.post("/check", json=json.loads(input_json))
     assert response.status_code == 200
-
-    first_record = response.json()
-    assert first_record["language"] == "de"
-    assert first_record["results"] == [
-        {
-            "text": "Manager",
-            "context": "",
-            "category": "gendered",
-            "subcategory": "function",
-            "start": 17,
-            "end": 24,
-            "alternatives": ["Management", "Manager:in"],
-            "label": "Geschlechtsspezifisch: Spezielle Funktionen",
-            "reason": "Aus wirtschaftlich-historischen Gründen wird unbewusst ein Bild eines Mannes vor dem inneren Auge hervorgerufen. Das weibliche Geschlecht oder andere Geschlechtsidentitäten werden nicht sichtbar. Und sie fühlen sich nicht zugehörig.",
-            "solution": "Umgehen Sie mit anderen Worten das unbewusst hervorgerufene Bild. Nutzen Sie eher das Nomen, das die Tätigkeit bezeichnet, um das unbewusste Bild zu umgehen. Oder verwenden Sie eine geschlechtsneutrale Bezeichnung.",
-        },
-        {
-            "text": "der",
-            "context": "",
-            "category": "gendered",
-            "subcategory": "function",
-            "start": 13,
-            "end": 16,
-            "alternatives": ["der:die"],
-            "label": "Geschlechtsspezifisch: Spezielle Funktionen",
-            "reason": "Aus wirtschaftlich-historischen Gründen wird unbewusst ein Bild eines Mannes vor dem inneren Auge hervorgerufen. Das weibliche Geschlecht oder andere Geschlechtsidentitäten werden nicht sichtbar. Und sie fühlen sich nicht zugehörig.",
-            "solution": "Umgehen Sie mit anderen Worten das unbewusst hervorgerufene Bild. Nutzen Sie eher das Nomen, das die Tätigkeit bezeichnet, um das unbewusste Bild zu umgehen. Oder verwenden Sie eine geschlechtsneutrale Bezeichnung.",
-        },
-        {
-            "text": "Boss",
-            "context": "",
-            "category": "gendered",
-            "subcategory": "leadership",
-            "start": 34,
-            "end": 38,
-            "alternatives": [
-                "Leitende Kraft",
-                "Leitungsperson",
-                "Leitung",
-                "Vorgesetzte:r",
-                "Leitende Kräfte",
-                "Leitungskräfte",
-                "Leitungspersonen",
-                "Vorgesetzte",
-                "Entscheidungsbefugte Person",
-                "Verantwortliche Person",
-            ],
-            "label": "Geschlechtsspezifisch: Führungsstereotyp",
-            "reason": "Besetzt das Thema der Führung stereotyp männlich und traditionell hierarchisch.",
-            "solution": "Verwenden Sie Begriffe, die von einer unterstützenden Vorstellung der Führung ausgeht und verschiedene Geschlechter meinen kann.",
-        },
-    ]
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    # Snapshot the return value.
+    snapshot.snapshot_dir = orthoraphy_case_dir
+    snapshot.assert_match(output, "output.json")
 
 
-def test_api_context():
-    request_data = {"text": "Wir suchen Kunden"}
+@pytest.mark.parametrize(
+    "ending_case_dir",
+    list(Path("tests/test_gender_ending").iterdir()),
+)
+def test_gender_ending(ending_case_dir, snapshot):
 
-    response = client.post("/check", json=request_data)
+    # Read input files from the case directory.
+    input_json = ending_case_dir.joinpath("input.json").read_text()
+    # Call the tested endpoint.
+    response = client.post("/check", json=json.loads(input_json))
     assert response.status_code == 200
-
-    first_record = response.json()
-    assert first_record["language"] == "de"
-    assert first_record["results"] == [
-        {
-            "text": "Kunden",
-            "context": "Wir suchen Kunden",
-            "category": "gendered",
-            "subcategory": "titles",
-            "start": 11,
-            "end": 17,
-            "alternatives": [
-                "Auftraggebende",
-                "Bestellende",
-                "Kund:innen",
-                "Kundschaft",
-                "Klientel",
-                "Beziehende Personen",
-                "Personen, die (…) kaufen",
-                "Beauftragende Firmen",
-            ],
-            "label": "Geschlechtsspezifisch: Titel",
-            "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
-            "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht.",
-        }
-    ]
-
-
-def test_api_disabled_categories():
-    request_data = {
-        "text": "Wir suchen Ninja Programmierer für unsere Kunden",
-        "config": {
-            "store_context": False,
-            "disabled_categories": "exaggerating,hollow",
-        },
-    }
-
-    response = client.post("/check", json=request_data)
-    assert response.status_code == 200
-
-    first_record = response.json()
-    assert first_record["language"] == "de"
-    assert first_record["results"] == [
-        {
-            "text": "Kunden",
-            "context": "",
-            "category": "gendered",
-            "subcategory": "titles",
-            "start": 42,
-            "end": 48,
-            "alternatives": [
-                "Auftraggebende",
-                "Bestellende",
-                "Kund:innen",
-                "Kundschaft",
-                "Klientel",
-                "Beziehende Personen",
-                "Personen, die (…) kaufen",
-                "Beauftragende Firmen",
-            ],
-            "label": "Geschlechtsspezifisch: Titel",
-            "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
-            "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht.",
-        }
-    ]
-
-
-def test_api_gender_endings():
-    request_data = {
-        "text": "Hallo Kunde. Wir geben unseren Kunden alles.",
-        "config": {"store_context": False, "german_gender_ending": "*in"},
-    }
-
-    response = client.post("/check", json=request_data)
-    assert response.status_code == 200
-
-    first_record = response.json()
-    assert first_record["language"] == "de"
-    assert first_record["results"] == [
-        {
-            "text": "Kunde",
-            "context": "",
-            "category": "gendered",
-            "subcategory": "titles",
-            "start": 6,
-            "end": 11,
-            "alternatives": [
-                "Kund*in",
-                "Kundschaft",
-                "Klientel",
-                "Auftraggebende",
-                "Bestellende",
-                "Beziehende Person",
-                "Person, die (…) kauft",
-                "Beauftragende Firma",
-            ],
-            "label": "Geschlechtsspezifisch: Titel",
-            "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
-            "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht.",
-        },
-        {
-            "text": "Kunden",
-            "context": "",
-            "category": "gendered",
-            "subcategory": "titles",
-            "start": 31,
-            "end": 37,
-            "alternatives": [
-                "Auftraggebende",
-                "Bestellende",
-                "Kund*innen",
-                "Kundschaft",
-                "Klientel",
-                "Beziehende Personen",
-                "Personen, die (…) kaufen",
-                "Beauftragende Firmen",
-            ],
-            "label": "Geschlechtsspezifisch: Titel",
-            "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
-            "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht.",
-        },
-    ]
-
-
-def test_api_gender_endings_do_not_trigger_spellchecker():
-    request_data = {
-        "text": "Wie geht es dir? Bis du unser Matros/-in?",
-        "config": {"store_context": False, "german_gender_ending": "/-in"},
-    }
-
-    response = client.post("/check", json=request_data)
-    assert response.status_code == 200
-
-    first_record = response.json()
-    assert first_record["language"] == "de"
-    assert first_record["results"] == []
-
-
-def test_api_orthography():
-    request_data = {
-        "text": "Ich gehe noch schnell ueber die Strasse!!!",
-        "config": {"store_context": False},
-    }
-
-    response = client.post("/check", json=request_data)
-    assert response.status_code == 200
-
-    first_record = response.json()
-    assert first_record["language"] == "de"
-    assert first_record["results"] == [
-        {
-            "text": "ueber",
-            "context": "",
-            "category": "orthography",
-            "subcategory": "orthography",
-            "start": 22,
-            "end": 27,
-            "alternatives": [
-                "über",
-                "Weber",
-                "Leber",
-                "Geber",
-                "Heber",
-                "Hueber",
-                "aber",
-                "unter",
-                "neben",
-                "Meter",
-                "eher",
-                "geben",
-                "jeder",
-                "leben",
-                "neuer",
-                "Peter",
-                "jener",
-                "weder",
-                "Meer",
-                "derer",
-            ],
-            "label": "Rechtschreibfehler",
-            "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
-            "solution": "Möglicher Tippfehler gefunden.",
-        },
-        {
-            "text": "Strasse",
-            "context": "",
-            "category": "orthography",
-            "subcategory": "orthography",
-            "start": 32,
-            "end": 39,
-            "alternatives": [
-                "Straße",
-                "Straßen",
-                "Strauße",
-                "Ostrasse",
-                "Stresse",
-                "Strapse",
-                "Strass",
-                "Trasse",
-                "Straß",
-                "Adresse",
-                "Sträuße",
-                "Krasse",
-                "Straffe",
-                "Strafe",
-                "Strafte",
-                "Zulasse",
-                "Strauss",
-                "Stramme",
-                "Strauß",
-                "Stanze",
-            ],
-            "label": "Rechtschreibfehler",
-            "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
-            "solution": "Möglicher Tippfehler gefunden.",
-        },
-        {
-            "text": "!!!",
-            "context": "",
-            "category": "orthography",
-            "subcategory": "orthography",
-            "start": 39,
-            "end": 42,
-            "alternatives": ["!"],
-            "label": "",
-            "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
-            "solution": "Die Verwendung von mehreren Frage- oder Ausrufezeichen wirkt oft übertrieben emphatisch.",
-        },
-    ]
-
-
-def test_api_english():
-    request_data = {
-        "text": "We are searching for analytical ninja programmer for our customers",
-        "config": {"store_context": False},
-    }
-
-    response = client.post("/check", json=request_data)
-    assert response.status_code == 200
-
-    first_record = response.json()
-    assert first_record["language"] == "en"
-    assert first_record["results"] == [
-        {
-            "text": "analytical",
-            "context": "",
-            "category": "unconscious_bias",
-            "subcategory": "agentic",
-            "start": 21,
-            "end": 31,
-            "alternatives": [],
-            "label": "Biased language: Agentic",
-            "reason": "Unconsciously attributed to the male stereotype. Many do not feel attracted by these terms.",
-            "solution": "Use team-oriented wording or referring to purpose.",
-        }
-    ]
-
-
-def test_api_orthography_english():
-    request_data = {"text": "I liki all the colors", "config": {"store_context": False}}
-
-    response = client.post("/check", json=request_data)
-    assert response.status_code == 200
-
-    first_record = response.json()
-    assert first_record["language"] == "en"
-    assert first_record["results"] == [
-        {
-            "text": "liki",
-            "context": "",
-            "category": "orthography",
-            "subcategory": "orthography",
-            "start": 2,
-            "end": 6,
-            "alternatives": ["like", "wiki", "Loki", "Niki", "tiki", "Lili", "Kiki"],
-            "label": "Spelling mistake",
-            "reason": "Correct any spelling or grammatical errors to maximize the impact of their writing.",
-            "solution": "Possible spelling mistake found.",
-        },
-        {
-            "text": "colors",
-            "context": "",
-            "category": "orthography",
-            "subcategory": "orthography",
-            "start": 15,
-            "end": 21,
-            "alternatives": ["colours"],
-            "label": "",
-            "reason": "Correct any spelling or grammatical errors to maximize the impact of their writing.",
-            "solution": "Possible spelling mistake. ‘colors’ is American English.",
-        },
-    ]
-
-
-def test_api_gender_ending():
-    request_data = {"text": "Sie ist eine Kund/in.", "config": {"store_context": False}}
-
-    response = client.post("/check", json=request_data)
-    assert response.status_code == 200
-
-    first_record = response.json()
-    assert first_record["language"] == "de"
-    assert first_record["results"] == [
-        {
-            "text": "/in",
-            "context": "",
-            "category": "gendered",
-            "subcategory": "gendered_denominations_ending",
-            "start": 17,
-            "end": 20,
-            "alternatives": [":in"],
-            "label": "Geschlechtsspezifisch: Inklusive Endung",
-            "reason": "Konsistente Schreibweise ist vertrauenserweckender.",
-            "solution": "Nutzen Sie den Genderstern oder -doppelpunkt, um durchgehend inklusiv zu sein.",
-        }
-    ]
-
-
-def test_api_gender_ending_custom():
-    request_data = {
-        "text": "Es ist eine Kund/in.",
-        "config": {"store_context": False, "german_gender_ending": "/in"},
-    }
-
-    response = client.post("/check", json=request_data)
-    assert response.status_code == 200
-
-    first_record = response.json()
-    assert first_record["language"] == "de"
-    assert first_record["results"] == []
-
-
-def test_api_false_positive():
-    request_data = {
-        "text": "Greenpeace is an international company with headquarters in London.",
-        "config": {"store_context": False},
-    }
-
-    response = client.post("/check", json=request_data)
-    assert response.status_code == 200
-
-    first_record = response.json()
-    assert first_record["language"] == "en"
-    assert first_record["results"] == []
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    # Snapshot the return value.
+    snapshot.snapshot_dir = ending_case_dir
+    snapshot.assert_match(output, "output.json")
 
 
 def test_api_missing_data():
@@ -488,47 +79,49 @@ def test_api_missing_data():
     assert response.status_code == 422
 
 
-def test_api_empty_data():
-    request_data = {}
+@pytest.mark.parametrize(
+    "detection_case_dir",
+    list(Path("tests/test_language_detection").iterdir()),
+)
+def test_language_detection(detection_case_dir, snapshot):
 
-    response = client.post("/check", json=request_data)
-    assert response.status_code == 422
-
-
-def test_language_detection_german():
-    request_data = {
-        "text": "Greenpeace ist eine internationale Firma mit Hauptquartier in London.",
-        "config": {"store_context": False},
-    }
-
-    response = client.post("/check", json=request_data)
+    # Read input files from the case directory.
+    input_json = detection_case_dir.joinpath("input.json").read_text()
+    # Call the tested endpoint.
+    response = client.post("/check", json=json.loads(input_json))
     assert response.status_code == 200
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    # Snapshot the return value.
+    snapshot.snapshot_dir = detection_case_dir
+    snapshot.assert_match(output, "output.json")
 
-    first_record = response.json()
-    assert first_record["language"] == "de"
 
+@pytest.mark.parametrize(
+    "fails_case_dir",
+    list(Path("tests/test_fails").iterdir()),
+)
+def test_language_detection_fail(fails_case_dir, snapshot):
 
-def test_language_detection_fail():
-    request_data = {"text": "Voila", "lang": "es"}
-
-    response = client.post("/check", json=request_data)
+    # Read input files from the case directory.
+    input_json = fails_case_dir.joinpath("input.json").read_text()
+    # Call the tested endpoint.
+    response = client.post("/check", json=json.loads(input_json))
     assert response.status_code == 422
 
 
-def test_log():
-    request_data = {
-        "text": "Voila",
-        "context": "Voila",
-        "lang": "auto",
-        "id": "123",
-        "start": 0,
-        "end": 23,
-        "type": "alternative",
-        "details": {"text": "test"},
-    }
-
-    response = client.post("/log", json=request_data)
+def test_log(snapshot):
+    # Read input files from the case directory.
+    log_case_dir = Path("tests/test_log")
+    input_json = log_case_dir.joinpath("input.json").read_text()
+    print("input_json", input_json)
+    # Call the tested endpoint.
+    response = client.post("/log", json=json.loads(input_json))
     assert response.status_code == 201
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    snapshot.snapshot_dir = "tests/test_log"
+    snapshot.assert_match(output, "output.json")
 
 
 def test_categories():
@@ -540,38 +133,26 @@ def test_categories():
     assert "hollow" in first_record
 
 
-def test_api_corporate_false_positives():
-    request_data = {
-        "text": "Die Bahn ist stark wegen ihrer Führungskräfte!",
-        "config": {"store_context": False},
-    }
+@pytest.mark.parametrize(
+    "fp_case_dir",
+    list(Path("tests/test_false_positive").iterdir()),
+)
+def test_false_positive(fp_case_dir, snapshot):
 
-    response = client.post("/check", json=request_data)
+    # Read input files from the case directory.
+    input_json = fp_case_dir.joinpath("input.json").read_text()
+    # Call the tested endpoint.
+    response = client.post("/check", json=json.loads(input_json))
     assert response.status_code == 200
-
-    first_record = response.json()
-    assert first_record["language"] == "de"
-    assert first_record["results"] == []
-
-
-# test overwriting user configuration by company forced rules
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    # Snapshot the return value.
+    snapshot.snapshot_dir = fp_case_dir
+    snapshot.assert_match(output, "output.json")
 
 
-def test_set_rules(event_loop):
-    request_data = {
-        "id": "test@gmail.com",
-        "text": "Wir suchen Ninja Programmierer für unsere Kunden",
-        "config": {
-            "store_context": True,
-            "primary_language": "de-DE",
-            "preferred_languages": "de",
-            "preferred_variants": "de-DE",
-            "german_gender_ending": "/in",
-            "gendered_roles_format": "inclusive_gender",
-        },
-    }
-    test_request = RequestIn(**request_data)
-
+@pytest.fixture
+def set_redis():
     company_object = {
         "users": ["test@gmail.com"],
         "config": {
@@ -589,6 +170,25 @@ def test_set_rules(event_loop):
 
     # Set a value
     redis.set("test", json.dumps(company_object))
+
+
+# test overwriting user configuration by company forced rules
+
+
+def test_set_rules(event_loop, set_redis):
+    request_data = {
+        "id": "test@gmail.com",
+        "text": "Wir suchen Ninja Programmierer für unsere Kunden",
+        "config": {
+            "store_context": True,
+            "primary_language": "de-DE",
+            "preferred_languages": "de",
+            "preferred_variants": "de-DE",
+            "german_gender_ending": "/in",
+            "gendered_roles_format": "inclusive_gender",
+        },
+    }
+    test_request = RequestIn(**request_data)
     event_loop.run_until_complete(set_rules(test_request))
     assert test_request.config.store_context == False
     assert test_request.config.primary_language == "en-GB"
@@ -601,7 +201,7 @@ def test_set_rules(event_loop):
 # test not overwriting user configuration by company suggestion/default rules
 
 
-def test_set_rules_suggestion(event_loop):
+def test_set_rules_suggestion(event_loop, set_redis):
     request_data = {
         "id": "test_default@gmail.com",
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
@@ -615,24 +215,6 @@ def test_set_rules_suggestion(event_loop):
         },
     }
     test_request = RequestIn(**request_data)
-
-    company_object = {
-        "users": ["test_default@gmail.com"],
-        "config": {
-            "suggestion": {
-                "store_context": False,
-                "primary_language": "en-GB",
-                "preferred_languages": "en",
-                "preferred_variants": "en-GB",
-                "german_gender_ending": "In",
-                "gendered_roles_format": "binary_gender",
-            },
-            "forced": {},
-        },
-    }
-
-    # Set a value
-    redis.set("test_default", json.dumps(company_object))
     test_result = event_loop.run_until_complete(set_rules(test_request))
     assert test_request.config.store_context == True
     assert test_request.config.primary_language == "de-DE"
@@ -645,36 +227,18 @@ def test_set_rules_suggestion(event_loop):
 # test user not set any parameters, but company did
 
 
-def test_set_company_rules(event_loop):
+def test_set_company_rules(event_loop, set_redis):
     request_data = {
         "id": "test@gmail.com",
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
     }
     test_request = RequestIn(**request_data)
-
-    company_object = {
-        "users": ["test@gmail.com"],
-        "config": {
-            "forced": {
-                "store_context": False,
-                "primary_language": "en-GB",
-                "preferred_languages": "en",
-                "preferred_variants": "en-GB",
-                "german_gender_ending": None,
-                "gendered_roles_format": "binary_gender",
-            },
-            "suggestion": {},
-        },
-    }
-
-    # Set a value
-    redis.set("test", json.dumps(company_object))
     event_loop.run_until_complete(set_rules(test_request))
     assert test_request.config.store_context == False
     assert test_request.config.primary_language == "en-GB"
     assert test_request.config.preferred_languages == "en"
     assert test_request.config.preferred_variants == "en-GB"
-    # assert test_request.config.german_gender_ending == "In"
+    assert test_request.config.german_gender_ending == "In"
     assert test_request.config.gendered_roles_format == "binary_gender"
 
 

@@ -1,0 +1,42 @@
+{
+    "language": "de",
+    "results": [
+        {
+            "alternatives": [
+                "Auftraggebende",
+                "Bestellende",
+                "Kund:innen",
+                "Kundschaft",
+                "Klientel",
+                "Beziehende Personen",
+                "Personen, die (…) kaufen",
+                "Beauftragende Firmen"
+            ],
+            "category": "gendered",
+            "context": "",
+            "end": 48,
+            "label": "Geschlechtsspezifisch: Titel",
+            "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
+            "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht.",
+            "start": 42,
+            "subcategory": "titles",
+            "text": "Kunden"
+        },
+        {
+            "alternatives": [
+                "Jemand, der erfahren und fachkundig ist",
+                "Jemand mit Know-how und Ausdauer",
+                "Mensch, der seine Fachkenntnis ständig vertieft"
+            ],
+            "category": "style",
+            "context": "",
+            "end": 16,
+            "label": "Stil: Superlative",
+            "reason": "Kommuniziert, dass sich Menschen sich im Sinne der Superlative anpassen müssen.",
+            "solution": "Verwenden Sie eine authentisch und ehrlich klingende Aussage.",
+            "start": 11,
+            "subcategory": "exaggerating",
+            "text": "Ninja"
+        }
+    ]
+}
