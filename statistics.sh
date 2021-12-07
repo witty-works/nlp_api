@@ -122,6 +122,6 @@ done
 if $BACKUP;
 then
     cd $data_dir;
-    tar -czvf "$DATE.tar.gz" $DATE;
+    tar -czf "$DATE.tar.gz" $DATE;
     rm -rf $DATE;
 fi
