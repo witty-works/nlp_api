@@ -1,6 +1,6 @@
 Lemma,Word_Type,Priority,Category,Primary_subcategory,Secondary_subcategory,Sg_all_clean,Pl_all_clean
 Einkäufer,s,,gendered,function,,"['Einkauf', 'Einkäufer~in~/~Einkäufer', 'Einkaufende']","['Einkaufende', 'Einkäufer~innen~ und ~Einkäufer', 'Einkauf']"
-Fachmann,s,,gendered,function,,"['Fachperson', 'Fachkraft', 'Fachfrau~/~Fachmann', 'Fachpersonal', 'Fachkräfte']","['Fachkräfte', 'Fachfrauen~ und ~Fachmänner', 'Fachpersonal']"
+Fachmann,s,,gendered,function,,"['Fachperson', 'Fachkraft', 'Fachfrau/Fachmann', 'Fachpersonal', 'Fachkräfte']","['Fachkräfte', 'Fachfrauen und Fachmänner', 'Fachpersonal']"
 Fachspezialist,s,,gendered,function,,"['Fachperson', 'Fachspezialist~in~/~Fachspezialist', 'in einem Fach spezialisierte Person', 'Person, die sich (auf ...) spezialisiert hat']","['Fachspezialist~innen~ und ~Fachspezialisten', 'in einem Fach spezialisierte Personen', 'Personen, die sich (auf ...) spezialisiert haben']"
 Forstwart,s,,gendered,function,,"['Forstwartung', 'Forstwart~in~/~Forstwart', 'Forstwartende', 'Fachkraft in der Waldbewirtschaftung']","['Forstwartende', 'Forstwart~innen~ und ~Forstwarte', 'Forstwartung', 'Fachkräfte in der Waldbewirtschaftung']"
 Guy,s,,gendered,function,americanism,"['Kamerad~in~/~Kamerad', 'Freund~in~/~Freund', 'Kolleg~in~/~Kollege', 'Team', 'Leute', 'alle miteinander', 'alle zusammen']","['Leute', 'alle miteinander', 'alle zusammen', 'Kolleg~innen~ und ~Kollge', 'Freund~innen~ und ~Freunde', 'Kamerad~innen~ und ~Kameraden', 'Team']"
@@ -11,7 +11,7 @@ Manager,s,,gendered,function,,"['Management', 'Manager~in~/~Manager']","['Manage
 Matrose,s,,gendered,function,,"['Matros~in~/~Matrose', 'zur See Fahrende']","['zur See Fahrende', 'Matrosinnen~ und ~Matrosen', 'Seemänn~innen~ und ~Seemänner']"
 Meister,s,,gendered,function,,"['Ausbildungskraft', 'Werkstattleitung', 'Meister~in~/~Meister', 'Werkstattleitende', 'Ausbildende', 'fachkundige Person', 'kompetente Person', 'ausbildende Lehrkraft']","['Werkstattleitende', 'Ausbildende', 'Meister~innen~ und ~Meister', 'Werkstattleitung', 'fachkundige Personen', 'kompetente Personen', 'ausbildende Lehrkraft']"
 Mentor,s,,gendered,function,,"['Mentorat', 'Mentoring', 'Mentor~in~/~Mentor', 'Mentorierende', 'Person, die ihr Wissen und ihre Erfahrung weitergibt']","['Mentorierende', 'Mentor~innen~ und ~Mentoren', 'Mentorat', 'Mentoring', 'Personen, die ihr Wissen und ihre Erfahrung weitergeben']"
-Nutzer,s,,gendered,function,,"['Nutzung', 'Nutzer~in~/~Nutzer', 'Nutzende']","['Nutzende', 'Nutzerinnen~ und ~Nutzer', 'Nutzung']"
+Nutzer,s,,gendered,function,,"['Nutzung', 'Nutzer~in~/~Nutzer', 'Nutzende']","['Nutzende', 'Nutzer~innen~ und ~Nutzer', 'Nutzung']"
 Officer,s,,gendered,function,americanism,"['Referent', 'Vorstandsmitglied']",[]
 Partner,s,,gendered,function,,"['Partnerschaft', 'Partner~in~/~Partner', 'Partnernde']","['Partnernde', 'Partner~innen~ und ~Partner', 'Partnerschaft']"
 Personalreferent,s,,gendered,function,,"['Personalverwaltung und Personalentwicklung', 'Personalreferent~in~/~Personalreferent', 'Person, die Aufgaben in Personalverwaltung und Personalentwicklung betreuen']","['Personalverwaltung und Personalentwicklung', 'Personen, die Aufgaben in Personalverwaltung und Personalentwicklung betreuen']"
@@ -40,7 +40,7 @@ Geschäftsführer,s,,gendered,leadership,,"['leitende Kraft', 'Leitungsperson', 
 Geschäftsleiter,s,,gendered,leadership,,"['leitende Kraft', 'Leitungsperson', 'Geschäftsleitung', 'Management', 'Firmenleitung', 'Unternehmensführung', 'Geschäftsleiter~in~/~Geschäftsleiter', 'entscheidungsbefugte Person', 'verantwortliche Person']","['Geschäftsleiter~innen~ und ~Geschäftsleiter', 'Geschäftsleitung', 'Management', 'Firmenleitung', 'Unternehmensführung', 'entscheidungsbefugte Personen', 'verantwortliche Person']"
 Head,s,,gendered,leadership,americanism,"['Leitungsperson', 'Leitungskraft', 'Leitung', 'Geschäftsführung', 'Management', 'Direktorium', 'Firmenleitung', 'Unternehmensleitung', '| Vorgesetzt~e~/~Vorgesetzter', 'die kreativen Kräfte (einer Agentur, Abteilung, Firma)', 'die strategisch denkenden Kräfte', 'entscheidungsbefugte Person', 'verantwortliche Person', 'Person, die eine gemeinsame Vision kommuniziert', 'Person, die das Team unterstützt und coacht', 'Person, die die kreative Richtung findet', 'Person, die strategisch denkt']","['die kreativen Kräfte (einer Agentur, Abteilung, Firma)', 'die strategisch denkenden Kräfte', 'Leitung', 'Geschäftsführung', 'Management', 'Direktorium', 'Firmenleitung', 'Unternehmensleitung', '| entscheidungsbefugte Personen', 'verantwortliche Person']"
 Leader,s,,gendered,leadership,americanism,"['Leitung', 'Leadership', 'Leiter~in~/~Leiter', 'Team-Coaching']","['Leitung', 'Leadership']"
-Leiter,s,,gendered,leadership,,"['Leitung', 'Leiter~in~/~Leiter']","['Leitung', 'Leiter~innen', 'Leiterinnen und Leiter', 'Leitung']"
+Leiter,s,,gendered,leadership,,"['Leitung', 'Leiter~in~/~Leiter']","['Leitung', 'Leiter~innen~ und ~Leiter', 'Leitung']"
 Lernpate,s,,gendered,leadership,,"['Lernpat~innenschaft', 'Lernpat~in~/~Lernpate']","['Lernpat~innen~ und ~Lernpaten', 'Lernpat~innenschaft']"
 Trainer,s,,gendered,leadership,,"['Trainingsperson', 'Training', 'Trainer~in~/~Trainer']",['Training']
 Vorgesetzter,s,,gendered,leadership,,"['Leitungsperson', 'Führungsperson', 'Vorgesetzt~e~/~Vorgesetzter']",[]
@@ -59,7 +59,7 @@ Assistent,s,,gendered,titles,,"['Assistenz', 'Assistent~in~/~Assistent', 'Assist
 Auditor,s,,gendered,titles,,"['Audit', 'Wirtschaftsprüfung', 'Betriebsprüfung', 'Überprüfung', 'Auditor~in~/~Auditor', 'Auditierende', 'Person, die den Betrieb prüft']","['Auditierende', 'Auditor~innen~ und ~Auditoren', 'Audit', 'Wirtschaftsprüfung', 'Betriebsprüfung', 'Überprüfung', 'Personen, die den Betrieb prüfen']"
 Auszubildender,s,,gendered,titles,,"['Azubi', 'Ausbildung', 'Ausbildungsabteilung', 'Auszubildende~/~Auszubildende~r', 'Auszubildende', 'Person in der Ausbildung']","['Auszubildende', 'Ausbildung', 'Ausbildungsabteilung', 'Personen in der Ausbildung']"
 Automatiker,s,,gendered,titles,,"['Automatisierung', 'Automatiker~in~/~Automatike~r']","['Automatiker~innen~ und ~Automatiker', 'Automatisierung']"
-Backender,s,,gendered,titles,americanism,"['Back-End-Entwicklung', 'Back-End-Entwickler~in~/~Back-End-Entwickler', 'Person, die den technischen Unterbau entwickelt', 'Person, die das Back-End baut']","['Backend~innen~ und ~Backender', 'Backend-Entwickler~innen~ und ~Backend-Entwickler', 'Back-End-Entwicklung', 'Personen, die den technischen Unterbau entwickeln', 'Personen, die das Back-End bauen']"
+Backender,s,,gendered,titles,americanism,"['Back-End-Entwicklung', 'Backender~in~/~Backender', 'Backend-Entwickler~in~/~Backend-Entwickler', 'Person, die den technischen Unterbau entwickelt', 'Person, die das Back-End baut']","['Backender~innen~ und ~Backender', 'Backend-Entwickler~innen~ und ~Backend-Entwickler', 'Back-End-Entwicklung', 'Personen, die den technischen Unterbau entwickeln', 'Personen, die das Back-End bauen']"
 Bauer,s,,gendered,titles,,"['Landbau', 'Landwirtschaft', 'Bäuer~in~/~Bauer', 'Landbauende']","['Landbauende', 'Bäuer~innen~ und ~Bauern', 'Landbau', 'Landwirtschaft']"
 Bauwerktrenner,s,,gendered,titles,,"['Bauwerktrennung', 'Bauwerktrenner~in~/~Bauwerktrenner']","['Bauwerktrenner~innen~ und ~Bauwerktrenner', 'Bauwerktrennung']"
 Berater,s,,gendered,titles,,"['Beratung', 'Berater~in~/~Berater', 'Beratende']","['Beratende', 'Berater~innen~ und ~Berater', 'Beratung']"
@@ -99,7 +99,7 @@ Experte,s,,gendered,titles,,"['Fachgröße', 'Kapazität', 'Expert~in~/~Experte'
 Fahrzeugtechniker,s,,gendered,titles,,"['Fahrzeugtechnik', 'Fahrzeugtechniker~in~/~Fahrzeugtechniker']","['Fahrzeugtechniker~innen~ und ~Fahrzeugtechniker', 'Fahrzeugtechnik']"
 Florist,s,,gendered,titles,,"['Blumenfachkraft', 'Floristik', 'Florist~in~/~Florist', 'Floristik-Team', 'Person, die Blumenschmuck künstlerisch/kreativ gestaltet']","['Florist~innen~ und ~Floristen', 'Floristik-Team', 'Floristik', 'Personen, die Blumenschmuck künstlerisch/kreativ gestalten']"
 Fotograf,s,,gendered,titles,,"['Fotografie', 'Fotograf~in~/~Fotograf', 'Fototeam', 'Fotografierende', 'fotografierende Person']","['Fotografierende', 'Fotograf~innen~ und ~Fotografen', 'Fototeam', 'Fotografie', 'fotografierende Personen']"
-Frontender,s,,gendered,titles,americanism,"['Front-End-Entwicklung', 'Front-End-Entwickler~in~/~Front-End-Entwickler', 'Person, die den technischen Oberbau entwickelt']","['Frontend~innen~ und ~Frontender', 'Frontend-Entwickler~innen~ und ~Frontend-Entwickler', 'Front-End-Entwicklung', 'Personen, die den technischen Oberbau entwickeln ']"
+Frontender,s,,gendered,titles,americanism,"['Front-End-Entwicklung', 'Frontender~in~/~Frontender', 'Frontend-Entwickler~in~/~Frontend-Entwickler', 'Person, die den technischen Oberbau entwickelt']","['Frontender~innen~ und ~Frontender', 'Frontend-Entwickler~innen~ und ~Frontend-Entwickler', 'Front-End-Entwicklung', 'Personen, die den technischen Oberbau entwickeln ']"
 Gärtner,s,,gendered,titles,,"['Gartenfachkraft', 'Gärtnerei', 'Gartenbau', 'Gärtner~in~/~Gärtner', 'Person, die Gärten pflegt', 'Person, die Gartenbau betreibt']","['Gärtner~innen~ und ~Gärtner', 'Gärtnerei', 'Gartenbau', 'Personen, die Gärten pflegen', 'Person, die Gartenbau betreiben']"
 Gemüsegärtner,s,,gendered,titles,,"['Gemüseanbau', 'Gemüsegärtner~in~/~Gemüsegärtner', 'Person, die Gemüsegärten pflegt', 'Person, die Gemüse anbaut', 'Person, die Gemüseanbau betreibt']","['Gemüsegärtner~innen~ und ~Gärtner', 'Gemüseanbau', 'Person, die Gemüsegärten pflegen', 'Person, die Gemüse anbauen', 'Person, die Gemüseanbau betreiben']"
 Generalist,s,,gendered,titles,,"['Multitalent', 'Generalist~in~/~Generalist', 'Multitalente', 'Mensch, der vielseitig begabt/interessiert ist', 'fachlich breit aufgestellter Mensch']","['Multitalente', 'Generalist~innen~ und ~Generalisten', 'Menschen, die vielseitig begabt/interessiert sind', 'fachlich breit aufgestellte Menschen']"
@@ -117,7 +117,7 @@ Gußformer,s,,gendered,titles,,"['Gussformerei', 'Gussformung', 'Gussformer~in~/
 Hauer,s,,gendered,titles,,['Hauer~in~/~Hauer'],[]
 Help-desk-Mitarbeiter,s,,gendered,titles,americanism,"['Helpdesk', 'Serviceticket-System', 'Fallbearbeitungssystem', 'Anfragenbearbeitung', 'Anwendungsbetreuung', 'Helpdesk-Mitarbeiter~in~/~Helpdesk-Mitarbeiter', 'Anwendungsbetreuer~in~/~Anwendungsbetreuer', 'Helpdesk-Team', 'Person, die für das Helpdesk arbeitet', 'Person, die eine Anwendung betreut']","['Helpdesk-Mitarbeiter~innen~ und ~Helpdesk-Mitarbeiter', 'Anwendungsbetreuer~innen~ und ~Anwendungsbetreuer', 'Helpdesk-Team', 'Helpdesk', 'Serviceticket-System', 'Fallbearbeitungssystem', 'Anfragenbearbeitung', 'Anwendungsbetreuung', 'Personen, die für das Helpdesk arbeiten', 'Personen, die eine Anwendung betreuen']"
 Hörsystemakustiker,s,,gendered,titles,,"['Hörsystemakustik', 'Hörsystemakustiker~in~/~Hörsystemakustiker']",['Hörsystemakustik']
-Industriekaufmann,s,,gendered,titles,,"['Industriekauffrau~/~Industriekaufmann', 'Industriekaufleute']",['Industriekaufleute']
+Industriekaufmann,s,,gendered,titles,,"['Industriekauffrau/Industriekaufmann', 'Industriekaufleute']",['Industriekaufleute']
 Industriekeramiker,s,,gendered,titles,,"['Industriekeramik', 'Industriekeramiker~in~/~Industriekeramiker']",['Industriekeramik']
 Industriemechaniker,s,,gendered,titles,,"['Industriemechanik', 'Industriemechaniker~in~/~Industriemechaniker']",['Industriemechanik']
 Industriepolsterer,s,,gendered,titles,,"['Industriepolsterei', 'Industriepolsterer~in~/~Industriepolsterer']",['Industriepolsterei']
@@ -131,7 +131,7 @@ Kaminfeger,s,,gendered,titles,,['Kaminfeger~in~/~Kaminfeger'],[]
 Kandidat,s,,gendered,titles,,"['Kandidatur', 'Kandidat~in~/~Kandidat', 'Kandidierende', 'Person, die sich bewirbt', 'Person, die kandidiert']","['Kandidierende', 'Kandidat~innen~ und ~Kandidaten', 'Kandidatur', 'Personen, die sich bewerben', 'Personen, die kandidieren']"
 Keramiker,s,,gendered,titles,,"['Keramik', 'Keramiker~in~/~Keramiker']",['Keramik']
 Koch,s,,gendered,titles,,"['Küche', 'Kantine', 'Köch~in~/~Koch']","['Küche', 'Kantine']"
-Kollege,s,,gendered,titles,,"['Teammitglied', 'Kollegin~/~Kollege', 'Kollegschaft', 'Team', 'Person, die im selben Team arbeitet', 'Person, die im selben Unternehmen arbeitet', 'Person, die man von der Arbeit kennt']","['Kolleginnen~ und ~Kollegen', 'Kollegschaft', 'Team', 'Personen, die im selben Team arbeiten', 'Personen, die im selben Unternehmen arbeiten', 'Personen, die man von der Arbeit kennt']"
+Kollege,s,,gendered,titles,,"['Teammitglied', 'Kolleg~in~/~Kollege', 'Kollegschaft', 'Team', 'Person, die im selben Team arbeitet', 'Person, die im selben Unternehmen arbeitet', 'Person, die man von der Arbeit kennt']","['Kolleg~innen~ und ~Kollegen', 'Kollegschaft', 'Team', 'Personen, die im selben Team arbeiten', 'Personen, die im selben Unternehmen arbeiten', 'Personen, die man von der Arbeit kennt']"
 Konstrukteur,s,,gendered,titles,,"['Konstruktion', 'Konstrukteur~in~/~Konstrukteur']",['Konstruktion']
 Kontrolleur,s,,gendered,titles,,"['Kontrolle', 'Kontrolleur~in~/~Kontrolleur']",['Kontrolle']
 Kosmetiker,s,,gendered,titles,,"['Kosmetik', 'Kosmetiker~in~/~Kosmetiker']",['Kosmetik']
@@ -191,9 +191,9 @@ Sicherheitsbeauftragter,s,,gendered,titles,,"['Sicherheits-Management', 'Sicherh
 Softwarearchitekt,s,,gendered,titles,,"['Softwarearchitektur', 'Softwarearchitekt~in~/~Softwarearchitekt']",['Softwarearchitektur']
 Speditionskaufmann,s,,gendered,titles,,"['Speditionskaufmann', 'Speditionskaufmann~in~/~Speditionskaufmann']",['Speditionskaufmann']
 Spengler,s,,gendered,titles,,"['Spenglerei', 'Spengler~in~/~Spengler']",['Spenglerei']
-Steinmetz,s,,gendered,titles,,['Steinmetzin~/~Steinmetz'],[]
-Steinsetzer,s,,gendered,titles,,['Steinsetzerin~/~Steinsetzer'],[]
-Tänzer,s,,gendered,titles,,"['Tanz', 'Tänzerin~/~Tänzer']",['Tanz']
+Steinmetz,s,,gendered,titles,,['Steinmetz~in~/~Steinmetz'],[]
+Steinsetzer,s,,gendered,titles,,['Steinsetzer~in~/~Steinsetzer'],[]
+Tänzer,s,,gendered,titles,,"['Tanz', 'Tänzer~in~/~Tänzer']",['Tanz']
 Technician,s,,gendered,titles,americanism,"['Technik', 'Techniker~in~/~Techniker']",['Technik']
 Techniker,s,,gendered,titles,,"['Technik', 'Techniker~in~/~Techniker']",['Technik']
 Technologe,s,,gendered,titles,,"['Technologiefachkraft', 'Technology', 'Technologie', 'Technolog~in~/~Technologe']","['Technology', 'Technologie']"
@@ -207,5 +207,5 @@ Wagenmeister,s,,gendered,titles,,['Wagenmeister~in~/~Wagenmeister'],[]
 Wagner,s,,gendered,titles,,"['Wagnerei', 'Stellmacherei', 'Wagner~in~/~Wagner']","['Wagnerei', 'Stellmacherei']"
 Winzer,s,,gendered,titles,,"['Winzerei', 'Winzereibetrieb', 'Winzer~in~/~Winzer']","['Winzerei', 'Winzereibetrieb']"
 Zeichner,s,,gendered,titles,,['Zeichner~in~/~Zeichner'],[]
-Zimmermann,s,,gendered,titles,,"['Zimmereifachkraft', 'Zimmerei', 'Zimmerfrau~/~Zimmermann']",['Zimmerei']
+Zimmermann,s,,gendered,titles,,"['Zimmereifachkraft', 'Zimmerei', 'Zimmerfrau/Zimmermann']",['Zimmerei']
 Zugbegleiter,s,,gendered,titles,,"['Zugbegleitung', 'Zugbegleiter~in~/~Zugbegleiter']",['Zugbegleitung']
