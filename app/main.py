@@ -353,15 +353,7 @@ userId = ""
 if userId:
     corporate_false_positive = get_false_positive(userId)
 else:
-    corporate_false_positive = [
-        "stark",
-        "starke",
-        "starkes",
-        "starker",
-        "Führungskraft",
-        "Führungskräfte",
-        "Führungskräften",
-    ]
+    corporate_false_positive = []
 
 terms_false_positive = gender_false_positive + corporate_false_positive
 false_positive_agentic += corporate_false_positive
