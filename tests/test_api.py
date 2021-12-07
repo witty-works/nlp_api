@@ -26,56 +26,56 @@ def test_read_form():
 
 
 @pytest.mark.parametrize(
-    "case_dir",
-    list(Path("tests/test_cases").iterdir()),
+    "general_case_dir",
+    list(Path("tests/test_general_cases").iterdir()),
 )
-def test_json(case_dir, snapshot):
+def test_json(general_case_dir, snapshot):
 
     # Read input files from the case directory.
-    input_json = case_dir.joinpath("input.json").read_text()
+    input_json = general_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
     response = client.post("/check", json=json.loads(input_json))
     assert response.status_code == 200
     # output must be string
     output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
     # Snapshot the return value.
-    snapshot.snapshot_dir = case_dir
+    snapshot.snapshot_dir = general_case_dir
     snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
-    "case_dir",
+    "orthoraphy_case_dir",
     list(Path("tests/test_orthography").iterdir()),
 )
-def test_orthoraphy(case_dir, snapshot):
+def test_orthoraphy(orthoraphy_case_dir, snapshot):
 
     # Read input files from the case directory.
-    input_json = case_dir.joinpath("input.json").read_text()
+    input_json = orthoraphy_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
     response = client.post("/check", json=json.loads(input_json))
     assert response.status_code == 200
     # output must be string
     output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
     # Snapshot the return value.
-    snapshot.snapshot_dir = case_dir
+    snapshot.snapshot_dir = orthoraphy_case_dir
     snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
-    "case_dir",
+    "ending_case_dir",
     list(Path("tests/test_gender_ending").iterdir()),
 )
-def test_gender_ending(case_dir, snapshot):
+def test_gender_ending(ending_case_dir, snapshot):
 
     # Read input files from the case directory.
-    input_json = case_dir.joinpath("input.json").read_text()
+    input_json = ending_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
     response = client.post("/check", json=json.loads(input_json))
     assert response.status_code == 200
     # output must be string
     output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
     # Snapshot the return value.
-    snapshot.snapshot_dir = case_dir
+    snapshot.snapshot_dir = ending_case_dir
     snapshot.assert_match(output, "output.json")
 
 
@@ -84,57 +84,32 @@ def test_api_missing_data():
     assert response.status_code == 422
 
 
-def test_api_empty_data():
-    request_data = {}
-
-    response = client.post("/check", json=request_data)
-    assert response.status_code == 422
-
-
 @pytest.mark.parametrize(
-    "case_dir",
-    list(Path("tests/test_gender_ending").iterdir()),
-)
-def test_gender_ending(case_dir, snapshot):
-
-    # Read input files from the case directory.
-    input_json = case_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    response = client.post("/check", json=json.loads(input_json))
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = case_dir
-    snapshot.assert_match(output, "output.json")
-
-
-@pytest.mark.parametrize(
-    "case_dir",
+    "detection_case_dir",
     list(Path("tests/test_language_detection").iterdir()),
 )
-def test_language_detection(case_dir, snapshot):
+def test_language_detection(detection_case_dir, snapshot):
 
     # Read input files from the case directory.
-    input_json = case_dir.joinpath("input.json").read_text()
+    input_json = detection_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
     response = client.post("/check", json=json.loads(input_json))
     assert response.status_code == 200
     # output must be string
     output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
     # Snapshot the return value.
-    snapshot.snapshot_dir = case_dir
+    snapshot.snapshot_dir = detection_case_dir
     snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
-    "case_dir",
-    list(Path("tests/test_language_detection_fail").iterdir()),
+    "fails_case_dir",
+    list(Path("tests/test_fails").iterdir()),
 )
-def test_language_detection_fail(case_dir, snapshot):
+def test_language_detection_fail(fails_case_dir, snapshot):
 
     # Read input files from the case directory.
-    input_json = case_dir.joinpath("input.json").read_text()
+    input_json = fails_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
     response = client.post("/check", json=json.loads(input_json))
     assert response.status_code == 422
@@ -142,8 +117,8 @@ def test_language_detection_fail(case_dir, snapshot):
 
 def test_log(snapshot):
     # Read input files from the case directory.
-    case_dir = Path("tests/test_log")
-    input_json = case_dir.joinpath("input.json").read_text()
+    log_case_dir = Path("tests/test_log")
+    input_json = log_case_dir.joinpath("input.json").read_text()
     print("input_json", input_json)
     # Call the tested endpoint.
     response = client.post("/log", json=json.loads(input_json))
@@ -152,3 +127,162 @@ def test_log(snapshot):
     output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
     snapshot.snapshot_dir = "tests/test_log"
     snapshot.assert_match(output, "output.json")
+
+
+def test_categories():
+    response = client.get("/categories")
+    assert response.status_code == 200
+
+    first_record = response.json()
+
+    assert "hollow" in first_record
+
+
+@pytest.mark.parametrize(
+    "fp_case_dir",
+    list(Path("tests/test_false_positive").iterdir()),
+)
+def test_false_positive(fp_case_dir, snapshot):
+
+    # Read input files from the case directory.
+    input_json = fp_case_dir.joinpath("input.json").read_text()
+    # Call the tested endpoint.
+    response = client.post("/check", json=json.loads(input_json))
+    assert response.status_code == 200
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    # Snapshot the return value.
+    snapshot.snapshot_dir = fp_case_dir
+    snapshot.assert_match(output, "output.json")
+
+
+@pytest.fixture
+def set_redis():
+    company_object = {
+        "users": ["test@gmail.com"],
+        "config": {
+            "forced": {
+                "store_context": False,
+                "primary_language": "en-GB",
+                "preferred_languages": "en",
+                "preferred_variants": "en-GB",
+                "german_gender_ending": "In",
+                "gendered_roles_format": "binary_gender",
+            },
+            "suggestion": {},
+        },
+    }
+
+    # Set a value
+    redis.set("test", json.dumps(company_object))
+
+
+# test overwriting user configuration by company forced rules
+
+
+def test_set_rules(event_loop, set_redis):
+    request_data = {
+        "id": "test@gmail.com",
+        "text": "Wir suchen Ninja Programmierer für unsere Kunden",
+        "config": {
+            "store_context": True,
+            "primary_language": "de-DE",
+            "preferred_languages": "de",
+            "preferred_variants": "de-DE",
+            "german_gender_ending": "/in",
+            "gendered_roles_format": "inclusive_gender",
+        },
+    }
+    test_request = RequestIn(**request_data)
+    event_loop.run_until_complete(set_rules(test_request))
+    assert test_request.config.store_context == False
+    assert test_request.config.primary_language == "en-GB"
+    assert test_request.config.preferred_languages == "en"
+    assert test_request.config.preferred_variants == "en-GB"
+    assert test_request.config.german_gender_ending == "In"
+    assert test_request.config.gendered_roles_format == "binary_gender"
+
+
+# test not overwriting user configuration by company suggestion/default rules
+
+
+def test_set_rules_suggestion(event_loop, set_redis):
+    request_data = {
+        "id": "test_default@gmail.com",
+        "text": "Wir suchen Ninja Programmierer für unsere Kunden",
+        "config": {
+            "store_context": True,
+            "primary_language": "de-DE",
+            "preferred_languages": "de",
+            "preferred_variants": "de-DE",
+            "german_gender_ending": "/in",
+            "gendered_roles_format": "inclusive_gender",
+        },
+    }
+    test_request = RequestIn(**request_data)
+    test_result = event_loop.run_until_complete(set_rules(test_request))
+    assert test_request.config.store_context == True
+    assert test_request.config.primary_language == "de-DE"
+    assert test_request.config.preferred_languages == "de"
+    assert test_request.config.preferred_variants == "de-DE"
+    assert test_request.config.german_gender_ending == "/in"
+    assert test_request.config.gendered_roles_format == "inclusive_gender"
+
+
+# test user not set any parameters, but company did
+
+
+def test_set_company_rules(event_loop, set_redis):
+    request_data = {
+        "id": "test@gmail.com",
+        "text": "Wir suchen Ninja Programmierer für unsere Kunden",
+    }
+    test_request = RequestIn(**request_data)
+    event_loop.run_until_complete(set_rules(test_request))
+    assert test_request.config.store_context == False
+    assert test_request.config.primary_language == "en-GB"
+    assert test_request.config.preferred_languages == "en"
+    assert test_request.config.preferred_variants == "en-GB"
+    assert test_request.config.german_gender_ending == "In"
+    assert test_request.config.gendered_roles_format == "binary_gender"
+
+
+# test user and company didn't set any rules
+
+
+def test_set_default_rules(event_loop):
+    request_data = {
+        "id": "test_default@gmail.com",
+        "text": "Wir suchen Ninja Programmierer für unsere Kunden",
+    }
+    test_request = RequestIn(**request_data)
+
+    event_loop.run_until_complete(set_rules(test_request))
+    assert test_request.config.store_context == True
+    assert test_request.config.primary_language == "de-DE"
+    assert test_request.config.preferred_languages == "de,en"
+    assert test_request.config.preferred_variants == "de-DE,en-GB"
+    assert test_request.config.german_gender_ending == ":in"
+    assert test_request.config.gendered_roles_format == "inclusive_gender"
+
+
+# test POST Redis endpoint
+
+
+def test_store_rules():
+    request_data = {
+        "company": "TEST_COMPANY",
+        "users": ["test@gmail.com"],
+        "forced": {"gendered_roles_format": "binary_gender"},
+        "suggestion": {"german_gender_ending": "In"},
+    }
+    response = client.post("/storeRules", json=request_data)
+    assert response.status_code == 200
+    response_content = json.loads(response.content)
+    assert (
+        response_content["config"]["forced"]["gendered_roles_format"] == "binary_gender"
+    )
+    assert response_content["config"]["suggestion"]["german_gender_ending"] == "In"
+    assert (
+        response_content["config"]["suggestion"]["preferred_variants"] == "de-DE,en-GB"
+    )
