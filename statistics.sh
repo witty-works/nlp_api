@@ -82,6 +82,7 @@ fi
 
 descriptions=(
     "Total number of installations"
+    "Total number of active installations"
     "Number of total requests and click on alternatives/ignores"
     "Number of clicks on an alternative"
     "Number of clicks on ignore"
@@ -92,6 +93,7 @@ date_dir="$data_dir/$DATE";
 
 cmds=(
     "ls $data_dir/installs | wc -l"
+    "ls $date_dir | wc -l"
     "find $date_dir -type f | wc -l"
     "ls $date_dir/ | grep -r '\"alternative\"' | wc -l"
     "ls $date_dir/ | grep -r '\"igore\"' | wc -l"
@@ -122,6 +124,6 @@ done
 if $BACKUP;
 then
     cd $data_dir;
-    tar -czvf "$DATE.tar.gz" $DATE;
+    tar -czf "$DATE.tar.gz" $DATE;
     rm -rf $DATE;
 fi

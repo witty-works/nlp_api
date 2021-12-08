@@ -199,25 +199,37 @@ class ResultOut(BaseModel):
 
         is_upper = text[0:1].isupper()
 
-        for key, alternative in enumerate(alternatives):
+        if isinstance(alternatives, Dict):
+            alternatives = list(alternatives.values())
+
+        # remove empty strings
+        if "" in alternatives:
+            alternatives.remove("")
+
+        # remove until we can properly handle this in the UI
+        # https://www.notion.so/witty-works/Rule-Guidelines-432792da944141b1b4d0a01de290aa43#9ab16aeb0c19416ca0b72fde152b5d86
+        if "^" in alternatives:
+            alternatives.remove("^")
+
+        for i, alternative in enumerate(alternatives):
             if is_upper and category != "orthography":
-                alternatives[key] = (
-                    string.capwords(alternatives[key][0:1]) + alternatives[key][1:]
+                alternatives[i] = (
+                    string.capwords(alternatives[i][0:1]) + alternatives[i][1:]
                 )
 
             if "~" not in alternative:
                 continue
 
             if config.gendered_roles_format == "binary_gender":
-                alternatives[key] = alternative.replace("~", "")
+                alternatives[i] = alternative.replace("~", "")
             else:
                 variants = alternative.split("~")
                 if str(variants[1]) == "e":
-                    alternatives[key] = (
+                    alternatives[i] = (
                         str(variants[0]) + "e" + config.german_gender_ending[0:-2] + "r"
                     )
                 else:
-                    alternatives[key] = (
+                    alternatives[i] = (
                         str(variants[0])
                         + config.german_gender_ending[0:-2]
                         + str(variants[1])

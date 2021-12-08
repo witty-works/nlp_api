@@ -160,6 +160,14 @@ To only run the last failing tests
 pipenv run pytest -vv --lf
 ```
 
+To update the fixtures with the current API responses run
+
+```
+pipenv run pytest --snapshot-update
+```
+
+Make sure to review the changes if they are indeed intended before commiting!
+
 ## Benchmarking
 
 Install the Apache HTTP server benchmarking tool:
@@ -189,26 +197,5 @@ pipenv run python -m analyze_rules -i [CSV export]]
 
 ## Collect statistics
 
-Number if installations
-
-```
-platform ssh -e main -A app "ls user_training_data/ | wc -l"
-```
-
-Number of total requests and click on alternatives/ignores
-
-````
-platform ssh -e main -A app "find user_training_data -type f | wc -l"
-````
-
-Number of clicks on an alternative
-
-```
-platform ssh -e main -A app "ls user_training_data/ | grep -r '\"alternative\"' | wc -l"
-```
-
-Number of clicks on ignore
-
-```
-platform ssh -e main -A app "ls user_training_data/ | grep -r '\"igore\"' | wc -l"
-```
+Run `./statistics.sh` to fetch statistics locally and remotely.
+See `./statistics.sh -h` for instructions.

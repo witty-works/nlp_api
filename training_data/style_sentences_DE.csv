@@ -1,36 +1,39 @@
 Lemma,Priority,Category,Primary_subcategory,Alt_split
+"Job, der den eigenen Vorstellungen/Wünschen entspricht",,style,filler,['-']
+Team player,,style,hollow,"['Zusammenarbeit über das eigene Streben stellen', 'Team', 'Teammitglieder', 'Teamplayer~innen', 'Teamplayer~in', 'Team-player~in~/~Team-player']"
 allem Anschein nach,,style,filler,['-']
 an sich,,style,filler,['-']
 aufs Neue,,style,filler,['-']
 bei weitem,,style,filler,['-']
 dann und wann,,style,filler,['-']
-des Öfteren,,style,filler,['-']
 des ungeachtet,,style,filler,['-']
+des Öfteren,,style,filler,['-']
 ein bisschen,,style,filler,['-']
 ein wenig,,style,filler,['-']
+flache Hierarchie,,style,hollow,"['kurze Entscheidungswege', 'verantwortliche und eigenorganisierte Arbeitsweise', 'Raum für Eigeninitiative', 'kurze Kommunikationswege', 'Mitgestaltungsmöglichkeiten für Mitarbeitende', 'Betriebsebene mit viel Kompetenzen und Entscheidungsmöglichkeiten']"
+flache Organisation,,style,hollow,"['kurze Entscheidungswege', 'verantwortliche und eigenorganisierte Arbeitsweise', 'Raum für Eigeninitiative', 'kurze Kommunikationswege', 'Mitgestaltungsmöglichkeiten für Mitarbeitende', 'Betriebsebene mit viel Kompetenzen und Entscheidungsmöglichkeiten']"
 ganz und gar,,style,filler,['-']
 hie und da,,style,filler,['-']
+hoch motiviert,,style,hollow,"['fähig zur Eigeninitiative', 'bereit, sich zu engagieren', 'setzt sich erreichbare Ziele', 'bereit, sich einzusetzen']"
 im Allgemeinen,,style,filler,['-']
 in der Tat,,style,filler,['-']
 in diesem Zusammenhang,,style,filler,['-']
 jedoch jemals,,style,filler,['-']
-"Job, der den eigenen Vorstellungen/Wünschen entspricht",,style,filler,['-']
 mehr oder weniger,,style,filler,['-']
 meines Erachtens,,style,filler,['-']
-ohne weiteres,,style,filler,['-']
 ohne Zweifel,,style,filler,['-']
-samt und sonders,,style,filler,['-']
-sowohl als auch,,style,filler,['-']
-voll und ganz,,style,filler,['-']
-von neuem,,style,filler,['-']
-flache Hierarchie,,style,hollow,"['kurze Entscheidungswege', 'verantwortliche und eigenorganisierte Arbeitsweise', 'Raum für Eigeninitiative', 'kurze Kommunikationswege', 'Mitgestaltungsmöglichkeiten für Mitarbeitende', 'Betriebsebene mit viel Kompetenzen und Entscheidungsmöglichkeiten']"
-flache Organisation,,style,hollow,"['kurze Entscheidungswege', 'verantwortliche und eigenorganisierte Arbeitsweise', 'Raum für Eigeninitiative', 'kurze Kommunikationswege', 'Mitgestaltungsmöglichkeiten für Mitarbeitende', 'Betriebsebene mit viel Kompetenzen und Entscheidungsmöglichkeiten']"
+ohne weiteres,,style,filler,['-']
 outside the box,,style,hollow,"['in neuen Mustern denken', 'parallel/lateral/kreativ/divergent denken', 'über den eigenen Tellerrand blicken', 'brainstormen']"
+quer denken,,style,hollow,"['in neuen Mustern denken', 'parallel/lateral/kreativ/divergent denken', 'über den eigenen Tellerrand blicken', 'brainstormen']"
 rasche Auffassungsgabe,,style,hollow,"['das Wesentliche schnell erkennen', 'Gelerntes rasch anwenden']"
+samt und sonders,,style,filler,['-']
 schnelle Auffassungsgabe,,style,hollow,"['das Wesentliche schnell erkennen', 'Gelerntes rasch anwenden']"
+sowohl als auch,,style,filler,['-']
 think outside of the box,,style,hollow,"['in neuen Mustern denken', 'parallel/lateral/kreativ/divergent denken', 'über den eigenen Tellerrand blicken', 'brainstormen']"
 unkonventionell denken,,style,hollow,"['in neuen Mustern denken', 'parallel/lateral/kreativ/divergent denken', 'über den eigenen Tellerrand blicken', 'brainstormen']"
 unkonventionell gedacht,,style,hollow,"['in neuen Mustern gedacht', 'parallel/lateral/kreativ/divergent gedacht', 'über den eigenen Tellerrand geblickt']"
+voll und ganz,,style,filler,['-']
+von neuem,,style,filler,['-']
 vor allem,,style,hollow,"['als Wichtigstes', 'namentlich', 'vorrangig']"
 zeitgemässe Arbeitsbedingungen,,style,hollow,"['flexible Arbeitszeiten', 'Homeoffice-Optionen', 'mehr Ferientage', 'Extra-Urlaub', 'Beteiligung am Mobiltelefon', 'neueste Arbeitsgeräte', 'Gratisfrüchte, -snacks, -getränke', 'Vermittlungsprovision für neue Mitarbeitende']"
 zügige Arbeitsweise,,style,hollow,['effiziente/pragmatische/ergebnisorientierte Arbeitsweise']

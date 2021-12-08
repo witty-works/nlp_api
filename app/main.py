@@ -30,7 +30,6 @@ from functools import lru_cache
 from fastapi import (
     FastAPI,
     Request,
-    Header,
     HTTPException,
     BackgroundTasks,
     Depends,
@@ -145,7 +144,7 @@ languagetool_url = get_languagetool_url()
 # convert string of list into list of the strings
 # project models
 
-version = "1.6.4"
+version = "1.7.0"
 
 app = FastAPI(
     title="Witty NLP API",
@@ -292,6 +291,10 @@ df_agentic_words_en = pd.read_csv("training_data/agentic_EN.csv")
 df_open_dis_word_en = pd.read_csv("training_data/open_dis_words_EN.csv")
 df_open_dis_sentence_en = pd.read_csv("training_data/open_dis_sentences_EN.csv")
 
+# load inclusive language
+df_inclusive_word_en = pd.read_csv("training_data/inclusive_words_EN.csv")
+df_inclusive_sentence_en = pd.read_csv("training_data/inclusive_sentences_EN.csv")
+
 # dictionaries to handle false positives
 false_positive_agentic = ["selbst", "flexible", "Probleme", "unabhängig", "Entwickler"]
 false_positive_style = ["international"]
@@ -338,9 +341,10 @@ false_positive_agentic += corporate_false_positive
 if settings.testing == True:
     redis = FakeStrictRedis()
 else:
-    redis_config = platformshconfig.Config()
-    credentials = redis_config.credentials("rediscache")
-    redis = Redis(credentials["host"], credentials["port"])
+    platform_config = platformshconfig.Config()
+    if platform_config.is_valid_platform():
+        redis_credentials = platform_config.credentials("rediscache")
+        redis = Redis(redis_credentials["host"], redis_credentials["port"])
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -823,6 +827,16 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
             df_open_dis_word_en,
             df_open_dis_sentence_en,
             "openly_discriminating",
+        )
+    if "inclusive" not in user_request_in.config.disabled_categories:
+        list_full += RulesBasedWordsPhraseMatcherNoAltEN(
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            df_inclusive_word_en,
+            df_inclusive_sentence_en,
+            "inclusive",
         )
 
     return list_full
@@ -1436,6 +1450,63 @@ def RulesBasedWordsPhraseMatcherEN(
                         span.start_char,
                         span.end_char,
                         ast.literal_eval(alternative),
+                    )
+                )
+
+    return list_tokens
+
+
+# english function, no alternatives
+
+
+def RulesBasedWordsPhraseMatcherNoAltEN(
+    config: Config, lang, full_text, tokens, df, df_sentence, category
+):
+    list_tokens = []
+    # Phrase matcher part to handle False positives with two words and special simbols
+    matcher = PhraseMatcher(model[lang.locale].vocab)
+
+    # Only run model.make_doc to speed things up
+    patterns = [
+        model[lang.locale].make_doc(text) for text in list(df_sentence["Lemma"])
+    ]
+    matcher.add("TerminologyList", patterns)
+
+    for token in tokens:
+        for word, subcategory in zip(df["Lemma"], df["Primary_subcategory"]):
+            if token.lemma_ == word:
+                list_tokens.append(
+                    ResultOut.factory(
+                        config,
+                        lang,
+                        token.text,
+                        full_text,
+                        category,
+                        subcategory,
+                        token.idx,
+                        token.idx + len(token.text),
+                        [],
+                    )
+                )
+
+    matches = matcher(tokens)
+    for match_id, start, end in matches:
+        for sentence, subcategory in zip(
+            df_sentence["Lemma"], df_sentence["Primary_subcategory"]
+        ):
+            span = tokens[start:end]
+            if span.text == sentence:
+                list_tokens.append(
+                    ResultOut.factory(
+                        config,
+                        lang,
+                        span.text,
+                        full_text,
+                        category,
+                        subcategory,
+                        span.start_char,
+                        span.end_char,
+                        [],
                     )
                 )
 
