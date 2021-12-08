@@ -1,6 +1,17 @@
 Lemma,Priority,Category,Primary_subcategory,Alt_split
+Arbeitskraft,,style,hollow,"['Arbeitsleistung', 'Personal', 'Mitarbeiter~in~/~Mitarbeiter', 'menschliche Kraft zu geistiger/körperlicher Arbeit', 'Personal', 'Mitarbeitende', 'Mitarbeiter~innen~ und ~Mitarbeiter']"
+Flexibilität,,style,hollow,"['Anpassungsfähigkeit', 'Aufgeschlossenheit gegenüber Wandel', 'Bereitschaft für Veränderung', 'Mobilität', 'Fähigkeit, sich schnell auf Neues umzustellen']"
+Innovation,,style,hollow,"['Neugestaltung', 'Erfindung', 'technischer Fortschritt', 'Neuerung', 'Neuschöpfung', 'Neuentwicklung']"
+Innovationskraft,,style,hollow,"['Erfindungsreichtum', 'Kreativität', 'Fähigkeit, Ideen in Lösungen umzusetzen', 'Umsetzungskraft']"
+Karrierechance,,style,hollow,['gute Aufstiegsmöglichkeit']
+Organisationstalent,,style,hollow,"['Organisationsfähigkeit', 'Geübtheit, anderen den Rücken frei zu halten', 'Person, die gern organisiert', 'jemand, der einen klaren Blick behält', 'Mensch, der gern offene Enden zusammenführt']"
+Querdenken,,style,hollow,"['die Fähigkeit, in neuen Mustern zu denken', 'die Fähigkeit, parallel/lateral/kreativ/divergent zu denken', 'die Fähigkeit, über den eigenen Tellerrand zu blicken', 'die Fähigkeit zum Brainstormen']"
+Team-player,,style,hollow,"['Zusammenarbeit über das eigene Streben stellen', 'Team', 'Teammitglieder', 'Teamplayer~innen', 'Teamplayer~in', 'Team-player~in~/~Team-player']"
+Teamfähigkeit,,style,hollow,"['Kooperationsfähigkeit', 'Akzeptanz gegenüber verschiedenen Menschen und Verhaltensweisen', 'Fähigkeit mit Unterschieden und Gemeinsamkeiten umzugehen', 'Kommunikationsfähigkeit', 'Kompromissbereitschaft zugunsten des gemeinsamen Ziels']"
+Teamplayer,,style,hollow,"['Zusammenarbeit über das eigene Streben stellen', 'Team', 'Teammitglieder', 'Teamplayer~innen', 'Teamplayer~in', 'Team-player~in~/~Team-player']"
 aber,,style,filler,['-']
 abermals,,style,filler,['-']
+aktiv,,style,hollow,"['lebendig', 'tatkräftig', 'lebhaft', 'enthusiastisch', 'engagiert', 'energiegeladen', 'vital', 'eifrig', 'anpassungsfähig', 'schwungvoll']"
 allein,,style,filler,['-']
 allemal,,style,filler,['-']
 allenfalls,,style,filler,['-']
@@ -42,6 +53,7 @@ deswegen,,style,filler,['-']
 doch,,style,filler,['-']
 durchaus,,style,filler,['-']
 durchweg,,style,filler,['-']
+dynamisch,,style,hollow,"['lebendig', 'tatkräftig', 'lebhaft', 'enthusiastisch', 'engagiert', 'energiegeladen', 'vital', 'eifrig', 'anpassungsfähig', 'schwungvoll']"
 eben,,style,filler,['-']
 eigentlich,,style,filler,['-']
 einerseits,,style,filler,['-']
@@ -54,14 +66,14 @@ etc.,,style,filler,['-']
 etliche,,style,filler,['-']
 etwa,,style,filler,['-']
 fast,,style,filler,['-']
+flexibel,,style,hollow,"['anpassungsfähig', 'bei Entscheidungen wendig', 'pragmatisch', 'offen', 'beweglich', 'agil', 'variabel', 'mobil', 'durch nutzende Personen definiert']"
 folgendermaßen,,style,filler,['-']
 folglich,,style,filler,['-']
-förmlich,,style,filler,['-']
 fortwährend,,style,filler,['-']
 fraglos,,style,filler,['-']
 freilich,,style,filler,['-']
+förmlich,,style,filler,['-']
 ganz,,style,filler,['-']
-gänzlich,,style,filler,['-']
 gar,,style,filler,['-']
 gelegentlich,,style,filler,['-']
 gemeinhin,,style,filler,['-']
@@ -71,13 +83,18 @@ gewissermaßen,,style,filler,['-']
 glatt,,style,filler,['-']
 gleichsam,,style,filler,['-']
 gleichwohl,,style,filler,['-']
+global,,style,hollow,"['in vielen Ländern Europas/Asiens/Afrikas/Nord- und Südamerikas', 'auf allen Kontinenten']"
 glücklicherweise,,style,filler,['-']
 gottseidank,,style,filler,['-']
 größtenteils,,style,filler,['-']
+gänzlich,,style,filler,['-']
 halt,,style,filler,['-']
-häufig,,style,filler,['-']
 hingegen,,style,filler,['-']
 hinlänglich,,style,filler,['-']
+hoch-motiviert,,style,hollow,"['fähig zur Eigeninitiative', 'bereit, sich zu engagieren', 'setzt sich erreichbare Ziele', 'bereit, sich einzusetzen']"
+hochmotiviert,,style,hollow,"['fähig zur Eigeninitiative', 'bereit, sich zu engagieren', 'setzt sich erreichbare Ziele', 'bereit, sich einzusetzen']"
+hochwertig,,style,hollow,"['von guter Qualität', 'dauerhaft', 'stabil', 'belastbar', 'wertbeständig']"
+häufig,,style,filler,['-']
 höchst,,style,filler,['-']
 höchstens,,style,filler,['-']
 immer,,style,filler,['-']
@@ -85,7 +102,9 @@ immerhin,,style,filler,['-']
 immerzu,,style,filler,['-']
 indessen,,style,filler,['-']
 infolgedessen,,style,filler,['-']
+innovativ,,style,hollow,"['einfallsreich', 'neuartig', 'kreativ', 'schöpferisch', 'erfindungsreich', 'zukunftsweisend', 'bahnbrechend', 'ideenreich', 'fortschrittlich']"
 insbesondere,,style,filler,['-']
+international,,style,hollow,"['in vielen Ländern Europas/Asiens/Afrikas/Nord- und Südamerikas', 'auf allen Kontinenten']"
 inzwischen,,style,filler,['-']
 irgend,,style,filler,['-']
 irgendein,,style,filler,['-']
@@ -98,11 +117,13 @@ jedenfalls,,style,filler,['-']
 kaum,,style,filler,['-']
 keinesfalls,,style,filler,['-']
 keineswegs,,style,filler,['-']
-längst,,style,filler,['-']
 lediglich,,style,filler,['-']
 leider,,style,filler,['-']
 letztlich,,style,filler,['-']
+längst,,style,filler,['-']
+lösungsorientiert,,style,hollow,"['pragmatisch', 'umsetzungsorientiert']"
 manchmal,,style,filler,['-']
+maßgeblich,,style,hollow,"['relevant', 'entscheidend', 'verantwortlich', 'wird großgeschrieben']"
 mehrfach,,style,filler,['-']
 meinetwegen,,style,filler,['-']
 meist,,style,filler,['-']
@@ -113,7 +134,6 @@ mithin,,style,filler,['-']
 mitunter,,style,filler,['-']
 möglicherweise,,style,filler,['-']
 möglichst,,style,filler,['-']
-nämlich,,style,filler,['-']
 naturgemäß,,style,filler,['-']
 natürlich,,style,filler,['-']
 neuerdings,,style,filler,['-']
@@ -122,10 +142,12 @@ neulich,,style,filler,['-']
 nichtsdestoweniger,,style,filler,['-']
 nie,,style,filler,['-']
 niemals,,style,filler,['-']
+normal,,style,hollow,"['typisch', 'vorschriftsmäßig', 'den allgemein anerkannten/als verbindlich geltenden Regeln/Erwartungen entsprechend']"
 nun,,style,filler,['-']
 nur,,style,filler,['-']
-o.ä.,,style,filler,['-']
+nämlich,,style,filler,['-']
 o.Ä.,,style,filler,['-']
+o.ä.,,style,filler,['-']
 offenbar,,style,filler,['-']
 offenkundig,,style,filler,['-']
 offensichtlich,,style,filler,['-']
@@ -134,6 +156,8 @@ ohnedies,,style,filler,['-']
 partout,,style,filler,['-']
 plötzlich,,style,filler,['-']
 quasi,,style,filler,['-']
+quer-denken,,style,hollow,"['in neuen Mustern denken', 'parallel/lateral/kreativ/divergent denken', 'über den eigenen Tellerrand blicken', 'brainstormen']"
+querdenken,,style,hollow,"['in neuen Mustern denken', 'parallel/lateral/kreativ/divergent denken', 'über den eigenen Tellerrand blicken', 'brainstormen']"
 recht,,style,filler,['-']
 reichlich,,style,filler,['-']
 reiflich,,style,filler,['-']
@@ -160,16 +184,14 @@ sogar,,style,filler,['-']
 sonst,,style,filler,['-']
 sowieso,,style,filler,['-']
 sozusagen,,style,filler,['-']
+state-of-the-art,,style,hollow,"['auf dem neuesten/letzten Stand der Technik', 'dem aktuellen Stand der Forschung/Technologie entsprechend', 'fachüblich']"
 stellenweise,,style,filler,['-']
 stets,,style,filler,['-']
+teamfähig,,style,hollow,"['kooperationsfähig', 'offen gegenüber verschiedenen Menschen und Verhaltensweisen', 'fähig mit Unterschieden und Gemeinsamkeiten umzugehen', 'kommunikationsfähig', 'kompromissbereit zugunsten des gemeinsamen Ziels']"
 trotzdem,,style,filler,['-']
 u.a.,,style,filler,['-']
-u.ä.,,style,filler,['-']
 u.Ä.,,style,filler,['-']
-überaus,,style,filler,['-']
-überdies,,style,filler,['-']
-überhaupt,,style,filler,['-']
-übrigens,,style,filler,['-']
+u.ä.,,style,filler,['-']
 umständehalber,,style,filler,['-']
 unbedingt,,style,filler,['-']
 unerhört,,style,filler,['-']
@@ -181,20 +203,22 @@ unglücklicherweise,,style,filler,['-']
 unlängst,,style,filler,['-']
 unmaßgeblich,,style,filler,['-']
 unsagbar,,style,filler,['-']
-unsäglich,,style,filler,['-']
 unstreitig,,style,filler,['-']
+unsäglich,,style,filler,['-']
 unzweifelhaft,,style,filler,['-']
 vergleichsweise,,style,filler,['-']
 vermutlich,,style,filler,['-']
 vielfach,,style,filler,['-']
 vielleicht,,style,filler,['-']
 vollends,,style,filler,['-']
-völlig,,style,filler,['-']
 vollkommen,,style,filler,['-']
 vollständig,,style,filler,['-']
+vorallem,,style,hollow,"['als Wichtigstes', 'namentlich', 'vorrangig']"
+völlig,,style,filler,['-']
 wahrscheinlich,,style,filler,['-']
 weidlich,,style,filler,['-']
 weitgehend,,style,filler,['-']
+weltweit,,style,hollow,"['in vielen Ländern Europas/Asiens/Afrikas/Nord- und Südamerikas', 'auf allen Kontinenten']"
 wenigstens,,style,filler,['-']
 wieder,,style,filler,['-']
 wiederum,,style,filler,['-']
@@ -211,28 +235,7 @@ zuweilen,,style,filler,['-']
 zweifellos,,style,filler,['-']
 zweifelsfrei,,style,filler,['-']
 zweifelsohne,,style,filler,['-']
-aktiv,,style,hollow,"['lebendig', 'tatkräftig', 'lebhaft', 'enthusiastisch', 'engagiert', 'energiegeladen', 'vital', 'eifrig', 'anpassungsfähig', 'schwungvoll']"
-Arbeitskraft,,style,hollow,"['Arbeitsleistung', 'Personal', 'Mitarbeiter~in~/~Mitarbeiter', 'menschliche Kraft zu geistiger/körperlicher Arbeit', 'Personal', 'Mitarbeitende', 'Mitarbeiter~innen~ und ~Mitarbeiter']"
-dynamisch,,style,hollow,"['lebendig', 'tatkräftig', 'lebhaft', 'enthusiastisch', 'engagiert', 'energiegeladen', 'vital', 'eifrig', 'anpassungsfähig', 'schwungvoll']"
-flexibel,,style,hollow,"['anpassungsfähig', 'bei Entscheidungen wendig', 'pragmatisch', 'offen', 'beweglich', 'agil', 'variabel', 'mobil', 'durch nutzende Personen definiert']"
-Flexibilität,,style,hollow,"['Anpassungsfähigkeit', 'Aufgeschlossenheit gegenüber Wandel', 'Bereitschaft für Veränderung', 'Mobilität', 'Fähigkeit, sich schnell auf Neues umzustellen']"
-global,,style,hollow,"['in vielen Ländern Europas/Asiens/Afrikas/Nord- und Südamerikas', 'auf allen Kontinenten']"
-hoch-motiviert,,style,hollow,"['fähig zur Eigeninitiative', 'bereit, sich zu engagieren', 'setzt sich erreichbare Ziele', 'bereit, sich einzusetzen']"
-hochwertig,,style,hollow,"['von guter Qualität', 'dauerhaft', 'stabil', 'belastbar', 'wertbeständig']"
-Innovation,,style,hollow,"['Neugestaltung', 'Erfindung', 'technischer Fortschritt', 'Neuerung', 'Neuschöpfung', 'Neuentwicklung']"
-Innovationskraft,,style,hollow,"['Erfindungsreichtum', 'Kreativität', 'Fähigkeit, Ideen in Lösungen umzusetzen', 'Umsetzungskraft']"
-innovativ,,style,hollow,"['einfallsreich', 'neuartig', 'kreativ', 'schöpferisch', 'erfindungsreich', 'zukunftsweisend', 'bahnbrechend', 'ideenreich', 'fortschrittlich']"
-international,,style,hollow,"['in vielen Ländern Europas/Asiens/Afrikas/Nord- und Südamerikas', 'auf allen Kontinenten']"
-Karrierechance,,style,hollow,['gute Aufstiegsmöglichkeit']
-lösungsorientiert,,style,hollow,"['pragmatisch', 'umsetzungsorientiert']"
-maßgeblich,,style,hollow,"['relevant', 'entscheidend', 'verantwortlich', 'wird großgeschrieben']"
-normal,,style,hollow,"['typisch', 'vorschriftsmäßig', 'den allgemein anerkannten/als verbindlich geltenden Regeln/Erwartungen entsprechend']"
-Organisationstalent,,style,hollow,"['Organisationsfähigkeit', 'Geübtheit, anderen den Rücken frei zu halten', 'Person, die gern organisiert', 'jemand, der einen klaren Blick behält', 'Mensch, der gern offene Enden zusammenführt']"
-quer-denken,,style,hollow,"['in neuen Mustern denken', 'parallel/lateral/kreativ/divergent denken', 'über den eigenen Tellerrand blicken', 'brainstormen']"
-Querdenken,,style,hollow,"['die Fähigkeit, in neuen Mustern zu denken', 'die Fähigkeit, parallel/lateral/kreativ/divergent zu denken', 'die Fähigkeit, über den eigenen Tellerrand zu blicken', 'die Fähigkeit zum Brainstormen']"
-state-of-the-art,,style,hollow,"['auf dem neuesten/letzten Stand der Technik', 'dem aktuellen Stand der Forschung/Technologie entsprechend', 'fachüblich']"
-Team-player,,style,hollow,"['Zusammenarbeit über das eigene Streben stellen', 'Team', 'Teammitglieder', 'Teamplayer~innen', 'Teamplayer~in', 'Team-player~in~/~Team-player']"
-teamfähig,,style,hollow,"['kooperationsfähig', 'offen gegenüber verschiedenen Menschen und Verhaltensweisen', 'fähig mit Unterschieden und Gemeinsamkeiten umzugehen', 'kommunikationsfähig', 'kompromissbereit zugunsten des gemeinsamen Ziels']"
-Teamfähigkeit,,style,hollow,"['Kooperationsfähigkeit', 'Akzeptanz gegenüber verschiedenen Menschen und Verhaltensweisen', 'Fähigkeit mit Unterschieden und Gemeinsamkeiten umzugehen', 'Kommunikationsfähigkeit', 'Kompromissbereitschaft zugunsten des gemeinsamen Ziels']"
-vorallem,,style,hollow,"['als Wichtigstes', 'namentlich', 'vorrangig']"
-weltweit,,style,hollow,"['in vielen Ländern Europas/Asiens/Afrikas/Nord- und Südamerikas', 'auf allen Kontinenten']"
+überaus,,style,filler,['-']
+überdies,,style,filler,['-']
+überhaupt,,style,filler,['-']
+übrigens,,style,filler,['-']
