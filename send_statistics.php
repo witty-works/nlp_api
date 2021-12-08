@@ -5,6 +5,13 @@ $date = date("Y-m-d", strtotime("yesterday"));
 exec("./statistics.sh -b -d $date", $message, $retval);
 
 $message = implode("\n", $message);
-echo $message;
+echo "message:\n";
+echo $message . "\n";
 
-mail("everyone@witty.works", "Witty Statistics: $date", $message, "From: support@witty.works");
+$emails = getenv('STATISTICS_TO_EMAILS_CSV');
+echo "emails:\n";
+echo $emails . "\n";
+
+foreach (explode(',', $emails) as $email) {
+    mail(trim($email), "Witty Statistics: $date", $message, "From: support@witty.works");
+}
