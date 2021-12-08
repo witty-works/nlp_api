@@ -54,7 +54,7 @@ variables:
     BLACKFIRE_LOG_FILE: "/tmp/blackfire.log"
 
 crons:
-  review-requests-reset:
+  generate-statistics:
     spec: "55 0 * * *"
     cmd: |
       if [ "$PLATFORM_BRANCH" = main ]; then
