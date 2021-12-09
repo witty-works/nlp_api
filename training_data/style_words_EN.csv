@@ -4,11 +4,9 @@ flexible,1,style,hollow,['']
 global,1,style,hollow,['']
 innovation,1,style,hollow,['']
 innovative,1,style,hollow,['']
-international,1,style,hollow,"['in (...) countries', '(...) offices across (...) continents']"
 normal,1,style,hollow,['typically']
 passion,1,style,hollow,"['enthusiasm', 'dedication', 'committment', 'fascination', 'keen interest', 'love (for something)', 'excitement (about doing something)']"
 passionate,1,style,hollow,"['enthusiastic', 'dedicated', 'committed (to something)', 'fascinated with', 'keenly interested in', 'excited (about doing something)']"
-perspective,1,style,hollow,['']
 quick,1,style,hollow,['']
 really,1,style,filler,['-']
 state-of-the-art,1,style,hollow,['']
