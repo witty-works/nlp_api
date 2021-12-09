@@ -83,7 +83,7 @@ fi
 descriptions=(
     "Total number of installations"
     "Total number of active installations"
-    "Number of total requests and click on alternatives/ignores"
+    "Number of total requests including click on alternatives/ignores"
     "Number of clicks on an alternative"
     "Number of clicks on ignore"
 )
