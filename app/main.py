@@ -295,6 +295,10 @@ df_open_dis_sentence_en = pd.read_csv("training_data/open_dis_sentences_EN.csv")
 df_inclusive_word_en = pd.read_csv("training_data/inclusive_words_EN.csv")
 df_inclusive_sentence_en = pd.read_csv("training_data/inclusive_sentences_EN.csv")
 
+# load style words
+df_style_word_en = pd.read_csv("training_data/style_words_EN.csv")
+df_style_sentence_en = pd.read_csv("training_data/style_sentences_EN.csv")
+
 # dictionaries to handle false positives
 false_positive_agentic = ["selbst", "flexible", "Probleme", "unabhängig", "Entwickler"]
 false_positive_style = ["international"]
@@ -837,6 +841,16 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
             df_inclusive_word_en,
             df_inclusive_sentence_en,
             "inclusive",
+        )
+    if "style" not in user_request_in.config.disabled_categories:
+        list_full += RulesBasedWordsPhraseMatcherEN(
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            df_style_word_en,
+            df_style_sentence_en,
+            "style",
         )
 
     return list_full
