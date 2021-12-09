@@ -47,6 +47,12 @@ def read_csv(in_file):
             if re.search("^.*[a-z]{3}innen~[^ ].*$", alternative):
                 print("Potential missing ~ in (innen~): " + alternative)
 
+            if re.search("^.*[a-z]e~.*$", alternative):
+                print("Potential missing ~ in (~e~): " + alternative)
+
+            if re.search("^.*e~r.*$", alternative):
+                print("Potential extra ~ in (er): " + alternative)
+
 
 @click.command()
 @click.option(
