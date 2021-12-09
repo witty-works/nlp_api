@@ -211,11 +211,35 @@ class ResultOut(BaseModel):
         if "^" in alternatives:
             alternatives.remove("^")
 
+        rewrite_to_swiss_german = False
+        if (
+            lang.locale == "de"
+            and "de-CH" in config.preferred_variants
+            and config.preferred_variants.find("de-CH")
+            <= config.preferred_variants.find("de")
+        ):
+            rewrite_to_swiss_german = True
+
+        rewrite_to_british = False
+        if (
+            lang.locale == "en"
+            and "en-GB" in config.preferred_variants
+            and config.preferred_variants.find("en-GB")
+            <= config.preferred_variants.find("en")
+        ):
+            rewrite_to_british = True
+
         for i, alternative in enumerate(alternatives):
             if is_upper and category != "orthography":
                 alternatives[i] = (
                     string.capwords(alternatives[i][0:1]) + alternatives[i][1:]
                 )
+
+            if rewrite_to_swiss_german:
+                alternatives[i] = alternative.replace("ß", "ss")
+
+            if rewrite_to_british:
+                alternatives[i] = alternative.replace("color", "colour")
 
             if "~" not in alternative:
                 continue
