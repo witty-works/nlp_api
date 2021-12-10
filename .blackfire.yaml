@@ -8,4 +8,4 @@ scenarios: |
             method 'POST'
             param text "Sehr geehrte Kollegen,\nWir sind ein Mannschaft, in dem Ehrgeiz und Durchhaltevermögen zählen. Wir suchen die Herausgeforderung.\nIch zähle auf euch.\nFreundliche Grüße\nArnau"
             json true
-            assert "main.wall_time <= 50ms * var('performance_multiplier')"
+            assert main.wall_time <= 50ms * var('performance_multiplier')
