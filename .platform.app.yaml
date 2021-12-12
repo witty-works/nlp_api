@@ -58,5 +58,5 @@ crons:
     spec: "55 0 * * *"
     cmd: |
       if [ "$PLATFORM_BRANCH" = main ]; then
-          php send_statistics.php
+          flock /tmp/send_statistics.lock php send_statistics.php
       fi
