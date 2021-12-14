@@ -35,8 +35,7 @@ class Lang(object):
 
 
 class EventType(str, Enum):
-    ID = "id"
-    SIGNIN = "signin"
+    CHECK = "check"
     IGNORE = "ignore"
     ALTERNATIVE = "alternative"
     ERROR = "error"
@@ -127,6 +126,7 @@ class ConfRequest(BaseModel):
 
 
 class RequestIn(BaseModel):
+    type: str = "check"
     text: str
     lang: Optional[LangWithAutoType] = "auto"
     id: Optional[str] = None
