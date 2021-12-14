@@ -1,3 +1,5 @@
-Lemma,is active,Wordtype,Forms,Alternatives
-unterschiedlicher Hintergrund,1,s,,
-sexuelle Orientierung,1,s,,
+Lemma,Priority,Category,Primary_subcategory
+diverser Hintergrund,,inclusive,d_and_i
+keine Diskriminierung,,inclusive,d_and_i
+sexuelle Orientierung,,inclusive,d_and_i
+unterschiedlicher Hintergrund,,inclusive,d_and_i
