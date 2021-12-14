@@ -711,24 +711,24 @@ def write_user_training_data(
 
     if user_request_in.id in settings.posthog_ids:
         posthog.capture(user_request_in.id, user_request_in.type, data)
-    else:
-        date = datetime.utcnow().strftime("%Y-%m-%d")
 
-        dirname = os.getcwd() + "/user_training_data/installs/" + user_request_in.id
-        os.makedirs(dirname, exist_ok=True)
+    date = datetime.utcnow().strftime("%Y-%m-%d")
 
-        dirname = os.getcwd() + "/user_training_data/" + date + "/" + user_request_in.id
-        os.makedirs(dirname, exist_ok=True)
+    dirname = os.getcwd() + "/user_training_data/installs/" + user_request_in.id
+    os.makedirs(dirname, exist_ok=True)
 
-        filename = (
-            dirname
-            + "/"
-            + datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
-            + ".json"
-        )
+    dirname = os.getcwd() + "/user_training_data/" + date + "/" + user_request_in.id
+    os.makedirs(dirname, exist_ok=True)
 
-        f = open(filename, "w")
-        f.write(json.dumps(data))
+    filename = (
+        dirname
+        + "/"
+        + datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+        + ".json"
+    )
+
+    f = open(filename, "w")
+    f.write(json.dumps(data))
 
 
 # Function for all German rules
