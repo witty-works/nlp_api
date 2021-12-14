@@ -288,6 +288,10 @@ df_style_sentences = pd.read_csv("training_data/style_sentences_DE.csv")
 # list of "hollow word" sentences
 terms_style = list(df_style_sentences["Lemma"])
 
+# load openly discriminating words de
+df_open_dis_word_de = pd.read_csv("training_data/open_dis_words_DE.csv")
+df_open_dis_sentence_de = pd.read_csv("training_data/open_dis_sentences_DE.csv")
+
 # load Exaggerating word and sentences de
 df_exaggerating = pd.read_csv("training_data/exaggerating_words_DE.csv")
 df_exaggerating_sentences = pd.read_csv("training_data/exaggerating_sentences_DE.csv")
@@ -825,6 +829,17 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             df_exaggerating,
             df_exaggerating_sentences,
         )
+    # openly discriminating words&sentences catch de
+    if "openly_discriminating" not in user_request_in.config.disabled_categories:
+        list_full += RulesBasedWordsPhraseMatcherUN(
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            df_open_dis_word_de,
+            df_open_dis_sentence_de,
+            "openly_discriminating",
+        )
 
     return list_full
 
@@ -847,7 +862,7 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
         )
 
     if "openly_discriminating" not in user_request_in.config.disabled_categories:
-        list_full += RulesBasedWordsPhraseMatcherEN(
+        list_full += RulesBasedWordsPhraseMatcherUN(
             user_request_in.config,
             lang,
             user_request_in.text,
@@ -867,7 +882,7 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
             "inclusive",
         )
     if "style" not in user_request_in.config.disabled_categories:
-        list_full += RulesBasedWordsPhraseMatcherEN(
+        list_full += RulesBasedWordsPhraseMatcherUN(
             user_request_in.config,
             lang,
             user_request_in.text,
@@ -1435,8 +1450,8 @@ def RulesBasedEN(config: Config, lang, full_text, tokens, df, category, subcateg
     return list_tokens
 
 
-# English function
-def RulesBasedWordsPhraseMatcherEN(
+# Unified function English&German
+def RulesBasedWordsPhraseMatcherUN(
     config: Config, lang, full_text, tokens, df, df_sentence, category
 ):
     list_tokens = []
