@@ -132,7 +132,7 @@ Hafenschlampe,,openly_discriminating,sexism,['-']
 Hartgeldnutte,,openly_discriminating,sexism,['-']
 Hartgeldstricher,,openly_discriminating,homophobia,['-']
 Henkershure,,openly_discriminating,sexism,['-']
-Hermaphrodit,,openly_discriminating,transphobia,['']
+Hermaphrodit,,openly_discriminating,transphobia,['-']
 Heulboje,,openly_discriminating,sexism,['-']
 Heulsuse,,openly_discriminating,sexism,['-']
 Hexe,,openly_discriminating,sexism,['-']
@@ -194,9 +194,9 @@ Meldemuschi,,openly_discriminating,sexism,['-']
 Metze,,openly_discriminating,sexism,['-']
 Milchmädchen,,openly_discriminating,sexism,['-']
 Mistschlampe,,openly_discriminating,sexism,['-']
-Mongo,,openly_discriminating,ableism,"['Mensch mit Downsyndom', 'Mensch mit Trisomie 21', 'Mensch mit geistigen Beeinträchtigungen']"
-Neger,,openly_discriminating,racism,"['Black Person of Color', 'Schwarzer', 'Afrikaner~in', 'Afroamerikaner~in']"
-Negerin,,openly_discriminating,racism,"['Black Person of Color', 'Schwarzer', 'Afrikaner~in', 'Afroamerikaner~in']"
+Mongo,,openly_discriminating,ableism,"['-', 'Mensch mit Downsyndom', 'Mensch mit Trisomie 21', 'Mensch mit geistigen Beeinträchtigungen']"
+Neger,,openly_discriminating,racism,"['-', 'Black Person of Color', 'Schwarzer', 'Afrikaner~in', 'Afroamerikaner~in']"
+Negerin,,openly_discriminating,racism,"['-', 'Black Person of Color', 'Schwarzer', 'Afrikaner~in', 'Afroamerikaner~in']"
 Nervensäge,,openly_discriminating,sexism,['-']
 Nigger,,openly_discriminating,racism,['-']
 Niggerin,,openly_discriminating,racism,['-']
@@ -240,7 +240,7 @@ Schabracke,,openly_discriminating,sexism,['-']
 Scheißhausfotze,,openly_discriminating,sexism,['-']
 Scheißhausnutte,,openly_discriminating,sexism,['-']
 Schickse,,openly_discriminating,sexism,['-']
-Schielauge,,openly_discriminating,ableism,['Person mit Gleichgewichtsstörung des Augenmuskels']
+Schielauge,,openly_discriminating,ableism,"['-', 'Person mit Gleichgewichtsstörung des Augenmuskels']"
 Schimmelmöse,,openly_discriminating,sexism,['-']
 Schindluder,,openly_discriminating,sexism,['-']
 Schlammsau,,openly_discriminating,sexism,['-']
@@ -273,7 +273,7 @@ Soldatenhure,,openly_discriminating,sexism,['-']
 Spacken,,openly_discriminating,ableism,['-']
 Spacko,,openly_discriminating,ableism,['-']
 Spagmat,,openly_discriminating,ableism,['-']
-Spasti,,openly_discriminating,ableism,"['Spastiker', 'Person, die unter Krämpfen/Spasmen leidet', 'Person mit einer motorischen Erkrankung', 'Person mit Willkürbewegungen', 'Mensch mit Cerebralparese', 'Person, die sich ungeschickt oder dumm anstellt']"
+Spasti,,openly_discriminating,ableism,"['-', 'Spastiker', 'Person, die unter Krämpfen/Spasmen leidet', 'Person mit einer motorischen Erkrankung', 'Person mit Willkürbewegungen', 'Mensch mit Cerebralparese', 'Person, die sich ungeschickt oder dumm anstellt']"
 Spermarutsche,,openly_discriminating,sexism,['-']
 Spinatwachtel,,openly_discriminating,sexism,['-']
 Stinkfotze,,openly_discriminating,sexism,['-']
