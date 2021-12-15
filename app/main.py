@@ -7,6 +7,7 @@ import json
 import secrets
 import aiohttp
 import copy
+import sys
 
 from fastapi import (
     FastAPI,
@@ -24,13 +25,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from starlette.responses import RedirectResponse, PlainTextResponse, FileResponse
-
-from fastapi.exception_handlers import (
-    http_exception_handler,
-)
+from fastapi.exception_handlers import http_exception_handler
+from starlette.responses import RedirectResponse, PlainTextResponse
+from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from typing import Optional
+
+from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
+from sentry_sdk import configure_scope
 
 from spacy.tokens import Doc
 from spacy.matcher import PhraseMatcher, Matcher
@@ -57,10 +59,15 @@ from app.rules import *
 
 from collections import namedtuple, defaultdict
 
+from collections import namedtuple
+from app.sentry import set_up_sentry_sdk
+
+version = "1.12.3"
 
 settings = get_settings()
 logging = set_up_logger(settings)
-# posthog = set_up_posthog(settings)
+sentry_sdk = set_up_sentry_sdk(version, settings)
+posthog = set_up_posthog(settings)
 languagetool_url = get_languagetool_url(settings)
 redis = set_up_redis(settings)
 
@@ -70,7 +77,6 @@ logging.debug("app started with settings: %s", settings)
 # convert string of list into list of the strings
 # project models
 
-version = "1.12.3"
 app = FastAPI(
     title="Witty NLP API",
     version=version,
@@ -79,17 +85,35 @@ app = FastAPI(
     openapi_url=None,
 )
 
-# To catch raised `HTTPException` exceptions as per:
-# https://fastapi.tiangolo.com/tutorial/handling-errors/
-# Might have to add something similar for `RequestValidationError`
+# Uncaught exceptions (like `raise Exception`) should propagate correctly
+# to Sentry's error handler
+# Middleware will also enable Sentry performance monitoring to work as expected
+try:
+    app.add_middleware(SentryAsgiMiddleware)
+except Exception:
+    # pass silently if the Sentry integration failed
+    pass
 
 
 @app.exception_handler(HTTPException)
-async def custom_http_exception_handler(request, e):
-    if e.status_code >= 500:
-        logging.exception("Exception logging message")
+async def custom_http_exception_handler(request: Request, exc: StarletteHTTPException):
+    if sentry_sdk:
+        with configure_scope() as scope:
+            sentry_sdk.transaction = request.scope["path"][1:]
 
-    return await http_exception_handler(request, e)
+        # settings.browser_id no longer needed once https://github.com/encode/starlette/pull/944 is merged
+        sentry_sdk.set_user({"id": request.state.browser_id})
+        sentry_sdk.capture_exception(exc)
+
+        info = sys.exc_info()
+        data = {
+            "detail": exc.detail,
+            "type": str(info[0]),
+            "path": request.scope["path"][1:],
+        }
+        posthog.capture(request.state.browser_id, "$exception", data)
+
+    return await http_exception_handler(request, exc)
 
 
 security = HTTPBasic(auto_error=False)
@@ -192,12 +216,16 @@ def get_root():
     return RedirectResponse(url="/form", status_code=301)
 
 
-@app.get("/exception")
-def raise_exception(
-    exception_type: str = None,
+@app.get("/exception", response_model=ResultsOut)
+async def exception(
+    request: Request,
+    id: str = None,
+    exception_type: str = "http",
     status_code: int = 500,
     username: str = Depends(get_current_username),
 ):
+    set_browser_id(request, id)
+
     if exception_type == "http":
         raise HTTPException(status_code=status_code)
 
@@ -231,8 +259,11 @@ def get_categories(lang: LangType = "de"):
 
 @app.post("/serialize", response_class=PlainTextResponse)
 def serialize(
-    user_request_in: RequestIn, username: str = Depends(get_current_username)
+    request: Request,
+    user_request_in: RequestIn,
+    username: str = Depends(get_current_username),
 ):
+    set_browser_id(request, user_request_in.id)
     data = collect_user_training_data(user_request_in, ResultsOut([], "en"))
     return json.dumps(data)
 
@@ -241,6 +272,7 @@ def serialize(
 def log(
     request: Request, user_request_in: RequestInEvent, background_tasks: BackgroundTasks
 ):
+    set_browser_id(request, user_request_in.id)
     background_tasks.add_task(write_user_training_data, request, user_request_in)
 
 
@@ -248,6 +280,13 @@ def log(
 async def check_query(
     request: Request, user_request_in: RequestIn, background_tasks: BackgroundTasks
 ):
+    set_browser_id(request, user_request_in.id)
+
+    if sentry_sdk:
+        sentry_sdk.set_context(
+            "request", clean_requestin_data(request, user_request_in)
+        )
+
     if settings.read_rules_from_redis:
         await set_rules(user_request_in)
 
@@ -301,6 +340,8 @@ async def get_redis(user: str):
 
 
 # Functions
+def set_browser_id(request: Request, id):
+    request.state.browser_id = str(id)
 
 
 async def set_rules(user_request_in: RequestIn):
@@ -461,7 +502,7 @@ def clean_event_data(user_request_in: RequestIn):
     return data
 
 
-def clean_request_data(request: Request, user_request_in: RequestIn):
+def clean_requestin_data(request: Request, user_request_in: RequestIn):
     data = user_request_in.dict(exclude={"text"})
     data["text"] = {
         "length": len(user_request_in.text),
@@ -491,7 +532,7 @@ def collect_user_training_data(
         }
     else:
         data = {
-            "request": clean_request_data(request, user_request_in),
+            "request": clean_requestin_data(request, user_request_in),
             "response": clean_response_data(
                 user_request_in.config.store_context, response
             ),
