@@ -8,7 +8,7 @@ def set_up_posthog(settings):
     posthog.api_key = settings.posthog_api_key
     posthog.host = settings.posthog_host
 
-    if settings.logging_enabled:
+    if settings.logging_config_level == "DEBUG":
         posthog.debug = True
 
     if settings.testing:
