@@ -1,5 +1,6 @@
 import logging
 import os
+import sys
 
 # Logging set up
 def set_up_logger(settings):
@@ -18,6 +19,8 @@ def set_up_logger(settings):
             )
             ah.setFormatter(formatter)
             logging.getLogger().addHandler(ah)
+        elif settings.logging_config_filename == "stdout":
+            logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
         else:
             filename = os.path.abspath(settings.logging_config_filename)
             os.makedirs(os.path.dirname(filename), exist_ok=True)
