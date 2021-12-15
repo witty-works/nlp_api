@@ -601,7 +601,9 @@ def write_user_training_data(
     data = collect_user_training_data(request, user_request_in, response)
 
     if user_request_in.id in settings.posthog_ids:
-        posthog.capture(user_request_in.id, user_request_in.type, data)
+        # TODO read user/company group from redis data
+        groups = {"user": "dashboard:0", "company": "dashboard:0"}
+        posthog.capture(user_request_in.id, user_request_in.type, data, groups=groups)
 
     date = datetime.utcnow().strftime("%Y-%m-%d")
 
