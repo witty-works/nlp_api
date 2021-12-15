@@ -563,7 +563,6 @@ def clean_request_data(request: Request, user_request_in: RequestIn):
     data["text"] = {
         "length": len(user_request_in.text),
     }
-    data["user_agent"] = request.headers.get("user-agent")
     data["origin"] = request.headers.get("origin")
 
     return data
@@ -587,6 +586,8 @@ def collect_user_training_data(
             "request": clean_request_data(request, user_request_in),
             "response": clean_response_data(response),
         }
+
+    data["$useragent"] = request.headers.get("user-agent")
 
     return data
 
