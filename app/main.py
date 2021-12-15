@@ -312,7 +312,13 @@ df_gendered_sentence_en = pd.read_csv("training_data/gendered_sentences_EN.csv")
 df_gendered_noun_word_en = pd.read_csv("training_data/gendered_noun_words_EN.csv")
 
 # dictionaries to handle false positives
-false_positive_agentic = ["selbst", "flexible", "Probleme", "unabhängig", "Entwickler"]
+false_positive_agentic_const = [
+    "selbst",
+    "flexible",
+    "Probleme",
+    "unabhängig",
+    "Entwickler",
+]
 false_positive_style = ["international"]
 exceptions = [
     "Unternehmen",
@@ -326,18 +332,8 @@ exceptions = [
 ]
 gender_false_positive = genderdenom_false_positives["False_positives"].tolist()
 
-# read redis configuration
-
-if settings.testing == True:
-    redis = FakeStrictRedis()
-else:
-    platform_config = platformshconfig.Config()
-    if platform_config.is_valid_platform():
-        redis_credentials = platform_config.credentials("rediscache")
-        redis = Redis(redis_credentials["host"], redis_credentials["port"])
-
 # corporate false positive DB
-def get_false_positive(userId: str):
+def get_false_positive_from_redis(userId: str):
     keys = redis.keys("*")
     for key in keys:
         user_list = json.loads(redis.get(key))["users"]
@@ -349,14 +345,27 @@ def get_false_positive(userId: str):
 
 # this information will be taken from the authentication token
 # userId = "karolina.bozek@witty.works"
-userId = ""
-if userId:
-    corporate_false_positive = get_false_positive(userId)
-else:
-    corporate_false_positive = []
+# userId = "test@gmail.com"
+# userId = "test@gmail.com"
+terms_false_positive = []
+false_positive_agentic = []
 
-terms_false_positive = gender_false_positive + corporate_false_positive
-false_positive_agentic += corporate_false_positive
+
+def get_false_positive(gender_false_positive, false_positive_agentic_const, userId=""):
+    corporate_false_positive = []
+    if userId:
+        corporate_false_positive = get_false_positive_from_redis(userId)
+    return (
+        gender_false_positive + corporate_false_positive,
+        false_positive_agentic_const + corporate_false_positive,
+    )
+
+
+# terms_false_positive = gender_false_positive + corporate_false_positive
+# false_positive_agentic += corporate_false_positive
+terms_false_positive, false_positive_agentic = get_false_positive(
+    gender_false_positive, false_positive_agentic_const
+)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 

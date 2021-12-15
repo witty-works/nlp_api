@@ -1,4 +1,4 @@
-f=from numpy import array
+from numpy import array
 from pydantic import BaseModel, validator
 from typing import Dict, List
 from typing import Optional

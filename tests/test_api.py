@@ -2,10 +2,10 @@ import pytest
 from pathlib import Path
 from fastapi.applications import FastAPI
 from fastapi.testclient import TestClient
-from app.main import app, redis, set_rules
+from app.main import app, redis, set_rules, get_false_positive, gender_false_positive
 import json
 from app.models import RequestIn
-
+from app import main
 
 client = TestClient(app)
 
@@ -133,24 +133,6 @@ def test_categories():
     assert "hollow" in first_record
 
 
-@pytest.mark.parametrize(
-    "fp_case_dir",
-    list(Path("tests/test_false_positive").iterdir()),
-)
-def test_false_positive(fp_case_dir, snapshot):
-
-    # Read input files from the case directory.
-    input_json = fp_case_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    response = client.post("/check", json=json.loads(input_json))
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = fp_case_dir
-    snapshot.assert_match(output, "output.json")
-
-
 @pytest.fixture
 def set_redis():
     company_object = {
@@ -166,10 +148,51 @@ def set_redis():
             },
             "suggestion": {},
         },
+        "false_positive": [
+            "stark",
+            "starke",
+            "starkes",
+            "starker",
+            "Führungskraft",
+            "Führungskräfte",
+            "Führungskräften",
+        ],
     }
 
     # Set a value
     redis.set("test", json.dumps(company_object))
+
+
+@pytest.mark.parametrize(
+    "fp_case_dir",
+    list(Path("tests/test_false_positive").iterdir()),
+)
+def test_false_positive(fp_case_dir, snapshot, set_redis):
+    false_positive_agentic_const = [
+        "selbst",
+        "flexible",
+        "Probleme",
+        "unabhängig",
+        "Entwickler",
+    ]
+
+    # Read input files from the case directory.
+    input_json = fp_case_dir.joinpath("input.json").read_text()
+    # call set_false_positive_agentic to read data from redis
+    userId = "test@gmail.com"
+    # get_false_positive(gender_false_positive, false_positive_agentic_const, userId)
+    main.terms_false_positive, main.false_positive_agentic = get_false_positive(
+        gender_false_positive, false_positive_agentic_const, userId
+    )
+    # Call the tested endpoint.
+    client = TestClient(app)
+    response = client.post("/check", json=json.loads(input_json))
+    assert response.status_code == 200
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    # Snapshot the return value.
+    snapshot.snapshot_dir = fp_case_dir
+    snapshot.assert_match(output, "output.json")
 
 
 # test overwriting user configuration by company forced rules
