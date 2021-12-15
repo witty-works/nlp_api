@@ -1,30 +1,12 @@
-import platformshconfig
-from app.models import (
-    Config,
-    LangType,
-    Lang,
-    RequestIn,
-    RequestInEvent,
-    ResultOut,
-    ResultsOut,
-    ConfRequest,
-)
 import ast
-
 import re
-from spacy.tokens import Doc
-from spacy.matcher import PhraseMatcher, Matcher
-import spacy
-import pandas as pd
 from datetime import datetime
 import uvicorn
 import os
 import json
-import base64
 import secrets
 import aiohttp
 import copy
-from functools import lru_cache
 
 from fastapi import (
     FastAPI,
@@ -48,115 +30,39 @@ from fastapi.exception_handlers import (
     http_exception_handler,
 )
 
-from typing import List, Optional
-from pydantic import BaseSettings
+from typing import Optional
+
+from spacy.tokens import Doc
+from spacy.matcher import PhraseMatcher, Matcher
+import spacy
+import pandas as pd
+
+from app.models import (
+    Config,
+    LangType,
+    Lang,
+    RequestIn,
+    RequestInEvent,
+    ResultOut,
+    ResultsOut,
+    ConfRequest,
+)
+
 from app.categories import categories
-
-import logging
-
-from redis import Redis
-import platformshconfig
-from fakeredis import FakeStrictRedis
-
-import posthog
-
-
-class Settings(BaseSettings):
-    """Load environment variables to python objects using pydantic."""
-
-    logging_enabled: bool = False
-    logging_config_filename: str = "./logs/error.log"
-    logging_config_level: str = "ERROR"
-    training_data_enabled: bool = False
-    platform_environment: str = "local"
-    languagetool_api: Optional[str]
-    languagetool_verify_ssl: bool = True
-    platform_relationships: Optional[str]
-    api_docs_username: Optional[str]
-    api_docs_password: Optional[str]
-    api_docs_auth_enabled: bool = False
-    instrumentation_key: str = ""
-    testing: bool = False
-    read_rules_from_redis: bool = False
-    posthog_api_key: Optional[str]
-    posthog_host: Optional[str]
-    posthog_ids: List[str] = []
-
-    class Config:
-        env_file = ".env"
-
-
-@lru_cache()
-def get_settings():
-    return Settings()
+from app.settings import get_settings
+from app.logger import set_up_logger
+from app.posthog import set_up_posthog
+from app.redis import set_up_redis
+from app.languagetool import get_languagetool_url
 
 
 settings = get_settings()
+logging = set_up_logger(settings)
+posthog = set_up_posthog(settings)
+languagetool_url = get_languagetool_url(settings)
+redis = set_up_redis(settings)
 
-# Logging set up
-@lru_cache()
-def set_up_logger():
-    logging.basicConfig(level=settings.logging_config_level)
-    logging.getLogger().handlers.clear()
-    formatter = logging.Formatter("[%(asctime)s] %(name)s %(levelname)s - %(message)s")
-
-    if settings.logging_enabled:
-        if settings.instrumentation_key:
-            from opencensus.ext.azure.log_exporter import AzureLogHandler
-
-            ah = AzureLogHandler(
-                connection_string="InstrumentationKey={}".format(
-                    settings.instrumentation_key
-                )
-            )
-            ah.setFormatter(formatter)
-            logging.getLogger().addHandler(ah)
-        else:
-            filename = os.path.abspath(settings.logging_config_filename)
-            os.makedirs(os.path.dirname(filename), exist_ok=True)
-            fh = logging.FileHandler(filename=filename)
-            fh.setFormatter(formatter)
-            logging.getLogger().addHandler(fh)
-    else:
-        logging.getLogger().addHandler(logging.NullHandler())
-
-
-set_up_logger()
 logging.debug("app started with settings: %s", settings)
-
-
-@lru_cache()
-def setup_posthog():
-    if not settings.training_data_enabled:
-        return
-
-    posthog.api_key = settings.posthog_api_key
-    posthog.host = settings.posthog_host
-
-    if settings.logging_enabled:
-        posthog.debug = True
-
-    if settings.testing:
-        posthog.disabled = True
-
-
-setup_posthog()
-
-# Languagetool URL
-@lru_cache()
-def get_languagetool_url():
-    if settings.languagetool_api:
-        return settings.languagetool_api
-
-    if settings.platform_relationships:
-        relationships = json.loads(base64.b64decode(settings.platform_relationships))
-        languagetool = relationships["languagetool"][0]
-        return "%(scheme)s://%(host)s:%(port)d/v2" % languagetool
-
-    return "https://lt.default.api.witty.works/v2"
-
-
-languagetool_url = get_languagetool_url()
 
 # Regular expression library
 # convert string of list into list of the strings
@@ -334,19 +240,6 @@ exceptions = [
 ]
 gender_false_positive = genderdenom_false_positives["False_positives"].tolist()
 
-
-@app.get("/companyRules")
-async def get_redis(user: str):
-    try:
-        keys = redis.keys("*")
-        for key in keys:
-            user_list = json.loads(redis.get(key))["users"]
-            if user in user_list:
-                return json.loads(redis.get(key))
-    except Exception as e:
-        return e
-
-
 # corporate false positive DB
 corporate_false_positive = [
     "stark",
@@ -359,16 +252,6 @@ corporate_false_positive = [
 ]
 terms_false_positive = gender_false_positive + corporate_false_positive
 false_positive_agentic += corporate_false_positive
-
-# read redis configuration
-
-if settings.testing == True:
-    redis = FakeStrictRedis()
-else:
-    platform_config = platformshconfig.Config()
-    if platform_config.is_valid_platform():
-        redis_credentials = platform_config.credentials("rediscache")
-        redis = Redis(redis_credentials["host"], redis_credentials["port"])
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -509,6 +392,18 @@ async def store_redis(corporate_rules: ConfRequest):
     except Exception as e:
         return e
     return company_object
+
+
+@app.get("/companyRules")
+async def get_redis(user: str):
+    try:
+        keys = redis.keys("*")
+        for key in keys:
+            user_list = json.loads(redis.get(key))["users"]
+            if user in user_list:
+                return json.loads(redis.get(key))
+    except Exception as e:
+        return e
 
 
 # Functions
