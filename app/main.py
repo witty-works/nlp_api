@@ -568,8 +568,13 @@ def clean_request_data(request: Request, user_request_in: RequestIn):
     return data
 
 
-def clean_response_data(response: ResultsOut):
-    data = response.dict(exclude={"results": {"__all__": {"context"}}})
+def clean_response_data(store_context, response: ResultsOut):
+    if store_context:
+        results_hidden_fields = {"label", "reason", "solution"}
+    else:
+        results_hidden_fields = {"label", "reason", "solution", "context"}
+
+    data = response.dict(exclude={"results": {"__all__": results_hidden_fields}})
 
     return data
 
@@ -584,7 +589,9 @@ def collect_user_training_data(
     else:
         data = {
             "request": clean_request_data(request, user_request_in),
-            "response": clean_response_data(response),
+            "response": clean_response_data(
+                user_request_in.config.store_context, response
+            ),
         }
 
     data["$useragent"] = request.headers.get("user-agent")
