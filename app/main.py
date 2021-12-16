@@ -80,9 +80,11 @@ logging.debug("app started with settings: %s", settings)
 # convert string of list into list of the strings
 # project models
 
+version = "1.8.0"
+
 app = FastAPI(
     title="Witty NLP API",
-    version="1.7.5",
+    version=version,
     docs_url=None,
     redoc_url=None,
     openapi_url=None,
