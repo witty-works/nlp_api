@@ -32,9 +32,21 @@ from fastapi.exception_handlers import (
 
 from typing import Optional
 
+import spacy
 from spacy.tokens import Doc
 from spacy.matcher import PhraseMatcher, Matcher
-import spacy
+from spacy.tokenizer import Tokenizer
+from spacy.lang.char_classes import (
+    ALPHA,
+    ALPHA_LOWER,
+    ALPHA_UPPER,
+    CONCAT_QUOTES,
+    LIST_ELLIPSES,
+    LIST_ICONS,
+)
+from spacy.util import compile_infix_regex
+
+
 import pandas as pd
 
 from app.models import (
@@ -109,8 +121,40 @@ for language in languages:
             "rules." + category + "_label"
         )
 
+# Custom tokenizer
+def custom_tokenizer(nlp):
+    infixes = (
+        LIST_ELLIPSES
+        + LIST_ICONS
+        + [
+            r"(?<=[0-9])[+\-\*^](?=[0-9-])",
+            r"(?<=[{al}{q}])\.(?=[{au}{q}])".format(
+                al=ALPHA_LOWER, au=ALPHA_UPPER, q=CONCAT_QUOTES
+            ),
+            r"(?<=[{a}]),(?=[{a}])".format(a=ALPHA),
+            # r"(?<=[{a}])(?:{h})(?=[{a}])".format(a=ALPHA, h=HYPHENS),
+            r"(?<=[{a}0-9])[:<>=/](?=[{a}])".format(a=ALPHA),
+        ]
+    )
+
+    infix_re = compile_infix_regex(infixes)
+
+    return Tokenizer(
+        nlp.vocab,
+        prefix_search=nlp.tokenizer.prefix_search,
+        suffix_search=nlp.tokenizer.suffix_search,
+        infix_finditer=infix_re.finditer,
+        token_match=nlp.tokenizer.token_match,
+        rules=nlp.Defaults.tokenizer_exceptions,
+    )
+
+
 # Model data
 model = {"en": spacy.load("en_core_web_sm"), "de": spacy.load("de_core_news_sm")}
+
+# custom lematizer for English
+model["en"].tokenizer = custom_tokenizer(model["en"])
+
 # custom lematizer to correct the lemmas in spacy library, to add to the curent spacy lematizer
 dict_lemma_lookup = {
     "international": "international",
@@ -224,6 +268,11 @@ df_inclusive_sentence_en = pd.read_csv("training_data/inclusive_sentences_EN.csv
 # load style words
 df_style_word_en = pd.read_csv("training_data/style_words_EN.csv")
 df_style_sentence_en = pd.read_csv("training_data/style_sentences_EN.csv")
+
+# load gendered language
+df_gendered_no_noun_word_en = pd.read_csv("training_data/gendered_no_noun_words_EN.csv")
+df_gendered_sentence_en = pd.read_csv("training_data/gendered_sentences_EN.csv")
+df_gendered_noun_word_en = pd.read_csv("training_data/gendered_noun_words_EN.csv")
 
 # dictionaries to handle false positives
 false_positive_agentic = ["selbst", "flexible", "Probleme", "unabhängig", "Entwickler"]
@@ -790,6 +839,24 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
             df_style_word_en,
             df_style_sentence_en,
             "style",
+        )
+
+    if "gendered" not in user_request_in.config.disabled_categories:
+        list_full += RulesBasedWordsPhraseMatcherUN(
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            df_gendered_no_noun_word_en,
+            df_gendered_sentence_en,
+            "gendered",
+        ) + GenderedEN(
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            df_gendered_noun_word_en,
+            "gendered",
         )
 
     return list_full
@@ -1405,6 +1472,53 @@ def RulesBasedWordsPhraseMatcherUN(
                         ast.literal_eval(alternative),
                     )
                 )
+
+    return list_tokens
+
+
+# english function to show plural and singular forms of alternatives for nouns
+
+
+def GenderedEN(config: Config, lang, full_text, tokens, df, category):
+    list_tokens = []
+
+    for token in tokens:
+        for word, alternative_sing, alternative_plur, subcategory in zip(
+            df["Lemma"],
+            df["Sg_all_split"],
+            df["Pl_all_split"],
+            df["Primary_subcategory"],
+        ):
+            if token.lemma_ == word:
+                if token.morph.get("Number")[0] == "Sing":
+                    list_tokens.append(
+                        ResultOut.factory(
+                            config,
+                            lang,
+                            token.text,
+                            full_text,
+                            category,
+                            subcategory,
+                            token.idx,
+                            token.idx + len(token.text),
+                            ast.literal_eval(alternative_sing),
+                        )
+                    )
+
+                elif token.morph.get("Number")[0] == "Plur":
+                    list_tokens.append(
+                        ResultOut.factory(
+                            config,
+                            lang,
+                            token.text,
+                            full_text,
+                            category,
+                            subcategory,
+                            token.idx,
+                            token.idx + len(token.text),
+                            ast.literal_eval(alternative_plur),
+                        )
+                    )
 
     return list_tokens
 
