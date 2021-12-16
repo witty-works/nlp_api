@@ -32,9 +32,21 @@ from fastapi.exception_handlers import (
 
 from typing import Optional
 
+import spacy
 from spacy.tokens import Doc
 from spacy.matcher import PhraseMatcher, Matcher
-import spacy
+from spacy.tokenizer import Tokenizer
+from spacy.lang.char_classes import (
+    ALPHA,
+    ALPHA_LOWER,
+    ALPHA_UPPER,
+    CONCAT_QUOTES,
+    LIST_ELLIPSES,
+    LIST_ICONS,
+)
+from spacy.util import compile_infix_regex
+
+
 import pandas as pd
 
 from app.models import (
@@ -109,8 +121,40 @@ for language in languages:
             "rules." + category + "_label"
         )
 
+# Custom tokenizer
+def custom_tokenizer(nlp):
+    infixes = (
+        LIST_ELLIPSES
+        + LIST_ICONS
+        + [
+            r"(?<=[0-9])[+\-\*^](?=[0-9-])",
+            r"(?<=[{al}{q}])\.(?=[{au}{q}])".format(
+                al=ALPHA_LOWER, au=ALPHA_UPPER, q=CONCAT_QUOTES
+            ),
+            r"(?<=[{a}]),(?=[{a}])".format(a=ALPHA),
+            # r"(?<=[{a}])(?:{h})(?=[{a}])".format(a=ALPHA, h=HYPHENS),
+            r"(?<=[{a}0-9])[:<>=/](?=[{a}])".format(a=ALPHA),
+        ]
+    )
+
+    infix_re = compile_infix_regex(infixes)
+
+    return Tokenizer(
+        nlp.vocab,
+        prefix_search=nlp.tokenizer.prefix_search,
+        suffix_search=nlp.tokenizer.suffix_search,
+        infix_finditer=infix_re.finditer,
+        token_match=nlp.tokenizer.token_match,
+        rules=nlp.Defaults.tokenizer_exceptions,
+    )
+
+
 # Model data
 model = {"en": spacy.load("en_core_web_sm"), "de": spacy.load("de_core_news_sm")}
+
+# custom lematizer for English
+model["en"].tokenizer = custom_tokenizer(model["en"])
+
 # custom lematizer to correct the lemmas in spacy library, to add to the curent spacy lematizer
 dict_lemma_lookup = {
     "international": "international",
