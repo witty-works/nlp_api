@@ -1,0 +1,32 @@
+from typing import Optional, List
+from pydantic import BaseSettings
+from functools import lru_cache
+
+class Settings(BaseSettings):
+    """Load environment variables to python objects using pydantic."""
+
+    logging_enabled: bool = False
+    logging_config_filename: str = "./logs/error.log"
+    logging_config_level: str = "ERROR"
+    training_data_enabled: bool = False
+    platform_environment: str = "local"
+    languagetool_api: Optional[str]
+    languagetool_verify_ssl: bool = True
+    platform_relationships: Optional[str]
+    api_docs_username: Optional[str]
+    api_docs_password: Optional[str]
+    api_docs_auth_enabled: bool = False
+    instrumentation_key: str = ""
+    testing: bool = False
+    read_rules_from_redis: bool = False
+    posthog_api_key: Optional[str]
+    posthog_host: Optional[str]
+    posthog_ids: List[str] = []
+
+    class Config:
+        env_file = ".env"
+
+
+@lru_cache()
+def get_settings():
+    return Settings()

@@ -1,30 +1,12 @@
-import platformshconfig
-from app.models import (
-    Config,
-    LangType,
-    Lang,
-    RequestIn,
-    RequestInEvent,
-    ResultOut,
-    ResultsOut,
-    ConfRequest,
-)
 import ast
-
 import re
-from spacy.tokens import Doc
-from spacy.matcher import PhraseMatcher, Matcher
-import spacy
-import pandas as pd
 from datetime import datetime
 import uvicorn
 import os
 import json
-import base64
 import secrets
 import aiohttp
 import copy
-from functools import lru_cache
 
 from fastapi import (
     FastAPI,
@@ -48,123 +30,61 @@ from fastapi.exception_handlers import (
     http_exception_handler,
 )
 
-from typing import List, Optional
-from pydantic import BaseSettings
+from typing import Optional
+
+import spacy
+from spacy.tokens import Doc
+from spacy.matcher import PhraseMatcher, Matcher
+from spacy.tokenizer import Tokenizer
+from spacy.lang.char_classes import (
+    ALPHA,
+    ALPHA_LOWER,
+    ALPHA_UPPER,
+    CONCAT_QUOTES,
+    LIST_ELLIPSES,
+    LIST_ICONS,
+)
+from spacy.util import compile_infix_regex
+
+
+import pandas as pd
+
+from app.models import (
+    Config,
+    LangType,
+    Lang,
+    RequestIn,
+    RequestInEvent,
+    ResultOut,
+    ResultsOut,
+    ConfRequest,
+)
+
 from app.categories import categories
-
-import logging
-
-from redis import Redis
-import platformshconfig
-from fakeredis import FakeStrictRedis
-
-import posthog
-
-
-class Settings(BaseSettings):
-    """Load environment variables to python objects using pydantic."""
-
-    logging_enabled: bool = False
-    logging_config_filename: str = "./logs/error.log"
-    logging_config_level: str = "ERROR"
-    training_data_enabled: bool = False
-    platform_environment: str = "local"
-    languagetool_api: Optional[str]
-    languagetool_verify_ssl: bool = True
-    platform_relationships: Optional[str]
-    api_docs_username: Optional[str]
-    api_docs_password: Optional[str]
-    api_docs_auth_enabled: bool = False
-    instrumentation_key: str = ""
-    testing: bool = False
-    read_rules_from_redis: bool = False
-    posthog_api_key: Optional[str]
-    posthog_host: Optional[str]
-    posthog_ids: List[str] = []
-
-    class Config:
-        env_file = ".env"
-
-
-@lru_cache()
-def get_settings():
-    return Settings()
+from app.settings import get_settings
+from app.logger import set_up_logger
+from app.posthog import set_up_posthog
+from app.redis import set_up_redis
+from app.languagetool import get_languagetool_url
 
 
 settings = get_settings()
+logging = set_up_logger(settings)
+posthog = set_up_posthog(settings)
+languagetool_url = get_languagetool_url(settings)
+redis = set_up_redis(settings)
 
-# Logging set up
-@lru_cache()
-def set_up_logger():
-    logging.basicConfig(level=settings.logging_config_level)
-    logging.getLogger().handlers.clear()
-    formatter = logging.Formatter("[%(asctime)s] %(name)s %(levelname)s - %(message)s")
-
-    if settings.logging_enabled:
-        if settings.instrumentation_key:
-            from opencensus.ext.azure.log_exporter import AzureLogHandler
-
-            ah = AzureLogHandler(
-                connection_string="InstrumentationKey={}".format(
-                    settings.instrumentation_key
-                )
-            )
-            ah.setFormatter(formatter)
-            logging.getLogger().addHandler(ah)
-        else:
-            filename = os.path.abspath(settings.logging_config_filename)
-            os.makedirs(os.path.dirname(filename), exist_ok=True)
-            fh = logging.FileHandler(filename=filename)
-            fh.setFormatter(formatter)
-            logging.getLogger().addHandler(fh)
-    else:
-        logging.getLogger().addHandler(logging.NullHandler())
-
-
-set_up_logger()
 logging.debug("app started with settings: %s", settings)
-
-
-@lru_cache()
-def setup_posthog():
-    if not settings.training_data_enabled:
-        return
-
-    posthog.api_key = settings.posthog_api_key
-    posthog.host = settings.posthog_host
-
-    if settings.logging_enabled:
-        posthog.debug = True
-
-    if settings.testing:
-        posthog.disabled = True
-
-
-setup_posthog()
-
-# Languagetool URL
-@lru_cache()
-def get_languagetool_url():
-    if settings.languagetool_api:
-        return settings.languagetool_api
-
-    if settings.platform_relationships:
-        relationships = json.loads(base64.b64decode(settings.platform_relationships))
-        languagetool = relationships["languagetool"][0]
-        return "%(scheme)s://%(host)s:%(port)d/v2" % languagetool
-
-    return "https://lt.default.api.witty.works/v2"
-
-
-languagetool_url = get_languagetool_url()
 
 # Regular expression library
 # convert string of list into list of the strings
 # project models
 
+version = "1.8.0"
+
 app = FastAPI(
     title="Witty NLP API",
-    version="1.7.5",
+    version=version,
     docs_url=None,
     redoc_url=None,
     openapi_url=None,
@@ -203,8 +123,40 @@ for language in languages:
             "rules." + category + "_label"
         )
 
+# Custom tokenizer
+def custom_tokenizer(nlp):
+    infixes = (
+        LIST_ELLIPSES
+        + LIST_ICONS
+        + [
+            r"(?<=[0-9])[+\-\*^](?=[0-9-])",
+            r"(?<=[{al}{q}])\.(?=[{au}{q}])".format(
+                al=ALPHA_LOWER, au=ALPHA_UPPER, q=CONCAT_QUOTES
+            ),
+            r"(?<=[{a}]),(?=[{a}])".format(a=ALPHA),
+            # r"(?<=[{a}])(?:{h})(?=[{a}])".format(a=ALPHA, h=HYPHENS),
+            r"(?<=[{a}0-9])[:<>=/](?=[{a}])".format(a=ALPHA),
+        ]
+    )
+
+    infix_re = compile_infix_regex(infixes)
+
+    return Tokenizer(
+        nlp.vocab,
+        prefix_search=nlp.tokenizer.prefix_search,
+        suffix_search=nlp.tokenizer.suffix_search,
+        infix_finditer=infix_re.finditer,
+        token_match=nlp.tokenizer.token_match,
+        rules=nlp.Defaults.tokenizer_exceptions,
+    )
+
+
 # Model data
 model = {"en": spacy.load("en_core_web_sm"), "de": spacy.load("de_core_news_sm")}
+
+# custom lematizer for English
+model["en"].tokenizer = custom_tokenizer(model["en"])
+
 # custom lematizer to correct the lemmas in spacy library, to add to the curent spacy lematizer
 dict_lemma_lookup = {
     "international": "international",
@@ -319,6 +271,11 @@ df_inclusive_sentence_en = pd.read_csv("training_data/inclusive_sentences_EN.csv
 df_style_word_en = pd.read_csv("training_data/style_words_EN.csv")
 df_style_sentence_en = pd.read_csv("training_data/style_sentences_EN.csv")
 
+# load gendered language
+df_gendered_no_noun_word_en = pd.read_csv("training_data/gendered_no_noun_words_EN.csv")
+df_gendered_sentence_en = pd.read_csv("training_data/gendered_sentences_EN.csv")
+df_gendered_noun_word_en = pd.read_csv("training_data/gendered_noun_words_EN.csv")
+
 # dictionaries to handle false positives
 false_positive_agentic = ["selbst", "flexible", "Probleme", "unabhängig", "Entwickler"]
 false_positive_style = ["international"]
@@ -334,19 +291,6 @@ exceptions = [
 ]
 gender_false_positive = genderdenom_false_positives["False_positives"].tolist()
 
-
-@app.get("/companyRules")
-async def get_redis(user: str):
-    try:
-        keys = redis.keys("*")
-        for key in keys:
-            user_list = json.loads(redis.get(key))["users"]
-            if user in user_list:
-                return json.loads(redis.get(key))
-    except Exception as e:
-        return e
-
-
 # corporate false positive DB
 corporate_false_positive = [
     "stark",
@@ -359,16 +303,6 @@ corporate_false_positive = [
 ]
 terms_false_positive = gender_false_positive + corporate_false_positive
 false_positive_agentic += corporate_false_positive
-
-# read redis configuration
-
-if settings.testing == True:
-    redis = FakeStrictRedis()
-else:
-    platform_config = platformshconfig.Config()
-    if platform_config.is_valid_platform():
-        redis_credentials = platform_config.credentials("rediscache")
-        redis = Redis(redis_credentials["host"], redis_credentials["port"])
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -509,6 +443,18 @@ async def store_redis(corporate_rules: ConfRequest):
     except Exception as e:
         return e
     return company_object
+
+
+@app.get("/companyRules")
+async def get_redis(user: str):
+    try:
+        keys = redis.keys("*")
+        for key in keys:
+            user_list = json.loads(redis.get(key))["users"]
+            if user in user_list:
+                return json.loads(redis.get(key))
+    except Exception as e:
+        return e
 
 
 # Functions
@@ -668,14 +614,18 @@ def clean_request_data(request: Request, user_request_in: RequestIn):
     data["text"] = {
         "length": len(user_request_in.text),
     }
-    data["user_agent"] = request.headers.get("user-agent")
     data["origin"] = request.headers.get("origin")
 
     return data
 
 
-def clean_response_data(response: ResultsOut):
-    data = response.dict(exclude={"results": {"__all__": {"context"}}})
+def clean_response_data(store_context, response: ResultsOut):
+    if store_context:
+        results_hidden_fields = {"label", "reason", "solution"}
+    else:
+        results_hidden_fields = {"label", "reason", "solution", "context"}
+
+    data = response.dict(exclude={"results": {"__all__": results_hidden_fields}})
 
     return data
 
@@ -690,8 +640,12 @@ def collect_user_training_data(
     else:
         data = {
             "request": clean_request_data(request, user_request_in),
-            "response": clean_response_data(response),
+            "response": clean_response_data(
+                user_request_in.config.store_context, response
+            ),
         }
+
+    data["$useragent"] = request.headers.get("user-agent")
 
     return data
 
@@ -705,7 +659,9 @@ def write_user_training_data(
     data = collect_user_training_data(request, user_request_in, response)
 
     if user_request_in.id in settings.posthog_ids:
-        posthog.capture(user_request_in.id, user_request_in.type, data)
+        # TODO read user/company group from redis data
+        groups = {"user": "dashboard:0", "company": "dashboard:0"}
+        posthog.capture(user_request_in.id, user_request_in.type, data, groups=groups)
 
     date = datetime.utcnow().strftime("%Y-%m-%d")
 
@@ -885,6 +841,24 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
             df_style_word_en,
             df_style_sentence_en,
             "style",
+        )
+
+    if "gendered" not in user_request_in.config.disabled_categories:
+        list_full += RulesBasedWordsPhraseMatcherUN(
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            df_gendered_no_noun_word_en,
+            df_gendered_sentence_en,
+            "gendered",
+        ) + GenderedEN(
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            df_gendered_noun_word_en,
+            "gendered",
         )
 
     return list_full
@@ -1500,6 +1474,53 @@ def RulesBasedWordsPhraseMatcherUN(
                         ast.literal_eval(alternative),
                     )
                 )
+
+    return list_tokens
+
+
+# english function to show plural and singular forms of alternatives for nouns
+
+
+def GenderedEN(config: Config, lang, full_text, tokens, df, category):
+    list_tokens = []
+
+    for token in tokens:
+        for word, alternative_sing, alternative_plur, subcategory in zip(
+            df["Lemma"],
+            df["Sg_all_split"],
+            df["Pl_all_split"],
+            df["Primary_subcategory"],
+        ):
+            if token.lemma_ == word:
+                if token.morph.get("Number")[0] == "Sing":
+                    list_tokens.append(
+                        ResultOut.factory(
+                            config,
+                            lang,
+                            token.text,
+                            full_text,
+                            category,
+                            subcategory,
+                            token.idx,
+                            token.idx + len(token.text),
+                            ast.literal_eval(alternative_sing),
+                        )
+                    )
+
+                elif token.morph.get("Number")[0] == "Plur":
+                    list_tokens.append(
+                        ResultOut.factory(
+                            config,
+                            lang,
+                            token.text,
+                            full_text,
+                            category,
+                            subcategory,
+                            token.idx,
+                            token.idx + len(token.text),
+                            ast.literal_eval(alternative_plur),
+                        )
+                    )
 
     return list_tokens
 

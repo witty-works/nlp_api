@@ -213,7 +213,7 @@ class ResultOut(BaseModel):
 
         # remove '-' if multiple alternatives are provided
         # until https://github.com/witty-works/browser-extension/issues/189 is implemented
-        if "-" in alternatives and len(alternatives) > 1:
+        if len(alternatives) > 1 and alternatives[0] != "-" and "-" in alternatives:
             alternatives.remove("-")
 
         rewrite_to_swiss_german = False
