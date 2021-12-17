@@ -81,7 +81,6 @@ logging.debug("app started with settings: %s", settings)
 # project models
 
 version = "1.8.0"
-
 app = FastAPI(
     title="Witty NLP API",
     version=version,
@@ -123,8 +122,9 @@ for language in languages:
             "rules." + category + "_label"
         )
 
-# Custom tokenizer
-def custom_tokenizer(nlp):
+# Custom tokenizers
+# English
+def custom_tokenizer_en(nlp):
     infixes = (
         LIST_ELLIPSES
         + LIST_ICONS
@@ -134,8 +134,40 @@ def custom_tokenizer(nlp):
                 al=ALPHA_LOWER, au=ALPHA_UPPER, q=CONCAT_QUOTES
             ),
             r"(?<=[{a}]),(?=[{a}])".format(a=ALPHA),
+            # hyphen excluded from separators
             # r"(?<=[{a}])(?:{h})(?=[{a}])".format(a=ALPHA, h=HYPHENS),
             r"(?<=[{a}0-9])[:<>=/](?=[{a}])".format(a=ALPHA),
+        ]
+    )
+
+    infix_re = compile_infix_regex(infixes)
+
+    return Tokenizer(
+        nlp.vocab,
+        prefix_search=nlp.tokenizer.prefix_search,
+        suffix_search=nlp.tokenizer.suffix_search,
+        infix_finditer=infix_re.finditer,
+        token_match=nlp.tokenizer.token_match,
+        rules=nlp.Defaults.tokenizer_exceptions,
+    )
+
+
+# German
+def custom_tokenizer_de(nlp):
+    _quotes = CONCAT_QUOTES.replace("'", "")
+    infixes = (
+        LIST_ELLIPSES
+        + LIST_ICONS
+        + [
+            r"(?<=[{al}])\.(?=[{au}])".format(al=ALPHA_LOWER, au=ALPHA_UPPER),
+            r"(?<=[{a}])[,!?](?=[{a}])".format(a=ALPHA),
+            # removed : [:<>=]
+            r"(?<=[{a}])[<>=](?=[{a}])".format(a=ALPHA),
+            r"(?<=[{a}]),(?=[{a}])".format(a=ALPHA),
+            r"(?<=[0-9{a}])\/(?=[0-9{a}])".format(a=ALPHA),
+            r"(?<=[{a}])([{q}\)\]\(\[])(?=[{a}])".format(a=ALPHA, q=_quotes),
+            r"(?<=[{a}])--(?=[{a}])".format(a=ALPHA),
+            r"(?<=[0-9])-(?=[0-9])",
         ]
     )
 
@@ -154,8 +186,11 @@ def custom_tokenizer(nlp):
 # Model data
 model = {"en": spacy.load("en_core_web_sm"), "de": spacy.load("de_core_news_sm")}
 
-# custom lematizer for English
-model["en"].tokenizer = custom_tokenizer(model["en"])
+# custom tokenizer for English
+model["en"].tokenizer = custom_tokenizer_en(model["en"])
+
+# custom tokenizer for German
+model["de"].tokenizer = custom_tokenizer_de(model["de"])
 
 # custom lematizer to correct the lemmas in spacy library, to add to the curent spacy lematizer
 dict_lemma_lookup = {
