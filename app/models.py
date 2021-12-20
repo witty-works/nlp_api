@@ -103,7 +103,6 @@ class ForcedConfig(BaseModel):
     }
     disabled_categories: Optional[List]
     gendered_roles_format: Optional[GenderedRolesFormatType]
-    corporate_false_positive: Optional[List] = []
 
     @validator("german_gender_ending")
     def valid_german_gender_ending(cls, v: str):
@@ -123,6 +122,7 @@ class ConfRequest(BaseModel):
     users: list
     forced: ForcedConfig
     suggestion: Config
+    false_positive: Optional[list] = []
 
 
 class RequestIn(BaseModel):

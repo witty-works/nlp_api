@@ -67,6 +67,7 @@ from app.posthog import set_up_posthog
 from app.redis import set_up_redis
 from app.languagetool import get_languagetool_url
 
+from collections import namedtuple
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -312,7 +313,13 @@ df_gendered_sentence_en = pd.read_csv("training_data/gendered_sentences_EN.csv")
 df_gendered_noun_word_en = pd.read_csv("training_data/gendered_noun_words_EN.csv")
 
 # dictionaries to handle false positives
-false_positive_agentic = ["selbst", "flexible", "Probleme", "unabhängig", "Entwickler"]
+false_positive_agentic_const = [
+    "selbst",
+    "flexible",
+    "Probleme",
+    "unabhängig",
+    "Entwickler",
+]
 false_positive_style = ["international"]
 exceptions = [
     "Unternehmen",
@@ -327,17 +334,33 @@ exceptions = [
 gender_false_positive = genderdenom_false_positives["False_positives"].tolist()
 
 # corporate false positive DB
-corporate_false_positive = [
-    "stark",
-    "starke",
-    "starkes",
-    "starker",
-    "Führungskraft",
-    "Führungskräfte",
-    "Führungskräften",
-]
-terms_false_positive = gender_false_positive + corporate_false_positive
-false_positive_agentic += corporate_false_positive
+def get_false_positive_from_redis(userId: str):
+    keys = redis.keys("*")
+    for key in keys:
+        user_list = json.loads(redis.get(key))["users"]
+        if userId in user_list:
+            return json.loads(redis.get(key))["false_positive"]
+        else:
+            return []
+
+
+FalsePositive = namedtuple("FalsePositive", "gender agentic")
+# TODO: userId will be taken from the authentication token
+def get_false_positive(gender_false_positive, false_positive_agentic_const, userId=""):
+    corporate_false_positive = []
+    if userId:
+        corporate_false_positive = get_false_positive_from_redis(userId)
+    # FalsePositive = namedtuple("FalsePositive", "gender agentic")
+    fp = FalsePositive(
+        gender_false_positive + corporate_false_positive,
+        false_positive_agentic_const + corporate_false_positive,
+    )
+    return fp
+
+
+# terms_false_positive = gender_false_positive + corporate_false_positive
+# false_positive_agentic += corporate_false_positive
+false_positive = get_false_positive(gender_false_positive, false_positive_agentic_const)
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -471,6 +494,7 @@ async def store_redis(corporate_rules: ConfRequest):
                 "forced": dict(corporate_rules.forced),
                 "suggestion": dict(corporate_rules.suggestion),
             },
+            "false_positive": corporate_rules.false_positive,
         }
 
         # Set a value
@@ -488,6 +512,9 @@ async def get_redis(user: str):
             user_list = json.loads(redis.get(key))["users"]
             if user in user_list:
                 return json.loads(redis.get(key))
+            # test
+            else:
+                return []
     except Exception as e:
         return e
 
@@ -953,7 +980,7 @@ def AgenticLanguageAnalysis(config: Config, lang, full_text, tokens, df):
 
     for token in tokens:
         # check if the user query have false positives
-        if IsItFalsePositive(token.lemma_, false_positive_agentic):
+        if IsItFalsePositive(token.lemma_, false_positive.agentic):
             # recognise if there is Name of organisation or geographical name in the query
             for entity in tokens.ents:
                 if entity.label_ == "ORG":
@@ -971,7 +998,7 @@ def AgenticLanguageAnalysis(config: Config, lang, full_text, tokens, df):
             elif token.pos_ == "ADJ":  # or token.tag_== "ADJD":
                 dic_anc[token.lemma_] = list(token.ancestors)
                 for key in dic_anc.keys():
-                    if key in false_positive_agentic:
+                    if key in false_positive.agentic:
                         for item in dic_anc[key]:
                             if item.text in exceptions:
                                 list_false_positives.append(
@@ -1008,7 +1035,7 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
     matcher = PhraseMatcher(model[lang.locale].vocab)
 
     # Only run model.make_doc to speed things up
-    patterns = [model[lang.locale].make_doc(text) for text in terms_false_positive]
+    patterns = [model[lang.locale].make_doc(text) for text in false_positive.gender]
     matcher.add("TerminologyList", patterns)
     matches = matcher(tokens)
 
