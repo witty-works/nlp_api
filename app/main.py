@@ -119,9 +119,14 @@ for language in languages:
     lang = Lang(language)
     categories_with_labels[language] = copy.deepcopy(categories)
     for category in categories_with_labels[language]:
+        parent_category = categories[category]["category"]
+        color = categories[parent_category]["color"]
+        categories_with_labels[language][category]["color"] = color
+
         categories_with_labels[language][category]["label"] = lang._(
             "rules." + category + "_label"
         )
+
 
 # Custom tokenizers
 # English
@@ -1425,7 +1430,7 @@ def RulesBased(config: Config, lang, full_text, tokens, df, category, subcategor
 
 def MisgenderingInstitutions(config: Config, lang, full_text, tokens):
     subcategory = "misgendering_institutions"
-    category = categories[subcategory]['category']
+    category = categories[subcategory]["category"]
     db_match_list = []
     matcher_db = Matcher(model[lang.locale].vocab)
     # Add match ID "DB" with no callback and one pattern
