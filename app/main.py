@@ -1203,7 +1203,7 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
 def ExaggeratingWordsSentences(
     config: Config, lang, full_text, tokens, df, df_sentences
 ):
-    category = "style"
+    category = "unconscious_bias"
     subcategory = "exaggerating"
     list_tokens = []
     # Phrase matcher part to handle False positives with two words and special simbols
