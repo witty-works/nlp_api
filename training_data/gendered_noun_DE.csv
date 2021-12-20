@@ -179,7 +179,7 @@ Rangierer,s,,gendered,titles,,"['Rangierperson', 'Rangierbetrieb', 'Rangierer~in
 Recyclist,s,,gendered,titles,americanism,"['Recycling', 'Recyclist~in~/~Recyclist']",['Recycling']
 Reiniger,s,,gendered,titles,,"['Reinigungskraft', 'Reinigung', 'Reiniger~in~/~Reiniger']",['Reinigung']
 Reparateur,s,,gendered,titles,,"['Reparatur', 'Reparateur~in~/~Reparateur']",['Reparatur']
-Researcher,s,,gendered,titles,,"['Research', 'Researcher~in~/~Researcher', 'Forscher~in~/~Foscher', 'Researchteam', 'Recherchierende', 'Forschende', 'Person, die recherchiert', 'Person, die forscht']","['Recherchierende', 'Forschende', 'Researcher~innen~ und ~Researcher', 'Forscher~innen~ und ~Forscher', 'Researchteam', 'Research', 'Personen, die recherchieren', 'Personen, die forschen']"
+Researcher,s,,gendered,titles,,"['Research', 'Researcher~in~/~Researcher', 'Forscher~in~/~Forscher', 'Researchteam', 'Recherchierende', 'Forschende', 'Person, die recherchiert', 'Person, die forscht']","['Recherchierende', 'Forschende', 'Researcher~innen~ und ~Researcher', 'Forscher~innen~ und ~Forscher', 'Researchteam', 'Research', 'Personen, die recherchieren', 'Personen, die forschen']"
 Säger,s,,gendered,titles,,"['Sägerei', 'Sägemühle', 'Säger~in~/~Säger']","['Sägerei', 'Sägemühle']"
 Schlosser,s,,gendered,titles,,"['Schlosserei', 'Schlosser~in~/~Schlosser']",['Schlosserei']
 Schmied,s,,gendered,titles,,"['Schmiede', 'Schmied~in~/~Schmied']",['Schmiede']
