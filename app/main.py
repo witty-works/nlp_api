@@ -770,32 +770,48 @@ def GetNonNounLowerCased(token):
     return token_word
 
 
+def IsSubCategoryEnabled(subcategory, disabled_categories):
+    return categories[subcategory]["category"] not in disabled_categories
+
+
 def GermanRules(lang, tokens, user_request_in: RequestIn):
     list_full = []
 
-    # Agentic language and related false positives catch
-    if "agentic" not in user_request_in.config.disabled_categories:
-        list_full += AgenticLanguageAnalysis(
-            user_request_in.config, lang, user_request_in.text, tokens, df_agentic_ct
+    disabled_categories = user_request_in.config.disabled_categories
+
+    if IsSubCategoryEnabled("openly_discriminating", disabled_categories):
+        list_full += RulesBasedWordsPhraseMatcherUN(
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            df_open_dis_word_de,
+            df_open_dis_sentence_de,
+            "openly_discriminating",
         )
 
-    if "gendered" not in user_request_in.config.disabled_categories:
+    if IsSubCategoryEnabled("gendered", disabled_categories):
         list_full += GenderedDenomAnalysis(
             user_request_in.config, lang, user_request_in.text, tokens, df_gender_ct
         )
 
-    if "misgendered_institutions" not in user_request_in.config.disabled_categories:
+    if IsSubCategoryEnabled(
+        "misgendering_institutions", user_request_in.config.disabled_categories
+    ):
         list_full += MisgenderingInstitutions(
             user_request_in.config, lang, user_request_in.text, tokens
         )
 
-    if "gendered_denomination_ending" not in user_request_in.config.disabled_categories:
+    if IsSubCategoryEnabled(
+        "gendered_denominations_ending", user_request_in.config.disabled_categories
+    ):
         list_full += GenderedDenomEnd(
             user_request_in.config, lang, user_request_in.text
         )
 
-    # discriminating words catch
-    if "unconscious_bias" not in user_request_in.config.disabled_categories:
+    if IsSubCategoryEnabled(
+        "unconscious_bias", user_request_in.config.disabled_categories
+    ):
         list_full += RulesBased(
             user_request_in.config,
             lang,
@@ -806,8 +822,22 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             "unconscious_bias",
         )
 
-    # communal terms
-    if "communal" not in user_request_in.config.disabled_categories:
+    if IsSubCategoryEnabled("agentic", disabled_categories):
+        list_full += AgenticLanguageAnalysis(
+            user_request_in.config, lang, user_request_in.text, tokens, df_agentic_ct
+        )
+
+    if IsSubCategoryEnabled("exaggerating", disabled_categories):
+        list_full += ExaggeratingWordsSentences(
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            df_exaggerating,
+            df_exaggerating_sentences,
+        )
+
+    if IsSubCategoryEnabled("communal", disabled_categories):
         list_full += RulesBased(
             user_request_in.config,
             lang,
@@ -818,8 +848,7 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             "communal",
         )
 
-    # d_and_i_words words
-    if "d_and_i" not in user_request_in.config.disabled_categories:
+    if IsSubCategoryEnabled("d_and_i", disabled_categories):
         list_full += RulesBasedWordsPhraseMatcher(
             user_request_in.config,
             lang,
@@ -831,8 +860,7 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             "d_and_i",
         )
 
-    # style words&sentences catch
-    if "style" not in user_request_in.config.disabled_categories:
+    if IsSubCategoryEnabled("style", disabled_categories):
         list_full += StyleWordAnalysis(
             user_request_in.config,
             lang,
@@ -843,49 +871,16 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             df_style_sentences,
         )
 
-    # exaggerating words&sentences catch
-    if "exaggerating" not in user_request_in.config.disabled_categories:
-        list_full += ExaggeratingWordsSentences(
-            user_request_in.config,
-            lang,
-            user_request_in.text,
-            tokens,
-            df_exaggerating,
-            df_exaggerating_sentences,
-        )
-    # openly discriminating words&sentences catch de
-    if "openly_discriminating" not in user_request_in.config.disabled_categories:
-        list_full += RulesBasedWordsPhraseMatcherUN(
-            user_request_in.config,
-            lang,
-            user_request_in.text,
-            tokens,
-            df_open_dis_word_de,
-            df_open_dis_sentence_de,
-            "openly_discriminating",
-        )
-
     return list_full
 
 
 # Function for all English rules
-
-
 def EnglishRules(lang, tokens, user_request_in: RequestIn):
     list_full = []
 
-    if "agentic" not in user_request_in.config.disabled_categories:
-        list_full += RulesBasedEN(
-            user_request_in.config,
-            lang,
-            user_request_in.text,
-            tokens,
-            df_agentic_words_en,
-            "unconscious_bias",
-            "agentic",
-        )
+    disabled_categories = user_request_in.config.disabled_categories
 
-    if "openly_discriminating" not in user_request_in.config.disabled_categories:
+    if IsSubCategoryEnabled("openly_discriminating", disabled_categories):
         list_full += RulesBasedWordsPhraseMatcherUN(
             user_request_in.config,
             lang,
@@ -895,28 +890,8 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
             df_open_dis_sentence_en,
             "openly_discriminating",
         )
-    if "inclusive" not in user_request_in.config.disabled_categories:
-        list_full += RulesBasedWordsPhraseMatcherNoAltEN(
-            user_request_in.config,
-            lang,
-            user_request_in.text,
-            tokens,
-            df_inclusive_word_en,
-            df_inclusive_sentence_en,
-            "inclusive",
-        )
-    if "style" not in user_request_in.config.disabled_categories:
-        list_full += RulesBasedWordsPhraseMatcherUN(
-            user_request_in.config,
-            lang,
-            user_request_in.text,
-            tokens,
-            df_style_word_en,
-            df_style_sentence_en,
-            "style",
-        )
 
-    if "gendered" not in user_request_in.config.disabled_categories:
+    if IsSubCategoryEnabled("gendered", disabled_categories):
         list_full += RulesBasedWordsPhraseMatcherUN(
             user_request_in.config,
             lang,
@@ -932,6 +907,39 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
             tokens,
             df_gendered_noun_word_en,
             "gendered",
+        )
+
+    if IsSubCategoryEnabled("agentic", disabled_categories):
+        list_full += RulesBasedEN(
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            df_agentic_words_en,
+            "unconscious_bias",
+            "agentic",
+        )
+
+    if IsSubCategoryEnabled("inclusive", disabled_categories):
+        list_full += RulesBasedWordsPhraseMatcherNoAltEN(
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            df_inclusive_word_en,
+            df_inclusive_sentence_en,
+            "inclusive",
+        )
+
+    if IsSubCategoryEnabled("style", disabled_categories):
+        list_full += RulesBasedWordsPhraseMatcherUN(
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            df_style_word_en,
+            df_style_sentence_en,
+            "style",
         )
 
     return list_full
