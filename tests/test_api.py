@@ -145,7 +145,7 @@ def test_categories():
 
 @pytest.fixture
 def set_redis():
-    company_object = {
+    organization_object = {
         "users": ["test@gmail.com"],
         "config": {
             "forced": {
@@ -170,7 +170,7 @@ def set_redis():
     }
 
     # Set a value
-    redis.set("test", json.dumps(company_object))
+    redis.set("test", json.dumps(organization_object))
 
 
 @pytest.mark.parametrize(
@@ -209,7 +209,7 @@ def test_false_positive(fp_case_dir, snapshot, set_redis):
     snapshot.assert_match(output, "output.json")
 
 
-# test overwriting user configuration by company forced rules
+# test overwriting user configuration by organization forced rules
 def test_set_rules(event_loop, set_redis):
     request_data = {
         "id": "test@gmail.com",
@@ -233,7 +233,7 @@ def test_set_rules(event_loop, set_redis):
     assert test_request.config.gendered_roles_format == "binary_gender"
 
 
-# test not overwriting user configuration by company suggestion/default rules
+# test not overwriting user configuration by organization suggestion/default rules
 
 
 def test_set_rules_suggestion(event_loop, set_redis):
@@ -259,10 +259,10 @@ def test_set_rules_suggestion(event_loop, set_redis):
     assert test_request.config.gendered_roles_format == "inclusive_gender"
 
 
-# test user not set any parameters, but company did
+# test user not set any parameters, but organization did
 
 
-def test_set_company_rules(event_loop, set_redis):
+def test_set_organization_rules(event_loop, set_redis):
     request_data = {
         "id": "test@gmail.com",
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
@@ -277,7 +277,7 @@ def test_set_company_rules(event_loop, set_redis):
     assert test_request.config.gendered_roles_format == "binary_gender"
 
 
-# test user and company didn't set any rules
+# test user and organization didn't set any rules
 
 
 def test_set_default_rules(event_loop):
@@ -301,7 +301,7 @@ def test_set_default_rules(event_loop):
 
 def test_store_rules():
     request_data = {
-        "company": "TEST_COMPANY",
+        "organization": "TEST_organization",
         "users": ["test@gmail.com"],
         "forced": {"gendered_roles_format": "binary_gender"},
         "suggestion": {"german_gender_ending": "In"},

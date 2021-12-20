@@ -488,7 +488,7 @@ async def check_query(
 @app.post("/storeRules")
 async def store_redis(corporate_rules: ConfRequest):
     try:
-        company_object = {
+        organization_object = {
             "users": corporate_rules.users,
             "config": {
                 "forced": dict(corporate_rules.forced),
@@ -498,13 +498,13 @@ async def store_redis(corporate_rules: ConfRequest):
         }
 
         # Set a value
-        redis.set(str(corporate_rules.company), json.dumps(company_object))
+        redis.set(str(corporate_rules.organization), json.dumps(organization_object))
     except Exception as e:
         return e
-    return company_object
+    return organization_object
 
 
-@app.get("/companyRules")
+@app.get("/organizationRules")
 async def get_redis(user: str):
     try:
         keys = redis.keys("*")
@@ -539,40 +539,40 @@ async def set_rules(user_request_in: RequestIn):
             for (k, v) in default_config.items()
             if v != "" and v is not None and v != []
         }
-        company_config = {**default_filtered, **forced_filtered}
+        organization_config = {**default_filtered, **forced_filtered}
 
         for config_value in vars(general_config):
             # user set a value (change, if user not give a key)
             if user_rules[config_value] is not None:
 
-                # company set a value and user can't change it
-                if config_value in company_config and config_value in forced_filtered:
+                # organization set a value and user can't change it
+                if config_value in organization_config and config_value in forced_filtered:
                     # overwrite user value
                     setattr(
                         user_request_in.config,
                         config_value,
                         forced_config[config_value],
                     )
-                # company set a value on default, user can change it
+                # organization set a value on default, user can change it
                 elif (
-                    config_value in company_config and config_value in default_filtered
+                    config_value in organization_config and config_value in default_filtered
                 ):
                     # set user value
                     setattr(
                         user_request_in.config, config_value, user_rules[config_value]
                     )
                 else:
-                    # company does not set a value, user can set a value
+                    # organization does not set a value, user can set a value
                     setattr(
                         user_request_in.config, config_value, user_rules[config_value]
                     )
             else:
-                # user does not set a value, but company did
-                if config_value in company_config:
+                # user does not set a value, but organization did
+                if config_value in organization_config:
                     setattr(
                         user_request_in.config,
                         config_value,
-                        company_config[config_value],
+                        organization_config[config_value],
                     )
 
 
@@ -723,8 +723,8 @@ def write_user_training_data(
     if user_request_in.id in settings.posthog_ids:
         posthog.identify(user_request_in.id)
 
-        # TODO read user/company group from redis data
-        groups = {"user": "dashboard:0", "company": "dashboard:0"}
+        # TODO read user/organization group from redis data
+        groups = {"user": "dashboard:0", "organization": "dashboard:0"}
         posthog.capture(user_request_in.id, user_request_in.type, data, groups=groups)
 
     date = datetime.utcnow().strftime("%Y-%m-%d")
@@ -1010,7 +1010,7 @@ def AgenticLanguageAnalysis(config: Config, lang, full_text, tokens, df):
                                     }
                                 )
         else:
-            for word, alternative in zip(df["Lemma"], df["Alternatives_split_company"]):
+            for word, alternative in zip(df["Lemma"], df["Alternatives_split_organization"]):
                 if GetNonNounLowerCased(token) == word:
                     list_tokens.append(
                         ResultOut.factory(
