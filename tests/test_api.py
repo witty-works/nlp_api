@@ -1,11 +1,21 @@
+from os import pathconf
 import pytest
 from pathlib import Path
 from fastapi.applications import FastAPI
 from fastapi.testclient import TestClient
-from app.main import app, redis, set_rules
+from app.main import (
+    app,
+    redis,
+    set_rules,
+    get_false_positive,
+    gender_false_positive,
+    false_positive,
+)
 import json
 from app.models import RequestIn
 
+from app import main
+from unittest import mock
 
 client = TestClient(app)
 
@@ -133,27 +143,9 @@ def test_categories():
     assert "hollow" in first_record
 
 
-@pytest.mark.parametrize(
-    "fp_case_dir",
-    list(Path("tests/test_false_positive").iterdir()),
-)
-def test_false_positive(fp_case_dir, snapshot):
-
-    # Read input files from the case directory.
-    input_json = fp_case_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    response = client.post("/check", json=json.loads(input_json))
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = fp_case_dir
-    snapshot.assert_match(output, "output.json")
-
-
 @pytest.fixture
 def set_redis():
-    company_object = {
+    organization_object = {
         "users": ["test@gmail.com"],
         "config": {
             "forced": {
@@ -166,15 +158,58 @@ def set_redis():
             },
             "suggestion": {},
         },
+        "false_positive": [
+            "stark",
+            "starke",
+            "starkes",
+            "starker",
+            "Führungskraft",
+            "Führungskräfte",
+            "Führungskräften",
+        ],
     }
 
     # Set a value
-    redis.set("test", json.dumps(company_object))
+    redis.set("test", json.dumps(organization_object))
 
 
-# test overwriting user configuration by company forced rules
+@pytest.mark.parametrize(
+    "fp_case_dir",
+    list(Path("tests/test_false_positive").iterdir()),
+)
+def test_false_positive(fp_case_dir, snapshot, set_redis):
+    false_positive_agentic_const = [
+        "selbst",
+        "flexible",
+        "Probleme",
+        "unabhängig",
+        "Entwickler",
+    ]
+
+    # Read input files from the case directory.
+    input_json = fp_case_dir.joinpath("input.json").read_text()
+    # call set_false_positive_agentic to read data from redis
+    userId = "test@gmail.com"
+    # get_false_positive(gender_false_positive, false_positive_agentic_const, userId)
+    patcher = mock.patch.object(
+        main,
+        "false_positive",
+        get_false_positive(gender_false_positive, false_positive_agentic_const, userId),
+    )
+    patcher.start()
+    # Call the tested endpoint.
+    client = TestClient(app)
+    response = client.post("/check", json=json.loads(input_json))
+    patcher.stop()
+    assert response.status_code == 200
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    # Snapshot the return value.
+    snapshot.snapshot_dir = fp_case_dir
+    snapshot.assert_match(output, "output.json")
 
 
+# test overwriting user configuration by organization forced rules
 def test_set_rules(event_loop, set_redis):
     request_data = {
         "id": "test@gmail.com",
@@ -198,7 +233,7 @@ def test_set_rules(event_loop, set_redis):
     assert test_request.config.gendered_roles_format == "binary_gender"
 
 
-# test not overwriting user configuration by company suggestion/default rules
+# test not overwriting user configuration by organization suggestion/default rules
 
 
 def test_set_rules_suggestion(event_loop, set_redis):
@@ -224,10 +259,10 @@ def test_set_rules_suggestion(event_loop, set_redis):
     assert test_request.config.gendered_roles_format == "inclusive_gender"
 
 
-# test user not set any parameters, but company did
+# test user not set any parameters, but organization did
 
 
-def test_set_company_rules(event_loop, set_redis):
+def test_set_organization_rules(event_loop, set_redis):
     request_data = {
         "id": "test@gmail.com",
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
@@ -242,7 +277,7 @@ def test_set_company_rules(event_loop, set_redis):
     assert test_request.config.gendered_roles_format == "binary_gender"
 
 
-# test user and company didn't set any rules
+# test user and organization didn't set any rules
 
 
 def test_set_default_rules(event_loop):
@@ -266,7 +301,7 @@ def test_set_default_rules(event_loop):
 
 def test_store_rules():
     request_data = {
-        "company": "TEST_COMPANY",
+        "organization": "TEST_organization",
         "users": ["test@gmail.com"],
         "forced": {"gendered_roles_format": "binary_gender"},
         "suggestion": {"german_gender_ending": "In"},

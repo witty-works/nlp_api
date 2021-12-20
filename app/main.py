@@ -67,6 +67,7 @@ from app.posthog import set_up_posthog
 from app.redis import set_up_redis
 from app.languagetool import get_languagetool_url
 
+from collections import namedtuple
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -80,7 +81,7 @@ logging.debug("app started with settings: %s", settings)
 # convert string of list into list of the strings
 # project models
 
-version = "1.8.2"
+version = "1.8.3"
 app = FastAPI(
     title="Witty NLP API",
     version=version,
@@ -312,7 +313,13 @@ df_gendered_sentence_en = pd.read_csv("training_data/gendered_sentences_EN.csv")
 df_gendered_noun_word_en = pd.read_csv("training_data/gendered_noun_words_EN.csv")
 
 # dictionaries to handle false positives
-false_positive_agentic = ["selbst", "flexible", "Probleme", "unabhängig", "Entwickler"]
+false_positive_agentic_const = [
+    "selbst",
+    "flexible",
+    "Probleme",
+    "unabhängig",
+    "Entwickler",
+]
 false_positive_style = ["international"]
 exceptions = [
     "Unternehmen",
@@ -327,17 +334,33 @@ exceptions = [
 gender_false_positive = genderdenom_false_positives["False_positives"].tolist()
 
 # corporate false positive DB
-corporate_false_positive = [
-    "stark",
-    "starke",
-    "starkes",
-    "starker",
-    "Führungskraft",
-    "Führungskräfte",
-    "Führungskräften",
-]
-terms_false_positive = gender_false_positive + corporate_false_positive
-false_positive_agentic += corporate_false_positive
+def get_false_positive_from_redis(userId: str):
+    keys = redis.keys("*")
+    for key in keys:
+        user_list = json.loads(redis.get(key))["users"]
+        if userId in user_list:
+            return json.loads(redis.get(key))["false_positive"]
+        else:
+            return []
+
+
+FalsePositive = namedtuple("FalsePositive", "gender agentic")
+# TODO: userId will be taken from the authentication token
+def get_false_positive(gender_false_positive, false_positive_agentic_const, userId=""):
+    corporate_false_positive = []
+    if userId:
+        corporate_false_positive = get_false_positive_from_redis(userId)
+    # FalsePositive = namedtuple("FalsePositive", "gender agentic")
+    fp = FalsePositive(
+        gender_false_positive + corporate_false_positive,
+        false_positive_agentic_const + corporate_false_positive,
+    )
+    return fp
+
+
+# terms_false_positive = gender_false_positive + corporate_false_positive
+# false_positive_agentic += corporate_false_positive
+false_positive = get_false_positive(gender_false_positive, false_positive_agentic_const)
 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -465,22 +488,23 @@ async def check_query(
 @app.post("/storeRules")
 async def store_redis(corporate_rules: ConfRequest):
     try:
-        company_object = {
+        organization_object = {
             "users": corporate_rules.users,
             "config": {
                 "forced": dict(corporate_rules.forced),
                 "suggestion": dict(corporate_rules.suggestion),
             },
+            "false_positive": corporate_rules.false_positive,
         }
 
         # Set a value
-        redis.set(str(corporate_rules.company), json.dumps(company_object))
+        redis.set(str(corporate_rules.organization), json.dumps(organization_object))
     except Exception as e:
         return e
-    return company_object
+    return organization_object
 
 
-@app.get("/companyRules")
+@app.get("/organizationRules")
 async def get_redis(user: str):
     try:
         keys = redis.keys("*")
@@ -488,6 +512,9 @@ async def get_redis(user: str):
             user_list = json.loads(redis.get(key))["users"]
             if user in user_list:
                 return json.loads(redis.get(key))
+            # test
+            else:
+                return []
     except Exception as e:
         return e
 
@@ -512,40 +539,44 @@ async def set_rules(user_request_in: RequestIn):
             for (k, v) in default_config.items()
             if v != "" and v is not None and v != []
         }
-        company_config = {**default_filtered, **forced_filtered}
+        organization_config = {**default_filtered, **forced_filtered}
 
         for config_value in vars(general_config):
             # user set a value (change, if user not give a key)
             if user_rules[config_value] is not None:
 
-                # company set a value and user can't change it
-                if config_value in company_config and config_value in forced_filtered:
+                # organization set a value and user can't change it
+                if (
+                    config_value in organization_config
+                    and config_value in forced_filtered
+                ):
                     # overwrite user value
                     setattr(
                         user_request_in.config,
                         config_value,
                         forced_config[config_value],
                     )
-                # company set a value on default, user can change it
+                # organization set a value on default, user can change it
                 elif (
-                    config_value in company_config and config_value in default_filtered
+                    config_value in organization_config
+                    and config_value in default_filtered
                 ):
                     # set user value
                     setattr(
                         user_request_in.config, config_value, user_rules[config_value]
                     )
                 else:
-                    # company does not set a value, user can set a value
+                    # organization does not set a value, user can set a value
                     setattr(
                         user_request_in.config, config_value, user_rules[config_value]
                     )
             else:
-                # user does not set a value, but company did
-                if config_value in company_config:
+                # user does not set a value, but organization did
+                if config_value in organization_config:
                     setattr(
                         user_request_in.config,
                         config_value,
-                        company_config[config_value],
+                        organization_config[config_value],
                     )
 
 
@@ -696,8 +727,8 @@ def write_user_training_data(
     if user_request_in.id in settings.posthog_ids:
         posthog.identify(user_request_in.id)
 
-        # TODO read user/company group from redis data
-        groups = {"user": "dashboard:0", "company": "dashboard:0"}
+        # TODO read user/organization group from redis data
+        groups = {"user": "dashboard:0", "organization": "dashboard:0"}
         posthog.capture(user_request_in.id, user_request_in.type, data, groups=groups)
 
     date = datetime.utcnow().strftime("%Y-%m-%d")
@@ -955,7 +986,7 @@ def AgenticLanguageAnalysis(config: Config, lang, full_text, tokens, df):
 
     for token in tokens:
         # check if the user query have false positives
-        if IsItFalsePositive(token.lemma_, false_positive_agentic):
+        if IsItFalsePositive(token.lemma_, false_positive.agentic):
             # recognise if there is Name of organisation or geographical name in the query
             for entity in tokens.ents:
                 if entity.label_ == "ORG":
@@ -973,7 +1004,7 @@ def AgenticLanguageAnalysis(config: Config, lang, full_text, tokens, df):
             elif token.pos_ == "ADJ":  # or token.tag_== "ADJD":
                 dic_anc[token.lemma_] = list(token.ancestors)
                 for key in dic_anc.keys():
-                    if key in false_positive_agentic:
+                    if key in false_positive.agentic:
                         for item in dic_anc[key]:
                             if item.text in exceptions:
                                 list_false_positives.append(
@@ -983,7 +1014,9 @@ def AgenticLanguageAnalysis(config: Config, lang, full_text, tokens, df):
                                     }
                                 )
         else:
-            for word, alternative in zip(df["Lemma"], df["Alternatives_split_company"]):
+            for word, alternative in zip(
+                df["Lemma"], df["Alternatives_split_organization"]
+            ):
                 if GetNonNounLowerCased(token) == word:
                     list_tokens.append(
                         ResultOut.factory(
@@ -1010,7 +1043,7 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
     matcher = PhraseMatcher(model[lang.locale].vocab)
 
     # Only run model.make_doc to speed things up
-    patterns = [model[lang.locale].make_doc(text) for text in terms_false_positive]
+    patterns = [model[lang.locale].make_doc(text) for text in false_positive.gender]
     matcher.add("TerminologyList", patterns)
     matches = matcher(tokens)
 
