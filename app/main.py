@@ -81,7 +81,7 @@ logging.debug("app started with settings: %s", settings)
 # convert string of list into list of the strings
 # project models
 
-version = "1.8.1"
+version = "1.8.2"
 app = FastAPI(
     title="Witty NLP API",
     version=version,
@@ -721,6 +721,8 @@ def write_user_training_data(
     data = collect_user_training_data(request, user_request_in, response)
 
     if user_request_in.id in settings.posthog_ids:
+        posthog.identify(user_request_in.id)
+
         # TODO read user/company group from redis data
         groups = {"user": "dashboard:0", "company": "dashboard:0"}
         posthog.capture(user_request_in.id, user_request_in.type, data, groups=groups)
