@@ -3,8 +3,8 @@ Arbeitskraft,,style,hollow,"['Arbeitsleistung', 'Personal', 'Mitarbeiter~in~/~Mi
 Flexibilität,,style,hollow,"['Anpassungsfähigkeit', 'Aufgeschlossenheit gegenüber Wandel', 'Bereitschaft für Veränderung', 'Mobilität', 'Fähigkeit, sich schnell auf Neues umzustellen']"
 Innovation,,style,hollow,"['Neugestaltung', 'Erfindung', 'technischer Fortschritt', 'Neuerung', 'Neuschöpfung', 'Neuentwicklung']"
 Innovationskraft,,style,hollow,"['Erfindungsreichtum', 'Kreativität', 'Fähigkeit, Ideen in Lösungen umzusetzen', 'Umsetzungskraft']"
-Karrierechance,,style,hollow,['gute Aufstiegsmöglichkeit']
-Organisationstalent,,style,hollow,"['Organisationsfähigkeit', 'Geübtheit, anderen den Rücken frei zu halten', 'Person, die gern organisiert', 'jemand, der einen klaren Blick behält', 'Mensch, der gern offene Enden zusammenführt']"
+Karrierechance,,style,hollow,"['gute Aufstiegsmöglichkeit', 'Maßnahmen zur Karriereförderung', 'Mentoring und Coaching für neue Rollen']"
+Organisationstalent,,style,hollow,"['Organisationsfähigkeit', 'Geübtheit, anderen den Rücken freizuhalten', 'Person, die gern organisiert', 'jemand, der einen klaren Blick behält', 'Mensch, der gern offene Enden zusammenführt']"
 Querdenken,,style,hollow,"['die Fähigkeit, in neuen Mustern zu denken', 'die Fähigkeit, parallel/lateral/kreativ/divergent zu denken', 'die Fähigkeit, über den eigenen Tellerrand zu blicken', 'die Fähigkeit zum Brainstormen']"
 Team-player,,style,hollow,"['Zusammenarbeit über das eigene Streben stellen', 'Team', 'Teammitglieder', 'Teamplayer~innen', 'Teamplayer~in', 'Team-player~in~/~Team-player']"
 Teamfähigkeit,,style,hollow,"['Kooperationsfähigkeit', 'Akzeptanz gegenüber verschiedenen Menschen und Verhaltensweisen', 'Fähigkeit mit Unterschieden und Gemeinsamkeiten umzugehen', 'Kommunikationsfähigkeit', 'Kompromissbereitschaft zugunsten des gemeinsamen Ziels']"
@@ -66,7 +66,7 @@ etc.,,style,filler,['-']
 etliche,,style,filler,['-']
 etwa,,style,filler,['-']
 fast,,style,filler,['-']
-flexibel,,style,hollow,"['anpassungsfähig', 'bei Entscheidungen wendig', 'pragmatisch', 'offen', 'beweglich', 'agil', 'variabel', 'mobil', 'durch nutzende Personen definiert']"
+flexibel,,style,hollow,"['anpassungsfähig', 'strategisch wendig', 'pragmatisch', 'offen', 'beweglich', 'agil', 'variabel', 'mobil', 'durch die Nutzenden definiert']"
 folgendermaßen,,style,filler,['-']
 folglich,,style,filler,['-']
 fortwährend,,style,filler,['-']
@@ -213,6 +213,7 @@ vielleicht,,style,filler,['-']
 vollends,,style,filler,['-']
 vollkommen,,style,filler,['-']
 vollständig,,style,filler,['-']
+vor-allem,,style,hollow,"['als Wichtigstes', 'namentlich', 'vorrangig']"
 vorallem,,style,hollow,"['als Wichtigstes', 'namentlich', 'vorrangig']"
 völlig,,style,filler,['-']
 wahrscheinlich,,style,filler,['-']

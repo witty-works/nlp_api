@@ -28,10 +28,10 @@
                 "Jemand mit Know-how und Ausdauer",
                 "Mensch, der seine Fachkenntnis ständig vertieft"
             ],
-            "category": "style",
+            "category": "unconscious_bias",
             "context": "",
             "end": 16,
-            "label": "Stil: Superlative",
+            "label": "Sprachliche Voreingenommenheit: Superlative",
             "reason": "Kommuniziert, dass sich Menschen sich im Sinne der Superlative anpassen müssen.",
             "solution": "Verwenden Sie eine authentisch und ehrlich klingende Aussage.",
             "start": 11,
