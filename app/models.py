@@ -118,7 +118,7 @@ class ForcedConfig(BaseModel):
 
 
 class ConfRequest(BaseModel):
-    company: str
+    organization: str
     users: list
     forced: ForcedConfig
     suggestion: Config
