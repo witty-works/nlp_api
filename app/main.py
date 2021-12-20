@@ -119,9 +119,14 @@ for language in languages:
     lang = Lang(language)
     categories_with_labels[language] = copy.deepcopy(categories)
     for category in categories_with_labels[language]:
+        parent_category = categories[category]["category"]
+        color = categories[parent_category]["color"]
+        categories_with_labels[language][category]["color"] = color
+
         categories_with_labels[language][category]["label"] = lang._(
             "rules." + category + "_label"
         )
+
 
 # Custom tokenizers
 # English
@@ -947,8 +952,8 @@ def IsItFalsePositive(word, false_positive):
 
 
 def GenderedDenomEnd(config: Config, lang, full_text):
-    category = "gendered"
     subcategory = "gendered_denominations_ending"
+    category = categories[subcategory]["category"]
 
     list_ending = []
     for item in config._gendereddenom_ending:
@@ -978,8 +983,8 @@ def GenderedDenomEnd(config: Config, lang, full_text):
 
 
 def AgenticLanguageAnalysis(config: Config, lang, full_text, tokens, df):
-    category = "unconscious_bias"
     subcategory = "agentic"
+    category = categories[subcategory]["category"]
     list_tokens = []
     dic_anc = {}
     list_false_positives = []
@@ -1203,8 +1208,8 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
 def ExaggeratingWordsSentences(
     config: Config, lang, full_text, tokens, df, df_sentences
 ):
-    category = "unconscious_bias"
     subcategory = "exaggerating"
+    category = categories[subcategory]["category"]
     list_tokens = []
     # Phrase matcher part to handle False positives with two words and special simbols
     matcher = PhraseMatcher(model[lang.locale].vocab)
@@ -1260,7 +1265,6 @@ def ExaggeratingWordsSentences(
 def StyleWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_sentence):
     # category = df_style_sentences(["subcategory"])
     category = "style"
-    # subcategory = ""
     list_tokens = []
     list_false_positives = []
     # Phrase matcher part to handle False positives with two words and special simbols
@@ -1425,8 +1429,8 @@ def RulesBased(config: Config, lang, full_text, tokens, df, category, subcategor
 
 
 def MisgenderingInstitutions(config: Config, lang, full_text, tokens):
-    category = "style"
     subcategory = "misgendering_institutions"
+    category = categories[subcategory]["category"]
     db_match_list = []
     matcher_db = Matcher(model[lang.locale].vocab)
     # Add match ID "DB" with no callback and one pattern

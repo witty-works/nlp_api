@@ -3,214 +3,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2021-12-06 11:32\n"
-"PO-Revision-Date: 2021-12-06 11:32\n"
+"POT-Creation-Date: 2021-12-20 13:49\n"
+"PO-Revision-Date: 2021-12-20 13:49\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-msgid "rules.gendered_label"
-msgstr "Gendered"
-
-msgid "rules.gendered_reason"
-msgstr ""
-"Expressing or transporting either outdated gendered roles or meanings or a "
-"binary view of gender."
-
-msgid "rules.gendered_solution"
-msgstr "Try to think beyond gendered roles or take a non-binary perspective."
-
-msgid "rules.titles_label"
-msgstr "Titles"
-
-msgid "rules.titles_reason"
-msgstr ""
-"The male generic does not speak to all genders or gender identities. Many "
-"people therefore do not feel included in the dialogue."
-
-msgid "rules.titles_solution"
-msgstr ""
-"Use words that address the female gender as well as gender identities that "
-"do not follow a binary understanding of gender."
-
-msgid "rules.function_label"
-msgstr "Special functions"
-
-msgid "rules.function_reason"
-msgstr ""
-"For economic-historical reasons, an image of a man is unconsciously evoked "
-"in front of the inner eye, even if the term is linguistically neutral. The "
-"female gender or other gender identities do not become visible. And they "
-"will not feel to belong in this setting."
-
-msgid "rules.function_solution"
-msgstr ""
-"In order to provoke an inclusive image, be not only linguistically, but also"
-" mentally neutral in your formulation. Rather use a noun that describes the "
-"activity. Or use a denomination that is truly gender-neutral."
-
-msgid "rules.leadership_label"
-msgstr "Leadership stereotype"
-
-msgid "rules.leadership_reason"
-msgstr ""
-"Casts the topic of leadership in stereotypical male terms and traditionally "
-"hierarchical."
-
-msgid "rules.leadership_solution"
-msgstr ""
-"Use terms that assume a supportive notion of leadership and can mean "
-"different genders."
-
-msgid "rules.hidden_image_label"
-msgstr "Hidden meaning"
-
-msgid "rules.hidden_image_reason"
-msgstr ""
-"Hides a form that is not gender-neutral and therefore calls up images with "
-"masculine connotations in our mind's eye."
-
-msgid "rules.hidden_image_solution"
-msgstr "Use alternatives that are gender neutral while avoiding duplication."
-
-msgid "rules.gendered_denominations_ending_label"
-msgstr "Inclusive ending"
-
-msgid "rules.gendered_denominations_ending_reason"
-msgstr "Consistent ending is more trustworthy."
-
-msgid "rules.gendered_denominations_ending_solution"
-msgstr "Use the gender star or the gender colon to be fully inclusive."
-
-msgid "rules.style_label"
-msgstr "Style"
-
-msgid "rules.style_reason"
-msgstr ""
-"Difficult to understand or limited in approachability and emotionality."
-
-msgid "rules.style_solution"
-msgstr "Formulate in simpler terms, try to bring in more emotionality."
-
-msgid "rules.passive_voice_label"
-msgstr "Passive Voice"
-
-msgid "rules.passive_voice_reason"
-msgstr "Limits approachability."
-
-msgid "rules.passive_voice_solution"
-msgstr "Write in active voice."
-
-msgid "rules.misgendering_institutions_label"
-msgstr "-"
-
-msgid "rules.misgendering_institutions_reason"
-msgstr "-"
-
-msgid "rules.misgendering_institutions_solution"
-msgstr "-"
-
-msgid "rules.unconscious_bias_label"
-msgstr "Biased language"
-
-msgid "rules.unconscious_bias_reason"
-msgstr ""
-"Outdated and perhaps even discriminatory stereotype that pigeonholes members"
-" of the social group."
-
-msgid "rules.unconscious_bias_solution"
-msgstr ""
-"Ask yourself \"What would I write if this person was of a strong social "
-"group?\""
-
-msgid "rules.agentic_label"
-msgstr "Agentic"
-
-msgid "rules.agentic_reason"
-msgstr ""
-"Unconsciously attributed to the male stereotype. Many do not feel attracted "
-"by these terms."
-
-msgid "rules.agentic_solution"
-msgstr "Use team-oriented wording or referring to purpose."
-
-msgid "rules.inclusive_label"
-msgstr "Inclusive"
-
-msgid "rules.inclusive_reason"
-msgstr "Is wording where people feel encouraged and get a sense of belonging."
-
-msgid "rules.inclusive_solution"
-msgstr ""
-"Use more such wording to express cooperation, care, purpose, goal of "
-"diversity and inclusion."
-
-msgid "rules.communal_label"
-msgstr "Communal"
-
-msgid "rules.communal_reason"
-msgstr ""
-"Emphasizes cooperative, compassionate or supportive characteristics and thus"
-" inclusive attributes."
-
-msgid "rules.communal_solution"
-msgstr "Use more of such wording to express cooperation, care or purpose."
-
-msgid "rules.d_and_i_label"
-msgstr "Diversity & Inclusion"
-
-msgid "rules.d_and_i_reason"
-msgstr ""
-"Describes that diversity and inclusion is valued. As a public commitment "
-"this is appreciated by underrepresented groups."
-
-msgid "rules.d_and_i_solution"
-msgstr ""
-"Make it clear through your words, if possible, that diversity is desired in "
-"your company and that you are working towards an inclusive culture."
-
-msgid "rules.hollow_label"
-msgstr "Empty Words"
-
-msgid "rules.hollow_reason"
-msgstr ""
-"Is a hollow word because it has been overused in the business environment."
-
-msgid "rules.hollow_solution"
-msgstr ""
-"Avoid using this word. Instead, explain the situation in a tangible and "
-"descriptive way."
-
-msgid "rules.filler_label"
-msgstr "Filler Words"
-
-msgid "rules.filler_reason"
-msgstr ""
-"Complicates the structure of the sentence and therefore becomes less "
-"readable."
-
-msgid "rules.filler_solution"
-msgstr "Delete filler words."
-
-msgid "rules.job_requirements_label"
-msgstr "Biased Requirements"
-
-msgid "rules.job_requirements_reason"
-msgstr "Missing"
-
-msgid "rules.job_requirements_solution"
-msgstr "Missing"
-
-msgid "rules.salary_vague_label"
-msgstr "Missing"
-
-msgid "rules.salary_vague_reason"
-msgstr "Missing"
-
-msgid "rules.salary_vague_solution"
-msgstr "Missing"
 
 msgid "rules.abbreviation_label"
 msgstr "Missing"
@@ -221,36 +20,27 @@ msgstr "Missing"
 msgid "rules.abbreviation_solution"
 msgstr "Missing"
 
-msgid "rules.verbose_label"
-msgstr "Missing"
+msgid "rules.ability_label"
+msgstr "Ability"
 
-msgid "rules.verbose_reason"
-msgstr "Missing"
-
-msgid "rules.verbose_solution"
-msgstr "Missing"
-
-msgid "rules.exaggerating_label"
-msgstr "Exaggeration"
-
-msgid "rules.exaggerating_reason"
-msgstr "Communicates that people have to conform to these superlatives."
-
-msgid "rules.exaggerating_solution"
-msgstr "Use an authentic and honest sounding statement."
-
-msgid "rules.binary_pronouns_label"
-msgstr "Binary Pronouns"
-
-msgid "rules.binary_pronouns_reason"
+msgid "rules.ability_reason"
 msgstr ""
-"Women or non-binary people do not feel addressed by the \"male generic\" and"
-" their engagement decreases."
+"Communicates exclusion by stating that a person's abilities are outside of "
+"an assumed definition of \"normal\"."
 
-msgid "rules.binary_pronouns_solution"
+msgid "rules.ability_solution"
 msgstr ""
-"Use the direct form of address (you). If you have to write in the third "
-"person, use \"they\"."
+"Rephrase in a way that talks about the person's ability without implying "
+"otherness or disability."
+
+msgid "rules.ableism_label"
+msgstr "Ableist"
+
+msgid "rules.ableism_reason"
+msgstr "-"
+
+msgid "rules.ableism_solution"
+msgstr "Don't use this expression. You strongly offend people."
 
 msgid "rules.age_label"
 msgstr "Age information"
@@ -262,6 +52,15 @@ msgstr ""
 
 msgid "rules.age_solution"
 msgstr "Maybe you do not need to know their age?"
+
+msgid "rules.age_in_jobs_label"
+msgstr "Missing"
+
+msgid "rules.age_in_jobs_reason"
+msgstr "Missing"
+
+msgid "rules.age_in_jobs_solution"
+msgstr "Missing"
 
 msgid "rules.age_old_label"
 msgstr "50 years and older"
@@ -285,79 +84,45 @@ msgstr ""
 msgid "rules.age_young_solution"
 msgstr "Ask yourself \"What would I write if this person was 45 years old?\""
 
-msgid "rules.culture_label"
-msgstr "Culture"
+msgid "rules.agentic_label"
+msgstr "Agentic"
 
-msgid "rules.culture_reason"
+msgid "rules.agentic_reason"
 msgstr ""
-"Is a sweeping generalisation and traps people in outdated stereotypes."
+"Unconsciously attributed to the male stereotype. Many do not feel attracted "
+"by these terms."
 
-msgid "rules.culture_solution"
+msgid "rules.agentic_solution"
+msgstr "Use team-oriented wording or referring to purpose."
+
+msgid "rules.americanism_label"
+msgstr "Americanism"
+
+msgid "rules.americanism_reason"
 msgstr ""
-"Ask yourself \"What would I write if this person was of the dominant "
-"national background?\""
+"May not be understood by readers who do not have an English language "
+"education."
 
-msgid "rules.migration_label"
-msgstr "Migration background"
+msgid "rules.americanism_solution"
+msgstr "Use a word in your text's language."
 
-msgid "rules.migration_reason"
-msgstr ""
-"Difficult to understand for people with a migration background, as they may "
-"not understand certain idioms or bureaucratic language. Or it is a sweeping "
-"generalisation and traps people in outdated stereotypes."
+msgid "rules.antimuslim_label"
+msgstr "Islamophobia"
 
-msgid "rules.migration_solution"
-msgstr ""
-"Rephrase with a simpler choice of words and short sentence. Ask yourself "
-"\"What would I write if this person was of the dominant national "
-"background?\""
+msgid "rules.antimuslim_reason"
+msgstr "-"
 
-msgid "rules.sexual_orientation_label"
-msgstr "Sexual orientation"
+msgid "rules.antimuslim_solution"
+msgstr "Don't use this expression. You strongly offend people."
 
-msgid "rules.sexual_orientation_reason"
-msgstr ""
-"Outdated and perhaps even discriminatory understanding of sexual orientation"
-" that pigeonholes LGBTQIA+ people and transporting heterosexuality as the "
-"norm."
+msgid "rules.antisemitism_label"
+msgstr "Anti-Semitism"
 
-msgid "rules.sexual_orientation_solution"
-msgstr "Ask yourself \"What would I write if this person was heterosexual?\""
+msgid "rules.antisemitism_reason"
+msgstr "-"
 
-msgid "rules.gender_identity_label"
-msgstr "Gender identity"
-
-msgid "rules.gender_identity_reason"
-msgstr ""
-"Outdated and perhaps even discriminatory understanding of gender that "
-"pigeonholes LGBTQIA+ people."
-
-msgid "rules.gender_identity_solution"
-msgstr "Ask yourself \"What would I write if this person was female or male?\""
-
-msgid "rules.racist_source_label"
-msgstr "Racist source"
-
-msgid "rules.racist_source_reason"
-msgstr ""
-"Outdated and perhaps even discriminatory pigeonholing a particular ethnic "
-"background."
-
-msgid "rules.racist_source_solution"
-msgstr ""
-"Ask yourself \"What would I write if this person belonged to the dominant "
-"ethnic background in my society?\""
-
-msgid "rules.classism_label"
-msgstr "Classism"
-
-msgid "rules.classism_reason"
-msgstr ""
-"Can seem arrogant or incomprehensible since wording can be associated with a"
-" power imbalance and/or noticeable difference in social class."
-
-msgid "rules.classism_solution"
-msgstr "Rephrase with a choice of words that's on eye-level."
+msgid "rules.antisemitism_solution"
+msgstr "Don't use this expression. You strongly offend people."
 
 msgid "rules.belief_label"
 msgstr "Belief"
@@ -371,6 +136,102 @@ msgid "rules.belief_solution"
 msgstr ""
 "Rephrase with words that do not transport any idea of belief or religion."
 
+msgid "rules.binary_pronouns_label"
+msgstr "Binary Pronouns"
+
+msgid "rules.binary_pronouns_reason"
+msgstr ""
+"Women or non-binary people do not feel addressed by the \"male generic\" and"
+" their engagement decreases."
+
+msgid "rules.binary_pronouns_solution"
+msgstr ""
+"Use the direct form of address (you). If you have to write in the third "
+"person, use \"they\"."
+
+msgid "rules.classism_label"
+msgstr "Classism"
+
+msgid "rules.classism_reason"
+msgstr ""
+"Can seem arrogant or incomprehensible since wording can be associated with a"
+" power imbalance and/or noticeable difference in social class."
+
+msgid "rules.classism_solution"
+msgstr "Rephrase with a choice of words that's on eye-level."
+
+msgid "rules.communal_label"
+msgstr "Communal"
+
+msgid "rules.communal_reason"
+msgstr ""
+"Emphasizes cooperative, compassionate or supportive characteristics and thus"
+" inclusive attributes."
+
+msgid "rules.communal_solution"
+msgstr "Use more of such wording to express cooperation, care or purpose."
+
+msgid "rules.corporate_rules_label"
+msgstr "Company guideline"
+
+msgid "rules.corporate_rules_reason"
+msgstr "We always use subcategories here and so no need to fill anything in."
+
+msgid "rules.corporate_rules_solution"
+msgstr "We always use subcategories here and so no need to fill anything in."
+
+msgid "rules.culture_label"
+msgstr "Culture"
+
+msgid "rules.culture_reason"
+msgstr ""
+"Is a sweeping generalisation and traps people in outdated stereotypes."
+
+msgid "rules.culture_solution"
+msgstr ""
+"Ask yourself \"What would I write if this person was of the dominant "
+"national background?\""
+
+msgid "rules.d_and_i_label"
+msgstr "Diversity & Inclusion"
+
+msgid "rules.d_and_i_reason"
+msgstr ""
+"Describes that diversity and inclusion is valued. As a public commitment "
+"this is appreciated by underrepresented groups."
+
+msgid "rules.d_and_i_solution"
+msgstr ""
+"Make it clear through your words, if possible, that diversity is desired in "
+"your company and that you are working towards an inclusive culture."
+
+msgid "rules.education_label"
+msgstr "Missing"
+
+msgid "rules.education_reason"
+msgstr "Missing"
+
+msgid "rules.education_solution"
+msgstr "Missing"
+
+msgid "rules.ethnicity_label"
+msgstr "Missing"
+
+msgid "rules.ethnicity_reason"
+msgstr "Missing"
+
+msgid "rules.ethnicity_solution"
+msgstr "Missing"
+
+msgid "rules.exaggerating_label"
+msgstr "Exaggeration"
+
+msgid "rules.exaggerating_reason"
+msgstr "Communicates that people have to conform to these superlatives."
+
+msgid "rules.exaggerating_solution"
+msgstr "Use an authentic and honest sounding statement."
+
 msgid "rules.female_stereotype_label"
 msgstr "Female Stereotype"
 
@@ -381,15 +242,43 @@ msgstr ""
 msgid "rules.female_stereotype_solution"
 msgstr "Ask yourself \"What would I write if this person was male?\""
 
-msgid "rules.male_stereotype_label"
-msgstr "Male Stereotype"
+msgid "rules.filler_label"
+msgstr "Filler Words"
 
-msgid "rules.male_stereotype_reason"
+msgid "rules.filler_reason"
 msgstr ""
-"Traps men in outdated stereotypes. Hinders people to develop as they like."
+"Complicates the structure of the sentence and therefore becomes less "
+"readable."
 
-msgid "rules.male_stereotype_solution"
-msgstr "Ask yourself \"What would I write if this person was female?\""
+msgid "rules.filler_solution"
+msgstr "Delete filler words."
+
+msgid "rules.formality_label"
+msgstr "Formality"
+
+msgid "rules.formality_reason"
+msgstr ""
+"Depending on the working environment, such formal wording can lead to more "
+"distance and is not conducive to cooperation at eye level."
+
+msgid "rules.formality_solution"
+msgstr "Try to write as if you were writing to a friend."
+
+msgid "rules.function_label"
+msgstr "Special functions"
+
+msgid "rules.function_reason"
+msgstr ""
+"For economic-historical reasons, an image of a man is unconsciously evoked "
+"in front of the inner eye, even if the term is linguistically neutral. The "
+"female gender or other gender identities do not become visible. And they "
+"will not feel to belong in this setting."
+
+msgid "rules.function_solution"
+msgstr ""
+"In order to provoke an inclusive image, be not only linguistically, but also"
+" mentally neutral in your formulation. Rather use a noun that describes the "
+"activity. Or use a denomination that is truly gender-neutral."
 
 msgid "rules.gen_boomer_label"
 msgstr "Language Generation Boomer & X"
@@ -417,6 +306,208 @@ msgstr ""
 "Reflect on whether this expression is still in use outside your age group. "
 "If not, try to formulate its meaning differently."
 
+msgid "rules.gender_identity_label"
+msgstr "Gender identity"
+
+msgid "rules.gender_identity_reason"
+msgstr ""
+"Outdated and perhaps even discriminatory understanding of gender that "
+"pigeonholes LGBTQIA+ people."
+
+msgid "rules.gender_identity_solution"
+msgstr "Ask yourself \"What would I write if this person was female or male?\""
+
+msgid "rules.gendered_label"
+msgstr "Gendered"
+
+msgid "rules.gendered_reason"
+msgstr ""
+"Expressing or transporting either outdated gendered roles or meanings or a "
+"binary view of gender."
+
+msgid "rules.gendered_solution"
+msgstr "Try to think beyond gendered roles or take a non-binary perspective."
+
+msgid "rules.gendered_denominations_ending_label"
+msgstr "Inclusive ending"
+
+msgid "rules.gendered_denominations_ending_reason"
+msgstr "Consistent ending is more trustworthy."
+
+msgid "rules.gendered_denominations_ending_solution"
+msgstr "Use the gender star or the gender colon to be fully inclusive."
+
+msgid "rules.hearing_speech_impairment_label"
+msgstr "Hearing and Speech Impairment"
+
+msgid "rules.hearing_speech_impairment_reason"
+msgstr ""
+"Outdated, hidden or even discriminatory wording pigeonholing people with "
+"hearing or speech impairment."
+
+msgid "rules.hearing_speech_impairment_solution"
+msgstr ""
+"Ask yourself \"What would I write if this person had their full hearing and "
+"speech capacity?\""
+
+msgid "rules.hidden_image_label"
+msgstr "Hidden meaning"
+
+msgid "rules.hidden_image_reason"
+msgstr ""
+"Hides a form that is not gender-neutral and therefore calls up images with "
+"masculine connotations in our mind's eye."
+
+msgid "rules.hidden_image_solution"
+msgstr "Use alternatives that are gender neutral while avoiding duplication."
+
+msgid "rules.hollow_label"
+msgstr "Empty Words"
+
+msgid "rules.hollow_reason"
+msgstr ""
+"Is a hollow word because it has been overused in the business environment."
+
+msgid "rules.hollow_solution"
+msgstr ""
+"Avoid using this word. Instead, explain the situation in a tangible and "
+"descriptive way."
+
+msgid "rules.homophobia_label"
+msgstr "Homophobia"
+
+msgid "rules.homophobia_reason"
+msgstr "-"
+
+msgid "rules.homophobia_solution"
+msgstr "Don't use this expression. You strongly offend people."
+
+msgid "rules.inclusive_label"
+msgstr "Inclusive"
+
+msgid "rules.inclusive_reason"
+msgstr "Is wording where people feel encouraged and get a sense of belonging."
+
+msgid "rules.inclusive_solution"
+msgstr ""
+"Use more such wording to express cooperation, care, purpose, goal of "
+"diversity and inclusion."
+
+msgid "rules.intellectual_impairment_label"
+msgstr "Intellectual impairment"
+
+msgid "rules.intellectual_impairment_reason"
+msgstr ""
+"Outdated, hidden or even discriminatory wording pigeonholing people with an "
+"intellectual impairment."
+
+msgid "rules.intellectual_impairment_solution"
+msgstr ""
+"Ask yourself \"What would I write if this person had their full mental "
+"capacity?\""
+
+msgid "rules.job_requirements_label"
+msgstr "Biased Requirements"
+
+msgid "rules.job_requirements_reason"
+msgstr "Missing"
+
+msgid "rules.job_requirements_solution"
+msgstr "Missing"
+
+msgid "rules.leadership_label"
+msgstr "Leadership stereotype"
+
+msgid "rules.leadership_reason"
+msgstr ""
+"Casts the topic of leadership in stereotypical male terms and traditionally "
+"hierarchical."
+
+msgid "rules.leadership_solution"
+msgstr ""
+"Use terms that assume a supportive notion of leadership and can mean "
+"different genders."
+
+msgid "rules.male_stereotype_label"
+msgstr "Male Stereotype"
+
+msgid "rules.male_stereotype_reason"
+msgstr ""
+"Traps men in outdated stereotypes. Hinders people to develop as they like."
+
+msgid "rules.male_stereotype_solution"
+msgstr "Ask yourself \"What would I write if this person was female?\""
+
+msgid "rules.medical_condition_label"
+msgstr "Medical Condition"
+
+msgid "rules.medical_condition_reason"
+msgstr ""
+"Outdated, hidden or even discriminatory wording pigeonholing people with a "
+"medical condition."
+
+msgid "rules.medical_condition_solution"
+msgstr "Ask yourself \"What would I write if this person was fully healthy?\""
+
+msgid "rules.mental_impairment_label"
+msgstr "Mental impairment"
+
+msgid "rules.mental_impairment_reason"
+msgstr ""
+"Outdated, hidden or even discriminatory wording pigeonholing people with a "
+"mental impairment."
+
+msgid "rules.mental_impairment_solution"
+msgstr ""
+"Ask yourself \"What would I write if this person was mentally fully  "
+"healthy?\""
+
+msgid "rules.migration_label"
+msgstr "Migration background"
+
+msgid "rules.migration_reason"
+msgstr ""
+"Difficult to understand for people with a migration background, as they may "
+"not understand certain idioms or bureaucratic language. Or it is a sweeping "
+"generalisation and traps people in outdated stereotypes."
+
+msgid "rules.migration_solution"
+msgstr ""
+"Rephrase with a simpler choice of words and short sentence. Ask yourself "
+"\"What would I write if this person was of the dominant national "
+"background?\""
+
+msgid "rules.misgendering_institutions_label"
+msgstr "-"
+
+msgid "rules.misgendering_institutions_reason"
+msgstr "-"
+
+msgid "rules.misgendering_institutions_solution"
+msgstr "-"
+
+msgid "rules.mobility_impairment_label"
+msgstr "Mobility Impairment"
+
+msgid "rules.mobility_impairment_reason"
+msgstr ""
+"Outdated, hidden or even discriminatory wording pigeonholing people with a "
+"mobility impairment."
+
+msgid "rules.mobility_impairment_solution"
+msgstr ""
+"Ask yourself \"What would I write if this person was in full capacity of all"
+" their limbs?\""
+
+msgid "rules.openly_discriminating_label"
+msgstr "Openly discriminating"
+
+msgid "rules.openly_discriminating_reason"
+msgstr ""
+
+msgid "rules.openly_discriminating_solution"
+msgstr ""
+
 msgid "rules.orthography_label"
 msgstr "Orthography"
 
@@ -437,41 +528,85 @@ msgstr "Missing"
 msgid "rules.overload_solution"
 msgstr "Missing"
 
-msgid "rules.education_label"
+msgid "rules.passive_voice_label"
+msgstr "Passive Voice"
+
+msgid "rules.passive_voice_reason"
+msgstr "Limits approachability."
+
+msgid "rules.passive_voice_solution"
+msgstr "Write in active voice."
+
+msgid "rules.pressure_label"
+msgstr "Pressure"
+
+msgid "rules.pressure_reason"
+msgstr "Communicates pressure and thus is a sign of \"having to fit in\"."
+
+msgid "rules.pressure_solution"
+msgstr "Formulate at eye level, as you being an equal part of your team."
+
+msgid "rules.racism_label"
+msgstr "Racism"
+
+msgid "rules.racism_reason"
+msgstr "-"
+
+msgid "rules.racism_solution"
+msgstr "Don't use this expression. You strongly offend people."
+
+msgid "rules.racist_source_label"
+msgstr "Racist source"
+
+msgid "rules.racist_source_reason"
+msgstr ""
+"Outdated and perhaps even discriminatory pigeonholing a particular ethnic "
+"background."
+
+msgid "rules.racist_source_solution"
+msgstr ""
+"Ask yourself \"What would I write if this person belonged to the dominant "
+"ethnic background in my society?\""
+
+msgid "rules.salary_vague_label"
 msgstr "Missing"
 
-msgid "rules.education_reason"
+msgid "rules.salary_vague_reason"
 msgstr "Missing"
 
-msgid "rules.education_solution"
+msgid "rules.salary_vague_solution"
 msgstr "Missing"
 
-msgid "rules.workload_label"
-msgstr "Missing"
+msgid "rules.sexism_label"
+msgstr "Sexism"
 
-msgid "rules.workload_reason"
-msgstr "Missing"
+msgid "rules.sexism_reason"
+msgstr "-"
 
-msgid "rules.workload_solution"
-msgstr "Missing"
+msgid "rules.sexism_solution"
+msgstr "Don't use this expression. You strongly offend people."
 
-msgid "rules.ethnicity_label"
-msgstr "Missing"
+msgid "rules.sexual_orientation_label"
+msgstr "Sexual orientation"
 
-msgid "rules.ethnicity_reason"
-msgstr "Missing"
+msgid "rules.sexual_orientation_reason"
+msgstr ""
+"Outdated and perhaps even discriminatory understanding of sexual orientation"
+" that pigeonholes LGBTQIA+ people and transporting heterosexuality as the "
+"norm."
 
-msgid "rules.ethnicity_solution"
-msgstr "Missing"
+msgid "rules.sexual_orientation_solution"
+msgstr "Ask yourself \"What would I write if this person was heterosexual?\""
 
-msgid "rules.age_in_jobs_label"
-msgstr "Missing"
+msgid "rules.style_label"
+msgstr "Style"
 
-msgid "rules.age_in_jobs_reason"
-msgstr "Missing"
+msgid "rules.style_reason"
+msgstr ""
+"Difficult to understand or limited in approachability and emotionality."
 
-msgid "rules.age_in_jobs_solution"
-msgstr "Missing"
+msgid "rules.style_solution"
+msgstr "Formulate in simpler terms, try to bring in more emotionality."
 
 msgid "rules.technical_frameworks_label"
 msgstr "Missing"
@@ -482,34 +617,49 @@ msgstr "Missing"
 msgid "rules.technical_frameworks_solution"
 msgstr "Missing"
 
-msgid "rules.corporate_rules_label"
-msgstr "Company guideline"
+msgid "rules.titles_label"
+msgstr "Titles"
 
-msgid "rules.corporate_rules_reason"
-msgstr "We always use subcategories here and so no need to fill anything in."
-
-msgid "rules.corporate_rules_solution"
-msgstr "We always use subcategories here and so no need to fill anything in."
-
-msgid "rules.americanism_label"
-msgstr "Americanism"
-
-msgid "rules.americanism_reason"
+msgid "rules.titles_reason"
 msgstr ""
-"May not be understood by readers who do not have an English language "
-"education."
+"The male generic does not speak to all genders or gender identities. Many "
+"people therefore do not feel included in the dialogue."
 
-msgid "rules.americanism_solution"
-msgstr "Use a word in your text's language."
+msgid "rules.titles_solution"
+msgstr ""
+"Use words that address the female gender as well as gender identities that "
+"do not follow a binary understanding of gender."
 
-msgid "rules.pressure_label"
-msgstr "Pressure"
+msgid "rules.transphobia_label"
+msgstr "Transphobia"
 
-msgid "rules.pressure_reason"
-msgstr "Communicates pressure and thus is a sign of \"having to fit in\"."
+msgid "rules.transphobia_reason"
+msgstr "-"
 
-msgid "rules.pressure_solution"
-msgstr "Formulate at eye level, as you being an equal part of your team."
+msgid "rules.transphobia_solution"
+msgstr "Don't use this expression. You strongly offend people."
+
+msgid "rules.unconscious_bias_label"
+msgstr "Biased language"
+
+msgid "rules.unconscious_bias_reason"
+msgstr ""
+"Outdated and perhaps even discriminatory stereotype that pigeonholes members"
+" of the social group."
+
+msgid "rules.unconscious_bias_solution"
+msgstr ""
+"Ask yourself \"What would I write if this person was of a strong social "
+"group?\""
+
+msgid "rules.verbose_label"
+msgstr "Missing"
+
+msgid "rules.verbose_reason"
+msgstr "Missing"
+
+msgid "rules.verbose_solution"
+msgstr "Missing"
 
 msgid "rules.visual_impairment_label"
 msgstr "Visual Impairment"
@@ -522,155 +672,14 @@ msgstr ""
 msgid "rules.visual_impairment_solution"
 msgstr "Ask yourself \"What would I write if this person had full visibility?\""
 
-msgid "rules.medical_condition_label"
-msgstr "Medical Condition"
+msgid "rules.workload_label"
+msgstr "Missing"
 
-msgid "rules.medical_condition_reason"
-msgstr ""
-"Outdated, hidden or even discriminatory wording pigeonholing people with a "
-"medical condition."
+msgid "rules.workload_reason"
+msgstr "Missing"
 
-msgid "rules.medical_condition_solution"
-msgstr "Ask yourself \"What would I write if this person was fully healthy?\""
-
-msgid "rules.intellectual_impairment_label"
-msgstr "Intellectual impairment"
-
-msgid "rules.intellectual_impairment_reason"
-msgstr ""
-"Outdated, hidden or even discriminatory wording pigeonholing people with an "
-"intellectual impairment."
-
-msgid "rules.intellectual_impairment_solution"
-msgstr ""
-"Ask yourself \"What would I write if this person had their full mental "
-"capacity?\""
-
-msgid "rules.hearing_speech_impairment_label"
-msgstr "Hearing and Speech Impairment"
-
-msgid "rules.hearing_speech_impairment_reason"
-msgstr ""
-"Outdated, hidden or even discriminatory wording pigeonholing people with "
-"hearing or speech impairment."
-
-msgid "rules.hearing_speech_impairment_solution"
-msgstr ""
-"Ask yourself \"What would I write if this person had their full hearing and "
-"speech capacity?\""
-
-msgid "rules.mobility_impairment_label"
-msgstr "Mobility Impairment"
-
-msgid "rules.mobility_impairment_reason"
-msgstr ""
-"Outdated, hidden or even discriminatory wording pigeonholing people with a "
-"mobility impairment."
-
-msgid "rules.mobility_impairment_solution"
-msgstr ""
-"Ask yourself \"What would I write if this person was in full capacity of all"
-" their limbs?\""
-
-msgid "rules.mental_impairment_label"
-msgstr "Mental impairment"
-
-msgid "rules.mental_impairment_reason"
-msgstr ""
-"Outdated, hidden or even discriminatory wording pigeonholing people with a "
-"mental impairment."
-
-msgid "rules.mental_impairment_solution"
-msgstr ""
-"Ask yourself \"What would I write if this person was mentally fully  "
-"healthy?\""
-
-msgid "rules.ability_label"
-msgstr "Ability"
-
-msgid "rules.ability_reason"
-msgstr ""
-"Communicates exclusion by stating that a person's abilities are outside of "
-"an assumed definition of \"normal\"."
-
-msgid "rules.ability_solution"
-msgstr ""
-"Rephrase in a way that talks about the person's ability without implying "
-"otherness or disability."
-
-msgid "rules.formality_label"
-msgstr "Formality"
-
-msgid "rules.formality_reason"
-msgstr ""
-"Depending on the working environment, such formal wording can lead to more "
-"distance and is not conducive to cooperation at eye level."
-
-msgid "rules.formality_solution"
-msgstr "Try to write as if you were writing to a friend."
-
-msgid "rules.openly_discriminating_label"
-msgstr "Openly discriminating"
-
-msgid "rules.openly_discriminating_reason"
-msgstr ""
-
-msgid "rules.openly_discriminating_solution"
-msgstr ""
-
-msgid "rules.racism_label"
-msgstr "Racism"
-
-msgid "rules.racism_reason"
-msgstr "-"
-
-msgid "rules.racism_solution"
-msgstr "Don't use this expression. You strongly offend people."
-
-msgid "rules.sexism_label"
-msgstr "Sexism"
-
-msgid "rules.sexism_reason"
-msgstr "-"
-
-msgid "rules.sexism_solution"
-msgstr "Don't use this expression. You strongly offend people."
-
-msgid "rules.transphobia_label"
-msgstr "Transphobia"
-
-msgid "rules.transphobia_reason"
-msgstr "-"
-
-msgid "rules.transphobia_solution"
-msgstr "Don't use this expression. You strongly offend people."
-
-msgid "rules.homophobia_label"
-msgstr "Homophobia"
-
-msgid "rules.homophobia_reason"
-msgstr "-"
-
-msgid "rules.homophobia_solution"
-msgstr "Don't use this expression. You strongly offend people."
-
-msgid "rules.antisemitism_label"
-msgstr "Anti-Semitism"
-
-msgid "rules.antisemitism_reason"
-msgstr "-"
-
-msgid "rules.antisemitism_solution"
-msgstr "Don't use this expression. You strongly offend people."
-
-msgid "rules.antimuslim_label"
-msgstr "Islamophobia"
-
-msgid "rules.antimuslim_reason"
-msgstr "-"
-
-msgid "rules.antimuslim_solution"
-msgstr "Don't use this expression. You strongly offend people."
+msgid "rules.workload_solution"
+msgstr "Missing"
 
 msgid "rules.xenophobia_label"
 msgstr "Xenophobia"
@@ -679,13 +688,4 @@ msgid "rules.xenophobia_reason"
 msgstr "-"
 
 msgid "rules.xenophobia_solution"
-msgstr "Don't use this expression. You strongly offend people."
-
-msgid "rules.ableism_label"
-msgstr "Ableist"
-
-msgid "rules.ableism_reason"
-msgstr "-"
-
-msgid "rules.ableism_solution"
 msgstr "Don't use this expression. You strongly offend people."

@@ -54,7 +54,7 @@ def read_csv(in_file):
 
         colors = {
             "Style": "blue",
-            "UB / Stereotypes": "orange",
+            "Unconscious bias": "orange",
             "Openly discriminating": "brown",
             "Gendered": "yellow",
             "Inclusive": "green",
