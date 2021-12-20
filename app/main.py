@@ -81,7 +81,7 @@ logging.debug("app started with settings: %s", settings)
 # convert string of list into list of the strings
 # project models
 
-version = "1.8.2"
+version = "1.8.3"
 app = FastAPI(
     title="Witty NLP API",
     version=version,
@@ -546,7 +546,10 @@ async def set_rules(user_request_in: RequestIn):
             if user_rules[config_value] is not None:
 
                 # organization set a value and user can't change it
-                if config_value in organization_config and config_value in forced_filtered:
+                if (
+                    config_value in organization_config
+                    and config_value in forced_filtered
+                ):
                     # overwrite user value
                     setattr(
                         user_request_in.config,
@@ -555,7 +558,8 @@ async def set_rules(user_request_in: RequestIn):
                     )
                 # organization set a value on default, user can change it
                 elif (
-                    config_value in organization_config and config_value in default_filtered
+                    config_value in organization_config
+                    and config_value in default_filtered
                 ):
                     # set user value
                     setattr(
@@ -1010,7 +1014,9 @@ def AgenticLanguageAnalysis(config: Config, lang, full_text, tokens, df):
                                     }
                                 )
         else:
-            for word, alternative in zip(df["Lemma"], df["Alternatives_split_organization"]):
+            for word, alternative in zip(
+                df["Lemma"], df["Alternatives_split_organization"]
+            ):
                 if GetNonNounLowerCased(token) == word:
                     list_tokens.append(
                         ResultOut.factory(
