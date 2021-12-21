@@ -268,7 +268,7 @@ df_gender_ct = pd.read_csv("training_data/gendered_noun_DE.csv")
 genderdenom_false_positives = pd.read_csv("training_data/titles_false_positives_DE.csv")
 
 # load discriminating words_de
-df_discrim_words = pd.read_csv("training_data/unconscious_bias_DE.csv")
+# df_discrim_words = pd.read_csv("training_data/unconscious_bias_DE.csv")
 
 # load style words_de
 df_style_word = pd.read_csv("training_data/style_words_DE.csv")
@@ -280,11 +280,12 @@ terms_style = list(df_style_sentences["Lemma"])
 df_open_dis_word_de = pd.read_csv("training_data/open_dis_words_DE.csv")
 df_open_dis_sentence_de = pd.read_csv("training_data/open_dis_sentences_DE.csv")
 
-# load Exaggerating word and sentences de
-df_exaggerating = pd.read_csv("training_data/exaggerating_words_DE.csv")
-df_exaggerating_sentences = pd.read_csv("training_data/exaggerating_sentences_DE.csv")
+# load unconscious_bias word (nouns, not nouns) and sentences de
+df_ub_noun_word_de = pd.read_csv("training_data/ub_noun_words_DE.csv")
+df_ub_no_noun_word_de = pd.read_csv("training_data/ub_no_noun_words_DE.csv")
+df_ub_sentences_de = pd.read_csv("training_data/ub_sentences_DE.csv")
 # list of "exaggerating word" sentences
-terms_exaggerating = list(df_exaggerating_sentences["Lemma"])
+# terms_exaggerating = list(df_exaggerating_sentences["Lemma"])
 
 # load inslusive words
 df_d_and_i_words = pd.read_csv("training_data/d_and_i_words_DE.csv")
@@ -780,7 +781,7 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
     disabled_categories = user_request_in.config.disabled_categories
 
     if IsSubCategoryEnabled("openly_discriminating", disabled_categories):
-        list_full += RulesBasedWordsPhraseMatcherUN(
+        list_full += RulesBasedWordsPhraseMatcherDE(
             user_request_in.config,
             lang,
             user_request_in.text,
@@ -809,32 +810,27 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             user_request_in.config, lang, user_request_in.text
         )
 
-    if IsSubCategoryEnabled(
-        "unconscious_bias", user_request_in.config.disabled_categories
-    ):
-        list_full += RulesBased(
-            user_request_in.config,
-            lang,
-            user_request_in.text,
-            tokens,
-            df_discrim_words,
-            "unconscious_bias",
-            "unconscious_bias",
-        )
-
     if IsSubCategoryEnabled("agentic", disabled_categories):
         list_full += AgenticLanguageAnalysis(
             user_request_in.config, lang, user_request_in.text, tokens, df_agentic_ct
         )
 
-    if IsSubCategoryEnabled("exaggerating", disabled_categories):
-        list_full += ExaggeratingWordsSentences(
+    if IsSubCategoryEnabled("unconscious_bias", disabled_categories):
+        list_full += RulesBasedWordsPhraseMatcherDE(
             user_request_in.config,
             lang,
             user_request_in.text,
             tokens,
-            df_exaggerating,
-            df_exaggerating_sentences,
+            df_ub_no_noun_word_de,
+            df_ub_sentences_de,
+            "unconscious_bias",
+        ) + WordNounDE(
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            df_ub_noun_word_de,
+            "unconscious_bias",
         )
 
     if IsSubCategoryEnabled("communal", disabled_categories):
@@ -1355,7 +1351,112 @@ def StyleWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_sen
     return list_tokens
 
 
+# German function to show plural and singular forms of alternatives for nouns
+
+
+def WordNounDE(config: Config, lang, full_text, tokens, df, category):
+    list_tokens = []
+
+    for token in tokens:
+        for word, alternative_sing, alternative_plur, subcategory in zip(
+            df["Lemma"],
+            df["Sg_all_split"],
+            df["Pl_all_split"],
+            df["Primary_subcategory"],
+        ):
+            if GetNonNounLowerCased(token) == word:
+                if token.morph.get("Number")[0] == "Sing":
+                    list_tokens.append(
+                        ResultOut.factory(
+                            config,
+                            lang,
+                            token.text,
+                            full_text,
+                            category,
+                            subcategory,
+                            token.idx,
+                            token.idx + len(token.text),
+                            ast.literal_eval(alternative_sing),
+                        )
+                    )
+
+                elif token.morph.get("Number")[0] == "Plur":
+                    list_tokens.append(
+                        ResultOut.factory(
+                            config,
+                            lang,
+                            token.text,
+                            full_text,
+                            category,
+                            subcategory,
+                            token.idx,
+                            token.idx + len(token.text),
+                            ast.literal_eval(alternative_plur),
+                        )
+                    )
+
+    return list_tokens
+
+
 # Unified function for rules and sentence false positives
+
+# Unified function German
+def RulesBasedWordsPhraseMatcherDE(
+    config: Config, lang, full_text, tokens, df, df_sentence, category
+):
+    list_tokens = []
+    # Phrase matcher part to handle False positives with two words and special simbols
+    matcher = PhraseMatcher(model[lang.locale].vocab)
+
+    # Only run model.make_doc to speed things up
+    patterns = [
+        model[lang.locale].make_doc(text) for text in list(df_sentence["Lemma"])
+    ]
+    matcher.add("TerminologyList", patterns)
+
+    for token in tokens:
+        for word, alternative, subcategory in zip(
+            df["Lemma"], df["Alt_split"], df["Primary_subcategory"]
+        ):
+            if GetNonNounLowerCased(token) == word:
+                list_tokens.append(
+                    ResultOut.factory(
+                        config,
+                        lang,
+                        token.text,
+                        full_text,
+                        category,
+                        subcategory,
+                        token.idx,
+                        token.idx + len(token.text),
+                        ast.literal_eval(alternative),
+                    )
+                )
+
+    matches = matcher(tokens)
+    for match_id, start, end in matches:
+        for sentence, alternative, subcategory in zip(
+            df_sentence["Lemma"],
+            df_sentence["Alt_split"],
+            df_sentence["Primary_subcategory"],
+        ):
+            span = tokens[start:end]
+            if span.text == sentence:
+                list_tokens.append(
+                    ResultOut.factory(
+                        config,
+                        lang,
+                        span.text,
+                        full_text,
+                        category,
+                        subcategory,
+                        span.start_char,
+                        span.end_char,
+                        ast.literal_eval(alternative),
+                    )
+                )
+
+    return list_tokens
 
 
 def RulesBasedWordsPhraseMatcher(
