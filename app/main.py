@@ -267,9 +267,6 @@ df_gender_ct = pd.read_csv("training_data/gendered_noun_DE.csv")
 # load Gender denom_de false_positives
 genderdenom_false_positives = pd.read_csv("training_data/titles_false_positives_DE.csv")
 
-# load discriminating words_de
-# df_discrim_words = pd.read_csv("training_data/unconscious_bias_DE.csv")
-
 # load style words_de
 df_style_word = pd.read_csv("training_data/style_words_DE.csv")
 df_style_sentences = pd.read_csv("training_data/style_sentences_DE.csv")
@@ -284,8 +281,6 @@ df_open_dis_sentence_de = pd.read_csv("training_data/open_dis_sentences_DE.csv")
 df_ub_noun_word_de = pd.read_csv("training_data/ub_noun_words_DE.csv")
 df_ub_no_noun_word_de = pd.read_csv("training_data/ub_no_noun_words_DE.csv")
 df_ub_sentences_de = pd.read_csv("training_data/ub_sentences_DE.csv")
-# list of "exaggerating word" sentences
-# terms_exaggerating = list(df_exaggerating_sentences["Lemma"])
 
 # load inslusive words
 df_d_and_i_words = pd.read_csv("training_data/d_and_i_words_DE.csv")
