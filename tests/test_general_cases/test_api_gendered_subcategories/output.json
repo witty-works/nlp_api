@@ -19,7 +19,8 @@
         },
         {
             "alternatives": [
-                "der:die"
+                "die:der",
+                "die/der"
             ],
             "category": "gendered",
             "context": "",

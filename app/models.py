@@ -249,10 +249,13 @@ class ResultOut(BaseModel):
                 alternative = alternative.replace("color", "colour")
 
             if "~" in alternative:
+                variants = alternative.split("~")
                 if config.gendered_roles_format == "binary_gender":
-                    alternative = alternative.replace("~", "")
+                    if alternatives[i][0].isupper():
+                        alternative = alternatives[i].replace("~", "")
+                    else:
+                        alternative = alternatives[i].replace("~", "/")
                 else:
-                    variants = alternative.split("~")
                     if str(variants[1]) == "e":
                         alternative = (
                             str(variants[0])
@@ -270,7 +273,10 @@ class ResultOut(BaseModel):
                     cleaned_alternatives.append(alternative)
 
                     if config.gendered_roles_format == "both":
-                        alternative = alternatives[i].replace("~", "")
+                        if alternatives[i][0].isupper():
+                            alternative = alternatives[i].replace("~", "")
+                        else:
+                            alternative = alternatives[i].replace("~", "/")
 
             cleaned_alternatives.append(alternative)
 

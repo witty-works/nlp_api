@@ -1100,7 +1100,7 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
                                     subcategory,
                                     c_doc[i - 1].idx,
                                     None,
-                                    ["der~die"],
+                                    ["die~der"],
                                 )
                             )
                         elif c_doc[i - 1].text == "einer":
@@ -1114,7 +1114,7 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
                                     subcategory,
                                     c_doc[i - 1].idx,
                                     None,
-                                    ["einer~eine"],
+                                    ["eine~einer"],
                                 )
                             )
                     elif c_doc[i].morph.get("Number")[0] == "Plur":
@@ -1166,7 +1166,7 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
                                     subcategory,
                                     tokens[i - 1].idx,
                                     None,
-                                    ["der~die"],
+                                    ["die~der"],
                                 )
                             )
                         elif tokens[i - 1].text == "einer":
@@ -1180,7 +1180,7 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
                                     subcategory,
                                     tokens[i - 1].idx,
                                     None,
-                                    ["einer~eine"],
+                                    ["eine~einer"],
                                 )
                             )
                     elif tokens[i].morph.get("Number")[0] == "Plur":
