@@ -4,7 +4,8 @@
         {
             "alternatives": [
                 "Management",
-                "Manager:in"
+                "Manager:in",
+                "Managerin/Manager"
             ],
             "category": "gendered",
             "context": "",
@@ -36,6 +37,7 @@
                 "Leitungsperson",
                 "Leitung",
                 "Vorgesetzte:r",
+                "Vorgesetzte/Vorgesetzter",
                 "Leitende Kräfte",
                 "Leitungskräfte",
                 "Leitungspersonen",
