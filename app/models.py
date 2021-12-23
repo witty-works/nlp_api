@@ -53,6 +53,7 @@ class LangWithAutoType(str, Enum):
 
 
 class GenderedRolesFormatType(str, Enum):
+    BOTH = "both"
     INCLUSIVE_GENDER = "inclusive_gender"
     BINARY_GENDER = "binary_gender"
 
@@ -72,7 +73,9 @@ class Config(BaseModel):
         "In": r"In\b",
     }
     disabled_categories: Optional[List] = []
-    gendered_roles_format: Optional[GenderedRolesFormatType] = "inclusive_gender"
+    gendered_roles_format: Optional[
+        GenderedRolesFormatType
+    ] = GenderedRolesFormatType.BOTH
 
     @validator("german_gender_ending")
     def valid_german_gender_ending(cls, v: str):
@@ -234,35 +237,42 @@ class ResultOut(BaseModel):
         ):
             rewrite_to_british = True
 
+        cleaned_alternatives = []
         for i, alternative in enumerate(alternatives):
             if is_upper and category != "orthography":
-                alternatives[i] = (
-                    string.capwords(alternatives[i][0:1]) + alternatives[i][1:]
-                )
+                alternative = string.capwords(alternative[0:1]) + alternative[1:]
 
             if rewrite_to_swiss_german:
-                alternatives[i] = alternative.replace("ß", "ss")
+                alternative = alternative.replace("ß", "ss")
 
             if rewrite_to_british:
-                alternatives[i] = alternative.replace("color", "colour")
+                alternative = alternative.replace("color", "colour")
 
-            if "~" not in alternative:
-                continue
-
-            if config.gendered_roles_format == "binary_gender":
-                alternatives[i] = alternative.replace("~", "")
-            else:
-                variants = alternative.split("~")
-                if str(variants[1]) == "e":
-                    alternatives[i] = (
-                        str(variants[0]) + "e" + config.german_gender_ending[0:-2] + "r"
-                    )
+            if "~" in alternative:
+                if config.gendered_roles_format == "binary_gender":
+                    alternative = alternative.replace("~", "")
                 else:
-                    alternatives[i] = (
-                        str(variants[0])
-                        + config.german_gender_ending[0:-2]
-                        + str(variants[1])
-                    )
+                    variants = alternative.split("~")
+                    if str(variants[1]) == "e":
+                        alternative = (
+                            str(variants[0])
+                            + "e"
+                            + config.german_gender_ending[0:-2]
+                            + "r"
+                        )
+                    else:
+                        alternative = (
+                            str(variants[0])
+                            + config.german_gender_ending[0:-2]
+                            + str(variants[1])
+                        )
+
+                    cleaned_alternatives.append(alternative)
+
+                    if config.gendered_roles_format == "both":
+                        alternative = alternatives[i].replace("~", "")
+
+            cleaned_alternatives.append(alternative)
 
         return ResultOut(
             text,
@@ -271,7 +281,7 @@ class ResultOut(BaseModel):
             subcategory,
             start,
             end,
-            alternatives,
+            cleaned_alternatives,
             label,
             reason,
             solution,
