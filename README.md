@@ -195,6 +195,12 @@ CLick on "File" -> "Download" -> CSV
 pipenv run python -m analyze_rules -i [CSV export]]
 ```
 
+## Update the ignore.txt
+
+```
+pipenv run python -m add_alternatives_to_ignore
+```
+
 ## Collect statistics
 
 Run `./statistics.sh` to fetch statistics locally and remotely.
