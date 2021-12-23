@@ -293,7 +293,7 @@ def test_set_default_rules(event_loop):
     assert test_request.config.preferred_languages == "de,en"
     assert test_request.config.preferred_variants == "de-DE,en-GB"
     assert test_request.config.german_gender_ending == ":in"
-    assert test_request.config.gendered_roles_format == "inclusive_gender"
+    assert test_request.config.gendered_roles_format == "both"
 
 
 # test POST Redis endpoint
