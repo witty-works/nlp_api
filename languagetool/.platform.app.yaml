@@ -35,7 +35,8 @@ hooks:
 
     echo "Installing archive of ${LT} ${VERSION} from '${PLATFORM_CACHE_DIR}/${LT}-${VERSION}' ..."
     cp -R "${PLATFORM_CACHE_DIR}/${LT}-${VERSION}"/* .
-
+    cp ignore.txt org/languagetool/resource/de/hunspell/ignore.txt
+  
     sed "s/^#fasttext/fasttext/" server.properties > server.properties.fasttext
     mv server.properties.fasttext server.properties
 
