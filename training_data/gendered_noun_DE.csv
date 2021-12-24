@@ -8,7 +8,7 @@ Kaufmann,s,,gendered,function,,"['Kauffrau/Kaufmann', 'Kaufleute', 'Handeltreibe
 Lehrling,s,,gendered,function,,"['Nachwuchskraft', 'Azubi', 'Ausbildung', 'Lehre', 'Auszubildend~e~/~Auszubildender', 'Lernende', 'Auszubildende', 'Person in Ausbildung', 'auszubildende Person', 'lernende Person']","['Lernende', 'Auszubildende', 'Ausbildung', 'Lehre', 'Personen in Ausbildung', 'auszubildende Personen', 'lernende Person']"
 Macher,s,,gendered,function,,['Macher~in~/~Macher'],['Macher~innen~ und ~Macher']
 Manager,s,,gendered,function,,"['Management', 'Manager~in~/~Manager']","['Manager~innen~ und ~Manager', 'Management']"
-Matrose,s,,gendered,function,,"['Matros~in~/~Matrose', 'zur See Fahrende']","['zur See Fahrende', 'Matrosinnen~ und ~Matrosen', 'Seemänn~innen~ und ~Seemänner']"
+Matrose,s,,gendered,function,,"['Matros~in~/~Matrose', 'zur See Fahrende']","['zur See Fahrende', 'Matros~innen~ und ~Matrosen', 'Seemänn~innen~ und ~Seemänner']"
 Meister,s,,gendered,function,,"['Ausbildungskraft', 'Werkstattleitung', 'Meister~in~/~Meister', 'Werkstattleitende', 'Ausbildende', 'fachkundige Person', 'kompetente Person', 'ausbildende Lehrkraft']","['Werkstattleitende', 'Ausbildende', 'Meister~innen~ und ~Meister', 'Werkstattleitung', 'fachkundige Personen', 'kompetente Personen', 'ausbildende Lehrkraft']"
 Mentor,s,,gendered,function,,"['Mentorat', 'Mentoring', 'Mentor~in~/~Mentor', 'Mentorierende', 'Person, die ihr Wissen und ihre Erfahrung weitergibt']","['Mentorierende', 'Mentor~innen~ und ~Mentoren', 'Mentorat', 'Mentoring', 'Personen, die ihr Wissen und ihre Erfahrung weitergeben']"
 Nutzer,s,,gendered,function,,"['Nutzung', 'Nutzer~in~/~Nutzer', 'Nutzende']","['Nutzende', 'Nutzer~innen~ und ~Nutzer', 'Nutzung']"
@@ -25,7 +25,7 @@ Student,s,,gendered,function,,"['Studi', 'Mitglied der Studentenschaft', 'Studiu
 Supporter,s,,gendered,function,,"['Support', 'Supporter~in~/~Supporter', 'Supportleistende']","['Supportleistende', 'Support', 'Supporter~in~/~Supporter']"
 Teilnehmer,s,,gendered,function,,"['Teilnahme', 'Teilnehmer~in~/~Teilnehmer', 'Teilnehmende']","['Teilnehmende', 'Teilnehmer~innen~ und ~Teilnehmer', 'Teilnahme']"
 Tester,s,,gendered,function,,"['Testing', 'Test', 'Tester~in~/~Tester', 'Testende']","['Testende', 'Testing', 'Test']"
-User,s,,gendered,function,,"['Nutzung', 'Nutzer~in~/~Nutzer', 'Nutzende']","['Nutzende', 'Nutzerinnen~ und ~Nutzer', 'Nutzung']"
+User,s,,gendered,function,,"['Nutzung', 'Nutzer~in~/~Nutzer', 'Nutzende']","['Nutzende', 'Nutzer~innen~ und ~Nutzer', 'Nutzung']"
 Verfechter,s,,gendered,function,,"['Verfechten', 'Verfechter~in~/~Verfechter', 'Verfechtende', 'Person, die für (...) eintritt', 'Person, die sich engagiert']","['Verfechtende', 'Verfechten', 'Personen, die für (...) eintreten', 'Personen, die sich engagieren']"
 Vermittler,s,,gendered,function,,"['Mittelsperson', 'Vermittlung', 'Vermittler~in~/~Vermittler', 'Vermittelnde', 'Person, die helfend vermittelt', 'Person, die vermittelnd (zwischen Personen, Parteien) auftritt']","['Vermittelnde', 'Vermittler~innen~ und ~Vermittler', 'Vermittlung', 'Personen, die helfend vermitteln', 'Personen, die vermittelnd (zwischen Personen, Parteien) auftreten']"
 Vertreter,s,,gendered,function,,"['Vertretung', 'Vertreter~in~/~Vertreter', 'Vertretende', 'Person, die die Vertretung übernimmt', 'Person in der Vertretungsrolle']","['Vertretende', 'Vertreter~innen~ und ~Vertreter', 'Vertretung', 'Personen, die die Vertretung übernehmen', 'Personen in der Vertretungsrolle']"
