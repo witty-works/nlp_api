@@ -38,7 +38,7 @@ def read_csv(in_file):
                     "Potential incorrect use of ~ in a Frau/Mann case: " + alternative
                 )
 
-            if re.search("^.*[a-z]{3}in .*$", alternative):
+            if re.search("^.*[a-z]{3}in(nen)?(~| ).*$", alternative):
                 print("Potential missing ~ in (~in): " + alternative)
 
             if re.search("^.*[a-z]{3}in~[^ ].*$", alternative):
