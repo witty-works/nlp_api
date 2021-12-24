@@ -37,6 +37,7 @@ mounts:
 hooks:
   build: |
     set -e
+    /opt/python/3.9/bin/python3.9 -m pip install --upgrade pip
     pipenv install --system --deploy
     pipenv run /opt/python/3.9/bin/python3.9 -m pip install blackfire==1.9.1
     pipenv run /opt/python/3.9/bin/python3.9 -m spacy download en_core_web_sm
