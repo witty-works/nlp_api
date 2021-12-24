@@ -256,19 +256,21 @@ class ResultOut(BaseModel):
                     else:
                         alternative = alternatives[i].replace("~", "/")
                 else:
+
+                    beginning = str(variants[0])
                     if str(variants[1]) == "e":
-                        alternative = (
-                            str(variants[0])
-                            + "e"
-                            + config.german_gender_ending[0:-2]
-                            + "r"
-                        )
+                        beginning += "e"
+                        ending = "r"
                     else:
-                        alternative = (
-                            str(variants[0])
-                            + config.german_gender_ending[0:-2]
-                            + str(variants[1])
-                        )
+                        ending = str(variants[1])
+
+                    if config.german_gender_ending == "In":
+                        ending = ending.capitalize()
+                        separator = ""
+                    else:
+                        separator = config.german_gender_ending[0:-2]
+
+                    alternative = beginning + separator + ending
 
                     cleaned_alternatives.append(alternative)
 
