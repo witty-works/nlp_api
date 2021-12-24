@@ -256,7 +256,6 @@ class ResultOut(BaseModel):
                     else:
                         alternative = alternatives[i].replace("~", "/")
                 else:
-
                     beginning = str(variants[0])
                     if str(variants[1]) == "e":
                         beginning += "e"
