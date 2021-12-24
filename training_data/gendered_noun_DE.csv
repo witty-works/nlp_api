@@ -3,8 +3,8 @@ Einkäufer,s,,gendered,function,,"['Einkauf', 'Einkäufer~in~/~Einkäufer', 'Ein
 Fachmann,s,,gendered,function,,"['Fachperson', 'Fachkraft', 'Fachfrau/Fachmann', 'Fachpersonal', 'Fachkräfte']","['Fachkräfte', 'Fachfrauen und Fachmänner', 'Fachpersonal']"
 Fachspezialist,s,,gendered,function,,"['Fachperson', 'Fachspezialist~in~/~Fachspezialist', 'in einem Fach spezialisierte Person', 'Person, die sich (auf ...) spezialisiert hat']","['Fachspezialist~innen~ und ~Fachspezialisten', 'in einem Fach spezialisierte Personen', 'Personen, die sich (auf ...) spezialisiert haben']"
 Forstwart,s,,gendered,function,,"['Forstwartung', 'Forstwart~in~/~Forstwart', 'Forstwartende', 'Fachkraft in der Waldbewirtschaftung']","['Forstwartende', 'Forstwart~innen~ und ~Forstwarte', 'Forstwartung', 'Fachkräfte in der Waldbewirtschaftung']"
-Guy,s,,gendered,function,americanism,"['Kamerad~in~/~Kamerad', 'Freund~in~/~Freund', 'Kolleg~in~/~Kollege', 'Team', 'Leute', 'alle miteinander', 'alle zusammen']","['Leute', 'alle miteinander', 'alle zusammen', 'Kolleg~innen~ und ~Kollge', 'Freund~innen~ und ~Freunde', 'Kamerad~innen~ und ~Kameraden', 'Team']"
-Kaufmann,s,,gendered,function,,"['Kauffrau~/~Kaufmann', 'Kaufleute', 'Handeltreibende', 'Person im kaufmännischen Bereich']","['Handeltreibende', 'Kaufleute', 'Personen im kaufmännischen Bereich']"
+Guy,s,,gendered,function,americanism,"['Kamerad~in~/~Kamerad', 'Freund~in~/~Freund', 'Kolleg~in~/~Kollege', 'Team', 'Leute', 'alle miteinander', 'alle zusammen']","['Leute', 'alle miteinander', 'alle zusammen', 'Kolleg~innen~ und ~Kollege', 'Freund~innen~ und ~Freunde', 'Kamerad~innen~ und ~Kameraden', 'Team']"
+Kaufmann,s,,gendered,function,,"['Kauffrau/Kaufmann', 'Kaufleute', 'Handeltreibende', 'Person im kaufmännischen Bereich']","['Handeltreibende', 'Kaufleute', 'Personen im kaufmännischen Bereich']"
 Lehrling,s,,gendered,function,,"['Nachwuchskraft', 'Azubi', 'Ausbildung', 'Lehre', 'Auszubildend~e~/~Auszubildender', 'Lernende', 'Auszubildende', 'Person in Ausbildung', 'auszubildende Person', 'lernende Person']","['Lernende', 'Auszubildende', 'Ausbildung', 'Lehre', 'Personen in Ausbildung', 'auszubildende Personen', 'lernende Person']"
 Macher,s,,gendered,function,,['Macher~in~/~Macher'],['Macher~innen~ und ~Macher']
 Manager,s,,gendered,function,,"['Management', 'Manager~in~/~Manager']","['Manager~innen~ und ~Manager', 'Management']"
@@ -103,7 +103,7 @@ Frontender,s,,gendered,titles,americanism,"['Front-End-Entwicklung', 'Frontender
 Gärtner,s,,gendered,titles,,"['Gartenfachkraft', 'Gärtnerei', 'Gartenbau', 'Gärtner~in~/~Gärtner', 'Person, die Gärten pflegt', 'Person, die Gartenbau betreibt']","['Gärtner~innen~ und ~Gärtner', 'Gärtnerei', 'Gartenbau', 'Personen, die Gärten pflegen', 'Person, die Gartenbau betreiben']"
 Gemüsegärtner,s,,gendered,titles,,"['Gemüseanbau', 'Gemüsegärtner~in~/~Gemüsegärtner', 'Person, die Gemüsegärten pflegt', 'Person, die Gemüse anbaut', 'Person, die Gemüseanbau betreibt']","['Gemüsegärtner~innen~ und ~Gärtner', 'Gemüseanbau', 'Person, die Gemüsegärten pflegen', 'Person, die Gemüse anbauen', 'Person, die Gemüseanbau betreiben']"
 Generalist,s,,gendered,titles,,"['Multitalent', 'Generalist~in~/~Generalist', 'Multitalente', 'Mensch, der vielseitig begabt/interessiert ist', 'fachlich breit aufgestellter Mensch']","['Multitalente', 'Generalist~innen~ und ~Generalisten', 'Menschen, die vielseitig begabt/interessiert sind', 'fachlich breit aufgestellte Menschen']"
-Geomatiker,s,,gendered,titles,,"['Fachkraft für Geoinformation', 'Geomatik', 'Geoinformationstechnik', 'Geomatiker~in~/~Geomatiker', 'Geomatik-Team', 'Person, die Geodaten erhebt und verarbeitet']","['Geomatiker~innen~ und ~Geomatiker', 'Geomatik-Team', 'Geomatik', 'Geoinformationstechnik', 'Leute, die Geodaten erhebrn und verarbeiten']"
+Geomatiker,s,,gendered,titles,,"['Fachkraft für Geoinformation', 'Geomatik', 'Geoinformationstechnik', 'Geomatiker~in~/~Geomatiker', 'Geomatik-Team', 'Person, die Geodaten erhebt und verarbeitet']","['Geomatiker~innen~ und ~Geomatiker', 'Geomatik-Team', 'Geomatik', 'Geoinformationstechnik', 'Leute, die Geodaten erheben und verarbeiten']"
 Gestalter,s,,gendered,titles,,"['Gestaltung', 'Gestalter~in~/~Gestalter', 'Gestaltende', 'Person, die (...) gestaltet']","['Gestaltende', 'Gestalter~innen~ und ~Gestalter', 'Gestaltung', 'Personen, die (...) gestalten']"
 Gipser,s,,gendered,titles,,"['Gipserei-Fachkraft', 'Gipserei', 'Gipser~in~/~Gipser']","['Gipser~innen~ und ~Gipser', 'Gipserei']"
 Glaser,s,,gendered,titles,,"['Glaserei', 'Glasbau', 'Verglasung', 'Glaser~in~/~Glaser']","['Glaser~innen~ und ~Glaser', 'Glaserei', 'Glasbau', 'Verglasung']"
@@ -123,7 +123,7 @@ Industriemechaniker,s,,gendered,titles,,"['Industriemechanik', 'Industriemechani
 Industriepolsterer,s,,gendered,titles,,"['Industriepolsterei', 'Industriepolsterer~in~/~Industriepolsterer']",['Industriepolsterei']
 Informatiker,s,,gendered,titles,,"['Informatik', 'Informatiker~in~/~Informatiker', 'auf IT spezialisierte Person']","['Informatik', 'auf IT spezialisierte Leute']"
 Ingenieur,s,,gendered,titles,,"['auf Hoch-/Fachschule ausgebildete Technik-Fachkraft', 'Engineering', 'Technik', 'Technikwissenschaften', 'Ingenieur~in~/~Ingenieur', 'Engineering-Team']","['Ingenieur~innen~ und ~Ingenieure', 'Engineering-Team', 'Engineering', 'Technik', 'Technikwissenschaften', 'auf Hoch-/Fachschule ausgebildete Technik-Fachleute']"
-Inhaber,s,,gendered,titles,,"['Inhaber~in~/~Inhaber', 'Person, die (…) besitzt', 'Person, die (eine Position, eine Rolle, …) innehat']","['Personen, die (…) besitzen', 'die (eine Position, eine Rolle, …) innehaben']"
+Inhaber,s,,gendered,titles,,"['Inhaber~in~/~Inhaber', 'Person, die (...) besitzt', 'Person, die (eine Position, eine Rolle, ...) innehat']","['Personen, die (...) besitzen', 'die (eine Position, eine Rolle, ...) innehaben']"
 Innendekorateur,s,,gendered,titles,,"['Innendekoration', 'Innendekorateur~in~/~Innendekorateur']",['Innendekoration']
 Installateur,s,,gendered,titles,,"['Installation', 'Installateur~in~/~Installateur']",['Installation']
 Instructor,s,,gendered,titles,americanism,"['Lehrkraft', 'Coach', 'Lehre', 'Training', 'Ausbildung', 'Instructor~in~/~Instructor', 'Kurstrainer~in~/~Kurstrainer']","['Lehre', 'Training', 'Ausbildung']"
@@ -136,7 +136,7 @@ Konstrukteur,s,,gendered,titles,,"['Konstruktion', 'Konstrukteur~in~/~Konstrukte
 Kontrolleur,s,,gendered,titles,,"['Kontrolle', 'Kontrolleur~in~/~Kontrolleur']",['Kontrolle']
 Kosmetiker,s,,gendered,titles,,"['Kosmetik', 'Kosmetiker~in~/~Kosmetiker']",['Kosmetik']
 Küfer,s,,gendered,titles,,"['Küferei', 'Küfereibetrieb', 'Küfer~in~/~Küfer']","['Küferei', 'Küfereibetrieb']"
-Kunde,s,,gendered,titles,,"['Kund~in~/~Kunde', 'Kundschaft', 'Klientel', 'Auftraggebende', 'Bestellende', 'beziehende Person', 'Person, die (…) kauft', 'beauftragende Firma']","['Auftraggebende', 'Bestellende', 'Kund~innen~ und ~Kunden', 'Kundschaft', 'Klientel', 'beziehende Personen', 'Personen, die (…) kaufen', 'beauftragende Firmen']"
+Kunde,s,,gendered,titles,,"['Kund~in~/~Kunde', 'Kundschaft', 'Klientel', 'Auftraggebende', 'Bestellende', 'beziehende Person', 'Person, die (...) kauft', 'beauftragende Firma']","['Auftraggebende', 'Bestellende', 'Kund~innen~ und ~Kunden', 'Kundschaft', 'Klientel', 'beziehende Personen', 'Personen, die (...) kaufen', 'beauftragende Firmen']"
 Laborant,s,,gendered,titles,,"['Labor', 'Laborbetrieb', 'Laborant~in~/~Laborant']","['Labor', 'Laborbetrieb']"
 Lackierer,s,,gendered,titles,,"['Lackierung', 'Lackierbetrieb', 'Lackierer~in~/~Lackierer']","['Lackierung', 'Lackierbetrieb']"
 Landwirt,s,,gendered,titles,,"['Landwirtschaft', 'Landwirt~in~/~Landwirt']",['Landwirtschaft']
@@ -172,24 +172,24 @@ Polier,s,,gendered,titles,,"['Poliererei', 'Polier~in~/~Polier']",['Poliererei']
 Polisseur,s,,gendered,titles,,['Polisseus~e~/~Polisseur'],[]
 Polygraf,s,,gendered,titles,,"['Polygrafie', 'Polygraf~in~/~Polygraf']",['Polygrafie']
 Processor,s,,gendered,titles,americanism,"['Processing', 'Prozessor~in~/~Prozessor']",['Processing']
-Product Owner,s,,gendered,titles,americanism,"['Product ownership', 'Product Owner~in~/~Product Owner', 'Person, die die Verantwortung für die erfolgreiche und wirtschaftlich sinnvolle Umsetzung eines Vorhabens trägt', 'Person, die gegenüber der Entwicklung die Sicht/Erwartungen der Kundschaft vertritt/kommuniziert']","['Product ownership', 'Personen, die die Verantwortung für die erfolgreiche und wirtschaftlich sinnvolle Umsetzung eines Vorhabens tragen', 'Personen, die gegenüber der Entwicklung die Sicht/Erwartungen der Kundschaft vertreten/kommunizieren']"
+Product Owner,s,,gendered,titles,americanism,"['Product Ownership', 'Product Owner~in~/~Product Owner', 'Person, die die Verantwortung für die erfolgreiche und wirtschaftlich sinnvolle Umsetzung eines Vorhabens trägt', 'Person, die gegenüber der Entwicklung die Sicht/Erwartungen der Kundschaft vertritt/kommuniziert']","['Product Ownership', 'Personen, die die Verantwortung für die erfolgreiche und wirtschaftlich sinnvolle Umsetzung eines Vorhabens tragen', 'Personen, die gegenüber der Entwicklung die Sicht/Erwartungen der Kundschaft vertreten/kommunizieren']"
 Professor,s,,gendered,titles,,"['Professur', 'Professor~in~/~Professor']",['Professur']
 Rangierbegleiter,s,,gendered,titles,,"['Rangierbegleitung', 'Rangierbegleiter~in~/~Rangierbegleiter', 'Rangierbegleitende']","['Rangierbegleitende', 'Rangierbegleiter~innen~ und ~Rangierbegleiter', 'Rangierbegleitung']"
 Rangierer,s,,gendered,titles,,"['Rangierperson', 'Rangierbetrieb', 'Rangierer~in~/~Rangierer', 'Rangierpersonal']","['Rangierer~innen~ und ~Rangierer', 'Rangierpersonal', 'Rangierbetrieb']"
 Recyclist,s,,gendered,titles,americanism,"['Recycling', 'Recyclist~in~/~Recyclist']",['Recycling']
 Reiniger,s,,gendered,titles,,"['Reinigungskraft', 'Reinigung', 'Reiniger~in~/~Reiniger']",['Reinigung']
 Reparateur,s,,gendered,titles,,"['Reparatur', 'Reparateur~in~/~Reparateur']",['Reparatur']
-Researcher,s,,gendered,titles,,"['Research', 'Researcher~in~/~Researcher', 'Forscher~in~/~Foscher', 'Researchteam', 'Recherchierende', 'Forschende', 'Person, die recherchiert', 'Person, die forscht']","['Recherchierende', 'Forschende', 'Researcher~innen~ und ~Researcher', 'Forscher~innen~ und ~Forscher', 'Researchteam', 'Research', 'Personen, die recherchieren', 'Personen, die forschen']"
+Researcher,s,,gendered,titles,,"['Research', 'Researcher~in~/~Researcher', 'Forscher~in~/~Forscher', 'Researchteam', 'Recherchierende', 'Forschende', 'Person, die recherchiert', 'Person, die forscht']","['Recherchierende', 'Forschende', 'Researcher~innen~ und ~Researcher', 'Forscher~innen~ und ~Forscher', 'Researchteam', 'Research', 'Personen, die recherchieren', 'Personen, die forschen']"
 Säger,s,,gendered,titles,,"['Sägerei', 'Sägemühle', 'Säger~in~/~Säger']","['Sägerei', 'Sägemühle']"
 Schlosser,s,,gendered,titles,,"['Schlosserei', 'Schlosser~in~/~Schlosser']",['Schlosserei']
 Schmied,s,,gendered,titles,,"['Schmiede', 'Schmied~in~/~Schmied']",['Schmiede']
 Schreiner,s,,gendered,titles,,"['Schreinerei', 'Schreiner~in~/~Schreiner']",['Schreinerei']
 Seilbahner,s,,gendered,titles,,"['Seilbahn', 'Seilbahner~in~/~Seilbahner']",['Seilbahn']
-Service desk agent,s,,gendered,titles,americanism,"['Servicedesk', 'Servicedesk-Mitarbeiter~in~/~Servicedesk-Mitarbeiter', 'Servicedesk-Mitarbeitende', 'Person, die für das Servicedesk arbeitet', 'Person, die im integrierten IT-Dienst arbeitet', 'Person, die sich dartum kümmert, dass der IT-Betrieb zuverlässig läuft']","['Servicedesk-Mitarbeitende', 'Servicedesk', 'Personen, die für das Servicedesk arbeiten', 'Personen, die sich darum kümmern, dass der IT-Betrieb zuverlässig läuft']"
+Service desk agent,s,,gendered,titles,americanism,"['Servicedesk', 'Servicedesk-Mitarbeiter~in~/~Servicedesk-Mitarbeiter', 'Servicedesk-Mitarbeitende', 'Person, die für das Servicedesk arbeitet', 'Person, die im integrierten IT-Dienst arbeitet', 'Person, die sich darum kümmert, dass der IT-Betrieb zuverlässig läuft']","['Servicedesk-Mitarbeitende', 'Servicedesk', 'Personen, die für das Servicedesk arbeiten', 'Personen, die sich darum kümmern, dass der IT-Betrieb zuverlässig läuft']"
 Servicetechniker,s,,gendered,titles,,"['technische Servicekraft', 'Service', 'technischer Service', 'Servicetechniker~in~/~Servicetechniker', 'Servicepersonal', 'technisches Servicepersonal']","['Servicetechniker~innen~ und ~Servicetechniker', 'Servicepersonal', 'technisches Servicepersonal', 'Service', 'technischer Service']"
 Sicherheitsbeauftragter,s,,gendered,titles,,"['Sicherheits-Management', 'Sicherheitsbeauftragt~e~/~Sicherheitsbeauftragter']",['Sicherheits-Management']
 Softwarearchitekt,s,,gendered,titles,,"['Softwarearchitektur', 'Softwarearchitekt~in~/~Softwarearchitekt']",['Softwarearchitektur']
-Speditionskaufmann,s,,gendered,titles,,"['Speditionskaufmann', 'Speditionskaufmann~in~/~Speditionskaufmann']",['Speditionskaufmann']
+Speditionskaufmann,s,,gendered,titles,,"['Speditionskaufmann', 'Speditionskauffrau/Speditionskaufmann']",['Speditionskaufmann']
 Spengler,s,,gendered,titles,,"['Spenglerei', 'Spengler~in~/~Spengler']",['Spenglerei']
 Steinmetz,s,,gendered,titles,,['Steinmetz~in~/~Steinmetz'],[]
 Steinsetzer,s,,gendered,titles,,['Steinsetzer~in~/~Steinsetzer'],[]

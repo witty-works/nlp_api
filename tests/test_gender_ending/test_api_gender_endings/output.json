@@ -4,12 +4,13 @@
         {
             "alternatives": [
                 "Kund*in",
+                "Kundin/Kunde",
                 "Kundschaft",
                 "Klientel",
                 "Auftraggebende",
                 "Bestellende",
                 "Beziehende Person",
-                "Person, die (…) kauft",
+                "Person, die (...) kauft",
                 "Beauftragende Firma"
             ],
             "category": "gendered",
@@ -27,10 +28,11 @@
                 "Auftraggebende",
                 "Bestellende",
                 "Kund*innen",
+                "Kundinnen und Kunden",
                 "Kundschaft",
                 "Klientel",
                 "Beziehende Personen",
-                "Personen, die (…) kaufen",
+                "Personen, die (...) kaufen",
                 "Beauftragende Firmen"
             ],
             "category": "gendered",

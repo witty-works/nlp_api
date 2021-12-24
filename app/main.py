@@ -81,7 +81,7 @@ logging.debug("app started with settings: %s", settings)
 # convert string of list into list of the strings
 # project models
 
-version = "1.8.3"
+version = "1.9.0"
 app = FastAPI(
     title="Witty NLP API",
     version=version,
@@ -119,9 +119,14 @@ for language in languages:
     lang = Lang(language)
     categories_with_labels[language] = copy.deepcopy(categories)
     for category in categories_with_labels[language]:
+        parent_category = categories[category]["category"]
+        color = categories[parent_category]["color"]
+        categories_with_labels[language][category]["color"] = color
+
         categories_with_labels[language][category]["label"] = lang._(
             "rules." + category + "_label"
         )
+
 
 # Custom tokenizers
 # English
@@ -258,12 +263,9 @@ df_agentic_ct = pd.read_csv("training_data/agentic_DE.csv")
 # list_agentic = list(df_agentic_ct["Lemma"])
 
 # load Gender denom_de
-df_gender_ct = pd.read_csv("training_data/GenderedNoun_DE.csv")
+df_gender_ct = pd.read_csv("training_data/gendered_noun_DE.csv")
 # load Gender denom_de false_positives
 genderdenom_false_positives = pd.read_csv("training_data/titles_false_positives_DE.csv")
-
-# load discriminating words_de
-df_discrim_words = pd.read_csv("training_data/unconscious_bias_DE.csv")
 
 # load style words_de
 df_style_word = pd.read_csv("training_data/style_words_DE.csv")
@@ -275,11 +277,10 @@ terms_style = list(df_style_sentences["Lemma"])
 df_open_dis_word_de = pd.read_csv("training_data/open_dis_words_DE.csv")
 df_open_dis_sentence_de = pd.read_csv("training_data/open_dis_sentences_DE.csv")
 
-# load Exaggerating word and sentences de
-df_exaggerating = pd.read_csv("training_data/exaggerating_words_DE.csv")
-df_exaggerating_sentences = pd.read_csv("training_data/exaggerating_sentences_DE.csv")
-# list of "exaggerating word" sentences
-terms_exaggerating = list(df_exaggerating_sentences["Lemma"])
+# load unconscious_bias word (nouns, not nouns) and sentences de
+df_ub_noun_word_de = pd.read_csv("training_data/ub_noun_words_DE.csv")
+df_ub_no_noun_word_de = pd.read_csv("training_data/ub_no_noun_words_DE.csv")
+df_ub_sentences_de = pd.read_csv("training_data/ub_sentences_DE.csv")
 
 # load inslusive words
 df_d_and_i_words = pd.read_csv("training_data/d_and_i_words_DE.csv")
@@ -765,44 +766,69 @@ def GetNonNounLowerCased(token):
     return token_word
 
 
+def IsSubCategoryEnabled(subcategory, disabled_categories):
+    return categories[subcategory]["category"] not in disabled_categories
+
+
 def GermanRules(lang, tokens, user_request_in: RequestIn):
     list_full = []
 
-    # Agentic language and related false positives catch
-    if "agentic" not in user_request_in.config.disabled_categories:
-        list_full += AgenticLanguageAnalysis(
-            user_request_in.config, lang, user_request_in.text, tokens, df_agentic_ct
-        )
+    disabled_categories = user_request_in.config.disabled_categories
 
-    if "gendered" not in user_request_in.config.disabled_categories:
-        list_full += GenderedDenomAnalysis(
-            user_request_in.config, lang, user_request_in.text, tokens, df_gender_ct
-        )
-
-    if "misgendered_institutions" not in user_request_in.config.disabled_categories:
-        list_full += MisgenderingInstitutions(
-            user_request_in.config, lang, user_request_in.text, tokens
-        )
-
-    if "gendered_denomination_ending" not in user_request_in.config.disabled_categories:
-        list_full += GenderedDenomEnd(
-            user_request_in.config, lang, user_request_in.text
-        )
-
-    # discriminating words catch
-    if "unconscious_bias" not in user_request_in.config.disabled_categories:
-        list_full += RulesBased(
+    if IsSubCategoryEnabled("openly_discriminating", disabled_categories):
+        list_full += RulesBasedWordsPhraseMatcherDE(
             user_request_in.config,
             lang,
             user_request_in.text,
             tokens,
-            df_discrim_words,
+            df_open_dis_word_de,
+            df_open_dis_sentence_de,
+            "openly_discriminating",
+        )
+
+    if IsSubCategoryEnabled("gendered", disabled_categories):
+        list_full += GenderedDenomAnalysis(
+            user_request_in.config, lang, user_request_in.text, tokens, df_gender_ct
+        )
+
+    if IsSubCategoryEnabled(
+        "misgendering_institutions", user_request_in.config.disabled_categories
+    ):
+        list_full += MisgenderingInstitutions(
+            user_request_in.config, lang, user_request_in.text, tokens
+        )
+
+    if IsSubCategoryEnabled(
+        "gendered_denominations_ending", user_request_in.config.disabled_categories
+    ):
+        list_full += GenderedDenomEnd(
+            user_request_in.config, lang, user_request_in.text
+        )
+
+    if IsSubCategoryEnabled("agentic", disabled_categories):
+        list_full += AgenticLanguageAnalysis(
+            user_request_in.config, lang, user_request_in.text, tokens, df_agentic_ct
+        )
+
+    if IsSubCategoryEnabled("unconscious_bias", disabled_categories):
+        list_full += RulesBasedWordsPhraseMatcherDE(
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            df_ub_no_noun_word_de,
+            df_ub_sentences_de,
             "unconscious_bias",
+        ) + WordNounDE(
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            df_ub_noun_word_de,
             "unconscious_bias",
         )
 
-    # communal terms
-    if "communal" not in user_request_in.config.disabled_categories:
+    if IsSubCategoryEnabled("communal", disabled_categories):
         list_full += RulesBased(
             user_request_in.config,
             lang,
@@ -813,8 +839,7 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             "communal",
         )
 
-    # d_and_i_words words
-    if "d_and_i" not in user_request_in.config.disabled_categories:
+    if IsSubCategoryEnabled("d_and_i", disabled_categories):
         list_full += RulesBasedWordsPhraseMatcher(
             user_request_in.config,
             lang,
@@ -826,8 +851,7 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             "d_and_i",
         )
 
-    # style words&sentences catch
-    if "style" not in user_request_in.config.disabled_categories:
+    if IsSubCategoryEnabled("style", disabled_categories):
         list_full += StyleWordAnalysis(
             user_request_in.config,
             lang,
@@ -838,49 +862,16 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             df_style_sentences,
         )
 
-    # exaggerating words&sentences catch
-    if "exaggerating" not in user_request_in.config.disabled_categories:
-        list_full += ExaggeratingWordsSentences(
-            user_request_in.config,
-            lang,
-            user_request_in.text,
-            tokens,
-            df_exaggerating,
-            df_exaggerating_sentences,
-        )
-    # openly discriminating words&sentences catch de
-    if "openly_discriminating" not in user_request_in.config.disabled_categories:
-        list_full += RulesBasedWordsPhraseMatcherUN(
-            user_request_in.config,
-            lang,
-            user_request_in.text,
-            tokens,
-            df_open_dis_word_de,
-            df_open_dis_sentence_de,
-            "openly_discriminating",
-        )
-
     return list_full
 
 
 # Function for all English rules
-
-
 def EnglishRules(lang, tokens, user_request_in: RequestIn):
     list_full = []
 
-    if "agentic" not in user_request_in.config.disabled_categories:
-        list_full += RulesBasedEN(
-            user_request_in.config,
-            lang,
-            user_request_in.text,
-            tokens,
-            df_agentic_words_en,
-            "unconscious_bias",
-            "agentic",
-        )
+    disabled_categories = user_request_in.config.disabled_categories
 
-    if "openly_discriminating" not in user_request_in.config.disabled_categories:
+    if IsSubCategoryEnabled("openly_discriminating", disabled_categories):
         list_full += RulesBasedWordsPhraseMatcherUN(
             user_request_in.config,
             lang,
@@ -890,28 +881,8 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
             df_open_dis_sentence_en,
             "openly_discriminating",
         )
-    if "inclusive" not in user_request_in.config.disabled_categories:
-        list_full += RulesBasedWordsPhraseMatcherNoAltEN(
-            user_request_in.config,
-            lang,
-            user_request_in.text,
-            tokens,
-            df_inclusive_word_en,
-            df_inclusive_sentence_en,
-            "inclusive",
-        )
-    if "style" not in user_request_in.config.disabled_categories:
-        list_full += RulesBasedWordsPhraseMatcherUN(
-            user_request_in.config,
-            lang,
-            user_request_in.text,
-            tokens,
-            df_style_word_en,
-            df_style_sentence_en,
-            "style",
-        )
 
-    if "gendered" not in user_request_in.config.disabled_categories:
+    if IsSubCategoryEnabled("gendered", disabled_categories):
         list_full += RulesBasedWordsPhraseMatcherUN(
             user_request_in.config,
             lang,
@@ -927,6 +898,39 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
             tokens,
             df_gendered_noun_word_en,
             "gendered",
+        )
+
+    if IsSubCategoryEnabled("agentic", disabled_categories):
+        list_full += RulesBasedEN(
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            df_agentic_words_en,
+            "unconscious_bias",
+            "agentic",
+        )
+
+    if IsSubCategoryEnabled("inclusive", disabled_categories):
+        list_full += RulesBasedWordsPhraseMatcherNoAltEN(
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            df_inclusive_word_en,
+            df_inclusive_sentence_en,
+            "inclusive",
+        )
+
+    if IsSubCategoryEnabled("style", disabled_categories):
+        list_full += RulesBasedWordsPhraseMatcherUN(
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            df_style_word_en,
+            df_style_sentence_en,
+            "style",
         )
 
     return list_full
@@ -947,8 +951,8 @@ def IsItFalsePositive(word, false_positive):
 
 
 def GenderedDenomEnd(config: Config, lang, full_text):
-    category = "gendered"
     subcategory = "gendered_denominations_ending"
+    category = categories[subcategory]["category"]
 
     list_ending = []
     for item in config._gendereddenom_ending:
@@ -978,8 +982,8 @@ def GenderedDenomEnd(config: Config, lang, full_text):
 
 
 def AgenticLanguageAnalysis(config: Config, lang, full_text, tokens, df):
-    category = "unconscious_bias"
     subcategory = "agentic"
+    category = categories[subcategory]["category"]
     list_tokens = []
     dic_anc = {}
     list_false_positives = []
@@ -1096,7 +1100,7 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
                                     subcategory,
                                     c_doc[i - 1].idx,
                                     None,
-                                    ["der~die"],
+                                    ["die~der"],
                                 )
                             )
                         elif c_doc[i - 1].text == "einer":
@@ -1110,7 +1114,7 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
                                     subcategory,
                                     c_doc[i - 1].idx,
                                     None,
-                                    ["einer~eine"],
+                                    ["eine~einer"],
                                 )
                             )
                     elif c_doc[i].morph.get("Number")[0] == "Plur":
@@ -1162,7 +1166,7 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
                                     subcategory,
                                     tokens[i - 1].idx,
                                     None,
-                                    ["der~die"],
+                                    ["die~der"],
                                 )
                             )
                         elif tokens[i - 1].text == "einer":
@@ -1176,7 +1180,7 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
                                     subcategory,
                                     tokens[i - 1].idx,
                                     None,
-                                    ["einer~eine"],
+                                    ["eine~einer"],
                                 )
                             )
                     elif tokens[i].morph.get("Number")[0] == "Plur":
@@ -1203,8 +1207,8 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
 def ExaggeratingWordsSentences(
     config: Config, lang, full_text, tokens, df, df_sentences
 ):
-    category = "style"
     subcategory = "exaggerating"
+    category = categories[subcategory]["category"]
     list_tokens = []
     # Phrase matcher part to handle False positives with two words and special simbols
     matcher = PhraseMatcher(model[lang.locale].vocab)
@@ -1260,7 +1264,6 @@ def ExaggeratingWordsSentences(
 def StyleWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_sentence):
     # category = df_style_sentences(["subcategory"])
     category = "style"
-    # subcategory = ""
     list_tokens = []
     list_false_positives = []
     # Phrase matcher part to handle False positives with two words and special simbols
@@ -1343,7 +1346,112 @@ def StyleWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_sen
     return list_tokens
 
 
+# German function to show plural and singular forms of alternatives for nouns
+
+
+def WordNounDE(config: Config, lang, full_text, tokens, df, category):
+    list_tokens = []
+
+    for token in tokens:
+        for word, alternative_sing, alternative_plur, subcategory in zip(
+            df["Lemma"],
+            df["Sg_all_split"],
+            df["Pl_all_split"],
+            df["Primary_subcategory"],
+        ):
+            if GetNonNounLowerCased(token) == word:
+                if token.morph.get("Number")[0] == "Sing":
+                    list_tokens.append(
+                        ResultOut.factory(
+                            config,
+                            lang,
+                            token.text,
+                            full_text,
+                            category,
+                            subcategory,
+                            token.idx,
+                            token.idx + len(token.text),
+                            ast.literal_eval(alternative_sing),
+                        )
+                    )
+
+                elif token.morph.get("Number")[0] == "Plur":
+                    list_tokens.append(
+                        ResultOut.factory(
+                            config,
+                            lang,
+                            token.text,
+                            full_text,
+                            category,
+                            subcategory,
+                            token.idx,
+                            token.idx + len(token.text),
+                            ast.literal_eval(alternative_plur),
+                        )
+                    )
+
+    return list_tokens
+
+
 # Unified function for rules and sentence false positives
+
+# Unified function German
+def RulesBasedWordsPhraseMatcherDE(
+    config: Config, lang, full_text, tokens, df, df_sentence, category
+):
+    list_tokens = []
+    # Phrase matcher part to handle False positives with two words and special simbols
+    matcher = PhraseMatcher(model[lang.locale].vocab)
+
+    # Only run model.make_doc to speed things up
+    patterns = [
+        model[lang.locale].make_doc(text) for text in list(df_sentence["Lemma"])
+    ]
+    matcher.add("TerminologyList", patterns)
+
+    for token in tokens:
+        for word, alternative, subcategory in zip(
+            df["Lemma"], df["Alt_split"], df["Primary_subcategory"]
+        ):
+            if GetNonNounLowerCased(token) == word:
+                list_tokens.append(
+                    ResultOut.factory(
+                        config,
+                        lang,
+                        token.text,
+                        full_text,
+                        category,
+                        subcategory,
+                        token.idx,
+                        token.idx + len(token.text),
+                        ast.literal_eval(alternative),
+                    )
+                )
+
+    matches = matcher(tokens)
+    for match_id, start, end in matches:
+        for sentence, alternative, subcategory in zip(
+            df_sentence["Lemma"],
+            df_sentence["Alt_split"],
+            df_sentence["Primary_subcategory"],
+        ):
+            span = tokens[start:end]
+            if span.text == sentence:
+                list_tokens.append(
+                    ResultOut.factory(
+                        config,
+                        lang,
+                        span.text,
+                        full_text,
+                        category,
+                        subcategory,
+                        span.start_char,
+                        span.end_char,
+                        ast.literal_eval(alternative),
+                    )
+                )
+
+    return list_tokens
 
 
 def RulesBasedWordsPhraseMatcher(
@@ -1425,8 +1533,8 @@ def RulesBased(config: Config, lang, full_text, tokens, df, category, subcategor
 
 
 def MisgenderingInstitutions(config: Config, lang, full_text, tokens):
-    category = "style"
     subcategory = "misgendering_institutions"
+    category = categories[subcategory]["category"]
     db_match_list = []
     matcher_db = Matcher(model[lang.locale].vocab)
     # Add match ID "DB" with no callback and one pattern
