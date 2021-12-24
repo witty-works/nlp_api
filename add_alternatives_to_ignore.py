@@ -51,12 +51,21 @@ for word in all_alternatives:
 
         variants = word.split("~")
         for german_gender_ending in endings:
+            beginning = str(variants[0])
             if str(variants[1]) == "e":
-                new_word = str(variants[0]) + "e" + german_gender_ending[0:-2] + "r"
+                beginning += "e"
+                ending = "r"
             else:
-                new_word = (
-                    str(variants[0]) + german_gender_ending[0:-2] + str(variants[1])
-                )
+                ending = str(variants[1])
+
+            if german_gender_ending == "In":
+                ending = ending.capitalize()
+                separator = ""
+            else:
+                separator = german_gender_ending[0:-2]
+
+            new_word = beginning + separator + ending
+
             clean_words.append(new_word)
     else:
         clean_words.extend(word.split("/"))

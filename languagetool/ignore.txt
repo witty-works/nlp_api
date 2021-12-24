@@ -3,6 +3,8 @@ Abdichter*in
 Abdichter*innen
 Abdichter:in
 Abdichter:innen
+AbdichterIn
+AbdichterInnen
 Abdichter\/-in
 Abdichter\/-innen
 Abdichter\/in
@@ -12,16 +14,26 @@ Abdichter\_innen
 Abdichterin
 Abdichterinnen
 Anfragenbearbeitung
+AngestellteR
 Apparateglasbau
+ApparateglasbläserIn
+ApparateglasbläserInnen
 Apparateglasbläserin
 Apparateglasbläserinnen
 Arbeitgebende
 Architekturschaffende
+AuszubildendeR
+AutomatikerIn
+AutomatikerInnen
+BackenderIn
+BackenderInnen
 Backenderin
 Backenderinnen
+BauwerktrennerIn
+BauwerktrennerInnen
 Bauwerktrennerin
 Bauwerktrennerinnen
-Beschäftiger
+BeschäftigeR
 Betriebsärzt*in
 Betriebsärzt*innen
 Betriebsärzt:in
@@ -32,6 +44,8 @@ Betriebsärzt\/in
 Betriebsärzt\/innen
 Betriebsärzt\_in
 Betriebsärzt\_innen
+BrückenbauerIn
+BrückenbauerInnen
 Brückenbauerin
 Brückenbauerinnen
 Bäuer\/-in
@@ -47,6 +61,8 @@ Carrossier*in
 Carrossier*innen
 Carrossier:in
 Carrossier:innen
+CarrossierIn
+CarrossierInnen
 Carrossier\/-in
 Carrossier\/-innen
 Carrossier\/in
@@ -56,12 +72,20 @@ Carrossier\_innen
 Carrossierin
 Carrossierinnen
 Carrossiers
+CoiffeurIn
+CoiffeurInnen
 Coiffeurin
 Coiffeurinnen
 Coiffure
+ControllerIn
+ControllerInnen
 Designschaffende
+DeveloperIn
+DeveloperInnen
 Developerin
 Developerinnen
+DienstleisterIn
+DienstleisterInnen
 Dientleistungssektor
 Diätköch*in
 Diätköch*innen
@@ -91,6 +115,8 @@ Frontender*in
 Frontender*innen
 Frontender:in
 Frontender:innen
+FrontenderIn
+FrontenderInnen
 Frontender\/-in
 Frontender\/-innen
 Frontender\/in
@@ -99,6 +125,8 @@ Frontender\_in
 Frontender\_innen
 Frontenderin
 Frontenderinnen
+GeneralistIn
+GeneralistInnen
 Generalistinnen
 Geoinformationstechnik
 Geomatiker
@@ -106,6 +134,8 @@ Geomatiker*in
 Geomatiker*innen
 Geomatiker:in
 Geomatiker:innen
+GeomatikerIn
+GeomatikerInnen
 Geomatiker\/-in
 Geomatiker\/-innen
 Geomatiker\/in
@@ -117,6 +147,7 @@ Geomatikerinnen
 Gipserei
 Gipserei-Fachkraft
 Glasmalende
+GleisbauerIn
 Gleisbauerin
 Grafikschaffende
 Gravierbetrieb
@@ -126,6 +157,8 @@ Growth-Manager*in
 Growth-Manager*innen
 Growth-Manager:in
 Growth-Manager:innen
+Growth-ManagerIn
+Growth-ManagerInnen
 Growth-Manager\/-in
 Growth-Manager\/-innen
 Growth-Manager\/in
@@ -139,6 +172,8 @@ Growth-Marketing-Spezialist*in
 Growth-Marketing-Spezialist*innen
 Growth-Marketing-Spezialist:in
 Growth-Marketing-Spezialist:innen
+Growth-Marketing-SpezialistIn
+Growth-Marketing-SpezialistInnen
 Growth-Marketing-Spezialist\/-in
 Growth-Marketing-Spezialist\/-innen
 Growth-Marketing-Spezialist\/in
@@ -159,6 +194,8 @@ Gussformer*in
 Gussformer*innen
 Gussformer:in
 Gussformer:innen
+GussformerIn
+GussformerInnen
 Gussformer\/-in
 Gussformer\/-innen
 Gussformer\/in
@@ -171,18 +208,22 @@ Gussformerinnen
 Hörsystemakustiker
 Hörsystemakustiker*in
 Hörsystemakustiker:in
+HörsystemakustikerIn
 Hörsystemakustiker\/-in
 Hörsystemakustiker\/in
 Hörsystemakustiker\_in
 Hörsystemakustikerin
+IndustriepolstererIn
 Industriepolstererin
 Instructor
 Instructor*in
 Instructor:in
+InstructorIn
 Instructor\/-in
 Instructor\/in
 Instructor\_in
 Instructorin
+KaminfegerIn
 Kaminfegerin
 Kollegschaft
 Konsultant
@@ -190,6 +231,8 @@ Konsultant*in
 Konsultant*innen
 Konsultant:in
 Konsultant:innen
+KonsultantIn
+KonsultantInnen
 Konsultant\/-in
 Konsultant\/-innen
 Konsultant\/in
@@ -205,6 +248,7 @@ Köch:in
 Köch\/-in
 Köch\/in
 Köch\_in
+KüferIn
 Küfereibetrieb
 Küferin
 Lenkungsperson
@@ -214,6 +258,7 @@ Lernpat*innenschaft
 Lernpat:in
 Lernpat:innen
 Lernpat:innenschaft
+LernpatInnenschaft
 Lernpat\/-in
 Lernpat\/-innen
 Lernpat\/-innenschaft
@@ -225,34 +270,41 @@ Lernpat\_innen
 Lernpat\_innenschaft
 Lernpatinnenschaft
 Lokführung
+LokrangierführerIn
 Lokrangierführerin
 Marmorist
 Marmorist*in
 Marmorist:in
+MarmoristIn
 Marmorist\/-in
 Marmorist\/in
 Marmorist\_in
 Marmoristin
+MasterIn
 Masterin
 Matros*in
+Matros*innen
 Matros:in
+Matros:innen
+MatrosIn
+MatrosInnen
 Matros\/-in
+Matros\/-innen
 Matros\/in
+Matros\/innen
 Matros\_in
+Matros\_innen
 Matrosin
 Matrosinnen
-Matrosinnen*
-Matrosinnen:
-Matrosinnen\/
-Matrosinnen\/-
-Matrosinnen\_
 Mediamatik
+MediamatikerIn
 Mentorat
 Mentorierende
 Moderations-Team
 Oberflächenbeschichter
 Oberflächenbeschichter*in
 Oberflächenbeschichter:in
+OberflächenbeschichterIn
 Oberflächenbeschichter\/-in
 Oberflächenbeschichter\/in
 Oberflächenbeschichter\_in
@@ -260,6 +312,7 @@ Oberflächenbeschichterin
 Oberflächenveredler
 Oberflächenveredler*in
 Oberflächenveredler:in
+OberflächenveredlerIn
 Oberflächenveredler\/-in
 Oberflächenveredler\/in
 Oberflächenveredler\_in
@@ -270,16 +323,19 @@ Orthopäd\_in
 Orthopädist
 Orthopädist*in
 Orthopädist:in
+OrthopädistIn
 Orthopädist\/-in
 Orthopädist\/in
 Orthopädist\_in
 Orthopädistin
+OwnerIn
 Ownerin
 Partnernde
 Pflästerei
 Pflästerer
 Pflästerer*in
 Pflästerer:in
+PflästererIn
 Pflästerer\/-in
 Pflästerer\/in
 Pflästerer\_in
@@ -287,25 +343,32 @@ Pflästererin
 Podolog\/-in
 Podolog\/in
 Podolog\_in
+PolierIn
 Poliererei
 Polierin
 Polisseur
 Polisseuse
 Polisseuse*r
 Polisseuse:r
+PolisseuseR
 Polisseuse\/-r
 Polisseuse\/r
 Polisseuse\_r
-Polisseuser
+PolygrafIn
 Processing
 Product
 Projektteilnehmende
+ProzessorIn
 Prozessorin
 Publikumsscharen
 Rangierbegleitende
+RangierbegleiterIn
+RangierbegleiterInnen
 Rangierbegleiterin
 Rangierbegleiterinnen
 Rangierbegleitung
+RangiererIn
+RangiererInnen
 Rangiererin
 Rangiererinnen
 Rangierperson
@@ -313,6 +376,7 @@ Rangierpersonal
 Recyclist
 Recyclist*in
 Recyclist:in
+RecyclistIn
 Recyclist\/-in
 Recyclist\/in
 Recyclist\_in
@@ -322,6 +386,8 @@ Researcher*in
 Researcher*innen
 Researcher:in
 Researcher:innen
+ResearcherIn
+ResearcherInnen
 Researcher\/-in
 Researcher\/-innen
 Researcher\/in
@@ -332,6 +398,7 @@ Researcherin
 Researcherinnen
 Seemänn*innen
 Seemänn:innen
+SeemännInnen
 Seemänn\/-innen
 Seemänn\/innen
 Seemänn\_innen
@@ -339,19 +406,24 @@ Seemänninnen
 Seilbahner
 Seilbahner*in
 Seilbahner:in
+SeilbahnerIn
 Seilbahner\/-in
 Seilbahner\/in
 Seilbahner\_in
 Seilbahnerin
+SicherheitsbeauftragteR
+SpenglerIn
 Spenglerin
 Student*innenschaft
 Student:innenschaft
 Student\/innenschaft
 Student\_innenschaft
+SupporterIn
 Supportleistende
 Säger
 Säger*in
 Säger:in
+SägerIn
 Säger\/-in
 Säger\/in
 Säger\_in
@@ -362,13 +434,19 @@ Technolog\/-in
 Technolog\/in
 Technolog\_in
 Technology
+TelematikerIn
 Telematikerin
+VorgesetzteR
+WagnerIn
 Wagnerin
+WerkerIn
 Werkerin
 Winzereibetrieb
 Zimmereifachkraft
 Zugsteward*ess
 Zugsteward:ess
+ZugstewardEss
+ZugstewardEssen
 Zugsteward\/-ess
 Zugsteward\/ess
 Zugsteward\_ess
@@ -451,3 +529,133 @@ wöchigen
 wöchiger
 wöchiges
 Zarah
+DL #abk
+EB #abk
+BPolG #abk
+WpÜG #abk
+Leni/S #name
+CW #abk
+GN #abk
+DF #abk
+DMAX #name
+CFD #abk
+GW #abk
+MWp #abk
+GWp #abk
+PV #abk
+IEA #abk
+ct #abk
+Holetschek/S #name
+Höfer/S #name
+Cora/S #name
+Fritsche/S #name
+Evers #name
+Shirin/S #name
+ECDC #abk
+AGES #abk
+Calmund/S #name
+de
+VDC #abk
+OÖN/S #abk
+SARL #abk
+Bloomingdale/S #name
+Strohmeyer/S #name
+Fastly/S #name
+Lüders #name
+BL #abk
+PP #abk
+GE #abk
+IO #abk
+Absolventa/S #name
+ASR #abk
+Wädenswil/S #name
+Regensdorf/S #name
+Opfikon/S #name
+Adliswil/S #name
+Volketswil/S #name
+Ostermundigen/S #name
+Wallisellen/S #name
+Val-de-Ruz #name
+Monthey/S #name
+Gossau/S #name
+Martigny/S #name
+Yverdon-les-Bains #name
+Lancy/S #name
+Musk/S #name
+Brandon/S #name
+Piet/S #name
+Anergie
+Detection/S #eng
+Authenticator/S #eng
+Flooding/S #eng
+Cyberweek/S
+Cyber-Week/S
+Geywitz #name
+Köpping/S #name
+Kofler/S #name
+DLG/S #name
+IUPAC/S #name
+Vesting/S
+APA/S #abk
+MPAA #abk
+Schultze/S #name
+Mehdi/S #name
+Camille/S #name
+Giannina/S #name
+Nehammer/S #name
+Rodolphe/S #name
+Ted/S #name
+Tyson/S #name
+DSGV #name #abk
+CVE/S #abk
+RCE/S #abk
+ESOP/S #eng #abk
+Elmau/S #name
+Offense #eng
+Defense #eng
+Melina/S #name
+Celina/S #name
+Özkurt/S #name
+KLiNGEL-Kundenservice #name
+Grinch/S #name
+Binance #name
+EF #abk
+BU #abk
+KA #abk
+DH #abk
+LZ #abk
+CAS #abk
+CF #abk
+Himmeröder/S #name
+PGM #abk
+ASAP #abk
+Candy/S #name #eng
+Batchcode/S #eng
+GER #abk
+Ahrenholz #name
+Achenbach/S #name
+Dascha/S #name
+DIVI #abk
+Wageningen/S #name
+Dudenhöffer/S #name
+Quadrilateral/S
+ALKIS #abk #name
+OVG #abk
+BVerwGE #abk
+Faeser/S #name
+GBP #abk
+Behring/S #name
+Thomasius #name
+Hopkins #name
+Markowitz #name
+WpHG #abk
+AktG #abk
+WpÜG #abk
+woke #eng
+wokes #eng
+woker #eng
+woken #eng
+wokem #eng
+Stiegemann/S #name
+Franjo/S #name
+Oberpleis #name
