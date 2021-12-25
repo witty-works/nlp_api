@@ -214,11 +214,6 @@ class ResultOut(BaseModel):
         if "^" in alternatives:
             alternatives.remove("^")
 
-        # remove '-' if multiple alternatives are provided
-        # until https://github.com/witty-works/browser-extension/issues/189 is implemented
-        if len(alternatives) > 1 and alternatives[0] != "-" and "-" in alternatives:
-            alternatives.remove("-")
-
         rewrite_to_swiss_german = False
         if (
             lang.locale == "de"
