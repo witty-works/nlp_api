@@ -8,8 +8,10 @@ from app.main import (
     redis,
     set_rules,
     get_false_positive,
-    gender_false_positive,
-    false_positive,
+    false_positive
+)
+from app.rules import (
+    rules,
 )
 import json
 from app.models import RequestIn
@@ -194,7 +196,7 @@ def test_false_positive(fp_case_dir, snapshot, set_redis):
     patcher = mock.patch.object(
         main,
         "false_positive",
-        get_false_positive(gender_false_positive, false_positive_agentic_const, userId),
+        get_false_positive(rules["de-DE"]["gender_false_positive"], false_positive_agentic_const, userId),
     )
     patcher.start()
     # Call the tested endpoint.

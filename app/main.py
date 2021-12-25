@@ -32,22 +32,8 @@ from fastapi.exception_handlers import (
 
 from typing import Optional
 
-import spacy
 from spacy.tokens import Doc
 from spacy.matcher import PhraseMatcher, Matcher
-from spacy.tokenizer import Tokenizer
-from spacy.lang.char_classes import (
-    ALPHA,
-    ALPHA_LOWER,
-    ALPHA_UPPER,
-    CONCAT_QUOTES,
-    LIST_ELLIPSES,
-    LIST_ICONS,
-)
-from spacy.util import compile_infix_regex
-
-
-import pandas as pd
 
 from app.models import (
     Config,
@@ -66,6 +52,8 @@ from app.logger import set_up_logger
 from app.posthog import set_up_posthog
 from app.redis import set_up_redis
 from app.languagetool import get_languagetool_url
+from app.model import model
+from app.rules import rules
 
 from collections import namedtuple
 
@@ -127,213 +115,6 @@ for language in languages:
             "rules." + category + "_label"
         )
 
-
-# Custom tokenizers
-# English
-def custom_tokenizer_en(nlp):
-    infixes = (
-        LIST_ELLIPSES
-        + LIST_ICONS
-        + [
-            r"(?<=[0-9])[+\-\*^](?=[0-9-])",
-            r"(?<=[{al}{q}])\.(?=[{au}{q}])".format(
-                al=ALPHA_LOWER, au=ALPHA_UPPER, q=CONCAT_QUOTES
-            ),
-            r"(?<=[{a}]),(?=[{a}])".format(a=ALPHA),
-            # hyphen excluded from separators
-            # r"(?<=[{a}])(?:{h})(?=[{a}])".format(a=ALPHA, h=HYPHENS),
-            r"(?<=[{a}0-9])[:<>=/](?=[{a}])".format(a=ALPHA),
-        ]
-    )
-
-    infix_re = compile_infix_regex(infixes)
-
-    return Tokenizer(
-        nlp.vocab,
-        prefix_search=nlp.tokenizer.prefix_search,
-        suffix_search=nlp.tokenizer.suffix_search,
-        infix_finditer=infix_re.finditer,
-        token_match=nlp.tokenizer.token_match,
-        rules=nlp.Defaults.tokenizer_exceptions,
-    )
-
-
-# German
-def custom_tokenizer_de(nlp):
-    _quotes = CONCAT_QUOTES.replace("'", "")
-    infixes = (
-        LIST_ELLIPSES
-        + LIST_ICONS
-        + [
-            r"(?<=[{al}])\.(?=[{au}])".format(al=ALPHA_LOWER, au=ALPHA_UPPER),
-            r"(?<=[{a}])[,!?](?=[{a}])".format(a=ALPHA),
-            # removed : [:<>=]
-            r"(?<=[{a}])[<>=](?=[{a}])".format(a=ALPHA),
-            r"(?<=[{a}]),(?=[{a}])".format(a=ALPHA),
-            r"(?<=[0-9{a}])\/(?=[0-9{a}])".format(a=ALPHA),
-            r"(?<=[{a}])([{q}\)\]\(\[])(?=[{a}])".format(a=ALPHA, q=_quotes),
-            r"(?<=[{a}])--(?=[{a}])".format(a=ALPHA),
-            r"(?<=[0-9])-(?=[0-9])",
-        ]
-    )
-
-    infix_re = compile_infix_regex(infixes)
-
-    return Tokenizer(
-        nlp.vocab,
-        prefix_search=nlp.tokenizer.prefix_search,
-        suffix_search=nlp.tokenizer.suffix_search,
-        infix_finditer=infix_re.finditer,
-        token_match=nlp.tokenizer.token_match,
-        rules=nlp.Defaults.tokenizer_exceptions,
-    )
-
-
-# Model data
-model = {"en": spacy.load("en_core_web_sm"), "de": spacy.load("de_core_news_sm")}
-
-# custom tokenizer for English
-model["en"].tokenizer = custom_tokenizer_en(model["en"])
-
-# custom tokenizer for German
-model["de"].tokenizer = custom_tokenizer_de(model["de"])
-
-# custom lematizer to correct the lemmas in spacy library, to add to the curent spacy lematizer
-dict_lemma_lookup = {
-    "international": "international",
-    "internationale": "international",
-    "Meister": "Meister",
-    "kämpfend": "kämpfend",
-    "abgebrüht": "abgebrüht",
-    "beherrschend": "beherrschend",
-    "entscheidend": "entscheidend",
-    "entschlossen": "entschlossen",
-    "angewiesen": "angewiesen",
-    "berührt": "berührt",
-    "besonnen": "besonnen",
-    "betreut": "betreut",
-    "bewegt": "bewegt",
-    "einfühlend": "einfühlend",
-    "engagiert": "engagiert",
-    "entgegenkommend": "entgegenkommend",
-    "ergreifend": "ergreifend",
-    "fördernd": "fördernd",
-    "gerührt": "gerührt",
-    "heiter": "heiter",
-    "lieb": "lieb",
-    "mitfühlend": "mitfühlend",
-    "mitwirkend": "mitwirkend",
-    "motiviert": "motiviert",
-    "nährend": "nährend",
-    "teilnehmend": "teilnehmend",
-    "unterstützend": "unterstützend",
-    "verbindend": "verbindend",
-    "vermittelnd": "vermittelnd",
-    "vertraut": "vertraut",
-    "weich": "weich",
-    "zusammenhängend": "zusammenhängend",
-    "zusammenwirkend": "zusammenwirkend",
-    "zustimmend": "zustimmend",
-    "jünger": "jünger",
-    "ausgeprägt": "ausgeprägt",
-    "ausgezeichnet": "ausgezeichnet",
-    "äußerst": "äußerst",
-    "beeindruckend": "beeindruckend",
-    "beste": "beste",
-    "bester": "beste",
-    "besten": "beste",
-    "bestem": "beste",
-    "bestes": "beste",
-    "etabliert": "etabliert",
-    "führend": "führend",
-    "fundiert": "fundiert",
-    "gewandt": "gewandt",
-    "Götter": "Götter",
-    "hervorragend": "hervorragend",
-    "überzeugend": "überzeugend",
-    "zwingend": "zwingend",
-}
-
-lookup_table = model["de"].get_pipe("lemmatizer").lookups.get_table("lemma_lookup")
-for key in dict_lemma_lookup:
-    lookup_table.set(key, dict_lemma_lookup[key])
-
-# load agentic language
-df_agentic_ct = pd.read_csv("training_data/agentic_DE.csv")
-# list_agentic = list(df_agentic_ct["Lemma"])
-
-# load Gender denom_de
-df_gender_ct = pd.read_csv("training_data/gendered_noun_DE.csv")
-# load Gender denom_de false_positives
-genderdenom_false_positives = pd.read_csv("training_data/titles_false_positives_DE.csv")
-
-# load style words_de
-df_style_word = pd.read_csv("training_data/style_words_DE.csv")
-df_style_sentences = pd.read_csv("training_data/style_sentences_DE.csv")
-# list of "hollow word" sentences
-terms_style = list(df_style_sentences["Lemma"])
-
-# load openly discriminating words de
-df_open_dis_word_de = pd.read_csv("training_data/open_dis_words_DE.csv")
-df_open_dis_sentence_de = pd.read_csv("training_data/open_dis_sentences_DE.csv")
-
-# load unconscious_bias word (nouns, not nouns) and sentences de
-df_ub_noun_word_de = pd.read_csv("training_data/ub_noun_words_DE.csv")
-df_ub_no_noun_word_de = pd.read_csv("training_data/ub_no_noun_words_DE.csv")
-df_ub_sentences_de = pd.read_csv("training_data/ub_sentences_DE.csv")
-
-# load inslusive words
-df_d_and_i_words = pd.read_csv("training_data/d_and_i_words_DE.csv")
-# load inslusive sentences
-df_d_and_i_words_sentences = pd.read_csv("training_data/d_and_i_sentences_DE.csv")
-# list of "d_and_i_words word" sentences
-terms_d_and_i_words = list(df_d_and_i_words_sentences["Lemma"])
-
-# load communal coded terms
-df_communal_words = pd.read_csv("training_data/communal_DE.csv")
-
-# English
-# load agentic language
-df_agentic_words_en = pd.read_csv("training_data/agentic_EN.csv")
-
-# load openly discriminating words
-df_open_dis_word_en = pd.read_csv("training_data/open_dis_words_EN.csv")
-df_open_dis_sentence_en = pd.read_csv("training_data/open_dis_sentences_EN.csv")
-
-# load inclusive language
-df_inclusive_word_en = pd.read_csv("training_data/inclusive_words_EN.csv")
-df_inclusive_sentence_en = pd.read_csv("training_data/inclusive_sentences_EN.csv")
-
-# load style words
-df_style_word_en = pd.read_csv("training_data/style_words_EN.csv")
-df_style_sentence_en = pd.read_csv("training_data/style_sentences_EN.csv")
-
-# load gendered language
-df_gendered_no_noun_word_en = pd.read_csv("training_data/gendered_no_noun_words_EN.csv")
-df_gendered_sentence_en = pd.read_csv("training_data/gendered_sentences_EN.csv")
-df_gendered_noun_word_en = pd.read_csv("training_data/gendered_noun_words_EN.csv")
-
-# dictionaries to handle false positives
-false_positive_agentic_const = [
-    "selbst",
-    "flexible",
-    "Probleme",
-    "unabhängig",
-    "Entwickler",
-]
-false_positive_style = ["international"]
-exceptions = [
-    "Unternehmen",
-    "Firma",
-    "Gruppe",
-    "Gesellschaft",
-    "Kollektivgesellschaft",
-    "Team",
-    "Organization",
-    "Gliederung",
-]
-gender_false_positive = genderdenom_false_positives["False_positives"].tolist()
-
 # corporate false positive DB
 def get_false_positive_from_redis(userId: str):
     keys = redis.keys("*")
@@ -341,8 +122,8 @@ def get_false_positive_from_redis(userId: str):
         user_list = json.loads(redis.get(key))["users"]
         if userId in user_list:
             return json.loads(redis.get(key))["false_positive"]
-        else:
-            return []
+
+        return []
 
 
 FalsePositive = namedtuple("FalsePositive", "gender agentic")
@@ -351,7 +132,6 @@ def get_false_positive(gender_false_positive, false_positive_agentic_const, user
     corporate_false_positive = []
     if userId:
         corporate_false_positive = get_false_positive_from_redis(userId)
-    # FalsePositive = namedtuple("FalsePositive", "gender agentic")
     fp = FalsePositive(
         gender_false_positive + corporate_false_positive,
         false_positive_agentic_const + corporate_false_positive,
@@ -359,10 +139,10 @@ def get_false_positive(gender_false_positive, false_positive_agentic_const, user
     return fp
 
 
-# terms_false_positive = gender_false_positive + corporate_false_positive
-# false_positive_agentic += corporate_false_positive
-false_positive = get_false_positive(gender_false_positive, false_positive_agentic_const)
-
+false_positive = get_false_positive(
+    rules["de-DE"]["gender_false_positive"],
+    rules["de-DE"]["false_positive_agentic_const"],
+)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
@@ -654,14 +434,14 @@ async def languagetool_rules(user_request_in: RequestIn):
 
 def language_rules(user_request_in: RequestIn, lang: Lang):
     # apply SpaCy pre-built model
-    tokens = model[lang.locale](user_request_in.text)
+    tokens = model[lang.lang](user_request_in.text)
 
     # functions for German rules
-    if lang.locale == "de":
+    if lang.lang == "de":
         list_results = GermanRules(lang, tokens, user_request_in)
 
     # function for English rules
-    elif lang.locale == "en":
+    elif lang.lang == "en":
         list_results = EnglishRules(lang, tokens, user_request_in)
 
     else:
@@ -781,14 +561,18 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             lang,
             user_request_in.text,
             tokens,
-            df_open_dis_word_de,
-            df_open_dis_sentence_de,
+            rules[lang.locale]["df_open_dis_word"],
+            rules[lang.locale]["df_open_dis_sentence"],
             "openly_discriminating",
         )
 
     if IsSubCategoryEnabled("gendered", disabled_categories):
         list_full += GenderedDenomAnalysis(
-            user_request_in.config, lang, user_request_in.text, tokens, df_gender_ct
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            rules[lang.locale]["df_gender_ct"],
         )
 
     if IsSubCategoryEnabled(
@@ -806,8 +590,12 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
         )
 
     if IsSubCategoryEnabled("agentic", disabled_categories):
-        list_full += AgenticLanguageAnalysis(
-            user_request_in.config, lang, user_request_in.text, tokens, df_agentic_ct
+        list_full += AgenticLanguageAnalysisDE(
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            rules[lang.locale]["df_agentic_ct"],
         )
 
     if IsSubCategoryEnabled("unconscious_bias", disabled_categories):
@@ -816,15 +604,15 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             lang,
             user_request_in.text,
             tokens,
-            df_ub_no_noun_word_de,
-            df_ub_sentences_de,
+            rules[lang.locale]["df_ub_no_noun_word"],
+            rules[lang.locale]["df_ub_sentences"],
             "unconscious_bias",
         ) + WordNounDE(
             user_request_in.config,
             lang,
             user_request_in.text,
             tokens,
-            df_ub_noun_word_de,
+            rules[lang.locale]["df_ub_noun_word"],
             "unconscious_bias",
         )
 
@@ -834,7 +622,7 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             lang,
             user_request_in.text,
             tokens,
-            df_communal_words,
+            rules[lang.locale]["df_communal_words"],
             "inclusive",
             "communal",
         )
@@ -845,21 +633,21 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             lang,
             user_request_in.text,
             tokens,
-            terms_d_and_i_words,
-            df_d_and_i_words,
+            rules[lang.locale]["terms_d_and_i_words"],
+            rules[lang.locale]["df_d_and_i_words"],
             "inclusive",
             "d_and_i",
         )
 
     if IsSubCategoryEnabled("style", disabled_categories):
-        list_full += StyleWordAnalysis(
+        list_full += StyleWordAnalysisDE(
             user_request_in.config,
             lang,
             user_request_in.text,
             tokens,
-            terms_style,
-            df_style_word,
-            df_style_sentences,
+            rules[lang.locale]["terms_style"],
+            rules[lang.locale]["df_style_word"],
+            rules[lang.locale]["df_style_sentences"],
         )
 
     return list_full
@@ -877,8 +665,8 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
             lang,
             user_request_in.text,
             tokens,
-            df_open_dis_word_en,
-            df_open_dis_sentence_en,
+            rules[lang.locale]["df_open_dis_word"],
+            rules[lang.locale]["df_open_dis_sentence"],
             "openly_discriminating",
         )
 
@@ -888,15 +676,15 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
             lang,
             user_request_in.text,
             tokens,
-            df_gendered_no_noun_word_en,
-            df_gendered_sentence_en,
+            rules[lang.locale]["df_gendered_no_noun_word"],
+            rules[lang.locale]["df_gendered_sentence"],
             "gendered",
         ) + GenderedEN(
             user_request_in.config,
             lang,
             user_request_in.text,
             tokens,
-            df_gendered_noun_word_en,
+            rules[lang.locale]["df_gendered_noun_word"],
             "gendered",
         )
 
@@ -906,7 +694,7 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
             lang,
             user_request_in.text,
             tokens,
-            df_agentic_words_en,
+            rules[lang.locale]["df_agentic_words"],
             "unconscious_bias",
             "agentic",
         )
@@ -917,8 +705,8 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
             lang,
             user_request_in.text,
             tokens,
-            df_inclusive_word_en,
-            df_inclusive_sentence_en,
+            rules[lang.locale]["df_inclusive_word"],
+            rules[lang.locale]["df_inclusive_sentence"],
             "inclusive",
         )
 
@@ -928,8 +716,8 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
             lang,
             user_request_in.text,
             tokens,
-            df_style_word_en,
-            df_style_sentence_en,
+            rules[lang.locale]["df_style_word"],
+            rules[lang.locale]["df_style_sentence"],
             "style",
         )
 
@@ -981,7 +769,7 @@ def GenderedDenomEnd(config: Config, lang, full_text):
 # this function agentic language & related false positives
 
 
-def AgenticLanguageAnalysis(config: Config, lang, full_text, tokens, df):
+def AgenticLanguageAnalysisDE(config: Config, lang, full_text, tokens, df):
     subcategory = "agentic"
     category = categories[subcategory]["category"]
     list_tokens = []
@@ -990,7 +778,9 @@ def AgenticLanguageAnalysis(config: Config, lang, full_text, tokens, df):
 
     for token in tokens:
         # check if the user query have false positives
-        if IsItFalsePositive(token.lemma_, false_positive.agentic):
+        if IsItFalsePositive(
+            token.lemma_, false_positive.agentic
+        ):
             # recognise if there is Name of organisation or geographical name in the query
             for entity in tokens.ents:
                 if entity.label_ == "ORG":
@@ -1010,7 +800,7 @@ def AgenticLanguageAnalysis(config: Config, lang, full_text, tokens, df):
                 for key in dic_anc.keys():
                     if key in false_positive.agentic:
                         for item in dic_anc[key]:
-                            if item.text in exceptions:
+                            if item.text in rules[lang.locale]["exceptions"]:
                                 list_false_positives.append(
                                     {
                                         "false positives": token.text,
@@ -1044,10 +834,13 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
 
     list_tokens = []
     list_false_positives = []
-    matcher = PhraseMatcher(model[lang.locale].vocab)
+    matcher = PhraseMatcher(model[lang.lang].vocab)
 
     # Only run model.make_doc to speed things up
-    patterns = [model[lang.locale].make_doc(text) for text in false_positive.gender]
+    patterns = [
+        model[lang.lang].make_doc(text)
+        for text in false_positive.gender
+    ]
     matcher.add("TerminologyList", patterns)
     matches = matcher(tokens)
 
@@ -1064,7 +857,7 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
             rest_text.append(part.text)
             old_start = end
 
-        docs = list(model[lang.locale].pipe(rest_text))
+        docs = list(model[lang.lang].pipe(rest_text))
         c_doc = Doc.from_docs(docs)
 
         for i in range(len(c_doc)):
@@ -1211,10 +1004,13 @@ def ExaggeratingWordsSentences(
     category = categories[subcategory]["category"]
     list_tokens = []
     # Phrase matcher part to handle False positives with two words and special simbols
-    matcher = PhraseMatcher(model[lang.locale].vocab)
+    matcher = PhraseMatcher(model[lang.lang].vocab)
 
     # Only run model.make_doc to speed things up
-    patterns = [model[lang.locale].make_doc(text) for text in terms_exaggerating]
+    patterns = [
+        model[lang.lang].make_doc(text)
+        for text in rules[lang.locale]["terms_exaggerating"]
+    ]
     matcher.add("TerminologyList", patterns)
 
     for token in tokens:
@@ -1261,21 +1057,24 @@ def ExaggeratingWordsSentences(
 # Unified function for Emty words false positives and rules
 
 
-def StyleWordAnalysis(config: Config, lang, full_text, tokens, terms, df, df_sentence):
-    # category = df_style_sentences(["subcategory"])
+def StyleWordAnalysisDE(
+    config: Config, lang, full_text, tokens, terms, df, df_sentence
+):
     category = "style"
     list_tokens = []
     list_false_positives = []
     # Phrase matcher part to handle False positives with two words and special simbols
-    matcher = PhraseMatcher(model[lang.locale].vocab)
+    matcher = PhraseMatcher(model[lang.lang].vocab)
 
     # Only run model.make_doc to speed things up
-    patterns = [model[lang.locale].make_doc(text) for text in terms]
+    patterns = [model[lang.lang].make_doc(text) for text in terms]
     matcher.add("TerminologyList", patterns)
 
     for i in range(len(tokens))[1:-1]:
         # check if the user query have false positives
-        if IsItFalsePositive(tokens[i].lemma_, false_positive_style):
+        if IsItFalsePositive(
+            tokens[i].lemma_, rules[lang.locale]["false_positive_style"]
+        ):
             # recognise if there is Name of organisation or geographical name in the query
             if len(tokens.ents) > 0:
                 # this output will be deleted in production
@@ -1401,12 +1200,10 @@ def RulesBasedWordsPhraseMatcherDE(
 ):
     list_tokens = []
     # Phrase matcher part to handle False positives with two words and special simbols
-    matcher = PhraseMatcher(model[lang.locale].vocab)
+    matcher = PhraseMatcher(model[lang.lang].vocab)
 
     # Only run model.make_doc to speed things up
-    patterns = [
-        model[lang.locale].make_doc(text) for text in list(df_sentence["Lemma"])
-    ]
+    patterns = [model[lang.lang].make_doc(text) for text in list(df_sentence["Lemma"])]
     matcher.add("TerminologyList", patterns)
 
     for token in tokens:
@@ -1460,10 +1257,10 @@ def RulesBasedWordsPhraseMatcher(
 
     list_tokens = []
     # Phrase matcher part to handle False positives with two words and special simbols
-    matcher = PhraseMatcher(model[lang.locale].vocab)
+    matcher = PhraseMatcher(model[lang.lang].vocab)
 
     # Only run model.make_doc to speed things up
-    patterns = [model[lang.locale].make_doc(text) for text in terms]
+    patterns = [model[lang.lang].make_doc(text) for text in terms]
     matcher.add("TerminologyList", patterns)
 
     for token in tokens:
@@ -1536,7 +1333,7 @@ def MisgenderingInstitutions(config: Config, lang, full_text, tokens):
     subcategory = "misgendering_institutions"
     category = categories[subcategory]["category"]
     db_match_list = []
-    matcher_db = Matcher(model[lang.locale].vocab)
+    matcher_db = Matcher(model[lang.lang].vocab)
     # Add match ID "DB" with no callback and one pattern
     pattern_db = [
         {"TEXT": "Deutsche"},
@@ -1603,12 +1400,10 @@ def RulesBasedWordsPhraseMatcherUN(
 ):
     list_tokens = []
     # Phrase matcher part to handle False positives with two words and special simbols
-    matcher = PhraseMatcher(model[lang.locale].vocab)
+    matcher = PhraseMatcher(model[lang.lang].vocab)
 
     # Only run model.make_doc to speed things up
-    patterns = [
-        model[lang.locale].make_doc(text) for text in list(df_sentence["Lemma"])
-    ]
+    patterns = [model[lang.lang].make_doc(text) for text in list(df_sentence["Lemma"])]
     matcher.add("TerminologyList", patterns)
 
     for token in tokens:
@@ -1711,12 +1506,10 @@ def RulesBasedWordsPhraseMatcherNoAltEN(
 ):
     list_tokens = []
     # Phrase matcher part to handle False positives with two words and special simbols
-    matcher = PhraseMatcher(model[lang.locale].vocab)
+    matcher = PhraseMatcher(model[lang.lang].vocab)
 
     # Only run model.make_doc to speed things up
-    patterns = [
-        model[lang.locale].make_doc(text) for text in list(df_sentence["Lemma"])
-    ]
+    patterns = [model[lang.lang].make_doc(text) for text in list(df_sentence["Lemma"])]
     matcher.add("TerminologyList", patterns)
 
     for token in tokens:
