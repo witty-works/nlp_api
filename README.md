@@ -207,6 +207,19 @@ pipenv run python -m analyze_rules -i [CSV export]]
 pipenv run python -m add_alternatives_to_ignore
 ```
 
+## Generate en-GB rules
+
+Install eng
+```
+python3 -m pip install --user eng
+```
+
+Run the following command:
+```
+cp training_data/en-US/* training_data/en-GB/.
+pipenv run python -m eng training_data/en-GB/. --ext=csv --target="uk"
+```
+
 ## Collect statistics
 
 Run `./statistics.sh` to fetch statistics locally and remotely.

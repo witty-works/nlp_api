@@ -214,21 +214,12 @@ class ResultOut(BaseModel):
         if "^" in alternatives:
             alternatives.remove("^")
 
-        rewrite_to_swiss_german = False
-        if (
-            lang.lang == "de"
-            and "de-CH" in config.preferred_variants
-            and config.preferred_variants.find("de-CH")
-            <= config.preferred_variants.find("de")
-        ):
-            rewrite_to_swiss_german = True
-
         cleaned_alternatives = []
         for i, alternative in enumerate(alternatives):
             if is_upper and category != "orthography":
                 alternative = string.capwords(alternative[0:1]) + alternative[1:]
 
-            if rewrite_to_swiss_german:
+            if lang.locale == "de-CH":
                 alternative = alternative.replace("ß", "ss")
 
             if "~" in alternative:

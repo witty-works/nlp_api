@@ -1,13 +1,13 @@
 Lemma,Is active,Wordtype,Forms,"Alternatives,"Alternatives input field ""Company, Company Culture, Goodies""","Subcategory: competitive, Hard-hearted, Rough, Corporate"
-achiever,,s,s?,"get things done, entrepreneurial, passionate about implementation, passionate about realizing a vision","realizing a vision together | entrepreneurial | move things to ""done""",competitive
+achiever,,s,s?,"get things done, entrepreneurial, passionate about implementation, passionate about realising a vision","realising a vision together | entrepreneurial | move things to ""done""",competitive
 active,1,a,,energetic | vital | dynamic | lively | spirited,energetic | vital | dynamic | lively | spirited,rough
 adventurous,,a,,,,competitive
 aggression,,s,s?,,,hard-hearted
 aggressive,,a,,,,hard-hearted
 alone,1,a,,feel competent in your field | keen on focussing on your tasks,keen on innovation | explore new directions,competitive
 lonely,1,a,,feel competent in your field | keen on focussing on your tasks,keen on innovation | explore new directions,competitive
-ambition,1,s,s?,go after a dream | realize a vision | enthusiastic about your or common goals | committed,committed | go after our dream | like to reach milestones | realize a vision | enthusiastic about common goals,competitive
-ambitious,1,a,(ly)?,go after a dream | realize a vision | enthusiastic about your or common goals | committed,committed | go after our dream | like to reach milestoens | realize a vision | enthusiastic about common goals,competitive
+ambition,1,s,s?,go after a dream | realise a vision | enthusiastic about your or common goals | committed,committed | go after our dream | like to reach milestones | realise a vision | enthusiastic about common goals,competitive
+ambitious,1,a,(ly)?,go after a dream | realise a vision | enthusiastic about your or common goals | committed,committed | go after our dream | like to reach milestoens | realise a vision | enthusiastic about common goals,competitive
 analys,1,s,(is|es|ing),systematic approach | investigative | with scientific care | meticulous | rational thinking | diagnostic methods | precise | exploration | enquiry | study | scrutiny,systematic approach | investigative | with scientific care | meticulous | rigorous | rational thinking | diagnostic methods | precise,rough
 analys,1,v,(s|ing|ed),systematic approach | investigative | with scientific care | meticulous | rational thinking | diagnostic methods | precise | exploration | enquiry | study | scrutiny,systematic approach | investigative | with scientific care | meticulous | rigorous | rational thinking | diagnostic methods | precise,rough
 analytical,1,a,(ly)?,systematic approach | investigative | with scientific care | meticulous | rational thinking | diagnostic methods | precise | exploration | enquiry | study | scrutiny,systematic approach | investigative | with scientific care | meticulous | rigorous | rational thinking | diagnostic methods | precise,rough
@@ -18,8 +18,8 @@ athlet,1,s,s?,,,competitive
 athletic,1,a,(ally)?,,,competitive
 authoritative ,1,a,(ly)?,,,hard-hearted
 authorit,1,s,(y|ies),competence | have and keep overview,competence | experience in the industry,hard-hearted
-autonomous,1,a,(ly)?,at ease to take decisions related to your work | curious to find answers,self-organized | self-managed | we take our own decisions,competitive
-autonomy,1,s,,at ease to take decisions related to your work | curious to find answers,self-organized | self-managed | we take our own decisions,competitive
+autonomous,1,a,(ly)?,at ease to take decisions related to your work | curious to find answers,self-organised | self-managed | we take our own decisions,competitive
+autonomy,1,s,,at ease to take decisions related to your work | curious to find answers,self-organised | self-managed | we take our own decisions,competitive
 battle,1,s,s?,,,hard-hearted
 best,1,a,,,,competitive
 boast,1,v,,,,hard-hearted
@@ -44,7 +44,7 @@ determination,1,s,,keen to set course | ready to try out | conclusive,keen to se
 determined,1,a,,keen to set course | ready to try out | conclusive,keen to set course | ready to try out | conclusive,rough
 direct,1,a,(ly)?,straightfoward | open | candid,,rough
 direct,1,v,(ing|s|ed)?,steer | guide,,rough
-directness,1,s,,openness | candor,,
+directness,1,s,,openness | candour,,
 dominant,1,a,(ly)?,respecting governance | defending governance,defend our innovative spirit | collaborate to serve our customers' needs,hard-hearted
 dominat,,v,(es|ed|ing),,,hard-hearted
 domination,,s,s?,,,hard-hearted
@@ -78,9 +78,9 @@ hunter,1,s,,,,competitive
 hunt,1,v,(s|ing)?,,,competitive
 impulsiv,1,a,(ly)?,,,hard-hearted
 in charge,1,a,,responsible for | take care of,responsible for | take care of,rough
-independence,1,s,s?,feel competent in your field | at ease to represent your work | at ease to take decisions related to your work | curious to find answers,self-organized | self-managed | we take our own decisions,competitive
-independent,1,a,(ly)?,feel competent in your field | at ease to represent your work | at ease to take decisions related to your work | curious to find answers,self-organized | self-managed | we take our own decisions,competitive
-individual,1,a,(ly)?,feel competent in your field | at ease to represent your work | at ease to take decisions related to your work | curious to find answers,self-organized | self-managed | we take our own decisions,competitive
+independence,1,s,s?,feel competent in your field | at ease to represent your work | at ease to take decisions related to your work | curious to find answers,self-organised | self-managed | we take our own decisions,competitive
+independent,1,a,(ly)?,feel competent in your field | at ease to represent your work | at ease to take decisions related to your work | curious to find answers,self-organised | self-managed | we take our own decisions,competitive
+individual,1,a,(ly)?,feel competent in your field | at ease to represent your work | at ease to take decisions related to your work | curious to find answers,self-organised | self-managed | we take our own decisions,competitive
 individuality,1,s,,in your own style,,competitive
 intellect,1,s,,with know how,with know how,corporate
 intellectual,1,a,(ly)?,with know how,with know how,corporate

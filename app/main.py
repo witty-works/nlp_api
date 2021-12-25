@@ -384,9 +384,14 @@ async def languagetool_rules(user_request_in: RequestIn):
             if "language" not in result:
                 lang = None
 
-            if result["language"]["code"][0:2] not in langs:
+            lang = result["language"]["code"][0:2]
+            if lang not in langs:
                 lang = None
             elif "matches" in result:
+                locale = result["language"]["code"]
+                if lang == "en" and locale != "en-US":
+                    locale = "en-GB"
+
                 lang = Lang(result["language"]["code"])
                 german_gender_ending = user_request_in.config.german_gender_ending
 
@@ -778,9 +783,7 @@ def AgenticLanguageAnalysisDE(config: Config, lang, full_text, tokens, df):
 
     for token in tokens:
         # check if the user query have false positives
-        if IsItFalsePositive(
-            token.lemma_, false_positive.agentic
-        ):
+        if IsItFalsePositive(token.lemma_, false_positive.agentic):
             # recognise if there is Name of organisation or geographical name in the query
             for entity in tokens.ents:
                 if entity.label_ == "ORG":
@@ -837,10 +840,7 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
     matcher = PhraseMatcher(model[lang.lang].vocab)
 
     # Only run model.make_doc to speed things up
-    patterns = [
-        model[lang.lang].make_doc(text)
-        for text in false_positive.gender
-    ]
+    patterns = [model[lang.lang].make_doc(text) for text in false_positive.gender]
     matcher.add("TerminologyList", patterns)
     matches = matcher(tokens)
 
