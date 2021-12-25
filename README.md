@@ -55,7 +55,7 @@ Compile PO files (done automatically during deployment and above pot/po file gen
 
 ```
 pipenv run pybabel compile -d locales -l de_DE -f
-pipenv run pybabel compile -d locales -l en_GB -f
+pipenv run pybabel compile -d locales -l en_US -f
 ```
 
 Create directory for the Spacy models
@@ -208,11 +208,6 @@ pipenv run python -m add_alternatives_to_ignore
 ```
 
 ## Generate en-GB rules
-
-Install eng
-```
-python3 -m pip install --user eng
-```
 
 Run the following command:
 ```

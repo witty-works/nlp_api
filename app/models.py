@@ -13,7 +13,7 @@ class Lang(object):
         self.locale = locale
 
         if self.lang == "en":
-            trans_locale = "en_GB"
+            trans_locale = "en_US"
         else:
             trans_locale = "de_DE"
 

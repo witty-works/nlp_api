@@ -19,7 +19,7 @@ def add_entry(poFiles, category, columns, label, column, row):
 
 
 def read_csv(in_file):
-    poFiles = {"pot": polib.POFile(), "en_GB": polib.POFile(), "de_DE": polib.POFile()}
+    poFiles = {"pot": polib.POFile(), "en_US": polib.POFile(), "de_DE": polib.POFile()}
     for locale in poFiles:
         current_date = datetime.utcnow().strftime("%Y-%m-%d %H:%M")
 
