@@ -128,19 +128,18 @@ def get_false_positive_from_redis(userId: str):
 
 FalsePositive = namedtuple("FalsePositive", "gender agentic")
 # TODO: userId will be taken from the authentication token
-def get_false_positive(gender_false_positive, false_positive_agentic_const, userId=""):
+def get_false_positive(false_positive_agentic_const, userId=""):
     corporate_false_positive = []
     if userId:
         corporate_false_positive = get_false_positive_from_redis(userId)
     fp = FalsePositive(
-        gender_false_positive + corporate_false_positive,
+        corporate_false_positive,
         false_positive_agentic_const + corporate_false_positive,
     )
     return fp
 
 
 false_positive = get_false_positive(
-    rules["de-DE"]["gender_false_positive"],
     rules["de-DE"]["false_positive_agentic_const"],
 )
 

@@ -1,18 +1,8 @@
 from os import pathconf
 import pytest
 from pathlib import Path
-from fastapi.applications import FastAPI
 from fastapi.testclient import TestClient
-from app.main import (
-    app,
-    redis,
-    set_rules,
-    get_false_positive,
-    false_positive
-)
-from app.rules import (
-    rules,
-)
+from app.main import app, redis, set_rules, get_false_positive, false_positive
 import json
 from app.models import RequestIn
 
@@ -192,11 +182,11 @@ def test_false_positive(fp_case_dir, snapshot, set_redis):
     input_json = fp_case_dir.joinpath("input.json").read_text()
     # call set_false_positive_agentic to read data from redis
     userId = "test@gmail.com"
-    # get_false_positive(gender_false_positive, false_positive_agentic_const, userId)
+    # get_false_positive(false_positive_agentic_const, userId)
     patcher = mock.patch.object(
         main,
         "false_positive",
-        get_false_positive(rules["de-DE"]["gender_false_positive"], false_positive_agentic_const, userId),
+        get_false_positive(false_positive_agentic_const, userId),
     )
     patcher.start()
     # Call the tested endpoint.

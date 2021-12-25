@@ -7,8 +7,6 @@ rules = {
         "df_agentic_ct": "agentic.csv",
         # load Gender denom
         "df_gender_ct": "gendered_noun.csv",
-        # load Gender denom false_positives
-        "genderdenom_false_positives": "titles_false_positives.csv",
         # load style words
         "df_style_word": "style_words.csv",
         "df_style_sentences": "style_sentences.csv",
@@ -80,9 +78,6 @@ rules["de-DE"]["exceptions"] = [
     "Organization",
     "Gliederung",
 ]
-rules["de-DE"]["gender_false_positive"] = rules["de-DE"]["genderdenom_false_positives"][
-    "False_positives"
-].tolist()
 
 rules["de-CH"] = copy.deepcopy(rules["de-DE"])
 rules["de-AT"] = copy.deepcopy(rules["de-DE"])
