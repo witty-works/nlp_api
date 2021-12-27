@@ -37,8 +37,8 @@ docker run  -p 8000:8000 --name nlp --network "bridge" --env languagetool_api=ht
 
 ```
 pipenv install --dev
-pipenv run python3.9 -m spacy download en_core_web_sm
-pipenv run python3.9 -m spacy download de_core_news_sm
+pipenv run python3.9 -m spacy download en_core_web_sm --no-cache-dir
+pipenv run python3.9 -m spacy download de_core_news_sm --no-cache-dir
 ```
 
 ## using virtual environment (venv)
@@ -47,8 +47,8 @@ pipenv run python3.9 -m spacy download de_core_news_sm
 python -m venv /path/to/new/virtual/environment
 source /path/to/new/virtual/environment/bin/active
 python3.9 -m pip install -r requirements.txt
-python3.9 -m spacy download en_core_web_sm
-python3.9 -m spacy download de_core_news_sm
+python3.9 -m spacy download en_core_web_sm --no-cache-dir
+python3.9 -m spacy download de_core_news_sm --no-cache-dir
 ```
 
 Compile PO files (done automatically during deployment and above pot/po file generation)
