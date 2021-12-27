@@ -24,8 +24,8 @@ with open(
         if not li.startswith("#"):
             current_words.append(li)
 
-traning_data_dir = "training_data"
-training_data_file_name = "gendered_noun_DE.csv"
+traning_data_dir = "training_data/de-DE"
+training_data_file_name = "gendered_noun.csv"
 training_data_full_path = traning_data_dir + "/" + training_data_file_name
 with open(training_data_full_path) as f:
     reader = csv.DictReader(f)

@@ -37,8 +37,8 @@ docker run  -p 8000:8000 --name nlp --network "bridge" --env languagetool_api=ht
 
 ```
 pipenv install --dev
-pipenv run python3.9 -m spacy download en_core_web_sm
-pipenv run python3.9 -m spacy download de_core_news_sm
+pipenv run python3.9 -m spacy download en_core_web_sm --no-cache-dir
+pipenv run python3.9 -m spacy download de_core_news_sm --no-cache-dir
 ```
 
 ## using virtual environment (venv)
@@ -47,15 +47,15 @@ pipenv run python3.9 -m spacy download de_core_news_sm
 python -m venv /path/to/new/virtual/environment
 source /path/to/new/virtual/environment/bin/active
 python3.9 -m pip install -r requirements.txt
-python3.9 -m spacy download en_core_web_sm
-python3.9 -m spacy download de_core_news_sm
+python3.9 -m spacy download en_core_web_sm --no-cache-dir
+python3.9 -m spacy download de_core_news_sm --no-cache-dir
 ```
 
 Compile PO files (done automatically during deployment and above pot/po file generation)
 
 ```
 pipenv run pybabel compile -d locales -l de_DE -f
-pipenv run pybabel compile -d locales -l en_GB -f
+pipenv run pybabel compile -d locales -l en_US -f
 ```
 
 Create directory for the Spacy models
@@ -205,6 +205,14 @@ pipenv run python -m analyze_rules -i [CSV export]]
 
 ```
 pipenv run python -m add_alternatives_to_ignore
+```
+
+## Generate en-GB rules
+
+Run the following command:
+```
+cp training_data/en-US/* training_data/en-GB/.
+pipenv run python -m eng training_data/en-GB/. --ext=csv --target="uk"
 ```
 
 ## Collect statistics
