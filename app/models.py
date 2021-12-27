@@ -1,4 +1,3 @@
-from numpy import array
 from pydantic import BaseModel, validator
 from typing import Dict, List
 from typing import Optional
@@ -10,10 +9,11 @@ import string
 
 class Lang(object):
     def __init__(self, locale):
-        self.locale = locale[0:2]
+        self.lang = locale[0:2]
+        self.locale = locale
 
-        if self.locale == "en":
-            trans_locale = "en_GB"
+        if self.lang == "en":
+            trans_locale = "en_US"
         else:
             trans_locale = "de_DE"
 
@@ -214,34 +214,13 @@ class ResultOut(BaseModel):
         if "^" in alternatives:
             alternatives.remove("^")
 
-        rewrite_to_swiss_german = False
-        if (
-            lang.locale == "de"
-            and "de-CH" in config.preferred_variants
-            and config.preferred_variants.find("de-CH")
-            <= config.preferred_variants.find("de")
-        ):
-            rewrite_to_swiss_german = True
-
-        rewrite_to_british = False
-        if (
-            lang.locale == "en"
-            and "en-GB" in config.preferred_variants
-            and config.preferred_variants.find("en-GB")
-            <= config.preferred_variants.find("en")
-        ):
-            rewrite_to_british = True
-
         cleaned_alternatives = []
         for i, alternative in enumerate(alternatives):
             if is_upper and category != "orthography":
                 alternative = string.capwords(alternative[0:1]) + alternative[1:]
 
-            if rewrite_to_swiss_german:
+            if lang.locale == "de-CH":
                 alternative = alternative.replace("ß", "ss")
-
-            if rewrite_to_british:
-                alternative = alternative.replace("color", "colour")
 
             if "~" in alternative:
                 variants = alternative.split("~")
@@ -321,7 +300,7 @@ class ResultsOut(BaseModel):
     language: str
 
     def factory(results, lang):
-        return ResultsOut(results, lang.locale)
+        return ResultsOut(results, lang.lang)
 
     factory = staticmethod(factory)
 

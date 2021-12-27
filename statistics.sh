@@ -86,22 +86,29 @@ descriptions=(
     "Number of total requests including click on alternatives/ignores"
     "Number of clicks on an alternative"
     "Number of clicks on ignore"
+    "Number of German rules"
+    "Number of English rules"
+    "Number of rules"
 )
 
-data_dir="user_training_data";
-date_dir="$data_dir/$DATE";
+training_data_dir="training_data";
+user_training_data_dir="user_training_data";
+user_training_data_date_dir="$user_training_data_dir/$DATE";
 
 cmds=(
-    "ls $data_dir/installs | wc -l"
-    "ls $date_dir | wc -l"
-    "find $date_dir -type f | wc -l"
-    "ls $date_dir/ | grep -r '\"alternative\"' | wc -l"
-    "ls $date_dir/ | grep -r '\"igore\"' | wc -l"
+    "ls $user_training_data_dir/installs | wc -l"
+    "ls $user_training_data_date_dir | wc -l"
+    "find $user_training_data_date_dir -type f | wc -l"
+    "ls $user_training_data_date_dir/ | grep -r '\"alternative\"' | wc -l"
+    "ls $user_training_data_date_dir/ | grep -r '\"igore\"' | wc -l"
+    "wc -l $training_data_dir/de-DE/*"
+    "wc -l $training_data_dir/en-US/*"
+    "wc -l `find training_data -type f`| tail -1"
 )
 
-if [[ ! -d $date_dir ]];
+if [[ ! -d $user_training_data_date_dir ]];
 then
-    echo "Directory $date_dir does not exist."
+    echo "Directory $user_training_data_date_dir does not exist."
     exit 1;
 fi
 
@@ -123,7 +130,7 @@ done
 
 if $BACKUP;
 then
-    cd $data_dir;
+    cd $user_training_data_dir;
     tar -czf "$DATE.tar.gz" $DATE;
     rm -rf $DATE;
 fi

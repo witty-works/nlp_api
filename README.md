@@ -55,7 +55,7 @@ Compile PO files (done automatically during deployment and above pot/po file gen
 
 ```
 pipenv run pybabel compile -d locales -l de_DE -f
-pipenv run pybabel compile -d locales -l en_GB -f
+pipenv run pybabel compile -d locales -l en_US -f
 ```
 
 Create directory for the Spacy models
@@ -205,6 +205,14 @@ pipenv run python -m analyze_rules -i [CSV export]]
 
 ```
 pipenv run python -m add_alternatives_to_ignore
+```
+
+## Generate en-GB rules
+
+Run the following command:
+```
+cp training_data/en-US/* training_data/en-GB/.
+pipenv run python -m eng training_data/en-GB/. --ext=csv --target="uk"
 ```
 
 ## Collect statistics

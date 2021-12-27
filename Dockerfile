@@ -31,7 +31,7 @@ RUN mkdir files \
   && spacy download de_core_news_sm
 COPY --chown=wittyuser:wittyuser . .
 RUN pybabel compile -d locales -l de_DE -f \
-  && pybabel compile -d locales -l en_GB -f
+  && pybabel compile -d locales -l en_US -f
 
 # azure app services needs port 80 or 8080 exposed
 ENV PORT 8080
