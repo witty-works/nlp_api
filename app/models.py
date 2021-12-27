@@ -225,10 +225,7 @@ class ResultOut(BaseModel):
             if "~" in alternative:
                 variants = alternative.split("~")
                 if config.gendered_roles_format == "binary_gender":
-                    if alternatives[i][0].isupper():
-                        alternative = alternatives[i].replace("~", "")
-                    else:
-                        alternative = alternatives[i].replace("~", "/")
+                    alternative = ResultOut.getGenderBinaryForm(alternatives[i])
                 else:
                     beginning = str(variants[0])
                     if str(variants[1]) == "e":
@@ -248,10 +245,7 @@ class ResultOut(BaseModel):
                     cleaned_alternatives.append(alternative)
 
                     if config.gendered_roles_format == "both":
-                        if alternatives[i][0].isupper():
-                            alternative = alternatives[i].replace("~", "")
-                        else:
-                            alternative = alternatives[i].replace("~", "/")
+                        alternative = ResultOut.getGenderBinaryForm(alternatives[i])
 
             cleaned_alternatives.append(alternative)
 
@@ -293,6 +287,13 @@ class ResultOut(BaseModel):
         object.__setattr__(self, "label", label)
         object.__setattr__(self, "reason", reason)
         object.__setattr__(self, "solution", solution)
+
+    @staticmethod
+    def getGenderBinaryForm(alternative):
+        if alternative[0].isupper() and  not alternative.find("rau~"):
+            return alternative.replace("~", "")
+
+        return alternative.replace("~", "/")
 
 
 class ResultsOut(BaseModel):
