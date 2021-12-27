@@ -1,10 +1,10 @@
 Lemma,Word_Type,Priority,Category,Primary_subcategory,Secondary_subcategory,Sg_all_clean,Pl_all_clean
 Einkäufer,s,,gendered,function,,"['Einkauf', 'Einkäufer~in~/~Einkäufer', 'Einkaufende']","['Einkaufende', 'Einkäufer~innen~ und ~Einkäufer', 'Einkauf']"
-Fachmann,s,,gendered,function,,"['Fachperson', 'Fachkraft', 'Fachfrau/Fachmann', 'Fachpersonal', 'Fachkräfte']","['Fachkräfte', 'Fachfrauen und Fachmänner', 'Fachpersonal']"
+Fachmann,s,,gendered,function,,"['Fachperson', 'Fachkraft', 'Fachfrau~Fachmann', 'Fachpersonal', 'Fachkräfte']","['Fachkräfte', 'Fachfrauen und Fachmänner', 'Fachpersonal']"
 Fachspezialist,s,,gendered,function,,"['Fachperson', 'Fachspezialist~in~/~Fachspezialist', 'in einem Fach spezialisierte Person', 'Person, die sich (auf ...) spezialisiert hat']","['Fachspezialist~innen~ und ~Fachspezialisten', 'in einem Fach spezialisierte Personen', 'Personen, die sich (auf ...) spezialisiert haben']"
 Forstwart,s,,gendered,function,,"['Forstwartung', 'Forstwart~in~/~Forstwart', 'Forstwartende', 'Fachkraft in der Waldbewirtschaftung']","['Forstwartende', 'Forstwart~innen~ und ~Forstwarte', 'Forstwartung', 'Fachkräfte in der Waldbewirtschaftung']"
 Guy,s,,gendered,function,americanism,"['Kamerad~in~/~Kamerad', 'Freund~in~/~Freund', 'Kolleg~in~/~Kollege', 'Team', 'Leute', 'alle miteinander', 'alle zusammen']","['Leute', 'alle miteinander', 'alle zusammen', 'Kolleg~innen~ und ~Kollege', 'Freund~innen~ und ~Freunde', 'Kamerad~innen~ und ~Kameraden', 'Team']"
-Kaufmann,s,,gendered,function,,"['Kauffrau/Kaufmann', 'Kaufleute', 'Handeltreibende', 'Person im kaufmännischen Bereich']","['Handeltreibende', 'Kaufleute', 'Personen im kaufmännischen Bereich']"
+Kaufmann,s,,gendered,function,,"['Kauffrau~Kaufmann', 'Kaufleute', 'Handeltreibende', 'Person im kaufmännischen Bereich']","['Handeltreibende', 'Kaufleute', 'Personen im kaufmännischen Bereich']"
 Lehrling,s,,gendered,function,,"['Nachwuchskraft', 'Azubi', 'Ausbildung', 'Lehre', 'Auszubildend~e~/~Auszubildender', 'Lernende', 'Auszubildende', 'Person in Ausbildung', 'auszubildende Person', 'lernende Person']","['Lernende', 'Auszubildende', 'Ausbildung', 'Lehre', 'Personen in Ausbildung', 'auszubildende Personen', 'lernende Person']"
 Macher,s,,gendered,function,,['Macher~in~/~Macher'],['Macher~innen~ und ~Macher']
 Manager,s,,gendered,function,,"['Management', 'Manager~in~/~Manager']","['Manager~innen~ und ~Manager', 'Management']"
@@ -117,7 +117,7 @@ Gußformer,s,,gendered,titles,,"['Gussformerei', 'Gussformung', 'Gussformer~in~/
 Hauer,s,,gendered,titles,,['Hauer~in~/~Hauer'],[]
 Help-desk-Mitarbeiter,s,,gendered,titles,americanism,"['Helpdesk', 'Serviceticket-System', 'Fallbearbeitungssystem', 'Anfragenbearbeitung', 'Anwendungsbetreuung', 'Helpdesk-Mitarbeiter~in~/~Helpdesk-Mitarbeiter', 'Anwendungsbetreuer~in~/~Anwendungsbetreuer', 'Helpdesk-Team', 'Person, die für das Helpdesk arbeitet', 'Person, die eine Anwendung betreut']","['Helpdesk-Mitarbeiter~innen~ und ~Helpdesk-Mitarbeiter', 'Anwendungsbetreuer~innen~ und ~Anwendungsbetreuer', 'Helpdesk-Team', 'Helpdesk', 'Serviceticket-System', 'Fallbearbeitungssystem', 'Anfragenbearbeitung', 'Anwendungsbetreuung', 'Personen, die für das Helpdesk arbeiten', 'Personen, die eine Anwendung betreuen']"
 Hörsystemakustiker,s,,gendered,titles,,"['Hörsystemakustik', 'Hörsystemakustiker~in~/~Hörsystemakustiker']",['Hörsystemakustik']
-Industriekaufmann,s,,gendered,titles,,"['Industriekauffrau/Industriekaufmann', 'Industriekaufleute']",['Industriekaufleute']
+Industriekaufmann,s,,gendered,titles,,"['Industriekauffrau~Industriekaufmann', 'Industriekaufleute']",['Industriekaufleute']
 Industriekeramiker,s,,gendered,titles,,"['Industriekeramik', 'Industriekeramiker~in~/~Industriekeramiker']",['Industriekeramik']
 Industriemechaniker,s,,gendered,titles,,"['Industriemechanik', 'Industriemechaniker~in~/~Industriemechaniker']",['Industriemechanik']
 Industriepolsterer,s,,gendered,titles,,"['Industriepolsterei', 'Industriepolsterer~in~/~Industriepolsterer']",['Industriepolsterei']
@@ -189,7 +189,7 @@ Service desk agent,s,,gendered,titles,americanism,"['Servicedesk', 'Servicedesk-
 Servicetechniker,s,,gendered,titles,,"['technische Servicekraft', 'Service', 'technischer Service', 'Servicetechniker~in~/~Servicetechniker', 'Servicepersonal', 'technisches Servicepersonal']","['Servicetechniker~innen~ und ~Servicetechniker', 'Servicepersonal', 'technisches Servicepersonal', 'Service', 'technischer Service']"
 Sicherheitsbeauftragter,s,,gendered,titles,,"['Sicherheits-Management', 'Sicherheitsbeauftragt~e~/~Sicherheitsbeauftragter']",['Sicherheits-Management']
 Softwarearchitekt,s,,gendered,titles,,"['Softwarearchitektur', 'Softwarearchitekt~in~/~Softwarearchitekt']",['Softwarearchitektur']
-Speditionskaufmann,s,,gendered,titles,,"['Speditionskaufmann', 'Speditionskauffrau/Speditionskaufmann']",['Speditionskaufmann']
+Speditionskaufmann,s,,gendered,titles,,"['Speditionskaufmann', 'Speditionskauffrau~Speditionskaufmann']",['Speditionskaufmann']
 Spengler,s,,gendered,titles,,"['Spenglerei', 'Spengler~in~/~Spengler']",['Spenglerei']
 Steinmetz,s,,gendered,titles,,['Steinmetz~in~/~Steinmetz'],[]
 Steinsetzer,s,,gendered,titles,,['Steinsetzer~in~/~Steinsetzer'],[]
@@ -207,5 +207,5 @@ Wagenmeister,s,,gendered,titles,,['Wagenmeister~in~/~Wagenmeister'],[]
 Wagner,s,,gendered,titles,,"['Wagnerei', 'Stellmacherei', 'Wagner~in~/~Wagner']","['Wagnerei', 'Stellmacherei']"
 Winzer,s,,gendered,titles,,"['Winzerei', 'Winzereibetrieb', 'Winzer~in~/~Winzer']","['Winzerei', 'Winzereibetrieb']"
 Zeichner,s,,gendered,titles,,['Zeichner~in~/~Zeichner'],[]
-Zimmermann,s,,gendered,titles,,"['Zimmereifachkraft', 'Zimmerei', 'Zimmerfrau/Zimmermann']",['Zimmerei']
+Zimmermann,s,,gendered,titles,,"['Zimmereifachkraft', 'Zimmerei', 'Zimmerfrau~Zimmermann']",['Zimmerei']
 Zugbegleiter,s,,gendered,titles,,"['Zugbegleitung', 'Zugbegleiter~in~/~Zugbegleiter']",['Zugbegleitung']
