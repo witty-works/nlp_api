@@ -993,66 +993,6 @@ def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
     return list_tokens
 
 
-# Exaggerating words and sentences analisys function, shows alternatives if avalible
-
-
-def ExaggeratingWordsSentences(
-    config: Config, lang, full_text, tokens, df, df_sentences
-):
-    subcategory = "exaggerating"
-    category = categories[subcategory]["category"]
-    list_tokens = []
-    # Phrase matcher part to handle False positives with two words and special simbols
-    matcher = PhraseMatcher(model[lang.lang].vocab)
-
-    # Only run model.make_doc to speed things up
-    patterns = [
-        model[lang.lang].make_doc(text)
-        for text in rules[lang.locale]["terms_exaggerating"]
-    ]
-    matcher.add("TerminologyList", patterns)
-
-    for token in tokens:
-        for word, alternative in zip(df["Lemma"], df["Alternatives"]):
-            if GetNonNounLowerCased(token) == word:
-                list_tokens.append(
-                    ResultOut.factory(
-                        config,
-                        lang,
-                        token.text,
-                        full_text,
-                        category,
-                        subcategory,
-                        token.idx,
-                        None,
-                        ast.literal_eval(alternative),
-                    )
-                )
-
-    matches = matcher(tokens)
-    for match_id, start, end in matches:
-        for sentence, alternative in zip(
-            df_sentences["Lemma"], df_sentences["Alternatives"]
-        ):
-            span = tokens[start:end]
-            if span.text == sentence:
-                list_tokens.append(
-                    ResultOut.factory(
-                        config,
-                        lang,
-                        span.text,
-                        full_text,
-                        category,
-                        subcategory,
-                        span.start_char,
-                        span.end_char,
-                        ast.literal_eval(alternative),
-                    )
-                )
-
-    return list_tokens
-
-
 # Unified function for Emty words false positives and rules
 
 
