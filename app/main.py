@@ -565,24 +565,24 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             lang,
             user_request_in.text,
             tokens,
-            rules[lang.locale]["df_open_dis_word"],
-            rules[lang.locale]["df_open_dis_sentence"],
+            rules["de-DE"]["df_open_dis_word"],
+            rules["de-DE"]["df_open_dis_sentence"],
             "openly_discriminating",
         )
 
     if IsSubCategoryEnabled("gendered", disabled_categories):
-        list_full += GenderedDenomAnalysis(
+        list_full += GenderedDenomAnalysisDE(
             user_request_in.config,
             lang,
             user_request_in.text,
             tokens,
-            rules[lang.locale]["df_gender_ct"],
+            rules["de-DE"]["df_gender_ct"],
         )
 
     if IsSubCategoryEnabled(
         "misgendering_institutions", user_request_in.config.disabled_categories
     ):
-        list_full += MisgenderingInstitutions(
+        list_full += MisgenderingInstitutionsDE(
             user_request_in.config, lang, user_request_in.text, tokens
         )
 
@@ -599,7 +599,7 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             lang,
             user_request_in.text,
             tokens,
-            rules[lang.locale]["df_agentic_ct"],
+            rules["de-DE"]["df_agentic_ct"],
         )
 
     if IsSubCategoryEnabled("unconscious_bias", disabled_categories):
@@ -608,15 +608,15 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             lang,
             user_request_in.text,
             tokens,
-            rules[lang.locale]["df_ub_no_noun_word"],
-            rules[lang.locale]["df_ub_sentences"],
+            rules["de-DE"]["df_ub_no_noun_word"],
+            rules["de-DE"]["df_ub_sentences"],
             "unconscious_bias",
         ) + WordNounDE(
             user_request_in.config,
             lang,
             user_request_in.text,
             tokens,
-            rules[lang.locale]["df_ub_noun_word"],
+            rules["de-DE"]["df_ub_noun_word"],
             "unconscious_bias",
         )
 
@@ -626,7 +626,7 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             lang,
             user_request_in.text,
             tokens,
-            rules[lang.locale]["df_communal_words"],
+            rules["de-DE"]["df_communal_words"],
             "inclusive",
             "communal",
         )
@@ -637,8 +637,8 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             lang,
             user_request_in.text,
             tokens,
-            rules[lang.locale]["terms_d_and_i_words"],
-            rules[lang.locale]["df_d_and_i_words"],
+            rules["de-DE"]["terms_d_and_i_words"],
+            rules["de-DE"]["df_d_and_i_words"],
             "inclusive",
             "d_and_i",
         )
@@ -649,9 +649,9 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             lang,
             user_request_in.text,
             tokens,
-            rules[lang.locale]["terms_style"],
-            rules[lang.locale]["df_style_word"],
-            rules[lang.locale]["df_style_sentences"],
+            rules["de-DE"]["terms_style"],
+            rules["de-DE"]["df_style_word"],
+            rules["de-DE"]["df_style_sentences"],
         )
 
     return list_full
@@ -802,7 +802,7 @@ def AgenticLanguageAnalysisDE(config: Config, lang, full_text, tokens, df):
                 for key in dic_anc.keys():
                     if key in false_positive.agentic:
                         for item in dic_anc[key]:
-                            if item.text in rules[lang.locale]["exceptions"]:
+                            if item.text in rules["de-DE"]["exceptions"]:
                                 list_false_positives.append(
                                     {
                                         "false positives": token.text,
@@ -831,7 +831,7 @@ def AgenticLanguageAnalysisDE(config: Config, lang, full_text, tokens, df):
     return list_tokens
 
 
-def GenderedDenomAnalysis(config: Config, lang, full_text, tokens, df):
+def GenderedDenomAnalysisDE(config: Config, lang, full_text, tokens, df):
     category = "gendered"
 
     list_tokens = []
@@ -1011,9 +1011,7 @@ def StyleWordAnalysisDE(
 
     for i in range(len(tokens))[1:-1]:
         # check if the user query have false positives
-        if IsItFalsePositive(
-            tokens[i].lemma_, rules[lang.locale]["false_positive_style"]
-        ):
+        if IsItFalsePositive(tokens[i].lemma_, rules["de-DE"]["false_positive_style"]):
             # recognise if there is Name of organisation or geographical name in the query
             if len(tokens.ents) > 0:
                 # this output will be deleted in production
@@ -1268,7 +1266,7 @@ def RulesBased(config: Config, lang, full_text, tokens, df, category, subcategor
 # Deutshe Bahn als.. Deutshe Bahn ist..
 
 
-def MisgenderingInstitutions(config: Config, lang, full_text, tokens):
+def MisgenderingInstitutionsDE(config: Config, lang, full_text, tokens):
     subcategory = "misgendering_institutions"
     category = categories[subcategory]["category"]
     db_match_list = []

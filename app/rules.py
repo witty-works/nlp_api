@@ -78,6 +78,3 @@ rules["de-DE"]["exceptions"] = [
     "Organization",
     "Gliederung",
 ]
-
-rules["de-CH"] = copy.deepcopy(rules["de-DE"])
-rules["de-AT"] = copy.deepcopy(rules["de-DE"])
