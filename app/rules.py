@@ -7,6 +7,7 @@ rules = {
         "df_agentic_ct": "agentic.csv",
         # load Gender denom
         "df_gender_ct": "gendered_noun.csv",
+        "df_articles": "articles.csv",
         # load style words
         "df_style_word": "style_words.csv",
         "df_style_sentences": "style_sentences.csv",
