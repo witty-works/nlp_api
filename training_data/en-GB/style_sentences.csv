@@ -1,19 +1,47 @@
 Lemma,Priority,Category,Primary_subcategory,Alt_split
+above average,1,style,exaggerating,['-']
 amongst others,1,style,filler,['-']
-career opportunity,1,style,hollow,['']
-contemporary working conditions,1,style,hollow,['']
-dream job,1,style,hollow,['']
-dream tasks,1,style,hollow,['']
-dynamic team,1,style,hollow,['']
-flat hierarchy,1,style,hollow,['']
-flat organisation,1,style,hollow,['']
-flat organisation,1,style,hollow,['']
-high quality,1,style,hollow,['']
-highly motivated,1,style,hollow,['']
-most of all,1,style,hollow,['']
-organisational talent,1,style,hollow,['']
-outside the box,1,style,hollow,['']
-team player,1,style,hollow,"['person who values team effort over individual gains', 'person who enjoys collaboration', 'someone who can compromise to reach a shared goal']"
-team spirit,1,style,hollow,['a mindset that values team effort over individual gains']
-think outside of the box,1,style,hollow,['']
-training budget,1,style,hollow,['']
+clever head,1,style,exaggerating,"['competence', 'creativity', 'intelligence', 'talent', 'ability', 'capability', 'proficiency', 'education', 'creative person', 'astute person', 'inventive person', 'someone with an eye for solutions', 'someone with surprising ideas']"
+extra mile,1,style,exaggerating,['-']
+extra ordinary,1,style,exaggerating,['-']
+fighter by nature,1,style,exaggerating,['-']
+first class,1,style,exaggerating,['-']
+first mover,1,style,exaggerating,"['the first to market a product', 'the first to offer a service']"
+flat hierarchy,1,style,hollow,"['short chain of command', 'responsible and self-organised way of working', 'room for personal initiative', 'short lines of communication', 'opportunities for employees to help shape the company', 'room for responsibility and freedom to organise their work at the operational level']"
+flat organisation,1,style,hollow,"['short chain of command', 'responsible and self-organised way of working', 'room for personal initiative', 'short lines of communication', 'opportunities for employees to help shape the company', 'room for responsibility and freedom to organise their work at the operational level']"
+front runner,1,style,exaggerating,['-']
+go OTB,,style,hollow,"['take a new approach', 'jump from a maturing trend to an emerging trend', 'explore new business models', 'take a disruptive approach', 'rethink (a strategy, business model, ...)', 'reinvent (a brand, a company, ...)', 'redefine (a product, brand, business, ...)']"
+go outside the box,,style,hollow,"['take a new approach', 'jump from a maturing trend to an emerging trend', 'explore new business models', 'take a disruptive approach', 'rethink (a strategy, business model, ...)', 'reinvent (a brand, a company, ...)', 'redefine (a product, brand, business, ...)']"
+high quality,1,style,hollow,"['adhering to rigorous standards', 'using premium materials', 'adhering to strict methods', 'meeting exacting requirements', 'dependable reliability']"
+highly motivated,1,style,hollow,"['motivated', 'energetic', 'enterprising', 'spirited', 'happy to take the initiative', 'willing to apply oneself', 'keenly interested']"
+market leader,1,style,exaggerating,['-']
+market leadership,1,style,exaggerating,['-']
+market leading,1,style,exaggerating,['-']
+most of all,1,style,hollow,"['especially', 'in particular', 'mostly', 'more than any other', 'more than anyone else', 'to a greater degree than anything else']"
+must have,1,style,exaggerating,"['requirement', 'criterion', 'essential', 'quality required to (...)']"
+no problem,1,style,exaggerating,['-']
+number 1,1,style,exaggerating,['-']
+number one,1,style,exaggerating,['-']
+opinion leader,1,style,exaggerating,['-']
+pioneering company,1,style,exaggerating,['-']
+proven track record,1,style,exaggerating,['-']
+reach for the star,1,style,exaggerating,"['have aspirations', 'set goals that are motivating (inspiring, aspirational)']"
+reach to the star,1,style,exaggerating,"['have aspirations', 'set goals that are motivating (inspiring, aspirational)']"
+risk carrier,1,style,exaggerating,['-']
+self starter,1,style,exaggerating,['-']
+state of the art,,style,hollow,"['the highest point of technological achievement to date', 'the current highest level of development in the field']"
+success rate,1,style,exaggerating,['-']
+success story,1,style,exaggerating,['-']
+team player,1,style,hollow,"['someone who values team effort over personal gains', 'someone who enjoys collaboration', 'someone who can compromise to reach a shared goal', 'someone who feels inspired and motivated by working together with others toward a shared goal']"
+team spirit,1,style,hollow,['mindset that values team effort over individual gains']
+think OTB,1,style,hollow,"['think differently', 'think unconventionally', 'think creatively', 'use lateral thinking', 'use parallel thinking', 'look (at ...) with fresh eyes', 'approach from a new angle', 'look beyond the obvious', 'consider from a fresh perspective', 'use an indirect approach via reasoning that is not immediately obvious', 'deviate from existing practises']"
+think outside the box,1,style,hollow,"['think differently', 'think unconventionally', 'think creatively', 'use lateral thinking', 'use parallel thinking', 'look (at ...) with fresh eyes', 'approach from a new angle', 'look beyond the obvious', 'consider from a fresh perspective', 'use an indirect approach via reasoning that is not immediately obvious', 'deviate from existing practises']"
+top performance,1,style,exaggerating,"['reference cases', 'documented results', ""execution to the customer's satisfaction"", 'fulfilment of customer expectations']"
+unique to,,style,hollow,"['exclusive to', 'particular to', 'characteristic of', 'typical of', 'peculiar to']"
+well established,1,style,exaggerating,['-']
+winner type,1,style,exaggerating,['-']
+winning type,1,style,exaggerating,['-']
+without any problem,1,style,exaggerating,['easily']
+without problem,1,style,exaggerating,['easily']
+world leader,1,style,exaggerating,"['largest revenue share in the market', 'largest customer base in the segment', 'brand to introduce the majority of technological advances in the market']"
+world wide,1,style,hollow,"['in (...) countries', '(...) offices across (...) continents']"
