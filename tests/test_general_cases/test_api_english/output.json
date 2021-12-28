@@ -12,6 +12,25 @@
             "start": 21,
             "subcategory": "agentic",
             "text": "analytical"
+        },
+        {
+            "alternatives": [
+                "dedicated",
+                "committed",
+                "person who continues despite difficulties",
+                "someone devoted to their purpose",
+                "someone who sticks to their goal",
+                "someone willing to see things through"
+            ],
+            "category": "style",
+            "context": "",
+            "end": 37,
+            "label": "Style: Exaggeration",
+            "reason": "Communicates that people have to conform to these superlatives.",
+            "solution": "Use an authentic and honest sounding statement.",
+            "start": 32,
+            "subcategory": "exaggerating",
+            "text": "ninja"
         }
     ]
 }
