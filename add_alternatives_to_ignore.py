@@ -2,11 +2,15 @@ import csv
 import json
 from collections import defaultdict
 import requests
+from app.models import (
+    ResultOut,
+    Config,
+)
 
 test_text = "Hier ist ein Satz. Liebe "
 api_url = "https://lt.default.api.witty.works/v2/check"
 # api_url = "https://api.languagetoolplus.com/v2/check"
-# api_url = "http://localhost:8081/v2/check"
+api_url = "http://localhost:8081/v2/check"
 # api_url = False
 columns = defaultdict(list)
 all_alternative_groups = []
@@ -25,8 +29,13 @@ with open(
             current_words.append(li)
 
 traning_data_dir = "training_data/de-DE"
-training_data_file_name = "gendered_noun.csv"
-training_data_full_path = traning_data_dir + "/" + training_data_file_name
+training_data_full_path = traning_data_dir + "/articles.csv"
+with open(training_data_full_path) as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        all_alternative_groups.append(row["Alternative"])
+
+training_data_full_path = traning_data_dir + "/gendered_noun.csv"
 with open(training_data_full_path) as f:
     reader = csv.DictReader(f)
     for row in reader:
@@ -44,29 +53,17 @@ for all_alternative_group in all_alternative_groups:
 
 print("Alternatives: " + str(len(all_alternatives)))
 
-endings = ["\/in", "\/-in", "\_in", "*in", ":in", "In"]
+endings = Config._gendereddenom_ending.keys()
 for word in all_alternatives:
     if "~" in word:
-        clean_words.extend(word.replace("~", "").split("/"))
-
-        variants = word.split("~")
         for german_gender_ending in endings:
-            beginning = str(variants[0])
-            if str(variants[1]) == "e":
-                beginning += "e"
-                ending = "r"
-            else:
-                ending = str(variants[1])
+            alternative = ResultOut.getGenderedRolesFormatInclusive(
+                word, german_gender_ending
+            )
 
-            if german_gender_ending == "In":
-                ending = ending.capitalize()
-                separator = ""
-            else:
-                separator = german_gender_ending[0:-2]
+            clean_words.append(alternative)
 
-            new_word = beginning + separator + ending
-
-            clean_words.append(new_word)
+        clean_words.extend(ResultOut.getGenderedRolesFormatBinary(word).split("/"))
     else:
         clean_words.extend(word.split("/"))
 
@@ -121,11 +118,12 @@ with open("languagetool/ignore.txt", "w") as myfile:
                     == "Rechtschreibfehler"
                 ):
                     newly_added_words.append(word)
-                    myfile.write(word)
+                    myfile.write(word.replace("/", "\/"))
                     myfile.write("\n")
+                    print(word)
 
             else:
-                myfile.write(word)
+                myfile.write(word.replace("/", "\/"))
                 myfile.write("\n")
 
 print("Newly added words: " + str(len(newly_added_words)))

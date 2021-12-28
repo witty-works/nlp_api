@@ -223,33 +223,22 @@ class ResultOut(BaseModel):
                 alternative = alternative.replace("ß", "ss")
 
             if "~" in alternative:
-                variants = alternative.split("~")
-                if config.gendered_roles_format == "binary_gender":
-                    alternative = ResultOut.getGenderedRolesFormatBoth(alternative)
-                else:
-                    beginning = str(variants[0])
-                    if str(variants[1]) == "e":
-                        beginning += "e"
-                        ending = "r"
-                    else:
-                        ending = str(variants[1])
-
-                    if config.german_gender_ending == "In":
-                        ending = ending.capitalize()
-                        separator = ""
-                    else:
-                        separator = config.german_gender_ending[0:-2]
-
-                    alternative = beginning + separator + ending
-
-                    cleaned_alternatives.append(alternative)
-
-                    if config.gendered_roles_format == "both":
-                        alternative = ResultOut.getGenderedRolesFormatBoth(
-                            alternatives[i]
+                if config.gendered_roles_format in ["both", "inclusive_gender"]:
+                    cleaned_alternatives.append(
+                        ResultOut.getGenderedRolesFormatInclusive(
+                            alternative,
+                            config.german_gender_ending,
                         )
+                    )
 
-            cleaned_alternatives.append(alternative)
+                if config.gendered_roles_format in ["both", "binary_gender"]:
+                    cleaned_alternatives.append(
+                        ResultOut.getGenderedRolesFormatBinary(
+                            alternative,
+                        )
+                    )
+            else:
+                cleaned_alternatives.append(alternative)
 
         return ResultOut(
             text,
@@ -291,11 +280,37 @@ class ResultOut(BaseModel):
         object.__setattr__(self, "solution", solution)
 
     @staticmethod
-    def getGenderedRolesFormatBoth(alternative):
-        if alternative[0].isupper() and alternative.find("rau~") == -1:
+    def getGenderedRolesFormatBinary(alternative):
+        if alternative.count("~") > 1 or alternative.find("~innenschaft") != -1:
             return alternative.replace("~", "")
 
         return alternative.replace("~", "/")
+
+    @staticmethod
+    def getGenderedRolesFormatInclusive(alternative, german_gender_ending):
+        variants = alternative.split("~")
+        beginning = str(variants[0])
+        if str(variants[1]) == "e":
+            beginning += "e"
+            ending = "r"
+        else:
+            ending = str(variants[1])
+
+        if german_gender_ending == "In":
+            if alternative.count("~") > 1:
+                ending = ending.capitalize()
+                separator = ""
+            else:
+                separator = "/"
+        elif german_gender_ending == "/-in":
+            if alternative.count("~") > 1:
+                separator = "/-"
+            else:
+                separator = "/"
+        else:
+            separator = german_gender_ending[0:1]
+
+        return beginning + separator + ending
 
 
 class ResultsOut(BaseModel):
