@@ -95,6 +95,8 @@ with open("languagetool/ignore.txt", "w") as myfile:
             if word == "":
                 continue
 
+            add_word = True
+
             if api_url and word not in used_words:
                 text = test_text + word
 
@@ -117,13 +119,15 @@ with open("languagetool/ignore.txt", "w") as myfile:
                     and response.json()["matches"][0]["shortMessage"]
                     == "Rechtschreibfehler"
                 ):
-                    newly_added_words.append(word)
-                    myfile.write(word.replace("/", "\/"))
-                    myfile.write("\n")
                     print(word)
+                    newly_added_words.append(word)
+                else:
+                    add_word = False
 
-            else:
-                myfile.write(word.replace("/", "\/"))
+            if add_word:
+                word = word.replace("/", "\/")
+                word = word.replace("_", "\_")
+                myfile.write(word)
                 myfile.write("\n")
 
 print("Newly added words: " + str(len(newly_added_words)))
