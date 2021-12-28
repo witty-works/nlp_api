@@ -1,17 +1,72 @@
 Lemma,Priority,Category,Primary_subcategory,Alt_split
+absolut,1,style,exaggerating,['-']
+compelling,1,style,exaggerating,"['convincing', 'evoking interest/attention', 'inspiring conviction', 'engaging', 'exciting', 'sound', 'reasonable', 'credible', 'effective', 'conclusive', 'urgent', 'crucial', 'vital']"
+competitor,1,style,exaggerating,['market participants']
+delicious,1,style,exaggerating,['-']
+dynamic,1,style,hollow,"['lively', 'energetic', 'spirited', 'enthusiastic', 'committed', 'vibrant', 'effective', 'productive', 'adaptable']"
+establishment,1,style,hollow,"['business', 'organization', 'place of business', 'start', 'founding', 'process of setting up', 'public institution', 'private institution', 'dominant group', 'people with power and influence']"
 etc.,1,style,filler,['-']
-flexible,1,style,hollow,['']
-global,1,style,hollow,['']
-innovation,1,style,hollow,['']
-innovative,1,style,hollow,['']
-normal,1,style,hollow,['typically']
-passion,1,style,hollow,"['enthusiasm', 'dedication', 'committment', 'fascination', 'keen interest', 'love (for something)', 'excitement (about doing something)']"
-passionate,1,style,hollow,"['enthusiastic', 'dedicated', 'committed (to something)', 'fascinated with', 'keenly interested in', 'excited (about doing something)']"
-quick,1,style,hollow,['']
+excellence,1,style,exaggerating,['-']
+excellent,1,style,exaggerating,['-']
+exceptional,1,style,exaggerating,['-']
+extra-mile,1,style,exaggerating,['-']
+extra-ordinary,1,style,exaggerating,['-']
+extramile,1,style,exaggerating,['-']
+extraordinary,1,style,exaggerating,['-']
+extreme,1,style,exaggerating,['-']
+fantastic,1,style,exaggerating,['-']
+first-class,1,style,exaggerating,['-']
+first-mover,1,style,exaggerating,"['the first to market a product', 'the first to offer a service']"
+firstclass,1,style,exaggerating,['-']
+firstmover,1,style,exaggerating,"['the first to market a product', 'the first to offer a service']"
+flexible,1,style,hollow,"['adaptable', 'strategically nimble', 'pragmatic', 'open', 'agile', 'variable', 'mobile', 'defined by its users']"
+geek,1,style,exaggerating,['-']
+global,1,style,hollow,"['in (...) countries', '(...) offices across (...) continents']"
+god,1,style,exaggerating,['-']
+hacker,1,style,exaggerating,['-']
+imperative,1,style,exaggerating,['-']
+impressive,1,style,exaggerating,['-']
+innovation,1,style,hollow,"['reinvention', 'change', 'modernization', 'improvement', 'new creation', 'redesign', 'introduction of new ideas (methods, devices)']"
+innovative,1,style,hollow,"['imaginative', 'novel', 'creative', 'inventive', 'trend-setting', 'groundbreaking', 'inspired', 'forward-looking']"
+irresistible,1,style,exaggerating,['-']
+kamikaze,1,style,exaggerating,['-']
+luminary,1,style,exaggerating,['-']
+mandatory,1,style,exaggerating,"['necessary', 'legally required', 'compulsory', 'forced', 'nonelective', 'required (by law, by a rule)']"
+market-leader,1,style,exaggerating,['-']
+market-leading,1,style,exaggerating,['-']
+marketleader,1,style,exaggerating,['-']
+marketleading,1,style,exaggerating,['-']
+muscle,1,style,exaggerating,"['power', 'influence', 'clout']"
+must-have,1,style,exaggerating,"['requirement', 'criterion', 'essential', 'quality required to (...)']"
+musthave,1,style,exaggerating,"['essential', 'helpful', 'valuable', 'mission-critical', 'vital', 'beneficial']"
+nerd,1,style,exaggerating,['-']
+ninja,1,style,exaggerating,"['dedicated', 'committed', 'person who continues despite difficulties', 'someone devoted to their purpose', 'someone who sticks to their goal', 'someone willing to see things through']"
+normal,1,style,hollow,"['traditional', 'typical', 'common', 'routine', 'regular', 'conventional', 'customary', 'popular', 'reasonable', 'well-adjusted', 'rational', 'able to think clearly', 'able to use reason']"
+outstanding,1,style,exaggerating,['-']
+passion,1,style,hollow,"['enthusiasm', 'dedication', 'committment', 'fascination', 'keen interest', 'love', 'excitement']"
+passionate,1,style,hollow,"['enthusiastic', 'dedicated', 'committed to', 'fascinated with', 'keenly interested in', 'excited']"
+perfect,1,style,exaggerating,['-']
+profit,1,style,exaggerating,['-']
+profound,1,style,exaggerating,"['intense', 'deep', 'thorough', 'acute', 'thoughtful', 'serious', 'experienced', 'requiring deep understanding']"
+protagonist,1,style,exaggerating,['-']
+quick,1,style,hollow,"['efficient', 'expedient', 'effective', 'rapid', 'prompt', 'willing', 'responsive', 'insightful', 'perceptive', 'observant', 'energetic', 'alert', 'lively', 'nimble', 'astute']"
 really,1,style,filler,['-']
-state-of-the-art,1,style,hollow,['']
-team-player,1,style,hollow,"['person who values team effort over individual gains', 'person who enjoys collaboration', 'someone who can compromise to reach a shared goal']"
-teamplayer,1,style,hollow,"['person who values team effort over individual gains', 'person who enjoys collaboration', 'someone who can compromise to reach a shared goal']"
-unique,1,style,hollow,['']
-workforce,1,style,hollow,"['employees', 'personnel']"
+rocket,1,style,exaggerating,['-']
+rockstar,1,style,exaggerating,['-']
+scorer,1,style,exaggerating,['-']
+state-of-the-art,1,style,hollow,"['current', 'best available', 'most advanced', 'most sophisticated', 'technologically most advanced', 'implementing the most recent methods', 'involving fresh concepts', 'employing the latest equipment', 'using the latest techniques', 'at the highest level of development', 'using the newest ideas']"
+success,1,style,exaggerating,['-']
+successful,1,style,exaggerating,['-']
+successfully,1,style,exaggerating,['-']
+superstar,1,style,exaggerating,['-']
+surpass,1,style,exaggerating,"['refine', 'enrich', 'build on', 'improve upon', 'transcend', 'do better than', 'go beyond']"
+team-player,1,style,hollow,"['someone who values team effort over personal gains', 'someone who enjoys collaboration', 'someone who can compromise to reach a shared goal', 'someone who feels inspired and motivated by working together with others toward a shared goal']"
+teamplayer,1,style,hollow,"['someone who values team effort over personal gains', 'someone who enjoys collaboration', 'someone who can compromise to reach a shared goal', 'someone who feels inspired and motivated by working together with others toward a shared goal']"
+unique,1,style,hollow,"['original', 'distinctive', 'rare', 'uncommon', 'one-of-a-kind', 'in a class by itself']"
+verifiably,1,style,exaggerating,['-']
+well-established,1,style,exaggerating,['-']
+wellestablished,1,style,exaggerating,['-']
+winner,1,style,exaggerating,['-']
+workforce,1,style,hollow,"['team', 'employees', 'personnel', 'staff']"
+world-wide,1,style,hollow,"['in (...) countries', '(...) offices across (...) continents']"
 worldwide,1,style,hollow,"['in (...) countries', '(...) offices across (...) continents']"
