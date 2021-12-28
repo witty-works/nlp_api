@@ -7,7 +7,7 @@ from app.models import (
     Config,
 )
 
-test_text = "Hier ist ein Satz. Liebe "
+test_text = "Hier ist ein Satz. Liebe {0}"
 api_url = "https://lt.default.api.witty.works/v2/check"
 # api_url = "https://api.languagetoolplus.com/v2/check"
 api_url = "http://localhost:8081/v2/check"
@@ -29,12 +29,6 @@ with open(
             current_words.append(li)
 
 traning_data_dir = "training_data/de-DE"
-training_data_full_path = traning_data_dir + "/articles.csv"
-with open(training_data_full_path) as f:
-    reader = csv.DictReader(f)
-    for row in reader:
-        all_alternative_groups.append(row["Alternative"])
-
 training_data_full_path = traning_data_dir + "/gendered_noun.csv"
 with open(training_data_full_path) as f:
     reader = csv.DictReader(f)
@@ -92,21 +86,23 @@ newly_added_words = []
 with open("languagetool/ignore.txt", "w") as myfile:
     for locale in words:
         for word in words[locale]:
-            if word == "":
+            if len(word) < 3:
                 continue
 
             add_word = True
 
             if api_url and word not in used_words:
-                text = test_text + word
+                text = test_text.format(word)
 
                 response = requests.post(
                     api_url,
                     data={
                         "text": text,
                         "language": "auto",
-                        "motherTongue": locale,
                         "preferredVariants": locale,
+                        "motherTongue": locale,
+                        "disabledRuleIds": "SEHR_GEEHRTER_NAME,PROFANITY",
+                        "disabledCategories": "GENDER_NEUTRALITY",
                     },
                 )
 
@@ -114,11 +110,7 @@ with open("languagetool/ignore.txt", "w") as myfile:
                     print("Got error on: " + word)
                     exit
 
-                if (
-                    response.json()["matches"]
-                    and response.json()["matches"][0]["shortMessage"]
-                    == "Rechtschreibfehler"
-                ):
+                if response.json()["matches"]:
                     print(word)
                     newly_added_words.append(word)
                 else:
@@ -127,6 +119,28 @@ with open("languagetool/ignore.txt", "w") as myfile:
             if add_word:
                 word = word.replace("/", "\/")
                 word = word.replace("_", "\_")
+                myfile.write(word)
+                myfile.write("\n")
+
+    all_alternatives = []
+    training_data_full_path = traning_data_dir + "/articles.csv"
+    with open(training_data_full_path) as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            all_alternatives.append(row["Alternative"])
+
+    for alternative in all_alternatives:
+        for german_gender_ending in endings:
+            word = ResultOut.getGenderedRolesFormatInclusive(
+                alternative, german_gender_ending
+            )
+
+            if word not in used_words:
+                # print(word)
+                used_words.append(word)
+                newly_added_words.append(word)
+
+                word = word.replace("/", "\/")
                 myfile.write(word)
                 myfile.write("\n")
 
