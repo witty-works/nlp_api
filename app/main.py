@@ -836,6 +836,10 @@ def GenderedDenomAnalysisDE(config: Config, lang, full_text, tokens, df):
 
     list_tokens = []
     list_false_positives = []
+    articles = zip(
+        rules["de-DE"]["df_articles"]["Lemma"],
+        rules["de-DE"]["df_articles"]["Alternative"],
+    )
     matcher = PhraseMatcher(model[lang.lang].vocab)
 
     # Only run model.make_doc to speed things up
@@ -881,34 +885,21 @@ def GenderedDenomAnalysisDE(config: Config, lang, full_text, tokens, df):
                                 ast.literal_eval(alternative_sing),
                             )
                         )
-                        if c_doc[i - 1].text == "der":
-                            list_tokens.append(
-                                ResultOut.factory(
-                                    config,
-                                    lang,
-                                    c_doc[i - 1].text,
-                                    full_text,
-                                    category,
-                                    subcategory,
-                                    c_doc[i - 1].idx,
-                                    None,
-                                    ["die~der"],
+                        for article, article_alternative in articles:
+                            if c_doc[i - 1].text == article:
+                                list_tokens.append(
+                                    ResultOut.factory(
+                                        config,
+                                        lang,
+                                        c_doc[i - 1].text,
+                                        full_text,
+                                        category,
+                                        subcategory,
+                                        c_doc[i - 1].idx,
+                                        None,
+                                        [article_alternative],
+                                    )
                                 )
-                            )
-                        elif c_doc[i - 1].text == "einer":
-                            list_tokens.append(
-                                ResultOut.factory(
-                                    config,
-                                    lang,
-                                    c_doc[i - 1].text,
-                                    full_text,
-                                    category,
-                                    subcategory,
-                                    c_doc[i - 1].idx,
-                                    None,
-                                    ["eine~einer"],
-                                )
-                            )
                     elif c_doc[i].morph.get("Number")[0] == "Plur":
                         list_tokens.append(
                             ResultOut.factory(
@@ -947,34 +938,21 @@ def GenderedDenomAnalysisDE(config: Config, lang, full_text, tokens, df):
                                 ast.literal_eval(alternative_sing),
                             )
                         )
-                        if tokens[i - 1].text == "der":
-                            list_tokens.append(
-                                ResultOut.factory(
-                                    config,
-                                    lang,
-                                    tokens[i - 1].text,
-                                    full_text,
-                                    category,
-                                    subcategory,
-                                    tokens[i - 1].idx,
-                                    None,
-                                    ["die~der"],
+                        for article, article_alternative in articles:
+                            if tokens[i - 1].text == article:
+                                list_tokens.append(
+                                    ResultOut.factory(
+                                        config,
+                                        lang,
+                                        tokens[i - 1].text,
+                                        full_text,
+                                        category,
+                                        subcategory,
+                                        tokens[i - 1].idx,
+                                        None,
+                                        [article_alternative],
+                                    )
                                 )
-                            )
-                        elif tokens[i - 1].text == "einer":
-                            list_tokens.append(
-                                ResultOut.factory(
-                                    config,
-                                    lang,
-                                    tokens[i - 1].text,
-                                    full_text,
-                                    category,
-                                    subcategory,
-                                    tokens[i - 1].idx,
-                                    None,
-                                    ["eine~einer"],
-                                )
-                            )
                     elif tokens[i].morph.get("Number")[0] == "Plur":
                         list_tokens.append(
                             ResultOut.factory(
