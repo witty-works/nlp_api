@@ -26,8 +26,6 @@ rules = {
         "df_communal_words": "communal.csv",
     },
     "en-US": {
-        # load agentic language
-        "df_agentic_words": "agentic.csv",
         # load openly discriminating words
         "df_open_dis_word": "open_dis_words.csv",
         "df_open_dis_sentence": "open_dis_sentences.csv",

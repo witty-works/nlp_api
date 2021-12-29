@@ -2,18 +2,6 @@
     "language": "en",
     "results": [
         {
-            "alternatives": [],
-            "category": "unconscious_bias",
-            "context": "",
-            "end": 31,
-            "label": "Biased language: Agentic",
-            "reason": "Unconsciously attributed to the male stereotype. Many do not feel attracted by these terms.",
-            "solution": "Use team-oriented wording or referring to purpose.",
-            "start": 21,
-            "subcategory": "agentic",
-            "text": "analytical"
-        },
-        {
             "alternatives": [
                 "dedicated",
                 "committed",
