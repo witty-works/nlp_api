@@ -593,22 +593,13 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             user_request_in.config, lang, user_request_in.text
         )
 
-    if IsSubCategoryEnabled("agentic", disabled_categories):
-        list_full += AgenticLanguageAnalysisDE(
-            user_request_in.config,
-            lang,
-            user_request_in.text,
-            tokens,
-            rules["de-DE"]["df_agentic_ct"],
-        )
-
     if IsSubCategoryEnabled("unconscious_bias", disabled_categories):
         list_full += RulesBasedWordsPhraseMatcherDE(
             user_request_in.config,
             lang,
             user_request_in.text,
             tokens,
-            rules["de-DE"]["df_ub_no_noun_word"],
+            rules["de-DE"]["df_ub_no_plur_word"],
             rules["de-DE"]["df_ub_sentences"],
             "unconscious_bias",
         ) + WordNounDE(
@@ -616,7 +607,7 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             lang,
             user_request_in.text,
             tokens,
-            rules["de-DE"]["df_ub_noun_word"],
+            rules["de-DE"]["df_ub_plur_word"],
             "unconscious_bias",
         )
 

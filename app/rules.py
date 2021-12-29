@@ -3,8 +3,6 @@ import copy
 
 rules = {
     "de-DE": {
-        # load agentic language
-        "df_agentic_ct": "agentic.csv",
         # load Gender denom
         "df_gender_ct": "gendered_noun.csv",
         "df_articles": "articles.csv",
@@ -14,9 +12,9 @@ rules = {
         # load openly discriminating words de
         "df_open_dis_word": "open_dis_words.csv",
         "df_open_dis_sentence": "open_dis_sentences.csv",
-        # load unconscious_bias word (nouns, not nouns) and sentences de
-        "df_ub_noun_word": "ub_noun_words.csv",
-        "df_ub_no_noun_word": "ub_no_noun_words.csv",
+        # load unconscious_bias word (nouns with sg/pl, other words) and sentences de
+        "df_ub_plur_word": "ub_plur_words.csv",
+        "df_ub_no_plur_word": "ub_no_plur_words.csv",
         "df_ub_sentences": "ub_sentences.csv",
         # load inslusive words
         "df_d_and_i_words": "d_and_i_words.csv",
