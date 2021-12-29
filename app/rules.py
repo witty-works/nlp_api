@@ -42,7 +42,7 @@ rules = {
         "df_gendered_sentence": "gendered_sentences.csv",
         "df_gendered_noun_word": "gendered_noun_words.csv",
         # load unconscious_bias word (nouns with sing/plural, other words (nouns without sing/plur, verb, adj, adv)) and sentences en
-        "df_ub_plur_word": "uab_plur_words.csv",
+        "df_ub_plur_word": "ub_plur_words.csv",
         "df_ub_no_plur_word": "ub_no_plur_words.csv",
         "df_ub_sentence": "ub_sentences.csv",
     },
