@@ -88,7 +88,6 @@ descriptions=(
     "Number of clicks on ignore"
     "Number of German rules"
     "Number of English rules"
-    "Number of rules"
 )
 
 training_data_dir="training_data";
@@ -103,7 +102,6 @@ cmds=(
     "ls $user_training_data_date_dir/ | grep -r '\"igore\"' | wc -l"
     "wc -l $training_data_dir/de-DE/*"
     "wc -l $training_data_dir/en-US/*"
-    "wc -l `find training_data -type f`| tail -1"
 )
 
 if [[ ! -d $user_training_data_date_dir ]];
