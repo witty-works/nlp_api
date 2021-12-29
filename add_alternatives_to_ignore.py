@@ -141,6 +141,7 @@ with open("languagetool/ignore.txt", "w") as myfile:
                 newly_added_words.append(word)
 
                 word = word.replace("/", "\/")
+                word = word.replace("_", "\_")
                 myfile.write(word)
                 myfile.write("\n")
 

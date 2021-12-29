@@ -466,15 +466,15 @@ Grosskund\/-innen
 Grosskund\/in
 Grosskund\/innen
 die\/der
-die_der
+die\_der
 die*der
 die:der
 eine\/einer
-eine_einer
+eine\_einer
 eine*einer
 eine:einer
 eine\/ein
-eine_ein
+eine\_ein
 eine*ein
 eine:ein
 # Old words (added by LT): 

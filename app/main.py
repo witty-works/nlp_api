@@ -69,7 +69,7 @@ logging.debug("app started with settings: %s", settings)
 # convert string of list into list of the strings
 # project models
 
-version = "1.10.5"
+version = "1.10.6"
 app = FastAPI(
     title="Witty NLP API",
     version=version,
