@@ -69,7 +69,7 @@ logging.debug("app started with settings: %s", settings)
 # convert string of list into list of the strings
 # project models
 
-version = "1.10.6"
+version = "1.11.0"
 app = FastAPI(
     title="Witty NLP API",
     version=version,
@@ -725,6 +725,23 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
             "style",
         )
 
+    if IsSubCategoryEnabled("unconscious_bias", disabled_categories):
+        list_full += RulesBasedWordsPhraseMatcherUN(
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            rules[lang.locale]["df_ub_no_plur_word"],
+            rules[lang.locale]["df_ub_sentence"],
+            "unconscious_bias",
+        ) + GenderedEN(
+            user_request_in.config,
+            lang,
+            user_request_in.text,
+            tokens,
+            rules[lang.locale]["df_ub_plur_word"],
+            "unconscious_bias",
+        )
     return list_full
 
 
