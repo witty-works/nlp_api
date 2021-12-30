@@ -69,7 +69,7 @@ logging.debug("app started with settings: %s", settings)
 # convert string of list into list of the strings
 # project models
 
-version = "1.11.0"
+version = "1.12.0"
 app = FastAPI(
     title="Witty NLP API",
     version=version,
@@ -692,17 +692,6 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
             "gendered",
         )
 
-    if IsSubCategoryEnabled("agentic", disabled_categories):
-        list_full += RulesBasedEN(
-            user_request_in.config,
-            lang,
-            user_request_in.text,
-            tokens,
-            rules[lang.locale]["df_agentic_words"],
-            "unconscious_bias",
-            "agentic",
-        )
-
     if IsSubCategoryEnabled("inclusive", disabled_categories):
         list_full += RulesBasedWordsPhraseMatcherNoAltEN(
             user_request_in.config,
@@ -827,9 +816,7 @@ def AgenticLanguageAnalysisDE(config: Config, lang, full_text, tokens, df):
                                     }
                                 )
         else:
-            for word, alternative in zip(
-                df["Lemma"], df["Alternatives_split_organization"]
-            ):
+            for word, alternative in zip(df["Lemma"], df["Alt_split"]):
                 if GetNonNounLowerCased(token) == word:
                     list_tokens.append(
                         ResultOut.factory(
@@ -1297,33 +1284,6 @@ def MisgenderingInstitutionsDE(config: Config, lang, full_text, tokens):
             )
         )
     return db_match_list
-
-
-# function to catch ending in gendered denom
-# Rules based english function
-
-
-def RulesBasedEN(config: Config, lang, full_text, tokens, df, category, subcategory):
-    list_tokens = []
-
-    for token in tokens:
-        for word in list(df["Lemma"]):
-            if token.lemma_ == word:
-                list_tokens.append(
-                    ResultOut.factory(
-                        config,
-                        lang,
-                        token.text,
-                        full_text,
-                        category,
-                        subcategory,
-                        token.idx,
-                        None,
-                        [],
-                    )
-                )
-
-    return list_tokens
 
 
 # Unified function English&German
