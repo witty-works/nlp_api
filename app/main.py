@@ -816,9 +816,7 @@ def AgenticLanguageAnalysisDE(config: Config, lang, full_text, tokens, df):
                                     }
                                 )
         else:
-            for word, alternative in zip(
-                df["Lemma"], df["Alternatives_split_organization"]
-            ):
+            for word, alternative in zip(df["Lemma"], df["Alt_split"]):
                 if GetNonNounLowerCased(token) == word:
                     list_tokens.append(
                         ResultOut.factory(
