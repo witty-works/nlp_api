@@ -1,0 +1,176 @@
+{
+    "language": "de",
+    "results": [
+        {
+            "alternatives": [
+                "wir"
+            ],
+            "category": "orthography",
+            "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert ",
+            "end": 25,
+            "label": "",
+            "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
+            "solution": "Außer am Satzanfang werden nur Nomen und Eigennamen großgeschrieben.",
+            "start": 22,
+            "subcategory": "orthography",
+            "text": "Wir"
+        },
+        {
+            "alternatives": [
+                "Grüße",
+                "Größe",
+                "Große",
+                "Grütze",
+                "Grüßen",
+                "Gruße",
+                "Grüßt",
+                "Krasse",
+                "Güsse",
+                "Grüßte",
+                "Grüß",
+                "Grenze",
+                "Küsse",
+                "Müsse",
+                "Krosse",
+                "Brüssel",
+                "Flüsse",
+                "Großen",
+                "Gründe",
+                "Größte"
+            ],
+            "category": "orthography",
+            "context": "urchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
+            "end": 174,
+            "label": "Rechtschreibfehler",
+            "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
+            "solution": "Möglicher Tippfehler gefunden.",
+            "start": 168,
+            "subcategory": "orthography",
+            "text": "Grüsse"
+        },
+        {
+            "alternatives": [
+                "Teammitglied",
+                "Kolleg:in",
+                "Kollegin/Kollege",
+                "Kollegschaft",
+                "Team",
+                "Person, die im selben Team arbeitet",
+                "Person, die im selben Unternehmen arbeitet",
+                "Person, die man von der Arbeit kennt"
+            ],
+            "category": "gendered",
+            "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgeford",
+            "end": 21,
+            "label": "Geschlechtsspezifisch: Titel",
+            "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
+            "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht.",
+            "start": 13,
+            "subcategory": "titles",
+            "text": "Kollegen"
+        },
+        {
+            "alternatives": [
+                "Fleiß",
+                "Eifer",
+                "Strebsamkeit",
+                "Engagement",
+                "Entwicklungsmotivation",
+                "Unternehmerische Haltung",
+                "Freude an mehr Verantwortung",
+                "Freude am Setzen und Verwirklichen von Zielen",
+                "Interesse an persönlichem Wachstm",
+                "Engagement für (gemeinsame/gesetzte) Ziele/Meilensteine",
+                "Freude am Weiterkommen"
+            ],
+            "category": "unconscious_bias",
+            "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreund",
+            "end": 62,
+            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "reason": "Unbewusst dem männlichen Geschlecht zugeschrieben. Viele werden davon abgestossen.",
+            "solution": "Teamorientierte Formulierung nutzen oder auf Sinnhaftigkeit einzahlend.",
+            "start": 55,
+            "subcategory": "agentic",
+            "text": "Ehrgeiz"
+        },
+        {
+            "alternatives": [
+                "Einen langen Atem haben",
+                "Fähigkeit, an Dingen dranzubleiben"
+            ],
+            "category": "unconscious_bias",
+            "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
+            "end": 85,
+            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "reason": "Unbewusst dem männlichen Geschlecht zugeschrieben. Viele werden davon abgestossen.",
+            "solution": "Teamorientierte Formulierung nutzen oder auf Sinnhaftigkeit einzahlend.",
+            "start": 67,
+            "subcategory": "agentic",
+            "text": "Durchhaltevermögen"
+        },
+        {
+            "alternatives": [
+                "gefragt",
+                "aufgerufen",
+                "gebeten",
+                "angeregt"
+            ],
+            "category": "unconscious_bias",
+            "context": "rte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
+            "end": 124,
+            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "reason": "Unbewusst dem männlichen Geschlecht zugeschrieben. Viele werden davon abgestossen.",
+            "solution": "Teamorientierte Formulierung nutzen oder auf Sinnhaftigkeit einzahlend.",
+            "start": 109,
+            "subcategory": "agentic",
+            "text": "herausgefordert"
+        },
+        {
+            "alternatives": [],
+            "category": "inclusive",
+            "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
+            "end": 104,
+            "label": "Inklusiv: Kommunal",
+            "reason": "Betont kooperative, mitfühlende oder unterstützende Eigenschaften und damit inklusive Attribute.",
+            "solution": "Verwenden Sie mehr solcher Formulierungen, um Kooperation, Unterstützung oder Sinnhaftigkeit auszudrücken.",
+            "start": 98,
+            "subcategory": "communal",
+            "text": "lieben"
+        },
+        {
+            "alternatives": [],
+            "category": "inclusive",
+            "context": "hrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
+            "end": 167,
+            "label": "Inklusiv: Kommunal",
+            "reason": "Betont kooperative, mitfühlende oder unterstützende Eigenschaften und damit inklusive Attribute.",
+            "solution": "Verwenden Sie mehr solcher Formulierungen, um Kooperation, Unterstützung oder Sinnhaftigkeit auszudrücken.",
+            "start": 156,
+            "subcategory": "communal",
+            "text": "Freundliche"
+        },
+        {
+            "alternatives": [
+                "Guten Tag, (Vorname) (Familienname)",
+                "Hallo (Vorname) (Familienname)",
+                "Liebe:r (Vorname) (Familienname)",
+                "Liebe/r (Vorname) (Familienname)",
+                "Guten Tag, liebe:r (Vorname) (Familienname)",
+                "Guten Tag, liebe/r (Vorname) (Familienname)",
+                "Guten Tag",
+                "Liebe alle,",
+                "Hallo zusammen",
+                "Sehr geehrte Zuhörende und Lesende"
+            ],
+            "category": "style",
+            "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, her",
+            "end": 12,
+            "label": "Stil: Formalität",
+            "reason": "Je nach Arbeitsumfeld kann eine solche förmliche Formulierung zu mehr Distanz führen und ist der Zusammenarbeit auf Augenhöhe nicht zuträglich.",
+            "solution": "Versuchen Sie, so zu schreiben, als ob Sie einer Freundin etwas schreiben würden.",
+            "start": 0,
+            "subcategory": "formality",
+            "text": "Sehr geehrte"
+        }
+    ]
+}
