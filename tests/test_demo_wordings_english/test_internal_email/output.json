@@ -1,0 +1,133 @@
+{
+    "language": "en",
+    "results": [
+        {
+            "alternatives": [
+                ", and"
+            ],
+            "category": "orthography",
+            "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number 1 and innovation drives us.\nSincere regards,\nNadia",
+            "end": 96,
+            "label": "",
+            "reason": "Correct any spelling or grammatical errors to maximize the impact of their writing.",
+            "solution": "Use a comma before ‘and’ if it connects two independent clauses (unless they are closely connected and short).",
+            "start": 92,
+            "subcategory": "orthography",
+            "text": " and"
+        },
+        {
+            "alternatives": [
+                "people",
+                "folks",
+                "friends",
+                "all",
+                "you all",
+                "everyone",
+                "teammates",
+                "you",
+                "team",
+                "crowd"
+            ],
+            "category": "gendered",
+            "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to ",
+            "end": 8,
+            "label": "Gendered: Special functions",
+            "reason": "For economic-historical reasons, an image of a man is unconsciously evoked in front of the inner eye, even if the term is linguistically neutral. The female gender or other gender identities do not become visible. And they will not feel to belong in this setting.",
+            "solution": "In order to provoke an inclusive image, be not only linguistically, but also mentally neutral in your formulation. Rather use a noun that describes the activity. Or use a denomination that is truly gender-neutral.",
+            "start": 4,
+            "subcategory": "function",
+            "text": "guys"
+        },
+        {
+            "alternatives": [
+                "reinvention",
+                "change",
+                "modernization",
+                "improvement",
+                "new creation",
+                "redesign",
+                "introduction of new ideas (methods, devices)"
+            ],
+            "category": "style",
+            "context": "perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number 1 and innovation drives us.\nSincere regards,\nNadia",
+            "end": 153,
+            "label": "Style: Empty Words",
+            "reason": "Is a hollow word because it has been overused in the business environment.",
+            "solution": "Avoid using this word. Instead, explain the situation in a tangible and descriptive way.",
+            "start": 143,
+            "subcategory": "hollow",
+            "text": "innovation"
+        },
+        {
+            "alternatives": [
+                "-"
+            ],
+            "category": "style",
+            "context": "ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number 1 and innovation drives us.\nSincere regards,\nNadia",
+            "end": 138,
+            "label": "Style: Exaggeration",
+            "reason": "Communicates that people have to conform to these superlatives.",
+            "solution": "Use an authentic and honest sounding statement.",
+            "start": 130,
+            "subcategory": "exaggerating",
+            "text": "number 1"
+        },
+        {
+            "alternatives": [
+                "willingness to go after a dream",
+                "desire to realise a vision",
+                "enthusiasm for working toward personal/shared goals",
+                "focus on one's purpose"
+            ],
+            "category": "unconscious_bias",
+            "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number 1",
+            "end": 38,
+            "label": "Biased language: Agentic",
+            "reason": "Unconsciously attributed to the male stereotype. Many do not feel attracted by these terms.",
+            "solution": "Use team-oriented wording or referring to purpose.",
+            "start": 30,
+            "subcategory": "agentic",
+            "text": "ambition"
+        },
+        {
+            "alternatives": [
+                "dedication",
+                "steadfastness",
+                "diligence",
+                "constancy",
+                "care",
+                "strength of character",
+                "continued effort to reach a goal despite difficulties (failure, opposition, ...)"
+            ],
+            "category": "unconscious_bias",
+            "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number 1 and innovation d",
+            "end": 55,
+            "label": "Biased language: Agentic",
+            "reason": "Unconsciously attributed to the male stereotype. Many do not feel attracted by these terms.",
+            "solution": "Use team-oriented wording or referring to purpose.",
+            "start": 43,
+            "subcategory": "agentic",
+            "text": "perseverance"
+        },
+        {
+            "alternatives": [
+                "guide",
+                "support",
+                "reach",
+                "realise",
+                "work toward",
+                "contribute to",
+                "take responsibility for"
+            ],
+            "category": "unconscious_bias",
+            "context": "e count.\nCompetition is our daily life and we love to be challenged.\nWe are number 1 and innovation drives us.\nSincere regards,\nNadia",
+            "end": 160,
+            "label": "Biased language: Agentic",
+            "reason": "Unconsciously attributed to the male stereotype. Many do not feel attracted by these terms.",
+            "solution": "Use team-oriented wording or referring to purpose.",
+            "start": 154,
+            "subcategory": "agentic",
+            "text": "drives"
+        }
+    ]
+}

@@ -1,0 +1,23 @@
+{
+    "language": "en",
+    "results": [
+        {
+            "alternatives": [
+                "feign ignorance",
+                "ignore",
+                "be willfully ignorant of (...)",
+                "turn one's back on (...)",
+                "be overcome by prejudice"
+            ],
+            "category": "unconscious_bias",
+            "context": "Don't turn a blind eye on this fact. ",
+            "end": 22,
+            "label": "Biased language: Visual Impairment",
+            "reason": "Outdated, hidden or even discriminatory wording pigeonholing people with visual impairment.",
+            "solution": "Ask yourself \"What would I write if this person had full visibility?\"",
+            "start": 6,
+            "subcategory": "visual_impairment",
+            "text": "turn a blind eye"
+        }
+    ]
+}
