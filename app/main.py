@@ -53,7 +53,19 @@ from app.posthog import set_up_posthog
 from app.redis import set_up_redis
 from app.languagetool import get_languagetool_url
 from app.model import model
-from app.rules import rules
+from app.rules import (
+    rules,
+    agentic_words_alternatives,
+    gender_words_alternatives,
+    articles,
+    bias_words_alternatives_no_noun,
+    bias_words_alternatives_noun,
+    style_words_alternatives,
+    open_disc_words_alternatives,
+    open_disc_sentences_alternatives,
+    bias_sentences_alternatives,
+    style_sentences_alternatives,
+)
 
 from collections import namedtuple
 
@@ -565,18 +577,15 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             lang,
             user_request_in.text,
             tokens,
-            rules["de-DE"]["df_open_dis_word"],
+            open_disc_words_alternatives,
+            open_disc_sentences_alternatives,
             rules["de-DE"]["df_open_dis_sentence"],
             "openly_discriminating",
         )
 
     if IsSubCategoryEnabled("gendered", disabled_categories):
         list_full += GenderedDenomAnalysisDE(
-            user_request_in.config,
-            lang,
-            user_request_in.text,
-            tokens,
-            rules["de-DE"]["df_gender_ct"],
+            user_request_in.config, lang, user_request_in.text, tokens
         )
 
     if IsSubCategoryEnabled(
@@ -595,11 +604,7 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
 
     if IsSubCategoryEnabled("agentic", disabled_categories):
         list_full += AgenticLanguageAnalysisDE(
-            user_request_in.config,
-            lang,
-            user_request_in.text,
-            tokens,
-            rules["de-DE"]["df_agentic_ct"],
+            user_request_in.config, lang, user_request_in.text, tokens
         )
 
     if IsSubCategoryEnabled("unconscious_bias", disabled_categories):
@@ -608,7 +613,8 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             lang,
             user_request_in.text,
             tokens,
-            rules["de-DE"]["df_ub_no_noun_word"],
+            bias_words_alternatives_no_noun,
+            bias_sentences_alternatives,
             rules["de-DE"]["df_ub_sentences"],
             "unconscious_bias",
         ) + WordNounDE(
@@ -616,7 +622,6 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             lang,
             user_request_in.text,
             tokens,
-            rules["de-DE"]["df_ub_noun_word"],
             "unconscious_bias",
         )
 
@@ -650,8 +655,6 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             user_request_in.text,
             tokens,
             rules["de-DE"]["terms_style"],
-            rules["de-DE"]["df_style_word"],
-            rules["de-DE"]["df_style_sentences"],
         )
 
     return list_full
@@ -779,13 +782,12 @@ def GenderedDenomEnd(config: Config, lang, full_text):
 # this function agentic language & related false positives
 
 
-def AgenticLanguageAnalysisDE(config: Config, lang, full_text, tokens, df):
+def AgenticLanguageAnalysisDE(config: Config, lang, full_text, tokens):
     subcategory = "agentic"
     category = categories[subcategory]["category"]
     list_tokens = []
     dic_anc = {}
     list_false_positives = []
-
     for token in tokens:
         # check if the user query have false positives
         if IsItFalsePositive(token.lemma_, false_positive.agentic):
@@ -816,7 +818,7 @@ def AgenticLanguageAnalysisDE(config: Config, lang, full_text, tokens, df):
                                     }
                                 )
         else:
-            for word, alternative in zip(df["Lemma"], df["Alt_split"]):
+            for word, alternative in agentic_words_alternatives:
                 if GetNonNounLowerCased(token) == word:
                     list_tokens.append(
                         ResultOut.factory(
@@ -835,15 +837,11 @@ def AgenticLanguageAnalysisDE(config: Config, lang, full_text, tokens, df):
     return list_tokens
 
 
-def GenderedDenomAnalysisDE(config: Config, lang, full_text, tokens, df):
+def GenderedDenomAnalysisDE(config: Config, lang, full_text, tokens):
     category = "gendered"
 
     list_tokens = []
     list_false_positives = []
-    articles = zip(
-        rules["de-DE"]["df_articles"]["Lemma"],
-        rules["de-DE"]["df_articles"]["Alternative"],
-    )
     matcher = PhraseMatcher(model[lang.lang].vocab)
 
     # Only run model.make_doc to speed things up
@@ -868,12 +866,12 @@ def GenderedDenomAnalysisDE(config: Config, lang, full_text, tokens, df):
         c_doc = Doc.from_docs(docs)
 
         for i in range(len(c_doc)):
-            for word, alternative_sing, alternative_plur, subcategory in zip(
-                df["Lemma"],
-                df["Sg_all_clean"],
-                df["Pl_all_clean"],
-                df["Primary_subcategory"],
-            ):
+            for (
+                word,
+                alternative_sing,
+                alternative_plur,
+                subcategory,
+            ) in gender_words_alternatives:
                 if c_doc[i].lemma_ == word:
                     if c_doc[i].morph.get("Number")[0] == "Sing":
                         list_tokens.append(
@@ -921,12 +919,12 @@ def GenderedDenomAnalysisDE(config: Config, lang, full_text, tokens, df):
 
     else:
         for i in range(len(tokens)):
-            for word, alternative_sing, alternative_plur, subcategory in zip(
-                df["Lemma"],
-                df["Sg_all_clean"],
-                df["Pl_all_clean"],
-                df["Primary_subcategory"],
-            ):
+            for (
+                word,
+                alternative_sing,
+                alternative_plur,
+                subcategory,
+            ) in gender_words_alternatives:
                 if tokens[i].lemma_ == word:
                     if tokens[i].morph.get("Number")[0] == "Sing":
                         list_tokens.append(
@@ -978,9 +976,7 @@ def GenderedDenomAnalysisDE(config: Config, lang, full_text, tokens, df):
 # Unified function for Emty words false positives and rules
 
 
-def StyleWordAnalysisDE(
-    config: Config, lang, full_text, tokens, terms, df, df_sentence
-):
+def StyleWordAnalysisDE(config: Config, lang, full_text, tokens, terms):
     category = "style"
     list_tokens = []
     list_false_positives = []
@@ -1001,9 +997,7 @@ def StyleWordAnalysisDE(
                     {"false positives": tokens[i].text, "category": category}
                 )
             else:
-                for word, alternative, subcategory in zip(
-                    df["Lemma"], df["Alt_split"], df["Primary_subcategory"]
-                ):
+                for word, alternative, subcategory in style_words_alternatives:
                     if tokens[i].lemma_ == word:
                         list_tokens.append(
                             ResultOut.factory(
@@ -1020,9 +1014,7 @@ def StyleWordAnalysisDE(
                         )
 
         else:
-            for word, alternative, subcategory in zip(
-                df["Lemma"], df["Alt_split"], df["Primary_subcategory"]
-            ):
+            for word, alternative, subcategory in style_sentences_alternatives:
                 if tokens[i].lemma_ == word:
                     list_tokens.append(
                         ResultOut.factory(
@@ -1040,11 +1032,7 @@ def StyleWordAnalysisDE(
 
     matches = matcher(tokens)
     for match_id, start, end in matches:
-        for sentence, alternative, subcategory in zip(
-            df_sentence["Lemma"],
-            df_sentence["Alt_split"],
-            df_sentence["Primary_subcategory"],
-        ):
+        for sentence, alternative, subcategory in style_sentences_alternatives:
             span = tokens[start:end]
             if span.text == sentence:
                 list_tokens.append(
@@ -1067,16 +1055,16 @@ def StyleWordAnalysisDE(
 # German function to show plural and singular forms of alternatives for nouns
 
 
-def WordNounDE(config: Config, lang, full_text, tokens, df, category):
+def WordNounDE(config: Config, lang, full_text, tokens, category):
     list_tokens = []
 
     for token in tokens:
-        for word, alternative_sing, alternative_plur, subcategory in zip(
-            df["Lemma"],
-            df["Sg_all_split"],
-            df["Pl_all_split"],
-            df["Primary_subcategory"],
-        ):
+        for (
+            word,
+            alternative_sing,
+            alternative_plur,
+            subcategory,
+        ) in bias_words_alternatives_noun:
             if GetNonNounLowerCased(token) == word:
                 if token.morph.get("Number")[0] == "Sing":
                     list_tokens.append(
@@ -1115,7 +1103,14 @@ def WordNounDE(config: Config, lang, full_text, tokens, df, category):
 
 # Unified function German
 def RulesBasedWordsPhraseMatcherDE(
-    config: Config, lang, full_text, tokens, df, df_sentence, category
+    config: Config,
+    lang,
+    full_text,
+    tokens,
+    words_alternatives,
+    sentences_alternatives,
+    df_sentence,
+    category,
 ):
     list_tokens = []
     # Phrase matcher part to handle False positives with two words and special simbols
@@ -1126,9 +1121,7 @@ def RulesBasedWordsPhraseMatcherDE(
     matcher.add("TerminologyList", patterns)
 
     for token in tokens:
-        for word, alternative, subcategory in zip(
-            df["Lemma"], df["Alt_split"], df["Primary_subcategory"]
-        ):
+        for word, alternative, subcategory in words_alternatives:
             if GetNonNounLowerCased(token) == word:
                 list_tokens.append(
                     ResultOut.factory(
@@ -1146,11 +1139,7 @@ def RulesBasedWordsPhraseMatcherDE(
 
     matches = matcher(tokens)
     for match_id, start, end in matches:
-        for sentence, alternative, subcategory in zip(
-            df_sentence["Lemma"],
-            df_sentence["Alt_split"],
-            df_sentence["Primary_subcategory"],
-        ):
+        for sentence, alternative, subcategory in sentences_alternatives:
             span = tokens[start:end]
             if span.text == sentence:
                 list_tokens.append(
