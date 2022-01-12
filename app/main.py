@@ -767,7 +767,6 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
             user_request_in.text,
             tokens,
             gendered_words_alternatives_en["bias"],
-            # rules[lang.locale]["df_ub_plur_word"],
             "unconscious_bias",
         )
     return list_full
@@ -1062,7 +1061,7 @@ def StyleWordAnalysisDE(
                         )
 
         else:
-            for word, alternative, subcategory in style_sentences_alternatives:
+            for word, alternative, subcategory in style_words_alternatives:
                 if tokens[i].lemma_ == word:
                     list_tokens.append(
                         ResultOut.factory(
@@ -1332,7 +1331,7 @@ def RulesBasedWordsPhraseMatcherUN(
     full_text,
     tokens,
     words_alternatives,
-    dis_sentences_alternatives_en,
+    sentences_alternatives,
     df_sentence,
     category,
 ):
@@ -1363,7 +1362,7 @@ def RulesBasedWordsPhraseMatcherUN(
 
     matches = matcher(tokens)
     for match_id, start, end in matches:
-        for sentence, alternative, subcategory in dis_sentences_alternatives_en:
+        for sentence, alternative, subcategory in sentences_alternatives:
             span = tokens[start:end]
             if span.text == sentence:
                 list_tokens.append(

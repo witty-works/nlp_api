@@ -139,9 +139,9 @@ df_discrimination_words = rules["de-DE"]["df_open_dis_word"]
 # open discrimination: words + alternative_split + subcategory
 open_disc_words_alternatives = list(
     zip(
-        df_bias_no_noun["Lemma"],
-        df_bias_no_noun["Alt_split"],
-        df_bias_no_noun["Primary_subcategory"],
+        df_discrimination_words["Lemma"],
+        df_discrimination_words["Alt_split"],
+        df_discrimination_words["Primary_subcategory"],
     )
 )
 ## sentences:
@@ -190,9 +190,9 @@ open_disc_words_alternatives_US = list(
 )
 open_disc_words_alternatives_GB = list(
     zip(
-        df_discrimination_US["Lemma"],
-        df_discrimination_US["Alt_split"],
-        df_discrimination_US["Primary_subcategory"],
+        df_discrimination_GB["Lemma"],
+        df_discrimination_GB["Alt_split"],
+        df_discrimination_GB["Primary_subcategory"],
     )
 )
 # df open discrimination words gender no noun
