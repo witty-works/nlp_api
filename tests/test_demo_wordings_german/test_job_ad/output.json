@@ -1,0 +1,75 @@
+{
+    "language": "de",
+    "results": [
+        {
+            "alternatives": [
+                "Kolleg:innen",
+                "Kolleginnen und Kollegen",
+                "Kollegschaft",
+                "Team",
+                "Personen, die im selben Team arbeiten",
+                "Personen, die im selben Unternehmen arbeiten",
+                "Personen, die man von der Arbeit kennt"
+            ],
+            "category": "gendered",
+            "context": "tleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielstrebig\nneue Höchstleistungen.",
+            "end": 134,
+            "label": "Geschlechtsspezifisch: Titel",
+            "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
+            "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht.",
+            "start": 126,
+            "subcategory": "titles",
+            "text": "Kollegen"
+        },
+        {
+            "alternatives": [
+                "erlangen",
+                "anpacken",
+                "erarbeiten",
+                "enthusiastisch in der Umsetzung sein",
+                "mit Energie angehen",
+                "tatkräftig sein"
+            ],
+            "category": "unconscious_bias",
+            "context": "Als selbstständiger Projektleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielst",
+            "end": 41,
+            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "reason": "Unbewusst dem männlichen Geschlecht zugeschrieben. Viele werden davon abgestossen.",
+            "solution": "Teamorientierte Formulierung nutzen oder auf Sinnhaftigkeit einzahlend.",
+            "start": 34,
+            "subcategory": "agentic",
+            "text": "leisten"
+        },
+        {
+            "alternatives": [
+                "umsetzungsfreudig",
+                "strebsam",
+                "fleißig",
+                "engagiert und fokussiert",
+                "auf Meilensteine fokussiert",
+                "motiviert auf Meilensteine hinarbeiten wollen"
+            ],
+            "category": "unconscious_bias",
+            "context": "eisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielstrebig\nneue Höchstleistungen.",
+            "end": 146,
+            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "reason": "Unbewusst dem männlichen Geschlecht zugeschrieben. Viele werden davon abgestossen.",
+            "solution": "Teamorientierte Formulierung nutzen oder auf Sinnhaftigkeit einzahlend.",
+            "start": 135,
+            "subcategory": "agentic",
+            "text": "zielstrebig"
+        },
+        {
+            "alternatives": [],
+            "category": "inclusive",
+            "context": "Als selbstständiger Projektleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielstrebig\nneue Höchstleistungen.",
+            "end": 93,
+            "label": "Inklusiv: Kommunal",
+            "reason": "Betont kooperative, mitfühlende oder unterstützende Eigenschaften und damit inklusive Attribute.",
+            "solution": "Verwenden Sie mehr solcher Formulierungen, um Kooperation, Unterstützung oder Sinnhaftigkeit auszudrücken.",
+            "start": 84,
+            "subcategory": "communal",
+            "text": "gemeinsam"
+        }
+    ]
+}

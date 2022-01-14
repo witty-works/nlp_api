@@ -97,7 +97,7 @@ see https://docs.platform.sh/development/cli.html for details
 Note for the Mac users. Set environment variables with the following snippet:
 
 ```
-source .env.development.mac
+cp .env.development.mac .env
 ```
 
 You could alternatively set these variables in:

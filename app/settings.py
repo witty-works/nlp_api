@@ -2,6 +2,7 @@ from typing import Optional, List
 from pydantic import BaseSettings
 from functools import lru_cache
 
+
 class Settings(BaseSettings):
     """Load environment variables to python objects using pydantic."""
 
@@ -21,7 +22,10 @@ class Settings(BaseSettings):
     read_rules_from_redis: bool = False
     posthog_api_key: Optional[str]
     posthog_host: Optional[str]
-    posthog_ids: List[str] = []
+    sentry_dsn: Optional[str]
+    sentry_organization: Optional[str] = "witty-works"
+    sentry_project_id: Optional[str]
+    sentry_traces_sample_rate: float = 0.2
 
     class Config:
         env_file = ".env"

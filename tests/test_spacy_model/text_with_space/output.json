@@ -1,0 +1,26 @@
+{
+    "language": "en",
+    "results": [
+        {
+            "alternatives": [
+                "Prevailing",
+                "Guiding",
+                "Main",
+                "Primary",
+                "Respecting governance",
+                "Communicating governance",
+                "Comfortable with taking on responsibility",
+                "At ease with taking the initiative"
+            ],
+            "category": "unconscious_bias",
+            "context": "Dominant ",
+            "end": 8,
+            "label": "Biased language: Agentic",
+            "reason": "Unconsciously attributed to the male stereotype. Many do not feel attracted by these terms.",
+            "solution": "Use team-oriented wording or referring to purpose.",
+            "start": 0,
+            "subcategory": "agentic",
+            "text": "Dominant"
+        }
+    ]
+}

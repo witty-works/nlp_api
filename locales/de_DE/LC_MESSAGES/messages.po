@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2021-12-25 18:46\n"
-"PO-Revision-Date: 2021-12-25 18:46\n"
+"POT-Creation-Date: 2022-01-14 14:26\n"
+"PO-Revision-Date: 2022-01-14 14:26\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -105,8 +105,7 @@ msgstr "Amerikanismen / Anglizismen"
 
 msgid "rules.americanism_reason"
 msgstr ""
-"Wird von Personen ohne englische Sprachausbildung eventuell nicht "
-"verstanden."
+"Wird von Personen ohne Englisch-Sprachausbildung eventuell nicht verstanden."
 
 msgid "rules.americanism_solution"
 msgstr "Nutzen Sie ein deutsches Wort."
@@ -168,6 +167,19 @@ msgstr ""
 msgid "rules.classism_solution"
 msgstr "Umformulieren mit einer Wortwahl, die auf Augenhöhe ist."
 
+msgid "rules.cognitive_ability_label"
+msgstr "Denkfähigkeit"
+
+msgid "rules.cognitive_ability_reason"
+msgstr ""
+"Versteckte, überholte oder diskriminierende Formulierung, die Menschen mit "
+"einer intellektuellen Beeinträchtigung schubladisiert."
+
+msgid "rules.cognitive_ability_solution"
+msgstr ""
+"Fragen Sie sich: \"Was würde ich schreiben, wenn diese Person ihre volle "
+"intellektuelle Kapazität hätte?\""
+
 msgid "rules.communal_label"
 msgstr "Kommunal"
 
@@ -182,7 +194,7 @@ msgstr ""
 "oder Sinnhaftigkeit auszudrücken."
 
 msgid "rules.corporate_rules_label"
-msgstr "Firmenleitlinie"
+msgstr "Organisations-Leitlinie"
 
 msgid "rules.corporate_rules_reason"
 msgstr "We always use subcategories here and so no need to fill anything in."
@@ -423,19 +435,6 @@ msgstr ""
 "Verwenden Sie mehr solcher Formulierungen, um Kooperation, Unterstützung, "
 "Sinnhaftigkeit und das Ziel von Diversität und Inklusion auszudrücken."
 
-msgid "rules.intellectual_impairment_label"
-msgstr "Intellektuelle Beeinträchtigung"
-
-msgid "rules.intellectual_impairment_reason"
-msgstr ""
-"Versteckte, überholte oder diskriminierende Formulierung, die Menschen mit "
-"einer intellektuellen Beeinträchtigung schubladisiert."
-
-msgid "rules.intellectual_impairment_solution"
-msgstr ""
-"Fragen Sie sich: \"Was würde ich schreiben, wenn diese Person ihre volle "
-"intellektuelle Kapazität hätte?\""
-
 msgid "rules.job_requirements_label"
 msgstr "Voreingenommene Anforderungen"
 
@@ -512,6 +511,17 @@ msgstr ""
 "Formulieren Sie den Ausdruck neu mit einfacheren Worten und kurzen Sätzen. "
 "Fragen Sie sich: \"Was würde ich schreiben, wenn diese Person den hier "
 "üblichen nationalen Hintergrund hätte?\""
+
+msgid "rules.military_source_label"
+msgstr "Militärische Wurzel"
+
+msgid "rules.military_source_reason"
+msgstr ""
+"Ausdruck einer kämpferischen Vision des Arbeitsumfelds. Wer nicht beim "
+"Militär war, kann sich nur begrenzt damit identifzieren."
+
+msgid "rules.military_source_solution"
+msgstr "Wählen Sie kooperative Formulierungen."
 
 msgid "rules.misgendering_institutions_label"
 msgstr "Geschlecht von Institutionen"
@@ -639,6 +649,17 @@ msgid "rules.sexual_orientation_solution"
 msgstr ""
 "Fragen Sie sich: \"Was würde ich schreiben, wenn diese Person heterosexuell "
 "wäre?\""
+
+msgid "rules.sports_terms_label"
+msgstr "Sport-Jargon"
+
+msgid "rules.sports_terms_reason"
+msgstr ""
+"Ausdruck einer wettbewerbsfähigen Vision des Arbeitsumfelds. Diejenigen, die"
+" nicht sportlich sind, können sich nur bedingt identifizieren."
+
+msgid "rules.sports_terms_solution"
+msgstr "Wählen Sie kooperative Formulierungen."
 
 msgid "rules.style_label"
 msgstr "Stil"

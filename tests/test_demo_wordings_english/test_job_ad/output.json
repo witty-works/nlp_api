@@ -1,0 +1,110 @@
+{
+    "language": "en",
+    "results": [
+        {
+            "alternatives": [],
+            "category": "inclusive",
+            "context": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
+            "end": 94,
+            "label": "Inclusive: Communal",
+            "reason": "Emphasizes cooperative, compassionate or supportive characteristics and thus inclusive attributes.",
+            "solution": "Use more of such wording to express cooperation, care or purpose.",
+            "start": 86,
+            "subcategory": "communal",
+            "text": "together"
+        },
+        {
+            "alternatives": [
+                "-"
+            ],
+            "category": "style",
+            "context": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
+            "end": 69,
+            "label": "Style: Exaggeration",
+            "reason": "Communicates that people have to conform to these superlatives.",
+            "solution": "Use an authentic and honest sounding statement.",
+            "start": 58,
+            "subcategory": "exaggerating",
+            "text": "exceptional"
+        },
+        {
+            "alternatives": [
+                "reference cases",
+                "documented results",
+                "execution to the customer's satisfaction",
+                "fulfilment of customer expectations"
+            ],
+            "category": "style",
+            "context": "rking on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
+            "end": 164,
+            "label": "Style: Exaggeration",
+            "reason": "Communicates that people have to conform to these superlatives.",
+            "solution": "Use an authentic and honest sounding statement.",
+            "start": 149,
+            "subcategory": "exaggerating",
+            "text": "top performance"
+        },
+        {
+            "alternatives": [
+                "impartial",
+                "unbiased",
+                "feeling competent in your field",
+                "at ease presenting their work",
+                "at ease making choices related to work",
+                "curious to find answers",
+                "happy to organise their personal workload",
+                "at ease making choices",
+                "happy to take on responsibility",
+                "capable of making informed, uncoerced choices"
+            ],
+            "category": "unconscious_bias",
+            "context": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious co",
+            "end": 17,
+            "label": "Biased language: Agentic",
+            "reason": "Unconsciously attributed to the male stereotype. Many do not feel attracted by these terms.",
+            "solution": "Use team-oriented wording or referring to purpose.",
+            "start": 6,
+            "subcategory": "agentic",
+            "text": "independent"
+        },
+        {
+            "alternatives": [
+                "interested in taking on new responsibilities",
+                "excited to go after one's dream",
+                "keen on realising their vision",
+                "clear about your goals",
+                "committed to working toward one's goals"
+            ],
+            "category": "unconscious_bias",
+            "context": " independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
+            "end": 114,
+            "label": "Biased language: Agentic",
+            "reason": "Unconsciously attributed to the male stereotype. Many do not feel attracted by these terms.",
+            "solution": "Use team-oriented wording or referring to purpose.",
+            "start": 105,
+            "subcategory": "agentic",
+            "text": "ambitious"
+        },
+        {
+            "alternatives": [
+                "achievement",
+                "accomplishment",
+                "capability",
+                "fulfilment",
+                "conduct",
+                "carrying out",
+                "running",
+                "capacity"
+            ],
+            "category": "unconscious_bias",
+            "context": "g on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
+            "end": 164,
+            "label": "Biased language: Agentic",
+            "reason": "Unconsciously attributed to the male stereotype. Many do not feel attracted by these terms.",
+            "solution": "Use team-oriented wording or referring to purpose.",
+            "start": 153,
+            "subcategory": "agentic",
+            "text": "performance"
+        }
+    ]
+}

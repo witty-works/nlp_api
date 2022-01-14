@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2021-12-25 18:46\n"
-"PO-Revision-Date: 2021-12-25 18:46\n"
+"POT-Creation-Date: 2022-01-14 14:26\n"
+"PO-Revision-Date: 2022-01-14 14:26\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -160,6 +160,19 @@ msgstr ""
 msgid "rules.classism_solution"
 msgstr "Rephrase with a choice of words that's on eye-level."
 
+msgid "rules.cognitive_ability_label"
+msgstr "Cognitive ability"
+
+msgid "rules.cognitive_ability_reason"
+msgstr ""
+"Outdated, hidden or even discriminatory wording pigeonholing people with "
+"differences in cognitive ability."
+
+msgid "rules.cognitive_ability_solution"
+msgstr ""
+"Ask yourself \"What would I write if this person had their full mental "
+"capacity?\""
+
 msgid "rules.communal_label"
 msgstr "Communal"
 
@@ -172,7 +185,7 @@ msgid "rules.communal_solution"
 msgstr "Use more of such wording to express cooperation, care or purpose."
 
 msgid "rules.corporate_rules_label"
-msgstr "Company guideline"
+msgstr "Organization guideline"
 
 msgid "rules.corporate_rules_reason"
 msgstr "We always use subcategories here and so no need to fill anything in."
@@ -395,19 +408,6 @@ msgstr ""
 "Use more such wording to express cooperation, care, purpose, goal of "
 "diversity and inclusion."
 
-msgid "rules.intellectual_impairment_label"
-msgstr "Intellectual impairment"
-
-msgid "rules.intellectual_impairment_reason"
-msgstr ""
-"Outdated, hidden or even discriminatory wording pigeonholing people with an "
-"intellectual impairment."
-
-msgid "rules.intellectual_impairment_solution"
-msgstr ""
-"Ask yourself \"What would I write if this person had their full mental "
-"capacity?\""
-
 msgid "rules.job_requirements_label"
 msgstr "Biased Requirements"
 
@@ -478,6 +478,17 @@ msgstr ""
 "Rephrase with a simpler choice of words and short sentence. Ask yourself "
 "\"What would I write if this person was of the dominant national "
 "background?\""
+
+msgid "rules.military_source_label"
+msgstr "Military source"
+
+msgid "rules.military_source_reason"
+msgstr ""
+"Expressing a combative vision of the work environment. Those who have not "
+"been in the military can only identify to a limited extent."
+
+msgid "rules.military_source_solution"
+msgstr "Choose cooperative wording."
 
 msgid "rules.misgendering_institutions_label"
 msgstr "-"
@@ -599,6 +610,17 @@ msgstr ""
 
 msgid "rules.sexual_orientation_solution"
 msgstr "Ask yourself \"What would I write if this person was heterosexual?\""
+
+msgid "rules.sports_terms_label"
+msgstr "Sports terms"
+
+msgid "rules.sports_terms_reason"
+msgstr ""
+"Expressing a competitive vision of the working environment. Those who are "
+"not sporty can only identify themselves to a limited extent."
+
+msgid "rules.sports_terms_solution"
+msgstr "Choose cooperative wording."
 
 msgid "rules.style_label"
 msgstr "Style"
