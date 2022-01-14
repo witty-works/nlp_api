@@ -60,7 +60,7 @@ from collections import namedtuple, defaultdict
 
 settings = get_settings()
 logging = set_up_logger(settings)
-posthog = set_up_posthog(settings)
+# posthog = set_up_posthog(settings)
 languagetool_url = get_languagetool_url(settings)
 redis = set_up_redis(settings)
 
@@ -509,13 +509,6 @@ def write_user_training_data(
         return
 
     data = collect_user_training_data(request, user_request_in, response)
-
-    if user_request_in.id in settings.posthog_ids:
-        posthog.identify(user_request_in.id)
-
-        # TODO read user/organization group from redis data
-        groups = {"user": "dashboard:0", "organization": "dashboard:0"}
-        posthog.capture(user_request_in.id, user_request_in.type, data, groups=groups)
 
     date = datetime.utcnow().strftime("%Y-%m-%d")
 

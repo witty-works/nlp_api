@@ -21,7 +21,6 @@ class Settings(BaseSettings):
     read_rules_from_redis: bool = False
     posthog_api_key: Optional[str]
     posthog_host: Optional[str]
-    posthog_ids: List[str] = []
 
     class Config:
         env_file = ".env"
