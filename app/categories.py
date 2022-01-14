@@ -24,7 +24,7 @@ categories = {
         "gravity": 2,
     },
     "age_in_jobs": {
-        "color": "orange",
+        "color": "yellow",
         "inclusive": False,
         "category": "job_requirements",
         "gravity": 5,
@@ -42,7 +42,7 @@ categories = {
         "gravity": 2,
     },
     "agentic": {
-        "color": "brown",
+        "color": "orange",
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2,
@@ -83,6 +83,12 @@ categories = {
         "category": "unconscious_bias",
         "gravity": 2,
     },
+    "cognitive_ability": {
+        "color": "orange",
+        "inclusive": False,
+        "category": "unconscious_bias",
+        "gravity": 2,
+    },
     "communal": {
         "color": "green",
         "inclusive": True,
@@ -90,7 +96,7 @@ categories = {
         "gravity": 2,
     },
     "corporate_rules": {
-        "color": "blue",
+        "color": "yellow",
         "inclusive": False,
         "category": "corporate_rules",
         "gravity": 2,
@@ -108,13 +114,13 @@ categories = {
         "gravity": 2,
     },
     "education": {
-        "color": "orange",
+        "color": "yellow",
         "inclusive": False,
         "category": "job_requirements",
         "gravity": 5,
     },
     "ethnicity": {
-        "color": "orange",
+        "color": "yellow",
         "inclusive": False,
         "category": "job_requirements",
         "gravity": 5,
@@ -122,7 +128,7 @@ categories = {
     "exaggerating": {
         "color": "blue",
         "inclusive": False,
-        "category": "unconscious_bias",
+        "category": "style",
         "gravity": 2,
     },
     "female_stereotype": {
@@ -194,14 +200,8 @@ categories = {
         "category": "inclusive",
         "gravity": 2,
     },
-    "intellectual_impairment": {
-        "color": "orange",
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 2,
-    },
     "job_requirements": {
-        "color": "brown",
+        "color": "yellow",
         "inclusive": False,
         "category": "job_requirements",
         "gravity": 5,
@@ -236,6 +236,12 @@ categories = {
         "category": "unconscious_bias",
         "gravity": 2,
     },
+    "military_source": {
+        "color": "orange",
+        "inclusive": False,
+        "category": "unconscious_bias",
+        "gravity": 2,
+    },
     "misgendering_institutions": {
         "color": "blue",
         "inclusive": False,
@@ -261,7 +267,7 @@ categories = {
         "gravity": 3,
     },
     "overload": {
-        "color": "brown",
+        "color": "yellow",
         "inclusive": False,
         "category": "job_requirements",
         "gravity": 5,
@@ -291,7 +297,7 @@ categories = {
         "gravity": 2,
     },
     "salary_vague": {
-        "color": "blue",
+        "color": "yellow",
         "inclusive": False,
         "category": "job_requirements",
         "gravity": 5,
@@ -308,9 +314,15 @@ categories = {
         "category": "unconscious_bias",
         "gravity": 2,
     },
+    "sports_terms": {
+        "color": "orange",
+        "inclusive": False,
+        "category": "unconscious_bias",
+        "gravity": 2,
+    },
     "style": {"color": "blue", "inclusive": False, "category": "style", "gravity": 3},
     "technical_frameworks": {
-        "color": "orange",
+        "color": "yellow",
         "inclusive": False,
         "category": "job_requirements",
         "gravity": 5,
@@ -341,7 +353,7 @@ categories = {
         "gravity": 2,
     },
     "workload": {
-        "color": "brown",
+        "color": "yellow",
         "inclusive": False,
         "category": "job_requirements",
         "gravity": 5,

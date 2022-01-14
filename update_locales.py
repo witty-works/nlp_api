@@ -45,7 +45,6 @@ def read_csv(in_file):
             "Reason DE": None,
             "Solution EN": None,
             "Solution DE": None,
-            "Color Scheme": None,
             "Status English": None,
             "Status German": None,
             "Inclusive?": None,
@@ -53,13 +52,16 @@ def read_csv(in_file):
         }
 
         colors = {
-            "Style": "blue",
-            "Unconscious bias": "orange",
-            "Openly discriminating": "brown",
-            "Gendered": "yellow",
-            "Inclusive": "green",
-            "Non-Inclusive": "yellow",
-            "": "yellow",
+            "unconscious_bias": "orange",
+            "openly_discriminating": "brown",
+            "gendered": "yellow",
+            "style": "blue",
+            "orthography": "blue",
+            "inclusive": "green",
+            "job_requirements": "yellow",
+            "abbreviation": "yellow",
+            "corporarte_rules": "yellow",
+            "default": "yellow",
         }
 
         categories = {}
@@ -80,18 +82,34 @@ def read_csv(in_file):
                 ):
                     continue
 
-                category = row[columns["Subcategory"]].strip()
-                if category == "New Category":
+                sub_category = row[columns["Subcategory"]].strip()
+                if sub_category == "New Category":
                     continue
 
-                categories[category] = {}
-                add_entry(poFiles, category, columns, "label", "Category Label", row)
-                add_entry(poFiles, category, columns, "reason", "Reason", row)
-                add_entry(poFiles, category, columns, "solution", "Solution", row)
+                categories[sub_category] = {}
+                add_entry(
+                    poFiles, sub_category, columns, "label", "Category Label", row
+                )
+                add_entry(poFiles, sub_category, columns, "reason", "Reason", row)
+                add_entry(poFiles, sub_category, columns, "solution", "Solution", row)
 
-                categories[category]["color"] = colors[row[columns["Color Scheme"]]]
-                categories[category]["inclusive"] = row[columns["Inclusive?"]] == "👍"
-                categories[category]["category"] = re.sub(
+                try:
+                    category = re.search(
+                        "https:\/\/www.notion.so\/([_a-z]+)-[a-z0-9]+",
+                        row[columns["Category"]],
+                    ).group(1)
+
+                    if category not in colors.keys():
+                        raise AttributeError
+                except AttributeError:
+                    print("Color missing for category: " + row[columns["Category"]])
+                    category = "default"
+
+                categories[sub_category]["color"] = colors[category]
+                categories[sub_category]["inclusive"] = (
+                    row[columns["Inclusive?"]] == "👍"
+                )
+                categories[sub_category]["category"] = re.sub(
                     "https://www\.notion\.so\/([_a-z]+)-[a-z0-9]+",
                     "\\1",
                     row[columns["Category"]],
@@ -100,7 +118,7 @@ def read_csv(in_file):
                     gravity = int(row[columns["Gravity"]])
                 except:
                     gravity = 5
-                categories[category]["gravity"] = gravity
+                categories[sub_category]["gravity"] = gravity
 
     locales_path = os.path.dirname(__file__) + "/locales"
 
