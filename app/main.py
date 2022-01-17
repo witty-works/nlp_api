@@ -62,7 +62,7 @@ from collections import namedtuple, defaultdict
 from collections import namedtuple
 from app.sentry import set_up_sentry_sdk
 
-version = "1.13.0"
+version = "1.13.1"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -430,10 +430,14 @@ async def languagetool_rules(user_request_in: RequestIn):
                 lang = None
             elif "matches" in result:
                 locale = result["language"]["code"]
-                if lang == "en" and locale != "en-US":
+                if locale == "en":
+                    locale = "en-US"
+                elif locale == "de":
+                    locale = "de-DE"
+                elif lang == "en" and locale != "en-US":
                     locale = "en-GB"
 
-                lang = Lang(result["language"]["code"])
+                lang = Lang(locale)
                 german_gender_ending = user_request_in.config.german_gender_ending
 
                 if "orthography" not in user_request_in.config.disabled_categories:
@@ -480,7 +484,7 @@ async def languagetool_rules(user_request_in: RequestIn):
 
 def language_rules(user_request_in: RequestIn, lang: Lang):
     # apply SpaCy pre-built model
-    tokens = model[lang.lang](user_request_in.text.strip())
+    tokens = model[lang.lang](user_request_in.text.strip().replace("\n", " "))
 
     # functions for German rules
     if lang.lang == "de":
