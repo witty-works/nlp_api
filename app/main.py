@@ -12,6 +12,7 @@ import sys
 from fastapi import (
     FastAPI,
     Request,
+    Response,
     HTTPException,
     BackgroundTasks,
     Depends,
@@ -29,7 +30,7 @@ from fastapi.exception_handlers import http_exception_handler
 from starlette.responses import RedirectResponse, PlainTextResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from typing import Optional
+from typing import Optional, Union
 
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 from sentry_sdk import configure_scope
@@ -43,6 +44,7 @@ from app.models import (
     Lang,
     RequestIn,
     RequestInEvent,
+    Result,
     ResultOut,
     ResultsOut,
     ConfRequest,
@@ -216,20 +218,15 @@ def get_root():
     return RedirectResponse(url="/form", status_code=301)
 
 
-@app.get("/exception", response_model=ResultsOut)
+@app.post("/exception")
 async def exception(
     request: Request,
-    id: str = None,
-    exception_type: str = "http",
-    status_code: int = 500,
+    user_request_in: RequestIn,
     username: str = Depends(get_current_username),
 ):
     set_browser_id(request, id)
 
-    if exception_type == "http":
-        raise HTTPException(status_code=status_code)
-
-    raise Exception("Example exception")
+    raise HTTPException(status_code=500, detail=user_request_in.text)
 
 
 @app.get("/lt")
@@ -276,9 +273,12 @@ def log(
     background_tasks.add_task(write_user_training_data, request, user_request_in)
 
 
-@app.post("/check", response_model=ResultsOut)
+@app.post("/check", response_model=Union[Result, ResultsOut])
 async def check_query(
-    request: Request, user_request_in: RequestIn, background_tasks: BackgroundTasks
+    request: Request,
+    response: Response,
+    user_request_in: RequestIn,
+    background_tasks: BackgroundTasks,
 ):
     set_browser_id(request, user_request_in.id)
 
@@ -291,11 +291,12 @@ async def check_query(
         await set_rules(user_request_in)
 
     languagetools_results, lang = await languagetool_rules(user_request_in)
+    if isinstance(lang, Lang) != True:
+        response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+        return Result.factory("Language could not be determined")
 
     language_rules_results = language_rules(user_request_in, lang)
-
     list_results = languagetools_results + language_rules_results
-
     response = ResultsOut.factory(list_results, lang)
 
     background_tasks.add_task(
@@ -415,6 +416,7 @@ async def set_rules(user_request_in: RequestIn):
 
 async def languagetool_rules(user_request_in: RequestIn):
     list_results = []
+    lang = None
 
     async with aiohttp.ClientSession(
         connector=aiohttp.TCPConnector(verify_ssl=settings.languagetool_verify_ssl)
@@ -431,64 +433,66 @@ async def languagetool_rules(user_request_in: RequestIn):
             payload["preferredLanguages"] = user_request_in.config.preferred_languages
             payload["preferredVariants"] = user_request_in.config.preferred_variants
         async with session.post(languagetool_url + "/check", data=payload) as r:
-            assert r.status == 200
-            result = await r.json()
-            if "language" not in result:
-                lang = None
+            try:
+                assert r.status == 200
+                result = await r.json()
+                if "language" in result:
+                    locale = result["language"]["code"]
+                    if locale == "en":
+                        locale = "en-US"
+                    elif locale == "de":
+                        locale = "de-DE"
+                    elif lang == "en" and locale != "en-US":
+                        locale = "en-GB"
 
-            lang = result["language"]["code"][0:2]
-            if lang not in langs:
-                lang = None
-            elif "matches" in result:
-                locale = result["language"]["code"]
-                if locale == "en":
-                    locale = "en-US"
-                elif locale == "de":
-                    locale = "de-DE"
-                elif lang == "en" and locale != "en-US":
-                    locale = "en-GB"
+                    lang = Lang(locale)
+                    german_gender_ending = user_request_in.config.german_gender_ending
 
-                lang = Lang(locale)
-                german_gender_ending = user_request_in.config.german_gender_ending
+                    if "orthography" not in user_request_in.config.disabled_categories:
+                        for match in result["matches"]:
+                            offset = int(match["offset"])
+                            end = offset + int(match["length"])
+                            if (
+                                german_gender_ending
+                                == user_request_in.text[
+                                    end : end + len(german_gender_ending)
+                                ]
+                            ):
+                                continue
 
-                if "orthography" not in user_request_in.config.disabled_categories:
-                    for match in result["matches"]:
-                        offset = int(match["offset"])
-                        end = offset + int(match["length"])
-                        if (
-                            german_gender_ending
-                            == user_request_in.text[
-                                end : end + len(german_gender_ending)
-                            ]
-                        ):
-                            continue
+                            alternatives = []
+                            if "replacements" in match:
+                                for replacement in match["replacements"]:
+                                    value = replacement["value"]
+                                    value = value if value != "" else "-"
+                                    alternatives.append(value)
 
-                        alternatives = []
-                        if "replacements" in match:
-                            for replacement in match["replacements"]:
-                                value = replacement["value"]
-                                value = value if value != "" else "-"
-                                alternatives.append(value)
-
-                        list_results.append(
-                            ResultOut.factory(
-                                user_request_in.config,
-                                lang,
-                                user_request_in.text[offset:end],
-                                user_request_in.text,
-                                "orthography",
-                                "orthography",
-                                offset,
-                                end,
-                                alternatives,
-                                match["shortMessage"],
-                                None,
-                                match["message"],
+                            list_results.append(
+                                ResultOut.factory(
+                                    user_request_in.config,
+                                    lang,
+                                    user_request_in.text[offset:end],
+                                    user_request_in.text,
+                                    "orthography",
+                                    "orthography",
+                                    offset,
+                                    end,
+                                    alternatives,
+                                    match["shortMessage"],
+                                    None,
+                                    match["message"],
+                                )
                             )
-                        )
+            except:
+                if r.status >= 500:
+                    result = "Problem communicating with LanguageTool"
+                    try:
+                        response = await r.text()
+                        result = result + ": " + response
+                    except:
+                        pass
 
-    if isinstance(lang, Lang) != True:
-        raise HTTPException(status_code=400, detail="Language could not be determined")
+                    raise Exception(result)
 
     return list_results, lang
 
