@@ -46,6 +46,22 @@
             "start": 134,
             "subcategory": "orthography",
             "text": "Riehenring"
+        },
+        {
+            "alternatives": [
+                "they",
+                "internship",
+                "interns"
+            ],
+            "category": "gendered",
+            "context": "Hi Siwar,\n\nit's the first time that we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n\nFossil Group Europe GmbH\nRiehenring 182\n\n4058 Basel\nSW",
+            "end": 63,
+            "label": "Gendered: Special functions",
+            "reason": "For economic-historical reasons, an image of a man is unconsciously evoked in front of the inner eye, even if the term is linguistically neutral. The female gender or other gender identities do not become visible. And they will not feel to belong in this setting.",
+            "solution": "In order to provoke an inclusive image, be not only linguistically, but also mentally neutral in your formulation. Rather use a noun that describes the activity. Or use a denomination that is truly gender-neutral.",
+            "start": 57,
+            "subcategory": "function",
+            "text": "intern"
         }
     ]
 }
