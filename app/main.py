@@ -102,7 +102,9 @@ async def custom_http_exception_handler(request: Request, exc: StarletteHTTPExce
             sentry_sdk.transaction = request.scope["path"][1:]
 
         # settings.browser_id no longer needed once https://github.com/encode/starlette/pull/944 is merged
-        sentry_sdk.set_user({"id": request.state.browser_id})
+        if hasattr(request.state, "browser_id"):
+            sentry_sdk.set_user({"id": request.state.browser_id})
+
         sentry_sdk.capture_exception(exc)
 
         info = sys.exc_info()
