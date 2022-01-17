@@ -340,6 +340,17 @@ async def get_redis(user: str):
 
 
 # Functions
+
+
+def is_number_list_empty(number, token):
+    if not number:
+        logging.error(
+            "List of token morph number: %s for token/word: %s", number, token
+        )
+        return True
+    return False
+
+
 def set_browser_id(request: Request, id):
     request.state.browser_id = str(id)
 
@@ -999,7 +1010,10 @@ def GenderedDenomAnalysisDE(
                 subcategory,
             ) in gender_words_alternatives:
                 if tokens[i].lemma_ == word:
-                    if tokens[i].morph.get("Number")[0] == "Sing":
+                    token_morph_number = tokens[i].morph.get("Number")
+                    if is_number_list_empty(token_morph_number, tokens[i]):
+                        continue
+                    if token_morph_number[0] == "Sing":
                         list_tokens.append(
                             ResultOut.factory(
                                 config,
@@ -1028,7 +1042,7 @@ def GenderedDenomAnalysisDE(
                                         [article_alternative],
                                     )
                                 )
-                    elif tokens[i].morph.get("Number")[0] == "Plur":
+                    elif token_morph_number[0] == "Plur":
                         list_tokens.append(
                             ResultOut.factory(
                                 config,
@@ -1149,7 +1163,10 @@ def WordNounDE(
             subcategory,
         ) in bias_words_alternatives_noun:
             if GetNonNounLowerCased(token) == word:
-                if token.morph.get("Number")[0] == "Sing":
+                token_morph_number = token.morph.get("Number")
+                if is_number_list_empty(token_morph_number, token):
+                    continue
+                if token_morph_number[0] == "Sing":
                     list_tokens.append(
                         ResultOut.factory(
                             config,
@@ -1164,7 +1181,7 @@ def WordNounDE(
                         )
                     )
 
-                elif token.morph.get("Number")[0] == "Plur":
+                elif token_morph_number[0] == "Plur":
                     list_tokens.append(
                         ResultOut.factory(
                             config,
@@ -1432,7 +1449,10 @@ def GenderedEN(
             subcategory,
         ) in gendered_words_alternatives:
             if token.lemma_ == word:
-                if token.morph.get("Number")[0] == "Sing":
+                token_morph_number = token.morph.get("Number")
+                if is_number_list_empty(token_morph_number, token):
+                    continue
+                if token_morph_number[0] == "Sing":
                     list_tokens.append(
                         ResultOut.factory(
                             config,
@@ -1447,7 +1467,7 @@ def GenderedEN(
                         )
                     )
 
-                elif token.morph.get("Number")[0] == "Plur":
+                elif token_morph_number[0] == "Plur":
                     list_tokens.append(
                         ResultOut.factory(
                             config,

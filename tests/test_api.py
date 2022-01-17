@@ -24,6 +24,24 @@ def test_read_form():
 
 @pytest.mark.parametrize(
     "ending_case_dir",
+    list(Path("tests/test_sentry_examples").iterdir()),
+)
+def test_sentry_examples(ending_case_dir, snapshot):
+
+    # Read input files from the case directory.
+    input_json = ending_case_dir.joinpath("input.json").read_text()
+    # Call the tested endpoint.
+    response = client.post("/check", json=json.loads(input_json))
+    assert response.status_code == 200
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    # Snapshot the return value.
+    snapshot.snapshot_dir = ending_case_dir
+    snapshot.assert_match(output, "output.json")
+
+
+@pytest.mark.parametrize(
+    "ending_case_dir",
     list(Path("tests/test_spacy_model").iterdir()),
 )
 def test_spacy_model(ending_case_dir, snapshot):
