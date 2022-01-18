@@ -64,7 +64,7 @@ from collections import namedtuple, defaultdict
 from collections import namedtuple
 from app.sentry import set_up_sentry_sdk
 
-version = "1.13.4"
+version = "1.13.5"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -423,8 +423,6 @@ async def languagetool_rules(user_request_in: RequestIn):
     async with aiohttp.ClientSession(
         connector=aiohttp.TCPConnector(verify_ssl=settings.languagetool_verify_ssl)
     ) as session:
-        langs = ["en", "de", "auto"]
-
         payload = {
             "text": user_request_in.text,
             "language": user_request_in.lang,
@@ -432,13 +430,19 @@ async def languagetool_rules(user_request_in: RequestIn):
         }
 
         if user_request_in.lang == "auto":
-            payload["preferredLanguages"] = user_request_in.config.preferred_languages
-            payload["preferredVariants"] = user_request_in.config.preferred_variants
+            if user_request_in.config.preferred_languages:
+                payload["preferredLanguages"] = user_request_in.config.preferred_languages
+            if user_request_in.config.preferred_variants:
+                payload["preferredVariants"] = user_request_in.config.preferred_variants
+
         async with session.post(languagetool_url + "/check", data=payload) as r:
             try:
                 assert r.status == 200
                 result = await r.json()
-                if "language" in result:
+                if "language" in result and result["language"]["code"][0:2] in [
+                    "de",
+                    "en",
+                ]:
                     locale = result["language"]["code"]
                     if locale == "en":
                         locale = "en-US"
