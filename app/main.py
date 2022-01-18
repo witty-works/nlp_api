@@ -64,7 +64,7 @@ from collections import namedtuple, defaultdict
 from collections import namedtuple
 from app.sentry import set_up_sentry_sdk
 
-version = "1.13.3"
+version = "1.13.4"
 
 settings = get_settings()
 logging = set_up_logger(settings)
