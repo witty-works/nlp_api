@@ -17,7 +17,6 @@ web:
     socket_family: unix
   commands:
     start: |
-      WORKERS="$(jq ".info.limits.memory / 250 | tonumber | floor" /run/config.json)"
       gunicorn app.main:app -b unix:$SOCKET -w ${WORKERS} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
   locations:
     "/static":
