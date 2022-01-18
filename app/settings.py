@@ -26,6 +26,7 @@ class Settings(BaseSettings):
     sentry_organization: Optional[str] = "witty-works"
     sentry_project_id: Optional[str]
     sentry_traces_sample_rate: float = 0.2
+    sentry_sample_rate: float = 0.2
 
     class Config:
         env_file = ".env"
