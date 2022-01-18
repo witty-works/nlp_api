@@ -1,0 +1,12 @@
+{
+    "text": "Hi Siwar,\n\nit's the first time that we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n\nFossil Group Europe GmbH\nRiehenring 182\n\n4058 Basel\nSWITZERLAND\nwww.fossilgroup.com\nt: +41 61 560 99 69\nm: +41 78 625 82 95\ne: tjung@fossil.com\n\n\n",
+    "config": {
+        "disabled_categories": [],
+        "gendered_roles_format": "both",
+        "german_gender_ending": ":in",
+        "preferred_languages": "de, en",
+        "preferred_variants": "de-DE,en-GB",
+        "primary_language": "de-DE",
+        "store_context": true
+    }
+}

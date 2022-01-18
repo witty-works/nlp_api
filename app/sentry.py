@@ -11,6 +11,7 @@ def set_up_sentry_sdk(version, settings):
     sentry_sdk.init(
         dsn=settings.sentry_dsn,
         traces_sample_rate=settings.sentry_traces_sample_rate,
+        sample_rate=settings.sentry_sample_rate,
         integrations=integrations,
         release=version,
         environment=settings.platform_environment,

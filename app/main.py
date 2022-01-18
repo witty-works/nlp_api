@@ -12,6 +12,7 @@ import sys
 from fastapi import (
     FastAPI,
     Request,
+    Response,
     HTTPException,
     BackgroundTasks,
     Depends,
@@ -29,7 +30,7 @@ from fastapi.exception_handlers import http_exception_handler
 from starlette.responses import RedirectResponse, PlainTextResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from typing import Optional
+from typing import Optional, Union
 
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 from sentry_sdk import configure_scope
@@ -43,6 +44,7 @@ from app.models import (
     Lang,
     RequestIn,
     RequestInEvent,
+    Result,
     ResultOut,
     ResultsOut,
     ConfRequest,
@@ -62,7 +64,7 @@ from collections import namedtuple, defaultdict
 from collections import namedtuple
 from app.sentry import set_up_sentry_sdk
 
-version = "1.13.1"
+version = "1.13.2"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -102,7 +104,9 @@ async def custom_http_exception_handler(request: Request, exc: StarletteHTTPExce
             sentry_sdk.transaction = request.scope["path"][1:]
 
         # settings.browser_id no longer needed once https://github.com/encode/starlette/pull/944 is merged
-        sentry_sdk.set_user({"id": request.state.browser_id})
+        if hasattr(request.state, "browser_id"):
+            sentry_sdk.set_user({"id": request.state.browser_id})
+
         sentry_sdk.capture_exception(exc)
 
         info = sys.exc_info()
@@ -216,20 +220,15 @@ def get_root():
     return RedirectResponse(url="/form", status_code=301)
 
 
-@app.get("/exception", response_model=ResultsOut)
+@app.post("/exception")
 async def exception(
     request: Request,
-    id: str = None,
-    exception_type: str = "http",
-    status_code: int = 500,
+    user_request_in: RequestIn,
     username: str = Depends(get_current_username),
 ):
     set_browser_id(request, id)
 
-    if exception_type == "http":
-        raise HTTPException(status_code=status_code)
-
-    raise Exception("Example exception")
+    raise HTTPException(status_code=500, detail=user_request_in.text)
 
 
 @app.get("/lt")
@@ -276,9 +275,12 @@ def log(
     background_tasks.add_task(write_user_training_data, request, user_request_in)
 
 
-@app.post("/check", response_model=ResultsOut)
+@app.post("/check", response_model=Union[Result, ResultsOut])
 async def check_query(
-    request: Request, user_request_in: RequestIn, background_tasks: BackgroundTasks
+    request: Request,
+    response: Response,
+    user_request_in: RequestIn,
+    background_tasks: BackgroundTasks,
 ):
     set_browser_id(request, user_request_in.id)
 
@@ -291,11 +293,12 @@ async def check_query(
         await set_rules(user_request_in)
 
     languagetools_results, lang = await languagetool_rules(user_request_in)
+    if isinstance(lang, Lang) != True:
+        response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+        return Result.factory("Language could not be determined")
 
     language_rules_results = language_rules(user_request_in, lang)
-
     list_results = languagetools_results + language_rules_results
-
     response = ResultsOut.factory(list_results, lang)
 
     background_tasks.add_task(
@@ -340,6 +343,17 @@ async def get_redis(user: str):
 
 
 # Functions
+
+
+def is_number_list_empty(number, token):
+    if not number:
+        logging.error(
+            "List of token morph number: %s for token/word: %s", number, token
+        )
+        return True
+    return False
+
+
 def set_browser_id(request: Request, id):
     request.state.browser_id = str(id)
 
@@ -404,6 +418,7 @@ async def set_rules(user_request_in: RequestIn):
 
 async def languagetool_rules(user_request_in: RequestIn):
     list_results = []
+    lang = None
 
     async with aiohttp.ClientSession(
         connector=aiohttp.TCPConnector(verify_ssl=settings.languagetool_verify_ssl)
@@ -420,64 +435,66 @@ async def languagetool_rules(user_request_in: RequestIn):
             payload["preferredLanguages"] = user_request_in.config.preferred_languages
             payload["preferredVariants"] = user_request_in.config.preferred_variants
         async with session.post(languagetool_url + "/check", data=payload) as r:
-            assert r.status == 200
-            result = await r.json()
-            if "language" not in result:
-                lang = None
+            try:
+                assert r.status == 200
+                result = await r.json()
+                if "language" in result:
+                    locale = result["language"]["code"]
+                    if locale == "en":
+                        locale = "en-US"
+                    elif locale == "de":
+                        locale = "de-DE"
+                    elif lang == "en" and locale != "en-US":
+                        locale = "en-GB"
 
-            lang = result["language"]["code"][0:2]
-            if lang not in langs:
-                lang = None
-            elif "matches" in result:
-                locale = result["language"]["code"]
-                if locale == "en":
-                    locale = "en-US"
-                elif locale == "de":
-                    locale = "de-DE"
-                elif lang == "en" and locale != "en-US":
-                    locale = "en-GB"
+                    lang = Lang(locale)
+                    german_gender_ending = user_request_in.config.german_gender_ending
 
-                lang = Lang(locale)
-                german_gender_ending = user_request_in.config.german_gender_ending
+                    if "orthography" not in user_request_in.config.disabled_categories:
+                        for match in result["matches"]:
+                            offset = int(match["offset"])
+                            end = offset + int(match["length"])
+                            if (
+                                german_gender_ending
+                                == user_request_in.text[
+                                    end : end + len(german_gender_ending)
+                                ]
+                            ):
+                                continue
 
-                if "orthography" not in user_request_in.config.disabled_categories:
-                    for match in result["matches"]:
-                        offset = int(match["offset"])
-                        end = offset + int(match["length"])
-                        if (
-                            german_gender_ending
-                            == user_request_in.text[
-                                end : end + len(german_gender_ending)
-                            ]
-                        ):
-                            continue
+                            alternatives = []
+                            if "replacements" in match:
+                                for replacement in match["replacements"]:
+                                    value = replacement["value"]
+                                    value = value if value != "" else "-"
+                                    alternatives.append(value)
 
-                        alternatives = []
-                        if "replacements" in match:
-                            for replacement in match["replacements"]:
-                                value = replacement["value"]
-                                value = value if value != "" else "-"
-                                alternatives.append(value)
-
-                        list_results.append(
-                            ResultOut.factory(
-                                user_request_in.config,
-                                lang,
-                                user_request_in.text[offset:end],
-                                user_request_in.text,
-                                "orthography",
-                                "orthography",
-                                offset,
-                                end,
-                                alternatives,
-                                match["shortMessage"],
-                                None,
-                                match["message"],
+                            list_results.append(
+                                ResultOut.factory(
+                                    user_request_in.config,
+                                    lang,
+                                    user_request_in.text[offset:end],
+                                    user_request_in.text,
+                                    "orthography",
+                                    "orthography",
+                                    offset,
+                                    end,
+                                    alternatives,
+                                    match["shortMessage"],
+                                    None,
+                                    match["message"],
+                                )
                             )
-                        )
+            except:
+                if r.status >= 500:
+                    result = "Problem communicating with LanguageTool"
+                    try:
+                        response = await r.text()
+                        result = result + ": " + response
+                    except:
+                        pass
 
-    if isinstance(lang, Lang) != True:
-        raise HTTPException(status_code=400, detail="Language could not be determined")
+                    raise Exception(result)
 
     return list_results, lang
 
@@ -1003,7 +1020,10 @@ def GenderedDenomAnalysisDE(
                 subcategory,
             ) in gender_words_alternatives:
                 if tokens[i].lemma_ == word:
-                    if tokens[i].morph.get("Number")[0] == "Sing":
+                    token_morph_number = tokens[i].morph.get("Number")
+                    if is_number_list_empty(token_morph_number, tokens[i]):
+                        continue
+                    if token_morph_number[0] == "Sing":
                         list_tokens.append(
                             ResultOut.factory(
                                 config,
@@ -1032,7 +1052,7 @@ def GenderedDenomAnalysisDE(
                                         [article_alternative],
                                     )
                                 )
-                    elif tokens[i].morph.get("Number")[0] == "Plur":
+                    elif token_morph_number[0] == "Plur":
                         list_tokens.append(
                             ResultOut.factory(
                                 config,
@@ -1153,7 +1173,10 @@ def WordNounDE(
             subcategory,
         ) in bias_words_alternatives_noun:
             if GetNonNounLowerCased(token) == word:
-                if token.morph.get("Number")[0] == "Sing":
+                token_morph_number = token.morph.get("Number")
+                if is_number_list_empty(token_morph_number, token):
+                    continue
+                if token_morph_number[0] == "Sing":
                     list_tokens.append(
                         ResultOut.factory(
                             config,
@@ -1168,7 +1191,7 @@ def WordNounDE(
                         )
                     )
 
-                elif token.morph.get("Number")[0] == "Plur":
+                elif token_morph_number[0] == "Plur":
                     list_tokens.append(
                         ResultOut.factory(
                             config,
@@ -1436,7 +1459,10 @@ def GenderedEN(
             subcategory,
         ) in gendered_words_alternatives:
             if token.lemma_ == word:
-                if token.morph.get("Number")[0] == "Sing":
+                token_morph_number = token.morph.get("Number")
+                if is_number_list_empty(token_morph_number, token):
+                    continue
+                if token_morph_number[0] == "Sing":
                     list_tokens.append(
                         ResultOut.factory(
                             config,
@@ -1451,7 +1477,7 @@ def GenderedEN(
                         )
                     )
 
-                elif token.morph.get("Number")[0] == "Plur":
+                elif token_morph_number[0] == "Plur":
                     list_tokens.append(
                         ResultOut.factory(
                             config,
