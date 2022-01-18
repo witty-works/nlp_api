@@ -3,8 +3,10 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 from app.main import app, redis, set_rules, get_false_positive, false_positive
 import json
-from app.models import RequestIn
-
+from app.models import (
+    LangWithAutoType,
+    RequestIn,
+)
 from app import main
 from unittest import mock
 
@@ -12,7 +14,9 @@ client = TestClient(app)
 
 
 def get_dirs(path):
-    return list(subpath for subpath in Path(path).iterdir() if not subpath.name.startswith("."))
+    return list(
+        subpath for subpath in Path(path).iterdir() if not subpath.name.startswith(".")
+    )
 
 
 def test_read_main():
@@ -218,8 +222,8 @@ def set_redis():
             "forced": {
                 "store_context": False,
                 "primary_language": "en-GB",
-                "preferred_languages": "en",
-                "preferred_variants": "en-GB",
+                "preferred_languages": ["en"],
+                "preferred_variants": ["en-GB"],
                 "german_gender_ending": "In",
                 "gendered_roles_format": "binary_gender",
             },
@@ -294,8 +298,8 @@ def test_set_rules(event_loop, set_redis):
     event_loop.run_until_complete(set_rules(test_request))
     assert test_request.config.store_context == False
     assert test_request.config.primary_language == "en-GB"
-    assert test_request.config.preferred_languages == "en"
-    assert test_request.config.preferred_variants == "en-GB"
+    assert test_request.config.preferred_languages == ["en"]
+    assert test_request.config.preferred_variants == ["en-GB"]
     assert test_request.config.german_gender_ending == "In"
     assert test_request.config.gendered_roles_format == "binary_gender"
 
@@ -320,8 +324,8 @@ def test_set_rules_suggestion(event_loop, set_redis):
     test_result = event_loop.run_until_complete(set_rules(test_request))
     assert test_request.config.store_context == True
     assert test_request.config.primary_language == "de-DE"
-    assert test_request.config.preferred_languages == "de"
-    assert test_request.config.preferred_variants == "de-DE"
+    assert test_request.config.preferred_languages == ["de"]
+    assert test_request.config.preferred_variants == ["de-DE"]
     assert test_request.config.german_gender_ending == "/in"
     assert test_request.config.gendered_roles_format == "inclusive_gender"
 
@@ -338,8 +342,8 @@ def test_set_organization_rules(event_loop, set_redis):
     event_loop.run_until_complete(set_rules(test_request))
     assert test_request.config.store_context == False
     assert test_request.config.primary_language == "en-GB"
-    assert test_request.config.preferred_languages == "en"
-    assert test_request.config.preferred_variants == "en-GB"
+    assert test_request.config.preferred_languages == ["en"]
+    assert test_request.config.preferred_variants == ["en-GB"]
     assert test_request.config.german_gender_ending == "In"
     assert test_request.config.gendered_roles_format == "binary_gender"
 
@@ -357,8 +361,14 @@ def test_set_default_rules(event_loop):
     event_loop.run_until_complete(set_rules(test_request))
     assert test_request.config.store_context == True
     assert test_request.config.primary_language == "de-DE"
-    assert test_request.config.preferred_languages == "de,en"
-    assert test_request.config.preferred_variants == "de-DE,en-GB"
+    assert test_request.config.preferred_languages == [
+        LangWithAutoType.EN,
+        LangWithAutoType.DE,
+    ]
+    assert test_request.config.preferred_variants == [
+        LangWithAutoType.enUS,
+        LangWithAutoType.deDE,
+    ]
     assert test_request.config.german_gender_ending == ":in"
     assert test_request.config.gendered_roles_format == "both"
 
@@ -380,6 +390,7 @@ def test_store_rules():
         response_content["config"]["forced"]["gendered_roles_format"] == "binary_gender"
     )
     assert response_content["config"]["suggestion"]["german_gender_ending"] == "In"
-    assert (
-        response_content["config"]["suggestion"]["preferred_variants"] == "de-DE,en-GB"
-    )
+    assert response_content["config"]["suggestion"]["preferred_variants"] == [
+        "en-US",
+        "de-DE",
+    ]

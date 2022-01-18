@@ -1,0 +1,11 @@
+{
+  "type": "check",
+  "text": "That is a lot of gold.",
+  "lang": "auto",
+  "config": {
+    "store_context": false,
+    "primary_language": "en-AU,en-DE",
+    "preferred_languages": "fr",
+    "preferred_variants": "en-AU"
+  }
+}

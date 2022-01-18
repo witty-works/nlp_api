@@ -1,0 +1,31 @@
+{
+    "detail": [
+        {
+            "loc": [
+                "body",
+                "config",
+                "primary_language"
+            ],
+            "msg": "Not supported primary_language: en-AU,en-DE",
+            "type": "value_error"
+        },
+        {
+            "loc": [
+                "body",
+                "config",
+                "preferred_languages"
+            ],
+            "msg": "Contains not supported preferred_languages: fr",
+            "type": "value_error"
+        },
+        {
+            "loc": [
+                "body",
+                "config",
+                "preferred_variants"
+            ],
+            "msg": "Contains not supported preferred_variants: en-AU",
+            "type": "value_error"
+        }
+    ]
+}
