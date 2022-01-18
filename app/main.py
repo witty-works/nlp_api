@@ -430,8 +430,11 @@ async def languagetool_rules(user_request_in: RequestIn):
         }
 
         if user_request_in.lang == "auto":
-            payload["preferredLanguages"] = user_request_in.config.preferred_languages
-            payload["preferredVariants"] = user_request_in.config.preferred_variants
+            if user_request_in.config.preferred_languages:
+                payload["preferredLanguages"] = user_request_in.config.preferred_languages
+            if user_request_in.config.preferred_variants:
+                payload["preferredVariants"] = user_request_in.config.preferred_variants
+
         async with session.post(languagetool_url + "/check", data=payload) as r:
             try:
                 assert r.status == 200
