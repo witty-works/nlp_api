@@ -313,12 +313,27 @@ class ResultOut(BaseModel):
         return beginning + separator + ending
 
 
+class Result(BaseModel):
+    details: str
+
+    def factory(details):
+        return Result(details)
+
+    factory = staticmethod(factory)
+
+    def __init__(self, details):
+        object.__setattr__(self, "details", details)
+
+
 class ResultsOut(BaseModel):
     results: List[ResultOut]
     language: str
 
     def factory(results, lang):
-        return ResultsOut(results, lang.lang)
+        if lang != None:
+            lang = lang.lang
+
+        return ResultsOut(results, lang)
 
     factory = staticmethod(factory)
 
