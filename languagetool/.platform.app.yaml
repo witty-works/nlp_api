@@ -10,7 +10,6 @@ resources:
 web:
   commands:
     start: |
-      export MEMORY="$(jq ".info.limits.memory * 0.80 | tonumber | floor" /run/config.json)"
       java -noverify -Xms${MEMORY}M -Xmx${MEMORY}M -XX:+UseG1GC -XX:+UseStringDeduplication -cp languagetool-server.jar org.languagetool.server.HTTPServer --public --config server.properties --port $PORT --allow-origin "*"
 
 hooks:
@@ -36,7 +35,7 @@ hooks:
     echo "Installing archive of ${LT} ${VERSION} from '${PLATFORM_CACHE_DIR}/${LT}-${VERSION}' ..."
     cp -R "${PLATFORM_CACHE_DIR}/${LT}-${VERSION}"/* .
     cp ignore.txt org/languagetool/resource/de/hunspell/ignore.txt
-  
+
     sed "s/^#fasttext/fasttext/" server.properties > server.properties.fasttext
     mv server.properties.fasttext server.properties
 
