@@ -423,8 +423,6 @@ async def languagetool_rules(user_request_in: RequestIn):
     async with aiohttp.ClientSession(
         connector=aiohttp.TCPConnector(verify_ssl=settings.languagetool_verify_ssl)
     ) as session:
-        langs = ["en", "de", "auto"]
-
         payload = {
             "text": user_request_in.text,
             "language": user_request_in.lang,
@@ -438,7 +436,10 @@ async def languagetool_rules(user_request_in: RequestIn):
             try:
                 assert r.status == 200
                 result = await r.json()
-                if "language" in result:
+                if "language" in result and result["language"]["code"][0:2] in [
+                    "de",
+                    "en",
+                ]:
                     locale = result["language"]["code"]
                     if locale == "en":
                         locale = "en-US"
