@@ -45,7 +45,7 @@ hooks:
 
 relationships:
   languagetool: "languagetool:http"
-  rediscache: "cacheredis:redis"
+  #rediscache: "cacheredis:redis"
 
 crons:
   generate-statistics:
