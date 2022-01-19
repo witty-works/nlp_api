@@ -12,7 +12,7 @@ client = TestClient(app)
 
 
 def get_dirs(path):
-    return list(file for file in Path(path).iterdir() if not file.name.startswith("."))
+    return list(subpath for subpath in Path(path).iterdir() if not subpath.name.startswith("."))
 
 
 def test_read_main():

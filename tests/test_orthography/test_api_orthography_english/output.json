@@ -1,85 +1,39 @@
 {
-    "language": "de",
+    "language": "en",
     "results": [
         {
             "alternatives": [
-                "über",
-                "Weber",
-                "Leber",
-                "Geber",
-                "Heber",
-                "Hueber",
-                "aber",
-                "unter",
-                "neben",
-                "Meter",
-                "eher",
-                "geben",
-                "jeder",
-                "leben",
-                "neuer",
-                "Peter",
-                "jener",
-                "weder",
-                "Meer",
-                "derer"
+                "like",
+                "wiki",
+                "Loki",
+                "Niki",
+                "tiki",
+                "Lili",
+                "Kiki"
             ],
             "category": "orthography",
             "context": "",
-            "end": 27,
-            "label": "Rechtschreibfehler",
-            "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
-            "solution": "Möglicher Tippfehler gefunden.",
-            "start": 22,
+            "end": 6,
+            "label": "Spelling mistake",
+            "reason": "Correct any spelling or grammatical errors to maximize the impact of their writing.",
+            "solution": "Possible spelling mistake found.",
+            "start": 2,
             "subcategory": "orthography",
-            "text": "ueber"
+            "text": "liki"
         },
         {
             "alternatives": [
-                "Straße",
-                "Straßen",
-                "Strauße",
-                "Ostrasse",
-                "Stresse",
-                "Strapse",
-                "Strass",
-                "Trasse",
-                "Straß",
-                "Adresse",
-                "Sträuße",
-                "Krasse",
-                "Straffe",
-                "Strafe",
-                "Strafte",
-                "Zulasse",
-                "Strauss",
-                "Stramme",
-                "Strauß",
-                "Stanze"
+                "colours"
             ],
             "category": "orthography",
             "context": "",
-            "end": 39,
-            "label": "Rechtschreibfehler",
-            "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
-            "solution": "Möglicher Tippfehler gefunden.",
-            "start": 32,
-            "subcategory": "orthography",
-            "text": "Strasse"
-        },
-        {
-            "alternatives": [
-                "!"
-            ],
-            "category": "orthography",
-            "context": "",
-            "end": 42,
+            "end": 21,
             "label": "",
-            "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
-            "solution": "Die Verwendung von mehreren Frage- oder Ausrufezeichen wirkt oft übertrieben emphatisch.",
-            "start": 39,
+            "reason": "Correct any spelling or grammatical errors to maximize the impact of their writing.",
+            "solution": "Possible spelling mistake. ‘colors’ is American English.",
+            "start": 15,
             "subcategory": "orthography",
-            "text": "!!!"
+            "text": "colors"
         }
     ]
 }
