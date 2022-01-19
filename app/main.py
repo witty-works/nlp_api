@@ -419,6 +419,7 @@ async def set_rules(user_request_in: RequestIn):
 async def languagetool_rules(user_request_in: RequestIn):
     list_results = []
     lang = None
+    config = user_request_in.config
 
     async with aiohttp.ClientSession(
         connector=aiohttp.TCPConnector(verify_ssl=settings.languagetool_verify_ssl)
@@ -426,16 +427,14 @@ async def languagetool_rules(user_request_in: RequestIn):
         payload = {
             "text": user_request_in.text,
             "language": user_request_in.lang,
-            "motherTongue": user_request_in.config.primary_language,
+            "motherTongue": config.primary_language,
         }
 
         if user_request_in.lang == "auto":
-            if user_request_in.config.preferred_languages:
-                payload[
-                    "preferredLanguages"
-                ] = user_request_in.config.preferred_languages
-            if user_request_in.config.preferred_variants:
-                payload["preferredVariants"] = user_request_in.config.preferred_variants
+            if config.preferred_languages:
+                payload["preferredLanguages"] = config.preferred_languages
+            if config.preferred_variants:
+                payload["preferredVariants"] = config.preferred_variants
 
         async with session.post(languagetool_url + "/check", data=payload) as r:
             try:
@@ -455,16 +454,15 @@ async def languagetool_rules(user_request_in: RequestIn):
                         locale = "en-GB"
 
                     lang = Lang(locale)
-                    german_gender_ending = user_request_in.config.german_gender_ending
 
-                    if "orthography" not in user_request_in.config.disabled_categories:
+                    if "orthography" not in config.disabled_categories:
                         for match in result["matches"]:
                             offset = int(match["offset"])
                             end = offset + int(match["length"])
                             if (
-                                german_gender_ending
+                                config.german_gender_ending
                                 == user_request_in.text[
-                                    end : end + len(german_gender_ending)
+                                    end : end + len(config.german_gender_ending)
                                 ]
                             ):
                                 continue
@@ -478,7 +476,7 @@ async def languagetool_rules(user_request_in: RequestIn):
 
                             list_results.append(
                                 ResultOut.factory(
-                                    user_request_in.config,
+                                    config,
                                     lang,
                                     user_request_in.text[offset:end],
                                     user_request_in.text,
