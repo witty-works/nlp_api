@@ -7,7 +7,6 @@ import json
 import secrets
 import aiohttp
 import copy
-import sys
 
 from fastapi import (
     FastAPI,
@@ -26,14 +25,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi.exception_handlers import http_exception_handler
 from starlette.responses import RedirectResponse, PlainTextResponse
-from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from typing import Optional, Union
 
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
-from sentry_sdk import configure_scope
 
 from spacy.tokens import Doc
 from spacy.matcher import PhraseMatcher, Matcher
@@ -53,7 +49,6 @@ from app.models import (
 from app.categories import categories
 from app.settings import get_settings
 from app.logger import set_up_logger
-from app.posthog import set_up_posthog
 from app.redis import set_up_redis
 from app.languagetool import get_languagetool_url
 from app.model import model
@@ -69,15 +64,11 @@ version = "1.13.8"
 settings = get_settings()
 logging = set_up_logger(settings)
 sentry_sdk = set_up_sentry_sdk(version, settings)
-posthog = set_up_posthog(settings)
 languagetool_url = get_languagetool_url(settings)
 redis = set_up_redis(settings)
 
 logging.debug("app started with settings: %s", settings)
 
-# Regular expression library
-# convert string of list into list of the strings
-# project models
 
 app = FastAPI(
     title="Witty NLP API",
@@ -95,29 +86,6 @@ try:
 except Exception:
     # pass silently if the Sentry integration failed
     pass
-
-
-@app.exception_handler(HTTPException)
-async def custom_http_exception_handler(request: Request, exc: StarletteHTTPException):
-    if sentry_sdk:
-        with configure_scope() as scope:
-            sentry_sdk.transaction = request.scope["path"][1:]
-
-        # settings.browser_id no longer needed once https://github.com/encode/starlette/pull/944 is merged
-        if hasattr(request.state, "browser_id"):
-            sentry_sdk.set_user({"id": request.state.browser_id})
-
-        sentry_sdk.capture_exception(exc)
-
-        info = sys.exc_info()
-        data = {
-            "detail": exc.detail,
-            "type": str(info[0]),
-            "path": request.scope["path"][1:],
-        }
-        posthog.capture(request.state.browser_id, "$exception", data)
-
-    return await http_exception_handler(request, exc)
 
 
 security = HTTPBasic(auto_error=False)
@@ -226,7 +194,7 @@ async def exception(
     user_request_in: RequestIn,
     username: str = Depends(get_current_username),
 ):
-    set_browser_id(request, id)
+    configure_sentry(request, id)
 
     raise HTTPException(status_code=500, detail=user_request_in.text)
 
@@ -262,7 +230,7 @@ def serialize(
     user_request_in: RequestIn,
     username: str = Depends(get_current_username),
 ):
-    set_browser_id(request, user_request_in.id)
+    configure_sentry(request, user_request_in.id)
     data = collect_user_training_data(user_request_in, ResultsOut([], "en"))
     return json.dumps(data)
 
@@ -271,7 +239,7 @@ def serialize(
 def log(
     request: Request, user_request_in: RequestInEvent, background_tasks: BackgroundTasks
 ):
-    set_browser_id(request, user_request_in.id)
+    configure_sentry(request, user_request_in.id)
     background_tasks.add_task(write_user_training_data, request, user_request_in)
 
 
@@ -282,7 +250,7 @@ async def check_query(
     user_request_in: RequestIn,
     background_tasks: BackgroundTasks,
 ):
-    set_browser_id(request, user_request_in.id)
+    configure_sentry(request, user_request_in.id)
 
     if sentry_sdk:
         sentry_sdk.set_context(
@@ -354,8 +322,12 @@ def is_number_list_empty(number, token):
     return False
 
 
-def set_browser_id(request: Request, id):
-    request.state.browser_id = str(id)
+def configure_sentry(request: Request, id):
+    id = str(id)
+
+    if sentry_sdk:
+        sentry_sdk.transaction = request.scope["path"][1:]
+        sentry_sdk.set_user({"id": id})
 
 
 async def set_rules(user_request_in: RequestIn):
