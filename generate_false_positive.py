@@ -129,7 +129,7 @@ def checked_false_positive_list(api_url, potential_false_positive):
 
 
 false_positive_checked = checked_false_positive_list(args.URL, potential_false_positive)
-false_positive_path = "training_data/de-DE/titles_false_positives.csv"
+false_positive_path = "training_data/de-DE/gender_false_positive.csv"
 header = ["False_positives"]
 with open(false_positive_path, "w") as f:
     writer = csv.writer(f)

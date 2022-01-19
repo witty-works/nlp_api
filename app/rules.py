@@ -25,6 +25,8 @@ rules = {
         "df_d_and_i_words_sentences": "d_and_i_sentences.csv",
         # load communal coded terms
         "df_communal_words": "communal.csv",
+        # load gender false positive
+        "df_gender_false_positive": "gender_false_positive.csv",
     },
     "en-US": {
         # load openly discriminating words
@@ -71,6 +73,9 @@ rules["de-DE"]["false_positive_agentic_const"] = [
     "unabhängig",
     "Entwickler",
 ]
+rules["de-DE"]["gender_false_positive"] = list(
+    rules["de-DE"]["df_gender_false_positive"]["False_positives"]
+)
 rules["de-DE"]["false_positive_style"] = ["international"]
 rules["de-DE"]["exceptions"] = [
     "Unternehmen",
