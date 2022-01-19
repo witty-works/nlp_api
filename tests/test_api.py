@@ -256,7 +256,7 @@ def test_false_positive(fp_case_dir, snapshot, set_redis):
         "unabhängig",
         "Entwickler",
     ]
-    gender_false_positive = []
+    gender_false_positive = ["Abdichterinnen und Abdichter"]
     # Read input files from the case directory.
     input_json = fp_case_dir.joinpath("input.json").read_text()
     # call set_false_positive_agentic to read data from redis
