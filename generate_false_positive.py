@@ -9,25 +9,75 @@ from app.models import (
 )
 import re
 import argparse
+import logging
+import sys
+
+# Logging configuration:
+logging.basicConfig(level="ERROR")
+logging.getLogger().handlers.clear()
+formatter = logging.Formatter("[%(asctime)s] %(name)s %(levelname)s - %(message)s")
+sh = logging.StreamHandler(sys.stdout)
+sh.setFormatter(formatter)
+logging.getLogger().addHandler(sh)
 
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
     "-u",
     "--URL",
-    help="Api url which should call check on training data, e.g. http://localhost:8000/check",
-    required=True,
+    help="Api url which should call check on training data, e.g. http://localhost:8000/",
+    default="http://localhost:8000/",
 )
 args = parser.parse_args()
+false_positive_path = "training_data/de-DE/gender_false_positive.csv"
+
+# Run checks:
+def check_if_false_positive_contains_dummy_data(path_to_false_positive):
+    with open(path_to_false_positive) as csvfile:
+        reader = csv.reader(csvfile)
+        for row in reader:
+            dummy = ", ".join(row)
+    if dummy == "False_positives":
+        return True
+    return False
+
+
+def check_if_server_is_running(api_url):
+    try:
+        response = requests.get(api_url)
+        if response.status_code == 200:
+            return True
+        else:
+            return False
+    except requests.ConnectionError as e:
+        logging.error("Please first run the local server %s", api_url)
+        exit(1)
+
+
+is_running = check_if_server_is_running(args.URL)
+if not is_running:
+    logging.error(
+        "Cannot connect to server %s. Please check if server is running properly",
+        args.URL,
+    )
+    exit(1)
+
+if not check_if_false_positive_contains_dummy_data(false_positive_path):
+    logging.error(
+        "Local false positive file %s must be empty. Please remove or clean file before running the script.",
+        false_positive_path,
+    )
+    exit(1)
+
 base_directory = "training_data/"
 training_data_paths = defaultdict(list)
 for directory in os.listdir(base_directory):
     for file in os.listdir(base_directory + directory):
         training_data_paths[directory].append(base_directory + directory + "/" + file)
 
-# print(training_data_paths["de-DE"])
 for key in training_data_paths.keys():
     training_data_paths[key] = sorted(training_data_paths[key])
+
 
 rules = {}
 rules["training_data/de-DE/agentic.csv"] = ["Alt_split"]
@@ -128,8 +178,10 @@ def checked_false_positive_list(api_url, potential_false_positive):
     return false_positive_checked
 
 
-false_positive_checked = checked_false_positive_list(args.URL, potential_false_positive)
-false_positive_path = "training_data/de-DE/gender_false_positive.csv"
+check_endpoint_url = args.URL + "check"
+false_positive_checked = checked_false_positive_list(
+    check_endpoint_url, potential_false_positive
+)
 header = ["False_positives"]
 with open(false_positive_path, "w") as f:
     writer = csv.writer(f)

@@ -207,7 +207,27 @@ pipenv run python -m analyze_rules -i [CSV export]]
 ```
 pipenv run python -m add_alternatives_to_ignore
 ```
-
+## Update the false positive list 
+1. Remove gender_false_positive.csv file (keep the old copy for safety):
+```
+mv gender_false_positive.csv gender_false_positive_old.csv
+```
+2. Create new csv file with  dummy entry
+```
+echo "False_positives" >> gender_false_positive.csv
+```
+3. Run server locally, for example with pipenv:
+```
+pipenv run uvicorn app.main:app --reload
+```
+4. Run the generate_false_positive.py file
+```
+pipenv run python -m generate_false_positive.py
+```
+5. After verifying that gender_false_positive.csv  contains correct false positive, remove old file.
+```
+rm gender_false_positive_old.csv
+```
 ## Generate en-GB rules
 
 Run the following command:
