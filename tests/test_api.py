@@ -1,4 +1,3 @@
-from os import pathconf
 import pytest
 from pathlib import Path
 from fastapi.testclient import TestClient
@@ -10,6 +9,10 @@ from app import main
 from unittest import mock
 
 client = TestClient(app)
+
+
+def get_dirs(path):
+    return list(file for file in Path(path).iterdir() if not file.name.startswith("."))
 
 
 def test_read_main():
@@ -24,7 +27,7 @@ def test_read_form():
 
 @pytest.mark.parametrize(
     "ending_case_dir",
-    list(Path("tests/test_sentry_examples").iterdir()),
+    get_dirs("tests/test_sentry_examples"),
 )
 def test_sentry_examples(ending_case_dir, snapshot):
 
@@ -42,7 +45,7 @@ def test_sentry_examples(ending_case_dir, snapshot):
 
 @pytest.mark.parametrize(
     "ending_case_dir",
-    list(Path("tests/test_spacy_model").iterdir()),
+    get_dirs("tests/test_spacy_model"),
 )
 def test_spacy_model(ending_case_dir, snapshot):
 
@@ -60,7 +63,7 @@ def test_spacy_model(ending_case_dir, snapshot):
 
 @pytest.mark.parametrize(
     "ending_case_dir",
-    list(Path("tests/test_demo_wordings_english").iterdir()),
+    get_dirs("tests/test_demo_wordings_english"),
 )
 def test_demo_wordings_english(ending_case_dir, snapshot):
 
@@ -78,7 +81,7 @@ def test_demo_wordings_english(ending_case_dir, snapshot):
 
 @pytest.mark.parametrize(
     "ending_case_dir",
-    list(Path("tests/test_demo_wordings_german").iterdir()),
+    get_dirs("tests/test_demo_wordings_german"),
 )
 def test_demo_wordings_german(ending_case_dir, snapshot):
 
@@ -96,7 +99,7 @@ def test_demo_wordings_german(ending_case_dir, snapshot):
 
 @pytest.mark.parametrize(
     "general_case_dir",
-    list(Path("tests/test_general_cases").iterdir()),
+    get_dirs("tests/test_general_cases"),
 )
 def test_json(general_case_dir, snapshot):
 
@@ -114,7 +117,7 @@ def test_json(general_case_dir, snapshot):
 
 @pytest.mark.parametrize(
     "orthoraphy_case_dir",
-    list(Path("tests/test_orthography").iterdir()),
+    get_dirs("tests/test_orthography"),
 )
 def test_orthoraphy(orthoraphy_case_dir, snapshot):
 
@@ -132,7 +135,7 @@ def test_orthoraphy(orthoraphy_case_dir, snapshot):
 
 @pytest.mark.parametrize(
     "ending_case_dir",
-    list(Path("tests/test_gender_ending").iterdir()),
+    get_dirs("tests/test_gender_ending"),
 )
 def test_gender_ending(ending_case_dir, snapshot):
 
@@ -155,7 +158,7 @@ def test_api_missing_data():
 
 @pytest.mark.parametrize(
     "detection_case_dir",
-    list(Path("tests/test_language_detection").iterdir()),
+    get_dirs("tests/test_language_detection"),
 )
 def test_language_detection(detection_case_dir, snapshot):
 
@@ -173,7 +176,7 @@ def test_language_detection(detection_case_dir, snapshot):
 
 @pytest.mark.parametrize(
     "fails_case_dir",
-    list(Path("tests/test_fails").iterdir()),
+    get_dirs("tests/test_fails"),
 )
 def test_language_detection_fail(fails_case_dir, snapshot):
 
@@ -239,7 +242,7 @@ def set_redis():
 
 @pytest.mark.parametrize(
     "fp_case_dir",
-    list(Path("tests/test_false_positive").iterdir()),
+    get_dirs("tests/test_false_positive"),
 )
 def test_false_positive(fp_case_dir, snapshot, set_redis):
     false_positive_agentic_const = [
