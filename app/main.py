@@ -459,13 +459,6 @@ async def languagetool_rules(user_request_in: RequestIn):
                         for match in result["matches"]:
                             offset = int(match["offset"])
                             end = offset + int(match["length"])
-                            if (
-                                config.german_gender_ending
-                                == user_request_in.text[
-                                    end : end + len(config.german_gender_ending)
-                                ]
-                            ):
-                                continue
 
                             alternatives = []
                             if "replacements" in match:
