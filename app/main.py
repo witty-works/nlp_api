@@ -934,10 +934,11 @@ def GenderedDenomAnalysisDE(
                 word,
                 alternative_sing,
                 alternative_plur,
+                alternative_all,
                 subcategory,
             ) in gender_words_alternatives:
                 if c_doc[i].lemma_ == word:
-                    if c_doc[i].morph.get("Number")[0] == "Sing":
+                    if len(c_doc[i].morph.get("Number")) == 0:
                         list_tokens.append(
                             ResultOut.factory(
                                 config,
@@ -948,38 +949,53 @@ def GenderedDenomAnalysisDE(
                                 subcategory,
                                 c_doc[i].idx,
                                 None,
-                                ast.literal_eval(alternative_sing),
+                                ast.literal_eval(alternative_all),
                             )
                         )
-                        for article, article_alternative in articles:
-                            if c_doc[i - 1].text == article:
-                                list_tokens.append(
-                                    ResultOut.factory(
-                                        config,
-                                        lang,
-                                        c_doc[i - 1].text,
-                                        full_text,
-                                        category,
-                                        subcategory,
-                                        c_doc[i - 1].idx,
-                                        None,
-                                        [article_alternative],
-                                    )
+                    else:
+                        if c_doc[i].morph.get("Number")[0] == "Sing":
+                            list_tokens.append(
+                                ResultOut.factory(
+                                    config,
+                                    lang,
+                                    c_doc[i].text,
+                                    full_text,
+                                    category,
+                                    subcategory,
+                                    c_doc[i].idx,
+                                    None,
+                                    ast.literal_eval(alternative_sing),
                                 )
-                    elif c_doc[i].morph.get("Number")[0] == "Plur":
-                        list_tokens.append(
-                            ResultOut.factory(
-                                config,
-                                lang,
-                                c_doc[i].text,
-                                full_text,
-                                category,
-                                subcategory,
-                                c_doc[i].idx,
-                                None,
-                                ast.literal_eval(alternative_plur),
                             )
-                        )
+                            for article, article_alternative in articles:
+                                if c_doc[i - 1].text == article:
+                                    list_tokens.append(
+                                        ResultOut.factory(
+                                            config,
+                                            lang,
+                                            c_doc[i - 1].text,
+                                            full_text,
+                                            category,
+                                            subcategory,
+                                            c_doc[i - 1].idx,
+                                            None,
+                                            [article_alternative],
+                                        )
+                                    )
+                        elif c_doc[i].morph.get("Number")[0] == "Plur":
+                            list_tokens.append(
+                                ResultOut.factory(
+                                    config,
+                                    lang,
+                                    c_doc[i].text,
+                                    full_text,
+                                    category,
+                                    subcategory,
+                                    c_doc[i].idx,
+                                    None,
+                                    ast.literal_eval(alternative_plur),
+                                )
+                            )
 
     else:
         for i in range(len(tokens)):
@@ -987,13 +1003,11 @@ def GenderedDenomAnalysisDE(
                 word,
                 alternative_sing,
                 alternative_plur,
+                alternative_all,
                 subcategory,
             ) in gender_words_alternatives:
                 if tokens[i].lemma_ == word:
-                    token_morph_number = tokens[i].morph.get("Number")
-                    if is_number_list_empty(token_morph_number, tokens[i]):
-                        continue
-                    if token_morph_number[0] == "Sing":
+                    if len(tokens[i].morph.get("Number")) == 0:
                         list_tokens.append(
                             ResultOut.factory(
                                 config,
@@ -1004,38 +1018,53 @@ def GenderedDenomAnalysisDE(
                                 subcategory,
                                 tokens[i].idx,
                                 None,
-                                ast.literal_eval(alternative_sing),
+                                ast.literal_eval(alternative_all),
                             )
                         )
-                        for article, article_alternative in articles:
-                            if tokens[i - 1].text == article:
-                                list_tokens.append(
-                                    ResultOut.factory(
-                                        config,
-                                        lang,
-                                        tokens[i - 1].text,
-                                        full_text,
-                                        category,
-                                        subcategory,
-                                        tokens[i - 1].idx,
-                                        None,
-                                        [article_alternative],
-                                    )
+                    else:
+                        if tokens[i].morph.get("Number")[0] == "Sing":
+                            list_tokens.append(
+                                ResultOut.factory(
+                                    config,
+                                    lang,
+                                    tokens[i].text,
+                                    full_text,
+                                    category,
+                                    subcategory,
+                                    tokens[i].idx,
+                                    None,
+                                    ast.literal_eval(alternative_sing),
                                 )
-                    elif token_morph_number[0] == "Plur":
-                        list_tokens.append(
-                            ResultOut.factory(
-                                config,
-                                lang,
-                                tokens[i].text,
-                                full_text,
-                                category,
-                                subcategory,
-                                tokens[i].idx,
-                                None,
-                                ast.literal_eval(alternative_plur),
                             )
-                        )
+                            for article, article_alternative in articles:
+                                if tokens[i - 1].text == article:
+                                    list_tokens.append(
+                                        ResultOut.factory(
+                                            config,
+                                            lang,
+                                            tokens[i - 1].text,
+                                            full_text,
+                                            category,
+                                            subcategory,
+                                            tokens[i - 1].idx,
+                                            None,
+                                            [article_alternative],
+                                        )
+                                    )
+                        elif tokens[i].morph.get("Number")[0] == "Plur":
+                            list_tokens.append(
+                                ResultOut.factory(
+                                    config,
+                                    lang,
+                                    tokens[i].text,
+                                    full_text,
+                                    category,
+                                    subcategory,
+                                    tokens[i].idx,
+                                    None,
+                                    ast.literal_eval(alternative_plur),
+                                )
+                            )
 
     return list_tokens
 
