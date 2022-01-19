@@ -431,7 +431,9 @@ async def languagetool_rules(user_request_in: RequestIn):
 
         if user_request_in.lang == "auto":
             if user_request_in.config.preferred_languages:
-                payload["preferredLanguages"] = user_request_in.config.preferred_languages
+                payload[
+                    "preferredLanguages"
+                ] = user_request_in.config.preferred_languages
             if user_request_in.config.preferred_variants:
                 payload["preferredVariants"] = user_request_in.config.preferred_variants
 
@@ -444,11 +446,12 @@ async def languagetool_rules(user_request_in: RequestIn):
                     "en",
                 ]:
                     locale = result["language"]["code"]
+
                     if locale == "en":
                         locale = "en-US"
                     elif locale == "de":
                         locale = "de-DE"
-                    elif lang == "en" and locale != "en-US":
+                    elif result["language"]["code"][0:2] == "en" and locale != "en-US":
                         locale = "en-GB"
 
                     lang = Lang(locale)

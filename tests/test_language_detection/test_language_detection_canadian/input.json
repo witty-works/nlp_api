@@ -1,0 +1,11 @@
+{
+    "type": "check",
+    "text": "What a dinkum! That is a lot of gold.",
+    "lang": "auto",
+    "config": {
+      "store_context": false,
+      "primary_language": "en-AU",
+      "preferred_languages": "en",
+      "preferred_variants": "en-AU"
+    }
+  }
