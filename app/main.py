@@ -938,7 +938,8 @@ def GenderedDenomAnalysisDE(
                 subcategory,
             ) in gender_words_alternatives:
                 if c_doc[i].lemma_ == word:
-                    if len(c_doc[i].morph.get("Number")) == 0:
+                    c_doc_morph_number = c_doc[i].morph.get("Number")
+                    if is_number_list_empty(c_doc_morph_number, c_doc[i]):
                         list_tokens.append(
                             ResultOut.factory(
                                 config,
@@ -953,7 +954,7 @@ def GenderedDenomAnalysisDE(
                             )
                         )
                     else:
-                        if c_doc[i].morph.get("Number")[0] == "Sing":
+                        if c_doc_morph_number[0] == "Sing":
                             list_tokens.append(
                                 ResultOut.factory(
                                     config,
@@ -982,7 +983,7 @@ def GenderedDenomAnalysisDE(
                                             [article_alternative],
                                         )
                                     )
-                        elif c_doc[i].morph.get("Number")[0] == "Plur":
+                        elif c_doc_morph_number[0] == "Plur":
                             list_tokens.append(
                                 ResultOut.factory(
                                     config,
@@ -1007,7 +1008,8 @@ def GenderedDenomAnalysisDE(
                 subcategory,
             ) in gender_words_alternatives:
                 if tokens[i].lemma_ == word:
-                    if len(tokens[i].morph.get("Number")) == 0:
+                    token_morph_number = tokens[i].morph.get("Number")
+                    if is_number_list_empty(token_morph_number, tokens[i]):
                         list_tokens.append(
                             ResultOut.factory(
                                 config,
@@ -1022,7 +1024,7 @@ def GenderedDenomAnalysisDE(
                             )
                         )
                     else:
-                        if tokens[i].morph.get("Number")[0] == "Sing":
+                        if token_morph_number[0] == "Sing":
                             list_tokens.append(
                                 ResultOut.factory(
                                     config,
@@ -1051,7 +1053,7 @@ def GenderedDenomAnalysisDE(
                                             [article_alternative],
                                         )
                                     )
-                        elif tokens[i].morph.get("Number")[0] == "Plur":
+                        elif token_morph_number[0] == "Plur":
                             list_tokens.append(
                                 ResultOut.factory(
                                     config,
