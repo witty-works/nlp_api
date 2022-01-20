@@ -392,6 +392,7 @@ async def languagetool_rules(user_request_in: RequestIn):
     list_results = []
     lang = None
     config = user_request_in.config
+    ignore = ["@", "#"]
 
     async with aiohttp.ClientSession(
         connector=aiohttp.TCPConnector(verify_ssl=settings.languagetool_verify_ssl)
@@ -431,6 +432,13 @@ async def languagetool_rules(user_request_in: RequestIn):
                         for match in result["matches"]:
                             offset = int(match["offset"])
                             end = offset + int(match["length"])
+                            text = user_request_in.text[offset:end]
+                            # ignore text that starts with @ or #
+                            if text[0:1] in ignore or (
+                                offset > 0
+                                and user_request_in.text[offset - 1 : offset] in ignore
+                            ):
+                                continue
 
                             alternatives = []
                             if "replacements" in match:
@@ -443,7 +451,7 @@ async def languagetool_rules(user_request_in: RequestIn):
                                 ResultOut.factory(
                                     config,
                                     lang,
-                                    user_request_in.text[offset:end],
+                                    text,
                                     user_request_in.text,
                                     "orthography",
                                     "orthography",
