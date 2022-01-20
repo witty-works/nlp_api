@@ -208,9 +208,9 @@ pipenv run python -m analyze_rules -i [CSV export]]
 pipenv run python -m add_alternatives_to_ignore
 ```
 ## Update the false positive list 
-1. Remove gender_false_positive.csv file (keep the old copy for safety):
+1. Remove gender_false_positive.csv file:
 ```
-mv training_data/de-DE/gender_false_positive.csv training_data/de-DE/gender_false_positive_old.csv
+rm training_data/de-DE/gender_false_positive.csv
 ```
 2. Create new csv file with  dummy entry
 ```
@@ -226,10 +226,6 @@ pipenv run python -m generate_false_positive
 ```
 * If you get an error here, please repeat steps 1-2 and run the script again.
 
-5. After verifying that gender_false_positive.csv  contains correct false positive, remove old file.
-```
-rm training_data/de-DE/gender_false_positive_old.csv
-```
 ## Generate en-GB rules
 
 Run the following command:
