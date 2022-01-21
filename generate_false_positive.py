@@ -169,8 +169,16 @@ def checked_false_positive_list(api_url, potential_false_positive):
             if response.status_code != 200:
                 print("Got error on: " + word)
                 continue
+
+            info = "trying: " + word + " for locale: " + locale
             if response.json()["results"]:
                 false_positive_checked.append([word])
+                info += " - added"
+            else:
+                info += " - skipped"
+
+            print(info)
+
     return false_positive_checked
 
 
