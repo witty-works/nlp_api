@@ -216,7 +216,7 @@ rm training_data/de-DE/gender_false_positive.csv
 ```
 echo "False_positives" >> training_data/de-DE/gender_false_positive.csv
 ```
-3. Run server locally, for example with pipenv:
+3. Run server locally (or restart to re-read the training data), for example with pipenv:
 ```
 pipenv run uvicorn app.main:app --reload
 ```
