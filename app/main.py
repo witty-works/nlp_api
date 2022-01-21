@@ -186,11 +186,7 @@ def get_current_username(
     return credentials.username
 
 
-@app.get("/")
-def get_root():
-    return RedirectResponse(url="/form", status_code=301)
-
-
+# debugging routes
 @app.post("/exception")
 async def exception(
     request: Request,
@@ -217,16 +213,6 @@ def openapi(username: str = Depends(get_current_username)):
     return get_openapi(title=app.title, version=app.version, routes=app.routes)
 
 
-@app.get("/form", response_class=HTMLResponse)
-def form(request: Request):
-    return templates.TemplateResponse("form.html", {"request": request})
-
-
-@app.get("/categories")
-def get_categories(lang: LangType = "de"):
-    return categories_with_labels[lang]
-
-
 @app.post("/serialize", response_class=PlainTextResponse)
 def serialize(
     request: Request,
@@ -238,12 +224,20 @@ def serialize(
     return json.dumps(data)
 
 
-@app.post("/log", status_code=201)
-def log(
-    request: Request, user_request_in: RequestInEvent, background_tasks: BackgroundTasks
-):
-    configure_sentry(request, user_request_in.id)
-    background_tasks.add_task(write_user_training_data, request, user_request_in)
+# public routes
+@app.get("/")
+def get_root():
+    return RedirectResponse(url="/form", status_code=301)
+
+
+@app.get("/form", response_class=HTMLResponse)
+def form(request: Request):
+    return templates.TemplateResponse("form.html", {"request": request})
+
+
+@app.get("/categories")
+def get_categories(lang: LangType = "de"):
+    return categories_with_labels[lang]
 
 
 @app.post("/check", response_model=Union[Result, ResultsOut])
@@ -294,6 +288,7 @@ async def check_query(
     return response
 
 
+# data exchange routes
 @app.post("/storeRules")
 async def store_redis(corporate_rules: ConfRequest):
     try:
@@ -329,8 +324,6 @@ async def get_redis(user: str):
 
 
 # Functions
-
-
 def is_number_list_empty(number, token):
     if not number:
         logging.error(
