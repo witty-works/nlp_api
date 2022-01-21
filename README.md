@@ -39,6 +39,7 @@ docker run  -p 8000:8000 --name nlp --network "bridge" --env languagetool_api=ht
 pipenv install --dev
 pipenv run python3.9 -m spacy download en_core_web_sm --no-cache-dir
 pipenv run python3.9 -m spacy download de_core_news_sm --no-cache-dir
+wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 ```
 
 ## using virtual environment (venv)

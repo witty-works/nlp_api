@@ -17,11 +17,16 @@ jobs:
         run: |
           python -m pip install --upgrade pipenv wheel
 
-      - id: cache-pipenv
-        uses: actions/cache@v1
+      - name: Caching Dependencies
+        id: cache-pipenv
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-pipenv
         with:
           path: ~/.local/share/virtualenvs
-          key: ${{ runner.os }}-pipenv-${{ hashFiles('**/Pipfile.lock') }}
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('Pipfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.cache-name }}-
 
       - name: Install dependencies
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
@@ -30,11 +35,32 @@ jobs:
           pipenv run python -m spacy download en_core_web_sm
           pipenv run python -m spacy download de_core_news_sm
 
-      - id: cache-po-files
-        uses: actions/cache@v1
+      - name: Caching FastText models
+        id: cache-fasttext
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-fasttext
+        with:
+          path: ./training_data/lid.176.bin
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('./training_data/lid.176.bin') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.cache-name }}-
+
+      - name: Install FastText models
+        if: steps.cache-fasttext.outputs.cache-hit != 'true'
+        run: |
+          wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
+
+      - name: Caching translations
+        id: cache-po-files
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-po-files
         with:
           path: ./locales
           key: ${{ runner.os }}-po-files-${{ hashFiles('**/*.po') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.cache-name }}-
 
       - name: Compile translation
         if: steps.cache-po-files.outputs.cache-hit != 'true'

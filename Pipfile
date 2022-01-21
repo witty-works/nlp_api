@@ -19,6 +19,7 @@ opencensus-ext-azure = "*"
 redis = "*"
 platformshconfig = "*"
 fakeredis = "*"
+fasttext = "*"
 
 [dev-packages]
 click = "*"

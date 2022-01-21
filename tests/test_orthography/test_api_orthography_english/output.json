@@ -6,10 +6,10 @@
                 "like",
                 "wiki",
                 "Loki",
+                "lii",
+                "Kiki",
                 "Niki",
-                "tiki",
-                "Lili",
-                "Kiki"
+                "tiki"
             ],
             "category": "orthography",
             "context": "",
@@ -20,20 +20,6 @@
             "start": 2,
             "subcategory": "orthography",
             "text": "liki"
-        },
-        {
-            "alternatives": [
-                "colours"
-            ],
-            "category": "orthography",
-            "context": "",
-            "end": 21,
-            "label": "",
-            "reason": "Correct any spelling or grammatical errors to maximize the impact of their writing.",
-            "solution": "Possible spelling mistake. ‘colors’ is American English.",
-            "start": 15,
-            "subcategory": "orthography",
-            "text": "colors"
         }
     ]
 }

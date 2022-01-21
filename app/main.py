@@ -46,6 +46,7 @@ from app.models import (
     ConfRequest,
 )
 
+from app.lang_detection import LangDetection
 from app.categories import categories
 from app.settings import get_settings
 from app.logger import set_up_logger
@@ -66,6 +67,7 @@ logging = set_up_logger(settings)
 sentry_sdk = set_up_sentry_sdk(version, settings)
 languagetool_url = get_languagetool_url(settings)
 redis = set_up_redis(settings)
+lang_detection = LangDetection()
 
 logging.debug("app started with settings: %s", settings)
 
@@ -260,13 +262,28 @@ async def check_query(
     if settings.read_rules_from_redis:
         await set_rules(user_request_in)
 
-    languagetools_results, lang = await languagetool_rules(user_request_in)
-    if isinstance(lang, Lang) != True:
+    locale = lang_detection.get_locale(
+        user_request_in.text,
+        user_request_in.lang,
+        user_request_in.config.preferred_languages,
+        user_request_in.config.preferred_variants,
+    )
+
+    if locale == None:
         response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
         return Result.factory("Language could not be determined")
 
-    language_rules_results = language_rules(user_request_in, lang)
-    list_results = languagetools_results + language_rules_results
+    lang = Lang(locale)
+
+    list_results = language_rules(user_request_in, lang)
+
+    if "orthography" not in user_request_in.config.disabled_categories:
+        try:
+            languagetools_results = await languagetool_rules(user_request_in, lang)
+            list_results = languagetools_results + list_results
+        except:
+            pass
+
     response = ResultsOut.factory(list_results, lang)
 
     background_tasks.add_task(
@@ -388,81 +405,60 @@ async def set_rules(user_request_in: RequestIn):
                     )
 
 
-async def languagetool_rules(user_request_in: RequestIn):
-    list_results = []
-    lang = None
+async def languagetool_rules(user_request_in: RequestIn, lang: Lang):
     config = user_request_in.config
     ignore = ["@", "#"]
 
+    list_results = []
     async with aiohttp.ClientSession(
         connector=aiohttp.TCPConnector(verify_ssl=settings.languagetool_verify_ssl)
     ) as session:
         payload = {
             "text": user_request_in.text,
-            "language": user_request_in.lang,
+            "language": lang.locale,
             "motherTongue": config.primary_language,
         }
-
-        if user_request_in.lang == "auto":
-            if config.preferred_languages:
-                payload["preferredLanguages"] = config.preferred_languages
-            if config.preferred_variants:
-                payload["preferredVariants"] = config.preferred_variants
 
         async with session.post(languagetool_url + "/check", data=payload) as r:
             try:
                 assert r.status == 200
                 result = await r.json()
-                if "language" in result and result["language"]["code"][0:2] in [
-                    "de",
-                    "en",
-                ]:
-                    locale = result["language"]["code"]
 
-                    if locale == "en":
-                        locale = "en-US"
-                    elif locale == "de":
-                        locale = "de-DE"
-                    elif result["language"]["code"][0:2] == "en" and locale != "en-US":
-                        locale = "en-GB"
+                for match in result["matches"]:
+                    offset = int(match["offset"])
+                    end = offset + int(match["length"])
+                    text = user_request_in.text[offset:end]
 
-                    lang = Lang(locale)
+                    # ignore text that starts with @ or #
+                    if text[0:1] in ignore or (
+                        offset > 0
+                        and user_request_in.text[offset - 1 : offset] in ignore
+                    ):
+                        continue
 
-                    if "orthography" not in config.disabled_categories:
-                        for match in result["matches"]:
-                            offset = int(match["offset"])
-                            end = offset + int(match["length"])
-                            text = user_request_in.text[offset:end]
-                            # ignore text that starts with @ or #
-                            if text[0:1] in ignore or (
-                                offset > 0
-                                and user_request_in.text[offset - 1 : offset] in ignore
-                            ):
-                                continue
+                    alternatives = []
+                    if "replacements" in match:
+                        for replacement in match["replacements"]:
+                            value = replacement["value"]
+                            value = value if value != "" else "-"
+                            alternatives.append(value)
 
-                            alternatives = []
-                            if "replacements" in match:
-                                for replacement in match["replacements"]:
-                                    value = replacement["value"]
-                                    value = value if value != "" else "-"
-                                    alternatives.append(value)
-
-                            list_results.append(
-                                ResultOut.factory(
-                                    config,
-                                    lang,
-                                    text,
-                                    user_request_in.text,
-                                    "orthography",
-                                    "orthography",
-                                    offset,
-                                    end,
-                                    alternatives,
-                                    match["shortMessage"],
-                                    None,
-                                    match["message"],
-                                )
-                            )
+                    list_results.append(
+                        ResultOut.factory(
+                            config,
+                            lang,
+                            text,
+                            user_request_in.text,
+                            "orthography",
+                            "orthography",
+                            offset,
+                            end,
+                            alternatives,
+                            match["shortMessage"],
+                            None,
+                            match["message"],
+                        )
+                    )
             except:
                 if r.status >= 500:
                     result = "Problem communicating with LanguageTool"
@@ -472,9 +468,9 @@ async def languagetool_rules(user_request_in: RequestIn):
                     except:
                         pass
 
-                    raise Exception(result)
+                    logging.error(result)
 
-    return list_results, lang
+    return list_results
 
 
 def language_rules(user_request_in: RequestIn, lang: Lang):
