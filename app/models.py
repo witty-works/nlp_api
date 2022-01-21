@@ -50,6 +50,11 @@ class LangWithAutoType(str, Enum):
     AUTO = "auto"
     EN = "en"
     DE = "de"
+    deDE = "de-DE"
+    deCH = "de-CH"
+    deAT = "de-AT"
+    enUS = "en-US"
+    enGB = "en-GB"
 
 
 class GenderedRolesFormatType(str, Enum):
@@ -60,10 +65,21 @@ class GenderedRolesFormatType(str, Enum):
 
 class Config(BaseModel):
     store_context: Optional[bool] = True
-    primary_language: Optional[str] = "de-DE"
-    preferred_languages: Optional[str] = "de,en"
-    preferred_variants: Optional[str] = "de-DE,en-GB"
-    german_gender_ending: Optional[str] = ":in"
+    primary_language: str = LangWithAutoType.deDE
+    preferred_languages: List = [LangWithAutoType.EN, LangWithAutoType.DE]
+    _supported_langs = [
+        LangType.DE,
+        LangType.EN,
+    ]
+    preferred_variants: List = [LangWithAutoType.enUS, LangWithAutoType.deDE]
+    _supported_locales = [
+        LangWithAutoType.deDE,
+        LangWithAutoType.deCH,
+        LangWithAutoType.deAT,
+        LangWithAutoType.enUS,
+        LangWithAutoType.enGB,
+    ]
+    german_gender_ending: str = ":in"
     _gendereddenom_ending = {
         "/in": "/in",
         "/-in": "/-in",
@@ -72,19 +88,51 @@ class Config(BaseModel):
         ":in": ":in",
         "In": r"In\b",
     }
-    disabled_categories: Optional[List] = []
-    gendered_roles_format: Optional[
-        GenderedRolesFormatType
-    ] = GenderedRolesFormatType.BOTH
+    disabled_categories: List = []
+    gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
 
     @validator("german_gender_ending")
     def valid_german_gender_ending(cls, v: str):
-        if v not in cls._gendereddenom_ending:
-            raise ValueError("Not supported german_gender_ending")
+        if v not in Config._gendereddenom_ending:
+            raise ValueError("Not supported german_gender_ending: " + v)
         return v
 
+    @validator("primary_language", pre=True)
+    def valid_primary_language(cls, v):
+        if v not in Config._supported_locales:
+            raise ValueError("Not supported primary_language: " + v)
+        return v
+
+    @validator("preferred_languages", pre=True)
+    def valid_preferred_languages(cls, v):
+        if isinstance(v, str) and v != "":
+            v = [s.strip() for s in v.split(",")]
+
+        if isinstance(v, list) and v != []:
+            for lang in v:
+                if lang not in Config._supported_langs:
+                    raise ValueError("Contains not supported preferred_languages: " + ",".join(v))
+
+            return v
+
+        return []
+
+    @validator("preferred_variants", pre=True)
+    def valid_preferred_variants(cls, v):
+        if isinstance(v, str) and v != "":
+            v = [s.strip() for s in v.split(",")]
+
+        if isinstance(v, list) and v != []:
+            for lang in v:
+                if lang not in Config._supported_locales:
+                    raise ValueError("Contains not supported preferred_variants: " + ",".join(v))
+
+            return v
+
+        return []
+
     @validator("disabled_categories", pre=True)
-    def split_string_values(cls, v):
+    def valid_disabled_categories(cls, v):
         if isinstance(v, str):
             return v.split(",")
         return v
@@ -93,25 +141,51 @@ class Config(BaseModel):
 class ForcedConfig(BaseModel):
     store_context: Optional[bool]
     primary_language: Optional[str]
-    preferred_languages: Optional[str]
-    preferred_variants: Optional[str]
+    preferred_languages: Optional[List]
+    preferred_variants: Optional[List]
     german_gender_ending: Optional[str]
-    _gendereddenom_ending = {
-        "/in": "/in",
-        "/-in": "/-in",
-        "_in": "_in",
-        "*in": "\\*in",
-        ":in": ":in",
-        "In": r"In\b",
-    }
     disabled_categories: Optional[List]
     gendered_roles_format: Optional[GenderedRolesFormatType]
 
     @validator("german_gender_ending")
     def valid_german_gender_ending(cls, v: str):
-        if v not in cls._gendereddenom_ending:
+        if v not in Config._gendereddenom_ending:
             raise ValueError("Not supported german_gender_ending")
         return v
+
+    @validator("primary_language", pre=True)
+    def valid_primary_language(cls, v):
+        if v not in Config._supported_locales:
+            raise ValueError("Not supported primary_language: " + v)
+        return v
+
+    @validator("preferred_languages", pre=True)
+    def valid_preferred_languages(cls, v):
+        if isinstance(v, str) and v != "":
+            v = [s.strip() for s in v.split(",")]
+
+        if isinstance(v, list) and v != []:
+            for lang in v:
+                if lang not in Config._supported_langs:
+                    raise ValueError("Contains not supported preferred_languages: " + ",".join(v))
+
+            return v
+
+        return []
+
+    @validator("preferred_variants", pre=True)
+    def valid_preferred_variants(cls, v):
+        if isinstance(v, str) and v != "":
+            v = [s.strip() for s in v.split(",")]
+
+        if isinstance(v, list) and v != []:
+            for lang in v:
+                if lang not in Config._supported_locales:
+                    raise ValueError("Contains not supported preferred_variants: " + ",".join(v))
+
+            return v
+
+        return []
 
     @validator("disabled_categories", pre=True)
     def split_string_values(cls, v):

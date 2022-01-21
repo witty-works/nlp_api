@@ -4,6 +4,7 @@
 
 venv-nlp-api/
 
+training_data/lid.176.bin
 user_training_data
 logs
 app/.env

@@ -7,7 +7,7 @@ rules = {
         # load agentic language
         "df_agentic_ct": "agentic.csv",
         # load Gender denom
-        "df_gender_ct": "gendered_noun.csv",
+        "df_gender_ct": "gendered_noun_words.csv",
         "df_articles": "articles.csv",
         # load style words
         "df_style_word": "style_words.csv",
@@ -25,6 +25,8 @@ rules = {
         "df_d_and_i_words_sentences": "d_and_i_sentences.csv",
         # load communal coded terms
         "df_communal_words": "communal.csv",
+        # load gender false positive
+        "df_gender_false_positive": "gender_false_positive.csv",
     },
     "en-US": {
         # load openly discriminating words
@@ -71,6 +73,9 @@ rules["de-DE"]["false_positive_agentic_const"] = [
     "unabhängig",
     "Entwickler",
 ]
+rules["de-DE"]["gender_false_positive"] = list(
+    rules["de-DE"]["df_gender_false_positive"]["False_positives"]
+)
 rules["de-DE"]["false_positive_style"] = ["international"]
 rules["de-DE"]["exceptions"] = [
     "Unternehmen",
@@ -91,12 +96,13 @@ df_agentic = rules["de-DE"]["df_agentic_ct"]
 agentic_words_alternatives = list(zip(df_agentic["Lemma"], df_agentic["Alt_split"]))
 # df gender
 df_gender = rules["de-DE"]["df_gender_ct"]
-# gender: words + singular alternatives + plural alternatives + subcategory
+# gender: words + singular alternatives + plural alternatives + all alternatives + subcategory
 gender_words_alternatives = list(
     zip(
         df_gender["Lemma"],
-        df_gender["Sg_all_clean"],
-        df_gender["Pl_all_clean"],
+        df_gender["Sg_all_split"],
+        df_gender["Pl_all_split"],
+        df_gender["Alt_split"],
         df_gender["Primary_subcategory"],
     )
 )

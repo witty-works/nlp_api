@@ -1,0 +1,8 @@
+{
+    "text": "Wie geht es?",
+    "config": {
+        "preferred_languages": "de, en",
+        "preferred_variants": "de-DE, en-US",
+        "store_context": false
+    }
+}

@@ -7,7 +7,6 @@ import json
 import secrets
 import aiohttp
 import copy
-import sys
 
 from fastapi import (
     FastAPI,
@@ -26,14 +25,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi.exception_handlers import http_exception_handler
 from starlette.responses import RedirectResponse, PlainTextResponse
-from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from typing import Optional, Union
 
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
-from sentry_sdk import configure_scope
 
 from spacy.tokens import Doc
 from spacy.matcher import PhraseMatcher, Matcher
@@ -50,10 +46,10 @@ from app.models import (
     ConfRequest,
 )
 
+from app.lang_detection import LangDetection
 from app.categories import categories
 from app.settings import get_settings
 from app.logger import set_up_logger
-from app.posthog import set_up_posthog
 from app.redis import set_up_redis
 from app.languagetool import get_languagetool_url
 from app.model import model
@@ -64,20 +60,17 @@ from collections import namedtuple, defaultdict
 from collections import namedtuple
 from app.sentry import set_up_sentry_sdk
 
-version = "1.13.8"
+version = "1.14.0"
 
 settings = get_settings()
 logging = set_up_logger(settings)
 sentry_sdk = set_up_sentry_sdk(version, settings)
-posthog = set_up_posthog(settings)
 languagetool_url = get_languagetool_url(settings)
 redis = set_up_redis(settings)
+lang_detection = LangDetection()
 
 logging.debug("app started with settings: %s", settings)
 
-# Regular expression library
-# convert string of list into list of the strings
-# project models
 
 app = FastAPI(
     title="Witty NLP API",
@@ -95,29 +88,6 @@ try:
 except Exception:
     # pass silently if the Sentry integration failed
     pass
-
-
-@app.exception_handler(HTTPException)
-async def custom_http_exception_handler(request: Request, exc: StarletteHTTPException):
-    if sentry_sdk:
-        with configure_scope() as scope:
-            sentry_sdk.transaction = request.scope["path"][1:]
-
-        # settings.browser_id no longer needed once https://github.com/encode/starlette/pull/944 is merged
-        if hasattr(request.state, "browser_id"):
-            sentry_sdk.set_user({"id": request.state.browser_id})
-
-        sentry_sdk.capture_exception(exc)
-
-        info = sys.exc_info()
-        data = {
-            "detail": exc.detail,
-            "type": str(info[0]),
-            "path": request.scope["path"][1:],
-        }
-        posthog.capture(request.state.browser_id, "$exception", data)
-
-    return await http_exception_handler(request, exc)
 
 
 security = HTTPBasic(auto_error=False)
@@ -157,18 +127,19 @@ def get_false_positive_from_redis(userId: str):
 
 FalsePositive = namedtuple("FalsePositive", "gender agentic")
 # TODO: userId will be taken from the authentication token
-def get_false_positive(false_positive_agentic_const, userId=""):
+def get_false_positive(gender_false_positive, false_positive_agentic_const, userId=""):
     corporate_false_positive = []
     if userId:
         corporate_false_positive = get_false_positive_from_redis(userId)
     fp = FalsePositive(
-        corporate_false_positive,
+        gender_false_positive + corporate_false_positive,
         false_positive_agentic_const + corporate_false_positive,
     )
     return fp
 
 
 false_positive = get_false_positive(
+    rules["de-DE"]["gender_false_positive"],
     rules["de-DE"]["false_positive_agentic_const"],
 )
 
@@ -215,18 +186,14 @@ def get_current_username(
     return credentials.username
 
 
-@app.get("/")
-def get_root():
-    return RedirectResponse(url="/form", status_code=301)
-
-
+# debugging routes
 @app.post("/exception")
 async def exception(
     request: Request,
     user_request_in: RequestIn,
     username: str = Depends(get_current_username),
 ):
-    set_browser_id(request, id)
+    configure_sentry(request, id)
 
     raise HTTPException(status_code=500, detail=user_request_in.text)
 
@@ -246,6 +213,23 @@ def openapi(username: str = Depends(get_current_username)):
     return get_openapi(title=app.title, version=app.version, routes=app.routes)
 
 
+@app.post("/serialize", response_class=PlainTextResponse)
+def serialize(
+    request: Request,
+    user_request_in: RequestIn,
+    username: str = Depends(get_current_username),
+):
+    configure_sentry(request, user_request_in.id)
+    data = collect_user_training_data(user_request_in, ResultsOut([], "en"))
+    return json.dumps(data)
+
+
+# public routes
+@app.get("/")
+def get_root():
+    return RedirectResponse(url="/form", status_code=301)
+
+
 @app.get("/form", response_class=HTMLResponse)
 def form(request: Request):
     return templates.TemplateResponse("form.html", {"request": request})
@@ -256,25 +240,6 @@ def get_categories(lang: LangType = "de"):
     return categories_with_labels[lang]
 
 
-@app.post("/serialize", response_class=PlainTextResponse)
-def serialize(
-    request: Request,
-    user_request_in: RequestIn,
-    username: str = Depends(get_current_username),
-):
-    set_browser_id(request, user_request_in.id)
-    data = collect_user_training_data(user_request_in, ResultsOut([], "en"))
-    return json.dumps(data)
-
-
-@app.post("/log", status_code=201)
-def log(
-    request: Request, user_request_in: RequestInEvent, background_tasks: BackgroundTasks
-):
-    set_browser_id(request, user_request_in.id)
-    background_tasks.add_task(write_user_training_data, request, user_request_in)
-
-
 @app.post("/check", response_model=Union[Result, ResultsOut])
 async def check_query(
     request: Request,
@@ -282,7 +247,7 @@ async def check_query(
     user_request_in: RequestIn,
     background_tasks: BackgroundTasks,
 ):
-    set_browser_id(request, user_request_in.id)
+    configure_sentry(request, user_request_in.id)
 
     if sentry_sdk:
         sentry_sdk.set_context(
@@ -292,13 +257,28 @@ async def check_query(
     if settings.read_rules_from_redis:
         await set_rules(user_request_in)
 
-    languagetools_results, lang = await languagetool_rules(user_request_in)
-    if isinstance(lang, Lang) != True:
+    locale = lang_detection.get_locale(
+        user_request_in.text,
+        user_request_in.lang,
+        user_request_in.config.preferred_languages,
+        user_request_in.config.preferred_variants,
+    )
+
+    if locale == None:
         response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
         return Result.factory("Language could not be determined")
 
-    language_rules_results = language_rules(user_request_in, lang)
-    list_results = languagetools_results + language_rules_results
+    lang = Lang(locale)
+
+    list_results = language_rules(user_request_in, lang)
+
+    if "orthography" not in user_request_in.config.disabled_categories:
+        try:
+            languagetools_results = await languagetool_rules(user_request_in, lang)
+            list_results = languagetools_results + list_results
+        except:
+            pass
+
     response = ResultsOut.factory(list_results, lang)
 
     background_tasks.add_task(
@@ -308,6 +288,7 @@ async def check_query(
     return response
 
 
+# data exchange routes
 @app.post("/storeRules")
 async def store_redis(corporate_rules: ConfRequest):
     try:
@@ -343,8 +324,6 @@ async def get_redis(user: str):
 
 
 # Functions
-
-
 def is_number_list_empty(number, token):
     if not number:
         logging.error(
@@ -354,8 +333,12 @@ def is_number_list_empty(number, token):
     return False
 
 
-def set_browser_id(request: Request, id):
-    request.state.browser_id = str(id)
+def configure_sentry(request: Request, id):
+    id = str(id)
+
+    if sentry_sdk:
+        sentry_sdk.transaction = request.scope["path"][1:]
+        sentry_sdk.set_user({"id": id})
 
 
 async def set_rules(user_request_in: RequestIn):
@@ -416,80 +399,60 @@ async def set_rules(user_request_in: RequestIn):
                     )
 
 
-async def languagetool_rules(user_request_in: RequestIn):
-    list_results = []
-    lang = None
+async def languagetool_rules(user_request_in: RequestIn, lang: Lang):
     config = user_request_in.config
+    ignore = ["@", "#"]
 
+    list_results = []
     async with aiohttp.ClientSession(
         connector=aiohttp.TCPConnector(verify_ssl=settings.languagetool_verify_ssl)
     ) as session:
         payload = {
             "text": user_request_in.text,
-            "language": user_request_in.lang,
+            "language": lang.locale,
             "motherTongue": config.primary_language,
         }
-
-        if user_request_in.lang == "auto":
-            if config.preferred_languages:
-                payload["preferredLanguages"] = config.preferred_languages
-            if config.preferred_variants:
-                payload["preferredVariants"] = config.preferred_variants
 
         async with session.post(languagetool_url + "/check", data=payload) as r:
             try:
                 assert r.status == 200
                 result = await r.json()
-                if "language" in result and result["language"]["code"][0:2] in [
-                    "de",
-                    "en",
-                ]:
-                    locale = result["language"]["code"]
 
-                    if locale == "en":
-                        locale = "en-US"
-                    elif locale == "de":
-                        locale = "de-DE"
-                    elif result["language"]["code"][0:2] == "en" and locale != "en-US":
-                        locale = "en-GB"
+                for match in result["matches"]:
+                    offset = int(match["offset"])
+                    end = offset + int(match["length"])
+                    text = user_request_in.text[offset:end]
 
-                    lang = Lang(locale)
+                    # ignore text that starts with @ or #
+                    if text[0:1] in ignore or (
+                        offset > 0
+                        and user_request_in.text[offset - 1 : offset] in ignore
+                    ):
+                        continue
 
-                    if "orthography" not in config.disabled_categories:
-                        for match in result["matches"]:
-                            offset = int(match["offset"])
-                            end = offset + int(match["length"])
-                            if (
-                                config.german_gender_ending
-                                == user_request_in.text[
-                                    end : end + len(config.german_gender_ending)
-                                ]
-                            ):
-                                continue
+                    alternatives = []
+                    if "replacements" in match:
+                        for replacement in match["replacements"]:
+                            value = replacement["value"]
+                            value = value if value != "" else "-"
+                            alternatives.append(value)
 
-                            alternatives = []
-                            if "replacements" in match:
-                                for replacement in match["replacements"]:
-                                    value = replacement["value"]
-                                    value = value if value != "" else "-"
-                                    alternatives.append(value)
-
-                            list_results.append(
-                                ResultOut.factory(
-                                    config,
-                                    lang,
-                                    user_request_in.text[offset:end],
-                                    user_request_in.text,
-                                    "orthography",
-                                    "orthography",
-                                    offset,
-                                    end,
-                                    alternatives,
-                                    match["shortMessage"],
-                                    None,
-                                    match["message"],
-                                )
-                            )
+                    list_results.append(
+                        ResultOut.factory(
+                            config,
+                            lang,
+                            text,
+                            user_request_in.text,
+                            "orthography",
+                            "orthography",
+                            offset,
+                            end,
+                            alternatives,
+                            match["shortMessage"],
+                            None,
+                            match["message"],
+                        )
+                    )
             except:
                 if r.status >= 500:
                     result = "Problem communicating with LanguageTool"
@@ -499,9 +462,9 @@ async def languagetool_rules(user_request_in: RequestIn):
                     except:
                         pass
 
-                    raise Exception(result)
+                    logging.error(result)
 
-    return list_results, lang
+    return list_results
 
 
 def language_rules(user_request_in: RequestIn, lang: Lang):
@@ -969,10 +932,12 @@ def GenderedDenomAnalysisDE(
                 word,
                 alternative_sing,
                 alternative_plur,
+                alternative_all,
                 subcategory,
             ) in gender_words_alternatives:
                 if c_doc[i].lemma_ == word:
-                    if c_doc[i].morph.get("Number")[0] == "Sing":
+                    c_doc_morph_number = c_doc[i].morph.get("Number")
+                    if is_number_list_empty(c_doc_morph_number, c_doc[i]):
                         list_tokens.append(
                             ResultOut.factory(
                                 config,
@@ -983,38 +948,53 @@ def GenderedDenomAnalysisDE(
                                 subcategory,
                                 c_doc[i].idx,
                                 None,
-                                ast.literal_eval(alternative_sing),
+                                ast.literal_eval(alternative_all),
                             )
                         )
-                        for article, article_alternative in articles:
-                            if c_doc[i - 1].text == article:
-                                list_tokens.append(
-                                    ResultOut.factory(
-                                        config,
-                                        lang,
-                                        c_doc[i - 1].text,
-                                        full_text,
-                                        category,
-                                        subcategory,
-                                        c_doc[i - 1].idx,
-                                        None,
-                                        [article_alternative],
-                                    )
+                    else:
+                        if c_doc_morph_number[0] == "Sing":
+                            list_tokens.append(
+                                ResultOut.factory(
+                                    config,
+                                    lang,
+                                    c_doc[i].text,
+                                    full_text,
+                                    category,
+                                    subcategory,
+                                    c_doc[i].idx,
+                                    None,
+                                    ast.literal_eval(alternative_sing),
                                 )
-                    elif c_doc[i].morph.get("Number")[0] == "Plur":
-                        list_tokens.append(
-                            ResultOut.factory(
-                                config,
-                                lang,
-                                c_doc[i].text,
-                                full_text,
-                                category,
-                                subcategory,
-                                c_doc[i].idx,
-                                None,
-                                ast.literal_eval(alternative_plur),
                             )
-                        )
+                            for article, article_alternative in articles:
+                                if c_doc[i - 1].text == article:
+                                    list_tokens.append(
+                                        ResultOut.factory(
+                                            config,
+                                            lang,
+                                            c_doc[i - 1].text,
+                                            full_text,
+                                            category,
+                                            subcategory,
+                                            c_doc[i - 1].idx,
+                                            None,
+                                            [article_alternative],
+                                        )
+                                    )
+                        elif c_doc_morph_number[0] == "Plur":
+                            list_tokens.append(
+                                ResultOut.factory(
+                                    config,
+                                    lang,
+                                    c_doc[i].text,
+                                    full_text,
+                                    category,
+                                    subcategory,
+                                    c_doc[i].idx,
+                                    None,
+                                    ast.literal_eval(alternative_plur),
+                                )
+                            )
 
     else:
         for i in range(len(tokens)):
@@ -1022,13 +1002,12 @@ def GenderedDenomAnalysisDE(
                 word,
                 alternative_sing,
                 alternative_plur,
+                alternative_all,
                 subcategory,
             ) in gender_words_alternatives:
                 if tokens[i].lemma_ == word:
                     token_morph_number = tokens[i].morph.get("Number")
                     if is_number_list_empty(token_morph_number, tokens[i]):
-                        continue
-                    if token_morph_number[0] == "Sing":
                         list_tokens.append(
                             ResultOut.factory(
                                 config,
@@ -1039,38 +1018,53 @@ def GenderedDenomAnalysisDE(
                                 subcategory,
                                 tokens[i].idx,
                                 None,
-                                ast.literal_eval(alternative_sing),
+                                ast.literal_eval(alternative_all),
                             )
                         )
-                        for article, article_alternative in articles:
-                            if tokens[i - 1].text == article:
-                                list_tokens.append(
-                                    ResultOut.factory(
-                                        config,
-                                        lang,
-                                        tokens[i - 1].text,
-                                        full_text,
-                                        category,
-                                        subcategory,
-                                        tokens[i - 1].idx,
-                                        None,
-                                        [article_alternative],
-                                    )
+                    else:
+                        if token_morph_number[0] == "Sing":
+                            list_tokens.append(
+                                ResultOut.factory(
+                                    config,
+                                    lang,
+                                    tokens[i].text,
+                                    full_text,
+                                    category,
+                                    subcategory,
+                                    tokens[i].idx,
+                                    None,
+                                    ast.literal_eval(alternative_sing),
                                 )
-                    elif token_morph_number[0] == "Plur":
-                        list_tokens.append(
-                            ResultOut.factory(
-                                config,
-                                lang,
-                                tokens[i].text,
-                                full_text,
-                                category,
-                                subcategory,
-                                tokens[i].idx,
-                                None,
-                                ast.literal_eval(alternative_plur),
                             )
-                        )
+                            for article, article_alternative in articles:
+                                if tokens[i - 1].text == article:
+                                    list_tokens.append(
+                                        ResultOut.factory(
+                                            config,
+                                            lang,
+                                            tokens[i - 1].text,
+                                            full_text,
+                                            category,
+                                            subcategory,
+                                            tokens[i - 1].idx,
+                                            None,
+                                            [article_alternative],
+                                        )
+                                    )
+                        elif token_morph_number[0] == "Plur":
+                            list_tokens.append(
+                                ResultOut.factory(
+                                    config,
+                                    lang,
+                                    tokens[i].text,
+                                    full_text,
+                                    category,
+                                    subcategory,
+                                    tokens[i].idx,
+                                    None,
+                                    ast.literal_eval(alternative_plur),
+                                )
+                            )
 
     return list_tokens
 

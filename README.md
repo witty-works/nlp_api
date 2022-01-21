@@ -39,6 +39,7 @@ docker run  -p 8000:8000 --name nlp --network "bridge" --env languagetool_api=ht
 pipenv install --dev
 pipenv run python3.9 -m spacy download en_core_web_sm --no-cache-dir
 pipenv run python3.9 -m spacy download de_core_news_sm --no-cache-dir
+wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 ```
 
 ## using virtual environment (venv)
@@ -206,6 +207,24 @@ pipenv run python -m analyze_rules -i [CSV export]]
 ```
 pipenv run python -m add_alternatives_to_ignore
 ```
+## Update the false positive list 
+1. Remove gender_false_positive.csv file:
+```
+rm training_data/de-DE/gender_false_positive.csv
+```
+2. Create new csv file with  dummy entry
+```
+echo "False_positives" >> training_data/de-DE/gender_false_positive.csv
+```
+3. Run server locally (or restart to re-read the training data), for example with pipenv:
+```
+pipenv run uvicorn app.main:app --reload
+```
+4. Run the generate_false_positive.py file
+```
+pipenv run python -m generate_false_positive
+```
+* If you get an error here, please repeat steps 1-2 and run the script again.
 
 ## Generate en-GB rules
 

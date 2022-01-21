@@ -1,15 +1,22 @@
-from os import pathconf
 import pytest
 from pathlib import Path
 from fastapi.testclient import TestClient
 from app.main import app, redis, set_rules, get_false_positive, false_positive
 import json
-from app.models import RequestIn
-
+from app.models import (
+    LangWithAutoType,
+    RequestIn,
+)
 from app import main
 from unittest import mock
 
 client = TestClient(app)
+
+
+def get_dirs(path):
+    return list(
+        subpath for subpath in Path(path).iterdir() if not subpath.name.startswith(".")
+    )
 
 
 def test_read_main():
@@ -24,7 +31,7 @@ def test_read_form():
 
 @pytest.mark.parametrize(
     "ending_case_dir",
-    list(Path("tests/test_sentry_examples").iterdir()),
+    get_dirs("tests/test_sentry_examples"),
 )
 def test_sentry_examples(ending_case_dir, snapshot):
 
@@ -42,7 +49,7 @@ def test_sentry_examples(ending_case_dir, snapshot):
 
 @pytest.mark.parametrize(
     "ending_case_dir",
-    list(Path("tests/test_spacy_model").iterdir()),
+    get_dirs("tests/test_spacy_model"),
 )
 def test_spacy_model(ending_case_dir, snapshot):
 
@@ -60,7 +67,7 @@ def test_spacy_model(ending_case_dir, snapshot):
 
 @pytest.mark.parametrize(
     "ending_case_dir",
-    list(Path("tests/test_demo_wordings_english").iterdir()),
+    get_dirs("tests/test_demo_wordings_english"),
 )
 def test_demo_wordings_english(ending_case_dir, snapshot):
 
@@ -78,7 +85,7 @@ def test_demo_wordings_english(ending_case_dir, snapshot):
 
 @pytest.mark.parametrize(
     "ending_case_dir",
-    list(Path("tests/test_demo_wordings_german").iterdir()),
+    get_dirs("tests/test_demo_wordings_german"),
 )
 def test_demo_wordings_german(ending_case_dir, snapshot):
 
@@ -96,7 +103,7 @@ def test_demo_wordings_german(ending_case_dir, snapshot):
 
 @pytest.mark.parametrize(
     "general_case_dir",
-    list(Path("tests/test_general_cases").iterdir()),
+    get_dirs("tests/test_general_cases"),
 )
 def test_json(general_case_dir, snapshot):
 
@@ -114,7 +121,7 @@ def test_json(general_case_dir, snapshot):
 
 @pytest.mark.parametrize(
     "orthoraphy_case_dir",
-    list(Path("tests/test_orthography").iterdir()),
+    get_dirs("tests/test_orthography"),
 )
 def test_orthoraphy(orthoraphy_case_dir, snapshot):
 
@@ -132,7 +139,7 @@ def test_orthoraphy(orthoraphy_case_dir, snapshot):
 
 @pytest.mark.parametrize(
     "ending_case_dir",
-    list(Path("tests/test_gender_ending").iterdir()),
+    get_dirs("tests/test_gender_ending"),
 )
 def test_gender_ending(ending_case_dir, snapshot):
 
@@ -155,7 +162,7 @@ def test_api_missing_data():
 
 @pytest.mark.parametrize(
     "detection_case_dir",
-    list(Path("tests/test_language_detection").iterdir()),
+    get_dirs("tests/test_language_detection"),
 )
 def test_language_detection(detection_case_dir, snapshot):
 
@@ -173,7 +180,7 @@ def test_language_detection(detection_case_dir, snapshot):
 
 @pytest.mark.parametrize(
     "fails_case_dir",
-    list(Path("tests/test_fails").iterdir()),
+    get_dirs("tests/test_fails"),
 )
 def test_language_detection_fail(fails_case_dir, snapshot):
 
@@ -183,19 +190,6 @@ def test_language_detection_fail(fails_case_dir, snapshot):
     response = client.post("/check", json=json.loads(input_json))
     assert response.status_code == 422
 
-
-def test_log(snapshot):
-    # Read input files from the case directory.
-    log_case_dir = Path("tests/test_log")
-    input_json = log_case_dir.joinpath("input.json").read_text()
-    print("input_json", input_json)
-    # Call the tested endpoint.
-    response = client.post("/log", json=json.loads(input_json))
-    assert response.status_code == 201
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    snapshot.snapshot_dir = "tests/test_log"
-    snapshot.assert_match(output, "output.json")
 
 
 def test_categories():
@@ -215,8 +209,8 @@ def set_redis():
             "forced": {
                 "store_context": False,
                 "primary_language": "en-GB",
-                "preferred_languages": "en",
-                "preferred_variants": "en-GB",
+                "preferred_languages": ["en"],
+                "preferred_variants": ["en-GB"],
                 "german_gender_ending": "In",
                 "gendered_roles_format": "binary_gender",
             },
@@ -239,7 +233,7 @@ def set_redis():
 
 @pytest.mark.parametrize(
     "fp_case_dir",
-    list(Path("tests/test_false_positive").iterdir()),
+    get_dirs("tests/test_false_positive"),
 )
 def test_false_positive(fp_case_dir, snapshot, set_redis):
     false_positive_agentic_const = [
@@ -249,7 +243,7 @@ def test_false_positive(fp_case_dir, snapshot, set_redis):
         "unabhängig",
         "Entwickler",
     ]
-
+    gender_false_positive = ["Abdichterinnen und Abdichter"]
     # Read input files from the case directory.
     input_json = fp_case_dir.joinpath("input.json").read_text()
     # call set_false_positive_agentic to read data from redis
@@ -258,7 +252,7 @@ def test_false_positive(fp_case_dir, snapshot, set_redis):
     patcher = mock.patch.object(
         main,
         "false_positive",
-        get_false_positive(false_positive_agentic_const, userId),
+        get_false_positive(gender_false_positive, false_positive_agentic_const, userId),
     )
     patcher.start()
     # Call the tested endpoint.
@@ -291,8 +285,8 @@ def test_set_rules(event_loop, set_redis):
     event_loop.run_until_complete(set_rules(test_request))
     assert test_request.config.store_context == False
     assert test_request.config.primary_language == "en-GB"
-    assert test_request.config.preferred_languages == "en"
-    assert test_request.config.preferred_variants == "en-GB"
+    assert test_request.config.preferred_languages == ["en"]
+    assert test_request.config.preferred_variants == ["en-GB"]
     assert test_request.config.german_gender_ending == "In"
     assert test_request.config.gendered_roles_format == "binary_gender"
 
@@ -317,8 +311,8 @@ def test_set_rules_suggestion(event_loop, set_redis):
     test_result = event_loop.run_until_complete(set_rules(test_request))
     assert test_request.config.store_context == True
     assert test_request.config.primary_language == "de-DE"
-    assert test_request.config.preferred_languages == "de"
-    assert test_request.config.preferred_variants == "de-DE"
+    assert test_request.config.preferred_languages == ["de"]
+    assert test_request.config.preferred_variants == ["de-DE"]
     assert test_request.config.german_gender_ending == "/in"
     assert test_request.config.gendered_roles_format == "inclusive_gender"
 
@@ -335,8 +329,8 @@ def test_set_organization_rules(event_loop, set_redis):
     event_loop.run_until_complete(set_rules(test_request))
     assert test_request.config.store_context == False
     assert test_request.config.primary_language == "en-GB"
-    assert test_request.config.preferred_languages == "en"
-    assert test_request.config.preferred_variants == "en-GB"
+    assert test_request.config.preferred_languages == ["en"]
+    assert test_request.config.preferred_variants == ["en-GB"]
     assert test_request.config.german_gender_ending == "In"
     assert test_request.config.gendered_roles_format == "binary_gender"
 
@@ -354,8 +348,14 @@ def test_set_default_rules(event_loop):
     event_loop.run_until_complete(set_rules(test_request))
     assert test_request.config.store_context == True
     assert test_request.config.primary_language == "de-DE"
-    assert test_request.config.preferred_languages == "de,en"
-    assert test_request.config.preferred_variants == "de-DE,en-GB"
+    assert test_request.config.preferred_languages == [
+        LangWithAutoType.EN,
+        LangWithAutoType.DE,
+    ]
+    assert test_request.config.preferred_variants == [
+        LangWithAutoType.enUS,
+        LangWithAutoType.deDE,
+    ]
     assert test_request.config.german_gender_ending == ":in"
     assert test_request.config.gendered_roles_format == "both"
 
@@ -377,6 +377,7 @@ def test_store_rules():
         response_content["config"]["forced"]["gendered_roles_format"] == "binary_gender"
     )
     assert response_content["config"]["suggestion"]["german_gender_ending"] == "In"
-    assert (
-        response_content["config"]["suggestion"]["preferred_variants"] == "de-DE,en-GB"
-    )
+    assert response_content["config"]["suggestion"]["preferred_variants"] == [
+        "en-US",
+        "de-DE",
+    ]
