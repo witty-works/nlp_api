@@ -68,12 +68,18 @@ if not check_if_false_positive_contains_dummy_data(false_positive_path):
         false_positive_path,
     )
     exit(1)
+base_directory = "training_data/de-DE/"
+training_data_paths = []
+for file in os.listdir(base_directory):
+    training_data_paths.append(base_directory + file)
 
+
+"""
 rules = {}
 rules["training_data/de-DE/agentic.csv"] = ["Alt_split"]
 rules["training_data/de-DE/gendered_noun.csv"] = ["Sg_all_clean", "Pl_all_clean"]
 # following files do not add anything to false_positive list
-"""
+
 rules["training_data/de-DE/hollow_sentences.csv"] = [
     "Alternative_Plural_split",
     "Alternative_Singular_split",
@@ -89,29 +95,29 @@ rules["training_data/de-DE/style_sentences.csv"] = ["Alt_split"]
 rules["training_data/de-DE/style_words.csv"] = ["Alt_split"]
 
 rules["training_data/de-DE/ub_no_noun_words.csv"] = ["Alt_split"]
-"""
+
 rules["training_data/de-DE/ub_noun_words.csv"] = ["Alt_split"]
 rules["training_data/de-DE/ub_sentences.csv"] = ["Alt_split"]
-
+"""
 columns = defaultdict(list)
 all_alternative_groups = []
 all_alternatives = []
 clean_words = []
 
 all_file_allternatives = []
-for r in rules:
-    training_data_full_path = r
-    with open(training_data_full_path) as f:
+for training_data_path in training_data_paths:
+    with open(training_data_path) as f:
         reader = csv.DictReader(f)
-        for row in reader:
-            for column in rules[r]:
-                value = row[column]
+        column_names = reader.fieldnames
+        if "Alt_split" in column_names:
+            for row in reader:
+                value = row["Alt_split"]
                 value = value.replace("'", '"')
                 try:
                     all_alternative_groups += json.loads(value)
                 except:
                     continue
-    all_file_allternatives += all_alternative_groups
+
 
 all_alternative_groups = set(all_alternative_groups)
 
