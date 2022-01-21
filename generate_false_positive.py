@@ -69,16 +69,6 @@ if not check_if_false_positive_contains_dummy_data(false_positive_path):
     )
     exit(1)
 
-base_directory = "training_data/"
-training_data_paths = defaultdict(list)
-for directory in os.listdir(base_directory):
-    for file in os.listdir(base_directory + directory):
-        training_data_paths[directory].append(base_directory + directory + "/" + file)
-
-for key in training_data_paths.keys():
-    training_data_paths[key] = sorted(training_data_paths[key])
-
-
 rules = {}
 rules["training_data/de-DE/agentic.csv"] = ["Alt_split"]
 rules["training_data/de-DE/gendered_noun.csv"] = ["Sg_all_clean", "Pl_all_clean"]
@@ -167,7 +157,13 @@ def checked_false_positive_list(api_url, potential_false_positive):
         for word in potential_false_positive[locale]:
             response = requests.post(
                 api_url,
-                json={"text": word, "lang": "auto"},
+                json={
+                    "text": word,
+                    "lang": locale,
+                    "config": {
+                        "disabled_categories": ["orthography"],
+                    },
+                },
             )
 
             if response.status_code != 200:
