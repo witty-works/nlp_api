@@ -1,0 +1,38 @@
+{
+    "language": "en",
+    "results": [
+        {
+            "alternatives": [
+                "Helo"
+            ],
+            "category": "orthography",
+            "context": "\n\nhelo ninja",
+            "end": 6,
+            "label": "",
+            "reason": "Correct any spelling or grammatical errors to maximize the impact of their writing.",
+            "solution": "This sentence does not start with an uppercase letter.",
+            "start": 2,
+            "subcategory": "orthography",
+            "text": "helo"
+        },
+        {
+            "alternatives": [
+                "dedicated",
+                "committed",
+                "person who continues despite difficulties",
+                "someone devoted to their purpose",
+                "someone who sticks to their goal",
+                "someone willing to see things through"
+            ],
+            "category": "style",
+            "context": "\n\nhelo ninja",
+            "end": 12,
+            "label": "Style: Exaggeration",
+            "reason": "Communicates that people have to conform to these superlatives.",
+            "solution": "Use an authentic and honest sounding statement.",
+            "start": 7,
+            "subcategory": "exaggerating",
+            "text": "ninja"
+        }
+    ]
+}
