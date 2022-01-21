@@ -71,6 +71,25 @@
         },
         {
             "alternatives": [
+                "Team",
+                "Equipe",
+                "Gruppe",
+                "Teams",
+                "Equipes",
+                "Gruppen"
+            ],
+            "category": "gendered",
+            "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle ",
+            "end": 46,
+            "label": "Geschlechtsspezifisch: Versteckter Ausdruck",
+            "reason": "Verborgen, nicht-geschlechtsneutrale Form. Ruft daher männlich konnotierte Bilder vor unserem inneren Auge auf.",
+            "solution": "Verwenden Sie Alternativen, die geschlechtsneutral sind und gleichzeitig Doppelnennungen vermeiden.",
+            "start": 36,
+            "subcategory": "hidden_image",
+            "text": "Mannschaft"
+        },
+        {
+            "alternatives": [
                 "Fleiß",
                 "Eifer",
                 "Strebsamkeit",
