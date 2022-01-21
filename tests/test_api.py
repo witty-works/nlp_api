@@ -191,19 +191,6 @@ def test_language_detection_fail(fails_case_dir, snapshot):
     assert response.status_code == 422
 
 
-def test_log(snapshot):
-    # Read input files from the case directory.
-    log_case_dir = Path("tests/test_log")
-    input_json = log_case_dir.joinpath("input.json").read_text()
-    print("input_json", input_json)
-    # Call the tested endpoint.
-    response = client.post("/log", json=json.loads(input_json))
-    assert response.status_code == 201
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    snapshot.snapshot_dir = "tests/test_log"
-    snapshot.assert_match(output, "output.json")
-
 
 def test_categories():
     response = client.get("/categories")
