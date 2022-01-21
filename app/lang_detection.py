@@ -1,5 +1,6 @@
 import fasttext
 import os
+from app.models import Config
 
 
 class LangDetection:
@@ -61,10 +62,10 @@ class LangDetection:
 
             return self.get_locale_by_lang(langs, language_preferences)
 
-        if lang in self.supported_langs:
-            if lang in self.supported_locales:
-                return lang
+        if lang in Config._supported_locales:
+            return lang
 
+        if lang in Config._supported_langs:
             return self.get_default_locale(lang)
 
         return None
