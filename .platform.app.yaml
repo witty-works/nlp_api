@@ -4,10 +4,6 @@ type: "python:3.9"
 
 disk: 12000
 
-resources:
-  base_memory: 1024
-  memory_ratio: 1024
-
 dependencies:
   python3:
     pipenv: "2021.5.29"
