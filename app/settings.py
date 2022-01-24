@@ -9,7 +9,6 @@ class Settings(BaseSettings):
     logging_enabled: bool = False
     logging_config_filename: str = "./logs/error.log"
     logging_config_level: str = "ERROR"
-    training_data_enabled: bool = False
     platform_environment: str = "local"
     languagetool_api: Optional[str]
     languagetool_verify_ssl: bool = True
