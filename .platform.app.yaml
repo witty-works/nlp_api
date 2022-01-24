@@ -21,14 +21,6 @@ web:
         '\.(css|js|ico)$':
           expires: 10m
 
-mounts:
-  "logs":
-    source: local
-    source_path: logs
-  "user_training_data":
-    source: local
-    source_path: user_training_data
-
 hooks:
   build: |
     set -e
