@@ -213,17 +213,6 @@ def openapi(username: str = Depends(get_current_username)):
     return get_openapi(title=app.title, version=app.version, routes=app.routes)
 
 
-@app.post("/serialize", response_class=PlainTextResponse)
-def serialize(
-    request: Request,
-    user_request_in: RequestIn,
-    username: str = Depends(get_current_username),
-):
-    configure_sentry(request, user_request_in.id)
-    data = collect_user_training_data(user_request_in, ResultsOut([], "en"))
-    return json.dumps(data)
-
-
 # public routes
 @app.get("/")
 def get_root():
@@ -245,13 +234,18 @@ async def check_query(
     request: Request,
     response: Response,
     user_request_in: RequestIn,
-    background_tasks: BackgroundTasks,
 ):
     configure_sentry(request, user_request_in.id)
 
     if sentry_sdk:
+        data = user_request_in.dict(exclude={"text"})
+        data["text"] = {
+            "length": len(user_request_in.text),
+        }
+        data["origin"] = request.headers.get("origin")
+
         sentry_sdk.set_context(
-            "request", clean_requestin_data(request, user_request_in)
+            "request", data
         )
 
     if settings.read_rules_from_redis:
@@ -280,10 +274,6 @@ async def check_query(
             pass
 
     response = ResultsOut.factory(list_results, lang)
-
-    background_tasks.add_task(
-        write_user_training_data, request, user_request_in, response
-    )
 
     return response
 
@@ -483,80 +473,6 @@ def language_rules(user_request_in: RequestIn, lang: Lang):
         list_results = []
 
     return list_results
-
-
-def clean_event_data(user_request_in: RequestIn):
-    data = user_request_in.dict()
-
-    return data
-
-
-def clean_requestin_data(request: Request, user_request_in: RequestIn):
-    data = user_request_in.dict(exclude={"text"})
-    data["text"] = {
-        "length": len(user_request_in.text),
-    }
-    data["origin"] = request.headers.get("origin")
-
-    return data
-
-
-def clean_response_data(store_context, response: ResultsOut):
-    if store_context:
-        results_hidden_fields = {"label", "reason", "solution"}
-    else:
-        results_hidden_fields = {"label", "reason", "solution", "context"}
-
-    data = response.dict(exclude={"results": {"__all__": results_hidden_fields}})
-
-    return data
-
-
-def collect_user_training_data(
-    request: Request, user_request_in: RequestIn, response: ResultsOut = None
-):
-    if response is None:
-        data = {
-            "event": clean_event_data(user_request_in),
-        }
-    else:
-        data = {
-            "request": clean_requestin_data(request, user_request_in),
-            "response": clean_response_data(
-                user_request_in.config.store_context, response
-            ),
-        }
-
-    data["$useragent"] = request.headers.get("user-agent")
-
-    return data
-
-
-def write_user_training_data(
-    request: Request, user_request_in: RequestIn, response: ResultsOut = None
-):
-    if user_request_in.id is None or not settings.training_data_enabled:
-        return
-
-    data = collect_user_training_data(request, user_request_in, response)
-
-    date = datetime.utcnow().strftime("%Y-%m-%d")
-
-    dirname = os.getcwd() + "/user_training_data/installs/" + user_request_in.id
-    os.makedirs(dirname, exist_ok=True)
-
-    dirname = os.getcwd() + "/user_training_data/" + date + "/" + user_request_in.id
-    os.makedirs(dirname, exist_ok=True)
-
-    filename = (
-        dirname
-        + "/"
-        + datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
-        + ".json"
-    )
-
-    f = open(filename, "w")
-    f.write(json.dumps(data))
 
 
 # Function for all German rules

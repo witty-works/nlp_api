@@ -2,7 +2,7 @@ name: "app"
 
 type: "python:3.9"
 
-disk: 12000
+disk: 4096
 
 dependencies:
   python3:
