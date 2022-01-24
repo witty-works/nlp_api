@@ -31,6 +31,24 @@ def test_read_form():
 
 @pytest.mark.parametrize(
     "ending_case_dir",
+    get_dirs("tests/test_highlight_position"),
+)
+def test_highlight_position(ending_case_dir, snapshot):
+
+    # Read input files from the case directory.
+    input_json = ending_case_dir.joinpath("input.json").read_text()
+    # Call the tested endpoint.
+    response = client.post("/check", json=json.loads(input_json))
+    assert response.status_code == 200
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    # Snapshot the return value.
+    snapshot.snapshot_dir = ending_case_dir
+    snapshot.assert_match(output, "output.json")
+
+
+@pytest.mark.parametrize(
+    "ending_case_dir",
     get_dirs("tests/test_sentry_examples"),
 )
 def test_sentry_examples(ending_case_dir, snapshot):
@@ -189,7 +207,6 @@ def test_language_detection_fail(fails_case_dir, snapshot):
     # Call the tested endpoint.
     response = client.post("/check", json=json.loads(input_json))
     assert response.status_code == 422
-
 
 
 def test_categories():

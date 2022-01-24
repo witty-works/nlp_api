@@ -5,6 +5,8 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      PIPENV_VENV_IN_PROJECT: enabled
 
     steps:
       - uses: actions/checkout@v2
@@ -23,15 +25,15 @@ jobs:
         env:
           cache-name: cache-pipenv
         with:
-          path: ~/.local/share/virtualenvs
-          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('Pipfile.lock') }}
+          path: ./.venv
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/Pipfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-${{ env.cache-name }}-
 
       - name: Install dependencies
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
         run: |
-          pipenv install --deploy --dev
+          pipenv install --deploy --dev --verbose
           pipenv run python -m spacy download en_core_web_sm
           pipenv run python -m spacy download de_core_news_sm
 
