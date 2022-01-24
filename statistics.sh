@@ -1,8 +1,6 @@
 #!/bin/bash
 READ_REMOTE=false 
 
-BACKUP=false
-
 ENV=main
 
 usage() {
@@ -22,20 +20,8 @@ while getopts "hrbe:d:" options; do
     r)
       READ_REMOTE=true
       ;;
-    b)
-      BACKUP=true
-      ;;
     e)
       ENV=${OPTARG}
-      ;;
-    d)
-      DATE=${OPTARG}
-      re_isanum='^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
-      if ! [[ $DATE =~ $re_isanum ]] ; then
-        echo "Error: DATE must be a date format YYYY-mm-dd"
-        exit_abnormal
-        exit 1
-      fi
       ;;
     :)
       echo "Error: -${OPTARG} requires an argument."
@@ -52,28 +38,7 @@ then
     READ_REMOTE=true
 fi
 
-if $BACKUP && $READ_REMOTE;
-then
-    echo "Backup cannot be enabled with remote";
-    exit_abnormal
-fi
-
-if [[ -z "$DATE" ]];
-then
-    unamestr="${OSTYPE//[0-9.]/}"
-
-    if [ "${OSTYPE//[0-9.]/}" == "darwin" ]
-    then
-        date="-v -0d"
-    else
-        date="--date=today"
-    fi
-
-    cmd="date $date +\"%Y-%m-%d\""
-    DATE=$(eval $cmd)
-fi
-
-echo "Collecting data for $DATE $ENV";
+echo "Collecting data for $ENV";
 
 if $READ_REMOTE;
 then
@@ -81,34 +46,16 @@ then
 fi
 
 descriptions=(
-    "Total number of installations"
-    "Total number of active installations"
-    "Number of total requests including click on alternatives/ignores"
-    "Number of clicks on an alternative"
-    "Number of clicks on ignore"
     "Number of German rules"
     "Number of English rules"
 )
 
 training_data_dir="training_data";
-user_training_data_dir="user_training_data";
-user_training_data_date_dir="$user_training_data_dir/$DATE";
 
 cmds=(
-    "ls $user_training_data_dir/installs | wc -l"
-    "ls $user_training_data_date_dir | wc -l"
-    "find $user_training_data_date_dir -type f | wc -l"
-    "ls $user_training_data_date_dir/ | grep -r '\"alternative\"' | wc -l"
-    "ls $user_training_data_date_dir/ | grep -r '\"igore\"' | wc -l"
     "wc -l $training_data_dir/de-DE/*"
     "wc -l $training_data_dir/en-US/*"
 )
-
-if [[ ! -d $user_training_data_date_dir ]];
-then
-    echo "Directory $user_training_data_date_dir does not exist."
-    exit 1;
-fi
 
 for i in ${!descriptions[@]};
 do
@@ -125,10 +72,3 @@ do
     fi
 
 done
-
-if $BACKUP;
-then
-    cd $user_training_data_dir;
-    tar -czf "$DATE.tar.gz" $DATE;
-    rm -rf $DATE;
-fi

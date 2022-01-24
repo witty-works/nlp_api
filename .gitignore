@@ -23,4 +23,3 @@ nosetests.xml
 
 python-probe.log
 .env
-languagetool/LanguageTool-5.5/org/languagetool/resource/de/hunspell/ignore.txt

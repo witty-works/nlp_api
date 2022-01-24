@@ -21,8 +21,7 @@ This project has two key dependencies:
 2. Pull images from Github registry:
 
 ```
-docker pull ghcr.io/witty-works/test-img:test
-docker pull ghcr.io/witty-works/languagetool:v1
+docker pull ghcr.io/witty-works/nlpapi:v1
 
 ```
 
