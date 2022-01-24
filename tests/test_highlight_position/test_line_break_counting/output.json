@@ -8,7 +8,7 @@
             "category": "orthography",
             "context": "\n\nhelo ninja",
             "end": 6,
-            "label": "",
+            "label": "Orthography",
             "reason": "Correct any spelling or grammatical errors to maximize the impact of their writing.",
             "solution": "This sentence does not start with an uppercase letter.",
             "start": 2,

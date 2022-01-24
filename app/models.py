@@ -267,7 +267,7 @@ class ResultOut(BaseModel):
         if subcategory == "gendered_denominations_ending":
             params["gendered_denominations_ending"] = config.german_gender_ending
 
-        label = label if label != None else lang._("rules." + category + "_label")
+        label = label if label else lang._("rules." + category + "_label")
         if category != subcategory:
             label += ": " + lang._("rules." + subcategory + "_label")
 

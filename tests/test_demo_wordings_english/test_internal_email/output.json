@@ -8,7 +8,7 @@
             "category": "orthography",
             "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number 1 and innovation drives us.\nSincere regards,\nNadia",
             "end": 96,
-            "label": "",
+            "label": "Orthography",
             "reason": "Correct any spelling or grammatical errors to maximize the impact of their writing.",
             "solution": "Use a comma before ‘and’ if it connects two independent clauses (unless they are closely connected and short).",
             "start": 92,

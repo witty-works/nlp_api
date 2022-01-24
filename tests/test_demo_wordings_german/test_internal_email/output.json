@@ -8,7 +8,7 @@
             "category": "orthography",
             "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert ",
             "end": 25,
-            "label": "",
+            "label": "Orthographie",
             "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
             "solution": "Außer am Satzanfang werden nur Nomen und Eigennamen großgeschrieben.",
             "start": 22,

@@ -74,7 +74,7 @@
             "category": "orthography",
             "context": "",
             "end": 42,
-            "label": "",
+            "label": "Orthographie",
             "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
             "solution": "Die Verwendung von mehreren Frage- oder Ausrufezeichen wirkt oft übertrieben emphatisch.",
             "start": 39,
