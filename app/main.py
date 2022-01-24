@@ -60,7 +60,7 @@ from collections import namedtuple, defaultdict
 from collections import namedtuple
 from app.sentry import set_up_sentry_sdk
 
-version = "1.14.0"
+version = "1.14.1"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -469,7 +469,7 @@ async def languagetool_rules(user_request_in: RequestIn, lang: Lang):
 
 def language_rules(user_request_in: RequestIn, lang: Lang):
     # apply SpaCy pre-built model
-    tokens = model[lang.lang](user_request_in.text.strip().replace("\n", " "))
+    tokens = model[lang.lang](user_request_in.text.rstrip())
 
     # functions for German rules
     if lang.lang == "de":
