@@ -5,7 +5,9 @@ disk: 2048
 
 resources:
   base_memory: 1024
-  memory_ratio: 1024
+  memory_ratio: 512
+
+size: L
 
 web:
   commands:

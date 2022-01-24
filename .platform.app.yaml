@@ -8,6 +8,8 @@ resources:
   base_memory: 1024
   memory_ratio: 1024
 
+size: XL
+
 dependencies:
   python3:
     pipenv: "2021.5.29"
