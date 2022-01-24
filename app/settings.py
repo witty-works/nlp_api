@@ -20,11 +20,7 @@ class Settings(BaseSettings):
     instrumentation_key: str = ""
     testing: bool = False
     read_rules_from_redis: bool = False
-    posthog_api_key: Optional[str]
-    posthog_host: Optional[str]
     sentry_dsn: Optional[str]
-    sentry_organization: Optional[str] = "witty-works"
-    sentry_project_id: Optional[str]
     sentry_traces_sample_rate: float = 0.2
     sentry_sample_rate: float = 0.2
 
