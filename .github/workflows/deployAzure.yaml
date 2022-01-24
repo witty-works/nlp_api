@@ -22,16 +22,3 @@ jobs:
           echo $tag
           docker tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:${{ github.sha }} ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:$tag
           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:$tag
-
-      # build languagetool
-      - run: |
-          cd languagetool
-          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/languagetool:${{ github.sha }}
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/languagetool:${{ github.sha }}
-          # release version
-          ref=${{ github.ref_name }}
-          tag=${ref////-}
-          echo $tag
-          docker tag ${{ secrets.REGISTRY_LOGIN_SERVER }}/languagetool:${{ github.sha }} ${{ secrets.REGISTRY_LOGIN_SERVER }}/languagetool:$tag
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/languagetool:$tag
-      

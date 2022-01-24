@@ -19,7 +19,7 @@ current_words = []
 clean_words = []
 
 with open(
-    "languagetool/LanguageTool-5.5/org/languagetool/resource/de/hunspell/ignore.txt",
+    "../languagetool/LanguageTool-5.5/org/languagetool/resource/de/hunspell/ignore.txt",
     "r",
 ) as f:
     lines = f.readlines()
