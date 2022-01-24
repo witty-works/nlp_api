@@ -4,6 +4,10 @@ type: "python:3.9"
 
 disk: 4096
 
+resources:
+  base_memory: 1024
+  memory_ratio: 1024
+
 dependencies:
   python3:
     pipenv: "2021.5.29"
@@ -20,14 +24,6 @@ web:
       rules:
         '\.(css|js|ico)$':
           expires: 10m
-
-mounts:
-  "logs":
-    source: local
-    source_path: logs
-  "user_training_data":
-    source: local
-    source_path: user_training_data
 
 hooks:
   build: |

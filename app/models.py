@@ -111,7 +111,9 @@ class Config(BaseModel):
         if isinstance(v, list) and v != []:
             for lang in v:
                 if lang not in Config._supported_langs:
-                    raise ValueError("Contains not supported preferred_languages: " + ",".join(v))
+                    raise ValueError(
+                        "Contains not supported preferred_languages: " + ",".join(v)
+                    )
 
             return v
 
@@ -125,7 +127,9 @@ class Config(BaseModel):
         if isinstance(v, list) and v != []:
             for lang in v:
                 if lang not in Config._supported_locales:
-                    raise ValueError("Contains not supported preferred_variants: " + ",".join(v))
+                    raise ValueError(
+                        "Contains not supported preferred_variants: " + ",".join(v)
+                    )
 
             return v
 
@@ -167,7 +171,9 @@ class ForcedConfig(BaseModel):
         if isinstance(v, list) and v != []:
             for lang in v:
                 if lang not in Config._supported_langs:
-                    raise ValueError("Contains not supported preferred_languages: " + ",".join(v))
+                    raise ValueError(
+                        "Contains not supported preferred_languages: " + ",".join(v)
+                    )
 
             return v
 
@@ -181,7 +187,9 @@ class ForcedConfig(BaseModel):
         if isinstance(v, list) and v != []:
             for lang in v:
                 if lang not in Config._supported_locales:
-                    raise ValueError("Contains not supported preferred_variants: " + ",".join(v))
+                    raise ValueError(
+                        "Contains not supported preferred_variants: " + ",".join(v)
+                    )
 
             return v
 
@@ -388,9 +396,20 @@ class ResultOut(BaseModel):
 
 
 class Result(BaseModel):
-    details: str
+    details: List
 
     def factory(details):
+        details = [
+            {
+                "loc": {
+                    "body",
+                    "text",
+                },
+                "msg": details,
+                "type": "value_error.not_supported",
+            }
+        ]
+
         return Result(details)
 
     factory = staticmethod(factory)

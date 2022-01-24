@@ -60,7 +60,7 @@ from collections import namedtuple, defaultdict
 from collections import namedtuple
 from app.sentry import set_up_sentry_sdk
 
-version = "1.15.0"
+version = "1.15.1"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -229,7 +229,7 @@ def get_categories(lang: LangType = "de"):
     return categories_with_labels[lang]
 
 
-@app.post("/check", response_model=Union[Result, ResultsOut])
+@app.post("/check", response_model=Union[ResultsOut, Result])
 async def check_query(
     request: Request,
     response: Response,
@@ -244,9 +244,7 @@ async def check_query(
         }
         data["origin"] = request.headers.get("origin")
 
-        sentry_sdk.set_context(
-            "request", data
-        )
+        sentry_sdk.set_context("request", data)
 
     if settings.read_rules_from_redis:
         await set_rules(user_request_in)
