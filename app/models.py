@@ -9,16 +9,11 @@ import string
 
 class Language(object):
     def __init__(self, locale):
-        self.lang = locale[0:2]
         self.locale = locale
-
-        if self.lang == "en":
-            trans_locale = "en_US"
-        else:
-            trans_locale = "de_DE"
+        self.lang = locale[0:2]
 
         language = gettext.translation(
-            "messages", localedir="locales", languages=[trans_locale]
+            "messages", localedir="locales", languages=[locale.replace("-", "_")]
         )
 
         language.install()

@@ -178,14 +178,14 @@ msgstr "Communal"
 
 msgid "rules.communal_reason"
 msgstr ""
-"Emphasizes cooperative, compassionate or supportive characteristics and thus"
+"Emphasises cooperative, compassionate or supportive characteristics and thus"
 " inclusive attributes."
 
 msgid "rules.communal_solution"
 msgstr "Use more of such wording to express cooperation, care or purpose."
 
 msgid "rules.corporate_rules_label"
-msgstr "Organization guideline"
+msgstr "Organisation guideline"
 
 msgid "rules.corporate_rules_reason"
 msgstr "We always use subcategories here and so no need to fill anything in."
@@ -526,7 +526,7 @@ msgstr "Orthography"
 
 msgid "rules.orthography_reason"
 msgstr ""
-"Correct any spelling or grammatical errors to maximize the impact of their "
+"Correct any spelling or grammatical errors to maximise the impact of their "
 "writing."
 
 msgid "rules.orthography_solution"

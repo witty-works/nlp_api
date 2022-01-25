@@ -13,6 +13,8 @@ def add_entry(poFiles, category, columns, label, column, row):
             msgstr = u""
         else:
             msgstr = row[columns[column + " " + locale[0:2].upper()]].strip()
+            if msgstr == "-":
+                msgstr = ""
 
         entry = polib.POEntry(msgid=msgid, msgstr=msgstr)
         poFiles[locale].append(entry)
@@ -60,7 +62,7 @@ def read_csv(in_file):
             "inclusive": "green",
             "job_requirements": "yellow",
             "abbreviation": "yellow",
-            "corporarte_rules": "yellow",
+            "corporate_rules": "yellow",
             "default": "yellow",
         }
 
