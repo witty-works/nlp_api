@@ -208,6 +208,13 @@ def test_language_detection_fail(fails_case_dir, snapshot):
     response = client.post("/check", json=json.loads(input_json))
     assert response.status_code == 422
 
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    # Snapshot the return value.
+    snapshot.snapshot_dir = fails_case_dir
+    snapshot.assert_match(output, "output.json")
+
+
 
 def test_categories():
     response = client.get("/categories")
