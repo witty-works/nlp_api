@@ -2,7 +2,7 @@
 
 $message = [];
 $date = date("Y-m-d", strtotime("yesterday"));
-exec("./statistics.sh -b -d $date", $message, $retval);
+exec("./statistics.sh", $message, $retval);
 
 $message = implode("\n", $message);
 echo "message:\n";
