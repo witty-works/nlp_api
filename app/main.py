@@ -37,7 +37,7 @@ from spacy.matcher import PhraseMatcher, Matcher
 from app.models import (
     Config,
     LangType,
-    Lang,
+    Language,
     RequestIn,
     RequestInEvent,
     Result,
@@ -103,7 +103,7 @@ app.add_middleware(
 categories_with_labels = {}
 languages = ["en", "de"]
 for language in languages:
-    lang = Lang(language)
+    lang = Language(language)
     categories_with_labels[language] = copy.deepcopy(categories)
     for category in categories_with_labels[language]:
         parent_category = categories[category]["category"]
@@ -260,7 +260,7 @@ async def check_query(
         response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
         return Result.factory("Language could not be determined")
 
-    lang = Lang(locale)
+    lang = Language(locale)
 
     list_results = language_rules(user_request_in, lang)
 
@@ -387,7 +387,7 @@ async def set_rules(user_request_in: RequestIn):
                     )
 
 
-async def languagetool_rules(user_request_in: RequestIn, lang: Lang):
+async def languagetool_rules(user_request_in: RequestIn, lang: Language):
     config = user_request_in.config
     ignore = ["@", "#"]
 
@@ -455,7 +455,7 @@ async def languagetool_rules(user_request_in: RequestIn, lang: Lang):
     return list_results
 
 
-def language_rules(user_request_in: RequestIn, lang: Lang):
+def language_rules(user_request_in: RequestIn, lang: Language):
     # apply SpaCy pre-built model
     tokens = model[lang.lang](user_request_in.text.rstrip())
 

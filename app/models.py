@@ -7,7 +7,7 @@ import gettext
 import string
 
 
-class Lang(object):
+class Language(object):
     def __init__(self, locale):
         self.lang = locale[0:2]
         self.locale = locale
@@ -241,7 +241,7 @@ class ResultOut(BaseModel):
 
     def factory(
         config: Config,
-        lang: Lang,
+        lang: Language,
         text,
         full_text,
         category,
