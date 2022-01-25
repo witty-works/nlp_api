@@ -634,7 +634,7 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
         sentences_alternatives_en["style"] = style_sentences_alternatives_US
         sentences_alternatives_en["bias"] = bias_sentences_alternatives_US
     if IsSubCategoryEnabled("openly_discriminating", disabled_categories):
-        list_full += RulesBasedWordsPhraseMatcherUN(
+        list_full += RulesBasedWordsPhraseMatcherEN(
             user_request_in.config,
             lang,
             user_request_in.text,
@@ -646,7 +646,7 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
         )
 
     if IsSubCategoryEnabled("gendered", disabled_categories):
-        list_full += RulesBasedWordsPhraseMatcherUN(
+        list_full += RulesBasedWordsPhraseMatcherEN(
             user_request_in.config,
             lang,
             user_request_in.text,
@@ -677,7 +677,7 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
         )
 
     if IsSubCategoryEnabled("style", disabled_categories):
-        list_full += RulesBasedWordsPhraseMatcherUN(
+        list_full += RulesBasedWordsPhraseMatcherEN(
             user_request_in.config,
             lang,
             user_request_in.text,
@@ -689,7 +689,7 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
         )
 
     if IsSubCategoryEnabled("unconscious_bias", disabled_categories):
-        list_full += RulesBasedWordsPhraseMatcherUN(
+        list_full += RulesBasedWordsPhraseMatcherEN(
             user_request_in.config,
             lang,
             user_request_in.text,
@@ -718,6 +718,15 @@ def IsItFalsePositive(word, false_positive):
             return True
 
     return False
+
+
+"""Function to make transform words to lowcase used for English"""
+
+
+def GetLowerCased(token):
+    token_word = token.lemma_
+
+    return token_word.lower()
 
 
 """Function to catch ending in German Denom"""
@@ -1298,8 +1307,8 @@ def MisgenderingInstitutionsDE(config: Config, lang, full_text, tokens):
     return db_match_list
 
 
-# Unified function English&German
-def RulesBasedWordsPhraseMatcherUN(
+# function English
+def RulesBasedWordsPhraseMatcherEN(
     config: Config,
     lang,
     full_text,
@@ -1319,7 +1328,7 @@ def RulesBasedWordsPhraseMatcherUN(
 
     for token in tokens:
         for word, alternative, subcategory in words_alternatives:
-            if token.lemma_ == word:
+            if GetLowerCased(token) == word:
                 list_tokens.append(
                     ResultOut.factory(
                         config,
@@ -1371,7 +1380,7 @@ def GenderedEN(
             alternative_plur,
             subcategory,
         ) in gendered_words_alternatives:
-            if token.lemma_ == word:
+            if GetLowerCased(token) == word:
                 token_morph_number = token.morph.get("Number")
                 if is_number_list_empty(token_morph_number, token):
                     continue
@@ -1431,7 +1440,7 @@ def RulesBasedWordsPhraseMatcherNoAltEN(
 
     for token in tokens:
         for word, subcategory in inclusive_words_alternatives_en:
-            if token.lemma_ == word:
+            if GetLowerCased(token) == word:
                 list_tokens.append(
                     ResultOut.factory(
                         config,
