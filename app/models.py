@@ -401,10 +401,10 @@ class Result(BaseModel):
     def factory(detail):
         detail = [
             {
-                "loc": {
+                "loc": [
                     "body",
                     "text",
-                },
+                ],
                 "msg": detail,
                 "type": "value_error.not_supported",
             }
