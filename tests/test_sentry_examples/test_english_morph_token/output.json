@@ -46,6 +46,42 @@
             "start": 134,
             "subcategory": "orthography",
             "text": "Riehenring"
+        },
+        {
+            "alternatives": [
+                "They",
+                "Heads",
+                "Person who supports and motivates the team",
+                "Someone who comunicates a shared vision",
+                "Someone who helps identify milestones",
+                "Person who offers guidance",
+                "Person who takes a coaching role to help a team work toward shared goals"
+            ],
+            "category": "gendered",
+            "context": "Hi Siwar,\n\nit's the first time that we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n\nFossil Group Europe GmbH\nRiehenring 182\n\n4058 Basel\nSWITZERLAND\nwww.fos",
+            "end": 80,
+            "label": "Gendered: Leadership stereotype",
+            "reason": "Casts the topic of leadership in stereotypical male terms and traditionally hierarchical.",
+            "solution": "Use terms that assume a supportive notion of leadership and can mean different genders.",
+            "start": 76,
+            "subcategory": "leadership",
+            "text": "Head"
+        },
+        {
+            "alternatives": [
+                "Older person",
+                "Adult",
+                "Retiree"
+            ],
+            "category": "unconscious_bias",
+            "context": "\n\nit's the first time that we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n\nFossil Group Europe GmbH\nRiehenring 182\n\n4058 Basel\nSWITZERLAND\nwww.fossilgroup.com\nt: +41 61 560 99 69\nm:",
+            "end": 115,
+            "label": "Biased language: 50 years and older",
+            "reason": "Outdated hidden or even discriminatory wording pigeonholing people 50 years or older.",
+            "solution": "Ask yourself \"What would I write if this person was 35 years old?\"",
+            "start": 109,
+            "subcategory": "age_old",
+            "text": "Fossil"
         }
     ]
 }

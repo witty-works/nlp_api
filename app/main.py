@@ -37,7 +37,7 @@ from spacy.matcher import PhraseMatcher, Matcher
 from app.models import (
     Config,
     LangType,
-    Lang,
+    Language,
     RequestIn,
     RequestInEvent,
     Result,
@@ -60,7 +60,7 @@ from collections import namedtuple, defaultdict
 from collections import namedtuple
 from app.sentry import set_up_sentry_sdk
 
-version = "1.15.1"
+version = "1.15.2"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -103,7 +103,7 @@ app.add_middleware(
 categories_with_labels = {}
 languages = ["en", "de"]
 for language in languages:
-    lang = Lang(language)
+    lang = Language(language)
     categories_with_labels[language] = copy.deepcopy(categories)
     for category in categories_with_labels[language]:
         parent_category = categories[category]["category"]
@@ -260,7 +260,7 @@ async def check_query(
         response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
         return Result.factory("Language could not be determined")
 
-    lang = Lang(locale)
+    lang = Language(locale)
 
     list_results = language_rules(user_request_in, lang)
 
@@ -322,11 +322,9 @@ def is_number_list_empty(number, token):
 
 
 def configure_sentry(request: Request, id):
-    id = str(id)
-
     if sentry_sdk:
         sentry_sdk.transaction = request.scope["path"][1:]
-        sentry_sdk.set_user({"id": id})
+        sentry_sdk.set_user({"id": str(id)})
 
 
 async def set_rules(user_request_in: RequestIn):
@@ -387,7 +385,7 @@ async def set_rules(user_request_in: RequestIn):
                     )
 
 
-async def languagetool_rules(user_request_in: RequestIn, lang: Lang):
+async def languagetool_rules(user_request_in: RequestIn, lang: Language):
     config = user_request_in.config
     ignore = ["@", "#"]
 
@@ -455,7 +453,7 @@ async def languagetool_rules(user_request_in: RequestIn, lang: Lang):
     return list_results
 
 
-def language_rules(user_request_in: RequestIn, lang: Lang):
+def language_rules(user_request_in: RequestIn, lang: Language):
     # apply SpaCy pre-built model
     tokens = model[lang.lang](user_request_in.text.rstrip())
 
@@ -634,7 +632,7 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
         sentences_alternatives_en["style"] = style_sentences_alternatives_US
         sentences_alternatives_en["bias"] = bias_sentences_alternatives_US
     if IsSubCategoryEnabled("openly_discriminating", disabled_categories):
-        list_full += RulesBasedWordsPhraseMatcherUN(
+        list_full += RulesBasedWordsPhraseMatcherEN(
             user_request_in.config,
             lang,
             user_request_in.text,
@@ -646,7 +644,7 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
         )
 
     if IsSubCategoryEnabled("gendered", disabled_categories):
-        list_full += RulesBasedWordsPhraseMatcherUN(
+        list_full += RulesBasedWordsPhraseMatcherEN(
             user_request_in.config,
             lang,
             user_request_in.text,
@@ -677,7 +675,7 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
         )
 
     if IsSubCategoryEnabled("style", disabled_categories):
-        list_full += RulesBasedWordsPhraseMatcherUN(
+        list_full += RulesBasedWordsPhraseMatcherEN(
             user_request_in.config,
             lang,
             user_request_in.text,
@@ -689,7 +687,7 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
         )
 
     if IsSubCategoryEnabled("unconscious_bias", disabled_categories):
-        list_full += RulesBasedWordsPhraseMatcherUN(
+        list_full += RulesBasedWordsPhraseMatcherEN(
             user_request_in.config,
             lang,
             user_request_in.text,
@@ -718,6 +716,15 @@ def IsItFalsePositive(word, false_positive):
             return True
 
     return False
+
+
+"""Function to make transform words to lowcase used for English"""
+
+
+def GetLowerCased(token):
+    token_word = token.lemma_
+
+    return token_word.lower()
 
 
 """Function to catch ending in German Denom"""
@@ -1298,8 +1305,8 @@ def MisgenderingInstitutionsDE(config: Config, lang, full_text, tokens):
     return db_match_list
 
 
-# Unified function English&German
-def RulesBasedWordsPhraseMatcherUN(
+# function English
+def RulesBasedWordsPhraseMatcherEN(
     config: Config,
     lang,
     full_text,
@@ -1319,7 +1326,7 @@ def RulesBasedWordsPhraseMatcherUN(
 
     for token in tokens:
         for word, alternative, subcategory in words_alternatives:
-            if token.lemma_ == word:
+            if GetLowerCased(token) == word:
                 list_tokens.append(
                     ResultOut.factory(
                         config,
@@ -1371,7 +1378,7 @@ def GenderedEN(
             alternative_plur,
             subcategory,
         ) in gendered_words_alternatives:
-            if token.lemma_ == word:
+            if GetLowerCased(token) == word:
                 token_morph_number = token.morph.get("Number")
                 if is_number_list_empty(token_morph_number, token):
                     continue
@@ -1431,7 +1438,7 @@ def RulesBasedWordsPhraseMatcherNoAltEN(
 
     for token in tokens:
         for word, subcategory in inclusive_words_alternatives_en:
-            if token.lemma_ == word:
+            if GetLowerCased(token) == word:
                 list_tokens.append(
                     ResultOut.factory(
                         config,

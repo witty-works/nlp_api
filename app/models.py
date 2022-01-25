@@ -7,7 +7,7 @@ import gettext
 import string
 
 
-class Lang(object):
+class Language(object):
     def __init__(self, locale):
         self.lang = locale[0:2]
         self.locale = locale
@@ -241,7 +241,7 @@ class ResultOut(BaseModel):
 
     def factory(
         config: Config,
-        lang: Lang,
+        lang: Language,
         text,
         full_text,
         category,
@@ -267,7 +267,7 @@ class ResultOut(BaseModel):
         if subcategory == "gendered_denominations_ending":
             params["gendered_denominations_ending"] = config.german_gender_ending
 
-        label = label if label != None else lang._("rules." + category + "_label")
+        label = label if label else lang._("rules." + category + "_label")
         if category != subcategory:
             label += ": " + lang._("rules." + subcategory + "_label")
 
@@ -396,26 +396,26 @@ class ResultOut(BaseModel):
 
 
 class Result(BaseModel):
-    details: List
+    detail: List
 
-    def factory(details):
-        details = [
+    def factory(detail):
+        detail = [
             {
                 "loc": {
                     "body",
                     "text",
                 },
-                "msg": details,
+                "msg": detail,
                 "type": "value_error.not_supported",
             }
         ]
 
-        return Result(details)
+        return Result(detail)
 
     factory = staticmethod(factory)
 
-    def __init__(self, details):
-        object.__setattr__(self, "details", details)
+    def __init__(self, detail):
+        object.__setattr__(self, "detail", detail)
 
 
 class ResultsOut(BaseModel):

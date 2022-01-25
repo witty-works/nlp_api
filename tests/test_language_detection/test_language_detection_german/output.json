@@ -1,4 +1,64 @@
 {
     "language": "de",
-    "results": []
+    "results": [
+        {
+            "alternatives": [
+                "Liebe"
+            ],
+            "category": "orthography",
+            "context": "",
+            "end": 5,
+            "label": "Orthographie",
+            "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
+            "solution": "Dieser Satz fängt nicht mit einem großgeschriebenen Wort an.",
+            "start": 0,
+            "subcategory": "orthography",
+            "text": "liebe"
+        },
+        {
+            "alternatives": [
+                "Mensch",
+                "längs",
+                "Deng",
+                "menge",
+                "mengt",
+                "peng",
+                "Dengs",
+                "Längs",
+                "mengst",
+                "Hänsch",
+                "häng",
+                "ging",
+                "lang",
+                "sechs",
+                "wenig",
+                "Berg",
+                "Länge",
+                "hängt",
+                "Menge",
+                "genug"
+            ],
+            "category": "orthography",
+            "context": "",
+            "end": 12,
+            "label": "Rechtschreibfehler",
+            "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
+            "solution": "Möglicher Tippfehler gefunden.",
+            "start": 6,
+            "subcategory": "orthography",
+            "text": "mensch"
+        },
+        {
+            "alternatives": [],
+            "category": "inclusive",
+            "context": "",
+            "end": 5,
+            "label": "Inklusiv: Kommunal",
+            "reason": "Betont kooperative, mitfühlende oder unterstützende Eigenschaften und damit inklusive Attribute.",
+            "solution": "Verwenden Sie mehr solcher Formulierungen, um Kooperation, Unterstützung oder Sinnhaftigkeit auszudrücken.",
+            "start": 0,
+            "subcategory": "communal",
+            "text": "liebe"
+        }
+    ]
 }
