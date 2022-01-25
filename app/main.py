@@ -322,11 +322,9 @@ def is_number_list_empty(number, token):
 
 
 def configure_sentry(request: Request, id):
-    id = str(id)
-
     if sentry_sdk:
         sentry_sdk.transaction = request.scope["path"][1:]
-        sentry_sdk.set_user({"id": id})
+        sentry_sdk.set_user({"id": str(id)})
 
 
 async def set_rules(user_request_in: RequestIn):
