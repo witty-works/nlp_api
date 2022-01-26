@@ -421,15 +421,17 @@ class Result(BaseModel):
 class ResultsOut(BaseModel):
     results: List[ResultOut]
     language: str
+    limit_reached: bool
 
-    def factory(results, lang):
+    def factory(results, lang, limit_reached = False):
         if lang != None:
             lang = lang.lang
 
-        return ResultsOut(results, lang)
+        return ResultsOut(results, lang, limit_reached)
 
     factory = staticmethod(factory)
 
-    def __init__(self, results, language):
+    def __init__(self, results, language, limit_reached):
         object.__setattr__(self, "results", results)
         object.__setattr__(self, "language", language)
+        object.__setattr__(self, "limit_reached", limit_reached)

@@ -263,6 +263,13 @@ async def check_query(
     lang = Language(locale)
 
     text = user_request_in.text
+    limit_reached = len(text) > settings.text_max_length
+    if limit_reached:
+        m = re.findall("(.*)\s\S*", text)
+        if len(m) >= 1:
+            text = m[0]
+        else:
+            text = text[0:settings.text_max_length]
 
     list_results = language_rules(user_request_in.config, lang, text)
 
@@ -275,7 +282,7 @@ async def check_query(
         except:
             pass
 
-    response = ResultsOut.factory(list_results, lang)
+    response = ResultsOut.factory(list_results, lang, limit_reached)
 
     return response
 
