@@ -1,8 +1,6 @@
 import ast
 import re
-from datetime import datetime
 import uvicorn
-import os
 import json
 import secrets
 import aiohttp
@@ -13,7 +11,6 @@ from fastapi import (
     Request,
     Response,
     HTTPException,
-    BackgroundTasks,
     Depends,
     status,
 )
@@ -22,10 +19,7 @@ from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
-from starlette.responses import RedirectResponse, PlainTextResponse
+from starlette.responses import RedirectResponse
 
 from typing import Optional, Union
 
@@ -39,7 +33,6 @@ from app.models import (
     LangType,
     Language,
     RequestIn,
-    RequestInEvent,
     Result,
     ResultOut,
     ResultsOut,
@@ -60,7 +53,7 @@ from collections import namedtuple, defaultdict
 from collections import namedtuple
 from app.sentry import set_up_sentry_sdk
 
-version = "1.16.0"
+version = "1.17.0"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -143,10 +136,6 @@ false_positive = get_false_positive(
     rules["de-DE"]["false_positive_agentic_const"],
 )
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
-templates = Jinja2Templates(directory="templates")
-
 
 def get_current_username(
     credentials: Optional[HTTPBasicCredentials] = Depends(security),
@@ -216,12 +205,12 @@ def openapi(username: str = Depends(get_current_username)):
 # public routes
 @app.get("/")
 def get_root():
-    return RedirectResponse(url="/form", status_code=301)
+    return RedirectResponse(url="https://www.witty.works/form", status_code=301)
 
 
-@app.get("/form", response_class=HTMLResponse)
+@app.get("/form")
 def form(request: Request):
-    return templates.TemplateResponse("form.html", {"request": request})
+    return RedirectResponse(url="https://www.witty.works/form", status_code=301)
 
 
 @app.get("/categories")
@@ -269,7 +258,7 @@ async def check_query(
         if len(m) >= 1:
             text = m[0]
         else:
-            text = text[0:settings.text_max_length]
+            text = text[0 : settings.text_max_length]
 
     list_results = language_rules(user_request_in.config, lang, text)
 
