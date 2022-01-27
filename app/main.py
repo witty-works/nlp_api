@@ -455,7 +455,7 @@ async def languagetool_rules(user_request_in: RequestIn, lang: Language):
 
 def language_rules(user_request_in: RequestIn, lang: Language):
     # apply SpaCy pre-built model
-    tokens = model[lang.lang](user_request_in.text.rstrip())
+    tokens = model[lang.lang](user_request_in.text.rstrip().replace("\n", " "))
 
     # functions for German rules
     if lang.lang == "de":

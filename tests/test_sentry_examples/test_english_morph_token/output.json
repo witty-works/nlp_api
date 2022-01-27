@@ -9,7 +9,7 @@
                 "Si war"
             ],
             "category": "orthography",
-            "context": "Hi Siwar,\n\nit's the first time that we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n",
+            "context": "",
             "end": 8,
             "label": "Spelling mistake",
             "reason": "Correct any spelling or grammatical errors to maximize the impact of their writing.",
@@ -23,7 +23,7 @@
                 "an"
             ],
             "category": "orthography",
-            "context": "Hi Siwar,\n\nit's the first time that we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n\nFossil Group Europe GmbH\nRiehenring 182\n\n4058 B",
+            "context": "",
             "end": 56,
             "label": "Wrong article",
             "reason": "Correct any spelling or grammatical errors to maximize the impact of their writing.",
@@ -38,7 +38,7 @@
                 "Richening"
             ],
             "category": "orthography",
-            "context": "t we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n\nFossil Group Europe GmbH\nRiehenring 182\n\n4058 Basel\nSWITZERLAND\nwww.fossilgroup.com\nt: +41 61 560 99 69\nm: +41 78 625 82 95\ne: tjung@fo",
+            "context": "",
             "end": 144,
             "label": "Spelling mistake",
             "reason": "Correct any spelling or grammatical errors to maximize the impact of their writing.",
@@ -46,6 +46,22 @@
             "start": 134,
             "subcategory": "orthography",
             "text": "Riehenring"
+        },
+        {
+            "alternatives": [
+                "they",
+                "internship",
+                "interns"
+            ],
+            "category": "gendered",
+            "context": "",
+            "end": 63,
+            "label": "Gendered: Special functions",
+            "reason": "For economic-historical reasons, an image of a man is unconsciously evoked in front of the inner eye, even if the term is linguistically neutral. The female gender or other gender identities do not become visible. And they will not feel to belong in this setting.",
+            "solution": "In order to provoke an inclusive image, be not only linguistically, but also mentally neutral in your formulation. Rather use a noun that describes the activity. Or use a denomination that is truly gender-neutral.",
+            "start": 57,
+            "subcategory": "function",
+            "text": "intern"
         },
         {
             "alternatives": [
@@ -58,7 +74,7 @@
                 "Person who takes a coaching role to help a team work toward shared goals"
             ],
             "category": "gendered",
-            "context": "Hi Siwar,\n\nit's the first time that we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n\nFossil Group Europe GmbH\nRiehenring 182\n\n4058 Basel\nSWITZERLAND\nwww.fos",
+            "context": "",
             "end": 80,
             "label": "Gendered: Leadership stereotype",
             "reason": "Casts the topic of leadership in stereotypical male terms and traditionally hierarchical.",
@@ -74,7 +90,7 @@
                 "Retiree"
             ],
             "category": "unconscious_bias",
-            "context": "\n\nit's the first time that we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n\nFossil Group Europe GmbH\nRiehenring 182\n\n4058 Basel\nSWITZERLAND\nwww.fossilgroup.com\nt: +41 61 560 99 69\nm:",
+            "context": "",
             "end": 115,
             "label": "Biased language: 50 years and older",
             "reason": "Outdated hidden or even discriminatory wording pigeonholing people 50 years or older.",

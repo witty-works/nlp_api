@@ -7,6 +7,6 @@
         "preferred_languages": "de, en",
         "preferred_variants": "de-DE,en-GB",
         "primary_language": "de-DE",
-        "store_context": true
+        "store_context": false
     }
 }
