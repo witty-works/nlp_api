@@ -18,12 +18,6 @@ web:
   commands:
     start: |
       gunicorn app.main:app -b unix:$SOCKET -w ${WORKERS} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
-  locations:
-    "/static":
-      root: "static"
-      rules:
-        '\.(css|js|ico)$':
-          expires: 10m
 
 hooks:
   build: |
