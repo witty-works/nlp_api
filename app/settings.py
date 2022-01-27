@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     sentry_dsn: Optional[str]
     sentry_traces_sample_rate: float = 0.2
     sentry_sample_rate: float = 0.2
+    text_max_length: int = 1000
 
     class Config:
         env_file = ".env"
