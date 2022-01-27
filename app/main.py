@@ -60,7 +60,7 @@ from collections import namedtuple, defaultdict
 from collections import namedtuple
 from app.sentry import set_up_sentry_sdk
 
-version = "1.15.2"
+version = "1.16.0"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -262,16 +262,27 @@ async def check_query(
 
     lang = Language(locale)
 
-    list_results = language_rules(user_request_in, lang)
+    text = user_request_in.text
+    limit_reached = len(text) > settings.text_max_length
+    if limit_reached:
+        m = re.findall("(.*)\s\S*", text)
+        if len(m) >= 1:
+            text = m[0]
+        else:
+            text = text[0:settings.text_max_length]
+
+    list_results = language_rules(user_request_in.config, lang, text)
 
     if "orthography" not in user_request_in.config.disabled_categories:
         try:
-            languagetools_results = await languagetool_rules(user_request_in, lang)
+            languagetools_results = await languagetool_rules(
+                user_request_in.config, lang, text
+            )
             list_results = languagetools_results + list_results
         except:
             pass
 
-    response = ResultsOut.factory(list_results, lang)
+    response = ResultsOut.factory(list_results, lang, limit_reached)
 
     return response
 
@@ -385,8 +396,7 @@ async def set_rules(user_request_in: RequestIn):
                     )
 
 
-async def languagetool_rules(user_request_in: RequestIn, lang: Language):
-    config = user_request_in.config
+async def languagetool_rules(config: Config, lang: Language, text: str):
     ignore = ["@", "#"]
 
     list_results = []
@@ -394,7 +404,7 @@ async def languagetool_rules(user_request_in: RequestIn, lang: Language):
         connector=aiohttp.TCPConnector(verify_ssl=settings.languagetool_verify_ssl)
     ) as session:
         payload = {
-            "text": user_request_in.text,
+            "text": text,
             "language": lang.locale,
             "motherTongue": config.primary_language,
         }
@@ -407,12 +417,11 @@ async def languagetool_rules(user_request_in: RequestIn, lang: Language):
                 for match in result["matches"]:
                     offset = int(match["offset"])
                     end = offset + int(match["length"])
-                    text = user_request_in.text[offset:end]
+                    highlight_text = text[offset:end]
 
                     # ignore text that starts with @ or #
-                    if text[0:1] in ignore or (
-                        offset > 0
-                        and user_request_in.text[offset - 1 : offset] in ignore
+                    if highlight_text[0:1] in ignore or (
+                        offset > 0 and text[offset - 1 : offset] in ignore
                     ):
                         continue
 
@@ -427,8 +436,8 @@ async def languagetool_rules(user_request_in: RequestIn, lang: Language):
                         ResultOut.factory(
                             config,
                             lang,
+                            highlight_text,
                             text,
-                            user_request_in.text,
                             "orthography",
                             "orthography",
                             offset,
@@ -453,17 +462,17 @@ async def languagetool_rules(user_request_in: RequestIn, lang: Language):
     return list_results
 
 
-def language_rules(user_request_in: RequestIn, lang: Language):
+def language_rules(config: Config, lang: Language, text: str):
     # apply SpaCy pre-built model
-    tokens = model[lang.lang](user_request_in.text.rstrip())
+    tokens = model[lang.lang](text.rstrip().replace("\n", " "))
 
     # functions for German rules
     if lang.lang == "de":
-        list_results = GermanRules(lang, tokens, user_request_in)
+        list_results = german_rules(config, lang, tokens, text)
 
     # function for English rules
     elif lang.lang == "en":
-        list_results = EnglishRules(lang, tokens, user_request_in)
+        list_results = english_rules(config, lang, tokens, text)
 
     else:
         list_results = []
@@ -474,32 +483,32 @@ def language_rules(user_request_in: RequestIn, lang: Language):
 # Function for all German rules
 
 
-def IsNotNoun(pos):
+def is_not_noun(pos):
     return pos != "NOUN" and pos != "PROPN" and pos != "PRON"
 
 
-def GetNonNounLowerCased(token):
+def get_non_noun_lower_cased(token):
     token_word = token.lemma_
-    if IsNotNoun(token.pos_):
+    if is_not_noun(token.pos_):
         token_word = token_word.lower()
 
     return token_word
 
 
-def IsSubCategoryEnabled(subcategory, disabled_categories):
+def is_sub_category_enabled(subcategory, disabled_categories):
     return categories[subcategory]["category"] not in disabled_categories
 
 
-def GermanRules(lang, tokens, user_request_in: RequestIn):
+def german_rules(config: Config, lang: Language, tokens, text: str):
     list_full = []
 
-    disabled_categories = user_request_in.config.disabled_categories
+    disabled_categories = config.disabled_categories
 
-    if IsSubCategoryEnabled("openly_discriminating", disabled_categories):
-        list_full += RulesBasedWordsPhraseMatcherDE(
-            user_request_in.config,
+    if is_sub_category_enabled("openly_discriminating", disabled_categories):
+        list_full += rules_based_words_phrase_matcher_de(
+            config,
             lang,
-            user_request_in.text,
+            text,
             tokens,
             open_disc_words_alternatives,
             open_disc_sentences_alternatives,
@@ -507,73 +516,67 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             "openly_discriminating",
         )
 
-    if IsSubCategoryEnabled("gendered", disabled_categories):
-        list_full += GenderedDenomAnalysisDE(
-            user_request_in.config,
+    if is_sub_category_enabled("gendered", disabled_categories):
+        list_full += gendered_denom_analysis_de(
+            config,
             lang,
-            user_request_in.text,
+            text,
             tokens,
             gender_words_alternatives,
         )
 
-    if IsSubCategoryEnabled(
-        "misgendering_institutions", user_request_in.config.disabled_categories
-    ):
-        list_full += MisgenderingInstitutionsDE(
-            user_request_in.config, lang, user_request_in.text, tokens
-        )
+    if is_sub_category_enabled("misgendering_institutions", config.disabled_categories):
+        list_full += misgendering_institutions_de(config, lang, text, tokens)
 
-    if IsSubCategoryEnabled(
-        "gendered_denominations_ending", user_request_in.config.disabled_categories
+    if is_sub_category_enabled(
+        "gendered_denominations_ending", config.disabled_categories
     ):
-        list_full += GenderedDenomEnd(
-            user_request_in.config, lang, user_request_in.text
-        )
+        list_full += gendered_denom_end(config, lang, text)
 
-    if IsSubCategoryEnabled("agentic", disabled_categories):
-        list_full += AgenticLanguageAnalysisDE(
-            user_request_in.config,
+    if is_sub_category_enabled("agentic", disabled_categories):
+        list_full += agentic_language_analysis_de(
+            config,
             lang,
-            user_request_in.text,
+            text,
             tokens,
             agentic_words_alternatives,
         )
 
-    if IsSubCategoryEnabled("unconscious_bias", disabled_categories):
-        list_full += RulesBasedWordsPhraseMatcherDE(
-            user_request_in.config,
+    if is_sub_category_enabled("unconscious_bias", disabled_categories):
+        list_full += rules_based_words_phrase_matcher_de(
+            config,
             lang,
-            user_request_in.text,
+            text,
             tokens,
             bias_words_alternatives_no_noun,
             bias_sentences_alternatives,
             rules["de-DE"]["df_ub_sentences"],
             "unconscious_bias",
-        ) + WordNounDE(
-            user_request_in.config,
+        ) + word_noun_de(
+            config,
             lang,
-            user_request_in.text,
+            text,
             tokens,
             bias_words_alternatives_noun,
             "unconscious_bias",
         )
 
-    if IsSubCategoryEnabled("communal", disabled_categories):
-        list_full += RulesBased(
-            user_request_in.config,
+    if is_sub_category_enabled("communal", disabled_categories):
+        list_full += rules_based(
+            config,
             lang,
-            user_request_in.text,
+            text,
             tokens,
             rules["de-DE"]["df_communal_words"],
             "inclusive",
             "communal",
         )
 
-    if IsSubCategoryEnabled("d_and_i", disabled_categories):
-        list_full += RulesBasedWordsPhraseMatcher(
-            user_request_in.config,
+    if is_sub_category_enabled("d_and_i", disabled_categories):
+        list_full += rules_based_words_phrase_matcher(
+            config,
             lang,
-            user_request_in.text,
+            text,
             tokens,
             rules["de-DE"]["terms_d_and_i_words"],
             rules["de-DE"]["df_d_and_i_words"],
@@ -581,11 +584,11 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
             "d_and_i",
         )
 
-    if IsSubCategoryEnabled("style", disabled_categories):
-        list_full += StyleWordAnalysisDE(
-            user_request_in.config,
+    if is_sub_category_enabled("style", disabled_categories):
+        list_full += style_word_analysis_de(
+            config,
             lang,
-            user_request_in.text,
+            text,
             tokens,
             rules["de-DE"]["terms_style"],
             style_words_alternatives,
@@ -596,10 +599,10 @@ def GermanRules(lang, tokens, user_request_in: RequestIn):
 
 
 # Function for all English rules
-def EnglishRules(lang, tokens, user_request_in: RequestIn):
+def english_rules(config: Config, lang: Language, tokens, text: str):
     list_full = []
 
-    disabled_categories = user_request_in.config.disabled_categories
+    disabled_categories = config.disabled_categories
     words_alternatives_en = defaultdict(list)
     inclusive_words_alternatives_en = []
     gendered_words_alternatives_en = defaultdict(list)
@@ -631,11 +634,12 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
         sentences_alternatives_en["ge"] = gender_sentences_alternatives_US
         sentences_alternatives_en["style"] = style_sentences_alternatives_US
         sentences_alternatives_en["bias"] = bias_sentences_alternatives_US
-    if IsSubCategoryEnabled("openly_discriminating", disabled_categories):
-        list_full += RulesBasedWordsPhraseMatcherEN(
-            user_request_in.config,
+
+    if is_sub_category_enabled("openly_discriminating", disabled_categories):
+        list_full += rules_based_words_phrase_matcher_en(
+            config,
             lang,
-            user_request_in.text,
+            text,
             tokens,
             words_alternatives_en["od"],
             sentences_alternatives_en["od"],
@@ -643,30 +647,30 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
             "openly_discriminating",
         )
 
-    if IsSubCategoryEnabled("gendered", disabled_categories):
-        list_full += RulesBasedWordsPhraseMatcherEN(
-            user_request_in.config,
+    if is_sub_category_enabled("gendered", disabled_categories):
+        list_full += rules_based_words_phrase_matcher_en(
+            config,
             lang,
-            user_request_in.text,
+            text,
             tokens,
             words_alternatives_en["ge"],
             sentences_alternatives_en["ge"],
             rules[lang.locale]["df_gendered_sentence"],
             "gendered",
-        ) + GenderedEN(
-            user_request_in.config,
+        ) + gendered_en(
+            config,
             lang,
-            user_request_in.text,
+            text,
             tokens,
             gendered_words_alternatives_en["gendered"],
             "gendered",
         )
 
-    if IsSubCategoryEnabled("inclusive", disabled_categories):
-        list_full += RulesBasedWordsPhraseMatcherNoAltEN(
-            user_request_in.config,
+    if is_sub_category_enabled("inclusive", disabled_categories):
+        list_full += rules_based_words_phrase_matcher_no_alt_en(
+            config,
             lang,
-            user_request_in.text,
+            text,
             tokens,
             inclusive_words_alternatives_en,
             inclusive_sentences_alternatives_en,
@@ -674,11 +678,11 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
             "inclusive",
         )
 
-    if IsSubCategoryEnabled("style", disabled_categories):
-        list_full += RulesBasedWordsPhraseMatcherEN(
-            user_request_in.config,
+    if is_sub_category_enabled("style", disabled_categories):
+        list_full += rules_based_words_phrase_matcher_en(
+            config,
             lang,
-            user_request_in.text,
+            text,
             tokens,
             words_alternatives_en["style"],
             sentences_alternatives_en["style"],
@@ -686,20 +690,20 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
             "style",
         )
 
-    if IsSubCategoryEnabled("unconscious_bias", disabled_categories):
-        list_full += RulesBasedWordsPhraseMatcherEN(
-            user_request_in.config,
+    if is_sub_category_enabled("unconscious_bias", disabled_categories):
+        list_full += rules_based_words_phrase_matcher_en(
+            config,
             lang,
-            user_request_in.text,
+            text,
             tokens,
             words_alternatives_en["bias"],
             sentences_alternatives_en["bias"],
             rules[lang.locale]["df_ub_sentence"],
             "unconscious_bias",
-        ) + GenderedEN(
-            user_request_in.config,
+        ) + gendered_en(
+            config,
             lang,
-            user_request_in.text,
+            text,
             tokens,
             gendered_words_alternatives_en["bias"],
             "unconscious_bias",
@@ -710,7 +714,7 @@ def EnglishRules(lang, tokens, user_request_in: RequestIn):
 """Function to catch the words related to False Positive in the user query"""
 
 
-def IsItFalsePositive(word, false_positive):
+def is_false_positive(word, false_positive):
     for item in false_positive:
         if word == item:
             return True
@@ -721,7 +725,7 @@ def IsItFalsePositive(word, false_positive):
 """Function to make transform words to lowcase used for English"""
 
 
-def GetLowerCased(token):
+def get_lower_cased(token):
     token_word = token.lemma_
 
     return token_word.lower()
@@ -730,7 +734,7 @@ def GetLowerCased(token):
 """Function to catch ending in German Denom"""
 
 
-def GenderedDenomEnd(config: Config, lang, full_text):
+def gendered_denom_end(config: Config, lang, full_text):
     subcategory = "gendered_denominations_ending"
     category = categories[subcategory]["category"]
 
@@ -761,7 +765,7 @@ def GenderedDenomEnd(config: Config, lang, full_text):
 # this function agentic language & related false positives
 
 
-def AgenticLanguageAnalysisDE(
+def agentic_language_analysis_de(
     config: Config, lang, full_text, tokens, agentic_words_alternatives
 ):
     subcategory = "agentic"
@@ -771,7 +775,7 @@ def AgenticLanguageAnalysisDE(
     list_false_positives = []
     for token in tokens:
         # check if the user query have false positives
-        if IsItFalsePositive(token.lemma_, false_positive.agentic):
+        if is_false_positive(token.lemma_, false_positive.agentic):
             # recognise if there is Name of organisation or geographical name in the query
             for entity in tokens.ents:
                 if entity.label_ == "ORG":
@@ -800,7 +804,7 @@ def AgenticLanguageAnalysisDE(
                                 )
         else:
             for word, alternative in agentic_words_alternatives:
-                if GetNonNounLowerCased(token) == word:
+                if get_non_noun_lower_cased(token) == word:
                     list_tokens.append(
                         ResultOut.factory(
                             config,
@@ -818,7 +822,7 @@ def AgenticLanguageAnalysisDE(
     return list_tokens
 
 
-def GenderedDenomAnalysisDE(
+def gendered_denom_analysis_de(
     config: Config, lang, full_text, tokens, gender_words_alternatives
 ):
     category = "gendered"
@@ -993,7 +997,7 @@ def GenderedDenomAnalysisDE(
 # Unified function for Emty words false positives and rules
 
 
-def StyleWordAnalysisDE(
+def style_word_analysis_de(
     config: Config,
     lang,
     full_text,
@@ -1014,7 +1018,7 @@ def StyleWordAnalysisDE(
 
     for i in range(len(tokens))[1:-1]:
         # check if the user query have false positives
-        if IsItFalsePositive(tokens[i].lemma_, rules["de-DE"]["false_positive_style"]):
+        if is_false_positive(tokens[i].lemma_, rules["de-DE"]["false_positive_style"]):
             # recognise if there is Name of organisation or geographical name in the query
             if len(tokens.ents) > 0:
                 # this output will be deleted in production
@@ -1080,7 +1084,7 @@ def StyleWordAnalysisDE(
 # German function to show plural and singular forms of alternatives for nouns
 
 
-def WordNounDE(
+def word_noun_de(
     config: Config, lang, full_text, tokens, bias_words_alternatives_noun, category
 ):
     list_tokens = []
@@ -1092,7 +1096,7 @@ def WordNounDE(
             alternative_plur,
             subcategory,
         ) in bias_words_alternatives_noun:
-            if GetNonNounLowerCased(token) == word:
+            if get_non_noun_lower_cased(token) == word:
                 token_morph_number = token.morph.get("Number")
                 if is_number_list_empty(token_morph_number, token):
                     continue
@@ -1132,7 +1136,7 @@ def WordNounDE(
 # Unified function for rules and sentence false positives
 
 # Unified function German
-def RulesBasedWordsPhraseMatcherDE(
+def rules_based_words_phrase_matcher_de(
     config: Config,
     lang,
     full_text,
@@ -1152,7 +1156,7 @@ def RulesBasedWordsPhraseMatcherDE(
 
     for token in tokens:
         for word, alternative, subcategory in words_alternatives:
-            if GetNonNounLowerCased(token) == word:
+            if get_non_noun_lower_cased(token) == word:
                 list_tokens.append(
                     ResultOut.factory(
                         config,
@@ -1189,7 +1193,7 @@ def RulesBasedWordsPhraseMatcherDE(
     return list_tokens
 
 
-def RulesBasedWordsPhraseMatcher(
+def rules_based_words_phrase_matcher(
     config: Config, lang, full_text, tokens, terms, df, category, subcategory
 ):
 
@@ -1203,7 +1207,7 @@ def RulesBasedWordsPhraseMatcher(
 
     for token in tokens:
         for word in list(df["Lemma"]):
-            if GetNonNounLowerCased(token) == word:
+            if get_non_noun_lower_cased(token) == word:
                 list_tokens.append(
                     ResultOut.factory(
                         config,
@@ -1241,11 +1245,11 @@ def RulesBasedWordsPhraseMatcher(
 # Unified function for rules
 
 
-def RulesBased(config: Config, lang, full_text, tokens, df, category, subcategory):
+def rules_based(config: Config, lang, full_text, tokens, df, category, subcategory):
     list_tokens = []
     for token in tokens:
         for word in list(df["Lemma"]):
-            if GetNonNounLowerCased(token) == word:
+            if get_non_noun_lower_cased(token) == word:
                 list_tokens.append(
                     ResultOut.factory(
                         config,
@@ -1267,7 +1271,7 @@ def RulesBased(config: Config, lang, full_text, tokens, df, category, subcategor
 # Deutshe Bahn als.. Deutshe Bahn ist..
 
 
-def MisgenderingInstitutionsDE(config: Config, lang, full_text, tokens):
+def misgendering_institutions_de(config: Config, lang, full_text, tokens):
     subcategory = "misgendering_institutions"
     category = categories[subcategory]["category"]
     db_match_list = []
@@ -1306,7 +1310,7 @@ def MisgenderingInstitutionsDE(config: Config, lang, full_text, tokens):
 
 
 # function English
-def RulesBasedWordsPhraseMatcherEN(
+def rules_based_words_phrase_matcher_en(
     config: Config,
     lang,
     full_text,
@@ -1326,7 +1330,7 @@ def RulesBasedWordsPhraseMatcherEN(
 
     for token in tokens:
         for word, alternative, subcategory in words_alternatives:
-            if GetLowerCased(token) == word:
+            if get_lower_cased(token) == word:
                 list_tokens.append(
                     ResultOut.factory(
                         config,
@@ -1366,7 +1370,7 @@ def RulesBasedWordsPhraseMatcherEN(
 # english function to show plural and singular forms of alternatives for nouns
 
 
-def GenderedEN(
+def gendered_en(
     config: Config, lang, full_text, tokens, gendered_words_alternatives, category
 ):
     list_tokens = []
@@ -1378,7 +1382,7 @@ def GenderedEN(
             alternative_plur,
             subcategory,
         ) in gendered_words_alternatives:
-            if GetLowerCased(token) == word:
+            if get_lower_cased(token) == word:
                 token_morph_number = token.morph.get("Number")
                 if is_number_list_empty(token_morph_number, token):
                     continue
@@ -1418,7 +1422,7 @@ def GenderedEN(
 # english function, no alternatives
 
 
-def RulesBasedWordsPhraseMatcherNoAltEN(
+def rules_based_words_phrase_matcher_no_alt_en(
     config: Config,
     lang,
     full_text,
@@ -1438,7 +1442,7 @@ def RulesBasedWordsPhraseMatcherNoAltEN(
 
     for token in tokens:
         for word, subcategory in inclusive_words_alternatives_en:
-            if GetLowerCased(token) == word:
+            if get_lower_cased(token) == word:
                 list_tokens.append(
                     ResultOut.factory(
                         config,
