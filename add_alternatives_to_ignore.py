@@ -1,5 +1,6 @@
 import csv
 import json
+import os
 from collections import defaultdict
 import requests
 from app.models import (
@@ -8,18 +9,16 @@ from app.models import (
 )
 
 test_text = "Hier ist ein Satz. Liebe {0}"
-api_url = "https://lt.default.api.witty.works/v2/check"
-# api_url = "https://api.languagetoolplus.com/v2/check"
-api_url = "http://localhost:8081/v2/check"
-# api_url = False
+api_url = "http://localhost:8000/v2/check"
 columns = defaultdict(list)
 all_alternative_groups = []
 all_alternatives = []
 current_words = []
 clean_words = []
 
+# change to original Languagetool path
 with open(
-    "../languagetool/LanguageTool-5.5/org/languagetool/resource/de/hunspell/ignore.txt",
+    "ignore.txt",
     "r",
 ) as f:
     lines = f.readlines()
@@ -28,17 +27,29 @@ with open(
         if not li.startswith("#"):
             current_words.append(li)
 
-traning_data_dir = "training_data/de-DE"
-training_data_full_path = traning_data_dir + "/gendered_noun.csv"
-with open(training_data_full_path) as f:
-    reader = csv.DictReader(f)
-    for row in reader:
-        value_sg = row["Sg_all_clean"]
-        value_pl = row["Pl_all_clean"]
-        value_sg = value_sg.replace("'", '"')
-        value_pl = value_pl.replace("'", '"')
-        all_alternative_groups += json.loads(value_sg)
-        all_alternative_groups += json.loads(value_pl)
+base_directory = "training_data/de-DE/"
+training_data_paths = []
+for file in os.listdir(base_directory):
+    training_data_paths.append(base_directory + file)
+
+columns = defaultdict(list)
+all_alternative_groups = []
+all_alternatives = []
+clean_words = []
+
+all_file_allternatives = []
+for training_data_path in training_data_paths:
+    with open(training_data_path) as f:
+        reader = csv.DictReader(f)
+        column_names = reader.fieldnames
+        if "Alt_split" in column_names:
+            for row in reader:
+                value = row["Alt_split"]
+                value = value.replace("'", '"')
+                try:
+                    all_alternative_groups += json.loads(value)
+                except ValueError:
+                    continue
 
 print("All alternative groups: " + str(len(all_alternative_groups)))
 
@@ -46,7 +57,7 @@ for all_alternative_group in all_alternative_groups:
     all_alternatives.extend(all_alternative_group.split("|"))
 
 print("Alternatives: " + str(len(all_alternatives)))
-
+all_alternatives = set(all_alternatives)
 endings = Config._gendereddenom_ending.keys()
 for word in all_alternatives:
     if "~" in word:
@@ -77,13 +88,13 @@ for word in words["de-DE"]:
         words["de-CH"].append(word.replace("ß", "ss"))
 
 used_words = []
-with open("languagetool/ignore.txt", "r") as readfile:
+with open("ignore.txt", "r") as readfile:
     used_words = [line.strip() for line in readfile]
 
 print("Previously used words: " + str(len(used_words)))
 
 newly_added_words = []
-with open("languagetool/ignore.txt", "w") as myfile:
+with open("ignore.txt", "w") as myfile:
     for locale in words:
         for word in words[locale]:
             if len(word) < 3:
@@ -97,21 +108,23 @@ with open("languagetool/ignore.txt", "w") as myfile:
                 response = requests.post(
                     api_url,
                     data={
-                        "text": text,
-                        "language": "auto",
-                        "preferredVariants": locale,
+                        "text": word,
+                        "language": locale,
                         "motherTongue": locale,
                         "disabledRuleIds": "SEHR_GEEHRTER_NAME,PROFANITY",
                         "disabledCategories": "GENDER_NEUTRALITY",
                     },
                 )
-
+                if word == "Backender":
+                    print("word= ", word)
+                    print(
+                        "response= ",
+                        response.json()["matches"],
+                    )
+                    exit(1)
                 if response.status_code != 200:
                     print("Got error on: " + word)
-                    exit
-
                 if response.json()["matches"]:
-                    print(word)
                     newly_added_words.append(word)
                 else:
                     add_word = False
@@ -123,7 +136,7 @@ with open("languagetool/ignore.txt", "w") as myfile:
                 myfile.write("\n")
 
     all_alternatives = []
-    training_data_full_path = traning_data_dir + "/articles.csv"
+    training_data_full_path = base_directory + "/articles.csv"
     with open(training_data_full_path) as f:
         reader = csv.DictReader(f)
         for row in reader:
