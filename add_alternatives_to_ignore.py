@@ -138,7 +138,6 @@ def generate_used_words_list(path_to_ignore_file):
 
 
 def check_words_spelling(newly_added_words):
-    newly_added_words = []
     words_to_write = []
     for locale in words:
         for word in words[locale]:
