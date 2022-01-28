@@ -29,9 +29,22 @@ def parse_args(args):
     return parser.parse_args()
 
 
+def check_if_server_is_running(api_url):
+    try:
+        response = requests.get(api_url)
+        if response.status_code == 200:
+            return True
+        else:
+            return False
+    except requests.ConnectionError:
+        print("Please first run the local server %s" % api_url)
+        exit(1)
+
+
 args = parse_args(sys.argv[1:])
 language = ""
 api_url = args.URL
+check_if_server_is_running(api_url)
 all_alternative_groups = []
 all_alternatives = []
 current_words = []
