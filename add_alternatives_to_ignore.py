@@ -1,6 +1,7 @@
 import csv
 import json
 import os
+import sys
 from collections import defaultdict
 from webbrowser import get
 import requests
@@ -10,20 +11,25 @@ from app.models import (
 )
 import argparse
 
-parser = argparse.ArgumentParser()
-parser.add_argument(
-    "-u",
-    "--URL",
-    help="Api url which should call check on training data, e.g. http://localhost:8081/v2/check",
-    default="http://localhost:8081/v2/check",
-)
-parser.add_argument(
-    "-l",
-    "--Language",
-    help="Langauge for which ignore file should be generated, currently: German or English",
-    default="German",
-)
-args = parser.parse_args()
+
+def parse_args(args):
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-u",
+        "--URL",
+        help="Api url which should call check on training data, e.g. http://localhost:8081/v2/check",
+        default="http://localhost:8081/v2/check",
+    )
+    parser.add_argument(
+        "-l",
+        "--Language",
+        help="Langauge for which ignore file should be generated, currently: German or English",
+        default="German",
+    )
+    return parser.parse_args()
+
+
+args = parse_args(sys.argv[1:])
 language = ""
 api_url = args.URL
 all_alternative_groups = []

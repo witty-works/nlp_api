@@ -203,10 +203,15 @@ pipenv run python -m analyze_rules -i [CSV export]]
 
 ## Update the ignore.txt
 1. Run the script to generate ignore words
+for German:
 ```
 pipenv run python -m add_alternatives_to_ignore
 ```
-2. Copy `ignore.txt` file from `languagetool/German` directory to languagetool repository: https://github.com/witty-works/languagetool
+for English:
+```
+pipenv run python -m add_alternatives_to_ignore -l English
+```
+2. Copy `ignore.txt` file from `languagetool/German` or `languagetool/English` directory to languagetool repository: https://github.com/witty-works/languagetool
 ## Update the false positive list 
 1. Remove gender_false_positive.csv file:
 ```
