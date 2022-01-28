@@ -64,10 +64,17 @@ def get_alt_from_files(base_directory):
                     except ValueError:
                         continue
 
-    print("All alternative groups: " + str(len(all_alternative_groups)))
+    print(
+        "All alternative groups for directory %s: %s"
+        % (base_directory, str(len(all_alternative_groups)))
+    )
 
     for all_alternative_group in all_alternative_groups:
         all_alternatives.extend(all_alternative_group.split("|"))
+    print(
+        "Alternatives for directory %s: %s "
+        % (base_directory, str(len(all_alternatives)))
+    )
     return set(all_alternatives)
 
 
@@ -126,6 +133,7 @@ def generate_used_words_list(path_to_ignore_file):
         used_words = [
             line.strip().replace("\/", "/").replace("\_", "_") for line in readfile
         ]
+    print("Previously used words: " + str(len(used_words)))
     return used_words
 
 
@@ -160,7 +168,8 @@ def check_words_spelling(newly_added_words):
     return set(words_to_write), newly_added_words
 
 
-def add_word_german(path_to_ignore_file, words_to_write):
+def add_words_to_ignore(path_to_ignore_file, words_to_write):
+    words_to_write = sorted(words_to_write, key=str.lower)
     with open(path_to_ignore_file, "w") as myfile:
         for word in words_to_write:
             word = word.replace("/", "\/")
@@ -200,7 +209,7 @@ def add_articles_german(path_to_ignore_file, articles):
             myfile.write("\n")
 
 
-def append_original_ignored_words(path_to_ignore_file):
+def append_original_ignored_words(path_to_ignore_file, current_words):
     with open(path_to_ignore_file, "a") as myfile:
         myfile.write("# Old words (added by LT): \n")
         for word in current_words:
@@ -214,42 +223,36 @@ if args.Language == "German":
     base_directory = "training_data/de-DE/"
     current_words = get_current_words(original_languagetool_path)
     all_alternatives = get_alt_from_files(base_directory)
-    all_alternatives = set(all_alternatives)
-    print("Alternatives: " + str(len(all_alternatives)))
-    print("all_alternatives= ", len(all_alternatives))
     endings = Config._gendereddenom_ending.keys()
     words = generate_correct_endings_german(all_alternatives, endings)
     used_words = generate_used_words_list(path_to_ignore_file)
-    print("Previously used words: " + str(len(used_words)))
     newly_added_words = []
     words_to_write, newly_added_words = check_words_spelling(newly_added_words)
-    print("first newly added= ", len(newly_added_words))
-    # words_to_write = set(words_to_write)
-    print("words_to_write= ", len(words_to_write))
-    add_word_german(path_to_ignore_file, words_to_write)
+    add_words_to_ignore(path_to_ignore_file, words_to_write)
     articles = generate_german_articles()
     print("Newly added words: " + str(len(newly_added_words)))
     if newly_added_words and len(newly_added_words) < 20:
         print(newly_added_words)
     add_articles_german(path_to_ignore_file, articles)
-    # append_original_ignored_words(path_to_ignore_file)
+    append_original_ignored_words(path_to_ignore_file, current_words)
 elif args.Language == "English":
-    # en-US words
     path_to_ignore_file = "languagetool/English/ignore.txt"
     original_languagetool_path = "languagetool/English/hunspell/ignore.txt"
-    base_directory = "training_data/en-US/"
+    base_directory_US = "training_data/en-US/"
     current_words = get_current_words(original_languagetool_path)
-    all_alternatives_US = get_alt_from_files(base_directory)
+    # en-US words
+    all_alternatives_US = get_alt_from_files(base_directory_US)
     words = {}
     words["en-US"] = generate_alternatives_english(all_alternatives_US)
     # en-GB words
     base_directory_GB = "training_data/en-GB/"
-    all_alternatives_GB = get_alt_from_files(base_directory)
+    all_alternatives_GB = get_alt_from_files(base_directory_GB)
     words["en-GB"] = generate_alternatives_english(all_alternatives_GB)
-    # words = set.union(words_GB, words_US)
     used_words = generate_used_words_list(path_to_ignore_file)
     newly_added_words = []
     words_to_write, newly_added_words = check_words_spelling(newly_added_words)
-    print(len(words_to_write))
-    add_word_german(path_to_ignore_file, words_to_write)
-    append_original_ignored_words(path_to_ignore_file)
+    print("Newly added words: " + str(len(newly_added_words)))
+    if newly_added_words and len(newly_added_words) < 20:
+        print(newly_added_words)
+    add_words_to_ignore(path_to_ignore_file, words_to_write)
+    append_original_ignored_words(path_to_ignore_file, current_words)
