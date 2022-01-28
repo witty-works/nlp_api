@@ -222,7 +222,7 @@ def append_original_ignored_words(path_to_ignore_file, current_words):
             myfile.write("\n")
 
 
-if args.Language == "German":
+if args.Language.lower() == "german":
     path_to_ignore_file = "languagetool/German/ignore.txt"
     original_languagetool_path = "languagetool/German/hunspell/ignore.txt"
     base_directory = "training_data/de-DE/"
@@ -240,7 +240,7 @@ if args.Language == "German":
         print(newly_added_words)
     add_articles_german(path_to_ignore_file, articles)
     append_original_ignored_words(path_to_ignore_file, current_words)
-elif args.Language == "English":
+elif args.Language.lower() == "english":
     path_to_ignore_file = "languagetool/English/ignore.txt"
     original_languagetool_path = "languagetool/English/hunspell/ignore.txt"
     base_directory_US = "training_data/en-US/"
@@ -261,3 +261,7 @@ elif args.Language == "English":
         print(newly_added_words)
     add_words_to_ignore(path_to_ignore_file, words_to_write)
     append_original_ignored_words(path_to_ignore_file, current_words)
+else:
+    raise ValueError(
+        "Please specify correct language argument. Valid values are German or English (not case-sensitive)."
+    )
