@@ -7,18 +7,28 @@ from app.models import (
     ResultOut,
     Config,
 )
+import argparse
 
-test_text = "Hier ist ein Satz. Liebe {0}"
-api_url = "http://localhost:8000/v2/check"
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "-u",
+    "--URL",
+    help="Api url which should call check on training data, e.g. http://localhost:8081/v2/check",
+    default="http://localhost:8081/v2/check",
+)
+args = parser.parse_args()
+
+api_url = args.URL
 columns = defaultdict(list)
 all_alternative_groups = []
 all_alternatives = []
 current_words = []
 clean_words = []
-
+path_to_ignore_file = "languagetool/German/ignore.txt"
+original_languagetoool_path = "languagetool/German/hunspell/ignore.txt"
 # change to original Languagetool path
 with open(
-    "ignore.txt",
+    original_languagetoool_path,
     "r",
 ) as f:
     lines = f.readlines()
@@ -35,9 +45,8 @@ for file in os.listdir(base_directory):
 columns = defaultdict(list)
 all_alternative_groups = []
 all_alternatives = []
-clean_words = []
 
-all_file_allternatives = []
+
 for training_data_path in training_data_paths:
     with open(training_data_path) as f:
         reader = csv.DictReader(f)
@@ -57,7 +66,9 @@ for all_alternative_group in all_alternative_groups:
     all_alternatives.extend(all_alternative_group.split("|"))
 
 print("Alternatives: " + str(len(all_alternatives)))
+clean_words = []
 all_alternatives = set(all_alternatives)
+print("all_alternatives= ", len(all_alternatives))
 endings = Config._gendereddenom_ending.keys()
 for word in all_alternatives:
     if "~" in word:
@@ -88,23 +99,30 @@ for word in words["de-DE"]:
         words["de-CH"].append(word.replace("ß", "ss"))
 
 used_words = []
-with open("ignore.txt", "r") as readfile:
-    used_words = [line.strip() for line in readfile]
+with open(path_to_ignore_file, "r") as readfile:
+    used_words = [
+        line.strip().replace("\/", "/").replace("\_", "_") for line in readfile
+    ]
 
 print("Previously used words: " + str(len(used_words)))
-
+count = 0
+count_r = 0
 newly_added_words = []
-with open("ignore.txt", "w") as myfile:
+words_to_write = []
+print(words["de-CH"])
+print("words len= ", len(words["de-DE"]) + len(words["de-CH"]))
+with open(path_to_ignore_file, "w") as myfile:
     for locale in words:
         for word in words[locale]:
+            if word == "mitreissen":
+                print("SPASS")
+                print(locale)
             if len(word) < 3:
                 continue
 
             add_word = True
 
             if api_url and word not in used_words:
-                text = test_text.format(word)
-
                 response = requests.post(
                     api_url,
                     data={
@@ -115,54 +133,55 @@ with open("ignore.txt", "w") as myfile:
                         "disabledCategories": "GENDER_NEUTRALITY",
                     },
                 )
-                if word == "Backender":
-                    print("word= ", word)
-                    print(
-                        "response= ",
-                        response.json()["matches"],
-                    )
-                    exit(1)
                 if response.status_code != 200:
                     print("Got error on: " + word)
                 if response.json()["matches"]:
+                    count_r += 1
                     newly_added_words.append(word)
                 else:
                     add_word = False
 
-            if add_word:
-                word = word.replace("/", "\/")
-                word = word.replace("_", "\_")
-                myfile.write(word)
-                myfile.write("\n")
+            if add_word and not (word in current_words):
+                words_to_write.append(word)
+    words_to_write = set(words_to_write)
+    for word in words_to_write:
+        word = word.replace("/", "\/")
+        word = word.replace("_", "\_")
+        count += 1
+        myfile.write(word)
+        myfile.write("\n")
 
     all_alternatives = []
+    articles = []
     training_data_full_path = base_directory + "/articles.csv"
     with open(training_data_full_path) as f:
         reader = csv.DictReader(f)
         for row in reader:
             all_alternatives.append(row["Alternative"])
-
+    all_alternatives = set(all_alternatives)
     for alternative in all_alternatives:
         for german_gender_ending in endings:
             word = ResultOut.getGenderedRolesFormatInclusive(
                 alternative, german_gender_ending
             )
 
-            if word not in used_words:
-                # print(word)
-                used_words.append(word)
+            if not (word in used_words):
                 newly_added_words.append(word)
-
-                word = word.replace("/", "\/")
-                word = word.replace("_", "\_")
-                myfile.write(word)
-                myfile.write("\n")
-
+            articles.append(word)
+    articles = set(articles)
+    for article in articles:
+        article = article.replace("/", "\/")
+        article = article.replace("_", "\_")
+        myfile.write(article)
+        myfile.write("\n")
+print("count_r= ", count_r)
+print("count= ", count)
 print("Newly added words: " + str(len(newly_added_words)))
-if len(newly_added_words) < 20:
+
+if newly_added_words and len(newly_added_words) < 20:
     print(newly_added_words)
 
-with open("languagetool/ignore.txt", "a") as myfile:
+with open(path_to_ignore_file, "a") as myfile:
     myfile.write("# Old words (added by LT): \n")
     for word in current_words:
         myfile.write(word)
