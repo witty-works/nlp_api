@@ -1,0 +1,13 @@
+{
+    "detail": [
+        {
+            "loc": [
+                "body",
+                "text"
+            ],
+            "msg": "Hallo, Ich bin <PERSON> (23) und du kannst mich unter <PHONE_NUMBER> erreichen und hier ist mein API Schlüssel API key 23S76D23S335LW.",
+            "type": "scrubbed PII data"
+        }
+    ],
+    "type": "scrubbed PII data"
+}

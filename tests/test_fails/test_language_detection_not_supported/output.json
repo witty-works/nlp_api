@@ -8,5 +8,6 @@
             "msg": "Language could not be determined",
             "type": "value_error.not_supported"
         }
-    ]
+    ],
+    "type": "value_error.not_supported"
 }

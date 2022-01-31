@@ -217,7 +217,6 @@ def test_language_detection_fail(fails_case_dir, snapshot):
     snapshot.assert_match(output, "output.json")
 
 
-
 def test_categories():
     response = client.get("/categories")
     assert response.status_code == 200
@@ -407,3 +406,24 @@ def test_store_rules():
         "en-US",
         "de-DE",
     ]
+
+
+# test PII scrubbing
+
+
+@pytest.mark.parametrize(
+    "pii_scrubbing_case_dir",
+    get_dirs("tests/test_pii_scrubbing"),
+)
+def test_pii_scrubbing(pii_scrubbing_case_dir, snapshot):
+
+    # Read input files from the case directory.
+    input_json = pii_scrubbing_case_dir.joinpath("input.json").read_text()
+    # Call the tested endpoint.
+    response = client.post("/pii", json=json.loads(input_json))
+    assert response.status_code == 200
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    # Snapshot the return value.
+    snapshot.snapshot_dir = pii_scrubbing_case_dir
+    snapshot.assert_match(output, "output.json")

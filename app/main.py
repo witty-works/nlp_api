@@ -45,6 +45,7 @@ from app.settings import get_settings
 from app.logger import set_up_logger
 from app.redis import set_up_redis
 from app.languagetool import get_languagetool_url
+from app.persidio import Persidio
 from app.model import model
 from app.rules import *
 
@@ -191,6 +192,12 @@ def raise_exception(text):
     raise Exception()
 
 
+@app.post("/pii", response_model=Result)
+def get_lt(user_request_in: RequestIn, username: str = Depends(get_current_username)):
+    persidio = Persidio()
+    return Result.factory(persidio.clean_str(user_request_in.text), "scrubbed PII data")
+
+
 @app.get("/lt")
 def get_lt(username: str = Depends(get_current_username)):
     return languagetool_url
@@ -209,12 +216,12 @@ def openapi(username: str = Depends(get_current_username)):
 # public routes
 @app.get("/")
 def root():
-    url="https://www.witty.works/form"
-    status_code=301
+    url = "https://www.witty.works/form"
+    status_code = 301
 
     if settings.platform_environment == "local" and settings.testing == False:
-        url="/docs"
-        status_code=302
+        url = "/docs"
+        status_code = 302
 
     return RedirectResponse(url=url, status_code=status_code)
 
@@ -258,7 +265,9 @@ async def check_query(
 
     if locale == None:
         response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
-        return Result.factory("Language could not be determined")
+        return Result.factory(
+            "Language could not be determined", "value_error.not_supported"
+        )
 
     lang = Language(locale)
 

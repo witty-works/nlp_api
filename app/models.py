@@ -392,8 +392,9 @@ class ResultOut(BaseModel):
 
 class Result(BaseModel):
     detail: List
+    type: str
 
-    def factory(detail):
+    def factory(detail, type):
         detail = [
             {
                 "loc": [
@@ -401,16 +402,17 @@ class Result(BaseModel):
                     "text",
                 ],
                 "msg": detail,
-                "type": "value_error.not_supported",
+                "type": type,
             }
         ]
 
-        return Result(detail)
+        return Result(detail, type)
 
     factory = staticmethod(factory)
 
-    def __init__(self, detail):
+    def __init__(self, detail, type):
         object.__setattr__(self, "detail", detail)
+        object.__setattr__(self, "type", type)
 
 
 class ResultsOut(BaseModel):
@@ -418,7 +420,7 @@ class ResultsOut(BaseModel):
     language: str
     limit_reached: bool
 
-    def factory(results, lang, limit_reached = False):
+    def factory(results, lang, limit_reached=False):
         if lang != None:
             lang = lang.lang
 

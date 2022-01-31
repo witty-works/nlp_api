@@ -20,6 +20,8 @@ redis = "*"
 platformshconfig = "*"
 fakeredis = "*"
 fasttext = "*"
+presidio-anonymizer = "*"
+presidio-analyzer = "*"
 
 [dev-packages]
 click = "*"
