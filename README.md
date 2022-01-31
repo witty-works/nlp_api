@@ -209,9 +209,9 @@ pipenv run python -m add_alternatives_to_ignore
 ```
 for English:
 ```
-pipenv run python -m add_alternatives_to_ignore -l English
+pipenv run python -m add_alternatives_to_ignore -l English -p <path_to_ignore_file>
 ```
-2. Copy `ignore.txt` file from `languagetool/German` or `languagetool/English` directory to languagetool repository: https://github.com/witty-works/languagetool
+2. Copy `ignore.txt` to LanguageTool repository: https://github.com/witty-works/languagetool
 ## Update the false positive list 
 1. Remove gender_false_positive.csv file:
 ```
