@@ -75,9 +75,9 @@
         },
         {
             "alternatives": [
+                "growth mindset",
                 "willingness to go after a dream",
-                "desire to realize a vision",
-                "enthusiasm for working toward personal/shared goals",
+                "enthusiasm for working toward goals",
                 "focus on one's purpose"
             ],
             "category": "unconscious_bias",
@@ -109,26 +109,6 @@
             "start": 43,
             "subcategory": "agentic",
             "text": "perseverance"
-        },
-        {
-            "alternatives": [
-                "guide",
-                "support",
-                "reach",
-                "realize",
-                "work toward",
-                "contribute to",
-                "take responsibility for"
-            ],
-            "category": "unconscious_bias",
-            "context": "e count.\nCompetition is our daily life and we love to be challenged.\nWe are number 1 and innovation drives us.\nSincere regards,\nNadia",
-            "end": 160,
-            "label": "Biased language: Agentic",
-            "reason": "Unconsciously attributed to the male stereotype. Many do not feel attracted by these terms.",
-            "solution": "Use team-oriented wording or referring to purpose.",
-            "start": 154,
-            "subcategory": "agentic",
-            "text": "drives"
         }
     ]
 }

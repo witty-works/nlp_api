@@ -21,11 +21,11 @@
         },
         {
             "alternatives": [
+                "growth-minded",
+                "keen and enthusiastic",
                 "interested in taking on new responsibilities",
-                "excited to go after one's dream",
-                "keen on realizing their vision",
-                "clear about your goals",
-                "committed to working toward one's goals"
+                "committed to working toward goals",
+                "keen on realizing a vision"
             ],
             "category": "unconscious_bias",
             "context": "Our whole team is ambitious and strives for top performance.",
@@ -39,12 +39,11 @@
         },
         {
             "alternatives": [
-                "achievement",
-                "accomplishment",
-                "capability",
+                "effectiveness",
+                "accomplishments",
+                "capabilities",
                 "fulfillment",
-                "conduct",
-                "carrying out",
+                "efficiency",
                 "running",
                 "capacity"
             ],
