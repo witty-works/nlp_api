@@ -170,8 +170,6 @@ def check_words_spelling(newly_added_words):
                         "text": word,
                         "language": locale,
                         "motherTongue": locale,
-                        "disabledRuleIds": "SEHR_GEEHRTER_NAME,PROFANITY",
-                        "disabledCategories": "GENDER_NEUTRALITY",
                     },
                 )
                 if response.status_code != 200:
@@ -218,15 +216,6 @@ def generate_german_articles():
     return articles
 
 
-def add_articles_german(path_to_ignore_file, articles):
-    with open(path_to_ignore_file, "a") as myfile:
-        for article in articles:
-            article = article.replace("/", "\/")
-            article = article.replace("_", "\_")
-            myfile.write(article)
-            myfile.write("\n")
-
-
 def append_original_ignored_words(path_to_ignore_file, current_words):
     with open(path_to_ignore_file, "a") as myfile:
         myfile.write("# Old words (added by LT): \n")
@@ -246,12 +235,12 @@ if args.Language.lower() == "german":
     used_words = generate_used_words_list(path_to_ignore_file)
     newly_added_words = []
     words_to_write, newly_added_words = check_words_spelling(newly_added_words)
-    add_words_to_ignore(path_to_ignore_file, words_to_write)
     articles = generate_german_articles()
     print("Newly added words: " + str(len(newly_added_words)))
     if newly_added_words and len(newly_added_words) < 20:
         print(newly_added_words)
-    add_articles_german(path_to_ignore_file, articles)
+    words_to_write.update(articles)
+    add_words_to_ignore(path_to_ignore_file, words_to_write)
     append_original_ignored_words(path_to_ignore_file, current_words)
 elif args.Language.lower() == "english":
     path_to_ignore_file = "languagetool/English/ignore.txt"
@@ -263,9 +252,9 @@ elif args.Language.lower() == "english":
     words = {}
     words["en-US"] = generate_alternatives_english(all_alternatives_US)
     # en-GB words
-    base_directory_GB = "training_data/en-GB/"
-    all_alternatives_GB = get_alt_from_files(base_directory_GB)
-    words["en-GB"] = generate_alternatives_english(all_alternatives_GB)
+    # base_directory_GB = "training_data/en-GB/"
+    # all_alternatives_GB = get_alt_from_files(base_directory_GB)
+    # words["en-GB"] = generate_alternatives_english(all_alternatives_GB)
     used_words = generate_used_words_list(path_to_ignore_file)
     newly_added_words = []
     words_to_write, newly_added_words = check_words_spelling(newly_added_words)
