@@ -52,7 +52,7 @@ class LangDetection:
 
         return None
 
-    def get_locale(self, text, lang, language_preferences, variant_preferences):
+    def get_locale(self, text, lang = "auto", language_preferences = None, variant_preferences = None):
         if lang == "auto":
             langs = self.predict_lang(text)
 
