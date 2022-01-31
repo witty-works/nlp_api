@@ -211,7 +211,7 @@ def check_words_spelling(newly_added_words):
 
 
 def add_words_to_ignore(path_to_ignore_file, words_to_write):
-    words_to_write = sorted(words_to_write)
+    words_to_write = sorted(words_to_write, key=str.casefold)
     with open(path_to_ignore_file, "w") as myfile:
         for word in words_to_write:
             word = word.replace("/", "\/")
