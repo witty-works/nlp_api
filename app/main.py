@@ -184,7 +184,11 @@ async def exception(
 ):
     configure_sentry(request, id)
 
-    raise HTTPException(status_code=500, detail=user_request_in.text)
+    raise_exception(user_request_in.text)
+
+
+def raise_exception(text):
+    raise Exception()
 
 
 @app.get("/lt")
