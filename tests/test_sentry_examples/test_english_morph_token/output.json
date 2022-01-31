@@ -87,8 +87,9 @@
         {
             "alternatives": [
                 "Older person",
-                "Adult",
-                "Retiree"
+                "Retiree",
+                "Someone with outdated views",
+                "Person with traditional views"
             ],
             "category": "unconscious_bias",
             "context": "",
