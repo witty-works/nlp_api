@@ -15,6 +15,24 @@
             "start": 51,
             "subcategory": "exaggerating",
             "text": "extra-mile"
+        },
+        {
+            "alternatives": [
+                "think ahead",
+                "make a special effort",
+                "make customers happy",
+                "find creative solutions to customer requests",
+                "delight and retain customers through unexpected generosity and unusual solutions"
+            ],
+            "category": "unconscious_bias",
+            "context": "If a manager picks up this topic, he has to go the extra-mile to solve it.",
+            "end": 61,
+            "label": "Biased language: Agentic",
+            "reason": "Unconsciously attributed to the male stereotype. Many do not feel attracted by these terms.",
+            "solution": "Use team-oriented wording or referring to purpose.",
+            "start": 44,
+            "subcategory": "agentic",
+            "text": "go the extra-mile"
         }
     ]
 }
