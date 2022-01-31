@@ -1,6 +1,8 @@
 import csv
+from genericpath import isfile
 import json
 import os
+from pickle import FALSE
 import sys
 from collections import defaultdict
 from webbrowser import get
@@ -26,6 +28,15 @@ def parse_args(args):
         help="Langauge for which ignore file should be generated, currently: German or English",
         default="German",
     )
+    parser.add_argument(
+        "-p", "--Path", help="Path to languagetool ignore.txt file ", required=True
+    )
+    parser.add_argument(
+        "-o",
+        "--Original",
+        help="Path to original language tool ignore.txt file, like LanguageTool-5.5/org/languagetool/resource/de/hunspell/ignore.txt. Use only when running script for the first time. ",
+        default="",
+    )
     return parser.parse_args()
 
 
@@ -50,16 +61,31 @@ all_alternatives = []
 current_words = []
 
 
-def get_current_words(original_languagetool_path):
-    with open(
-        original_languagetool_path,
-        "r",
-    ) as f:
-        lines = f.readlines()
-        for line in lines:
-            li = line.strip()
-            if not li.startswith("#"):
-                current_words.append(li)
+def get_current_words(original_languagetool_path, ignore_languagetool_path):
+
+    if original_languagetool_path:
+        with open(
+            original_languagetool_path,
+            "r",
+        ) as f:
+            lines = f.readlines()
+            for line in lines:
+                li = line.strip()
+                if not li.startswith("#"):
+                    current_words.append(li)
+    else:
+        start = FALSE
+        with open(
+            ignore_languagetool_path,
+            "r",
+        ) as f:
+            lines = f.readlines()
+            for line in lines:
+                if start == True:
+                    li = line.strip()
+                    current_words.append(li)
+                if line == "# Old words (added by LT): \n":
+                    start = True
     return current_words
 
 
@@ -224,11 +250,25 @@ def append_original_ignored_words(path_to_ignore_file, current_words):
             myfile.write("\n")
 
 
+path_to_ignore_file = args.Path
+original_languagetool_path = args.Original
+
+
+def is_file(path_to_file):
+    if os.path.isfile(path_to_file):
+        return True
+    return False
+
+
+if not is_file(path_to_ignore_file):
+    raise FileNotFoundError("File %s cannot be found." % path_to_ignore_file)
+if args.Original and not is_file(original_languagetool_path):
+    raise FileNotFoundError("File %s cannot be found." % original_languagetool_path)
+
 if args.Language.lower() == "german":
-    path_to_ignore_file = "languagetool/German/ignore.txt"
-    original_languagetool_path = "languagetool/German/hunspell/ignore.txt"
+    path_to_ignore_file = args.Path
     base_directory = "training_data/de-DE/"
-    current_words = get_current_words(original_languagetool_path)
+    current_words = get_current_words(original_languagetool_path, path_to_ignore_file)
     all_alternatives = get_alt_from_files(base_directory)
     endings = Config._gendereddenom_ending.keys()
     words = generate_correct_endings_german(all_alternatives, endings)
@@ -243,10 +283,8 @@ if args.Language.lower() == "german":
     add_words_to_ignore(path_to_ignore_file, words_to_write)
     append_original_ignored_words(path_to_ignore_file, current_words)
 elif args.Language.lower() == "english":
-    path_to_ignore_file = "languagetool/English/ignore.txt"
-    original_languagetool_path = "languagetool/English/hunspell/ignore.txt"
     base_directory_US = "training_data/en-US/"
-    current_words = get_current_words(original_languagetool_path)
+    current_words = get_current_words(original_languagetool_path, path_to_ignore_file)
     # en-US words
     all_alternatives_US = get_alt_from_files(base_directory_US)
     words = {}
