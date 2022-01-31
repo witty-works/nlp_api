@@ -194,7 +194,7 @@ pipenv run python -m update_locales -i [CSV export]]
 
 ## Analyze Rules
 
-Go to https://docs.google.com/spreadsheets/d/1G68x7SUGwolD5pFNG8ZCzvstVqRGz2ir/edit#gid=1195384709
+Go to https://docs.google.com/spreadsheets/d/1TInxuhKeVFxEIg3H0bUMMUQmHOJL8zIB1SRM81yjitg/edit#gid=373958727
 CLick on "File" -> "Download" -> CSV
 
 ```
