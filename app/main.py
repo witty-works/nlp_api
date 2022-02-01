@@ -53,7 +53,7 @@ from collections import namedtuple, defaultdict
 from collections import namedtuple
 from app.sentry import set_up_sentry_sdk
 
-version = "1.17.0"
+version = "1.18.0"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -204,13 +204,20 @@ def openapi(username: str = Depends(get_current_username)):
 
 # public routes
 @app.get("/")
-def get_root():
-    return RedirectResponse(url="https://www.witty.works/form", status_code=301)
+def root():
+    url="https://www.witty.works/form"
+    status_code=301
+
+    if settings.platform_environment == "local" and settings.testing == False:
+        url="/docs"
+        status_code=302
+
+    return RedirectResponse(url=url, status_code=status_code)
 
 
 @app.get("/form")
-def form(request: Request):
-    return RedirectResponse(url="https://www.witty.works/form", status_code=301)
+def form():
+    return root()
 
 
 @app.get("/categories")

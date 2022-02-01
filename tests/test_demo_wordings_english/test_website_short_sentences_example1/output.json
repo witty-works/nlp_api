@@ -16,12 +16,11 @@
         },
         {
             "alternatives": [
-                "achievement",
-                "accomplishment",
-                "capability",
+                "effectiveness",
+                "accomplishments",
+                "capabilities",
                 "fulfillment",
-                "conduct",
-                "carrying out",
+                "efficiency",
                 "running",
                 "capacity"
             ],

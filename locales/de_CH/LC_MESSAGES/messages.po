@@ -25,7 +25,7 @@ msgstr "Fähigkeiten"
 
 msgid "rules.ability_reason"
 msgstr ""
-"Kommuniziert Ausgrenzung, indem die Fähigkeiten einer Person als außerhalb "
+"Kommuniziert Ausgrenzung, indem die Fähigkeiten einer Person als ausserhalb "
 "einer Norm beschrieben werden."
 
 msgid "rules.ability_solution"

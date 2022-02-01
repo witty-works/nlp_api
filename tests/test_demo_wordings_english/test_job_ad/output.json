@@ -48,15 +48,11 @@
         {
             "alternatives": [
                 "impartial",
-                "unbiased",
-                "feeling competent in your field",
-                "at ease presenting their work",
-                "at ease making choices related to work",
-                "curious to find answers",
-                "happy to organize their personal workload",
-                "at ease making choices",
-                "happy to take on responsibility",
-                "capable of making informed, uncoerced choices"
+                "freelance",
+                "consulting",
+                "free to make informed choices",
+                "responsible for organizing your workload",
+                "in a position to take on responsibility"
             ],
             "category": "unconscious_bias",
             "context": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious co",
@@ -70,11 +66,11 @@
         },
         {
             "alternatives": [
+                "growth-minded",
+                "keen and enthusiastic",
                 "interested in taking on new responsibilities",
-                "excited to go after one's dream",
-                "keen on realizing their vision",
-                "clear about your goals",
-                "committed to working toward one's goals"
+                "committed to working toward goals",
+                "keen on realizing a vision"
             ],
             "category": "unconscious_bias",
             "context": " independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
@@ -88,12 +84,11 @@
         },
         {
             "alternatives": [
-                "achievement",
-                "accomplishment",
-                "capability",
+                "effectiveness",
+                "accomplishments",
+                "capabilities",
                 "fulfillment",
-                "conduct",
-                "carrying out",
+                "efficiency",
                 "running",
                 "capacity"
             ],

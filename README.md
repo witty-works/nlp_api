@@ -41,6 +41,20 @@ pipenv run python3.9 -m spacy download de_core_news_sm --no-cache-dir
 wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 ```
 
+Note to uninstall spacy models use
+
+```
+pipenv uninstall en_core_web_sm
+pipenv uninstall de_core_news_sm
+```
+
+Compile PO files (done automatically during deployment and above pot/po file generation).
+Apply https://github.com/orsinium-labs/eng/pull/1/files before running the below script:
+
+```
+./compile-translations.sh
+```
+
 ## using virtual environment (venv)
 
 ```
@@ -51,25 +65,7 @@ python3.9 -m spacy download en_core_web_sm --no-cache-dir
 python3.9 -m spacy download de_core_news_sm --no-cache-dir
 ```
 
-Compile PO files (done automatically during deployment and above pot/po file generation)
-
-```
-pipenv run pybabel compile -d locales -l de_DE -f
-pipenv run pybabel compile -d locales -l en_US -f
-```
-
-Create directory for the Spacy models
-
-```
-mkdir files
-```
-
-Note to uninstall spacy models use
-
-```
-pipenv uninstall en_core_web_sm
-pipenv uninstall de_core_news_sm
-```
+Compile the translations in the spirit of `./compile-translations.sh`
 
 ## Docker image
 
@@ -194,7 +190,7 @@ pipenv run python -m update_locales -i [CSV export]]
 
 ## Analyze Rules
 
-Go to https://docs.google.com/spreadsheets/d/1G68x7SUGwolD5pFNG8ZCzvstVqRGz2ir/edit#gid=1195384709
+Go to https://docs.google.com/spreadsheets/d/1TInxuhKeVFxEIg3H0bUMMUQmHOJL8zIB1SRM81yjitg/edit#gid=373958727
 CLick on "File" -> "Download" -> CSV
 
 ```
@@ -202,10 +198,16 @@ pipenv run python -m analyze_rules -i [CSV export]]
 ```
 
 ## Update the ignore.txt
-
+1. Run the script to generate ignore words
+for German:
 ```
 pipenv run python -m add_alternatives_to_ignore
 ```
+for English:
+```
+pipenv run python -m add_alternatives_to_ignore -l English -p <path_to_ignore_file>
+```
+2. Copy `ignore.txt` to LanguageTool repository: https://github.com/witty-works/languagetool
 ## Update the false positive list 
 1. Remove gender_false_positive.csv file:
 ```
