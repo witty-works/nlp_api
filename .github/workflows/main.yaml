@@ -68,7 +68,10 @@ jobs:
         if: steps.cache-po-files.outputs.cache-hit != 'true'
         run: |
           pipenv run pybabel compile -d locales -l de_DE -f
+          pipenv run pybabel compile -d locales -l de_AT -f
+          pipenv run pybabel compile -d locales -l de_CH -f
           pipenv run pybabel compile -d locales -l en_US -f
+          pipenv run pybabel compile -d locales -l en_GB -f
 
       - name: Create files directory
         run: |
