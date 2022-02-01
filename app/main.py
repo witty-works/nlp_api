@@ -31,6 +31,7 @@ from spacy.matcher import PhraseMatcher, Matcher
 from app.models import (
     Config,
     LangType,
+    SingularThey,
     Language,
     RequestIn,
     Result,
@@ -205,12 +206,12 @@ def openapi(username: str = Depends(get_current_username)):
 # public routes
 @app.get("/")
 def root():
-    url="https://www.witty.works/form"
-    status_code=301
+    url = "https://www.witty.works/form"
+    status_code = 301
 
     if settings.platform_environment == "local" and settings.testing == False:
-        url="/docs"
-        status_code=302
+        url = "/docs"
+        status_code = 302
 
     return RedirectResponse(url=url, status_code=status_code)
 
@@ -630,6 +631,10 @@ def english_rules(config: Config, lang: Language, tokens, text: str):
         sentences_alternatives_en["ge"] = gender_sentences_alternatives_US
         sentences_alternatives_en["style"] = style_sentences_alternatives_US
         sentences_alternatives_en["bias"] = bias_sentences_alternatives_US
+
+    if config.singular_they == SingularThey.ALL_PRONOUNS:
+        words_alternatives_en["bias"].append(("he", "['they']", "binary_pronouns"))
+        words_alternatives_en["bias"].append(("she", "['they']", "binary_pronouns"))
 
     if is_sub_category_enabled("openly_discriminating", disabled_categories):
         list_full += rules_based_words_phrase_matcher_en(
