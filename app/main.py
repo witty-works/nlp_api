@@ -205,12 +205,12 @@ def openapi(username: str = Depends(get_current_username)):
 # public routes
 @app.get("/")
 def root():
-    url="https://www.witty.works/form"
-    status_code=301
+    url = "https://www.witty.works/form"
+    status_code = 301
 
     if settings.platform_environment == "local" and settings.testing == False:
-        url="/docs"
-        status_code=302
+        url = "/docs"
+        status_code = 302
 
     return RedirectResponse(url=url, status_code=status_code)
 
@@ -368,17 +368,8 @@ async def set_rules(user_request_in: RequestIn):
                         config_value,
                         forced_config[config_value],
                     )
-                # organization set a value on default, user can change it
-                elif (
-                    config_value in organization_config
-                    and config_value in default_filtered
-                ):
-                    # set user value
-                    setattr(
-                        user_request_in.config, config_value, user_rules[config_value]
-                    )
+                # organization not set a value or set on default, user can set/change it
                 else:
-                    # organization does not set a value, user can set a value
                     setattr(
                         user_request_in.config, config_value, user_rules[config_value]
                     )
