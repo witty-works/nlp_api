@@ -53,7 +53,7 @@ from collections import namedtuple, defaultdict
 from collections import namedtuple
 from app.sentry import set_up_sentry_sdk
 
-version = "1.18.0"
+version = "1.19.0"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -205,12 +205,12 @@ def openapi(username: str = Depends(get_current_username)):
 # public routes
 @app.get("/")
 def root():
-    url="https://www.witty.works/form"
-    status_code=301
+    url = "https://www.witty.works/form"
+    status_code = 301
 
     if settings.platform_environment == "local" and settings.testing == False:
-        url="/docs"
-        status_code=302
+        url = "/docs"
+        status_code = 302
 
     return RedirectResponse(url=url, status_code=status_code)
 
@@ -368,17 +368,8 @@ async def set_rules(user_request_in: RequestIn):
                         config_value,
                         forced_config[config_value],
                     )
-                # organization set a value on default, user can change it
-                elif (
-                    config_value in organization_config
-                    and config_value in default_filtered
-                ):
-                    # set user value
-                    setattr(
-                        user_request_in.config, config_value, user_rules[config_value]
-                    )
+                # organization not set a value or set on default, user can set/change it
                 else:
-                    # organization does not set a value, user can set a value
                     setattr(
                         user_request_in.config, config_value, user_rules[config_value]
                     )
@@ -391,10 +382,48 @@ async def set_rules(user_request_in: RequestIn):
                         organization_config[config_value],
                     )
 
-
-async def languagetool_rules(config: Config, lang: Language, text: str):
+def languagetool_matches(config: Config, lang: Language, text: str, result):
+    list_results = []
     ignore = ["@", "#"]
 
+    for match in result["matches"]:
+        offset = int(match["offset"])
+        end = offset + int(match["length"])
+        highlight_text = text[offset:end]
+
+        # ignore text that starts with @ or #
+        if highlight_text[0:1] in ignore or (
+            offset > 0 and text[offset - 1 : offset] in ignore
+        ):
+            continue
+
+        alternatives = []
+        if "replacements" in match:
+            for replacement in match["replacements"]:
+                value = replacement["value"]
+                value = value if value != "" else "-"
+                alternatives.append(value)
+
+        list_results.append(
+            ResultOut.factory(
+                config,
+                lang,
+                highlight_text,
+                text,
+                "orthography",
+                "orthography",
+                offset,
+                end,
+                alternatives,
+                match["shortMessage"],
+                None,
+                match["message"],
+            )
+        )
+
+    return list_results
+
+async def languagetool_rules(config: Config, lang: Language, text: str):
     list_results = []
     async with aiohttp.ClientSession(
         connector=aiohttp.TCPConnector(verify_ssl=settings.languagetool_verify_ssl)
@@ -410,40 +439,7 @@ async def languagetool_rules(config: Config, lang: Language, text: str):
                 assert r.status == 200
                 result = await r.json()
 
-                for match in result["matches"]:
-                    offset = int(match["offset"])
-                    end = offset + int(match["length"])
-                    highlight_text = text[offset:end]
-
-                    # ignore text that starts with @ or #
-                    if highlight_text[0:1] in ignore or (
-                        offset > 0 and text[offset - 1 : offset] in ignore
-                    ):
-                        continue
-
-                    alternatives = []
-                    if "replacements" in match:
-                        for replacement in match["replacements"]:
-                            value = replacement["value"]
-                            value = value if value != "" else "-"
-                            alternatives.append(value)
-
-                    list_results.append(
-                        ResultOut.factory(
-                            config,
-                            lang,
-                            highlight_text,
-                            text,
-                            "orthography",
-                            "orthography",
-                            offset,
-                            end,
-                            alternatives,
-                            match["shortMessage"],
-                            None,
-                            match["message"],
-                        )
-                    )
+                list_results = languagetool_matches(config, lang, text, result)
             except:
                 if r.status >= 500:
                     result = "Problem communicating with LanguageTool"
