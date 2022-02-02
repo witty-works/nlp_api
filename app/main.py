@@ -391,10 +391,48 @@ async def set_rules(user_request_in: RequestIn):
                         organization_config[config_value],
                     )
 
-
-async def languagetool_rules(config: Config, lang: Language, text: str):
+def languagetool_matches(config: Config, lang: Language, text: str, result):
+    list_results = []
     ignore = ["@", "#"]
 
+    for match in result["matches"]:
+        offset = int(match["offset"])
+        end = offset + int(match["length"])
+        highlight_text = text[offset:end]
+
+        # ignore text that starts with @ or #
+        if highlight_text[0:1] in ignore or (
+            offset > 0 and text[offset - 1 : offset] in ignore
+        ):
+            continue
+
+        alternatives = []
+        if "replacements" in match:
+            for replacement in match["replacements"]:
+                value = replacement["value"]
+                value = value if value != "" else "-"
+                alternatives.append(value)
+
+        list_results.append(
+            ResultOut.factory(
+                config,
+                lang,
+                highlight_text,
+                text,
+                "orthography",
+                "orthography",
+                offset,
+                end,
+                alternatives,
+                match["shortMessage"],
+                None,
+                match["message"],
+            )
+        )
+
+    return list_results
+
+async def languagetool_rules(config: Config, lang: Language, text: str):
     list_results = []
     async with aiohttp.ClientSession(
         connector=aiohttp.TCPConnector(verify_ssl=settings.languagetool_verify_ssl)
@@ -410,40 +448,7 @@ async def languagetool_rules(config: Config, lang: Language, text: str):
                 assert r.status == 200
                 result = await r.json()
 
-                for match in result["matches"]:
-                    offset = int(match["offset"])
-                    end = offset + int(match["length"])
-                    highlight_text = text[offset:end]
-
-                    # ignore text that starts with @ or #
-                    if highlight_text[0:1] in ignore or (
-                        offset > 0 and text[offset - 1 : offset] in ignore
-                    ):
-                        continue
-
-                    alternatives = []
-                    if "replacements" in match:
-                        for replacement in match["replacements"]:
-                            value = replacement["value"]
-                            value = value if value != "" else "-"
-                            alternatives.append(value)
-
-                    list_results.append(
-                        ResultOut.factory(
-                            config,
-                            lang,
-                            highlight_text,
-                            text,
-                            "orthography",
-                            "orthography",
-                            offset,
-                            end,
-                            alternatives,
-                            match["shortMessage"],
-                            None,
-                            match["message"],
-                        )
-                    )
+                list_results = languagetool_matches(config, lang, text, result)
             except:
                 if r.status >= 500:
                     result = "Problem communicating with LanguageTool"
