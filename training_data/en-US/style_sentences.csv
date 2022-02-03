@@ -1,12 +1,13 @@
 Lemma,Priority,Category,Primary_subcategory,Alt_split
+Kind regards,21-01-2022,style,formality,"['Cordially', 'Thank you for reading', 'Sending you the best', 'Take care', 'With appreciation']"
 above average,1,style,exaggerating,['-']
 amongst others,1,style,filler,['-']
+bright mind,1,style,exaggerating,"['astute mind', 'creative mind', 'inventive mind', 'talent', 'engaged person', 'person with different perspectives', 'someone who comes up with creative ideas/solutions']"
 clever head,1,style,exaggerating,"['competence', 'creativity', 'intelligence', 'talent', 'ability', 'capability', 'proficiency', 'education', 'creative person', 'astute person', 'inventive person', 'someone with an eye for solutions', 'someone with surprising ideas']"
-extra mile,1,style,exaggerating,['-']
 extra ordinary,1,style,exaggerating,['-']
 fighter by nature,1,style,exaggerating,['-']
 first class,1,style,exaggerating,['-']
-first mover,1,style,exaggerating,"['the first to market a product', 'the first to offer a service']"
+first mover,1,style,exaggerating,"['the first to market a product', 'the first to offer a service', 'the first to seize a market opportunity']"
 flat hierarchy,1,style,hollow,"['short chain of command', 'responsible and self-organized way of working', 'room for personal initiative', 'short lines of communication', 'opportunities for employees to help shape the company', 'room for responsibility and freedom to organize their work at the operational level']"
 flat organization,1,style,hollow,"['short chain of command', 'responsible and self-organized way of working', 'room for personal initiative', 'short lines of communication', 'opportunities for employees to help shape the company', 'room for responsibility and freedom to organize their work at the operational level']"
 front runner,1,style,exaggerating,['-']
@@ -14,19 +15,21 @@ go OTB,,style,hollow,"['take a new approach', 'jump from a maturing trend to an 
 go outside the box,,style,hollow,"['take a new approach', 'jump from a maturing trend to an emerging trend', 'explore new business models', 'take a disruptive approach', 'rethink (a strategy, business model, ...)', 'reinvent (a brand, a company, ...)', 'redefine (a product, brand, business, ...)']"
 high quality,1,style,hollow,"['adhering to rigorous standards', 'using premium materials', 'adhering to strict methods', 'meeting exacting requirements', 'dependable reliability']"
 highly motivated,1,style,hollow,"['motivated', 'energetic', 'enterprising', 'spirited', 'happy to take the initiative', 'willing to apply oneself', 'keenly interested']"
-market leader,1,style,exaggerating,['-']
-market leadership,1,style,exaggerating,['-']
-market leading,1,style,exaggerating,['-']
+market leader,22-01-2022,style,exaggerating,"['company with the largest market share in the industry', 'company with the ability to influence the market', 'company with the greatest profitability margin in the market', 'company with the products most relevant to the customer']"
+market leadership,22-01-2022,style,exaggerating,"['market share gain', 'having the largest market share in the industry', 'ability to influence the market', 'greatest profitability margin in the market']"
+market leading,22-01-2022,style,exaggerating,['market-influencing']
 most of all,1,style,hollow,"['especially', 'in particular', 'mostly', 'more than any other', 'more than anyone else', 'to a greater degree than anything else']"
+move the needle on,21-01-2022,style,hollow,"['provide a perceptible improvement in', 'increase activity in', 'have a measurable effect on', 'generate noticeable results in']"
 must have,1,style,exaggerating,"['requirement', 'criterion', 'essential', 'quality required to (...)']"
 no problem,1,style,exaggerating,['-']
+not move the needle,21-01-2022,style,hollow,"['futile', 'have no effect on', 'have no measurable effect on']"
 number 1,1,style,exaggerating,['-']
 number one,1,style,exaggerating,['-']
-opinion leader,1,style,exaggerating,['-']
-pioneering company,1,style,exaggerating,['-']
-proven track record,1,style,exaggerating,['-']
+opinion leader,1,style,exaggerating,"['incluencer', 'opinion maker', 'opinion shaper']"
+pioneering company,26-01-2022,style,exaggerating,['company that paves the way for new technologies']
+proven track record,26-01-2022,style,exaggerating,"['documented outcomes', 'portfolio of case studies', 'reference cases']"
 reach for the star,1,style,exaggerating,"['have aspirations', 'set goals that are motivating (inspiring, aspirational)']"
-reach to the star,1,style,exaggerating,"['have aspirations', 'set goals that are motivating (inspiring, aspirational)']"
+reach to the star,1,style,exaggerating,"['have aspirations', 'set motivating goals', 'aspire to realize dreams)']"
 risk carrier,1,style,exaggerating,['-']
 self starter,1,style,exaggerating,['-']
 state of the art,,style,hollow,"['the highest point of technological achievement to date', 'the current highest level of development in the field']"
@@ -36,12 +39,12 @@ team player,1,style,hollow,"['someone who values team effort over personal gains
 team spirit,1,style,hollow,['mindset that values team effort over individual gains']
 think OTB,1,style,hollow,"['think differently', 'think unconventionally', 'think creatively', 'use lateral thinking', 'use parallel thinking', 'look (at ...) with fresh eyes', 'approach from a new angle', 'look beyond the obvious', 'consider from a fresh perspective', 'use an indirect approach via reasoning that is not immediately obvious', 'deviate from existing practices']"
 think outside the box,1,style,hollow,"['think differently', 'think unconventionally', 'think creatively', 'use lateral thinking', 'use parallel thinking', 'look (at ...) with fresh eyes', 'approach from a new angle', 'look beyond the obvious', 'consider from a fresh perspective', 'use an indirect approach via reasoning that is not immediately obvious', 'deviate from existing practices']"
-top performance,1,style,exaggerating,"['reference cases', 'documented results', ""execution to the customer's satisfaction"", 'fulfilment of customer expectations']"
+top performance,26-01-2022,style,exaggerating,"[""execution to the customer's satisfaction"", 'the fulfilment of customer expectations', 'reference cases', 'satisfying results']"
 unique to,,style,hollow,"['exclusive to', 'particular to', 'characteristic of', 'typical of', 'peculiar to']"
-well established,1,style,exaggerating,['-']
+well established,1,style,exaggerating,"['thriving', 'acknowledged', 'confirmed', 'long-standing', 'well-documented']"
 winner type,1,style,exaggerating,['-']
 winning type,1,style,exaggerating,['-']
-without any problem,1,style,exaggerating,['easily']
-without problem,1,style,exaggerating,['easily']
-world leader,1,style,exaggerating,"['largest revenue share in the market', 'largest customer base in the segment', 'brand to introduce the majority of technological advances in the market']"
+without any problem,1,style,exaggerating,['-']
+without problem,1,style,exaggerating,['-']
+world leader,1,style,exaggerating,"['company with largest revenue share in the market', 'with largest customer base in the segment', 'brand to introduce the majority of technological advances in the market']"
 world wide,1,style,hollow,"['in (...) countries', '(...) offices across (...) continents']"
