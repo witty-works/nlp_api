@@ -190,22 +190,19 @@ pipenv run python -m update_locales -i [CSV export]]
 
 ## Analyze Rules
 
-Go to https://docs.google.com/spreadsheets/d/1TInxuhKeVFxEIg3H0bUMMUQmHOJL8zIB1SRM81yjitg/edit#gid=373958727
-CLick on "File" -> "Download" -> CSV
-
 ```
-pipenv run python -m analyze_rules -i [CSV export]]
+pipenv run python -m analyze_rules -l en
 ```
 
 ## Update the ignore.txt
 1. Run the script to generate ignore words
 for German:
 ```
-pipenv run python -m add_alternatives_to_ignore
+pipenv run python -m analyze_rules -p <path_to_ignore_file>
 ```
 for English:
 ```
-pipenv run python -m add_alternatives_to_ignore -l English -p <path_to_ignore_file>
+pipenv run python -m analyze_rules -l en -p <path_to_ignore_file>
 ```
 2. Copy `ignore.txt` to LanguageTool repository: https://github.com/witty-works/languagetool
 ## Update the false positive list 
