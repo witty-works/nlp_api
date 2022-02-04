@@ -3,11 +3,23 @@
     "limit_reached": false,
     "results": [
         {
+            "alternatives": [],
+            "category": "inclusive",
+            "context": "Our whole team is ambitious and strives for top performance.",
+            "end": 14,
+            "label": "Inclusive: Communal",
+            "reason": "Emphasizes cooperative, compassionate or supportive characteristics and thus inclusive attributes.",
+            "solution": "Use more of such wording to express cooperation, care or purpose.",
+            "start": 10,
+            "subcategory": "communal",
+            "text": "team"
+        },
+        {
             "alternatives": [
-                "reference cases",
-                "documented results",
                 "execution to the customer's satisfaction",
-                "fulfilment of customer expectations"
+                "the fulfilment of customer expectations",
+                "reference cases",
+                "satisfying results"
             ],
             "category": "style",
             "context": "Our whole team is ambitious and strives for top performance.",

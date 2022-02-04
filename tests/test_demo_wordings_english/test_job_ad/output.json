@@ -3,6 +3,24 @@
     "limit_reached": false,
     "results": [
         {
+            "alternatives": [
+                "project management",
+                "person in project management",
+                "they",
+                "person handling project management",
+                "someone in the project management role"
+            ],
+            "category": "gendered",
+            "context": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you wi",
+            "end": 33,
+            "label": "Gendered: Titles",
+            "reason": "The male generic does not speak to all genders or gender identities. Many people therefore do not feel included in the dialogue.",
+            "solution": "Use words that address the female gender as well as gender identities that do not follow a binary understanding of gender.",
+            "start": 18,
+            "subcategory": "titles",
+            "text": "project manager"
+        },
+        {
             "alternatives": [],
             "category": "inclusive",
             "context": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
@@ -30,10 +48,10 @@
         },
         {
             "alternatives": [
-                "reference cases",
-                "documented results",
                 "execution to the customer's satisfaction",
-                "fulfilment of customer expectations"
+                "the fulfilment of customer expectations",
+                "reference cases",
+                "satisfying results"
             ],
             "category": "style",
             "context": "rking on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",

@@ -40,6 +40,18 @@
             "text": "guys"
         },
         {
+            "alternatives": [],
+            "category": "inclusive",
+            "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\n",
+            "end": 23,
+            "label": "Inclusive: Communal",
+            "reason": "Emphasizes cooperative, compassionate or supportive characteristics and thus inclusive attributes.",
+            "solution": "Use more of such wording to express cooperation, care or purpose.",
+            "start": 19,
+            "subcategory": "communal",
+            "text": "team"
+        },
+        {
             "alternatives": [
                 "reinvention",
                 "change",
