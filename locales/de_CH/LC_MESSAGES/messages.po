@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-02-06 16:02\n"
-"PO-Revision-Date: 2022-02-06 16:02\n"
+"POT-Creation-Date: 2022-02-07 10:38\n"
+"PO-Revision-Date: 2022-02-07 10:38\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -175,7 +175,7 @@ msgstr ""
 "gesund wäre?\""
 
 msgid "rules.behavior_explanation"
-msgstr ""
+msgstr "😒 versteckte Voreingenommenheit bezüglich Verhalten"
 
 msgid "rules.belief_label"
 msgstr "Glauben"
@@ -208,7 +208,7 @@ msgstr ""
 "der dritten Person schreiben müssen, verwenden Sie die Mehrzahl \"sie\"."
 
 msgid "rules.binary_pronouns_explanation"
-msgstr "👎🏽 Pronomen gemäss binärem Normativ"
+msgstr "😟 Pronomen gemäss binärem Normativ"
 
 msgid "rules.classism_label"
 msgstr "Klassismus"
@@ -240,6 +240,18 @@ msgstr ""
 
 msgid "rules.cognitive_ability_explanation"
 msgstr "😒 versteckte Voreingenommenheit bezüglich Lernfähigkeit"
+
+msgid "rules.cognitive_perception_label"
+msgstr "Kognitive Wahrnehmung"
+
+msgid "rules.cognitive_perception_reason"
+msgstr ""
+
+msgid "rules.cognitive_perception_solution"
+msgstr ""
+
+msgid "rules.cognitive_perception_explanation"
+msgstr "😒 versteckte Voreingenommenheit bezüglich kognitiver Wahrnehmung"
 
 msgid "rules.communal_label"
 msgstr "Kommunal"
@@ -353,7 +365,7 @@ msgstr ""
 "wäre?\""
 
 msgid "rules.female_stereotype_explanation"
-msgstr "👎🏽 Steckt Frauen in traditionelle Rollen"
+msgstr "😟 Steckt Frauen in traditionelle Rollen"
 
 msgid "rules.filler_label"
 msgstr "Füllwörter"
@@ -467,7 +479,7 @@ msgstr ""
 "nicht-binäre Perspektive einzunehmen."
 
 msgid "rules.gendered_explanation"
-msgstr "👎🏽 Schubladendenken nach Geschlechternormen"
+msgstr "😟 Schubladendenken nach Geschlechternormen"
 
 msgid "rules.gendered_denominations_ending_label"
 msgstr "Inklusive Endung"
@@ -484,7 +496,7 @@ msgid "rules.gendered_denominations_ending_explanation"
 msgstr "💯 Nicht konsistente Geschlechts-Schreibweise"
 
 msgid "rules.hearing_label"
-msgstr "Hör- und Sprachbeeinträchtigung"
+msgstr "Hör-Fähigkeit"
 
 msgid "rules.hearing_reason"
 msgstr ""
@@ -513,7 +525,7 @@ msgstr ""
 "Doppelnennungen vermeiden."
 
 msgid "rules.hidden_image_explanation"
-msgstr "👎🏽 Verstecktes männliches Generikum"
+msgstr "😟 Verstecktes männliches Generikum"
 
 msgid "rules.hollow_label"
 msgstr "Worthülsen"
@@ -585,7 +597,19 @@ msgstr ""
 "Führung ausgeht und verschiedene Geschlechter meinen kann."
 
 msgid "rules.leadership_explanation"
-msgstr "👎🏽 Traditionelles Führungs-Vokabular"
+msgstr "😟 Traditionelles Führungs-Vokabular"
+
+msgid "rules.learning_label"
+msgstr "Lernfähigkeit"
+
+msgid "rules.learning_reason"
+msgstr ""
+
+msgid "rules.learning_solution"
+msgstr ""
+
+msgid "rules.learning_explanation"
+msgstr "😒 versteckte Voreingenommenheit bezüglich Lernfähigkeit"
 
 msgid "rules.male_stereotype_label"
 msgstr "Männlicher Stereotyp"
@@ -601,10 +625,10 @@ msgstr ""
 "wäre?\""
 
 msgid "rules.male_stereotype_explanation"
-msgstr "👎🏽 Steckt Männer in traditionelle Rollen"
+msgstr "😟 Steckt Männer in traditionelle Rollen"
 
 msgid "rules.medical_state_label"
-msgstr "Gesundheitliche Einschränkung"
+msgstr "Gesundheitsbild"
 
 msgid "rules.medical_state_reason"
 msgstr ""
@@ -618,6 +642,18 @@ msgstr ""
 
 msgid "rules.medical_state_explanation"
 msgstr "😒 versteckte Voreingenommenheit bezüglich Gesundheitsbild"
+
+msgid "rules.mental_wellbeing_label"
+msgstr "Mentales Wohlbefinden"
+
+msgid "rules.mental_wellbeing_reason"
+msgstr ""
+
+msgid "rules.mental_wellbeing_solution"
+msgstr ""
+
+msgid "rules.mental_wellbeing_explanation"
+msgstr "😒 versteckte Voreingenommenheit bezüglich mentalem Wohlbefinden"
 
 msgid "rules.migration_label"
 msgstr "Migrationshintergrund"
@@ -667,7 +703,7 @@ msgid "rules.misgendering_institutions_explanation"
 msgstr "❌ Falsche Verwendung des grammatikalischen Geschlechtes"
 
 msgid "rules.mobility_label"
-msgstr "Mobilitätsbeeinträchtigung"
+msgstr "Mobilität"
 
 msgid "rules.mobility_reason"
 msgstr ""
@@ -815,6 +851,18 @@ msgstr ""
 msgid "rules.sexual_orientation_explanation"
 msgstr "😒 versteckte Voreingenommenheit bezüglich sexueller Orientierung"
 
+msgid "rules.speech_label"
+msgstr "Sprech-Fähigkeit"
+
+msgid "rules.speech_reason"
+msgstr ""
+
+msgid "rules.speech_solution"
+msgstr ""
+
+msgid "rules.speech_explanation"
+msgstr "😒 versteckte Voreingenommenheit bezüglich Sprech-Fähigkeit"
+
 msgid "rules.sports_terms_label"
 msgstr "Sport-Jargon"
 
@@ -871,7 +919,7 @@ msgstr ""
 "Geschlecht folgen, anspricht."
 
 msgid "rules.titles_explanation"
-msgstr "👎🏽 “Mitmeinen” mit männlichen Generikum funktioniert nicht"
+msgstr "😟 “Mitmeinen” mit männlichen Generikum funktioniert nicht"
 
 msgid "rules.transphobia_label"
 msgstr "Transphobie"
@@ -914,7 +962,7 @@ msgid "rules.verbose_explanation"
 msgstr "🧊 Durch Substantivierung (Nomen) entsteht Distanz"
 
 msgid "rules.vision_label"
-msgstr "Seh-Beinträchtigung"
+msgstr "Seh-Fähigkeit"
 
 msgid "rules.vision_reason"
 msgstr ""
