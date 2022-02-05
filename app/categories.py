@@ -65,6 +65,12 @@ categories = {
         "category": "openly_discriminating",
         "gravity": 1,
     },
+    "behavior": {
+        "color": "orange",
+        "inclusive": False,
+        "category": "unconscious_bias",
+        "gravity": 2,
+    },
     "belief": {
         "color": "orange",
         "inclusive": False,
@@ -88,6 +94,12 @@ categories = {
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2,
+    },
+    "cognitive_perception": {
+        "color": "orange",
+        "inclusive": False,
+        "category": "unconscious_bias",
+        "gravity": 5,
     },
     "communal": {
         "color": "green",
@@ -175,7 +187,7 @@ categories = {
         "category": "gendered",
         "gravity": 2,
     },
-    "hearing_speech_impairment": {
+    "hearing": {
         "color": "orange",
         "inclusive": False,
         "category": "unconscious_bias",
@@ -212,23 +224,29 @@ categories = {
         "category": "gendered",
         "gravity": 2,
     },
+    "learning": {
+        "color": "orange",
+        "inclusive": False,
+        "category": "unconscious_bias",
+        "gravity": 5,
+    },
     "male_stereotype": {
         "color": "yellow",
         "inclusive": False,
         "category": "gendered",
         "gravity": 2,
     },
-    "medical_condition": {
+    "medical_state": {
         "color": "orange",
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2,
     },
-    "mental_impairment": {
+    "mental_wellbeing": {
         "color": "orange",
         "inclusive": False,
         "category": "unconscious_bias",
-        "gravity": 2,
+        "gravity": 5,
     },
     "migration": {
         "color": "orange",
@@ -248,7 +266,7 @@ categories = {
         "category": "style",
         "gravity": 3,
     },
-    "mobility_impairment": {
+    "mobility": {
         "color": "orange",
         "inclusive": False,
         "category": "unconscious_bias",
@@ -314,6 +332,12 @@ categories = {
         "category": "unconscious_bias",
         "gravity": 2,
     },
+    "speech": {
+        "color": "orange",
+        "inclusive": False,
+        "category": "unconscious_bias",
+        "gravity": 5,
+    },
     "sports_terms": {
         "color": "orange",
         "inclusive": False,
@@ -346,7 +370,7 @@ categories = {
         "gravity": 2,
     },
     "verbose": {"color": "blue", "inclusive": False, "category": "style", "gravity": 5},
-    "visual_impairment": {
+    "vision": {
         "color": "orange",
         "inclusive": False,
         "category": "unconscious_bias",

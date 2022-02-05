@@ -16,6 +16,7 @@
             "category": "unconscious_bias",
             "context": "Dominant ",
             "end": 8,
+            "explanation": "😒 deterring people with cooperative mindset",
             "label": "Biased language: Agentic",
             "reason": "Unconsciously attributed to the male stereotype. Many do not feel attracted by these terms.",
             "solution": "Use team-oriented wording or referring to purpose.",
