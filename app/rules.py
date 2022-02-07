@@ -5,7 +5,7 @@ from collections import defaultdict
 rules = {
     "de-DE": {
         # load agentic language
-        "df_agentic_ct": "agentic.csv",
+        # "df_agentic_ct": "agentic.csv",
         # load Gender (nouns, not nouns) and sentences de
         "df_gender_ct": "gendered_noun_words.csv",
         "df_gender_no_noun_word": "gendered_no_noun_words.csv",
@@ -18,9 +18,9 @@ rules = {
         # load openly discriminating words de
         "df_open_dis_word": "open_dis_words.csv",
         "df_open_dis_sentence": "open_dis_sentences.csv",
-        # load unconscious_bias word (nouns, not nouns) and sentences de
-        "df_ub_noun_word": "ub_noun_words.csv",
-        "df_ub_no_noun_word": "ub_no_noun_words.csv",
+        # load unconscious_bias word (nouns with plurals and nouns, adj, verbs without plural) and sentences de
+        "df_ub_plur_word": "ub_plur_words.csv",
+        "df_ub_no_plur_word": "ub_no_plur_words.csv",
         "df_ub_sentences": "ub_sentences.csv",
         # load inslusive words
         "df_d_and_i_words": "d_and_i_words.csv",
@@ -71,6 +71,7 @@ rules["de-DE"]["terms_d_and_i_words"] = list(
 # dictionaries to handle false positives
 rules["de-DE"]["false_positive_agentic_const"] = [
     "selbst",
+    "stark",
     "flexible",
     "Probleme",
     "unabhängig",
@@ -94,9 +95,9 @@ rules["de-DE"]["exceptions"] = [
 ### de-DE:
 ## words:
 # df agentic
-df_agentic = rules["de-DE"]["df_agentic_ct"]
+# df_agentic = rules["de-DE"]["df_agentic_ct"]
 # agentic: words + alternatives
-agentic_words_alternatives = list(zip(df_agentic["Lemma"], df_agentic["Alt_split"]))
+# agentic_words_alternatives = list(zip(df_agentic["Lemma"], df_agentic["Alt_split"]))
 # df gender
 df_gender = rules["de-DE"]["df_gender_ct"]
 # gender: words + singular alternatives + plural alternatives + all alternatives + subcategory
@@ -126,8 +127,8 @@ articles = list(
         rules["de-DE"]["df_articles"]["Alternative"],
     )
 )
-# df unconscious bias noun
-df_bias = rules["de-DE"]["df_ub_noun_word"]
+# df unconscious bias nouns with plural
+df_bias = rules["de-DE"]["df_ub_plur_word"]
 # unconscious bias: words + singular alternatives split + plural alternatives split + subcategory
 bias_words_alternatives_noun = list(
     zip(
@@ -137,14 +138,14 @@ bias_words_alternatives_noun = list(
         df_bias["Primary_subcategory"],
     )
 )
-# df unconscious bias no noun
-df_bias_no_noun = rules["de-DE"]["df_ub_no_noun_word"]
+# df unconscious bias words without plurals
+df_bias_no_plur = rules["de-DE"]["df_ub_no_plur_word"]
 # unconscious bias: words + alternatives split + subcategory
-bias_words_alternatives_no_noun = list(
+bias_words_alternatives_no_plur = list(
     zip(
-        df_bias_no_noun["Lemma"],
-        df_bias_no_noun["Alt_split"],
-        df_bias_no_noun["Primary_subcategory"],
+        df_bias_no_plur["Lemma"],
+        df_bias_no_plur["Alt_split"],
+        df_bias_no_plur["Primary_subcategory"],
     )
 )
 # df style

@@ -536,26 +536,26 @@ def german_rules(config: Config, lang: Language, tokens, text: str):
     ):
         list_full += gendered_denom_end(config, lang, text)
 
-    if is_sub_category_enabled("agentic", disabled_categories):
-        list_full += agentic_language_analysis_de(
-            config,
-            lang,
-            text,
-            tokens,
-            agentic_words_alternatives,
-        )
+    # if is_sub_category_enabled("agentic", disabled_categories):
+    #    list_full += agentic_language_analysis_de(
+    #        config,
+    #        lang,
+    #        text,
+    #        tokens,
+    #        agentic_words_alternatives,
+    # C    )
 
     if is_sub_category_enabled("unconscious_bias", disabled_categories):
-        list_full += rules_based_words_phrase_matcher_de(
+        list_full += ub_words_phrase_matcher_de(
             config,
             lang,
             text,
             tokens,
-            bias_words_alternatives_no_noun,
+            bias_words_alternatives_no_plur,
             bias_sentences_alternatives,
             rules["de-DE"]["df_ub_sentences"],
             "unconscious_bias",
-        ) + word_noun_de(
+        ) + agentic_language_analysis_de(
             config,
             lang,
             text,
@@ -769,10 +769,10 @@ def gendered_denom_end(config: Config, lang, full_text):
 
 
 def agentic_language_analysis_de(
-    config: Config, lang, full_text, tokens, agentic_words_alternatives
+    config: Config, lang, full_text, tokens, words_alternatives_noun, category
 ):
-    subcategory = "agentic"
-    category = categories[subcategory]["category"]
+    # subcategory = "agentic"
+    # category = categories[subcategory]["category"]
     list_tokens = []
     dic_anc = {}
     list_false_positives = []
@@ -783,13 +783,13 @@ def agentic_language_analysis_de(
             for entity in tokens.ents:
                 if entity.label_ == "ORG":
                     list_false_positives.append(
-                        {"false positives": token.text, "category": subcategory}
+                        {"false positives": token.text, "category": category}
                     )
 
             # check if the word is adverb
             if token.pos_ == "ADV":
                 list_false_positives.append(
-                    {"false positives": token.text, "category": subcategory}
+                    {"false positives": token.text, "category": category}
                 )
 
             # check if the word is adjective and find out how it depends on the other words to feel the contex
@@ -802,11 +802,104 @@ def agentic_language_analysis_de(
                                 list_false_positives.append(
                                     {
                                         "false positives": token.text,
-                                        "category": subcategory,
+                                        "category": category,
                                     }
                                 )
         else:
-            for word, alternative in agentic_words_alternatives:
+            for (
+                word,
+                alternative_sing,
+                alternative_plur,
+                subcategory,
+            ) in words_alternatives_noun:
+                if get_non_noun_lower_cased(token) == word:
+                    token_morph_number = token.morph.get("Number")
+                    if is_number_list_empty(token_morph_number, token):
+                        continue
+
+                    elif token_morph_number[0] == "Sing":
+                        list_tokens.append(
+                            ResultOut.factory(
+                                config,
+                                lang,
+                                token.text,
+                                full_text,
+                                category,
+                                subcategory,
+                                token.idx,
+                                token.idx + len(token.text),
+                                ast.literal_eval(alternative_sing),
+                            )
+                        )
+
+                    elif token_morph_number[0] == "Plur":
+                        list_tokens.append(
+                            ResultOut.factory(
+                                config,
+                                lang,
+                                token.text,
+                                full_text,
+                                category,
+                                subcategory,
+                                token.idx,
+                                token.idx + len(token.text),
+                                ast.literal_eval(alternative_plur),
+                            )
+                        )
+    return list_tokens
+
+
+def ub_words_phrase_matcher_de(
+    config: Config,
+    lang,
+    full_text,
+    tokens,
+    words_alternatives,
+    sentences_alternatives,
+    df_sentence,
+    category,
+):
+    list_tokens = []
+    # Phrase matcher part to handle False positives with two words and special simbols
+    matcher = PhraseMatcher(model[lang.lang].vocab)
+
+    # Only run model.make_doc to speed things up
+    patterns = [model[lang.lang].make_doc(text) for text in list(df_sentence["Lemma"])]
+    matcher.add("TerminologyList", patterns)
+
+    dic_anc = {}
+    list_false_positives = []
+    for token in tokens:
+        # check if the user query have false positives
+        if is_false_positive(token.lemma_, false_positive.agentic):
+            # recognise if there is Name of organisation or geographical name in the query
+            for entity in tokens.ents:
+                if entity.label_ == "ORG":
+                    list_false_positives.append(
+                        {"false positives": token.text, "category": category}
+                    )
+
+            # check if the word is adverb
+            if token.pos_ == "ADV":
+                list_false_positives.append(
+                    {"false positives": token.text, "category": category}
+                )
+
+            # check if the word is adjective and find out how it depends on the other words to feel the contex
+            elif token.pos_ == "ADJ":  # or token.tag_== "ADJD":
+                dic_anc[token.lemma_] = list(token.ancestors)
+                for key in dic_anc.keys():
+                    if key in false_positive.agentic:
+                        for item in dic_anc[key]:
+                            if item.text in rules["de-DE"]["exceptions"]:
+                                list_false_positives.append(
+                                    {
+                                        "false positives": token.text,
+                                        "category": category,
+                                    }
+                                )
+        else:
+            for word, alternative, subcategory in words_alternatives:
                 if get_non_noun_lower_cased(token) == word:
                     list_tokens.append(
                         ResultOut.factory(
@@ -817,10 +910,29 @@ def agentic_language_analysis_de(
                             category,
                             subcategory,
                             token.idx,
-                            None,
+                            token.idx + len(token.text),
                             ast.literal_eval(alternative),
                         )
                     )
+
+    matches = matcher(tokens)
+    for match_id, start, end in matches:
+        for sentence, alternative, subcategory in sentences_alternatives:
+            span = tokens[start:end]
+            if span.text == sentence:
+                list_tokens.append(
+                    ResultOut.factory(
+                        config,
+                        lang,
+                        span.text,
+                        full_text,
+                        category,
+                        subcategory,
+                        span.start_char,
+                        span.end_char,
+                        ast.literal_eval(alternative),
+                    )
+                )
 
     return list_tokens
 
