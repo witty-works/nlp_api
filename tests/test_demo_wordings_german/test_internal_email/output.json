@@ -187,9 +187,10 @@
                 "Guten Tag, liebe:r (Vorname) (Familienname)",
                 "Guten Tag, liebe/r (Vorname) (Familienname)",
                 "Guten Tag",
-                "Liebe alle,",
+                "Liebe",
+                "Liebe alle",
                 "Hallo zusammen",
-                "Sehr geehrte Zuhörende und Lesende"
+                "Hallo, liebe Zuhörende und Lesende"
             ],
             "category": "style",
             "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, her",

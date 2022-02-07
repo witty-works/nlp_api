@@ -1,242 +1,301 @@
-Lemma,Priority,Category,Primary_subcategory,Alt_split
-Arbeitskraft,,style,hollow,"['Arbeitsleistung', 'Personal', 'Mitarbeiter~in~/~Mitarbeiter', 'menschliche Kraft zu geistiger/körperlicher Arbeit', 'Personal', 'Mitarbeitende', 'Mitarbeiter~innen~ und ~Mitarbeiter']"
-Flexibilität,,style,hollow,"['Anpassungsfähigkeit', 'Aufgeschlossenheit gegenüber Wandel', 'Bereitschaft für Veränderung', 'Mobilität', 'Fähigkeit, sich schnell auf Neues umzustellen']"
-Innovation,,style,hollow,"['Neugestaltung', 'Erfindung', 'technischer Fortschritt', 'Neuerung', 'Neuschöpfung', 'Neuentwicklung']"
-Innovationskraft,,style,hollow,"['Erfindungsreichtum', 'Kreativität', 'Fähigkeit, Ideen in Lösungen umzusetzen', 'Umsetzungskraft']"
-Karrierechance,,style,hollow,"['gute Aufstiegsmöglichkeit', 'Maßnahmen zur Karriereförderung', 'Mentoring und Coaching für neue Rollen']"
-Organisationstalent,,style,hollow,"['Organisationsfähigkeit', 'Geübtheit, anderen den Rücken freizuhalten', 'Person, die gern organisiert', 'jemand, der einen klaren Blick behält', 'Mensch, der gern offene Enden zusammenführt']"
-Querdenken,,style,hollow,"['die Fähigkeit, in neuen Mustern zu denken', 'die Fähigkeit, parallel/lateral/kreativ/divergent zu denken', 'die Fähigkeit, über den eigenen Tellerrand zu blicken', 'die Fähigkeit zum Brainstormen']"
-Team-player,,style,hollow,"['Zusammenarbeit über das eigene Streben stellen', 'Team', 'Teammitglieder', 'Teamplayer~innen', 'Teamplayer~in', 'Team-player~in~/~Team-player']"
-Teamfähigkeit,,style,hollow,"['Kooperationsfähigkeit', 'Akzeptanz gegenüber verschiedenen Menschen und Verhaltensweisen', 'Fähigkeit mit Unterschieden und Gemeinsamkeiten umzugehen', 'Kommunikationsfähigkeit', 'Kompromissbereitschaft zugunsten des gemeinsamen Ziels']"
-Teamplayer,,style,hollow,"['Zusammenarbeit über das eigene Streben stellen', 'Team', 'Teammitglieder', 'Teamplayer~innen', 'Teamplayer~in', 'Team-player~in~/~Team-player']"
-aber,,style,filler,['-']
-abermals,,style,filler,['-']
-aktiv,,style,hollow,"['lebendig', 'tatkräftig', 'lebhaft', 'enthusiastisch', 'engagiert', 'energiegeladen', 'vital', 'eifrig', 'anpassungsfähig', 'schwungvoll']"
-allein,,style,filler,['-']
-allemal,,style,filler,['-']
-allenfalls,,style,filler,['-']
-allenthalben,,style,filler,['-']
-allerdings,,style,filler,['-']
-allesamt,,style,filler,['-']
-allzu,,style,filler,['-']
-also,,style,filler,['-']
-andauernd,,style,filler,['-']
-andererseits,,style,filler,['-']
-andernfalls,,style,filler,['-']
-anscheinend,,style,filler,['-']
-auch,,style,filler,['-']
-auffallend,,style,filler,['-']
-augenscheinlich,,style,filler,['-']
-ausdrücklich,,style,filler,['-']
-ausgerechnet,,style,filler,['-']
-ausnahmslos,,style,filler,['-']
-außerdem,,style,filler,['-']
-beinahe,,style,filler,['-']
-bekanntlich,,style,filler,['-']
-bereits,,style,filler,['-']
-besonders,,style,filler,['-']
-bestenfalls,,style,filler,['-']
-bloß,,style,filler,['-']
-dabei,,style,filler,['-']
-dadurch,,style,filler,['-']
-dagegen,,style,filler,['-']
-daher,,style,filler,['-']
-damals,,style,filler,['-']
-danach,,style,filler,['-']
-demgegenüber,,style,filler,['-']
-demgemäß,,style,filler,['-']
-demnach,,style,filler,['-']
-denn,,style,filler,['-']
-dennoch,,style,filler,['-']
-deshalb,,style,filler,['-']
-deswegen,,style,filler,['-']
-doch,,style,filler,['-']
-durchaus,,style,filler,['-']
-durchweg,,style,filler,['-']
-dynamisch,,style,hollow,"['lebendig', 'tatkräftig', 'lebhaft', 'enthusiastisch', 'engagiert', 'energiegeladen', 'vital', 'eifrig', 'anpassungsfähig', 'schwungvoll']"
-eben,,style,filler,['-']
-eigentlich,,style,filler,['-']
-einerseits,,style,filler,['-']
-einige,,style,filler,['-']
-einigermaßen,,style,filler,['-']
-einmal,,style,filler,['-']
-ergo,,style,filler,['-']
-erheblich,,style,filler,['-']
-etc.,,style,filler,['-']
-etliche,,style,filler,['-']
-etwa,,style,filler,['-']
-fast,,style,filler,['-']
-flexibel,,style,hollow,"['anpassungsfähig', 'strategisch wendig', 'pragmatisch', 'offen', 'beweglich', 'agil', 'variabel', 'mobil', 'durch die Nutzenden definiert']"
-folgendermaßen,,style,filler,['-']
-folglich,,style,filler,['-']
-fortwährend,,style,filler,['-']
-fraglos,,style,filler,['-']
-freilich,,style,filler,['-']
-förmlich,,style,filler,['-']
-ganz,,style,filler,['-']
-gar,,style,filler,['-']
-gelegentlich,,style,filler,['-']
-gemeinhin,,style,filler,['-']
-geradezu,,style,filler,['-']
-gewiss,,style,filler,['-']
-gewissermaßen,,style,filler,['-']
-glatt,,style,filler,['-']
-gleichsam,,style,filler,['-']
-gleichwohl,,style,filler,['-']
-global,,style,hollow,"['in vielen Ländern Europas/Asiens/Afrikas/Nord- und Südamerikas', 'auf allen Kontinenten']"
-glücklicherweise,,style,filler,['-']
-gottseidank,,style,filler,['-']
-größtenteils,,style,filler,['-']
-gänzlich,,style,filler,['-']
-halt,,style,filler,['-']
-hingegen,,style,filler,['-']
-hinlänglich,,style,filler,['-']
-hoch-motiviert,,style,hollow,"['fähig zur Eigeninitiative', 'bereit, sich zu engagieren', 'setzt sich erreichbare Ziele', 'bereit, sich einzusetzen']"
-hochmotiviert,,style,hollow,"['fähig zur Eigeninitiative', 'bereit, sich zu engagieren', 'setzt sich erreichbare Ziele', 'bereit, sich einzusetzen']"
-hochwertig,,style,hollow,"['von guter Qualität', 'dauerhaft', 'stabil', 'belastbar', 'wertbeständig']"
-häufig,,style,filler,['-']
-höchst,,style,filler,['-']
-höchstens,,style,filler,['-']
-immer,,style,filler,['-']
-immerhin,,style,filler,['-']
-immerzu,,style,filler,['-']
-indessen,,style,filler,['-']
-infolgedessen,,style,filler,['-']
-innovativ,,style,hollow,"['einfallsreich', 'neuartig', 'kreativ', 'schöpferisch', 'erfindungsreich', 'zukunftsweisend', 'bahnbrechend', 'ideenreich', 'fortschrittlich']"
-insbesondere,,style,filler,['-']
-international,,style,hollow,"['in vielen Ländern Europas/Asiens/Afrikas/Nord- und Südamerikas', 'auf allen Kontinenten']"
-inzwischen,,style,filler,['-']
-irgend,,style,filler,['-']
-irgendein,,style,filler,['-']
-irgendjemand,,style,filler,['-']
-irgendwann,,style,filler,['-']
-irgendwie,,style,filler,['-']
-irgendwo,,style,filler,['-']
-je,,style,filler,['-']
-jedenfalls,,style,filler,['-']
-kaum,,style,filler,['-']
-keinesfalls,,style,filler,['-']
-keineswegs,,style,filler,['-']
-lediglich,,style,filler,['-']
-leider,,style,filler,['-']
-letztlich,,style,filler,['-']
-längst,,style,filler,['-']
-lösungsorientiert,,style,hollow,"['pragmatisch', 'umsetzungsorientiert']"
-manchmal,,style,filler,['-']
-maßgeblich,,style,hollow,"['relevant', 'entscheidend', 'verantwortlich', 'wird großgeschrieben']"
-mehrfach,,style,filler,['-']
-meinetwegen,,style,filler,['-']
-meist,,style,filler,['-']
-meistens,,style,filler,['-']
-meistenteils,,style,filler,['-']
-mindestens,,style,filler,['-']
-mithin,,style,filler,['-']
-mitunter,,style,filler,['-']
-möglicherweise,,style,filler,['-']
-möglichst,,style,filler,['-']
-naturgemäß,,style,filler,['-']
-natürlich,,style,filler,['-']
-neuerdings,,style,filler,['-']
-neuerlich,,style,filler,['-']
-neulich,,style,filler,['-']
-nichtsdestoweniger,,style,filler,['-']
-nie,,style,filler,['-']
-niemals,,style,filler,['-']
-normal,,style,hollow,"['typisch', 'vorschriftsmäßig', 'den allgemein anerkannten/als verbindlich geltenden Regeln/Erwartungen entsprechend']"
-nun,,style,filler,['-']
-nur,,style,filler,['-']
-nämlich,,style,filler,['-']
-o.Ä.,,style,filler,['-']
-o.ä.,,style,filler,['-']
-offenbar,,style,filler,['-']
-offenkundig,,style,filler,['-']
-offensichtlich,,style,filler,['-']
-oft,,style,filler,['-']
-ohnedies,,style,filler,['-']
-partout,,style,filler,['-']
-plötzlich,,style,filler,['-']
-quasi,,style,filler,['-']
-quer-denken,,style,hollow,"['in neuen Mustern denken', 'parallel/lateral/kreativ/divergent denken', 'über den eigenen Tellerrand blicken', 'brainstormen']"
-querdenken,,style,hollow,"['in neuen Mustern denken', 'parallel/lateral/kreativ/divergent denken', 'über den eigenen Tellerrand blicken', 'brainstormen']"
-recht,,style,filler,['-']
-reichlich,,style,filler,['-']
-reiflich,,style,filler,['-']
-relativ,,style,filler,['-']
-restlos,,style,filler,['-']
-richtiggehend,,style,filler,['-']
-rundheraus,,style,filler,['-']
-rundum,,style,filler,['-']
-sattsam,,style,filler,['-']
-schlicht,,style,filler,['-']
-schlichtweg,,style,filler,['-']
-schließlich,,style,filler,['-']
-schlußendlich,,style,filler,['-']
-schon,,style,filler,['-']
-sehr,,style,filler,['-']
-selbst,,style,filler,['-']
-selbstredend,,style,filler,['-']
-selbstverständlich,,style,filler,['-']
-selten,,style,filler,['-']
-seltsamerweise,,style,filler,['-']
-sicherlich,,style,filler,['-']
-so,,style,filler,['-']
-sogar,,style,filler,['-']
-sonst,,style,filler,['-']
-sowieso,,style,filler,['-']
-sozusagen,,style,filler,['-']
-state-of-the-art,,style,hollow,"['auf dem neuesten/letzten Stand der Technik', 'dem aktuellen Stand der Forschung/Technologie entsprechend', 'fachüblich']"
-stellenweise,,style,filler,['-']
-stets,,style,filler,['-']
-teamfähig,,style,hollow,"['kooperationsfähig', 'offen gegenüber verschiedenen Menschen und Verhaltensweisen', 'fähig mit Unterschieden und Gemeinsamkeiten umzugehen', 'kommunikationsfähig', 'kompromissbereit zugunsten des gemeinsamen Ziels']"
-trotzdem,,style,filler,['-']
-u.a.,,style,filler,['-']
-u.Ä.,,style,filler,['-']
-u.ä.,,style,filler,['-']
-umständehalber,,style,filler,['-']
-unbedingt,,style,filler,['-']
-unerhört,,style,filler,['-']
-ungefähr,,style,filler,['-']
-ungemein,,style,filler,['-']
-ungewöhnlich,,style,filler,['-']
-ungleich,,style,filler,['-']
-unglücklicherweise,,style,filler,['-']
-unlängst,,style,filler,['-']
-unmaßgeblich,,style,filler,['-']
-unsagbar,,style,filler,['-']
-unstreitig,,style,filler,['-']
-unsäglich,,style,filler,['-']
-unzweifelhaft,,style,filler,['-']
-vergleichsweise,,style,filler,['-']
-vermutlich,,style,filler,['-']
-vielfach,,style,filler,['-']
-vielleicht,,style,filler,['-']
-vollends,,style,filler,['-']
-vollkommen,,style,filler,['-']
-vollständig,,style,filler,['-']
-vor-allem,,style,hollow,"['als Wichtigstes', 'namentlich', 'vorrangig']"
-vorallem,,style,hollow,"['als Wichtigstes', 'namentlich', 'vorrangig']"
-völlig,,style,filler,['-']
-wahrscheinlich,,style,filler,['-']
-weidlich,,style,filler,['-']
-weitgehend,,style,filler,['-']
-weltweit,,style,hollow,"['in vielen Ländern Europas/Asiens/Afrikas/Nord- und Südamerikas', 'auf allen Kontinenten']"
-wenigstens,,style,filler,['-']
-wieder,,style,filler,['-']
-wiederum,,style,filler,['-']
-wirklich,,style,filler,['-']
-wohl,,style,filler,['-']
-wohlgemerkt,,style,filler,['-']
-womöglich,,style,filler,['-']
-ziemlich,,style,filler,['-']
-zudem,,style,filler,['-']
-zugegeben,,style,filler,['-']
-zumeist,,style,filler,['-']
-zusehends,,style,filler,['-']
-zuweilen,,style,filler,['-']
-zweifellos,,style,filler,['-']
-zweifelsfrei,,style,filler,['-']
-zweifelsohne,,style,filler,['-']
-überaus,,style,filler,['-']
-überdies,,style,filler,['-']
-überhaupt,,style,filler,['-']
-übrigens,,style,filler,['-']
+Lemma,Word_Type,Priority,Category,Primary_subcategory,Alt_split
+Arbeitskraft,s,,style,hollow,"['Arbeitsleistung', 'Personal', 'Mitarbeiter~in~/~Mitarbeiter', 'menschliche Kraft zu geistiger/körperlicher Arbeit', 'Personal', 'Mitarbeitende', 'Mitarbeiter~innen~ und ~Mitarbeiter']"
+Erfolg,s,,style,exaggerating,"['Gelingen', 'gemeinsam erreichtes Ziel', 'gutes Ergebnis', 'positive Überraschung', 'Lohn für Engagement', 'Umsetzung', 'gutes Resultat']"
+Erfolgsbilanz,s,,style,exaggerating,"['positive Bilanz', 'erfreuliches Fazit', 'Überblick über gute Ergebnisse', 'erreichte Meilensteine']"
+Erfolgserlebnis,s,,style,exaggerating,"['Freude über die kompetente Umsetzung gemeinsamer Ziele', 'Auftrieb durch das Erreichen von Meilensteinen', 'Motivation durch gute Ergebnisse']"
+Erfolgsfaktor,s,,style,exaggerating,"['Faktor im Erreichen gemeinsamer Ziele', 'Schlüssel zum guten Ergebnis', 'Anziehungskraft steigernder Aspekt', 'Erhöhung der Zugkraft', 'Beitrag zum guten Gelingen']"
+Erfolgsgeschichte,s,,style,exaggerating,"['gelungenes Beispiel', 'Geschichte, wie wir gemeinsame Ziele erreichen', 'Beweis für den positiven Verlauf', 'Geschichte der positiven Entwicklung', 'Bericht über die positive Unternehmung', 'Beispiel, das zeigt, wie uns das gelungen ist']"
+Erfolgsquote,s,,style,exaggerating,"['positiver Beitrag zum Gesamtergebnis', 'Anteil am Erreichen gemeinsamer Ziele', 'Mitwirkung am positiven Verlauf', 'Beitrag zum gemeinsamen guten Gelingen']"
+Establishment,s,,style,exaggerating,"['bessere Gesellschaft', 'bessere Kreise', 'gut situierte Kreise', 'soziale Oberschicht', 'in Kaderkreisen']"
+Exzellenz,s,,style,exaggerating,"['Qualität', 'sich kontinuierlich Ziele setzen und erreichen', 'Qualitätsbewusstsein', 'mit besonderer Güte']"
+Flexibilität,s,,style,hollow,"['Anpassungsfähigkeit', 'Aufgeschlossenheit gegenüber Wandel', 'Bereitschaft für Veränderung', 'Mobilität', 'Fähigkeit, sich schnell auf Neues umzustellen']"
+Gewinn,s,,style,exaggerating,"['Bereicherung', 'Nutzen', 'Vorteil', 'positiver Ertrag', 'Nutzeffekt', 'Benefit', 'Vorzug']"
+Hardliner,s,26-01-2022,style,exaggerating,"['Verfechter~in~/~Verfechter', 'jemand, der ungern Kompromisse eingeht', 'Mensch, der für seine Ziele eintritt', 'Verfechter~innen~ und ~Verfechter']"
+Höchstleistung,s,,style,exaggerating,"['gelungene Leistung', 'Sternstunde', 'Glanzleistung', 'Leistung, zu der alle gemeinsam beigetragen haben', 'gemeinsame Leistung, die neue Maßstäbe gesetzt hat |']"
+Innovation,s,,style,hollow,"['Neugestaltung', 'Erfindung', 'technischer Fortschritt', 'Neuerung', 'Neuschöpfung', 'Neuentwicklung']"
+Innovationskraft,s,,style,hollow,"['Erfindungsreichtum', 'Kreativität', 'Fähigkeit, Ideen in Lösungen umzusetzen', 'Umsetzungskraft']"
+Karrierechance,s,,style,hollow,"['gute Aufstiegsmöglichkeit', 'Maßnahmen zur Karriereförderung', 'Mentoring und Coaching für neue Rollen']"
+Karrierefrau,s,,style,exaggerating,"['engagierter Mensch', 'Person, die neu erworbenes Wissen kompetent einsetzt und weiterkommt', 'Person, die sich kontinuierlich Ziele setzt und sie erreicht']"
+Marktführer,s,,style,exaggerating,"['Marktführer~in~/~Marktführer', 'Unternehmen, das im Markt Maßstäbe setzt', 'Unternehmen mit überwiegender Marktpräsenz', 'in der Branche richtungweisendes Unternehmen', 'im Markt wegweisendes Unternehmen', 'Marktführer~innen~ und ~Marktführer', 'Unternehmen, die im Markt Maßstäbe setzen', 'Unternehmen mit überwiegender Marktpräsenz', 'in der Branche richtungweisende Unternehmen', 'im Markt wegweisende Unternehmen']"
+Must-have,s,,style,exaggerating,"['nützliches Merkmal', 'hilfreiche Fähigkeit', 'Kompetenz, die wichtig ist, um (...)', 'Erfahrung, die (...) ermöglicht', 'Kenntnis, die (...) erlaubt']"
+Musthave,s,,style,exaggerating,"['nützliches Merkmal', 'hilfreiche Fähigkeit', 'Kompetenz, die wichtig ist, um (...)', 'Erfahrung, die (...) ermöglicht', 'Kenntnis, die (...) erlaubt']"
+Organisationstalent,s,,style,hollow,"['Organisationsfähigkeit', 'Geübtheit, anderen den Rücken freizuhalten', 'Person, die gern organisiert', 'jemand, der einen klaren Blick behält', 'Mensch, der gern offene Enden zusammenführt']"
+Pionierunternehmen,s,,style,exaggerating,"['richtungweisendes Unternehmen', 'Unternehmen, das mit gutem Beispiel vorangeht', 'Unternehmen, das sich auf Neues einlässt', 'Unternehmen, das neue Wege geht', 'Unternehmen, das inspiriert', 'Unternehmen, das Maßstäbe im (...) setzt', 'verantwortungsbewusstes Unternehmen, das anderen den Weg bereitet']"
+Querdenken,s,,style,hollow,"['die Fähigkeit, in neuen Mustern zu denken', 'die Fähigkeit, parallel/lateral/kreativ/divergent zu denken', 'die Fähigkeit, über den eigenen Tellerrand zu blicken', 'die Fähigkeit zum Brainstormen']"
+Scherge,s,26-01-2022,style,exaggerating,"['Verfechter~in~/~Verfechter', 'Verbündete~r~/~Verbündeter', 'Polizist~in~/~Polizist', 'Handlanger~in~/~Handlanger', 'Mitarbeitende', 'Verfechtende', 'Verbündete', 'Komplizen', 'Verfechter~innen~ und ~Verfechter', 'Polizist~innen~ und ~Polizisten', 'Handlanger~innen~ und ~Handlanger']"
+Spitzenleistung,s,,style,exaggerating,"['Leistung', 'Einsatz', 'Potenzial', 'Leistungsvermögen', 'Meilenstein']"
+Spitzenunternehmen ,s,26-01-2022,style,exaggerating,"['Unternehmen, das technologischen Wandel gestaltet,', 'Unternehmen, das neue Technologien mit Bedacht und Kreativität einsetzt,', 'Unternehmen, das sorgfältig ausgewählte Technologien für den Unternehmenserfolg einsetzt,']"
+Team-player,s,,style,hollow,"['Zusammenarbeit über das eigene Streben stellen', 'Team', 'Teammitglieder', 'Teamplayer~innen', 'Teamplayer~in', 'Team-player~in~/~Team-player']"
+Teamfähigkeit,s,,style,hollow,"['Kooperationsfähigkeit', 'Akzeptanz gegenüber verschiedenen Menschen und Verhaltensweisen', 'Fähigkeit mit Unterschieden und Gemeinsamkeiten umzugehen', 'Kommunikationsfähigkeit', 'Kompromissbereitschaft zugunsten des gemeinsamen Ziels']"
+Teamplayer,s,,style,hollow,"['Zusammenarbeit über das eigene Streben stellen', 'Team', 'Teammitglieder', 'Teamplayer~innen', 'Teamplayer~in', 'Team-player~in~/~Team-player']"
+Traumaufgabe,s,,style,exaggerating,"['Aufgabe, die den eigenen Wünschen entspricht', 'Aufgabe, für die sich jemand mit Freude engagiert', 'Aufgabe, die inspiriert und motiviert']"
+Traumjob,s,,style,exaggerating,"['Job, der den persönlichen Wünschen entspricht', 'interessanter Job', 'gut bezahlter Job', 'Job in einem engagierten offenen Team']"
+Weltherrschaft,s,,style,exaggerating,"['tonangebende Rolle', 'einflussreiche Position', 'überwiegende Marktpräsenz', 'Position, die erlaubt, im Markt Maßstäbe zu setzen', 'Rolle, in der man Weg und Richtung weist']"
+Weltmarktführer,s,26-01-2022,style,exaggerating,"['Weltmarke', 'Unternehmen mit dem größen Weltmarktanteil nach Umsatz', 'Unternehmen mit dem größen Weltmarktanteil nach Stückzahl', 'Unternehmen, das im weltweiten Handel im Segment stärker vertreten ist als der Wettbewerb', 'Unternehmen, das den technologischen Wandel im Markt weltweit gestaltet']"
+Weltspitze,s,,style,exaggerating,"['tonangebende Rolle', 'einflussreiche Position', 'überwiegende Marktpräsenz', 'Position, die erlaubt, im Markt Maßstäbe zu setzen', 'Rolle, in der man Weg und Richtung weist']"
+aber,adv,1/2/2022,style,filler,['-']
+abermals,adv,,style,filler,['-']
+absolut,a,,style,exaggerating,"['durch und durch', 'real', 'umfassend', 'uneingeschränkt', 'gründlich', 'zweifelsohne', 'gerne', 'zuverlässig']"
+aktiv,a,,style,hollow,"['lebendig', 'tatkräftig', 'lebhaft', 'enthusiastisch', 'engagiert', 'energiegeladen', 'vital', 'eifrig', 'anpassungsfähig', 'schwungvoll']"
+allein,adv,,style,filler,['-']
+allemal,adv,,style,filler,['-']
+allenfalls,adv,,style,filler,['-']
+allenthalben,adv,,style,filler,['-']
+allerdings,adv,,style,filler,['-']
+allesamt,adv,,style,filler,['-']
+allzu,adv,,style,filler,['-']
+also,adv,,style,filler,['-']
+andauernd,a,,style,filler,['-']
+andererseits,adv,,style,filler,['-']
+andernfalls,adv,,style,filler,['-']
+anscheinend,a,,style,filler,['-']
+auch,adv,,style,filler,['-']
+auffallend,a,,style,filler,['-']
+augenscheinlich,a,,style,filler,['-']
+ausdrücklich,a,,style,filler,['-']
+ausgeprägt,a,,style,exaggerating,"['sichtbar', 'intensiv', 'wahrnehmbar', 'gründlich', 'spürbar', 'merklich', 'klar erkennbar', 'klar umrissen', 'prägnant', 'klar ersichtlich']"
+ausgerechnet,adv,,style,filler,['-']
+ausgezeichnet,a,,style,exaggerating,"['gut', 'bemerkenswert', 'mit einem Preis gewürdigt', 'öffentlich geehrt', 'auf (...) stolz sein dürfen']"
+ausnahmslos,adv,,style,filler,['-']
+außerdem,adv,,style,filler,['-']
+außergewöhnlich,a,,style,exaggerating,"['kreativ', 'gut', 'komplex', 'beeindruckend', 'eindrucksvoll', 'auffällig', 'sich positiv abhebend', 'bemerkenswert']"
+außerordentlich,a,,style,exaggerating,"['gut', 'eindrucksvoll', 'bemerkenswert']"
+beeindrucken,v,,style,exaggerating,"['einen guten Eindruck hinterlassen', 'einen guten Eindruck machen', 'wirken', 'bewegen', 'sich hervortun']"
+beeindruckend,a,,style,exaggerating,"['gut', 'bewegend', 'inspirierend', 'bemerkenswert', 'eindrucksvoll', 'wirkungsvoll']"
+beinahe,adv,,style,filler,['-']
+bekanntlich,adv,,style,filler,['-']
+bereits,adv,,style,filler,['-']
+besonders,adv,,style,filler,['-']
+beste,a,,style,exaggerating,"['leicht', 'einfach', 'mühelos', 'wirkungsvoll', 'als positiv empfunden', 'erfüllend', 'befriedigend', 'bereichernd', 'schön', 'fein', 'gut', 'passend']"
+bestenfalls,adv,,style,filler,['-']
+bloß,adv,,style,filler,['-']
+brillant,a,,style,exaggerating,"['glänzend', 'gebündelt', 'fokussiert', 'klar', 'kreativ', 'scharfsinnig', 'begabt', 'wirkungsvoll', 'einnehmend', 'technisch kreativ', 'gekonnt', 'famos', 'reich an Obertönen', 'dass es eine Freude ist', 'eine wahre Wonne']"
+dabei,adv,,style,filler,['-']
+dadurch,adv,,style,filler,['-']
+dagegen,adv,,style,filler,['-']
+daher,adv,,style,filler,['-']
+damals,adv,,style,filler,['-']
+danach,adv,,style,filler,['-']
+demgegenüber,adv,,style,filler,['-']
+demgemäß,adv,,style,filler,['-']
+demnach,adv,,style,filler,['-']
+denn,adv,,style,filler,['-']
+dennoch,adv,,style,filler,['-']
+deshalb,adv,,style,filler,['-']
+deswegen,adv,,style,filler,['-']
+doch,adv,,style,filler,['-']
+durchaus,adv,,style,filler,['-']
+durchweg,adv,,style,filler,['-']
+dynamisch,a,,style,hollow,"['lebendig', 'tatkräftig', 'lebhaft', 'enthusiastisch', 'engagiert', 'energiegeladen', 'vital', 'eifrig', 'anpassungsfähig', 'schwungvoll']"
+eben,adv,,style,filler,['-']
+eigentlich,adv,,style,filler,['-']
+eindrücklich,a,,style,exaggerating,"['eindringlich', 'eloquent', 'in eindringlichen Bildern', 'bildlich', 'emphatisch', 'anschaulich']"
+einerseits,adv,,style,filler,['-']
+einige,adv,,style,filler,['-']
+einigermaßen,adv,,style,filler,['-']
+einmal,adv,,style,filler,['-']
+einzigartig,a,,style,exaggerating,"['spezifisch', 'eindeutig', 'kreativ', 'einfallsreich', 'überraschend', 'ausgefallen']"
+erfolgreich,a,,style,exaggerating,"['fähig', 'fruchtbringend', 'gelungen', 'gewinnbringend', 'produktiv', 'Meilensteine erreicht', 'mit gutem Ergebnis', 'Aufgaben gemeinsam gelöst', 'mit Leichtigkeit bewältigt', 'mit Engagement zu Ende gebracht']"
+ergo,adv,,style,filler,['-']
+erheblich,adv,,style,filler,['-']
+erstklassig,a,,style,exaggerating,"['mit einem Auge für Qualität', 'zuverlässig und präzise', 'ansprechend', 'gehoben', 'rein', 'bevorzugt', 'sorgfältig ausgewählt']"
+etabliert,a,,style,exaggerating,"['anerkannt', 'akzeptiert', 'sich einen Namen gemacht habend', 'verwurzelt', 'eingerichtet', 'geltend', 'eingeführt', 'bekannt', 'bewährt', 'aufgebaut']"
+etc,abbr,28-01-2022,style,filler,['-']
+etc.,abbr,,style,filler,['-']
+etliche,adv,,style,filler,['-']
+etwa,adv,,style,filler,['-']
+exzellent,a,,style,exaggerating,"['wertvoll', 'gut', 'qualitätsorientiert', 'mit Sinn für Qualität', 'von besonderer Qualität']"
+fantastisch,a,,style,exaggerating,"['inspirierend', 'begeisternd', 'motivierend']"
+fast,adv,,style,filler,['-']
+flexibel,a,,style,hollow,"['anpassungsfähig', 'strategisch wendig', 'pragmatisch', 'offen', 'beweglich', 'agil', 'variabel', 'mobil', 'durch die Nutzenden definiert']"
+folgendermaßen,adv,,style,filler,['-']
+folglich,adv,,style,filler,['-']
+fortwährend,adv,,style,filler,['-']
+fraglos,adv,,style,filler,['-']
+freilich,adv,,style,filler,['-']
+fundiert,a,,style,exaggerating,"['mit Know-how', 'mit Erfahrung']"
+förmlich,adv,,style,filler,['-']
+führend,a,,style,exaggerating,"['bedeutend', 'wichtig', 'bekannt', 'Maßstäbe setzend', 'einflußreich', 'richtungweisend', 'tonangebend', 'wegweisend']"
+ganz,adv,,style,filler,['-']
+gar,adv,,style,filler,['-']
+gelegentlich,adv,,style,filler,['-']
+gemeinhin,adv,,style,filler,['-']
+geradezu,adv,,style,filler,['-']
+gewandt,a,,style,exaggerating,"['flexibel', 'geschickt', 'umsichtig', 'diplomatisch', 'behände', 'beweglich', 'eloquent', 'anpassungsfähig', 'routiniert']"
+gewiss,adv,,style,filler,['-']
+gewissermaßen,adv,,style,filler,['-']
+glatt,adv,,style,filler,['-']
+gleichsam,adv,,style,filler,['-']
+gleichwohl,adv,,style,filler,['-']
+global,a,,style,hollow,"['in vielen Ländern Europas/Asiens/Afrikas/Nord- und Südamerikas', 'auf allen Kontinenten']"
+glücklicherweise,adv,,style,filler,['-']
+gottseidank,adv,,style,filler,['-']
+größtenteils,adv,,style,filler,['-']
+gänzlich,adv,,style,filler,['-']
+halt,adv,,style,filler,['-']
+hard-core,a,26-01-2022,style,exaggerating,"['heftig', 'engagiert', 'kompomisslos', 'anstrengend', 'unerfreulich']"
+hardcore,a,26-01-2022,style,exaggerating,"['heftig', 'engagiert', 'kompomisslos', 'anstrengend', 'unerfreulich']"
+herausragend,a,,style,exaggerating,"['kreativ', 'einfallsreich', 'gut', 'überraschend', 'eindrucksvoll', 'erfreulich', 'zur großen Zufriedenheit aller']"
+hervorragend,a,,style,exaggerating,"['kreativ', 'einfallsreich', 'gut', 'überraschend', 'eindrucksvoll', 'erfreulich', 'zur großen Zufriedenheit aller']"
+hingegen,adv,,style,filler,['-']
+hinlänglich,adv,,style,filler,['-']
+hoch-motiviert,a,,style,hollow,"['fähig zur Eigeninitiative', 'bereit, sich zu engagieren', 'setzt sich erreichbare Ziele', 'bereit, sich einzusetzen']"
+hochmotiviert,a,,style,hollow,"['fähig zur Eigeninitiative', 'bereit, sich zu engagieren', 'setzt sich erreichbare Ziele', 'bereit, sich einzusetzen']"
+hochwertig,a,,style,hollow,"['von guter Qualität', 'dauerhaft', 'stabil', 'belastbar', 'wertbeständig']"
+häufig,adv,,style,filler,['-']
+höchst,adv,,style,filler,['-']
+höchstens,adv,,style,filler,['-']
+immer,adv,,style,filler,['-']
+immerhin,adv,,style,filler,['-']
+immerzu,adv,,style,filler,['-']
+indessen,adv,,style,filler,['-']
+infolgedessen,adv,,style,filler,['-']
+innovativ,a,,style,hollow,"['einfallsreich', 'neuartig', 'kreativ', 'schöpferisch', 'erfindungsreich', 'zukunftsweisend', 'bahnbrechend', 'ideenreich', 'fortschrittlich']"
+insbesondere,adv,,style,filler,['-']
+international,a,,style,hollow,"['in vielen Ländern Europas/Asiens/Afrikas/Nord- und Südamerikas', 'auf allen Kontinenten']"
+inzwischen,adv,,style,filler,['-']
+irgend,adv,,style,filler,['-']
+irgendein,adv,,style,filler,['-']
+irgendjemand,adv,,style,filler,['-']
+irgendwann,adv,,style,filler,['-']
+irgendwie,adv,,style,filler,['-']
+irgendwo,adv,,style,filler,['-']
+je,adv,,style,filler,['-']
+jedenfalls,adv,,style,filler,['-']
+kaum,adv,,style,filler,['-']
+keinesfalls,adv,,style,filler,['-']
+keineswegs,adv,,style,filler,['-']
+lediglich,adv,,style,filler,['-']
+leider,adv,,style,filler,['-']
+letztlich,adv,,style,filler,['-']
+längst,adv,,style,filler,['-']
+lösungsorientiert,a,,style,hollow,"['pragmatisch', 'umsetzungsorientiert']"
+manchmal,adv,,style,filler,['-']
+maßgeblich,a,,style,hollow,"['relevant', 'entscheidend', 'verantwortlich', 'wird großgeschrieben']"
+mehrfach,adv,,style,filler,['-']
+meinetwegen,adv,,style,filler,['-']
+meist,adv,,style,filler,['-']
+meistens,adv,,style,filler,['-']
+meistenteils,adv,,style,filler,['-']
+mindestens,adv,,style,filler,['-']
+mithin,adv,,style,filler,['-']
+mitunter,adv,,style,filler,['-']
+möglicherweise,adv,,style,filler,['-']
+möglichst,adv,,style,filler,['-']
+nachweisbar,a,,style,exaggerating,"['dokumentiert', 'nachvollziehbar', 'belegbar']"
+nachweisen,v,,style,exaggerating,"['dokumentieren', 'nachvollziehbar aufzeigen']"
+naturgemäß,adv,,style,filler,['-']
+natürlich,adv,,style,filler,['-']
+neuerdings,adv,,style,filler,['-']
+neuerlich,adv,,style,filler,['-']
+neulich,adv,,style,filler,['-']
+nichtsdestoweniger,adv,,style,filler,['-']
+nie,adv,,style,filler,['-']
+niemals,adv,,style,filler,['-']
+normal,a,,style,hollow,"['typisch', 'vorschriftsmäßig', 'den allgemein anerkannten/als verbindlich geltenden Regeln/Erwartungen entsprechend']"
+nun,adv,,style,filler,['-']
+nur,adv,,style,filler,['-']
+nämlich,adv,,style,filler,['-']
+o.Ä.,abbr,,style,filler,['-']
+o.ä.,abbr,,style,filler,['-']
+obligatorisch,a,,style,exaggerating,"['nützlich', 'hilfreich', 'wichtig, um (...)']"
+offenbar,adv,,style,filler,['-']
+offenkundig,adv,,style,filler,['-']
+offensichtlich,adv,,style,filler,['-']
+oft,adv,,style,filler,['-']
+ohnedies,adv,,style,filler,['-']
+partout,adv,,style,filler,['-']
+perfekt,a,,style,exaggerating,"['ausgereift', 'passend', 'zielführend', 'effektiv', 'interessant', 'geeignet', 'umfassend', 'richtig', 'angebracht', 'gültig', 'gleichwertig', 'praktisch', 'unkompliziert', 'in vollem Umfang']"
+plötzlich,adv,,style,filler,['-']
+problemlos,a,,style,exaggerating,"['einfach', 'leicht', 'reibungslos', 'praktisch', 'bequem', 'ohne großen Aufwand', 'mit Leichtigkeit', 'gut verständlich']"
+quasi,adv,,style,filler,['-']
+quer-denken,v,,style,hollow,"['in neuen Mustern denken', 'parallel/lateral/kreativ/divergent denken', 'über den eigenen Tellerrand blicken', 'brainstormen']"
+querdenken,v,,style,hollow,"['in neuen Mustern denken', 'parallel/lateral/kreativ/divergent denken', 'über den eigenen Tellerrand blicken', 'brainstormen']"
+recht,adv,,style,filler,['-']
+reflektieren,v,,style,exaggerating,"['überdenken', 'betrachten', 'reindenken', 'sich gedanklich intensiv befassen']"
+reichlich,adv,,style,filler,['-']
+reiflich,adv,,style,filler,['-']
+relativ,adv,,style,filler,['-']
+restlos,adv,,style,filler,['-']
+richtiggehend,adv,,style,filler,['-']
+rundheraus,adv,,style,filler,['-']
+rundum,adv,,style,filler,['-']
+sattsam,adv,,style,filler,['-']
+schlicht,adv,,style,filler,['-']
+schlichtweg,adv,,style,filler,['-']
+schließlich,adv,,style,filler,['-']
+schlußendlich,adv,,style,filler,['-']
+schon,adv,,style,filler,['-']
+sehr,a,,style,filler,['-']
+selbst,adv,,style,filler,['-']
+selbstredend,adv,,style,filler,['-']
+selbstverständlich,adv,,style,filler,['-']
+selten,adv,,style,filler,['-']
+seltsamerweise,adv,,style,filler,['-']
+sicherlich,adv,,style,filler,['-']
+so,adv,,style,filler,['-']
+sogar,adv,,style,filler,['-']
+sonst,adv,,style,filler,['-']
+sowieso,adv,,style,filler,['-']
+sozusagen,adv,,style,filler,['-']
+state-of-the-art,i,,style,hollow,"['auf dem neuesten/letzten Stand der Technik', 'dem aktuellen Stand der Forschung/Technologie entsprechend', 'fachüblich']"
+stellenweise,adv,,style,filler,['-']
+stets,adv,,style,filler,['-']
+stilsicher,a,,style,exaggerating,"['kultiviert', 'der jeweiligen Situation angemessen auftretend', 'Gepflogenheiten routiniert respektierend']"
+teamfähig,a,,style,hollow,"['kooperationsfähig', 'offen gegenüber verschiedenen Menschen und Verhaltensweisen', 'fähig mit Unterschieden und Gemeinsamkeiten umzugehen', 'kommunikationsfähig', 'kompromissbereit zugunsten des gemeinsamen Ziels']"
+trotzdem,adv,,style,filler,['-']
+u.a.,abbr,,style,filler,['-']
+u.Ä.,abbr,,style,filler,['-']
+u.ä.,abbr,,style,filler,['-']
+umständehalber,adv,,style,filler,['-']
+unbedingt,adv,,style,filler,['-']
+unerhört,adv,,style,filler,['-']
+ungefähr,adv,,style,filler,['-']
+ungemein,adv,,style,filler,['-']
+ungewöhnlich,adv,,style,filler,['-']
+ungleich,adv,,style,filler,['-']
+unglücklicherweise,adv,,style,filler,['-']
+unlängst,adv,,style,filler,['-']
+unmaßgeblich,adv,,style,filler,['-']
+unsagbar,adv,,style,filler,['-']
+unstreitig,adv,,style,filler,['-']
+unsäglich,adv,,style,filler,['-']
+unwiderstehlich,a,,style,exaggerating,"['für sich einnehmen', 'interessant', 'einladend', 'Kundenbedürfnisse identifiziert und bedient haben']"
+unzweifelhaft,adv,,style,filler,['-']
+vergleichsweise,adv,,style,filler,['-']
+vermutlich,adv,,style,filler,['-']
+vielfach,adv,,style,filler,['-']
+vielleicht,adv,,style,filler,['-']
+vollends,adv,,style,filler,['-']
+vollkommen,adv,,style,filler,['-']
+vollständig,adv,,style,filler,['-']
+vor-allem,a,,style,hollow,"['als Wichtigstes', 'namentlich', 'vorrangig']"
+vorallem,a,,style,hollow,"['als Wichtigstes', 'namentlich', 'vorrangig']"
+völlig,adv,,style,filler,['-']
+wahrscheinlich,adv,,style,filler,['-']
+weidlich,adv,,style,filler,['-']
+weitgehend,adv,,style,filler,['-']
+weltweit,a,,style,hollow,"['in vielen Ländern Europas/Asiens/Afrikas/Nord- und Südamerikas', 'auf allen Kontinenten']"
+wenigstens,adv,,style,filler,['-']
+wieder,adv,,style,filler,['-']
+wiederum,adv,,style,filler,['-']
+wirklich,adv,,style,filler,['-']
+wohl,adv,,style,filler,['-']
+wohlgemerkt,adv,,style,filler,['-']
+womöglich,adv,,style,filler,['-']
+ziemlich,adv,,style,filler,['-']
+zudem,adv,,style,filler,['-']
+zugegeben,adv,,style,filler,['-']
+zumeist,adv,,style,filler,['-']
+zusehends,adv,,style,filler,['-']
+zuweilen,adv,,style,filler,['-']
+zweifellos,adv,,style,filler,['-']
+zweifelsfrei,adv,,style,filler,['-']
+zweifelsohne,adv,,style,filler,['-']
+äußerst,a,,style,exaggerating,"['ausgesprochen', 'hochgradig', 'mit Feuereifer']"
+überaus,adv,,style,filler,['-']
+überdies,adv,,style,filler,['-']
+überdurchschnittlich,a,,style,exaggerating,"['viel', 'ausgesprochen', 'hochgradig', 'mehr als', 'zutiefst', 'mit Feuereifer']"
+überhaupt,adv,,style,filler,['-']
+übertreffen,v,,style,exaggerating,"['kompetent und enthusiastisch umsetzen', 'mit Elan und Leichtigkeit erreichen', 'an Meilensteinen wachsen']"
+übrigens,adv,,style,filler,['-']

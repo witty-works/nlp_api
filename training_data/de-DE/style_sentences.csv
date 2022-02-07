@@ -1,39 +1,54 @@
-Lemma,Priority,Category,Primary_subcategory,Alt_split
-"Job, der den eigenen Vorstellungen/Wünschen entspricht",,style,filler,['-']
-Sehr geehrte,,style,formality,"['Guten Tag, (Vorname) (Familienname)', 'Hallo (Vorname) (Familienname)', 'Liebe~r (Vorname) (Familienname)', 'Guten Tag, liebe~r (Vorname) (Familienname)', 'Guten Tag', 'Liebe alle,', 'Hallo zusammen', 'Sehr geehrte Zuhörende und Lesende']"
-Sehr geehrter,,style,formality,"['Guten Tag, (Vorname) (Familienname)', 'Hallo (Vorname) (Familienname)', 'Liebe~r (Vorname) (Familienname)', 'Guten Tag, liebe~r (Vorname) (Familienname)']"
-Team player,,style,hollow,"['Zusammenarbeit über das eigene Streben stellen', 'Team', 'Teammitglieder', 'Teamplayer~innen', 'Teamplayer~in', 'Team-player~in~/~Team-player']"
-allem Anschein nach,,style,filler,['-']
-an sich,,style,filler,['-']
-aufs Neue,,style,filler,['-']
-bei weitem,,style,filler,['-']
-dann und wann,,style,filler,['-']
-des ungeachtet,,style,filler,['-']
-des Öfteren,,style,filler,['-']
-ein bisschen,,style,filler,['-']
-ein wenig,,style,filler,['-']
-flache Hierarchie,,style,hollow,"['kurze Entscheidungswege', 'verantwortliche und eigenorganisierte Arbeitsweise', 'Raum für Eigeninitiative', 'kurze Kommunikationswege', 'Mitgestaltungsmöglichkeiten für Mitarbeitende', 'Betriebsebene mit viel Kompetenzen und Entscheidungsmöglichkeiten']"
-flache Organisation,,style,hollow,"['kurze Entscheidungswege', 'verantwortliche und eigenorganisierte Arbeitsweise', 'Raum für Eigeninitiative', 'kurze Kommunikationswege', 'Mitgestaltungsmöglichkeiten für Mitarbeitende', 'Betriebsebene mit viel Kompetenzen und Entscheidungsmöglichkeiten']"
-ganz und gar,,style,filler,['-']
-hie und da,,style,filler,['-']
-hoch motiviert,,style,hollow,"['fähig zur Eigeninitiative', 'bereit, sich zu engagieren', 'setzt sich erreichbare Ziele', 'bereit, sich einzusetzen']"
-im Allgemeinen,,style,filler,['-']
-in der Tat,,style,filler,['-']
-in diesem Zusammenhang,,style,filler,['-']
-jedoch jemals,,style,filler,['-']
-mehr oder weniger,,style,filler,['-']
-meines Erachtens,,style,filler,['-']
-ohne Zweifel,,style,filler,['-']
-ohne weiteres,,style,filler,['-']
-outside the box,,style,hollow,"['in neuen Mustern denken', 'parallel/lateral/kreativ/divergent denken', 'über den eigenen Tellerrand blicken', 'brainstormen']"
-quer denken,,style,hollow,"['in neuen Mustern denken', 'parallel/lateral/kreativ/divergent denken', 'über den eigenen Tellerrand blicken', 'brainstormen']"
-rasche Auffassungsgabe,,style,hollow,"['das Wesentliche schnell erkennen', 'Gelerntes rasch anwenden']"
-samt und sonders,,style,filler,['-']
-schnelle Auffassungsgabe,,style,hollow,"['das Wesentliche schnell erkennen', 'Gelerntes rasch anwenden']"
-sowohl als auch,,style,filler,['-']
-think outside of the box,,style,hollow,"['in neuen Mustern denken', 'parallel/lateral/kreativ/divergent denken', 'über den eigenen Tellerrand blicken', 'brainstormen']"
-unkonventionell denken,,style,hollow,"['in neuen Mustern denken', 'parallel/lateral/kreativ/divergent denken', 'über den eigenen Tellerrand blicken', 'brainstormen']"
-unkonventionell gedacht,,style,hollow,"['in neuen Mustern gedacht', 'parallel/lateral/kreativ/divergent gedacht', 'über den eigenen Tellerrand geblickt']"
-voll und ganz,,style,filler,['-']
-von neuem,,style,filler,['-']
-vor allem,,style,hollow,"['als Wichtigstes', 'namentlich', 'vorrangig']"
+Lemma,Word_Type,Priority,Category,Primary_subcategory,Alt_split
+"Erst die Arbeit, dann das Vergnügen",i,02-05-2022,style,exaggerating,['Zusammen mit Freude an der Sache geht alles leichter und besser.']
+Extrameile gehen,s+v,1/2/2022,style,exaggerating,"['Spaß am Mit- und Weiterdenken haben', 'sich für Kundenzufriedenheit engagieren', 'über den eigenen Tellerrand blicken', 'Spaß haben, Kundschaft durch unerwartete und kreative Lösungen zu begeistern']"
+"Job, der den eigenen Vorstellungen/Wünschen entspricht",adv,,style,filler,['-']
+Must have,s,,style,exaggerating,"['nützliches Merkmal', 'hilfreiche Fähigkeit', 'Kompetenz, die wichtig ist, um (...)', 'Erfahrung, die (...) ermöglicht', 'Kenntnis, die (...) erlaubt']"
+Schindluder treiben,v,26-01-2022,style,exaggerating,"['schlecht behandeln', 'Mißwirtschaft treiben', 'mißhandeln', 'ausbeuten', 'nicht angemessen pflegen']"
+Schindluderei betreiben,v,26-01-2022,style,exaggerating,"['schlecht behandeln', 'Mißwirtschaft treiben', 'mißhandeln', 'ausbeuten', 'nicht angemessen pflegen']"
+Sehr geehrte,adv+a,,style,formality,"['Guten Tag, (Vorname) (Familienname)', 'Hallo (Vorname) (Familienname)', 'Liebe~r (Vorname) (Familienname)', 'Guten Tag, liebe~r (Vorname) (Familienname)', 'Guten Tag', 'Liebe', 'Liebe alle', 'Hallo zusammen', 'Hallo, liebe Zuhörende und Lesende']"
+Sehr geehrter,adv+a,,style,formality,"['Guten Tag, (Vorname) (Familienname)', 'Hallo (Vorname) (Familienname)', 'Liebe~r (Vorname) (Familienname)', 'Guten Tag, liebe~r (Vorname) (Familienname)', 'Guten Tag', 'Liebe', 'Liebe alle', 'Hallo zusammen', 'Hallo, liebe Zuhörende und Lesende']"
+Team player,s,,style,hollow,"['Zusammenarbeit über das eigene Streben stellen', 'Team', 'Teammitglieder', 'Teamplayer~innen', 'Teamplayer~in', 'Team-player~in~/~Team-player']"
+allem Anschein nach,adv,,style,filler,['-']
+an sich,adv,,style,filler,['-']
+aufs Neue,adv,,style,filler,['-']
+bei weitem,adv,,style,filler,['-']
+belegte Erfolgsgeschichte,a+s,,style,exaggerating,"['belegte Gelingen', 'Beweis für den positiven Verlauf', 'Geschichte der positiven Entwicklung', 'positive Unternehmungsentwicklung', 'Beispiele, die belegen, wie wir gesetzte Ziele erreichen', 'Meilensteine, die dokumentieren, was wir (...) können']"
+bestens etabliert,a,,style,exaggerating,"['anerkannt', 'akzeptiert', 'verwurzelt', 'eingeführt', 'bekannt', 'bewährt', 'aufgebaut', 'einen Ruf (als ...) erworben haben', 'eingerichtet', 'eine stabile Grundlage geschaffen', 'sich einen Namen gemacht haben (für ...)']"
+dann und wann,adv,,style,filler,['-']
+des ungeachtet,adv,,style,filler,['-']
+des Öfteren,adv,,style,filler,['-']
+ein bisschen,adv,,style,filler,['-']
+ein wenig,adv,,style,filler,['-']
+flache Hierarchie,a+s,,style,hollow,"['kurze Entscheidungswege', 'verantwortliche und eigenorganisierte Arbeitsweise', 'Raum für Eigeninitiative', 'kurze Kommunikationswege', 'Mitgestaltungsmöglichkeiten für Mitarbeitende', 'Betriebsebene mit viel Kompetenzen und Entscheidungsmöglichkeiten']"
+flache Organisation,a+s,,style,hollow,"['kurze Entscheidungswege', 'verantwortliche und eigenorganisierte Arbeitsweise', 'Raum für Eigeninitiative', 'kurze Kommunikationswege', 'Mitgestaltungsmöglichkeiten für Mitarbeitende', 'Betriebsebene mit viel Kompetenzen und Entscheidungsmöglichkeiten']"
+ganz und gar,adv,,style,filler,['-']
+gehen die Extrameile,v+s,1/2/2022,style,exaggerating,"['haben Spaß am Mit- und Weiterdenken', 'engagieren sich für Kundenzufriedenheit', 'blicken über den eigenen Tellerrand', 'haben Spaß daran, Kundschaft durch unerwartete und kreative Lösungen zu begeistern']"
+hard core,a,26-01-2022,style,exaggerating,"['heftig', 'engagiert', 'kompomisslos', 'anstrengend', 'unerfreulich']"
+hie und da,adv,,style,filler,['-']
+hoch motiviert,a,,style,hollow,"['fähig zur Eigeninitiative', 'bereit, sich zu engagieren', 'setzt sich erreichbare Ziele', 'bereit, sich einzusetzen']"
+hohe Ziele,a+s,,style,exaggerating,"['Meilensteine', 'Etappenziele', 'Ziele, die motivieren', 'Vorhaben, die begeistern']"
+hohes Verantwortungsbewusstsein,a+s,,style,exaggerating,"['Freude an Verantwortung', 'Sorgfältigkeit', 'Angehen von Aufgaben mit Umsicht und Sorgfalt', 'beim Betreuen von Aufgaben das große Ganze im Blick']"
+im Allgemeinen,adv,,style,filler,['-']
+in der Tat,adv,,style,filler,['-']
+in diesem Zusammenhang,adv,,style,filler,['-']
+jedoch jemals,adv,,style,filler,['-']
+kein Problem,s,,style,exaggerating,"['keine Umstände', 'ein Leichtes', 'ohne großen Aufwand zu erledigen', 'mit Leichtigkeit']"
+mehr oder weniger,adv,,style,filler,['-']
+meines Erachtens,adv,,style,filler,['-']
+nach den Sternen greifen,s+v,,style,exaggerating,"['sich Ziele setzen, die motivieren', 'auf gesteckte Ziele hinarbeiten', 'auf eine Vision hinarbeiten']"
+ohne Problem,s,,style,exaggerating,"['leicht', 'reibungslos', 'praktisch', 'bequem', 'ohne großen Aufwand', 'mit Leichtigkeit']"
+ohne Zweifel,adv,,style,filler,['-']
+ohne weiteres,adv,,style,filler,['-']
+outside the box,i,,style,hollow,"['in neuen Mustern denken', 'parallel/lateral/kreativ/divergent denken', 'über den eigenen Tellerrand blicken', 'brainstormen']"
+quer denken,v,,style,hollow,"['in neuen Mustern denken', 'parallel/lateral/kreativ/divergent denken', 'über den eigenen Tellerrand blicken', 'brainstormen']"
+rasche Auffassungsgabe,a+s,,style,hollow,"['das Wesentliche schnell erkennen', 'Gelerntes rasch anwenden']"
+samt und sonders,adv,,style,filler,['-']
+schnelle Auffassungsgabe,a+s,,style,hollow,"['das Wesentliche schnell erkennen', 'Gelerntes rasch anwenden']"
+sowohl als auch,adv,,style,filler,['-']
+think outside of the box,i,,style,hollow,"['in neuen Mustern denken', 'parallel/lateral/kreativ/divergent denken', 'über den eigenen Tellerrand blicken', 'brainstormen']"
+unkonventionell denken,a+v,,style,hollow,"['in neuen Mustern denken', 'parallel/lateral/kreativ/divergent denken', 'über den eigenen Tellerrand blicken', 'brainstormen']"
+unkonventionell gedacht,a+v,,style,hollow,"['in neuen Mustern gedacht', 'parallel/lateral/kreativ/divergent gedacht', 'über den eigenen Tellerrand geblickt']"
+voll und ganz,adv,,style,filler,['-']
+von neuem,adv,,style,filler,['-']
+vor allem,a,,style,hollow,"['als Wichtigstes', 'namentlich', 'vorrangig']"
+über dem Durchschnitt,a,,style,exaggerating,"['viel', 'ausgesprochen', 'hochgradig', 'mehr als', 'zutiefst', 'mit Feuereifer']"
