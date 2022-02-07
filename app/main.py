@@ -536,15 +536,6 @@ def german_rules(config: Config, lang: Language, tokens, text: str):
     ):
         list_full += gendered_denom_end(config, lang, text)
 
-    # if is_sub_category_enabled("agentic", disabled_categories):
-    #    list_full += agentic_language_analysis_de(
-    #        config,
-    #        lang,
-    #        text,
-    #        tokens,
-    #        agentic_words_alternatives,
-    # C    )
-
     if is_sub_category_enabled("unconscious_bias", disabled_categories):
         list_full += ub_words_phrase_matcher_de(
             config,
@@ -771,8 +762,6 @@ def gendered_denom_end(config: Config, lang, full_text):
 def agentic_language_analysis_de(
     config: Config, lang, full_text, tokens, words_alternatives_noun, category
 ):
-    # subcategory = "agentic"
-    # category = categories[subcategory]["category"]
     list_tokens = []
     dic_anc = {}
     list_false_positives = []

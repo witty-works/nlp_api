@@ -4,8 +4,6 @@ from collections import defaultdict
 
 rules = {
     "de-DE": {
-        # load agentic language
-        # "df_agentic_ct": "agentic.csv",
         # load Gender (nouns, not nouns) and sentences de
         "df_gender_ct": "gendered_noun_words.csv",
         "df_gender_no_noun_word": "gendered_no_noun_words.csv",
@@ -94,10 +92,6 @@ rules["de-DE"]["exceptions"] = [
 
 ### de-DE:
 ## words:
-# df agentic
-# df_agentic = rules["de-DE"]["df_agentic_ct"]
-# agentic: words + alternatives
-# agentic_words_alternatives = list(zip(df_agentic["Lemma"], df_agentic["Alt_split"]))
 # df gender
 df_gender = rules["de-DE"]["df_gender_ct"]
 # gender: words + singular alternatives + plural alternatives + all alternatives + subcategory
