@@ -247,6 +247,7 @@ class ResultOut(BaseModel):
         label=None,
         reason=None,
         solution=None,
+        explanation=None,
     ):
         if end == None:
             end = start + len(text)
@@ -275,6 +276,11 @@ class ResultOut(BaseModel):
             solution
             if solution != None
             else lang._("rules." + subcategory + "_solution", params)
+        )
+        explanation = (
+            explanation
+            if explanation != None
+            else lang._("rules." + subcategory + "_explanation", params)
         )
 
         is_upper = text[0:1].isupper()
@@ -328,6 +334,7 @@ class ResultOut(BaseModel):
             label,
             reason,
             solution,
+            explanation,
         )
 
     factory = staticmethod(factory)
@@ -344,6 +351,7 @@ class ResultOut(BaseModel):
         label,
         reason,
         solution,
+        explanation,
     ):
         object.__setattr__(self, "text", text)
         object.__setattr__(self, "context", context)
@@ -355,6 +363,7 @@ class ResultOut(BaseModel):
         object.__setattr__(self, "label", label)
         object.__setattr__(self, "reason", reason)
         object.__setattr__(self, "solution", solution)
+        object.__setattr__(self, "explanation", explanation)
 
     @staticmethod
     def getGenderedRolesFormatBinary(alternative):
@@ -418,7 +427,7 @@ class ResultsOut(BaseModel):
     language: str
     limit_reached: bool
 
-    def factory(results, lang, limit_reached = False):
+    def factory(results, lang, limit_reached=False):
         if lang != None:
             lang = lang.lang
 

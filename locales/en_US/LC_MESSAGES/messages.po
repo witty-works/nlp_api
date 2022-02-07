@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-01-25 09:51\n"
-"PO-Revision-Date: 2022-01-25 09:51\n"
+"POT-Creation-Date: 2022-02-07 10:38\n"
+"PO-Revision-Date: 2022-02-07 10:38\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -20,6 +20,9 @@ msgstr "Missing"
 msgid "rules.abbreviation_solution"
 msgstr "Missing"
 
+msgid "rules.abbreviation_explanation"
+msgstr "😉 Sure your readers understand?"
+
 msgid "rules.ability_label"
 msgstr "Ability"
 
@@ -33,6 +36,9 @@ msgstr ""
 "Rephrase in a way that talks about the person's ability without implying "
 "otherness or disability."
 
+msgid "rules.ability_explanation"
+msgstr "😒 hidden bias regarding disabilities"
+
 msgid "rules.ableism_label"
 msgstr "Ableist"
 
@@ -41,6 +47,9 @@ msgstr ""
 
 msgid "rules.ableism_solution"
 msgstr "Don't use this expression. You strongly offend people."
+
+msgid "rules.ableism_explanation"
+msgstr "🚫 Ableist"
 
 msgid "rules.age_label"
 msgstr "Age information"
@@ -53,6 +62,9 @@ msgstr ""
 msgid "rules.age_solution"
 msgstr "Maybe you do not need to know their age?"
 
+msgid "rules.age_explanation"
+msgstr "🤔 Sure you need to ask for age?"
+
 msgid "rules.age_in_jobs_label"
 msgstr "Missing"
 
@@ -61,6 +73,9 @@ msgstr "Missing"
 
 msgid "rules.age_in_jobs_solution"
 msgstr "Missing"
+
+msgid "rules.age_in_jobs_explanation"
+msgstr ""
 
 msgid "rules.age_old_label"
 msgstr "50 years and older"
@@ -73,6 +88,9 @@ msgstr ""
 msgid "rules.age_old_solution"
 msgstr "Ask yourself \"What would I write if this person was 35 years old?\""
 
+msgid "rules.age_old_explanation"
+msgstr "😒 hidden bias regarding age over 50"
+
 msgid "rules.age_young_label"
 msgstr "25 years and younger"
 
@@ -83,6 +101,9 @@ msgstr ""
 
 msgid "rules.age_young_solution"
 msgstr "Ask yourself \"What would I write if this person was 45 years old?\""
+
+msgid "rules.age_young_explanation"
+msgstr "😒 hidden bias regarding age below 25"
 
 msgid "rules.agentic_label"
 msgstr "Agentic"
@@ -95,6 +116,9 @@ msgstr ""
 msgid "rules.agentic_solution"
 msgstr "Use team-oriented wording or referring to purpose."
 
+msgid "rules.agentic_explanation"
+msgstr "😒 deterring people with cooperative mindset"
+
 msgid "rules.americanism_label"
 msgstr "Americanism"
 
@@ -106,6 +130,9 @@ msgstr ""
 msgid "rules.americanism_solution"
 msgstr "Use a word in your text's language."
 
+msgid "rules.americanism_explanation"
+msgstr "😉 Americanism: sure your readers understand?"
+
 msgid "rules.antimuslim_label"
 msgstr "Islamophobia"
 
@@ -115,6 +142,9 @@ msgstr ""
 msgid "rules.antimuslim_solution"
 msgstr "Don't use this expression. You strongly offend people."
 
+msgid "rules.antimuslim_explanation"
+msgstr "🚫 Islamophobic"
+
 msgid "rules.antisemitism_label"
 msgstr "Anti-Semitism"
 
@@ -123,6 +153,25 @@ msgstr ""
 
 msgid "rules.antisemitism_solution"
 msgstr "Don't use this expression. You strongly offend people."
+
+msgid "rules.antisemitism_explanation"
+msgstr "🚫 Anti-semitic"
+
+msgid "rules.behavior_label"
+msgstr "Behavior"
+
+msgid "rules.behavior_reason"
+msgstr ""
+"Outdated, hidden or even discriminatory wording pigeonholing people with a "
+"mental impairment."
+
+msgid "rules.behavior_solution"
+msgstr ""
+"Ask yourself \"What would I write if this person was mentally fully  "
+"healthy?\""
+
+msgid "rules.behavior_explanation"
+msgstr "😒 hidden bias regarding behavior"
 
 msgid "rules.belief_label"
 msgstr "Belief"
@@ -135,6 +184,9 @@ msgstr ""
 msgid "rules.belief_solution"
 msgstr ""
 "Rephrase with words that do not transport any idea of belief or religion."
+
+msgid "rules.belief_explanation"
+msgstr "😒 expressing belief; not true for all"
 
 msgid "rules.binary_pronouns_label"
 msgstr "Binary Pronouns"
@@ -149,6 +201,9 @@ msgstr ""
 "Use the direct form of address (you). If you have to write in the third "
 "person, use \"they\"."
 
+msgid "rules.binary_pronouns_explanation"
+msgstr "😟 Pronouns according to binary normative"
+
 msgid "rules.classism_label"
 msgstr "Classism"
 
@@ -159,6 +214,9 @@ msgstr ""
 
 msgid "rules.classism_solution"
 msgstr "Rephrase with a choice of words that's on eye-level."
+
+msgid "rules.classism_explanation"
+msgstr "😒 expresses power-imbalance"
 
 msgid "rules.cognitive_ability_label"
 msgstr "Cognitive ability"
@@ -173,6 +231,21 @@ msgstr ""
 "Ask yourself \"What would I write if this person had their full mental "
 "capacity?\""
 
+msgid "rules.cognitive_ability_explanation"
+msgstr "😒 hidden bias regarding cognitive ability"
+
+msgid "rules.cognitive_perception_label"
+msgstr "Cognitive perception"
+
+msgid "rules.cognitive_perception_reason"
+msgstr ""
+
+msgid "rules.cognitive_perception_solution"
+msgstr ""
+
+msgid "rules.cognitive_perception_explanation"
+msgstr "😒 hidden bias regarding cognitive perception"
+
 msgid "rules.communal_label"
 msgstr "Communal"
 
@@ -184,6 +257,9 @@ msgstr ""
 msgid "rules.communal_solution"
 msgstr "Use more of such wording to express cooperation, care or purpose."
 
+msgid "rules.communal_explanation"
+msgstr "👍🏽 Emphasizes cooperative attributes"
+
 msgid "rules.corporate_rules_label"
 msgstr "Organization guideline"
 
@@ -192,6 +268,9 @@ msgstr "We always use subcategories here and so no need to fill anything in."
 
 msgid "rules.corporate_rules_solution"
 msgstr "We always use subcategories here and so no need to fill anything in."
+
+msgid "rules.corporate_rules_explanation"
+msgstr ""
 
 msgid "rules.culture_label"
 msgstr "Culture"
@@ -204,6 +283,9 @@ msgid "rules.culture_solution"
 msgstr ""
 "Ask yourself \"What would I write if this person was of the dominant "
 "national background?\""
+
+msgid "rules.culture_explanation"
+msgstr "😒 hidden bias regarding cultural background"
 
 msgid "rules.d_and_i_label"
 msgstr "Diversity & Inclusion"
@@ -218,6 +300,9 @@ msgstr ""
 "Make it clear through your words, if possible, that diversity is desired in "
 "your company and that you are working towards an inclusive culture."
 
+msgid "rules.d_and_i_explanation"
+msgstr "👍🏽 Emphasizes value of diversity, equity and inclusion"
+
 msgid "rules.education_label"
 msgstr "Missing"
 
@@ -226,6 +311,9 @@ msgstr "Missing"
 
 msgid "rules.education_solution"
 msgstr "Missing"
+
+msgid "rules.education_explanation"
+msgstr ""
 
 msgid "rules.ethnicity_label"
 msgstr "Missing"
@@ -236,6 +324,9 @@ msgstr "Missing"
 msgid "rules.ethnicity_solution"
 msgstr "Missing"
 
+msgid "rules.ethnicity_explanation"
+msgstr ""
+
 msgid "rules.exaggerating_label"
 msgstr "Exaggeration"
 
@@ -244,6 +335,9 @@ msgstr "Communicates that people have to conform to these superlatives."
 
 msgid "rules.exaggerating_solution"
 msgstr "Use an authentic and honest sounding statement."
+
+msgid "rules.exaggerating_explanation"
+msgstr "😮‍💨 Creating pressure through exaggeration"
 
 msgid "rules.female_stereotype_label"
 msgstr "Female Stereotype"
@@ -254,6 +348,9 @@ msgstr ""
 
 msgid "rules.female_stereotype_solution"
 msgstr "Ask yourself \"What would I write if this person was male?\""
+
+msgid "rules.female_stereotype_explanation"
+msgstr "😟 Branding women in traditional roles"
 
 msgid "rules.filler_label"
 msgstr "Filler Words"
@@ -266,6 +363,9 @@ msgstr ""
 msgid "rules.filler_solution"
 msgstr "Delete filler words."
 
+msgid "rules.filler_explanation"
+msgstr "😟 Filler words make understanding harder"
+
 msgid "rules.formality_label"
 msgstr "Formality"
 
@@ -276,6 +376,9 @@ msgstr ""
 
 msgid "rules.formality_solution"
 msgstr "Try to write as if you were writing to a friend."
+
+msgid "rules.formality_explanation"
+msgstr "🧊 Formal wording creates emotional distance"
 
 msgid "rules.function_label"
 msgstr "Special functions"
@@ -293,6 +396,9 @@ msgstr ""
 " mentally neutral in your formulation. Rather use a noun that describes the "
 "activity. Or use a denomination that is truly gender-neutral."
 
+msgid "rules.function_explanation"
+msgstr "💡 Image of a man unconsciously triggered"
+
 msgid "rules.gen_boomer_label"
 msgstr "Language Generation Boomer & X"
 
@@ -305,6 +411,9 @@ msgid "rules.gen_boomer_solution"
 msgstr ""
 "Reflect on whether this expression is still in use outside your age group. "
 "If not, try to formulate its meaning differently."
+
+msgid "rules.gen_boomer_explanation"
+msgstr "🤔 Seldom known wording of generation boomer"
 
 msgid "rules.gen_z_label"
 msgstr "Gen Z Language"
@@ -319,6 +428,9 @@ msgstr ""
 "Reflect on whether this expression is still in use outside your age group. "
 "If not, try to formulate its meaning differently."
 
+msgid "rules.gen_z_explanation"
+msgstr "🤔 Wording of generation Z not known to all"
+
 msgid "rules.gender_identity_label"
 msgstr "Gender identity"
 
@@ -329,6 +441,9 @@ msgstr ""
 
 msgid "rules.gender_identity_solution"
 msgstr "Ask yourself \"What would I write if this person was female or male?\""
+
+msgid "rules.gender_identity_explanation"
+msgstr "😒 hidden bias regarding gender identity"
 
 msgid "rules.gendered_label"
 msgstr "Gendered"
@@ -341,6 +456,9 @@ msgstr ""
 msgid "rules.gendered_solution"
 msgstr "Try to think beyond gendered roles or take a non-binary perspective."
 
+msgid "rules.gendered_explanation"
+msgstr "😟 Getting stuck in gender normatives"
+
 msgid "rules.gendered_denominations_ending_label"
 msgstr "Inclusive ending"
 
@@ -352,18 +470,24 @@ msgstr ""
 "Correct the spelling or adjust the setting for the “German Gender Ending” "
 "according to the preference of Witty."
 
-msgid "rules.hearing_speech_impairment_label"
-msgstr "Hearing and Speech Impairment"
+msgid "rules.gendered_denominations_ending_explanation"
+msgstr "💯 Non-consistent gender-ending"
 
-msgid "rules.hearing_speech_impairment_reason"
+msgid "rules.hearing_label"
+msgstr "Hearing"
+
+msgid "rules.hearing_reason"
 msgstr ""
 "Outdated, hidden or even discriminatory wording pigeonholing people with "
 "hearing or speech impairment."
 
-msgid "rules.hearing_speech_impairment_solution"
+msgid "rules.hearing_solution"
 msgstr ""
 "Ask yourself \"What would I write if this person had their full hearing and "
 "speech capacity?\""
+
+msgid "rules.hearing_explanation"
+msgstr "😒 hidden bias regarding hearing ability"
 
 msgid "rules.hidden_image_label"
 msgstr "Hidden meaning"
@@ -375,6 +499,9 @@ msgstr ""
 
 msgid "rules.hidden_image_solution"
 msgstr "Use alternatives that are gender neutral while avoiding duplication."
+
+msgid "rules.hidden_image_explanation"
+msgstr "😟 Hidden male generic"
 
 msgid "rules.hollow_label"
 msgstr "Empty Words"
@@ -388,6 +515,9 @@ msgstr ""
 "Avoid using this word. Instead, explain the situation in a tangible and "
 "descriptive way."
 
+msgid "rules.hollow_explanation"
+msgstr "🙄 Empty words have lost all meaning"
+
 msgid "rules.homophobia_label"
 msgstr "Homophobia"
 
@@ -396,6 +526,9 @@ msgstr ""
 
 msgid "rules.homophobia_solution"
 msgstr "Don't use this expression. You strongly offend people."
+
+msgid "rules.homophobia_explanation"
+msgstr "🚫 Homophobe"
 
 msgid "rules.inclusive_label"
 msgstr "Inclusive"
@@ -408,6 +541,9 @@ msgstr ""
 "Use more such wording to express cooperation, care, purpose, goal of "
 "diversity and inclusion."
 
+msgid "rules.inclusive_explanation"
+msgstr "👍🏽 Creates sense of belonging"
+
 msgid "rules.job_requirements_label"
 msgstr "Biased Requirements"
 
@@ -416,6 +552,9 @@ msgstr "Missing"
 
 msgid "rules.job_requirements_solution"
 msgstr "Missing"
+
+msgid "rules.job_requirements_explanation"
+msgstr ""
 
 msgid "rules.leadership_label"
 msgstr "Leadership stereotype"
@@ -430,6 +569,21 @@ msgstr ""
 "Use terms that assume a supportive notion of leadership and can mean "
 "different genders."
 
+msgid "rules.leadership_explanation"
+msgstr "😟 Traditional leadership vocabulary"
+
+msgid "rules.learning_label"
+msgstr "Learning ability"
+
+msgid "rules.learning_reason"
+msgstr ""
+
+msgid "rules.learning_solution"
+msgstr ""
+
+msgid "rules.learning_explanation"
+msgstr "😒 hidden bias regarding learning ability"
+
 msgid "rules.male_stereotype_label"
 msgstr "Male Stereotype"
 
@@ -440,29 +594,34 @@ msgstr ""
 msgid "rules.male_stereotype_solution"
 msgstr "Ask yourself \"What would I write if this person was female?\""
 
-msgid "rules.medical_condition_label"
-msgstr "Medical Condition"
+msgid "rules.male_stereotype_explanation"
+msgstr "😟 Branding men in traditional roles"
 
-msgid "rules.medical_condition_reason"
+msgid "rules.medical_state_label"
+msgstr "Medical state"
+
+msgid "rules.medical_state_reason"
 msgstr ""
 "Outdated, hidden or even discriminatory wording pigeonholing people with a "
 "medical condition."
 
-msgid "rules.medical_condition_solution"
+msgid "rules.medical_state_solution"
 msgstr "Ask yourself \"What would I write if this person was fully healthy?\""
 
-msgid "rules.mental_impairment_label"
-msgstr "Mental impairment"
+msgid "rules.medical_state_explanation"
+msgstr "😒 hidden bias regarding medical state"
 
-msgid "rules.mental_impairment_reason"
-msgstr ""
-"Outdated, hidden or even discriminatory wording pigeonholing people with a "
-"mental impairment."
+msgid "rules.mental_wellbeing_label"
+msgstr "Mental wellbeing"
 
-msgid "rules.mental_impairment_solution"
+msgid "rules.mental_wellbeing_reason"
 msgstr ""
-"Ask yourself \"What would I write if this person was mentally fully  "
-"healthy?\""
+
+msgid "rules.mental_wellbeing_solution"
+msgstr ""
+
+msgid "rules.mental_wellbeing_explanation"
+msgstr "😒 hidden bias regarding mental wellbeing"
 
 msgid "rules.migration_label"
 msgstr "Migration background"
@@ -479,6 +638,9 @@ msgstr ""
 "\"What would I write if this person was of the dominant national "
 "background?\""
 
+msgid "rules.migration_explanation"
+msgstr "😒 hidden bias regarding migration background"
+
 msgid "rules.military_source_label"
 msgstr "Military source"
 
@@ -490,6 +652,9 @@ msgstr ""
 msgid "rules.military_source_solution"
 msgstr "Choose cooperative wording."
 
+msgid "rules.military_source_explanation"
+msgstr "🪖 military term expresses war-like ambiance"
+
 msgid "rules.misgendering_institutions_label"
 msgstr ""
 
@@ -499,18 +664,24 @@ msgstr ""
 msgid "rules.misgendering_institutions_solution"
 msgstr ""
 
-msgid "rules.mobility_impairment_label"
-msgstr "Mobility Impairment"
+msgid "rules.misgendering_institutions_explanation"
+msgstr ""
 
-msgid "rules.mobility_impairment_reason"
+msgid "rules.mobility_label"
+msgstr "Mobility"
+
+msgid "rules.mobility_reason"
 msgstr ""
 "Outdated, hidden or even discriminatory wording pigeonholing people with a "
 "mobility impairment."
 
-msgid "rules.mobility_impairment_solution"
+msgid "rules.mobility_solution"
 msgstr ""
 "Ask yourself \"What would I write if this person was in full capacity of all"
 " their limbs?\""
+
+msgid "rules.mobility_explanation"
+msgstr "😒 hidden bias regarding mobility"
 
 msgid "rules.openly_discriminating_label"
 msgstr "Openly discriminating"
@@ -519,6 +690,9 @@ msgid "rules.openly_discriminating_reason"
 msgstr ""
 
 msgid "rules.openly_discriminating_solution"
+msgstr ""
+
+msgid "rules.openly_discriminating_explanation"
 msgstr ""
 
 msgid "rules.orthography_label"
@@ -532,6 +706,9 @@ msgstr ""
 msgid "rules.orthography_solution"
 msgstr "Use LanguageTool \"message\" as the solution"
 
+msgid "rules.orthography_explanation"
+msgstr "❌ Orthography"
+
 msgid "rules.overload_label"
 msgstr "Missing"
 
@@ -540,6 +717,9 @@ msgstr "Missing"
 
 msgid "rules.overload_solution"
 msgstr "Missing"
+
+msgid "rules.overload_explanation"
+msgstr ""
 
 msgid "rules.passive_voice_label"
 msgstr "Passive Voice"
@@ -550,6 +730,9 @@ msgstr "Limits approachability."
 msgid "rules.passive_voice_solution"
 msgstr "Write in active voice."
 
+msgid "rules.passive_voice_explanation"
+msgstr "🧊 Passive voice creates emotional distance"
+
 msgid "rules.pressure_label"
 msgstr "Pressure"
 
@@ -559,6 +742,9 @@ msgstr "Communicates pressure and thus is a sign of \"having to fit in\"."
 msgid "rules.pressure_solution"
 msgstr "Formulate at eye level, as you being an equal part of your team."
 
+msgid "rules.pressure_explanation"
+msgstr "😮‍💨 expresses pressure"
+
 msgid "rules.racism_label"
 msgstr "Racism"
 
@@ -567,6 +753,9 @@ msgstr ""
 
 msgid "rules.racism_solution"
 msgstr "Don't use this expression. You strongly offend people."
+
+msgid "rules.racism_explanation"
+msgstr "🚫 Racist"
 
 msgid "rules.racist_source_label"
 msgstr "Racist source"
@@ -581,6 +770,9 @@ msgstr ""
 "Ask yourself \"What would I write if this person belonged to the dominant "
 "ethnic background in my society?\""
 
+msgid "rules.racist_source_explanation"
+msgstr "😒 hidden bias regarding skin color"
+
 msgid "rules.salary_vague_label"
 msgstr "Missing"
 
@@ -590,6 +782,9 @@ msgstr "Missing"
 msgid "rules.salary_vague_solution"
 msgstr "Missing"
 
+msgid "rules.salary_vague_explanation"
+msgstr ""
+
 msgid "rules.sexism_label"
 msgstr "Sexism"
 
@@ -598,6 +793,9 @@ msgstr ""
 
 msgid "rules.sexism_solution"
 msgstr "Don't use this expression. You strongly offend people."
+
+msgid "rules.sexism_explanation"
+msgstr "🚫 Mysogynist"
 
 msgid "rules.sexual_orientation_label"
 msgstr "Sexual orientation"
@@ -611,6 +809,21 @@ msgstr ""
 msgid "rules.sexual_orientation_solution"
 msgstr "Ask yourself \"What would I write if this person was heterosexual?\""
 
+msgid "rules.sexual_orientation_explanation"
+msgstr "😒 hidden bias regarding sexual orientation"
+
+msgid "rules.speech_label"
+msgstr "Speech ability"
+
+msgid "rules.speech_reason"
+msgstr ""
+
+msgid "rules.speech_solution"
+msgstr ""
+
+msgid "rules.speech_explanation"
+msgstr "😒 hidden bias regarding speech ability"
+
 msgid "rules.sports_terms_label"
 msgstr "Sports terms"
 
@@ -622,6 +835,9 @@ msgstr ""
 msgid "rules.sports_terms_solution"
 msgstr "Choose cooperative wording."
 
+msgid "rules.sports_terms_explanation"
+msgstr "🏅 sports term expresses competitive ambiance"
+
 msgid "rules.style_label"
 msgstr "Style"
 
@@ -632,6 +848,9 @@ msgstr ""
 msgid "rules.style_solution"
 msgstr "Formulate in simpler terms, try to bring in more emotionality."
 
+msgid "rules.style_explanation"
+msgstr "🤔 Style issue making reading difficult or less emotional"
+
 msgid "rules.technical_frameworks_label"
 msgstr "Missing"
 
@@ -640,6 +859,9 @@ msgstr "Missing"
 
 msgid "rules.technical_frameworks_solution"
 msgstr "Missing"
+
+msgid "rules.technical_frameworks_explanation"
+msgstr ""
 
 msgid "rules.titles_label"
 msgstr "Titles"
@@ -654,6 +876,9 @@ msgstr ""
 "Use words that address the female gender as well as gender identities that "
 "do not follow a binary understanding of gender."
 
+msgid "rules.titles_explanation"
+msgstr "😟 Male generic doesn’t address all genders"
+
 msgid "rules.transphobia_label"
 msgstr "Transphobia"
 
@@ -662,6 +887,9 @@ msgstr ""
 
 msgid "rules.transphobia_solution"
 msgstr "Don't use this expression. You strongly offend people."
+
+msgid "rules.transphobia_explanation"
+msgstr "🚫 Transphobic"
 
 msgid "rules.unconscious_bias_label"
 msgstr "Biased language"
@@ -676,6 +904,9 @@ msgstr ""
 "Ask yourself \"What would I write if this person was of a strong social "
 "group?\""
 
+msgid "rules.unconscious_bias_explanation"
+msgstr "😒 word communicating bias, in a hidden way"
+
 msgid "rules.verbose_label"
 msgstr "Missing"
 
@@ -685,16 +916,22 @@ msgstr "Missing"
 msgid "rules.verbose_solution"
 msgstr "Missing"
 
-msgid "rules.visual_impairment_label"
-msgstr "Visual Impairment"
+msgid "rules.verbose_explanation"
+msgstr "n/a"
 
-msgid "rules.visual_impairment_reason"
+msgid "rules.vision_label"
+msgstr "Vision"
+
+msgid "rules.vision_reason"
 msgstr ""
 "Outdated, hidden or even discriminatory wording pigeonholing people with "
 "visual impairment."
 
-msgid "rules.visual_impairment_solution"
+msgid "rules.vision_solution"
 msgstr "Ask yourself \"What would I write if this person had full visibility?\""
+
+msgid "rules.vision_explanation"
+msgstr "😒 hidden bias regarding vision ability"
 
 msgid "rules.workload_label"
 msgstr "Missing"
@@ -705,6 +942,9 @@ msgstr "Missing"
 msgid "rules.workload_solution"
 msgstr "Missing"
 
+msgid "rules.workload_explanation"
+msgstr ""
+
 msgid "rules.xenophobia_label"
 msgstr "Xenophobia"
 
@@ -713,3 +953,6 @@ msgstr ""
 
 msgid "rules.xenophobia_solution"
 msgstr "Don't use this expression. You strongly offend people."
+
+msgid "rules.xenophobia_explanation"
+msgstr "🚫 Xenophobic"

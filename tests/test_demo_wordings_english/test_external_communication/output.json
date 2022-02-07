@@ -13,6 +13,7 @@
             "category": "unconscious_bias",
             "context": "If a manager picks up this topic, he has to go the extra-mile to solve it.",
             "end": 61,
+            "explanation": "😒 deterring people with cooperative mindset",
             "label": "Biased language: Agentic",
             "reason": "Unconsciously attributed to the male stereotype. Many do not feel attracted by these terms.",
             "solution": "Use team-oriented wording or referring to purpose.",

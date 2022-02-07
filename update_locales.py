@@ -7,14 +7,25 @@ import re
 
 
 def add_entry(poFiles, category, columns, label, column, row):
-    msgid = u"rules." + category + "_" + label
+    msgid = "rules." + category + "_" + label
     for locale in poFiles:
         if locale == "pot":
-            msgstr = u""
+            msgstr = ""
         else:
             msgstr = row[columns[column + " " + locale[0:2].upper()]].strip()
             if msgstr == "-":
                 msgstr = ""
+
+            if msgstr == "":
+                print(
+                    "Empty text given for '"
+                    + category
+                    + "' key '"
+                    + label
+                    + "' ("
+                    + locale
+                    + ")"
+                )
 
         entry = polib.POEntry(msgid=msgid, msgstr=msgstr)
         poFiles[locale].append(entry)
@@ -47,6 +58,8 @@ def read_csv(in_file):
             "Reason DE": None,
             "Solution EN": None,
             "Solution DE": None,
+            "Super Short EN": None,
+            "Super Short DE": None,
             "Status English": None,
             "Status German": None,
             "Inclusive?": None,
@@ -94,6 +107,9 @@ def read_csv(in_file):
                 )
                 add_entry(poFiles, sub_category, columns, "reason", "Reason", row)
                 add_entry(poFiles, sub_category, columns, "solution", "Solution", row)
+                add_entry(
+                    poFiles, sub_category, columns, "explanation", "Super Short", row
+                )
 
                 try:
                     category = re.search(
@@ -151,7 +167,7 @@ def read_csv(in_file):
 )
 def process(in_file):
     """Processes the input file to generate new .pot and .po files"""
-    input = read_csv(in_file)
+    read_csv(in_file)
     print(in_file)
 
 
