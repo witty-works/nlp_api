@@ -382,6 +382,7 @@ async def set_rules(user_request_in: RequestIn):
                         organization_config[config_value],
                     )
 
+
 def languagetool_matches(config: Config, lang: Language, text: str, result):
     list_results = []
     ignore = ["@", "#"]
@@ -422,6 +423,7 @@ def languagetool_matches(config: Config, lang: Language, text: str, result):
         )
 
     return list_results
+
 
 async def languagetool_rules(config: Config, lang: Language, text: str):
     list_results = []
@@ -509,7 +511,16 @@ def german_rules(config: Config, lang: Language, tokens, text: str):
         )
 
     if is_sub_category_enabled("gendered", disabled_categories):
-        list_full += gendered_denom_analysis_de(
+        list_full += rules_based_words_phrase_matcher_de(
+            config,
+            lang,
+            text,
+            tokens,
+            gender_words_alternatives_no_noun,
+            gender_sentences_alternatives,
+            rules["de-DE"]["df_gendered_sentences"],
+            "gendered",
+        ) + gendered_denom_analysis_de(
             config,
             lang,
             text,

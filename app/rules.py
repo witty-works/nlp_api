@@ -6,8 +6,11 @@ rules = {
     "de-DE": {
         # load agentic language
         "df_agentic_ct": "agentic.csv",
-        # load Gender denom
+        # load Gender (nouns, not nouns) and sentences de
         "df_gender_ct": "gendered_noun_words.csv",
+        "df_gender_no_noun_word": "gendered_no_noun_words.csv",
+        "df_gendered_sentences": "gendered_sentences.csv",
+        # load articles for gendered denom
         "df_articles": "articles.csv",
         # load style words
         "df_style_word": "style_words.csv",
@@ -106,6 +109,16 @@ gender_words_alternatives = list(
         df_gender["Primary_subcategory"],
     )
 )
+# df gendered no noun
+df_gendered_no_noun = rules["de-DE"]["df_gender_no_noun_word"]
+# gendered: words + alternatives split + subcategory
+gender_words_alternatives_no_noun = list(
+    zip(
+        df_gendered_no_noun["Lemma"],
+        df_gendered_no_noun["Alt_split"],
+        df_gendered_no_noun["Primary_subcategory"],
+    )
+)
 # articles
 articles = list(
     zip(
@@ -159,6 +172,16 @@ open_disc_sentences_alternatives = list(
         df_discrimination_sentences["Lemma"],
         df_discrimination_sentences["Alt_split"],
         df_discrimination_sentences["Primary_subcategory"],
+    )
+)
+# df gendered sentences
+df_gendered_sentences = rules["de-DE"]["df_gendered_sentences"]
+# gendered: sentences + alternatives split + subcategory
+gender_sentences_alternatives = list(
+    zip(
+        df_gendered_sentences["Lemma"],
+        df_gendered_sentences["Alt_split"],
+        df_gendered_sentences["Primary_subcategory"],
     )
 )
 # df unconscious bias sentences
