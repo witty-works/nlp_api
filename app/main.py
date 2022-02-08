@@ -31,6 +31,7 @@ from spacy.matcher import PhraseMatcher, Matcher
 from app.models import (
     Config,
     LangType,
+    SingularThey,
     Language,
     RequestIn,
     Result,
@@ -628,6 +629,10 @@ def english_rules(config: Config, lang: Language, tokens, text: str):
         sentences_alternatives_en["ge"] = gender_sentences_alternatives_US
         sentences_alternatives_en["style"] = style_sentences_alternatives_US
         sentences_alternatives_en["bias"] = bias_sentences_alternatives_US
+
+    if config.singular_they == SingularThey.ALL_PRONOUNS:
+        words_alternatives_en["bias"].append(("he", "['they']", "binary_pronouns"))
+        words_alternatives_en["bias"].append(("she", "['they']", "binary_pronouns"))
 
     if is_sub_category_enabled("openly_discriminating", disabled_categories):
         list_full += rules_based_words_phrase_matcher_en(

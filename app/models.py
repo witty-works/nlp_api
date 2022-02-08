@@ -52,6 +52,20 @@ class LangWithAutoType(str, Enum):
     enGB = "en-GB"
 
 
+class GermanGenderEnding(str, Enum):
+    SLASH = "/in"
+    SLASH_DASH = "/-in"
+    UNDERSCORE = "_in"
+    STAR = "*in"
+    COLON = ":in"
+    CAPITAL_LETTER = "In"
+
+
+class SingularThey(str, Enum):
+    HE_OR_SHE = "he_or_she"
+    ALL_PRONOUNS = "all_pronouns"
+
+
 class GenderedRolesFormatType(str, Enum):
     BOTH = "both"
     INCLUSIVE_GENDER = "inclusive_gender"
@@ -74,17 +88,18 @@ class Config(BaseModel):
         LangWithAutoType.enUS,
         LangWithAutoType.enGB,
     ]
-    german_gender_ending: str = ":in"
+    german_gender_ending: str = GermanGenderEnding.COLON
     _gendereddenom_ending = {
-        "/in": "/in",
-        "/-in": "/-in",
-        "_in": "_in",
-        "*in": "\\*in",
-        ":in": ":in",
-        "In": r"In\b",
+        GermanGenderEnding.SLASH: "/in",
+        GermanGenderEnding.SLASH_DASH: "/-in",
+        GermanGenderEnding.UNDERSCORE: "_in",
+        GermanGenderEnding.STAR: "\\*in",
+        GermanGenderEnding.COLON: ":in",
+        GermanGenderEnding.CAPITAL_LETTER: r"In\b",
     }
     disabled_categories: List = []
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
+    singular_they: str = SingularThey.HE_OR_SHE
 
     @validator("german_gender_ending")
     def valid_german_gender_ending(cls, v: str):
@@ -145,6 +160,7 @@ class ForcedConfig(BaseModel):
     german_gender_ending: Optional[str]
     disabled_categories: Optional[List]
     gendered_roles_format: Optional[GenderedRolesFormatType]
+    singular_they: Optional[str]
 
     @validator("german_gender_ending")
     def valid_german_gender_ending(cls, v: str):
