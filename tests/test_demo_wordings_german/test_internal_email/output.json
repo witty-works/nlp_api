@@ -136,10 +136,9 @@
         },
         {
             "alternatives": [
-                "gefragt",
-                "aufgerufen",
-                "gebeten",
-                "angeregt"
+                "vor interessante Aufgaben gestellt",
+                "vor spannende Fragen gestellt",
+                "eine Chance, zu zeigen, was (...) kann"
             ],
             "category": "unconscious_bias",
             "context": "rte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",

@@ -4,6 +4,23 @@
     "results": [
         {
             "alternatives": [
+                "Jemand, der erfahren und fachkundig ist",
+                "Jemand mit Know-how und Erfahrung",
+                "Mensch, der seine Fachkenntnis ständig vertieft"
+            ],
+            "category": "gendered",
+            "context": "",
+            "end": 16,
+            "explanation": "💡 Bild eines Mannes wird unbewusst ausgelöst",
+            "label": "Geschlechtsspezifisch: Spezielle Funktionen",
+            "reason": "Aus wirtschaftlich-historischen Gründen wird unbewusst ein Bild eines Mannes vor dem inneren Auge hervorgerufen. Das weibliche Geschlecht oder andere Geschlechtsidentitäten werden nicht sichtbar. Und sie fühlen sich nicht zugehörig.",
+            "solution": "Umgehen Sie mit anderen Worten das unbewusst hervorgerufene Bild. Nutzen Sie eher das Nomen, das die Tätigkeit bezeichnet, um das unbewusste Bild zu umgehen. Oder verwenden Sie eine geschlechtsneutrale Bezeichnung.",
+            "start": 11,
+            "subcategory": "function",
+            "text": "Ninja"
+        },
+        {
+            "alternatives": [
                 "Auftraggebende",
                 "Bestellende",
                 "Kund:innen",
@@ -24,23 +41,6 @@
             "start": 42,
             "subcategory": "titles",
             "text": "Kunden"
-        },
-        {
-            "alternatives": [
-                "Jemand, der erfahren und fachkundig ist",
-                "Jemand mit Know-how und Erfahrung",
-                "Mensch, der seine Fachkenntnis ständig vertieft"
-            ],
-            "category": "unconscious_bias",
-            "context": "",
-            "end": 16,
-            "explanation": "😮‍💨 Superlative erzeugen Druck",
-            "label": "Sprachliche Voreingenommenheit: Superlative",
-            "reason": "Kommuniziert, dass sich Menschen sich im Sinne der Superlative anpassen müssen.",
-            "solution": "Verwenden Sie eine authentisch und ehrlich klingende Aussage.",
-            "start": 11,
-            "subcategory": "exaggerating",
-            "text": "Ninja"
         }
     ]
 }
