@@ -17,7 +17,10 @@ child,1,inclusive,communal
 children,1,inclusive,communal
 cis-gender,,inclusive,d_and_i
 cis-gendered,,inclusive,d_and_i
+cisgender,,inclusive,d_and_i
+cisgendered,,inclusive,d_and_i
 code-switching,,inclusive,d_and_i
+codeswitching,,inclusive,d_and_i
 collaborate,1,inclusive,communal
 collaboration,1,inclusive,communal
 collaborative,1,inclusive,communal
@@ -63,7 +66,6 @@ enthusiasm,1,inclusive,communal
 enthusiast,1,inclusive,communal
 enthusiastic,1,inclusive,communal
 equality,1,inclusive,d_and_i
-inclusify,1,inclusive,d_and_i
 equity,,inclusive,d_and_i
 fair,1,inclusive,d_and_i
 faithful,,inclusive,communal
@@ -82,6 +84,7 @@ honesty,1,inclusive,communal
 identity,1,inclusive,d_and_i
 impact,1,inclusive,communal
 impactful,1,inclusive,communal
+inclusify,1,inclusive,d_and_i
 inclusion,1,inclusive,d_and_i
 inclusive,1,inclusive,d_and_i
 initiative,1,inclusive,communal
@@ -89,9 +92,13 @@ integrity,1,inclusive,d_and_i
 inter-dependence,,inclusive,communal
 inter-dependent,1,inclusive,communal
 inter-personal,1,inclusive,communal
+interdependence,,inclusive,communal
+interdependent,1,inclusive,communal
 interest,1,inclusive,communal
+interpersonal,1,inclusive,communal
 intersectionality,,inclusive,d_and_i
 job-sharing,1,inclusive,communal
+jobsharing,1,inclusive,communal
 kind,1,inclusive,communal
 kinship,1,inclusive,communal
 learn,1,inclusive,communal
@@ -102,8 +109,9 @@ maintain,1,inclusive,communal
 meaningful,1,inclusive,d_and_i
 mediate,1,inclusive,communal
 mediation,1,inclusive,communal
-mentor,1,inclusive,communal
 mentoring,1,inclusive,communal
+micro-aggressions,26-01-22,inclusive,d_and_i
+microaggressions,26-01-22,inclusive,d_and_i
 modest,1,inclusive,communal
 modesty,1,inclusive,communal
 moral,,inclusive,communal
@@ -142,12 +150,14 @@ sustainable,1,inclusive,communal
 sympathetic,1,inclusive,communal
 sympathize,,inclusive,communal
 sympathy,1,inclusive,communal
+team,26-01-22,inclusive,communal
 tender,1,inclusive,communal
 thoughtful,1,inclusive,communal
 together,1,inclusive,communal
 trust,1,inclusive,communal
 trustworthy,1,inclusive,communal
 under-represented,1,inclusive,d_and_i
+underrepresented,1,inclusive,d_and_i
 understand,1,inclusive,communal
 understanding,,inclusive,communal
 understood,1,inclusive,communal

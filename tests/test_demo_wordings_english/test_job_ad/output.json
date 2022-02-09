@@ -3,10 +3,30 @@
     "limit_reached": false,
     "results": [
         {
+            "alternatives": [
+                "project management",
+                "person in project management",
+                "they",
+                "person handling project management",
+                "someone in the project management role"
+            ],
+            "category": "gendered",
+            "context": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you wi",
+            "end": 33,
+            "explanation": "😟 Male generic doesn’t address all genders",
+            "label": "Gendered: Titles",
+            "reason": "The male generic does not speak to all genders or gender identities. Many people therefore do not feel included in the dialogue.",
+            "solution": "Use words that address the female gender as well as gender identities that do not follow a binary understanding of gender.",
+            "start": 18,
+            "subcategory": "titles",
+            "text": "project manager"
+        },
+        {
             "alternatives": [],
             "category": "inclusive",
             "context": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
             "end": 94,
+            "explanation": "👍🏽 Emphasizes cooperative attributes",
             "label": "Inclusive: Communal",
             "reason": "Emphasizes cooperative, compassionate or supportive characteristics and thus inclusive attributes.",
             "solution": "Use more of such wording to express cooperation, care or purpose.",
@@ -21,6 +41,7 @@
             "category": "style",
             "context": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
             "end": 69,
+            "explanation": "😮‍💨 Creating pressure through exaggeration",
             "label": "Style: Exaggeration",
             "reason": "Communicates that people have to conform to these superlatives.",
             "solution": "Use an authentic and honest sounding statement.",
@@ -30,14 +51,15 @@
         },
         {
             "alternatives": [
-                "reference cases",
-                "documented results",
                 "execution to the customer's satisfaction",
-                "fulfilment of customer expectations"
+                "the fulfilment of customer expectations",
+                "reference cases",
+                "satisfying results"
             ],
             "category": "style",
             "context": "rking on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
             "end": 164,
+            "explanation": "😮‍💨 Creating pressure through exaggeration",
             "label": "Style: Exaggeration",
             "reason": "Communicates that people have to conform to these superlatives.",
             "solution": "Use an authentic and honest sounding statement.",
@@ -57,6 +79,7 @@
             "category": "unconscious_bias",
             "context": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious co",
             "end": 17,
+            "explanation": "😒 deterring people with cooperative mindset",
             "label": "Biased language: Agentic",
             "reason": "Unconsciously attributed to the male stereotype. Many do not feel attracted by these terms.",
             "solution": "Use team-oriented wording or referring to purpose.",
@@ -75,6 +98,7 @@
             "category": "unconscious_bias",
             "context": " independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
             "end": 114,
+            "explanation": "😒 deterring people with cooperative mindset",
             "label": "Biased language: Agentic",
             "reason": "Unconsciously attributed to the male stereotype. Many do not feel attracted by these terms.",
             "solution": "Use team-oriented wording or referring to purpose.",
@@ -95,6 +119,7 @@
             "category": "unconscious_bias",
             "context": "g on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
             "end": 164,
+            "explanation": "😒 deterring people with cooperative mindset",
             "label": "Biased language: Agentic",
             "reason": "Unconsciously attributed to the male stereotype. Many do not feel attracted by these terms.",
             "solution": "Use team-oriented wording or referring to purpose.",

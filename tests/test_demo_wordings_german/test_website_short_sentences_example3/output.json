@@ -17,6 +17,7 @@
             "category": "orthography",
             "context": "Wir haben aussergewöhnliche Herausforderungen vor uns.",
             "end": 27,
+            "explanation": "❌ Orthographie",
             "label": "Rechtschreibfehler",
             "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
             "solution": "Möglicher Tippfehler gefunden.",
@@ -26,15 +27,16 @@
         },
         {
             "alternatives": [
-                "Wichtiger Meilenstein",
-                "Komplexe Frage",
-                "Unwägbarkeit",
-                "Ziel, das man mit vereinten Kräften erreichen kann",
-                "Meilenstein, der mit Initiative und Engagement gemeinsam zu erreichen ist"
+                "Neue Hürden",
+                "Schwierigkeiten",
+                "Komplexe Aufgaben",
+                "Brennende Fragen",
+                "Chancen, zu zeigen, was man kann"
             ],
             "category": "unconscious_bias",
             "context": "Wir haben aussergewöhnliche Herausforderungen vor uns.",
             "end": 45,
+            "explanation": "😒 schreckt Menschen mit kooperativer Einstellung ab",
             "label": "Sprachliche Voreingenommenheit: Agentisch",
             "reason": "Unbewusst dem männlichen Geschlecht zugeschrieben. Viele werden davon abgestossen.",
             "solution": "Teamorientierte Formulierung nutzen oder auf Sinnhaftigkeit einzahlend.",

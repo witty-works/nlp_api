@@ -4,20 +4,6 @@
     "results": [
         {
             "alternatives": [
-                "-"
-            ],
-            "category": "style",
-            "context": "If a manager picks up this topic, he has to go the extra-mile to solve it.",
-            "end": 61,
-            "label": "Style: Exaggeration",
-            "reason": "Communicates that people have to conform to these superlatives.",
-            "solution": "Use an authentic and honest sounding statement.",
-            "start": 51,
-            "subcategory": "exaggerating",
-            "text": "extra-mile"
-        },
-        {
-            "alternatives": [
                 "think ahead",
                 "make a special effort",
                 "make customers happy",
@@ -27,6 +13,7 @@
             "category": "unconscious_bias",
             "context": "If a manager picks up this topic, he has to go the extra-mile to solve it.",
             "end": 61,
+            "explanation": "😒 deterring people with cooperative mindset",
             "label": "Biased language: Agentic",
             "reason": "Unconsciously attributed to the male stereotype. Many do not feel attracted by these terms.",
             "solution": "Use team-oriented wording or referring to purpose.",

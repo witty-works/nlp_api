@@ -52,6 +52,20 @@ class LangWithAutoType(str, Enum):
     enGB = "en-GB"
 
 
+class GermanGenderEnding(str, Enum):
+    SLASH = "/in"
+    SLASH_DASH = "/-in"
+    UNDERSCORE = "_in"
+    STAR = "*in"
+    COLON = ":in"
+    CAPITAL_LETTER = "In"
+
+
+class SingularThey(str, Enum):
+    HE_OR_SHE = "he_or_she"
+    ALL_PRONOUNS = "all_pronouns"
+
+
 class GenderedRolesFormatType(str, Enum):
     BOTH = "both"
     INCLUSIVE_GENDER = "inclusive_gender"
@@ -74,17 +88,18 @@ class Config(BaseModel):
         LangWithAutoType.enUS,
         LangWithAutoType.enGB,
     ]
-    german_gender_ending: str = ":in"
+    german_gender_ending: str = GermanGenderEnding.COLON
     _gendereddenom_ending = {
-        "/in": "/in",
-        "/-in": "/-in",
-        "_in": "_in",
-        "*in": "\\*in",
-        ":in": ":in",
-        "In": r"In\b",
+        GermanGenderEnding.SLASH: "/in",
+        GermanGenderEnding.SLASH_DASH: "/-in",
+        GermanGenderEnding.UNDERSCORE: "_in",
+        GermanGenderEnding.STAR: "\\*in",
+        GermanGenderEnding.COLON: ":in",
+        GermanGenderEnding.CAPITAL_LETTER: r"In\b",
     }
     disabled_categories: List = []
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
+    singular_they: str = SingularThey.HE_OR_SHE
 
     @validator("german_gender_ending")
     def valid_german_gender_ending(cls, v: str):
@@ -145,6 +160,7 @@ class ForcedConfig(BaseModel):
     german_gender_ending: Optional[str]
     disabled_categories: Optional[List]
     gendered_roles_format: Optional[GenderedRolesFormatType]
+    singular_they: Optional[str]
 
     @validator("german_gender_ending")
     def valid_german_gender_ending(cls, v: str):
@@ -243,10 +259,11 @@ class ResultOut(BaseModel):
         subcategory,
         start,
         end=None,
-        alternatives=[],
+        alternatives=None,
         label=None,
         reason=None,
         solution=None,
+        explanation=None,
     ):
         if end == None:
             end = start + len(text)
@@ -276,8 +293,16 @@ class ResultOut(BaseModel):
             if solution != None
             else lang._("rules." + subcategory + "_solution", params)
         )
+        explanation = (
+            explanation
+            if explanation != None
+            else lang._("rules." + subcategory + "_explanation", params)
+        )
 
         is_upper = text[0:1].isupper()
+
+        if alternatives == None:
+            alternatives = []
 
         if isinstance(alternatives, Dict):
             alternatives = list(alternatives.values())
@@ -292,7 +317,7 @@ class ResultOut(BaseModel):
             alternatives.remove("^")
 
         cleaned_alternatives = []
-        for i, alternative in enumerate(alternatives):
+        for alternative in alternatives:
             if is_upper and category != "orthography":
                 alternative = string.capwords(alternative[0:1]) + alternative[1:]
 
@@ -300,21 +325,33 @@ class ResultOut(BaseModel):
                 alternative = alternative.replace("ß", "ss")
 
             if "~" in alternative:
-                if config.gendered_roles_format in ["both", "inclusive_gender"]:
-                    cleaned_alternatives.append(
-                        ResultOut.getGenderedRolesFormatInclusive(
-                            alternative,
-                            config.german_gender_ending,
-                        )
+                if alternative.count("/") == 2 and " und " in alternative:
+                    alternative_list = alternative.split(" und ")
+                    alternative_list[0] = ResultOut.getGenderedRoles(
+                        config, alternative_list[0]
                     )
-
-                if config.gendered_roles_format in ["both", "binary_gender"]:
-                    cleaned_alternatives.append(
-                        ResultOut.getGenderedRolesFormatBinary(
-                            alternative,
-                        )
+                    alternative_list[1] = ResultOut.getGenderedRoles(
+                        config, alternative_list[1]
                     )
-            else:
+                    cleaned_alternatives.append(
+                        alternative_list[0][0] + " und " + alternative_list[1][0]
+                    )
+                    if len(alternative_list[0]) == 2:
+                        if len(alternative_list[1]) == 2:
+                            cleaned_alternatives.append(
+                                alternative_list[0][1]
+                                + " und "
+                                + alternative_list[1][1]
+                            )
+                        else:
+                            cleaned_alternatives.append(alternative_list[0][1])
+                    elif len(alternative_list[1]) == 2:
+                        cleaned_alternatives.append(alternative_list[1][1])
+                else:
+                    cleaned_alternatives += ResultOut.getGenderedRoles(
+                        config, alternative
+                    )
+            elif alternative not in cleaned_alternatives:
                 cleaned_alternatives.append(alternative)
 
         return ResultOut(
@@ -328,6 +365,7 @@ class ResultOut(BaseModel):
             label,
             reason,
             solution,
+            explanation,
         )
 
     factory = staticmethod(factory)
@@ -344,6 +382,7 @@ class ResultOut(BaseModel):
         label,
         reason,
         solution,
+        explanation,
     ):
         object.__setattr__(self, "text", text)
         object.__setattr__(self, "context", context)
@@ -355,6 +394,7 @@ class ResultOut(BaseModel):
         object.__setattr__(self, "label", label)
         object.__setattr__(self, "reason", reason)
         object.__setattr__(self, "solution", solution)
+        object.__setattr__(self, "explanation", explanation)
 
     @staticmethod
     def getGenderedRolesFormatBinary(alternative):
@@ -375,7 +415,10 @@ class ResultOut(BaseModel):
 
         if german_gender_ending == "In":
             if alternative.count("~") > 1:
-                ending = ending.capitalize()
+                if len(ending) == 1:
+                    ending = ending.upper()
+                else:
+                    ending = ending[0:-1].upper() + ending[-1:]
                 separator = ""
             else:
                 separator = "/"
@@ -388,6 +431,33 @@ class ResultOut(BaseModel):
             separator = german_gender_ending[0:1]
 
         return beginning + separator + ending
+
+    @staticmethod
+    def getGenderedRoles(config: Config, alternative):
+        cleaned_alternatives = []
+        if config.gendered_roles_format in [
+            GenderedRolesFormatType.BOTH,
+            GenderedRolesFormatType.INCLUSIVE_GENDER,
+        ]:
+            cleaned_alternatives.append(
+                ResultOut.getGenderedRolesFormatInclusive(
+                    alternative,
+                    config.german_gender_ending,
+                )
+            )
+
+        if config.gendered_roles_format in [
+            GenderedRolesFormatType.BOTH,
+            GenderedRolesFormatType.BINARY_GENDER,
+        ]:
+            cleaned_alternative = ResultOut.getGenderedRolesFormatBinary(
+                alternative,
+            )
+
+            if cleaned_alternative not in cleaned_alternatives:
+                cleaned_alternatives.append(cleaned_alternative)
+
+        return cleaned_alternatives
 
 
 class Result(BaseModel):
@@ -418,7 +488,7 @@ class ResultsOut(BaseModel):
     language: str
     limit_reached: bool
 
-    def factory(results, lang, limit_reached = False):
+    def factory(results, lang, limit_reached=False):
         if lang != None:
             lang = lang.lang
 
