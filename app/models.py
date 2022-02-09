@@ -415,10 +415,7 @@ class ResultOut(BaseModel):
 
         if german_gender_ending == "In":
             if alternative.count("~") > 1:
-                if len(ending) == 1:
-                    ending = ending.upper()
-                else:
-                    ending = ending[0:-1].upper() + ending[-1:]
+                ending = ending.capitalize()
                 separator = ""
             else:
                 separator = "/"
