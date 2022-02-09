@@ -3,8 +3,8 @@ Lemma,Word_Type,Priority,Category,Primary_subcategory,Alt_split
 Extrameile gehen,s+v,1/2/2022,style,exaggerating,"['Spaß am Mit- und Weiterdenken haben', 'sich für Kundenzufriedenheit engagieren', 'über den eigenen Tellerrand blicken', 'Spaß haben, Kundschaft durch unerwartete und kreative Lösungen zu begeistern']"
 "Job, der den eigenen Vorstellungen/Wünschen entspricht",adv,,style,filler,['-']
 Must have,s,,style,exaggerating,"['nützliches Merkmal', 'hilfreiche Fähigkeit', 'Kompetenz, die wichtig ist, um (...)', 'Erfahrung, die (...) ermöglicht', 'Kenntnis, die (...) erlaubt']"
-Schindluder treiben,v,26-01-2022,style,exaggerating,"['schlecht behandeln', 'Mißwirtschaft treiben', 'mißhandeln', 'ausbeuten', 'nicht angemessen pflegen']"
-Schindluderei betreiben,v,26-01-2022,style,exaggerating,"['schlecht behandeln', 'Mißwirtschaft treiben', 'mißhandeln', 'ausbeuten', 'nicht angemessen pflegen']"
+Schindluder treiben,v,26-01-2022,style,exaggerating,"['schlecht behandeln', 'Misswirtschaft treiben', 'misshandeln', 'ausbeuten', 'nicht angemessen pflegen']"
+Schindluderei betreiben,v,26-01-2022,style,exaggerating,"['schlecht behandeln', 'Misswirtschaft treiben', 'misshandeln', 'ausbeuten', 'nicht angemessen pflegen']"
 Sehr geehrte,adv+a,,style,formality,"['Guten Tag, (Vorname) (Familienname)', 'Hallo (Vorname) (Familienname)', 'Liebe~r (Vorname) (Familienname)', 'Guten Tag, liebe~r (Vorname) (Familienname)', 'Guten Tag', 'Liebe', 'Liebe alle', 'Hallo zusammen', 'Hallo, liebe Zuhörende und Lesende']"
 Sehr geehrter,adv+a,,style,formality,"['Guten Tag, (Vorname) (Familienname)', 'Hallo (Vorname) (Familienname)', 'Liebe~r (Vorname) (Familienname)', 'Guten Tag, liebe~r (Vorname) (Familienname)', 'Guten Tag', 'Liebe', 'Liebe alle', 'Hallo zusammen', 'Hallo, liebe Zuhörende und Lesende']"
 Team player,s,,style,hollow,"['Zusammenarbeit über das eigene Streben stellen', 'Team', 'Teammitglieder', 'Teamplayer~innen', 'Teamplayer~in', 'Team-player~in~/~Team-player']"
@@ -23,7 +23,7 @@ flache Hierarchie,a+s,,style,hollow,"['kurze Entscheidungswege', 'verantwortlich
 flache Organisation,a+s,,style,hollow,"['kurze Entscheidungswege', 'verantwortliche und eigenorganisierte Arbeitsweise', 'Raum für Eigeninitiative', 'kurze Kommunikationswege', 'Mitgestaltungsmöglichkeiten für Mitarbeitende', 'Betriebsebene mit viel Kompetenzen und Entscheidungsmöglichkeiten']"
 ganz und gar,adv,,style,filler,['-']
 gehen die Extrameile,v+s,1/2/2022,style,exaggerating,"['haben Spaß am Mit- und Weiterdenken', 'engagieren sich für Kundenzufriedenheit', 'blicken über den eigenen Tellerrand', 'haben Spaß daran, Kundschaft durch unerwartete und kreative Lösungen zu begeistern']"
-hard core,a,26-01-2022,style,exaggerating,"['heftig', 'engagiert', 'kompomisslos', 'anstrengend', 'unerfreulich']"
+hard core,a,26-01-2022,style,exaggerating,"['heftig', 'engagiert', 'kompromisslos', 'anstrengend', 'unerfreulich']"
 hie und da,adv,,style,filler,['-']
 hoch motiviert,a,,style,hollow,"['fähig zur Eigeninitiative', 'bereit, sich zu engagieren', 'setzt sich erreichbare Ziele', 'bereit, sich einzusetzen']"
 hohe Ziele,a+s,,style,exaggerating,"['Meilensteine', 'Etappenziele', 'Ziele, die motivieren', 'Vorhaben, die begeistern']"

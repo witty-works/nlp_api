@@ -157,21 +157,21 @@ msgstr "Don't use this expression. You strongly offend people."
 msgid "rules.antisemitism_explanation"
 msgstr "🚫 Anti-semitic"
 
-msgid "rules.behaviour_label"
-msgstr "Behaviour"
+msgid "rules.behavior_label"
+msgstr "Behavior"
 
-msgid "rules.behaviour_reason"
+msgid "rules.behavior_reason"
 msgstr ""
 "Outdated, hidden or even discriminatory wording pigeonholing people with a "
 "mental impairment."
 
-msgid "rules.behaviour_solution"
+msgid "rules.behavior_solution"
 msgstr ""
 "Ask yourself \"What would I write if this person was mentally fully  "
 "healthy?\""
 
-msgid "rules.behaviour_explanation"
-msgstr "😒 hidden bias regarding behaviour"
+msgid "rules.behavior_explanation"
+msgstr "😒 hidden bias regarding behavior"
 
 msgid "rules.belief_label"
 msgstr "Belief"
@@ -251,17 +251,17 @@ msgstr "Communal"
 
 msgid "rules.communal_reason"
 msgstr ""
-"Emphasises cooperative, compassionate or supportive characteristics and thus"
+"Emphasizes cooperative, compassionate or supportive characteristics and thus"
 " inclusive attributes."
 
 msgid "rules.communal_solution"
 msgstr "Use more of such wording to express cooperation, care or purpose."
 
 msgid "rules.communal_explanation"
-msgstr "👍🏽 Emphasises cooperative attributes"
+msgstr "👍🏽 Emphasizes cooperative attributes"
 
 msgid "rules.corporate_rules_label"
-msgstr "Organisation guideline"
+msgstr "Organization guideline"
 
 msgid "rules.corporate_rules_reason"
 msgstr "We always use subcategories here and so no need to fill anything in."
@@ -301,7 +301,7 @@ msgstr ""
 "your company and that you are working towards an inclusive culture."
 
 msgid "rules.d_and_i_explanation"
-msgstr "👍🏽 Emphasises value of diversity, equity and inclusion"
+msgstr "👍🏽 Emphasizes value of diversity, equity and inclusion"
 
 msgid "rules.education_label"
 msgstr "Missing"
@@ -700,7 +700,7 @@ msgstr "Orthography"
 
 msgid "rules.orthography_reason"
 msgstr ""
-"Correct any spelling or grammatical errors to maximise the impact of their "
+"Correct any spelling or grammatical errors to maximize the impact of their "
 "writing."
 
 msgid "rules.orthography_solution"
@@ -771,7 +771,7 @@ msgstr ""
 "ethnic background in my society?\""
 
 msgid "rules.racist_source_explanation"
-msgstr "😒 hidden bias regarding skin colour"
+msgstr "😒 hidden bias regarding skin color"
 
 msgid "rules.salary_vague_label"
 msgstr "Missing"
