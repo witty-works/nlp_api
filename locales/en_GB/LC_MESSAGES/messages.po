@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-02-06 16:02\n"
-"PO-Revision-Date: 2022-02-06 16:02\n"
+"POT-Creation-Date: 2022-02-07 10:38\n"
+"PO-Revision-Date: 2022-02-07 10:38\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -171,7 +171,7 @@ msgstr ""
 "healthy?\""
 
 msgid "rules.behaviour_explanation"
-msgstr ""
+msgstr "😒 hidden bias regarding behaviour"
 
 msgid "rules.belief_label"
 msgstr "Belief"
@@ -202,7 +202,7 @@ msgstr ""
 "person, use \"they\"."
 
 msgid "rules.binary_pronouns_explanation"
-msgstr "👎🏽 Pronouns according to binary normative"
+msgstr "😟 Pronouns according to binary normative"
 
 msgid "rules.classism_label"
 msgstr "Classism"
@@ -233,6 +233,18 @@ msgstr ""
 
 msgid "rules.cognitive_ability_explanation"
 msgstr "😒 hidden bias regarding cognitive ability"
+
+msgid "rules.cognitive_perception_label"
+msgstr "Cognitive perception"
+
+msgid "rules.cognitive_perception_reason"
+msgstr ""
+
+msgid "rules.cognitive_perception_solution"
+msgstr ""
+
+msgid "rules.cognitive_perception_explanation"
+msgstr "😒 hidden bias regarding cognitive perception"
 
 msgid "rules.communal_label"
 msgstr "Communal"
@@ -338,7 +350,7 @@ msgid "rules.female_stereotype_solution"
 msgstr "Ask yourself \"What would I write if this person was male?\""
 
 msgid "rules.female_stereotype_explanation"
-msgstr "👎🏽 Pigeonholing women in traditional roles"
+msgstr "😟 Branding women in traditional roles"
 
 msgid "rules.filler_label"
 msgstr "Filler Words"
@@ -445,7 +457,7 @@ msgid "rules.gendered_solution"
 msgstr "Try to think beyond gendered roles or take a non-binary perspective."
 
 msgid "rules.gendered_explanation"
-msgstr "👎🏽 Pigeonholing according to gender normatives"
+msgstr "😟 Getting stuck in gender normatives"
 
 msgid "rules.gendered_denominations_ending_label"
 msgstr "Inclusive ending"
@@ -462,7 +474,7 @@ msgid "rules.gendered_denominations_ending_explanation"
 msgstr "💯 Non-consistent gender-ending"
 
 msgid "rules.hearing_label"
-msgstr "Hearing and Speech Impairment"
+msgstr "Hearing"
 
 msgid "rules.hearing_reason"
 msgstr ""
@@ -489,7 +501,7 @@ msgid "rules.hidden_image_solution"
 msgstr "Use alternatives that are gender neutral while avoiding duplication."
 
 msgid "rules.hidden_image_explanation"
-msgstr "👎🏽 Hidden male generic"
+msgstr "😟 Hidden male generic"
 
 msgid "rules.hollow_label"
 msgstr "Empty Words"
@@ -558,7 +570,19 @@ msgstr ""
 "different genders."
 
 msgid "rules.leadership_explanation"
-msgstr "👎🏽 Traditional leadership vocabulary"
+msgstr "😟 Traditional leadership vocabulary"
+
+msgid "rules.learning_label"
+msgstr "Learning ability"
+
+msgid "rules.learning_reason"
+msgstr ""
+
+msgid "rules.learning_solution"
+msgstr ""
+
+msgid "rules.learning_explanation"
+msgstr "😒 hidden bias regarding learning ability"
 
 msgid "rules.male_stereotype_label"
 msgstr "Male Stereotype"
@@ -571,10 +595,10 @@ msgid "rules.male_stereotype_solution"
 msgstr "Ask yourself \"What would I write if this person was female?\""
 
 msgid "rules.male_stereotype_explanation"
-msgstr "👎🏽 Pigeonholing men in traditional roles"
+msgstr "😟 Branding men in traditional roles"
 
 msgid "rules.medical_state_label"
-msgstr "Medical Condition"
+msgstr "Medical state"
 
 msgid "rules.medical_state_reason"
 msgstr ""
@@ -586,6 +610,18 @@ msgstr "Ask yourself \"What would I write if this person was fully healthy?\""
 
 msgid "rules.medical_state_explanation"
 msgstr "😒 hidden bias regarding medical state"
+
+msgid "rules.mental_wellbeing_label"
+msgstr "Mental wellbeing"
+
+msgid "rules.mental_wellbeing_reason"
+msgstr ""
+
+msgid "rules.mental_wellbeing_solution"
+msgstr ""
+
+msgid "rules.mental_wellbeing_explanation"
+msgstr "😒 hidden bias regarding mental wellbeing"
 
 msgid "rules.migration_label"
 msgstr "Migration background"
@@ -632,7 +668,7 @@ msgid "rules.misgendering_institutions_explanation"
 msgstr ""
 
 msgid "rules.mobility_label"
-msgstr "Mobility Impairment"
+msgstr "Mobility"
 
 msgid "rules.mobility_reason"
 msgstr ""
@@ -776,6 +812,18 @@ msgstr "Ask yourself \"What would I write if this person was heterosexual?\""
 msgid "rules.sexual_orientation_explanation"
 msgstr "😒 hidden bias regarding sexual orientation"
 
+msgid "rules.speech_label"
+msgstr "Speech ability"
+
+msgid "rules.speech_reason"
+msgstr ""
+
+msgid "rules.speech_solution"
+msgstr ""
+
+msgid "rules.speech_explanation"
+msgstr "😒 hidden bias regarding speech ability"
+
 msgid "rules.sports_terms_label"
 msgstr "Sports terms"
 
@@ -829,7 +877,7 @@ msgstr ""
 "do not follow a binary understanding of gender."
 
 msgid "rules.titles_explanation"
-msgstr "👎🏽 Male generic doesn’t address all genders"
+msgstr "😟 Male generic doesn’t address all genders"
 
 msgid "rules.transphobia_label"
 msgstr "Transphobia"
@@ -872,7 +920,7 @@ msgid "rules.verbose_explanation"
 msgstr "n/a"
 
 msgid "rules.vision_label"
-msgstr "Visual Impairment"
+msgstr "Vision"
 
 msgid "rules.vision_reason"
 msgstr ""
