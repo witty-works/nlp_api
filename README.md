@@ -224,13 +224,6 @@ pipenv run python -m generate_false_positive
 ```
 * If you get an error here, please repeat steps 1-2 and run the script again.
 
-## Generate en-GB rules
-
-Run the following command:
-```
-./sync-GB-training-data.sh
-```
-
 ## Collect statistics
 
 Run `./statistics.sh` to fetch statistics locally and remotely.
