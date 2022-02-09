@@ -11,7 +11,7 @@ from app.models import (
 )
 
 
-def parse_args(args):
+def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-u",
@@ -112,8 +112,10 @@ def get_data_from_files(locale):
 def generate_alternatives_english(all_alternatives):
     all_words = []
     clean_words = []
+
     for word in all_alternatives:
         all_words.extend(word.split())
+
     for word in all_words:
         for ch in ["(", ")", ".", "^", ","]:
             if ch in word:
@@ -198,15 +200,17 @@ def generate_correct_endings_german(all_alternatives):
 
 def generate_used_words_list(path_to_ignore_file):
     used_words = []
+
     with open(path_to_ignore_file, "r") as readfile:
         used_words = [
             line.strip().replace("\/", "/").replace("\_", "_") for line in readfile
         ]
+
     print("Previously used words: " + str(len(used_words)))
     return used_words
 
 
-def check_word(word):
+def check_word(word, locale):
     response = requests.post(
         api_url,
         data={
@@ -235,7 +239,7 @@ def check_words_spelling(words, current_words, used_words):
 
             add_word = True
             if api_url and word not in used_words:
-                add_word = check_word(word)
+                add_word = check_word(word, locale)
 
             if add_word:
                 words_to_write.append(word)
@@ -311,7 +315,7 @@ def print_trigger_alternative_overlap(locale, all_triggers, words):
     print(intersection(all_triggers, words))
 
 
-args = parse_args(sys.argv[1:])
+args = parse_args()
 if args.Language.lower() == "de":
     locale = "de-DE"
 
