@@ -279,7 +279,7 @@ async def check_query(
         except:
             pass
 
-    response = ResultsOut.factory(list_results, lang, limit_reached)
+    response = ResultsOut.factory(list_results, lang.lang, limit_reached)
 
     return response
 

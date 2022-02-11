@@ -485,11 +485,8 @@ class ResultsOut(BaseModel):
     language: str
     limit_reached: bool
 
-    def factory(results, lang, limit_reached=False):
-        if lang != None:
-            lang = lang.lang
-
-        return ResultsOut(results, lang, limit_reached)
+    def factory(results, language, limit_reached=False):
+        return ResultsOut(results, language, limit_reached)
 
     factory = staticmethod(factory)
 
