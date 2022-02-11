@@ -4,42 +4,66 @@
     "results": [
         {
             "alternatives": [
-                "Mitarbeitende",
-                "Mitarbeiter:innen",
-                "Mitarbeiterinnen und Mitarbeiter",
-                "Personal",
-                "Mitarbeiterschaft",
-                "Belegschaft",
-                "Kollegschaft",
-                "Mitarbeit"
+                {
+                    "text": "Mitarbeitende"
+                },
+                {
+                    "text": "Mitarbeiter:innen"
+                },
+                {
+                    "text": "Mitarbeiterinnen und Mitarbeiter"
+                },
+                {
+                    "text": "Personal"
+                },
+                {
+                    "text": "Mitarbeiterschaft"
+                },
+                {
+                    "text": "Belegschaft"
+                },
+                {
+                    "text": "Kollegschaft"
+                },
+                {
+                    "text": "Mitarbeit"
+                }
             ],
             "category": "gendered",
             "context": "Wir unterstützen leistungsstarke Mitarbeiter.",
             "end": 44,
             "explanation": "😟 “Mitmeinen” mit männlichen Generikum funktioniert nicht",
             "label": "Geschlechtsspezifisch: Titel",
-            "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
-            "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht.",
             "start": 33,
             "subcategory": "titles",
             "text": "Mitarbeiter"
         },
         {
             "alternatives": [
-                "engagiert",
-                "tatkräftig",
-                "kompetent",
-                "interessiert am Erarbeiten von Meilensteinen",
-                "enthusiastisch bei der Umsetzung",
-                "mit Energie bei der Sache"
+                {
+                    "text": "engagiert"
+                },
+                {
+                    "text": "tatkräftig"
+                },
+                {
+                    "text": "kompetent"
+                },
+                {
+                    "text": "interessiert am Erarbeiten von Meilensteinen"
+                },
+                {
+                    "text": "enthusiastisch bei der Umsetzung"
+                },
+                {
+                    "text": "mit Energie bei der Sache"
+                }
             ],
             "category": "unconscious_bias",
             "context": "Wir unterstützen leistungsstarke Mitarbeiter.",
             "end": 32,
             "explanation": "😒 schreckt Menschen mit kooperativer Einstellung ab",
             "label": "Sprachliche Voreingenommenheit: Agentisch",
-            "reason": "Unbewusst dem männlichen Geschlecht zugeschrieben. Viele werden davon abgestossen.",
-            "solution": "Teamorientierte Formulierung nutzen oder auf Sinnhaftigkeit einzahlend.",
             "start": 17,
             "subcategory": "agentic",
             "text": "leistungsstarke"
@@ -51,8 +75,6 @@
             "end": 16,
             "explanation": "👍🏽 Betont kooperative Eigenschaften",
             "label": "Inklusiv: Kommunal",
-            "reason": "Betont kooperative, mitfühlende oder unterstützende Eigenschaften und damit inklusive Attribute.",
-            "solution": "Verwenden Sie mehr solcher Formulierungen, um Kooperation, Unterstützung oder Sinnhaftigkeit auszudrücken.",
             "start": 4,
             "subcategory": "communal",
             "text": "unterstützen"

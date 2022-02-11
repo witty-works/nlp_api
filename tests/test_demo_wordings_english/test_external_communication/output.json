@@ -4,19 +4,27 @@
     "results": [
         {
             "alternatives": [
-                "think ahead",
-                "make a special effort",
-                "make customers happy",
-                "find creative solutions to customer requests",
-                "delight and retain customers through unexpected generosity and unusual solutions"
+                {
+                    "text": "think ahead"
+                },
+                {
+                    "text": "make a special effort"
+                },
+                {
+                    "text": "make customers happy"
+                },
+                {
+                    "text": "find creative solutions to customer requests"
+                },
+                {
+                    "text": "delight and retain customers through unexpected generosity and unusual solutions"
+                }
             ],
             "category": "unconscious_bias",
             "context": "If a manager picks up this topic, he has to go the extra-mile to solve it.",
             "end": 61,
             "explanation": "😒 deterring people with cooperative mindset",
             "label": "Biased language: Agentic",
-            "reason": "Unconsciously attributed to the male stereotype. Many do not feel attracted by these terms.",
-            "solution": "Use team-oriented wording or referring to purpose.",
             "start": 44,
             "subcategory": "agentic",
             "text": "go the extra-mile"

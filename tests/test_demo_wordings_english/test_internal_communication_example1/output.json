@@ -9,66 +9,90 @@
             "end": 14,
             "explanation": "👍🏽 Emphasizes cooperative attributes",
             "label": "Inclusive: Communal",
-            "reason": "Emphasizes cooperative, compassionate or supportive characteristics and thus inclusive attributes.",
-            "solution": "Use more of such wording to express cooperation, care or purpose.",
             "start": 10,
             "subcategory": "communal",
             "text": "team"
         },
         {
             "alternatives": [
-                "execution to the customer's satisfaction",
-                "the fulfilment of customer expectations",
-                "reference cases",
-                "satisfying results"
+                {
+                    "text": "execution to the customer's satisfaction"
+                },
+                {
+                    "text": "the fulfilment of customer expectations"
+                },
+                {
+                    "text": "reference cases"
+                },
+                {
+                    "text": "satisfying results"
+                }
             ],
             "category": "style",
             "context": "Our whole team is ambitious and strives for top performance.",
             "end": 59,
             "explanation": "😮‍💨 Creating pressure through exaggeration",
             "label": "Style: Exaggeration",
-            "reason": "Communicates that people have to conform to these superlatives.",
-            "solution": "Use an authentic and honest sounding statement.",
             "start": 44,
             "subcategory": "exaggerating",
             "text": "top performance"
         },
         {
             "alternatives": [
-                "growth-minded",
-                "keen and enthusiastic",
-                "interested in taking on new responsibilities",
-                "committed to working toward goals",
-                "keen on realizing a vision"
+                {
+                    "text": "growth-minded"
+                },
+                {
+                    "text": "keen and enthusiastic"
+                },
+                {
+                    "text": "interested in taking on new responsibilities"
+                },
+                {
+                    "text": "committed to working toward goals"
+                },
+                {
+                    "text": "keen on realizing a vision"
+                }
             ],
             "category": "unconscious_bias",
             "context": "Our whole team is ambitious and strives for top performance.",
             "end": 27,
             "explanation": "😒 deterring people with cooperative mindset",
             "label": "Biased language: Agentic",
-            "reason": "Unconsciously attributed to the male stereotype. Many do not feel attracted by these terms.",
-            "solution": "Use team-oriented wording or referring to purpose.",
             "start": 18,
             "subcategory": "agentic",
             "text": "ambitious"
         },
         {
             "alternatives": [
-                "effectiveness",
-                "accomplishments",
-                "capabilities",
-                "fulfillment",
-                "efficiency",
-                "running",
-                "capacity"
+                {
+                    "text": "effectiveness"
+                },
+                {
+                    "text": "accomplishments"
+                },
+                {
+                    "text": "capabilities"
+                },
+                {
+                    "text": "fulfillment"
+                },
+                {
+                    "text": "efficiency"
+                },
+                {
+                    "text": "running"
+                },
+                {
+                    "text": "capacity"
+                }
             ],
             "category": "unconscious_bias",
             "context": "Our whole team is ambitious and strives for top performance.",
             "end": 59,
             "explanation": "😒 deterring people with cooperative mindset",
             "label": "Biased language: Agentic",
-            "reason": "Unconsciously attributed to the male stereotype. Many do not feel attracted by these terms.",
-            "solution": "Use team-oriented wording or referring to purpose.",
             "start": 48,
             "subcategory": "agentic",
             "text": "performance"

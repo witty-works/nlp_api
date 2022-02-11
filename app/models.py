@@ -1,6 +1,5 @@
 from pydantic import BaseModel, validator
-from typing import Dict, List
-from typing import Optional
+from typing import Dict, List, Optional, Union
 from enum import Enum
 
 import gettext
@@ -242,7 +241,14 @@ class RequestInEvent(RequestIn):
     details: Dict[str, str]
 
 
-class ResultOut(BaseModel):
+class ResultAlternative(BaseModel):
+    text: Optional[str]
+    remove: Optional[bool]
+    inspiration: Optional[bool]
+    infos: Optional[str]
+
+
+class ResultOutOld(BaseModel):
     text: str
     context: str
     category: str
@@ -254,7 +260,20 @@ class ResultOut(BaseModel):
     reason: str
     solution: str
 
+
+class ResultOut(BaseModel):
+    text: str
+    context: str
+    category: str
+    subcategory: str
+    start: int
+    end: int
+    alternatives: List[ResultAlternative]
+    label: str
+    explanation: str
+
     def factory(
+        version: float,
         config: Config,
         lang: Language,
         text,
@@ -320,21 +339,38 @@ class ResultOut(BaseModel):
         if "^" in alternatives:
             alternatives.remove("^")
 
-        cleaned_alternatives = []
+        cleaned_alternatives = {}
         for alternative in alternatives:
-            if (
-                not config.show_inspiration_alternatives
-                and ResultOut.isInspirationAlternative(alternative)
-            ):
-                continue
+            if ResultOut.isInspirationAlternative(alternative):
+                if not config.show_inspiration_alternatives:
+                    continue
 
-            if is_upper and category != "orthography":
-                alternative = string.capwords(alternative[0:1]) + alternative[1:]
+                inspiration = True
+            else:
+                inspiration = None
 
-            if lang.locale == "de-CH":
-                alternative = alternative.replace("ß", "ss")
+            alternative_variations = []
 
-            if "~" in alternative:
+            if category != "orthography":
+                if "---" in alternative:
+                    alternative, infos = alternative.split("---")
+                    alternative = alternative.strip()
+                    infos = infos.strip()
+                else:
+                    infos = None
+
+                if is_upper:
+                    alternative = string.capwords(alternative[0:1]) + alternative[1:]
+
+            if alternative == "-" and version == 1.1:
+                alternative = None
+                remove = True
+            else:
+                remove = None
+                if lang.locale == "de-CH":
+                    alternative = alternative.replace("ß", "ss")
+
+            if alternative and "~" in alternative:
                 if alternative.count("/") == 2 and " und " in alternative:
                     alternative_list = alternative.split(" und ")
                     alternative_list[0] = ResultOut.getGenderedRoles(
@@ -343,68 +379,69 @@ class ResultOut(BaseModel):
                     alternative_list[1] = ResultOut.getGenderedRoles(
                         config, alternative_list[1]
                     )
-                    cleaned_alternatives.append(
+                    alternative_variations.append(
                         alternative_list[0][0] + " und " + alternative_list[1][0]
                     )
                     if len(alternative_list[0]) == 2:
                         if len(alternative_list[1]) == 2:
-                            cleaned_alternatives.append(
+                            alternative_variations.append(
                                 alternative_list[0][1]
                                 + " und "
                                 + alternative_list[1][1]
                             )
                         else:
-                            cleaned_alternatives.append(alternative_list[0][1])
+                            alternative_variations.append(alternative_list[0][1])
                     elif len(alternative_list[1]) == 2:
-                        cleaned_alternatives.append(alternative_list[1][1])
+                        alternative_variations.append(alternative_list[1][1])
                 else:
-                    cleaned_alternatives += ResultOut.getGenderedRoles(
+                    alternative_variations += ResultOut.getGenderedRoles(
                         config, alternative
                     )
-            elif alternative not in cleaned_alternatives:
-                cleaned_alternatives.append(alternative)
+            else:
+                alternative_variations.append(alternative)
+
+            for variation in alternative_variations:
+                if variation in cleaned_alternatives:
+                    continue
+
+                key = variation
+                if version >= 1.1:
+                    variation = ResultAlternative(
+                        text=variation,
+                        remove=remove,
+                        inspiration=inspiration,
+                        infos=infos,
+                    )
+
+                cleaned_alternatives[key] = variation
+
+        if version == 1.0:
+            return ResultOutOld(
+                text=text,
+                context=context,
+                category=category,
+                subcategory=subcategory,
+                start=start,
+                end=end,
+                alternatives=list(cleaned_alternatives.values()),
+                label=label,
+                reason=reason,
+                solution=solution,
+            )
 
         return ResultOut(
-            text,
-            context,
-            category,
-            subcategory,
-            start,
-            end,
-            cleaned_alternatives,
-            label,
-            reason,
-            solution,
-            explanation,
+            text=text,
+            context=context,
+            category=category,
+            subcategory=subcategory,
+            start=start,
+            end=end,
+            alternatives=list(cleaned_alternatives.values()),
+            label=label,
+            explanation=explanation,
         )
 
     factory = staticmethod(factory)
-
-    def __init__(
-        self,
-        text,
-        context,
-        category,
-        subcategory,
-        start,
-        end,
-        alternatives,
-        label,
-        reason,
-        solution,
-        explanation,
-    ):
-        object.__setattr__(self, "text", text)
-        object.__setattr__(self, "context", context)
-        object.__setattr__(self, "category", category)
-        object.__setattr__(self, "subcategory", subcategory)
-        object.__setattr__(self, "start", start)
-        object.__setattr__(self, "end", end)
-        object.__setattr__(self, "alternatives", alternatives)
-        object.__setattr__(self, "label", label)
-        object.__setattr__(self, "reason", reason)
-        object.__setattr__(self, "solution", solution)
-        object.__setattr__(self, "explanation", explanation)
 
     @staticmethod
     def isInspirationAlternative(alternative):
@@ -445,12 +482,12 @@ class ResultOut(BaseModel):
 
     @staticmethod
     def getGenderedRoles(config: Config, alternative):
-        cleaned_alternatives = []
+        alternative_variations = []
         if config.gendered_roles_format in [
             GenderedRolesFormatType.BOTH,
             GenderedRolesFormatType.INCLUSIVE_GENDER,
         ]:
-            cleaned_alternatives.append(
+            alternative_variations.append(
                 ResultOut.getGenderedRolesFormatInclusive(
                     alternative,
                     config.german_gender_ending,
@@ -461,14 +498,14 @@ class ResultOut(BaseModel):
             GenderedRolesFormatType.BOTH,
             GenderedRolesFormatType.BINARY_GENDER,
         ]:
-            cleaned_alternative = ResultOut.getGenderedRolesFormatBinary(
+            alternative_variation = ResultOut.getGenderedRolesFormatBinary(
                 alternative,
             )
 
-            if cleaned_alternative not in cleaned_alternatives:
-                cleaned_alternatives.append(cleaned_alternative)
+            if alternative_variation not in alternative_variations:
+                alternative_variations.append(alternative_variation)
 
-        return cleaned_alternatives
+        return alternative_variations
 
 
 class Result(BaseModel):
@@ -495,7 +532,7 @@ class Result(BaseModel):
 
 
 class ResultsOut(BaseModel):
-    results: List[ResultOut]
+    results: Union[List[ResultOut], List[List[ResultOutOld]]]
     language: str
     limit_reached: bool
 

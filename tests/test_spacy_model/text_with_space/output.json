@@ -4,22 +4,36 @@
     "results": [
         {
             "alternatives": [
-                "Prevailing",
-                "Guiding",
-                "Main",
-                "Primary",
-                "Respecting governance",
-                "Communicating governance",
-                "Comfortable with taking on responsibility",
-                "At ease with taking the initiative"
+                {
+                    "text": "Prevailing"
+                },
+                {
+                    "text": "Guiding"
+                },
+                {
+                    "text": "Main"
+                },
+                {
+                    "text": "Primary"
+                },
+                {
+                    "text": "Respecting governance"
+                },
+                {
+                    "text": "Communicating governance"
+                },
+                {
+                    "text": "Comfortable with taking on responsibility"
+                },
+                {
+                    "text": "At ease with taking the initiative"
+                }
             ],
             "category": "unconscious_bias",
             "context": "Dominant ",
             "end": 8,
             "explanation": "😒 deterring people with cooperative mindset",
             "label": "Biased language: Agentic",
-            "reason": "Unconsciously attributed to the male stereotype. Many do not feel attracted by these terms.",
-            "solution": "Use team-oriented wording or referring to purpose.",
             "start": 0,
             "subcategory": "agentic",
             "text": "Dominant"

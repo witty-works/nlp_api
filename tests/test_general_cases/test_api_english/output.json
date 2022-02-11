@@ -4,42 +4,66 @@
     "results": [
         {
             "alternatives": [
-                "dedicated",
-                "committed",
-                "person who continues despite difficulties",
-                "someone devoted to their purpose",
-                "someone who sticks to their goal",
-                "someone willing to see things through"
+                {
+                    "text": "dedicated"
+                },
+                {
+                    "text": "committed"
+                },
+                {
+                    "text": "person who continues despite difficulties"
+                },
+                {
+                    "text": "someone devoted to their purpose"
+                },
+                {
+                    "text": "someone who sticks to their goal"
+                },
+                {
+                    "text": "someone willing to see things through"
+                }
             ],
             "category": "style",
             "context": "",
             "end": 37,
             "explanation": "😮‍💨 Creating pressure through exaggeration",
             "label": "Style: Exaggeration",
-            "reason": "Communicates that people have to conform to these superlatives.",
-            "solution": "Use an authentic and honest sounding statement.",
             "start": 32,
             "subcategory": "exaggerating",
             "text": "ninja"
         },
         {
             "alternatives": [
-                "logical",
-                "systematical",
-                "investigative",
-                "explorative",
-                "able to interpret data",
-                "taking a systematic approach",
-                "with scientific care",
-                "applying diagnostic methods"
+                {
+                    "text": "logical"
+                },
+                {
+                    "text": "systematical"
+                },
+                {
+                    "text": "investigative"
+                },
+                {
+                    "text": "explorative"
+                },
+                {
+                    "text": "able to interpret data"
+                },
+                {
+                    "text": "taking a systematic approach"
+                },
+                {
+                    "text": "with scientific care"
+                },
+                {
+                    "text": "applying diagnostic methods"
+                }
             ],
             "category": "unconscious_bias",
             "context": "",
             "end": 31,
             "explanation": "😒 deterring people with cooperative mindset",
             "label": "Biased language: Agentic",
-            "reason": "Unconsciously attributed to the male stereotype. Many do not feel attracted by these terms.",
-            "solution": "Use team-oriented wording or referring to purpose.",
             "start": 21,
             "subcategory": "agentic",
             "text": "analytical"

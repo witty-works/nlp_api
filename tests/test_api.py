@@ -40,7 +40,7 @@ def test_highlight_position(ending_case_dir, snapshot):
     # Read input files from the case directory.
     input_json = ending_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
-    response = client.post("/check", json=json.loads(input_json))
+    response = client.post("/v1.1/check", json=json.loads(input_json))
     assert response.status_code == 200
     # output must be string
     output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
@@ -58,7 +58,7 @@ def test_sentry_examples(ending_case_dir, snapshot):
     # Read input files from the case directory.
     input_json = ending_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
-    response = client.post("/check", json=json.loads(input_json))
+    response = client.post("/v1.1/check", json=json.loads(input_json))
     assert response.status_code == 200
     # output must be string
     output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
@@ -76,7 +76,7 @@ def test_spacy_model(ending_case_dir, snapshot):
     # Read input files from the case directory.
     input_json = ending_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
-    response = client.post("/check", json=json.loads(input_json))
+    response = client.post("/v1.1/check", json=json.loads(input_json))
     assert response.status_code == 200
     # output must be string
     output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
@@ -94,7 +94,7 @@ def test_demo_wordings_english(ending_case_dir, snapshot):
     # Read input files from the case directory.
     input_json = ending_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
-    response = client.post("/check", json=json.loads(input_json))
+    response = client.post("/v1.1/check", json=json.loads(input_json))
     assert response.status_code == 200
     # output must be string
     output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
@@ -112,7 +112,7 @@ def test_demo_wordings_german(ending_case_dir, snapshot):
     # Read input files from the case directory.
     input_json = ending_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
-    response = client.post("/check", json=json.loads(input_json))
+    response = client.post("/v1.1/check", json=json.loads(input_json))
     assert response.status_code == 200
     # output must be string
     output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
@@ -126,6 +126,24 @@ def test_demo_wordings_german(ending_case_dir, snapshot):
     get_dirs("tests/test_general_cases"),
 )
 def test_json(general_case_dir, snapshot):
+
+    # Read input files from the case directory.
+    input_json = general_case_dir.joinpath("input.json").read_text()
+    # Call the tested endpoint.
+    response = client.post("/v1.1/check", json=json.loads(input_json))
+    assert response.status_code == 200
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    # Snapshot the return value.
+    snapshot.snapshot_dir = general_case_dir
+    snapshot.assert_match(output, "output.json")
+
+
+@pytest.mark.parametrize(
+    "general_case_dir",
+    get_dirs("tests/test_1_0"),
+)
+def test_1_0_json(general_case_dir, snapshot):
 
     # Read input files from the case directory.
     input_json = general_case_dir.joinpath("input.json").read_text()
@@ -148,7 +166,7 @@ def test_orthoraphy(orthoraphy_case_dir, snapshot):
     # Read input files from the case directory.
     input_json = orthoraphy_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
-    response = client.post("/check", json=json.loads(input_json))
+    response = client.post("/v1.1/check", json=json.loads(input_json))
     assert response.status_code == 200
     # output must be string
     output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
@@ -166,7 +184,7 @@ def test_gender_ending(ending_case_dir, snapshot):
     # Read input files from the case directory.
     input_json = ending_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
-    response = client.post("/check", json=json.loads(input_json))
+    response = client.post("/v1.1/check", json=json.loads(input_json))
     assert response.status_code == 200
     # output must be string
     output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
@@ -176,7 +194,7 @@ def test_gender_ending(ending_case_dir, snapshot):
 
 
 def test_api_missing_data():
-    response = client.post("/check")
+    response = client.post("/v1.1/check")
     assert response.status_code == 422
 
 
@@ -189,7 +207,7 @@ def test_language_detection(detection_case_dir, snapshot):
     # Read input files from the case directory.
     input_json = detection_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
-    response = client.post("/check", json=json.loads(input_json))
+    response = client.post("/v1.1/check", json=json.loads(input_json))
     assert response.status_code == 200
     # output must be string
     output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
@@ -207,7 +225,7 @@ def test_language_detection_fail(fails_case_dir, snapshot):
     # Read input files from the case directory.
     input_json = fails_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
-    response = client.post("/check", json=json.loads(input_json))
+    response = client.post("/v1.1/check", json=json.loads(input_json))
     assert response.status_code == 422
 
     # output must be string
@@ -215,7 +233,6 @@ def test_language_detection_fail(fails_case_dir, snapshot):
     # Snapshot the return value.
     snapshot.snapshot_dir = fails_case_dir
     snapshot.assert_match(output, "output.json")
-
 
 
 def test_categories():
@@ -283,7 +300,7 @@ def test_false_positive(fp_case_dir, snapshot, set_redis):
     patcher.start()
     # Call the tested endpoint.
     client = TestClient(app)
-    response = client.post("/check", json=json.loads(input_json))
+    response = client.post("/v1.1/check", json=json.loads(input_json))
     patcher.stop()
     assert response.status_code == 200
     # output must be string

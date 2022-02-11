@@ -4,39 +4,42 @@
     "results": [
         {
             "alternatives": [
-                ", and"
-            ],
-            "category": "orthography",
-            "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number 1 and innovation drives us.\nSincere regards,\nNadia",
-            "end": 96,
-            "explanation": "❌ Orthography",
-            "label": "Orthography",
-            "reason": "Correct any spelling or grammatical errors to maximize the impact of their writing.",
-            "solution": "Use a comma before ‘and’ if it connects two independent clauses (unless they are closely connected and short).",
-            "start": 92,
-            "subcategory": "orthography",
-            "text": " and"
-        },
-        {
-            "alternatives": [
-                "people",
-                "folks",
-                "friends",
-                "all",
-                "you all",
-                "everyone",
-                "teammates",
-                "you",
-                "team",
-                "crowd"
+                {
+                    "text": "people"
+                },
+                {
+                    "text": "folks"
+                },
+                {
+                    "text": "friends"
+                },
+                {
+                    "text": "all"
+                },
+                {
+                    "text": "you all"
+                },
+                {
+                    "text": "everyone"
+                },
+                {
+                    "text": "teammates"
+                },
+                {
+                    "text": "you"
+                },
+                {
+                    "text": "team"
+                },
+                {
+                    "text": "crowd"
+                }
             ],
             "category": "gendered",
             "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to ",
             "end": 8,
             "explanation": "💡 Image of a man unconsciously triggered",
             "label": "Gendered: Special functions",
-            "reason": "For economic-historical reasons, an image of a man is unconsciously evoked in front of the inner eye, even if the term is linguistically neutral. The female gender or other gender identities do not become visible. And they will not feel to belong in this setting.",
-            "solution": "In order to provoke an inclusive image, be not only linguistically, but also mentally neutral in your formulation. Rather use a noun that describes the activity. Or use a denomination that is truly gender-neutral.",
             "start": 4,
             "subcategory": "function",
             "text": "guys"
@@ -48,82 +51,108 @@
             "end": 23,
             "explanation": "👍🏽 Emphasizes cooperative attributes",
             "label": "Inclusive: Communal",
-            "reason": "Emphasizes cooperative, compassionate or supportive characteristics and thus inclusive attributes.",
-            "solution": "Use more of such wording to express cooperation, care or purpose.",
             "start": 19,
             "subcategory": "communal",
             "text": "team"
         },
         {
             "alternatives": [
-                "reinvention",
-                "change",
-                "modernization",
-                "improvement",
-                "new creation",
-                "redesign",
-                "introduction of new ideas (methods, devices)"
+                {
+                    "text": "reinvention"
+                },
+                {
+                    "text": "change"
+                },
+                {
+                    "text": "modernization"
+                },
+                {
+                    "text": "improvement"
+                },
+                {
+                    "text": "new creation"
+                },
+                {
+                    "text": "redesign"
+                },
+                {
+                    "text": "introduction of new ideas (methods, devices)"
+                }
             ],
             "category": "style",
             "context": "perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number 1 and innovation drives us.\nSincere regards,\nNadia",
             "end": 153,
             "explanation": "🙄 Empty words have lost all meaning",
             "label": "Style: Empty Words",
-            "reason": "Is a hollow word because it has been overused in the business environment.",
-            "solution": "Avoid using this word. Instead, explain the situation in a tangible and descriptive way.",
             "start": 143,
             "subcategory": "hollow",
             "text": "innovation"
         },
         {
             "alternatives": [
-                "-"
+                {
+                    "remove": true
+                }
             ],
             "category": "style",
             "context": "ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number 1 and innovation drives us.\nSincere regards,\nNadia",
             "end": 138,
             "explanation": "😮‍💨 Creating pressure through exaggeration",
             "label": "Style: Exaggeration",
-            "reason": "Communicates that people have to conform to these superlatives.",
-            "solution": "Use an authentic and honest sounding statement.",
             "start": 130,
             "subcategory": "exaggerating",
             "text": "number 1"
         },
         {
             "alternatives": [
-                "growth mindset",
-                "dedication",
-                "willingness to go after a dream",
-                "enthusiasm for working toward goals"
+                {
+                    "text": "growth mindset"
+                },
+                {
+                    "text": "dedication"
+                },
+                {
+                    "text": "willingness to go after a dream"
+                },
+                {
+                    "text": "enthusiasm for working toward goals"
+                }
             ],
             "category": "unconscious_bias",
             "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number 1",
             "end": 38,
             "explanation": "😒 deterring people with cooperative mindset",
             "label": "Biased language: Agentic",
-            "reason": "Unconsciously attributed to the male stereotype. Many do not feel attracted by these terms.",
-            "solution": "Use team-oriented wording or referring to purpose.",
             "start": 30,
             "subcategory": "agentic",
             "text": "ambition"
         },
         {
             "alternatives": [
-                "dedication",
-                "steadfastness",
-                "diligence",
-                "constancy",
-                "care",
-                "strength of character"
+                {
+                    "text": "dedication"
+                },
+                {
+                    "text": "steadfastness"
+                },
+                {
+                    "text": "diligence"
+                },
+                {
+                    "text": "constancy"
+                },
+                {
+                    "text": "care"
+                },
+                {
+                    "text": "strength of character"
+                }
             ],
             "category": "unconscious_bias",
             "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number 1 and innovation d",
             "end": 55,
             "explanation": "😒 deterring people with cooperative mindset",
             "label": "Biased language: Agentic",
-            "reason": "Unconsciously attributed to the male stereotype. Many do not feel attracted by these terms.",
-            "solution": "Use team-oriented wording or referring to purpose.",
             "start": 43,
             "subcategory": "agentic",
             "text": "perseverance"

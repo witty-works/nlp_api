@@ -4,101 +4,153 @@
     "results": [
         {
             "alternatives": [
-                "Projektleitung",
-                "Projektleiter:in",
-                "Projektleiterin/Projektleiter",
-                "Projektleitende"
+                {
+                    "text": "Projektleitung"
+                },
+                {
+                    "text": "Projektleiter:in"
+                },
+                {
+                    "text": "Projektleiterin/Projektleiter"
+                },
+                {
+                    "text": "Projektleitende"
+                }
             ],
             "category": "gendered",
             "context": "Als selbstständiger Projektleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollege",
             "end": 33,
             "explanation": "😟 “Mitmeinen” mit männlichen Generikum funktioniert nicht",
             "label": "Geschlechtsspezifisch: Titel",
-            "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
-            "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht.",
             "start": 20,
             "subcategory": "titles",
             "text": "Projektleiter"
         },
         {
             "alternatives": [
-                "Kolleg:innen",
-                "Kolleginnen und Kollegen",
-                "Kollegschaft",
-                "Team",
-                "Personen, die im selben Team arbeiten",
-                "Personen, die im selben Unternehmen arbeiten",
-                "Personen, die man von der Arbeit kennt"
+                {
+                    "text": "Kolleg:innen"
+                },
+                {
+                    "text": "Kolleginnen und Kollegen"
+                },
+                {
+                    "text": "Kollegschaft"
+                },
+                {
+                    "text": "Team"
+                },
+                {
+                    "text": "Personen, die im selben Team arbeiten"
+                },
+                {
+                    "text": "Personen, die im selben Unternehmen arbeiten"
+                },
+                {
+                    "text": "Personen, die man von der Arbeit kennt"
+                }
             ],
             "category": "gendered",
             "context": "tleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielstrebig\nneue Höchstleistungen.",
             "end": 134,
             "explanation": "😟 “Mitmeinen” mit männlichen Generikum funktioniert nicht",
             "label": "Geschlechtsspezifisch: Titel",
-            "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
-            "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht.",
             "start": 126,
             "subcategory": "titles",
             "text": "Kollegen"
         },
         {
             "alternatives": [
-                "lösen",
-                "erledigen",
-                "anpacken",
-                "erarbeiten",
-                "enthusiastisch umsetzen",
-                "mit Energie angehen",
-                "tatkräftig sein"
+                {
+                    "text": "lösen"
+                },
+                {
+                    "text": "erledigen"
+                },
+                {
+                    "text": "anpacken"
+                },
+                {
+                    "text": "erarbeiten"
+                },
+                {
+                    "text": "enthusiastisch umsetzen"
+                },
+                {
+                    "text": "mit Energie angehen"
+                },
+                {
+                    "text": "tatkräftig sein"
+                }
             ],
             "category": "unconscious_bias",
             "context": "Als selbstständiger Projektleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielst",
             "end": 41,
             "explanation": "😒 schreckt Menschen mit kooperativer Einstellung ab",
             "label": "Sprachliche Voreingenommenheit: Agentisch",
-            "reason": "Unbewusst dem männlichen Geschlecht zugeschrieben. Viele werden davon abgestossen.",
-            "solution": "Teamorientierte Formulierung nutzen oder auf Sinnhaftigkeit einzahlend.",
             "start": 34,
             "subcategory": "agentic",
             "text": "leisten"
         },
         {
             "alternatives": [
-                "engagiert",
-                "entwicklungsmotiviert",
-                "unternehmerisch denkend",
-                "bereit, größere Verantwortung zu übernehmen",
-                "interessiert an persönlichem Wachstum",
-                "engagiert im Hinarbeiten auf (gemeinsame, gesetzte) Ziele",
-                "interessiert, neues Wissen und neue Erfahrung anzuwenden"
+                {
+                    "text": "engagiert"
+                },
+                {
+                    "text": "entwicklungsmotiviert"
+                },
+                {
+                    "text": "unternehmerisch denkend"
+                },
+                {
+                    "text": "bereit, größere Verantwortung zu übernehmen"
+                },
+                {
+                    "text": "interessiert an persönlichem Wachstum"
+                },
+                {
+                    "text": "engagiert im Hinarbeiten auf (gemeinsame, gesetzte) Ziele"
+                },
+                {
+                    "text": "interessiert, neues Wissen und neue Erfahrung anzuwenden"
+                }
             ],
             "category": "unconscious_bias",
             "context": "tändiger Projektleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielstrebig\nneue Höchstleistungen.",
             "end": 125,
             "explanation": "😒 schreckt Menschen mit kooperativer Einstellung ab",
             "label": "Sprachliche Voreingenommenheit: Agentisch",
-            "reason": "Unbewusst dem männlichen Geschlecht zugeschrieben. Viele werden davon abgestossen.",
-            "solution": "Teamorientierte Formulierung nutzen oder auf Sinnhaftigkeit einzahlend.",
             "start": 111,
             "subcategory": "agentic",
             "text": "ambitionierten"
         },
         {
             "alternatives": [
-                "umsetzungsfreudig",
-                "strebsam",
-                "fleißig",
-                "engagiert und fokussiert",
-                "auf Meilensteine fokussiert",
-                "motiviert auf Meilensteine hinarbeiten wollen"
+                {
+                    "text": "umsetzungsfreudig"
+                },
+                {
+                    "text": "strebsam"
+                },
+                {
+                    "text": "fleißig"
+                },
+                {
+                    "text": "engagiert und fokussiert"
+                },
+                {
+                    "text": "auf Meilensteine fokussiert"
+                },
+                {
+                    "text": "motiviert auf Meilensteine hinarbeiten wollen"
+                }
             ],
             "category": "unconscious_bias",
             "context": "eisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielstrebig\nneue Höchstleistungen.",
             "end": 146,
             "explanation": "😒 schreckt Menschen mit kooperativer Einstellung ab",
             "label": "Sprachliche Voreingenommenheit: Agentisch",
-            "reason": "Unbewusst dem männlichen Geschlecht zugeschrieben. Viele werden davon abgestossen.",
-            "solution": "Teamorientierte Formulierung nutzen oder auf Sinnhaftigkeit einzahlend.",
             "start": 135,
             "subcategory": "agentic",
             "text": "zielstrebig"
@@ -110,8 +162,6 @@
             "end": 93,
             "explanation": "👍🏽 Betont kooperative Eigenschaften",
             "label": "Inklusiv: Kommunal",
-            "reason": "Betont kooperative, mitfühlende oder unterstützende Eigenschaften und damit inklusive Attribute.",
-            "solution": "Verwenden Sie mehr solcher Formulierungen, um Kooperation, Unterstützung oder Sinnhaftigkeit auszudrücken.",
             "start": 84,
             "subcategory": "communal",
             "text": "gemeinsam"
