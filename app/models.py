@@ -100,6 +100,8 @@ class Config(BaseModel):
     disabled_categories: List = []
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
     singular_they: str = SingularThey.HE_OR_SHE
+    show_inspiration_alternatives: Optional[bool] = False
+    maximum_gravity: Optional[int] = None
 
     @validator("german_gender_ending")
     def valid_german_gender_ending(cls, v: str):
@@ -161,6 +163,8 @@ class ForcedConfig(BaseModel):
     disabled_categories: Optional[List]
     gendered_roles_format: Optional[GenderedRolesFormatType]
     singular_they: Optional[str]
+    show_inspiration_alternatives: Optional[bool]
+    minimum_gravity: Optional[int]
 
     @validator("german_gender_ending")
     def valid_german_gender_ending(cls, v: str):
@@ -318,6 +322,12 @@ class ResultOut(BaseModel):
 
         cleaned_alternatives = []
         for alternative in alternatives:
+            if (
+                not config.show_inspiration_alternatives
+                and ResultOut.isInspirationAlternative(alternative)
+            ):
+                continue
+
             if is_upper and category != "orthography":
                 alternative = string.capwords(alternative[0:1]) + alternative[1:]
 
@@ -395,6 +405,10 @@ class ResultOut(BaseModel):
         object.__setattr__(self, "reason", reason)
         object.__setattr__(self, "solution", solution)
         object.__setattr__(self, "explanation", explanation)
+
+    @staticmethod
+    def isInspirationAlternative(alternative):
+        return alternative.count("...") > 0
 
     @staticmethod
     def getGenderedRolesFormatBinary(alternative):
@@ -485,11 +499,8 @@ class ResultsOut(BaseModel):
     language: str
     limit_reached: bool
 
-    def factory(results, lang, limit_reached=False):
-        if lang != None:
-            lang = lang.lang
-
-        return ResultsOut(results, lang, limit_reached)
+    def factory(results, language, limit_reached=False):
+        return ResultsOut(results, language, limit_reached)
 
     factory = staticmethod(factory)
 

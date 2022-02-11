@@ -14,13 +14,13 @@
                 "Beauftragende Firmen"
             ],
             "category": "gendered",
-            "context": "Wir suchen Kunden",
-            "end": 17,
+            "context": "",
+            "end": 16,
             "explanation": "😟 “Mitmeinen” mit männlichen Generikum funktioniert nicht",
             "label": "Geschlechtsspezifisch: Titel",
             "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
             "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht.",
-            "start": 11,
+            "start": 10,
             "subcategory": "titles",
             "text": "Kunden"
         }

@@ -281,7 +281,7 @@ categories = {
     "orthography": {
         "color": "blue",
         "inclusive": False,
-        "category": "style",
+        "category": "orthography",
         "gravity": 3,
     },
     "overload": {
