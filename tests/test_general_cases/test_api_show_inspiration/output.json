@@ -6,13 +6,10 @@
             "alternatives": [
                 "press officer",
                 "spokesperson",
-                "representative (for ...)",
                 "(if gender is known) spokeswoman",
                 "they",
                 "press officers",
-                "spokespersons",
-                "representatives (for ...)",
-                "person speaking for (...)"
+                "spokespersons"
             ],
             "category": "gendered",
             "context": "",

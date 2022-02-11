@@ -4,38 +4,6 @@
     "results": [
         {
             "alternatives": [
-                "suchen",
-                "sucht",
-                "such",
-                "suche",
-                "auch",
-                "sich",
-                "schon",
-                "sechs",
-                "zog",
-                "wuchs",
-                "zehn",
-                "Buch",
-                "Zuge",
-                "sog",
-                "zogen",
-                "Augen",
-                "Zug",
-                "Züge"
-            ],
-            "category": "orthography",
-            "context": "",
-            "end": 9,
-            "explanation": "❌ Orthographie",
-            "label": "Rechtschreibfehler",
-            "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
-            "solution": "Möglicher Tippfehler gefunden.",
-            "start": 4,
-            "subcategory": "orthography",
-            "text": "suchn"
-        },
-        {
-            "alternatives": [
                 "Auftraggebende",
                 "Bestellende",
                 "Kund:innen",
@@ -43,7 +11,6 @@
                 "Kundschaft",
                 "Klientel",
                 "Beziehende Personen",
-                "Personen, die (...) kaufen",
                 "Beauftragende Firmen"
             ],
             "category": "gendered",
