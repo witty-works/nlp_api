@@ -13,12 +13,12 @@
             "category": "unconscious_bias",
             "context": "Don't turn a blind eye on this fact. ",
             "end": 22,
-            "explanation": "rules.visual_impairment_explanation",
-            "label": "Biased language: rules.visual_impairment_label",
-            "reason": "rules.visual_impairment_reason",
-            "solution": "rules.visual_impairment_solution",
+            "explanation": "😒 hidden bias regarding vision ability",
+            "label": "Biased language: Vision",
+            "reason": "Outdated, hidden or even discriminatory wording pigeonholing people with visual impairment.",
+            "solution": "Ask yourself \"What would I write if this person had full visibility?\"",
             "start": 6,
-            "subcategory": "visual_impairment",
+            "subcategory": "vision",
             "text": "turn a blind eye"
         }
     ]
