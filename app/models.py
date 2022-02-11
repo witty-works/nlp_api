@@ -100,6 +100,7 @@ class Config(BaseModel):
     disabled_categories: List = []
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
     singular_they: str = SingularThey.HE_OR_SHE
+    show_inspiration_alternatives: Optional[bool] = False
 
     @validator("german_gender_ending")
     def valid_german_gender_ending(cls, v: str):
@@ -161,6 +162,7 @@ class ForcedConfig(BaseModel):
     disabled_categories: Optional[List]
     gendered_roles_format: Optional[GenderedRolesFormatType]
     singular_they: Optional[str]
+    show_inspiration_alternatives: Optional[bool]
 
     @validator("german_gender_ending")
     def valid_german_gender_ending(cls, v: str):
