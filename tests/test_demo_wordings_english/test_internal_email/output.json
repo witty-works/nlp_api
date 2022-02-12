@@ -5,6 +5,22 @@
         {
             "alternatives": [
                 {
+                    "text": ", and"
+                }
+            ],
+            "category": "orthography",
+            "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number 1 and innovation drives us.\nSincere regards,\nNadia",
+            "end": 96,
+            "explanation": "Use a comma before ‘and’ if it connects two independent clauses (unless they are closely connected and short).",
+            "gravity": 1,
+            "label": "Orthography",
+            "start": 92,
+            "subcategory": "orthography",
+            "text": " and"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "people"
                 },
                 {
@@ -39,6 +55,7 @@
             "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to ",
             "end": 8,
             "explanation": "💡 Image of a man unconsciously triggered",
+            "gravity": 2,
             "label": "Gendered: Special functions",
             "start": 4,
             "subcategory": "function",
@@ -83,6 +100,7 @@
             "context": "perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number 1 and innovation drives us.\nSincere regards,\nNadia",
             "end": 153,
             "explanation": "🙄 Empty words have lost all meaning",
+            "gravity": 3,
             "label": "Style: Empty Words",
             "start": 143,
             "subcategory": "hollow",
@@ -98,6 +116,7 @@
             "context": "ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number 1 and innovation drives us.\nSincere regards,\nNadia",
             "end": 138,
             "explanation": "😮‍💨 Creating pressure through exaggeration",
+            "gravity": 2,
             "label": "Style: Exaggeration",
             "start": 130,
             "subcategory": "exaggerating",
@@ -121,7 +140,8 @@
             "category": "unconscious_bias",
             "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number 1",
             "end": 38,
-            "explanation": "😒 deterring people with cooperative mindset",
+            "explanation": "😒 deters people with a “we” mindset",
+            "gravity": 2,
             "label": "Biased language: Agentic",
             "start": 30,
             "subcategory": "agentic",
@@ -151,7 +171,8 @@
             "category": "unconscious_bias",
             "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number 1 and innovation d",
             "end": 55,
-            "explanation": "😒 deterring people with cooperative mindset",
+            "explanation": "😒 deters people with a “we” mindset",
+            "gravity": 2,
             "label": "Biased language: Agentic",
             "start": 43,
             "subcategory": "agentic",

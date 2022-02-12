@@ -3,7 +3,7 @@ import re
 import uvicorn
 import json
 import secrets
-import aiohttp
+from aiohttp import ClientSession, TCPConnector, ClientError
 import copy
 
 from fastapi import (
@@ -101,8 +101,8 @@ for language in languages:
     categories_with_labels[language] = copy.deepcopy(categories)
     for category in categories_with_labels[language]:
         parent_category = categories[category]["category"]
-        color = categories[parent_category]["color"]
-        categories_with_labels[language][category]["color"] = color
+
+        del categories_with_labels[language][category]["importance"]
 
         categories_with_labels[language][category]["label"] = lang._(
             "rules." + category + "_label"
@@ -363,7 +363,7 @@ async def check(
     user_request_in: RequestIn,
 ):
     if version != 1.0 and version != 1.1:
-        response.status_code = status.HTTP_404_NOT_FOUND
+        response.status_code = status.HTTP_400_BAD_REQUEST
         return Result.factory("Version not supported: " + str(version))
 
     configure_sentry(request, user_request_in)
@@ -435,7 +435,6 @@ def languagetool_matches(
                 end,
                 alternatives,
                 match["shortMessage"],
-                None,
                 match["message"],
             )
         )
@@ -446,8 +445,8 @@ def languagetool_matches(
 async def languagetool_rules(version: float, config: Config, lang: Language, text: str):
     list_results = []
 
-    async with aiohttp.ClientSession(
-        connector=aiohttp.TCPConnector(verify_ssl=settings.languagetool_verify_ssl)
+    async with ClientSession(
+        connector=TCPConnector(verify_ssl=settings.languagetool_verify_ssl)
     ) as session:
         payload = {
             "text": text,
@@ -463,16 +462,18 @@ async def languagetool_rules(version: float, config: Config, lang: Language, tex
                 list_results = languagetool_matches(
                     version, config, lang, "orthography", text, result
                 )
-            except:
+            except ClientError as err:
+                result = "Problem communicating with LanguageTool"
                 if r.status >= 500:
-                    result = "Problem communicating with LanguageTool"
                     try:
                         response = await r.text()
-                        result = result + ": " + response
-                    except:
-                        pass
+                        result += ": " + response
+                    except ClientError as err:
+                        result += ": " + str(err)
+                else:
+                    result += ": " + str(err)
 
-                    logging.error(result)
+                logging.error(result)
 
     return list_results
 
@@ -519,10 +520,11 @@ def get_non_noun_lower_cased(token):
     return token_word
 
 
-def check_category_gravity(config: Config, subcategory: str):
+def check_category_importance(config: Config, subcategory: str):
     return (
-        config.maximum_gravity == None
-        or config.maximum_gravity >= categories[subcategory]["gravity"]
+        config.maximum_importance == None
+        or categories[subcategory]["importance"] == None
+        or config.maximum_importance >= categories[subcategory]["importance"]
     )
 
 
@@ -530,7 +532,7 @@ def is_sub_category_enabled(config: Config, subcategory: str):
     if categories[subcategory]["category"] in config.disabled_categories:
         return False
 
-    return check_category_gravity(config, subcategory)
+    return check_category_importance(config, subcategory)
 
 
 def german_rules(version: float, config: Config, lang: Language, tokens, text: str):

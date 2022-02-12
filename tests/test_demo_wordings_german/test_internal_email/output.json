@@ -5,6 +5,95 @@
         {
             "alternatives": [
                 {
+                    "text": "wir"
+                }
+            ],
+            "category": "orthography",
+            "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert ",
+            "end": 25,
+            "explanation": "Außer am Satzanfang werden nur Nomen und Eigennamen großgeschrieben.",
+            "gravity": 1,
+            "label": "Orthographie",
+            "start": 22,
+            "subcategory": "orthography",
+            "text": "Wir"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Grüße"
+                },
+                {
+                    "text": "Größe"
+                },
+                {
+                    "text": "Große"
+                },
+                {
+                    "text": "Grütze"
+                },
+                {
+                    "text": "Grüßen"
+                },
+                {
+                    "text": "Gruße"
+                },
+                {
+                    "text": "Grüßt"
+                },
+                {
+                    "text": "Krasse"
+                },
+                {
+                    "text": "Güsse"
+                },
+                {
+                    "text": "Grüßte"
+                },
+                {
+                    "text": "Grüß"
+                },
+                {
+                    "text": "Grenze"
+                },
+                {
+                    "text": "Küsse"
+                },
+                {
+                    "text": "Müsse"
+                },
+                {
+                    "text": "Krosse"
+                },
+                {
+                    "text": "Brüssel"
+                },
+                {
+                    "text": "Flüsse"
+                },
+                {
+                    "text": "Großen"
+                },
+                {
+                    "text": "Gründe"
+                },
+                {
+                    "text": "Größte"
+                }
+            ],
+            "category": "orthography",
+            "context": "urchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
+            "end": 174,
+            "explanation": "Möglicher Tippfehler gefunden.",
+            "gravity": 1,
+            "label": "Rechtschreibfehler",
+            "start": 168,
+            "subcategory": "orthography",
+            "text": "Grüsse"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "Teammitglied"
                 },
                 {
@@ -33,6 +122,7 @@
             "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgeford",
             "end": 21,
             "explanation": "😟 “Mitmeinen” mit männlichen Generikum funktioniert nicht",
+            "gravity": 2,
             "label": "Geschlechtsspezifisch: Titel",
             "start": 13,
             "subcategory": "titles",
@@ -63,6 +153,7 @@
             "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle ",
             "end": 46,
             "explanation": "😟 Verstecktes männliches Generikum",
+            "gravity": 2,
             "label": "Geschlechtsspezifisch: Versteckter Ausdruck",
             "start": 36,
             "subcategory": "hidden_image",
@@ -107,7 +198,8 @@
             "category": "unconscious_bias",
             "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreund",
             "end": 62,
-            "explanation": "😒 schreckt Menschen mit kooperativer Einstellung ab",
+            "explanation": "😒 schreckt Menschen mit “wir”-Einstellung ab",
+            "gravity": 2,
             "label": "Sprachliche Voreingenommenheit: Agentisch",
             "start": 55,
             "subcategory": "agentic",
@@ -125,7 +217,8 @@
             "category": "unconscious_bias",
             "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
             "end": 85,
-            "explanation": "😒 schreckt Menschen mit kooperativer Einstellung ab",
+            "explanation": "😒 schreckt Menschen mit “wir”-Einstellung ab",
+            "gravity": 2,
             "label": "Sprachliche Voreingenommenheit: Agentisch",
             "start": 67,
             "subcategory": "agentic",
@@ -143,7 +236,8 @@
             "category": "unconscious_bias",
             "context": "rte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
             "end": 124,
-            "explanation": "😒 schreckt Menschen mit kooperativer Einstellung ab",
+            "explanation": "😒 schreckt Menschen mit “wir”-Einstellung ab",
+            "gravity": 2,
             "label": "Sprachliche Voreingenommenheit: Agentisch",
             "start": 109,
             "subcategory": "agentic",
@@ -211,6 +305,7 @@
             "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, her",
             "end": 12,
             "explanation": "🧊 Formale Formulierung kreiert emotionale Distanz",
+            "gravity": 3,
             "label": "Stil: Formalität",
             "start": 0,
             "subcategory": "formality",

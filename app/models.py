@@ -5,6 +5,8 @@ from enum import Enum
 import gettext
 import string
 
+from app.categories import categories
+
 
 class Language(object):
     def __init__(self, locale):
@@ -100,7 +102,7 @@ class Config(BaseModel):
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
     singular_they: str = SingularThey.HE_OR_SHE
     show_inspiration_alternatives: Optional[bool] = False
-    maximum_gravity: Optional[int] = None
+    maximum_importance: Optional[int] = None
 
     @validator("german_gender_ending")
     def valid_german_gender_ending(cls, v: str):
@@ -163,7 +165,7 @@ class ForcedConfig(BaseModel):
     gendered_roles_format: Optional[GenderedRolesFormatType]
     singular_they: Optional[str]
     show_inspiration_alternatives: Optional[bool]
-    minimum_gravity: Optional[int]
+    maximum_importance: Optional[int]
 
     @validator("german_gender_ending")
     def valid_german_gender_ending(cls, v: str):
@@ -245,7 +247,7 @@ class ResultAlternative(BaseModel):
     text: Optional[str]
     remove: Optional[bool]
     inspiration: Optional[bool]
-    infos: Optional[str]
+    context: Optional[str]
 
 
 class ResultOutOld(BaseModel):
@@ -271,6 +273,7 @@ class ResultOut(BaseModel):
     alternatives: List[ResultAlternative]
     label: str
     explanation: str
+    gravity: Optional[int]
 
     def factory(
         version: float,
@@ -284,9 +287,8 @@ class ResultOut(BaseModel):
         end=None,
         alternatives=None,
         label=None,
-        reason=None,
-        solution=None,
         explanation=None,
+        gravity=None,
     ):
         if end == None:
             end = start + len(text)
@@ -306,21 +308,21 @@ class ResultOut(BaseModel):
         if category != subcategory:
             label += ": " + lang._("rules." + subcategory + "_label")
 
-        reason = (
-            reason
-            if reason != None
-            else lang._("rules." + subcategory + "_reason", params)
-        )
+        reason = lang._("rules." + subcategory + "_reason", params)
+        solution = explanation
         solution = (
             solution
             if solution != None
             else lang._("rules." + subcategory + "_solution", params)
         )
+
         explanation = (
             explanation
             if explanation != None
             else lang._("rules." + subcategory + "_explanation", params)
         )
+
+        gravity = gravity if gravity != None else categories[subcategory]["gravity"]
 
         is_upper = text[0:1].isupper()
 
@@ -351,13 +353,12 @@ class ResultOut(BaseModel):
 
             alternative_variations = []
 
+            alternative_context = None
             if category != "orthography":
                 if "---" in alternative:
-                    alternative, infos = alternative.split("---")
+                    alternative, alternative_context = alternative.split("---")
                     alternative = alternative.strip()
-                    infos = infos.strip()
-                else:
-                    infos = None
+                    alternative_context = context.strip()
 
                 if is_upper:
                     alternative = string.capwords(alternative[0:1]) + alternative[1:]
@@ -410,7 +411,7 @@ class ResultOut(BaseModel):
                         text=variation,
                         remove=remove,
                         inspiration=inspiration,
-                        infos=infos,
+                        context=alternative_context,
                     )
 
                 cleaned_alternatives[key] = variation
@@ -439,6 +440,7 @@ class ResultOut(BaseModel):
             alternatives=list(cleaned_alternatives.values()),
             label=label,
             explanation=explanation,
+            gravity=gravity,
         )
 
     factory = staticmethod(factory)
@@ -532,7 +534,7 @@ class Result(BaseModel):
 
 
 class ResultsOut(BaseModel):
-    results: Union[List[ResultOut], List[List[ResultOutOld]]]
+    results: Union[List[ResultOut], List[ResultOutOld]]
     language: str
     limit_reached: bool
 

@@ -18,6 +18,7 @@
             "context": "Don't turn a blind eye on this fact. ",
             "end": 22,
             "explanation": "😒 hidden bias regarding vision ability",
+            "gravity": 2,
             "label": "Biased language: Vision",
             "start": 6,
             "subcategory": "vision",

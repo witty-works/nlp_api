@@ -12,6 +12,7 @@
             "context": "",
             "end": 20,
             "explanation": "💯 Nicht konsistente Geschlechts-Schreibweise",
+            "gravity": 2,
             "label": "Geschlechtsspezifisch: Inklusive Endung",
             "start": 17,
             "subcategory": "gendered_denominations_ending",

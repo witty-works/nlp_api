@@ -2,6 +2,6 @@
     "text": "Wir suchn Kunden",
     "config": {
         "store_context": false,
-        "maximum_gravity": 2
+        "maximum_importance": 2
     }
 }

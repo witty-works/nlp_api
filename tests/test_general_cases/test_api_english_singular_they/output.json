@@ -12,6 +12,7 @@
             "context": "",
             "end": 14,
             "explanation": "😟 Pronouns according to binary normative",
+            "gravity": 2,
             "label": "Biased language: Binary Pronouns",
             "start": 12,
             "subcategory": "binary_pronouns",

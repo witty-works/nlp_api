@@ -33,6 +33,7 @@
             "context": "Wir suchen Kunden",
             "end": 17,
             "explanation": "😟 “Mitmeinen” mit männlichen Generikum funktioniert nicht",
+            "gravity": 2,
             "label": "Geschlechtsspezifisch: Titel",
             "start": 11,
             "subcategory": "titles",

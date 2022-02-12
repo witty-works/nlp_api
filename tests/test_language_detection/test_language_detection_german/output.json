@@ -3,6 +3,95 @@
     "limit_reached": false,
     "results": [
         {
+            "alternatives": [
+                {
+                    "text": "Liebe"
+                }
+            ],
+            "category": "orthography",
+            "context": "",
+            "end": 5,
+            "explanation": "Dieser Satz fängt nicht mit einem großgeschriebenen Wort an.",
+            "gravity": 1,
+            "label": "Orthographie",
+            "start": 0,
+            "subcategory": "orthography",
+            "text": "liebe"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Mensch"
+                },
+                {
+                    "text": "längs"
+                },
+                {
+                    "text": "Deng"
+                },
+                {
+                    "text": "menge"
+                },
+                {
+                    "text": "mengt"
+                },
+                {
+                    "text": "peng"
+                },
+                {
+                    "text": "Dengs"
+                },
+                {
+                    "text": "Längs"
+                },
+                {
+                    "text": "mengst"
+                },
+                {
+                    "text": "Hänsch"
+                },
+                {
+                    "text": "häng"
+                },
+                {
+                    "text": "ging"
+                },
+                {
+                    "text": "lang"
+                },
+                {
+                    "text": "sechs"
+                },
+                {
+                    "text": "wenig"
+                },
+                {
+                    "text": "Berg"
+                },
+                {
+                    "text": "Länge"
+                },
+                {
+                    "text": "hängt"
+                },
+                {
+                    "text": "Menge"
+                },
+                {
+                    "text": "genug"
+                }
+            ],
+            "category": "orthography",
+            "context": "",
+            "end": 12,
+            "explanation": "Möglicher Tippfehler gefunden.",
+            "gravity": 1,
+            "label": "Rechtschreibfehler",
+            "start": 6,
+            "subcategory": "orthography",
+            "text": "mensch"
+        },
+        {
             "alternatives": [],
             "category": "inclusive",
             "context": "",

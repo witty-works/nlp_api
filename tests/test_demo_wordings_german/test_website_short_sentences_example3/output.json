@@ -5,6 +5,46 @@
         {
             "alternatives": [
                 {
+                    "text": "außergewöhnliche"
+                },
+                {
+                    "text": "außergewöhnlich"
+                },
+                {
+                    "text": "außergewöhnlichen"
+                },
+                {
+                    "text": "außergewöhnlicher"
+                },
+                {
+                    "text": "außergewöhnliches"
+                },
+                {
+                    "text": "außergewöhnlichem"
+                },
+                {
+                    "text": "außergewöhnlichere"
+                },
+                {
+                    "text": "außergewöhnlichst"
+                },
+                {
+                    "text": "außergewöhnlichste"
+                }
+            ],
+            "category": "orthography",
+            "context": "Wir haben aussergewöhnliche Herausforderungen vor uns.",
+            "end": 27,
+            "explanation": "Möglicher Tippfehler gefunden.",
+            "gravity": 1,
+            "label": "Rechtschreibfehler",
+            "start": 10,
+            "subcategory": "orthography",
+            "text": "aussergewöhnliche"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "Neue Hürden"
                 },
                 {
@@ -23,7 +63,8 @@
             "category": "unconscious_bias",
             "context": "Wir haben aussergewöhnliche Herausforderungen vor uns.",
             "end": 45,
-            "explanation": "😒 schreckt Menschen mit kooperativer Einstellung ab",
+            "explanation": "😒 schreckt Menschen mit “wir”-Einstellung ab",
+            "gravity": 2,
             "label": "Sprachliche Voreingenommenheit: Agentisch",
             "start": 28,
             "subcategory": "agentic",

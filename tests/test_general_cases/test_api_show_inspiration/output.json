@@ -11,7 +11,7 @@
                     "text": "spokesperson"
                 },
                 {
-                    "infos": "if gender is known",
+                    "context": "",
                     "text": "spokeswoman"
                 },
                 {
@@ -28,6 +28,7 @@
             "context": "",
             "end": 30,
             "explanation": "💡 Image of a man unconsciously triggered",
+            "gravity": 2,
             "label": "Gendered: Special functions",
             "start": 21,
             "subcategory": "function",

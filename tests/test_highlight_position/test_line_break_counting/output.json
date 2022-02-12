@@ -5,6 +5,22 @@
         {
             "alternatives": [
                 {
+                    "text": "Helo"
+                }
+            ],
+            "category": "orthography",
+            "context": "\n\nhelo ninja",
+            "end": 6,
+            "explanation": "This sentence does not start with an uppercase letter.",
+            "gravity": 1,
+            "label": "Orthography",
+            "start": 2,
+            "subcategory": "orthography",
+            "text": "helo"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "dedicated"
                 },
                 {
@@ -27,6 +43,7 @@
             "context": "\n\nhelo ninja",
             "end": 12,
             "explanation": "😮‍💨 Creating pressure through exaggeration",
+            "gravity": 2,
             "label": "Style: Exaggeration",
             "start": 7,
             "subcategory": "exaggerating",

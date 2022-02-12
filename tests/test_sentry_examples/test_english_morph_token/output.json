@@ -5,6 +5,66 @@
         {
             "alternatives": [
                 {
+                    "text": "Sitar"
+                },
+                {
+                    "text": "Siar"
+                },
+                {
+                    "text": "Sizar"
+                },
+                {
+                    "text": "Si war"
+                }
+            ],
+            "category": "orthography",
+            "context": "",
+            "end": 8,
+            "explanation": "Possible spelling mistake found.",
+            "gravity": 1,
+            "label": "Spelling mistake",
+            "start": 3,
+            "subcategory": "orthography",
+            "text": "Siwar"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "an"
+                }
+            ],
+            "category": "orthography",
+            "context": "",
+            "end": 56,
+            "explanation": "Use “an” instead of ‘a’ if the following word starts with a vowel sound, e.g. ‘an article’, ‘an hour’.",
+            "gravity": 1,
+            "label": "Wrong article",
+            "start": 55,
+            "subcategory": "orthography",
+            "text": "a"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Rehearing"
+                },
+                {
+                    "text": "Richening"
+                }
+            ],
+            "category": "orthography",
+            "context": "",
+            "end": 144,
+            "explanation": "Possible spelling mistake found.",
+            "gravity": 1,
+            "label": "Spelling mistake",
+            "start": 134,
+            "subcategory": "orthography",
+            "text": "Riehenring"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "they"
                 },
                 {
@@ -18,6 +78,7 @@
             "context": "",
             "end": 63,
             "explanation": "💡 Image of a man unconsciously triggered",
+            "gravity": 2,
             "label": "Gendered: Special functions",
             "start": 57,
             "subcategory": "function",
@@ -42,6 +103,7 @@
             "context": "",
             "end": 115,
             "explanation": "😒 hidden bias regarding age over 50",
+            "gravity": 2,
             "label": "Biased language: 50 years and older",
             "start": 109,
             "subcategory": "age_old",

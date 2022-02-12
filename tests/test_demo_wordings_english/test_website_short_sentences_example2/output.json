@@ -12,6 +12,7 @@
             "context": "We've got exceptional challenges ahead!",
             "end": 21,
             "explanation": "😮‍💨 Creating pressure through exaggeration",
+            "gravity": 2,
             "label": "Style: Exaggeration",
             "start": 10,
             "subcategory": "exaggerating",
