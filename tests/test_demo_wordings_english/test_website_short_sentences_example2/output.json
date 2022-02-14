@@ -4,15 +4,16 @@
     "results": [
         {
             "alternatives": [
-                "-"
+                {
+                    "remove": true
+                }
             ],
             "category": "style",
             "context": "We've got exceptional challenges ahead!",
             "end": 21,
             "explanation": "😮‍💨 Creating pressure through exaggeration",
+            "gravity": 2,
             "label": "Style: Exaggeration",
-            "reason": "Communicates that people have to conform to these superlatives.",
-            "solution": "Use an authentic and honest sounding statement.",
             "start": 10,
             "subcategory": "exaggerating",
             "text": "exceptional"

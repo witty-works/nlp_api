@@ -4,20 +4,32 @@
     "results": [
         {
             "alternatives": [
-                "press officer",
-                "spokesperson",
-                "(if gender is known) spokeswoman",
-                "they",
-                "press officers",
-                "spokespersons"
+                {
+                    "text": "press officer"
+                },
+                {
+                    "text": "spokesperson"
+                },
+                {
+                    "context": "",
+                    "text": "spokeswoman"
+                },
+                {
+                    "text": "they"
+                },
+                {
+                    "text": "press officers"
+                },
+                {
+                    "text": "spokespersons"
+                }
             ],
             "category": "gendered",
             "context": "",
             "end": 30,
             "explanation": "💡 Image of a man unconsciously triggered",
+            "gravity": 2,
             "label": "Gendered: Special functions",
-            "reason": "For economic-historical reasons, an image of a man is unconsciously evoked in front of the inner eye, even if the term is linguistically neutral. The female gender or other gender identities do not become visible. And they will not feel to belong in this setting.",
-            "solution": "In order to provoke an inclusive image, be not only linguistically, but also mentally neutral in your formulation. Rather use a noun that describes the activity. Or use a denomination that is truly gender-neutral.",
             "start": 21,
             "subcategory": "function",
             "text": "spokesman"

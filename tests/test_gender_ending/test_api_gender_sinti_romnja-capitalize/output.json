@@ -4,56 +4,81 @@
     "results": [
         {
             "alternatives": [
-                "SintiZe und RomNja",
-                "Sintize/Sinti und Romnja/Roma",
-                "RomNja",
-                "Romnja und Roma",
-                "SintiZe",
-                "Sintize und Sinti"
+                {
+                    "text": "SintiZe und RomNja"
+                },
+                {
+                    "text": "Sintize/Sinti und Romnja/Roma"
+                },
+                {
+                    "text": "RomNja"
+                },
+                {
+                    "text": "Romnja und Roma"
+                },
+                {
+                    "text": "SintiZe"
+                },
+                {
+                    "text": "Sintize und Sinti"
+                }
             ],
             "category": "unconscious_bias",
             "context": "",
             "end": 22,
             "explanation": "😒 versteckte Voreingenommenheit bezüglich Hautfarbe",
+            "gravity": 2,
             "label": "Sprachliche Voreingenommenheit: Rassistische Wurzel",
-            "reason": "Überholte oder diskriminierende Formulierung, die Menschen eines bestimmten ethnischen Hintergrundes schubladisiert.",
-            "solution": "Fragen Sie sich: \"Was würde ich schreiben, wenn diese Person zur dominanten, ethnischen Gruppe in meiner Gesellschaft gehören würde?\"",
             "start": 14,
             "subcategory": "racist_source",
             "text": "Zigeuner"
         },
         {
             "alternatives": [
-                "RomNi",
-                "Romni/Rom",
-                "SintIza",
-                "Sintiza/Sinto",
-                "SintEza",
-                "Sinteza/Sinto"
+                {
+                    "text": "RomNi"
+                },
+                {
+                    "text": "Romni/Rom"
+                },
+                {
+                    "text": "SintIza"
+                },
+                {
+                    "text": "Sintiza/Sinto"
+                },
+                {
+                    "text": "SintEza"
+                },
+                {
+                    "text": "Sinteza/Sinto"
+                }
             ],
             "category": "unconscious_bias",
             "context": "",
             "end": 44,
             "explanation": "😒 versteckte Voreingenommenheit bezüglich Hautfarbe",
+            "gravity": 2,
             "label": "Sprachliche Voreingenommenheit: Rassistische Wurzel",
-            "reason": "Überholte oder diskriminierende Formulierung, die Menschen eines bestimmten ethnischen Hintergrundes schubladisiert.",
-            "solution": "Fragen Sie sich: \"Was würde ich schreiben, wenn diese Person zur dominanten, ethnischen Gruppe in meiner Gesellschaft gehören würde?\"",
             "start": 36,
             "subcategory": "racist_source",
             "text": "Zigeuner"
         },
         {
             "alternatives": [
-                "Rom/ni",
-                "Sint/iza"
+                {
+                    "text": "Rom/ni"
+                },
+                {
+                    "text": "Sint/iza"
+                }
             ],
             "category": "unconscious_bias",
             "context": "",
             "end": 67,
             "explanation": "😒 versteckte Voreingenommenheit bezüglich Hautfarbe",
+            "gravity": 2,
             "label": "Sprachliche Voreingenommenheit: Rassistische Wurzel",
-            "reason": "Überholte oder diskriminierende Formulierung, die Menschen eines bestimmten ethnischen Hintergrundes schubladisiert.",
-            "solution": "Fragen Sie sich: \"Was würde ich schreiben, wenn diese Person zur dominanten, ethnischen Gruppe in meiner Gesellschaft gehören würde?\"",
             "start": 57,
             "subcategory": "racist_source",
             "text": "Zigeunerin"

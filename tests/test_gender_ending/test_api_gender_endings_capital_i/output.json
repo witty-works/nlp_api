@@ -4,44 +4,74 @@
     "results": [
         {
             "alternatives": [
-                "KundIn",
-                "Kundin/Kunde",
-                "Kundschaft",
-                "Klientel",
-                "Auftraggebende",
-                "Bestellende",
-                "Beziehende Person",
-                "Beauftragende Firma"
+                {
+                    "text": "KundIn"
+                },
+                {
+                    "text": "Kundin/Kunde"
+                },
+                {
+                    "text": "Kundschaft"
+                },
+                {
+                    "text": "Klientel"
+                },
+                {
+                    "text": "Auftraggebende"
+                },
+                {
+                    "text": "Bestellende"
+                },
+                {
+                    "text": "Beziehende Person"
+                },
+                {
+                    "text": "Beauftragende Firma"
+                }
             ],
             "category": "gendered",
             "context": "",
             "end": 11,
             "explanation": "😟 “Mitmeinen” mit männlichen Generikum funktioniert nicht",
+            "gravity": 2,
             "label": "Geschlechtsspezifisch: Titel",
-            "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
-            "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht.",
             "start": 6,
             "subcategory": "titles",
             "text": "Kunde"
         },
         {
             "alternatives": [
-                "Auftraggebende",
-                "Bestellende",
-                "KundInnen",
-                "Kundinnen und Kunden",
-                "Kundschaft",
-                "Klientel",
-                "Beziehende Personen",
-                "Beauftragende Firmen"
+                {
+                    "text": "Auftraggebende"
+                },
+                {
+                    "text": "Bestellende"
+                },
+                {
+                    "text": "KundInnen"
+                },
+                {
+                    "text": "Kundinnen und Kunden"
+                },
+                {
+                    "text": "Kundschaft"
+                },
+                {
+                    "text": "Klientel"
+                },
+                {
+                    "text": "Beziehende Personen"
+                },
+                {
+                    "text": "Beauftragende Firmen"
+                }
             ],
             "category": "gendered",
             "context": "",
             "end": 37,
             "explanation": "😟 “Mitmeinen” mit männlichen Generikum funktioniert nicht",
+            "gravity": 2,
             "label": "Geschlechtsspezifisch: Titel",
-            "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
-            "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht.",
             "start": 31,
             "subcategory": "titles",
             "text": "Kunden"

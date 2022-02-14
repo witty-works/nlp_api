@@ -4,17 +4,22 @@
     "results": [
         {
             "alternatives": [
-                "feign ignorance",
-                "ignore",
-                "be overcome by prejudice"
+                {
+                    "text": "feign ignorance"
+                },
+                {
+                    "text": "ignore"
+                },
+                {
+                    "text": "be overcome by prejudice"
+                }
             ],
             "category": "unconscious_bias",
             "context": "Don't turn a blind eye on this fact. ",
             "end": 22,
             "explanation": "😒 hidden bias regarding vision ability",
+            "gravity": 2,
             "label": "Biased language: Vision",
-            "reason": "Outdated, hidden or even discriminatory wording pigeonholing people with visual impairment.",
-            "solution": "Ask yourself \"What would I write if this person had full visibility?\"",
             "start": 6,
             "subcategory": "vision",
             "text": "turn a blind eye"

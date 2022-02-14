@@ -4,58 +4,87 @@
     "results": [
         {
             "alternatives": [
-                "Management",
-                "Manager:in",
-                "Managerin/Manager"
+                {
+                    "text": "Management"
+                },
+                {
+                    "text": "Manager:in"
+                },
+                {
+                    "text": "Managerin/Manager"
+                }
             ],
             "category": "gendered",
             "context": "",
             "end": 24,
             "explanation": "💡 Bild eines Mannes wird unbewusst ausgelöst",
+            "gravity": 2,
             "label": "Geschlechtsspezifisch: Spezielle Funktionen",
-            "reason": "Aus wirtschaftlich-historischen Gründen wird unbewusst ein Bild eines Mannes vor dem inneren Auge hervorgerufen. Das weibliche Geschlecht oder andere Geschlechtsidentitäten werden nicht sichtbar. Und sie fühlen sich nicht zugehörig.",
-            "solution": "Umgehen Sie mit anderen Worten das unbewusst hervorgerufene Bild. Nutzen Sie eher das Nomen, das die Tätigkeit bezeichnet, um das unbewusste Bild zu umgehen. Oder verwenden Sie eine geschlechtsneutrale Bezeichnung.",
             "start": 17,
             "subcategory": "function",
             "text": "Manager"
         },
         {
             "alternatives": [
-                "die:der",
-                "die/der"
+                {
+                    "text": "die:der"
+                },
+                {
+                    "text": "die/der"
+                }
             ],
             "category": "gendered",
             "context": "",
             "end": 16,
             "explanation": "💡 Bild eines Mannes wird unbewusst ausgelöst",
+            "gravity": 2,
             "label": "Geschlechtsspezifisch: Spezielle Funktionen",
-            "reason": "Aus wirtschaftlich-historischen Gründen wird unbewusst ein Bild eines Mannes vor dem inneren Auge hervorgerufen. Das weibliche Geschlecht oder andere Geschlechtsidentitäten werden nicht sichtbar. Und sie fühlen sich nicht zugehörig.",
-            "solution": "Umgehen Sie mit anderen Worten das unbewusst hervorgerufene Bild. Nutzen Sie eher das Nomen, das die Tätigkeit bezeichnet, um das unbewusste Bild zu umgehen. Oder verwenden Sie eine geschlechtsneutrale Bezeichnung.",
             "start": 13,
             "subcategory": "function",
             "text": "der"
         },
         {
             "alternatives": [
-                "Leitende Kraft",
-                "Leitungsperson",
-                "Leitung",
-                "Vorgesetzte:r",
-                "Vorgesetzte/Vorgesetzter",
-                "Leitende Kräfte",
-                "Leitungskräfte",
-                "Leitungspersonen",
-                "Vorgesetzte",
-                "Entscheidungsbefugte Person",
-                "Verantwortliche Person"
+                {
+                    "text": "Leitende Kraft"
+                },
+                {
+                    "text": "Leitungsperson"
+                },
+                {
+                    "text": "Leitung"
+                },
+                {
+                    "text": "Vorgesetzte:r"
+                },
+                {
+                    "text": "Vorgesetzte/Vorgesetzter"
+                },
+                {
+                    "text": "Leitende Kräfte"
+                },
+                {
+                    "text": "Leitungskräfte"
+                },
+                {
+                    "text": "Leitungspersonen"
+                },
+                {
+                    "text": "Vorgesetzte"
+                },
+                {
+                    "text": "Entscheidungsbefugte Person"
+                },
+                {
+                    "text": "Verantwortliche Person"
+                }
             ],
             "category": "gendered",
             "context": "",
             "end": 38,
             "explanation": "😟 Traditionelles Führungs-Vokabular",
+            "gravity": 2,
             "label": "Geschlechtsspezifisch: Führungsstereotyp",
-            "reason": "Besetzt das Thema der Führung stereotyp männlich und traditionell hierarchisch.",
-            "solution": "Verwenden Sie Begriffe, die von einer unterstützenden Vorstellung der Führung ausgeht und verschiedene Geschlechter meinen kann.",
             "start": 34,
             "subcategory": "leadership",
             "text": "Boss"

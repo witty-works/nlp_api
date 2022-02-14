@@ -4,15 +4,16 @@
     "results": [
         {
             "alternatives": [
-                "they"
+                {
+                    "text": "they"
+                }
             ],
             "category": "unconscious_bias",
             "context": "",
             "end": 14,
             "explanation": "😟 Pronouns according to binary normative",
+            "gravity": 2,
             "label": "Biased language: Binary Pronouns",
-            "reason": "Women or non-binary people do not feel addressed by the \"male generic\" and their engagement decreases.",
-            "solution": "Use the direct form of address (you). If you have to write in the third person, use \"they\".",
             "start": 12,
             "subcategory": "binary_pronouns",
             "text": "he"

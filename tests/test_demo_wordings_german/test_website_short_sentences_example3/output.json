@@ -4,42 +4,68 @@
     "results": [
         {
             "alternatives": [
-                "außergewöhnliche",
-                "außergewöhnlich",
-                "außergewöhnlichen",
-                "außergewöhnlicher",
-                "außergewöhnliches",
-                "außergewöhnlichem",
-                "außergewöhnlichere",
-                "außergewöhnlichst",
-                "außergewöhnlichste"
+                {
+                    "text": "außergewöhnliche"
+                },
+                {
+                    "text": "außergewöhnlich"
+                },
+                {
+                    "text": "außergewöhnlichen"
+                },
+                {
+                    "text": "außergewöhnlicher"
+                },
+                {
+                    "text": "außergewöhnliches"
+                },
+                {
+                    "text": "außergewöhnlichem"
+                },
+                {
+                    "text": "außergewöhnlichere"
+                },
+                {
+                    "text": "außergewöhnlichst"
+                },
+                {
+                    "text": "außergewöhnlichste"
+                }
             ],
             "category": "orthography",
             "context": "Wir haben aussergewöhnliche Herausforderungen vor uns.",
             "end": 27,
-            "explanation": "❌ Orthographie",
+            "explanation": "Möglicher Tippfehler gefunden.",
+            "gravity": 1,
             "label": "Rechtschreibfehler",
-            "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
-            "solution": "Möglicher Tippfehler gefunden.",
             "start": 10,
             "subcategory": "orthography",
             "text": "aussergewöhnliche"
         },
         {
             "alternatives": [
-                "Neue Hürden",
-                "Schwierigkeiten",
-                "Komplexe Aufgaben",
-                "Brennende Fragen",
-                "Chancen, zu zeigen, was man kann"
+                {
+                    "text": "Neue Hürden"
+                },
+                {
+                    "text": "Schwierigkeiten"
+                },
+                {
+                    "text": "Komplexe Aufgaben"
+                },
+                {
+                    "text": "Brennende Fragen"
+                },
+                {
+                    "text": "Chancen, zu zeigen, was man kann"
+                }
             ],
             "category": "unconscious_bias",
             "context": "Wir haben aussergewöhnliche Herausforderungen vor uns.",
             "end": 45,
-            "explanation": "😒 schreckt Menschen mit kooperativer Einstellung ab",
+            "explanation": "😒 schreckt Menschen mit “wir”-Einstellung ab",
+            "gravity": 2,
             "label": "Sprachliche Voreingenommenheit: Agentisch",
-            "reason": "Unbewusst dem männlichen Geschlecht zugeschrieben. Viele werden davon abgestossen.",
-            "solution": "Teamorientierte Formulierung nutzen oder auf Sinnhaftigkeit einzahlend.",
             "start": 28,
             "subcategory": "agentic",
             "text": "Herausforderungen"
