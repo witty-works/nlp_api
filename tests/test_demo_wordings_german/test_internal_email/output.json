@@ -268,25 +268,22 @@
         {
             "alternatives": [
                 {
-                    "text": "Guten Tag, (Vorname) (Familienname)"
-                },
-                {
-                    "text": "Hallo (Vorname) (Familienname)"
-                },
-                {
-                    "text": "Liebe:r (Vorname) (Familienname)"
-                },
-                {
-                    "text": "Liebe/r (Vorname) (Familienname)"
-                },
-                {
-                    "text": "Guten Tag, liebe:r (Vorname) (Familienname)"
-                },
-                {
-                    "text": "Guten Tag, liebe/r (Vorname) (Familienname)"
-                },
-                {
                     "text": "Guten Tag"
+                },
+                {
+                    "text": "Hallo"
+                },
+                {
+                    "text": "Liebe:r"
+                },
+                {
+                    "text": "Liebe/r"
+                },
+                {
+                    "text": "Guten Tag, liebe:r"
+                },
+                {
+                    "text": "Guten Tag, liebe/r"
                 },
                 {
                     "text": "Liebe"
