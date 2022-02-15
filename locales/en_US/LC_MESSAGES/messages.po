@@ -258,7 +258,7 @@ msgid "rules.communal_solution"
 msgstr "Use more of such wording to express cooperation, care or purpose."
 
 msgid "rules.communal_explanation"
-msgstr "👍🏽 Emphasizes cooperative attributes"
+msgstr "✅ Emphasizes cooperative attributes"
 
 msgid "rules.corporate_rules_label"
 msgstr "Organization guideline"
@@ -301,7 +301,7 @@ msgstr ""
 "your company and that you are working towards an inclusive culture."
 
 msgid "rules.d_and_i_explanation"
-msgstr "👍🏽 Emphasizes value of diversity, equity and inclusion"
+msgstr "✅ Emphasizes value of diversity, equity and inclusion"
 
 msgid "rules.education_label"
 msgstr "Missing"
@@ -542,7 +542,7 @@ msgstr ""
 "diversity and inclusion."
 
 msgid "rules.inclusive_explanation"
-msgstr "👍🏽 Creates sense of belonging"
+msgstr "✅ Creates sense of belonging"
 
 msgid "rules.job_requirements_label"
 msgstr "Biased Requirements"
