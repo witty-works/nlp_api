@@ -60,7 +60,6 @@
                 }
             ],
             "category": "orthography",
-            "context": "",
             "end": 9,
             "explanation": "Möglicher Tippfehler gefunden.",
             "gravity": 1,
@@ -97,7 +96,6 @@
                 }
             ],
             "category": "gendered",
-            "context": "",
             "end": 16,
             "explanation": "😟 “Mitmeinen” mit männlichen Generikum funktioniert nicht",
             "gravity": 2,

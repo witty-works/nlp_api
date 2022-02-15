@@ -18,7 +18,6 @@
                 }
             ],
             "category": "orthography",
-            "context": "",
             "end": 8,
             "explanation": "Possible spelling mistake found.",
             "gravity": 1,
@@ -34,7 +33,6 @@
                 }
             ],
             "category": "orthography",
-            "context": "",
             "end": 56,
             "explanation": "Use “an” instead of ‘a’ if the following word starts with a vowel sound, e.g. ‘an article’, ‘an hour’.",
             "gravity": 1,
@@ -53,7 +51,6 @@
                 }
             ],
             "category": "orthography",
-            "context": "",
             "end": 144,
             "explanation": "Possible spelling mistake found.",
             "gravity": 1,
@@ -75,7 +72,6 @@
                 }
             ],
             "category": "gendered",
-            "context": "",
             "end": 63,
             "explanation": "💡 Image of a man unconsciously triggered",
             "gravity": 2,
@@ -100,7 +96,6 @@
                 }
             ],
             "category": "unconscious_bias",
-            "context": "",
             "end": 115,
             "explanation": "😒 hidden bias regarding age over 50",
             "gravity": 2,
