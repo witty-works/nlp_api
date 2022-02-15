@@ -4,83 +4,159 @@
     "results": [
         {
             "alternatives": [
-                "über",
-                "Weber",
-                "Leber",
-                "Geber",
-                "Heber",
-                "Hueber",
-                "aber",
-                "unter",
-                "neben",
-                "Meter",
-                "eher",
-                "geben",
-                "jeder",
-                "leben",
-                "neuer",
-                "Peter",
-                "jener",
-                "weder",
-                "Meer",
-                "derer"
+                {
+                    "text": "über"
+                },
+                {
+                    "text": "Weber"
+                },
+                {
+                    "text": "Leber"
+                },
+                {
+                    "text": "Geber"
+                },
+                {
+                    "text": "Heber"
+                },
+                {
+                    "text": "Hueber"
+                },
+                {
+                    "text": "aber"
+                },
+                {
+                    "text": "unter"
+                },
+                {
+                    "text": "neben"
+                },
+                {
+                    "text": "Meter"
+                },
+                {
+                    "text": "eher"
+                },
+                {
+                    "text": "geben"
+                },
+                {
+                    "text": "jeder"
+                },
+                {
+                    "text": "leben"
+                },
+                {
+                    "text": "neuer"
+                },
+                {
+                    "text": "Peter"
+                },
+                {
+                    "text": "jener"
+                },
+                {
+                    "text": "weder"
+                },
+                {
+                    "text": "Meer"
+                },
+                {
+                    "text": "derer"
+                }
             ],
             "category": "orthography",
-            "context": "",
             "end": 27,
-            "explanation": "❌ Orthographie",
+            "explanation": "Möglicher Tippfehler gefunden.",
+            "gravity": 1,
             "label": "Rechtschreibfehler",
-            "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
-            "solution": "Möglicher Tippfehler gefunden.",
             "start": 22,
             "subcategory": "orthography",
             "text": "ueber"
         },
         {
             "alternatives": [
-                "Straße",
-                "Straßen",
-                "Strauße",
-                "Ostrasse",
-                "Stresse",
-                "Strapse",
-                "Strass",
-                "Trasse",
-                "Straß",
-                "Adresse",
-                "Sträuße",
-                "Krasse",
-                "Straffe",
-                "Strafe",
-                "Strafte",
-                "Zulasse",
-                "Strauss",
-                "Stramme",
-                "Strauß",
-                "Stanze"
+                {
+                    "text": "Straße"
+                },
+                {
+                    "text": "Straßen"
+                },
+                {
+                    "text": "Strauße"
+                },
+                {
+                    "text": "Ostrasse"
+                },
+                {
+                    "text": "Stresse"
+                },
+                {
+                    "text": "Strapse"
+                },
+                {
+                    "text": "Strass"
+                },
+                {
+                    "text": "Trasse"
+                },
+                {
+                    "text": "Straß"
+                },
+                {
+                    "text": "Adresse"
+                },
+                {
+                    "text": "Sträuße"
+                },
+                {
+                    "text": "Krasse"
+                },
+                {
+                    "text": "Straffe"
+                },
+                {
+                    "text": "Strafe"
+                },
+                {
+                    "text": "Strafte"
+                },
+                {
+                    "text": "Zulasse"
+                },
+                {
+                    "text": "Strauss"
+                },
+                {
+                    "text": "Stramme"
+                },
+                {
+                    "text": "Strauß"
+                },
+                {
+                    "text": "Stanze"
+                }
             ],
             "category": "orthography",
-            "context": "",
             "end": 39,
-            "explanation": "❌ Orthographie",
+            "explanation": "Möglicher Tippfehler gefunden.",
+            "gravity": 1,
             "label": "Rechtschreibfehler",
-            "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
-            "solution": "Möglicher Tippfehler gefunden.",
             "start": 32,
             "subcategory": "orthography",
             "text": "Strasse"
         },
         {
             "alternatives": [
-                "!"
+                {
+                    "text": "!"
+                }
             ],
             "category": "orthography",
-            "context": "",
             "end": 42,
-            "explanation": "❌ Orthographie",
+            "explanation": "Die Verwendung von mehreren Frage- oder Ausrufezeichen wirkt oft übertrieben emphatisch.",
+            "gravity": 1,
             "label": "Orthographie",
-            "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
-            "solution": "Die Verwendung von mehreren Frage- oder Ausrufezeichen wirkt oft übertrieben emphatisch.",
             "start": 39,
             "subcategory": "orthography",
             "text": "!!!"

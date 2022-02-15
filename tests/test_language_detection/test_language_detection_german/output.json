@@ -4,49 +4,87 @@
     "results": [
         {
             "alternatives": [
-                "Liebe"
+                {
+                    "text": "Liebe"
+                }
             ],
             "category": "orthography",
-            "context": "",
             "end": 5,
-            "explanation": "❌ Orthographie",
+            "explanation": "Dieser Satz fängt nicht mit einem großgeschriebenen Wort an.",
+            "gravity": 1,
             "label": "Orthographie",
-            "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
-            "solution": "Dieser Satz fängt nicht mit einem großgeschriebenen Wort an.",
             "start": 0,
             "subcategory": "orthography",
             "text": "liebe"
         },
         {
             "alternatives": [
-                "Mensch",
-                "längs",
-                "Deng",
-                "menge",
-                "mengt",
-                "peng",
-                "Dengs",
-                "Längs",
-                "mengst",
-                "Hänsch",
-                "häng",
-                "ging",
-                "lang",
-                "sechs",
-                "wenig",
-                "Berg",
-                "Länge",
-                "hängt",
-                "Menge",
-                "genug"
+                {
+                    "text": "Mensch"
+                },
+                {
+                    "text": "längs"
+                },
+                {
+                    "text": "Deng"
+                },
+                {
+                    "text": "menge"
+                },
+                {
+                    "text": "mengt"
+                },
+                {
+                    "text": "peng"
+                },
+                {
+                    "text": "Dengs"
+                },
+                {
+                    "text": "Längs"
+                },
+                {
+                    "text": "mengst"
+                },
+                {
+                    "text": "Hänsch"
+                },
+                {
+                    "text": "häng"
+                },
+                {
+                    "text": "ging"
+                },
+                {
+                    "text": "lang"
+                },
+                {
+                    "text": "sechs"
+                },
+                {
+                    "text": "wenig"
+                },
+                {
+                    "text": "Berg"
+                },
+                {
+                    "text": "Länge"
+                },
+                {
+                    "text": "hängt"
+                },
+                {
+                    "text": "Menge"
+                },
+                {
+                    "text": "genug"
+                }
             ],
             "category": "orthography",
-            "context": "",
             "end": 12,
-            "explanation": "❌ Orthographie",
+            "explanation": "Möglicher Tippfehler gefunden.",
+            "gravity": 1,
             "label": "Rechtschreibfehler",
-            "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
-            "solution": "Möglicher Tippfehler gefunden.",
             "start": 6,
             "subcategory": "orthography",
             "text": "mensch"
@@ -54,12 +92,9 @@
         {
             "alternatives": [],
             "category": "inclusive",
-            "context": "",
             "end": 5,
-            "explanation": "👍🏽 Betont kooperative Eigenschaften",
+            "explanation": "✅ Betont kooperative Eigenschaften",
             "label": "Inklusiv: Kommunal",
-            "reason": "Betont kooperative, mitfühlende oder unterstützende Eigenschaften und damit inklusive Attribute.",
-            "solution": "Verwenden Sie mehr solcher Formulierungen, um Kooperation, Unterstützung oder Sinnhaftigkeit auszudrücken.",
             "start": 0,
             "subcategory": "communal",
             "text": "liebe"

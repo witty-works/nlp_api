@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-02-07 10:38\n"
-"PO-Revision-Date: 2022-02-07 10:38\n"
+"POT-Creation-Date: 2022-02-15 15:00\n"
+"PO-Revision-Date: 2022-02-15 15:00\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 msgid "rules.abbreviation_label"
-msgstr "Missing"
+msgstr "Abkürzung"
 
 msgid "rules.abbreviation_reason"
 msgstr "Missing"
@@ -21,7 +21,7 @@ msgid "rules.abbreviation_solution"
 msgstr "Missing"
 
 msgid "rules.abbreviation_explanation"
-msgstr "😉 Sicher, dass das Lesende verstehen?"
+msgstr "😉 Abkürzung: Sicher, dass das Lesende verstehen?"
 
 msgid "rules.ability_label"
 msgstr "Fähigkeiten"
@@ -122,7 +122,7 @@ msgstr ""
 "Teamorientierte Formulierung nutzen oder auf Sinnhaftigkeit einzahlend."
 
 msgid "rules.agentic_explanation"
-msgstr "😒 schreckt Menschen mit kooperativer Einstellung ab"
+msgstr "😒 schreckt Menschen mit “wir”-Einstellung ab"
 
 msgid "rules.americanism_label"
 msgstr "Amerikanismen / Anglizismen"
@@ -267,7 +267,7 @@ msgstr ""
 "oder Sinnhaftigkeit auszudrücken."
 
 msgid "rules.communal_explanation"
-msgstr "👍🏽 Betont kooperative Eigenschaften"
+msgstr "✅ Betont kooperative Eigenschaften"
 
 msgid "rules.corporate_rules_label"
 msgstr "Organisations-Leitlinie"
@@ -311,7 +311,7 @@ msgstr ""
 "Diversität erwünscht ist und Sie auf eine inklusive Kultur hin arbeiten."
 
 msgid "rules.d_and_i_explanation"
-msgstr "👍🏽 Bestärkt Wert von Diversity, Gleichstellung und Inklusion"
+msgstr "✅ Bestärkt Wert von Diversity, Gleichstellung und Inklusion"
 
 msgid "rules.education_label"
 msgstr "Missing"
@@ -349,7 +349,7 @@ msgid "rules.exaggerating_solution"
 msgstr "Verwenden Sie eine authentisch und ehrlich klingende Aussage."
 
 msgid "rules.exaggerating_explanation"
-msgstr "😮‍💨 Superlative erzeugen Druck"
+msgstr "😮‍💨 Superlative: als Druck oder Arroganz wahrgenommen"
 
 msgid "rules.female_stereotype_label"
 msgstr "Weiblicher Stereotyp"
@@ -569,7 +569,7 @@ msgstr ""
 "Sinnhaftigkeit und das Ziel von Diversität und Inklusion auszudrücken."
 
 msgid "rules.inclusive_explanation"
-msgstr "👍🏽 Lässt Zugehörigkeitsgefühl entstehen"
+msgstr "✅ Lässt Zugehörigkeitsgefühl entstehen"
 
 msgid "rules.job_requirements_label"
 msgstr "Voreingenommene Anforderungen"

@@ -5,38 +5,68 @@
         {
             "alternatives": [
                 {
-                    "text": "KundIn"
+                    "text": "suchen"
                 },
                 {
-                    "text": "Kundin/Kunde"
+                    "text": "sucht"
                 },
                 {
-                    "text": "Kundschaft"
+                    "text": "such"
                 },
                 {
-                    "text": "Klientel"
+                    "text": "suche"
                 },
                 {
-                    "text": "Auftraggebende"
+                    "text": "auch"
                 },
                 {
-                    "text": "Bestellende"
+                    "text": "sich"
                 },
                 {
-                    "text": "Beziehende Person"
+                    "text": "schon"
                 },
                 {
-                    "text": "Beauftragende Firma"
+                    "text": "sechs"
+                },
+                {
+                    "text": "zog"
+                },
+                {
+                    "text": "wuchs"
+                },
+                {
+                    "text": "zehn"
+                },
+                {
+                    "text": "Buch"
+                },
+                {
+                    "text": "Zuge"
+                },
+                {
+                    "text": "sog"
+                },
+                {
+                    "text": "zogen"
+                },
+                {
+                    "text": "Augen"
+                },
+                {
+                    "text": "Zug"
+                },
+                {
+                    "text": "Züge"
                 }
             ],
-            "category": "gendered",
-            "end": 11,
-            "explanation": "😟 “Mitmeinen” mit männlichen Generikum funktioniert nicht",
-            "gravity": 2,
-            "label": "Geschlechtsspezifisch: Titel",
-            "start": 6,
-            "subcategory": "titles",
-            "text": "Kunde"
+            "category": "orthography",
+            "end": 9,
+            "explanation": "Möglicher Tippfehler gefunden.",
+            "gravity": 1,
+            "label": "Rechtschreibfehler",
+            "start": 4,
+            "subcategory": "orthography",
+            "text": "suchn"
         },
         {
             "alternatives": [
@@ -47,7 +77,7 @@
                     "text": "Bestellende"
                 },
                 {
-                    "text": "KundInnen"
+                    "text": "Kund:innen"
                 },
                 {
                     "text": "Kundinnen und Kunden"
@@ -66,11 +96,11 @@
                 }
             ],
             "category": "gendered",
-            "end": 37,
+            "end": 16,
             "explanation": "😟 “Mitmeinen” mit männlichen Generikum funktioniert nicht",
             "gravity": 2,
             "label": "Geschlechtsspezifisch: Titel",
-            "start": 31,
+            "start": 10,
             "subcategory": "titles",
             "text": "Kunden"
         }

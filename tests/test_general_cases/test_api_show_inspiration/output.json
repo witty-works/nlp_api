@@ -1,0 +1,37 @@
+{
+    "language": "en",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "press officer"
+                },
+                {
+                    "text": "spokesperson"
+                },
+                {
+                    "context": "if gender is known",
+                    "text": "spokeswoman"
+                },
+                {
+                    "text": "they"
+                },
+                {
+                    "text": "press officers"
+                },
+                {
+                    "text": "spokespersons"
+                }
+            ],
+            "category": "gendered",
+            "end": 30,
+            "explanation": "💡 Image of a man unconsciously triggered",
+            "gravity": 2,
+            "label": "Gendered: Special functions",
+            "start": 21,
+            "subcategory": "function",
+            "text": "spokesman"
+        }
+    ]
+}

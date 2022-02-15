@@ -4,21 +4,33 @@
     "results": [
         {
             "alternatives": [
-                "like",
-                "wiki",
-                "Loki",
-                "lii",
-                "Kiki",
-                "Niki",
-                "tiki"
+                {
+                    "text": "like"
+                },
+                {
+                    "text": "wiki"
+                },
+                {
+                    "text": "Loki"
+                },
+                {
+                    "text": "lii"
+                },
+                {
+                    "text": "Kiki"
+                },
+                {
+                    "text": "Niki"
+                },
+                {
+                    "text": "tiki"
+                }
             ],
             "category": "orthography",
-            "context": "",
             "end": 6,
-            "explanation": "❌ Orthography",
+            "explanation": "Possible spelling mistake found.",
+            "gravity": 1,
             "label": "Spelling mistake",
-            "reason": "Correct any spelling or grammatical errors to maximize the impact of their writing.",
-            "solution": "Possible spelling mistake found.",
             "start": 2,
             "subcategory": "orthography",
             "text": "liki"

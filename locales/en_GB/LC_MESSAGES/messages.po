@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-02-07 10:38\n"
-"PO-Revision-Date: 2022-02-07 10:38\n"
+"POT-Creation-Date: 2022-02-15 15:00\n"
+"PO-Revision-Date: 2022-02-15 15:00\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 msgid "rules.abbreviation_label"
-msgstr "Missing"
+msgstr "Abbreviation"
 
 msgid "rules.abbreviation_reason"
 msgstr "Missing"
@@ -21,7 +21,7 @@ msgid "rules.abbreviation_solution"
 msgstr "Missing"
 
 msgid "rules.abbreviation_explanation"
-msgstr "😉 Sure your readers understand?"
+msgstr "😉 Abbreviation: Sure your readers understand?"
 
 msgid "rules.ability_label"
 msgstr "Ability"
@@ -117,7 +117,7 @@ msgid "rules.agentic_solution"
 msgstr "Use team-oriented wording or referring to purpose."
 
 msgid "rules.agentic_explanation"
-msgstr "😒 deterring people with cooperative mindset"
+msgstr "😒 deters people with a “we” mindset"
 
 msgid "rules.americanism_label"
 msgstr "Americanism"
@@ -131,7 +131,7 @@ msgid "rules.americanism_solution"
 msgstr "Use a word in your text's language."
 
 msgid "rules.americanism_explanation"
-msgstr "😉 Americanism: sure your readers understand?"
+msgstr "😉 Americanism: Sure your readers understand?"
 
 msgid "rules.antimuslim_label"
 msgstr "Islamophobia"
@@ -258,7 +258,7 @@ msgid "rules.communal_solution"
 msgstr "Use more of such wording to express cooperation, care or purpose."
 
 msgid "rules.communal_explanation"
-msgstr "👍🏽 Emphasizes cooperative attributes"
+msgstr "✅ Emphasizes cooperative attributes"
 
 msgid "rules.corporate_rules_label"
 msgstr "Organization guideline"
@@ -301,7 +301,7 @@ msgstr ""
 "your company and that you are working towards an inclusive culture."
 
 msgid "rules.d_and_i_explanation"
-msgstr "👍🏽 Emphasizes value of diversity, equity and inclusion"
+msgstr "✅ Emphasizes value of diversity, equity and inclusion"
 
 msgid "rules.education_label"
 msgstr "Missing"
@@ -337,7 +337,7 @@ msgid "rules.exaggerating_solution"
 msgstr "Use an authentic and honest sounding statement."
 
 msgid "rules.exaggerating_explanation"
-msgstr "😮‍💨 Creating pressure through exaggeration"
+msgstr "😮‍💨 Exaggeration: perceived as pressure or arrogance"
 
 msgid "rules.female_stereotype_label"
 msgstr "Female Stereotype"
@@ -542,7 +542,7 @@ msgstr ""
 "diversity and inclusion."
 
 msgid "rules.inclusive_explanation"
-msgstr "👍🏽 Creates sense of belonging"
+msgstr "✅ Creates sense of belonging"
 
 msgid "rules.job_requirements_label"
 msgstr "Biased Requirements"

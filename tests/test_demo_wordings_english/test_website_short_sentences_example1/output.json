@@ -7,31 +7,42 @@
             "category": "inclusive",
             "context": "We support high performance employees.",
             "end": 10,
-            "explanation": "👍🏽 Emphasizes cooperative attributes",
+            "explanation": "✅ Emphasizes cooperative attributes",
             "label": "Inclusive: Communal",
-            "reason": "Emphasizes cooperative, compassionate or supportive characteristics and thus inclusive attributes.",
-            "solution": "Use more of such wording to express cooperation, care or purpose.",
             "start": 3,
             "subcategory": "communal",
             "text": "support"
         },
         {
             "alternatives": [
-                "effectiveness",
-                "accomplishments",
-                "capabilities",
-                "fulfillment",
-                "efficiency",
-                "running",
-                "capacity"
+                {
+                    "text": "effectiveness"
+                },
+                {
+                    "text": "accomplishments"
+                },
+                {
+                    "text": "capabilities"
+                },
+                {
+                    "text": "fulfillment"
+                },
+                {
+                    "text": "efficiency"
+                },
+                {
+                    "text": "running"
+                },
+                {
+                    "text": "capacity"
+                }
             ],
             "category": "unconscious_bias",
             "context": "We support high performance employees.",
             "end": 27,
-            "explanation": "😒 deterring people with cooperative mindset",
+            "explanation": "😒 deters people with a “we” mindset",
+            "gravity": 2,
             "label": "Biased language: Agentic",
-            "reason": "Unconsciously attributed to the male stereotype. Many do not feel attracted by these terms.",
-            "solution": "Use team-oriented wording or referring to purpose.",
             "start": 16,
             "subcategory": "agentic",
             "text": "performance"

@@ -4,35 +4,47 @@
     "results": [
         {
             "alternatives": [
-                "Helo"
+                {
+                    "text": "Helo"
+                }
             ],
             "category": "orthography",
             "context": "\n\nhelo ninja",
             "end": 6,
-            "explanation": "❌ Orthography",
+            "explanation": "This sentence does not start with an uppercase letter.",
+            "gravity": 1,
             "label": "Orthography",
-            "reason": "Correct any spelling or grammatical errors to maximize the impact of their writing.",
-            "solution": "This sentence does not start with an uppercase letter.",
             "start": 2,
             "subcategory": "orthography",
             "text": "helo"
         },
         {
             "alternatives": [
-                "dedicated",
-                "committed",
-                "person who continues despite difficulties",
-                "someone devoted to their purpose",
-                "someone who sticks to their goal",
-                "someone willing to see things through"
+                {
+                    "text": "dedicated"
+                },
+                {
+                    "text": "committed"
+                },
+                {
+                    "text": "person who continues despite difficulties"
+                },
+                {
+                    "text": "someone devoted to their purpose"
+                },
+                {
+                    "text": "someone who sticks to their goal"
+                },
+                {
+                    "text": "someone willing to see things through"
+                }
             ],
             "category": "style",
             "context": "\n\nhelo ninja",
             "end": 12,
-            "explanation": "😮‍💨 Creating pressure through exaggeration",
+            "explanation": "😮‍💨 Exaggeration: perceived as pressure or arrogance",
+            "gravity": 2,
             "label": "Style: Exaggeration",
-            "reason": "Communicates that people have to conform to these superlatives.",
-            "solution": "Use an authentic and honest sounding statement.",
             "start": 7,
             "subcategory": "exaggerating",
             "text": "ninja"

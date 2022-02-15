@@ -4,84 +4,102 @@
     "results": [
         {
             "alternatives": [
-                "Sitar",
-                "Siar",
-                "Sizar",
-                "Si war"
+                {
+                    "text": "Sitar"
+                },
+                {
+                    "text": "Siar"
+                },
+                {
+                    "text": "Sizar"
+                },
+                {
+                    "text": "Si war"
+                }
             ],
             "category": "orthography",
-            "context": "",
             "end": 8,
-            "explanation": "❌ Orthography",
+            "explanation": "Possible spelling mistake found.",
+            "gravity": 1,
             "label": "Spelling mistake",
-            "reason": "Correct any spelling or grammatical errors to maximize the impact of their writing.",
-            "solution": "Possible spelling mistake found.",
             "start": 3,
             "subcategory": "orthography",
             "text": "Siwar"
         },
         {
             "alternatives": [
-                "an"
+                {
+                    "text": "an"
+                }
             ],
             "category": "orthography",
-            "context": "",
             "end": 56,
-            "explanation": "❌ Orthography",
+            "explanation": "Use “an” instead of ‘a’ if the following word starts with a vowel sound, e.g. ‘an article’, ‘an hour’.",
+            "gravity": 1,
             "label": "Wrong article",
-            "reason": "Correct any spelling or grammatical errors to maximize the impact of their writing.",
-            "solution": "Use “an” instead of ‘a’ if the following word starts with a vowel sound, e.g. ‘an article’, ‘an hour’.",
             "start": 55,
             "subcategory": "orthography",
             "text": "a"
         },
         {
             "alternatives": [
-                "Rehearing",
-                "Richening"
+                {
+                    "text": "Rehearing"
+                },
+                {
+                    "text": "Richening"
+                }
             ],
             "category": "orthography",
-            "context": "",
             "end": 144,
-            "explanation": "❌ Orthography",
+            "explanation": "Possible spelling mistake found.",
+            "gravity": 1,
             "label": "Spelling mistake",
-            "reason": "Correct any spelling or grammatical errors to maximize the impact of their writing.",
-            "solution": "Possible spelling mistake found.",
             "start": 134,
             "subcategory": "orthography",
             "text": "Riehenring"
         },
         {
             "alternatives": [
-                "they",
-                "internship",
-                "interns"
+                {
+                    "text": "they"
+                },
+                {
+                    "text": "internship"
+                },
+                {
+                    "text": "interns"
+                }
             ],
             "category": "gendered",
-            "context": "",
             "end": 63,
             "explanation": "💡 Image of a man unconsciously triggered",
+            "gravity": 2,
             "label": "Gendered: Special functions",
-            "reason": "For economic-historical reasons, an image of a man is unconsciously evoked in front of the inner eye, even if the term is linguistically neutral. The female gender or other gender identities do not become visible. And they will not feel to belong in this setting.",
-            "solution": "In order to provoke an inclusive image, be not only linguistically, but also mentally neutral in your formulation. Rather use a noun that describes the activity. Or use a denomination that is truly gender-neutral.",
             "start": 57,
             "subcategory": "function",
             "text": "intern"
         },
         {
             "alternatives": [
-                "Older person",
-                "Retiree",
-                "Someone with outdated views",
-                "Person with traditional views"
+                {
+                    "text": "Older person"
+                },
+                {
+                    "text": "Retiree"
+                },
+                {
+                    "text": "Someone with outdated views"
+                },
+                {
+                    "text": "Person with traditional views"
+                }
             ],
             "category": "unconscious_bias",
-            "context": "",
             "end": 115,
             "explanation": "😒 hidden bias regarding age over 50",
+            "gravity": 2,
             "label": "Biased language: 50 years and older",
-            "reason": "Outdated hidden or even discriminatory wording pigeonholing people 50 years or older.",
-            "solution": "Ask yourself \"What would I write if this person was 35 years old?\"",
             "start": 109,
             "subcategory": "age_old",
             "text": "Fossil"

@@ -4,40 +4,57 @@
     "results": [
         {
             "alternatives": [
-                "Jemand, der erfahren und fachkundig ist",
-                "Jemand mit Know-how und Erfahrung",
-                "Mensch, der seine Fachkenntnis ständig vertieft"
+                {
+                    "text": "Jemand, der erfahren und fachkundig ist"
+                },
+                {
+                    "text": "Jemand mit Know-how und Erfahrung"
+                },
+                {
+                    "text": "Mensch, der seine Fachkenntnis ständig vertieft"
+                }
             ],
             "category": "gendered",
-            "context": "",
             "end": 16,
             "explanation": "💡 Bild eines Mannes wird unbewusst ausgelöst",
+            "gravity": 2,
             "label": "Geschlechtsspezifisch: Spezielle Funktionen",
-            "reason": "Aus wirtschaftlich-historischen Gründen wird unbewusst ein Bild eines Mannes vor dem inneren Auge hervorgerufen. Das weibliche Geschlecht oder andere Geschlechtsidentitäten werden nicht sichtbar. Und sie fühlen sich nicht zugehörig.",
-            "solution": "Umgehen Sie mit anderen Worten das unbewusst hervorgerufene Bild. Nutzen Sie eher das Nomen, das die Tätigkeit bezeichnet, um das unbewusste Bild zu umgehen. Oder verwenden Sie eine geschlechtsneutrale Bezeichnung.",
             "start": 11,
             "subcategory": "function",
             "text": "Ninja"
         },
         {
             "alternatives": [
-                "Auftraggebende",
-                "Bestellende",
-                "Kund:innen",
-                "Kundinnen und Kunden",
-                "Kundschaft",
-                "Klientel",
-                "Beziehende Personen",
-                "Personen, die (...) kaufen",
-                "Beauftragende Firmen"
+                {
+                    "text": "Auftraggebende"
+                },
+                {
+                    "text": "Bestellende"
+                },
+                {
+                    "text": "Kund:innen"
+                },
+                {
+                    "text": "Kundinnen und Kunden"
+                },
+                {
+                    "text": "Kundschaft"
+                },
+                {
+                    "text": "Klientel"
+                },
+                {
+                    "text": "Beziehende Personen"
+                },
+                {
+                    "text": "Beauftragende Firmen"
+                }
             ],
             "category": "gendered",
-            "context": "",
             "end": 48,
             "explanation": "😟 “Mitmeinen” mit männlichen Generikum funktioniert nicht",
+            "gravity": 2,
             "label": "Geschlechtsspezifisch: Titel",
-            "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
-            "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht.",
             "start": 42,
             "subcategory": "titles",
             "text": "Kunden"
