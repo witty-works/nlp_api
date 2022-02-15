@@ -358,7 +358,7 @@ class ResultOut(BaseModel):
                 if "---" in alternative:
                     alternative, alternative_context = alternative.split("---")
                     alternative = alternative.strip()
-                    alternative_context = context.strip()
+                    alternative_context = alternative_context.strip()
 
                 if is_upper:
                     alternative = string.capwords(alternative[0:1]) + alternative[1:]
