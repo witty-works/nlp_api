@@ -9,7 +9,6 @@
                 }
             ],
             "category": "orthography",
-            "context": "",
             "end": 5,
             "explanation": "Dieser Satz fängt nicht mit einem großgeschriebenen Wort an.",
             "gravity": 1,
@@ -82,7 +81,6 @@
                 }
             ],
             "category": "orthography",
-            "context": "",
             "end": 12,
             "explanation": "Möglicher Tippfehler gefunden.",
             "gravity": 1,
@@ -94,7 +92,6 @@
         {
             "alternatives": [],
             "category": "inclusive",
-            "context": "",
             "end": 5,
             "explanation": "✅ Betont kooperative Eigenschaften",
             "label": "Inklusiv: Kommunal",

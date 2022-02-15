@@ -265,7 +265,7 @@ class ResultOutOld(BaseModel):
 
 class ResultOut(BaseModel):
     text: str
-    context: str
+    context: Optional[str]
     category: str
     subcategory: str
     start: int
@@ -297,8 +297,10 @@ class ResultOut(BaseModel):
             context_start = max(int(start) - 100, 0)
             context_end = min(int(end) + 100, len(full_text))
             context = full_text[context_start:context_end]
-        else:
+        elif version == 1.0:
             context = ""
+        else:
+            context = None
 
         params = {}
         if subcategory == "gendered_denominations_ending":

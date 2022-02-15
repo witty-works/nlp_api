@@ -15,7 +15,6 @@
                 }
             ],
             "category": "gendered",
-            "context": "",
             "end": 24,
             "explanation": "💡 Bild eines Mannes wird unbewusst ausgelöst",
             "gravity": 2,
@@ -34,7 +33,6 @@
                 }
             ],
             "category": "gendered",
-            "context": "",
             "end": 16,
             "explanation": "💡 Bild eines Mannes wird unbewusst ausgelöst",
             "gravity": 2,
@@ -80,7 +78,6 @@
                 }
             ],
             "category": "gendered",
-            "context": "",
             "end": 38,
             "explanation": "😟 Traditionelles Führungs-Vokabular",
             "gravity": 2,
