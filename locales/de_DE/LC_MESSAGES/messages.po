@@ -267,7 +267,7 @@ msgstr ""
 "oder Sinnhaftigkeit auszudrücken."
 
 msgid "rules.communal_explanation"
-msgstr "👍🏽 Betont kooperative Eigenschaften"
+msgstr "✅ Betont kooperative Eigenschaften"
 
 msgid "rules.corporate_rules_label"
 msgstr "Organisations-Leitlinie"
@@ -311,7 +311,7 @@ msgstr ""
 "Diversität erwünscht ist und Sie auf eine inklusive Kultur hin arbeiten."
 
 msgid "rules.d_and_i_explanation"
-msgstr "👍🏽 Bestärkt Wert von Diversity, Gleichstellung und Inklusion"
+msgstr "✅ Bestärkt Wert von Diversity, Gleichstellung und Inklusion"
 
 msgid "rules.education_label"
 msgstr "Missing"
@@ -569,7 +569,7 @@ msgstr ""
 "Sinnhaftigkeit und das Ziel von Diversität und Inklusion auszudrücken."
 
 msgid "rules.inclusive_explanation"
-msgstr "👍🏽 Lässt Zugehörigkeitsgefühl entstehen"
+msgstr "✅ Lässt Zugehörigkeitsgefühl entstehen"
 
 msgid "rules.job_requirements_label"
 msgstr "Voreingenommene Anforderungen"
