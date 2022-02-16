@@ -6,6 +6,7 @@ import gettext
 import string
 
 from app.categories import categories
+from app.settings import get_settings
 
 
 class Language(object):
@@ -250,6 +251,12 @@ class ResultAlternative(BaseModel):
     context: Optional[str]
 
 
+class ResultExplanation(BaseModel):
+    text: str
+    icon: Optional[str]
+    url: Optional[str]
+
+
 class ResultOutOld(BaseModel):
     text: str
     context: str
@@ -272,7 +279,7 @@ class ResultOut(BaseModel):
     end: int
     alternatives: List[ResultAlternative]
     label: str
-    explanation: str
+    explanation: ResultExplanation
     gravity: Optional[int]
 
     def factory(
@@ -318,11 +325,30 @@ class ResultOut(BaseModel):
             else lang._("rules." + subcategory + "_solution", params)
         )
 
-        explanation = (
-            explanation
-            if explanation != None
-            else lang._("rules." + subcategory + "_explanation", params)
-        )
+        if explanation != None:
+            icon, explanation = ResultOut.parseExplanation(explanation)
+            if icon == None:
+                icon, foo = ResultOut.parseExplanation(
+                    lang._("rules." + subcategory + "_explanation", params)
+                )
+        else:
+            icon, explanation = ResultOut.parseExplanation(
+                lang._("rules." + subcategory + "_explanation", params)
+            )
+
+        if category != "orthography":
+            settings = get_settings()
+            url = (
+                settings.learning_bites_base_url
+                + "/"
+                + lang.lang
+                + "/"
+                + category
+                + "#"
+                + subcategory
+            )
+        else:
+            url = None
 
         gravity = gravity if gravity != None else categories[subcategory]["gravity"]
 
@@ -432,6 +458,12 @@ class ResultOut(BaseModel):
                 solution=solution,
             )
 
+        explanation = {
+            "text": explanation,
+            "icon": icon,
+            "url": url,
+        }
+
         return ResultOut(
             text=text,
             context=context,
@@ -446,6 +478,17 @@ class ResultOut(BaseModel):
         )
 
     factory = staticmethod(factory)
+
+    @staticmethod
+    def parseExplanation(explanation):
+        icon = None
+        explanation = explanation.strip()
+        pipe_sign_position = explanation.find("|")
+        if pipe_sign_position != -1:
+            icon = explanation[0:pipe_sign_position]
+            explanation = explanation[pipe_sign_position + 1 :]
+
+        return icon, explanation
 
     @staticmethod
     def isInspirationAlternative(alternative):

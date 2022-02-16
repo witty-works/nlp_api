@@ -23,7 +23,11 @@
             "category": "gendered",
             "context": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you wi",
             "end": 33,
-            "explanation": "😟 Male generic doesn’t address all genders",
+            "explanation": {
+                "icon": "😟",
+                "text": "Male generic doesn’t address all genders",
+                "url": "https://www.witty.works/en/gendered#titles"
+            },
             "gravity": 2,
             "label": "Gendered: Titles",
             "start": 18,
@@ -35,7 +39,11 @@
             "category": "inclusive",
             "context": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
             "end": 94,
-            "explanation": "✅ Emphasizes cooperative attributes",
+            "explanation": {
+                "icon": "✅",
+                "text": "Emphasizes cooperative attributes",
+                "url": "https://www.witty.works/en/inclusive#communal"
+            },
             "label": "Inclusive: Communal",
             "start": 86,
             "subcategory": "communal",
@@ -50,7 +58,11 @@
             "category": "style",
             "context": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
             "end": 69,
-            "explanation": "😮‍💨 Exaggeration: perceived as pressure or arrogance",
+            "explanation": {
+                "icon": "😮‍💨",
+                "text": "Exaggeration: Perceived as pressure or arrogance",
+                "url": "https://www.witty.works/en/style#exaggerating"
+            },
             "gravity": 2,
             "label": "Style: Exaggeration",
             "start": 58,
@@ -75,7 +87,11 @@
             "category": "style",
             "context": "rking on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
             "end": 164,
-            "explanation": "😮‍💨 Exaggeration: perceived as pressure or arrogance",
+            "explanation": {
+                "icon": "😮‍💨",
+                "text": "Exaggeration: Perceived as pressure or arrogance",
+                "url": "https://www.witty.works/en/style#exaggerating"
+            },
             "gravity": 2,
             "label": "Style: Exaggeration",
             "start": 149,
@@ -106,7 +122,11 @@
             "category": "unconscious_bias",
             "context": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious co",
             "end": 17,
-            "explanation": "😒 deters people with a “we” mindset",
+            "explanation": {
+                "icon": "😒",
+                "text": "Deters people with a “we” mindset",
+                "url": "https://www.witty.works/en/unconscious_bias#agentic"
+            },
             "gravity": 2,
             "label": "Biased language: Agentic",
             "start": 6,
@@ -134,7 +154,11 @@
             "category": "unconscious_bias",
             "context": " independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
             "end": 114,
-            "explanation": "😒 deters people with a “we” mindset",
+            "explanation": {
+                "icon": "😒",
+                "text": "Deters people with a “we” mindset",
+                "url": "https://www.witty.works/en/unconscious_bias#agentic"
+            },
             "gravity": 2,
             "label": "Biased language: Agentic",
             "start": 105,
@@ -168,7 +192,11 @@
             "category": "unconscious_bias",
             "context": "g on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
             "end": 164,
-            "explanation": "😒 deters people with a “we” mindset",
+            "explanation": {
+                "icon": "😒",
+                "text": "Deters people with a “we” mindset",
+                "url": "https://www.witty.works/en/unconscious_bias#agentic"
+            },
             "gravity": 2,
             "label": "Biased language: Agentic",
             "start": 153,

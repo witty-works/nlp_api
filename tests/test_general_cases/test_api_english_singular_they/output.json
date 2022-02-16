@@ -10,7 +10,11 @@
             ],
             "category": "unconscious_bias",
             "end": 14,
-            "explanation": "😟 Pronouns according to binary normative",
+            "explanation": {
+                "icon": "😟",
+                "text": "Pronouns according to binary normative",
+                "url": "https://www.witty.works/en/unconscious_bias#binary_pronouns"
+            },
             "gravity": 2,
             "label": "Biased language: Binary Pronouns",
             "start": 12,

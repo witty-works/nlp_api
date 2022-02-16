@@ -16,7 +16,11 @@
             ],
             "category": "gendered",
             "end": 24,
-            "explanation": "💡 Bild eines Mannes wird unbewusst ausgelöst",
+            "explanation": {
+                "icon": "💡",
+                "text": "Bild eines Mannes wird unbewusst ausgelöst",
+                "url": "https://www.witty.works/de/gendered#function"
+            },
             "gravity": 2,
             "label": "Geschlechtsspezifisch: Spezielle Funktionen",
             "start": 17,
@@ -34,7 +38,11 @@
             ],
             "category": "gendered",
             "end": 16,
-            "explanation": "💡 Bild eines Mannes wird unbewusst ausgelöst",
+            "explanation": {
+                "icon": "💡",
+                "text": "Bild eines Mannes wird unbewusst ausgelöst",
+                "url": "https://www.witty.works/de/gendered#function"
+            },
             "gravity": 2,
             "label": "Geschlechtsspezifisch: Spezielle Funktionen",
             "start": 13,
@@ -79,7 +87,11 @@
             ],
             "category": "gendered",
             "end": 38,
-            "explanation": "😟 Traditionelles Führungs-Vokabular",
+            "explanation": {
+                "icon": "😟",
+                "text": "Traditionelles Führungs-Vokabular",
+                "url": "https://www.witty.works/de/gendered#leadership"
+            },
             "gravity": 2,
             "label": "Geschlechtsspezifisch: Führungsstereotyp",
             "start": 34,

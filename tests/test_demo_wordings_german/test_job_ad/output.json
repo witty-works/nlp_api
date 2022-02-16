@@ -20,7 +20,11 @@
             "category": "gendered",
             "context": "Als selbstständiger Projektleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollege",
             "end": 33,
-            "explanation": "😟 “Mitmeinen” mit männlichen Generikum funktioniert nicht",
+            "explanation": {
+                "icon": "😟",
+                "text": "“Mitmeinen” mit männlichen Generikum funktioniert nicht",
+                "url": "https://www.witty.works/de/gendered#titles"
+            },
             "gravity": 2,
             "label": "Geschlechtsspezifisch: Titel",
             "start": 20,
@@ -54,7 +58,11 @@
             "category": "gendered",
             "context": "tleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielstrebig\nneue Höchstleistungen.",
             "end": 134,
-            "explanation": "😟 “Mitmeinen” mit männlichen Generikum funktioniert nicht",
+            "explanation": {
+                "icon": "😟",
+                "text": "“Mitmeinen” mit männlichen Generikum funktioniert nicht",
+                "url": "https://www.witty.works/de/gendered#titles"
+            },
             "gravity": 2,
             "label": "Geschlechtsspezifisch: Titel",
             "start": 126,
@@ -88,7 +96,11 @@
             "category": "unconscious_bias",
             "context": "Als selbstständiger Projektleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielst",
             "end": 41,
-            "explanation": "😒 schreckt Menschen mit “wir”-Einstellung ab",
+            "explanation": {
+                "icon": "😒",
+                "text": "Schreckt Menschen mit “wir”-Einstellung ab",
+                "url": "https://www.witty.works/de/unconscious_bias#agentic"
+            },
             "gravity": 2,
             "label": "Sprachliche Voreingenommenheit: Agentisch",
             "start": 34,
@@ -122,7 +134,11 @@
             "category": "unconscious_bias",
             "context": "tändiger Projektleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielstrebig\nneue Höchstleistungen.",
             "end": 125,
-            "explanation": "😒 schreckt Menschen mit “wir”-Einstellung ab",
+            "explanation": {
+                "icon": "😒",
+                "text": "Schreckt Menschen mit “wir”-Einstellung ab",
+                "url": "https://www.witty.works/de/unconscious_bias#agentic"
+            },
             "gravity": 2,
             "label": "Sprachliche Voreingenommenheit: Agentisch",
             "start": 111,
@@ -153,7 +169,11 @@
             "category": "unconscious_bias",
             "context": "eisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielstrebig\nneue Höchstleistungen.",
             "end": 146,
-            "explanation": "😒 schreckt Menschen mit “wir”-Einstellung ab",
+            "explanation": {
+                "icon": "😒",
+                "text": "Schreckt Menschen mit “wir”-Einstellung ab",
+                "url": "https://www.witty.works/de/unconscious_bias#agentic"
+            },
             "gravity": 2,
             "label": "Sprachliche Voreingenommenheit: Agentisch",
             "start": 135,
@@ -165,7 +185,11 @@
             "category": "inclusive",
             "context": "Als selbstständiger Projektleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielstrebig\nneue Höchstleistungen.",
             "end": 93,
-            "explanation": "✅ Betont kooperative Eigenschaften",
+            "explanation": {
+                "icon": "✅",
+                "text": "Betont kooperative Eigenschaften",
+                "url": "https://www.witty.works/de/inclusive#communal"
+            },
             "label": "Inklusiv: Kommunal",
             "start": 84,
             "subcategory": "communal",

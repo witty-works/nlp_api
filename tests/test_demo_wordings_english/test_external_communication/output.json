@@ -23,7 +23,11 @@
             "category": "unconscious_bias",
             "context": "If a manager picks up this topic, he has to go the extra-mile to solve it.",
             "end": 61,
-            "explanation": "😒 deters people with a “we” mindset",
+            "explanation": {
+                "icon": "😒",
+                "text": "Deters people with a “we” mindset",
+                "url": "https://www.witty.works/en/unconscious_bias#agentic"
+            },
             "gravity": 2,
             "label": "Biased language: Agentic",
             "start": 44,

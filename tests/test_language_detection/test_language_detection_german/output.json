@@ -10,7 +10,10 @@
             ],
             "category": "orthography",
             "end": 5,
-            "explanation": "Dieser Satz fängt nicht mit einem großgeschriebenen Wort an.",
+            "explanation": {
+                "icon": "❌",
+                "text": "Dieser Satz fängt nicht mit einem großgeschriebenen Wort an."
+            },
             "gravity": 1,
             "label": "Orthographie",
             "start": 0,
@@ -82,7 +85,10 @@
             ],
             "category": "orthography",
             "end": 12,
-            "explanation": "Möglicher Tippfehler gefunden.",
+            "explanation": {
+                "icon": "❌",
+                "text": "Möglicher Tippfehler gefunden."
+            },
             "gravity": 1,
             "label": "Rechtschreibfehler",
             "start": 6,
@@ -93,7 +99,11 @@
             "alternatives": [],
             "category": "inclusive",
             "end": 5,
-            "explanation": "✅ Betont kooperative Eigenschaften",
+            "explanation": {
+                "icon": "✅",
+                "text": "Betont kooperative Eigenschaften",
+                "url": "https://www.witty.works/de/inclusive#communal"
+            },
             "label": "Inklusiv: Kommunal",
             "start": 0,
             "subcategory": "communal",

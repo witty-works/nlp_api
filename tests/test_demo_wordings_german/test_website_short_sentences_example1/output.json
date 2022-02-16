@@ -32,7 +32,11 @@
             "category": "gendered",
             "context": "Wir unterstützen leistungsstarke Mitarbeiter.",
             "end": 44,
-            "explanation": "😟 “Mitmeinen” mit männlichen Generikum funktioniert nicht",
+            "explanation": {
+                "icon": "😟",
+                "text": "“Mitmeinen” mit männlichen Generikum funktioniert nicht",
+                "url": "https://www.witty.works/de/gendered#titles"
+            },
             "gravity": 2,
             "label": "Geschlechtsspezifisch: Titel",
             "start": 33,
@@ -63,7 +67,11 @@
             "category": "unconscious_bias",
             "context": "Wir unterstützen leistungsstarke Mitarbeiter.",
             "end": 32,
-            "explanation": "😒 schreckt Menschen mit “wir”-Einstellung ab",
+            "explanation": {
+                "icon": "😒",
+                "text": "Schreckt Menschen mit “wir”-Einstellung ab",
+                "url": "https://www.witty.works/de/unconscious_bias#agentic"
+            },
             "gravity": 2,
             "label": "Sprachliche Voreingenommenheit: Agentisch",
             "start": 17,
@@ -75,7 +83,11 @@
             "category": "inclusive",
             "context": "Wir unterstützen leistungsstarke Mitarbeiter.",
             "end": 16,
-            "explanation": "✅ Betont kooperative Eigenschaften",
+            "explanation": {
+                "icon": "✅",
+                "text": "Betont kooperative Eigenschaften",
+                "url": "https://www.witty.works/de/inclusive#communal"
+            },
             "label": "Inklusiv: Kommunal",
             "start": 4,
             "subcategory": "communal",

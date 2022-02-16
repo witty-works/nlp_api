@@ -32,7 +32,11 @@
             "category": "unconscious_bias",
             "context": "Dominant ",
             "end": 8,
-            "explanation": "😒 deters people with a “we” mindset",
+            "explanation": {
+                "icon": "😒",
+                "text": "Deters people with a “we” mindset",
+                "url": "https://www.witty.works/en/unconscious_bias#agentic"
+            },
             "gravity": 2,
             "label": "Biased language: Agentic",
             "start": 0,

@@ -26,7 +26,11 @@
             ],
             "category": "gendered",
             "end": 30,
-            "explanation": "💡 Image of a man unconsciously triggered",
+            "explanation": {
+                "icon": "💡",
+                "text": "Image of a man unconsciously triggered",
+                "url": "https://www.witty.works/en/gendered#function"
+            },
             "gravity": 2,
             "label": "Gendered: Special functions",
             "start": 21,
