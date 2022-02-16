@@ -315,7 +315,7 @@ class ResultOut(BaseModel):
 
         label = label if label else lang._("rules." + category + "_label")
         if category != "orthography":
-            trans_key = subcategory
+            category_key = subcategory
 
             settings = get_settings()
             url = (
@@ -329,31 +329,31 @@ class ResultOut(BaseModel):
             )
         else:
             url = None
-            trans_key = category
+            category_key = category
 
-        if category != trans_key:
-            label += ": " + lang._("rules." + trans_key + "_label")
+        if category != category_key:
+            label += ": " + lang._("rules." + category_key + "_label")
 
-        reason = lang._("rules." + trans_key + "_reason", params)
+        reason = lang._("rules." + category_key + "_reason", params)
         solution = explanation
         solution = (
             solution
             if solution != None
-            else lang._("rules." + trans_key + "_solution", params)
+            else lang._("rules." + category_key + "_solution", params)
         )
 
         if explanation != None:
             icon, explanation = ResultOut.parseExplanation(explanation)
             if icon == None:
                 icon, foo = ResultOut.parseExplanation(
-                    lang._("rules." + trans_key + "_explanation", params)
+                    lang._("rules." + category_key + "_explanation", params)
                 )
         else:
             icon, explanation = ResultOut.parseExplanation(
-                lang._("rules." + trans_key + "_explanation", params)
+                lang._("rules." + category_key + "_explanation", params)
             )
 
-        gravity = gravity if gravity != None else categories[trans_key]["gravity"]
+        gravity = gravity if gravity != None else categories[category_key]["gravity"]
 
         is_upper = text[0:1].isupper()
 
@@ -452,7 +452,7 @@ class ResultOut(BaseModel):
                 text=text,
                 context=context,
                 category=category,
-                subcategory=trans_key,
+                subcategory=subcategory,
                 start=start,
                 end=end,
                 alternatives=list(cleaned_alternatives.values()),

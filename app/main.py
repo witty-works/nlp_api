@@ -468,6 +468,16 @@ async def languagetool_rules(version: float, config: Config, lang: Language, tex
             "motherTongue": config.primary_language,
         }
 
+        spelling_categories = list(
+            set(config.disabled_categories) - set(categories.keys())
+        )
+
+        if len(spelling_categories) > 0:
+            spelling_categories = [
+                spelling_category.upper() for spelling_category in spelling_categories
+            ]
+            payload["disabledCategories"] = spelling_categories
+
         async with session.post(languagetool_url + "/check", data=payload) as r:
             try:
                 assert r.status == 200
