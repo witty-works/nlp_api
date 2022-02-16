@@ -220,7 +220,7 @@ def root():
 def save_openapi_json(username: str = Depends(get_current_username)):
     openapi_data = app.openapi()
     for path in openapi_data["paths"].copy():
-        if not "check" in path:
+        if not "v1.1" in path:
             del openapi_data["paths"][path]
 
     with open("openapi.json", "w") as file:
