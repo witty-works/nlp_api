@@ -5,6 +5,15 @@
         {
             "alternatives": [
                 {
+                    "text": "Roma"
+                },
+                {
+                    "text": "Sinti"
+                },
+                {
+                    "text": "Sinti und Roma"
+                },
+                {
                     "text": "SintiZe und RomNja"
                 },
                 {
@@ -39,22 +48,13 @@
         {
             "alternatives": [
                 {
-                    "text": "RomNi"
+                    "text": "Roma"
                 },
                 {
-                    "text": "Romni/Rom"
+                    "text": "Sinti"
                 },
                 {
-                    "text": "SintIza"
-                },
-                {
-                    "text": "Sintiza/Sinto"
-                },
-                {
-                    "text": "SintEza"
-                },
-                {
-                    "text": "Sinteza/Sinto"
+                    "text": "Sinti und Roma"
                 }
             ],
             "category": "unconscious_bias",
@@ -73,10 +73,13 @@
         {
             "alternatives": [
                 {
-                    "text": "Rom/ni"
+                    "text": "Roma"
                 },
                 {
-                    "text": "Sint/iza"
+                    "text": "Sinti"
+                },
+                {
+                    "text": "Sinti und Roma"
                 }
             ],
             "category": "unconscious_bias",
