@@ -67,7 +67,10 @@
             ],
             "category": "orthography",
             "end": 27,
-            "explanation": "Möglicher Tippfehler gefunden.",
+            "explanation": {
+                "icon": "❌",
+                "text": "Möglicher Tippfehler gefunden."
+            },
             "gravity": 1,
             "label": "Rechtschreibfehler",
             "start": 22,
@@ -139,7 +142,10 @@
             ],
             "category": "orthography",
             "end": 39,
-            "explanation": "Möglicher Tippfehler gefunden.",
+            "explanation": {
+                "icon": "❌",
+                "text": "Möglicher Tippfehler gefunden."
+            },
             "gravity": 1,
             "label": "Rechtschreibfehler",
             "start": 32,
@@ -154,7 +160,10 @@
             ],
             "category": "orthography",
             "end": 42,
-            "explanation": "Die Verwendung von mehreren Frage- oder Ausrufezeichen wirkt oft übertrieben emphatisch.",
+            "explanation": {
+                "icon": "❌",
+                "text": "Die Verwendung von mehreren Frage- oder Ausrufezeichen wirkt oft übertrieben emphatisch."
+            },
             "gravity": 1,
             "label": "Orthographie",
             "start": 39,

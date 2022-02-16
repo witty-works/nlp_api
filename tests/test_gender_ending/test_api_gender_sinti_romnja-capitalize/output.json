@@ -25,7 +25,11 @@
             ],
             "category": "unconscious_bias",
             "end": 22,
-            "explanation": "😒 versteckte Voreingenommenheit bezüglich Hautfarbe",
+            "explanation": {
+                "icon": "😒",
+                "text": "Versteckte Voreingenommenheit bezüglich Hautfarbe",
+                "url": "https://www.witty.works/de/unconscious_bias#racist_source"
+            },
             "gravity": 2,
             "label": "Sprachliche Voreingenommenheit: Rassistische Wurzel",
             "start": 14,
@@ -55,7 +59,11 @@
             ],
             "category": "unconscious_bias",
             "end": 44,
-            "explanation": "😒 versteckte Voreingenommenheit bezüglich Hautfarbe",
+            "explanation": {
+                "icon": "😒",
+                "text": "Versteckte Voreingenommenheit bezüglich Hautfarbe",
+                "url": "https://www.witty.works/de/unconscious_bias#racist_source"
+            },
             "gravity": 2,
             "label": "Sprachliche Voreingenommenheit: Rassistische Wurzel",
             "start": 36,
@@ -73,7 +81,11 @@
             ],
             "category": "unconscious_bias",
             "end": 67,
-            "explanation": "😒 versteckte Voreingenommenheit bezüglich Hautfarbe",
+            "explanation": {
+                "icon": "😒",
+                "text": "Versteckte Voreingenommenheit bezüglich Hautfarbe",
+                "url": "https://www.witty.works/de/unconscious_bias#racist_source"
+            },
             "gravity": 2,
             "label": "Sprachliche Voreingenommenheit: Rassistische Wurzel",
             "start": 57,

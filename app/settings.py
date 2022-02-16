@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     sentry_traces_sample_rate: float = 0.2
     sentry_sample_rate: float = 0.2
     text_max_length: int = 1000
+    learning_bites_base_url: str = "https://www.witty.works"
 
     class Config:
         env_file = ".env"

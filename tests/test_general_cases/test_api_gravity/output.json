@@ -61,7 +61,10 @@
             ],
             "category": "orthography",
             "end": 9,
-            "explanation": "Möglicher Tippfehler gefunden.",
+            "explanation": {
+                "icon": "❌",
+                "text": "Möglicher Tippfehler gefunden."
+            },
             "gravity": 1,
             "label": "Rechtschreibfehler",
             "start": 4,
@@ -97,7 +100,11 @@
             ],
             "category": "gendered",
             "end": 16,
-            "explanation": "😟 “Mitmeinen” mit männlichen Generikum funktioniert nicht",
+            "explanation": {
+                "icon": "😟",
+                "text": "“Mitmeinen” mit männlichen Generikum funktioniert nicht",
+                "url": "https://www.witty.works/de/gendered#titles"
+            },
             "gravity": 2,
             "label": "Geschlechtsspezifisch: Titel",
             "start": 10,

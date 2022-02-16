@@ -10,7 +10,11 @@
             ],
             "category": "gendered",
             "end": 20,
-            "explanation": "💯 Nicht konsistente Geschlechts-Schreibweise",
+            "explanation": {
+                "icon": "💯",
+                "text": "Nicht konsistente Geschlechts-Schreibweise",
+                "url": "https://www.witty.works/de/gendered#gendered_denominations_ending"
+            },
             "gravity": 2,
             "label": "Geschlechtsspezifisch: Inklusive Endung",
             "start": 17,

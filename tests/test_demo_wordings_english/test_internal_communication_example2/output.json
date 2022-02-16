@@ -17,7 +17,11 @@
             "category": "unconscious_bias",
             "context": "Don't turn a blind eye on this fact. ",
             "end": 22,
-            "explanation": "😒 hidden bias regarding vision ability",
+            "explanation": {
+                "icon": "😒",
+                "text": "Hidden bias regarding vision ability",
+                "url": "https://www.witty.works/en/unconscious_bias#vision"
+            },
             "gravity": 2,
             "label": "Biased language: Vision",
             "start": 6,

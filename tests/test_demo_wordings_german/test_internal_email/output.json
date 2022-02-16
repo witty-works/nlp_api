@@ -11,7 +11,10 @@
             "category": "orthography",
             "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert ",
             "end": 25,
-            "explanation": "Außer am Satzanfang werden nur Nomen und Eigennamen großgeschrieben.",
+            "explanation": {
+                "icon": "❌",
+                "text": "Außer am Satzanfang werden nur Nomen und Eigennamen großgeschrieben."
+            },
             "gravity": 1,
             "label": "Orthographie",
             "start": 22,
@@ -84,7 +87,10 @@
             "category": "orthography",
             "context": "urchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
             "end": 174,
-            "explanation": "Möglicher Tippfehler gefunden.",
+            "explanation": {
+                "icon": "❌",
+                "text": "Möglicher Tippfehler gefunden."
+            },
             "gravity": 1,
             "label": "Rechtschreibfehler",
             "start": 168,
@@ -121,7 +127,11 @@
             "category": "gendered",
             "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgeford",
             "end": 21,
-            "explanation": "😟 “Mitmeinen” mit männlichen Generikum funktioniert nicht",
+            "explanation": {
+                "icon": "😟",
+                "text": "“Mitmeinen” mit männlichen Generikum funktioniert nicht",
+                "url": "https://www.witty.works/de/gendered#titles"
+            },
             "gravity": 2,
             "label": "Geschlechtsspezifisch: Titel",
             "start": 13,
@@ -152,7 +162,11 @@
             "category": "gendered",
             "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle ",
             "end": 46,
-            "explanation": "😟 Verstecktes männliches Generikum",
+            "explanation": {
+                "icon": "😟",
+                "text": "Verstecktes männliches Generikum",
+                "url": "https://www.witty.works/de/gendered#hidden_image"
+            },
             "gravity": 2,
             "label": "Geschlechtsspezifisch: Versteckter Ausdruck",
             "start": 36,
@@ -198,7 +212,11 @@
             "category": "unconscious_bias",
             "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreund",
             "end": 62,
-            "explanation": "😒 schreckt Menschen mit “wir”-Einstellung ab",
+            "explanation": {
+                "icon": "😒",
+                "text": "Schreckt Menschen mit “wir”-Einstellung ab",
+                "url": "https://www.witty.works/de/unconscious_bias#agentic"
+            },
             "gravity": 2,
             "label": "Sprachliche Voreingenommenheit: Agentisch",
             "start": 55,
@@ -217,7 +235,11 @@
             "category": "unconscious_bias",
             "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
             "end": 85,
-            "explanation": "😒 schreckt Menschen mit “wir”-Einstellung ab",
+            "explanation": {
+                "icon": "😒",
+                "text": "Schreckt Menschen mit “wir”-Einstellung ab",
+                "url": "https://www.witty.works/de/unconscious_bias#agentic"
+            },
             "gravity": 2,
             "label": "Sprachliche Voreingenommenheit: Agentisch",
             "start": 67,
@@ -236,7 +258,11 @@
             "category": "unconscious_bias",
             "context": "rte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
             "end": 124,
-            "explanation": "😒 schreckt Menschen mit “wir”-Einstellung ab",
+            "explanation": {
+                "icon": "😒",
+                "text": "Schreckt Menschen mit “wir”-Einstellung ab",
+                "url": "https://www.witty.works/de/unconscious_bias#agentic"
+            },
             "gravity": 2,
             "label": "Sprachliche Voreingenommenheit: Agentisch",
             "start": 109,
@@ -248,7 +274,11 @@
             "category": "inclusive",
             "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
             "end": 104,
-            "explanation": "✅ Betont kooperative Eigenschaften",
+            "explanation": {
+                "icon": "✅",
+                "text": "Betont kooperative Eigenschaften",
+                "url": "https://www.witty.works/de/inclusive#communal"
+            },
             "label": "Inklusiv: Kommunal",
             "start": 98,
             "subcategory": "communal",
@@ -259,7 +289,11 @@
             "category": "inclusive",
             "context": "hrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
             "end": 167,
-            "explanation": "✅ Betont kooperative Eigenschaften",
+            "explanation": {
+                "icon": "✅",
+                "text": "Betont kooperative Eigenschaften",
+                "url": "https://www.witty.works/de/inclusive#communal"
+            },
             "label": "Inklusiv: Kommunal",
             "start": 156,
             "subcategory": "communal",
@@ -301,7 +335,11 @@
             "category": "style",
             "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, her",
             "end": 12,
-            "explanation": "🧊 Formale Formulierung kreiert emotionale Distanz",
+            "explanation": {
+                "icon": "🧊",
+                "text": "Formale Formulierung kreiert emotionale Distanz",
+                "url": "https://www.witty.works/de/style#formality"
+            },
             "gravity": 3,
             "label": "Stil: Formalität",
             "start": 0,

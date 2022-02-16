@@ -11,7 +11,10 @@
             "category": "orthography",
             "context": "\n\nhelo ninja",
             "end": 6,
-            "explanation": "This sentence does not start with an uppercase letter.",
+            "explanation": {
+                "icon": "❌",
+                "text": "This sentence does not start with an uppercase letter."
+            },
             "gravity": 1,
             "label": "Orthography",
             "start": 2,
@@ -42,7 +45,11 @@
             "category": "style",
             "context": "\n\nhelo ninja",
             "end": 12,
-            "explanation": "😮‍💨 Exaggeration: perceived as pressure or arrogance",
+            "explanation": {
+                "icon": "😮‍💨",
+                "text": "Exaggeration: Perceived as pressure or arrogance",
+                "url": "https://www.witty.works/en/style#exaggerating"
+            },
             "gravity": 2,
             "label": "Style: Exaggeration",
             "start": 7,

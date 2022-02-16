@@ -28,7 +28,10 @@
             ],
             "category": "orthography",
             "end": 6,
-            "explanation": "Possible spelling mistake found.",
+            "explanation": {
+                "icon": "❌",
+                "text": "Possible spelling mistake found."
+            },
             "gravity": 1,
             "label": "Spelling mistake",
             "start": 2,

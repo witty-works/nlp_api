@@ -32,7 +32,11 @@
             "category": "gendered",
             "context": "Wir suchen Kunden",
             "end": 17,
-            "explanation": "😟 “Mitmeinen” mit männlichen Generikum funktioniert nicht",
+            "explanation": {
+                "icon": "😟",
+                "text": "“Mitmeinen” mit männlichen Generikum funktioniert nicht",
+                "url": "https://www.witty.works/de/gendered#titles"
+            },
             "gravity": 2,
             "label": "Geschlechtsspezifisch: Titel",
             "start": 11,

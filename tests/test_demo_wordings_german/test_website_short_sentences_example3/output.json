@@ -35,7 +35,10 @@
             "category": "orthography",
             "context": "Wir haben aussergewöhnliche Herausforderungen vor uns.",
             "end": 27,
-            "explanation": "Möglicher Tippfehler gefunden.",
+            "explanation": {
+                "icon": "❌",
+                "text": "Möglicher Tippfehler gefunden."
+            },
             "gravity": 1,
             "label": "Rechtschreibfehler",
             "start": 10,
@@ -63,7 +66,11 @@
             "category": "unconscious_bias",
             "context": "Wir haben aussergewöhnliche Herausforderungen vor uns.",
             "end": 45,
-            "explanation": "😒 schreckt Menschen mit “wir”-Einstellung ab",
+            "explanation": {
+                "icon": "😒",
+                "text": "Schreckt Menschen mit “wir”-Einstellung ab",
+                "url": "https://www.witty.works/de/unconscious_bias#agentic"
+            },
             "gravity": 2,
             "label": "Sprachliche Voreingenommenheit: Agentisch",
             "start": 28,

@@ -7,7 +7,11 @@
             "category": "inclusive",
             "context": "We support high performance employees.",
             "end": 10,
-            "explanation": "✅ Emphasizes cooperative attributes",
+            "explanation": {
+                "icon": "✅",
+                "text": "Emphasizes cooperative attributes",
+                "url": "https://www.witty.works/en/inclusive#communal"
+            },
             "label": "Inclusive: Communal",
             "start": 3,
             "subcategory": "communal",
@@ -40,7 +44,11 @@
             "category": "unconscious_bias",
             "context": "We support high performance employees.",
             "end": 27,
-            "explanation": "😒 deters people with a “we” mindset",
+            "explanation": {
+                "icon": "😒",
+                "text": "Deters people with a “we” mindset",
+                "url": "https://www.witty.works/en/unconscious_bias#agentic"
+            },
             "gravity": 2,
             "label": "Biased language: Agentic",
             "start": 16,
