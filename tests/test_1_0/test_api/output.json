@@ -67,6 +67,22 @@
             "start": 43,
             "subcategory": "titles",
             "text": "Kunden"
+        },
+        {
+            "alternatives": [
+                "Jemand, der erfahren und fachkundig ist",
+                "Person, die ihr Know-how und ihre Erfahrung kreativ einsetzt",
+                "Mensch, der seine Fachkenntnis ständig vertieft"
+            ],
+            "category": "style",
+            "context": "",
+            "end": 16,
+            "label": "Stil: Superlative",
+            "reason": "Kommuniziert, dass sich Menschen sich im Sinne der Superlative anpassen müssen.",
+            "solution": "Verwenden Sie eine authentisch und ehrlich klingende Aussage.",
+            "start": 11,
+            "subcategory": "exaggerating",
+            "text": "Ninja"
         }
     ]
 }

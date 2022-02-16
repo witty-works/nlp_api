@@ -66,6 +66,27 @@
             "start": 42,
             "subcategory": "titles",
             "text": "Kunden"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Jemand, der erfahren und fachkundig ist"
+                },
+                {
+                    "text": "Person, die ihr Know-how und ihre Erfahrung kreativ einsetzt"
+                },
+                {
+                    "text": "Mensch, der seine Fachkenntnis ständig vertieft"
+                }
+            ],
+            "category": "style",
+            "end": 16,
+            "explanation": "😮‍💨 Superlative: als Druck oder Arroganz wahrgenommen",
+            "gravity": 2,
+            "label": "Stil: Superlative",
+            "start": 11,
+            "subcategory": "exaggerating",
+            "text": "Ninja"
         }
     ]
 }
