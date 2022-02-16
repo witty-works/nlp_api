@@ -5,31 +5,6 @@
         {
             "alternatives": [
                 {
-                    "text": "Jemand, der erfahren und fachkundig ist"
-                },
-                {
-                    "text": "Jemand mit Know-how und Erfahrung"
-                },
-                {
-                    "text": "Mensch, der seine Fachkenntnis ständig vertieft"
-                }
-            ],
-            "category": "gendered",
-            "end": 16,
-            "explanation": {
-                "icon": "💡",
-                "text": "Bild eines Mannes wird unbewusst ausgelöst",
-                "url": "https://www.witty.works/de/gendered#function"
-            },
-            "gravity": 2,
-            "label": "Geschlechtsspezifisch: Spezielle Funktionen",
-            "start": 11,
-            "subcategory": "function",
-            "text": "Ninja"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "Auftraggebende"
                 },
                 {
