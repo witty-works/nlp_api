@@ -114,7 +114,7 @@ Selbständigkeit,s,5/2/2022,unconscious_bias,agentic,"['Gestaltungsspielraum', '
 Sicherstellung,s,,unconscious_bias,agentic,"['Gewährleistung', 'Sorge', 'Erhaltung', 'Bewahrung', 'Einhaltung', 'Umsetzung']",[''],"['Gewährleistung', 'Sorge', 'Erhaltung', 'Bewahrung', 'Einhaltung', 'Umsetzung']"
 Sieg,s,,unconscious_bias,agentic,"['erarbeiteter Meilenstein', 'verwirklichte Vision', 'gemeinsam erfüllte Aufgabe', 'zusammen umgesetztes Ziel']",[''],"['erarbeiteter Meilenstein', 'verwirklichte Vision', 'gemeinsam erfüllte Aufgabe', 'zusammen umgesetztes Ziel']"
 Silberblick,s,,unconscious_bias,vision,"['Mikrostrabismus', 'leichtes Schielen']",[''],"['Mikrostrabismus', 'leichtes Schielen']"
-Slave,s,,unconscious_bias,racist_source,"['Follower -- in Datenbank-Technologie', 'Replica -- in Datenbank-Technologie']",[''],"['Follower -- in Datenbank-Technologie', 'Replica -- in Datenbank-Technologie']"
+Slave,s,,unconscious_bias,racist_source,"['Follower --- in Datenbank-Technologie', 'Replica --- in Datenbank-Technologie']",[''],"['Follower --- in Datenbank-Technologie', 'Replica --- in Datenbank-Technologie']"
 Stärke,s,,unconscious_bias,agentic,"['Stabilität', 'Erfahrung', 'Energie', 'Seelenstärke', 'Motivation', 'Resilienz']",[''],"['Stabilität', 'Erfahrung', 'Energie', 'Seelenstärke', 'Motivation', 'Resilienz']"
 Tomahawks,s,,unconscious_bias,racist_source,"['Axt', 'Beil', 'Kriegsaxt']",[''],"['Axt', 'Beil', 'Kriegsaxt']"
 Trans-Frau,s,12/2/2022,unconscious_bias,gender_identity,['trans Frau'],[''],['trans Frau']
