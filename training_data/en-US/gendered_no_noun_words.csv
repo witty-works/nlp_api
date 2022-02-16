@@ -4,7 +4,6 @@ attentionseeking,a,1,gendered,female_stereotype,"['outgoing', 'at ease in social
 beautiful,a,,gendered,female_stereotype,"['attractive', 'good-looking']",[''],"['attractive', 'good-looking']"
 bossy,a,,gendered,female_stereotype,"['in charge', 'supervising', 'responsible for results', 'direct', 'communicating expectations']",[''],"['in charge', 'supervising', 'responsible for results', 'direct', 'communicating expectations']"
 handsome,a,,gendered,male_stereotype,"['attractive', 'good-looking']",[''],"['attractive', 'good-looking']"
-housewife,a,,gendered,female_stereotype,"['homemaker', 'they']",[''],"['homemaker', 'they']"
 man,v,,gendered,hidden_image,"['staff', 'crew', 'occupy', 'work', 'use']",[''],"['staff', 'crew', 'occupy', 'work', 'use']"
 man-made,a,,gendered,hidden_image,"['synthetic', 'machine-made', 'artificial']",[''],"['synthetic', 'machine-made', 'artificial']"
 man-sized,a,,gendered,hidden_image,"['very large', 'generous', 'calling for the strength traditionally attributed to a man']",[''],"['very large', 'generous', 'calling for the strength traditionally attributed to a man']"

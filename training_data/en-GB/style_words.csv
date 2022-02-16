@@ -1,4 +1,13 @@
 Lemma,Priority,Category,Primary_subcategory,Alt_split
+ADD,11-02-2022,style,abbreviation,"['attention deficit disorder', 'person with ADD', 'person with attention deficit disorder', 'easily bored', 'inattentive', 'easily distracted', 'having a poor working memory']"
+ADHD,11-02-2022,style,abbreviation,"['attention deficit hyperactivity disorder', 'person with ADHD', 'person with attention deficit hyperactivity disorder', 'fidgety', 'restless', 'easily bored']"
+ASD,11-02-2022,style,abbreviation,"['autism spectrum disorder', 'neurodiversity', 'person with ASD', 'person with autism  sprectrum disorder', 'neurodevelopmental disorder characterised by difficulties with social interaction and communication', 'umbrella diagnosis that includes autistic disorder, childhood disintegrative disorder, some pervasive developmental disorders, and Asperger syndrome']"
+ASL,11-02-2022,style,abbreviation,['American Sign Language']
+DALYs,11-02-2022,style,abbreviation,"['-', 'diasability-adjusted life years', 'metric that confuses quality of life with health --- avoid if possible']"
+DFLYs,11-02-2022,style,abbreviation,"['-', 'dependency-free life-years', 'metric that confuses quality of life with health --- avoid if possible']"
+OCD,11-02-2022,style,abbreviation,"['obsessive-compulsive disorder', 'detail-oriented', 'precise', 'careful', 'with attention to detail']"
+OTB,11-02-2022,style,abbreviation,['outside the box']
+QALYs,11-02-2022,style,abbreviation,"['-', 'quality-adjusted life years', 'metric that confuses quality of life with health --- avoid if possible']"
 Sincerely,21-01-2022,style,formality,"['Best regards', 'All the best', 'Thank you', 'Have a wonderful day', 'Let us know if you need anything']"
 absolut,1,style,exaggerating,['-']
 actually,1,style,filler,['-']
@@ -31,12 +40,12 @@ god,1,style,exaggerating,['-']
 hacker,1,style,exaggerating,['-']
 imperative,1,style,exaggerating,"['critical', 'vital']"
 impressive,1,style,exaggerating,['-']
-innovation,22-02-2022,style,hollow,"['reinvention', 'change', 'modernization', 'improvement', 'new creation', 'redesign', 'introduction of new ideas (methods, devices)']"
+innovation,22-02-2022,style,hollow,"['reinvention', 'change', 'modernization', 'improvement', 'new creation', 'redesign', 'introduction of new ideas (methods, devices, ...)']"
 innovative,1,style,hollow,"['imaginative', 'novel', 'creative', 'inventive', 'trend-setting', 'groundbreaking', 'inspired', 'forward-looking']"
 irresistible,1,style,exaggerating,['-']
 kamikaze,1,style,exaggerating,['-']
 luminary,1,style,exaggerating,['-']
-mandatory,1,style,exaggerating,"['necessary', 'legally required', 'compulsory', 'forced', 'nonelective', 'required (by law, by a rule)']"
+mandatory,1,style,exaggerating,"['necessary', 'legally required', 'compulsory', 'forced', 'nonelective', 'required (by law, by a rule, ...)']"
 market-leader,22-01-2022,style,exaggerating,"['company with the largest market share in the industry', 'company with the ability to influence the market', 'company with the greatest profitability margin in the market', 'company with the products most relevant to the customer']"
 market-leading,22-01-2022,style,exaggerating,['market-influencing']
 marketleader,22-01-2022,style,exaggerating,"['company with the largest market share in the industry', 'company with the ability to influence the market', 'company with the greatest profitability margin in the market', 'company with the products most relevant to the customer']"
@@ -48,8 +57,8 @@ nerd,1,style,exaggerating,['-']
 ninja,1,style,exaggerating,"['dedicated', 'committed', 'person who continues despite difficulties', 'someone devoted to their purpose', 'someone who sticks to their goal', 'someone willing to see things through']"
 normal,1,style,hollow,"['traditional', 'typical', 'common', 'routine', 'regular', 'conventional', 'customary', 'popular', 'reasonable', 'well-adjusted', 'rational', 'able to think clearly', 'able to use reason']"
 outstanding,26-01-2022,style,exaggerating,"['awesome', 'inspiring']"
-passion,1,style,hollow,"['enthusiasm', 'dedication', 'commitment', 'fascination', 'keen interest', 'love', 'excitement']"
-passionate,1,style,hollow,"['enthusiastic', 'dedicated', 'committed to', 'fascinated with', 'keenly interested in', 'excited']"
+passion,1,style,hollow,"['enthusiasm', 'dedication to', 'fascination with', 'keen interest in', 'love']"
+passionate,1,style,hollow,"['enthusiastic', 'believe (in)', 'committed to', 'fascinated with', 'keenly interested in', 'excited']"
 perfect,1,style,exaggerating,['-']
 profit,1,style,exaggerating,['-']
 profound,1,style,exaggerating,"['intense', 'deep', 'thorough', 'acute', 'thoughtful', 'serious', 'experienced', 'requiring deep understanding']"
@@ -69,7 +78,7 @@ surpass,1,style,exaggerating,"['refine', 'enrich', 'build on', 'improve upon', '
 team-player,1,style,hollow,"['someone who values team effort over personal gains', 'someone who enjoys collaboration', 'someone who can compromise to reach a shared goal', 'someone who feels inspired and motivated by working together with others toward a shared goal']"
 teamplayer,1,style,hollow,"['someone who values team effort over personal gains', 'someone who enjoys collaboration', 'someone who can compromise to reach a shared goal', 'someone who feels inspired and motivated by working together with others toward a shared goal']"
 totally,1,style,filler,['-']
-unique,1,style,hollow,"['original', 'distinctive', 'rare', 'uncommon', 'one-of-a-kind', 'in a class by itself']"
+unique,1,style,hollow,"['original', 'distinctive', 'rare', 'diverse', 'in a class by itself']"
 verifiable,1,style,exaggerating,"['documented', 'valid', 'reliable']"
 verifiably,1,style,exaggerating,['-']
 very,1,style,filler,['-']
