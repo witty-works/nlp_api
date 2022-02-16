@@ -16,9 +16,9 @@
                 "text": "Use a comma before ‘and’ if it connects two independent clauses (unless they are closely connected and short)."
             },
             "gravity": 1,
-            "label": "Orthography",
+            "label": "Punctuation",
             "start": 92,
-            "subcategory": "orthography",
+            "subcategory": "punctuation",
             "text": " and"
         },
         {

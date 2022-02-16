@@ -42,7 +42,7 @@
             "gravity": 1,
             "label": "Rechtschreibfehler",
             "start": 10,
-            "subcategory": "orthography",
+            "subcategory": "typos",
             "text": "aussergewöhnliche"
         },
         {

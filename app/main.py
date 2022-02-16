@@ -422,6 +422,20 @@ def languagetool_matches(
                 value = value if value != "" else "-"
                 alternatives.append(value)
 
+        label = match["shortMessage"]
+        if label == "":
+            try:
+                label = match["rule"]["category"]["name"]
+            except KeyError:
+                pass
+
+        try:
+            subcategory = match["rule"]["category"]["id"].lower()
+        except KeyError:
+            subcategory = category
+
+        explanation = match["message"]
+
         list_results.append(
             ResultOut.factory(
                 version,
@@ -430,12 +444,12 @@ def languagetool_matches(
                 highlight_text,
                 text,
                 category,
-                category,
+                subcategory,
                 offset,
                 end,
                 alternatives,
-                match["shortMessage"],
-                match["message"],
+                label,
+                explanation,
             )
         )
 
@@ -495,11 +509,9 @@ async def language_rules(version: float, config: Config, lang: Language, text: s
 
     if is_sub_category_enabled(config, "orthography"):
         try:
-            languagetools_results = await languagetool_rules(
-                version, config, lang, text
-            )
-            list_results = languagetools_results + list_results
-        except:
+            languagetool_results = await languagetool_rules(version, config, lang, text)
+            list_results = languagetool_results + list_results
+        except Exception:
             pass
 
     return list_results

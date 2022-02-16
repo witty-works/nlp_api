@@ -35,7 +35,7 @@
             "gravity": 1,
             "label": "Spelling mistake",
             "start": 2,
-            "subcategory": "orthography",
+            "subcategory": "typos",
             "text": "liki"
         }
     ]
