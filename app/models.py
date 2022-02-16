@@ -76,7 +76,7 @@ class GenderedRolesFormatType(str, Enum):
 
 class Config(BaseModel):
     store_context: Optional[bool] = True
-    primary_language: str = LangWithAutoType.deDE
+    primary_language: LangWithAutoType = LangWithAutoType.deDE
     preferred_languages: List = [LangWithAutoType.EN, LangWithAutoType.DE]
     _supported_langs = [
         LangType.DE,
@@ -90,7 +90,7 @@ class Config(BaseModel):
         LangWithAutoType.enUS,
         LangWithAutoType.enGB,
     ]
-    german_gender_ending: str = GermanGenderEnding.COLON
+    german_gender_ending: GermanGenderEnding = GermanGenderEnding.COLON
     _gendereddenom_ending = {
         GermanGenderEnding.SLASH: "/in",
         GermanGenderEnding.SLASH_DASH: "/-in",
