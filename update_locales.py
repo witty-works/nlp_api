@@ -13,12 +13,21 @@ def add_entry(poFiles, category, columns, label, column, row):
             msgstr = ""
         else:
             msgstr = row[columns[column + " " + locale[0:2].upper()]].strip()
-            if msgstr == "-":
+            if msgstr == "n/a" or msgstr == "-":
                 msgstr = ""
-
-            if msgstr == "":
+            elif msgstr == "":
                 print(
                     "Empty text given for '"
+                    + category
+                    + "' key '"
+                    + label
+                    + "' ("
+                    + locale
+                    + ")"
+                )
+            elif label == "explanation" and msgstr.find("|") == -1:
+                print(
+                    "Pipesign missing for '"
                     + category
                     + "' key '"
                     + label

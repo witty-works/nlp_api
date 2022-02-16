@@ -7,7 +7,11 @@
             "category": "inclusive",
             "context": "Our whole team is ambitious and strives for top performance.",
             "end": 14,
-            "explanation": "✅ Emphasizes cooperative attributes",
+            "explanation": {
+                "icon": "✅",
+                "text": "Emphasizes cooperative attributes",
+                "url": "https://www.witty.works/en/inclusive#communal"
+            },
             "label": "Inclusive: Communal",
             "start": 10,
             "subcategory": "communal",
@@ -31,7 +35,11 @@
             "category": "style",
             "context": "Our whole team is ambitious and strives for top performance.",
             "end": 59,
-            "explanation": "😮‍💨 Exaggeration: perceived as pressure or arrogance",
+            "explanation": {
+                "icon": "😮‍💨",
+                "text": "Exaggeration: Perceived as pressure or arrogance",
+                "url": "https://www.witty.works/en/style#exaggerating"
+            },
             "gravity": 2,
             "label": "Style: Exaggeration",
             "start": 44,
@@ -59,7 +67,11 @@
             "category": "unconscious_bias",
             "context": "Our whole team is ambitious and strives for top performance.",
             "end": 27,
-            "explanation": "😒 deters people with a “we” mindset",
+            "explanation": {
+                "icon": "😒",
+                "text": "Deters people with a “we” mindset",
+                "url": "https://www.witty.works/en/unconscious_bias#agentic"
+            },
             "gravity": 2,
             "label": "Biased language: Agentic",
             "start": 18,
@@ -93,7 +105,11 @@
             "category": "unconscious_bias",
             "context": "Our whole team is ambitious and strives for top performance.",
             "end": 59,
-            "explanation": "😒 deters people with a “we” mindset",
+            "explanation": {
+                "icon": "😒",
+                "text": "Deters people with a “we” mindset",
+                "url": "https://www.witty.works/en/unconscious_bias#agentic"
+            },
             "gravity": 2,
             "label": "Biased language: Agentic",
             "start": 48,

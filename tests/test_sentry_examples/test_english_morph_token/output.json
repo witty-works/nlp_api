@@ -19,7 +19,10 @@
             ],
             "category": "orthography",
             "end": 8,
-            "explanation": "Possible spelling mistake found.",
+            "explanation": {
+                "icon": "❌",
+                "text": "Possible spelling mistake found."
+            },
             "gravity": 1,
             "label": "Spelling mistake",
             "start": 3,
@@ -34,7 +37,10 @@
             ],
             "category": "orthography",
             "end": 56,
-            "explanation": "Use “an” instead of ‘a’ if the following word starts with a vowel sound, e.g. ‘an article’, ‘an hour’.",
+            "explanation": {
+                "icon": "❌",
+                "text": "Use “an” instead of ‘a’ if the following word starts with a vowel sound, e.g. ‘an article’, ‘an hour’."
+            },
             "gravity": 1,
             "label": "Wrong article",
             "start": 55,
@@ -52,7 +58,10 @@
             ],
             "category": "orthography",
             "end": 144,
-            "explanation": "Possible spelling mistake found.",
+            "explanation": {
+                "icon": "❌",
+                "text": "Possible spelling mistake found."
+            },
             "gravity": 1,
             "label": "Spelling mistake",
             "start": 134,
@@ -73,7 +82,11 @@
             ],
             "category": "gendered",
             "end": 63,
-            "explanation": "💡 Image of a man unconsciously triggered",
+            "explanation": {
+                "icon": "💡",
+                "text": "Image of a man unconsciously triggered",
+                "url": "https://www.witty.works/en/gendered#function"
+            },
             "gravity": 2,
             "label": "Gendered: Special functions",
             "start": 57,
@@ -97,7 +110,11 @@
             ],
             "category": "unconscious_bias",
             "end": 115,
-            "explanation": "😒 hidden bias regarding age over 50",
+            "explanation": {
+                "icon": "😒",
+                "text": "Hidden bias regarding age over 50",
+                "url": "https://www.witty.works/en/unconscious_bias#age_old"
+            },
             "gravity": 2,
             "label": "Biased language: 50 years and older",
             "start": 109,

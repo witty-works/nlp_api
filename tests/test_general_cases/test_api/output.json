@@ -16,7 +16,11 @@
             ],
             "category": "gendered",
             "end": 16,
-            "explanation": "💡 Bild eines Mannes wird unbewusst ausgelöst",
+            "explanation": {
+                "icon": "💡",
+                "text": "Bild eines Mannes wird unbewusst ausgelöst",
+                "url": "https://www.witty.works/de/gendered#function"
+            },
             "gravity": 2,
             "label": "Geschlechtsspezifisch: Spezielle Funktionen",
             "start": 11,
@@ -52,7 +56,11 @@
             ],
             "category": "gendered",
             "end": 48,
-            "explanation": "😟 “Mitmeinen” mit männlichen Generikum funktioniert nicht",
+            "explanation": {
+                "icon": "😟",
+                "text": "“Mitmeinen” mit männlichen Generikum funktioniert nicht",
+                "url": "https://www.witty.works/de/gendered#titles"
+            },
             "gravity": 2,
             "label": "Geschlechtsspezifisch: Titel",
             "start": 42,
