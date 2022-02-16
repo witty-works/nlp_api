@@ -4,6 +4,35 @@
     "results": [
         {
             "alternatives": [
+                "unsere",
+                "unserer",
+                "untere",
+                "unser",
+                "unserem",
+                "unseren",
+                "unseres",
+                "unitäre",
+                "unserm",
+                "unsern",
+                "unsre",
+                "unsrer",
+                "unstete",
+                "ansäuere",
+                "ansäure",
+                "unterere"
+            ],
+            "category": "orthography",
+            "context": "",
+            "end": 42,
+            "label": "Rechtschreibfehler",
+            "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
+            "solution": "Möglicher Tippfehler gefunden.",
+            "start": 35,
+            "subcategory": "typos",
+            "text": "unseere"
+        },
+        {
+            "alternatives": [
                 "Jemand, der erfahren und fachkundig ist",
                 "Jemand mit Know-how und Erfahrung",
                 "Mensch, der seine Fachkenntnis ständig vertieft"
@@ -31,11 +60,11 @@
             ],
             "category": "gendered",
             "context": "",
-            "end": 48,
+            "end": 49,
             "label": "Geschlechtsspezifisch: Titel",
             "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
             "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht.",
-            "start": 42,
+            "start": 43,
             "subcategory": "titles",
             "text": "Kunden"
         }

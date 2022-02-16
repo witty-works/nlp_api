@@ -26,7 +26,7 @@
             "gravity": 1,
             "label": "Spelling mistake",
             "start": 3,
-            "subcategory": "orthography",
+            "subcategory": "typos",
             "text": "Siwar"
         },
         {
@@ -44,7 +44,7 @@
             "gravity": 1,
             "label": "Wrong article",
             "start": 55,
-            "subcategory": "orthography",
+            "subcategory": "misc",
             "text": "a"
         },
         {
@@ -65,7 +65,7 @@
             "gravity": 1,
             "label": "Spelling mistake",
             "start": 134,
-            "subcategory": "orthography",
+            "subcategory": "typos",
             "text": "Riehenring"
         },
         {

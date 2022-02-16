@@ -1,0 +1,9 @@
+{
+    "text": "what is going on?",
+    "config": {
+        "store_context": false,
+        "disabled_categories": [
+            "casing"
+        ]
+    }
+}

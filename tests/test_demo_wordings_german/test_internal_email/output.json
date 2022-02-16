@@ -16,9 +16,9 @@
                 "text": "Außer am Satzanfang werden nur Nomen und Eigennamen großgeschrieben."
             },
             "gravity": 1,
-            "label": "Orthographie",
+            "label": "Groß-/Kleinschreibung",
             "start": 22,
-            "subcategory": "orthography",
+            "subcategory": "casing",
             "text": "Wir"
         },
         {
@@ -94,7 +94,7 @@
             "gravity": 1,
             "label": "Rechtschreibfehler",
             "start": 168,
-            "subcategory": "orthography",
+            "subcategory": "typos",
             "text": "Grüsse"
         },
         {

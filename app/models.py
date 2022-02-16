@@ -314,29 +314,9 @@ class ResultOut(BaseModel):
             params["gendered_denominations_ending"] = config.german_gender_ending
 
         label = label if label else lang._("rules." + category + "_label")
-        if category != subcategory:
-            label += ": " + lang._("rules." + subcategory + "_label")
-
-        reason = lang._("rules." + subcategory + "_reason", params)
-        solution = explanation
-        solution = (
-            solution
-            if solution != None
-            else lang._("rules." + subcategory + "_solution", params)
-        )
-
-        if explanation != None:
-            icon, explanation = ResultOut.parseExplanation(explanation)
-            if icon == None:
-                icon, foo = ResultOut.parseExplanation(
-                    lang._("rules." + subcategory + "_explanation", params)
-                )
-        else:
-            icon, explanation = ResultOut.parseExplanation(
-                lang._("rules." + subcategory + "_explanation", params)
-            )
-
         if category != "orthography":
+            category_key = subcategory
+
             settings = get_settings()
             url = (
                 settings.learning_bites_base_url
@@ -349,8 +329,31 @@ class ResultOut(BaseModel):
             )
         else:
             url = None
+            category_key = category
 
-        gravity = gravity if gravity != None else categories[subcategory]["gravity"]
+        if category != category_key:
+            label += ": " + lang._("rules." + category_key + "_label")
+
+        reason = lang._("rules." + category_key + "_reason", params)
+        solution = explanation
+        solution = (
+            solution
+            if solution != None
+            else lang._("rules." + category_key + "_solution", params)
+        )
+
+        if explanation != None:
+            icon, explanation = ResultOut.parseExplanation(explanation)
+            if icon == None:
+                icon, foo = ResultOut.parseExplanation(
+                    lang._("rules." + category_key + "_explanation", params)
+                )
+        else:
+            icon, explanation = ResultOut.parseExplanation(
+                lang._("rules." + category_key + "_explanation", params)
+            )
+
+        gravity = gravity if gravity != None else categories[category_key]["gravity"]
 
         is_upper = text[0:1].isupper()
 
