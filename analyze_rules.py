@@ -106,6 +106,10 @@ def get_data_from_files(locale):
 
     print("Trigger for directory %s: %s " % (base_directory, str(len(all_triggers))))
 
+    for alternative in all_alternatives:
+        if re.search("^[^-]*--[^-]*$", alternative):
+            print("Potential missing - in ' --- ': " + alternative)
+
     return set(all_triggers), set(all_alternatives)
 
 

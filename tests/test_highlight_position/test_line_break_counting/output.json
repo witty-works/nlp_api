@@ -16,9 +16,9 @@
                 "text": "This sentence does not start with an uppercase letter."
             },
             "gravity": 1,
-            "label": "Orthography",
+            "label": "Capitalization",
             "start": 2,
-            "subcategory": "orthography",
+            "subcategory": "casing",
             "text": "helo"
         },
         {

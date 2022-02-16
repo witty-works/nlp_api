@@ -35,8 +35,26 @@
             "gravity": 1,
             "label": "Spelling mistake",
             "start": 2,
-            "subcategory": "orthography",
+            "subcategory": "typos",
             "text": "liki"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "What"
+                }
+            ],
+            "category": "orthography",
+            "end": 27,
+            "explanation": {
+                "icon": "❌",
+                "text": "This sentence does not start with an uppercase letter."
+            },
+            "gravity": 1,
+            "label": "Capitalization",
+            "start": 23,
+            "subcategory": "casing",
+            "text": "what"
         }
     ]
 }

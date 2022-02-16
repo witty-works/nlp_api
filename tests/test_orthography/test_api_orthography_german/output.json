@@ -74,7 +74,7 @@
             "gravity": 1,
             "label": "Rechtschreibfehler",
             "start": 22,
-            "subcategory": "orthography",
+            "subcategory": "typos",
             "text": "ueber"
         },
         {
@@ -149,7 +149,7 @@
             "gravity": 1,
             "label": "Rechtschreibfehler",
             "start": 32,
-            "subcategory": "orthography",
+            "subcategory": "typos",
             "text": "Strasse"
         },
         {
@@ -165,9 +165,9 @@
                 "text": "Die Verwendung von mehreren Frage- oder Ausrufezeichen wirkt oft übertrieben emphatisch."
             },
             "gravity": 1,
-            "label": "Orthographie",
+            "label": "Zeichensetzung",
             "start": 39,
-            "subcategory": "orthography",
+            "subcategory": "punctuation",
             "text": "!!!"
         }
     ]

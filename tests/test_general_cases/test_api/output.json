@@ -5,31 +5,6 @@
         {
             "alternatives": [
                 {
-                    "text": "Jemand, der erfahren und fachkundig ist"
-                },
-                {
-                    "text": "Jemand mit Know-how und Erfahrung"
-                },
-                {
-                    "text": "Mensch, der seine Fachkenntnis ständig vertieft"
-                }
-            ],
-            "category": "gendered",
-            "end": 16,
-            "explanation": {
-                "icon": "💡",
-                "text": "Bild eines Mannes wird unbewusst ausgelöst",
-                "url": "https://www.witty.works/de/gendered#function"
-            },
-            "gravity": 2,
-            "label": "Geschlechtsspezifisch: Spezielle Funktionen",
-            "start": 11,
-            "subcategory": "function",
-            "text": "Ninja"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "Auftraggebende"
                 },
                 {
@@ -66,6 +41,31 @@
             "start": 42,
             "subcategory": "titles",
             "text": "Kunden"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Jemand, der erfahren und fachkundig ist"
+                },
+                {
+                    "text": "Person, die ihr Know-how und ihre Erfahrung kreativ einsetzt"
+                },
+                {
+                    "text": "Mensch, der seine Fachkenntnis ständig vertieft"
+                }
+            ],
+            "category": "style",
+            "end": 16,
+            "explanation": {
+                "icon": "😮‍💨",
+                "text": "Superlative: als Druck oder Arroganz wahrgenommen",
+                "url": "https://www.witty.works/de/style#exaggerating"
+            },
+            "gravity": 2,
+            "label": "Stil: Superlative",
+            "start": 11,
+            "subcategory": "exaggerating",
+            "text": "Ninja"
         }
     ]
 }

@@ -4,19 +4,32 @@
     "results": [
         {
             "alternatives": [
-                "Jemand, der erfahren und fachkundig ist",
-                "Jemand mit Know-how und Erfahrung",
-                "Mensch, der seine Fachkenntnis ständig vertieft"
+                "unsere",
+                "unserer",
+                "untere",
+                "unser",
+                "unserem",
+                "unseren",
+                "unseres",
+                "unitäre",
+                "unserm",
+                "unsern",
+                "unsre",
+                "unsrer",
+                "unstete",
+                "ansäuere",
+                "ansäure",
+                "unterere"
             ],
-            "category": "gendered",
+            "category": "orthography",
             "context": "",
-            "end": 16,
-            "label": "Geschlechtsspezifisch: Spezielle Funktionen",
-            "reason": "Aus wirtschaftlich-historischen Gründen wird unbewusst ein Bild eines Mannes vor dem inneren Auge hervorgerufen. Das weibliche Geschlecht oder andere Geschlechtsidentitäten werden nicht sichtbar. Und sie fühlen sich nicht zugehörig.",
-            "solution": "Umgehen Sie mit anderen Worten das unbewusst hervorgerufene Bild. Nutzen Sie eher das Nomen, das die Tätigkeit bezeichnet, um das unbewusste Bild zu umgehen. Oder verwenden Sie eine geschlechtsneutrale Bezeichnung.",
-            "start": 11,
-            "subcategory": "function",
-            "text": "Ninja"
+            "end": 42,
+            "label": "Rechtschreibfehler",
+            "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
+            "solution": "Möglicher Tippfehler gefunden.",
+            "start": 35,
+            "subcategory": "typos",
+            "text": "unseere"
         },
         {
             "alternatives": [
@@ -31,13 +44,29 @@
             ],
             "category": "gendered",
             "context": "",
-            "end": 48,
+            "end": 49,
             "label": "Geschlechtsspezifisch: Titel",
             "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
             "solution": "Verwenden Sie eine Schreibweise, die das weibliche Geschlecht sowie auch andere Geschlechteridentitäten, die nicht einem binären Verständnis von Geschlecht folgen, anspricht.",
-            "start": 42,
+            "start": 43,
             "subcategory": "titles",
             "text": "Kunden"
+        },
+        {
+            "alternatives": [
+                "Jemand, der erfahren und fachkundig ist",
+                "Person, die ihr Know-how und ihre Erfahrung kreativ einsetzt",
+                "Mensch, der seine Fachkenntnis ständig vertieft"
+            ],
+            "category": "style",
+            "context": "",
+            "end": 16,
+            "label": "Stil: Superlative",
+            "reason": "Kommuniziert, dass sich Menschen sich im Sinne der Superlative anpassen müssen.",
+            "solution": "Verwenden Sie eine authentisch und ehrlich klingende Aussage.",
+            "start": 11,
+            "subcategory": "exaggerating",
+            "text": "Ninja"
         }
     ]
 }
