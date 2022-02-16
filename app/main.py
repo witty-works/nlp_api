@@ -216,6 +216,17 @@ def root():
     return RedirectResponse(url=url, status_code=status_code)
 
 
+@app.get("/save_openapi_json")
+def save_openapi_json(username: str = Depends(get_current_username)):
+    openapi_data = app.openapi()
+    for path in openapi_data["paths"].copy():
+        if not "check" in path:
+            del openapi_data["paths"][path]
+
+    with open("openapi.json", "w") as file:
+        json.dump(openapi_data, file, indent=4, sort_keys=True)
+
+
 @app.get("/form")
 def form():
     return root()

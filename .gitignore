@@ -20,3 +20,5 @@ coverage.xml
 
 python-probe.log
 .env
+
+openapi.json
