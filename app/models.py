@@ -300,14 +300,13 @@ class ResultOut(BaseModel):
         if end == None:
             end = start + len(text)
 
+        context = None
         if config.store_context:
             context_start = max(int(start) - 100, 0)
             context_end = min(int(end) + 100, len(full_text))
             context = full_text[context_start:context_end]
         elif version == 1.0:
             context = ""
-        else:
-            context = None
 
         params = {}
         if subcategory == "gendered_denominations_ending":
@@ -374,15 +373,15 @@ class ResultOut(BaseModel):
 
         cleaned_alternatives = {}
         for alternative in alternatives:
+            inspiration = None
             if ResultOut.isInspirationAlternative(alternative):
                 if not config.show_inspiration_alternatives:
                     continue
 
                 inspiration = True
-            else:
-                inspiration = None
 
             alternative_context = None
+            remove = None
             if category != "orthography":
                 if "---" in alternative:
                     alternative, alternative_context = alternative.split("---")
@@ -395,10 +394,8 @@ class ResultOut(BaseModel):
             if alternative == "-" and version == 1.1:
                 alternative = None
                 remove = True
-            else:
-                remove = None
-                if lang.locale == "de-CH":
-                    alternative = alternative.replace("ß", "ss")
+            elif lang.locale == "de-CH":
+                alternative = alternative.replace("ß", "ss")
 
             alternative_variations = ResultOut.getAlternativeVariations(
                 config.gendered_roles_format, config.german_gender_ending, alternative
