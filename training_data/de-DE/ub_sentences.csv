@@ -29,9 +29,11 @@ aus der Schußlinie nehmen,i,18-01-2022,unconscious_bias,military_source,"['unte
 aus der Schußlinie sein,i,18-01-2022,unconscious_bias,military_source,"['vor Angriffen geschützt sein', 'auf der sicheren Seite sein', 'von Kritik verschont werden']",,[''],"['vor Angriffen geschützt sein', 'auf der sicheren Seite sein', 'von Kritik verschont werden']"
 aus der Schußlinie ziehen,i,18-01-2022,unconscious_bias,military_source,"['vor Angriffen schützen', 'vor Kritik in Schutz nehmen', 'eine schützende Hand halten über', 'unter seinen persönlichen Schutz stellen', '(jemandem etwas ...) vom Hals halten']",,[''],"['vor Angriffen schützen', 'vor Kritik in Schutz nehmen', 'eine schützende Hand halten über', 'unter seinen persönlichen Schutz stellen', '(jemandem etwas ...) vom Hals halten']"
 blind wie eine Fledermaus sein,i,,unconscious_bias,vision,"['schlecht sehen', 'mit schwachem Sehvermögen']",,[''],"['schlecht sehen', 'mit schwachem Sehvermögen']"
+deine Frau,s,05-02-2022,unconscious_bias,gender_identity,"['dein~e Partner~in', 'der Mensch, mit dem du lebst,']",,[''],"['dein~e Partner~in', 'der Mensch, mit dem du lebst,']"
 die Flinte ins Korn werfen,i,26-01-2022,unconscious_bias,military_source,"['aufgeben', 'alles hinwerfen', 'sich entmutigen lassen']",,[''],"['aufgeben', 'alles hinwerfen', 'sich entmutigen lassen']"
 ehemalige Frau,a+s,12/2/2022,unconscious_bias,gender_identity,"['Mann, der früher als Frau lebte']",,[''],"['Mann, der früher als Frau lebte']"
 ehemaliger Mann,a+s,12/2/2022,unconscious_bias,gender_identity,"['Frau, die früher als Mann lebte']",,[''],"['Frau, die früher als Mann lebte']"
+ihre Frau,s,05-02-2022,unconscious_bias,gender_identity,['ihr~e Partner~in'],,[''],['ihr~e Partner~in']
 im Schild führen,i,26-01-2022,unconscious_bias,military_source,['einen Plan haben'],,[''],['einen Plan haben']
 in der Schußlinie,i,18-01-2022,unconscious_bias,military_source,"['heftiger Kritik ausgesetzt', 'Anfechtungen ausgesetzt']",,[''],"['heftiger Kritik ausgesetzt', 'Anfechtungen ausgesetzt']"
 in die Schußlinie geraten,i,18-01-2022,unconscious_bias,military_source,"['Kritik auf sich ziehen', 'Anfechtungen ausgesetzt sein', 'in etwas hineingezogen werden', 'sich eine Blöße geben']",,[''],"['Kritik auf sich ziehen', 'Anfechtungen ausgesetzt sein', 'in etwas hineingezogen werden', 'sich eine Blöße geben']"
@@ -40,6 +42,7 @@ mehr erreichen,a+v,,unconscious_bias,agentic,"['unternehmerisch handeln', 'wirts
 mit Autismus,s,,unconscious_bias,cognitive_ability,"['Autist~in~/~Autist', 'Person auf dem Spektrum', 'autistische Person']",,[''],"['Autist~in~/~Autist', 'Person auf dem Spektrum', 'autistische Person']"
 pro aktiv,a,,unconscious_bias,agentic,"['energiegeladen', 'unternehmerisch', 'bereit, die Initiative zu ergreifen']",,[''],"['energiegeladen', 'unternehmerisch', 'bereit, die Initiative zu ergreifen']"
 resultat orientiert,a,,unconscious_bias,agentic,"['umsetzungsfreudig', 'motiviert, mit dem Team gemeinsame Ziele zu verwirklichen', 'auf Meilensteine fokussiert']",,[''],"['umsetzungsfreudig', 'motiviert, mit dem Team gemeinsame Ziele zu verwirklichen', 'auf Meilensteine fokussiert']"
+seine Frau,s,05-02-2022,unconscious_bias,gender_identity,['sein~e Partner~in'],,[''],['sein~e Partner~in']
 sich am Riemen reißen,i,26-01-2022,unconscious_bias,military_source,['zusammennehmen'],,[''],['zusammennehmen']
 sich sicher sein,v,,unconscious_bias,agentic,"['gewissenhaft geprüft haben', 'sorgfältig abgewogen haben', 'in eigene Kompetenz vertrauen', 'bereit sein, die eigene Meinung/Arbeit vertreten']",,[''],"['gewissenhaft geprüft haben', 'sorgfältig abgewogen haben', 'in eigene Kompetenz vertrauen', 'bereit sein, die eigene Meinung/Arbeit vertreten']"
 sich wehren,v,,unconscious_bias,agentic,"['das eigene Vorgehen erläutern', 'den eigenen Standpunkt kommunizieren', 'seine Sicht vertreten']",,[''],"['das eigene Vorgehen erläutern', 'den eigenen Standpunkt kommunizieren', 'seine Sicht vertreten']"
