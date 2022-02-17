@@ -1,0 +1,7 @@
+{
+    "text": "Was ist seine Frau?",
+    "config": {
+        "store_context": false,
+        "german_gender_ending": "In"
+    }
+}

@@ -30,6 +30,8 @@ from spacy.matcher import PhraseMatcher, Matcher
 
 from app.models import (
     Config,
+    GenderedRolesFormatType,
+    GermanGenderEnding,
     LangType,
     SingularThey,
     Language,
@@ -54,7 +56,7 @@ from collections import namedtuple, defaultdict
 from collections import namedtuple
 from app.sentry import set_up_sentry_sdk
 
-version = "1.22.0"
+version = "1.22.1"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -225,6 +227,28 @@ def save_openapi_json(username: str = Depends(get_current_username)):
 
     with open("openapi.json", "w") as file:
         json.dump(openapi_data, file, indent=4, sort_keys=True)
+
+
+@app.get("/german_gender_ending")
+def german_gender_ending(
+    alternative: str,
+    german_gender_ending: GermanGenderEnding = None,
+    username: str = Depends(get_current_username),
+):
+    alternative_variations = set()
+
+    german_gender_endings = Config._gendereddenom_ending.keys()
+    if german_gender_ending != None:
+        german_gender_endings = [german_gender_ending]
+
+    for german_gender_ending in german_gender_endings:
+        alternative_variations.update(
+            ResultOut.getAlternativeVariations(
+                GenderedRolesFormatType.BOTH, german_gender_ending, alternative
+            )
+        )
+
+    return alternative_variations
 
 
 @app.get("/form")

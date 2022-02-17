@@ -3,11 +3,11 @@ import re
 import csv
 import json
 import os
-import sys
 import requests
 from app.models import (
     ResultOut,
     Config,
+    GenderedRolesFormatType,
 )
 
 
@@ -133,33 +133,27 @@ def generate_alternatives_english(all_alternatives):
 
 
 def analyze_correct_endings_german(word):
-    if re.search("^.*[a-z]{3}in(nen)?[~ ].*$", word):
-        print("Potential missing ~ in (~in): " + word)
-
-    if re.search("^.*[a-z]{3}in~[^ ].*$", word):
-        print("Potential missing ~ in (in~): " + word)
-
-    if re.search("^.*[a-z]{3}innen~[^ ].*$", word):
-        print("Potential missing ~ in (innen~): " + word)
-
-    if re.search("^.*[a-z]e~.*/.*$", word):
-        print("Potential missing ~ in (~e~): " + word)
-
-    if re.search("^.+e~r.+$", word):
-        print("Potential extra ~ in (er): " + word)
-
-    if re.search("^.+[^~]/[^~].+$", word):
-        print("Potential missing ~ in (/): " + word)
-
-    if re.search("^.+[^~] und [^~].+$", word):
-        print("Potential missing ~ in (und): " + word)
-
-    if re.search("~en", word):
-        print("Potential misplaced ~ in (~en): " + word)
-
-    occurrence = word.count("~")
-    if occurrence != 1 and occurrence != 3:
+    if (
+        re.search("^.*[a-z]{3}in(nen)?[~ ].*$", word)
+        or re.search("^.*[a-z]{3}in~[^ ].*$", word)
+        or re.search("^.*[a-z]{3}innen~[^ ].*$", word)
+        or re.search("^.*[a-z]e~.*/.*$", word)
+        or re.search("^.+e~r.+$", word)
+        or re.search("^.+[^~]/[^~].+$", word)
+        or re.search("^.+[^~] und [^~].+$", word)
+        or re.search("~en", word)
+    ):
         print("Potential misplaced ~ in: " + word)
+        alternative_variations = set()
+        for german_gender_ending in Config._gendereddenom_ending.keys():
+            alternative_variations.update(
+                ResultOut.getAlternativeVariations(
+                    GenderedRolesFormatType.BOTH, german_gender_ending, word
+                )
+            )
+
+        for alternative_variation in alternative_variations:
+            print(alternative_variation)
 
 
 def generate_correct_endings_german(all_alternatives):
@@ -172,7 +166,7 @@ def generate_correct_endings_german(all_alternatives):
 
             for german_gender_ending in endings:
                 alternative = ResultOut.getGenderedRolesFormatInclusive(
-                    word, german_gender_ending
+                    german_gender_ending, word
                 )
 
                 clean_words.append(alternative)
@@ -274,7 +268,7 @@ def generate_german_articles(locale):
     for alternative in all_alternatives:
         for german_gender_ending in endings:
             word = ResultOut.getGenderedRolesFormatInclusive(
-                alternative, german_gender_ending
+                german_gender_ending, alternative
             )
 
             articles.append(word)
