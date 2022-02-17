@@ -1,0 +1,68 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "seinE Partnerin"
+                },
+                {
+                    "text": "seine Partnerin"
+                }
+            ],
+            "category": "unconscious_bias",
+            "end": 18,
+            "explanation": {
+                "icon": "😒",
+                "text": "Versteckte Voreingenommenheit bezüglich Geschlechtsidentität",
+                "url": "https://www.witty.works/de/unconscious_bias#gender_identity"
+            },
+            "gravity": 2,
+            "label": "Sprachliche Voreingenommenheit: Geschlechtsidentität",
+            "start": 8,
+            "subcategory": "gender_identity",
+            "text": "seine Frau"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Person"
+                },
+                {
+                    "text": "Jemand"
+                },
+                {
+                    "text": "Mensch"
+                },
+                {
+                    "text": "ErwachseneR"
+                },
+                {
+                    "text": "Erwachsene/Erwachsener"
+                },
+                {
+                    "text": "Alle"
+                },
+                {
+                    "text": "Du"
+                },
+                {
+                    "text": "Sie"
+                }
+            ],
+            "category": "unconscious_bias",
+            "end": 18,
+            "explanation": {
+                "icon": "😒",
+                "text": "Versteckte Voreingenommenheit bezüglich Geschlechtsidentität",
+                "url": "https://www.witty.works/de/unconscious_bias#gender_identity"
+            },
+            "gravity": 2,
+            "label": "Sprachliche Voreingenommenheit: Geschlechtsidentität",
+            "start": 14,
+            "subcategory": "gender_identity",
+            "text": "Frau"
+        }
+    ]
+}

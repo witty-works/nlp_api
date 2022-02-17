@@ -142,8 +142,6 @@ def analyze_correct_endings_german(word):
         or re.search("^.+[^~]/[^~].+$", word)
         or re.search("^.+[^~] und [^~].+$", word)
         or re.search("~en", word)
-        or word.count("~") != 1
-        and word.count("~") != 3
     ):
         print("Potential misplaced ~ in: " + word)
         alternative_variations = set()

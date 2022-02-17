@@ -533,7 +533,7 @@ class ResultOut(BaseModel):
 
         if german_gender_ending == "In":
             if alternative.count("~") > 1:
-                ending = ending.capitalize()
+                ending = ending[0:1].capitalize() + ending[1:]
                 separator = ""
             else:
                 separator = "/"
@@ -544,6 +544,9 @@ class ResultOut(BaseModel):
                 separator = "/"
         else:
             separator = german_gender_ending[0:1]
+
+        if len(variants) == 3:
+            ending += separator + variants[2]
 
         return beginning + separator + ending
 
