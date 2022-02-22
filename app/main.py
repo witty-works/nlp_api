@@ -709,6 +709,10 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
         words_alternatives_en["ge"] = gender_words_alternatives_GB
         words_alternatives_en["style"] = style_words_alternatives_GB
         words_alternatives_en["bias"] = bias_words_alternatives_GB
+
+        if config.singular_they == SingularThey.ALL_PRONOUNS:
+            words_alternatives_en["bias"] += bias_singular_they_alternatives_GB
+
         inclusive_words_alternatives_en = inclusive_words_alternatives_GB
         gendered_words_alternatives_en["gendered"] = gender_noun_words_alternatives_GB
         gendered_words_alternatives_en["bias"] = gender_bias_words_alternatives_GB
@@ -722,6 +726,10 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
         words_alternatives_en["ge"] = gender_words_alternatives_US
         words_alternatives_en["style"] = style_words_alternatives_US
         words_alternatives_en["bias"] = bias_words_alternatives_US
+
+        if config.singular_they == SingularThey.ALL_PRONOUNS:
+            words_alternatives_en["bias"] += bias_singular_they_alternatives_US
+
         inclusive_words_alternatives_en = inclusive_words_alternatives_US
         gendered_words_alternatives_en["gendered"] = gender_noun_words_alternatives_US
         gendered_words_alternatives_en["bias"] = gender_bias_words_alternatives_US
@@ -730,10 +738,6 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
         sentences_alternatives_en["ge"] = gender_sentences_alternatives_US
         sentences_alternatives_en["style"] = style_sentences_alternatives_US
         sentences_alternatives_en["bias"] = bias_sentences_alternatives_US
-
-    if config.singular_they == SingularThey.ALL_PRONOUNS:
-        words_alternatives_en["bias"].append(("he", "['they']", "binary_pronouns"))
-        words_alternatives_en["bias"].append(("she", "['they']", "binary_pronouns"))
 
     if is_sub_category_enabled(config, "openly_discriminating"):
         list_full += rules_based_words_phrase_matcher_en(

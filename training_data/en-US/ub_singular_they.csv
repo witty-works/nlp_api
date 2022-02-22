@@ -1,0 +1,7 @@
+Lemma,Word_Type,Priority,Category,Primary_subcategory,Sg_all_split,Pl_all_split,Alt_split
+he,s,21-01-2022,unconscious_bias,binary_pronouns,['they'],[''],['they']
+she,s,21-01-2022,unconscious_bias,binary_pronouns,['they'],[''],['they']
+him,s,21-01-2022,unconscious_bias,binary_pronouns,['them'],[''],['them']
+her,s,21-01-2022,unconscious_bias,binary_pronouns,['them'],[''],['them']
+himself,s,21-01-2022,unconscious_bias,binary_pronouns,['themself'],[''],['themself']
+herself,s,21-01-2022,unconscious_bias,binary_pronouns,['themself'],[''],['themself']
