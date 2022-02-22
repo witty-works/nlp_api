@@ -46,7 +46,7 @@ from app.lang_detection import LangDetection
 from app.categories import categories
 from app.settings import get_settings
 from app.logger import set_up_logger
-from app.redis import set_up_redis
+from app.redis_setup import set_up_redis
 from app.languagetool import get_languagetool_url
 from app.model import model
 from app.rules import *
