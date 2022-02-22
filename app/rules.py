@@ -47,6 +47,7 @@ rules = {
         "df_ub_plur_word": "ub_plur_words.csv",
         "df_ub_no_plur_word": "ub_no_plur_words.csv",
         "df_ub_sentence": "ub_sentences.csv",
+        "df_ub_singular_they": "ub_singular_they.csv",
     },
 }
 
@@ -412,5 +413,23 @@ bias_sentences_alternatives_GB = list(
         df_bias_sentences_GB["Lemma"],
         df_bias_sentences_GB["Alt_split"],
         df_bias_sentences_GB["Primary_subcategory"],
+    )
+)
+
+df_bias_singular_they_US = rules["en-US"]["df_ub_singular_they"]
+df_bias_singular_they_GB = rules["en-GB"]["df_ub_singular_they"]
+# unconscious bias singular they: lemma + alternatives split + subcategory
+bias_singular_they_alternatives_US = list(
+    zip(
+        df_bias_singular_they_US["Lemma"],
+        df_bias_singular_they_US["Alt_split"],
+        df_bias_singular_they_US["Primary_subcategory"],
+    )
+)
+bias_singular_they_alternatives_GB = list(
+    zip(
+        df_bias_singular_they_GB["Lemma"],
+        df_bias_singular_they_GB["Alt_split"],
+        df_bias_singular_they_GB["Primary_subcategory"],
     )
 )
