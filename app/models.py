@@ -4,6 +4,7 @@ from enum import Enum
 
 import gettext
 import string
+import re
 
 from app.categories import categories
 from app.settings import get_settings
@@ -354,7 +355,17 @@ class ResultOut(BaseModel):
 
         gravity = gravity if gravity != None else categories[category_key]["gravity"]
 
-        is_upper = text[0:1].isupper()
+        is_upper = False
+        if lang.lang == "de":
+            punctuation = "[.!?:]"
+        else:
+            punctuation = "[.!?]"
+
+        if (
+            re.match("^.*" + punctuation + "\s*$", full_text[0:start], re.MULTILINE)
+            != None
+        ):
+            is_upper = True
 
         if alternatives == None:
             alternatives = []

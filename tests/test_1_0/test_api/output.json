@@ -39,8 +39,8 @@
                 "Kundinnen und Kunden",
                 "Kundschaft",
                 "Klientel",
-                "Beziehende Personen",
-                "Beauftragende Firmen"
+                "beziehende Personen",
+                "beauftragende Firmen"
             ],
             "category": "gendered",
             "context": "",
@@ -54,7 +54,7 @@
         },
         {
             "alternatives": [
-                "Jemand, der erfahren und fachkundig ist",
+                "jemand, der erfahren und fachkundig ist",
                 "Person, die ihr Know-how und ihre Erfahrung kreativ einsetzt",
                 "Mensch, der seine Fachkenntnis ständig vertieft"
             ],

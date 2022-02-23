@@ -23,10 +23,10 @@
                     "text": "Klientel"
                 },
                 {
-                    "text": "Beziehende Personen"
+                    "text": "beziehende Personen"
                 },
                 {
-                    "text": "Beauftragende Firmen"
+                    "text": "beauftragende Firmen"
                 }
             ],
             "category": "gendered",
@@ -45,7 +45,7 @@
         {
             "alternatives": [
                 {
-                    "text": "Jemand, der erfahren und fachkundig ist"
+                    "text": "jemand, der erfahren und fachkundig ist"
                 },
                 {
                     "text": "Person, die ihr Know-how und ihre Erfahrung kreativ einsetzt"

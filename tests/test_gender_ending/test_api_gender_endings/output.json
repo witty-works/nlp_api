@@ -23,10 +23,10 @@
                     "text": "Bestellende"
                 },
                 {
-                    "text": "Beziehende Person"
+                    "text": "beziehende Person"
                 },
                 {
-                    "text": "Beauftragende Firma"
+                    "text": "beauftragende Firma"
                 }
             ],
             "category": "gendered",
@@ -63,10 +63,10 @@
                     "text": "Klientel"
                 },
                 {
-                    "text": "Beziehende Personen"
+                    "text": "beziehende Personen"
                 },
                 {
-                    "text": "Beauftragende Firmen"
+                    "text": "beauftragende Firmen"
                 }
             ],
             "category": "gendered",
