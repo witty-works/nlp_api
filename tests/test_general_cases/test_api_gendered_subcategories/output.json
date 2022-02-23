@@ -52,7 +52,7 @@
         {
             "alternatives": [
                 {
-                    "text": "Leitende Kraft"
+                    "text": "leitende Kraft"
                 },
                 {
                     "text": "Leitungsperson"
@@ -67,7 +67,7 @@
                     "text": "Vorgesetzte/Vorgesetzter"
                 },
                 {
-                    "text": "Leitende Kräfte"
+                    "text": "leitende Kräfte"
                 },
                 {
                     "text": "Leitungskräfte"
@@ -79,10 +79,10 @@
                     "text": "Vorgesetzte"
                 },
                 {
-                    "text": "Entscheidungsbefugte Person"
+                    "text": "entscheidungsbefugte Person"
                 },
                 {
-                    "text": "Verantwortliche Person"
+                    "text": "verantwortliche Person"
                 }
             ],
             "category": "gendered",

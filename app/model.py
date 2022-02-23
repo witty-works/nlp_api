@@ -70,6 +70,7 @@ def custom_tokenizer_de(nlp):
         rules=nlp.Defaults.tokenizer_exceptions,
     )
 
+
 # Model data
 model = {"en": spacy.load("en_core_web_sm"), "de": spacy.load("de_core_news_sm")}
 
@@ -133,6 +134,46 @@ dict_lemma_lookup = {
     "hervorragend": "hervorragend",
     "überzeugend": "überzeugend",
     "zwingend": "zwingend",
+    "Alter": "Alter",
+    "Bucklige": "Bucklige",
+    "Grundsätze": "Grundsätze",
+    "Herrschaften": "Herrschaften",
+    "Jeder": "Jeder",
+    "Kanus": "Kanus",
+    "Spitzenunternehmen ": "Spitzenunternehmen",
+    "Trampel": "Trampel",
+    "Wettkämpfe": "Wettkämpfe",
+    "Wilde": "Wilde",
+    "Zusammenhänge": "Zusammenhänge",
+    "andauernd": "andauernd",
+    "angreifend": "angreifend",
+    "anscheinend": "anscheinend",
+    "auffallend": "auffallend",
+    "aufstrebend": "aufstrebend",
+    "ausgerechnet": "ausgerechnet",
+    "bestimmend": "bestimmend",
+    "bestimmt": "bestimmt",
+    "einige": "einige",
+    "entschieden": "entschieden",
+    "entspannt": "entspannt",
+    "erfüllend": "erfüllend",
+    "ermutigend": "ermutigend",
+    "erprobt": "erprobt",
+    "etliche": "etliche",
+    "fortwährend": "fortwährend",
+    "führen": "führen",
+    "gewagt": "gewagt",
+    "herrschend": "herrschend",
+    "o.Ä.": "o.Ä.",
+    "offenbar": "offenbar",
+    "schlicht": "schlicht",
+    "sicher": "sicher",
+    "stärker": "stärker",
+    "treibend": "treibend",
+    "u.Ä.": "u.Ä.",
+    "u.ä.": "u.ä.",
+    "zugegeben": "zugegeben",
+    "überzeugt": "überzeugt",
 }
 
 lookup_table = model["de"].get_pipe("lemmatizer").lookups.get_table("lemma_lookup")
