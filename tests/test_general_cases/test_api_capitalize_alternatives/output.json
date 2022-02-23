@@ -1,0 +1,114 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "Auftraggebende"
+                },
+                {
+                    "text": "Bestellende"
+                },
+                {
+                    "text": "Kund:innen"
+                },
+                {
+                    "text": "Kundinnen und Kunden"
+                },
+                {
+                    "text": "Kundschaft"
+                },
+                {
+                    "text": "Klientel"
+                },
+                {
+                    "text": "beziehende Personen"
+                },
+                {
+                    "text": "beauftragende Firmen"
+                }
+            ],
+            "category": "gendered",
+            "end": 34,
+            "explanation": {
+                "icon": "😟",
+                "text": "“Mitmeinen” mit männlichen Generikum funktioniert nicht",
+                "url": "https://www.witty.works/de/gendered#titles"
+            },
+            "gravity": 2,
+            "label": "Geschlechtsspezifisch: Titel",
+            "start": 28,
+            "subcategory": "titles",
+            "text": "Kunden"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Fleiß"
+                },
+                {
+                    "text": "Eifer"
+                },
+                {
+                    "text": "Strebsamkeit"
+                },
+                {
+                    "text": "Engagement"
+                },
+                {
+                    "text": "Entwicklungsmotivation"
+                },
+                {
+                    "text": "Unternehmerische Haltung"
+                },
+                {
+                    "text": "Freude an mehr Verantwortung"
+                },
+                {
+                    "text": "Freude am Setzen und Verwirklichen von Zielen"
+                },
+                {
+                    "text": "Interesse an persönlichem Wachstum"
+                },
+                {
+                    "text": "Freude am Weiterkommen"
+                }
+            ],
+            "category": "unconscious_bias",
+            "end": 43,
+            "explanation": {
+                "icon": "😒",
+                "text": "Schreckt Menschen mit “wir”-Einstellung ab",
+                "url": "https://www.witty.works/de/unconscious_bias#agentic"
+            },
+            "gravity": 2,
+            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "start": 36,
+            "subcategory": "agentic",
+            "text": "Ehrgeiz"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Einen langen Atem haben"
+                },
+                {
+                    "text": "Fähigkeit, an Dingen dranzubleiben"
+                }
+            ],
+            "category": "unconscious_bias",
+            "end": 85,
+            "explanation": {
+                "icon": "😒",
+                "text": "Schreckt Menschen mit “wir”-Einstellung ab",
+                "url": "https://www.witty.works/de/unconscious_bias#agentic"
+            },
+            "gravity": 2,
+            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "start": 67,
+            "subcategory": "agentic",
+            "text": "Durchhaltevermögen"
+        }
+    ]
+}

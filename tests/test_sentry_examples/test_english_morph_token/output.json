@@ -96,16 +96,16 @@
         {
             "alternatives": [
                 {
-                    "text": "Older person"
+                    "text": "older person"
                 },
                 {
-                    "text": "Retiree"
+                    "text": "retiree"
                 },
                 {
-                    "text": "Someone with outdated views"
+                    "text": "someone with outdated views"
                 },
                 {
-                    "text": "Person with traditional views"
+                    "text": "person with traditional views"
                 }
             ],
             "category": "unconscious_bias",
