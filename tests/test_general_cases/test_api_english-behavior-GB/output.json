@@ -1,0 +1,37 @@
+{
+    "language": "en",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "substance abuser"
+                },
+                {
+                    "text": "substance misuser"
+                },
+                {
+                    "text": "substance user"
+                },
+                {
+                    "text": "a person who has become physically/psychologically dependent on a substance"
+                },
+                {
+                    "text": "a person with an uncontrolled compulsion to continue engaging in an activity despite suffering negative personal or professional consequences"
+                }
+            ],
+            "category": "unconscious_bias",
+            "end": 17,
+            "explanation": {
+                "icon": "😒",
+                "text": "Hidden bias regarding behaviour",
+                "url": "https://www.witty.works/en/unconscious_bias#behavior"
+            },
+            "gravity": 2,
+            "label": "Biased language: Behaviour",
+            "start": 11,
+            "subcategory": "behavior",
+            "text": "addict"
+        }
+    ]
+}
