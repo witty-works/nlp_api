@@ -3,6 +3,13 @@
 mkdir -p locales/en_GB/LC_MESSAGES
 rm -rf locales/en_GB/LC_MESSAGES/*
 cp -r locales/en_US/LC_MESSAGES/messages.po locales/en_GB/LC_MESSAGES/.
+pipenv run python -m eng locales/en_GB/LC_MESSAGES/. --ext=po --target="uk"
+
+if [ "$(uname)" == "Darwin" ]; then
+    find 'locales/en_GB/LC_MESSAGES' -name '*.po' -print0 | xargs -0 sed -i '' 's/rules\.behaviour/rules.behavior/g'
+else
+    find 'locales/en_GB/LC_MESSAGES' -name '*.po' -print0 | xargs -0 sed -i 's/rules\.behaviour/rules.behavior/g'
+fi
 
 rm -rf training_data/en-GB/*
 cp training_data/en-US/* training_data/en-GB/.

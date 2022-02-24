@@ -24,11 +24,11 @@
             "end": 17,
             "explanation": {
                 "icon": "😒",
-                "text": "Hidden bias regarding behavior",
+                "text": "Hidden bias regarding behaviour",
                 "url": "https://www.witty.works/en/unconscious_bias#behavior"
             },
             "gravity": 2,
-            "label": "Biased language: Behavior",
+            "label": "Biased language: Behaviour",
             "start": 11,
             "subcategory": "behavior",
             "text": "addict"
