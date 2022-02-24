@@ -1,2 +1,0 @@
-export BLACKFIRE_APM_ENABLED="1"
-export BLACKFIRE_LOG_FILE="/tmp/blackfire.log"
