@@ -8,6 +8,12 @@ rm -rf training_data/en-GB/*
 cp training_data/en-US/* training_data/en-GB/.
 pipenv run python -m eng training_data/en-GB/. --ext=csv --target="uk"
 
+if [ "$(uname)" == "Darwin" ]; then
+    find 'training_data/en-GB' -name '*.csv' -print0 | xargs -0 sed -i '' 's/,behaviour,/,behavior,/g'
+else
+    find 'training_data/en-GB' -name '*.csv' -print0 | xargs -0 sed -i 's/,behaviour,/,behavior,/g'
+fi
+
 mkdir -p locales/de_AT/LC_MESSAGES
 rm -rf locales/de_AT/LC_MESSAGES/*
 cp -r locales/de_DE/LC_MESSAGES/messages.po locales/de_AT/LC_MESSAGES/.
