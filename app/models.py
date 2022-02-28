@@ -296,6 +296,7 @@ class ResultOut(BaseModel):
         alternatives=None,
         label=None,
         explanation=None,
+        icon=None,
         gravity=None,
     ):
         if end == None:
@@ -338,6 +339,7 @@ class ResultOut(BaseModel):
             label += ": " + sub_label
 
         reason = lang._("rules." + category_key + "_reason", params)
+
         solution = explanation
         solution = (
             solution
@@ -345,16 +347,14 @@ class ResultOut(BaseModel):
             else lang._("rules." + category_key + "_solution", params)
         )
 
-        if explanation != None:
-            icon, explanation = ResultOut.parseExplanation(explanation)
-            if icon == None:
-                icon, foo = ResultOut.parseExplanation(
-                    lang._("rules." + category_key + "_explanation", params)
-                )
-        else:
-            icon, explanation = ResultOut.parseExplanation(
-                lang._("rules." + category_key + "_explanation", params)
-            )
+        explanation = (
+            explanation
+            if explanation
+            else lang._("rules." + category_key + "_explanation")
+        )
+
+        if icon == None and "emoji" in categories[category_key]:
+            icon = categories[category_key]["emoji"]
 
         gravity = gravity if gravity != None else categories[category_key]["gravity"]
 
@@ -475,17 +475,6 @@ class ResultOut(BaseModel):
             .replace("ä", "ae")
             .replace("ö", "oe")
         )
-
-    @staticmethod
-    def parseExplanation(explanation):
-        icon = None
-        explanation = explanation.strip()
-        pipe_sign_position = explanation.find("|")
-        if pipe_sign_position != -1:
-            icon = explanation[0:pipe_sign_position]
-            explanation = explanation[pipe_sign_position + 1 :]
-
-        return icon, explanation
 
     @staticmethod
     def isInspirationAlternative(alternative):
