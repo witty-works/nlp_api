@@ -314,6 +314,7 @@ class ResultOut(BaseModel):
             params["gendered_denominations_ending"] = config.german_gender_ending
 
         label = label if label else lang._("rules." + category + "_label")
+        sub_label = lang._("rules." + subcategory + "_label")
         if category != "orthography":
             category_key = subcategory
 
@@ -323,16 +324,18 @@ class ResultOut(BaseModel):
                 + "/"
                 + lang.lang
                 + "/"
-                + category
+                + ("categories" if lang.lang == "en" else "kategorien")
+                + "/"
+                + ResultOut.transliterate(label)
                 + "#"
-                + subcategory
+                + ResultOut.transliterate(sub_label)
             )
         else:
             url = None
             category_key = category
 
         if category != category_key:
-            label += ": " + lang._("rules." + category_key + "_label")
+            label += ": " + sub_label
 
         reason = lang._("rules." + category_key + "_reason", params)
         solution = explanation
@@ -461,6 +464,17 @@ class ResultOut(BaseModel):
         )
 
     factory = staticmethod(factory)
+
+    @staticmethod
+    def transliterate(string):
+        return (
+            string.lower()
+            .replace(" ", "_")
+            .replace("ß", "ss")
+            .replace("ü", "ue")
+            .replace("ä", "ae")
+            .replace("ö", "oe")
+        )
 
     @staticmethod
     def parseExplanation(explanation):

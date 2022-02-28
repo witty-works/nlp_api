@@ -85,7 +85,7 @@
             "explanation": {
                 "icon": "💡",
                 "text": "Image of a man unconsciously triggered",
-                "url": "https://www.witty.works/en/gendered#function"
+                "url": "https://www.witty.works/en/categories/gendered#special_functions"
             },
             "gravity": 2,
             "label": "Gendered: Special functions",
@@ -113,7 +113,7 @@
             "explanation": {
                 "icon": "😒",
                 "text": "Hidden bias regarding age over 50",
-                "url": "https://www.witty.works/en/unconscious_bias#age_old"
+                "url": "https://www.witty.works/en/categories/biased_language#50_years_and_older"
             },
             "gravity": 2,
             "label": "Biased language: 50 years and older",
