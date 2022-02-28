@@ -26,7 +26,7 @@
             "explanation": {
                 "icon": "😟",
                 "text": "Male generic doesn’t address all genders",
-                "url": "https://www.witty.works/en/gendered#titles"
+                "url": "https://www.witty.works/en/categories/gendered#titles"
             },
             "gravity": 2,
             "label": "Gendered: Titles",
@@ -42,7 +42,7 @@
             "explanation": {
                 "icon": "✅",
                 "text": "Emphasizes cooperative attributes",
-                "url": "https://www.witty.works/en/inclusive#communal"
+                "url": "https://www.witty.works/en/categories/inclusive#communal"
             },
             "label": "Inclusive: Communal",
             "start": 86,
@@ -61,7 +61,7 @@
             "explanation": {
                 "icon": "😮‍💨",
                 "text": "Exaggeration: Perceived as pressure or arrogance",
-                "url": "https://www.witty.works/en/style#exaggerating"
+                "url": "https://www.witty.works/en/categories/style#exaggeration"
             },
             "gravity": 2,
             "label": "Style: Exaggeration",
@@ -90,7 +90,7 @@
             "explanation": {
                 "icon": "😮‍💨",
                 "text": "Exaggeration: Perceived as pressure or arrogance",
-                "url": "https://www.witty.works/en/style#exaggerating"
+                "url": "https://www.witty.works/en/categories/style#exaggeration"
             },
             "gravity": 2,
             "label": "Style: Exaggeration",
@@ -125,7 +125,7 @@
             "explanation": {
                 "icon": "😒",
                 "text": "Deters people with a “we” mindset",
-                "url": "https://www.witty.works/en/unconscious_bias#agentic"
+                "url": "https://www.witty.works/en/categories/biased_language#agentic"
             },
             "gravity": 2,
             "label": "Biased language: Agentic",
@@ -157,7 +157,7 @@
             "explanation": {
                 "icon": "😒",
                 "text": "Deters people with a “we” mindset",
-                "url": "https://www.witty.works/en/unconscious_bias#agentic"
+                "url": "https://www.witty.works/en/categories/biased_language#agentic"
             },
             "gravity": 2,
             "label": "Biased language: Agentic",
@@ -195,7 +195,7 @@
             "explanation": {
                 "icon": "😒",
                 "text": "Deters people with a “we” mindset",
-                "url": "https://www.witty.works/en/unconscious_bias#agentic"
+                "url": "https://www.witty.works/en/categories/biased_language#agentic"
             },
             "gravity": 2,
             "label": "Biased language: Agentic",

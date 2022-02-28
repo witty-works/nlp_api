@@ -19,7 +19,7 @@
             "explanation": {
                 "icon": "💡",
                 "text": "Bild eines Mannes wird unbewusst ausgelöst",
-                "url": "https://www.witty.works/de/gendered#function"
+                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#spezielle_funktionen"
             },
             "gravity": 2,
             "label": "Geschlechtsspezifisch: Spezielle Funktionen",
@@ -41,7 +41,7 @@
             "explanation": {
                 "icon": "💡",
                 "text": "Bild eines Mannes wird unbewusst ausgelöst",
-                "url": "https://www.witty.works/de/gendered#function"
+                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#spezielle_funktionen"
             },
             "gravity": 2,
             "label": "Geschlechtsspezifisch: Spezielle Funktionen",
@@ -90,7 +90,7 @@
             "explanation": {
                 "icon": "😟",
                 "text": "Traditionelles Führungs-Vokabular",
-                "url": "https://www.witty.works/de/gendered#leadership"
+                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#fuehrungsstereotyp"
             },
             "gravity": 2,
             "label": "Geschlechtsspezifisch: Führungsstereotyp",
