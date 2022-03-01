@@ -29,21 +29,19 @@ def add_entry(po_files, category, columns, label, column, row, add_to_po_file=Tr
             msgstr = row[columns[column + " " + locale[0:2].upper()]].strip()
             if msgstr == "n/a" or msgstr == "-":
                 msgstr = ""
-            elif (
-                (msgstr == "" or msgstr == "Missing")
-                and label != "reason"
-                and label != "solution"
-            ):
+            elif msgstr == "" or msgstr == "Missing":
                 msgstr = ""
-                print(
-                    "Empty text given for '"
-                    + category
-                    + "' key '"
-                    + label
-                    + "' ("
-                    + locale
-                    + ")"
-                )
+                if label != "reason" and label != "solution":
+
+                    print(
+                        "Empty text given for '"
+                        + category
+                        + "' key '"
+                        + label
+                        + "' ("
+                        + locale
+                        + ")"
+                    )
             elif label == "explanation" and msgstr.find("|") == -1:
                 print(
                     "Pipesign missing for '"
@@ -292,6 +290,7 @@ def read_csv(in_file):
                             }
                         )
 
+                del category["status"]
                 del category["name"]
                 del category["introduction"]
                 del category["title"]
@@ -335,6 +334,7 @@ def read_csv(in_file):
                             }
                         )
 
+                del category["status"]
                 del category["name"]
                 del category["introduction"]
                 del category["explanation"]
