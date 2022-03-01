@@ -106,6 +106,8 @@ def read_csv(in_file):
             "Micro-learning bites DE": None,
             "Lead Text EN": None,
             "Lead Text DE": None,
+            "Status EN": None,
+            "Status DE": None,
         }
 
         gravities = {"red": 1, "orange": 2, "yellow": 3, "": 3, "none": None}
@@ -143,6 +145,16 @@ def read_csv(in_file):
                     columns,
                     "micro_learning_bites",
                     "Micro-learning bites",
+                    row,
+                    False,
+                )
+
+                categories[sub_category]["status"] = add_entry(
+                    poFiles,
+                    sub_category,
+                    columns,
+                    "status",
+                    "Status",
                     row,
                     False,
                 )
@@ -255,6 +267,9 @@ def read_csv(in_file):
             if category_name == category["category"]:
                 if category_name in active_categories:
                     for language in ["en", "de"]:
+                        if category["status"][language] != "Deployed":
+                            continue
+
                         if category_name == "inclusive":
                             sort = 4
                         else:
@@ -298,8 +313,14 @@ def read_csv(in_file):
         writer.writeheader()
         for category_name, category in categories.items():
             if category_name != category["category"]:
-                if category["category"] in active_categories:
+                if (
+                    category["category"] in active_categories
+                    and len(category["name"][language]) > 0
+                ):
                     for language in ["en", "de"]:
+                        if category["status"][language] != "Deployed":
+                            continue
+
                         writer.writerow(
                             {
                                 "name": category["name"][language],
