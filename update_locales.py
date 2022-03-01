@@ -29,7 +29,11 @@ def add_entry(po_files, category, columns, label, column, row, add_to_po_file=Tr
             msgstr = row[columns[column + " " + locale[0:2].upper()]].strip()
             if msgstr == "n/a" or msgstr == "-":
                 msgstr = ""
-            elif msgstr == "" or msgstr == "Missing":
+            elif (
+                (msgstr == "" or msgstr == "Missing")
+                and label != "reason"
+                and label != "solution"
+            ):
                 msgstr = ""
                 print(
                     "Empty text given for '"
