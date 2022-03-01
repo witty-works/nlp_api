@@ -315,9 +315,13 @@ class ResultOut(BaseModel):
             params["gendered_denominations_ending"] = config.german_gender_ending
 
         label = label if label else lang._("rules." + category + "_label")
-        sub_label = lang._("rules." + subcategory + "_label")
-        if category != "orthography":
+
+        if category == "orthography":
+            category_key = category
+            url = None
+        else:
             category_key = subcategory
+            sub_label = lang._("rules." + subcategory + "_label")
 
             settings = get_settings()
             url = (
@@ -331,12 +335,9 @@ class ResultOut(BaseModel):
                 + "#"
                 + ResultOut.transliterate(sub_label)
             )
-        else:
-            url = None
-            category_key = category
 
-        if category != category_key:
-            label += ": " + sub_label
+            if category != subcategory:
+                label += ": " + sub_label
 
         reason = lang._("rules." + category_key + "_reason", params)
 
