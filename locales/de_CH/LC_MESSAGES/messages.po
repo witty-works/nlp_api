@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-02-16 09:35\n"
-"PO-Revision-Date: 2022-02-16 09:35\n"
+"POT-Creation-Date: 2022-02-28 19:03\n"
+"PO-Revision-Date: 2022-02-28 19:03\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -15,13 +15,13 @@ msgid "rules.abbreviation_label"
 msgstr "Abkürzung"
 
 msgid "rules.abbreviation_reason"
-msgstr "Missing"
+msgstr ""
 
 msgid "rules.abbreviation_solution"
-msgstr "Missing"
+msgstr ""
 
 msgid "rules.abbreviation_explanation"
-msgstr "😉|Abkürzung: Sicher, dass das Lesende verstehen?"
+msgstr "Abkürzung: Sicher, dass das Lesende verstehen?"
 
 msgid "rules.ability_label"
 msgstr "Fähigkeiten"
@@ -37,7 +37,7 @@ msgstr ""
 "Beeinträchtigung anzudeuten."
 
 msgid "rules.ability_explanation"
-msgstr "😒|Versteckte Voreingenommenheit bezüglich Behinderungen"
+msgstr "Versteckte Voreingenommenheit bezüglich Behinderungen"
 
 msgid "rules.ableism_label"
 msgstr "Behindertenfeindlichkeit"
@@ -49,7 +49,7 @@ msgid "rules.ableism_solution"
 msgstr "Schreiben Sie das niemals. Sie verletzen Menschen stark."
 
 msgid "rules.ableism_explanation"
-msgstr "🚫|Feindlich gegenüber Menschen mit Beeinträchtigung"
+msgstr "Feindlich gegenüber Menschen mit Beeinträchtigung"
 
 msgid "rules.age_label"
 msgstr "Altersangabe"
@@ -63,16 +63,16 @@ msgid "rules.age_solution"
 msgstr "Vielleicht brauchen Sie die Altersangabe nicht?"
 
 msgid "rules.age_explanation"
-msgstr "🤔|Sicher, dass du das Alter wissen musst?"
+msgstr "Sicher, dass du das Alter wissen musst?"
 
 msgid "rules.age_in_jobs_label"
-msgstr "Missing"
+msgstr ""
 
 msgid "rules.age_in_jobs_reason"
-msgstr "Missing"
+msgstr ""
 
 msgid "rules.age_in_jobs_solution"
-msgstr "Missing"
+msgstr ""
 
 msgid "rules.age_in_jobs_explanation"
 msgstr ""
@@ -91,7 +91,7 @@ msgstr ""
 "wäre?\""
 
 msgid "rules.age_old_explanation"
-msgstr "😒|Versteckte Voreingenommenheit bezüglich Alter 50+"
+msgstr "Versteckte Voreingenommenheit bezüglich Alter 50+"
 
 msgid "rules.age_young_label"
 msgstr "25 Jahre und jünger"
@@ -107,7 +107,7 @@ msgstr ""
 "wäre?\""
 
 msgid "rules.age_young_explanation"
-msgstr "😒|Versteckte Voreingenommenheit bezüglich Alter unter 25"
+msgstr "Versteckte Voreingenommenheit bezüglich Alter unter 25"
 
 msgid "rules.agentic_label"
 msgstr "Agentisch"
@@ -122,7 +122,7 @@ msgstr ""
 "Teamorientierte Formulierung nutzen oder auf Sinnhaftigkeit einzahlend."
 
 msgid "rules.agentic_explanation"
-msgstr "😒|Schreckt Menschen mit “wir”-Einstellung ab"
+msgstr "Schreckt Menschen mit “wir”-Einstellung ab"
 
 msgid "rules.americanism_label"
 msgstr "Amerikanismen / Anglizismen"
@@ -135,7 +135,7 @@ msgid "rules.americanism_solution"
 msgstr "Nutzen Sie ein deutsches Wort."
 
 msgid "rules.americanism_explanation"
-msgstr "😉|Amerikanismen: Sicher, dass das Lesende verstehen?"
+msgstr "Amerikanismen: Sicher, dass das Lesende verstehen?"
 
 msgid "rules.antimuslim_label"
 msgstr "Islamophobie"
@@ -147,7 +147,7 @@ msgid "rules.antimuslim_solution"
 msgstr "Schreiben Sie das niemals. Sie verletzen Menschen stark."
 
 msgid "rules.antimuslim_explanation"
-msgstr "🚫|Islamophob"
+msgstr "Islamophob"
 
 msgid "rules.antisemitism_label"
 msgstr "Anti-Semitismus"
@@ -159,7 +159,7 @@ msgid "rules.antisemitism_solution"
 msgstr "Schreiben Sie das niemals. Sie verletzen Menschen stark."
 
 msgid "rules.antisemitism_explanation"
-msgstr "🚫|Anti-semitisch"
+msgstr "Anti-semitisch"
 
 msgid "rules.behavior_label"
 msgstr "Verhalten"
@@ -175,7 +175,7 @@ msgstr ""
 "gesund wäre?\""
 
 msgid "rules.behavior_explanation"
-msgstr "😒|Versteckte Voreingenommenheit bezüglich Verhalten"
+msgstr "Versteckte Voreingenommenheit bezüglich Verhalten"
 
 msgid "rules.belief_label"
 msgstr "Glauben"
@@ -192,7 +192,7 @@ msgstr ""
 "Religion transportieren."
 
 msgid "rules.belief_explanation"
-msgstr "😒|Glauben ausdrückend; stimmt nicht für alle"
+msgstr "Glauben ausdrückend; stimmt nicht für alle"
 
 msgid "rules.binary_pronouns_label"
 msgstr "Binäre Pronomen"
@@ -208,7 +208,7 @@ msgstr ""
 "der dritten Person schreiben müssen, verwenden Sie die Mehrzahl \"sie\"."
 
 msgid "rules.binary_pronouns_explanation"
-msgstr "😟|Pronomen gemäss binärem Normativ"
+msgstr "Pronomen gemäss binärem Normativ"
 
 msgid "rules.classism_label"
 msgstr "Klassismus"
@@ -223,7 +223,7 @@ msgid "rules.classism_solution"
 msgstr "Umformulieren mit einer Wortwahl, die auf Augenhöhe ist."
 
 msgid "rules.classism_explanation"
-msgstr "😒|Drückt Machtungleichgewicht aus"
+msgstr "Drückt Machtungleichgewicht aus"
 
 msgid "rules.cognitive_ability_label"
 msgstr "Denkfähigkeit"
@@ -239,7 +239,7 @@ msgstr ""
 "intellektuelle Kapazität hätte?\""
 
 msgid "rules.cognitive_ability_explanation"
-msgstr "😒|Versteckte Voreingenommenheit bezüglich Lernfähigkeit"
+msgstr "Versteckte Voreingenommenheit bezüglich Lernfähigkeit"
 
 msgid "rules.cognitive_perception_label"
 msgstr "Kognitive Wahrnehmung"
@@ -251,7 +251,7 @@ msgid "rules.cognitive_perception_solution"
 msgstr ""
 
 msgid "rules.cognitive_perception_explanation"
-msgstr "😒|Versteckte Voreingenommenheit bezüglich kognitiver Wahrnehmung"
+msgstr "Versteckte Voreingenommenheit bezüglich kognitiver Wahrnehmung"
 
 msgid "rules.communal_label"
 msgstr "Kommunal"
@@ -267,7 +267,7 @@ msgstr ""
 "oder Sinnhaftigkeit auszudrücken."
 
 msgid "rules.communal_explanation"
-msgstr "✅|Betont kooperative Eigenschaften"
+msgstr "Betont kooperative Eigenschaften"
 
 msgid "rules.corporate_rules_label"
 msgstr "Organisations-Leitlinie"
@@ -295,7 +295,7 @@ msgstr ""
 "üblichen nationalen Hintergrund hätte?\""
 
 msgid "rules.culture_explanation"
-msgstr "😒|Versteckte Voreingenommenheit bezüglich kulturellem Hintergrund"
+msgstr "Versteckte Voreingenommenheit bezüglich kulturellem Hintergrund"
 
 msgid "rules.d_and_i_label"
 msgstr "Diversität & Inklusion"
@@ -311,28 +311,28 @@ msgstr ""
 "Diversität erwünscht ist und Sie auf eine inklusive Kultur hin arbeiten."
 
 msgid "rules.d_and_i_explanation"
-msgstr "✅|Bestärkt Wert von Diversity, Gleichstellung und Inklusion"
+msgstr "Bestärkt Wert von Diversity, Gleichstellung und Inklusion"
 
 msgid "rules.education_label"
-msgstr "Missing"
+msgstr ""
 
 msgid "rules.education_reason"
-msgstr "Missing"
+msgstr ""
 
 msgid "rules.education_solution"
-msgstr "Missing"
+msgstr ""
 
 msgid "rules.education_explanation"
 msgstr ""
 
 msgid "rules.ethnicity_label"
-msgstr "Missing"
+msgstr ""
 
 msgid "rules.ethnicity_reason"
-msgstr "Missing"
+msgstr ""
 
 msgid "rules.ethnicity_solution"
-msgstr "Missing"
+msgstr ""
 
 msgid "rules.ethnicity_explanation"
 msgstr ""
@@ -349,7 +349,7 @@ msgid "rules.exaggerating_solution"
 msgstr "Verwenden Sie eine authentisch und ehrlich klingende Aussage."
 
 msgid "rules.exaggerating_explanation"
-msgstr "😮‍💨|Superlative: als Druck oder Arroganz wahrgenommen"
+msgstr "Superlative: als Druck oder Arroganz wahrgenommen"
 
 msgid "rules.female_stereotype_label"
 msgstr "Weiblicher Stereotyp"
@@ -365,7 +365,7 @@ msgstr ""
 "wäre?\""
 
 msgid "rules.female_stereotype_explanation"
-msgstr "😟|Steckt Frauen in traditionelle Rollen"
+msgstr "Steckt Frauen in traditionelle Rollen"
 
 msgid "rules.filler_label"
 msgstr "Füllwörter"
@@ -378,7 +378,7 @@ msgid "rules.filler_solution"
 msgstr "Füllwörter löschen."
 
 msgid "rules.filler_explanation"
-msgstr "😟|Füllwörter machen das Verständnis schwieriger"
+msgstr "Füllwörter machen das Verständnis schwieriger"
 
 msgid "rules.formality_label"
 msgstr "Formalität"
@@ -394,7 +394,7 @@ msgstr ""
 "würden."
 
 msgid "rules.formality_explanation"
-msgstr "🧊|Formale Formulierung kreiert emotionale Distanz"
+msgstr "Formale Formulierung kreiert emotionale Distanz"
 
 msgid "rules.function_label"
 msgstr "Spezielle Funktionen"
@@ -413,7 +413,7 @@ msgstr ""
 "umgehen. Oder verwenden Sie eine geschlechtsneutrale Bezeichnung."
 
 msgid "rules.function_explanation"
-msgstr "💡|Bild eines Mannes wird unbewusst ausgelöst"
+msgstr "Bild eines Mannes wird unbewusst ausgelöst"
 
 msgid "rules.gen_boomer_label"
 msgstr "Sprache Generation Boomer & X"
@@ -430,7 +430,7 @@ msgstr ""
 "formulieren."
 
 msgid "rules.gen_boomer_explanation"
-msgstr "🤔|Selten bekannte Formulierung der Generation Boomer"
+msgstr "Selten bekannte Formulierung der Generation Boomer"
 
 msgid "rules.gen_z_label"
 msgstr "Gen Z Language"
@@ -447,7 +447,7 @@ msgstr ""
 "formulieren."
 
 msgid "rules.gen_z_explanation"
-msgstr "🤔|Nicht allen bekannte Formulierung der Generation Z"
+msgstr "Nicht allen bekannte Formulierung der Generation Z"
 
 msgid "rules.gender_identity_label"
 msgstr "Geschlechtsidentität"
@@ -463,7 +463,7 @@ msgstr ""
 "männlich wäre?\""
 
 msgid "rules.gender_identity_explanation"
-msgstr "😒|Versteckte Voreingenommenheit bezüglich Geschlechtsidentität"
+msgstr "Versteckte Voreingenommenheit bezüglich Geschlechtsidentität"
 
 msgid "rules.gendered_label"
 msgstr "Geschlechtsspezifisch"
@@ -479,7 +479,7 @@ msgstr ""
 "nicht-binäre Perspektive einzunehmen."
 
 msgid "rules.gendered_explanation"
-msgstr "😟|Schubladendenken nach Geschlechternormen"
+msgstr "Schubladendenken nach Geschlechternormen"
 
 msgid "rules.gendered_denominations_ending_label"
 msgstr "Inklusive Endung"
@@ -493,7 +493,7 @@ msgstr ""
 "Geschlechter-Nennung” entsprechend der Präferenz in Witty an."
 
 msgid "rules.gendered_denominations_ending_explanation"
-msgstr "💯|Nicht konsistente Geschlechts-Schreibweise"
+msgstr "Nicht konsistente Geschlechts-Schreibweise"
 
 msgid "rules.hearing_label"
 msgstr "Hör-Fähigkeit"
@@ -509,7 +509,7 @@ msgstr ""
 "Hör- und Sprachkapazität hätte?\""
 
 msgid "rules.hearing_explanation"
-msgstr "😒|Versteckte Voreingenommenheit bezüglich Hör-Fähigkeit"
+msgstr "Versteckte Voreingenommenheit bezüglich Hör-Fähigkeit"
 
 msgid "rules.hidden_image_label"
 msgstr "Versteckter Ausdruck"
@@ -525,7 +525,7 @@ msgstr ""
 "Doppelnennungen vermeiden."
 
 msgid "rules.hidden_image_explanation"
-msgstr "😟|Verstecktes männliches Generikum"
+msgstr "Verstecktes männliches Generikum"
 
 msgid "rules.hollow_label"
 msgstr "Worthülsen"
@@ -541,7 +541,7 @@ msgstr ""
 "fassbaren und anschaulichen Weise."
 
 msgid "rules.hollow_explanation"
-msgstr "🙄|Worthülsen haben ihre Bedeutung verloren"
+msgstr "Worthülsen haben ihre Bedeutung verloren"
 
 msgid "rules.homophobia_label"
 msgstr "Homophobie"
@@ -553,7 +553,7 @@ msgid "rules.homophobia_solution"
 msgstr "Schreiben Sie das niemals. Sie verletzen Menschen stark."
 
 msgid "rules.homophobia_explanation"
-msgstr "🚫|Homophob"
+msgstr "Homophob"
 
 msgid "rules.inclusive_label"
 msgstr "Inklusiv"
@@ -569,16 +569,16 @@ msgstr ""
 "Sinnhaftigkeit und das Ziel von Diversität und Inklusion auszudrücken."
 
 msgid "rules.inclusive_explanation"
-msgstr "✅|Lässt Zugehörigkeitsgefühl entstehen"
+msgstr "Lässt Zugehörigkeitsgefühl entstehen"
 
 msgid "rules.job_requirements_label"
 msgstr "Voreingenommene Anforderungen"
 
 msgid "rules.job_requirements_reason"
-msgstr "Missing"
+msgstr ""
 
 msgid "rules.job_requirements_solution"
-msgstr "Missing"
+msgstr ""
 
 msgid "rules.job_requirements_explanation"
 msgstr ""
@@ -597,19 +597,24 @@ msgstr ""
 "Führung ausgeht und verschiedene Geschlechter meinen kann."
 
 msgid "rules.leadership_explanation"
-msgstr "😟|Traditionelles Führungs-Vokabular"
+msgstr "Traditionelles Führungs-Vokabular"
 
 msgid "rules.learning_label"
 msgstr "Lernfähigkeit"
 
 msgid "rules.learning_reason"
 msgstr ""
+"Formulierungen, die das Fehlen guter Noten als Mangel an Motivation oder "
+"Fähigkeiten darstellen und damit andere Faktoren, die das Lernergebnis "
+"beeinflussen, ignorieren."
 
 msgid "rules.learning_solution"
 msgstr ""
+"Könnte es gute Gründe für die schlechten Noten geben? Wie wichtig ist "
+"schulischer Erfolg für das Lösen der anstehenden Aufgabe?"
 
 msgid "rules.learning_explanation"
-msgstr "😒|Versteckte Voreingenommenheit bezüglich Lernfähigkeit"
+msgstr "Versteckte Voreingenommenheit bezüglich Lernfähigkeit"
 
 msgid "rules.male_stereotype_label"
 msgstr "Männlicher Stereotyp"
@@ -625,7 +630,7 @@ msgstr ""
 "wäre?\""
 
 msgid "rules.male_stereotype_explanation"
-msgstr "😟|Steckt Männer in traditionelle Rollen"
+msgstr "Steckt Männer in traditionelle Rollen"
 
 msgid "rules.medical_state_label"
 msgstr "Gesundheitsbild"
@@ -641,7 +646,7 @@ msgstr ""
 "wäre?\""
 
 msgid "rules.medical_state_explanation"
-msgstr "😒|Versteckte Voreingenommenheit bezüglich Gesundheitsbild"
+msgstr "Versteckte Voreingenommenheit bezüglich Gesundheitsbild"
 
 msgid "rules.mental_wellbeing_label"
 msgstr "Mentales Wohlbefinden"
@@ -653,7 +658,7 @@ msgid "rules.mental_wellbeing_solution"
 msgstr ""
 
 msgid "rules.mental_wellbeing_explanation"
-msgstr "😒|Versteckte Voreingenommenheit bezüglich mentalem Wohlbefinden"
+msgstr "Versteckte Voreingenommenheit bezüglich mentalem Wohlbefinden"
 
 msgid "rules.migration_label"
 msgstr "Migrationshintergrund"
@@ -672,7 +677,7 @@ msgstr ""
 "üblichen nationalen Hintergrund hätte?\""
 
 msgid "rules.migration_explanation"
-msgstr "😒|Versteckte Voreingenommenheit bezüglich Migrationshintergrund"
+msgstr "Versteckte Voreingenommenheit bezüglich Migrationshintergrund"
 
 msgid "rules.military_source_label"
 msgstr "Militärische Wurzel"
@@ -686,7 +691,7 @@ msgid "rules.military_source_solution"
 msgstr "Wählen Sie kooperative Formulierungen."
 
 msgid "rules.military_source_explanation"
-msgstr "🪖|Militärischer Begriff drückt Kriegsstimmung aus"
+msgstr "Militärischer Begriff kommuniziert kriegsähnlichen Zustand"
 
 msgid "rules.misgendering_institutions_label"
 msgstr "Geschlecht von Institutionen"
@@ -700,7 +705,7 @@ msgid "rules.misgendering_institutions_solution"
 msgstr "Wählen Sie die grammatikalisch richtige Form."
 
 msgid "rules.misgendering_institutions_explanation"
-msgstr "❌|Falsche Verwendung des grammatikalischen Geschlechtes"
+msgstr "Falsche Verwendung des grammatikalischen Geschlechtes"
 
 msgid "rules.mobility_label"
 msgstr "Mobilität"
@@ -716,7 +721,7 @@ msgstr ""
 "Kapazität der Glieder hätte?\""
 
 msgid "rules.mobility_explanation"
-msgstr "😒|Versteckte Voreingenommenheit bezüglich Mobilität"
+msgstr "Versteckte Voreingenommenheit bezüglich Mobilität"
 
 msgid "rules.openly_discriminating_label"
 msgstr "Offene Diskriminierung"
@@ -742,16 +747,16 @@ msgid "rules.orthography_solution"
 msgstr "Use LanguageTool \"message\" as the solution"
 
 msgid "rules.orthography_explanation"
-msgstr "❌|Orthographie"
+msgstr "Orthographie"
 
 msgid "rules.overload_label"
-msgstr "Missing"
+msgstr ""
 
 msgid "rules.overload_reason"
-msgstr "Missing"
+msgstr ""
 
 msgid "rules.overload_solution"
-msgstr "Missing"
+msgstr ""
 
 msgid "rules.overload_explanation"
 msgstr ""
@@ -766,7 +771,7 @@ msgid "rules.passive_voice_solution"
 msgstr "Schreiben Sie es in der aktiven Form."
 
 msgid "rules.passive_voice_explanation"
-msgstr "🧊|Durch Passiv-Form entsteht emotionale Distanz"
+msgstr "Durch Passiv-Form entsteht emotionale Distanz"
 
 msgid "rules.pressure_label"
 msgstr "Druck"
@@ -781,7 +786,7 @@ msgstr ""
 "Formulieren Sie auf Augenhöhe. Sie sind ein gleichwertiges Teil Ihres Teams."
 
 msgid "rules.pressure_explanation"
-msgstr "😮‍💨|Kommuniziert Druck"
+msgstr "Kommuniziert Druck"
 
 msgid "rules.racism_label"
 msgstr "Rassismus"
@@ -793,7 +798,7 @@ msgid "rules.racism_solution"
 msgstr "Schreiben Sie das niemals. Sie verletzen Menschen stark."
 
 msgid "rules.racism_explanation"
-msgstr "🚫|Rassistisch"
+msgstr "Rassistisch"
 
 msgid "rules.racist_source_label"
 msgstr "Rassistische Wurzel"
@@ -809,16 +814,16 @@ msgstr ""
 "dominanten, ethnischen Gruppe in meiner Gesellschaft gehören würde?\""
 
 msgid "rules.racist_source_explanation"
-msgstr "😒|Versteckte Voreingenommenheit bezüglich Hautfarbe"
+msgstr "Versteckte Voreingenommenheit bezüglich Hautfarbe"
 
 msgid "rules.salary_vague_label"
-msgstr "Missing"
+msgstr ""
 
 msgid "rules.salary_vague_reason"
-msgstr "Missing"
+msgstr ""
 
 msgid "rules.salary_vague_solution"
-msgstr "Missing"
+msgstr ""
 
 msgid "rules.salary_vague_explanation"
 msgstr ""
@@ -833,7 +838,7 @@ msgid "rules.sexism_solution"
 msgstr "Schreiben Sie das niemals. Sie verletzen Menschen stark."
 
 msgid "rules.sexism_explanation"
-msgstr "🚫|Frauenfeindlich"
+msgstr "Frauenfeindlich"
 
 msgid "rules.sexual_orientation_label"
 msgstr "Sexuelle Orientierung"
@@ -849,7 +854,7 @@ msgstr ""
 "wäre?\""
 
 msgid "rules.sexual_orientation_explanation"
-msgstr "😒|Versteckte Voreingenommenheit bezüglich sexueller Orientierung"
+msgstr "Versteckte Voreingenommenheit bezüglich sexueller Orientierung"
 
 msgid "rules.speech_label"
 msgstr "Sprech-Fähigkeit"
@@ -861,7 +866,7 @@ msgid "rules.speech_solution"
 msgstr ""
 
 msgid "rules.speech_explanation"
-msgstr "😒|Versteckte Voreingenommenheit bezüglich Sprech-Fähigkeit"
+msgstr "Versteckte Voreingenommenheit bezüglich Sprech-Fähigkeit"
 
 msgid "rules.sports_terms_label"
 msgstr "Sport-Jargon"
@@ -875,7 +880,7 @@ msgid "rules.sports_terms_solution"
 msgstr "Wählen Sie kooperative Formulierungen."
 
 msgid "rules.sports_terms_explanation"
-msgstr "🏅|Sportlicher Begriff drückt Wettbewerbsstimmung aus"
+msgstr "Sportlicher Begriff drückt Wettbewerbsstimmung aus"
 
 msgid "rules.style_label"
 msgstr "Stil"
@@ -889,16 +894,16 @@ msgstr ""
 "Formulieren Sie einfacher; versuchen Sie, mehr Emotionalität einzubringen."
 
 msgid "rules.style_explanation"
-msgstr "🤔|Stil, der Lesen erschwert oder weniger emotional macht"
+msgstr "Stil, der Lesen erschwert oder weniger emotional macht"
 
 msgid "rules.technical_frameworks_label"
-msgstr "Missing"
+msgstr ""
 
 msgid "rules.technical_frameworks_reason"
-msgstr "Missing"
+msgstr ""
 
 msgid "rules.technical_frameworks_solution"
-msgstr "Missing"
+msgstr ""
 
 msgid "rules.technical_frameworks_explanation"
 msgstr ""
@@ -919,7 +924,7 @@ msgstr ""
 "Geschlecht folgen, anspricht."
 
 msgid "rules.titles_explanation"
-msgstr "😟|“Mitmeinen” mit männlichen Generikum funktioniert nicht"
+msgstr "“Mitmeinen” mit männlichen Generikum funktioniert nicht"
 
 msgid "rules.transphobia_label"
 msgstr "Transphobie"
@@ -931,7 +936,7 @@ msgid "rules.transphobia_solution"
 msgstr "Schreiben Sie das niemals. Sie verletzen Menschen stark."
 
 msgid "rules.transphobia_explanation"
-msgstr "🚫|Transphob"
+msgstr "Transphob"
 
 msgid "rules.unconscious_bias_label"
 msgstr "Sprachliche Voreingenommenheit"
@@ -947,19 +952,19 @@ msgstr ""
 "starken sozialen Gruppe stammt?\""
 
 msgid "rules.unconscious_bias_explanation"
-msgstr "😒|Wort, das eine Voreingenommenheit kommuniziert, auf versteckte Art"
+msgstr "Wort, das eine Voreingenommenheit kommuniziert, auf versteckte Art"
 
 msgid "rules.verbose_label"
-msgstr "Missing"
+msgstr ""
 
 msgid "rules.verbose_reason"
-msgstr "Missing"
+msgstr ""
 
 msgid "rules.verbose_solution"
-msgstr "Missing"
+msgstr ""
 
 msgid "rules.verbose_explanation"
-msgstr "🧊|Durch Substantivierung (Nomen) entsteht Distanz"
+msgstr "Durch ‘Nominalistil’ entsteht Distanz"
 
 msgid "rules.vision_label"
 msgstr "Seh-Fähigkeit"
@@ -975,16 +980,16 @@ msgstr ""
 "Kapazität hätte?\""
 
 msgid "rules.vision_explanation"
-msgstr "😒|Versteckte Voreingenommenheit bezüglich Seh-Fähigkeit"
+msgstr "Versteckte Voreingenommenheit bezüglich Seh-Fähigkeit"
 
 msgid "rules.workload_label"
-msgstr "Missing"
+msgstr ""
 
 msgid "rules.workload_reason"
-msgstr "Missing"
+msgstr ""
 
 msgid "rules.workload_solution"
-msgstr "Missing"
+msgstr ""
 
 msgid "rules.workload_explanation"
 msgstr ""
@@ -999,4 +1004,4 @@ msgid "rules.xenophobia_solution"
 msgstr "Schreiben Sie das niemals. Sie verletzen Menschen stark."
 
 msgid "rules.xenophobia_explanation"
-msgstr "🚫|Fremdenfeindlich, xenophob"
+msgstr "Fremdenfeindlich, xenophob"

@@ -4,16 +4,30 @@ import click
 import csv
 import polib
 import re
+from app.models import ResultOut
 
 
-def add_entry(poFiles, category, columns, label, column, row):
+def parse_explanation(explanation):
+    icon = None
+    explanation = explanation.strip()
+    pipe_sign_position = explanation.find("|")
+    if pipe_sign_position != -1:
+        icon = explanation[0:pipe_sign_position]
+        explanation = explanation[pipe_sign_position + 1 :]
+
+    return icon, explanation
+
+
+def add_entry(po_files, category, columns, label, column, row, add_to_po_file=True):
     msgid = "rules." + category + "_" + label
-    for locale in poFiles:
+
+    result = {}
+    for locale in po_files:
         if locale == "pot":
             msgstr = ""
         else:
             msgstr = row[columns[column + " " + locale[0:2].upper()]].strip()
-            if msgstr == "n/a" or msgstr == "-":
+            if msgstr == "n/a" or msgstr == "-" or msgstr == "Missing":
                 msgstr = ""
             elif msgstr == "":
                 print(
@@ -36,8 +50,17 @@ def add_entry(poFiles, category, columns, label, column, row):
                     + ")"
                 )
 
-        entry = polib.POEntry(msgid=msgid, msgstr=msgstr)
-        poFiles[locale].append(entry)
+            result[locale[0:2]] = msgstr
+
+            if label == "explanation":
+                emoji, msgstr = parse_explanation(msgstr)
+                result["emoji"] = emoji
+
+        if add_to_po_file:
+            entry = polib.POEntry(msgid=msgid, msgstr=msgstr)
+            po_files[locale].append(entry)
+
+    return result
 
 
 def read_csv(in_file):
@@ -74,6 +97,10 @@ def read_csv(in_file):
             "Inclusive?": None,
             "Gravity": None,
             "Importance": None,
+            "Micro-learning bites EN": None,
+            "Micro-learning bites DE": None,
+            "Lead Text EN": None,
+            "Lead Text DE": None,
         }
 
         gravities = {"red": 1, "orange": 2, "yellow": 3, "": 3, "none": None}
@@ -101,12 +128,33 @@ def read_csv(in_file):
                     continue
 
                 categories[sub_category] = {}
-                add_entry(
+                categories[sub_category]["name"] = add_entry(
                     poFiles, sub_category, columns, "label", "Category Label", row
                 )
-                add_entry(poFiles, sub_category, columns, "reason", "Reason", row)
-                add_entry(poFiles, sub_category, columns, "solution", "Solution", row)
-                add_entry(
+
+                categories[sub_category]["introduction"] = add_entry(
+                    poFiles,
+                    sub_category,
+                    columns,
+                    "micro_learning_bites",
+                    "Micro-learning bites",
+                    row,
+                    False,
+                )
+
+                reason = add_entry(
+                    poFiles, sub_category, columns, "reason", "Reason", row
+                )
+                solution = add_entry(
+                    poFiles, sub_category, columns, "solution", "Solution", row
+                )
+                for language in categories[sub_category]["introduction"]:
+                    if len(categories[sub_category]["introduction"][language]) == 0:
+                        categories[sub_category]["introduction"][language] = (
+                            reason[language] + "\n\n" + solution[language]
+                        )
+
+                categories[sub_category]["explanation"] = add_entry(
                     poFiles,
                     sub_category,
                     columns,
@@ -124,17 +172,41 @@ def read_csv(in_file):
                     row[columns["Category"]],
                 )
 
+                if sub_category == categories[sub_category]["category"]:
+                    categories[sub_category]["title"] = {
+                        "en": 'What does Witty highlight in the category "'
+                        + categories[sub_category]["name"]["en"]
+                        + '"?',
+                        "de": 'Was markiert Witty in der Kategorie "'
+                        + categories[sub_category]["name"]["de"]
+                        + '"?',
+                    }
+                    categories[sub_category]["text"] = add_entry(
+                        poFiles,
+                        sub_category,
+                        columns,
+                        "lead_text",
+                        "Lead Text",
+                        row,
+                        False,
+                    )
+
                 try:
                     gravity = gravities[str(row[columns["Gravity"]])]
-                except:
+                except ValueError:
                     gravity = None
                 categories[sub_category]["gravity"] = gravity
 
                 try:
                     importance = int(row[columns["Importance"]])
-                except:
+                except ValueError:
                     importance = None
                 categories[sub_category]["importance"] = importance
+
+                categories[sub_category]["emoji"] = categories[sub_category][
+                    "explanation"
+                ]["emoji"]
+                del categories[sub_category]["explanation"]["emoji"]
 
     locales_path = os.path.dirname(__file__) + "/locales"
 
@@ -148,6 +220,98 @@ def read_csv(in_file):
             poFiles[locale].save(locale_path + "/messages.po")
             poFiles[locale].to_binary()
             poFiles[locale].save_as_mofile(locale_path + "/messages.mo")
+
+    active_categories = [
+        "openly_discriminating",
+        "unconscious_bias",
+        "gendered",
+        "orthography",
+        "style",
+        "inclusive",
+    ]
+
+    with open("categories.csv", "w", newline="") as csvfile:
+        fieldnames = [
+            "hs_path",
+            "hs_name",
+            "name",
+            "language",
+            "emoji",
+            "introduction",
+            "lead_title",
+            "lead_text",
+            "category_name",
+            "sort",
+        ]
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        writer.writeheader()
+        for category_name, category in categories.items():
+            if category_name == category["category"]:
+                if category_name in active_categories:
+                    for language in ["en", "de"]:
+                        if category_name == "inclusive":
+                            sort = 4
+                        else:
+                            sort = category["gravity"]
+
+                        writer.writerow(
+                            {
+                                "hs_path": ResultOut.transliterate(
+                                    category["name"][language]
+                                ),
+                                "hs_name": category["name"][language],
+                                "name": category["name"][language],
+                                "language": language,
+                                "emoji": category["emoji"],
+                                "introduction": category["introduction"][language],
+                                "lead_title": category["title"][language],
+                                "lead_text": category["text"][language],
+                                "category_name": category_name,
+                                "sort": sort,
+                            }
+                        )
+
+                del category["name"]
+                del category["introduction"]
+                del category["title"]
+                del category["text"]
+                del category["explanation"]
+
+    with open("subcategories.csv", "w", newline="") as csvfile:
+        fieldnames = [
+            "name",
+            "language",
+            "emoji",
+            "introduction",
+            "anchor",
+            "subcategory_name",
+            "category_name",
+        ]
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        writer.writeheader()
+        for category_name, category in categories.items():
+            if category_name != category["category"]:
+                if category["category"] in active_categories:
+                    for language in ["en", "de"]:
+                        writer.writerow(
+                            {
+                                "name": category["name"][language],
+                                "language": language,
+                                "emoji": category["emoji"],
+                                "introduction": category["introduction"][language],
+                                "anchor": ResultOut.transliterate(
+                                    category["name"][language]
+                                ),
+                                "subcategory_name": category_name,
+                                "category_name": category["category"],
+                            }
+                        )
+
+                del category["name"]
+                del category["introduction"]
+                del category["explanation"]
 
     f = open("app/categories.py", "w")
     f.write("categories = " + repr(categories) + "\n")
