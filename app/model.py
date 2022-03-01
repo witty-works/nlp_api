@@ -153,6 +153,7 @@ dict_lemma_lookup = {
     "ausgerechnet": "ausgerechnet",
     "bestimmend": "bestimmend",
     "bestimmt": "bestimmt",
+    "behindert": "behindert",
     "einige": "einige",
     "entschieden": "entschieden",
     "entspannt": "entspannt",
