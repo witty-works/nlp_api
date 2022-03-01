@@ -34,7 +34,7 @@
             "explanation": {
                 "icon": "😟",
                 "text": "“Mitmeinen” mit männlichen Generikum funktioniert nicht",
-                "url": "https://www.witty.works/de/gendered#titles"
+                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#titel"
             },
             "gravity": 2,
             "label": "Geschlechtsspezifisch: Titel",
@@ -80,7 +80,7 @@
             "explanation": {
                 "icon": "😒",
                 "text": "Schreckt Menschen mit “wir”-Einstellung ab",
-                "url": "https://www.witty.works/de/unconscious_bias#agentic"
+                "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
             },
             "gravity": 2,
             "label": "Sprachliche Voreingenommenheit: Agentisch",
@@ -102,7 +102,7 @@
             "explanation": {
                 "icon": "😒",
                 "text": "Schreckt Menschen mit “wir”-Einstellung ab",
-                "url": "https://www.witty.works/de/unconscious_bias#agentic"
+                "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
             },
             "gravity": 2,
             "label": "Sprachliche Voreingenommenheit: Agentisch",

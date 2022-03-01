@@ -8,15 +8,15 @@
                     "text": "they"
                 }
             ],
-            "category": "unconscious_bias",
+            "category": "gendered",
             "end": 14,
             "explanation": {
                 "icon": "😟",
                 "text": "Pronouns according to binary normative",
-                "url": "https://www.witty.works/en/unconscious_bias#binary_pronouns"
+                "url": "https://www.witty.works/en/categories/gendered#binary_pronouns"
             },
             "gravity": 2,
-            "label": "Biased language: Binary Pronouns",
+            "label": "Gendered: Binary Pronouns",
             "start": 12,
             "subcategory": "binary_pronouns",
             "text": "he"

@@ -38,7 +38,7 @@ def parse_args():
 
 
 def get_current_words(original_languagetool_path, ignore_languagetool_path):
-
+    current_words = []
     if original_languagetool_path:
         with open(
             original_languagetool_path,

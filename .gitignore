@@ -22,3 +22,5 @@ python-probe.log
 .env
 
 openapi.json
+categories.csv
+subcategories.csv

@@ -296,6 +296,7 @@ class ResultOut(BaseModel):
         alternatives=None,
         label=None,
         explanation=None,
+        icon=None,
         gravity=None,
     ):
         if end == None:
@@ -314,8 +315,13 @@ class ResultOut(BaseModel):
             params["gendered_denominations_ending"] = config.german_gender_ending
 
         label = label if label else lang._("rules." + category + "_label")
-        if category != "orthography":
+
+        if category == "orthography":
+            category_key = category
+            url = None
+        else:
             category_key = subcategory
+            sub_label = lang._("rules." + subcategory + "_label")
 
             settings = get_settings()
             url = (
@@ -323,18 +329,18 @@ class ResultOut(BaseModel):
                 + "/"
                 + lang.lang
                 + "/"
-                + category
+                + ("categories" if lang.lang == "en" else "kategorien")
+                + "/"
+                + ResultOut.transliterate(label)
                 + "#"
-                + subcategory
+                + ResultOut.transliterate(sub_label)
             )
-        else:
-            url = None
-            category_key = category
 
-        if category != category_key:
-            label += ": " + lang._("rules." + category_key + "_label")
+            if category != subcategory:
+                label += ": " + sub_label
 
         reason = lang._("rules." + category_key + "_reason", params)
+
         solution = explanation
         solution = (
             solution
@@ -342,16 +348,14 @@ class ResultOut(BaseModel):
             else lang._("rules." + category_key + "_solution", params)
         )
 
-        if explanation != None:
-            icon, explanation = ResultOut.parseExplanation(explanation)
-            if icon == None:
-                icon, foo = ResultOut.parseExplanation(
-                    lang._("rules." + category_key + "_explanation", params)
-                )
-        else:
-            icon, explanation = ResultOut.parseExplanation(
-                lang._("rules." + category_key + "_explanation", params)
-            )
+        explanation = (
+            explanation
+            if explanation
+            else lang._("rules." + category_key + "_explanation")
+        )
+
+        if icon == None and "emoji" in categories[category_key]:
+            icon = categories[category_key]["emoji"]
 
         gravity = gravity if gravity != None else categories[category_key]["gravity"]
 
@@ -463,15 +467,15 @@ class ResultOut(BaseModel):
     factory = staticmethod(factory)
 
     @staticmethod
-    def parseExplanation(explanation):
-        icon = None
-        explanation = explanation.strip()
-        pipe_sign_position = explanation.find("|")
-        if pipe_sign_position != -1:
-            icon = explanation[0:pipe_sign_position]
-            explanation = explanation[pipe_sign_position + 1 :]
-
-        return icon, explanation
+    def transliterate(string):
+        return (
+            string.lower()
+            .replace(" ", "_")
+            .replace("ß", "ss")
+            .replace("ü", "ue")
+            .replace("ä", "ae")
+            .replace("ö", "oe")
+        )
 
     @staticmethod
     def isInspirationAlternative(alternative):
