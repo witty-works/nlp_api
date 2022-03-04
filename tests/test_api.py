@@ -1,4 +1,5 @@
 import pytest
+import logging
 from pathlib import Path
 from fastapi.testclient import TestClient
 from app.main import (
@@ -75,6 +76,7 @@ def test_sentry_examples(ending_case_dir, snapshot):
     snapshot.assert_match(output, "output.json")
 
 
+# This test is failling because singular/plural form of token cannot be determined. The workaround is applied, but this test case remain failing till permanent fix is found.
 @pytest.mark.parametrize(
     "ending_case_dir",
     get_dirs("tests/test_singular_plural"),
@@ -88,6 +90,9 @@ def test_singular_plural(ending_case_dir, snapshot):
     token = model["en"](text.rstrip().replace("\n", " "))[0]
     number = token.morph.get("Number")
     response = is_number_list_empty(number, token, text)
+    logging.info(
+        "Singular/plural form cannot be determined. This test will remain failing till this is fixed. The workaround is applied for now."
+    )
     assert response == False
 
 
