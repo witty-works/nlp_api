@@ -4,6 +4,7 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 from app.main import (
     app,
+    form,
     redis,
     set_rules,
     get_false_positive,
@@ -20,6 +21,9 @@ from app import main
 from unittest import mock
 
 client = TestClient(app)
+logging.basicConfig(
+    level="DEBUG", format="[%(asctime)s] %(name)s %(levelname)s - %(message)s"
+)
 
 
 def get_dirs(path):
@@ -90,7 +94,7 @@ def test_singular_plural(ending_case_dir, snapshot):
     token = model["en"](text.rstrip().replace("\n", " "))[0]
     number = token.morph.get("Number")
     response = is_number_list_empty(number, token, text)
-    logging.info(
+    logging.debug(
         "Singular/plural form cannot be determined. This test will remain failing till this is fixed. The workaround is applied for now."
     )
     assert response == False
