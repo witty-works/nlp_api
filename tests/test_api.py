@@ -1,7 +1,15 @@
 import pytest
 from pathlib import Path
 from fastapi.testclient import TestClient
-from app.main import app, redis, set_rules, get_false_positive, false_positive
+from app.main import (
+    app,
+    redis,
+    set_rules,
+    get_false_positive,
+    false_positive,
+    is_number_list_empty,
+)
+from app.model import model
 import json
 from app.models import (
     LangWithAutoType,
@@ -65,6 +73,22 @@ def test_sentry_examples(ending_case_dir, snapshot):
     # Snapshot the return value.
     snapshot.snapshot_dir = ending_case_dir
     snapshot.assert_match(output, "output.json")
+
+
+@pytest.mark.parametrize(
+    "ending_case_dir",
+    get_dirs("tests/test_singular_plural"),
+)
+def test_singular_plural(ending_case_dir, snapshot):
+
+    # Read input files from the case directory.
+    input_json = ending_case_dir.joinpath("input.json").read_text()
+    # Call the tested function
+    text = json.loads(input_json)["text"]
+    token = model["en"](text.rstrip().replace("\n", " "))[0]
+    number = token.morph.get("Number")
+    response = is_number_list_empty(number, token, text)
+    assert response == False
 
 
 @pytest.mark.parametrize(
