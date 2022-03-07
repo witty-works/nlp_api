@@ -179,7 +179,10 @@ def get_current_username(
 
 
 # debugging routes
-@app.post("/exception")
+@app.post(
+    "/exception",
+    include_in_schema=not settings.is_prod,
+)
 async def exception(
     request: Request,
     user_request_in: RequestIn,
@@ -190,13 +193,16 @@ async def exception(
     raise HTTPException(status_code=500, detail=user_request_in.text)
 
 
-@app.get("/lt")
+@app.get("/lt", include_in_schema=not settings.is_prod)
 def get_lt(username: str = Depends(get_current_username)):
     return languagetool_url
 
 
 @app.get("/docs", include_in_schema=False)
-def get_swagger_documentation(username: str = Depends(get_current_username)):
+def get_swagger_documentation(
+    username: str = Depends(get_current_username),
+    include_in_schema=not settings.is_prod,
+):
     return get_swagger_ui_html(openapi_url="/openapi.json", title="docs")
 
 
@@ -206,7 +212,7 @@ def openapi(username: str = Depends(get_current_username)):
 
 
 # public routes
-@app.get("/")
+@app.get("/", include_in_schema=False)
 def root():
     url = "https://www.witty.works/form"
     status_code = 301
@@ -218,7 +224,10 @@ def root():
     return RedirectResponse(url=url, status_code=status_code)
 
 
-@app.get("/save_openapi_json")
+@app.get(
+    "/save_openapi_json",
+    include_in_schema=not settings.is_prod,
+)
 def save_openapi_json(username: str = Depends(get_current_username)):
     openapi_data = app.openapi()
     for path in openapi_data["paths"].copy():
@@ -229,7 +238,10 @@ def save_openapi_json(username: str = Depends(get_current_username)):
         json.dump(openapi_data, file, indent=4, sort_keys=True)
 
 
-@app.get("/german_gender_ending")
+@app.get(
+    "/german_gender_ending",
+    include_in_schema=not settings.is_prod,
+)
 def german_gender_ending(
     alternative: str,
     german_gender_ending: GermanGenderEnding = None,
@@ -251,7 +263,7 @@ def german_gender_ending(
     return alternative_variations
 
 
-@app.get("/form")
+@app.get("/form", include_in_schema=False)
 def form():
     return root()
 
