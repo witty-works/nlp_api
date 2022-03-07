@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     logging_enabled: bool = False
     logging_config_filename: str = "./logs/error.log"
     logging_config_level: str = "ERROR"
+    platform_environment_type: str = "development"
     platform_environment: str = "local"
     languagetool_api: Optional[str]
     languagetool_verify_ssl: bool = True
@@ -25,6 +26,7 @@ class Settings(BaseSettings):
     sentry_sample_rate: float = 0.2
     text_max_length: int = 1000
     learning_bites_base_url: str = "https://www.witty.works"
+    is_prod: bool = False
 
     class Config:
         env_file = ".env"
@@ -32,4 +34,6 @@ class Settings(BaseSettings):
 
 @lru_cache()
 def get_settings():
-    return Settings()
+    settings = Settings()
+    settings.is_prod = settings.platform_environment_type == "production"
+    return settings

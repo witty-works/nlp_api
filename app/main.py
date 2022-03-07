@@ -56,7 +56,7 @@ from collections import namedtuple, defaultdict
 from collections import namedtuple
 from app.sentry import set_up_sentry_sdk
 
-version = "1.22.6"
+version = "1.22.7"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -179,7 +179,10 @@ def get_current_username(
 
 
 # debugging routes
-@app.post("/exception")
+@app.post(
+    "/exception",
+    include_in_schema=not settings.is_prod,
+)
 async def exception(
     request: Request,
     user_request_in: RequestIn,
@@ -190,13 +193,16 @@ async def exception(
     raise HTTPException(status_code=500, detail=user_request_in.text)
 
 
-@app.get("/lt")
+@app.get("/lt", include_in_schema=not settings.is_prod)
 def get_lt(username: str = Depends(get_current_username)):
     return languagetool_url
 
 
 @app.get("/docs", include_in_schema=False)
-def get_swagger_documentation(username: str = Depends(get_current_username)):
+def get_swagger_documentation(
+    username: str = Depends(get_current_username),
+    include_in_schema=not settings.is_prod,
+):
     return get_swagger_ui_html(openapi_url="/openapi.json", title="docs")
 
 
@@ -206,7 +212,7 @@ def openapi(username: str = Depends(get_current_username)):
 
 
 # public routes
-@app.get("/")
+@app.get("/", include_in_schema=False)
 def root():
     url = "https://www.witty.works/form"
     status_code = 301
@@ -218,7 +224,10 @@ def root():
     return RedirectResponse(url=url, status_code=status_code)
 
 
-@app.get("/save_openapi_json")
+@app.get(
+    "/save_openapi_json",
+    include_in_schema=not settings.is_prod,
+)
 def save_openapi_json(username: str = Depends(get_current_username)):
     openapi_data = app.openapi()
     for path in openapi_data["paths"].copy():
@@ -229,7 +238,10 @@ def save_openapi_json(username: str = Depends(get_current_username)):
         json.dump(openapi_data, file, indent=4, sort_keys=True)
 
 
-@app.get("/german_gender_ending")
+@app.get(
+    "/german_gender_ending",
+    include_in_schema=not settings.is_prod,
+)
 def german_gender_ending(
     alternative: str,
     german_gender_ending: GermanGenderEnding = None,
@@ -251,7 +263,7 @@ def german_gender_ending(
     return alternative_variations
 
 
-@app.get("/form")
+@app.get("/form", include_in_schema=False)
 def form():
     return root()
 
@@ -319,12 +331,21 @@ async def get_redis(user: str):
 
 
 # Functions
-def is_number_list_empty(number, token):
+def is_number_list_empty(number, token, full_text):
     if not number:
+        start = max(token.idx - 100, 0)
+        end = min(token.idx + 100, len(full_text) - 1)
+        context = full_text[start:end]
+
         logging.error(
-            "List of token morph number: %s for token/word: %s", number, token
+            "List of token morph number: %s for token/word: %s\n%s",
+            number,
+            token.text,
+            context,
         )
+
         return True
+
     return False
 
 
@@ -927,7 +948,7 @@ def agentic_language_analysis_de(
             ) in words_alternatives_noun:
                 if get_non_noun_lower_cased(token) == word:
                     token_morph_number = token.morph.get("Number")
-                    if is_number_list_empty(token_morph_number, token):
+                    if is_number_list_empty(token_morph_number, token, full_text):
                         continue
 
                     elif token_morph_number[0] == "Sing":
@@ -1095,7 +1116,7 @@ def gendered_denom_analysis_de(
             ) in gender_words_alternatives:
                 if c_doc[i].lemma_ == word:
                     c_doc_morph_number = c_doc[i].morph.get("Number")
-                    if is_number_list_empty(c_doc_morph_number, c_doc[i]):
+                    if is_number_list_empty(c_doc_morph_number, c_doc[i], full_text):
                         list_tokens.append(
                             ResultOut.factory(
                                 version,
@@ -1169,7 +1190,7 @@ def gendered_denom_analysis_de(
             ) in gender_words_alternatives:
                 if tokens[i].lemma_ == word:
                     token_morph_number = tokens[i].morph.get("Number")
-                    if is_number_list_empty(token_morph_number, tokens[i]):
+                    if is_number_list_empty(token_morph_number, tokens[i], full_text):
                         list_tokens.append(
                             ResultOut.factory(
                                 version,
@@ -1349,7 +1370,7 @@ def word_noun_de(
         ) in bias_words_alternatives_noun:
             if get_non_noun_lower_cased(token) == word:
                 token_morph_number = token.morph.get("Number")
-                if is_number_list_empty(token_morph_number, token):
+                if is_number_list_empty(token_morph_number, token, full_text):
                     continue
                 if token_morph_number[0] == "Sing":
                     list_tokens.append(
@@ -1665,7 +1686,7 @@ def gendered_en(
         ) in gendered_words_alternatives:
             if get_lower_cased(token) == word:
                 token_morph_number = token.morph.get("Number")
-                if is_number_list_empty(token_morph_number, token):
+                if is_number_list_empty(token_morph_number, token, full_text):
                     continue
                 if token_morph_number[0] == "Sing":
                     list_tokens.append(
