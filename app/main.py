@@ -427,6 +427,12 @@ async def check(
     if settings.read_rules_from_redis:
         await set_rules(user_request_in)
 
+    text = user_request_in.text
+    limit_reached = len(text) > settings.text_max_length
+    if limit_reached:
+        text = text[0 : settings.text_max_length]
+        text = text.rsplit(" ", 1)[0]
+
     locale = lang_detection.get_locale(
         user_request_in.text,
         user_request_in.lang,
@@ -439,15 +445,6 @@ async def check(
         return Result.factory("Language could not be determined")
 
     lang = Language(locale)
-
-    text = user_request_in.text
-    limit_reached = len(text) > settings.text_max_length
-    if limit_reached:
-        m = re.findall("(.*)\s\S*", text)
-        if len(m) >= 1:
-            text = m[0]
-        else:
-            text = text[0 : settings.text_max_length]
 
     list_results = await language_rules(version, user_request_in.config, lang, text)
 
