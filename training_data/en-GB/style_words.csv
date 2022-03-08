@@ -3,10 +3,14 @@ ADD,11-02-2022,style,abbreviation,"['attention deficit disorder', 'person with A
 ADHD,11-02-2022,style,abbreviation,"['attention deficit hyperactivity disorder', 'person with ADHD', 'person with attention deficit hyperactivity disorder', 'fidgety', 'restless', 'easily bored']"
 ASD,11-02-2022,style,abbreviation,"['autism spectrum disorder', 'neurodiversity', 'person with ASD', 'person with autism  sprectrum disorder', 'neurodevelopmental disorder characterised by difficulties with social interaction and communication', 'umbrella diagnosis that includes autistic disorder, childhood disintegrative disorder, some pervasive developmental disorders, and Asperger syndrome']"
 ASL,11-02-2022,style,abbreviation,['American Sign Language']
+DALY,11-02-2022,style,abbreviation,"['-', 'diasability-adjusted life years', 'metric that confuses quality of life with health --- avoid if possible']"
 DALYs,11-02-2022,style,abbreviation,"['-', 'diasability-adjusted life years', 'metric that confuses quality of life with health --- avoid if possible']"
+DFLY,11-02-2022,style,abbreviation,"['-', 'dependency-free life-years', 'metric that confuses quality of life with health --- avoid if possible']"
 DFLYs,11-02-2022,style,abbreviation,"['-', 'dependency-free life-years', 'metric that confuses quality of life with health --- avoid if possible']"
+Ninja,18-01-2022,style,exaggerating,"['skilled person', 'very proficient person', 'courageous person', 'they', 'skilled people', 'very proficient people', 'courageous people']"
 OCD,11-02-2022,style,abbreviation,"['obsessive-compulsive disorder', 'detail-oriented', 'precise', 'careful', 'with attention to detail']"
 OTB,11-02-2022,style,abbreviation,['outside the box']
+QALY,11-02-2022,style,abbreviation,"['-', 'quality-adjusted life years', 'metric that confuses quality of life with health --- avoid if possible']"
 QALYs,11-02-2022,style,abbreviation,"['-', 'quality-adjusted life years', 'metric that confuses quality of life with health --- avoid if possible']"
 Sincerely,21-01-2022,style,formality,"['Best regards', 'All the best', 'Thank you', 'Have a wonderful day', 'Let us know if you need anything']"
 absolut,1,style,exaggerating,['-']
@@ -36,8 +40,13 @@ flexible,1,style,hollow,"['adaptable', 'strategically nimble', 'pragmatic', 'ope
 geek,1,style,exaggerating,['-']
 generally,1,style,filler,['-']
 global,1,style,hollow,"['in (...) countries', '(...) offices across (...) continents']"
+go-getter,22-01-2022,style,exaggerating,"['bundle of energy', 'ball of fire', 'person who continues despite difficulties/opposition', 'person devoted/loyal to their purpose', 'someone who sticks to their goal', 'person happy/willing to see (something ...) through', 'motivated people', 'energetic and focused colleagues']"
 god,1,style,exaggerating,['-']
+gogetter,22-01-2022,style,exaggerating,"['bundle of energy', 'ball of fire', 'person who continues despite difficulties/opposition', 'person devoted/loyal to their purpose', 'someone who sticks to their goal', 'person happy/willing to see (something ...) through', 'motivated people', 'energetic and focused colleagues']"
 hacker,1,style,exaggerating,['-']
+hero,1,style,exaggerating,"['person of the hour', 'person making sacrifices for their team', 'role model', 'heroix', 'they', 'people of the hour', 'those making sacrifices for their team', 'role models', 'heroix']"
+high-flyer,1,style,exaggerating,"['person who continues despite difficulties', 'someone devoted to their purpose', 'someone who sticks to their goal', 'someone willing to see things through']"
+highflyer,1,style,exaggerating,"['person who continues despite difficulties', 'someone devoted to their purpose', 'someone who sticks to their goal', 'someone willing to see things through']"
 imperative,1,style,exaggerating,"['critical', 'vital']"
 impressive,1,style,exaggerating,['-']
 innovation,22-02-2022,style,hollow,"['reinvention', 'change', 'modernization', 'improvement', 'new creation', 'redesign', 'introduction of new ideas (methods, devices, ...)']"
@@ -51,8 +60,8 @@ market-leading,22-01-2022,style,exaggerating,['market-influencing']
 marketleader,22-01-2022,style,exaggerating,"['company with the largest market share in the industry', 'company with the ability to influence the market', 'company with the greatest profitability margin in the market', 'company with the products most relevant to the customer']"
 marketleading,22-01-2022,style,exaggerating,['market-influencing']
 muscle,1,style,exaggerating,"['power', 'influence', 'clout']"
-must-have,1,style,exaggerating,"['essential', 'helpful', 'valuable', 'mission-critical', 'vital', 'beneficial']"
-musthave,1,style,exaggerating,"['essential', 'helpful', 'valuable', 'mission-critical', 'vital', 'beneficial']"
+must-have,1,style,exaggerating,"['requirement', 'criterion', 'essential', 'quality required to (...)']"
+musthave,1,style,exaggerating,"['requirement', 'criterion', 'essential', 'quality required to (...)']"
 nerd,1,style,exaggerating,['-']
 ninja,1,style,exaggerating,"['dedicated', 'committed', 'person who continues despite difficulties', 'someone devoted to their purpose', 'someone who sticks to their goal', 'someone willing to see things through']"
 normal,1,style,hollow,"['traditional', 'typical', 'common', 'routine', 'regular', 'conventional', 'customary', 'popular', 'reasonable', 'well-adjusted', 'rational', 'able to think clearly', 'able to use reason']"

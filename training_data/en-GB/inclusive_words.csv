@@ -7,14 +7,11 @@ agreeable,1,inclusive,communal
 ally,,inclusive,d_and_i
 amplification,1,inclusive,d_and_i
 belief,1,inclusive,d_and_i
-beliefs,1,inclusive,d_and_i
 belong,1,inclusive,d_and_i
 care,1,inclusive,communal
-caring,1,inclusive,communal
 cheer,1,inclusive,communal
 cheerful,1,inclusive,communal
 child,1,inclusive,communal
-children,1,inclusive,communal
 cis-gender,,inclusive,d_and_i
 cis-gendered,,inclusive,d_and_i
 cisgender,,inclusive,d_and_i
@@ -110,8 +107,8 @@ meaningful,1,inclusive,d_and_i
 mediate,1,inclusive,communal
 mediation,1,inclusive,communal
 mentoring,1,inclusive,communal
-micro-aggressions,26-01-22,inclusive,d_and_i
-microaggressions,26-01-22,inclusive,d_and_i
+micro-aggression,26-01-22,inclusive,d_and_i
+microaggression,26-01-22,inclusive,d_and_i
 modest,1,inclusive,communal
 modesty,1,inclusive,communal
 moral,,inclusive,communal
@@ -160,7 +157,6 @@ under-represented,1,inclusive,d_and_i
 underrepresented,1,inclusive,d_and_i
 understand,1,inclusive,communal
 understanding,,inclusive,communal
-understood,1,inclusive,communal
 warm,1,inclusive,communal
 warmth,1,inclusive,communal
 woman,1,inclusive,communal
