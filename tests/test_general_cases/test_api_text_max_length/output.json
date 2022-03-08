@@ -1,5 +1,585 @@
 {
-    "language": "de",
+    "language": "en",
     "limit_reached": true,
-    "results": []
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "meters"
+                }
+            ],
+            "category": "orthography",
+            "context": "y guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately 330 metres east of the most south corner of 17 Batherton Close, Widnes and approximately 208 metres east-south",
+            "end": 108,
+            "explanation": {
+                "icon": "❌",
+                "text": "Possible spelling mistake. ‘metres’ is British English."
+            },
+            "gravity": 1,
+            "label": "Possible Typo",
+            "start": 102,
+            "subcategory": "typos",
+            "text": "metres"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Bather ton"
+                },
+                {
+                    "text": "Atherton"
+                }
+            ],
+            "category": "orthography",
+            "context": "rseverance count.\n\nA path from a point approximately 330 metres east of the most south corner of 17 Batherton Close, Widnes and approximately 208 metres east-south-east of the most southerly corner of Unit 3 F",
+            "end": 154,
+            "explanation": {
+                "icon": "❌",
+                "text": "Possible spelling mistake found."
+            },
+            "gravity": 1,
+            "label": "Spelling mistake",
+            "start": 145,
+            "subcategory": "typos",
+            "text": "Batherton"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Wines"
+                },
+                {
+                    "text": "Widens"
+                }
+            ],
+            "category": "orthography",
+            "context": "\n\nA path from a point approximately 330 metres east of the most south corner of 17 Batherton Close, Widnes and approximately 208 metres east-south-east of the most southerly corner of Unit 3 Foundry Industr",
+            "end": 168,
+            "explanation": {
+                "icon": "❌",
+                "text": "Possible spelling mistake found."
+            },
+            "gravity": 1,
+            "label": "Spelling mistake",
+            "start": 162,
+            "subcategory": "typos",
+            "text": "Widnes"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "meters"
+                }
+            ],
+            "category": "orthography",
+            "context": "mately 330 metres east of the most south corner of 17 Batherton Close, Widnes and approximately 208 metres east-south-east of the most southerly corner of Unit 3 Foundry Industrial Estate, Victoria Street, ",
+            "end": 197,
+            "explanation": {
+                "icon": "❌",
+                "text": "Possible spelling mistake. ‘metres’ is British English."
+            },
+            "gravity": 1,
+            "label": "Possible Typo",
+            "start": 191,
+            "subcategory": "typos",
+            "text": "metres"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Wines"
+                },
+                {
+                    "text": "Widens"
+                }
+            ],
+            "category": "orthography",
+            "context": " east-south-east of the most southerly corner of Unit 3 Foundry Industrial Estate, Victoria Street, Widnes, proceeding in a generally east-north-easterly direction for approximately 28 metres to a point app",
+            "end": 303,
+            "explanation": {
+                "icon": "❌",
+                "text": "Possible spelling mistake found."
+            },
+            "gravity": 1,
+            "label": "Spelling mistake",
+            "start": 297,
+            "subcategory": "typos",
+            "text": "Widnes"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "meters"
+                }
+            ],
+            "category": "orthography",
+            "context": "ctoria Street, Widnes, proceeding in a generally east-north-easterly direction for approximately 28 metres to a point approximately 202 metres east-south-east of the most south-easterly corner of Unit 4 Fou",
+            "end": 388,
+            "explanation": {
+                "icon": "❌",
+                "text": "Possible spelling mistake. ‘metres’ is British English."
+            },
+            "gravity": 1,
+            "label": "Possible Typo",
+            "start": 382,
+            "subcategory": "typos",
+            "text": "metres"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "meters"
+                }
+            ],
+            "category": "orthography",
+            "context": " a generally east-north-easterly direction for approximately 28 metres to a point approximately 202 metres east-south-east of the most south-easterly corner of Unit 4 Foundry Industrial Estate, Victoria Str",
+            "end": 424,
+            "explanation": {
+                "icon": "❌",
+                "text": "Possible spelling mistake. ‘metres’ is British English."
+            },
+            "gravity": 1,
+            "label": "Possible Typo",
+            "start": 418,
+            "subcategory": "typos",
+            "text": "metres"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "meters"
+                }
+            ],
+            "category": "orthography",
+            "context": "t south-easterly corner of Unit 4 Foundry Industrial Estate, Victoria Street, and approximately 347 metres east of the most south-easterly corner of 17 Batherton Close.\n\nHey guys, We are a team where ambiti",
+            "end": 557,
+            "explanation": {
+                "icon": "❌",
+                "text": "Possible spelling mistake. ‘metres’ is British English."
+            },
+            "gravity": 1,
+            "label": "Possible Typo",
+            "start": 551,
+            "subcategory": "typos",
+            "text": "metres"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Bather ton"
+                },
+                {
+                    "text": "Atherton"
+                }
+            ],
+            "category": "orthography",
+            "context": " Estate, Victoria Street, and approximately 347 metres east of the most south-easterly corner of 17 Batherton Close.\n\nHey guys, We are a team where ambition and perseverance count.\n\nA path from a point approxi",
+            "end": 612,
+            "explanation": {
+                "icon": "❌",
+                "text": "Possible spelling mistake found."
+            },
+            "gravity": 1,
+            "label": "Spelling mistake",
+            "start": 603,
+            "subcategory": "typos",
+            "text": "Batherton"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "meters"
+                }
+            ],
+            "category": "orthography",
+            "context": "y guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately 330 metres east of the most south corner of 17 Batherton Close, Widnes and approximately 208 metres east-south",
+            "end": 729,
+            "explanation": {
+                "icon": "❌",
+                "text": "Possible spelling mistake. ‘metres’ is British English."
+            },
+            "gravity": 1,
+            "label": "Possible Typo",
+            "start": 723,
+            "subcategory": "typos",
+            "text": "metres"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Bather ton"
+                },
+                {
+                    "text": "Atherton"
+                }
+            ],
+            "category": "orthography",
+            "context": "rseverance count.\n\nA path from a point approximately 330 metres east of the most south corner of 17 Batherton Close, Widnes and approximately 208 metres east-south-east of the most southerly corner of Unit 3 F",
+            "end": 775,
+            "explanation": {
+                "icon": "❌",
+                "text": "Possible spelling mistake found."
+            },
+            "gravity": 1,
+            "label": "Spelling mistake",
+            "start": 766,
+            "subcategory": "typos",
+            "text": "Batherton"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Wines"
+                },
+                {
+                    "text": "Widens"
+                }
+            ],
+            "category": "orthography",
+            "context": "\n\nA path from a point approximately 330 metres east of the most south corner of 17 Batherton Close, Widnes and approximately 208 metres east-south-east of the most southerly corner of Unit 3 Foundry Industr",
+            "end": 789,
+            "explanation": {
+                "icon": "❌",
+                "text": "Possible spelling mistake found."
+            },
+            "gravity": 1,
+            "label": "Spelling mistake",
+            "start": 783,
+            "subcategory": "typos",
+            "text": "Widnes"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "meters"
+                }
+            ],
+            "category": "orthography",
+            "context": "mately 330 metres east of the most south corner of 17 Batherton Close, Widnes and approximately 208 metres east-south-east of the most southerly corner of Unit 3 Foundry Industrial Estate, Victoria Street, ",
+            "end": 818,
+            "explanation": {
+                "icon": "❌",
+                "text": "Possible spelling mistake. ‘metres’ is British English."
+            },
+            "gravity": 1,
+            "label": "Possible Typo",
+            "start": 812,
+            "subcategory": "typos",
+            "text": "metres"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Wines"
+                },
+                {
+                    "text": "Widens"
+                }
+            ],
+            "category": "orthography",
+            "context": " east-south-east of the most southerly corner of Unit 3 Foundry Industrial Estate, Victoria Street, Widnes, proceeding in a generally east-north-easterly direction for approximately",
+            "end": 924,
+            "explanation": {
+                "icon": "❌",
+                "text": "Possible spelling mistake found."
+            },
+            "gravity": 1,
+            "label": "Spelling mistake",
+            "start": 918,
+            "subcategory": "typos",
+            "text": "Widnes"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "people"
+                },
+                {
+                    "text": "folks"
+                },
+                {
+                    "text": "friends"
+                },
+                {
+                    "text": "all"
+                },
+                {
+                    "text": "you all"
+                },
+                {
+                    "text": "everyone"
+                },
+                {
+                    "text": "teammates"
+                },
+                {
+                    "text": "you"
+                },
+                {
+                    "text": "team"
+                },
+                {
+                    "text": "crowd"
+                }
+            ],
+            "category": "gendered",
+            "context": "Hey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately 330 metres",
+            "end": 8,
+            "explanation": {
+                "icon": "💡",
+                "text": "Image of a man unconsciously triggered",
+                "url": "https://www.witty.works/en/categories/gendered#special_functions"
+            },
+            "gravity": 2,
+            "label": "Gendered: Special functions",
+            "start": 4,
+            "subcategory": "function",
+            "text": "guys"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "People"
+                },
+                {
+                    "text": "Folks"
+                },
+                {
+                    "text": "Friends"
+                },
+                {
+                    "text": "All"
+                },
+                {
+                    "text": "You all"
+                },
+                {
+                    "text": "Everyone"
+                },
+                {
+                    "text": "Teammates"
+                },
+                {
+                    "text": "You"
+                },
+                {
+                    "text": "Team"
+                },
+                {
+                    "text": "Crowd"
+                }
+            ],
+            "category": "gendered",
+            "context": "et, and approximately 347 metres east of the most south-easterly corner of 17 Batherton Close.\n\nHey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately 330 metres",
+            "end": 629,
+            "explanation": {
+                "icon": "💡",
+                "text": "Image of a man unconsciously triggered",
+                "url": "https://www.witty.works/en/categories/gendered#special_functions"
+            },
+            "gravity": 2,
+            "label": "Gendered: Special functions",
+            "start": 625,
+            "subcategory": "function",
+            "text": "guys"
+        },
+        {
+            "alternatives": [],
+            "category": "inclusive",
+            "context": "Hey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately 330 metres east of the mo",
+            "end": 23,
+            "explanation": {
+                "icon": "✅",
+                "text": "Emphasizes cooperative attributes",
+                "url": "https://www.witty.works/en/categories/inclusive#communal"
+            },
+            "label": "Inclusive: Communal",
+            "start": 19,
+            "subcategory": "communal",
+            "text": "team"
+        },
+        {
+            "alternatives": [],
+            "category": "inclusive",
+            "context": "mately 347 metres east of the most south-easterly corner of 17 Batherton Close.\n\nHey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately 330 metres east of the mo",
+            "end": 644,
+            "explanation": {
+                "icon": "✅",
+                "text": "Emphasizes cooperative attributes",
+                "url": "https://www.witty.works/en/categories/inclusive#communal"
+            },
+            "label": "Inclusive: Communal",
+            "start": 640,
+            "subcategory": "communal",
+            "text": "team"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "style",
+            "context": "most southerly corner of Unit 3 Foundry Industrial Estate, Victoria Street, Widnes, proceeding in a generally east-north-easterly direction for approximately 28 metres to a point approximately 202 metres east-",
+            "end": 330,
+            "explanation": {
+                "icon": "😟",
+                "text": "Filler words make understanding harder",
+                "url": "https://www.witty.works/en/categories/style#filler_words"
+            },
+            "gravity": 3,
+            "label": "Style: Filler Words",
+            "start": 321,
+            "subcategory": "filler",
+            "text": "generally"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "style",
+            "context": "most southerly corner of Unit 3 Foundry Industrial Estate, Victoria Street, Widnes, proceeding in a generally east-north-easterly direction for approximately",
+            "end": 951,
+            "explanation": {
+                "icon": "😟",
+                "text": "Filler words make understanding harder",
+                "url": "https://www.witty.works/en/categories/style#filler_words"
+            },
+            "gravity": 3,
+            "label": "Style: Filler Words",
+            "start": 942,
+            "subcategory": "filler",
+            "text": "generally"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "growth mindset"
+                },
+                {
+                    "text": "dedication"
+                },
+                {
+                    "text": "willingness to go after a dream"
+                },
+                {
+                    "text": "enthusiasm for working toward goals"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "Hey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately 330 metres east of the most south corner",
+            "end": 38,
+            "explanation": {
+                "icon": "😒",
+                "text": "Deters people with a “we” mindset",
+                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+            },
+            "gravity": 2,
+            "label": "Biased language: Agentic",
+            "start": 30,
+            "subcategory": "agentic",
+            "text": "ambition"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "dedication"
+                },
+                {
+                    "text": "steadfastness"
+                },
+                {
+                    "text": "diligence"
+                },
+                {
+                    "text": "constancy"
+                },
+                {
+                    "text": "care"
+                },
+                {
+                    "text": "strength of character"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "Hey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately 330 metres east of the most south corner of 17 Batherton ",
+            "end": 55,
+            "explanation": {
+                "icon": "😒",
+                "text": "Deters people with a “we” mindset",
+                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+            },
+            "gravity": 2,
+            "label": "Biased language: Agentic",
+            "start": 43,
+            "subcategory": "agentic",
+            "text": "perseverance"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Growth mindset"
+                },
+                {
+                    "text": "Dedication"
+                },
+                {
+                    "text": "Willingness to go after a dream"
+                },
+                {
+                    "text": "Enthusiasm for working toward goals"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "metres east of the most south-easterly corner of 17 Batherton Close.\n\nHey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately 330 metres east of the most south corner",
+            "end": 659,
+            "explanation": {
+                "icon": "😒",
+                "text": "Deters people with a “we” mindset",
+                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+            },
+            "gravity": 2,
+            "label": "Biased language: Agentic",
+            "start": 651,
+            "subcategory": "agentic",
+            "text": "ambition"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Dedication"
+                },
+                {
+                    "text": "Steadfastness"
+                },
+                {
+                    "text": "Diligence"
+                },
+                {
+                    "text": "Constancy"
+                },
+                {
+                    "text": "Care"
+                },
+                {
+                    "text": "Strength of character"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "f the most south-easterly corner of 17 Batherton Close.\n\nHey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately 330 metres east of the most south corner of 17 Batherton ",
+            "end": 676,
+            "explanation": {
+                "icon": "😒",
+                "text": "Deters people with a “we” mindset",
+                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+            },
+            "gravity": 2,
+            "label": "Biased language: Agentic",
+            "start": 664,
+            "subcategory": "agentic",
+            "text": "perseverance"
+        }
+    ]
 }
