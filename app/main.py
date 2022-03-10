@@ -1687,7 +1687,10 @@ def homonyms_english(
 
     list_tokens = []
     for token in tokens:
+
         for word, word_type, category, subcategory, alternative in homonyms_words:
+            if not is_sub_category_enabled(config, subcategory):
+                continue
             if token.lemma_ == word and token.pos_ == type_transform(word_type):
                 list_tokens.append(
                     ResultOut.factory(
