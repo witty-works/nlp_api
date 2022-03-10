@@ -605,18 +605,14 @@ def check_category_importance(config: Config, subcategory: str):
 
 # function to convern word_type to SpaCy part-of-the-speech labels
 def type_transform(lemma_type):
-    noun = "NOUN"
-    verb = "VERB"
-    adj = "ADJ"
-    adv = "ADV"
     if lemma_type == "s":
-        return noun
+        return "NOUN"
     if lemma_type == "v":
-        return verb
+        return "VERB"
     if lemma_type == "a":
-        return adj
+        return "ADJ"
     if lemma_type == "adv":
-        return adv
+        return "ADV"
 
 
 def is_sub_category_enabled(config: Config, subcategory: str):
