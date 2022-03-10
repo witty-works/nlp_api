@@ -773,6 +773,10 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
         sentences_alternatives_en["style"] = style_sentences_alternatives_US
         sentences_alternatives_en["bias"] = bias_sentences_alternatives_US
 
+    list_full += homonyms_english(
+        version, config, lang, text, tokens, rules[lang.locale]["df_homonyms_word"]
+    )
+
     if is_sub_category_enabled(config, "openly_discriminating"):
         list_full += rules_based_words_phrase_matcher_en(
             version,
