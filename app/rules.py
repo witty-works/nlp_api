@@ -303,7 +303,7 @@ homonyms_word_US = list(
 homonyms_word_GB = list(
     zip(
         df_homonyms_GB["Lemma"],
-        df_homonyms_GB["Word_type"],
+        df_homonyms_GB["Word_Type"],
         df_homonyms_GB["Category"],
         df_homonyms_GB["Primary_subcategory"],
         df_homonyms_GB["Alt_split"],

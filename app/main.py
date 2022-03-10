@@ -738,11 +738,13 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
     gendered_words_alternatives_en = defaultdict(list)
     inclusive_sentences_alternatives_en = []
     sentences_alternatives_en = defaultdict(list)
+
     if lang.locale == "en-GB":
         words_alternatives_en["od"] = open_disc_words_alternatives_GB
         words_alternatives_en["ge"] = gender_words_alternatives_GB
         words_alternatives_en["style"] = style_words_alternatives_GB
         words_alternatives_en["bias"] = bias_words_alternatives_GB
+        words_alternatives_en["homonym"] = homonyms_word_GB
 
         if config.singular_they == SingularThey.ALL_PRONOUNS:
             words_alternatives_en["ge"] += bias_singular_they_alternatives_GB
@@ -760,6 +762,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
         words_alternatives_en["ge"] = gender_words_alternatives_US
         words_alternatives_en["style"] = style_words_alternatives_US
         words_alternatives_en["bias"] = bias_words_alternatives_US
+        words_alternatives_en["homonym"] = homonyms_word_US
 
         if config.singular_they == SingularThey.ALL_PRONOUNS:
             words_alternatives_en["ge"] += bias_singular_they_alternatives_US
@@ -774,7 +777,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
         sentences_alternatives_en["bias"] = bias_sentences_alternatives_US
 
     list_full += homonyms_english(
-        version, config, lang, text, tokens, rules[lang.locale]["df_homonyms_words"]
+        version, config, lang, text, tokens, words_alternatives_en["homonym"]
     )
 
     if is_sub_category_enabled(config, "openly_discriminating"):
