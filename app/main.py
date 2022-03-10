@@ -604,18 +604,18 @@ def check_category_importance(config: Config, subcategory: str):
 
 
 # function to convern word_type to SpaCy part-of-the-speech labels
-def type_transform(word_type):
+def type_transform(lemma_type):
     noun = "NOUN"
     verb = "VERB"
     adj = "ADJ"
     adv = "ADV"
-    if word_type == "s":
+    if lemma_type == "s":
         return noun
-    if word_type == "v":
+    if lemma_type == "v":
         return verb
-    if word_type == "a":
+    if lemma_type == "a":
         return adj
-    if word_type == "adv":
+    if lemma_type == "adv":
         return adv
 
 
@@ -774,7 +774,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
         sentences_alternatives_en["bias"] = bias_sentences_alternatives_US
 
     list_full += homonyms_english(
-        version, config, lang, text, tokens, rules[lang.locale]["df_homonyms_word"]
+        version, config, lang, text, tokens, rules[lang.locale]["df_homonyms_words"]
     )
 
     if is_sub_category_enabled(config, "openly_discriminating"):

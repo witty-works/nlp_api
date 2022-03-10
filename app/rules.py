@@ -49,7 +49,7 @@ rules = {
         "df_ub_sentence": "ub_sentences.csv",
         "df_ub_singular_they": "ub_singular_they.csv",
         # load homonyms
-        "df_homonyms_word": "homonyms_words.csv",
+        "df_homonyms_words": "homonyms_words.csv",
     },
 }
 
@@ -288,13 +288,13 @@ inclusive_words_alternatives_GB = list(
     zip(df_inclusive_GB["Lemma"], df_inclusive_GB["Primary_subcategory"])
 )
 # df homonyms words
-df_homonyms_US = rules["en-US"]["df_homonyms_word"]
-df_homonyms_GB = rules["en-GB"]["df_homonyms_word"]
+df_homonyms_US = rules["en-US"]["df_homonyms_words"]
+df_homonyms_GB = rules["en-GB"]["df_homonyms_words"]
 # homonyms : lemma+word_type+category+subcategory+alternatives
 homonyms_word_US = list(
     zip(
         df_homonyms_US["Lemma"],
-        df_homonyms_US["Word_type"],
+        df_homonyms_US["Word_Type"],
         df_homonyms_US["Category"],
         df_homonyms_US["Primary_subcategory"],
         df_homonyms_US["Alt_split"],
