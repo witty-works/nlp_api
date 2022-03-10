@@ -5,6 +5,50 @@
         {
             "alternatives": [
                 {
+                    "text": "test"
+                },
+                {
+                    "text": "burning question"
+                },
+                {
+                    "text": "complex situation"
+                },
+                {
+                    "text": "task"
+                },
+                {
+                    "text": "task requiring thought and skill to solve"
+                },
+                {
+                    "text": "complex questions"
+                },
+                {
+                    "text": "difficult tasks"
+                },
+                {
+                    "text": "burning questions"
+                },
+                {
+                    "text": "tasks"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
+            "end": 80,
+            "explanation": {
+                "icon": "😒",
+                "text": "Deters people with a “we” mindset",
+                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+            },
+            "gravity": 2,
+            "label": "Biased language: Agentic",
+            "start": 70,
+            "subcategory": "agentic",
+            "text": "challenges"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "project management"
                 },
                 {
