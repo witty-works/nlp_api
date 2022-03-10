@@ -1675,43 +1675,31 @@ def rules_based_words_phrase_matcher_en(
 
     return list_tokens
 
-for (
-            word,
-            alternative_sing,
-            alternative_plur,
-            subcategory,
-        ) in gendered_words_alternatives:
-
-
 
 # english function to handle homonyms
 def homonyms_english(
-    version: float,
-    config: Config,
-    lang,
-    full_text,
-    tokens,
-    homonyms_words
-    ):
+    version: float, config: Config, lang, full_text, tokens, homonyms_words
+):
 
     list_tokens = []
     for token in tokens:
-         for word, word_type, category, subcategory, alternative in homonyms_words:
-                if token.lemma_ == word and token.pos_ == type_transform(word_type):
-                    list_tokens.append(
-                        ResultOut.factory(
-                            version,
-                            config,
-                            lang,
-                            token.text,
-                            full_text,
-                            category,
-                            subcategory,
-                            token.idx,
-                            token.idx + len(token.text),
-                            ast.literal_eval(alternative),
+        for word, word_type, category, subcategory, alternative in homonyms_words:
+            if token.lemma_ == word and token.pos_ == type_transform(word_type):
+                list_tokens.append(
+                    ResultOut.factory(
+                        version,
+                        config,
+                        lang,
+                        token.text,
+                        full_text,
+                        category,
+                        subcategory,
+                        token.idx,
+                        token.idx + len(token.text),
+                        ast.literal_eval(alternative),
                     )
-            
+                )
+    return list_tokens
 
 
 # english function to show plural and singular forms of alternatives for nouns
