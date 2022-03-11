@@ -1,0 +1,17 @@
+Lemma,Word_Type,Category,Primary_subcategory,Alt_split
+ADD,abbr,style,abbreviation,"['attention deficit disorder', 'person with ADD', 'person with attention deficit disorder', 'easily bored', 'inattentive', 'easily distracted', 'having a poor working memory']"
+ADHD,abbr,style,abbreviation,"['attention deficit hyperactivity disorder', 'person with ADHD', 'person with attention deficit hyperactivity disorder', 'fidgety', 'restless', 'easily bored']"
+ASD,abbr,style,abbreviation,"['autism spectrum disorder', 'neurodiversity', 'person with ASD', 'person with autism  sprectrum disorder', 'neurodevelopmental disorder characterised by difficulties with social interaction and communication', 'umbrella diagnosis that includes autistic disorder, childhood disintegrative disorder, some pervasive developmental disorders, and Asperger syndrome']"
+ASL,abbr,style,abbreviation,['American Sign Language']
+DALY,abbr,style,abbreviation,"['-', 'diasability-adjusted life years', 'metric that confuses quality of life with health --- avoid if possible']"
+DALYs,abbr,style,abbreviation,"['-', 'diasability-adjusted life years', 'metric that confuses quality of life with health --- avoid if possible']"
+DFLY,abbr,style,abbreviation,"['-', 'dependency-free life-years', 'metric that confuses quality of life with health --- avoid if possible']"
+DFLYs,abbr,style,abbreviation,"['-', 'dependency-free life-years', 'metric that confuses quality of life with health --- avoid if possible']"
+LBFM,abbr,openly_discriminating,sexism,['-']
+OCD,abbr,style,abbreviation,"['obsessive-compulsive disorder', 'detail-oriented', 'precise', 'careful', 'with attention to detail']"
+OTB,abbr,style,abbreviation,['outside the box']
+QALY,abbr,style,abbreviation,"['-', 'quality-adjusted life years', 'metric that confuses quality of life with health --- avoid if possible']"
+QALYs,abbr,style,abbreviation,"['-', 'quality-adjusted life years', 'metric that confuses quality of life with health --- avoid if possible']"
+TERF,abbr,unconscious_bias,sexual_orientation,"['trans-exclusionary radical feminist', 'trans-exclusionary radical feminism']"
+etc,abbr,style,filler,['-']
+etc.,abbr,style,filler,['-']
