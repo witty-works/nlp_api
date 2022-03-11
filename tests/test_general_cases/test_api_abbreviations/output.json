@@ -1,0 +1,25 @@
+{
+    "language": "en",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "American Sign Language"
+                }
+            ],
+            "category": "style",
+            "end": 16,
+            "explanation": {
+                "icon": "😉",
+                "text": "Abbreviation: Sure your readers understand?",
+                "url": "https://www.witty.works/en/categories/style#abbreviation"
+            },
+            "gravity": 3,
+            "label": "Style: Abbreviation",
+            "start": 13,
+            "subcategory": "abbreviation",
+            "text": "ASL"
+        }
+    ]
+}
