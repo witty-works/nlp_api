@@ -100,10 +100,6 @@ def read_csv(in_file):
             "Inclusive?": None,
             "Gravity": None,
             "Importance": None,
-            "Micro-learning bites EN": None,
-            "Micro-learning bites DE": None,
-            "Lead Text EN": None,
-            "Lead Text DE": None,
             "Status EN": None,
             "Status DE": None,
         }
@@ -137,16 +133,6 @@ def read_csv(in_file):
                     poFiles, sub_category, columns, "label", "Category Label", row
                 )
 
-                categories[sub_category]["introduction"] = add_entry(
-                    poFiles,
-                    sub_category,
-                    columns,
-                    "micro_learning_bites",
-                    "Micro-learning bites",
-                    row,
-                    False,
-                )
-
                 categories[sub_category]["status"] = add_entry(
                     poFiles,
                     sub_category,
@@ -157,17 +143,8 @@ def read_csv(in_file):
                     False,
                 )
 
-                reason = add_entry(
-                    poFiles, sub_category, columns, "reason", "Reason", row
-                )
-                solution = add_entry(
-                    poFiles, sub_category, columns, "solution", "Solution", row
-                )
-                for language in categories[sub_category]["introduction"]:
-                    if len(categories[sub_category]["introduction"][language]) == 0:
-                        categories[sub_category]["introduction"][language] = (
-                            reason[language] + "\n\n" + solution[language]
-                        )
+                add_entry(poFiles, sub_category, columns, "reason", "Reason", row)
+                add_entry(poFiles, sub_category, columns, "solution", "Solution", row)
 
                 categories[sub_category]["explanation"] = add_entry(
                     poFiles,
@@ -186,25 +163,6 @@ def read_csv(in_file):
                     "\\1",
                     row[columns["Category"]],
                 )
-
-                if sub_category == categories[sub_category]["category"]:
-                    categories[sub_category]["title"] = {
-                        "en": 'What does Witty highlight in the category "'
-                        + categories[sub_category]["name"]["en"]
-                        + '"?',
-                        "de": 'Was markiert Witty in der Kategorie "'
-                        + categories[sub_category]["name"]["de"]
-                        + '"?',
-                    }
-                    categories[sub_category]["text"] = add_entry(
-                        poFiles,
-                        sub_category,
-                        columns,
-                        "lead_text",
-                        "Lead Text",
-                        row,
-                        False,
-                    )
 
                 try:
                     gravity = gravities[str(row[columns["Gravity"]])]
@@ -236,6 +194,8 @@ def read_csv(in_file):
             poFiles[locale].to_binary()
             poFiles[locale].save_as_mofile(locale_path + "/messages.mo")
 
+    return
+
     active_categories = [
         "openly_discriminating",
         "unconscious_bias",
@@ -253,8 +213,6 @@ def read_csv(in_file):
             "language",
             "emoji",
             "introduction",
-            "lead_title",
-            "lead_text",
             "category_name",
             "sort",
         ]
