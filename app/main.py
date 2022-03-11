@@ -1708,6 +1708,48 @@ def homonyms_english(
     return list_tokens
 
 
+def abbreviation_match(
+    version: float,
+    config: Config,
+    lang,
+    full_text,
+    tokens,
+    df_abbreviation,
+    abbreviation_list,
+):
+    list_tokens = []
+    # Phrase matcher part to handle False positives with two words and special simbols
+    matcher = PhraseMatcher(model["en"].vocab)
+
+    # Only run model.make_doc to speed things up
+    patterns = [model["en"].make_doc(text) for text in list(df_abbreviation["Lemma"])]
+    matcher.add("TerminologyList", patterns)
+
+    matches = matcher(tokens)
+    for match_id, start, end in matches:
+        for abbreviation, category, subcategory, alternative in abbreviation_list:
+            if not is_sub_category_enabled(config, subcategory):
+                continue
+            span = tokens[start:end]
+            if span.text == abbreviation:
+                list_tokens.append(
+                    ResultOut.factory(
+                        version,
+                        config,
+                        lang,
+                        span.text,
+                        full_text,
+                        category,
+                        subcategory,
+                        span.start_char,
+                        span.end_char,
+                        ast.literal_eval(alternative),
+                    )
+                )
+
+    return list_tokens
+
+
 # english function to show plural and singular forms of alternatives for nouns
 
 
