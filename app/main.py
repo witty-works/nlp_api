@@ -1708,6 +1708,7 @@ def homonyms_english(
     return list_tokens
 
 
+# function to find exact match for abbreviations
 def abbreviation_match(
     version: float,
     config: Config,
@@ -1719,10 +1720,12 @@ def abbreviation_match(
 ):
     list_tokens = []
     # Phrase matcher part to handle False positives with two words and special simbols
-    matcher = PhraseMatcher(model["en"].vocab)
+    matcher = PhraseMatcher(model[lang.lang].vocab)
 
     # Only run model.make_doc to speed things up
-    patterns = [model["en"].make_doc(text) for text in list(df_abbreviation["Lemma"])]
+    patterns = [
+        model[lang.lang].make_doc(text) for text in list(df_abbreviation["Lemma"])
+    ]
     matcher.add("TerminologyList", patterns)
 
     matches = matcher(tokens)
