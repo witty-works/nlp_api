@@ -48,6 +48,8 @@ rules = {
         "df_ub_no_plur_word": "ub_no_plur_words.csv",
         "df_ub_sentence": "ub_sentences.csv",
         "df_ub_singular_they": "ub_singular_they.csv",
+        # load homonyms
+        "df_homonyms_words": "homonyms_words.csv",
     },
 }
 
@@ -284,6 +286,28 @@ inclusive_words_alternatives_US = list(
 )
 inclusive_words_alternatives_GB = list(
     zip(df_inclusive_GB["Lemma"], df_inclusive_GB["Primary_subcategory"])
+)
+# df homonyms words
+df_homonyms_US = rules["en-US"]["df_homonyms_words"]
+df_homonyms_GB = rules["en-GB"]["df_homonyms_words"]
+# homonyms : lemma+word_type+category+subcategory+alternatives
+homonyms_word_US = list(
+    zip(
+        df_homonyms_US["Lemma"],
+        df_homonyms_US["Word_Type"],
+        df_homonyms_US["Category"],
+        df_homonyms_US["Primary_subcategory"],
+        df_homonyms_US["Alt_split"],
+    )
+)
+homonyms_word_GB = list(
+    zip(
+        df_homonyms_GB["Lemma"],
+        df_homonyms_GB["Word_Type"],
+        df_homonyms_GB["Category"],
+        df_homonyms_GB["Primary_subcategory"],
+        df_homonyms_GB["Alt_split"],
+    )
 )
 # df gendered noun
 df_gender_noun_US = rules["en-US"]["df_gendered_noun_word"]

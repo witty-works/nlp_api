@@ -24,6 +24,73 @@
         {
             "alternatives": [
                 {
+                    "text": "question"
+                },
+                {
+                    "text": "cross-examine"
+                },
+                {
+                    "text": "re-evaluate"
+                },
+                {
+                    "text": "object to"
+                },
+                {
+                    "text": "express the need for"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "e are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number 1 and innovation drives us.\nSincere regards,\nNadia",
+            "end": 121,
+            "explanation": {
+                "icon": "😒",
+                "text": "Deters people with a “we” mindset",
+                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+            },
+            "gravity": 2,
+            "label": "Biased language: Agentic",
+            "start": 111,
+            "subcategory": "agentic",
+            "text": "challenged"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "invest in"
+                },
+                {
+                    "text": "support"
+                },
+                {
+                    "text": "work toward"
+                },
+                {
+                    "text": "take responsibility for"
+                },
+                {
+                    "text": "dedicated"
+                },
+                {
+                    "text": "invested"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "e count.\nCompetition is our daily life and we love to be challenged.\nWe are number 1 and innovation drives us.\nSincere regards,\nNadia",
+            "end": 160,
+            "explanation": {
+                "icon": "😒",
+                "text": "Deters people with a “we” mindset",
+                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+            },
+            "gravity": 2,
+            "label": "Biased language: Agentic",
+            "start": 154,
+            "subcategory": "agentic",
+            "text": "drives"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "people"
                 },
                 {
