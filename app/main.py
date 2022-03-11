@@ -603,6 +603,18 @@ def check_category_importance(config: Config, subcategory: str):
     )
 
 
+# function to convern word_type to SpaCy part-of-the-speech labels
+def type_transform(lemma_type):
+    if lemma_type == "s":
+        return "NOUN"
+    if lemma_type == "v":
+        return "VERB"
+    if lemma_type == "a":
+        return "ADJ"
+    if lemma_type == "adv":
+        return "ADV"
+
+
 def is_sub_category_enabled(config: Config, subcategory: str):
     if categories[subcategory]["category"] in config.disabled_categories:
         return False
@@ -722,11 +734,13 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
     gendered_words_alternatives_en = defaultdict(list)
     inclusive_sentences_alternatives_en = []
     sentences_alternatives_en = defaultdict(list)
+
     if lang.locale == "en-GB":
         words_alternatives_en["od"] = open_disc_words_alternatives_GB
         words_alternatives_en["ge"] = gender_words_alternatives_GB
         words_alternatives_en["style"] = style_words_alternatives_GB
         words_alternatives_en["bias"] = bias_words_alternatives_GB
+        words_alternatives_en["homonym"] = homonyms_word_GB
 
         if config.singular_they == SingularThey.ALL_PRONOUNS:
             words_alternatives_en["ge"] += bias_singular_they_alternatives_GB
@@ -744,6 +758,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
         words_alternatives_en["ge"] = gender_words_alternatives_US
         words_alternatives_en["style"] = style_words_alternatives_US
         words_alternatives_en["bias"] = bias_words_alternatives_US
+        words_alternatives_en["homonym"] = homonyms_word_US
 
         if config.singular_they == SingularThey.ALL_PRONOUNS:
             words_alternatives_en["ge"] += bias_singular_they_alternatives_US
@@ -756,6 +771,10 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
         sentences_alternatives_en["ge"] = gender_sentences_alternatives_US
         sentences_alternatives_en["style"] = style_sentences_alternatives_US
         sentences_alternatives_en["bias"] = bias_sentences_alternatives_US
+
+    list_full += homonyms_english(
+        version, config, lang, text, tokens, words_alternatives_en["homonym"]
+    )
 
     if is_sub_category_enabled(config, "openly_discriminating"):
         list_full += rules_based_words_phrase_matcher_en(
@@ -1657,6 +1676,35 @@ def rules_based_words_phrase_matcher_en(
                     )
                 )
 
+    return list_tokens
+
+
+# english function to handle homonyms
+def homonyms_english(
+    version: float, config: Config, lang, full_text, tokens, homonyms_words
+):
+
+    list_tokens = []
+    for token in tokens:
+
+        for word, word_type, category, subcategory, alternative in homonyms_words:
+            if not is_sub_category_enabled(config, subcategory):
+                continue
+            if token.lemma_ == word and token.pos_ == type_transform(word_type):
+                list_tokens.append(
+                    ResultOut.factory(
+                        version,
+                        config,
+                        lang,
+                        token.text,
+                        full_text,
+                        category,
+                        subcategory,
+                        token.idx,
+                        token.idx + len(token.text),
+                        ast.literal_eval(alternative),
+                    )
+                )
     return list_tokens
 
 
