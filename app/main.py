@@ -741,6 +741,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
         words_alternatives_en["style"] = style_words_alternatives_GB
         words_alternatives_en["bias"] = bias_words_alternatives_GB
         words_alternatives_en["homonym"] = homonyms_word_GB
+        words_alternatives_en["abbr"] = abbreviation_GB
 
         if config.singular_they == SingularThey.ALL_PRONOUNS:
             words_alternatives_en["ge"] += bias_singular_they_alternatives_GB
@@ -759,6 +760,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
         words_alternatives_en["style"] = style_words_alternatives_US
         words_alternatives_en["bias"] = bias_words_alternatives_US
         words_alternatives_en["homonym"] = homonyms_word_US
+        words_alternatives_en["abbr"] = abbreviation_US
 
         if config.singular_they == SingularThey.ALL_PRONOUNS:
             words_alternatives_en["ge"] += bias_singular_they_alternatives_US
@@ -774,6 +776,15 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
 
     list_full += homonyms_english(
         version, config, lang, text, tokens, words_alternatives_en["homonym"]
+    )
+    list_full += abbreviation_match(
+        version,
+        config,
+        lang,
+        text,
+        tokens,
+        rules[lang.locale]["df_abbreviation"],
+        words_alternatives_en["abbr"],
     )
 
     if is_sub_category_enabled(config, "openly_discriminating"):
