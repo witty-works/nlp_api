@@ -14,4 +14,4 @@ QALY,abbr,style,abbreviation,"['-', 'quality-adjusted life years', 'metric that 
 QALYs,abbr,style,abbreviation,"['-', 'quality-adjusted life years', 'metric that confuses quality of life with health --- avoid if possible']"
 TERF,abbr,unconscious_bias,sexual_orientation,"['trans-exclusionary radical feminist', 'trans-exclusionary radical feminism']"
 etc,abbr,style,filler,['-']
-etc.,abbr,style,filler,['-']
+
