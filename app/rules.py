@@ -50,6 +50,8 @@ rules = {
         "df_ub_singular_they": "ub_singular_they.csv",
         # load homonyms
         "df_homonyms_words": "homonyms_words.csv",
+        # load abbreviations
+        "df_abbreviation": "abbreviations.csv",
     },
 }
 
@@ -307,6 +309,27 @@ homonyms_word_GB = list(
         df_homonyms_GB["Category"],
         df_homonyms_GB["Primary_subcategory"],
         df_homonyms_GB["Alt_split"],
+    )
+)
+
+# df abbreviation english
+df_abbreviation_US = rules["en-US"]["df_abbreviation"]
+df_abbreviation_GB = rules["en-GB"]["df_abbreviation"]
+# abbreviation : lemma+category+subcategory+alternatives
+abbreviation_US = list(
+    zip(
+        df_abbreviation_US["Lemma"],
+        df_abbreviation_US["Category"],
+        df_abbreviation_US["Primary_subcategory"],
+        df_abbreviation_US["Alt_split"],
+    )
+)
+abbreviation_GB = list(
+    zip(
+        df_abbreviation_GB["Lemma"],
+        df_abbreviation_GB["Category"],
+        df_abbreviation_GB["Primary_subcategory"],
+        df_abbreviation_GB["Alt_split"],
     )
 )
 # df gendered noun
