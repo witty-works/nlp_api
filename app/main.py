@@ -625,6 +625,16 @@ def is_sub_category_enabled(config: Config, subcategory: str):
 def german_rules(version: float, config: Config, lang: Language, tokens, text: str):
     list_full = []
 
+    list_full += abbreviation_match(
+        version,
+        config,
+        lang,
+        text,
+        tokens,
+        rules[lang.locale]["df_abbreviation"],
+        abbreviation,
+    )
+
     if is_sub_category_enabled(config, "openly_discriminating"):
         list_full += rules_based_words_phrase_matcher_de(
             version,
