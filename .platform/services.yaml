@@ -1,2 +1,2 @@
-#cacheredis:
-#    type: redis:6.0
+cacheredis:
+    type: redis:6.0

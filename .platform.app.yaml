@@ -46,8 +46,8 @@ hooks:
     echo "Installing archive of ${FT_MODEL} from '${PLATFORM_CACHE_DIR}/${FT_MODEL}' ..."
     cp -R "${PLATFORM_CACHE_DIR}/${FT_MODEL}" ./training_data/.
 
-#relationships:
-#rediscache: "cacheredis:redis"
+relationships:
+  rediscache: "cacheredis:redis"
 
 crons:
   generate-statistics:
