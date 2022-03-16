@@ -28,6 +28,8 @@ rules = {
         "df_communal_words": "communal.csv",
         # load gender false positive
         "df_gender_false_positive": "gender_false_positive.csv",
+        # load abbreviations
+        "df_abbreviation": "abbreviations.csv",
     },
     "en-US": {
         # load openly discriminating words
@@ -163,6 +165,18 @@ open_disc_words_alternatives = list(
         df_discrimination_words["Primary_subcategory"],
     )
 )
+# df abbreviation
+df_abbreviation = rules["de-DE"]["df_abbreviation"]
+# abbreviation: lemma + category + subcategory + alternatives
+abbreviation = list(
+    zip(
+        df_abbreviation["Lemma"],
+        df_abbreviation["Category"],
+        df_abbreviation["Primary_subcategory"],
+        df_abbreviation["Alt_split"],
+    )
+)
+
 ## sentences:
 # df open discrimination sentence
 df_discrimination_sentences = rules["de-DE"]["df_open_dis_sentence"]

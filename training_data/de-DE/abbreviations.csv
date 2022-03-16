@@ -1,0 +1,8 @@
+Lemma,Word_Type,Category,Primary_subcategory,Alt_split
+etc,abbr,style,filler,['-']
+etc.,abbr,style,filler,['-']
+o.Ä.,abbr,style,filler,['-']
+o.ä.,abbr,style,filler,['-']
+u.a.,abbr,style,filler,"['-', 'unter Anderem']"
+u.Ä.,abbr,style,filler,"['-', 'und Ähnliche', 'und Ähnliches']"
+u.ä.,abbr,style,filler,"['-', 'und ahnlich']"
