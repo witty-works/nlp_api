@@ -2,7 +2,7 @@
 branch = True
 source = app
 include = */app/*
-omit = *migrations*, *tests*
+omit = */migrations/*, */tests/*, */bin/*
 
 [coverage:report]
 show_missing = True

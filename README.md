@@ -185,24 +185,24 @@ Go to https://www.notion.so/witty-works/e68e073dd0a342fca2a6683c7a8b2341?v=b54da
 Export to CSV
 
 ```
-pipenv run python -m update_locales -i [CSV export]]
+pipenv run python -m bin.update_locales -i [CSV export]]
 ```
 
 ## Analyze Rules
 
 ```
-pipenv run python -m analyze_rules -l en
+pipenv run python -m bin.analyze_rules -l en
 ```
 
 ## Update the ignore.txt
 1. Run the script to generate ignore words
 for German:
 ```
-pipenv run python -m analyze_rules -p <path_to_ignore_file>
+pipenv run python -m bin.analyze_rules -p <path_to_ignore_file>
 ```
 for English:
 ```
-pipenv run python -m analyze_rules -l en -p <path_to_ignore_file>
+pipenv run python -m bin.analyze_rules -l en -p <path_to_ignore_file>
 ```
 2. Copy `ignore.txt` to LanguageTool repository: https://github.com/witty-works/languagetool
 ## Update the false positive list 
@@ -220,7 +220,7 @@ pipenv run uvicorn app.main:app --reload
 ```
 4. Run the generate_false_positive.py file
 ```
-pipenv run python -m generate_false_positive
+pipenv run python -m bin.generate_false_positive
 ```
 * If you get an error here, please repeat steps 1-2 and run the script again.
 
