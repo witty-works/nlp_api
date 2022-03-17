@@ -180,7 +180,7 @@ def read_csv(in_file):
                 ]["emoji"]
                 del categories[sub_category]["explanation"]
 
-    locales_path = os.path.dirname(__file__) + "/locales"
+    locales_path = os.path.dirname(__file__) + "/../locales"
 
     for locale in poFiles:
         if locale == "pot":
@@ -193,7 +193,7 @@ def read_csv(in_file):
             poFiles[locale].to_binary()
             poFiles[locale].save_as_mofile(locale_path + "/messages.mo")
 
-    f = open("app/categories.py", "w")
+    f = open(os.path.dirname(__file__) + "/../app/categories.py", "w")
     f.write("categories = " + repr(categories) + "\n")
     f.close()
 
