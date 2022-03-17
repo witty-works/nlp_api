@@ -56,7 +56,7 @@ from collections import namedtuple, defaultdict
 from collections import namedtuple
 from app.sentry import set_up_sentry_sdk
 
-version = "1.22.10"
+version = "1.22.11"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -625,6 +625,16 @@ def is_sub_category_enabled(config: Config, subcategory: str):
 def german_rules(version: float, config: Config, lang: Language, tokens, text: str):
     list_full = []
 
+    list_full += abbreviation_match(
+        version,
+        config,
+        lang,
+        text,
+        tokens,
+        rules[lang.locale]["df_abbreviation"],
+        abbreviation,
+    )
+
     if is_sub_category_enabled(config, "openly_discriminating"):
         list_full += rules_based_words_phrase_matcher_de(
             version,
@@ -741,6 +751,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
         words_alternatives_en["style"] = style_words_alternatives_GB
         words_alternatives_en["bias"] = bias_words_alternatives_GB
         words_alternatives_en["homonym"] = homonyms_word_GB
+        words_alternatives_en["abbr"] = abbreviation_GB
 
         if config.singular_they == SingularThey.ALL_PRONOUNS:
             words_alternatives_en["ge"] += bias_singular_they_alternatives_GB
@@ -759,6 +770,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
         words_alternatives_en["style"] = style_words_alternatives_US
         words_alternatives_en["bias"] = bias_words_alternatives_US
         words_alternatives_en["homonym"] = homonyms_word_US
+        words_alternatives_en["abbr"] = abbreviation_US
 
         if config.singular_they == SingularThey.ALL_PRONOUNS:
             words_alternatives_en["ge"] += bias_singular_they_alternatives_US
@@ -774,6 +786,15 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
 
     list_full += homonyms_english(
         version, config, lang, text, tokens, words_alternatives_en["homonym"]
+    )
+    list_full += abbreviation_match(
+        version,
+        config,
+        lang,
+        text,
+        tokens,
+        rules[lang.locale]["df_abbreviation"],
+        words_alternatives_en["abbr"],
     )
 
     if is_sub_category_enabled(config, "openly_discriminating"):
@@ -1705,6 +1726,51 @@ def homonyms_english(
                         ast.literal_eval(alternative),
                     )
                 )
+    return list_tokens
+
+
+# function to find exact match for abbreviations
+def abbreviation_match(
+    version: float,
+    config: Config,
+    lang,
+    full_text,
+    tokens,
+    df_abbreviation,
+    abbreviation_list,
+):
+    list_tokens = []
+    # Phrase matcher part to handle False positives with two words and special simbols
+    matcher = PhraseMatcher(model[lang.lang].vocab)
+
+    # Only run model.make_doc to speed things up
+    patterns = [
+        model[lang.lang].make_doc(text) for text in list(df_abbreviation["Lemma"])
+    ]
+    matcher.add("TerminologyList", patterns)
+
+    matches = matcher(tokens)
+    for match_id, start, end in matches:
+        for abbreviation, category, subcategory, alternative in abbreviation_list:
+            if not is_sub_category_enabled(config, subcategory):
+                continue
+            span = tokens[start:end]
+            if span.text == abbreviation:
+                list_tokens.append(
+                    ResultOut.factory(
+                        version,
+                        config,
+                        lang,
+                        span.text,
+                        full_text,
+                        category,
+                        subcategory,
+                        span.start_char,
+                        span.end_char,
+                        ast.literal_eval(alternative),
+                    )
+                )
+
     return list_tokens
 
 

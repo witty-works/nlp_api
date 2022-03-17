@@ -28,6 +28,8 @@ rules = {
         "df_communal_words": "communal.csv",
         # load gender false positive
         "df_gender_false_positive": "gender_false_positive.csv",
+        # load abbreviations
+        "df_abbreviation": "abbreviations.csv",
     },
     "en-US": {
         # load openly discriminating words
@@ -50,6 +52,8 @@ rules = {
         "df_ub_singular_they": "ub_singular_they.csv",
         # load homonyms
         "df_homonyms_words": "homonyms_words.csv",
+        # load abbreviations
+        "df_abbreviation": "abbreviations.csv",
     },
 }
 
@@ -161,6 +165,18 @@ open_disc_words_alternatives = list(
         df_discrimination_words["Primary_subcategory"],
     )
 )
+# df abbreviation
+df_abbreviation = rules["de-DE"]["df_abbreviation"]
+# abbreviation: lemma + category + subcategory + alternatives
+abbreviation = list(
+    zip(
+        df_abbreviation["Lemma"],
+        df_abbreviation["Category"],
+        df_abbreviation["Primary_subcategory"],
+        df_abbreviation["Alt_split"],
+    )
+)
+
 ## sentences:
 # df open discrimination sentence
 df_discrimination_sentences = rules["de-DE"]["df_open_dis_sentence"]
@@ -307,6 +323,27 @@ homonyms_word_GB = list(
         df_homonyms_GB["Category"],
         df_homonyms_GB["Primary_subcategory"],
         df_homonyms_GB["Alt_split"],
+    )
+)
+
+# df abbreviation english
+df_abbreviation_US = rules["en-US"]["df_abbreviation"]
+df_abbreviation_GB = rules["en-GB"]["df_abbreviation"]
+# abbreviation : lemma+category+subcategory+alternatives
+abbreviation_US = list(
+    zip(
+        df_abbreviation_US["Lemma"],
+        df_abbreviation_US["Category"],
+        df_abbreviation_US["Primary_subcategory"],
+        df_abbreviation_US["Alt_split"],
+    )
+)
+abbreviation_GB = list(
+    zip(
+        df_abbreviation_GB["Lemma"],
+        df_abbreviation_GB["Category"],
+        df_abbreviation_GB["Primary_subcategory"],
+        df_abbreviation_GB["Alt_split"],
     )
 )
 # df gendered noun
