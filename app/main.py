@@ -56,7 +56,7 @@ from collections import namedtuple, defaultdict
 from collections import namedtuple
 from app.sentry import set_up_sentry_sdk
 
-version = "1.22.11"
+version = "1.22.12"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -631,7 +631,7 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
         lang,
         text,
         tokens,
-        rules[lang.locale]["df_abbreviation"],
+        rules["de-DE"]["df_abbreviation"],
         abbreviation,
     )
 
