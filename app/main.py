@@ -631,7 +631,7 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
         lang,
         text,
         tokens,
-        rules[lang.locale]["df_abbreviation"],
+        rules["de-DE"]["df_abbreviation"],
         abbreviation,
     )
 
