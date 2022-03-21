@@ -305,6 +305,7 @@ def set_redis():
 
     # Set a value
     redis.set("test", json.dumps(organization_object))
+    redis.set("test@gmail.com", "test")
 
 
 @pytest.mark.parametrize(
@@ -346,7 +347,6 @@ def test_false_positive(fp_case_dir, snapshot, set_redis):
 # test overwriting user configuration by organization forced rules
 def test_set_rules(event_loop, set_redis):
     request_data = {
-        "id": "test@gmail.com",
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
         "config": {
             "store_context": True,
@@ -358,7 +358,7 @@ def test_set_rules(event_loop, set_redis):
         },
     }
     test_request = RequestIn(**request_data)
-    event_loop.run_until_complete(set_rules(test_request))
+    event_loop.run_until_complete(set_rules(test_request, "test@gmail.com"))
     assert test_request.config.store_context == False
     assert test_request.config.primary_language == "en-GB"
     assert test_request.config.preferred_languages == ["en"]
@@ -372,7 +372,6 @@ def test_set_rules(event_loop, set_redis):
 
 def test_set_rules_suggestion(event_loop, set_redis):
     request_data = {
-        "id": "test_default@gmail.com",
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
         "config": {
             "store_context": True,
@@ -384,7 +383,7 @@ def test_set_rules_suggestion(event_loop, set_redis):
         },
     }
     test_request = RequestIn(**request_data)
-    test_result = event_loop.run_until_complete(set_rules(test_request))
+    event_loop.run_until_complete(set_rules(test_request, "test_default@gmail.com"))
     assert test_request.config.store_context == True
     assert test_request.config.primary_language == "de-DE"
     assert test_request.config.preferred_languages == ["de"]
@@ -398,11 +397,10 @@ def test_set_rules_suggestion(event_loop, set_redis):
 
 def test_set_organization_rules(event_loop, set_redis):
     request_data = {
-        "id": "test@gmail.com",
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
     }
     test_request = RequestIn(**request_data)
-    event_loop.run_until_complete(set_rules(test_request))
+    event_loop.run_until_complete(set_rules(test_request, "test@gmail.com"))
     assert test_request.config.store_context == False
     assert test_request.config.primary_language == "en-GB"
     assert test_request.config.preferred_languages == ["en"]
@@ -416,12 +414,11 @@ def test_set_organization_rules(event_loop, set_redis):
 
 def test_set_default_rules(event_loop):
     request_data = {
-        "id": "test_default@gmail.com",
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
     }
     test_request = RequestIn(**request_data)
 
-    event_loop.run_until_complete(set_rules(test_request))
+    event_loop.run_until_complete(set_rules(test_request, "test_default@gmail.com"))
     assert test_request.config.store_context == True
     assert test_request.config.primary_language == "de-DE"
     assert test_request.config.preferred_languages == [
@@ -446,7 +443,7 @@ def test_store_rules():
         "forced": {"gendered_roles_format": "binary_gender"},
         "suggestion": {"german_gender_ending": "In"},
     }
-    response = client.post("/storeRules", json=request_data)
+    response = client.post("/store_rules", json=request_data)
     assert response.status_code == 200
     response_content = json.loads(response.content)
     assert (

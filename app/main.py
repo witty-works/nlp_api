@@ -320,9 +320,16 @@ async def check_v1_1(
 
 
 # data exchange routes
-@app.post("/storeRules")
-async def store_redis(corporate_rules: ConfRequest):
+@app.post("/store_rules")
+async def store_redis(
+    corporate_rules: ConfRequest, username: str = Depends(get_current_username)
+):
     try:
+        key = str(corporate_rules.organization)
+        rules = redis.get(key)
+        if rules:
+            rules = json.loads(rules)
+
         organization_object = {
             "users": corporate_rules.users,
             "config": {
@@ -333,20 +340,28 @@ async def store_redis(corporate_rules: ConfRequest):
         }
 
         # Set a value
-        redis.set(str(corporate_rules.organization), json.dumps(organization_object))
+        redis.set(key, json.dumps(organization_object))
+        for user in corporate_rules.users:
+            redis.set(str(user), key)
+
+        if rules:
+            for user in rules["users"]:
+                if user not in corporate_rules.users:
+                    redis.delete(str(user))
+
     except Exception as e:
         return e
     return organization_object
 
 
-@app.get("/organizationRules")
-async def get_redis(user: str):
+@app.get("/get_user_rules")
+async def get_redis(user: str, username: str = Depends(get_current_username)):
     try:
-        keys = redis.keys("*")
-        for key in keys:
-            user_list = json.loads(redis.get(key))["users"]
-            if user in user_list:
-                return json.loads(redis.get(key))
+        key = redis.get(user)
+        if key:
+            rules = json.loads(redis.get(key))
+            if user in rules["users"]:
+                return rules
             else:
                 return []
     except Exception as e:
@@ -449,6 +464,22 @@ async def check(
 
     if settings.read_rules_from_redis:
         try:
+            organization_object = {
+                "users": ["lukas.smith@witty.works"],
+                "config": {
+                    "forced": {
+                        "german_gender_ending": "In",
+                    },
+                    "suggestion": {},
+                },
+                "false_positive": [
+                    "stark",
+                ],
+            }
+
+            # redis.set("witty.works", json.dumps(organization_object))
+            # redis.set("lukas.smith@witty.works", "witty.works")
+
             claims = validate_scope(settings.aadb2c_expected_scope, request)
             try:
                 await set_rules(user_request_in, claims["emails"][0])
