@@ -436,7 +436,7 @@ def test_set_default_rules(event_loop):
 # test POST Redis endpoint
 
 
-def test_store_rules():
+def test_store_and_get_rules():
     request_data = {
         "organization": "TEST_organization",
         "users": ["test@gmail.com"],
@@ -444,6 +444,18 @@ def test_store_rules():
         "suggestion": {"german_gender_ending": "In"},
     }
     response = client.post("/store_rules", json=request_data)
+    assert response.status_code == 200
+    response_content = json.loads(response.content)
+    assert (
+        response_content["config"]["forced"]["gendered_roles_format"] == "binary_gender"
+    )
+    assert response_content["config"]["suggestion"]["german_gender_ending"] == "In"
+    assert response_content["config"]["suggestion"]["preferred_variants"] == [
+        "en-US",
+        "de-DE",
+    ]
+
+    response = client.get("/get_user_rules?user=test@gmail.com")
     assert response.status_code == 200
     response_content = json.loads(response.content)
     assert (

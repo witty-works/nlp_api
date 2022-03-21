@@ -361,6 +361,7 @@ async def get_redis(user: str, username: str = Depends(get_current_username)):
         if key:
             rules = json.loads(redis.get(key))
             if user in rules["users"]:
+                del rules["users"]
                 return rules
             else:
                 return []
