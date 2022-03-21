@@ -13,11 +13,16 @@ from fastapi import (
     HTTPException,
     Depends,
     status,
+    Header,
 )
 
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from fastapi.security import (
+    HTTPBasic,
+    HTTPBasicCredentials,
+    HTTPBearer,
+)
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import RedirectResponse
 
@@ -42,12 +47,16 @@ from app.models import (
     ConfRequest,
 )
 
+from fastapi_microsoft_identity import validate_scope, AuthError
+
+
 from app.lang_detection import LangDetection
 from app.categories import categories
 from app.settings import get_settings
 from app.logger import set_up_logger
 from app.redis_setup import set_up_redis
 from app.languagetool import get_languagetool_url
+from app.azure_ad_b2c import initialize_aadb2c
 from app.model import model
 from app.rules import *
 
@@ -64,6 +73,7 @@ sentry_sdk = set_up_sentry_sdk(version, settings)
 languagetool_url = get_languagetool_url(settings)
 redis = set_up_redis(settings)
 lang_detection = LangDetection()
+initialize_aadb2c(settings)
 
 logging.debug("app started with settings: %s", settings)
 
@@ -71,6 +81,8 @@ logging.debug("app started with settings: %s", settings)
 app = FastAPI(
     title="Witty NLP API",
     version=version,
+    terms_of_service=settings.terms_of_service,
+    contact=settings.contact,
     docs_url=None,
     redoc_url=None,
     openapi_url=None,
@@ -263,6 +275,14 @@ def german_gender_ending(
     return alternative_variations
 
 
+@app.post(
+    "/auth",
+    dependencies=[Depends(HTTPBearer())],
+)
+def auth(request: Request):
+    return validate_scope(settings.aadb2c_expected_scope, request)
+
+
 @app.get("/form", include_in_schema=False)
 def form():
     return root()
@@ -273,7 +293,10 @@ def get_categories(lang: LangType = "de"):
     return categories_with_labels[lang]
 
 
-@app.post("/check", response_model=Union[ResultsOut, Result])
+@app.post(
+    "/check",
+    response_model=Union[ResultsOut, Result],
+)
 async def check_v1_0(
     request: Request,
     response: Response,
@@ -286,6 +309,7 @@ async def check_v1_0(
     "/v1.1/check",
     response_model=Union[ResultsOut, Result],
     response_model_exclude_none=True,
+    dependencies=[Depends(HTTPBearer(auto_error=False))],
 )
 async def check_v1_1(
     request: Request,
@@ -323,7 +347,6 @@ async def get_redis(user: str):
             user_list = json.loads(redis.get(key))["users"]
             if user in user_list:
                 return json.loads(redis.get(key))
-            # test
             else:
                 return []
     except Exception as e:
@@ -363,9 +386,9 @@ def configure_sentry(request: Request, user_request_in: RequestIn):
         sentry_sdk.set_context("request", data)
 
 
-async def set_rules(user_request_in: RequestIn):
+async def set_rules(user_request_in: RequestIn, email=str):
     general_config = Config()
-    corporate_rules = await get_redis(user_request_in.id)
+    corporate_rules = await get_redis(email)
     if corporate_rules and type(corporate_rules) is dict:
         user_rules = user_request_in.config.__dict__
         forced_config = corporate_rules["config"]["forced"]
@@ -425,7 +448,14 @@ async def check(
     configure_sentry(request, user_request_in)
 
     if settings.read_rules_from_redis:
-        await set_rules(user_request_in)
+        try:
+            claims = validate_scope(settings.aadb2c_expected_scope, request)
+            try:
+                await set_rules(user_request_in, claims["emails"][0])
+            except KeyError:
+                pass
+        except AuthError as e:
+            logging.debug("token autrh error: %s", e.error_msg)
 
     text = user_request_in.text
     limit_reached = len(text) > settings.text_max_length

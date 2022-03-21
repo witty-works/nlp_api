@@ -28,6 +28,11 @@ class Settings(BaseSettings):
     is_prod: bool = False
     terms_of_service: str = "https://www.witty.works/privacy"
     contact: str = "support@witty.works"
+    aadb2c_tenant_id: Optional[str]
+    aadb2c_client_id: Optional[str]
+    aadb2c_policy: Optional[str]
+    aadb2c_domain: Optional[str]
+    aadb2c_expected_scope: Optional[str]
 
     class Config:
         env_file = ".env"

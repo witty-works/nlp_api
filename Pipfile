@@ -19,6 +19,7 @@ redis = "*"
 platformshconfig = "*"
 fakeredis = "*"
 fasttext = "*"
+fastapi-microsoft-identity = "*"
 
 [dev-packages]
 click = "*"
