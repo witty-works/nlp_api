@@ -168,7 +168,7 @@ async def exception(
     request: Request,
     user_request_in: RequestIn,
     username: str = Depends(get_current_username),
-):
+):  # pragma: no cover
     configure_sentry(request, user_request_in)
 
     raise HTTPException(status_code=500, detail=user_request_in.text)
@@ -183,12 +183,12 @@ def get_lt(username: str = Depends(get_current_username)):
 def get_swagger_documentation(
     username: str = Depends(get_current_username),
     include_in_schema=not settings.is_prod,
-):
+):  # pragma: no cover
     return get_swagger_ui_html(openapi_url="/openapi.json", title="docs")
 
 
 @app.get("/openapi.json", include_in_schema=False)
-def openapi(username: str = Depends(get_current_username)):
+def openapi(username: str = Depends(get_current_username)):  # pragma: no cover
     return get_openapi(title=app.title, version=app.version, routes=app.routes)
 
 
@@ -198,7 +198,9 @@ def root():
     url = "https://www.witty.works/form"
     status_code = 301
 
-    if settings.platform_environment == "local" and settings.testing == False:
+    if (
+        settings.platform_environment == "local" and settings.testing == False
+    ):  # pragma: no cover
         url = "/docs"
         status_code = 302
 
@@ -209,7 +211,9 @@ def root():
     "/save_openapi_json",
     include_in_schema=not settings.is_prod,
 )
-def save_openapi_json(username: str = Depends(get_current_username)):
+def save_openapi_json(
+    username: str = Depends(get_current_username),
+):  # pragma: no cover
     openapi_data = app.openapi()
     for path in openapi_data["paths"].copy():
         if not "v1.1" in path:
@@ -248,7 +252,7 @@ def german_gender_ending(
     "/auth",
     dependencies=[Depends(HTTPBearer())],
 )
-def auth(request: Request):
+def auth(request: Request):  # pragma: no cover
     return validate_scope(settings.aadb2c_expected_scope, request)
 
 
@@ -359,7 +363,7 @@ def is_number_list_empty(number, token, full_text):
 
 
 def configure_sentry(request: Request, user_request_in: RequestIn):
-    if sentry_sdk:
+    if sentry_sdk:  # pragma: no cover
         sentry_sdk.transaction = request.scope["path"][1:]
         sentry_sdk.set_user({"id": str(user_request_in.id)})
 
