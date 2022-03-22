@@ -435,12 +435,27 @@ def test_store_and_get_rules():
         "de-DE",
     ]
 
+    request_data["users"] = ["test2@gmail.com", "test3@gmail.com"]
+    request_data["forced"]["gendered_roles_format"] = "both"
+    response = client.post("/store_rules", json=request_data)
+    assert response.status_code == 200
+    response_content = json.loads(response.content)
+    assert response_content["config"]["forced"]["gendered_roles_format"] == "both"
+    assert response_content["config"]["suggestion"]["german_gender_ending"] == "In"
+    assert response_content["config"]["suggestion"]["preferred_variants"] == [
+        "en-US",
+        "de-DE",
+    ]
+
     response = client.get("/get_user_rules?user=test@gmail.com")
     assert response.status_code == 200
     response_content = json.loads(response.content)
-    assert (
-        response_content["config"]["forced"]["gendered_roles_format"] == "binary_gender"
-    )
+    assert response_content == []
+
+    response = client.get("/get_user_rules?user=test2@gmail.com")
+    assert response.status_code == 200
+    response_content = json.loads(response.content)
+    assert response_content["config"]["forced"]["gendered_roles_format"] == "both"
     assert response_content["config"]["suggestion"]["german_gender_ending"] == "In"
     assert response_content["config"]["suggestion"]["preferred_variants"] == [
         "en-US",
