@@ -446,3 +446,27 @@ def test_store_and_get_rules():
         "en-US",
         "de-DE",
     ]
+
+
+# test german gender ending
+
+
+def test_german_gender_ending():
+    request_data = {
+        "alternative": "Sinti~ze~/~Sinti und Rom~nja~/~Roma",
+    }
+    response = client.get("/german_gender_ending", params=request_data)
+    assert response.status_code == 200
+    response_content = json.loads(response.content)
+
+    expected = [
+        "Sinti/ze und Rom/nja",
+        "Sinti_ze und Rom_nja",
+        "Sinti:ze und Rom:nja",
+        "Sinti*ze und Rom*nja",
+        "Sinti/-ze und Rom/-nja",
+        "Sintize/Sinti und Romnja/Roma",
+        "SintiZe und RomNja",
+    ]
+
+    assert sorted(response_content) == sorted(expected)
