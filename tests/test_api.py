@@ -450,7 +450,7 @@ def test_store_and_get_rules():
     response = client.get("/get_user_rules?user=test@gmail.com")
     assert response.status_code == 200
     response_content = json.loads(response.content)
-    assert response_content == []
+    assert response_content == None
 
     response = client.get("/get_user_rules?user=test2@gmail.com")
     assert response.status_code == 200

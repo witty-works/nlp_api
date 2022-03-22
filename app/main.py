@@ -295,31 +295,30 @@ async def check_v1_1(
 # data exchange routes
 @app.post("/store_rules")
 async def store_redis(
-    corporate_rules: ConfRequest, username: str = Depends(get_current_username)
+    organization_rules: ConfRequest, username: str = Depends(get_current_username)
 ):
     try:
-        key = str(corporate_rules.organization)
+        key = str(organization_rules.organization)
         rules = redis.get(key)
-        if rules:
-            rules = json.loads(rules)
 
         organization_object = {
-            "users": corporate_rules.users,
+            "users": organization_rules.users,
             "config": {
-                "forced": dict(corporate_rules.forced),
-                "suggestion": dict(corporate_rules.suggestion),
+                "forced": dict(organization_rules.forced),
+                "suggestion": dict(organization_rules.suggestion),
             },
-            "false_positive": corporate_rules.false_positive,
+            "false_positive": organization_rules.false_positive,
         }
 
         # Set a value
         redis.set(key, json.dumps(organization_object))
-        for user in corporate_rules.users:
+        for user in organization_rules.users:
             redis.set(str(user), key)
 
         if rules:
+            rules = json.loads(rules)
             for user in rules["users"]:
-                if user not in corporate_rules.users:
+                if user not in organization_rules.users:
                     redis.delete(str(user))
 
     except Exception as e:
@@ -329,7 +328,11 @@ async def store_redis(
 
 @app.get("/get_user_rules")
 async def get_user_rules(user: str, username: str = Depends(get_current_username)):
-    return await get_user_rules_from_redis(user)
+    rules = await get_user_rules_from_redis(user)
+    if rules:
+        del rules["users"]
+
+    return rules
 
 
 # Functions
@@ -338,10 +341,9 @@ async def get_user_rules_from_redis(user: str):
     if key:
         rules = json.loads(redis.get(key))
         if user in rules["users"]:
-            del rules["users"]
             return rules
 
-    return []
+    return None
 
 
 def is_number_list_empty(number, token, full_text):
@@ -376,55 +378,69 @@ def configure_sentry(request: Request, user_request_in: RequestIn):
         sentry_sdk.set_context("request", data)
 
 
-async def set_rules(user_request_in: RequestIn, email=str):
+def filter_config(config):
+    return {k: v for (k, v) in config.items() if v != "" and v is not None and v != []}
+
+
+async def set_rules(user_request_in: RequestIn, user=Optional[str]):
+    if not user:
+        return {}
+
+    organization_rules = await get_user_rules_from_redis(user)
+    if not organization_rules or type(organization_rules) is not dict:
+        return {}
+
     general_config = Config()
-    corporate_rules = await get_user_rules_from_redis(email)
-    if corporate_rules and type(corporate_rules) is dict:
-        user_rules = user_request_in.config.__dict__
-        forced_config = corporate_rules["config"]["forced"]
-        default_config = corporate_rules["config"]["suggestion"]
-        forced_filtered = {
-            k: v
-            for (k, v) in forced_config.items()
-            if v != "" and v is not None and v != []
-        }
-        default_filtered = {
-            k: v
-            for (k, v) in default_config.items()
-            if v != "" and v is not None and v != []
-        }
-        organization_config = {**default_filtered, **forced_filtered}
 
-        for config_value in vars(general_config):
-            # user set a value (change, if user not give a key)
-            if user_rules[config_value] is not None:
+    user_rules = user_request_in.config.__dict__
+    forced_config = organization_rules["config"]["forced"]
+    default_config = organization_rules["config"]["suggestion"]
+    forced_filtered = filter_config(forced_config)
+    default_filtered = filter_config(default_config)
+    organization_config = {**default_filtered, **forced_filtered}
 
-                # organization set a value and user can't change it
-                if (
-                    config_value in organization_config
-                    and config_value in forced_filtered
-                ):
-                    # overwrite user value
-                    setattr(
-                        user_request_in.config,
-                        config_value,
-                        forced_config[config_value],
-                    )
-                # organization not set a value or set on default, user can set/change it
-                else:
-                    setattr(
-                        user_request_in.config, config_value, user_rules[config_value]
-                    )
+    for config_value in vars(general_config):
+        # user set a value (change, if user not give a key)
+        if user_rules[config_value] is not None:
+
+            # organization set a value and user can't change it
+            if config_value in organization_config and config_value in forced_filtered:
+                # overwrite user value
+                setattr(
+                    user_request_in.config,
+                    config_value,
+                    forced_config[config_value],
+                )
+            # organization not set a value or set on default, user can set/change it
             else:
-                # user does not set a value, but organization did
-                if config_value in organization_config:
-                    setattr(
-                        user_request_in.config,
-                        config_value,
-                        organization_config[config_value],
-                    )
+                setattr(user_request_in.config, config_value, user_rules[config_value])
+        else:
+            # user does not set a value, but organization did
+            if config_value in organization_config:
+                setattr(
+                    user_request_in.config,
+                    config_value,
+                    organization_config[config_value],
+                )
 
-    return corporate_rules
+    return organization_rules
+
+
+def get_user(request: Request):
+    if settings.testing and "x-auth" in request.headers:
+        return request.headers["x-auth"]
+
+    if settings.read_rules_from_redis:
+        try:
+            claims = validate_scope(settings.aadb2c_expected_scope, request)
+            try:
+                return claims["emails"][0]
+            except KeyError:
+                pass
+        except AuthError:
+            pass
+
+    return None
 
 
 async def check(
@@ -439,22 +455,8 @@ async def check(
 
     configure_sentry(request, user_request_in)
 
-    user_rules = user = False
-    if settings.read_rules_from_redis:
-        try:
-            claims = validate_scope(settings.aadb2c_expected_scope, request)
-            try:
-                user = claims["emails"][0]
-            except KeyError:
-                pass
-        except AuthError:
-            pass
-
-    if settings.testing and "x-auth" in request.headers:
-        user = request.headers["x-auth"]
-
-    if user:
-        user_rules = await set_rules(user_request_in, user)
+    user = get_user(request)
+    user_rules = await set_rules(user_request_in, user)
 
     text = user_request_in.text
     limit_reached = len(text) > settings.text_max_length
