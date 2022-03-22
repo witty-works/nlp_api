@@ -434,7 +434,7 @@ async def check(
         text = text.rsplit(" ", 1)[0]
 
     locale = lang_detection.get_locale(
-        user_request_in.text,
+        text,
         user_request_in.lang,
         user_request_in.config.preferred_languages,
         user_request_in.config.preferred_variants,
