@@ -4,11 +4,8 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 from app.main import (
     app,
-    form,
     redis,
     set_rules,
-    get_false_positive,
-    false_positive,
     is_number_list_empty,
 )
 from app.model import model
@@ -313,29 +310,12 @@ def set_redis():
     get_dirs("tests/test_false_positive"),
 )
 def test_false_positive(fp_case_dir, snapshot, set_redis):
-    false_positive_agentic_const = [
-        "selbst",
-        "flexible",
-        "Probleme",
-        "unabhängig",
-        "Entwickler",
-    ]
-    gender_false_positive = ["Abdichterinnen und Abdichter"]
-    # Read input files from the case directory.
     input_json = fp_case_dir.joinpath("input.json").read_text()
-    # call set_false_positive_agentic to read data from redis
-    userId = "test@gmail.com"
-    # get_false_positive(false_positive_agentic_const, userId)
-    patcher = mock.patch.object(
-        main,
-        "false_positive",
-        get_false_positive(gender_false_positive, false_positive_agentic_const, userId),
-    )
-    patcher.start()
     # Call the tested endpoint.
     client = TestClient(app)
-    response = client.post("/v1.1/check", json=json.loads(input_json))
-    patcher.stop()
+    response = client.post(
+        "/v1.1/check", json=json.loads(input_json), headers={"X-Auth": "test@gmail.com"}
+    )
     assert response.status_code == 200
     # output must be string
     output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)

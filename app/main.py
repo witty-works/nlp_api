@@ -13,7 +13,6 @@ from fastapi import (
     HTTPException,
     Depends,
     status,
-    Header,
 )
 
 from fastapi.openapi.docs import get_swagger_ui_html
@@ -60,9 +59,8 @@ from app.azure_ad_b2c import initialize_aadb2c
 from app.model import model
 from app.rules import *
 
-from collections import namedtuple, defaultdict
+from collections import defaultdict
 
-from collections import namedtuple
 from app.sentry import set_up_sentry_sdk
 
 version = "1.22.12"
@@ -121,35 +119,6 @@ for language in languages:
         categories_with_labels[language][category]["label"] = lang._(
             "rules." + category + "_label"
         )
-
-# corporate false positive DB
-def get_false_positive_from_redis(userId: str):
-    keys = redis.keys("*")
-    for key in keys:
-        user_list = json.loads(redis.get(key))["users"]
-        if userId in user_list:
-            return json.loads(redis.get(key))["false_positive"]
-
-        return []
-
-
-FalsePositive = namedtuple("FalsePositive", "gender agentic")
-# TODO: userId will be taken from the authentication token
-def get_false_positive(gender_false_positive, false_positive_agentic_const, userId=""):
-    corporate_false_positive = []
-    if userId:
-        corporate_false_positive = get_false_positive_from_redis(userId)
-    fp = FalsePositive(
-        gender_false_positive + corporate_false_positive,
-        false_positive_agentic_const + corporate_false_positive,
-    )
-    return fp
-
-
-false_positive = get_false_positive(
-    rules["de-DE"]["gender_false_positive"],
-    rules["de-DE"]["false_positive_agentic_const"],
-)
 
 
 def get_current_username(
@@ -355,21 +324,22 @@ async def store_redis(
 
 
 @app.get("/get_user_rules")
-async def get_redis(user: str, username: str = Depends(get_current_username)):
-    try:
-        key = redis.get(user)
-        if key:
-            rules = json.loads(redis.get(key))
-            if user in rules["users"]:
-                del rules["users"]
-                return rules
-            else:
-                return []
-    except Exception as e:
-        return e
+async def get_user_rules(user: str, username: str = Depends(get_current_username)):
+    return await get_user_rules_from_redis(user)
 
 
 # Functions
+async def get_user_rules_from_redis(user: str):
+    key = redis.get(user)
+    if key:
+        rules = json.loads(redis.get(key))
+        if user in rules["users"]:
+            del rules["users"]
+            return rules
+
+    return []
+
+
 def is_number_list_empty(number, token, full_text):
     if not number:
         start = max(token.idx - 100, 0)
@@ -404,7 +374,7 @@ def configure_sentry(request: Request, user_request_in: RequestIn):
 
 async def set_rules(user_request_in: RequestIn, email=str):
     general_config = Config()
-    corporate_rules = await get_redis(email)
+    corporate_rules = await get_user_rules_from_redis(email)
     if corporate_rules and type(corporate_rules) is dict:
         user_rules = user_request_in.config.__dict__
         forced_config = corporate_rules["config"]["forced"]
@@ -450,6 +420,8 @@ async def set_rules(user_request_in: RequestIn, email=str):
                         organization_config[config_value],
                     )
 
+    return corporate_rules
+
 
 async def check(
     version: float,
@@ -463,15 +435,22 @@ async def check(
 
     configure_sentry(request, user_request_in)
 
+    user_rules = user = False
     if settings.read_rules_from_redis:
         try:
             claims = validate_scope(settings.aadb2c_expected_scope, request)
             try:
-                await set_rules(user_request_in, claims["emails"][0])
+                user = claims["emails"][0]
             except KeyError:
                 pass
-        except AuthError as e:
-            logging.debug("token autrh error: %s", e.error_msg)
+        except AuthError:
+            pass
+
+    if settings.testing and "x-auth" in request.headers:
+        user = request.headers["x-auth"]
+
+    if user:
+        user_rules = await set_rules(user_request_in, user)
 
     text = user_request_in.text
     limit_reached = len(text) > settings.text_max_length
@@ -493,6 +472,11 @@ async def check(
     lang = Language(locale)
 
     list_results = await language_rules(version, user_request_in.config, lang, text)
+
+    if user_rules:
+        for result in list_results:
+            if result.text in user_rules["false_positive"]:
+                list_results.remove(result)
 
     return ResultsOut.factory(list_results, lang.lang, limit_reached)
 

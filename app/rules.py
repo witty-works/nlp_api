@@ -1,6 +1,5 @@
 import pandas as pd
-import copy
-from collections import defaultdict
+from collections import namedtuple
 
 rules = {
     "de-DE": {
@@ -493,4 +492,20 @@ bias_singular_they_alternatives_GB = list(
         df_bias_singular_they_GB["Alt_split"],
         df_bias_singular_they_GB["Primary_subcategory"],
     )
+)
+
+FalsePositive = namedtuple("FalsePositive", "gender agentic")
+
+
+def get_false_positive(gender_false_positive, false_positive_agentic_const):
+    fp = FalsePositive(
+        gender_false_positive,
+        false_positive_agentic_const,
+    )
+    return fp
+
+
+false_positive = get_false_positive(
+    rules["de-DE"]["gender_false_positive"],
+    rules["de-DE"]["false_positive_agentic_const"],
 )
