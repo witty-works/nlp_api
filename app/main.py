@@ -451,6 +451,17 @@ async def check(
     return ResultsOut.factory(list_results, lang.lang, limit_reached)
 
 
+def get_alternatives(match):
+    alternatives = []
+    if "replacements" in match:
+        for replacement in match["replacements"]:
+            value = replacement["value"]
+            value = value if value != "" else "-"
+            alternatives.append(value)
+
+    return alternatives
+
+
 def languagetool_matches(
     version: float, config: Config, lang: Language, category: str, text: str, result
 ):
@@ -468,12 +479,7 @@ def languagetool_matches(
         ):
             continue
 
-        alternatives = []
-        if "replacements" in match:
-            for replacement in match["replacements"]:
-                value = replacement["value"]
-                value = value if value != "" else "-"
-                alternatives.append(value)
+        alternatives = get_alternatives(match)
 
         label = match["shortMessage"]
         if label == "":
