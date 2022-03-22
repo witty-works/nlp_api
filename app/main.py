@@ -465,22 +465,6 @@ async def check(
 
     if settings.read_rules_from_redis:
         try:
-            organization_object = {
-                "users": ["lukas.smith@witty.works"],
-                "config": {
-                    "forced": {
-                        "german_gender_ending": "In",
-                    },
-                    "suggestion": {},
-                },
-                "false_positive": [
-                    "stark",
-                ],
-            }
-
-            # redis.set("witty.works", json.dumps(organization_object))
-            # redis.set("lukas.smith@witty.works", "witty.works")
-
             claims = validate_scope(settings.aadb2c_expected_scope, request)
             try:
                 await set_rules(user_request_in, claims["emails"][0])
