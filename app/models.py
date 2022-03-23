@@ -104,7 +104,7 @@ class Config(BaseModel):
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
     singular_they: str = SingularThey.HE_OR_SHE
     show_inspiration_alternatives: Optional[bool] = False
-    maximum_importance: Optional[int] = None
+    maximum_importance: int = 2
 
     @validator("german_gender_ending")
     def valid_german_gender_ending(cls, v: str):
