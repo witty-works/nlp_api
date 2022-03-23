@@ -17,7 +17,11 @@ from fastapi import (
 
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from fastapi.security import (
+    HTTPBasic,
+    HTTPBasicCredentials,
+    HTTPBearer,
+)
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import RedirectResponse
 
@@ -42,21 +46,24 @@ from app.models import (
     ConfRequest,
 )
 
+from fastapi_microsoft_identity import validate_scope, AuthError
+
+
 from app.lang_detection import LangDetection
 from app.categories import categories
 from app.settings import get_settings
 from app.logger import set_up_logger
 from app.redis_setup import set_up_redis
 from app.languagetool import get_languagetool_url
+from app.azure_ad_b2c import initialize_aadb2c
 from app.model import model
 from app.rules import *
 
-from collections import namedtuple, defaultdict
+from collections import defaultdict
 
-from collections import namedtuple
 from app.sentry import set_up_sentry_sdk
 
-version = "1.22.12"
+version = "1.23.0"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -64,6 +71,7 @@ sentry_sdk = set_up_sentry_sdk(version, settings)
 languagetool_url = get_languagetool_url(settings)
 redis = set_up_redis(settings)
 lang_detection = LangDetection()
+initialize_aadb2c(settings)
 
 logging.debug("app started with settings: %s", settings)
 
@@ -71,6 +79,8 @@ logging.debug("app started with settings: %s", settings)
 app = FastAPI(
     title="Witty NLP API",
     version=version,
+    terms_of_service=settings.terms_of_service,
+    contact=settings.contact,
     docs_url=None,
     redoc_url=None,
     openapi_url=None,
@@ -109,35 +119,6 @@ for language in languages:
         categories_with_labels[language][category]["label"] = lang._(
             "rules." + category + "_label"
         )
-
-# corporate false positive DB
-def get_false_positive_from_redis(userId: str):
-    keys = redis.keys("*")
-    for key in keys:
-        user_list = json.loads(redis.get(key))["users"]
-        if userId in user_list:
-            return json.loads(redis.get(key))["false_positive"]
-
-        return []
-
-
-FalsePositive = namedtuple("FalsePositive", "gender agentic")
-# TODO: userId will be taken from the authentication token
-def get_false_positive(gender_false_positive, false_positive_agentic_const, userId=""):
-    corporate_false_positive = []
-    if userId:
-        corporate_false_positive = get_false_positive_from_redis(userId)
-    fp = FalsePositive(
-        gender_false_positive + corporate_false_positive,
-        false_positive_agentic_const + corporate_false_positive,
-    )
-    return fp
-
-
-false_positive = get_false_positive(
-    rules["de-DE"]["gender_false_positive"],
-    rules["de-DE"]["false_positive_agentic_const"],
-)
 
 
 def get_current_username(
@@ -187,7 +168,7 @@ async def exception(
     request: Request,
     user_request_in: RequestIn,
     username: str = Depends(get_current_username),
-):
+):  # pragma: no cover
     configure_sentry(request, user_request_in)
 
     raise HTTPException(status_code=500, detail=user_request_in.text)
@@ -202,12 +183,12 @@ def get_lt(username: str = Depends(get_current_username)):
 def get_swagger_documentation(
     username: str = Depends(get_current_username),
     include_in_schema=not settings.is_prod,
-):
+):  # pragma: no cover
     return get_swagger_ui_html(openapi_url="/openapi.json", title="docs")
 
 
 @app.get("/openapi.json", include_in_schema=False)
-def openapi(username: str = Depends(get_current_username)):
+def openapi(username: str = Depends(get_current_username)):  # pragma: no cover
     return get_openapi(title=app.title, version=app.version, routes=app.routes)
 
 
@@ -217,7 +198,9 @@ def root():
     url = "https://www.witty.works/form"
     status_code = 301
 
-    if settings.platform_environment == "local" and settings.testing == False:
+    if (
+        settings.platform_environment == "local" and settings.testing == False
+    ):  # pragma: no cover
         url = "/docs"
         status_code = 302
 
@@ -228,7 +211,9 @@ def root():
     "/save_openapi_json",
     include_in_schema=not settings.is_prod,
 )
-def save_openapi_json(username: str = Depends(get_current_username)):
+def save_openapi_json(
+    username: str = Depends(get_current_username),
+):  # pragma: no cover
     openapi_data = app.openapi()
     for path in openapi_data["paths"].copy():
         if not "v1.1" in path:
@@ -263,6 +248,25 @@ def german_gender_ending(
     return alternative_variations
 
 
+@app.post(
+    "/auth",
+    dependencies=[Depends(HTTPBearer())],
+)
+async def auth(request: Request, user_request_in: RequestIn):  # pragma: no cover
+    user = get_user(request)
+    if not user:
+        return user
+
+    claim = validate_scope(settings.aadb2c_expected_scope, request)
+    rules = await set_rules(user_request_in, user)
+
+    return {
+        "claim": claim,
+        "rules": rules,
+        "user_request_in": user_request_in,
+    }
+
+
 @app.get("/form", include_in_schema=False)
 def form():
     return root()
@@ -273,7 +277,10 @@ def get_categories(lang: LangType = "de"):
     return categories_with_labels[lang]
 
 
-@app.post("/check", response_model=Union[ResultsOut, Result])
+@app.post(
+    "/check",
+    response_model=Union[ResultsOut, Result],
+)
 async def check_v1_0(
     request: Request,
     response: Response,
@@ -286,6 +293,7 @@ async def check_v1_0(
     "/v1.1/check",
     response_model=Union[ResultsOut, Result],
     response_model_exclude_none=True,
+    dependencies=[Depends(HTTPBearer(auto_error=False))],
 )
 async def check_v1_1(
     request: Request,
@@ -296,41 +304,59 @@ async def check_v1_1(
 
 
 # data exchange routes
-@app.post("/storeRules")
-async def store_redis(corporate_rules: ConfRequest):
+@app.post("/store_rules")
+async def store_redis(
+    organization_rules: ConfRequest, username: str = Depends(get_current_username)
+):
     try:
+        key = str(organization_rules.organization)
+        rules = redis.get(key)
+
         organization_object = {
-            "users": corporate_rules.users,
+            "users": organization_rules.users,
             "config": {
-                "forced": dict(corporate_rules.forced),
-                "suggestion": dict(corporate_rules.suggestion),
+                "forced": dict(organization_rules.forced),
+                "suggestion": dict(organization_rules.suggestion),
             },
-            "false_positive": corporate_rules.false_positive,
+            "false_positive": organization_rules.false_positive,
         }
 
         # Set a value
-        redis.set(str(corporate_rules.organization), json.dumps(organization_object))
+        redis.set(key, json.dumps(organization_object))
+        for user in organization_rules.users:
+            redis.set(str(user), key)
+
+        if rules:
+            rules = json.loads(rules)
+            for user in rules["users"]:
+                if user not in organization_rules.users:
+                    redis.delete(str(user))
+
     except Exception as e:
         return e
     return organization_object
 
 
-@app.get("/organizationRules")
-async def get_redis(user: str):
-    try:
-        keys = redis.keys("*")
-        for key in keys:
-            user_list = json.loads(redis.get(key))["users"]
-            if user in user_list:
-                return json.loads(redis.get(key))
-            # test
-            else:
-                return []
-    except Exception as e:
-        return e
+@app.get("/get_user_rules")
+async def get_user_rules(user: str, username: str = Depends(get_current_username)):
+    rules = await get_user_rules_from_redis(user)
+    if rules:
+        del rules["users"]
+
+    return rules
 
 
 # Functions
+async def get_user_rules_from_redis(user: str):
+    key = redis.get(user)
+    if key:
+        rules = json.loads(redis.get(key))
+        if user in rules["users"]:
+            return rules
+
+    return None
+
+
 def is_number_list_empty(number, token, full_text):
     if not number:
         start = max(token.idx - 100, 0)
@@ -350,7 +376,7 @@ def is_number_list_empty(number, token, full_text):
 
 
 def configure_sentry(request: Request, user_request_in: RequestIn):
-    if sentry_sdk:
+    if sentry_sdk:  # pragma: no cover
         sentry_sdk.transaction = request.scope["path"][1:]
         sentry_sdk.set_user({"id": str(user_request_in.id)})
 
@@ -363,53 +389,69 @@ def configure_sentry(request: Request, user_request_in: RequestIn):
         sentry_sdk.set_context("request", data)
 
 
-async def set_rules(user_request_in: RequestIn):
+def filter_config(config):
+    return {k: v for (k, v) in config.items() if v != "" and v is not None and v != []}
+
+
+async def set_rules(user_request_in: RequestIn, user=Optional[str]):
+    if not user:
+        return {}
+
+    organization_rules = await get_user_rules_from_redis(user)
+    if not organization_rules or type(organization_rules) is not dict:
+        return {}
+
     general_config = Config()
-    corporate_rules = await get_redis(user_request_in.id)
-    if corporate_rules and type(corporate_rules) is dict:
-        user_rules = user_request_in.config.__dict__
-        forced_config = corporate_rules["config"]["forced"]
-        default_config = corporate_rules["config"]["suggestion"]
-        forced_filtered = {
-            k: v
-            for (k, v) in forced_config.items()
-            if v != "" and v is not None and v != []
-        }
-        default_filtered = {
-            k: v
-            for (k, v) in default_config.items()
-            if v != "" and v is not None and v != []
-        }
-        organization_config = {**default_filtered, **forced_filtered}
 
-        for config_value in vars(general_config):
-            # user set a value (change, if user not give a key)
-            if user_rules[config_value] is not None:
+    user_rules = user_request_in.config.__dict__
+    forced_config = organization_rules["config"]["forced"]
+    default_config = organization_rules["config"]["suggestion"]
+    forced_filtered = filter_config(forced_config)
+    default_filtered = filter_config(default_config)
+    organization_config = {**default_filtered, **forced_filtered}
 
-                # organization set a value and user can't change it
-                if (
-                    config_value in organization_config
-                    and config_value in forced_filtered
-                ):
-                    # overwrite user value
-                    setattr(
-                        user_request_in.config,
-                        config_value,
-                        forced_config[config_value],
-                    )
-                # organization not set a value or set on default, user can set/change it
-                else:
-                    setattr(
-                        user_request_in.config, config_value, user_rules[config_value]
-                    )
+    for config_value in vars(general_config):
+        # user set a value (change, if user not give a key)
+        if user_rules[config_value] is not None:
+
+            # organization set a value and user can't change it
+            if config_value in organization_config and config_value in forced_filtered:
+                # overwrite user value
+                setattr(
+                    user_request_in.config,
+                    config_value,
+                    forced_config[config_value],
+                )
+            # organization not set a value or set on default, user can set/change it
             else:
-                # user does not set a value, but organization did
-                if config_value in organization_config:
-                    setattr(
-                        user_request_in.config,
-                        config_value,
-                        organization_config[config_value],
-                    )
+                setattr(user_request_in.config, config_value, user_rules[config_value])
+        else:
+            # user does not set a value, but organization did
+            if config_value in organization_config:
+                setattr(
+                    user_request_in.config,
+                    config_value,
+                    organization_config[config_value],
+                )
+
+    return organization_rules
+
+
+def get_user(request: Request):
+    if settings.testing and "x-auth" in request.headers:
+        return request.headers["x-auth"]
+
+    if settings.read_rules_from_redis:
+        try:
+            claims = validate_scope(settings.aadb2c_expected_scope, request)
+            try:
+                return claims["emails"][0]
+            except KeyError:
+                pass
+        except AuthError:
+            pass
+
+    return None
 
 
 async def check(
@@ -424,8 +466,8 @@ async def check(
 
     configure_sentry(request, user_request_in)
 
-    if settings.read_rules_from_redis:
-        await set_rules(user_request_in)
+    user = get_user(request)
+    user_rules = await set_rules(user_request_in, user)
 
     text = user_request_in.text
     limit_reached = len(text) > settings.text_max_length
@@ -434,7 +476,7 @@ async def check(
         text = text.rsplit(" ", 1)[0]
 
     locale = lang_detection.get_locale(
-        user_request_in.text,
+        text,
         user_request_in.lang,
         user_request_in.config.preferred_languages,
         user_request_in.config.preferred_variants,
@@ -448,7 +490,23 @@ async def check(
 
     list_results = await language_rules(version, user_request_in.config, lang, text)
 
+    if user_rules:
+        for result in list_results:
+            if result.text in user_rules["false_positive"]:
+                list_results.remove(result)
+
     return ResultsOut.factory(list_results, lang.lang, limit_reached)
+
+
+def get_alternatives(match):
+    alternatives = []
+    if "replacements" in match:
+        for replacement in match["replacements"]:
+            value = replacement["value"]
+            value = value if value != "" else "-"
+            alternatives.append(value)
+
+    return alternatives
 
 
 def languagetool_matches(
@@ -468,12 +526,7 @@ def languagetool_matches(
         ):
             continue
 
-        alternatives = []
-        if "replacements" in match:
-            for replacement in match["replacements"]:
-                value = replacement["value"]
-                value = value if value != "" else "-"
-                alternatives.append(value)
+        alternatives = get_alternatives(match)
 
         label = match["shortMessage"]
         if label == "":

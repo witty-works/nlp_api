@@ -1,7 +1,7 @@
 categories = {
     "abbreviation": {
         "inclusive": False,
-        "category": "style",
+        "category": "",
         "gravity": 3,
         "importance": 3,
         "emoji": "😉",
@@ -162,7 +162,7 @@ categories = {
     },
     "exaggerating": {
         "inclusive": False,
-        "category": "style",
+        "category": "",
         "gravity": 2,
         "importance": 2,
         "emoji": "😮\u200d💨",
@@ -261,7 +261,7 @@ categories = {
     "inclusive": {
         "inclusive": True,
         "category": "inclusive",
-        "gravity": None,
+        "gravity": 3,
         "importance": 2,
         "emoji": "✅",
     },
@@ -339,7 +339,7 @@ categories = {
         "inclusive": False,
         "category": "openly_discriminating",
         "gravity": 1,
-        "importance": 1,
+        "importance": None,
         "emoji": "🚫",
     },
     "orthography": {
@@ -423,8 +423,8 @@ categories = {
         "inclusive": False,
         "category": "style",
         "gravity": 3,
-        "importance": 3,
-        "emoji": "🤔",
+        "importance": None,
+        "emoji": None,
     },
     "technical_frameworks": {
         "inclusive": False,
@@ -456,7 +456,7 @@ categories = {
     },
     "verbose": {
         "inclusive": False,
-        "category": "style",
+        "category": "",
         "gravity": 3,
         "importance": 3,
         "emoji": "🧊",

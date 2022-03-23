@@ -88,7 +88,7 @@ jobs:
       - name: Override Coverage Source Path for Sonar
         run: |
           sed -i "s/<source>\/home\/runner\/work\/nlp_api\/nlp_api\/app<\/source>/<source>\/github\/workspace\/app<\/source>/g" /home/runner/work/nlp_api/nlp_api/coverage.xml
-          cat coverage.xml
+          sed -i "s/<source>\/home\/runner\/work\/nlp_api\/nlp_api\/bin<\/source>/<source>\/github\/workspace\/bin<\/source>/g" /home/runner/work/nlp_api/nlp_api/coverage.xml
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master

@@ -4,11 +4,8 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 from app.main import (
     app,
-    form,
     redis,
     set_rules,
-    get_false_positive,
-    false_positive,
     is_number_list_empty,
 )
 from app.model import model
@@ -305,6 +302,7 @@ def set_redis():
 
     # Set a value
     redis.set("test", json.dumps(organization_object))
+    redis.set("test@gmail.com", "test")
 
 
 @pytest.mark.parametrize(
@@ -312,29 +310,12 @@ def set_redis():
     get_dirs("tests/test_false_positive"),
 )
 def test_false_positive(fp_case_dir, snapshot, set_redis):
-    false_positive_agentic_const = [
-        "selbst",
-        "flexible",
-        "Probleme",
-        "unabhängig",
-        "Entwickler",
-    ]
-    gender_false_positive = ["Abdichterinnen und Abdichter"]
-    # Read input files from the case directory.
     input_json = fp_case_dir.joinpath("input.json").read_text()
-    # call set_false_positive_agentic to read data from redis
-    userId = "test@gmail.com"
-    # get_false_positive(false_positive_agentic_const, userId)
-    patcher = mock.patch.object(
-        main,
-        "false_positive",
-        get_false_positive(gender_false_positive, false_positive_agentic_const, userId),
-    )
-    patcher.start()
     # Call the tested endpoint.
     client = TestClient(app)
-    response = client.post("/v1.1/check", json=json.loads(input_json))
-    patcher.stop()
+    response = client.post(
+        "/v1.1/check", json=json.loads(input_json), headers={"X-Auth": "test@gmail.com"}
+    )
     assert response.status_code == 200
     # output must be string
     output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
@@ -346,7 +327,6 @@ def test_false_positive(fp_case_dir, snapshot, set_redis):
 # test overwriting user configuration by organization forced rules
 def test_set_rules(event_loop, set_redis):
     request_data = {
-        "id": "test@gmail.com",
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
         "config": {
             "store_context": True,
@@ -358,7 +338,7 @@ def test_set_rules(event_loop, set_redis):
         },
     }
     test_request = RequestIn(**request_data)
-    event_loop.run_until_complete(set_rules(test_request))
+    event_loop.run_until_complete(set_rules(test_request, "test@gmail.com"))
     assert test_request.config.store_context == False
     assert test_request.config.primary_language == "en-GB"
     assert test_request.config.preferred_languages == ["en"]
@@ -372,7 +352,6 @@ def test_set_rules(event_loop, set_redis):
 
 def test_set_rules_suggestion(event_loop, set_redis):
     request_data = {
-        "id": "test_default@gmail.com",
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
         "config": {
             "store_context": True,
@@ -384,7 +363,7 @@ def test_set_rules_suggestion(event_loop, set_redis):
         },
     }
     test_request = RequestIn(**request_data)
-    test_result = event_loop.run_until_complete(set_rules(test_request))
+    event_loop.run_until_complete(set_rules(test_request, "test_default@gmail.com"))
     assert test_request.config.store_context == True
     assert test_request.config.primary_language == "de-DE"
     assert test_request.config.preferred_languages == ["de"]
@@ -398,11 +377,10 @@ def test_set_rules_suggestion(event_loop, set_redis):
 
 def test_set_organization_rules(event_loop, set_redis):
     request_data = {
-        "id": "test@gmail.com",
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
     }
     test_request = RequestIn(**request_data)
-    event_loop.run_until_complete(set_rules(test_request))
+    event_loop.run_until_complete(set_rules(test_request, "test@gmail.com"))
     assert test_request.config.store_context == False
     assert test_request.config.primary_language == "en-GB"
     assert test_request.config.preferred_languages == ["en"]
@@ -416,12 +394,11 @@ def test_set_organization_rules(event_loop, set_redis):
 
 def test_set_default_rules(event_loop):
     request_data = {
-        "id": "test_default@gmail.com",
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
     }
     test_request = RequestIn(**request_data)
 
-    event_loop.run_until_complete(set_rules(test_request))
+    event_loop.run_until_complete(set_rules(test_request, "test_default@gmail.com"))
     assert test_request.config.store_context == True
     assert test_request.config.primary_language == "de-DE"
     assert test_request.config.preferred_languages == [
@@ -439,14 +416,14 @@ def test_set_default_rules(event_loop):
 # test POST Redis endpoint
 
 
-def test_store_rules():
+def test_store_and_get_rules():
     request_data = {
         "organization": "TEST_organization",
         "users": ["test@gmail.com"],
         "forced": {"gendered_roles_format": "binary_gender"},
         "suggestion": {"german_gender_ending": "In"},
     }
-    response = client.post("/storeRules", json=request_data)
+    response = client.post("/store_rules", json=request_data)
     assert response.status_code == 200
     response_content = json.loads(response.content)
     assert (
@@ -457,3 +434,54 @@ def test_store_rules():
         "en-US",
         "de-DE",
     ]
+
+    request_data["users"] = ["test2@gmail.com", "test3@gmail.com"]
+    request_data["forced"]["gendered_roles_format"] = "both"
+    response = client.post("/store_rules", json=request_data)
+    assert response.status_code == 200
+    response_content = json.loads(response.content)
+    assert response_content["config"]["forced"]["gendered_roles_format"] == "both"
+    assert response_content["config"]["suggestion"]["german_gender_ending"] == "In"
+    assert response_content["config"]["suggestion"]["preferred_variants"] == [
+        "en-US",
+        "de-DE",
+    ]
+
+    response = client.get("/get_user_rules?user=test@gmail.com")
+    assert response.status_code == 200
+    response_content = json.loads(response.content)
+    assert response_content == None
+
+    response = client.get("/get_user_rules?user=test2@gmail.com")
+    assert response.status_code == 200
+    response_content = json.loads(response.content)
+    assert response_content["config"]["forced"]["gendered_roles_format"] == "both"
+    assert response_content["config"]["suggestion"]["german_gender_ending"] == "In"
+    assert response_content["config"]["suggestion"]["preferred_variants"] == [
+        "en-US",
+        "de-DE",
+    ]
+
+
+# test german gender ending
+
+
+def test_german_gender_ending():
+    request_data = {
+        "alternative": "Sinti~ze~/~Sinti und Rom~nja~/~Roma",
+    }
+    response = client.get("/german_gender_ending", params=request_data)
+    assert response.status_code == 200
+    response_content = json.loads(response.content)
+
+    expected = [
+        "Sinti/ze und Rom/nja",
+        "Sinti_ze und Rom_nja",
+        "Sinti:ze und Rom:nja",
+        "Sinti*ze und Rom*nja",
+        "Sinti/-ze und Rom/-nja",
+        "Sintize/Sinti und Romnja/Roma",
+        "SintiZe und RomNja",
+    ]
+
+    assert sorted(response_content) == sorted(expected)

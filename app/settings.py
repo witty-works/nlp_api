@@ -26,6 +26,14 @@ class Settings(BaseSettings):
     text_max_length: int = 1000
     learning_bites_base_url: str = "https://www.witty.works"
     is_prod: bool = False
+    terms_of_service: str = "https://www.witty.works/privacy"
+    contact: str = "support@witty.works"
+    aadb2c_tenant_id: Optional[str]
+    aadb2c_client_id: Optional[str]
+    aadb2c_policy: Optional[str]
+    aadb2c_domain: Optional[str]
+    aadb2c_expected_scope: Optional[str]
+    redis_default_rules: Optional[str]
 
     class Config:
         env_file = ".env"
