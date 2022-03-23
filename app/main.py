@@ -252,8 +252,19 @@ def german_gender_ending(
     "/auth",
     dependencies=[Depends(HTTPBearer())],
 )
-def auth(request: Request):  # pragma: no cover
-    return validate_scope(settings.aadb2c_expected_scope, request)
+async def auth(request: Request, user_request_in: RequestIn):  # pragma: no cover
+    user = get_user(request)
+    if not user:
+        return user
+
+    claim = validate_scope(settings.aadb2c_expected_scope, request)
+    rules = await set_rules(user_request_in, user)
+
+    return {
+        "claim": claim,
+        "rules": rules,
+        "user_request_in": user_request_in,
+    }
 
 
 @app.get("/form", include_in_schema=False)
