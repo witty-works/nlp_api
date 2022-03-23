@@ -1,6 +1,7 @@
 from redis import Redis
 from platformshconfig import Config
 from fakeredis import FakeStrictRedis
+import json
 
 
 def set_up_redis(settings):
@@ -12,4 +13,11 @@ def set_up_redis(settings):
         except:
             pass
 
-    return FakeStrictRedis()
+    redis = FakeStrictRedis()
+
+    if settings.redis_default_rules: # pragma: no cover
+        organization_object = json.loads(settings.redis_default_rules)
+        redis.set("witty.works", settings.redis_default_rules)
+        redis.set(organization_object["users"][0], "witty.works")
+
+    return redis
