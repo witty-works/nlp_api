@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-03-23 08:53\n"
-"PO-Revision-Date: 2022-03-23 08:53\n"
+"POT-Creation-Date: 2022-03-23 11:53\n"
+"PO-Revision-Date: 2022-03-23 11:53\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -455,6 +455,18 @@ msgstr ""
 msgid "rules.homophobia_explanation"
 msgstr ""
 
+msgid "rules.inclusive_label"
+msgstr ""
+
+msgid "rules.inclusive_reason"
+msgstr ""
+
+msgid "rules.inclusive_solution"
+msgstr ""
+
+msgid "rules.inclusive_explanation"
+msgstr ""
+
 msgid "rules.job_requirements_label"
 msgstr ""
 
@@ -573,6 +585,18 @@ msgid "rules.mobility_solution"
 msgstr ""
 
 msgid "rules.mobility_explanation"
+msgstr ""
+
+msgid "rules.openly_discriminating_label"
+msgstr ""
+
+msgid "rules.openly_discriminating_reason"
+msgstr ""
+
+msgid "rules.openly_discriminating_solution"
+msgstr ""
+
+msgid "rules.openly_discriminating_explanation"
 msgstr ""
 
 msgid "rules.orthography_label"
@@ -705,6 +729,18 @@ msgid "rules.sports_terms_solution"
 msgstr ""
 
 msgid "rules.sports_terms_explanation"
+msgstr ""
+
+msgid "rules.style_label"
+msgstr ""
+
+msgid "rules.style_reason"
+msgstr ""
+
+msgid "rules.style_solution"
+msgstr ""
+
+msgid "rules.style_explanation"
 msgstr ""
 
 msgid "rules.technical_frameworks_label"

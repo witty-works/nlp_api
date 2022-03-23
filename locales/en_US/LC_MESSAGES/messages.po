@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-03-23 08:53\n"
-"PO-Revision-Date: 2022-03-23 08:53\n"
+"POT-Creation-Date: 2022-03-23 11:53\n"
+"PO-Revision-Date: 2022-03-23 11:53\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -533,6 +533,20 @@ msgstr "Don't use this expression. You strongly offend people."
 msgid "rules.homophobia_explanation"
 msgstr "Homophobe"
 
+msgid "rules.inclusive_label"
+msgstr "Inclusive"
+
+msgid "rules.inclusive_reason"
+msgstr "Is wording where people feel encouraged and get a sense of belonging."
+
+msgid "rules.inclusive_solution"
+msgstr ""
+"Use more such wording to express cooperation, care, purpose, goal of "
+"diversity and inclusion."
+
+msgid "rules.inclusive_explanation"
+msgstr "Creates sense of belonging"
+
 msgid "rules.job_requirements_label"
 msgstr "Biased Requirements"
 
@@ -678,6 +692,18 @@ msgstr ""
 
 msgid "rules.mobility_explanation"
 msgstr "Hidden bias regarding mobility"
+
+msgid "rules.openly_discriminating_label"
+msgstr "Openly discriminating"
+
+msgid "rules.openly_discriminating_reason"
+msgstr ""
+
+msgid "rules.openly_discriminating_solution"
+msgstr ""
+
+msgid "rules.openly_discriminating_explanation"
+msgstr ""
 
 msgid "rules.orthography_label"
 msgstr "Orthography"
@@ -825,6 +851,19 @@ msgstr "Choose cooperative wording."
 
 msgid "rules.sports_terms_explanation"
 msgstr "Sports term expresses competitive ambiance"
+
+msgid "rules.style_label"
+msgstr "Style"
+
+msgid "rules.style_reason"
+msgstr ""
+"Difficult to understand or limited in approachability and emotionality."
+
+msgid "rules.style_solution"
+msgstr "Formulate in simpler terms, try to bring in more emotionality."
+
+msgid "rules.style_explanation"
+msgstr ""
 
 msgid "rules.technical_frameworks_label"
 msgstr ""

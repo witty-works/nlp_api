@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-03-23 08:53\n"
-"PO-Revision-Date: 2022-03-23 08:53\n"
+"POT-Creation-Date: 2022-03-23 11:53\n"
+"PO-Revision-Date: 2022-03-23 11:53\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -559,6 +559,22 @@ msgstr "Schreiben Sie das niemals. Sie verletzen Menschen stark."
 msgid "rules.homophobia_explanation"
 msgstr "Homophob"
 
+msgid "rules.inclusive_label"
+msgstr "Inklusiv"
+
+msgid "rules.inclusive_reason"
+msgstr ""
+"Wortwahl, mit der Menschen sich ermutigt fühlen und ein Zugehörigkeitsgefühl"
+" entwickeln."
+
+msgid "rules.inclusive_solution"
+msgstr ""
+"Verwenden Sie mehr solcher Formulierungen, um Kooperation, Unterstützung, "
+"Sinnhaftigkeit und das Ziel von Diversität und Inklusion auszudrücken."
+
+msgid "rules.inclusive_explanation"
+msgstr "Lässt Zugehörigkeitsgefühl entstehen"
+
 msgid "rules.job_requirements_label"
 msgstr "Voreingenommene Anforderungen"
 
@@ -713,6 +729,18 @@ msgstr ""
 msgid "rules.mobility_explanation"
 msgstr "Versteckte Voreingenommenheit bezüglich Mobilität"
 
+msgid "rules.openly_discriminating_label"
+msgstr "Offene Diskriminierung"
+
+msgid "rules.openly_discriminating_reason"
+msgstr ""
+
+msgid "rules.openly_discriminating_solution"
+msgstr ""
+
+msgid "rules.openly_discriminating_explanation"
+msgstr ""
+
 msgid "rules.orthography_label"
 msgstr "Orthographie"
 
@@ -863,6 +891,20 @@ msgstr "Wählen Sie kooperative Formulierungen."
 
 msgid "rules.sports_terms_explanation"
 msgstr "Sportlicher Begriff drückt Wettbewerbsstimmung aus"
+
+msgid "rules.style_label"
+msgstr "Stil"
+
+msgid "rules.style_reason"
+msgstr ""
+"Schwierig verständlich oder begrenzt die Nahbarkeit und Emotionalität."
+
+msgid "rules.style_solution"
+msgstr ""
+"Formulieren Sie einfacher; versuchen Sie, mehr Emotionalität einzubringen."
+
+msgid "rules.style_explanation"
+msgstr ""
 
 msgid "rules.technical_frameworks_label"
 msgstr ""

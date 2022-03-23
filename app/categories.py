@@ -1,7 +1,7 @@
 categories = {
     "abbreviation": {
         "inclusive": False,
-        "category": "style",
+        "category": "",
         "gravity": 3,
         "importance": 3,
         "emoji": "😉",
@@ -162,7 +162,7 @@ categories = {
     },
     "exaggerating": {
         "inclusive": False,
-        "category": "style",
+        "category": "",
         "gravity": 2,
         "importance": 2,
         "emoji": "😮\u200d💨",
@@ -258,6 +258,13 @@ categories = {
         "importance": 1,
         "emoji": "🚫",
     },
+    "inclusive": {
+        "inclusive": True,
+        "category": "inclusive",
+        "gravity": 3,
+        "importance": 2,
+        "emoji": "✅",
+    },
     "job_requirements": {
         "inclusive": False,
         "category": "job_requirements",
@@ -327,6 +334,13 @@ categories = {
         "gravity": 2,
         "importance": 2,
         "emoji": "😒",
+    },
+    "openly_discriminating": {
+        "inclusive": False,
+        "category": "openly_discriminating",
+        "gravity": 1,
+        "importance": None,
+        "emoji": "🚫",
     },
     "orthography": {
         "inclusive": False,
@@ -405,6 +419,13 @@ categories = {
         "importance": 2,
         "emoji": "🏅",
     },
+    "style": {
+        "inclusive": False,
+        "category": "style",
+        "gravity": 3,
+        "importance": None,
+        "emoji": None,
+    },
     "technical_frameworks": {
         "inclusive": False,
         "category": "job_requirements",
@@ -435,7 +456,7 @@ categories = {
     },
     "verbose": {
         "inclusive": False,
-        "category": "style",
+        "category": "",
         "gravity": 3,
         "importance": 3,
         "emoji": "🧊",
