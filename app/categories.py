@@ -258,13 +258,6 @@ categories = {
         "importance": 1,
         "emoji": "🚫",
     },
-    "inclusive": {
-        "inclusive": True,
-        "category": "inclusive",
-        "gravity": None,
-        "importance": 2,
-        "emoji": "✅",
-    },
     "job_requirements": {
         "inclusive": False,
         "category": "job_requirements",
@@ -334,13 +327,6 @@ categories = {
         "gravity": 2,
         "importance": 2,
         "emoji": "😒",
-    },
-    "openly_discriminating": {
-        "inclusive": False,
-        "category": "openly_discriminating",
-        "gravity": 1,
-        "importance": 1,
-        "emoji": "🚫",
     },
     "orthography": {
         "inclusive": False,
@@ -418,13 +404,6 @@ categories = {
         "gravity": 2,
         "importance": 2,
         "emoji": "🏅",
-    },
-    "style": {
-        "inclusive": False,
-        "category": "style",
-        "gravity": 3,
-        "importance": 3,
-        "emoji": "🤔",
     },
     "technical_frameworks": {
         "inclusive": False,
