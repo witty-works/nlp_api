@@ -124,7 +124,7 @@ Set an env variable `API_DOCS_AUTH_ENABLED` to `"true"` and for the username/pas
 Set am env variable `LANGUAGETOOL_API` to the URL endpoint of your LanguageTool server.
 Default is `https://api.languagetool.org/v2`.
 
-If the build fails due to "No space left on device" while installing the dependencies  run:
+If the build fails due to "No space left on device" while installing the dependencies run:
 
 ```
 platform project:clear-build-cache
