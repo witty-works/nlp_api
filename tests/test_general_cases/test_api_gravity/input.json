@@ -1,7 +1,7 @@
 {
-    "text": "Wir suchn Kunden",
+    "text": "Guten Tag, wir suchn Kunden",
     "config": {
         "store_context": false,
-        "maximum_importance": 2
+        "maximum_importance": 3
     }
 }
