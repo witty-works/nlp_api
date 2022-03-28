@@ -1,17 +1,29 @@
 Lemma,Word_Type,Category,Primary_subcategory,Alt_split
-ADD,abbr,style,abbreviation,"['attention deficit disorder', 'person with ADD', 'person with attention deficit disorder', 'easily bored', 'inattentive', 'easily distracted', 'having a poor working memory']"
-ADHD,abbr,style,abbreviation,"['attention deficit hyperactivity disorder', 'person with ADHD', 'person with attention deficit hyperactivity disorder', 'fidgety', 'restless', 'easily bored']"
-ASD,abbr,style,abbreviation,"['autism spectrum disorder', 'neurodiversity', 'person with ASD', 'person with autism  sprectrum disorder', 'neurodevelopmental disorder characterized by difficulties with social interaction and communication', 'umbrella diagnosis that includes autistic disorder, childhood disintegrative disorder, some pervasive developmental disorders, and Asperger syndrome']"
-ASL,abbr,style,abbreviation,['American Sign Language']
-DALY,abbr,style,abbreviation,"['-', 'diasability-adjusted life years', 'metric that confuses quality of life with health --- avoid if possible']"
-DALYs,abbr,style,abbreviation,"['-', 'diasability-adjusted life years', 'metric that confuses quality of life with health --- avoid if possible']"
-DFLY,abbr,style,abbreviation,"['-', 'dependency-free life-years', 'metric that confuses quality of life with health --- avoid if possible']"
-DFLYs,abbr,style,abbreviation,"['-', 'dependency-free life-years', 'metric that confuses quality of life with health --- avoid if possible']"
+ACCT,abbr,style,abbreviation,['account']
+ADD,abbr,style,abbreviation,"['attention deficit disorder', 'attention deficit disorder (ADD)', 'easily bored', 'easily distracted', 'having a poor working memory']"
+ADHD,abbr,style,abbreviation,"['attention deficit hyperactivity disorder', 'attention deficit hyperactivity disorder (ADHD)', 'person with attention deficit hyperactivity disorder', 'fidgety', 'restless', 'easily bored']"
+ASD,abbr,style,abbreviation,"['autism spectrum disorder', 'autism spectrum disorder', 'autism spectrum disorder (ASD)', 'neurodiversity', 'person with autism spectrum disorder', 'difficulties with social interaction and communication', 'umbrella diagnosis that includes autistic disorder, childhood disintegrative disorder, some pervasive developmental disorders, and Asperger syndrome']"
+ASL,abbr,style,abbreviation,"['American Sign Language', 'American Sign Language (ASL)']"
+DALY,abbr,style,abbreviation,"['-', 'diasability-adjusted life years', 'diasability-adjusted life years (DALY)', 'metric that confuses quality of life with health --- avoid if possible']"
+DALYs,abbr,style,abbreviation,"['-', 'diasability-adjusted life years', 'diasability-adjusted life years (DALYs)', 'metric that confuses quality of life with health --- avoid if possible']"
+DFLY,abbr,style,abbreviation,"['-', 'dependency-free life-years', 'dependency-free life-years (DFLY)', 'metric that confuses quality of life with health --- avoid if possible']"
+DFLYs,abbr,style,abbreviation,"['-', 'dependency-free life-years', 'dependency-free life-years (DFLYs)', 'metric that confuses quality of life with health --- avoid if possible']"
+FY,abbr,style,abbreviation,['financial year']
+H1,abbr,style,abbreviation,"['firt half', 'first half of the year']"
+H2,abbr,style,abbreviation,"['secoond half', 'second half of the year']"
 LBFM,abbr,openly_discriminating,sexism,['-']
-OCD,abbr,style,abbreviation,"['obsessive-compulsive disorder', 'detail-oriented', 'precise', 'careful', 'with attention to detail']"
+OCD,abbr,style,abbreviation,"['obsessive-compulsive disorder', 'obsessive-compulsive disorder (OCD)', 'detail-oriented', 'precise', 'careful', 'with attention to detail']"
 OTB,abbr,style,abbreviation,['outside the box']
-QALY,abbr,style,abbreviation,"['-', 'quality-adjusted life years', 'metric that confuses quality of life with health --- avoid if possible']"
-QALYs,abbr,style,abbreviation,"['-', 'quality-adjusted life years', 'metric that confuses quality of life with health --- avoid if possible']"
+P card,abbr,style,abbreviation,['Purchase card']
+P-card,abbr,style,abbreviation,['Purchase card']
+Pcard,abbr,style,abbreviation,['Purchase card']
+Q1,abbr,style,abbreviation,['first quarter']
+Q2,abbr,style,abbreviation,['second quarter']
+Q3,abbr,style,abbreviation,['third quarter']
+Q4,abbr,style,abbreviation,"['fourth quarter', 'last quarter']"
+QALY,abbr,style,abbreviation,"['-', 'quality-adjusted life years', 'quality-adjusted life years (QALY)', 'metric that confuses quality of life with health --- avoid if possible']"
+QALYs,abbr,style,abbreviation,"['-', 'quality-adjusted life years', 'quality-adjusted life years (QALYs)', 'metric that confuses quality of life with health --- avoid if possible']"
+SMB,abbr,style,abbreviation,['small to medium business']
 TERF,abbr,unconscious_bias,sexual_orientation,"['trans-exclusionary radical feminist', 'trans-exclusionary radical feminism']"
 etc,abbr,style,filler,['-']
-
+etc.,abbr,style,filler,['-']
