@@ -312,13 +312,21 @@ async def store_redis(
         key = str(organization_rules.organization)
         rules = redis.get(key)
 
+        term_replacements = []
+        for term_replacement in organization_rules.term_replacements:
+            if term_replacement.explanation is not None:
+                term_replacement.explanation = dict(term_replacement.explanation)
+
+            term_replacements.append(dict(term_replacement))
+
         organization_object = {
             "users": organization_rules.users,
             "config": {
                 "forced": dict(organization_rules.forced),
                 "suggestion": dict(organization_rules.suggestion),
             },
-            "false_positive": organization_rules.false_positive,
+            "false_positives": organization_rules.false_positives,
+            "term_replacements": term_replacements,
         }
 
         # Set a value
@@ -492,7 +500,7 @@ async def check(
 
     if user_rules:
         for result in list_results:
-            if result.text in user_rules["false_positive"]:
+            if result.text in user_rules["false_positives"]:
                 list_results.remove(result)
 
     return ResultsOut.factory(list_results, lang.lang, limit_reached)

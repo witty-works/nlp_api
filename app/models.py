@@ -160,10 +160,10 @@ class Config(BaseModel):
 class ForcedConfig(BaseModel):
     store_context: Optional[bool]
     primary_language: Optional[str]
-    preferred_languages: Optional[List]
-    preferred_variants: Optional[List]
+    preferred_languages: List[str] = []
+    preferred_variants: List[str] = []
     german_gender_ending: Optional[str]
-    disabled_categories: Optional[List]
+    disabled_categories: List[str] = []
     gendered_roles_format: Optional[GenderedRolesFormatType]
     singular_they: Optional[str]
     show_inspiration_alternatives: Optional[bool]
@@ -220,12 +220,26 @@ class ForcedConfig(BaseModel):
         return v
 
 
+class Explanation(BaseModel):
+    text: str
+    icon: Optional[str]
+    url: Optional[str]
+
+
+class TermReplacement(BaseModel):
+    term: str
+    alternatives: List[str]
+    explanation: Optional[Explanation]
+    gravity: Optional[int]
+
+
 class ConfRequest(BaseModel):
     organization: str
-    users: list
+    users: List[str]
     forced: ForcedConfig
     suggestion: Config
-    false_positive: Optional[list] = []
+    false_positives: List[str] = []
+    term_replacements: List[TermReplacement] = []
 
 
 class RequestIn(BaseModel):

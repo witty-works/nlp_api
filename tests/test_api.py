@@ -289,7 +289,7 @@ def set_redis():
             },
             "suggestion": {},
         },
-        "false_positive": [
+        "false_positives": [
             "stark",
             "starke",
             "starkes",
@@ -422,30 +422,54 @@ def test_store_and_get_rules():
         "users": ["test@gmail.com"],
         "forced": {"gendered_roles_format": "binary_gender"},
         "suggestion": {"german_gender_ending": "In"},
+        "false_positives": ["hello", "world"],
+        "term_replacements": [
+            {
+                "term": "foo",
+                "alternatives": ["bar"],
+                "explanation": {
+                    "text": "better bar",
+                    "icon": "🥰",
+                    "url": "https://witty.works",
+                },
+                "gravity": 3,
+            }
+        ],
     }
     response = client.post("/store_rules", json=request_data)
     assert response.status_code == 200
     response_content = json.loads(response.content)
     assert (
-        response_content["config"]["forced"]["gendered_roles_format"] == "binary_gender"
+        response_content["config"]["forced"]["gendered_roles_format"]
+        == request_data["forced"]["gendered_roles_format"]
     )
-    assert response_content["config"]["suggestion"]["german_gender_ending"] == "In"
+    assert (
+        response_content["config"]["suggestion"]["german_gender_ending"]
+        == request_data["suggestion"]["german_gender_ending"]
+    )
     assert response_content["config"]["suggestion"]["preferred_variants"] == [
         "en-US",
         "de-DE",
     ]
+    assert response_content["false_positives"] == request_data["false_positives"]
+    assert response_content["term_replacements"] == request_data["term_replacements"]
 
     request_data["users"] = ["test2@gmail.com", "test3@gmail.com"]
     request_data["forced"]["gendered_roles_format"] = "both"
     response = client.post("/store_rules", json=request_data)
     assert response.status_code == 200
     response_content = json.loads(response.content)
-    assert response_content["config"]["forced"]["gendered_roles_format"] == "both"
-    assert response_content["config"]["suggestion"]["german_gender_ending"] == "In"
-    assert response_content["config"]["suggestion"]["preferred_variants"] == [
-        "en-US",
-        "de-DE",
-    ]
+    assert (
+        response_content["config"]["forced"]["gendered_roles_format"]
+        == request_data["forced"]["gendered_roles_format"]
+    )
+    assert (
+        response_content["config"]["suggestion"]["german_gender_ending"]
+        == request_data["suggestion"]["german_gender_ending"]
+    )
+
+    assert response_content["false_positives"] == request_data["false_positives"]
+    assert response_content["term_replacements"] == request_data["term_replacements"]
 
     response = client.get("/get_user_rules?user=test@gmail.com")
     assert response.status_code == 200
@@ -455,12 +479,16 @@ def test_store_and_get_rules():
     response = client.get("/get_user_rules?user=test2@gmail.com")
     assert response.status_code == 200
     response_content = json.loads(response.content)
-    assert response_content["config"]["forced"]["gendered_roles_format"] == "both"
-    assert response_content["config"]["suggestion"]["german_gender_ending"] == "In"
-    assert response_content["config"]["suggestion"]["preferred_variants"] == [
-        "en-US",
-        "de-DE",
-    ]
+    assert (
+        response_content["config"]["forced"]["gendered_roles_format"]
+        == request_data["forced"]["gendered_roles_format"]
+    )
+    assert (
+        response_content["config"]["suggestion"]["german_gender_ending"]
+        == request_data["suggestion"]["german_gender_ending"]
+    )
+    assert response_content["false_positives"] == request_data["false_positives"]
+    assert response_content["term_replacements"] == request_data["term_replacements"]
 
 
 # test german gender ending
