@@ -34,9 +34,19 @@ hooks:
 
     export FT_MODEL="lid.176.bin"
 
-    cd training_data
-    curl https://pooteeweet.org/files/${FT_MODEL} --output ${FT_MODEL}
-    cd ~
+    if [ ! -f "${PLATFORM_CACHE_DIR}/$FT_MODEL" ]; then
+      echo "Downloading ${FT_MODEL} ..."
+      cd "${PLATFORM_CACHE_DIR}"
+      curl https://dl.fbaipublicfiles.com/fasttext/supervised-models/${FT_MODEL} --output ${FT_MODEL}
+      cd ~
+    else
+      echo "Using cached ${FT_MODEL} model ..."
+    fi
+
+    echo "Installing archive of ${FT_MODEL} from '${PLATFORM_CACHE_DIR}/${FT_MODEL}' ..."
+    cp -R "${PLATFORM_CACHE_DIR}/${FT_MODEL}" ./training_data/.
+
+    echo "e613bda316ecb4f5e1924140eedf81b81c087d9a *training_data/lid.176.bin" | sha1sum -c -
 
 relationships:
   rediscache: "cacheredis:redis"
