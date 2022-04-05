@@ -400,7 +400,7 @@ def test_set_default_rules(event_loop):
 
     event_loop.run_until_complete(set_rules(test_request, "test_default@gmail.com"))
     assert test_request.config.store_context == True
-    assert test_request.config.primary_language == "de-DE"
+    assert test_request.config.primary_language == None
     assert test_request.config.preferred_languages == [
         LangWithAutoType.EN,
         LangWithAutoType.DE,
@@ -447,10 +447,7 @@ def test_store_and_get_rules():
         response_content["config"]["suggestion"]["german_gender_ending"]
         == request_data["suggestion"]["german_gender_ending"]
     )
-    assert response_content["config"]["suggestion"]["preferred_variants"] == [
-        "en-US",
-        "de-DE",
-    ]
+    assert response_content["config"]["suggestion"]["preferred_variants"] == []
     assert response_content["false_positives"] == request_data["false_positives"]
     assert response_content["term_replacements"] == request_data["term_replacements"]
 

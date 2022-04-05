@@ -579,8 +579,10 @@ async def languagetool_rules(version: float, config: Config, lang: Language, tex
         payload = {
             "text": text,
             "language": lang.locale,
-            "motherTongue": config.primary_language,
         }
+
+        if config.primary_language != None:
+            payload["motherTongue"] = config.primary_language
 
         spelling_categories = list(
             set(config.disabled_categories) - set(categories.keys())
