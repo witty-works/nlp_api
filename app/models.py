@@ -77,7 +77,7 @@ class GenderedRolesFormatType(str, Enum):
 
 class Config(BaseModel):
     store_context: Optional[bool] = True
-    primary_language: LangWithAutoType = LangWithAutoType.deDE
+    primary_language: Optional[LangWithAutoType]
     preferred_languages: List = [LangWithAutoType.EN, LangWithAutoType.DE]
     _supported_langs = [
         LangType.DE,
@@ -114,7 +114,7 @@ class Config(BaseModel):
 
     @validator("primary_language", pre=True)
     def valid_primary_language(cls, v):
-        if v not in Config._supported_locales:
+        if v and v not in Config._supported_locales:
             raise ValueError("Not supported primary_language: " + v)
         return v
 
@@ -157,27 +157,27 @@ class Config(BaseModel):
         return v
 
 
-class ForcedConfig(BaseModel):
+class OrganizationConfig(BaseModel):
     store_context: Optional[bool]
-    primary_language: Optional[str]
+    primary_language: Optional[LangWithAutoType]
     preferred_languages: List[str] = []
     preferred_variants: List[str] = []
-    german_gender_ending: Optional[str]
+    german_gender_ending: Optional[GermanGenderEnding]
     disabled_categories: List[str] = []
     gendered_roles_format: Optional[GenderedRolesFormatType]
-    singular_they: Optional[str]
+    singular_they: Optional[SingularThey]
     show_inspiration_alternatives: Optional[bool]
     maximum_importance: Optional[int]
 
     @validator("german_gender_ending")
     def valid_german_gender_ending(cls, v: str):
-        if v not in Config._gendereddenom_ending:
+        if v and v not in Config._gendereddenom_ending:
             raise ValueError("Not supported german_gender_ending")
         return v
 
     @validator("primary_language", pre=True)
     def valid_primary_language(cls, v):
-        if v not in Config._supported_locales:
+        if v and v not in Config._supported_locales:
             raise ValueError("Not supported primary_language: " + v)
         return v
 
@@ -236,8 +236,8 @@ class TermReplacement(BaseModel):
 class ConfRequest(BaseModel):
     organization: str
     users: List[str]
-    forced: ForcedConfig
-    suggestion: Config
+    forced: OrganizationConfig
+    suggestion: OrganizationConfig
     false_positives: List[str] = []
     term_replacements: List[TermReplacement] = []
 
