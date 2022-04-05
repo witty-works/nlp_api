@@ -310,6 +310,7 @@ class ResultOut(BaseModel):
         alternatives=None,
         label=None,
         explanation=None,
+        url=None,
         icon=None,
         gravity=None,
     ):
@@ -330,25 +331,25 @@ class ResultOut(BaseModel):
 
         label = label if label else lang._("rules." + category + "_label")
 
-        if category == "orthography":
+        if category == "orthography" or category == "corporate_rules":
             category_key = category
-            url = None
         else:
             category_key = subcategory
             sub_label = lang._("rules." + subcategory + "_label")
 
-            settings = get_settings()
-            url = (
-                settings.learning_bites_base_url
-                + "/"
-                + lang.lang
-                + "/"
-                + ("categories" if lang.lang == "en" else "kategorien")
-                + "/"
-                + ResultOut.transliterate(label)
-                + "#"
-                + ResultOut.transliterate(sub_label)
-            )
+            if url == None:
+                settings = get_settings()
+                url = (
+                    settings.learning_bites_base_url
+                    + "/"
+                    + lang.lang
+                    + "/"
+                    + ("categories" if lang.lang == "en" else "kategorien")
+                    + "/"
+                    + ResultOut.transliterate(label)
+                    + "#"
+                    + ResultOut.transliterate(sub_label)
+                )
 
             if category != subcategory:
                 label += ": " + sub_label

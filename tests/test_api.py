@@ -298,6 +298,18 @@ def set_redis():
             "Führungskräfte",
             "Führungskräften",
         ],
+        "term_replacements": [
+            {
+                "term": "foo",
+                "alternatives": ["bar"],
+                "explanation": {
+                    "text": "better bar",
+                    "icon": "🥰",
+                    "url": "https://witty.works",
+                },
+                "gravity": 3,
+            }
+        ],
     }
 
     # Set a value
@@ -310,6 +322,25 @@ def set_redis():
     get_dirs("tests/test_false_positive"),
 )
 def test_false_positive(fp_case_dir, snapshot, set_redis):
+    input_json = fp_case_dir.joinpath("input.json").read_text()
+    # Call the tested endpoint.
+    client = TestClient(app)
+    response = client.post(
+        "/v1.1/check", json=json.loads(input_json), headers={"X-Auth": "test@gmail.com"}
+    )
+    assert response.status_code == 200
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    # Snapshot the return value.
+    snapshot.snapshot_dir = fp_case_dir
+    snapshot.assert_match(output, "output.json")
+
+
+@pytest.mark.parametrize(
+    "fp_case_dir",
+    get_dirs("tests/test_term_replacement"),
+)
+def test_term_replacement(fp_case_dir, snapshot, set_redis):
     input_json = fp_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
     client = TestClient(app)
