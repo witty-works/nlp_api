@@ -1,0 +1,126 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [],
+            "category": "orthography",
+            "end": 7,
+            "explanation": {
+                "icon": "❌",
+                "text": "Möglicherweise fehlende grammatische Übereinstimmung zwischen Subjekt und Prädikat (bin) bezüglich Person oder Numerus (Einzahl, Mehrzahl - Beispiel: ‚Max bist‘ statt ‚Max ist‘)."
+            },
+            "gravity": 1,
+            "label": "Grammatik",
+            "start": 4,
+            "subcategory": "grammar",
+            "text": "bin"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "von"
+                },
+                {
+                    "text": "vom"
+                },
+                {
+                    "text": "vor"
+                },
+                {
+                    "text": "floh"
+                },
+                {
+                    "text": "Zoo"
+                },
+                {
+                    "text": "froh"
+                },
+                {
+                    "text": "für"
+                },
+                {
+                    "text": "so"
+                },
+                {
+                    "text": "wo"
+                },
+                {
+                    "text": "oft"
+                },
+                {
+                    "text": "zog"
+                },
+                {
+                    "text": "Sohn"
+                },
+                {
+                    "text": "Tod"
+                },
+                {
+                    "text": "hohe"
+                },
+                {
+                    "text": "ob"
+                },
+                {
+                    "text": "pro"
+                },
+                {
+                    "text": "van"
+                },
+                {
+                    "text": "wohl"
+                },
+                {
+                    "text": "John"
+                },
+                {
+                    "text": "Rom"
+                }
+            ],
+            "category": "orthography",
+            "end": 11,
+            "explanation": {
+                "icon": "❌",
+                "text": "Möglicher Tippfehler gefunden."
+            },
+            "gravity": 1,
+            "label": "Rechtschreibfehler",
+            "start": 8,
+            "subcategory": "typos",
+            "text": "foo"
+        },
+        {
+            "alternatives": [],
+            "category": "orthography",
+            "end": 19,
+            "explanation": {
+                "icon": "❌",
+                "text": "Möglicher Tippfehler gefunden."
+            },
+            "gravity": 1,
+            "label": "Rechtschreibfehler",
+            "start": 12,
+            "subcategory": "typos",
+            "text": "foooooo"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "bar"
+                }
+            ],
+            "category": "corporate_rules",
+            "end": 11,
+            "explanation": {
+                "text": "Wir schreiben lieber"
+            },
+            "gravity": 1,
+            "label": "Organisations-Leitlinie",
+            "start": 8,
+            "subcategory": "corporate_rules",
+            "text": "foo"
+        }
+    ]
+}

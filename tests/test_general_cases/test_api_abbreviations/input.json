@@ -1,6 +1,7 @@
 {
     "text": "Do you speak ASL?",
     "config": {
-        "store_context": false
+        "store_context": false,
+        "maximum_importance": 3
     }
 }

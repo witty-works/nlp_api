@@ -60,14 +60,14 @@
                 }
             ],
             "category": "orthography",
-            "end": 9,
+            "end": 20,
             "explanation": {
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
             },
             "gravity": 1,
             "label": "Rechtschreibfehler",
-            "start": 4,
+            "start": 15,
             "subcategory": "typos",
             "text": "suchn"
         },
@@ -99,7 +99,7 @@
                 }
             ],
             "category": "gendered",
-            "end": 16,
+            "end": 27,
             "explanation": {
                 "icon": "😟",
                 "text": "“Mitmeinen” mit männlichen Generikum funktioniert nicht",
@@ -107,7 +107,7 @@
             },
             "gravity": 2,
             "label": "Geschlechtsspezifisch: Titel",
-            "start": 10,
+            "start": 21,
             "subcategory": "titles",
             "text": "Kunden"
         }

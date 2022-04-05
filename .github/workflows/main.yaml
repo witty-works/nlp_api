@@ -23,10 +23,10 @@ jobs:
           python -m pip install --upgrade pipenv wheel
 
       - name: Caching Dependencies
-        id: cache-pipenv
+        id: cache-pipenv2
         uses: actions/cache@v2
         env:
-          cache-name: cache-pipenv
+          cache-name: cache-pipenv2
         with:
           path: ./.venv
           key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/Pipfile.lock') }}
@@ -34,7 +34,7 @@ jobs:
             ${{ runner.os }}-${{ env.cache-name }}-
 
       - name: Install dependencies
-        if: steps.cache-pipenv.outputs.cache-hit != 'true'
+        if: steps.cache-pipenv2.outputs.cache-hit != 'true'
         run: |
           pipenv install --deploy --dev --verbose
           pipenv run python -m spacy download en_core_web_sm
@@ -57,10 +57,10 @@ jobs:
           wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 
       - name: Caching translations
-        id: cache-po-files
+        id: cache-po-files2
         uses: actions/cache@v2
         env:
-          cache-name: cache-po-files
+          cache-name: cache-po-files2
         with:
           path: ./locales
           key: ${{ runner.os }}-po-files-${{ hashFiles('**/*.po') }}
@@ -68,7 +68,7 @@ jobs:
             ${{ runner.os }}-${{ env.cache-name }}-
 
       - name: Compile translation
-        if: steps.cache-po-files.outputs.cache-hit != 'true'
+        if: steps.cache-po-files2.outputs.cache-hit != 'true'
         run: |
           pipenv run pybabel compile -d locales -l de_DE -f
           pipenv run pybabel compile -d locales -l de_AT -f

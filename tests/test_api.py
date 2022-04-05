@@ -289,7 +289,7 @@ def set_redis():
             },
             "suggestion": {},
         },
-        "false_positive": [
+        "false_positives": [
             "stark",
             "starke",
             "starkes",
@@ -297,6 +297,18 @@ def set_redis():
             "Führungskraft",
             "Führungskräfte",
             "Führungskräften",
+        ],
+        "term_replacements": [
+            {
+                "term": "foo",
+                "alternatives": ["bar"],
+                "explanation": {
+                    "text": "better bar",
+                    "icon": "🥰",
+                    "url": "https://witty.works",
+                },
+                "gravity": 3,
+            }
         ],
     }
 
@@ -310,6 +322,25 @@ def set_redis():
     get_dirs("tests/test_false_positive"),
 )
 def test_false_positive(fp_case_dir, snapshot, set_redis):
+    input_json = fp_case_dir.joinpath("input.json").read_text()
+    # Call the tested endpoint.
+    client = TestClient(app)
+    response = client.post(
+        "/v1.1/check", json=json.loads(input_json), headers={"X-Auth": "test@gmail.com"}
+    )
+    assert response.status_code == 200
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    # Snapshot the return value.
+    snapshot.snapshot_dir = fp_case_dir
+    snapshot.assert_match(output, "output.json")
+
+
+@pytest.mark.parametrize(
+    "fp_case_dir",
+    get_dirs("tests/test_term_replacement"),
+)
+def test_term_replacement(fp_case_dir, snapshot, set_redis):
     input_json = fp_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
     client = TestClient(app)
@@ -400,7 +431,7 @@ def test_set_default_rules(event_loop):
 
     event_loop.run_until_complete(set_rules(test_request, "test_default@gmail.com"))
     assert test_request.config.store_context == True
-    assert test_request.config.primary_language == "de-DE"
+    assert test_request.config.primary_language == None
     assert test_request.config.preferred_languages == [
         LangWithAutoType.EN,
         LangWithAutoType.DE,
@@ -422,30 +453,51 @@ def test_store_and_get_rules():
         "users": ["test@gmail.com"],
         "forced": {"gendered_roles_format": "binary_gender"},
         "suggestion": {"german_gender_ending": "In"},
+        "false_positives": ["hello", "world"],
+        "term_replacements": [
+            {
+                "term": "foo",
+                "alternatives": ["bar"],
+                "explanation": {
+                    "text": "better bar",
+                    "icon": "🥰",
+                    "url": "https://witty.works",
+                },
+                "gravity": 3,
+            }
+        ],
     }
     response = client.post("/store_rules", json=request_data)
     assert response.status_code == 200
     response_content = json.loads(response.content)
     assert (
-        response_content["config"]["forced"]["gendered_roles_format"] == "binary_gender"
+        response_content["config"]["forced"]["gendered_roles_format"]
+        == request_data["forced"]["gendered_roles_format"]
     )
-    assert response_content["config"]["suggestion"]["german_gender_ending"] == "In"
-    assert response_content["config"]["suggestion"]["preferred_variants"] == [
-        "en-US",
-        "de-DE",
-    ]
+    assert (
+        response_content["config"]["suggestion"]["german_gender_ending"]
+        == request_data["suggestion"]["german_gender_ending"]
+    )
+    assert response_content["config"]["suggestion"]["preferred_variants"] == []
+    assert response_content["false_positives"] == request_data["false_positives"]
+    assert response_content["term_replacements"] == request_data["term_replacements"]
 
     request_data["users"] = ["test2@gmail.com", "test3@gmail.com"]
     request_data["forced"]["gendered_roles_format"] = "both"
     response = client.post("/store_rules", json=request_data)
     assert response.status_code == 200
     response_content = json.loads(response.content)
-    assert response_content["config"]["forced"]["gendered_roles_format"] == "both"
-    assert response_content["config"]["suggestion"]["german_gender_ending"] == "In"
-    assert response_content["config"]["suggestion"]["preferred_variants"] == [
-        "en-US",
-        "de-DE",
-    ]
+    assert (
+        response_content["config"]["forced"]["gendered_roles_format"]
+        == request_data["forced"]["gendered_roles_format"]
+    )
+    assert (
+        response_content["config"]["suggestion"]["german_gender_ending"]
+        == request_data["suggestion"]["german_gender_ending"]
+    )
+
+    assert response_content["false_positives"] == request_data["false_positives"]
+    assert response_content["term_replacements"] == request_data["term_replacements"]
 
     response = client.get("/get_user_rules?user=test@gmail.com")
     assert response.status_code == 200
@@ -455,12 +507,16 @@ def test_store_and_get_rules():
     response = client.get("/get_user_rules?user=test2@gmail.com")
     assert response.status_code == 200
     response_content = json.loads(response.content)
-    assert response_content["config"]["forced"]["gendered_roles_format"] == "both"
-    assert response_content["config"]["suggestion"]["german_gender_ending"] == "In"
-    assert response_content["config"]["suggestion"]["preferred_variants"] == [
-        "en-US",
-        "de-DE",
-    ]
+    assert (
+        response_content["config"]["forced"]["gendered_roles_format"]
+        == request_data["forced"]["gendered_roles_format"]
+    )
+    assert (
+        response_content["config"]["suggestion"]["german_gender_ending"]
+        == request_data["suggestion"]["german_gender_ending"]
+    )
+    assert response_content["false_positives"] == request_data["false_positives"]
+    assert response_content["term_replacements"] == request_data["term_replacements"]
 
 
 # test german gender ending

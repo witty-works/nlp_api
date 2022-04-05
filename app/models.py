@@ -77,7 +77,7 @@ class GenderedRolesFormatType(str, Enum):
 
 class Config(BaseModel):
     store_context: Optional[bool] = True
-    primary_language: LangWithAutoType = LangWithAutoType.deDE
+    primary_language: Optional[LangWithAutoType]
     preferred_languages: List = [LangWithAutoType.EN, LangWithAutoType.DE]
     _supported_langs = [
         LangType.DE,
@@ -104,7 +104,7 @@ class Config(BaseModel):
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
     singular_they: str = SingularThey.HE_OR_SHE
     show_inspiration_alternatives: Optional[bool] = False
-    maximum_importance: Optional[int] = None
+    maximum_importance: int = 2
 
     @validator("german_gender_ending")
     def valid_german_gender_ending(cls, v: str):
@@ -114,7 +114,7 @@ class Config(BaseModel):
 
     @validator("primary_language", pre=True)
     def valid_primary_language(cls, v):
-        if v not in Config._supported_locales:
+        if v and v not in Config._supported_locales:
             raise ValueError("Not supported primary_language: " + v)
         return v
 
@@ -157,27 +157,27 @@ class Config(BaseModel):
         return v
 
 
-class ForcedConfig(BaseModel):
+class OrganizationConfig(BaseModel):
     store_context: Optional[bool]
-    primary_language: Optional[str]
-    preferred_languages: Optional[List]
-    preferred_variants: Optional[List]
-    german_gender_ending: Optional[str]
-    disabled_categories: Optional[List]
+    primary_language: Optional[LangWithAutoType]
+    preferred_languages: List[str] = []
+    preferred_variants: List[str] = []
+    german_gender_ending: Optional[GermanGenderEnding]
+    disabled_categories: List[str] = []
     gendered_roles_format: Optional[GenderedRolesFormatType]
-    singular_they: Optional[str]
+    singular_they: Optional[SingularThey]
     show_inspiration_alternatives: Optional[bool]
     maximum_importance: Optional[int]
 
     @validator("german_gender_ending")
     def valid_german_gender_ending(cls, v: str):
-        if v not in Config._gendereddenom_ending:
+        if v and v not in Config._gendereddenom_ending:
             raise ValueError("Not supported german_gender_ending")
         return v
 
     @validator("primary_language", pre=True)
     def valid_primary_language(cls, v):
-        if v not in Config._supported_locales:
+        if v and v not in Config._supported_locales:
             raise ValueError("Not supported primary_language: " + v)
         return v
 
@@ -220,12 +220,26 @@ class ForcedConfig(BaseModel):
         return v
 
 
+class Explanation(BaseModel):
+    text: str
+    icon: Optional[str]
+    url: Optional[str]
+
+
+class TermReplacement(BaseModel):
+    term: str
+    alternatives: List[str]
+    explanation: Optional[Explanation]
+    gravity: Optional[int]
+
+
 class ConfRequest(BaseModel):
     organization: str
-    users: list
-    forced: ForcedConfig
-    suggestion: Config
-    false_positive: Optional[list] = []
+    users: List[str]
+    forced: OrganizationConfig
+    suggestion: OrganizationConfig
+    false_positives: List[str] = []
+    term_replacements: List[TermReplacement] = []
 
 
 class RequestIn(BaseModel):
@@ -296,6 +310,7 @@ class ResultOut(BaseModel):
         alternatives=None,
         label=None,
         explanation=None,
+        url=None,
         icon=None,
         gravity=None,
     ):
@@ -316,25 +331,25 @@ class ResultOut(BaseModel):
 
         label = label if label else lang._("rules." + category + "_label")
 
-        if category == "orthography":
+        if category == "orthography" or category == "corporate_rules":
             category_key = category
-            url = None
         else:
             category_key = subcategory
             sub_label = lang._("rules." + subcategory + "_label")
 
-            settings = get_settings()
-            url = (
-                settings.learning_bites_base_url
-                + "/"
-                + lang.lang
-                + "/"
-                + ("categories" if lang.lang == "en" else "kategorien")
-                + "/"
-                + ResultOut.transliterate(label)
-                + "#"
-                + ResultOut.transliterate(sub_label)
-            )
+            if url == None:
+                settings = get_settings()
+                url = (
+                    settings.learning_bites_base_url
+                    + "/"
+                    + lang.lang
+                    + "/"
+                    + ("categories" if lang.lang == "en" else "kategorien")
+                    + "/"
+                    + ResultOut.transliterate(label)
+                    + "#"
+                    + ResultOut.transliterate(sub_label)
+                )
 
             if category != subcategory:
                 label += ": " + sub_label

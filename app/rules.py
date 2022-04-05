@@ -1,4 +1,5 @@
 import pandas as pd
+import ast
 from collections import namedtuple
 
 rules = {
@@ -104,9 +105,9 @@ df_gender = rules["de-DE"]["df_gender_ct"]
 gender_words_alternatives = list(
     zip(
         df_gender["Lemma"],
-        df_gender["Sg_all_split"],
-        df_gender["Pl_all_split"],
-        df_gender["Alt_split"],
+        map(ast.literal_eval, df_gender["Sg_all_split"]),
+        map(ast.literal_eval, df_gender["Pl_all_split"]),
+        map(ast.literal_eval, df_gender["Alt_split"]),
         df_gender["Primary_subcategory"],
     )
 )
@@ -116,7 +117,7 @@ df_gendered_no_noun = rules["de-DE"]["df_gender_no_noun_word"]
 gender_words_alternatives_no_noun = list(
     zip(
         df_gendered_no_noun["Lemma"],
-        df_gendered_no_noun["Alt_split"],
+        map(ast.literal_eval, df_gendered_no_noun["Alt_split"]),
         df_gendered_no_noun["Primary_subcategory"],
     )
 )
@@ -133,8 +134,8 @@ df_bias = rules["de-DE"]["df_ub_plur_word"]
 bias_words_alternatives_noun = list(
     zip(
         df_bias["Lemma"],
-        df_bias["Sg_all_split"],
-        df_bias["Pl_all_split"],
+        map(ast.literal_eval, df_bias["Sg_all_split"]),
+        map(ast.literal_eval, df_bias["Pl_all_split"]),
         df_bias["Primary_subcategory"],
     )
 )
@@ -144,7 +145,7 @@ df_bias_no_plur = rules["de-DE"]["df_ub_no_plur_word"]
 bias_words_alternatives_no_plur = list(
     zip(
         df_bias_no_plur["Lemma"],
-        df_bias_no_plur["Alt_split"],
+        map(ast.literal_eval, df_bias_no_plur["Alt_split"]),
         df_bias_no_plur["Primary_subcategory"],
     )
 )
@@ -152,7 +153,11 @@ bias_words_alternatives_no_plur = list(
 df_style = rules["de-DE"]["df_style_word"]
 # style: words + alternatives + subcategory
 style_words_alternatives = list(
-    zip(df_style["Lemma"], df_style["Alt_split"], df_style["Primary_subcategory"])
+    zip(
+        df_style["Lemma"],
+        map(ast.literal_eval, df_style["Alt_split"]),
+        df_style["Primary_subcategory"],
+    )
 )
 # df open discrimination words
 df_discrimination_words = rules["de-DE"]["df_open_dis_word"]
@@ -160,7 +165,7 @@ df_discrimination_words = rules["de-DE"]["df_open_dis_word"]
 open_disc_words_alternatives = list(
     zip(
         df_discrimination_words["Lemma"],
-        df_discrimination_words["Alt_split"],
+        map(ast.literal_eval, df_discrimination_words["Alt_split"]),
         df_discrimination_words["Primary_subcategory"],
     )
 )
@@ -172,7 +177,7 @@ abbreviation = list(
         df_abbreviation["Lemma"],
         df_abbreviation["Category"],
         df_abbreviation["Primary_subcategory"],
-        df_abbreviation["Alt_split"],
+        map(ast.literal_eval, df_abbreviation["Alt_split"]),
     )
 )
 
@@ -183,7 +188,7 @@ df_discrimination_sentences = rules["de-DE"]["df_open_dis_sentence"]
 open_disc_sentences_alternatives = list(
     zip(
         df_discrimination_sentences["Lemma"],
-        df_discrimination_sentences["Alt_split"],
+        map(ast.literal_eval, df_discrimination_sentences["Alt_split"]),
         df_discrimination_sentences["Primary_subcategory"],
     )
 )
@@ -193,7 +198,7 @@ df_gendered_sentences = rules["de-DE"]["df_gendered_sentences"]
 gender_sentences_alternatives = list(
     zip(
         df_gendered_sentences["Lemma"],
-        df_gendered_sentences["Alt_split"],
+        map(ast.literal_eval, df_gendered_sentences["Alt_split"]),
         df_gendered_sentences["Primary_subcategory"],
     )
 )
@@ -203,7 +208,7 @@ df_bias_sentences = rules["de-DE"]["df_ub_sentences"]
 bias_sentences_alternatives = list(
     zip(
         df_bias_sentences["Lemma"],
-        df_bias_sentences["Alt_split"],
+        map(ast.literal_eval, df_bias_sentences["Alt_split"]),
         df_bias_sentences["Primary_subcategory"],
     )
 )
@@ -213,7 +218,7 @@ df_style_sentences = rules["de-DE"]["df_style_sentences"]
 style_sentences_alternatives = list(
     zip(
         df_style_sentences["Lemma"],
-        df_style_sentences["Alt_split"],
+        map(ast.literal_eval, df_style_sentences["Alt_split"]),
         df_style_sentences["Primary_subcategory"],
     )
 )
@@ -226,14 +231,14 @@ df_discrimination_GB = rules["en-GB"]["df_open_dis_word"]
 open_disc_words_alternatives_US = list(
     zip(
         df_discrimination_US["Lemma"],
-        df_discrimination_US["Alt_split"],
+        map(ast.literal_eval, df_discrimination_US["Alt_split"]),
         df_discrimination_US["Primary_subcategory"],
     )
 )
 open_disc_words_alternatives_GB = list(
     zip(
         df_discrimination_GB["Lemma"],
-        df_discrimination_GB["Alt_split"],
+        map(ast.literal_eval, df_discrimination_GB["Alt_split"]),
         df_discrimination_GB["Primary_subcategory"],
     )
 )
@@ -244,14 +249,14 @@ df_gender_no_noun_GB = rules["en-GB"]["df_gendered_no_noun_word"]
 gender_words_alternatives_US = list(
     zip(
         df_gender_no_noun_US["Lemma"],
-        df_gender_no_noun_US["Alt_split"],
+        map(ast.literal_eval, df_gender_no_noun_US["Alt_split"]),
         df_gender_no_noun_US["Primary_subcategory"],
     )
 )
 gender_words_alternatives_GB = list(
     zip(
         df_gender_no_noun_GB["Lemma"],
-        df_gender_no_noun_GB["Alt_split"],
+        map(ast.literal_eval, df_gender_no_noun_GB["Alt_split"]),
         df_gender_no_noun_GB["Primary_subcategory"],
     )
 )
@@ -262,14 +267,14 @@ df_style_GB = rules["en-GB"]["df_style_word"]
 style_words_alternatives_US = list(
     zip(
         df_style_US["Lemma"],
-        df_style_US["Alt_split"],
+        map(ast.literal_eval, df_style_US["Alt_split"]),
         df_style_US["Primary_subcategory"],
     )
 )
 style_words_alternatives_GB = list(
     zip(
         df_style_GB["Lemma"],
-        df_style_GB["Alt_split"],
+        map(ast.literal_eval, df_style_GB["Alt_split"]),
         df_style_GB["Primary_subcategory"],
     )
 )
@@ -280,14 +285,14 @@ df_bias_GB = rules["en-GB"]["df_ub_no_plur_word"]
 bias_words_alternatives_US = list(
     zip(
         df_bias_US["Lemma"],
-        df_bias_US["Alt_split"],
+        map(ast.literal_eval, df_bias_US["Alt_split"]),
         df_bias_US["Primary_subcategory"],
     )
 )
 bias_words_alternatives_GB = list(
     zip(
         df_bias_GB["Lemma"],
-        df_bias_GB["Alt_split"],
+        map(ast.literal_eval, df_bias_GB["Alt_split"]),
         df_bias_GB["Primary_subcategory"],
     )
 )
@@ -312,7 +317,7 @@ homonyms_word_US = list(
         df_homonyms_US["Word_Type"],
         df_homonyms_US["Category"],
         df_homonyms_US["Primary_subcategory"],
-        df_homonyms_US["Alt_split"],
+        map(ast.literal_eval, df_homonyms_US["Alt_split"]),
     )
 )
 homonyms_word_GB = list(
@@ -321,7 +326,7 @@ homonyms_word_GB = list(
         df_homonyms_GB["Word_Type"],
         df_homonyms_GB["Category"],
         df_homonyms_GB["Primary_subcategory"],
-        df_homonyms_GB["Alt_split"],
+        map(ast.literal_eval, df_homonyms_GB["Alt_split"]),
     )
 )
 
@@ -334,7 +339,7 @@ abbreviation_US = list(
         df_abbreviation_US["Lemma"],
         df_abbreviation_US["Category"],
         df_abbreviation_US["Primary_subcategory"],
-        df_abbreviation_US["Alt_split"],
+        map(ast.literal_eval, df_abbreviation_US["Alt_split"]),
     )
 )
 abbreviation_GB = list(
@@ -342,7 +347,7 @@ abbreviation_GB = list(
         df_abbreviation_GB["Lemma"],
         df_abbreviation_GB["Category"],
         df_abbreviation_GB["Primary_subcategory"],
-        df_abbreviation_GB["Alt_split"],
+        map(ast.literal_eval, df_abbreviation_GB["Alt_split"]),
     )
 )
 # df gendered noun
@@ -352,16 +357,16 @@ df_gender_noun_GB = rules["en-GB"]["df_gendered_noun_word"]
 gender_noun_words_alternatives_US = list(
     zip(
         df_gender_noun_US["Lemma"],
-        df_gender_noun_US["Sg_all_split"],
-        df_gender_noun_US["Pl_all_split"],
+        map(ast.literal_eval, df_gender_noun_US["Sg_all_split"]),
+        map(ast.literal_eval, df_gender_noun_US["Pl_all_split"]),
         df_gender_noun_US["Primary_subcategory"],
     )
 )
 gender_noun_words_alternatives_GB = list(
     zip(
         df_gender_noun_GB["Lemma"],
-        df_gender_noun_GB["Sg_all_split"],
-        df_gender_noun_GB["Pl_all_split"],
+        map(ast.literal_eval, df_gender_noun_GB["Sg_all_split"]),
+        map(ast.literal_eval, df_gender_noun_GB["Pl_all_split"]),
         df_gender_noun_GB["Primary_subcategory"],
     )
 )
@@ -372,16 +377,16 @@ df_gendered_ub_GB = rules["en-GB"]["df_ub_plur_word"]
 gender_bias_words_alternatives_US = list(
     zip(
         df_gendered_ub_US["Lemma"],
-        df_gendered_ub_US["Sg_all_split"],
-        df_gendered_ub_US["Pl_all_split"],
+        map(ast.literal_eval, df_gendered_ub_US["Sg_all_split"]),
+        map(ast.literal_eval, df_gendered_ub_US["Pl_all_split"]),
         df_gendered_ub_US["Primary_subcategory"],
     )
 )
 gender_bias_words_alternatives_GB = list(
     zip(
         df_gendered_ub_GB["Lemma"],
-        df_gendered_ub_GB["Sg_all_split"],
-        df_gendered_ub_GB["Pl_all_split"],
+        map(ast.literal_eval, df_gendered_ub_GB["Sg_all_split"]),
+        map(ast.literal_eval, df_gendered_ub_GB["Pl_all_split"]),
         df_gendered_ub_GB["Primary_subcategory"],
     )
 )
@@ -410,14 +415,14 @@ df_open_dis_sentences_GB = rules["en-GB"]["df_open_dis_sentence"]
 open_dis_sentences_US = list(
     zip(
         df_open_dis_sentences_US["Lemma"],
-        df_open_dis_sentences_US["Alt_split"],
+        map(ast.literal_eval, df_open_dis_sentences_US["Alt_split"]),
         df_open_dis_sentences_US["Primary_subcategory"],
     )
 )
 open_dis_sentences_GB = list(
     zip(
         df_open_dis_sentences_GB["Lemma"],
-        df_open_dis_sentences_GB["Alt_split"],
+        map(ast.literal_eval, df_open_dis_sentences_GB["Alt_split"]),
         df_open_dis_sentences_GB["Primary_subcategory"],
     )
 )
@@ -428,14 +433,14 @@ df_gendered_sentences_GB = rules["en-GB"]["df_gendered_sentence"]
 gender_sentences_alternatives_US = list(
     zip(
         df_gendered_sentences_US["Lemma"],
-        df_gendered_sentences_US["Alt_split"],
+        map(ast.literal_eval, df_gendered_sentences_US["Alt_split"]),
         df_gendered_sentences_US["Primary_subcategory"],
     )
 )
 gender_sentences_alternatives_GB = list(
     zip(
         df_gendered_sentences_GB["Lemma"],
-        df_gendered_sentences_GB["Alt_split"],
+        map(ast.literal_eval, df_gendered_sentences_GB["Alt_split"]),
         df_gendered_sentences_GB["Primary_subcategory"],
     )
 )
@@ -446,14 +451,14 @@ df_style_sentences_GB = rules["en-GB"]["df_style_sentence"]
 style_sentences_alternatives_US = list(
     zip(
         df_style_sentences_US["Lemma"],
-        df_style_sentences_US["Alt_split"],
+        map(ast.literal_eval, df_style_sentences_US["Alt_split"]),
         df_style_sentences_US["Primary_subcategory"],
     )
 )
 style_sentences_alternatives_GB = list(
     zip(
         df_style_sentences_GB["Lemma"],
-        df_style_sentences_GB["Alt_split"],
+        map(ast.literal_eval, df_style_sentences_GB["Alt_split"]),
         df_style_sentences_GB["Primary_subcategory"],
     )
 )
@@ -464,14 +469,14 @@ df_bias_sentences_GB = rules["en-GB"]["df_ub_sentence"]
 bias_sentences_alternatives_US = list(
     zip(
         df_bias_sentences_US["Lemma"],
-        df_bias_sentences_US["Alt_split"],
+        map(ast.literal_eval, df_bias_sentences_US["Alt_split"]),
         df_bias_sentences_US["Primary_subcategory"],
     )
 )
 bias_sentences_alternatives_GB = list(
     zip(
         df_bias_sentences_GB["Lemma"],
-        df_bias_sentences_GB["Alt_split"],
+        map(ast.literal_eval, df_bias_sentences_GB["Alt_split"]),
         df_bias_sentences_GB["Primary_subcategory"],
     )
 )
@@ -482,14 +487,14 @@ df_bias_singular_they_GB = rules["en-GB"]["df_ub_singular_they"]
 bias_singular_they_alternatives_US = list(
     zip(
         df_bias_singular_they_US["Lemma"],
-        df_bias_singular_they_US["Alt_split"],
+        map(ast.literal_eval, df_bias_singular_they_US["Alt_split"]),
         df_bias_singular_they_US["Primary_subcategory"],
     )
 )
 bias_singular_they_alternatives_GB = list(
     zip(
         df_bias_singular_they_GB["Lemma"],
-        df_bias_singular_they_GB["Alt_split"],
+        map(ast.literal_eval, df_bias_singular_they_GB["Alt_split"]),
         df_bias_singular_they_GB["Primary_subcategory"],
     )
 )

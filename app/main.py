@@ -1,4 +1,3 @@
-import ast
 import re
 import uvicorn
 import json
@@ -312,13 +311,21 @@ async def store_redis(
         key = str(organization_rules.organization)
         rules = redis.get(key)
 
+        term_replacements = []
+        for term_replacement in organization_rules.term_replacements:
+            if term_replacement.explanation is not None:
+                term_replacement.explanation = dict(term_replacement.explanation)
+
+            term_replacements.append(dict(term_replacement))
+
         organization_object = {
             "users": organization_rules.users,
             "config": {
                 "forced": dict(organization_rules.forced),
                 "suggestion": dict(organization_rules.suggestion),
             },
-            "false_positive": organization_rules.false_positive,
+            "false_positives": organization_rules.false_positives,
+            "term_replacements": term_replacements,
         }
 
         # Set a value
@@ -438,8 +445,11 @@ async def set_rules(user_request_in: RequestIn, user=Optional[str]):
 
 
 def get_user(request: Request):
-    if settings.testing and "x-auth" in request.headers:
-        return request.headers["x-auth"]
+    if settings.testing:
+        if "x-auth" in request.headers:
+            return request.headers["x-auth"]
+        if settings.redis_default_user:
+            return settings.redis_default_user
 
     if settings.read_rules_from_redis:
         try:
@@ -467,7 +477,7 @@ async def check(
     configure_sentry(request, user_request_in)
 
     user = get_user(request)
-    user_rules = await set_rules(user_request_in, user)
+    organization_rules = await set_rules(user_request_in, user)
 
     text = user_request_in.text
     limit_reached = len(text) > settings.text_max_length
@@ -488,12 +498,9 @@ async def check(
 
     lang = Language(locale)
 
-    list_results = await language_rules(version, user_request_in.config, lang, text)
-
-    if user_rules:
-        for result in list_results:
-            if result.text in user_rules["false_positive"]:
-                list_results.remove(result)
+    list_results = await language_rules(
+        version, user_request_in.config, organization_rules, lang, text
+    )
 
     return ResultsOut.factory(list_results, lang.lang, limit_reached)
 
@@ -571,8 +578,10 @@ async def languagetool_rules(version: float, config: Config, lang: Language, tex
         payload = {
             "text": text,
             "language": lang.locale,
-            "motherTongue": config.primary_language,
         }
+
+        if config.primary_language != None:
+            payload["motherTongue"] = config.primary_language
 
         spelling_categories = list(
             set(config.disabled_categories) - set(categories.keys())
@@ -608,27 +617,66 @@ async def languagetool_rules(version: float, config: Config, lang: Language, tex
     return list_results
 
 
-async def language_rules(version: float, config: Config, lang: Language, text: str):
+async def language_rules(
+    version: float, config: Config, organization_rules: dict, lang: Language, text: str
+):
     # apply SpaCy pre-built model
     tokens = model[lang.lang](text.rstrip().replace("\n", " "))
 
+    list_results = []
+    if is_sub_category_enabled(config, "orthography"):
+        try:
+            list_results += await languagetool_rules(version, config, lang, text)
+        except Exception:
+            pass
+
     # functions for German rules
     if lang.lang == "de":
-        list_results = german_rules(version, config, lang, tokens, text)
+        list_results += german_rules(version, config, lang, tokens, text)
 
     # function for English rules
     elif lang.lang == "en":
-        list_results = english_rules(version, config, lang, tokens, text)
+        list_results += english_rules(version, config, lang, tokens, text)
 
-    else:
-        list_results = []
+    if "term_replacements" in organization_rules:
+        term_replacements = {
+            "Lemma": [],
+            "Category": [],
+            "Primary_subcategory": [],
+            "Alt_split": [],
+        }
 
-    if is_sub_category_enabled(config, "orthography"):
-        try:
-            languagetool_results = await languagetool_rules(version, config, lang, text)
-            list_results = languagetool_results + list_results
-        except Exception:
-            pass
+        for term_replacement in organization_rules["term_replacements"]:
+            term_replacements["Lemma"].append(term_replacement["term"])
+            term_replacements["Category"].append("corporate_rules")
+            term_replacements["Primary_subcategory"].append("corporate_rules")
+
+            term_replacements["Alt_split"].append(term_replacement["alternatives"])
+
+        df_term_replacements = pd.DataFrame(data=term_replacements)
+        alternatives = list(
+            zip(
+                df_term_replacements["Lemma"],
+                df_term_replacements["Category"],
+                df_term_replacements["Primary_subcategory"],
+                df_term_replacements["Alt_split"],
+            )
+        )
+
+        list_results += literal_match(
+            version,
+            config,
+            lang,
+            text,
+            tokens,
+            df_term_replacements,
+            alternatives,
+        )
+
+    if "false_positives" in organization_rules:
+        for result in list_results:
+            if result.text in organization_rules["false_positives"]:
+                list_results.remove(result)
 
     return list_results
 
@@ -678,7 +726,7 @@ def is_sub_category_enabled(config: Config, subcategory: str):
 def german_rules(version: float, config: Config, lang: Language, tokens, text: str):
     list_full = []
 
-    list_full += abbreviation_match(
+    list_full += literal_match(
         version,
         config,
         lang,
@@ -840,7 +888,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
     list_full += homonyms_english(
         version, config, lang, text, tokens, words_alternatives_en["homonym"]
     )
-    list_full += abbreviation_match(
+    list_full += literal_match(
         version,
         config,
         lang,
@@ -1053,7 +1101,7 @@ def agentic_language_analysis_de(
                                 subcategory,
                                 token.idx,
                                 token.idx + len(token.text),
-                                ast.literal_eval(alternative_sing),
+                                alternative_sing,
                             )
                         )
 
@@ -1069,7 +1117,7 @@ def agentic_language_analysis_de(
                                 subcategory,
                                 token.idx,
                                 token.idx + len(token.text),
-                                ast.literal_eval(alternative_plur),
+                                alternative_plur,
                             )
                         )
     return list_tokens
@@ -1139,7 +1187,7 @@ def ub_words_phrase_matcher_de(
                             subcategory,
                             token.idx,
                             token.idx + len(token.text),
-                            ast.literal_eval(alternative),
+                            alternative,
                         )
                     )
 
@@ -1159,7 +1207,7 @@ def ub_words_phrase_matcher_de(
                         subcategory,
                         span.start_char,
                         span.end_char,
-                        ast.literal_eval(alternative),
+                        alternative,
                     )
                 )
 
@@ -1218,7 +1266,7 @@ def gendered_denom_analysis_de(
                                 subcategory,
                                 c_doc[i].idx,
                                 None,
-                                ast.literal_eval(alternative_all),
+                                alternative_all,
                             )
                         )
                     else:
@@ -1234,7 +1282,7 @@ def gendered_denom_analysis_de(
                                     subcategory,
                                     c_doc[i].idx,
                                     None,
-                                    ast.literal_eval(alternative_sing),
+                                    alternative_sing,
                                 )
                             )
                             for article, article_alternative in articles:
@@ -1265,7 +1313,7 @@ def gendered_denom_analysis_de(
                                     subcategory,
                                     c_doc[i].idx,
                                     None,
-                                    ast.literal_eval(alternative_plur),
+                                    alternative_plur,
                                 )
                             )
 
@@ -1292,7 +1340,7 @@ def gendered_denom_analysis_de(
                                 subcategory,
                                 tokens[i].idx,
                                 None,
-                                ast.literal_eval(alternative_all),
+                                alternative_all,
                             )
                         )
                     else:
@@ -1308,7 +1356,7 @@ def gendered_denom_analysis_de(
                                     subcategory,
                                     tokens[i].idx,
                                     None,
-                                    ast.literal_eval(alternative_sing),
+                                    alternative_sing,
                                 )
                             )
                             for article, article_alternative in articles:
@@ -1339,7 +1387,7 @@ def gendered_denom_analysis_de(
                                     subcategory,
                                     tokens[i].idx,
                                     None,
-                                    ast.literal_eval(alternative_plur),
+                                    alternative_plur,
                                 )
                             )
 
@@ -1392,7 +1440,7 @@ def style_word_analysis_de(
                                 subcategory,
                                 tokens[i].idx,
                                 tokens[i].idx + len(tokens[i].text),
-                                ast.literal_eval(alternative),
+                                alternative,
                             )
                         )
 
@@ -1410,7 +1458,7 @@ def style_word_analysis_de(
                             subcategory,
                             tokens[i].idx,
                             tokens[i].idx + len(tokens[i].text),
-                            ast.literal_eval(alternative),
+                            alternative,
                         )
                     )
 
@@ -1430,7 +1478,7 @@ def style_word_analysis_de(
                         subcategory,
                         span.start_char,
                         span.end_char,
-                        ast.literal_eval(alternative),
+                        alternative,
                     )
                 )
 
@@ -1474,7 +1522,7 @@ def word_noun_de(
                             subcategory,
                             token.idx,
                             token.idx + len(token.text),
-                            ast.literal_eval(alternative_sing),
+                            alternative_sing,
                         )
                     )
 
@@ -1490,7 +1538,7 @@ def word_noun_de(
                             subcategory,
                             token.idx,
                             token.idx + len(token.text),
-                            ast.literal_eval(alternative_plur),
+                            alternative_plur,
                         )
                     )
 
@@ -1533,7 +1581,7 @@ def rules_based_words_phrase_matcher_de(
                         subcategory,
                         token.idx,
                         token.idx + len(token.text),
-                        ast.literal_eval(alternative),
+                        alternative,
                     )
                 )
 
@@ -1553,7 +1601,7 @@ def rules_based_words_phrase_matcher_de(
                         subcategory,
                         span.start_char,
                         span.end_char,
-                        ast.literal_eval(alternative),
+                        alternative,
                     )
                 )
 
@@ -1726,7 +1774,7 @@ def rules_based_words_phrase_matcher_en(
                         subcategory,
                         token.idx,
                         token.idx + len(token.text),
-                        ast.literal_eval(alternative),
+                        alternative,
                     )
                 )
 
@@ -1746,7 +1794,7 @@ def rules_based_words_phrase_matcher_en(
                         subcategory,
                         span.start_char,
                         span.end_char,
-                        ast.literal_eval(alternative),
+                        alternative,
                     )
                 )
 
@@ -1776,14 +1824,14 @@ def homonyms_english(
                         subcategory,
                         token.idx,
                         token.idx + len(token.text),
-                        ast.literal_eval(alternative),
+                        alternative,
                     )
                 )
     return list_tokens
 
 
 # function to find exact match for abbreviations
-def abbreviation_match(
+def literal_match(
     version: float,
     config: Config,
     lang,
@@ -1820,7 +1868,7 @@ def abbreviation_match(
                         subcategory,
                         span.start_char,
                         span.end_char,
-                        ast.literal_eval(alternative),
+                        alternative,
                     )
                 )
 
@@ -1864,7 +1912,7 @@ def gendered_en(
                             subcategory,
                             token.idx,
                             token.idx + len(token.text),
-                            ast.literal_eval(alternative_sing),
+                            alternative_sing,
                         )
                     )
 
@@ -1880,7 +1928,7 @@ def gendered_en(
                             subcategory,
                             token.idx,
                             token.idx + len(token.text),
-                            ast.literal_eval(alternative_plur),
+                            alternative_plur,
                         )
                     )
 
