@@ -128,8 +128,8 @@ categories = {
     "corporate_rules": {
         "inclusive": False,
         "category": "corporate_rules",
-        "gravity": 3,
-        "importance": None,
+        "gravity": 1,
+        "importance": 1,
         "emoji": None,
     },
     "culture": {
