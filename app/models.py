@@ -403,6 +403,9 @@ class ResultOut(BaseModel):
 
         cleaned_alternatives = {}
         for alternative in alternatives:
+            if alternative == text:
+                continue
+
             inspiration = None
             if ResultOut.isInspirationAlternative(alternative):
                 if not config.show_inspiration_alternatives:
