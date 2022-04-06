@@ -41,8 +41,11 @@ from app.models import (
     RequestIn,
     Result,
     ResultOut,
+    ResultsOutOld,
     ResultsOut,
     ConfRequest,
+    OrganizationConfig,
+    ResultConf,
 )
 
 from fastapi_microsoft_identity import validate_scope, AuthError
@@ -278,14 +281,25 @@ def get_categories(lang: LangType = "de"):
 
 @app.post(
     "/check",
-    response_model=Union[ResultsOut, Result],
+    response_model=Union[ResultsOutOld, Result],
 )
 async def check_v1_0(
     request: Request,
     response: Response,
     user_request_in: RequestIn,
 ):
-    return await check(1.0, request, response, user_request_in)
+    results, language, limit_reached, organization_config = await check(
+        1.0, request, response, user_request_in
+    )
+
+    if isinstance(results, Result):
+        return results
+
+    return ResultsOutOld(
+        results=results,
+        language=language,
+        limit_reached=limit_reached,
+    )
 
 
 @app.post(
@@ -299,7 +313,19 @@ async def check_v1_1(
     response: Response,
     user_request_in: RequestIn,
 ):
-    return await check(1.1, request, response, user_request_in)
+    results, language, limit_reached, organization_config = await check(
+        1.1, request, response, user_request_in
+    )
+
+    if isinstance(results, Result):
+        return results
+
+    return ResultsOut(
+        results=results,
+        language=language,
+        limit_reached=limit_reached,
+        organization_config=organization_config,
+    )
 
 
 # data exchange routes
@@ -492,23 +518,32 @@ async def check(
         user_request_in.config.preferred_variants,
     )
 
+    organization_config = None
+
     if locale == None:
         response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
-        return Result.factory("Language could not be determined")
+        results = Result.factory("Language could not be determined")
+        language = None
+    else:
+        lang = Language(locale)
 
-    lang = Language(locale)
+        results = await language_rules(
+            version, user_request_in.config, organization_rules, lang, text
+        )
 
-    list_results = await language_rules(
-        version, user_request_in.config, organization_rules, lang, text
-    )
+        language = lang.lang
 
-    organization_config = None
-    if "config" in organization_rules:
-        organization_config = organization_rules["config"]
+        if "config" in organization_rules:
+            organization_config = ResultConf(
+                forced=OrganizationConfig.parse_obj(
+                    organization_rules["config"]["forced"]
+                ),
+                suggestion=OrganizationConfig.parse_obj(
+                    organization_rules["config"]["suggestion"]
+                ),
+            )
 
-    return ResultsOut.factory(
-        list_results, lang.lang, limit_reached, organization_config
-    )
+    return results, language, limit_reached, organization_config
 
 
 def get_alternatives(match):
