@@ -1,5 +1,5 @@
 from pydantic import BaseModel, validator
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional
 from enum import Enum
 
 import gettext
@@ -643,30 +643,14 @@ class ResultConf(BaseModel):
     suggestion: OrganizationConfig
 
 
-class ResultsOut(BaseModel):
-    results: Union[List[ResultOut], List[ResultOutOld]]
+class ResultsOutOld(BaseModel):
+    results: List[ResultOutOld]
     language: str
     limit_reached: bool
-    organization_config: Union[ResultConf, bool]
 
-    def factory(results, language, limit_reached=False, organization_config=None):
-        if organization_config != None:
-            organization_config["forced"] = OrganizationConfig.parse_obj(
-                organization_config["forced"]
-            )
-            organization_config["suggestion"] = OrganizationConfig.parse_obj(
-                organization_config["suggestion"]
-            )
-            organization_config = ResultConf.parse_obj(organization_config)
-        else:
-            organization_config = False
 
-        return ResultsOut(results, language, limit_reached, organization_config)
-
-    factory = staticmethod(factory)
-
-    def __init__(self, results, language, limit_reached, organization_config):
-        object.__setattr__(self, "results", results)
-        object.__setattr__(self, "language", language)
-        object.__setattr__(self, "limit_reached", limit_reached)
-        object.__setattr__(self, "organization_config", organization_config)
+class ResultsOut(BaseModel):
+    results: List[ResultOut]
+    language: str
+    limit_reached: bool
+    organization_config: Optional[ResultConf]
