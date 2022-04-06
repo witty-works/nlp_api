@@ -478,7 +478,7 @@ def test_store_and_get_rules():
         response_content["config"]["suggestion"]["german_gender_ending"]
         == request_data["suggestion"]["german_gender_ending"]
     )
-    assert response_content["config"]["suggestion"]["preferred_variants"] == []
+    assert response_content["config"]["suggestion"]["preferred_variants"] == None
     assert response_content["false_positives"] == request_data["false_positives"]
     assert response_content["term_replacements"] == request_data["term_replacements"]
 

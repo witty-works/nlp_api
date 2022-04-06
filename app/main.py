@@ -304,7 +304,7 @@ async def check_v1_1(
 
 # data exchange routes
 @app.post("/store_rules")
-async def store_redis(
+async def store_rules(
     organization_rules: ConfRequest, username: str = Depends(get_current_username)
 ):
     try:
@@ -502,7 +502,13 @@ async def check(
         version, user_request_in.config, organization_rules, lang, text
     )
 
-    return ResultsOut.factory(list_results, lang.lang, limit_reached)
+    organization_config = None
+    if "config" in organization_rules:
+        organization_config = organization_rules["config"]
+
+    return ResultsOut.factory(
+        list_results, lang.lang, limit_reached, organization_config
+    )
 
 
 def get_alternatives(match):

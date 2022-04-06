@@ -160,11 +160,11 @@ class Config(BaseModel):
 class OrganizationConfig(BaseModel):
     store_context: Optional[bool]
     primary_language: Optional[LangWithAutoType]
-    preferred_languages: List[str] = []
-    preferred_variants: List[str] = []
+    preferred_languages: Optional[List[str]]
+    preferred_variants: Optional[List[str]]
     german_gender_ending: Optional[GermanGenderEndingType]
-    disabled_categories: List[str] = []
     gendered_roles_format: Optional[GenderedRolesFormatType]
+    disabled_categories: Optional[List[str]]
     singular_they: Optional[SingularTheyType]
     show_inspiration_alternatives: Optional[bool]
     maximum_importance: Optional[int]
@@ -638,17 +638,35 @@ class Result(BaseModel):
         object.__setattr__(self, "detail", detail)
 
 
+class ResultConf(BaseModel):
+    forced: OrganizationConfig
+    suggestion: OrganizationConfig
+
+
 class ResultsOut(BaseModel):
     results: Union[List[ResultOut], List[ResultOutOld]]
     language: str
     limit_reached: bool
+    organization_config: Union[ResultConf, bool]
 
-    def factory(results, language, limit_reached=False):
-        return ResultsOut(results, language, limit_reached)
+    def factory(results, language, limit_reached=False, organization_config=None):
+        if organization_config != None:
+            organization_config["forced"] = OrganizationConfig.parse_obj(
+                organization_config["forced"]
+            )
+            organization_config["suggestion"] = OrganizationConfig.parse_obj(
+                organization_config["suggestion"]
+            )
+            organization_config = ResultConf.parse_obj(organization_config)
+        else:
+            organization_config = False
+
+        return ResultsOut(results, language, limit_reached, organization_config)
 
     factory = staticmethod(factory)
 
-    def __init__(self, results, language, limit_reached):
+    def __init__(self, results, language, limit_reached, organization_config):
         object.__setattr__(self, "results", results)
         object.__setattr__(self, "language", language)
         object.__setattr__(self, "limit_reached", limit_reached)
+        object.__setattr__(self, "organization_config", organization_config)

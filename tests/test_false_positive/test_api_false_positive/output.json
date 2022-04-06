@@ -1,5 +1,20 @@
 {
     "language": "en",
     "limit_reached": false,
+    "organization_config": {
+        "forced": {
+            "gendered_roles_format": "binary_gender",
+            "german_gender_ending": "In",
+            "preferred_languages": [
+                "en"
+            ],
+            "preferred_variants": [
+                "en-GB"
+            ],
+            "primary_language": "en-GB",
+            "store_context": false
+        },
+        "suggestion": {}
+    },
     "results": []
 }
