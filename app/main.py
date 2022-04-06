@@ -34,9 +34,9 @@ from spacy.matcher import PhraseMatcher, Matcher
 from app.models import (
     Config,
     GenderedRolesFormatType,
-    GermanGenderEnding,
+    GermanGenderEndingType,
     LangType,
-    SingularThey,
+    SingularTheyType,
     Language,
     RequestIn,
     Result,
@@ -228,7 +228,7 @@ def save_openapi_json(
 )
 def german_gender_ending(
     alternative: str,
-    german_gender_ending: GermanGenderEnding = None,
+    german_gender_ending: GermanGenderEndingType = None,
     username: str = Depends(get_current_username),
 ):
     alternative_variations = set()
@@ -854,7 +854,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
         words_alternatives_en["homonym"] = homonyms_word_GB
         words_alternatives_en["abbr"] = abbreviation_GB
 
-        if config.singular_they == SingularThey.ALL_PRONOUNS:
+        if config.singular_they == SingularTheyType.ALL_PRONOUNS:
             words_alternatives_en["ge"] += bias_singular_they_alternatives_GB
 
         inclusive_words_alternatives_en = inclusive_words_alternatives_GB
@@ -873,7 +873,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
         words_alternatives_en["homonym"] = homonyms_word_US
         words_alternatives_en["abbr"] = abbreviation_US
 
-        if config.singular_they == SingularThey.ALL_PRONOUNS:
+        if config.singular_they == SingularTheyType.ALL_PRONOUNS:
             words_alternatives_en["ge"] += bias_singular_they_alternatives_US
 
         inclusive_words_alternatives_en = inclusive_words_alternatives_US

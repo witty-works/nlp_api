@@ -55,7 +55,7 @@ class LangWithAutoType(str, Enum):
     enGB = "en-GB"
 
 
-class GermanGenderEnding(str, Enum):
+class GermanGenderEndingType(str, Enum):
     SLASH = "/in"
     SLASH_DASH = "/-in"
     UNDERSCORE = "_in"
@@ -64,7 +64,7 @@ class GermanGenderEnding(str, Enum):
     CAPITAL_LETTER = "In"
 
 
-class SingularThey(str, Enum):
+class SingularTheyType(str, Enum):
     HE_OR_SHE = "he_or_she"
     ALL_PRONOUNS = "all_pronouns"
 
@@ -91,18 +91,18 @@ class Config(BaseModel):
         LangWithAutoType.enUS,
         LangWithAutoType.enGB,
     ]
-    german_gender_ending: GermanGenderEnding = GermanGenderEnding.COLON
+    german_gender_ending: GermanGenderEndingType = GermanGenderEndingType.COLON
     _gendereddenom_ending = {
-        GermanGenderEnding.SLASH: "/in",
-        GermanGenderEnding.SLASH_DASH: "/-in",
-        GermanGenderEnding.UNDERSCORE: "_in",
-        GermanGenderEnding.STAR: "\\*in",
-        GermanGenderEnding.COLON: ":in",
-        GermanGenderEnding.CAPITAL_LETTER: r"In\b",
+        GermanGenderEndingType.SLASH: "/in",
+        GermanGenderEndingType.SLASH_DASH: "/-in",
+        GermanGenderEndingType.UNDERSCORE: "_in",
+        GermanGenderEndingType.STAR: "\\*in",
+        GermanGenderEndingType.COLON: ":in",
+        GermanGenderEndingType.CAPITAL_LETTER: r"In\b",
     }
     disabled_categories: List = []
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
-    singular_they: str = SingularThey.HE_OR_SHE
+    singular_they: str = SingularTheyType.HE_OR_SHE
     show_inspiration_alternatives: Optional[bool] = False
     maximum_importance: int = 2
 
@@ -162,10 +162,10 @@ class OrganizationConfig(BaseModel):
     primary_language: Optional[LangWithAutoType]
     preferred_languages: List[str] = []
     preferred_variants: List[str] = []
-    german_gender_ending: Optional[GermanGenderEnding]
+    german_gender_ending: Optional[GermanGenderEndingType]
     disabled_categories: List[str] = []
     gendered_roles_format: Optional[GenderedRolesFormatType]
-    singular_they: Optional[SingularThey]
+    singular_they: Optional[SingularTheyType]
     show_inspiration_alternatives: Optional[bool]
     maximum_importance: Optional[int]
 
@@ -502,7 +502,7 @@ class ResultOut(BaseModel):
     @staticmethod
     def getAlternativeVariations(
         gendered_roles_format: GenderedRolesFormatType,
-        german_gender_ending: GermanGenderEnding,
+        german_gender_ending: GermanGenderEndingType,
         alternative: str,
     ):
         if alternative and "~" in alternative:
@@ -515,7 +515,7 @@ class ResultOut(BaseModel):
     @staticmethod
     def getGenderedRoleFormatVariations(
         gendered_roles_format: GenderedRolesFormatType,
-        german_gender_ending: GermanGenderEnding,
+        german_gender_ending: GermanGenderEndingType,
         alternative: str,
     ):
         alternative_variations = []
@@ -586,7 +586,7 @@ class ResultOut(BaseModel):
     @staticmethod
     def getGenderedRoles(
         gendered_roles_format: GenderedRolesFormatType,
-        german_gender_ending: GermanGenderEnding,
+        german_gender_ending: GermanGenderEndingType,
         alternative,
     ):
         alternative_variations = []
