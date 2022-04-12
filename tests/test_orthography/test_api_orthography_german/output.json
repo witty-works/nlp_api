@@ -66,6 +66,7 @@
                 }
             ],
             "category": "orthography",
+            "context": "Ich gehe noch schnell ueber die Strasse!!!",
             "end": 27,
             "explanation": {
                 "icon": "❌",
@@ -141,6 +142,7 @@
                 }
             ],
             "category": "orthography",
+            "context": "Ich gehe noch schnell ueber die Strasse!!!",
             "end": 39,
             "explanation": {
                 "icon": "❌",
@@ -159,6 +161,7 @@
                 }
             ],
             "category": "orthography",
+            "context": "Ich gehe noch schnell ueber die Strasse!!!",
             "end": 42,
             "explanation": {
                 "icon": "❌",

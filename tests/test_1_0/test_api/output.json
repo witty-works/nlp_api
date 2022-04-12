@@ -22,7 +22,7 @@
                 "unterere"
             ],
             "category": "orthography",
-            "context": "",
+            "context": "Wir suchen Ninja Programmierer für unseere Kunden",
             "end": 42,
             "label": "Rechtschreibfehler",
             "reason": "Korrigieren sie eventuelle Rechtschreib- oder Grammatikfehler, um die Wirkung ihrer Texte zu maximieren.",
@@ -43,7 +43,7 @@
                 "beauftragende Firmen"
             ],
             "category": "gendered",
-            "context": "",
+            "context": "Wir suchen Ninja Programmierer für unseere Kunden",
             "end": 49,
             "label": "Geschlechtsspezifisch: Titel",
             "reason": "Das männliche Generikum spricht nicht alle Geschlechter oder Geschlechtsidentitäten an. Viele Menschen fühlen sich daher nicht in den Dialog einbezogen.",
@@ -59,7 +59,7 @@
                 "Mensch, der seine Fachkenntnis ständig vertieft"
             ],
             "category": "style",
-            "context": "",
+            "context": "Wir suchen Ninja Programmierer für unseere Kunden",
             "end": 16,
             "label": "Stil: Superlative",
             "reason": "Kommuniziert, dass sich Menschen sich im Sinne der Superlative anpassen müssen.",

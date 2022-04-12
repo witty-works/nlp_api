@@ -278,9 +278,11 @@ def test_categories():
 def set_redis():
     organization_object = {
         "users": ["test@gmail.com"],
+        "name": "Witty Works",
+        "plan": "witty_teams",
+        "store_context": False,
         "config": {
             "forced": {
-                "store_context": False,
                 "primary_language": "en-GB",
                 "preferred_languages": ["en"],
                 "preferred_variants": ["en-GB"],
@@ -370,7 +372,7 @@ def test_set_rules(event_loop, set_redis):
     }
     test_request = RequestIn(**request_data)
     event_loop.run_until_complete(set_rules(test_request, "test@gmail.com"))
-    assert test_request.config.store_context == False
+    assert test_request.config.store_context == True
     assert test_request.config.primary_language == "en-GB"
     assert test_request.config.preferred_languages == ["en"]
     assert test_request.config.preferred_variants == ["en-GB"]
@@ -385,7 +387,6 @@ def test_set_rules_suggestion(event_loop, set_redis):
     request_data = {
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
         "config": {
-            "store_context": True,
             "primary_language": "de-DE",
             "preferred_languages": "de",
             "preferred_variants": "de-DE",
@@ -412,7 +413,7 @@ def test_set_organization_rules(event_loop, set_redis):
     }
     test_request = RequestIn(**request_data)
     event_loop.run_until_complete(set_rules(test_request, "test@gmail.com"))
-    assert test_request.config.store_context == False
+    assert test_request.config.store_context == True
     assert test_request.config.primary_language == "en-GB"
     assert test_request.config.preferred_languages == ["en"]
     assert test_request.config.preferred_variants == ["en-GB"]
@@ -450,6 +451,9 @@ def test_set_default_rules(event_loop):
 def test_store_and_get_rules():
     request_data = {
         "organization": "TEST_organization",
+        "name": "Witty Works",
+        "plan": "witty_teams",
+        "store_context": True,
         "users": ["test@gmail.com"],
         "forced": {"gendered_roles_format": "binary_gender"},
         "suggestion": {"german_gender_ending": "In"},

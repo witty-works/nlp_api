@@ -346,6 +346,9 @@ async def store_rules(
 
         organization_object = {
             "users": organization_rules.users,
+            "name": organization_rules.name,
+            "plan": organization_rules.plan,
+            "store_context": organization_rules.store_context,
             "config": {
                 "forced": dict(organization_rules.forced),
                 "suggestion": dict(organization_rules.suggestion),
@@ -504,6 +507,10 @@ async def check(
 
     user = get_user(request)
     organization_rules = await set_rules(user_request_in, user)
+    if organization_rules:
+        user_request_in.config.store_context = organization_rules["store_context"]
+    else:
+        user_request_in.config.store_context = True
 
     text = user_request_in.text
     limit_reached = len(text) > settings.text_max_length
@@ -535,6 +542,9 @@ async def check(
 
         if "config" in organization_rules:
             organization_config = ResultConf(
+                name=organization_rules["name"],
+                plan=organization_rules["plan"],
+                store_context=organization_rules["store_context"],
                 forced=OrganizationConfig.parse_obj(
                     organization_rules["config"]["forced"]
                 ),

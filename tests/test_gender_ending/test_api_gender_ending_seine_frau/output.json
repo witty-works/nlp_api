@@ -12,6 +12,7 @@
                 }
             ],
             "category": "unconscious_bias",
+            "context": "Was ist seine Frau?",
             "end": 18,
             "explanation": {
                 "icon": "😒",
@@ -52,6 +53,7 @@
                 }
             ],
             "category": "unconscious_bias",
+            "context": "Was ist seine Frau?",
             "end": 18,
             "explanation": {
                 "icon": "😒",

@@ -11,9 +11,11 @@
             "preferred_variants": [
                 "en-GB"
             ],
-            "primary_language": "en-GB",
-            "store_context": false
+            "primary_language": "en-GB"
         },
+        "name": "Witty Works",
+        "plan": "witty_teams",
+        "store_context": false,
         "suggestion": {}
     },
     "results": []
