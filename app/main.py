@@ -251,7 +251,7 @@ def german_gender_ending(
 
 
 @app.post(
-    "/auth",
+    "/auth_debug",
     dependencies=[Depends(HTTPBearer())],
 )
 async def auth(request: Request, user_request_in: RequestIn):  # pragma: no cover
@@ -267,6 +267,26 @@ async def auth(request: Request, user_request_in: RequestIn):  # pragma: no cove
         "rules": rules,
         "user_request_in": user_request_in,
     }
+
+
+@app.post(
+    "/auth",
+    response_model=Union[ResultConf, Result],
+    response_model_exclude_none=True,
+    dependencies=[Depends(HTTPBearer(auto_error=False))],
+)
+async def auth(request: Request, response: Response):
+    user = get_user(request)
+    if not user:
+        response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+        return Result.factory("User could not be determined")
+
+    organization_rules = await set_rules(RequestIn(text=""), user)
+    if not organization_rules:
+        response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+        return Result.factory("Organization rules could not be determined")
+
+    return get_result_conf(organization_rules)
 
 
 @app.get("/form", include_in_schema=False)
@@ -346,6 +366,9 @@ async def store_rules(
 
         organization_object = {
             "users": organization_rules.users,
+            "name": organization_rules.name,
+            "plan": organization_rules.plan,
+            "store_context": organization_rules.store_context,
             "config": {
                 "forced": dict(organization_rules.forced),
                 "suggestion": dict(organization_rules.suggestion),
@@ -504,6 +527,10 @@ async def check(
 
     user = get_user(request)
     organization_rules = await set_rules(user_request_in, user)
+    if organization_rules:
+        user_request_in.config.store_context = organization_rules["store_context"]
+    else:
+        user_request_in.config.store_context = True
 
     text = user_request_in.text
     limit_reached = len(text) > settings.text_max_length
@@ -534,16 +561,21 @@ async def check(
         language = lang.lang
 
         if "config" in organization_rules:
-            organization_config = ResultConf(
-                forced=OrganizationConfig.parse_obj(
-                    organization_rules["config"]["forced"]
-                ),
-                suggestion=OrganizationConfig.parse_obj(
-                    organization_rules["config"]["suggestion"]
-                ),
-            )
+            organization_config = get_result_conf(organization_rules)
 
     return results, language, limit_reached, organization_config
+
+
+def get_result_conf(organization_rules: dict):
+    return ResultConf(
+        name=organization_rules["name"],
+        plan=organization_rules["plan"],
+        store_context=organization_rules["store_context"],
+        forced=OrganizationConfig.parse_obj(organization_rules["config"]["forced"]),
+        suggestion=OrganizationConfig.parse_obj(
+            organization_rules["config"]["suggestion"]
+        ),
+    )
 
 
 def get_alternatives(match):

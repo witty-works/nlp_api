@@ -24,6 +24,7 @@
                 }
             ],
             "category": "unconscious_bias",
+            "context": "Wir sind alle Zigeuner.\nIch bin ein Zigeuner und du eine Zigeunerin.",
             "end": 22,
             "explanation": {
                 "icon": "😒",
@@ -58,6 +59,7 @@
                 }
             ],
             "category": "unconscious_bias",
+            "context": "Wir sind alle Zigeuner.\nIch bin ein Zigeuner und du eine Zigeunerin.",
             "end": 44,
             "explanation": {
                 "icon": "😒",
@@ -86,6 +88,7 @@
                 }
             ],
             "category": "unconscious_bias",
+            "context": "Wir sind alle Zigeuner.\nIch bin ein Zigeuner und du eine Zigeunerin.",
             "end": 67,
             "explanation": {
                 "icon": "😒",

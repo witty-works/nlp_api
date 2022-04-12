@@ -158,7 +158,6 @@ class Config(BaseModel):
 
 
 class OrganizationConfig(BaseModel):
-    store_context: Optional[bool]
     primary_language: Optional[LangWithAutoType]
     preferred_languages: Optional[List[str]]
     preferred_variants: Optional[List[str]]
@@ -235,7 +234,10 @@ class TermReplacement(BaseModel):
 
 class ConfRequest(BaseModel):
     organization: str
+    name: str
+    plan: str
     users: List[str]
+    store_context: bool
     forced: OrganizationConfig
     suggestion: OrganizationConfig
     false_positives: List[str] = []
@@ -641,6 +643,9 @@ class Result(BaseModel):
 class ResultConf(BaseModel):
     forced: OrganizationConfig
     suggestion: OrganizationConfig
+    name: str
+    plan: str
+    store_context: bool
 
 
 class ResultsOutOld(BaseModel):
