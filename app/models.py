@@ -244,6 +244,11 @@ class ConfRequest(BaseModel):
     term_replacements: List[TermReplacement] = []
 
 
+class ConfDeleteRequest(BaseModel):
+    organization: str
+    users: List[str]
+
+
 class RequestIn(BaseModel):
     type: str = "check"
     text: str
