@@ -272,7 +272,7 @@ async def auth(request: Request, user_request_in: RequestIn):  # pragma: no cove
 
 @app.post(
     "/auth",
-    response_model=Union[ResultConf, Result],
+    response_model=Union[ResultConf, dict, Result],
     response_model_exclude_none=True,
     dependencies=[Depends(HTTPBearer(auto_error=False))],
 )
@@ -284,8 +284,7 @@ async def auth(request: Request, response: Response):
 
     organization_rules = await set_rules(RequestIn(text=""), user)
     if not organization_rules:
-        response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
-        return Result.factory("Organization rules could not be determined")
+        return {}
 
     return get_result_conf(organization_rules)
 
@@ -577,6 +576,8 @@ async def check(
 
         if "config" in organization_rules:
             organization_config = get_result_conf(organization_rules)
+        elif user:
+            organization_config = {}
 
     return results, language, limit_reached, organization_config
 

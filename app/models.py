@@ -1,5 +1,5 @@
 from pydantic import BaseModel, validator
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 from enum import Enum
 
 import gettext
@@ -663,4 +663,4 @@ class ResultsOut(BaseModel):
     results: List[ResultOut]
     language: str
     limit_reached: bool
-    organization_config: Optional[ResultConf]
+    organization_config: Union[ResultConf, dict, None]
