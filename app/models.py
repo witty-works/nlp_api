@@ -648,6 +648,7 @@ class Result(BaseModel):
 class ResultConf(BaseModel):
     forced: OrganizationConfig
     suggestion: OrganizationConfig
+    id: str
     name: str
     plan: str
     store_context: bool
