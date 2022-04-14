@@ -272,21 +272,18 @@ async def auth(request: Request, user_request_in: RequestIn):  # pragma: no cove
 
 @app.post(
     "/auth",
-    response_model=Union[ResultConf, dict, Result],
+    response_model=Union[ResultConf, dict, None],
     response_model_exclude_none=True,
     dependencies=[Depends(HTTPBearer(auto_error=False))],
 )
 async def auth(request: Request, response: Response):
     user = get_user(request)
     if not user:
-        response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
-        return Result.factory("User could not be determined")
+        return None
 
     organization_rules = await set_rules(RequestIn(text=""), user)
-    if not organization_rules:
-        return {}
 
-    return get_result_conf(organization_rules)
+    return get_result_conf(user, organization_rules)
 
 
 @app.get("/form", include_in_schema=False)
@@ -422,6 +419,7 @@ async def get_user_rules_from_redis(user: str):
     if key:
         rules = json.loads(redis.get(key))
         if user in rules["users"]:
+            rules["id"] = key
             return rules
 
     return None
@@ -559,12 +557,11 @@ async def check(
         user_request_in.config.preferred_variants,
     )
 
-    organization_config = None
-
     if locale == None:
         response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
         results = Result.factory("Language could not be determined")
         language = None
+        organization_config = None
     else:
         lang = Language(locale)
 
@@ -574,16 +571,20 @@ async def check(
 
         language = lang.lang
 
-        if "config" in organization_rules:
-            organization_config = get_result_conf(organization_rules)
-        elif user:
-            organization_config = {}
+        organization_config = get_result_conf(user, organization_rules)
 
     return results, language, limit_reached, organization_config
 
 
-def get_result_conf(organization_rules: dict):
+def get_result_conf(user, organization_rules: dict):
+    if "config" not in organization_rules:
+        if user:
+            return {}
+
+        return None
+
     return ResultConf(
+        id=organization_rules["id"],
         name=organization_rules["name"],
         plan=organization_rules["plan"],
         store_context=organization_rules["store_context"],
