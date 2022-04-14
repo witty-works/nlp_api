@@ -49,7 +49,7 @@ from app.models import (
     ResultConf,
 )
 
-from fastapi_microsoft_identity import validate_scope, AuthError
+from fastapi_microsoft_identity import validate_scope, get_token_claims, AuthError
 
 
 from app.lang_detection import LangDetection
@@ -260,11 +260,10 @@ async def auth(request: Request, user_request_in: RequestIn):  # pragma: no cove
     if not user:
         return user
 
-    claim = validate_scope(settings.aadb2c_expected_scope, request)
     rules = await set_rules(user_request_in, user)
 
     return {
-        "claim": claim,
+        "claim": get_token_claims(request),
         "rules": rules,
         "user_request_in": user_request_in,
     }
@@ -514,7 +513,8 @@ def get_user(request: Request):
 
     if settings.read_rules_from_redis:
         try:
-            claims = validate_scope(settings.aadb2c_expected_scope, request)
+            validate_scope(settings.aadb2c_expected_scope, request)
+            claims = get_token_claims(request)
             try:
                 return claims["emails"][0]
             except KeyError:

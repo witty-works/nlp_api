@@ -19,7 +19,7 @@ redis = "*"
 platformshconfig = "*"
 fakeredis = "*"
 fasttext = "*"
-fastapi-microsoft-identity = {editable = true, ref = "main", git = "https://github.com/witty-works/fastapi_microsoft_identity"}
+fastapi-microsoft-identity = {editable = true, ref = "expose-get_token_claims", git = "https://github.com/witty-works/fastapi_microsoft_identity"}
 
 [dev-packages]
 click = "*"
