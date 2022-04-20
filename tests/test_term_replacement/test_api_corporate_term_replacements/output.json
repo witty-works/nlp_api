@@ -132,7 +132,9 @@
             "category": "corporate_rules",
             "end": 11,
             "explanation": {
-                "text": "Wir schreiben lieber"
+                "icon": "🥰",
+                "text": "better bar",
+                "url": "https://witty.works"
             },
             "gravity": 1,
             "label": "Organisations-Leitlinie",

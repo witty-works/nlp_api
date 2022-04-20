@@ -734,14 +734,15 @@ async def language_rules(
             "Category": [],
             "Primary_subcategory": [],
             "Alt_split": [],
+            "Explanation": [],
         }
 
         for term_replacement in organization_rules["term_replacements"]:
             term_replacements["Lemma"].append(term_replacement["term"])
             term_replacements["Category"].append("corporate_rules")
             term_replacements["Primary_subcategory"].append("corporate_rules")
-
             term_replacements["Alt_split"].append(term_replacement["alternatives"])
+            term_replacements["Explanation"].append(term_replacement["explanation"])
 
         df_term_replacements = pd.DataFrame(data=term_replacements)
         alternatives = list(
@@ -750,6 +751,7 @@ async def language_rules(
                 df_term_replacements["Category"],
                 df_term_replacements["Primary_subcategory"],
                 df_term_replacements["Alt_split"],
+                df_term_replacements["Explanation"],
             )
         )
 
@@ -1920,33 +1922,46 @@ def homonyms_english(
     return list_tokens
 
 
-# function to find exact match for abbreviations
+# function to find exact match for abbreviations and term replacements
 def literal_match(
     version: float,
     config: Config,
     lang,
     full_text,
     tokens,
-    df_abbreviation,
-    abbreviation_list,
+    df_term,
+    term_list,
 ):
     list_tokens = []
     # Phrase matcher part to handle False positives with two words and special simbols
     matcher = PhraseMatcher(model[lang.lang].vocab)
 
     # Only run model.make_doc to speed things up
-    patterns = [
-        model[lang.lang].make_doc(text) for text in list(df_abbreviation["Lemma"])
-    ]
+    patterns = [model[lang.lang].make_doc(text) for text in list(df_term["Lemma"])]
     matcher.add("TerminologyList", patterns)
 
     matches = matcher(tokens)
     for match_id, start, end in matches:
-        for abbreviation, category, subcategory, alternative in abbreviation_list:
+        for (
+            term,
+            category,
+            subcategory,
+            alternative,
+            *explanation,
+        ) in term_list:
             if not is_sub_category_enabled(config, subcategory):
                 continue
             span = tokens[start:end]
-            if span.text == abbreviation:
+            if span.text == term:
+                url = None
+                icon = None
+                explanation_text = None
+
+                if len(explanation):
+                    url = explanation[0]["url"]
+                    icon = explanation[0]["icon"]
+                    explanation_text = explanation[0]["text"]
+
                 list_tokens.append(
                     ResultOut.factory(
                         version,
@@ -1959,6 +1974,10 @@ def literal_match(
                         span.start_char,
                         span.end_char,
                         alternative,
+                        None,
+                        explanation_text,
+                        url,
+                        icon,
                     )
                 )
 
