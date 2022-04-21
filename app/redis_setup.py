@@ -17,7 +17,7 @@ def set_up_redis(settings):
 
     if settings.redis_default_rules:  # pragma: no cover
         organization_object = json.loads(settings.redis_default_rules)
-        key = organization_object["organization"]
+        key = organization_object["id"]
         redis.set(key, settings.redis_default_rules)
         for user in organization_object["users"]:
             redis.set(user, key)

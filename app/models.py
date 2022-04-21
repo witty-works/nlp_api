@@ -55,6 +55,14 @@ class LangWithAutoType(str, Enum):
     enGB = "en-GB"
 
 
+class LangVariantType(str, Enum):
+    deDE = "de-DE"
+    deCH = "de-CH"
+    deAT = "de-AT"
+    enUS = "en-US"
+    enGB = "en-GB"
+
+
 class GermanGenderEndingType(str, Enum):
     SLASH = "/in"
     SLASH_DASH = "/-in"
@@ -157,66 +165,72 @@ class Config(BaseModel):
         return v
 
 
+class StatusType(str, Enum):
+    FORCE = "force"
+    SUGGESTION = "suggestion"
+
+
+class BooleanConfigType(BaseModel):
+    value: bool
+    status: StatusType
+
+
+class IntegerConfigType(BaseModel):
+    value: int
+    status: StatusType
+
+
+class LangVariantConfigType(BaseModel):
+    value: List[LangVariantType]
+    status: StatusType
+
+
+class GermanGenderEndingConfigType(BaseModel):
+    value: GermanGenderEndingType
+    status: StatusType
+
+
+class GenderedRolesFormatConfigType(BaseModel):
+    value: GenderedRolesFormatType
+    status: StatusType
+
+
+class SingularTheyConfigType(BaseModel):
+    value: SingularTheyType
+    status: StatusType
+
+
 class OrganizationConfig(BaseModel):
-    primary_language: Optional[LangWithAutoType]
-    preferred_languages: Optional[List[str]]
-    preferred_variants: Optional[List[str]]
-    german_gender_ending: Optional[GermanGenderEndingType]
-    gendered_roles_format: Optional[GenderedRolesFormatType]
-    disabled_categories: Optional[List[str]]
-    singular_they: Optional[SingularTheyType]
-    show_inspiration_alternatives: Optional[bool]
-    maximum_importance: Optional[int]
+    store_context: Optional[BooleanConfigType]
+    preferred_variants: Optional[LangVariantConfigType]
+    german_gender_ending: Optional[GermanGenderEndingConfigType]
+    gendered_roles_format: Optional[GenderedRolesFormatConfigType]
+    inclusive: Optional[BooleanConfigType]
+    style: Optional[BooleanConfigType]
+    orthography: Optional[BooleanConfigType]
+    singular_they: Optional[SingularTheyConfigType]
+    show_inspiration_alternatives: Optional[BooleanConfigType]
+    maximum_importance: Optional[IntegerConfigType]
 
     @validator("german_gender_ending")
     def valid_german_gender_ending(cls, v: str):
-        if v and v not in Config._gendereddenom_ending:
+        if "value" in v and v["value"] not in Config._gendereddenom_ending:
             raise ValueError("Not supported german_gender_ending")
         return v
 
-    @validator("primary_language", pre=True)
-    def valid_primary_language(cls, v):
-        if v and v not in Config._supported_locales:
-            raise ValueError("Not supported primary_language: " + v)
-        return v
-
-    @validator("preferred_languages", pre=True)
-    def valid_preferred_languages(cls, v):
-        if isinstance(v, str) and v != "":
-            v = [s.strip() for s in v.split(",")]
-
-        if isinstance(v, list) and v != []:
-            for lang in v:
-                if lang not in Config._supported_langs:
-                    raise ValueError(
-                        "Contains not supported preferred_languages: " + ",".join(v)
-                    )
-
-            return v
-
-        return []
-
     @validator("preferred_variants", pre=True)
     def valid_preferred_variants(cls, v):
-        if isinstance(v, str) and v != "":
-            v = [s.strip() for s in v.split(",")]
+        if "value" in v and isinstance(v["value"], str) and v["value"] != "":
+            v["value"] = [s.strip() for s in v.split(",")]
 
-        if isinstance(v, list) and v != []:
-            for lang in v:
+        if isinstance(v["value"], list) and v["value"] != []:
+            for lang in v["value"]:
                 if lang not in Config._supported_locales:
                     raise ValueError(
                         "Contains not supported preferred_variants: " + ",".join(v)
                     )
 
             return v
-
-        return []
-
-    @validator("disabled_categories", pre=True)
-    def split_string_values(cls, v):
-        if isinstance(v, str):
-            return v.split(",")
-        return v
 
 
 class Explanation(BaseModel):
@@ -233,19 +247,17 @@ class TermReplacement(BaseModel):
 
 
 class ConfRequest(BaseModel):
-    organization: str
+    id: str
     name: str
     plan: str
     users: List[str]
-    store_context: bool
-    forced: OrganizationConfig
-    suggestion: OrganizationConfig
+    config: OrganizationConfig
     false_positives: List[str] = []
     term_replacements: List[TermReplacement] = []
 
 
 class ConfDeleteRequest(BaseModel):
-    organization: str
+    id: str
     users: List[str]
 
 
@@ -646,12 +658,10 @@ class Result(BaseModel):
 
 
 class ResultConf(BaseModel):
-    forced: OrganizationConfig
-    suggestion: OrganizationConfig
+    config: OrganizationConfig
     id: str
     name: str
     plan: str
-    store_context: bool
 
 
 class ResultsOutOld(BaseModel):
