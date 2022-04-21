@@ -260,7 +260,7 @@ async def auth(request: Request, user_request_in: RequestIn):  # pragma: no cove
     if not user:
         return user
 
-    rules = await set_rules(user_request_in, user)
+    rules = await apply_rules(user_request_in, user)
 
     return {
         "claim": get_token_claims(request),
@@ -280,7 +280,7 @@ async def auth(request: Request, response: Response):
     if not user:
         return None
 
-    organization_rules = await set_rules(RequestIn(text=""), user)
+    organization_rules = await apply_rules(RequestIn(text=""), user)
 
     return get_result_conf(user, organization_rules)
 
@@ -350,33 +350,12 @@ async def store_rules(
     organization_rules: ConfRequest, username: str = Depends(get_current_username)
 ):
     try:
-        key = str(organization_rules.organization)
-        rules = redis.get(key)
-
-        term_replacements = []
-        for term_replacement in organization_rules.term_replacements:
-            if term_replacement.explanation is not None:
-                term_replacement.explanation = dict(term_replacement.explanation)
-
-            term_replacements.append(dict(term_replacement))
-
-        organization_object = {
-            "users": organization_rules.users,
-            "name": organization_rules.name,
-            "plan": organization_rules.plan,
-            "store_context": organization_rules.store_context,
-            "config": {
-                "forced": dict(organization_rules.forced),
-                "suggestion": dict(organization_rules.suggestion),
-            },
-            "false_positives": organization_rules.false_positives,
-            "term_replacements": term_replacements,
-        }
+        rules = redis.get(organization_rules.id)
 
         # Set a value
-        redis.set(key, json.dumps(organization_object))
+        redis.set(organization_rules.id, organization_rules.json())
         for user in organization_rules.users:
-            redis.set(str(user), key)
+            redis.set(str(user), organization_rules.id)
 
         if rules:
             rules = json.loads(rules)
@@ -386,7 +365,8 @@ async def store_rules(
 
     except Exception as e:
         return e
-    return organization_object
+
+    return organization_rules
 
 
 @app.delete("/delete_rules")
@@ -394,8 +374,7 @@ async def delete_rules(
     organization_rules: ConfDeleteRequest, username: str = Depends(get_current_username)
 ):
     try:
-        key = str(organization_rules.organization)
-        redis.delete(key)
+        redis.delete(organization_rules.id)
 
         for user in organization_rules.users:
             redis.delete(str(user))
@@ -418,7 +397,6 @@ async def get_user_rules_from_redis(user: str):
     if key:
         rules = json.loads(redis.get(key))
         if user in rules["users"]:
-            rules["id"] = key
             return rules
 
     return None
@@ -460,7 +438,7 @@ def filter_config(config):
     return {k: v for (k, v) in config.items() if v != "" and v is not None and v != []}
 
 
-async def set_rules(user_request_in: RequestIn, user=Optional[str]):
+async def apply_rules(user_request_in: RequestIn, user=Optional[str]):
     if not user:
         return {}
 
@@ -468,38 +446,19 @@ async def set_rules(user_request_in: RequestIn, user=Optional[str]):
     if not organization_rules or type(organization_rules) is not dict:
         return {}
 
-    general_config = Config()
+    categories = ["inclusive", "style", "orthography"]
+    disabled_categories = []
 
-    user_rules = user_request_in.config.__dict__
-    forced_config = organization_rules["config"]["forced"]
-    default_config = organization_rules["config"]["suggestion"]
-    forced_filtered = filter_config(forced_config)
-    default_filtered = filter_config(default_config)
-    organization_config = {**default_filtered, **forced_filtered}
-
-    for config_value in vars(general_config):
-        # user set a value (change, if user not give a key)
-        if user_rules[config_value] is not None:
-
-            # organization set a value and user can't change it
-            if config_value in organization_config and config_value in forced_filtered:
-                # overwrite user value
-                setattr(
-                    user_request_in.config,
-                    config_value,
-                    forced_config[config_value],
-                )
-            # organization not set a value or set on default, user can set/change it
+    for config in organization_rules["config"]:
+        data = organization_rules["config"][config]
+        if data is not None and data["status"] == "force":
+            if config in categories:
+                if data["value"] == False:
+                    disabled_categories.append(config)
             else:
-                setattr(user_request_in.config, config_value, user_rules[config_value])
-        else:
-            # user does not set a value, but organization did
-            if config_value in organization_config:
-                setattr(
-                    user_request_in.config,
-                    config_value,
-                    organization_config[config_value],
-                )
+                user_request_in.config.__setattr__(config, data["value"])
+
+    user_request_in.config.__setattr__("disabled_categories", disabled_categories)
 
     return organization_rules
 
@@ -538,10 +497,8 @@ async def check(
     configure_sentry(request, user_request_in)
 
     user = get_user(request)
-    organization_rules = await set_rules(user_request_in, user)
-    if organization_rules:
-        user_request_in.config.store_context = organization_rules["store_context"]
-    else:
+    organization_rules = await apply_rules(user_request_in, user)
+    if not organization_rules:
         user_request_in.config.store_context = True
 
     text = user_request_in.text
@@ -587,11 +544,7 @@ def get_result_conf(user, organization_rules: dict):
         id=organization_rules["id"],
         name=organization_rules["name"],
         plan=organization_rules["plan"],
-        store_context=organization_rules["store_context"],
-        forced=OrganizationConfig.parse_obj(organization_rules["config"]["forced"]),
-        suggestion=OrganizationConfig.parse_obj(
-            organization_rules["config"]["suggestion"]
-        ),
+        config=OrganizationConfig.parse_obj(organization_rules["config"]),
     )
 
 

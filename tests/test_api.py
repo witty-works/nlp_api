@@ -5,7 +5,7 @@ from fastapi.testclient import TestClient
 from app.main import (
     app,
     redis,
-    set_rules,
+    apply_rules,
     is_number_list_empty,
 )
 from app.model import model
@@ -278,18 +278,26 @@ def test_categories():
 def set_redis():
     organization_object = {
         "users": ["test@gmail.com"],
-        "name": "Witty Works",
+        "id": "test",
+        "name": "Tests Works",
         "plan": "witty_teams",
-        "store_context": False,
         "config": {
-            "forced": {
-                "primary_language": "en-GB",
-                "preferred_languages": ["en"],
-                "preferred_variants": ["en-GB"],
-                "german_gender_ending": "In",
-                "gendered_roles_format": "binary_gender",
+            "store_context": {
+                "value": False,
+                "status": "force",
             },
-            "suggestion": {},
+            "preferred_variants": {
+                "value": ["en-GB"],
+                "status": "force",
+            },
+            "german_gender_ending": {
+                "value": "In",
+                "status": "force",
+            },
+            "gendered_roles_format": {
+                "value": "binary_gender",
+                "status": "force",
+            },
         },
         "false_positives": [
             "stark",
@@ -315,8 +323,8 @@ def set_redis():
     }
 
     # Set a value
-    redis.set("test", json.dumps(organization_object))
-    redis.set("test@gmail.com", "test")
+    redis.set(organization_object["id"], json.dumps(organization_object))
+    redis.set("test@gmail.com", organization_object["id"])
 
 
 @pytest.mark.parametrize(
@@ -358,7 +366,7 @@ def test_term_replacement(fp_case_dir, snapshot, set_redis):
 
 
 # test overwriting user configuration by organization forced rules
-def test_set_rules(event_loop, set_redis):
+def test_apply_rules(event_loop, set_redis):
     request_data = {
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
         "config": {
@@ -371,10 +379,9 @@ def test_set_rules(event_loop, set_redis):
         },
     }
     test_request = RequestIn(**request_data)
-    event_loop.run_until_complete(set_rules(test_request, "test@gmail.com"))
-    assert test_request.config.store_context == True
-    assert test_request.config.primary_language == "en-GB"
-    assert test_request.config.preferred_languages == ["en"]
+    event_loop.run_until_complete(apply_rules(test_request, "test@gmail.com"))
+    assert hasattr(test_request.config, 'store_context')
+    assert test_request.config.store_context == False
     assert test_request.config.preferred_variants == ["en-GB"]
     assert test_request.config.german_gender_ending == "In"
     assert test_request.config.gendered_roles_format == "binary_gender"
@@ -383,7 +390,7 @@ def test_set_rules(event_loop, set_redis):
 # test not overwriting user configuration by organization suggestion/default rules
 
 
-def test_set_rules_suggestion(event_loop, set_redis):
+def test_apply_rules_suggestion(event_loop, set_redis):
     request_data = {
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
         "config": {
@@ -395,7 +402,7 @@ def test_set_rules_suggestion(event_loop, set_redis):
         },
     }
     test_request = RequestIn(**request_data)
-    event_loop.run_until_complete(set_rules(test_request, "test_default@gmail.com"))
+    event_loop.run_until_complete(apply_rules(test_request, "non_existant@gmail.com"))
     assert test_request.config.store_context == True
     assert test_request.config.primary_language == "de-DE"
     assert test_request.config.preferred_languages == ["de"]
@@ -412,10 +419,8 @@ def test_set_organization_rules(event_loop, set_redis):
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
     }
     test_request = RequestIn(**request_data)
-    event_loop.run_until_complete(set_rules(test_request, "test@gmail.com"))
-    assert test_request.config.store_context == True
-    assert test_request.config.primary_language == "en-GB"
-    assert test_request.config.preferred_languages == ["en"]
+    event_loop.run_until_complete(apply_rules(test_request, "test@gmail.com"))
+    assert test_request.config.store_context == False
     assert test_request.config.preferred_variants == ["en-GB"]
     assert test_request.config.german_gender_ending == "In"
     assert test_request.config.gendered_roles_format == "binary_gender"
@@ -430,7 +435,7 @@ def test_set_default_rules(event_loop):
     }
     test_request = RequestIn(**request_data)
 
-    event_loop.run_until_complete(set_rules(test_request, "test_default@gmail.com"))
+    event_loop.run_until_complete(apply_rules(test_request, "non_existant@gmail.com"))
     assert test_request.config.store_context == True
     assert test_request.config.primary_language == None
     assert test_request.config.preferred_languages == [
@@ -450,13 +455,24 @@ def test_set_default_rules(event_loop):
 
 def test_store_and_get_rules():
     request_data = {
-        "organization": "TEST_organization",
+        "id": "TEST_organization",
         "name": "Witty Works",
         "plan": "witty_teams",
-        "store_context": True,
         "users": ["test@gmail.com"],
-        "forced": {"gendered_roles_format": "binary_gender"},
-        "suggestion": {"german_gender_ending": "In"},
+        "config": {
+            "store_context": {
+                "value": True,
+                "status": "force",
+            },
+            "gendered_roles_format": {
+                "value": "binary_gender",
+                "status": "force",
+            },
+            "german_gender_ending": {
+                "value": "In",
+                "status": "suggestion",
+            },
+        },
         "false_positives": ["hello", "world"],
         "term_replacements": [
             {
@@ -475,29 +491,28 @@ def test_store_and_get_rules():
     assert response.status_code == 200
     response_content = json.loads(response.content)
     assert (
-        response_content["config"]["forced"]["gendered_roles_format"]
-        == request_data["forced"]["gendered_roles_format"]
+        response_content["config"]["gendered_roles_format"]
+        == request_data["config"]["gendered_roles_format"]
     )
     assert (
-        response_content["config"]["suggestion"]["german_gender_ending"]
-        == request_data["suggestion"]["german_gender_ending"]
+        response_content["config"]["german_gender_ending"]
+        == request_data["config"]["german_gender_ending"]
     )
-    assert response_content["config"]["suggestion"]["preferred_variants"] == None
     assert response_content["false_positives"] == request_data["false_positives"]
     assert response_content["term_replacements"] == request_data["term_replacements"]
 
     request_data["users"] = ["test2@gmail.com", "test3@gmail.com"]
-    request_data["forced"]["gendered_roles_format"] = "both"
+    request_data["config"]["gendered_roles_format"]["value"] = "both"
     response = client.post("/store_rules", json=request_data)
     assert response.status_code == 200
     response_content = json.loads(response.content)
     assert (
-        response_content["config"]["forced"]["gendered_roles_format"]
-        == request_data["forced"]["gendered_roles_format"]
+        response_content["config"]["gendered_roles_format"]
+        == request_data["config"]["gendered_roles_format"]
     )
     assert (
-        response_content["config"]["suggestion"]["german_gender_ending"]
-        == request_data["suggestion"]["german_gender_ending"]
+        response_content["config"]["german_gender_ending"]
+        == request_data["config"]["german_gender_ending"]
     )
 
     assert response_content["false_positives"] == request_data["false_positives"]
@@ -512,12 +527,12 @@ def test_store_and_get_rules():
     assert response.status_code == 200
     response_content = json.loads(response.content)
     assert (
-        response_content["config"]["forced"]["gendered_roles_format"]
-        == request_data["forced"]["gendered_roles_format"]
+        response_content["config"]["gendered_roles_format"]
+        == request_data["config"]["gendered_roles_format"]
     )
     assert (
-        response_content["config"]["suggestion"]["german_gender_ending"]
-        == request_data["suggestion"]["german_gender_ending"]
+        response_content["config"]["german_gender_ending"]
+        == request_data["config"]["german_gender_ending"]
     )
     assert response_content["false_positives"] == request_data["false_positives"]
     assert response_content["term_replacements"] == request_data["term_replacements"]
