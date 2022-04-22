@@ -30,6 +30,7 @@
                 }
             ],
             "category": "gendered",
+            "context": "Hallo Kunde. Wir geben unseren Kunden alles.",
             "end": 11,
             "explanation": {
                 "icon": "😟",
@@ -70,6 +71,7 @@
                 }
             ],
             "category": "gendered",
+            "context": "Hallo Kunde. Wir geben unseren Kunden alles.",
             "end": 37,
             "explanation": {
                 "icon": "😟",

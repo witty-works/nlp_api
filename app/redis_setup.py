@@ -15,9 +15,11 @@ def set_up_redis(settings):
 
     redis = FakeStrictRedis()
 
-    if settings.redis_default_rules: # pragma: no cover
+    if settings.redis_default_rules:  # pragma: no cover
         organization_object = json.loads(settings.redis_default_rules)
-        redis.set("witty.works", settings.redis_default_rules)
-        redis.set(organization_object["users"][0], "witty.works")
+        key = organization_object["id"]
+        redis.set(key, settings.redis_default_rules)
+        for user in organization_object["users"]:
+            redis.set(user, key)
 
     return redis

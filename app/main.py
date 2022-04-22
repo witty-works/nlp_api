@@ -34,18 +34,22 @@ from spacy.matcher import PhraseMatcher, Matcher
 from app.models import (
     Config,
     GenderedRolesFormatType,
-    GermanGenderEnding,
+    GermanGenderEndingType,
     LangType,
-    SingularThey,
+    SingularTheyType,
     Language,
     RequestIn,
     Result,
     ResultOut,
+    ResultsOutOld,
     ResultsOut,
     ConfRequest,
+    ConfDeleteRequest,
+    OrganizationConfig,
+    ResultConf,
 )
 
-from fastapi_microsoft_identity import validate_scope, AuthError
+from fastapi_microsoft_identity import validate_scope, get_token_claims, AuthError
 
 
 from app.lang_detection import LangDetection
@@ -62,7 +66,7 @@ from collections import defaultdict
 
 from app.sentry import set_up_sentry_sdk
 
-version = "1.23.2"
+version = "1.25.0"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -228,7 +232,7 @@ def save_openapi_json(
 )
 def german_gender_ending(
     alternative: str,
-    german_gender_ending: GermanGenderEnding = None,
+    german_gender_ending: GermanGenderEndingType = None,
     username: str = Depends(get_current_username),
 ):
     alternative_variations = set()
@@ -248,7 +252,7 @@ def german_gender_ending(
 
 
 @app.post(
-    "/auth",
+    "/auth_debug",
     dependencies=[Depends(HTTPBearer())],
 )
 async def auth(request: Request, user_request_in: RequestIn):  # pragma: no cover
@@ -256,14 +260,29 @@ async def auth(request: Request, user_request_in: RequestIn):  # pragma: no cove
     if not user:
         return user
 
-    claim = validate_scope(settings.aadb2c_expected_scope, request)
-    rules = await set_rules(user_request_in, user)
+    rules = await apply_rules(user_request_in, user)
 
     return {
-        "claim": claim,
+        "claim": get_token_claims(request),
         "rules": rules,
         "user_request_in": user_request_in,
     }
+
+
+@app.post(
+    "/auth",
+    response_model=Union[ResultConf, dict, None],
+    response_model_exclude_none=True,
+    dependencies=[Depends(HTTPBearer(auto_error=False))],
+)
+async def auth(request: Request, response: Response):
+    user = get_user(request)
+    if not user:
+        return None
+
+    organization_rules = await apply_rules(RequestIn(text=""), user)
+
+    return get_result_conf(user, organization_rules)
 
 
 @app.get("/form", include_in_schema=False)
@@ -278,14 +297,25 @@ def get_categories(lang: LangType = "de"):
 
 @app.post(
     "/check",
-    response_model=Union[ResultsOut, Result],
+    response_model=Union[ResultsOutOld, Result],
 )
 async def check_v1_0(
     request: Request,
     response: Response,
     user_request_in: RequestIn,
 ):
-    return await check(1.0, request, response, user_request_in)
+    results, language, limit_reached, organization_config = await check(
+        1.0, request, response, user_request_in
+    )
+
+    if isinstance(results, Result):
+        return results
+
+    return ResultsOutOld(
+        results=results,
+        language=language,
+        limit_reached=limit_reached,
+    )
 
 
 @app.post(
@@ -299,39 +329,33 @@ async def check_v1_1(
     response: Response,
     user_request_in: RequestIn,
 ):
-    return await check(1.1, request, response, user_request_in)
+    results, language, limit_reached, organization_config = await check(
+        1.1, request, response, user_request_in
+    )
+
+    if isinstance(results, Result):
+        return results
+
+    return ResultsOut(
+        results=results,
+        language=language,
+        limit_reached=limit_reached,
+        organization_config=organization_config,
+    )
 
 
 # data exchange routes
 @app.post("/store_rules")
-async def store_redis(
+async def store_rules(
     organization_rules: ConfRequest, username: str = Depends(get_current_username)
 ):
     try:
-        key = str(organization_rules.organization)
-        rules = redis.get(key)
-
-        term_replacements = []
-        for term_replacement in organization_rules.term_replacements:
-            if term_replacement.explanation is not None:
-                term_replacement.explanation = dict(term_replacement.explanation)
-
-            term_replacements.append(dict(term_replacement))
-
-        organization_object = {
-            "users": organization_rules.users,
-            "config": {
-                "forced": dict(organization_rules.forced),
-                "suggestion": dict(organization_rules.suggestion),
-            },
-            "false_positives": organization_rules.false_positives,
-            "term_replacements": term_replacements,
-        }
+        rules = redis.get(organization_rules.id)
 
         # Set a value
-        redis.set(key, json.dumps(organization_object))
+        redis.set(organization_rules.id, organization_rules.json())
         for user in organization_rules.users:
-            redis.set(str(user), key)
+            redis.set(str(user), organization_rules.id)
 
         if rules:
             rules = json.loads(rules)
@@ -341,7 +365,21 @@ async def store_redis(
 
     except Exception as e:
         return e
-    return organization_object
+
+    return organization_rules
+
+
+@app.delete("/delete_rules")
+async def delete_rules(
+    organization_rules: ConfDeleteRequest, username: str = Depends(get_current_username)
+):
+    try:
+        redis.delete(organization_rules.id)
+
+        for user in organization_rules.users:
+            redis.delete(str(user))
+    except Exception as e:
+        return e
 
 
 @app.get("/get_user_rules")
@@ -400,7 +438,7 @@ def filter_config(config):
     return {k: v for (k, v) in config.items() if v != "" and v is not None and v != []}
 
 
-async def set_rules(user_request_in: RequestIn, user=Optional[str]):
+async def apply_rules(user_request_in: RequestIn, user=Optional[str]):
     if not user:
         return {}
 
@@ -408,38 +446,19 @@ async def set_rules(user_request_in: RequestIn, user=Optional[str]):
     if not organization_rules or type(organization_rules) is not dict:
         return {}
 
-    general_config = Config()
+    categories = ["inclusive", "style", "orthography"]
+    disabled_categories = []
 
-    user_rules = user_request_in.config.__dict__
-    forced_config = organization_rules["config"]["forced"]
-    default_config = organization_rules["config"]["suggestion"]
-    forced_filtered = filter_config(forced_config)
-    default_filtered = filter_config(default_config)
-    organization_config = {**default_filtered, **forced_filtered}
-
-    for config_value in vars(general_config):
-        # user set a value (change, if user not give a key)
-        if user_rules[config_value] is not None:
-
-            # organization set a value and user can't change it
-            if config_value in organization_config and config_value in forced_filtered:
-                # overwrite user value
-                setattr(
-                    user_request_in.config,
-                    config_value,
-                    forced_config[config_value],
-                )
-            # organization not set a value or set on default, user can set/change it
+    for config in organization_rules["config"]:
+        data = organization_rules["config"][config]
+        if data is not None and data["status"] == "force":
+            if config in categories:
+                if data["value"] == False:
+                    disabled_categories.append(config)
             else:
-                setattr(user_request_in.config, config_value, user_rules[config_value])
-        else:
-            # user does not set a value, but organization did
-            if config_value in organization_config:
-                setattr(
-                    user_request_in.config,
-                    config_value,
-                    organization_config[config_value],
-                )
+                user_request_in.config.__setattr__(config, data["value"])
+
+    user_request_in.config.__setattr__("disabled_categories", disabled_categories)
 
     return organization_rules
 
@@ -453,7 +472,8 @@ def get_user(request: Request):
 
     if settings.read_rules_from_redis:
         try:
-            claims = validate_scope(settings.aadb2c_expected_scope, request)
+            validate_scope(settings.aadb2c_expected_scope, request)
+            claims = get_token_claims(request)
             try:
                 return claims["emails"][0]
             except KeyError:
@@ -477,7 +497,9 @@ async def check(
     configure_sentry(request, user_request_in)
 
     user = get_user(request)
-    organization_rules = await set_rules(user_request_in, user)
+    organization_rules = await apply_rules(user_request_in, user)
+    if not organization_rules:
+        user_request_in.config.store_context = True
 
     text = user_request_in.text
     limit_reached = len(text) > settings.text_max_length
@@ -494,15 +516,36 @@ async def check(
 
     if locale == None:
         response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
-        return Result.factory("Language could not be determined")
+        results = Result.factory("Language could not be determined")
+        language = None
+        organization_config = None
+    else:
+        lang = Language(locale)
 
-    lang = Language(locale)
+        results = await language_rules(
+            version, user_request_in.config, organization_rules, lang, text
+        )
 
-    list_results = await language_rules(
-        version, user_request_in.config, organization_rules, lang, text
+        language = lang.lang
+
+        organization_config = get_result_conf(user, organization_rules)
+
+    return results, language, limit_reached, organization_config
+
+
+def get_result_conf(user, organization_rules: dict):
+    if "config" not in organization_rules:
+        if user:
+            return {}
+
+        return None
+
+    return ResultConf(
+        id=organization_rules["id"],
+        name=organization_rules["name"],
+        plan=organization_rules["plan"],
+        config=OrganizationConfig.parse_obj(organization_rules["config"]),
     )
-
-    return ResultsOut.factory(list_results, lang.lang, limit_reached)
 
 
 def get_alternatives(match):
@@ -644,14 +687,15 @@ async def language_rules(
             "Category": [],
             "Primary_subcategory": [],
             "Alt_split": [],
+            "Explanation": [],
         }
 
         for term_replacement in organization_rules["term_replacements"]:
             term_replacements["Lemma"].append(term_replacement["term"])
             term_replacements["Category"].append("corporate_rules")
             term_replacements["Primary_subcategory"].append("corporate_rules")
-
             term_replacements["Alt_split"].append(term_replacement["alternatives"])
+            term_replacements["Explanation"].append(term_replacement["explanation"])
 
         df_term_replacements = pd.DataFrame(data=term_replacements)
         alternatives = list(
@@ -660,6 +704,7 @@ async def language_rules(
                 df_term_replacements["Category"],
                 df_term_replacements["Primary_subcategory"],
                 df_term_replacements["Alt_split"],
+                df_term_replacements["Explanation"],
             )
         )
 
@@ -854,7 +899,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
         words_alternatives_en["homonym"] = homonyms_word_GB
         words_alternatives_en["abbr"] = abbreviation_GB
 
-        if config.singular_they == SingularThey.ALL_PRONOUNS:
+        if config.singular_they == SingularTheyType.ALL_PRONOUNS:
             words_alternatives_en["ge"] += bias_singular_they_alternatives_GB
 
         inclusive_words_alternatives_en = inclusive_words_alternatives_GB
@@ -873,7 +918,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
         words_alternatives_en["homonym"] = homonyms_word_US
         words_alternatives_en["abbr"] = abbreviation_US
 
-        if config.singular_they == SingularThey.ALL_PRONOUNS:
+        if config.singular_they == SingularTheyType.ALL_PRONOUNS:
             words_alternatives_en["ge"] += bias_singular_they_alternatives_US
 
         inclusive_words_alternatives_en = inclusive_words_alternatives_US
@@ -1830,33 +1875,46 @@ def homonyms_english(
     return list_tokens
 
 
-# function to find exact match for abbreviations
+# function to find exact match for abbreviations and term replacements
 def literal_match(
     version: float,
     config: Config,
     lang,
     full_text,
     tokens,
-    df_abbreviation,
-    abbreviation_list,
+    df_term,
+    term_list,
 ):
     list_tokens = []
     # Phrase matcher part to handle False positives with two words and special simbols
     matcher = PhraseMatcher(model[lang.lang].vocab)
 
     # Only run model.make_doc to speed things up
-    patterns = [
-        model[lang.lang].make_doc(text) for text in list(df_abbreviation["Lemma"])
-    ]
+    patterns = [model[lang.lang].make_doc(text) for text in list(df_term["Lemma"])]
     matcher.add("TerminologyList", patterns)
 
     matches = matcher(tokens)
     for match_id, start, end in matches:
-        for abbreviation, category, subcategory, alternative in abbreviation_list:
+        for (
+            term,
+            category,
+            subcategory,
+            alternative,
+            *explanation,
+        ) in term_list:
             if not is_sub_category_enabled(config, subcategory):
                 continue
             span = tokens[start:end]
-            if span.text == abbreviation:
+            if span.text == term:
+                url = None
+                icon = None
+                explanation_text = None
+
+                if len(explanation):
+                    url = explanation[0]["url"]
+                    icon = explanation[0]["icon"]
+                    explanation_text = explanation[0]["text"]
+
                 list_tokens.append(
                     ResultOut.factory(
                         version,
@@ -1869,6 +1927,10 @@ def literal_match(
                         span.start_char,
                         span.end_char,
                         alternative,
+                        None,
+                        explanation_text,
+                        url,
+                        icon,
                     )
                 )
 

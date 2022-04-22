@@ -15,6 +15,7 @@
                 }
             ],
             "category": "gendered",
+            "context": "Ich bin hier der Manager und dein Boss!",
             "end": 24,
             "explanation": {
                 "icon": "💡",
@@ -37,6 +38,7 @@
                 }
             ],
             "category": "gendered",
+            "context": "Ich bin hier der Manager und dein Boss!",
             "end": 16,
             "explanation": {
                 "icon": "💡",
@@ -86,6 +88,7 @@
                 }
             ],
             "category": "gendered",
+            "context": "Ich bin hier der Manager und dein Boss!",
             "end": 38,
             "explanation": {
                 "icon": "😟",

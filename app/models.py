@@ -55,7 +55,15 @@ class LangWithAutoType(str, Enum):
     enGB = "en-GB"
 
 
-class GermanGenderEnding(str, Enum):
+class LangVariantType(str, Enum):
+    deDE = "de-DE"
+    deCH = "de-CH"
+    deAT = "de-AT"
+    enUS = "en-US"
+    enGB = "en-GB"
+
+
+class GermanGenderEndingType(str, Enum):
     SLASH = "/in"
     SLASH_DASH = "/-in"
     UNDERSCORE = "_in"
@@ -64,7 +72,7 @@ class GermanGenderEnding(str, Enum):
     CAPITAL_LETTER = "In"
 
 
-class SingularThey(str, Enum):
+class SingularTheyType(str, Enum):
     HE_OR_SHE = "he_or_she"
     ALL_PRONOUNS = "all_pronouns"
 
@@ -91,18 +99,18 @@ class Config(BaseModel):
         LangWithAutoType.enUS,
         LangWithAutoType.enGB,
     ]
-    german_gender_ending: GermanGenderEnding = GermanGenderEnding.COLON
+    german_gender_ending: GermanGenderEndingType = GermanGenderEndingType.COLON
     _gendereddenom_ending = {
-        GermanGenderEnding.SLASH: "/in",
-        GermanGenderEnding.SLASH_DASH: "/-in",
-        GermanGenderEnding.UNDERSCORE: "_in",
-        GermanGenderEnding.STAR: "\\*in",
-        GermanGenderEnding.COLON: ":in",
-        GermanGenderEnding.CAPITAL_LETTER: r"In\b",
+        GermanGenderEndingType.SLASH: "/in",
+        GermanGenderEndingType.SLASH_DASH: "/-in",
+        GermanGenderEndingType.UNDERSCORE: "_in",
+        GermanGenderEndingType.STAR: "\\*in",
+        GermanGenderEndingType.COLON: ":in",
+        GermanGenderEndingType.CAPITAL_LETTER: r"In\b",
     }
     disabled_categories: List = []
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
-    singular_they: str = SingularThey.HE_OR_SHE
+    singular_they: str = SingularTheyType.HE_OR_SHE
     show_inspiration_alternatives: Optional[bool] = False
     maximum_importance: int = 2
 
@@ -157,67 +165,72 @@ class Config(BaseModel):
         return v
 
 
+class StatusType(str, Enum):
+    FORCE = "force"
+    SUGGESTION = "suggestion"
+
+
+class BooleanConfigType(BaseModel):
+    value: bool
+    status: StatusType
+
+
+class IntegerConfigType(BaseModel):
+    value: int
+    status: StatusType
+
+
+class LangVariantConfigType(BaseModel):
+    value: List[LangVariantType]
+    status: StatusType
+
+
+class GermanGenderEndingConfigType(BaseModel):
+    value: GermanGenderEndingType
+    status: StatusType
+
+
+class GenderedRolesFormatConfigType(BaseModel):
+    value: GenderedRolesFormatType
+    status: StatusType
+
+
+class SingularTheyConfigType(BaseModel):
+    value: SingularTheyType
+    status: StatusType
+
+
 class OrganizationConfig(BaseModel):
-    store_context: Optional[bool]
-    primary_language: Optional[LangWithAutoType]
-    preferred_languages: List[str] = []
-    preferred_variants: List[str] = []
-    german_gender_ending: Optional[GermanGenderEnding]
-    disabled_categories: List[str] = []
-    gendered_roles_format: Optional[GenderedRolesFormatType]
-    singular_they: Optional[SingularThey]
-    show_inspiration_alternatives: Optional[bool]
-    maximum_importance: Optional[int]
+    store_context: Optional[BooleanConfigType]
+    preferred_variants: Optional[LangVariantConfigType]
+    german_gender_ending: Optional[GermanGenderEndingConfigType]
+    gendered_roles_format: Optional[GenderedRolesFormatConfigType]
+    inclusive: Optional[BooleanConfigType]
+    style: Optional[BooleanConfigType]
+    orthography: Optional[BooleanConfigType]
+    singular_they: Optional[SingularTheyConfigType]
+    show_inspiration_alternatives: Optional[BooleanConfigType]
+    maximum_importance: Optional[IntegerConfigType]
 
     @validator("german_gender_ending")
     def valid_german_gender_ending(cls, v: str):
-        if v and v not in Config._gendereddenom_ending:
+        if "value" in v and v["value"] not in Config._gendereddenom_ending:
             raise ValueError("Not supported german_gender_ending")
         return v
 
-    @validator("primary_language", pre=True)
-    def valid_primary_language(cls, v):
-        if v and v not in Config._supported_locales:
-            raise ValueError("Not supported primary_language: " + v)
-        return v
-
-    @validator("preferred_languages", pre=True)
-    def valid_preferred_languages(cls, v):
-        if isinstance(v, str) and v != "":
-            v = [s.strip() for s in v.split(",")]
-
-        if isinstance(v, list) and v != []:
-            for lang in v:
-                if lang not in Config._supported_langs:
-                    raise ValueError(
-                        "Contains not supported preferred_languages: " + ",".join(v)
-                    )
-
-            return v
-
-        return []
-
     @validator("preferred_variants", pre=True)
     def valid_preferred_variants(cls, v):
-        if isinstance(v, str) and v != "":
-            v = [s.strip() for s in v.split(",")]
+        if "value" in v and isinstance(v["value"], str) and v["value"] != "":
+            v["value"] = [s.strip() for s in v.split(",")]
 
-        if isinstance(v, list) and v != []:
-            for lang in v:
+        if isinstance(v["value"], list) and v["value"] != []:
+            for lang in v["value"]:
                 if lang not in Config._supported_locales:
                     raise ValueError(
                         "Contains not supported preferred_variants: " + ",".join(v)
                     )
 
             return v
-
-        return []
-
-    @validator("disabled_categories", pre=True)
-    def split_string_values(cls, v):
-        if isinstance(v, str):
-            return v.split(",")
-        return v
 
 
 class Explanation(BaseModel):
@@ -234,12 +247,18 @@ class TermReplacement(BaseModel):
 
 
 class ConfRequest(BaseModel):
-    organization: str
+    id: str
+    name: str
+    plan: str
     users: List[str]
-    forced: OrganizationConfig
-    suggestion: OrganizationConfig
+    config: OrganizationConfig
     false_positives: List[str] = []
     term_replacements: List[TermReplacement] = []
+
+
+class ConfDeleteRequest(BaseModel):
+    id: str
+    users: List[str]
 
 
 class RequestIn(BaseModel):
@@ -502,7 +521,7 @@ class ResultOut(BaseModel):
     @staticmethod
     def getAlternativeVariations(
         gendered_roles_format: GenderedRolesFormatType,
-        german_gender_ending: GermanGenderEnding,
+        german_gender_ending: GermanGenderEndingType,
         alternative: str,
     ):
         if alternative and "~" in alternative:
@@ -515,7 +534,7 @@ class ResultOut(BaseModel):
     @staticmethod
     def getGenderedRoleFormatVariations(
         gendered_roles_format: GenderedRolesFormatType,
-        german_gender_ending: GermanGenderEnding,
+        german_gender_ending: GermanGenderEndingType,
         alternative: str,
     ):
         alternative_variations = []
@@ -586,7 +605,7 @@ class ResultOut(BaseModel):
     @staticmethod
     def getGenderedRoles(
         gendered_roles_format: GenderedRolesFormatType,
-        german_gender_ending: GermanGenderEnding,
+        german_gender_ending: GermanGenderEndingType,
         alternative,
     ):
         alternative_variations = []
@@ -638,17 +657,21 @@ class Result(BaseModel):
         object.__setattr__(self, "detail", detail)
 
 
-class ResultsOut(BaseModel):
-    results: Union[List[ResultOut], List[ResultOutOld]]
+class ResultConf(BaseModel):
+    config: OrganizationConfig
+    id: str
+    name: str
+    plan: str
+
+
+class ResultsOutOld(BaseModel):
+    results: List[ResultOutOld]
     language: str
     limit_reached: bool
 
-    def factory(results, language, limit_reached=False):
-        return ResultsOut(results, language, limit_reached)
 
-    factory = staticmethod(factory)
-
-    def __init__(self, results, language, limit_reached):
-        object.__setattr__(self, "results", results)
-        object.__setattr__(self, "language", language)
-        object.__setattr__(self, "limit_reached", limit_reached)
+class ResultsOut(BaseModel):
+    results: List[ResultOut]
+    language: str
+    limit_reached: bool
+    organization_config: Union[ResultConf, dict, None]

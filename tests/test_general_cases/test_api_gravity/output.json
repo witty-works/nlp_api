@@ -60,6 +60,7 @@
                 }
             ],
             "category": "orthography",
+            "context": "Guten Tag, wir suchn Kunden",
             "end": 20,
             "explanation": {
                 "icon": "❌",
@@ -99,6 +100,7 @@
                 }
             ],
             "category": "gendered",
+            "context": "Guten Tag, wir suchn Kunden",
             "end": 27,
             "explanation": {
                 "icon": "😟",

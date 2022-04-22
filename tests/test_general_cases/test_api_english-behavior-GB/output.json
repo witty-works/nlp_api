@@ -21,6 +21,7 @@
                 }
             ],
             "category": "unconscious_bias",
+            "context": "Are you an addict",
             "end": 17,
             "explanation": {
                 "icon": "😒",

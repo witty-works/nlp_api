@@ -9,6 +9,7 @@
                 }
             ],
             "category": "orthography",
+            "context": "liebe mensch",
             "end": 5,
             "explanation": {
                 "icon": "❌",
@@ -84,6 +85,7 @@
                 }
             ],
             "category": "orthography",
+            "context": "liebe mensch",
             "end": 12,
             "explanation": {
                 "icon": "❌",
@@ -98,6 +100,7 @@
         {
             "alternatives": [],
             "category": "inclusive",
+            "context": "liebe mensch",
             "end": 5,
             "explanation": {
                 "icon": "✅",
