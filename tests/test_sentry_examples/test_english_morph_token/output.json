@@ -18,7 +18,7 @@
                 }
             ],
             "category": "orthography",
-            "context": "Hi Siwar,\n\nit's the first time that we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n",
+            "context": "Hi Siwar,\n\nit's the first time that we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA",
             "end": 8,
             "explanation": {
                 "icon": "❌",
@@ -37,7 +37,7 @@
                 }
             ],
             "category": "orthography",
-            "context": "Hi Siwar,\n\nit's the first time that we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n\nFossil Group Europe GmbH\nRiehenring 182\n\n4058 B",
+            "context": "Hi Siwar,\n\nit's the first time that we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n\nFossil Group Europe GmbH\nRiehenring <NUMBER>\n\n<NUMBER> B",
             "end": 56,
             "explanation": {
                 "icon": "❌",
@@ -59,7 +59,7 @@
                 }
             ],
             "category": "orthography",
-            "context": "t we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n\nFossil Group Europe GmbH\nRiehenring 182\n\n4058 Basel\nSWITZERLAND\nwww.fossilgroup.com\nt: +41 61 560 99 69\nm: +41 78 625 82 95\ne: tjung@fo",
+            "context": "t we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n\nFossil Group Europe GmbH\nRiehenring <NUMBER>\n\n<NUMBER> Basel\nSWITZERLAND\n<URL>\nt: +<NUMBER> <NUMBER> <NUMBER> <NUMBER> <NUMBER>\nm: +<NUMBER> <NUMBER> <NUMBER> <NUMBER> <NUMBER>\ne: tjung@fo",
             "end": 144,
             "explanation": {
                 "icon": "❌",
@@ -84,7 +84,7 @@
                 }
             ],
             "category": "gendered",
-            "context": "Hi Siwar,\n\nit's the first time that we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n\nFossil Group Europe GmbH\nRiehenring 182\n\n4058 Basel\nSW",
+            "context": "Hi Siwar,\n\nit's the first time that we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n\nFossil Group Europe GmbH\nRiehenring <NUMBER>\n\n<NUMBER> Basel\nSW",
             "end": 63,
             "explanation": {
                 "icon": "💡",
@@ -113,7 +113,7 @@
                 }
             ],
             "category": "unconscious_bias",
-            "context": "\n\nit's the first time that we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n\nFossil Group Europe GmbH\nRiehenring 182\n\n4058 Basel\nSWITZERLAND\nwww.fossilgroup.com\nt: +41 61 560 99 69\nm:",
+            "context": "it's the first time that we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n\nFossil Group Europe GmbH\nRiehenring <NUMBER>\n\n<NUMBER> Basel\nSWITZERLAND\n<URL>\nt: +<NUMBER> <NUMBER> <NUMBER> <NUMBER> <NUMBER>\nm:",
             "end": 115,
             "explanation": {
                 "icon": "😒",
