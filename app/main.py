@@ -894,13 +894,13 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
     if lang.locale == "en-GB":
         words_alternatives_en["od"] = open_disc_words_alternatives_GB
         words_alternatives_en["ge"] = gender_words_alternatives_GB
+        words_alternatives_en["ge-singular-they"] = (
+            gender_words_alternatives_GB + bias_singular_they_alternatives_GB
+        )
         words_alternatives_en["style"] = style_words_alternatives_GB
         words_alternatives_en["bias"] = bias_words_alternatives_GB
         words_alternatives_en["homonym"] = homonyms_word_GB
         words_alternatives_en["abbr"] = abbreviation_GB
-
-        if config.singular_they == SingularTheyType.ALL_PRONOUNS:
-            words_alternatives_en["ge"] += bias_singular_they_alternatives_GB
 
         inclusive_words_alternatives_en = inclusive_words_alternatives_GB
         gendered_words_alternatives_en["gendered"] = gender_noun_words_alternatives_GB
@@ -913,13 +913,13 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
     else:
         words_alternatives_en["od"] = open_disc_words_alternatives_US
         words_alternatives_en["ge"] = gender_words_alternatives_US
+        words_alternatives_en["ge-singular-they"] = (
+            gender_words_alternatives_US + bias_singular_they_alternatives_US
+        )
         words_alternatives_en["style"] = style_words_alternatives_US
         words_alternatives_en["bias"] = bias_words_alternatives_US
         words_alternatives_en["homonym"] = homonyms_word_US
         words_alternatives_en["abbr"] = abbreviation_US
-
-        if config.singular_they == SingularTheyType.ALL_PRONOUNS:
-            words_alternatives_en["ge"] += bias_singular_they_alternatives_US
 
         inclusive_words_alternatives_en = inclusive_words_alternatives_US
         gendered_words_alternatives_en["gendered"] = gender_noun_words_alternatives_US
@@ -957,17 +957,31 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
         )
 
     if is_sub_category_enabled(config, "gendered"):
-        list_full += rules_based_words_phrase_matcher_en(
-            version,
-            config,
-            lang,
-            text,
-            tokens,
-            words_alternatives_en["ge"],
-            sentences_alternatives_en["ge"],
-            rules[lang.locale]["df_gendered_sentence"],
-            "gendered",
-        ) + gendered_en(
+        if config.singular_they == SingularTheyType.ALL_PRONOUNS:
+            list_full += rules_based_words_phrase_matcher_en(
+                version,
+                config,
+                lang,
+                text,
+                tokens,
+                words_alternatives_en["ge-singular-they"],
+                sentences_alternatives_en["ge"],
+                rules[lang.locale]["df_gendered_sentence"],
+                "gendered",
+            )
+        else:
+            list_full += rules_based_words_phrase_matcher_en(
+                version,
+                config,
+                lang,
+                text,
+                tokens,
+                words_alternatives_en["ge"],
+                sentences_alternatives_en["ge"],
+                rules[lang.locale]["df_gendered_sentence"],
+                "gendered",
+            )
+        list_full += gendered_en(
             version,
             config,
             lang,
