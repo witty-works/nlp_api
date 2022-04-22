@@ -5,33 +5,24 @@
         {
             "alternatives": [
                 {
-                    "text": "prevailing"
+                    "text": "growth-minded"
                 },
                 {
-                    "text": "guiding"
+                    "text": "keen and enthusiastic"
                 },
                 {
-                    "text": "main"
+                    "text": "interested in taking on new responsibilities"
                 },
                 {
-                    "text": "primary"
+                    "text": "committed to working toward goals"
                 },
                 {
-                    "text": "respecting governance"
-                },
-                {
-                    "text": "communicating governance"
-                },
-                {
-                    "text": "comfortable with taking on responsibility"
-                },
-                {
-                    "text": "at ease with taking the initiative"
+                    "text": "keen on realizing a vision"
                 }
             ],
             "category": "unconscious_bias",
-            "context": "Dominant",
-            "end": 8,
+            "context": "Name is Jones, an ambitious person. Phone number is <NUMBER>-<NUMBER>-<NUMBER> <URL> <EMAIL>",
+            "end": 27,
             "explanation": {
                 "icon": "😒",
                 "text": "Doesn’t feel cooperative nor supportive",
@@ -39,9 +30,9 @@
             },
             "gravity": 2,
             "label": "Biased language: Agentic",
-            "start": 0,
+            "start": 18,
             "subcategory": "agentic",
-            "text": "Dominant"
+            "text": "ambitious"
         }
     ]
 }

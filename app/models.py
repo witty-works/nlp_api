@@ -8,6 +8,7 @@ import re
 
 from app.categories import categories
 from app.settings import get_settings
+from app.privacy_filter import get_privacy_filter
 
 
 class Language(object):
@@ -341,6 +342,9 @@ class ResultOut(BaseModel):
             context_start = max(int(start) - 100, 0)
             context_end = min(int(end) + 100, len(full_text))
             context = full_text[context_start:context_end]
+
+            privacy_filter = get_privacy_filter()
+            context = privacy_filter.clean_var(context)
         elif version == 1.0:
             context = ""
 

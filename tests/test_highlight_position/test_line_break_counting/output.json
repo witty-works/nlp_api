@@ -9,7 +9,7 @@
                 }
             ],
             "category": "orthography",
-            "context": "\n\nhelo ninja",
+            "context": "helo ninja",
             "end": 6,
             "explanation": {
                 "icon": "❌",
@@ -43,7 +43,7 @@
                 }
             ],
             "category": "style",
-            "context": "\n\nhelo ninja",
+            "context": "helo ninja",
             "end": 12,
             "explanation": {
                 "icon": "😮‍💨",
