@@ -165,6 +165,17 @@ class Config(BaseModel):
             return v.split(",")
         return v
 
+    # This is a quick fix, in principle we should adjust the model singular_they: SingularTheyType = SingularTheyType.HE_OR_SHE
+    # and then also update the browser extension https://github.com/witty-works/browser-extension/pull/423
+    @validator("singular_they", pre=True)
+    def valid_singular_they(cls, v):
+        if isinstance(v, bool):
+            if v:
+                return SingularTheyType.ALL_PRONOUNS
+            
+            return SingularTheyType.HE_OR_SHE
+        return v
+
 
 class StatusType(str, Enum):
     FORCE = "force"
