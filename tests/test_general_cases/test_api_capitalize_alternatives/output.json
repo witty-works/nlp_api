@@ -30,7 +30,7 @@
                 }
             ],
             "category": "gendered",
-            "context": "Wir suchen alles für unsere Kunden: Ehrgeiz ist unser Schlüssel.\n\n\nDurchhaltevermögen benötigen wir.",
+            "context": "Wir suchen alles für unsere Kunden: Ehrgeiz ist unser Schlüssel.\n\n\nDurchhaltevermögen benötigen wir.\n\n\n\n\n\nEhrgeiz ist am wichtigsten",
             "end": 34,
             "explanation": {
                 "icon": "😟",
@@ -77,7 +77,7 @@
                 }
             ],
             "category": "unconscious_bias",
-            "context": "Wir suchen alles für unsere Kunden: Ehrgeiz ist unser Schlüssel.\n\n\nDurchhaltevermögen benötigen wir.",
+            "context": "Wir suchen alles für unsere Kunden: Ehrgeiz ist unser Schlüssel.\n\n\nDurchhaltevermögen benötigen wir.\n\n\n\n\n\nEhrgeiz ist am wichtigsten",
             "end": 43,
             "explanation": {
                 "icon": "😒",
@@ -100,7 +100,7 @@
                 }
             ],
             "category": "unconscious_bias",
-            "context": "Wir suchen alles für unsere Kunden: Ehrgeiz ist unser Schlüssel.\n\n\nDurchhaltevermögen benötigen wir.",
+            "context": "Wir suchen alles für unsere Kunden: Ehrgeiz ist unser Schlüssel.\n\n\nDurchhaltevermögen benötigen wir.\n\n\n\n\n\nEhrgeiz ist am wichtigsten",
             "end": 85,
             "explanation": {
                 "icon": "😒",
@@ -112,6 +112,53 @@
             "start": 67,
             "subcategory": "agentic",
             "text": "Durchhaltevermögen"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Fleiß"
+                },
+                {
+                    "text": "Eifer"
+                },
+                {
+                    "text": "Strebsamkeit"
+                },
+                {
+                    "text": "Engagement"
+                },
+                {
+                    "text": "Entwicklungsmotivation"
+                },
+                {
+                    "text": "Unternehmerische Haltung"
+                },
+                {
+                    "text": "Freude an mehr Verantwortung"
+                },
+                {
+                    "text": "Freude am Setzen und Verwirklichen von Zielen"
+                },
+                {
+                    "text": "Interesse an persönlichem Wachstum"
+                },
+                {
+                    "text": "Freude am Weiterkommen"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "chen alles für unsere Kunden: Ehrgeiz ist unser Schlüssel.\n\n\nDurchhaltevermögen benötigen wir.\n\n\n\n\n\nEhrgeiz ist am wichtigsten",
+            "end": 113,
+            "explanation": {
+                "icon": "😒",
+                "text": "Fühlt sich weder kooperativ noch unterstützend an",
+                "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
+            },
+            "gravity": 2,
+            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "start": 106,
+            "subcategory": "agentic",
+            "text": "Ehrgeiz"
         }
     ]
 }

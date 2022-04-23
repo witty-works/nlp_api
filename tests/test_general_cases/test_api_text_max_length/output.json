@@ -339,34 +339,34 @@
         {
             "alternatives": [
                 {
-                    "text": "People"
+                    "text": "people"
                 },
                 {
-                    "text": "Folks"
+                    "text": "folks"
                 },
                 {
-                    "text": "Friends"
+                    "text": "friends"
                 },
                 {
-                    "text": "All"
+                    "text": "all"
                 },
                 {
-                    "text": "You all"
+                    "text": "you all"
                 },
                 {
-                    "text": "Everyone"
+                    "text": "everyone"
                 },
                 {
-                    "text": "Teammates"
+                    "text": "teammates"
                 },
                 {
-                    "text": "You"
+                    "text": "you"
                 },
                 {
-                    "text": "Team"
+                    "text": "team"
                 },
                 {
-                    "text": "Crowd"
+                    "text": "crowd"
                 }
             ],
             "category": "gendered",
@@ -520,16 +520,16 @@
         {
             "alternatives": [
                 {
-                    "text": "Growth mindset"
+                    "text": "growth mindset"
                 },
                 {
-                    "text": "Dedication"
+                    "text": "dedication"
                 },
                 {
-                    "text": "Willingness to go after a dream"
+                    "text": "willingness to go after a dream"
                 },
                 {
-                    "text": "Enthusiasm for working toward goals"
+                    "text": "enthusiasm for working toward goals"
                 }
             ],
             "category": "unconscious_bias",
@@ -549,22 +549,22 @@
         {
             "alternatives": [
                 {
-                    "text": "Dedication"
+                    "text": "dedication"
                 },
                 {
-                    "text": "Steadfastness"
+                    "text": "steadfastness"
                 },
                 {
-                    "text": "Diligence"
+                    "text": "diligence"
                 },
                 {
-                    "text": "Constancy"
+                    "text": "constancy"
                 },
                 {
-                    "text": "Care"
+                    "text": "care"
                 },
                 {
-                    "text": "Strength of character"
+                    "text": "strength of character"
                 }
             ],
             "category": "unconscious_bias",
