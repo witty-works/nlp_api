@@ -1,25 +1,25 @@
-Lemma,Priority,Category,Primary_subcategory
-affinity group,,inclusive,d_and_i
-cis gender,,inclusive,d_and_i
-cis gendered,,inclusive,d_and_i
-code switching,,inclusive,d_and_i
-different background,1,inclusive,d_and_i
-diverse perspectives,1,inclusive,d_and_i
-do one's share,1,inclusive,communal
-gender identity,,inclusive,d_and_i
-implicit bias,,inclusive,d_and_i
-impostor syndrome,,inclusive,d_and_i
-inter dependence,,inclusive,communal
-inter dependent,1,inclusive,communal
-inter personal,1,inclusive,communal
-job sharing,1,inclusive,communal
-micro aggression,26-01-22,inclusive,d_and_i
-of all ages,1,inclusive,d_and_i
-of all beliefs,1,inclusive,d_and_i
-of all religions,1,inclusive,d_and_i
-of all sexual orientations,1,inclusive,d_and_i
-part time,1,inclusive,communal
-servant leader,26-01-22,inclusive,communal
-servant leadership,26-01-22,inclusive,communal
-sexual orientation,1,inclusive,d_and_i
-under represented,1,inclusive,d_and_i
+Lemma,Word_Type,Category,Primary_subcategory
+affinity group,s,inclusive,d_and_i
+cis gender,a,inclusive,d_and_i
+cis gendered,a,inclusive,d_and_i
+code switching,s,inclusive,d_and_i
+different background,s,inclusive,d_and_i
+diverse perspectives,a+s,inclusive,d_and_i
+do one's share,i,inclusive,communal
+gender identity,s,inclusive,d_and_i
+implicit bias,a+s,inclusive,d_and_i
+impostor syndrome,s,inclusive,d_and_i
+inter dependence,s,inclusive,communal
+inter dependent,a,inclusive,communal
+inter personal,a,inclusive,communal
+job sharing,s,inclusive,communal
+micro aggression,s,inclusive,d_and_i
+of all ages,s,inclusive,d_and_i
+of all beliefs,s,inclusive,d_and_i
+of all religions,s,inclusive,d_and_i
+of all sexual orientations,s,inclusive,d_and_i
+part time,a,inclusive,communal
+servant leader,s,inclusive,communal
+servant leadership,s,inclusive,communal
+sexual orientation,s,inclusive,d_and_i
+under represented,a,inclusive,d_and_i
