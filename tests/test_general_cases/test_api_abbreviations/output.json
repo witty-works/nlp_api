@@ -6,6 +6,9 @@
             "alternatives": [
                 {
                     "text": "American Sign Language"
+                },
+                {
+                    "text": "American Sign Language (ASL)"
                 }
             ],
             "category": "style",

@@ -5,6 +5,82 @@
         {
             "alternatives": [
                 {
+                    "text": "logical"
+                },
+                {
+                    "text": "systematical"
+                },
+                {
+                    "text": "investigative"
+                },
+                {
+                    "text": "explorative"
+                },
+                {
+                    "text": "able to interpret data"
+                },
+                {
+                    "text": "taking a systematic approach"
+                },
+                {
+                    "text": "with scientific care"
+                },
+                {
+                    "text": "applying diagnostic methods"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "We are searching for analytical ninja programmer for our customers",
+            "end": 31,
+            "explanation": {
+                "icon": "😒",
+                "text": "Doesn’t feel cooperative nor supportive",
+                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+            },
+            "gravity": 2,
+            "label": "Biased language: Agentic",
+            "start": 21,
+            "subcategory": "agentic",
+            "text": "analytical"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "dedicated"
+                },
+                {
+                    "text": "committed"
+                },
+                {
+                    "text": "person who continues despite difficulties"
+                },
+                {
+                    "text": "someone devoted to their purpose"
+                },
+                {
+                    "text": "someone who sticks to their goal"
+                },
+                {
+                    "text": "someone willing to see things through"
+                }
+            ],
+            "category": "style",
+            "context": "We are searching for analytical ninja programmer for our customers",
+            "end": 37,
+            "explanation": {
+                "icon": "😮‍💨",
+                "text": "Exaggeration: Perceived as pressure or arrogance",
+                "url": "https://www.witty.works/en/categories/style#exaggeration"
+            },
+            "gravity": 2,
+            "label": "Style: Exaggeration",
+            "start": 32,
+            "subcategory": "exaggerating",
+            "text": "ninja"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "dedicated"
                 },
                 {

@@ -74,6 +74,32 @@
         {
             "alternatives": [
                 {
+                    "text": "internship"
+                },
+                {
+                    "text": "they"
+                },
+                {
+                    "text": "interns"
+                }
+            ],
+            "category": "gendered",
+            "context": "Hi Siwar,\n\nit's the first time that we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n\nFossil Group Europe GmbH\nRiehenring <NUMBER>\n\n<NUMBER> Basel\nSW",
+            "end": 63,
+            "explanation": {
+                "icon": "💡",
+                "text": "Image of a man unconsciously triggered",
+                "url": "https://www.witty.works/en/categories/gendered#special_functions"
+            },
+            "gravity": 2,
+            "label": "Gendered: Special functions",
+            "start": 57,
+            "subcategory": "function",
+            "text": "intern"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "they"
                 },
                 {
@@ -104,6 +130,12 @@
                 },
                 {
                     "text": "retiree"
+                },
+                {
+                    "text": "older people"
+                },
+                {
+                    "text": "retirees"
                 },
                 {
                     "text": "someone with outdated views"

@@ -24,6 +24,138 @@
         {
             "alternatives": [
                 {
+                    "text": "person"
+                },
+                {
+                    "text": "friend"
+                },
+                {
+                    "text": "you"
+                },
+                {
+                    "text": "team"
+                },
+                {
+                    "text": "crowd"
+                },
+                {
+                    "text": "people"
+                },
+                {
+                    "text": "folks"
+                },
+                {
+                    "text": "friends"
+                },
+                {
+                    "text": "all"
+                },
+                {
+                    "text": "you all"
+                },
+                {
+                    "text": "everyone"
+                },
+                {
+                    "text": "teammates"
+                }
+            ],
+            "category": "gendered",
+            "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to",
+            "end": 8,
+            "explanation": {
+                "icon": "💡",
+                "text": "Image of a man unconsciously triggered",
+                "url": "https://www.witty.works/en/categories/gendered#special_functions"
+            },
+            "gravity": 2,
+            "label": "Gendered: Special functions",
+            "start": 4,
+            "subcategory": "function",
+            "text": "guys"
+        },
+        {
+            "alternatives": [],
+            "category": "inclusive",
+            "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.",
+            "end": 23,
+            "explanation": {
+                "icon": "✅",
+                "text": "Emphasizes cooperative attributes",
+                "url": "https://www.witty.works/en/categories/inclusive#communal"
+            },
+            "label": "Inclusive: Communal",
+            "start": 19,
+            "subcategory": "communal",
+            "text": "team"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "growth mindset"
+                },
+                {
+                    "text": "dedication"
+                },
+                {
+                    "text": "willingness to go after a dream"
+                },
+                {
+                    "text": "enthusiasm for working toward goals"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number <NUMBER>",
+            "end": 38,
+            "explanation": {
+                "icon": "😒",
+                "text": "Doesn’t feel cooperative nor supportive",
+                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+            },
+            "gravity": 2,
+            "label": "Biased language: Agentic",
+            "start": 30,
+            "subcategory": "agentic",
+            "text": "ambition"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "dedication"
+                },
+                {
+                    "text": "steadfastness"
+                },
+                {
+                    "text": "diligence"
+                },
+                {
+                    "text": "constancy"
+                },
+                {
+                    "text": "care"
+                },
+                {
+                    "text": "strength of character"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number <NUMBER> and innovation d",
+            "end": 55,
+            "explanation": {
+                "icon": "😒",
+                "text": "Doesn’t feel cooperative nor supportive",
+                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+            },
+            "gravity": 2,
+            "label": "Biased language: Agentic",
+            "start": 43,
+            "subcategory": "agentic",
+            "text": "perseverance"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "question"
                 },
                 {
@@ -169,6 +301,21 @@
                 },
                 {
                     "text": "redesign"
+                },
+                {
+                    "text": "reinventions"
+                },
+                {
+                    "text": "changes"
+                },
+                {
+                    "text": "modernizations"
+                },
+                {
+                    "text": "improvements"
+                },
+                {
+                    "text": "new creations"
                 }
             ],
             "category": "style",
@@ -188,7 +335,19 @@
         {
             "alternatives": [
                 {
-                    "remove": true
+                    "text": "critical"
+                },
+                {
+                    "text": "vital"
+                },
+                {
+                    "text": "key"
+                },
+                {
+                    "text": "crucial"
+                },
+                {
+                    "text": "paramount"
                 }
             ],
             "category": "style",
@@ -204,35 +363,6 @@
             "start": 130,
             "subcategory": "exaggerating",
             "text": "number 1"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "growth mindset"
-                },
-                {
-                    "text": "dedication"
-                },
-                {
-                    "text": "willingness to go after a dream"
-                },
-                {
-                    "text": "enthusiasm for working toward goals"
-                }
-            ],
-            "category": "unconscious_bias",
-            "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number <NUMBER>",
-            "end": 38,
-            "explanation": {
-                "icon": "😒",
-                "text": "Doesn’t feel cooperative nor supportive",
-                "url": "https://www.witty.works/en/categories/biased_language#agentic"
-            },
-            "gravity": 2,
-            "label": "Biased language: Agentic",
-            "start": 30,
-            "subcategory": "agentic",
-            "text": "ambition"
         },
         {
             "alternatives": [
@@ -268,6 +398,35 @@
             "start": 43,
             "subcategory": "agentic",
             "text": "perseverance"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "growth mindset"
+                },
+                {
+                    "text": "dedication"
+                },
+                {
+                    "text": "willingness to go after a dream"
+                },
+                {
+                    "text": "enthusiasm for working toward goals"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number <NUMBER>",
+            "end": 38,
+            "explanation": {
+                "icon": "😒",
+                "text": "Doesn’t feel cooperative nor supportive",
+                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+            },
+            "gravity": 2,
+            "label": "Biased language: Agentic",
+            "start": 30,
+            "subcategory": "agentic",
+            "text": "ambition"
         }
     ]
 }

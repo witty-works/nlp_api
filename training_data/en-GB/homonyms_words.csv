@@ -1023,7 +1023,7 @@ illegal alien,a+s,unconscious_bias,migration,"['undocumented person', 'irregular
 illegal immigrant,a+s,unconscious_bias,migration,"['undocumented person', 'irregular migrant', 'non-documented migrant', 'person with a migratory background', 'person who has migrated into their present country of residence', 'undocumented people', 'irregular migrants', 'non-documented migrants', 'people with a migration background', 'individuals who have migrated into their present country of residence']"
 imbecile,s,unconscious_bias,cognitive_ability,"['person with mental impairment', 'person with psychiatric disabilities', 'dense', 'ignorant', 'lacking understanding', 'impulsive', 'risk-taking', 'uninformed', 'silly', 'foolish', 'people with a mental impairment', 'people with psychiatric disabilities']"
 immigrant,s,unconscious_bias,migration,"['person with a migratory background', 'someone who migrated into their present country of residence', 'person who previously had a different nationality from their present country of residence', 'person who has at least one parent who entered their present country of residence as a migrant', 'people with a migratory background', 'people who have migrated into their present country of residence', 'people who previously had a different nationality from their present country of residence', 'people who have at least one parent who entered their present country of residence as a migrant']"
-impact,v,inclusive,,['']
+impact,v,inclusive,inclusive,['']
 impact,s,inclusive,communal,['']
 impactful,a,inclusive,communal,['']
 imperative,a,style,exaggerating,"['critical', 'vital']"

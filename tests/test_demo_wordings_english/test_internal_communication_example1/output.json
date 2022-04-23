@@ -20,6 +20,91 @@
         {
             "alternatives": [
                 {
+                    "text": "growth-minded"
+                },
+                {
+                    "text": "keen and enthusiastic"
+                },
+                {
+                    "text": "interested in taking on new responsibilities"
+                },
+                {
+                    "text": "committed to working toward goals"
+                },
+                {
+                    "text": "keen on realizing a vision"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "Our whole team is ambitious and strives for top performance.",
+            "end": 27,
+            "explanation": {
+                "icon": "😒",
+                "text": "Doesn’t feel cooperative nor supportive",
+                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+            },
+            "gravity": 2,
+            "label": "Biased language: Agentic",
+            "start": 18,
+            "subcategory": "agentic",
+            "text": "ambitious"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "effectiveness"
+                },
+                {
+                    "text": "accomplishments"
+                },
+                {
+                    "text": "capabilities"
+                },
+                {
+                    "text": "fulfillment"
+                },
+                {
+                    "text": "efficiency"
+                },
+                {
+                    "text": "running"
+                },
+                {
+                    "text": "capacity"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "Our whole team is ambitious and strives for top performance.",
+            "end": 59,
+            "explanation": {
+                "icon": "😒",
+                "text": "Doesn’t feel cooperative nor supportive",
+                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+            },
+            "gravity": 2,
+            "label": "Biased language: Agentic",
+            "start": 48,
+            "subcategory": "agentic",
+            "text": "performance"
+        },
+        {
+            "alternatives": [],
+            "category": "inclusive",
+            "context": "Our whole team is ambitious and strives for top performance.",
+            "end": 14,
+            "explanation": {
+                "icon": "✅",
+                "text": "Emphasizes cooperative attributes",
+                "url": "https://www.witty.works/en/categories/inclusive#communal"
+            },
+            "label": "Inclusive: Communal",
+            "start": 10,
+            "subcategory": "communal",
+            "text": "team"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "execution to the customer's satisfaction"
                 },
                 {
