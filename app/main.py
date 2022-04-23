@@ -762,6 +762,15 @@ def type_transform(lemma_type):
 
 
 def is_sub_category_enabled(config: Config, subcategory: str):
+    if subcategory not in categories:
+        if not settings.is_prod:
+            logging.error(
+                "Subcategory is not defined: %s",
+                subcategory,
+            )
+
+        return False
+
     if categories[subcategory]["category"] in config.disabled_categories:
         return False
 
@@ -1864,7 +1873,6 @@ def rules_based_words_phrase_matcher_en(
 def homonyms_english(
     version: float, config: Config, lang, full_text, tokens, homonyms_words
 ):
-
     list_tokens = []
     for token in tokens:
 
