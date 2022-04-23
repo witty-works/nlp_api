@@ -172,7 +172,7 @@ class Config(BaseModel):
         if isinstance(v, bool):
             if v:
                 return SingularTheyType.ALL_PRONOUNS
-            
+
             return SingularTheyType.HE_OR_SHE
         return v
 
@@ -414,8 +414,9 @@ class ResultOut(BaseModel):
         else:
             punctuation = "[.!?]"
 
+        preceeding_text = full_text[max(0, start - 5) : start]
         if (
-            re.match("^.*" + punctuation + "\s*$", full_text[0:start], re.MULTILINE)
+            re.search("(" + punctuation + "\s*|\s{5})$", preceeding_text, re.MULTILINE)
             != None
         ):
             is_upper = True
