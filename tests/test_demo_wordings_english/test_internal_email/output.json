@@ -169,6 +169,21 @@
                 },
                 {
                     "text": "redesign"
+                },
+                {
+                    "text": "reinventions"
+                },
+                {
+                    "text": "changes"
+                },
+                {
+                    "text": "modernizations"
+                },
+                {
+                    "text": "improvements"
+                },
+                {
+                    "text": "new creations"
                 }
             ],
             "category": "style",
@@ -188,7 +203,19 @@
         {
             "alternatives": [
                 {
-                    "remove": true
+                    "text": "critical"
+                },
+                {
+                    "text": "vital"
+                },
+                {
+                    "text": "key"
+                },
+                {
+                    "text": "crucial"
+                },
+                {
+                    "text": "paramount"
                 }
             ],
             "category": "style",
@@ -204,35 +231,6 @@
             "start": 130,
             "subcategory": "exaggerating",
             "text": "number 1"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "growth mindset"
-                },
-                {
-                    "text": "dedication"
-                },
-                {
-                    "text": "willingness to go after a dream"
-                },
-                {
-                    "text": "enthusiasm for working toward goals"
-                }
-            ],
-            "category": "unconscious_bias",
-            "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number <NUMBER>",
-            "end": 38,
-            "explanation": {
-                "icon": "😒",
-                "text": "Doesn’t feel cooperative nor supportive",
-                "url": "https://www.witty.works/en/categories/biased_language#agentic"
-            },
-            "gravity": 2,
-            "label": "Biased language: Agentic",
-            "start": 30,
-            "subcategory": "agentic",
-            "text": "ambition"
         },
         {
             "alternatives": [
@@ -268,6 +266,35 @@
             "start": 43,
             "subcategory": "agentic",
             "text": "perseverance"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "growth mindset"
+                },
+                {
+                    "text": "dedication"
+                },
+                {
+                    "text": "willingness to go after a dream"
+                },
+                {
+                    "text": "enthusiasm for working toward goals"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number <NUMBER>",
+            "end": 38,
+            "explanation": {
+                "icon": "😒",
+                "text": "Doesn’t feel cooperative nor supportive",
+                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+            },
+            "gravity": 2,
+            "label": "Biased language: Agentic",
+            "start": 30,
+            "subcategory": "agentic",
+            "text": "ambition"
         }
     ]
 }

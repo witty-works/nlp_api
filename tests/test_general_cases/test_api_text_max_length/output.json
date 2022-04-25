@@ -456,35 +456,6 @@
         {
             "alternatives": [
                 {
-                    "text": "growth mindset"
-                },
-                {
-                    "text": "dedication"
-                },
-                {
-                    "text": "willingness to go after a dream"
-                },
-                {
-                    "text": "enthusiasm for working toward goals"
-                }
-            ],
-            "category": "unconscious_bias",
-            "context": "Hey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately <NUMBER> metres east of the most south corner",
-            "end": 38,
-            "explanation": {
-                "icon": "😒",
-                "text": "Doesn’t feel cooperative nor supportive",
-                "url": "https://www.witty.works/en/categories/biased_language#agentic"
-            },
-            "gravity": 2,
-            "label": "Biased language: Agentic",
-            "start": 30,
-            "subcategory": "agentic",
-            "text": "ambition"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "dedication"
                 },
                 {
@@ -520,35 +491,6 @@
         {
             "alternatives": [
                 {
-                    "text": "growth mindset"
-                },
-                {
-                    "text": "dedication"
-                },
-                {
-                    "text": "willingness to go after a dream"
-                },
-                {
-                    "text": "enthusiasm for working toward goals"
-                }
-            ],
-            "category": "unconscious_bias",
-            "context": "metres east of the most south-easterly corner of <NUMBER> Batherton Close.\n\nHey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately <NUMBER> metres east of the most south corner",
-            "end": 659,
-            "explanation": {
-                "icon": "😒",
-                "text": "Doesn’t feel cooperative nor supportive",
-                "url": "https://www.witty.works/en/categories/biased_language#agentic"
-            },
-            "gravity": 2,
-            "label": "Biased language: Agentic",
-            "start": 651,
-            "subcategory": "agentic",
-            "text": "ambition"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "dedication"
                 },
                 {
@@ -580,6 +522,64 @@
             "start": 664,
             "subcategory": "agentic",
             "text": "perseverance"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "growth mindset"
+                },
+                {
+                    "text": "dedication"
+                },
+                {
+                    "text": "willingness to go after a dream"
+                },
+                {
+                    "text": "enthusiasm for working toward goals"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "Hey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately <NUMBER> metres east of the most south corner",
+            "end": 38,
+            "explanation": {
+                "icon": "😒",
+                "text": "Doesn’t feel cooperative nor supportive",
+                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+            },
+            "gravity": 2,
+            "label": "Biased language: Agentic",
+            "start": 30,
+            "subcategory": "agentic",
+            "text": "ambition"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "growth mindset"
+                },
+                {
+                    "text": "dedication"
+                },
+                {
+                    "text": "willingness to go after a dream"
+                },
+                {
+                    "text": "enthusiasm for working toward goals"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "metres east of the most south-easterly corner of <NUMBER> Batherton Close.\n\nHey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately <NUMBER> metres east of the most south corner",
+            "end": 659,
+            "explanation": {
+                "icon": "😒",
+                "text": "Doesn’t feel cooperative nor supportive",
+                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+            },
+            "gravity": 2,
+            "label": "Biased language: Agentic",
+            "start": 651,
+            "subcategory": "agentic",
+            "text": "ambition"
         }
     ]
 }
