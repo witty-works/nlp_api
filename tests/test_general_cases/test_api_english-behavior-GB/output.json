@@ -18,6 +18,62 @@
                 },
                 {
                     "text": "a person with an uncontrolled compulsion to continue engaging in an activity despite suffering negative personal or professional consequences"
+                },
+                {
+                    "text": "substance abusers"
+                },
+                {
+                    "text": "substance misusers"
+                },
+                {
+                    "text": "substance users"
+                },
+                {
+                    "text": "people who have become physically/psychologically dependent on a substance"
+                },
+                {
+                    "text": "people with an uncontrolled compulsion to continue engaging in an activity despite suffering negative personal or professional consequences"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "Are you an addict",
+            "end": 17,
+            "explanation": {
+                "icon": "😒",
+                "text": "Hidden bias regarding behaviour",
+                "url": "https://www.witty.works/en/categories/biased_language#behaviour"
+            },
+            "gravity": 2,
+            "label": "Biased language: Behaviour",
+            "start": 11,
+            "subcategory": "behavior",
+            "text": "addict"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "substance abuser"
+                },
+                {
+                    "text": "substance misuser"
+                },
+                {
+                    "text": "substance user"
+                },
+                {
+                    "text": "substance abusers"
+                },
+                {
+                    "text": "substance misusers"
+                },
+                {
+                    "text": "substance users"
+                },
+                {
+                    "text": "a person who has become physically/psychologically dependent on a substance"
+                },
+                {
+                    "text": "a person with an uncontrolled compulsion to continue engaging in an activity despite suffering negative personal or professional consequences"
                 }
             ],
             "category": "unconscious_bias",

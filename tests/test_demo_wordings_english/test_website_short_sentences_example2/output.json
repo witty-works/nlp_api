@@ -5,6 +5,26 @@
         {
             "alternatives": [
                 {
+                    "remove": true
+                }
+            ],
+            "category": "style",
+            "context": "We've got exceptional challenges ahead!",
+            "end": 21,
+            "explanation": {
+                "icon": "😮‍💨",
+                "text": "Exaggeration: Perceived as pressure or arrogance",
+                "url": "https://www.witty.works/en/categories/style#exaggeration"
+            },
+            "gravity": 2,
+            "label": "Style: Exaggeration",
+            "start": 10,
+            "subcategory": "exaggerating",
+            "text": "exceptional"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "test"
                 },
                 {

@@ -5,6 +5,61 @@
         {
             "alternatives": [
                 {
+                    "text": "impartial"
+                },
+                {
+                    "text": "freelance"
+                },
+                {
+                    "text": "consulting"
+                },
+                {
+                    "text": "free to make informed choices"
+                },
+                {
+                    "text": "responsible for organizing your workload"
+                },
+                {
+                    "text": "in a position to take on responsibility"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious co",
+            "end": 17,
+            "explanation": {
+                "icon": "😒",
+                "text": "Doesn’t feel cooperative nor supportive",
+                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+            },
+            "gravity": 2,
+            "label": "Biased language: Agentic",
+            "start": 6,
+            "subcategory": "agentic",
+            "text": "independent"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "style",
+            "context": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
+            "end": 69,
+            "explanation": {
+                "icon": "😮‍💨",
+                "text": "Exaggeration: Perceived as pressure or arrogance",
+                "url": "https://www.witty.works/en/categories/style#exaggeration"
+            },
+            "gravity": 2,
+            "label": "Style: Exaggeration",
+            "start": 58,
+            "subcategory": "exaggerating",
+            "text": "exceptional"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "test"
                 },
                 {
@@ -49,6 +104,76 @@
         {
             "alternatives": [
                 {
+                    "text": "growth-minded"
+                },
+                {
+                    "text": "keen and enthusiastic"
+                },
+                {
+                    "text": "interested in taking on new responsibilities"
+                },
+                {
+                    "text": "committed to working toward goals"
+                },
+                {
+                    "text": "keen on realizing a vision"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
+            "end": 114,
+            "explanation": {
+                "icon": "😒",
+                "text": "Doesn’t feel cooperative nor supportive",
+                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+            },
+            "gravity": 2,
+            "label": "Biased language: Agentic",
+            "start": 105,
+            "subcategory": "agentic",
+            "text": "ambitious"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "effectiveness"
+                },
+                {
+                    "text": "accomplishments"
+                },
+                {
+                    "text": "capabilities"
+                },
+                {
+                    "text": "fulfillment"
+                },
+                {
+                    "text": "efficiency"
+                },
+                {
+                    "text": "running"
+                },
+                {
+                    "text": "capacity"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "g on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
+            "end": 164,
+            "explanation": {
+                "icon": "😒",
+                "text": "Doesn’t feel cooperative nor supportive",
+                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+            },
+            "gravity": 2,
+            "label": "Biased language: Agentic",
+            "start": 153,
+            "subcategory": "agentic",
+            "text": "performance"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "project management"
                 },
                 {
@@ -62,6 +187,9 @@
                 },
                 {
                     "text": "someone in the project management role"
+                },
+                {
+                    "text": "people in project management"
                 }
             ],
             "category": "gendered",
