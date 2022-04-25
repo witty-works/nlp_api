@@ -33,38 +33,6 @@
             "start": 18,
             "subcategory": "agentic",
             "text": "ambitious"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "growth-minded"
-                },
-                {
-                    "text": "keen and enthusiastic"
-                },
-                {
-                    "text": "interested in taking on new responsibilities"
-                },
-                {
-                    "text": "committed to working toward goals"
-                },
-                {
-                    "text": "keen on realizing a vision"
-                }
-            ],
-            "category": "unconscious_bias",
-            "context": "Name is Jones, an ambitious person. Phone number is <NUMBER>-<NUMBER>-<NUMBER> <URL> <EMAIL>",
-            "end": 27,
-            "explanation": {
-                "icon": "😒",
-                "text": "Doesn’t feel cooperative nor supportive",
-                "url": "https://www.witty.works/en/categories/biased_language#agentic"
-            },
-            "gravity": 2,
-            "label": "Biased language: Agentic",
-            "start": 18,
-            "subcategory": "agentic",
-            "text": "ambitious"
         }
     ]
 }

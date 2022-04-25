@@ -54,59 +54,6 @@
             "start": 16,
             "subcategory": "agentic",
             "text": "performance"
-        },
-        {
-            "alternatives": [],
-            "category": "inclusive",
-            "context": "We support high performance employees.",
-            "end": 10,
-            "explanation": {
-                "icon": "✅",
-                "text": "Emphasizes cooperative attributes",
-                "url": "https://www.witty.works/en/categories/inclusive#communal"
-            },
-            "label": "Inclusive: Communal",
-            "start": 3,
-            "subcategory": "communal",
-            "text": "support"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "effectiveness"
-                },
-                {
-                    "text": "accomplishments"
-                },
-                {
-                    "text": "capabilities"
-                },
-                {
-                    "text": "fulfillment"
-                },
-                {
-                    "text": "efficiency"
-                },
-                {
-                    "text": "running"
-                },
-                {
-                    "text": "capacity"
-                }
-            ],
-            "category": "unconscious_bias",
-            "context": "We support high performance employees.",
-            "end": 27,
-            "explanation": {
-                "icon": "😒",
-                "text": "Doesn’t feel cooperative nor supportive",
-                "url": "https://www.witty.works/en/categories/biased_language#agentic"
-            },
-            "gravity": 2,
-            "label": "Biased language: Agentic",
-            "start": 16,
-            "subcategory": "agentic",
-            "text": "performance"
         }
     ]
 }

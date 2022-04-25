@@ -42,47 +42,6 @@
             "start": 0,
             "subcategory": "agentic",
             "text": "Dominant"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "prevailing"
-                },
-                {
-                    "text": "guiding"
-                },
-                {
-                    "text": "main"
-                },
-                {
-                    "text": "primary"
-                },
-                {
-                    "text": "respecting governance"
-                },
-                {
-                    "text": "communicating governance"
-                },
-                {
-                    "text": "comfortable with taking on responsibility"
-                },
-                {
-                    "text": "at ease with taking the initiative"
-                }
-            ],
-            "category": "unconscious_bias",
-            "context": "Dominant",
-            "end": 8,
-            "explanation": {
-                "icon": "😒",
-                "text": "Doesn’t feel cooperative nor supportive",
-                "url": "https://www.witty.works/en/categories/biased_language#agentic"
-            },
-            "gravity": 2,
-            "label": "Biased language: Agentic",
-            "start": 0,
-            "subcategory": "agentic",
-            "text": "Dominant"
         }
     ]
 }
