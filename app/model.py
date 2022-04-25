@@ -240,7 +240,6 @@ dict_lemma_lookup_en = {
     "butt-rider": "butt-rider",
     "butt-rustler": "butt-rustler",
     "bøsser": "bøsser",
-    "challenged": "challenged",
     "challenging": "challenging",
     "chi-chi-man": "chi-chi-man",
     "cis-gender": "cis-gender",
