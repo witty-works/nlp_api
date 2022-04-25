@@ -37,42 +37,6 @@
             "start": 21,
             "subcategory": "function",
             "text": "spokesman"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "press officer"
-                },
-                {
-                    "text": "spokesperson"
-                },
-                {
-                    "context": "if gender is known",
-                    "text": "spokeswoman"
-                },
-                {
-                    "text": "they"
-                },
-                {
-                    "text": "press officers"
-                },
-                {
-                    "text": "spokespersons"
-                }
-            ],
-            "category": "gendered",
-            "context": "We are looking for a spokesman.",
-            "end": 30,
-            "explanation": {
-                "icon": "💡",
-                "text": "Image of a man unconsciously triggered",
-                "url": "https://www.witty.works/en/categories/gendered#special_functions"
-            },
-            "gravity": 2,
-            "label": "Gendered: Special functions",
-            "start": 21,
-            "subcategory": "function",
-            "text": "spokesman"
         }
     ]
 }
