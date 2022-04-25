@@ -1,4 +1,7 @@
 import spacy
+from spacy.lang.en import English
+from spacy.lang.de import German
+
 from spacy.lang.char_classes import (
     ALPHA,
     ALPHA_LOWER,
@@ -9,6 +12,19 @@ from spacy.lang.char_classes import (
 )
 from spacy.tokenizer import Tokenizer
 from spacy.util import compile_infix_regex
+
+# class for Lemmatizer
+class TokenLemmatizer:
+    def __init__(self, lemma_table):
+        self.lemma_table = lemma_table
+
+    def __call__(self, doc):
+        for token in doc:
+            # Overwrite the token.lemma_ if there's an entry in the data
+            if token.text in self.lemma_table:
+                token.lemma_ = self.lemma_table.get(token.text, token.lemma_)
+        return doc
+
 
 # Custom tokenizers
 # English
@@ -80,8 +96,9 @@ model["en"].tokenizer = custom_tokenizer_en(model["en"])
 # custom tokenizer for German
 model["de"].tokenizer = custom_tokenizer_de(model["de"])
 
+# German
 # custom lematizer to correct the lemmas in spacy library, to add to the curent spacy lematizer
-dict_lemma_lookup = {
+dict_lemma_lookup_de = {
     "international": "international",
     "internationale": "international",
     "Meister": "Meister",
@@ -177,6 +194,210 @@ dict_lemma_lookup = {
     "überzeugt": "überzeugt",
 }
 
-lookup_table = model["de"].get_pipe("lemmatizer").lookups.get_table("lemma_lookup")
-for key in dict_lemma_lookup:
-    lookup_table.set(key, dict_lemma_lookup[key])
+lookup_table_de = model["de"].get_pipe("lemmatizer").lookups.get_table("lemma_lookup")
+for key in dict_lemma_lookup_de:
+    lookup_table_de.set(key, dict_lemma_lookup_de[key])
+
+# English
+# custom English dictionary to correct lemmas in SpaCy
+dict_lemma_lookup_en = {
+    "Bin-Laden": "Bin-Laden",
+    "Binladen": "Binladen",
+    "Buckwheat": "Buckwheat",
+    "Cervix-haver": "Cervix-haver",
+    "Cervixhaver": "Cervixhaver",
+    "Congressman": "Congressman",
+    "Euro-weenies": "Euro-weenies",
+    "Euroweenies": "Euroweenies",
+    "Jewbacca": "Jewbacca",
+    "Jewgene": "Jewgene",
+    "Sincerely": "Sincerely",
+    "able-bodied": "able-bodied",
+    "ablebodied": "ablebodied",
+    "afro-saxon": "afro-saxon",
+    "ages": "ages",
+    "attention-seeking": "attention-seeking",
+    "attentionseeking": "attentionseeking",
+    "battle-axe": "battle-axe",
+    "bean-eater": "bean-eater",
+    "bean-flicker": "bean-flicker",
+    "best": "best",
+    "bin-Laden": "bin-Laden",
+    "bin-laden": "bin-laden",
+    "blind-sided": "blind-sided",
+    "bonkers": "bonkers",
+    "brain-damaged": "brain-damaged",
+    "braindamaged": "braindamaged",
+    "bum-boy": "bum-boy",
+    "bum-chum": "bum-chum",
+    "bum-driller": "bum-driller",
+    "bum-robber": "bum-robber",
+    "bumhole-engineer": "bumhole-engineer",
+    "butt-boy": "butt-boy",
+    "butt-fruit": "butt-fruit",
+    "butt-pilot": "butt-pilot",
+    "butt-pirate": "butt-pirate",
+    "butt-rider": "butt-rider",
+    "butt-rustler": "butt-rustler",
+    "bøsser": "bøsser",
+    "challenged": "challenged",
+    "challenging": "challenging",
+    "chi-chi-man": "chi-chi-man",
+    "cis-gender": "cis-gender",
+    "cis-gendered": "cis-gendered",
+    "cisgendered": "cisgendered",
+    "code-switching": "code-switching",
+    "codeswitching": "codeswitching",
+    "conquest": "conquest",
+    "crafty-butcher": "crafty-butcher",
+    "crick-crick": "crick-crick",
+    "cunt-boy": "cunt-boy",
+    "deaf-mute": "deaf-mute",
+    "deformed": "deformed",
+    "deranged": "deranged",
+    "determined": "determined",
+    "dim-witted": "dim-witted",
+    "dimwitted": "dimwitted",
+    "disabled": "disabled",
+    "disfigured": "disfigured",
+    "donut-muncher": "donut-muncher",
+    "donut-puncher": "donut-puncher",
+    "enlightened": "enlightened",
+    "every-man": "every-man",
+    "extra-ordinary": "extra-ordinary",
+    "eye-opener": "eye-opener",
+    "feeble-minded": "feeble-minded",
+    "feebleminded": "feebleminded",
+    "first-class": "first-class",
+    "first-mover": "first-mover",
+    "flat-face": "flat-face",
+    "flat-head": "flat-head",
+    "flatter": "flatter",
+    "flattering": "flattering",
+    "fog-breather": "fog-breather",
+    "front-runner": "front-runner",
+    "fruit-loop": "fruit-loop",
+    "fruit-packer": "fruit-packer",
+    "fudge-packer": "fudge-packer",
+    "fulfilling": "fulfilling",
+    "gals": "gals",
+    "go-getter": "go-getter",
+    "goal-getter": "goal-getter",
+    "gogetter": "gogetter",
+    "gramps": "gramps",
+    "grandfathered": "grandfathered",
+    "grandfathering": "grandfathering",
+    "greaser": "greaser",
+    "gun-man": "gun-man",
+    "gym-bunny": "gym-bunny",
+    "gypped": "gypped",
+    "half-breed": "half-breed",
+    "half-caste": "half-caste",
+    "head-strong": "head-strong",
+    "hearing-impaired": "hearing-impaired",
+    "hearingimpaired": "hearingimpaired",
+    "herp-derp": "herp-derp",
+    "high-flyer": "high-flyer",
+    "hooch-cooch": "hooch-cooch",
+    "hyper-active": "hyper-active",
+    "hyper-sensitive": "hyper-sensitive",
+    "inbred": "inbred",
+    "incapacitated": "incapacitated",
+    "indian-giver": "indian-giver",
+    "inter-dependence": "inter-dependence",
+    "inter-dependent": "inter-dependent",
+    "inter-personal": "inter-personal",
+    "job-sharing": "job-sharing",
+    "jobsharing": "jobsharing",
+    "kitty-puncher": "kitty-puncher",
+    "knife-nose": "knife-nose",
+    "les": "les",
+    "limp-wristed": "limp-wristed",
+    "limpwristed": "limpwristed",
+    "man-bag": "man-bag",
+    "man-bun": "man-bun",
+    "man-day": "man-day",
+    "man-hour": "man-hour",
+    "man-hunt": "man-hunt",
+    "man-kini": "man-kini",
+    "man-made": "man-made",
+    "man-power": "man-power",
+    "man-scara": "man-scara",
+    "man-sized": "man-sized",
+    "man-to-man": "man-to-man",
+    "man-trap": "man-trap",
+    "mansized": "mansized",
+    "manwards": "manwards",
+    "market-leader": "market-leader",
+    "market-leading": "market-leading",
+    "marketleading": "marketleading",
+    "mentoring": "mentoring",
+    "micro-aggression": "micro-aggression",
+    "middle-man": "middle-man",
+    "must-have": "must-have",
+    "nuts": "nuts",
+    "opinionated": "opinionated",
+    "over-the-hill": "over-the-hill",
+    "perfomance-based": "perfomance-based",
+    "perfomancebased": "perfomancebased",
+    "pow-wow": "pow-wow",
+    "pro-active": "pro-active",
+    "pussy-puncher": "pussy-puncher",
+    "result-oriented": "result-oriented",
+    "resultoriented": "resultoriented",
+    "results-oriented": "results-oriented",
+    "resultsoriented": "resultsoriented",
+    "risk-taker": "risk-taker",
+    "risk-taking": "risk-taking",
+    "risktaking": "risktaking",
+    "scatterbrained": "scatterbrained",
+    "self-confidence": "self-confidence",
+    "self-confident": "self-confident",
+    "self-motivated": "self-motivated",
+    "self-reliance": "self-reliance",
+    "self-reliant": "self-reliant",
+    "self-sufficiency": "self-sufficiency",
+    "self-sufficient": "self-sufficient",
+    "selfmotivated": "selfmotivated",
+    "sharing": "sharing",
+    "slant-eye": "slant-eye",
+    "spazzed": "spazzed",
+    "special-needs": "special-needs",
+    "specialneeds": "specialneeds",
+    "state-of-the-art": "state-of-the-art",
+    "strong-minded": "strong-minded",
+    "strongminded": "strongminded",
+    "switch-hitter": "switch-hitter",
+    "taco-head": "taco-head",
+    "team-player": "team-player",
+    "thicklips": "thicklips",
+    "tongue-tied": "tongue-tied",
+    "tonguetied": "tonguetied",
+    "top-perfomer": "top-perfomer",
+    "top-performance": "top-performance",
+    "top-performing": "top-performing",
+    "topperforming": "topperforming",
+    "trans-man": "trans-man",
+    "trans-woman": "trans-woman",
+    "under-represented": "under-represented",
+    "uterus-havers": "uterus-havers",
+    "uterushavers": "uterushavers",
+    "well-established": "well-established",
+    "wellestablished": "wellestablished",
+    "wheelchair-bound": "wheelchair-bound",
+    "world-wide": "world-wide",
+}
+# lookup exeption table for lemmas from spacy
+lookup_table_en = model["en"].get_pipe("lemmatizer").lookups.get_table("lemma_exc")
+# update the lookup table
+for key in dict_lemma_lookup_en:
+    lookup_table_en.set(key, dict_lemma_lookup_en[key])
+
+# call engish factory from spacy and apply the custom lemmatizer
+@English.factory("token_lemmatizer_en")
+def create_en_lemmatizer(nlp, name):
+    return TokenLemmatizer(dict_lemma_lookup_en)
+
+
+# add custom lemmatizer to the pipline
+model["en"].add_pipe("token_lemmatizer_en")  # uses the English factory
