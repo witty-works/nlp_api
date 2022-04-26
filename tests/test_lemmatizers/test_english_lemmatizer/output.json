@@ -1,0 +1,103 @@
+{
+    "language": "en",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "preferred"
+                },
+                {
+                    "text": " fitting"
+                },
+                {
+                    "text": "satisfactory"
+                },
+                {
+                    "text": "advantageous"
+                },
+                {
+                    "text": "satisfying"
+                },
+                {
+                    "text": "choice"
+                },
+                {
+                    "text": "select"
+                },
+                {
+                    "text": "reliable"
+                },
+                {
+                    "text": "valuable"
+                },
+                {
+                    "text": "conducive to desired outcome"
+                }
+            ],
+            "category": "style",
+            "context": "Our efforts continue to be geared to offering the best state-of-the-art technology",
+            "end": 54,
+            "explanation": {
+                "icon": "😮‍💨",
+                "text": "Exaggeration: Perceived as pressure or arrogance",
+                "url": "https://www.witty.works/en/categories/style#exaggeration"
+            },
+            "gravity": 2,
+            "label": "Style: Exaggeration",
+            "start": 50,
+            "subcategory": "exaggerating",
+            "text": "best"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "current"
+                },
+                {
+                    "text": "best available"
+                },
+                {
+                    "text": "most advanced"
+                },
+                {
+                    "text": "most sophisticated"
+                },
+                {
+                    "text": "technologically most advanced"
+                },
+                {
+                    "text": "implementing the most recent methods"
+                },
+                {
+                    "text": "involving fresh concepts"
+                },
+                {
+                    "text": "employing the latest equipment"
+                },
+                {
+                    "text": "using the latest techniques"
+                },
+                {
+                    "text": "at the highest level of development"
+                },
+                {
+                    "text": "using the newest ideas"
+                }
+            ],
+            "category": "style",
+            "context": "Our efforts continue to be geared to offering the best state-of-the-art technology",
+            "end": 71,
+            "explanation": {
+                "icon": "🙄",
+                "text": "Empty words have lost all meaning",
+                "url": "https://www.witty.works/en/categories/style#empty_words"
+            },
+            "gravity": 3,
+            "label": "Style: Empty Words",
+            "start": 55,
+            "subcategory": "hollow",
+            "text": "state-of-the-art"
+        }
+    ]
+}

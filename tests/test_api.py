@@ -380,7 +380,7 @@ def test_apply_rules(event_loop, set_redis):
     }
     test_request = RequestIn(**request_data)
     event_loop.run_until_complete(apply_rules(test_request, "test@gmail.com"))
-    assert hasattr(test_request.config, 'store_context')
+    assert hasattr(test_request.config, "store_context")
     assert test_request.config.store_context == False
     assert test_request.config.preferred_variants == ["en-GB"]
     assert test_request.config.german_gender_ending == "In"
@@ -560,3 +560,21 @@ def test_german_gender_ending():
     ]
 
     assert sorted(response_content) == sorted(expected)
+
+
+@pytest.mark.parametrize(
+    "lemma_case_dir",
+    get_dirs("tests/test_lemmatizers"),
+)
+def test_lemmatizer(lemma_case_dir, snapshot):
+
+    # Read input files from the case directory.
+    input_json = lemma_case_dir.joinpath("input.json").read_text()
+    # Call the tested endpoint.
+    response = client.post("/v1.1/check", json=json.loads(input_json))
+    assert response.status_code == 200
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    # Snapshot the return value.
+    snapshot.snapshot_dir = lemma_case_dir
+    snapshot.assert_match(output, "output.json")
