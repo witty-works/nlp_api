@@ -1,12 +1,8 @@
 {
+    "language": "en",
+    "limit_reached": false,
     "results": [
         {
-            "text": "best",
-            "context": "Our efforts continue to be geared to offering the best state-of-the-art technology",
-            "category": "style",
-            "subcategory": "exaggerating",
-            "start": 50,
-            "end": 54,
             "alternatives": [
                 {
                     "text": "preferred"
@@ -39,21 +35,21 @@
                     "text": "conducive to desired outcome"
                 }
             ],
-            "label": "Style: Exaggeration",
+            "category": "style",
+            "context": "Our efforts continue to be geared to offering the best state-of-the-art technology",
+            "end": 54,
             "explanation": {
-                "text": "Exaggeration: Perceived as pressure or arrogance",
                 "icon": "😮‍💨",
+                "text": "Exaggeration: Perceived as pressure or arrogance",
                 "url": "https://www.witty.works/en/categories/style#exaggeration"
             },
-            "gravity": 2
+            "gravity": 2,
+            "label": "Style: Exaggeration",
+            "start": 50,
+            "subcategory": "exaggerating",
+            "text": "best"
         },
         {
-            "text": "state-of-the-art",
-            "context": "Our efforts continue to be geared to offering the best state-of-the-art technology",
-            "category": "style",
-            "subcategory": "hollow",
-            "start": 55,
-            "end": 71,
             "alternatives": [
                 {
                     "text": "current"
@@ -89,15 +85,19 @@
                     "text": "using the newest ideas"
                 }
             ],
-            "label": "Style: Empty Words",
+            "category": "style",
+            "context": "Our efforts continue to be geared to offering the best state-of-the-art technology",
+            "end": 71,
             "explanation": {
-                "text": "Empty words have lost all meaning",
                 "icon": "🙄",
+                "text": "Empty words have lost all meaning",
                 "url": "https://www.witty.works/en/categories/style#empty_words"
             },
-            "gravity": 3
+            "gravity": 3,
+            "label": "Style: Empty Words",
+            "start": 55,
+            "subcategory": "hollow",
+            "text": "state-of-the-art"
         }
-    ],
-    "language": "en",
-    "limit_reached": false
+    ]
 }
