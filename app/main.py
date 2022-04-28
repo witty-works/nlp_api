@@ -1932,7 +1932,11 @@ def literal_match(
                 icon = None
                 explanation_text = None
 
-                if explanation is not None and len(explanation):
+                if (
+                    isinstance(explanation, list)
+                    and len(explanation)
+                    and isinstance(explanation[0], dict)
+                ):
                     explanation_text = (
                         explanation[0]["text"] if "text" in explanation[0] else None
                     )
