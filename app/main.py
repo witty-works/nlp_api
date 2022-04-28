@@ -1932,10 +1932,12 @@ def literal_match(
                 icon = None
                 explanation_text = None
 
-                if len(explanation):
-                    url = explanation[0]["url"]
-                    icon = explanation[0]["icon"]
-                    explanation_text = explanation[0]["text"]
+                if explanation is not None and len(explanation):
+                    explanation_text = (
+                        explanation[0]["text"] if "text" in explanation[0] else None
+                    )
+                    url = explanation[0]["url"] if "url" in explanation[0] else None
+                    icon = explanation[0]["icon"] if "icon" in explanation[0] else None
 
                 list_tokens.append(
                     ResultOut.factory(
