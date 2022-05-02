@@ -1,0 +1,30 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "organization_config": {
+        "config": {
+            "gendered_roles_format": {
+                "status": "force",
+                "value": "binary_gender"
+            },
+            "german_gender_ending": {
+                "status": "force",
+                "value": "In"
+            },
+            "preferred_variants": {
+                "status": "force",
+                "value": [
+                    "en-GB"
+                ]
+            },
+            "store_context": {
+                "status": "force",
+                "value": false
+            }
+        },
+        "id": "test",
+        "name": "Tests Works",
+        "plan": "witty_teams"
+    },
+    "results": []
+}
