@@ -66,7 +66,7 @@ from collections import defaultdict
 
 from app.sentry import set_up_sentry_sdk
 
-version = "1.28.0"
+version = "1.28.1"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -1080,7 +1080,7 @@ def gendered_denom_end(version: float, config: Config, lang, full_text):
     for item in config._gendereddenom_ending:
         if config.german_gender_ending == item:
             continue
-        span = re.search(config._gendereddenom_ending[item], full_text)
+        span = re.search("\S" + config._gendereddenom_ending[item], full_text)
         if type(span) == re.Match:
             list_ending.append(
                 ResultOut.factory(
@@ -1091,7 +1091,7 @@ def gendered_denom_end(version: float, config: Config, lang, full_text):
                     full_text,
                     category,
                     subcategory,
-                    span.start(),
+                    span.start() + 1,  # remove extra \S character
                     span.end(),
                     [config.german_gender_ending],
                 )
@@ -1932,10 +1932,16 @@ def literal_match(
                 icon = None
                 explanation_text = None
 
-                if len(explanation):
-                    url = explanation[0]["url"]
-                    icon = explanation[0]["icon"]
-                    explanation_text = explanation[0]["text"]
+                if (
+                    isinstance(explanation, list)
+                    and len(explanation)
+                    and isinstance(explanation[0], dict)
+                ):
+                    explanation_text = (
+                        explanation[0]["text"] if "text" in explanation[0] else None
+                    )
+                    url = explanation[0]["url"] if "url" in explanation[0] else None
+                    icon = explanation[0]["icon"] if "icon" in explanation[0] else None
 
                 list_tokens.append(
                     ResultOut.factory(
