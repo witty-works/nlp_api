@@ -79,6 +79,7 @@ class SingularTheyType(str, Enum):
 
 
 class GenderedRolesFormatType(str, Enum):
+    NONE = "none"
     BOTH = "both"
     INCLUSIVE_GENDER = "inclusive_gender"
     BINARY_GENDER = "binary_gender"
@@ -541,6 +542,9 @@ class ResultOut(BaseModel):
         alternative: str,
     ):
         if alternative and "~" in alternative:
+            if gendered_roles_format == GenderedRolesFormatType.NONE:
+                return []
+
             return ResultOut.getGenderedRoleFormatVariations(
                 gendered_roles_format, german_gender_ending, alternative
             )
