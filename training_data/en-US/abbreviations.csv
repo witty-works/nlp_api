@@ -35,6 +35,7 @@ CDN,acr,style,abbreviation,"['content delivery network', 'content delivery netwo
 CDO,acr,style,abbreviation,"['chief data officer', 'chief data officer (CDO)']"
 CEO,acr,style,abbreviation,"['chief executive officer', 'chief executive officer (CEO)']"
 CFO,acr,style,abbreviation,"['chief financial officer', 'chief financial officer (CFO)']"
+CFP,acr,style,abbreviation,"['certified financial planner', 'certified financial planner (CFP)']"
 CIO,acr,style,abbreviation,"['chief information officer', 'chief information officer (CIO)']"
 CLTV,acr,style,abbreviation,"['customer lifetime value', 'customer lifetime value (CLTV)']"
 CMA,acr,style,abbreviation,"['content management application', 'content management application (CMA)']"
@@ -45,6 +46,7 @@ COGS,acr,style,abbreviation,"['cost of goods sold', 'cost of goods sold (COGS)']
 COO,acr,style,abbreviation,"['chief operating officer', 'chief operating officer (COO)']"
 CPA,acr,style,abbreviation,"['cost per acquisition', 'cost per acquisition (CPA)', 'certified public accountant', 'certified public accountant (CPA)']"
 CPC,acr,style,abbreviation,"['cost-per-click', 'cost-per-click (CPC)', 'cost-per-conversion', 'cost-per-conversion (CPC)']"
+CPTSD,acr,style,abbreviation,"['complex post-traumatic stress disorder', 'complex post-traumatic stress disorder (CPTSD)', 'person with complex post-traumatic stress disorder']"
 CPU,acr,style,abbreviation,"['cost-per-unit', 'cost-per-unit (CPU)', 'central processing unit', 'central processing unit (CPU)']"
 CPaaS,acr,style,abbreviation,"['communications platform as a service', 'communications platform as a service (CPaaS)']"
 CR,acr,style,abbreviation,"['conversion rate', 'conversion rate (CR)', 'credit', 'credit (CR)']"
@@ -52,6 +54,7 @@ CRM,acr,style,abbreviation,"['customer relationship management', 'customer relat
 CRO,acr,style,abbreviation,"['conversion rate optimization', 'conversion rate optimization (CRO)']"
 CRUD,acr,style,abbreviation,"['create, read, update, delete', 'create, read, update, delete (CRUD)']"
 CSO,acr,style,abbreviation,"['chief security officer', 'chief security officer (CSO)']"
+CSR,acr,style,abbreviation,"['corporate social responsibility', 'corporate social responsibility (CSR)']"
 CSS,acr,style,abbreviation,"['cascading style sheet', 'cascading style sheet (CSS)']"
 CT,acr,style,abbreviation,"['capitalization table', 'capitalization table (CT)']"
 CTA,acr,style,abbreviation,"['call-to-action', 'call-to-action (CTA)']"
@@ -69,6 +72,7 @@ DFLYs,abbr,style,abbreviation,"['-', 'dependency-free life-years', 'dependency-f
 DIY,acr,style,abbreviation,"['do-it-yourself', 'do-it-yourself (DIY)']"
 DM,acr,style,abbreviation,"['direct message', 'direct mail', 'private message', 'send a direct message to']"
 DNS,acr,style,abbreviation,"['domain name system', 'domain name system (DNS)']"
+DOE,acr,style,abbreviation,['depending on experience']
 DOM,acr,style,abbreviation,"['document object model', 'document object model (DOM)']"
 DPO,acr,style,abbreviation,"['direct public offering', 'direct public offering (DPO)']"
 DR,acr,style,abbreviation,"['debit', 'debit (DR)']"
@@ -81,7 +85,7 @@ ETA,acr,style,abbreviation,"['estimated time of arrival', 'estimated time of arr
 ETD,acr,style,abbreviation,"['estimated time of departure', 'estimated time of departure (ETD)']"
 EV,acr,style,abbreviation,"['enterprise value', 'enterprise value (EV)']"
 EVP,acr,style,abbreviation,"['exceptional viable product', 'exceptional viable product (EVP)']"
-FAQ,acr,style,abbreviation,['Frequently asked question']
+FAQ,acr,style,abbreviation,"['frequently asked question', 'frequently asked question (FAQ)']"
 FFF,acr,style,abbreviation,"['friends and family round', 'friends and family round (FFF)']"
 FIFO,acr,style,abbreviation,"['first in, first out', 'first in, first out (FIFO)']"
 FMA,acr,style,abbreviation,"['first-mover advantage', 'first-mover advantage (FMA)']"
@@ -93,9 +97,10 @@ FTP,acr,style,abbreviation,"['file transport protocol', 'file transport protocol
 FTU,acr,style,abbreviation,"['first time use', 'first time use (FTU)']"
 FWIW,acr,style,abbreviation,['For what it’s worth']
 FY,abbr,style,abbreviation,"['financial year', 'financial year (FY)', 'fiscal year', 'fiscal year (FY)']"
-FYI,acr,style,abbreviation,['for your information']
+FYI,acr,style,abbreviation,"['for your information', 'for your information (FYI)']"
 GA,acr,style,abbreviation,"['Google Analytics', 'Google Analytics (GA)']"
 GAAP,acr,style,abbreviation,"['generally accepted accounting principles', 'generally accepted accounting principles (GAAP)']"
+GC,acr,style,abbreviation,"['general counsel', 'general counsel (GC)']"
 GMV,acr,style,abbreviation,"['gross merchandise value', 'gross merchandise value (GMV)']"
 GTM,acr,style,abbreviation,"['go-to-market', 'go-to-market (GTM)']"
 GUI,acr,style,abbreviation,"['graphical user interface', 'graphical user interface (GUI)']"
@@ -267,6 +272,7 @@ UX,acr,style,abbreviation,"['user experience', 'user experience (UX)']"
 VC,acr,style,abbreviation,"['venture capitalists', 'venture capitalists (VC)']"
 VCS,acr,style,abbreviation,"['version control software', 'version control software (VCS)']"
 VPN,acr,style,abbreviation,"['virtual private network', 'virtual private network (VPN)']"
+WDYT,acr,style,abbreviation,['What do you think?']
 WFH,acr,style,abbreviation,['work from home']
 WIIFM,acr,style,abbreviation,"[""What's in it for me?""]"
 WOM,acr,style,abbreviation,"['word-of-mouth', 'word-of-mouth (WOM)']"

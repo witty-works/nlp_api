@@ -1,7 +1,7 @@
 Lemma,Word_Type,Category,Primary_subcategory,Alt_split
 Ninja,s,style,exaggerating,"['skilled person', 'very proficient person', 'courageous person', 'they', 'skilled people', 'very proficient people', 'courageous people']"
 Sincerely,a,style,formality,"['Best regards', 'All the best', 'Thank you', 'Have a wonderful day', 'Let us know if you need anything']"
-absolut,a,style,exaggerating,['-']
+absolute,a,style,exaggerating,['-']
 actually,adv,style,filler,['-']
 best,a,style,exaggerating,"['preferred', ' fitting', 'satisfactory', 'advantageous', 'satisfying', 'choice', 'select', 'reliable', 'valuable', 'conducive to desired outcome']"
 brilliant,a,style,exaggerating,"['inspired', 'talented', 'inventive', 'astute', 'creative']"
@@ -10,7 +10,7 @@ competitor,s,style,exaggerating,"['market participant', 'market participants']"
 completely,adv,style,filler,['-']
 delicious,a,style,exaggerating,['-']
 dynamic,a,style,hollow,"['lively', 'energetic', 'spirited', 'enthusiastic', 'committed', 'vibrant', 'effective', 'productive', 'adaptable']"
-establishment,s,style,hollow,"['business', 'organisation', 'place of business', 'start', 'founding', 'process of setting up', 'public institution', 'private institution', 'dominant group', 'people with power and influence']"
+establishment,s,style,hollow,"['business', 'organisation', 'place of business', 'start', 'founding', 'process of setting up', 'public institution', 'private institution', 'dominant group', 'people with power and influence', 'businesses', 'organisations', 'places of business', 'start', 'founding', 'processes of setting up', 'public institutions', 'private institutions', 'dominant groups', 'people with power and influence']"
 excellence,s,style,exaggerating,['-']
 excellent,a,style,exaggerating,['-']
 exceptional,a,style,exaggerating,['-']
@@ -52,7 +52,7 @@ nerd,s,style,exaggerating,"['techie', 'intellectual', 'bookworm', 'person devote
 ninja,a,style,exaggerating,"['dedicated', 'committed', 'person who continues despite difficulties', 'someone devoted to their purpose', 'someone who sticks to their goal', 'someone willing to see things through']"
 normal,a,style,hollow,"['traditional', 'typical', 'common', 'routine', 'regular', 'conventional', 'customary', 'popular', 'reasonable', 'well-adjusted', 'rational', 'able to think clearly', 'able to use reason']"
 outstanding,a,style,exaggerating,"['awesome', 'inspiring']"
-passion,s,style,hollow,"['enthusiasm', 'dedication to', 'fascination with', 'keen interest in', 'love']"
+passion,s,style,hollow,"['enthusiasm', 'dedication to', 'fascination with', 'keen interest in', 'love', 'enthusiasm', 'dedication to', 'fascination with', 'keen interests in', 'love']"
 passionate,a,style,hollow,"['enthusiastic', 'believe (in)', 'committed to', 'fascinated with', 'keenly interested in', 'excited']"
 perfect,a,style,exaggerating,['-']
 profit,s,style,exaggerating,"['earnings', 'proceeds', 'net', 'revenue', 'gain', 'yield', 'earnings', 'proceeds', 'net', 'revenue', 'gains', 'yield']"
@@ -72,10 +72,10 @@ superstar,s,style,exaggerating,['-']
 surpass,v,style,exaggerating,"['refine', 'enrich', 'build on', 'improve upon', 'transcend', 'do better than', 'go beyond']"
 team-player,s,style,hollow,"['someone who values team effort over personal gains', 'someone who enjoys collaboration', 'someone who can compromise to reach a shared goal', 'someone who feels inspired and motivated by working together with others toward a shared goal', 'people who value team effort over personal gains', 'people who enjoy collaboration', 'people who can compromise to reach a shared goal', 'people who feel inspired and motivated by working together with others toward a shared goal']"
 teamplayer,s,style,hollow,"['someone who values team effort over personal gains', 'someone who enjoys collaboration', 'someone who can compromise to reach a shared goal', 'someone who feels inspired and motivated by working together with others toward a shared goal', 'people who value team effort over personal gains', 'people who enjoy collaboration', 'people who can compromise to reach a shared goal', 'people who feel inspired and motivated by working together with others toward a shared goal']"
-top-perfomer,s,style,exaggerating,"['colleague who approaches tasks constructively and with commitment', 'someone who thrives on implementing milestones together', 'someone who inspires their team to tackle tasks', 'someone with an entrepreneurial mindset']"
+top-perfomer,s,style,exaggerating,"['colleague who approaches tasks constructively and with commitment', 'someone who thrives on implementing milestones together', 'someone who inspires their team to tackle tasks', 'someone with an entrepreneurial mindset', 'colleagues who approaches tasks constructively and with commitment', 'people who thrive on implementing milestones together', 'people who inspire their teams to tackle tasks', 'people with an entrepreneurial mindset']"
 top-performance,a,style,exaggerating,"[""execution to the customer's satisfaction"", 'the fulfilment of customer expectations', 'reference cases', 'satisfying results']"
 top-performing,a,style,exaggerating,"['contributing to business success --- about a person', 'implementing goals with enthusiasm --- about a person', 'fulfilling customer expectations --- about a person']"
-topperfomer,s,style,exaggerating,"['colleague who approaches tasks constructively and with commitment', 'someone who thrives on implementing milestones together', 'someone who inspires their team to tackle tasks', 'someone with an entrepreneurial mindset']"
+topperfomer,s,style,exaggerating,"['colleague who approaches tasks constructively and with commitment', 'someone who thrives on implementing milestones together', 'someone who inspires their team to tackle tasks', 'someone with an entrepreneurial mindset', 'colleagues who approaches tasks constructively and with commitment', 'people who thrive on implementing milestones together', 'people who inspire their teams to tackle tasks', 'people with an entrepreneurial mindset']"
 topperformance,a,style,exaggerating,"[""execution to the customer's satisfaction"", 'the fulfilment of customer expectations', 'reference cases', 'satisfying results']"
 topperforming,a,style,exaggerating,"['contributing to business success --- about a person', 'implementing goals with enthusiasm --- about a person', 'fulfilling customer expectations --- about a person']"
 totally,adv,style,filler,['-']
@@ -86,6 +86,6 @@ very,adv,style,filler,['-']
 well-established,a,style,exaggerating,"['thriving', 'acknowledged', 'confirmed', 'long-standing', 'well-documented']"
 wellestablished,a,style,exaggerating,"['thriving', 'acknowledged', 'confirmed', 'long-standing', 'well-documented']"
 winner,s,style,exaggerating,['-']
-workforce,s,style,hollow,"['team', 'employees', 'personnel', 'staff']"
+workforce,s,style,hollow,"['team', 'employees', 'personnel', 'staff', 'teams', 'employees', 'personnel', 'staff']"
 world-wide,a,style,hollow,"['in (...) countries', '(...) offices across (...) continents']"
 worldwide,a,style,hollow,"['in (...) countries', '(...) offices across (...) continents']"
