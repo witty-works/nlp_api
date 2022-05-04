@@ -349,22 +349,18 @@ async def check_v1_1(
 async def store_rules(
     organization_rules: ConfRequest, username: str = Depends(get_current_username)
 ):
-    try:
-        rules = redis.get(organization_rules.id)
+    rules = redis.get(organization_rules.id)
 
-        # Set a value
-        redis.set(organization_rules.id, organization_rules.json())
-        for user in organization_rules.users:
-            redis.set(str(user), organization_rules.id)
+    # Set a value
+    redis.set(organization_rules.id, organization_rules.json())
+    for user in organization_rules.users:
+        redis.set(str(user), organization_rules.id)
 
-        if rules:
-            rules = json.loads(rules)
-            for user in rules["users"]:
-                if user not in organization_rules.users:
-                    redis.delete(str(user))
-
-    except Exception as e:
-        return e
+    if rules:
+        rules = json.loads(rules)
+        for user in rules["users"]:
+            if user not in organization_rules.users:
+                redis.delete(str(user))
 
     return organization_rules
 
@@ -373,13 +369,10 @@ async def store_rules(
 async def delete_rules(
     organization_rules: ConfDeleteRequest, username: str = Depends(get_current_username)
 ):
-    try:
-        redis.delete(organization_rules.id)
+    redis.delete(organization_rules.id)
 
-        for user in organization_rules.users:
-            redis.delete(str(user))
-    except Exception as e:
-        return e
+    for user in organization_rules.users:
+        redis.delete(str(user))
 
 
 @app.get("/get_user_rules")
