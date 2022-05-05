@@ -174,7 +174,9 @@ async def exception(
 ):  # pragma: no cover
     configure_sentry(request, user_request_in)
 
-    raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=user_request_in.text)
+    raise HTTPException(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=user_request_in.text
+    )
 
 
 @app.get("/lt", include_in_schema=not settings.is_prod)
@@ -463,7 +465,9 @@ def get_user(request: Request):
         if settings.redis_default_user:
             return settings.redis_default_user
 
-    if "authorization" in request.headers:
+    if "authorization" in request.headers and request.headers[
+        "authorization"
+    ].lower().startswith("bearer"):
         try:
             validate_scope(settings.aadb2c_expected_scope, request)
             claims = get_token_claims(request)
@@ -472,8 +476,9 @@ def get_user(request: Request):
             except KeyError:
                 pass
         except Exception:
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="access token invalid")
-
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN, detail="access token invalid"
+            )
 
     return None
 
