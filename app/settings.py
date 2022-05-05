@@ -19,7 +19,6 @@ class Settings(BaseSettings):
     api_docs_auth_enabled: bool = False
     instrumentation_key: str = ""
     testing: bool = False
-    read_rules_from_redis: bool = False
     sentry_dsn: Optional[str]
     sentry_traces_sample_rate: float = 0.2
     sentry_sample_rate: float = 0.2

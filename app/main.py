@@ -49,7 +49,7 @@ from app.models import (
     ResultConf,
 )
 
-from fastapi_microsoft_identity import validate_scope, get_token_claims, AuthError
+from fastapi_microsoft_identity import validate_scope, get_token_claims
 
 
 from app.lang_detection import LangDetection
@@ -66,7 +66,7 @@ from collections import defaultdict
 
 from app.sentry import set_up_sentry_sdk
 
-version = "1.28.2"
+version = "1.28.3"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -174,7 +174,9 @@ async def exception(
 ):  # pragma: no cover
     configure_sentry(request, user_request_in)
 
-    raise HTTPException(status_code=500, detail=user_request_in.text)
+    raise HTTPException(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=user_request_in.text
+    )
 
 
 @app.get("/lt", include_in_schema=not settings.is_prod)
@@ -349,22 +351,18 @@ async def check_v1_1(
 async def store_rules(
     organization_rules: ConfRequest, username: str = Depends(get_current_username)
 ):
-    try:
-        rules = redis.get(organization_rules.id)
+    rules = redis.get(organization_rules.id)
 
-        # Set a value
-        redis.set(organization_rules.id, organization_rules.json())
-        for user in organization_rules.users:
-            redis.set(str(user), organization_rules.id)
+    # Set a value
+    redis.set(organization_rules.id, organization_rules.json())
+    for user in organization_rules.users:
+        redis.set(str(user), organization_rules.id)
 
-        if rules:
-            rules = json.loads(rules)
-            for user in rules["users"]:
-                if user not in organization_rules.users:
-                    redis.delete(str(user))
-
-    except Exception as e:
-        return e
+    if rules:
+        rules = json.loads(rules)
+        for user in rules["users"]:
+            if user not in organization_rules.users:
+                redis.delete(str(user))
 
     return organization_rules
 
@@ -373,13 +371,10 @@ async def store_rules(
 async def delete_rules(
     organization_rules: ConfDeleteRequest, username: str = Depends(get_current_username)
 ):
-    try:
-        redis.delete(organization_rules.id)
+    redis.delete(organization_rules.id)
 
-        for user in organization_rules.users:
-            redis.delete(str(user))
-    except Exception as e:
-        return e
+    for user in organization_rules.users:
+        redis.delete(str(user))
 
 
 @app.get("/get_user_rules")
@@ -396,7 +391,7 @@ async def get_user_rules_from_redis(user: str):
     key = redis.get(user)
     if key:
         rules = json.loads(redis.get(key))
-        if user in rules["users"]:
+        if "users" in rules and user in rules["users"]:
             return rules
 
     return None
@@ -470,7 +465,9 @@ def get_user(request: Request):
         if settings.redis_default_user:
             return settings.redis_default_user
 
-    if settings.read_rules_from_redis:
+    if "authorization" in request.headers and request.headers[
+        "authorization"
+    ].lower().startswith("bearer"):
         try:
             validate_scope(settings.aadb2c_expected_scope, request)
             claims = get_token_claims(request)
@@ -478,8 +475,10 @@ def get_user(request: Request):
                 return claims["emails"][0]
             except KeyError:
                 pass
-        except AuthError:
-            pass
+        except Exception:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN, detail="access token invalid"
+            )
 
     return None
 
