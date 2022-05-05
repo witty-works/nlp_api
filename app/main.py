@@ -49,7 +49,7 @@ from app.models import (
     ResultConf,
 )
 
-from fastapi_microsoft_identity import validate_scope, get_token_claims, AuthError
+from fastapi_microsoft_identity import validate_scope, get_token_claims
 
 
 from app.lang_detection import LangDetection
@@ -174,7 +174,7 @@ async def exception(
 ):  # pragma: no cover
     configure_sentry(request, user_request_in)
 
-    raise HTTPException(status_code=500, detail=user_request_in.text)
+    raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=user_request_in.text)
 
 
 @app.get("/lt", include_in_schema=not settings.is_prod)
@@ -389,7 +389,7 @@ async def get_user_rules_from_redis(user: str):
     key = redis.get(user)
     if key:
         rules = json.loads(redis.get(key))
-        if user in rules["users"]:
+        if "users" in rules and user in rules["users"]:
             return rules
 
     return None
@@ -463,7 +463,7 @@ def get_user(request: Request):
         if settings.redis_default_user:
             return settings.redis_default_user
 
-    if settings.read_rules_from_redis:
+    if "authorization" in request.headers:
         try:
             validate_scope(settings.aadb2c_expected_scope, request)
             claims = get_token_claims(request)
@@ -471,8 +471,9 @@ def get_user(request: Request):
                 return claims["emails"][0]
             except KeyError:
                 pass
-        except AuthError:
-            pass
+        except Exception:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="access token invalid")
+
 
     return None
 

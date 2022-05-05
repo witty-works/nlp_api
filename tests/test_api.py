@@ -274,6 +274,18 @@ def test_categories():
     assert "hollow" in first_record
 
 
+def test_invalid_access_token():
+    input_json = '{"text": "Hello world."}'
+
+    response = client.post(
+        "/v1.1/check",
+        json=json.loads(input_json),
+        headers={"authorization": "bearer invalid"},
+    )
+
+    assert response.status_code == 403
+
+
 @pytest.fixture
 def set_redis():
     organization_object = {
