@@ -417,7 +417,7 @@ class ResultOut(BaseModel):
 
         preceeding_text = full_text[max(0, start - 5) : start]
         if (
-            re.search("(" + punctuation + "\s*|\s{5})$", preceeding_text, re.MULTILINE)
+            re.search(r"(" + punctuation + r"\s*|\s{5})$", preceeding_text, re.MULTILINE)
             != None
         ):
             is_upper = True
