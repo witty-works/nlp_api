@@ -1079,7 +1079,7 @@ def gendered_denom_end(version: float, config: Config, lang, full_text):
     for item in config._gendereddenom_ending:
         if config.german_gender_ending == item:
             continue
-        span = re.search("\S" + config._gendereddenom_ending[item], full_text)
+        span = re.search(r"\S" + config._gendereddenom_ending[item], full_text)
         if type(span) == re.Match:
             list_ending.append(
                 ResultOut.factory(
