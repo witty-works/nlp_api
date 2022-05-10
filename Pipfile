@@ -4,11 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-fastapi = {version = ">=0.73.0,<0.74.0"}
+fastapi = {version = ">=0.77.0,<0.78.0"}
 pydantic = {version = ">=1.2.0,<2.0.0"}
 uvicorn = {extras = ["standard"], version = "*"}
 gunicorn = "*"
-spacy = "*"
+spacy = {version = ">=3.2.0,<3.3.0"}
 pandas = "*"
 aiofiles = "*"
 babel = "*"
