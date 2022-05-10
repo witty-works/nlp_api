@@ -62,7 +62,7 @@ rules["en-GB"] = rules["en-US"].copy()
 for locale in rules:
     for csv in rules[locale]:
         rules[locale][csv] = pd.read_csv(
-            "training_data/" + locale + "/" + rules[locale][csv]
+            "training_data/" + locale + "/" + rules[locale][csv], keep_default_na=False
         )
 
 # list of "hollow word" sentences

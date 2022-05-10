@@ -2,7 +2,7 @@ Lemma,Word_Type,Category,Primary_subcategory,Alt_split
 (x)aaS,acr,style,abbreviation,"['something as a service', 'something as a service ((x)aaS)']"
 ACCT,abbr,style,abbreviation,['account']
 ADD,abbr,style,abbreviation,"['attention deficit disorder', 'attention deficit disorder (ADD)', 'easily bored', 'easily distracted', 'having a poor working memory']"
-ADHD,abbr,style,abbreviation,"['attention deficit hyperactivity disorder', 'attention deficit hyperactivity disorder (ADHD)', 'person with attention deficit hyperactivity disorder', 'fidgety', 'restless', 'easily bored', 'people with attention deficit hyperactivity disorder']"
+ADHD,abbr,style,abbreviation,"['attention deficit hyperactivity disorder', 'attention deficit hyperactivity disorder (ADHD)', 'person with attention deficit hyperactivity disorder', 'fidgety', 'restless', 'easily bored', 'people with attention deficit hyperactivity disorder', 'fidgety', 'restless', 'easily bored']"
 AIDA,acr,style,abbreviation,"['attention, interest, desire, action', 'attention, interest, desire, action (AIDA)']"
 AJAX,acr,style,abbreviation,"['asynchronous JavaScript and XML', 'asynchronous JavaScript and eXtensible markup language (AJAX)']"
 AKA,acr,style,abbreviation,['also known as']
@@ -14,7 +14,7 @@ AR,acr,style,abbreviation,"['accounts receivable', 'accounts receivable (AR)']"
 ARIA,acr,style,abbreviation,"['accessible rich internet applications', 'accessible rich internet applications (ARIA)']"
 ARR,acr,style,abbreviation,"['annual recurring revenue', 'annual recurring revenue (ARR)']"
 ASAP,acr,style,abbreviation,['As soon as possible']
-ASD,abbr,style,abbreviation,"['autism spectrum disorder', 'autism spectrum disorder', 'autism spectrum disorder (ASD)', 'neurodiversity', 'person with autism spectrum disorder', 'difficulties with social interaction and communication', 'umbrella diagnosis that includes autistic disorder, childhood disintegrative disorder, some pervasive developmental disorders, and Asperger syndrome', 'people with autism spectrum disorder']"
+ASD,abbr,style,abbreviation,"['autism spectrum disorder', 'autism spectrum disorder', 'autism spectrum disorder (ASD)', 'neurodiversity', 'person with autism spectrum disorder', 'difficulties with social interaction and communication', 'umbrella diagnosis that includes autistic disorder, childhood disintegrative disorder, some pervasive developmental disorders, and Asperger syndrome', 'people with autism spectrum disorder', 'difficulties with social interaction and communication', 'umbrella diagnosis that includes autistic disorder, childhood disintegrative disorder, some pervasive developmental disorders, and Asperger syndrome']"
 ASL,abbr,style,abbreviation,"['American Sign Language', 'American Sign Language (ASL)']"
 ATM,acr,style,abbreviation,['at the moment']
 B2B,acr,style,abbreviation,"['business-to-business', 'business-to-business (B2B)']"
@@ -62,8 +62,8 @@ CTO,acr,style,abbreviation,"['chief technology officer', 'chief technology offic
 CTR,acr,style,abbreviation,"['click-through rate', 'click-through rate (CTR)']"
 D&I,acr,style,abbreviation,"['diversity and inclusion', 'diversity and inclusion (D&I)']"
 D&O Insurance,acr,style,abbreviation,"['directors and officers insurance', 'directors and officers insurance (D&O insurance)']"
-DALY,abbr,style,abbreviation,"['-', 'diasability-adjusted life years', 'diasability-adjusted life years (DALY)', 'metric that confuses quality of life with health --- avoid if possible']"
-DALYs,abbr,style,abbreviation,"['-', 'diasability-adjusted life years', 'diasability-adjusted life years (DALYs)', 'metric that confuses quality of life with health --- avoid if possible']"
+DALY,abbr,style,abbreviation,"['-', 'disability-adjusted life years', 'disability-adjusted life years (DALY)', 'metric that confuses quality of life with health --- avoid if possible']"
+DALYs,abbr,style,abbreviation,"['-', 'disability-adjusted life years', 'diasability-adjusted life years (DALYs)', 'metric that confuses quality of life with health --- avoid if possible']"
 DD,acr,style,abbreviation,"['due diligence', 'due diligence (DD)']"
 DEI,acr,style,abbreviation,"['diversity, equity, and inclusion', 'diversity, equity, and inclusion (DEI)']"
 DEIB,acr,style,abbreviation,"['diversity, equity, inclusion, and belonging', 'diversity, equity, inclusion, and belonging (DEIB)']"
@@ -76,7 +76,7 @@ DOE,acr,style,abbreviation,['depending on experience']
 DOM,acr,style,abbreviation,"['document object model', 'document object model (DOM)']"
 DPO,acr,style,abbreviation,"['direct public offering', 'direct public offering (DPO)']"
 DR,acr,style,abbreviation,"['debit', 'debit (DR)']"
-EBITDA,acr,style,abbreviation,"['earnings before interest, taxes, decreciation and amortisation', 'earnings before interest, taxes, decreciation and amortisation (EBITDA)']"
+EBITDA,acr,style,abbreviation,"['earning before interest, taxes, depreciation and amortisation', 'earnings before interest, taxes, depreciation and amortisation (EBITDA)']"
 EOD,acr,style,abbreviation,"['end of day', 'end of day (EOD)']"
 EPS,acr,style,abbreviation,"['earnings per share', 'earnings per share (EPS)']"
 ESOP,acr,style,abbreviation,"['employee stock option plan', 'employee stock option plan (ESOP)']"
@@ -95,7 +95,7 @@ FOSS,acr,style,abbreviation,"['free and open-source software', 'free and open-so
 FTE,acr,style,abbreviation,"['full-time employee', 'full-time employee (FTE)']"
 FTP,acr,style,abbreviation,"['file transport protocol', 'file transport protocol (FTP)']"
 FTU,acr,style,abbreviation,"['first time use', 'first time use (FTU)']"
-FWIW,acr,style,abbreviation,['For what it’s worth']
+FWIW,acr,style,abbreviation,"[""For what it's worth""]"
 FY,abbr,style,abbreviation,"['financial year', 'financial year (FY)', 'fiscal year', 'fiscal year (FY)']"
 FYI,acr,style,abbreviation,"['for your information', 'for your information (FYI)']"
 GA,acr,style,abbreviation,"['Google Analytics', 'Google Analytics (GA)']"
@@ -127,7 +127,7 @@ IaaS,acr,style,abbreviation,"['infrastructure as a service', 'infrastructure as 
 JS,acr,style,abbreviation,"['JavaScript', 'JavaScript (JS)']"
 JSON,acr,style,abbreviation,"['JavaScript object notation', 'JavaScript object notation (JSON)']"
 KISS,acr,style,abbreviation,"['Keep it simple, stupid', 'Keep it simple, stupid (KISS)', 'Keep it simple, obvious']"
-KPI,acr,style,abbreviation,"['key performance indictator', 'key performance indictators', 'key performance indictator (KPI)', 'key performance indictators (KPI)']"
+KPI,acr,style,abbreviation,"['key performance indicator', 'key performance indicators', 'key performance indicator (KPI)', 'key performance indicators (KPI)']"
 KPIs,acr,style,abbreviation,"['key performance indicators', 'key performance indicators (KPIs)']"
 LAMP,acr,style,abbreviation,"['Linux, Apache, MySQL, PHP', 'Linux, Apache, MySQL, PHP (LAMP)', 'Linux, Apache, MySQL, Python', 'Linux, Apache, MySQL, Python (LAMP)', 'Linux, Apache, MySQL, Perl', 'Linux, Apache, MySQL, Perl (LAMP)']"
 LBFM,abbr,openly_discriminating,sexism,['-']
@@ -155,6 +155,7 @@ MTD,acr,style,abbreviation,"['month-to-date', 'month-to-date (MTD)']"
 MVC,acr,style,abbreviation,"['model-view-controller', 'model-view-controller (MVC)']"
 MVP,acr,style,abbreviation,"['minimum viable product', 'minimum viable product (MVP)']"
 MoM,acr,style,abbreviation,"['month-over-month', 'month-over-month (MoM)']"
+N/A,acr,style,abbreviation,"['not applicable', 'not available']"
 NAV,acr,style,abbreviation,"['net asset value', 'net asset value (NAV)']"
 NBD,acr,style,abbreviation,['No big deal.']
 NDA,acr,style,abbreviation,"['non-disclosure agreement', 'non-disclosure agreement (NDA)']"
@@ -212,7 +213,7 @@ RAM,acr,style,abbreviation,"['random access memory', 'random access memory (RAM)
 RCS,acr,style,abbreviation,"['rich communication services', 'rich communication services (RCS)']"
 REGEX,acr,style,abbreviation,"['regular expression', 'regular expression (REGEX)']"
 REST,acr,style,abbreviation,"['representational state transfer', 'representational state transfer (REST)']"
-RFD,acr,style,abbreviation,"['request for discusssion', 'send a request for discussion']"
+RFD,acr,style,abbreviation,"['request for discussion', 'send a request for discussion']"
 RFP,acr,style,abbreviation,"['request for proposal', 'request for proposal (RFP)']"
 RN,acr,style,abbreviation,['Right now']
 ROA,acr,style,abbreviation,"['return on assets', 'return on assets (ROA)']"
@@ -253,7 +254,7 @@ TBD,acr,style,abbreviation,['To be decided']
 TBF,acr,style,abbreviation,['To be frank']
 TBH,acr,style,abbreviation,"['To be honest,']"
 TERF,abbr,unconscious_bias,sexual_orientation,"['trans-exclusionary radical feminist', 'trans-exclusionary radical feminism']"
-TGIF,acr,style,abbreviation,['Thank goodness it’s Friday']
+TGIF,acr,style,abbreviation,"[""Thank goodness it's Friday""]"
 TIA,acr,style,abbreviation,['Thanks in advance!']
 TL;DR,acr,style,abbreviation,"[""Too long, didn't read.""]"
 TLTR,acr,style,abbreviation,['too long to read']
