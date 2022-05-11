@@ -32,7 +32,7 @@ RUN mkdir files \
 COPY --chown=wittyuser:wittyuser . .
 RUN pybabel compile -d locales -l de_DE -f \
   && pybabel compile -d locales -l en_US -f
-
+RUN wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 # azure app services needs port 80 or 8080 exposed
 ENV PORT 8080
 EXPOSE 8080 
