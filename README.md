@@ -18,18 +18,26 @@ This project has two key dependencies:
 ## using Docker
 
 1. Install Docker engine - https://docs.docker.com/engine/install/
-2. Pull images from Github registry:
+2. Pull images from Azure container registry:
 
 ```
-docker pull ghcr.io/witty-works/nlpapi:v1
-
+az login
+az acr login --name wittyworks
+docker pull wittyworks.azurecr.io/nlpapi:main
+docker pull wittyworks.azurecr.io/languagetool:main
 ```
 
 3. Run images:
 
 ```
-docker run --rm -it -p 8010:8010 ghcr.io/witty-works/languagetool:v1
-docker run  -p 8000:8000 --name nlp --network "bridge" --env languagetool_api=http://172.17.0.1:8010/v2 ghcr.io/test-img:test
+docker run --rm --name LT -it -p 8000:8000 wittyworks.azurecr.io/languagetool:main
+```
+check languagetool conatiner local adddress:
+```
+lt_api=`docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' LT`
+```
+```
+docker run  -p 8080:8080 --name nlp --network "bridge" --env languagetool_api="$lt_api/v2" wittyworks.azurecr.io/nlpapi:main
 ```
 
 ## using pipenv
