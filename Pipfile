@@ -20,6 +20,7 @@ platformshconfig = "*"
 fakeredis = "*"
 fasttext = "*"
 fastapi-microsoft-identity = "*"
+matplotlib = "*"
 
 [dev-packages]
 click = "*"
