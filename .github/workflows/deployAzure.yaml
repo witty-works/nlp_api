@@ -11,14 +11,9 @@ jobs:
           login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
-      #install pipenv
-      - name: Install pipenv
-        run: |
-          python -m pip install --upgrade pipenv wheel
 
       # build nlp api
       - run: |
-          pipenv lock -r > requirements.txt
           docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:${{ github.sha }}
           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:${{ github.sha }}
           # release version
