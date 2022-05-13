@@ -14,6 +14,7 @@ jobs:
       
       # build nlp api
       - run: |
+          pipenv lock -r > requirements.txt
           docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:${{ github.sha }}
           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:${{ github.sha }}
           # release version
