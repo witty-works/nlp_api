@@ -68,7 +68,6 @@ Apply https://github.com/orsinium-labs/eng/pull/1/files before running the below
 ```
 python -m venv /path/to/new/virtual/environment
 source /path/to/new/virtual/environment/bin/active
-python3.9 -m pip install -r requirements.txt
 python3.9 -m spacy download en_core_web_sm --no-cache-dir
 python3.9 -m spacy download de_core_news_sm --no-cache-dir
 ```
@@ -79,9 +78,10 @@ Compile the translations in the spirit of `./compile-translations.sh`
 
 ### Build Docker image:
 
-After making change in the code or in the Dockerfile, build new image with the following command:
+After making changes in the code or in the Dockerfile, you can run the local setup. Create `requirements.txt` file (used by Docker image) and build new image with the following commands:
 
 ```
+python3.9 -m pip install -r requirements.txt
 docker build -t DockerImageName:DockerImageRelease
 ```
 

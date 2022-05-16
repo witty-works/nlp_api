@@ -1,17 +1,30 @@
-on: [push] 
+on: [push]
 name: Build a Docker image and Push it to ACR
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      
+
       - uses: azure/docker-login@v1
         with:
           login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
-      
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+
+      - name: Install pipenv
+        run: |
+          python -m pip install --upgrade pipenv wheel
+
+      - name: Update requirements.txt for Docker image
+        run: |
+          pipenv lock -r > requirements.txt
+
       # build nlp api
       - run: |
           docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:${{ github.sha }}
