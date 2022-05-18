@@ -24,7 +24,7 @@ no problem,s,style,exaggerating,['-']
 not move the needle,i,style,hollow,"['futile', 'have no effect on', 'have no measurable effect on']"
 number 1,a,style,exaggerating,"['critical', 'vital', 'key', 'crucial', 'paramount']"
 number one,a,style,exaggerating,"['critical', 'vital', 'key', 'crucial', 'paramount']"
-opinion leader,s,style,exaggerating,"['incluencer', 'opinion maker', 'opinion shaper', 'influencers', 'opinion makers', 'opinion shapers']"
+opinion leader,s,style,exaggerating,"['influencer', 'opinion maker', 'opinion shaper', 'influencers', 'opinion makers', 'opinion shapers']"
 pioneering company,s,style,exaggerating,"['company paving the way for new technologies', 'companies paving the way for new technologies']"
 proven track record,s,style,exaggerating,"['documented outcomes', 'portfolio of case studies', 'reference cases', 'documented outcomes', 'portfolio of case studies', 'reference cases']"
 reach for the star,i,style,exaggerating,"['have aspirations', 'set goals that are motivating (inspiring, aspirational, ...)']"
