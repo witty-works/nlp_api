@@ -73,32 +73,6 @@ training_data_paths = []
 for file in os.listdir(base_directory):
     training_data_paths.append(base_directory + file)
 
-
-"""
-rules = {}
-rules["training_data/de-DE/agentic.csv"] = ["Alt_split"]
-rules["training_data/de-DE/gendered_noun.csv"] = ["Sg_all_clean", "Pl_all_clean"]
-# following files do not add anything to false_positive list
-
-rules["training_data/de-DE/hollow_sentences.csv"] = [
-    "Alternative_Plural_split",
-    "Alternative_Singular_split",
-]
-rules["training_data/de-DE/hollow_words.csv"] = [
-    "Alternative_Plural_split",
-    "Alternative_Singular_split",
-]
-
-rules["training_data/de-DE/open_dis_words.csv"] = ["Alt_split"]
-rules["training_data/de-DE/style_sentences.csv"] = ["Alt_split"]
-
-rules["training_data/de-DE/style_words.csv"] = ["Alt_split"]
-
-rules["training_data/de-DE/ub_no_noun_words.csv"] = ["Alt_split"]
-
-rules["training_data/de-DE/ub_noun_words.csv"] = ["Alt_split"]
-rules["training_data/de-DE/ub_sentences.csv"] = ["Alt_split"]
-"""
 columns = defaultdict(list)
 all_alternative_groups = []
 all_alternatives = []
@@ -130,7 +104,7 @@ for word in all_alternatives:
     if "~" in word:
         for german_gender_ending in endings:
             alternative = ResultOut.getGenderedRolesFormatInclusive(
-                word, german_gender_ending
+                german_gender_ending, word
             )
             clean_words.append(alternative)
 

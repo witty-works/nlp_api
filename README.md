@@ -18,18 +18,26 @@ This project has two key dependencies:
 ## using Docker
 
 1. Install Docker engine - https://docs.docker.com/engine/install/
-2. Pull images from Github registry:
+2. Pull images from Azure container registry:
 
 ```
-docker pull ghcr.io/witty-works/nlpapi:v1
-
+az login
+az acr login --name wittyworks
+docker pull wittyworks.azurecr.io/nlpapi:main
+docker pull wittyworks.azurecr.io/languagetool:main
 ```
 
 3. Run images:
 
 ```
-docker run --rm -it -p 8010:8010 ghcr.io/witty-works/languagetool:v1
-docker run  -p 8000:8000 --name nlp --network "bridge" --env languagetool_api=http://172.17.0.1:8010/v2 ghcr.io/test-img:test
+docker run --rm --name LT -it -p 8000:8000 wittyworks.azurecr.io/languagetool:main
+```
+check languagetool conatiner local adddress:
+```
+lt_api=`docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' LT`
+```
+```
+docker run  -p 8080:8080 --name nlp --network "bridge" --env languagetool_api="$lt_api/v2" wittyworks.azurecr.io/nlpapi:main
 ```
 
 ## using pipenv
@@ -60,7 +68,6 @@ Apply https://github.com/orsinium-labs/eng/pull/1/files before running the below
 ```
 python -m venv /path/to/new/virtual/environment
 source /path/to/new/virtual/environment/bin/active
-python3.9 -m pip install -r requirements.txt
 python3.9 -m spacy download en_core_web_sm --no-cache-dir
 python3.9 -m spacy download de_core_news_sm --no-cache-dir
 ```
@@ -71,9 +78,10 @@ Compile the translations in the spirit of `./compile-translations.sh`
 
 ### Build Docker image:
 
-After making change in the code or in the Dockerfile, build new image with the following command:
+After making changes in the code or in the Dockerfile, you can run the local setup. Create `requirements.txt` file (used by Docker image) and build new image with the following commands:
 
 ```
+python3.9 -m pip install -r requirements.txt
 docker build -t DockerImageName:DockerImageRelease
 ```
 
