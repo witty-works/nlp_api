@@ -1,7 +1,7 @@
 Lemma,Word_Type,Category,Primary_subcategory,Alt_split
 CSD,abbr,style,abbreviation,"['Christopher Street Day', 'Christopher Street Day (CSD)']"
-FLINT,abbr,style,abbreviation,"['Frauen, Lesben, intersexuelle Personen, nicht-binäre-Personen, Trans~gender', 'Frauen, Lesben, intersexuelle Personen, nicht-binäre-Personen, Trans~gender (FLINT)', 'alle, die aufgrund ihrer Geschlechtsidentitat und sexuellen Orientierung im Patriarchat diskrimiert werden']"
-FLINTA,abbr,style,abbreviation,"['Frauen, Lesben, intersexuelle Personen, nicht-binäre-Personen, Trans~gender, Agender', 'Frauen, Lesben, intersexuelle Personen, nicht-binäre-Personen, Trans~gender, Agender (FLINTA)', 'alle, die aufgrund ihrer Geschlechtsidentitat und sexuellen Orientierung im Patriarchat diskrimiert werden']"
+FLINT,abbr,style,abbreviation,"['Frauen, Lesben, intersexuelle Personen, nicht-binäre-Personen, Trans~gender', 'Frauen, Lesben, intersexuelle Personen, nicht-binäre-Personen, Trans~gender (FLINT)', 'alle, die aufgrund ihrer Geschlechtsidentität und sexuellen Orientierung im Patriarchat diskriminiert werden']"
+FLINTA,abbr,style,abbreviation,"['Frauen, Lesben, intersexuelle Personen, nicht-binäre-Personen, Trans~gender, Agender', 'Frauen, Lesben, intersexuelle Personen, nicht-binäre-Personen, Trans~gender, Agender (FLINTA)', 'alle, die aufgrund ihrer Geschlechtsidentität und sexuellen Orientierung im Patriarchat diskriminiert werden']"
 LGBTQIA+,abbr,style,abbreviation,"['lesbian, gay, bisexual, transgender, intersex, queer/questioning, asexual and more (LGBTQIA+)', 'lesbische, schwule, bisexuelle, transsexuelle, queere, intersexuelle, asexuelle Menschen']"
 etc,abbr,style,filler,['-']
 etc.,abbr,style,filler,['-']
