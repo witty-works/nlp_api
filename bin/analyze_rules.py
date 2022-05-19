@@ -121,9 +121,14 @@ def generate_alternatives_english(all_alternatives):
         all_words.extend(word.split())
 
     for word in all_words:
-        for ch in ["(", ")", ".", "^", ","]:
+        for ch in ["(", ")", "^", ","]:
             if ch in word:
                 word = word.replace(ch, "")
+        if "." in word:
+            # special handling for "Express.js" etc.
+            word = word.replace(".js", "-~-js")
+            word = word.replace(".", "")
+            word = word.replace("-~-js", ".js")
         if "/" in word:
             clean_words.extend(word.split("/"))
         elif len(word) >= 1:

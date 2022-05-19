@@ -1,7 +1,7 @@
 categories = {
     "abbreviation": {
         "inclusive": False,
-        "category": "",
+        "category": "style",
         "gravity": 3,
         "importance": 3,
         "emoji": "😉",
@@ -162,7 +162,7 @@ categories = {
     },
     "exaggerating": {
         "inclusive": False,
-        "category": "",
+        "category": "style",
         "gravity": 2,
         "importance": 2,
         "emoji": "😮\u200d💨",
@@ -456,7 +456,7 @@ categories = {
     },
     "verbose": {
         "inclusive": False,
-        "category": "",
+        "category": "style",
         "gravity": 3,
         "importance": 3,
         "emoji": "🧊",
