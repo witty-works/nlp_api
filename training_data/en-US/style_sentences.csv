@@ -1,5 +1,7 @@
 Lemma,Word_Type,Category,Primary_subcategory,Alt_split
 Kind regards,a,style,formality,"['Cordially', 'Thank you for reading', 'Sending you the best', 'Take care', 'With appreciation']"
+What we want is to,i,style,filler,"['We want to', 'Our goal:', ""Let's""]"
+What we want to do is to,i,style,filler,"['We want to', 'Our goal:', ""Let's""]"
 amongst others,s,style,filler,['-']
 bright mind,a+s,style,exaggerating,"['astute mind', 'creative mind', 'inventive mind', 'talent', 'engaged person', 'person with different perspectives', 'someone who comes up with creative ideas/solutions', 'astute minds', 'creative minds', 'inventive minds', 'talents', 'engaged people', 'people with different perspectives', 'people who comes up with creative ideas (solutions)']"
 clever head,a+s,style,exaggerating,"['competence', 'creativity', 'intelligence', 'talent', 'ability', 'capability', 'proficiency', 'education', 'creative person', 'astute person', 'inventive person', 'someone with an eye for solutions', 'someone with surprising ideas', 'creative people', 'astute people', 'inventive people', 'people with an eye for solutions', 'people with surprising ideas']"
