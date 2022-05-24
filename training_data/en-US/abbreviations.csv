@@ -20,7 +20,9 @@ ATM,acr,style,abbreviation,['at the moment']
 B2B,acr,style,abbreviation,"['business-to-business', 'business-to-business (B2B)']"
 B2C,acr,style,abbreviation,"['business-to-customer', 'business-to-customer (B2C)', 'business-to-consumer', 'business-to-consumer (B2C)']"
 B2S,acr,style,abbreviation,"['business-to-society', 'business-to-society (B2S)']"
+BAME,acr,style,abbreviation,"['--- (UK)', 'Black, Asian, and Minority Ethnic', 'Black, Asian, and Minority Ethnic (BAME)']"
 BD,acr,style,abbreviation,"['business development', 'business development (BD)']"
+BIPOC,acr,style,abbreviation,"['--- (US) be specific, if possible', 'Black, Indigenous, People of Color', 'Black, Indigenous, People of Color (BIPOC)']"
 BOD,acr,style,abbreviation,"['board of directors', 'board of directors (BOD)']"
 BR,acr,style,abbreviation,"['bounce rate', 'bounce rate (BR)']"
 BRB,acr,style,abbreviation,['Be right back']
@@ -187,7 +189,6 @@ PIV,acr,style,abbreviation,"['pooled investment vehicle', 'pooled investment veh
 PLG,acr,style,abbreviation,"['product-led growth', 'product-led growth (PLG)']"
 PM,acr,style,abbreviation,"['project manager', 'project manager (PM)']"
 PMF,acr,style,abbreviation,"['product market fit', 'product market fit (PMF)']"
-POC,acr,style,abbreviation,"['point of contact', 'point of contact (POC)', 'proof of concept', 'proof of concept (POC)']"
 POI,acr,style,abbreviation,"['point of information', 'point of information (POI)']"
 PPC,acr,style,abbreviation,"['pay-per-click', 'pay-per-click (PPC)']"
 PR,acr,style,abbreviation,"['public relations', 'public relations (PR)']"
