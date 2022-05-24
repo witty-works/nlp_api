@@ -2,7 +2,7 @@ Lemma,Word_Type,Category,Primary_subcategory,Alt_split
 (x)aaS,acr,style,abbreviation,"['something as a service', 'something as a service ((x)aaS)']"
 ACCT,abbr,style,abbreviation,['account']
 ADD,abbr,style,abbreviation,"['attention deficit disorder', 'attention deficit disorder (ADD)', 'easily bored', 'easily distracted', 'having a poor working memory']"
-ADHD,abbr,style,abbreviation,"['attention deficit hyperactivity disorder', 'attention deficit hyperactivity disorder (ADHD)', 'person with attention deficit hyperactivity disorder', 'fidgety', 'restless', 'easily bored', 'people with attention deficit hyperactivity disorder', 'fidgety', 'restless', 'easily bored']"
+ADHD,abbr,style,abbreviation,"['attention deficit hyperactivity disorder', 'attention deficit hyperactivity disorder (ADHD)', 'person with attention deficit hyperactivity disorder', 'fidgety', 'restless', 'easily bored', 'people with attention deficit hyperactivity disorder']"
 AIDA,acr,style,abbreviation,"['attention, interest, desire, action', 'attention, interest, desire, action (AIDA)']"
 AJAX,acr,style,abbreviation,"['asynchronous JavaScript and XML', 'asynchronous JavaScript and eXtensible markup language (AJAX)']"
 AKA,acr,style,abbreviation,['also known as']
@@ -14,13 +14,15 @@ AR,acr,style,abbreviation,"['accounts receivable', 'accounts receivable (AR)']"
 ARIA,acr,style,abbreviation,"['accessible rich internet applications', 'accessible rich internet applications (ARIA)']"
 ARR,acr,style,abbreviation,"['annual recurring revenue', 'annual recurring revenue (ARR)']"
 ASAP,acr,style,abbreviation,['As soon as possible']
-ASD,abbr,style,abbreviation,"['autism spectrum disorder', 'autism spectrum disorder', 'autism spectrum disorder (ASD)', 'neurodiversity', 'person with autism spectrum disorder', 'difficulties with social interaction and communication', 'umbrella diagnosis that includes autistic disorder, childhood disintegrative disorder, some pervasive developmental disorders, and Asperger syndrome', 'people with autism spectrum disorder', 'difficulties with social interaction and communication', 'umbrella diagnosis that includes autistic disorder, childhood disintegrative disorder, some pervasive developmental disorders, and Asperger syndrome']"
+ASD,abbr,style,abbreviation,"['autism spectrum disorder', 'autism spectrum disorder', 'autism spectrum disorder (ASD)', 'neurodiversity', 'person with autism spectrum disorder', 'difficulties with social interaction and communication', 'umbrella diagnosis that includes autistic disorder, childhood disintegrative disorder, some pervasive developmental disorders, and Asperger syndrome', 'people with autism spectrum disorder']"
 ASL,abbr,style,abbreviation,"['American Sign Language', 'American Sign Language (ASL)']"
 ATM,acr,style,abbreviation,['at the moment']
 B2B,acr,style,abbreviation,"['business-to-business', 'business-to-business (B2B)']"
 B2C,acr,style,abbreviation,"['business-to-customer', 'business-to-customer (B2C)', 'business-to-consumer', 'business-to-consumer (B2C)']"
 B2S,acr,style,abbreviation,"['business-to-society', 'business-to-society (B2S)']"
+BAME,acr,style,abbreviation,"['--- (UK)', 'Black, Asian, and Minority Ethnic', 'Black, Asian, and Minority Ethnic (BAME)']"
 BD,acr,style,abbreviation,"['business development', 'business development (BD)']"
+BIPOC,acr,style,abbreviation,"['--- (US) be specific, if possible', 'Black, Indigenous, People of Color', 'Black, Indigenous, People of Color (BIPOC)']"
 BOD,acr,style,abbreviation,"['board of directors', 'board of directors (BOD)']"
 BR,acr,style,abbreviation,"['bounce rate', 'bounce rate (BR)']"
 BRB,acr,style,abbreviation,['Be right back']
@@ -155,7 +157,6 @@ MTD,acr,style,abbreviation,"['month-to-date', 'month-to-date (MTD)']"
 MVC,acr,style,abbreviation,"['model-view-controller', 'model-view-controller (MVC)']"
 MVP,acr,style,abbreviation,"['minimum viable product', 'minimum viable product (MVP)']"
 MoM,acr,style,abbreviation,"['month-over-month', 'month-over-month (MoM)']"
-N/A,acr,style,abbreviation,"['not applicable', 'not available']"
 NAV,acr,style,abbreviation,"['net asset value', 'net asset value (NAV)']"
 NBD,acr,style,abbreviation,['No big deal.']
 NDA,acr,style,abbreviation,"['non-disclosure agreement', 'non-disclosure agreement (NDA)']"
@@ -164,7 +165,7 @@ NP,acr,style,abbreviation,['No problem']
 NPV,acr,style,abbreviation,"['net present value', 'net present value (NPV)']"
 NRN,acr,style,abbreviation,['No reply necessary.']
 NSFW,acr,style,abbreviation,['not safe for work']
-NVM,acr,style,abbreviation,['Nevermind']
+NVM,acr,style,abbreviation,['Never mind.']
 NWR,acr,style,abbreviation,['not work related']
 NYSE,acr,style,abbreviation,"['New York Stock Exchange', 'New York Stock Exchange (NYSE)']"
 OAuth,acr,style,abbreviation,"['open authentication', 'open authentication (OAuth)']"
@@ -188,7 +189,6 @@ PIV,acr,style,abbreviation,"['pooled investment vehicle', 'pooled investment veh
 PLG,acr,style,abbreviation,"['product-led growth', 'product-led growth (PLG)']"
 PM,acr,style,abbreviation,"['project manager', 'project manager (PM)']"
 PMF,acr,style,abbreviation,"['product market fit', 'product market fit (PMF)']"
-POC,acr,style,abbreviation,"['point of contact', 'point of contact (POC)', 'proof of concept', 'proof of concept (POC)']"
 POI,acr,style,abbreviation,"['point of information', 'point of information (POI)']"
 PPC,acr,style,abbreviation,"['pay-per-click', 'pay-per-click (PPC)']"
 PR,acr,style,abbreviation,"['public relations', 'public relations (PR)']"

@@ -442,6 +442,11 @@ class ResultOut(BaseModel):
             if alternative == text:
                 continue
 
+            # requests for user input are not yet supported
+            # https://wittyworks.productboard.com/roadmap/3751070-browser-extension/features/13529555/detail
+            if "((" in alternative:
+                continue
+
             inspiration = None
             if ResultOut.isInspirationAlternative(alternative):
                 if not config.show_inspiration_alternatives:
@@ -456,6 +461,10 @@ class ResultOut(BaseModel):
                     alternative, alternative_context = alternative.split("---")
                     alternative = alternative.strip()
                     alternative_context = alternative_context.strip()
+                    # context without an alternative is not supported yet
+                    # https://wittyworks.productboard.com/roadmap/3751070-browser-extension/features/13529614/detail
+                    if alternative == "":
+                        continue
 
                 if is_upper:
                     alternative = string.capwords(alternative[0:1]) + alternative[1:]

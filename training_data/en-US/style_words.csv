@@ -22,7 +22,7 @@ first-class,a,style,exaggerating,['-']
 first-mover,s,style,exaggerating,"['the first to market a product', 'the first to offer a service', 'the first to seize a market opportunity', 'those first to market a product', 'those first to offer a service', 'those first to seize a market opportunity']"
 firstclass,a,style,exaggerating,['-']
 firstmover,s,style,exaggerating,"['the first to market a product', 'the first to offer a service', 'the first to seize a market opportunity', 'those first to market a product', 'those first to offer a service', 'those first to seize a market opportunity']"
-flexible,a,style,hollow,"['adaptable', 'strategically nimble', 'pragmatic', 'open', 'agile', 'variable', 'mobile', 'defined by its users']"
+flexible,a,style,hollow,"[""--- don't use to describe a person"", 'adaptable', 'strategically nimble', 'pragmatic', 'open', 'agile', 'variable', 'mobile', 'defined by its users']"
 front-runner,s,style,exaggerating,"['-', 'favorite', 'person who sets the pace', 'probable winner', 'favorites', 'people who set the pace', 'probable winners']"
 frontrunner,s,style,exaggerating,"['-', 'favorite', 'person who sets the pace', 'probable winner', 'favorites', 'people who set the pace', 'probable winners']"
 geek,s,style,exaggerating,"['-', 'techie', 'intellectual', 'bookworm', 'person devoted to academic pursuits', 'person with a high level of knowledge (skills) in', 'techies', ' intellectuals', 'bookworms', 'people devoted to academic pursuits', 'people with a high level of knowledge (skills) in']"
