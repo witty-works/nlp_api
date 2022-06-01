@@ -1069,14 +1069,11 @@ def get_lower_cased(token):
 
 
 """Function to change verb to -ing form in alternatives"""
+def ing_ify_alternative(alternative):
+    return alternative.split()[0].rstrip("e") + "ing" + " " + " ".join(alternative.split()[1:])
 
-
-def get_ing_form(mystring):
-    mylist = []
-    for a in mystring:
-        mylist.append(a.split()[0].rstrip("e") + "ing" + " " + " ".join(a.split()[1:]))
-
-    return mylist
+def ing_ify_alternatives(alternatives):
+    return [ing_ify_alternative(alternative).strip() for alternative in alternatives]
 
 
 """Function to catch ending in German Denom"""
@@ -1842,36 +1839,22 @@ def rules_based_words_phrase_matcher_en(
         for word, alternative, subcategory in words_alternatives:
             if get_lower_cased(token) == word:
                 if token.text.endswith("ing") and token.pos_ == "VERB":
-                    list_tokens.append(
-                        ResultOut.factory(
-                            version,
-                            config,
-                            lang,
-                            token.text,
-                            full_text,
-                            category,
-                            subcategory,
-                            token.idx,
-                            token.idx + len(token.text),
-                            get_ing_form(alternative),
-                        )
-                    )
+                    alternative = ing_ify_alternatives(alternative)
 
-                else:
-                    list_tokens.append(
-                        ResultOut.factory(
-                            version,
-                            config,
-                            lang,
-                            token.text,
-                            full_text,
-                            category,
-                            subcategory,
-                            token.idx,
-                            token.idx + len(token.text),
-                            alternative,
-                        )
+                list_tokens.append(
+                    ResultOut.factory(
+                        version,
+                        config,
+                        lang,
+                        token.text,
+                        full_text,
+                        category,
+                        subcategory,
+                        token.idx,
+                        token.idx + len(token.text),
+                        alternative,
                     )
+                )
 
     matches = matcher(tokens)
     for match_id, start, end in matches:
@@ -1907,6 +1890,9 @@ def homonyms_english(
             if not is_sub_category_enabled(config, subcategory):
                 continue
             if token.lemma_ == word and token.pos_ == type_transform(word_type):
+                if token.text.endswith("ing") and token.pos_ == "VERB":
+                    alternative = ing_ify_alternatives(alternative)
+
                 list_tokens.append(
                     ResultOut.factory(
                         version,
@@ -1921,6 +1907,7 @@ def homonyms_english(
                         alternative,
                     )
                 )
+
     return list_tokens
 
 
