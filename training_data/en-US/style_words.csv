@@ -3,7 +3,7 @@ Ninja,s,style,exaggerating,"['skilled person', 'very proficient person', 'courag
 Sincerely,a,style,formality,"['Best regards', 'All the best', 'Thank you', 'Have a wonderful day', 'Let us know if you need anything']"
 absolute,a,style,exaggerating,['-']
 actually,adv,style,filler,['-']
-best,a,style,exaggerating,"['preferred', ' fitting', 'satisfactory', 'advantageous', 'satisfying', 'choice', 'select', 'reliable', 'valuable', 'conducive to desired outcome']"
+best,a,style,exaggerating,"['preferred', 'fitting', 'satisfactory', 'advantageous', 'satisfying', 'choice', 'select', 'reliable', 'valuable', 'conducive to desired outcome']"
 brilliant,a,style,exaggerating,"['inspired', 'talented', 'inventive', 'astute', 'creative']"
 compelling,a,style,exaggerating,"['convincing', 'evoking interest/attention', 'inspiring conviction', 'engaging', 'exciting', 'sound', 'reasonable', 'credible', 'effective', 'conclusive', 'urgent', 'crucial', 'vital']"
 competitor,s,style,exaggerating,"['market participant', 'market participants']"
