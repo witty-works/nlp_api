@@ -1068,6 +1068,17 @@ def get_lower_cased(token):
     return token_word.lower()
 
 
+"""Function to change verb to -ing form in alternatives"""
+
+
+def get_ing_form(mystring):
+    mylist = []
+    for a in mystring:
+        mylist.append(a.split()[0].rstrip("e") + "ing" + " " + " ".join(a.split()[1:]))
+
+    return mylist
+
+
 """Function to catch ending in German Denom"""
 
 
@@ -1830,20 +1841,37 @@ def rules_based_words_phrase_matcher_en(
     for token in tokens:
         for word, alternative, subcategory in words_alternatives:
             if get_lower_cased(token) == word:
-                list_tokens.append(
-                    ResultOut.factory(
-                        version,
-                        config,
-                        lang,
-                        token.text,
-                        full_text,
-                        category,
-                        subcategory,
-                        token.idx,
-                        token.idx + len(token.text),
-                        alternative,
+                if token.text.endswith("ing") and token.pos_ == "VERB":
+                    list_tokens.append(
+                        ResultOut.factory(
+                            version,
+                            config,
+                            lang,
+                            token.text,
+                            full_text,
+                            category,
+                            subcategory,
+                            token.idx,
+                            token.idx + len(token.text),
+                            get_ing_form(alternative),
+                        )
                     )
-                )
+
+                else:
+                    list_tokens.append(
+                        ResultOut.factory(
+                            version,
+                            config,
+                            lang,
+                            token.text,
+                            full_text,
+                            category,
+                            subcategory,
+                            token.idx,
+                            token.idx + len(token.text),
+                            alternative,
+                        )
+                    )
 
     matches = matcher(tokens)
     for match_id, start, end in matches:
