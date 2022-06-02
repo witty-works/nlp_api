@@ -34,7 +34,7 @@ jobs:
             ${{ runner.os }}-${{ env.cache-name }}-
 
       - name: Install dependencies
-        if: steps.cache-pipenv2.outputs.cache-hit != 'true'
+        if: steps.cache-pipenv3.outputs.cache-hit != 'true'
         run: |
           pipenv install --deploy --dev --verbose
           pipenv run python -m spacy download en_core_web_sm
