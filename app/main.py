@@ -1068,6 +1068,14 @@ def get_lower_cased(token):
     return token_word.lower()
 
 
+"""Function to change verb to -ing form in alternatives"""
+def ing_ify_alternative(alternative):
+    return alternative.split()[0].rstrip("e") + "ing" + " " + " ".join(alternative.split()[1:])
+
+def ing_ify_alternatives(alternatives):
+    return [ing_ify_alternative(alternative).strip() for alternative in alternatives]
+
+
 """Function to catch ending in German Denom"""
 
 
@@ -1830,6 +1838,9 @@ def rules_based_words_phrase_matcher_en(
     for token in tokens:
         for word, alternative, subcategory in words_alternatives:
             if get_lower_cased(token) == word:
+                if token.text.endswith("ing") and token.pos_ == "VERB":
+                    alternative = ing_ify_alternatives(alternative)
+
                 list_tokens.append(
                     ResultOut.factory(
                         version,
@@ -1879,6 +1890,9 @@ def homonyms_english(
             if not is_sub_category_enabled(config, subcategory):
                 continue
             if token.lemma_ == word and token.pos_ == type_transform(word_type):
+                if token.text.endswith("ing") and token.pos_ == "VERB":
+                    alternative = ing_ify_alternatives(alternative)
+
                 list_tokens.append(
                     ResultOut.factory(
                         version,
@@ -1893,6 +1907,7 @@ def homonyms_english(
                         alternative,
                     )
                 )
+
     return list_tokens
 
 
