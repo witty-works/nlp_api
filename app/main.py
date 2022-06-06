@@ -1072,8 +1072,13 @@ def get_lower_cased(token):
 def ing_ify_alternative(alternative):
     return alternative.split()[0].rstrip("e") + "ing" + " " + " ".join(alternative.split()[1:])
 
-def ing_ify_alternatives(alternatives):
-    return [ing_ify_alternative(alternative).strip() for alternative in alternatives]
+def ing_ify_alternatives(token, alternatives):
+    if token.text.endswith("ing") and token.pos_ == "VERB":
+        return [
+            ing_ify_alternative(alternative).strip() for alternative in alternatives
+        ]
+
+    return alternatives
 
 
 """Function to catch ending in German Denom"""
@@ -1839,7 +1844,7 @@ def rules_based_words_phrase_matcher_en(
         for word, alternative, subcategory in words_alternatives:
             if get_lower_cased(token) == word:
                 if token.text.endswith("ing") and token.pos_ == "VERB":
-                    alternative = ing_ify_alternatives(alternative)
+                    alternative = ing_ify_alternatives(token, alternative)
 
                 list_tokens.append(
                     ResultOut.factory(
@@ -1891,7 +1896,7 @@ def homonyms_english(
                 continue
             if token.lemma_ == word and token.pos_ == type_transform(word_type):
                 if token.text.endswith("ing") and token.pos_ == "VERB":
-                    alternative = ing_ify_alternatives(alternative)
+                    alternative = ing_ify_alternatives(token, alternative)
 
                 list_tokens.append(
                     ResultOut.factory(
