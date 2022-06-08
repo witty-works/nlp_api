@@ -44,7 +44,6 @@ from app.models import (
     ResultsOutOld,
     ResultsOut,
     ConfRequest,
-    ConfDeleteRequest,
     OrganizationConfig,
     ResultConf,
 )
@@ -371,12 +370,16 @@ async def store_rules(
 
 @app.delete("/delete_rules")
 async def delete_rules(
-    organization_rules: ConfDeleteRequest, username: str = Depends(get_current_username)
+    organization_id: str, username: str = Depends(get_current_username)
 ):
-    redis.delete(organization_rules.id)
+    rules = redis.get(organization_id)
 
-    for user in organization_rules.users:
-        redis.delete(str(user))
+    if rules:
+        rules = json.loads(rules)
+        for user in rules["users"]:
+            redis.delete(str(user))
+
+    redis.delete(organization_id)
 
 
 @app.get("/get_user_rules")
