@@ -255,6 +255,7 @@ def german_gender_ending(
 
 @app.post(
     "/auth_debug",
+    include_in_schema=not settings.is_prod,
     dependencies=[Depends(HTTPBearer())],
 )
 async def auth(request: Request, user_request_in: RequestIn):  # pragma: no cover
@@ -299,6 +300,7 @@ def get_categories(lang: LangType = "de"):
 
 @app.post(
     "/check",
+    include_in_schema=not settings.is_prod,
     response_model=Union[ResultsOutOld, Result],
 )
 async def check_v1_0(
