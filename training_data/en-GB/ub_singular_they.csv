@@ -1,7 +1,8 @@
-Lemma,Word_Type,Priority,Category,Primary_subcategory,Sg_all_split,Pl_all_split,Alt_split
-he,s,21-01-2022,gendered,binary_pronouns,['they'],[''],['they']
-she,s,21-01-2022,gendered,binary_pronouns,['they'],[''],['they']
-him,s,21-01-2022,gendered,binary_pronouns,['them'],[''],['them']
-her,s,21-01-2022,gendered,binary_pronouns,['them'],[''],['them']
-himself,s,21-01-2022,gendered,binary_pronouns,['themself'],[''],['themself']
-herself,s,21-01-2022,gendered,binary_pronouns,['themself'],[''],['themself']
+Lemma,Word_Type,Category,Primary_subcategory,Sg_all_split,Pl_all,Pl_all_split,Alt_split
+he,s,gendered,binary_pronouns,"['they', 'enby --- for non-binary people, if stated preference', '((given name))', '((given name family name))']",,[''],"['they', 'enby --- for non-binary people, if stated preference', '((given name))', '((given name family name))']"
+her,s,gendered,binary_pronouns,"['them', 'their', '((given name))', '((given name family name))']",,[''],"['them', 'their', '((given name))', '((given name family name))']"
+herself,s,gendered,binary_pronouns,['themself'],,[''],['themself']
+him,s,gendered,binary_pronouns,"['them', '((given name))', '((given name family name))']",,[''],"['them', '((given name))', '((given name family name))']"
+himself,s,gendered,binary_pronouns,['themself'],,[''],['themself']
+his,s,gendered,binary_pronouns,"['their', ""(given name's))""]",,[''],"['their', ""(given name's))""]"
+she,s,gendered,binary_pronouns,"['they', 'enby --- for non-binary people, if stated preference', '((given name))', '((given name family name))']",,[''],"['they', 'enby --- for non-binary people, if stated preference', '((given name))', '((given name family name))']"

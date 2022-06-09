@@ -15,6 +15,6 @@ manward,a,gendered,hidden_image,"['directed toward humankind', 'relating to huma
 manwards,adv,gendered,hidden_image,"['of humankind', 'at humanity', 'toward humankind']",[''],"['of humankind', 'at humanity', 'toward humankind']"
 manwise,adv,gendered,hidden_image,"['in the manner of a human being', 'like a human being']",[''],"['in the manner of a human being', 'like a human being']"
 submissive,a,gendered,female_stereotype,"['cooperative', 'open to compromise', 'keen to keep peace', 'willing to accommodate', 'willing to accommodate others']",[''],"['cooperative', 'open to compromise', 'keen to keep peace', 'willing to accommodate', 'willing to accommodate others']"
-talkative,,gendered,female_stereotype,"['articulate', 'happy to communicate']",[''],"['articulate', 'happy to communicate']"
+talkative,a,gendered,female_stereotype,"['articulate', 'happy to communicate']",[''],"['articulate', 'happy to communicate']"
 unmanned,a,gendered,hidden_image,['piloted remotely'],[''],['piloted remotely']
 whine,v,gendered,female_stereotype,"['complain', 'grouse', 'grumble', 'express doubts', 'be open about their doubts', 'annoy by repeatedly complaining', 'annoy with repeated complaints', 'annoy someone with repeated complaints']",[''],"['complain', 'grouse', 'grumble', 'express doubts', 'be open about their doubts', 'annoy by repeatedly complaining', 'annoy with repeated complaints', 'annoy someone with repeated complaints']"

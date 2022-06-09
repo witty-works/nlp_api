@@ -8,19 +8,19 @@
                     "text": "test"
                 },
                 {
+                    "text": "trial"
+                },
+                {
                     "text": "burning question"
                 },
                 {
                     "text": "complex situation"
                 },
                 {
-                    "text": "task"
+                    "text": "task that requires thought and skill to solve"
                 },
                 {
-                    "text": "task requiring thought and skill to solve"
-                },
-                {
-                    "text": "complex questions"
+                    "text": "complex situations"
                 },
                 {
                     "text": "difficult tasks"
@@ -29,7 +29,7 @@
                     "text": "burning questions"
                 },
                 {
-                    "text": "tasks"
+                    "text": "trials"
                 }
             ],
             "category": "unconscious_bias",

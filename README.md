@@ -29,17 +29,24 @@ docker pull wittyworks.azurecr.io/languagetool:main
 
 3. Run images:
 
+First run the LanguageTool image:
+
 ```
-docker run --rm --name LT -it -p 8000:8000 wittyworks.azurecr.io/languagetool:main
-```
-check languagetool conatiner local adddress:
-```
-lt_api=`docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' LT`
-```
-```
-docker run  -p 8080:8080 --name nlp --network "bridge" --env languagetool_api="$lt_api/v2" wittyworks.azurecr.io/nlpapi:main
+docker run --rm --name lt -p 8000:8000 wittyworks.azurecr.io/languagetool:main
 ```
 
+Open another terminal tab and check LanguageTool container local address:
+
+```
+lt_api=`docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' lt`
+```
+As a last step run the NLP API image:
+
+```
+docker run --rm --name nlp_api -p 8080:8080 --network "bridge" --env languagetool_api="$lt_api/v2" wittyworks.azurecr.io/nlpapi:main
+```
+
+You should see application running under http://localhost:8000/docs
 ## using pipenv
 
 ```
@@ -73,6 +80,17 @@ python3.9 -m spacy download de_core_news_sm --no-cache-dir
 ```
 
 Compile the translations in the spirit of `./compile-translations.sh`
+
+## Update dependencies locally
+To update packages locally after Pipfile was changed, run the command:
+```
+pipenv install --dev
+```
+## Add new package
+When adding new package to the project, you need to updated existing Pipfile. Following command will install the package and add it to the `Pipfile` and `Pipfile.lock`:
+```
+pipenv install <package_name>
+```
 
 ## Docker image
 

@@ -66,7 +66,7 @@ from collections import defaultdict
 
 from app.sentry import set_up_sentry_sdk
 
-version = "1.28.7"
+version = "1.28.8"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -441,15 +441,23 @@ async def apply_rules(user_request_in: RequestIn, user=Optional[str]):
     if not organization_rules or type(organization_rules) is not dict:
         return {}
 
+    return merge_rules(user_request_in, organization_rules)
+
+
+
+def merge_rules(user_request_in: RequestIn, organization_rules: list):
     categories = ["inclusive", "style", "orthography"]
-    disabled_categories = []
+    disabled_categories = user_request_in.config.disabled_categories
 
     for config in organization_rules["config"]:
         data = organization_rules["config"][config]
         if data is not None and data["status"] == "force":
             if config in categories:
-                if data["value"] == False:
+                if data["value"] and config in disabled_categories:
+                    disabled_categories.remove(config)
+                elif config not in disabled_categories:
                     disabled_categories.append(config)
+
             else:
                 user_request_in.config.__setattr__(config, data["value"])
 
@@ -1066,6 +1074,27 @@ def get_lower_cased(token):
     token_word = token.lemma_
 
     return token_word.lower()
+
+
+"""Function to change verb to -ing form in alternatives"""
+
+
+def ing_ify_alternative(alternative):
+    return (
+        alternative.split()[0].rstrip("e")
+        + "ing"
+        + " "
+        + " ".join(alternative.split()[1:])
+    )
+
+
+def ing_ify_alternatives(token, alternatives):
+    if token.text.endswith("ing") and token.pos_ == "VERB":
+        return [
+            ing_ify_alternative(alternative).strip() for alternative in alternatives
+        ]
+
+    return alternatives
 
 
 """Function to catch ending in German Denom"""
@@ -1830,6 +1859,8 @@ def rules_based_words_phrase_matcher_en(
     for token in tokens:
         for word, alternative, subcategory in words_alternatives:
             if get_lower_cased(token) == word:
+                alternative = ing_ify_alternatives(token, alternative)
+
                 list_tokens.append(
                     ResultOut.factory(
                         version,
@@ -1879,6 +1910,8 @@ def homonyms_english(
             if not is_sub_category_enabled(config, subcategory):
                 continue
             if token.lemma_ == word and token.pos_ == type_transform(word_type):
+                alternative = ing_ify_alternatives(token, alternative)
+
                 list_tokens.append(
                     ResultOut.factory(
                         version,
@@ -1893,6 +1926,7 @@ def homonyms_english(
                         alternative,
                     )
                 )
+
     return list_tokens
 
 

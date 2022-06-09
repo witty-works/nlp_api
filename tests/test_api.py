@@ -310,6 +310,8 @@ def set_redis():
                 "value": "binary_gender",
                 "status": "force",
             },
+            "inclusive": {"value": False, "status": "force"},
+            "orthography": {"value": True, "status": "force"},
         },
         "false_positives": [
             "stark",
@@ -361,6 +363,27 @@ def test_false_positive(fp_case_dir, snapshot, set_redis):
 @pytest.mark.parametrize(
     "fp_case_dir",
     get_dirs("tests/test_term_replacement"),
+)
+def test_term_replacement(fp_case_dir, snapshot, set_redis):
+    input_json = fp_case_dir.joinpath("input.json").read_text()
+    # Call the tested endpoint.
+    client = TestClient(app)
+    response = client.post(
+        "/v1.1/check", json=json.loads(input_json), headers={"X-Auth": "test@gmail.com"}
+    )
+    assert response.status_code == 200
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    # Snapshot the return value.
+    snapshot.snapshot_dir = fp_case_dir
+    snapshot.assert_match(output, "output.json")
+
+
+
+
+@pytest.mark.parametrize(
+    "fp_case_dir",
+    get_dirs("tests/test_disable_categories"),
 )
 def test_term_replacement(fp_case_dir, snapshot, set_redis):
     input_json = fp_case_dir.joinpath("input.json").read_text()
@@ -484,6 +507,7 @@ def test_store_and_get_rules():
                 "value": "In",
                 "status": "suggestion",
             },
+            "inclusive": {"value": True, "status": "force"},
         },
         "false_positives": ["hello", "world"],
         "term_replacements": [
@@ -546,6 +570,9 @@ def test_store_and_get_rules():
         response_content["config"]["german_gender_ending"]
         == request_data["config"]["german_gender_ending"]
     )
+    assert (
+        response_content["config"]["inclusive"] == request_data["config"]["inclusive"]
+    )
     assert response_content["false_positives"] == request_data["false_positives"]
     assert response_content["term_replacements"] == request_data["term_replacements"]
 
@@ -589,4 +616,24 @@ def test_lemmatizer(lemma_case_dir, snapshot):
     output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
     # Snapshot the return value.
     snapshot.snapshot_dir = lemma_case_dir
+    snapshot.assert_match(output, "output.json")
+
+
+@pytest.mark.parametrize(
+    "grammatical_alternatives_case_dir",
+    get_dirs("tests/test_grammatically_correct_alternatives"),
+)
+def test_grammatically_correct_alternatives(
+    grammatical_alternatives_case_dir, snapshot
+):
+
+    # Read input files from the case directory.
+    input_json = grammatical_alternatives_case_dir.joinpath("input.json").read_text()
+    # Call the tested endpoint.
+    response = client.post("/v1.1/check", json=json.loads(input_json))
+    assert response.status_code == 200
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    # Snapshot the return value.
+    snapshot.snapshot_dir = grammatical_alternatives_case_dir
     snapshot.assert_match(output, "output.json")

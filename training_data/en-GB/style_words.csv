@@ -3,7 +3,7 @@ Ninja,s,style,exaggerating,"['skilled person', 'very proficient person', 'courag
 Sincerely,a,style,formality,"['Best regards', 'All the best', 'Thank you', 'Have a wonderful day', 'Let us know if you need anything']"
 absolute,a,style,exaggerating,['-']
 actually,adv,style,filler,['-']
-best,a,style,exaggerating,"['preferred', ' fitting', 'satisfactory', 'advantageous', 'satisfying', 'choice', 'select', 'reliable', 'valuable', 'conducive to desired outcome']"
+best,a,style,exaggerating,"['preferred', 'fitting', 'satisfactory', 'advantageous', 'satisfying', 'choice', 'select', 'reliable', 'valuable', 'conducive to desired outcome']"
 brilliant,a,style,exaggerating,"['inspired', 'talented', 'inventive', 'astute', 'creative']"
 compelling,a,style,exaggerating,"['convincing', 'evoking interest/attention', 'inspiring conviction', 'engaging', 'exciting', 'sound', 'reasonable', 'credible', 'effective', 'conclusive', 'urgent', 'crucial', 'vital']"
 competitor,s,style,exaggerating,"['market participant', 'market participants']"
@@ -22,7 +22,7 @@ first-class,a,style,exaggerating,['-']
 first-mover,s,style,exaggerating,"['the first to market a product', 'the first to offer a service', 'the first to seize a market opportunity', 'those first to market a product', 'those first to offer a service', 'those first to seize a market opportunity']"
 firstclass,a,style,exaggerating,['-']
 firstmover,s,style,exaggerating,"['the first to market a product', 'the first to offer a service', 'the first to seize a market opportunity', 'those first to market a product', 'those first to offer a service', 'those first to seize a market opportunity']"
-flexible,a,style,hollow,"['adaptable', 'strategically nimble', 'pragmatic', 'open', 'agile', 'variable', 'mobile', 'defined by its users']"
+flexible,a,style,hollow,"[""--- don't use to describe a person"", 'adaptable', 'strategically nimble', 'pragmatic', 'open', 'agile', 'variable', 'mobile', 'defined by its users']"
 front-runner,s,style,exaggerating,"['-', 'favourite', 'person who sets the pace', 'probable winner', 'favourites', 'people who set the pace', 'probable winners']"
 frontrunner,s,style,exaggerating,"['-', 'favourite', 'person who sets the pace', 'probable winner', 'favourites', 'people who set the pace', 'probable winners']"
 geek,s,style,exaggerating,"['-', 'techie', 'intellectual', 'bookworm', 'person devoted to academic pursuits', 'person with a high level of knowledge (skills) in', 'techies', ' intellectuals', 'bookworms', 'people devoted to academic pursuits', 'people with a high level of knowledge (skills) in']"
