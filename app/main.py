@@ -441,15 +441,23 @@ async def apply_rules(user_request_in: RequestIn, user=Optional[str]):
     if not organization_rules or type(organization_rules) is not dict:
         return {}
 
+    return merge_rules(user_request_in, organization_rules)
+
+
+
+def merge_rules(user_request_in: RequestIn, organization_rules: list):
     categories = ["inclusive", "style", "orthography"]
-    disabled_categories = []
+    disabled_categories = user_request_in.config.disabled_categories
 
     for config in organization_rules["config"]:
         data = organization_rules["config"][config]
         if data is not None and data["status"] == "force":
             if config in categories:
-                if data["value"] == False:
+                if data["value"] and config in disabled_categories:
+                    disabled_categories.remove(config)
+                elif config not in disabled_categories:
                     disabled_categories.append(config)
+
             else:
                 user_request_in.config.__setattr__(config, data["value"])
 
