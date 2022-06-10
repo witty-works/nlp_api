@@ -657,6 +657,8 @@ class ResultOut(BaseModel):
 
         return alternative_variations
 
+class ErrorMessage(BaseModel):
+    message: str
 
 class Result(BaseModel):
     detail: List

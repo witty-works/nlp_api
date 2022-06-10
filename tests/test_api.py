@@ -465,7 +465,7 @@ def test_set_default_rules(event_loop):
 # test POST Redis endpoint
 
 
-def test_store_and_get_rules():
+def test_store_get_delete_rules():
     request_data = {
         "id": "TEST_organization",
         "name": "Witty Works",
@@ -531,9 +531,8 @@ def test_store_and_get_rules():
     assert response_content["term_replacements"] == request_data["term_replacements"]
 
     response = client.get("/get_user_rules?user=test@gmail.com")
-    assert response.status_code == 200
-    response_content = json.loads(response.content)
-    assert response_content == None
+    assert response.status_code == 404
+
 
     response = client.get("/get_user_rules?user=test2@gmail.com")
     assert response.status_code == 200
@@ -549,6 +548,12 @@ def test_store_and_get_rules():
     assert response_content["false_positives"] == request_data["false_positives"]
     assert response_content["term_replacements"] == request_data["term_replacements"]
 
+    response = client.delete("/delete_rules?organization_id=foobar")
+    assert response.status_code == 404
+
+
+    response = client.delete("/delete_rules?organization_id=TEST_organization")
+    assert response.status_code == 204
 
 # test german gender ending
 
