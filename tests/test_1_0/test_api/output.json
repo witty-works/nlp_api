@@ -53,11 +53,7 @@
             "text": "Kunden"
         },
         {
-            "alternatives": [
-                "jemand, der erfahren und fachkundig ist",
-                "Person, die ihr Know-how und ihre Erfahrung kreativ einsetzt",
-                "Mensch, der seine Fachkenntnis ständig vertieft"
-            ],
+            "alternatives": [],
             "category": "style",
             "context": "Wir suchen Ninja Programmierer für unseere Kunden",
             "end": 16,

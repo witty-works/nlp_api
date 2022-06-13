@@ -64,15 +64,6 @@
                     "text": "Unternehmerische Haltung"
                 },
                 {
-                    "text": "Freude an mehr Verantwortung"
-                },
-                {
-                    "text": "Freude am Setzen und Verwirklichen von Zielen"
-                },
-                {
-                    "text": "Interesse an persönlichem Wachstum"
-                },
-                {
                     "text": "Freude am Weiterkommen"
                 }
             ],
@@ -91,14 +82,7 @@
             "text": "Ehrgeiz"
         },
         {
-            "alternatives": [
-                {
-                    "text": "Einen langen Atem haben"
-                },
-                {
-                    "text": "Fähigkeit, an Dingen dranzubleiben"
-                }
-            ],
+            "alternatives": [],
             "category": "unconscious_bias",
             "context": "Wir suchen alles für unsere Kunden: Ehrgeiz ist unser Schlüssel.\n\n\nDurchhaltevermögen benötigen wir.\n\n\n\n\n\nEhrgeiz ist am wichtigsten",
             "end": 85,
@@ -132,15 +116,6 @@
                 },
                 {
                     "text": "unternehmerische Haltung"
-                },
-                {
-                    "text": "Freude an mehr Verantwortung"
-                },
-                {
-                    "text": "Freude am Setzen und Verwirklichen von Zielen"
-                },
-                {
-                    "text": "Interesse an persönlichem Wachstum"
                 },
                 {
                     "text": "Freude am Weiterkommen"
