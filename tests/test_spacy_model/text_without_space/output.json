@@ -5,28 +5,22 @@
         {
             "alternatives": [
                 {
-                    "text": "prevailing"
+                    "text": "Prevailing"
                 },
                 {
-                    "text": "guiding"
+                    "text": "Guiding"
                 },
                 {
-                    "text": "main"
+                    "text": "Main"
                 },
                 {
-                    "text": "primary"
+                    "text": "Primary"
                 },
                 {
-                    "text": "respecting governance"
+                    "text": "Respecting governance"
                 },
                 {
-                    "text": "communicating governance"
-                },
-                {
-                    "text": "comfortable with taking on responsibility"
-                },
-                {
-                    "text": "at ease with taking the initiative"
+                    "text": "Communicating governance"
                 }
             ],
             "category": "unconscious_bias",

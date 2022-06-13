@@ -44,15 +44,6 @@
                 },
                 {
                     "text": "Team"
-                },
-                {
-                    "text": "Personen, die im selben Team arbeiten"
-                },
-                {
-                    "text": "Personen, die im selben Unternehmen arbeiten"
-                },
-                {
-                    "text": "Personen, die man von der Arbeit kennt"
                 }
             ],
             "category": "gendered",
@@ -110,22 +101,13 @@
         {
             "alternatives": [
                 {
-                    "text": "engagiert"
+                    "text": "engagierten"
                 },
                 {
-                    "text": "entwicklungsmotiviert"
+                    "text": "entwicklungsmotivierten"
                 },
                 {
-                    "text": "unternehmerisch denkend"
-                },
-                {
-                    "text": "bereit, größere Verantwortung zu übernehmen"
-                },
-                {
-                    "text": "interessiert an persönlichem Wachstum"
-                },
-                {
-                    "text": "interessiert, neues Wissen und neue Erfahrung anzuwenden"
+                    "text": "unternehmerisch denkenden"
                 }
             ],
             "category": "unconscious_bias",
@@ -158,9 +140,6 @@
                 },
                 {
                     "text": "auf Meilensteine fokussiert"
-                },
-                {
-                    "text": "motiviert auf Meilensteine hinarbeiten wollen"
                 }
             ],
             "category": "unconscious_bias",

@@ -269,11 +269,6 @@ class ConfRequest(BaseModel):
     term_replacements: List[TermReplacement] = []
 
 
-class ConfDeleteRequest(BaseModel):
-    id: str
-    users: List[str]
-
-
 class RequestIn(BaseModel):
     type: str = "check"
     text: str
@@ -409,18 +404,7 @@ class ResultOut(BaseModel):
 
         gravity = gravity if gravity != None else categories[category_key]["gravity"]
 
-        is_upper = False
-        if lang.lang == "de":
-            punctuation = "[.!?:]"
-        else:
-            punctuation = "[.!?]"
-
-        preceeding_text = full_text[max(0, start - 5) : start]
-        if (
-            re.search(r"(" + punctuation + r"\s*|\s{5})$", preceeding_text, re.MULTILINE)
-            != None
-        ):
-            is_upper = True
+        is_upper = ResultOut.isUpper(text, full_text, start, category, lang)
 
         if alternatives == None:
             alternatives = []
@@ -447,13 +431,6 @@ class ResultOut(BaseModel):
             if "((" in alternative:
                 continue
 
-            inspiration = None
-            if ResultOut.isInspirationAlternative(alternative):
-                if not config.show_inspiration_alternatives:
-                    continue
-
-                inspiration = True
-
             alternative_context = None
             remove = None
             if category != "orthography":
@@ -474,6 +451,13 @@ class ResultOut(BaseModel):
                 remove = True
             elif lang.locale == "de-CH":
                 alternative = alternative.replace("ß", "ss")
+
+            inspiration = None
+            if ResultOut.isInspirationAlternative(text, alternative, subcategory):
+                if not config.show_inspiration_alternatives:
+                    continue
+
+                inspiration = True
 
             alternative_variations = ResultOut.getAlternativeVariations(
                 config.gendered_roles_format, config.german_gender_ending, alternative
@@ -530,6 +514,25 @@ class ResultOut(BaseModel):
     factory = staticmethod(factory)
 
     @staticmethod
+    def isUpper(text, full_text, start, category, lang):
+        if category != "orthography" and text[0:1].isupper():
+            if lang.lang == "de":
+                punctuation = "[.!?:]"
+            else:
+                punctuation = "[.!?]"
+
+            preceeding_text = full_text[max(0, start - 5) : start]
+            if (
+                re.search(r"^ *$", preceeding_text) != None
+                or re.search(r"\s{3,}}$", preceeding_text, re.MULTILINE) != None
+                or re.search(punctuation + r"\s*$", preceeding_text, re.MULTILINE)
+                != None
+            ):
+                return True
+
+        return False
+
+    @staticmethod
     def transliterate(string):
         return (
             string.lower()
@@ -541,8 +544,15 @@ class ResultOut(BaseModel):
         )
 
     @staticmethod
-    def isInspirationAlternative(alternative):
-        return alternative.count("...") > 0
+    def isInspirationAlternative(text, alternative, subcategory=None):
+        return (
+            alternative != None
+            and subcategory != "abbreviation"
+            and (
+                alternative.count(" ") >= str(text).count(" ") + 3
+            or alternative.count("...") > 0
+            )
+        )
 
     @staticmethod
     def getAlternativeVariations(
@@ -568,30 +578,31 @@ class ResultOut(BaseModel):
     ):
         alternative_variations = []
 
-        if alternative.count("/") == 2 and " und " in alternative:
-            alternative_list = alternative.split(" und ")
-            alternative_list[0] = ResultOut.getGenderedRoles(
-                gendered_roles_format, german_gender_ending, alternative_list[0]
-            )
-            alternative_list[1] = ResultOut.getGenderedRoles(
-                gendered_roles_format, german_gender_ending, alternative_list[1]
-            )
-            alternative_variations.append(
-                alternative_list[0][0] + " und " + alternative_list[1][0]
-            )
-            if len(alternative_list[0]) == 2:
-                if len(alternative_list[1]) == 2:
-                    alternative_variations.append(
-                        alternative_list[0][1] + " und " + alternative_list[1][1]
-                    )
-                else:
-                    alternative_variations.append(alternative_list[0][1])
-            elif len(alternative_list[1]) == 2:
-                alternative_variations.append(alternative_list[1][1])
-        else:
-            alternative_variations += ResultOut.getGenderedRoles(
-                gendered_roles_format, german_gender_ending, alternative
-            )
+        alternative = alternative.replace("~ und ~", "~~und~~")
+        words = alternative.split()
+        variations_count = 1
+        for i, word in enumerate(words):
+            if "~" in word:
+                word = word.replace("~~und~~", "~ und ~")
+                words[i] = ResultOut.getGenderedRoles(
+                    gendered_roles_format, german_gender_ending, word
+                )
+                variations_count = max(variations_count, len(words[i]))
+
+        for i in range(0, variations_count):
+            alternative_variations.append("")
+
+        for i, word in enumerate(words):
+            if isinstance(word, list) and len(word) < variations_count:
+                word = word * variations_count
+
+            if not isinstance(word, list) or len(word) < variations_count:
+                word = [word] * variations_count
+
+            for v, variation in enumerate(word):
+                alternative_variations[v] = alternative_variations[v] + variation
+                if i < len(words) - 1:
+                    alternative_variations[v] = alternative_variations[v] + " "
 
         return alternative_variations
 
@@ -606,14 +617,14 @@ class ResultOut(BaseModel):
     def getGenderedRolesFormatInclusive(german_gender_ending, alternative):
         variants = alternative.split("~")
         beginning = str(variants[0])
-        if str(variants[1]) == "e":
+        if str(variants[1]) == "e" and len(variants) == 4 and variants[3][-1] == "r":
             beginning += "e"
             ending = "r"
         else:
             ending = str(variants[1])
 
         if german_gender_ending == "In":
-            if alternative.count("~") > 1:
+            if alternative.count("~") > 1 or variants[0][0].isupper():
                 ending = ending[0:1].capitalize() + ending[1:]
                 separator = ""
             else:
@@ -662,6 +673,8 @@ class ResultOut(BaseModel):
 
         return alternative_variations
 
+class ErrorMessage(BaseModel):
+    message: str
 
 class Result(BaseModel):
     detail: List

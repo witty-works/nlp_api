@@ -75,7 +75,13 @@
         {
             "alternatives": [
                 {
+                    "text": "RomNi"
+                },
+                {
                     "text": "Rom/ni"
+                },
+                {
+                    "text": "SintIza"
                 },
                 {
                     "text": "Sint/iza"

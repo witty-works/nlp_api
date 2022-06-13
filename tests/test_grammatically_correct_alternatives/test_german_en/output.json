@@ -1,0 +1,50 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "fähigen"
+                },
+                {
+                    "text": "gelungenen"
+                },
+                {
+                    "text": "gewinnbringenden"
+                },
+                {
+                    "text": "produktiven"
+                },
+                {
+                    "text": "zielführenden"
+                },
+                {
+                    "text": "Meilensteine erreichten"
+                },
+                {
+                    "text": "mit gutemen Ergebnis"
+                },
+                {
+                    "text": "Aufgaben gemeinsam gelösten"
+                },
+                {
+                    "text": "mit Leichtigkeit bewältigten"
+                }
+            ],
+            "category": "style",
+            "context": "Unternehmen profitieren von einem erfolgreichen Management.",
+            "end": 47,
+            "explanation": {
+                "icon": "😮‍💨",
+                "text": "Superlative: als Druck oder Arroganz wahrgenommen",
+                "url": "https://www.witty.works/de/kategorien/stil#superlative"
+            },
+            "gravity": 2,
+            "label": "Stil: Superlative",
+            "start": 34,
+            "subcategory": "exaggerating",
+            "text": "erfolgreichen"
+        }
+    ]
+}
