@@ -113,15 +113,6 @@
                 },
                 {
                     "text": "Team"
-                },
-                {
-                    "text": "Person, die im selben Team arbeitet"
-                },
-                {
-                    "text": "Person, die im selben Unternehmen arbeitet"
-                },
-                {
-                    "text": "Person, die man von der Arbeit kennt"
                 }
             ],
             "category": "gendered",
@@ -191,15 +182,6 @@
                     "text": "unternehmerische Haltung"
                 },
                 {
-                    "text": "Freude an mehr Verantwortung"
-                },
-                {
-                    "text": "Freude am Setzen und Verwirklichen von Zielen"
-                },
-                {
-                    "text": "Interesse an persönlichem Wachstum"
-                },
-                {
                     "text": "Freude am Weiterkommen"
                 }
             ],
@@ -218,14 +200,7 @@
             "text": "Ehrgeiz"
         },
         {
-            "alternatives": [
-                {
-                    "text": "einen langen Atem haben"
-                },
-                {
-                    "text": "Fähigkeit, an Dingen dranzubleiben"
-                }
-            ],
+            "alternatives": [],
             "category": "unconscious_bias",
             "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
             "end": 85,
@@ -241,14 +216,7 @@
             "text": "Durchhaltevermögen"
         },
         {
-            "alternatives": [
-                {
-                    "text": "vor interessante Aufgaben gestellt"
-                },
-                {
-                    "text": "vor spannende Fragen gestellt"
-                }
-            ],
+            "alternatives": [],
             "category": "unconscious_bias",
             "context": "rte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
             "end": 124,
@@ -321,9 +289,6 @@
                 },
                 {
                     "text": "Hallo zusammen"
-                },
-                {
-                    "text": "Hallo, liebe Zuhörende und Lesende"
                 }
             ],
             "category": "style",

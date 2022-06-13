@@ -431,13 +431,6 @@ class ResultOut(BaseModel):
             if "((" in alternative:
                 continue
 
-            inspiration = None
-            if ResultOut.isInspirationAlternative(alternative):
-                if not config.show_inspiration_alternatives:
-                    continue
-
-                inspiration = True
-
             alternative_context = None
             remove = None
             if category != "orthography":
@@ -458,6 +451,13 @@ class ResultOut(BaseModel):
                 remove = True
             elif lang.locale == "de-CH":
                 alternative = alternative.replace("ß", "ss")
+
+            inspiration = None
+            if ResultOut.isInspirationAlternative(text, alternative, subcategory):
+                if not config.show_inspiration_alternatives:
+                    continue
+
+                inspiration = True
 
             alternative_variations = ResultOut.getAlternativeVariations(
                 config.gendered_roles_format, config.german_gender_ending, alternative
@@ -544,8 +544,15 @@ class ResultOut(BaseModel):
         )
 
     @staticmethod
-    def isInspirationAlternative(alternative):
-        return alternative.count("...") > 0
+    def isInspirationAlternative(text, alternative, subcategory=None):
+        return (
+            alternative != None
+            and subcategory != "abbreviation"
+            and (
+                alternative.count(" ") >= str(text).count(" ") + 3
+            or alternative.count("...") > 0
+            )
+        )
 
     @staticmethod
     def getAlternativeVariations(

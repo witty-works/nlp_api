@@ -17,9 +17,6 @@
                     "text": "complex situation"
                 },
                 {
-                    "text": "task that requires thought and skill to solve"
-                },
-                {
                     "text": "complex situations"
                 },
                 {
@@ -59,9 +56,6 @@
                 },
                 {
                     "text": "person handling project management"
-                },
-                {
-                    "text": "someone in the project management role"
                 },
                 {
                     "text": "people in project management"
@@ -119,12 +113,6 @@
         {
             "alternatives": [
                 {
-                    "text": "execution to the customer's satisfaction"
-                },
-                {
-                    "text": "the fulfilment of customer expectations"
-                },
-                {
                     "text": "reference cases"
                 },
                 {
@@ -155,15 +143,6 @@
                 },
                 {
                     "text": "consulting"
-                },
-                {
-                    "text": "free to make informed choices"
-                },
-                {
-                    "text": "responsible for organizing your workload"
-                },
-                {
-                    "text": "in a position to take on responsibility"
                 }
             ],
             "category": "unconscious_bias",
@@ -187,15 +166,6 @@
                 },
                 {
                     "text": "keen and enthusiastic"
-                },
-                {
-                    "text": "interested in taking on new responsibilities"
-                },
-                {
-                    "text": "committed to working toward goals"
-                },
-                {
-                    "text": "keen on realizing a vision"
                 }
             ],
             "category": "unconscious_bias",
