@@ -1114,6 +1114,48 @@ def ing_ify_alternatives(token, alternatives):
     return alternatives
 
 
+"""Function to change adjectives to -en form in alternatives"""
+def en_ify_adjective_or_verb(token):
+    return token.pos_ == "ADJ" or token.pos_ == "ADV" or token.pos_ == "VERB"
+
+def en_ify_alternative(text, lang, alternative):
+    if ResultOut.isInspirationAlternative(text, alternative):
+        return alternative
+
+    tokens = model[lang.lang](alternative.rstrip().replace("\n", " "))
+
+    new_alternative = ""
+    previous = False
+    for token in reversed(tokens):
+        if not token.is_alpha:
+            return alternative
+
+        text = token.text
+        if previous == False and en_ify_adjective_or_verb(token):
+            text += "en"
+            previous = True
+        else:
+            previous = False
+
+        new_alternative = text + " " + new_alternative
+
+    return new_alternative
+
+
+def en_ify_alternatives(token, lang, alternatives):
+    if (
+        not token.lemma_.endswith("en")
+        and token.text.endswith("en")
+        and en_ify_adjective_or_verb(token)
+    ):
+        return [
+            en_ify_alternative(token.text, lang, alternative).strip()
+            for alternative in alternatives
+        ]
+
+    return alternatives
+
+
 """Function to catch ending in German Denom"""
 
 
@@ -1289,6 +1331,8 @@ def ub_words_phrase_matcher_de(
         else:
             for word, alternative, subcategory in words_alternatives:
                 if get_non_noun_lower_cased(token) == word:
+                    alternative = en_ify_alternatives(token, lang, alternative)
+
                     list_tokens.append(
                         ResultOut.factory(
                             version,
@@ -1542,6 +1586,8 @@ def style_word_analysis_de(
             else:
                 for word, alternative, subcategory in style_words_alternatives:
                     if tokens[i].lemma_ == word:
+                        alternative = en_ify_alternatives(tokens[i], lang, alternative)
+
                         list_tokens.append(
                             ResultOut.factory(
                                 version,
@@ -1560,6 +1606,8 @@ def style_word_analysis_de(
         else:
             for word, alternative, subcategory in style_words_alternatives:
                 if tokens[i].lemma_ == word:
+                    alternative = en_ify_alternatives(tokens[i], lang, alternative)
+
                     list_tokens.append(
                         ResultOut.factory(
                             version,
@@ -1683,6 +1731,8 @@ def rules_based_words_phrase_matcher_de(
     for token in tokens:
         for word, alternative, subcategory in words_alternatives:
             if get_non_noun_lower_cased(token) == word:
+                alternative = en_ify_alternatives(token, lang, alternative)
+
                 list_tokens.append(
                     ResultOut.factory(
                         version,
