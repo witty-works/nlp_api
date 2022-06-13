@@ -409,20 +409,7 @@ class ResultOut(BaseModel):
 
         gravity = gravity if gravity != None else categories[category_key]["gravity"]
 
-        is_upper = False
-        if lang.lang == "de":
-            punctuation = "[.!?:]"
-        else:
-            punctuation = "[.!?]"
-
-        preceeding_text = full_text[max(0, start - 5) : start]
-        if (
-            re.search(
-                r"(" + punctuation + r"\s*|\s{5})$", preceeding_text, re.MULTILINE
-            )
-            != None
-        ):
-            is_upper = True
+        is_upper = ResultOut.isUpper(text, full_text, start, category, lang)
 
         if alternatives == None:
             alternatives = []
@@ -530,6 +517,25 @@ class ResultOut(BaseModel):
         )
 
     factory = staticmethod(factory)
+
+    @staticmethod
+    def isUpper(text, full_text, start, category, lang):
+        if category != "orthography" and text[0:1].isupper():
+            if lang.lang == "de":
+                punctuation = "[.!?:]"
+            else:
+                punctuation = "[.!?]"
+
+            preceeding_text = full_text[max(0, start - 5) : start]
+            if (
+                re.search(r"^ *$", preceeding_text) != None
+                or re.search(r"\s{3,}}$", preceeding_text, re.MULTILINE) != None
+                or re.search(punctuation + r"\s*$", preceeding_text, re.MULTILINE)
+                != None
+            ):
+                return True
+
+        return False
 
     @staticmethod
     def transliterate(string):
