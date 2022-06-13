@@ -5,19 +5,19 @@
         {
             "alternatives": [
                 {
-                    "text": "Sinti:ze und Rom:nja"
+                    "text": "Sinti*ze und Rom*nja"
                 },
                 {
                     "text": "Sintize/Sinti und Romnja/Roma"
                 },
                 {
-                    "text": "Rom:nja"
+                    "text": "Rom*nja"
                 },
                 {
                     "text": "Romnja und Roma"
                 },
                 {
-                    "text": "Sinti:ze"
+                    "text": "Sinti*ze"
                 },
                 {
                     "text": "Sintize und Sinti"
@@ -40,19 +40,19 @@
         {
             "alternatives": [
                 {
-                    "text": "Rom:ni"
+                    "text": "Rom*ni"
                 },
                 {
                     "text": "Romni/Rom"
                 },
                 {
-                    "text": "Sint:iza"
+                    "text": "Sint*iza"
                 },
                 {
                     "text": "Sintiza/Sinto"
                 },
                 {
-                    "text": "Sint:eza"
+                    "text": "Sint*eza"
                 },
                 {
                     "text": "Sinteza/Sinto"
@@ -75,13 +75,13 @@
         {
             "alternatives": [
                 {
-                    "text": "Rom:ni"
+                    "text": "Rom*ni"
                 },
                 {
                     "text": "Rom/ni"
                 },
                 {
-                    "text": "Sint:iza"
+                    "text": "Sint*iza"
                 },
                 {
                     "text": "Sint/iza"

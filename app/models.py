@@ -101,13 +101,13 @@ class Config(BaseModel):
         LangWithAutoType.enUS,
         LangWithAutoType.enGB,
     ]
-    german_gender_ending: GermanGenderEndingType = GermanGenderEndingType.COLON
+    german_gender_ending: GermanGenderEndingType = GermanGenderEndingType.STAR
     _gendereddenom_ending = {
+        GermanGenderEndingType.STAR: "\\*in",
+        GermanGenderEndingType.UNDERSCORE: "_in",
+        GermanGenderEndingType.COLON: ":in",
         GermanGenderEndingType.SLASH: "/in",
         GermanGenderEndingType.SLASH_DASH: "/-in",
-        GermanGenderEndingType.UNDERSCORE: "_in",
-        GermanGenderEndingType.STAR: "\\*in",
-        GermanGenderEndingType.COLON: ":in",
         GermanGenderEndingType.CAPITAL_LETTER: r"In\b",
     }
     disabled_categories: List = []

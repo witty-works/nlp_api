@@ -8,7 +8,7 @@
                     "text": "Management"
                 },
                 {
-                    "text": "Manager:in"
+                    "text": "Manager*in"
                 },
                 {
                     "text": "Managerin/Manager"
@@ -31,7 +31,7 @@
         {
             "alternatives": [
                 {
-                    "text": "die:der"
+                    "text": "die*der"
                 },
                 {
                     "text": "die/der"
@@ -63,7 +63,7 @@
                     "text": "Leitung"
                 },
                 {
-                    "text": "Vorgesetzte:r"
+                    "text": "Vorgesetzte*r"
                 },
                 {
                     "text": "Vorgesetzte/Vorgesetzter"

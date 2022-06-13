@@ -481,7 +481,7 @@ def test_set_default_rules(event_loop):
         LangWithAutoType.enUS,
         LangWithAutoType.deDE,
     ]
-    assert test_request.config.german_gender_ending == ":in"
+    assert test_request.config.german_gender_ending == "*in"
     assert test_request.config.gendered_roles_format == "both"
 
 
