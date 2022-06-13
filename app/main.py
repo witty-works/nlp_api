@@ -1628,6 +1628,12 @@ def gendered_denom_analysis_de(
 
 
 # Unified function for Emty words false positives and rules
+def is_conjunction(full_text, start):
+    preceeding_text = full_text[max(0, start - 5) : start]
+    return (
+        re.search(r"^ *$", preceeding_text) != None
+        or re.search(r"[.!?:,]\s*$", preceeding_text, re.MULTILINE) != None
+    )
 
 
 def style_word_analysis_de(
@@ -1659,45 +1665,30 @@ def style_word_analysis_de(
                 list_false_positives.append(
                     {"false positives": tokens[i].text, "category": category}
                 )
-            else:
-                for word, alternative, subcategory in style_words_alternatives:
-                    if tokens[i].lemma_ == word:
-                        alternative = alternatives_declension(tokens[i], lang, alternative)
 
-                        list_tokens.append(
-                            ResultOut.factory(
-                                version,
-                                config,
-                                lang,
-                                tokens[i].text,
-                                full_text,
-                                category,
-                                subcategory,
-                                tokens[i].idx,
-                                tokens[i].idx + len(tokens[i].text),
-                                alternative,
-                            )
-                        )
+                continue
 
-        else:
-            for word, alternative, subcategory in style_words_alternatives:
-                if tokens[i].lemma_ == word:
-                    alternative = alternatives_declension(tokens[i], lang, alternative)
+        if tokens[i].lemma_ == "aber" and is_conjunction(full_text, tokens[i].idx):
+            continue
 
-                    list_tokens.append(
-                        ResultOut.factory(
-                            version,
-                            config,
-                            lang,
-                            tokens[i].text,
-                            full_text,
-                            category,
-                            subcategory,
-                            tokens[i].idx,
-                            tokens[i].idx + len(tokens[i].text),
-                            alternative,
-                        )
+        for word, alternative, subcategory in style_words_alternatives:
+            if tokens[i].lemma_ == word:
+                alternative = alternatives_declension(tokens[i], lang, alternative)
+
+                list_tokens.append(
+                    ResultOut.factory(
+                        version,
+                        config,
+                        lang,
+                        tokens[i].text,
+                        full_text,
+                        category,
+                        subcategory,
+                        tokens[i].idx,
+                        tokens[i].idx + len(tokens[i].text),
+                        alternative,
                     )
+                )
 
     matches = matcher(tokens)
     for match_id, start, end in matches:
