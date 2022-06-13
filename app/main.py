@@ -370,7 +370,11 @@ async def store_rules(
     return organization_rules
 
 
-@app.delete("/delete_rules", status_code=status.HTTP_204_NO_CONTENT, responses={404: {"model": ErrorMessage}})
+@app.delete(
+    "/delete_rules",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={404: {"model": ErrorMessage}},
+)
 async def delete_rules(
     organization_id: str,
     username: str = Depends(get_current_username),
@@ -378,7 +382,9 @@ async def delete_rules(
     rules = redis.get(organization_id)
 
     if not rules:
-        return JSONResponse(status_code=404, content={"message": "User rules not found"})
+        return JSONResponse(
+            status_code=404, content={"message": "User rules not found"}
+        )
 
     rules = json.loads(rules)
     for user in rules["users"]:
@@ -387,7 +393,9 @@ async def delete_rules(
     redis.delete(organization_id)
 
 
-@app.get("/get_user_rules", response_model=dict, responses={404: {"model": ErrorMessage}})
+@app.get(
+    "/get_user_rules", response_model=dict, responses={404: {"model": ErrorMessage}}
+)
 async def get_user_rules(
     user: str,
     username: str = Depends(get_current_username),
@@ -395,7 +403,9 @@ async def get_user_rules(
     rules = await get_user_rules_from_redis(user)
 
     if not rules:
-        return JSONResponse(status_code=404, content={"message": "User rules not found"})
+        return JSONResponse(
+            status_code=404, content={"message": "User rules not found"}
+        )
 
     del rules["users"]
 
@@ -459,7 +469,6 @@ async def apply_rules(user_request_in: RequestIn, user=Optional[str]):
         return {}
 
     return merge_rules(user_request_in, organization_rules)
-
 
 
 def merge_rules(user_request_in: RequestIn, organization_rules: list):
@@ -1115,8 +1124,11 @@ def ing_ify_alternatives(token, alternatives):
 
 
 """Function to change adjectives to -en form in alternatives"""
+
+
 def en_ify_adjective_or_verb(token):
     return token.pos_ == "ADJ" or token.pos_ == "ADV" or token.pos_ == "VERB"
+
 
 def en_ify_alternative(text, lang, alternative):
     if ResultOut.isInspirationAlternative(text, alternative):
@@ -1187,6 +1199,17 @@ def gendered_denom_end(version: float, config: Config, lang, full_text):
     return list_ending
 
 
+def plural_or_singular_alternatives(
+    token_morph_number, alternative_sing, alternative_plur
+):
+    if token_morph_number[0] == "Sing":
+        return alternative_sing
+    elif token_morph_number[0] == "Plur":
+        return alternative_plur
+
+    return None
+
+
 """Function to handle dependecies of the adjectives."""
 # this function agentic language & related false positives
 
@@ -1244,23 +1267,11 @@ def agentic_language_analysis_de(
                     if is_number_list_empty(token_morph_number, token, full_text):
                         continue
 
-                    elif token_morph_number[0] == "Sing":
-                        list_tokens.append(
-                            ResultOut.factory(
-                                version,
-                                config,
-                                lang,
-                                token.text,
-                                full_text,
-                                category,
-                                subcategory,
-                                token.idx,
-                                token.idx + len(token.text),
-                                alternative_sing,
-                            )
-                        )
+                    alternative = plural_or_singular_alternatives(
+                        token_morph_number, alternative_sing, alternative_plur
+                    )
 
-                    elif token_morph_number[0] == "Plur":
+                    if alternative != None:
                         list_tokens.append(
                             ResultOut.factory(
                                 version,
@@ -1272,7 +1283,7 @@ def agentic_language_analysis_de(
                                 subcategory,
                                 token.idx,
                                 token.idx + len(token.text),
-                                alternative_plur,
+                                alternative,
                             )
                         )
     return list_tokens
@@ -1501,7 +1512,11 @@ def gendered_denom_analysis_de(
                             )
                         )
                     else:
-                        if token_morph_number[0] == "Sing":
+                        alternative = plural_or_singular_alternatives(
+                            token_morph_number, alternative_sing, alternative_plur
+                        )
+
+                        if alternative != None:
                             list_tokens.append(
                                 ResultOut.factory(
                                     version,
@@ -1513,9 +1528,11 @@ def gendered_denom_analysis_de(
                                     subcategory,
                                     tokens[i].idx,
                                     None,
-                                    alternative_sing,
+                                    alternative,
                                 )
                             )
+
+                        if token_morph_number[0] == "Sing":
                             for article, article_alternative in articles:
                                 if tokens[i - 1].text == article:
                                     list_tokens.append(
@@ -1532,21 +1549,6 @@ def gendered_denom_analysis_de(
                                             [article_alternative],
                                         )
                                     )
-                        elif token_morph_number[0] == "Plur":
-                            list_tokens.append(
-                                ResultOut.factory(
-                                    version,
-                                    config,
-                                    lang,
-                                    tokens[i].text,
-                                    full_text,
-                                    category,
-                                    subcategory,
-                                    tokens[i].idx,
-                                    None,
-                                    alternative_plur,
-                                )
-                            )
 
     return list_tokens
 
@@ -1671,23 +1673,12 @@ def word_noun_de(
                 token_morph_number = token.morph.get("Number")
                 if is_number_list_empty(token_morph_number, token, full_text):
                     continue
-                if token_morph_number[0] == "Sing":
-                    list_tokens.append(
-                        ResultOut.factory(
-                            version,
-                            config,
-                            lang,
-                            token.text,
-                            full_text,
-                            category,
-                            subcategory,
-                            token.idx,
-                            token.idx + len(token.text),
-                            alternative_sing,
-                        )
-                    )
 
-                elif token_morph_number[0] == "Plur":
+                alternative = plural_or_singular_alternatives(
+                    token_morph_number, alternative_sing, alternative_plur
+                )
+
+                if alternative != None:
                     list_tokens.append(
                         ResultOut.factory(
                             version,
@@ -1699,7 +1690,7 @@ def word_noun_de(
                             subcategory,
                             token.idx,
                             token.idx + len(token.text),
-                            alternative_plur,
+                            alternative,
                         )
                     )
 
@@ -2090,23 +2081,12 @@ def gendered_en(
                 token_morph_number = token.morph.get("Number")
                 if is_number_list_empty(token_morph_number, token, full_text):
                     continue
-                if token_morph_number[0] == "Sing":
-                    list_tokens.append(
-                        ResultOut.factory(
-                            version,
-                            config,
-                            lang,
-                            token.text,
-                            full_text,
-                            category,
-                            subcategory,
-                            token.idx,
-                            token.idx + len(token.text),
-                            alternative_sing,
-                        )
-                    )
 
-                elif token_morph_number[0] == "Plur":
+                alternative = plural_or_singular_alternatives(
+                    token_morph_number, alternative_sing, alternative_plur
+                )
+
+                if alternative != None:
                     list_tokens.append(
                         ResultOut.factory(
                             version,
@@ -2118,7 +2098,7 @@ def gendered_en(
                             subcategory,
                             token.idx,
                             token.idx + len(token.text),
-                            alternative_plur,
+                            alternative,
                         )
                     )
 
