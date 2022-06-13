@@ -269,11 +269,6 @@ class ConfRequest(BaseModel):
     term_replacements: List[TermReplacement] = []
 
 
-class ConfDeleteRequest(BaseModel):
-    id: str
-    users: List[str]
-
-
 class RequestIn(BaseModel):
     type: str = "check"
     text: str
@@ -671,6 +666,8 @@ class ResultOut(BaseModel):
 
         return alternative_variations
 
+class ErrorMessage(BaseModel):
+    message: str
 
 class Result(BaseModel):
     detail: List

@@ -14,6 +14,7 @@ from fastapi import (
     status,
 )
 
+from fastapi.responses import JSONResponse
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
 from fastapi.security import (
@@ -44,9 +45,9 @@ from app.models import (
     ResultsOutOld,
     ResultsOut,
     ConfRequest,
-    ConfDeleteRequest,
     OrganizationConfig,
     ResultConf,
+    ErrorMessage,
 )
 
 from fastapi_microsoft_identity import validate_scope, get_token_claims
@@ -255,6 +256,7 @@ def german_gender_ending(
 
 @app.post(
     "/auth_debug",
+    include_in_schema=not settings.is_prod,
     dependencies=[Depends(HTTPBearer())],
 )
 async def auth(request: Request, user_request_in: RequestIn):  # pragma: no cover
@@ -299,6 +301,7 @@ def get_categories(lang: LangType = "de"):
 
 @app.post(
     "/check",
+    include_in_schema=not settings.is_prod,
     response_model=Union[ResultsOutOld, Result],
 )
 async def check_v1_0(
@@ -367,21 +370,34 @@ async def store_rules(
     return organization_rules
 
 
-@app.delete("/delete_rules")
+@app.delete("/delete_rules", status_code=status.HTTP_204_NO_CONTENT, responses={404: {"model": ErrorMessage}})
 async def delete_rules(
-    organization_rules: ConfDeleteRequest, username: str = Depends(get_current_username)
+    organization_id: str,
+    username: str = Depends(get_current_username),
 ):
-    redis.delete(organization_rules.id)
+    rules = redis.get(organization_id)
 
-    for user in organization_rules.users:
+    if not rules:
+        return JSONResponse(status_code=404, content={"message": "User rules not found"})
+
+    rules = json.loads(rules)
+    for user in rules["users"]:
         redis.delete(str(user))
 
+    redis.delete(organization_id)
 
-@app.get("/get_user_rules")
-async def get_user_rules(user: str, username: str = Depends(get_current_username)):
+
+@app.get("/get_user_rules", response_model=dict, responses={404: {"model": ErrorMessage}})
+async def get_user_rules(
+    user: str,
+    username: str = Depends(get_current_username),
+):
     rules = await get_user_rules_from_redis(user)
-    if rules:
-        del rules["users"]
+
+    if not rules:
+        return JSONResponse(status_code=404, content={"message": "User rules not found"})
+
+    del rules["users"]
 
     return rules
 
@@ -389,6 +405,7 @@ async def get_user_rules(user: str, username: str = Depends(get_current_username
 # Functions
 async def get_user_rules_from_redis(user: str):
     key = redis.get(user)
+
     if key:
         rules = json.loads(redis.get(key))
         if "users" in rules and user in rules["users"]:

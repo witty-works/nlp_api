@@ -14,10 +14,8 @@ class LangDetection:
         )
 
         result = []
-        i = 0
         for lang in langs:
             result.append(lang[-2:])
-            i += 1
 
         return result
 
