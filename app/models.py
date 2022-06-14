@@ -71,7 +71,12 @@ class GermanGenderEndingType(str, Enum):
     STAR = "*in"
     COLON = ":in"
     CAPITAL_LETTER = "In"
-
+    STR_SLASH = "slash_in"
+    STR_SLASH_DASH = "slash_dash_in"
+    STR_UNDERSCORE = "underscore_in"
+    STR_STAR = "asterisk_in"
+    STR_COLON = "colon_in"
+    STR_CAPITAL_LETTER = "uppercase_in"
 
 class SingularTheyType(str, Enum):
     HE_OR_SHE = "he_or_she"
@@ -119,6 +124,18 @@ class Config(BaseModel):
     @validator("german_gender_ending")
     def valid_german_gender_ending(cls, v: str):
         if v not in Config._gendereddenom_ending:
+            mapping = {
+                GermanGenderEndingType.STR_SLASH: GermanGenderEndingType.SLASH,
+                GermanGenderEndingType.STR_SLASH_DASH: GermanGenderEndingType.SLASH_DASH,
+                GermanGenderEndingType.STR_UNDERSCORE: GermanGenderEndingType.UNDERSCORE,
+                GermanGenderEndingType.STR_STAR: GermanGenderEndingType.STAR,
+                GermanGenderEndingType.STR_COLON: GermanGenderEndingType.COLON,
+                GermanGenderEndingType.STR_CAPITAL_LETTER: GermanGenderEndingType.CAPITAL_LETTER,
+            }
+
+            if v in mapping:
+                return mapping[v]
+
             raise ValueError("Not supported german_gender_ending: " + v)
         return v
 

@@ -1,0 +1,47 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "Kund*in"
+                },
+                {
+                    "text": "Kundin/Kunde"
+                },
+                {
+                    "text": "Kundschaft"
+                },
+                {
+                    "text": "Klientel"
+                },
+                {
+                    "text": "Auftraggebende"
+                },
+                {
+                    "text": "Bestellende"
+                },
+                {
+                    "text": "beziehende Person"
+                },
+                {
+                    "text": "beauftragende Firma"
+                }
+            ],
+            "category": "gendered",
+            "context": "Hallo Kunde.",
+            "end": 11,
+            "explanation": {
+                "icon": "😟",
+                "text": "“Mitmeinen” mit männlichen Generikum funktioniert nicht",
+                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#titel"
+            },
+            "gravity": 2,
+            "label": "Geschlechtsspezifisch: Titel",
+            "start": 6,
+            "subcategory": "titles",
+            "text": "Kunde"
+        }
+    ]
+}
