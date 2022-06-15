@@ -1,7 +1,0 @@
-{
-    "text": "Wie geht es ihnen? Hallo Kund*in und Kunde. Hallo Kund:in.",
-    "config": {
-        "store_context": false,
-        "german_gender_ending": ":in"
-    }
-}
