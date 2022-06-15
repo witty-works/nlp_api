@@ -462,12 +462,13 @@ class ResultOut(BaseModel):
 
                 if is_upper:
                     alternative = string.capwords(alternative[0:1]) + alternative[1:]
+            else:
+                explanation = ResultOut.convert_sharp_ss(lang, explanation)
+                alternative = ResultOut.convert_sharp_ss(lang, alternative)
 
             if alternative == "-" and version == 1.1:
                 alternative = None
                 remove = True
-            elif lang.locale == "de-CH":
-                alternative = alternative.replace("ß", "ss")
 
             inspiration = None
             if ResultOut.isInspirationAlternative(text, alternative, subcategory):
@@ -529,6 +530,13 @@ class ResultOut(BaseModel):
         )
 
     factory = staticmethod(factory)
+
+    @staticmethod
+    def convert_sharp_ss(lang, text):
+        if lang.locale != "de-CH":
+            return text
+
+        return text.replace("ß", "ss")
 
     @staticmethod
     def isUpper(text, full_text, start, category, lang):
