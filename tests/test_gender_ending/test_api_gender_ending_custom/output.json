@@ -1,5 +1,21 @@
 {
     "language": "de",
     "limit_reached": false,
-    "results": []
+    "results": [
+        {
+            "alternatives": [],
+            "category": "inclusive",
+            "context": "Es ist eine Kund/in.",
+            "end": 19,
+            "explanation": {
+                "icon": "✅",
+                "text": "Bestärkt Wert von Diversity, Gleichstellung und Inklusion",
+                "url": "https://www.witty.works/de/kategorien/inklusiv#diversitaet_&_inklusion"
+            },
+            "label": "Inklusiv: Diversität & Inklusion",
+            "start": 16,
+            "subcategory": "d_and_i",
+            "text": "/in"
+        }
+    ]
 }

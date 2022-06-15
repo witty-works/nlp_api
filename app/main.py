@@ -859,8 +859,20 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
     if is_sub_category_enabled(config, "misgendering_institutions"):
         list_full += misgendering_institutions_de(version, config, lang, text, tokens)
 
-    if is_sub_category_enabled(config, "gendered_denominations_ending"):
-        list_full += gendered_denom_end(version, config, lang, text)
+    if is_sub_category_enabled(
+        config, "gendered_denominations_ending"
+    ) and ResultOut.genderedRolesFormatInclusive(config.gendered_roles_format):
+        subcategory = "gendered_denominations_ending"
+        category = categories[subcategory]["category"]
+        endings = config._gendereddenom_ending.copy()
+        if config.german_gender_ending in endings:
+            del endings[config.german_gender_ending]
+
+        alternative = [config.german_gender_ending]
+
+        list_full += gendered_denom_end(
+            version, config, lang, text, category, subcategory, endings, alternative
+        )
 
     if is_sub_category_enabled(config, "unconscious_bias"):
         list_full += ub_words_phrase_matcher_de(
@@ -906,6 +918,18 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             rules["de-DE"]["df_d_and_i_words"],
             "inclusive",
             "d_and_i",
+        )
+
+        subcategory = "d_and_i"
+        category = categories[subcategory]["category"]
+        endings = {
+            config.german_gender_ending: config._gendereddenom_ending[
+                config.german_gender_ending
+            ]
+        }
+
+        list_full += gendered_denom_end(
+            version, config, lang, text, category, subcategory, endings
         )
 
     if is_sub_category_enabled(config, "style"):
@@ -1171,15 +1195,19 @@ def en_ify_alternatives(token, lang, alternatives):
 """Function to catch ending in German Denom"""
 
 
-def gendered_denom_end(version: float, config: Config, lang, full_text):
-    subcategory = "gendered_denominations_ending"
-    category = categories[subcategory]["category"]
-
+def gendered_denom_end(
+    version: float,
+    config: Config,
+    lang,
+    full_text,
+    category,
+    subcategory,
+    endings,
+    alternative=None,
+):
     list_ending = []
-    for item in config._gendereddenom_ending:
-        if config.german_gender_ending == item:
-            continue
-        span = re.search(r"\S" + config._gendereddenom_ending[item], full_text)
+    for item, regex in endings.items():
+        span = re.search(r"\S" + regex, full_text)
         if type(span) == re.Match:
             list_ending.append(
                 ResultOut.factory(
@@ -1192,7 +1220,7 @@ def gendered_denom_end(version: float, config: Config, lang, full_text):
                     subcategory,
                     span.start() + 1,  # remove extra \S character
                     span.end(),
-                    [config.german_gender_ending],
+                    alternative,
                 )
             )
 

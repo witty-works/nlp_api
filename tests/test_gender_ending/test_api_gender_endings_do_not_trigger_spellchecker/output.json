@@ -1,5 +1,21 @@
 {
     "language": "de",
     "limit_reached": false,
-    "results": []
+    "results": [
+        {
+            "alternatives": [],
+            "category": "inclusive",
+            "context": "Wie geht es dir? Bis du unser Matros/-in?",
+            "end": 40,
+            "explanation": {
+                "icon": "✅",
+                "text": "Bestärkt Wert von Diversity, Gleichstellung und Inklusion",
+                "url": "https://www.witty.works/de/kategorien/inklusiv#diversitaet_&_inklusion"
+            },
+            "label": "Inklusiv: Diversität & Inklusion",
+            "start": 36,
+            "subcategory": "d_and_i",
+            "text": "/-in"
+        }
+    ]
 }
