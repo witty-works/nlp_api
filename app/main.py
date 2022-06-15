@@ -1126,11 +1126,11 @@ def ing_ify_alternatives(token, alternatives):
 """Function to change adjectives to -en form in alternatives"""
 
 
-def en_ify_adjective_or_verb(token):
+def adjective_or_verb(token):
     return token.pos_ == "ADJ" or token.pos_ == "ADV" or token.pos_ == "VERB"
 
 
-def en_ify_alternative(text, lang, alternative):
+def alternative_declension(text, ending, lang, alternative):
     if ResultOut.isInspirationAlternative(text, alternative):
         return alternative
 
@@ -1143,8 +1143,8 @@ def en_ify_alternative(text, lang, alternative):
             return alternative
 
         text = token.text
-        if previous == False and en_ify_adjective_or_verb(token):
-            text += "en"
+        if previous == False and adjective_or_verb(token):
+            text += ending
             previous = True
         else:
             previous = False
@@ -1154,16 +1154,35 @@ def en_ify_alternative(text, lang, alternative):
     return new_alternative
 
 
-def en_ify_alternatives(token, lang, alternatives):
-    if (
-        not token.lemma_.endswith("en")
-        and token.text.endswith("en")
-        and en_ify_adjective_or_verb(token)
-    ):
-        return [
-            en_ify_alternative(token.text, lang, alternative).strip()
-            for alternative in alternatives
+def alternatives_declension(token, lang, alternatives):
+    if adjective_or_verb(token):
+        endings = [
+            "erer",
+            "eren",
+            "erem",
+            "eres",
+            "erere",
+            "erers",
+            "erern",
+            "ererm",
+            "ste",
+            "ster",
+            "stes",
+            "sten",
+            "stem",
+            "ere",
+            "er",
+            "en",
+            "em",
+            "es",
+            "e",
         ]
+        for ending in endings:
+            if not token.lemma_.endswith(ending) and token.text.endswith(ending):
+                return [
+                    alternative_declension(token.text, ending, lang, alternative).strip()
+                    for alternative in alternatives
+                ]
 
     return alternatives
 
@@ -1342,7 +1361,7 @@ def ub_words_phrase_matcher_de(
         else:
             for word, alternative, subcategory in words_alternatives:
                 if get_non_noun_lower_cased(token) == word:
-                    alternative = en_ify_alternatives(token, lang, alternative)
+                    alternative = alternatives_declension(token, lang, alternative)
 
                     list_tokens.append(
                         ResultOut.factory(
@@ -1588,7 +1607,7 @@ def style_word_analysis_de(
             else:
                 for word, alternative, subcategory in style_words_alternatives:
                     if tokens[i].lemma_ == word:
-                        alternative = en_ify_alternatives(tokens[i], lang, alternative)
+                        alternative = alternatives_declension(tokens[i], lang, alternative)
 
                         list_tokens.append(
                             ResultOut.factory(
@@ -1608,7 +1627,7 @@ def style_word_analysis_de(
         else:
             for word, alternative, subcategory in style_words_alternatives:
                 if tokens[i].lemma_ == word:
-                    alternative = en_ify_alternatives(tokens[i], lang, alternative)
+                    alternative = alternatives_declension(tokens[i], lang, alternative)
 
                     list_tokens.append(
                         ResultOut.factory(
@@ -1722,7 +1741,7 @@ def rules_based_words_phrase_matcher_de(
     for token in tokens:
         for word, alternative, subcategory in words_alternatives:
             if get_non_noun_lower_cased(token) == word:
-                alternative = en_ify_alternatives(token, lang, alternative)
+                alternative = alternatives_declension(token, lang, alternative)
 
                 list_tokens.append(
                     ResultOut.factory(
