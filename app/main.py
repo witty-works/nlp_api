@@ -592,6 +592,15 @@ def get_alternatives(match):
     return alternatives
 
 
+def has_gender_denom_ending(text, full_text, offset, config: Config):
+    offset_with_text = offset + len(text)
+    for ending in config._gendereddenom_ending:
+        if full_text[offset_with_text:offset_with_text + len(ending)] == ending:
+            return True
+
+    return False
+
+
 def languagetool_matches(
     version: float, config: Config, lang: Language, category: str, text: str, result
 ):
@@ -616,15 +625,10 @@ def languagetool_matches(
             continue
 
         # ignore german gender ending as spelling mistakes
-        if gendered_denom:
-            offset_with_text = offset + len(highlight_text)
-            offset_with_text_and_ending = offset_with_text + 3
-            if (
-                offset_with_text_and_ending < len(text)
-                and text[offset_with_text:offset_with_text_and_ending]
-                in config._gendereddenom_ending
-            ):
-                continue
+        if gendered_denom and has_gender_denom_ending(
+            highlight_text, text, offset, config
+        ):
+            continue
 
         alternatives = get_alternatives(match)
 
