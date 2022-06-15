@@ -598,6 +598,12 @@ def languagetool_matches(
     list_results = []
     ignore = ["@", "#"]
 
+    gendered_denom = (
+        lang.lang == "de"
+        and is_sub_category_enabled(config, "gendered_denominations_ending")
+        and ResultOut.genderedRolesFormatInclusive(config.gendered_roles_format)
+    )
+
     for match in result["matches"]:
         offset = int(match["offset"])
         end = offset + int(match["length"])
@@ -608,6 +614,17 @@ def languagetool_matches(
             offset > 0 and text[offset - 1 : offset] in ignore
         ):
             continue
+
+        # ignore german gender ending as spelling mistakes
+        if gendered_denom:
+            offset_with_text = offset + len(highlight_text)
+            offset_with_text_and_ending = offset_with_text + 3
+            if (
+                offset_with_text_and_ending < len(text)
+                and text[offset_with_text:offset_with_text_and_ending]
+                in config._gendereddenom_ending
+            ):
+                continue
 
         alternatives = get_alternatives(match)
 
