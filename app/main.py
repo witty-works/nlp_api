@@ -598,6 +598,11 @@ def has_gender_denom_ending(text, full_text, offset, config: Config):
         if full_text[offset_with_text:offset_with_text + len(ending)] == ending:
             return True
 
+        # innen case
+        ending = ending + "nen"
+        if full_text[offset_with_text:offset_with_text + len(ending)] == ending:
+            return True
+
     return False
 
 
