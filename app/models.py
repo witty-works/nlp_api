@@ -668,16 +668,27 @@ class ResultOut(BaseModel):
         return beginning + separator + ending
 
     @staticmethod
+    def genderedRolesFormatInclusive(gendered_roles_format):
+        return gendered_roles_format in [
+            GenderedRolesFormatType.BOTH,
+            GenderedRolesFormatType.INCLUSIVE_GENDER,
+        ]
+
+    @staticmethod
+    def genderedRolesFormatBinary(gendered_roles_format):
+        return gendered_roles_format in [
+            GenderedRolesFormatType.BOTH,
+            GenderedRolesFormatType.BINARY_GENDER,
+        ]
+
+    @staticmethod
     def getGenderedRoles(
         gendered_roles_format: GenderedRolesFormatType,
         german_gender_ending: GermanGenderEndingType,
         alternative,
     ):
         alternative_variations = []
-        if gendered_roles_format in [
-            GenderedRolesFormatType.BOTH,
-            GenderedRolesFormatType.INCLUSIVE_GENDER,
-        ]:
+        if ResultOut.genderedRolesFormatInclusive(gendered_roles_format):
             alternative_variations.append(
                 ResultOut.getGenderedRolesFormatInclusive(
                     german_gender_ending,
@@ -685,10 +696,7 @@ class ResultOut(BaseModel):
                 )
             )
 
-        if gendered_roles_format in [
-            GenderedRolesFormatType.BOTH,
-            GenderedRolesFormatType.BINARY_GENDER,
-        ]:
+        if ResultOut.genderedRolesFormatBinary(gendered_roles_format):
             alternative_variation = ResultOut.getGenderedRolesFormatBinary(
                 alternative,
             )
