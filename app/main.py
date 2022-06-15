@@ -1224,22 +1224,23 @@ def gendered_denom_end(
 ):
     list_ending = []
     for item, regex in endings.items():
-        span = re.search(r"\S" + regex, full_text)
-        if type(span) == re.Match:
-            list_ending.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    item,
-                    full_text,
-                    category,
-                    subcategory,
-                    span.start() + 1,  # remove extra \S character
-                    span.end(),
-                    alternative,
+        matches = re.finditer(r"\S" + regex, full_text)
+        for span in matches:
+            if type(span) == re.Match:
+                list_ending.append(
+                    ResultOut.factory(
+                        version,
+                        config,
+                        lang,
+                        item,
+                        full_text,
+                        category,
+                        subcategory,
+                        span.start() + 1,  # remove extra \S character
+                        span.end(),
+                        alternative,
+                    )
                 )
-            )
 
     return list_ending
 
