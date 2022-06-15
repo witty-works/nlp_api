@@ -1,0 +1,25 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "wie"
+                }
+            ],
+            "category": "orthography",
+            "context": "Ich gehe noch schnell über die Strasse Wie geht es dir?",
+            "end": 42,
+            "explanation": {
+                "icon": "❌",
+                "text": "Ausser am Satzanfang werden nur Nomen und Eigennamen grossgeschrieben."
+            },
+            "gravity": 1,
+            "label": "Groß-/Kleinschreibung",
+            "start": 39,
+            "subcategory": "casing",
+            "text": "Wie"
+        }
+    ]
+}
