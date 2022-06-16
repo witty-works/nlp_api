@@ -2007,6 +2007,7 @@ def gendered_en(
             alternative_sing,
             alternative_plur,
             subcategory,
+            second_subcategory,
         ) in gendered_words_alternatives:
             if get_lower_cased(token) == word:
                 token_morph_number = token.morph.get("Number")
@@ -2026,7 +2027,7 @@ def gendered_en(
                             token.text,
                             full_text,
                             category,
-                            subcategory,
+                            second_subcategory,
                             token.idx,
                             token.idx + len(token.text),
                             alternative,
