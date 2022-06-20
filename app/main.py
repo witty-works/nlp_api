@@ -1524,11 +1524,6 @@ def style_word_analysis_de(
         if is_false_positive(tokens[i].lemma_, false_positives):
             # recognise if there is Name of organisation or geographical name in the query
             if len(tokens.ents) > 0:
-                # this output will be deleted in production
-                list_false_positives.append(
-                    {"false positives": tokens[i].text, "category": category}
-                )
-
                 continue
 
         if tokens[i].lemma_ == "aber" and is_conjunction(full_text, tokens[i].idx):
