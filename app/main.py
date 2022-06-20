@@ -1433,109 +1433,58 @@ def gendered_denom_analysis_de(
             old_start = end
 
         docs = list(model[lang.lang].pipe(rest_text))
-        c_doc = Doc.from_docs(docs)
+        tokens = Doc.from_docs(docs)
 
-        for i in range(len(c_doc)):
-            for (
-                word,
-                alternative_sing,
-                alternative_plur,
-                alternative_all,
-                subcategory,
-            ) in gender_words_alternatives:
-                if c_doc[i].lemma_ == word:
-                    c_doc_morph_number = c_doc[i].morph.get("Number")
-                    if is_number_list_empty(c_doc_morph_number, c_doc[i], full_text):
-                        alternative = alternative_all
-                    else:
-                        alternative = plural_or_singular_alternatives(
-                            c_doc_morph_number, alternative_sing, alternative_plur
+    for i in range(len(tokens)):
+        for (
+            word,
+            alternative_sing,
+            alternative_plur,
+            alternative_all,
+            subcategory,
+        ) in gender_words_alternatives:
+            if tokens[i].lemma_ == word:
+                token_morph_number = tokens[i].morph.get("Number")
+                if is_number_list_empty(token_morph_number, tokens[i], full_text):
+                    alternative = alternative_all
+                else:
+                    alternative = plural_or_singular_alternatives(
+                        token_morph_number, alternative_sing, alternative_plur
+                    )
+
+                if alternative != None:
+                    list_tokens.append(
+                        ResultOut.factory(
+                            version,
+                            config,
+                            lang,
+                            tokens[i].text,
+                            full_text,
+                            category,
+                            subcategory,
+                            tokens[i].idx,
+                            None,
+                            alternative,
                         )
+                    )
 
-                    if alternative != None:
-                        list_tokens.append(
-                            ResultOut.factory(
-                                version,
-                                config,
-                                lang,
-                                c_doc[i].text,
-                                full_text,
-                                category,
-                                subcategory,
-                                c_doc[i].idx,
-                                None,
-                                alternative,
-                            )
-                        )
-
-                    if c_doc_morph_number[0] == "Sing":
-                        for article, article_alternative in articles:
-                            if c_doc[i - 1].text == article:
-                                list_tokens.append(
-                                    ResultOut.factory(
-                                        version,
-                                        config,
-                                        lang,
-                                        c_doc[i - 1].text,
-                                        full_text,
-                                        category,
-                                        subcategory,
-                                        c_doc[i - 1].idx,
-                                        None,
-                                        [article_alternative],
-                                    )
+                if token_morph_number[0] == "Sing":
+                    for article, article_alternative in articles:
+                        if tokens[i - 1].text == article:
+                            list_tokens.append(
+                                ResultOut.factory(
+                                    version,
+                                    config,
+                                    lang,
+                                    tokens[i - 1].text,
+                                    full_text,
+                                    category,
+                                    subcategory,
+                                    tokens[i - 1].idx,
+                                    None,
+                                    [article_alternative],
                                 )
-    else:
-        for i in range(len(tokens)):
-            for (
-                word,
-                alternative_sing,
-                alternative_plur,
-                alternative_all,
-                subcategory,
-            ) in gender_words_alternatives:
-                if tokens[i].lemma_ == word:
-                    token_morph_number = tokens[i].morph.get("Number")
-                    if is_number_list_empty(token_morph_number, tokens[i], full_text):
-                        alternative = alternative_all
-                    else:
-                        alternative = plural_or_singular_alternatives(
-                            token_morph_number, alternative_sing, alternative_plur
-                        )
-
-                    if alternative != None:
-                        list_tokens.append(
-                            ResultOut.factory(
-                                version,
-                                config,
-                                lang,
-                                tokens[i].text,
-                                full_text,
-                                category,
-                                subcategory,
-                                tokens[i].idx,
-                                None,
-                                alternative,
                             )
-                        )
-
-                    if token_morph_number[0] == "Sing":
-                        for article, article_alternative in articles:
-                            if tokens[i - 1].text == article:
-                                list_tokens.append(
-                                    ResultOut.factory(
-                                        version,
-                                        config,
-                                        lang,
-                                        tokens[i - 1].text,
-                                        full_text,
-                                        category,
-                                        subcategory,
-                                        tokens[i - 1].idx,
-                                        None,
-                                        [article_alternative],
-                                    )
-                                )
 
     return list_tokens
 
