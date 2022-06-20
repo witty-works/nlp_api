@@ -1449,7 +1449,7 @@ def gendered_denom_analysis_de(
                         alternative = alternative_all
                     else:
                         alternative = plural_or_singular_alternatives(
-                            c_doc_morph_number[0], alternative_sing, alternative_plur
+                            c_doc_morph_number, alternative_sing, alternative_plur
                         )
 
                     if alternative != None:
