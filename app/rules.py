@@ -74,18 +74,10 @@ rules["de-DE"]["terms_d_and_i_words"] = list(
 )
 
 # dictionaries to handle false positives
-rules["de-DE"]["false_positive_agentic_const"] = [
-    "selbst",
-    "stark",
-    "flexible",
-    "Probleme",
-    "unabhängig",
-    "Entwickler",
-]
 rules["de-DE"]["gender_false_positive"] = list(
     rules["de-DE"]["df_gender_false_positive"]["False_positives"]
 )
-rules["de-DE"]["false_positive_style"] = ["international"]
+rules["de-DE"]["style_false_positive"] = ["international"]
 rules["de-DE"]["exceptions"] = [
     "Unternehmen",
     "Firma",
@@ -499,9 +491,8 @@ bias_singular_they_alternatives_GB = list(
     )
 )
 
-FalsePositive = namedtuple("FalsePositive", "gender agentic")
+FalsePositive = namedtuple("FalsePositive", "gender style")
 
-false_positive = FalsePositive(
-    rules["de-DE"]["gender_false_positive"],
-    rules["de-DE"]["false_positive_agentic_const"],
+false_positives = FalsePositive(
+    rules["de-DE"]["gender_false_positive"], rules["de-DE"]["style_false_positive"]
 )

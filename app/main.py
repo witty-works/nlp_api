@@ -880,7 +880,7 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             text,
             tokens,
             gender_words_alternatives,
-            false_positive.gender,
+            false_positives.gender,
         )
 
     if is_sub_category_enabled(config, "misgendering_institutions"):
@@ -912,7 +912,6 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             bias_sentences_alternatives,
             rules["de-DE"]["df_ub_sentences"],
             "unconscious_bias",
-            false_positive.agentic,
         ) + agentic_language_analysis_de(
             version,
             config,
@@ -921,7 +920,6 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             tokens,
             bias_words_alternatives_noun,
             "unconscious_bias",
-            false_positive.agentic,
         )
 
     if is_sub_category_enabled(config, "communal"):
@@ -971,6 +969,7 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             rules["de-DE"]["terms_style"],
             style_words_alternatives,
             style_sentences_alternatives,
+            false_positives.style,
         )
 
     return list_full
@@ -1301,130 +1300,25 @@ def agentic_language_analysis_de(
     tokens,
     words_alternatives_noun,
     category,
-    false_positives,
 ):
     list_tokens = []
-    dic_anc = {}
-    list_false_positives = []
     for token in tokens:
-        # check if the user query have false positives
-        if is_false_positive(token.lemma_, false_positives):
-            # recognise if there is Name of organisation or geographical name in the query
-            for entity in tokens.ents:
-                if entity.label_ == "ORG":
-                    list_false_positives.append(
-                        {"false positives": token.text, "category": category}
-                    )
+        for (
+            word,
+            alternative_sing,
+            alternative_plur,
+            subcategory,
+        ) in words_alternatives_noun:
+            if get_non_noun_lower_cased(token) == word:
+                token_morph_number = token.morph.get("Number")
+                if is_number_list_empty(token_morph_number, token, full_text):
+                    continue
 
-            # check if the word is adverb
-            if token.pos_ == "ADV":
-                list_false_positives.append(
-                    {"false positives": token.text, "category": category}
+                alternative = plural_or_singular_alternatives(
+                    token_morph_number, alternative_sing, alternative_plur
                 )
 
-            # check if the word is adjective and find out how it depends on the other words to feel the contex
-            elif token.pos_ == "ADJ":  # or token.tag_== "ADJD":
-                dic_anc[token.lemma_] = list(token.ancestors)
-                for key in dic_anc.keys():
-                    if key in false_positives:
-                        for item in dic_anc[key]:
-                            if item.text in rules["de-DE"]["exceptions"]:
-                                list_false_positives.append(
-                                    {
-                                        "false positives": token.text,
-                                        "category": category,
-                                    }
-                                )
-        else:
-            for (
-                word,
-                alternative_sing,
-                alternative_plur,
-                subcategory,
-            ) in words_alternatives_noun:
-                if get_non_noun_lower_cased(token) == word:
-                    token_morph_number = token.morph.get("Number")
-                    if is_number_list_empty(token_morph_number, token, full_text):
-                        continue
-
-                    alternative = plural_or_singular_alternatives(
-                        token_morph_number, alternative_sing, alternative_plur
-                    )
-
-                    if alternative != None:
-                        list_tokens.append(
-                            ResultOut.factory(
-                                version,
-                                config,
-                                lang,
-                                token.text,
-                                full_text,
-                                category,
-                                subcategory,
-                                token.idx,
-                                token.idx + len(token.text),
-                                alternative,
-                            )
-                        )
-    return list_tokens
-
-
-def ub_words_phrase_matcher_de(
-    version: float,
-    config: Config,
-    lang,
-    full_text,
-    tokens,
-    words_alternatives,
-    sentences_alternatives,
-    df_sentence,
-    category,
-    false_positives,
-):
-    list_tokens = []
-    # Phrase matcher part to handle False positives with two words and special simbols
-    matcher = PhraseMatcher(model[lang.lang].vocab)
-
-    # Only run model.make_doc to speed things up
-    patterns = [model[lang.lang].make_doc(text) for text in list(df_sentence["Lemma"])]
-    matcher.add("TerminologyList", patterns)
-
-    dic_anc = {}
-    list_false_positives = []
-    for token in tokens:
-        # check if the user query have false positives
-        if is_false_positive(token.lemma_, false_positives):
-            # recognise if there is Name of organisation or geographical name in the query
-            for entity in tokens.ents:
-                if entity.label_ == "ORG":
-                    list_false_positives.append(
-                        {"false positives": token.text, "category": category}
-                    )
-
-            # check if the word is adverb
-            if token.pos_ == "ADV":
-                list_false_positives.append(
-                    {"false positives": token.text, "category": category}
-                )
-
-            # check if the word is adjective and find out how it depends on the other words to feel the contex
-            elif token.pos_ == "ADJ":  # or token.tag_== "ADJD":
-                dic_anc[token.lemma_] = list(token.ancestors)
-                for key in dic_anc.keys():
-                    if key in false_positives:
-                        for item in dic_anc[key]:
-                            if item.text in rules["de-DE"]["exceptions"]:
-                                list_false_positives.append(
-                                    {
-                                        "false positives": token.text,
-                                        "category": category,
-                                    }
-                                )
-        else:
-            for word, alternative, subcategory in words_alternatives:
-                if get_non_noun_lower_cased(token) == word:
-                    alternative = alternatives_declension(token, lang, alternative)
-
+                if alternative != None:
                     list_tokens.append(
                         ResultOut.factory(
                             version,
@@ -1439,6 +1333,48 @@ def ub_words_phrase_matcher_de(
                             alternative,
                         )
                     )
+
+    return list_tokens
+
+
+def ub_words_phrase_matcher_de(
+    version: float,
+    config: Config,
+    lang,
+    full_text,
+    tokens,
+    words_alternatives,
+    sentences_alternatives,
+    df_sentence,
+    category,
+):
+    list_tokens = []
+    # Phrase matcher part to handle False positives with two words and special simbols
+    matcher = PhraseMatcher(model[lang.lang].vocab)
+
+    # Only run model.make_doc to speed things up
+    patterns = [model[lang.lang].make_doc(text) for text in list(df_sentence["Lemma"])]
+    matcher.add("TerminologyList", patterns)
+
+    for token in tokens:
+        for word, alternative, subcategory in words_alternatives:
+            if get_non_noun_lower_cased(token) == word:
+                alternative = alternatives_declension(token, lang, alternative)
+
+                list_tokens.append(
+                    ResultOut.factory(
+                        version,
+                        config,
+                        lang,
+                        token.text,
+                        full_text,
+                        category,
+                        subcategory,
+                        token.idx,
+                        token.idx + len(token.text),
+                        alternative,
+                    )
+                )
 
     matches = matcher(tokens)
     for match_id, start, end in matches:
@@ -1622,6 +1558,7 @@ def style_word_analysis_de(
     terms,
     style_words_alternatives,
     style_sentences_alternatives,
+    false_positives,
 ):
     category = "style"
     list_tokens = []
@@ -1635,7 +1572,7 @@ def style_word_analysis_de(
 
     for i in range(len(tokens))[1:-1]:
         # check if the user query have false positives
-        if is_false_positive(tokens[i].lemma_, rules["de-DE"]["false_positive_style"]):
+        if is_false_positive(tokens[i].lemma_, false_positives):
             # recognise if there is Name of organisation or geographical name in the query
             if len(tokens.ents) > 0:
                 # this output will be deleted in production
