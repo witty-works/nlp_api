@@ -880,6 +880,7 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             text,
             tokens,
             gender_words_alternatives,
+            false_positive.gender,
         )
 
     if is_sub_category_enabled(config, "misgendering_institutions"):
@@ -911,6 +912,7 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             bias_sentences_alternatives,
             rules["de-DE"]["df_ub_sentences"],
             "unconscious_bias",
+            false_positive.agentic,
         ) + agentic_language_analysis_de(
             version,
             config,
@@ -919,6 +921,7 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             tokens,
             bias_words_alternatives_noun,
             "unconscious_bias",
+            false_positive.agentic,
         )
 
     if is_sub_category_enabled(config, "communal"):
@@ -1296,13 +1299,14 @@ def agentic_language_analysis_de(
     tokens,
     words_alternatives_noun,
     category,
+    false_positives,
 ):
     list_tokens = []
     dic_anc = {}
     list_false_positives = []
     for token in tokens:
         # check if the user query have false positives
-        if is_false_positive(token.lemma_, false_positive.agentic):
+        if is_false_positive(token.lemma_, false_positives):
             # recognise if there is Name of organisation or geographical name in the query
             for entity in tokens.ents:
                 if entity.label_ == "ORG":
@@ -1320,7 +1324,7 @@ def agentic_language_analysis_de(
             elif token.pos_ == "ADJ":  # or token.tag_== "ADJD":
                 dic_anc[token.lemma_] = list(token.ancestors)
                 for key in dic_anc.keys():
-                    if key in false_positive.agentic:
+                    if key in false_positives:
                         for item in dic_anc[key]:
                             if item.text in rules["de-DE"]["exceptions"]:
                                 list_false_positives.append(
@@ -1373,6 +1377,7 @@ def ub_words_phrase_matcher_de(
     sentences_alternatives,
     df_sentence,
     category,
+    false_positives,
 ):
     list_tokens = []
     # Phrase matcher part to handle False positives with two words and special simbols
@@ -1386,7 +1391,7 @@ def ub_words_phrase_matcher_de(
     list_false_positives = []
     for token in tokens:
         # check if the user query have false positives
-        if is_false_positive(token.lemma_, false_positive.agentic):
+        if is_false_positive(token.lemma_, false_positives):
             # recognise if there is Name of organisation or geographical name in the query
             for entity in tokens.ents:
                 if entity.label_ == "ORG":
@@ -1404,7 +1409,7 @@ def ub_words_phrase_matcher_de(
             elif token.pos_ == "ADJ":  # or token.tag_== "ADJD":
                 dic_anc[token.lemma_] = list(token.ancestors)
                 for key in dic_anc.keys():
-                    if key in false_positive.agentic:
+                    if key in false_positives:
                         for item in dic_anc[key]:
                             if item.text in rules["de-DE"]["exceptions"]:
                                 list_false_positives.append(
@@ -1457,7 +1462,9 @@ def ub_words_phrase_matcher_de(
 
 
 def gendered_denom_analysis_de(
-    version: float, config: Config, lang, full_text, tokens, gender_words_alternatives
+    tokens,
+    gender_words_alternatives,
+    false_positives,
 ):
     category = "gendered"
 
@@ -1466,7 +1473,7 @@ def gendered_denom_analysis_de(
     matcher = PhraseMatcher(model[lang.lang].vocab)
 
     # Only run model.make_doc to speed things up
-    patterns = [model[lang.lang].make_doc(text) for text in false_positive.gender]
+    patterns = [model[lang.lang].make_doc(text) for text in false_positives]
     matcher.add("TerminologyList", patterns)
     matches = matcher(tokens)
 
