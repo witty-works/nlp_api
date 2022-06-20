@@ -204,9 +204,7 @@ def root():
     url = "https://www.witty.works/form"
     status_code = 301
 
-    if (
-        settings.platform_environment == "local" and settings.testing == False
-    ):  # pragma: no cover
+    if not settings.is_prod and settings.testing == False:  # pragma: no cover
         url = "/docs"
         status_code = 302
 
