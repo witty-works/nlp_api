@@ -595,12 +595,12 @@ def get_alternatives(match):
 def has_gender_denom_ending(text, full_text, offset, config: Config):
     offset_with_text = offset + len(text)
     for ending in config._gendereddenom_ending:
-        if full_text[offset_with_text:offset_with_text + len(ending)] == ending:
+        if full_text[offset_with_text : offset_with_text + len(ending)] == ending:
             return True
 
         # innen case
         ending = ending + "nen"
-        if full_text[offset_with_text:offset_with_text + len(ending)] == ending:
+        if full_text[offset_with_text : offset_with_text + len(ending)] == ending:
             return True
 
     return False
@@ -1233,7 +1233,9 @@ def alternatives_declension(token, lang, alternatives):
         for ending in endings:
             if not token.lemma_.endswith(ending) and token.text.endswith(ending):
                 return [
-                    alternative_declension(token.text, ending, lang, alternative).strip()
+                    alternative_declension(
+                        token.text, ending, lang, alternative
+                    ).strip()
                     for alternative in alternatives
                 ]
 
@@ -1462,6 +1464,10 @@ def ub_words_phrase_matcher_de(
 
 
 def gendered_denom_analysis_de(
+    version: float,
+    config: Config,
+    lang,
+    full_text,
     tokens,
     gender_words_alternatives,
     false_positives,
@@ -1481,7 +1487,7 @@ def gendered_denom_analysis_de(
 
     rest_text = []
 
-    if matches.__len__() != 0:
+    if matches.__len__() > 0:
         for match_id, start, end in matches:
             span = tokens[start:end]
             list_false_positives.append({"False positives": span.text})
