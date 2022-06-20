@@ -904,7 +904,14 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
         alternative = [config.german_gender_ending]
 
         list_full += gendered_denom_end(
-            version, config, lang, text, category, subcategory, endings, alternative
+            version,
+            config,
+            lang,
+            text,
+            category,
+            subcategory,
+            endings,
+            alternative,
         )
 
     if is_sub_category_enabled(config, "unconscious_bias"):
