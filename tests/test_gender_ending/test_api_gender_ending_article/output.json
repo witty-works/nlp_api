@@ -1,0 +1,65 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "context": "wenn GmbH, Einzelfirma oder AG",
+                    "text": "Arbeitgeberin"
+                },
+                {
+                    "text": "Arbeitgeber*in"
+                },
+                {
+                    "text": "Arbeitgeberin/Arbeitgeber"
+                },
+                {
+                    "text": "Arbeitgebende"
+                },
+                {
+                    "text": "arbeitgebende Firma"
+                },
+                {
+                    "text": "beschäftigendes Unternehmen"
+                }
+            ],
+            "category": "gendered",
+            "context": "Ist der Arbeitgeber zufriedenstellend?",
+            "end": 19,
+            "explanation": {
+                "icon": "😟",
+                "text": "“Mitmeinen” mit männlichen Generikum funktioniert nicht",
+                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#titel"
+            },
+            "gravity": 2,
+            "label": "Geschlechtsspezifisch: Titel",
+            "start": 8,
+            "subcategory": "titles",
+            "text": "Arbeitgeber"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "die*der"
+                },
+                {
+                    "text": "die/der"
+                }
+            ],
+            "category": "gendered",
+            "context": "Ist der Arbeitgeber zufriedenstellend?",
+            "end": 7,
+            "explanation": {
+                "icon": "😟",
+                "text": "“Mitmeinen” mit männlichen Generikum funktioniert nicht",
+                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#titel"
+            },
+            "gravity": 2,
+            "label": "Geschlechtsspezifisch: Titel",
+            "start": 4,
+            "subcategory": "titles",
+            "text": "der"
+        }
+    ]
+}
