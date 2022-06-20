@@ -5,7 +5,7 @@
         {
             "alternatives": [
                 {
-                    "text": "/-in"
+                    "text": "Kund/-in"
                 }
             ],
             "category": "gendered",
@@ -18,14 +18,14 @@
             },
             "gravity": 2,
             "label": "Geschlechtsspezifisch: Inklusive Endung",
-            "start": 29,
+            "start": 25,
             "subcategory": "gendered_denominations_ending",
-            "text": "*in"
+            "text": "Kund*in"
         },
         {
             "alternatives": [
                 {
-                    "text": "/-in"
+                    "text": "Kund/-in"
                 }
             ],
             "category": "gendered",
@@ -38,14 +38,14 @@
             },
             "gravity": 2,
             "label": "Geschlechtsspezifisch: Inklusive Endung",
-            "start": 44,
+            "start": 40,
             "subcategory": "gendered_denominations_ending",
-            "text": "*in"
+            "text": "Kund*in"
         },
         {
             "alternatives": [
                 {
-                    "text": "/-in"
+                    "text": "Kund/-in"
                 }
             ],
             "category": "gendered",
@@ -58,9 +58,9 @@
             },
             "gravity": 2,
             "label": "Geschlechtsspezifisch: Inklusive Endung",
-            "start": 59,
+            "start": 55,
             "subcategory": "gendered_denominations_ending",
-            "text": ":in"
+            "text": "Kund:in"
         },
         {
             "alternatives": [],
@@ -73,9 +73,9 @@
                 "url": "https://www.witty.works/de/kategorien/inklusiv#diversitaet_&_inklusion"
             },
             "label": "Inklusiv: Diversität & Inklusion",
-            "start": 83,
+            "start": 77,
             "subcategory": "d_and_i",
-            "text": "/-in"
+            "text": "Matros/-in"
         }
     ]
 }
