@@ -1,0 +1,26 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "alle"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "FLINT schließt lesbische Frauen explizit mit ein, um sich für mehr lesbische Sichtbarkeit zu solidarisieren.",
+            "end": 31,
+            "explanation": {
+                "icon": "😒",
+                "text": "Versteckte Voreingenommenheit bezüglich Geschlechtsidentität",
+                "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#geschlechtsidentitaet"
+            },
+            "gravity": 2,
+            "label": "Sprachliche Voreingenommenheit: Geschlechtsidentität",
+            "start": 25,
+            "subcategory": "gender_identity",
+            "text": "Frauen"
+        }
+    ]
+}
