@@ -230,6 +230,13 @@ categories = {
         "importance": 2,
         "emoji": "💯",
     },
+    "generic_plural": {
+        "inclusive": False,
+        "category": "gendered",
+        "gravity": 3,
+        "importance": 2,
+        "emoji": "😮",
+    },
     "hearing": {
         "inclusive": False,
         "category": "unconscious_bias",
