@@ -642,3 +642,20 @@ def test_grammatically_correct_alternatives(
     # Snapshot the return value.
     snapshot.snapshot_dir = grammatical_alternatives_case_dir
     snapshot.assert_match(output, "output.json")
+
+@pytest.mark.parametrize(
+    "abbr_case_dir",
+    get_dirs("tests/test_abbreviation"),
+)
+def test_abbreviation(abbr_case_dir, snapshot):
+
+    # Read input files from the case directory.
+    input_json = abbr_case_dir.joinpath("input.json").read_text()
+    # Call the tested endpoint.
+    response = client.post("/v1.1/check", json=json.loads(input_json))
+    assert response.status_code == 200
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    # Snapshot the return value.
+    snapshot.snapshot_dir = abbr_case_dir
+    snapshot.assert_match(output, "output.json")
