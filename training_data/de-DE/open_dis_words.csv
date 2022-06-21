@@ -56,7 +56,7 @@ Arschwichser,s,openly_discriminating,homophobia,['-']
 Astlochficker,s,openly_discriminating,homophobia,['-']
 Asylantenheim,S,openly_discriminating,xenophobia,"['-', 'Geflüchteten-Unterkunft', 'Geflüchteten-Unterkünfte']"
 Asylantenstrom,S,openly_discriminating,xenophobia,"['-', 'Zahl asylsuchender Menschen', 'Zahl der Geflüchteten', 'Zahlen asylsuchender Menschen', 'Zahlen Geflüchteter']"
-Asyltourist,S,openly_discriminating,xenophobia,"['-', 'Asylsuchen~r', 'Asylberechtigte~r', 'politisch Verfolgte~r', 'Asylbewerbe~r', 'Asylwerbe~r', 'Asylsuchende', 'Asylberechtigte', 'politisch Verfolgte', 'sich um Asyl Bewerbende', 'Asylwerbende']"
+Asyltourist,S,openly_discriminating,xenophobia,"['-', 'Asylsuchende~r', 'Asylberechtigte~r', 'politisch Verfolgte~r', 'Asylbewerber~in', 'Asylwerber~in', 'Asylsuchende', 'Asylberechtigte', 'politisch Verfolgte', 'sich um Asyl Bewerbende', 'Asylwerbende']"
 Bauerndirne,s,openly_discriminating,sexism,['-']
 Bauernhure,s,openly_discriminating,sexism,['-']
 Beißzange,s,openly_discriminating,sexism,['-']
@@ -216,7 +216,7 @@ Meldemuschi,s,openly_discriminating,sexism,['-']
 Metze,s,openly_discriminating,sexism,['-']
 Milchmädchen,s,openly_discriminating,sexism,['-']
 Mistschlampe,s,openly_discriminating,sexism,['-']
-Mongo,s,openly_discriminating,ableism,"['-', 'Mensch mit Down-Syndrom', 'Mensch mit Trisomie 21', 'Mensch mit geistigen Beeinträchtigungen']"
+Mongo,s,openly_discriminating,ableism,"['-', 'Mensch mit Down-Syndrom', 'Mensch mit Trisomie 21', 'Mensch mit veränderter Chromosomenzahl', 'Mensch mit Lernschwierigkeiten']"
 Neger,s,openly_discriminating,racism,"['-', 'Black Person of Color', 'Schwarzer', 'Afrikaner~in', 'Afroamerikaner~in']"
 Negerin,s,openly_discriminating,racism,"['-', 'Black Person of Color', 'Schwarzer', 'Afrikaner~in', 'Afroamerikaner~in']"
 Negerordnung,s,openly_discriminating,racism,['-']
@@ -302,7 +302,8 @@ Spacken,s,openly_discriminating,ableism,['-']
 Spacko,s,openly_discriminating,ableism,['-']
 Spagmat,s,openly_discriminating,ableism,['-']
 Spargeltarzan,s,openly_discriminating,ableism,"['-', 'schlanke Person']"
-Spasti,s,openly_discriminating,ableism,"['-', 'Spastiker', 'Person, die unter Krämpfen/Spasmen leidet', 'Person mit einer motorischen Erkrankung', 'Person mit Willkürbewegungen', 'Mensch mit Cerebralparese', 'Person, die sich ungeschickt oder dumm anstellt']"
+Spast,s,openly_discriminating,ableism,"['-', 'Spastiker', 'Person, die mit Spasmen lebt', 'Person mit einer motorischen Erkrankung', 'Person mit Willkürbewegungen', 'Mensch mit Cerebralparese', 'Person, die sich ungeschickt oder dumm anstellt']"
+Spasti,s,openly_discriminating,ableism,"['-', 'Spastiker', 'Person, die mit Spasmen lebt', 'Person mit einer motorischen Erkrankung', 'Person mit Willkürbewegungen', 'Mensch mit Cerebralparese', 'Person, die sich ungeschickt oder dumm anstellt']"
 Spermarutsche,s,openly_discriminating,sexism,['-']
 Spinatwachtel,s,openly_discriminating,sexism,['-']
 Stinkfotze,s,openly_discriminating,sexism,['-']
