@@ -595,12 +595,12 @@ def get_alternatives(match):
 def has_gender_denom_ending(text, full_text, offset, config: Config):
     offset_with_text = offset + len(text)
     for ending in config._gendereddenom_ending:
-        if full_text[offset_with_text:offset_with_text + len(ending)] == ending:
+        if full_text[offset_with_text : offset_with_text + len(ending)] == ending:
             return True
 
         # innen case
         ending = ending + "nen"
-        if full_text[offset_with_text:offset_with_text + len(ending)] == ending:
+        if full_text[offset_with_text : offset_with_text + len(ending)] == ending:
             return True
 
     return False
@@ -880,6 +880,7 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             text,
             tokens,
             gender_words_alternatives,
+            false_positives.gender,
         )
 
     if is_sub_category_enabled(config, "misgendering_institutions"):
@@ -968,6 +969,7 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             rules["de-DE"]["terms_style"],
             style_words_alternatives,
             style_sentences_alternatives,
+            false_positives.style,
         )
 
     return list_full
@@ -1230,7 +1232,9 @@ def alternatives_declension(token, lang, alternatives):
         for ending in endings:
             if not token.lemma_.endswith(ending) and token.text.endswith(ending):
                 return [
-                    alternative_declension(token.text, ending, lang, alternative).strip()
+                    alternative_declension(
+                        token.text, ending, lang, alternative
+                    ).strip()
                     for alternative in alternatives
                 ]
 
@@ -1298,68 +1302,38 @@ def agentic_language_analysis_de(
     category,
 ):
     list_tokens = []
-    dic_anc = {}
-    list_false_positives = []
     for token in tokens:
-        # check if the user query have false positives
-        if is_false_positive(token.lemma_, false_positive.agentic):
-            # recognise if there is Name of organisation or geographical name in the query
-            for entity in tokens.ents:
-                if entity.label_ == "ORG":
-                    list_false_positives.append(
-                        {"false positives": token.text, "category": category}
-                    )
+        for (
+            word,
+            alternative_sing,
+            alternative_plur,
+            subcategory,
+        ) in words_alternatives_noun:
+            if get_non_noun_lower_cased(token) == word:
+                token_morph_number = token.morph.get("Number")
+                if is_number_list_empty(token_morph_number, token, full_text):
+                    continue
 
-            # check if the word is adverb
-            if token.pos_ == "ADV":
-                list_false_positives.append(
-                    {"false positives": token.text, "category": category}
+                alternative = plural_or_singular_alternatives(
+                    token_morph_number, alternative_sing, alternative_plur
                 )
 
-            # check if the word is adjective and find out how it depends on the other words to feel the contex
-            elif token.pos_ == "ADJ":  # or token.tag_== "ADJD":
-                dic_anc[token.lemma_] = list(token.ancestors)
-                for key in dic_anc.keys():
-                    if key in false_positive.agentic:
-                        for item in dic_anc[key]:
-                            if item.text in rules["de-DE"]["exceptions"]:
-                                list_false_positives.append(
-                                    {
-                                        "false positives": token.text,
-                                        "category": category,
-                                    }
-                                )
-        else:
-            for (
-                word,
-                alternative_sing,
-                alternative_plur,
-                subcategory,
-            ) in words_alternatives_noun:
-                if get_non_noun_lower_cased(token) == word:
-                    token_morph_number = token.morph.get("Number")
-                    if is_number_list_empty(token_morph_number, token, full_text):
-                        continue
-
-                    alternative = plural_or_singular_alternatives(
-                        token_morph_number, alternative_sing, alternative_plur
+                if alternative != None:
+                    list_tokens.append(
+                        ResultOut.factory(
+                            version,
+                            config,
+                            lang,
+                            token.text,
+                            full_text,
+                            category,
+                            subcategory,
+                            token.idx,
+                            token.idx + len(token.text),
+                            alternative,
+                        )
                     )
 
-                    if alternative != None:
-                        list_tokens.append(
-                            ResultOut.factory(
-                                version,
-                                config,
-                                lang,
-                                token.text,
-                                full_text,
-                                category,
-                                subcategory,
-                                token.idx,
-                                token.idx + len(token.text),
-                                alternative,
-                            )
-                        )
     return list_tokens
 
 
@@ -1382,56 +1356,25 @@ def ub_words_phrase_matcher_de(
     patterns = [model[lang.lang].make_doc(text) for text in list(df_sentence["Lemma"])]
     matcher.add("TerminologyList", patterns)
 
-    dic_anc = {}
-    list_false_positives = []
     for token in tokens:
-        # check if the user query have false positives
-        if is_false_positive(token.lemma_, false_positive.agentic):
-            # recognise if there is Name of organisation or geographical name in the query
-            for entity in tokens.ents:
-                if entity.label_ == "ORG":
-                    list_false_positives.append(
-                        {"false positives": token.text, "category": category}
-                    )
+        for word, alternative, subcategory in words_alternatives:
+            if get_non_noun_lower_cased(token) == word:
+                alternative = alternatives_declension(token, lang, alternative)
 
-            # check if the word is adverb
-            if token.pos_ == "ADV":
-                list_false_positives.append(
-                    {"false positives": token.text, "category": category}
+                list_tokens.append(
+                    ResultOut.factory(
+                        version,
+                        config,
+                        lang,
+                        token.text,
+                        full_text,
+                        category,
+                        subcategory,
+                        token.idx,
+                        token.idx + len(token.text),
+                        alternative,
+                    )
                 )
-
-            # check if the word is adjective and find out how it depends on the other words to feel the contex
-            elif token.pos_ == "ADJ":  # or token.tag_== "ADJD":
-                dic_anc[token.lemma_] = list(token.ancestors)
-                for key in dic_anc.keys():
-                    if key in false_positive.agentic:
-                        for item in dic_anc[key]:
-                            if item.text in rules["de-DE"]["exceptions"]:
-                                list_false_positives.append(
-                                    {
-                                        "false positives": token.text,
-                                        "category": category,
-                                    }
-                                )
-        else:
-            for word, alternative, subcategory in words_alternatives:
-                if get_non_noun_lower_cased(token) == word:
-                    alternative = alternatives_declension(token, lang, alternative)
-
-                    list_tokens.append(
-                        ResultOut.factory(
-                            version,
-                            config,
-                            lang,
-                            token.text,
-                            full_text,
-                            category,
-                            subcategory,
-                            token.idx,
-                            token.idx + len(token.text),
-                            alternative,
-                        )
-                    )
 
     matches = matcher(tokens)
     for match_id, start, end in matches:
@@ -1457,7 +1400,13 @@ def ub_words_phrase_matcher_de(
 
 
 def gendered_denom_analysis_de(
-    version: float, config: Config, lang, full_text, tokens, gender_words_alternatives
+    version: float,
+    config: Config,
+    lang,
+    full_text,
+    tokens,
+    gender_words_alternatives,
+    false_positives,
 ):
     category = "gendered"
 
@@ -1466,7 +1415,7 @@ def gendered_denom_analysis_de(
     matcher = PhraseMatcher(model[lang.lang].vocab)
 
     # Only run model.make_doc to speed things up
-    patterns = [model[lang.lang].make_doc(text) for text in false_positive.gender]
+    patterns = [model[lang.lang].make_doc(text) for text in false_positives]
     matcher.add("TerminologyList", patterns)
     matches = matcher(tokens)
 
@@ -1474,7 +1423,7 @@ def gendered_denom_analysis_de(
 
     rest_text = []
 
-    if matches.__len__() != 0:
+    if matches.__len__() > 0:
         for match_id, start, end in matches:
             span = tokens[start:end]
             list_false_positives.append({"False positives": span.text})
@@ -1484,150 +1433,69 @@ def gendered_denom_analysis_de(
             old_start = end
 
         docs = list(model[lang.lang].pipe(rest_text))
-        c_doc = Doc.from_docs(docs)
+        tokens = Doc.from_docs(docs)
 
-        for i in range(len(c_doc)):
-            for (
-                word,
-                alternative_sing,
-                alternative_plur,
-                alternative_all,
-                subcategory,
-            ) in gender_words_alternatives:
-                if c_doc[i].lemma_ == word:
-                    c_doc_morph_number = c_doc[i].morph.get("Number")
-                    if is_number_list_empty(c_doc_morph_number, c_doc[i], full_text):
-                        list_tokens.append(
-                            ResultOut.factory(
-                                version,
-                                config,
-                                lang,
-                                c_doc[i].text,
-                                full_text,
-                                category,
-                                subcategory,
-                                c_doc[i].idx,
-                                None,
-                                alternative_all,
-                            )
+    for i in range(len(tokens)):
+        for (
+            word,
+            alternative_sing,
+            alternative_plur,
+            alternative_all,
+            subcategory,
+        ) in gender_words_alternatives:
+            if tokens[i].lemma_ == word:
+                token_morph_number = tokens[i].morph.get("Number")
+                if is_number_list_empty(token_morph_number, tokens[i], full_text):
+                    alternative = alternative_all
+                else:
+                    alternative = plural_or_singular_alternatives(
+                        token_morph_number, alternative_sing, alternative_plur
+                    )
+
+                if alternative != None:
+                    list_tokens.append(
+                        ResultOut.factory(
+                            version,
+                            config,
+                            lang,
+                            tokens[i].text,
+                            full_text,
+                            category,
+                            subcategory,
+                            tokens[i].idx,
+                            None,
+                            alternative,
                         )
-                    else:
-                        if c_doc_morph_number[0] == "Sing":
+                    )
+
+                if token_morph_number[0] == "Sing":
+                    for article, article_alternative in articles:
+                        if tokens[i - 1].text == article:
                             list_tokens.append(
                                 ResultOut.factory(
                                     version,
                                     config,
                                     lang,
-                                    c_doc[i].text,
+                                    tokens[i - 1].text,
                                     full_text,
                                     category,
                                     subcategory,
-                                    c_doc[i].idx,
+                                    tokens[i - 1].idx,
                                     None,
-                                    alternative_sing,
+                                    [article_alternative],
                                 )
                             )
-                            for article, article_alternative in articles:
-                                if c_doc[i - 1].text == article:
-                                    list_tokens.append(
-                                        ResultOut.factory(
-                                            version,
-                                            config,
-                                            lang,
-                                            c_doc[i - 1].text,
-                                            full_text,
-                                            category,
-                                            subcategory,
-                                            c_doc[i - 1].idx,
-                                            None,
-                                            [article_alternative],
-                                        )
-                                    )
-                        elif c_doc_morph_number[0] == "Plur":
-                            list_tokens.append(
-                                ResultOut.factory(
-                                    version,
-                                    config,
-                                    lang,
-                                    c_doc[i].text,
-                                    full_text,
-                                    category,
-                                    subcategory,
-                                    c_doc[i].idx,
-                                    None,
-                                    alternative_plur,
-                                )
-                            )
-
-    else:
-        for i in range(len(tokens)):
-            for (
-                word,
-                alternative_sing,
-                alternative_plur,
-                alternative_all,
-                subcategory,
-            ) in gender_words_alternatives:
-                if tokens[i].lemma_ == word:
-                    token_morph_number = tokens[i].morph.get("Number")
-                    if is_number_list_empty(token_morph_number, tokens[i], full_text):
-                        list_tokens.append(
-                            ResultOut.factory(
-                                version,
-                                config,
-                                lang,
-                                tokens[i].text,
-                                full_text,
-                                category,
-                                subcategory,
-                                tokens[i].idx,
-                                None,
-                                alternative_all,
-                            )
-                        )
-                    else:
-                        alternative = plural_or_singular_alternatives(
-                            token_morph_number, alternative_sing, alternative_plur
-                        )
-
-                        if alternative != None:
-                            list_tokens.append(
-                                ResultOut.factory(
-                                    version,
-                                    config,
-                                    lang,
-                                    tokens[i].text,
-                                    full_text,
-                                    category,
-                                    subcategory,
-                                    tokens[i].idx,
-                                    None,
-                                    alternative,
-                                )
-                            )
-
-                        if token_morph_number[0] == "Sing":
-                            for article, article_alternative in articles:
-                                if tokens[i - 1].text == article:
-                                    list_tokens.append(
-                                        ResultOut.factory(
-                                            version,
-                                            config,
-                                            lang,
-                                            tokens[i - 1].text,
-                                            full_text,
-                                            category,
-                                            subcategory,
-                                            tokens[i - 1].idx,
-                                            None,
-                                            [article_alternative],
-                                        )
-                                    )
 
     return list_tokens
 
 
 # Unified function for Emty words false positives and rules
+def is_conjunction(full_text, start):
+    preceeding_text = full_text[max(0, start - 5) : start]
+    return (
+        re.search(r"^ *$", preceeding_text) != None
+        or re.search(r"[.!?:,]\s*$", preceeding_text, re.MULTILINE) != None
+    )
 
 
 def style_word_analysis_de(
@@ -1639,6 +1507,7 @@ def style_word_analysis_de(
     terms,
     style_words_alternatives,
     style_sentences_alternatives,
+    false_positives,
 ):
     category = "style"
     list_tokens = []
@@ -1652,52 +1521,32 @@ def style_word_analysis_de(
 
     for i in range(len(tokens))[1:-1]:
         # check if the user query have false positives
-        if is_false_positive(tokens[i].lemma_, rules["de-DE"]["false_positive_style"]):
+        if is_false_positive(tokens[i].lemma_, false_positives):
             # recognise if there is Name of organisation or geographical name in the query
             if len(tokens.ents) > 0:
-                # this output will be deleted in production
-                list_false_positives.append(
-                    {"false positives": tokens[i].text, "category": category}
-                )
-            else:
-                for word, alternative, subcategory in style_words_alternatives:
-                    if tokens[i].lemma_ == word:
-                        alternative = alternatives_declension(tokens[i], lang, alternative)
+                continue
 
-                        list_tokens.append(
-                            ResultOut.factory(
-                                version,
-                                config,
-                                lang,
-                                tokens[i].text,
-                                full_text,
-                                category,
-                                subcategory,
-                                tokens[i].idx,
-                                tokens[i].idx + len(tokens[i].text),
-                                alternative,
-                            )
-                        )
+        if tokens[i].lemma_ == "aber" and is_conjunction(full_text, tokens[i].idx):
+            continue
 
-        else:
-            for word, alternative, subcategory in style_words_alternatives:
-                if tokens[i].lemma_ == word:
-                    alternative = alternatives_declension(tokens[i], lang, alternative)
+        for word, alternative, subcategory in style_words_alternatives:
+            if tokens[i].lemma_ == word:
+                alternative = alternatives_declension(tokens[i], lang, alternative)
 
-                    list_tokens.append(
-                        ResultOut.factory(
-                            version,
-                            config,
-                            lang,
-                            tokens[i].text,
-                            full_text,
-                            category,
-                            subcategory,
-                            tokens[i].idx,
-                            tokens[i].idx + len(tokens[i].text),
-                            alternative,
-                        )
+                list_tokens.append(
+                    ResultOut.factory(
+                        version,
+                        config,
+                        lang,
+                        tokens[i].text,
+                        full_text,
+                        category,
+                        subcategory,
+                        tokens[i].idx,
+                        tokens[i].idx + len(tokens[i].text),
+                        alternative,
                     )
+                )
 
     matches = matcher(tokens)
     for match_id, start, end in matches:
