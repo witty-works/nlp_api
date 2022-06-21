@@ -15,6 +15,7 @@
             "context": "Name is Jones, an ambitious person. Phone number is <NUMBER>-<NUMBER>-<NUMBER> <URL> <EMAIL>",
             "end": 27,
             "explanation": {
+                "context": "don't use to describe a person",
                 "icon": "😒",
                 "text": "Doesn’t feel cooperative nor supportive",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
