@@ -8,7 +8,7 @@
                     "text": "Mitarbeitende"
                 },
                 {
-                    "text": "Mitarbeiter:innen"
+                    "text": "Mitarbeiter*innen"
                 },
                 {
                     "text": "Mitarbeiterinnen und Mitarbeiter"
@@ -46,13 +46,13 @@
         {
             "alternatives": [
                 {
-                    "text": "engagiert"
+                    "text": "engagierte"
                 },
                 {
-                    "text": "tatkräftig"
+                    "text": "tatkräftige"
                 },
                 {
-                    "text": "kompetent"
+                    "text": "kompetente"
                 }
             ],
             "category": "unconscious_bias",

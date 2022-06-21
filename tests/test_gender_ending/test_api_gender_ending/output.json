@@ -5,7 +5,7 @@
         {
             "alternatives": [
                 {
-                    "text": ":in"
+                    "text": "*in"
                 }
             ],
             "category": "gendered",
