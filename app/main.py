@@ -505,13 +505,21 @@ def get_user(request: Request):
         try:
             validate_scope(settings.aadb2c_expected_scope, request)
             claims = get_token_claims(request)
-            try:
-                return claims["emails"][0]
-            except KeyError:
-                pass
         except Exception:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN, detail="access token invalid"
+            )
+
+        try:
+            if claims["aud"] != settings.aadb2c_client_id:
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN, detail="access token does not match client id"
+                )
+
+            return claims["emails"][0]
+        except KeyError:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN, detail="access token does not map to email"
             )
 
     return None
