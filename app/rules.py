@@ -431,7 +431,7 @@ gender_sentences_alternatives_US = list(
         df_gendered_sentences_US["Lemma"],
         map(ast.literal_eval, df_gendered_sentences_US["Alt_split"]),
         df_gendered_sentences_US["Primary_subcategory"],
-        df_gendered_sentences_US["Secondary_subcategory"],
+        #df_gendered_sentences_US["Secondary_subcategory"],
     )
 )
 gender_sentences_alternatives_GB = list(
@@ -439,7 +439,7 @@ gender_sentences_alternatives_GB = list(
         df_gendered_sentences_GB["Lemma"],
         map(ast.literal_eval, df_gendered_sentences_GB["Alt_split"]),
         df_gendered_sentences_GB["Primary_subcategory"],
-        df_gendered_sentences_GB["Secondary_subcategory"],
+        #df_gendered_sentences_GB["Secondary_subcategory"],
     )
 )
 # df style sentences
