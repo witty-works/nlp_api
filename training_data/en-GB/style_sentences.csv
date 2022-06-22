@@ -1,10 +1,18 @@
 Lemma,Word_Type,Category,Primary_subcategory,Alt_split
 Kind regards,a,style,formality,"['Cordially', 'Thank you for reading', 'Sending you the best', 'Take care', 'With appreciation']"
+Make sure the juice is worth the squeeze,i,style,hollow,['Make sure this is worth the effort']
 What we want is to,i,style,filler,"['We want to', 'Our goal:', ""Let's""]"
 What we want to do is to,i,style,filler,"['We want to', 'Our goal:', ""Let's""]"
 amongst others,s,style,filler,['-']
+are on the same page,i,style,hollow,"['agree', 'are in agreement', 'understand each other', 'speak the same language']"
+at the end of the day,i,style,hollow,"['when the results come in', 'in the end']"
 bright mind,a+s,style,exaggerating,"['astute mind', 'creative mind', 'inventive mind', 'talent', 'engaged person', 'person with different perspectives', 'someone who comes up with creative ideas/solutions', 'astute minds', 'creative minds', 'inventive minds', 'talents', 'engaged people', 'people with different perspectives', 'people who comes up with creative ideas (solutions)']"
 clever head,a+s,style,exaggerating,"['competence', 'creativity', 'intelligence', 'talent', 'ability', 'capability', 'proficiency', 'education', 'creative person', 'astute person', 'inventive person', 'someone with an eye for solutions', 'someone with surprising ideas', 'creative people', 'astute people', 'inventive people', 'people with an eye for solutions', 'people with surprising ideas']"
+click to,i,style,filler,['-']
+core competencies,s,style,hollow,['what we do best']
+drink the kool aid,i,style,hollow,"['be misled', ""believe everything you're told""]"
+drink the kool-aid,i,style,hollow,"['be misled', ""believe everything you're told""]"
+drink the koolaid,i,style,hollow,"['be misled', ""believe everything you're told""]"
 extra ordinary,a,style,exaggerating,['-']
 fighter by nature,s,style,exaggerating,"['supporter', 'advocate', 'resilient person', 'person committed to shared goals', 'supporters', 'advocates', 'resilient people', 'people committed to shared goals']"
 first class,a,style,exaggerating,['-']
@@ -14,14 +22,20 @@ flat organisation,a+s,style,hollow,"['short chain of command', 'responsible and 
 front runner,s,style,exaggerating,"['-', 'favourite', 'person who sets the pace', 'probable winner', 'favourites', 'people who set the pace', 'probable winners']"
 go getter,s,style,exaggerating,"['bundle of energy', 'ball of fire', 'person who continues despite difficulties/opposition', 'person devoted/loyal to their purpose', 'someone who sticks to their goal', 'person happy/willing to see (something ...) through', 'motivated people', 'energetic and focused colleagues', 'people who continue despite difficulties/opposition', 'people devoted/loyal to their purpose', 'people who stick to their goal', 'people happy/willing to see (something ...) through']"
 go outside the box,i,style,hollow,"['take a new approach', 'jump from a maturing trend to an emerging trend', 'explore new business models', 'take a disruptive approach', 'rethink (a strategy, business model, ...)', 'reinvent (a brand, a company, ...)', 'redefine (a product, brand, business, ...)']"
+going forward,i,style,hollow,"['from now on', 'in the future']"
 high flyer,s,style,exaggerating,"['person who continues despite difficulties', 'someone devoted to their purpose', 'someone who sticks to their goal', 'someone willing to see things through', 'people who continue despite difficulties', 'people devoted to their purpose', 'people who stick to their goal', 'people willing to see things through']"
 high quality,a+s,style,hollow,"['adhering to rigorous standards', 'using premium materials', 'adhering to strict methods', 'meeting exacting requirements', 'dependable reliability']"
 highly motivated,a,style,hollow,"['motivated', 'energetic', 'enterprising', 'spirited', 'happy to take the initiative', 'willing to apply oneself', 'keenly interested']"
+key learnings,s,style,hollow,"[""what we've learnt"", 'findings']"
+low hanging fruit,i,style,hollow,"['easy opportunities', 'easy pickings']"
+low-hanging fruit,i,style,hollow,"['easy opportunities', 'easy pickings']"
+lowhanging fruit,i,style,hollow,"['easy opportunities', 'easy pickings']"
 market leader,s,style,exaggerating,"['company with the largest market share in the industry', 'company with the ability to influence the market', 'company with the greatest profitability margin in the market', 'company with the products most relevant to the customer', 'companies with the largest market shares in the industry', 'companies with the ability to influence the market', 'companies with the greatest profitability margin in the market', 'companies with the products most relevant to the customer']"
 market leadership,s,style,exaggerating,"['market share gain', 'having the largest market share in the industry', 'ability to influence the market', 'greatest profitability margin in the market', 'market share gains', 'having the largest market shares in the industry', 'abilities to influence the markets', 'greatest profitability margin in the market']"
 market leading,a,style,exaggerating,['market-influencing']
 most of all,a,style,hollow,"['especially', 'in particular', 'mostly', 'more than any other', 'more than anyone else', 'to a greater degree than anything else']"
 move the needle on,i,style,hollow,"['provide a perceptible improvement in', 'increase activity in', 'have a measurable effect on', 'generate noticeable results in']"
+need to have a conversation around that,i,style,hollow,"['should talk about that', 'should discuss that']"
 no problem,s,style,exaggerating,['-']
 not move the needle,i,style,hollow,"['futile', 'have no effect on', 'have no measurable effect on']"
 number 1,i,style,exaggerating,"['critical', 'vital', 'key', 'crucial', 'paramount']"
@@ -29,16 +43,19 @@ number one,i,style,exaggerating,"['critical', 'vital', 'key', 'crucial', 'paramo
 opinion leader,s,style,exaggerating,"['influencer', 'opinion maker', 'opinion shaper', 'influencers', 'opinion makers', 'opinion shapers']"
 pioneering company,s,style,exaggerating,"['company paving the way for new technologies', 'companies paving the way for new technologies']"
 proven track record,s,style,exaggerating,"['documented outcomes', 'portfolio of case studies', 'reference cases', 'documented outcomes', 'portfolio of case studies', 'reference cases']"
+push the envelope,i,style,hollow,"['push the boundaries', 'test the limits']"
 reach for the star,i,style,exaggerating,"['have aspirations', 'set goals that are motivating (inspiring, aspirational, ...)']"
 reach to the star,i,style,exaggerating,"['have aspirations', 'set motivating goals', 'aspire to realise dreams']"
+results driven,a,style,hollow,['-']
 risk carrier,s,style,exaggerating,['-']
 self starter,s,style,exaggerating,['-']
 state of the art,i,style,hollow,"['the highest point of technological achievement to date', 'the current highest level of development in the field']"
 success rate,s,style,exaggerating,['-']
 success story,s,style,exaggerating,['-']
+take it offline,i,style,hollow,['talk about this later']
 team player,s,style,hollow,"['someone who values team effort over personal gains', 'someone who enjoys collaboration', 'someone who can compromise to reach a shared goal', 'someone who feels inspired and motivated by working together with others toward a shared goal', 'people who value team effort over personal gains', 'people who enjoy collaboration', 'people who can compromise to reach a shared goal', 'people who feel inspired and motivated by working together with others toward a shared goal']"
 team spirit,s,style,hollow,"['mindset that values team effort over individual gains', 'mindsets that value team effort over individual gains']"
-think outside the box,i,style,hollow,"['think differently', 'think unconventionally', 'think creatively', 'use lateral thinking', 'use parallel thinking', 'look (at ...) with fresh eyes', 'approach from a new angle', 'look beyond the obvious', 'consider from a fresh perspective', 'use an indirect approach via reasoning that is not immediately obvious', 'deviate from existing practises']"
+think outside the box,i,style,hollow,"['think differently', 'explore new ideas', 'think creatively', 'use lateral thinking', 'look beyond the obvious', 'use parallel thinking', 'consider (...) from a fresh perspective', 'look (at ...) with fresh eyes', 'approach (...) from a new angle', 'deviate from existing practises']"
 top perfomer,s,style,exaggerating,"['colleague who approaches tasks constructively and with commitment', 'someone who thrives on implementing milestones together', 'someone who inspires their team to tackle tasks', 'someone with an entrepreneurial mindset', 'colleagues who approaches tasks constructively and with commitment', 'people who thrive on implementing milestones together', 'people who inspire their teams to tackle tasks', 'people with an entrepreneurial mindset']"
 top performance,a,style,exaggerating,"[""execution to the customer's satisfaction"", 'the fulfilment of customer expectations', 'reference cases', 'satisfying results']"
 top performing,a,style,exaggerating,"['contributing to business success --- about a person', 'implementing goals with enthusiasm --- about a person', 'fulfilling customer expectations --- about a person']"
