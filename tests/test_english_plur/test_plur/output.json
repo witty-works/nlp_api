@@ -28,11 +28,11 @@
             "end": 9,
             "explanation": {
                 "icon": "😮",
-                "text": "rules.generic_plural_explanation",
-                "url": "https://www.witty.works/en/categories/gendered#rules.generic_plural_label"
+                "text": "Gendered image deeply anchored. In plural less.",
+                "url": "https://www.witty.works/en/categories/gendered#generic_plural"
             },
             "gravity": 3,
-            "label": "Gendered: rules.generic_plural_label",
+            "label": "Gendered: Generic plural",
             "start": 0,
             "subcategory": "generic_plural",
             "text": "Engineers"
