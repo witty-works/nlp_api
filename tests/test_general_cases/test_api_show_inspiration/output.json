@@ -11,6 +11,9 @@
                     "text": "spokesperson"
                 },
                 {
+                    "text": "representative"
+                },
+                {
                     "context": "if gender is known",
                     "text": "spokeswoman"
                 },
@@ -22,6 +25,9 @@
                 },
                 {
                     "text": "spokespersons"
+                },
+                {
+                    "text": "representative"
                 }
             ],
             "category": "gendered",
