@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-04-05 10:38\n"
-"PO-Revision-Date: 2022-04-05 10:38\n"
+"POT-Creation-Date: 2022-06-21 13:21\n"
+"PO-Revision-Date: 2022-06-21 13:21\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -405,6 +405,18 @@ msgid "rules.gendered_denominations_ending_solution"
 msgstr ""
 
 msgid "rules.gendered_denominations_ending_explanation"
+msgstr ""
+
+msgid "rules.generic_plural_label"
+msgstr ""
+
+msgid "rules.generic_plural_reason"
+msgstr ""
+
+msgid "rules.generic_plural_solution"
+msgstr ""
+
+msgid "rules.generic_plural_explanation"
 msgstr ""
 
 msgid "rules.hearing_label"

@@ -1,0 +1,51 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [],
+            "category": "inclusive",
+            "context": "Bist du hoch motiviert?",
+            "end": 22,
+            "explanation": {
+                "icon": "✅",
+                "text": "Betont kooperative Eigenschaften",
+                "url": "https://www.witty.works/de/kategorien/inklusiv#kommunal"
+            },
+            "label": "Inklusiv: Kommunal",
+            "start": 13,
+            "subcategory": "communal",
+            "text": "motiviert"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "fähig zur Eigeninitiative"
+                },
+                {
+                    "text": "bereit, sich zu engagieren"
+                },
+                {
+                    "text": "setzt sich erreichbare Ziele"
+                },
+                {
+                    "text": "bereit, sich einzusetzen"
+                }
+            ],
+            "category": "style",
+            "context": "Bist du hoch motiviert?",
+            "end": 22,
+            "explanation": {
+                "context": "nicht für Einzelpersonen verwenden",
+                "icon": "🙄",
+                "text": "Worthülsen haben ihre Bedeutung verloren",
+                "url": "https://www.witty.works/de/kategorien/stil#worthuelsen"
+            },
+            "gravity": 3,
+            "label": "Stil: Worthülsen",
+            "start": 8,
+            "subcategory": "hollow",
+            "text": "hoch motiviert"
+        }
+    ]
+}

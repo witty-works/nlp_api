@@ -67,7 +67,7 @@ from collections import defaultdict
 
 from app.sentry import set_up_sentry_sdk
 
-version = "1.30.1"
+version = "1.31.0"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -505,13 +505,21 @@ def get_user(request: Request):
         try:
             validate_scope(settings.aadb2c_expected_scope, request)
             claims = get_token_claims(request)
-            try:
-                return claims["emails"][0]
-            except KeyError:
-                pass
         except Exception:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN, detail="access token invalid"
+            )
+
+        try:
+            if claims["aud"] != settings.aadb2c_client_id:
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN, detail="access token does not match client id"
+                )
+
+            return claims["emails"][0]
+        except KeyError:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN, detail="access token does not map to email"
             )
 
     return None
@@ -1277,7 +1285,17 @@ def gendered_denom_end(
     return list_ending
 
 
-def plural_or_singular_alternatives(
+def plural_or_singular_en(
+    token, token_morph_number, alternative_sing, alternative_plur, subcategory, second_subcategory
+):
+    if token_morph_number[0] == "Sing":
+        return alternative_sing, subcategory
+    elif token_morph_number[0] == "Plur":
+        return [item for item in alternative_plur if item != token.text.lower()], second_subcategory
+
+    return None
+
+def plural_or_singular_alternatives_de(
     token_morph_number, alternative_sing, alternative_plur
 ):
     if token_morph_number[0] == "Sing":
@@ -1314,7 +1332,7 @@ def agentic_language_analysis_de(
                 if is_number_list_empty(token_morph_number, token, full_text):
                     continue
 
-                alternative = plural_or_singular_alternatives(
+                alternative = plural_or_singular_alternatives_de(
                     token_morph_number, alternative_sing, alternative_plur
                 )
 
@@ -1448,7 +1466,7 @@ def gendered_denom_analysis_de(
                 if is_number_list_empty(token_morph_number, tokens[i], full_text):
                     alternative = alternative_all
                 else:
-                    alternative = plural_or_singular_alternatives(
+                    alternative = plural_or_singular_alternatives_de(
                         token_morph_number, alternative_sing, alternative_plur
                     )
 
@@ -1597,7 +1615,7 @@ def word_noun_de(
                 if is_number_list_empty(token_morph_number, token, full_text):
                     continue
 
-                alternative = plural_or_singular_alternatives(
+                alternative = plural_or_singular_alternatives_de(
                     token_morph_number, alternative_sing, alternative_plur
                 )
 
@@ -1999,14 +2017,15 @@ def gendered_en(
             alternative_sing,
             alternative_plur,
             subcategory,
+            second_subcategory,
         ) in gendered_words_alternatives:
             if get_lower_cased(token) == word:
                 token_morph_number = token.morph.get("Number")
                 if is_number_list_empty(token_morph_number, token, full_text):
                     continue
 
-                alternative = plural_or_singular_alternatives(
-                    token_morph_number, alternative_sing, alternative_plur
+                alternative, subcategory = plural_or_singular_en(
+                    token, token_morph_number, alternative_sing, alternative_plur, subcategory, second_subcategory
                 )
 
                 if alternative != None:

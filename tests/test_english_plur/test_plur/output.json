@@ -1,0 +1,41 @@
+{
+    "language": "en",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "Engineering team"
+                },
+                {
+                    "text": "Development team"
+                },
+                {
+                    "text": "Engineering"
+                },
+                {
+                    "text": "Development"
+                },
+                {
+                    "text": "Colleagues in engineering"
+                },
+                {
+                    "text": "People in engineering"
+                }
+            ],
+            "category": "gendered",
+            "context": "Engineers usually work in industry.",
+            "end": 9,
+            "explanation": {
+                "icon": "😮",
+                "text": "Gendered image deeply anchored. In plural less.",
+                "url": "https://www.witty.works/en/categories/gendered#generic_plural"
+            },
+            "gravity": 3,
+            "label": "Gendered: Generic plural",
+            "start": 0,
+            "subcategory": "generic_plural",
+            "text": "Engineers"
+        }
+    ]
+}
