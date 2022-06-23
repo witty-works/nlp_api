@@ -3,7 +3,7 @@ Lemma,Word_Type,Category,Primary_subcategory,Alt_split
 A.M.,abbr,style,abbreviation,"['Master of Arts', 'Master of Arts (A.M.)']"
 ACCT,abbr,style,abbreviation,['account']
 ADD,abbr,style,abbreviation,"['attention deficit disorder', 'attention deficit disorder (ADD)', 'easily bored', 'easily distracted', 'having a poor working memory']"
-ADHD,abbr,style,abbreviation,"['attention deficit hyperactivity disorder', 'attention deficit hyperactivity disorder (ADHD)', 'person with attention deficit hyperactivity disorder', 'fidgety', 'restless', 'easily bored', 'people with attention deficit hyperactivity disorder']"
+ADHD,abbr,style,abbreviation,"['attention deficit hyperactivity disorder', 'attention deficit hyperactivity disorder (ADHD)', 'person with attention deficit hyperactivity disorder', 'fidgety', 'restless', 'easily bored', 'people with attention deficit hyperactivity disorder', 'fidgety', 'restless', 'easily bored']"
 AIDA,acr,style,abbreviation,"['attention, interest, desire, action', 'attention, interest, desire, action (AIDA)']"
 AJAX,acr,style,abbreviation,"['asynchronous JavaScript and XML', 'asynchronous JavaScript and eXtensible markup language (AJAX)']"
 AKA,acr,style,abbreviation,['also known as']
@@ -16,7 +16,7 @@ AR,acr,style,abbreviation,"['accounts receivable', 'accounts receivable (AR)']"
 ARIA,acr,style,abbreviation,"['accessible rich internet applications', 'accessible rich internet applications (ARIA)']"
 ARR,acr,style,abbreviation,"['annual recurring revenue', 'annual recurring revenue (ARR)']"
 ASAP,acr,style,abbreviation,['As soon as possible']
-ASD,abbr,style,abbreviation,"['autism spectrum disorder', 'autism spectrum disorder (ASD)', 'neurodiversity', 'person with autism spectrum disorder', 'difficulties with social interaction and communication', 'umbrella diagnosis that includes autistic disorder, childhood disintegrative disorder, some pervasive developmental disorders, and Asperger syndrome', 'people with autism spectrum disorder']"
+ASD,abbr,style,abbreviation,"['autism spectrum disorder', 'autism spectrum disorder (ASD)', 'neurodiversity', 'person with autism spectrum disorder', 'difficulties with social interaction and communication', 'umbrella diagnosis that includes autistic disorder, childhood disintegrative disorder, some pervasive developmental disorders, and Asperger syndrome', 'people with autism spectrum disorder', 'difficulties with social interaction and communication', 'umbrella diagnosis that includes autistic disorder, childhood disintegrative disorder, some pervasive developmental disorders, and Asperger syndrome']"
 ASL,abbr,style,abbreviation,"['American Sign Language', 'American Sign Language (ASL)']"
 ATM,acr,style,abbreviation,['at the moment']
 B2B,acr,style,abbreviation,"['business-to-business', 'business-to-business (B2B)']"
@@ -157,7 +157,7 @@ M&A,acr,style,abbreviation,"['mergers and acquisitions', 'mergers and acquisitio
 M.A.,acr,style,abbreviation,"['Master of Arts', 'Master of Arts (M.A.)']"
 M.S.,acr,style,abbreviation,"['Master of Science', 'Master of Science (M.S.)']"
 M.Sc.,abbr,style,abbreviation,"['Master of Science', 'Master of Science (M.Sc.)']"
-MA,acr,style,abbreviation,['Master of Arts| Master of Arts (MA)']
+MA,acr,style,abbreviation,"['Master of Arts', 'Master of Arts (MA)']"
 MBA,acr,style,abbreviation,"['Master of Business Administration', 'Master of Business Administration (MBA)']"
 MBI,acr,style,abbreviation,"['management buy-in', 'management buy-in (MBI)']"
 MBO,acr,style,abbreviation,"['management buyout', 'management buyout (MBO)']"
@@ -173,6 +173,7 @@ MTD,acr,style,abbreviation,"['month-to-date', 'month-to-date (MTD)']"
 MVC,acr,style,abbreviation,"['model-view-controller', 'model-view-controller (MVC)']"
 MVP,acr,style,abbreviation,"['minimum viable product', 'minimum viable product (MVP)']"
 MoM,acr,style,abbreviation,"['month-over-month', 'month-over-month (MoM)']"
+N/A,acr,style,abbreviation,"['not applicable', 'not available']"
 NAV,acr,style,abbreviation,"['net asset value', 'net asset value (NAV)']"
 NBD,acr,style,abbreviation,['No big deal.']
 NDA,acr,style,abbreviation,"['non-disclosure agreement', 'non-disclosure agreement (NDA)']"
