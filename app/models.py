@@ -78,6 +78,7 @@ class GermanGenderEndingType(str, Enum):
     STR_COLON = "colon_in"
     STR_CAPITAL_LETTER = "uppercase_in"
 
+
 class SingularTheyType(str, Enum):
     HE_OR_SHE = "he_or_she"
     ALL_PRONOUNS = "all_pronouns"
@@ -314,6 +315,7 @@ class ResultExplanation(BaseModel):
     text: str
     icon: Optional[str]
     url: Optional[str]
+    context: Optional[str]
 
 
 class ResultOutOld(BaseModel):
@@ -357,6 +359,7 @@ class ResultOut(BaseModel):
         url=None,
         icon=None,
         gravity=None,
+        explanation_context=None,
     ):
         if end == None:
             end = start + len(text)
@@ -458,6 +461,9 @@ class ResultOut(BaseModel):
                     # context without an alternative is not supported yet
                     # https://wittyworks.productboard.com/roadmap/3751070-browser-extension/features/13529614/detail
                     if alternative == "":
+                        if explanation_context == None:
+                            explanation_context = alternative_context
+
                         continue
 
                 if is_upper:
@@ -514,6 +520,7 @@ class ResultOut(BaseModel):
             "text": explanation,
             "icon": icon,
             "url": url,
+            "context": explanation_context,
         }
 
         return ResultOut(
@@ -575,7 +582,7 @@ class ResultOut(BaseModel):
             and subcategory != "abbreviation"
             and (
                 alternative.count(" ") >= str(text).count(" ") + 3
-            or alternative.count("...") > 0
+                or alternative.count("...") > 0
             )
         )
 
@@ -706,8 +713,10 @@ class ResultOut(BaseModel):
 
         return alternative_variations
 
+
 class ErrorMessage(BaseModel):
     message: str
+
 
 class Result(BaseModel):
     detail: List
