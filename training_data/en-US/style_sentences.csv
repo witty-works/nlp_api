@@ -24,7 +24,7 @@ go getter,s,style,exaggerating,"['bundle of energy', 'ball of fire', 'person who
 go outside the box,i,style,hollow,"['take a new approach', 'jump from a maturing trend to an emerging trend', 'explore new business models', 'take a disruptive approach', 'rethink (a strategy, business model, ...)', 'reinvent (a brand, a company, ...)', 'redefine (a product, brand, business, ...)']"
 going forward,i,style,hollow,"['from now on', 'in the future']"
 high flyer,s,style,exaggerating,"['person who continues despite difficulties', 'someone devoted to their purpose', 'someone who sticks to their goal', 'someone willing to see things through', 'people who continue despite difficulties', 'people devoted to their purpose', 'people who stick to their goal', 'people willing to see things through']"
-high quality,a+s,style,hollow,"['adhering to rigorous standards', 'using premium materials', 'adhering to strict methods', 'meeting exacting requirements', 'dependable reliability']"
+high quality,a+s,style,hollow,"['adhering to rigorous standards', 'using premium materials', 'adhering to strict methods', 'meeting exacting requirements', 'dependable reliability', 'adhering to rigorous standards', 'using premium materials', 'adhering to strict methods', 'meeting exacting requirements', 'dependable reliabilities']"
 highly motivated,a,style,hollow,"['motivated', 'energetic', 'enterprising', 'spirited', 'happy to take the initiative', 'willing to apply oneself', 'keenly interested']"
 key learnings,s,style,hollow,"[""what we've learned"", 'findings']"
 low hanging fruit,i,style,hollow,"['easy opportunities', 'easy pickings']"
@@ -65,5 +65,5 @@ winner type,s,style,exaggerating,['-']
 winning type,s,style,exaggerating,['-']
 without any problem,s,style,exaggerating,['-']
 without problem,s,style,exaggerating,['-']
-world leader,s,style,exaggerating,"['company with largest revenue share in the market', 'with largest customer base in the segment', 'brand to introduce the majority of technological advances in the market']"
+world leader,s,style,exaggerating,"['company with largest revenue share in the market', 'with largest customer base in the segment', 'brand to introduce the majority of technological advances in the market', 'companies with largest revenue share in the market', 'with largest customer base in the segment', 'brand to introduce the majority of technological advances in the market']"
 world wide,a,style,hollow,"['in (...) countries', '(...) offices across (...) continents']"

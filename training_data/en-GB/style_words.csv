@@ -26,7 +26,7 @@ firstmover,s,style,exaggerating,"['the first to market a product', 'the first to
 flexible,a,style,hollow,"[""--- don't use for people"", 'adaptable', 'strategically nimble', 'pragmatic', 'open', 'agile', 'variable', 'mobile', 'defined by its users']"
 front-runner,s,style,exaggerating,"['-', 'favourite', 'person who sets the pace', 'probable winner', 'favourites', 'people who set the pace', 'probable winners']"
 frontrunner,s,style,exaggerating,"['-', 'favourite', 'person who sets the pace', 'probable winner', 'favourites', 'people who set the pace', 'probable winners']"
-geek,s,style,exaggerating,"['-', 'techie', 'intellectual', 'bookworm', 'person devoted to academic pursuits', 'person with a high level of knowledge (skills) in', 'techies', ' intellectuals', 'bookworms', 'people devoted to academic pursuits', 'people with a high level of knowledge (skills) in']"
+geek,s,style,exaggerating,"['-', 'techie', 'intellectual', 'bookworm', 'person devoted to academic pursuits', 'person with a high level of knowledge (skills) in', 'techies', 'intellectuals', 'bookworms', 'people devoted to academic pursuits', 'people with a high level of knowledge (skills) in']"
 generally,adv,style,filler,['-']
 global,a,style,hollow,"['in (...) countries', '(...) offices across (...) continents']"
 go-getter,s,style,exaggerating,"['bundle of energy', 'ball of fire', 'person who continues despite difficulties/opposition', 'person devoted/loyal to their purpose', 'someone who sticks to their goal', 'person happy/willing to see (something ...) through', 'motivated people', 'energetic and focused colleagues', 'people who continue despite difficulties/opposition', 'people devoted/loyal to their purpose', 'people who stick to their goal', 'people happy/willing to see (something ...) through']"
@@ -38,7 +38,7 @@ high-flyer,s,style,exaggerating,"['person who continues despite difficulties', '
 highflyer,s,style,exaggerating,"['person who continues despite difficulties', 'someone devoted to their purpose', 'someone who sticks to their goal', 'someone willing to see things through', 'people who continue despite difficulties', 'people devoted to their purpose', 'people who stick to their goal', 'people willing to see things through']"
 imperative,a,style,exaggerating,"['critical', 'vital']"
 impressive,a,style,exaggerating,['-']
-innovation,s,style,hollow,"['reinvention', 'change', 'modernization', 'improvement', 'new creation', 'redesign', 'introduction of new ideas (methods, devices, ...)', 'reinventions', 'changes', 'modernizations', 'improvements', 'new creations', 'redesign']"
+innovation,s,style,hollow,"['reinvention', 'change', 'modernization', 'improvement', 'new creation', 'redesign', 'introduction of new ideas (methods, devices, ...)', 'reinventions', 'changes', 'modernizations', 'improvements', 'new creations', 'redesign', 'new ideas', 'new methods', 'new devices']"
 innovative,a,style,hollow,"['imaginative', 'novel', 'creative', 'inventive', 'trend-setting', 'groundbreaking', 'inspired', 'forward-looking']"
 irresistible,a,style,exaggerating,['-']
 kamikaze,s,style,exaggerating,['-']
@@ -50,7 +50,7 @@ market-leading,a,style,exaggerating,['market-influencing']
 marketleader,s,style,exaggerating,"['company with the largest market share in the industry', 'company with the ability to influence the market', 'company with the greatest profitability margin in the market', 'company with the products most relevant to the customer', 'companies with the largest market shares in the industry', 'companies with the ability to influence the market', 'companies with the greatest profitability margin in the market', 'companies with the products most relevant to the customer']"
 marketleading,a,style,exaggerating,['market-influencing']
 muscle,a,style,exaggerating,"['power', 'influence', 'clout']"
-nerd,s,style,exaggerating,"['techie', 'intellectual', 'bookworm', 'person devoted to academic pursuits', 'person with a high level of knowledge (skills) in', 'techies', ' intellectuals', 'bookworms', 'people devoted to academic pursuits', 'people with a high level of knowledge (skills) in']"
+nerd,s,style,exaggerating,"['techie', 'intellectual', 'bookworm', 'person devoted to academic pursuits', 'person with a high level of knowledge (skills) in', 'techies', 'intellectuals', 'bookworms', 'people devoted to academic pursuits', 'people with a high level of knowledge (skills) in']"
 ninja,a,style,exaggerating,"['dedicated', 'committed', 'person who continues despite difficulties', 'someone devoted to their purpose', 'someone who sticks to their goal', 'someone willing to see things through']"
 normal,a,style,hollow,"['traditional', 'typical', 'common', 'routine', 'regular', 'conventional', 'customary', 'popular', 'reasonable', 'well-adjusted', 'rational', 'able to think clearly', 'able to use reason']"
 outstanding,a,style,exaggerating,"['awesome', 'inspiring']"
