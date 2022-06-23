@@ -345,13 +345,14 @@ abbreviation_GB = list(
 # df gendered noun
 df_gender_noun_US = rules["en-US"]["df_gendered_noun_word"]
 df_gender_noun_GB = rules["en-GB"]["df_gendered_noun_word"]
-# gendered noun: lemma + singular alternatives split + plural alternatives split + subcategory
+# gendered noun: lemma + singular alternatives split + plural alternatives split + primary subcategory + secondary subcategory
 gender_noun_words_alternatives_US = list(
     zip(
         df_gender_noun_US["Lemma"],
         map(ast.literal_eval, df_gender_noun_US["Sg_all_split"]),
         map(ast.literal_eval, df_gender_noun_US["Pl_all_split"]),
         df_gender_noun_US["Primary_subcategory"],
+        df_gender_noun_US["Secondary_subcategory"],
     )
 )
 gender_noun_words_alternatives_GB = list(
@@ -360,6 +361,7 @@ gender_noun_words_alternatives_GB = list(
         map(ast.literal_eval, df_gender_noun_GB["Sg_all_split"]),
         map(ast.literal_eval, df_gender_noun_GB["Pl_all_split"]),
         df_gender_noun_GB["Primary_subcategory"],
+        df_gender_noun_GB["Secondary_subcategory"],
     )
 )
 # df gendered unconscious bias plural
@@ -372,6 +374,7 @@ gender_bias_words_alternatives_US = list(
         map(ast.literal_eval, df_gendered_ub_US["Sg_all_split"]),
         map(ast.literal_eval, df_gendered_ub_US["Pl_all_split"]),
         df_gendered_ub_US["Primary_subcategory"],
+        df_gendered_ub_US["Secondary_subcategory"],
     )
 )
 gender_bias_words_alternatives_GB = list(
@@ -380,6 +383,7 @@ gender_bias_words_alternatives_GB = list(
         map(ast.literal_eval, df_gendered_ub_GB["Sg_all_split"]),
         map(ast.literal_eval, df_gendered_ub_GB["Pl_all_split"]),
         df_gendered_ub_GB["Primary_subcategory"],
+        df_gendered_ub_GB["Secondary_subcategory"],
     )
 )
 
@@ -421,7 +425,7 @@ open_dis_sentences_GB = list(
 # df gendered sentences
 df_gendered_sentences_US = rules["en-US"]["df_gendered_sentence"]
 df_gendered_sentences_GB = rules["en-GB"]["df_gendered_sentence"]
-# gendered sentences: lemma + alternatives split + subcategory
+# gendered sentences: lemma + alternatives split + primary subcategory 
 gender_sentences_alternatives_US = list(
     zip(
         df_gendered_sentences_US["Lemma"],

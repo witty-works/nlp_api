@@ -1,0 +1,44 @@
+{
+    "language": "en",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "they"
+                },
+                {
+                    "text": "engineering"
+                },
+                {
+                    "text": "development"
+                },
+                {
+                    "text": "engineering team"
+                },
+                {
+                    "text": "development team"
+                },
+                {
+                    "text": "engineers"
+                },
+                {
+                    "text": "colleague in engineering"
+                }
+            ],
+            "category": "gendered",
+            "context": "The engineer found a flaw in the construction.",
+            "end": 12,
+            "explanation": {
+                "icon": "😟",
+                "text": "Male generic doesn’t address all genders",
+                "url": "https://www.witty.works/en/categories/gendered#titles"
+            },
+            "gravity": 2,
+            "label": "Gendered: Titles",
+            "start": 4,
+            "subcategory": "titles",
+            "text": "engineer"
+        }
+    ]
+}
