@@ -187,6 +187,7 @@ dict_lemma_lookup_de = {
     "schlicht": "schlicht",
     "sicher": "sicher",
     "stärker": "stärker",
+    "starke":"stark",
     "treibend": "treibend",
     "u.Ä.": "u.Ä.",
     "u.ä.": "u.ä.",
