@@ -513,13 +513,15 @@ def get_user(request: Request):
         try:
             if claims["aud"] != settings.aadb2c_client_id:
                 raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEN, detail="access token does not match client id"
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="access token does not match client id",
                 )
 
             return claims["emails"][0]
         except KeyError:
             raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN, detail="access token does not map to email"
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="access token does not map to email",
             )
 
     return None
@@ -1186,11 +1188,20 @@ def ing_ify_alternatives(token, alternatives):
 """Function to change adjectives to -en form in alternatives"""
 
 
-def adjective_or_verb(token):
-    return token.pos_ == "ADJ" or token.pos_ == "ADV" or token.pos_ == "VERB"
+def get_token_type(token, token_type=None, single_word=None):
+    if token.pos_ == "ADJ" or token.pos_ == "ADV":
+        return "adjective"
+
+    if token.pos_ == "VERB":
+        return "verb"
+
+    if token.pos_ == "PROPN" and single_word:
+        return token_type
+
+    return None
 
 
-def alternative_declension(text, ending, lang, alternative):
+def alternative_declension(text, token_type, ending, lang, alternative):
     if ResultOut.isInspirationAlternative(text, alternative):
         return alternative
 
@@ -1203,11 +1214,22 @@ def alternative_declension(text, ending, lang, alternative):
             return alternative
 
         text = token.text
-        if previous == False and adjective_or_verb(token):
-            text += ending
-            previous = True
-        else:
-            previous = False
+        if previous == False:
+            alternative_token_type = get_token_type(
+                token, token_type, len(tokens) == 1
+            )
+
+            if lang.lang == "en":
+                if  "verb" == alternative_token_type:
+                    previous = True
+
+                    if text[-1] in ["s", "z", "h", "x"]:
+                        text += "e"
+            elif alternative_token_type:
+                previous = True
+
+            if previous == True:
+                text += ending
 
         new_alternative = text + " " + new_alternative
 
@@ -1215,7 +1237,12 @@ def alternative_declension(text, ending, lang, alternative):
 
 
 def alternatives_declension(token, lang, alternatives):
-    if adjective_or_verb(token):
+    endings = False
+    token_type = get_token_type(token)
+
+    if lang.lang == "en" and token_type == "verb":
+        endings = ["s"]
+    elif lang.lang == "de" and token_type:
         endings = [
             "erer",
             "eren",
@@ -1237,11 +1264,13 @@ def alternatives_declension(token, lang, alternatives):
             "es",
             "e",
         ]
+
+    if endings:
         for ending in endings:
             if not token.lemma_.endswith(ending) and token.text.endswith(ending):
                 return [
                     alternative_declension(
-                        token.text, ending, lang, alternative
+                        token.text, token_type, ending, lang, alternative
                     ).strip()
                     for alternative in alternatives
                 ]
@@ -1286,14 +1315,22 @@ def gendered_denom_end(
 
 
 def plural_or_singular_en(
-    token, token_morph_number, alternative_sing, alternative_plur, subcategory, second_subcategory
+    token,
+    token_morph_number,
+    alternative_sing,
+    alternative_plur,
+    subcategory,
+    second_subcategory,
 ):
     if token_morph_number[0] == "Sing":
         return alternative_sing, subcategory
     elif token_morph_number[0] == "Plur":
-        return [item for item in alternative_plur if item != token.text.lower()], second_subcategory
+        return [
+            item for item in alternative_plur if item != token.text.lower()
+        ], second_subcategory
 
     return None
+
 
 def plural_or_singular_alternatives_de(
     token_morph_number, alternative_sing, alternative_plur
@@ -1859,6 +1896,7 @@ def rules_based_words_phrase_matcher_en(
         for word, alternative, subcategory in words_alternatives:
             if get_lower_cased(token) == word:
                 alternative = ing_ify_alternatives(token, alternative)
+                alternative = alternatives_declension(token, lang, alternative)
 
                 list_tokens.append(
                     ResultOut.factory(
@@ -2025,7 +2063,12 @@ def gendered_en(
                     continue
 
                 alternative, subcategory = plural_or_singular_en(
-                    token, token_morph_number, alternative_sing, alternative_plur, subcategory, second_subcategory
+                    token,
+                    token_morph_number,
+                    alternative_sing,
+                    alternative_plur,
+                    subcategory,
+                    second_subcategory,
                 )
 
                 if alternative != None:

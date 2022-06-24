@@ -1,0 +1,47 @@
+{
+    "language": "en",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "agrees"
+                },
+                {
+                    "text": "chooses"
+                },
+                {
+                    "text": "elects"
+                },
+                {
+                    "text": "opts"
+                },
+                {
+                    "text": "draws a conclusion"
+                },
+                {
+                    "text": "settles an issue"
+                },
+                {
+                    "text": "makes a choice"
+                },
+                {
+                    "text": "reaches mutual consent"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "What if she decides to step down?",
+            "end": 19,
+            "explanation": {
+                "icon": "😒",
+                "text": "Doesn’t feel cooperative nor supportive",
+                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+            },
+            "gravity": 2,
+            "label": "Biased language: Agentic",
+            "start": 12,
+            "subcategory": "agentic",
+            "text": "decides"
+        }
+    ]
+}
