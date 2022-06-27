@@ -34,5 +34,40 @@
         "name": "Tests Works",
         "plan": "witty_teams"
     },
-    "results": []
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "stabile"
+                },
+                {
+                    "text": "resiliente"
+                },
+                {
+                    "text": "zuverlässige"
+                },
+                {
+                    "text": "fachkundige"
+                },
+                {
+                    "text": "fachkundige und erfahrene"
+                },
+                {
+                    "text": "ausgeglichene"
+                }
+            ],
+            "category": "unconscious_bias",
+            "end": 19,
+            "explanation": {
+                "icon": "😒",
+                "text": "Fühlt sich weder kooperativ noch unterstützend an",
+                "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
+            },
+            "gravity": 2,
+            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "start": 13,
+            "subcategory": "agentic",
+            "text": "starke"
+        }
+    ]
 }

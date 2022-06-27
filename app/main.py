@@ -67,7 +67,7 @@ from collections import defaultdict
 
 from app.sentry import set_up_sentry_sdk
 
-version = "1.31.1"
+version = "1.31.2"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -204,9 +204,7 @@ def root():
     url = "https://www.witty.works/form"
     status_code = 301
 
-    if (
-        settings.platform_environment == "local" and settings.testing == False
-    ):  # pragma: no cover
+    if not settings.is_prod and settings.testing == False:  # pragma: no cover
         url = "/docs"
         status_code = 302
 
@@ -513,13 +511,15 @@ def get_user(request: Request):
         try:
             if claims["aud"] != settings.aadb2c_client_id:
                 raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEN, detail="access token does not match client id"
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="access token does not match client id",
                 )
 
             return claims["emails"][0]
         except KeyError:
             raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN, detail="access token does not map to email"
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="access token does not map to email",
             )
 
     return None
@@ -903,10 +903,15 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
         if config.german_gender_ending in endings:
             del endings[config.german_gender_ending]
 
-        alternative = [config.german_gender_ending]
-
         list_full += gendered_denom_end(
-            version, config, lang, text, category, subcategory, endings, alternative
+            version,
+            config,
+            lang,
+            text,
+            category,
+            subcategory,
+            endings,
+            config.german_gender_ending,
         )
 
     if is_sub_category_enabled(config, "unconscious_bias"):
@@ -1260,19 +1265,26 @@ def gendered_denom_end(
     category,
     subcategory,
     endings,
-    alternative=None,
+    german_gender_ending=None,
 ):
     list_ending = []
+
+    if not german_gender_ending:
+        alternative = None
+
     for item, regex in endings.items():
-        matches = re.finditer(r"\S" + regex, full_text)
+        matches = re.finditer(r"\s(\S+)(" + regex + ")", full_text)
         for span in matches:
             if type(span) == re.Match:
+                if german_gender_ending:
+                    alternative = [span.group(1) + german_gender_ending]
+
                 list_ending.append(
                     ResultOut.factory(
                         version,
                         config,
                         lang,
-                        item,
+                        span.group(1) + span.group(2),
                         full_text,
                         category,
                         subcategory,
@@ -1286,14 +1298,22 @@ def gendered_denom_end(
 
 
 def plural_or_singular_en(
-    token, token_morph_number, alternative_sing, alternative_plur, subcategory, second_subcategory
+    token,
+    token_morph_number,
+    alternative_sing,
+    alternative_plur,
+    subcategory,
+    second_subcategory,
 ):
     if token_morph_number[0] == "Sing":
         return alternative_sing, subcategory
     elif token_morph_number[0] == "Plur":
-        return [item for item in alternative_plur if item != token.text.lower()], second_subcategory
+        return [
+            item for item in alternative_plur if item != token.text.lower()
+        ], second_subcategory
 
     return None
+
 
 def plural_or_singular_alternatives_de(
     token_morph_number, alternative_sing, alternative_plur
@@ -2025,7 +2045,12 @@ def gendered_en(
                     continue
 
                 alternative, subcategory = plural_or_singular_en(
-                    token, token_morph_number, alternative_sing, alternative_plur, subcategory, second_subcategory
+                    token,
+                    token_morph_number,
+                    alternative_sing,
+                    alternative_plur,
+                    subcategory,
+                    second_subcategory,
                 )
 
                 if alternative != None:

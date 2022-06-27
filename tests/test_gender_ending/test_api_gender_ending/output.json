@@ -5,7 +5,7 @@
         {
             "alternatives": [
                 {
-                    "text": "*in"
+                    "text": "Kund*in"
                 }
             ],
             "category": "gendered",
@@ -18,9 +18,9 @@
             },
             "gravity": 2,
             "label": "Geschlechtsspezifisch: Inklusive Endung",
-            "start": 17,
+            "start": 13,
             "subcategory": "gendered_denominations_ending",
-            "text": "/in"
+            "text": "Kund/in"
         }
     ]
 }
