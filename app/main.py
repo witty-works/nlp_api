@@ -1356,6 +1356,26 @@ def plural_or_singular_alternatives_de(
     return None
 
 
+def get_token_type(token, token_type=None, single_word=None):
+    if token.pos_ == "ADJ" or token.pos_ == "ADV":
+        return "a"
+
+    if token.pos_ == "VERB":
+        return "v"
+
+    if token.pos_ == "NOUN":
+        return "s"
+
+    if token.pos_ == "PROPN" and single_word and token_type:
+        return token_type.split(",")[0]
+
+    return None
+
+
+def check_token_type(token, token_type=None, single_word=None):
+    return get_token_type(token, token_type, single_word) in token_type.split(",")
+
+
 """Function to handle dependecies of the adjectives."""
 # this function agentic language & related false positives
 
@@ -1425,8 +1445,10 @@ def ub_words_phrase_matcher_de(
     matcher.add("TerminologyList", patterns)
 
     for token in tokens:
-        for word, alternative, subcategory in words_alternatives:
-            if get_non_noun_lower_cased(token) == word:
+        for word, alternative, subcategory, word_type in words_alternatives:
+            if get_non_noun_lower_cased(token) == word and check_token_type(
+                token, word_type
+            ):
                 alternative = alternatives_declension(token, lang, alternative)
 
                 list_tokens.append(

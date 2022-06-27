@@ -217,22 +217,6 @@
         },
         {
             "alternatives": [],
-            "category": "unconscious_bias",
-            "context": "rte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
-            "end": 124,
-            "explanation": {
-                "icon": "😒",
-                "text": "Fühlt sich weder kooperativ noch unterstützend an",
-                "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
-            },
-            "gravity": 2,
-            "label": "Sprachliche Voreingenommenheit: Agentisch",
-            "start": 109,
-            "subcategory": "agentic",
-            "text": "herausgefordert"
-        },
-        {
-            "alternatives": [],
             "category": "inclusive",
             "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
             "end": 104,

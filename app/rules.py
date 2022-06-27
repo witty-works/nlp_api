@@ -139,6 +139,7 @@ bias_words_alternatives_no_plur = list(
         df_bias_no_plur["Lemma"],
         map(ast.literal_eval, df_bias_no_plur["Alt_split"]),
         df_bias_no_plur["Primary_subcategory"],
+        df_bias_no_plur["Word_Type"],
     )
 )
 # df style
