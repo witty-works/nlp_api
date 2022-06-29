@@ -197,7 +197,7 @@ out of left field,i,unconscious_bias,sports_terms,sports_terms,['unexpected'],[]
 paddy waggon,s,unconscious_bias,culture,culture,"['police car', 'police cars']",['police cars'],"['police car', 'police cars']"
 par for the course,i,unconscious_bias,sports_terms,sports_terms,['entirely predictable'],[],['entirely predictable']
 peanut gallery,s,unconscious_bias,classism,classism,"['hecklers', 'cheap seats', 'second balcony', 'crowd', 'audience', 'criticism', 'unwelcome criticism', 'unwelcome commentary', 'inexpert criticism', 'source of much criticism']",['criticism'],"['criticism', 'hecklers', 'cheap seats', 'second balcony', 'crowd', 'audience', 'unwelcome criticism', 'unwelcome commentary', 'inexpert criticism', 'source of much criticism']"
-perfomance based,a,unconscious_bias,agentic,agentic,['influenced by the level of engagement'],[],['influenced by the level of engagement']
+performance based,a,unconscious_bias,agentic,agentic,['influenced by the level of engagement'],[],['influenced by the level of engagement']
 person who menstruates,i,unconscious_bias,gender_identity,gender_identity,['individual with monthly bleeding'],['individuals with monthly bleeding'],"['individual with monthly bleeding', 'individuals with monthly bleeding']"
 pick fights,v+s,unconscious_bias,agentic,agentic,"['differ', 'disagree', 'start debate', 'discuss options', 'present arguments']",[],"['differ', 'disagree', 'start debate', 'discuss options', 'present arguments']"
 pinch hitter,i,unconscious_bias,sports_terms,sports_terms,['stand-in'],[],['stand-in']
