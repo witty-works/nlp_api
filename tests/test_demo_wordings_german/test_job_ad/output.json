@@ -101,6 +101,32 @@
         {
             "alternatives": [
                 {
+                    "text": "sorgfältige"
+                },
+                {
+                    "text": "präzisee"
+                },
+                {
+                    "text": "komplexe"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "Als selbstständiger Projektleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielstrebig\nneue Höchstle",
+            "end": 60,
+            "explanation": {
+                "icon": "😒",
+                "text": "Fühlt sich weder kooperativ noch unterstützend an",
+                "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
+            },
+            "gravity": 2,
+            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "start": 46,
+            "subcategory": "agentic",
+            "text": "anspruchsvolle"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "engagierten"
                 },
                 {
