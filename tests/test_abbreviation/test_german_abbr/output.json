@@ -21,6 +21,36 @@
             "start": 25,
             "subcategory": "gender_identity",
             "text": "Frauen"
+        },
+        {
+            "alternatives": [],
+            "category": "inclusive",
+            "context": "FLINT schließt lesbische Frauen explizit mit ein, um sich für mehr lesbische Sichtbarkeit zu solidarisieren.",
+            "end": 24,
+            "explanation": {
+                "icon": "✅",
+                "text": "Bestärkt Wert von Diversity, Gleichstellung und Inklusion",
+                "url": "https://www.witty.works/de/kategorien/inklusiv#diversitaet_&_inklusion"
+            },
+            "label": "Inklusiv: Diversität & Inklusion",
+            "start": 15,
+            "subcategory": "d_and_i",
+            "text": "lesbische"
+        },
+        {
+            "alternatives": [],
+            "category": "inclusive",
+            "context": "FLINT schließt lesbische Frauen explizit mit ein, um sich für mehr lesbische Sichtbarkeit zu solidarisieren.",
+            "end": 76,
+            "explanation": {
+                "icon": "✅",
+                "text": "Bestärkt Wert von Diversity, Gleichstellung und Inklusion",
+                "url": "https://www.witty.works/de/kategorien/inklusiv#diversitaet_&_inklusion"
+            },
+            "label": "Inklusiv: Diversität & Inklusion",
+            "start": 67,
+            "subcategory": "d_and_i",
+            "text": "lesbische"
         }
     ]
 }
