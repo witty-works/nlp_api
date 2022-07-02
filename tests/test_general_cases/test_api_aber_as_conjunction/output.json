@@ -16,7 +16,7 @@
                 "text": "Füllwörter machen das Verständnis schwieriger",
                 "url": "https://www.witty.works/de/kategorien/stil#fuellwoerter"
             },
-            "gravity": 3,
+            "gravity": 3.0,
             "label": "Stil: Füllwörter",
             "start": 80,
             "subcategory": "filler",
@@ -36,7 +36,7 @@
                 "text": "Füllwörter machen das Verständnis schwieriger",
                 "url": "https://www.witty.works/de/kategorien/stil#fuellwoerter"
             },
-            "gravity": 3,
+            "gravity": 3.0,
             "label": "Stil: Füllwörter",
             "start": 117,
             "subcategory": "filler",

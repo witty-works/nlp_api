@@ -19,7 +19,7 @@
                 "text": "Versteckte Voreingenommenheit bezüglich Geschlechtsidentität",
                 "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#geschlechtsidentitaet"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Sprachliche Voreingenommenheit: Geschlechtsidentität",
             "start": 8,
             "subcategory": "gender_identity",
@@ -60,7 +60,7 @@
                 "text": "Versteckte Voreingenommenheit bezüglich Geschlechtsidentität",
                 "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#geschlechtsidentitaet"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Sprachliche Voreingenommenheit: Geschlechtsidentität",
             "start": 14,
             "subcategory": "gender_identity",

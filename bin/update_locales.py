@@ -33,17 +33,15 @@ def parse_row_column(locales, category, columns, label, column, row):
                 msgstr = ""
             elif msgstr == "" or msgstr == "Missing":
                 msgstr = ""
-                if label != "reason" and label != "solution":
-
-                    print(
-                        "Empty text given for '"
-                        + category
-                        + "' key '"
-                        + label
-                        + "' ("
-                        + locale
-                        + ")"
-                    )
+                print(
+                    "Empty text given for '"
+                    + category
+                    + "' key '"
+                    + label
+                    + "' ("
+                    + locale
+                    + ")"
+                )
             elif label == "explanation":
                 if msgstr.find("|") == -1:
                     print(
@@ -91,10 +89,6 @@ def read_csv(in_file):
             "Category": None,
             "Category Label EN": None,
             "Category Label DE": None,
-            "Reason EN": None,
-            "Reason DE": None,
-            "Solution EN": None,
-            "Solution DE": None,
             "Short explanation EN": None,
             "Short explanation DE": None,
             "Status English": None,
@@ -108,8 +102,6 @@ def read_csv(in_file):
 
         columnMap = {
             "label": "Category Label",
-            "reason": "Reason",
-            "solution": "Solution",
             "explanation": "Short explanation",
         }
 

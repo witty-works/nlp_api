@@ -43,11 +43,14 @@ from app.models import (
     RequestIn,
     Result,
     ResultOut,
-    ResultsOutOld,
     ResultsOut,
-    ConfRequest,
-    OrganizationConfig,
+    ResultsOut1_1,
+    UserConfRequest,
+    OrganizationConfRequest,
+    ConfRequest1_1,
+    RuleConfig,
     ResultConf,
+    ResultConf1_1,
     ErrorMessage,
 )
 
@@ -221,7 +224,7 @@ def save_openapi_json(
 ):  # pragma: no cover
     openapi_data = app.openapi()
     for path in openapi_data["paths"].copy():
-        if not "v1.1" in path:
+        if not "v2.0" in path:
             del openapi_data["paths"][path]
 
     with open("openapi.json", "w") as file:
@@ -256,17 +259,24 @@ def german_gender_ending(
 @app.post(
     "/debug/auth",
     include_in_schema=not settings.is_prod,
-    dependencies=[Depends(HTTPBearer())],
+    dependencies=[Depends(HTTPBearer(auto_error=False))],
 )
-async def auth(request: Request, user_request_in: RequestIn):  # pragma: no cover
-    user = get_user(request)
-    if not user:
-        return user
+async def auth_debug(request: Request, user_request_in: RequestIn):  # pragma: no cover
+    user_email = get_user(request)
+    if not user_email:
+        return user_email
 
-    rules = await apply_rules(user_request_in, user)
+    rules = await apply_rules(user_request_in, user_email)
+
+    if "authorization" in request.headers and request.headers[
+        "authorization"
+    ].lower().startswith("bearer"):
+        claim = get_token_claims(request)
+    else:
+        claim = "using auth token override"
 
     return {
-        "claim": get_token_claims(request),
+        "claim": claim,
         "rules": rules,
         "user_request_in": user_request_in,
     }
@@ -278,14 +288,39 @@ async def auth(request: Request, user_request_in: RequestIn):  # pragma: no cove
     response_model_exclude_none=True,
     dependencies=[Depends(HTTPBearer(auto_error=False))],
 )
-async def auth(request: Request, response: Response):
-    user = get_user(request)
-    if not user:
+async def auth_1_1(request: Request, response: Response):
+    user_email = get_user(request)
+    if not user_email:
         return None
 
-    organization_rules = await apply_rules(RequestIn(text=""), user)
+    rules = await apply_rules(RequestIn(text=""), user_email)
+    config = get_result_conf(rules, 1.1)
+    if config == None and user_email:
+        config = {}
 
-    return get_result_conf(user, organization_rules)
+    return config
+
+
+@app.post(
+    "/v2.0/auth",
+    response_model=Union[ResultConf, dict, None],
+    response_model_exclude_none=True,
+    dependencies=[Depends(HTTPBearer(auto_error=False))],
+)
+async def auth_2_0(request: Request, response: Response):
+    user_email = get_user(request)
+    if not user_email:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+        )
+
+    rules = await apply_rules(RequestIn(text=""), user_email)
+    if rules == {}:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+        )
+
+    return get_result_conf(rules, 2.0)
 
 
 @app.get("/form", include_in_schema=False)
@@ -332,32 +367,8 @@ def get_categories(lang: LangType = "de"):
 
 
 @app.post(
-    "/check",
-    include_in_schema=not settings.is_prod,
-    response_model=Union[ResultsOutOld, Result],
-)
-async def check_v1_0(
-    request: Request,
-    response: Response,
-    user_request_in: RequestIn,
-):
-    results, language, limit_reached, organization_config = await check(
-        1.0, request, response, user_request_in
-    )
-
-    if isinstance(results, Result):
-        return results
-
-    return ResultsOutOld(
-        results=results,
-        language=language,
-        limit_reached=limit_reached,
-    )
-
-
-@app.post(
     "/v1.1/check",
-    response_model=Union[ResultsOut, Result],
+    response_model=Union[ResultsOut1_1, Result],
     response_model_exclude_none=True,
     dependencies=[Depends(HTTPBearer(auto_error=False))],
 )
@@ -366,8 +377,39 @@ async def check_v1_1(
     response: Response,
     user_request_in: RequestIn,
 ):
-    results, language, limit_reached, organization_config = await check(
-        1.1, request, response, user_request_in
+    version = 1.1
+    results, language, limit_reached, rules, user_email = await check(
+        version, request, response, user_request_in
+    )
+
+    config = get_result_conf(rules, 1.1)
+    if config == None and user_email:
+        config = {}
+
+    if isinstance(results, Result):
+        return results
+
+    return ResultsOut1_1(
+        results=results,
+        language=language,
+        limit_reached=limit_reached,
+        organization_config=config,
+    )
+
+
+@app.post(
+    "/v2.0/check",
+    response_model=Union[ResultsOut, Result],
+    response_model_exclude_none=True,
+    dependencies=[Depends(HTTPBearer(auto_error=False))],
+)
+async def check_v2_0(
+    request: Request,
+    response: Response,
+    user_request_in: RequestIn,
+):
+    results, language, limit_reached, rules, user_email = await check(
+        2.0, request, response, user_request_in
     )
 
     if isinstance(results, Result):
@@ -377,14 +419,18 @@ async def check_v1_1(
         results=results,
         language=language,
         limit_reached=limit_reached,
-        organization_config=organization_config,
+        config_changed=get_config_change(rules, user_request_in),
     )
 
 
 # data exchange routes
+
+
+# BC
 @app.post("/store_rules")
 async def store_rules(
-    organization_rules: ConfRequest, username: str = Depends(get_current_username)
+    organization_rules: ConfRequest1_1,
+    username: str = Depends(get_current_username),
 ):
     rules = redis.get(organization_rules.id)
 
@@ -402,6 +448,7 @@ async def store_rules(
     return organization_rules
 
 
+# BC
 @app.delete(
     "/delete_rules",
     status_code=status.HTTP_204_NO_CONTENT,
@@ -425,33 +472,167 @@ async def delete_rules(
     redis.delete(organization_id)
 
 
-@app.get(
-    "/get_user_rules", response_model=dict, responses={404: {"model": ErrorMessage}}
-)
-async def get_user_rules(
-    user: str,
+@app.post("/organization/rules")
+async def store_organization_rules(
+    organization_rules: OrganizationConfRequest,
     username: str = Depends(get_current_username),
 ):
-    rules = await get_user_rules_from_redis(user)
+    redis.set(organization_rules.id, organization_rules.json())
+
+    return organization_rules
+
+
+@app.delete(
+    "/organization/rules",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={404: {"model": ErrorMessage}},
+)
+async def delete_organiztion_rules(
+    organization_id: str,
+    username: str = Depends(get_current_username),
+):
+    rules = redis.get(organization_id)
+
+    if not rules:
+        return JSONResponse(
+            status_code=404, content={"message": "Organization rules not found"}
+        )
+
+    redis.delete(organization_id)
+
+
+@app.get(
+    "/organization/rules", response_model=dict, responses={404: {"model": ErrorMessage}}
+)
+async def get_organization_rules(
+    organization_id: str,
+    username: str = Depends(get_current_username),
+):
+    rules = redis.get(organization_id)
 
     if not rules:
         return JSONResponse(
             status_code=404, content={"message": "User rules not found"}
         )
 
-    del rules["users"]
+    return json.loads(rules)
+
+
+@app.post("/user/rules")
+async def store_user_rules(
+    user_rules: UserConfRequest, username: str = Depends(get_current_username)
+):
+    redis.set(user_rules.email, user_rules.json())
+
+    return user_rules
+
+
+@app.delete(
+    "/user/rules",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={404: {"model": ErrorMessage}},
+)
+async def delete_user_rules(
+    email: str,
+    username: str = Depends(get_current_username),
+):
+    rules = redis.get(email)
+
+    if not rules:
+        return JSONResponse(
+            status_code=404, content={"message": "User rules not found"}
+        )
+
+    redis.delete(email)
+
+
+@app.get("/user/rules", response_model=dict, responses={404: {"model": ErrorMessage}})
+async def get_user_rules(
+    email: str,
+    username: str = Depends(get_current_username),
+):
+    rules = await get_user_rules_from_redis(email)
+
+    if not rules:
+        return JSONResponse(
+            status_code=404, content={"message": "User rules not found"}
+        )
 
     return rules
 
 
 # Functions
-async def get_user_rules_from_redis(user: str):
-    key = redis.get(user)
+async def get_user_rules_from_redis(email: str):
+    rules = redis.get(email)
 
-    if key:
-        rules = json.loads(redis.get(key))
-        if "users" in rules and user in rules["users"]:
-            return rules
+    if rules:
+        old_format = False
+
+        try:
+            rules = json.loads(rules)
+        except ValueError as e:
+            # handle old format
+            old_format = True
+
+            rules = {
+                "id": email,
+                "name": email,
+                "email": email,
+                "organization_id": rules,
+                "config": {},
+                "term_replacements": {},
+                "false_positives": [],
+                "domains": {},
+                "organization_domains": {},
+            }
+
+        rules["plan"] = "witty_free"
+
+        if "organization_id" in rules:
+            organization_rules = redis.get(rules["organization_id"])
+
+            if organization_rules:
+                organization_rules = json.loads(organization_rules)
+
+                rules["plan"] = organization_rules["plan"]
+                rules["organization_name"] = organization_rules["name"]
+
+                if old_format:
+                    for rule in organization_rules["term_replacements"]:
+                        term = rule["term"]
+                        del rule["term"]
+                        rules["term_replacements"][term] = rule
+                else:
+                    rules["term_replacements"] |= organization_rules[
+                        "term_replacements"
+                    ]
+
+                rules["false_positives"] = list(
+                    set(
+                        rules["false_positives"] + organization_rules["false_positives"]
+                    )
+                )
+
+                if "config_hash" in organization_rules:
+                    rules["organization_config_hash"] = organization_rules[
+                        "config_hash"
+                    ]
+                else:
+                    rules["organization_config_hash"] = None
+
+                if "domains" in organization_rules:
+                    rules["organization_domains"] = organization_rules["domains"]
+                else:
+                    rules["organization_domains"] = {}
+
+                for config in organization_rules["config"]:
+                    if (
+                        not organization_rules["config"][config] == None
+                        and organization_rules["config"][config]["status"] == "force"
+                    ):
+                        rules["config"][config] = organization_rules["config"][config]
+
+        return rules
 
     return None
 
@@ -492,46 +673,42 @@ def filter_config(config):
     return {k: v for (k, v) in config.items() if v != "" and v is not None and v != []}
 
 
-async def apply_rules(user_request_in: RequestIn, user=Optional[str]):
-    if not user:
+async def apply_rules(user_request_in: RequestIn, user_email=Optional[str]):
+    store_context = user_request_in.config.store_context
+    user_request_in.config.__setattr__("store_context", True)
+
+    if not user_email:
         return {}
 
-    organization_rules = await get_user_rules_from_redis(user)
-    if not organization_rules or type(organization_rules) is not dict:
+    rules = await get_user_rules_from_redis(user_email)
+    if not rules or type(rules) is not dict:
         return {}
 
-    return merge_rules(user_request_in, organization_rules)
-
-
-def merge_rules(user_request_in: RequestIn, organization_rules: list):
-    categories = ["inclusive", "style", "orthography"]
     disabled_categories = user_request_in.config.disabled_categories
 
-    for config in organization_rules["config"]:
-        data = organization_rules["config"][config]
+    for config in rules["config"]:
+        data = rules["config"][config]
         if data is not None and data["status"] == "force":
-            if config in categories:
+            if config in ["inclusive", "style", "orthography"]:
                 if data["value"]:
                     if config in disabled_categories:
                         disabled_categories.remove(config)
                 elif config not in disabled_categories:
                     disabled_categories.append(config)
-
+            elif config == "store_context":
+                store_context = data["value"]
             else:
                 user_request_in.config.__setattr__(config, data["value"])
 
     user_request_in.config.__setattr__("disabled_categories", disabled_categories)
 
-    return organization_rules
+    if rules["plan"] == "witty_teams" and not store_context:
+        user_request_in.config.__setattr__("store_context", False)
+
+    return rules
 
 
 def get_user(request: Request):
-    if settings.testing:
-        if "x-auth" in request.headers:
-            return request.headers["x-auth"]
-        if settings.redis_default_user:
-            return settings.redis_default_user
-
     if "authorization" in request.headers and request.headers[
         "authorization"
     ].lower().startswith("bearer"):
@@ -557,6 +734,12 @@ def get_user(request: Request):
                 detail="access token does not map to email",
             )
 
+    if settings.testing:
+        if "x-auth" in request.headers:
+            return request.headers["x-auth"]
+        if settings.redis_default_user:
+            return settings.redis_default_user
+
     return None
 
 
@@ -566,16 +749,19 @@ async def check(
     response: Response,
     user_request_in: RequestIn,
 ):
-    if version != 1.0 and version != 1.1:
+    if version != 1.1 and version != 2.0:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return Result.factory("Version not supported: " + str(version))
 
     configure_sentry(request, user_request_in)
 
-    user = get_user(request)
-    organization_rules = await apply_rules(user_request_in, user)
-    if not organization_rules:
-        user_request_in.config.store_context = True
+    user_email = get_user(request)
+    if version >= 2.0 and not user_email:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+        )
+
+    rules = await apply_rules(user_request_in, user_email)
 
     text = user_request_in.text
     limit_reached = len(text) > settings.text_max_length
@@ -594,33 +780,65 @@ async def check(
         response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
         results = Result.factory("Language could not be determined")
         language = None
-        organization_config = None
+        rules = None
     else:
         lang = Language(locale)
 
         results = await language_rules(
-            version, user_request_in.config, organization_rules, lang, text
+            version, user_request_in.config, rules, lang, text
         )
 
         language = lang.lang
 
-        organization_config = get_result_conf(user, organization_rules)
-
-    return results, language, limit_reached, organization_config
+    return results, language, limit_reached, rules, user_email
 
 
-def get_result_conf(user, organization_rules: dict):
-    if "config" not in organization_rules:
-        if user:
-            return {}
+def get_config_change(
+    rules: dict,
+    user_request_in: Optional[RequestIn] = None,
+):
+    if not user_request_in:
+        return True
 
+    if "config_hash" in rules and user_request_in.config_hash != rules["config_hash"]:
+        return True
+
+    if (
+        "organizationn_config_hash" in rules
+        and user_request_in.organizationn_hash != rules["organization_config_hash"]
+    ):
+        return True
+
+    return None
+
+
+def get_result_conf(
+    rules: dict,
+    version: float,
+):
+    if "config" not in rules:
         return None
 
+    config = RuleConfig.parse_obj(rules["config"])
+    plan = rules["plan"]
+
+    if version < 2.0:
+        return ResultConf1_1(
+            id=rules["organization_id"],
+            name=rules["organization_name"],
+            plan=plan,
+            config=config,
+        )
+
     return ResultConf(
-        id=organization_rules["id"],
-        name=organization_rules["name"],
-        plan=organization_rules["plan"],
-        config=OrganizationConfig.parse_obj(organization_rules["config"]),
+        id=rules["id"],
+        name=rules["name"],
+        organization_id=rules["organization_id"],
+        organization_name=rules["organization_name"],
+        plan=plan,
+        config=config,
+        domains=rules["domains"],
+        organization_domains=rules["organization_domains"],
     )
 
 
@@ -782,7 +1000,7 @@ def get_matches(tokens, phrases):
 
 
 async def language_rules(
-    version: float, config: Config, organization_rules: dict, lang: Language, text: str
+    version: float, config: Config, rules: dict, lang: Language, text: str
 ):
     tokens = get_tokens(lang, text)
 
@@ -802,7 +1020,7 @@ async def language_rules(
     elif lang.lang == "en":
         list_results += english_rules(version, config, lang, tokens, text)
 
-    if "term_replacements" in organization_rules:
+    if "term_replacements" in rules:
         term_replacements = {
             "Lemma": [],
             "Category": [],
@@ -811,8 +1029,10 @@ async def language_rules(
             "Explanation": [],
         }
 
-        for term_replacement in organization_rules["term_replacements"]:
-            term_replacements["Lemma"].append(term_replacement["term"])
+        for term in rules["term_replacements"]:
+            term_replacement = rules["term_replacements"][term]
+
+            term_replacements["Lemma"].append(term)
             term_replacements["Category"].append("corporate_rules")
             term_replacements["Primary_subcategory"].append("corporate_rules")
             term_replacements["Alt_split"].append(term_replacement["alternatives"])
@@ -840,14 +1060,14 @@ async def language_rules(
         )
 
     false_positives = []
-    if "false_positives" in organization_rules:
-        false_positives = organization_rules["false_positives"]
+    if "false_positives" in rules:
+        false_positives = rules["false_positives"]
 
-    if "term_replacements" in organization_rules:
-        for rule in organization_rules["term_replacements"]:
-            false_positives.append(rule["alternatives"][0])
+    if "term_replacements" in rules:
+        for rule in rules["term_replacements"]:
+            false_positives.append(rules["term_replacements"][rule]["alternatives"][0])
 
-    if false_positives != []:
+    if len(false_positives):
         for result in list_results:
             if result.text in false_positives:
                 list_results.remove(result)
@@ -873,7 +1093,8 @@ def check_category_importance(config: Config, subcategory: str):
     return (
         config.maximum_importance == None
         or categories[subcategory]["importance"] == None
-        or config.maximum_importance >= categories[subcategory]["importance"]
+        or float(config.maximum_importance)
+        >= float(categories[subcategory]["importance"])
     )
 
 
@@ -1669,7 +1890,9 @@ def gendered_denom_analysis_de(
                                         article_alternative = masculine
                                     elif gender["definite_article"] == "das":
                                         article_alternative = neuter
-                                    elif gender["definite_article"] == "die" or alternative.endswith("in"):
+                                    elif gender[
+                                        "definite_article"
+                                    ] == "die" or alternative.endswith("in"):
                                         article_alternative = feminine
 
                                 alternatives_with_article.append(

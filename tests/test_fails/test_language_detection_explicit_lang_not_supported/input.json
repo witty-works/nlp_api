@@ -1,7 +1,4 @@
 {
     "text": "What is going on?",
-    "lang": "en-AU",
-    "config": {
-        "store_context": false
-    }
+    "lang": "en-AU"
 }

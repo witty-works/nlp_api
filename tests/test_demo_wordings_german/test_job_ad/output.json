@@ -25,7 +25,7 @@
                 "text": "“Mitmeinen” mit männlichen Generikum funktioniert nicht",
                 "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#titel"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Geschlechtsspezifisch: Titel",
             "start": 20,
             "subcategory": "titles",
@@ -54,7 +54,7 @@
                 "text": "“Mitmeinen” mit männlichen Generikum funktioniert nicht",
                 "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#titel"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Geschlechtsspezifisch: Titel",
             "start": 126,
             "subcategory": "titles",
@@ -92,7 +92,7 @@
                 "text": "Fühlt sich weder kooperativ noch unterstützend an",
                 "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Sprachliche Voreingenommenheit: Agentisch",
             "start": 34,
             "subcategory": "agentic",
@@ -118,7 +118,7 @@
                 "text": "Fühlt sich weder kooperativ noch unterstützend an",
                 "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Sprachliche Voreingenommenheit: Agentisch",
             "start": 46,
             "subcategory": "agentic",
@@ -144,7 +144,7 @@
                 "text": "Fühlt sich weder kooperativ noch unterstützend an",
                 "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Sprachliche Voreingenommenheit: Agentisch",
             "start": 111,
             "subcategory": "agentic",
@@ -176,7 +176,7 @@
                 "text": "Fühlt sich weder kooperativ noch unterstützend an",
                 "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Sprachliche Voreingenommenheit: Agentisch",
             "start": 135,
             "subcategory": "agentic",

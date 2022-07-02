@@ -1,6 +1,3 @@
 {
-    "text": "Who is #foo, #wrld and @bar?",
-    "config": {
-        "store_context": false
-    }
+    "text": "Who is #foo, #wrld and @bar?"
 }

@@ -32,8 +32,9 @@ class Settings(BaseSettings):
     aadb2c_policy: Optional[str]
     aadb2c_domain: Optional[str]
     aadb2c_expected_scope: Optional[str]
-    redis_default_rules: Optional[str]
     redis_default_user: Optional[str]
+    redis_default_rules: Optional[str]
+    redis_default_organization_rules: Optional[str]
 
     class Config:
         env_file = ".env"

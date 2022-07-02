@@ -31,7 +31,7 @@
                 "text": "Versteckte Voreingenommenheit bezüglich Hautfarbe",
                 "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#rassistische_wurzel"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Sprachliche Voreingenommenheit: Rassistische Wurzel",
             "start": 14,
             "subcategory": "racist_source",
@@ -66,7 +66,7 @@
                 "text": "Versteckte Voreingenommenheit bezüglich Hautfarbe",
                 "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#rassistische_wurzel"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Sprachliche Voreingenommenheit: Rassistische Wurzel",
             "start": 36,
             "subcategory": "racist_source",
@@ -95,7 +95,7 @@
                 "text": "Versteckte Voreingenommenheit bezüglich Hautfarbe",
                 "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#rassistische_wurzel"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Sprachliche Voreingenommenheit: Rassistische Wurzel",
             "start": 57,
             "subcategory": "racist_source",

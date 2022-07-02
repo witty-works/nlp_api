@@ -1,7 +1,6 @@
 {
     "text": "Wir suchen Ninja Programmierer für unsere Kunden",
     "config": {
-        "store_context": false,
         "disabled_categories": "unconscious_bias,style"
     }
 }

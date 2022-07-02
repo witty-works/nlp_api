@@ -22,7 +22,7 @@
                 "text": "Bild eines Mannes wird unbewusst ausgelöst",
                 "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#spezielle_funktionen"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Geschlechtsspezifisch: Spezielle Funktionen",
             "start": 13,
             "subcategory": "function",
@@ -72,7 +72,7 @@
                 "text": "Traditionelles Führungs-Vokabular",
                 "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#fuehrungsstereotyp"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Geschlechtsspezifisch: Führungsstereotyp",
             "start": 29,
             "subcategory": "leadership",
