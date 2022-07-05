@@ -1437,18 +1437,11 @@ def ub_words_phrase_matcher_de(
     return list_tokens
 
 
-def gendered_denom_analysis_de(
-    version: float,
-    config: Config,
+def ignore_binary_inclusive_gendered_denom_analysis_de(
     lang,
-    full_text,
     tokens,
-    gender_words_alternatives,
     false_positives,
 ):
-    category = "gendered"
-
-    list_tokens = []
     list_false_positives = []
     matcher = PhraseMatcher(model[lang.lang].vocab)
 
@@ -1473,6 +1466,48 @@ def gendered_denom_analysis_de(
         docs = list(model[lang.lang].pipe(rest_text))
         tokens = Doc.from_docs(docs)
 
+    return tokens
+
+
+def match_binary_inclusive_gendered_denom_analysis_de(
+    config: Config, false_positives, full_text, token, category, subcategory
+):
+    text = token.text
+    start = token.idx
+    if not ResultOut.genderedRolesFormatBinary(config.gendered_roles_format):
+        for false_positive in false_positives:
+            if not false_positive.endswith(text):
+                continue
+
+            new_start = start - len(false_positive.removesuffix(text))
+            if false_positive == full_text[new_start : new_start + len(false_positive)]:
+                start = new_start
+                text = false_positive
+
+                subcategory = "gendered_denominations_ending"
+                category = categories[subcategory]["category"]
+                break
+
+    return text, start, category, subcategory
+
+
+def gendered_denom_analysis_de(
+    version: float,
+    config: Config,
+    lang,
+    full_text,
+    tokens,
+    gender_words_alternatives,
+    false_positives,
+):
+    category = "gendered"
+
+    if ResultOut.genderedRolesFormatBinary(config.gendered_roles_format):
+        tokens = ignore_binary_inclusive_gendered_denom_analysis_de(
+            lang, tokens, false_positives
+        )
+
+    list_tokens = []
     for i in range(len(tokens)):
         for (
             word,
@@ -1491,16 +1526,30 @@ def gendered_denom_analysis_de(
                     )
 
                 if alternative != None:
+                    (
+                        text,
+                        start,
+                        category,
+                        subcategory,
+                    ) = match_binary_inclusive_gendered_denom_analysis_de(
+                        config,
+                        false_positives,
+                        full_text,
+                        tokens[i],
+                        category,
+                        subcategory,
+                    )
+
                     list_tokens.append(
                         ResultOut.factory(
                             version,
                             config,
                             lang,
-                            tokens[i].text,
+                            text,
                             full_text,
                             category,
                             subcategory,
-                            tokens[i].idx,
+                            start,
                             None,
                             alternative,
                         )

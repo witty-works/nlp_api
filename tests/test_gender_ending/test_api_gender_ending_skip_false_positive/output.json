@@ -1,0 +1,70 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "Bewerbende"
+                },
+                {
+                    "text": "Bewerber*innen"
+                },
+                {
+                    "text": "Bewerbung"
+                },
+                {
+                    "text": "Personen, die sich bewerben"
+                }
+            ],
+            "category": "gendered",
+            "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachfrau/Fachmann?",
+            "end": 36,
+            "explanation": {
+                "icon": "💯",
+                "text": "Nicht konsistente Geschlechts-Schreibweise",
+                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#inklusive_endung"
+            },
+            "gravity": 2,
+            "label": "Geschlechtsspezifisch: Inklusive Endung",
+            "start": 10,
+            "subcategory": "gendered_denominations_ending",
+            "text": "Bewerberinnen und Bewerber"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Fachperson"
+                },
+                {
+                    "text": "Fachkraft"
+                },
+                {
+                    "text": "Fachfrau*Fachmann"
+                },
+                {
+                    "text": "Fachpersonal"
+                },
+                {
+                    "text": "Fachkräfte"
+                },
+                {
+                    "text": "jemand vom Fach"
+                }
+            ],
+            "category": "gendered",
+            "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachfrau/Fachmann?",
+            "end": 77,
+            "explanation": {
+                "icon": "💯",
+                "text": "Nicht konsistente Geschlechts-Schreibweise",
+                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#inklusive_endung"
+            },
+            "gravity": 2,
+            "label": "Geschlechtsspezifisch: Inklusive Endung",
+            "start": 60,
+            "subcategory": "gendered_denominations_ending",
+            "text": "Fachfrau/Fachmann"
+        }
+    ]
+}
