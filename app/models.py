@@ -576,12 +576,16 @@ class ResultOut(BaseModel):
         )
 
     @staticmethod
+    def countWords(text):
+        return sum(map(str(text).count, [" ", "-"]))
+
+    @staticmethod
     def isInspirationAlternative(text, alternative, subcategory=None):
         return (
             alternative != None
             and subcategory != "abbreviation"
             and (
-                alternative.count(" ") >= str(text).count(" ") + 3
+                ResultOut.countWords(alternative) >= ResultOut.countWords(text) + 3
                 or alternative.count("...") > 0
             )
         )
