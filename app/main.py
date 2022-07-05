@@ -1204,6 +1204,14 @@ def get_token_type(token, token_type=None, single_word=None):
     return None
 
 
+def add_declension(lang, text, ending):
+    if lang.lang == "en":
+        if text[-1] in ["s", "z", "h", "x"]:
+            text += "e"
+
+    return text + ending
+
+
 def alternative_declension(text, token_type, ending, lang, alternative):
     if ResultOut.isInspirationAlternative(text, alternative):
         return alternative
@@ -1218,21 +1226,16 @@ def alternative_declension(text, token_type, ending, lang, alternative):
 
         text = token.text
         if previous == False:
-            alternative_token_type = get_token_type(
-                token, token_type, len(tokens) == 1
-            )
+            alternative_token_type = get_token_type(token, token_type, len(tokens) == 1)
 
-            if lang.lang == "en":
-                if  "verb" == alternative_token_type:
-                    previous = True
-
-                    if text[-1] in ["s", "z", "h", "x"]:
-                        text += "e"
-            elif alternative_token_type:
+            if (lang.lang == "en" and "verb" == alternative_token_type) or (
+                lang.lang == "de" and alternative_token_type
+            ):
                 previous = True
+                text = add_declension(lang, text, ending)
 
-            if previous == True:
-                text += ending
+        elif is_conjunction(text):
+            previous = False
 
         new_alternative = text + " " + new_alternative
 
@@ -1554,8 +1557,11 @@ def gendered_denom_analysis_de(
     return list_tokens
 
 
-# Unified function for Emty words false positives and rules
-def is_conjunction(full_text, start):
+# Unified function for Empty words false positives and rules
+def is_conjunction(full_text, start=0):
+    if full_text in ["und", "oder", "and", "or"]:
+        return True
+
     preceeding_text = full_text[max(0, start - 5) : start]
     return (
         re.search(r"^ *$", preceeding_text) != None
