@@ -1193,21 +1193,28 @@ def ing_ify_alternatives(token, alternatives):
 
 def get_token_type(token, token_type=None, single_word=None):
     if token.pos_ == "ADJ" or token.pos_ == "ADV":
-        return "adjective"
+        return "a"
 
     if token.pos_ == "VERB":
-        return "verb"
+        return "v"
 
-    if token.pos_ == "PROPN" and single_word:
-        return token_type
+    if token.pos_ == "NOUN":
+        return "s"
+
+    if token.pos_ == "PROPN" and single_word and token_type:
+        return token_type.split(",")[0]
 
     return None
 
 
 def add_declension(lang, text, ending):
-    if lang.lang == "en":
-        if text[-1] in ["s", "z", "h", "x"]:
-            text += "e"
+    if lang.lang == "en" and text[-1] in ["s", "z", "h", "x"]:
+        text += "e"
+    if lang.lang == "de":
+        if text[-1] == "s":
+            text += "s"
+        if text[-1] == "e" and ending[0] == "e":
+            text = text[0:-1]
 
     return text + ending
 
@@ -1218,19 +1225,25 @@ def alternative_declension(text, token_type, ending, lang, alternative):
 
     tokens = model[lang.lang](alternative.rstrip().replace("\n", " "))
 
+    if lang.lang == "en":
+        alternative_token_types = ["v"]
+    if lang.lang == "de":
+        alternative_token_types = ["v", "a"]
+
     new_alternative = ""
     previous = False
     for token in reversed(tokens):
         if not token.is_alpha:
             return alternative
-
+            
         text = token.text
-        if previous == False:
-            alternative_token_type = get_token_type(token, token_type, len(tokens) == 1)
 
-            if (lang.lang == "en" and "verb" == alternative_token_type) or (
-                lang.lang == "de" and alternative_token_type
-            ):
+        if previous == False:
+            alternative_token_type = get_token_type(
+                token, token_type, len(tokens) == 1
+            )
+
+            if alternative_token_type in alternative_token_types:
                 previous = True
                 text = add_declension(lang, text, ending)
 
@@ -1246,7 +1259,7 @@ def alternatives_declension(token, lang, alternatives):
     endings = False
     token_type = get_token_type(token)
 
-    if lang.lang == "en" and token_type == "verb":
+    if lang.lang == "en" and token_type == "v":
         endings = ["s"]
     elif lang.lang == "de" and token_type:
         endings = [
