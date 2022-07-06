@@ -676,3 +676,20 @@ def test_english_plur(english_plur_case_dir, snapshot):
     # Snapshot the return value.
     snapshot.snapshot_dir = english_plur_case_dir
     snapshot.assert_match(output, "output.json")
+
+@pytest.mark.parametrize(
+    "uberlegen_word_type_dir",
+    get_dirs("tests/test_uberlegen_word_type"),
+)
+def test_uberlegen_word_type(uberlegen_word_type_dir, snapshot):
+
+    # Read input files from the case directory.
+    input_json = uberlegen_word_type_dir.joinpath("input.json").read_text()
+    # Call the tested endpoint.
+    response = client.post("/v1.1/check", json=json.loads(input_json))
+    assert response.status_code == 200
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    # Snapshot the return value.
+    snapshot.snapshot_dir = uberlegen_word_type_dir
+    snapshot.assert_match(output, "output.json")
