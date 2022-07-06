@@ -660,7 +660,7 @@ class ResultOut(BaseModel):
             ending = str(variants[1])
 
         if german_gender_ending == "In":
-            if alternative.count("~") > 1 or variants[0][0].isupper():
+            if alternative.count("~") > 1 or (variants[0] and variants[0][0].isupper()):
                 ending = ending[0:1].capitalize() + ending[1:]
                 separator = ""
             else:

@@ -232,19 +232,12 @@ pipenv run python -m bin.analyze_rules -l en -p <path_to_ignore_file>
 ```
 2. Copy `ignore.txt` to LanguageTool repository: https://github.com/witty-works/languagetool
 ## Update the false positive list 
-1. Remove gender_false_positive.csv file:
 ```
-rm training_data/de-DE/gender_false_positive.csv
-```
-2. Create new csv file with  dummy entry
-```
-echo "False_positives" >> training_data/de-DE/gender_false_positive.csv
-```
-3. Run server locally (or restart to re-read the training data), for example with pipenv:
+1. Run server locally (or restart to re-read the training data), for example with pipenv:
 ```
 pipenv run uvicorn app.main:app --reload
 ```
-4. Run the generate_false_positive.py file
+2. Run the generate_false_positive.py file
 ```
 pipenv run python -m bin.generate_false_positive
 ```
