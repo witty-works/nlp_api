@@ -379,8 +379,6 @@ def test_term_replacement(fp_case_dir, snapshot, set_redis):
     snapshot.assert_match(output, "output.json")
 
 
-
-
 @pytest.mark.parametrize(
     "fp_case_dir",
     get_dirs("tests/test_disable_categories"),
@@ -557,7 +555,6 @@ def test_store_get_delete_rules():
     response = client.get("/get_user_rules?user=test@gmail.com")
     assert response.status_code == 404
 
-
     response = client.get("/get_user_rules?user=test2@gmail.com")
     assert response.status_code == 200
     response_content = json.loads(response.content)
@@ -578,9 +575,9 @@ def test_store_get_delete_rules():
     response = client.delete("/delete_rules?organization_id=foobar")
     assert response.status_code == 404
 
-
     response = client.delete("/delete_rules?organization_id=TEST_organization")
     assert response.status_code == 204
+
 
 # test german gender ending
 
@@ -643,6 +640,7 @@ def test_grammatically_correct_alternatives(
     snapshot.snapshot_dir = grammatical_alternatives_case_dir
     snapshot.assert_match(output, "output.json")
 
+
 @pytest.mark.parametrize(
     "abbr_case_dir",
     get_dirs("tests/test_abbreviation"),
@@ -660,6 +658,7 @@ def test_abbreviation(abbr_case_dir, snapshot):
     snapshot.snapshot_dir = abbr_case_dir
     snapshot.assert_match(output, "output.json")
 
+
 @pytest.mark.parametrize(
     "english_plur_case_dir",
     get_dirs("tests/test_english_plur"),
@@ -676,6 +675,7 @@ def test_english_plur(english_plur_case_dir, snapshot):
     # Snapshot the return value.
     snapshot.snapshot_dir = english_plur_case_dir
     snapshot.assert_match(output, "output.json")
+
 
 @pytest.mark.parametrize(
     "uberlegen_word_type_dir",
