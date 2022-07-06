@@ -38,7 +38,7 @@ jobs:
         run: |
           pipenv install --deploy --dev --verbose
           pipenv run python -m spacy download en_core_web_sm
-          pipenv run python -m spacy download de_core_news_sm
+          pipenv run python -m spacy download de_core_news_md
 
       - name: Caching FastText models
         id: cache-fasttext

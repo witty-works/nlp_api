@@ -5,10 +5,16 @@
         {
             "alternatives": [
                 {
-                    "text": "KundIn"
+                    "text": "Auftraggebende"
                 },
                 {
-                    "text": "Kundin/Kunde"
+                    "text": "Bestellende"
+                },
+                {
+                    "text": "KundInnen"
+                },
+                {
+                    "text": "Kundinnen und Kunden"
                 },
                 {
                     "text": "Kundschaft"
@@ -17,16 +23,10 @@
                     "text": "Klientel"
                 },
                 {
-                    "text": "Auftraggebende"
+                    "text": "beziehende Personen"
                 },
                 {
-                    "text": "Bestellende"
-                },
-                {
-                    "text": "beziehende Person"
-                },
-                {
-                    "text": "beauftragende Firma"
+                    "text": "beauftragende Firmen"
                 }
             ],
             "category": "gendered",
