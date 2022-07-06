@@ -1192,16 +1192,23 @@ def ing_ify_alternatives(token, alternatives):
 
 
 def get_token_type(token, token_type=None, single_word=None):
-    if token.pos_ == "ADJ" or token.pos_ == "ADV":
-        return "adjective"
+    adj_tags = {"ADJA", "ADJD", "ADV", "ADJ", "JJ", "VVPP", "VAPP", "VMPP", "JJR", "JJS"}
+    if token.tag_ in adj_tags or token.pos_ in adj_tags:
+        return "a"
 
     if token.pos_ == "VERB":
-        return "verb"
+        return "v"
 
-    if token.pos_ == "PROPN" and single_word:
-        return token_type
+    if token.pos_ == "NOUN":
+        return "s"
+
+    if token.pos_ == "PROPN" and single_word and token_type:
+        return token_type.split(",")[0]
 
     return None
+
+def check_token_type(token, token_type=None, single_word=None):
+     return get_token_type(token, token_type, single_word) in token_type.split(",")
 
 
 def add_declension(lang, text, ending):
@@ -1228,7 +1235,7 @@ def alternative_declension(text, token_type, ending, lang, alternative):
         if previous == False:
             alternative_token_type = get_token_type(token, token_type, len(tokens) == 1)
 
-            if (lang.lang == "en" and "verb" == alternative_token_type) or (
+            if (lang.lang == "en" and "v" == alternative_token_type) or (
                 lang.lang == "de" and alternative_token_type
             ):
                 previous = True
@@ -1246,7 +1253,7 @@ def alternatives_declension(token, lang, alternatives):
     endings = False
     token_type = get_token_type(token)
 
-    if lang.lang == "en" and token_type == "verb":
+    if lang.lang == "en" and token_type == "v":
         endings = ["s"]
     elif lang.lang == "de" and token_type:
         endings = [
@@ -1425,8 +1432,8 @@ def ub_words_phrase_matcher_de(
     matcher.add("TerminologyList", patterns)
 
     for token in tokens:
-        for word, alternative, subcategory in words_alternatives:
-            if get_non_noun_lower_cased(token) == word:
+        for word, alternative, subcategory, word_type in words_alternatives:
+            if get_non_noun_lower_cased(token) == word and check_token_type(token, word_type):
                 alternative = alternatives_declension(token, lang, alternative)
 
                 list_tokens.append(
