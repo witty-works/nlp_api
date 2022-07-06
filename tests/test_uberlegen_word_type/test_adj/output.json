@@ -1,0 +1,81 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "Einflussvermögen"
+                },
+                {
+                    "text": "Einflugvermögen"
+                },
+                {
+                    "text": "Eisflussvermögen"
+                },
+                {
+                    "text": "Genflussvermögen"
+                },
+                {
+                    "text": "Einglasvermögen"
+                },
+                {
+                    "text": "Tonflussvermögen"
+                }
+            ],
+            "category": "orthography",
+            "context": "Einflußvermögen der einzelnen Regierungen auf diese Märkte weit überlegen ist",
+            "end": 15,
+            "explanation": {
+                "icon": "❌",
+                "text": "Möglicher Tippfehler gefunden."
+            },
+            "gravity": 1,
+            "label": "Rechtschreibfehler",
+            "start": 0,
+            "subcategory": "typos",
+            "text": "Einflußvermögen"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "angesehen"
+                },
+                {
+                    "text": "fortschrittlich"
+                },
+                {
+                    "text": "kompetent"
+                },
+                {
+                    "text": "einflussreich"
+                },
+                {
+                    "text": "tonangebend"
+                },
+                {
+                    "text": "beeinflussend"
+                },
+                {
+                    "text": "den Markt beeinflussend"
+                },
+                {
+                    "text": "den Maßstab setzend"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "Einflußvermögen der einzelnen Regierungen auf diese Märkte weit überlegen ist",
+            "end": 73,
+            "explanation": {
+                "icon": "😒",
+                "text": "Fühlt sich weder kooperativ noch unterstützend an",
+                "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
+            },
+            "gravity": 2,
+            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "start": 64,
+            "subcategory": "agentic",
+            "text": "überlegen"
+        }
+    ]
+}
