@@ -5,21 +5,33 @@
         {
             "alternatives": [
                 {
-                    "text": "think ahead"
+                    "text": "agrees"
                 },
                 {
-                    "text": "make a special effort"
+                    "text": "chooses"
                 },
                 {
-                    "text": "make customers happy"
+                    "text": "elects"
                 },
                 {
-                    "text": "find creative solutions to customer requests"
+                    "text": "opts"
+                },
+                {
+                    "text": "draws a conclusion"
+                },
+                {
+                    "text": "settles an issue"
+                },
+                {
+                    "text": "makes a choice"
+                },
+                {
+                    "text": "reaches mutual consent"
                 }
             ],
             "category": "unconscious_bias",
-            "context": "If a manager picks up this topic, he has to go the extra-mile to solve it.",
-            "end": 61,
+            "context": "What if she decides to step down?",
+            "end": 19,
             "explanation": {
                 "icon": "😒",
                 "text": "Doesn’t feel cooperative nor supportive",
@@ -27,9 +39,9 @@
             },
             "gravity": 2,
             "label": "Biased language: Agentic",
-            "start": 44,
+            "start": 12,
             "subcategory": "agentic",
-            "text": "go the extra-mile"
+            "text": "decides"
         }
     ]
 }

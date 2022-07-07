@@ -576,12 +576,16 @@ class ResultOut(BaseModel):
         )
 
     @staticmethod
+    def countWords(text):
+        return sum(map(str(text).count, [" ", "-"]))
+
+    @staticmethod
     def isInspirationAlternative(text, alternative, subcategory=None):
         return (
             alternative != None
             and subcategory != "abbreviation"
             and (
-                alternative.count(" ") >= str(text).count(" ") + 3
+                ResultOut.countWords(alternative) >= ResultOut.countWords(text) + 3
                 or alternative.count("...") > 0
             )
         )
@@ -656,7 +660,7 @@ class ResultOut(BaseModel):
             ending = str(variants[1])
 
         if german_gender_ending == "In":
-            if alternative.count("~") > 1 or variants[0][0].isupper():
+            if alternative.count("~") > 1 or (variants[0] and variants[0][0].isupper()):
                 ending = ending[0:1].capitalize() + ending[1:]
                 separator = ""
             else:

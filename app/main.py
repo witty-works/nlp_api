@@ -67,7 +67,7 @@ from collections import defaultdict
 
 from app.sentry import set_up_sentry_sdk
 
-version = "1.31.4"
+version = "1.31.5"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -1191,11 +1191,28 @@ def ing_ify_alternatives(token, alternatives):
 """Function to change adjectives to -en form in alternatives"""
 
 
-def adjective_or_verb(token):
-    return token.pos_ == "ADJ" or token.pos_ == "ADV" or token.pos_ == "VERB"
+def get_token_type(token, token_type=None, single_word=None):
+    if token.pos_ == "ADJ" or token.pos_ == "ADV":
+        return "adjective"
+
+    if token.pos_ == "VERB":
+        return "verb"
+
+    if token.pos_ == "PROPN" and single_word:
+        return token_type
+
+    return None
 
 
-def alternative_declension(text, ending, lang, alternative):
+def add_declension(lang, text, ending):
+    if lang.lang == "en":
+        if text[-1] in ["s", "z", "h", "x"]:
+            text += "e"
+
+    return text + ending
+
+
+def alternative_declension(text, token_type, ending, lang, alternative):
     if ResultOut.isInspirationAlternative(text, alternative):
         return alternative
 
@@ -1208,10 +1225,16 @@ def alternative_declension(text, ending, lang, alternative):
             return alternative
 
         text = token.text
-        if previous == False and adjective_or_verb(token):
-            text += ending
-            previous = True
-        else:
+        if previous == False:
+            alternative_token_type = get_token_type(token, token_type, len(tokens) == 1)
+
+            if (lang.lang == "en" and "verb" == alternative_token_type) or (
+                lang.lang == "de" and alternative_token_type
+            ):
+                previous = True
+                text = add_declension(lang, text, ending)
+
+        elif is_conjunction(text):
             previous = False
 
         new_alternative = text + " " + new_alternative
@@ -1220,7 +1243,12 @@ def alternative_declension(text, ending, lang, alternative):
 
 
 def alternatives_declension(token, lang, alternatives):
-    if adjective_or_verb(token):
+    endings = False
+    token_type = get_token_type(token)
+
+    if lang.lang == "en" and token_type == "verb":
+        endings = ["s"]
+    elif lang.lang == "de" and token_type:
         endings = [
             "erer",
             "eren",
@@ -1242,11 +1270,13 @@ def alternatives_declension(token, lang, alternatives):
             "es",
             "e",
         ]
+
+    if endings:
         for ending in endings:
             if not token.lemma_.endswith(ending) and token.text.endswith(ending):
                 return [
                     alternative_declension(
-                        token.text, ending, lang, alternative
+                        token.text, token_type, ending, lang, alternative
                     ).strip()
                     for alternative in alternatives
                 ]
@@ -1437,18 +1467,11 @@ def ub_words_phrase_matcher_de(
     return list_tokens
 
 
-def gendered_denom_analysis_de(
-    version: float,
-    config: Config,
+def ignore_binary_inclusive_gendered_denom_analysis_de(
     lang,
-    full_text,
     tokens,
-    gender_words_alternatives,
     false_positives,
 ):
-    category = "gendered"
-
-    list_tokens = []
     list_false_positives = []
     matcher = PhraseMatcher(model[lang.lang].vocab)
 
@@ -1473,6 +1496,48 @@ def gendered_denom_analysis_de(
         docs = list(model[lang.lang].pipe(rest_text))
         tokens = Doc.from_docs(docs)
 
+    return tokens
+
+
+def match_binary_inclusive_gendered_denom_analysis_de(
+    config: Config, false_positives, full_text, token, category, subcategory
+):
+    text = token.text
+    start = token.idx
+    if not ResultOut.genderedRolesFormatBinary(config.gendered_roles_format):
+        for false_positive in false_positives:
+            if not false_positive.endswith(text):
+                continue
+
+            new_start = start - len(false_positive.removesuffix(text))
+            if false_positive == full_text[new_start : new_start + len(false_positive)]:
+                start = new_start
+                text = false_positive
+
+                subcategory = "gendered_denominations_ending"
+                category = categories[subcategory]["category"]
+                break
+
+    return text, start, category, subcategory
+
+
+def gendered_denom_analysis_de(
+    version: float,
+    config: Config,
+    lang,
+    full_text,
+    tokens,
+    gender_words_alternatives,
+    false_positives,
+):
+    category = "gendered"
+
+    if ResultOut.genderedRolesFormatBinary(config.gendered_roles_format):
+        tokens = ignore_binary_inclusive_gendered_denom_analysis_de(
+            lang, tokens, false_positives
+        )
+
+    list_tokens = []
     for i in range(len(tokens)):
         for (
             word,
@@ -1491,16 +1556,30 @@ def gendered_denom_analysis_de(
                     )
 
                 if alternative != None:
+                    (
+                        text,
+                        start,
+                        category,
+                        subcategory,
+                    ) = match_binary_inclusive_gendered_denom_analysis_de(
+                        config,
+                        false_positives,
+                        full_text,
+                        tokens[i],
+                        category,
+                        subcategory,
+                    )
+
                     list_tokens.append(
                         ResultOut.factory(
                             version,
                             config,
                             lang,
-                            tokens[i].text,
+                            text,
                             full_text,
                             category,
                             subcategory,
-                            tokens[i].idx,
+                            start,
                             None,
                             alternative,
                         )
@@ -1527,8 +1606,11 @@ def gendered_denom_analysis_de(
     return list_tokens
 
 
-# Unified function for Emty words false positives and rules
-def is_conjunction(full_text, start):
+# Unified function for Empty words false positives and rules
+def is_conjunction(full_text, start=0):
+    if full_text in ["und", "oder", "and", "or"]:
+        return True
+
     preceeding_text = full_text[max(0, start - 5) : start]
     return (
         re.search(r"^ *$", preceeding_text) != None
@@ -1879,6 +1961,7 @@ def rules_based_words_phrase_matcher_en(
         for word, alternative, subcategory in words_alternatives:
             if get_lower_cased(token) == word:
                 alternative = ing_ify_alternatives(token, alternative)
+                alternative = alternatives_declension(token, lang, alternative)
 
                 list_tokens.append(
                     ResultOut.factory(
