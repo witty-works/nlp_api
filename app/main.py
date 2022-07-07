@@ -67,7 +67,7 @@ from collections import defaultdict
 
 from app.sentry import set_up_sentry_sdk
 
-version = "1.31.4"
+version = "1.31.5"
 
 settings = get_settings()
 logging = set_up_logger(settings)
