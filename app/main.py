@@ -705,9 +705,13 @@ async def languagetool_rules(version: float, config: Config, lang: Language, tex
 
         async with session.post(languagetool_url + "/check", data=payload) as r:
             try:
-                assert r.status == 200
-                result = await r.json()
+                if r.status != 200:  # pragma: no cover
+                    result = await r.text()
+                    logging.error(result)
 
+                    raise Exception(result)
+
+                result = await r.json()
                 list_results = languagetool_matches(
                     version, config, lang, "orthography", text, result
                 )
@@ -737,8 +741,9 @@ async def language_rules(
     if is_sub_category_enabled(config, "orthography"):
         try:
             list_results += await languagetool_rules(version, config, lang, text)
-        except Exception:
-            pass
+        except Exception as err:
+            if not settings.is_prod:  # pragma: no cover
+                raise err
 
     # functions for German rules
     if lang.lang == "de":
