@@ -790,9 +790,17 @@ async def language_rules(
             alternatives,
         )
 
+    false_positives = []
     if "false_positives" in organization_rules:
+        false_positives = organization_rules["false_positives"]
+
+    if "term_replacements" in organization_rules:
+        for rule in organization_rules["term_replacements"]:
+            false_positives.append(rule["alternatives"][0])
+
+    if false_positives != []:
         for result in list_results:
-            if result.text in organization_rules["false_positives"]:
+            if result.text in false_positives:
                 list_results.remove(result)
 
     return list_results
