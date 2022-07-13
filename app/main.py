@@ -477,8 +477,9 @@ def merge_rules(user_request_in: RequestIn, organization_rules: list):
         data = organization_rules["config"][config]
         if data is not None and data["status"] == "force":
             if config in categories:
-                if data["value"] and config in disabled_categories:
-                    disabled_categories.remove(config)
+                if data["value"]:
+                    if config in disabled_categories:
+                        disabled_categories.remove(config)
                 elif config not in disabled_categories:
                     disabled_categories.append(config)
 
