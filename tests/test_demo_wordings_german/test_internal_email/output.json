@@ -25,63 +25,6 @@
             "alternatives": [
                 {
                     "text": "Grüße"
-                },
-                {
-                    "text": "Größe"
-                },
-                {
-                    "text": "Große"
-                },
-                {
-                    "text": "Grütze"
-                },
-                {
-                    "text": "Grüßen"
-                },
-                {
-                    "text": "Gruße"
-                },
-                {
-                    "text": "Grüßt"
-                },
-                {
-                    "text": "Krasse"
-                },
-                {
-                    "text": "Güsse"
-                },
-                {
-                    "text": "Grüßte"
-                },
-                {
-                    "text": "Grüß"
-                },
-                {
-                    "text": "Grenze"
-                },
-                {
-                    "text": "Küsse"
-                },
-                {
-                    "text": "Müsse"
-                },
-                {
-                    "text": "Krosse"
-                },
-                {
-                    "text": "Brüssel"
-                },
-                {
-                    "text": "Flüsse"
-                },
-                {
-                    "text": "Großen"
-                },
-                {
-                    "text": "Gründe"
-                },
-                {
-                    "text": "Größte"
                 }
             ],
             "category": "orthography",
@@ -230,21 +173,6 @@
             "start": 109,
             "subcategory": "agentic",
             "text": "herausgefordert"
-        },
-        {
-            "alternatives": [],
-            "category": "inclusive",
-            "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
-            "end": 104,
-            "explanation": {
-                "icon": "✅",
-                "text": "Betont kooperative Eigenschaften",
-                "url": "https://www.witty.works/de/kategorien/inklusiv#kommunal"
-            },
-            "label": "Inklusiv: Kommunal",
-            "start": 98,
-            "subcategory": "communal",
-            "text": "lieben"
         },
         {
             "alternatives": [],
