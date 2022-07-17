@@ -3,7 +3,11 @@
     "limit_reached": false,
     "results": [
         {
-            "alternatives": [],
+            "alternatives": [
+                {
+                    "text": "#BeanAllyBe2022"
+                }
+            ],
             "category": "style",
             "context": "How to #beanallybe<NUMBER>? Better using #beAnAlly",
             "end": 22,
@@ -17,6 +21,26 @@
             "start": 7,
             "subcategory": "style",
             "text": "#beanallybe2022"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "#BeanAlly"
+                }
+            ],
+            "category": "style",
+            "context": "How to #beanallybe<NUMBER>? Better using #beAnAlly",
+            "end": 46,
+            "explanation": {
+                "icon": "😟",
+                "text": "When you capitalize words, everyone knows right away what you mean. #ForExample",
+                "url": "https://www.witty.works/en/categories/style#style"
+            },
+            "gravity": 2.0,
+            "label": "Style",
+            "start": 37,
+            "subcategory": "style",
+            "text": "#beAnAlly"
         }
     ]
 }
