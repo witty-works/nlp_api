@@ -383,7 +383,7 @@ def test_term_replacement(fp_case_dir, snapshot, set_redis):
     "fp_case_dir",
     get_dirs("tests/test_disable_categories"),
 )
-def test_term_replacement(fp_case_dir, snapshot, set_redis):
+def test_disable_categories(fp_case_dir, snapshot, set_redis):
     input_json = fp_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
     client = TestClient(app)
