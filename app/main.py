@@ -477,8 +477,9 @@ def merge_rules(user_request_in: RequestIn, organization_rules: list):
         data = organization_rules["config"][config]
         if data is not None and data["status"] == "force":
             if config in categories:
-                if data["value"] and config in disabled_categories:
-                    disabled_categories.remove(config)
+                if data["value"]:
+                    if config in disabled_categories:
+                        disabled_categories.remove(config)
                 elif config not in disabled_categories:
                     disabled_categories.append(config)
 
@@ -790,9 +791,17 @@ async def language_rules(
             alternatives,
         )
 
+    false_positives = []
     if "false_positives" in organization_rules:
+        false_positives = organization_rules["false_positives"]
+
+    if "term_replacements" in organization_rules:
+        for rule in organization_rules["term_replacements"]:
+            false_positives.append(rule["alternatives"][0])
+
+    if false_positives != []:
         for result in list_results:
-            if result.text in organization_rules["false_positives"]:
+            if result.text in false_positives:
                 list_results.remove(result)
 
     return list_results
