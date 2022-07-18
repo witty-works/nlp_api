@@ -20,29 +20,6 @@
             "start": 2,
             "subcategory": "casing",
             "text": "helo"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "dedicated"
-                },
-                {
-                    "text": "committed"
-                }
-            ],
-            "category": "style",
-            "context": "helo ninja",
-            "end": 12,
-            "explanation": {
-                "icon": "😮‍💨",
-                "text": "Exaggeration: Perceived as pressure or arrogance",
-                "url": "https://www.witty.works/en/categories/style#exaggeration"
-            },
-            "gravity": 2,
-            "label": "Style: Exaggeration",
-            "start": 7,
-            "subcategory": "exaggerating",
-            "text": "ninja"
         }
     ]
 }

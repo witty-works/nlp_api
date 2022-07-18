@@ -422,24 +422,6 @@ async def get_user_rules_from_redis(user: str):
     return None
 
 
-def is_number_list_empty(number, token, full_text):
-    if not number:
-        start = max(token.idx - 100, 0)
-        end = min(token.idx + 100, len(full_text) - 1)
-        context = full_text[start:end]
-
-        logging.error(
-            "List of token morph number: %s for token/word: %s\n%s",
-            number,
-            token.text,
-            context,
-        )
-
-        return True
-
-    return False
-
-
 def configure_sentry(request: Request, user_request_in: RequestIn):
     if sentry_sdk:  # pragma: no cover
         sentry_sdk.transaction = request.scope["path"][1:]
@@ -1402,7 +1384,7 @@ def agentic_language_analysis_de(
                 token, word_type, True
             ):
                 token_morph_number = token.morph.get("Number")
-                if is_number_list_empty(token_morph_number, token, full_text):
+                if not token_morph_number:
                     continue
 
                 alternative = plural_or_singular_alternatives_de(
@@ -1571,7 +1553,7 @@ def gendered_denom_analysis_de(
                 tokens[i], word_type, True
             ):
                 token_morph_number = tokens[i].morph.get("Number")
-                if is_number_list_empty(token_morph_number, tokens[i], full_text):
+                if not token_morph_number:
                     alternative = alternative_all
                 else:
                     alternative = plural_or_singular_alternatives_de(
@@ -1742,7 +1724,7 @@ def word_noun_de(
                 token, word_type, True
             ):
                 token_morph_number = token.morph.get("Number")
-                if is_number_list_empty(token_morph_number, token, full_text):
+                if not token_morph_number:
                     continue
 
                 alternative = plural_or_singular_alternatives_de(
@@ -2170,7 +2152,7 @@ def gendered_en(
                 token, word_type, True
             ):
                 token_morph_number = token.morph.get("Number")
-                if is_number_list_empty(token_morph_number, token, full_text):
+                if not token_morph_number:
                     continue
 
                 alternative, subcategory = plural_or_singular_en(

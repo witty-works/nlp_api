@@ -27,8 +27,8 @@ COPY --chown=wittyuser:wittyuser requirements.txt requirements.txt
 ENV PATH="/home/wittyuser/.local/bin:${PATH}"
 RUN pip install -r requirements.txt --user
 RUN mkdir files \
-  && spacy download en_core_web_sm \
-  && spacy download de_core_news_sm
+  && spacy download en_core_web_md \
+  && spacy download de_core_news_md
 COPY --chown=wittyuser:wittyuser . .
 RUN pybabel compile -d locales -l de_DE -f \
   && pybabel compile -d locales -l en_US -f
