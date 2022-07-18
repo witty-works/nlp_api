@@ -12,7 +12,7 @@
                 }
             ],
             "category": "unconscious_bias",
-            "context": "Name is Jones, an ambitious person. Phone number is <NUMBER>-<NUMBER>-<NUMBER> <URL> <EMAIL>",
+            "context": "Name is Jones, an ambitious person. Phone number is <NUMBER>-<NUMBER>-<NUMBER> <URL> <EMAIL> my username is jones<NUMBER>",
             "end": 27,
             "explanation": {
                 "context": "don't use for people",

@@ -56,7 +56,7 @@ class PrivacyFilter:
         )
 
     def remove_numbers(self, text):
-        return re.sub(r"\w*\d+\w*", "<NUMBER>", text).strip()
+        return re.sub(r"\d+", "<NUMBER>", text)
 
     def remove_email(self, text):
         return re.sub(
@@ -74,7 +74,7 @@ class PrivacyFilter:
         text = self.remove_email(text)
         text = self.remove_url(text)
         text = self.remove_numbers(text)
-        return text
+        return text.strip()
 
     def clean(self, text):
         return self.filter_regular_expressions(text)
