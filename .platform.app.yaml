@@ -24,8 +24,8 @@ hooks:
     set -e
     pipenv install --system --deploy
     pipenv run /opt/python/3.9/bin/python3.9 -m pip install blackfire==1.11.0
-    pipenv run /opt/python/3.9/bin/python3.9 -m spacy download en_core_web_sm --no-cache-dir
-    pipenv run /opt/python/3.9/bin/python3.9 -m spacy download de_core_news_sm --no-cache-dir
+    pipenv run /opt/python/3.9/bin/python3.9 -m spacy download en_core_web_lg --no-cache-dir
+    pipenv run /opt/python/3.9/bin/python3.9 -m spacy download de_core_news_lg --no-cache-dir
     pipenv run pybabel compile -d locales -l de_DE -f
     pipenv run pybabel compile -d locales -l de_AT -f
     pipenv run pybabel compile -d locales -l de_CH -f

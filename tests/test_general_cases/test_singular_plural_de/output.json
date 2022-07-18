@@ -1,0 +1,79 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "Kolleg:innen"
+                },
+                {
+                    "text": "Kolleginnen und Kollegen"
+                },
+                {
+                    "text": "Kollegschaft"
+                },
+                {
+                    "text": "Team"
+                }
+            ],
+            "category": "gendered",
+            "context": "Sehr geehrte Kollegen. Wir sind ein Team.",
+            "end": 21,
+            "explanation": {
+                "icon": "😟",
+                "text": "“Mitmeinen” mit männlichen Generikum funktioniert nicht",
+                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#titel"
+            },
+            "gravity": 2,
+            "label": "Geschlechtsspezifisch: Titel",
+            "start": 13,
+            "subcategory": "titles",
+            "text": "Kollegen"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Guten Tag"
+                },
+                {
+                    "text": "Hallo"
+                },
+                {
+                    "text": "Liebe:r"
+                },
+                {
+                    "text": "Liebe/r"
+                },
+                {
+                    "text": "Guten Tag, liebe:r"
+                },
+                {
+                    "text": "Guten Tag, liebe/r"
+                },
+                {
+                    "text": "Liebe"
+                },
+                {
+                    "text": "Liebe alle"
+                },
+                {
+                    "text": "Hallo zusammen"
+                }
+            ],
+            "category": "style",
+            "context": "Sehr geehrte Kollegen. Wir sind ein Team.",
+            "end": 12,
+            "explanation": {
+                "icon": "🧊",
+                "text": "Formale Formulierung kreiert emotionale Distanz",
+                "url": "https://www.witty.works/de/kategorien/stil#formalitaet"
+            },
+            "gravity": 3,
+            "label": "Stil: Formalität",
+            "start": 0,
+            "subcategory": "formality",
+            "text": "Sehr geehrte"
+        }
+    ]
+}

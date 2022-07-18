@@ -51,16 +51,16 @@ You should see application running under http://localhost:8000/docs
 
 ```
 pipenv install --dev
-pipenv run python3.9 -m spacy download en_core_web_sm --no-cache-dir
-pipenv run python3.9 -m spacy download de_core_news_sm --no-cache-dir
+pipenv run python3.9 -m spacy download en_core_web_lg --no-cache-dir
+pipenv run python3.9 -m spacy download de_core_news_lg --no-cache-dir
 wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 ```
 
 Note to uninstall spacy models use
 
 ```
-pipenv uninstall en_core_web_sm
-pipenv uninstall de_core_news_sm
+pipenv uninstall en_core_web_lg
+pipenv uninstall de_core_news_lg
 ```
 
 Compile PO files (done automatically during deployment and above pot/po file generation).
@@ -75,8 +75,8 @@ Apply https://github.com/orsinium-labs/eng/pull/1/files before running the below
 ```
 python -m venv /path/to/new/virtual/environment
 source /path/to/new/virtual/environment/bin/active
-python3.9 -m spacy download en_core_web_sm --no-cache-dir
-python3.9 -m spacy download de_core_news_sm --no-cache-dir
+python3.9 -m spacy download en_core_web_lg --no-cache-dir
+python3.9 -m spacy download de_core_news_lg --no-cache-dir
 ```
 
 Compile the translations in the spirit of `./compile-translations.sh`
