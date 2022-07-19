@@ -5,27 +5,33 @@
         {
             "alternatives": [
                 {
-                    "text": "die Arbeitgeberin"
+                    "text": "einer Mitarbeit"
                 },
                 {
-                    "text": "die*der Arbeitgeber*in"
+                    "text": "einer*eines Mitarbeiter*in"
                 },
                 {
-                    "text": "die/der Arbeitgeberin/Arbeitgeber"
+                    "text": "einer/eines Mitarbeiterin/Mitarbeiter"
                 },
                 {
-                    "text": "die Arbeitgebende"
+                    "text": "eines Personal"
                 },
                 {
-                    "text": "die arbeitgebende Firma"
+                    "text": "einer Mitarbeiterschaft"
                 },
                 {
-                    "text": "das beschäftigendes Unternehmen"
+                    "text": "einer Belegschaft"
+                },
+                {
+                    "text": "einer Kollegschaft"
+                },
+                {
+                    "text": "einer Mitarbeitende"
                 }
             ],
             "category": "gendered",
-            "context": "Ist der Arbeitgeber zufriedenstellend?",
-            "end": 19,
+            "context": "Dies ist das Ergebnis eines Mitarbeiters",
+            "end": 40,
             "explanation": {
                 "icon": "😟",
                 "text": "“Mitmeinen” mit männlichen Generikum funktioniert nicht",
@@ -33,9 +39,9 @@
             },
             "gravity": 2,
             "label": "Geschlechtsspezifisch: Titel",
-            "start": 4,
+            "start": 22,
             "subcategory": "titles",
-            "text": "der Arbeitgeber"
+            "text": "eines Mitarbeiters"
         }
     ]
 }

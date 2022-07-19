@@ -5,13 +5,13 @@
         {
             "alternatives": [
                 {
-                    "text": "Management"
+                    "text": "das Management"
                 },
                 {
-                    "text": "Manager*in"
+                    "text": "die*der Manager*in"
                 },
                 {
-                    "text": "Managerin/Manager"
+                    "text": "die/der Managerin/Manager"
                 }
             ],
             "category": "gendered",
@@ -24,32 +24,9 @@
             },
             "gravity": 2,
             "label": "Geschlechtsspezifisch: Spezielle Funktionen",
-            "start": 17,
-            "subcategory": "function",
-            "text": "Manager"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "die*der"
-                },
-                {
-                    "text": "die/der"
-                }
-            ],
-            "category": "gendered",
-            "context": "Ich bin hier der Manager und dein Boss!",
-            "end": 16,
-            "explanation": {
-                "icon": "💡",
-                "text": "Bild eines Mannes wird unbewusst ausgelöst",
-                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#spezielle_funktionen"
-            },
-            "gravity": 2,
-            "label": "Geschlechtsspezifisch: Spezielle Funktionen",
             "start": 13,
             "subcategory": "function",
-            "text": "der"
+            "text": "der Manager"
         },
         {
             "alternatives": [
