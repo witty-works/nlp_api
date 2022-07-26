@@ -113,7 +113,7 @@ def read_csv(in_file):
             "explanation": "Short explanation",
         }
 
-        gravities = {"red": 1, "orange": 2, "yellow": 3, "": 3, "none": None}
+        gravities = {"red": 1.0, "orange": 2.0, "yellow": 3.0, "": 3.0, "none": None}
 
         categories = {}
 
