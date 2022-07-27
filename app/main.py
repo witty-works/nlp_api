@@ -732,11 +732,15 @@ async def languagetool_rules(version: float, config: Config, lang: Language, tex
     return list_results
 
 
+def get_tokens(lang: Language, text: str):
+    # apply SpaCy pre-built model
+    return model[lang.lang](text.rstrip().replace("\n", " "))
+
+
 async def language_rules(
     version: float, config: Config, organization_rules: dict, lang: Language, text: str
 ):
-    # apply SpaCy pre-built model
-    tokens = model[lang.lang](text.rstrip().replace("\n", " "))
+    tokens = get_tokens(lang, text)
 
     list_results = []
     if is_sub_category_enabled(config, "orthography"):
@@ -1236,7 +1240,7 @@ def alternative_declension(text, token_type, ending, lang, alternative):
     if ResultOut.isInspirationAlternative(text, alternative):
         return alternative
 
-    tokens = model[lang.lang](alternative.rstrip().replace("\n", " "))
+    tokens = get_tokens(lang, alternative)
 
     if lang.lang == "en":
         alternative_token_types = ["v"]
