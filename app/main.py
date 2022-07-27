@@ -893,9 +893,6 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             false_positives.gender,
         )
 
-    if is_sub_category_enabled(config, "misgendering_institutions"):
-        list_full += misgendering_institutions_de(version, config, lang, text, tokens)
-
     if is_sub_category_enabled(
         config, "gendered_denominations_ending"
     ) and ResultOut.genderedRolesFormatInclusive(config.gendered_roles_format):
@@ -1609,6 +1606,9 @@ def gendered_denom_analysis_de(
                         )
 
                         if masculine != None:
+                            # also detect if its a person or an institution
+                            # in the later case do not offer the Gender-star options
+                            # and use subcategory "misgendering_institutions"
                             for alternative in alternatives:
                                 if "~" in alternative:
                                     article_alternative = feminine + "~" + masculine
@@ -1627,7 +1627,9 @@ def gendered_denom_analysis_de(
                                         article_alternative = masculine
                                     elif gender["definite_article"] == "das":
                                         article_alternative = neuter
-                                    elif gender["definite_article"] == "die" or alternative.endswith("in"):
+                                    elif gender[
+                                        "definite_article"
+                                    ] == "die" or alternative.endswith("in"):
                                         article_alternative = feminine
 
                                 alternatives_with_article.append(
@@ -1958,51 +1960,6 @@ def rules_based(
                 )
 
     return list_tokens
-
-
-# Deutshe Bahn realated rule. Function to catch masculine words in sentences like
-# Deutshe Bahn als.. Deutshe Bahn ist..
-
-
-def misgendering_institutions_de(
-    version: float, config: Config, lang, full_text, tokens
-):
-    subcategory = "misgendering_institutions"
-    category = categories[subcategory]["category"]
-    db_match_list = []
-    matcher_db = Matcher(model[lang.lang].vocab)
-    # Add match ID "DB" with no callback and one pattern
-    pattern_db = [
-        {"TEXT": "Deutsche"},
-        {"TEXT": "Bahn"},
-        {"LEMMA": "sein", "OP": "*"},
-        {"POS": "ADV", "OP": "*"},
-        {"TEXT": "als", "OP": "*"},
-        {"TAG": "ART", "OP": "*"},
-        {"POS": "ADJ", "OP": "*"},
-        {"POS": "NOUN", "MORPH": {"IS_SUPERSET": ["Gender=Masc"]}},
-    ]
-    # use greedy = "LONGEST" to find all matches in the text related to pattern
-    matcher_db.add("DB", [pattern_db], greedy="LONGEST")
-    matches_db = matcher_db(tokens)
-
-    for match_id, start, end in matches_db:
-        span = tokens[start:end]  # The matched span
-        db_match_list.append(
-            ResultOut.factory(
-                version,
-                config,
-                lang,
-                span.text,
-                full_text,
-                category,
-                subcategory,
-                span.start_char,
-                span.end_char,
-                [span.text + "in"],
-            )
-        )
-    return db_match_list
 
 
 # function English
