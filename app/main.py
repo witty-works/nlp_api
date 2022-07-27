@@ -292,6 +292,39 @@ def form():
     return root()
 
 
+@app.get(
+    "/debug/spacy",
+    include_in_schema=not settings.is_prod,
+)
+async def debug_spacy(
+    text: str,
+    username: str = Depends(get_current_username),
+):
+    locale = lang_detection.get_locale(
+        text,
+        "auto",
+        ["en", "de"],
+    )
+
+    lang = Language(locale)
+
+    results = []
+    tokens = get_tokens(lang, text)
+    for token in tokens:
+        results.append(
+            {
+                "text": token.text,
+                "start": token.idx,
+                "tag": token.tag_,
+                "pos": token.pos_,
+                "word_type": get_token_type(token),
+                "morph": token.morph.get("Number"),
+            }
+        )
+
+    return results
+
+
 @app.get("/categories")
 def get_categories(lang: LangType = "de"):
     return categories_with_labels[lang]

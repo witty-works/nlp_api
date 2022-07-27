@@ -50,7 +50,7 @@ class LangDetection:
 
         return None
 
-    def get_locale(self, text, lang, language_preferences, variant_preferences):
+    def get_locale(self, text, lang, language_preferences = [], variant_preferences = []):
         if lang == "auto":
             langs = self.predict_lang(text)
 
