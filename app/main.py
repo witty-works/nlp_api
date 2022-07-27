@@ -984,12 +984,13 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
         )
 
     if is_sub_category_enabled(config, "communal"):
-        list_full += rules_based(
+        list_full += rules_based_words_phrase_matcher(
             version,
             config,
             lang,
             text,
             tokens,
+            [],
             rules["de-DE"]["df_communal_words"],
             "inclusive",
             "communal",
@@ -1891,61 +1892,24 @@ def rules_based_words_phrase_matcher(
                     )
                 )
 
-    matches = get_matches(tokens, terms)
-    for match_id, start, end in matches:
-        span = tokens[start:end]
-        list_tokens.append(
-            ResultOut.factory(
-                version,
-                config,
-                lang,
-                span.text,
-                full_text,
-                category,
-                subcategory,
-                span.start_char,
-                span.end_char,
-                [],
-            )
-        )
-
-    return list_tokens
-
-
-# Unified function for rules
-
-
-def rules_based(
-    version: float,
-    config: Config,
-    lang,
-    full_text,
-    tokens,
-    df,
-    category,
-    subcategory,
-):
-    list_tokens = []
-
-    for token in tokens:
-        for word, word_type in df:
-            if get_lemma_non_noun_lower_cased(token) == word and check_token_type(
-                token, word_type, True
-            ):
-                list_tokens.append(
-                    ResultOut.factory(
-                        version,
-                        config,
-                        lang,
-                        token.text,
-                        full_text,
-                        category,
-                        subcategory,
-                        token.idx,
-                        None,
-                        [],
-                    )
+    if len(terms):
+        matches = get_matches(tokens, terms)
+        for match_id, start, end in matches:
+            span = tokens[start:end]
+            list_tokens.append(
+                ResultOut.factory(
+                    version,
+                    config,
+                    lang,
+                    span.text,
+                    full_text,
+                    category,
+                    subcategory,
+                    span.start_char,
+                    span.end_char,
+                    [],
                 )
+            )
 
     return list_tokens
 
