@@ -63,8 +63,7 @@ pipenv uninstall en_core_web_sm
 pipenv uninstall de_core_news_sm
 ```
 
-Compile PO files (done automatically during deployment and above pot/po file generation).
-Apply https://github.com/orsinium-labs/eng/pull/1/files before running the below script:
+Compile PO files (done automatically during deployment:
 
 ```
 ./compile-translations.sh
@@ -147,7 +146,7 @@ For an alternate view of the docs navigate to http://localhost:8000/redoc
 
 Set an env variable `API_DOCS_AUTH_ENABLED` to `"true"` and for the username/password called `API_DOCS_USERNAME` and `API_DOCS_PASSWORD` for basic auth for the API docs.
 
-Set am env variable `LANGUAGETOOL_API` to the URL endpoint of your LanguageTool server.
+Set an env variable `LANGUAGETOOL_API` to the URL endpoint of your LanguageTool server.
 Default is `https://api.languagetool.org/v2`.
 
 If the build fails due to "No space left on device" while installing the dependencies run:
@@ -163,14 +162,16 @@ https://docs.platform.sh/development/troubleshoot.html#clear-the-build-cache
 
 ```
 curl -X 'POST' \
-  'http://127.0.0.1:8000/check' \
+  'http://127.0.0.1:8000/v1.1/check' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
   "text": "Wer sind unsere Kunden?"
 }'
 ```
+
 ## Cloud deployment
+
 Test deployment(proof of concept) was done on Azure Kubernetes service with Docker images attached to this repository.
 More about that: https://www.notion.so/witty-works/Cloud-Deployment-Approaches-a5320f3e1b854e1e817909d365118ee7#cd1d5b8f43d449088c59de1b816119fd
 
@@ -231,6 +232,7 @@ for English:
 pipenv run python -m bin.analyze_rules -l en -p <path_to_ignore_file>
 ```
 2. Copy `ignore.txt` to LanguageTool repository: https://github.com/witty-works/languagetool
+
 ## Update the false positive list 
 ```
 1. Run server locally (or restart to re-read the training data), for example with pipenv:
