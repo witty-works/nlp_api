@@ -134,8 +134,10 @@ gender_words_alternatives_no_noun = list(
 # articles
 articles = list(
     zip(
-        rules["de-DE"]["df_articles"]["Lemma"],
-        rules["de-DE"]["df_articles"]["Alternative"],
+        rules["de-DE"]["df_articles"]["Masculine"],
+        rules["de-DE"]["df_articles"]["Feminine"],
+        rules["de-DE"]["df_articles"]["Neuter"],
+        rules["de-DE"]["df_articles"]["Plural"],
     )
 )
 # df unconscious bias nouns with plural

@@ -4,6 +4,7 @@ import json
 import secrets
 from aiohttp import ClientSession, TCPConnector, ClientError
 import copy
+from app.gender import get_gender_of_word
 
 from fastapi import (
     FastAPI,
@@ -1541,6 +1542,14 @@ def match_binary_inclusive_gendered_denom_analysis_de(
     return text, start, category, subcategory
 
 
+def find_article(token):
+    for masculine, feminine, neuter, plural in articles:
+        if token.text.lower() == masculine:
+            return masculine, feminine, neuter, plural
+
+    return None, None, None, None
+
+
 def gendered_denom_analysis_de(
     version: float,
     config: Config,
@@ -1562,9 +1571,9 @@ def gendered_denom_analysis_de(
         for (
             word,
             word_type,
-            alternative_sing,
-            alternative_plur,
-            alternative_all,
+            alternatives_sing,
+            alternatives_plur,
+            alternatives_all,
             subcategory,
         ) in gender_words_alternatives:
             if tokens[i].lemma_ == word and check_token_type(
@@ -1572,13 +1581,13 @@ def gendered_denom_analysis_de(
             ):
                 token_morph_number = tokens[i].morph.get("Number")
                 if is_number_list_empty(token_morph_number, tokens[i], full_text):
-                    alternative = alternative_all
+                    alternatives = alternatives_all
                 else:
-                    alternative = plural_or_singular_alternatives_de(
-                        token_morph_number, alternative_sing, alternative_plur
+                    alternatives = plural_or_singular_alternatives_de(
+                        token_morph_number, alternatives_sing, alternatives_plur
                     )
 
-                if alternative != None:
+                if alternatives != None:
                     (
                         text,
                         start,
@@ -1593,6 +1602,42 @@ def gendered_denom_analysis_de(
                         subcategory,
                     )
 
+                    if i > 0 and token_morph_number[0] == "Sing":
+                        alternatives_with_article = []
+                        masculine, feminine, neuter, plural = find_article(
+                            tokens[i - 1]
+                        )
+
+                        if masculine != None:
+                            for alternative in alternatives:
+                                if "~" in alternative:
+                                    article_alternative = feminine + "~" + masculine
+                                else:
+                                    if "---" in alternative:
+                                        (
+                                            alternative,
+                                            alternative_context,
+                                        ) = alternative.split("---")
+                                        alternative = alternative.strip()
+
+                                    words = alternative.split()
+                                    gender = get_gender_of_word(words[-1])
+
+                                    if gender["definite_article"] == "der":
+                                        article_alternative = masculine
+                                    elif gender["definite_article"] == "das":
+                                        article_alternative = neuter
+                                    elif gender["definite_article"] == "die" or alternative.endswith("in"):
+                                        article_alternative = feminine
+
+                                alternatives_with_article.append(
+                                    article_alternative + " " + alternative
+                                )
+
+                            alternatives = alternatives_with_article
+                            start = tokens[i - 1].idx
+                            text = tokens[i - 1].text + " " + text
+
                     list_tokens.append(
                         ResultOut.factory(
                             version,
@@ -1604,27 +1649,9 @@ def gendered_denom_analysis_de(
                             subcategory,
                             start,
                             None,
-                            alternative,
+                            alternatives,
                         )
                     )
-
-                if token_morph_number[0] == "Sing":
-                    for article, article_alternative in articles:
-                        if tokens[i - 1].text == article:
-                            list_tokens.append(
-                                ResultOut.factory(
-                                    version,
-                                    config,
-                                    lang,
-                                    tokens[i - 1].text,
-                                    full_text,
-                                    category,
-                                    subcategory,
-                                    tokens[i - 1].idx,
-                                    None,
-                                    [article_alternative],
-                                )
-                            )
 
     return list_tokens
 
