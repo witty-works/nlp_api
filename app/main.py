@@ -228,7 +228,7 @@ def save_openapi_json(
 
 
 @app.get(
-    "/german_gender_ending",
+    "/debug/german_gender_ending",
     include_in_schema=not settings.is_prod,
 )
 def german_gender_ending(
@@ -253,7 +253,7 @@ def german_gender_ending(
 
 
 @app.post(
-    "/auth_debug",
+    "/debug/auth",
     include_in_schema=not settings.is_prod,
     dependencies=[Depends(HTTPBearer())],
 )

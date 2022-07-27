@@ -579,14 +579,11 @@ def test_store_get_delete_rules():
     assert response.status_code == 204
 
 
-# test german gender ending
-
-
 def test_german_gender_ending():
     request_data = {
         "alternative": "Sinti~ze~/~Sinti und Rom~nja~/~Roma",
     }
-    response = client.get("/german_gender_ending", params=request_data)
+    response = client.get("/debug/german_gender_ending", params=request_data)
     assert response.status_code == 200
     response_content = json.loads(response.content)
 
