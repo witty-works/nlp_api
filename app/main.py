@@ -1151,6 +1151,108 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
 
 """Function to catch the words related to False Positive in the user query"""
 
+#Function to ignore false positives based on match patterns 
+def ignore_match(tokens):
+    #print ("Start:", tokens, [token.pos_ for token in tokens])
+    list_false_positives = []
+    
+    matcher = Matcher(model["en"].vocab)
+    # Only run model.make_doc to speed things up
+    #patterns = [model["en"].make_doc(text) for text in false_positives]
+    #matcher.add("FalsePositivesList", patterns)
+    # Define a list with nested dictionaries that contains the pattern to be matched
+    #pronoun_verb = [{'POS': 'PRON'}, {'POS': 'VERB'}]
+    
+    # patterns for false positives
+    
+    # master of + noun
+    pattern_master = [[{"LOWER": "master"}, {"LOWER": "of"}, {"POS": "NOUN"}],
+    [{"LOWER": "masters"}, {"LOWER": "of"}, {"POS": "NOUN"}],
+        [{"LOWER": "master"}, {"LOWER": "of"}, {"POS": "PROPN"}],
+        [{"LOWER": "masters"}, {"LOWER": "of"}, {"POS": "PROPN"}]]
+    matcher.add("FalsePositivesList", pattern_master)
+    
+    # lead+someone(optional)+prepostion(on, down, up, to, away, back, along)
+    pattern_lead_prepos = [[{"LEMMA": "lead", 'POS': 'VERB',}, {"POS": {"IN": ["PRON", "NOUN", "PROPN"]}, "OP": "?"}, {"LEMMA": {"IN": ["on", "down", "up", "to", "away", "back", "along", "with", "off"]}}]]
+    matcher.add("FalsePositivesList", pattern_lead_prepos) 
+    
+    # lead a (charmed, busy, quiet, normal, ...) life','lead your (my, his, her, their, our, ...) life'
+    pattern_lead_life = [[{"LEMMA": "lead", 'POS': 'VERB'}, {"POS": "DET", "OP": "?"}, {"POS": {"IN": ["ADJ", "PRON"]}, "OP": "?"}, {"LOWER": "life"}]]
+    matcher.add("FalsePositivesList", pattern_lead_life) 
+    
+    #need to
+    pattern_need_to = [[{"LEMMA": "need", 'POS': 'VERB'}, {"LEMMA": {"IN": ["to", "for"]}}]]
+    matcher.add("FalsePositivesList", pattern_need_to) 
+    
+    matches = matcher(tokens)
+    print ("Matches:", matches)
+    old_start = 0
+
+    rest_text = []
+    #fin_end = tokens[-1].index
+
+    if matches.__len__() > 0:
+        for match_id, start, end in matches:
+            span = tokens[start:end]
+            list_false_positives.append({"False positives": span.text})
+            part = tokens[old_start:start]
+            rest_text.append(part.text)
+            old_start = end
+            print (span.text)
+            
+        fin_text = tokens[end:len(tokens)]
+        rest_text.append(fin_text.text)
+        docs = list(model["en"].pipe(rest_text))
+        tokens = Doc.from_docs(docs)
+        
+        
+
+    return tokens #print (tokens, [token.pos_ for token in tokens])
+
+# function to ignore false positives based on list generated from False positives column from Witty Rules
+def ignore_phrase_match(
+    tokens,
+    false_positives,
+):
+    #print ("Start:", tokens, [token.pos_ for token in tokens])
+    list_false_positives = []
+    matcher = PhraseMatcher(model["en"].vocab)
+    
+    # Only run model.make_doc to speed things up
+    patterns = [model["en"].make_doc(text) for text in false_positives]
+    matcher.add("FalsePositivesList", patterns)
+    # Define a list with nested dictionaries that contains the pattern to be matched
+    #pronoun_verb = [{'POS': 'PRON'}, {'POS': 'VERB'}]
+    #pattern_master = [{"LOWER": "master"}, {"LOWER": "of"}, {"POS": "NOUN"}]
+    #matcher.add("FalsePositivesList", [pattern_master])
+    matches = matcher(tokens, as_spans=True)
+    for match in matches:
+        if match.text in false_positives:
+            list_false_positives.append({"False positives": match})
+            #return True
+             #return 
+    #return False
+ 
+    #old_start = 0
+
+    #rest_text = []
+    #fin_end = tokens[-1].index
+
+    #if matches.__len__() > 0:
+    #    for match_id, start, end in matches:
+    #        span = tokens[start:end]
+    #        list_false_positives.append({"False positives": span.text})
+    #        part = tokens[old_start:start]
+    #        rest_text.append(part.text)
+    #        old_start = end
+            
+    #    fin_text = tokens[end:len(tokens)]
+    #    rest_text.append(fin_text.text)
+    #    docs = list(model["en"].pipe(rest_text))
+    #    tokens = Doc.from_docs(docs)
+        
+
+    return list_false_positives #print (tokens, [token.pos_ for token in tokens])
 
 def is_false_positive(word, false_positive):
     for item in false_positive:
