@@ -1,4 +1,9 @@
-Lemma,Alternative
-der,die~der
-einer,eine~einer
-ein,eine~ein
+Masculine,Feminine,Neuter,Plural
+der,die,das,die
+den,die,das,die
+des,der,des,der
+dem,der,dem,den
+ein,eine,ein,
+einen,eine,ein,
+eines,einer,eines,
+einem,einer,einem,

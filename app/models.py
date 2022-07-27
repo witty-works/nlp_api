@@ -424,6 +424,12 @@ class ResultOut(BaseModel):
 
         gravity = gravity if gravity != None else categories[category_key]["gravity"]
 
+        if gravity != None:
+            if gravity < 1.0:
+                gravity = 1.0
+
+            gravity = int(gravity)
+
         is_upper = ResultOut.isUpper(text, full_text, start, category, lang)
 
         if alternatives == None:
