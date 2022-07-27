@@ -4,7 +4,6 @@ import click
 import csv
 import polib
 import re
-from app.models import ResultOut
 
 
 def parse_explanation(explanation):
@@ -18,15 +17,18 @@ def parse_explanation(explanation):
     return icon, explanation
 
 
-def add_entry(po_files, category, columns, label, column, row, add_to_po_file=True):
+def parse_row_column(locales, category, columns, label, column, row):
     msgid = "rules." + category + "_" + label
 
     result = {}
-    for locale in po_files:
+    for locale in locales:
+        result[locale] = {}
+
         if locale == "pot":
             msgstr = ""
         else:
             msgstr = row[columns[column + " " + locale[0:2].upper()]].strip()
+
             if msgstr == "n/a" or msgstr == "-":
                 msgstr = ""
             elif msgstr == "" or msgstr == "Missing":
@@ -42,33 +44,33 @@ def add_entry(po_files, category, columns, label, column, row, add_to_po_file=Tr
                         + locale
                         + ")"
                     )
-            elif label == "explanation" and msgstr.find("|") == -1:
-                print(
-                    "Pipesign missing for '"
-                    + category
-                    + "' key '"
-                    + label
-                    + "' ("
-                    + locale
-                    + ")"
-                )
+            elif label == "explanation":
+                if msgstr.find("|") == -1:
+                    print(
+                        "Pipesign missing for '"
+                        + category
+                        + "' key '"
+                        + label
+                        + "' ("
+                        + locale
+                        + ")"
+                    )
+                else:
+                    result["emoji"], msgstr = parse_explanation(msgstr)
 
-            result[locale[0:2]] = msgstr
-
-            if label == "explanation":
-                emoji, msgstr = parse_explanation(msgstr)
-                result["emoji"] = emoji
-
-        if add_to_po_file:
-            entry = polib.POEntry(msgid=msgid, msgstr=msgstr)
-            po_files[locale].append(entry)
+        result[locale] = {
+            "msgid": msgid,
+            "msgstr": msgstr,
+        }
 
     return result
 
 
 def read_csv(in_file):
     poFiles = {"pot": polib.POFile(), "en_US": polib.POFile(), "de_DE": polib.POFile()}
-    for locale in poFiles:
+    locales = poFiles.keys()
+
+    for locale in locales:
         current_date = datetime.utcnow().strftime("%Y-%m-%d %H:%M")
 
         poFiles[locale].metadata = {
@@ -104,7 +106,14 @@ def read_csv(in_file):
             "Status DE": None,
         }
 
-        gravities = {"red": 1, "orange": 2, "yellow": 3, "": 3, "none": None}
+        columnMap = {
+            "label": "Category Label",
+            "reason": "Reason",
+            "solution": "Solution",
+            "explanation": "Short explanation",
+        }
+
+        gravities = {"red": 1.0, "orange": 2.0, "yellow": 3.0, "": 3.0, "none": None}
 
         categories = {}
 
@@ -129,22 +138,11 @@ def read_csv(in_file):
                     continue
 
                 categories[sub_category] = {}
-                add_entry(
-                    poFiles, sub_category, columns, "label", "Category Label", row
-                )
 
-                add_entry(
-                    poFiles,
-                    sub_category,
-                    columns,
-                    "status",
-                    "Status",
-                    row,
-                    False,
-                )
-
-                add_entry(poFiles, sub_category, columns, "reason", "Reason", row)
-                add_entry(poFiles, sub_category, columns, "solution", "Solution", row)
+                for key in columnMap:
+                    categories[sub_category][key] = parse_row_column(
+                        locales, sub_category, columns, key, columnMap[key], row
+                    )
 
                 categories[sub_category]["inclusive"] = (
                     row[columns["Inclusive?"]] == "👍"
@@ -155,10 +153,15 @@ def read_csv(in_file):
                     row[columns["Category"]],
                 )
 
-                try:
-                    gravity = gravities[str(row[columns["Gravity"]])]
-                except ValueError:
-                    gravity = None
+                if sub_category == "corporate_rules":
+                    gravity = 0.9
+                else:
+                    try:
+                        gravity = str(row[columns["Gravity"]])
+                        gravity = gravities[gravity]
+                    except ValueError:
+                        gravity = None
+
                 categories[sub_category]["gravity"] = gravity
 
                 try:
@@ -167,22 +170,28 @@ def read_csv(in_file):
                     importance = None
                 categories[sub_category]["importance"] = importance
 
-                categories[sub_category]["explanation"] = add_entry(
-                    poFiles,
-                    sub_category,
-                    columns,
-                    "explanation",
-                    "Short explanation",
-                    row,
+    sorted_categories = {}
+    for i in sorted(categories.keys()):
+        sorted_categories[i] = categories[i]
+
+    for sub_category in sorted_categories:
+        for key in columnMap:
+            data = sorted_categories[sub_category][key]
+
+            for locale in locales:
+                entry = polib.POEntry(
+                    msgid=data[locale]["msgid"], msgstr=data[locale]["msgstr"]
                 )
-                categories[sub_category]["emoji"] = categories[sub_category][
-                    "explanation"
-                ]["emoji"]
-                del categories[sub_category]["explanation"]
+                poFiles[locale].append(entry)
+
+                if "emoji" in data:
+                    sorted_categories[sub_category]["emoji"] = data["emoji"]
+
+            del sorted_categories[sub_category][key]
 
     locales_path = os.path.dirname(__file__) + "/../locales"
 
-    for locale in poFiles:
+    for locale in locales:
         if locale == "pot":
             poFiles[locale].save(locales_path + "/messages.pot")
         else:
@@ -194,7 +203,7 @@ def read_csv(in_file):
             poFiles[locale].save_as_mofile(locale_path + "/messages.mo")
 
     f = open(os.path.dirname(__file__) + "/../app/categories.py", "w")
-    f.write("categories = " + repr(categories) + "\n")
+    f.write("categories = " + repr(sorted_categories) + "\n")
     f.close()
 
 
