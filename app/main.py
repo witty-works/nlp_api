@@ -229,7 +229,7 @@ def save_openapi_json(
 
 
 @app.get(
-    "/german_gender_ending",
+    "/debug/german_gender_ending",
     include_in_schema=not settings.is_prod,
 )
 def german_gender_ending(
@@ -254,7 +254,7 @@ def german_gender_ending(
 
 
 @app.post(
-    "/auth_debug",
+    "/debug/auth",
     include_in_schema=not settings.is_prod,
     dependencies=[Depends(HTTPBearer())],
 )
@@ -291,6 +291,39 @@ async def auth(request: Request, response: Response):
 @app.get("/form", include_in_schema=False)
 def form():
     return root()
+
+
+@app.get(
+    "/debug/spacy",
+    include_in_schema=not settings.is_prod,
+)
+async def debug_spacy(
+    text: str,
+    username: str = Depends(get_current_username),
+):
+    locale = lang_detection.get_locale(
+        text,
+        "auto",
+        ["en", "de"],
+    )
+
+    lang = Language(locale)
+
+    results = []
+    tokens = get_tokens(lang, text)
+    for token in tokens:
+        results.append(
+            {
+                "text": token.text,
+                "start": token.idx,
+                "tag": token.tag_,
+                "pos": token.pos_,
+                "word_type": get_token_type(token),
+                "morph": token.morph.get("Number"),
+            }
+        )
+
+    return results
 
 
 @app.get("/categories")
@@ -733,11 +766,25 @@ async def languagetool_rules(version: float, config: Config, lang: Language, tex
     return list_results
 
 
+def get_tokens(lang: Language, text: str):
+    # apply SpaCy pre-built model
+    return model[lang.lang](text.rstrip().replace("\n", " "))
+
+
+def get_matches(tokens, phrases):
+    # Phrase matcher part to handle False positives with two words and special symbols
+    matcher = PhraseMatcher(model[lang.lang].vocab)
+
+    # Only run model.make_doc to speed things up
+    patterns = [model[lang.lang].make_doc(text) for text in phrases]
+    matcher.add("TerminologyList", patterns)
+    return matcher(tokens)
+
+
 async def language_rules(
     version: float, config: Config, organization_rules: dict, lang: Language, text: str
 ):
-    # apply SpaCy pre-built model
-    tokens = model[lang.lang](text.rstrip().replace("\n", " "))
+    tokens = get_tokens(lang, text)
 
     list_results = []
     if is_sub_category_enabled(config, "orthography"):
@@ -938,12 +985,13 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
         )
 
     if is_sub_category_enabled(config, "communal"):
-        list_full += rules_based(
+        list_full += rules_based_words_phrase_matcher(
             version,
             config,
             lang,
             text,
             tokens,
+            [],
             rules["de-DE"]["df_communal_words"],
             "inclusive",
             "communal",
@@ -1237,7 +1285,7 @@ def alternative_declension(text, token_type, ending, lang, alternative):
     if ResultOut.isInspirationAlternative(text, alternative):
         return alternative
 
-    tokens = model[lang.lang](alternative.rstrip().replace("\n", " "))
+    tokens = get_tokens(lang, alternative)
 
     if lang.lang == "en":
         alternative_token_types = ["v"]
@@ -1391,6 +1439,7 @@ def agentic_language_analysis_de(
     category,
 ):
     list_tokens = []
+
     for token in tokens:
         for (
             word,
@@ -1441,12 +1490,6 @@ def ub_words_phrase_matcher_de(
     category,
 ):
     list_tokens = []
-    # Phrase matcher part to handle False positives with two words and special simbols
-    matcher = PhraseMatcher(model[lang.lang].vocab)
-
-    # Only run model.make_doc to speed things up
-    patterns = [model[lang.lang].make_doc(text) for text in list(df_sentence["Lemma"])]
-    matcher.add("TerminologyList", patterns)
 
     for token in tokens:
         for word, word_type, alternative, subcategory in words_alternatives:
@@ -1470,7 +1513,7 @@ def ub_words_phrase_matcher_de(
                     )
                 )
 
-    matches = matcher(tokens)
+    matches = get_matches(tokens, list(df_sentence["Lemma"]))
     for match_id, start, end in matches:
         for sentence, alternative, subcategory in sentences_alternatives:
             span = tokens[start:end]
@@ -1498,13 +1541,7 @@ def ignore_binary_inclusive_gendered_denom_analysis_de(
     tokens,
     false_positives,
 ):
-    matcher = PhraseMatcher(model[lang.lang].vocab)
-
-    # Only run model.make_doc to speed things up
-    patterns = [model[lang.lang].make_doc(text) for text in false_positives]
-    matcher.add("TerminologyList", patterns)
-    matches = matcher(tokens)
-
+    matches = get_matches(tokens, false_positives)
     if matches.__len__() > 0:
         old_start = 0
         rest_text = []
@@ -1567,6 +1604,7 @@ def gendered_denom_analysis_de(
         )
 
     list_tokens = []
+
     for i in range(len(tokens)):
         for (
             word,
@@ -1682,45 +1720,36 @@ def style_word_analysis_de(
     category = "style"
     list_tokens = []
 
-    # Phrase matcher part to handle False positives with two words and special simbols
-    matcher = PhraseMatcher(model[lang.lang].vocab)
-
-    # Only run model.make_doc to speed things up
-    patterns = [model[lang.lang].make_doc(text) for text in terms]
-    matcher.add("TerminologyList", patterns)
-
-    for i in range(len(tokens)):
+    for token in tokens:
         # check if the user query have false positives
-        if is_false_positive(tokens[i].lemma_, false_positives):
+        if is_false_positive(token.lemma_, false_positives):
             # recognise if there is Name of organisation or geographical name in the query
             if len(tokens.ents) > 0:
                 continue
 
-        if tokens[i].lemma_ == "aber" and is_conjunction(full_text, tokens[i].idx):
+        if token.lemma_ == "aber" and is_conjunction(full_text, token.idx):
             continue
 
         for word, word_type, alternative, subcategory in style_words_alternatives:
-            if tokens[i].lemma_ == word and check_token_type(
-                tokens[i], word_type, True
-            ):
-                alternative = alternatives_declension(tokens[i], lang, alternative)
+            if token.lemma_ == word and check_token_type(token, word_type, True):
+                alternative = alternatives_declension(token, lang, alternative)
 
                 list_tokens.append(
                     ResultOut.factory(
                         version,
                         config,
                         lang,
-                        tokens[i].text,
+                        token.text,
                         full_text,
                         category,
                         subcategory,
-                        tokens[i].idx,
-                        tokens[i].idx + len(tokens[i].text),
+                        token.idx,
+                        None,
                         alternative,
                     )
                 )
 
-    matches = matcher(tokens)
+    matches = get_matches(tokens, terms)
     for match_id, start, end in matches:
         for sentence, alternative, subcategory in style_sentences_alternatives:
             span = tokens[start:end]
@@ -1810,12 +1839,6 @@ def rules_based_words_phrase_matcher_de(
     category,
 ):
     list_tokens = []
-    # Phrase matcher part to handle False positives with two words and special simbols
-    matcher = PhraseMatcher(model[lang.lang].vocab)
-
-    # Only run model.make_doc to speed things up
-    patterns = [model[lang.lang].make_doc(text) for text in list(df_sentence["Lemma"])]
-    matcher.add("TerminologyList", patterns)
 
     for token in tokens:
         for word, word_type, alternative, subcategory in words_alternatives:
@@ -1839,7 +1862,7 @@ def rules_based_words_phrase_matcher_de(
                     )
                 )
 
-    matches = matcher(tokens)
+    matches = get_matches(tokens, list(df_sentence["Lemma"]))
     for match_id, start, end in matches:
         for sentence, alternative, subcategory in sentences_alternatives:
             span = tokens[start:end]
@@ -1875,12 +1898,6 @@ def rules_based_words_phrase_matcher(
 ):
 
     list_tokens = []
-    # Phrase matcher part to handle False positives with two words and special simbols
-    matcher = PhraseMatcher(model[lang.lang].vocab)
-
-    # Only run model.make_doc to speed things up
-    patterns = [model[lang.lang].make_doc(text) for text in terms]
-    matcher.add("TerminologyList", patterns)
 
     for token in tokens:
         for word, word_type in df:
@@ -1902,60 +1919,24 @@ def rules_based_words_phrase_matcher(
                     )
                 )
 
-    matches = matcher(tokens)
-    for match_id, start, end in matches:
-        span = tokens[start:end]
-        list_tokens.append(
-            ResultOut.factory(
-                version,
-                config,
-                lang,
-                span.text,
-                full_text,
-                category,
-                subcategory,
-                span.start_char,
-                span.end_char,
-                [],
+    if len(terms):
+        matches = get_matches(tokens, terms)
+        for match_id, start, end in matches:
+            span = tokens[start:end]
+            list_tokens.append(
+                ResultOut.factory(
+                    version,
+                    config,
+                    lang,
+                    span.text,
+                    full_text,
+                    category,
+                    subcategory,
+                    span.start_char,
+                    span.end_char,
+                    [],
+                )
             )
-        )
-
-    return list_tokens
-
-
-# Unified function for rules
-
-
-def rules_based(
-    version: float,
-    config: Config,
-    lang,
-    full_text,
-    tokens,
-    df,
-    category,
-    subcategory,
-):
-    list_tokens = []
-    for token in tokens:
-        for word, word_type in df:
-            if get_lemma_non_noun_lower_cased(token) == word and check_token_type(
-                token, word_type, True
-            ):
-                list_tokens.append(
-                    ResultOut.factory(
-                        version,
-                        config,
-                        lang,
-                        token.text,
-                        full_text,
-                        category,
-                        subcategory,
-                        token.idx,
-                        None,
-                        [],
-                    )
-                )
 
     return list_tokens
 
@@ -2018,12 +1999,6 @@ def rules_based_words_phrase_matcher_en(
     category,
 ):
     list_tokens = []
-    # Phrase matcher part to handle False positives with two words and special simbols
-    matcher = PhraseMatcher(model[lang.lang].vocab)
-
-    # Only run model.make_doc to speed things up
-    patterns = [model[lang.lang].make_doc(text) for text in list(df_sentence["Lemma"])]
-    matcher.add("TerminologyList", patterns)
 
     for token in tokens:
         for word, word_type, alternative, subcategory in words_alternatives:
@@ -2048,7 +2023,7 @@ def rules_based_words_phrase_matcher_en(
                     )
                 )
 
-    matches = matcher(tokens)
+    matches = get_matches(tokens, list(df_sentence["Lemma"]))
     for match_id, start, end in matches:
         for sentence, alternative, subcategory in sentences_alternatives:
             span = tokens[start:end]
@@ -2076,6 +2051,7 @@ def homonyms_english(
     version: float, config: Config, lang, full_text, tokens, homonyms_words
 ):
     list_tokens = []
+
     for token in tokens:
         for word, word_type, category, subcategory, alternative in homonyms_words:
             if not is_sub_category_enabled(config, subcategory):
@@ -2113,14 +2089,8 @@ def literal_match(
     term_list,
 ):
     list_tokens = []
-    # Phrase matcher part to handle False positives with two words and special simbols
-    matcher = PhraseMatcher(model[lang.lang].vocab)
 
-    # Only run model.make_doc to speed things up
-    patterns = [model[lang.lang].make_doc(text) for text in list(df_term["Lemma"])]
-    matcher.add("TerminologyList", patterns)
-
-    matches = matcher(tokens)
+    matches = get_matches(tokens, list(df_term["Lemma"]))
     for match_id, start, end in matches:
         for (
             term,
@@ -2243,12 +2213,6 @@ def rules_based_words_phrase_matcher_no_alt_en(
     category,
 ):
     list_tokens = []
-    # Phrase matcher part to handle False positives with two words and special simbols
-    matcher = PhraseMatcher(model[lang.lang].vocab)
-
-    # Only run model.make_doc to speed things up
-    patterns = [model[lang.lang].make_doc(text) for text in list(df_sentence["Lemma"])]
-    matcher.add("TerminologyList", patterns)
 
     for token in tokens:
         for word, word_type, subcategory in inclusive_words_alternatives_en:
@@ -2270,7 +2234,7 @@ def rules_based_words_phrase_matcher_no_alt_en(
                     )
                 )
 
-    matches = matcher(tokens)
+    matches = get_matches(tokens, list(df_sentence["Lemma"]))
     for match_id, start, end in matches:
         for sentence, subcategory in inclusive_sentences_alternatives_en:
             span = tokens[start:end]

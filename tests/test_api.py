@@ -579,14 +579,11 @@ def test_store_get_delete_rules():
     assert response.status_code == 204
 
 
-# test german gender ending
-
-
 def test_german_gender_ending():
     request_data = {
         "alternative": "Sinti~ze~/~Sinti und Rom~nja~/~Roma",
     }
-    response = client.get("/german_gender_ending", params=request_data)
+    response = client.get("/debug/german_gender_ending", params=request_data)
     assert response.status_code == 200
     response_content = json.loads(response.content)
 
@@ -601,6 +598,50 @@ def test_german_gender_ending():
     ]
 
     assert sorted(response_content) == sorted(expected)
+
+
+def test_spacy():
+    request_data = {"text": "Das ist sehr ehrgeizig"}
+    response = client.get("/debug/spacy", params=request_data)
+    assert response.status_code == 200
+    response_content = json.loads(response.content)
+
+    expected = [
+        {
+            "text": "Das",
+            "start": 0,
+            "tag": "PDS",
+            "pos": "PRON",
+            "word_type": "s",
+            "morph": ["Sing"],
+        },
+        {
+            "text": "ist",
+            "start": 4,
+            "tag": "VAFIN",
+            "pos": "AUX",
+            "word_type": None,
+            "morph": ["Sing"],
+        },
+        {
+            "text": "sehr",
+            "start": 8,
+            "tag": "ADV",
+            "pos": "ADV",
+            "word_type": "a",
+            "morph": [],
+        },
+        {
+            "text": "ehrgeizig",
+            "start": 13,
+            "tag": "CARD",
+            "pos": "NUM",
+            "word_type": None,
+            "morph": [],
+        },
+    ]
+
+    assert response_content == expected
 
 
 @pytest.mark.parametrize(
