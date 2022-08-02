@@ -31,37 +31,37 @@
         {
             "alternatives": [
                 {
-                    "text": "leitende Kraft"
+                    "text": "deine leitende Kraft"
                 },
                 {
-                    "text": "Leitungsperson"
+                    "text": "deine Leitungsperson"
                 },
                 {
-                    "text": "Leitung"
+                    "text": "deine Leitung"
                 },
                 {
-                    "text": "Vorgesetzte*r"
+                    "text": "dein*e Vorgesetzte*r"
                 },
                 {
-                    "text": "Vorgesetzte/Vorgesetzter"
+                    "text": "dein/e Vorgesetzte/Vorgesetzter"
                 },
                 {
-                    "text": "leitende Kräfte"
+                    "text": "deine leitende Kräfte"
                 },
                 {
-                    "text": "Leitungskräfte"
+                    "text": "deine Leitungskräfte"
                 },
                 {
-                    "text": "Leitungspersonen"
+                    "text": "dein Leitungspersonen"
                 },
                 {
-                    "text": "Vorgesetzte"
+                    "text": "deine Vorgesetzte"
                 },
                 {
-                    "text": "entscheidungsbefugte Person"
+                    "text": "deine entscheidungsbefugte Person"
                 },
                 {
-                    "text": "verantwortliche Person"
+                    "text": "deine verantwortliche Person"
                 }
             ],
             "category": "gendered",
@@ -74,9 +74,9 @@
             },
             "gravity": 2,
             "label": "Geschlechtsspezifisch: Führungsstereotyp",
-            "start": 34,
+            "start": 29,
             "subcategory": "leadership",
-            "text": "Boss"
+            "text": "dein Boss"
         }
     ]
 }

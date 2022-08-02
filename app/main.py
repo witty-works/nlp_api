@@ -1580,11 +1580,11 @@ def match_binary_inclusive_gendered_denom_analysis_de(
 
 
 def find_article(token):
-    for masculine, feminine, neuter, plural in articles:
+    for masculine, feminine, neuter, plural, alternative in articles:
         if token.text.lower() == masculine:
-            return masculine, feminine, neuter, plural
+            return masculine, feminine, neuter, plural, alternative
 
-    return None, None, None, None
+    return None, None, None, None, None
 
 
 def gendered_denom_analysis_de(
@@ -1642,14 +1642,18 @@ def gendered_denom_analysis_de(
 
                     if i > 0 and token_morph_number[0] == "Sing":
                         alternatives_with_article = []
-                        masculine, feminine, neuter, plural = find_article(
-                            tokens[i - 1]
-                        )
+                        (
+                            masculine,
+                            feminine,
+                            neuter,
+                            plural,
+                            alternative_for_article,
+                        ) = find_article(tokens[i - 1])
 
                         if masculine != None:
                             for alternative in alternatives:
                                 if "~" in alternative:
-                                    article_alternative = feminine + "~" + masculine
+                                    article_alternative = alternative_for_article
                                 else:
                                     if "---" in alternative:
                                         (

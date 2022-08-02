@@ -464,8 +464,6 @@ class ResultOut(BaseModel):
                     alternative, alternative_context = alternative.split("---")
                     alternative = alternative.strip()
                     alternative_context = alternative_context.strip()
-                    # context without an alternative is not supported yet
-                    # https://wittyworks.productboard.com/roadmap/3751070-browser-extension/features/13529614/detail
                     if alternative == "":
                         if explanation_context == None:
                             explanation_context = alternative_context
