@@ -32,6 +32,8 @@ class Settings(BaseSettings):
     aadb2c_policy: Optional[str]
     aadb2c_domain: Optional[str]
     aadb2c_expected_scope: Optional[str]
+    redis_host: Optional[str]
+    redis_port: Optional[str]
     redis_default_user: Optional[str]
     redis_default_1_1_rules: Optional[str]
     redis_default_rules: Optional[str]

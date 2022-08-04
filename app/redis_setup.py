@@ -6,11 +6,17 @@ import json
 
 def set_up_redis(settings):
     platform_config = Config()
+
     if platform_config.is_valid_platform():
+        redis_credentials = platform_config.credentials("rediscache")
+
+        settings.redis_host = redis_credentials["host"]
+        settings.redis_port = redis_credentials["port"]
+
+    if settings.redis_host:
         try:
-            redis_credentials = platform_config.credentials("rediscache")
-            return Redis(redis_credentials["host"], redis_credentials["port"])
-        except:
+            return Redis(host=settings.redis_host, port=settings.redis_port)
+        except Exception as e:
             pass
 
     redis = FakeStrictRedis()
