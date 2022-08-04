@@ -626,10 +626,7 @@ async def get_user_rules_from_redis(email: str):
                     rules["organization_domains"] = {}
 
                 for config in organization_rules["config"]:
-                    if (
-                        not organization_rules["config"][config] == None
-                        and organization_rules["config"][config]["status"] == "force"
-                    ):
+                    if not organization_rules["config"][config] == None:
                         rules["config"][config] = organization_rules["config"][config]
 
         return rules
