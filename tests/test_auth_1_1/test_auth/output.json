@@ -30,5 +30,8 @@
             "status": "force",
             "value": false
         }
-    }
+    },
+    "id": "test-org",
+    "name": "Witty Works",
+    "plan": "witty_teams"
 }
