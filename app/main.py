@@ -566,13 +566,13 @@ async def get_user_rules_from_redis(email: str):
     rules = redis.get(email)
 
     if rules:
-        old_format = False
+        format_1_1 = False
 
         try:
             rules = json.loads(rules)
         except ValueError as e:
             # handle old format
-            old_format = True
+            format_1_1 = True
 
             rules = {
                 "id": email,
@@ -597,7 +597,7 @@ async def get_user_rules_from_redis(email: str):
                 rules["plan"] = organization_rules["plan"]
                 rules["organization_name"] = organization_rules["name"]
 
-                if old_format:
+                if format_1_1:
                     for rule in organization_rules["term_replacements"]:
                         term = rule["term"]
                         del rule["term"]

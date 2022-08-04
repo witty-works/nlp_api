@@ -277,6 +277,13 @@ class TermReplacement(BaseModel):
     gravity: Optional[float]
 
 
+class TermReplacement1_1(BaseModel):
+    term: str
+    alternatives: List[str]
+    explanation: Optional[Explanation]
+    gravity: Optional[int]
+
+
 class DomainType(str, Enum):
     DENY = "deny"
     ALLOW = "allow"
@@ -295,6 +302,7 @@ class ConfRequest(BaseModel):
     term_replacements: Dict[str, TermReplacement] = {}
     domains: Optional[DomainConfig]
 
+
 class ConfRequest1_1(BaseModel):
     id: str
     name: str
@@ -302,7 +310,8 @@ class ConfRequest1_1(BaseModel):
     users: List[str]
     config: RuleConfig
     false_positives: List[str] = []
-    term_replacements: List[TermReplacement] = []
+    term_replacements: List[TermReplacement1_1] = []
+
 
 class UserConfRequest(ConfRequest):
     email: str
