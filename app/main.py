@@ -284,7 +284,7 @@ async def auth_debug(request: Request, user_request_in: RequestIn):  # pragma: n
 
 @app.post(
     "/auth",
-    response_model=Union[ResultConf, dict, None],
+    response_model=Union[ResultConf1_1, dict, None],
     response_model_exclude_none=True,
     dependencies=[Depends(HTTPBearer(auto_error=False))],
 )
