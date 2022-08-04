@@ -37,7 +37,7 @@
                 "text": "“Mitmeinen” mit männlichen Generikum funktioniert nicht",
                 "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#titel"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Geschlechtsspezifisch: Titel",
             "start": 28,
             "subcategory": "titles",
@@ -75,7 +75,7 @@
                 "text": "Fühlt sich weder kooperativ noch unterstützend an",
                 "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Sprachliche Voreingenommenheit: Agentisch",
             "start": 36,
             "subcategory": "agentic",
@@ -91,7 +91,7 @@
                 "text": "Fühlt sich weder kooperativ noch unterstützend an",
                 "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Sprachliche Voreingenommenheit: Agentisch",
             "start": 67,
             "subcategory": "agentic",
@@ -129,7 +129,7 @@
                 "text": "Fühlt sich weder kooperativ noch unterstützend an",
                 "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Sprachliche Voreingenommenheit: Agentisch",
             "start": 106,
             "subcategory": "agentic",

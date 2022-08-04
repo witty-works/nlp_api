@@ -1,7 +1,6 @@
 {
     "text": "Hallo Kunde. Wir geben unseren Kunden alles.",
     "config": {
-        "store_context": false,
         "german_gender_ending": "*in"
     }
 }

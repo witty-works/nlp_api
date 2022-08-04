@@ -38,7 +38,7 @@
                 "text": "Image of a man unconsciously triggered",
                 "url": "https://www.witty.works/en/categories/gendered#special_functions"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Gendered: Special functions",
             "start": 21,
             "subcategory": "function",

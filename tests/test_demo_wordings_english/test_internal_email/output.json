@@ -15,7 +15,7 @@
                 "icon": "❌",
                 "text": "Use a comma before ‘and’ if it connects two independent clauses (unless they are closely connected and short)."
             },
-            "gravity": 1,
+            "gravity": 1.0,
             "label": "Punctuation",
             "start": 92,
             "subcategory": "punctuation",
@@ -44,7 +44,7 @@
                 "text": "Doesn’t feel cooperative nor supportive",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Biased language: Agentic",
             "start": 111,
             "subcategory": "agentic",
@@ -79,7 +79,7 @@
                 "text": "Doesn’t feel cooperative nor supportive",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Biased language: Agentic",
             "start": 154,
             "subcategory": "agentic",
@@ -126,7 +126,7 @@
                 "text": "Image of a man unconsciously triggered",
                 "url": "https://www.witty.works/en/categories/gendered#special_functions"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Gendered: Special functions",
             "start": 4,
             "subcategory": "function",
@@ -200,7 +200,7 @@
                 "text": "Empty words have lost all meaning",
                 "url": "https://www.witty.works/en/categories/style#empty_words"
             },
-            "gravity": 3,
+            "gravity": 3.0,
             "label": "Style: Empty Words",
             "start": 143,
             "subcategory": "hollow",
@@ -232,7 +232,7 @@
                 "text": "Exaggeration: Perceived as pressure or arrogance",
                 "url": "https://www.witty.works/en/categories/style#exaggeration"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Style: Exaggeration",
             "start": 130,
             "subcategory": "exaggerating",
@@ -267,7 +267,7 @@
                 "text": "Doesn’t feel cooperative nor supportive",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Biased language: Agentic",
             "start": 43,
             "subcategory": "agentic",
@@ -290,7 +290,7 @@
                 "text": "Doesn’t feel cooperative nor supportive",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Biased language: Agentic",
             "start": 30,
             "subcategory": "agentic",

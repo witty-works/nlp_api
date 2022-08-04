@@ -72,7 +72,7 @@
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
             },
-            "gravity": 1,
+            "gravity": 1.0,
             "label": "Rechtschreibfehler",
             "start": 22,
             "subcategory": "typos",
@@ -148,7 +148,7 @@
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
             },
-            "gravity": 1,
+            "gravity": 1.0,
             "label": "Rechtschreibfehler",
             "start": 32,
             "subcategory": "typos",
@@ -167,7 +167,7 @@
                 "icon": "❌",
                 "text": "Die Verwendung von mehreren Frage- oder Ausrufezeichen wirkt oft übertrieben emphatisch."
             },
-            "gravity": 1,
+            "gravity": 1.0,
             "label": "Zeichensetzung",
             "start": 39,
             "subcategory": "punctuation",

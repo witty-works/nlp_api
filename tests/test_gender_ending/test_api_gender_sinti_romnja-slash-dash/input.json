@@ -1,7 +1,6 @@
 {
     "text": "Wir sind alle Zigeuner.\nIch bin ein Zigeuner und du eine Zigeunerin.",
     "config": {
-        "store_context": false,
         "german_gender_ending": "/-in"
     }
 }

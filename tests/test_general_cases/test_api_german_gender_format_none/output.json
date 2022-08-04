@@ -31,7 +31,7 @@
                 "text": "“Mitmeinen” mit männlichen Generikum funktioniert nicht",
                 "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#titel"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Geschlechtsspezifisch: Titel",
             "start": 42,
             "subcategory": "titles",
@@ -47,7 +47,7 @@
                 "text": "Superlative: als Druck oder Arroganz wahrgenommen",
                 "url": "https://www.witty.works/de/kategorien/stil#superlative"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Stil: Superlative",
             "start": 11,
             "subcategory": "exaggerating",

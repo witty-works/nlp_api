@@ -1,7 +1,4 @@
 {
     "text": "Wie geht es?",
-    "lang": "de",
-    "config": {
-        "store_context": false
-    }
+    "lang": "de"
 }

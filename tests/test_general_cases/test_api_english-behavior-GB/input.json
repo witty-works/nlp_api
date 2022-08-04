@@ -1,7 +1,6 @@
 {
     "text": "Are you an addict",
     "config": {
-        "store_context": false,
         "preferred_variants": "en-GB"
     }
 }

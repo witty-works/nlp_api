@@ -5,6 +5,7 @@ from enum import Enum
 import gettext
 import string
 import re
+import math
 
 from app.categories import categories
 from app.settings import get_settings
@@ -120,7 +121,7 @@ class Config(BaseModel):
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
     singular_they: str = SingularTheyType.HE_OR_SHE
     show_inspiration_alternatives: Optional[bool] = False
-    maximum_importance: int = 2
+    maximum_importance: float = 2.0
 
     @validator("german_gender_ending")
     def valid_german_gender_ending(cls, v: str):
@@ -231,7 +232,7 @@ class SingularTheyConfigType(BaseModel):
     status: StatusType
 
 
-class OrganizationConfig(BaseModel):
+class RuleConfig(BaseModel):
     store_context: Optional[BooleanConfigType]
     preferred_variants: Optional[LangVariantConfigType]
     german_gender_ending: Optional[GermanGenderEndingConfigType]
@@ -271,20 +272,54 @@ class Explanation(BaseModel):
 
 
 class TermReplacement(BaseModel):
+    alternatives: List[str]
+    explanation: Optional[Explanation]
+    gravity: Optional[float]
+
+
+class TermReplacement1_1(BaseModel):
     term: str
     alternatives: List[str]
     explanation: Optional[Explanation]
     gravity: Optional[int]
 
 
+class DomainType(str, Enum):
+    DENY = "deny"
+    ALLOW = "allow"
+
+
+class DomainConfig(BaseModel):
+    list: List[str]
+    type: DomainType
+
+
 class ConfRequest(BaseModel):
+    id: str
+    name: str
+    config: RuleConfig
+    false_positives: List[str] = []
+    term_replacements: Dict[str, TermReplacement] = {}
+    domains: Optional[DomainConfig]
+
+
+class ConfRequest1_1(BaseModel):
     id: str
     name: str
     plan: str
     users: List[str]
-    config: OrganizationConfig
+    config: RuleConfig
     false_positives: List[str] = []
-    term_replacements: List[TermReplacement] = []
+    term_replacements: List[TermReplacement1_1] = []
+
+
+class UserConfRequest(ConfRequest):
+    email: str
+    organization_id: Optional[str]
+
+
+class OrganizationConfRequest(ConfRequest):
+    plan: str
 
 
 class RequestIn(BaseModel):
@@ -294,6 +329,8 @@ class RequestIn(BaseModel):
     id: Optional[str] = None
     client: Optional[str] = None
     config: Optional[Config] = Config()
+    config_hash: Optional[str]
+    config_organization_hash: Optional[str]
 
 
 class RequestInEvent(RequestIn):
@@ -318,19 +355,6 @@ class ResultExplanation(BaseModel):
     context: Optional[str]
 
 
-class ResultOutOld(BaseModel):
-    text: str
-    context: str
-    category: str
-    subcategory: str
-    start: int
-    end: int
-    alternatives: List[str]
-    label: str
-    reason: str
-    solution: str
-
-
 class ResultOut(BaseModel):
     text: str
     context: Optional[str]
@@ -341,8 +365,9 @@ class ResultOut(BaseModel):
     alternatives: List[ResultAlternative]
     label: str
     explanation: ResultExplanation
-    gravity: Optional[int]
+    gravity: Optional[float]
 
+    @staticmethod
     def factory(
         version: float,
         config: Config,
@@ -372,8 +397,6 @@ class ResultOut(BaseModel):
 
             privacy_filter = get_privacy_filter()
             context = privacy_filter.clean_var(context)
-        elif version == 1.0:
-            context = ""
 
         params = {}
         if subcategory == "gendered_denominations_ending":
@@ -404,15 +427,6 @@ class ResultOut(BaseModel):
             if category != subcategory:
                 label += ": " + sub_label
 
-        reason = lang._("rules." + category_key + "_reason", params)
-
-        solution = explanation
-        solution = (
-            solution
-            if solution != None
-            else lang._("rules." + category_key + "_solution", params)
-        )
-
         explanation = (
             explanation
             if explanation
@@ -423,12 +437,6 @@ class ResultOut(BaseModel):
             icon = categories[category_key]["emoji"]
 
         gravity = gravity if gravity != None else categories[category_key]["gravity"]
-
-        if gravity != None:
-            if gravity < 1.0:
-                gravity = 1.0
-
-            gravity = int(gravity)
 
         is_upper = ResultOut.isUpper(text, full_text, start, category, lang)
 
@@ -476,7 +484,7 @@ class ResultOut(BaseModel):
                 explanation = ResultOut.convert_sharp_ss(lang, explanation)
                 alternative = ResultOut.convert_sharp_ss(lang, alternative)
 
-            if alternative == "-" and version == 1.1:
+            if alternative == "-" and version >= 1.1:
                 alternative = None
                 remove = True
 
@@ -506,19 +514,7 @@ class ResultOut(BaseModel):
 
                 cleaned_alternatives[key] = variation
 
-        if version == 1.0:
-            return ResultOutOld(
-                text=text,
-                context=context,
-                category=category,
-                subcategory=subcategory,
-                start=start,
-                end=end,
-                alternatives=list(cleaned_alternatives.values()),
-                label=label,
-                reason=reason,
-                solution=solution,
-            )
+        alternatives = list(cleaned_alternatives.values())
 
         explanation = {
             "text": explanation,
@@ -527,6 +523,23 @@ class ResultOut(BaseModel):
             "context": explanation_context,
         }
 
+        if version <= 1.1:
+            if gravity != None:
+                gravity = math.ceil(gravity)
+
+            return ResultOut1_1(
+                text=text,
+                context=context,
+                category=category,
+                subcategory=subcategory,
+                start=start,
+                end=end,
+                alternatives=alternatives,
+                label=label,
+                explanation=explanation,
+                gravity=gravity,
+            )
+
         return ResultOut(
             text=text,
             context=context,
@@ -534,13 +547,11 @@ class ResultOut(BaseModel):
             subcategory=subcategory,
             start=start,
             end=end,
-            alternatives=list(cleaned_alternatives.values()),
+            alternatives=alternatives,
             label=label,
             explanation=explanation,
             gravity=gravity,
         )
-
-    factory = staticmethod(factory)
 
     @staticmethod
     def convert_sharp_ss(lang, text):
@@ -722,6 +733,10 @@ class ResultOut(BaseModel):
         return alternative_variations
 
 
+class ResultOut1_1(ResultOut):
+    gravity: Optional[int]
+
+
 class ErrorMessage(BaseModel):
     message: str
 
@@ -729,6 +744,7 @@ class ErrorMessage(BaseModel):
 class Result(BaseModel):
     detail: List
 
+    @staticmethod
     def factory(detail):
         detail = [
             {
@@ -743,23 +759,28 @@ class Result(BaseModel):
 
         return Result(detail)
 
-    factory = staticmethod(factory)
-
     def __init__(self, detail):
         object.__setattr__(self, "detail", detail)
 
 
-class ResultConf(BaseModel):
-    config: OrganizationConfig
+class ResultConf1_1(BaseModel):
+    config: Optional[RuleConfig]
     id: str
     name: str
-    plan: str
+    plan: Optional[str]
 
 
-class ResultsOutOld(BaseModel):
-    results: List[ResultOutOld]
+class ResultConf(BaseModel):
+    config: Optional[RuleConfig]
+    domains: Optional[DomainConfig]
+    organization_domains: Optional[DomainConfig]
+
+
+class ResultsOut1_1(BaseModel):
+    results: List[ResultOut1_1]
     language: str
     limit_reached: bool
+    organization_config: Union[ResultConf1_1, dict, None]
 
 
 class ResultsOut(BaseModel):
@@ -767,3 +788,4 @@ class ResultsOut(BaseModel):
     language: str
     limit_reached: bool
     organization_config: Union[ResultConf, dict, None]
+    config_changed: Optional[bool]

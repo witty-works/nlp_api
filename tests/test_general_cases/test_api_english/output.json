@@ -19,7 +19,7 @@
                 "text": "Exaggeration: Perceived as pressure or arrogance",
                 "url": "https://www.witty.works/en/categories/style#exaggeration"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Style: Exaggeration",
             "start": 32,
             "subcategory": "exaggerating",
@@ -54,7 +54,7 @@
                 "text": "Doesn’t feel cooperative nor supportive",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Biased language: Agentic",
             "start": 21,
             "subcategory": "agentic",

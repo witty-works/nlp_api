@@ -41,7 +41,7 @@
                 "text": "Worthülsen haben ihre Bedeutung verloren",
                 "url": "https://www.witty.works/de/kategorien/stil#worthuelsen"
             },
-            "gravity": 3,
+            "gravity": 3.0,
             "label": "Stil: Worthülsen",
             "start": 8,
             "subcategory": "hollow",

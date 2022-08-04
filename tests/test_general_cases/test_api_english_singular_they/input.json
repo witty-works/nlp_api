@@ -1,7 +1,6 @@
 {
     "text": "Is this all he could do?",
     "config": {
-        "singular_they": "all_pronouns",
-        "store_context": false
-    }
+        "singular_they": "all_pronouns"
+    }        
 }

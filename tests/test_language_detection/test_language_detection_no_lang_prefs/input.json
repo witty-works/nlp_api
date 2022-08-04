@@ -2,7 +2,6 @@
     "text": "Wie geht es?",
     "config": {
         "preferred_languages": "",
-        "preferred_variants": null,
-        "store_context": false
+        "preferred_variants": null
     }
 }

@@ -19,7 +19,7 @@
                 "text": "Sure your readers understand?",
                 "url": "https://www.witty.works/en/categories/style#abbreviation"
             },
-            "gravity": 3,
+            "gravity": 3.0,
             "label": "Style: Abbreviation",
             "start": 13,
             "subcategory": "abbreviation",
