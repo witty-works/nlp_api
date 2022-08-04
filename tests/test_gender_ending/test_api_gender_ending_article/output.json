@@ -31,7 +31,7 @@
                 "text": "“Mitmeinen” mit männlichen Generikum funktioniert nicht",
                 "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#titel"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Geschlechtsspezifisch: Titel",
             "start": 4,
             "subcategory": "titles",

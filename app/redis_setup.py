@@ -16,10 +16,13 @@ def set_up_redis(settings):
     redis = FakeStrictRedis()
 
     if settings.redis_default_rules:  # pragma: no cover
-        organization_object = json.loads(settings.redis_default_rules)
-        key = organization_object["id"]
+        rules = json.loads(settings.redis_default_rules)
+        key = rules["id"]
         redis.set(key, settings.redis_default_rules)
-        for user in organization_object["users"]:
-            redis.set(user, key)
+
+    if settings.redis_default_organization_rules:  # pragma: no cover
+        organization_rules = json.loads(settings.redis_default_organization_rules)
+        key = organization_rules["id"]
+        redis.set(key, settings.redis_default_organization_rules)
 
     return redis

@@ -25,7 +25,7 @@
                 "text": "Nicht konsistente Geschlechts-Schreibweise",
                 "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#inklusive_endung"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Geschlechtsspezifisch: Inklusive Endung",
             "start": 10,
             "subcategory": "gendered_denominations_ending",
@@ -60,7 +60,7 @@
                 "text": "Nicht konsistente Geschlechts-Schreibweise",
                 "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#inklusive_endung"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Geschlechtsspezifisch: Inklusive Endung",
             "start": 60,
             "subcategory": "gendered_denominations_ending",

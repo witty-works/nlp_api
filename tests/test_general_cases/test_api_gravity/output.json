@@ -66,7 +66,7 @@
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
             },
-            "gravity": 1,
+            "gravity": 1.0,
             "label": "Rechtschreibfehler",
             "start": 15,
             "subcategory": "typos",
@@ -107,7 +107,7 @@
                 "text": "“Mitmeinen” mit männlichen Generikum funktioniert nicht",
                 "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#titel"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Geschlechtsspezifisch: Titel",
             "start": 21,
             "subcategory": "titles",

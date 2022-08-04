@@ -1,7 +1,6 @@
 {
     "text": "Ich gehe noch schnell über die Strasse Wie geht es dir?",
     "config": {
-        "store_context": false,
         "preferred_variants": "de-CH"
     }
 }
