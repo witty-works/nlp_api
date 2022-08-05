@@ -301,6 +301,7 @@ class ConfRequest(BaseModel):
     false_positives: List[str] = []
     term_replacements: Dict[str, TermReplacement] = {}
     domains: Optional[DomainConfig]
+    config_hash: Optional[str]
 
 
 class ConfRequest1_1(BaseModel):
