@@ -882,19 +882,34 @@ def languagetool_matches(
     )
 
     for match in result["matches"]:
-        offset = int(match["offset"])
-        end = offset + int(match["length"])
-        highlight_text = text[offset:end]
+        start = int(match["offset"])
+        end = start + int(match["length"])
+        highlight_text = text[start:end]
+
+        # Ignore capitalization after German salutation
+        if (
+            start > 5
+            and match["rule"]["id"] == "DE_CASE"
+            and text.lstrip().startswith(
+                (
+                    "Hallo",
+                    "Sehr geehrte",
+                    "Liebe",
+                )
+            )
+            and "".join(text[0:start].split()).endswith(",")
+        ):
+            continue
 
         # ignore text that starts with @ or #
         if highlight_text[0:1] in ignore or (
-            offset > 0 and text[offset - 1 : offset] in ignore
+            start > 0 and text[start - 1 : start] in ignore
         ):
             continue
 
         # ignore german gender ending as spelling mistakes
         if gendered_denom and has_gender_denom_ending(
-            highlight_text, text, offset, config
+            highlight_text, text, start, config
         ):
             continue
 
@@ -923,7 +938,7 @@ def languagetool_matches(
                 text,
                 category,
                 subcategory,
-                offset,
+                start,
                 end,
                 alternatives,
                 label,
