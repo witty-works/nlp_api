@@ -765,16 +765,20 @@ class Result(BaseModel):
 
 
 class ResultConf1_1(BaseModel):
-    config: Optional[RuleConfig]
     id: str
     name: str
     plan: Optional[str]
-
-
-class ResultConf(BaseModel):
     config: Optional[RuleConfig]
+
+
+class ResultConf(ResultConf1_1):
+    organization_id: Optional[str]
+    organization_name: Optional[str]
+    organization_config: Optional[RuleConfig]
     domains: Optional[DomainConfig]
     organization_domains: Optional[DomainConfig]
+    config_hash: Optional[str]
+    organization_config_hash: Optional[str]
 
 
 class ResultsOut1_1(BaseModel):
@@ -788,5 +792,4 @@ class ResultsOut(BaseModel):
     results: List[ResultOut]
     language: str
     limit_reached: bool
-    organization_config: Union[ResultConf, dict, None]
     config_changed: Optional[bool]

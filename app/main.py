@@ -266,7 +266,7 @@ async def auth_debug(request: Request, user_request_in: RequestIn):  # pragma: n
     if not user_email:
         return user_email
 
-    rules = await apply_rules(user_request_in, user_email)
+    rules = await get_rules(user_request_in, user_email)
 
     if "authorization" in request.headers and request.headers[
         "authorization"
@@ -293,7 +293,7 @@ async def auth_1_1(request: Request, response: Response):
     if not user_email:
         return None
 
-    rules = await apply_rules(RequestIn(text=""), user_email)
+    rules = await get_rules(RequestIn(text=""), user_email)
     config = get_result_conf(rules, 1.1)
     if config == None and user_email:
         config = {}
@@ -314,7 +314,7 @@ async def auth_2_0(request: Request, response: Response):
             status_code=status.HTTP_403_FORBIDDEN,
         )
 
-    rules = await apply_rules(RequestIn(text=""), user_email)
+    rules = await get_rules(RequestIn(text=""), user_email)
     if rules == {}:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -565,78 +565,67 @@ async def get_user_rules(
 async def get_user_rules_from_redis(email: str):
     rules = redis.get(email)
 
-    if rules:
-        format_1_1 = False
+    if not rules:
+        return None
 
-        try:
-            rules = json.loads(rules)
-        except ValueError as e:
-            # handle old format
-            format_1_1 = True
+    format_1_1 = False
 
-            rules = {
-                "id": email,
-                "name": email,
-                "email": email,
-                "organization_id": rules,
-                "config": {},
-                "term_replacements": {},
-                "false_positives": [],
-                "domains": {},
-                "organization_domains": {},
-            }
+    try:
+        rules = json.loads(rules)
+    except ValueError as e:
+        # handle old format
+        format_1_1 = True
 
-        rules["plan"] = "witty_free"
+        rules = {
+            "id": email,
+            "name": email,
+            "email": email,
+            "organization_id": rules,
+            "config": {},
+            "term_replacements": {},
+            "false_positives": [],
+            "domains": {},
+            "organization_domains": {},
+        }
 
-        if "organization_id" in rules:
-            organization_rules = redis.get(rules["organization_id"])
+    rules["plan"] = "witty_free"
 
-            if organization_rules:
-                organization_rules = json.loads(organization_rules)
+    if "organization_id" in rules:
+        organization_rules = redis.get(rules["organization_id"])
 
-                rules["plan"] = organization_rules["plan"]
-                rules["organization_name"] = organization_rules["name"]
+        if organization_rules:
+            organization_rules = json.loads(organization_rules)
 
-                if format_1_1:
-                    for rule in organization_rules["term_replacements"]:
-                        term = rule["term"]
-                        del rule["term"]
-                        rules["term_replacements"][term] = rule
-                else:
-                    rules["term_replacements"] |= organization_rules[
-                        "term_replacements"
-                    ]
+            rules["plan"] = organization_rules["plan"]
+            rules["organization_name"] = organization_rules["name"]
 
-                rules["false_positives"] = list(
-                    set(
-                        rules["false_positives"] + organization_rules["false_positives"]
-                    )
-                )
+            if format_1_1:
+                term_replacements = {}
+                for rule in organization_rules["term_replacements"]:
+                    term = rule["term"]
+                    del rule["term"]
+                    term_replacements[term] = rule
+                organization_rules["term_replacements"] = term_replacements
 
-                if "config_hash" in organization_rules:
-                    rules["organization_config_hash"] = organization_rules[
-                        "config_hash"
-                    ]
-                else:
-                    rules["organization_config_hash"] = None
+            if "config_hash" in organization_rules:
+                rules["organization_config_hash"] = organization_rules["config_hash"]
+            else:
+                rules["organization_config_hash"] = None
 
-                if "domains" in organization_rules:
-                    rules["organization_domains"] = organization_rules["domains"]
-                else:
-                    rules["organization_domains"] = {}
+            if "domains" in organization_rules:
+                rules["organization_domains"] = organization_rules["domains"]
+            else:
+                rules["organization_domains"] = {}
 
-                for config in organization_rules["config"]:
-                    if organization_rules["config"][
-                        config
-                    ] != None and organization_rules["config"][config]["status"] in [
-                        "force",
-                        "suggestion",
-                    ]:
-                        rules["config"][config] = organization_rules["config"][config]
+            rules["organization_config"] = organization_rules["config"]
+            rules["organization_term_replacements"] = organization_rules[
+                "term_replacements"
+            ]
+            rules["organization_false_positives"] = organization_rules[
+                "false_positives"
+            ]
 
-        return rules
-
-    return None
+    return rules
 
 
 def is_number_list_empty(number, token, full_text):
@@ -675,8 +664,28 @@ def filter_config(config):
     return {k: v for (k, v) in config.items() if v != "" and v is not None and v != []}
 
 
-async def apply_rules(user_request_in: RequestIn, user_email=Optional[str]):
-    store_context = user_request_in.config.store_context
+def apply_rules(user_request_in: RequestIn, configs: dict, plan: str):
+    disabled_categories = user_request_in.config.disabled_categories
+
+    for config in configs:
+        data = configs[config]
+        if data is not None and data["status"] == "force":
+            if config in ["inclusive", "style", "orthography"]:
+                if data["value"]:
+                    if config in disabled_categories:
+                        disabled_categories.remove(config)
+                elif config not in disabled_categories:
+                    disabled_categories.append(config)
+            elif config == "store_context":
+                if plan == "witty_teams" and not data["value"]:
+                    user_request_in.config.__setattr__("store_context", False)
+            else:
+                user_request_in.config.__setattr__(config, data["value"])
+
+    user_request_in.config.__setattr__("disabled_categories", disabled_categories)
+
+
+async def get_rules(user_request_in: RequestIn, user_email=Optional[str]):
     user_request_in.config.__setattr__("store_context", True)
 
     if not user_email:
@@ -686,26 +695,15 @@ async def apply_rules(user_request_in: RequestIn, user_email=Optional[str]):
     if not rules or type(rules) is not dict:
         return {}
 
-    disabled_categories = user_request_in.config.disabled_categories
+    apply_rules(user_request_in, rules["config"], rules["plan"])
 
-    for config in rules["config"]:
-        data = rules["config"][config]
-        if data is not None and data["status"] == "force":
-            if config in ["inclusive", "style", "orthography"]:
-                if data["value"]:
-                    if config in disabled_categories:
-                        disabled_categories.remove(config)
-                elif config not in disabled_categories:
-                    disabled_categories.append(config)
-            elif config == "store_context":
-                store_context = data["value"]
-            else:
-                user_request_in.config.__setattr__(config, data["value"])
+    if "organization_config" in rules:
+        apply_rules(user_request_in, rules["organization_config"], rules["plan"])
 
-    user_request_in.config.__setattr__("disabled_categories", disabled_categories)
-
-    if rules["plan"] == "witty_teams" and not store_context:
-        user_request_in.config.__setattr__("store_context", False)
+        rules["term_replacements"] |= rules["organization_term_replacements"]
+        rules["false_positives"] = list(
+            set(rules["false_positives"] + rules["organization_false_positives"])
+        )
 
     return rules
 
@@ -763,7 +761,7 @@ async def check(
             status_code=status.HTTP_403_FORBIDDEN,
         )
 
-    rules = await apply_rules(user_request_in, user_email)
+    rules = await get_rules(user_request_in, user_email)
 
     text = user_request_in.text
     limit_reached = len(text) > settings.text_max_length
@@ -821,6 +819,19 @@ def get_result_conf(
     if "config" not in rules:
         return None
 
+    if "organization_config" in rules:
+        if version < 2.0:
+            for config in rules["organization_config"]:
+                if (
+                    rules["organization_config"][config] != None
+                    and rules["organization_config"][config]["status"] == "force"
+                ):
+                    rules["config"][config] = rules["organization_config"][config]
+        else:
+            organization_config = RuleConfig.parse_obj(rules["organization_config"])
+    else:
+        organization_config = None
+
     config = RuleConfig.parse_obj(rules["config"])
     plan = rules["plan"]
 
@@ -835,12 +846,15 @@ def get_result_conf(
     return ResultConf(
         id=rules["id"],
         name=rules["name"],
-        organization_id=rules["organization_id"],
-        organization_name=rules["organization_name"],
         plan=plan,
         config=config,
+        organization_id=rules["organization_id"],
+        organization_name=rules["organization_name"],
+        organization_config=organization_config,
         domains=rules["domains"],
         organization_domains=rules["organization_domains"],
+        config_hash=rules["config_hash"],
+        organization_config_hash=rules["organization_config_hash"],
     )
 
 
