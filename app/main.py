@@ -2234,10 +2234,10 @@ def rules_based_words_phrase_matcher_en(
     list_tokens = []
     
     #create false positives list 
-    matches_false = get_matches(tokens, list_false_column)
-    #word_matches_false = false_match(tokens)
+    phrase_matches_false = get_matches(tokens, list_false_column)
+    word_matches_false = false_match(tokens)
     #merge two lists without duplicates
-    #matches_false = list(set(phrase_matches_false + word_matches_false))
+    matches_false = list(set(phrase_matches_false + word_matches_false))
 
     if matches_false.__len__() > 0:
         for match_id, start, end in matches_false:
@@ -2479,26 +2479,57 @@ def rules_based_words_phrase_matcher_no_alt_en(
     category,
 ):
     list_tokens = []
+    
+    #create false positives list 
+    phrase_matches_false = get_matches(tokens, list_false_column)
+    word_matches_false = false_match(tokens)
+    #merge two lists without duplicates
+    matches_false = list(set(phrase_matches_false + word_matches_false))
 
-    for token in tokens:
-        for word, word_type, subcategory in inclusive_words_alternatives_en:
-            if get_lemma_lower_cased(token) == word and check_token_type(
-                token, word_type, True
-            ):
-                list_tokens.append(
-                    ResultOut.factory(
-                        version,
-                        config,
-                        lang,
-                        token.text,
-                        full_text,
-                        category,
-                        subcategory,
-                        token.idx,
-                        token.idx + len(token.text),
-                        [],
-                    )
-                )
+    if matches_false.__len__() > 0:
+        for match_id, start, end in matches_false:
+            span_false = tokens[start:end]
+            for token in tokens:
+                for word, word_type, subcategory in inclusive_words_alternatives_en:
+                    if get_lemma_lower_cased(token) == word and check_token_type(
+                        token, word_type, True):
+                        if token.idx in range(span_false.start_char, span_false.end_char):
+                            continue
+                        else:
+                            list_tokens.append(
+                                ResultOut.factory(
+                                    version,
+                                    config,
+                                    lang,
+                                    token.text,
+                                    full_text,
+                                    category,
+                                    subcategory,
+                                    token.idx,
+                                    token.idx + len(token.text),
+                                    [],
+                                )
+                            )
+    #no false positives
+    else:
+        for token in tokens:
+                for word, word_type, subcategory in inclusive_words_alternatives_en:
+                    if get_lemma_lower_cased(token) == word and check_token_type(
+                        token, word_type, True):
+                        list_tokens.append(
+                                ResultOut.factory(
+                                    version,
+                                    config,
+                                    lang,
+                                    token.text,
+                                    full_text,
+                                    category,
+                                    subcategory,
+                                    token.idx,
+                                    token.idx + len(token.text),
+                                    [],
+                                )
+                            )
 
     matches = get_matches(tokens, list(df_sentence["Lemma"]))
     for match_id, start, end in matches:
