@@ -5,7 +5,7 @@ from fastapi.testclient import TestClient
 from app.main import (
     app,
     redis,
-    apply_rules,
+    get_rules,
     is_number_list_empty,
 )
 from app.model import model
@@ -549,7 +549,7 @@ def set_redis():
             },
             "german_gender_ending": {
                 "value": "*in",
-                "status": "suggest",
+                "status": "suggestion",
             },
             "gendered_roles_format": {
                 "value": "binary_gender",
@@ -691,7 +691,7 @@ def test_disable_categories(test_disable_categories_dir, snapshot, set_redis):
 
 
 # test overwriting user configuration by organization forced rules
-def test_apply_rules(event_loop, set_redis):
+def test_get_rules(event_loop, set_redis):
     request_data = {
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
         "config": {
@@ -704,7 +704,7 @@ def test_apply_rules(event_loop, set_redis):
         },
     }
     test_request = RequestIn(**request_data)
-    event_loop.run_until_complete(apply_rules(test_request, "test@gmail.com"))
+    event_loop.run_until_complete(get_rules(test_request, "test@gmail.com"))
     assert hasattr(test_request.config, "store_context")
     assert test_request.config.store_context == True
     assert test_request.config.preferred_variants == ["en-GB"]
@@ -715,7 +715,7 @@ def test_apply_rules(event_loop, set_redis):
 # test not overwriting user configuration by organization suggestion/default rules
 
 
-def test_apply_rules_suggestion(event_loop, set_redis):
+def test_get_rules_suggestion(event_loop, set_redis):
     request_data = {
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
         "config": {
@@ -727,7 +727,7 @@ def test_apply_rules_suggestion(event_loop, set_redis):
         },
     }
     test_request = RequestIn(**request_data)
-    event_loop.run_until_complete(apply_rules(test_request, "non_existant@gmail.com"))
+    event_loop.run_until_complete(get_rules(test_request, "non_existant@gmail.com"))
     assert test_request.config.store_context == True
     assert test_request.config.primary_language == "de-DE"
     assert test_request.config.preferred_languages == ["de"]
@@ -744,7 +744,7 @@ def test_set_organization_rules(event_loop, set_redis):
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
     }
     test_request = RequestIn(**request_data)
-    event_loop.run_until_complete(apply_rules(test_request, "test@gmail.com"))
+    event_loop.run_until_complete(get_rules(test_request, "test@gmail.com"))
     assert test_request.config.store_context == True
     assert test_request.config.preferred_variants == ["en-GB"]
     assert test_request.config.german_gender_ending == "In"
@@ -760,7 +760,7 @@ def test_set_default_rules(event_loop):
     }
     test_request = RequestIn(**request_data)
 
-    event_loop.run_until_complete(apply_rules(test_request, "non_existant@gmail.com"))
+    event_loop.run_until_complete(get_rules(test_request, "non_existant@gmail.com"))
     assert test_request.config.store_context == True
     assert test_request.config.primary_language == None
     assert test_request.config.preferred_languages == [
@@ -775,19 +775,25 @@ def test_set_default_rules(event_loop):
     assert test_request.config.gendered_roles_format == "both"
 
 
-def assert_rules(response, request_data):
+def assert_rules(response, request_data, key_prefix=""):
     assert response.status_code == 200
     response_content = json.loads(response.content)
     assert (
-        response_content["config"]["gendered_roles_format"]
+        response_content[key_prefix + "config"]["gendered_roles_format"]
         == request_data["config"]["gendered_roles_format"]
     )
     assert (
-        response_content["config"]["german_gender_ending"]
+        response_content[key_prefix + "config"]["german_gender_ending"]
         == request_data["config"]["german_gender_ending"]
     )
-    assert response_content["false_positives"] == request_data["false_positives"]
-    assert response_content["term_replacements"] == request_data["term_replacements"]
+    assert (
+        response_content[key_prefix + "false_positives"]
+        == request_data["false_positives"]
+    )
+    assert (
+        response_content[key_prefix + "term_replacements"]
+        == request_data["term_replacements"]
+    )
 
 
 # test POST Redis endpoint
@@ -949,21 +955,8 @@ def test_store_get_delete_rules():
     # check user exists
     response = client.get("/user/rules?email=" + user_request_data["email"])
 
-    user_request_data_with_organization_rules = copy.deepcopy(user_request_data)
-    user_request_data_with_organization_rules["false_positives"] = list(
-        set(
-            user_request_data_with_organization_rules["false_positives"]
-            + organization_request_data["false_positives"]
-        )
-    )
-    user_request_data_with_organization_rules[
-        "term_replacements"
-    ] |= organization_request_data["term_replacements"]
-    user_request_data_with_organization_rules["config"]["gendered_roles_format"][
-        "value"
-    ] = organization_request_data["config"]["gendered_roles_format"]["value"]
-
-    assert_rules(response, user_request_data_with_organization_rules)
+    assert_rules(response, user_request_data)
+    assert_rules(response, organization_request_data, "organization_")
 
     # check organization missing cannot be deleted
     response = client.delete("/organization/rules?organization_id=foobar")
@@ -975,7 +968,6 @@ def test_store_get_delete_rules():
 
     # check deleted organization reverts to user rules
     response = client.get("/user/rules?email=" + user_request_data["email"])
-    user_request_data["config"]["gendered_roles_format"]["value"] = "none"
     assert_rules(response, user_request_data)
 
 
