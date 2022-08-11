@@ -2185,6 +2185,40 @@ def rules_based_words_phrase_matcher(
     return list_tokens
 
 
+# create false positives patterns based on false positives column
+def false_match(tokens):
+    #print ("Start:", tokens, [token.pos_ for token in tokens])
+    #list_false_positives = []
+    
+    matcher = Matcher(model["en"].vocab)
+    # Only run model.make_doc to speed things up
+    #patterns = [model["en"].make_doc(text) for text in false_positives]
+    #matcher.add("FalsePositivesList", patterns)
+    # Define a list with nested dictionaries that contains the pattern to be matched
+    #pronoun_verb = [{'POS': 'PRON'}, {'POS': 'VERB'}]
+    
+    # patterns for false positives
+    
+    # master of + noun
+    pattern_master = [[{"LOWER": "master"}, {"LEMMA": "of"}, {"POS": {"IN": ["PRON", "NOUN", "PROPN"]}}],
+    [{"LOWER": "masters"}, {"LEMMA": "of"}, {"POS": {"IN": ["PRON", "NOUN", "PROPN"]}}]]
+    matcher.add("FalsePositivesList", pattern_master)
+    
+    # lead+someone(optional)+prepostion(on, down, up, to, away, back, along)
+    pattern_lead_prepos = [[{"LEMMA": "lead", 'POS': 'VERB',}, {"POS": {"IN": ["PRON", "NOUN", "PROPN"]}, "OP": "?"}, {"LEMMA": {"IN": ["on", "down", "up", "to", "away", "back", "along", "with", "off"]}}]]
+    matcher.add("FalsePositivesList", pattern_lead_prepos) 
+    
+    # lead a (charmed, busy, quiet, normal, ...) life','lead your (my, his, her, their, our, ...) life'
+    pattern_lead_life = [[{"LEMMA": "lead", 'POS': 'VERB'}, {"POS": "DET", "OP": "?"}, {"POS": {"IN": ["ADJ", "PRON"]}, "OP": "?"}, {"LOWER": "life"}]]
+    matcher.add("FalsePositivesList", pattern_lead_life) 
+    
+    #need to
+    pattern_need_to = [[{"LEMMA": "need", 'POS': 'VERB'}, {"LEMMA": {"IN": ["to", "for"]}}]]
+    matcher.add("FalsePositivesList", pattern_need_to) 
+    
+    return matcher(tokens)
+
+
 # function English
 def rules_based_words_phrase_matcher_en(
     version: float,
@@ -2198,29 +2232,62 @@ def rules_based_words_phrase_matcher_en(
     category,
 ):
     list_tokens = []
+    
+    #create false positives list 
+    matches_false = get_matches(tokens, list_false_column)
+    #word_matches_false = false_match(tokens)
+    #merge two lists without duplicates
+    #matches_false = list(set(phrase_matches_false + word_matches_false))
 
-    for token in tokens:
-        for word, word_type, alternative, subcategory in words_alternatives:
-            if get_lemma_lower_cased(token) == word and check_token_type(
-                token, word_type, True
-            ):
-                alternative = ing_ify_alternatives(token, alternative)
-                alternative = alternatives_declension(token, lang, alternative)
-
-                list_tokens.append(
-                    ResultOut.factory(
-                        version,
-                        config,
-                        lang,
-                        token.text,
-                        full_text,
-                        category,
-                        subcategory,
-                        token.idx,
-                        token.idx + len(token.text),
-                        alternative,
+    if matches_false.__len__() > 0:
+        for match_id, start, end in matches_false:
+            span_false = tokens[start:end]
+            for token in tokens:
+                for word, word_type, alternative, subcategory in words_alternatives:
+                    if get_lemma_lower_cased(token) == word and check_token_type(token, word_type, True):
+                        #if highlited word belongs to false positives continue else go to results
+                        if token.idx in range(span_false.start_char, span_false.end_char):
+                            continue
+                        else:
+                            alternative = ing_ify_alternatives(token, alternative)
+                            alternative = alternatives_declension(token, lang, alternative)
+                    
+                            list_tokens.append(
+                                ResultOut.factory(
+                                    version,
+                                    config,
+                                    lang,
+                                    token.text,
+                                    full_text,
+                                    category,
+                                    subcategory,
+                                    token.idx,
+                                    token.idx + len(token.text),
+                                    alternative,
+                                )
+                            )
+    #no false positives
+    else:
+        for token in tokens:
+            for word, word_type, alternative, subcategory in words_alternatives:
+                if get_lemma_lower_cased(token) == word and check_token_type(token, word_type, True):
+                    alternative = ing_ify_alternatives(token, alternative)
+                    alternative = alternatives_declension(token, lang, alternative)
+                    
+                    list_tokens.append(
+                        ResultOut.factory(
+                            version,
+                            config,
+                            lang,
+                            token.text,
+                            full_text,
+                            category,
+                            subcategory,
+                            token.idx,
+                            token.idx + len(token.text),
+                            alternative,
+                        )
                     )
-                )
 
     matches = get_matches(tokens, list(df_sentence["Lemma"]))
     for match_id, start, end in matches:
