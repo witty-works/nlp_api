@@ -1,7 +1,6 @@
 [coverage:run]
 branch = True
 source = app
-include = */app/*
 omit = */migrations/*, */tests/*, */bin/*
 
 [coverage:report]
