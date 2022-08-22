@@ -37,13 +37,10 @@ jobs:
         with:
           path: ./training_data/lid.176.bin
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('./training_data/lid.176.bin') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+          restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-
 
-      - if: ${{ steps.cache-fasttext.outputs.cache-hit == 'false' }}
-        name: Install FastText models
+      - name: Install FastText models
+        if: steps.cache-fasttext.outputs.cache-hit != 'true'
         run: |
           wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 
@@ -55,13 +52,10 @@ jobs:
         with:
           path: ./locales
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/.po') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+          restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-
 
-      - if: ${{ steps.cache-po-files.outputs.cache-hit == 'false' }}
-        name: Compile translation
+      - name: Compile translation
+        if: steps.cache-po-files.outputs.cache-hit != 'true'
         run: |
           pipenv run pybabel compile -d locales -l de_DE -f
           pipenv run pybabel compile -d locales -l de_AT -f
