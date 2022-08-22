@@ -23,7 +23,7 @@ jobs:
 
       - name: Update requirements.txt for Docker image
         run: |
-          pipenv lock -r > requirements.txt
+          pipenv requirements > requirements.txt
 
       # build nlp api
       - run: |
