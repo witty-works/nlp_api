@@ -1020,6 +1020,13 @@ def get_tokens(lang: Language, text: str):
     return model[lang.lang](text.rstrip().replace("\n", " "))
 
 
+def get_false_positive_matcher(tokens):
+    # create false positives list
+    phrase_matches_false = get_matches(tokens, list_false_column)
+    word_matches_false = false_pattern_match(tokens)
+    return list(set(phrase_matches_false + word_matches_false))
+
+
 def get_matches(tokens, phrases):
     # Phrase matcher part to handle False positives with two words and special symbols
     matcher = PhraseMatcher(model[lang.lang].vocab)
@@ -1296,6 +1303,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
     gendered_words_alternatives_en = defaultdict(list)
     inclusive_sentences_alternatives_en = []
     sentences_alternatives_en = defaultdict(list)
+    matches_false = get_false_positive_matcher(tokens)
 
     if lang.locale == "en-GB":
         words_alternatives_en["od"] = open_disc_words_alternatives_GB
@@ -1337,7 +1345,13 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
         sentences_alternatives_en["bias"] = bias_sentences_alternatives_US
 
     list_full += homonyms_english(
-        version, config, lang, text, tokens, words_alternatives_en["homonym"]
+        version,
+        config,
+        lang,
+        text,
+        tokens,
+        matches_false,
+        words_alternatives_en["homonym"],
     )
     list_full += literal_match(
         version,
@@ -1356,6 +1370,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
             lang,
             text,
             tokens,
+            matches_false,
             words_alternatives_en["od"],
             sentences_alternatives_en["od"],
             rules[lang.locale]["df_open_dis_sentence"],
@@ -1370,6 +1385,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
                 lang,
                 text,
                 tokens,
+                matches_false,
                 words_alternatives_en["ge-singular-they"],
                 sentences_alternatives_en["ge"],
                 rules[lang.locale]["df_gendered_sentence"],
@@ -1382,6 +1398,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
                 lang,
                 text,
                 tokens,
+                matches_false,
                 words_alternatives_en["ge"],
                 sentences_alternatives_en["ge"],
                 rules[lang.locale]["df_gendered_sentence"],
@@ -1393,6 +1410,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
             lang,
             text,
             tokens,
+            matches_false,
             gendered_words_alternatives_en["gendered"],
             "gendered",
         )
@@ -1404,6 +1422,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
             lang,
             text,
             tokens,
+            matches_false,
             inclusive_words_alternatives_en,
             inclusive_sentences_alternatives_en,
             rules[lang.locale]["df_inclusive_sentence"],
@@ -1417,6 +1436,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
             lang,
             text,
             tokens,
+            matches_false,
             words_alternatives_en["style"],
             sentences_alternatives_en["style"],
             rules[lang.locale]["df_style_sentence"],
@@ -1430,6 +1450,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
             lang,
             text,
             tokens,
+            matches_false,
             words_alternatives_en["bias"],
             sentences_alternatives_en["bias"],
             rules[lang.locale]["df_ub_sentence"],
@@ -1440,6 +1461,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
             lang,
             text,
             tokens,
+            matches_false,
             gendered_words_alternatives_en["bias"],
             "unconscious_bias",
         )
@@ -2198,54 +2220,93 @@ def rules_based_words_phrase_matcher(
 
     return list_tokens
 
+
 # function English
 
 # matcher to false positives
 def is_false_positive_match(list_false_positive, tokens, token):
-    if list_false_positive.__len__() > 0: 
+    if list_false_positive.__len__() > 0:
         for match_id, start, end in list_false_positive:
             span_false = tokens[start:end]
             if token.idx in range(span_false.start_char, span_false.end_char):
                 return True
-        return False  
-    else:
-        return False
 
-    
+    return False
 
 
 # create false positives patterns based on false positives column
 def false_pattern_match(tokens):
-    #print ("Start:", tokens, [token.pos_ for token in tokens])
-    #list_false_positives = []
+    # print ("Start:", tokens, [token.pos_ for token in tokens])
+    # list_false_positives = []
 
     matcher = Matcher(model["en"].vocab)
-    # Only run model.make_doc to speed things up
-    #patterns = [model["en"].make_doc(text) for text in false_positives]
-    #matcher.add("FalsePositivesList", patterns)
+
     # Define a list with nested dictionaries that contains the pattern to be matched
-    #pronoun_verb = [{'POS': 'PRON'}, {'POS': 'VERB'}]
+    # pronoun_verb = [{'POS': 'PRON'}, {'POS': 'VERB'}]
 
     # patterns for false positives
 
     # master of + noun
-    pattern_master = [[{"LOWER": "master"}, {"LEMMA": "of"}, {"POS": {"IN": ["PRON", "NOUN", "PROPN"]}}],
-    [{"LOWER": "masters"}, {"LEMMA": "of"}, {"POS": {"IN": ["PRON", "NOUN", "PROPN"]}}]]
+    pattern_master = [
+        [
+            {"LOWER": "master"},
+            {"LEMMA": "of"},
+            {"POS": {"IN": ["PRON", "NOUN", "PROPN"]}},
+        ],
+        [
+            {"LOWER": "masters"},
+            {"LEMMA": "of"},
+            {"POS": {"IN": ["PRON", "NOUN", "PROPN"]}},
+        ],
+    ]
     matcher.add("FalsePositivesList", pattern_master)
 
     # lead+someone(optional)+prepostion(on, down, up, to, away, back, along)
-    pattern_lead_prepos = [[{"LEMMA": "lead", 'POS': 'VERB',}, {"POS": {"IN": ["PRON", "NOUN", "PROPN"]}, "OP": "?"}, {"LEMMA": {"IN": ["on", "down", "up", "to", "away", "back", "along", "with", "off"]}}]]
-    matcher.add("FalsePositivesList", pattern_lead_prepos) 
+    pattern_lead_prepos = [
+        [
+            {
+                "LEMMA": "lead",
+                "POS": "VERB",
+            },
+            {"POS": {"IN": ["PRON", "NOUN", "PROPN"]}, "OP": "?"},
+            {
+                "LEMMA": {
+                    "IN": [
+                        "on",
+                        "down",
+                        "up",
+                        "to",
+                        "away",
+                        "back",
+                        "along",
+                        "with",
+                        "off",
+                    ]
+                }
+            },
+        ]
+    ]
+    matcher.add("FalsePositivesList", pattern_lead_prepos)
 
     # lead a (charmed, busy, quiet, normal, ...) life','lead your (my, his, her, their, our, ...) life'
-    pattern_lead_life = [[{"LEMMA": "lead", 'POS': 'VERB'}, {"POS": "DET", "OP": "?"}, {"POS": {"IN": ["ADJ", "PRON"]}, "OP": "?"}, {"LOWER": "life"}]]
-    matcher.add("FalsePositivesList", pattern_lead_life) 
+    pattern_lead_life = [
+        [
+            {"LEMMA": "lead", "POS": "VERB"},
+            {"POS": "DET", "OP": "?"},
+            {"POS": {"IN": ["ADJ", "PRON"]}, "OP": "?"},
+            {"LOWER": "life"},
+        ]
+    ]
+    matcher.add("FalsePositivesList", pattern_lead_life)
 
-     #need to
-    pattern_need_to = [[{"LEMMA": "need", 'POS': 'VERB'}, {"LEMMA": {"IN": ["to", "for"]}}]]
-    matcher.add("FalsePositivesList", pattern_need_to) 
+    # need to
+    pattern_need_to = [
+        [{"LEMMA": "need", "POS": "VERB"}, {"LEMMA": {"IN": ["to", "for"]}}]
+    ]
+    matcher.add("FalsePositivesList", pattern_need_to)
 
     return matcher(tokens)
+
 
 def rules_based_words_phrase_matcher_en(
     version: float,
@@ -2253,6 +2314,7 @@ def rules_based_words_phrase_matcher_en(
     lang,
     full_text,
     tokens,
+    matches_false,
     words_alternatives,
     sentences_alternatives,
     df_sentence,
@@ -2260,15 +2322,11 @@ def rules_based_words_phrase_matcher_en(
 ):
     list_tokens = []
 
-    #create false positives list 
-    phrase_matches_false = get_matches(tokens, list_false_column)
-    word_matches_false = false_pattern_match(tokens)
-    matches_false = list(set(phrase_matches_false + word_matches_false))
-
     for token in tokens:
         for word, word_type, alternative, subcategory in words_alternatives:
             if get_lemma_lower_cased(token) == word and check_token_type(
-                token, word_type, True):
+                token, word_type, True
+            ):
                 if is_false_positive_match(matches_false, tokens, token) == False:
                     alternative = ing_ify_alternatives(token, alternative)
                     alternative = alternatives_declension(token, lang, alternative)
@@ -2313,14 +2371,15 @@ def rules_based_words_phrase_matcher_en(
 
 # english function to handle homonyms
 def homonyms_english(
-    version: float, config: Config, lang, full_text, tokens, homonyms_words
+    version: float,
+    config: Config,
+    lang,
+    full_text,
+    tokens,
+    matches_false,
+    homonyms_words,
 ):
     list_tokens = []
-   
-    #create false positives list 
-    phrase_matches_false = get_matches(tokens, list_false_column)
-    word_matches_false = false_pattern_match(tokens)
-    matches_false = list(set(phrase_matches_false + word_matches_false))
 
     for token in tokens:
         for word, word_type, category, subcategory, alternative in homonyms_words:
@@ -2420,14 +2479,11 @@ def gendered_en(
     lang,
     full_text,
     tokens,
+    matches_false,
     gendered_words_alternatives,
     category,
 ):
     list_tokens = []
-    #create false positives list 
-    phrase_matches_false = get_matches(tokens, list_false_column)
-    word_matches_false = false_pattern_match(tokens)
-    matches_false = list(set(phrase_matches_false + word_matches_false))
 
     for token in tokens:
         for (
@@ -2439,7 +2495,8 @@ def gendered_en(
             second_subcategory,
         ) in gendered_words_alternatives:
             if get_lemma_lower_cased(token) == word and check_token_type(
-                token, word_type, True):
+                token, word_type, True
+            ):
                 if is_false_positive_match(matches_false, tokens, token) == False:
                     token_morph_number = token.morph.get("Number")
                     if is_number_list_empty(token_morph_number, token, full_text):
@@ -2482,6 +2539,7 @@ def rules_based_words_phrase_matcher_no_alt_en(
     lang,
     full_text,
     tokens,
+    matches_false,
     inclusive_words_alternatives_en,
     inclusive_sentences_alternatives_en,
     df_sentence,
@@ -2489,15 +2547,11 @@ def rules_based_words_phrase_matcher_no_alt_en(
 ):
     list_tokens = []
 
-    #create false positives list 
-    phrase_matches_false = get_matches(tokens, list_false_column)
-    word_matches_false = false_pattern_match(tokens)
-    matches_false = list(set(phrase_matches_false + word_matches_false))
-
     for token in tokens:
         for word, word_type, subcategory in inclusive_words_alternatives_en:
             if get_lemma_lower_cased(token) == word and check_token_type(
-                token, word_type, True):
+                token, word_type, True
+            ):
                 if is_false_positive_match(matches_false, tokens, token) == False:
                     list_tokens.append(
                         ResultOut.factory(
