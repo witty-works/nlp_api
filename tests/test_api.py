@@ -1146,3 +1146,24 @@ def test_uberlegen_word_type(uberlegen_word_type_dir, snapshot, set_redis):
     # Snapshot the return value.
     snapshot.snapshot_dir = uberlegen_word_type_dir
     snapshot.assert_match(output, "output.json")
+
+@pytest.mark.parametrize(
+    "english_false_pos_pattern_case_dir",
+    get_dirs("tests/test_english_false_positives_pattern"),
+)
+def test_english_false_positive_pattern(english_false_pos_pattern_case_dir, snapshot, set_redis):
+
+    # Read input files from the case directory.
+    input_json = english_false_pos_pattern_case_dir.joinpath("input.json").read_text()
+    # Call the tested endpoint.
+    response = client.post(
+        "/v2.0/check",
+        json=json.loads(input_json),
+        headers={"X-Auth": "default@gmail.com"},
+    )
+    assert response.status_code == 200
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    # Snapshot the return value.
+    snapshot.snapshot_dir = english_false_pos_pattern_case_dir
+    snapshot.assert_match(output, "output.json")
