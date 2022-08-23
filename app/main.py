@@ -71,7 +71,7 @@ from collections import defaultdict
 
 from app.sentry import set_up_sentry_sdk
 
-version = "1.34.0"
+version = "1.34.1"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -266,7 +266,7 @@ async def auth_debug(request: Request, user_request_in: RequestIn):  # pragma: n
     if not user_email:
         return user_email
 
-    rules = await apply_rules(user_request_in, user_email)
+    rules = await get_rules(user_request_in, user_email)
 
     if "authorization" in request.headers and request.headers[
         "authorization"
@@ -293,7 +293,7 @@ async def auth_1_1(request: Request, response: Response):
     if not user_email:
         return None
 
-    rules = await apply_rules(RequestIn(text=""), user_email)
+    rules = await get_rules(RequestIn(text=""), user_email)
     config = get_result_conf(rules, 1.1)
     if config == None and user_email:
         config = {}
@@ -314,7 +314,7 @@ async def auth_2_0(request: Request, response: Response):
             status_code=status.HTTP_403_FORBIDDEN,
         )
 
-    rules = await apply_rules(RequestIn(text=""), user_email)
+    rules = await get_rules(RequestIn(text=""), user_email)
     if rules == {}:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -565,78 +565,67 @@ async def get_user_rules(
 async def get_user_rules_from_redis(email: str):
     rules = redis.get(email)
 
-    if rules:
-        format_1_1 = False
+    if not rules:
+        return None
 
-        try:
-            rules = json.loads(rules)
-        except ValueError as e:
-            # handle old format
-            format_1_1 = True
+    format_1_1 = False
 
-            rules = {
-                "id": email,
-                "name": email,
-                "email": email,
-                "organization_id": rules,
-                "config": {},
-                "term_replacements": {},
-                "false_positives": [],
-                "domains": {},
-                "organization_domains": {},
-            }
+    try:
+        rules = json.loads(rules)
+    except ValueError as e:
+        # handle old format
+        format_1_1 = True
 
-        rules["plan"] = "witty_free"
+        rules = {
+            "id": email,
+            "name": email,
+            "email": email,
+            "organization_id": rules,
+            "config": {},
+            "term_replacements": {},
+            "false_positives": [],
+            "domains": {},
+            "organization_domains": {},
+        }
 
-        if "organization_id" in rules:
-            organization_rules = redis.get(rules["organization_id"])
+    rules["plan"] = "witty_free"
 
-            if organization_rules:
-                organization_rules = json.loads(organization_rules)
+    if "organization_id" in rules:
+        organization_rules = redis.get(rules["organization_id"])
 
-                rules["plan"] = organization_rules["plan"]
-                rules["organization_name"] = organization_rules["name"]
+        if organization_rules:
+            organization_rules = json.loads(organization_rules)
 
-                if format_1_1:
-                    for rule in organization_rules["term_replacements"]:
-                        term = rule["term"]
-                        del rule["term"]
-                        rules["term_replacements"][term] = rule
-                else:
-                    rules["term_replacements"] |= organization_rules[
-                        "term_replacements"
-                    ]
+            rules["plan"] = organization_rules["plan"]
+            rules["organization_name"] = organization_rules["name"]
 
-                rules["false_positives"] = list(
-                    set(
-                        rules["false_positives"] + organization_rules["false_positives"]
-                    )
-                )
+            if format_1_1:
+                term_replacements = {}
+                for rule in organization_rules["term_replacements"]:
+                    term = rule["term"]
+                    del rule["term"]
+                    term_replacements[term] = rule
+                organization_rules["term_replacements"] = term_replacements
 
-                if "config_hash" in organization_rules:
-                    rules["organization_config_hash"] = organization_rules[
-                        "config_hash"
-                    ]
-                else:
-                    rules["organization_config_hash"] = None
+            if "config_hash" in organization_rules:
+                rules["organization_config_hash"] = organization_rules["config_hash"]
+            else:
+                rules["organization_config_hash"] = None
 
-                if "domains" in organization_rules:
-                    rules["organization_domains"] = organization_rules["domains"]
-                else:
-                    rules["organization_domains"] = {}
+            if "domains" in organization_rules:
+                rules["organization_domains"] = organization_rules["domains"]
+            else:
+                rules["organization_domains"] = {}
 
-                for config in organization_rules["config"]:
-                    if organization_rules["config"][
-                        config
-                    ] != None and organization_rules["config"][config]["status"] in [
-                        "force",
-                        "suggestion",
-                    ]:
-                        rules["config"][config] = organization_rules["config"][config]
+            rules["organization_config"] = organization_rules["config"]
+            rules["organization_term_replacements"] = organization_rules[
+                "term_replacements"
+            ]
+            rules["organization_false_positives"] = organization_rules[
+                "false_positives"
+            ]
 
-        return rules
-
-    return None
+    return rules
 
 
 def is_number_list_empty(number, token, full_text):
@@ -675,8 +664,28 @@ def filter_config(config):
     return {k: v for (k, v) in config.items() if v != "" and v is not None and v != []}
 
 
-async def apply_rules(user_request_in: RequestIn, user_email=Optional[str]):
-    store_context = user_request_in.config.store_context
+def apply_rules(user_request_in: RequestIn, configs: dict, plan: str):
+    disabled_categories = user_request_in.config.disabled_categories
+
+    for config in configs:
+        data = configs[config]
+        if data is not None and data["status"] == "force":
+            if config in ["inclusive", "style", "orthography"]:
+                if data["value"]:
+                    if config in disabled_categories:
+                        disabled_categories.remove(config)
+                elif config not in disabled_categories:
+                    disabled_categories.append(config)
+            elif config == "store_context":
+                if plan == "witty_teams" and not data["value"]:
+                    user_request_in.config.__setattr__("store_context", False)
+            else:
+                user_request_in.config.__setattr__(config, data["value"])
+
+    user_request_in.config.__setattr__("disabled_categories", disabled_categories)
+
+
+async def get_rules(user_request_in: RequestIn, user_email=Optional[str]):
     user_request_in.config.__setattr__("store_context", True)
 
     if not user_email:
@@ -686,26 +695,15 @@ async def apply_rules(user_request_in: RequestIn, user_email=Optional[str]):
     if not rules or type(rules) is not dict:
         return {}
 
-    disabled_categories = user_request_in.config.disabled_categories
+    apply_rules(user_request_in, rules["config"], rules["plan"])
 
-    for config in rules["config"]:
-        data = rules["config"][config]
-        if data is not None and data["status"] == "force":
-            if config in ["inclusive", "style", "orthography"]:
-                if data["value"]:
-                    if config in disabled_categories:
-                        disabled_categories.remove(config)
-                elif config not in disabled_categories:
-                    disabled_categories.append(config)
-            elif config == "store_context":
-                store_context = data["value"]
-            else:
-                user_request_in.config.__setattr__(config, data["value"])
+    if "organization_config" in rules:
+        apply_rules(user_request_in, rules["organization_config"], rules["plan"])
 
-    user_request_in.config.__setattr__("disabled_categories", disabled_categories)
-
-    if rules["plan"] == "witty_teams" and not store_context:
-        user_request_in.config.__setattr__("store_context", False)
+        rules["term_replacements"] |= rules["organization_term_replacements"]
+        rules["false_positives"] = list(
+            set(rules["false_positives"] + rules["organization_false_positives"])
+        )
 
     return rules
 
@@ -763,7 +761,7 @@ async def check(
             status_code=status.HTTP_403_FORBIDDEN,
         )
 
-    rules = await apply_rules(user_request_in, user_email)
+    rules = await get_rules(user_request_in, user_email)
 
     text = user_request_in.text
     limit_reached = len(text) > settings.text_max_length
@@ -821,6 +819,19 @@ def get_result_conf(
     if "config" not in rules:
         return None
 
+    if "organization_config" in rules:
+        if version < 2.0:
+            for config in rules["organization_config"]:
+                if (
+                    rules["organization_config"][config] != None
+                    and rules["organization_config"][config]["status"] == "force"
+                ):
+                    rules["config"][config] = rules["organization_config"][config]
+        else:
+            organization_config = RuleConfig.parse_obj(rules["organization_config"])
+    else:
+        organization_config = None
+
     config = RuleConfig.parse_obj(rules["config"])
     plan = rules["plan"]
 
@@ -835,12 +846,15 @@ def get_result_conf(
     return ResultConf(
         id=rules["id"],
         name=rules["name"],
-        organization_id=rules["organization_id"],
-        organization_name=rules["organization_name"],
         plan=plan,
         config=config,
+        organization_id=rules["organization_id"],
+        organization_name=rules["organization_name"],
+        organization_config=organization_config,
         domains=rules["domains"],
         organization_domains=rules["organization_domains"],
+        config_hash=rules["config_hash"],
+        organization_config_hash=rules["organization_config_hash"],
     )
 
 
@@ -882,19 +896,34 @@ def languagetool_matches(
     )
 
     for match in result["matches"]:
-        offset = int(match["offset"])
-        end = offset + int(match["length"])
-        highlight_text = text[offset:end]
+        start = int(match["offset"])
+        end = start + int(match["length"])
+        highlight_text = text[start:end]
+
+        # Ignore capitalization after German salutation
+        if (
+            start > 5
+            and match["rule"]["id"] == "DE_CASE"
+            and text.lstrip().startswith(
+                (
+                    "Hallo",
+                    "Sehr geehrte",
+                    "Liebe",
+                )
+            )
+            and "".join(text[0:start].split()).endswith(",")
+        ):
+            continue
 
         # ignore text that starts with @ or #
         if highlight_text[0:1] in ignore or (
-            offset > 0 and text[offset - 1 : offset] in ignore
+            start > 0 and text[start - 1 : start] in ignore
         ):
             continue
 
         # ignore german gender ending as spelling mistakes
         if gendered_denom and has_gender_denom_ending(
-            highlight_text, text, offset, config
+            highlight_text, text, start, config
         ):
             continue
 
@@ -923,7 +952,7 @@ def languagetool_matches(
                 text,
                 category,
                 subcategory,
-                offset,
+                start,
                 end,
                 alternatives,
                 label,
@@ -989,6 +1018,13 @@ async def languagetool_rules(version: float, config: Config, lang: Language, tex
 def get_tokens(lang: Language, text: str):
     # apply SpaCy pre-built model
     return model[lang.lang](text.rstrip().replace("\n", " "))
+
+
+def get_false_positive_matcher(tokens):
+    # create false positives list
+    phrase_matches_false = get_matches(tokens, list_false_column)
+    word_matches_false = false_pattern_match(tokens)
+    return list(set(phrase_matches_false + word_matches_false))
 
 
 def get_matches(tokens, phrases):
@@ -1163,9 +1199,6 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             false_positives.gender,
         )
 
-    if is_sub_category_enabled(config, "misgendering_institutions"):
-        list_full += misgendering_institutions_de(version, config, lang, text, tokens)
-
     if is_sub_category_enabled(
         config, "gendered_denominations_ending"
     ) and ResultOut.genderedRolesFormatInclusive(config.gendered_roles_format):
@@ -1270,6 +1303,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
     gendered_words_alternatives_en = defaultdict(list)
     inclusive_sentences_alternatives_en = []
     sentences_alternatives_en = defaultdict(list)
+    matches_false = get_false_positive_matcher(tokens)
 
     if lang.locale == "en-GB":
         words_alternatives_en["od"] = open_disc_words_alternatives_GB
@@ -1311,7 +1345,13 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
         sentences_alternatives_en["bias"] = bias_sentences_alternatives_US
 
     list_full += homonyms_english(
-        version, config, lang, text, tokens, words_alternatives_en["homonym"]
+        version,
+        config,
+        lang,
+        text,
+        tokens,
+        matches_false,
+        words_alternatives_en["homonym"],
     )
     list_full += literal_match(
         version,
@@ -1330,6 +1370,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
             lang,
             text,
             tokens,
+            matches_false,
             words_alternatives_en["od"],
             sentences_alternatives_en["od"],
             rules[lang.locale]["df_open_dis_sentence"],
@@ -1344,6 +1385,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
                 lang,
                 text,
                 tokens,
+                matches_false,
                 words_alternatives_en["ge-singular-they"],
                 sentences_alternatives_en["ge"],
                 rules[lang.locale]["df_gendered_sentence"],
@@ -1356,6 +1398,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
                 lang,
                 text,
                 tokens,
+                matches_false,
                 words_alternatives_en["ge"],
                 sentences_alternatives_en["ge"],
                 rules[lang.locale]["df_gendered_sentence"],
@@ -1367,6 +1410,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
             lang,
             text,
             tokens,
+            matches_false,
             gendered_words_alternatives_en["gendered"],
             "gendered",
         )
@@ -1378,6 +1422,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
             lang,
             text,
             tokens,
+            matches_false,
             inclusive_words_alternatives_en,
             inclusive_sentences_alternatives_en,
             rules[lang.locale]["df_inclusive_sentence"],
@@ -1391,6 +1436,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
             lang,
             text,
             tokens,
+            matches_false,
             words_alternatives_en["style"],
             sentences_alternatives_en["style"],
             rules[lang.locale]["df_style_sentence"],
@@ -1404,6 +1450,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
             lang,
             text,
             tokens,
+            matches_false,
             words_alternatives_en["bias"],
             sentences_alternatives_en["bias"],
             rules[lang.locale]["df_ub_sentence"],
@@ -1414,6 +1461,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
             lang,
             text,
             tokens,
+            matches_false,
             gendered_words_alternatives_en["bias"],
             "unconscious_bias",
         )
@@ -1874,6 +1922,9 @@ def gendered_denom_analysis_de(
                         ) = find_article(tokens[i - 1])
 
                         if masculine != None:
+                            # also detect if its a person or an institution
+                            # in the later case do not offer the Gender-star options
+                            # and use subcategory "misgendering_institutions"
                             for alternative in alternatives:
                                 if "~" in alternative:
                                     article_alternative = alternative_for_article
@@ -2170,58 +2221,100 @@ def rules_based_words_phrase_matcher(
     return list_tokens
 
 
-# Deutshe Bahn realated rule. Function to catch masculine words in sentences like
-# Deutshe Bahn als.. Deutshe Bahn ist..
-
-
-def misgendering_institutions_de(
-    version: float, config: Config, lang, full_text, tokens
-):
-    subcategory = "misgendering_institutions"
-    category = categories[subcategory]["category"]
-    db_match_list = []
-    matcher_db = Matcher(model[lang.lang].vocab)
-    # Add match ID "DB" with no callback and one pattern
-    pattern_db = [
-        {"TEXT": "Deutsche"},
-        {"TEXT": "Bahn"},
-        {"LEMMA": "sein", "OP": "*"},
-        {"POS": "ADV", "OP": "*"},
-        {"TEXT": "als", "OP": "*"},
-        {"TAG": "ART", "OP": "*"},
-        {"POS": "ADJ", "OP": "*"},
-        {"POS": "NOUN", "MORPH": {"IS_SUPERSET": ["Gender=Masc"]}},
-    ]
-    # use greedy = "LONGEST" to find all matches in the text related to pattern
-    matcher_db.add("DB", [pattern_db], greedy="LONGEST")
-    matches_db = matcher_db(tokens)
-
-    for match_id, start, end in matches_db:
-        span = tokens[start:end]  # The matched span
-        db_match_list.append(
-            ResultOut.factory(
-                version,
-                config,
-                lang,
-                span.text,
-                full_text,
-                category,
-                subcategory,
-                span.start_char,
-                span.end_char,
-                [span.text + "in"],
-            )
-        )
-    return db_match_list
-
-
 # function English
+
+# matcher to false positives
+def is_false_positive_match(list_false_positive, tokens, token):
+    if list_false_positive.__len__() > 0:
+        for match_id, start, end in list_false_positive:
+            span_false = tokens[start:end]
+            if token.idx in range(span_false.start_char, span_false.end_char):
+                return True
+
+    return False
+
+
+# create false positives patterns based on false positives column
+def false_pattern_match(tokens):
+    # print ("Start:", tokens, [token.pos_ for token in tokens])
+    # list_false_positives = []
+
+    matcher = Matcher(model["en"].vocab)
+
+    # Define a list with nested dictionaries that contains the pattern to be matched
+    # pronoun_verb = [{'POS': 'PRON'}, {'POS': 'VERB'}]
+
+    # patterns for false positives
+
+    # master of + noun
+    pattern_master = [
+        [
+            {"LOWER": "master"},
+            {"LEMMA": "of"},
+            {"POS": {"IN": ["PRON", "NOUN", "PROPN"]}},
+        ],
+        [
+            {"LOWER": "masters"},
+            {"LEMMA": "of"},
+            {"POS": {"IN": ["PRON", "NOUN", "PROPN"]}},
+        ],
+    ]
+    matcher.add("FalsePositivesList", pattern_master)
+
+    # lead+someone(optional)+prepostion(on, down, up, to, away, back, along)
+    pattern_lead_prepos = [
+        [
+            {
+                "LEMMA": "lead",
+                "POS": "VERB",
+            },
+            {"POS": {"IN": ["PRON", "NOUN", "PROPN"]}, "OP": "?"},
+            {
+                "LEMMA": {
+                    "IN": [
+                        "on",
+                        "down",
+                        "up",
+                        "to",
+                        "away",
+                        "back",
+                        "along",
+                        "with",
+                        "off",
+                    ]
+                }
+            },
+        ]
+    ]
+    matcher.add("FalsePositivesList", pattern_lead_prepos)
+
+    # lead a (charmed, busy, quiet, normal, ...) life','lead your (my, his, her, their, our, ...) life'
+    pattern_lead_life = [
+        [
+            {"LEMMA": "lead", "POS": "VERB"},
+            {"POS": "DET", "OP": "?"},
+            {"POS": {"IN": ["ADJ", "PRON"]}, "OP": "?"},
+            {"LOWER": "life"},
+        ]
+    ]
+    matcher.add("FalsePositivesList", pattern_lead_life)
+
+    # need to
+    pattern_need_to = [
+        [{"LEMMA": "need", "POS": "VERB"}, {"LEMMA": {"IN": ["to", "for"]}}]
+    ]
+    matcher.add("FalsePositivesList", pattern_need_to)
+
+    return matcher(tokens)
+
+
 def rules_based_words_phrase_matcher_en(
     version: float,
     config: Config,
     lang,
     full_text,
     tokens,
+    matches_false,
     words_alternatives,
     sentences_alternatives,
     df_sentence,
@@ -2234,23 +2327,24 @@ def rules_based_words_phrase_matcher_en(
             if get_lemma_lower_cased(token) == word and check_token_type(
                 token, word_type, True
             ):
-                alternative = ing_ify_alternatives(token, alternative)
-                alternative = alternatives_declension(token, lang, alternative)
+                if is_false_positive_match(matches_false, tokens, token) == False:
+                    alternative = ing_ify_alternatives(token, alternative)
+                    alternative = alternatives_declension(token, lang, alternative)
 
-                list_tokens.append(
-                    ResultOut.factory(
-                        version,
-                        config,
-                        lang,
-                        token.text,
-                        full_text,
-                        category,
-                        subcategory,
-                        token.idx,
-                        token.idx + len(token.text),
-                        alternative,
+                    list_tokens.append(
+                        ResultOut.factory(
+                            version,
+                            config,
+                            lang,
+                            token.text,
+                            full_text,
+                            category,
+                            subcategory,
+                            token.idx,
+                            token.idx + len(token.text),
+                            alternative,
+                        )
                     )
-                )
 
     matches = get_matches(tokens, list(df_sentence["Lemma"]))
     for match_id, start, end in matches:
@@ -2277,7 +2371,13 @@ def rules_based_words_phrase_matcher_en(
 
 # english function to handle homonyms
 def homonyms_english(
-    version: float, config: Config, lang, full_text, tokens, homonyms_words
+    version: float,
+    config: Config,
+    lang,
+    full_text,
+    tokens,
+    matches_false,
+    homonyms_words,
 ):
     list_tokens = []
 
@@ -2287,22 +2387,23 @@ def homonyms_english(
                 continue
 
             if token.lemma_ == word and check_token_type(token, word_type, True):
-                alternative = ing_ify_alternatives(token, alternative)
+                if is_false_positive_match(matches_false, tokens, token) == False:
+                    alternative = ing_ify_alternatives(token, alternative)
 
-                list_tokens.append(
-                    ResultOut.factory(
-                        version,
-                        config,
-                        lang,
-                        token.text,
-                        full_text,
-                        category,
-                        subcategory,
-                        token.idx,
-                        token.idx + len(token.text),
-                        alternative,
+                    list_tokens.append(
+                        ResultOut.factory(
+                            version,
+                            config,
+                            lang,
+                            token.text,
+                            full_text,
+                            category,
+                            subcategory,
+                            token.idx,
+                            token.idx + len(token.text),
+                            alternative,
+                        )
                     )
-                )
 
     return list_tokens
 
@@ -2378,6 +2479,7 @@ def gendered_en(
     lang,
     full_text,
     tokens,
+    matches_false,
     gendered_words_alternatives,
     category,
 ):
@@ -2395,34 +2497,35 @@ def gendered_en(
             if get_lemma_lower_cased(token) == word and check_token_type(
                 token, word_type, True
             ):
-                token_morph_number = token.morph.get("Number")
-                if is_number_list_empty(token_morph_number, token, full_text):
-                    continue
+                if is_false_positive_match(matches_false, tokens, token) == False:
+                    token_morph_number = token.morph.get("Number")
+                    if is_number_list_empty(token_morph_number, token, full_text):
+                        continue
 
-                alternative, subcategory = plural_or_singular_en(
-                    token,
-                    token_morph_number,
-                    alternative_sing,
-                    alternative_plur,
-                    subcategory,
-                    second_subcategory,
-                )
-
-                if alternative != None:
-                    list_tokens.append(
-                        ResultOut.factory(
-                            version,
-                            config,
-                            lang,
-                            token.text,
-                            full_text,
-                            category,
-                            subcategory,
-                            token.idx,
-                            token.idx + len(token.text),
-                            alternative,
-                        )
+                    alternative, subcategory = plural_or_singular_en(
+                        token,
+                        token_morph_number,
+                        alternative_sing,
+                        alternative_plur,
+                        subcategory,
+                        second_subcategory,
                     )
+
+                    if alternative != None:
+                        list_tokens.append(
+                            ResultOut.factory(
+                                version,
+                                config,
+                                lang,
+                                token.text,
+                                full_text,
+                                category,
+                                subcategory,
+                                token.idx,
+                                token.idx + len(token.text),
+                                alternative,
+                            )
+                        )
 
     return list_tokens
 
@@ -2436,6 +2539,7 @@ def rules_based_words_phrase_matcher_no_alt_en(
     lang,
     full_text,
     tokens,
+    matches_false,
     inclusive_words_alternatives_en,
     inclusive_sentences_alternatives_en,
     df_sentence,
@@ -2448,20 +2552,21 @@ def rules_based_words_phrase_matcher_no_alt_en(
             if get_lemma_lower_cased(token) == word and check_token_type(
                 token, word_type, True
             ):
-                list_tokens.append(
-                    ResultOut.factory(
-                        version,
-                        config,
-                        lang,
-                        token.text,
-                        full_text,
-                        category,
-                        subcategory,
-                        token.idx,
-                        token.idx + len(token.text),
-                        [],
+                if is_false_positive_match(matches_false, tokens, token) == False:
+                    list_tokens.append(
+                        ResultOut.factory(
+                            version,
+                            config,
+                            lang,
+                            token.text,
+                            full_text,
+                            category,
+                            subcategory,
+                            token.idx,
+                            token.idx + len(token.text),
+                            [],
+                        )
                     )
-                )
 
     matches = get_matches(tokens, list(df_sentence["Lemma"]))
     for match_id, start, end in matches:

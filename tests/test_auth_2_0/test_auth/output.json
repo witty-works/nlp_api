@@ -1,12 +1,42 @@
 {
     "config": {
+        "german_gender_ending": {
+            "status": "force",
+            "value": "In"
+        },
+        "inclusive": {
+            "status": "force",
+            "value": true
+        },
+        "preferred_variants": {
+            "status": "force",
+            "value": [
+                "en-GB"
+            ]
+        },
+        "style": {
+            "status": "force",
+            "value": false
+        }
+    },
+    "config_hash": "foobar",
+    "domains": {
+        "list": [
+            "foo.com",
+            "bar.de"
+        ],
+        "type": "deny"
+    },
+    "id": "test-user",
+    "name": "Tests User",
+    "organization_config": {
         "gendered_roles_format": {
             "status": "force",
             "value": "binary_gender"
         },
         "german_gender_ending": {
-            "status": "force",
-            "value": "In"
+            "status": "suggestion",
+            "value": "*in"
         },
         "inclusive": {
             "status": "force",
@@ -25,23 +55,16 @@
         "store_context": {
             "status": "force",
             "value": true
-        },
-        "style": {
-            "status": "force",
-            "value": false
         }
     },
-    "domains": {
-        "list": [
-            "foo.com",
-            "bar.de"
-        ],
-        "type": "deny"
-    },
+    "organization_config_hash": "foobaz",
     "organization_domains": {
         "list": [
             "hello.com"
         ],
         "type": "allow"
-    }
+    },
+    "organization_id": "test-org",
+    "organization_name": "Witty Works",
+    "plan": "witty_teams"
 }

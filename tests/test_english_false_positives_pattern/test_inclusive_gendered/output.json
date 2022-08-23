@@ -1,0 +1,36 @@
+{
+    "language": "en",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [],
+            "category": "inclusive",
+            "context": "We need to aid those who needs. The analysis team likes to work as a team.",
+            "end": 30,
+            "explanation": {
+                "icon": "✅",
+                "text": "Emphasizes cooperative attributes",
+                "url": "https://www.witty.works/en/categories/inclusive#communal"
+            },
+            "label": "Inclusive: Communal",
+            "start": 25,
+            "subcategory": "communal",
+            "text": "needs"
+        },
+        {
+            "alternatives": [],
+            "category": "inclusive",
+            "context": "We need to aid those who needs. The analysis team likes to work as a team.",
+            "end": 73,
+            "explanation": {
+                "icon": "✅",
+                "text": "Emphasizes cooperative attributes",
+                "url": "https://www.witty.works/en/categories/inclusive#communal"
+            },
+            "label": "Inclusive: Communal",
+            "start": 69,
+            "subcategory": "communal",
+            "text": "team"
+        }
+    ]
+}
