@@ -415,11 +415,16 @@ async def check_v2_0(
     if isinstance(results, Result):
         return results
 
+    notifications = None
+    if "notifications" in rules and rules["notifications"] > 0:
+        notifications = rules["notifications"]
+
     return ResultsOut(
         results=results,
         language=language,
         limit_reached=limit_reached,
         config_changed=get_config_change(rules, user_request_in),
+        notifications=notifications,
     )
 
 
@@ -586,6 +591,7 @@ async def get_user_rules_from_redis(email: str):
             "false_positives": [],
             "domains": {},
             "organization_domains": {},
+            "notifications": None,
         }
 
     rules["plan"] = "witty_free"
@@ -804,8 +810,9 @@ def get_config_change(
         return True
 
     if (
-        "organizationn_config_hash" in rules
-        and user_request_in.organizationn_hash != rules["organization_config_hash"]
+        "organization_config_hash" in rules
+        and user_request_in.organization_config_hash
+        != rules["organization_config_hash"]
     ):
         return True
 

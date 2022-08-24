@@ -475,6 +475,7 @@ def set_redis():
         "config": {},
         "false_positives": [],
         "term_replacements": {},
+        "notifications": 0,
     }
 
     redis.set(user_object["email"], json.dumps(user_object))
@@ -530,6 +531,7 @@ def set_redis():
             "list": ["foo.com", "bar.de"],
         },
         "config_hash": "foobar",
+        "notifications": 5,
     }
 
     redis.set(user_object["email"], json.dumps(user_object))
