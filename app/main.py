@@ -1162,15 +1162,16 @@ def is_sub_category_enabled(config: Config, subcategory: str):
 def german_rules(version: float, config: Config, lang: Language, tokens, text: str):
     list_full = []
 
-    list_full += literal_match(
-        version,
-        config,
-        lang,
-        text,
-        tokens,
-        rules["de-DE"]["df_abbreviation"],
-        abbreviation,
-    )
+    if is_sub_category_enabled(config, "abbreviation"):
+        list_full += literal_match(
+            version,
+            config,
+            lang,
+            text,
+            tokens,
+            rules["de-DE"]["df_abbreviation"],
+            abbreviation,
+        )
 
     if is_sub_category_enabled(config, "openly_discriminating"):
         list_full += rules_based_words_phrase_matcher_de(
@@ -1360,15 +1361,17 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
         matches_false,
         words_alternatives_en["homonym"],
     )
-    list_full += literal_match(
-        version,
-        config,
-        lang,
-        text,
-        tokens,
-        rules[lang.locale]["df_abbreviation"],
-        words_alternatives_en["abbr"],
-    )
+
+    if is_sub_category_enabled(config, "abbreviation"):
+        list_full += literal_match(
+            version,
+            config,
+            lang,
+            text,
+            tokens,
+            rules[lang.locale]["df_abbreviation"],
+            words_alternatives_en["abbr"],
+        )
 
     if is_sub_category_enabled(config, "openly_discriminating"):
         list_full += rules_based_words_phrase_matcher_en(
@@ -2436,8 +2439,6 @@ def literal_match(
             alternative,
             *explanation,
         ) in term_list:
-            if not is_sub_category_enabled(config, subcategory):
-                continue
             span = tokens[start:end]
             if span.text == term:
                 url = None
