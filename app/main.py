@@ -71,7 +71,7 @@ from collections import defaultdict
 
 from app.sentry import set_up_sentry_sdk
 
-version = "1.34.2"
+version = "1.34.3"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -827,19 +827,10 @@ def get_result_conf(
         return None
 
     if "organization_config" in rules:
-        if version < 2.0:
-            for config in rules["organization_config"]:
-                if (
-                    rules["organization_config"][config] != None
-                    and rules["organization_config"][config]["status"] == "force"
-                ):
-                    rules["config"][config] = rules["organization_config"][config]
-        else:
-            organization_config = RuleConfig.parse_obj(rules["organization_config"])
+        organization_config = RuleConfig.parse_obj(rules["organization_config"])
     else:
         organization_config = None
 
-    config = RuleConfig.parse_obj(rules["config"])
     plan = rules["plan"]
 
     if version < 2.0:
@@ -847,8 +838,10 @@ def get_result_conf(
             id=rules["organization_id"],
             name=rules["organization_name"],
             plan=plan,
-            config=config,
+            config=organization_config,
         )
+
+    config = RuleConfig.parse_obj(rules["config"])
 
     return ResultConf(
         id=rules["id"],

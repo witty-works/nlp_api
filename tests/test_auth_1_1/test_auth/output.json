@@ -5,8 +5,8 @@
             "value": "binary_gender"
         },
         "german_gender_ending": {
-            "status": "force",
-            "value": "In"
+            "status": "suggestion",
+            "value": "*in"
         },
         "inclusive": {
             "status": "force",
@@ -25,10 +25,6 @@
         "store_context": {
             "status": "force",
             "value": true
-        },
-        "style": {
-            "status": "force",
-            "value": false
         }
     },
     "id": "test-org",
