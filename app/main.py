@@ -71,7 +71,7 @@ from collections import defaultdict
 
 from app.sentry import set_up_sentry_sdk
 
-version = "1.34.3"
+version = "1.34.4"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -415,11 +415,16 @@ async def check_v2_0(
     if isinstance(results, Result):
         return results
 
+    notifications = None
+    if "notifications" in rules and rules["notifications"] > 0:
+        notifications = rules["notifications"]
+
     return ResultsOut(
         results=results,
         language=language,
         limit_reached=limit_reached,
         config_changed=get_config_change(rules, user_request_in),
+        notifications=notifications,
     )
 
 
@@ -586,6 +591,7 @@ async def get_user_rules_from_redis(email: str):
             "false_positives": [],
             "domains": {},
             "organization_domains": {},
+            "notifications": None,
         }
 
     rules["plan"] = "witty_free"
@@ -804,8 +810,9 @@ def get_config_change(
         return True
 
     if (
-        "organizationn_config_hash" in rules
-        and user_request_in.organizationn_hash != rules["organization_config_hash"]
+        "organization_config_hash" in rules
+        and user_request_in.organization_config_hash
+        != rules["organization_config_hash"]
     ):
         return True
 
@@ -1148,15 +1155,16 @@ def is_sub_category_enabled(config: Config, subcategory: str):
 def german_rules(version: float, config: Config, lang: Language, tokens, text: str):
     list_full = []
 
-    list_full += literal_match(
-        version,
-        config,
-        lang,
-        text,
-        tokens,
-        rules["de-DE"]["df_abbreviation"],
-        abbreviation,
-    )
+    if is_sub_category_enabled(config, "abbreviation"):
+        list_full += literal_match(
+            version,
+            config,
+            lang,
+            text,
+            tokens,
+            rules["de-DE"]["df_abbreviation"],
+            abbreviation,
+        )
 
     if is_sub_category_enabled(config, "openly_discriminating"):
         list_full += rules_based_words_phrase_matcher_de(
@@ -1346,15 +1354,17 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
         matches_false,
         words_alternatives_en["homonym"],
     )
-    list_full += literal_match(
-        version,
-        config,
-        lang,
-        text,
-        tokens,
-        rules[lang.locale]["df_abbreviation"],
-        words_alternatives_en["abbr"],
-    )
+
+    if is_sub_category_enabled(config, "abbreviation"):
+        list_full += literal_match(
+            version,
+            config,
+            lang,
+            text,
+            tokens,
+            rules[lang.locale]["df_abbreviation"],
+            words_alternatives_en["abbr"],
+        )
 
     if is_sub_category_enabled(config, "openly_discriminating"):
         list_full += rules_based_words_phrase_matcher_en(
@@ -1940,6 +1950,8 @@ def gendered_denom_analysis_de(
                                         "definite_article"
                                     ] == "die" or alternative.endswith("in"):
                                         article_alternative = feminine
+                                    else:
+                                        article_alternative = tokens[i -1].text
 
                                 alternatives_with_article.append(
                                     article_alternative + " " + alternative
@@ -2422,8 +2434,6 @@ def literal_match(
             alternative,
             *explanation,
         ) in term_list:
-            if not is_sub_category_enabled(config, subcategory):
-                continue
             span = tokens[start:end]
             if span.text == term:
                 url = None

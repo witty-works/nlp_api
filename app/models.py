@@ -302,6 +302,7 @@ class ConfRequest(BaseModel):
     term_replacements: Dict[str, TermReplacement] = {}
     domains: Optional[DomainConfig]
     config_hash: Optional[str]
+    notifications: Optional[int]
 
 
 class ConfRequest1_1(BaseModel):
@@ -331,7 +332,7 @@ class RequestIn(BaseModel):
     client: Optional[str] = None
     config: Optional[Config] = Config()
     config_hash: Optional[str]
-    config_organization_hash: Optional[str]
+    organization_config_hash: Optional[str]
 
 
 class RequestInEvent(RequestIn):
@@ -793,3 +794,4 @@ class ResultsOut(BaseModel):
     language: str
     limit_reached: bool
     config_changed: Optional[bool]
+    notifications: Optional[int]
