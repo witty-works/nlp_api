@@ -1950,6 +1950,8 @@ def gendered_denom_analysis_de(
                                         "definite_article"
                                     ] == "die" or alternative.endswith("in"):
                                         article_alternative = feminine
+                                    else:
+                                        article_alternative = tokens[i -1].text
 
                                 alternatives_with_article.append(
                                     article_alternative + " " + alternative
