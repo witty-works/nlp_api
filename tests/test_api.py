@@ -5,7 +5,7 @@ from fastapi.testclient import TestClient
 from app.main import (
     app,
     redis,
-    get_rules,
+    fetch_user_rules,
     is_number_list_empty,
 )
 from app.model import model
@@ -693,7 +693,7 @@ def test_disable_categories(test_disable_categories_dir, snapshot, set_redis):
 
 
 # test overwriting user configuration by organization forced rules
-def test_get_rules(event_loop, set_redis):
+def test_fetch_user_rules(event_loop, set_redis):
     request_data = {
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
         "config": {
@@ -706,7 +706,7 @@ def test_get_rules(event_loop, set_redis):
         },
     }
     test_request = RequestIn(**request_data)
-    event_loop.run_until_complete(get_rules(test_request, "test@gmail.com"))
+    event_loop.run_until_complete(fetch_user_rules(test_request, "test@gmail.com"))
     assert hasattr(test_request.config, "store_context")
     assert test_request.config.store_context == True
     assert test_request.config.preferred_variants == ["en-GB"]
@@ -717,7 +717,7 @@ def test_get_rules(event_loop, set_redis):
 # test not overwriting user configuration by organization suggestion/default rules
 
 
-def test_get_rules_suggestion(event_loop, set_redis):
+def test_fetch_user_rules_suggestion(event_loop, set_redis):
     request_data = {
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
         "config": {
@@ -729,7 +729,7 @@ def test_get_rules_suggestion(event_loop, set_redis):
         },
     }
     test_request = RequestIn(**request_data)
-    event_loop.run_until_complete(get_rules(test_request, "non_existant@gmail.com"))
+    event_loop.run_until_complete(fetch_user_rules(test_request, "non_existant@gmail.com"))
     assert test_request.config.store_context == True
     assert test_request.config.primary_language == "de-DE"
     assert test_request.config.preferred_languages == ["de"]
@@ -746,7 +746,7 @@ def test_set_organization_rules(event_loop, set_redis):
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
     }
     test_request = RequestIn(**request_data)
-    event_loop.run_until_complete(get_rules(test_request, "test@gmail.com"))
+    event_loop.run_until_complete(fetch_user_rules(test_request, "test@gmail.com"))
     assert test_request.config.store_context == True
     assert test_request.config.preferred_variants == ["en-GB"]
     assert test_request.config.german_gender_ending == "In"
@@ -762,7 +762,7 @@ def test_set_default_rules(event_loop):
     }
     test_request = RequestIn(**request_data)
 
-    event_loop.run_until_complete(get_rules(test_request, "non_existant@gmail.com"))
+    event_loop.run_until_complete(fetch_user_rules(test_request, "non_existant@gmail.com"))
     assert test_request.config.store_context == True
     assert test_request.config.primary_language == None
     assert test_request.config.preferred_languages == [

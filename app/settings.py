@@ -38,6 +38,9 @@ class Settings(BaseSettings):
     redis_default_1_1_rules: Optional[str]
     redis_default_rules: Optional[str]
     redis_default_organization_rules: Optional[str]
+    slack_signing_secret: Optional[str]
+    slack_bot_token: Optional[str]
+    slack_organization_id: Optional[str]
 
     class Config:
         env_file = ".env"

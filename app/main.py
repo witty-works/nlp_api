@@ -26,6 +26,16 @@ from fastapi.security import (
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import RedirectResponse
 
+from slack_bolt.adapter.fastapi.async_handler import AsyncSlackRequestHandler
+from slack_bolt.app.async_app import AsyncApp
+from slack_sdk import WebClient
+from slack_sdk.models.blocks import (
+    SectionBlock,
+    MarkdownTextObject,
+)
+from slack_bolt import Ack, Respond
+from slack_sdk.web.async_client import AsyncWebClient
+
 from typing import Optional, Union
 
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
@@ -71,7 +81,7 @@ from collections import defaultdict
 
 from app.sentry import set_up_sentry_sdk
 
-version = "1.34.4"
+version = "1.34.5"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -82,6 +92,113 @@ lang_detection = LangDetection()
 initialize_aadb2c(settings)
 
 logging.debug("app started with settings: %s", settings)
+
+if (
+    settings.slack_bot_token != None and settings.slack_signing_secret != None
+):  # pragma: no cover
+    bolt = AsyncApp(
+        token=settings.slack_bot_token, signing_secret=settings.slack_signing_secret
+    )
+else:
+    bolt = AsyncApp(
+        signing_secret="valid",
+        client=AsyncWebClient(
+            token="valid_token",
+            base_url="http://localhost",
+        ),
+    )
+
+bolt_handler = AsyncSlackRequestHandler(bolt)
+
+
+@bolt.command("/witty")
+async def handle_command_witty(
+    body: dict, ack: Ack, respond: Respond, client: WebClient
+):
+    await ack()
+
+    user_request_in = RequestIn(text=body["text"])
+    text, lang, limit_reached = get_text(user_request_in)
+
+    if lang == None:
+        await respond(f"Witty could not determine a language for '{text}'.")
+        return
+
+    rules = {}
+
+    try:
+        user = await client.users_info(user=body["user_id"])
+        rules = await fetch_user_rules(
+            user_request_in, user.data["user"]["profile"]["email"]
+        )
+    except KeyError:
+        pass
+
+    if rules == {} and settings.slack_organization_id:
+        rules = await fetch_organization_rules(
+            user_request_in, settings.slack_organization_id
+        )
+
+    results = await language_rules(2.0, user_request_in.config, rules, lang, text)
+
+    analyzed_text = f"*Analyzed*: {text}"
+    if limit_reached:
+        analyzed_text += " (text length limit reached)"
+
+    blocks = [
+        SectionBlock(
+            block_id="text",
+            text=MarkdownTextObject(text=analyzed_text),
+        ),
+        SectionBlock(
+            block_id="details",
+            text=MarkdownTextObject(
+                text=f"*Language*: {lang.lang}, *Number of Issues Detected*: {len(results)}"
+            ),
+        ),
+    ]
+
+    if len(results):
+        for i, result in enumerate(results):
+            issue_text = f"#{i+1} Matched Text: {result.text} (category {result.category}, gravity {result.gravity})\n"
+
+            if result.explanation.icon:
+                issue_text += f"{result.explanation.icon} "
+
+            if result.explanation.url:
+                issue_text += f"<{result.explanation.url}|{result.explanation.text}>"
+            else:
+                issue_text += f"{result.explanation.text}"
+
+            if result.explanation.context:
+                issue_text += f" ({result.explanation.context})"
+
+            blocks.append(
+                SectionBlock(
+                    block_id=f"match{i}",
+                    text=MarkdownTextObject(text=issue_text),
+                )
+            )
+
+            if len(result.alternatives):
+                alternatives = ""
+                for alternative in result.alternatives:
+                    if alternative.remove:
+                        alternatives += f"\n• ~{alternative.text}~"
+                    else:
+                        alternatives += f"\n• {alternative.text}"
+
+                    if alternative.context:
+                        alternatives += f"- ({alternative.context})"
+
+                blocks.append(
+                    SectionBlock(
+                        block_id=f"alternatives{i}",
+                        text=MarkdownTextObject(text=alternatives),
+                    )
+                )
+
+    await respond(blocks=blocks)
 
 
 app = FastAPI(
@@ -165,6 +282,11 @@ def get_current_username(
         )
 
     return credentials.username
+
+
+@app.post("/slack/commands")
+async def slack_commands(request: Request):
+    return await bolt_handler.handle(request)
 
 
 # debugging routes
@@ -266,7 +388,7 @@ async def auth_debug(request: Request, user_request_in: RequestIn):  # pragma: n
     if not user_email:
         return user_email
 
-    rules = await get_rules(user_request_in, user_email)
+    rules = await fetch_user_rules(user_request_in, user_email)
 
     if "authorization" in request.headers and request.headers[
         "authorization"
@@ -293,7 +415,7 @@ async def auth_1_1(request: Request, response: Response):
     if not user_email:
         return None
 
-    rules = await get_rules(RequestIn(text=""), user_email)
+    rules = await fetch_user_rules(RequestIn(text=""), user_email)
     config = get_result_conf(rules, 1.1)
     if config == None and user_email:
         config = {}
@@ -314,7 +436,7 @@ async def auth_2_0(request: Request, response: Response):
             status_code=status.HTTP_403_FORBIDDEN,
         )
 
-    rules = await get_rules(RequestIn(text=""), user_email)
+    rules = await fetch_user_rules(RequestIn(text=""), user_email)
     if rules == {}:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -556,7 +678,7 @@ async def get_user_rules(
     email: str,
     username: str = Depends(get_current_username),
 ):
-    rules = await get_user_rules_from_redis(email)
+    rules = await fetch_user_rules_from_redis(email)
 
     if not rules:
         return JSONResponse(
@@ -567,7 +689,7 @@ async def get_user_rules(
 
 
 # Functions
-async def get_user_rules_from_redis(email: str):
+async def fetch_user_rules_from_redis(email: str):
     rules = redis.get(email)
 
     if not rules:
@@ -634,6 +756,17 @@ async def get_user_rules_from_redis(email: str):
     return rules
 
 
+async def fetch_organization_rules_from_redis(organization_id: str):
+    rules = redis.get(organization_id)
+
+    if not rules:
+        return None
+
+    rules = json.loads(rules)
+
+    return rules
+
+
 def is_number_list_empty(number, token, full_text):
     if not number:
         start = max(token.idx - 100, 0)
@@ -691,13 +824,13 @@ def apply_rules(user_request_in: RequestIn, configs: dict, plan: str):
     user_request_in.config.__setattr__("disabled_categories", disabled_categories)
 
 
-async def get_rules(user_request_in: RequestIn, user_email=Optional[str]):
+async def fetch_user_rules(user_request_in: RequestIn, user_email=Optional[str]):
     user_request_in.config.__setattr__("store_context", True)
 
     if not user_email:
         return {}
 
-    rules = await get_user_rules_from_redis(user_email)
+    rules = await fetch_user_rules_from_redis(user_email)
     if not rules or type(rules) is not dict:
         return {}
 
@@ -710,6 +843,27 @@ async def get_rules(user_request_in: RequestIn, user_email=Optional[str]):
         rules["false_positives"] = list(
             set(rules["false_positives"] + rules["organization_false_positives"])
         )
+
+    return rules
+
+
+async def fetch_organization_rules(
+    user_request_in: RequestIn, organization_id=Optional[str]
+):
+    user_request_in.config.__setattr__("store_context", True)
+
+    if not organization_id:
+        return {}
+
+    rules = await fetch_organization_rules_from_redis(organization_id)
+    if not rules or type(rules) is not dict:
+        return {}
+
+    for config in rules["configs"]:
+        if rules["configs"][config]["status"] == "suggestion":
+            rules["configs"][config]["status"] = "force"
+
+    apply_rules(user_request_in, rules["config"], rules["plan"])
 
     return rules
 
@@ -749,6 +903,28 @@ def get_user(request: Request):
     return None
 
 
+def get_text(user_request_in):
+    text = user_request_in.text
+    limit_reached = len(text) > settings.text_max_length
+    if limit_reached:
+        text = text[0 : settings.text_max_length]
+        text = text.rsplit(" ", 1)[0]
+
+    locale = lang_detection.get_locale(
+        text,
+        user_request_in.lang,
+        user_request_in.config.preferred_languages,
+        user_request_in.config.preferred_variants,
+    )
+
+    if locale == None:
+        lang = None
+    else:
+        lang = Language(locale)
+
+    return text, lang, limit_reached
+
+
 async def check(
     version: float,
     request: Request,
@@ -767,29 +943,16 @@ async def check(
             status_code=status.HTTP_403_FORBIDDEN,
         )
 
-    rules = await get_rules(user_request_in, user_email)
+    rules = await fetch_user_rules(user_request_in, user_email)
 
-    text = user_request_in.text
-    limit_reached = len(text) > settings.text_max_length
-    if limit_reached:
-        text = text[0 : settings.text_max_length]
-        text = text.rsplit(" ", 1)[0]
+    text, lang, limit_reached = get_text(user_request_in)
 
-    locale = lang_detection.get_locale(
-        text,
-        user_request_in.lang,
-        user_request_in.config.preferred_languages,
-        user_request_in.config.preferred_variants,
-    )
-
-    if locale == None:
+    if lang == None:
         response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
         results = Result.factory("Language could not be determined")
         language = None
         rules = None
     else:
-        lang = Language(locale)
-
         results = await language_rules(
             version, user_request_in.config, rules, lang, text
         )
@@ -1951,7 +2114,7 @@ def gendered_denom_analysis_de(
                                     ] == "die" or alternative.endswith("in"):
                                         article_alternative = feminine
                                     else:
-                                        article_alternative = tokens[i -1].text
+                                        article_alternative = tokens[i - 1].text
 
                                 alternatives_with_article.append(
                                     article_alternative + " " + alternative
