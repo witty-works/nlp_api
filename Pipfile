@@ -20,6 +20,7 @@ platformshconfig = "*"
 fakeredis = "*"
 fasttext = "*"
 fastapi-microsoft-identity = "*"
+slack-bolt = "*"
 
 [dev-packages]
 click = "*"
