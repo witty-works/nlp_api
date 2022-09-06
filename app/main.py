@@ -2016,10 +2016,34 @@ def match_binary_inclusive_gendered_denom_analysis_de(
     return text, start, category, subcategory
 
 
-def find_article(token):
-    for masculine, feminine, neuter, plural, alternative in articles:
-        if token.text.lower() == masculine:
-            return masculine, feminine, neuter, plural, alternative
+def find_article(tokens, i):
+    matches = 0
+    article_text = tokens[i - 1].text.lower()
+    gender = get_gender_of_word(tokens[i].text.lower())
+    if gender["definite_article"] != None:
+        for masculine, feminine, neuter, plural, alternative in articles:
+            if (
+                (gender["definite_article"] == "der" and article_text == masculine)
+                or (gender["definite_article"] == "die" and article_text == feminine)
+                or (gender["definite_article"] == "das" and article_text == neuter)
+            ):
+                match_masculine = masculine
+                match_feminine = feminine
+                match_neuter = neuter
+                match_plural = plural
+                match_alternative = alternative
+                matches += 1
+                if matches > 1:
+                    break
+
+        if matches == 1:
+            return (
+                match_masculine,
+                match_feminine,
+                match_neuter,
+                match_plural,
+                match_alternative,
+            )
 
     return None, None, None, None, None
 
@@ -2085,9 +2109,9 @@ def gendered_denom_analysis_de(
                             neuter,
                             plural,
                             alternative_for_article,
-                        ) = find_article(tokens[i - 1])
+                        ) = find_article(tokens, i)
 
-                        if masculine != None:
+                        if alternative_for_article != None:
                             # also detect if its a person or an institution
                             # in the later case do not offer the Gender-star options
                             # and use subcategory "misgendering_institutions"

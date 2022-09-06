@@ -5,28 +5,28 @@
         {
             "alternatives": [
                 {
-                    "text": "einer Mitarbeit"
+                    "text": "Mitarbeit"
                 },
                 {
-                    "text": "einer*eines Mitarbeiter*in"
+                    "text": "Mitarbeiter*in"
                 },
                 {
-                    "text": "einer/eines Mitarbeiterin/Mitarbeiter"
+                    "text": "Mitarbeiterin/Mitarbeiter"
                 },
                 {
-                    "text": "eines Personal"
+                    "text": "Personal"
                 },
                 {
-                    "text": "einer Mitarbeiterschaft"
+                    "text": "Mitarbeiterschaft"
                 },
                 {
-                    "text": "einer Belegschaft"
+                    "text": "Belegschaft"
                 },
                 {
-                    "text": "einer Kollegschaft"
+                    "text": "Kollegschaft"
                 },
                 {
-                    "text": "einer Mitarbeitende"
+                    "text": "Mitarbeitende"
                 }
             ],
             "category": "gendered",
@@ -39,9 +39,9 @@
             },
             "gravity": 2.0,
             "label": "Geschlechtsspezifisch: Titel",
-            "start": 22,
+            "start": 28,
             "subcategory": "titles",
-            "text": "eines Mitarbeiters"
+            "text": "Mitarbeiters"
         }
     ]
 }
