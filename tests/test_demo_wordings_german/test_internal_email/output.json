@@ -177,6 +177,21 @@
         {
             "alternatives": [],
             "category": "inclusive",
+            "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
+            "end": 104,
+            "explanation": {
+                "icon": "✅",
+                "text": "Betont kooperative Eigenschaften",
+                "url": "https://www.witty.works/de/kategorien/inklusiv#kommunal"
+            },
+            "label": "Inklusiv: Kommunal",
+            "start": 98,
+            "subcategory": "communal",
+            "text": "lieben"
+        },
+        {
+            "alternatives": [],
+            "category": "inclusive",
             "context": "hrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
             "end": 167,
             "explanation": {
