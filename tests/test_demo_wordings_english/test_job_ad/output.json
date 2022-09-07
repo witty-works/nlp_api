@@ -59,9 +59,6 @@
                 },
                 {
                     "text": "people in project management"
-                },
-                {
-                    "text": "people handling project management"
                 }
             ],
             "category": "gendered",
@@ -97,6 +94,21 @@
             "alternatives": [
                 {
                     "remove": true
+                },
+                {
+                    "text": "remarkable"
+                },
+                {
+                    "text": "inspiring"
+                },
+                {
+                    "text": "surprising"
+                },
+                {
+                    "text": "unusual"
+                },
+                {
+                    "text": "exemplary"
                 }
             ],
             "category": "style",
@@ -116,10 +128,10 @@
         {
             "alternatives": [
                 {
-                    "text": "reference cases"
+                    "text": "amazing display of capability"
                 },
                 {
-                    "text": "satisfying results"
+                    "text": "history of delivering results"
                 }
             ],
             "category": "style",
