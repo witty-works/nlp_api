@@ -81,7 +81,7 @@ from collections import defaultdict
 
 from app.sentry import set_up_sentry_sdk
 
-version = "1.34.7"
+version = "1.34.8"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -680,7 +680,7 @@ async def get_user_rules(
 ):
     rules = await fetch_user_rules_from_redis(email)
 
-    if not rules:
+    if not rules or type(rules) is not dict:
         return JSONResponse(
             status_code=404, content={"message": "User rules not found"}
         )
@@ -951,7 +951,7 @@ async def check(
         response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
         results = Result.factory("Language could not be determined")
         language = None
-        rules = None
+        rules = {}
     else:
         results = await language_rules(
             version, user_request_in.config, rules, lang, text
