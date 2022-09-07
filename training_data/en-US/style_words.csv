@@ -1,61 +1,68 @@
 Lemma,Word_Type,Category,Primary_subcategory,Alt_split
-Ninja,s,style,exaggerating,"['skilled person', 'very proficient person', 'courageous person', 'they', 'skilled people', 'very proficient people', 'courageous people']"
-PTSD,,style,abbreviation,"['post-traumatic stress disorder', 'post-traumatic stress disorder (PTSD)', 'person with post-traumatic stress disorder']"
+Ninja,s,style,exaggerating,"['skilled person', 'very proficient person', 'courageous person', 'they', 'person who continues despite difficulties', 'someone devoted to their purpose', 'someone who sticks to their goal', 'someone willing to see things through', 'skilled people', 'very proficient people', 'courageous people']"
 Sincerely,a,style,formality,"['Best regards', 'All the best', 'Thank you', 'Have a wonderful day', 'Let us know if you need anything']"
 absolute,a,style,exaggerating,['-']
 actually,adv,style,filler,['-']
-best,a,style,exaggerating,"['preferred', 'fitting', 'satisfactory', 'advantageous', 'satisfying', 'choice', 'select', 'reliable', 'valuable', 'conducive to desired outcome']"
+best,a,style,exaggerating,"['preferred', 'fitting', 'satisfying', 'top-quality', 'outstanding', 'reliable', 'valuable', 'perfect', '| first-rate', 'magnificent']"
 brilliant,a,style,exaggerating,"['inspired', 'talented', 'inventive', 'astute', 'creative']"
-compelling,a,style,exaggerating,"['convincing', 'evoking interest/attention', 'inspiring conviction', 'engaging', 'exciting', 'sound', 'reasonable', 'credible', 'effective', 'conclusive', 'urgent', 'crucial', 'vital']"
+compelling,a,style,exaggerating,"['persuasive', 'interesting', 'exciting', 'sound', 'reasonable', 'credible', 'effective', 'conclusive', 'urgent', 'crucial', 'vital']"
 competitor,s,style,exaggerating,"['market participant', 'market participants']"
 completely,adv,style,filler,['-']
-delicious,a,style,exaggerating,['-']
-dynamic,a,style,hollow,"['lively', 'energetic', 'spirited', 'enthusiastic', 'committed', 'vibrant', 'effective', 'productive', 'adaptable']"
+delicious,a,style,exaggerating,"['-', 'appealing', 'tasty', 'charming', 'refreshing', 'stimulating']"
+dynamic,a,style,hollow,"[""--- don't use for people"", 'lively', 'energetic', 'spirited', 'enthusiastic', 'committed', 'vibrant', 'effective', 'productive', 'adaptable']"
 establishment,s,style,hollow,"['business', 'organization', 'place of business', 'start', 'founding', 'process of setting up', 'public institution', 'private institution', 'dominant group', 'people with power and influence', 'businesses', 'organizations', 'places of business', 'start', 'founding', 'processes of setting up', 'public institutions', 'private institutions', 'dominant groups', 'people with power and influence']"
 excellence,s,style,exaggerating,['-']
-excellent,a,style,exaggerating,['-']
-exceptional,a,style,exaggerating,['-']
-extra-ordinary,a,style,exaggerating,['-']
-extraordinary,a,style,exaggerating,['-']
-extreme,a,style,exaggerating,['-']
-fantastic,a,style,exaggerating,['-']
-first-class,a,style,exaggerating,['-']
+excellent,a,style,exaggerating,"['-', 'remarkable', 'inspiring', 'very good', 'fine', 'exemplary']"
+exceptional,a,style,exaggerating,"['-', 'remarkable', 'inspiring', 'surprising', 'unusual', 'exemplary']"
+extra-ordinary,a,style,exaggerating,"['-', 'remarkable', 'inspiring', 'baffling', 'unusual', 'exemplary']"
+extraordinary,a,style,exaggerating,"['-', 'remarkable', 'inspiring', 'baffling', 'unusual', 'exemplary']"
+extreme,a,style,exaggerating,"['-', 'scute', 'major', 'substantial', 'severe', 'over-the-top', '']"
+fantastic,a,style,exaggerating,"['-', 'remarkable', 'inspiring', 'amazing', 'riveting', 'stimulating']"
+first,a,style,hollow,"['initial', 'principal', 'number-one']"
+first-class,a,style,exaggerating,"['-', 'quality-focused', 'luxurious', 'fabulous', 'extravagant', 'stylish']"
 first-mover,s,style,exaggerating,"['the first to market a product', 'the first to offer a service', 'the first to seize a market opportunity', 'those first to market a product', 'those first to offer a service', 'those first to seize a market opportunity']"
-firstclass,a,style,exaggerating,['-']
+firstclass,a,style,exaggerating,"['-', 'quality-focused', 'luxurious', 'fabulous', 'extravagant', 'stylish']"
 firstmover,s,style,exaggerating,"['the first to market a product', 'the first to offer a service', 'the first to seize a market opportunity', 'those first to market a product', 'those first to offer a service', 'those first to seize a market opportunity']"
 flexible,a,style,hollow,"[""--- don't use for people"", 'adaptable', 'strategically nimble', 'pragmatic', 'open', 'agile', 'variable', 'mobile', 'defined by its users']"
 front-runner,s,style,exaggerating,"['-', 'favorite', 'person who sets the pace', 'probable winner', 'favorites', 'people who set the pace', 'probable winners']"
 frontrunner,s,style,exaggerating,"['-', 'favorite', 'person who sets the pace', 'probable winner', 'favorites', 'people who set the pace', 'probable winners']"
-geek,s,style,exaggerating,"['-', 'techie', 'intellectual', 'bookworm', 'person devoted to academic pursuits', 'person with a high level of knowledge (skills) in', 'techies', 'intellectuals', 'bookworms', 'people devoted to academic pursuits', 'people with a high level of knowledge (skills) in']"
+geek,s,style,exaggerating,"['-', 'techie', 'intellectual', 'bookworm', 'person devoted to academic pursuits', 'person with a high level of knowledge (skills) in', 'techies', ' intellectuals', 'bookworms', 'people devoted to academic pursuits', 'people with a high level of knowledge (skills) in']"
 generally,adv,style,filler,['-']
-global,a,style,hollow,"['in (...) countries', '(...) offices across (...) continents']"
-go-getter,s,style,exaggerating,"['bundle of energy', 'ball of fire', 'person who continues despite difficulties/opposition', 'person devoted/loyal to their purpose', 'someone who sticks to their goal', 'person happy/willing to see (something ...) through', 'motivated people', 'energetic and focused colleagues', 'people who continue despite difficulties/opposition', 'people devoted/loyal to their purpose', 'people who stick to their goal', 'people happy/willing to see (something ...) through']"
+global,a,style,hollow,"['--- be specific to build trust', 'in (...) countries', '(...) offices across (...) continents']"
+go-getter,s,style,exaggerating,"['bundle of energy', 'ball of fire', 'someone who sticks to their goal', 'person happy to see things through', 'someone who continues despite difficulty', 'person loyal to their cause', 'motivated people', 'energetic and focused colleagues', 'people who sticks to their goal', 'people happy to see things through', 'individuals who continues despite difficulty', 'people loyal to their cause']"
 god,s,style,exaggerating,['-']
-gogetter,s,style,exaggerating,"['bundle of energy', 'ball of fire', 'person who continues despite difficulties/opposition', 'person devoted/loyal to their purpose', 'someone who sticks to their goal', 'person happy/willing to see (something ...) through', 'motivated people', 'energetic and focused colleagues', 'people who continue despite difficulties/opposition', 'people devoted/loyal to their purpose', 'people who stick to their goal', 'people happy/willing to see (something ...) through']"
+gogetter,s,style,exaggerating,"['bundle of energy', 'ball of fire', 'someone who sticks to their goal', 'person happy to see things through', 'someone who continues despite difficulty', 'person loyal to their cause', 'motivated people', 'energetic and focused colleagues', 'people who sticks to their goal', 'people happy to see things through', 'individuals who continues despite difficulty', 'people loyal to their cause']"
+good,a,style,hollow,"['exceptional', 'acceptable', 'worthy', 'favorable', 'positive']"
+great,a,style,hollow,"['sizable', 'strong', 'generous', 'exceptional', 'nicely']"
 hacker,s,style,exaggerating,"['-', 'technophile', 'techie', 'person with a high level of coding skills', 'technophiles', 'techies', 'people with a high level of coding skills']"
 hero,s,style,exaggerating,"['person of the hour', 'person making sacrifices for their team', 'role model', 'heroix', 'they', 'people of the hour', 'those making sacrifices for their team', 'role models', 'heroix']"
 high-flyer,s,style,exaggerating,"['person who continues despite difficulties', 'someone devoted to their purpose', 'someone who sticks to their goal', 'someone willing to see things through', 'people who continue despite difficulties', 'people devoted to their purpose', 'people who stick to their goal', 'people willing to see things through']"
 highflyer,s,style,exaggerating,"['person who continues despite difficulties', 'someone devoted to their purpose', 'someone who sticks to their goal', 'someone willing to see things through', 'people who continue despite difficulties', 'people devoted to their purpose', 'people who stick to their goal', 'people willing to see things through']"
-imperative,a,style,exaggerating,"['critical', 'vital']"
+imperative,a,style,exaggerating,"['critical', 'vital', 'esssential']"
+important,a,style,hollow,"['vital', 'urgent', 'essential', 'influential', 'substantial ']"
 impressive,a,style,exaggerating,['-']
-innovation,s,style,hollow,"['reinvention', 'change', 'modernization', 'improvement', 'new creation', 'redesign', 'introduction of new ideas (methods, devices, ...)', 'reinventions', 'changes', 'modernizations', 'improvements', 'new creations', 'redesign', 'new ideas', 'new methods', 'new devices']"
+innovation,s,style,hollow,"['reinvention', 'modernization', 'improvement', 'new creation', 'redesign', 'introduction of new ideas', 'introduction of new methods', 'reinventions', 'changes', 'modernizations', 'improvements', 'new creations', 'redesign']"
 innovative,a,style,hollow,"['imaginative', 'novel', 'creative', 'inventive', 'trend-setting', 'groundbreaking', 'inspired', 'forward-looking']"
 irresistible,a,style,exaggerating,['-']
 kamikaze,s,style,exaggerating,['-']
 leverage,v,style,hollow,"['use', 'capitalize on']"
 luminary,s,style,exaggerating,"['celebrity', 'icon', 'star', 'personality', 'person who is widely known', 'celebrities', 'icons', 'stars', 'personalities', 'people who are widely known']"
-mandatory,a,style,exaggerating,"['necessary', 'legally required', 'compulsory', 'forced', 'nonelective', 'required (by law, by a rule, ...)']"
-market-leader,s,style,exaggerating,"['company with the largest market share in the industry', 'company with the ability to influence the market', 'company with the greatest profitability margin in the market', 'company with the products most relevant to the customer', 'companies with the largest market shares in the industry', 'companies with the ability to influence the market', 'companies with the greatest profitability margin in the market', 'companies with the products most relevant to the customer']"
+mandatory,a,style,exaggerating,"['necessary', 'legally required', 'compulsory', 'nonelective', 'required']"
+many,a,style,hollow,"['a multitude of', 'a host of', 'numerous', 'multiple', 'countless']"
+market-leader,s,style,exaggerating,"['--- be specific to build trust', 'company with the largest market share in the industry', 'company with the ability to influence the market', 'company with the greatest profitability margin in the market', 'company with the products most relevant to the customer', 'companies with the largest market shares in the industry', 'companies with the ability to influence the market', 'companies with the greatest profitability margin in the market', 'companies with the products most relevant to the customer']"
 market-leading,a,style,exaggerating,['market-influencing']
-marketleader,s,style,exaggerating,"['company with the largest market share in the industry', 'company with the ability to influence the market', 'company with the greatest profitability margin in the market', 'company with the products most relevant to the customer', 'companies with the largest market shares in the industry', 'companies with the ability to influence the market', 'companies with the greatest profitability margin in the market', 'companies with the products most relevant to the customer']"
+marketleader,s,style,exaggerating,"['--- be specific to build trust', 'company with the largest market share in the industry', 'company with the ability to influence the market', 'company with the greatest profitability margin in the market', 'company with the products most relevant to the customer', 'companies with the largest market shares in the industry', 'companies with the ability to influence the market', 'companies with the greatest profitability margin in the market', 'companies with the products most relevant to the customer']"
 marketleading,a,style,exaggerating,['market-influencing']
+more,a,style,hollow,"['additional', 'incremental', 'greater']"
 muscle,a,style,exaggerating,"['power', 'influence', 'clout']"
-nerd,s,style,exaggerating,"['techie', 'intellectual', 'bookworm', 'person devoted to academic pursuits', 'person with a high level of knowledge (skills) in', 'techies', 'intellectuals', 'bookworms', 'people devoted to academic pursuits', 'people with a high level of knowledge (skills) in']"
-ninja,a,style,exaggerating,"['dedicated', 'committed', 'person who continues despite difficulties', 'someone devoted to their purpose', 'someone who sticks to their goal', 'someone willing to see things through']"
+nerd,s,style,exaggerating,"['techie', 'intellectual', 'bookworm', 'person devoted to academic pursuits', 'person with a high level of knowledge (skills) in', 'techies', ' intellectuals', 'bookworms', 'people devoted to academic pursuits', 'people with a high level of knowledge (skills) in']"
+new,a,style,hollow,"['updated', 'contemporary', 'novel', 'latest', 'up to date']"
+ninja,a,style,exaggerating,"['dedicated', 'committed']"
 normal,a,style,hollow,"['traditional', 'typical', 'common', 'routine', 'regular', 'conventional', 'customary', 'popular', 'reasonable', 'well-adjusted', 'rational', 'able to think clearly', 'able to use reason']"
+other,a,style,hollow,"['alternative', 'further', 'different']"
 outstanding,a,style,exaggerating,"['awesome', 'inspiring']"
 passion,s,style,hollow,"['enthusiasm', 'dedication to', 'fascination with', 'keen interest in', 'love', 'enthusiasm', 'dedication to', 'fascination with', 'keen interests in', 'love']"
-passionate,a,style,hollow,"['enthusiastic', 'believe (in)', 'committed to', 'fascinated with', 'keenly interested in', 'excited']"
+passionate,a,style,hollow,"['enthusiastic', 'invested in', 'committed to', 'fascinated with', 'keenly interested in']"
 perfect,a,style,exaggerating,['-']
 profit,s,style,exaggerating,"['earnings', 'proceeds', 'net', 'revenue', 'gain', 'yield', 'earnings', 'proceeds', 'net', 'revenue', 'gains', 'yield']"
 profound,a,style,exaggerating,"['intense', 'deep', 'thorough', 'acute', 'thoughtful', 'serious', 'experienced', 'requiring deep understanding']"
@@ -63,25 +70,27 @@ protagonist,s,style,exaggerating,"['advocate', 'friend', 'proponent', 'supporter
 quick,a,style,hollow,"['efficient', 'expedient', 'effective', 'rapid', 'prompt', 'willing', 'responsive', 'insightful', 'perceptive', 'observant', 'energetic', 'alert', 'lively', 'nimble', 'astute']"
 quite,adv,style,filler,['-']
 really,a,style,filler,['-']
-results-driven,a,style,hollow,['-']
-resultsdriven,a,style,hollow,['-']
+results-driven,a,style,hollow,"['-', 'goal-oriented', 'keen to get things done', 'motivated by milestones', 'able to create momentum to get things done', 'using targets to stay motivated', 'focused on outcomes']"
+resultsdriven,a,style,hollow,"['-', 'goal-oriented', 'keen to get things done', 'motivated by milestones', 'able to create momentum to get things done', 'using targets to stay motivated', 'focused on outcomes']"
 rocket,s,style,exaggerating,['-']
 rockstar,s,style,exaggerating,['-']
 scorer,s,style,exaggerating,['-']
+self-driven,i,style,hollow,"['motivated', 'ardent', 'spirited', 'aspiring', 'sincere', 'industrious']"
+selfdriven,i,style,hollow,"['motivated', 'ardent', 'spirited', 'aspiring', 'sincere', 'industrious']"
 state-of-the-art,a,style,hollow,"['current', 'best available', 'most advanced', 'most sophisticated', 'technologically most advanced', 'implementing the most recent methods', 'involving fresh concepts', 'employing the latest equipment', 'using the latest techniques', 'at the highest level of development', 'using the newest ideas']"
-success,s,style,exaggerating,"['positive outcome', ""a feather in one's cap"", 'popular', '(good) result', 'rewarded for dedication and hard work', 'positive outcomes', ""feathers in one's cap"", 'popular', '(good) results', 'rewarded for dedication and hard work']"
-successful,a,style,exaggerating,['-']
-successfully,a,style,exaggerating,['-']
+success,s,style,exaggerating,"['positive outcome', ""a feather in one's cap"", 'popular', 'good result', 'reward for dedication and hard work', 'positive outcomes', ""feathers in one's cap"", 'popular', '(good) results', 'rewarded for dedication and hard work']"
+successful,a,style,exaggerating,"['-', 'productive', 'lucky', 'lucrative', 'practiced', 'skilled']"
+successfully,a,style,exaggerating,"['-', 'with good results', 'favorably']"
 superstar,s,style,exaggerating,['-']
-surpass,v,style,exaggerating,"['refine', 'enrich', 'build on', 'improve upon', 'transcend', 'do better than', 'go beyond']"
+surpass,v,style,exaggerating,"['refine', 'improve upon', 'transcend', 'do better than', 'go beyond']"
 synergize,v,style,hollow,['work together']
 team-player,s,style,hollow,"['someone who values team effort over personal gains', 'someone who enjoys collaboration', 'someone who can compromise to reach a shared goal', 'someone who feels inspired and motivated by working together with others toward a shared goal', 'people who value team effort over personal gains', 'people who enjoy collaboration', 'people who can compromise to reach a shared goal', 'people who feel inspired and motivated by working together with others toward a shared goal']"
 teamplayer,s,style,hollow,"['someone who values team effort over personal gains', 'someone who enjoys collaboration', 'someone who can compromise to reach a shared goal', 'someone who feels inspired and motivated by working together with others toward a shared goal', 'people who value team effort over personal gains', 'people who enjoy collaboration', 'people who can compromise to reach a shared goal', 'people who feel inspired and motivated by working together with others toward a shared goal']"
-top-performer,s,style,exaggerating,"['colleague who approaches tasks constructively and with commitment', 'someone who thrives on implementing milestones together', 'someone who inspires their team to tackle tasks', 'someone with an entrepreneurial mindset', 'colleagues who approaches tasks constructively and with commitment', 'people who thrive on implementing milestones together', 'people who inspire their teams to tackle tasks', 'people with an entrepreneurial mindset']"
-top-performance,a,style,exaggerating,"[""execution to the customer's satisfaction"", 'the fulfilment of customer expectations', 'reference cases', 'satisfying results']"
+top-performance,s,style,exaggerating,"['substantial contribution to business success', 'amazing display of capability', 'history of delivering results']"
+top-performer,s,style,exaggerating,"['mentor at heart', 'an inspiration to the team', 'an entrepreneur at heart', 'someone with an entrepreurial mindset', 'someone who thrives on working toward milestones', 'mentors at heart', 'people who are an inspiration to the team', 'entrepreneurs at heart', 'people with an entrepreurial mindset', 'people who thrive on working toward milestones']"
 top-performing,a,style,exaggerating,"['contributing to business success --- about a person', 'implementing goals with enthusiasm --- about a person', 'fulfilling customer expectations --- about a person']"
-topperformer,s,style,exaggerating,"['colleague who approaches tasks constructively and with commitment', 'someone who thrives on implementing milestones together', 'someone who inspires their team to tackle tasks', 'someone with an entrepreneurial mindset', 'colleagues who approaches tasks constructively and with commitment', 'people who thrive on implementing milestones together', 'people who inspire their teams to tackle tasks', 'people with an entrepreneurial mindset']"
-topperformance,a,style,exaggerating,"[""execution to the customer's satisfaction"", 'the fulfilment of customer expectations', 'reference cases', 'satisfying results']"
+topperformance,s,style,exaggerating,"['substantial contribution to business success', 'amazing display of capability', 'history of delivering results']"
+topperformer,s,style,exaggerating,"['mentor at heart', 'an inspiration to the team', 'an entrepreneur at heart', 'someone with an entrepreurial mindset', 'someone who thrives on working toward milestones', 'mentors at heart', 'people who are an inspiration to the team', 'entrepreneurs at heart', 'people with an entrepreurial mindset', 'people who thrive on working toward milestones']"
 topperforming,a,style,exaggerating,"['contributing to business success --- about a person', 'implementing goals with enthusiasm --- about a person', 'fulfilling customer expectations --- about a person']"
 totally,adv,style,filler,['-']
 unique,a,style,hollow,"['original', 'distinctive', 'rare', 'diverse', 'in a class by itself']"
@@ -93,5 +102,5 @@ well-established,a,style,exaggerating,"['thriving', 'acknowledged', 'confirmed',
 wellestablished,a,style,exaggerating,"['thriving', 'acknowledged', 'confirmed', 'long-standing', 'well-documented']"
 winner,s,style,exaggerating,['-']
 workforce,s,style,hollow,"['team', 'employees', 'personnel', 'staff', 'teams', 'employees', 'personnel', 'staff']"
-world-wide,a,style,hollow,"['in (...) countries', '(...) offices across (...) continents']"
-worldwide,a,style,hollow,"['in (...) countries', '(...) offices across (...) continents']"
+world-wide,a,style,hollow,"['--- be specific to build trust', 'in (...) countries', '(...) offices across (...) continents']"
+worldwide,a,style,hollow,"['--- be specific to build trust', 'in (...) countries', '(...) offices across (...) continents']"
