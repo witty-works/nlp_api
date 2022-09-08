@@ -96,6 +96,13 @@ categories = {
         "importance": 2,
         "emoji": "😟",
     },
+    "caring": {
+        "inclusive": True,
+        "category": "inclusive",
+        "gravity": None,
+        "importance": 2,
+        "emoji": "✅",
+    },
     "classism": {
         "inclusive": False,
         "category": "unconscious_bias",
@@ -336,6 +343,13 @@ categories = {
         "gravity": 2.0,
         "importance": 2,
         "emoji": "😒",
+    },
+    "offensive_language": {
+        "inclusive": False,
+        "category": "openly_discriminating",
+        "gravity": 1.0,
+        "importance": None,
+        "emoji": "🚫",
     },
     "openly_discriminating": {
         "inclusive": False,

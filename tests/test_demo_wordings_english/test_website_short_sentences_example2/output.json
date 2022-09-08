@@ -47,6 +47,21 @@
             "alternatives": [
                 {
                     "remove": true
+                },
+                {
+                    "text": "remarkable"
+                },
+                {
+                    "text": "inspiring"
+                },
+                {
+                    "text": "surprising"
+                },
+                {
+                    "text": "unusual"
+                },
+                {
+                    "text": "exemplary"
                 }
             ],
             "category": "style",

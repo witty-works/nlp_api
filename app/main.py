@@ -887,7 +887,16 @@ def get_user(request: Request):
                     detail="access token does not match client id",
                 )
 
-            return claims["emails"][0]
+            if "email" in claims:
+                return claims["email"]
+
+            if "emails" in claims and len(claims["emails"]) > 0:
+                return claims["emails"][0]
+
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="no email found in claim",
+            )
         except KeyError:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
