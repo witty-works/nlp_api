@@ -1,0 +1,53 @@
+{
+    "language": "en",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [],
+            "category": "inclusive",
+            "context": "Kind regards from London",
+            "end": 4,
+            "explanation": {
+                "icon": "✅",
+                "text": "Emphasizes cooperative attributes",
+                "url": "https://www.witty.works/en/categories/inclusive#communal"
+            },
+            "label": "Inclusive: Communal",
+            "start": 0,
+            "subcategory": "communal",
+            "text": "Kind"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Cordially"
+                },
+                {
+                    "text": "Thank you for reading"
+                },
+                {
+                    "text": "Sending you the best"
+                },
+                {
+                    "text": "Take care"
+                },
+                {
+                    "text": "With appreciation"
+                }
+            ],
+            "category": "style",
+            "context": "Kind regards from London",
+            "end": 12,
+            "explanation": {
+                "icon": "🧊",
+                "text": "Formal wording creates emotional distance",
+                "url": "https://www.witty.works/en/categories/style#formality"
+            },
+            "gravity": 3.0,
+            "label": "Style: Formality",
+            "start": 0,
+            "subcategory": "formality",
+            "text": "Kind regards"
+        }
+    ]
+}

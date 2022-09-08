@@ -1201,7 +1201,7 @@ def get_false_positive_matcher(tokens):
 
 def get_matches(tokens, phrases):
     # Phrase matcher part to handle False positives with two words and special symbols
-    matcher = PhraseMatcher(model[lang.lang].vocab)
+    matcher = PhraseMatcher(model[lang.lang].vocab, attr="LOWER")
 
     # Only run model.make_doc to speed things up
     patterns = [model[lang.lang].make_doc(text) for text in phrases]
@@ -1966,7 +1966,7 @@ def ub_words_phrase_matcher_de(
     for match_id, start, end in matches:
         for sentence, alternative, subcategory in sentences_alternatives:
             span = tokens[start:end]
-            if span.text == sentence:
+            if span.text.lower() == sentence.lower():
                 list_tokens.append(
                     ResultOut.factory(
                         version,
@@ -2237,7 +2237,7 @@ def style_word_analysis_de(
     for match_id, start, end in matches:
         for sentence, alternative, subcategory in style_sentences_alternatives:
             span = tokens[start:end]
-            if span.text == sentence:
+            if span.text.lower() == sentence.lower():
                 list_tokens.append(
                     ResultOut.factory(
                         version,
@@ -2350,7 +2350,7 @@ def rules_based_words_phrase_matcher_de(
     for match_id, start, end in matches:
         for sentence, alternative, subcategory in sentences_alternatives:
             span = tokens[start:end]
-            if span.text == sentence:
+            if span.text.lower() == sentence.lower():
                 list_tokens.append(
                     ResultOut.factory(
                         version,
@@ -2554,7 +2554,7 @@ def rules_based_words_phrase_matcher_en(
     for match_id, start, end in matches:
         for sentence, alternative, subcategory in sentences_alternatives:
             span = tokens[start:end]
-            if span.text == sentence:
+            if span.text.lower() == sentence.lower():
                 list_tokens.append(
                     ResultOut.factory(
                         version,
@@ -2774,7 +2774,7 @@ def rules_based_words_phrase_matcher_no_alt_en(
     for match_id, start, end in matches:
         for sentence, subcategory in inclusive_sentences_alternatives_en:
             span = tokens[start:end]
-            if span.text == sentence:
+            if span.text.lower() == sentence.lower():
                 list_tokens.append(
                     ResultOut.factory(
                         version,
