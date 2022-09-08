@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-07-27 08:22\n"
-"PO-Revision-Date: 2022-07-27 08:22\n"
+"POT-Creation-Date: 2022-09-08 08:37\n"
+"PO-Revision-Date: 2022-09-08 08:37\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -93,6 +93,12 @@ msgid "rules.binary_pronouns_label"
 msgstr ""
 
 msgid "rules.binary_pronouns_explanation"
+msgstr ""
+
+msgid "rules.caring_label"
+msgstr ""
+
+msgid "rules.caring_explanation"
 msgstr ""
 
 msgid "rules.classism_label"
@@ -303,6 +309,12 @@ msgid "rules.mobility_label"
 msgstr ""
 
 msgid "rules.mobility_explanation"
+msgstr ""
+
+msgid "rules.offensive_language_label"
+msgstr ""
+
+msgid "rules.offensive_language_explanation"
 msgstr ""
 
 msgid "rules.openly_discriminating_label"
