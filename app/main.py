@@ -81,7 +81,7 @@ from collections import defaultdict
 
 from app.sentry import set_up_sentry_sdk
 
-version = "1.34.8"
+version = "1.34.9"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -887,7 +887,16 @@ def get_user(request: Request):
                     detail="access token does not match client id",
                 )
 
-            return claims["emails"][0]
+            if "email" in claims:
+                return claims["email"]
+
+            if "emails" in claims and len(claims["emails"]) > 0:
+                return claims["emails"][0]
+
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="no email found in claim",
+            )
         except KeyError:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,

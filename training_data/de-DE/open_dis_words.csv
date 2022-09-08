@@ -54,9 +54,9 @@ Arschsau,s,openly_discriminating,homophobia,['-']
 Arschvotze,s,openly_discriminating,homophobia,['-']
 Arschwichser,s,openly_discriminating,homophobia,['-']
 Astlochficker,s,openly_discriminating,homophobia,['-']
-Asylantenheim,S,openly_discriminating,xenophobia,"['-', 'Geflüchteten-Unterkunft', 'Geflüchteten-Unterkünfte']"
-Asylantenstrom,S,openly_discriminating,xenophobia,"['-', 'Zahl asylsuchender Menschen', 'Zahl der Geflüchteten', 'Zahlen asylsuchender Menschen', 'Zahlen Geflüchteter']"
-Asyltourist,S,openly_discriminating,xenophobia,"['-', 'Asylsuchende~r', 'Asylberechtigte~r', 'politisch Verfolgte~r', 'Asylbewerber~in', 'Asylwerber~in', 'Asylsuchende', 'Asylberechtigte', 'politisch Verfolgte', 'sich um Asyl Bewerbende', 'Asylwerbende']"
+Asylantenheim,s,openly_discriminating,xenophobia,"['-', 'Geflüchteten-Unterkunft', 'Geflüchteten-Unterkünfte']"
+Asylantenstrom,s,openly_discriminating,xenophobia,"['-', 'Zahl asylsuchender Menschen', 'Zahl der Geflüchteten', 'Zahlen asylsuchender Menschen', 'Zahlen Geflüchteter']"
+Asyltourist,s,openly_discriminating,xenophobia,"['-', 'Asylsuchende~r', 'Asylberechtigte~r', 'politisch Verfolgte~r', 'Asylbewerber~in', 'Asylwerber~in', 'Asylsuchende', 'Asylberechtigte', 'politisch Verfolgte', 'sich um Asyl Bewerbende', 'Asylwerbende']"
 Bauerndirne,s,openly_discriminating,sexism,['-']
 Bauernhure,s,openly_discriminating,sexism,['-']
 Beißzange,s,openly_discriminating,sexism,['-']
@@ -264,7 +264,7 @@ Rummelhure,s,openly_discriminating,sexism,['-']
 Saufotze,s,openly_discriminating,sexism,['-']
 Sauhure,s,openly_discriminating,sexism,['-']
 Schabracke,s,openly_discriminating,sexism,['-']
-Scheinasylant,S,openly_discriminating,xenophobia,['-']
+Scheinasylant,s,openly_discriminating,xenophobia,['-']
 Scheißhausfotze,s,openly_discriminating,sexism,['-']
 Scheißhausnutte,s,openly_discriminating,sexism,['-']
 Schickse,s,openly_discriminating,sexism,['-']
@@ -358,7 +358,7 @@ Weihnachtsgans,s,openly_discriminating,sexism,['-']
 Wetterhexe,s,openly_discriminating,sexism,['-']
 Wildsau,s,openly_discriminating,sexism,['-']
 Windelschädel,s,openly_discriminating,antimuslim,['-']
-Wirtschaftsflüchtling,S,openly_discriminating,xenophobia,"['-', 'Mensch mit Migrationshintergrund', 'Menschen mit Migrationshintergrund']"
+Wirtschaftsflüchtling,s,openly_discriminating,xenophobia,"['-', 'Mensch mit Migrationshintergrund', 'Menschen mit Migrationshintergrund']"
 Xanthippe,s,openly_discriminating,sexism,['-']
 Yogafotze,s,openly_discriminating,sexism,['-']
 Yogaschlampe,s,openly_discriminating,sexism,['-']

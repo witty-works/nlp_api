@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-07-27 08:22\n"
-"PO-Revision-Date: 2022-07-27 08:22\n"
+"POT-Creation-Date: 2022-09-08 08:37\n"
+"PO-Revision-Date: 2022-09-08 08:37\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -94,6 +94,12 @@ msgstr "Binäre Pronomen"
 
 msgid "rules.binary_pronouns_explanation"
 msgstr "Pronomen gemäss binärem Geschlechterverständnis"
+
+msgid "rules.caring_label"
+msgstr "Einfühlsam"
+
+msgid "rules.caring_explanation"
+msgstr "Betont Offenheit, Fürsorge und Interesse"
 
 msgid "rules.classism_label"
 msgstr "Klassismus"
@@ -304,6 +310,12 @@ msgstr "Mobilität"
 
 msgid "rules.mobility_explanation"
 msgstr "Versteckte Voreingenommenheit bezüglich Mobilität"
+
+msgid "rules.offensive_language_label"
+msgstr "Beleidigende und vulgäre Sprache"
+
+msgid "rules.offensive_language_explanation"
+msgstr " Beleidigend und vulgär"
 
 msgid "rules.openly_discriminating_label"
 msgstr "Offene Diskriminierung"

@@ -5,6 +5,26 @@
         {
             "alternatives": [
                 {
+                    "remove": true
+                }
+            ],
+            "category": "openly_discriminating",
+            "context": "We are searching for analytical ninja programmer for our customers. Ours are ass.",
+            "end": 80,
+            "explanation": {
+                "icon": "🚫",
+                "text": "Offensive and vulgar",
+                "url": "https://www.witty.works/en/categories/openly_discriminating#offensive_language"
+            },
+            "gravity": 1.0,
+            "label": "Openly discriminating: Offensive language",
+            "start": 77,
+            "subcategory": "offensive_language",
+            "text": "ass"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "dedicated"
                 },
                 {
@@ -12,7 +32,7 @@
                 }
             ],
             "category": "style",
-            "context": "We are searching for analytical ninja programmer for our customers",
+            "context": "We are searching for analytical ninja programmer for our customers. Ours are ass.",
             "end": 37,
             "explanation": {
                 "icon": "😮‍💨",
@@ -47,7 +67,7 @@
                 }
             ],
             "category": "unconscious_bias",
-            "context": "We are searching for analytical ninja programmer for our customers",
+            "context": "We are searching for analytical ninja programmer for our customers. Ours are ass.",
             "end": 31,
             "explanation": {
                 "icon": "😒",
