@@ -74,6 +74,35 @@
         {
             "alternatives": [
                 {
+                    "text": "person responsible for"
+                },
+                {
+                    "text": "person who offers guidance"
+                },
+                {
+                    "text": "heads of"
+                },
+                {
+                    "text": "people who offer guidance"
+                }
+            ],
+            "category": "gendered",
+            "context": "Hi Siwar,\n\nit's the first time that we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n\nFossil Group Europe GmbH\nRiehenring <NUMBER>\n\n<NUMBER> Basel\nSWITZERLAND\n<URL>",
+            "end": 83,
+            "explanation": {
+                "icon": "😟",
+                "text": "Traditional leadership vocabulary",
+                "url": "https://www.witty.works/en/categories/gendered#leadership_stereotype"
+            },
+            "gravity": 2.0,
+            "label": "Gendered: Leadership stereotype",
+            "start": 76,
+            "subcategory": "leadership",
+            "text": "Head of"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "they"
                 },
                 {
@@ -122,35 +151,6 @@
             "start": 20,
             "subcategory": "hollow",
             "text": "first"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "older person"
-                },
-                {
-                    "text": "retiree"
-                },
-                {
-                    "text": "older people"
-                },
-                {
-                    "text": "retirees"
-                }
-            ],
-            "category": "unconscious_bias",
-            "context": "it's the first time that we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n\nFossil Group Europe GmbH\nRiehenring <NUMBER>\n\n<NUMBER> Basel\nSWITZERLAND\n<URL>\nt: +<NUMBER> <NUMBER> <NUMBER> <NUMBER> <NUMBER>\nm:",
-            "end": 115,
-            "explanation": {
-                "icon": "😒",
-                "text": "Hidden bias regarding age over 50",
-                "url": "https://www.witty.works/en/categories/biased_language#50_years_and_older"
-            },
-            "gravity": 2.0,
-            "label": "Biased language: 50 years and older",
-            "start": 109,
-            "subcategory": "age_old",
-            "text": "Fossil"
         }
     ]
 }
