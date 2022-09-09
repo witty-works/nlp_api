@@ -4,7 +4,7 @@ from collections import defaultdict
 # https://github.com/Pimverleg/German-gender-finder
 
 wordMap = defaultdict(list)
-with open("training_data/de-DE/word_list.csv", encoding="utf8") as file:
+with open("training_data/german_gender_word_list.csv", encoding="utf8") as file:
     dr = csv.DictReader(file)
     for line in dr:
         wordMap[line["Word"]] = line["Gender"]
