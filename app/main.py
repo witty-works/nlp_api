@@ -116,7 +116,7 @@ async def handle_command_witty(
     await ack()
 
     user_request_in = RequestIn(text=body["text"])
-    text, lang, limit_reached = get_text(user_request_in)
+    text, lang, limit_reached = fetch_text(user_request_in)
 
     if lang == None:
         await respond(f"Witty could not determine a language for '{text}'.")
@@ -235,7 +235,7 @@ for language in languages:
         )
 
 
-def get_current_username(
+def fetch_current_username(
     credentials: Optional[HTTPBasicCredentials] = Depends(security),
 ):
     # Credentials are missing
@@ -274,7 +274,7 @@ def get_current_username(
 
 
 @app.post("/slack/commands")
-async def slack_commands(request: Request):
+async def post_slack_commands(request: Request):
     return await bolt_handler.handle(request)
 
 
@@ -283,10 +283,10 @@ async def slack_commands(request: Request):
     "/exception",
     include_in_schema=not settings.is_prod,
 )
-async def exception(
+async def post_exception(
     request: Request,
     user_request_in: RequestIn,
-    username: str = Depends(get_current_username),
+    username: str = Depends(fetch_current_username),
 ):  # pragma: no cover
     raise HTTPException(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=user_request_in.text
@@ -294,20 +294,20 @@ async def exception(
 
 
 @app.get("/lt", include_in_schema=not settings.is_prod)
-def get_lt(username: str = Depends(get_current_username)):
+def get_lt(username: str = Depends(fetch_current_username)):
     return languagetool_url
 
 
 @app.get("/docs", include_in_schema=False)
 def get_swagger_documentation(
-    username: str = Depends(get_current_username),
+    username: str = Depends(fetch_current_username),
     include_in_schema=not settings.is_prod,
 ):  # pragma: no cover
     return get_swagger_ui_html(openapi_url="/openapi.json", title="docs")
 
 
 @app.get("/openapi.json", include_in_schema=False)
-def openapi(username: str = Depends(get_current_username)):  # pragma: no cover
+def get_openapi(username: str = Depends(fetch_current_username)):  # pragma: no cover
     return get_openapi(title=app.title, version=app.version, routes=app.routes)
 
 
@@ -328,8 +328,8 @@ def get_root():
     "/save_openapi_json",
     include_in_schema=not settings.is_prod,
 )
-def save_openapi_json(
-    username: str = Depends(get_current_username),
+def get_save_openapi_json(
+    username: str = Depends(fetch_current_username),
 ):  # pragma: no cover
     openapi_data = app.openapi()
     for path in openapi_data["paths"].copy():
@@ -344,10 +344,10 @@ def save_openapi_json(
     "/debug/german_gender_ending",
     include_in_schema=not settings.is_prod,
 )
-def german_gender_ending(
+def get_german_gender_ending(
     alternative: str,
     german_gender_ending: GermanGenderEndingType = None,
-    username: str = Depends(get_current_username),
+    username: str = Depends(fetch_current_username),
 ):
     alternative_variations = set()
 
@@ -370,8 +370,10 @@ def german_gender_ending(
     include_in_schema=not settings.is_prod,
     dependencies=[Depends(HTTPBearer(auto_error=False))],
 )
-async def auth_debug(request: Request, user_request_in: RequestIn):  # pragma: no cover
-    user_email = get_user(request)
+async def post_auth_debug(
+    request: Request, user_request_in: RequestIn
+):  # pragma: no cover
+    user_email = fetch_user(request)
     if not user_email:
         return user_email
 
@@ -397,13 +399,13 @@ async def auth_debug(request: Request, user_request_in: RequestIn):  # pragma: n
     response_model_exclude_none=True,
     dependencies=[Depends(HTTPBearer(auto_error=False))],
 )
-async def auth_1_1(request: Request, response: Response):
-    user_email = get_user(request)
+async def post_auth_1_1(request: Request, response: Response):
+    user_email = fetch_user(request)
     if not user_email:
         return None
 
     rules = await fetch_rules_for_request(RequestIn(text=""), user_email)
-    config = get_result_conf(rules, 1.1)
+    config = fetch_result_conf(rules, 1.1)
     if config == None and user_email:
         config = {}
 
@@ -416,8 +418,8 @@ async def auth_1_1(request: Request, response: Response):
     response_model_exclude_none=True,
     dependencies=[Depends(HTTPBearer(auto_error=False))],
 )
-async def auth_2_0(request: Request, response: Response):
-    user_email = get_user(request)
+async def post_auth_2_0(request: Request, response: Response):
+    user_email = fetch_user(request)
     if not user_email:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -429,16 +431,16 @@ async def auth_2_0(request: Request, response: Response):
             status_code=status.HTTP_403_FORBIDDEN,
         )
 
-    return get_result_conf(rules, 2.0)
+    return fetch_result_conf(rules, 2.0)
 
 
 @app.get(
     "/debug/spacy",
     include_in_schema=not settings.is_prod,
 )
-async def debug_spacy(
+async def get_debug_spacy(
     text: str,
-    username: str = Depends(get_current_username),
+    username: str = Depends(fetch_current_username),
 ):
     locale = lang_detection.get_locale(
         text,
@@ -449,7 +451,7 @@ async def debug_spacy(
     lang = Language(locale)
 
     results = []
-    tokens = get_tokens(lang, text)
+    tokens = fetch_tokens(lang, text)
     for token in tokens:
         results.append(
             {
@@ -457,7 +459,7 @@ async def debug_spacy(
                 "start": token.idx,
                 "tag": token.tag_,
                 "pos": token.pos_,
-                "word_type": get_token_type(token),
+                "word_type": fetch_token_type(token),
                 "morph": token.morph.get("Number"),
             }
         )
@@ -476,7 +478,7 @@ def get_categories(lang: LangType = "de"):
     response_model_exclude_none=True,
     dependencies=[Depends(HTTPBearer(auto_error=False))],
 )
-async def check_v1_1(
+async def post_check_v1_1(
     request: Request,
     response: Response,
     user_request_in: RequestIn,
@@ -486,7 +488,7 @@ async def check_v1_1(
         version, request, response, user_request_in
     )
 
-    config = get_result_conf(rules, 1.1)
+    config = fetch_result_conf(rules, 1.1)
     if config == None and user_email:
         config = {}
 
@@ -507,7 +509,7 @@ async def check_v1_1(
     response_model_exclude_none=True,
     dependencies=[Depends(HTTPBearer(auto_error=False))],
 )
-async def check_v2_0(
+async def post_check_v2_0(
     request: Request,
     response: Response,
     user_request_in: RequestIn,
@@ -531,7 +533,7 @@ async def check_v2_0(
         results=results,
         language=language,
         limit_reached=limit_reached,
-        config_changed=get_config_change(rules, user_request_in),
+        config_changed=fetch_config_change(rules, user_request_in),
         notifications=notifications,
         has_consented_to_mailing=has_consented_to_mailing,
     )
@@ -539,9 +541,9 @@ async def check_v2_0(
 
 # data exchange routes
 @app.post("/organization/rules")
-async def store_organization_rules(
+async def post_organization_rules(
     organization_rules: OrganizationConfRequest,
-    username: str = Depends(get_current_username),
+    username: str = Depends(fetch_current_username),
 ):
     redis.set(organization_rules.id, organization_rules.json())
 
@@ -554,7 +556,7 @@ async def store_organization_rules(
 )
 async def delete_organiztion_rules(
     organization_id: str,
-    username: str = Depends(get_current_username),
+    username: str = Depends(fetch_current_username),
 ):
     redis.delete(organization_id)
 
@@ -564,14 +566,14 @@ async def delete_organiztion_rules(
 )
 async def get_organization_rules(
     organization_id: str,
-    username: str = Depends(get_current_username),
+    username: str = Depends(fetch_current_username),
 ):
     return await fetch_organization_rules_from_redis(organization_id)
 
 
 @app.post("/user/rules")
-async def store_user_rules(
-    user_rules: UserConfRequest, username: str = Depends(get_current_username)
+async def post_user_rules(
+    user_rules: UserConfRequest, username: str = Depends(fetch_current_username)
 ):
     redis.set(user_rules.email, user_rules.json())
 
@@ -584,7 +586,7 @@ async def store_user_rules(
 )
 async def delete_user_rules(
     email: str,
-    username: str = Depends(get_current_username),
+    username: str = Depends(fetch_current_username),
 ):
     redis.delete(email)
 
@@ -592,7 +594,7 @@ async def delete_user_rules(
 @app.get("/user/rules", response_model=dict, responses={404: {"model": ErrorMessage}})
 async def get_user_rules(
     email: str,
-    username: str = Depends(get_current_username),
+    username: str = Depends(fetch_current_username),
 ):
     rules = await fetch_user_organization_rules(email)
 
@@ -756,7 +758,7 @@ async def fetch_organization_rules_for_request(
     return rules
 
 
-def get_user(request: Request):
+def fetch_user(request: Request):
     if "authorization" in request.headers and request.headers[
         "authorization"
     ].lower().startswith("bearer"):
@@ -800,7 +802,7 @@ def get_user(request: Request):
     return None
 
 
-def get_text(user_request_in):
+def fetch_text(user_request_in):
     text = user_request_in.text
     limit_reached = len(text) > settings.text_max_length
     if limit_reached:
@@ -832,7 +834,7 @@ async def check(
         response.status_code = status.HTTP_400_BAD_REQUEST
         return Result.factory("Version not supported: " + str(version))
 
-    user_email = get_user(request)
+    user_email = fetch_user(request)
     if version >= 2.0 and not user_email:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -840,7 +842,7 @@ async def check(
 
     rules = await fetch_rules_for_request(user_request_in, user_email)
 
-    text, lang, limit_reached = get_text(user_request_in)
+    text, lang, limit_reached = fetch_text(user_request_in)
 
     if lang == None:
         response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
@@ -857,7 +859,7 @@ async def check(
     return results, language, limit_reached, rules, user_email
 
 
-def get_config_change(
+def fetch_config_change(
     rules: dict,
     user_request_in: Optional[RequestIn] = None,
 ):
@@ -877,7 +879,7 @@ def get_config_change(
     return None
 
 
-def get_result_conf(
+def fetch_result_conf(
     rules: dict,
     version: float,
 ):
@@ -916,7 +918,7 @@ def get_result_conf(
     )
 
 
-def get_alternatives(match):
+def fetch_alternatives(match):
     alternatives = []
     if "replacements" in match:
         for replacement in match["replacements"]:
@@ -985,7 +987,7 @@ def languagetool_matches(
         ):
             continue
 
-        alternatives = get_alternatives(match)
+        alternatives = fetch_alternatives(match)
 
         label = match["shortMessage"]
         if label == "":
@@ -1082,19 +1084,19 @@ async def languagetool_rules(version: float, config: Config, lang: Language, tex
     return list_results
 
 
-def get_tokens(lang: Language, text: str):
+def fetch_tokens(lang: Language, text: str):
     # apply SpaCy pre-built model
     return model[lang.lang](text.rstrip().replace("\n", " "))
 
 
-def get_false_positive_matcher(tokens):
+def fetch_false_positive_matcher(tokens):
     # create false positives list
-    phrase_matches_false = get_matches(tokens, list_false_column)
+    phrase_matches_false = fetch_matches(tokens, list_false_column)
     word_matches_false = false_pattern_match(tokens)
     return list(set(phrase_matches_false + word_matches_false))
 
 
-def get_matches(tokens, phrases):
+def fetch_matches(tokens, phrases):
     # Phrase matcher part to handle False positives with two words and special symbols
     matcher = PhraseMatcher(model[lang.lang].vocab, attr="LOWER")
 
@@ -1107,7 +1109,7 @@ def get_matches(tokens, phrases):
 async def language_rules(
     version: float, config: Config, rules: dict, lang: Language, text: str
 ):
-    tokens = get_tokens(lang, text)
+    tokens = fetch_tokens(lang, text)
 
     list_results = []
     if is_sub_category_enabled(config, "orthography"):
@@ -1181,15 +1183,15 @@ async def language_rules(
 
 
 # Function for all German rules
-def get_lemma_lower_cased(token):
+def fetch_lemma_lower_cased(token):
     token_word = token.lemma_
 
     return token_word.lower()
 
 
-def get_lemma_non_noun_lower_cased(token, lang):
+def fetch_lemma_non_noun_lower_cased(token, lang):
     if not check_token_type(token, lang, "s"):
-        return get_lemma_lower_cased(token)
+        return fetch_lemma_lower_cased(token)
 
     return token.lemma_
 
@@ -1373,7 +1375,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
     gendered_words_alternatives_en = defaultdict(list)
     inclusive_sentences_alternatives_en = []
     sentences_alternatives_en = defaultdict(list)
-    matches_false = get_false_positive_matcher(tokens)
+    matches_false = fetch_false_positive_matcher(tokens)
 
     if lang.locale == "en-GB":
         words_alternatives_en["od"] = open_disc_words_alternatives_GB
@@ -1575,7 +1577,7 @@ def ing_ify_alternatives(token, alternatives):
 """Function to change adjectives to -en form in alternatives"""
 
 
-def get_token_type(token, token_type=None, single_word=None):
+def fetch_token_type(token, token_type=None, single_word=None):
     if token.pos_ == "VERB":
         return "v"
 
@@ -1616,7 +1618,7 @@ def check_token_type(token, lang, token_type=None, single_word=None):
     if token_type == None:
         return True
 
-    return get_token_type(token, token_type, single_word) in token_type.split(",")
+    return fetch_token_type(token, token_type, single_word) in token_type.split(",")
 
 
 def add_declension(lang, text, ending):
@@ -1637,7 +1639,7 @@ def alternative_declension(text, token_type, ending, lang, alternative):
     if ResultOut.isInspirationAlternative(text, alternative):
         return alternative
 
-    tokens = get_tokens(lang, alternative)
+    tokens = fetch_tokens(lang, alternative)
 
     if lang.lang == "en":
         alternative_token_types = ["v"]
@@ -1649,7 +1651,9 @@ def alternative_declension(text, token_type, ending, lang, alternative):
     for token in reversed(tokens):
         text = token.text
         if previous == False:
-            alternative_token_type = get_token_type(token, token_type, len(tokens) == 1)
+            alternative_token_type = fetch_token_type(
+                token, token_type, len(tokens) == 1
+            )
 
             if alternative_token_type in alternative_token_types:
                 previous = True
@@ -1665,7 +1669,7 @@ def alternative_declension(text, token_type, ending, lang, alternative):
 
 def alternatives_declension(token, lang, alternatives):
     endings = False
-    token_type = get_token_type(token)
+    token_type = fetch_token_type(token)
 
     if lang.lang == "en" and token_type == "v":
         endings = ["s"]
@@ -1802,9 +1806,9 @@ def agentic_language_analysis_de(
             alternative_plur,
             subcategory,
         ) in words_alternatives_noun:
-            if get_lemma_non_noun_lower_cased(token, lang) == word and check_token_type(
-                token, lang, word_type, True
-            ):
+            if fetch_lemma_non_noun_lower_cased(
+                token, lang
+            ) == word and check_token_type(token, lang, word_type, True):
                 token_morph_number = token.morph.get("Number")
                 if is_number_list_empty(token_morph_number, token, full_text):
                     continue
@@ -1847,9 +1851,9 @@ def ub_words_phrase_matcher_de(
 
     for token in tokens:
         for word, word_type, alternative, subcategory in words_alternatives:
-            if get_lemma_non_noun_lower_cased(token, lang) == word and check_token_type(
-                token, lang, word_type, True
-            ):
+            if fetch_lemma_non_noun_lower_cased(
+                token, lang
+            ) == word and check_token_type(token, lang, word_type, True):
                 alternative = alternatives_declension(token, lang, alternative)
 
                 list_tokens.append(
@@ -1867,7 +1871,7 @@ def ub_words_phrase_matcher_de(
                     )
                 )
 
-    matches = get_matches(tokens, list(df_sentence["Lemma"]))
+    matches = fetch_matches(tokens, list(df_sentence["Lemma"]))
     for match_id, start, end in matches:
         for sentence, alternative, subcategory in sentences_alternatives:
             span = tokens[start:end]
@@ -1895,7 +1899,7 @@ def ignore_binary_inclusive_gendered_denom_analysis_de(
     tokens,
     false_positives,
 ):
-    matches = get_matches(tokens, false_positives)
+    matches = fetch_matches(tokens, false_positives)
     if matches.__len__() > 0:
         old_start = 0
         rest_text = []
@@ -2138,7 +2142,7 @@ def style_word_analysis_de(
                     )
                 )
 
-    matches = get_matches(tokens, terms)
+    matches = fetch_matches(tokens, terms)
     for match_id, start, end in matches:
         for sentence, alternative, subcategory in style_sentences_alternatives:
             span = tokens[start:end]
@@ -2183,9 +2187,9 @@ def word_noun_de(
             alternative_plur,
             subcategory,
         ) in bias_words_alternatives_noun:
-            if get_lemma_non_noun_lower_cased(token, lang) == word and check_token_type(
-                token, lang, word_type, True
-            ):
+            if fetch_lemma_non_noun_lower_cased(
+                token, lang
+            ) == word and check_token_type(token, lang, word_type, True):
                 token_morph_number = token.morph.get("Number")
                 if is_number_list_empty(token_morph_number, token, full_text):
                     continue
@@ -2235,9 +2239,9 @@ def rules_based_words_phrase_matcher_de(
 
     for token in tokens:
         for word, word_type, *data in words_alternatives:
-            if get_lemma_non_noun_lower_cased(token, lang) == word and check_token_type(
-                token, lang, word_type, True
-            ):
+            if fetch_lemma_non_noun_lower_cased(
+                token, lang
+            ) == word and check_token_type(token, lang, word_type, True):
                 if isinstance(data, list):
                     if len(data) >= 1:
                         alternative = alternatives_declension(token, lang, data[0])
@@ -2262,7 +2266,7 @@ def rules_based_words_phrase_matcher_de(
     if isinstance(df_sentence, pd.DataFrame):
         alternative = None
         subcategory = fallback_subcategory
-        matches = get_matches(tokens, list(df_sentence["Lemma"]))
+        matches = fetch_matches(tokens, list(df_sentence["Lemma"]))
         for match_id, start, end in matches:
             span = tokens[start:end]
             if sentences_alternatives == None:
@@ -2277,7 +2281,7 @@ def rules_based_words_phrase_matcher_de(
                         subcategory,
                         span.start_char,
                         span.end_char,
-                        [],
+                        alternative,
                     )
                 )
             else:
@@ -2410,7 +2414,7 @@ def rules_based_words_phrase_matcher_en(
     for token in tokens:
         for word, word_type, alternative, subcategory in words_alternatives:
             if (
-                get_lemma_lower_cased(token) == word
+                fetch_lemma_lower_cased(token) == word
                 and check_token_type(token, lang, word_type, True)
                 and is_false_positive_match(matches_false, tokens, token) == False
             ):
@@ -2432,7 +2436,7 @@ def rules_based_words_phrase_matcher_en(
                     )
                 )
 
-    matches = get_matches(tokens, list(df_sentence["Lemma"]))
+    matches = fetch_matches(tokens, list(df_sentence["Lemma"]))
     for match_id, start, end in matches:
         for sentence, alternative, subcategory in sentences_alternatives:
             span = tokens[start:end]
@@ -2509,7 +2513,7 @@ def literal_match(
 ):
     list_tokens = []
 
-    matches = get_matches(tokens, list(df_term["Lemma"]))
+    matches = fetch_matches(tokens, list(df_term["Lemma"]))
     for match_id, start, end in matches:
         for (
             term,
@@ -2582,7 +2586,7 @@ def gendered_en(
             second_subcategory,
         ) in gendered_words_alternatives:
             if (
-                get_lemma_lower_cased(token) == word
+                fetch_lemma_lower_cased(token) == word
                 and check_token_type(token, lang, word_type, True)
                 and is_false_positive_match(matches_false, tokens, token) == False
             ):
@@ -2638,7 +2642,7 @@ def rules_based_words_phrase_matcher_no_alt_en(
     for token in tokens:
         for word, word_type, subcategory in inclusive_words_alternatives_en:
             if (
-                get_lemma_lower_cased(token) == word
+                fetch_lemma_lower_cased(token) == word
                 and check_token_type(token, lang, word_type, True)
                 and is_false_positive_match(matches_false, tokens, token) == False
             ):
@@ -2657,7 +2661,7 @@ def rules_based_words_phrase_matcher_no_alt_en(
                     )
                 )
 
-    matches = get_matches(tokens, list(df_sentence["Lemma"]))
+    matches = fetch_matches(tokens, list(df_sentence["Lemma"]))
     for match_id, start, end in matches:
         for sentence, subcategory in inclusive_sentences_alternatives_en:
             span = tokens[start:end]
