@@ -1787,6 +1787,66 @@ def plural_or_singular_alternatives_de(
     return None
 
 
+def sentences_matcher(
+    version: float,
+    config: Config,
+    lang,
+    full_text,
+    tokens,
+    sentences_alternatives,
+    sentences_list,
+    category,
+    fallback_subcategory=None,
+):
+    list_tokens = []
+    alternative = None
+    subcategory = fallback_subcategory
+
+    matches = fetch_matches(tokens, sentences_list)
+    for match_id, start, end in matches:
+        span = tokens[start:end]
+        if sentences_alternatives == None:
+            list_tokens.append(
+                ResultOut.factory(
+                    version,
+                    config,
+                    lang,
+                    span.text,
+                    full_text,
+                    category,
+                    subcategory,
+                    span.start_char,
+                    span.end_char,
+                    alternative,
+                )
+            )
+        else:
+            for sentence, *data in sentences_alternatives:
+                if span.text.lower() == sentence.lower():
+                    if len(data) >= 2:
+                        alternative = data[0]
+                        subcategory = data[1]
+                    elif len(data) >= 1:
+                        alternative = data[0]
+
+                    list_tokens.append(
+                        ResultOut.factory(
+                            version,
+                            config,
+                            lang,
+                            span.text,
+                            full_text,
+                            category,
+                            subcategory,
+                            span.start_char,
+                            span.end_char,
+                            alternative,
+                        )
+                    )
+
+    return list_tokens
+
+
 """Function to handle dependecies of the adjectives."""
 # this function agentic language & related false positives
 
@@ -1875,27 +1935,16 @@ def ub_words_phrase_matcher_de(
                     )
                 )
 
-    matches = fetch_matches(tokens, list(df_sentence["Lemma"]))
-    for match_id, start, end in matches:
-        for sentence, alternative, subcategory in sentences_alternatives:
-            span = tokens[start:end]
-            if span.text.lower() == sentence.lower():
-                list_tokens.append(
-                    ResultOut.factory(
-                        version,
-                        config,
-                        lang,
-                        span.text,
-                        full_text,
-                        category,
-                        subcategory,
-                        span.start_char,
-                        span.end_char,
-                        alternative,
-                    )
-                )
-
-    return list_tokens
+    return list_tokens + sentences_matcher(
+        version,
+        config,
+        lang,
+        full_text,
+        tokens,
+        sentences_alternatives,
+        list(df_sentence["Lemma"]),
+        category,
+    )
 
 
 def ignore_binary_inclusive_gendered_denom_analysis_de(
@@ -2146,27 +2195,16 @@ def style_word_analysis_de(
                     )
                 )
 
-    matches = fetch_matches(tokens, df_sentences)
-    for match_id, start, end in matches:
-        for sentence, alternative, subcategory in sentences_alternatives:
-            span = tokens[start:end]
-            if span.text.lower() == sentence.lower():
-                list_tokens.append(
-                    ResultOut.factory(
-                        version,
-                        config,
-                        lang,
-                        span.text,
-                        full_text,
-                        category,
-                        subcategory,
-                        span.start_char,
-                        span.end_char,
-                        alternative,
-                    )
-                )
-
-    return list_tokens
+    return list_tokens + sentences_matcher(
+        version,
+        config,
+        lang,
+        full_text,
+        tokens,
+        sentences_alternatives,
+        df_sentences,
+        category,
+    )
 
 
 # German function to show plural and singular forms of alternatives for nouns
@@ -2268,48 +2306,17 @@ def rules_based_words_phrase_matcher_de(
                 )
 
     if isinstance(df_sentence, pd.DataFrame):
-        alternative = None
-        subcategory = fallback_subcategory
-        matches = fetch_matches(tokens, list(df_sentence["Lemma"]))
-        for match_id, start, end in matches:
-            span = tokens[start:end]
-            if sentences_alternatives == None:
-                list_tokens.append(
-                    ResultOut.factory(
-                        version,
-                        config,
-                        lang,
-                        span.text,
-                        full_text,
-                        category,
-                        subcategory,
-                        span.start_char,
-                        span.end_char,
-                        alternative,
-                    )
-                )
-            else:
-                for sentence, *data in sentences_alternatives:
-                    if span.text.lower() == sentence.lower():
-                        if len(data) >= 1:
-                            alternative = data[0]
-                        if len(data) >= 2:
-                            subcategory = data[1]
-
-            list_tokens.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    span.text,
-                    full_text,
-                    category,
-                    subcategory,
-                    span.start_char,
-                    span.end_char,
-                    alternative,
-                )
-            )
+        list_tokens += sentences_matcher(
+            version,
+            config,
+            lang,
+            full_text,
+            tokens,
+            sentences_alternatives,
+            list(df_sentence["Lemma"]),
+            category,
+            fallback_subcategory,
+        )
 
     return list_tokens
 
@@ -2440,27 +2447,16 @@ def rules_based_words_phrase_matcher_en(
                     )
                 )
 
-    matches = fetch_matches(tokens, list(df_sentence["Lemma"]))
-    for match_id, start, end in matches:
-        for sentence, alternative, subcategory in sentences_alternatives:
-            span = tokens[start:end]
-            if span.text.lower() == sentence.lower():
-                list_tokens.append(
-                    ResultOut.factory(
-                        version,
-                        config,
-                        lang,
-                        span.text,
-                        full_text,
-                        category,
-                        subcategory,
-                        span.start_char,
-                        span.end_char,
-                        alternative,
-                    )
-                )
-
-    return list_tokens
+    return list_tokens + sentences_matcher(
+        version,
+        config,
+        lang,
+        full_text,
+        tokens,
+        sentences_alternatives,
+        list(df_sentence["Lemma"]),
+        category,
+    )
 
 
 # english function to handle homonyms
@@ -2665,27 +2661,16 @@ def rules_based_words_phrase_matcher_no_alt_en(
                     )
                 )
 
-    matches = fetch_matches(tokens, list(df_sentence["Lemma"]))
-    for match_id, start, end in matches:
-        for sentence, subcategory in sentences_alternatives:
-            span = tokens[start:end]
-            if span.text.lower() == sentence.lower():
-                list_tokens.append(
-                    ResultOut.factory(
-                        version,
-                        config,
-                        lang,
-                        span.text,
-                        full_text,
-                        category,
-                        subcategory,
-                        span.start_char,
-                        span.end_char,
-                        [],
-                    )
-                )
-
-    return list_tokens
+    return list_tokens + sentences_matcher(
+        version,
+        config,
+        lang,
+        full_text,
+        tokens,
+        sentences_alternatives,
+        list(df_sentence["Lemma"]),
+        category,
+    )
 
 
 # want to server to run app.py in the folder app as main app, port=8000 is defaut port for the fast api
