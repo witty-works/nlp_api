@@ -313,8 +313,8 @@ def openapi(username: str = Depends(get_current_username)):  # pragma: no cover
 
 # public routes
 @app.get("/", include_in_schema=False)
-def root():
-    url = "https://www.witty.works/form"
+def get_root():
+    url = "https://www.witty.works/editor"
     status_code = 301
 
     if not settings.is_prod and settings.testing == False:  # pragma: no cover
@@ -430,11 +430,6 @@ async def auth_2_0(request: Request, response: Response):
         )
 
     return get_result_conf(rules, 2.0)
-
-
-@app.get("/form", include_in_schema=False)
-def form():
-    return root()
 
 
 @app.get(

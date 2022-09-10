@@ -14,7 +14,6 @@ from app.models import (
     LangWithAutoType,
     RequestIn,
 )
-import copy
 
 client = TestClient(app)
 logging.basicConfig(
@@ -31,13 +30,7 @@ def get_dirs(path):
 def test_read_main():
     response = client.get("/", allow_redirects=False)
     assert response.status_code == 301
-    assert response.headers["Location"] == "https://www.witty.works/form"
-
-
-def test_read_form():
-    response = client.get("/form", allow_redirects=False)
-    assert response.status_code == 301
-    assert response.headers["Location"] == "https://www.witty.works/form"
+    assert response.headers["Location"] == "https://www.witty.works/editor"
 
 
 @pytest.mark.parametrize(
