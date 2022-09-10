@@ -307,7 +307,9 @@ def get_swagger_documentation(
 
 
 @app.get("/openapi.json", include_in_schema=False)
-def get_openapi(username: str = Depends(fetch_current_username)):  # pragma: no cover
+def get_openapi_json(
+    username: str = Depends(fetch_current_username),
+):  # pragma: no cover
     return get_openapi(title=app.title, version=app.version, routes=app.routes)
 
 
@@ -1416,7 +1418,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
         sentences_alternatives_en["style"] = style_sentences_alternatives_US
         sentences_alternatives_en["bias"] = bias_sentences_alternatives_US
 
-    list_full += homonyms_english(
+    list_full += homonyms_en(
         version,
         config,
         lang,
@@ -1639,12 +1641,14 @@ def alternative_declension(text, token_type, ending, lang, alternative):
     if ResultOut.isInspirationAlternative(text, alternative):
         return alternative
 
-    tokens = fetch_tokens(lang, alternative)
-
     if lang.lang == "en":
         alternative_token_types = ["v"]
     elif lang.lang == "de":
         alternative_token_types = ["v", "a"]
+    else:
+        return alternative
+
+    tokens = fetch_tokens(lang, alternative)
 
     new_alternative = ""
     previous = False
@@ -1793,7 +1797,7 @@ def agentic_language_analysis_de(
     lang,
     full_text,
     tokens,
-    words_alternatives_noun,
+    words_alternatives,
     category,
 ):
     list_tokens = []
@@ -1805,10 +1809,10 @@ def agentic_language_analysis_de(
             alternative_sing,
             alternative_plur,
             subcategory,
-        ) in words_alternatives_noun:
-            if fetch_lemma_non_noun_lower_cased(
-                token, lang
-            ) == word and check_token_type(token, lang, word_type, True):
+        ) in words_alternatives:
+            if fetch_lemma_non_noun_lower_cased(token, lang) == word and check_token_type(
+                token, lang, word_type, True
+            ):
                 token_morph_number = token.morph.get("Number")
                 if is_number_list_empty(token_morph_number, token, full_text):
                     continue
@@ -1975,7 +1979,7 @@ def gendered_denom_analysis_de(
     lang,
     full_text,
     tokens,
-    gender_words_alternatives,
+    words_alternatives,
     false_positives,
 ):
     category = "gendered"
@@ -1995,7 +1999,7 @@ def gendered_denom_analysis_de(
             alternatives_plur,
             alternatives_all,
             subcategory,
-        ) in gender_words_alternatives:
+        ) in words_alternatives:
             if tokens[i].lemma_ == word and check_token_type(
                 tokens[i], lang, word_type, True
             ):
@@ -2105,9 +2109,9 @@ def style_word_analysis_de(
     lang,
     full_text,
     tokens,
-    terms,
-    style_words_alternatives,
-    style_sentences_alternatives,
+    df_sentences,
+    words_alternatives,
+    sentences_alternatives,
     false_positives,
 ):
     category = "style"
@@ -2123,7 +2127,7 @@ def style_word_analysis_de(
         if token.lemma_ == "aber" and is_conjunction(full_text, token.idx):
             continue
 
-        for word, word_type, alternative, subcategory in style_words_alternatives:
+        for word, word_type, alternative, subcategory in words_alternatives:
             if token.lemma_ == word and check_token_type(token, lang, word_type, True):
                 alternative = alternatives_declension(token, lang, alternative)
 
@@ -2142,9 +2146,9 @@ def style_word_analysis_de(
                     )
                 )
 
-    matches = fetch_matches(tokens, terms)
+    matches = fetch_matches(tokens, df_sentences)
     for match_id, start, end in matches:
-        for sentence, alternative, subcategory in style_sentences_alternatives:
+        for sentence, alternative, subcategory in sentences_alternatives:
             span = tokens[start:end]
             if span.text.lower() == sentence.lower():
                 list_tokens.append(
@@ -2169,12 +2173,12 @@ def style_word_analysis_de(
 
 
 def word_noun_de(
-    version: version,
+    version: float,
     config: Config,
     lang,
     full_text,
     tokens,
-    bias_words_alternatives_noun,
+    words_alternatives,
     category,
 ):
     list_tokens = []
@@ -2186,10 +2190,10 @@ def word_noun_de(
             alternative_sing,
             alternative_plur,
             subcategory,
-        ) in bias_words_alternatives_noun:
-            if fetch_lemma_non_noun_lower_cased(
-                token, lang
-            ) == word and check_token_type(token, lang, word_type, True):
+        ) in words_alternatives:
+            if fetch_lemma_non_noun_lower_cased(token, lang) == word and check_token_type(
+                token, lang, word_type, True
+            ):
                 token_morph_number = token.morph.get("Number")
                 if is_number_list_empty(token_morph_number, token, full_text):
                     continue
@@ -2460,19 +2464,19 @@ def rules_based_words_phrase_matcher_en(
 
 
 # english function to handle homonyms
-def homonyms_english(
+def homonyms_en(
     version: float,
     config: Config,
     lang,
     full_text,
     tokens,
     matches_false,
-    homonyms_words,
+    words_alternatives,
 ):
     list_tokens = []
 
     for token in tokens:
-        for word, word_type, category, subcategory, alternative in homonyms_words:
+        for word, word_type, category, subcategory, alternative in words_alternatives:
             if not is_sub_category_enabled(config, subcategory):
                 continue
 
@@ -2508,12 +2512,12 @@ def literal_match(
     lang,
     full_text,
     tokens,
-    df_term,
+    df_sentence,
     term_list,
 ):
     list_tokens = []
 
-    matches = fetch_matches(tokens, list(df_term["Lemma"]))
+    matches = fetch_matches(tokens, list(df_sentence["Lemma"]))
     for match_id, start, end in matches:
         for (
             term,
@@ -2571,7 +2575,7 @@ def gendered_en(
     full_text,
     tokens,
     matches_false,
-    gendered_words_alternatives,
+    words_alternatives,
     category,
 ):
     list_tokens = []
@@ -2584,7 +2588,7 @@ def gendered_en(
             alternative_plur,
             subcategory,
             second_subcategory,
-        ) in gendered_words_alternatives:
+        ) in words_alternatives:
             if (
                 fetch_lemma_lower_cased(token) == word
                 and check_token_type(token, lang, word_type, True)
@@ -2632,15 +2636,15 @@ def rules_based_words_phrase_matcher_no_alt_en(
     full_text,
     tokens,
     matches_false,
-    inclusive_words_alternatives_en,
-    inclusive_sentences_alternatives_en,
+    words_alternatives,
+    sentences_alternatives,
     df_sentence,
     category,
 ):
     list_tokens = []
 
     for token in tokens:
-        for word, word_type, subcategory in inclusive_words_alternatives_en:
+        for word, word_type, subcategory in words_alternatives:
             if (
                 fetch_lemma_lower_cased(token) == word
                 and check_token_type(token, lang, word_type, True)
@@ -2663,7 +2667,7 @@ def rules_based_words_phrase_matcher_no_alt_en(
 
     matches = fetch_matches(tokens, list(df_sentence["Lemma"]))
     for match_id, start, end in matches:
-        for sentence, subcategory in inclusive_sentences_alternatives_en:
+        for sentence, subcategory in sentences_alternatives:
             span = tokens[start:end]
             if span.text.lower() == sentence.lower():
                 list_tokens.append(
