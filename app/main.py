@@ -1414,27 +1414,29 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
         )
 
     if is_sub_category_enabled(config, "communal"):
-        list_full += rules_based_words_phrase_matcher(
+        list_full += rules_based_words_phrase_matcher_de(
             version,
             config,
             lang,
             text,
             tokens,
-            [],
             rules["de-DE"]["df_communal_words"],
+            None,
+            [],
             "inclusive",
             "communal",
         )
 
     if is_sub_category_enabled(config, "d_and_i"):
-        list_full += rules_based_words_phrase_matcher(
+        list_full += rules_based_words_phrase_matcher_de(
             version,
             config,
             lang,
             text,
             tokens,
-            rules["de-DE"]["terms_d_and_i_words"],
             rules["de-DE"]["df_d_and_i_words"],
+            None,
+            rules["de-DE"]["df_terms_d_and_i_words"],
             "inclusive",
             "d_and_i",
         )
@@ -2321,15 +2323,23 @@ def rules_based_words_phrase_matcher_de(
     sentences_alternatives,
     df_sentence,
     category,
+    fallback_subcategory=None,
 ):
     list_tokens = []
 
+    alternative = None
+    subcategory = fallback_subcategory
+
     for token in tokens:
-        for word, word_type, alternative, subcategory in words_alternatives:
+        for word, word_type, *data in words_alternatives:
             if get_lemma_non_noun_lower_cased(token) == word and check_token_type(
                 token, lang, word_type, True
             ):
-                alternative = alternatives_declension(token, lang, alternative)
+                if isinstance(data, list):
+                    if len(data) >= 1:
+                        alternative = alternatives_declension(token, lang, data[0])
+                    if len(data) >= 2:
+                        subcategory = data[1]
 
                 list_tokens.append(
                     ResultOut.factory(
@@ -2346,11 +2356,35 @@ def rules_based_words_phrase_matcher_de(
                     )
                 )
 
-    matches = get_matches(tokens, list(df_sentence["Lemma"]))
-    for match_id, start, end in matches:
-        for sentence, alternative, subcategory in sentences_alternatives:
-            span = tokens[start:end]
-            if span.text.lower() == sentence.lower():
+    if isinstance(df_sentence, pd.DataFrame):
+        alternative = None
+        subcategory = fallback_subcategory
+        matches = get_matches(tokens, list(df_sentence["Lemma"]))
+        for match_id, start, end in matches:
+                span = tokens[start:end]
+                if sentences_alternatives == None:
+                    list_tokens.append(
+                        ResultOut.factory(
+                            version,
+                            config,
+                            lang,
+                            span.text,
+                            full_text,
+                            category,
+                            subcategory,
+                            span.start_char,
+                            span.end_char,
+                            [],
+                        )
+                    )
+                else:
+                    for sentence, *data in sentences_alternatives:
+                        if span.text.lower() == sentence.lower():
+                            if len(data) >= 1:
+                                alternative = data[0]
+                            if len(data) >= 2:
+                                subcategory = data[1]
+
                 list_tokens.append(
                     ResultOut.factory(
                         version,
@@ -2362,65 +2396,9 @@ def rules_based_words_phrase_matcher_de(
                         subcategory,
                         span.start_char,
                         span.end_char,
-                        alternative,
+                                    alternative,
                     )
                 )
-
-    return list_tokens
-
-
-def rules_based_words_phrase_matcher(
-    version: float,
-    config: Config,
-    lang,
-    full_text,
-    tokens,
-    terms,
-    df,
-    category,
-    subcategory,
-):
-
-    list_tokens = []
-
-    for token in tokens:
-        for word, word_type in df:
-            if get_lemma_non_noun_lower_cased(token) == word and check_token_type(
-                token, lang, word_type, True
-            ):
-                list_tokens.append(
-                    ResultOut.factory(
-                        version,
-                        config,
-                        lang,
-                        token.text,
-                        full_text,
-                        category,
-                        subcategory,
-                        token.idx,
-                        None,
-                        [],
-                    )
-                )
-
-    if len(terms):
-        matches = get_matches(tokens, terms)
-        for match_id, start, end in matches:
-            span = tokens[start:end]
-            list_tokens.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    span.text,
-                    full_text,
-                    category,
-                    subcategory,
-                    span.start_char,
-                    span.end_char,
-                    [],
-                )
-            )
 
     return list_tokens
 
