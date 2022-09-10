@@ -1492,7 +1492,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
         )
 
     if is_sub_category_enabled(config, "inclusive"):
-        list_full += rules_based_words_phrase_matcher_no_alt_en(
+        list_full += rules_based_words_phrase_matcher_en(
             version,
             config,
             lang,
@@ -2325,11 +2325,10 @@ def rules_based_words_phrase_matcher_de(
 
 # matcher to false positives
 def is_false_positive_match(list_false_positive, tokens, token):
-    if list_false_positive.__len__() > 0:
-        for match_id, start, end in list_false_positive:
-            span_false = tokens[start:end]
-            if token.idx in range(span_false.start_char, span_false.end_char):
-                return True
+    for match_id, start, end in list_false_positive:
+        span_false = tokens[start:end]
+        if token.idx in range(span_false.start_char, span_false.end_char):
+            return True
 
     return False
 
@@ -2421,16 +2420,21 @@ def rules_based_words_phrase_matcher_en(
     category,
 ):
     list_tokens = []
+    alternative = None
 
     for token in tokens:
-        for word, word_type, alternative, subcategory in words_alternatives:
+        for word, word_type, *data in words_alternatives:
             if (
                 fetch_lemma_lower_cased(token) == word
                 and check_token_type(token, lang, word_type, True)
                 and is_false_positive_match(matches_false, tokens, token) == False
             ):
-                alternative = ing_ify_alternatives(token, alternative)
-                alternative = alternatives_declension(token, lang, alternative)
+                if len(data) > 1:
+                    alternative = ing_ify_alternatives(token, data[0])
+                    alternative = alternatives_declension(token, lang, alternative)
+                    subcategory = data[1]
+                else:
+                    subcategory = data[0]
 
                 list_tokens.append(
                     ResultOut.factory(
@@ -2620,57 +2624,6 @@ def gendered_en(
                     )
 
     return list_tokens
-
-
-# english function, no alternatives
-
-
-def rules_based_words_phrase_matcher_no_alt_en(
-    version: float,
-    config: Config,
-    lang,
-    full_text,
-    tokens,
-    matches_false,
-    words_alternatives,
-    sentences_alternatives,
-    df_sentence,
-    category,
-):
-    list_tokens = []
-
-    for token in tokens:
-        for word, word_type, subcategory in words_alternatives:
-            if (
-                fetch_lemma_lower_cased(token) == word
-                and check_token_type(token, lang, word_type, True)
-                and is_false_positive_match(matches_false, tokens, token) == False
-            ):
-                list_tokens.append(
-                    ResultOut.factory(
-                        version,
-                        config,
-                        lang,
-                        token.text,
-                        full_text,
-                        category,
-                        subcategory,
-                        token.idx,
-                        token.idx + len(token.text),
-                        [],
-                    )
-                )
-
-    return list_tokens + sentences_matcher(
-        version,
-        config,
-        lang,
-        full_text,
-        tokens,
-        sentences_alternatives,
-        list(df_sentence["Lemma"]),
-        category,
-    )
 
 
 # want to server to run app.py in the folder app as main app, port=8000 is defaut port for the fast api
