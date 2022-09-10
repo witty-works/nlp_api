@@ -69,8 +69,10 @@ for locale in rules:
 rules["de-DE"]["terms_style"] = list(rules["de-DE"]["df_style_sentences"]["Lemma"])
 
 # list of "d_and_i_words word" sentences
-rules["de-DE"]["terms_d_and_i_words"] = list(
-    rules["de-DE"]["df_d_and_i_words_sentences"]["Lemma"]
+rules["de-DE"]["df_terms_d_and_i_words"] = list(
+    zip(
+        rules["de-DE"]["df_d_and_i_words_sentences"]["Lemma"],
+    )
 )
 
 # list of "d_and_i_words word" sentences
@@ -583,7 +585,7 @@ list_false_column = [
     "nothing of the kind",
     "lead nowhere",
     "lead astray",
-"lead a dog's life",
+    "lead a dog's life",
     "lead off",
     "lead on",
     "lead someone by the nose",
@@ -616,7 +618,7 @@ list_false_column = [
     "communal leader",
     "servant leadership",
     "communal leadership",
-"master's",
+    "master's",
     "Master of Arts",
     "Master of Science",
     "Master of Laws",
