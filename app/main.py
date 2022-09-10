@@ -126,14 +126,14 @@ async def handle_command_witty(
 
     try:
         user = await client.users_info(user=body["user_id"])
-        rules = await fetch_user_rules(
+        rules = await fetch_rules_for_request(
             user_request_in, user.data["user"]["profile"]["email"]
         )
     except KeyError:
         pass
 
     if rules == {} and settings.slack_organization_id:
-        rules = await fetch_organization_rules(
+        rules = await fetch_organization_rules_for_request(
             user_request_in, settings.slack_organization_id
         )
 
@@ -375,7 +375,7 @@ async def auth_debug(request: Request, user_request_in: RequestIn):  # pragma: n
     if not user_email:
         return user_email
 
-    rules = await fetch_user_rules(user_request_in, user_email)
+    rules = await fetch_rules_for_request(user_request_in, user_email)
 
     if "authorization" in request.headers and request.headers[
         "authorization"
@@ -402,7 +402,7 @@ async def auth_1_1(request: Request, response: Response):
     if not user_email:
         return None
 
-    rules = await fetch_user_rules(RequestIn(text=""), user_email)
+    rules = await fetch_rules_for_request(RequestIn(text=""), user_email)
     config = get_result_conf(rules, 1.1)
     if config == None and user_email:
         config = {}
@@ -423,7 +423,7 @@ async def auth_2_0(request: Request, response: Response):
             status_code=status.HTTP_403_FORBIDDEN,
         )
 
-    rules = await fetch_user_rules(RequestIn(text=""), user_email)
+    rules = await fetch_rules_for_request(RequestIn(text=""), user_email)
     if rules == {}:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -543,54 +543,6 @@ async def check_v2_0(
 
 
 # data exchange routes
-
-
-# BC
-@app.post("/store_rules")
-async def store_rules(
-    organization_rules: ConfRequest1_1,
-    username: str = Depends(get_current_username),
-):
-    rules = redis.get(organization_rules.id)
-
-    # Set a value
-    redis.set(organization_rules.id, organization_rules.json())
-    for user in organization_rules.users:
-        redis.set(str(user), organization_rules.id)
-
-    if rules:
-        rules = json.loads(rules)
-        for user in rules["users"]:
-            if user not in organization_rules.users:
-                redis.delete(str(user))
-
-    return organization_rules
-
-
-# BC
-@app.delete(
-    "/delete_rules",
-    status_code=status.HTTP_204_NO_CONTENT,
-    responses={404: {"model": ErrorMessage}},
-)
-async def delete_rules(
-    organization_id: str,
-    username: str = Depends(get_current_username),
-):
-    rules = redis.get(organization_id)
-
-    if not rules:
-        return JSONResponse(
-            status_code=404, content={"message": "User rules not found"}
-        )
-
-    rules = json.loads(rules)
-    for user in rules["users"]:
-        redis.delete(str(user))
-
-    redis.delete(organization_id)
-
-
 @app.post("/organization/rules")
 async def store_organization_rules(
     organization_rules: OrganizationConfRequest,
@@ -604,19 +556,11 @@ async def store_organization_rules(
 @app.delete(
     "/organization/rules",
     status_code=status.HTTP_204_NO_CONTENT,
-    responses={404: {"model": ErrorMessage}},
 )
 async def delete_organiztion_rules(
     organization_id: str,
     username: str = Depends(get_current_username),
 ):
-    rules = redis.get(organization_id)
-
-    if not rules:
-        return JSONResponse(
-            status_code=404, content={"message": "Organization rules not found"}
-        )
-
     redis.delete(organization_id)
 
 
@@ -627,14 +571,7 @@ async def get_organization_rules(
     organization_id: str,
     username: str = Depends(get_current_username),
 ):
-    rules = redis.get(organization_id)
-
-    if not rules:
-        return JSONResponse(
-            status_code=404, content={"message": "User rules not found"}
-        )
-
-    return json.loads(rules)
+    return await fetch_organization_rules_from_redis(organization_id)
 
 
 @app.post("/user/rules")
@@ -649,19 +586,11 @@ async def store_user_rules(
 @app.delete(
     "/user/rules",
     status_code=status.HTTP_204_NO_CONTENT,
-    responses={404: {"model": ErrorMessage}},
 )
 async def delete_user_rules(
     email: str,
     username: str = Depends(get_current_username),
 ):
-    rules = redis.get(email)
-
-    if not rules:
-        return JSONResponse(
-            status_code=404, content={"message": "User rules not found"}
-        )
-
     redis.delete(email)
 
 
@@ -670,7 +599,7 @@ async def get_user_rules(
     email: str,
     username: str = Depends(get_current_username),
 ):
-    rules = await fetch_user_rules_from_redis(email)
+    rules = await fetch_user_organization_rules(email)
 
     if not rules or type(rules) is not dict:
         return JSONResponse(
@@ -681,52 +610,43 @@ async def get_user_rules(
 
 
 # Functions
-async def fetch_user_rules_from_redis(email: str):
-    rules = redis.get(email)
-
+async def fetch_organization_rules_from_redis(
+    organization_id: str,
+):
+    rules = redis.get(organization_id)
     if not rules:
-        return None
+        raise HTTPException(status_code=404, detail="Organization rules not found")
 
-    format_1_1 = False
+    return json.loads(rules)
 
+
+async def fetch_user_rules_from_redis(
+    email: str,
+):
+    rules = redis.get(email)
+    if not rules:
+        raise HTTPException(status_code=404, detail="User rules not found")
+
+    return json.loads(rules)
+
+
+async def fetch_user_organization_rules(email: str):
     try:
-        rules = json.loads(rules)
-    except ValueError as e:
-        # handle old format
-        format_1_1 = True
-
-        rules = {
-            "id": email,
-            "name": email,
-            "email": email,
-            "organization_id": rules,
-            "config": {},
-            "term_replacements": {},
-            "false_positives": [],
-            "domains": {},
-            "organization_domains": {},
-            "notifications": None,
-        }
+        rules = await fetch_user_rules_from_redis(email)
+    except HTTPException:
+        return None
 
     rules["plan"] = "witty_free"
     rules["organization_name"] = None
 
     if "organization_id" in rules and rules["organization_id"] != None:
-        organization_rules = redis.get(rules["organization_id"])
-
-        if organization_rules:
-            organization_rules = json.loads(organization_rules)
+        try:
+            organization_rules = await fetch_organization_rules_from_redis(
+                rules["organization_id"]
+            )
 
             rules["plan"] = organization_rules["plan"]
             rules["organization_name"] = organization_rules["name"]
-
-            if format_1_1:
-                term_replacements = {}
-                for rule in organization_rules["term_replacements"]:
-                    term = rule["term"]
-                    del rule["term"]
-                    term_replacements[term] = rule
-                organization_rules["term_replacements"] = term_replacements
 
             if "config_hash" in organization_rules:
                 rules["organization_config_hash"] = organization_rules["config_hash"]
@@ -745,19 +665,10 @@ async def fetch_user_rules_from_redis(email: str):
             rules["organization_false_positives"] = organization_rules[
                 "false_positives"
             ]
+        except HTTPException:
+            pass
     else:
         rules["organization_id"] = None
-
-    return rules
-
-
-async def fetch_organization_rules_from_redis(organization_id: str):
-    rules = redis.get(organization_id)
-
-    if not rules:
-        return None
-
-    rules = json.loads(rules)
 
     return rules
 
@@ -805,13 +716,13 @@ def apply_rules(user_request_in: RequestIn, configs: dict, plan: str):
     user_request_in.config.__setattr__("disabled_categories", disabled_categories)
 
 
-async def fetch_user_rules(user_request_in: RequestIn, user_email=Optional[str]):
+async def fetch_rules_for_request(user_request_in: RequestIn, user_email=Optional[str]):
     user_request_in.config.__setattr__("store_context", True)
 
     if not user_email:
         return {}
 
-    rules = await fetch_user_rules_from_redis(user_email)
+    rules = await fetch_user_organization_rules(user_email)
     if not rules or type(rules) is not dict:
         return {}
 
@@ -828,7 +739,7 @@ async def fetch_user_rules(user_request_in: RequestIn, user_email=Optional[str])
     return rules
 
 
-async def fetch_organization_rules(
+async def fetch_organization_rules_for_request(
     user_request_in: RequestIn, organization_id=Optional[str]
 ):
     user_request_in.config.__setattr__("store_context", True)
@@ -836,8 +747,9 @@ async def fetch_organization_rules(
     if not organization_id:
         return {}
 
-    rules = await fetch_organization_rules_from_redis(organization_id)
-    if not rules or type(rules) is not dict:
+    try:
+        rules = await fetch_organization_rules_from_redis(organization_id)
+    except HTTPException:
         return {}
 
     for config in rules["configs"]:
@@ -931,7 +843,7 @@ async def check(
             status_code=status.HTTP_403_FORBIDDEN,
         )
 
-    rules = await fetch_user_rules(user_request_in, user_email)
+    rules = await fetch_rules_for_request(user_request_in, user_email)
 
     text, lang, limit_reached = get_text(user_request_in)
 
@@ -1851,7 +1763,8 @@ def plural_or_singular_en(
 ):
     if token_morph_number[0] == "Sing":
         return alternative_sing, subcategory
-    elif token_morph_number[0] == "Plur":
+
+    if token_morph_number[0] == "Plur":
         return [
             item for item in alternative_plur if item != token.text.lower()
         ], second_subcategory
@@ -1864,7 +1777,8 @@ def plural_or_singular_alternatives_de(
 ):
     if token_morph_number[0] == "Sing":
         return alternative_sing
-    elif token_morph_number[0] == "Plur":
+
+    if token_morph_number[0] == "Plur":
         return alternative_plur
 
     return None
@@ -2500,27 +2414,28 @@ def rules_based_words_phrase_matcher_en(
 
     for token in tokens:
         for word, word_type, alternative, subcategory in words_alternatives:
-            if get_lemma_lower_cased(token) == word and check_token_type(
-                token, lang, word_type, True
+            if (
+                get_lemma_lower_cased(token) == word
+                and check_token_type(token, lang, word_type, True)
+                and is_false_positive_match(matches_false, tokens, token) == False
             ):
-                if is_false_positive_match(matches_false, tokens, token) == False:
-                    alternative = ing_ify_alternatives(token, alternative)
-                    alternative = alternatives_declension(token, lang, alternative)
+                alternative = ing_ify_alternatives(token, alternative)
+                alternative = alternatives_declension(token, lang, alternative)
 
-                    list_tokens.append(
-                        ResultOut.factory(
-                            version,
-                            config,
-                            lang,
-                            token.text,
-                            full_text,
-                            category,
-                            subcategory,
-                            token.idx,
-                            token.idx + len(token.text),
-                            alternative,
-                        )
+                list_tokens.append(
+                    ResultOut.factory(
+                        version,
+                        config,
+                        lang,
+                        token.text,
+                        full_text,
+                        category,
+                        subcategory,
+                        token.idx,
+                        token.idx + len(token.text),
+                        alternative,
                     )
+                )
 
     matches = get_matches(tokens, list(df_sentence["Lemma"]))
     for match_id, start, end in matches:
@@ -2562,24 +2477,27 @@ def homonyms_english(
             if not is_sub_category_enabled(config, subcategory):
                 continue
 
-            if token.lemma_ == word and check_token_type(token, lang, word_type, True):
-                if is_false_positive_match(matches_false, tokens, token) == False:
-                    alternative = ing_ify_alternatives(token, alternative)
+            if (
+                token.lemma_ == word
+                and check_token_type(token, lang, word_type, True)
+                and is_false_positive_match(matches_false, tokens, token) == False
+            ):
+                alternative = ing_ify_alternatives(token, alternative)
 
-                    list_tokens.append(
-                        ResultOut.factory(
-                            version,
-                            config,
-                            lang,
-                            token.text,
-                            full_text,
-                            category,
-                            subcategory,
-                            token.idx,
-                            token.idx + len(token.text),
-                            alternative,
-                        )
+                list_tokens.append(
+                    ResultOut.factory(
+                        version,
+                        config,
+                        lang,
+                        token.text,
+                        full_text,
+                        category,
+                        subcategory,
+                        token.idx,
+                        token.idx + len(token.text),
+                        alternative,
                     )
+                )
 
     return list_tokens
 
@@ -2668,38 +2586,39 @@ def gendered_en(
             subcategory,
             second_subcategory,
         ) in gendered_words_alternatives:
-            if get_lemma_lower_cased(token) == word and check_token_type(
-                token, lang, word_type, True
+            if (
+                get_lemma_lower_cased(token) == word
+                and check_token_type(token, lang, word_type, True)
+                and is_false_positive_match(matches_false, tokens, token) == False
             ):
-                if is_false_positive_match(matches_false, tokens, token) == False:
-                    token_morph_number = token.morph.get("Number")
-                    if is_number_list_empty(token_morph_number, token, full_text):
-                        continue
+                token_morph_number = token.morph.get("Number")
+                if is_number_list_empty(token_morph_number, token, full_text):
+                    continue
 
-                    alternative, subcategory = plural_or_singular_en(
-                        token,
-                        token_morph_number,
-                        alternative_sing,
-                        alternative_plur,
-                        subcategory,
-                        second_subcategory,
-                    )
+                alternative, subcategory = plural_or_singular_en(
+                    token,
+                    token_morph_number,
+                    alternative_sing,
+                    alternative_plur,
+                    subcategory,
+                    second_subcategory,
+                )
 
-                    if alternative != None:
-                        list_tokens.append(
-                            ResultOut.factory(
-                                version,
-                                config,
-                                lang,
-                                token.text,
-                                full_text,
-                                category,
-                                subcategory,
-                                token.idx,
-                                token.idx + len(token.text),
-                                alternative,
-                            )
+                if alternative != None:
+                    list_tokens.append(
+                        ResultOut.factory(
+                            version,
+                            config,
+                            lang,
+                            token.text,
+                            full_text,
+                            category,
+                            subcategory,
+                            token.idx,
+                            token.idx + len(token.text),
+                            alternative,
                         )
+                    )
 
     return list_tokens
 
@@ -2723,24 +2642,25 @@ def rules_based_words_phrase_matcher_no_alt_en(
 
     for token in tokens:
         for word, word_type, subcategory in inclusive_words_alternatives_en:
-            if get_lemma_lower_cased(token) == word and check_token_type(
-                token, lang, word_type, True
+            if (
+                get_lemma_lower_cased(token) == word
+                and check_token_type(token, lang, word_type, True)
+                and is_false_positive_match(matches_false, tokens, token) == False
             ):
-                if is_false_positive_match(matches_false, tokens, token) == False:
-                    list_tokens.append(
-                        ResultOut.factory(
-                            version,
-                            config,
-                            lang,
-                            token.text,
-                            full_text,
-                            category,
-                            subcategory,
-                            token.idx,
-                            token.idx + len(token.text),
-                            [],
-                        )
+                list_tokens.append(
+                    ResultOut.factory(
+                        version,
+                        config,
+                        lang,
+                        token.text,
+                        full_text,
+                        category,
+                        subcategory,
+                        token.idx,
+                        token.idx + len(token.text),
+                        [],
                     )
+                )
 
     matches = get_matches(tokens, list(df_sentence["Lemma"]))
     for match_id, start, end in matches:
