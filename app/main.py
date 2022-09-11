@@ -541,12 +541,17 @@ async def check_v2_0(
     if "notifications" in rules and rules["notifications"] > 0:
         notifications = rules["notifications"]
 
+    has_consented_to_mailing = None
+    if "has_consented_to_mailing" in rules:
+        has_consented_to_mailing = rules["has_consented_to_mailing"]
+
     return ResultsOut(
         results=results,
         language=language,
         limit_reached=limit_reached,
         config_changed=get_config_change(rules, user_request_in),
         notifications=notifications,
+        has_consented_to_mailing=has_consented_to_mailing,
     )
 
 
