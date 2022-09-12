@@ -16,7 +16,7 @@
                 "text": "Außer am Satzanfang werden nur Nomen und Eigennamen großgeschrieben."
             },
             "gravity": 1.0,
-            "label": "Groß-/Kleinschreibung",
+            "label": "Gross-/Kleinschreibung",
             "start": 22,
             "subcategory": "casing",
             "text": "Wir"

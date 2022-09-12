@@ -87,21 +87,17 @@ def read_csv(in_file):
         columns = {
             "Subcategory": 0,
             "Category": None,
-            "Category Label EN": None,
-            "Category Label DE": None,
+            "Anchor EN": None,
+            "Anchor DE": None,
             "Short explanation EN": None,
             "Short explanation DE": None,
-            "Status English": None,
-            "Status German": None,
             "Inclusive?": None,
             "Gravity": None,
             "Importance": None,
-            "Status EN": None,
-            "Status DE": None,
         }
 
         columnMap = {
-            "label": "Category Label",
+            "anchor": "Anchor",
             "explanation": "Short explanation",
         }
 
@@ -120,8 +116,8 @@ def read_csv(in_file):
                 line_count += 1
             else:
                 if (
-                    row[columns["Category Label EN"]] == ""
-                    and row[columns["Category Label DE"]] == ""
+                    row[columns["Anchor EN"]] == ""
+                    and row[columns["Anchor DE"]] == ""
                 ):
                     continue
 

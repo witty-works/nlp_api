@@ -382,7 +382,7 @@ class ResultOut(BaseModel):
         start,
         end=None,
         alternatives=None,
-        label=None,
+        anchor=None,
         explanation=None,
         url=None,
         icon=None,
@@ -405,13 +405,14 @@ class ResultOut(BaseModel):
         if subcategory == "gendered_denominations_ending":
             params["gendered_denominations_ending"] = config.german_gender_ending
 
-        label = label if label else lang._("rules." + category + "_label")
+        anchor = anchor if anchor else lang._("rules." + category + "_anchor")
+        sub_anchor = None
 
         if category == "orthography" or category == "corporate_rules":
             category_key = category
         else:
             category_key = subcategory
-            sub_label = lang._("rules." + subcategory + "_label")
+            sub_anchor = lang._("rules." + subcategory + "_anchor")
 
             if url == None:
                 settings = get_settings()
@@ -422,13 +423,14 @@ class ResultOut(BaseModel):
                     + "/"
                     + ("categories" if lang.lang == "en" else "kategorien")
                     + "/"
-                    + ResultOut.transliterate(label)
+                    + anchor
                     + "#"
-                    + ResultOut.transliterate(sub_label)
+                    + sub_anchor
                 )
 
-            if category != subcategory:
-                label += ": " + sub_label
+        label = ResultOut.reverseTransliterate(anchor, lang)
+        if sub_anchor != None and anchor != sub_anchor:
+            label += ": " + ResultOut.reverseTransliterate(sub_anchor, lang)
 
         explanation = (
             explanation
@@ -583,15 +585,13 @@ class ResultOut(BaseModel):
         return False
 
     @staticmethod
-    def transliterate(string):
-        return (
-            string.lower()
-            .replace(" ", "_")
-            .replace("ß", "ss")
-            .replace("ü", "ue")
-            .replace("ä", "ae")
-            .replace("ö", "oe")
-        )
+    def reverseTransliterate(string, lang):
+        string = string.replace("_", " ")
+
+        if lang.lang == "en":
+            return string.capitalize()
+
+        return string.title().replace("ue", "ü").replace("ae", "ä").replace("oe", "ö")
 
     @staticmethod
     def countWords(text):

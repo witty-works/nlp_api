@@ -27,12 +27,6 @@ categories = {
         "importance": 2,
         "emoji": "🤔",
     },
-    "age_in_jobs": {
-        "inclusive": False,
-        "category": "job_requirements",
-        "gravity": 3.0,
-        "importance": None,
-    },
     "age_old": {
         "inclusive": False,
         "category": "unconscious_bias",
@@ -46,6 +40,12 @@ categories = {
         "gravity": 2.0,
         "importance": 2,
         "emoji": "😒",
+    },
+    "ageism": {
+        "inclusive": False,
+        "category": "unconscious_bias",
+        "gravity": 3.0,
+        "importance": None,
     },
     "agentic": {
         "inclusive": False,
@@ -151,24 +151,12 @@ categories = {
         "importance": 2,
         "emoji": "✅",
     },
-    "education": {
-        "inclusive": False,
-        "category": "job_requirements",
-        "gravity": 3.0,
-        "importance": None,
-    },
     "emotional_security": {
         "inclusive": True,
         "category": "inclusive",
         "gravity": None,
         "importance": 2,
         "emoji": "✅",
-    },
-    "ethnicity": {
-        "inclusive": False,
-        "category": "job_requirements",
-        "gravity": 3.0,
-        "importance": None,
     },
     "exaggerating": {
         "inclusive": False,
@@ -372,12 +360,6 @@ categories = {
         "importance": 1,
         "emoji": "❌",
     },
-    "overload": {
-        "inclusive": False,
-        "category": "job_requirements",
-        "gravity": 3.0,
-        "importance": None,
-    },
     "passive_voice": {
         "inclusive": False,
         "category": "style",
@@ -405,12 +387,6 @@ categories = {
         "gravity": 2.0,
         "importance": 2,
         "emoji": "😒",
-    },
-    "salary_vague": {
-        "inclusive": False,
-        "category": "job_requirements",
-        "gravity": 3.0,
-        "importance": None,
     },
     "sexism": {
         "inclusive": False,
@@ -446,12 +422,6 @@ categories = {
         "gravity": 3.0,
         "importance": None,
     },
-    "technical_frameworks": {
-        "inclusive": False,
-        "category": "job_requirements",
-        "gravity": 3.0,
-        "importance": None,
-    },
     "titles": {
         "inclusive": False,
         "category": "gendered",
@@ -473,25 +443,12 @@ categories = {
         "importance": 2,
         "emoji": "😒",
     },
-    "verbose": {
-        "inclusive": False,
-        "category": "style",
-        "gravity": 3.0,
-        "importance": 3,
-        "emoji": "🧊",
-    },
     "vision": {
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2.0,
         "importance": 2,
         "emoji": "😒",
-    },
-    "workload": {
-        "inclusive": False,
-        "category": "job_requirements",
-        "gravity": 3.0,
-        "importance": None,
     },
     "xenophobia": {
         "inclusive": False,
