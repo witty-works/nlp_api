@@ -532,6 +532,7 @@ def set_redis():
         },
         "config_hash": "foobar",
         "notifications": 5,
+        "has_consented_to_mailing": True,
     }
 
     redis.set(user_object["email"], json.dumps(user_object))
