@@ -88,7 +88,7 @@ def custom_tokenizer_de(nlp):
 
 
 # Model data
-model = {"en": spacy.load("en_core_web_sm"), "de": spacy.load("de_core_news_sm")}
+model = {"en": spacy.load("en_core_web_sm"), "de": spacy.load("de_core_news_lg")}
 
 # custom tokenizer for English
 model["en"].tokenizer = custom_tokenizer_en(model["en"])

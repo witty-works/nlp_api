@@ -1292,8 +1292,8 @@ def get_lemma_lower_cased(token):
     return token_word.lower()
 
 
-def get_lemma_non_noun_lower_cased(token):
-    if token.pos_ != "NOUN" and token.pos_ != "PROPN" and token.pos_ != "PRON":
+def get_lemma_non_noun_lower_cased(token, lang):
+    if not check_token_type(token, lang, "s"):
         return get_lemma_lower_cased(token)
 
     return token.lemma_
@@ -1681,6 +1681,12 @@ def ing_ify_alternatives(token, alternatives):
 
 
 def get_token_type(token, token_type=None, single_word=None):
+    if token.pos_ == "VERB":
+        return "v"
+
+    if token.pos_ == "NOUN" or token.pos_ == "PRON":
+        return "s"
+
     adj_tags = {
         "ADJA",
         "ADJD",
@@ -1696,10 +1702,7 @@ def get_token_type(token, token_type=None, single_word=None):
     if token.tag_ in adj_tags or token.pos_ in adj_tags:
         return "a"
 
-    if token.pos_ == "VERB":
-        return "v"
-
-    if token.pos_ == "NOUN" or token.pos_ == "PRON":
+    if token.tag_ == "NN":
         return "s"
 
     if token.pos_ == "PROPN" and single_word and token_type:
@@ -1714,6 +1717,9 @@ def check_token_type(token, lang, token_type=None, single_word=None):
 
     if token_type == "adv":
         return token.pos_ == "ADV"
+
+    if token_type == None:
+        return True
 
     return get_token_type(token, token_type, single_word) in token_type.split(",")
 
@@ -1899,7 +1905,7 @@ def agentic_language_analysis_de(
             alternative_plur,
             subcategory,
         ) in words_alternatives_noun:
-            if get_lemma_non_noun_lower_cased(token) == word and check_token_type(
+            if get_lemma_non_noun_lower_cased(token, lang) == word and check_token_type(
                 token, lang, word_type, True
             ):
                 token_morph_number = token.morph.get("Number")
@@ -1944,7 +1950,7 @@ def ub_words_phrase_matcher_de(
 
     for token in tokens:
         for word, word_type, alternative, subcategory in words_alternatives:
-            if get_lemma_non_noun_lower_cased(token) == word and check_token_type(
+            if get_lemma_non_noun_lower_cased(token, lang) == word and check_token_type(
                 token, lang, word_type, True
             ):
                 alternative = alternatives_declension(token, lang, alternative)
@@ -2280,7 +2286,7 @@ def word_noun_de(
             alternative_plur,
             subcategory,
         ) in bias_words_alternatives_noun:
-            if get_lemma_non_noun_lower_cased(token) == word and check_token_type(
+            if get_lemma_non_noun_lower_cased(token, lang) == word and check_token_type(
                 token, lang, word_type, True
             ):
                 token_morph_number = token.morph.get("Number")
@@ -2332,7 +2338,7 @@ def rules_based_words_phrase_matcher_de(
 
     for token in tokens:
         for word, word_type, *data in words_alternatives:
-            if get_lemma_non_noun_lower_cased(token) == word and check_token_type(
+            if get_lemma_non_noun_lower_cased(token, lang) == word and check_token_type(
                 token, lang, word_type, True
             ):
                 if isinstance(data, list):
@@ -2361,30 +2367,8 @@ def rules_based_words_phrase_matcher_de(
         subcategory = fallback_subcategory
         matches = get_matches(tokens, list(df_sentence["Lemma"]))
         for match_id, start, end in matches:
-                span = tokens[start:end]
-                if sentences_alternatives == None:
-                    list_tokens.append(
-                        ResultOut.factory(
-                            version,
-                            config,
-                            lang,
-                            span.text,
-                            full_text,
-                            category,
-                            subcategory,
-                            span.start_char,
-                            span.end_char,
-                            [],
-                        )
-                    )
-                else:
-                    for sentence, *data in sentences_alternatives:
-                        if span.text.lower() == sentence.lower():
-                            if len(data) >= 1:
-                                alternative = data[0]
-                            if len(data) >= 2:
-                                subcategory = data[1]
-
+            span = tokens[start:end]
+            if sentences_alternatives == None:
                 list_tokens.append(
                     ResultOut.factory(
                         version,
@@ -2396,9 +2380,31 @@ def rules_based_words_phrase_matcher_de(
                         subcategory,
                         span.start_char,
                         span.end_char,
-                                    alternative,
+                        [],
                     )
                 )
+            else:
+                for sentence, *data in sentences_alternatives:
+                    if span.text.lower() == sentence.lower():
+                        if len(data) >= 1:
+                            alternative = data[0]
+                        if len(data) >= 2:
+                            subcategory = data[1]
+
+            list_tokens.append(
+                ResultOut.factory(
+                    version,
+                    config,
+                    lang,
+                    span.text,
+                    full_text,
+                    category,
+                    subcategory,
+                    span.start_char,
+                    span.end_char,
+                    alternative,
+                )
+            )
 
     return list_tokens
 

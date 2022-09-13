@@ -1032,9 +1032,9 @@ def test_spacy():
         {
             "text": "ehrgeizig",
             "start": 13,
-            "tag": "CARD",
-            "pos": "NUM",
-            "word_type": None,
+            "tag": "ADJD",
+            "pos": "ADV",
+            "word_type": "a",
             "morph": [],
         },
     ]

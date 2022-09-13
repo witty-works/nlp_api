@@ -1,0 +1,41 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "Sinti*ze und Rom*nja"
+                },
+                {
+                    "text": "Sintize/Sinti und Romnja/Roma"
+                },
+                {
+                    "text": "Rom*nja"
+                },
+                {
+                    "text": "Romnja und Roma"
+                },
+                {
+                    "text": "Sinti*ze"
+                },
+                {
+                    "text": "Sintize und Sinti"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "Das sind Zigeuner Aber es ist",
+            "end": 17,
+            "explanation": {
+                "icon": "😒",
+                "text": "Versteckte Voreingenommenheit bezüglich Hautfarbe",
+                "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#rassistische_wurzel"
+            },
+            "gravity": 2.0,
+            "label": "Sprachliche Voreingenommenheit: Rassistische Wurzel",
+            "start": 9,
+            "subcategory": "racist_source",
+            "text": "Zigeuner"
+        }
+    ]
+}
