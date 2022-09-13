@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-09-08 08:37\n"
-"PO-Revision-Date: 2022-09-08 08:37\n"
+"POT-Creation-Date: 2022-09-13 14:30\n"
+"PO-Revision-Date: 2022-09-13 14:30\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -59,10 +59,10 @@ msgstr ""
 msgid "rules.agentic_explanation"
 msgstr ""
 
-msgid "rules.americanism_label"
+msgid "rules.anglicism_label"
 msgstr ""
 
-msgid "rules.americanism_explanation"
+msgid "rules.anglicism_explanation"
 msgstr ""
 
 msgid "rules.antimuslim_label"
@@ -147,6 +147,12 @@ msgid "rules.education_label"
 msgstr ""
 
 msgid "rules.education_explanation"
+msgstr ""
+
+msgid "rules.emotional_security_label"
+msgstr ""
+
+msgid "rules.emotional_security_explanation"
 msgstr ""
 
 msgid "rules.ethnicity_label"

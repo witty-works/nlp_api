@@ -54,7 +54,7 @@ categories = {
         "importance": 2,
         "emoji": "😒",
     },
-    "americanism": {
+    "anglicism": {
         "inclusive": False,
         "category": "style",
         "gravity": 3.0,
@@ -156,6 +156,13 @@ categories = {
         "category": "job_requirements",
         "gravity": 3.0,
         "importance": None,
+    },
+    "emotional_security": {
+        "inclusive": True,
+        "category": "inclusive",
+        "gravity": None,
+        "importance": 2,
+        "emoji": "✅",
     },
     "ethnicity": {
         "inclusive": False,

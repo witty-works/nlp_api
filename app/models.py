@@ -303,6 +303,7 @@ class ConfRequest(BaseModel):
     domains: Optional[DomainConfig]
     config_hash: Optional[str]
     notifications: Optional[int]
+    has_consented_to_mailing: Optional[bool]
 
 
 class ConfRequest1_1(BaseModel):
@@ -795,3 +796,4 @@ class ResultsOut(BaseModel):
     limit_reached: bool
     config_changed: Optional[bool]
     notifications: Optional[int]
+    has_consented_to_mailing: Optional[bool]

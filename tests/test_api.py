@@ -532,6 +532,7 @@ def set_redis():
         },
         "config_hash": "foobar",
         "notifications": 5,
+        "has_consented_to_mailing": True,
     }
 
     redis.set(user_object["email"], json.dumps(user_object))
@@ -729,7 +730,9 @@ def test_fetch_user_rules_suggestion(event_loop, set_redis):
         },
     }
     test_request = RequestIn(**request_data)
-    event_loop.run_until_complete(fetch_user_rules(test_request, "non_existant@gmail.com"))
+    event_loop.run_until_complete(
+        fetch_user_rules(test_request, "non_existant@gmail.com")
+    )
     assert test_request.config.store_context == True
     assert test_request.config.primary_language == "de-DE"
     assert test_request.config.preferred_languages == ["de"]
@@ -762,7 +765,9 @@ def test_set_default_rules(event_loop):
     }
     test_request = RequestIn(**request_data)
 
-    event_loop.run_until_complete(fetch_user_rules(test_request, "non_existant@gmail.com"))
+    event_loop.run_until_complete(
+        fetch_user_rules(test_request, "non_existant@gmail.com")
+    )
     assert test_request.config.store_context == True
     assert test_request.config.primary_language == None
     assert test_request.config.preferred_languages == [
@@ -1028,9 +1033,9 @@ def test_spacy():
         {
             "text": "ehrgeizig",
             "start": 13,
-            "tag": "CARD",
-            "pos": "NUM",
-            "word_type": None,
+            "tag": "ADJD",
+            "pos": "ADV",
+            "word_type": "a",
             "morph": [],
         },
     ]
@@ -1149,11 +1154,14 @@ def test_uberlegen_word_type(uberlegen_word_type_dir, snapshot, set_redis):
     snapshot.snapshot_dir = uberlegen_word_type_dir
     snapshot.assert_match(output, "output.json")
 
+
 @pytest.mark.parametrize(
     "english_false_pos_pattern_case_dir",
     get_dirs("tests/test_english_false_positives_pattern"),
 )
-def test_english_false_positive_pattern(english_false_pos_pattern_case_dir, snapshot, set_redis):
+def test_english_false_positive_pattern(
+    english_false_pos_pattern_case_dir, snapshot, set_redis
+):
 
     # Read input files from the case directory.
     input_json = english_false_pos_pattern_case_dir.joinpath("input.json").read_text()
@@ -1170,11 +1178,14 @@ def test_english_false_positive_pattern(english_false_pos_pattern_case_dir, snap
     snapshot.snapshot_dir = english_false_pos_pattern_case_dir
     snapshot.assert_match(output, "output.json")
 
+
 @pytest.mark.parametrize(
     "english_upper_case_multiterms_dir",
     get_dirs("tests/test_english_upper_case_multiterms"),
 )
-def test_english_upper_case_multiterms(english_upper_case_multiterms_dir, snapshot, set_redis):
+def test_english_upper_case_multiterms(
+    english_upper_case_multiterms_dir, snapshot, set_redis
+):
 
     # Read input files from the case directory.
     input_json = english_upper_case_multiterms_dir.joinpath("input.json").read_text()
