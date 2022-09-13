@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-09-08 08:37\n"
-"PO-Revision-Date: 2022-09-08 08:37\n"
+"POT-Creation-Date: 2022-09-13 14:30\n"
+"PO-Revision-Date: 2022-09-13 14:30\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -59,11 +59,11 @@ msgstr "Agentic"
 msgid "rules.agentic_explanation"
 msgstr "Doesn’t feel cooperative nor supportive"
 
-msgid "rules.americanism_label"
-msgstr "Americanism"
+msgid "rules.anglicism_label"
+msgstr "Anglicism"
 
-msgid "rules.americanism_explanation"
-msgstr "Americanism: Sure your readers understand?"
+msgid "rules.anglicism_explanation"
+msgstr "Anglicism: Are you sure, everyone understands what you mean?"
 
 msgid "rules.antimuslim_label"
 msgstr "Islamophobia"
@@ -147,6 +147,12 @@ msgid "rules.education_label"
 msgstr ""
 
 msgid "rules.education_explanation"
+msgstr ""
+
+msgid "rules.emotional_security_label"
+msgstr "Positive_emotions"
+
+msgid "rules.emotional_security_explanation"
 msgstr ""
 
 msgid "rules.ethnicity_label"
@@ -315,7 +321,7 @@ msgid "rules.offensive_language_label"
 msgstr "Offensive language"
 
 msgid "rules.offensive_language_explanation"
-msgstr "Offensive and vulgar"
+msgstr "Offends and intimidates"
 
 msgid "rules.openly_discriminating_label"
 msgstr "Openly discriminating"

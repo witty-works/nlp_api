@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-09-08 08:37\n"
-"PO-Revision-Date: 2022-09-08 08:37\n"
+"POT-Creation-Date: 2022-09-13 14:30\n"
+"PO-Revision-Date: 2022-09-13 14:30\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -59,11 +59,11 @@ msgstr "Agentisch"
 msgid "rules.agentic_explanation"
 msgstr "Fühlt sich weder kooperativ noch unterstützend an"
 
-msgid "rules.americanism_label"
-msgstr "Amerikanismen / Anglizismen"
+msgid "rules.anglicism_label"
+msgstr "Anglizismen"
 
-msgid "rules.americanism_explanation"
-msgstr "Amerikanismen: Sicher, dass das Lesende verstehen?"
+msgid "rules.anglicism_explanation"
+msgstr "Anglizismen: Sicher, dass das alle Lesenden verstehen?"
 
 msgid "rules.antimuslim_label"
 msgstr "Islamophobie"
@@ -148,6 +148,12 @@ msgstr ""
 
 msgid "rules.education_explanation"
 msgstr ""
+
+msgid "rules.emotional_security_label"
+msgstr ""
+
+msgid "rules.emotional_security_explanation"
+msgstr "Vermittelt emotionale Sicherheit"
 
 msgid "rules.ethnicity_label"
 msgstr ""
@@ -312,10 +318,10 @@ msgid "rules.mobility_explanation"
 msgstr "Versteckte Voreingenommenheit bezüglich Mobilität"
 
 msgid "rules.offensive_language_label"
-msgstr "Beleidigende und vulgäre Sprache"
+msgstr "Beleidigende und einschüchternde Sprache"
 
 msgid "rules.offensive_language_explanation"
-msgstr " Beleidigend und vulgär"
+msgstr " Verletzt und schüchtert ein"
 
 msgid "rules.openly_discriminating_label"
 msgstr "Offene Diskriminierung"
