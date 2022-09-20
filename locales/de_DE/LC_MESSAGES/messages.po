@@ -3,448 +3,406 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-09-13 14:30\n"
-"PO-Revision-Date: 2022-09-13 14:30\n"
+"POT-Creation-Date: 2022-09-19 13:51\n"
+"PO-Revision-Date: 2022-09-19 13:51\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "rules.abbreviation_label"
-msgstr "Abkürzung"
+msgid "rules.abbreviation_anchor"
+msgstr "abkuerzung"
 
 msgid "rules.abbreviation_explanation"
 msgstr "Sicher, dass das Lesende verstehen?"
 
-msgid "rules.ability_label"
-msgstr "Fähigkeiten"
+msgid "rules.ability_anchor"
+msgstr "faehigkeiten"
 
 msgid "rules.ability_explanation"
 msgstr "Versteckte Voreingenommenheit bezüglich Behinderungen"
 
-msgid "rules.ableism_label"
-msgstr "Behindertenfeindlichkeit"
+msgid "rules.ableism_anchor"
+msgstr "behindertenfeindlichkeit"
 
 msgid "rules.ableism_explanation"
 msgstr "Feindlich gegenüber Menschen mit Behinderung"
 
-msgid "rules.age_label"
-msgstr "Altersangabe"
+msgid "rules.age_anchor"
+msgstr "altersangabe"
 
 msgid "rules.age_explanation"
 msgstr "Sicher, dass du das Alter wissen musst?"
 
-msgid "rules.age_in_jobs_label"
-msgstr ""
-
-msgid "rules.age_in_jobs_explanation"
-msgstr ""
-
-msgid "rules.age_old_label"
-msgstr "50 Jahre und älter"
+msgid "rules.age_old_anchor"
+msgstr "50_jahre_und_aelter"
 
 msgid "rules.age_old_explanation"
 msgstr "Versteckte Voreingenommenheit bezüglich Alter 50+"
 
-msgid "rules.age_young_label"
-msgstr "25 Jahre und jünger"
+msgid "rules.age_young_anchor"
+msgstr "25_jahre_und_juenger"
 
 msgid "rules.age_young_explanation"
 msgstr "Versteckte Voreingenommenheit bezüglich Alter unter 25"
 
-msgid "rules.agentic_label"
-msgstr "Agentisch"
+msgid "rules.ageism_anchor"
+msgstr "altersdiskriminierungen"
+
+msgid "rules.ageism_explanation"
+msgstr ""
+
+msgid "rules.agentic_anchor"
+msgstr "agentisch"
 
 msgid "rules.agentic_explanation"
 msgstr "Fühlt sich weder kooperativ noch unterstützend an"
 
-msgid "rules.anglicism_label"
-msgstr "Anglizismen"
+msgid "rules.anglicism_anchor"
+msgstr "anglizismen"
 
 msgid "rules.anglicism_explanation"
 msgstr "Anglizismen: Sicher, dass das alle Lesenden verstehen?"
 
-msgid "rules.antimuslim_label"
-msgstr "Islamophobie"
+msgid "rules.antimuslim_anchor"
+msgstr "islamophobie"
 
 msgid "rules.antimuslim_explanation"
 msgstr "Islamophob"
 
-msgid "rules.antisemitism_label"
-msgstr "Anti-Semitismus"
+msgid "rules.antisemitism_anchor"
+msgstr "anti-semitismus"
 
 msgid "rules.antisemitism_explanation"
 msgstr "Anti-semitisch"
 
-msgid "rules.behavior_label"
-msgstr "Verhalten"
+msgid "rules.behavior_anchor"
+msgstr "verhalten"
 
 msgid "rules.behavior_explanation"
 msgstr "Versteckte Voreingenommenheit bezüglich Verhalten"
 
-msgid "rules.belief_label"
-msgstr "Glauben"
+msgid "rules.belief_anchor"
+msgstr "glauben"
 
 msgid "rules.belief_explanation"
 msgstr "Glauben ausdrückend; stimmt nicht für alle"
 
-msgid "rules.binary_pronouns_label"
-msgstr "Binäre Pronomen"
+msgid "rules.binary_pronouns_anchor"
+msgstr "binaere_pronomen"
 
 msgid "rules.binary_pronouns_explanation"
 msgstr "Pronomen gemäss binärem Geschlechterverständnis"
 
-msgid "rules.caring_label"
-msgstr "Einfühlsam"
+msgid "rules.caring_anchor"
+msgstr "einfühlsam"
 
 msgid "rules.caring_explanation"
 msgstr "Betont Offenheit, Fürsorge und Interesse"
 
-msgid "rules.classism_label"
-msgstr "Klassismus"
+msgid "rules.classism_anchor"
+msgstr "klassismus"
 
 msgid "rules.classism_explanation"
 msgstr "Drückt Machtungleichgewicht aus"
 
-msgid "rules.cognitive_ability_label"
-msgstr "Denkfähigkeit"
+msgid "rules.cognitive_ability_anchor"
+msgstr "denkfaehigkeit"
 
 msgid "rules.cognitive_ability_explanation"
 msgstr "Versteckte Voreingenommenheit bezüglich Lernfähigkeit"
 
-msgid "rules.cognitive_perception_label"
-msgstr "Wahrnehmung"
+msgid "rules.cognitive_perception_anchor"
+msgstr "wahrnehmung"
 
 msgid "rules.cognitive_perception_explanation"
 msgstr "Versteckte Voreingenommenheit bezüglich kognitiver Wahrnehmung"
 
-msgid "rules.communal_label"
-msgstr "Kommunal"
+msgid "rules.communal_anchor"
+msgstr "kommunal"
 
 msgid "rules.communal_explanation"
 msgstr "Betont kooperative Eigenschaften"
 
-msgid "rules.corporate_rules_label"
-msgstr "Organisations-Leitlinie"
+msgid "rules.corporate_rules_anchor"
+msgstr "organisations_leitlinie"
 
 msgid "rules.corporate_rules_explanation"
 msgstr "Wir schreiben lieber"
 
-msgid "rules.culture_label"
-msgstr "Kultur"
+msgid "rules.culture_anchor"
+msgstr "kultur"
 
 msgid "rules.culture_explanation"
 msgstr "Versteckte Voreingenommenheit bezüglich kulturellem Hintergrund"
 
-msgid "rules.d_and_i_label"
-msgstr "Diversität & Inklusion"
+msgid "rules.d_and_i_anchor"
+msgstr "diversitaet_&_inklusion"
 
 msgid "rules.d_and_i_explanation"
 msgstr "Bestärkt Wert von Diversity, Gleichstellung und Inklusion"
 
-msgid "rules.education_label"
-msgstr ""
-
-msgid "rules.education_explanation"
-msgstr ""
-
-msgid "rules.emotional_security_label"
+msgid "rules.emotional_security_anchor"
 msgstr ""
 
 msgid "rules.emotional_security_explanation"
 msgstr "Vermittelt emotionale Sicherheit"
 
-msgid "rules.ethnicity_label"
-msgstr ""
-
-msgid "rules.ethnicity_explanation"
-msgstr ""
-
-msgid "rules.exaggerating_label"
-msgstr "Superlative"
+msgid "rules.exaggerating_anchor"
+msgstr "superlative"
 
 msgid "rules.exaggerating_explanation"
 msgstr "Superlative: als Druck oder Arroganz wahrgenommen"
 
-msgid "rules.female_stereotype_label"
-msgstr "Weiblicher Stereotyp"
+msgid "rules.female_stereotype_anchor"
+msgstr "weiblicher_stereotyp"
 
 msgid "rules.female_stereotype_explanation"
 msgstr "Steckt Frauen in traditionelle Rollen"
 
-msgid "rules.filler_label"
-msgstr "Füllwörter"
+msgid "rules.filler_anchor"
+msgstr "fuellwoerter"
 
 msgid "rules.filler_explanation"
 msgstr "Füllwörter machen das Verständnis schwieriger"
 
-msgid "rules.formality_label"
-msgstr "Formalität"
+msgid "rules.formality_anchor"
+msgstr "formalitaet"
 
 msgid "rules.formality_explanation"
 msgstr "Formale Formulierung kreiert emotionale Distanz"
 
-msgid "rules.function_label"
-msgstr "Spezielle Funktionen"
+msgid "rules.function_anchor"
+msgstr "spezielle_funktionen"
 
 msgid "rules.function_explanation"
 msgstr "Bild eines Mannes wird unbewusst ausgelöst"
 
-msgid "rules.gen_boomer_label"
-msgstr "Sprache Generation Boomer & X"
+msgid "rules.gen_boomer_anchor"
+msgstr "sprach_generation_boomer_&_X"
 
 msgid "rules.gen_boomer_explanation"
 msgstr "Selten bekannte Formulierung der Generation Boomer"
 
-msgid "rules.gen_z_label"
-msgstr "Gen Z Language"
+msgid "rules.gen_z_anchor"
+msgstr "gen_z_sprache"
 
 msgid "rules.gen_z_explanation"
 msgstr "Nicht allen bekannte Formulierung der Generation Z"
 
-msgid "rules.gender_identity_label"
-msgstr "Geschlechtsidentität"
+msgid "rules.gender_identity_anchor"
+msgstr "geschlechtsidentitaet"
 
 msgid "rules.gender_identity_explanation"
 msgstr "Versteckte Voreingenommenheit bezüglich Geschlechtsidentität"
 
-msgid "rules.gendered_label"
-msgstr "Geschlechtsspezifisch"
+msgid "rules.gendered_anchor"
+msgstr "geschlechtsspezifisch"
 
 msgid "rules.gendered_explanation"
 msgstr "Schubladendenken nach Geschlechternormen"
 
-msgid "rules.gendered_denominations_ending_label"
-msgstr "Inklusive Endung"
+msgid "rules.gendered_denominations_ending_anchor"
+msgstr "inklusive_endung"
 
 msgid "rules.gendered_denominations_ending_explanation"
 msgstr "Nicht konsistente Geschlechts-Schreibweise"
 
-msgid "rules.generic_plural_label"
-msgstr "Generisches Plural"
+msgid "rules.generic_plural_anchor"
+msgstr "generisches_plural"
 
 msgid "rules.generic_plural_explanation"
 msgstr "Geschlechtsspezifisches Bild stark verankert. Im Plural weniger."
 
-msgid "rules.hearing_label"
-msgstr "Hör-Fähigkeit"
+msgid "rules.hearing_anchor"
+msgstr "hoer_faehigkeit"
 
 msgid "rules.hearing_explanation"
 msgstr "Versteckte Voreingenommenheit bezüglich Hör-Fähigkeit"
 
-msgid "rules.hidden_image_label"
-msgstr "Versteckter Ausdruck"
+msgid "rules.hidden_image_anchor"
+msgstr "versteckter_ausdruck"
 
 msgid "rules.hidden_image_explanation"
 msgstr "Verstecktes männliches Generikum"
 
-msgid "rules.hollow_label"
-msgstr "Worthülsen"
+msgid "rules.hollow_anchor"
+msgstr "worthuelsen"
 
 msgid "rules.hollow_explanation"
 msgstr "Worthülsen haben ihre Bedeutung verloren"
 
-msgid "rules.homophobia_label"
-msgstr "Homophobie"
+msgid "rules.homophobia_anchor"
+msgstr "homophobie"
 
 msgid "rules.homophobia_explanation"
 msgstr "Homophob"
 
-msgid "rules.inclusive_label"
-msgstr "Inklusiv"
+msgid "rules.inclusive_anchor"
+msgstr "inklusiv"
 
 msgid "rules.inclusive_explanation"
 msgstr "Lässt Zugehörigkeitsgefühl entstehen"
 
-msgid "rules.job_requirements_label"
-msgstr "Voreingenommene Anforderungen"
+msgid "rules.job_requirements_anchor"
+msgstr "voreingenommene_anforderungen"
 
 msgid "rules.job_requirements_explanation"
 msgstr ""
 
-msgid "rules.leadership_label"
-msgstr "Führungsstereotyp"
+msgid "rules.leadership_anchor"
+msgstr "fuehrungsstereotyp"
 
 msgid "rules.leadership_explanation"
 msgstr "Traditionelles Führungs-Vokabular"
 
-msgid "rules.learning_label"
-msgstr "Lernfähigkeit"
+msgid "rules.learning_anchor"
+msgstr "lernfaehigkeit"
 
 msgid "rules.learning_explanation"
 msgstr "Versteckte Voreingenommenheit bezüglich Lernfähigkeit"
 
-msgid "rules.male_stereotype_label"
-msgstr "Männlicher Stereotyp"
+msgid "rules.male_stereotype_anchor"
+msgstr "maennlicher_stereotyp"
 
 msgid "rules.male_stereotype_explanation"
 msgstr "Steckt Männer in traditionelle Rollen"
 
-msgid "rules.medical_state_label"
-msgstr "Gesundheitsbild"
+msgid "rules.medical_state_anchor"
+msgstr "gesundheitsbild"
 
 msgid "rules.medical_state_explanation"
 msgstr "Versteckte Voreingenommenheit bezüglich Gesundheitsbild"
 
-msgid "rules.mental_wellbeing_label"
-msgstr "Mentales Wohlbefinden"
+msgid "rules.mental_wellbeing_anchor"
+msgstr "mentales_wohlbefinden"
 
 msgid "rules.mental_wellbeing_explanation"
 msgstr "Versteckte Voreingenommenheit bezüglich mentalem Wohlbefinden"
 
-msgid "rules.migration_label"
-msgstr "Migrationshintergrund"
+msgid "rules.migration_anchor"
+msgstr "migrationshintergrund"
 
 msgid "rules.migration_explanation"
 msgstr "Versteckte Voreingenommenheit bezüglich Migrationshintergrund"
 
-msgid "rules.military_source_label"
-msgstr "Militärische Wurzel"
+msgid "rules.military_source_anchor"
+msgstr "militaerische_wurzel"
 
 msgid "rules.military_source_explanation"
 msgstr "Militärischer Begriff kommuniziert kriegsähnlichen Zustand"
 
-msgid "rules.misgendering_institutions_label"
-msgstr "Geschlecht von Institutionen"
+msgid "rules.misgendering_institutions_anchor"
+msgstr "geschlecht_von_institutionen"
 
 msgid "rules.misgendering_institutions_explanation"
 msgstr "Falsche Verwendung des grammatikalischen Geschlechtes"
 
-msgid "rules.mobility_label"
-msgstr "Mobilität"
+msgid "rules.mobility_anchor"
+msgstr "mobilitaet"
 
 msgid "rules.mobility_explanation"
 msgstr "Versteckte Voreingenommenheit bezüglich Mobilität"
 
-msgid "rules.offensive_language_label"
-msgstr "Beleidigende und einschüchternde Sprache"
+msgid "rules.offensive_language_anchor"
+msgstr "beleidigende_und_einschuechternde_sprache"
 
 msgid "rules.offensive_language_explanation"
 msgstr " Verletzt und schüchtert ein"
 
-msgid "rules.openly_discriminating_label"
-msgstr "Offene Diskriminierung"
+msgid "rules.openly_discriminating_anchor"
+msgstr "offene_diskriminierung"
 
 msgid "rules.openly_discriminating_explanation"
 msgstr ""
 
-msgid "rules.orthography_label"
-msgstr "Orthographie"
+msgid "rules.orthography_anchor"
+msgstr "orthographie"
 
 msgid "rules.orthography_explanation"
 msgstr "Orthographie"
 
-msgid "rules.overload_label"
-msgstr ""
-
-msgid "rules.overload_explanation"
-msgstr ""
-
-msgid "rules.passive_voice_label"
-msgstr "Passiv-Form"
+msgid "rules.passive_voice_anchor"
+msgstr "passiv_form"
 
 msgid "rules.passive_voice_explanation"
 msgstr "Durch Passiv-Form entsteht emotionale Distanz"
 
-msgid "rules.pressure_label"
-msgstr "Druck"
+msgid "rules.pressure_anchor"
+msgstr "druck"
 
 msgid "rules.pressure_explanation"
 msgstr "Kommuniziert Druck"
 
-msgid "rules.racism_label"
-msgstr "Rassismus"
+msgid "rules.racism_anchor"
+msgstr "rassismus"
 
 msgid "rules.racism_explanation"
 msgstr "Rassistisch"
 
-msgid "rules.racist_source_label"
-msgstr "Rassistische Wurzel"
+msgid "rules.racist_source_anchor"
+msgstr "rassistische_wurzel"
 
 msgid "rules.racist_source_explanation"
 msgstr "Versteckte Voreingenommenheit bezüglich Hautfarbe"
 
-msgid "rules.salary_vague_label"
-msgstr ""
-
-msgid "rules.salary_vague_explanation"
-msgstr ""
-
-msgid "rules.sexism_label"
-msgstr "Sexismus"
+msgid "rules.sexism_anchor"
+msgstr "sexismus"
 
 msgid "rules.sexism_explanation"
 msgstr "Frauenfeindlich"
 
-msgid "rules.sexual_orientation_label"
-msgstr "Sexuelle Orientierung"
+msgid "rules.sexual_orientation_anchor"
+msgstr "sexuelle_orientierung"
 
 msgid "rules.sexual_orientation_explanation"
 msgstr "Versteckte Voreingenommenheit bezüglich sexueller Orientierung"
 
-msgid "rules.speech_label"
-msgstr "Sprech-Fähigkeit"
+msgid "rules.speech_anchor"
+msgstr "sprech_faehigkeit"
 
 msgid "rules.speech_explanation"
 msgstr "Versteckte Voreingenommenheit bezüglich Sprech-Fähigkeit"
 
-msgid "rules.sports_terms_label"
-msgstr "Sport-Jargon"
+msgid "rules.sports_terms_anchor"
+msgstr "sport_jargon"
 
 msgid "rules.sports_terms_explanation"
 msgstr "Sportlicher Begriff drückt Wettbewerbsstimmung aus"
 
-msgid "rules.style_label"
-msgstr "Stil"
+msgid "rules.style_anchor"
+msgstr "stil"
 
 msgid "rules.style_explanation"
 msgstr ""
 
-msgid "rules.technical_frameworks_label"
-msgstr ""
-
-msgid "rules.technical_frameworks_explanation"
-msgstr ""
-
-msgid "rules.titles_label"
-msgstr "Titel"
+msgid "rules.titles_anchor"
+msgstr "titel"
 
 msgid "rules.titles_explanation"
 msgstr "“Mitmeinen” mit männlichen Generikum funktioniert nicht"
 
-msgid "rules.transphobia_label"
-msgstr "Transphobie"
+msgid "rules.transphobia_anchor"
+msgstr "transphobie"
 
 msgid "rules.transphobia_explanation"
 msgstr "Transphob"
 
-msgid "rules.unconscious_bias_label"
-msgstr "Sprachliche Voreingenommenheit"
+msgid "rules.unconscious_bias_anchor"
+msgstr "sprachliche_voreingenommenheit"
 
 msgid "rules.unconscious_bias_explanation"
 msgstr "Wort, das eine Voreingenommenheit kommuniziert, auf versteckte Art"
 
-msgid "rules.verbose_label"
-msgstr ""
-
-msgid "rules.verbose_explanation"
-msgstr "Durch ‘Nominalistil’ entsteht Distanz"
-
-msgid "rules.vision_label"
-msgstr "Seh-Fähigkeit"
+msgid "rules.vision_anchor"
+msgstr "seh_faehigkeit"
 
 msgid "rules.vision_explanation"
 msgstr "Versteckte Voreingenommenheit bezüglich Seh-Fähigkeit"
 
-msgid "rules.workload_label"
-msgstr ""
-
-msgid "rules.workload_explanation"
-msgstr ""
-
-msgid "rules.xenophobia_label"
-msgstr "Xenophobie/Fremdenfeindlichkeit"
+msgid "rules.xenophobia_anchor"
+msgstr "xenophobie/fremdenfeindlichkeit"
 
 msgid "rules.xenophobia_explanation"
 msgstr "Fremdenfeindlich, xenophob"

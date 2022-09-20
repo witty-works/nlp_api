@@ -16,7 +16,7 @@
                 "text": "Dieser Satz fängt nicht mit einem großgeschriebenen Wort an."
             },
             "gravity": 1.0,
-            "label": "Groß-/Kleinschreibung",
+            "label": "Gross-/Kleinschreibung",
             "start": 0,
             "subcategory": "casing",
             "text": "liebe"

@@ -44,18 +44,7 @@ jobs:
         run: |
           wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 
-      - name: Caching translations
-        id: cache-translation-files
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-translation-files
-        with:
-          path: ./locales
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/.po') }}
-          restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-
-
       - name: Compile translation
-        if: steps.cache-translation-files.outputs.cache-hit != 'true'
         run: |
           pipenv run pybabel compile -d locales -l de_DE -f
           pipenv run pybabel compile -d locales -l de_AT -f

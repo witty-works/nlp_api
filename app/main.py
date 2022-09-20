@@ -1113,6 +1113,15 @@ def languagetool_matches(
             except KeyError:
                 pass
 
+        anchor = (
+            label.lower()
+            .replace(" ", "_")
+            .replace("ß", "ss")
+            .replace("ü", "ue")
+            .replace("ä", "ae")
+            .replace("ö", "oe")
+        )
+
         try:
             subcategory = match["rule"]["category"]["id"].lower()
         except KeyError:
@@ -1132,7 +1141,7 @@ def languagetool_matches(
                 start,
                 end,
                 alternatives,
-                label,
+                anchor,
                 explanation,
             )
         )
