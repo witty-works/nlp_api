@@ -9,11 +9,15 @@ Biphobie,s,inclusive,d_and_i
 Bisexualität,s,inclusive,d_and_i
 Bisexuelle~r,s,inclusive,d_and_i
 Cissexismus,s,inclusive,d_and_i
+Coming-out,s,inclusive,d_and_i
+Comingout,s,inclusive,d_and_i
 Deadname,s,inclusive,d_and_i
 Diversität,s,inclusive,d_and_i
 Drag-King,s,inclusive,d_and_i
+Drag-Künstler~in,s,inclusive,d_and_i
 Drag-Queen,s,inclusive,d_and_i
 Dragking,s,inclusive,d_and_i
+Dragkünstler~in,s,inclusive,d_and_i
 Dragqueen,s,inclusive,d_and_i
 Enby,s,inclusive,d_and_i
 Femboy,s,inclusive,d_and_i
@@ -36,7 +40,6 @@ Interphobie,s,inclusive,d_and_i
 Intersektionalität,s,inclusive,d_and_i
 Intersexualität,s,inclusive,d_and_i
 Kultur,s,inclusive,d_and_i
-LGBTQIA+,acr,inclusive,d_and_i
 Latinx,s,inclusive,d_and_i
 Lesbe,s,inclusive,d_and_i
 Mentorin,s,inclusive,d_and_i
@@ -59,7 +62,7 @@ Transition,s,inclusive,d_and_i
 Unterstützer~in,s,inclusive,d_and_i
 Verbündete~r,s,inclusive,d_and_i
 Vielfalt,s,inclusive,d_and_i
-Voguing,v+s,inclusive,d_and_i
+Voguing,s,inclusive,d_and_i
 androsexuell,a,inclusive,d_and_i
 asexuell,a,inclusive,d_and_i
 bigender,s,inclusive,d_and_i
@@ -88,3 +91,4 @@ straight-acting,a,inclusive,d_and_i
 straightacting,a,inclusive,d_and_i
 unterrepräsentiert,a,inclusive,d_and_i
 vielfältig,a,inclusive,d_and_i
+vogueing,s,inclusive,d_and_i

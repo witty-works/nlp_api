@@ -20,23 +20,23 @@
         {
             "alternatives": [
                 {
-                    "text": "fähig zur Eigeninitiative"
+                    "text": "engagiert"
+                },
+                {
+                    "text": "begeisterungsfähig"
+                },
+                {
+                    "text": "zur Eigeninitiative"
                 },
                 {
                     "text": "bereit, sich zu engagieren"
-                },
-                {
-                    "text": "setzt sich erreichbare Ziele"
-                },
-                {
-                    "text": "bereit, sich einzusetzen"
                 }
             ],
             "category": "style",
             "context": "Bist du hoch motiviert?",
             "end": 22,
             "explanation": {
-                "context": "nicht für Einzelpersonen verwenden",
+                "context": "nicht auf Menschen beziehen",
                 "icon": "🙄",
                 "text": "Worthülsen haben ihre Bedeutung verloren",
                 "url": "https://www.witty.works/de/kategorien/stil#worthuelsen"
