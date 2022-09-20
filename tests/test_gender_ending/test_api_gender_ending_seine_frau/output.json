@@ -5,10 +5,16 @@
         {
             "alternatives": [
                 {
-                    "text": "sein/e PartnerIn"
+                    "text": "seinE Begleitung"
                 },
                 {
-                    "text": "sein/e Partner/in"
+                    "text": "seine/sein Begleitung"
+                },
+                {
+                    "text": "seinE PartnerIn"
+                },
+                {
+                    "text": "seine/sein Partnerin/Partner"
                 }
             ],
             "category": "unconscious_bias",

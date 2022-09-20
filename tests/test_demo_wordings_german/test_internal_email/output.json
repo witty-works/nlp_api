@@ -204,6 +204,9 @@
         {
             "alternatives": [
                 {
+                    "remove": true
+                },
+                {
                     "text": "Guten Tag"
                 },
                 {
@@ -213,13 +216,13 @@
                     "text": "Liebe*r"
                 },
                 {
-                    "text": "Liebe/r"
+                    "text": "Liebe/Lieber"
                 },
                 {
                     "text": "Guten Tag, liebe*r"
                 },
                 {
-                    "text": "Guten Tag, liebe/r"
+                    "text": "Guten Tag, liebe/lieber"
                 },
                 {
                     "text": "Liebe"

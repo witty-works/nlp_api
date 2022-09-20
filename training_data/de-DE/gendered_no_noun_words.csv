@@ -1,5 +1,4 @@
 Lemma,Word_Type,Category,Primary_subcategory,Sg_all_split,Pl_all_split,Alt_split
-Ingenieurstradition,i,gendered,hidden_image,['Techniktradition'],[''],['Techniktradition']
 dämlich,a,gendered,female_stereotype,"['ungünstig', 'dumm', 'ungeschickt', 'unbeholfen', 'trostlos']",[''],"['ungünstig', 'dumm', 'ungeschickt', 'unbeholfen', 'trostlos']"
 herrlich,a,gendered,hidden_image,"['wunderbar', 'fantastisch', 'großartig']",[''],"['wunderbar', 'fantastisch', 'großartig']"
 jammern,v,gendered,female_stereotype,"['kritisieren', 'Unbehagen äußern', 'sich beschweren', 'untröstlich sein', '(mögliche) Konsequenzen aufzeigen']",[''],"['kritisieren', 'Unbehagen äußern', 'sich beschweren', 'untröstlich sein', '(mögliche) Konsequenzen aufzeigen']"

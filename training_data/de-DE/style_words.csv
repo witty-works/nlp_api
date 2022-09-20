@@ -1,21 +1,6 @@
 Lemma,Word_Type,Category,Primary_subcategory,Alt_split
-(x)aaS,acr,style,abbreviation,"['something as a service ((x)aaS)', 'etwas als Dienstleistung', 'etwas als Dienstleistung ((x)aaS)']"
-ADD,acr,style,abbreviation,"['Attention Deficit Disorder', 'Attention Deficit Disorder (ADD)', 'Aufmerksamkeitsdefizitstörung', 'Aufmerksamkeitsdefizitstörung (ADS)']"
-ADHD,acr,style,abbreviation,"['Attention Deficit Hyperactivity Disorder', 'Attention Deficit Hyperactivity Disorder (ADHD)', 'Aufmerksamkeitsdefizit-Hyperaktivitätsstörung', 'Aufmerksamkeitsdefizit-Hyperaktivitätsstörung (ADHS)']"
-ADHS,acr,style,abbreviation,"['Aufmerksamkeitsdefizit-Hyperaktivitätsstörung', 'Aufmerksamkeitsdefizit-Hyperaktivitätsstörung (ADHS)']"
-ADS,acr,style,abbreviation,"['Aufmerksamkeitsdefizitstörung', 'Aufmerksamkeitsdefizitstörung (ADS)']"
-AIDA,acr,style,abbreviation,"['Attention, Interest, Desire, Action', 'Attention, Interest, Desire, Action (AIDA)', 'AIDA-Modell (übersetzt Aufmerksamkeit, Interesse, Verlangen, Handeln)']"
-AJAX,acr,style,abbreviation,"['Asynchrones JavaScript und XML', 'Asynchrones JavaScript und eXtensible Markup Language (AJAX)']"
-AKA,acr,style,abbreviation,"['also known as', 'auch bekannt als']"
-AMP,acr,style,abbreviation,"['Accelerated Mobile Pages', 'Accelerated Mobile Pages (AMP)', 'beschleunigte Mobilseiten']"
-AP,acr,style,abbreviation,"['Accounts Payable', 'Accounts Payable (AP)', 'Kreditorenbuchhaltung']"
-AP/AR,acr,style,abbreviation,"['Accounts Payable/Receivable', 'Accounts Payable/Receivable (AP/AR)', 'Kreditoren- und Debitorenbuchhaltung']"
-API,acr,style,abbreviation,"['Application Program Interface (API)', 'Anwendungsprogrammschnittstelle', 'Application Programming Interface (API)', 'Anwendungsprogrammierschnittstelle']"
-AR,acr,style,abbreviation,"['Accounts Receivable', 'Accounts Receivable (AR)', 'Debitorenbuchhaltung']"
-ARIA,acr,style,abbreviation,"['Accessible Rich Internet Applications', 'Accessible Rich Internet Applications (ARIA)', 'ARIA-Initiative zur Verbesserung der Zugänglichkeit von Webseiten und Webanwendungen für Menschen mit Behinderungen']"
-ARR,acr,style,abbreviation,"['Annual Recurring Revenue', 'Annual Recurring Revenue (ARR)', 'jährlich wiederkehrender Umsatz']"
-ASAP,acr,style,abbreviation,"['as soon as possible', 'so früh wie möglich', 'baldigst, bitte', 'so bald es geht', 'am liebsten gestern']"
-ATM,acr,style,abbreviation,"['at the moment', 'zur Zeit', 'im Moment', 'gerade', 'derzeit']"
+Access,s,style,anglicism,['Zugriff']
+Administration,s,style,anglicism,"['Verwaltung', 'Regierung', 'Büroarbeit']"
 Alpha,s,style,exaggerating,"['Person, die ihr Team inspiriert', 'Mensch mit Freude an Verantwortung', 'Person, die ihrem Team mit Rat und Tat zur Seite steht', 'Person, die das Team beim Erreichen von gemeinsamen Zielen unterstützt', 'Leute, die ihre Teams inspirieren', 'Menschen mit Freude an Verantwortung', 'Leute, die ihrem Team mit Rat und Tat zur Seite stehen', 'Leute, die das Team beim Erreichen von gemeinsamen Zielen unterstützen und lenken']"
 Alpha-Chef,s,style,exaggerating,"['Person, die ihr Team inspiriert', 'Mensch mit Freude an Verantwortung', 'Person, die ihrem Team mit Rat und Tat zur Seite steht', 'Person, die das Team beim Erreichen von gemeinsamen Zielen unterstützt', 'Leute, die ihre Teams inspirieren', 'Menschen mit Freude an Verantwortung', 'Leute, die ihrem Team mit Rat und Tat zur Seite stehen', 'Leute, die das Team beim Erreichen von gemeinsamen Zielen unterstützen und lenken']"
 Alpha-Führungskraft,s,style,exaggerating,"['Person, die ihr Team inspiriert', 'Mensch mit Freude an Verantwortung', 'Person, die ihrem Team mit Rat und Tat zur Seite steht', 'Person, die das Team beim Erreichen von gemeinsamen Zielen unterstützt', 'Leute, die ihre Teams inspirieren', 'Menschen mit Freude an Verantwortung', 'Leute, die ihrem Team mit Rat und Tat zur Seite stehen', 'Leute, die das Team beim Erreichen von gemeinsamen Zielen unterstützen und lenken']"
@@ -29,73 +14,17 @@ Alphapersönlichkeit,s,style,exaggerating,"['Person, die ihr Team inspiriert', '
 Alphatier,s,style,exaggerating,"['Person, die ihr Team inspiriert', 'Mensch mit Freude an Verantwortung', 'Person, die ihrem Team mit Rat und Tat zur Seite steht', 'Person, die das Team beim Erreichen von gemeinsamen Zielen unterstützt', 'Leute, die ihre Teams inspirieren', 'Menschen mit Freude an Verantwortung', 'Leute, die ihrem Team mit Rat und Tat zur Seite stehen', 'Leute, die das Team beim Erreichen von gemeinsamen Zielen unterstützen und lenken']"
 Alphatyp,s,style,exaggerating,"['Person, die ihr Team inspiriert', 'Mensch mit Freude an Verantwortung', 'Person, die ihrem Team mit Rat und Tat zur Seite steht', 'Person, die das Team beim Erreichen von gemeinsamen Zielen unterstützt', 'Leute, die ihre Teams inspirieren', 'Menschen mit Freude an Verantwortung', 'Leute, die ihrem Team mit Rat und Tat zur Seite stehen', 'Leute, die das Team beim Erreichen von gemeinsamen Zielen unterstützen und lenken']"
 Alphaweibchen,s,style,exaggerating,"['Person, die ihr Team inspiriert', 'Mensch mit Freude an Verantwortung', 'Person, die ihrem Team mit Rat und Tat zur Seite steht', 'Person, die das Team beim Erreichen von gemeinsamen Zielen unterstützt', 'Leute, die ihre Teams inspirieren', 'Menschen mit Freude an Verantwortung', 'Leute, die ihrem Team mit Rat und Tat zur Seite stehen', 'Leute, die das Team beim Erreichen von gemeinsamen Zielen unterstützen und lenken']"
-Arbeitskraft,s,style,hollow,"['--- nicht für Personen verwenden', 'Personal', 'Mitarbeiter~in~/~Mitarbeiter', 'menschliche Kraft zu geistiger/körperlicher Arbeit', 'Personal', 'Mitarbeitende', 'Mitarbeiter~innen~ und ~Mitarbeiter']"
+Arbeitskraft,s,style,hollow,"['--- nicht auf Menschen beziehen', 'Personal', 'Mitarbeiter~in~/~Mitarbeiter', 'menschliche Kraft zu geistiger/körperlicher Arbeit', 'Personal', 'Mitarbeitende', 'Mitarbeiter~innen~ und ~Mitarbeiter']"
 Aufsteiger,s,style,exaggerating,"['Aufsteiger~in~/~Aufsteiger', 'aufmerksame Person, die mit neu gewonnenem Wissen weiterkommt', 'Person, die aus Erfahrungen lernt', 'Person, die Spaß an neuen Aufgaben hat', 'Aufsteiger~innen~ und ~Aufsteiger', 'aufmerksame Menschen, die neu gewonnenes Wissen nutzen und weiterkommen', 'Leute, die aus Erfahrungen lernen', 'Leute, die Spaß an neuen Aufgaben haben']"
-B2B,acr,style,abbreviation,"['Business-to-Business', 'Business-to-Business (B2B)']"
-B2C,acr,style,abbreviation,"['Business-to-Customer', 'Business-to-Customer (B2C)', 'Business-to-Consumer', 'Business-to-Consumer (B2C)']"
-B2S,acr,style,abbreviation,"['Business-to-Society', 'Business-to-Society (B2S)']"
-BD,acr,style,abbreviation,"['Business Development', 'Business Development (BD)', 'Geschäftsentwicklung']"
-BOD,acr,style,abbreviation,"['Board of Directors', 'Board of Directors (BOD)', 'Vorstand']"
-BR,acr,style,abbreviation,"['Bounce Rate', 'Bounce Rate (BR)', 'Absprungrate']"
-BRB,acr,style,abbreviation,"['Be right back', 'Bin gleich wieder da', 'Sofort wieder da', 'Komme gleich wieder', 'Bin rechtzeitig zurück']"
-BS,acr,style,abbreviation,"['Balance Sheet', 'Balance Sheet (BS)', 'Bilanz']"
-BTW,acr,style,abbreviation,"['By the way', 'Übrigens', 'Nebenbei bemerkt', 'Apropos', 'Ach ja']"
 Boomer,s,style,hollow,"['älterer Mensch', 'jemand, der zwischen 1946 und 1964 geboren wurde', 'jemand, dessen Ansichten veraltet wirken', 'jemand, der ungefragt aus seinem Leben erzählt', 'ältere Menschen', 'Erwachsene', 'Leute, die zwischen 1946 und 1964 geboren wurden', 'Leute, deren Ansichten veraltet wirken', 'Menschen, die ungefragt aus ihrem Leben erzählen']"
-CAC,acr,style,abbreviation,"['Customer Acquisition Cost', 'Customer Acquisition Cost (CAC)', 'Kundengewinnungskosten']"
-CAGR,acr,style,abbreviation,"['Compound Annual Growth Rate', 'Compound Annual Growth Rate (CAGR)', 'Durchschnittliche jährliche Wachstumsrate']"
-CAO,acr,style,abbreviation,"['Chief Analytics Officer (CAO)', 'Chief Administrative Officer (CAO)', 'Datenvorstand', 'Führungskraft verantwortlich für Datenanalyse', 'Verantwortliche~r~/~Verantwortlicher für die administrative Leitung']"
-CAPEX,acr,style,abbreviation,"['Capital Expenditures', 'Capital Expenditures (CAPEX)', 'Investitionsausgaben', 'Investitionsausgaben (CAPEX)']"
-CDA,acr,style,abbreviation,"['Content Delivery Application', 'Content Delivery Application (CDA)', 'Anwendung zur Bereitstellung von Inhalten']"
-CDN,acr,style,abbreviation,"['Content Delivery Network', 'Content Delivery Network (CDN)', 'Netzwerk zur Bereitstellung von Inhalten']"
-CDO,acr,style,abbreviation,"['Chief Data Officer', 'Chief Data Officer (CDO)', 'Leiter~in~/~Leiter der Datenabteilung']"
-CEO,acr,style,abbreviation,"['Chief Executive Officer', 'Chief Executive Officer (CEO)', 'Vorstandsvorsitzende~r~/~Vorstandsvorsitzender', 'Generaldirektor~in~/~Generaldirektor', 'geschäftsführendes Vorstandsmitglied']"
-CFO,acr,style,abbreviation,"['Chief Financial Officer', 'Chief Financial Officer (CFO)', 'Finanzvorstand', 'Kaufmännische~r Geschäftsführer~in~/~Geschäftsführer']"
-CFP,acr,style,abbreviation,"['Certified Financial Planner', 'Certified Financial Planner (CFP)', 'Zertifizierte~r Finanzplaner~in~/~Finanzplaner']"
-CIO,acr,style,abbreviation,"['Chief Information Officer', 'Chief Information Officer (CIO)', 'IT-Vorstand', 'Leitung Informationstechnik', 'strategische und operative Führung der Informationstechnik (IT)']"
-CISO,acr,style,abbreviation,"['Chief Information Security Officer', 'Chief Information Security Officer (CIO)', 'Gesamtverantwortliche~r~/~Gesamtverantwortlicher für Informationssicherheit', 'Informationssicherheitsbeauftragte~r~/~Informationssicherheitsbeauftragter']"
-CLTV,acr,style,abbreviation,"['Customer Lifetime Value', 'Customer Lifetime Value (CLTV)', 'Kundenlebensdauerwert']"
-CMA,acr,style,abbreviation,"['Content Management Application (CMA)', 'Content-Management-Anwendung', 'Content-Management-Anwendung (CMA)']"
-CMO,acr,style,abbreviation,"['Chief Marketing Officer', 'Chief Marketing Officer (CMO)', 'Marketingleiter~in~/~Marketingleiter', 'Marketingvorstand', 'Hauptverantwortliche~r~/~Hauptverantwortliche für das Marketing']"
-CMS,acr,style,abbreviation,"['Content Management System', 'Content Management System (CMS)', 'Inhaltsverwaltungssystem']"
-COB,acr,style,abbreviation,"['close of business', 'before the end of the working day', 'Geschäftsschluss', 'zu Geschäftsschluss', 'vor Ende des Arbeitstages']"
-COGS,acr,style,abbreviation,"['Cost of Goods Sold', 'Cost of Goods Sold (COGS)', 'Kosten der verkauften Waren']"
-COO,acr,style,abbreviation,"['Chief Operating Officer', 'Chief Operating Officer (COO)', 'Betriebsleiter~in~/~Betriebsleiter', 'Leitung des operativen Geschäfts']"
-CPA,acr,style,abbreviation,"['Cost per Acquisition (CPA)', 'certified public accountant (CPA)', 'Kosten pro Akquisition', 'Wirtschaftsprüfer~in~/~Wirtschaftsprüfer']"
-CPC,acr,style,abbreviation,"['Cost-per-Click (CPC)', 'Cost-per-Conversion (CPC)', 'Werbekosten bei der Bezahlmethode Pay per Click (PPC)', 'Gesamtwerbekosten für die Gewinnung eines~einer Kunden~Kundin']"
-CPTSD,acr,style,abbreviation,"['Complex Post-traumatic Stress Disorder (CPTSD)', 'Complex Post-traumatic Stress Disorder (C-PTSD)', 'Komplexe posttraumatische Belastungsstörung (komplexe PTBS)', 'Komplexe posttraumatische Belastungsstörung (K-PTBS)']"
-CPU,acr,style,abbreviation,"['Cost-per-Unit (CPU)', 'Central Processing Unit (CPU)', 'Stückkosten', 'Prozessor']"
-CPaaS,acr,style,abbreviation,"['Communications Platform as a Service', 'Communications Platform as a Service (CPaaS)', 'Kommunikationsplattform als Dienstleistung']"
-CR,acr,style,abbreviation,"['Conversion Rate (CR)', 'Credit (CR)', 'Konversionsrate', 'Umwandlungsquote', 'Kredit']"
-CRM,acr,style,abbreviation,"['Customer Relationship Management', 'Customer Relationship Management (CRM)', 'Kundenbeziehungsmanagement', 'Kundenpflege', 'Beziehungsmarketing']"
-CRO,acr,style,abbreviation,"['Conversion Rate Optimization', 'Conversion Rate Optimization (CRO)', 'Konversionsoptimierung']"
-CRUD,acr,style,abbreviation,"['Create, Read, Update, Delete (CRUD)', 'CRUD-Operationen (Datensatz anlegen, lesen, aktualisieren, löschen)']"
-CSO,acr,style,abbreviation,"['Chief Security Officer', 'Chief Security Officer (CSO)', 'Leiter der Sicherheitsabteilung', 'Konzernverantwortlich~r für Sicherheit']"
-CSR,acr,style,abbreviation,"['Corporate Social Responsibility', 'Corporate Social Responsibility (CSR)', 'Verantwortung von Unternehmen für ihre Auswirkungen auf die Gesellschaft', 'gesellschaftliche Unternehmensverantwortung', 'unternehmerische Sozialveranwortung']"
-CSS,acr,style,abbreviation,"['Cascading Style Sheet', 'Cascading Style Sheet (CSS)', 'Sprache für Kaskadenstilvorlagen', 'Sprache für Seitenlayouts im World Wide Web']"
-CT,acr,style,abbreviation,"['Capitalization Table', 'Capitalization Table (CT)', 'tabellarische Aufstellung der Besitzverhältnisse im Unternehmen', 'Liste aller Beteiligungen am Unternehmen', 'Darstellung der Eigentümerstruktur']"
-CTA,acr,style,abbreviation,"['Call-to-Action', 'Call-to-Action (CTA)', 'Aufruf zum Handeln', 'Handlungsaufforderung']"
-CTO,acr,style,abbreviation,"['Chief Technology Officer', 'Chief Technology Officer (CTO)', 'Technikvorstand', 'Technische~r Direktor~in', 'Technische Leitungsperson']"
-CTR,acr,style,abbreviation,"['Click-Through-Rate (CTR)', 'Klickrate', 'Anzahl der Klicks auf Werbebanner oder Sponsorenlinks']"
-DALY,acr,style,abbreviation,"['Disability-adjusted Life Year (DALY)', 'Behinderungsbereinigtes Lebensjahr']"
-DD,acr,style,abbreviation,"['Due Diligence (DD)', 'Sorgfaltspflicht']"
-DEI,acr,style,abbreviation,"['Diversity, Equity and Inclusion (DEI)', 'Vielfalt, Gleichstellung und Inklusion']"
-DEIB,acr,style,abbreviation,"['Diversity, Equity, Inclusion and Belonging (DEIB)', 'Vielfalt, Gleichstellung, Inklusion und Zugehörigkeit']"
-DIY,acr,style,abbreviation,"['do-it-yourself', 'Do-it-yourself (DIY)', 'Selbermachen', 'selbstgemacht', 'Heimwerken']"
-DM,acr,style,abbreviation,"['Direct Message', 'Direct Mail', 'private Nachricht', 'Privatnachricht schicken']"
-DNS,acr,style,abbreviation,"['Domain Name System (DNS)', 'Verzeichnisdienst im Internet', 'System zur Verwaltung von Namen und IP-Adressen']"
-DOE,acr,style,abbreviation,"['Depending-on-Experience', 'je nach Erfahrung']"
-DOM,acr,style,abbreviation,"['Dokument-Objektmodell', 'Dokument-Objektmodell (DOM)', 'der Schnittstelle zugrundeliegendes Objektmodell', 'Spezifikation einer Programmierschnittstelle']"
-DPO,acr,style,abbreviation,"['Direct Public Offering (DPO)', 'direktes öffentliches Angebot']"
-DR,acr,style,abbreviation,"['Debit (DR)', 'Lastschrift']"
-EBITDA,acr,style,abbreviation,"['Earnings Before Interests, Taxes, Depreciation and Amortisation (EBITDA)', 'Ergebnis vor Zinsen, Steuern, Abschreibungen auf Sachanlagen und Abschreibungen auf immaterielle Vermögenswerte']"
-EOD,acr,style,abbreviation,"['End of Day (EOD)', 'Tagesende', 'Ende des Tages', 'zum Tagesende']"
-EPS,acr,style,abbreviation,"['Earnings per Share (EPS)', 'Aktienrendite', 'Gewinn je Aktie']"
-ESOP,acr,style,abbreviation,"['Employee Stock Option Plan (ESOP)', 'Mitarbeitsbeteiligung', 'Anteilsoptionen für Mitarbeitende']"
-ESP,acr,style,abbreviation,"['Email Service Provider (ESP)', 'E-Mail-Dienstanbieter']"
-ETA,acr,style,abbreviation,"['Estimated Time of Arrival (ETA)', 'Geschätzte Ankunftszeit']"
-ETD,acr,style,abbreviation,"['Estimated Time of Departure (ETD)', 'Geschätzte Abflugzeit', 'geschätzte Abreisezeit']"
-EV,acr,style,abbreviation,"['Enterprise Value (EV)', 'Unternehmenswert']"
-EVP,acr,style,abbreviation,"['Exceptional Viable Product (EVP)', 'Employer Value Proposition (EVP)', 'außergewöhnlich existenzfähiges Produkt', 'Werteversprechen des arbeitgebenden Unternehmens an Mitarbeitende']"
+Briefing,s,style,anglicism,['Pressekonferenz']
+Buyer,s,style,anglicism,"['Einkauf', 'Einkäufer~in~/~Einkäufer']"
+CV,s,style,anglicism,['Lebenslauf']
+Canceln,s,style,anglicism,['Stornieren']
+Certificate,s,style,anglicism,"['Zeugnis', 'Zertifikat']"
+Charts,s,style,anglicism,['Hitliste']
+Crash,s,style,anglicism,['Absturz']
+Deadline,s,style,anglicism,['Abgabetermin']
 Erfolg,s,style,exaggerating,"['Gelingen', 'gemeinsam erreichtes Ziel', 'gutes Ergebnis', 'positive Überraschung', 'Lohn für Engagement', 'Umsetzung', 'gutes Resultat']"
 Erfolgsbilanz,s,style,exaggerating,"['positive Bilanz', 'erfreuliches Fazit', 'Überblick über gute Ergebnisse', 'erreichte Meilensteine']"
 Erfolgserlebnis,s,style,exaggerating,"['Freude über die kompetente Umsetzung gemeinsamer Ziele', 'Auftrieb durch das Erreichen von Meilensteinen', 'Motivation durch gute Ergebnisse']"
@@ -103,28 +32,13 @@ Erfolgsfaktor,s,style,exaggerating,"['Faktor im Erreichen gemeinsamer Ziele', 'S
 Erfolgsgeschichte,s,style,exaggerating,"['gelungenes Beispiel', 'Geschichte, wie wir gemeinsame Ziele erreichen', 'Beweis für den positiven Verlauf', 'Geschichte der positiven Entwicklung', 'Bericht über die positive Unternehmung', 'Beispiel, das zeigt, wie uns das gelungen ist']"
 Erfolgsquote,s,style,exaggerating,"['positiver Beitrag zum Gesamtergebnis', 'Anteil am Erreichen gemeinsamer Ziele', 'Mitwirkung am positiven Verlauf', 'Beitrag zum gemeinsamen guten Gelingen']"
 Establishment,s,style,exaggerating,"['bessere Gesellschaft', 'bessere Kreise', 'gut situierte Kreise', 'soziale Oberschicht', 'in Kaderkreisen']"
+Event,s,style,anglicism,['Veranstaltung']
 Exzellenz,s,style,exaggerating,"['Qualität', 'sich kontinuierlich Ziele setzen und erreichen', 'Qualitätsbewusstsein', 'mit besonderer Güte']"
-FAQ,acr,style,abbreviation,"['Frequently Asked Question (FAQ)', 'Häufig gestellte Fragen', 'Oft gefragt, hier beantwortet', 'Häufig gefragt']"
-FFF,acr,style,abbreviation,"['Family, Friends, and Fools Round (FFF)', 'Finanzierungsrunde mit Familie, Freunden und begeisterten Vermögenden']"
-FIFO,acr,style,abbreviation,"['First in, First out (FIFO)', 'Wer zuerst kommt, mahlt zuerst', 'der Reihe nach', 'Warteschlange --- Informatik', 'Verbrauchsfolgeverfahren --- Warenwirtschaft']"
-FMA,acr,style,abbreviation,"['First-mover Advantage (FMA)', 'Erstanbietervorteile', 'Wettbewerbsvorteile einer Pionierstrategie']"
-FOLO,acr,style,abbreviation,"['Fear of Losing Out (FOLO)', 'Angst, dass einem etwas entgeht', 'Angst, etwas zu verpassen', 'Angst, übergangen zu werden']"
-FOMO,acr,style,abbreviation,"['Fear of Missing Out (FOMO)', 'Angst, etwas zu verpassen']"
-FOSS,acr,style,abbreviation,"['Free and Open-source Software (FOSS)', 'Freie Software und Open-Source-Software']"
-FTE,acr,style,abbreviation,"['Full-time Employee (FTE)', 'Vollzeitbeschäftigte~r']"
-FTP,acr,style,abbreviation,"['File Transport Protocol (FTP)', 'Dateiübertragungsprotokoll', 'Protokoll zur Übertragung von Dateien über IP-Netzwerke']"
-FTU,acr,style,abbreviation,"['First-time Use (FTU)', 'Erstverwendung', 'erstmalige Verwendung']"
-FTUE,acr,style,abbreviation,"['First-time User Experience (FTUE)', 'Erstverwendungserlebnis', 'erstmalige Nutzungserfahrung']"
-FWIW,acr,style,abbreviation,"[""For what it's worth"", 'Hilft vielleicht nicht weiter, aber', 'Nur so ein Gedanke']"
-FY,acr,style,abbreviation,"['Financial Year (FY)', 'Fiscal Year (FY)', 'Finanzjahr', 'Steuerjahr', 'Geschäftsjahr']"
-FYI,acr,style,abbreviation,"['For your Information (FYI)', 'zu Ihrer Information', 'zu deiner Information']"
+Eyecatcher,s,style,anglicism,['Blickfang']
+Fake,s,style,anglicism,['Fälschung']
 Flexibilität,s,style,hollow,"['Anpassungsfähigkeit', 'Aufgeschlossenheit gegenüber Wandel', 'Bereitschaft für Veränderung', 'Mobilität', 'Fähigkeit, sich schnell auf Neues umzustellen']"
-GA,acr,style,abbreviation,"['Google Analytics', 'Google Analytics (GA)']"
-GAAP,acr,style,abbreviation,"['Generally Accepted Accounting Principles (GAAP)', 'allgemein anerkannte Rechnungslegungsgrundsätze']"
-GC,acr,style,abbreviation,"['Leiter~in der Rechtsabteilung', 'Justitiar~in', 'Rechtsbeistand', 'Syndika~Syndikus', 'General Counsel (GC)']"
-GMV,acr,style,abbreviation,"['Gross merchandise value (GMV)', 'Bruttowarenwert']"
-GTM,acr,style,abbreviation,"['Go-to-Market (GTM)', 'Markteinführung']"
-GUI,acr,style,abbreviation,"['Graphical User Interface (GUI)', 'grafische Benutzungsoberfläche', 'grafische Anwendungsoberfläche']"
+Flyer,s,style,anglicism,['Flugblatt']
+Gatekeeper,s,style,anglicism,"['Pforte', 'Empfang', 'Türhüter~in~/~Türhüter', 'Pförtner~in~/~Pförtner']"
 Geek,s,style,exaggerating,"['Mensch, der sich gern mit Technologie beschäftigt', 'Mensch, der Spaß an Computern hat', 'Mensch, der unseren Enthusiasmus für neue Medien teilt', 'Mensch, der sich für ein Thema begeistert', 'Mensch, der für ein Thema brennt']"
 Gewinn,s,style,exaggerating,"['Bereicherung', 'Nutzen', 'Vorteil', 'positiver Ertrag', 'Nutzeffekt', 'Benefit', 'Vorzug']"
 Gewinner,s,style,exaggerating,"['Gewinner~in~/~Gewinner', 'Mensch, der nicht locker lässt', 'Person, die sich vom Ziel nicht abbringen lässt', 'Gewinner~innen~ und ~Gewinner', 'Menschen, die nicht locker lassen', 'alle, die sich nicht von ihrem Ziel ablenken lassen']"
@@ -132,185 +46,62 @@ Go-getter,s,style,exaggerating,"['tatkräftige Person', 'Tatmensch', 'umsetzungs
 Goal-getter,s,style,exaggerating,"['tatkräftige Person', 'Tatmensch', 'umsetzungsfreudiger Mensch', 'Mensch, der sich kontinuierlich Ziele setzt und erreicht', 'Mensch, der bereit ist, sich neuen oder komplexen Situationen zu stellen, um gemeinsame Ziele zu verwirklichen', 'tatkräftige Leute', 'Tatmenschen', 'umsetzungsfreudige Menschen', 'Menschen, die sich kontinuierlich Ziele setzen und erreichen', 'Leute, der bereit sind, sich neuen oder komplexen Situationen zu stellen, um gemeinsame Ziele zu verwirklichen']"
 Goalgetter,s,style,exaggerating,"['tatkräftige Person', 'Tatmensch', 'umsetzungsfreudiger Mensch', 'Mensch, der sich kontinuierlich Ziele setzt und erreicht', 'Mensch, der bereit ist, sich neuen oder komplexen Situationen zu stellen, um gemeinsame Ziele zu verwirklichen', 'tatkräftige Leute', 'Tatmenschen', 'umsetzungsfreudige Menschen', 'Menschen, die sich kontinuierlich Ziele setzen und erreichen', 'Leute, der bereit sind, sich neuen oder komplexen Situationen zu stellen, um gemeinsame Ziele zu verwirklichen']"
 Gogetter,s,style,exaggerating,"['tatkräftige Person', 'Tatmensch', 'umsetzungsfreudiger Mensch', 'jemand, der unternehmerisch denkt', 'jemand, der mit Elan auf Ziele hinarbeitet', 'tatkräftige Leute', 'Tatmenschen', 'umsetzungsfreudige Menschen', 'Leute, die unternehmerisch denken', 'Menschen, die mit Elan auf Ziele hinarbeiten']"
+Goodwill,s,style,anglicism,['guter Ruf']
 Gott,s,style,exaggerating,"['Gött~in~/~Gott', 'Mensch, der dank großer Erfahrung den Überblick behält', 'jemand, der vor Komplexität keine Angst hat', 'Mensch, der seine Aufgaben zuverlässig und gelassen im Griff hat', 'Gött~innen~ und ~Götter', 'Menschen, die dank großer Erfahrung den Überblick behalten', 'Leute, die vor Komplexität keine Angst haben', 'Personen, die ihre Aufgaben zuverlässig und gelassen im Griff haben']"
-HMU,acr,style,abbreviation,"['Hit me up', ""Meld' dich"", 'Ruf mich an', 'hat sich gemeldet', 'hat mich angehauen']"
-HR,acr,style,abbreviation,"['Human Relations (HR)', 'Human Resources (HR)', 'Personalwesen', 'Personalabteilung']"
-HTML,acr,style,abbreviation,"['HyperText Markup Language (HTML)', 'HyperText Markup Language']"
-HTTP,acr,style,abbreviation,"['HyperText Transfer Protocol (HTTP)', 'HyperText-Übertragungsprotokoll']"
-HTTPS,acr,style,abbreviation,"['HyperText Transfer Protocol Secure (HTTPS)', 'sicheres HyperText-Übertragungsprotokoll']"
 Hacker,s,style,exaggerating,"['Hacker~in~/~Hacker', 'Mensch, der Lösungen kreativ mit Technologie angeht', 'Person, die kostengünstige Alternativen findet und kreativ umsetzt', 'jemand, der bei Komplexität das Ziel nicht aus den Augen verliert', 'Person, die Aufgaben zuverlässig im Griff hat', 'Hacker~innen~ und ~Hacker', 'Menschen, die Lösungen kreativ mit Technologie angehen', 'Fachleute, die kostengünstige Alternativen finden und kreativ umsetzen', 'Personen, die bei Komplexität das Ziel nicht aus den Augen verlieren', 'Personen, die Aufgaben zuverlässig im Griff haben']"
 Hardliner,s,style,exaggerating,"['Verfechter~in~/~Verfechter', 'jemand, der ungern Kompromisse eingeht', 'Mensch, der für seine Ziele eintritt', 'Verfechter~innen~ und ~Verfechter']"
 Held,s,style,exaggerating,"['loyaler Mensch', 'resiliente Persönlichkeit', 'umsetzungsfreudige und engagierte Personen', 'Held~in~/~Held', 'Person, die die Initiative ergreift', 'Person, die sich für gemeinsame Ziele einsetzt', 'Person, die mit Umsicht auf die Bedürfnisse des Teams eingeht', 'Person, die komplexe Aufgaben ruhig und gelassen angeht', 'loyaler Mensch', 'resiliente Persönlichkeit', 'umsetzungsfreudiger Mensch', 'loyale Menschen', 'resiliente Persönlichkeiten', 'engagierte und umsetzungsfreudige Personen', 'Held~innen~ und ~Helden', 'Personen, die die Initiative ergreifen', 'Personen, die sich für gemeinsame Ziele einsetzen', 'Personen, die mit Umsicht auf die Bedürfnisse des Teams eingehen', 'Menschen, die komplexe Aufgaben ruhig und gelassen angehen']"
+Highlight,s,style,anglicism,"['Höhepunkt', 'Glanzpunkt']"
 Höchstleistung,s,style,exaggerating,"['Meilenstein', 'Teamziel', 'zuverlässiges Ergebnis', 'Sternstunde', 'Resultat, das das Vertrauen unserer Kundschaft in uns bestätigt', 'Leistung, zu der alle gemeinsam beigetragen haben', 'gemeinsame Leistung, die neue Maßstäbe gesetzt hat', '| Meilensteine', 'Teamziele', 'zuverlässige Ergebnisse', 'Sternstunden', 'Resultate, die das Vertrauen unserer Kundschaft in uns bestätigen', 'gemeinsame Leistungen, die neue Maßstäbe gesetzt haben']"
-ICP,acr,style,abbreviation,"['Ideal-Customer Profile (ICP)', 'Idealkundenprofil', 'ideales Kundenprofil', 'Profil des~der idealtypischen Kunden~Kundin']"
-ICYMI,acr,style,abbreviation,"['In case you missed it', 'Nur für den Fall, dass Ihnen das entgangen sein sollte', 'Nur für den Fall, dass Sie das übersehen haben', 'Sicherheitshalber, falls du das verpasst hast', 'Nur für den Fall, dass du das nicht mitbekommen hast']"
-IDE,acr,style,abbreviation,"['Integrated Development Environment (IDE)', 'integrierte Entwicklungsumgebung']"
-IDK,acr,style,abbreviation,"[""I don't know"", 'Keine Ahnung', 'Das weiß ich leider nicht', 'Nur eine Vermutung', 'Nur eine Annahme']"
-IIRC,acr,style,abbreviation,"['If I remember correctly,', 'Wenn ich mich recht entsinne,', 'Wenn ich mich richtig erinnere,']"
-IM,acr,style,abbreviation,"['Instant Messaging (IM)', 'Sofortnachrichten', 'Direktnachrichten']"
-IMHO,acr,style,abbreviation,"['In my humble opinion,', 'Meiner bescheidenen Ansicht nach', 'Meiner unmaßgeblichen Meinung nach']"
-IMO,acr,style,abbreviation,"['In my opinion', 'Meiner Meinung nach', 'Aus meiner Sicht', 'In meinen Augen']"
-IP,acr,style,abbreviation,"['Internet Protocol (IP)', 'Internetprotokoll']"
-IPO,acr,style,abbreviation,"['Initial Public Offering (IPO)', 'Börsengang']"
-IRR,acr,style,abbreviation,"['Internal Rate of Return (IRR)', 'interner Zinsfuß']"
-ISP,acr,style,abbreviation,"['Internet Service Provider (ISP)', 'Internetdienstanbieter']"
-IaaS,acr,style,abbreviation,"['Infrastructure-as-a-Service (IaaS)', 'Infrastruktur-Dienstleistungen über die Cloud', 'Infrastruktur-Dienstleistungen übers Internet', 'Infrastruktur-Dienstleistungen über Cloud oder Internet']"
 Innovation,s,style,hollow,"['Neugestaltung', 'Erfindung', 'technischer Fortschritt', 'Neuerung', 'Neuschöpfung', 'Neuentwicklung']"
 Innovationskraft,s,style,hollow,"['Erfindungsreichtum', 'Kreativität', 'Fähigkeit, Ideen in Lösungen umzusetzen', 'Umsetzungskraft']"
-JS,acr,style,abbreviation,['JavaScript (JS)']
-JSON,acr,style,abbreviation,"['JavaScript Object Notation (JSON)', 'JavaScript-Objektnotation']"
-K-PTSB,acr,style,abbreviation,"['Komplexe posttraumatische Belastungsstörung (komplexe PTBS)', 'Komplexe posttraumatische Belastungsstörung (K-PTBS)']"
-KISS,acr,style,abbreviation,"['Keep it simple, stupid (KISS)', 'Keep it simple, obvious', 'So komplex wie nötig, so schlicht wie möglich', ""Mach's nicht komplizierter als nötig"", 'Halt es einfach']"
-KPI,acr,style,abbreviation,"['Key Performance Indicator (KPI)', 'Leistungskennzahl', 'Kennzahl']"
-KPIs,acr,style,abbreviation,"['Key Performance Indicators (KPI)', 'Leistungskennzahlen', 'Kennzahlen']"
+Internship,s,style,anglicism,['Praktikum']
 Kamikaze,s,style,exaggerating,"['Person, die sich für gemeinsame Ziele engagiert', 'fokussierter und resilienter Mensch', 'jemand, der mit Energie ein Ziel verfolgt', 'jemand, der für (...) einsteht']"
 Karrierechance,s,style,hollow,"['gute Aufstiegsmöglichkeit', 'Maßnahmen zur Karriereförderung', 'Mentoring und Coaching für neue Rollen']"
 Karrierefrau,s,style,exaggerating,"['engagierter Mensch', 'Person, die neu erworbenes Wissen kompetent einsetzt und weiterkommt', 'Person, die sich kontinuierlich Ziele setzt und sie erreicht']"
-Kptsb,acr,style,abbreviation,"['Komplexe posttraumatische Belastungsstörung (komplexe PTBS)', 'Komplexe posttraumatische Belastungsstörung (K-PTBS)']"
 Kämpfer,s,style,exaggerating,"['Mensch, der mit Disziplin auf ein Ziel hinarbeitet', 'jemand, der für (...) einsteht', 'tatkräftiger Mensch', 'jemand, der Aufgaben mit Elan anpackt']"
 Kämpfernatur,s,style,exaggerating,"['Geradlinigkeit', 'Standhaftigkeit', 'Seelenstärke', 'tatkräftige Person', 'resilienter Mensch', 'Person, die Aufgaben mit Stetigkeit und Elan angeht', 'Person, die mit Energie ans Werk geht', 'Person, die sich voll innerer Energie für (...) einsetzt', 'Mensch, der Aufgaben beherzt anpackt', 'Mensch, der bereit ist, sich neuen oder komplexen Situationen zu stellen', 'jemand, der für (...) einsteht']"
 Könner,s,style,exaggerating,"['Fachkraft', 'Könner~in~/~Könner', 'jemand, der erfahren und fachkundig ist', 'Person, die ihre Kompetenzen routiniert einsetzt']"
-LAMP,acr,style,abbreviation,"['Linux, Apache, MySQL, PHP (LAMP)', 'Linux, Apache, MySQL, Python (LAMP)', 'Linux, Apache, MySQL, Perl (LAMP)']"
-LBO,acr,style,abbreviation,"['Leveraged-Buyout (LBO)', 'fremdfinanzierte Übernahme']"
-LET,acr,style,abbreviation,"['Leaving early today', 'Ich gehe heute früher', 'Muss heute früher los']"
-LIFO,acr,style,abbreviation,"['Last in, First out (LIFO)', 'Als Letzte~r rein, als Erste~r raus', 'Elemente in entgegengesetzter Reihenfolge abrufen', 'jüngste Bestände zuerst verbrauchen', 'Als Letzte~r kommen, als Erste~r gehen']"
-LLC,acr,style,abbreviation,"['Limited Liability Company (LLC)', 'Gesellschaft mit beschränkter Haftung']"
-LMGTFY,acr,style,abbreviation,"['Let me Google that for you', 'Das googele ich doch gern für dich', 'Bitte selbst googlen', 'Prima Frage für Selbstgoogler', 'Selbst googeln ist schon die halbe Antwort']"
-LMK,acr,style,abbreviation,"['Let me know', 'Geben Sie mir Bescheid', 'Gib mir Bescheid', 'en Sie mich auf dem Laufenden', 'Halt mich auf dem Laufenden']"
-LP,acr,style,abbreviation,"['Limited Partner (LP)', 'Kommanditist']"
-LTM,acr,style,abbreviation,"['Last Twelve Months (LTM)', 'in den letzten zwölf Monaten', 'die letzten zwölf Monate']"
-LTR,acr,style,abbreviation,"['Left-to-Right (LTR)', 'von links nach rechts']"
-LTV,acr,style,abbreviation,"['Lifetime Value (LTV)', 'Lebenszeitwert']"
-M&A,acr,style,abbreviation,"['Mergers-and-Acquisitions (M&A)', 'Fusionen und Übernahmen']"
-MBA,acr,style,abbreviation,"['Master of Business Administration', 'Master of Business Administration (MBA)']"
-MBI,acr,style,abbreviation,['Management-Buy-in (MBI)']
-MBO,acr,style,abbreviation,['Management-Buy-Out (MBO)']
-MEAN,acr,style,abbreviation,"['MongoDB, Express.js, Angular, Node.js (MEAN)', 'MongoDB, Express.js, Angular, und Node.js']"
-MESBIC,acr,style,abbreviation,"['Minority Enterprise Small Business Investment Companies (MESBIC)', 'Investmentgesellschaften für kleine Unternehmen, die einer Minderheit angehören']"
-MF,acr,style,abbreviation,"['Management Fee (MF)', 'Verwaltungsgebühr']"
-MMP,acr,style,abbreviation,"['Minimum Marketable Product (MMP)', 'mimimal vermarktbares Produkt', 'Mindestausführung eines Produkt, die die Vermarktung ermöglicht']"
-MMS,acr,style,abbreviation,"['Multimedia Message (MMS)', 'Multimedia Messaging Service (MMS)', 'Multimedia-Nachrichtendienst', 'Multimedia-Nachricht']"
-MRR,acr,style,abbreviation,"['Monthly Recurring Revenue (MRR)', 'Monatlich wiederkehrender Umsatz']"
-MSP,acr,style,abbreviation,"['Multi-sided Platform (MSP)', 'Mehrseitige Plattform']"
-MTD,acr,style,abbreviation,"['Month-to-Date (MTD)', 'diesen Monat', 'seit Monatsanfang', 'Monat bis dato']"
-MVC,acr,style,abbreviation,"['Model-View-Controller (MVC)', 'Softwarearchitektur, die die Logik einer Anwendung von ihrer Präsentation trennt']"
-MVP,acr,style,abbreviation,"['Minimum Viable Product (MVP)', 'Produkt in Minimalausführung', 'minimal überlebensfähiges Produkt', 'minimal funktionsfähige Iteration eines Produkts']"
+Look,s,style,anglicism,['Aussehen']
+Low-Interest-Product,s,style,anglicism,['Klein- und Bequemlichkeitsbedarf']
+Lowlight,s,style,anglicism,"['Tiefpunkt', 'Schatten in der Licht-und-Schatten-Betrachtung']"
 Marktführer,s,style,exaggerating,"['Marktführer~in~/~Marktführer', 'Unternehmen, das im Markt Maßstäbe setzt', 'Unternehmen mit überwiegender Marktpräsenz', 'in der Branche richtungweisendes Unternehmen', 'im Markt wegweisendes Unternehmen', 'Marktführer~innen~ und ~Marktführer', 'Unternehmen, die im Markt Maßstäbe setzen', 'Unternehmen mit überwiegender Marktpräsenz', 'in der Branche richtungweisende Unternehmen', 'im Markt wegweisende Unternehmen']"
-MoM,acr,style,abbreviation,"['Month-over-Month (MoM)', 'im Monatsvergleich', 'gegenüber dem Vormonat']"
+Meeting,s,style,anglicism,['Besprechung']
+Message-Marketing,s,style,anglicism,['Kommunikationsmarketing']
+Messagemarketing,s,style,anglicism,['Kommunikationsmarketing']
 Muskel,s,style,exaggerating,"['Tatmensch', 'Person, die Aufgaben mit Elan angeht', 'Person, die mit Energie ans Werk geht', 'Person, die sich voll (...) einsetzt', 'Mensch, der Aufgaben beherzt anpackt']"
 Must-have,s,style,exaggerating,"['nützliches Merkmal', 'hilfreiche Fähigkeit', 'Kompetenz, die wichtig ist, um (...)', 'Erfahrung, die (...) ermöglicht', 'Kenntnis, die (...) erlaubt']"
 Musthave,s,style,exaggerating,"['nützliches Merkmal', 'hilfreiche Fähigkeit', 'Kompetenz, die wichtig ist, um (...)', 'Erfahrung, die (...) ermöglicht', 'Kenntnis, die (...) erlaubt']"
-NAV,acr,style,abbreviation,"['Net Asset Value (NAV)', 'Nettoinventarwert']"
-NBD,acr,style,abbreviation,"['No big deal', 'Keine große Angelegenheit| eine Kleinigkeit', 'Kein Thema!', 'Nicht so schlimm']"
-NDA,acr,style,abbreviation,"['Non-disclosure Agreement (NDA)', 'Geheimhaltungsvereinbarung']"
-NDR,acr,style,abbreviation,"['Net Dollar Retention (NDR)', 'Netto-Dollar-Bindung']"
-NP,acr,style,abbreviation,"['No problem', 'Kein Problem']"
-NPV,acr,style,abbreviation,"['Net Present Value (NPV)', 'Nettogegenwartswert']"
-NRN,acr,style,abbreviation,"['No reply necessary.', 'Keine Antwort erforderlich.', 'Eine Antwort ist nicht erforderlich.']"
-NSFW,acr,style,abbreviation,"['not safe for work', 'nicht arbeitsplatzsicher', 'Zur Verwendung am Arbeitsplatz nicht empfohlen', 'für den Arbeitsplatz unangemessen']"
-NVM,acr,style,abbreviation,"['Never mind.', ""Vergiss' es."", ""Lass' gut sein.""]"
-NWR,acr,style,abbreviation,"['not work related', 'hat nichts mit der Arbeit zu tun', 'privat', 'nicht arbeitsbezogen']"
-NYSE,acr,style,abbreviation,"['New York Stock Exchange', 'New York Stock Exchange (NYSE)']"
 Nerd,s,style,exaggerating,"['Mensch, der sich gern mit Technologie beschäftigt', 'Mensch, der Spaß an Computern hat', 'Mensch, der unseren Enthusiasmus für neue Medien teilt', 'Mensch, der sich für ein Thema begeistert', 'Mensch, der für ein Thema brennt']"
 Ninja,s,style,exaggerating,"['jemand, der erfahren und fachkundig ist', 'Person, die ihr Know-how und ihre Erfahrung kreativ einsetzt', 'Mensch, der seine Fachkenntnis ständig vertieft']"
-OAuth,acr,style,abbreviation,"['Open Authentication (OAuth)', 'offene Authentifizierung', 'offene Authentifizierung (OAuth)']"
-OKR,acr,style,abbreviation,"['Objectives and Key Results (OKR)', 'Ziele und Schlüsselergebnisse', 'Ziele und Ergebnisse für die Zielerreichung']"
-OMW,acr,style,abbreviation,"['on my way', 'auf dem Weg', 'bin unterwegs']"
-OOO,acr,style,abbreviation,"['out-of-Office (OOO)', 'außer Haus', 'Abwesenheit']"
-OOP,acr,style,abbreviation,"['Object-oriented Programming (OOP)', 'Objektorientierte Programmierung', 'Objektorientierte Programmierung (OOP)']"
-OOTD,acr,style,abbreviation,"['Outfit of the Day', 'Outfit des Tages']"
-OS,acr,style,abbreviation,"['Operating System (OS)', 'Betriebssystem']"
-OTC,acr,style,abbreviation,"['Over-the-Counter (OTC)', 'über den Ladentisch', 'im Einzelhandel erhältlich']"
-OTP,acr,style,abbreviation,"['over-the-top', 'One-Time-Password', 'On-Time-Performance', 'übertrieben', 'Einmalpasswort', 'pünktlich erbrachte Leistung']"
+No-Name-Products,s,style,anglicism,['namenlose Produkte']
 Organisationstalent,s,style,hollow,"['Organisationsfähigkeit', 'Geübtheit, anderen den Rücken freizuhalten', 'Person, die gern organisiert', 'jemand, der einen klaren Blick behält', 'Mensch, der gern offene Enden zusammenführt']"
-P&L,acr,style,abbreviation,"['Profit-and-Loss-Statement (P&L)', 'Gewinn- und Verlustrechnung']"
-P/E,acr,style,abbreviation,"['Price-to-Earnings (P/E)', 'Kurs-Gewinn-Verhältnis']"
-PIK,acr,style,abbreviation,"['Payments-in-kind (PIK)', 'Zahlungen in Form von Sachleistungen']"
-PIPE,acr,style,abbreviation,"['Private Investment for Public Equity (PIPE)', 'Private Investition für öffentliches Kapital']"
-PIV,acr,style,abbreviation,"['Pooled Investment Vehicle (PIV)', 'als Pool strukturiertes Anlageinstrument', 'gebündelte Anlageform', 'Investitionsvehikel für kollektive Investitionen']"
-PLG,acr,style,abbreviation,"['Product-led Growth (PLG)', 'produktgesteuertes Wachstum', 'produktgetriebenes Wachstum']"
-PM,acr,style,abbreviation,"['Project Manager (PM)', 'Projektleitung', 'Projektleiter~in~/~Projektleiter']"
-PMF,acr,style,abbreviation,"['Product-Market-Fit (PMF)', 'Produkt-Markt-Eignung', 'Eignung des Produkts für den gewählten Markt', 'Fähigkeit eines Produkts, eine existierende Nachfrage auf dem Markt zu bedienen']"
-POC,acr,style,abbreviation,"['Point-of-Contact (POC)', 'Proof-of-Concept (POC)', 'Anlaufstelle', 'Berührungspunkt', 'Ansprechperson', 'Machbarkeitsnachweis']"
-POI,acr,style,abbreviation,"['Point-of-Information (POI)', 'Informationsquelle', 'Ort zur Informationsvermittlung']"
-PPC,acr,style,abbreviation,"['Pay-per-Click (PPC)', 'klickbasierte Vergütung', 'Zahlen-pro-Klick']"
-PR,acr,style,abbreviation,"['Public Relations (PR)', 'Öffentlichkeitsarbeit', 'Presse- und Medienarbeit', 'Außendarstellung']"
 PR-Held,s,style,exaggerating,"['Öffentlichkeitsarbeit', 'PR-Held~in~/~PR-Held', 'jemand, der mit Energie und Ideen in der PR neue Wege sucht', 'jemand, dessen Herz für PR-Themen schlägt', 'kommunikationsfreudiger Mensch, der sich um die PR-Bedürfnisse (von ...) kümmert', 'engagiertes PR-Team', 'PR-Held~innen~ und ~PR-Helden', 'PR-Leute, die mit Energie und Ideen neue Wege suchen', 'Menschen, deren Herzen für PR-Themen schlagen', 'kommunikationsfreudige Menschen, die sich um die PR-Bedürfnisse (von ...) kümmern']"
-PRB,acr,style,abbreviation,"['Please reply by', 'Bitte antworten Sie bis', 'Rückantwort bis', 'Bitte antworten Sie per']"
 PRheld,s,style,exaggerating,"['Öffentlichkeitsarbeit', 'PR-Held~in~/~PR-Held', 'jemand, der mit Energie und Ideen in der PR neue Wege sucht', 'jemand, dessen Herz für PR-Themen schlägt', 'kommunikationsfreudiger Mensch, der sich um die PR-Bedürfnisse (von ...) kümmert', 'engagiertes PR-Team', 'PR-Held~innen~ und ~PR-Helden', 'PR-Leute, die mit Energie und Ideen neue Wege suchen', 'Menschen, deren Herzen für PR-Themen schlagen', 'kommunikationsfreudige Menschen, die sich um die PR-Bedürfnisse (von ...) kümmern']"
-PTSB,acr,style,abbreviation,"['Posttraumatische Belastungsstörung (PTBS)', 'Komplexe posttraumatische Belastungsstörung (K-PTBS)']"
-PV,acr,style,abbreviation,"['Page Views (PV)', 'Seitenaufrufe', 'Seitenzugriffe', 'angesehene Seiten']"
-PaaS,acr,style,abbreviation,"['Platform-as-a-Service (PaaS)', 'Plattform als Dienstleistung']"
+Passwort,s,style,anglicism,['Kennwort']
 Performer,s,style,exaggerating,"['Performer~in~/~Performer', 'jemand, der sich auf die nächsten Schritte fokussiert', 'Person, die engagiert in ihren Aufgaben ist', 'unternehmerisch denkender Mensch', 'Performer~innen~ und ~Performer']"
 Pionier,s,style,exaggerating,"['Inspiration', 'Pionier~in~/~Pioniere', 'Wegbereiter~in~/~Wegbereiter', 'Person mit zukunfsweisenden Ideen', 'Person, die Neuland betritt', 'Person, die gewohnte Bahnen verlässt', 'Mensch, der bereit ist, sich neuen Situationen zu stellen', 'Mensch, der Visionen verwirklichen will', 'experimentierfreudiger Mensch', 'Mensch, der Verantwortung übernimmt', 'jemand, der mit gutem Beispiel vorangeht', 'erfinderischer Mensch', 'einfallsreicher Mensch', 'jemand, der inspiriert', 'jemand, der eine Vision vermittelt', 'jemand, der Neues ausprobieren will', 'Pionier~innen~ und ~Pioniere', 'Wegbereiter~innen~ und ~Wegbereiter']"
 Pionierunternehmen,s,style,exaggerating,"['richtungweisendes Unternehmen', 'Unternehmen, das mit gutem Beispiel vorangeht', 'Unternehmen, das sich auf Neues einlässt', 'Unternehmen, das neue Wege geht', 'Unternehmen, das inspiriert', 'Unternehmen, das Maßstäbe im (...) setzt', 'verantwortungsbewusstes Unternehmen, das anderen den Weg bereitet']"
-QA,acr,style,abbreviation,"['Quality Assurance (QA)', 'Qualitätssicherung']"
-QOTD,acr,style,abbreviation,"['Quote of the day', 'Zitat des Tages']"
-QPAM,acr,style,abbreviation,"['Qualified Professional Asset Manager', '(QPAM)', 'qualifizierte~r Vermögensverwalter~in~/~Vermögensverwalter', 'professionelle~r Vermögensverwalter~in~/~Vermögensverwalter']"
-QoQ,acr,style,abbreviation,"['Quarter-over-Quarter (QoQ)', 'gegenüber dem vorangegangenen Quartal', 'im Vierteljahresvergleich']"
-Querdenken,s,style,hollow,"['die Fähigkeit, in neuen Mustern zu denken', 'die Fähigkeit, parallel/lateral/kreativ/divergent zu denken', 'die Fähigkeit, über den eigenen Tellerrand zu blicken', 'die Fähigkeit zum Brainstormen']"
-R&D,acr,style,abbreviation,"['Research-and-Development (R&D)', 'Forschung und Entwicklung']"
-RAM,acr,style,abbreviation,"['Random Access Memory (RAM)', 'Direktzugriffsspeicher', 'Arbeitsspeicher', 'Schreib-Lese-Speicher']"
-RCS,acr,style,abbreviation,"['Rich Communication Services (RCS)', 'reichhaltige Kommunikationsdienste', 'umfassende Kommunikationsdienste']"
-REGEX,acr,style,abbreviation,"['Regular Expression (REGEX)', 'Regulärer Ausdruck']"
-REST,acr,style,abbreviation,"['Representational State Transfer', '(REST)', 'repräsentative Zustandsübertragung']"
-RFD,acr,style,abbreviation,"['Request-for-Discussion (RFD)', 'Aufruf zur Diskussion', 'Diskussionsanfrage']"
-RFP,acr,style,abbreviation,"['Request-for-Proposal (RFP)', 'Ausschreibung', 'Angebotsanfrage']"
-RN,acr,style,abbreviation,"['Right now', 'im Moment', 'jetzt gerade', 'sofort', 'ab sofort']"
-ROA,acr,style,abbreviation,"['Return-on-Assets (ROA)', 'Gesamtkapitalrentabilität', 'Anlagenrendite', 'Gesamtkapitalrendite', 'Rendite der Vermögenswerte']"
-ROE,acr,style,abbreviation,"['Return-on-Equity (ROE)', 'Eigenkapitalrendite']"
-ROFL,acr,style,abbreviation,"['Rolling on floor laughing!', 'Liege in der Ecke vor Lachen!', ""Ich schmeiß' mich weg!"", 'Liege auf dem Boden vor Lachen!']"
-ROFLOL,acr,style,abbreviation,"['Rolling on floor laughing out loud!', 'Liege laut lachend in der Ecke!', ""Ich schmeiß' mich weg!"", 'Wälze mich auf dem Boden und brülle vor Lachen!']"
-ROFR,acr,style,abbreviation,"['Right-of-First-Refusal (ROFR)', 'Vorkaufsrecht']"
-ROI,acr,style,abbreviation,"['Return on Investment (ROI)', 'Kapitalrendite', 'Amortisation', 'Investitionsrentabilität', 'Investitionsertrag']"
-ROR,acr,style,abbreviation,"['Ruby on Rails (ROR)', 'Ruby on Rails']"
-ROS,acr,style,abbreviation,"['Run of Site (ROS)', 'seitenweit', 'überall auf einer Website', 'webseitenweit']"
-RSS,acr,style,abbreviation,"['Rich Site Summary (RSS)', 'Really Simple Syndication', 'Webfeed-Dateiformate', 'wirklich einfache Verbreitung']"
-RT,acr,style,abbreviation,"['Retweet (RT)', 'retweeten']"
-RTL,acr,style,abbreviation,"['Right-to-Left (RTL)', 'rechts nach links']"
+Querdenken,s,style,hollow,"['die Fähigkeit, in neuen Mustern zu denken', 'Hinterfragen', 'unkonventionelle Betrachtungsweise', 'die Fähigkeit, über den eigenen Tellerrand zu blicken']"
 Rakete,s,style,exaggerating,"['Tatmensch', 'Person, die die Initiative ergreift', 'Person, die ein Team mitreißen kann', 'energiegeladener Mensch', 'lebensbejahende Persönlichkeit', 'begeisterungsfähiger Mensch', 'jemand, der zupackt']"
+Ranking,s,style,anglicism,['Rangfolge']
+Responsibilities,s,style,anglicism,['Aufgabengebiete']
 Rockstar,s,style,exaggerating,"['strebsamer Mensch', 'fleißiger Mensch', 'umsetzungsfreudiger Mensch', 'tatkräftiger Mensch', 'Tatmensch', 'Mensch, der Meilensteine erreichen will', 'Mensch, der Aufgaben engagiert angeht', 'jemand, der mit dem Team gemeinsame Ziele umsetzt', 'jemand, der mit dem Team Aufgaben anpackt', 'jemand, der unternehmerisch denkt', 'jemand, der Ziele mit Elan umsetzt']"
-SAFE,acr,style,abbreviation,"['Simple Agreement for Future Equity (SAFE)', 'einfache Vereinbarung für zukünftiges Eigenkapital']"
-SBIC,acr,style,abbreviation,"['Small Business Investment Company (SBIC)', 'Investitionsgesellschaft für kleine Unternehmen']"
-SBIR,acr,style,abbreviation,"['Small Business Innovation Research (SBIR)', 'Investitionsforschung für kleine Unternehmen']"
-SCM,acr,style,abbreviation,"['Source Control Management (SCM)', 'Source Code Management (SCM)', 'Quellcodeverwaltung']"
-SEC,acr,style,abbreviation,"['Securities and Exchange Commission (SEC)', 'Wertpapieraufsichtsbehörde']"
-SEM,acr,style,abbreviation,"['Search Engine Marketing (SEM)', 'Suchmaschinenmarketing']"
-SEO,acr,style,abbreviation,"['Search Engine Optimization (SEO)', 'Suchmaschinenoptimierung']"
-SHA,acr,style,abbreviation,"['Shareholders Agreement (SHA)', 'Aktionärsvereinbarung', 'Vereinbarung zischen Aktionär~innen~/~Aktionären']"
-SM,acr,style,abbreviation,"['Servicemark (SM)', 'Social Media (SM)', 'Dienstleistungsmarke', 'Soziale Medien (SM)']"
-SMART,acr,style,abbreviation,"['Specific, Measurable, Attainable, Realistic, Time-bound (SMART)', 'spezifisch, messbar, erreichbar, realistisch, zeitgebunden']"
-SMM,acr,style,abbreviation,"['Social Media Marketing', 'Social Media Marketing (SMM)']"
-SMS,acr,style,abbreviation,"['Short Message Service (SMS)', 'Kurznachrichtendienst']"
-SOW,acr,style,abbreviation,"['Scope of Work (SOW)', 'Auftragsumfang', 'Leistungsbild', 'Aufgabenstellung', 'Leistungsumfang']"
-SPAC,acr,style,abbreviation,"['Specified Purpose Acquisition Company (SPAC)', 'Zweckgebundene Akquisitionsgesellschaft', 'Akquisitionsgesellschaft für besondere Zwecke']"
-SPACS,acr,style,abbreviation,"['Specified Purpose Acquisition Companies (SPACS)', 'Zweckgebundene Akquisitionsgesellschaften', 'Akquisitionsgesellschaften für besondere Zwecke']"
-STFU,acr,style,abbreviation,"['Shut the *beep* up!', 'Halt die Klappe!']"
-STTR,acr,style,abbreviation,"['Small Business Technology Transfer (STTR)', 'Technologietransfer für kleine Unternehmen']"
-SWOT,acr,style,abbreviation,"['Strengths, Weaknesses, Opportunities, Threats (SWOT)', 'Stärken, Schwächen, Chancen, Risiken']"
-SaaS,acr,style,abbreviation,"['Software-as-a-Service (SaaS)', 'Software-as-a-Service']"
+Sabbatical,s,style,anglicism,['Auszeit']
+Salary,s,style,anglicism,['Gehalt']
+Sales,s,style,anglicism,['Verkaufskatalog']
+Sample,s,style,anglicism,['Verkaufskatalog']
 Scherge,s,style,exaggerating,"['Verfechter~in~/~Verfechter', 'Verbündete~r~/~Verbündeter', 'Polizist~in~/~Polizist', 'Handlanger~in~/~Handlanger', 'Mitarbeitende', 'Verfechtende', 'Verbündete', 'Komplizen', 'Verfechter~innen~ und ~Verfechter', 'Polizist~innen~ und ~Polizisten', 'Handlanger~innen~ und ~Handlanger']"
 Scorer,s,style,exaggerating,"['strebsamer Mensch', 'fleißiger Mensch', 'umsetzungsfreudiger Mensch', 'tatkräftiger Mensch', 'Tatmensch', 'Mensch, der Meilensteine erreichen will', 'Mensch, der Aufgaben engagiert angeht', 'jemand, der mit dem Team gemeinsame Ziele umsetzt', 'jemand, der mit dem Team Aufgaben anpackt', 'jemand, der unternehmerisch denkt', 'jemand, der Ziele mit Elan umsetzt']"
 Selbstanlasser,s,style,exaggerating,"['Mensch, der gemeinsame Ziele mit Energie anpackt', 'Person, die gern die Initiative ergreift', 'jemand, den Meilensteine motivieren']"
+Service,s,style,anglicism,['Diensleisdtung']
 Spitzenleistung,s,style,exaggerating,"['Einsatz', 'Kompetenz', 'Meilenstein', 'Bravourstück', 'Ergebnis, das zum Geschäftserfolg beiträgt', 'erreichte Meilensteine', 'wiederholter Einsatz', 'Resultate, die zum Geschäftserfolg beitragen']"
 Spitzenreiter,s,style,exaggerating,"['Spitzenreiter~in~/~Spitzenreiter', 'jemand, der gern auf Meilensteine hinarbeitet', 'Mensch, der mit dem Team gemeinsame Ziele angeht', 'Person, die mit dem Team (...) erreichen möchte', 'Person, die unternehmerisch denkt', 'jemand, der Ziele mit Elan anpackt', 'du bist engagiert in deinen Aufgaben', 'Tatmenschen', 'Spitzenreiter~in~ und ~Spitzenreiter', 'Unternehmen, das im Markt Maßstäbe setzt', 'wichtige Sache', 'Ziel, das das Team inspiriert', 'inspirierendes Teammitglied', 'Mensch, der dem Team mit Rat und Tat zur Seite steht', 'im Markt richtungweisendes Unternehmen', 'Lieblings (...)']"
 Spitzenunternehmen,s,style,exaggerating,"['Unternehmen, das technologischen Wandel gestaltet,', 'Unternehmen, das neue Technologien mit Bedacht und Kreativität einsetzt,', 'Unternehmen, das ausgewählte Technologien erfolgreich vorantreibt,', 'Unternehmen, die technologischen Wandel gestalten', 'Unternehmen, die neue Technologien mit Bedacht und Kreativität einsetzen,', 'Unternehmen, die ausgewählte Technologien erfolgreich vorantreiben']"
 Superstar,s,style,exaggerating,"['strebsamer Mensch', 'fleißiger Mensch', 'umsetzungsfreudiger Mensch', 'tatkräftiger Mensch', 'Tatmensch', 'Mensch, der Meilensteine erreichen will', 'Mensch, der Aufgaben engagiert angeht', 'jemand, der mit dem Team gemeinsame Ziele umsetzt', 'jemand, der mit dem Team Aufgaben anpackt', 'jemand, der unternehmerisch denkt', 'jemand, der Ziele mit Elan umsetzt', 'Tatmenschen', 'strebsame Menschen', 'fleißige Leute', 'umsetzungsfreudige Menschen', 'tatkräftige Leute', 'Menschen, die Meilensteine erreichen wollen', 'Menschen, die Aufgaben engagiert angehen', 'Leute, die mit dem Team gemeinsame Ziele umsetzen', 'alle, die mit dem Team Aufgaben engagiert anpacken', 'Leute, die unternehmerisch denken', 'alle, die Ziele mit Elan umsetzen']"
-TBA,acr,style,abbreviation,"['to be announced', 'wird noch bekannt gegeben', 'steht noch nicht fest']"
-TBD,acr,style,abbreviation,"['to be decided', 'wird erst noch entschieden', 'noch festzulegen']"
-TBF,acr,style,abbreviation,"['to be frank', 'Offen gesagt', 'Ehrlich gesagt', 'Offen gestanden']"
-TBH,acr,style,abbreviation,"['to be honest', 'Um ehrlich zu sein', 'Offen gesagt', 'Ehrlich gesagt', 'Offen gestanden']"
-TGIF,acr,style,abbreviation,"[""Thank goodness it's Friday"", 'Zum Glück ist schon Freitag', 'Wie gut, dass schon Freitag ist']"
-TIA,acr,style,abbreviation,"['Thanks in advance!', 'Vielen Dank im Voraus!']"
-TL;DR,acr,style,abbreviation,"[""Too long, didn't read."", 'Zu lang, habe ich nicht gelesen.']"
-TLTR,acr,style,abbreviation,"['too long to read', 'zum Lesen zu lang']"
-TM,acr,style,abbreviation,"['Trademark (TM)', 'Markenzeichen', 'Warenzeichen', 'Schutzmarke', 'Markenname']"
-TOS,acr,style,abbreviation,"['Terms of Service (TOS)', 'Nutzungsbedingungen', 'Allgemeine Geschäftsbedingungen', 'Dienstleistungsbedingungen']"
-TS,acr,style,abbreviation,"['Term Sheet (TS)', 'Absichtserklärung', 'Grundsatzvereinbarung']"
-TTYL,acr,style,abbreviation,"['Talk to you later', 'Wir sprechen uns später']"
-Team-player,s,style,hollow,"['Zusammenarbeit über das eigene Streben stellen', 'Team', 'Teammitglieder', 'Teamplayer~innen', 'Teamplayer~in', 'Teamplayer~in~/~Teamplayer']"
+Team-player,s,style,hollow,"['Teamplayer~in~/~Teamplayer', 'Person, die gut und gern mit anderen zusammenarbeitet', 'jemand, dem gute Verständigung und kameradschaftliches Verhalten wichtig sind', 'jemand, dem das ""Wir"" wichtiger ist als das ""Ich""', 'Team', 'Teammitglieder', 'Teamplayer~innen~/~Teamplayer', 'Leute, die gut und gern mit anderen zusammenarbeiten', 'Menschen, denen kameradschaftliches Verhalten und gute Verständigung wichtig sind', 'Menschen, den das ""Wir"" wichtiger ist als das ""Ich""']"
 Teamfähigkeit,s,style,hollow,"['Kooperationsfähigkeit', 'Akzeptanz gegenüber verschiedenen Menschen und Verhaltensweisen', 'Fähigkeit mit Unterschieden und Gemeinsamkeiten umzugehen', 'Kommunikationsfähigkeit', 'Kompromissbereitschaft zugunsten des gemeinsamen Ziels']"
-Teamplayer,s,style,hollow,"['Zusammenarbeit über das eigene Streben stellen', 'Team', 'Teammitglieder', 'Teamplayer~innen', 'Teamplayer~in', 'Teamplayer~in~/~Teamplayer']"
+Teamplayer,s,style,hollow,"['Teamplayer~in~/~Teamplayer', 'Person, die gut und gern mit anderen zusammenarbeitet', 'jemand, dem gute Verständigung und kameradschaftliches Verhalten wichtig sind', 'jemand, dem das ""Wir"" wichtiger ist als das ""Ich""', 'Team', 'Teammitglieder', 'Teamplayer~innen~/~Teamplayer', 'Leute, die gut und gern mit anderen zusammenarbeiten', 'Menschen, denen kameradschaftliches Verhalten und gute Verständigung wichtig sind', 'Menschen, den das ""Wir"" wichtiger ist als das ""Ich""']"
 Top-Performance,s,style,exaggerating,"['Engagement', 'erfreuliches Ergebnis', 'Kompetenz', 'Bravourstück', 'einen Meilenstein mit Leichtigkeit erreicht haben']"
 Top-Performer,s,style,exaggerating,"['Kümmerer', 'Tatmensch', 'umsetzungsfreudiger Mensch', 'tatkräftiger Mensch', 'Team-Mentor~in~/~Team-Mentor', 'jemand mit Blick fürs große Ganze', 'Mensch, dem Meilensteine am Herzen liegen', 'Mensch, der Aufgaben konstruktiv und engagiert angeht', 'jemand, der mit dem Team Ziele gemeinsam umsetzt', 'jemand, der mit dem Team Aufgaben anpackt', 'jemand, der unternehmerisch denkt', 'jemand, der Ziele mit Elan umsetzt', 'Tatmenschen', 'Mitdenkende', 'engagierte Mitarbeitende', 'umsetzungsfreudige Menschen', 'tatkräftige Leute', 'Leute mit Blick fürs große Ganze', 'Menschen, denen Meilensteine am Herzen liegen', 'Menschen, die Aufgaben konstruktiv und engagiert angehen', 'Leute, die mit dem Team Ziele gemeinsam umsetzen', 'alle, die mit dem Team Aufgaben engagiert anpacken', 'Leute, die unternehmerisch denken', 'alle, die Ziele mit Elan umsetzen']"
 Topperformance,s,style,exaggerating,"['Engagement', 'erfreuliches Ergebnis', 'Kompetenz', 'Bravourstück', 'einen Meilenstein mit Leichtigkeit erreicht haben']"
@@ -318,35 +109,20 @@ Topperformer,s,style,exaggerating,"['Kümmerer', 'Tatmensch', 'umsetzungsfreudig
 Traumaufgabe,s,style,exaggerating,"['Aufgabe, die den eigenen Wünschen entspricht', 'Aufgabe, für die sich jemand mit Freude engagiert', 'Aufgabe, die inspiriert und motiviert']"
 Traumjob,s,style,exaggerating,"['Job, der den persönlichen Wünschen entspricht', 'interessanter Job', 'gut bezahlter Job', 'Job in einem engagierten offenen Team']"
 Treiber,s,style,exaggerating,"['Person, die den Takt vorgibt', 'Person, die motiviert', 'Person, die die Initiative ergreift', 'Person, die dem Team hilft, gemeinsame Ziele zu erreichen', 'Motivierende']"
-UGC,acr,style,abbreviation,"['User-generated Content (UGC)', 'von Nutzenden generierte Inhalte', 'von Nutzenden generierter Inhalt']"
-UI,acr,style,abbreviation,"['User Interface (UI)', 'Benutzungsoberfläche', 'Bedienoberfläche', 'Oberfläche', 'Anwendungsoberfläche']"
-URL,acr,style,abbreviation,"['Universal Resource Locator (URL)', 'Uniform Resource Locator (URL)', 'universelle Adresse', 'einheitlicher Ressourcen-Locator', 'universeller Ressourcen-Locator']"
-URM,acr,style,abbreviation,"['Universal Resource Manager (URM)', 'universeller Ressourcenmanager']"
-UV,acr,style,abbreviation,"['Unique Visitors (UV)', 'Einzelbesucher~in~/~Einzelbesucher', 'eindeutige Besucher~innen~/~Besucher']"
-UX,acr,style,abbreviation,"['User Experience (UX)', 'Benutzungserfahrung', 'Nutzungserlebnis', 'Nutzungsfreundlichkeit', 'Anwendungserlebnis']"
-VC,acr,style,abbreviation,"['Venture Capitalists (VC)', 'Risikokapitalgeber~in~/~Risikokapitalgeber', 'Risikokapitalgebende']"
-VCS,acr,style,abbreviation,"['Version Control Software (VCS)', 'Versionskontrollsoftware']"
-VPN,acr,style,abbreviation,"['Virtual Private Network (VPN)', 'virtuelles privates Netzwerk']"
-WDYT,acr,style,abbreviation,"['What do you think?', 'Was halten Sie davon?', 'Was meinst du dazu?', 'Was hälst du davon?']"
-WFH,acr,style,abbreviation,"['work from home', 'zuhause arbeiten', 'Arbeit von zu Hause']"
-WIIFM,acr,style,abbreviation,"[""What's in it for me?"", 'Was ist für mich drin?']"
-WOM,acr,style,abbreviation,"['Word-of-Mouth (WOM)', 'Mundpropaganda']"
-WTF,acr,style,abbreviation,"['What the...', 'Was zum...']"
-WTH,acr,style,abbreviation,"['What the...', 'Was zum...']"
-WYSIWYG,acr,style,abbreviation,"['What-you-see-is-what-you-get (WYSIWYG)', 'Sie bekommen, was Sie sehen', 'Du kriegst, was du siehst', 'Echtbilddarstellung', 'Echtzeitdarstellung']"
+Update,s,style,anglicism,['Aktualisierung']
+Vacancy,s,style,anglicism,['Freie Stelle']
+Wallpaper,s,style,anglicism,['Bildschirmhintergrund']
 Weltherrschaft,s,style,exaggerating,"['tonangebende Rolle', 'einflussreiche Position', 'überwiegende Marktpräsenz', 'Position, die erlaubt, im Markt Maßstäbe zu setzen', 'Rolle, in der man Weg und Richtung weist']"
 Weltmarktführer,s,style,exaggerating,"['Weltmarke', 'Unternehmen mit dem größten Weltmarktanteil nach Umsatz', 'Unternehmen mit dem größten Weltmarktanteil nach Stückzahl', 'Unternehmen, das im weltweiten Handel im Segment mehr vertreten ist als andere', 'Unternehmen, das den technologischen Wandel im Markt weltweit gestaltet']"
 Weltspitze,s,style,exaggerating,"['tonangebende Rolle', 'einflussreiche Position', 'überwiegende Marktpräsenz', 'Position, die erlaubt, im Markt Maßstäbe zu setzen', 'Rolle, in der man Weg und Richtung weist']"
 Wettkämpfer,s,style,exaggerating,"['Wettkampf', 'Wettkämpfer~in~/~Wettkämpfer', 'Mensch, der sein Team gern auf dem gemeinsamen Weg mitnimmt', 'jemand, der ein faires Miteinander schätzt', 'jemand, der Ziele zusammen mit dem Team erreichen will', 'Wettkämpfer~innen~ und ~Wettkämpfer', 'Menschen, die ihr Team gern auf dem gemeinsamen Weg mitnehmen', 'alle, die ein faires Miteinander schätzen', 'Leute, die Ziele zusammen mit dem Team umsetzen wollen']"
 Winner-Typ,s,style,exaggerating,"['umsetzungsfreudiger Mensch', 'Mensch, der gemeinsame Ziele motiviert anpackt', 'jemand, der Freude am Erreichen von Meilensteinen hat', 'jemand, der zusammen mit dem Team kontinuierlich Ziele umsetzt', 'jemand, der gemeinsame Aufgaben mit Elan angeht']"
 Winnertyp,s,style,exaggerating,"['umsetzungsfreudiger Mensch', 'Mensch, der gemeinsame Ziele motiviert anpackt', 'jemand, der Freude am Erreichen von Meilensteinen hat', 'jemand, der zusammen mit dem Team kontinuierlich Ziele umsetzt', 'jemand, der gemeinsame Aufgaben mit Elan angeht']"
-WoW,acr,style,abbreviation,"['Week-over-Week (WoW)', 'gegenüber der Vorwoche', 'von Woche zu Woche', 'im Wochenvergleich']"
-YTD,acr,style,abbreviation,"['Year-to-Date (YTD)', 'seit Jahresbeginn', 'seit Jahresanfang bis dato', 'im bisherigen Jahresverlauf']"
-YoY,acr,style,abbreviation,"['Year-over-Year (YoY)', 'gegenüber dem Vorjahr', 'im Jahresvergleich', 'im Vergleich zum Vorjahr']"
+Workflow,s,style,anglicism,['Arbeitsablauf']
 aber,adv,style,filler,['-']
 abermals,adv,style,filler,['-']
 absolut,a,style,exaggerating,"['durch und durch', 'real', 'umfassend', 'uneingeschränkt', 'gründlich', 'zweifelsohne', 'gerne', 'zuverlässig']"
-aktiv,a,style,hollow,"['--- nicht für Personen verwenden', 'lebendig', 'tatkräftig', 'lebhaft', 'enthusiastisch', 'engagiert', 'energiegeladen', 'vital', 'eifrig', 'anpassungsfähig', 'schwungvoll']"
+aktiv,a,style,hollow,"['--- nicht auf Menschen beziehen', 'lebendig', 'tatkräftig', 'lebhaft', 'enthusiastisch', 'engagiert', 'energiegeladen', 'vital', 'eifrig', 'anpassungsfähig', 'schwungvoll']"
 allein,adv,style,filler,['-']
 allemal,adv,style,filler,['-']
 allenfalls,adv,style,filler,['-']
@@ -376,10 +152,12 @@ beinahe,adv,style,filler,['-']
 bekanntlich,adv,style,filler,['-']
 bereits,adv,style,filler,['-']
 besonders,adv,style,filler,['-']
+best-of-breed,a,style,anglicism,"['für diesen Geschäftszweck am besten passend', 'für diesen Anwendungsfall die effektivste', 'zu diesem Zweck empfehlenswerteste ']"
 beste,a,style,exaggerating,"['leicht', 'einfach', 'mühelos', 'wirkungsvoll', 'als positiv empfunden', 'erfüllend', 'befriedigend', 'bereichernd', 'schön', 'fein', 'gut', 'passend']"
 bestenfalls,adv,style,filler,['-']
 bloß,adv,style,filler,['-']
 brillant,a,style,exaggerating,"['glänzend', 'gebündelt', 'fokussiert', 'klar', 'kreativ', 'scharfsinnig', 'begabt', 'wirkungsvoll', 'einnehmend', 'technisch kreativ', 'gekonnt', 'famos', 'reich an Obertönen', 'dass es eine Freude ist', 'eine wahre Wonne']"
+committen,v,style,anglicism,"['zusagen', 'fest zusagen', 'dabei sein', 'mitmachen', 'unterstützen']"
 dabei,adv,style,filler,['-']
 dadurch,adv,style,filler,['-']
 dagegen,adv,style,filler,['-']
@@ -396,7 +174,7 @@ deswegen,adv,style,filler,['-']
 doch,adv,style,filler,['-']
 durchaus,adv,style,filler,['-']
 durchweg,adv,style,filler,['-']
-dynamisch,a,style,hollow,"['--- nicht für Personen verwenden', 'lebendig', 'tatkräftig', 'lebhaft', 'enthusiastisch', 'engagiert', 'energiegeladen', 'vital', 'eifrig', 'anpassungsfähig', 'schwungvoll']"
+dynamisch,a,style,hollow,"['--- nicht auf Menschen beziehen', 'lebendig', 'tatkräftig', 'lebhaft', 'enthusiastisch', 'engagiert', 'energiegeladen', 'vital', 'eifrig', 'anpassungsfähig', 'schwungvoll']"
 eben,adv,style,filler,['-']
 eigentlich,adv,style,filler,['-']
 eindrücklich,a,style,exaggerating,"['eindringlich', 'eloquent', 'in eindringlichen Bildern', 'bildlich', 'emphatisch', 'anschaulich']"
@@ -405,7 +183,7 @@ einige,adv,style,filler,['-']
 einigermaßen,adv,style,filler,['-']
 einmal,adv,style,filler,['-']
 einzigartig,a,style,exaggerating,"['spezifisch', 'eindeutig', 'kreativ', 'einfallsreich', 'überraschend', 'ausgefallen']"
-erfolgreich,a,style,exaggerating,"['fähig', 'gelungen', 'gewinnbringend', 'produktiv', 'zielführend', 'Meilensteine erreicht', 'mit gutem Ergebnis', 'Aufgaben gemeinsam gelöst', 'mit Leichtigkeit bewältigt', 'mit Engagement zu Ende gebracht']"
+erfolgreich,a,style,exaggerating,"['fähig', 'gelungen', 'gewinnbringend', 'produktiv', 'zielführend', 'wirkungsvoll', 'ertragreich', 'mit gutem Ergebnis', 'mit Leichtigkeit', 'alle Meilensteine erreicht']"
 ergo,adv,style,filler,['-']
 erheblich,adv,style,filler,['-']
 erstklassig,a,style,exaggerating,"['mit einem Auge für Qualität', 'zuverlässig und präzise', 'ansprechend', 'gehoben', 'rein', 'bevorzugt', 'sorgfältig ausgewählt']"
@@ -415,7 +193,7 @@ etwa,adv,style,filler,['-']
 exzellent,a,style,exaggerating,"['wertvoll', 'gut', 'qualitätsorientiert', 'mit Sinn für Qualität', 'von besonderer Qualität']"
 fantastisch,a,style,exaggerating,"['inspirierend', 'begeisternd', 'motivierend']"
 fast,adv,style,filler,['-']
-flexibel,a,style,hollow,"['--- nicht für Personen verwenden', 'anpassungsfähig', 'strategisch wendig', 'pragmatisch', 'offen', 'beweglich', 'agil', 'variabel', 'mobil', 'durch die Nutzenden definiert']"
+flexibel,a,style,hollow,"['--- nicht auf Menschen beziehen', 'anpassungsfähig', 'strategisch wendig', 'pragmatisch', 'offen', 'beweglich', 'agil', 'variabel', 'mobil', 'durch die Nutzenden definiert']"
 folgendermaßen,adv,style,filler,['-']
 folglich,adv,style,filler,['-']
 fortwährend,adv,style,filler,['-']
@@ -435,9 +213,10 @@ gewissermaßen,adv,style,filler,['-']
 glatt,adv,style,filler,['-']
 gleichsam,adv,style,filler,['-']
 gleichwohl,adv,style,filler,['-']
-global,a,style,hollow,"['in vielen Ländern Europas/Asiens/Afrikas/Nord- und Südamerikas', 'auf allen Kontinenten']"
+global,a,style,hollow,"['in vielen Ländern vertreten', 'auf allen Kontinenten vertreten', 'in ((Länder)) tätig', 'in vielen Ländern ((Kontinente)) tätig', 'mit ((Zahl)) Niederlassungen auf ((Zahl)) Kontinenten']"
 glücklicherweise,adv,style,filler,['-']
 gottseidank,adv,style,filler,['-']
+greenlighten,v,style,anglicism,"['freigeben', 'erlauben', 'grünes Licht geben']"
 größtenteils,adv,style,filler,['-']
 gänzlich,adv,style,filler,['-']
 halt,adv,style,filler,['-']
@@ -447,8 +226,8 @@ herausragend,a,style,exaggerating,"['kreativ', 'einfallsreich', 'gut', 'überras
 hervorragend,a,style,exaggerating,"['kreativ', 'einfallsreich', 'gut', 'überraschend', 'eindrucksvoll', 'erfreulich', 'zur großen Zufriedenheit aller']"
 hingegen,adv,style,filler,['-']
 hinlänglich,adv,style,filler,['-']
-hoch-motiviert,a,style,hollow,"['--- nicht für Einzelpersonen verwenden', 'fähig zur Eigeninitiative', 'bereit, sich zu engagieren', 'setzt sich erreichbare Ziele', 'bereit, sich einzusetzen']"
-hochmotiviert,a,style,hollow,"['--- nicht für Einzelpersonen verwenden', 'fähig zur Eigeninitiative', 'bereit, sich zu engagieren', 'setzt sich erreichbare Ziele', 'bereit, sich einzusetzen']"
+hoch-motiviert,a,style,hollow,"['--- nicht auf Menschen beziehen', 'engagiert', 'begeisterungsfähig', 'zur Eigeninitiative', 'bereit, sich zu engagieren']"
+hochmotiviert,a,style,hollow,"['--- nicht auf Menschen beziehen', 'engagiert', 'begeisterungsfähig', 'zur Eigeninitiative', 'bereit, sich zu engagieren']"
 hochwertig,a,style,hollow,"['von guter Qualität', 'dauerhaft', 'stabil', 'belastbar', 'wertbeständig']"
 häufig,adv,style,filler,['-']
 höchst,adv,style,filler,['-']
@@ -460,7 +239,7 @@ indessen,adv,style,filler,['-']
 infolgedessen,adv,style,filler,['-']
 innovativ,a,style,hollow,"['einfallsreich', 'neuartig', 'kreativ', 'schöpferisch', 'erfindungsreich', 'zukunftsweisend', 'bahnbrechend', 'ideenreich', 'fortschrittlich']"
 insbesondere,adv,style,filler,['-']
-international,a,style,hollow,"['in vielen Ländern Europas/Asiens/Afrikas/Nord- und Südamerikas', 'auf allen Kontinenten']"
+international,a,style,hollow,"['in vielen Ländern vertreten', 'auf allen Kontinenten vertreten', 'in ((Länder)) tätig', 'in Ländern in ((Kontinente)) tätig', 'mit ((Zahl)) Niederlassungen auf ((Zahl)) Kontinenten']"
 inzwischen,adv,style,filler,['-']
 irgend,adv,style,filler,['-']
 irgendein,adv,style,filler,['-']
@@ -498,9 +277,8 @@ neuerdings,adv,style,filler,['-']
 neuerlich,adv,style,filler,['-']
 neulich,adv,style,filler,['-']
 nichtsdestoweniger,adv,style,filler,['-']
-nie,adv,style,filler,['-']
 niemals,adv,style,filler,['-']
-normal,a,style,hollow,"['--- nicht für Personen verwenden', 'typisch', 'vorschriftsmäßig', 'neurotypisch', 'den Regeln entsprechend']"
+normal,a,style,hollow,"['--- nicht auf Menschen beziehen', 'typisch', 'vorschriftsmäßig', 'neurotypisch', 'den Regeln entsprechend']"
 nun,adv,style,filler,['-']
 nur,adv,style,filler,['-']
 nämlich,adv,style,filler,['-']
@@ -515,8 +293,8 @@ perfekt,a,style,exaggerating,"['ausgereift', 'passend', 'zielführend', 'effekti
 plötzlich,adv,style,filler,['-']
 problemlos,a,style,exaggerating,"['einfach', 'leicht', 'reibungslos', 'praktisch', 'bequem', 'ohne großen Aufwand', 'mit Leichtigkeit', 'gut verständlich']"
 quasi,adv,style,filler,['-']
-quer-denken,v,style,hollow,"['in neuen Mustern denken', 'parallel/lateral/kreativ/divergent denken', 'über den eigenen Tellerrand blicken', 'brainstormen']"
-querdenken,v,style,hollow,"['in neuen Mustern denken', 'parallel/lateral/kreativ/divergent denken', 'über den eigenen Tellerrand blicken', 'brainstormen']"
+quer-denken,v,style,hollow,"['in neuen Mustern denken', 'kreativ denken', 'über den eigenen Tellerrand blicken', 'lateral denken', 'aus einem neuen Blinkwinkel betrachten']"
+querdenken,v,style,hollow,"['in neuen Mustern denken', 'kreativ denken', 'über den eigenen Tellerrand blicken', 'lateral denken', 'aus einem neuen Blinkwinkel betrachten']"
 recht,adv,style,filler,['-']
 reflektieren,v,style,exaggerating,"['überdenken', 'betrachten', 'reindenken', 'sich gedanklich intensiv befassen']"
 reichlich,adv,style,filler,['-']
@@ -544,10 +322,11 @@ sogar,adv,style,filler,['-']
 sonst,adv,style,filler,['-']
 sowieso,adv,style,filler,['-']
 sozusagen,adv,style,filler,['-']
-state-of-the-art,i,style,hollow,"['auf dem neuesten/letzten Stand der Technik', 'dem aktuellen Stand der Forschung/Technologie entsprechend', 'fachüblich']"
+state-of-the-art,i,style,hollow,"['auf dem neuesten Stand der Technik', 'aktuellen Standards entsprechend', 'im Einklang mit dem letzten Stand der Forschung', 'auf dem höchsten Stand der technologischen Entwicklung', 'fachüblich']"
 stellenweise,adv,style,filler,['-']
 stets,adv,style,filler,['-']
 stilsicher,a,style,exaggerating,"['kultiviert', 'der Situation angemessen auftretend', 'Gepflogenheiten routiniert respektierend']"
+supporten,v,style,anglicism,['unterstützen']
 teamfähig,a,style,hollow,"['kooperationsfähig', 'offen gegenüber verschiedenen Menschen und Verhaltensweisen', 'fähig mit Unterschieden und Gemeinsamkeiten umzugehen', 'kommunikationsfähig', 'kompromissbereit zugunsten des gemeinsamen Ziels']"
 trotzdem,adv,style,filler,['-']
 umständehalber,adv,style,filler,['-']
@@ -565,6 +344,8 @@ unstreitig,adv,style,filler,['-']
 unsäglich,adv,style,filler,['-']
 unwiderstehlich,a,style,exaggerating,"['für sich einnehmen', 'interessant', 'einladend', 'Kundenbedürfnisse identifiziert und bedient haben']"
 unzweifelhaft,adv,style,filler,['-']
+value-adden,v,style,anglicism,"['beitragen', 'etwas beitragen', 'sinnvollen Beitrag leisten']"
+valueadden,v,style,anglicism,"['beitragen', 'etwas beitragen', 'sinnvollen Beitrag leisten']"
 vergleichsweise,adv,style,filler,['-']
 vermutlich,adv,style,filler,['-']
 vielfach,adv,style,filler,['-']
@@ -578,7 +359,7 @@ völlig,adv,style,filler,['-']
 wahrscheinlich,adv,style,filler,['-']
 weidlich,adv,style,filler,['-']
 weitgehend,adv,style,filler,['-']
-weltweit,a,style,hollow,"['in vielen Ländern Europas/Asiens/Afrikas/Nord- und Südamerikas', 'auf allen Kontinenten']"
+weltweit,a,style,hollow,"['in vielen Ländern vertreten', 'auf allen Kontinenten vertreten', 'in ((Länder)) tätig', 'in vielen Ländern ((Kontinente)) tätig', 'mit ((Zahl)) Niederlassungen auf ((Zahl)) Kontinenten']"
 wenigstens,adv,style,filler,['-']
 wieder,adv,style,filler,['-']
 wiederum,adv,style,filler,['-']
