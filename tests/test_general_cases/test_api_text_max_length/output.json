@@ -16,7 +16,7 @@
                 "text": "Possible spelling mistake. ‘metres’ is British English."
             },
             "gravity": 1.0,
-            "label": "Possible Typo",
+            "label": "Possible typo",
             "start": 102,
             "subcategory": "typos",
             "text": "metres"
@@ -79,7 +79,7 @@
                 "text": "Possible spelling mistake. ‘metres’ is British English."
             },
             "gravity": 1.0,
-            "label": "Possible Typo",
+            "label": "Possible typo",
             "start": 191,
             "subcategory": "typos",
             "text": "metres"
@@ -120,7 +120,7 @@
                 "text": "Possible spelling mistake. ‘metres’ is British English."
             },
             "gravity": 1.0,
-            "label": "Possible Typo",
+            "label": "Possible typo",
             "start": 382,
             "subcategory": "typos",
             "text": "metres"
@@ -139,7 +139,7 @@
                 "text": "Possible spelling mistake. ‘metres’ is British English."
             },
             "gravity": 1.0,
-            "label": "Possible Typo",
+            "label": "Possible typo",
             "start": 418,
             "subcategory": "typos",
             "text": "metres"
@@ -158,7 +158,7 @@
                 "text": "Possible spelling mistake. ‘metres’ is British English."
             },
             "gravity": 1.0,
-            "label": "Possible Typo",
+            "label": "Possible typo",
             "start": 551,
             "subcategory": "typos",
             "text": "metres"
@@ -199,7 +199,7 @@
                 "text": "Possible spelling mistake. ‘metres’ is British English."
             },
             "gravity": 1.0,
-            "label": "Possible Typo",
+            "label": "Possible typo",
             "start": 723,
             "subcategory": "typos",
             "text": "metres"
@@ -262,7 +262,7 @@
                 "text": "Possible spelling mistake. ‘metres’ is British English."
             },
             "gravity": 1.0,
-            "label": "Possible Typo",
+            "label": "Possible typo",
             "start": 812,
             "subcategory": "typos",
             "text": "metres"
@@ -428,7 +428,7 @@
                 "url": "https://www.witty.works/en/categories/style#filler_words"
             },
             "gravity": 3.0,
-            "label": "Style: Filler Words",
+            "label": "Style: Filler words",
             "start": 321,
             "subcategory": "filler",
             "text": "generally"
@@ -448,7 +448,7 @@
                 "url": "https://www.witty.works/en/categories/style#filler_words"
             },
             "gravity": 3.0,
-            "label": "Style: Filler Words",
+            "label": "Style: Filler words",
             "start": 942,
             "subcategory": "filler",
             "text": "generally"

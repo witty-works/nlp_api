@@ -81,7 +81,7 @@ from collections import defaultdict
 
 from app.sentry import set_up_sentry_sdk
 
-version = "1.34.11"
+version = "1.34.12"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -1113,6 +1113,15 @@ def languagetool_matches(
             except KeyError:
                 pass
 
+        anchor = (
+            label.lower()
+            .replace(" ", "_")
+            .replace("ß", "ss")
+            .replace("ü", "ue")
+            .replace("ä", "ae")
+            .replace("ö", "oe")
+        )
+
         try:
             subcategory = match["rule"]["category"]["id"].lower()
         except KeyError:
@@ -1132,7 +1141,7 @@ def languagetool_matches(
                 start,
                 end,
                 alternatives,
-                label,
+                anchor,
                 explanation,
             )
         )
