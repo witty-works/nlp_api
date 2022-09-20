@@ -1,5 +1,8 @@
 import sentry_sdk
 from sentry_sdk.integrations.aiohttp import AioHttpIntegration
+from sentry_sdk.integrations.starlette import StarletteIntegration
+from sentry_sdk.integrations.fastapi import FastApiIntegration
+
 from app.privacy_filter import get_privacy_filter
 from app.privacy_filter import PrivacyFilter
 
@@ -13,7 +16,7 @@ def sentry_clean_sensitive_frame(
     return frame
 
 
-def sentry_clean_event_data(event):  # pragma: no cover
+def sentry_clean_event_data(event, hint):  # pragma: no cover
     privacy_filter = get_privacy_filter()
 
     for exception in event.get("exception", {}).get("values", []):
@@ -32,7 +35,11 @@ def set_up_sentry_sdk(version, settings):
     if not settings.sentry_dsn or settings.testing == True:
         return None
 
-    integrations = [AioHttpIntegration()]
+    integrations = [
+        AioHttpIntegration(),
+        StarletteIntegration(transaction_style="endpoint"),
+        FastApiIntegration(transaction_style="endpoint"),
+    ]
 
     sentry_sdk.init(
         dsn=settings.sentry_dsn,
