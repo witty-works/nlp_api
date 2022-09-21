@@ -112,7 +112,7 @@ bolt_handler = AsyncSlackRequestHandler(bolt)
 @bolt.command("/witty")
 async def handle_command_witty(
     body: dict, ack: Ack, respond: Respond, client: WebClient
-):
+):  # pragma: no cover
     await ack()
 
     user_request_in = RequestIn(text=body["text"])
@@ -237,7 +237,7 @@ for language in languages:
 
 def fetch_current_username(
     credentials: Optional[HTTPBasicCredentials] = Depends(security),
-):
+):  # pragma: no cover
     # Credentials are missing
     if credentials is None:
         # Auth is disabled, just proceed
@@ -274,7 +274,7 @@ def fetch_current_username(
 
 
 @app.post("/slack/commands")
-async def post_slack_commands(request: Request):
+async def post_slack_commands(request: Request):  # pragma: no cover
     return await bolt_handler.handle(request)
 
 
@@ -690,10 +690,6 @@ def is_number_list_empty(number, token, full_text):
     return False
 
 
-def filter_config(config):
-    return {k: v for (k, v) in config.items() if v != "" and v is not None and v != []}
-
-
 def apply_rules(user_request_in: RequestIn, configs: dict, plan: str):
     disabled_categories = user_request_in.config.disabled_categories
 
@@ -772,7 +768,7 @@ def fetch_user(request: Request):
                 status_code=status.HTTP_403_FORBIDDEN, detail="access token invalid"
             )
 
-        try:
+        try:  # pragma: no cover
             if claims["aud"] != settings.aadb2c_client_id:
                 raise HTTPException(
                     status_code=status.HTTP_403_FORBIDDEN,
@@ -798,7 +794,7 @@ def fetch_user(request: Request):
     if settings.testing:
         if "x-auth" in request.headers:
             return request.headers["x-auth"]
-        if settings.redis_default_user:
+        if settings.redis_default_user:  # pragma: no cover
             return settings.redis_default_user
 
     return None
@@ -832,7 +828,7 @@ async def check(
     response: Response,
     user_request_in: RequestIn,
 ):
-    if version != 1.1 and version != 2.0:
+    if version != 1.1 and version != 2.0:  # pragma: no cover
         response.status_code = status.HTTP_400_BAD_REQUEST
         return Result.factory("Version not supported: " + str(version))
 
@@ -1070,7 +1066,7 @@ async def languagetool_rules(version: float, config: Config, lang: Language, tex
                 list_results = languagetool_matches(
                     version, config, lang, "orthography", text, result
                 )
-            except ClientError as err:
+            except ClientError as err:  # pragma: no cover
                 result = "Problem communicating with LanguageTool"
                 if r.status >= 500:
                     try:
@@ -1203,7 +1199,7 @@ def check_category_importance(config: Config, subcategory: str):
 
 
 def is_sub_category_enabled(config: Config, subcategory: str):
-    if subcategory not in categories:
+    if subcategory not in categories:  # pragma: no cover
         if not settings.is_prod:
             logging.error(
                 "Subcategory is not defined: %s",
@@ -2478,7 +2474,7 @@ def literal_match(
 # want to server to run app.py in the folder app as main app, port=8000 is defaut port for the fast api
 # reload=True is debag mode in Flask is on, to set =False, when deploy the app to the production
 # might be added host="0.0.0.0"
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     # If this is being ran directly as a script, run an internal uvicorn server
     # to service API requests
     uvicorn.run(app, host="0.0.0.0", port=8000, log_level=settings.logging_config_level)
