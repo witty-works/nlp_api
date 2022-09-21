@@ -1,4 +1,5 @@
 False_positives
+Abdichterin/Abdichter
 Abdichterinnen und Abdichter
 Abgeordnete/Abgeordneter
 Administratorin/Administrator
@@ -20,6 +21,8 @@ Athletin/Athlet
 Athletinnen und Athleten
 Auditorin/Auditor
 Auditorinnen und Auditoren
+Aufsteigerin/Aufsteiger
+Aufsteigerinnen und Aufsteiger
 Auszubildende/Auszubildender
 Automatikerin/Automatiker
 Automatikerinnen und Automatiker
@@ -66,6 +69,7 @@ Dienstleisterinnen und Dienstleister
 Direktorin/Direktor
 Direktorinnen und Direktoren
 Disponentin/Disponent
+Diätköchin/Diätkoch
 Drogistin/Drogist
 Druckerin/Drucker
 Druckerinnen und Drucker
@@ -109,6 +113,8 @@ Geschäftspartnerin/Geschäftspartner
 Geschäftspartnerinnen und Geschäftspartner
 Gestalterin/Gestalter
 Gestalterinnen und Gestalter
+Gewinnerin/Gewinner
+Gewinnerinnen und Gewinner
 Gipserin/Gipser
 Gipserinnen und Gipser
 Glaserin/Glaser
@@ -125,7 +131,12 @@ Gußformerin/Gußformer
 Gußformerinnen und Gußformer
 Gärtnerin/Gärtner
 Gärtnerinnen und Gärtner
+Göttin/Gott
+Hackerin/Hacker
+Hackerinnen und Hacker
 Hauerin/Hauer
+Heldin/Held
+Heldinnen und Helden
 Hörsystemakustikerin/Hörsystemakustiker
 Hörsystemakustikerinnen und Hörsystemakustiker
 Industriekauffrau/Industriekaufmann
@@ -168,6 +179,7 @@ Kundin/Kunde
 Kundinnen und Kunden
 Köchin/Koch
 Köchinnen und Köche
+Könnerin/Könner
 Küferin/Küfer
 Küferinnen und Küfer
 Laborantin/Laborant
@@ -195,6 +207,8 @@ Malerin/Maler
 Malerinnen und Maler
 Managerin/Manager
 Managerinnen und Manager
+Marktführerin/Marktführer
+Marktführerinnen und Marktführer
 Marmoristin/Marmorist
 Marmoristinnen und Marmorist
 Matrosin/Matrose
@@ -212,6 +226,7 @@ Meinungsbildnerinnen und Meinungsbildner
 Meisterin/Meister
 Meisterinnen und Meister
 Mentorin/Mentor
+Migrantin/Migrant
 Mitarbeiterin/Mitarbeiter
 Mitarbeiterinnen und Mitarbeiter
 Mitkonkurrentin/Mitkonkurrent
@@ -242,6 +257,8 @@ Parlamentarierin/Parlamentarier
 Parlamentarierinnen und Parlamentarier
 Partnerin/Partner
 Partnerinnen und Partner
+Performerin/Performer
+Performerinnen und Performer
 Personalreferentin/Personalreferent
 Pferdewartin/Pferdewart
 Pferdewirtin/Pferdewirt
@@ -250,6 +267,8 @@ Pflegerinnen und Pfleger
 Pflästererin/Pflästerer
 Pflästererinnen und Pflästerer
 Physiklaborantin/Physiklaborant
+Pionierin/Pioniere
+Pionierinnen und Pioniere
 Planerin/Planer
 Planerinnen und Planer
 Plattenlegerin/Plattenleger
@@ -305,6 +324,8 @@ Spenglerin/Spengler
 Spenglerinnen und Spengler
 Spezialistin/Spezialist
 Spezialistinnen und Spezialisten
+Spitzenreiterin und Spitzenreiter
+Spitzenreiterin/Spitzenreiter
 Steinmetzin/Steinmetz
 Steinsetzerin/Steinsetzer
 Steinsetzerinnen und Steinsetzer
@@ -313,20 +334,24 @@ Studentinnen und Studenten
 Supporterin/Supporter
 Sägerin/Säger
 Sägerinnen und Säger
+Technikerin/Techniker
 Technikerinnen und Techniker
 Technologin/Technologe
 Teilnehmerin/Teilnehmer
 Teilnehmerinnen und Teilnehmer
 Telematikerin/Telematiker
 Telematikerinnen und Telematiker
+Testerin/Tester
 Testerinnen und Tester
 Theatermalerin/Theatermaler
 Theatermalerinnen und Theatermaler
 Torjägerin/Torjäger
+Torjägerinnen und Torjäger
 Torschützenkönigin/Torschützenkönig
 Trainerin/Trainer
 Tänzerin/Tänzer
 Tänzerinnen und Tänzer
+Userin/User
 Userinnen und User
 Verfechterin/Verfechter
 Verfechterinnen und Verfechter
@@ -348,6 +373,8 @@ Wagenmeisterinnen und Wagenmeister
 Wagnerin/Wagner
 Wagnerinnen und Wagner
 Werkerin/Werker
+Wettkämpferin/Wettkämpfer
+Wettkämpferinnen und Wettkämpfer
 Winzerin/Winzer
 Winzerinnen und Winzer
 Zeichnerin/Zeichner

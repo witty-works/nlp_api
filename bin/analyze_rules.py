@@ -69,7 +69,8 @@ def get_data_from_files(locale):
     base_directory = "training_data/" + locale + "/"
     training_data_paths = []
     for file in os.listdir(base_directory):
-        training_data_paths.append(base_directory + file)
+        if not file.startswith("."):
+            training_data_paths.append(base_directory + file)
     all_alternative_groups = []
     all_alternatives = []
     all_triggers = []
@@ -83,7 +84,14 @@ def get_data_from_files(locale):
                     value = row["Alt_split"]
                     value = value.replace("'", '"')
                     try:
-                        all_alternative_groups += json.loads(value)
+                        alternatives = json.loads(value)
+                        if (
+                            locale[0:2] == "de"
+                            and str(f).find("abbreviations.csv") != -1
+                        ):
+                            alternatives.pop(0)
+
+                        all_alternative_groups += alternatives
                     except ValueError:
                         continue
 
@@ -121,7 +129,7 @@ def generate_alternatives_english(all_alternatives):
         all_words.extend(word.split())
 
     for word in all_words:
-        for ch in ["(", ")", "^", ","]:
+        for ch in ["(", ")", "^", ",", "?", "!", ":", ";"]:
             if ch in word:
                 word = word.replace(ch, "")
         if "." in word:

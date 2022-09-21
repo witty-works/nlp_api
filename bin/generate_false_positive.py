@@ -152,7 +152,7 @@ def checked_false_positive_list(api_url, potential_false_positive):
     return false_positive_checked
 
 
-check_endpoint_url = args.URL + "check"
+check_endpoint_url = args.URL + "v1.1/check"
 false_positive_checked = checked_false_positive_list(
     check_endpoint_url, potential_false_positive
 )

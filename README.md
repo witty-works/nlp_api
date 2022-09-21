@@ -222,7 +222,20 @@ pipenv run python -m bin.analyze_rules -l en
 ```
 
 ## Update the ignore.txt
-1. Run the script to generate ignore words
+
+1. Download the current LanguageTool server
+```
+curl https://languagetool.org/download/LanguageTool-stable.zip
+```
+
+Unzip the file and move into the folder
+
+2. Run the LanguageTool server
+```
+java -noverify -cp languagetool-server.jar org.languagetool.server.HTTPServer --public --allow-origin "*"
+```
+
+3. Run the script to generate ignore words
 for German:
 ```
 pipenv run python -m bin.analyze_rules -p <path_to_ignore_file>
@@ -231,7 +244,12 @@ for English:
 ```
 pipenv run python -m bin.analyze_rules -l en -p <path_to_ignore_file>
 ```
-2. Copy `ignore.txt` to LanguageTool repository: https://github.com/witty-works/languagetool
+
+For example:
+```
+pipenv run python -m bin.analyze_rules -l en -p ../languagetool/ignored_words/English/ignore.txt
+pipenv run python -m bin.analyze_rules -l de -p ../languagetool/ignored_words/German/ignore.txt
+```
 
 ## Update the false positive list 
 ```
