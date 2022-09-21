@@ -1233,7 +1233,7 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
         )
 
     if is_sub_category_enabled(config, "openly_discriminating"):
-        list_full += rules_based_words_phrase_matcher_de(
+        list_full += rules_based_words_phrase_matcher(
             version,
             config,
             lang,
@@ -1246,7 +1246,7 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
         )
 
     if is_sub_category_enabled(config, "gendered"):
-        list_full += rules_based_words_phrase_matcher_de(
+        list_full += rules_based_words_phrase_matcher(
             version,
             config,
             lang,
@@ -1308,7 +1308,7 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
         )
 
     if is_sub_category_enabled(config, "communal"):
-        list_full += rules_based_words_phrase_matcher_de(
+        list_full += rules_based_words_phrase_matcher(
             version,
             config,
             lang,
@@ -1318,11 +1318,12 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             None,
             [],
             "inclusive",
+            [],
             "communal",
         )
 
     if is_sub_category_enabled(config, "d_and_i"):
-        list_full += rules_based_words_phrase_matcher_de(
+        list_full += rules_based_words_phrase_matcher(
             version,
             config,
             lang,
@@ -1332,6 +1333,7 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             None,
             rules["de-DE"]["df_terms_d_and_i_words"],
             "inclusive",
+            [],
             "d_and_i",
         )
 
@@ -1435,45 +1437,45 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
         )
 
     if is_sub_category_enabled(config, "openly_discriminating"):
-        list_full += rules_based_words_phrase_matcher_en(
+        list_full += rules_based_words_phrase_matcher(
             version,
             config,
             lang,
             text,
             tokens,
-            matches_false,
             words_data_en["od"],
             sentences_data_en["od"],
             rules[lang.locale]["df_open_dis_sentence"],
             "openly_discriminating",
+            matches_false,
         )
 
     if is_sub_category_enabled(config, "gendered"):
         if config.singular_they == SingularTheyType.ALL_PRONOUNS:
-            list_full += rules_based_words_phrase_matcher_en(
+            list_full += rules_based_words_phrase_matcher(
                 version,
                 config,
                 lang,
                 text,
                 tokens,
-                matches_false,
                 words_data_en["ge-singular-they"],
                 sentences_data_en["ge"],
                 rules[lang.locale]["df_gendered_sentence"],
                 "gendered",
+                matches_false,
             )
         else:
-            list_full += rules_based_words_phrase_matcher_en(
+            list_full += rules_based_words_phrase_matcher(
                 version,
                 config,
                 lang,
                 text,
                 tokens,
-                matches_false,
                 words_data_en["ge"],
                 sentences_data_en["ge"],
                 rules[lang.locale]["df_gendered_sentence"],
                 "gendered",
+                matches_false,
             )
         list_full += word_noun(
             version,
@@ -1487,45 +1489,45 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
         )
 
     if is_sub_category_enabled(config, "inclusive"):
-        list_full += rules_based_words_phrase_matcher_en(
+        list_full += rules_based_words_phrase_matcher(
             version,
             config,
             lang,
             text,
             tokens,
-            matches_false,
             inclusive_words_data_en,
             inclusive_sentences_data_en,
             rules[lang.locale]["df_inclusive_sentence"],
             "inclusive",
+            matches_false,
         )
 
     if is_sub_category_enabled(config, "style"):
-        list_full += rules_based_words_phrase_matcher_en(
+        list_full += rules_based_words_phrase_matcher(
             version,
             config,
             lang,
             text,
             tokens,
-            matches_false,
             words_data_en["style"],
             sentences_data_en["style"],
             rules[lang.locale]["df_style_sentence"],
             "style",
+            matches_false,
         )
 
     if is_sub_category_enabled(config, "unconscious_bias"):
-        list_full += rules_based_words_phrase_matcher_en(
+        list_full += rules_based_words_phrase_matcher(
             version,
             config,
             lang,
             text,
             tokens,
-            matches_false,
             words_data_en["bias"],
             sentences_data_en["bias"],
             rules[lang.locale]["df_ub_sentence"],
             "unconscious_bias",
+            matches_false,
         ) + word_noun(
             version,
             config,
@@ -2160,7 +2162,7 @@ def word_noun(
     tokens,
     words_data,
     category,
-    matches_false=[],
+    matches_false=None,
 ):
     list_tokens = []
 
@@ -2215,72 +2217,11 @@ def word_noun(
     return list_tokens
 
 
-# Unified function for rules and sentence false positives
-
-# Unified function German
-def rules_based_words_phrase_matcher_de(
-    version: float,
-    config: Config,
-    lang,
-    full_text,
-    tokens,
-    words_data,
-    sentences_data,
-    df_sentence,
-    category,
-    fallback_subcategory=None,
-):
-    list_tokens = []
-
-    alternative = None
-    subcategory = fallback_subcategory
-
-    for token in tokens:
-        for word, word_type, *data in words_data:
-            if fetch_lemma_lower_cased(token, lang) == word and check_token_type(
-                token, lang, word_type, True
-            ):
-                if isinstance(data, list):
-                    if len(data) >= 1:
-                        alternative = alternatives_declension(token, lang, data[0])
-                    if len(data) >= 2:
-                        subcategory = data[1]
-
-                list_tokens.append(
-                    ResultOut.factory(
-                        version,
-                        config,
-                        lang,
-                        token.text,
-                        full_text,
-                        category,
-                        subcategory,
-                        token.idx,
-                        token.idx + len(token.text),
-                        alternative,
-                    )
-                )
-
-    if isinstance(df_sentence, pd.DataFrame):
-        list_tokens += sentences_matcher(
-            version,
-            config,
-            lang,
-            full_text,
-            tokens,
-            sentences_data,
-            list(df_sentence["Lemma"]),
-            category,
-            fallback_subcategory,
-        )
-
-    return list_tokens
-
-
-# function English
-
 # matcher to false positives
 def is_false_positive_match(list_false_positive, tokens, token):
+    if list_false_positive == None:
+        return False
+
     for match_id, start, end in list_false_positive:
         span_false = tokens[start:end]
         if token.idx in range(span_false.start_char, span_false.end_char):
@@ -2363,20 +2304,23 @@ def false_pattern_match(tokens):
     return matcher(tokens)
 
 
-def rules_based_words_phrase_matcher_en(
+def rules_based_words_phrase_matcher(
     version: float,
     config: Config,
     lang,
     full_text,
     tokens,
-    matches_false,
     words_data,
     sentences_data,
     df_sentence,
     category,
+    matches_false=None,
+    fallback_subcategory=None,
 ):
     list_tokens = []
+
     alternative = None
+    subcategory = fallback_subcategory
 
     for token in tokens:
         for word, word_type, *data in words_data:
@@ -2385,12 +2329,18 @@ def rules_based_words_phrase_matcher_en(
                 and check_token_type(token, lang, word_type, True)
                 and is_false_positive_match(matches_false, tokens, token) == False
             ):
-                if len(data) > 1:
-                    alternative = ing_ify_alternatives(token, data[0])
-                    alternative = alternatives_declension(token, lang, alternative)
-                    subcategory = data[1]
-                else:
-                    subcategory = data[0]
+                if lang.lang == "en":
+                    if len(data) > 1:
+                        alternative = ing_ify_alternatives(token, data[0])
+                        alternative = alternatives_declension(token, lang, alternative)
+                        subcategory = data[1]
+                    else:
+                        subcategory = data[0]
+                elif lang.lang == "de":
+                    if len(data) >= 1:
+                        alternative = alternatives_declension(token, lang, data[0])
+                    if len(data) >= 2:
+                        subcategory = data[1]
 
                 list_tokens.append(
                     ResultOut.factory(
@@ -2407,16 +2357,20 @@ def rules_based_words_phrase_matcher_en(
                     )
                 )
 
-    return list_tokens + sentences_matcher(
-        version,
-        config,
-        lang,
-        full_text,
-        tokens,
-        sentences_data,
-        list(df_sentence["Lemma"]),
-        category,
-    )
+    if isinstance(df_sentence, pd.DataFrame):
+        list_tokens += sentences_matcher(
+            version,
+            config,
+            lang,
+            full_text,
+            tokens,
+            sentences_data,
+            list(df_sentence["Lemma"]),
+            category,
+            fallback_subcategory,
+        )
+
+    return list_tokens
 
 
 # english function to handle homonyms
