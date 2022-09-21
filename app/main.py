@@ -38,8 +38,6 @@ from slack_sdk.web.async_client import AsyncWebClient
 
 from typing import Optional, Union
 
-from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
-
 from spacy.tokens import Doc
 from spacy.matcher import PhraseMatcher, Matcher
 
@@ -211,15 +209,6 @@ app = FastAPI(
     openapi_url=None,
 )
 
-# Uncaught exceptions (like `raise Exception`) should propagate correctly
-# to Sentry's error handler
-# Middleware will also enable Sentry performance monitoring to work as expected
-try:
-    app.add_middleware(SentryAsgiMiddleware)
-except Exception:
-    # pass silently if the Sentry integration failed
-    pass
-
 
 security = HTTPBasic(auto_error=False)
 
@@ -299,8 +288,6 @@ async def exception(
     user_request_in: RequestIn,
     username: str = Depends(get_current_username),
 ):  # pragma: no cover
-    configure_sentry(request, user_request_in)
-
     raise HTTPException(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=user_request_in.text
     )
@@ -790,20 +777,6 @@ def is_number_list_empty(number, token, full_text):
     return False
 
 
-def configure_sentry(request: Request, user_request_in: RequestIn):
-    if sentry_sdk:  # pragma: no cover
-        sentry_sdk.transaction = request.scope["path"][1:]
-        sentry_sdk.set_user({"id": str(user_request_in.id)})
-
-        data = user_request_in.dict(exclude={"text"})
-        data["text"] = {
-            "length": len(user_request_in.text),
-        }
-        data["origin"] = request.headers.get("origin")
-
-        sentry_sdk.set_context("request", data)
-
-
 def filter_config(config):
     return {k: v for (k, v) in config.items() if v != "" and v is not None and v != []}
 
@@ -948,8 +921,6 @@ async def check(
     if version != 1.1 and version != 2.0:
         response.status_code = status.HTTP_400_BAD_REQUEST
         return Result.factory("Version not supported: " + str(version))
-
-    configure_sentry(request, user_request_in)
 
     user_email = get_user(request)
     if version >= 2.0 and not user_email:
