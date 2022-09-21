@@ -84,7 +84,14 @@ def get_data_from_files(locale):
                     value = row["Alt_split"]
                     value = value.replace("'", '"')
                     try:
-                        all_alternative_groups += json.loads(value)
+                        alternatives = json.loads(value)
+                        if (
+                            locale[0:2] == "de"
+                            and str(f).find("abbreviations.csv") != -1
+                        ):
+                            alternatives.pop(0)
+
+                        all_alternative_groups += alternatives
                     except ValueError:
                         continue
 
