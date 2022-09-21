@@ -1087,6 +1087,93 @@ def fetch_tokens(lang: Language, text: str):
     return model[lang.lang](text.rstrip().replace("\n", " "))
 
 
+# matcher to false positives
+def is_false_positive_match(list_false_positive, tokens, token):
+    if list_false_positive == None:
+        return False
+
+    for match_id, start, end in list_false_positive:
+        span_false = tokens[start:end]
+        if token.idx in range(span_false.start_char, span_false.end_char):
+            return True
+
+    return False
+
+
+# create false positives patterns based on false positives column
+def false_pattern_match(tokens):
+    # print ("Start:", tokens, [token.pos_ for token in tokens])
+    # list_false_positives = []
+
+    matcher = Matcher(model["en"].vocab)
+
+    # Define a list with nested dictionaries that contains the pattern to be matched
+    # pronoun_verb = [{'POS': 'PRON'}, {'POS': 'VERB'}]
+
+    # patterns for false positives
+
+    # master of + noun
+    pattern_master = [
+        [
+            {"LOWER": "master"},
+            {"LEMMA": "of"},
+            {"POS": {"IN": ["PRON", "NOUN", "PROPN"]}},
+        ],
+        [
+            {"LOWER": "masters"},
+            {"LEMMA": "of"},
+            {"POS": {"IN": ["PRON", "NOUN", "PROPN"]}},
+        ],
+    ]
+    matcher.add("FalsePositivesList", pattern_master)
+
+    # lead+someone(optional)+prepostion(on, down, up, to, away, back, along)
+    pattern_lead_prepos = [
+        [
+            {
+                "LEMMA": "lead",
+                "POS": "VERB",
+            },
+            {"POS": {"IN": ["PRON", "NOUN", "PROPN"]}, "OP": "?"},
+            {
+                "LEMMA": {
+                    "IN": [
+                        "on",
+                        "down",
+                        "up",
+                        "to",
+                        "away",
+                        "back",
+                        "along",
+                        "with",
+                        "off",
+                    ]
+                }
+            },
+        ]
+    ]
+    matcher.add("FalsePositivesList", pattern_lead_prepos)
+
+    # lead a (charmed, busy, quiet, normal, ...) life','lead your (my, his, her, their, our, ...) life'
+    pattern_lead_life = [
+        [
+            {"LEMMA": "lead", "POS": "VERB"},
+            {"POS": "DET", "OP": "?"},
+            {"POS": {"IN": ["ADJ", "PRON"]}, "OP": "?"},
+            {"LOWER": "life"},
+        ]
+    ]
+    matcher.add("FalsePositivesList", pattern_lead_life)
+
+    # need to
+    pattern_need_to = [
+        [{"LEMMA": "need", "POS": "VERB"}, {"LEMMA": {"IN": ["to", "for"]}}]
+    ]
+    matcher.add("FalsePositivesList", pattern_need_to)
+
+    return matcher(tokens)
+
+
 def fetch_false_positive_matcher(tokens):
     # create false positives list
     phrase_matches_false = fetch_matches(tokens, list_false_column)
@@ -1640,6 +1727,17 @@ def add_declension(lang, text, ending):
     return text + ending
 
 
+def is_conjunction(full_text, start=0):
+    if full_text in ["und", "oder", "and", "or"]:
+        return True
+
+    preceeding_text = full_text[max(0, start - 5) : start]
+    return (
+        re.search(r"^ *$", preceeding_text) != None
+        or re.search(r"[.!?:,]\s*$", preceeding_text, re.MULTILINE) != None
+    )
+
+
 def alternative_declension(text, token_type, ending, lang, alternative):
     if ResultOut.isInspirationAlternative(text, alternative):
         return alternative
@@ -1717,49 +1815,6 @@ def alternatives_declension(token, lang, alternatives):
     return alternatives
 
 
-"""Function to catch ending in German Denom"""
-
-
-def gendered_denom_end(
-    version: float,
-    config: Config,
-    lang,
-    full_text,
-    category,
-    subcategory,
-    endings,
-    german_gender_ending=None,
-):
-    list_ending = []
-
-    if not german_gender_ending:
-        alternative = None
-
-    for item, regex in endings.items():
-        matches = re.finditer(r"\s(\S+)(" + regex + ")", full_text)
-        for span in matches:
-            if type(span) == re.Match:
-                if german_gender_ending:
-                    alternative = [span.group(1) + german_gender_ending]
-
-                list_ending.append(
-                    ResultOut.factory(
-                        version,
-                        config,
-                        lang,
-                        span.group(1) + span.group(2),
-                        full_text,
-                        category,
-                        subcategory,
-                        span.start() + 1,  # remove extra \S character
-                        span.end(),
-                        alternative,
-                    )
-                )
-
-    return list_ending
-
-
 def plural_or_singular_en(
     token,
     token_morph_number,
@@ -1789,6 +1844,127 @@ def plural_or_singular_alternatives_de(
         return alternative_plur
 
     return None
+
+
+def ignore_binary_inclusive_gendered_denom_analysis_de(
+    lang,
+    tokens,
+    false_positives,
+):
+    matches = fetch_matches(tokens, false_positives)
+    if matches.__len__() > 0:
+        old_start = 0
+        rest_text = []
+
+        for match_id, start, end in matches:
+            part = tokens[old_start:start]
+            rest_text.append(part.text)
+            old_start = end
+
+        docs = list(model[lang.lang].pipe(rest_text))
+        tokens = Doc.from_docs(docs)
+
+    return tokens
+
+
+def match_binary_inclusive_gendered_denom_analysis_de(
+    config: Config, false_positives, full_text, token, category, subcategory
+):
+    text = token.text
+    start = token.idx
+    if not ResultOut.genderedRolesFormatBinary(config.gendered_roles_format):
+        for false_positive in false_positives:
+            if not false_positive.endswith(text):
+                continue
+
+            new_start = start - len(false_positive.removesuffix(text))
+            if false_positive == full_text[new_start : new_start + len(false_positive)]:
+                start = new_start
+                text = false_positive
+
+                subcategory = "gendered_denominations_ending"
+                category = categories[subcategory]["category"]
+                break
+
+    return text, start, category, subcategory
+
+
+def find_article(tokens, i):
+    matches = 0
+    article_text = tokens[i - 1].text.lower()
+    gender = get_gender_of_word(tokens[i].text.lower())
+    if gender["definite_article"] == None:
+        return None, None, None, None, None
+
+    for masculine, feminine, neuter, plural, alternative in articles:
+        if (
+            (gender["definite_article"] == "der" and article_text == masculine)
+            or (gender["definite_article"] == "die" and article_text == feminine)
+            or (gender["definite_article"] == "das" and article_text == neuter)
+        ):
+            match_masculine = masculine
+            match_feminine = feminine
+            match_neuter = neuter
+            match_plural = plural
+            match_alternative = alternative
+            matches += 1
+            if matches > 1:
+                break
+
+    if matches == 1:
+        return (
+            match_masculine,
+            match_feminine,
+            match_neuter,
+            match_plural,
+            match_alternative,
+        )
+
+    return None, None, None, None, None
+
+
+def fetch_alternatives_with_article(tokens, i, alternatives):
+    alternatives_with_article = []
+    (
+        masculine,
+        feminine,
+        neuter,
+        plural,
+        alternative_for_article,
+    ) = find_article(tokens, i)
+
+    if alternative_for_article == None:
+        return None
+
+    # also detect if its a person or an institution
+    # in the later case do not offer the Gender-star options
+    # and use subcategory "misgendering_institutions"
+    for alternative in alternatives:
+        if "~" in alternative:
+            article_alternative = alternative_for_article
+        else:
+            if "---" in alternative:
+                (
+                    alternative,
+                    alternative_context,
+                ) = alternative.split("---")
+                alternative = alternative.strip()
+
+            words = alternative.split()
+            gender = get_gender_of_word(words[-1])
+
+            if gender["definite_article"] == "der":
+                article_alternative = masculine
+            elif gender["definite_article"] == "das":
+                article_alternative = neuter
+            elif gender["definite_article"] == "die" or alternative.endswith("in"):
+                article_alternative = feminine
+            else:
+                article_alternative = tokens[i - 1].text
+
+        alternatives_with_article.append(article_alternative + " " + alternative)
+
+    return alternatives_with_article
 
 
 def sentences_matcher(
@@ -1851,8 +2027,44 @@ def sentences_matcher(
     return list_tokens
 
 
-"""Function to handle dependecies of the adjectives."""
-# this function agentic language & related false positives
+def gendered_denom_end(
+    version: float,
+    config: Config,
+    lang,
+    full_text,
+    category,
+    subcategory,
+    endings,
+    german_gender_ending=None,
+):
+    list_ending = []
+
+    if not german_gender_ending:
+        alternative = None
+
+    for item, regex in endings.items():
+        matches = re.finditer(r"\s(\S+)(" + regex + ")", full_text)
+        for span in matches:
+            if type(span) == re.Match:
+                if german_gender_ending:
+                    alternative = [span.group(1) + german_gender_ending]
+
+                list_ending.append(
+                    ResultOut.factory(
+                        version,
+                        config,
+                        lang,
+                        span.group(1) + span.group(2),
+                        full_text,
+                        category,
+                        subcategory,
+                        span.start() + 1,  # remove extra \S character
+                        span.end(),
+                        alternative,
+                    )
+                )
+
+    return list_ending
 
 
 def ub_words_phrase_matcher_de(
@@ -1900,125 +2112,6 @@ def ub_words_phrase_matcher_de(
         list(df_sentence["Lemma"]),
         category,
     )
-
-
-def ignore_binary_inclusive_gendered_denom_analysis_de(
-    lang,
-    tokens,
-    false_positives,
-):
-    matches = fetch_matches(tokens, false_positives)
-    if matches.__len__() > 0:
-        old_start = 0
-        rest_text = []
-
-        for match_id, start, end in matches:
-            part = tokens[old_start:start]
-            rest_text.append(part.text)
-            old_start = end
-
-        docs = list(model[lang.lang].pipe(rest_text))
-        tokens = Doc.from_docs(docs)
-
-    return tokens
-
-
-def match_binary_inclusive_gendered_denom_analysis_de(
-    config: Config, false_positives, full_text, token, category, subcategory
-):
-    text = token.text
-    start = token.idx
-    if not ResultOut.genderedRolesFormatBinary(config.gendered_roles_format):
-        for false_positive in false_positives:
-            if not false_positive.endswith(text):
-                continue
-
-            new_start = start - len(false_positive.removesuffix(text))
-            if false_positive == full_text[new_start : new_start + len(false_positive)]:
-                start = new_start
-                text = false_positive
-
-                subcategory = "gendered_denominations_ending"
-                category = categories[subcategory]["category"]
-                break
-
-    return text, start, category, subcategory
-
-
-def find_article(tokens, i):
-    matches = 0
-    article_text = tokens[i - 1].text.lower()
-    gender = get_gender_of_word(tokens[i].text.lower())
-    if gender["definite_article"] != None:
-        for masculine, feminine, neuter, plural, alternative in articles:
-            if (
-                (gender["definite_article"] == "der" and article_text == masculine)
-                or (gender["definite_article"] == "die" and article_text == feminine)
-                or (gender["definite_article"] == "das" and article_text == neuter)
-            ):
-                match_masculine = masculine
-                match_feminine = feminine
-                match_neuter = neuter
-                match_plural = plural
-                match_alternative = alternative
-                matches += 1
-                if matches > 1:
-                    break
-
-        if matches == 1:
-            return (
-                match_masculine,
-                match_feminine,
-                match_neuter,
-                match_plural,
-                match_alternative,
-            )
-
-    return None, None, None, None, None
-
-
-def fetch_alternatives_with_article(tokens, i, alternatives):
-    alternatives_with_article = []
-    (
-        masculine,
-        feminine,
-        neuter,
-        plural,
-        alternative_for_article,
-    ) = find_article(tokens, i)
-
-    if alternative_for_article == None:
-        return None
-
-    # also detect if its a person or an institution
-    # in the later case do not offer the Gender-star options
-    # and use subcategory "misgendering_institutions"
-    for alternative in alternatives:
-        if "~" in alternative:
-            article_alternative = alternative_for_article
-        else:
-            if "---" in alternative:
-                (
-                    alternative,
-                    alternative_context,
-                ) = alternative.split("---")
-                alternative = alternative.strip()
-
-            words = alternative.split()
-            gender = get_gender_of_word(words[-1])
-
-            if gender["definite_article"] == "der":
-                article_alternative = masculine
-            elif gender["definite_article"] == "das":
-                article_alternative = neuter
-            elif gender["definite_article"] == "die" or alternative.endswith("in"):
-                article_alternative = feminine
-            else:
-                article_alternative = tokens[i - 1].text
-
-        alternatives_with_article.append(article_alternative + " " + alternative)
-
-    return alternatives_with_article
 
 
 def gendered_denom_analysis_de(
@@ -2101,18 +2194,6 @@ def gendered_denom_analysis_de(
                 )
 
     return list_tokens
-
-
-# Unified function for Empty words false positives and rules
-def is_conjunction(full_text, start=0):
-    if full_text in ["und", "oder", "and", "or"]:
-        return True
-
-    preceeding_text = full_text[max(0, start - 5) : start]
-    return (
-        re.search(r"^ *$", preceeding_text) != None
-        or re.search(r"[.!?:,]\s*$", preceeding_text, re.MULTILINE) != None
-    )
 
 
 def style_word_analysis_de(
@@ -2231,93 +2312,6 @@ def word_noun(
                 )
 
     return list_tokens
-
-
-# matcher to false positives
-def is_false_positive_match(list_false_positive, tokens, token):
-    if list_false_positive == None:
-        return False
-
-    for match_id, start, end in list_false_positive:
-        span_false = tokens[start:end]
-        if token.idx in range(span_false.start_char, span_false.end_char):
-            return True
-
-    return False
-
-
-# create false positives patterns based on false positives column
-def false_pattern_match(tokens):
-    # print ("Start:", tokens, [token.pos_ for token in tokens])
-    # list_false_positives = []
-
-    matcher = Matcher(model["en"].vocab)
-
-    # Define a list with nested dictionaries that contains the pattern to be matched
-    # pronoun_verb = [{'POS': 'PRON'}, {'POS': 'VERB'}]
-
-    # patterns for false positives
-
-    # master of + noun
-    pattern_master = [
-        [
-            {"LOWER": "master"},
-            {"LEMMA": "of"},
-            {"POS": {"IN": ["PRON", "NOUN", "PROPN"]}},
-        ],
-        [
-            {"LOWER": "masters"},
-            {"LEMMA": "of"},
-            {"POS": {"IN": ["PRON", "NOUN", "PROPN"]}},
-        ],
-    ]
-    matcher.add("FalsePositivesList", pattern_master)
-
-    # lead+someone(optional)+prepostion(on, down, up, to, away, back, along)
-    pattern_lead_prepos = [
-        [
-            {
-                "LEMMA": "lead",
-                "POS": "VERB",
-            },
-            {"POS": {"IN": ["PRON", "NOUN", "PROPN"]}, "OP": "?"},
-            {
-                "LEMMA": {
-                    "IN": [
-                        "on",
-                        "down",
-                        "up",
-                        "to",
-                        "away",
-                        "back",
-                        "along",
-                        "with",
-                        "off",
-                    ]
-                }
-            },
-        ]
-    ]
-    matcher.add("FalsePositivesList", pattern_lead_prepos)
-
-    # lead a (charmed, busy, quiet, normal, ...) life','lead your (my, his, her, their, our, ...) life'
-    pattern_lead_life = [
-        [
-            {"LEMMA": "lead", "POS": "VERB"},
-            {"POS": "DET", "OP": "?"},
-            {"POS": {"IN": ["ADJ", "PRON"]}, "OP": "?"},
-            {"LOWER": "life"},
-        ]
-    ]
-    matcher.add("FalsePositivesList", pattern_lead_life)
-
-    # need to
-    pattern_need_to = [
-        [{"LEMMA": "need", "POS": "VERB"}, {"LEMMA": {"IN": ["to", "for"]}}]
-    ]
-    matcher.add("FalsePositivesList", pattern_need_to)
-
-    return matcher(tokens)
 
 
 def rules_based_words_phrase_matcher(
