@@ -1184,18 +1184,13 @@ async def language_rules(
     return list_results
 
 
-# Function for all German rules
-def fetch_lemma_lower_cased(token):
+def fetch_lemma_lower_cased(token, lang):
     token_word = token.lemma_
 
-    return token_word.lower()
+    if lang.lang == "en" or not check_token_type(token, lang, "s"):
+        return token_word.lower()
 
-
-def fetch_lemma_non_noun_lower_cased(token, lang):
-    if not check_token_type(token, lang, "s"):
-        return fetch_lemma_lower_cased(token)
-
-    return token.lemma_
+    return token_word
 
 
 def check_category_importance(config: Config, subcategory: str):
@@ -1302,7 +1297,7 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             bias_sentences_data,
             rules["de-DE"]["df_ub_sentences"],
             "unconscious_bias",
-        ) + agentic_language_analysis_de(
+        ) + word_noun(
             version,
             config,
             lang,
@@ -1480,15 +1475,15 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
                 rules[lang.locale]["df_gendered_sentence"],
                 "gendered",
             )
-        list_full += gendered_en(
+        list_full += word_noun(
             version,
             config,
             lang,
             text,
             tokens,
-            matches_false,
             gendered_words_data_en["gendered"],
             "gendered",
+            matches_false,
         )
 
     if is_sub_category_enabled(config, "inclusive"):
@@ -1531,15 +1526,15 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
             sentences_data_en["bias"],
             rules[lang.locale]["df_ub_sentence"],
             "unconscious_bias",
-        ) + gendered_en(
+        ) + word_noun(
             version,
             config,
             lang,
             text,
             tokens,
-            matches_false,
             gendered_words_data_en["bias"],
             "unconscious_bias",
+            matches_false,
         )
     return list_full
 
@@ -1850,55 +1845,6 @@ def sentences_matcher(
 # this function agentic language & related false positives
 
 
-def agentic_language_analysis_de(
-    version: float,
-    config: Config,
-    lang,
-    full_text,
-    tokens,
-    words_data,
-    category,
-):
-    list_tokens = []
-
-    for token in tokens:
-        for (
-            word,
-            word_type,
-            alternative_sing,
-            alternative_plur,
-            subcategory,
-        ) in words_data:
-            if fetch_lemma_non_noun_lower_cased(token, lang) == word and check_token_type(
-                token, lang, word_type, True
-            ):
-                token_morph_number = token.morph.get("Number")
-                if is_number_list_empty(token_morph_number, token, full_text):
-                    continue
-
-                alternative = plural_or_singular_alternatives_de(
-                    token_morph_number, alternative_sing, alternative_plur
-                )
-
-                if alternative != None:
-                    list_tokens.append(
-                        ResultOut.factory(
-                            version,
-                            config,
-                            lang,
-                            token.text,
-                            full_text,
-                            category,
-                            subcategory,
-                            token.idx,
-                            token.idx + len(token.text),
-                            alternative,
-                        )
-                    )
-
-    return list_tokens
-
-
 def ub_words_phrase_matcher_de(
     version: float,
     config: Config,
@@ -1914,7 +1860,7 @@ def ub_words_phrase_matcher_de(
 
     for token in tokens:
         for word, word_type, alternative, subcategory in words_data:
-            if fetch_lemma_non_noun_lower_cased(token, lang) == word and check_token_type(
+            if fetch_lemma_lower_cased(token, lang) == word and check_token_type(
                 token, lang, word_type, True
             ):
                 alternative = alternatives_declension(token, lang, alternative)
@@ -2206,10 +2152,7 @@ def style_word_analysis_de(
     )
 
 
-# German function to show plural and singular forms of alternatives for nouns
-
-
-def word_noun_de(
+def word_noun(
     version: float,
     config: Config,
     lang,
@@ -2217,6 +2160,7 @@ def word_noun_de(
     tokens,
     words_data,
     category,
+    matches_false=[],
 ):
     list_tokens = []
 
@@ -2227,17 +2171,30 @@ def word_noun_de(
             alternative_sing,
             alternative_plur,
             subcategory,
+            *data,
         ) in words_data:
-            if fetch_lemma_non_noun_lower_cased(token, lang) == word and check_token_type(
-                token, lang, word_type, True
+            if (
+                fetch_lemma_lower_cased(token, lang) == word
+                and check_token_type(token, lang, word_type, True)
+                and is_false_positive_match(matches_false, tokens, token) == False
             ):
                 token_morph_number = token.morph.get("Number")
                 if is_number_list_empty(token_morph_number, token, full_text):
                     continue
 
-                alternative = plural_or_singular_alternatives_de(
-                    token_morph_number, alternative_sing, alternative_plur
-                )
+                if lang.lang == "de":
+                    alternative = plural_or_singular_alternatives_de(
+                        token_morph_number, alternative_sing, alternative_plur
+                    )
+                else:
+                    alternative, subcategory = plural_or_singular_en(
+                        token,
+                        token_morph_number,
+                        alternative_sing,
+                        alternative_plur,
+                        subcategory,
+                        data[0],
+                    )
 
                 if alternative != None:
                     list_tokens.append(
@@ -2280,7 +2237,7 @@ def rules_based_words_phrase_matcher_de(
 
     for token in tokens:
         for word, word_type, *data in words_data:
-            if fetch_lemma_non_noun_lower_cased(token, lang) == word and check_token_type(
+            if fetch_lemma_lower_cased(token, lang) == word and check_token_type(
                 token, lang, word_type, True
             ):
                 if isinstance(data, list):
@@ -2424,7 +2381,7 @@ def rules_based_words_phrase_matcher_en(
     for token in tokens:
         for word, word_type, *data in words_data:
             if (
-                fetch_lemma_lower_cased(token) == word
+                fetch_lemma_lower_cased(token, lang) == word
                 and check_token_type(token, lang, word_type, True)
                 and is_false_positive_match(matches_false, tokens, token) == False
             ):
@@ -2560,67 +2517,6 @@ def literal_match(
                         icon,
                     )
                 )
-
-    return list_tokens
-
-
-# english function to show plural and singular forms of alternatives for nouns
-
-
-def gendered_en(
-    version: float,
-    config: Config,
-    lang,
-    full_text,
-    tokens,
-    matches_false,
-    words_data,
-    category,
-):
-    list_tokens = []
-
-    for token in tokens:
-        for (
-            word,
-            word_type,
-            alternative_sing,
-            alternative_plur,
-            subcategory,
-            second_subcategory,
-        ) in words_data:
-            if (
-                fetch_lemma_lower_cased(token) == word
-                and check_token_type(token, lang, word_type, True)
-                and is_false_positive_match(matches_false, tokens, token) == False
-            ):
-                token_morph_number = token.morph.get("Number")
-                if is_number_list_empty(token_morph_number, token, full_text):
-                    continue
-
-                alternative, subcategory = plural_or_singular_en(
-                    token,
-                    token_morph_number,
-                    alternative_sing,
-                    alternative_plur,
-                    subcategory,
-                    second_subcategory,
-                )
-
-                if alternative != None:
-                    list_tokens.append(
-                        ResultOut.factory(
-                            version,
-                            config,
-                            lang,
-                            token.text,
-                            full_text,
-                            category,
-                            subcategory,
-                            token.idx,
-                            token.idx + len(token.text),
-                            alternative,
-                        )
-                    )
 
     return list_tokens
 
