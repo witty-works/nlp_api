@@ -1180,10 +1180,10 @@ async def language_rules(
     return list_results
 
 
-def fetch_lemma_lower_cased(token, lang):
+def fetch_lemma(token, lang, lower_case=True):
     token_word = token.lemma_
 
-    if lang.lang == "en" or not check_token_type(token, lang, "s"):
+    if lower_case and (lang.lang == "en" or not check_token_type(token, lang, "s")):
         return token_word.lower()
 
     return token_word
@@ -1537,6 +1537,16 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
     return list_full
 
 
+def is_word_match(
+    token, tokens, lang, word, word_type, matches_false=None, lower_case=True
+):
+    return (
+        fetch_lemma(token, lang, lower_case) == word
+        and check_token_type(token, lang, word_type, True)
+        and is_false_positive_match(matches_false, tokens, token) == False
+    )
+
+
 """Function to catch the words related to False Positive in the user query"""
 
 
@@ -1692,16 +1702,17 @@ def alternatives_declension(token, lang, alternatives):
             "es",
             "e",
         ]
+    else:
+        return alternatives
 
-    if endings:
-        for ending in endings:
-            if not token.lemma_.endswith(ending) and token.text.endswith(ending):
-                return [
-                    alternative_declension(
-                        token.text, token_type, ending, lang, alternative
-                    ).strip()
-                    for alternative in alternatives
-                ]
+    for ending in endings:
+        if not token.lemma_.endswith(ending) and token.text.endswith(ending):
+            return [
+                alternative_declension(
+                    token.text, token_type, ending, lang, alternative
+                ).strip()
+                for alternative in alternatives
+            ]
 
     return alternatives
 
@@ -1798,6 +1809,7 @@ def sentences_matcher(
     matches = fetch_matches(tokens, sentences_list)
     for match_id, start, end in matches:
         span = tokens[start:end]
+
         if sentences_data == None:
             list_tokens.append(
                 ResultOut.factory(
@@ -1858,25 +1870,25 @@ def ub_words_phrase_matcher_de(
 
     for token in tokens:
         for word, word_type, alternative, subcategory in words_data:
-            if fetch_lemma_lower_cased(token, lang) == word and check_token_type(
-                token, lang, word_type, True
-            ):
-                alternative = alternatives_declension(token, lang, alternative)
+            if not is_word_match(token, tokens, lang, word, word_type):
+                continue
 
-                list_tokens.append(
-                    ResultOut.factory(
-                        version,
-                        config,
-                        lang,
-                        token.text,
-                        full_text,
-                        category,
-                        subcategory,
-                        token.idx,
-                        token.idx + len(token.text),
-                        alternative,
-                    )
+            alternative = alternatives_declension(token, lang, alternative)
+
+            list_tokens.append(
+                ResultOut.factory(
+                    version,
+                    config,
+                    lang,
+                    token.text,
+                    full_text,
+                    category,
+                    subcategory,
+                    token.idx,
+                    token.idx + len(token.text),
+                    alternative,
                 )
+            )
 
     return list_tokens + sentences_matcher(
         version,
@@ -1965,6 +1977,50 @@ def find_article(tokens, i):
     return None, None, None, None, None
 
 
+def fetch_alternatives_with_article(tokens, i, alternatives):
+    alternatives_with_article = []
+    (
+        masculine,
+        feminine,
+        neuter,
+        plural,
+        alternative_for_article,
+    ) = find_article(tokens, i)
+
+    if alternative_for_article == None:
+        return None
+
+    # also detect if its a person or an institution
+    # in the later case do not offer the Gender-star options
+    # and use subcategory "misgendering_institutions"
+    for alternative in alternatives:
+        if "~" in alternative:
+            article_alternative = alternative_for_article
+        else:
+            if "---" in alternative:
+                (
+                    alternative,
+                    alternative_context,
+                ) = alternative.split("---")
+                alternative = alternative.strip()
+
+            words = alternative.split()
+            gender = get_gender_of_word(words[-1])
+
+            if gender["definite_article"] == "der":
+                article_alternative = masculine
+            elif gender["definite_article"] == "das":
+                article_alternative = neuter
+            elif gender["definite_article"] == "die" or alternative.endswith("in"):
+                article_alternative = feminine
+            else:
+                article_alternative = tokens[i - 1].text
+
+        alternatives_with_article.append(article_alternative + " " + alternative)
+
+    return alternatives_with_article
+
+
 def gendered_denom_analysis_de(
     version: float,
     config: Config,
@@ -2003,82 +2059,46 @@ def gendered_denom_analysis_de(
                         token_morph_number, alternatives_sing, alternatives_plur
                     )
 
-                if alternatives != None:
-                    (
-                        text,
-                        start,
-                        category,
-                        subcategory,
-                    ) = match_binary_inclusive_gendered_denom_analysis_de(
+                if alternatives == None:
+                    continue
+
+                (
+                    text,
+                    start,
+                    category,
+                    subcategory,
+                ) = match_binary_inclusive_gendered_denom_analysis_de(
+                    config,
+                    false_positives,
+                    full_text,
+                    tokens[i],
+                    category,
+                    subcategory,
+                )
+
+                if i > 0 and token_morph_number[0] == "Sing":
+                    alternatives_with_article = fetch_alternatives_with_article(
+                        tokens, i, alternatives
+                    )
+                    if alternatives_with_article != None:
+                        alternatives = alternatives_with_article
+                        start = tokens[i - 1].idx
+                        text = tokens[i - 1].text + " " + text
+
+                list_tokens.append(
+                    ResultOut.factory(
+                        version,
                         config,
-                        false_positives,
+                        lang,
+                        text,
                         full_text,
-                        tokens[i],
                         category,
                         subcategory,
+                        start,
+                        None,
+                        alternatives,
                     )
-
-                    if i > 0 and token_morph_number[0] == "Sing":
-                        alternatives_with_article = []
-                        (
-                            masculine,
-                            feminine,
-                            neuter,
-                            plural,
-                            alternative_for_article,
-                        ) = find_article(tokens, i)
-
-                        if alternative_for_article != None:
-                            # also detect if its a person or an institution
-                            # in the later case do not offer the Gender-star options
-                            # and use subcategory "misgendering_institutions"
-                            for alternative in alternatives:
-                                if "~" in alternative:
-                                    article_alternative = alternative_for_article
-                                else:
-                                    if "---" in alternative:
-                                        (
-                                            alternative,
-                                            alternative_context,
-                                        ) = alternative.split("---")
-                                        alternative = alternative.strip()
-
-                                    words = alternative.split()
-                                    gender = get_gender_of_word(words[-1])
-
-                                    if gender["definite_article"] == "der":
-                                        article_alternative = masculine
-                                    elif gender["definite_article"] == "das":
-                                        article_alternative = neuter
-                                    elif gender[
-                                        "definite_article"
-                                    ] == "die" or alternative.endswith("in"):
-                                        article_alternative = feminine
-                                    else:
-                                        article_alternative = tokens[i - 1].text
-
-                                alternatives_with_article.append(
-                                    article_alternative + " " + alternative
-                                )
-
-                            alternatives = alternatives_with_article
-                            start = tokens[i - 1].idx
-                            text = tokens[i - 1].text + " " + text
-
-                    list_tokens.append(
-                        ResultOut.factory(
-                            version,
-                            config,
-                            lang,
-                            text,
-                            full_text,
-                            category,
-                            subcategory,
-                            start,
-                            None,
-                            alternatives,
-                        )
-                    )
+                )
 
     return list_tokens
 
@@ -2120,23 +2140,25 @@ def style_word_analysis_de(
             continue
 
         for word, word_type, alternative, subcategory in words_data:
-            if token.lemma_ == word and check_token_type(token, lang, word_type, True):
-                alternative = alternatives_declension(token, lang, alternative)
+            if not is_word_match(token, tokens, lang, word, word_type, None, False):
+                continue
 
-                list_tokens.append(
-                    ResultOut.factory(
-                        version,
-                        config,
-                        lang,
-                        token.text,
-                        full_text,
-                        category,
-                        subcategory,
-                        token.idx,
-                        None,
-                        alternative,
-                    )
+            alternative = alternatives_declension(token, lang, alternative)
+
+            list_tokens.append(
+                ResultOut.factory(
+                    version,
+                    config,
+                    lang,
+                    token.text,
+                    full_text,
+                    category,
+                    subcategory,
+                    token.idx,
+                    None,
+                    alternative,
                 )
+            )
 
     return list_tokens + sentences_matcher(
         version,
@@ -2171,44 +2193,42 @@ def word_noun(
             subcategory,
             *data,
         ) in words_data:
-            if (
-                fetch_lemma_lower_cased(token, lang) == word
-                and check_token_type(token, lang, word_type, True)
-                and is_false_positive_match(matches_false, tokens, token) == False
-            ):
-                token_morph_number = token.morph.get("Number")
-                if is_number_list_empty(token_morph_number, token, full_text):
-                    continue
+            if not is_word_match(token, tokens, lang, word, word_type, matches_false):
+                continue
 
-                if lang.lang == "de":
-                    alternative = plural_or_singular_alternatives_de(
-                        token_morph_number, alternative_sing, alternative_plur
-                    )
-                else:
-                    alternative, subcategory = plural_or_singular_en(
-                        token,
-                        token_morph_number,
-                        alternative_sing,
-                        alternative_plur,
+            token_morph_number = token.morph.get("Number")
+            if is_number_list_empty(token_morph_number, token, full_text):
+                continue
+
+            if lang.lang == "de":
+                alternative = plural_or_singular_alternatives_de(
+                    token_morph_number, alternative_sing, alternative_plur
+                )
+            elif lang.lang == "en":
+                alternative, subcategory = plural_or_singular_en(
+                    token,
+                    token_morph_number,
+                    alternative_sing,
+                    alternative_plur,
+                    subcategory,
+                    data[0],
+                )
+
+            if alternative != None:
+                list_tokens.append(
+                    ResultOut.factory(
+                        version,
+                        config,
+                        lang,
+                        token.text,
+                        full_text,
+                        category,
                         subcategory,
-                        data[0],
+                        token.idx,
+                        token.idx + len(token.text),
+                        alternative,
                     )
-
-                if alternative != None:
-                    list_tokens.append(
-                        ResultOut.factory(
-                            version,
-                            config,
-                            lang,
-                            token.text,
-                            full_text,
-                            category,
-                            subcategory,
-                            token.idx,
-                            token.idx + len(token.text),
-                            alternative,
-                        )
-                    )
+                )
 
     return list_tokens
 
@@ -2320,38 +2340,36 @@ def rules_based_words_phrase_matcher(
 
     for token in tokens:
         for word, word_type, *data in words_data:
-            if (
-                fetch_lemma_lower_cased(token, lang) == word
-                and check_token_type(token, lang, word_type, True)
-                and is_false_positive_match(matches_false, tokens, token) == False
-            ):
-                if lang.lang == "en":
-                    if len(data) > 1:
-                        alternative = ing_ify_alternatives(token, data[0])
-                        alternative = alternatives_declension(token, lang, alternative)
-                        subcategory = data[1]
-                    else:
-                        subcategory = data[0]
-                elif lang.lang == "de":
-                    if len(data) >= 1:
-                        alternative = alternatives_declension(token, lang, data[0])
-                    if len(data) >= 2:
-                        subcategory = data[1]
+            if not is_word_match(token, tokens, lang, word, word_type, matches_false):
+                continue
 
-                list_tokens.append(
-                    ResultOut.factory(
-                        version,
-                        config,
-                        lang,
-                        token.text,
-                        full_text,
-                        category,
-                        subcategory,
-                        token.idx,
-                        token.idx + len(token.text),
-                        alternative,
-                    )
+            if lang.lang == "en":
+                if len(data) > 1:
+                    alternative = ing_ify_alternatives(token, data[0])
+                    alternative = alternatives_declension(token, lang, alternative)
+                    subcategory = data[1]
+                else:
+                    subcategory = data[0]
+            elif lang.lang == "de":
+                if len(data) >= 1:
+                    alternative = alternatives_declension(token, lang, data[0])
+                if len(data) >= 2:
+                    subcategory = data[1]
+
+            list_tokens.append(
+                ResultOut.factory(
+                    version,
+                    config,
+                    lang,
+                    token.text,
+                    full_text,
+                    category,
+                    subcategory,
+                    token.idx,
+                    token.idx + len(token.text),
+                    alternative,
                 )
+            )
 
     if isinstance(df_sentence, pd.DataFrame):
         list_tokens += sentences_matcher(
@@ -2386,27 +2404,27 @@ def homonyms_en(
             if not is_sub_category_enabled(config, subcategory):
                 continue
 
-            if (
-                token.lemma_ == word
-                and check_token_type(token, lang, word_type, True)
-                and is_false_positive_match(matches_false, tokens, token) == False
+            if not is_word_match(
+                token, tokens, lang, word, word_type, matches_false, False
             ):
-                alternative = ing_ify_alternatives(token, alternative)
+                continue
 
-                list_tokens.append(
-                    ResultOut.factory(
-                        version,
-                        config,
-                        lang,
-                        token.text,
-                        full_text,
-                        category,
-                        subcategory,
-                        token.idx,
-                        token.idx + len(token.text),
-                        alternative,
-                    )
+            alternative = ing_ify_alternatives(token, alternative)
+
+            list_tokens.append(
+                ResultOut.factory(
+                    version,
+                    config,
+                    lang,
+                    token.text,
+                    full_text,
+                    category,
+                    subcategory,
+                    token.idx,
+                    token.idx + len(token.text),
+                    alternative,
                 )
+            )
 
     return list_tokens
 
@@ -2433,40 +2451,42 @@ def literal_match(
             *explanation,
         ) in term_list:
             span = tokens[start:end]
-            if span.text == term:
-                url = None
-                icon = None
-                explanation_text = None
+            if span.text != term:
+                continue
 
-                if (
-                    isinstance(explanation, list)
-                    and len(explanation)
-                    and isinstance(explanation[0], dict)
-                ):
-                    explanation_text = (
-                        explanation[0]["text"] if "text" in explanation[0] else None
-                    )
-                    url = explanation[0]["url"] if "url" in explanation[0] else None
-                    icon = explanation[0]["icon"] if "icon" in explanation[0] else None
+            url = None
+            icon = None
+            explanation_text = None
 
-                list_tokens.append(
-                    ResultOut.factory(
-                        version,
-                        config,
-                        lang,
-                        span.text,
-                        full_text,
-                        category,
-                        subcategory,
-                        span.start_char,
-                        span.end_char,
-                        alternative,
-                        None,
-                        explanation_text,
-                        url,
-                        icon,
-                    )
+            if (
+                isinstance(explanation, list)
+                and len(explanation)
+                and isinstance(explanation[0], dict)
+            ):
+                explanation_text = (
+                    explanation[0]["text"] if "text" in explanation[0] else None
                 )
+                url = explanation[0]["url"] if "url" in explanation[0] else None
+                icon = explanation[0]["icon"] if "icon" in explanation[0] else None
+
+            list_tokens.append(
+                ResultOut.factory(
+                    version,
+                    config,
+                    lang,
+                    span.text,
+                    full_text,
+                    category,
+                    subcategory,
+                    span.start_char,
+                    span.end_char,
+                    alternative,
+                    None,
+                    explanation_text,
+                    url,
+                    icon,
+                )
+            )
 
     return list_tokens
 
