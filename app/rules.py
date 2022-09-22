@@ -8,6 +8,7 @@ rules = {
         "df_gender_ct": "gendered_noun_words.csv",
         "df_gender_no_noun_word": "gendered_no_noun_words.csv",
         "df_gendered_sentences": "gendered_sentences.csv",
+        "df_gendered_singular_they": "gendered_singular_they.csv",
         # load articles for gendered denom
         "df_articles": "articles.csv",
         # load style words
@@ -45,11 +46,11 @@ rules = {
         "df_gendered_no_noun_word": "gendered_no_noun_words.csv",
         "df_gendered_sentence": "gendered_sentences.csv",
         "df_gendered_noun_word": "gendered_noun_words.csv",
+        "df_gendered_singular_they": "gendered_singular_they.csv",
         # load unconscious_bias word (nouns with sing/plural, other words (nouns without sing/plur, verb, adj, adv)) and sentences en
         "df_ub_plur_word": "ub_plur_words.csv",
         "df_ub_no_plur_word": "ub_no_plur_words.csv",
         "df_ub_sentence": "ub_sentences.csv",
-        "df_gendered_singular_they": "gendered_singular_they.csv",
         # load homonyms
         "df_homonyms_words": "homonyms_words.csv",
         # load abbreviations

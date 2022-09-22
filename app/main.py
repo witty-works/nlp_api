@@ -1355,6 +1355,48 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             gender_words_data,
             false_positives.gender,
         )
+    if is_sub_category_enabled(config, "gendered"):
+        if config.singular_they == SingularTheyType.ALL_PRONOUNS:
+            list_full += rules_based_words_phrase_matcher(
+                version,
+                config,
+                lang,
+                text,
+                tokens,
+                gender_words_data_no_noun + bias_singular_they_alternatives,
+                gender_sentences_data,
+                rules["de-DE"]["df_gendered_sentences"],
+                "gendered"
+            )+ gendered_denom_analysis_de(
+                version,
+                config,
+                lang,
+                text,
+                tokens,
+                gender_words_data,
+                false_positives.gender,
+            )
+        else:
+            list_full += rules_based_words_phrase_matcher(
+                version,
+                config,
+                lang,
+                text,
+                tokens,
+                gender_words_data_no_noun,
+                gender_sentences_data,
+                rules["de-DE"]["df_gendered_sentences"],
+                "gendered",
+             )+ gendered_denom_analysis_de(
+                version,
+                config,
+                lang,
+                text,
+                tokens,
+                gender_words_data,
+                false_positives.gender,
+            )
+
 
     if is_sub_category_enabled(
         config, "gendered_denominations_ending"
