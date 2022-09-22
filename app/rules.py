@@ -49,7 +49,7 @@ rules = {
         "df_ub_plur_word": "ub_plur_words.csv",
         "df_ub_no_plur_word": "ub_no_plur_words.csv",
         "df_ub_sentence": "ub_sentences.csv",
-        "df_ub_singular_they": "ub_singular_they.csv",
+        "df_gendered_singular_they": "gendered_singular_they.csv",
         # load homonyms
         "df_homonyms_words": "homonyms_words.csv",
         # load abbreviations
@@ -522,8 +522,8 @@ bias_sentences_data_GB = list(
     )
 )
 
-df_bias_singular_they_US = rules["en-US"]["df_ub_singular_they"]
-df_bias_singular_they_GB = rules["en-GB"]["df_ub_singular_they"]
+df_bias_singular_they_US = rules["en-US"]["df_gendered_singular_they"]
+df_bias_singular_they_GB = rules["en-GB"]["df_gendered_singular_they"]
 # unconscious bias singular they: lemma + alternatives split + subcategory
 bias_singular_they_alternatives_US = list(
     zip(
