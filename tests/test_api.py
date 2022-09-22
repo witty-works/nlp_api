@@ -5,7 +5,7 @@ from fastapi.testclient import TestClient
 from app.main import (
     app,
     redis,
-    fetch_user_rules,
+    fetch_rules_for_request,
     is_number_list_empty,
 )
 from app.model import model
@@ -14,7 +14,6 @@ from app.models import (
     LangWithAutoType,
     RequestIn,
 )
-import copy
 
 client = TestClient(app)
 logging.basicConfig(
@@ -31,13 +30,7 @@ def get_dirs(path):
 def test_read_main():
     response = client.get("/", allow_redirects=False)
     assert response.status_code == 301
-    assert response.headers["Location"] == "https://www.witty.works/form"
-
-
-def test_read_form():
-    response = client.get("/form", allow_redirects=False)
-    assert response.status_code == 301
-    assert response.headers["Location"] == "https://www.witty.works/form"
+    assert response.headers["Location"] == "https://www.witty.works/editor"
 
 
 @pytest.mark.parametrize(
@@ -226,84 +219,6 @@ def test_1_1_authenticated_json(test_1_1_authenticated_dir, snapshot, set_redis)
     output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
     # Snapshot the return value.
     snapshot.snapshot_dir = test_1_1_authenticated_dir
-    snapshot.assert_match(output, "output.json")
-
-
-@pytest.fixture
-def set_redis_1_1():
-    organization_object = {
-        "users": ["test@gmail.com"],
-        "id": "test",
-        "name": "Tests Works",
-        "plan": "witty_teams",
-        "config": {
-            "store_context": {
-                "value": False,
-                "status": "force",
-            },
-            "preferred_variants": {
-                "value": ["en-GB"],
-                "status": "force",
-            },
-            "german_gender_ending": {
-                "value": "In",
-                "status": "force",
-            },
-            "gendered_roles_format": {
-                "value": "binary_gender",
-                "status": "force",
-            },
-            "inclusive": {"value": False, "status": "force"},
-            "orthography": {"value": True, "status": "force"},
-        },
-        "false_positives": [
-            "stark",
-            "starke",
-            "starkes",
-            "starker",
-            "Führungskraft",
-            "Führungskräfte",
-            "Führungskräften",
-        ],
-        "term_replacements": [
-            {
-                "term": "foo",
-                "alternatives": ["bar"],
-                "explanation": {
-                    "text": "better bar",
-                    "icon": "🥰",
-                    "url": "https://witty.works",
-                },
-                "gravity": 3,
-            }
-        ],
-    }
-
-    # Set a value
-    redis.set(organization_object["id"], json.dumps(organization_object))
-    redis.set("test@gmail.com", organization_object["id"])
-
-
-@pytest.mark.parametrize(
-    "test_1_1_authenticated_old_format_dir",
-    get_dirs("tests/test_1_1_authenticated_old_format"),
-)
-def test_1_1_authenticated_old_format_json(
-    test_1_1_authenticated_old_format_dir, snapshot, set_redis_1_1
-):
-    # Read input files from the case directory.
-    input_json = test_1_1_authenticated_old_format_dir.joinpath(
-        "input.json"
-    ).read_text()
-    # Call the tested endpoint.
-    response = client.post(
-        "/v1.1/check", json=json.loads(input_json), headers={"X-Auth": "test@gmail.com"}
-    )
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = test_1_1_authenticated_old_format_dir
     snapshot.assert_match(output, "output.json")
 
 
@@ -694,7 +609,7 @@ def test_disable_categories(test_disable_categories_dir, snapshot, set_redis):
 
 
 # test overwriting user configuration by organization forced rules
-def test_fetch_user_rules(event_loop, set_redis):
+def test_fetch_rules_for_request(event_loop, set_redis):
     request_data = {
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
         "config": {
@@ -707,7 +622,9 @@ def test_fetch_user_rules(event_loop, set_redis):
         },
     }
     test_request = RequestIn(**request_data)
-    event_loop.run_until_complete(fetch_user_rules(test_request, "test@gmail.com"))
+    event_loop.run_until_complete(
+        fetch_rules_for_request(test_request, "test@gmail.com")
+    )
     assert hasattr(test_request.config, "store_context")
     assert test_request.config.store_context == True
     assert test_request.config.preferred_variants == ["en-GB"]
@@ -731,7 +648,7 @@ def test_fetch_user_rules_suggestion(event_loop, set_redis):
     }
     test_request = RequestIn(**request_data)
     event_loop.run_until_complete(
-        fetch_user_rules(test_request, "non_existant@gmail.com")
+        fetch_rules_for_request(test_request, "non_existant@gmail.com")
     )
     assert test_request.config.store_context == True
     assert test_request.config.primary_language == "de-DE"
@@ -749,7 +666,9 @@ def test_set_organization_rules(event_loop, set_redis):
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
     }
     test_request = RequestIn(**request_data)
-    event_loop.run_until_complete(fetch_user_rules(test_request, "test@gmail.com"))
+    event_loop.run_until_complete(
+        fetch_rules_for_request(test_request, "test@gmail.com")
+    )
     assert test_request.config.store_context == True
     assert test_request.config.preferred_variants == ["en-GB"]
     assert test_request.config.german_gender_ending == "In"
@@ -766,7 +685,7 @@ def test_set_default_rules(event_loop):
     test_request = RequestIn(**request_data)
 
     event_loop.run_until_complete(
-        fetch_user_rules(test_request, "non_existant@gmail.com")
+        fetch_rules_for_request(test_request, "non_existant@gmail.com")
     )
     assert test_request.config.store_context == True
     assert test_request.config.primary_language == None
@@ -874,9 +793,9 @@ def test_store_get_delete_rules():
     response = client.get("/user/rules?email=" + user_request_data["email"])
     assert_rules(response, user_request_data)
 
-    # check user is missing cannot be deleted
+    # check user is missing can be deleted
     response = client.delete("/user/rules?email=foobar")
-    assert response.status_code == 404
+    assert response.status_code == 204
 
     # check user is deleted
     response = client.delete("/user/rules?email=" + user_request_data["email"])
@@ -965,9 +884,9 @@ def test_store_get_delete_rules():
     assert_rules(response, user_request_data)
     assert_rules(response, organization_request_data, "organization_")
 
-    # check organization missing cannot be deleted
+    # check organization missing can be deleted
     response = client.delete("/organization/rules?organization_id=foobar")
-    assert response.status_code == 404
+    assert response.status_code == 204
 
     # check organization deleted
     response = client.delete("/organization/rules?organization_id=TEST_organization")
