@@ -756,6 +756,32 @@ async def fetch_organization_rules_for_request(
     return rules
 
 
+def fetch_email_from_claims(claims):
+    try:  # pragma: no cover
+        if claims["aud"] != settings.aadb2c_client_id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="access token does not match client id",
+            )
+
+        if "email" in claims:
+            return claims["email"]
+
+        if "emails" in claims and len(claims["emails"]) > 0:
+            return claims["emails"][0]
+
+    except KeyError:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="access token does not map to email",
+        )
+
+    raise HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail="no email found in claim",
+    )
+
+
 def fetch_user(request: Request):
     if "authorization" in request.headers and request.headers[
         "authorization"
@@ -768,28 +794,7 @@ def fetch_user(request: Request):
                 status_code=status.HTTP_403_FORBIDDEN, detail="access token invalid"
             )
 
-        try:  # pragma: no cover
-            if claims["aud"] != settings.aadb2c_client_id:
-                raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEN,
-                    detail="access token does not match client id",
-                )
-
-            if "email" in claims:
-                return claims["email"]
-
-            if "emails" in claims and len(claims["emails"]) > 0:
-                return claims["emails"][0]
-
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="no email found in claim",
-            )
-        except KeyError:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="access token does not map to email",
-            )
+        return fetch_email_from_claims(claims)
 
     if settings.testing:
         if "x-auth" in request.headers:
@@ -1974,15 +1979,18 @@ def sentences_matcher(
     full_text,
     tokens,
     sentences_data,
-    sentences_list,
+    df_sentence,
     category,
     fallback_subcategory=None,
 ):
+    if not isinstance(df_sentence, list):
+        df_sentence = list(df_sentence["Lemma"])
+
     list_tokens = []
     alternative = None
     subcategory = fallback_subcategory
 
-    matches = fetch_matches(tokens, sentences_list)
+    matches = fetch_matches(tokens, df_sentence)
     for match_id, start, end in matches:
         span = tokens[start:end]
 
@@ -2001,28 +2009,30 @@ def sentences_matcher(
                     alternative,
                 )
             )
-        else:
-            for sentence, *data in sentences_data:
-                if span.text.lower() == sentence.lower():
-                    if len(data) >= 1:
-                        alternative = data[0]
-                    if len(data) >= 2:
-                        subcategory = data[1]
 
-                    list_tokens.append(
-                        ResultOut.factory(
-                            version,
-                            config,
-                            lang,
-                            span.text,
-                            full_text,
-                            category,
-                            subcategory,
-                            span.start_char,
-                            span.end_char,
-                            alternative,
-                        )
+            continue
+
+        for sentence, *data in sentences_data:
+            if span.text.lower() == sentence.lower():
+                if len(data) >= 1:
+                    alternative = data[0]
+                if len(data) >= 2:
+                    subcategory = data[1]
+
+                list_tokens.append(
+                    ResultOut.factory(
+                        version,
+                        config,
+                        lang,
+                        span.text,
+                        full_text,
+                        category,
+                        subcategory,
+                        span.start_char,
+                        span.end_char,
+                        alternative,
                     )
+                )
 
     return list_tokens
 
@@ -2109,7 +2119,7 @@ def ub_words_phrase_matcher_de(
         full_text,
         tokens,
         sentences_data,
-        list(df_sentence["Lemma"]),
+        df_sentence,
         category,
     )
 
@@ -2281,11 +2291,7 @@ def word_noun(
             if is_number_list_empty(token_morph_number, token, full_text):
                 continue
 
-            if lang.lang == "de":
-                alternative = plural_or_singular_alternatives_de(
-                    token_morph_number, alternative_sing, alternative_plur
-                )
-            elif lang.lang == "en":
+            if lang.lang == "en":
                 alternative, subcategory = plural_or_singular_en(
                     token,
                     token_morph_number,
@@ -2294,22 +2300,25 @@ def word_noun(
                     subcategory,
                     data[0],
                 )
-
-            if alternative != None:
-                list_tokens.append(
-                    ResultOut.factory(
-                        version,
-                        config,
-                        lang,
-                        token.text,
-                        full_text,
-                        category,
-                        subcategory,
-                        token.idx,
-                        token.idx + len(token.text),
-                        alternative,
-                    )
+            else:
+                alternative = plural_or_singular_alternatives_de(
+                    token_morph_number, alternative_sing, alternative_plur
                 )
+
+            list_tokens.append(
+                ResultOut.factory(
+                    version,
+                    config,
+                    lang,
+                    token.text,
+                    full_text,
+                    category,
+                    subcategory,
+                    token.idx,
+                    token.idx + len(token.text),
+                    alternative,
+                )
+            )
 
     return list_tokens
 
@@ -2337,18 +2346,17 @@ def rules_based_words_phrase_matcher(
             if not is_word_match(token, tokens, lang, word, word_type, matches_false):
                 continue
 
+            if len(data) > 1:
+                subcategory = data[1]
+
             if lang.lang == "en":
                 if len(data) > 1:
                     alternative = ing_ify_alternatives(token, data[0])
                     alternative = alternatives_declension(token, lang, alternative)
-                    subcategory = data[1]
                 else:
                     subcategory = data[0]
-            elif lang.lang == "de":
-                if len(data) >= 1:
-                    alternative = alternatives_declension(token, lang, data[0])
-                if len(data) >= 2:
-                    subcategory = data[1]
+            elif len(data) > 0:
+                alternative = alternatives_declension(token, lang, data[0])
 
             list_tokens.append(
                 ResultOut.factory(
@@ -2365,18 +2373,17 @@ def rules_based_words_phrase_matcher(
                 )
             )
 
-    if isinstance(df_sentence, pd.DataFrame):
-        list_tokens += sentences_matcher(
-            version,
-            config,
-            lang,
-            full_text,
-            tokens,
-            sentences_data,
-            list(df_sentence["Lemma"]),
-            category,
-            fallback_subcategory,
-        )
+    list_tokens += sentences_matcher(
+        version,
+        config,
+        lang,
+        full_text,
+        tokens,
+        sentences_data,
+        df_sentence,
+        category,
+        fallback_subcategory,
+    )
 
     return list_tokens
 

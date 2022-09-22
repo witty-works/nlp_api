@@ -70,9 +70,7 @@ rules["de-DE"]["terms_style"] = list(rules["de-DE"]["df_style_sentences"]["Lemma
 
 # list of "d_and_i_words word" sentences
 rules["de-DE"]["df_terms_d_and_i_words"] = list(
-    zip(
-        rules["de-DE"]["df_d_and_i_words_sentences"]["Lemma"],
-    )
+    rules["de-DE"]["df_d_and_i_words_sentences"]["Lemma"],
 )
 
 # list of "d_and_i_words word" sentences
