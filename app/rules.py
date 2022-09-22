@@ -239,6 +239,17 @@ style_sentences_data = list(
         df_style_sentences["Primary_subcategory"],
     )
 )
+
+df_bias_singular_they = rules["de-DE"]["df_gendered_singular_they"]
+# gendered singular they: lemma + alternatives split + subcategory
+bias_singular_they_alternatives = list(
+    zip(
+        df_bias_singular_they["Lemma"],
+        df_bias_singular_they["Word_Type"],
+        map(ast.literal_eval, df_bias_singular_they["Alt_split"]),
+        df_bias_singular_they["Primary_subcategory"],
+    )
+)
 ### en-US & en_GB:
 ## words:
 # df open discrimination words
@@ -524,7 +535,7 @@ bias_sentences_data_GB = list(
 
 df_bias_singular_they_US = rules["en-US"]["df_gendered_singular_they"]
 df_bias_singular_they_GB = rules["en-GB"]["df_gendered_singular_they"]
-# unconscious bias singular they: lemma + alternatives split + subcategory
+# gendered singular they: lemma + alternatives split + subcategory
 bias_singular_they_alternatives_US = list(
     zip(
         df_bias_singular_they_US["Lemma"],
