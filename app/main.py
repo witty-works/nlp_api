@@ -79,7 +79,7 @@ from collections import defaultdict
 
 from app.sentry import set_up_sentry_sdk
 
-version = "1.35.4"
+version = "1.35.6"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -2181,7 +2181,11 @@ def gendered_denom_analysis_de(
                     subcategory,
                 )
 
-                if i > 0 and token_morph_number[0] == "Sing":
+                if (
+                    i > 0
+                    and len(token_morph_number)
+                    and token_morph_number[0] == "Sing"
+                ):
                     alternatives_with_article = fetch_alternatives_with_article(
                         tokens, i, alternatives
                     )
