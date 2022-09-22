@@ -710,6 +710,8 @@ async def fetch_user_rules_from_redis(email: str):
 
     rules["plan"] = "witty_free"
     rules["organization_name"] = None
+    rules["organization_config_hash"] = None
+    rules["organization_domains"] = None
 
     if "organization_id" in rules and rules["organization_id"] != None:
         organization_rules = redis.get(rules["organization_id"])
