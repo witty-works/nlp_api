@@ -79,7 +79,7 @@ from collections import defaultdict
 
 from app.sentry import set_up_sentry_sdk
 
-version = "1.35.4"
+version = "1.35.6"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -1851,6 +1851,9 @@ def plural_or_singular_en(
     subcategory,
     second_subcategory,
 ):
+    if len(token_morph_number) < 1:
+        return None
+
     if token_morph_number[0] == "Sing":
         return alternative_sing, subcategory
     elif token_morph_number[0] == "Plur":
@@ -1864,6 +1867,9 @@ def plural_or_singular_en(
 def plural_or_singular_alternatives_de(
     token_morph_number, alternative_sing, alternative_plur
 ):
+    if len(token_morph_number) < 1:
+        return None
+
     if token_morph_number[0] == "Sing":
         return alternative_sing
     elif token_morph_number[0] == "Plur":
@@ -2111,7 +2117,11 @@ def gendered_denom_analysis_de(
                         subcategory,
                     )
 
-                    if i > 0 and token_morph_number[0] == "Sing":
+                    if (
+                        i > 0
+                        and len(token_morph_number)
+                        and token_morph_number[0] == "Sing"
+                    ):
                         alternatives_with_article = []
                         (
                             masculine,
