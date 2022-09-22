@@ -79,7 +79,7 @@ from collections import defaultdict
 
 from app.sentry import set_up_sentry_sdk
 
-version = "1.35.3"
+version = "1.35.4"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -709,6 +709,7 @@ async def fetch_user_rules_from_redis(email: str):
         }
 
     rules["plan"] = "witty_free"
+    rules["organization_name"] = None
 
     if "organization_id" in rules and rules["organization_id"] != None:
         organization_rules = redis.get(rules["organization_id"])
@@ -744,6 +745,8 @@ async def fetch_user_rules_from_redis(email: str):
             rules["organization_false_positives"] = organization_rules[
                 "false_positives"
             ]
+    else:
+        rules["organization_id"] = None
 
     return rules
 
