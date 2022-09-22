@@ -97,6 +97,7 @@ trotz ihrer Behinderung,i,unconscious_bias,ability,"['mit ihrer Behinderung', 't
 trotz seiner Behinderung,i,unconscious_bias,ability,"['mit seiner Behinderung', 'trotz der Barrieren, die ihn in seiner Teilhabe behindern', '--- nur erwähnen, wenn relevant']","['--- nur erwähnen, wenn relevant']","['--- nur erwähnen, wenn relevant', 'mit seiner Behinderung', 'trotz der Barrieren, die ihn in seiner Teilhabe behindern']"
 unbedingter Willen,a+s,unconscious_bias,agentic,"['Fokus', 'Geduld', 'Strebsamkeit', 'langer Atem', 'Fähigkeit, an Dingen dranzubleiben']",[''],"['Fokus', 'Geduld', 'Strebsamkeit', 'langer Atem', 'Fähigkeit, an Dingen dranzubleiben']"
 ursprüngliches Geschlecht,a+s,unconscious_bias,gender_identity,"['biologisches Geburtsgeschlecht', 'bei der Geburt zugewiesenes Geschlecht']",[''],"['biologisches Geburtsgeschlecht', 'bei der Geburt zugewiesenes Geschlecht']"
+vor Augen haben,i,unconscious_bias,vision,['vor sich haben'],[''],['vor sich haben']
 war früher ein Mann,i,unconscious_bias,gender_identity,['lebte früher als Mann'],[''],['lebte früher als Mann']
 war früher eine Frau,i,unconscious_bias,gender_identity,['lebte früher als Frau'],[''],['lebte früher als Frau']
 zwei linke Hände haben,i,unconscious_bias,ability,['sich ungeschickt anstellen'],[''],['sich ungeschickt anstellen']
