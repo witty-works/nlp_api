@@ -328,31 +328,39 @@ def print_trigger_alternative_overlap(locale, all_triggers, words):
 
 args = parse_args()
 if args.Language.lower() == "de":
-    locale = "de-DE"
+    locales = [
+        "de-DE",
+        # "en-GB",
+    ]
 
-    all_triggers, all_alternatives = get_data_from_files(locale)
-
-    words = generate_correct_endings_german(all_alternatives)
-    words[locale] += generate_german_articles(locale)
-
-    print_trigger_alternative_overlap(locale, all_triggers, words[locale])
 elif args.Language.lower() == "en":
     locales = [
         "en-US",
         # "en-GB",
     ]
 
-    words = {}
-    for locale in locales:
-        all_triggers, all_alternatives = get_data_from_files(locale)
-
-        words[locale] = generate_alternatives_english(all_alternatives)
-
-        print_trigger_alternative_overlap(locale, all_triggers, words[locale])
 else:
     raise ValueError(
         "Please specify correct language argument. Valid values are 'de' or 'en' (not case-sensitive)."
     )
+
+words = {}
+for locale in locales:
+    all_triggers, all_alternatives = get_data_from_files(locale)
+
+    if locale == "de-DE":
+        words = generate_correct_endings_german(all_alternatives)
+        words[locale] += generate_german_articles(locale)
+    else:
+        words[locale] = generate_alternatives_english(all_alternatives)
+
+    words[locale] = [
+        word
+        for word in words[locale]
+        if sum(1 for c in word if c.isupper() or c.isnumeric()) < 2
+    ]
+    print_trigger_alternative_overlap(locale, all_triggers, words[locale])
+
 
 if args.Path:
     current_words = []
