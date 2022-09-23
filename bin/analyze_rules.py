@@ -357,7 +357,8 @@ for locale in locales:
     words[locale] = [
         word
         for word in words[locale]
-        if sum(1 for c in word if c.isupper() or c.isnumeric()) < 2
+        if sum(1 for c in word if c.isupper() or c.isnumeric())
+        < (2 if len(word) <= 4 else 3)
     ]
     print_trigger_alternative_overlap(locale, all_triggers, words[locale])
 
