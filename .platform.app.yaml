@@ -53,8 +53,8 @@ relationships:
 
 crons:
   generate-statistics:
-    spec: "55 0 * * *"
+    spec: "0 1 * * 0"
     cmd: |
       if [ "$PLATFORM_BRANCH" = main ]; then
-          flock -n /tmp/send_statistics.lock php send_statistics.php
+          ./statistics.sh
       fi
