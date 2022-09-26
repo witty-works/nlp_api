@@ -31,7 +31,7 @@
             "end": 59,
             "explanation": {
                 "icon": "😮‍💨",
-                "text": "Exaggeration: Perceived as pressure or arrogance",
+                "text": "Build trust by avoiding exaggerations",
                 "url": "https://www.witty.works/en/categories/style#exaggeration"
             },
             "gravity": 2.0,
@@ -55,7 +55,7 @@
             "explanation": {
                 "context": "don't use for people",
                 "icon": "😒",
-                "text": "Doesn’t feel cooperative nor supportive",
+                "text": "Doesn’t resonate with cooperative and supportive people",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
             },
             "gravity": 2.0,
@@ -93,7 +93,7 @@
             "end": 59,
             "explanation": {
                 "icon": "😒",
-                "text": "Doesn’t feel cooperative nor supportive",
+                "text": "Doesn’t resonate with cooperative and supportive people",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
             },
             "gravity": 2.0,

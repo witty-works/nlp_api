@@ -1,3 +1,6 @@
 {
-    "text": "Our values? Work hard, play hard."
+    "text": "Our values? Work hard, play hard.",
+    "config": {
+        "maximum_importance": 3
+    }
 }

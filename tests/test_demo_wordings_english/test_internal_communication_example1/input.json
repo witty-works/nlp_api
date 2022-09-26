@@ -1,3 +1,6 @@
 {
-    "text": "Our whole team is ambitious and strives for top performance."
+    "text": "Our whole team is ambitious and strives for top performance.",
+    "config": {
+        "maximum_importance": 3
+    }
 }

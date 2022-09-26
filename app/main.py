@@ -234,6 +234,17 @@ for language in languages:
             "rules." + category + "_label"
         )
 
+# https://languagetool.org/development/api/org/languagetool/rules/Categories.html
+lt_style_categories = [
+    "PLAIN_ENGLISH",
+    "FALSE_FRIENDS",
+    "REDUNDANCY",
+    "REGIONALISMS",
+    "REPETITIONS_STYLE",
+    "SEMANTICS",
+    "STYLE",
+]
+
 
 def fetch_current_username(
     credentials: Optional[HTTPBasicCredentials] = Depends(security),
@@ -949,7 +960,7 @@ def has_gender_denom_ending(text, full_text, offset, config: Config):
 
 
 def languagetool_matches(
-    version: float, config: Config, lang: Language, category: str, text: str, result
+    version: float, config: Config, lang: Language, text: str, result
 ):
     list_results = []
     ignore = ["@", "#"]
@@ -992,6 +1003,23 @@ def languagetool_matches(
         ):
             continue
 
+        try:
+            category = "orthography"
+            subcategory = match["rule"]["category"]["id"]
+            if subcategory in lt_style_categories:
+                category = "style"
+
+            subcategory = subcategory.lower()
+            if subcategory == "style":
+                subcategory = "general_style"
+            elif subcategory not in categories:
+                subcategory = category
+        except KeyError:
+            subcategory = category
+
+        if not is_sub_category_enabled(config, subcategory):
+            continue
+
         alternatives = fetch_alternatives(match)
 
         label = match["shortMessage"]
@@ -1009,11 +1037,6 @@ def languagetool_matches(
             .replace("ä", "ae")
             .replace("ö", "oe")
         )
-
-        try:
-            subcategory = match["rule"]["category"]["id"].lower()
-        except KeyError:
-            subcategory = category
 
         explanation = match["message"]
 
@@ -1051,15 +1074,23 @@ async def languagetool_rules(version: float, config: Config, lang: Language, tex
         if config.primary_language != None:
             payload["motherTongue"] = config.primary_language
 
-        spelling_categories = list(
-            set(config.disabled_categories) - set(categories.keys())
-        )
-
-        if len(spelling_categories) > 0:
-            spelling_categories = [
-                spelling_category.upper() for spelling_category in spelling_categories
+        if is_sub_category_enabled(config, "orthography"):
+            disabled_categories = [
+                "GENDER_NEUTRALITY",
+                "COLLOQUIALISMS",
             ]
-            payload["disabledCategories"] = spelling_categories
+
+            if "casing" in config.disabled_categories:
+                disabled_categories += ["CASING"]
+
+            if "style" in config.disabled_categories:
+                disabled_categories += lt_style_categories
+
+            payload["disabledCategories"] = disabled_categories
+        elif is_sub_category_enabled(config, "style"):
+            payload["enabledCategories"] = lt_style_categories
+        else:
+            return []
 
         async with session.post(languagetool_url + "/check", data=payload) as r:
             try:
@@ -1070,9 +1101,7 @@ async def languagetool_rules(version: float, config: Config, lang: Language, tex
                     raise Exception(result)
 
                 result = await r.json()
-                list_results = languagetool_matches(
-                    version, config, lang, "orthography", text, result
-                )
+                list_results = languagetool_matches(version, config, lang, text, result)
             except ClientError as err:  # pragma: no cover
                 result = "Problem communicating with LanguageTool"
                 if r.status >= 500:
@@ -1204,7 +1233,9 @@ async def language_rules(
     tokens = fetch_tokens(lang, text)
 
     list_results = []
-    if is_sub_category_enabled(config, "orthography"):
+    if is_sub_category_enabled(config, "orthography") or is_sub_category_enabled(
+        config, "style"
+    ):
         try:
             list_results += await languagetool_rules(version, config, lang, text)
         except Exception as err:
@@ -2237,6 +2268,9 @@ def style_word_analysis_de(
             continue
 
         for word, word_type, alternative, subcategory in words_data:
+            if not is_sub_category_enabled(config, subcategory):
+                continue
+
             if not is_word_match(token, tokens, lang, word, word_type, None, False):
                 continue
 
@@ -2363,6 +2397,9 @@ def rules_based_words_phrase_matcher(
                     subcategory = data[0]
             elif len(data) > 0:
                 alternative = alternatives_declension(token, lang, data[0])
+
+            if not is_sub_category_enabled(config, subcategory):
+                continue
 
             list_tokens.append(
                 ResultOut.factory(

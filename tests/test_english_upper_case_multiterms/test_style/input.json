@@ -1,3 +1,6 @@
 {
-    "text": "Kind regards from London"
+    "text": "Kind regards from London",
+    "config": {
+        "maximum_importance": 3
+    }
 }

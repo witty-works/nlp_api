@@ -17,14 +17,18 @@ def parse_explanation(explanation):
     return icon, explanation
 
 
-def parse_row_column(locales, category, columns, label, column, row):
-    msgid = "rules." + category + "_" + label
+def parse_row_column(locales, category, sub_category, columns, label, column, row):
+    msgid = "rules." + sub_category + "_" + label
 
     result = {}
     for locale in locales:
         result[locale] = {}
 
-        if locale == "pot":
+        if (
+            locale == "pot"
+            or (category == "orthography" and label == "anchor")
+            or (category == "corporate_rules" and label == "explanation")
+        ):
             msgstr = ""
         else:
             msgstr = row[columns[column + " " + locale[0:2].upper()]].strip()
@@ -35,7 +39,7 @@ def parse_row_column(locales, category, columns, label, column, row):
                 msgstr = ""
                 print(
                     "Empty text given for '"
-                    + category
+                    + sub_category
                     + "' key '"
                     + label
                     + "' ("
@@ -46,7 +50,7 @@ def parse_row_column(locales, category, columns, label, column, row):
                 if msgstr.find("|") == -1:
                     print(
                         "Pipesign missing for '"
-                        + category
+                        + sub_category
                         + "' key '"
                         + label
                         + "' ("
@@ -94,6 +98,7 @@ def read_csv(in_file):
             "Inclusive?": None,
             "Gravity": None,
             "Importance": None,
+            "Status API": None,
         }
 
         columnMap = {
@@ -115,10 +120,7 @@ def read_csv(in_file):
                         columns[column] = i
                 line_count += 1
             else:
-                if (
-                    row[columns["Anchor EN"]] == ""
-                    and row[columns["Anchor DE"]] == ""
-                ):
+                if row[columns["Status API"]] == "Idea":
                     continue
 
                 sub_category = row[columns["Subcategory"]].strip()
@@ -126,11 +128,6 @@ def read_csv(in_file):
                     continue
 
                 categories[sub_category] = {}
-
-                for key in columnMap:
-                    categories[sub_category][key] = parse_row_column(
-                        locales, sub_category, columns, key, columnMap[key], row
-                    )
 
                 categories[sub_category]["inclusive"] = (
                     row[columns["Inclusive?"]] == "👍"
@@ -140,6 +137,18 @@ def read_csv(in_file):
                     "\\1",
                     row[columns["Category"]],
                 )
+
+                for key in columnMap:
+                    category = categories[sub_category]["category"]
+                    categories[sub_category][key] = parse_row_column(
+                        locales,
+                        category,
+                        sub_category,
+                        columns,
+                        key,
+                        columnMap[key],
+                        row,
+                    )
 
                 if sub_category == "corporate_rules":
                     gravity = 0.9

@@ -41,12 +41,6 @@ categories = {
         "importance": 2,
         "emoji": "😒",
     },
-    "ageism": {
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 3.0,
-        "importance": None,
-    },
     "agentic": {
         "inclusive": False,
         "category": "unconscious_bias",
@@ -96,12 +90,12 @@ categories = {
         "importance": 2,
         "emoji": "😟",
     },
-    "caring": {
-        "inclusive": True,
-        "category": "inclusive",
-        "gravity": None,
-        "importance": 2,
-        "emoji": "✅",
+    "casing": {
+        "inclusive": False,
+        "category": "orthography",
+        "gravity": 1.0,
+        "importance": 1,
+        "emoji": "❌",
     },
     "classism": {
         "inclusive": False,
@@ -130,6 +124,20 @@ categories = {
         "gravity": None,
         "importance": 2,
         "emoji": "✅",
+    },
+    "compounding": {
+        "inclusive": False,
+        "category": "orthography",
+        "gravity": 2.0,
+        "importance": 2,
+        "emoji": "⚠️",
+    },
+    "confused_words": {
+        "inclusive": False,
+        "category": "orthography",
+        "gravity": 1.0,
+        "importance": 1,
+        "emoji": "❌",
     },
     "corporate_rules": {
         "inclusive": False,
@@ -165,6 +173,13 @@ categories = {
         "importance": 2,
         "emoji": "😮\u200d💨",
     },
+    "false_friends": {
+        "inclusive": False,
+        "category": "style",
+        "gravity": 3.0,
+        "importance": 3,
+        "emoji": "🤔",
+    },
     "female_stereotype": {
         "inclusive": False,
         "category": "gendered",
@@ -193,20 +208,6 @@ categories = {
         "importance": 2,
         "emoji": "💡",
     },
-    "gen_boomer": {
-        "inclusive": False,
-        "category": "style",
-        "gravity": 3.0,
-        "importance": 3,
-        "emoji": "🤔",
-    },
-    "gen_z": {
-        "inclusive": False,
-        "category": "style",
-        "gravity": 3.0,
-        "importance": 3,
-        "emoji": "🤔",
-    },
     "gender_identity": {
         "inclusive": False,
         "category": "unconscious_bias",
@@ -228,12 +229,26 @@ categories = {
         "importance": 2,
         "emoji": "💯",
     },
+    "general_style": {
+        "inclusive": False,
+        "category": "style",
+        "gravity": 2.0,
+        "importance": 2,
+        "emoji": "🤔",
+    },
     "generic_plural": {
         "inclusive": False,
         "category": "gendered",
         "gravity": 3.0,
         "importance": 3,
         "emoji": "😮",
+    },
+    "grammar": {
+        "inclusive": False,
+        "category": "orthography",
+        "gravity": 1.0,
+        "importance": 1,
+        "emoji": "❌",
     },
     "hearing": {
         "inclusive": False,
@@ -266,15 +281,9 @@ categories = {
     "inclusive": {
         "inclusive": True,
         "category": "inclusive",
-        "gravity": 3.0,
+        "gravity": None,
         "importance": 2,
         "emoji": "✅",
-    },
-    "job_requirements": {
-        "inclusive": False,
-        "category": "job_requirements",
-        "gravity": 3.0,
-        "importance": None,
     },
     "leadership": {
         "inclusive": False,
@@ -325,12 +334,12 @@ categories = {
         "importance": 2,
         "emoji": "🪖",
     },
-    "misgendering_institutions": {
+    "misc": {
         "inclusive": False,
-        "category": "style",
-        "gravity": 3.0,
-        "importance": 3,
-        "emoji": "❌",
+        "category": "orthography",
+        "gravity": 2.0,
+        "importance": 2,
+        "emoji": "🤔",
     },
     "mobility": {
         "inclusive": False,
@@ -360,19 +369,19 @@ categories = {
         "importance": 1,
         "emoji": "❌",
     },
-    "passive_voice": {
+    "plain_english": {
         "inclusive": False,
         "category": "style",
-        "gravity": 3.0,
-        "importance": 3,
-        "emoji": "🧊",
-    },
-    "pressure": {
-        "inclusive": False,
-        "category": "unconscious_bias",
         "gravity": 2.0,
-        "importance": 2,
-        "emoji": "😮\u200d💨",
+        "importance": None,
+        "emoji": "🙄",
+    },
+    "punctuation": {
+        "inclusive": False,
+        "category": "orthography",
+        "gravity": 1.0,
+        "importance": 1,
+        "emoji": "❌",
     },
     "racism": {
         "inclusive": False,
@@ -387,6 +396,41 @@ categories = {
         "gravity": 2.0,
         "importance": 2,
         "emoji": "😒",
+    },
+    "redundancy": {
+        "inclusive": False,
+        "category": "style",
+        "gravity": 3.0,
+        "importance": 3,
+        "emoji": "🤔",
+    },
+    "regionalisms": {
+        "inclusive": False,
+        "category": "style",
+        "gravity": 3.0,
+        "importance": 3,
+        "emoji": "🤔",
+    },
+    "repetitions": {
+        "inclusive": False,
+        "category": "orthography",
+        "gravity": 2.0,
+        "importance": 2,
+        "emoji": "⚠️",
+    },
+    "repetitions_style": {
+        "inclusive": False,
+        "category": "style",
+        "gravity": 3.0,
+        "importance": 3,
+        "emoji": "😟",
+    },
+    "semantics": {
+        "inclusive": False,
+        "category": "style",
+        "gravity": 3.0,
+        "importance": 3,
+        "emoji": "🤔",
     },
     "sexism": {
         "inclusive": False,
@@ -419,8 +463,9 @@ categories = {
     "style": {
         "inclusive": False,
         "category": "style",
-        "gravity": 3.0,
-        "importance": None,
+        "gravity": 2.0,
+        "importance": 2,
+        "emoji": "😟",
     },
     "titles": {
         "inclusive": False,
@@ -435,6 +480,20 @@ categories = {
         "gravity": 1.0,
         "importance": 1,
         "emoji": "🚫",
+    },
+    "typography": {
+        "inclusive": False,
+        "category": "orthography",
+        "gravity": 1.0,
+        "importance": 1,
+        "emoji": "❌",
+    },
+    "typos": {
+        "inclusive": False,
+        "category": "orthography",
+        "gravity": 1.0,
+        "importance": 1,
+        "emoji": "❌",
     },
     "unconscious_bias": {
         "inclusive": False,

@@ -327,7 +327,7 @@
             "end": 8,
             "explanation": {
                 "icon": "💡",
-                "text": "Image of a man unconsciously triggered",
+                "text": "People are more likely to picture men here",
                 "url": "https://www.witty.works/en/categories/gendered#special_functions"
             },
             "gravity": 2.0,
@@ -374,7 +374,7 @@
             "end": 629,
             "explanation": {
                 "icon": "💡",
-                "text": "Image of a man unconsciously triggered",
+                "text": "People are more likely to picture men here",
                 "url": "https://www.witty.works/en/categories/gendered#special_functions"
             },
             "gravity": 2.0,
@@ -416,46 +416,6 @@
         {
             "alternatives": [
                 {
-                    "remove": true
-                }
-            ],
-            "category": "style",
-            "context": "most southerly corner of Unit <NUMBER> Foundry Industrial Estate, Victoria Street, Widnes, proceeding in a generally east-north-easterly direction for approximately <NUMBER> metres to a point approximately <NUMBER> metres east-",
-            "end": 330,
-            "explanation": {
-                "icon": "😟",
-                "text": "Filler words make understanding harder",
-                "url": "https://www.witty.works/en/categories/style#filler_words"
-            },
-            "gravity": 3.0,
-            "label": "Style: Filler words",
-            "start": 321,
-            "subcategory": "filler",
-            "text": "generally"
-        },
-        {
-            "alternatives": [
-                {
-                    "remove": true
-                }
-            ],
-            "category": "style",
-            "context": "most southerly corner of Unit <NUMBER> Foundry Industrial Estate, Victoria Street, Widnes, proceeding in a generally east-north-easterly direction for approximately",
-            "end": 951,
-            "explanation": {
-                "icon": "😟",
-                "text": "Filler words make understanding harder",
-                "url": "https://www.witty.works/en/categories/style#filler_words"
-            },
-            "gravity": 3.0,
-            "label": "Style: Filler words",
-            "start": 942,
-            "subcategory": "filler",
-            "text": "generally"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "dedication"
                 },
                 {
@@ -479,7 +439,7 @@
             "end": 55,
             "explanation": {
                 "icon": "😒",
-                "text": "Doesn’t feel cooperative nor supportive",
+                "text": "Doesn’t resonate with cooperative and supportive people",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
             },
             "gravity": 2.0,
@@ -514,7 +474,7 @@
             "end": 676,
             "explanation": {
                 "icon": "😒",
-                "text": "Doesn’t feel cooperative nor supportive",
+                "text": "Doesn’t resonate with cooperative and supportive people",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
             },
             "gravity": 2.0,
@@ -537,7 +497,7 @@
             "end": 38,
             "explanation": {
                 "icon": "😒",
-                "text": "Doesn’t feel cooperative nor supportive",
+                "text": "Doesn’t resonate with cooperative and supportive people",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
             },
             "gravity": 2.0,
@@ -560,7 +520,7 @@
             "end": 659,
             "explanation": {
                 "icon": "😒",
-                "text": "Doesn’t feel cooperative nor supportive",
+                "text": "Doesn’t resonate with cooperative and supportive people",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
             },
             "gravity": 2.0,

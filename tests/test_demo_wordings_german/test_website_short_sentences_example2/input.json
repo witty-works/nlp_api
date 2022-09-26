@@ -1,3 +1,6 @@
 {
-    "text": "Unsere Werte? Zuerst die Arbeit, dann das Vergnügen"
+    "text": "Unsere Werte? Zuerst die Arbeit, dann das Vergnügen",
+    "config": {
+        "maximum_importance": 3
+    }
 }
