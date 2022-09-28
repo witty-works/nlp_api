@@ -165,6 +165,13 @@ categories = {
         "importance": 2,
         "emoji": "😮\u200d💨",
     },
+    "false_friends": {
+        "inclusive": False,
+        "category": "style",
+        "gravity": 3.0,
+        "importance": 3,
+        "emoji": "🤔",
+    },
     "female_stereotype": {
         "inclusive": False,
         "category": "gendered",
@@ -266,7 +273,7 @@ categories = {
     "inclusive": {
         "inclusive": True,
         "category": "inclusive",
-        "gravity": 3.0,
+        "gravity": None,
         "importance": 2,
         "emoji": "✅",
     },
@@ -353,19 +360,19 @@ categories = {
         "importance": None,
         "emoji": "🚫",
     },
-    "orthography": {
-        "inclusive": False,
-        "category": "orthography",
-        "gravity": 1.0,
-        "importance": 1,
-        "emoji": "❌",
-    },
     "passive_voice": {
         "inclusive": False,
         "category": "style",
         "gravity": 3.0,
         "importance": 3,
         "emoji": "🧊",
+    },
+    "plain_english": {
+        "inclusive": False,
+        "category": "style",
+        "gravity": 2.0,
+        "importance": None,
+        "emoji": "🙄",
     },
     "pressure": {
         "inclusive": False,
@@ -387,6 +394,27 @@ categories = {
         "gravity": 2.0,
         "importance": 2,
         "emoji": "😒",
+    },
+    "redundancy": {
+        "inclusive": False,
+        "category": "style",
+        "gravity": 3.0,
+        "importance": 3,
+        "emoji": "🤔",
+    },
+    "repetitions_style": {
+        "inclusive": False,
+        "category": "style",
+        "gravity": 3.0,
+        "importance": 3,
+        "emoji": "😟",
+    },
+    "semantics": {
+        "inclusive": False,
+        "category": "style",
+        "gravity": 3.0,
+        "importance": 3,
+        "emoji": "🤔",
     },
     "sexism": {
         "inclusive": False,
@@ -416,12 +444,6 @@ categories = {
         "importance": 2,
         "emoji": "🏅",
     },
-    "style": {
-        "inclusive": False,
-        "category": "style",
-        "gravity": 3.0,
-        "importance": None,
-    },
     "titles": {
         "inclusive": False,
         "category": "gendered",
@@ -442,6 +464,13 @@ categories = {
         "gravity": 2.0,
         "importance": 2,
         "emoji": "😒",
+    },
+    "verbose": {
+        "inclusive": False,
+        "category": "style",
+        "gravity": 3.0,
+        "importance": 3,
+        "emoji": "🧊",
     },
     "vision": {
         "inclusive": False,

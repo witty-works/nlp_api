@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-09-19 13:51\n"
-"PO-Revision-Date: 2022-09-19 13:51\n"
+"POT-Creation-Date: 2022-09-29 20:44\n"
+"PO-Revision-Date: 2022-09-29 20:44\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -15,13 +15,13 @@ msgid "rules.abbreviation_anchor"
 msgstr "abkuerzung"
 
 msgid "rules.abbreviation_explanation"
-msgstr "Sicher, dass das Lesende verstehen?"
+msgstr "Werden alle Lesenden diese Abkürzung verstehen?"
 
 msgid "rules.ability_anchor"
 msgstr "faehigkeiten"
 
 msgid "rules.ability_explanation"
-msgstr "Versteckte Voreingenommenheit bezüglich Behinderungen"
+msgstr "Nährt Voreingenommenheit gegenüber Menschen mit Behinderung"
 
 msgid "rules.ableism_anchor"
 msgstr "behindertenfeindlichkeit"
@@ -33,19 +33,19 @@ msgid "rules.age_anchor"
 msgstr "altersangabe"
 
 msgid "rules.age_explanation"
-msgstr "Sicher, dass du das Alter wissen musst?"
+msgstr "Spielt das Alter hier eine Rolle?"
 
 msgid "rules.age_old_anchor"
 msgstr "50_jahre_und_aelter"
 
 msgid "rules.age_old_explanation"
-msgstr "Versteckte Voreingenommenheit bezüglich Alter 50+"
+msgstr "Bedient Klischees über Menschen über 50"
 
 msgid "rules.age_young_anchor"
 msgstr "25_jahre_und_juenger"
 
 msgid "rules.age_young_explanation"
-msgstr "Versteckte Voreingenommenheit bezüglich Alter unter 25"
+msgstr "Bedient Klischees über Menschen unter 25"
 
 msgid "rules.ageism_anchor"
 msgstr "altersdiskriminierungen"
@@ -57,7 +57,7 @@ msgid "rules.agentic_anchor"
 msgstr "agentisch"
 
 msgid "rules.agentic_explanation"
-msgstr "Fühlt sich weder kooperativ noch unterstützend an"
+msgstr "Spricht kooperativ denkende Menschen nicht an"
 
 msgid "rules.anglicism_anchor"
 msgstr "anglizismen"
@@ -81,19 +81,19 @@ msgid "rules.behavior_anchor"
 msgstr "verhalten"
 
 msgid "rules.behavior_explanation"
-msgstr "Versteckte Voreingenommenheit bezüglich Verhalten"
+msgstr "Stellt authentisches Verhalten als unerwünscht dar"
 
 msgid "rules.belief_anchor"
 msgstr "glauben"
 
 msgid "rules.belief_explanation"
-msgstr "Glauben ausdrückend; stimmt nicht für alle"
+msgstr "Ausdruck eines Glaubens, dem nicht jede*r angehört"
 
 msgid "rules.binary_pronouns_anchor"
 msgstr "binaere_pronomen"
 
 msgid "rules.binary_pronouns_explanation"
-msgstr "Pronomen gemäss binärem Geschlechterverständnis"
+msgstr "Pronomen, das nichtbinäre Menschen ausschliesst"
 
 msgid "rules.caring_anchor"
 msgstr "einfühlsam"
@@ -105,13 +105,13 @@ msgid "rules.classism_anchor"
 msgstr "klassismus"
 
 msgid "rules.classism_explanation"
-msgstr "Drückt Machtungleichgewicht aus"
+msgstr "Impliziert sozioökonomischer Status bestimmt den Wert einer Person"
 
 msgid "rules.cognitive_ability_anchor"
 msgstr "denkfaehigkeit"
 
 msgid "rules.cognitive_ability_explanation"
-msgstr "Versteckte Voreingenommenheit bezüglich Lernfähigkeit"
+msgstr "Bedient Vorurteile und Klischees über Lernfähigkeit"
 
 msgid "rules.cognitive_perception_anchor"
 msgstr "wahrnehmung"
@@ -144,7 +144,7 @@ msgid "rules.d_and_i_explanation"
 msgstr "Bestärkt Wert von Diversity, Gleichstellung und Inklusion"
 
 msgid "rules.emotional_security_anchor"
-msgstr ""
+msgstr "positive_emotionen"
 
 msgid "rules.emotional_security_explanation"
 msgstr "Vermittelt emotionale Sicherheit"
@@ -153,31 +153,31 @@ msgid "rules.exaggerating_anchor"
 msgstr "superlative"
 
 msgid "rules.exaggerating_explanation"
-msgstr "Superlative: als Druck oder Arroganz wahrgenommen"
+msgstr "Auf Übertreibungen verzichten schafft Vertrauen"
 
 msgid "rules.female_stereotype_anchor"
 msgstr "weiblicher_stereotyp"
 
 msgid "rules.female_stereotype_explanation"
-msgstr "Steckt Frauen in traditionelle Rollen"
+msgstr "Reduziert Frauen auf traditionelle Rollenklischees"
 
 msgid "rules.filler_anchor"
 msgstr "fuellwoerter"
 
 msgid "rules.filler_explanation"
-msgstr "Füllwörter machen das Verständnis schwieriger"
+msgstr "Füllwörter machen Text länger und unverständlicher"
 
 msgid "rules.formality_anchor"
 msgstr "formalitaet"
 
 msgid "rules.formality_explanation"
-msgstr "Formale Formulierung kreiert emotionale Distanz"
+msgstr "Weniger Förmlichkeit schafft mehr emotionale Nähe"
 
 msgid "rules.function_anchor"
 msgstr "spezielle_funktionen"
 
 msgid "rules.function_explanation"
-msgstr "Bild eines Mannes wird unbewusst ausgelöst"
+msgstr "Viele denken bei diesem Wort zuerst an einen Mann"
 
 msgid "rules.gen_boomer_anchor"
 msgstr "sprach_generation_boomer_&_X"
@@ -225,13 +225,13 @@ msgid "rules.hidden_image_anchor"
 msgstr "versteckter_ausdruck"
 
 msgid "rules.hidden_image_explanation"
-msgstr "Verstecktes männliches Generikum"
+msgstr "Wortteil macht andere Geschlechter unsichtbar"
 
 msgid "rules.hollow_anchor"
 msgstr "worthuelsen"
 
 msgid "rules.hollow_explanation"
-msgstr "Worthülsen haben ihre Bedeutung verloren"
+msgstr "Worthülsen schwächen die Wirkung deiner Botschaft"
 
 msgid "rules.homophobia_anchor"
 msgstr "homophobie"
@@ -255,7 +255,7 @@ msgid "rules.leadership_anchor"
 msgstr "fuehrungsstereotyp"
 
 msgid "rules.leadership_explanation"
-msgstr "Traditionelles Führungs-Vokabular"
+msgstr "Bedient altmodisches Konzept von Führung"
 
 msgid "rules.learning_anchor"
 msgstr "lernfaehigkeit"
@@ -267,7 +267,7 @@ msgid "rules.male_stereotype_anchor"
 msgstr "maennlicher_stereotyp"
 
 msgid "rules.male_stereotype_explanation"
-msgstr "Steckt Männer in traditionelle Rollen"
+msgstr "Reduziert Männer auf traditionelle Rollenklischees"
 
 msgid "rules.medical_state_anchor"
 msgstr "gesundheitsbild"
@@ -381,7 +381,7 @@ msgid "rules.titles_anchor"
 msgstr "titel"
 
 msgid "rules.titles_explanation"
-msgstr "“Mitmeinen” mit männlichen Generikum funktioniert nicht"
+msgstr "Viele denken bei diesem Wort zuerst an einen Mann"
 
 msgid "rules.transphobia_anchor"
 msgstr "transphobie"
@@ -402,7 +402,7 @@ msgid "rules.vision_explanation"
 msgstr "Versteckte Voreingenommenheit bezüglich Seh-Fähigkeit"
 
 msgid "rules.xenophobia_anchor"
-msgstr "xenophobie/fremdenfeindlichkeit"
+msgstr "fremdenfeindlichkeit_xenophobie"
 
 msgid "rules.xenophobia_explanation"
 msgstr "Fremdenfeindlich, xenophob"

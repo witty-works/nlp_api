@@ -1,46 +1,5 @@
 {
     "language": "de",
     "limit_reached": false,
-    "results": [
-        {
-            "alternatives": [
-                {
-                    "remove": true
-                }
-            ],
-            "category": "style",
-            "context": "Na gut, wir gehen einkaufen, aber wir kaufen keine Süßigkeiten. Aber nachdem es so lange geregnet hatte, war der Weg aber zu matschig, um spazieren zu gehen.",
-            "end": 82,
-            "explanation": {
-                "icon": "😟",
-                "text": "Füllwörter machen das Verständnis schwieriger",
-                "url": "https://www.witty.works/de/kategorien/stil#fuellwoerter"
-            },
-            "gravity": 3.0,
-            "label": "Stil: Füllwörter",
-            "start": 80,
-            "subcategory": "filler",
-            "text": "so"
-        },
-        {
-            "alternatives": [
-                {
-                    "remove": true
-                }
-            ],
-            "category": "style",
-            "context": "einkaufen, aber wir kaufen keine Süßigkeiten. Aber nachdem es so lange geregnet hatte, war der Weg aber zu matschig, um spazieren zu gehen.",
-            "end": 121,
-            "explanation": {
-                "icon": "😟",
-                "text": "Füllwörter machen das Verständnis schwieriger",
-                "url": "https://www.witty.works/de/kategorien/stil#fuellwoerter"
-            },
-            "gravity": 3.0,
-            "label": "Stil: Füllwörter",
-            "start": 117,
-            "subcategory": "filler",
-            "text": "aber"
-        }
-    ]
+    "results": []
 }

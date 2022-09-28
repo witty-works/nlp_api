@@ -34,7 +34,7 @@
             "end": 80,
             "explanation": {
                 "icon": "😒",
-                "text": "Doesn’t feel cooperative nor supportive",
+                "text": "Doesn’t resonate with cooperative and supportive people",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
             },
             "gravity": 2.0,
@@ -66,7 +66,7 @@
             "end": 33,
             "explanation": {
                 "icon": "😟",
-                "text": "Male generic doesn’t address all genders",
+                "text": "People are more likely to picture men here",
                 "url": "https://www.witty.works/en/categories/gendered#titles"
             },
             "gravity": 2.0,
@@ -93,64 +93,6 @@
         {
             "alternatives": [
                 {
-                    "remove": true
-                },
-                {
-                    "text": "remarkable"
-                },
-                {
-                    "text": "inspiring"
-                },
-                {
-                    "text": "surprising"
-                },
-                {
-                    "text": "unusual"
-                },
-                {
-                    "text": "exemplary"
-                }
-            ],
-            "category": "style",
-            "context": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
-            "end": 69,
-            "explanation": {
-                "icon": "😮‍💨",
-                "text": "Exaggeration: Perceived as pressure or arrogance",
-                "url": "https://www.witty.works/en/categories/style#exaggeration"
-            },
-            "gravity": 2.0,
-            "label": "Style: Exaggeration",
-            "start": 58,
-            "subcategory": "exaggerating",
-            "text": "exceptional"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "amazing display of capability"
-                },
-                {
-                    "text": "history of delivering results"
-                }
-            ],
-            "category": "style",
-            "context": "rking on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
-            "end": 164,
-            "explanation": {
-                "icon": "😮‍💨",
-                "text": "Exaggeration: Perceived as pressure or arrogance",
-                "url": "https://www.witty.works/en/categories/style#exaggeration"
-            },
-            "gravity": 2.0,
-            "label": "Style: Exaggeration",
-            "start": 149,
-            "subcategory": "exaggerating",
-            "text": "top performance"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "impartial"
                 },
                 {
@@ -165,7 +107,7 @@
             "end": 17,
             "explanation": {
                 "icon": "😒",
-                "text": "Doesn’t feel cooperative nor supportive",
+                "text": "Doesn’t resonate with cooperative and supportive people",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
             },
             "gravity": 2.0,
@@ -189,7 +131,7 @@
             "explanation": {
                 "context": "don't use for people",
                 "icon": "😒",
-                "text": "Doesn’t feel cooperative nor supportive",
+                "text": "Doesn’t resonate with cooperative and supportive people",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
             },
             "gravity": 2.0,
@@ -227,7 +169,7 @@
             "end": 164,
             "explanation": {
                 "icon": "😒",
-                "text": "Doesn’t feel cooperative nor supportive",
+                "text": "Doesn’t resonate with cooperative and supportive people",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
             },
             "gravity": 2.0,

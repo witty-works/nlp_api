@@ -16,36 +16,6 @@
             "start": 13,
             "subcategory": "communal",
             "text": "motiviert"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "engagiert"
-                },
-                {
-                    "text": "begeisterungsfähig"
-                },
-                {
-                    "text": "zur Eigeninitiative"
-                },
-                {
-                    "text": "bereit, sich zu engagieren"
-                }
-            ],
-            "category": "style",
-            "context": "Bist du hoch motiviert?",
-            "end": 22,
-            "explanation": {
-                "context": "nicht auf Menschen beziehen",
-                "icon": "🙄",
-                "text": "Worthülsen haben ihre Bedeutung verloren",
-                "url": "https://www.witty.works/de/kategorien/stil#worthuelsen"
-            },
-            "gravity": 3.0,
-            "label": "Stil: Worthülsen",
-            "start": 8,
-            "subcategory": "hollow",
-            "text": "hoch motiviert"
         }
     ]
 }

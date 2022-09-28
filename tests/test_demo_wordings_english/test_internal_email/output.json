@@ -41,7 +41,7 @@
             "end": 121,
             "explanation": {
                 "icon": "😒",
-                "text": "Doesn’t feel cooperative nor supportive",
+                "text": "Doesn’t resonate with cooperative and supportive people",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
             },
             "gravity": 2.0,
@@ -76,7 +76,7 @@
             "end": 160,
             "explanation": {
                 "icon": "😒",
-                "text": "Doesn’t feel cooperative nor supportive",
+                "text": "Doesn’t resonate with cooperative and supportive people",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
             },
             "gravity": 2.0,
@@ -123,7 +123,7 @@
             "end": 8,
             "explanation": {
                 "icon": "💡",
-                "text": "Image of a man unconsciously triggered",
+                "text": "People are more likely to picture men here",
                 "url": "https://www.witty.works/en/categories/gendered#special_functions"
             },
             "gravity": 2.0,
@@ -146,85 +146,6 @@
             "start": 19,
             "subcategory": "communal",
             "text": "team"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "reinvention"
-                },
-                {
-                    "text": "modernization"
-                },
-                {
-                    "text": "improvement"
-                },
-                {
-                    "text": "new creation"
-                },
-                {
-                    "text": "redesign"
-                },
-                {
-                    "text": "reinventions"
-                },
-                {
-                    "text": "changes"
-                },
-                {
-                    "text": "modernizations"
-                },
-                {
-                    "text": "improvements"
-                },
-                {
-                    "text": "new creations"
-                }
-            ],
-            "category": "style",
-            "context": "perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number <NUMBER> and innovation drives us.\nSincere regards,\nNadia",
-            "end": 153,
-            "explanation": {
-                "icon": "🙄",
-                "text": "Empty words have lost all meaning",
-                "url": "https://www.witty.works/en/categories/style#empty_words"
-            },
-            "gravity": 3.0,
-            "label": "Style: Empty words",
-            "start": 143,
-            "subcategory": "hollow",
-            "text": "innovation"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "critical"
-                },
-                {
-                    "text": "vital"
-                },
-                {
-                    "text": "key"
-                },
-                {
-                    "text": "crucial"
-                },
-                {
-                    "text": "paramount"
-                }
-            ],
-            "category": "style",
-            "context": "ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number <NUMBER> and innovation drives us.\nSincere regards,\nNadia",
-            "end": 138,
-            "explanation": {
-                "icon": "😮‍💨",
-                "text": "Exaggeration: Perceived as pressure or arrogance",
-                "url": "https://www.witty.works/en/categories/style#exaggeration"
-            },
-            "gravity": 2.0,
-            "label": "Style: Exaggeration",
-            "start": 130,
-            "subcategory": "exaggerating",
-            "text": "number 1"
         },
         {
             "alternatives": [
@@ -252,7 +173,7 @@
             "end": 55,
             "explanation": {
                 "icon": "😒",
-                "text": "Doesn’t feel cooperative nor supportive",
+                "text": "Doesn’t resonate with cooperative and supportive people",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
             },
             "gravity": 2.0,
@@ -275,7 +196,7 @@
             "end": 38,
             "explanation": {
                 "icon": "😒",
-                "text": "Doesn’t feel cooperative nor supportive",
+                "text": "Doesn’t resonate with cooperative and supportive people",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
             },
             "gravity": 2.0,

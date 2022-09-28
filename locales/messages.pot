@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-09-19 13:51\n"
-"PO-Revision-Date: 2022-09-19 13:51\n"
+"POT-Creation-Date: 2022-09-30 07:41\n"
+"PO-Revision-Date: 2022-09-30 07:41\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -153,6 +153,12 @@ msgid "rules.exaggerating_anchor"
 msgstr ""
 
 msgid "rules.exaggerating_explanation"
+msgstr ""
+
+msgid "rules.false_friends_anchor"
+msgstr ""
+
+msgid "rules.false_friends_explanation"
 msgstr ""
 
 msgid "rules.female_stereotype_anchor"
@@ -317,16 +323,16 @@ msgstr ""
 msgid "rules.openly_discriminating_explanation"
 msgstr ""
 
-msgid "rules.orthography_anchor"
-msgstr ""
-
-msgid "rules.orthography_explanation"
-msgstr ""
-
 msgid "rules.passive_voice_anchor"
 msgstr ""
 
 msgid "rules.passive_voice_explanation"
+msgstr ""
+
+msgid "rules.plain_english_anchor"
+msgstr ""
+
+msgid "rules.plain_english_explanation"
 msgstr ""
 
 msgid "rules.pressure_anchor"
@@ -345,6 +351,24 @@ msgid "rules.racist_source_anchor"
 msgstr ""
 
 msgid "rules.racist_source_explanation"
+msgstr ""
+
+msgid "rules.redundancy_anchor"
+msgstr ""
+
+msgid "rules.redundancy_explanation"
+msgstr ""
+
+msgid "rules.repetitions_style_anchor"
+msgstr ""
+
+msgid "rules.repetitions_style_explanation"
+msgstr ""
+
+msgid "rules.semantics_anchor"
+msgstr ""
+
+msgid "rules.semantics_explanation"
 msgstr ""
 
 msgid "rules.sexism_anchor"
@@ -371,12 +395,6 @@ msgstr ""
 msgid "rules.sports_terms_explanation"
 msgstr ""
 
-msgid "rules.style_anchor"
-msgstr ""
-
-msgid "rules.style_explanation"
-msgstr ""
-
 msgid "rules.titles_anchor"
 msgstr ""
 
@@ -393,6 +411,12 @@ msgid "rules.unconscious_bias_anchor"
 msgstr ""
 
 msgid "rules.unconscious_bias_explanation"
+msgstr ""
+
+msgid "rules.verbose_anchor"
+msgstr ""
+
+msgid "rules.verbose_explanation"
 msgstr ""
 
 msgid "rules.vision_anchor"

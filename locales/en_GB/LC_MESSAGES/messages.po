@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-09-19 13:51\n"
-"PO-Revision-Date: 2022-09-19 13:51\n"
+"POT-Creation-Date: 2022-09-29 20:44\n"
+"PO-Revision-Date: 2022-09-29 20:44\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -15,13 +15,13 @@ msgid "rules.abbreviation_anchor"
 msgstr "abbreviation"
 
 msgid "rules.abbreviation_explanation"
-msgstr "Sure your readers understand?"
+msgstr "Are you sure people know what this stands for?"
 
 msgid "rules.ability_anchor"
 msgstr "ability"
 
 msgid "rules.ability_explanation"
-msgstr "Hidden bias regarding disabilities"
+msgstr "Reveals and feeds biases against disabilities"
 
 msgid "rules.ableism_anchor"
 msgstr "ableist"
@@ -33,19 +33,19 @@ msgid "rules.age_anchor"
 msgstr "age_information"
 
 msgid "rules.age_explanation"
-msgstr "Sure you need to ask for age?"
+msgstr "Is age relevant to your message?"
 
 msgid "rules.age_old_anchor"
 msgstr "50_years_and_older"
 
 msgid "rules.age_old_explanation"
-msgstr "Hidden bias regarding age over 50"
+msgstr "Reveals and feeds biases against people aged 50+"
 
 msgid "rules.age_young_anchor"
 msgstr "25_years_and_younger"
 
 msgid "rules.age_young_explanation"
-msgstr "Hidden bias regarding age below 25"
+msgstr "Reveals and feeds biases against people under 25"
 
 msgid "rules.ageism_anchor"
 msgstr "ageism"
@@ -57,7 +57,7 @@ msgid "rules.agentic_anchor"
 msgstr "agentic"
 
 msgid "rules.agentic_explanation"
-msgstr "Doesn’t feel cooperative nor supportive"
+msgstr "Doesn’t resonate with cooperative and supportive people"
 
 msgid "rules.anglicism_anchor"
 msgstr "anglicism"
@@ -81,19 +81,19 @@ msgid "rules.behavior_anchor"
 msgstr "behaviour"
 
 msgid "rules.behavior_explanation"
-msgstr "Hidden bias regarding behaviour"
+msgstr "Frames authentic behaviour as undesirable and other"
 
 msgid "rules.belief_anchor"
 msgstr "belief"
 
 msgid "rules.belief_explanation"
-msgstr "Expressing belief; not true for all"
+msgstr "Expression of a belief system not universally shared"
 
 msgid "rules.binary_pronouns_anchor"
 msgstr "binary_pronouns"
 
 msgid "rules.binary_pronouns_explanation"
-msgstr "Pronouns according to binary understanding of gender"
+msgstr "Pronouns that exclude non-binary people"
 
 msgid "rules.caring_anchor"
 msgstr "caring"
@@ -105,13 +105,13 @@ msgid "rules.classism_anchor"
 msgstr "classism"
 
 msgid "rules.classism_explanation"
-msgstr "Expresses power-imbalance"
+msgstr "Implies socioeconomic status sets the value of a person"
 
 msgid "rules.cognitive_ability_anchor"
 msgstr "cognitive_ability"
 
 msgid "rules.cognitive_ability_explanation"
-msgstr "Hidden bias regarding cognitive ability"
+msgstr "Fuels preconceived notions about cognitive ability"
 
 msgid "rules.cognitive_perception_anchor"
 msgstr "cognitive_perception"
@@ -147,37 +147,37 @@ msgid "rules.emotional_security_anchor"
 msgstr "positive_emotions"
 
 msgid "rules.emotional_security_explanation"
-msgstr ""
+msgstr "Conveys emotional security"
 
 msgid "rules.exaggerating_anchor"
 msgstr "exaggeration"
 
 msgid "rules.exaggerating_explanation"
-msgstr "Exaggeration: Perceived as pressure or arrogance"
+msgstr "Build trust by avoiding exaggerations"
 
 msgid "rules.female_stereotype_anchor"
 msgstr "female_stereotype"
 
 msgid "rules.female_stereotype_explanation"
-msgstr "Branding women in traditional roles"
+msgstr "Limits women to traditional roles and behaviours"
 
 msgid "rules.filler_anchor"
 msgstr "filler_words"
 
 msgid "rules.filler_explanation"
-msgstr "Filler words make understanding harder"
+msgstr "Filler words add words but no meaning"
 
 msgid "rules.formality_anchor"
 msgstr "formality"
 
 msgid "rules.formality_explanation"
-msgstr "Formal wording creates emotional distance"
+msgstr "A less formal tone makes you sound more accessible"
 
 msgid "rules.function_anchor"
 msgstr "special_functions"
 
 msgid "rules.function_explanation"
-msgstr "Image of a man unconsciously triggered"
+msgstr "People are more likely to picture men here"
 
 msgid "rules.gen_boomer_anchor"
 msgstr "language_generation_boomer_&_X"
@@ -225,19 +225,19 @@ msgid "rules.hidden_image_anchor"
 msgstr "hidden_meaning"
 
 msgid "rules.hidden_image_explanation"
-msgstr "Hidden male generic"
+msgstr "Word component impacting representation"
 
 msgid "rules.hollow_anchor"
 msgstr "empty_words"
 
 msgid "rules.hollow_explanation"
-msgstr "Empty words have lost all meaning"
+msgstr "Empty words distract from or undermine your message"
 
 msgid "rules.homophobia_anchor"
 msgstr "homophobia"
 
 msgid "rules.homophobia_explanation"
-msgstr "Homophobe"
+msgstr "Homophobic"
 
 msgid "rules.inclusive_anchor"
 msgstr "inclusive"
@@ -255,7 +255,7 @@ msgid "rules.leadership_anchor"
 msgstr "leadership_stereotype"
 
 msgid "rules.leadership_explanation"
-msgstr "Traditional leadership vocabulary"
+msgstr "Perpetuates outdated ideas about leading people"
 
 msgid "rules.learning_anchor"
 msgstr "learning_ability"
@@ -267,7 +267,7 @@ msgid "rules.male_stereotype_anchor"
 msgstr "male_stereotype"
 
 msgid "rules.male_stereotype_explanation"
-msgstr "Branding men in traditional roles"
+msgstr "Limits men to traditional roles and behaviours"
 
 msgid "rules.medical_state_anchor"
 msgstr "medical_state"
@@ -381,7 +381,7 @@ msgid "rules.titles_anchor"
 msgstr "titles"
 
 msgid "rules.titles_explanation"
-msgstr "Male generic doesn’t address all genders"
+msgstr "People are more likely to picture men here"
 
 msgid "rules.transphobia_anchor"
 msgstr "transphobia"

@@ -60,7 +60,7 @@
             "end": 21,
             "explanation": {
                 "icon": "😟",
-                "text": "“Mitmeinen” mit männlichen Generikum funktioniert nicht",
+                "text": "Viele denken bei diesem Wort zuerst an einen Mann",
                 "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#titel"
             },
             "gravity": 2.0,
@@ -92,7 +92,7 @@
             "end": 46,
             "explanation": {
                 "icon": "😟",
-                "text": "Verstecktes männliches Generikum",
+                "text": "Wortteil macht andere Geschlechter unsichtbar",
                 "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#versteckter_ausdruck"
             },
             "gravity": 2.0,
@@ -130,7 +130,7 @@
             "end": 62,
             "explanation": {
                 "icon": "😒",
-                "text": "Fühlt sich weder kooperativ noch unterstützend an",
+                "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
             },
             "gravity": 2.0,
@@ -146,7 +146,7 @@
             "end": 85,
             "explanation": {
                 "icon": "😒",
-                "text": "Fühlt sich weder kooperativ noch unterstützend an",
+                "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
             },
             "gravity": 2.0,
@@ -162,7 +162,7 @@
             "end": 124,
             "explanation": {
                 "icon": "😒",
-                "text": "Fühlt sich weder kooperativ noch unterstützend an",
+                "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
             },
             "gravity": 2.0,
@@ -200,53 +200,6 @@
             "start": 156,
             "subcategory": "communal",
             "text": "Freundliche"
-        },
-        {
-            "alternatives": [
-                {
-                    "remove": true
-                },
-                {
-                    "text": "Guten Tag"
-                },
-                {
-                    "text": "Hallo"
-                },
-                {
-                    "text": "Liebe*r"
-                },
-                {
-                    "text": "Liebe/Lieber"
-                },
-                {
-                    "text": "Guten Tag, liebe*r"
-                },
-                {
-                    "text": "Guten Tag, liebe/lieber"
-                },
-                {
-                    "text": "Liebe"
-                },
-                {
-                    "text": "Liebe alle"
-                },
-                {
-                    "text": "Hallo zusammen"
-                }
-            ],
-            "category": "style",
-            "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, her",
-            "end": 12,
-            "explanation": {
-                "icon": "🧊",
-                "text": "Formale Formulierung kreiert emotionale Distanz",
-                "url": "https://www.witty.works/de/kategorien/stil#formalitaet"
-            },
-            "gravity": 3.0,
-            "label": "Stil: Formalität",
-            "start": 0,
-            "subcategory": "formality",
-            "text": "Sehr geehrte"
         }
     ]
 }

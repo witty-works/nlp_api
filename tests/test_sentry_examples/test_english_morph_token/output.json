@@ -91,7 +91,7 @@
             "end": 83,
             "explanation": {
                 "icon": "😟",
-                "text": "Traditional leadership vocabulary",
+                "text": "Perpetuates outdated ideas about leading people",
                 "url": "https://www.witty.works/en/categories/gendered#leadership_stereotype"
             },
             "gravity": 2.0,
@@ -117,7 +117,7 @@
             "end": 63,
             "explanation": {
                 "icon": "💡",
-                "text": "Image of a man unconsciously triggered",
+                "text": "People are more likely to picture men here",
                 "url": "https://www.witty.works/en/categories/gendered#special_functions"
             },
             "gravity": 2.0,
@@ -125,32 +125,6 @@
             "start": 57,
             "subcategory": "function",
             "text": "intern"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "initial"
-                },
-                {
-                    "text": "principal"
-                },
-                {
-                    "text": "number-one"
-                }
-            ],
-            "category": "style",
-            "context": "Hi Siwar,\n\nit's the first time that we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n\nFossil Group Eur",
-            "end": 25,
-            "explanation": {
-                "icon": "🙄",
-                "text": "Empty words have lost all meaning",
-                "url": "https://www.witty.works/en/categories/style#empty_words"
-            },
-            "gravity": 3.0,
-            "label": "Style: Empty words",
-            "start": 20,
-            "subcategory": "hollow",
-            "text": "first"
         }
     ]
 }
