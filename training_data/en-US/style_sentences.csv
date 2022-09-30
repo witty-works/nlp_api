@@ -1,5 +1,5 @@
 Lemma,Word_Type,Category,Primary_subcategory,Alt_split
-Fine. Whatever.,i,style,hollow,["I don't feel good about this. Can we talk about it?"]
+Fine. Whatever.,i,style,hollow,"[""I don't feel good about this. Can we talk about it?""]"
 I think,i,style,filler,['-']
 I think we should,i,style,hollow,"[""Let's""]"
 It’s not that complicated,i,style,hollow,['Which part is confusing? I can help clarify']
@@ -12,8 +12,8 @@ able to,a,style,hollow,"['in a position to', 'willing to', 'interested in', 'pre
 amongst others,s,style,filler,['-']
 are on the same page,i,style,hollow,"['agree', 'are in agreement', 'understand each other', 'speak the same language']"
 at the end of the day,i,style,hollow,"['when the results come in', 'in the end']"
-bright mind,a+s,style,exaggerating,"['astute mind', 'creative mind', 'inventive mind', 'talent', 'engaged person', 'person with different perspectives', 'someone who comes up with interesting ideas', 'someone who comes up with creative solutions', 'astute minds', 'creative minds', 'inventive minds', 'talents', 'engaged people', 'people with different perspectives', 'people who comes up with interesting ideas', 'people who comes up with creative solutions']"
-clever head,a+s,style,exaggerating,"['competence', 'creativity', 'intelligence', 'talent', 'ability', 'capability', 'proficiency', 'education', 'creative person', 'astute person', 'inventive person', 'someone with an eye for solutions', 'someone with surprising ideas', 'creative people', 'astute people', 'inventive people', 'people with an eye for solutions', 'people with surprising ideas']"
+bright mind,a+s,style,exaggerating,"['astute mind', 'creative mind', 'inventive mind', 'talent', 'engaged person(...)', 'person with different perspectives(...)', 'someone who comes up with interesting ideas(...)', 'someone who comes up with creative solutions(...)', 'astute minds', 'creative minds', 'inventive minds', 'talents', 'engaged people(...)', 'people with different perspectives(...)', 'people who comes up with interesting ideas(...)', 'people who comes up with creative solutions(...)']"
+clever head,a+s,style,exaggerating,"['competence', 'creativity', 'intelligence', 'talent', 'ability', 'capability', 'proficiency', 'education', 'creative person(...)', 'astute person(...)', 'inventive person(...)', 'someone with an eye for solutions(...)', 'someone with surprising ideas(...)', 'creative people(...)', 'astute people(...)', 'inventive people(...)', 'people with an eye for solutions(...)', 'people with surprising ideas(...)']"
 click to,i,style,filler,['-']
 core competencies,s,style,hollow,['what we do best']
 digital immigrant,s,style,hollow,"['--- spell out relevant skills', 'technologically literate person', 'someone with technology literacy skills', 'someone who handles digital tools with ease', 'digitally skilled person', 'technologically literate people', 'those with technology literacy skills', 'people who handle digital tools with ease', 'digitally skilled people']"
@@ -22,19 +22,19 @@ drink the kool aid,i,style,hollow,"['be misled', ""believe everything you're tol
 drink the kool-aid,i,style,hollow,"['be misled', ""believe everything you're told""]"
 drink the koolaid,i,style,hollow,"['be misled', ""believe everything you're told""]"
 extra ordinary,a,style,exaggerating,"['-', 'remarkable', 'inspiring', 'baffling', 'unusual', 'exemplary']"
-fighter by nature,s,style,exaggerating,"['supporter', 'advocate', 'resilient person', 'person committed to shared goals', 'supporters', 'advocates', 'resilient people', 'people committed to shared goals']"
+fighter by nature,s,style,exaggerating,"['supporter', 'advocate', 'resilient person', 'person committed to shared goals(...)', 'supporters', 'advocates', 'resilient people', 'people committed to shared goals(...)']"
 first class,a,style,exaggerating,"['--- use only in programming', 'premium', 'quality-focused', 'luxurious', 'stylish', 'business --- in transportation']"
 first mover,s,style,exaggerating,"['the first to market a product', 'the first to offer a service', 'the first to seize a market opportunity', 'those first to market a product', 'those first to offer a service', 'those first to seize a market opportunity']"
 flat hierarchy,a+s,style,hollow,"['responsible and self-organized way of working', 'room for personal initiative', 'short lines of communication', 'opportunities for employees to help shape the company', 'room for responsibility and freedom to organize their work', 'short chains of command', 'responsible and self-organized ways of working', 'room for personal initiative', 'short lines of communication', 'opportunities for employees to help shape the company', 'room for responsibility and freedom to organize their work at the operational level']"
 flat organization,a+s,style,hollow,"['responsible and self-organized way of working', 'room for personal initiative', 'short lines of communication', 'opportunities for employees to help shape the company', 'room for responsibility and freedom to organize their work', 'short chains of command', 'responsible and self-organized ways of working', 'room for personal initiative', 'short lines of communication', 'opportunities for employees to help shape the company', 'room for responsibility and freedom to organize their work at the operational level']"
 for future reference,i,style,hollow,['What do you think about trying (...) instead?']
 front runner,s,style,exaggerating,"['-', 'favorite', 'person who sets the pace', 'probable winner', 'favorites', 'people who set the pace', 'probable winners']"
-go getter,s,style,exaggerating,"['bundle of energy', 'ball of fire', 'someone who sticks to their goal', 'person happy to see things through', 'someone who continues despite difficulty', 'person loyal to their cause', 'motivated people', 'energetic and focused colleagues', 'people who sticks to their goal', 'people happy to see things through', 'individuals who continues despite difficulty', 'people loyal to their cause']"
-go outside the box,i,style,hollow,"['take a new approach', 'jump from a maturing trend to an emerging trend', 'explore new business models', 'take a disruptive approach', 'rethink (a strategy)', 'reinvent (a brand)', 'redefine (a product)']"
+go getter,s,style,exaggerating,"['bundle of energy', 'ball of fire', 'someone who sticks to their goal(...)', 'person happy to see things through(...)', 'someone who continues despite difficulty(...)', 'person loyal to their cause(...)', 'motivated people', 'energetic and focused colleagues', 'people who sticks to their goal(...)', 'people happy to see things through(...)', 'individuals who continues despite difficulty(...)', 'people loyal to their cause(...)']"
+go outside the box,i,style,hollow,"['take a new approach', 'jump from a maturing trend to an emerging trend', 'explore new business models', 'take a disruptive approach', 'rethink (a strategy)(...)', 'reinvent (a brand)(...)', 'redefine (a product)(...)']"
 going forward,i,style,hollow,"['from now on', 'in the future']"
-high flyer,s,style,exaggerating,"['person who continues despite difficulties', 'someone devoted to their purpose', 'someone who sticks to their goal', 'someone willing to see things through', 'people who continue despite difficulties', 'people devoted to their purpose', 'people who stick to their goal', 'people willing to see things through']"
-high quality,a+s,style,hollow,"['adhering to rigorous standards', 'using premium materials', 'adhering to strict methods', 'meeting exacting requirements', 'dependable reliability']"
-highly motivated,a,style,hollow,"['motivated', 'energetic', 'enterprising', 'spirited', 'happy to take the initiative', 'willing to apply oneself', 'keenly interested']"
+high flyer,s,style,exaggerating,"['person who continues despite difficulties(...)', 'someone devoted to their purpose(...)', 'someone who sticks to their goal(...)', 'someone willing to see things through(...)', 'people who continue despite difficulties(...)', 'people devoted to their purpose(...)', 'people who stick to their goal(...)', 'people willing to see things through(...)']"
+high quality,a+s,style,hollow,"['adhering to rigorous standards(...)', 'using premium materials(...)', 'adhering to strict methods(...)', 'meeting exacting requirements(...)', 'dependable reliability(...)']"
+highly motivated,a,style,hollow,"['motivated', 'energetic', 'enterprising', 'spirited', 'happy to take the initiative(...)', 'willing to apply oneself(...)', 'keenly interested(...)']"
 key learnings,s,style,hollow,"[""what we've learned"", 'findings']"
 like crazy,i,style,exaggerating,"['fast and with great enthusiasm', 'a lot', ""like nobody's business"", 'without restraint', 'with speed and energy']"
 low hanging fruit,i,style,hollow,"['easy opportunities', 'easy pickings']"
@@ -57,7 +57,7 @@ proven track record,s,style,exaggerating,"['documented outcomes', 'portfolio of 
 push the envelope,i,style,hollow,"['push the boundaries', 'test the limits']"
 reach for the star,i,style,exaggerating,"['have aspirations', 'set motivating goals', 'set inspiring milestones']"
 reach to the star,i,style,exaggerating,"['have aspirations', 'set motivating goals', 'set inspiring milestones']"
-results driven,a,style,hollow,"['-', 'goal-oriented', 'keen to get things done', 'motivated by milestones', 'able to create momentum to get things done', 'using targets to stay motivated', 'focused on outcomes']"
+results driven,a,style,hollow,"['-', 'goal-oriented', 'keen to get things done(...)', 'motivated by milestones(...)', 'able to create momentum to get things done(...)', 'using targets to stay motivated(...)', 'focused on outcomes(...)']"
 risk carrier,s,style,exaggerating,['-']
 self driven,i,style,hollow,"['motivated', 'ardent', 'spirited', 'aspiring', 'sincere', 'industrious']"
 self starter,s,style,exaggerating,['-']
@@ -67,8 +67,8 @@ success story,s,style,exaggerating,['-']
 take it offline,i,style,hollow,['talk about this later']
 team player,s,style,hollow,"['someone who values team effort over personal gains', 'someone who enjoys collaboration', 'someone who can compromise to reach a shared goal', 'someone who feels inspired and motivated by working together with others toward a shared goal', 'people who value team effort over personal gains', 'people who enjoy collaboration', 'people who can compromise to reach a shared goal', 'people who feel inspired and motivated by working together with others toward a shared goal']"
 team spirit,s,style,hollow,"['mindset that values team effort over individual gains', 'mindsets that value team effort over individual gains']"
-think outside the box,i,style,hollow,"['think differently', 'explore new ideas', 'think creatively', 'use lateral thinking', 'look beyond the obvious', 'use parallel thinking', 'consider (...) from a fresh perspective', 'look (at ...) with fresh eyes', 'approach (...) from a new angle', 'deviate from existing practices']"
-top performance,s,style,exaggerating,"['substantial contribution to business success', 'amazing display of capability', 'history of delivering results']"
+think outside the box,i,style,hollow,"['think differently', 'explore new ideas', 'think creatively', 'use lateral thinking', 'look beyond the obvious', 'use parallel thinking(...)', 'consider (...) from a fresh perspective', 'look (at ...) with fresh eyes', 'approach (...) from a new angle', 'deviate from existing practices(...)']"
+top performance,s,style,exaggerating,"['substantial contribution to business success', 'amazing display of capability', 'history of delivering results(...)']"
 top performer,s,style,exaggerating,"['mentor at heart', 'an inspiration to the team', 'an entrepreneur at heart', 'someone with an entrepreneurial mindset', 'someone who thrives on working toward milestones', 'mentors at heart', 'people who are an inspiration to the team', 'entrepreneurs at heart', 'people with an entrepreneurial mindset', 'people who thrive on working toward milestones']"
 top performing,a,style,exaggerating,"['contributing to business success --- about a person', 'implementing goals with enthusiasm --- about a person', 'fulfilling customer expectations --- about a person']"
 unique to,a,style,hollow,"['exclusive to', 'particular to', 'characteristic of', 'typical of', 'peculiar to']"
@@ -79,5 +79,5 @@ winning type,s,style,exaggerating,['-']
 without any problem,i,style,exaggerating,"['-', 'easily', 'smoothly', 'swimmingly', 'without a hitch', 'without friction']"
 without problem,i,style,exaggerating,"['-', 'easily', 'smoothly', 'swimmingly', 'without a hitch', 'without friction']"
 without problems,i,style,exaggerating,"['-', 'easily', 'smoothly', 'swimmingly', 'without a hitch', 'without friction']"
-world leader,s,style,exaggerating,"['--- be specific to build trust', 'company with largest revenue share in the market', 'with largest customer base in the segment', 'brand to introduce the majority of technological advances in the market']"
+world leader,s,style,exaggerating,"['--- be specific to build trust', 'company with largest revenue share in the market(...)', 'with largest customer base in the segment(...)', 'brand to introduce the majority of technological advances in the market(...)']"
 world wide,a,style,hollow,"['--- be specific to build trust', 'in (...) countries', '(...) offices across (...) continents']"
