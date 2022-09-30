@@ -5,6 +5,26 @@
         {
             "alternatives": [
                 {
+                    "remove": true
+                }
+            ],
+            "category": "openly_discriminating",
+            "context": "Wir suchen Ninja Programmierer für unsere Kunden und keinen Armleuchter.",
+            "end": 71,
+            "explanation": {
+                "icon": "🚫",
+                "text": " Verletzt und schüchtert ein",
+                "url": "https://www.witty.works/de/kategorien/offene_diskriminierung#beleidigende_und_einschuechternde_sprache"
+            },
+            "gravity": 1.0,
+            "label": "Offene Diskriminierung: Beleidigende Und Einschüchternde Sprache",
+            "start": 60,
+            "subcategory": "offensive_language",
+            "text": "Armleuchter"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "Auftraggebende"
                 },
                 {
@@ -30,11 +50,11 @@
                 }
             ],
             "category": "gendered",
-            "context": "Wir suchen Ninja Programmierer für unsere Kunden",
+            "context": "Wir suchen Ninja Programmierer für unsere Kunden und keinen Armleuchter.",
             "end": 48,
             "explanation": {
                 "icon": "😟",
-                "text": "“Mitmeinen” mit männlichen Generikum funktioniert nicht",
+                "text": "Viele denken bei diesem Wort zuerst an einen Mann",
                 "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#titel"
             },
             "gravity": 2.0,
@@ -46,11 +66,11 @@
         {
             "alternatives": [],
             "category": "style",
-            "context": "Wir suchen Ninja Programmierer für unsere Kunden",
+            "context": "Wir suchen Ninja Programmierer für unsere Kunden und keinen Armleuchter.",
             "end": 16,
             "explanation": {
                 "icon": "😮‍💨",
-                "text": "Superlative: als Druck oder Arroganz wahrgenommen",
+                "text": "Auf Übertreibungen verzichten schafft Vertrauen",
                 "url": "https://www.witty.works/de/kategorien/stil#superlative"
             },
             "gravity": 2.0,

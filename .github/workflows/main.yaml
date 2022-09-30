@@ -52,10 +52,10 @@ jobs:
           pipenv run pybabel compile -d locales -l en_US -f
           pipenv run pybabel compile -d locales -l en_GB -f
 
-      - if: startsWith(github.ref, 'refs/tags/') != true && github.ref != 'refs/heads/main'
-        name: Use LT "dev" via .env file for anything but "main"
-        run: |
-          echo "LANGUAGETOOL_API=\"https://dev-54ta5gq-7jb67g2dz5epc.de-2.platformsh.site/v2\"" >> .env
+      #- if: startsWith(github.ref, 'refs/tags/') != true && github.ref != 'refs/heads/main'
+      #  name: Use LT "dev" via .env file for anything but "main"
+      #  run: |
+      #    echo "LANGUAGETOOL_API=\"https://dev-54ta5gq-7jb67g2dz5epc.de-2.platformsh.site/v2\"" >> .env
 
       - name: Run test suite
         run: |

@@ -19,9 +19,9 @@ extraordinary,a,style,exaggerating,"['-', 'remarkable', 'inspiring', 'baffling',
 extreme,a,style,exaggerating,"['-', 'scute', 'major', 'substantial', 'severe', 'over-the-top', '']"
 fantastic,a,style,exaggerating,"['-', 'remarkable', 'inspiring', 'amazing', 'riveting', 'stimulating']"
 first,a,style,hollow,"['initial', 'principal', 'number-one']"
-first-class,a,style,exaggerating,"['-', 'quality-focused', 'luxurious', 'fabulous', 'extravagant', 'stylish']"
+first-class,a,style,exaggerating,"['--- use only in programming', 'premium', 'quality-focused', 'luxurious', 'stylish', 'business --- in transportation']"
 first-mover,s,style,exaggerating,"['the first to market a product', 'the first to offer a service', 'the first to seize a market opportunity', 'those first to market a product', 'those first to offer a service', 'those first to seize a market opportunity']"
-firstclass,a,style,exaggerating,"['-', 'quality-focused', 'luxurious', 'fabulous', 'extravagant', 'stylish']"
+firstclass,a,style,exaggerating,"['--- use only in programming', 'premium', 'quality-focused', 'luxurious', 'stylish', 'business --- in transportation']"
 firstmover,s,style,exaggerating,"['the first to market a product', 'the first to offer a service', 'the first to seize a market opportunity', 'those first to market a product', 'those first to offer a service', 'those first to seize a market opportunity']"
 flexible,a,style,hollow,"[""--- don't use for people"", 'adaptable', 'strategically nimble', 'pragmatic', 'open', 'agile', 'variable', 'mobile', 'defined by its users']"
 front-runner,s,style,exaggerating,"['-', 'favorite', 'person who sets the pace', 'probable winner', 'favorites', 'people who set the pace', 'probable winners']"
@@ -33,7 +33,7 @@ go-getter,s,style,exaggerating,"['bundle of energy', 'ball of fire', 'someone wh
 god,s,style,exaggerating,['-']
 gogetter,s,style,exaggerating,"['bundle of energy', 'ball of fire', 'someone who sticks to their goal', 'person happy to see things through', 'someone who continues despite difficulty', 'person loyal to their cause', 'motivated people', 'energetic and focused colleagues', 'people who sticks to their goal', 'people happy to see things through', 'individuals who continues despite difficulty', 'people loyal to their cause']"
 good,a,style,hollow,"['exceptional', 'acceptable', 'worthy', 'favorable', 'positive']"
-great,a,style,hollow,"['sizable', 'strong', 'generous', 'exceptional', 'nicely']"
+great,a,style,hollow,"['much appreciated', 'considerable', 'substantial', 'significant', 'nicely']"
 hacker,s,style,exaggerating,"['-', 'technophile', 'techie', 'person with a high level of coding skills', 'technophiles', 'techies', 'people with a high level of coding skills']"
 hero,s,style,exaggerating,"['person of the hour', 'person making sacrifices for their team', 'role model', 'heroix', 'they', 'people of the hour', 'those making sacrifices for their team', 'role models', 'heroix']"
 high-flyer,s,style,exaggerating,"['person who continues despite difficulties', 'someone devoted to their purpose', 'someone who sticks to their goal', 'someone willing to see things through', 'people who continue despite difficulties', 'people devoted to their purpose', 'people who stick to their goal', 'people willing to see things through']"
@@ -69,7 +69,8 @@ profound,a,style,exaggerating,"['intense', 'deep', 'thorough', 'acute', 'thought
 protagonist,s,style,exaggerating,"['advocate', 'friend', 'proponent', 'supporter', 'person actively supporting a cause', 'advocates', 'friends', 'proponents', 'supporters', 'people actively supporting a cause']"
 quick,a,style,hollow,"['efficient', 'expedient', 'effective', 'rapid', 'prompt', 'willing', 'responsive', 'insightful', 'perceptive', 'observant', 'energetic', 'alert', 'lively', 'nimble', 'astute']"
 quite,adv,style,filler,['-']
-really,a,style,filler,['-']
+rather,a,style,filler,['-']
+really,a,style,filler,"['-', 'in fact', 'admittedly', 'to be honest', 'frankly']"
 results-driven,a,style,hollow,"['-', 'goal-oriented', 'keen to get things done', 'motivated by milestones', 'able to create momentum to get things done', 'using targets to stay motivated', 'focused on outcomes']"
 resultsdriven,a,style,hollow,"['-', 'goal-oriented', 'keen to get things done', 'motivated by milestones', 'able to create momentum to get things done', 'using targets to stay motivated', 'focused on outcomes']"
 rocket,s,style,exaggerating,['-']
@@ -81,6 +82,7 @@ state-of-the-art,a,style,hollow,"['current', 'best available', 'most advanced', 
 success,s,style,exaggerating,"['positive outcome', ""a feather in one's cap"", 'popular', 'good result', 'reward for dedication and hard work', 'positive outcomes', ""feathers in one's cap"", 'popular', '(good) results', 'rewarded for dedication and hard work']"
 successful,a,style,exaggerating,"['-', 'productive', 'lucky', 'lucrative', 'practiced', 'skilled']"
 successfully,a,style,exaggerating,"['-', 'with good results', 'favorably']"
+super,adv,style,exaggerating,['-']
 superstar,s,style,exaggerating,['-']
 surpass,v,style,exaggerating,"['refine', 'improve upon', 'transcend', 'do better than', 'go beyond']"
 synergize,v,style,hollow,['work together']

@@ -17,13 +17,12 @@ web:
     socket_family: unix
   commands:
     start: |
-      blackfire-python gunicorn app.main:app -b unix:$SOCKET -w ${WORKERS} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
+      gunicorn app.main:app -b unix:$SOCKET -w ${WORKERS} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
 
 hooks:
   build: |
     set -e
     pipenv install --system --deploy
-    pipenv run /opt/python/3.9/bin/python3.9 -m pip install blackfire==1.11.0
     pipenv run /opt/python/3.9/bin/python3.9 -m spacy download en_core_web_sm --no-cache-dir
     pipenv run /opt/python/3.9/bin/python3.9 -m spacy download de_core_news_lg --no-cache-dir
     pipenv run pybabel compile -d locales -l de_DE -f
@@ -53,8 +52,8 @@ relationships:
 
 crons:
   generate-statistics:
-    spec: "55 0 * * *"
+    spec: "0 1 * * 0"
     cmd: |
       if [ "$PLATFORM_BRANCH" = main ]; then
-          flock -n /tmp/send_statistics.lock php send_statistics.php
+          ./statistics.sh
       fi
