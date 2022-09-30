@@ -607,8 +607,7 @@ class ResultOut(BaseModel):
             alternative != None
             and subcategory != "abbreviation"
             and (
-                ResultOut.countWords(alternative) >= ResultOut.countWords(text) + 3
-                or alternative.count("...") > 0
+                alternative.count("...") > 0
             )
         )
 
