@@ -408,11 +408,14 @@ class ResultOut(BaseModel):
         anchor = anchor if anchor else lang._("rules." + category + "_anchor")
         sub_anchor = None
 
-        if category == "orthography" or category == "corporate_rules":
-            category_key = category
-        else:
+        if subcategory in categories:
             category_key = subcategory
-            sub_anchor = lang._("rules." + subcategory + "_anchor")
+        else:
+            category_key = category
+
+        if category != "orthography" and category != "corporate_rules":
+            if category != subcategory:
+                sub_anchor = lang._("rules." + subcategory + "_anchor")
 
             if url == None:
                 settings = get_settings()
@@ -424,9 +427,10 @@ class ResultOut(BaseModel):
                     + ("categories" if lang.lang == "en" else "kategorien")
                     + "/"
                     + anchor
-                    + "#"
-                    + sub_anchor
                 )
+
+                if sub_anchor != None:
+                    url += "#" + sub_anchor
 
         label = ResultOut.reverseTransliterate(anchor, lang)
         if sub_anchor != None and anchor != sub_anchor:

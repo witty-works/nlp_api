@@ -1,3 +1,6 @@
 {
-    "text": "We support high performance employees."
+    "text": "We support high performance employees.",
+    "config": {
+        "maximum_importance": 3
+    }
 }

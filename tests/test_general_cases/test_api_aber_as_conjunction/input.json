@@ -1,3 +1,6 @@
 {
-    "text": "Na gut, wir gehen einkaufen, aber wir kaufen keine Süßigkeiten. Aber nachdem es so lange geregnet hatte, war der Weg aber zu matschig, um spazieren zu gehen."
+    "text": "Na gut, wir gehen einkaufen, aber wir kaufen keine Süßigkeiten. Aber nachdem es so lange geregnet hatte, war der Weg aber zu matschig, um spazieren zu gehen.",
+    "config": {
+        "maximum_importance": 3
+    }
 }

@@ -1,3 +1,6 @@
 {
-    "text": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance."
+    "text": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
+    "config": {
+        "maximum_importance": 3
+    }
 }

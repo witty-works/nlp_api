@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-09-19 13:51\n"
-"PO-Revision-Date: 2022-09-19 13:51\n"
+"POT-Creation-Date: 2022-09-30 08:13\n"
+"PO-Revision-Date: 2022-09-30 08:13\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -45,12 +45,6 @@ msgid "rules.age_young_anchor"
 msgstr ""
 
 msgid "rules.age_young_explanation"
-msgstr ""
-
-msgid "rules.ageism_anchor"
-msgstr ""
-
-msgid "rules.ageism_explanation"
 msgstr ""
 
 msgid "rules.agentic_anchor"
@@ -95,10 +89,10 @@ msgstr ""
 msgid "rules.binary_pronouns_explanation"
 msgstr ""
 
-msgid "rules.caring_anchor"
+msgid "rules.casing_anchor"
 msgstr ""
 
-msgid "rules.caring_explanation"
+msgid "rules.casing_explanation"
 msgstr ""
 
 msgid "rules.classism_anchor"
@@ -123,6 +117,18 @@ msgid "rules.communal_anchor"
 msgstr ""
 
 msgid "rules.communal_explanation"
+msgstr ""
+
+msgid "rules.compounding_anchor"
+msgstr ""
+
+msgid "rules.compounding_explanation"
+msgstr ""
+
+msgid "rules.confused_words_anchor"
+msgstr ""
+
+msgid "rules.confused_words_explanation"
 msgstr ""
 
 msgid "rules.corporate_rules_anchor"
@@ -155,6 +161,12 @@ msgstr ""
 msgid "rules.exaggerating_explanation"
 msgstr ""
 
+msgid "rules.false_friends_anchor"
+msgstr ""
+
+msgid "rules.false_friends_explanation"
+msgstr ""
+
 msgid "rules.female_stereotype_anchor"
 msgstr ""
 
@@ -179,18 +191,6 @@ msgstr ""
 msgid "rules.function_explanation"
 msgstr ""
 
-msgid "rules.gen_boomer_anchor"
-msgstr ""
-
-msgid "rules.gen_boomer_explanation"
-msgstr ""
-
-msgid "rules.gen_z_anchor"
-msgstr ""
-
-msgid "rules.gen_z_explanation"
-msgstr ""
-
 msgid "rules.gender_identity_anchor"
 msgstr ""
 
@@ -209,10 +209,22 @@ msgstr ""
 msgid "rules.gendered_denominations_ending_explanation"
 msgstr ""
 
+msgid "rules.general_style_anchor"
+msgstr ""
+
+msgid "rules.general_style_explanation"
+msgstr ""
+
 msgid "rules.generic_plural_anchor"
 msgstr ""
 
 msgid "rules.generic_plural_explanation"
+msgstr ""
+
+msgid "rules.grammar_anchor"
+msgstr ""
+
+msgid "rules.grammar_explanation"
 msgstr ""
 
 msgid "rules.hearing_anchor"
@@ -243,12 +255,6 @@ msgid "rules.inclusive_anchor"
 msgstr ""
 
 msgid "rules.inclusive_explanation"
-msgstr ""
-
-msgid "rules.job_requirements_anchor"
-msgstr ""
-
-msgid "rules.job_requirements_explanation"
 msgstr ""
 
 msgid "rules.leadership_anchor"
@@ -293,10 +299,10 @@ msgstr ""
 msgid "rules.military_source_explanation"
 msgstr ""
 
-msgid "rules.misgendering_institutions_anchor"
+msgid "rules.misc_anchor"
 msgstr ""
 
-msgid "rules.misgendering_institutions_explanation"
+msgid "rules.misc_explanation"
 msgstr ""
 
 msgid "rules.mobility_anchor"
@@ -323,16 +329,16 @@ msgstr ""
 msgid "rules.orthography_explanation"
 msgstr ""
 
-msgid "rules.passive_voice_anchor"
+msgid "rules.plain_english_anchor"
 msgstr ""
 
-msgid "rules.passive_voice_explanation"
+msgid "rules.plain_english_explanation"
 msgstr ""
 
-msgid "rules.pressure_anchor"
+msgid "rules.punctuation_anchor"
 msgstr ""
 
-msgid "rules.pressure_explanation"
+msgid "rules.punctuation_explanation"
 msgstr ""
 
 msgid "rules.racism_anchor"
@@ -345,6 +351,36 @@ msgid "rules.racist_source_anchor"
 msgstr ""
 
 msgid "rules.racist_source_explanation"
+msgstr ""
+
+msgid "rules.redundancy_anchor"
+msgstr ""
+
+msgid "rules.redundancy_explanation"
+msgstr ""
+
+msgid "rules.regionalisms_anchor"
+msgstr ""
+
+msgid "rules.regionalisms_explanation"
+msgstr ""
+
+msgid "rules.repetitions_anchor"
+msgstr ""
+
+msgid "rules.repetitions_explanation"
+msgstr ""
+
+msgid "rules.repetitions_style_anchor"
+msgstr ""
+
+msgid "rules.repetitions_style_explanation"
+msgstr ""
+
+msgid "rules.semantics_anchor"
+msgstr ""
+
+msgid "rules.semantics_explanation"
 msgstr ""
 
 msgid "rules.sexism_anchor"
@@ -387,6 +423,18 @@ msgid "rules.transphobia_anchor"
 msgstr ""
 
 msgid "rules.transphobia_explanation"
+msgstr ""
+
+msgid "rules.typography_anchor"
+msgstr ""
+
+msgid "rules.typography_explanation"
+msgstr ""
+
+msgid "rules.typos_anchor"
+msgstr ""
+
+msgid "rules.typos_explanation"
 msgstr ""
 
 msgid "rules.unconscious_bias_anchor"

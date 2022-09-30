@@ -224,7 +224,7 @@ def test_1_1_authenticated_json(test_1_1_authenticated_dir, snapshot, set_redis)
 
 @pytest.mark.parametrize(
     "orthoraphy_case_dir",
-    get_dirs("tests/test_orthography"),
+    get_dirs("tests/test_languagetool"),
 )
 def test_orthoraphy(orthoraphy_case_dir, snapshot, set_redis):
 

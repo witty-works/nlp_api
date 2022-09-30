@@ -82,7 +82,7 @@
             "gravity": 1,
             "label": "Kommasetzung",
             "start": 49,
-            "subcategory": "hilfestellung_kommasetzung",
+            "subcategory": "orthography",
             "text": " um"
         },
         {
@@ -117,7 +117,7 @@
             "end": 49,
             "explanation": {
                 "icon": "😟",
-                "text": "“Mitmeinen” mit männlichen Generikum funktioniert nicht",
+                "text": "Viele denken bei diesem Wort zuerst an einen Mann",
                 "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#titel"
             },
             "gravity": 2,
@@ -133,7 +133,7 @@
             "end": 16,
             "explanation": {
                 "icon": "😮‍💨",
-                "text": "Superlative: als Druck oder Arroganz wahrgenommen",
+                "text": "Auf Übertreibungen verzichten schafft Vertrauen",
                 "url": "https://www.witty.works/de/kategorien/stil#superlative"
             },
             "gravity": 2,
@@ -153,7 +153,7 @@
             "end": 57,
             "explanation": {
                 "icon": "😟",
-                "text": "Füllwörter machen das Verständnis schwieriger",
+                "text": "Füllwörter machen Text länger und unverständlicher",
                 "url": "https://www.witty.works/de/kategorien/stil#fuellwoerter"
             },
             "gravity": 3,
@@ -191,7 +191,7 @@
             "end": 90,
             "explanation": {
                 "icon": "😮‍💨",
-                "text": "Superlative: als Druck oder Arroganz wahrgenommen",
+                "text": "Auf Übertreibungen verzichten schafft Vertrauen",
                 "url": "https://www.witty.works/de/kategorien/stil#superlative"
             },
             "gravity": 2,
