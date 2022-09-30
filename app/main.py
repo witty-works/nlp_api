@@ -79,7 +79,7 @@ from collections import defaultdict
 
 from app.sentry import set_up_sentry_sdk
 
-version = "1.36.0"
+version = "1.36.1"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -2047,10 +2047,13 @@ def sentences_matcher(
 
         for sentence, *data in sentences_data:
             if span.text.lower() == sentence.lower():
-                if len(data) >= 1:
-                    alternative = data[0]
                 if len(data) >= 2:
                     subcategory = data[1]
+                if len(data) >= 1:
+                    if subcategory == None:
+                        subcategory = data[0]
+                    else:
+                        alternative = data[0]
 
                 list_tokens.append(
                     ResultOut.factory(
