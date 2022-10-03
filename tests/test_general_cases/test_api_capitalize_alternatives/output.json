@@ -21,12 +21,6 @@
                 },
                 {
                     "text": "Klientel"
-                },
-                {
-                    "text": "beziehende Personen"
-                },
-                {
-                    "text": "beauftragende Firmen"
                 }
             ],
             "category": "gendered",
@@ -64,7 +58,13 @@
                     "text": "Unternehmerische Haltung"
                 },
                 {
-                    "text": "Freude am Weiterkommen"
+                    "text": "Freude an mehr Verantwortung"
+                },
+                {
+                    "text": "Freude am Setzen und Verwirklichen von Zielen"
+                },
+                {
+                    "text": "Interesse an persönlichem Wachstum"
                 }
             ],
             "category": "unconscious_bias",
@@ -82,7 +82,16 @@
             "text": "Ehrgeiz"
         },
         {
-            "alternatives": [],
+            "alternatives": [
+                {
+                    "inspiration": true,
+                    "text": "Einen langen Atem haben(...)"
+                },
+                {
+                    "inspiration": true,
+                    "text": "Fähigkeit, an Dingen dranzubleiben(...)"
+                }
+            ],
             "category": "unconscious_bias",
             "context": "Wir suchen alles für unsere Kunden: Ehrgeiz ist unser Schlüssel.\n\n\nDurchhaltevermögen benötigen wir.\n\n\n\n\n\nEhrgeiz ist am wichtigsten",
             "end": 85,
@@ -118,7 +127,13 @@
                     "text": "unternehmerische Haltung"
                 },
                 {
-                    "text": "Freude am Weiterkommen"
+                    "text": "Freude an mehr Verantwortung"
+                },
+                {
+                    "text": "Freude am Setzen und Verwirklichen von Zielen"
+                },
+                {
+                    "text": "Interesse an persönlichem Wachstum"
                 }
             ],
             "category": "unconscious_bias",
