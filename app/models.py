@@ -95,6 +95,7 @@ class GenderedRolesFormatType(str, Enum):
 class Config(BaseModel):
     store_context: Optional[bool] = True
     simple_language: Optional[bool] = False
+    hide_details: Optional[bool] = False
     primary_language: Optional[LangWithAutoType]
     preferred_languages: List = [LangWithAutoType.EN, LangWithAutoType.DE]
     _supported_langs = [
@@ -363,13 +364,13 @@ class ResultExplanation(BaseModel):
 class ResultOut(BaseModel):
     text: str
     context: Optional[str]
-    category: str
-    subcategory: str
+    category: Optional[str]
+    subcategory: Optional[str]
     start: int
     end: int
-    alternatives: List[ResultAlternative]
-    label: str
-    explanation: ResultExplanation
+    alternatives: Union[List[ResultAlternative], None]
+    label: Optional[str]
+    explanation: Optional[ResultExplanation]
     gravity: Optional[float]
 
     @staticmethod
@@ -449,14 +450,84 @@ class ResultOut(BaseModel):
 
         gravity = gravity if gravity != None else categories[category_key]["gravity"]
 
-        is_upper = ResultOut.isUpper(text, full_text, start, category, lang)
-
-        if alternatives == None:
+        if (config.hide_details and version >= 2.0) or alternatives == None:
             alternatives = []
+        else:
+            if isinstance(alternatives, Dict):
+                alternatives = list(alternatives.values())
 
-        if isinstance(alternatives, Dict):
-            alternatives = list(alternatives.values())
+            (alternatives, explanation_context) = ResultOut.clean_alternatives(
+                version,
+                config,
+                lang,
+                text,
+                category,
+                subcategory,
+                ResultOut.isUpper(text, full_text, start, category, lang),
+                alternatives,
+                explanation_context,
+            )
 
+        if category == "orthography":
+            explanation = ResultOut.convert_sharp_ss(lang, explanation)
+
+        explanation = {
+            "text": explanation,
+            "icon": icon,
+            "url": url,
+            "context": explanation_context,
+        }
+
+        if version <= 1.1:
+            if gravity != None:
+                gravity = math.ceil(gravity)
+
+            return ResultOut1_1(
+                text=text,
+                context=context,
+                category=category,
+                subcategory=subcategory,
+                start=start,
+                end=end,
+                alternatives=alternatives,
+                label=label,
+                explanation=explanation,
+                gravity=gravity,
+            )
+
+        if config.hide_details == True:
+            category = None
+            subcategory = None
+            alternatives = None
+            label = None
+            explanation = None
+            gravity = None
+
+        return ResultOut(
+            text=text,
+            context=context,
+            category=category,
+            subcategory=subcategory,
+            start=start,
+            end=end,
+            alternatives=alternatives,
+            label=label,
+            explanation=explanation,
+            gravity=gravity,
+        )
+
+    @staticmethod
+    def clean_alternatives(
+        version: float,
+        config: Config,
+        lang: Language,
+        text,
+        category,
+        subcategory,
+        is_upper,
+        alternatives,
+        explanation_context,
+    ):
         # remove empty strings
         if "" in alternatives:
             alternatives.remove("")
@@ -493,7 +564,6 @@ class ResultOut(BaseModel):
                 if is_upper:
                     alternative = string.capwords(alternative[0:1]) + alternative[1:]
             else:
-                explanation = ResultOut.convert_sharp_ss(lang, explanation)
                 alternative = ResultOut.convert_sharp_ss(lang, alternative)
 
             if alternative == "-" and version >= 1.1:
@@ -531,44 +601,7 @@ class ResultOut(BaseModel):
 
                 cleaned_alternatives[key] = variation
 
-        alternatives = list(cleaned_alternatives.values())
-
-        explanation = {
-            "text": explanation,
-            "icon": icon,
-            "url": url,
-            "context": explanation_context,
-        }
-
-        if version <= 1.1:
-            if gravity != None:
-                gravity = math.ceil(gravity)
-
-            return ResultOut1_1(
-                text=text,
-                context=context,
-                category=category,
-                subcategory=subcategory,
-                start=start,
-                end=end,
-                alternatives=alternatives,
-                label=label,
-                explanation=explanation,
-                gravity=gravity,
-            )
-
-        return ResultOut(
-            text=text,
-            context=context,
-            category=category,
-            subcategory=subcategory,
-            start=start,
-            end=end,
-            alternatives=alternatives,
-            label=label,
-            explanation=explanation,
-            gravity=gravity,
-        )
+        return list(cleaned_alternatives.values()), explanation_context
 
     @staticmethod
     def convert_sharp_ss(lang, text):

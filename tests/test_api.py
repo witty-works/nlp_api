@@ -524,6 +524,23 @@ def test_false_positive(test_false_positive_dir, snapshot, set_redis):
 
 
 @pytest.mark.parametrize(
+    "test_not_logged_in_dir",
+    get_dirs("tests/test_not_logged_in"),
+)
+def test_not_logged_in(test_not_logged_in_dir, snapshot):
+    input_json = test_not_logged_in_dir.joinpath("input.json").read_text()
+    # Call the tested endpoint.
+    client = TestClient(app)
+    response = client.post("/v2.0/check", json=json.loads(input_json))
+    assert response.status_code == 200
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    # Snapshot the return value.
+    snapshot.snapshot_dir = test_not_logged_in_dir
+    snapshot.assert_match(output, "output.json")
+
+
+@pytest.mark.parametrize(
     "test_term_replacement_dir",
     get_dirs("tests/test_term_replacement"),
 )

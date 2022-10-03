@@ -728,6 +728,8 @@ async def fetch_rules_for_request(user_request_in: RequestIn, user_email=Optiona
     user_request_in.config.__setattr__("store_context", True)
 
     if not user_email:
+        user_request_in.config.__setattr__("hide_details", True)
+ 
         return {}
 
     rules = await fetch_user_organization_rules(user_email)
@@ -851,11 +853,6 @@ async def check(
         return Result.factory("Version not supported: " + str(version))
 
     user_email = fetch_user(request)
-    if version >= 2.0 and not user_email:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-        )
-
     rules = await fetch_rules_for_request(user_request_in, user_email)
 
     text, lang, limit_reached = fetch_text(user_request_in)
