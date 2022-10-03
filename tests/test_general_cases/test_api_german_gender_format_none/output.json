@@ -15,12 +15,6 @@
                 },
                 {
                     "text": "Klientel"
-                },
-                {
-                    "text": "beziehende Personen"
-                },
-                {
-                    "text": "beauftragende Firmen"
                 }
             ],
             "category": "gendered",
@@ -38,7 +32,20 @@
             "text": "Kunden"
         },
         {
-            "alternatives": [],
+            "alternatives": [
+                {
+                    "inspiration": true,
+                    "text": "jemand, der erfahren und fachkundig ist(...)"
+                },
+                {
+                    "inspiration": true,
+                    "text": "Person, die ihr Know-how und ihre Erfahrung kreativ einsetzt(...)"
+                },
+                {
+                    "inspiration": true,
+                    "text": "Mensch, der seine Fachkenntnis ständig vertieft(...)"
+                }
+            ],
             "category": "style",
             "context": "Wir suchen Ninja Programmierer für unsere Kunden",
             "end": 16,

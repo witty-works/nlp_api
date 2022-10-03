@@ -1,5 +1,5 @@
 Lemma,Word_Type,Category,Primary_subcategory,Alt_split
-Ninja,s,style,exaggerating,"['skilled person', 'very proficient person', 'courageous person', 'they', 'person who continues despite difficulties', 'someone devoted to their purpose', 'someone who sticks to their goal', 'someone willing to see things through', 'skilled people', 'very proficient people', 'courageous people']"
+Ninja,s,style,exaggerating,"['skilled person', 'very proficient person', 'courageous person', 'they', 'person who continues despite difficulties(...)', 'someone devoted to their purpose(...)', 'someone who sticks to their goal(...)', 'someone willing to see things through(...)', 'skilled people', 'very proficient people', 'courageous people']"
 Sincerely,a,style,formality,"['Best regards', 'All the best', 'Thank you', 'Have a wonderful day', 'Let us know if you need anything']"
 absolute,a,style,exaggerating,['-']
 actually,adv,style,filler,['-']
@@ -29,19 +29,19 @@ frontrunner,s,style,exaggerating,"['-', 'favorite', 'person who sets the pace', 
 geek,s,style,exaggerating,"['-', 'techie', 'intellectual', 'bookworm', 'person devoted to academic pursuits', 'person with a high level of knowledge (skills) in', 'techies', ' intellectuals', 'bookworms', 'people devoted to academic pursuits', 'people with a high level of knowledge (skills) in']"
 generally,adv,style,filler,['-']
 global,a,style,hollow,"['--- be specific to build trust', 'in (...) countries', '(...) offices across (...) continents']"
-go-getter,s,style,exaggerating,"['bundle of energy', 'ball of fire', 'someone who sticks to their goal', 'person happy to see things through', 'someone who continues despite difficulty', 'person loyal to their cause', 'motivated people', 'energetic and focused colleagues', 'people who sticks to their goal', 'people happy to see things through', 'individuals who continues despite difficulty', 'people loyal to their cause']"
+go-getter,s,style,exaggerating,"['bundle of energy', 'ball of fire', 'someone who sticks to their goal(...)', 'person happy to see things through(...)', 'someone who continues despite difficulty(...)', 'person loyal to their cause(...)', 'motivated people', 'energetic and focused colleagues', 'people who sticks to their goal(...)', 'people happy to see things through(...)', 'individuals who continues despite difficulty(...)', 'people loyal to their cause(...)']"
 god,s,style,exaggerating,['-']
-gogetter,s,style,exaggerating,"['bundle of energy', 'ball of fire', 'someone who sticks to their goal', 'person happy to see things through', 'someone who continues despite difficulty', 'person loyal to their cause', 'motivated people', 'energetic and focused colleagues', 'people who sticks to their goal', 'people happy to see things through', 'individuals who continues despite difficulty', 'people loyal to their cause']"
+gogetter,s,style,exaggerating,"['bundle of energy', 'ball of fire', 'someone who sticks to their goal(...)', 'person happy to see things through(...)', 'someone who continues despite difficulty(...)', 'person loyal to their cause(...)', 'motivated people', 'energetic and focused colleagues', 'people who sticks to their goal(...)', 'people happy to see things through(...)', 'individuals who continues despite difficulty(...)', 'people loyal to their cause(...)']"
 good,a,style,hollow,"['exceptional', 'acceptable', 'worthy', 'favorable', 'positive']"
 great,a,style,hollow,"['much appreciated', 'considerable', 'substantial', 'significant', 'nicely']"
 hacker,s,style,exaggerating,"['-', 'technophile', 'techie', 'person with a high level of coding skills', 'technophiles', 'techies', 'people with a high level of coding skills']"
 hero,s,style,exaggerating,"['person of the hour', 'person making sacrifices for their team', 'role model', 'heroix', 'they', 'people of the hour', 'those making sacrifices for their team', 'role models', 'heroix']"
-high-flyer,s,style,exaggerating,"['person who continues despite difficulties', 'someone devoted to their purpose', 'someone who sticks to their goal', 'someone willing to see things through', 'people who continue despite difficulties', 'people devoted to their purpose', 'people who stick to their goal', 'people willing to see things through']"
-highflyer,s,style,exaggerating,"['person who continues despite difficulties', 'someone devoted to their purpose', 'someone who sticks to their goal', 'someone willing to see things through', 'people who continue despite difficulties', 'people devoted to their purpose', 'people who stick to their goal', 'people willing to see things through']"
+high-flyer,s,style,exaggerating,"['person who continues despite difficulties(...)', 'someone devoted to their purpose(...)', 'someone who sticks to their goal(...)', 'someone willing to see things through(...)', 'people who continue despite difficulties(...)', 'people devoted to their purpose(...)', 'people who stick to their goal(...)', 'people willing to see things through(...)']"
+highflyer,s,style,exaggerating,"['person who continues despite difficulties(...)', 'someone devoted to their purpose(...)', 'someone who sticks to their goal(...)', 'someone willing to see things through(...)', 'people who continue despite difficulties(...)', 'people devoted to their purpose(...)', 'people who stick to their goal(...)', 'people willing to see things through(...)']"
 imperative,a,style,exaggerating,"['critical', 'vital', 'essential']"
 important,a,style,hollow,"['vital', 'urgent', 'essential', 'influential', 'substantial ']"
 impressive,a,style,exaggerating,['-']
-innovation,s,style,hollow,"['reinvention', 'modernization', 'improvement', 'new creation', 'redesign', 'introduction of new ideas', 'introduction of new methods', 'reinventions', 'changes', 'modernizations', 'improvements', 'new creations', 'redesign']"
+innovation,s,style,hollow,"['reinvention', 'modernization', 'improvement', 'new creation', 'redesign', 'introduction of new ideas(...)', 'introduction of new methods(...)', 'reinventions', 'changes', 'modernizations', 'improvements', 'new creations', 'redesign']"
 innovative,a,style,hollow,"['imaginative', 'novel', 'creative', 'inventive', 'trend-setting', 'groundbreaking', 'inspired', 'forward-looking']"
 irresistible,a,style,exaggerating,['-']
 kamikaze,s,style,exaggerating,['-']
@@ -71,14 +71,14 @@ quick,a,style,hollow,"['efficient', 'expedient', 'effective', 'rapid', 'prompt',
 quite,adv,style,filler,['-']
 rather,a,style,filler,['-']
 really,a,style,filler,"['-', 'in fact', 'admittedly', 'to be honest', 'frankly']"
-results-driven,a,style,hollow,"['-', 'goal-oriented', 'keen to get things done', 'motivated by milestones', 'able to create momentum to get things done', 'using targets to stay motivated', 'focused on outcomes']"
-resultsdriven,a,style,hollow,"['-', 'goal-oriented', 'keen to get things done', 'motivated by milestones', 'able to create momentum to get things done', 'using targets to stay motivated', 'focused on outcomes']"
+results-driven,a,style,hollow,"['-', 'goal-oriented', 'keen to get things done(...)', 'motivated by milestones(...)', 'able to create momentum to get things done(...)', 'using targets to stay motivated(...)', 'focused on outcomes(...)']"
+resultsdriven,a,style,hollow,"['-', 'goal-oriented', 'keen to get things done(...)', 'motivated by milestones(...)', 'able to create momentum to get things done(...)', 'using targets to stay motivated(...)', 'focused on outcomes(...)']"
 rocket,s,style,exaggerating,['-']
 rockstar,s,style,exaggerating,['-']
 scorer,s,style,exaggerating,['-']
 self-driven,i,style,hollow,"['motivated', 'ardent', 'spirited', 'aspiring', 'sincere', 'industrious']"
 selfdriven,i,style,hollow,"['motivated', 'ardent', 'spirited', 'aspiring', 'sincere', 'industrious']"
-state-of-the-art,a,style,hollow,"['current', 'best available', 'most advanced', 'most sophisticated', 'technologically most advanced', 'implementing the most recent methods', 'involving fresh concepts', 'employing the latest equipment', 'using the latest techniques', 'at the highest level of development', 'using the newest ideas']"
+state-of-the-art,a,style,hollow,"['current', 'best available', 'most advanced', 'most sophisticated', 'technologically most advanced', 'implementing the most recent methods(...)', 'involving fresh concepts(...)', 'employing the latest equipment(...)', 'using the latest techniques(...)', 'at the highest level of development(...)', 'using the newest ideas(...)']"
 success,s,style,exaggerating,"['positive outcome', ""a feather in one's cap"", 'popular', 'good result', 'reward for dedication and hard work', 'positive outcomes', ""feathers in one's cap"", 'popular', '(good) results', 'rewarded for dedication and hard work']"
 successful,a,style,exaggerating,"['-', 'productive', 'lucky', 'lucrative', 'practiced', 'skilled']"
 successfully,a,style,exaggerating,"['-', 'with good results', 'favorably']"
@@ -88,10 +88,10 @@ surpass,v,style,exaggerating,"['refine', 'improve upon', 'transcend', 'do better
 synergize,v,style,hollow,['work together']
 team-player,s,style,hollow,"['someone who values team effort over personal gains', 'someone who enjoys collaboration', 'someone who can compromise to reach a shared goal', 'someone who feels inspired and motivated by working together with others toward a shared goal', 'people who value team effort over personal gains', 'people who enjoy collaboration', 'people who can compromise to reach a shared goal', 'people who feel inspired and motivated by working together with others toward a shared goal']"
 teamplayer,s,style,hollow,"['someone who values team effort over personal gains', 'someone who enjoys collaboration', 'someone who can compromise to reach a shared goal', 'someone who feels inspired and motivated by working together with others toward a shared goal', 'people who value team effort over personal gains', 'people who enjoy collaboration', 'people who can compromise to reach a shared goal', 'people who feel inspired and motivated by working together with others toward a shared goal']"
-top-performance,s,style,exaggerating,"['substantial contribution to business success', 'amazing display of capability', 'history of delivering results']"
+top-performance,s,style,exaggerating,"['substantial contribution to business success', 'amazing display of capability', 'history of delivering results(...)']"
 top-performer,s,style,exaggerating,"['mentor at heart', 'an inspiration to the team', 'an entrepreneur at heart', 'someone with an entrepreneurial mindset', 'someone who thrives on working toward milestones', 'mentors at heart', 'people who are an inspiration to the team', 'entrepreneurs at heart', 'people with an entrepreneurial mindset', 'people who thrive on working toward milestones']"
 top-performing,a,style,exaggerating,"['contributing to business success --- about a person', 'implementing goals with enthusiasm --- about a person', 'fulfilling customer expectations --- about a person']"
-topperformance,s,style,exaggerating,"['substantial contribution to business success', 'amazing display of capability', 'history of delivering results']"
+topperformance,s,style,exaggerating,"['substantial contribution to business success', 'amazing display of capability', 'history of delivering results(...)']"
 topperformer,s,style,exaggerating,"['mentor at heart', 'an inspiration to the team', 'an entrepreneur at heart', 'someone with an entrepreneurial mindset', 'someone who thrives on working toward milestones', 'mentors at heart', 'people who are an inspiration to the team', 'entrepreneurs at heart', 'people with an entrepreneurial mindset', 'people who thrive on working toward milestones']"
 topperforming,a,style,exaggerating,"['contributing to business success --- about a person', 'implementing goals with enthusiasm --- about a person', 'fulfilling customer expectations --- about a person']"
 totally,adv,style,filler,['-']

@@ -464,6 +464,7 @@ class ResultOut(BaseModel):
         if "^" in alternatives:
             alternatives.remove("^")
 
+        add_inspiration_alternatives = True
         cleaned_alternatives = {}
         for alternative in alternatives:
             if alternative == text:
@@ -499,10 +500,15 @@ class ResultOut(BaseModel):
 
             inspiration = None
             if ResultOut.isInspirationAlternative(text, alternative, subcategory):
-                if not config.show_inspiration_alternatives:
+                if (
+                    not config.show_inspiration_alternatives
+                    and not add_inspiration_alternatives
+                ):
                     continue
 
                 inspiration = True
+            else:
+                add_inspiration_alternatives = False
 
             alternative_variations = ResultOut.getAlternativeVariations(
                 config.gendered_roles_format, config.german_gender_ending, alternative
@@ -606,10 +612,7 @@ class ResultOut(BaseModel):
         return (
             alternative != None
             and subcategory != "abbreviation"
-            and (
-                ResultOut.countWords(alternative) >= ResultOut.countWords(text) + 3
-                or alternative.count("...") > 0
-            )
+            and (alternative.count("...") > 0)
         )
 
     @staticmethod

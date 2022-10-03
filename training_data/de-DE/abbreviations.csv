@@ -192,7 +192,7 @@ OOO,acr,style,abbreviation,"['out-of-office (OOO)', 'außer Haus', 'Abwesenheit'
 OOP,acr,style,abbreviation,"['Object-oriented Programming (OOP)', 'Objektorientierte Programmierung', 'Objektorientierte Programmierung (OOP)']"
 OOTD,acr,style,abbreviation,"['Outfit of the Day', 'Outfit des Tages']"
 OS,acr,style,abbreviation,"['Operating System (OS)', 'Betriebssystem']"
-OTB,abbr,style,abbreviation,"['outside the box', 'unkonventionell', 'um die Ecke (denken)', 'über den Tellerrand schauen', 'frische Denkweise']"
+OTB,abbr,style,abbreviation,"['outside the box', 'unkonventionell', 'um die Ecke (denken)(...)', 'über den Tellerrand schauen(...)', 'frische Denkweise(...)']"
 OTC,acr,style,abbreviation,"['Over-the-Counter (OTC)', 'über den Ladentisch', 'im Einzelhandel erhältlich']"
 OTP,acr,style,abbreviation,"['over-the-top', 'One-Time-Password', 'On-Time-Performance', 'übertrieben', 'Einmalpasswort', 'pünktlich erbrachte Leistung']"
 P card,abbr,style,abbreviation,"['Purchasing-Card (P-card)', 'Procurement-Card (P-card)', 'Einkaufskarte', 'Geschäftskreditkarte', 'Kundenkarte']"
