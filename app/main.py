@@ -1009,11 +1009,26 @@ def languagetool_matches(
             if subcategory in lt_style_categories:
                 category = "style"
 
-            subcategory = subcategory.lower()
-            if subcategory == "style":
-                subcategory = "general_style"
-            elif subcategory not in categories:
-                subcategory = category
+            if subcategory == "DIFFICULT_WORDS":
+                category = "style"
+                if match["rule"]["id"] == "ABKUERZUNG":
+                    subcategory = "abbreviation"
+                elif (
+                    match["rule"]["id"] == "ANGLIZISMEN"
+                    or "Fremdwörter" in match["message"]
+                ):
+                    subcategory = "anglicism"
+                else:
+                    subcategory = "simple_language"
+            elif match["rule"]["category"]["name"] == "Leichte Sprache":
+                category = "style"
+                subcategory = "simple_language"
+            else:
+                subcategory = subcategory.lower()
+                if subcategory == "style":
+                    subcategory = "general_style"
+                elif subcategory not in categories:
+                    subcategory = category
         except KeyError:
             subcategory = category
 
@@ -1029,16 +1044,24 @@ def languagetool_matches(
             except KeyError:
                 pass
 
-        anchor = (
-            label.lower()
-            .replace(" ", "_")
-            .replace("ß", "ss")
-            .replace("ü", "ue")
-            .replace("ä", "ae")
-            .replace("ö", "oe")
-        )
+        if category != "style":
+            anchor = (
+                label.lower()
+                .replace(" ", "_")
+                .replace("ß", "ss")
+                .replace("ü", "ue")
+                .replace("ä", "ae")
+                .replace("ö", "oe")
+            )
+        else:
+            anchor = None
 
-        explanation = match["message"]
+        if category != "style" or (
+            subcategory != "abbreviation" and subcategory != "anglicism"
+        ):
+            explanation = match["message"]
+        else:
+            explanation = None
 
         list_results.append(
             ResultOut.factory(
@@ -1066,10 +1089,14 @@ async def languagetool_rules(version: float, config: Config, lang: Language, tex
     async with ClientSession(
         connector=TCPConnector(verify_ssl=settings.languagetool_verify_ssl)
     ) as session:
+
         payload = {
             "text": text,
             "language": lang.locale,
         }
+
+        if config.simple_language and payload["language"] == "de-DE":
+            payload["language"] += "-x-simple-language"
 
         if config.primary_language != None:
             payload["motherTongue"] = config.primary_language

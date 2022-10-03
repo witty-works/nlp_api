@@ -449,8 +449,8 @@ categories = {
     "simple_language": {
         "inclusive": False,
         "category": "style",
-        "gravity": 2.0,
-        "importance": None,
+        "gravity": 3.0,
+        "importance": 2,
         "emoji": "🙄",
     },
     "speech": {

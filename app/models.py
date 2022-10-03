@@ -94,6 +94,7 @@ class GenderedRolesFormatType(str, Enum):
 
 class Config(BaseModel):
     store_context: Optional[bool] = True
+    simple_language: Optional[bool] = False
     primary_language: Optional[LangWithAutoType]
     preferred_languages: List = [LangWithAutoType.EN, LangWithAutoType.DE]
     _supported_langs = [
@@ -234,6 +235,7 @@ class SingularTheyConfigType(BaseModel):
 
 class RuleConfig(BaseModel):
     store_context: Optional[BooleanConfigType]
+    simple_language: Optional[BooleanConfigType]
     preferred_variants: Optional[LangVariantConfigType]
     german_gender_ending: Optional[GermanGenderEndingConfigType]
     gendered_roles_format: Optional[GenderedRolesFormatConfigType]
