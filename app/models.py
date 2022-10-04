@@ -450,7 +450,7 @@ class ResultOut(BaseModel):
 
         gravity = gravity if gravity != None else categories[category_key]["gravity"]
 
-        if (config.hide_details and version >= 2.0) or alternatives == None:
+        if (config.hide_details and version >= 2.1) or alternatives == None:
             alternatives = []
         else:
             if isinstance(alternatives, Dict):
@@ -495,7 +495,7 @@ class ResultOut(BaseModel):
                 gravity=gravity,
             )
 
-        if config.hide_details == True:
+        if config.hide_details and version >= 2.1:
             category = None
             subcategory = None
             alternatives = None
