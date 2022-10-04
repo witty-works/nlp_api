@@ -215,6 +215,13 @@ categories = {
         "importance": 2,
         "emoji": "😒",
     },
+    "gender_specific_abbreviation": {
+        "inclusive": False,
+        "category": "gendered",
+        "gravity": 2.0,
+        "importance": 2,
+        "emoji": "😮",
+    },
     "gendered": {
         "inclusive": False,
         "category": "gendered",
@@ -369,13 +376,6 @@ categories = {
         "importance": 1,
         "emoji": "❌",
     },
-    "plain_english": {
-        "inclusive": False,
-        "category": "style",
-        "gravity": 2.0,
-        "importance": None,
-        "emoji": "🙄",
-    },
     "punctuation": {
         "inclusive": False,
         "category": "orthography",
@@ -445,6 +445,13 @@ categories = {
         "gravity": 2.0,
         "importance": 2,
         "emoji": "😒",
+    },
+    "simple_language": {
+        "inclusive": False,
+        "category": "style",
+        "gravity": 3.0,
+        "importance": 2,
+        "emoji": "🙄",
     },
     "speech": {
         "inclusive": False,

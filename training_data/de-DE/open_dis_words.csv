@@ -226,9 +226,9 @@ Metze,s,openly_discriminating,sexism,['-']
 Milchmädchen,s,openly_discriminating,sexism,['-']
 Mistschlampe,s,openly_discriminating,sexism,['-']
 Mistvieh,s,openly_discriminating,offensive_language,['-']
-Mongo,s,openly_discriminating,ableism,"['-', 'Mensch mit Down-Syndrom', 'Mensch mit Trisomie 21', 'Mensch mit veränderter Chromosomenzahl', 'Mensch mit Lernschwierigkeiten']"
+Mongo,s,openly_discriminating,ableism,"['-', 'Mensch mit Down-Syndrom(...)', 'Mensch mit Trisomie 21(...)', 'Mensch mit veränderter Chromosomenzahl(...)', 'Mensch mit Lernschwierigkeiten(...)']"
 Neger,s,openly_discriminating,racism,"['-', 'Black Person of Color', 'Schwarz~e~/~Schwarzer', 'Afrikaner~in~/~Afrikaner', 'Afroamerikaner~in~/~Afroamerikaner']"
-Negerin,s,openly_discriminating,racism,"['-', 'Black Person of Color', 'Schwarz~e~/~Schwarzer', 'Afrikaner~in~/~Afrikaner', 'Afroamerikaner~in~/~Afroamerikaner']"
+Negerin,s,openly_discriminating,racism,"['-', 'Black Person of Color', 'Schwarze~/~Schwarzer', 'Afrikaner~in~/~Afrikaner', 'Afroamerikaner~in~/~Afroamerikaner']"
 Negerordnung,s,openly_discriminating,racism,['-']
 Nervensäge,s,openly_discriminating,sexism,['-']
 Nigger,s,openly_discriminating,racism,['-']
@@ -281,11 +281,11 @@ Scheißer,s,openly_discriminating,offensive_language,['-']
 Scheißhausfotze,s,openly_discriminating,sexism,['-']
 Scheißhausnutte,s,openly_discriminating,sexism,['-']
 Schickse,s,openly_discriminating,sexism,['-']
-Schielauge,s,openly_discriminating,ableism,"['-', 'Person mit Gleichgewichtsstörung des Augenmuskels']"
+Schielauge,s,openly_discriminating,ableism,"['-', 'Person mit Gleichgewichtsstörung des Augenmuskels(...)']"
 Schimmelmöse,s,openly_discriminating,sexism,['-']
 Schindluder,s,openly_discriminating,sexism,['-']
 Schlammsau,s,openly_discriminating,sexism,['-']
-Schlampe,s,openly_discriminating,sexism,"['-', 'Mensch, der unordentlich ist']"
+Schlampe,s,openly_discriminating,sexism,"['-', 'Mensch, der unordentlich ist(...)']"
 Schlampenfotze,s,openly_discriminating,sexism,['-']
 Schlampenkuh,s,openly_discriminating,sexism,['-']
 Schlampensau,s,openly_discriminating,sexism,['-']
@@ -318,8 +318,8 @@ Spacken,s,openly_discriminating,ableism,['-']
 Spacko,s,openly_discriminating,ableism,['-']
 Spagmat,s,openly_discriminating,ableism,['-']
 Spargeltarzan,s,openly_discriminating,ableism,"['-', 'schlanke Person']"
-Spast,s,openly_discriminating,ableism,"['-', 'Spastiker', 'Person, die mit Spasmen lebt', 'Person mit einer motorischen Erkrankung', 'Person mit Willkürbewegungen', 'Mensch mit Cerebralparese', 'Person, die sich ungeschickt oder dumm anstellt']"
-Spasti,s,openly_discriminating,ableism,"['-', 'Spastiker', 'Person, die mit Spasmen lebt', 'Person mit einer motorischen Erkrankung', 'Person mit Willkürbewegungen', 'Mensch mit Cerebralparese', 'Person, die sich ungeschickt oder dumm anstellt']"
+Spast,s,openly_discriminating,ableism,"['-', 'Spastiker', 'Person, die mit Spasmen lebt(...)', 'Person mit einer motorischen Erkrankung(...)', 'Person mit Willkürbewegungen(...)', 'Mensch mit Cerebralparese(...)', 'Person, die sich ungeschickt oder dumm anstellt(...)']"
+Spasti,s,openly_discriminating,ableism,"['-', 'Spastiker', 'Person, die mit Spasmen lebt(...)', 'Person mit einer motorischen Erkrankung(...)', 'Person mit Willkürbewegungen(...)', 'Mensch mit Cerebralparese(...)', 'Person, die sich ungeschickt oder dumm anstellt(...)']"
 Spermarutsche,s,openly_discriminating,sexism,['-']
 Spinatwachtel,s,openly_discriminating,sexism,['-']
 Stinkfotze,s,openly_discriminating,sexism,['-']
@@ -377,7 +377,7 @@ Windelschädel,s,openly_discriminating,antimuslim,['-']
 Xanthippe,s,openly_discriminating,sexism,['-']
 Yogafotze,s,openly_discriminating,sexism,['-']
 Yogaschlampe,s,openly_discriminating,sexism,['-']
-Zicke,s,openly_discriminating,sexism,"['-', 'Mensch, der anderer Meinung ist', 'launenhafter Mensch', 'jemand, der nicht tut, was man will', 'Mensch mit uneinsichtigem Verhalten', 'unwillige Person']"
+Zicke,s,openly_discriminating,sexism,"['-', 'Mensch, der anderer Meinung ist(...)', 'launenhafter Mensch(...)', 'jemand, der nicht tut, was man will(...)', 'Mensch mit uneinsichtigem Verhalten(...)', 'unwillige Person(...)']"
 Ziege,s,openly_discriminating,sexism,['-']
 Ziegenficker,s,openly_discriminating,sexism,['-']
 Zimperliese,s,openly_discriminating,sexism,['-']

@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-09-30 08:13\n"
-"PO-Revision-Date: 2022-09-30 08:13\n"
+"POT-Creation-Date: 2022-10-04 09:16\n"
+"PO-Revision-Date: 2022-10-04 09:16\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -197,6 +197,12 @@ msgstr "geschlechtsidentitaet"
 msgid "rules.gender_identity_explanation"
 msgstr "Versteckte Voreingenommenheit bezüglich Geschlechtsidentität"
 
+msgid "rules.gender_specific_abbreviation_anchor"
+msgstr "geschlechter_spezifische_abkuerzung"
+
+msgid "rules.gender_specific_abbreviation_explanation"
+msgstr "Männer als Standard; non-binäre Menschen ausgeschlossen"
+
 msgid "rules.gendered_anchor"
 msgstr "geschlechtsspezifisch"
 
@@ -329,12 +335,6 @@ msgstr ""
 msgid "rules.orthography_explanation"
 msgstr "Orthographie"
 
-msgid "rules.plain_english_anchor"
-msgstr "leichte_sprache"
-
-msgid "rules.plain_english_explanation"
-msgstr ""
-
 msgid "rules.punctuation_anchor"
 msgstr ""
 
@@ -394,6 +394,12 @@ msgstr "sexuelle_orientierung"
 
 msgid "rules.sexual_orientation_explanation"
 msgstr "Versteckte Voreingenommenheit bezüglich sexueller Orientierung"
+
+msgid "rules.simple_language_anchor"
+msgstr "leichte_sprache"
+
+msgid "rules.simple_language_explanation"
+msgstr ""
 
 msgid "rules.speech_anchor"
 msgstr "sprech_faehigkeit"

@@ -122,7 +122,13 @@
                     "text": "unternehmerische Haltung"
                 },
                 {
-                    "text": "Freude am Weiterkommen"
+                    "text": "Freude an mehr Verantwortung"
+                },
+                {
+                    "text": "Freude am Setzen und Verwirklichen von Zielen"
+                },
+                {
+                    "text": "Interesse an persönlichem Wachstum"
                 }
             ],
             "category": "unconscious_bias",
@@ -140,7 +146,16 @@
             "text": "Ehrgeiz"
         },
         {
-            "alternatives": [],
+            "alternatives": [
+                {
+                    "inspiration": true,
+                    "text": "einen langen Atem haben(...)"
+                },
+                {
+                    "inspiration": true,
+                    "text": "Fähigkeit, an Dingen dranzubleiben(...)"
+                }
+            ],
             "category": "unconscious_bias",
             "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
             "end": 85,
@@ -156,7 +171,14 @@
             "text": "Durchhaltevermögen"
         },
         {
-            "alternatives": [],
+            "alternatives": [
+                {
+                    "text": "vor interessante Aufgaben gestellt"
+                },
+                {
+                    "text": "vor spannende Fragen gestellt"
+                }
+            ],
             "category": "unconscious_bias",
             "context": "rte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
             "end": 124,
@@ -232,6 +254,9 @@
                 },
                 {
                     "text": "Hallo zusammen"
+                },
+                {
+                    "text": "Hallo, liebe Zuhörende und Lesende"
                 }
             ],
             "category": "style",

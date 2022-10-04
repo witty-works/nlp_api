@@ -3,7 +3,11 @@
     "limit_reached": false,
     "results": [
         {
-            "alternatives": [],
+            "alternatives": [
+                {
+                    "text": "Fun at work makes us happier, more productive, and more creative"
+                }
+            ],
             "category": "unconscious_bias",
             "context": "Our values? Work hard, play hard.",
             "end": 32,

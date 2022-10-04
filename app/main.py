@@ -79,7 +79,7 @@ from collections import defaultdict
 
 from app.sentry import set_up_sentry_sdk
 
-version = "1.36.1"
+version = "1.37.0"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -1009,11 +1009,26 @@ def languagetool_matches(
             if subcategory in lt_style_categories:
                 category = "style"
 
-            subcategory = subcategory.lower()
-            if subcategory == "style":
-                subcategory = "general_style"
-            elif subcategory not in categories:
-                subcategory = category
+            if subcategory == "DIFFICULT_WORDS":
+                category = "style"
+                if match["rule"]["id"] == "ABKUERZUNG":
+                    subcategory = "abbreviation"
+                elif (
+                    match["rule"]["id"] == "ANGLIZISMEN"
+                    or "Fremdwörter" in match["message"]
+                ):
+                    subcategory = "anglicism"
+                else:
+                    subcategory = "simple_language"
+            elif match["rule"]["category"]["name"] == "Leichte Sprache":
+                category = "style"
+                subcategory = "simple_language"
+            else:
+                subcategory = subcategory.lower()
+                if subcategory == "style":
+                    subcategory = "general_style"
+                elif subcategory not in categories:
+                    subcategory = category
         except KeyError:
             subcategory = category
 
@@ -1029,16 +1044,24 @@ def languagetool_matches(
             except KeyError:
                 pass
 
-        anchor = (
-            label.lower()
-            .replace(" ", "_")
-            .replace("ß", "ss")
-            .replace("ü", "ue")
-            .replace("ä", "ae")
-            .replace("ö", "oe")
-        )
+        if category != "style":
+            anchor = (
+                label.lower()
+                .replace(" ", "_")
+                .replace("ß", "ss")
+                .replace("ü", "ue")
+                .replace("ä", "ae")
+                .replace("ö", "oe")
+            )
+        else:
+            anchor = None
 
-        explanation = match["message"]
+        if category != "style" or (
+            subcategory != "abbreviation" and subcategory != "anglicism"
+        ):
+            explanation = match["message"]
+        else:
+            explanation = None
 
         list_results.append(
             ResultOut.factory(
@@ -1066,10 +1089,14 @@ async def languagetool_rules(version: float, config: Config, lang: Language, tex
     async with ClientSession(
         connector=TCPConnector(verify_ssl=settings.languagetool_verify_ssl)
     ) as session:
+
         payload = {
             "text": text,
             "language": lang.locale,
         }
+
+        if config.simple_language and payload["language"] == "de-DE":
+            payload["language"] += "-x-simple-language"
 
         if config.primary_language != None:
             payload["motherTongue"] = config.primary_language
@@ -1367,24 +1394,36 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
         )
 
     if is_sub_category_enabled(config, "gendered"):
-        list_full += rules_based_words_phrase_matcher(
-            version,
-            config,
-            lang,
-            text,
-            tokens,
-            gender_words_data_no_noun,
-            gender_sentences_data,
-            rules["de-DE"]["df_gendered_sentences"],
-            "gendered",
-        ) + gendered_denom_analysis_de(
-            version,
-            config,
-            lang,
-            text,
-            tokens,
-            gender_words_data,
-            false_positives.gender,
+        list_full += (
+            rules_based_words_phrase_matcher(
+                version,
+                config,
+                lang,
+                text,
+                tokens,
+                gender_words_data_no_noun,
+                gender_sentences_data,
+                rules["de-DE"]["df_gendered_sentences"],
+                "gendered",
+            )
+            + gendered_denom_analysis_de(
+                version,
+                config,
+                lang,
+                text,
+                tokens,
+                gender_words_data,
+                false_positives.gender,
+            )
+            + regex_matches(
+                version,
+                config,
+                lang,
+                text,
+                categories["gendered"]["category"],
+                "gender_specific_abbreviation",
+                m_w_regexes,
+            )
         )
 
     if is_sub_category_enabled(
@@ -1392,19 +1431,21 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
     ) and ResultOut.genderedRolesFormatInclusive(config.gendered_roles_format):
         subcategory = "gendered_denominations_ending"
         category = categories[subcategory]["category"]
-        endings = config._gendereddenom_ending.copy()
-        if config.german_gender_ending in endings:
-            del endings[config.german_gender_ending]
+        regexes = {}
+        for ending, regex in config._gendereddenom_ending.items():
+            if config.german_gender_ending == ending:
+                continue
 
-        list_full += gendered_denom_end(
+            regexes[regex] = [config.german_gender_ending]
+
+        list_full += regex_matches(
             version,
             config,
             lang,
             text,
             category,
             subcategory,
-            endings,
-            config.german_gender_ending,
+            regexes,
         )
 
     if is_sub_category_enabled(config, "unconscious_bias"):
@@ -1460,14 +1501,10 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
 
         subcategory = "d_and_i"
         category = categories[subcategory]["category"]
-        endings = {
-            config.german_gender_ending: config._gendereddenom_ending[
-                config.german_gender_ending
-            ]
-        }
+        regexes = {config._gendereddenom_ending[config.german_gender_ending]: None}
 
-        list_full += gendered_denom_end(
-            version, config, lang, text, category, subcategory, endings
+        list_full += regex_matches(
+            version, config, lang, text, category, subcategory, regexes
         )
 
     if is_sub_category_enabled(config, "style"):
@@ -1607,6 +1644,14 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
             gendered_words_data_en["gendered"],
             "gendered",
             matches_false,
+        ) + regex_matches(
+            version,
+            config,
+            lang,
+            text,
+            categories["gendered"]["category"],
+            "gender_specific_abbreviation",
+            m_w_regexes,
         )
 
     if is_sub_category_enabled(config, "inclusive"):
@@ -2073,42 +2118,51 @@ def sentences_matcher(
     return list_tokens
 
 
-def gendered_denom_end(
+def regex_matches(
     version: float,
     config: Config,
     lang,
     full_text,
     category,
     subcategory,
-    endings,
-    german_gender_ending=None,
+    regexes,
 ):
     list_ending = []
+    alternatives = None
 
-    if not german_gender_ending:
-        alternative = None
-
-    for item, regex in endings.items():
-        matches = re.finditer(r"\s(\S+)(" + regex + ")", full_text)
+    for regex in regexes:
+        matches = re.finditer(regex, full_text)
         for span in matches:
-            if type(span) == re.Match:
-                if german_gender_ending:
-                    alternative = [span.group(1) + german_gender_ending]
+            if type(span) != re.Match:
+                continue
 
-                list_ending.append(
-                    ResultOut.factory(
-                        version,
-                        config,
-                        lang,
-                        span.group(1) + span.group(2),
-                        full_text,
-                        category,
-                        subcategory,
-                        span.start() + 1,  # remove extra \S character
-                        span.end(),
-                        alternative,
-                    )
+            groups = span.groups()
+            text = span.group(1)
+
+            if len(groups) == 2:
+                text += span.group(2)
+
+                if category != "inclusive":
+                    alternatives = []
+                    for alternative in regexes[regex]:
+                        alternatives.append(groups[0] + alternative)
+            elif category != "inclusive":
+                alternatives = regexes[regex]
+
+            list_ending.append(
+                ResultOut.factory(
+                    version,
+                    config,
+                    lang,
+                    text,
+                    full_text,
+                    category,
+                    subcategory,
+                    span.start() + 1,  # remove extra \s character
+                    span.end(),
+                    alternatives,
                 )
+            )
 
     return list_ending
 

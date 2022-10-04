@@ -94,6 +94,7 @@ class GenderedRolesFormatType(str, Enum):
 
 class Config(BaseModel):
     store_context: Optional[bool] = True
+    simple_language: Optional[bool] = False
     primary_language: Optional[LangWithAutoType]
     preferred_languages: List = [LangWithAutoType.EN, LangWithAutoType.DE]
     _supported_langs = [
@@ -110,12 +111,12 @@ class Config(BaseModel):
     ]
     german_gender_ending: GermanGenderEndingType = GermanGenderEndingType.STAR
     _gendereddenom_ending = {
-        GermanGenderEndingType.STAR: "\\*in",
-        GermanGenderEndingType.UNDERSCORE: "_in",
-        GermanGenderEndingType.COLON: ":in",
-        GermanGenderEndingType.SLASH: "/in",
-        GermanGenderEndingType.SLASH_DASH: "/-in",
-        GermanGenderEndingType.CAPITAL_LETTER: r"In\b",
+        GermanGenderEndingType.STAR: r"\s(\S+)(\*in)",
+        GermanGenderEndingType.UNDERSCORE: r"\s(\S+)(_in)",
+        GermanGenderEndingType.COLON: r"\s(\S+)(:in)",
+        GermanGenderEndingType.SLASH: r"\s(\S+)(/in)",
+        GermanGenderEndingType.SLASH_DASH: r"\s(\S+)(/-in)",
+        GermanGenderEndingType.CAPITAL_LETTER: r"\s(\S+)(In\b)",
     }
     disabled_categories: List = []
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
@@ -234,6 +235,7 @@ class SingularTheyConfigType(BaseModel):
 
 class RuleConfig(BaseModel):
     store_context: Optional[BooleanConfigType]
+    simple_language: Optional[BooleanConfigType]
     preferred_variants: Optional[LangVariantConfigType]
     german_gender_ending: Optional[GermanGenderEndingConfigType]
     gendered_roles_format: Optional[GenderedRolesFormatConfigType]
@@ -464,6 +466,7 @@ class ResultOut(BaseModel):
         if "^" in alternatives:
             alternatives.remove("^")
 
+        add_inspiration_alternatives = True
         cleaned_alternatives = {}
         for alternative in alternatives:
             if alternative == text:
@@ -499,10 +502,15 @@ class ResultOut(BaseModel):
 
             inspiration = None
             if ResultOut.isInspirationAlternative(text, alternative, subcategory):
-                if not config.show_inspiration_alternatives:
+                if (
+                    not config.show_inspiration_alternatives
+                    and not add_inspiration_alternatives
+                ):
                     continue
 
                 inspiration = True
+            else:
+                add_inspiration_alternatives = False
 
             alternative_variations = ResultOut.getAlternativeVariations(
                 config.gendered_roles_format, config.german_gender_ending, alternative
@@ -606,10 +614,7 @@ class ResultOut(BaseModel):
         return (
             alternative != None
             and subcategory != "abbreviation"
-            and (
-                ResultOut.countWords(alternative) >= ResultOut.countWords(text) + 3
-                or alternative.count("...") > 0
-            )
+            and (alternative.count("...") > 0)
         )
 
     @staticmethod
