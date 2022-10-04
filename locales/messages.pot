@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-09-30 08:13\n"
-"PO-Revision-Date: 2022-09-30 08:13\n"
+"POT-Creation-Date: 2022-10-04 08:12\n"
+"PO-Revision-Date: 2022-10-04 08:12\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -197,6 +197,12 @@ msgstr ""
 msgid "rules.gender_identity_explanation"
 msgstr ""
 
+msgid "rules.gender_specific_abbreviation_anchor"
+msgstr ""
+
+msgid "rules.gender_specific_abbreviation_explanation"
+msgstr ""
+
 msgid "rules.gendered_anchor"
 msgstr ""
 
@@ -329,12 +335,6 @@ msgstr ""
 msgid "rules.orthography_explanation"
 msgstr ""
 
-msgid "rules.plain_english_anchor"
-msgstr ""
-
-msgid "rules.plain_english_explanation"
-msgstr ""
-
 msgid "rules.punctuation_anchor"
 msgstr ""
 
@@ -393,6 +393,12 @@ msgid "rules.sexual_orientation_anchor"
 msgstr ""
 
 msgid "rules.sexual_orientation_explanation"
+msgstr ""
+
+msgid "rules.simple_language_anchor"
+msgstr ""
+
+msgid "rules.simple_language_explanation"
 msgstr ""
 
 msgid "rules.speech_anchor"

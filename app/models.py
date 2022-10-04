@@ -110,12 +110,12 @@ class Config(BaseModel):
     ]
     german_gender_ending: GermanGenderEndingType = GermanGenderEndingType.STAR
     _gendereddenom_ending = {
-        GermanGenderEndingType.STAR: "\\*in",
-        GermanGenderEndingType.UNDERSCORE: "_in",
-        GermanGenderEndingType.COLON: ":in",
-        GermanGenderEndingType.SLASH: "/in",
-        GermanGenderEndingType.SLASH_DASH: "/-in",
-        GermanGenderEndingType.CAPITAL_LETTER: r"In\b",
+        GermanGenderEndingType.STAR: r"\s(\S+)(\*in)",
+        GermanGenderEndingType.UNDERSCORE: r"\s(\S+)(_in)",
+        GermanGenderEndingType.COLON: r"\s(\S+)(:in)",
+        GermanGenderEndingType.SLASH: r"\s(\S+)(/in)",
+        GermanGenderEndingType.SLASH_DASH: r"\s(\S+)(/-in)",
+        GermanGenderEndingType.CAPITAL_LETTER: r"\s(\S+)(In\b)",
     }
     disabled_categories: List = []
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH

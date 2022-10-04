@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-09-30 08:13\n"
-"PO-Revision-Date: 2022-09-30 08:13\n"
+"POT-Creation-Date: 2022-10-03 19:39\n"
+"PO-Revision-Date: 2022-10-03 19:39\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -256,6 +256,12 @@ msgstr "inclusive"
 
 msgid "rules.inclusive_explanation"
 msgstr "Creates sense of belonging"
+
+msgid "rules.job_gender_acronym_anchor"
+msgstr "n/a"
+
+msgid "rules.job_gender_acronym_explanation"
+msgstr "n/a"
 
 msgid "rules.leadership_anchor"
 msgstr "leadership_stereotype"
