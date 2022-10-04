@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-10-03 19:39\n"
-"PO-Revision-Date: 2022-10-03 19:39\n"
+"POT-Creation-Date: 2022-10-04 09:16\n"
+"PO-Revision-Date: 2022-10-04 09:16\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -197,6 +197,12 @@ msgstr "gender_identity"
 msgid "rules.gender_identity_explanation"
 msgstr "Hidden bias regarding gender identity"
 
+msgid "rules.gender_specific_abbreviation_anchor"
+msgstr "gender_specific_abbreviation"
+
+msgid "rules.gender_specific_abbreviation_explanation"
+msgstr "Men as default; non-binary persons are excluded"
+
 msgid "rules.gendered_anchor"
 msgstr "gendered"
 
@@ -256,12 +262,6 @@ msgstr "inclusive"
 
 msgid "rules.inclusive_explanation"
 msgstr "Creates sense of belonging"
-
-msgid "rules.job_gender_acronym_anchor"
-msgstr "n/a"
-
-msgid "rules.job_gender_acronym_explanation"
-msgstr "n/a"
 
 msgid "rules.leadership_anchor"
 msgstr "leadership_stereotype"
@@ -335,12 +335,6 @@ msgstr ""
 msgid "rules.orthography_explanation"
 msgstr "Orthography"
 
-msgid "rules.plain_english_anchor"
-msgstr "plain_english"
-
-msgid "rules.plain_english_explanation"
-msgstr ""
-
 msgid "rules.punctuation_anchor"
 msgstr ""
 
@@ -400,6 +394,12 @@ msgstr "sexual_orientation"
 
 msgid "rules.sexual_orientation_explanation"
 msgstr "Hidden bias regarding sexual orientation"
+
+msgid "rules.simple_language_anchor"
+msgstr "plain_english"
+
+msgid "rules.simple_language_explanation"
+msgstr ""
 
 msgid "rules.speech_anchor"
 msgstr "speech_ability"
