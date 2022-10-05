@@ -43,7 +43,7 @@ def test_highlight_position(ending_case_dir, snapshot, set_redis):
     input_json = ending_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
     response = client.post(
-        "/v2.0/check",
+        "/v2.1/check",
         json=json.loads(input_json),
         headers={"X-Auth": "default@gmail.com"},
     )
@@ -65,7 +65,7 @@ def test_sentry_examples(ending_case_dir, snapshot, set_redis):
     input_json = ending_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
     response = client.post(
-        "/v2.0/check",
+        "/v2.1/check",
         json=json.loads(input_json),
         headers={"X-Auth": "default@gmail.com"},
     )
@@ -107,7 +107,7 @@ def test_spacy_model(ending_case_dir, snapshot):
     input_json = ending_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
     response = client.post(
-        "/v2.0/check",
+        "/v2.1/check",
         json=json.loads(input_json),
         headers={"X-Auth": "default@gmail.com"},
     )
@@ -129,7 +129,7 @@ def test_demo_wordings_english(ending_case_dir, snapshot, set_redis):
     input_json = ending_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
     response = client.post(
-        "/v2.0/check",
+        "/v2.1/check",
         json=json.loads(input_json),
         headers={"X-Auth": "default@gmail.com"},
     )
@@ -151,7 +151,7 @@ def test_demo_wordings_german(ending_case_dir, snapshot, set_redis):
     input_json = ending_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
     response = client.post(
-        "/v2.0/check",
+        "/v2.1/check",
         json=json.loads(input_json),
         headers={"X-Auth": "default@gmail.com"},
     )
@@ -173,7 +173,7 @@ def test_json(general_case_dir, snapshot, set_redis):
     input_json = general_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
     response = client.post(
-        "/v2.0/check",
+        "/v2.1/check",
         json=json.loads(input_json),
         headers={"X-Auth": "default@gmail.com"},
     )
@@ -200,6 +200,29 @@ def test_1_1_json(test_1_1_dir, snapshot):
     output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
     # Snapshot the return value.
     snapshot.snapshot_dir = test_1_1_dir
+    snapshot.assert_match(output, "output.json")
+
+
+@pytest.mark.parametrize(
+    "test_2_0_dir",
+    get_dirs("tests/test_2_0"),
+)
+def test_2_0_json(test_2_0_dir, snapshot, set_redis):
+
+    # Read input files from the case directory.
+    input_json = test_2_0_dir.joinpath("input.json").read_text()
+    # Call the tested endpoint.
+    response = client.post("/v2.0/check", json=json.loads(input_json))
+    assert response.status_code == 403
+
+    response = client.post(
+        "/v2.0/check", json=json.loads(input_json), headers={"X-Auth": "test@gmail.com"}
+    )
+    assert response.status_code == 200
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    # Snapshot the return value.
+    snapshot.snapshot_dir = test_2_0_dir
     snapshot.assert_match(output, "output.json")
 
 
@@ -232,7 +255,7 @@ def test_orthoraphy(orthoraphy_case_dir, snapshot, set_redis):
     input_json = orthoraphy_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
     response = client.post(
-        "/v2.0/check",
+        "/v2.1/check",
         json=json.loads(input_json),
         headers={"X-Auth": "default@gmail.com"},
     )
@@ -254,7 +277,7 @@ def test_gender_ending(ending_case_dir, snapshot, set_redis):
     input_json = ending_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
     response = client.post(
-        "/v2.0/check",
+        "/v2.1/check",
         json=json.loads(input_json),
         headers={"X-Auth": "default@gmail.com"},
     )
@@ -267,7 +290,7 @@ def test_gender_ending(ending_case_dir, snapshot, set_redis):
 
 
 def test_api_missing_data():
-    response = client.post("/v2.0/check")
+    response = client.post("/v2.1/check")
     assert response.status_code == 422
 
 
@@ -281,7 +304,7 @@ def test_language_detection(detection_case_dir, snapshot, set_redis):
     input_json = detection_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
     response = client.post(
-        "/v2.0/check",
+        "/v2.1/check",
         json=json.loads(input_json),
         headers={"X-Auth": "default@gmail.com"},
     )
@@ -303,7 +326,7 @@ def test_language_detection_fail(fails_case_dir, snapshot, set_redis):
     input_json = fails_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
     response = client.post(
-        "/v2.0/check",
+        "/v2.1/check",
         json=json.loads(input_json),
         headers={"X-Auth": "default@gmail.com"},
     )
@@ -329,7 +352,7 @@ def test_invalid_access_token():
     input_json = '{"text": "Hello world."}'
 
     response = client.post(
-        "/v2.0/check",
+        "/v2.1/check",
         json=json.loads(input_json),
         headers={"authorization": "bearer invalid"},
     )
@@ -341,7 +364,7 @@ def test_config_changed(set_redis):
     input_json = '{"text": "Hello world.", "config_hash": "foo"}'
 
     response = client.post(
-        "/v2.0/check",
+        "/v2.1/check",
         json=json.loads(input_json),
         headers={"X-Auth": "default@gmail.com"},
     )
@@ -355,7 +378,7 @@ def test_config_changed(set_redis):
     input_json = '{"text": "Hello world.", "config_hash": "foo"}'
 
     response = client.post(
-        "/v2.0/check",
+        "/v2.1/check",
         json=json.loads(input_json),
         headers={"X-Auth": "test@gmail.com"},
     )
@@ -369,7 +392,7 @@ def test_config_organization_changed(set_redis):
     input_json = '{"text": "Hello world.", "organization_config_hash": "bar"}'
 
     response = client.post(
-        "/v2.0/check",
+        "/v2.1/check",
         json=json.loads(input_json),
         headers={"X-Auth": "test@gmail.com"},
     )
@@ -513,13 +536,30 @@ def test_false_positive(test_false_positive_dir, snapshot, set_redis):
     # Call the tested endpoint.
     client = TestClient(app)
     response = client.post(
-        "/v2.0/check", json=json.loads(input_json), headers={"X-Auth": "test@gmail.com"}
+        "/v2.1/check", json=json.loads(input_json), headers={"X-Auth": "test@gmail.com"}
     )
     assert response.status_code == 200
     # output must be string
     output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
     # Snapshot the return value.
     snapshot.snapshot_dir = test_false_positive_dir
+    snapshot.assert_match(output, "output.json")
+
+
+@pytest.mark.parametrize(
+    "test_not_logged_in_dir",
+    get_dirs("tests/test_not_logged_in"),
+)
+def test_not_logged_in(test_not_logged_in_dir, snapshot):
+    input_json = test_not_logged_in_dir.joinpath("input.json").read_text()
+    # Call the tested endpoint.
+    client = TestClient(app)
+    response = client.post("/v2.1/check", json=json.loads(input_json))
+    assert response.status_code == 200
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    # Snapshot the return value.
+    snapshot.snapshot_dir = test_not_logged_in_dir
     snapshot.assert_match(output, "output.json")
 
 
@@ -532,7 +572,7 @@ def test_term_replacement(test_term_replacement_dir, snapshot, set_redis):
     # Call the tested endpoint.
     client = TestClient(app)
     response = client.post(
-        "/v2.0/check", json=json.loads(input_json), headers={"X-Auth": "test@gmail.com"}
+        "/v2.1/check", json=json.loads(input_json), headers={"X-Auth": "test@gmail.com"}
     )
     assert response.status_code == 200
     # output must be string
@@ -598,7 +638,7 @@ def test_disable_categories(test_disable_categories_dir, snapshot, set_redis):
     # Call the tested endpoint.
     client = TestClient(app)
     response = client.post(
-        "/v2.0/check", json=json.loads(input_json), headers={"X-Auth": "test@gmail.com"}
+        "/v2.1/check", json=json.loads(input_json), headers={"X-Auth": "test@gmail.com"}
     )
     assert response.status_code == 200
     # output must be string
@@ -972,7 +1012,7 @@ def test_lemmatizer(lemma_case_dir, snapshot):
     input_json = lemma_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
     response = client.post(
-        "/v2.0/check",
+        "/v2.1/check",
         json=json.loads(input_json),
         headers={"X-Auth": "default@gmail.com"},
     )
@@ -996,7 +1036,7 @@ def test_grammatically_correct_alternatives(
     input_json = grammatical_alternatives_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
     response = client.post(
-        "/v2.0/check",
+        "/v2.1/check",
         json=json.loads(input_json),
         headers={"X-Auth": "default@gmail.com"},
     )
@@ -1018,7 +1058,7 @@ def test_abbreviation(abbr_case_dir, snapshot, set_redis):
     input_json = abbr_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
     response = client.post(
-        "/v2.0/check",
+        "/v2.1/check",
         json=json.loads(input_json),
         headers={"X-Auth": "default@gmail.com"},
     )
@@ -1040,7 +1080,7 @@ def test_english_plur(english_plur_case_dir, snapshot, set_redis):
     input_json = english_plur_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
     response = client.post(
-        "/v2.0/check",
+        "/v2.1/check",
         json=json.loads(input_json),
         headers={"X-Auth": "default@gmail.com"},
     )
@@ -1062,7 +1102,7 @@ def test_uberlegen_word_type(uberlegen_word_type_dir, snapshot, set_redis):
     input_json = uberlegen_word_type_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
     response = client.post(
-        "/v2.0/check",
+        "/v2.1/check",
         json=json.loads(input_json),
         headers={"X-Auth": "default@gmail.com"},
     )
@@ -1086,7 +1126,7 @@ def test_english_false_positive_pattern(
     input_json = english_false_pos_pattern_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
     response = client.post(
-        "/v2.0/check",
+        "/v2.1/check",
         json=json.loads(input_json),
         headers={"X-Auth": "default@gmail.com"},
     )
@@ -1110,7 +1150,7 @@ def test_english_upper_case_multiterms(
     input_json = english_upper_case_multiterms_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
     response = client.post(
-        "/v2.0/check",
+        "/v2.1/check",
         json=json.loads(input_json),
         headers={"X-Auth": "default@gmail.com"},
     )
