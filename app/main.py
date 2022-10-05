@@ -552,6 +552,42 @@ async def post_check_v2_0(
     )
 
 
+@app.post(
+    "/v2.1/check",
+    response_model=Union[ResultsOut, Result],
+    response_model_exclude_none=True,
+    dependencies=[Depends(HTTPBearer(auto_error=False))],
+)
+async def post_check_v2_1(
+    request: Request,
+    response: Response,
+    user_request_in: RequestIn,
+):
+    results, language, limit_reached, rules, user_email = await check(
+        2.1, request, response, user_request_in
+    )
+
+    if isinstance(results, Result):
+        return results
+
+    notifications = None
+    if "notifications" in rules and rules["notifications"] > 0:
+        notifications = rules["notifications"]
+
+    has_consented_to_mailing = None
+    if "has_consented_to_mailing" in rules:
+        has_consented_to_mailing = rules["has_consented_to_mailing"]
+
+    return ResultsOut(
+        results=results,
+        language=language,
+        limit_reached=limit_reached,
+        config_changed=fetch_config_change(rules, user_request_in),
+        notifications=notifications,
+        has_consented_to_mailing=has_consented_to_mailing,
+    )
+
+
 # data exchange routes
 @app.post("/organization/rules")
 async def post_organization_rules(
@@ -728,6 +764,8 @@ async def fetch_rules_for_request(user_request_in: RequestIn, user_email=Optiona
     user_request_in.config.__setattr__("store_context", True)
 
     if not user_email:
+        user_request_in.config.__setattr__("hide_details", True)
+
         return {}
 
     rules = await fetch_user_organization_rules(user_email)
@@ -846,12 +884,15 @@ async def check(
     response: Response,
     user_request_in: RequestIn,
 ):
-    if version != 1.1 and version != 2.0:  # pragma: no cover
+    if version != 1.1 and version != 2.0 and version != 2.1:  # pragma: no cover
         response.status_code = status.HTTP_400_BAD_REQUEST
-        return Result.factory("Version not supported: " + str(version))
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Version not supported: " + str(version),
+        )
 
     user_email = fetch_user(request)
-    if version >= 2.0 and not user_email:
+    if version == 2.0 and not user_email:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
         )
