@@ -967,6 +967,7 @@ def test_spacy():
     expected = [
         {
             "text": "Das",
+            "lemma": "der",
             "start": 0,
             "tag": "PDS",
             "pos": "PRON",
@@ -975,6 +976,7 @@ def test_spacy():
         },
         {
             "text": "ist",
+            "lemma": "sein",
             "start": 4,
             "tag": "VAFIN",
             "pos": "AUX",
@@ -983,6 +985,7 @@ def test_spacy():
         },
         {
             "text": "sehr",
+            "lemma": "sehr",
             "start": 8,
             "tag": "ADV",
             "pos": "ADV",
@@ -991,6 +994,7 @@ def test_spacy():
         },
         {
             "text": "ehrgeizig",
+            "lemma": "ehrgeizig",
             "start": 13,
             "tag": "ADJD",
             "pos": "ADV",

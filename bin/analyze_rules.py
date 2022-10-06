@@ -8,7 +8,13 @@ from app.models import (
     ResultOut,
     Config,
     GenderedRolesFormatType,
+    Language,
 )
+from app.main import fetch_tokens
+import logging
+
+log = logging.getLogger("urllib3")
+log.setLevel(logging.ERROR)
 
 
 def parse_args():
@@ -74,31 +80,35 @@ def get_data_from_files(locale):
     all_alternative_groups = []
     all_alternatives = []
     all_triggers = []
+    all_lemma = []
 
     for training_data_path in training_data_paths:
         with open(training_data_path) as f:
             reader = csv.DictReader(f)
             column_names = reader.fieldnames
-            if "Alt_split" in column_names:
+            if "Lemma" in column_names:
                 for row in reader:
-                    value = row["Alt_split"]
-                    value = value.replace("'", '"')
-                    try:
-                        alternatives = json.loads(value)
-                        if (
-                            locale[0:2] == "de"
-                            and str(f).find("abbreviations.csv") != -1
-                        ):
-                            alternatives.pop(0)
+                    lemma = row["Lemma"].replace("'", '"')
+                    if "words" in f.name:
+                        all_lemma.append(lemma)
 
-                        all_alternative_groups += alternatives
-                    except ValueError:
-                        continue
-
-                    if row["Primary_subcategory"] not in ["function", "titles"]:
-                        value = row["Lemma"]
+                    if "Alt_split" in row:
+                        value = row["Alt_split"]
                         value = value.replace("'", '"')
-                        all_triggers.append(value)
+                        try:
+                            alternatives = json.loads(value)
+                            if (
+                                locale[0:2] == "de"
+                                and str(f).find("abbreviations.csv") != -1
+                            ):
+                                alternatives.pop(0)
+
+                            all_alternative_groups += alternatives
+                        except ValueError:
+                            continue
+
+                        if row["Primary_subcategory"] not in ["function", "titles"]:
+                            all_triggers.append(lemma)
 
     print(
         "All alternative groups for directory %s: %s"
@@ -118,7 +128,7 @@ def get_data_from_files(locale):
         if re.search("^[^-]*--[^-]*$", alternative):
             print("Potential missing - in ' --- ': " + alternative)
 
-    return set(all_triggers), set(all_alternatives)
+    return set(all_lemma), set(all_triggers), set(all_alternatives)
 
 
 def generate_alternatives_english(all_alternatives):
@@ -126,6 +136,7 @@ def generate_alternatives_english(all_alternatives):
     clean_words = []
 
     for word in all_alternatives:
+        word = word.replace("...", " ")
         all_words.extend(word.split())
 
     for word in all_words:
@@ -240,7 +251,7 @@ def check_word(word, locale):
     return True
 
 
-def check_words_spelling(words, current_words, used_words):
+def check_words_spelling(words, current_words=[], used_words=[]):
     words_to_write = []
 
     for locale in words:
@@ -345,8 +356,9 @@ else:
     )
 
 words = {}
+lemmas = {}
 for locale in locales:
-    all_triggers, all_alternatives = get_data_from_files(locale)
+    all_lemma, all_triggers, all_alternatives = get_data_from_files(locale)
 
     if locale == "de-DE":
         words = generate_correct_endings_german(all_alternatives)
@@ -362,23 +374,46 @@ for locale in locales:
     ]
     print_trigger_alternative_overlap(locale, all_triggers, words[locale])
 
+    lang = Language(locale)
+    for lemma in all_lemma:
+        tokens = fetch_tokens(lang, lemma)
+        if lemma.lower() != tokens[0].lemma_.lower():
+            print(
+                "Lemma mismatch, got '"
+                + lemma
+                + "', spacy generates '"
+                + tokens[0].lemma_
+                + "'"
+            )
+
+    lemmas[locale] = list(all_lemma)
+
+
+original_languagetool_path = args.Original
+api_url = args.URL
+
+try:
+    response = requests.get(api_url.rstrip("/check") + "/languages")
+    assert response.status_code == 200
+    languagetool_running = True
+
+    print("Checking lemma for spelling mistakes ..")
+    lemma_spelling_mistakes = check_words_spelling(lemmas)
+    print("Following lemma may be spelling mistakes:")
+    print(lemma_spelling_mistakes)
+except requests.ConnectionError:
+    languagetool_running = False
 
 if args.Path:
-    current_words = []
-    path_to_ignore_file = args.Path
-    original_languagetool_path = args.Original
-    api_url = args.URL
-
-    try:
-        response = requests.get(api_url.rstrip("/check") + "/languages")
-        assert response.status_code == 200
-    except requests.ConnectionError:
+    if not languagetool_running:
         print("Please first run the local server %s" % api_url)
         exit(1)
 
+    path_to_ignore_file = args.Path
     if not is_file(path_to_ignore_file):
         raise FileNotFoundError("File %s cannot be found." % path_to_ignore_file)
     if args.Original and not is_file(original_languagetool_path):
         raise FileNotFoundError("File %s cannot be found." % original_languagetool_path)
 
+    print("Checking alternatives for spelling mistakes ..")
     update_ignore_file(words, original_languagetool_path, path_to_ignore_file)

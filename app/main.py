@@ -55,7 +55,6 @@ from app.models import (
     ResultsOut1_1,
     UserConfRequest,
     OrganizationConfRequest,
-    ConfRequest1_1,
     RuleConfig,
     ResultConf,
     ResultConf1_1,
@@ -469,6 +468,7 @@ async def get_debug_spacy(
         results.append(
             {
                 "text": token.text,
+                "lemma": token.lemma_,
                 "start": token.idx,
                 "tag": token.tag_,
                 "pos": token.pos_,
@@ -1834,7 +1834,7 @@ def check_token_type(token, lang, token_type=None, single_word=None):
     if token_type == None:
         return True
 
-    return fetch_token_type(token, token_type, single_word) in token_type.split(",")
+    return fetch_token_type(token, token_type, single_word) in token_type.split("+")
 
 
 def add_declension(lang, text, ending):
