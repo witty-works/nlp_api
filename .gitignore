@@ -5,8 +5,8 @@
 venv-nlp-api/
 
 training_data/lid.176.bin
-app/.env
-files
+
+analyze_rules/*
 
 __pycache__/
 *.py[cod]

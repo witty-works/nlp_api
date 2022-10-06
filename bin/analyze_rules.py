@@ -176,7 +176,7 @@ def analyze_correct_endings_german(word):
                 )
             )
 
-        for alternative_variation in alternative_variations:
+        for alternative_variation in sorted(alternative_variations):
             print(alternative_variation)
 
 
@@ -184,7 +184,7 @@ def generate_correct_endings_german(all_alternatives):
     endings = Config._gendereddenom_ending.keys()
 
     clean_words = []
-    for word in all_alternatives:
+    for word in sorted(all_alternatives):
         if "~" in word:
             analyze_correct_endings_german(word)
 
@@ -202,7 +202,7 @@ def generate_correct_endings_german(all_alternatives):
         clean_words.extend(word.split("/"))
 
     words_post = []
-    for word in clean_words:
+    for word in sorted(clean_words):
         word = word.replace(".", " ")
         word = word.replace("?", " ")
         word = word.replace("!", " ")
@@ -255,7 +255,7 @@ def check_words_spelling(words, current_words=[], used_words=[]):
     words_to_write = []
 
     for locale in words:
-        for word in words[locale]:
+        for word in sorted(words[locale]):
             if len(word) < 3 or word in current_words:
                 continue
 
@@ -288,7 +288,7 @@ def generate_german_articles(locale):
         reader = csv.DictReader(f)
         for row in reader:
             all_alternatives.append(row["Alternative"])
-    all_alternatives = set(all_alternatives)
+    all_alternatives = sorted(set(all_alternatives))
     for alternative in all_alternatives:
         for german_gender_ending in endings:
             word = ResultOut.getGenderedRolesFormatInclusive(
@@ -326,7 +326,7 @@ def update_ignore_file(words, original_languagetool_path, path_to_ignore_file):
     newly_added_words = intersection(words_to_write, used_words)
     print("Newly added words: " + str(len(newly_added_words)))
     if newly_added_words and len(newly_added_words) < 20:
-        print(newly_added_words)
+        print("\n".join(sorted(newly_added_words)))
 
     add_words_to_ignore(path_to_ignore_file, words_to_write)
     append_original_ignored_words(path_to_ignore_file, current_words)
@@ -334,20 +334,18 @@ def update_ignore_file(words, original_languagetool_path, path_to_ignore_file):
 
 def print_trigger_alternative_overlap(locale, all_triggers, words):
     print("Trigger words, overlapping with alternatives for locale: " + locale)
-    print(intersection(all_triggers, words))
+    print("\n".join(sorted(intersection(all_triggers, words))))
 
 
 args = parse_args()
 if args.Language.lower() == "de":
     locales = [
         "de-DE",
-        # "en-GB",
     ]
 
 elif args.Language.lower() == "en":
     locales = [
         "en-US",
-        # "en-GB",
     ]
 
 else:
@@ -375,6 +373,8 @@ for locale in locales:
     print_trigger_alternative_overlap(locale, all_triggers, words[locale])
 
     lang = Language(locale)
+
+    all_lemma = sorted(all_lemma)
     for lemma in all_lemma:
         tokens = fetch_tokens(lang, lemma)
         if lemma.lower() != tokens[0].lemma_.lower():
@@ -400,7 +400,7 @@ try:
     print("Checking lemma for spelling mistakes ..")
     lemma_spelling_mistakes = check_words_spelling(lemmas)
     print("Following lemma may be spelling mistakes:")
-    print(lemma_spelling_mistakes)
+    print("\n".join(sorted(lemma_spelling_mistakes)))
 except requests.ConnectionError:
     languagetool_running = False
 
