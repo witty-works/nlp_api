@@ -468,6 +468,7 @@ async def get_debug_spacy(
         results.append(
             {
                 "text": token.text,
+                "lemma": token.lemma_,
                 "start": token.idx,
                 "tag": token.tag_,
                 "pos": token.pos_,
