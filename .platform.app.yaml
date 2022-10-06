@@ -57,3 +57,13 @@ crons:
       if [ "$PLATFORM_BRANCH" = main ]; then
           ./statistics.sh
       fi
+  analyze-rules:
+    spec: "0 1 * * *"
+    cmd: |
+      if [ "$PLATFORM_BRANCH" = dev ]; then
+          ./analyze_rules.sh
+      fi
+
+# The mounts that will be performed when the package is deployed.
+mounts:
+  "analyze_rules": "shared:files/analyze_rules"
