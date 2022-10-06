@@ -1834,7 +1834,7 @@ def check_token_type(token, lang, token_type=None, single_word=None):
     if token_type == None:
         return True
 
-    return fetch_token_type(token, token_type, single_word) in token_type.split(",")
+    return fetch_token_type(token, token_type, single_word) in token_type.split("+")
 
 
 def add_declension(lang, text, ending):
