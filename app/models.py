@@ -2,6 +2,10 @@ from pydantic import BaseModel, validator
 from typing import Dict, List, Optional, Union
 from enum import Enum
 
+import json, typing
+
+from starlette.responses import Response
+
 import gettext
 import string
 import re
@@ -10,6 +14,7 @@ import math
 from app.categories import categories
 from app.settings import get_settings
 from app.privacy_filter import get_privacy_filter
+
 
 
 class Language(object):
@@ -833,3 +838,15 @@ class ResultsOut(BaseModel):
     config_changed: Optional[bool]
     notifications: Optional[int]
     has_consented_to_mailing: Optional[bool]
+
+class PrettyJSONResponse(Response):
+    media_type = "application/json"
+
+    def render(self, content: typing.Any) -> bytes:
+        return json.dumps(
+            content,
+            ensure_ascii=False,
+            allow_nan=False,
+            indent=4,
+            separators=(", ", ": "),
+        ).encode("utf-8")
