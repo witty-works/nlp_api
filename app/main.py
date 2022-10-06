@@ -55,7 +55,6 @@ from app.models import (
     ResultsOut1_1,
     UserConfRequest,
     OrganizationConfRequest,
-    ConfRequest1_1,
     RuleConfig,
     ResultConf,
     ResultConf1_1,
