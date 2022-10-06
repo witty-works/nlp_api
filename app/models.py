@@ -309,16 +309,6 @@ class ConfRequest(BaseModel):
     has_consented_to_mailing: Optional[bool]
 
 
-class ConfRequest1_1(BaseModel):
-    id: str
-    name: str
-    plan: str
-    users: List[str]
-    config: RuleConfig
-    false_positives: List[str] = []
-    term_replacements: List[TermReplacement1_1] = []
-
-
 class UserConfRequest(ConfRequest):
     email: str
     organization_id: Optional[str]
