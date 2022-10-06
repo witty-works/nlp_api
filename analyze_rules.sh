@@ -55,7 +55,7 @@ do
     fi
 
     lt_url="https://lt.default.api.witty.works/v2/check"
-    cmd="pipenv run python -m bin.analyze_rules -l $lang -u $lt_url >> ./analyze_rules/$lang.txt"
+    cmd="pipenv run /opt/python/3.9/bin/python3.9 -m bin.analyze_rules -l $lang -u $lt_url >> ./analyze_rules/$lang.txt"
     diff="diff $prev_file $file"
 
     if $SEND_MAIL;
