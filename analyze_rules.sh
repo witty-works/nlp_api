@@ -28,101 +28,112 @@ while getopts "hrne:" options; do
   esac
 done
 
-if $SEND_MAIL;
+echo "Collecting data"
+
+lt_url="https://lt.default.api.witty.works/v2/check"
+
+diff_not_empty=false
+
+python=`which python`
+if ! [[ "$python" =~ ^/ ]]
 then
-    message="Collecting data\n";
-else
-    echo "Collecting data";
+    python="python"
 fi
 
 langs=(
   "de"
   "en"
 )
-
-diff_run="Diff from last run"
-
-for i in ${!langs[@]};
+for i in ${!langs[@]}
 do
     lang=${langs[$i]}
 
     description="Analyze $lang rules"
     file="./analyze_rules/$lang.txt"
     prev_file="./analyze_rules/prev_$lang.txt"
-    if test -f "$file"; then
+    if test -f "$file"
+    then
       pre_cmd="mv $file $prev_file"
       eval $pre_cmd
     fi
 
-    lt_url="https://lt.default.api.witty.works/v2/check"
-    cmd="pipenv run /opt/python/3.9/bin/python3.9 -m bin.analyze_rules -l $lang -u $lt_url >> ./analyze_rules/$lang.txt"
-    diff="diff $prev_file $file"
+    cmd="pipenv run $python -m bin.analyze_rules -l $lang -u $lt_url >> ./analyze_rules/$lang.txt"
 
-    if $SEND_MAIL;
+    if ! [ $SEND_MAIL ]
     then
-        message+="\n\n$description";
-
-        eval $cmd;
-
-        if test -f "$prev_file"; then
-          message+="\n\n$diff_run";
-
-          diffoutput=`$diff`
-          message+="\n$diffoutput";
-        fi
-    else
         echo $description
-        eval $cmd;
+    fi
 
-        if test -f "$prev_file"; then
-          echo $diff_run;
-          eval $diff;
-        fi
+    eval $cmd
+
+    if test -f "$prev_file"
+    then
+      diff="diff $prev_file $file"
+
+      if $SEND_MAIL
+      then
+          diffoutput=`$diff`
+
+          if [ -z "$diffoutput" ]
+          then
+            echo "$lang diff is empty"
+          else
+            message+="\n\n$description"
+            message+="\n$diffoutput"
+            diff_not_empty=true
+          fi
+      else
+          echo "$lang diff from last run"
+          eval $diff
+      fi
     fi
 
 done
-
-if $SEND_MAIL;
-then
-  for i in ${!langs[@]};
-  do
-      lang=${langs[$i]}
-      description="Analyze $lang rules"
-      file="./analyze_rules/$lang.txt"
-
-      message+="\n\n$description";
-
-      cmdoutput=`cat $file`
-      message+="\n$cmdoutput";
-  done
-fi
 
 mj_payload(){
     currentDate=`date +"%Y-%m-%d"`
     messageJson=`echo "$message" | jq -Rsa .`
     messageJson=${messageJson//\\\\/\\}
+    base64de=`base64 -w 0 ./analyze_rules/de.txt`
+    base64en=`base64 -w 0 ./analyze_rules/en.txt`
 
     cat <<EOF
 {
   "Messages":[
     {
       "From": { "Email": "support@witty.works" },
-      "To": [{ "Email": "$STATISTICS_TO_EMAIL" }],
+      "To": [{ "Email": "$ANALYZE_RULES_EMAIL" }],
       "Subject": "Witty Rules Analysis: $currentDate",
-      "TextPart": $messageJson
+      "TextPart": $messageJson,
+      "Attachments": [
+          {
+              "ContentType": "text/plain",
+              "Filename": "de.txt",
+              "Base64Content": "$base64de"
+          },
+          {
+              "ContentType": "text/plain",
+              "Filename": "en.txt",
+              "Base64Content": "$base64en"
+          }
+      ]
     }
   ]
 }
 EOF
 }
 
-if $SEND_MAIL;
+if $diff_not_empty
 then
+    echo "sending email"
+    json=$(mj_payload)
+    echo "$json"
+
     curl -s \
       -X POST \
       --user "$MJ_APIKEY_PUBLIC:$MJ_APIKEY_PRIVATE" \
       https://api.mailjet.com/v3.1/send \
       -H 'Content-Type: application/json' \
-      -d "$(mj_payload)"
+      -d "$json"
 fi
 
