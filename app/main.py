@@ -59,6 +59,7 @@ from app.models import (
     ResultConf,
     ResultConf1_1,
     ErrorMessage,
+    PrettyJSONResponse,
 )
 
 from fastapi_microsoft_identity import validate_scope, get_token_claims
@@ -78,7 +79,7 @@ from collections import defaultdict
 
 from app.sentry import set_up_sentry_sdk
 
-version = "1.37.2"
+version = "1.37.3"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -355,6 +356,7 @@ def get_save_openapi_json(
 @app.get(
     "/debug/german_gender_ending",
     include_in_schema=not settings.is_prod,
+    response_class=PrettyJSONResponse,
 )
 def get_german_gender_ending(
     alternative: str,
@@ -449,6 +451,7 @@ async def post_auth_2_0(request: Request, response: Response):
 @app.get(
     "/debug/spacy",
     include_in_schema=not settings.is_prod,
+    response_class=PrettyJSONResponse,
 )
 async def get_debug_spacy(
     text: str,
