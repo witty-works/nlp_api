@@ -101,7 +101,7 @@ mj_payload(){
   "Messages":[
     {
       "From": { "Email": "support@witty.works" },
-      "To": [{ "Email": "$STATISTICS_TO_EMAIL" }],
+      "To": [{ "Email": "$ANALYZE_RULES_EMAIL" }],
       "Subject": "Witty Statistics: $currentDate",
       "TextPart": $messageJson
     }
