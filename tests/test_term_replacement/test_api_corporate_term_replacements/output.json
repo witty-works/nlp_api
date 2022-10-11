@@ -120,5 +120,6 @@
             "subcategory": "corporate_rules",
             "text": "foo"
         }
-    ]
+    ],
+    "team_analytics": true
 }
