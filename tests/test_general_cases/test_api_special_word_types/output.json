@@ -1,0 +1,52 @@
+{
+    "language": "en",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [],
+            "category": "inclusive",
+            "context": "I felt very encouraged as a Deaf person.",
+            "end": 6,
+            "explanation": {
+                "icon": "✅",
+                "text": "Emphasizes cooperative attributes",
+                "url": "https://www.witty.works/en/categories/inclusive#communal"
+            },
+            "label": "Inclusive: Communal",
+            "start": 2,
+            "subcategory": "communal",
+            "text": "felt"
+        },
+        {
+            "alternatives": [],
+            "category": "inclusive",
+            "context": "I felt very encouraged as a Deaf person.",
+            "end": 22,
+            "explanation": {
+                "icon": "✅",
+                "text": "Conveys emotional security",
+                "url": "https://www.witty.works/en/categories/inclusive#positive_emotions"
+            },
+            "label": "Inclusive: Positive emotions",
+            "start": 12,
+            "subcategory": "emotional_security",
+            "text": "encouraged"
+        },
+        {
+            "alternatives": [],
+            "category": "unconscious_bias",
+            "context": "I felt very encouraged as a Deaf person.",
+            "end": 39,
+            "explanation": {
+                "icon": "😒",
+                "text": "Hidden bias regarding hearing ability",
+                "url": "https://www.witty.works/en/categories/biased_language#hearing"
+            },
+            "gravity": 2.0,
+            "label": "Biased language: Hearing",
+            "start": 28,
+            "subcategory": "hearing",
+            "text": "Deaf person"
+        }
+    ]
+}

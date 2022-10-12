@@ -971,7 +971,7 @@ def test_spacy():
             "start": 0,
             "tag": "PDS",
             "pos": "PRON",
-            "word_type": "s",
+            "word_types": ["s"],
             "morph": ["Sing"],
         },
         {
@@ -980,7 +980,7 @@ def test_spacy():
             "start": 4,
             "tag": "VAFIN",
             "pos": "AUX",
-            "word_type": None,
+            "word_types": [],
             "morph": ["Sing"],
         },
         {
@@ -989,7 +989,7 @@ def test_spacy():
             "start": 8,
             "tag": "ADV",
             "pos": "ADV",
-            "word_type": "a",
+            "word_types": ["a"],
             "morph": [],
         },
         {
@@ -998,7 +998,7 @@ def test_spacy():
             "start": 13,
             "tag": "ADJD",
             "pos": "ADV",
-            "word_type": "a",
+            "word_types": ["a"],
             "morph": [],
         },
     ]
