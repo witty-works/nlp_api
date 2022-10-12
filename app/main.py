@@ -1208,83 +1208,19 @@ def is_false_positive_match(list_false_positive, tokens, token):
 
 
 # create false positives patterns based on false positives column
-def false_pattern_match(tokens):
-    # print ("Start:", tokens, [token.pos_ for token in tokens])
-    # list_false_positives = []
+def false_pattern_match(tokens, lang):
+    matcher = Matcher(model[lang.lang].vocab)
 
-    matcher = Matcher(model["en"].vocab)
-
-    # Define a list with nested dictionaries that contains the pattern to be matched
-    # pronoun_verb = [{'POS': 'PRON'}, {'POS': 'VERB'}]
-
-    # patterns for false positives
-
-    # master of + noun
-    pattern_master = [
-        [
-            {"LOWER": "master"},
-            {"LEMMA": "of"},
-            {"POS": {"IN": ["PRON", "NOUN", "PROPN"]}},
-        ],
-        [
-            {"LOWER": "masters"},
-            {"LEMMA": "of"},
-            {"POS": {"IN": ["PRON", "NOUN", "PROPN"]}},
-        ],
-    ]
-    matcher.add("FalsePositivesList", pattern_master)
-
-    # lead+someone(optional)+prepostion(on, down, up, to, away, back, along)
-    pattern_lead_prepos = [
-        [
-            {
-                "LEMMA": "lead",
-                "POS": "VERB",
-            },
-            {"POS": {"IN": ["PRON", "NOUN", "PROPN"]}, "OP": "?"},
-            {
-                "LEMMA": {
-                    "IN": [
-                        "on",
-                        "down",
-                        "up",
-                        "to",
-                        "away",
-                        "back",
-                        "along",
-                        "with",
-                        "off",
-                    ]
-                }
-            },
-        ]
-    ]
-    matcher.add("FalsePositivesList", pattern_lead_prepos)
-
-    # lead a (charmed, busy, quiet, normal, ...) life','lead your (my, his, her, their, our, ...) life'
-    pattern_lead_life = [
-        [
-            {"LEMMA": "lead", "POS": "VERB"},
-            {"POS": "DET", "OP": "?"},
-            {"POS": {"IN": ["ADJ", "PRON"]}, "OP": "?"},
-            {"LOWER": "life"},
-        ]
-    ]
-    matcher.add("FalsePositivesList", pattern_lead_life)
-
-    # need to
-    pattern_need_to = [
-        [{"LEMMA": "need", "POS": "VERB"}, {"LEMMA": {"IN": ["to", "for"]}}]
-    ]
-    matcher.add("FalsePositivesList", pattern_need_to)
+    for false_positive in pattern_false_positives[lang.lang]:
+        matcher.add("FalsePositivesList", false_positive)
 
     return matcher(tokens)
 
 
-def fetch_false_positive_matcher(tokens):
+def fetch_false_positive_matcher(tokens, lang):
     # create false positives list
     phrase_matches_false = fetch_matches(tokens, list_false_column)
-    word_matches_false = false_pattern_match(tokens)
+    word_matches_false = false_pattern_match(tokens, lang)
     return list(set(phrase_matches_false + word_matches_false))
 
 
@@ -1576,7 +1512,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
     gendered_words_data_en = defaultdict(list)
     inclusive_sentences_data_en = []
     sentences_data_en = defaultdict(list)
-    matches_false = fetch_false_positive_matcher(tokens)
+    matches_false = fetch_false_positive_matcher(tokens, lang)
 
     if lang.locale == "en-GB":
         words_data_en["od"] = open_disc_words_data_GB

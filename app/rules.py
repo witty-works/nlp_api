@@ -682,3 +682,66 @@ list_false_column = [
     "wheelchair-user",
     "substance user",
 ]
+
+# master of + noun
+pattern_master = [
+    [
+        {"LOWER": "master"},
+        {"LEMMA": "of"},
+        {"POS": {"IN": ["PRON", "NOUN", "PROPN"]}},
+    ],
+    [
+        {"LOWER": "masters"},
+        {"LEMMA": "of"},
+        {"POS": {"IN": ["PRON", "NOUN", "PROPN"]}},
+    ],
+]
+
+# lead+someone(optional)+prepostion(on, down, up, to, away, back, along)
+pattern_lead_prepos = [
+    [
+        {
+            "LEMMA": "lead",
+            "POS": "VERB",
+        },
+        {"POS": {"IN": ["PRON", "NOUN", "PROPN"]}, "OP": "?"},
+        {
+            "LEMMA": {
+                "IN": [
+                    "on",
+                    "down",
+                    "up",
+                    "to",
+                    "away",
+                    "back",
+                    "along",
+                    "with",
+                    "off",
+                ]
+            }
+        },
+    ]
+]
+
+# lead a (charmed, busy, quiet, normal, ...) life','lead your (my, his, her, their, our, ...) life'
+pattern_lead_life = [
+    [
+        {"LEMMA": "lead", "POS": "VERB"},
+        {"POS": "DET", "OP": "?"},
+        {"POS": {"IN": ["ADJ", "PRON"]}, "OP": "?"},
+        {"LOWER": "life"},
+    ]
+]
+
+# need to
+pattern_need_to = [[{"LEMMA": "need", "POS": "VERB"}, {"LEMMA": {"IN": ["to", "for"]}}]]
+
+pattern_false_positives = {
+    "en": [
+        pattern_master,
+        pattern_lead_prepos,
+        pattern_lead_life,
+        pattern_need_to,
+    ],
+    "de": [],
+}
