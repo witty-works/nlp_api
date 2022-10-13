@@ -1104,6 +1104,9 @@ def languagetool_matches(
             subcategory != "abbreviation" and subcategory != "anglicism"
         ):
             explanation = match["message"]
+            # may be removed once updated to LT 6.0 https://github.com/languagetool-org/languagetool/commit/e4f7d6a677483b069fd98dfc461a41623618767b
+            if explanation.startswith("Das Nomen „Trans"):
+                continue
         else:
             explanation = None
 
