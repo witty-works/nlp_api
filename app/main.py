@@ -1894,7 +1894,7 @@ def alternative_declension(text, token_type, ending, lang, alternative):
         elif is_conjunction(text):
             previous = False
 
-        new_alternative = text + " " + new_alternative
+        new_alternative = text + token.whitespace_ + new_alternative
 
     return new_alternative
 
