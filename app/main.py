@@ -1318,6 +1318,15 @@ async def language_rules(
     return list_results
 
 
+def fetch_lemma(token, lang, lower_case=True):
+    token_word = token.lemma_
+
+    if lower_case and (lang.lang == "en" or not check_word_types(token, lang, "s")):
+        return token_word.lower()
+
+    return token_word
+
+
 def check_category_importance(config: Config, subcategory: str):
     return (
         config.maximum_importance == None
