@@ -4,7 +4,11 @@ import json
 import secrets
 from aiohttp import ClientSession, TCPConnector, ClientError
 import copy
-from app.gender import get_gender_of_word
+from typing import Optional, Union
+from collections import defaultdict
+
+from spacy.tokens import Doc
+from spacy.matcher import PhraseMatcher, Matcher
 
 from fastapi import (
     FastAPI,
@@ -26,6 +30,8 @@ from fastapi.security import (
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import RedirectResponse
 
+from fastapi_microsoft_identity import validate_scope, get_token_claims
+
 from slack_bolt.adapter.fastapi.async_handler import AsyncSlackRequestHandler
 from slack_bolt.app.async_app import AsyncApp
 from slack_sdk import WebClient
@@ -36,10 +42,6 @@ from slack_sdk.models.blocks import (
 from slack_bolt import Ack, Respond
 from slack_sdk.web.async_client import AsyncWebClient
 
-from typing import Optional, Union
-
-from spacy.tokens import Doc
-from spacy.matcher import PhraseMatcher, Matcher
 
 from app.models import (
     Config,
@@ -61,10 +63,6 @@ from app.models import (
     ErrorMessage,
     PrettyJSONResponse,
 )
-
-from fastapi_microsoft_identity import validate_scope, get_token_claims
-
-
 from app.lang_detection import LangDetection
 from app.categories import categories
 from app.settings import get_settings
@@ -74,10 +72,8 @@ from app.languagetool import get_languagetool_url
 from app.azure_ad_b2c import initialize_aadb2c
 from app.model import model
 from app.rules import *
-
-from collections import defaultdict
-
 from app.sentry import set_up_sentry_sdk
+from app.gender import get_gender_of_word
 
 version = "1.37.3"
 
