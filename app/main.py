@@ -2109,7 +2109,7 @@ def sentences_matcher(
         df_sentence = list(df_sentence["Lemma"])
 
     list_tokens = []
-    alternative = None
+    alternatives = None
     subcategory = fallback_subcategory
 
     matches = fetch_matches(tokens, df_sentence)
@@ -2128,7 +2128,7 @@ def sentences_matcher(
                     subcategory,
                     span.start_char,
                     span.end_char,
-                    alternative,
+                    alternatives,
                 )
             )
 
@@ -2142,7 +2142,7 @@ def sentences_matcher(
                     if subcategory == None:
                         subcategory = data[0]
                     else:
-                        alternative = data[0]
+                        alternatives = data[0]
 
                 list_tokens.append(
                     ResultOut.factory(
@@ -2155,7 +2155,7 @@ def sentences_matcher(
                         subcategory,
                         span.start_char,
                         span.end_char,
-                        alternative,
+                        alternatives,
                     )
                 )
 
@@ -2225,11 +2225,11 @@ def ub_words_phrase_matcher_de(
     list_tokens = []
 
     for token in tokens:
-        for word, word_type, alternative, subcategory in words_data:
+        for word, word_type, alternatives, subcategory in words_data:
             if not is_word_match(token, tokens, lang, word, word_type):
                 continue
 
-            alternative = alternatives_declension(token, lang, alternative)
+            alternatives = alternatives_declension(token, lang, alternatives)
 
             list_tokens.append(
                 ResultOut.factory(
@@ -2242,7 +2242,7 @@ def ub_words_phrase_matcher_de(
                     subcategory,
                     token.idx,
                     token.idx + len(token.text),
-                    alternative,
+                    alternatives,
                 )
             )
 
@@ -2368,14 +2368,14 @@ def style_word_analysis_de(
         if token.lemma_ == "aber" and is_conjunction(full_text, token.idx):
             continue
 
-        for word, word_type, alternative, subcategory in words_data:
+        for word, word_type, alternatives, subcategory in words_data:
             if not is_sub_category_enabled(config, subcategory):
                 continue
 
             if not is_word_match(token, tokens, lang, word, word_type, None, False):
                 continue
 
-            alternative = alternatives_declension(token, lang, alternative)
+            alternatives = alternatives_declension(token, lang, alternatives)
 
             list_tokens.append(
                 ResultOut.factory(
@@ -2388,7 +2388,7 @@ def style_word_analysis_de(
                     subcategory,
                     token.idx,
                     None,
-                    alternative,
+                    alternatives,
                 )
             )
 
@@ -2420,8 +2420,8 @@ def word_noun(
         for (
             word,
             word_type,
-            alternative_sing,
-            alternative_plur,
+            alternatives_sing,
+            alternatives_plur,
             subcategory,
             *data,
         ) in words_data:
@@ -2433,17 +2433,17 @@ def word_noun(
                 continue
 
             if lang.lang == "en":
-                alternative, subcategory = plural_or_singular_en(
+                alternatives, subcategory = plural_or_singular_en(
                     token,
                     token_morph_number,
-                    alternative_sing,
-                    alternative_plur,
+                    alternatives_sing,
+                    alternatives_plur,
                     subcategory,
                     data[0],
                 )
             else:
-                alternative = plural_or_singular_alternatives_de(
-                    token_morph_number, alternative_sing, alternative_plur
+                alternatives = plural_or_singular_alternatives_de(
+                    token_morph_number, alternatives_sing, alternatives_plur
                 )
 
             list_tokens.append(
@@ -2457,7 +2457,7 @@ def word_noun(
                     subcategory,
                     token.idx,
                     token.idx + len(token.text),
-                    alternative,
+                    alternatives,
                 )
             )
 
@@ -2479,7 +2479,7 @@ def rules_based_words_phrase_matcher(
 ):
     list_tokens = []
 
-    alternative = None
+    alternatives = None
     subcategory = fallback_subcategory
 
     for token in tokens:
@@ -2492,12 +2492,12 @@ def rules_based_words_phrase_matcher(
 
             if lang.lang == "en":
                 if len(data) > 1:
-                    alternative = ing_ify_alternatives(token, data[0])
-                    alternative = alternatives_declension(token, lang, alternative)
+                    alternatives = ing_ify_alternatives(token, data[0])
+                    alternatives = alternatives_declension(token, lang, alternatives)
                 else:
                     subcategory = data[0]
             elif len(data) > 0:
-                alternative = alternatives_declension(token, lang, data[0])
+                alternatives = alternatives_declension(token, lang, data[0])
 
             if not is_sub_category_enabled(config, subcategory):
                 continue
@@ -2513,7 +2513,7 @@ def rules_based_words_phrase_matcher(
                     subcategory,
                     token.idx,
                     token.idx + len(token.text),
-                    alternative,
+                    alternatives,
                 )
             )
 
@@ -2545,7 +2545,7 @@ def homonyms_en(
     list_tokens = []
 
     for token in tokens:
-        for word, word_type, category, subcategory, alternative in words_data:
+        for word, word_type, category, subcategory, alternatives in words_data:
             if not is_sub_category_enabled(config, subcategory):
                 continue
 
@@ -2554,7 +2554,7 @@ def homonyms_en(
             ):
                 continue
 
-            alternative = ing_ify_alternatives(token, alternative)
+            alternatives = ing_ify_alternatives(token, alternatives)
 
             list_tokens.append(
                 ResultOut.factory(
@@ -2567,7 +2567,7 @@ def homonyms_en(
                     subcategory,
                     token.idx,
                     token.idx + len(token.text),
-                    alternative,
+                    alternatives,
                 )
             )
 
@@ -2592,7 +2592,7 @@ def literal_match(
             term,
             category,
             subcategory,
-            alternative,
+            alternatives,
             *explanation,
         ) in term_list:
             span = tokens[start:end]
@@ -2625,7 +2625,7 @@ def literal_match(
                     subcategory,
                     span.start_char,
                     span.end_char,
-                    alternative,
+                    alternatives,
                     None,
                     explanation_text,
                     url,
