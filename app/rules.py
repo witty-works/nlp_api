@@ -1,6 +1,7 @@
 import pandas as pd
 import ast
 from collections import namedtuple
+from german_nouns.lookup import Nouns
 
 rules = {
     "de-DE": {
@@ -682,3 +683,5 @@ list_false_column = [
     "wheelchair-user",
     "substance user",
 ]
+
+german_nouns = Nouns()

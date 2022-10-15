@@ -1,0 +1,83 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "Kernfragen"
+                },
+                {
+                    "text": "komplexe Aufgaben"
+                },
+                {
+                    "text": "schwere Fragen"
+                },
+                {
+                    "text": "schwieriges Themen"
+                },
+                {
+                    "text": "komplexe Materien"
+                },
+                {
+                    "text": "Fragestellungen"
+                },
+                {
+                    "text": "Schwachpunkt"
+                },
+                {
+                    "text": "Beeinträchtigungen"
+                },
+                {
+                    "text": "Erschwernis"
+                },
+                {
+                    "text": "Haken"
+                },
+                {
+                    "text": "Schwierigkeiten"
+                },
+                {
+                    "text": "Hindernisse"
+                },
+                {
+                    "text": "Engpässe"
+                },
+                {
+                    "text": "Komplikationen"
+                },
+                {
+                    "text": "Fehler"
+                },
+                {
+                    "text": "Bürden"
+                },
+                {
+                    "text": "Hürden"
+                },
+                {
+                    "text": "Fallstricke"
+                },
+                {
+                    "text": "missliche Lagen"
+                },
+                {
+                    "text": "Unsicherheiten"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "Sind das Probleme?",
+            "end": 17,
+            "explanation": {
+                "icon": "😒",
+                "text": "Spricht kooperativ denkende Menschen nicht an",
+                "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
+            },
+            "gravity": 2.0,
+            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "start": 9,
+            "subcategory": "agentic",
+            "text": "Probleme"
+        }
+    ]
+}
