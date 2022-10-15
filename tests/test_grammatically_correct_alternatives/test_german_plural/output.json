@@ -1,0 +1,50 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "komplexe Aufgaben"
+                },
+                {
+                    "text": "Schwierigkeiten"
+                },
+                {
+                    "text": "Schwachpunkte"
+                },
+                {
+                    "text": "Beeinträchtigungen"
+                },
+                {
+                    "text": "Hindernisse"
+                },
+                {
+                    "text": "Engpässe"
+                },
+                {
+                    "text": "Komplikationen"
+                },
+                {
+                    "text": "Hürden"
+                },
+                {
+                    "text": "Fallstricke"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "Sind das Probleme?",
+            "end": 17,
+            "explanation": {
+                "icon": "😒",
+                "text": "Spricht kooperativ denkende Menschen nicht an",
+                "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
+            },
+            "gravity": 2.0,
+            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "start": 9,
+            "subcategory": "agentic",
+            "text": "Probleme"
+        }
+    ]
+}

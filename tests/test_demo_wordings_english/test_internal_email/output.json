@@ -24,16 +24,16 @@
         {
             "alternatives": [
                 {
-                    "text": "question"
+                    "text": "questioned"
                 },
                 {
-                    "text": "cross-examine"
+                    "text": "cross-examined"
                 },
                 {
-                    "text": "re-evaluate"
+                    "text": "re-evaluated"
                 },
                 {
-                    "text": "object to"
+                    "text": "objected to"
                 }
             ],
             "category": "unconscious_bias",
@@ -53,22 +53,22 @@
         {
             "alternatives": [
                 {
-                    "text": "invest in"
+                    "text": "invests in"
                 },
                 {
-                    "text": "support"
+                    "text": "supports"
                 },
                 {
-                    "text": "work toward"
+                    "text": "works toward"
                 },
                 {
-                    "text": "take responsibility for"
+                    "text": "takes responsibility for"
                 },
                 {
-                    "text": "dedicated"
+                    "text": "dedicates"
                 },
                 {
-                    "text": "invested"
+                    "text": "invests"
                 }
             ],
             "category": "unconscious_bias",

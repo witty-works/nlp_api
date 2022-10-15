@@ -10,6 +10,8 @@ from collections import defaultdict
 from spacy.tokens import Doc
 from spacy.matcher import PhraseMatcher, Matcher
 
+from inflex import Noun, Verb, Adjective
+
 from fastapi import (
     FastAPI,
     Request,
@@ -471,7 +473,7 @@ async def get_debug_spacy(
                 "start": token.idx,
                 "tag": token.tag_,
                 "pos": token.pos_,
-                "word_types": fetch_word_types(token),
+                "word_types": fetch_word_types(token, lang),
                 "morph": token.morph.get("Number"),
             }
         )
@@ -1735,33 +1737,18 @@ def is_false_positive(word, false_positive):
     return False
 
 
-"""Function to change verb to -ing form in alternatives"""
-
-
-def ing_ify_alternative(alternative):
-    return (
-        alternative.split()[0].rstrip("e")
-        + "ing"
-        + " "
-        + " ".join(alternative.split()[1:])
-    )
-
-
-def ing_ify_alternatives(token, alternatives):
-    if token.text.endswith("ing") and token.pos_ == "VERB":
-        return [
-            ing_ify_alternative(alternative).strip() for alternative in alternatives
-        ]
-
-    return alternatives
-
-
 """Function to change adjectives to -en form in alternatives"""
 
 
-def fetch_word_types(token, word_types=[], single_word=None):
+def fetch_word_types(token, lang, word_types=[], single_word=None):
+    if "adv" in word_types and token.pos_ == "ADV":
+        return ["adv"]
+
     if token.pos_ == "VERB":
-        return ["v"]
+        if lang.lang == "de" and "a" in word_types:
+            return "a"
+
+        return "v"
 
     if token.pos_ == "NOUN" or token.pos_ == "PRON":
         return ["s"]
@@ -1794,27 +1781,18 @@ def check_word_types(token, lang, word_types=[], single_word=None):
     if word_types == []:
         return True
 
-    if lang.lang == "de" and "a" in word_types:
-        return True
-
-    if "adv" in word_types:
-        return token.pos_ == "ADV"
-
     return word_types_overlap(
-        fetch_word_types(token, word_types, single_word), word_types
+        fetch_word_types(token, lang, word_types, single_word), word_types
     )
 
 
-def add_declension(lang, text, ending):
-    if lang.lang == "en" and text[-1] in ["s", "z", "h", "x"]:
-        text += "e"
-    if lang.lang == "de":
-        if text[-1] == "s":
-            text += "s"
-        elif text[-1] == "e" and ending[0] == "e":
-            text = text[0:-1]
-        elif text[-2:] == "em":
-            return text
+def add_declension_german(text, ending):
+    if text[-1] == "s":
+        text += "s"
+    elif text[-1] == "e" and ending[0] == "e":
+        text = text[0:-1]
+    elif text[-2:] == "em":
+        return text
 
     return text + ending
 
@@ -1834,78 +1812,151 @@ def word_types_overlap(a_word_types, b_word_types):
     return not set(a_word_types).isdisjoint(b_word_types)
 
 
-def alternative_declension(text, word_types, ending, lang, alternative):
+def align_noun_form(lang, a_token, b_token):
+    a_text = a_token.text
+    b_text = b_token.text
+
+    if a_token.morph.get("Number") == b_token.morph.get("Number"):
+        return b_text
+
+    if lang.lang == "en":
+        if b_token.morph.get("Number") == ["Sing"]:
+            return Noun(b_text).plural()
+
+        return Noun(b_text).singular()
+    elif lang.lang == "de":
+        a_word = german_nouns[a_text]
+        if len(a_word) == 0:
+            return b_text
+
+        b_word = german_nouns[b_text]
+        if len(b_word) == 0:
+            return b_text
+
+        for flexion, value in a_word[0]["flexion"].items():
+            if value != a_text:
+                continue
+
+            if flexion not in b_word[0]["flexion"]:
+                flexion += " 1"
+
+            return b_word[0]["flexion"][flexion]
+
+    return b_text
+
+
+def align_adjective_form(lang, a_token, b_token):
+    if lang.lang == "en":
+        a_text = a_token.text
+        b_text = b_token.lemma_
+        a_adjective = Adjective(a_text)
+        b_adjective = Adjective(b_text)
+
+        if a_adjective.is_singular():
+            b_text = b_adjective.singular()
+            b_adjective = Adjective(b_text)
+        elif a_adjective.is_plural():
+            b_text = b_adjective.plural()
+            b_adjective = Adjective(b_text)
+
+        a_adjective_lemma = Adjective(a_token.lemma_)
+        if a_adjective_lemma.comparative() == a_text:
+            b_text = b_adjective.comparative()
+        elif a_adjective_lemma.superlative() == a_text:
+            b_text = b_adjective.superlative()
+
+        return b_text
+    elif lang.lang == "de":
+        ending = a_token.text[len(a_token.lemma_) :]
+        return add_declension_german(b_token.text, ending)
+
+    return b_token.text
+
+
+def align_verb_form(lang, a_token, b_token):
+    if lang.lang == "en":
+        a_text = a_token.text
+        b_text = b_token.lemma_
+        a_verb = Verb(a_text)
+        b_verb = Verb(b_text)
+
+        if a_verb.is_singular():
+            b_text = b_verb.singular()
+            b_verb = Verb(b_text)
+        elif a_verb.is_plural():
+            b_text = b_verb.plural()
+            b_verb = Verb(b_text)
+
+        if a_verb.is_past():
+            b_text = b_verb.past()
+        elif a_verb.is_pres_part():
+            b_text = b_verb.pres_part()
+        elif a_verb.is_past_part():
+            b_text = b_verb.past_part()
+
+        return b_text
+    elif lang.lang == "de":
+        ending = a_token.text[len(a_token.lemma_) :]
+        return add_declension_german(b_token.text, ending)
+
+    return b_token.text
+
+
+def alternative_declension(token, word_types, lang, alternative):
+    text = token.text
+    if text == token.lemma_ or not text.startswith(token.lemma_):
+        return alternative
+
     if ResultOut.isInspirationAlternative(text, alternative):
         return alternative
 
-    if lang.lang == "en":
-        alternative_word_types = ["v"]
-    elif lang.lang == "de":
-        alternative_word_types = ["v", "a"]
-    else:
-        return alternative
-
-    tokens = fetch_tokens(lang, alternative)
-
     new_alternative = ""
     previous = False
-    for token in reversed(tokens):
-        text = token.text
-        if previous == False:
-            word_types = fetch_word_types(token, word_types, len(tokens) == 1)
-            if word_types_overlap(alternative_word_types, word_types):
-                previous = True
-                text = add_declension(lang, text, ending)
+    tokens = fetch_tokens(lang, alternative)
+    for alternative_token in reversed(tokens):
+        if len(tokens) == 1:
+            # in this case we just assume it is the same to avoid issues with word type detection
+            alternative_word_types = word_types
+        else:
+            alternative_word_types = fetch_word_types(
+                alternative_token, lang, word_types, False
+            )
 
-        elif is_conjunction(text):
-            previous = False
+        if "s" in word_types and "s" in alternative_word_types:
+            alternative_text = align_noun_form(lang, token, alternative_token)
+        else:
+            alternative_text = alternative_token.text
 
-        new_alternative = text + token.whitespace_ + new_alternative
+            if previous == False:
+                if word_types_overlap(word_types, alternative_word_types):
+                    previous = True
+                    if "a" in alternative_word_types:
+                        alternative_text = align_adjective_form(
+                            lang, token, alternative_token
+                        )
+                    elif "v" in alternative_word_types:
+                        alternative_text = align_verb_form(
+                            lang, token, alternative_token
+                        )
+            elif is_conjunction(text):
+                previous = False
+
+        new_alternative = (
+            alternative_text + alternative_token.whitespace_ + new_alternative
+        )
 
     return new_alternative
 
 
 def alternatives_declension(token, lang, alternatives):
-    endings = False
-    word_types = fetch_word_types(token)
-
-    if lang.lang == "en" and "v" in word_types:
-        endings = ["s"]
-    elif lang.lang == "de" and len(word_types):
-        endings = [
-            "erer",
-            "eren",
-            "erem",
-            "eres",
-            "erere",
-            "erers",
-            "erern",
-            "ererm",
-            "ste",
-            "ster",
-            "stes",
-            "sten",
-            "stem",
-            "ere",
-            "er",
-            "en",
-            "em",
-            "es",
-            "e",
-        ]
-    else:
+    word_types = fetch_word_types(token, lang)
+    if word_types == []:
         return alternatives
 
-    for ending in endings:
-        if not token.lemma_.endswith(ending) and token.text.endswith(ending):
-            return [
-                alternative_declension(
-                    token.text, word_types, ending, lang, alternative
-                ).strip()
-                for alternative in alternatives
-            ]
-
-    return alternatives
+    return [
+        alternative_declension(token, word_types, lang, alternative).strip()
+        for alternative in alternatives
+    ]
 
 
 def plural_or_singular_en(
@@ -2459,8 +2510,7 @@ def rules_based_words_phrase_matcher(
 
             if lang.lang == "en":
                 if len(data) > 1:
-                    alternatives = ing_ify_alternatives(token, data[0])
-                    alternatives = alternatives_declension(token, lang, alternatives)
+                    alternatives = alternatives_declension(token, lang, data[0])
                 else:
                     subcategory = data[0]
             elif len(data) > 0:
@@ -2521,7 +2571,7 @@ def homonyms_en(
             ):
                 continue
 
-            alternatives = ing_ify_alternatives(token, alternatives)
+            alternatives = alternatives_declension(token, lang, alternatives)
 
             list_tokens.append(
                 ResultOut.factory(
