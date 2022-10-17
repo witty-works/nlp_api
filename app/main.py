@@ -577,6 +577,10 @@ async def post_check_v2_1(
     if "has_consented_to_mailing" in rules:
         has_consented_to_mailing = rules["has_consented_to_mailing"]
 
+    team_analytics = None
+    if "team_analytics" in rules:
+        team_analytics = rules["team_analytics"]
+
     return ResultsOut(
         results=results,
         language=language,
@@ -584,6 +588,7 @@ async def post_check_v2_1(
         config_changed=fetch_config_change(rules, user_request_in),
         notifications=notifications,
         has_consented_to_mailing=has_consented_to_mailing,
+        team_analytics=team_analytics,
     )
 
 
