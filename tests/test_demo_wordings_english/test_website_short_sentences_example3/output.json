@@ -5,7 +5,8 @@
         {
             "alternatives": [
                 {
-                    "text": "Fun at work makes us happier, more productive, and more creative"
+                    "inspiration": true,
+                    "text": "Fun at work makes us happier, more productive, and more creative(...)"
                 }
             ],
             "category": "unconscious_bias",
