@@ -1318,15 +1318,6 @@ async def language_rules(
     return list_results
 
 
-def fetch_lemma(token, lang, lower_case=True):
-    token_word = token.lemma_
-
-    if lower_case and (lang.lang == "en" or not check_word_types(token, lang, "s")):
-        return token_word.lower()
-
-    return token_word
-
-
 def check_category_importance(config: Config, subcategory: str):
     return (
         config.maximum_importance == None
@@ -1806,17 +1797,6 @@ def add_declension_german(text, ending):
     return text + ending
 
 
-def is_conjunction(full_text, start=0):
-    if full_text in ["und", "oder", "and", "or"]:
-        return True
-
-    preceeding_text = full_text[max(0, start - 5) : start]
-    return (
-        re.search(r"^ *$", preceeding_text) != None
-        or re.search(r"[.!?:,]\s*$", preceeding_text, re.MULTILINE) != None
-    )
-
-
 def word_types_overlap(a_word_types, b_word_types):
     return not set(a_word_types).isdisjoint(b_word_types)
 
@@ -1923,32 +1903,30 @@ def alternative_declension(token, word_types, lang, alternative):
     previous = False
     tokens = fetch_tokens(lang, alternative)
     for alternative_token in reversed(tokens):
-        if len(tokens) == 1:
-            # in this case we just assume it is the same to avoid issues with word type detection
-            alternative_word_types = word_types
+        alternative_text = alternative_token.text
+        if alternative_text in conjunctions[lang.lang]:
+            previous = False
         else:
-            alternative_word_types = fetch_word_types(
-                alternative_token, lang, word_types, False
-            )
+            if len(tokens) == 1:
+                # in this case we just assume it is the same to avoid issues with word type detection
+                alternative_word_types = word_types
+            else:
+                alternative_word_types = fetch_word_types(
+                    alternative_token, lang, word_types, False
+                )
 
-        if "s" in word_types and "s" in alternative_word_types:
-            alternative_text = align_noun_form(lang, token, alternative_token)
-        else:
-            alternative_text = alternative_token.text
-
-            if previous == False:
-                if word_types_overlap(word_types, alternative_word_types):
-                    previous = True
-                    if "a" in alternative_word_types:
-                        alternative_text = align_adjective_form(
-                            lang, token, alternative_token
-                        )
-                    elif "v" in alternative_word_types:
-                        alternative_text = align_verb_form(
-                            lang, token, alternative_token
-                        )
-            elif is_conjunction(text):
-                previous = False
+            if "s" in word_types and "s" in alternative_word_types:
+                alternative_text = align_noun_form(lang, token, alternative_token)
+            elif previous == False and word_types_overlap(
+                word_types, alternative_word_types
+            ):
+                previous = True
+                if "a" in alternative_word_types:
+                    alternative_text = align_adjective_form(
+                        lang, token, alternative_token
+                    )
+                elif "v" in alternative_word_types:
+                    alternative_text = align_verb_form(lang, token, alternative_token)
 
         new_alternative = (
             alternative_text + alternative_token.whitespace_ + new_alternative
@@ -2392,8 +2370,13 @@ def style_word_analysis_de(
             if len(tokens.ents) > 0:
                 continue
 
-        if token.lemma_ == "aber" and is_conjunction(full_text, token.idx):
-            continue
+        if token.lemma_ == "aber":
+            preceeding_text = full_text[max(0, token.idx - 5) : token.idx]
+            if (
+                re.search(r"^ *$", preceeding_text) != None
+                or re.search(r"[.!?:,]\s*$", preceeding_text, re.MULTILINE) != None
+            ):
+                continue
 
         for word, word_types, alternatives, subcategory in words_data:
             if not is_sub_category_enabled(config, subcategory):
