@@ -3,7 +3,7 @@ Lemma,Word_Type,Category,Primary_subcategory,Alt_split
 A.M.,abbr,style,abbreviation,"['Master of Arts', 'Master of Arts (A.M.)']"
 ACCT,abbr,style,abbreviation,['account']
 ADD,abbr,style,abbreviation,"['attention deficit disorder', 'attention deficit disorder (ADD)', 'easily bored(...)', 'easily distracted(...)', 'having a poor working memory(...)']"
-ADHD,abbr,style,abbreviation,"['attention deficit hyperactivity disorder', 'attention deficit hyperactivity disorder (ADHD)', 'person with attention deficit hyperactivity disorder(...)', 'fidgety(...)', 'restless(...)', 'easily bored(...)', 'people with attention deficit hyperactivity disorder(...)']"
+ADHD,abbr,style,abbreviation,"['attention deficit hyperactivity disorder', 'attention deficit hyperactivity disorder (ADHD)', 'person with attention deficit hyperactivity disorder(...)', 'fidgety(...)', 'restless(...)', 'easily bored(...)']"
 AIDA,acr,style,abbreviation,"['attention, interest, desire, action', 'attention, interest, desire, action (AIDA)']"
 AJAX,acr,style,abbreviation,"['asynchronous JavaScript and XML', 'asynchronous JavaScript and eXtensible markup language (AJAX)']"
 AKA,acr,style,abbreviation,['also known as']
@@ -16,7 +16,7 @@ AR,acr,style,abbreviation,"['accounts receivable', 'accounts receivable (AR)']"
 ARIA,acr,style,abbreviation,"['accessible rich internet applications', 'accessible rich internet applications (ARIA)']"
 ARR,acr,style,abbreviation,"['annual recurring revenue', 'annual recurring revenue (ARR)']"
 ASAP,acr,style,abbreviation,['As soon as possible']
-ASD,abbr,style,abbreviation,"['autism spectrum disorder', 'autism spectrum disorder (ASD)', 'neurodiversity', 'person with autism spectrum disorder(...)', 'difficulties with social interaction and communication(...)', 'umbrella diagnosis that includes autistic disorder, childhood disintegrative disorder, some pervasive developmental disorders, and Asperger syndrome(...)', 'people with autism spectrum disorder(...)']"
+ASD,abbr,style,abbreviation,"['autism spectrum disorder', 'autism spectrum disorder (ASD)', 'neurodiversity', 'person with autism spectrum disorder(...)', 'difficulties with social interaction and communication(...)', 'umbrella diagnosis that includes autistic disorder, childhood disintegrative disorder, some pervasive developmental disorders, and Asperger syndrome(...)']"
 ASL,abbr,style,abbreviation,"['American Sign Language', 'American Sign Language (ASL)']"
 ATM,acr,style,abbreviation,['at the moment']
 AUD,acr,style,abbreviation,"['alcohol use disorder', 'alcohol use disorder (AUD)']"
@@ -130,8 +130,8 @@ IDE,acr,style,abbreviation,"['integrated development environment', 'integrated d
 IDK,acr,style,abbreviation,"[""I don't know""]"
 IIRC,acr,style,abbreviation,"['If I remember correctly,']"
 IM,acr,style,abbreviation,"['instant messaging', 'instant messaging (IM)']"
-IMHO,acr,style,abbreviation,"['In my humble opinion,']"
-IMO,acr,style,abbreviation,"['In my opinion,']"
+IMHO,acr,style,abbreviation,"['-', 'In my humble opinion,', 'From my perspective']"
+IMO,acr,style,abbreviation,"['-', 'In my opinion,', 'From my perspective']"
 IP,acr,style,abbreviation,"['Internet Protocol', 'Internet Protocol (IP)']"
 IPO,acr,style,abbreviation,"['initial public offering', 'initial public offering (IPO)']"
 IRR,acr,style,abbreviation,"['internal rate of return', 'internal rate of return (IRR)']"
