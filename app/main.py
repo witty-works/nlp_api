@@ -471,7 +471,7 @@ async def get_debug_spacy(
                 "start": token.idx,
                 "tag": token.tag_,
                 "pos": token.pos_,
-                "word_type": fetch_token_type(token),
+                "word_types": fetch_word_types(token),
                 "morph": token.morph.get("Number"),
             }
         )
@@ -1380,15 +1380,6 @@ async def language_rules(
     return list_results
 
 
-def fetch_lemma(token, lang, lower_case=True):
-    token_word = token.lemma_
-
-    if lower_case and (lang.lang == "en" or not check_token_type(token, lang, "s")):
-        return token_word.lower()
-
-    return token_word
-
-
 def check_category_importance(config: Config, subcategory: str):
     return (
         config.maximum_importance == None
@@ -1755,14 +1746,46 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
     return list_full
 
 
+def parse_word_types(word_types, lower_case=True):
+    lemmatize = True
+
+    if word_types == None:
+        return [], lower_case, lemmatize
+
+    if word_types[0] == "=":
+        # exact match
+        lower_case = False
+        lemmatize = False
+        word_types = word_types[1:]
+    elif word_types[0] == "-":
+        # force lower case off
+        lower_case = False
+        lemmatize = True
+        word_types = word_types[1:]
+
+    return word_types.split("+"), lower_case, lemmatize
+
+
 def is_word_match(
-    token, tokens, lang, word, word_type, matches_false=None, lower_case=True
+    token, tokens, lang, word, word_types, matches_false=None, lower_case=True
 ):
-    return (
-        fetch_lemma(token, lang, lower_case) == word
-        and check_token_type(token, lang, word_type, True)
-        and is_false_positive_match(matches_false, tokens, token) == False
-    )
+    word_types, lower_case, lemmatize = parse_word_types(word_types, lower_case)
+
+    if lemmatize:
+        token_word = token.lemma_
+    else:
+        token_word = token.text
+
+    if lower_case and (lang.lang == "en" or "s" not in word_types):
+        token_word = token_word.lower()
+
+    if token_word != word:
+        return False
+
+    if not check_word_types(token, lang, word_types, True):
+        return False
+
+    return is_false_positive_match(matches_false, tokens, token) == False
 
 
 """Function to catch the words related to False Positive in the user query"""
@@ -1800,12 +1823,12 @@ def ing_ify_alternatives(token, alternatives):
 """Function to change adjectives to -en form in alternatives"""
 
 
-def fetch_token_type(token, token_type=None, single_word=None):
+def fetch_word_types(token, word_types=[], single_word=None):
     if token.pos_ == "VERB":
-        return "v"
+        return ["v"]
 
     if token.pos_ == "NOUN" or token.pos_ == "PRON":
-        return "s"
+        return ["s"]
 
     adj_tags = {
         "ADJA",
@@ -1820,28 +1843,30 @@ def fetch_token_type(token, token_type=None, single_word=None):
         "JJS",
     }
     if token.tag_ in adj_tags or token.pos_ in adj_tags:
-        return "a"
+        return ["a"]
 
     if token.tag_ == "NN":
-        return "s"
+        return ["s"]
 
-    if token.pos_ == "PROPN" and single_word and token_type:
-        return token_type.split(",")[0]
+    if token.pos_ == "PROPN" and single_word != None and len(word_types):
+        return word_types[0:1]
 
-    return None
+    return []
 
 
-def check_token_type(token, lang, token_type=None, single_word=None):
-    if lang.lang == "de" and token_type == "a":
+def check_word_types(token, lang, word_types=[], single_word=None):
+    if word_types == []:
         return True
 
-    if token_type == "adv":
+    if lang.lang == "de" and "a" in word_types:
+        return True
+
+    if "adv" in word_types:
         return token.pos_ == "ADV"
 
-    if token_type == None:
-        return True
-
-    return fetch_token_type(token, token_type, single_word) in token_type.split("+")
+    return word_types_overlap(
+        fetch_word_types(token, word_types, single_word), word_types
+    )
 
 
 def add_declension(lang, text, ending):
@@ -1869,14 +1894,18 @@ def is_conjunction(full_text, start=0):
     )
 
 
-def alternative_declension(text, token_type, ending, lang, alternative):
+def word_types_overlap(a_word_types, b_word_types):
+    return not set(a_word_types).isdisjoint(b_word_types)
+
+
+def alternative_declension(text, word_types, ending, lang, alternative):
     if ResultOut.isInspirationAlternative(text, alternative):
         return alternative
 
     if lang.lang == "en":
-        alternative_token_types = ["v"]
+        alternative_word_types = ["v"]
     elif lang.lang == "de":
-        alternative_token_types = ["v", "a"]
+        alternative_word_types = ["v", "a"]
     else:
         return alternative
 
@@ -1887,11 +1916,8 @@ def alternative_declension(text, token_type, ending, lang, alternative):
     for token in reversed(tokens):
         text = token.text
         if previous == False:
-            alternative_token_type = fetch_token_type(
-                token, token_type, len(tokens) == 1
-            )
-
-            if alternative_token_type in alternative_token_types:
+            word_types = fetch_word_types(token, word_types, len(tokens) == 1)
+            if word_types_overlap(alternative_word_types, word_types):
                 previous = True
                 text = add_declension(lang, text, ending)
 
@@ -1905,11 +1931,11 @@ def alternative_declension(text, token_type, ending, lang, alternative):
 
 def alternatives_declension(token, lang, alternatives):
     endings = False
-    token_type = fetch_token_type(token)
+    word_types = fetch_word_types(token)
 
-    if lang.lang == "en" and token_type == "v":
+    if lang.lang == "en" and "v" in word_types:
         endings = ["s"]
-    elif lang.lang == "de" and token_type:
+    elif lang.lang == "de" and len(word_types):
         endings = [
             "erer",
             "eren",
@@ -1938,7 +1964,7 @@ def alternatives_declension(token, lang, alternatives):
         if not token.lemma_.endswith(ending) and token.text.endswith(ending):
             return [
                 alternative_declension(
-                    token.text, token_type, ending, lang, alternative
+                    token.text, word_types, ending, lang, alternative
                 ).strip()
                 for alternative in alternatives
             ]
@@ -2229,8 +2255,8 @@ def ub_words_phrase_matcher_de(
     list_tokens = []
 
     for token in tokens:
-        for word, word_type, alternatives, subcategory in words_data:
-            if not is_word_match(token, tokens, lang, word, word_type):
+        for word, word_types, alternatives, subcategory in words_data:
+            if not is_word_match(token, tokens, lang, word, word_types):
                 continue
 
             alternatives = alternatives_declension(token, lang, alternatives)
@@ -2283,14 +2309,15 @@ def gendered_denom_analysis_de(
     for i in range(len(tokens)):
         for (
             word,
-            word_type,
+            word_types,
             alternatives_sing,
             alternatives_plur,
             alternatives_all,
             subcategory,
         ) in words_data:
-            if tokens[i].lemma_ == word and check_token_type(
-                tokens[i], lang, word_type, True
+            word_types, lower_case, lemmatize = parse_word_types(word_types)
+            if tokens[i].lemma_ == word and check_word_types(
+                tokens[i], lang, word_types, True
             ):
                 token_morph_number = tokens[i].morph.get("Number")
                 if is_number_list_empty(token_morph_number, tokens[i], full_text):
@@ -2372,11 +2399,11 @@ def style_word_analysis_de(
         if token.lemma_ == "aber" and is_conjunction(full_text, token.idx):
             continue
 
-        for word, word_type, alternatives, subcategory in words_data:
+        for word, word_types, alternatives, subcategory in words_data:
             if not is_sub_category_enabled(config, subcategory):
                 continue
 
-            if not is_word_match(token, tokens, lang, word, word_type, None, False):
+            if not is_word_match(token, tokens, lang, word, word_types, None, False):
                 continue
 
             alternatives = alternatives_declension(token, lang, alternatives)
@@ -2423,13 +2450,13 @@ def word_noun(
     for token in tokens:
         for (
             word,
-            word_type,
+            word_types,
             alternatives_sing,
             alternatives_plur,
             subcategory,
             *data,
         ) in words_data:
-            if not is_word_match(token, tokens, lang, word, word_type, matches_false):
+            if not is_word_match(token, tokens, lang, word, word_types, matches_false):
                 continue
 
             token_morph_number = token.morph.get("Number")
@@ -2487,8 +2514,8 @@ def rules_based_words_phrase_matcher(
     subcategory = fallback_subcategory
 
     for token in tokens:
-        for word, word_type, *data in words_data:
-            if not is_word_match(token, tokens, lang, word, word_type, matches_false):
+        for word, word_types, *data in words_data:
+            if not is_word_match(token, tokens, lang, word, word_types, matches_false):
                 continue
 
             if len(data) > 1:
@@ -2549,12 +2576,12 @@ def homonyms_en(
     list_tokens = []
 
     for token in tokens:
-        for word, word_type, category, subcategory, alternatives in words_data:
+        for word, word_types, category, subcategory, alternatives in words_data:
             if not is_sub_category_enabled(config, subcategory):
                 continue
 
             if not is_word_match(
-                token, tokens, lang, word, word_type, matches_false, False
+                token, tokens, lang, word, word_types, matches_false, False
             ):
                 continue
 

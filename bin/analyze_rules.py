@@ -10,7 +10,7 @@ from app.models import (
     GenderedRolesFormatType,
     Language,
 )
-from app.main import fetch_tokens
+from app.main import fetch_tokens, parse_word_types
 import logging
 
 log = logging.getLogger("urllib3")
@@ -81,6 +81,7 @@ def get_data_from_files(locale):
     all_alternatives = []
     all_triggers = []
     all_lemma = []
+    supported_word_types = {"s", "a", "adv", "v", "acr", "abbr", "i"}
 
     for training_data_path in training_data_paths:
         with open(training_data_path) as f:
@@ -91,6 +92,17 @@ def get_data_from_files(locale):
                     lemma = row["Lemma"].replace("'", '"')
                     if "words" in f.name:
                         all_lemma.append(lemma)
+
+                    if "Word_Type" in row:
+                        word_type = row["Word_Type"].replace("'", '"')
+
+                        word_types, lower_case, lemmatize = parse_word_types(word_type)
+
+                        if not set(word_types).issubset(supported_word_types):
+                            print(
+                                "Lemma '%s' contains an incorrect word type '%s'."
+                                % (lemma, word_type)
+                            )
 
                     if "Alt_split" in row:
                         value = row["Alt_split"]
