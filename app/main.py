@@ -1318,29 +1318,19 @@ async def language_rules(
     return list_results
 
 
-def check_category_importance(config: Config, subcategory: str):
+def is_sub_category_enabled(config: Config, subcategory: str):
+    if (
+        subcategory not in categories
+        or categories[subcategory]["category"] in config.disabled_categories
+    ):
+        return False
+
     return (
         config.maximum_importance == None
         or categories[subcategory]["importance"] == None
         or float(config.maximum_importance)
         >= float(categories[subcategory]["importance"])
     )
-
-
-def is_sub_category_enabled(config: Config, subcategory: str):
-    if subcategory not in categories:  # pragma: no cover
-        if not settings.is_prod:
-            logging.error(
-                "Subcategory is not defined: %s",
-                subcategory,
-            )
-
-        return False
-
-    if categories[subcategory]["category"] in config.disabled_categories:
-        return False
-
-    return check_category_importance(config, subcategory)
 
 
 def german_rules(version: float, config: Config, lang: Language, tokens, text: str):

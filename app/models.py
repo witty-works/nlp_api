@@ -411,6 +411,11 @@ class ResultOut(BaseModel):
         else:
             category_key = category
 
+        if category_key in categories:
+            category_data = categories[category_key]
+        else:
+            category_data = None
+
         if category != "orthography" and category != "corporate_rules":
             if category != subcategory:
                 sub_anchor = lang._("rules." + subcategory + "_anchor")
@@ -440,10 +445,11 @@ class ResultOut(BaseModel):
             else lang._("rules." + category_key + "_explanation")
         )
 
-        if icon == None and "emoji" in categories[category_key]:
-            icon = categories[category_key]["emoji"]
+        if icon == None and "emoji" in category_data:
+            icon = category_data["emoji"]
 
-        gravity = gravity if gravity != None else categories[category_key]["gravity"]
+        if gravity == None and "gravity" in category_data:
+            gravity = category_data["gravity"]
 
         if (config.hide_details and version >= 2.1) or alternatives == None:
             alternatives = []
