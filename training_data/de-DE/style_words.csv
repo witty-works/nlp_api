@@ -20,7 +20,7 @@ Arbeitskraft,s,style,hollow,"['--- nicht auf Menschen beziehen', 'Personal', 'Mi
 Aufsteiger,s,style,exaggerating,"['Aufsteiger~in~/~Aufsteiger', 'aufmerksame Person, die mit neu gewonnenem Wissen weiterkommt(...)', 'Person, die aus Erfahrungen lernt(...)', 'Person, die Spaß an neuen Aufgaben hat(...)', 'Aufsteiger~innen~ und ~Aufsteiger', 'aufmerksame Menschen, die neu gewonnenes Wissen nutzen und weiterkommen(...)', 'Leute, die aus Erfahrungen lernen(...)', 'Leute, die Spaß an neuen Aufgaben haben(...)']"
 Boomer,s,style,hollow,"['älterer Mensch', 'jemand, der zwischen 1946 und 1964 geboren wurde', 'jemand, dessen Ansichten veraltet wirken(...)', 'jemand, der ungefragt aus seinem Leben erzählt(...)', 'ältere Menschen', 'Erwachsene', 'Leute, die zwischen 1946 und 1964 geboren wurden', 'Leute, deren Ansichten veraltet wirken(...)', 'Menschen, die ungefragt aus ihrem Leben erzählen(...)']"
 Brand,s,style,anglicism,"['Marke', 'Warenzeichen', 'Markenbezeichnung']"
-Briefing,s,style,anglicism,"['Pressekonferenz', 'kurze Besprechung', 'Anweisung', 'kurze Zusamenfassung', 'Einweisung ']"
+Briefing,s,style,anglicism,"['Pressekonferenz', 'kurze Besprechung', 'Anweisung', 'kurze Zusammenfassung', 'Einweisung ']"
 Bullet-point,s,style,anglicism,"['Aufzählungspunkt', 'Aufzählungspunkte']"
 Bulletpoint,s,style,anglicism,"['Aufzählungspunkt', 'Aufzählungspunkte']"
 Buyer,s,style,anglicism,"['Einkauf', 'Einkäufer~in~/~Einkäufer']"
@@ -187,7 +187,7 @@ bestenfalls,adv,style,filler,['-']
 bloß,adv,style,filler,['-']
 brillant,a,style,exaggerating,"['glänzend', 'gebündelt', 'fokussiert', 'klar', 'kreativ', 'scharfsinnig', 'begabt', 'wirkungsvoll', 'einnehmend', 'technisch kreativ', 'gekonnt', 'famos', 'reich an Obertönen(...)', 'dass es eine Freude ist(...)', 'eine wahre Wonne(...)']"
 challenged,a,style,anglicism,"['hinterfragt', 'auf den Prüfstand gebracht', 'in Frage gestellt', 'genauer angesehen', 'zur Sprache gebracht']"
-challengen,v,style,anglicism,"['hinterfragen', 'auf den Prüfstand bringen', 'in Frage stellen', 'genauer ansehen', 'zrr Sprache bringen']"
+challengen,v,style,anglicism,"['hinterfragen', 'auf den Prüfstand bringen', 'in Frage stellen', 'genauer ansehen', 'zur Sprache bringen']"
 closen,v,style,anglicism,"['abschließen', 'zu Ende bringen', 'unterzeichnen', 'zur Unterschrift bringen']"
 committen,v,style,anglicism,"['zusagen', 'fest zusagen', 'dabei sein', 'mitmachen', 'unterstützen']"
 dabei,adv,style,filler,['-']
