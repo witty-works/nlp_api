@@ -602,7 +602,10 @@ class ResultOut(BaseModel):
 
                 cleaned_alternatives[key] = variation
 
-        return list(cleaned_alternatives.values()), explanation_context
+            if len(cleaned_alternatives) >= 5:
+                break
+
+        return list(cleaned_alternatives.values())[0:5], explanation_context
 
     @staticmethod
     def convert_sharp_ss(lang, text):

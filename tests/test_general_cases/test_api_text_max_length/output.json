@@ -305,21 +305,6 @@
                 },
                 {
                     "text": "you all"
-                },
-                {
-                    "text": "everyone"
-                },
-                {
-                    "text": "teammates"
-                },
-                {
-                    "text": "you"
-                },
-                {
-                    "text": "team"
-                },
-                {
-                    "text": "crowd"
                 }
             ],
             "category": "gendered",
@@ -352,21 +337,6 @@
                 },
                 {
                     "text": "you all"
-                },
-                {
-                    "text": "everyone"
-                },
-                {
-                    "text": "teammates"
-                },
-                {
-                    "text": "you"
-                },
-                {
-                    "text": "team"
-                },
-                {
-                    "text": "crowd"
                 }
             ],
             "category": "gendered",
@@ -429,9 +399,6 @@
                 },
                 {
                     "text": "care"
-                },
-                {
-                    "text": "strength of character"
                 }
             ],
             "category": "unconscious_bias",
@@ -464,9 +431,6 @@
                 },
                 {
                     "text": "care"
-                },
-                {
-                    "text": "strength of character"
                 }
             ],
             "category": "unconscious_bias",

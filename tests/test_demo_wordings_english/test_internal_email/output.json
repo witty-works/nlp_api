@@ -66,9 +66,6 @@
                 },
                 {
                     "text": "dedicates"
-                },
-                {
-                    "text": "invests"
                 }
             ],
             "category": "unconscious_bias",
@@ -101,21 +98,6 @@
                 },
                 {
                     "text": "you all"
-                },
-                {
-                    "text": "everyone"
-                },
-                {
-                    "text": "teammates"
-                },
-                {
-                    "text": "you"
-                },
-                {
-                    "text": "team"
-                },
-                {
-                    "text": "crowd"
                 }
             ],
             "category": "gendered",
@@ -163,21 +145,6 @@
                 },
                 {
                     "text": "redesign"
-                },
-                {
-                    "text": "reinventions"
-                },
-                {
-                    "text": "changes"
-                },
-                {
-                    "text": "modernizations"
-                },
-                {
-                    "text": "improvements"
-                },
-                {
-                    "text": "new creations"
                 }
             ],
             "category": "style",
@@ -242,9 +209,6 @@
                 },
                 {
                     "text": "care"
-                },
-                {
-                    "text": "strength of character"
                 }
             ],
             "category": "unconscious_bias",
