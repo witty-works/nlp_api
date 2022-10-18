@@ -21,6 +21,8 @@ fakeredis = "*"
 fasttext = "*"
 fastapi-microsoft-identity = "*"
 slack-bolt = "*"
+german-nouns = "*"
+inflex = "*"
 
 [dev-packages]
 click = "*"
