@@ -75,7 +75,6 @@ from app.azure_ad_b2c import initialize_aadb2c
 from app.model import model
 from app.rules import *
 from app.sentry import set_up_sentry_sdk
-from app.gender import get_gender_of_word
 
 version = "1.37.3"
 
@@ -2023,15 +2022,15 @@ def match_binary_inclusive_gendered_denom_analysis_de(
 def find_article(tokens, i):
     matches = 0
     article_text = tokens[i - 1].text.lower()
-    gender = get_gender_of_word(tokens[i].text.lower())
-    if gender["definite_article"] == None:
+    word = german_nouns[tokens[i].text.lower()]
+    if len(word) == 0:
         return None, None, None, None, None
 
     for masculine, feminine, neuter, plural, alternative in articles:
         if (
-            (gender["definite_article"] == "der" and article_text == masculine)
-            or (gender["definite_article"] == "die" and article_text == feminine)
-            or (gender["definite_article"] == "das" and article_text == neuter)
+            (word[0]["genus"] == "m" and article_text == masculine)
+            or (word[0]["genus"] == "f" and article_text == feminine)
+            or (word[0]["genus"] == "n" and article_text == neuter)
         ):
             match_masculine = masculine
             match_feminine = feminine
@@ -2082,16 +2081,16 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
                 alternative = alternative.strip()
 
             words = alternative.split()
-            gender = get_gender_of_word(words[-1])
+            word = german_nouns[words[-1]]
 
-            if gender["definite_article"] == "der":
-                article_alternative = masculine
-            elif gender["definite_article"] == "das":
-                article_alternative = neuter
-            elif gender["definite_article"] == "die" or alternative.endswith("in"):
-                article_alternative = feminine
-            else:
+            if len(word) == 0:
                 article_alternative = tokens[i - 1].text
+            elif word[0]["genus"] == "m":
+                article_alternative = masculine
+            elif word[0]["genus"] == "n":
+                article_alternative = neuter
+            elif word[0]["genus"] == "f" or alternative.endswith("in"):
+                article_alternative = feminine
 
         alternatives_with_article.append(article_alternative + " " + alternative)
 
