@@ -90,8 +90,6 @@ def get_data_from_files(locale):
             if "Lemma" in column_names:
                 for row in reader:
                     lemma = row["Lemma"].replace("'", '"')
-                    if "words" in f.name:
-                        all_lemma.append(lemma)
 
                     if "Word_Type" in row:
                         word_type = row["Word_Type"].replace("'", '"')
@@ -103,6 +101,9 @@ def get_data_from_files(locale):
                                 "Lemma '%s' contains an incorrect word type '%s'."
                                 % (lemma, word_type)
                             )
+
+                        if lemmatize and "words" in f.name:
+                            all_lemma.append(lemma)
 
                     if "Alt_split" in row:
                         value = row["Alt_split"]
