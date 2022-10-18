@@ -15,7 +15,7 @@ API,acr,style,abbreviation,"['Application Program Interface (API)', 'Anwendungsp
 AR,acr,style,abbreviation,"['Accounts Receivable', 'Accounts Receivable (AR)', 'Debitorenbuchhaltung']"
 ARIA,acr,style,abbreviation,"['Accessible Rich Internet Applications', 'Accessible Rich Internet Applications (ARIA)', 'ARIA-Initiative zur Verbesserung der Zugänglichkeit von Webseiten und Webanwendungen für Menschen mit Behinderungen']"
 ARR,acr,style,abbreviation,"['Annual Recurring Revenue', 'Annual Recurring Revenue (ARR)', 'jährlich wiederkehrender Umsatz']"
-ASAP,acr,style,anglicsim,"['as soon as possible', 'so früh wie möglich', 'baldigst, bitte', 'so bald es geht', 'am liebsten gestern']"
+ASAP,acr,style,anglicism,"['as soon as possible', 'so früh wie möglich', 'baldigst, bitte', 'so bald es geht', 'am liebsten gestern']"
 ASD,abbr,style,abbreviation,"['Autism Spectrum Disorder', 'Autism Spectrum Disorder (ASD)', 'Autismus-Spektrum-Störung| Neurodiversität']"
 ASS,abbr,style,abbreviation,"['Autismus-Spektrum-Störung', 'Autismus-Spektrum-Störung (ASS)', 'Neurodiversität']"
 ATM,acr,style,abbreviation,"['at the moment', 'zur Zeit', 'im Moment', 'gerade', 'derzeit']"
