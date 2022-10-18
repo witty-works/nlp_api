@@ -227,7 +227,7 @@ Mistschlampe,s,openly_discriminating,sexism,['-']
 Mistvieh,s,openly_discriminating,offensive_language,['-']
 Mongo,s,openly_discriminating,ableism,"['-', 'Mensch mit Down-Syndrom(...)', 'Mensch mit Trisomie 21(...)', 'Mensch mit veränderter Chromosomenzahl(...)', 'Mensch mit Lernschwierigkeiten(...)']"
 Neger,s,openly_discriminating,racism,"['-', 'Black Person of Color', 'Schwarz~e~/~Schwarzer', 'Afrikaner~in~/~Afrikaner', 'Afroamerikaner~in~/~Afroamerikaner']"
-Negerin,s,openly_discriminating,racism,"['-', 'Black Person of Color', 'Schwarze~/~Schwarzer', 'Afrikaner~in~/~Afrikaner', 'Afroamerikaner~in~/~Afroamerikaner']"
+Negerin,s,openly_discriminating,racism,"['-', 'Black Person of Color', 'Schwarze~Schwarzer', 'Afrikaner~in~/~Afrikaner', 'Afroamerikaner~in~/~Afroamerikaner']"
 Negerordnung,s,openly_discriminating,racism,['-']
 Nervensäge,s,openly_discriminating,sexism,['-']
 Nigger,s,openly_discriminating,racism,['-']
