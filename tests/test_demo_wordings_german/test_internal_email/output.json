@@ -117,18 +117,6 @@
                 },
                 {
                     "text": "Entwicklungsmotivation"
-                },
-                {
-                    "text": "unternehmerische Haltung"
-                },
-                {
-                    "text": "Freude an mehr Verantwortung"
-                },
-                {
-                    "text": "Freude am Setzen und Verwirklichen von Zielen"
-                },
-                {
-                    "text": "Interesse an persönlichem Wachstum"
                 }
             ],
             "category": "unconscious_bias",
@@ -239,24 +227,6 @@
                 },
                 {
                     "text": "Liebe/Lieber"
-                },
-                {
-                    "text": "Guten Tag, liebe*r"
-                },
-                {
-                    "text": "Guten Tag, liebe/lieber"
-                },
-                {
-                    "text": "Liebe"
-                },
-                {
-                    "text": "Liebe alle"
-                },
-                {
-                    "text": "Hallo zusammen"
-                },
-                {
-                    "text": "Hallo, liebe Zuhörende und Lesende"
                 }
             ],
             "category": "style",
