@@ -325,58 +325,13 @@
                     "text": "komplexe Aufgabe"
                 },
                 {
-                    "text": "schwere Frage"
-                },
-                {
-                    "text": "schwieriges Thema"
-                },
-                {
-                    "text": "komplexe Materie"
-                },
-                {
-                    "text": "Fragestellung"
-                },
-                {
-                    "text": "Schwachpunkt"
-                },
-                {
-                    "text": "Beeinträchtigung"
-                },
-                {
-                    "text": "Erschwernis"
-                },
-                {
-                    "text": "Haken"
-                },
-                {
                     "text": "Schwierigkeit"
                 },
                 {
                     "text": "Hindernis"
                 },
                 {
-                    "text": "Engpass"
-                },
-                {
-                    "text": "Komplikation"
-                },
-                {
-                    "text": "Fehler"
-                },
-                {
-                    "text": "Bürde"
-                },
-                {
-                    "text": "Hürde"
-                },
-                {
-                    "text": "Fallstrick"
-                },
-                {
-                    "text": "missliche Lage"
-                },
-                {
-                    "text": "Unsicherheit"
+                    "text": "komplexe Materie"
                 }
             ],
             "category": "unconscious_bias",
@@ -472,6 +427,18 @@
             "alternatives": [
                 {
                     "text": "Pressekonferenz"
+                },
+                {
+                    "text": "kurze Besprechung"
+                },
+                {
+                    "text": "Anweisung"
+                },
+                {
+                    "text": "kurze Zusammenfassung"
+                },
+                {
+                    "text": "Einweisung"
                 }
             ],
             "category": "style",
@@ -487,6 +454,35 @@
             "start": 307,
             "subcategory": "anglicism",
             "text": "Briefing"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Leistung"
+                },
+                {
+                    "text": "Durchsatz"
+                },
+                {
+                    "text": "Leistungsfähigkeit"
+                },
+                {
+                    "text": "Erfüllung"
+                }
+            ],
+            "category": "style",
+            "context": "ass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen",
+            "end": 344,
+            "explanation": {
+                "icon": "😉",
+                "text": "Anglizismen: Sicher, dass das alle Lesenden verstehen?",
+                "url": "https://www.witty.works/de/kategorien/stil#anglizismen"
+            },
+            "gravity": 3.0,
+            "label": "Stil: Anglizismen",
+            "start": 333,
+            "subcategory": "anglicism",
+            "text": "Performance"
         },
         {
             "alternatives": [

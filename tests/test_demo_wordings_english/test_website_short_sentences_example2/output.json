@@ -5,28 +5,19 @@
         {
             "alternatives": [
                 {
-                    "text": "test"
+                    "text": "tests"
                 },
                 {
-                    "text": "trial"
+                    "text": "trials"
                 },
                 {
-                    "text": "burning question"
-                },
-                {
-                    "text": "complex situation"
+                    "text": "burning questions"
                 },
                 {
                     "text": "complex situations"
                 },
                 {
                     "text": "difficult tasks"
-                },
-                {
-                    "text": "burning questions"
-                },
-                {
-                    "text": "trials"
                 }
             ],
             "category": "unconscious_bias",
@@ -59,9 +50,6 @@
                 },
                 {
                     "text": "unusual"
-                },
-                {
-                    "text": "exemplary"
                 }
             ],
             "category": "style",

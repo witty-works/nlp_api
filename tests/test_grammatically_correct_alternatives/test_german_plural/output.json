@@ -1,31 +1,28 @@
 {
-    "config_changed": true,
-    "has_consented_to_mailing": true,
     "language": "de",
     "limit_reached": false,
-    "notifications": 5,
     "results": [
         {
             "alternatives": [
                 {
-                    "text": "stabile"
+                    "text": "komplexe Aufgaben"
                 },
                 {
-                    "text": "resiliente"
+                    "text": "Schwierigkeiten"
                 },
                 {
-                    "text": "zuverlässige"
+                    "text": "Schwachpunkte"
                 },
                 {
-                    "text": "fachkundige"
+                    "text": "Beeinträchtigungen"
                 },
                 {
-                    "text": "fachkundige und erfahrene"
+                    "text": "Hindernisse"
                 }
             ],
             "category": "unconscious_bias",
-            "context": "Ich bin eine starke Führungskraft!",
-            "end": 19,
+            "context": "Sind das Probleme?",
+            "end": 17,
             "explanation": {
                 "icon": "😒",
                 "text": "Spricht kooperativ denkende Menschen nicht an",
@@ -33,10 +30,9 @@
             },
             "gravity": 2.0,
             "label": "Sprachliche Voreingenommenheit: Agentisch",
-            "start": 13,
+            "start": 9,
             "subcategory": "agentic",
-            "text": "starke"
+            "text": "Probleme"
         }
-    ],
-    "team_analytics": true
+    ]
 }

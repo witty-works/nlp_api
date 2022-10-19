@@ -1,6 +1,7 @@
 import pandas as pd
 import ast
 from collections import namedtuple
+from german_nouns.lookup import Nouns
 
 rules = {
     "de-DE": {
@@ -682,3 +683,162 @@ list_false_column = [
     "wheelchair-user",
     "substance user",
 ]
+
+# master of + noun
+pattern_master = [
+    [
+        {"LOWER": "master"},
+        {"LEMMA": "of"},
+        {"POS": {"IN": ["PRON", "NOUN", "PROPN"]}},
+    ],
+    [
+        {"LOWER": "masters"},
+        {"LEMMA": "of"},
+        {"POS": {"IN": ["PRON", "NOUN", "PROPN"]}},
+    ],
+]
+
+# lead+someone(optional)+prepostion(on, down, up, to, away, back, along)
+pattern_lead_prepos = [
+    [
+        {
+            "LEMMA": "lead",
+            "POS": "VERB",
+        },
+        {"POS": {"IN": ["PRON", "NOUN", "PROPN"]}, "OP": "?"},
+        {
+            "LEMMA": {
+                "IN": [
+                    "on",
+                    "down",
+                    "up",
+                    "to",
+                    "away",
+                    "back",
+                    "along",
+                    "with",
+                    "off",
+                ]
+            }
+        },
+    ]
+]
+
+# lead a (charmed, busy, quiet, normal, ...) life','lead your (my, his, her, their, our, ...) life'
+pattern_lead_life = [
+    [
+        {"LEMMA": "lead", "POS": "VERB"},
+        {"POS": "DET", "OP": "?"},
+        {"POS": {"IN": ["ADJ", "PRON"]}, "OP": "?"},
+        {"LOWER": "life"},
+    ]
+]
+
+# need to
+pattern_need_to = [[{"LEMMA": "need", "POS": "VERB"}, {"LEMMA": {"IN": ["to", "for"]}}]]
+
+pattern_false_positives = {
+    "en": [
+        pattern_master,
+        pattern_lead_prepos,
+        pattern_lead_life,
+        pattern_need_to,
+    ],
+    "de": [],
+}
+
+german_nouns = Nouns()
+
+conjunctions = {
+    # all the multi-word conjunctions are included as individual words except for "weder noch"
+    "de": [
+        "aber",
+        "als",
+        # "als dass als ob",
+        # "als wenn",
+        # "anstatt dass",
+        "außer",
+        "ausser",
+        "auch",
+        "bevor",
+        "beziehungsweise",
+        "bis",
+        "da",
+        "dass",
+        "denn",
+        "desto",
+        "damit",
+        "doch",
+        "ehe",
+        "eh",
+        "entweder",
+        "oder",
+        "einerseits",
+        "andererseits",
+        "falls",
+        "ferner",
+        "indem",
+        "indessen",
+        "indes",
+        "insofern",
+        "insoweit",
+        "soweit",
+        "je",
+        "jedoch",
+        "nachdem",
+        "ob",
+        "obgleich",
+        "obschon",
+        "obwohl",
+        "obzwar",
+        "oder",
+        # "ohne dass",
+        "respektive",
+        "so",
+        "sobald",
+        "sodass",
+        # "so dass",
+        "sofern",
+        "solange",
+        "sondern",
+        "sonst",
+        "sooft",
+        "soviel",
+        "soweit",
+        "sowie",
+        # "sowohl als auch",
+        "statt",
+        "um",
+        "umso",
+        "und",
+        "wobei",
+        "während",
+        "währenddessen",
+        # "weder noch",
+        "weil",
+        "wenn",
+        "wie",
+        "wo",
+        "wohingegen",
+        "zumal",
+        "zwar",
+        "und",
+        "oder",
+        "aber",
+    ],
+    "en": [
+        "and",
+        "but",
+        "or",
+        "so",
+        "because",
+        "however",
+        "after",
+        "since",
+        "during",
+        "than",
+        "unless",
+        "that",
+        "while",
+    ],
+}

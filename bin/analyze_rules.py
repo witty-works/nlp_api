@@ -4,14 +4,16 @@ import csv
 import json
 import os
 import requests
+import logging
+
 from app.models import (
     ResultOut,
     Config,
     GenderedRolesFormatType,
     Language,
 )
-from app.main import fetch_tokens
-import logging
+from app.main import fetch_tokens, parse_word_types
+from app.categories import categories
 
 log = logging.getLogger("urllib3")
 log.setLevel(logging.ERROR)
@@ -81,6 +83,9 @@ def get_data_from_files(locale):
     all_alternatives = []
     all_triggers = []
     all_lemma = []
+    all_categories = []
+    all_secondar_subcategories = []
+    supported_word_types = {"s", "a", "adv", "v", "acr", "abbr", "i"}
 
     for training_data_path in training_data_paths:
         with open(training_data_path) as f:
@@ -89,8 +94,20 @@ def get_data_from_files(locale):
             if "Lemma" in column_names:
                 for row in reader:
                     lemma = row["Lemma"].replace("'", '"')
-                    if "words" in f.name:
-                        all_lemma.append(lemma)
+
+                    if "Word_Type" in row:
+                        word_type = row["Word_Type"].replace("'", '"')
+
+                        word_types, lower_case, lemmatize = parse_word_types(word_type)
+
+                        if not set(word_types).issubset(supported_word_types):
+                            print(
+                                "Lemma '%s' contains an incorrect word type '%s'."
+                                % (lemma, word_type)
+                            )
+
+                        if lemmatize and "words" in f.name:
+                            all_lemma.append(lemma)
 
                     if "Alt_split" in row:
                         value = row["Alt_split"]
@@ -107,8 +124,17 @@ def get_data_from_files(locale):
                         except ValueError:
                             continue
 
+                    if "Category" in row:
+                        all_categories.append(row["Category"])
+
+                    if "Primary_subcategory" in row:
+                        all_categories.append(row["Primary_subcategory"])
+
                         if row["Primary_subcategory"] not in ["function", "titles"]:
                             all_triggers.append(lemma)
+
+                    if "Secondary_subcategory" in row and row["Secondary_subcategory"]:
+                        all_secondar_subcategories.append(row["Secondary_subcategory"])
 
     print(
         "All alternative groups for directory %s: %s"
@@ -128,7 +154,13 @@ def get_data_from_files(locale):
         if re.search("^[^-]*--[^-]*$", alternative):
             print("Potential missing - in ' --- ': " + alternative)
 
-    return set(all_lemma), set(all_triggers), set(all_alternatives)
+    return (
+        set(all_lemma),
+        set(all_triggers),
+        set(all_alternatives),
+        set(all_categories),
+        set(all_secondar_subcategories),
+    )
 
 
 def generate_alternatives_english(all_alternatives):
@@ -270,7 +302,7 @@ def check_words_spelling(words, current_words=[], used_words=[]):
 
 
 def add_words_to_ignore(path_to_ignore_file, words_to_write):
-    words_to_write = sorted(words_to_write, key=str.casefold)
+    words_to_write = sorted(words_to_write)
     with open(path_to_ignore_file, "w") as myfile:
         for word in words_to_write:
             word = word.replace("/", "\/")
@@ -356,7 +388,13 @@ else:
 words = {}
 lemmas = {}
 for locale in locales:
-    all_lemma, all_triggers, all_alternatives = get_data_from_files(locale)
+    (
+        all_lemma,
+        all_triggers,
+        all_alternatives,
+        all_categories,
+        all_secondar_subcategories,
+    ) = get_data_from_files(locale)
 
     if locale == "de-DE":
         words = generate_correct_endings_german(all_alternatives)
@@ -387,6 +425,11 @@ for locale in locales:
             )
 
     lemmas[locale] = list(all_lemma)
+
+    print("Missing (sub-)categories")
+    print(all_categories - set(categories.keys()))
+    print("Missing secondary sub-categories")
+    print(all_secondar_subcategories - set(categories.keys()))
 
 
 original_languagetool_path = args.Original

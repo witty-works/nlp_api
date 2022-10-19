@@ -18,9 +18,6 @@
                 },
                 {
                     "text": "Kundschaft"
-                },
-                {
-                    "text": "Klientel"
                 }
             ],
             "category": "gendered",
@@ -53,18 +50,6 @@
                 },
                 {
                     "text": "Entwicklungsmotivation"
-                },
-                {
-                    "text": "Unternehmerische Haltung"
-                },
-                {
-                    "text": "Freude an mehr Verantwortung"
-                },
-                {
-                    "text": "Freude am Setzen und Verwirklichen von Zielen"
-                },
-                {
-                    "text": "Interesse an persönlichem Wachstum"
                 }
             ],
             "category": "unconscious_bias",
@@ -122,18 +107,6 @@
                 },
                 {
                     "text": "Entwicklungsmotivation"
-                },
-                {
-                    "text": "unternehmerische Haltung"
-                },
-                {
-                    "text": "Freude an mehr Verantwortung"
-                },
-                {
-                    "text": "Freude am Setzen und Verwirklichen von Zielen"
-                },
-                {
-                    "text": "Interesse an persönlichem Wachstum"
                 }
             ],
             "category": "unconscious_bias",

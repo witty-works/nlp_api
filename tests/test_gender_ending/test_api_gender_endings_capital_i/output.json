@@ -18,9 +18,6 @@
                 },
                 {
                     "text": "Auftraggebende"
-                },
-                {
-                    "text": "Bestellende"
                 }
             ],
             "category": "gendered",
@@ -53,9 +50,6 @@
                 },
                 {
                     "text": "Kundschaft"
-                },
-                {
-                    "text": "Klientel"
                 }
             ],
             "category": "gendered",

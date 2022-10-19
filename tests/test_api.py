@@ -471,6 +471,7 @@ def set_redis():
         "config_hash": "foobar",
         "notifications": 5,
         "has_consented_to_mailing": True,
+        "team_analytics": True,
     }
 
     redis.set(user_object["email"], json.dumps(user_object))
@@ -971,7 +972,7 @@ def test_spacy():
             "start": 0,
             "tag": "PDS",
             "pos": "PRON",
-            "word_type": "s",
+            "word_types": ["s"],
             "morph": ["Sing"],
         },
         {
@@ -980,7 +981,7 @@ def test_spacy():
             "start": 4,
             "tag": "VAFIN",
             "pos": "AUX",
-            "word_type": None,
+            "word_types": [],
             "morph": ["Sing"],
         },
         {
@@ -989,7 +990,7 @@ def test_spacy():
             "start": 8,
             "tag": "ADV",
             "pos": "ADV",
-            "word_type": "a",
+            "word_types": ["a"],
             "morph": [],
         },
         {
@@ -998,7 +999,7 @@ def test_spacy():
             "start": 13,
             "tag": "ADJD",
             "pos": "ADV",
-            "word_type": "a",
+            "word_types": ["a"],
             "morph": [],
         },
     ]

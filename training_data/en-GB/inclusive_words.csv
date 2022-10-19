@@ -29,6 +29,8 @@ cis-gender,a,inclusive,d_and_i
 cis-gendered,a,inclusive,d_and_i
 cisgender,a,inclusive,d_and_i
 cisgendered,a,inclusive,d_and_i
+clear-headed,a,inclusive,emotional_security
+clearheaded,a,inclusive,emotional_security
 code-switching,s,inclusive,d_and_i
 codeswitching,s,inclusive,d_and_i
 collaborate,v,inclusive,communal
@@ -77,7 +79,7 @@ empathy,s,inclusive,communal
 empowered,a,inclusive,emotional_security
 enby,a,inclusive,d_and_i
 enchanted,a,inclusive,emotional_security
-encourage,v+a,inclusive,emotional_security
+encouraged,=a,inclusive,emotional_security
 energetic,a,inclusive,emotional_security
 engage,v,inclusive,communal
 engaged,a,inclusive,emotional_security
@@ -122,6 +124,7 @@ impactful,a,inclusive,communal
 inclusify,s,inclusive,d_and_i
 inclusion,s,inclusive,d_and_i
 inclusive,a,inclusive,d_and_i
+inclusively,adv,inclusive,d_and_i
 initiative,s,inclusive,communal
 inspired,a,inclusive,emotional_security
 integrity,s,inclusive,d_and_i
@@ -221,7 +224,7 @@ team,s,inclusive,communal
 tender,a,inclusive,communal
 thankful,a,inclusive,emotional_security
 thoughtful,a,inclusive,communal
-thrill,v+a,inclusive,emotional_security
+thrilled,=a,inclusive,emotional_security
 tickled,a,inclusive,emotional_security
 together,a,inclusive,communal
 touched,a,inclusive,emotional_security

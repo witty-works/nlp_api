@@ -16,7 +16,6 @@ from app.settings import get_settings
 from app.privacy_filter import get_privacy_filter
 
 
-
 class Language(object):
     def __init__(self, locale):
         self.locale = locale
@@ -310,13 +309,14 @@ class ConfRequest(BaseModel):
     term_replacements: Dict[str, TermReplacement] = {}
     domains: Optional[DomainConfig]
     config_hash: Optional[str]
-    notifications: Optional[int]
-    has_consented_to_mailing: Optional[bool]
 
 
 class UserConfRequest(ConfRequest):
     email: str
     organization_id: Optional[str]
+    notifications: Optional[int]
+    has_consented_to_mailing: Optional[bool]
+    team_analytics: Optional[bool]
 
 
 class OrganizationConfRequest(ConfRequest):
@@ -411,6 +411,11 @@ class ResultOut(BaseModel):
         else:
             category_key = category
 
+        if category_key in categories:
+            category_data = categories[category_key]
+        else:
+            category_data = None
+
         if category != "orthography" and category != "corporate_rules":
             if category != subcategory:
                 sub_anchor = lang._("rules." + subcategory + "_anchor")
@@ -440,10 +445,11 @@ class ResultOut(BaseModel):
             else lang._("rules." + category_key + "_explanation")
         )
 
-        if icon == None and "emoji" in categories[category_key]:
-            icon = categories[category_key]["emoji"]
+        if icon == None and "emoji" in category_data:
+            icon = category_data["emoji"]
 
-        gravity = gravity if gravity != None else categories[category_key]["gravity"]
+        if gravity == None and "gravity" in category_data:
+            gravity = category_data["gravity"]
 
         if (config.hide_details and version >= 2.1) or alternatives == None:
             alternatives = []
@@ -596,7 +602,10 @@ class ResultOut(BaseModel):
 
                 cleaned_alternatives[key] = variation
 
-        return list(cleaned_alternatives.values()), explanation_context
+            if len(cleaned_alternatives) >= 5:
+                break
+
+        return list(cleaned_alternatives.values())[0:5], explanation_context
 
     @staticmethod
     def convert_sharp_ss(lang, text):
@@ -838,6 +847,8 @@ class ResultsOut(BaseModel):
     config_changed: Optional[bool]
     notifications: Optional[int]
     has_consented_to_mailing: Optional[bool]
+    team_analytics: Optional[bool]
+
 
 class PrettyJSONResponse(Response):
     media_type = "application/json"

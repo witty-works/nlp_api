@@ -37,7 +37,7 @@
                     "text": "Person"
                 },
                 {
-                    "text": "jemand"
+                    "text": "eine/einer"
                 },
                 {
                     "text": "Mensch"
@@ -47,15 +47,13 @@
                 },
                 {
                     "text": "Erwachsene/Erwachsener"
-                },
-                {
-                    "text": "alle"
                 }
             ],
             "category": "unconscious_bias",
             "context": "Was ist seine Frau?",
             "end": 18,
             "explanation": {
+                "context": "nur wenn die Person sich selbst so bezeichnet",
                 "icon": "😒",
                 "text": "Versteckte Voreingenommenheit bezüglich Geschlechtsidentität",
                 "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#geschlechtsidentitaet"

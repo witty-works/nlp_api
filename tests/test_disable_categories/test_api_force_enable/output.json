@@ -21,21 +21,6 @@
                 },
                 {
                     "text": "ammos"
-                },
-                {
-                    "text": "AMM"
-                },
-                {
-                    "text": "Amma"
-                },
-                {
-                    "text": "Ammon"
-                },
-                {
-                    "text": "MMM"
-                },
-                {
-                    "text": "Ammar"
                 }
             ],
             "category": "orthography",
@@ -51,5 +36,6 @@
             "subcategory": "typos",
             "text": "ammmm"
         }
-    ]
+    ],
+    "team_analytics": true
 }

@@ -24,16 +24,16 @@
         {
             "alternatives": [
                 {
-                    "text": "question"
+                    "text": "questioned"
                 },
                 {
-                    "text": "cross-examine"
+                    "text": "cross-examined"
                 },
                 {
-                    "text": "re-evaluate"
+                    "text": "re-evaluated"
                 },
                 {
-                    "text": "object to"
+                    "text": "objected to"
                 }
             ],
             "category": "unconscious_bias",
@@ -53,22 +53,19 @@
         {
             "alternatives": [
                 {
-                    "text": "invest in"
+                    "text": "invests in"
                 },
                 {
-                    "text": "support"
+                    "text": "supports"
                 },
                 {
-                    "text": "work toward"
+                    "text": "works toward"
                 },
                 {
-                    "text": "take responsibility for"
+                    "text": "takes responsibility for"
                 },
                 {
-                    "text": "dedicated"
-                },
-                {
-                    "text": "invested"
+                    "text": "dedicates"
                 }
             ],
             "category": "unconscious_bias",
@@ -101,21 +98,6 @@
                 },
                 {
                     "text": "you all"
-                },
-                {
-                    "text": "everyone"
-                },
-                {
-                    "text": "teammates"
-                },
-                {
-                    "text": "you"
-                },
-                {
-                    "text": "team"
-                },
-                {
-                    "text": "crowd"
                 }
             ],
             "category": "gendered",
@@ -163,21 +145,6 @@
                 },
                 {
                     "text": "redesign"
-                },
-                {
-                    "text": "reinventions"
-                },
-                {
-                    "text": "changes"
-                },
-                {
-                    "text": "modernizations"
-                },
-                {
-                    "text": "improvements"
-                },
-                {
-                    "text": "new creations"
                 }
             ],
             "category": "style",
@@ -242,9 +209,6 @@
                 },
                 {
                     "text": "care"
-                },
-                {
-                    "text": "strength of character"
                 }
             ],
             "category": "unconscious_bias",
