@@ -450,7 +450,7 @@ categories = {
         "inclusive": False,
         "category": "style",
         "gravity": 3.0,
-        "importance": 2,
+        "importance": 3,
         "emoji": "🙄",
     },
     "speech": {
