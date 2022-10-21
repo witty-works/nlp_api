@@ -134,11 +134,11 @@ def get_data_from_files(locale):
                         subcategory = row["Primary_subcategory"]
                         all_categories.append(category)
 
-if subcategory not in [
-    "function",
-    "titles",
-] and category not in ["inclusive", "openly_discriminating"]:
-    all_triggers.append(lemma)
+                    if subcategory not in [
+                        "function",
+                        "titles",
+                    ] and category not in ["inclusive", "openly_discriminating"]:
+                        all_triggers.append(lemma)
 
                     if "Secondary_subcategory" in row and row["Secondary_subcategory"]:
                         all_secondar_subcategories.append(row["Secondary_subcategory"])
