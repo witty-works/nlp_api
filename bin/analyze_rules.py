@@ -434,9 +434,9 @@ for locale in locales:
     lemmas[locale] = list(all_lemma)
 
     print("Missing (sub-)categories")
-    print(all_categories - set(categories.keys()))
+    print(sorted(all_categories - set(categories.keys())))
     print("Missing secondary sub-categories")
-    print(all_secondar_subcategories - set(categories.keys()))
+    print(sorted(all_secondar_subcategories - set(categories.keys())))
 
 
 original_languagetool_path = args.Original
