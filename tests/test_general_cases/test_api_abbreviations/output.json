@@ -5,6 +5,37 @@
         {
             "alternatives": [
                 {
+                    "text": "ASL"
+                },
+                {
+                    "text": "as"
+                },
+                {
+                    "text": "all"
+                },
+                {
+                    "text": "ask"
+                },
+                {
+                    "text": "ash"
+                }
+            ],
+            "category": "orthography",
+            "context": "Do you speak asl?",
+            "end": 16,
+            "explanation": {
+                "icon": "❌",
+                "text": "Possible spelling mistake found."
+            },
+            "gravity": 1.0,
+            "label": "Spelling mistake",
+            "start": 13,
+            "subcategory": "typos",
+            "text": "asl"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "American Sign Language"
                 },
                 {
@@ -12,7 +43,7 @@
                 }
             ],
             "category": "style",
-            "context": "Do you speak ASL?",
+            "context": "Do you speak asl?",
             "end": 16,
             "explanation": {
                 "icon": "😉",
@@ -23,7 +54,7 @@
             "label": "Style: Abbreviation",
             "start": 13,
             "subcategory": "abbreviation",
-            "text": "ASL"
+            "text": "asl"
         }
     ]
 }
