@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-10-04 09:16\n"
-"PO-Revision-Date: 2022-10-04 09:16\n"
+"POT-Creation-Date: 2022-10-20 06:50\n"
+"PO-Revision-Date: 2022-10-20 06:50\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -111,7 +111,7 @@ msgid "rules.cognitive_perception_anchor"
 msgstr "wahrnehmung"
 
 msgid "rules.cognitive_perception_explanation"
-msgstr "Versteckte Voreingenommenheit bezüglich kognitiver Wahrnehmung"
+msgstr "Bedient Vorurteile über kognitive Wahrnehmungsfähigkeit"
 
 msgid "rules.communal_anchor"
 msgstr "kommunal"
@@ -141,7 +141,7 @@ msgid "rules.culture_anchor"
 msgstr "kultur"
 
 msgid "rules.culture_explanation"
-msgstr "Versteckte Voreingenommenheit bezüglich kulturellem Hintergrund"
+msgstr "Impliziert kultureller Hintergrund bestimmt den Wert einer Person"
 
 msgid "rules.d_and_i_anchor"
 msgstr "diversitaet_&_inklusion"
@@ -195,7 +195,7 @@ msgid "rules.gender_identity_anchor"
 msgstr "geschlechtsidentitaet"
 
 msgid "rules.gender_identity_explanation"
-msgstr "Versteckte Voreingenommenheit bezüglich Geschlechtsidentität"
+msgstr "Bedient die heteronormative Sicht von Geschlechteridentität"
 
 msgid "rules.gender_specific_abbreviation_anchor"
 msgstr "geschlechter_spezifische_abkuerzung"
@@ -237,7 +237,7 @@ msgid "rules.hearing_anchor"
 msgstr "hoer_faehigkeit"
 
 msgid "rules.hearing_explanation"
-msgstr "Versteckte Voreingenommenheit bezüglich Hör-Fähigkeit"
+msgstr "Bedient Vorurteile und Klischees über Hörvermögen"
 
 msgid "rules.hidden_image_anchor"
 msgstr "versteckter_ausdruck"
@@ -273,7 +273,7 @@ msgid "rules.learning_anchor"
 msgstr "lernfaehigkeit"
 
 msgid "rules.learning_explanation"
-msgstr "Versteckte Voreingenommenheit bezüglich Lernfähigkeit"
+msgstr "Bedient Vorurteile und Klischees über Lernfähigkeit"
 
 msgid "rules.male_stereotype_anchor"
 msgstr "maennlicher_stereotyp"
@@ -285,25 +285,26 @@ msgid "rules.medical_state_anchor"
 msgstr "gesundheitsbild"
 
 msgid "rules.medical_state_explanation"
-msgstr "Versteckte Voreingenommenheit bezüglich Gesundheitsbild"
+msgstr "Bedient Stereotypen von Gesundheit und Krankheit"
 
 msgid "rules.mental_wellbeing_anchor"
 msgstr "mentales_wohlbefinden"
 
 msgid "rules.mental_wellbeing_explanation"
-msgstr "Versteckte Voreingenommenheit bezüglich mentalem Wohlbefinden"
+msgstr ""
+"Bedient überholte Vorstellungen von mentaler Gesundheit oder Wohlbefinden"
 
 msgid "rules.migration_anchor"
 msgstr "migrationshintergrund"
 
 msgid "rules.migration_explanation"
-msgstr "Versteckte Voreingenommenheit bezüglich Migrationshintergrund"
+msgstr "Nährt Klischees über Menschen mit Migrationshintergrund"
 
 msgid "rules.military_source_anchor"
 msgstr "militaerische_wurzel"
 
 msgid "rules.military_source_explanation"
-msgstr "Militärischer Begriff kommuniziert kriegsähnlichen Zustand"
+msgstr "Inszeniert den Berufsalltag als Kriegsschauplatz"
 
 msgid "rules.misc_anchor"
 msgstr ""
@@ -315,7 +316,7 @@ msgid "rules.mobility_anchor"
 msgstr "mobilitaet"
 
 msgid "rules.mobility_explanation"
-msgstr "Versteckte Voreingenommenheit bezüglich Mobilität"
+msgstr "Nährt Klischees über Beweglichkeit oder Bewegungsfähigkeit"
 
 msgid "rules.offensive_language_anchor"
 msgstr "beleidigende_und_einschuechternde_sprache"
@@ -351,7 +352,7 @@ msgid "rules.racist_source_anchor"
 msgstr "rassistische_wurzel"
 
 msgid "rules.racist_source_explanation"
-msgstr "Versteckte Voreingenommenheit bezüglich Hautfarbe"
+msgstr "Suggeriert Bias in Bezug auf Hautfarbe und Ethnizität"
 
 msgid "rules.redundancy_anchor"
 msgstr "redundancy"
@@ -393,7 +394,7 @@ msgid "rules.sexual_orientation_anchor"
 msgstr "sexuelle_orientierung"
 
 msgid "rules.sexual_orientation_explanation"
-msgstr "Versteckte Voreingenommenheit bezüglich sexueller Orientierung"
+msgstr "Vermittelt ein heterosexuelles Werte- und Rollen-System"
 
 msgid "rules.simple_language_anchor"
 msgstr "leichte_sprache"
@@ -405,13 +406,15 @@ msgid "rules.speech_anchor"
 msgstr "sprech_faehigkeit"
 
 msgid "rules.speech_explanation"
-msgstr "Versteckte Voreingenommenheit bezüglich Sprech-Fähigkeit"
+msgstr "Bedient Vorurteile und Klischees über Sprechfähigkeit"
 
 msgid "rules.sports_terms_anchor"
 msgstr "sport_jargon"
 
 msgid "rules.sports_terms_explanation"
-msgstr "Sportlicher Begriff drückt Wettbewerbsstimmung aus"
+msgstr ""
+"Reduziert auf den Wettbewerbsaspekt; für Nicht-Sportinteressierte "
+"unverständlich"
 
 msgid "rules.style_anchor"
 msgstr "stil"
@@ -447,13 +450,13 @@ msgid "rules.unconscious_bias_anchor"
 msgstr "sprachliche_voreingenommenheit"
 
 msgid "rules.unconscious_bias_explanation"
-msgstr "Wort, das eine Voreingenommenheit kommuniziert, auf versteckte Art"
+msgstr "(Re)produziert Bias und unbewusste Voreingenommenheiten"
 
 msgid "rules.vision_anchor"
 msgstr "seh_faehigkeit"
 
 msgid "rules.vision_explanation"
-msgstr "Versteckte Voreingenommenheit bezüglich Seh-Fähigkeit"
+msgstr "Nährt Vorurteile und Klischees über Sehfähigkeit"
 
 msgid "rules.xenophobia_anchor"
 msgstr "fremdenfeindlichkeit_xenophobie"
