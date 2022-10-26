@@ -124,14 +124,21 @@ def get_data_from_files(locale):
                         except ValueError:
                             continue
 
+                    category = None
                     if "Category" in row:
-                        all_categories.append(row["Category"])
+                        category = row["Category"]
+                        all_categories.append(category)
 
+                    subcategory = None
                     if "Primary_subcategory" in row:
-                        all_categories.append(row["Primary_subcategory"])
+                        subcategory = row["Primary_subcategory"]
+                        all_categories.append(category)
 
-                        if row["Primary_subcategory"] not in ["function", "titles"]:
-                            all_triggers.append(lemma)
+                    if subcategory not in [
+                        "function",
+                        "titles",
+                    ] and category not in ["inclusive", "openly_discriminating"]:
+                        all_triggers.append(lemma)
 
                     if "Secondary_subcategory" in row and row["Secondary_subcategory"]:
                         all_secondar_subcategories.append(row["Secondary_subcategory"])
@@ -427,9 +434,9 @@ for locale in locales:
     lemmas[locale] = list(all_lemma)
 
     print("Missing (sub-)categories")
-    print(all_categories - set(categories.keys()))
+    print(sorted(all_categories - set(categories.keys())))
     print("Missing secondary sub-categories")
-    print(all_secondar_subcategories - set(categories.keys()))
+    print(sorted(all_secondar_subcategories - set(categories.keys())))
 
 
 original_languagetool_path = args.Original

@@ -76,7 +76,7 @@ from app.model import model
 from app.rules import *
 from app.sentry import set_up_sentry_sdk
 
-version = "1.38.2"
+version = "1.38.3"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -1344,6 +1344,7 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             tokens,
             rules["de-DE"]["df_abbreviation"],
             abbreviation,
+            True,
         )
 
     if is_sub_category_enabled(config, "openly_discriminating"):
@@ -1558,6 +1559,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
             tokens,
             rules[lang.locale]["df_abbreviation"],
             words_data_en["abbr"],
+            True,
         )
 
     if is_sub_category_enabled(config, "openly_discriminating"):
@@ -2087,29 +2089,22 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
     return alternatives_with_article
 
 
-def sentences_matcher(
+def sentences_matches(
     version: float,
     config: Config,
     lang,
     full_text,
     tokens,
-    sentences_data,
-    df_sentence,
     category,
-    fallback_subcategory=None,
+    subcategory,
+    matches,
 ):
-    if not isinstance(df_sentence, list):
-        df_sentence = list(df_sentence["Lemma"])
-
     list_tokens = []
-    alternatives = None
-    subcategory = fallback_subcategory
 
-    matches = fetch_matches(tokens, df_sentence)
-    for match_id, start, end in matches:
-        span = tokens[start:end]
+    if is_sub_category_enabled(config, subcategory):
+        for match_id, start, end in matches:
+            span = tokens[start:end]
 
-        if sentences_data == None:
             list_tokens.append(
                 ResultOut.factory(
                     version,
@@ -2121,21 +2116,59 @@ def sentences_matcher(
                     subcategory,
                     span.start_char,
                     span.end_char,
-                    alternatives,
+                    [],
                 )
             )
 
-            continue
+    return list_tokens
 
+
+def sentences_matcher(
+    version: float,
+    config: Config,
+    lang,
+    full_text,
+    tokens,
+    sentences_data,
+    df_sentence,
+    category,
+    subcategory=None,
+):
+    if not isinstance(df_sentence, list):
+        df_sentence = list(df_sentence["Lemma"])
+
+    matches = fetch_matches(tokens, df_sentence)
+
+    if sentences_data == None:
+        return sentences_matches(
+            version,
+            config,
+            lang,
+            full_text,
+            tokens,
+            category,
+            subcategory,
+            matches,
+        )
+
+    list_tokens = []
+    alternatives = None
+
+    for match_id, start, end in matches:
+        span = tokens[start:end]
         for sentence, *data in sentences_data:
             if span.text.lower() == sentence.lower():
-                if len(data) >= 2:
-                    subcategory = data[1]
                 if len(data) >= 1:
+                    if len(data) >= 2:
+                        subcategory = data[1]
+
                     if subcategory == None:
                         subcategory = data[0]
                     else:
                         alternatives = data[0]
+
+                if not is_sub_category_enabled(config, subcategory):
+                    continue
 
                 list_tokens.append(
                     ResultOut.factory(
@@ -2219,6 +2252,9 @@ def ub_words_phrase_matcher_de(
 
     for token in tokens:
         for word, word_types, alternatives, subcategory in words_data:
+            if not is_sub_category_enabled(config, subcategory):
+                continue
+
             if not is_word_match(token, tokens, lang, word, word_types):
                 continue
 
@@ -2278,6 +2314,9 @@ def gendered_denom_analysis_de(
             alternatives_all,
             subcategory,
         ) in words_data:
+            if not is_sub_category_enabled(config, subcategory):
+                continue
+
             word_types, lower_case, lemmatize = parse_word_types(word_types)
             if tokens[i].lemma_ == word and check_word_types(
                 tokens[i], lang, word_types, True
@@ -2424,6 +2463,9 @@ def word_noun(
             subcategory,
             *data,
         ) in words_data:
+            if not is_sub_category_enabled(config, subcategory):
+                continue
+
             if not is_word_match(token, tokens, lang, word, word_types, matches_false):
                 continue
 
@@ -2440,6 +2482,9 @@ def word_noun(
                     subcategory,
                     data[0],
                 )
+
+                if not is_sub_category_enabled(config, subcategory):
+                    continue
             else:
                 alternatives = plural_or_singular_alternatives_de(
                     token_morph_number, alternatives_sing, alternatives_plur
@@ -2581,6 +2626,7 @@ def literal_match(
     tokens,
     df_sentence,
     term_list,
+    ignore_case=False,
 ):
     list_tokens = []
 
@@ -2593,8 +2639,16 @@ def literal_match(
             alternatives,
             *explanation,
         ) in term_list:
+            if not is_sub_category_enabled(config, subcategory):
+                continue
+
             span = tokens[start:end]
-            if span.text != term:
+            text = span.text
+            if ignore_case:
+                text = text.lower()
+                term = term.lower()
+
+            if text != term:
                 continue
 
             url = None
