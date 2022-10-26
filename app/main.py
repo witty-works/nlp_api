@@ -1344,6 +1344,7 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             tokens,
             rules["de-DE"]["df_abbreviation"],
             abbreviation,
+            True,
         )
 
     if is_sub_category_enabled(config, "openly_discriminating"):
@@ -1558,6 +1559,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
             tokens,
             rules[lang.locale]["df_abbreviation"],
             words_data_en["abbr"],
+            True,
         )
 
     if is_sub_category_enabled(config, "openly_discriminating"):
@@ -2581,6 +2583,7 @@ def literal_match(
     tokens,
     df_sentence,
     term_list,
+    ignore_case=False,
 ):
     list_tokens = []
 
@@ -2594,7 +2597,12 @@ def literal_match(
             *explanation,
         ) in term_list:
             span = tokens[start:end]
-            if span.text != term:
+            text = span.text
+            if ignore_case:
+                text = text.lower()
+                term = term.lower()
+
+            if text != term:
                 continue
 
             url = None

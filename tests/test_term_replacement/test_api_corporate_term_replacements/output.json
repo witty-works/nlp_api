@@ -24,7 +24,7 @@
                 }
             ],
             "category": "orthography",
-            "context": "Ich bin foo bar! Und kein fooooo",
+            "context": "Ich bin foo bar! Und kein fooooo. Aber ich bin auch Foo.",
             "end": 11,
             "explanation": {
                 "icon": "❌",
@@ -43,7 +43,7 @@
                 }
             ],
             "category": "orthography",
-            "context": "Ich bin foo bar! Und kein fooooo",
+            "context": "Ich bin foo bar! Und kein fooooo. Aber ich bin auch Foo.",
             "end": 32,
             "explanation": {
                 "icon": "❌",
@@ -58,11 +58,42 @@
         {
             "alternatives": [
                 {
+                    "text": "Foto"
+                },
+                {
+                    "text": "Food"
+                },
+                {
+                    "text": "Von"
+                },
+                {
+                    "text": "Zoo"
+                },
+                {
+                    "text": "Form"
+                }
+            ],
+            "category": "orthography",
+            "context": "Ich bin foo bar! Und kein fooooo. Aber ich bin auch Foo.",
+            "end": 55,
+            "explanation": {
+                "icon": "❌",
+                "text": "Möglicher Tippfehler gefunden."
+            },
+            "gravity": 1.0,
+            "label": "Rechtschreibfehler",
+            "start": 52,
+            "subcategory": "typos",
+            "text": "Foo"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "bar"
                 }
             ],
             "category": "corporate_rules",
-            "context": "Ich bin foo bar! Und kein fooooo",
+            "context": "Ich bin foo bar! Und kein fooooo. Aber ich bin auch Foo.",
             "end": 11,
             "explanation": {
                 "icon": "🥰",
