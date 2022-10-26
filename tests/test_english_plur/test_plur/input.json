@@ -1,3 +1,6 @@
 {
-    "text": "Engineers usually work in industry."
+    "text": "Engineers usually work in industry.",
+    "config": {
+        "maximum_importance": 3
+    }
 }
