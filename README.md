@@ -40,6 +40,7 @@ Open another terminal tab and check LanguageTool container local address:
 ```
 lt_api=`docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' lt`
 ```
+
 As a last step run the NLP API image:
 
 ```
@@ -47,6 +48,7 @@ docker run --rm --name nlp_api -p 8080:8080 --network "bridge" --env languagetoo
 ```
 
 You should see application running under http://localhost:8000/docs
+
 ## using pipenv
 
 ```
@@ -81,12 +83,19 @@ python3.9 -m spacy download de_core_news_lg --no-cache-dir
 Compile the translations in the spirit of `./compile-translations.sh`
 
 ## Update dependencies locally
+
 To update packages locally after Pipfile was changed, run the command:
+
 ```
 pipenv install --dev
 ```
+
 ## Add new package
-When adding new package to the project, you need to updated existing Pipfile. Following command will install the package and add it to the `Pipfile` and `Pipfile.lock`:
+
+When adding new package to the project, you need to updated existing Pipfile.
+Following command will install the package and add it to the `Pipfile` and
+`Pipfile.lock`:
+
 ```
 pipenv install <package_name>
 ```
@@ -95,7 +104,9 @@ pipenv install <package_name>
 
 ### Build Docker image:
 
-After making changes in the code or in the Dockerfile, you can run the local setup. Create `requirements.txt` file (used by Docker image) and build new image with the following commands:
+After making changes in the code or in the Dockerfile, you can run the local
+setup. Create `requirements.txt` file (used by Docker image) and build new image
+with the following commands:
 
 ```
 python3.9 -m pip install -r requirements.txt
@@ -123,8 +134,11 @@ cp .env.development.mac .env
 
 You could alternatively set these variables in:
 
-- when using venv: set variables in a `/path/to/new/virtual/environment/bin/activate` file. This way they will be set each time virtual environment is activated.
-- when using conda: follow instructions in this article: https://guillaume-martin.github.io/saving-environment-variables-in-conda.html
+- when using venv: set variables in a
+  `/path/to/new/virtual/environment/bin/activate` file. This way they will be
+  set each time virtual environment is activated.
+- when using conda: follow instructions in this article:
+  https://guillaume-martin.github.io/saving-environment-variables-in-conda.html
 
 ---
 
@@ -144,12 +158,15 @@ For an alternate view of the docs navigate to http://localhost:8000/redoc
 
 ## Production Deployment
 
-Set an env variable `API_DOCS_AUTH_ENABLED` to `"true"` and for the username/password called `API_DOCS_USERNAME` and `API_DOCS_PASSWORD` for basic auth for the API docs.
+Set an env variable `API_DOCS_AUTH_ENABLED` to `"true"` and for the
+username/password called `API_DOCS_USERNAME` and `API_DOCS_PASSWORD` for basic
+auth for the API docs.
 
-Set an env variable `LANGUAGETOOL_API` to the URL endpoint of your LanguageTool server.
-Default is `https://api.languagetool.org/v2`.
+Set an env variable `LANGUAGETOOL_API` to the URL endpoint of your LanguageTool
+server. Default is `https://api.languagetool.org/v2`.
 
-If the build fails due to "No space left on device" while installing the dependencies run:
+If the build fails due to "No space left on device" while installing the
+dependencies run:
 
 ```
 platform project:clear-build-cache
@@ -172,8 +189,9 @@ curl -X 'POST' \
 
 ## Cloud deployment
 
-Test deployment(proof of concept) was done on Azure Kubernetes service with Docker images attached to this repository.
-More about that: https://www.notion.so/witty-works/Cloud-Deployment-Approaches-a5320f3e1b854e1e817909d365118ee7#cd1d5b8f43d449088c59de1b816119fd
+Test deployment(proof of concept) was done on Azure Kubernetes service with
+Docker images attached to this repository. More about that:
+https://www.notion.so/witty-works/Cloud-Deployment-Approaches-a5320f3e1b854e1e817909d365118ee7#cd1d5b8f43d449088c59de1b816119fd
 
 ## Run tests
 
@@ -208,7 +226,8 @@ ab -c 50 -n 100 -p tests/test_small.json -T application/json https://[env subdom
 
 ## Localization
 
-Go to https://www.notion.so/witty-works/e68e073dd0a342fca2a6683c7a8b2341?v=b54da99f8a6b4e6e8f312a530f653eb0
+Go to
+https://www.notion.so/witty-works/e68e073dd0a342fca2a6683c7a8b2341?v=b54da99f8a6b4e6e8f312a530f653eb0
 Export to CSV
 
 ```
@@ -224,6 +243,7 @@ pipenv run python -m bin.analyze_rules -l en
 ## Update the ignore.txt
 
 1. Download the current LanguageTool server
+
 ```
 curl https://languagetool.org/download/LanguageTool-stable.zip
 ```
@@ -231,39 +251,58 @@ curl https://languagetool.org/download/LanguageTool-stable.zip
 Unzip the file and move into the folder
 
 2. Run the LanguageTool server
+
 ```
 java -noverify -cp languagetool-server.jar org.languagetool.server.HTTPServer --public --allow-origin "*"
 ```
 
-3. Run the script to generate ignore words
-for German:
+3. Run the script to generate ignore words for German:
+
 ```
 pipenv run python -m bin.analyze_rules -p <path_to_ignore_file>
 ```
+
 for English:
+
 ```
 pipenv run python -m bin.analyze_rules -l en -p <path_to_ignore_file>
 ```
 
 For example:
+
 ```
 pipenv run python -m bin.analyze_rules -l en -p ../languagetool/ignored_words/English/ignore.txt
 pipenv run python -m bin.analyze_rules -l de -p ../languagetool/ignored_words/German/ignore.txt
 ```
 
-## Update the false positive list 
-```
-1. Run server locally (or restart to re-read the training data), for example with pipenv:
+## Update the false positive list
+
+1. Run server locally (or restart to re-read the training data), for example
+   with pipenv:
+
 ```
 pipenv run uvicorn app.main:app --reload
 ```
+
 2. Run the generate_false_positive.py file
+
 ```
 pipenv run python -m bin.generate_false_positive
 ```
-* If you get an error here, please repeat steps 1-2 and run the script again.
+
+If you get an error here, please repeat steps 1-2 and run the script again.
 
 ## Collect statistics
 
-Run `./statistics.sh` to fetch statistics locally and remotely.
-See `./statistics.sh -h` for instructions.
+Run `./statistics.sh` to fetch statistics locally and remotely. See
+`./statistics.sh -h` for instructions.
+
+## Incorrect German Noun Gender Detection
+
+Missing word needs to be added to https://de.wiktionary.org/ and then update
+https://github.com/gambolputty/german-nouns#compiling-the-list
+
+## Incorrect/Missing German Articles
+
+See https://www.verbformen.de/deklination/pronomen and update
+./training_data/de-DE/articles.csv accordingly.

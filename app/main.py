@@ -76,7 +76,7 @@ from app.model import model
 from app.rules import *
 from app.sentry import set_up_sentry_sdk
 
-version = "1.38.3"
+version = "1.38.4"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -1265,6 +1265,7 @@ async def language_rules(
     if "term_replacements" in rules:
         term_replacements = {
             "Lemma": [],
+            "Word_Type": [],
             "Category": [],
             "Primary_subcategory": [],
             "Alt_split": [],
@@ -1275,6 +1276,7 @@ async def language_rules(
             term_replacement = rules["term_replacements"][term]
 
             term_replacements["Lemma"].append(term)
+            term_replacements["Word_Type"].append("")
             term_replacements["Category"].append("corporate_rules")
             term_replacements["Primary_subcategory"].append("corporate_rules")
             term_replacements["Alt_split"].append(term_replacement["alternatives"])
@@ -1284,6 +1286,7 @@ async def language_rules(
         alternatives = list(
             zip(
                 df_term_replacements["Lemma"],
+                df_term_replacements["Word_Type"],
                 df_term_replacements["Category"],
                 df_term_replacements["Primary_subcategory"],
                 df_term_replacements["Alt_split"],
@@ -2011,80 +2014,115 @@ def match_binary_inclusive_gendered_denom_analysis_de(
     return text, start, category, subcategory
 
 
-def find_article(tokens, i):
-    matches = 0
-    article_text = tokens[i - 1].text.lower()
-    word = german_nouns[tokens[i].text.lower()]
+def fetch_matching_flexions(text, word, is_plural_check = False):
+    matches = {
+        "is_plural": False,
+        "forms": [],
+    }
+
     if len(word) == 0:
-        return None, None, None, None, None
+        return matches
 
-    for masculine, feminine, neuter, plural, alternative in articles:
-        if (
-            (word[0]["genus"] == "m" and article_text == masculine)
-            or (word[0]["genus"] == "f" and article_text == feminine)
-            or (word[0]["genus"] == "n" and article_text == neuter)
-        ):
-            match_masculine = masculine
-            match_feminine = feminine
-            match_neuter = neuter
-            match_plural = plural
-            match_alternative = alternative
-            matches += 1
-            if matches > 1:
-                break
+    for flexion, value in word[0]["flexion"].items():
+        if value == text:
+            words = flexion.replace("*", "").split()
+            if len(words) != 2:
+                continue
 
-    if matches == 1:
-        return (
-            match_masculine,
-            match_feminine,
-            match_neuter,
-            match_plural,
-            match_alternative,
-        )
+            if "plural" in words[1]:
+                matches["is_plural"] = True
+                if is_plural_check:
+                    break
 
-    return None, None, None, None, None
+            matches["forms"].append(words[0])
+
+    return matches
 
 
 def fetch_alternatives_with_article(tokens, i, alternatives):
-    alternatives_with_article = []
-    (
-        masculine,
-        feminine,
-        neuter,
-        plural,
-        alternative_for_article,
-    ) = find_article(tokens, i)
-
-    if alternative_for_article == None:
+    text = tokens[i].text
+    word = german_nouns[text]
+    matches = fetch_matching_flexions(text, word)
+    if len(matches["forms"]) == 0:
         return None
 
-    # also detect if its a person or an institution
-    # in the later case do not offer the Gender-star options
-    # and use subcategory "misgendering_institutions"
+    matched_form = None
+    article_text = tokens[i - 1].text.lower()
+    match_masculine = None
+    match_feminine = None
+    match_neuter = None
+    match_alternative = None
+    for form, masculine, feminine, neuter, plural, alternative in articles:
+        if form not in matches["forms"]:
+            continue
+
+        article_to_check = None
+        if word[0]["genus"] == "m":
+            article_to_check = masculine
+        elif word[0]["genus"] == "f":
+            article_to_check = feminine
+        elif word[0]["genus"] == "n":
+            article_to_check = neuter
+
+        if article_text == article_to_check:
+            if matched_form == None:
+                matched_form = form
+                match_masculine = masculine
+                match_feminine = feminine
+                match_neuter = neuter
+                match_alternative = alternative
+            elif matched_form != form:
+                if match_masculine != masculine:
+                    match_masculine = False
+
+                if match_feminine != feminine:
+                    match_feminine = False
+
+                if match_neuter != neuter:
+                    match_neuter = False
+
+                if match_alternative != alternative:
+                    match_alternative = False
+
+    if match_alternative == None:
+        return None
+
+    alternatives_with_article = []
     for alternative in alternatives:
         if "~" in alternative:
-            article_alternative = alternative_for_article
+            article_alternative = match_alternative
         else:
             if "---" in alternative:
-                (
-                    alternative,
-                    alternative_context,
-                ) = alternative.split("---")
-                alternative = alternative.strip()
+                alternative, alternative_context = ResultOut.parse_alternative_context(
+                    alternative
+                )
 
             words = alternative.split()
             word = german_nouns[words[-1]]
 
             if len(word) == 0:
                 article_alternative = tokens[i - 1].text
-            elif word[0]["genus"] == "m":
-                article_alternative = masculine
-            elif word[0]["genus"] == "n":
-                article_alternative = neuter
-            elif word[0]["genus"] == "f" or alternative.endswith("in"):
-                article_alternative = feminine
+            else:
+                matches = fetch_matching_flexions(alternative, word, True)
+                if matches["is_plural"]:
+                    article_alternative = ""
+                elif word[0]["genus"] == "m":
+                    if match_masculine == False:
+                        return None
+                    article_alternative = match_masculine
+                elif word[0]["genus"] == "n":
+                    if match_neuter == False:
+                        return None
+                    article_alternative = match_neuter
+                elif word[0]["genus"] == "f" or alternative.endswith("in"):
+                    if match_feminine == False:
+                        return None
+                    article_alternative = match_feminine
 
-        alternatives_with_article.append(article_alternative + " " + alternative)
+        if article_alternative != "":
+            article_alternative += tokens[i - 1].whitespace_
+
+        alternatives_with_article.append(article_alternative + alternative)
 
     return alternatives_with_article
 
@@ -2626,7 +2664,7 @@ def literal_match(
     tokens,
     df_sentence,
     term_list,
-    ignore_case=False,
+    lower_case=False,
 ):
     list_tokens = []
 
@@ -2634,6 +2672,7 @@ def literal_match(
     for match_id, start, end in matches:
         for (
             term,
+            word_types,
             category,
             subcategory,
             alternatives,
@@ -2644,7 +2683,11 @@ def literal_match(
 
             span = tokens[start:end]
             text = span.text
-            if ignore_case:
+            lower_case_rule = lower_case
+            if lower_case and word_types != "":
+                word_types, lower_case_rule, lemmatize = parse_word_types(word_types)
+
+            if lower_case_rule:
                 text = text.lower()
                 term = term.lower()
 
