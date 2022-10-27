@@ -1265,6 +1265,7 @@ async def language_rules(
     if "term_replacements" in rules:
         term_replacements = {
             "Lemma": [],
+            "Word_Type": [],
             "Category": [],
             "Primary_subcategory": [],
             "Alt_split": [],
@@ -1275,6 +1276,7 @@ async def language_rules(
             term_replacement = rules["term_replacements"][term]
 
             term_replacements["Lemma"].append(term)
+            term_replacements["Word_Type"].append("")
             term_replacements["Category"].append("corporate_rules")
             term_replacements["Primary_subcategory"].append("corporate_rules")
             term_replacements["Alt_split"].append(term_replacement["alternatives"])
@@ -1284,6 +1286,7 @@ async def language_rules(
         alternatives = list(
             zip(
                 df_term_replacements["Lemma"],
+                df_term_replacements["Word_Type"],
                 df_term_replacements["Category"],
                 df_term_replacements["Primary_subcategory"],
                 df_term_replacements["Alt_split"],
@@ -2626,7 +2629,7 @@ def literal_match(
     tokens,
     df_sentence,
     term_list,
-    ignore_case=False,
+    lower_case=False,
 ):
     list_tokens = []
 
@@ -2634,6 +2637,7 @@ def literal_match(
     for match_id, start, end in matches:
         for (
             term,
+            word_types,
             category,
             subcategory,
             alternatives,
@@ -2644,7 +2648,11 @@ def literal_match(
 
             span = tokens[start:end]
             text = span.text
-            if ignore_case:
+            lower_case_rule = lower_case
+            if lower_case and word_types != "":
+                word_types, lower_case_rule, lemmatize = parse_word_types(word_types)
+
+            if lower_case_rule:
                 text = text.lower()
                 term = term.lower()
 
