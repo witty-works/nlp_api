@@ -72,13 +72,13 @@
         {
             "alternatives": [
                 {
-                    "text": "Team"
+                    "text": "ein Team"
                 },
                 {
-                    "text": "Equipe"
+                    "text": "eine Equipe"
                 },
                 {
-                    "text": "Gruppe"
+                    "text": "eine Gruppe"
                 },
                 {
                     "text": "Teams"
@@ -97,9 +97,9 @@
             },
             "gravity": 2.0,
             "label": "Geschlechtsspezifisch: Versteckter Ausdruck",
-            "start": 36,
+            "start": 31,
             "subcategory": "hidden_image",
-            "text": "Mannschaft"
+            "text": "eine Mannschaft"
         },
         {
             "alternatives": [

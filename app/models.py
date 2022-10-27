@@ -553,9 +553,7 @@ class ResultOut(BaseModel):
             remove = None
             if category != "orthography":
                 if "---" in alternative:
-                    alternative, alternative_context = alternative.split("---")
-                    alternative = alternative.strip()
-                    alternative_context = alternative_context.strip()
+                    alternative, alternative_context = ResultOut.parse_alternative_context(alternative)
                     if alternative == "":
                         if explanation_context == None:
                             explanation_context = alternative_context
@@ -606,6 +604,11 @@ class ResultOut(BaseModel):
                 break
 
         return list(cleaned_alternatives.values())[0:5], explanation_context
+
+    @staticmethod
+    def parse_alternative_context(alternative):
+        alternative, alternative_context = alternative.split("---")
+        return alternative.strip(), alternative_context.strip()
 
     @staticmethod
     def convert_sharp_ss(lang, text):

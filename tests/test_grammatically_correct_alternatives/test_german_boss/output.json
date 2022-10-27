@@ -1,0 +1,38 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "Unser Leitungsperson"
+                },
+                {
+                    "text": "Unsere Leitung"
+                },
+                {
+                    "text": "Unser Management"
+                },
+                {
+                    "text": "Unser*e Vorgesetzte*r"
+                },
+                {
+                    "text": "Unser/e Vorgesetzte/Vorgesetzter"
+                }
+            ],
+            "category": "gendered",
+            "context": "Unser Boss ist ok.",
+            "end": 10,
+            "explanation": {
+                "icon": "😟",
+                "text": "Bedient altmodisches Konzept von Führung",
+                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#fuehrungsstereotyp"
+            },
+            "gravity": 2.0,
+            "label": "Geschlechtsspezifisch: Führungsstereotyp",
+            "start": 0,
+            "subcategory": "leadership",
+            "text": "Unser Boss"
+        }
+    ]
+}

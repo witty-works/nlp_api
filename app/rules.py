@@ -135,6 +135,7 @@ gender_words_data_no_noun = list(
 # articles
 articles = list(
     zip(
+        rules["de-DE"]["df_articles"]["Form"],
         rules["de-DE"]["df_articles"]["Masculine"],
         rules["de-DE"]["df_articles"]["Feminine"],
         rules["de-DE"]["df_articles"]["Neuter"],
