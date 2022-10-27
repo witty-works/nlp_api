@@ -31,6 +31,26 @@
             "start": 12,
             "subcategory": "emotional_security",
             "text": "encouraged"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "style",
+            "context": "I felt very encouraged as a Deaf person.",
+            "end": 11,
+            "explanation": {
+                "icon": "😟",
+                "text": "Filler words add words but no meaning",
+                "url": "https://www.witty.works/en/categories/style#filler_words"
+            },
+            "gravity": 3.0,
+            "label": "Style: Filler words",
+            "start": 7,
+            "subcategory": "filler",
+            "text": "very"
         }
     ]
 }
