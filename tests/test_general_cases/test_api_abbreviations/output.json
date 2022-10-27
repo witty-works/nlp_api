@@ -21,7 +21,7 @@
                 }
             ],
             "category": "orthography",
-            "context": "Do you speak asl?",
+            "context": "Do you speak asl? I am taking a rest.",
             "end": 16,
             "explanation": {
                 "icon": "❌",
@@ -43,7 +43,7 @@
                 }
             ],
             "category": "style",
-            "context": "Do you speak asl?",
+            "context": "Do you speak asl? I am taking a rest.",
             "end": 16,
             "explanation": {
                 "icon": "😉",

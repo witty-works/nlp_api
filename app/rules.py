@@ -193,6 +193,7 @@ df_abbreviation = rules["de-DE"]["df_abbreviation"]
 abbreviation = list(
     zip(
         df_abbreviation["Lemma"],
+        df_abbreviation["Word_Type"],
         df_abbreviation["Category"],
         df_abbreviation["Primary_subcategory"],
         map(ast.literal_eval, df_abbreviation["Alt_split"]),
@@ -371,6 +372,7 @@ df_abbreviation_GB = rules["en-GB"]["df_abbreviation"]
 abbreviation_US = list(
     zip(
         df_abbreviation_US["Lemma"],
+        df_abbreviation_US["Word_Type"],
         df_abbreviation_US["Category"],
         df_abbreviation_US["Primary_subcategory"],
         map(ast.literal_eval, df_abbreviation_US["Alt_split"]),
@@ -379,6 +381,7 @@ abbreviation_US = list(
 abbreviation_GB = list(
     zip(
         df_abbreviation_GB["Lemma"],
+        df_abbreviation_GB["Word_Type"],
         df_abbreviation_GB["Category"],
         df_abbreviation_GB["Primary_subcategory"],
         map(ast.literal_eval, df_abbreviation_GB["Alt_split"]),
