@@ -1,3 +1,6 @@
 {
-    "text": "I felt very encouraged as a Deaf person."
+    "text": "I felt very encouraged as a Deaf person.",
+    "config": {
+        "maximum_importance": 3
+    }
 }

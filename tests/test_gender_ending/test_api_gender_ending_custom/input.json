@@ -1,6 +1,7 @@
 {
     "text": "Es ist eine Kund/in. Eine gute Kund/in.",
     "config": {
+        "maximum_importance": 3,
         "german_gender_ending": "/in"
     }
 }
