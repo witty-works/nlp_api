@@ -52,7 +52,7 @@ categories = {
         "inclusive": False,
         "category": "style",
         "gravity": 3.0,
-        "importance": 3,
+        "importance": 2,
         "emoji": "😉",
     },
     "antimuslim": {
@@ -156,14 +156,14 @@ categories = {
         "inclusive": True,
         "category": "inclusive",
         "gravity": None,
-        "importance": 2,
+        "importance": 3,
         "emoji": "✅",
     },
     "emotional_security": {
         "inclusive": True,
         "category": "inclusive",
         "gravity": None,
-        "importance": 2,
+        "importance": 3,
         "emoji": "✅",
     },
     "exaggerating": {
@@ -191,7 +191,7 @@ categories = {
         "inclusive": False,
         "category": "style",
         "gravity": 3.0,
-        "importance": 3,
+        "importance": 2,
         "emoji": "😟",
     },
     "formality": {
@@ -289,7 +289,7 @@ categories = {
         "inclusive": True,
         "category": "inclusive",
         "gravity": None,
-        "importance": 2,
+        "importance": 3,
         "emoji": "✅",
     },
     "leadership": {
@@ -359,14 +359,14 @@ categories = {
         "inclusive": False,
         "category": "openly_discriminating",
         "gravity": 1.0,
-        "importance": None,
+        "importance": 1,
         "emoji": "🚫",
     },
     "openly_discriminating": {
         "inclusive": False,
         "category": "openly_discriminating",
         "gravity": 1.0,
-        "importance": None,
+        "importance": 1,
         "emoji": "🚫",
     },
     "orthography": {
