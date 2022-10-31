@@ -164,7 +164,7 @@ def read_csv(in_file):
                 try:
                     importance = int(row[columns["Importance"]])
                 except ValueError:
-                    importance = None
+                    importance = 3.0
                 categories[sub_category]["importance"] = importance
 
     sorted_categories = {}

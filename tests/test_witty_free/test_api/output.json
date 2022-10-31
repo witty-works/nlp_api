@@ -1,0 +1,127 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "unsere"
+                },
+                {
+                    "text": "unserer"
+                },
+                {
+                    "text": "untere"
+                },
+                {
+                    "text": "unser"
+                },
+                {
+                    "text": "unserem"
+                }
+            ],
+            "category": "orthography",
+            "context": "Wir suchen eine Arbeitskraft für unseere Kunden um Erfolg zu haben.",
+            "end": 40,
+            "explanation": {
+                "icon": "❌",
+                "text": "Möglicher Tippfehler gefunden."
+            },
+            "gravity": 1.0,
+            "label": "Rechtschreibfehler",
+            "start": 33,
+            "subcategory": "typos",
+            "text": "unseere"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": ", um"
+                }
+            ],
+            "category": "orthography",
+            "context": "Wir suchen eine Arbeitskraft für unseere Kunden um Erfolg zu haben.",
+            "end": 50,
+            "explanation": {
+                "icon": "❌",
+                "text": "Wenn es sich hier um eine Infinitivgruppe (‚zu‘ + Grundform) handelt, muss in der Regel ein Komma gesetzt werden."
+            },
+            "gravity": 1.0,
+            "label": "Kommasetzung",
+            "start": 47,
+            "subcategory": "orthography",
+            "text": " um"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Auftraggebende"
+                },
+                {
+                    "text": "Bestellende"
+                },
+                {
+                    "text": "Kund*innen"
+                },
+                {
+                    "text": "Kundinnen und Kunden"
+                },
+                {
+                    "text": "Kundschaft"
+                }
+            ],
+            "category": "gendered",
+            "context": "Wir suchen eine Arbeitskraft für unseere Kunden um Erfolg zu haben.",
+            "end": 47,
+            "explanation": {
+                "icon": "😟",
+                "text": "Viele denken bei diesem Wort zuerst an einen Mann",
+                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#titel"
+            },
+            "gravity": 2.0,
+            "label": "Geschlechtsspezifisch: Titel",
+            "start": 41,
+            "subcategory": "titles",
+            "text": "Kunden"
+        },
+        {
+            "context": "Wir suchen eine Arbeitskraft für unseere Kunden um Erfolg zu haben.",
+            "end": 28,
+            "gravity": 3.0,
+            "start": 16,
+            "text": "Arbeitskraft"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Gelingen"
+                },
+                {
+                    "text": "gemeinsam erreichtes Ziel"
+                },
+                {
+                    "text": "gutes Ergebnis"
+                },
+                {
+                    "text": "positive Überraschung"
+                },
+                {
+                    "text": "Lohn für Engagement"
+                }
+            ],
+            "category": "style",
+            "context": "Wir suchen eine Arbeitskraft für unseere Kunden um Erfolg zu haben.",
+            "end": 57,
+            "explanation": {
+                "icon": "😮‍💨",
+                "text": "Auf Übertreibungen verzichten schafft Vertrauen",
+                "url": "https://www.witty.works/de/kategorien/stil#superlative"
+            },
+            "gravity": 2.0,
+            "label": "Stil: Superlative",
+            "start": 51,
+            "subcategory": "exaggerating",
+            "text": "Erfolg"
+        }
+    ]
+}
