@@ -227,6 +227,28 @@ def test_2_0_json(test_2_0_dir, snapshot, set_redis):
 
 
 @pytest.mark.parametrize(
+    "test_witty_free_dir",
+    get_dirs("tests/test_witty_free"),
+)
+def test_witty_free_json(test_witty_free_dir, snapshot, set_redis):
+
+    # Read input files from the case directory.
+    input_json = test_witty_free_dir.joinpath("input.json").read_text()
+    # Call the tested endpoint.
+    response = client.post(
+        "/v2.1/check",
+        json=json.loads(input_json),
+        headers={"X-Auth": "free@gmail.com"},
+    )
+    assert response.status_code == 200
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    # Snapshot the return value.
+    snapshot.snapshot_dir = test_witty_free_dir
+    snapshot.assert_match(output, "output.json")
+
+
+@pytest.mark.parametrize(
     "test_1_1_authenticated_dir",
     get_dirs("tests/test_1_1_authenticated"),
 )
@@ -404,6 +426,31 @@ def test_config_organization_changed(set_redis):
 
 @pytest.fixture
 def set_redis():
+    # free@gmail.com
+    user_object = {
+        "id": "test-free",
+        "email": "free@gmail.com",
+        "organization_id": "test-free-org",
+        "name": "Tests Free",
+        "config": {},
+        "false_positives": [],
+        "term_replacements": {},
+        "notifications": 0,
+    }
+
+    redis.set(user_object["email"], json.dumps(user_object))
+
+    organization_object = {
+        "id": user_object["organization_id"],
+        "name": "Free",
+        "plan": "witty_free",
+        "config": {},
+        "false_positives": [],
+        "term_replacements": {},
+    }
+
+    redis.set(organization_object["id"], json.dumps(organization_object))
+
     # default@gmail.com
     user_object = {
         "id": "test-default",
@@ -421,13 +468,12 @@ def set_redis():
     organization_object = {
         "id": user_object["organization_id"],
         "name": "Default",
-        "plan": "witty_me",
+        "plan": "witty_teams",
         "config": {},
         "false_positives": [],
         "term_replacements": {},
     }
 
-    # Set a value
     redis.set(organization_object["id"], json.dumps(organization_object))
 
     # test@gmail.com

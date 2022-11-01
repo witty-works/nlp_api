@@ -27,6 +27,7 @@ class Settings(BaseSettings):
     is_prod: bool = False
     terms_of_service: str = "https://www.witty.works/privacy"
     contact: str = "support@witty.works"
+    hide_details_for_witty_free: bool = True
     aadb2c_tenant_id: Optional[str]
     aadb2c_client_id: Optional[str]
     aadb2c_policy: Optional[str]

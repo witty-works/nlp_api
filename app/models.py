@@ -99,7 +99,7 @@ class GenderedRolesFormatType(str, Enum):
 class Config(BaseModel):
     store_context: Optional[bool] = True
     simple_language: Optional[bool] = False
-    hide_details: Optional[bool] = False
+    plan: Optional[str]
     primary_language: Optional[LangWithAutoType]
     preferred_languages: List = [LangWithAutoType.EN, LangWithAutoType.DE]
     _supported_langs = [
@@ -411,10 +411,9 @@ class ResultOut(BaseModel):
         else:
             category_key = category
 
+        category_data = None
         if category_key in categories:
             category_data = categories[category_key]
-        else:
-            category_data = None
 
         if category != "orthography" and category != "corporate_rules":
             if category != subcategory:
@@ -451,7 +450,19 @@ class ResultOut(BaseModel):
         if gravity == None and "gravity" in category_data:
             gravity = category_data["gravity"]
 
-        if (config.hide_details and version >= 2.1) or alternatives == None:
+        hide_details = False
+
+        if version >= 2.1:
+            # Not logged-in
+            hide_details = config.plan == None
+
+            # Logged-in but non paying user get all highlights
+            if config.plan == "witty_free":
+                hide_details = float(config.maximum_importance) < float(
+                    categories[subcategory]["importance"]
+                )
+
+        if hide_details or alternatives == None or alternatives == []:
             alternatives = []
         else:
             if isinstance(alternatives, Dict):
@@ -496,13 +507,12 @@ class ResultOut(BaseModel):
                 gravity=gravity,
             )
 
-        if config.hide_details and version >= 2.1:
+        if hide_details:
             category = None
             subcategory = None
             alternatives = None
             label = None
             explanation = None
-            gravity = None
 
         return ResultOut(
             text=text,
@@ -553,7 +563,10 @@ class ResultOut(BaseModel):
             remove = None
             if category != "orthography":
                 if "---" in alternative:
-                    alternative, alternative_context = ResultOut.parse_alternative_context(alternative)
+                    (
+                        alternative,
+                        alternative_context,
+                    ) = ResultOut.parse_alternative_context(alternative)
                     if alternative == "":
                         if explanation_context == None:
                             explanation_context = alternative_context
