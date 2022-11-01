@@ -24,11 +24,7 @@ def parse_row_column(locales, category, sub_category, columns, label, column, ro
     for locale in locales:
         result[locale] = {}
 
-        if (
-            locale == "pot"
-            or (category == "orthography" and label == "anchor")
-            or (category == "corporate_rules" and label == "explanation")
-        ):
+        if locale == "pot" or (category == "orthography" and label == "anchor"):
             msgstr = ""
         else:
             msgstr = row[columns[column + " " + locale[0:2].upper()]].strip()
