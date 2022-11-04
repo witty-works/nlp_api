@@ -419,7 +419,9 @@ class ResultOut(BaseModel):
             if category != subcategory:
                 sub_anchor = lang._("rules." + subcategory + "_anchor")
 
-            if url == None:
+            if url == None and (
+                category_data["why"] == True or category_data["why"] == lang.lang
+            ):
                 settings = get_settings()
                 url = (
                     settings.learning_bites_base_url
