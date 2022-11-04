@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-11-01 16:46\n"
-"PO-Revision-Date: 2022-11-01 16:46\n"
+"POT-Creation-Date: 2022-11-04 09:01\n"
+"PO-Revision-Date: 2022-11-04 09:01\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -112,6 +112,12 @@ msgstr "cognitive_perception"
 
 msgid "rules.cognitive_perception_explanation"
 msgstr "Fuels preconceived notions about cognitive perception"
+
+msgid "rules.color_anchor"
+msgstr "color"
+
+msgid "rules.color_explanation"
+msgstr "Don’t use colors to describe good or bad"
 
 msgid "rules.communal_anchor"
 msgstr "communal"

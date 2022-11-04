@@ -42,7 +42,7 @@ def parse_row_column(locales, category, sub_category, columns, label, column, ro
                     + locale
                     + ")"
                 )
-            elif label == "explanation":
+            elif label == "explanation" and sub_category != "corporate_rules":
                 if msgstr.find("|") == -1:
                     print(
                         "Pipesign missing for '"
@@ -95,6 +95,7 @@ def read_csv(in_file):
             "Gravity": None,
             "Importance": None,
             "Status API": None,
+            "Status HubSpot": None,
         }
 
         columnMap = {
@@ -124,6 +125,15 @@ def read_csv(in_file):
                     continue
 
                 categories[sub_category] = {}
+
+                if row[columns["Status HubSpot"]] == "Deployed":
+                    categories[sub_category]["why"] = True
+                elif row[columns["Status HubSpot"]] == "Missing English":
+                    categories[sub_category]["why"] = "de"
+                elif row[columns["Status HubSpot"]] == "Missing German":
+                    categories[sub_category]["why"] = "en"
+                else:
+                    categories[sub_category]["why"] = False
 
                 categories[sub_category]["inclusive"] = (
                     row[columns["Inclusive?"]] == "👍"

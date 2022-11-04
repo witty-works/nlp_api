@@ -1,5 +1,6 @@
 categories = {
     "abbreviation": {
+        "why": True,
         "inclusive": False,
         "category": "style",
         "gravity": 3.0,
@@ -7,6 +8,7 @@ categories = {
         "emoji": "😉",
     },
     "ability": {
+        "why": True,
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2.0,
@@ -14,6 +16,7 @@ categories = {
         "emoji": "😒",
     },
     "ableism": {
+        "why": True,
         "inclusive": False,
         "category": "openly_discriminating",
         "gravity": 1.0,
@@ -21,6 +24,7 @@ categories = {
         "emoji": "🚫",
     },
     "age": {
+        "why": True,
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2.0,
@@ -28,6 +32,7 @@ categories = {
         "emoji": "🤔",
     },
     "age_old": {
+        "why": True,
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2.0,
@@ -35,6 +40,7 @@ categories = {
         "emoji": "😒",
     },
     "age_young": {
+        "why": True,
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2.0,
@@ -42,6 +48,7 @@ categories = {
         "emoji": "😒",
     },
     "agentic": {
+        "why": True,
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2.0,
@@ -49,6 +56,7 @@ categories = {
         "emoji": "😒",
     },
     "anglicism": {
+        "why": True,
         "inclusive": False,
         "category": "style",
         "gravity": 3.0,
@@ -56,6 +64,7 @@ categories = {
         "emoji": "😉",
     },
     "antimuslim": {
+        "why": True,
         "inclusive": False,
         "category": "openly_discriminating",
         "gravity": 1.0,
@@ -63,6 +72,7 @@ categories = {
         "emoji": "🚫",
     },
     "antisemitism": {
+        "why": True,
         "inclusive": False,
         "category": "openly_discriminating",
         "gravity": 1.0,
@@ -70,6 +80,7 @@ categories = {
         "emoji": "🚫",
     },
     "behavior": {
+        "why": True,
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2.0,
@@ -77,6 +88,7 @@ categories = {
         "emoji": "😒",
     },
     "belief": {
+        "why": True,
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2.0,
@@ -84,6 +96,7 @@ categories = {
         "emoji": "😒",
     },
     "binary_pronouns": {
+        "why": True,
         "inclusive": False,
         "category": "gendered",
         "gravity": 2.0,
@@ -91,6 +104,7 @@ categories = {
         "emoji": "😟",
     },
     "casing": {
+        "why": False,
         "inclusive": False,
         "category": "orthography",
         "gravity": 1.0,
@@ -98,6 +112,7 @@ categories = {
         "emoji": "❌",
     },
     "classism": {
+        "why": True,
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2.0,
@@ -105,6 +120,7 @@ categories = {
         "emoji": "😒",
     },
     "cognitive_ability": {
+        "why": True,
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2.0,
@@ -112,13 +128,22 @@ categories = {
         "emoji": "😒",
     },
     "cognitive_perception": {
+        "why": False,
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2.0,
         "importance": 2,
         "emoji": "😒",
     },
+    "color": {
+        "why": "en",
+        "inclusive": False,
+        "category": "unconscious_bias",
+        "gravity": 2.0,
+        "importance": 2,
+    },
     "communal": {
+        "why": True,
         "inclusive": True,
         "category": "inclusive",
         "gravity": None,
@@ -126,6 +151,7 @@ categories = {
         "emoji": "✅",
     },
     "compounding": {
+        "why": False,
         "inclusive": False,
         "category": "orthography",
         "gravity": 2.0,
@@ -133,6 +159,7 @@ categories = {
         "emoji": "⚠️",
     },
     "confused_words": {
+        "why": False,
         "inclusive": False,
         "category": "orthography",
         "gravity": 1.0,
@@ -140,12 +167,14 @@ categories = {
         "emoji": "❌",
     },
     "corporate_rules": {
+        "why": False,
         "inclusive": False,
         "category": "corporate_rules",
         "gravity": 0.9,
         "importance": 1,
     },
     "culture": {
+        "why": True,
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2.0,
@@ -153,6 +182,7 @@ categories = {
         "emoji": "😒",
     },
     "d_and_i": {
+        "why": True,
         "inclusive": True,
         "category": "inclusive",
         "gravity": None,
@@ -160,6 +190,7 @@ categories = {
         "emoji": "✅",
     },
     "emotional_security": {
+        "why": False,
         "inclusive": True,
         "category": "inclusive",
         "gravity": None,
@@ -167,6 +198,7 @@ categories = {
         "emoji": "✅",
     },
     "exaggerating": {
+        "why": True,
         "inclusive": False,
         "category": "style",
         "gravity": 2.0,
@@ -174,6 +206,7 @@ categories = {
         "emoji": "😮\u200d💨",
     },
     "false_friends": {
+        "why": False,
         "inclusive": False,
         "category": "style",
         "gravity": 3.0,
@@ -181,6 +214,7 @@ categories = {
         "emoji": "🤔",
     },
     "female_stereotype": {
+        "why": True,
         "inclusive": False,
         "category": "gendered",
         "gravity": 2.0,
@@ -188,6 +222,7 @@ categories = {
         "emoji": "😟",
     },
     "filler": {
+        "why": True,
         "inclusive": False,
         "category": "style",
         "gravity": 3.0,
@@ -195,6 +230,7 @@ categories = {
         "emoji": "😟",
     },
     "formality": {
+        "why": True,
         "inclusive": False,
         "category": "style",
         "gravity": 3.0,
@@ -202,6 +238,7 @@ categories = {
         "emoji": "🧊",
     },
     "function": {
+        "why": True,
         "inclusive": False,
         "category": "gendered",
         "gravity": 2.0,
@@ -209,6 +246,7 @@ categories = {
         "emoji": "💡",
     },
     "gender_identity": {
+        "why": True,
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2.0,
@@ -216,6 +254,7 @@ categories = {
         "emoji": "😒",
     },
     "gender_specific_abbreviation": {
+        "why": True,
         "inclusive": False,
         "category": "gendered",
         "gravity": 2.0,
@@ -223,6 +262,7 @@ categories = {
         "emoji": "😮",
     },
     "gendered": {
+        "why": True,
         "inclusive": False,
         "category": "gendered",
         "gravity": 2.0,
@@ -230,6 +270,7 @@ categories = {
         "emoji": "😟",
     },
     "gendered_denominations_ending": {
+        "why": True,
         "inclusive": False,
         "category": "gendered",
         "gravity": 2.0,
@@ -237,6 +278,7 @@ categories = {
         "emoji": "💯",
     },
     "general_style": {
+        "why": False,
         "inclusive": False,
         "category": "style",
         "gravity": 2.0,
@@ -244,6 +286,7 @@ categories = {
         "emoji": "🤔",
     },
     "generic_plural": {
+        "why": True,
         "inclusive": False,
         "category": "gendered",
         "gravity": 3.0,
@@ -251,6 +294,7 @@ categories = {
         "emoji": "😮",
     },
     "grammar": {
+        "why": False,
         "inclusive": False,
         "category": "orthography",
         "gravity": 1.0,
@@ -258,6 +302,7 @@ categories = {
         "emoji": "❌",
     },
     "hearing": {
+        "why": True,
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2.0,
@@ -265,6 +310,7 @@ categories = {
         "emoji": "😒",
     },
     "hidden_image": {
+        "why": True,
         "inclusive": False,
         "category": "gendered",
         "gravity": 2.0,
@@ -272,6 +318,7 @@ categories = {
         "emoji": "😟",
     },
     "hollow": {
+        "why": True,
         "inclusive": False,
         "category": "style",
         "gravity": 3.0,
@@ -279,6 +326,7 @@ categories = {
         "emoji": "🙄",
     },
     "homophobia": {
+        "why": True,
         "inclusive": False,
         "category": "openly_discriminating",
         "gravity": 1.0,
@@ -286,6 +334,7 @@ categories = {
         "emoji": "🚫",
     },
     "inclusive": {
+        "why": False,
         "inclusive": True,
         "category": "inclusive",
         "gravity": None,
@@ -293,6 +342,7 @@ categories = {
         "emoji": "✅",
     },
     "leadership": {
+        "why": True,
         "inclusive": False,
         "category": "gendered",
         "gravity": 2.0,
@@ -300,6 +350,7 @@ categories = {
         "emoji": "😟",
     },
     "learning": {
+        "why": False,
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2.0,
@@ -307,6 +358,7 @@ categories = {
         "emoji": "😒",
     },
     "male_stereotype": {
+        "why": True,
         "inclusive": False,
         "category": "gendered",
         "gravity": 2.0,
@@ -314,6 +366,7 @@ categories = {
         "emoji": "😟",
     },
     "medical_state": {
+        "why": True,
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2.0,
@@ -321,6 +374,7 @@ categories = {
         "emoji": "😒",
     },
     "mental_wellbeing": {
+        "why": False,
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2.0,
@@ -328,6 +382,7 @@ categories = {
         "emoji": "😒",
     },
     "migration": {
+        "why": True,
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2.0,
@@ -335,6 +390,7 @@ categories = {
         "emoji": "😒",
     },
     "military_source": {
+        "why": False,
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2.0,
@@ -342,6 +398,7 @@ categories = {
         "emoji": "🪖",
     },
     "misc": {
+        "why": False,
         "inclusive": False,
         "category": "orthography",
         "gravity": 2.0,
@@ -349,6 +406,7 @@ categories = {
         "emoji": "🤔",
     },
     "mobility": {
+        "why": True,
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2.0,
@@ -356,6 +414,7 @@ categories = {
         "emoji": "😒",
     },
     "offensive_language": {
+        "why": True,
         "inclusive": False,
         "category": "openly_discriminating",
         "gravity": 1.0,
@@ -363,6 +422,7 @@ categories = {
         "emoji": "🚫",
     },
     "openly_discriminating": {
+        "why": True,
         "inclusive": False,
         "category": "openly_discriminating",
         "gravity": 1.0,
@@ -370,6 +430,7 @@ categories = {
         "emoji": "🚫",
     },
     "orthography": {
+        "why": False,
         "inclusive": False,
         "category": "orthography",
         "gravity": 1.0,
@@ -377,6 +438,7 @@ categories = {
         "emoji": "❌",
     },
     "punctuation": {
+        "why": False,
         "inclusive": False,
         "category": "orthography",
         "gravity": 1.0,
@@ -384,6 +446,7 @@ categories = {
         "emoji": "❌",
     },
     "racism": {
+        "why": True,
         "inclusive": False,
         "category": "openly_discriminating",
         "gravity": 1.0,
@@ -391,6 +454,7 @@ categories = {
         "emoji": "🚫",
     },
     "racist_source": {
+        "why": True,
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2.0,
@@ -398,6 +462,7 @@ categories = {
         "emoji": "😒",
     },
     "redundancy": {
+        "why": False,
         "inclusive": False,
         "category": "style",
         "gravity": 3.0,
@@ -405,6 +470,7 @@ categories = {
         "emoji": "🤔",
     },
     "regionalisms": {
+        "why": False,
         "inclusive": False,
         "category": "style",
         "gravity": 3.0,
@@ -412,6 +478,7 @@ categories = {
         "emoji": "🤔",
     },
     "repetitions": {
+        "why": False,
         "inclusive": False,
         "category": "orthography",
         "gravity": 2.0,
@@ -419,6 +486,7 @@ categories = {
         "emoji": "⚠️",
     },
     "repetitions_style": {
+        "why": False,
         "inclusive": False,
         "category": "style",
         "gravity": 3.0,
@@ -426,6 +494,7 @@ categories = {
         "emoji": "😟",
     },
     "semantics": {
+        "why": False,
         "inclusive": False,
         "category": "style",
         "gravity": 3.0,
@@ -433,6 +502,7 @@ categories = {
         "emoji": "🤔",
     },
     "sexism": {
+        "why": True,
         "inclusive": False,
         "category": "openly_discriminating",
         "gravity": 1.0,
@@ -440,6 +510,7 @@ categories = {
         "emoji": "🚫",
     },
     "sexual_orientation": {
+        "why": True,
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2.0,
@@ -447,6 +518,7 @@ categories = {
         "emoji": "😒",
     },
     "simple_language": {
+        "why": False,
         "inclusive": False,
         "category": "style",
         "gravity": 3.0,
@@ -454,6 +526,7 @@ categories = {
         "emoji": "🙄",
     },
     "speech": {
+        "why": False,
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2.0,
@@ -461,6 +534,7 @@ categories = {
         "emoji": "😒",
     },
     "sports_terms": {
+        "why": False,
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2.0,
@@ -468,6 +542,7 @@ categories = {
         "emoji": "🏅",
     },
     "style": {
+        "why": True,
         "inclusive": False,
         "category": "style",
         "gravity": 2.0,
@@ -475,6 +550,7 @@ categories = {
         "emoji": "😟",
     },
     "titles": {
+        "why": True,
         "inclusive": False,
         "category": "gendered",
         "gravity": 2.0,
@@ -482,6 +558,7 @@ categories = {
         "emoji": "😟",
     },
     "transphobia": {
+        "why": True,
         "inclusive": False,
         "category": "openly_discriminating",
         "gravity": 1.0,
@@ -489,6 +566,7 @@ categories = {
         "emoji": "🚫",
     },
     "typography": {
+        "why": False,
         "inclusive": False,
         "category": "orthography",
         "gravity": 1.0,
@@ -496,6 +574,7 @@ categories = {
         "emoji": "❌",
     },
     "typos": {
+        "why": False,
         "inclusive": False,
         "category": "orthography",
         "gravity": 1.0,
@@ -503,6 +582,7 @@ categories = {
         "emoji": "❌",
     },
     "unconscious_bias": {
+        "why": False,
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2.0,
@@ -510,6 +590,7 @@ categories = {
         "emoji": "😒",
     },
     "vision": {
+        "why": True,
         "inclusive": False,
         "category": "unconscious_bias",
         "gravity": 2.0,
@@ -517,6 +598,7 @@ categories = {
         "emoji": "😒",
     },
     "xenophobia": {
+        "why": True,
         "inclusive": False,
         "category": "openly_discriminating",
         "gravity": 1.0,
