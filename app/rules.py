@@ -739,7 +739,6 @@ list_false_column = [
     'undergrad student',
     'present as male',
     'trick up',
-    'drives',
     'in full force',
     'assign male',
     'his best',
