@@ -145,7 +145,6 @@ KPIs,acr,style,abbreviation,"['Key Performance Indicators (KPI)', 'Leistungskenn
 Kptsb,acr,style,abbreviation,"['Komplexe posttraumatische Belastungsstörung (komplexe PTBS)', 'Komplexe posttraumatische Belastungsstörung (K-PTBS)']"
 LAMP,acr,style,abbreviation,"['Linux, Apache, MySQL, PHP (LAMP)', 'Linux, Apache, MySQL, Python (LAMP)', 'Linux, Apache, MySQL, Perl (LAMP)']"
 LBO,acr,style,abbreviation,"['Leveraged-Buyout (LBO)', 'fremdfinanzierte Übernahme']"
-LET,-acr,style,abbreviation,"['Leaving early today', 'Ich gehe heute früher', 'Muss heute früher los']"
 LGB,acr,style,abbreviation,['LGBTQIA+']
 LGBT,acr,style,abbreviation,['LGBTQIA+']
 LGBTQIA+,acr,style,abbreviation,"['lesbian, gay, bisexual, trans, queer, questioning, intersex, asexual and more (LGBTQIA+)', 'lesbische, schwule, bisexuelle, transsexuelle, queere, intersexuelle, asexuelle und fragende Menschen']"
@@ -161,7 +160,6 @@ M&A,acr,style,abbreviation,"['Mergers-and-Acquisitions (M&A)', 'Fusionen und Üb
 MBA,acr,style,abbreviation,"['Master of Business Administration', 'Master of Business Administration (MBA)']"
 MBI,acr,style,abbreviation,['Management-Buy-in (MBI)']
 MBO,acr,style,abbreviation,['Management-Buy-Out (MBO)']
-MEAN,-acr,style,abbreviation,"['MongoDB, Express.js, Angular, Node.js (MEAN)', 'MongoDB, Express.js, Angular, und Node.js']"
 MESBIC,acr,style,abbreviation,"['Minority Enterprise Small Business Investment Companies (MESBIC)', 'Investmentgesellschaften für kleine Unternehmen, die einer Minderheit angehören']"
 MF,acr,style,abbreviation,"['Management Fee (MF)', 'Verwaltungsgebühr']"
 MMP,acr,style,abbreviation,"['Minimum Marketable Product (MMP)', 'mimimal vermarktbares Produkt', 'Mindestausführung eines Produkt, die die Vermarktung ermöglicht']"
@@ -226,7 +224,6 @@ R&D,acr,style,abbreviation,"['Research-and-Development (R&D)', 'Forschung und En
 RAM,acr,style,abbreviation,"['Random Access Memory (RAM)', 'Direktzugriffsspeicher', 'Arbeitsspeicher', 'Schreib-Lese-Speicher']"
 RCS,acr,style,abbreviation,"['Rich Communication Services (RCS)', 'reichhaltige Kommunikationsdienste', 'umfassende Kommunikationsdienste']"
 REGEX,acr,style,abbreviation,"['Regular Expression (REGEX)', 'Regulärer Ausdruck']"
-REST,-acr,style,abbreviation,"['Representational State Transfer', '(REST)', 'repräsentative Zustandsübertragung']"
 RFD,acr,style,abbreviation,"['Request-for-Discussion (RFD)', 'Aufruf zur Diskussion', 'Diskussionsanfrage']"
 RFP,acr,style,abbreviation,"['Request-for-Proposal (RFP)', 'Ausschreibung', 'Angebotsanfrage']"
 RN,acr,style,abbreviation,"['Right now', 'im Moment', 'jetzt gerade', 'sofort', 'ab sofort']"
@@ -241,7 +238,6 @@ ROS,acr,style,abbreviation,"['Run of Site (ROS)', 'seitenweit', 'überall auf ei
 RSS,acr,style,abbreviation,"['Rich Site Summary (RSS)', 'Really Simple Syndication', 'Webfeed-Dateiformate', 'wirklich einfache Verbreitung']"
 RT,acr,style,abbreviation,"['Retweet (RT)', 'retweeten']"
 RTL,acr,style,abbreviation,"['Right-to-Left (RTL)', 'rechts nach links']"
-SAFE,-acr,style,abbreviation,"['Simple Agreement for Future Equity (SAFE)', 'einfache Vereinbarung für zukünftiges Eigenkapital']"
 SBIC,acr,style,abbreviation,"['Small Business Investment Company (SBIC)', 'Investitionsgesellschaft für kleine Unternehmen']"
 SBIR,acr,style,abbreviation,"['Small Business Innovation Research (SBIR)', 'Investitionsforschung für kleine Unternehmen']"
 SCM,acr,style,abbreviation,"['Source Control Management (SCM)', 'Source Code Management (SCM)', 'Quellcodeverwaltung']"
@@ -250,7 +246,6 @@ SEM,acr,style,abbreviation,"['Search Engine Marketing (SEM)', 'Suchmaschinenmark
 SEO,acr,style,abbreviation,"['Search Engine Optimization (SEO)', 'Suchmaschinenoptimierung']"
 SHA,acr,style,abbreviation,"['Shareholders Agreement (SHA)', 'Vereinbarung zwischen Aktionär~innen~/~Aktionären']"
 SM,acr,style,abbreviation,"['Servicemark (SM)', 'Social Media (SM)', 'Dienstleistungsmarke', 'Soziale Medien (SM)']"
-SMART,-acr,style,abbreviation,"['Specific, Measurable, Attainable, Realistic, Time-bound (SMART)', 'spezifisch, messbar, erreichbar, realistisch, zeitgebunden']"
 SMB,abbr,style,abbreviation,"['Small and Medium-sized Businesses (SMB)', 'kleine und mittlere Unternehmen (KMU)', 'kleine und mittlere Unternehmen']"
 SME,abbr,style,abbreviation,"['Subject Matter Expert (SME)', 'Small and Medium-sized Enterprises (SME)', 'kleine und mittlere Unternehmen', 'kleine und mittlere Unternehmen (KMU)', 'Fachexpertin~Fachexperte']"
 SMM,acr,style,abbreviation,"['Social Media Marketing', 'Social Media Marketing (SMM)']"
