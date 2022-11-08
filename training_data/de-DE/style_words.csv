@@ -80,7 +80,6 @@ Karrierefrau,s,style,exaggerating,"['engagierter Mensch', 'Person, die neu erwor
 Kämpfer,s,style,exaggerating,"['Mensch, der mit Disziplin auf ein Ziel hinarbeitet(...)', 'jemand, der für (...) einsteht', 'tatkräftiger Mensch(...)', 'jemand, der Aufgaben mit Elan anpackt(...)']"
 Kämpfernatur,s,style,exaggerating,"['Geradlinigkeit', 'Standhaftigkeit', 'Seelenstärke', 'tatkräftige Person', 'resilienter Mensch', 'Person, die Aufgaben mit Stetigkeit und Elan angeht(...)', 'Person, die mit Energie ans Werk geht(...)', 'Person, die sich voll innerer Energie für (...) einsetzt', 'Mensch, der Aufgaben beherzt anpackt(...)', 'Mensch, der bereit ist, sich neuen oder komplexen Situationen zu stellen(...)', 'jemand, der für (...) einsteht']"
 Könner,s,style,exaggerating,"['Fachkraft', 'Könner~in~/~Könner', 'jemand, der erfahren und fachkundig ist(...)', 'Person, die ihre Kompetenzen routiniert einsetzt(...)']"
-LET,-acr,style,abbreviation,"['Leaving early today', 'Ich gehe heute früher', 'Muss heute früher los']"
 Learnings,s,style,anglicism,"['Erkenntnisse', 'Einblicke', 'Einsichten', 'Lernprozesse']"
 Legal,s,style,anglicism,['Rechtsabteilung']
 Listening-mode,s,style,anglicism,['Zuhör-Modus']
@@ -88,7 +87,6 @@ Listeningmode,s,style,anglicism,['Zuhör-Modus']
 Look,s,style,anglicism,['Aussehen']
 Low-Interest-Product,s,style,anglicism,['Klein- und Bequemlichkeitsbedarf']
 Lowlight,s,style,anglicism,"['Tiefpunkt', 'Schatten in der Licht-und-Schatten-Betrachtung(...)']"
-MEAN,-acr,style,abbreviation,"['MongoDB, Express.js, Angular, Node.js (MEAN)', 'MongoDB, Express.js, Angular, und Node.js']"
 Marktführer,s,style,exaggerating,"['Marktführer~in~/~Marktführer', 'Unternehmen, das im Markt Maßstäbe setzt(...)', 'Unternehmen mit überwiegender Marktpräsenz(...)', 'in der Branche richtungweisendes Unternehmen(...)', 'im Markt wegweisendes Unternehmen(...)', 'Marktführer~innen~ und ~Marktführer', 'Unternehmen, die im Markt Maßstäbe setzen(...)', 'Unternehmen mit überwiegender Marktpräsenz(...)', 'in der Branche richtungweisende Unternehmen(...)', 'im Markt wegweisende Unternehmen(...)']"
 Meeting,s,style,anglicism,['Besprechung']
 Message-Marketing,s,style,anglicism,['Kommunikationsmarketing']
@@ -108,13 +106,10 @@ Performer,s,style,exaggerating,"['Performer~in~/~Performer', 'jemand, der sich a
 Pionier,s,style,exaggerating,"['Inspiration', 'Pionier~in~/~Pioniere', 'Wegbereiter~in~/~Wegbereiter', 'Person mit zukunfsweisenden Ideen(...)', 'Person, die Neuland betritt(...)', 'Person, die gewohnte Bahnen verlässt(...)', 'Mensch, der bereit ist, sich neuen Situationen zu stellen(...)', 'Mensch, der Visionen verwirklichen will(...)', 'experimentierfreudiger Mensch(...)', 'Mensch, der Verantwortung übernimmt(...)', 'jemand, der mit gutem Beispiel vorangeht(...)', 'erfinderischer Mensch(...)', 'einfallsreicher Mensch(...)', 'jemand, der inspiriert(...)', 'jemand, der eine Vision vermittelt(...)', 'jemand, der Neues ausprobieren will(...)', 'Pionier~innen~ und ~Pioniere', 'Wegbereiter~innen~ und ~Wegbereiter']"
 Pionierunternehmen,s,style,exaggerating,"['richtungweisendes Unternehmen(...)', 'Unternehmen, das mit gutem Beispiel vorangeht(...)', 'Unternehmen, das sich auf Neues einlässt(...)', 'Unternehmen, das neue Wege geht(...)', 'Unternehmen, das inspiriert(...)', 'Unternehmen, das Maßstäbe im (...) setzt', 'verantwortungsbewusstes Unternehmen, das anderen den Weg bereitet(...)']"
 Querdenken,s,style,hollow,"['die Fähigkeit, in neuen Mustern zu denken', 'Hinterfragen', 'unkonventionelle Betrachtungsweise', 'die Fähigkeit, über den eigenen Tellerrand zu blicken']"
-REST,-acr,style,abbreviation,"['Representational State Transfer', '(REST)', 'repräsentative Zustandsübertragung']"
 Rakete,s,style,exaggerating,"['Tatmensch(...)', 'Person, die die Initiative ergreift(...)', 'Person, die ein Team mitreißen kann(...)', 'energiegeladener Mensch(...)', 'lebensbejahende Persönlichkeit(...)', 'begeisterungsfähiger Mensch(...)', 'jemand, der zupackt(...)']"
 Ranking,s,style,anglicism,['Rangfolge']
 Responsibilities,s,style,anglicism,['Aufgabengebiete']
 Rockstar,s,style,exaggerating,"['strebsamer Mensch', 'fleißiger Mensch', 'umsetzungsfreudiger Mensch', 'tatkräftiger Mensch', 'Tatmensch', 'Mensch, der Meilensteine erreichen will(...)', 'Mensch, der Aufgaben engagiert angeht(...)', 'jemand, der mit dem Team gemeinsame Ziele umsetzt(...)', 'jemand, der mit dem Team Aufgaben anpackt(...)', 'jemand, der unternehmerisch denkt(...)', 'jemand, der Ziele mit Elan umsetzt(...)']"
-SAFE,-acr,style,abbreviation,"['Simple Agreement for Future Equity (SAFE)', 'einfache Vereinbarung für zukünftiges Eigenkapital']"
-SMART,-acr,style,abbreviation,"['Specific, Measurable, Attainable, Realistic, Time-bound (SMART)', 'spezifisch, messbar, erreichbar, realistisch, zeitgebunden']"
 Sabbatical,s,style,anglicism,['Auszeit']
 Salary,s,style,anglicism,['Gehalt']
 Sales,s,style,anglicism,['Verkaufskatalog']
