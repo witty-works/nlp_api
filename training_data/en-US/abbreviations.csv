@@ -144,6 +144,7 @@ KPIs,acr,style,abbreviation,"['key performance indicators', 'key performance ind
 LAMP,acr,style,abbreviation,"['Linux, Apache, MySQL, PHP', 'Linux, Apache, MySQL, PHP (LAMP)', 'Linux, Apache, MySQL, Python', 'Linux, Apache, MySQL, Python (LAMP)', 'Linux, Apache, MySQL, Perl', 'Linux, Apache, MySQL, Perl (LAMP)']"
 LBFM,abbr,openly_discriminating,sexism,['-']
 LBO,acr,style,abbreviation,"['leveraged buyout', 'leveraged buyout (LBO)']"
+LET,-acr,style,abbreviation,['Leaving early today']
 LIFO,acr,style,abbreviation,"['last in, first out', 'last in, first out (LIFO)']"
 LLC,acr,style,abbreviation,"['limited liability company', 'limited liability company (LLC)']"
 LMGTFY,acr,style,abbreviation,['Let me Google that for you']
@@ -162,6 +163,7 @@ MAT,acr,style,abbreviation,"['medication-assisted treatment (MAT) --- avoid this
 MBA,acr,style,abbreviation,"['Master of Business Administration', 'Master of Business Administration (MBA)']"
 MBI,acr,style,abbreviation,"['management buy-in', 'management buy-in (MBI)']"
 MBO,acr,style,abbreviation,"['management buyout', 'management buyout (MBO)']"
+MEAN,-acr,style,abbreviation,"['MongoDB, Express.js, Angular, Node.js', 'MongoDB, Express.js, Angular, Node.js (MEAN)']"
 MESBIC,acr,style,abbreviation,"['minority enterprise small business investment companies', 'minority enterprise small business investment companies (MESBIC)']"
 MF,acr,style,abbreviation,"['management fee', 'management fee (MF)']"
 MITM,acr,style,abbreviation,"['man-in-the-middle (MITM)', 'person in the middle (PITM)']"
@@ -234,6 +236,7 @@ R&D,acr,style,abbreviation,"['research and development', 'research and developme
 RAM,acr,style,abbreviation,"['random access memory', 'random access memory (RAM)']"
 RCS,acr,style,abbreviation,"['rich communication services', 'rich communication services (RCS)']"
 REGEX,acr,style,abbreviation,"['regular expression', 'regular expression (REGEX)']"
+REST,-acr,style,abbreviation,"['representational state transfer', 'representational state transfer (REST)']"
 RFD,acr,style,abbreviation,"['request for discussion', 'send a request for discussion']"
 RFP,acr,style,abbreviation,"['request for proposal', 'request for proposal (RFP)']"
 RN,acr,style,abbreviation,['Right now']
@@ -250,6 +253,7 @@ RSVP,acr,style,abbreviation,"[""Répondez s'il vous plaît (RSVP)"", ""Répondez
 RT,acr,style,abbreviation,"['retweet', 'retweet (RT)']"
 RTL,acr,style,abbreviation,"['right To left', 'right To left (RTL)']"
 S.M.,abbr,style,abbreviation,"['Master of Science', 'Master of Science (S.M.)']"
+SAFE,-acr,style,abbreviation,"['simple agreement for future equity', 'simple agreement for future equity (SAFE)']"
 SBIC,acr,style,abbreviation,"['small business investment company', 'small business investment company (SBIC)']"
 SBIR,acr,style,abbreviation,"['Small Business Innovation Research', 'Small Business Innovation Research (SBIR)']"
 SCCE,acr,style,abbreviation,"['Society for Corporate Compliance and Ethics', 'Society for Corporate Compliance and Ethics (SCCE)']"
@@ -259,6 +263,7 @@ SEM,acr,style,abbreviation,"['search engine marketing', 'search engine marketing
 SEO,acr,style,abbreviation,"['search engine optimization', 'search engine optimization (SEO)']"
 SHA,acr,style,abbreviation,"['shareholders agreement', 'shareholders agreement (SHA)']"
 SM,acr,style,abbreviation,"['servicemark --- marketing', 'servicemark (SM)', 'social media (SM) --- marketing', 'Master of Science --- degree', 'Master of Science (SM)']"
+SMART,-acr,style,abbreviation,"['specific, measurable, attainable, realistic, time-bound', 'specific, measurable, attainable, realistic, time-bound (SMART)']"
 SMB,abbr,style,abbreviation,"['small and medium-sized businesses', 'small and medium-sized businesses (SMB)']"
 SME,abbr,style,abbreviation,"['subject matter expert', 'subject matter expert (SME)', 'small and medium-sized enterprises', 'small and medium-sized enterprises (SME)']"
 SMM,acr,style,abbreviation,"['social media marketing', 'social media marketing (SMM)']"

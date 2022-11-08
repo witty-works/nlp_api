@@ -1,10 +1,5 @@
 Lemma,Word_Type,Category,Primary_subcategory,Alt_split
-LET,-acr,style,abbreviation,['Leaving early today']
-MEAN,-acr,style,abbreviation,"['MongoDB, Express.js, Angular, Node.js', 'MongoDB, Express.js, Angular, Node.js (MEAN)']"
 Ninja,s,style,exaggerating,"['skilled person', 'very proficient person', 'resourceful person', 'they', 'person who continues despite difficulties(...)', 'someone devoted to their purpose(...)', 'someone who sticks to their goal(...)', 'someone willing to see things through(...)', 'skilled people', 'very proficient people', 'resourceful people']"
-REST,-acr,style,abbreviation,"['representational state transfer', 'representational state transfer (REST)']"
-SAFE,-acr,style,abbreviation,"['simple agreement for future equity', 'simple agreement for future equity (SAFE)']"
-SMART,-acr,style,abbreviation,"['specific, measurable, attainable, realistic, time-bound', 'specific, measurable, attainable, realistic, time-bound (SMART)']"
 Sincerely,a,style,formality,"['Best regards', 'All the best', 'Thank you', 'Have a wonderful day', 'Let us know if you need anything']"
 absolute,a,style,exaggerating,['-']
 actually,adv,style,filler,['-']
