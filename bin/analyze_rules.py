@@ -132,7 +132,7 @@ def get_data_from_files(locale):
                     subcategory = None
                     if "Primary_subcategory" in row:
                         subcategory = row["Primary_subcategory"]
-                        all_categories.append(category)
+                        all_categories.append(subcategory)
 
                     if subcategory not in [
                         "function",
