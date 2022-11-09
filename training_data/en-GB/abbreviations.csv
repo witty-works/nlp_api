@@ -1,7 +1,7 @@
 Lemma,Word_Type,Category,Primary_subcategory,Alt_split
 (x)aaS,acr,style,abbreviation,"['something as a service', 'something as a service ((x)aaS)']"
 ACCT,abbr,style,abbreviation,['account']
-ADD,abbr,style,abbreviation,"['attention deficit disorder', 'attention deficit disorder (ADD)', 'easily bored(...)', 'easily distracted(...)', 'having a poor working memory(...)']"
+ADD,-abbr,style,abbreviation,"['attention deficit disorder', 'attention deficit disorder (ADD)', 'easily bored(...)', 'easily distracted(...)', 'having a poor working memory(...)']"
 ADHD,abbr,style,abbreviation,"['attention deficit hyperactivity disorder', 'attention deficit hyperactivity disorder (ADHD)', 'person with attention deficit hyperactivity disorder(...)', 'fidgety(...)', 'restless(...)', 'easily bored(...)']"
 AIDA,acr,style,abbreviation,"['attention, interest, desire, action', 'attention, interest, desire, action (AIDA)']"
 AJAX,acr,style,abbreviation,"['asynchronous JavaScript and XML', 'asynchronous JavaScript and eXtensible markup language (AJAX)']"
