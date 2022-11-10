@@ -17,7 +17,7 @@ web:
     socket_family: unix
   commands:
     start: |
-      gunicorn app.main:app -b unix:$SOCKET -w ${WORKERS} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
+      blackfire-python gunicorn app.main:app -b unix:$SOCKET -w ${WORKERS} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
 
 hooks:
   build: |
