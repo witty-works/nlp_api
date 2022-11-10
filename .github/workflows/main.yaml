@@ -5,8 +5,6 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      PIPENV_VENV_IN_PROJECT: enabled
 
     steps:
       - uses: actions/checkout@v3
