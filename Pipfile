@@ -23,6 +23,7 @@ fastapi-microsoft-identity = "*"
 slack-bolt = "*"
 german-nouns = "*"
 inflex = "*"
+blackfire = "*"
 
 [dev-packages]
 click = "*"
