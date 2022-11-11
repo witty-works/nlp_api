@@ -72,6 +72,7 @@ beyond words,i,style,anglicism,['ohne Worte']
 dann und wann,adv,style,filler,['-']
 des ungeachtet,adv,style,filler,['-']
 des Öfteren,adv,style,filler,['-']
+due diligence,s,style,anglicism,"['Sorgfaltsprüfung', 'Risikoprüfung', 'Nachhaltigkeitsprüfung', 'Rechtsprüfung', 'Prüfung unter aller gebotenen Sorgfalt(...)']"
 ein bisschen,adv,style,filler,['-']
 ein wenig,adv,style,filler,['-']
 fast lane,s,style,anglicism,['Überholspur']
@@ -80,7 +81,7 @@ flache Organisation,a+s,style,hollow,"['kurze Entscheidungswege', 'verantwortlic
 ganz und gar,adv,style,filler,['-']
 gehen die Extrameile,v+s,style,exaggerating,"['haben Spaß am Mit- und Weiterdenken', 'engagieren sich für Kundenzufriedenheit', 'blicken über den Tellerrand', 'haben Spaß daran, Kundschaft durch unerwartete und kreative Lösungen zu begeistern(...)']"
 hard core,a,style,exaggerating,"['heftig', 'engagiert', 'kompromisslos', 'anstrengend', 'unerfreulich']"
-hard sell,i,style,anglicism,['nur schwer zu verkaufen sein']
+hard sell,i,style,anglicism,['schwer zu verkaufen']
 heller Geist,a+s,style,exaggerating,"['Mensch mit Ideen(...)', 'Mensch mit Blick fürs Wesentliche(...)', 'Person, die Erlerntes rasch anwenden kann(...)', 'Mensch mit Erfindungsgeist(...)', 'jemand, der Zusammenhänge schnell erfasst(...)']"
 hie und da,adv,style,filler,['-']
 high priority,a,style,anglicism,"['wichtig', 'dringend', 'vordringlich', 'priorisiert', 'mit hoher Priorität']"
