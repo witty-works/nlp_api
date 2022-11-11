@@ -76,7 +76,7 @@ from app.model import model
 from app.rules import *
 from app.sentry import set_up_sentry_sdk
 
-version = "1.38.10"
+version = "1.38.11"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -442,7 +442,12 @@ async def post_auth_2_0(request: Request, response: Response):
             status_code=status.HTTP_403_FORBIDDEN,
         )
 
-    return fetch_result_conf(rules, 2.0)
+    config = fetch_result_conf(rules, 2.0)
+
+    if "team_analytics" in rules and not rules["team_analytics"]:
+        config.organization_id = None
+
+    return config
 
 
 @app.get(
@@ -578,10 +583,6 @@ async def post_check_v2_1(
     if "has_consented_to_mailing" in rules:
         has_consented_to_mailing = rules["has_consented_to_mailing"]
 
-    team_analytics = None
-    if "team_analytics" in rules:
-        team_analytics = rules["team_analytics"]
-
     return ResultsOut(
         results=results,
         language=language,
@@ -589,7 +590,6 @@ async def post_check_v2_1(
         config_changed=fetch_config_change(rules, user_request_in),
         notifications=notifications,
         has_consented_to_mailing=has_consented_to_mailing,
-        team_analytics=team_analytics,
     )
 
 
