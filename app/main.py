@@ -1832,7 +1832,8 @@ def align_noun_form(lang, a_token, b_token):
             if flexion not in b_word[0]["flexion"]:
                 flexion += " 1"
 
-            return b_word[0]["flexion"][flexion]
+            if flexion in b_word[0]["flexion"]:
+                return b_word[0]["flexion"][flexion]
 
     return b_text
 
