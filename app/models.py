@@ -865,7 +865,6 @@ class ResultsOut(BaseModel):
     config_changed: Optional[bool]
     notifications: Optional[int]
     has_consented_to_mailing: Optional[bool]
-    team_analytics: Optional[bool]
 
 
 class PrettyJSONResponse(Response):

@@ -460,7 +460,10 @@ def set_redis():
         "config": {},
         "false_positives": [],
         "term_replacements": {},
+        "domains": None,
         "notifications": 0,
+        "config_hash": None,
+        "team_analytics": False,
     }
 
     redis.set(user_object["email"], json.dumps(user_object))
@@ -472,6 +475,8 @@ def set_redis():
         "config": {},
         "false_positives": [],
         "term_replacements": {},
+        "domains": None,
+        "config_hash": None,
     }
 
     redis.set(organization_object["id"], json.dumps(organization_object))
@@ -666,13 +671,27 @@ def test_auth_2_0(test_auth_2_0_dir, snapshot, set_redis):
     response = client.post("/v2.0/auth", headers={"X-Auth": "missing@gmail.com"})
     assert response.status_code == 403
 
-    client = TestClient(app)
     response = client.post("/v2.0/auth", headers={"X-Auth": "test@gmail.com"})
     assert response.status_code == 200
     # output must be string
     output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
     # Snapshot the return value.
     snapshot.snapshot_dir = test_auth_2_0_dir
+    snapshot.assert_match(output, "output.json")
+
+
+@pytest.mark.parametrize(
+    "test_auth_2_0_team_analytics_opt_out_dir",
+    get_dirs("tests/test_auth_2_0_team_analytics_opt_out"),
+)
+def test_auth_2_0_team_analytics_opt_out(test_auth_2_0_team_analytics_opt_out_dir, snapshot, set_redis):
+    client = TestClient(app)
+    response = client.post("/v2.0/auth", headers={"X-Auth": "default@gmail.com"})
+    assert response.status_code == 200
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    # Snapshot the return value.
+    snapshot.snapshot_dir = test_auth_2_0_team_analytics_opt_out_dir
     snapshot.assert_match(output, "output.json")
 
 
