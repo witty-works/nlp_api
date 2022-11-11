@@ -148,6 +148,7 @@ Workflow,s,style,anglicism,['Arbeitsablauf']
 aber,adv,style,filler,['-']
 abermals,adv,style,filler,['-']
 absolut,a,style,exaggerating,"['durch und durch', 'real', 'umfassend', 'uneingeschränkt', 'gründlich', 'zweifelsohne', 'gerne', 'zuverlässig']"
+adden,v,style,anglicism,"['hinzufügen', 'einladen', 'einwerfen', 'ergänzen', 'verbessern']"
 adressieren,v,style,anglicism,"['besprechen', 'beschäftigen mit', 'angehen', 'mit (...) befassen ', 'nehmen (...) dem Thema an', 'nehmen (...) der Sache an']"
 agreed,a,style,anglicism,"['einer Meinung', 'zugesagt', 'eingewilligt', 'angenommen', 'vereinbart']"
 aktiv,a,style,hollow,"['--- nicht auf Menschen beziehen', 'lebendig', 'tatkräftig', 'lebhaft', 'enthusiastisch', 'engagiert', 'energiegeladen', 'vital', 'eifrig', 'anpassungsfähig', 'schwungvoll']"
@@ -364,6 +365,7 @@ selten,adv,style,filler,['-']
 seltsamerweise,adv,style,filler,['-']
 shiften,v,style,anglicism,"['umverteilen', 'verschieben', 'versetzen']"
 sicherlich,adv,style,filler,['-']
+skippen,v,style,anglicism,"['weglassen', 'außer Acht lassen', 'überspringen', 'durchwinken', 'ignorieren']"
 so,adv,style,filler,['-']
 sogar,adv,style,filler,['-']
 sonst,adv,style,filler,['-']

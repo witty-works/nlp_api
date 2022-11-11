@@ -1,5 +1,6 @@
 Lemma,Word_Type,Category,Primary_subcategory,Alt_split
 (x)aaS,acr,style,abbreviation,"['something as a service', 'something as a service ((x)aaS)']"
+A.M.,abbr,style,abbreviation,"['Master of Arts', 'Master of Arts (A.M.)']"
 ACCT,abbr,style,abbreviation,['account']
 ADD,-abbr,style,abbreviation,"['attention deficit disorder', 'attention deficit disorder (ADD)', 'easily bored(...)', 'easily distracted(...)', 'having a poor working memory(...)']"
 ADHD,abbr,style,abbreviation,"['attention deficit hyperactivity disorder', 'attention deficit hyperactivity disorder (ADHD)', 'person with attention deficit hyperactivity disorder(...)', 'fidgety(...)', 'restless(...)', 'easily bored(...)']"
@@ -137,7 +138,7 @@ ISP,acr,style,abbreviation,"['Internet service provider', 'Internet service prov
 IaaS,acr,style,abbreviation,"['infrastructure as a service', 'infrastructure as a service (IaaS)']"
 JS,acr,style,abbreviation,"['JavaScript', 'JavaScript (JS)']"
 JSON,acr,style,abbreviation,"['JavaScript object notation', 'JavaScript object notation (JSON)']"
-KISS,acr,style,abbreviation,"['Keep it simple, stupid', 'Keep it simple, stupid (KISS)', 'Keep it simple, obvious']"
+KISS,acr,style,abbreviation,"['Keep it simple, sweets', 'Keep it simple, stupid (KISS)', 'Keep it simple, obvious']"
 KPI,acr,style,abbreviation,"['key performance indicator', 'key performance indicators', 'key performance indicator (KPI)', 'key performance indicators (KPI)']"
 KPIs,acr,style,abbreviation,"['key performance indicators', 'key performance indicators (KPIs)']"
 LAMP,acr,style,abbreviation,"['Linux, Apache, MySQL, PHP', 'Linux, Apache, MySQL, PHP (LAMP)', 'Linux, Apache, MySQL, Python', 'Linux, Apache, MySQL, Python (LAMP)', 'Linux, Apache, MySQL, Perl', 'Linux, Apache, MySQL, Perl (LAMP)']"
@@ -220,7 +221,7 @@ PTSD,acr,style,abbreviation,"['post-traumatic stress disorder', 'post-traumatic 
 PV,acr,style,abbreviation,"['page views', 'page views (PV)']"
 PaaS,acr,style,abbreviation,"['platform as a service', 'platform as a service (PaaS)']"
 Pcard,abbr,style,abbreviation,"['purchase card', 'purchase card (P-card)']"
-PoC,acr,style,abbreviation,"['point of contact --- in marketing', 'point of contact (POC)', 'proof of concept (POC) --- in film, science, etc.', 'People of Colour', 'People of Colour (POC)']"
+PoC,acr,style,abbreviation,"['point of contact --- in marketing', 'point of contact (POC)', 'proof of concept (POC) --- in film, science, engineering', 'People of Colour', 'People of Colour (POC)']"
 Q1,abbr,style,abbreviation,"['first quarter', 'first quarter (Q1)']"
 Q2,abbr,style,abbreviation,"['second quarter', 'second quarter (Q2)']"
 Q3,abbr,style,abbreviation,"['third quarter', 'third quarter (Q3)']"
@@ -272,7 +273,7 @@ SPAC,acr,style,abbreviation,"['specified purpose acquisition company', 'specifie
 SPACS,acr,style,abbreviation,"['special purpose acquisition companies', 'special purpose acquisition companies (SPACS)']"
 STFU,acr,style,abbreviation,['Shut the *beep* up!']
 STTR,acr,style,abbreviation,"['Small Business Technology Transfer', 'Small Business Technology Transfer (STTR)']"
-SUD,-acr,style,abbreviation,"['substance use disorder (SUD)', 'substance use disorder']"
+SUD,acr,style,abbreviation,"['substance use disorder (SUD)', 'substance use disorder']"
 SWOT,acr,style,abbreviation,"['strengths, weaknesses, opportunities, threats', 'strengths, weaknesses, opportunities, threats (SWOT)']"
 SaaS,acr,style,abbreviation,"['software as a service', 'software as a service (SaaS)', 'software-as-a-service (SaaS)']"
 Sc.M.,abbr,style,abbreviation,"['Master of Science', 'Master of Science (Sc.M.)']"
