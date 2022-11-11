@@ -76,7 +76,7 @@ from app.model import model
 from app.rules import *
 from app.sentry import set_up_sentry_sdk
 
-version = "1.38.11"
+version = "1.38.12"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -1832,7 +1832,8 @@ def align_noun_form(lang, a_token, b_token):
             if flexion not in b_word[0]["flexion"]:
                 flexion += " 1"
 
-            return b_word[0]["flexion"][flexion]
+            if flexion in b_word[0]["flexion"]:
+                return b_word[0]["flexion"][flexion]
 
     return b_text
 
