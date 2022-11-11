@@ -96,18 +96,24 @@ def get_data_from_files(locale):
                     lemma = row["Lemma"].replace("'", '"')
 
                     if "Word_Type" in row:
-                        word_type = row["Word_Type"].replace("'", '"')
-
-                        word_types, lower_case, lemmatize = parse_word_types(word_type)
-
-                        if not set(word_types).issubset(supported_word_types):
-                            print(
-                                "Lemma '%s' contains an incorrect word type '%s'."
-                                % (lemma, word_type)
+                        word_type = row["Word_Type"]
+                        if word_type == None:
+                            print("Lemma '%s' is missing a word type." % (lemma))
+                        else:
+                            word_type = word_type.replace("'", '"')
+                            word_types, lower_case, lemmatize = parse_word_types(
+                                word_type
                             )
 
-                        if lemmatize and "words" in f.name:
-                            all_lemma.append(lemma)
+                            if not set(word_types).issubset(supported_word_types):
+                                print(
+                                    "Lemma '%s' contains an incorrect word type '%s'."
+                                    % (lemma, word_type)
+                                )
+                                print(word_types)
+
+                            if lemmatize and "words" in f.name:
+                                all_lemma.append(lemma)
 
                     if "Alt_split" in row:
                         value = row["Alt_split"]
