@@ -1,8 +1,4 @@
 Lemma,Word_Type,Category,Primary_subcategory,Alt_split
-Aryan,s,unconscious_bias,Nazi_language,"['-', 'Indo-Iranian', 'Indo-Aryan', 'Scandinavian looking person(...)', 'blond White person(...)', 'blond white person(...)', 'Indo-Iranians', 'Indo-Aryans']"
-Aryan,a,unconscious_bias,Nazi_language,"['-', 'Indo-Iranian', 'Indo-Aryan', 'Scandinavian looking(...)', 'blond and White(...)', 'blond and white(...)']"
-camp,s,unconscious_bias,Nazi_language,"['--- clarify the purpose', 'prison camp', 'holiday camp', 'death camp', 'internment camp', 'labour camp']"
-camp,a,gendered,female_stereotype,"['over-the-top', 'feminine', 'exaggerated']"
 challenge,v,unconscious_bias,agentic,"['question', 'cross-examine', 're-evaluate', 'object to', 'express the need for(...)']"
 challenge,s,unconscious_bias,agentic,"['test', 'trial', 'burning question', 'complex situation', 'task that requires thought and skill to solve(...)', 'complex situations', 'difficult tasks', 'burning questions', 'trials']"
 direct,a,unconscious_bias,agentic,"[""--- don't use for people"", 'straightforward', 'open', 'candid']"
