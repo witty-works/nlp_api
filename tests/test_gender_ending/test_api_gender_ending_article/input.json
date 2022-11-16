@@ -1,3 +1,6 @@
 {
-    "text": "Ist der Arbeitgeber zufriedenstellend?"
+    "text": "Ist der Arbeitgeber zufriedenstellend? Es wäre gut die*den Arbeitergeber*in zu bestärken.",
+    "config": {
+        "maximum_importance": 3
+    }
 }
