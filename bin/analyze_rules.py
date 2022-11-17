@@ -202,27 +202,68 @@ def generate_alternatives_english(all_alternatives):
 
 
 def analyze_correct_endings_german(word):
-    if (
-        re.search("^.*[a-z]{3}in(nen)?[~ ].*$", word)
-        or re.search("^.*[a-z]{3}in~[^ ].*$", word)
-        or re.search("^.*[a-z]{3}innen~[^ ].*$", word)
-        or re.search("^.*[a-z]e~.*/.*$", word)
-        or re.search("^.+e~r.+$", word)
-        or re.search("^.+[^~]/[^~].+$", word)
-        or re.search("^.+[^~] und [^~].+$", word)
-        or re.search("~en", word)
-    ):
-        print("Potential misplaced ~ in: " + word)
-        alternative_variations = set()
-        for german_gender_ending in Config._gendereddenom_ending.keys():
-            alternative_variations.update(
-                ResultOut.getAlternativeVariations(
-                    GenderedRolesFormatType.BOTH, german_gender_ending, word
-                )
-            )
+    word = word.replace("~ und ~", "-~-und-~-")
+    words = word.split()
+    word = word.replace("-~-und-~-", "~ und ~")
+    for sub_word in words:
+        sub_word = sub_word.replace("-~-und-~-", "~ und ~")
+        issue_detected = False
 
-        for alternative_variation in sorted(alternative_variations):
-            print(alternative_variation)
+        if (
+            re.search("^.*[a-z]{3}in(nen)?[~ ].*$", sub_word)
+            or re.search("^.*[a-z]{3}in~[^ ].*$", sub_word)
+            or re.search("^.*[a-z]{3}innen~[^ ].*$", sub_word)
+            or re.search("^.*[a-z]e~.*/.*$", sub_word)
+            or re.search("^.+e~r.+$", sub_word)
+            or re.search("^.+[^~]/[^~].+$", sub_word)
+            or re.search("^.+[^~] und [^~].+$", sub_word)
+            or re.search("~en", sub_word)
+        ):
+            print("Potential misplaced ~ in: " + word)
+            issue_detected = True
+
+        if sub_word.count("~") == 3:
+            elements = sub_word.split("~")
+            if not elements[3].startswith(elements[0]):
+                if words[0] == elements[3]:
+                    print(
+                        "Potential case to word to the front '"
+                        + elements[3]
+                        + " "
+                        + elements[0]
+                        + "~"
+                        + elements[1]
+                        + "~"
+                        + elements[2]
+                        + "~"
+                        + words[-1]
+                        + "': "
+                        + word
+                    )
+                    issue_detected = True
+                else:
+                    print(
+                        "Potential case to change to '"
+                        + elements[0]
+                        + elements[1]
+                        + "~"
+                        + elements[3]
+                        + "' form: "
+                        + word
+                    )
+                    issue_detected = True
+
+        if issue_detected:
+            alternative_variations = set()
+            for german_gender_ending in Config._gendereddenom_ending.keys():
+                alternative_variations.update(
+                    ResultOut.getAlternativeVariations(
+                        GenderedRolesFormatType.BOTH, german_gender_ending, sub_word
+                    )
+                )
+
+            for alternative_variation in sorted(alternative_variations):
+                print(alternative_variation)
 
 
 def generate_correct_endings_german(all_alternatives):
