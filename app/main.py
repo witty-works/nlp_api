@@ -1042,6 +1042,14 @@ def languagetool_matches(
         ):
             continue
 
+        if (
+            lang.lang == "de"
+            and config.german_gender_ending == ":in"
+            and match["rule"]["id"] == "LEERZEICHEN_HINTER_DOPPELPUNKT"
+            and text[start + 1 : end] in male_articles
+        ):
+            continue
+
         # ignore text that starts with @ or #
         if highlight_text[0:1] in ignore or (
             start > 0 and text[start - 1 : start] in ignore
@@ -1417,6 +1425,11 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
 
             regexes[regex] = [config.german_gender_ending]
 
+            if ending == ":in":
+                regexes["\s((\S+):(\S+))"] = config.german_gender_ending[0:1]
+            elif ending == "*in":
+                regexes["\s((\S+)\*(\S+))"] = config.german_gender_ending[0:1]
+
         list_full += regex_matches(
             version,
             config,
@@ -1481,6 +1494,10 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
         subcategory = "d_and_i"
         category = categories[subcategory]["category"]
         regexes = {config._gendereddenom_ending[config.german_gender_ending]: None}
+        if config.german_gender_ending == ":in":
+            regexes["\s((\S+):(\S+))"] = None
+        elif ending == "*in":
+            regexes["\s((\S+)\*(\S+))"] = None
 
         list_full += regex_matches(
             version, config, lang, text, category, subcategory, regexes
@@ -2257,7 +2274,13 @@ def regex_matches(
             groups = span.groups()
             text = span.group(1)
 
-            if len(groups) == 2:
+            if len(groups) == 3:
+                if span.group(3) not in male_articles:
+                    continue
+                text = span.group(1)
+                if category != "inclusive":
+                    alternatives = [span.group(2) + regexes[regex] + span.group(3)]
+            elif len(groups) == 2:
                 text += span.group(2)
 
                 if category != "inclusive":

@@ -143,6 +143,8 @@ articles = list(
         rules["de-DE"]["df_articles"]["Alternative"],
     )
 )
+male_articles = list(rules["de-DE"]["df_articles"]["Masculine"])
+
 # df unconscious bias nouns with plural
 df_bias = rules["de-DE"]["df_ub_plur_word"]
 # unconscious bias: words + singular alternatives split + plural alternatives split + subcategory
