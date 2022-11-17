@@ -593,6 +593,8 @@ class ResultOut(BaseModel):
                     continue
 
                 inspiration = True
+                if alternative[-5:] == "(...)":
+                    alternative = alternative[0:-5]
             else:
                 add_inspiration_alternatives = False
 
