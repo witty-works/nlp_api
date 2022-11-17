@@ -541,6 +541,8 @@ class ResultOut(BaseModel):
         alternatives,
         explanation_context,
     ):
+        alternatives_max_count = 5
+
         # remove empty strings
         if "" in alternatives:
             alternatives.remove("")
@@ -615,10 +617,10 @@ class ResultOut(BaseModel):
 
                 cleaned_alternatives[key] = variation
 
-            if len(cleaned_alternatives) >= 5:
+            if len(cleaned_alternatives) >= alternatives_max_count:
                 break
 
-        return list(cleaned_alternatives.values())[0:5], explanation_context
+        return list(cleaned_alternatives.values())[0:alternatives_max_count], explanation_context
 
     @staticmethod
     def parse_alternative_context(alternative):
