@@ -1,0 +1,26 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "Mir"
+                }
+            ],
+            "category": "style",
+            "context": "Auch, mir ist nicht klar, wie das alles funktioniert?",
+            "end": 9,
+            "explanation": {
+                "icon": "😟",
+                "text": "Füllwörter machen Text länger und unverständlicher",
+                "url": "https://www.witty.works/de/kategorien/stil#fuellwoerter"
+            },
+            "gravity": 3.0,
+            "label": "Stil: Füllwörter",
+            "start": 0,
+            "subcategory": "filler",
+            "text": "Auch, mir"
+        }
+    ]
+}

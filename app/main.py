@@ -2481,17 +2481,25 @@ def style_word_analysis_de(
             if not is_sub_category_enabled(version, config, subcategory):
                 continue
 
-            if not is_word_match(token, tokens, lang, word, word_types, None, False):
+            if not is_word_match(token, tokens, lang, word, word_types):
                 continue
 
             alternatives = alternatives_declension(token, lang, alternatives)
+
+            text, alternatives = detect_filler_words_at_sentence_start(
+                subcategory,
+                alternatives,
+                token.text,
+                full_text,
+                token.idx + len(token.text),
+            )
 
             list_tokens.append(
                 ResultOut.factory(
                     version,
                     config,
                     lang,
-                    token.text,
+                    text,
                     full_text,
                     category,
                     subcategory,
@@ -2579,6 +2587,16 @@ def word_noun(
     return list_tokens
 
 
+def detect_filler_words_at_sentence_start(subcategory, alternatives, text, full_text, end):
+    if subcategory == "filler" and alternatives == ["-"] and text[0].isupper():
+        match = re.search(r"(\s*,\s*)(\S+)", full_text[end : end + 30])
+        if type(match) == re.Match:
+            text += match.group(0)
+            alternatives = [match.group(2).capitalize()]
+
+    return text, alternatives
+
+
 def rules_based_words_phrase_matcher(
     version: float,
     config: Config,
@@ -2616,17 +2634,25 @@ def rules_based_words_phrase_matcher(
             if not is_sub_category_enabled(version, config, subcategory):
                 continue
 
+            text, alternatives = detect_filler_words_at_sentence_start(
+                subcategory,
+                alternatives,
+                token.text,
+                full_text,
+                token.idx + len(token.text),
+            )
+
             list_tokens.append(
                 ResultOut.factory(
                     version,
                     config,
                     lang,
-                    token.text,
+                    text,
                     full_text,
                     category,
                     subcategory,
                     token.idx,
-                    token.idx + len(token.text),
+                    None,
                     alternatives,
                 )
             )

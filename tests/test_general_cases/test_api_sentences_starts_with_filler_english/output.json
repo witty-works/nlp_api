@@ -1,0 +1,64 @@
+{
+    "language": "en",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": ","
+                }
+            ],
+            "category": "orthography",
+            "context": "Rather ,  what are you doing?",
+            "end": 8,
+            "explanation": {
+                "icon": "❌",
+                "text": "Put a space after the comma, but not before the comma."
+            },
+            "gravity": 1.0,
+            "label": "Typography",
+            "start": 6,
+            "subcategory": "typography",
+            "text": " ,"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": " "
+                }
+            ],
+            "category": "orthography",
+            "context": "Rather ,  what are you doing?",
+            "end": 10,
+            "explanation": {
+                "icon": "❌",
+                "text": "Possible typo: you repeated a whitespace"
+            },
+            "gravity": 1.0,
+            "label": "Typography",
+            "start": 8,
+            "subcategory": "typography",
+            "text": "  "
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "What"
+                }
+            ],
+            "category": "style",
+            "context": "Rather ,  what are you doing?",
+            "end": 14,
+            "explanation": {
+                "icon": "😟",
+                "text": "Filler words add words but no meaning",
+                "url": "https://www.witty.works/en/categories/style#filler_words"
+            },
+            "gravity": 3.0,
+            "label": "Style: Filler words",
+            "start": 0,
+            "subcategory": "filler",
+            "text": "Rather ,  what"
+        }
+    ]
+}
