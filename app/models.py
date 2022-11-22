@@ -97,8 +97,8 @@ class GenderedRolesFormatType(str, Enum):
 
 
 class Config(BaseModel):
-    store_context: Optional[bool] = True
-    simple_language: Optional[bool] = False
+    store_context: bool = True
+    simple_language: bool = False
     plan: Optional[str]
     primary_language: Optional[LangWithAutoType]
     preferred_languages: List = [LangWithAutoType.EN, LangWithAutoType.DE]
@@ -126,8 +126,9 @@ class Config(BaseModel):
     disabled_categories: List = []
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
     singular_they: str = SingularTheyType.HE_OR_SHE
-    show_inspiration_alternatives: Optional[bool] = False
+    show_inspiration_alternatives: bool = False
     maximum_importance: float = 2.0
+    alternatives_max_count: Optional[int]
 
     @validator("german_gender_ending")
     def valid_german_gender_ending(cls, v: str):
@@ -327,8 +328,8 @@ class RequestIn(BaseModel):
     type: str = "check"
     text: str
     lang: Optional[LangWithAutoType] = "auto"
-    id: Optional[str] = None
-    client: Optional[str] = None
+    id: Optional[str]
+    client: Optional[str]
     config: Optional[Config] = Config()
     config_hash: Optional[str]
     organization_config_hash: Optional[str]
@@ -480,6 +481,7 @@ class ResultOut(BaseModel):
                 ResultOut.isUpper(text, full_text, start, category, lang),
                 alternatives,
                 explanation_context,
+                config.alternatives_max_count,
             )
 
         if category == "orthography":
@@ -540,9 +542,8 @@ class ResultOut(BaseModel):
         is_upper,
         alternatives,
         explanation_context,
+        alternatives_max_count,
     ):
-        alternatives_max_count = 5
-
         # remove empty strings
         if "" in alternatives:
             alternatives.remove("")
@@ -619,10 +620,20 @@ class ResultOut(BaseModel):
 
                 cleaned_alternatives[key] = variation
 
-            if len(cleaned_alternatives) >= alternatives_max_count:
+            if (
+                alternatives_max_count != None
+                and len(cleaned_alternatives) >= alternatives_max_count
+            ):
                 break
 
-        return list(cleaned_alternatives.values())[0:alternatives_max_count], explanation_context
+        cleaned_alternatives = list(cleaned_alternatives.values())
+        if (
+            alternatives_max_count != None
+            and len(cleaned_alternatives) >= alternatives_max_count
+        ):
+            cleaned_alternatives = cleaned_alternatives[0:alternatives_max_count]
+
+        return cleaned_alternatives, explanation_context
 
     @staticmethod
     def parse_alternative_context(alternative):
