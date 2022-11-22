@@ -1829,7 +1829,7 @@ def determine_genus_from_ending(word, endings, genus):
     return None
 
 
-def german_noun_analysis(word, genus_only=True):
+def german_noun_analysis(word, genus_only=False):
     if "..." in word:
         return None
 

@@ -87,6 +87,8 @@ def read_csv(in_file):
         columns = {
             "Subcategory": 0,
             "Category": None,
+            "Name EN": None,
+            "Name DE": None,
             "Anchor EN": None,
             "Anchor DE": None,
             "Short explanation EN": None,
@@ -99,6 +101,7 @@ def read_csv(in_file):
         }
 
         columnMap = {
+            #"name": "Name",
             "anchor": "Anchor",
             "explanation": "Short explanation",
         }
@@ -186,6 +189,14 @@ def read_csv(in_file):
                     msgid=data[locale]["msgid"], msgstr=data[locale]["msgstr"]
                 )
                 poFiles[locale].append(entry)
+
+                # if locale in sorted_categories[sub_category][key]:
+                #    if locale != "pot":
+                #        sorted_categories[sub_category][key][locale[0:2]] = data[
+                #            locale
+                #        ]["msgstr"]
+
+                # del sorted_categories[sub_category][key][locale]
 
                 if "emoji" in data:
                     sorted_categories[sub_category]["emoji"] = data["emoji"]
