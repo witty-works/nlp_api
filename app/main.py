@@ -76,7 +76,7 @@ from app.model import model
 from app.rules import *
 from app.sentry import set_up_sentry_sdk
 
-version = "1.38.14"
+version = "1.38.15"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -1829,7 +1829,7 @@ def determine_genus_from_ending(word, endings, genus):
     return None
 
 
-def german_noun_analysis(word, genus_only=True):
+def german_noun_analysis(word, genus_only=False):
     if "..." in word:
         return None
 
