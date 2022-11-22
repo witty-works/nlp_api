@@ -1829,7 +1829,7 @@ def determine_genus_from_ending(word, endings, genus):
     return None
 
 
-def german_noun_analysis(word):
+def german_noun_analysis(word, genus_only=True):
     if "..." in word:
         return None
 
@@ -1837,13 +1837,14 @@ def german_noun_analysis(word):
     if len(result):
         result = result[0]
     else:
-        for genus in primary_german_genus_endings:
-            result = determine_genus_from_ending(
-                word, primary_german_genus_endings[genus], genus
-            )
+        if genus_only:
+            for genus in primary_german_genus_endings:
+                result = determine_genus_from_ending(
+                    word, primary_german_genus_endings[genus], genus
+                )
 
-            if result != None:
-                return result
+                if result != None:
+                    return result
 
         # skip the first 2 letters
         i = 2
@@ -1860,7 +1861,7 @@ def german_noun_analysis(word):
     if result == []:
         result = None
 
-    if result == None:
+    if result == None and genus_only:
         for genus in secondary_german_genus_endings:
             result = determine_genus_from_ending(
                 word, secondary_german_genus_endings[genus], genus
@@ -2180,7 +2181,7 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
                 )
 
             words = alternative.split()
-            word = german_noun_analysis(words[-1])
+            word = german_noun_analysis(words[-1], True)
             if word == None:
                 article_alternative = tokens[i - 1].text
             else:
@@ -2641,7 +2642,9 @@ def word_noun(
     return list_tokens
 
 
-def detect_filler_words_at_sentence_start(subcategory, alternatives, text, full_text, end):
+def detect_filler_words_at_sentence_start(
+    subcategory, alternatives, text, full_text, end
+):
     if subcategory == "filler" and alternatives == ["-"] and text[0].isupper():
         match = re.search(r"(\s*,\s*)(\S+)", full_text[end : end + 30])
         if type(match) == re.Match:
