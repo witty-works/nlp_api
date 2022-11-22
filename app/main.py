@@ -76,7 +76,7 @@ from app.model import model
 from app.rules import *
 from app.sentry import set_up_sentry_sdk
 
-version = "1.38.12"
+version = "1.38.13"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -1042,6 +1042,14 @@ def languagetool_matches(
         ):
             continue
 
+        if (
+            lang.lang == "de"
+            and config.german_gender_ending == ":in"
+            and match["rule"]["id"] == "LEERZEICHEN_HINTER_DOPPELPUNKT"
+            and text[start + 1 : end] in male_articles
+        ):
+            continue
+
         # ignore text that starts with @ or #
         if highlight_text[0:1] in ignore or (
             start > 0 and text[start - 1 : start] in ignore
@@ -1417,6 +1425,11 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
 
             regexes[regex] = [config.german_gender_ending]
 
+            if ending == ":in":
+                regexes["\s((\S+):(\S+))"] = config.german_gender_ending[0:1]
+            elif ending == "*in":
+                regexes["\s((\S+)\*(\S+))"] = config.german_gender_ending[0:1]
+
         list_full += regex_matches(
             version,
             config,
@@ -1481,6 +1494,10 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
         subcategory = "d_and_i"
         category = categories[subcategory]["category"]
         regexes = {config._gendereddenom_ending[config.german_gender_ending]: None}
+        if config.german_gender_ending == ":in":
+            regexes["\s((\S+):(\S+))"] = None
+        elif ending == "*in":
+            regexes["\s((\S+)\*(\S+))"] = None
 
         list_full += regex_matches(
             version, config, lang, text, category, subcategory, regexes
@@ -1804,6 +1821,60 @@ def word_types_overlap(a_word_types, b_word_types):
     return not set(a_word_types).isdisjoint(b_word_types)
 
 
+def determine_genus_from_ending(word, endings, genus):
+    for ending in endings:
+        if word.endswith(ending):
+            return {"genus": genus}
+
+    return None
+
+
+def german_noun_analysis(word):
+    if "..." in word:
+        return None
+
+    result = german_nouns[word]
+    if len(result):
+        result = result[0]
+    else:
+        for genus in primary_german_genus_endings:
+            result = determine_genus_from_ending(
+                word, primary_german_genus_endings[genus], genus
+            )
+
+            if result != None:
+                return result
+
+        # skip the first 2 letters
+        i = 2
+        # skip the last 4 letters, especially to avoid cases like 'Ende' at the end of 'Arbeitgebende'
+        while i < len(word) - 4:
+            partial_word = word[i:].capitalize()
+            i += 1
+
+            result = german_nouns[partial_word]
+            if len(result):
+                result = result[0]
+                break
+
+    if result == []:
+        result = None
+
+    if result == None:
+        for genus in secondary_german_genus_endings:
+            result = determine_genus_from_ending(
+                word, secondary_german_genus_endings[genus], genus
+            )
+
+            if result != None:
+                return result
+
+    if isinstance(result, list) and "genus 1" in result:
+        result["genus"] = result["genus 1"]
+
+    return result
+
+
 def align_noun_form(lang, a_token, b_token):
     a_text = a_token.text
     b_text = b_token.text
@@ -1817,23 +1888,23 @@ def align_noun_form(lang, a_token, b_token):
 
         return Noun(b_text).singular()
     elif lang.lang == "de":
-        a_word = german_nouns[a_text]
-        if len(a_word) == 0:
+        a_word = german_noun_analysis(a_text)
+        if a_word == None:
             return b_text
 
-        b_word = german_nouns[b_text]
-        if len(b_word) == 0:
+        b_word = german_noun_analysis(b_text)
+        if b_word == None:
             return b_text
 
-        for flexion, value in a_word[0]["flexion"].items():
+        for flexion, value in a_word["flexion"].items():
             if value != a_text:
                 continue
 
-            if flexion not in b_word[0]["flexion"]:
+            if flexion not in b_word["flexion"]:
                 flexion += " 1"
 
-            if flexion in b_word[0]["flexion"]:
-                return b_word[0]["flexion"][flexion]
+            if flexion in b_word["flexion"]:
+                return b_word["flexion"][flexion]
 
     return b_text
 
@@ -2030,28 +2101,29 @@ def fetch_matching_flexions(text, word, is_plural_check=False):
         "forms": [],
     }
 
-    if len(word) == 0:
-        return matches
+    if "flexion" in word:
+        for flexion, value in word["flexion"].items():
+            if value == text:
+                words = flexion.replace("*", "").split()
+                if len(words) != 2:
+                    continue
 
-    for flexion, value in word[0]["flexion"].items():
-        if value == text:
-            words = flexion.replace("*", "").split()
-            if len(words) != 2:
-                continue
+                if "plural" in words[1]:
+                    matches["is_plural"] = True
+                    if is_plural_check:
+                        break
 
-            if "plural" in words[1]:
-                matches["is_plural"] = True
-                if is_plural_check:
-                    break
-
-            matches["forms"].append(words[0])
+                matches["forms"].append(words[0])
 
     return matches
 
 
 def fetch_alternatives_with_article(tokens, i, alternatives):
     text = tokens[i].text
-    word = german_nouns[text]
+    word = german_noun_analysis(text)
+    if word == None:
+        return None
+
     matches = fetch_matching_flexions(text, word)
     if len(matches["forms"]) == 0:
         return None
@@ -2067,11 +2139,11 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
             continue
 
         article_to_check = None
-        if word[0]["genus"] == "m":
+        if word["genus"] == "m":
             article_to_check = masculine
-        elif word[0]["genus"] == "f":
+        elif word["genus"] == "f":
             article_to_check = feminine
-        elif word[0]["genus"] == "n":
+        elif word["genus"] == "n":
             article_to_check = neuter
 
         if article_text == article_to_check:
@@ -2108,23 +2180,22 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
                 )
 
             words = alternative.split()
-            word = german_nouns[words[-1]]
-
-            if len(word) == 0:
+            word = german_noun_analysis(words[-1])
+            if word == None:
                 article_alternative = tokens[i - 1].text
             else:
                 matches = fetch_matching_flexions(alternative, word, True)
                 if matches["is_plural"]:
                     article_alternative = ""
-                elif word[0]["genus"] == "m":
+                elif word["genus"] == "m":
                     if match_masculine == False:
                         return None
                     article_alternative = match_masculine
-                elif word[0]["genus"] == "n":
+                elif word["genus"] == "n":
                     if match_neuter == False:
                         return None
                     article_alternative = match_neuter
-                elif word[0]["genus"] == "f" or alternative.endswith("in"):
+                elif word["genus"] == "f" or alternative.endswith("in"):
                     if match_feminine == False:
                         return None
                     article_alternative = match_feminine
@@ -2257,7 +2328,13 @@ def regex_matches(
             groups = span.groups()
             text = span.group(1)
 
-            if len(groups) == 2:
+            if len(groups) == 3:
+                if span.group(3) not in male_articles:
+                    continue
+                text = span.group(1)
+                if category != "inclusive":
+                    alternatives = [span.group(2) + regexes[regex] + span.group(3)]
+            elif len(groups) == 2:
                 text += span.group(2)
 
                 if category != "inclusive":
@@ -2458,17 +2535,25 @@ def style_word_analysis_de(
             if not is_sub_category_enabled(version, config, subcategory):
                 continue
 
-            if not is_word_match(token, tokens, lang, word, word_types, None, False):
+            if not is_word_match(token, tokens, lang, word, word_types):
                 continue
 
             alternatives = alternatives_declension(token, lang, alternatives)
+
+            text, alternatives = detect_filler_words_at_sentence_start(
+                subcategory,
+                alternatives,
+                token.text,
+                full_text,
+                token.idx + len(token.text),
+            )
 
             list_tokens.append(
                 ResultOut.factory(
                     version,
                     config,
                     lang,
-                    token.text,
+                    text,
                     full_text,
                     category,
                     subcategory,
@@ -2556,6 +2641,16 @@ def word_noun(
     return list_tokens
 
 
+def detect_filler_words_at_sentence_start(subcategory, alternatives, text, full_text, end):
+    if subcategory == "filler" and alternatives == ["-"] and text[0].isupper():
+        match = re.search(r"(\s*,\s*)(\S+)", full_text[end : end + 30])
+        if type(match) == re.Match:
+            text += match.group(0)
+            alternatives = [match.group(2).capitalize()]
+
+    return text, alternatives
+
+
 def rules_based_words_phrase_matcher(
     version: float,
     config: Config,
@@ -2593,17 +2688,25 @@ def rules_based_words_phrase_matcher(
             if not is_sub_category_enabled(version, config, subcategory):
                 continue
 
+            text, alternatives = detect_filler_words_at_sentence_start(
+                subcategory,
+                alternatives,
+                token.text,
+                full_text,
+                token.idx + len(token.text),
+            )
+
             list_tokens.append(
                 ResultOut.factory(
                     version,
                     config,
                     lang,
-                    token.text,
+                    text,
                     full_text,
                     category,
                     subcategory,
                     token.idx,
-                    token.idx + len(token.text),
+                    None,
                     alternatives,
                 )
             )

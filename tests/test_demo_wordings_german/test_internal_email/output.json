@@ -137,11 +137,11 @@
             "alternatives": [
                 {
                     "inspiration": true,
-                    "text": "einen langen Atem haben(...)"
+                    "text": "einen langen Atem haben"
                 },
                 {
                     "inspiration": true,
-                    "text": "Fähigkeit, an Dingen dranzubleiben(...)"
+                    "text": "Fähigkeit, an Dingen dranzubleiben"
                 }
             ],
             "category": "unconscious_bias",
@@ -210,6 +210,26 @@
             "start": 156,
             "subcategory": "communal",
             "text": "Freundliche"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "style",
+            "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben",
+            "end": 4,
+            "explanation": {
+                "icon": "😟",
+                "text": "Füllwörter machen Text länger und unverständlicher",
+                "url": "https://www.witty.works/de/kategorien/stil#fuellwoerter"
+            },
+            "gravity": 3.0,
+            "label": "Stil: Füllwörter",
+            "start": 0,
+            "subcategory": "filler",
+            "text": "Sehr"
         },
         {
             "alternatives": [
