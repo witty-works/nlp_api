@@ -749,6 +749,7 @@ list_false_column = [
     "push the boundaries",
     "fossil promo",
     "good friends",
+    "good at"
     "of a kind",
     "great at",
     "Minority Ethnic",
