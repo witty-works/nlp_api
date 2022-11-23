@@ -26,7 +26,7 @@
                 "icon": "✅",
                 "text": "Conveys emotional security"
             },
-            "label": "Inclusive: Positive emotions",
+            "label": "Inclusive: Positive Emotions",
             "start": 12,
             "subcategory": "emotional_security",
             "text": "encouraged"
@@ -46,7 +46,7 @@
                 "url": "https://www.witty.works/en/categories/style#filler_words"
             },
             "gravity": 3.0,
-            "label": "Style: Filler words",
+            "label": "Style: Filler Words",
             "start": 7,
             "subcategory": "filler",
             "text": "very"

@@ -223,7 +223,7 @@
             "explanation": {
                 "icon": "😟",
                 "text": "Füllwörter machen Text länger und unverständlicher",
-                "url": "https://www.witty.works/de/kategorien/stil#fuellwoerter"
+                "url": "https://www.witty.works/de/kategorien/stil#füllwörter"
             },
             "gravity": 3.0,
             "label": "Stil: Füllwörter",
@@ -255,7 +255,7 @@
             "explanation": {
                 "icon": "🧊",
                 "text": "Weniger Förmlichkeit schafft mehr emotionale Nähe",
-                "url": "https://www.witty.works/de/kategorien/stil#formalitaet"
+                "url": "https://www.witty.works/de/kategorien/stil#formalität"
             },
             "gravity": 3.0,
             "label": "Stil: Formalität",

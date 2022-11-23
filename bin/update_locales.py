@@ -101,7 +101,7 @@ def read_csv(in_file):
         }
 
         columnMap = {
-            #"name": "Name",
+            "name": "Name",
             "anchor": "Anchor",
             "explanation": "Short explanation",
         }
@@ -178,10 +178,36 @@ def read_csv(in_file):
 
     sorted_categories = {}
     for i in sorted(categories.keys()):
+        categories[i]["url"] = {}
+        for locale in locales:
+            if locale == "pot":
+                continue
+
+            path = "categories" if locale[0:2] == "en" else "kategorien"
+            category = categories[i]["category"]
+
+            categories[i]["url"][locale[0:2]] = (
+                "https://www.witty.works/"
+                + locale[0:2]
+                + "/"
+                + path
+                + "/"
+                + categories[category]["anchor"][locale]["msgstr"]
+            )
+
+            if category != sub_category:
+                categories[i]["url"][locale[0:2]] += (
+                    "#" + categories[i]["anchor"][locale]["msgstr"]
+                )
+
         sorted_categories[i] = categories[i]
 
     for sub_category in sorted_categories:
         for key in columnMap:
+            if key == "anchor":
+                del sorted_categories[sub_category][key]
+                continue
+
             data = sorted_categories[sub_category][key]
 
             for locale in locales:
@@ -190,18 +216,18 @@ def read_csv(in_file):
                 )
                 poFiles[locale].append(entry)
 
-                # if locale in sorted_categories[sub_category][key]:
-                #    if locale != "pot":
-                #        sorted_categories[sub_category][key][locale[0:2]] = data[
-                #            locale
-                #        ]["msgstr"]
+                if locale in sorted_categories[sub_category][key]:
+                    if locale != "pot":
+                        sorted_categories[sub_category][key][locale[0:2]] = data[
+                            locale
+                        ]["msgstr"]
 
-                # del sorted_categories[sub_category][key][locale]
+                del sorted_categories[sub_category][key][locale]
 
                 if "emoji" in data:
                     sorted_categories[sub_category]["emoji"] = data["emoji"]
 
-            del sorted_categories[sub_category][key]
+        del sorted_categories[sub_category]["explanation"]
 
     locales_path = os.path.dirname(__file__) + "/../locales"
 

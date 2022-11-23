@@ -3,465 +3,465 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-11-04 09:01\n"
-"PO-Revision-Date: 2022-11-04 09:01\n"
+"POT-Creation-Date: 2022-11-22 15:42\n"
+"PO-Revision-Date: 2022-11-22 15:42\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "rules.abbreviation_anchor"
+msgid "rules.abbreviation_name"
 msgstr ""
 
 msgid "rules.abbreviation_explanation"
 msgstr ""
 
-msgid "rules.ability_anchor"
+msgid "rules.ability_name"
 msgstr ""
 
 msgid "rules.ability_explanation"
 msgstr ""
 
-msgid "rules.ableism_anchor"
+msgid "rules.ableism_name"
 msgstr ""
 
 msgid "rules.ableism_explanation"
 msgstr ""
 
-msgid "rules.age_anchor"
+msgid "rules.age_name"
 msgstr ""
 
 msgid "rules.age_explanation"
 msgstr ""
 
-msgid "rules.age_old_anchor"
+msgid "rules.age_old_name"
 msgstr ""
 
 msgid "rules.age_old_explanation"
 msgstr ""
 
-msgid "rules.age_young_anchor"
+msgid "rules.age_young_name"
 msgstr ""
 
 msgid "rules.age_young_explanation"
 msgstr ""
 
-msgid "rules.agentic_anchor"
+msgid "rules.agentic_name"
 msgstr ""
 
 msgid "rules.agentic_explanation"
 msgstr ""
 
-msgid "rules.anglicism_anchor"
+msgid "rules.anglicism_name"
 msgstr ""
 
 msgid "rules.anglicism_explanation"
 msgstr ""
 
-msgid "rules.antimuslim_anchor"
+msgid "rules.antimuslim_name"
 msgstr ""
 
 msgid "rules.antimuslim_explanation"
 msgstr ""
 
-msgid "rules.antisemitism_anchor"
+msgid "rules.antisemitism_name"
 msgstr ""
 
 msgid "rules.antisemitism_explanation"
 msgstr ""
 
-msgid "rules.behavior_anchor"
+msgid "rules.behavior_name"
 msgstr ""
 
 msgid "rules.behavior_explanation"
 msgstr ""
 
-msgid "rules.belief_anchor"
+msgid "rules.belief_name"
 msgstr ""
 
 msgid "rules.belief_explanation"
 msgstr ""
 
-msgid "rules.binary_pronouns_anchor"
+msgid "rules.binary_pronouns_name"
 msgstr ""
 
 msgid "rules.binary_pronouns_explanation"
 msgstr ""
 
-msgid "rules.casing_anchor"
+msgid "rules.casing_name"
 msgstr ""
 
 msgid "rules.casing_explanation"
 msgstr ""
 
-msgid "rules.classism_anchor"
+msgid "rules.classism_name"
 msgstr ""
 
 msgid "rules.classism_explanation"
 msgstr ""
 
-msgid "rules.cognitive_ability_anchor"
+msgid "rules.cognitive_ability_name"
 msgstr ""
 
 msgid "rules.cognitive_ability_explanation"
 msgstr ""
 
-msgid "rules.cognitive_perception_anchor"
+msgid "rules.cognitive_perception_name"
 msgstr ""
 
 msgid "rules.cognitive_perception_explanation"
 msgstr ""
 
-msgid "rules.color_anchor"
+msgid "rules.color_name"
 msgstr ""
 
 msgid "rules.color_explanation"
 msgstr ""
 
-msgid "rules.communal_anchor"
+msgid "rules.communal_name"
 msgstr ""
 
 msgid "rules.communal_explanation"
 msgstr ""
 
-msgid "rules.compounding_anchor"
+msgid "rules.compounding_name"
 msgstr ""
 
 msgid "rules.compounding_explanation"
 msgstr ""
 
-msgid "rules.confused_words_anchor"
+msgid "rules.confused_words_name"
 msgstr ""
 
 msgid "rules.confused_words_explanation"
 msgstr ""
 
-msgid "rules.corporate_rules_anchor"
+msgid "rules.corporate_rules_name"
 msgstr ""
 
 msgid "rules.corporate_rules_explanation"
 msgstr ""
 
-msgid "rules.culture_anchor"
+msgid "rules.culture_name"
 msgstr ""
 
 msgid "rules.culture_explanation"
 msgstr ""
 
-msgid "rules.d_and_i_anchor"
+msgid "rules.d_and_i_name"
 msgstr ""
 
 msgid "rules.d_and_i_explanation"
 msgstr ""
 
-msgid "rules.emotional_security_anchor"
+msgid "rules.emotional_security_name"
 msgstr ""
 
 msgid "rules.emotional_security_explanation"
 msgstr ""
 
-msgid "rules.exaggerating_anchor"
+msgid "rules.exaggerating_name"
 msgstr ""
 
 msgid "rules.exaggerating_explanation"
 msgstr ""
 
-msgid "rules.false_friends_anchor"
+msgid "rules.false_friends_name"
 msgstr ""
 
 msgid "rules.false_friends_explanation"
 msgstr ""
 
-msgid "rules.female_stereotype_anchor"
+msgid "rules.female_stereotype_name"
 msgstr ""
 
 msgid "rules.female_stereotype_explanation"
 msgstr ""
 
-msgid "rules.filler_anchor"
+msgid "rules.filler_name"
 msgstr ""
 
 msgid "rules.filler_explanation"
 msgstr ""
 
-msgid "rules.formality_anchor"
+msgid "rules.formality_name"
 msgstr ""
 
 msgid "rules.formality_explanation"
 msgstr ""
 
-msgid "rules.function_anchor"
+msgid "rules.function_name"
 msgstr ""
 
 msgid "rules.function_explanation"
 msgstr ""
 
-msgid "rules.gender_identity_anchor"
+msgid "rules.gender_identity_name"
 msgstr ""
 
 msgid "rules.gender_identity_explanation"
 msgstr ""
 
-msgid "rules.gender_specific_abbreviation_anchor"
+msgid "rules.gender_specific_abbreviation_name"
 msgstr ""
 
 msgid "rules.gender_specific_abbreviation_explanation"
 msgstr ""
 
-msgid "rules.gendered_anchor"
+msgid "rules.gendered_name"
 msgstr ""
 
 msgid "rules.gendered_explanation"
 msgstr ""
 
-msgid "rules.gendered_denominations_ending_anchor"
+msgid "rules.gendered_denominations_ending_name"
 msgstr ""
 
 msgid "rules.gendered_denominations_ending_explanation"
 msgstr ""
 
-msgid "rules.general_style_anchor"
+msgid "rules.general_style_name"
 msgstr ""
 
 msgid "rules.general_style_explanation"
 msgstr ""
 
-msgid "rules.generic_plural_anchor"
+msgid "rules.generic_plural_name"
 msgstr ""
 
 msgid "rules.generic_plural_explanation"
 msgstr ""
 
-msgid "rules.grammar_anchor"
+msgid "rules.grammar_name"
 msgstr ""
 
 msgid "rules.grammar_explanation"
 msgstr ""
 
-msgid "rules.hearing_anchor"
+msgid "rules.hearing_name"
 msgstr ""
 
 msgid "rules.hearing_explanation"
 msgstr ""
 
-msgid "rules.hidden_image_anchor"
+msgid "rules.hidden_image_name"
 msgstr ""
 
 msgid "rules.hidden_image_explanation"
 msgstr ""
 
-msgid "rules.hollow_anchor"
+msgid "rules.hollow_name"
 msgstr ""
 
 msgid "rules.hollow_explanation"
 msgstr ""
 
-msgid "rules.homophobia_anchor"
+msgid "rules.homophobia_name"
 msgstr ""
 
 msgid "rules.homophobia_explanation"
 msgstr ""
 
-msgid "rules.inclusive_anchor"
+msgid "rules.inclusive_name"
 msgstr ""
 
 msgid "rules.inclusive_explanation"
 msgstr ""
 
-msgid "rules.leadership_anchor"
+msgid "rules.leadership_name"
 msgstr ""
 
 msgid "rules.leadership_explanation"
 msgstr ""
 
-msgid "rules.learning_anchor"
+msgid "rules.learning_name"
 msgstr ""
 
 msgid "rules.learning_explanation"
 msgstr ""
 
-msgid "rules.male_stereotype_anchor"
+msgid "rules.male_stereotype_name"
 msgstr ""
 
 msgid "rules.male_stereotype_explanation"
 msgstr ""
 
-msgid "rules.medical_state_anchor"
+msgid "rules.medical_state_name"
 msgstr ""
 
 msgid "rules.medical_state_explanation"
 msgstr ""
 
-msgid "rules.mental_wellbeing_anchor"
+msgid "rules.mental_wellbeing_name"
 msgstr ""
 
 msgid "rules.mental_wellbeing_explanation"
 msgstr ""
 
-msgid "rules.migration_anchor"
+msgid "rules.migration_name"
 msgstr ""
 
 msgid "rules.migration_explanation"
 msgstr ""
 
-msgid "rules.military_source_anchor"
+msgid "rules.military_source_name"
 msgstr ""
 
 msgid "rules.military_source_explanation"
 msgstr ""
 
-msgid "rules.misc_anchor"
+msgid "rules.misc_name"
 msgstr ""
 
 msgid "rules.misc_explanation"
 msgstr ""
 
-msgid "rules.mobility_anchor"
+msgid "rules.mobility_name"
 msgstr ""
 
 msgid "rules.mobility_explanation"
 msgstr ""
 
-msgid "rules.offensive_language_anchor"
+msgid "rules.offensive_language_name"
 msgstr ""
 
 msgid "rules.offensive_language_explanation"
 msgstr ""
 
-msgid "rules.openly_discriminating_anchor"
+msgid "rules.openly_discriminating_name"
 msgstr ""
 
 msgid "rules.openly_discriminating_explanation"
 msgstr ""
 
-msgid "rules.orthography_anchor"
+msgid "rules.orthography_name"
 msgstr ""
 
 msgid "rules.orthography_explanation"
 msgstr ""
 
-msgid "rules.punctuation_anchor"
+msgid "rules.punctuation_name"
 msgstr ""
 
 msgid "rules.punctuation_explanation"
 msgstr ""
 
-msgid "rules.racism_anchor"
+msgid "rules.racism_name"
 msgstr ""
 
 msgid "rules.racism_explanation"
 msgstr ""
 
-msgid "rules.racist_source_anchor"
+msgid "rules.racist_source_name"
 msgstr ""
 
 msgid "rules.racist_source_explanation"
 msgstr ""
 
-msgid "rules.redundancy_anchor"
+msgid "rules.redundancy_name"
 msgstr ""
 
 msgid "rules.redundancy_explanation"
 msgstr ""
 
-msgid "rules.regionalisms_anchor"
+msgid "rules.regionalisms_name"
 msgstr ""
 
 msgid "rules.regionalisms_explanation"
 msgstr ""
 
-msgid "rules.repetitions_anchor"
+msgid "rules.repetitions_name"
 msgstr ""
 
 msgid "rules.repetitions_explanation"
 msgstr ""
 
-msgid "rules.repetitions_style_anchor"
+msgid "rules.repetitions_style_name"
 msgstr ""
 
 msgid "rules.repetitions_style_explanation"
 msgstr ""
 
-msgid "rules.semantics_anchor"
+msgid "rules.semantics_name"
 msgstr ""
 
 msgid "rules.semantics_explanation"
 msgstr ""
 
-msgid "rules.sexism_anchor"
+msgid "rules.sexism_name"
 msgstr ""
 
 msgid "rules.sexism_explanation"
 msgstr ""
 
-msgid "rules.sexual_orientation_anchor"
+msgid "rules.sexual_orientation_name"
 msgstr ""
 
 msgid "rules.sexual_orientation_explanation"
 msgstr ""
 
-msgid "rules.simple_language_anchor"
+msgid "rules.simple_language_name"
 msgstr ""
 
 msgid "rules.simple_language_explanation"
 msgstr ""
 
-msgid "rules.speech_anchor"
+msgid "rules.speech_name"
 msgstr ""
 
 msgid "rules.speech_explanation"
 msgstr ""
 
-msgid "rules.sports_terms_anchor"
+msgid "rules.sports_terms_name"
 msgstr ""
 
 msgid "rules.sports_terms_explanation"
 msgstr ""
 
-msgid "rules.style_anchor"
+msgid "rules.style_name"
 msgstr ""
 
 msgid "rules.style_explanation"
 msgstr ""
 
-msgid "rules.titles_anchor"
+msgid "rules.titles_name"
 msgstr ""
 
 msgid "rules.titles_explanation"
 msgstr ""
 
-msgid "rules.transphobia_anchor"
+msgid "rules.transphobia_name"
 msgstr ""
 
 msgid "rules.transphobia_explanation"
 msgstr ""
 
-msgid "rules.typography_anchor"
+msgid "rules.typography_name"
 msgstr ""
 
 msgid "rules.typography_explanation"
 msgstr ""
 
-msgid "rules.typos_anchor"
+msgid "rules.typos_name"
 msgstr ""
 
 msgid "rules.typos_explanation"
 msgstr ""
 
-msgid "rules.unconscious_bias_anchor"
+msgid "rules.unconscious_bias_name"
 msgstr ""
 
 msgid "rules.unconscious_bias_explanation"
 msgstr ""
 
-msgid "rules.vision_anchor"
+msgid "rules.vision_name"
 msgstr ""
 
 msgid "rules.vision_explanation"
 msgstr ""
 
-msgid "rules.xenophobia_anchor"
+msgid "rules.xenophobia_name"
 msgstr ""
 
 msgid "rules.xenophobia_explanation"

@@ -12,7 +12,6 @@ import re
 import math
 
 from app.categories import categories
-from app.settings import get_settings
 from app.privacy_filter import get_privacy_filter
 
 
@@ -404,42 +403,35 @@ class ResultOut(BaseModel):
         if subcategory == "gendered_denominations_ending":
             params["gendered_denominations_ending"] = config.german_gender_ending
 
-        anchor = anchor if anchor else lang._("rules." + category + "_anchor")
-        sub_anchor = None
-
         if subcategory in categories:
             category_key = subcategory
         else:
             category_key = category
 
+        if anchor == None and "anchor" in categories[category_key]:
+            anchor = categories[category_key]["anchor"][lang.lang]
+
         category_data = None
+        label = None
+
         if category_key in categories:
             category_data = categories[category_key]
 
-        if category != "orthography" and category != "corporate_rules":
-            if category != subcategory:
-                sub_anchor = lang._("rules." + subcategory + "_anchor")
+            if category != "orthography":
+                label = lang._("rules." + category_key + "_name")
+                if category != subcategory and category in categories:
+                    label = lang._("rules." + category + "_name") + ": " + label
 
-            if url == None and (
-                category_data["why"] == True or category_data["why"] == lang.lang
-            ):
-                settings = get_settings()
-                url = (
-                    settings.learning_bites_base_url
-                    + "/"
-                    + lang.lang
-                    + "/"
-                    + ("categories" if lang.lang == "en" else "kategorien")
-                    + "/"
-                    + anchor
-                )
+        if label == None:
+            label = ResultOut.reverseTransliterate(anchor, lang)
 
-                if sub_anchor != None:
-                    url += "#" + sub_anchor
-
-        label = ResultOut.reverseTransliterate(anchor, lang)
-        if sub_anchor != None and anchor != sub_anchor:
-            label += ": " + ResultOut.reverseTransliterate(sub_anchor, lang)
+        if (
+            category != "orthography"
+            and category != "corporate_rules"
+            and url == None
+            and (category_data["why"] == True or category_data["why"] == lang.lang)
+        ):
+            url = category_data["url"][lang.lang]
 
         explanation = (
             explanation
