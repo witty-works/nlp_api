@@ -1518,6 +1518,15 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             false_positives.style,
         )
 
+        list_full += detect_lower_cased_hashtags(
+            version,
+            config,
+            lang,
+            text,
+            "style",
+            "style",
+        )
+
     return list_full
 
 
@@ -1681,6 +1690,16 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
             matches_false,
         )
 
+        list_full += detect_lower_cased_hashtags(
+            version,
+            config,
+            lang,
+            text,
+            "style",
+            "style",
+        )
+
+
     if is_sub_category_enabled(version, config, "unconscious_bias"):
         list_full += rules_based_words_phrase_matcher(
             version,
@@ -1703,6 +1722,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
             "unconscious_bias",
             matches_false,
         )
+
     return list_full
 
 
@@ -2847,6 +2867,49 @@ def literal_match(
             )
 
     return list_tokens
+
+
+def detect_lower_cased_hashtags(
+    version: float,
+    config: Config,
+    lang,
+    full_text,
+    category,
+    subcategory,
+):
+    list_results = []
+
+    if lang.lang == "de":
+        explanation = "Wenn du Wörter großschreibst, wissen alle gleich, was du meinst. #ZumBeispiel"
+    else:
+        explanation = "When you capitalize words, everyone knows right away what you mean. #ForExample"
+
+    matches = re.finditer("#(\w*)", full_text)
+    for span in matches:
+        if type(span) == re.Match:
+            text = span.group(1)
+
+            if len(text) < 5 or any(char.isupper() for char in text):
+                continue
+
+            list_results.append(
+                ResultOut.factory(
+                    version,
+                    config,
+                    lang,
+                    "#" + text,
+                    full_text,
+                    category,
+                    subcategory,
+                    span.start(),
+                    span.end(),
+                    None,
+                    None,
+                    explanation,
+                )
+            )
+
+    return list_results
 
 
 # want to server to run app.py in the folder app as main app, port=8000 is defaut port for the fast api
