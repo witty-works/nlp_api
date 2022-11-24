@@ -12,7 +12,6 @@ import re
 import math
 
 from app.categories import categories
-from app.settings import get_settings
 from app.privacy_filter import get_privacy_filter
 
 
@@ -97,8 +96,8 @@ class GenderedRolesFormatType(str, Enum):
 
 
 class Config(BaseModel):
-    store_context: Optional[bool] = True
-    simple_language: Optional[bool] = False
+    store_context: bool = True
+    simple_language: bool = False
     plan: Optional[str]
     primary_language: Optional[LangWithAutoType]
     preferred_languages: List = [LangWithAutoType.EN, LangWithAutoType.DE]
@@ -126,8 +125,9 @@ class Config(BaseModel):
     disabled_categories: List = []
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
     singular_they: str = SingularTheyType.HE_OR_SHE
-    show_inspiration_alternatives: Optional[bool] = False
+    show_inspiration_alternatives: bool = False
     maximum_importance: float = 2.0
+    alternatives_max_count: Optional[int]
 
     @validator("german_gender_ending")
     def valid_german_gender_ending(cls, v: str):
@@ -327,8 +327,8 @@ class RequestIn(BaseModel):
     type: str = "check"
     text: str
     lang: Optional[LangWithAutoType] = "auto"
-    id: Optional[str] = None
-    client: Optional[str] = None
+    id: Optional[str]
+    client: Optional[str]
     config: Optional[Config] = Config()
     config_hash: Optional[str]
     organization_config_hash: Optional[str]
@@ -403,42 +403,35 @@ class ResultOut(BaseModel):
         if subcategory == "gendered_denominations_ending":
             params["gendered_denominations_ending"] = config.german_gender_ending
 
-        anchor = anchor if anchor else lang._("rules." + category + "_anchor")
-        sub_anchor = None
-
         if subcategory in categories:
             category_key = subcategory
         else:
             category_key = category
 
+        if anchor == None and "anchor" in categories[category_key]:
+            anchor = categories[category_key]["anchor"][lang.lang]
+
         category_data = None
+        label = None
+
         if category_key in categories:
             category_data = categories[category_key]
 
-        if category != "orthography" and category != "corporate_rules":
-            if category != subcategory:
-                sub_anchor = lang._("rules." + subcategory + "_anchor")
+            if category != "orthography":
+                label = lang._("rules." + category_key + "_name")
+                if category != subcategory and category in categories:
+                    label = lang._("rules." + category + "_name") + ": " + label
 
-            if url == None and (
-                category_data["why"] == True or category_data["why"] == lang.lang
-            ):
-                settings = get_settings()
-                url = (
-                    settings.learning_bites_base_url
-                    + "/"
-                    + lang.lang
-                    + "/"
-                    + ("categories" if lang.lang == "en" else "kategorien")
-                    + "/"
-                    + anchor
-                )
+        if label == None:
+            label = ResultOut.reverseTransliterate(anchor, lang)
 
-                if sub_anchor != None:
-                    url += "#" + sub_anchor
-
-        label = ResultOut.reverseTransliterate(anchor, lang)
-        if sub_anchor != None and anchor != sub_anchor:
-            label += ": " + ResultOut.reverseTransliterate(sub_anchor, lang)
+        if (
+            category != "orthography"
+            and category != "corporate_rules"
+            and url == None
+            and (category_data["why"] == True or category_data["why"] == lang.lang)
+        ):
+            url = category_data["url"][lang.lang]
 
         explanation = (
             explanation
@@ -480,6 +473,7 @@ class ResultOut(BaseModel):
                 ResultOut.isUpper(text, full_text, start, category, lang),
                 alternatives,
                 explanation_context,
+                config.alternatives_max_count,
             )
 
         if category == "orthography":
@@ -540,9 +534,8 @@ class ResultOut(BaseModel):
         is_upper,
         alternatives,
         explanation_context,
+        alternatives_max_count,
     ):
-        alternatives_max_count = 5
-
         # remove empty strings
         if "" in alternatives:
             alternatives.remove("")
@@ -619,10 +612,20 @@ class ResultOut(BaseModel):
 
                 cleaned_alternatives[key] = variation
 
-            if len(cleaned_alternatives) >= alternatives_max_count:
+            if (
+                alternatives_max_count != None
+                and len(cleaned_alternatives) >= alternatives_max_count
+            ):
                 break
 
-        return list(cleaned_alternatives.values())[0:alternatives_max_count], explanation_context
+        cleaned_alternatives = list(cleaned_alternatives.values())
+        if (
+            alternatives_max_count != None
+            and len(cleaned_alternatives) >= alternatives_max_count
+        ):
+            cleaned_alternatives = cleaned_alternatives[0:alternatives_max_count]
+
+        return cleaned_alternatives, explanation_context
 
     @staticmethod
     def parse_alternative_context(alternative):

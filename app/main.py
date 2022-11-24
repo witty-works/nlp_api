@@ -76,7 +76,7 @@ from app.model import model
 from app.rules import *
 from app.sentry import set_up_sentry_sdk
 
-version = "1.38.15"
+version = "1.38.16"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -134,6 +134,7 @@ async def handle_command_witty(
             user_request_in, settings.slack_organization_id
         )
 
+    user_request_in.config.__setattr__("alternatives_max_count", None)
     results = await language_rules(2.0, user_request_in.config, rules, lang, text)
 
     analyzed_text = f"*Analyzed*: {text}"
@@ -769,6 +770,7 @@ def apply_rules(user_request_in: RequestIn, configs: dict, plan: str):
 async def fetch_rules_for_request(user_request_in: RequestIn, user_email=Optional[str]):
     user_request_in.config.__setattr__("store_context", True)
     user_request_in.config.__setattr__("plan", None)
+    user_request_in.config.__setattr__("alternatives_max_count", 5)
 
     if not user_email:
         return {}

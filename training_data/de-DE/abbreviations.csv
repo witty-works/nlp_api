@@ -126,7 +126,7 @@ ICYMI,acr,style,abbreviation,"['In case you missed it', 'Nur für den Fall, dass
 IDE,acr,style,abbreviation,"['Integrated Development Environment (IDE)', 'integrierte Entwicklungsumgebung']"
 IDK,acr,style,abbreviation,"[""I don't know"", 'Keine Ahnung', 'Das weiß ich leider nicht', 'Nur eine Vermutung', 'Nur eine Annahme']"
 IIRC,acr,style,abbreviation,"['If I remember correctly,', 'Wenn ich mich recht entsinne,', 'Wenn ich mich richtig erinnere,']"
-IM,acr,style,abbreviation,"['Instant Messaging (IM)', 'Sofortnachrichten', 'Direktnachrichten']"
+IM,-acr,style,abbreviation,"['Instant Messaging (IM)', 'Sofortnachrichten', 'Direktnachrichten']"
 IMHO,acr,style,abbreviation,"['In my humble opinion,', 'Meiner bescheidenen Ansicht nach', 'Meiner unmaßgeblichen Meinung nach']"
 IMO,acr,style,abbreviation,"['In my opinion', 'Meiner Meinung nach', 'Aus meiner Sicht', 'In meinen Augen']"
 IP,acr,style,abbreviation,"['Internet Protocol (IP)', 'Internetprotokoll']"

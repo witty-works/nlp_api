@@ -45,7 +45,7 @@
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
             },
             "gravity": 2.0,
-            "label": "Biased language: Agentic",
+            "label": "Biased Language: Agentic",
             "start": 111,
             "subcategory": "agentic",
             "text": "challenged"
@@ -77,7 +77,7 @@
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
             },
             "gravity": 2.0,
-            "label": "Biased language: Agentic",
+            "label": "Biased Language: Agentic",
             "start": 154,
             "subcategory": "agentic",
             "text": "drives"
@@ -109,7 +109,7 @@
                 "url": "https://www.witty.works/en/categories/gendered#special_functions"
             },
             "gravity": 2.0,
-            "label": "Gendered: Special functions",
+            "label": "Gendered: Special Functions",
             "start": 4,
             "subcategory": "function",
             "text": "guys"
@@ -156,7 +156,7 @@
                 "url": "https://www.witty.works/en/categories/style#empty_words"
             },
             "gravity": 3.0,
-            "label": "Style: Empty words",
+            "label": "Style: Empty Words",
             "start": 143,
             "subcategory": "hollow",
             "text": "innovation"
@@ -220,7 +220,7 @@
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
             },
             "gravity": 2.0,
-            "label": "Biased language: Agentic",
+            "label": "Biased Language: Agentic",
             "start": 43,
             "subcategory": "agentic",
             "text": "perseverance"
@@ -249,7 +249,7 @@
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
             },
             "gravity": 2.0,
-            "label": "Biased language: Agentic",
+            "label": "Biased Language: Agentic",
             "start": 30,
             "subcategory": "agentic",
             "text": "ambition"

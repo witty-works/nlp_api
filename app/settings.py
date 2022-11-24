@@ -23,7 +23,6 @@ class Settings(BaseSettings):
     sentry_traces_sample_rate: float = 0.2
     sentry_sample_rate: float = 0.2
     text_max_length: int = 1000
-    learning_bites_base_url: str = "https://www.witty.works"
     is_prod: bool = False
     terms_of_service: str = "https://www.witty.works/privacy"
     contact: str = "support@witty.works"
