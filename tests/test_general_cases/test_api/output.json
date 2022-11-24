@@ -14,10 +14,10 @@
             "explanation": {
                 "icon": "🚫",
                 "text": " Verletzt und schüchtert ein",
-                "url": "https://www.witty.works/de/kategorien/offene_diskriminierung#beleidigende_und_einschuechternde_sprache"
+                "url": "https://www.witty.works/de/kategorien/offene_diskriminierung#beleidigende_und_einschüchternde_sprache"
             },
             "gravity": 1.0,
-            "label": "Offene Diskriminierung: Beleidigende Und Einschüchternde Sprache",
+            "label": "Offene Diskriminierung: Beleidigende und Einschüchternde Sprache",
             "start": 60,
             "subcategory": "offensive_language",
             "text": "Armleuchter"

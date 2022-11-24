@@ -669,7 +669,8 @@ primary_german_genus_endings = {
 secondary_german_genus_endings = {
     # 3 out of four words ending with -nis and -sal are neuter nouns
     "n": [
-        "nis", "sal",
+        "nis",
+        "sal",
     ],
     # There are exceptions such as Postillion, which is masculine while the oberwhelming majority of -ion words in German is feminine.
     "f": [
@@ -677,7 +678,9 @@ secondary_german_genus_endings = {
     ],
     # More than half of  words ending with -er, -en, -el are masculine
     "m": [
-        "er", "en", "el",
+        "er",
+        "en",
+        "el",
     ],
 }
 
