@@ -1982,7 +1982,7 @@ def align_verb_form(lang, a_token, b_token):
 
 def alternative_declension(token, word_types, lang, alternative):
     text = token.text
-    if text == token.lemma_ or not text.startswith(token.lemma_):
+    if text == token.lemma_:
         return alternative
 
     if ResultOut.isInspirationAlternative(text, alternative):
