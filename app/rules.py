@@ -555,55 +555,13 @@ false_positives = FalsePositive(
     rules["de-DE"]["gender_false_positive"], rules["de-DE"]["style_false_positive"]
 )
 
-m_w_alternatives_dw = ["-", "d/w/m", "*/w/m"]
-m_w_alternatives_w = m_w_alternatives_dw + ["w/d/m", "w/*/m"]
-m_w_alternatives_f = []
-m_w_alternatives_df = []
-m_w_alternatives_w_parenthesis = []
-m_w_alternatives_f_parenthesis = []
-m_w_alternatives_dw_parenthesis = []
-m_w_alternatives_df_parenthesis = []
-for item in m_w_alternatives_w:
-    item_f = item.replace("w", "f")
-    m_w_alternatives_f.append(item_f)
-    if item in m_w_alternatives_dw:
-        m_w_alternatives_df.append(item_f)
+m_f_regexes = {
+    r"(?i)\s(\()?(m)\/(f|w)(\/[*a-z])*(\))?": None,  # (m/f..)
+    r"(?i)\s(\()?(f|w)\/(m)(\/[*a-z])*(\))?": None,  # (f/m..)
+}
 
-    if item == "-":
-        m_w_alternatives_w_parenthesis.append(item)
-        m_w_alternatives_f_parenthesis.append(item)
-    else:
-        m_w_alternatives_w_parenthesis.append("(" + item + ")")
-        m_w_alternatives_f_parenthesis.append("(" + item_f + ")")
-        if item in m_w_alternatives_dw:
-            m_w_alternatives_dw_parenthesis.append("(" + item + ")")
-            m_w_alternatives_df_parenthesis.append("(" + item_f + ")")
-
-m_w_regexes = {
-    r"\s(\w\/m)": m_w_alternatives_w,  # w/m
-    r"\s(\f\/m)": m_w_alternatives_f,  # f/m
-    r"\s(\(\w\/m\))": m_w_alternatives_w_parenthesis,  # (w/m)
-    r"\s(\(\f\/m\))": m_w_alternatives_f_parenthesis,  # (f/m)
-    r"\s(m\/w)": m_w_alternatives_w,  # m/w
-    r"\s(m\/f)": m_w_alternatives_f,  # m/f
-    r"\s(\(m\/w\))": m_w_alternatives_w_parenthesis,  # (m/w)
-    r"\s(\(m\/f\))": m_w_alternatives_f_parenthesis,  # (m/f)
-    r"\s(m\/w\/d)": m_w_alternatives_w,  # m/w/d
-    r"\s(m\/f\/d)": m_w_alternatives_f,  # m/f/d
-    r"\s(\(m\/w\/d\))": m_w_alternatives_w_parenthesis,  # (m/w/d)
-    r"\s(\(m\/f\/d\))": m_w_alternatives_f_parenthesis,  # (m/f/d)
-    r"\s(m\/w\/\*)": m_w_alternatives_w,  # m/w/*
-    r"\s(m\/f\/\*)": m_w_alternatives_f,  # m/f/*
-    r"\s(\(m\/w\/\*\))": m_w_alternatives_w_parenthesis,  # (m/w/*)
-    r"\s(\(m\/f\/\*\))": m_w_alternatives_f_parenthesis,  # (m/f/*)
-    r"\s(w\/m\/d)": m_w_alternatives_dw,  # w/m/d
-    r"\s(f\/m\/d)": m_w_alternatives_df,  # f/m/d
-    r"\s(\(w\/f\/d\))": m_w_alternatives_dw_parenthesis,  # (w/m/d)
-    r"\s(\(f\/m\/d\))": m_w_alternatives_df_parenthesis,  # (f/m/d)
-    r"\s(w\/m\/\*)": m_w_alternatives_dw,  # w/m/*
-    r"\s(f\/m\/\*)": m_w_alternatives_df,  # f/m/*
-    r"\s(\(w\/m\/\*\))": m_w_alternatives_dw_parenthesis,  # (w/m/*)
-    r"\s(\(f\/m\/\*\))": m_w_alternatives_df_parenthesis,  # f/m/*)
+d_f_m_regexes = {
+    r"(?i)\s(\()?(d|\*)\/f\/m(\/[*a-z])*(\))?": None,  # (d/f/m..)
 }
 
 primary_german_genus_endings = {
