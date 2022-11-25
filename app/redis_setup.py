@@ -23,7 +23,7 @@ def set_up_redis(settings):  # pragma: no cover
 
     if settings.redis_default_rules:
         rules = json.loads(settings.redis_default_rules)
-        key = rules["id"]
+        key = rules["email"]
         redis.set(key, settings.redis_default_rules)
 
     if settings.redis_default_1_1_rules:
