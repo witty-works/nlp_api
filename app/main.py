@@ -76,7 +76,7 @@ from app.model import model
 from app.rules import *
 from app.sentry import set_up_sentry_sdk
 
-version = "1.38.16"
+version = "1.38.17"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -1411,7 +1411,7 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
                 text,
                 categories["gendered"]["category"],
                 "gender_specific_abbreviation",
-                m_w_regexes,
+                m_f_regexes,
             )
         )
 
@@ -1428,9 +1428,9 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             regexes[regex] = [config.german_gender_ending]
 
             if ending == ":in":
-                regexes["\s((\S+):(\S+))"] = config.german_gender_ending[0:1]
+                regexes[r"\s((\S+):(\S+))"] = config.german_gender_ending[0:1]
             elif ending == "*in":
-                regexes["\s((\S+)\*(\S+))"] = config.german_gender_ending[0:1]
+                regexes[r"\s((\S+)\*(\S+))"] = config.german_gender_ending[0:1]
 
         list_full += regex_matches(
             version,
@@ -1497,9 +1497,11 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
         category = categories[subcategory]["category"]
         regexes = {config._gendereddenom_ending[config.german_gender_ending]: None}
         if config.german_gender_ending == ":in":
-            regexes["\s((\S+):(\S+))"] = None
+            regexes[r"\s((\S+):(\S+))"] = None
         elif ending == "*in":
-            regexes["\s((\S+)\*(\S+))"] = None
+            regexes[r"\s((\S+)\*(\S+))"] = None
+
+        regexes.update(d_f_m_regexes)
 
         list_full += regex_matches(
             version, config, lang, text, category, subcategory, regexes
@@ -1650,10 +1652,19 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
             text,
             categories["gendered"]["category"],
             "gender_specific_abbreviation",
-            m_w_regexes,
+            m_f_regexes,
         )
 
     if is_sub_category_enabled(version, config, "inclusive"):
+
+        if is_sub_category_enabled(version, config, "d_and_i"):
+            subcategory = "d_and_i"
+            category = categories[subcategory]["category"]
+
+            list_full += regex_matches(
+                version, config, lang, text, category, subcategory, d_f_m_regexes
+            )
+
         list_full += rules_based_words_phrase_matcher(
             version,
             config,
@@ -2328,22 +2339,90 @@ def regex_matches(
             if type(span) != re.Match:
                 continue
 
-            groups = span.groups()
             text = span.group(1)
+            explanation = None
+            if len(span.groups()) == 5:
+                text = span.group(0).lstrip()
 
-            if len(groups) == 3:
+                letters = [span.group(2), span.group(3)]
+                if span.group(4) != None:
+                    letters = letters + span.group(4)[1:].split("/")
+
+                letters = list(map(lambda x: x.upper(), letters))
+                is_lower = span.group(2).islower()
+
+                veteran_letter = "V"
+                diverse_letter = "D"
+                if diverse_letter not in letters and "*" not in letters:
+                    letters.append(diverse_letter)
+
+                without_v = True
+                if "V" in letters:
+                    letters.remove("V")
+                    without_v = False
+
+                if "W" in letters:
+                    letters.remove("W")
+                    letters.append("F")
+
+                alternative = "/".join(sorted(letters))
+                if is_lower:
+                    alternative = alternative.lower()
+                    diverse_letter = diverse_letter.lower()
+                    veteran_letter = veteran_letter.lower()
+
+                parenthesis = False if span.group(1) == None else True
+                if parenthesis:
+                    alternative = "(" + alternative + ")"
+
+                context_v = "--- include veterans"
+                if lang.lang == "de":
+                    context_d = "--- Divers (EU) / m. Behinderung (NA)"
+                    explanation = "Nenne unterrepräsentierte Gruppen zuerst. Verlinke auf deine Leitlinie zur Gleichstellung."
+                else:
+                    context_d = "--- disabled (NA) / diverse (EU)"
+                    explanation = "Put underrepresented groups first and link to your equal opportunity policy"
+
+                if "*" in alternative:
+                    alternative_2 = alternative.replace("*", diverse_letter)
+                    alternative_v = alternative_2
+                    alternative_2 += context_d
+                else:
+                    alternative_2 = alternative.replace(diverse_letter, "*")
+                    alternative_v = alternative
+                    alternative += context_d
+
+                if lang.lang == "en":
+                    alternative_v = alternative_v.replace(
+                        diverse_letter, diverse_letter + "/" + veteran_letter
+                    )
+
+                    if without_v == False:
+                        alternative = alternative_v + context_d
+                    else:
+                        alternative_v += context_v
+
+                alternatives = ["-", alternative]
+
+                if lang.lang == "en" and without_v:
+                    alternatives.append(alternative_v)
+
+                if lang.lang == "de" or "*" in alternative:
+                    alternatives.append(alternative_2)
+            elif len(span.groups()) == 4:
+                text = span.group(0).lstrip()
+            elif len(span.groups()) == 3:
                 if span.group(3) not in male_articles:
                     continue
-                text = span.group(1)
                 if category != "inclusive":
                     alternatives = [span.group(2) + regexes[regex] + span.group(3)]
-            elif len(groups) == 2:
+            elif len(span.groups()) == 2:
                 text += span.group(2)
 
                 if category != "inclusive":
                     alternatives = []
                     for alternative in regexes[regex]:
-                        alternatives.append(groups[0] + alternative)
+                        alternatives.append(span.groups()[0] + alternative)
             elif category != "inclusive":
                 alternatives = regexes[regex]
 
@@ -2356,9 +2435,11 @@ def regex_matches(
                     full_text,
                     category,
                     subcategory,
-                    span.start() + 1,  # remove extra \s character
+                    span.start() + 1,
                     span.end(),
                     alternatives,
+                    None,
+                    explanation,
                 )
             )
 
