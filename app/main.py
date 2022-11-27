@@ -50,6 +50,7 @@ from app.models import (
     GenderedRolesFormatType,
     GermanGenderEndingType,
     LangType,
+    LangWithAutoType,
     SingularTheyType,
     Language,
     RequestIn,
@@ -458,13 +459,18 @@ async def post_auth_2_0(request: Request, response: Response):
 )
 async def get_debug_spacy(
     text: str,
+    locale: LangWithAutoType = "auto",
     username: str = Depends(fetch_current_username),
 ):
-    locale = lang_detection.get_locale(
-        text,
-        "auto",
-        ["en", "de"],
-    )
+    if locale == "auto" or len(locale) == 2:
+        locale = lang_detection.get_locale(
+            text,
+            locale,
+            ["en", "de"],
+        )
+
+    if locale == None:
+        raise HTTPException(status_code=422, detail="Could not determine language")
 
     lang = Language(locale)
 
