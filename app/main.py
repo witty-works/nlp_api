@@ -776,7 +776,7 @@ def apply_rules(user_request_in: RequestIn, configs: dict, plan: str):
 async def fetch_rules_for_request(user_request_in: RequestIn, user_email=Optional[str]):
     user_request_in.config.__setattr__("store_context", True)
     user_request_in.config.__setattr__("plan", None)
-    user_request_in.config.__setattr__("alternatives_max_count", 5)
+    user_request_in.config.__setattr__("alternatives_max_count", settings.alternatives_max_count)
 
     if not user_email:
         return {}

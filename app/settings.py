@@ -41,6 +41,7 @@ class Settings(BaseSettings):
     slack_signing_secret: Optional[str]
     slack_bot_token: Optional[str]
     slack_organization_id: Optional[str]
+    alternatives_max_count: int = 5
 
     class Config:
         env_file = ".env"
