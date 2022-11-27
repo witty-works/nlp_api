@@ -879,32 +879,32 @@ def test_store_get_delete_rules():
     }
 
     # check user is missing
-    response = client.get("/user/rules?email=" + user_request_data["email"])
+    response = client.get("/user/configs?email=" + user_request_data["email"])
     assert response.status_code == 404
 
     # create user rules
-    response = client.post("/user/rules", json=user_request_data)
+    response = client.post("/user/configs", json=user_request_data)
     assert_rules(response, user_request_data)
 
     # update user rules
     user_request_data["config"]["gendered_roles_format"]["value"] = "none"
-    response = client.post("/user/rules", json=user_request_data)
+    response = client.post("/user/configs", json=user_request_data)
     assert_rules(response, user_request_data)
 
     # check user is missing
-    response = client.get("/user/rules?email=bar")
+    response = client.get("/user/configs?email=bar")
     assert response.status_code == 404
 
     # check user exists
-    response = client.get("/user/rules?email=" + user_request_data["email"])
+    response = client.get("/user/configs?email=" + user_request_data["email"])
     assert_rules(response, user_request_data)
 
     # check user is missing can be deleted
-    response = client.delete("/user/rules?email=foobar")
+    response = client.delete("/user/configs?email=foobar")
     assert response.status_code == 204
 
     # check user is deleted
-    response = client.delete("/user/rules?email=" + user_request_data["email"])
+    response = client.delete("/user/configs?email=" + user_request_data["email"])
     assert response.status_code == 204
 
     organization_request_data = {
@@ -959,47 +959,47 @@ def test_store_get_delete_rules():
 
     # check organization is missing
     response = client.get(
-        "/organization/rules?organization_id=" + organization_request_data["id"]
+        "/organization/configs?organization_id=" + organization_request_data["id"]
     )
     assert response.status_code == 404
 
     # check organization is created
-    response = client.post("/organization/rules", json=organization_request_data)
+    response = client.post("/organization/configs", json=organization_request_data)
     assert_rules(response, organization_request_data)
 
     # check organization is updated
     organization_request_data["config"]["gendered_roles_format"]["value"] = "both"
-    response = client.post("/organization/rules", json=organization_request_data)
+    response = client.post("/organization/configs", json=organization_request_data)
     assert_rules(response, organization_request_data)
 
     # check user is missing
-    response = client.get("/user/rules?email=bar")
+    response = client.get("/user/configs?email=bar")
     assert response.status_code == 404
 
     # check user is still missing
-    response = client.get("/user/rules?email=" + user_request_data["email"])
+    response = client.get("/user/configs?email=" + user_request_data["email"])
     assert response.status_code == 404
 
     # check user is created
-    response = client.post("/user/rules", json=user_request_data)
+    response = client.post("/user/configs", json=user_request_data)
     assert response.status_code == 200
 
     # check user exists
-    response = client.get("/user/rules?email=" + user_request_data["email"])
+    response = client.get("/user/configs?email=" + user_request_data["email"])
 
     assert_rules(response, user_request_data)
     assert_rules(response, organization_request_data, "organization_")
 
     # check organization missing can be deleted
-    response = client.delete("/organization/rules?organization_id=foobar")
+    response = client.delete("/organization/configs?organization_id=foobar")
     assert response.status_code == 204
 
     # check organization deleted
-    response = client.delete("/organization/rules?organization_id=TEST_organization")
+    response = client.delete("/organization/configs?organization_id=TEST_organization")
     assert response.status_code == 204
 
     # check deleted organization reverts to user rules
-    response = client.get("/user/rules?email=" + user_request_data["email"])
+    response = client.get("/user/configs?email=" + user_request_data["email"])
     assert_rules(response, user_request_data)
 
 

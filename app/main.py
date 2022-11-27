@@ -599,6 +599,7 @@ async def post_check_v2_1(
 
 # data exchange routes
 @app.post("/organization/rules")
+@app.post("/organization/configs")
 async def post_organization_configs(
     organization_configs: OrganizationConfRequest,
     username: str = Depends(fetch_current_username),
@@ -610,6 +611,10 @@ async def post_organization_configs(
 
 @app.delete(
     "/organization/rules",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+@app.delete(
+    "/organization/configs",
     status_code=status.HTTP_204_NO_CONTENT,
 )
 async def delete_organiztion_configs(
@@ -624,6 +629,11 @@ async def delete_organiztion_configs(
     response_model=dict,
     responses={404: {"model": ErrorMessage}},
 )
+@app.get(
+    "/organization/configs",
+    response_model=dict,
+    responses={404: {"model": ErrorMessage}},
+)
 async def get_organization_configs(
     organization_id: str,
     username: str = Depends(fetch_current_username),
@@ -632,6 +642,7 @@ async def get_organization_configs(
 
 
 @app.post("/user/rules")
+@app.post("/user/configs")
 async def post_user_configs(
     user_configs: UserConfRequest, username: str = Depends(fetch_current_username)
 ):
@@ -644,6 +655,10 @@ async def post_user_configs(
     "/user/rules",
     status_code=status.HTTP_204_NO_CONTENT,
 )
+@app.delete(
+    "/user/configs",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
 async def delete_user_configs(
     email: str,
     username: str = Depends(fetch_current_username),
@@ -652,6 +667,7 @@ async def delete_user_configs(
 
 
 @app.get("/user/rules", response_model=dict, responses={404: {"model": ErrorMessage}})
+@app.get("/user/configs", response_model=dict, responses={404: {"model": ErrorMessage}})
 async def get_user_configs(
     email: str,
     username: str = Depends(fetch_current_username),
