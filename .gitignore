@@ -24,3 +24,4 @@ python-probe.log
 openapi.json
 categories.csv
 subcategories.csv
+.python-version
