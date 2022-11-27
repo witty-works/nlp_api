@@ -5,7 +5,7 @@ from fastapi.testclient import TestClient
 from app.main import (
     app,
     redis,
-    fetch_rules_for_request,
+    fetch_configs_for_request,
     is_number_list_empty,
 )
 from app.model import model
@@ -715,7 +715,7 @@ def test_disable_categories(test_disable_categories_dir, snapshot, set_redis):
 
 
 # test overwriting user configuration by organization forced rules
-def test_fetch_rules_for_request(event_loop, set_redis):
+def test_fetch_configs_for_request(event_loop, set_redis):
     request_data = {
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
         "config": {
@@ -729,7 +729,7 @@ def test_fetch_rules_for_request(event_loop, set_redis):
     }
     test_request = RequestIn(**request_data)
     event_loop.run_until_complete(
-        fetch_rules_for_request(test_request, "test@gmail.com")
+        fetch_configs_for_request(test_request, "test@gmail.com")
     )
     assert hasattr(test_request.config, "store_context")
     assert test_request.config.store_context == True
@@ -754,7 +754,7 @@ def test_fetch_user_rules_suggestion(event_loop, set_redis):
     }
     test_request = RequestIn(**request_data)
     event_loop.run_until_complete(
-        fetch_rules_for_request(test_request, "non_existant@gmail.com")
+        fetch_configs_for_request(test_request, "non_existant@gmail.com")
     )
     assert test_request.config.store_context == True
     assert test_request.config.primary_language == "de-DE"
@@ -773,7 +773,7 @@ def test_set_organization_rules(event_loop, set_redis):
     }
     test_request = RequestIn(**request_data)
     event_loop.run_until_complete(
-        fetch_rules_for_request(test_request, "test@gmail.com")
+        fetch_configs_for_request(test_request, "test@gmail.com")
     )
     assert test_request.config.store_context == True
     assert test_request.config.preferred_variants == ["en-GB"]
@@ -791,7 +791,7 @@ def test_set_default_rules(event_loop):
     test_request = RequestIn(**request_data)
 
     event_loop.run_until_complete(
-        fetch_rules_for_request(test_request, "non_existant@gmail.com")
+        fetch_configs_for_request(test_request, "non_existant@gmail.com")
     )
     assert test_request.config.store_context == True
     assert test_request.config.primary_language == None
