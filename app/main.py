@@ -1105,18 +1105,6 @@ def languagetool_matches(
             except KeyError:
                 pass
 
-        if category != "style":
-            anchor = (
-                label.lower()
-                .replace(" ", "_")
-                .replace("ß", "ss")
-                .replace("ü", "ue")
-                .replace("ä", "ae")
-                .replace("ö", "oe")
-            )
-        else:
-            anchor = None
-
         if category != "style" or (
             subcategory != "abbreviation" and subcategory != "anglicism"
         ):
@@ -1139,7 +1127,7 @@ def languagetool_matches(
                 start,
                 end,
                 alternatives,
-                anchor,
+                label,
                 explanation,
             )
         )
