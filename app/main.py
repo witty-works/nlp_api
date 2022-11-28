@@ -2997,7 +2997,7 @@ def detect_lower_cased_hashtags(
     else:
         explanation = "When you capitalize words, everyone knows right away what you mean. #ForExample"
 
-    matches = re.finditer("#(\w*)", full_text)
+    matches = re.finditer(r"#(\w*)", full_text)
     for span in matches:
         if type(span) == re.Match:
             text = span.group(1)
