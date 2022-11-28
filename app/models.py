@@ -380,7 +380,7 @@ class ResultOut(BaseModel):
         start,
         end=None,
         alternatives=None,
-        anchor=None,
+        label=None,
         explanation=None,
         url=None,
         icon=None,
@@ -408,12 +408,7 @@ class ResultOut(BaseModel):
         else:
             category_key = category
 
-        if anchor == None and "anchor" in categories[category_key]:
-            anchor = categories[category_key]["anchor"][lang.lang]
-
         category_data = None
-        label = None
-
         if category_key in categories:
             category_data = categories[category_key]
 
@@ -421,9 +416,6 @@ class ResultOut(BaseModel):
                 label = lang._("rules." + category_key + "_name")
                 if category != subcategory and category in categories:
                     label = lang._("rules." + category + "_name") + ": " + label
-
-        if label == None:
-            label = ResultOut.reverseTransliterate(anchor, lang)
 
         if (
             category != "orthography"
@@ -477,6 +469,7 @@ class ResultOut(BaseModel):
             )
 
         if category == "orthography":
+            label = ResultOut.convert_sharp_ss(lang, label)
             explanation = ResultOut.convert_sharp_ss(lang, explanation)
 
         explanation = {
@@ -657,15 +650,6 @@ class ResultOut(BaseModel):
                 return True
 
         return False
-
-    @staticmethod
-    def reverseTransliterate(string, lang):
-        string = string.replace("_", " ")
-
-        if lang.lang == "en":
-            return string.capitalize()
-
-        return string.title().replace("ue", "ü").replace("ae", "ä").replace("oe", "ö")
 
     @staticmethod
     def countWords(text):
