@@ -1,0 +1,21 @@
+{
+    "language": "en",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [],
+            "category": "style",
+            "context": "How to #beanallybe<NUMBER>? Better using #beAnAlly",
+            "end": 22,
+            "explanation": {
+                "icon": "😟",
+                "text": "When you capitalize words, everyone knows right away what you mean. #ForExample"
+            },
+            "gravity": 2.0,
+            "label": "Style",
+            "start": 7,
+            "subcategory": "style",
+            "text": "#beanallybe2022"
+        }
+    ]
+}

@@ -888,7 +888,7 @@ categories = {
         "emoji": "🏅",
     },
     "style": {
-        "why": True,
+        "why": False,
         "inclusive": False,
         "category": "style",
         "name": {"en": "Style", "de": "Stil"},

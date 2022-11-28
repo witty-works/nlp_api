@@ -5,7 +5,7 @@ from fastapi.testclient import TestClient
 from app.main import (
     app,
     redis,
-    fetch_rules_for_request,
+    fetch_configs_for_request,
     is_number_list_empty,
 )
 from app.model import model
@@ -370,6 +370,17 @@ def test_categories():
     assert "hollow" in first_record
 
 
+def test_lemmatize():
+    response = client.get("/lemmatize?locale=" + "en-US&text=running")
+    assert response.status_code == 200
+    result = response.json()
+
+    assert "lemma" in result
+    assert result["lemma"] == "run"
+    assert "word_type" in result
+    assert result["word_type"] == "v"
+
+
 def test_invalid_access_token():
     input_json = '{"text": "Hello world."}'
 
@@ -512,8 +523,19 @@ def set_redis():
                     "icon": "🥰",
                     "url": "https://witty.works",
                 },
-                "gravity": 3,
-            }
+                "gravity": 3.0,
+            },
+            "run": {
+                "lang": "en",
+                "word_type": "v",
+                "alternatives": ["walk"],
+                "explanation": {
+                    "text": "better not run",
+                    "icon": "🥰",
+                    "url": "https://witty.works",
+                },
+                "gravity": 3.0,
+            },
         },
         "domains": {
             "type": "deny",
@@ -565,7 +587,7 @@ def set_redis():
                     "icon": "🥰",
                     "url": "https://witty.works",
                 },
-                "gravity": 3,
+                "gravity": 3.0,
             }
         },
         "domains": {
@@ -684,7 +706,9 @@ def test_auth_2_0(test_auth_2_0_dir, snapshot, set_redis):
     "test_auth_2_0_team_analytics_opt_out_dir",
     get_dirs("tests/test_auth_2_0_team_analytics_opt_out"),
 )
-def test_auth_2_0_team_analytics_opt_out(test_auth_2_0_team_analytics_opt_out_dir, snapshot, set_redis):
+def test_auth_2_0_team_analytics_opt_out(
+    test_auth_2_0_team_analytics_opt_out_dir, snapshot, set_redis
+):
     client = TestClient(app)
     response = client.post("/v2.0/auth", headers={"X-Auth": "default@gmail.com"})
     assert response.status_code == 200
@@ -715,7 +739,7 @@ def test_disable_categories(test_disable_categories_dir, snapshot, set_redis):
 
 
 # test overwriting user configuration by organization forced rules
-def test_fetch_rules_for_request(event_loop, set_redis):
+def test_fetch_configs_for_request(event_loop, set_redis):
     request_data = {
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
         "config": {
@@ -729,7 +753,7 @@ def test_fetch_rules_for_request(event_loop, set_redis):
     }
     test_request = RequestIn(**request_data)
     event_loop.run_until_complete(
-        fetch_rules_for_request(test_request, "test@gmail.com")
+        fetch_configs_for_request(test_request, "test@gmail.com")
     )
     assert hasattr(test_request.config, "store_context")
     assert test_request.config.store_context == True
@@ -754,7 +778,7 @@ def test_fetch_user_rules_suggestion(event_loop, set_redis):
     }
     test_request = RequestIn(**request_data)
     event_loop.run_until_complete(
-        fetch_rules_for_request(test_request, "non_existant@gmail.com")
+        fetch_configs_for_request(test_request, "non_existant@gmail.com")
     )
     assert test_request.config.store_context == True
     assert test_request.config.primary_language == "de-DE"
@@ -773,7 +797,7 @@ def test_set_organization_rules(event_loop, set_redis):
     }
     test_request = RequestIn(**request_data)
     event_loop.run_until_complete(
-        fetch_rules_for_request(test_request, "test@gmail.com")
+        fetch_configs_for_request(test_request, "test@gmail.com")
     )
     assert test_request.config.store_context == True
     assert test_request.config.preferred_variants == ["en-GB"]
@@ -791,7 +815,7 @@ def test_set_default_rules(event_loop):
     test_request = RequestIn(**request_data)
 
     event_loop.run_until_complete(
-        fetch_rules_for_request(test_request, "non_existant@gmail.com")
+        fetch_configs_for_request(test_request, "non_existant@gmail.com")
     )
     assert test_request.config.store_context == True
     assert test_request.config.primary_language == None
@@ -837,6 +861,10 @@ def test_store_get_delete_rules():
         "config_hash": "foobar",
         "organization_id": "TEST_organization",
         "config": {
+            "preferred_variants": {
+                "value": ["en-GB"],
+                "status": "force",
+            },
             "store_context": {
                 "value": True,
                 "status": "force",
@@ -860,7 +888,7 @@ def test_store_get_delete_rules():
                     "icon": "🥰",
                     "url": "https://witty.works",
                 },
-                "gravity": 3,
+                "gravity": 3.0,
             },
             "bim": {
                 "alternatives": ["bam"],
@@ -869,7 +897,7 @@ def test_store_get_delete_rules():
                     "icon": "🥰",
                     "url": "https://witty.works",
                 },
-                "gravity": 3,
+                "gravity": 3.0,
             },
         },
         "domains": {
@@ -879,32 +907,32 @@ def test_store_get_delete_rules():
     }
 
     # check user is missing
-    response = client.get("/user/rules?email=" + user_request_data["email"])
+    response = client.get("/user/configs?email=" + user_request_data["email"])
     assert response.status_code == 404
 
     # create user rules
-    response = client.post("/user/rules", json=user_request_data)
+    response = client.post("/user/configs", json=user_request_data)
     assert_rules(response, user_request_data)
 
     # update user rules
     user_request_data["config"]["gendered_roles_format"]["value"] = "none"
-    response = client.post("/user/rules", json=user_request_data)
+    response = client.post("/user/configs", json=user_request_data)
     assert_rules(response, user_request_data)
 
     # check user is missing
-    response = client.get("/user/rules?email=bar")
+    response = client.get("/user/configs?email=bar")
     assert response.status_code == 404
 
     # check user exists
-    response = client.get("/user/rules?email=" + user_request_data["email"])
+    response = client.get("/user/configs?email=" + user_request_data["email"])
     assert_rules(response, user_request_data)
 
     # check user is missing can be deleted
-    response = client.delete("/user/rules?email=foobar")
+    response = client.delete("/user/configs?email=foobar")
     assert response.status_code == 204
 
     # check user is deleted
-    response = client.delete("/user/rules?email=" + user_request_data["email"])
+    response = client.delete("/user/configs?email=" + user_request_data["email"])
     assert response.status_code == 204
 
     organization_request_data = {
@@ -913,6 +941,10 @@ def test_store_get_delete_rules():
         "plan": "witty_teams",
         "config_hash": "foobaz",
         "config": {
+            "preferred_variants": {
+                "value": ["en-GB"],
+                "status": "force",
+            },
             "store_context": {
                 "value": True,
                 "status": "force",
@@ -936,7 +968,7 @@ def test_store_get_delete_rules():
                     "icon": "🥰",
                     "url": "https://witty.works",
                 },
-                "gravity": 3,
+                "gravity": 3.0,
             },
             "foo": {
                 "alternatives": ["bar"],
@@ -945,7 +977,7 @@ def test_store_get_delete_rules():
                     "icon": "🥰",
                     "url": "https://witty.works",
                 },
-                "gravity": 3,
+                "gravity": 3.0,
             },
         },
         "domains": {
@@ -959,47 +991,47 @@ def test_store_get_delete_rules():
 
     # check organization is missing
     response = client.get(
-        "/organization/rules?organization_id=" + organization_request_data["id"]
+        "/organization/configs?organization_id=" + organization_request_data["id"]
     )
     assert response.status_code == 404
 
     # check organization is created
-    response = client.post("/organization/rules", json=organization_request_data)
+    response = client.post("/organization/configs", json=organization_request_data)
     assert_rules(response, organization_request_data)
 
     # check organization is updated
     organization_request_data["config"]["gendered_roles_format"]["value"] = "both"
-    response = client.post("/organization/rules", json=organization_request_data)
+    response = client.post("/organization/configs", json=organization_request_data)
     assert_rules(response, organization_request_data)
 
     # check user is missing
-    response = client.get("/user/rules?email=bar")
+    response = client.get("/user/configs?email=bar")
     assert response.status_code == 404
 
     # check user is still missing
-    response = client.get("/user/rules?email=" + user_request_data["email"])
+    response = client.get("/user/configs?email=" + user_request_data["email"])
     assert response.status_code == 404
 
     # check user is created
-    response = client.post("/user/rules", json=user_request_data)
+    response = client.post("/user/configs", json=user_request_data)
     assert response.status_code == 200
 
     # check user exists
-    response = client.get("/user/rules?email=" + user_request_data["email"])
+    response = client.get("/user/configs?email=" + user_request_data["email"])
 
     assert_rules(response, user_request_data)
     assert_rules(response, organization_request_data, "organization_")
 
     # check organization missing can be deleted
-    response = client.delete("/organization/rules?organization_id=foobar")
+    response = client.delete("/organization/configs?organization_id=foobar")
     assert response.status_code == 204
 
     # check organization deleted
-    response = client.delete("/organization/rules?organization_id=TEST_organization")
+    response = client.delete("/organization/configs?organization_id=TEST_organization")
     assert response.status_code == 204
 
     # check deleted organization reverts to user rules
-    response = client.get("/user/rules?email=" + user_request_data["email"])
+    response = client.get("/user/configs?email=" + user_request_data["email"])
     assert_rules(response, user_request_data)
 
 

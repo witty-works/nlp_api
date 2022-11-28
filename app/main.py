@@ -9,6 +9,7 @@ from collections import defaultdict
 
 from spacy.tokens import Doc
 from spacy.matcher import PhraseMatcher, Matcher
+import pandas as pd
 
 from inflex import Noun, Verb, Adjective
 
@@ -50,6 +51,8 @@ from app.models import (
     GenderedRolesFormatType,
     GermanGenderEndingType,
     LangType,
+    LangWithAutoType,
+    LangVariantType,
     SingularTheyType,
     Language,
     RequestIn,
@@ -59,6 +62,8 @@ from app.models import (
     ResultsOut1_1,
     UserConfRequest,
     OrganizationConfRequest,
+    ConfResponse,
+    UserConfResponse,
     RuleConfig,
     ResultConf,
     ResultConf1_1,
@@ -73,10 +78,10 @@ from app.redis_setup import set_up_redis
 from app.languagetool import get_languagetool_url
 from app.azure_ad_b2c import initialize_aadb2c
 from app.model import model
-from app.rules import *
+from app.rules import rules
 from app.sentry import set_up_sentry_sdk
 
-version = "1.38.17"
+version = "1.39.0"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -119,23 +124,25 @@ async def handle_command_witty(
         await respond(f"Witty could not determine a language for '{text}'.")
         return
 
-    rules = {}
+    configs = {}
 
     try:
         user = await client.users_info(user=body["user_id"])
-        rules = await fetch_rules_for_request(
+        configs = await fetch_configs_for_request(
             user_request_in, user.data["user"]["profile"]["email"]
         )
     except KeyError:
         pass
 
-    if rules == {} and settings.slack_organization_id:
-        rules = await fetch_organization_rules_for_request(
+    if configs == {} and settings.slack_organization_id:
+        configs = await fetch_organization_configs_for_request(
             user_request_in, settings.slack_organization_id
         )
 
     user_request_in.config.__setattr__("alternatives_max_count", None)
-    results = await language_rules(2.0, user_request_in.config, rules, lang, text)
+    results = await apply_language_rules(
+        2.0, user_request_in.config, configs, lang, text
+    )
 
     analyzed_text = f"*Analyzed*: {text}"
     if limit_reached:
@@ -389,7 +396,7 @@ async def post_auth_debug(
     if not user_email:
         return user_email
 
-    rules = await fetch_rules_for_request(user_request_in, user_email)
+    configs = await fetch_configs_for_request(user_request_in, user_email)
 
     if "authorization" in request.headers and request.headers[
         "authorization"
@@ -400,7 +407,7 @@ async def post_auth_debug(
 
     return {
         "claim": claim,
-        "rules": rules,
+        "configs": configs,
         "user_request_in": user_request_in,
     }
 
@@ -416,8 +423,8 @@ async def post_auth_1_1(request: Request, response: Response):
     if not user_email:
         return None
 
-    rules = await fetch_rules_for_request(RequestIn(text=""), user_email)
-    config = fetch_result_conf(rules, 1.1)
+    configs = await fetch_configs_for_request(RequestIn(text=""), user_email)
+    config = fetch_result_conf(configs, 1.1)
     if config == None and user_email:
         config = {}
 
@@ -437,15 +444,15 @@ async def post_auth_2_0(request: Request, response: Response):
             status_code=status.HTTP_403_FORBIDDEN,
         )
 
-    rules = await fetch_rules_for_request(RequestIn(text=""), user_email)
-    if rules == {}:
+    configs = await fetch_configs_for_request(RequestIn(text=""), user_email)
+    if configs == {}:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
         )
 
-    config = fetch_result_conf(rules, 2.0)
+    config = fetch_result_conf(configs, 2.0)
 
-    if "team_analytics" in rules and not rules["team_analytics"]:
+    if "team_analytics" in configs and not configs["team_analytics"]:
         config.organization_id = None
 
     return config
@@ -458,13 +465,18 @@ async def post_auth_2_0(request: Request, response: Response):
 )
 async def get_debug_spacy(
     text: str,
+    locale: LangWithAutoType = "auto",
     username: str = Depends(fetch_current_username),
 ):
-    locale = lang_detection.get_locale(
-        text,
-        "auto",
-        ["en", "de"],
-    )
+    if locale == "auto" or len(locale) == 2:
+        locale = lang_detection.get_locale(
+            text,
+            locale,
+            ["en", "de"],
+        )
+
+    if locale == None:
+        raise HTTPException(status_code=422, detail="Could not determine language")
 
     lang = Language(locale)
 
@@ -503,11 +515,11 @@ async def post_check_v1_1(
     user_request_in: RequestIn,
 ):
     version = 1.1
-    results, language, limit_reached, rules, user_email = await check(
+    results, language, limit_reached, configs, user_email = await check(
         version, request, response, user_request_in
     )
 
-    config = fetch_result_conf(rules, version)
+    config = fetch_result_conf(configs, version)
     if config == None and user_email:
         config = {}
 
@@ -533,7 +545,7 @@ async def post_check_v2_0(
     response: Response,
     user_request_in: RequestIn,
 ):
-    results, language, limit_reached, rules, user_email = await check(
+    results, language, limit_reached, configs, user_email = await check(
         2.0, request, response, user_request_in
     )
 
@@ -541,18 +553,18 @@ async def post_check_v2_0(
         return results
 
     notifications = None
-    if "notifications" in rules and rules["notifications"] > 0:
-        notifications = rules["notifications"]
+    if "notifications" in configs and configs["notifications"] > 0:
+        notifications = configs["notifications"]
 
     has_consented_to_mailing = None
-    if "has_consented_to_mailing" in rules:
-        has_consented_to_mailing = rules["has_consented_to_mailing"]
+    if "has_consented_to_mailing" in configs:
+        has_consented_to_mailing = configs["has_consented_to_mailing"]
 
     return ResultsOut(
         results=results,
         language=language,
         limit_reached=limit_reached,
-        config_changed=fetch_config_change(rules, user_request_in),
+        config_changed=fetch_config_change(configs, user_request_in),
         notifications=notifications,
         has_consented_to_mailing=has_consented_to_mailing,
     )
@@ -569,7 +581,7 @@ async def post_check_v2_1(
     response: Response,
     user_request_in: RequestIn,
 ):
-    results, language, limit_reached, rules, user_email = await check(
+    results, language, limit_reached, configs, user_email = await check(
         2.1, request, response, user_request_in
     )
 
@@ -577,39 +589,70 @@ async def post_check_v2_1(
         return results
 
     notifications = None
-    if "notifications" in rules and rules["notifications"] > 0:
-        notifications = rules["notifications"]
+    if "notifications" in configs and configs["notifications"] > 0:
+        notifications = configs["notifications"]
 
     has_consented_to_mailing = None
-    if "has_consented_to_mailing" in rules:
-        has_consented_to_mailing = rules["has_consented_to_mailing"]
+    if "has_consented_to_mailing" in configs:
+        has_consented_to_mailing = configs["has_consented_to_mailing"]
 
     return ResultsOut(
         results=results,
         language=language,
         limit_reached=limit_reached,
-        config_changed=fetch_config_change(rules, user_request_in),
+        config_changed=fetch_config_change(configs, user_request_in),
         notifications=notifications,
         has_consented_to_mailing=has_consented_to_mailing,
     )
 
 
 # data exchange routes
-@app.post("/organization/rules")
-async def post_organization_rules(
-    organization_rules: OrganizationConfRequest,
+@app.get("/lemmatize")
+async def lemmatize(
+    text: str,
+    locale: Union[LangVariantType, LangType],
     username: str = Depends(fetch_current_username),
 ):
-    redis.set(organization_rules.id, organization_rules.json())
+    lang = Language(locale)
 
-    return organization_rules
+    tokens = fetch_tokens(lang, text)
+    if len(tokens) != 1:
+        return None
+
+    return {
+        "lemma": tokens[0].lemma_,
+        "word_type": fetch_word_types(tokens[0], lang),
+    }
+
+
+@app.post(
+    "/organization/rules",
+    response_model=ConfResponse,
+    response_model_exclude_none=True,
+)
+@app.post(
+    "/organization/configs",
+    response_model=ConfResponse,
+    response_model_exclude_none=True,
+)
+async def post_organization_configs(
+    organization_configs: OrganizationConfRequest,
+    username: str = Depends(fetch_current_username),
+):
+    redis.set(organization_configs.id, organization_configs.json())
+
+    return organization_configs
 
 
 @app.delete(
     "/organization/rules",
     status_code=status.HTTP_204_NO_CONTENT,
 )
-async def delete_organiztion_rules(
+@app.delete(
+    "/organization/configs",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+async def delete_organiztion_configs(
     organization_id: str,
     username: str = Depends(fetch_current_username),
 ):
@@ -617,114 +660,146 @@ async def delete_organiztion_rules(
 
 
 @app.get(
-    "/organization/rules", response_model=dict, responses={404: {"model": ErrorMessage}}
+    "/organization/rules",
+    response_model=ConfResponse,
+    response_model_exclude_none=True,
+    responses={404: {"model": ErrorMessage}},
 )
-async def get_organization_rules(
+@app.get(
+    "/organization/configs",
+    response_model=ConfResponse,
+    response_model_exclude_none=True,
+    responses={404: {"model": ErrorMessage}},
+)
+async def get_organization_configs(
     organization_id: str,
     username: str = Depends(fetch_current_username),
 ):
-    return await fetch_organization_rules_from_redis(organization_id)
+    return await fetch_organization_configs_from_redis(organization_id)
 
 
-@app.post("/user/rules")
-async def post_user_rules(
-    user_rules: UserConfRequest, username: str = Depends(fetch_current_username)
+@app.post(
+    "/user/rules",
+    response_model=UserConfResponse,
+    response_model_exclude_none=True,
+)
+@app.post(
+    "/user/configs",
+    response_model=UserConfResponse,
+    response_model_exclude_none=True,
+)
+async def post_user_configs(
+    user_configs: UserConfRequest, username: str = Depends(fetch_current_username)
 ):
-    redis.set(user_rules.email, user_rules.json())
+    redis.set(user_configs.email, user_configs.json())
 
-    return user_rules
+    return user_configs
 
 
 @app.delete(
     "/user/rules",
     status_code=status.HTTP_204_NO_CONTENT,
 )
-async def delete_user_rules(
+@app.delete(
+    "/user/configs",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+async def delete_user_configs(
     email: str,
     username: str = Depends(fetch_current_username),
 ):
     redis.delete(email)
 
 
-@app.get("/user/rules", response_model=dict, responses={404: {"model": ErrorMessage}})
-async def get_user_rules(
+@app.get(
+    "/user/rules",
+    response_model=UserConfResponse,
+    response_model_exclude_none=True,
+    responses={404: {"model": ErrorMessage}},
+)
+@app.get(
+    "/user/configs",
+    response_model=UserConfResponse,
+    response_model_exclude_none=True,
+    responses={404: {"model": ErrorMessage}},
+)
+async def get_user_configs(
     email: str,
     username: str = Depends(fetch_current_username),
 ):
-    rules = await fetch_user_organization_rules(email)
+    configs = await fetch_user_organization_configs(email)
 
-    if not rules or type(rules) is not dict:
+    if not configs or type(configs) is not dict:
         return JSONResponse(
-            status_code=404, content={"message": "User rules not found"}
+            status_code=404, content={"message": "User configs not found"}
         )
 
-    return rules
+    return configs
 
 
 # Functions
-async def fetch_organization_rules_from_redis(
+async def fetch_organization_configs_from_redis(
     organization_id: str,
 ):
-    rules = redis.get(organization_id)
-    if not rules:
-        raise HTTPException(status_code=404, detail="Organization rules not found")
+    configs = redis.get(organization_id)
+    if not configs:
+        raise HTTPException(status_code=404, detail="Organization configs not found")
 
-    return json.loads(rules)
+    return json.loads(configs)
 
 
-async def fetch_user_rules_from_redis(
+async def fetch_user_configs_from_redis(
     email: str,
 ):
-    rules = redis.get(email)
-    if not rules:
-        raise HTTPException(status_code=404, detail="User rules not found")
+    configs = redis.get(email)
+    if not configs:
+        raise HTTPException(status_code=404, detail="User configs not found")
 
-    return json.loads(rules)
+    return json.loads(configs)
 
 
-async def fetch_user_organization_rules(email: str):
-    try:
-        rules = await fetch_user_rules_from_redis(email)
-    except HTTPException:
-        return None
+async def fetch_user_organization_configs(email: str):
+    configs = await fetch_user_configs_from_redis(email)
 
-    rules["plan"] = "witty_free"
-    rules["organization_name"] = None
-    rules["organization_config_hash"] = None
-    rules["organization_domains"] = None
+    configs["plan"] = "witty_free"
+    configs["organization_name"] = None
+    configs["organization_config_hash"] = None
+    configs["organization_domains"] = None
 
-    if "organization_id" in rules and rules["organization_id"] != None:
+    if "organization_id" in configs and configs["organization_id"] != None:
         try:
-            organization_rules = await fetch_organization_rules_from_redis(
-                rules["organization_id"]
+            organization_configs = await fetch_organization_configs_from_redis(
+                configs["organization_id"]
             )
 
-            rules["plan"] = organization_rules["plan"]
-            rules["organization_name"] = organization_rules["name"]
+            configs["plan"] = organization_configs["plan"]
+            configs["organization_name"] = organization_configs["name"]
 
-            if "config_hash" in organization_rules:
-                rules["organization_config_hash"] = organization_rules["config_hash"]
+            if "config_hash" in organization_configs:
+                configs["organization_config_hash"] = organization_configs[
+                    "config_hash"
+                ]
             else:
-                rules["organization_config_hash"] = None
+                configs["organization_config_hash"] = None
 
-            if "domains" in organization_rules:
-                rules["organization_domains"] = organization_rules["domains"]
+            if "domains" in organization_configs:
+                configs["organization_domains"] = organization_configs["domains"]
             else:
-                rules["organization_domains"] = {}
+                configs["organization_domains"] = {}
 
-            rules["organization_config"] = organization_rules["config"]
-            rules["organization_term_replacements"] = organization_rules[
+            configs["organization_config"] = organization_configs["config"]
+            configs["organization_term_replacements"] = organization_configs[
                 "term_replacements"
             ]
-            rules["organization_false_positives"] = organization_rules[
+            configs["organization_false_positives"] = organization_configs[
                 "false_positives"
             ]
         except HTTPException:
             pass
     else:
-        rules["organization_id"] = None
+        configs["organization_id"] = None
 
-    return rules
+    return configs
 
 
 def is_number_list_empty(number, token, full_text):
@@ -745,7 +820,7 @@ def is_number_list_empty(number, token, full_text):
     return False
 
 
-def apply_rules(user_request_in: RequestIn, configs: dict, plan: str):
+def apply_configs(user_request_in: RequestIn, configs: dict, plan: str):
     disabled_categories = user_request_in.config.disabled_categories
 
     for config in configs:
@@ -767,37 +842,45 @@ def apply_rules(user_request_in: RequestIn, configs: dict, plan: str):
     user_request_in.config.__setattr__("plan", plan)
 
 
-async def fetch_rules_for_request(user_request_in: RequestIn, user_email=Optional[str]):
+async def fetch_configs_for_request(
+    user_request_in: RequestIn, user_email=Optional[str]
+):
     user_request_in.config.__setattr__("store_context", True)
     user_request_in.config.__setattr__("plan", None)
-    user_request_in.config.__setattr__("alternatives_max_count", 5)
+    user_request_in.config.__setattr__(
+        "alternatives_max_count", settings.alternatives_max_count
+    )
 
     if not user_email:
         return {}
 
-    rules = await fetch_user_organization_rules(user_email)
-    if not rules or type(rules) is not dict:
+    try:
+        configs = await fetch_user_organization_configs(user_email)
+    except HTTPException:
+        configs = None
+
+    if not configs or type(configs) is not dict:
         return {}
 
-    apply_rules(user_request_in, rules["config"], rules["plan"])
+    apply_configs(user_request_in, configs["config"], configs["plan"])
 
-    if "organization_config" in rules:
-        apply_rules(user_request_in, rules["organization_config"], rules["plan"])
+    if "organization_config" in configs:
+        apply_configs(user_request_in, configs["organization_config"], configs["plan"])
 
-        rules["term_replacements"] |= rules["organization_term_replacements"]
-        rules["false_positives"] = list(
-            set(rules["false_positives"] + rules["organization_false_positives"])
+        configs["term_replacements"] |= configs["organization_term_replacements"]
+        configs["false_positives"] = list(
+            set(configs["false_positives"] + configs["organization_false_positives"])
         )
 
-    if rules["plan"] != "witty_teams":
+    if configs["plan"] != "witty_teams":
         user_request_in.config.maximum_importance = min(
             2.0, user_request_in.config.maximum_importance
         )
 
-    return rules
+    return configs
 
 
-async def fetch_organization_rules_for_request(
+async def fetch_organization_configs_for_request(
     user_request_in: RequestIn, organization_id=Optional[str]
 ):
     user_request_in.config.__setattr__("store_context", True)
@@ -806,17 +889,17 @@ async def fetch_organization_rules_for_request(
         return {}
 
     try:
-        rules = await fetch_organization_rules_from_redis(organization_id)
+        configs = await fetch_organization_configs_from_redis(organization_id)
     except HTTPException:
         return {}
 
-    for config in rules["configs"]:
-        if rules["configs"][config]["status"] == "suggestion":
-            rules["configs"][config]["status"] = "force"
+    for config in configs["configs"]:
+        if configs["configs"][config]["status"] == "suggestion":
+            configs["configs"][config]["status"] = "force"
 
-    apply_rules(user_request_in, rules["config"], rules["plan"])
+    apply_configs(user_request_in, configs["config"], configs["plan"])
 
-    return rules
+    return configs
 
 
 def fetch_email_from_claims(claims):
@@ -909,7 +992,7 @@ async def check(
             status_code=status.HTTP_403_FORBIDDEN,
         )
 
-    rules = await fetch_rules_for_request(user_request_in, user_email)
+    configs = await fetch_configs_for_request(user_request_in, user_email)
 
     text, lang, limit_reached = fetch_text(user_request_in)
 
@@ -917,31 +1000,34 @@ async def check(
         response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
         results = Result.factory("Language could not be determined")
         language = None
-        rules = {}
+        configs = {}
     else:
-        results = await language_rules(
-            version, user_request_in.config, rules, lang, text
+        results = await apply_language_rules(
+            version, user_request_in.config, configs, lang, text
         )
 
         language = lang.lang
 
-    return results, language, limit_reached, rules, user_email
+    return results, language, limit_reached, configs, user_email
 
 
 def fetch_config_change(
-    rules: dict,
+    configs: dict,
     user_request_in: Optional[RequestIn] = None,
 ):
     if not user_request_in:
         return True
 
-    if "config_hash" in rules and user_request_in.config_hash != rules["config_hash"]:
+    if (
+        "config_hash" in configs
+        and user_request_in.config_hash != configs["config_hash"]
+    ):
         return True
 
     if (
-        "organization_config_hash" in rules
+        "organization_config_hash" in configs
         and user_request_in.organization_config_hash
-        != rules["organization_config_hash"]
+        != configs["organization_config_hash"]
     ):
         return True
 
@@ -949,41 +1035,41 @@ def fetch_config_change(
 
 
 def fetch_result_conf(
-    rules: dict,
+    configs: dict,
     version: float,
 ):
-    if "config" not in rules:
+    if "config" not in configs:
         return None
 
-    if "organization_config" in rules:
-        organization_config = RuleConfig.parse_obj(rules["organization_config"])
+    if "organization_config" in configs:
+        organization_config = RuleConfig.parse_obj(configs["organization_config"])
     else:
         organization_config = None
 
-    plan = rules["plan"]
+    plan = configs["plan"]
 
     if version < 2.0:
         return ResultConf1_1(
-            id=rules["organization_id"],
-            name=rules["organization_name"],
+            id=configs["organization_id"],
+            name=configs["organization_name"],
             plan=plan,
             config=organization_config,
         )
 
-    config = RuleConfig.parse_obj(rules["config"])
+    config = RuleConfig.parse_obj(configs["config"])
 
     return ResultConf(
-        id=rules["id"],
-        name=rules["name"],
+        id=configs["id"],
+        name=configs["name"],
         plan=plan,
         config=config,
-        organization_id=rules["organization_id"],
-        organization_name=rules["organization_name"],
+        organization_id=configs["organization_id"],
+        organization_name=configs["organization_name"],
         organization_config=organization_config,
-        domains=rules["domains"],
-        organization_domains=rules["organization_domains"],
-        config_hash=rules["config_hash"],
-        organization_config_hash=rules["organization_config_hash"],
+        domains=configs["domains"],
+        organization_domains=configs["organization_domains"],
+        config_hash=configs["config_hash"],
+        organization_config_hash=configs["organization_config_hash"],
     )
 
 
@@ -1048,7 +1134,7 @@ def languagetool_matches(
             lang.lang == "de"
             and config.german_gender_ending == ":in"
             and match["rule"]["id"] == "LEERZEICHEN_HINTER_DOPPELPUNKT"
-            and text[start + 1 : end] in male_articles
+            and text[start + 1 : end] in rules["de-DE"]["male_articles"]
         ):
             continue
 
@@ -1105,18 +1191,6 @@ def languagetool_matches(
             except KeyError:
                 pass
 
-        if category != "style":
-            anchor = (
-                label.lower()
-                .replace(" ", "_")
-                .replace("ß", "ss")
-                .replace("ü", "ue")
-                .replace("ä", "ae")
-                .replace("ö", "oe")
-            )
-        else:
-            anchor = None
-
         if category != "style" or (
             subcategory != "abbreviation" and subcategory != "anglicism"
         ):
@@ -1139,7 +1213,7 @@ def languagetool_matches(
                 start,
                 end,
                 alternatives,
-                anchor,
+                label,
                 explanation,
             )
         )
@@ -1147,7 +1221,9 @@ def languagetool_matches(
     return list_results
 
 
-async def languagetool_rules(version: float, config: Config, lang: Language, text: str):
+async def apply_languagetool_rules(
+    version: float, config: Config, lang: Language, text: str
+):
     list_results = []
 
     async with ClientSession(
@@ -1231,7 +1307,7 @@ def is_false_positive_match(list_false_positive, tokens, token):
 def false_pattern_match(tokens, lang):
     matcher = Matcher(model[lang.lang].vocab)
 
-    for false_positive in pattern_false_positives[lang.lang]:
+    for false_positive in rules[lang.lang]["pattern_false_positives"]:
         matcher.add("FalsePositivesList", false_positive)
 
     return matcher(tokens)
@@ -1239,7 +1315,7 @@ def false_pattern_match(tokens, lang):
 
 def fetch_false_positive_matcher(tokens, lang):
     # create false positives list
-    phrase_matches_false = fetch_matches(tokens, list_false_column)
+    phrase_matches_false = fetch_matches(tokens, rules["en"]["list_false_column"])
     word_matches_false = false_pattern_match(tokens, lang)
     return list(set(phrase_matches_false + word_matches_false))
 
@@ -1254,8 +1330,8 @@ def fetch_matches(tokens, phrases):
     return matcher(tokens)
 
 
-async def language_rules(
-    version: float, config: Config, rules: dict, lang: Language, text: str
+async def apply_language_rules(
+    version: float, config: Config, configs: dict, lang: Language, text: str
 ):
     tokens = fetch_tokens(lang, text)
 
@@ -1264,68 +1340,71 @@ async def language_rules(
         version, config, "orthography"
     ) or is_sub_category_enabled(version, config, "style"):
         try:
-            list_results += await languagetool_rules(version, config, lang, text)
+            list_results += await apply_languagetool_rules(version, config, lang, text)
         except Exception as err:
             if not settings.is_prod:  # pragma: no cover
                 raise err
 
-    # functions for German rules
     if lang.lang == "de":
         list_results += german_rules(version, config, lang, tokens, text)
-
-    # function for English rules
-    elif lang.lang == "en":
+    else:
         list_results += english_rules(version, config, lang, tokens, text)
 
-    if "term_replacements" in rules:
+    if "term_replacements" in configs:
         term_replacements = {
             "Lemma": [],
             "Word_Type": [],
-            "Category": [],
-            "Primary_subcategory": [],
             "Alt_split": [],
+            "Primary_subcategory": [],
             "Explanation": [],
         }
 
-        for term in rules["term_replacements"]:
-            term_replacement = rules["term_replacements"][term]
+        for term in configs["term_replacements"]:
+            term_replacement = configs["term_replacements"][term]
+
+            if "lang" in term_replacement and term_replacement["lang"] != lang.lang:
+                continue
+
+            if "word_type" in term_replacement:
+                word_type = term_replacement["word_type"]
+            else:
+                word_type = "-"
 
             term_replacements["Lemma"].append(term)
-            term_replacements["Word_Type"].append("")
-            term_replacements["Category"].append("corporate_rules")
-            term_replacements["Primary_subcategory"].append("corporate_rules")
+            term_replacements["Word_Type"].append(word_type)
             term_replacements["Alt_split"].append(term_replacement["alternatives"])
+            term_replacements["Primary_subcategory"].append("corporate_rules")
             term_replacements["Explanation"].append(term_replacement["explanation"])
 
-        df_term_replacements = pd.DataFrame(data=term_replacements)
-        alternatives = list(
+        term_replacements = list(
             zip(
-                df_term_replacements["Lemma"],
-                df_term_replacements["Word_Type"],
-                df_term_replacements["Category"],
-                df_term_replacements["Primary_subcategory"],
-                df_term_replacements["Alt_split"],
-                df_term_replacements["Explanation"],
+                term_replacements["Lemma"],
+                term_replacements["Word_Type"],
+                term_replacements["Alt_split"],
+                term_replacements["Primary_subcategory"],
+                term_replacements["Explanation"],
             )
         )
 
-        list_results += literal_match(
+        list_results += rules_based_words_phrase_matcher(
             version,
             config,
             lang,
             text,
             tokens,
-            df_term_replacements,
-            alternatives,
+            "corporate_rules",
+            term_replacements,
         )
 
     false_positives = []
-    if "false_positives" in rules:
-        false_positives = rules["false_positives"]
+    if "false_positives" in configs:
+        false_positives = configs["false_positives"]
 
-    if "term_replacements" in rules:
-        for rule in rules["term_replacements"]:
-            false_positives.append(rules["term_replacements"][rule]["alternatives"][0])
+    if "term_replacements" in configs:
+        for term_replacement in configs["term_replacements"]:
+            false_positives.append(
+                configs["term_replacements"][term_replacement]["alternatives"][0]
+            )
 
     if len(false_positives):
         for result in list_results:
@@ -1365,7 +1444,7 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             text,
             tokens,
             rules["de-DE"]["df_abbreviation"],
-            abbreviation,
+            rules["de-DE"]["abbreviation"],
             True,
         )
 
@@ -1376,10 +1455,10 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             lang,
             text,
             tokens,
-            open_disc_words_data,
-            open_disc_sentences_data,
-            rules["de-DE"]["df_open_dis_sentence"],
             "openly_discriminating",
+            rules["de-DE"]["open_disc_words_data"],
+            rules["de-DE"]["open_disc_sentences_data"],
+            rules["de-DE"]["df_open_dis_sentence"],
         )
 
     if is_sub_category_enabled(version, config, "gendered"):
@@ -1390,10 +1469,10 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
                 lang,
                 text,
                 tokens,
-                gender_words_data_no_noun,
-                gender_sentences_data,
-                rules["de-DE"]["df_gendered_sentences"],
                 "gendered",
+                rules["de-DE"]["gender_words_data_no_noun"],
+                rules["de-DE"]["gender_sentences_data"],
+                rules["de-DE"]["df_gendered_sentences"],
             )
             + gendered_denom_analysis_de(
                 version,
@@ -1401,8 +1480,8 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
                 lang,
                 text,
                 tokens,
-                gender_words_data,
-                false_positives.gender,
+                rules["de-DE"]["gender_words_data"],
+                rules["de-DE"]["false_positives"].gender,
             )
             + regex_matches(
                 version,
@@ -1411,7 +1490,7 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
                 text,
                 categories["gendered"]["category"],
                 "gender_specific_abbreviation",
-                m_f_regexes,
+                rules["m_f_regexes"],
             )
         )
 
@@ -1449,8 +1528,8 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             lang,
             text,
             tokens,
-            bias_words_data_no_plur,
-            bias_sentences_data,
+            rules["de-DE"]["bias_words_data_no_plur"],
+            rules["de-DE"]["bias_sentences_data"],
             rules["de-DE"]["df_ub_sentences"],
             "unconscious_bias",
         ) + word_noun(
@@ -1459,7 +1538,7 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             lang,
             text,
             tokens,
-            bias_words_data_noun,
+            rules["de-DE"]["bias_words_data_noun"],
             "unconscious_bias",
         )
 
@@ -1470,10 +1549,10 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             lang,
             text,
             tokens,
+            "inclusive",
             rules["de-DE"]["df_communal_words"],
             None,
             [],
-            "inclusive",
             [],
             "communal",
         )
@@ -1485,10 +1564,10 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             lang,
             text,
             tokens,
+            "inclusive",
             rules["de-DE"]["df_d_and_i_words"],
             None,
             rules["de-DE"]["df_terms_d_and_i_words"],
-            "inclusive",
             [],
             "d_and_i",
         )
@@ -1501,7 +1580,7 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
         elif ending == "*in":
             regexes[r"\s((\S+)\*(\S+))"] = None
 
-        regexes.update(d_f_m_regexes)
+        regexes.update(rules["d_f_m_regexes"])
 
         list_full += regex_matches(
             version, config, lang, text, category, subcategory, regexes
@@ -1515,15 +1594,23 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             text,
             tokens,
             rules["de-DE"]["terms_style"],
-            style_words_data,
-            style_sentences_data,
-            false_positives.style,
+            rules["de-DE"]["style_words_data"],
+            rules["de-DE"]["style_sentences_data"],
+            rules["de-DE"]["false_positives"].style,
+        )
+
+        list_full += detect_lower_cased_hashtags(
+            version,
+            config,
+            lang,
+            text,
+            "style",
+            "style",
         )
 
     return list_full
 
 
-# Function for all English rules
 def english_rules(version: float, config: Config, lang: Language, tokens, text: str):
     list_full = []
 
@@ -1535,43 +1622,45 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
     matches_false = fetch_false_positive_matcher(tokens, lang)
 
     if lang.locale == "en-GB":
-        words_data_en["od"] = open_disc_words_data_GB
-        words_data_en["ge"] = gender_words_data_GB
+        words_data_en["od"] = rules["en-GB"]["open_disc_words_data"]
+        words_data_en["ge"] = rules["en-GB"]["gender_words_data"]
         words_data_en["ge-singular-they"] = (
-            gender_words_data_GB + bias_singular_they_alternatives_GB
+            rules["en-GB"]["gender_words_data"]
+            + rules["en-GB"]["bias_singular_they_alternatives"]
         )
-        words_data_en["style"] = style_words_data_GB
-        words_data_en["bias"] = bias_words_data_GB
-        words_data_en["homonym"] = homonyms_word_GB
-        words_data_en["abbr"] = abbreviation_GB
+        words_data_en["style"] = rules["en-GB"]["style_words_data"]
+        words_data_en["bias"] = rules["en-GB"]["bias_words_data"]
+        words_data_en["homonym"] = rules["en-GB"]["homonyms_word"]
+        words_data_en["abbr"] = rules["en-GB"]["abbreviation"]
 
-        inclusive_words_data_en = inclusive_words_data_GB
-        gendered_words_data_en["gendered"] = gender_noun_words_data_GB
-        gendered_words_data_en["bias"] = gender_bias_words_data_GB
-        inclusive_sentences_data_en = inclusive_sentences_data_GB
-        sentences_data_en["od"] = open_dis_sentences_GB
-        sentences_data_en["ge"] = gender_sentences_data_GB
-        sentences_data_en["style"] = style_sentences_data_GB
-        sentences_data_en["bias"] = bias_sentences_data_GB
+        inclusive_words_data_en = rules["en-GB"]["inclusive_words_data"]
+        gendered_words_data_en["gendered"] = rules["en-GB"]["gender_noun_words_data"]
+        gendered_words_data_en["bias"] = rules["en-GB"]["gender_bias_words_data"]
+        inclusive_sentences_data_en = rules["en-GB"]["inclusive_sentences_data"]
+        sentences_data_en["od"] = rules["en-GB"]["open_dis_sentences"]
+        sentences_data_en["ge"] = rules["en-GB"]["gender_sentences_data"]
+        sentences_data_en["style"] = rules["en-GB"]["style_sentences_data"]
+        sentences_data_en["bias"] = rules["en-GB"]["bias_sentences_data"]
     else:
-        words_data_en["od"] = open_disc_words_data_US
-        words_data_en["ge"] = gender_words_data_US
+        words_data_en["od"] = rules["en-US"]["open_disc_words_data"]
+        words_data_en["ge"] = rules["en-US"]["gender_words_data"]
         words_data_en["ge-singular-they"] = (
-            gender_words_data_US + bias_singular_they_alternatives_US
+            rules["en-US"]["gender_words_data"]
+            + rules["en-US"]["bias_singular_they_alternatives"]
         )
-        words_data_en["style"] = style_words_data_US
-        words_data_en["bias"] = bias_words_data_US
-        words_data_en["homonym"] = homonyms_word_US
-        words_data_en["abbr"] = abbreviation_US
+        words_data_en["style"] = rules["en-US"]["style_words_data"]
+        words_data_en["bias"] = rules["en-US"]["bias_words_data"]
+        words_data_en["homonym"] = rules["en-US"]["homonyms_word"]
+        words_data_en["abbr"] = rules["en-US"]["abbreviation"]
 
-        inclusive_words_data_en = inclusive_words_data_US
-        gendered_words_data_en["gendered"] = gender_noun_words_data_US
-        gendered_words_data_en["bias"] = gender_bias_words_data_US
-        inclusive_sentences_data_en = inclusive_sentences_data_US
-        sentences_data_en["od"] = open_dis_sentences_US
-        sentences_data_en["ge"] = gender_sentences_data_US
-        sentences_data_en["style"] = style_sentences_data_US
-        sentences_data_en["bias"] = bias_sentences_data_US
+        inclusive_words_data_en = rules["en-US"]["inclusive_words_data"]
+        gendered_words_data_en["gendered"] = rules["en-US"]["gender_noun_words_data"]
+        gendered_words_data_en["bias"] = rules["en-US"]["gender_bias_words_data"]
+        inclusive_sentences_data_en = rules["en-US"]["inclusive_sentences_data"]
+        sentences_data_en["od"] = rules["en-US"]["open_dis_sentences"]
+        sentences_data_en["ge"] = rules["en-US"]["gender_sentences_data"]
+        sentences_data_en["style"] = rules["en-US"]["style_sentences_data"]
+        sentences_data_en["bias"] = rules["en-US"]["bias_sentences_data"]
 
     list_full += homonyms_en(
         version,
@@ -1602,10 +1691,10 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
             lang,
             text,
             tokens,
+            "openly_discriminating",
             words_data_en["od"],
             sentences_data_en["od"],
             rules[lang.locale]["df_open_dis_sentence"],
-            "openly_discriminating",
             matches_false,
         )
 
@@ -1617,10 +1706,10 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
                 lang,
                 text,
                 tokens,
+                "gendered",
                 words_data_en["ge-singular-they"],
                 sentences_data_en["ge"],
                 rules[lang.locale]["df_gendered_sentence"],
-                "gendered",
                 matches_false,
             )
         else:
@@ -1630,10 +1719,10 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
                 lang,
                 text,
                 tokens,
+                "gendered",
                 words_data_en["ge"],
                 sentences_data_en["ge"],
                 rules[lang.locale]["df_gendered_sentence"],
-                "gendered",
                 matches_false,
             )
         list_full += word_noun(
@@ -1652,7 +1741,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
             text,
             categories["gendered"]["category"],
             "gender_specific_abbreviation",
-            m_f_regexes,
+            rules["m_f_regexes"],
         )
 
     if is_sub_category_enabled(version, config, "inclusive"):
@@ -1662,7 +1751,13 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
             category = categories[subcategory]["category"]
 
             list_full += regex_matches(
-                version, config, lang, text, category, subcategory, d_f_m_regexes
+                version,
+                config,
+                lang,
+                text,
+                category,
+                subcategory,
+                rules["d_f_m_regexes"],
             )
 
         list_full += rules_based_words_phrase_matcher(
@@ -1671,10 +1766,10 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
             lang,
             text,
             tokens,
+            "inclusive",
             inclusive_words_data_en,
             inclusive_sentences_data_en,
             rules[lang.locale]["df_inclusive_sentence"],
-            "inclusive",
             matches_false,
         )
 
@@ -1685,11 +1780,20 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
             lang,
             text,
             tokens,
+            "style",
             words_data_en["style"],
             sentences_data_en["style"],
             rules[lang.locale]["df_style_sentence"],
-            "style",
             matches_false,
+        )
+
+        list_full += detect_lower_cased_hashtags(
+            version,
+            config,
+            lang,
+            text,
+            "style",
+            "style",
         )
 
     if is_sub_category_enabled(version, config, "unconscious_bias"):
@@ -1699,10 +1803,10 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
             lang,
             text,
             tokens,
+            "unconscious_bias",
             words_data_en["bias"],
             sentences_data_en["bias"],
             rules[lang.locale]["df_ub_sentence"],
-            "unconscious_bias",
             matches_false,
         ) + word_noun(
             version,
@@ -1714,6 +1818,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
             "unconscious_bias",
             matches_false,
         )
+
     return list_full
 
 
@@ -1846,14 +1951,14 @@ def german_noun_analysis(word, genus_only=False):
     if "..." in word:
         return None
 
-    result = german_nouns[word]
+    result = rules["de"]["german_nouns"][word]
     if len(result):
         result = result[0]
     else:
         if genus_only:
-            for genus in primary_german_genus_endings:
+            for genus in rules["de"]["primary_german_genus_endings"]:
                 result = determine_genus_from_ending(
-                    word, primary_german_genus_endings[genus], genus
+                    word, rules["de"]["primary_german_genus_endings"][genus], genus
                 )
 
                 if result != None:
@@ -1866,7 +1971,7 @@ def german_noun_analysis(word, genus_only=False):
             partial_word = word[i:].capitalize()
             i += 1
 
-            result = german_nouns[partial_word]
+            result = rules["de"]["german_nouns"][partial_word]
             if len(result):
                 result = result[0]
                 break
@@ -1875,16 +1980,23 @@ def german_noun_analysis(word, genus_only=False):
         result = None
 
     if result == None and genus_only:
-        for genus in secondary_german_genus_endings:
+        for genus in rules["de"]["secondary_german_genus_endings"]:
             result = determine_genus_from_ending(
-                word, secondary_german_genus_endings[genus], genus
+                word, rules["de"]["secondary_german_genus_endings"][genus], genus
             )
 
             if result != None:
                 return result
 
-    if isinstance(result, list) and "genus 1" in result:
-        result["genus"] = result["genus 1"]
+    if isinstance(result, dict):
+        if "genus 1" in result:
+            result["genus"] = result["genus 1"]
+        elif "genus" not in result:
+            if word[-5:].lower() != "leute":
+                return None
+
+            result["is_plural"] = True
+            result["genus"] = "f"
 
     return result
 
@@ -1982,7 +2094,7 @@ def align_verb_form(lang, a_token, b_token):
 
 def alternative_declension(token, word_types, lang, alternative):
     text = token.text
-    if text == token.lemma_ or not text.startswith(token.lemma_):
+    if text == token.lemma_:
         return alternative
 
     if ResultOut.isInspirationAlternative(text, alternative):
@@ -1993,7 +2105,7 @@ def alternative_declension(token, word_types, lang, alternative):
     tokens = fetch_tokens(lang, alternative)
     for alternative_token in reversed(tokens):
         alternative_text = alternative_token.text
-        if alternative_text in conjunctions[lang.lang]:
+        if alternative_text in rules[lang.lang]["conjunctions"]:
             previous = False
         else:
             if len(tokens) == 1:
@@ -2148,7 +2260,9 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
     match_feminine = None
     match_neuter = None
     match_alternative = None
-    for form, masculine, feminine, neuter, plural, alternative in articles:
+    for form, masculine, feminine, neuter, plural, alternative in rules["de-DE"][
+        "articles"
+    ]:
         if form not in matches["forms"]:
             continue
 
@@ -2267,7 +2381,12 @@ def sentences_matcher(
     category,
     subcategory=None,
 ):
+    list_tokens = []
+
     if not isinstance(df_sentence, list):
+        if not isinstance(df_sentence, pd.DataFrame):
+            return list_tokens
+
         df_sentence = list(df_sentence["Lemma"])
 
     matches = fetch_matches(tokens, df_sentence)
@@ -2284,7 +2403,6 @@ def sentences_matcher(
             matches,
         )
 
-    list_tokens = []
     alternatives = None
 
     for match_id, start, end in matches:
@@ -2412,7 +2530,7 @@ def regex_matches(
             elif len(span.groups()) == 4:
                 text = span.group(0).lstrip()
             elif len(span.groups()) == 3:
-                if span.group(3) not in male_articles:
+                if span.group(3) not in rules["de-DE"]["male_articles"]:
                     continue
                 if category != "inclusive":
                     alternatives = [span.group(2) + regexes[regex] + span.group(3)]
@@ -2743,10 +2861,10 @@ def rules_based_words_phrase_matcher(
     lang,
     full_text,
     tokens,
-    words_data,
-    sentences_data,
-    df_sentence,
     category,
+    words_data,
+    sentences_data=None,
+    df_sentence=None,
     matches_false=None,
     fallback_subcategory=None,
 ):
@@ -2759,6 +2877,27 @@ def rules_based_words_phrase_matcher(
         for word, word_types, *data in words_data:
             if not is_word_match(token, tokens, lang, word, word_types, matches_false):
                 continue
+
+            url = None
+            icon = None
+            explanation = None
+
+            if len(data) > 2 and data[2] != None:
+                explanation = (
+                    data[2]["text"]
+                    if "text" in data[2] and data[2]["text"] != ""
+                    else None
+                )
+                url = (
+                    data[2]["url"]
+                    if "url" in data[2] and data[2]["url"] != ""
+                    else None
+                )
+                icon = (
+                    data[2]["icon"]
+                    if "icon" in data[2] and data[2]["icon"] != ""
+                    else None
+                )
 
             if len(data) > 1:
                 subcategory = data[1]
@@ -2794,10 +2933,14 @@ def rules_based_words_phrase_matcher(
                     token.idx,
                     None,
                     alternatives,
+                    None,
+                    explanation,
+                    url,
+                    icon,
                 )
             )
 
-    list_tokens += sentences_matcher(
+    return list_tokens + sentences_matcher(
         version,
         config,
         lang,
@@ -2808,8 +2951,6 @@ def rules_based_words_phrase_matcher(
         category,
         fallback_subcategory,
     )
-
-    return list_tokens
 
 
 # english function to handle homonyms
@@ -2893,21 +3034,6 @@ def literal_match(
             if text != term:
                 continue
 
-            url = None
-            icon = None
-            explanation_text = None
-
-            if (
-                isinstance(explanation, list)
-                and len(explanation)
-                and isinstance(explanation[0], dict)
-            ):
-                explanation_text = (
-                    explanation[0]["text"] if "text" in explanation[0] else None
-                )
-                url = explanation[0]["url"] if "url" in explanation[0] else None
-                icon = explanation[0]["icon"] if "icon" in explanation[0] else None
-
             list_tokens.append(
                 ResultOut.factory(
                     version,
@@ -2920,14 +3046,53 @@ def literal_match(
                     span.start_char,
                     span.end_char,
                     alternatives,
-                    None,
-                    explanation_text,
-                    url,
-                    icon,
                 )
             )
 
     return list_tokens
+
+
+def detect_lower_cased_hashtags(
+    version: float,
+    config: Config,
+    lang,
+    full_text,
+    category,
+    subcategory,
+):
+    list_results = []
+
+    if lang.lang == "de":
+        explanation = "Wenn du Wörter großschreibst, wissen alle gleich, was du meinst. #ZumBeispiel"
+    else:
+        explanation = "When you capitalize words, everyone knows right away what you mean. #ForExample"
+
+    matches = re.finditer(r"#(\w*)", full_text)
+    for span in matches:
+        if type(span) == re.Match:
+            text = span.group(1)
+
+            if len(text) < 5 or any(char.isupper() for char in text):
+                continue
+
+            list_results.append(
+                ResultOut.factory(
+                    version,
+                    config,
+                    lang,
+                    "#" + text,
+                    full_text,
+                    category,
+                    subcategory,
+                    span.start(),
+                    span.end(),
+                    None,
+                    None,
+                    explanation,
+                )
+            )
+
+    return list_results
 
 
 # want to server to run app.py in the folder app as main app, port=8000 is defaut port for the fast api

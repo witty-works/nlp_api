@@ -282,6 +282,8 @@ class TermReplacement(BaseModel):
     alternatives: List[str]
     explanation: Optional[Explanation]
     gravity: Optional[float]
+    lang: Optional[LangType]
+    word_type: Optional[str]
 
 
 class TermReplacement1_1(BaseModel):
@@ -321,6 +323,31 @@ class UserConfRequest(ConfRequest):
 
 class OrganizationConfRequest(ConfRequest):
     plan: str
+
+
+class ConfResponse(BaseModel):
+    id: str
+    name: str
+    plan: Optional[str]
+    config: RuleConfig
+    false_positives: List[str] = []
+    term_replacements: Dict[str, TermReplacement] = {}
+    domains: Optional[DomainConfig]
+    config_hash: Optional[str]
+
+
+class UserConfResponse(ConfRequest):
+    email: str
+    organization_id: Optional[str]
+    organization_name: Optional[str]
+    organization_config: Optional[RuleConfig]
+    organization_false_positives: Optional[List[str]] = []
+    organization_term_replacements: Optional[Dict[str, TermReplacement]] = {}
+    organization_domains: Optional[DomainConfig]
+    organization_config_hash: Optional[str]
+    notifications: Optional[int]
+    has_consented_to_mailing: Optional[bool]
+    team_analytics: Optional[bool]
 
 
 class RequestIn(BaseModel):
@@ -380,7 +407,7 @@ class ResultOut(BaseModel):
         start,
         end=None,
         alternatives=None,
-        anchor=None,
+        label=None,
         explanation=None,
         url=None,
         icon=None,
@@ -408,12 +435,7 @@ class ResultOut(BaseModel):
         else:
             category_key = category
 
-        if anchor == None and "anchor" in categories[category_key]:
-            anchor = categories[category_key]["anchor"][lang.lang]
-
         category_data = None
-        label = None
-
         if category_key in categories:
             category_data = categories[category_key]
 
@@ -421,9 +443,6 @@ class ResultOut(BaseModel):
                 label = lang._("rules." + category_key + "_name")
                 if category != subcategory and category in categories:
                     label = lang._("rules." + category + "_name") + ": " + label
-
-        if label == None:
-            label = ResultOut.reverseTransliterate(anchor, lang)
 
         if (
             category != "orthography"
@@ -477,6 +496,7 @@ class ResultOut(BaseModel):
             )
 
         if category == "orthography":
+            label = ResultOut.convert_sharp_ss(lang, label)
             explanation = ResultOut.convert_sharp_ss(lang, explanation)
 
         explanation = {
@@ -657,15 +677,6 @@ class ResultOut(BaseModel):
                 return True
 
         return False
-
-    @staticmethod
-    def reverseTransliterate(string, lang):
-        string = string.replace("_", " ")
-
-        if lang.lang == "en":
-            return string.capitalize()
-
-        return string.title().replace("ue", "ü").replace("ae", "ä").replace("oe", "ö")
 
     @staticmethod
     def countWords(text):
