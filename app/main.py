@@ -1988,8 +1988,15 @@ def german_noun_analysis(word, genus_only=False):
             if result != None:
                 return result
 
-    if isinstance(result, list) and "genus 1" in result:
-        result["genus"] = result["genus 1"]
+    if isinstance(result, dict):
+        if "genus 1" in result:
+            result["genus"] = result["genus 1"]
+        elif "genus" not in result:
+            if word[-5:].lower() != "leute":
+                return None
+
+            result["is_plural"] = True
+            result["genus"] = "f"
 
     return result
 
