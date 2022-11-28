@@ -370,6 +370,17 @@ def test_categories():
     assert "hollow" in first_record
 
 
+def test_lemmatize():
+    response = client.get("/lemmatize?locale=" + "en-US&text=running")
+    assert response.status_code == 200
+    result = response.json()
+
+    assert "lemma" in result
+    assert result["lemma"] == "run"
+    assert "word_type" in result
+    assert result["word_type"] == "v"
+
+
 def test_invalid_access_token():
     input_json = '{"text": "Hello world."}'
 
@@ -512,8 +523,19 @@ def set_redis():
                     "icon": "🥰",
                     "url": "https://witty.works",
                 },
-                "gravity": 3,
-            }
+                "gravity": 3.0,
+            },
+            "run": {
+                "lang": "en",
+                "word_type": "v",
+                "alternatives": ["walk"],
+                "explanation": {
+                    "text": "better not run",
+                    "icon": "🥰",
+                    "url": "https://witty.works",
+                },
+                "gravity": 3.0,
+            },
         },
         "domains": {
             "type": "deny",
@@ -565,7 +587,7 @@ def set_redis():
                     "icon": "🥰",
                     "url": "https://witty.works",
                 },
-                "gravity": 3,
+                "gravity": 3.0,
             }
         },
         "domains": {
@@ -684,7 +706,9 @@ def test_auth_2_0(test_auth_2_0_dir, snapshot, set_redis):
     "test_auth_2_0_team_analytics_opt_out_dir",
     get_dirs("tests/test_auth_2_0_team_analytics_opt_out"),
 )
-def test_auth_2_0_team_analytics_opt_out(test_auth_2_0_team_analytics_opt_out_dir, snapshot, set_redis):
+def test_auth_2_0_team_analytics_opt_out(
+    test_auth_2_0_team_analytics_opt_out_dir, snapshot, set_redis
+):
     client = TestClient(app)
     response = client.post("/v2.0/auth", headers={"X-Auth": "default@gmail.com"})
     assert response.status_code == 200
@@ -837,6 +861,10 @@ def test_store_get_delete_rules():
         "config_hash": "foobar",
         "organization_id": "TEST_organization",
         "config": {
+            "preferred_variants": {
+                "value": ["en-GB"],
+                "status": "force",
+            },
             "store_context": {
                 "value": True,
                 "status": "force",
@@ -860,7 +888,7 @@ def test_store_get_delete_rules():
                     "icon": "🥰",
                     "url": "https://witty.works",
                 },
-                "gravity": 3,
+                "gravity": 3.0,
             },
             "bim": {
                 "alternatives": ["bam"],
@@ -869,7 +897,7 @@ def test_store_get_delete_rules():
                     "icon": "🥰",
                     "url": "https://witty.works",
                 },
-                "gravity": 3,
+                "gravity": 3.0,
             },
         },
         "domains": {
@@ -913,6 +941,10 @@ def test_store_get_delete_rules():
         "plan": "witty_teams",
         "config_hash": "foobaz",
         "config": {
+            "preferred_variants": {
+                "value": ["en-GB"],
+                "status": "force",
+            },
             "store_context": {
                 "value": True,
                 "status": "force",
@@ -936,7 +968,7 @@ def test_store_get_delete_rules():
                     "icon": "🥰",
                     "url": "https://witty.works",
                 },
-                "gravity": 3,
+                "gravity": 3.0,
             },
             "foo": {
                 "alternatives": ["bar"],
@@ -945,7 +977,7 @@ def test_store_get_delete_rules():
                     "icon": "🥰",
                     "url": "https://witty.works",
                 },
-                "gravity": 3,
+                "gravity": 3.0,
             },
         },
         "domains": {
