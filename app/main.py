@@ -2872,7 +2872,7 @@ def rules_based_words_phrase_matcher(
             icon = None
             explanation = None
 
-            if len(data) > 2:
+            if len(data) > 2 and data[2] != None:
                 explanation = (
                     data[2]["text"]
                     if "text" in data[2] and data[2]["text"] != ""
