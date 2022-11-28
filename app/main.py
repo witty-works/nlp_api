@@ -609,7 +609,9 @@ async def post_check_v2_1(
 # data exchange routes
 @app.get("/lemmatize")
 async def lemmatize(
-    text: str, locale: LangVariantType, username: str = Depends(fetch_current_username)
+    text: str,
+    locale: Union[LangVariantType, LangType],
+    username: str = Depends(fetch_current_username),
 ):
     lang = Language(locale)
 
@@ -845,7 +847,9 @@ async def fetch_configs_for_request(
 ):
     user_request_in.config.__setattr__("store_context", True)
     user_request_in.config.__setattr__("plan", None)
-    user_request_in.config.__setattr__("alternatives_max_count", settings.alternatives_max_count)
+    user_request_in.config.__setattr__(
+        "alternatives_max_count", settings.alternatives_max_count
+    )
 
     if not user_email:
         return {}
@@ -1791,7 +1795,6 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
             "style",
             "style",
         )
-
 
     if is_sub_category_enabled(version, config, "unconscious_bias"):
         list_full += rules_based_words_phrase_matcher(
