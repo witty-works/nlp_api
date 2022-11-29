@@ -94,7 +94,7 @@ initialize_aadb2c(settings)
 logging.debug("app started with settings: %s", settings)
 
 if (
-    settings.slack_bot_token != None and settings.slack_signing_secret != None
+    settings.slack_bot_token is not None and settings.slack_signing_secret is not None
 ):  # pragma: no cover
     bolt = AsyncApp(
         token=settings.slack_bot_token, signing_secret=settings.slack_signing_secret
@@ -120,7 +120,7 @@ async def handle_command_witty(
     user_request_in = RequestIn(text=body["text"])
     text, lang, limit_reached = fetch_text(user_request_in)
 
-    if lang == None:
+    if lang is None:
         await respond(f"Witty could not determine a language for '{text}'.")
         return
 
@@ -371,7 +371,7 @@ def get_german_gender_ending(
     alternative_variations = set()
 
     german_gender_endings = Config._gendereddenom_ending.keys()
-    if german_gender_ending != None:
+    if german_gender_ending is not None:
         german_gender_endings = [german_gender_ending]
 
     for german_gender_ending in german_gender_endings:
@@ -425,7 +425,7 @@ async def post_auth_1_1(request: Request, response: Response):
 
     configs = await fetch_configs_for_request(RequestIn(text=""), user_email)
     config = fetch_result_conf(configs, 1.1)
-    if config == None and user_email:
+    if config is None and user_email:
         config = {}
 
     return config
@@ -475,7 +475,7 @@ async def get_debug_spacy(
             ["en", "de"],
         )
 
-    if locale == None:
+    if locale is None:
         raise HTTPException(status_code=422, detail="Could not determine language")
 
     lang = Language(locale)
@@ -520,7 +520,7 @@ async def post_check_v1_1(
     )
 
     config = fetch_result_conf(configs, version)
-    if config == None and user_email:
+    if config is None and user_email:
         config = {}
 
     if isinstance(results, Result):
@@ -763,7 +763,7 @@ async def fetch_user_organization_configs(email: str):
     configs["organization_config_hash"] = None
     configs["organization_domains"] = None
 
-    if "organization_id" in configs and configs["organization_id"] != None:
+    if "organization_id" in configs and configs["organization_id"] is not None:
         try:
             organization_configs = await fetch_organization_configs_from_redis(
                 configs["organization_id"]
@@ -962,7 +962,7 @@ def fetch_text(user_request_in):
         user_request_in.config.preferred_variants,
     )
 
-    if locale == None:
+    if locale is None:
         lang = None
     else:
         lang = Language(locale)
@@ -993,7 +993,7 @@ async def check(
 
     text, lang, limit_reached = fetch_text(user_request_in)
 
-    if lang == None:
+    if lang is None:
         response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
         results = Result.factory("Language could not be determined")
         language = None
@@ -1235,7 +1235,7 @@ async def apply_languagetool_rules(
         if config.simple_language and payload["language"] == "de-DE":
             payload["language"] += "-x-simple-language"
 
-        if config.primary_language != None:
+        if config.primary_language is not None:
             payload["motherTongue"] = config.primary_language
 
         if is_sub_category_enabled(version, config, "orthography"):
@@ -1289,7 +1289,7 @@ def fetch_tokens(lang: Language, text: str):
 
 # matcher to false positives
 def is_false_positive_match(list_false_positive, tokens, token):
-    if list_false_positive == None:
+    if list_false_positive is None:
         return False
 
     for match_id, start, end in list_false_positive:
@@ -1361,7 +1361,7 @@ async def apply_language_rules(
 
             if (
                 "lang" in term_replacement
-                and term_replacement["lang"] != None
+                and term_replacement["lang"] is not None
                 and term_replacement["lang"] != lang.lang
             ):
                 continue
@@ -1826,7 +1826,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
 def parse_word_types(word_types, lower_case=True):
     lemmatize = True
 
-    if word_types == None:
+    if word_types is None:
         return [], lower_case, lemmatize
 
     if word_types[0] == "=":
@@ -1910,7 +1910,7 @@ def fetch_word_types(token, lang, word_types=[], single_word=None):
     if token.tag_ == "NN":
         return ["s"]
 
-    if token.pos_ == "PROPN" and single_word != None and len(word_types):
+    if token.pos_ == "PROPN" and single_word is not None and len(word_types):
         return word_types[0:1]
 
     return []
@@ -1962,7 +1962,7 @@ def german_noun_analysis(word, genus_only=False):
                     word, rules["de"]["primary_german_genus_endings"][genus], genus
                 )
 
-                if result != None:
+                if result is not None:
                     return result
 
         # skip the first 2 letters
@@ -1980,13 +1980,13 @@ def german_noun_analysis(word, genus_only=False):
     if result == []:
         result = None
 
-    if result == None and genus_only:
+    if result is None and genus_only:
         for genus in rules["de"]["secondary_german_genus_endings"]:
             result = determine_genus_from_ending(
                 word, rules["de"]["secondary_german_genus_endings"][genus], genus
             )
 
-            if result != None:
+            if result is not None:
                 return result
 
     if isinstance(result, dict):
@@ -2016,11 +2016,11 @@ def align_noun_form(lang, a_token, b_token):
         return Noun(b_text).singular()
     elif lang.lang == "de":
         a_word = german_noun_analysis(a_text)
-        if a_word == None:
+        if a_word is None:
             return b_text
 
         b_word = german_noun_analysis(b_text)
-        if b_word == None:
+        if b_word is None:
             return b_text
 
         for flexion, value in a_word["flexion"].items():
@@ -2248,7 +2248,7 @@ def fetch_matching_flexions(text, word, is_plural_check=False):
 def fetch_alternatives_with_article(tokens, i, alternatives):
     text = tokens[i].text
     word = german_noun_analysis(text)
-    if word == None:
+    if word is None:
         return None
 
     matches = fetch_matching_flexions(text, word)
@@ -2276,7 +2276,7 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
             article_to_check = neuter
 
         if article_text == article_to_check:
-            if matched_form == None:
+            if matched_form is None:
                 matched_form = form
                 match_masculine = masculine
                 match_feminine = feminine
@@ -2295,7 +2295,7 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
                 if match_alternative != alternative:
                     match_alternative = False
 
-    if match_alternative == None:
+    if match_alternative is None:
         return None
 
     alternatives_with_article = []
@@ -2310,7 +2310,7 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
 
             words = alternative.split()
             word = german_noun_analysis(words[-1], True)
-            if word == None:
+            if word is None:
                 article_alternative = tokens[i - 1].text
             else:
                 matches = fetch_matching_flexions(alternative, word, True)
@@ -2392,7 +2392,7 @@ def sentences_matcher(
 
     matches = fetch_matches(tokens, df_sentence)
 
-    if sentences_data == None:
+    if sentences_data is None:
         return sentences_matches(
             version,
             config,
@@ -2414,7 +2414,7 @@ def sentences_matcher(
                     if len(data) >= 2:
                         subcategory = data[1]
 
-                    if subcategory == None:
+                    if subcategory is None:
                         subcategory = data[0]
                     else:
                         alternatives = data[0]
@@ -2464,7 +2464,7 @@ def regex_matches(
                 text = span.group(0).lstrip()
 
                 letters = [span.group(2), span.group(3)]
-                if span.group(4) != None:
+                if span.group(4) is not None:
                     letters = letters + span.group(4)[1:].split("/")
 
                 letters = list(map(lambda x: x.upper(), letters))
@@ -2490,7 +2490,7 @@ def regex_matches(
                     diverse_letter = diverse_letter.lower()
                     veteran_letter = veteran_letter.lower()
 
-                parenthesis = False if span.group(1) == None else True
+                parenthesis = False if span.group(1) is None else True
                 if parenthesis:
                     alternative = "(" + alternative + ")"
 
@@ -2657,7 +2657,7 @@ def gendered_denom_analysis_de(
                         token_morph_number, alternatives_sing, alternatives_plur
                     )
 
-                if alternatives == None:
+                if alternatives is None:
                     continue
 
                 (
@@ -2682,7 +2682,7 @@ def gendered_denom_analysis_de(
                     alternatives_with_article = fetch_alternatives_with_article(
                         tokens, i, alternatives
                     )
-                    if alternatives_with_article != None:
+                    if alternatives_with_article is not None:
                         alternatives = alternatives_with_article
                         start = tokens[i - 1].idx
                         text = tokens[i - 1].text + " " + text
@@ -2729,8 +2729,8 @@ def style_word_analysis_de(
         if token.lemma_ == "aber":
             preceeding_text = full_text[max(0, token.idx - 5) : token.idx]
             if (
-                re.search(r"^ *$", preceeding_text) != None
-                or re.search(r"[.!?:,]\s*$", preceeding_text, re.MULTILINE) != None
+                re.search(r"^ *$", preceeding_text) is not None
+                or re.search(r"[.!?:,]\s*$", preceeding_text, re.MULTILINE) is not None
             ):
                 continue
 
@@ -2883,7 +2883,7 @@ def rules_based_words_phrase_matcher(
             icon = None
             explanation = None
 
-            if len(data) > 2 and data[2] != None:
+            if len(data) > 2 and data[2] is not None:
                 explanation = (
                     data[2]["text"]
                     if "text" in data[2] and data[2]["text"] != ""

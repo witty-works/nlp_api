@@ -662,7 +662,7 @@ def test_auth_1_1(test_auth_1_1_dir, snapshot, set_redis):
 
     response = client.post("/auth")
     assert response.status_code == 200
-    assert response.json() == None
+    assert response.json() is None
 
     response = client.post("/auth", headers={"X-Auth": "missing@gmail.com"})
     assert response.status_code == 200
@@ -815,7 +815,7 @@ def test_set_default_rules(event_loop):
         fetch_configs_for_request(test_request, "non_existant@gmail.com")
     )
     assert test_request.config.store_context == True
-    assert test_request.config.primary_language == None
+    assert test_request.config.primary_language is None
     assert test_request.config.preferred_languages == [
         LangWithAutoType.EN,
         LangWithAutoType.DE,

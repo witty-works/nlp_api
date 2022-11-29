@@ -414,7 +414,7 @@ class ResultOut(BaseModel):
         gravity=None,
         explanation_context=None,
     ):
-        if end == None:
+        if end is None:
             end = start + len(text)
 
         context = None
@@ -447,7 +447,7 @@ class ResultOut(BaseModel):
         if (
             category != "orthography"
             and category != "corporate_rules"
-            and url == None
+            and url is None
             and category_data["url"][lang.lang] is not None
         ):
             url = category_data["url"][lang.lang]
@@ -458,17 +458,17 @@ class ResultOut(BaseModel):
             else lang._("rules." + category_key + "_explanation")
         )
 
-        if icon == None and "emoji" in category_data:
+        if icon is None and "emoji" in category_data:
             icon = category_data["emoji"]
 
-        if gravity == None and "gravity" in category_data:
+        if gravity is None and "gravity" in category_data:
             gravity = category_data["gravity"]
 
         hide_details = False
 
         if version >= 2.1:
             # Not logged-in
-            hide_details = config.plan == None
+            hide_details = config.plan is None
 
             # Logged-in but non paying user get all highlights
             if config.plan == "witty_free":
@@ -476,7 +476,7 @@ class ResultOut(BaseModel):
                     categories[subcategory]["importance"]
                 )
 
-        if hide_details or alternatives == None or alternatives == []:
+        if hide_details or alternatives is None or alternatives == []:
             alternatives = []
         else:
             if isinstance(alternatives, Dict):
@@ -507,7 +507,7 @@ class ResultOut(BaseModel):
         }
 
         if version <= 1.1:
-            if gravity != None:
+            if gravity is not None:
                 gravity = math.ceil(gravity)
 
             return ResultOut1_1(
@@ -585,7 +585,7 @@ class ResultOut(BaseModel):
                         alternative_context,
                     ) = ResultOut.parse_alternative_context(alternative)
                     if alternative == "":
-                        if explanation_context == None:
+                        if explanation_context is None:
                             explanation_context = alternative_context
 
                         continue
@@ -633,14 +633,14 @@ class ResultOut(BaseModel):
                 cleaned_alternatives[key] = variation
 
             if (
-                alternatives_max_count != None
+                alternatives_max_count is not None
                 and len(cleaned_alternatives) >= alternatives_max_count
             ):
                 break
 
         cleaned_alternatives = list(cleaned_alternatives.values())
         if (
-            alternatives_max_count != None
+            alternatives_max_count is not None
             and len(cleaned_alternatives) >= alternatives_max_count
         ):
             cleaned_alternatives = cleaned_alternatives[0:alternatives_max_count]
@@ -669,10 +669,10 @@ class ResultOut(BaseModel):
 
             preceeding_text = full_text[max(0, start - 5) : start]
             if (
-                re.search(r"^ *$", preceeding_text) != None
-                or re.search(r"\s{3,}}$", preceeding_text, re.MULTILINE) != None
+                re.search(r"^ *$", preceeding_text) is not None
+                or re.search(r"\s{3,}}$", preceeding_text, re.MULTILINE) is not None
                 or re.search(punctuation + r"\s*$", preceeding_text, re.MULTILINE)
-                != None
+                is not None
             ):
                 return True
 
@@ -685,7 +685,7 @@ class ResultOut(BaseModel):
     @staticmethod
     def isInspirationAlternative(text, alternative, subcategory=None):
         return (
-            alternative != None
+            alternative is not None
             and subcategory != "abbreviation"
             and (alternative.count("...") > 0)
         )

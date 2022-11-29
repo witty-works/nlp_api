@@ -97,7 +97,7 @@ def get_data_from_files(locale):
 
                     if "Word_Type" in row:
                         word_type = row["Word_Type"]
-                        if word_type == None:
+                        if word_type is None:
                             print("Lemma '%s' is missing a word type." % (lemma))
                         else:
                             word_type = word_type.replace("'", '"')
