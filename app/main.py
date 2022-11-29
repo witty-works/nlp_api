@@ -1362,7 +1362,11 @@ async def apply_language_rules(
         for term in configs["term_replacements"]:
             term_replacement = configs["term_replacements"][term]
 
-            if "lang" in term_replacement and term_replacement["lang"] != lang.lang:
+            if (
+                "lang" in term_replacement
+                and term_replacement["lang"] != None
+                and term_replacement["lang"] != lang.lang
+            ):
                 continue
 
             if "word_type" in term_replacement:
