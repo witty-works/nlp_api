@@ -619,9 +619,11 @@ async def lemmatize(
     if len(tokens) != 1:
         return None
 
+    word_types = fetch_word_types(tokens[0], lang)
+
     return {
         "lemma": tokens[0].lemma_,
-        "word_type": fetch_word_types(tokens[0], lang),
+        "word_type": ",".join(word_types),
     }
 
 
