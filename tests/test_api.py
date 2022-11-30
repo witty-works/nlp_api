@@ -375,10 +375,7 @@ def test_lemmatize():
     assert response.status_code == 200
     result = response.json()
 
-    assert "lemma" in result
-    assert result["lemma"] == "run"
-    assert "word_type" in result
-    assert result["word_type"] == "v"
+    assert result == "run"
 
 
 def test_invalid_access_token():
