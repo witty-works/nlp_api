@@ -81,7 +81,7 @@ from app.model import model
 from app.rules import rules
 from app.sentry import set_up_sentry_sdk
 
-version = "1.39.0"
+version = "1.39.1"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -619,10 +619,7 @@ async def lemmatize(
     if len(tokens) != 1:
         return None
 
-    return {
-        "lemma": tokens[0].lemma_,
-        "word_type": fetch_word_types(tokens[0], lang),
-    }
+    return tokens[0].lemma_
 
 
 @app.post(
@@ -1362,7 +1359,11 @@ async def apply_language_rules(
         for term in configs["term_replacements"]:
             term_replacement = configs["term_replacements"][term]
 
-            if "lang" in term_replacement and term_replacement["lang"] != lang.lang:
+            if (
+                "lang" in term_replacement
+                and term_replacement["lang"] != None
+                and term_replacement["lang"] != lang.lang
+            ):
                 continue
 
             if "word_type" in term_replacement:
