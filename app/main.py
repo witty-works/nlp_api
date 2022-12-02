@@ -2464,7 +2464,9 @@ def regex_matches(
 
             text = span.group(1)
             explanation = None
-            if len(span.groups()) == 5:
+            if len(span.groups()) == 5 and subcategory == "d_and_i":
+                text = span.group(0).lstrip()
+            elif len(span.groups()) == 5:
                 text = span.group(0).lstrip()
 
                 letters = [span.group(2), span.group(3)]
@@ -2478,6 +2480,12 @@ def regex_matches(
                 diverse_letter = "D"
                 if diverse_letter not in letters and "*" not in letters:
                     letters.append(diverse_letter)
+
+                x_letter = "X"
+                without_x = True
+                if "X" in letters:
+                    letters.remove("X")
+                    without_x = False
 
                 without_v = True
                 if "V" in letters:
@@ -2493,6 +2501,7 @@ def regex_matches(
                     alternative = alternative.lower()
                     diverse_letter = diverse_letter.lower()
                     veteran_letter = veteran_letter.lower()
+                    x_letter = x_letter.lower()
 
                 parenthesis = False if span.group(1) == None else True
                 if parenthesis:
@@ -2501,18 +2510,25 @@ def regex_matches(
                 context_v = "--- include veterans"
                 if lang.lang == "de":
                     context_d = "--- Divers (EU) / m. Behinderung (NA)"
+                    context_remove = "--- Nutze geschlechtsneutrale Job-Titel"
                     explanation = "Nenne unterrepräsentierte Gruppen zuerst. Verlinke auf deine Leitlinie zur Gleichstellung."
                 else:
                     context_d = "--- disabled (NA) / diverse (EU)"
+                    context_remove = "--- Use gender neutral job title"
                     explanation = "Put underrepresented groups first and link to your equal opportunity policy"
 
+                alternative_3 = None
                 if "*" in alternative:
                     alternative_2 = alternative.replace("*", diverse_letter)
                     alternative_v = alternative_2
                     alternative_2 += context_d
+                    if not without_x:
+                        alternative_3 = alternative.replace("*", x_letter)
                 else:
                     alternative_2 = alternative.replace(diverse_letter, "*")
                     alternative_v = alternative
+                    if not without_x:
+                        alternative_3 = alternative.replace(diverse_letter, x_letter)
                     alternative += context_d
 
                 if lang.lang == "en":
@@ -2525,15 +2541,16 @@ def regex_matches(
                     else:
                         alternative_v += context_v
 
-                alternatives = ["-", alternative]
+                alternatives = ["- " + context_remove, alternative]
 
                 if lang.lang == "en" and without_v:
                     alternatives.append(alternative_v)
 
                 if lang.lang == "de" or "*" in alternative:
                     alternatives.append(alternative_2)
-            elif len(span.groups()) == 4:
-                text = span.group(0).lstrip()
+
+                if alternative_3 is not None:
+                    alternatives.append(alternative_3)
             elif len(span.groups()) == 3:
                 if span.group(3) not in rules["de-DE"]["male_articles"]:
                     continue

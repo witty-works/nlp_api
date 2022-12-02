@@ -68,7 +68,7 @@ rules["m_f_regexes"] = {
 }
 
 rules["d_f_m_regexes"] = {
-    r"(?i)\s(\()?(d|\*)\/f\/m(\/[*a-z])*(\))?": None,  # (d/f/m..)
+    r"(?i)\s(\()?(d|x|\*)(\/v)?\/f(\/[*a-z])*(\))?": None,  # (d/f/m..)
 }
 
 data = {}
