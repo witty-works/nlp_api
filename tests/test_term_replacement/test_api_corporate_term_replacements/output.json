@@ -101,7 +101,7 @@
                 "url": "https://witty.works"
             },
             "gravity": 0.9,
-            "label": "Eigene Regel",
+            "label": "Wörterbuch",
             "start": 8,
             "subcategory": "corporate_rules",
             "text": "foo"

@@ -129,15 +129,6 @@ def read_csv(in_file):
 
                 categories[sub_category] = {}
 
-                if row[columns["Status HubSpot"]] == "Deployed":
-                    categories[sub_category]["why"] = True
-                elif row[columns["Status HubSpot"]] == "Missing English":
-                    categories[sub_category]["why"] = "de"
-                elif row[columns["Status HubSpot"]] == "Missing German":
-                    categories[sub_category]["why"] = "en"
-                else:
-                    categories[sub_category]["why"] = False
-
                 categories[sub_category]["inclusive"] = (
                     row[columns["Inclusive?"]] == "👍"
                 )
@@ -176,9 +167,19 @@ def read_csv(in_file):
                     importance = 3.0
                 categories[sub_category]["importance"] = importance
 
+                if row[columns["Status HubSpot"]] == "Deployed":
+                    categories[sub_category]["url"] = {"en": True, "de": True}
+                elif row[columns["Status HubSpot"]] == "Missing English":
+                    print(sub_category + ": " + row[columns["Status HubSpot"]])
+                    categories[sub_category]["url"] = {"en": None, "de": True}
+                elif row[columns["Status HubSpot"]] == "Missing German":
+                    print(sub_category + ": " + row[columns["Status HubSpot"]])
+                    categories[sub_category]["url"] = {"en": True, "de": None}
+                else:
+                    categories[sub_category]["url"] = {"en": None, "de": None}
+
     sorted_categories = {}
     for i in sorted(categories.keys()):
-        categories[i]["url"] = {}
         for locale in locales:
             if locale == "pot":
                 continue
@@ -186,19 +187,20 @@ def read_csv(in_file):
             path = "categories" if locale[0:2] == "en" else "kategorien"
             category = categories[i]["category"]
 
-            categories[i]["url"][locale[0:2]] = (
-                "https://www.witty.works/"
-                + locale[0:2]
-                + "/"
-                + path
-                + "/"
-                + categories[category]["anchor"][locale]["msgstr"]
-            )
-
-            if category != sub_category:
-                categories[i]["url"][locale[0:2]] += (
-                    "#" + categories[i]["anchor"][locale]["msgstr"]
+            if categories[i]["url"][locale[0:2]]:
+                categories[i]["url"][locale[0:2]] = (
+                    "https://www.witty.works/"
+                    + locale[0:2]
+                    + "/"
+                    + path
+                    + "/"
+                    + categories[category]["anchor"][locale]["msgstr"]
                 )
+
+                if category != sub_category:
+                    categories[i]["url"][locale[0:2]] += (
+                        "#" + categories[i]["anchor"][locale]["msgstr"]
+                    )
 
         sorted_categories[i] = categories[i]
 

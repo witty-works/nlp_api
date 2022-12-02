@@ -448,7 +448,7 @@ class ResultOut(BaseModel):
             category != "orthography"
             and category != "corporate_rules"
             and url == None
-            and (category_data["why"] == True or category_data["why"] == lang.lang)
+            and category_data["url"][lang.lang] is not None
         ):
             url = category_data["url"][lang.lang]
 
