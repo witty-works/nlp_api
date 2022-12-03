@@ -1502,7 +1502,11 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
         category = categories[subcategory]["category"]
         regexes = {}
         for ending, regex in config._gendereddenom_ending.items():
-            if config.german_gender_ending == ending:
+            if (
+                config.german_gender_ending == ending
+                # avoid issues with LinkedIn
+                or ending == GermanGenderEndingType.CAPITAL_LETTER
+            ):
                 continue
 
             regexes[regex] = [config.german_gender_ending]
