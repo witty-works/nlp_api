@@ -81,7 +81,7 @@ from app.model import model
 from app.rules import rules
 from app.sentry import set_up_sentry_sdk
 
-version = "1.39.1"
+version = "1.39.2"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -1502,7 +1502,11 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
         category = categories[subcategory]["category"]
         regexes = {}
         for ending, regex in config._gendereddenom_ending.items():
-            if config.german_gender_ending == ending:
+            if (
+                config.german_gender_ending == ending
+                # avoid issues with LinkedIn
+                or ending == GermanGenderEndingType.CAPITAL_LETTER
+            ):
                 continue
 
             regexes[regex] = [config.german_gender_ending]
