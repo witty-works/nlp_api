@@ -492,6 +492,7 @@ async def get_debug_spacy(
                 "pos": token.pos_,
                 "word_types": fetch_word_types(token, lang),
                 "morph": token.morph.get("Number"),
+                "foreign": token.morph.get("Foreign"),
             }
         )
 

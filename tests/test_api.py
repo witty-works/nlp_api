@@ -1068,6 +1068,7 @@ def test_spacy():
             "pos": "PRON",
             "word_types": ["s"],
             "morph": ["Sing"],
+            "foreign": [],
         },
         {
             "text": "ist",
@@ -1077,6 +1078,7 @@ def test_spacy():
             "pos": "AUX",
             "word_types": [],
             "morph": ["Sing"],
+            "foreign": [],
         },
         {
             "text": "sehr",
@@ -1086,6 +1088,7 @@ def test_spacy():
             "pos": "ADV",
             "word_types": ["a"],
             "morph": [],
+            "foreign": [],
         },
         {
             "text": "ehrgeizig",
@@ -1095,6 +1098,7 @@ def test_spacy():
             "pos": "ADV",
             "word_types": ["a"],
             "morph": [],
+            "foreign": [],
         },
     ]
 
