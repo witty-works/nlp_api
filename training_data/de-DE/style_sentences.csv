@@ -1,5 +1,5 @@
 Lemma,Word_Type,Category,Primary_subcategory,Alt_split
-Account Manager,s,style,anglicism,"['Kundenbetreuung', 'Kundenbetreuer~in~/~Kundenbetreuer', 'Kundenbetreuer~innen~/~Kundenbetreuer']"
+Account Manager,s,style,anglicism,"['Kundenbetreuung', 'Kundenbetreuer~in~/~Kundenbetreuer', 'Kundenbetreuer~innen~ und ~Kundenbetreuer']"
 Alpha Chef,s,style,exaggerating,"['Person, die ihr Team inspiriert(...)', 'Mensch mit Freude an Verantwortung(...)', 'Person, die ihrem Team mit Rat und Tat zur Seite steht(...)', 'Person, die das Team beim Erreichen von gemeinsamen Zielen unterstützt(...)', 'Leute, die ihre Teams inspirieren(...)', 'Menschen mit Freude an Verantwortung(...)', 'Leute, die ihrem Team mit Rat und Tat zur Seite stehen(...)', 'Leute, die das Team beim Erreichen von gemeinsamen Zielen unterstützen und lenken(...)']"
 Alpha Führungskraft,s,style,exaggerating,"['Person, die ihr Team inspiriert(...)', 'Mensch mit Freude an Verantwortung(...)', 'Person, die ihrem Team mit Rat und Tat zur Seite steht(...)', 'Person, die das Team beim Erreichen von gemeinsamen Zielen unterstützt(...)', 'Leute, die ihre Teams inspirieren(...)', 'Menschen mit Freude an Verantwortung(...)', 'Leute, die ihrem Team mit Rat und Tat zur Seite stehen(...)', 'Leute, die das Team beim Erreichen von gemeinsamen Zielen unterstützen und lenken(...)']"
 Alpha Person,s,style,exaggerating,"['Person, die ihr Team inspiriert(...)', 'Mensch mit Freude an Verantwortung(...)', 'Person, die ihrem Team mit Rat und Tat zur Seite steht(...)', 'Person, die das Team beim Erreichen von gemeinsamen Zielen unterstützt(...)', 'Leute, die ihre Teams inspirieren(...)', 'Menschen mit Freude an Verantwortung(...)', 'Leute, die ihrem Team mit Rat und Tat zur Seite stehen(...)', 'Leute, die das Team beim Erreichen von gemeinsamen Zielen unterstützen und lenken(...)']"
@@ -20,13 +20,13 @@ Field Operator,s,style,anglicism,"['Außendienst', 'Außendienstmitarbeiter~in~/
 Financial Plan,s,style,anglicism,['Finanzplan']
 Go getter,s,style,exaggerating,"['tatkräftige Person', 'Tatmensch', 'umsetzungsfreudiger Mensch', 'jemand, der unternehmerisch denkt(...)', 'jemand, der mit Elan auf Ziele hinarbeitet(...)', 'tatkräftige Leute', 'Tatmenschen', 'umsetzungsfreudige Menschen', 'Leute, die unternehmerisch denken(...)', 'Menschen, die mit Elan auf Ziele hinarbeiten(...)']"
 Goal getter,s,style,exaggerating,"['tatkräftige Person', 'Tatmensch', 'umsetzungsfreudiger Mensch', 'Mensch, der sich kontinuierlich Ziele setzt und erreicht(...)', 'Mensch, der bereit ist, sich neuen oder komplexen Situationen zu stellen, um gemeinsame Ziele zu verwirklichen(...)', 'tatkräftige Leute', 'Tatmenschen', 'umsetzungsfreudige Menschen', 'Menschen, die sich kontinuierlich Ziele setzen und erreichen(...)', 'Leute, der bereit sind, sich neuen oder komplexen Situationen zu stellen, um gemeinsame Ziele zu verwirklichen(...)']"
-High potential,s,style,anglicism,"['vielversprechende~r Bewerber~in~/~Bewerber', 'Person mit hohem Potenzial(...)', 'vielversprechende Bewerber~innen~/~Bewerber', 'Personen mit hohem Potenzial(...)']"
+High potential,s,style,anglicism,"['vielversprechende~r Bewerber~in~/~Bewerber', 'Person mit hohem Potenzial(...)', 'vielversprechende Bewerber~innen~ und ~Bewerber', 'Personen mit hohem Potenzial(...)']"
 Human Resources,s,style,anglicism,['Personalverwaltung']
 Industrial Design,s,style,anglicism,"['Industriedesign', 'industrielle Formgebung']"
 Industrial Marketing,s,style,anglicism,['Industriemarketing']
 Inner Circle,s,style,anglicism,"['innere Kreis', 'kleine Kreis', 'engere Kreis']"
 Joint Venture,s,style,anglicism,['Gemeinschaftsunternehmen']
-Key Account Manager,s,style,anglicism,"['Großkundenbetreuung', 'Großkundenbetreuer~in~/~Großkundenbetreuer', 'Großkundenbetreuer~innen~/~Großkundenbetreuer']"
+Key Account Manager,s,style,anglicism,"['Großkundenbetreuung', 'Großkundenbetreuer~in~/~Großkundenbetreuer', 'Großkundenbetreuer~innen~ und ~Großkundenbetreuer']"
 Key learnings,i,style,anglicism,"['wichtigsten Erkenntnisse', 'Schlüsselerfahrungen', 'wichtigsten Lehren', 'Schlüsselqualifikationen']"
 Life Cycle,s,style,anglicism,['Lebenszyklus']
 Life Style,s,style,anglicism,['Lebensstil']
