@@ -90,7 +90,7 @@ ESP,acr,style,abbreviation,"['Email Service Provider (ESP)', 'E-Mail-Dienstanbie
 ETA,acr,style,abbreviation,"['Estimated Time of Arrival (ETA)', 'Geschätzte Ankunftszeit']"
 ETD,acr,style,abbreviation,"['Estimated Time of Departure (ETD)', 'Geschätzte Abflugzeit', 'geschätzte Abreisezeit']"
 EV,acr,style,abbreviation,"['Enterprise Value (EV)', 'Unternehmenswert']"
-EVP,acr,style,abbreviation,"['Exceptional Viable Product (EVP)', 'Employer Value Proposition (EVP)', 'außergewöhnlich existenzfähiges Produkt', 'Werteversprechen des arbeitgebenden Unternehmens an Mitarbeitende']"
+EVP,acr,style,abbreviation,"['Exceptional Viable Product (EVP)', 'Employer Value Proposition (EVP)', 'existenzfähiges Produkt', 'Werteversprechen des arbeitgebenden Unternehmens an Mitarbeitende']"
 FAQ,acr,style,abbreviation,"['Frequently Asked Question (FAQ)', 'Häufig gestellte Fragen', 'Oft gefragt, hier beantwortet', 'Häufig gefragt']"
 FFF,acr,style,abbreviation,"['Family, Friends, and Fools Round (FFF)', 'Finanzierungsrunde mit Familie, Freunden und begeisterten Vermögenden']"
 FIFO,acr,style,abbreviation,"['First in, First out (FIFO)', 'Wer zuerst kommt, mahlt zuerst', 'der Reihe nach', 'Warteschlange --- Informatik', 'Verbrauchsfolgeverfahren --- Warenwirtschaft']"
@@ -177,7 +177,7 @@ NAV,acr,style,abbreviation,"['Net Asset Value (NAV)', 'Nettoinventarwert']"
 NBD,acr,style,abbreviation,"['No big deal', 'Keine große Angelegenheit| eine Kleinigkeit', 'Kein Thema!', 'Nicht so schlimm']"
 NDA,acr,style,abbreviation,"['Non-disclosure Agreement (NDA)', 'Geheimhaltungsvereinbarung']"
 NDR,acr,style,abbreviation,"['Net Dollar Retention (NDR)', 'Netto-Dollar-Bindung']"
-NP,acr,style,abbreviation,"['No problem', 'Kein Problem']"
+NP,acr,style,abbreviation,"['No problem', 'Kein Problem', 'Gern!', 'Mach ich.']"
 NPV,acr,style,abbreviation,"['Net Present Value (NPV)', 'Nettogegenwartswert']"
 NRN,acr,style,abbreviation,"['No reply necessary.', 'Keine Antwort erforderlich.', 'Eine Antwort ist nicht erforderlich.']"
 NSFW,acr,style,abbreviation,"['not safe for work', 'nicht arbeitsplatzsicher', 'Zur Verwendung am Arbeitsplatz nicht empfohlen', 'für den Arbeitsplatz unangemessen']"
@@ -208,7 +208,7 @@ PMF,acr,style,abbreviation,"['Product-Market-Fit (PMF)', 'Produkt-Markt-Eignung'
 POC,acr,style,abbreviation,"['Point-of-Contact (POC)', 'Proof-of-Concept (POC)', 'Anlaufstelle', 'Berührungspunkt', 'Ansprechperson', 'Machbarkeitsnachweis']"
 POI,acr,style,abbreviation,"['Point-of-Information (POI)', 'Informationsquelle', 'Ort zur Informationsvermittlung']"
 PPC,acr,style,abbreviation,"['Pay-per-Click (PPC)', 'klickbasierte Vergütung', 'Zahlen-pro-Klick']"
-PR,acr,style,abbreviation,"['Public Relations (PR)', 'Öffentlichkeitsarbeit', 'Presse- und Medienarbeit', 'Außendarstellung']"
+PR,acr,style,abbreviation,"['Public Relations (PR)', 'Öffentlichkeitsarbeit', 'Presse- und Medienarbeit', 'Außendarstellung', 'Pull Request (PR)']"
 PRB,acr,style,abbreviation,"['Please reply by', 'Bitte antworten Sie bis', 'Rückantwort bis', 'Bitte antworten Sie per']"
 PTSB,acr,style,abbreviation,"['Posttraumatische Belastungsstörung (PTBS)', 'Komplexe posttraumatische Belastungsstörung (K-PTBS)']"
 PV,acr,style,abbreviation,"['Page Views (PV)', 'Seitenaufrufe', 'Seitenzugriffe', 'angesehene Seiten']"
@@ -238,7 +238,7 @@ ROFR,acr,style,abbreviation,"['Right-of-First-Refusal (ROFR)', 'Vorkaufsrecht']"
 ROI,acr,style,abbreviation,"['Return on Investment (ROI)', 'Kapitalrendite', 'Amortisation', 'Investitionsrentabilität', 'Investitionsertrag']"
 ROR,acr,style,abbreviation,"['Ruby on Rails (ROR)', 'Ruby on Rails']"
 ROS,acr,style,abbreviation,"['Run of Site (ROS)', 'seitenweit', 'überall auf einer Website', 'webseitenweit']"
-RSS,acr,style,abbreviation,"['Rich Site Summary (RSS)', 'Really Simple Syndication', 'Webfeed-Dateiformate', 'wirklich einfache Verbreitung']"
+RSS,acr,style,abbreviation,"['Rich Site Summary (RSS)', 'Really Simple Syndication', 'Webfeed-Dateiformate', 'einfache Verbreitung']"
 RT,acr,style,abbreviation,"['Retweet (RT)', 'retweeten']"
 RTL,acr,style,abbreviation,"['Right-to-Left (RTL)', 'rechts nach links']"
 SAFE,-acr,style,abbreviation,"['Simple Agreement for Future Equity (SAFE)', 'einfache Vereinbarung für zukünftiges Eigenkapital']"
@@ -300,6 +300,7 @@ cap table,abbr,style,abbreviation,"['Capitalization Table', 'Capitalization Tabl
 cc,abbr,style,anglicism,['Kopie']
 etc,abbr,style,filler,['-']
 etc.,abbr,style,filler,['-']
+ndH,acr,unconscious_bias,abbreviation,"['nichtdeutsche Herkunftssprache (ndH)', 'Mehrsprachigkeit']"
 o. Ä.,abbr,style,filler,['-']
 o. ä.,abbr,style,filler,['-']
 u.a.,abbr,style,filler,"['-', 'unter Anderem']"

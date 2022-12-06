@@ -18,7 +18,6 @@ Alphatyp,s,style,exaggerating,"['Person, die ihr Team inspiriert(...)', 'Mensch 
 Alphaweibchen,s,style,exaggerating,"['Person, die ihr Team inspiriert(...)', 'Mensch mit Freude an Verantwortung(...)', 'Person, die ihrem Team mit Rat und Tat zur Seite steht(...)', 'Person, die das Team beim Erreichen von gemeinsamen Zielen unterstützt(...)', 'Leute, die ihre Teams inspirieren(...)', 'Menschen mit Freude an Verantwortung(...)', 'Leute, die ihrem Team mit Rat und Tat zur Seite stehen(...)', 'Leute, die das Team beim Erreichen von gemeinsamen Zielen unterstützen und lenken(...)']"
 Arbeitskraft,s,style,hollow,"['--- nicht auf Menschen beziehen', 'Personal', 'Mitarbeiter~in~/~Mitarbeiter', 'menschliche Kraft zu geistiger/körperlicher Arbeit(...)', 'Personal', 'Mitarbeitende', 'Mitarbeiter~innen~ und ~Mitarbeiter']"
 Aufsteiger,s,style,exaggerating,"['Aufsteiger~in~/~Aufsteiger', 'aufmerksame Person, die mit neu gewonnenem Wissen weiterkommt(...)', 'Person, die aus Erfahrungen lernt(...)', 'Person, die Spaß an neuen Aufgaben hat(...)', 'Aufsteiger~innen~ und ~Aufsteiger', 'aufmerksame Menschen, die neu gewonnenes Wissen nutzen und weiterkommen(...)', 'Leute, die aus Erfahrungen lernen(...)', 'Leute, die Spaß an neuen Aufgaben haben(...)']"
-Boomer,s,style,hollow,"['älterer Mensch', 'jemand, der zwischen 1946 und 1964 geboren wurde', 'jemand, dessen Ansichten veraltet wirken(...)', 'jemand, der ungefragt aus seinem Leben erzählt(...)', 'ältere Menschen', 'Erwachsene', 'Leute, die zwischen 1946 und 1964 geboren wurden', 'Leute, deren Ansichten veraltet wirken(...)', 'Menschen, die ungefragt aus ihrem Leben erzählen(...)']"
 Brand,s,style,anglicism,"['Marke', 'Warenzeichen', 'Markenbezeichnung']"
 Briefing,s,style,anglicism,"['Pressekonferenz', 'kurze Besprechung', 'Anweisung', 'kurze Zusammenfassung', 'Einweisung ']"
 Bullet-point,s,style,anglicism,"['Aufzählungspunkt', 'Aufzählungspunkte']"
@@ -103,7 +102,7 @@ PRheld,s,style,exaggerating,"['Öffentlichkeitsarbeit', 'PR-Held~in~/~PR-Held', 
 Password,s,style,anglicism,['Kennwort']
 Performance,s,style,anglicism,"['Leistung', 'Durchsatz', 'Leistungsfähigkeit', 'Erfüllung']"
 Performer,s,style,exaggerating,"['Performer~in~/~Performer', 'jemand, der sich auf die nächsten Schritte fokussiert(...)', 'Person, die engagiert in ihren Aufgaben ist(...)', 'unternehmerisch denkender Mensch(...)', 'Performer~innen~ und ~Performer']"
-Pionier,s,style,exaggerating,"['Inspiration', 'Pionier~in~/~Pioniere', 'Wegbereiter~in~/~Wegbereiter', 'Person mit zukunfsweisenden Ideen(...)', 'Person, die Neuland betritt(...)', 'Person, die gewohnte Bahnen verlässt(...)', 'Mensch, der bereit ist, sich neuen Situationen zu stellen(...)', 'Mensch, der Visionen verwirklichen will(...)', 'experimentierfreudiger Mensch(...)', 'Mensch, der Verantwortung übernimmt(...)', 'jemand, der mit gutem Beispiel vorangeht(...)', 'erfinderischer Mensch(...)', 'einfallsreicher Mensch(...)', 'jemand, der inspiriert(...)', 'jemand, der eine Vision vermittelt(...)', 'jemand, der Neues ausprobieren will(...)', 'Pionier~innen~ und ~Pioniere', 'Wegbereiter~innen~ und ~Wegbereiter']"
+Pionier,s,style,exaggerating,"['Inspiration', 'Pionier~in~/~Pioniere', 'Wegbereiter~in~/~Wegbereiter', 'Person mit zukunftsweisenden Ideen(...)', 'Person, die Neuland betritt(...)', 'Person, die gewohnte Bahnen verlässt(...)', 'Mensch, der bereit ist, sich neuen Situationen zu stellen(...)', 'Mensch, der Visionen verwirklichen will(...)', 'experimentierfreudiger Mensch(...)', 'Mensch, der Verantwortung übernimmt(...)', 'jemand, der mit gutem Beispiel vorangeht(...)', 'erfinderischer Mensch(...)', 'einfallsreicher Mensch(...)', 'jemand, der inspiriert(...)', 'jemand, der eine Vision vermittelt(...)', 'jemand, der Neues ausprobieren will(...)', 'Pionier~innen~ und ~Pioniere', 'Wegbereiter~innen~ und ~Wegbereiter']"
 Pionierunternehmen,s,style,exaggerating,"['richtungweisendes Unternehmen(...)', 'Unternehmen, das mit gutem Beispiel vorangeht(...)', 'Unternehmen, das sich auf Neues einlässt(...)', 'Unternehmen, das neue Wege geht(...)', 'Unternehmen, das inspiriert(...)', 'Unternehmen, das Maßstäbe im (...) setzt', 'verantwortungsbewusstes Unternehmen, das anderen den Weg bereitet(...)']"
 Querdenken,s,style,hollow,"['die Fähigkeit, in neuen Mustern zu denken', 'Hinterfragen', 'unkonventionelle Betrachtungsweise', 'die Fähigkeit, über den eigenen Tellerrand zu blicken']"
 Rakete,s,style,exaggerating,"['Tatmensch(...)', 'Person, die die Initiative ergreift(...)', 'Person, die ein Team mitreißen kann(...)', 'energiegeladener Mensch(...)', 'lebensbejahende Persönlichkeit(...)', 'begeisterungsfähiger Mensch(...)', 'jemand, der zupackt(...)']"
@@ -113,6 +112,8 @@ Rockstar,s,style,exaggerating,"['strebsamer Mensch', 'fleißiger Mensch', 'umset
 Sabbatical,s,style,anglicism,['Auszeit']
 Salary,s,style,anglicism,['Gehalt']
 Sales,s,style,anglicism,['Verkaufskatalog']
+Sales-Pitch,s,style,anglicism,"['Verkaufsmasche', 'Verkaufstaktik', 'Verkaufsargumentation', 'Kundenansprache', 'Verkaufspräsentation']"
+Salespitch,s,style,anglicism,"['Verkaufsmasche', 'Verkaufstaktik', 'Verkaufsargumentation', 'Kundenansprache', 'Verkaufspräsentation']"
 Sample,s,style,anglicism,['Verkaufskatalog']
 Save-my-ass-Memo,i,style,anglicism,"['Ich-sicher-mich-vorsorglich-ab-Memo', 'Ich-steh-gut-da-Memo']"
 Scherge,s,style,exaggerating,"['Verfechter~in~/~Verfechter', 'Verbündet~e~/~Verbündeter', 'Polizist~in~/~Polizist', 'Handlanger~in~/~Handlanger', 'Mitarbeitende', 'Verfechtende', 'Verbündete', 'Komplizen', 'Verfechter~innen~ und ~Verfechter', 'Polizist~innen~ und ~Polizisten', 'Handlanger~innen~ und ~Handlanger']"
@@ -121,11 +122,11 @@ Selbstanlasser,s,style,exaggerating,"['Mensch, der gemeinsame Ziele mit Energie 
 Service,s,style,anglicism,['Diensleistung']
 Spitzenleistung,s,style,exaggerating,"['Einsatz', 'Kompetenz', 'Meilenstein', 'Bravourstück', 'Ergebnis, das zum Geschäftserfolg beiträgt', 'erreichte Meilensteine', 'wiederholter Einsatz', 'Resultate, die zum Geschäftserfolg beitragen']"
 Spitzenreiter,s,style,exaggerating,"['Spitzenreiter~in~/~Spitzenreiter', 'jemand, der gern auf Meilensteine hinarbeitet(...)', 'Mensch, der mit dem Team gemeinsame Ziele angeht(...)', 'Person, die mit dem Team (...) erreichen möchte', 'Person, die unternehmerisch denkt(...)', 'jemand, der Ziele mit Elan anpackt(...)', 'du bist engagiert in deinen Aufgaben(...)', 'Tatmenschen', 'Spitzenreiter~in~ und ~Spitzenreiter', 'Unternehmen, das im Markt Maßstäbe setzt(...)', 'wichtige Sache(...)', 'Ziel, das das Team inspiriert(...)', 'inspirierendes Teammitglied(...)', 'Mensch, der dem Team mit Rat und Tat zur Seite steht(...)', 'im Markt richtungweisendes Unternehmen(...)', 'Lieblings (...)']"
-Spitzenunternehmen,s,style,exaggerating,"['Unternehmen, das technologischen Wandel gestaltet,', 'Unternehmen, das neue Technologien mit Bedacht und Kreativität einsetzt,', 'Unternehmen, das ausgewählte Technologien erfolgreich vorantreibt,', 'Unternehmen, die technologischen Wandel gestalten', 'Unternehmen, die neue Technologien mit Bedacht und Kreativität einsetzen,', 'Unternehmen, die ausgewählte Technologien erfolgreich vorantreiben']"
+Spitzenunternehmen,s,style,exaggerating,"['Unternehmen, das technologischen Wandel gestaltet,', 'Unternehmen, das neue Technologien mit Bedacht und Kreativität einsetzt,', 'Unternehmen, das ausgewählte Technologien den Weg ebnet,', 'Unternehmen, die technologischen Wandel gestalten', 'Unternehmen, die neue Technologien mit Bedacht und Kreativität einsetzen,', 'Unternehmen, die ausgewählten Technologien den Weg ebnen']"
 Superstar,s,style,exaggerating,"['strebsamer Mensch', 'fleißiger Mensch', 'umsetzungsfreudiger Mensch', 'tatkräftiger Mensch', 'Tatmensch', 'Mensch, der Meilensteine erreichen will(...)', 'Mensch, der Aufgaben engagiert angeht(...)', 'jemand, der mit dem Team gemeinsame Ziele umsetzt(...)', 'jemand, der mit dem Team Aufgaben anpackt(...)', 'jemand, der unternehmerisch denkt(...)', 'jemand, der Ziele mit Elan umsetzt(...)', 'Tatmenschen', 'strebsame Menschen', 'fleißige Leute', 'umsetzungsfreudige Menschen', 'tatkräftige Leute', 'Menschen, die Meilensteine erreichen wollen(...)', 'Menschen, die Aufgaben engagiert angehen(...)', 'Leute, die mit dem Team gemeinsame Ziele umsetzen(...)', 'alle, die mit dem Team Aufgaben engagiert anpacken(...)', 'Leute, die unternehmerisch denken(...)', 'alle, die Ziele mit Elan umsetzen(...)']"
-Team-player,s,style,hollow,"['Teamplayer~in~/~Teamplayer', 'Person, die gut und gern mit anderen zusammenarbeitet(...)', 'jemand, dem gute Verständigung und kameradschaftliches Verhalten wichtig sind(...)', 'jemand, dem das ""Wir"" wichtiger ist als das ""Ich""(...)', 'Team', 'Teammitglieder', 'Teamplayer~innen~/~Teamplayer', 'Leute, die gut und gern mit anderen zusammenarbeiten(...)', 'Menschen, denen kameradschaftliches Verhalten und gute Verständigung wichtig sind(...)', 'Menschen, den das ""Wir"" wichtiger ist als das ""Ich""(...)']"
+Team-player,s,style,hollow,"['Teamplayer~in~/~Teamplayer', 'Person, die gut und gern mit anderen zusammenarbeitet(...)', 'jemand, dem gute Verständigung und kameradschaftliches Verhalten wichtig sind(...)', 'jemand, dem das ""Wir"" wichtiger ist als das ""Ich""(...)', 'Team', 'Teammitglieder', 'Teamplayer~innen~ und ~Teamplayer', 'Leute, die gut und gern mit anderen zusammenarbeiten(...)', 'Menschen, denen kameradschaftliches Verhalten und gute Verständigung wichtig sind(...)', 'Menschen, den das ""Wir"" wichtiger ist als das ""Ich""(...)']"
 Teamfähigkeit,s,style,hollow,"['Kooperationsfähigkeit', 'Akzeptanz gegenüber verschiedenen Menschen und Verhaltensweisen', 'Fähigkeit mit Unterschieden und Gemeinsamkeiten umzugehen', 'Kommunikationsfähigkeit', 'Kompromissbereitschaft zugunsten des gemeinsamen Ziels']"
-Teamplayer,s,style,hollow,"['Teamplayer~in~/~Teamplayer', 'Person, die gut und gern mit anderen zusammenarbeitet(...)', 'jemand, dem gute Verständigung und kameradschaftliches Verhalten wichtig sind(...)', 'jemand, dem das ""Wir"" wichtiger ist als das ""Ich""(...)', 'Team', 'Teammitglieder', 'Teamplayer~innen~/~Teamplayer', 'Leute, die gut und gern mit anderen zusammenarbeiten(...)', 'Menschen, denen kameradschaftliches Verhalten und gute Verständigung wichtig sind(...)', 'Menschen, den das ""Wir"" wichtiger ist als das ""Ich""(...)']"
+Teamplayer,s,style,hollow,"['Teamplayer~in~/~Teamplayer', 'Person, die gut und gern mit anderen zusammenarbeitet(...)', 'jemand, dem gute Verständigung und kameradschaftliches Verhalten wichtig sind(...)', 'jemand, dem das ""Wir"" wichtiger ist als das ""Ich""(...)', 'Team', 'Teammitglieder', 'Teamplayer~innen~ und ~Teamplayer', 'Leute, die gut und gern mit anderen zusammenarbeiten(...)', 'Menschen, denen kameradschaftliches Verhalten und gute Verständigung wichtig sind(...)', 'Menschen, den das ""Wir"" wichtiger ist als das ""Ich""(...)']"
 Top-Performance,s,style,exaggerating,"['Engagement', 'erfreuliches Ergebnis', 'Kompetenz', 'Bravourstück', 'einen Meilenstein mit Leichtigkeit erreicht haben(...)']"
 Top-Performer,s,style,exaggerating,"['Kümmerer', 'Tatmensch', 'umsetzungsfreudiger Mensch', 'tatkräftiger Mensch', 'Team-Mentor~in~/~Team-Mentor', 'jemand mit Blick fürs große Ganze(...)', 'Mensch, dem Meilensteine am Herzen liegen(...)', 'Mensch, der Aufgaben konstruktiv und engagiert angeht(...)', 'jemand, der mit dem Team Ziele gemeinsam umsetzt(...)', 'jemand, der mit dem Team Aufgaben anpackt(...)', 'jemand, der unternehmerisch denkt(...)', 'jemand, der Ziele mit Elan umsetzt(...)', 'Tatmenschen', 'Mitdenkende', 'engagierte Mitarbeitende', 'umsetzungsfreudige Menschen', 'tatkräftige Leute', 'Leute mit Blick fürs große Ganze(...)', 'Menschen, denen Meilensteine am Herzen liegen(...)', 'Menschen, die Aufgaben konstruktiv und engagiert angehen(...)', 'Leute, die mit dem Team Ziele gemeinsam umsetzen(...)', 'alle, die mit dem Team Aufgaben engagiert anpacken(...)', 'Leute, die unternehmerisch denken(...)', 'alle, die Ziele mit Elan umsetzen(...)']"
 Topic,s,style,anglicism,"['Thema', 'Aufgabenstellung', 'Thematik', 'Gesprächsgegenstand', 'Inhalt']"
@@ -139,7 +140,7 @@ Update,s,style,anglicism,['Aktualisierung']
 Vacancy,s,style,anglicism,['Freie Stelle']
 Wallpaper,s,style,anglicism,['Bildschirmhintergrund']
 Weltherrschaft,s,style,exaggerating,"['tonangebende Rolle', 'einflussreiche Position', 'überwiegende Marktpräsenz', 'Position, die erlaubt, im Markt Maßstäbe zu setzen', 'Rolle, in der man Weg und Richtung weist']"
-Weltmarktführer,s,style,exaggerating,"['Weltmarke', 'Unternehmen mit dem größten Weltmarktanteil nach Umsatz', 'Unternehmen mit dem größten Weltmarktanteil nach Stückzahl', 'Unternehmen, das im weltweiten Handel im Segment mehr vertreten ist als andere', 'Unternehmen, das den technologischen Wandel im Markt weltweit gestaltet']"
+Weltmarktführer,s,style,exaggerating,"['Weltmarke', 'Unternehmen mit dem größten Weltmarktanteil nach Umsatz', 'Unternehmen mit dem größten Weltmarktanteil nach Stückzahl', 'multinationales Unternehmen, das den technologischen Wandel im Markt gestaltet']"
 Weltspitze,s,style,exaggerating,"['tonangebende Rolle', 'einflussreiche Position', 'überwiegende Marktpräsenz', 'Position, die erlaubt, im Markt Maßstäbe zu setzen', 'Rolle, in der man Weg und Richtung weist']"
 Wettkämpfer,s,style,exaggerating,"['Wettkampf', 'Wettkämpfer~in~/~Wettkämpfer', 'Mensch, der sein Team gern auf dem gemeinsamen Weg mitnimmt(...)', 'jemand, der ein faires Miteinander schätzt(...)', 'jemand, der Ziele zusammen mit dem Team erreichen will(...)', 'Wettkämpfer~innen~ und ~Wettkämpfer', 'Menschen, die ihr Team gern auf dem gemeinsamen Weg mitnehmen(...)', 'alle, die ein faires Miteinander schätzen(...)', 'Leute, die Ziele zusammen mit dem Team umsetzen wollen(...)']"
 Winner-Typ,s,style,exaggerating,"['umsetzungsfreudiger Mensch(...)', 'Mensch, der gemeinsame Ziele motiviert anpackt(...)', 'jemand, der Freude am Erreichen von Meilensteinen hat(...)', 'jemand, der zusammen mit dem Team kontinuierlich Ziele umsetzt(...)', 'jemand, der gemeinsame Aufgaben mit Elan angeht(...)']"
@@ -147,9 +148,9 @@ Winnertyp,s,style,exaggerating,"['umsetzungsfreudiger Mensch(...)', 'Mensch, der
 Workflow,s,style,anglicism,['Arbeitsablauf']
 aber,adv,style,filler,['-']
 abermals,adv,style,filler,['-']
-absolut,a,style,exaggerating,"['durch und durch', 'real', 'umfassend', 'uneingeschränkt', 'gründlich', 'zweifelsohne', 'gerne', 'zuverlässig']"
+absolut,a,style,exaggerating,"['durch und durch', 'real', 'umfassend', 'uneingeschränkt', 'gründlich', 'gerne', 'zuverlässig']"
 adden,v,style,anglicism,"['hinzufügen', 'einladen', 'einwerfen', 'ergänzen', 'verbessern']"
-adressieren,v,style,anglicism,"['besprechen', 'beschäftigen mit', 'angehen', 'mit (...) befassen ', 'nehmen (...) dem Thema an', 'nehmen (...) der Sache an']"
+adressieren,v,style,anglicism,"['besprechen', 'beschäftigen mit', 'angehen', 'mit (...) befassen', 'nehmen (...) dem Thema an', 'nehmen (...) der Sache an']"
 agreed,a,style,anglicism,"['einer Meinung', 'zugesagt', 'eingewilligt', 'angenommen', 'vereinbart']"
 aktiv,a,style,hollow,"['--- nicht auf Menschen beziehen', 'lebendig', 'tatkräftig', 'lebhaft', 'enthusiastisch', 'engagiert', 'energiegeladen', 'vital', 'eifrig', 'anpassungsfähig', 'schwungvoll']"
 allein,adv,style,filler,['-']
@@ -174,7 +175,7 @@ ausgerechnet,adv,style,filler,['-']
 ausgezeichnet,a,style,exaggerating,"['gut', 'bemerkenswert', 'mit einem Preis gewürdigt', 'öffentlich geehrt', 'auf (...) stolz sein dürfen']"
 ausnahmslos,adv,style,filler,['-']
 außerdem,adv,style,filler,['-']
-außergewöhnlich,a,style,exaggerating,"['kreativ', 'gut', 'komplex', 'beeindruckend', 'eindrucksvoll', 'auffällig', 'sich positiv abhebend', 'bemerkenswert']"
+außergewöhnlich,a,style,exaggerating,"['kreativ', 'gut', 'komplex', 'eindrucksvoll', 'auffällig', 'sich positiv abhebend', 'bemerkenswert']"
 außerordentlich,a,style,exaggerating,"['gut', 'eindrucksvoll', 'bemerkenswert']"
 beeindrucken,v,style,exaggerating,"['einen guten Eindruck hinterlassen', 'einen guten Eindruck machen', 'wirken', 'bewegen', 'sich hervortun']"
 beeindruckend,a,style,exaggerating,"['gut', 'bewegend', 'inspirierend', 'bemerkenswert', 'eindrucksvoll', 'wirkungsvoll']"
@@ -343,8 +344,8 @@ recht,adv,style,filler,['-']
 reflektieren,v,style,exaggerating,"['überdenken', 'betrachten', 'reindenken(...)', 'sich gedanklich intensiv befassen(...)']"
 reichlich,adv,style,filler,['-']
 reiflich,adv,style,filler,['-']
-reingestafft,a,style,anglicism,"['zugeteilt', 'Arbeitskräfte zugewiesen', 'Personenstunden bewilligt']"
-reinstaffen,v,style,anglicism,"['zuteilen', 'Arbeitskräfte zuweisen', 'Personenstunden bewilligen']"
+reingestafft,a,style,anglicism,"['zugeteilt', 'Personal zugewiesen', 'Personenstunden bewilligt']"
+reinstaffen,v,style,anglicism,"['zuteilen', 'Personal zuweisen', 'Personenstunden bewilligen']"
 relativ,adv,style,filler,['-']
 restlos,adv,style,filler,['-']
 resyncen,v,style,anglicism,"['abstimmen', 'koordinieren', 'abgleichen', 'in Einklang bringen']"
@@ -377,6 +378,7 @@ stets,adv,style,filler,['-']
 stilsicher,a,style,exaggerating,"['kultiviert', 'der Situation angemessen auftretend', 'Gepflogenheiten routiniert respektierend']"
 stressen,v,style,anglicism,"['betonen', 'hervorheben', 'mit Nachdruck bewerben', 'unterstreichen']"
 supporten,v,style,anglicism,['unterstützen']
+sweet-talken,v,style,anglicism,"['umgarnen', '']"
 sweettalken,v,style,anglicism,"['umgarnen', '']"
 teamfähig,a,style,hollow,"['kooperationsfähig', 'offen gegenüber verschiedenen Menschen und Verhaltensweisen', 'fähig mit Unterschieden und Gemeinsamkeiten umzugehen', 'kommunikationsfähig', 'kompromissbereit zugunsten des gemeinsamen Ziels']"
 trotzdem,adv,style,filler,['-']
@@ -393,7 +395,7 @@ unmaßgeblich,adv,style,filler,['-']
 unsagbar,adv,style,filler,['-']
 unstreitig,adv,style,filler,['-']
 unsäglich,adv,style,filler,['-']
-unwiderstehlich,a,style,exaggerating,"['für sich einnehmen', 'interessant', 'einladend', 'Kundenbedürfnisse identifiziert und bedient haben(...)']"
+unwiderstehlich,a,style,exaggerating,"['einnehmend', 'interessant', 'einladend', 'effektiv', 'Kundenbedürfnisse identifiziert und bedient haben(...)']"
 unzweifelhaft,adv,style,filler,['-']
 value-adden,v,style,anglicism,"['beitragen', 'etwas beitragen', 'sinnvollen Beitrag leisten']"
 valueadden,v,style,anglicism,"['beitragen', 'etwas beitragen', 'sinnvollen Beitrag leisten']"
@@ -410,7 +412,7 @@ völlig,adv,style,filler,['-']
 wahrscheinlich,adv,style,filler,['-']
 weidlich,adv,style,filler,['-']
 weitgehend,adv,style,filler,['-']
-weltweit,a,style,hollow,"['in vielen Ländern vertreten', 'auf allen Kontinenten vertreten', 'in ((Länder)) tätig', 'in vielen Ländern ((Kontinente)) tätig(...)', 'mit ((Zahl)) Niederlassungen auf ((Zahl)) Kontinenten(...)']"
+weltweit,a,style,hollow,"['in vielen Ländern', 'auf allen Kontinenten', 'in ((Länder)) tätig', 'länderübergreifend', 'multinational', 'in vielen Ländern ((Kontinente)) tätig(...)', 'mit ((Zahl)) Niederlassungen auf ((Zahl)) Kontinenten(...)']"
 wenigstens,adv,style,filler,['-']
 wieder,adv,style,filler,['-']
 wiederum,adv,style,filler,['-']
@@ -418,8 +420,8 @@ wirklich,adv,style,filler,['-']
 wohl,adv,style,filler,['-']
 wohlgemerkt,adv,style,filler,['-']
 womöglich,adv,style,filler,['-']
-world-class,a,style,anglicism,"['hochwertig', 'Weltklasse', 'mit guten Erfolgschancen auf dem Weltmarkt(...)', 'mit Weltformat (...)', 'hat das Potenzial, sich auf dem Weltmarkt durchzusetzen(...)']"
-worldclass,a,style,anglicism,"['hochwertig', 'Weltklasse', 'mit guten Erfolgschancen auf dem Weltmarkt(...)', 'mit Weltformat (...)', 'hat das Potenzial, sich auf dem Weltmarkt durchzusetzen(...)']"
+world-class,a,style,anglicism,"['Weltklasse sein', 'mit guten Erfolgschancen auf dem Weltmarkt(...)', 'mit Weltformat(...)', 'hat das Potenzial, sich auf dem Weltmarkt durchzusetzen(...)']"
+worldclass,a,style,anglicism,"['Weltklasse sein', 'mit guten Erfolgschancen auf dem Weltmarkt(...)', 'mit Weltformat(...)', 'hat das Potenzial, sich auf dem Weltmarkt durchzusetzen(...)']"
 ziemlich,adv,style,filler,['-']
 zudem,adv,style,filler,['-']
 zugegeben,adv,style,filler,['-']
@@ -429,7 +431,7 @@ zuweilen,adv,style,filler,['-']
 zweifellos,adv,style,filler,['-']
 zweifelsfrei,adv,style,filler,['-']
 zweifelsohne,adv,style,filler,['-']
-Überflieger,s,style,exaggerating,"['kompetenter Mensch', 'fähiger Mensch', 'tatkräftige Person', 'Tatmensch', 'Überflieger~in~/~Überflieger', 'jemand, der durch Kompetenz überrascht(...)', 'jemand, der Meilensteine leicht und kreativ umsetzt(...)', 'kompetenter Mensch', 'fähiger Mensch', 'tatkräftige Person', 'Tatmensch', 'Überflieger~innen~ und ~Überflieger', 'jemand, der durch Kompetenz überrascht(...)', 'jemand, der Meilensteine leicht und kreativ umsetzt(...)']"
+Überflieger,s,style,exaggerating,"['kompetenter Mensch', 'fähiger Mensch', 'tatkräftige Person', 'Tatmensch', 'Überflieger~in~/~Überflieger', 'jemand, der durch Kompetenz überrascht(...)', 'jemand, der Meilensteine leicht und kreativ umsetzt(...)', 'kompetenter Mensch', 'fähiger Mensch', 'tatkräftige Person', 'Tatmensch', 'schlussendlich', 'jemand, der durch Kompetenz überrascht(...)', 'jemand, der Meilensteine leicht und kreativ umsetzt(...)']"
 äußerst,a,style,exaggerating,"['ausgesprochen', 'hochgradig', 'mit Feuereifer']"
 überaus,adv,style,filler,['-']
 überdies,adv,style,filler,['-']
