@@ -209,7 +209,7 @@
                 "icon": "🤔",
                 "text": "Vermeiden Sie Sonderzeichen."
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Stil: Verschiedenes",
             "start": 376,
             "subcategory": "general_style",

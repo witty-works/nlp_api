@@ -1,25 +1,5 @@
 {
     "language": "de",
     "limit_reached": false,
-    "results": [
-        {
-            "alternatives": [
-                {
-                    "text": "liebe es"
-                }
-            ],
-            "category": "style",
-            "context": "Ich liebs wenn du singst",
-            "end": 9,
-            "explanation": {
-                "icon": "🤔",
-                "text": "Möchten Sie die standardsprachliche Alternative „liebe es“ verwenden?"
-            },
-            "gravity": 2.0,
-            "label": "Stil: Verschiedenes",
-            "start": 4,
-            "subcategory": "general_style",
-            "text": "liebs"
-        }
-    ]
+    "results": []
 }
