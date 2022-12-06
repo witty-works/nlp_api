@@ -5,6 +5,35 @@
         {
             "alternatives": [
                 {
+                    "text": "they"
+                },
+                {
+                    "text": "management"
+                },
+                {
+                    "text": "management team"
+                },
+                {
+                    "text": "managers"
+                }
+            ],
+            "category": "gendered",
+            "context": "If a manager picks up this topic, he has to go the extra-mile to solve it.",
+            "end": 12,
+            "explanation": {
+                "icon": "😟",
+                "text": "People are more likely to picture men here",
+                "url": "https://www.witty.works/en/categories/gendered#titles"
+            },
+            "gravity": 2.0,
+            "label": "Gendered: Titles",
+            "start": 5,
+            "subcategory": "titles",
+            "text": "manager"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "think ahead"
                 },
                 {
