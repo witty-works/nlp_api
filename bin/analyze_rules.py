@@ -202,12 +202,21 @@ def generate_alternatives_english(all_alternatives):
 
 
 def analyze_correct_endings_german(word):
+    if re.search("^.*  *$", word):
+        print("Potential multiple spaces in a row in: " + word)
+        issue_detected = True
+
     word = word.replace("~ und ~", "-~-und-~-")
+
     words = word.split()
     word = word.replace("-~-und-~-", "~ und ~")
     for sub_word in words:
         sub_word = sub_word.replace("-~-und-~-", "~ und ~")
         issue_detected = False
+
+        if re.search("^.*innen~/~.*$", sub_word):
+            print("Potential replace '/' with ' und ' in: " + word)
+            issue_detected = True
 
         if (
             re.search("^.*[a-z]{3}in(nen)?[~ ].*$", sub_word)
