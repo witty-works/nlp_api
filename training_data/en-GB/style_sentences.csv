@@ -1,5 +1,6 @@
 Lemma,Word_Type,Category,Primary_subcategory,Alt_split
 Fine. Whatever.,i,style,hollow,"[""I don't feel good about this. Can we talk about it?""]"
+I mean,i,style,filler,['-']
 I think,i,style,filler,['-']
 I think we should,i,style,hollow,"[""Let's""]"
 It’s not that complicated,i,style,hollow,['Which part is confusing? I can help clarify']
@@ -17,7 +18,6 @@ clever head,a+s,style,exaggerating,"['competence', 'creativity', 'intelligence',
 click to,i,style,filler,['-']
 core competencies,s,style,hollow,['what we do best']
 digital immigrant,s,style,hollow,"['--- spell out relevant skills', 'technologically literate person', 'someone with technology literacy skills', 'someone who handles digital tools with ease', 'digitally skilled person', 'technologically literate people', 'those with technology literacy skills', 'people who handle digital tools with ease', 'digitally skilled people']"
-digital native,s,style,hollow,"['--- spell out relevant skills', 'digitally skilled person', 'someone who handles digital tools with ease', 'someone with technology literacy skills', 'someone comfortable with using digital technologies', 'digitally skilled people', 'people who handle digital tools with ease', 'those with technology literacy skills', 'people comfortable with using digital technologies']"
 drink the kool aid,i,style,hollow,"['be misled', ""believe everything you're told""]"
 drink the kool-aid,i,style,hollow,"['be misled', ""believe everything you're told""]"
 drink the koolaid,i,style,hollow,"['be misled', ""believe everything you're told""]"
@@ -62,7 +62,7 @@ self driven,i,style,hollow,"['motivated', 'ardent', 'spirited', 'aspiring', 'sin
 self starter,s,style,exaggerating,['-']
 state of the art,i,style,hollow,"['the highest point of technological achievement to date', 'the current highest level of development in the field']"
 success rate,s,style,exaggerating,['-']
-success story,s,style,exaggerating,['-']
+success story,s,style,exaggerating,"['-', 'reference', 'person of the hour', 'case study', 'business case', 'case story', 'references', 'people of the hour', 'case studies', 'business cases', 'case stories']"
 take it offline,i,style,hollow,['talk about this later']
 team player,s,style,hollow,"['someone who values team effort over personal gains', 'someone who enjoys collaboration', 'someone who can compromise to reach a shared goal', 'someone who feels inspired and motivated by working together with others toward a shared goal', 'people who value team effort over personal gains', 'people who enjoy collaboration', 'people who can compromise to reach a shared goal', 'people who feel inspired and motivated by working together with others toward a shared goal']"
 team spirit,s,style,hollow,"['mindset that values team effort over individual gains', 'mindsets that value team effort over individual gains']"

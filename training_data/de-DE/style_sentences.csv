@@ -1,10 +1,10 @@
 Lemma,Word_Type,Category,Primary_subcategory,Alt_split
+Account Manager,s,style,anglicism,"['Kundenbetreuung', 'Kundenbetreuer~in~/~Kundenbetreuer', 'Kundenbetreuer~innen~ und ~Kundenbetreuer']"
 Alpha Chef,s,style,exaggerating,"['Person, die ihr Team inspiriert(...)', 'Mensch mit Freude an Verantwortung(...)', 'Person, die ihrem Team mit Rat und Tat zur Seite steht(...)', 'Person, die das Team beim Erreichen von gemeinsamen Zielen unterstützt(...)', 'Leute, die ihre Teams inspirieren(...)', 'Menschen mit Freude an Verantwortung(...)', 'Leute, die ihrem Team mit Rat und Tat zur Seite stehen(...)', 'Leute, die das Team beim Erreichen von gemeinsamen Zielen unterstützen und lenken(...)']"
 Alpha Führungskraft,s,style,exaggerating,"['Person, die ihr Team inspiriert(...)', 'Mensch mit Freude an Verantwortung(...)', 'Person, die ihrem Team mit Rat und Tat zur Seite steht(...)', 'Person, die das Team beim Erreichen von gemeinsamen Zielen unterstützt(...)', 'Leute, die ihre Teams inspirieren(...)', 'Menschen mit Freude an Verantwortung(...)', 'Leute, die ihrem Team mit Rat und Tat zur Seite stehen(...)', 'Leute, die das Team beim Erreichen von gemeinsamen Zielen unterstützen und lenken(...)']"
 Alpha Person,s,style,exaggerating,"['Person, die ihr Team inspiriert(...)', 'Mensch mit Freude an Verantwortung(...)', 'Person, die ihrem Team mit Rat und Tat zur Seite steht(...)', 'Person, die das Team beim Erreichen von gemeinsamen Zielen unterstützt(...)', 'Leute, die ihre Teams inspirieren(...)', 'Menschen mit Freude an Verantwortung(...)', 'Leute, die ihrem Team mit Rat und Tat zur Seite stehen(...)', 'Leute, die das Team beim Erreichen von gemeinsamen Zielen unterstützen und lenken(...)']"
 Alpha Persönlichkeit,s,style,exaggerating,"['Person, die ihr Team inspiriert(...)', 'Mensch mit Freude an Verantwortung(...)', 'Person, die ihrem Team mit Rat und Tat zur Seite steht(...)', 'Person, die das Team beim Erreichen von gemeinsamen Zielen unterstützt(...)', 'Leute, die ihre Teams inspirieren(...)', 'Menschen mit Freude an Verantwortung(...)', 'Leute, die ihrem Team mit Rat und Tat zur Seite stehen(...)', 'Leute, die das Team beim Erreichen von gemeinsamen Zielen unterstützen und lenken(...)']"
 Art Director,s,style,anglicism,"['Werbegestaltung', 'Werbegestalter~in~/~Werbegestalter']"
-Baby Boomer,s,style,hollow,"['älterer Mensch', 'jemand, der zwischen 1946 und 1964 geboren wurde', 'jemand, dessen Ansichten veraltet wirken(...)', 'jemand, der ungefragt aus seinem Leben erzählt(...)', 'ältere Menschen', 'Erwachsene', 'Leute, die zwischen 1946 und 1964 geboren wurden', 'Leute, deren Ansichten veraltet wirken(...)', 'Menschen, die ungefragt aus ihrem Leben erzählen(...)']"
 Bullet point,s,style,anglicism,"['Aufzählungspunkt', 'Aufzählungspunkte']"
 C Level,s,style,anglicism,"['Führungsetage', 'obere Management']"
 Case Study,s,style,anglicism,['Fallstudie']
@@ -14,20 +14,19 @@ Convenience Goods,s,style,anglicism,['Klein- und Bequemlichkeitsbedarf']
 Cover your ass,i,style,anglicism,"['Halt dich bedeckt', ""Sicher' dich ab"", ""Sicher' dich rechtlich ab"", ""Beug' mal für den Fall der Fälle vor"", 'Geh auf Nummer Sicher']"
 Customer Relationship Manager,s,style,anglicism,"['Kundenbetreuung', 'Kundenbetreuer~in~/~Kundenbetreuer']"
 Data Base,s,style,anglicism,['Datenbank']
-Digital Native,s,style,hollow,"['jüngerer Mensch', 'Mensch, der in der digitalen Welt aufgewachsen ist,(...)', 'jemand, der online lebt und liebt,(...)', 'Person, die Internet, neue Medien und digitale Technologien intuitiv einsetzt,(...)', 'jemand, der digitalen Innovationen offen gegenübersteht(...)', 'digitale Generation', 'Gen Y und Gen Z', 'jüngere Menschen', 'Menschen, die in der digitalen Welt aufgewachsen sind,(...)', 'Menschen, die online leben und lieben,(...)', 'Leute, die Internet, neue Medien und digitale Technologien intuitiv nutzen(...)', 'Personen, die digitalen Innovationen offen gegenüberstehen(...)']"
 "Erst die Arbeit, dann das Vergnügen",i,style,exaggerating,['Zusammen und mit Freude an der Sache geht alles leichter und besser.']
 Extrameile gehen,s+v,style,exaggerating,"['Spaß am Mit- und Weiterdenken haben', 'sich für Kundenzufriedenheit engagieren', 'über den eigenen Tellerrand blicken', 'Spaß haben, Kundschaft durch unerwartete und kreative Lösungen zu begeistern']"
 Field Operator,s,style,anglicism,"['Außendienst', 'Außendienstmitarbeiter~in~/~Außendienstmitarbeiter']"
 Financial Plan,s,style,anglicism,['Finanzplan']
 Go getter,s,style,exaggerating,"['tatkräftige Person', 'Tatmensch', 'umsetzungsfreudiger Mensch', 'jemand, der unternehmerisch denkt(...)', 'jemand, der mit Elan auf Ziele hinarbeitet(...)', 'tatkräftige Leute', 'Tatmenschen', 'umsetzungsfreudige Menschen', 'Leute, die unternehmerisch denken(...)', 'Menschen, die mit Elan auf Ziele hinarbeiten(...)']"
 Goal getter,s,style,exaggerating,"['tatkräftige Person', 'Tatmensch', 'umsetzungsfreudiger Mensch', 'Mensch, der sich kontinuierlich Ziele setzt und erreicht(...)', 'Mensch, der bereit ist, sich neuen oder komplexen Situationen zu stellen, um gemeinsame Ziele zu verwirklichen(...)', 'tatkräftige Leute', 'Tatmenschen', 'umsetzungsfreudige Menschen', 'Menschen, die sich kontinuierlich Ziele setzen und erreichen(...)', 'Leute, der bereit sind, sich neuen oder komplexen Situationen zu stellen, um gemeinsame Ziele zu verwirklichen(...)']"
-High potential,s,style,anglicism,"['vielversprechende~r Bewerber~in~/~Bewerber', 'Person mit hohem Potenzial(...)', 'vielversprechende Bewerber~innen~/~Bewerber', 'Personen mit hohem Potenzial(...)']"
+High potential,s,style,anglicism,"['vielversprechende~r Bewerber~in~/~Bewerber', 'Person mit hohem Potenzial(...)', 'vielversprechende Bewerber~innen~ und ~Bewerber', 'Personen mit hohem Potenzial(...)']"
 Human Resources,s,style,anglicism,['Personalverwaltung']
 Industrial Design,s,style,anglicism,"['Industriedesign', 'industrielle Formgebung']"
 Industrial Marketing,s,style,anglicism,['Industriemarketing']
 Inner Circle,s,style,anglicism,"['innere Kreis', 'kleine Kreis', 'engere Kreis']"
 Joint Venture,s,style,anglicism,['Gemeinschaftsunternehmen']
-Key Account Manager,s,style,anglicism,"['Großkundenbetreuung', 'Großkundenbetreuer~in~/~Großkundenbetreuer']"
+Key Account Manager,s,style,anglicism,"['Großkundenbetreuung', 'Großkundenbetreuer~in~/~Großkundenbetreuer', 'Großkundenbetreuer~innen~ und ~Großkundenbetreuer']"
 Key learnings,i,style,anglicism,"['wichtigsten Erkenntnisse', 'Schlüsselerfahrungen', 'wichtigsten Lehren', 'Schlüsselqualifikationen']"
 Life Cycle,s,style,anglicism,['Lebenszyklus']
 Life Style,s,style,anglicism,['Lebensstil']
@@ -45,6 +44,7 @@ Public Marketing,s,style,anglicism,['Öffentlichkeitsmarketing']
 Public Relations,s,style,anglicism,['Öffentlichkeitsarbeit']
 Reference Group,s,style,anglicism,['Referenzgruppe']
 SEO Manager,s,style,anglicism,"['Suchmaschinenoptimierung', 'Spezialist~in~/~Spezialist in der Suchmaschinenoptimierung']"
+Sales Pitch,s,style,anglicism,"['Verkaufsmasche', 'Verkaufstaktik', 'Verkaufsargumentation', 'Kundenansprache', 'Verkaufspräsentation']"
 Sales Portfolio,s,style,anglicism,['Vetrieb']
 Sales Promotion,s,style,anglicism,['Verkaufsförderung']
 Save my ass,i,style,anglicism,"[""Halt' mir den Rücken frei""]"
@@ -54,7 +54,7 @@ Sehr geehrte,adv+a,style,formality,"['-', 'Guten Tag', 'Hallo', 'Lieb~e~/~Lieber
 Sehr geehrter,adv+a,style,formality,"['Guten Tag', 'Hallo', 'Lieb~e~/~Lieber', 'Guten Tag, lieb~e~/~lieber', 'Guten Tag', 'Liebe', 'Liebe alle', 'Hallo zusammen', 'Hallo, liebe Zuhörende und Lesende']"
 Shopping Center,s,style,anglicism,['Einkaufszentrum']
 Supply Chain Manager,s,style,anglicism,"['Lieferkette', 'Mitarbeiter~in~/~Mitarbeiter in der Lieferkette']"
-Team player,s,style,hollow,"['Teamplayer~in~/~Teamplayer', 'Person, die gut und gern mit anderen zusammenarbeitet(...)', 'jemand, dem gute Verständigung und kameradschaftliches Verhalten wichtig sind(...)', 'jemand, dem das ""Wir"" wichtiger ist als das ""Ich""(...)', 'Team', 'Teammitglieder', 'Teamplayer~innen~/~Teamplayer', 'Leute, die gut und gern mit anderen zusammenarbeiten(...)', 'Menschen, denen kameradschaftliches Verhalten und gute Verständigung wichtig sind(...)', 'Menschen, den das ""Wir"" wichtiger ist als das ""Ich""(...)']"
+Team player,s,style,hollow,"['Teamplayer~in~/~Teamplayer', 'Person, die gut und gern mit anderen zusammenarbeitet(...)', 'jemand, dem gute Verständigung und kameradschaftliches Verhalten wichtig sind(...)', 'jemand, dem das ""Wir"" wichtiger ist als das ""Ich""(...)', 'Team', 'Teammitglieder', 'Teamplayer~innen~ und ~Teamplayer', 'Leute, die gut und gern mit anderen zusammenarbeiten(...)', 'Menschen, denen kameradschaftliches Verhalten und gute Verständigung wichtig sind(...)', 'Menschen, den das ""Wir"" wichtiger ist als das ""Ich""(...)']"
 Top Performance,s,style,exaggerating,"['Engagement', 'erfreuliches Ergebnis', 'Kompetenz', 'Bravourstück', 'einen Meilenstein mit Leichtigkeit erreicht haben(...)']"
 Top Performer,s,style,exaggerating,"['Kümmerer', 'Tatmensch', 'umsetzungsfreudiger Mensch', 'tatkräftiger Mensch', 'Team-Mentor~in~/~Team-Mentor', 'jemand mit Blick fürs große Ganze(...)', 'Mensch, dem Meilensteine am Herzen liegen(...)', 'Mensch, der Aufgaben konstruktiv und engagiert angeht(...)', 'jemand, der mit dem Team Ziele gemeinsam umsetzt(...)', 'jemand, der mit dem Team Aufgaben anpackt(...)', 'jemand, der unternehmerisch denkt(...)', 'jemand, der Ziele mit Elan umsetzt(...)', 'Tatmenschen', 'Mitdenkende', 'engagierte Mitarbeitende', 'umsetzungsfreudige Menschen', 'tatkräftige Leute', 'Leute mit Blick fürs große Ganze(...)', 'Menschen, denen Meilensteine am Herzen liegen(...)', 'Menschen, die Aufgaben konstruktiv und engagiert angehen(...)', 'Leute, die mit dem Team Ziele gemeinsam umsetzen(...)', 'alle, die mit dem Team Aufgaben engagiert anpacken(...)', 'Leute, die unternehmerisch denken(...)', 'alle, die Ziele mit Elan umsetzen(...)']"
 Trade Mart,s,style,anglicism,['Großhandelszentrum']
@@ -124,6 +124,7 @@ schlaue Köpfe,a+s,style,exaggerating,"['Leute mit Durchblick', 'aufmerksame Men
 schlauer Kopf,a+s,style,exaggerating,"['jemand mit Durchblick', 'aufmerksame Person', 'erfindungsreicher Menschen', 'Mensch mit Blick fürs Wesentliche(...)', 'Person, die Erlerntes rasch anwenden kann(...)', 'aufmerksame Person, die mitdenkt(...)', 'jemand mit Erfahrung(...)', 'Mensch mit verschiedenen Perspektiven(...)']"
 schnelle Auffassungsgabe,a+s,style,hollow,"['das Wesentliche schnell erkennen', 'Gelerntes rasch anwenden']"
 sowohl als auch,adv,style,filler,['-']
+sweet talken,v,style,anglicism,"['umgarnen', '']"
 think outside of the box,i,style,hollow,"['brainstormen', 'aus neuen Blinkwinkeln betrachten', 'kreativ denken', 'gedankliches Neuland betraten', 'lateral denken']"
 tight getaktet,i,style,anglicism,"['eng getaktet', 'beschäftigt', 'ausgebucht', 'habe einen engen Terminplan', 'hat einen Termin nach dem anderen']"
 too barebone,i,style,anglicism,"['zu dünn', 'zu wenig schlüssig', 'zu unentwickelt', 'zu mager']"
@@ -133,5 +134,5 @@ value adden,v,style,anglicism,"['beitragen', 'etwas beitragen', 'sinnvollen Beit
 voll und ganz,adv,style,filler,['-']
 von neuem,adv,style,filler,['-']
 vor allem,a,style,hollow,"['als Wichtigstes', 'namentlich', 'vorrangig']"
-world class,a,style,anglicism,"['hochwertig', 'Weltklasse', 'mit guten Erfolgschancen auf dem Weltmarkt(...)', 'mit Weltformat (...)', 'hat das Potenzial, sich auf dem Weltmarkt durchzusetzen(...)']"
+world class,a,style,anglicism,"['Weltklasse sein', 'mit guten Erfolgschancen auf dem Weltmarkt(...)', 'mit Weltformat(...)', 'hat das Potenzial, sich auf dem Weltmarkt durchzusetzen(...)']"
 über dem Durchschnitt,a,style,exaggerating,"['viel', 'ausgesprochen', 'hochgradig', 'mehr als', 'zutiefst', 'mit Feuereifer']"

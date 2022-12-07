@@ -89,7 +89,7 @@ Dorfmatratze,s,openly_discriminating,sexism,['-']
 Dorfnutte,s,openly_discriminating,sexism,['-']
 Dorfschlampe,s,openly_discriminating,sexism,['-']
 Dorftrampel,s,openly_discriminating,sexism,['-']
-Drache,s,openly_discriminating,sexism,['-']
+Drachen,=s,openly_discriminating,sexism,['-']
 Dreckhure,s,openly_discriminating,sexism,['-']
 Dreckluder,s,openly_discriminating,sexism,['-']
 Drecksau,s,openly_discriminating,sexism,['-']
@@ -203,7 +203,6 @@ LGBTIQ-Lobby,s,openly_discriminating,homophobia,['-']
 LGBTIQlobby,s,openly_discriminating,homophobia,['-']
 LGBTlobby,s,openly_discriminating,homophobia,['-']
 LGBTmafia,s,openly_discriminating,homophobia,['-']
-Laborunfall,s,openly_discriminating,ableism,['-']
 Ladyboy,s,openly_discriminating,transphobia,"['-', 'trans Frau']"
 Lallkopf,s,openly_discriminating,ableism,['-']
 Landhure,s,openly_discriminating,sexism,['-']
@@ -218,15 +217,17 @@ Lululutscher,s,openly_discriminating,homophobia,['-']
 Mannschaftsmatratze,s,openly_discriminating,sexism,['-']
 Mannweib,s,openly_discriminating,sexism,['-']
 Mauerblümchen,s,openly_discriminating,sexism,['-']
+Mauschelei,s,openly_discriminating,antisemitism,"['-', 'Täuschung', 'Übervorteilung', 'Schwindel', 'interne Absprache', 'Nepotismus', 'Täuschungen', 'Übervorteilungen', 'Schwindeleien', 'interne Absprachen', 'Begünstigungen']"
 Meckerliese,s,openly_discriminating,sexism,['-']
 Meldemuschi,s,openly_discriminating,sexism,['-']
 Metze,s,openly_discriminating,sexism,['-']
 Milchmädchen,s,openly_discriminating,sexism,['-']
+Mischpoke,a,openly_discriminating,antisemitism,"['-', 'Familie', 'Gruppe', 'eingeschworene Gemeinschaft', 'liebe Verwandtschaft', 'Bande']"
 Mistschlampe,s,openly_discriminating,sexism,['-']
 Mistvieh,s,openly_discriminating,offensive_language,['-']
 Mongo,s,openly_discriminating,ableism,"['-', 'Mensch mit Down-Syndrom(...)', 'Mensch mit Trisomie 21(...)', 'Mensch mit veränderter Chromosomenzahl(...)', 'Mensch mit Lernschwierigkeiten(...)']"
-Neger,s,openly_discriminating,racism,"['-', 'Black Person of Color', 'Schwarze~/~Schwarzer', 'Afrikaner~in~/~Afrikaner', 'Afroamerikaner~in~/~Afroamerikaner']"
-Negerin,s,openly_discriminating,racism,"['-', 'Black Person of Color', 'Schwarze~/~Schwarzer', 'Afrikaner~in~/~Afrikaner', 'Afroamerikaner~in~/~Afroamerikaner']"
+Neger,s,openly_discriminating,racism,"['-', 'Black Person of Color', 'Schwarz~e~/~Schwarzer', 'Afrikaner~in~/~Afrikaner', 'Afroamerikaner~in~/~Afroamerikaner']"
+Negerin,s,openly_discriminating,racism,"['-', 'Black Person of Color', 'Schwarz~e~/~Schwarzer', 'Afrikaner~in~/~Afrikaner', 'Afroamerikaner~in~/~Afroamerikaner']"
 Negerordnung,s,openly_discriminating,racism,['-']
 Nervensäge,s,openly_discriminating,sexism,['-']
 Nigger,s,openly_discriminating,racism,['-']
@@ -274,6 +275,8 @@ Saftsack,s,openly_discriminating,offensive_language,['-']
 Saufotze,s,openly_discriminating,sexism,['-']
 Sauhure,s,openly_discriminating,sexism,['-']
 Schabracke,s,openly_discriminating,sexism,['-']
+Schacher,s,openly_discriminating,antisemitism,"['-', 'Handel', 'unlautere Preisabsprache', 'Absprache unter der Hand', 'gewinnsüchtige Treiben']"
+Schacherei,s,openly_discriminating,antisemitism,"['-', 'Feilscherei', 'harte Verhandlungen', 'Geschäftemacherei', 'Gezerre', 'Gefeilsche', 'Feilschereien', 'harte Verhandlungen', 'Geschäftemacherei', 'Gezerre', 'Gefeilsche']"
 Scheiße,s,openly_discriminating,offensive_language,['-']
 Scheißer,s,openly_discriminating,offensive_language,['-']
 Scheißhausfotze,s,openly_discriminating,sexism,['-']
@@ -316,8 +319,8 @@ Spacken,s,openly_discriminating,ableism,['-']
 Spacko,s,openly_discriminating,ableism,['-']
 Spagmat,s,openly_discriminating,ableism,['-']
 Spargeltarzan,s,openly_discriminating,ableism,"['-', 'schlanke Person']"
-Spast,s,openly_discriminating,ableism,"['-', 'Spastiker', 'Person, die mit Spasmen lebt(...)', 'Person mit einer motorischen Erkrankung(...)', 'Person mit Willkürbewegungen(...)', 'Mensch mit Cerebralparese(...)', 'Person, die sich ungeschickt oder dumm anstellt(...)']"
-Spasti,s,openly_discriminating,ableism,"['-', 'Spastiker', 'Person, die mit Spasmen lebt(...)', 'Person mit einer motorischen Erkrankung(...)', 'Person mit Willkürbewegungen(...)', 'Mensch mit Cerebralparese(...)', 'Person, die sich ungeschickt oder dumm anstellt(...)']"
+Spast,s,openly_discriminating,ableism,"['-', 'Spastiker', 'Person, die mit Spasmen lebt(...)', 'Person mit einer motorischen Erkrankung(...)', 'Person mit Willkürbewegungen(...)', 'Mensch mit Cerebralparese(...)', 'Person, die sich ungeschickt anstellt(...)']"
+Spasti,s,openly_discriminating,ableism,"['-', 'Spastiker', 'Person, die mit Spasmen lebt(...)', 'Person mit einer motorischen Erkrankung(...)', 'Person mit Willkürbewegungen(...)', 'Mensch mit Cerebralparese(...)', 'Person, die sich ungeschickt anstellt(...)']"
 Spermarutsche,s,openly_discriminating,sexism,['-']
 Spinatwachtel,s,openly_discriminating,sexism,['-']
 Stinkfotze,s,openly_discriminating,sexism,['-']
@@ -368,7 +371,6 @@ Waldhexe,s,openly_discriminating,sexism,['-']
 Wanderpokal,s,openly_discriminating,sexism,['-']
 Waschweib,s,openly_discriminating,sexism,['-']
 Weib,s,openly_discriminating,sexism,['-']
-Weihnachtsgans,s,openly_discriminating,sexism,['-']
 Wetterhexe,s,openly_discriminating,sexism,['-']
 Wildsau,s,openly_discriminating,sexism,['-']
 Windelschädel,s,openly_discriminating,antimuslim,['-']
@@ -384,7 +386,9 @@ Zuchtsau,s,openly_discriminating,sexism,['-']
 Zwitter,s,openly_discriminating,transphobia,['-']
 Zyklopenfotze,s,openly_discriminating,sexism,['-']
 Zystenfresse,s,openly_discriminating,sexism,['-']
-verdammt,=a,openly_discriminating,offensive_language,['-']
+mauscheln,v,openly_discriminating,antisemitism,"['-', 'täuschen', 'betrügen', 'irreführen', 'übervorteilen', 'geheime Absprachen treffen(...)']"
+schachern,v,openly_discriminating,antisemitism,"['-', 'feilschen', 'hart verhandeln', 'Geschäfte machen', 'sich Vorteile sichern', 'um die Macht feilschen(...)']"
+verdammt,a,openly_discriminating,offensive_language,['-']
 verfickt,a,openly_discriminating,offensive_language,['-']
-verflucht,=a,openly_discriminating,offensive_language,['-']
+verflucht,a,openly_discriminating,offensive_language,['-']
 verkackt,a,openly_discriminating,offensive_language,['-']
