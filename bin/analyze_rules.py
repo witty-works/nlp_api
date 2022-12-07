@@ -205,6 +205,10 @@ def analyze_correct_endings_german(word):
         print("Potential multiple spaces in a row in: " + word)
         issue_detected = True
 
+    if re.search("^.*~~*$", word):
+        print("Potential multiple '~' in a row in: " + word)
+        issue_detected = True
+
     word = word.replace("~ und ~", "-~-und-~-")
 
     words = word.split()
