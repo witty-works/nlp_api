@@ -81,7 +81,7 @@ from app.model import model
 from app.rules import rules
 from app.sentry import set_up_sentry_sdk
 
-version = "1.39.2"
+version = "1.39.3"
 
 settings = get_settings()
 logging = set_up_logger(settings)
