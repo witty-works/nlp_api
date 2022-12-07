@@ -5,6 +5,7 @@
         {
             "alternatives": [
                 {
+                    "context": "Nutze geschlechtsneutrale Job-Titel",
                     "remove": true
                 },
                 {
@@ -16,7 +17,7 @@
                 }
             ],
             "category": "gendered",
-            "context": "Wir brauchen m/f Menschen. Besser ist f/m/d. Und noch besser d/f/m.",
+            "context": "Wir brauchen m/f Menschen. Besser ist f/m/d. Und noch besser d/f/m oder x/f/m.",
             "end": 16,
             "explanation": {
                 "icon": "😮",
@@ -32,6 +33,7 @@
         {
             "alternatives": [
                 {
+                    "context": "Nutze geschlechtsneutrale Job-Titel",
                     "remove": true
                 },
                 {
@@ -43,7 +45,7 @@
                 }
             ],
             "category": "gendered",
-            "context": "Wir brauchen m/f Menschen. Besser ist f/m/d. Und noch besser d/f/m.",
+            "context": "Wir brauchen m/f Menschen. Besser ist f/m/d. Und noch besser d/f/m oder x/f/m.",
             "end": 43,
             "explanation": {
                 "icon": "😮",
@@ -59,7 +61,7 @@
         {
             "alternatives": [],
             "category": "inclusive",
-            "context": "Wir brauchen m/f Menschen. Besser ist f/m/d. Und noch besser d/f/m.",
+            "context": "Wir brauchen m/f Menschen. Besser ist f/m/d. Und noch besser d/f/m oder x/f/m.",
             "end": 66,
             "explanation": {
                 "icon": "✅",
@@ -70,6 +72,21 @@
             "start": 61,
             "subcategory": "d_and_i",
             "text": "d/f/m"
+        },
+        {
+            "alternatives": [],
+            "category": "inclusive",
+            "context": "Wir brauchen m/f Menschen. Besser ist f/m/d. Und noch besser d/f/m oder x/f/m.",
+            "end": 77,
+            "explanation": {
+                "icon": "✅",
+                "text": "Bestärkt Wert von Diversity, Gleichstellung und Inklusion",
+                "url": "https://www.witty.works/de/kategorien/inklusiv#diversität_&_inklusion"
+            },
+            "label": "Inklusiv: Diversität & Inklusion",
+            "start": 72,
+            "subcategory": "d_and_i",
+            "text": "x/f/m"
         }
     ]
 }
