@@ -25,7 +25,7 @@ firstmover,s,style,exaggerating,"['the first to market a product', 'the first to
 flexible,a,style,hollow,"[""--- don't use for people"", 'adaptable', 'strategically nimble', 'pragmatic', 'open', 'agile', 'variable', 'mobile', 'defined by its users']"
 front-runner,s,style,exaggerating,"['-', 'favourite', 'person who sets the pace', 'probable winner', 'favourites', 'people who set the pace', 'probable winners']"
 frontrunner,s,style,exaggerating,"['-', 'favourite', 'person who sets the pace', 'probable winner', 'favourites', 'people who set the pace', 'probable winners']"
-geek,s,style,exaggerating,"['-', 'techie', 'intellectual', 'bookworm', 'person devoted to academic pursuits', 'person with a high level of knowledge (skills) in', 'techies', ' intellectuals', 'bookworms', 'people devoted to academic pursuits', 'people with a high level of knowledge (skills) in']"
+geek,s,style,exaggerating,"['-', 'techie', 'intellectual', 'bookworm', 'person devoted to academic pursuits', 'person with a high level of knowledge (skills) in', 'techies', 'intellectuals', 'bookworms', 'people devoted to academic pursuits', 'people with a high level of knowledge (skills) in']"
 generally,adv,style,filler,['-']
 global,a,style,hollow,"['--- be specific to build trust', 'in (...) countries', '(...) offices across (...) continents']"
 go-getter,s,style,exaggerating,"['bundle of energy', 'ball of fire', 'someone who sticks to their goal(...)', 'person happy to see things through(...)', 'someone who continues despite difficulty(...)', 'person loyal to their cause(...)', 'motivated people', 'energetic and focused colleagues']"
@@ -53,7 +53,7 @@ market-leading,a,style,exaggerating,['market-influencing']
 marketleader,s,style,exaggerating,"['--- be specific to build trust', 'company with the largest market share in the industry', 'company with the ability to influence the market', 'company with the largest profitability margin in the market', 'company with the products most relevant to the customer', 'companies with the largest market shares in the industry', 'companies with the ability to influence the market', 'companies with the largest profitability margin in the market', 'companies with the products most relevant to the customer']"
 marketleading,a,style,exaggerating,['market-influencing']
 muscle,s,style,exaggerating,"['capacity', 'influence', 'clout']"
-nerd,s,style,exaggerating,"['techie', 'intellectual', 'bookworm', 'person devoted to academic pursuits', 'person with a high level of knowledge (skills) in', 'techies', ' intellectuals', 'bookworms', 'people devoted to academic pursuits', 'people with a high level of knowledge (skills) in']"
+nerd,s,style,exaggerating,"['techie', 'intellectual', 'bookworm', 'person devoted to academic pursuits', 'person with a high level of knowledge (skills) in', 'techies', 'intellectuals', 'bookworms', 'people devoted to academic pursuits', 'people with a high level of knowledge (skills) in']"
 ninja,a,style,exaggerating,"['dedicated', 'committed']"
 normal,a,style,hollow,"['traditional', 'typical', 'common', 'routine', 'regular', 'conventional', 'customary', 'popular', 'reasonable', 'well-adjusted', 'rational', 'able to think clearly', 'able to use reason']"
 other,a,style,hollow,"['alternative', 'further', 'different']"

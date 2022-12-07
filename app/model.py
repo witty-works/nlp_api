@@ -404,6 +404,7 @@ dict_lemma_lookup_de = {
     "zwingendermaßene": "zwingendermaßen",
     "zwischenmenschliche": "zwischenmenschlich",
     "äußerste": "äußerst",
+    "Führungskräfte": "Führungskraft",
 }
 
 lookup_table_de = model["de"].get_pipe("lemmatizer").lookups.get_table("lemma_lookup")

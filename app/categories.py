@@ -194,7 +194,10 @@ categories = {
         "name": {"en": "Cognitive Perception", "de": "Wahrnehmung"},
         "gravity": 2.0,
         "importance": 2,
-        "url": {"en": None, "de": None},
+        "url": {
+            "en": "https://www.witty.works/en/categories/biased_language#cognitive_perception",
+            "de": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#wahrnehmung",
+        },
         "emoji": "😒",
     },
     "color": {
@@ -205,7 +208,7 @@ categories = {
         "importance": 2,
         "url": {
             "en": "https://www.witty.works/en/categories/biased_language#color",
-            "de": None,
+            "de": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#farbwörter",
         },
         "emoji": "😒",
     },
@@ -277,7 +280,10 @@ categories = {
         "name": {"en": "Positive Emotions", "de": "Positive Emotionen"},
         "gravity": None,
         "importance": 3,
-        "url": {"en": None, "de": None},
+        "url": {
+            "en": "https://www.witty.works/en/categories/inclusive#positive_emotions",
+            "de": "https://www.witty.works/de/kategorien/inklusiv#positive_emotionen",
+        },
         "emoji": "✅",
     },
     "exaggerating": {
@@ -404,8 +410,8 @@ categories = {
         "inclusive": False,
         "category": "style",
         "name": {"en": "Miscellaneous", "de": "Verschiedenes"},
-        "gravity": 2.0,
-        "importance": 2,
+        "gravity": 3.0,
+        "importance": 3,
         "url": {"en": None, "de": None},
         "emoji": "🤔",
     },
@@ -505,7 +511,10 @@ categories = {
         "name": {"en": "Learning Ability", "de": "Lernfähigkeit"},
         "gravity": 2.0,
         "importance": 2,
-        "url": {"en": None, "de": None},
+        "url": {
+            "en": "https://www.witty.works/en/categories/biased_language#learning_ability",
+            "de": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#lernfähigkeit",
+        },
         "emoji": "😒",
     },
     "male_stereotype": {
@@ -538,7 +547,10 @@ categories = {
         "name": {"en": "Mental Wellbeing", "de": "Mentales Wohlbefinden"},
         "gravity": 2.0,
         "importance": 2,
-        "url": {"en": None, "de": None},
+        "url": {
+            "en": "https://www.witty.works/en/categories/biased_language#mental_wellbeing",
+            "de": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#mentales_wohlbefinden",
+        },
         "emoji": "😒",
     },
     "migration": {
@@ -559,7 +571,10 @@ categories = {
         "name": {"en": "Military Source", "de": "Militaerische Wurzel"},
         "gravity": 2.0,
         "importance": 2,
-        "url": {"en": None, "de": None},
+        "url": {
+            "en": "https://www.witty.works/en/categories/biased_language#military_source",
+            "de": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#militaerische_wurzel",
+        },
         "emoji": "🪖",
     },
     "misc": {
@@ -736,7 +751,10 @@ categories = {
         "name": {"en": "Speech Ability", "de": "Sprech-Fähigkeit"},
         "gravity": 2.0,
         "importance": 2,
-        "url": {"en": None, "de": None},
+        "url": {
+            "en": "https://www.witty.works/en/categories/biased_language#speech_ability",
+            "de": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#sprech-fähigkeit",
+        },
         "emoji": "😒",
     },
     "sports_terms": {
@@ -745,7 +763,10 @@ categories = {
         "name": {"en": "Sports Terms", "de": "Sport-Jargon"},
         "gravity": 2.0,
         "importance": 2,
-        "url": {"en": None, "de": None},
+        "url": {
+            "en": "https://www.witty.works/en/categories/biased_language#sports_terms",
+            "de": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#sport-jargon",
+        },
         "emoji": "🏅",
     },
     "style": {
@@ -754,7 +775,10 @@ categories = {
         "name": {"en": "Style", "de": "Stil"},
         "gravity": 2.0,
         "importance": 2,
-        "url": {"en": None, "de": None},
+        "url": {
+            "en": "https://www.witty.works/en/categories/style#style",
+            "de": "https://www.witty.works/de/kategorien/stil#stil",
+        },
         "emoji": "😟",
     },
     "titles": {

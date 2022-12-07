@@ -45,7 +45,7 @@ class LangDetection:
 
         for lang in langs:
             lang = self.get_default_locale(lang)
-            if lang != None:
+            if lang is not None:
                 return lang
 
         return None
@@ -55,7 +55,7 @@ class LangDetection:
             langs = self.predict_lang(text)
 
             locale = self.get_locale_by_variant(langs, variant_preferences)
-            if locale != None:
+            if locale is not None:
                 return locale
 
             return self.get_locale_by_lang(langs, language_preferences)

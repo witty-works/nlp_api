@@ -84,7 +84,7 @@ def get_data_from_files(locale):
     all_triggers = []
     all_lemma = []
     all_categories = []
-    all_secondar_subcategories = []
+    all_secondary_subcategories = []
     supported_word_types = {"s", "a", "adv", "v", "acr", "abbr", "i"}
 
     for training_data_path in training_data_paths:
@@ -93,11 +93,20 @@ def get_data_from_files(locale):
             column_names = reader.fieldnames
             if "Lemma" in column_names:
                 for row in reader:
-                    lemma = row["Lemma"].replace("'", '"')
+                    category = None
+                    if "Category" in row:
+                        category = row["Category"]
+                        all_categories.append(category)
 
+                    subcategory = None
+                    if "Primary_subcategory" in row:
+                        subcategory = row["Primary_subcategory"]
+                        all_categories.append(subcategory)
+
+                    lemma = row["Lemma"].replace("'", '"')
                     if "Word_Type" in row:
                         word_type = row["Word_Type"]
-                        if word_type == None:
+                        if word_type is None:
                             print("Lemma '%s' is missing a word type." % (lemma))
                         else:
                             word_type = word_type.replace("'", '"')
@@ -112,7 +121,7 @@ def get_data_from_files(locale):
                                 )
                                 print(word_types)
 
-                            if lemmatize and "words" in f.name:
+                            if lemmatize and "words" in f.name and category not in ["inclusive", "openly_discriminating"]:
                                 all_lemma.append(lemma)
 
                     if "Alt_split" in row:
@@ -130,16 +139,6 @@ def get_data_from_files(locale):
                         except ValueError:
                             continue
 
-                    category = None
-                    if "Category" in row:
-                        category = row["Category"]
-                        all_categories.append(category)
-
-                    subcategory = None
-                    if "Primary_subcategory" in row:
-                        subcategory = row["Primary_subcategory"]
-                        all_categories.append(subcategory)
-
                     if subcategory not in [
                         "function",
                         "titles",
@@ -147,7 +146,7 @@ def get_data_from_files(locale):
                         all_triggers.append(lemma)
 
                     if "Secondary_subcategory" in row and row["Secondary_subcategory"]:
-                        all_secondar_subcategories.append(row["Secondary_subcategory"])
+                        all_secondary_subcategories.append(row["Secondary_subcategory"])
 
     print(
         "All alternative groups for directory %s: %s"
@@ -172,7 +171,7 @@ def get_data_from_files(locale):
         set(all_triggers),
         set(all_alternatives),
         set(all_categories),
-        set(all_secondar_subcategories),
+        set(all_secondary_subcategories),
     )
 
 
@@ -202,12 +201,25 @@ def generate_alternatives_english(all_alternatives):
 
 
 def analyze_correct_endings_german(word):
+    if re.search("^.*  *$", word):
+        print("Potential multiple spaces in a row in: " + word)
+        issue_detected = True
+
+    if re.search("^.*~~*$", word):
+        print("Potential multiple '~' in a row in: " + word)
+        issue_detected = True
+
     word = word.replace("~ und ~", "-~-und-~-")
+
     words = word.split()
     word = word.replace("-~-und-~-", "~ und ~")
     for sub_word in words:
         sub_word = sub_word.replace("-~-und-~-", "~ und ~")
         issue_detected = False
+
+        if re.search("^.*innen~/~.*$", sub_word):
+            print("Potential replace '/' with ' und ' in: " + word)
+            issue_detected = True
 
         if (
             re.search("^.*[a-z]{3}in(nen)?[~ ].*$", sub_word)
@@ -447,7 +459,7 @@ for locale in locales:
         all_triggers,
         all_alternatives,
         all_categories,
-        all_secondar_subcategories,
+        all_secondary_subcategories,
     ) = get_data_from_files(locale)
 
     if locale == "de-DE":
@@ -483,7 +495,7 @@ for locale in locales:
     print("Missing (sub-)categories")
     print(sorted(all_categories - set(categories.keys())))
     print("Missing secondary sub-categories")
-    print(sorted(all_secondar_subcategories - set(categories.keys())))
+    print(sorted(all_secondary_subcategories - set(categories.keys())))
 
 
 original_languagetool_path = args.Original
