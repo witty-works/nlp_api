@@ -1621,9 +1621,7 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
     list_full = []
 
     words_data_en = defaultdict(list)
-    inclusive_words_data_en = []
     gendered_words_data_en = defaultdict(list)
-    inclusive_sentences_data_en = []
     sentences_data_en = defaultdict(list)
     matches_false = fetch_false_positive_matcher(tokens, lang)
 
@@ -2372,7 +2370,6 @@ def sentences_matches(
                     subcategory,
                     span.start_char,
                     span.end_char,
-                    [],
                 )
             )
 
