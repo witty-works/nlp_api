@@ -2306,7 +2306,10 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
     alternatives_with_article = []
     for alternative in alternatives:
         if "~" in alternative:
-            article_alternative = match_alternative
+            if match_alternative:
+                article_alternative = match_alternative
+            else:
+                article_alternative = article_text
         else:
             if "---" in alternative:
                 alternative, alternative_context = ResultOut.parse_alternative_context(
