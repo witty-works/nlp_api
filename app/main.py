@@ -81,7 +81,7 @@ from app.model import model
 from app.rules import rules
 from app.sentry import set_up_sentry_sdk
 
-version = "1.39.3"
+version = "1.39.4"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -2306,7 +2306,10 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
     alternatives_with_article = []
     for alternative in alternatives:
         if "~" in alternative:
-            article_alternative = match_alternative
+            if match_alternative:
+                article_alternative = match_alternative
+            else:
+                article_alternative = article_text
         else:
             if "---" in alternative:
                 alternative, alternative_context = ResultOut.parse_alternative_context(
