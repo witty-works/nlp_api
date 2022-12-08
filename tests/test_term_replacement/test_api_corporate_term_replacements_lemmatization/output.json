@@ -48,7 +48,7 @@
                 "url": "https://witty.works"
             },
             "gravity": 0.9,
-            "label": "Custom Rule",
+            "label": "Dictionary",
             "start": 5,
             "subcategory": "corporate_rules",
             "text": "foo"
@@ -68,7 +68,7 @@
                 "url": "https://witty.works"
             },
             "gravity": 0.9,
-            "label": "Custom Rule",
+            "label": "Dictionary",
             "start": 49,
             "subcategory": "corporate_rules",
             "text": "ran"
@@ -88,7 +88,7 @@
                 "url": "https://witty.works"
             },
             "gravity": 0.9,
-            "label": "Custom Rule",
+            "label": "Dictionary",
             "start": 70,
             "subcategory": "corporate_rules",
             "text": "running"
