@@ -2415,16 +2415,18 @@ def sentences_matcher(
         span = tokens[start:end]
         for sentence, *data in sentences_data:
             if span.text.lower() == sentence.lower():
-                if len(data) >= 1:
-                    if len(data) >= 2:
-                        subcategory = data[1]
+                rule_subcategory = subcategory
 
+                if len(data) == 2:
+                    rule_subcategory = data[1]
+                    alternatives = data[0]
+                elif len(data) == 1:
                     if subcategory is None:
-                        subcategory = data[0]
+                        rule_subcategory = data[0]
                     else:
                         alternatives = data[0]
 
-                if not is_sub_category_enabled(version, config, subcategory):
+                if not is_sub_category_enabled(version, config, rule_subcategory):
                     continue
 
                 list_tokens.append(
@@ -2435,7 +2437,7 @@ def sentences_matcher(
                         span.text,
                         full_text,
                         category,
-                        subcategory,
+                        rule_subcategory,
                         span.start_char,
                         span.end_char,
                         alternatives,
