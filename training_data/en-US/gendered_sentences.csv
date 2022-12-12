@@ -12,7 +12,7 @@ big boy,a+s,gendered,leadership,leadership,"['higher-up', 'supervisor', 'executi
 boldly go where no man has gone before,i,gendered,hidden_image,hidden_image,['boldly go where no one has gone before'],[],['boldly go where no one has gone before']
 child prostitute,i,gendered,female_stereotype,female_stereotype,['sexual assault survivor'],[],['sexual assault survivor']
 child prostitutes,i,gendered,female_stereotype,female_stereotype,['sexual assault survivors'],[],['sexual assault survivors']
-common man,i,gendered,hidden_image,hidden_image,"['average person', 'average people', 'common person', 'common people']",[],"['average person', 'average people', 'common person', 'common people']"
+common man,a+s,gendered,hidden_image,hidden_image,"['average person', 'average people', 'common person', 'common people']",[],"['average person', 'average people', 'common person', 'common people']"
 delivery boy,i,gendered,titles,titles,"['courier', 'messenger']",[],"['courier', 'messenger']"
 delivery girl,i,gendered,titles,titles,"['courier', 'messenger']",[],"['courier', 'messenger']"
 delivery man,s,gendered,titles,titles,"['delivery person', 'they', 'delivery', 'delivery team', 'delivery staff', 'delivery persons', 'delivery people']","['delivery persons', 'delivery people', 'delivery team', 'delivery staff', 'delivery']","['delivery', 'delivery person', 'they', 'delivery team', 'delivery staff', 'delivery persons', 'delivery people']"
@@ -70,10 +70,10 @@ master at,i,gendered,hidden_image,hidden_image,"['skilled at', 'proficient in', 
 masters at,i,gendered,hidden_image,hidden_image,"['skilled at', 'proficient in']","['people who have a creative way of(...)', 'people with a talent for(...)', 'people who have a high level of knowledge in(...)']","['skilled at', 'proficient in']"
 middle man,s,gendered,function,function,"['intermediary', 'mediator', 'go-between', 'intermediaries', 'mediators', 'go-betweens', 'person acting as an agent between two parties(...)']","['intermediaries', 'mediators', 'go-betweens', 'people acting as agents between two parties(...)']","['intermediary', 'mediator', 'go-between', 'person acting as an agent between two parties(...)', 'intermediaries', 'mediators', 'go-betweens']"
 no man is an island,i,gendered,hidden_image,hidden_image,['no one is an island --- if not a quote'],[],['no one is an island --- if not a quote']
-non consentual sex,i,gendered,female_stereotype,female_stereotype,['rape'],[],['rape']
-non-consentual sex,i,gendered,female_stereotype,female_stereotype,['rape'],[],['rape']
-nonconsentual sex,i,gendered,female_stereotype,female_stereotype,['rape'],[],['rape']
-pick a fight,v+s,gendered,male_stereotype,male_stereotype,"['differ', 'disagree', 'start a debate', 'discuss options', 'present arguments']",[],"['differ', 'disagree', 'start a debate', 'discuss options', 'present arguments']"
+non consentual sex,a+s,gendered,female_stereotype,female_stereotype,['rape'],[],['rape']
+non-consentual sex,a+s,gendered,female_stereotype,female_stereotype,['rape'],[],['rape']
+nonconsentual sex,a+s,gendered,female_stereotype,female_stereotype,['rape'],[],['rape']
+pick a fight,i,gendered,male_stereotype,male_stereotype,"['differ', 'disagree', 'start a debate', 'discuss options', 'present arguments']",[],"['differ', 'disagree', 'start a debate', 'discuss options', 'present arguments']"
 pink leadership,a+s,gendered,leadership,leadership,"['communal leadership', 'servant leadership', 'communal leaderships', 'servant leaderships']","['communal leaderships', 'servant leaderships']","['communal leadership', 'servant leadership', 'communal leaderships', 'servant leaderships']"
 product owner,s,gendered,titles,generic_plural,"['they', 'product ownership', 'product owners']","['product owners', 'product ownership']","['product ownership', 'they', 'product owners']"
 project manager,s,gendered,titles,titles,"['person in project management', 'they', 'project management', 'people in project management', 'person managing the project(...)', 'someone in the project management role(...)']","['people in project management', 'project management', 'people managing projects(...)', 'people in project management roles(...)']","['project management', 'person in project management', 'they', 'person managing the project(...)', 'someone in the project management role(...)', 'people in project management']"
@@ -86,8 +86,8 @@ she or he,s,gendered,binary_pronouns,binary_pronouns,"['they', '((given name))',
 she/he,s,gendered,binary_pronouns,binary_pronouns,"['they', '((given name))', '((given name family name))']",[],"['they', '((given name))', '((given name family name))']"
 stunt man,s,gendered,titles,titles,"['stunt person', 'stunt performer', 'stunt double', 'they', 'stunt people', 'stunt persons', 'stunt performers', 'stunt doubles']","['stunt persons', 'stunt performers', 'stunt doubles', 'stunt people']","['stunt person', 'stunt performer', 'stunt double', 'they', 'stunt people', 'stunt persons', 'stunt performers', 'stunt doubles']"
 take the lead,i,gendered,leadership,leadership,"['head up', 'take responsibility for', 'guide', 'coach', 'set a course', 'inspire']",[],"['head up', 'take responsibility for', 'guide', 'coach', 'set a course', 'inspire']"
-underage woman,i,gendered,female_stereotype,female_stereotype,['child'],[],['child']
-underage women,i,gendered,female_stereotype,female_stereotype,['children'],[],['children']
+underage woman,a+s,gendered,female_stereotype,female_stereotype,['child'],[],['child']
+underage women,a+s,gendered,female_stereotype,female_stereotype,['children'],[],['children']
 user of,i,gendered,function,function,['person using(...)'],[],['person using(...)']
 users of,i,gendered,function,function,['people using(...)'],[],['people using(...)']
 vice chairman,s,gendered,titles,titles,"['vice chairperson', 'they', 'vice chairpersons', 'vice chairpeople', '((name)) who serves as vice chair(...)']","['vice chairpersons', 'vice chairpeople', '((name)) who serve as vice chairs(...)']","['vice chairperson', 'they', '((name)) who serves as vice chair(...)', 'vice chairpersons', 'vice chairpeople']"
