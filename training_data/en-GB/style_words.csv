@@ -73,8 +73,8 @@ resultsdriven,a,style,hollow,"['-', 'goal-oriented', 'keen to get things done(..
 rocket,s,style,exaggerating,['-']
 rockstar,s,style,exaggerating,['-']
 scorer,s,style,exaggerating,['-']
-self-driven,i,style,hollow,"['motivated', 'ardent', 'spirited', 'aspiring', 'sincere', 'industrious']"
-selfdriven,i,style,hollow,"['motivated', 'ardent', 'spirited', 'aspiring', 'sincere', 'industrious']"
+self-driven,=a,style,hollow,"['motivated', 'ardent', 'spirited', 'aspiring', 'sincere', 'industrious']"
+selfdriven,=a,style,hollow,"['motivated', 'ardent', 'spirited', 'aspiring', 'sincere', 'industrious']"
 state-of-the-art,a,style,hollow,"['current', 'best available', 'most advanced', 'most sophisticated', 'technologically most advanced', 'implementing the most recent methods(...)', 'involving fresh concepts(...)', 'employing the latest equipment(...)', 'using the latest techniques(...)', 'at the highest level of development(...)', 'using the newest ideas(...)']"
 success,s,style,exaggerating,"['positive outcome', ""a feather in one's cap"", 'popular', 'good result', 'reward for dedication and hard work', 'positive outcomes', ""feathers in one's cap"", 'popular', '(good) results', 'rewarded for dedication and hard work']"
 successful,a,style,exaggerating,"['-', 'productive', 'lucky', 'lucrative', 'practised', 'skilled']"
