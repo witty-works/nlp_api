@@ -691,7 +691,6 @@ rules["en"]["list_false_column"] = [
     'do best',
     'do the best',
     'do the trick',
-    'drives',
     'dwarf satellite',
     'dwarf star',
     'epileptic episode',
