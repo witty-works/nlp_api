@@ -1,0 +1,32 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "Die Polizeikraft"
+                },
+                {
+                    "text": "Die Polizei"
+                },
+                {
+                    "text": "Die Polizeileute"
+                }
+            ],
+            "category": "gendered",
+            "context": "Der Polizist hat es gesehen.",
+            "end": 12,
+            "explanation": {
+                "icon": "😟",
+                "text": "Viele denken bei diesem Wort zuerst an einen Mann",
+                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#titel"
+            },
+            "gravity": 2.0,
+            "label": "Geschlechtsspezifisch: Titel",
+            "start": 0,
+            "subcategory": "titles",
+            "text": "Der Polizist"
+        }
+    ]
+}

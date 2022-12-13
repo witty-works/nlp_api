@@ -499,6 +499,19 @@ async def get_debug_spacy(
     return results
 
 
+@app.get(
+    "/debug/german_noun",
+    include_in_schema=not settings.is_prod,
+    response_class=PrettyJSONResponse,
+)
+async def get_debug_german_noun(
+    word: str,
+    genus_only: bool = False,
+    username: str = Depends(fetch_current_username),
+):
+    return german_noun_analysis(word, genus_only)
+
+
 @app.get("/categories")
 def get_categories(lang: LangType = "de"):
     return categories_with_labels[lang]
@@ -1938,64 +1951,108 @@ def word_types_overlap(a_word_types, b_word_types):
     return not set(a_word_types).isdisjoint(b_word_types)
 
 
-def determine_genus_from_ending(word, endings, genus):
-    for ending in endings:
-        if word.endswith(ending):
-            return {"genus": genus}
+def determine_genus_from_ending(word, german_genus_endings):
+    for genus in german_genus_endings:
+        for ending in german_genus_endings[genus]:
+            if word.endswith(ending):
+                return {"genus": genus}
 
     return None
+
+
+def german_noun_lookup(word):
+    if word in rules["de"]["gender_neutral_nouns"]:
+        return rules["de"]["gender_neutral_nouns"][word]
+
+    result = rules["de"]["german_nouns"][word]
+    if not len(result):
+        logging.error(
+            "Unable to determine german noun data for: %s",
+            word,
+        )
+
+        return None
+
+    result = result[0]
+
+    if "genus" in result:
+        return result
+
+    if "genus 1" in result:
+        result["genus"] = result["genus 1"]
+
+        return result
+
+    if word[-5:].lower() == "leute":
+        result["is_plural"] = True
+        result["genus"] = "f"
+
+        return result
+
+    genus_result = determine_genus_from_ending(
+        word, rules["de"]["primary_german_genus_endings"]
+    )
+    if genus_result == None or "genus" not in genus_result:
+        genus_result = determine_genus_from_ending(
+            word, rules["de"]["secondary_german_genus_endings"]
+        )
+        if genus_result == None or "genus" not in genus_result:
+            logging.error(
+                "Unable to determine german noun genus for: %s",
+                word,
+            )
+
+            return None
+
+    result["genus"] = genus_result["genus"]
+
+    return result
 
 
 def german_noun_analysis(word, genus_only=False):
     if "..." in word:
         return None
 
-    result = rules["de"]["german_nouns"][word]
-    if len(result):
-        result = result[0]
-    else:
+    result = german_noun_lookup(word)
+    if result != None:
+        return result
+
+    if genus_only:
+        result = determine_genus_from_ending(
+            word, rules["de"]["primary_german_genus_endings"]
+        )
+
+        if result != None:
+            return result
+
+    # skip the first 2 letters
+    i = 2
+
+    # skip the last 2 letters
+    while i < len(word) - 2:
+        partial_word = word[i:]
+
+        result = german_noun_lookup(partial_word.capitalize())
+        if result == None:
+            i += 1
+            continue
+
+        result["lemma"] = word
         if genus_only:
-            for genus in rules["de"]["primary_german_genus_endings"]:
-                result = determine_genus_from_ending(
-                    word, rules["de"]["primary_german_genus_endings"][genus], genus
+            del result["flexion"]
+        else:
+            word_prefix = word[0:i]
+            for flexion in result["flexion"]:
+                result["flexion"][flexion] = (
+                    word_prefix + result["flexion"][flexion].lower()
                 )
 
-                if result is not None:
-                    return result
+        return result
 
-        # skip the first 2 letters
-        i = 2
-        # skip the last 4 letters, especially to avoid cases like 'Ende' at the end of 'Arbeitgebende'
-        while i < len(word) - 4:
-            partial_word = word[i:].capitalize()
-            i += 1
-
-            result = rules["de"]["german_nouns"][partial_word]
-            if len(result):
-                result = result[0]
-                break
-
-    if result == []:
-        result = None
-
-    if result is None and genus_only:
-        for genus in rules["de"]["secondary_german_genus_endings"]:
-            result = determine_genus_from_ending(
-                word, rules["de"]["secondary_german_genus_endings"][genus], genus
-            )
-
-            if result is not None:
-                return result
-
-    if isinstance(result, dict):
-        if "genus 1" in result:
-            result["genus"] = result["genus 1"]
-        elif "genus" not in result:
-            if word[-5:].lower() != "leute":
-                return None
-
-            result["is_plural"] = True
-            result["genus"] = "f"
+    if genus_only:
+        result = determine_genus_from_ending(
+            word, rules["de"]["secondary_german_genus_endings"]
+        )
 
     return result
 
@@ -2025,11 +2082,18 @@ def align_noun_form(lang, a_token, b_token):
             if value != a_text:
                 continue
 
-            if flexion not in b_word["flexion"]:
-                flexion += " 1"
+            flexion = flexion.split()
+            flexion = flexion[0] + " " + flexion[1]
 
             if flexion in b_word["flexion"]:
                 return b_word["flexion"][flexion]
+
+            key = flexion + " 1"
+            if key not in b_word["flexion"]:
+                key = flexion + " stark"
+
+            if key in b_word["flexion"]:
+                return b_word["flexion"][key]
 
     return b_text
 

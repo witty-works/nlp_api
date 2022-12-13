@@ -423,6 +423,39 @@ rules["de"]["conjunctions"] = [
     "aber",
 ]
 
+rules["de"]["gender_neutral_nouns"] = {
+    "Ierende": {
+        "flexion": {
+            "nominativ singular": "Ierende",
+            "nominativ plural": "Ierende",
+            "genitiv singular": "Ierender",
+            "genitiv plural": "Ierender",
+            "dativ singular": "Ierender",
+            "dativ plural": "Ierenden",
+            "akkusativ singular": "Ierende",
+            "akkusativ plural": "Ierende",
+        },
+        "lemma": "Ierende",
+        "pos": ["Substantiv", "adjektivische Deklination"],
+        "genus": "f",
+    },
+    "Gebende": {
+        "flexion": {
+            "nominativ singular": "Gebende",
+            "nominativ plural": "Gebende",
+            "genitiv singular": "Gebender",
+            "genitiv plural": "Gebender",
+            "dativ singular": "Gebender",
+            "dativ plural": "Gebenden",
+            "akkusativ singular": "Gebende",
+            "akkusativ plural": "Gebende",
+        },
+        "lemma": "Gebende",
+        "pos": ["Substantiv", "adjektivische Deklination"],
+        "genus": "f",
+    },
+}
+
 ### en-US & en_GB:
 
 for locale in ["en-US", "en-GB"]:
