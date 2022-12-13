@@ -131,7 +131,6 @@ rules["de-DE"]["gender_words_data"] = list(
         df_gender["Word_Type"],
         map(ast.literal_eval, df_gender["Sg_all_split"]),
         map(ast.literal_eval, df_gender["Pl_all_split"]),
-        map(ast.literal_eval, df_gender["Alt_split"]),
         df_gender["Primary_subcategory"],
     )
 )
