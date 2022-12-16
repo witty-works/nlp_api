@@ -45,6 +45,21 @@
             "start": 59,
             "subcategory": "d_and_i",
             "text": "Arbeitergeber*in"
+        },
+        {
+            "alternatives": [],
+            "category": "inclusive",
+            "context": "Ist der Arbeitgeber zufriedenstellend? Es wäre gut die*den Arbeitergeber*in zu bestärken.",
+            "end": 58,
+            "explanation": {
+                "icon": "✅",
+                "text": "Bestärkt Wert von Diversity, Gleichstellung und Inklusion",
+                "url": "https://www.witty.works/de/kategorien/inklusiv#diversität_&_inklusion"
+            },
+            "label": "Inklusiv: Diversität & Inklusion",
+            "start": 51,
+            "subcategory": "d_and_i",
+            "text": "die*den"
         }
     ]
 }

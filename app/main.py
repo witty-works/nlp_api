@@ -1591,7 +1591,7 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
         regexes = {config._gendereddenom_ending[config.german_gender_ending]: None}
         if config.german_gender_ending == ":in":
             regexes[r"\s((\S+):(\S+))"] = None
-        elif ending == "*in":
+        elif config.german_gender_ending == "*in":
             regexes[r"\s((\S+)\*(\S+))"] = None
 
         regexes.update(rules["d_f_m_regexes"])
