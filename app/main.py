@@ -2039,7 +2039,8 @@ def german_noun_analysis(word, genus_only=False):
 
         result["lemma"] = word
         if genus_only:
-            del result["flexion"]
+            if "flexion" in result:
+                del result["flexion"]
         else:
             word_prefix = word[0:i]
             for flexion in result["flexion"]:
