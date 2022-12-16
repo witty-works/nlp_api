@@ -2,7 +2,7 @@ Lemma,Word_Type,Category,Primary_subcategory,Alt_split
 (x)aaS,acr,style,abbreviation,"['something as a service', 'something as a service ((x)aaS)']"
 A.M.,abbr,style,abbreviation,"['Master of Arts', 'Master of Arts (A.M.)']"
 ACCT,abbr,style,abbreviation,['account']
-ADD,-abbr,style,abbreviation,"['attention deficit disorder', 'attention deficit disorder (ADD)', 'easily bored(...)', 'easily distracted(...)', 'having a poor working memory(...)']"
+ADD,-abbr,unconscious_bias,behavior,"['attention deficit hyperactivity disability (ADHD)', 'attention deficit disability (ADD)', 'neurodivergent', 'ADHDer', 'person with ADHD(...)', 'someone who has ADHD(...)', 'easily bored(...)', 'easily distracted(...)', 'having a poor working memory(...)']"
 ADHD,abbr,style,abbreviation,"['attention deficit hyperactivity disorder', 'attention deficit hyperactivity disorder (ADHD)', 'person with attention deficit hyperactivity disorder(...)', 'fidgety(...)', 'restless(...)', 'easily bored(...)']"
 AIDA,acr,style,abbreviation,"['attention, interest, desire, action', 'attention, interest, desire, action (AIDA)']"
 AJAX,acr,style,abbreviation,"['asynchronous JavaScript and XML', 'asynchronous JavaScript and eXtensible markup language (AJAX)']"
@@ -15,7 +15,7 @@ AR,acr,style,abbreviation,"['accounts receivable', 'accounts receivable (AR)']"
 ARIA,acr,style,abbreviation,"['accessible rich internet applications', 'accessible rich internet applications (ARIA)']"
 ARR,acr,style,abbreviation,"['annual recurring revenue', 'annual recurring revenue (ARR)']"
 ASAP,acr,style,abbreviation,['As soon as possible']
-ASD,abbr,style,abbreviation,"['autism spectrum disorder', 'autism spectrum disorder (ASD)', 'neurodiversity', 'person with autism spectrum disorder(...)', 'difficulties with social interaction and communication(...)', 'umbrella diagnosis that includes autistic disorder, childhood disintegrative disorder, some pervasive developmental disorders, and Asperger syndrome(...)']"
+ASD,acr,unconscious_bias,behavior,"['autism', 'being on the autism spectrum', 'autism spectrum disability (ASD)', 'neurodiversity', 'person with autism spectrum disability(...)', 'difficulties with social interaction and communication(...)', 'umbrella diagnosis that includes autistic disability, childhood disintegrative disability, some pervasive developmental disability(...)']"
 ASL,abbr,style,abbreviation,"['American Sign Language', 'American Sign Language (ASL)']"
 ATM,acr,style,abbreviation,['at the moment']
 AUD,acr,style,abbreviation,"['alcohol use disorder', 'alcohol use disorder (AUD)']"
@@ -205,6 +205,9 @@ P card,abbr,style,abbreviation,"['purchase card', 'purchase card (P-card)']"
 P&L,acr,style,abbreviation,"['profit and loss statement', 'profit and loss statement (P&L)']"
 P-card,abbr,style,abbreviation,"['purchase card', 'purchase card (P-card)']"
 P/E,acr,style,abbreviation,"['price to earnings', 'price to earnings (P/E)']"
+PDD NOS,acr,unconscious_bias,behavior,"['pervasive developmental disorder not otherwise specified (PDD-NOS)', 'autism', 'neurodivergence', 'being on the autism spectrum', 'Autistic', 'neurodivergent']"
+PDD-NOS,acr,unconscious_bias,behavior,"['pervasive developmental disorder not otherwise specified (PDD-NOS)', 'autism', 'neurodivergence', 'being on the autism spectrum', 'Autistic', 'neurodivergent']"
+PDDnos,acr,unconscious_bias,behavior,"['pervasive developmental disorder not otherwise specified (PDD-NOS)', 'autism', 'neurodivergence', 'being on the autism spectrum', 'Autistic', 'neurodivergent']"
 PIK,acr,style,abbreviation,"['payments in kind', 'payments in kind (PIK)']"
 PIPE,acr,style,abbreviation,"['private investment for public equity', 'private investment for public equity (PIPE)']"
 PIV,acr,style,abbreviation,"['pooled investment vehicle', 'pooled investment vehicle (PIV)']"
@@ -313,3 +316,4 @@ YTD,acr,style,abbreviation,"['year-to-date', 'year-to-date (YTD)']"
 YoY,acr,style,abbreviation,"['year-over-year', 'year over year', 'year-over-year (YoY)']"
 etc,abbr,style,filler,['-']
 etc.,abbr,style,filler,['-']
+pervasive developmental disorder not otherwise specified,acr,unconscious_bias,behavior,"['autism', 'being on the autism spectrum', 'neurodivergence', 'Autistic', 'neurodivergent', 'person who has autism(...)', 'someone with autism(...)']"

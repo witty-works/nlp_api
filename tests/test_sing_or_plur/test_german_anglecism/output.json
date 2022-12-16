@@ -1,0 +1,32 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "Management"
+                },
+                {
+                    "text": "Manager*in"
+                },
+                {
+                    "text": "Managerin/Manager"
+                }
+            ],
+            "category": "gendered",
+            "context": "Hier die Titel: Store Manager Watch Zürich und Store Managerin Berlin",
+            "end": 29,
+            "explanation": {
+                "icon": "💡",
+                "text": "Viele denken bei diesem Wort zuerst an einen Mann",
+                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#spezielle_funktionen"
+            },
+            "gravity": 2.0,
+            "label": "Geschlechtsspezifisch: Spezielle Funktionen",
+            "start": 22,
+            "subcategory": "function",
+            "text": "Manager"
+        }
+    ]
+}

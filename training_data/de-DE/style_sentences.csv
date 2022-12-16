@@ -4,19 +4,19 @@ Alpha Chef,s,style,exaggerating,"['Person, die ihr Team inspiriert(...)', 'Mensc
 Alpha Führungskraft,s,style,exaggerating,"['Person, die ihr Team inspiriert(...)', 'Mensch mit Freude an Verantwortung(...)', 'Person, die ihrem Team mit Rat und Tat zur Seite steht(...)', 'Person, die das Team beim Erreichen von gemeinsamen Zielen unterstützt(...)', 'Leute, die ihre Teams inspirieren(...)', 'Menschen mit Freude an Verantwortung(...)', 'Leute, die ihrem Team mit Rat und Tat zur Seite stehen(...)', 'Leute, die das Team beim Erreichen von gemeinsamen Zielen unterstützen und lenken(...)']"
 Alpha Person,s,style,exaggerating,"['Person, die ihr Team inspiriert(...)', 'Mensch mit Freude an Verantwortung(...)', 'Person, die ihrem Team mit Rat und Tat zur Seite steht(...)', 'Person, die das Team beim Erreichen von gemeinsamen Zielen unterstützt(...)', 'Leute, die ihre Teams inspirieren(...)', 'Menschen mit Freude an Verantwortung(...)', 'Leute, die ihrem Team mit Rat und Tat zur Seite stehen(...)', 'Leute, die das Team beim Erreichen von gemeinsamen Zielen unterstützen und lenken(...)']"
 Alpha Persönlichkeit,s,style,exaggerating,"['Person, die ihr Team inspiriert(...)', 'Mensch mit Freude an Verantwortung(...)', 'Person, die ihrem Team mit Rat und Tat zur Seite steht(...)', 'Person, die das Team beim Erreichen von gemeinsamen Zielen unterstützt(...)', 'Leute, die ihre Teams inspirieren(...)', 'Menschen mit Freude an Verantwortung(...)', 'Leute, die ihrem Team mit Rat und Tat zur Seite stehen(...)', 'Leute, die das Team beim Erreichen von gemeinsamen Zielen unterstützen und lenken(...)']"
-Art Director,s,style,anglicism,"['Werbegestaltung', 'Werbegestalter~in~/~Werbegestalter']"
+Art Director,s,style,anglicism,"['Werbegestaltung', 'Werbegestalter~in~/~Werbegestalter', 'Werbegestalter~innen~ und ~Werbegestalter']"
 Bullet point,s,style,anglicism,"['Aufzählungspunkt', 'Aufzählungspunkte']"
 C Level,s,style,anglicism,"['Führungsetage', 'obere Management']"
 Case Study,s,style,anglicism,['Fallstudie']
 Cash Flow,s,style,anglicism,['Kapitalfluss']
-Content Manager,s,style,anglicism,"['Online-Redaktion', 'Internetredaktion', 'Online-Redakteur~in~/~Online-Redakteur']"
+Content Manager,s,style,anglicism,"['Online-Redaktion', 'Internetredaktion', 'Online-Redakteur~in~/~Online-Redakteur', 'Online-Redakteur~innen~ und ~Online-Redakteur']"
 Convenience Goods,s,style,anglicism,['Klein- und Bequemlichkeitsbedarf']
 Cover your ass,i,style,anglicism,"['Halt dich bedeckt', ""Sicher' dich ab"", ""Sicher' dich rechtlich ab"", ""Beug' mal für den Fall der Fälle vor"", 'Geh auf Nummer Sicher']"
-Customer Relationship Manager,s,style,anglicism,"['Kundenbetreuung', 'Kundenbetreuer~in~/~Kundenbetreuer']"
+Customer Relationship Manager,s,style,anglicism,"['Kundenbetreuung', 'Kundenbetreuer~in~/~Kundenbetreuer', 'Kundenbetreuer~innen~ und ~Kundenbetreuer']"
 Data Base,s,style,anglicism,['Datenbank']
 "Erst die Arbeit, dann das Vergnügen",i,style,exaggerating,['Zusammen und mit Freude an der Sache geht alles leichter und besser.']
 Extrameile gehen,s+v,style,exaggerating,"['Spaß am Mit- und Weiterdenken haben', 'sich für Kundenzufriedenheit engagieren', 'über den eigenen Tellerrand blicken', 'Spaß haben, Kundschaft durch unerwartete und kreative Lösungen zu begeistern']"
-Field Operator,s,style,anglicism,"['Außendienst', 'Außendienstmitarbeiter~in~/~Außendienstmitarbeiter']"
+Field Operator,s,style,anglicism,"['Außendienst', 'Außendienstmitarbeiter~in~/~Außendienstmitarbeiter', 'Außendienstmitarbeiter~innen~ und ~Außendienstmitarbeiter']"
 Financial Plan,s,style,anglicism,['Finanzplan']
 Go getter,s,style,exaggerating,"['tatkräftige Person', 'Tatmensch', 'umsetzungsfreudiger Mensch', 'jemand, der unternehmerisch denkt(...)', 'jemand, der mit Elan auf Ziele hinarbeitet(...)', 'tatkräftige Leute', 'Tatmenschen', 'umsetzungsfreudige Menschen', 'Leute, die unternehmerisch denken(...)', 'Menschen, die mit Elan auf Ziele hinarbeiten(...)']"
 Goal getter,s,style,exaggerating,"['tatkräftige Person', 'Tatmensch', 'umsetzungsfreudiger Mensch', 'Mensch, der sich kontinuierlich Ziele setzt und erreicht(...)', 'Mensch, der bereit ist, sich neuen oder komplexen Situationen zu stellen, um gemeinsame Ziele zu verwirklichen(...)', 'tatkräftige Leute', 'Tatmenschen', 'umsetzungsfreudige Menschen', 'Menschen, die sich kontinuierlich Ziele setzen und erreichen(...)', 'Leute, der bereit sind, sich neuen oder komplexen Situationen zu stellen, um gemeinsame Ziele zu verwirklichen(...)']"
@@ -43,17 +43,17 @@ Profit Center,s,style,anglicism,['Ertragszentrum']
 Public Marketing,s,style,anglicism,['Öffentlichkeitsmarketing']
 Public Relations,s,style,anglicism,['Öffentlichkeitsarbeit']
 Reference Group,s,style,anglicism,['Referenzgruppe']
-SEO Manager,s,style,anglicism,"['Suchmaschinenoptimierung', 'Spezialist~in~/~Spezialist in der Suchmaschinenoptimierung']"
+SEO Manager,s,style,anglicism,"['Suchmaschinenoptimierung', 'Spezialist~in~/~Spezialist in der Suchmaschinenoptimierung', 'Spezialist~innen~ und ~Spezialisten in der Suchmaschinenoptimierung']"
 Sales Pitch,s,style,anglicism,"['Verkaufsmasche', 'Verkaufstaktik', 'Verkaufsargumentation', 'Kundenansprache', 'Verkaufspräsentation']"
 Sales Portfolio,s,style,anglicism,['Vetrieb']
 Sales Promotion,s,style,anglicism,['Verkaufsförderung']
 Save my ass,i,style,anglicism,"[""Halt' mir den Rücken frei""]"
-Schindluder treiben,v,style,exaggerating,"['schlecht behandeln', 'Misswirtschaft treiben', 'misshandeln', 'ausbeuten', 'nicht angemessen pflegen']"
-Schindluderei betreiben,v,style,exaggerating,"['schlecht behandeln', 'Misswirtschaft treiben', 'misshandeln', 'ausbeuten', 'nicht angemessen pflegen']"
+Schindluder treiben,s+v,style,exaggerating,"['schlecht behandeln', 'Misswirtschaft treiben', 'misshandeln', 'ausbeuten', 'nicht angemessen pflegen']"
+Schindluderei betreiben,s+v,style,exaggerating,"['schlecht behandeln', 'Misswirtschaft treiben', 'misshandeln', 'ausbeuten', 'nicht angemessen pflegen']"
 Sehr geehrte,adv+a,style,formality,"['-', 'Guten Tag', 'Hallo', 'Lieb~e~/~Lieber', 'Guten Tag, lieb~e~/~lieber', 'Guten Tag', 'Liebe', 'Liebe alle', 'Hallo zusammen', 'Hallo, liebe Zuhörende und Lesende']"
 Sehr geehrter,adv+a,style,formality,"['Guten Tag', 'Hallo', 'Lieb~e~/~Lieber', 'Guten Tag, lieb~e~/~lieber', 'Guten Tag', 'Liebe', 'Liebe alle', 'Hallo zusammen', 'Hallo, liebe Zuhörende und Lesende']"
 Shopping Center,s,style,anglicism,['Einkaufszentrum']
-Supply Chain Manager,s,style,anglicism,"['Lieferkette', 'Mitarbeiter~in~/~Mitarbeiter in der Lieferkette']"
+Supply Chain Manager,s,style,anglicism,"['Lieferkette', 'Mitarbeiter~in~/~Mitarbeiter in der Lieferkette', 'Mitarbeiter~innen~ und ~Mitarbeiter in der Lieferkette']"
 Team player,s,style,hollow,"['Teamplayer~in~/~Teamplayer', 'Person, die gut und gern mit anderen zusammenarbeitet(...)', 'jemand, dem gute Verständigung und kameradschaftliches Verhalten wichtig sind(...)', 'jemand, dem das ""Wir"" wichtiger ist als das ""Ich""(...)', 'Team', 'Teammitglieder', 'Teamplayer~innen~ und ~Teamplayer', 'Leute, die gut und gern mit anderen zusammenarbeiten(...)', 'Menschen, denen kameradschaftliches Verhalten und gute Verständigung wichtig sind(...)', 'Menschen, den das ""Wir"" wichtiger ist als das ""Ich""(...)']"
 Top Performance,s,style,exaggerating,"['Engagement', 'erfreuliches Ergebnis', 'Kompetenz', 'Bravourstück', 'einen Meilenstein mit Leichtigkeit erreicht haben(...)']"
 Top Performer,s,style,exaggerating,"['Kümmerer', 'Tatmensch', 'umsetzungsfreudiger Mensch', 'tatkräftiger Mensch', 'Team-Mentor~in~/~Team-Mentor', 'jemand mit Blick fürs große Ganze(...)', 'Mensch, dem Meilensteine am Herzen liegen(...)', 'Mensch, der Aufgaben konstruktiv und engagiert angeht(...)', 'jemand, der mit dem Team Ziele gemeinsam umsetzt(...)', 'jemand, der mit dem Team Aufgaben anpackt(...)', 'jemand, der unternehmerisch denkt(...)', 'jemand, der Ziele mit Elan umsetzt(...)', 'Tatmenschen', 'Mitdenkende', 'engagierte Mitarbeitende', 'umsetzungsfreudige Menschen', 'tatkräftige Leute', 'Leute mit Blick fürs große Ganze(...)', 'Menschen, denen Meilensteine am Herzen liegen(...)', 'Menschen, die Aufgaben konstruktiv und engagiert angehen(...)', 'Leute, die mit dem Team Ziele gemeinsam umsetzen(...)', 'alle, die mit dem Team Aufgaben engagiert anpacken(...)', 'Leute, die unternehmerisch denken(...)', 'alle, die Ziele mit Elan umsetzen(...)']"
@@ -79,7 +79,7 @@ fast lane,s,style,anglicism,['Überholspur']
 flache Hierarchie,a+s,style,hollow,"['kurze Entscheidungswege', 'verantwortliche und eigenorganisierte Arbeitsweise', 'Raum für Eigeninitiative', 'kurze Kommunikationswege', 'Mitgestaltungsmöglichkeiten für Mitarbeitende', 'Betriebsebene mit viel Kompetenzen und Entscheidungsmöglichkeiten']"
 flache Organisation,a+s,style,hollow,"['kurze Entscheidungswege', 'verantwortliche und eigenorganisierte Arbeitsweise', 'Raum für Eigeninitiative', 'kurze Kommunikationswege', 'Mitgestaltungsmöglichkeiten für Mitarbeitende', 'Betriebsebene mit viel Kompetenzen und Entscheidungsmöglichkeiten']"
 ganz und gar,adv,style,filler,['-']
-gehen die Extrameile,v+s,style,exaggerating,"['haben Spaß am Mit- und Weiterdenken', 'engagieren sich für Kundenzufriedenheit', 'blicken über den Tellerrand', 'haben Spaß daran, Kundschaft durch unerwartete und kreative Lösungen zu begeistern(...)']"
+gehen die Extrameile,i,style,exaggerating,"['haben Spaß am Mit- und Weiterdenken', 'engagieren sich für Kundenzufriedenheit', 'blicken über den Tellerrand', 'haben Spaß daran, Kundschaft durch unerwartete und kreative Lösungen zu begeistern(...)']"
 hard core,a,style,exaggerating,"['heftig', 'engagiert', 'kompromisslos', 'anstrengend', 'unerfreulich']"
 hard sell,i,style,anglicism,['schwer zu verkaufen']
 heller Geist,a+s,style,exaggerating,"['Mensch mit Ideen(...)', 'Mensch mit Blick fürs Wesentliche(...)', 'Person, die Erlerntes rasch anwenden kann(...)', 'Mensch mit Erfindungsgeist(...)', 'jemand, der Zusammenhänge schnell erfasst(...)']"
@@ -89,7 +89,7 @@ hoch motiviert,a,style,hollow,"['--- nicht auf Menschen beziehen', 'engagiert', 
 hohe Ziele,a+s,style,exaggerating,"['Meilensteine', 'Etappenziele', 'Ziele, die motivieren', 'Vorhaben, die begeistern']"
 hohes Verantwortungsbewusstsein,a+s,style,exaggerating,"['Freude an Verantwortung', 'Sorgfältigkeit', 'Umsicht und Sorgfslt im Angehen von Aufgaben', 'beim Betreuen von Aufgaben das große Ganze im Blick(...)']"
 im Allgemeinen,adv,style,filler,['-']
-in a Nutshell,i,style,anglicism,"['kurz gesagt', 'kurz und bündig', 'in einem Wort']"
+in a Nutshell,i,style,anglicism,"['kurz gesagt', 'kurz und bündig', 'in einem Wort', 'auf eine einfache Formel gebracht', 'auf den Punkt gebracht']"
 in den Loop nehmen,i,style,anglicism,"['auf den Verteiler nehmen', 'einbinden', 'auf dem Laufenden halten']"
 in der Tat,adv,style,filler,['-']
 in diesem Zusammenhang,adv,style,filler,['-']
@@ -100,15 +100,15 @@ klugem Kopf,a+s,style,exaggerating,"['Mensch mit Durchblick(...)', 'Mensch, der 
 klugen Kopf,a+s,style,exaggerating,"['Mensch mit Durchblick(...)', 'Mensch, der mitdenkt(...)', 'Person, die sich mit Themen intensiv beschäftigt(...)', 'jemand mit anderen Perspektiven(...)', 'Mensch, der interessante Schlüsse zieht(...)']"
 klugen Köpfen,a+s,style,exaggerating,"['Menschen, die mitdenken(...)', 'Menschen, die sich mit Themen intensiv beschäftigen(...)', 'Menschen mit verschiedenen Perspektiven(...)', 'Menschen, die interessante Schlüsse ziehen(...)']"
 kluger Kopf,a+s,style,exaggerating,"['Mensch mit Durchblick(...)', 'Mensch, der mitdenkt(...)', 'Person, die sich mit Themen intensiv beschäftigt(...)', 'jemand mit anderen Perspektiven(...)', 'Mensch, der interessante Schlüsse zieht(...)']"
-low hanging Fruit,i,style,anglicism,"['schneller, einfacher Erfolg', 'unaufwändige Optimierung, die schnell Wirkung zeigt,', 'unaufwändige, aber umsatzträchtige Maßnahme', 'Aufgabe, die bei minimalem Aufwand maximalen Ertrag bringt,']"
-low hanging Fruits,i,style,anglicism,"['schnelle, einfache Erfolge', 'unaufwändige Optimierungen, die schnell Wirkung zeigen,', 'unaufwändige, aber umsatzträchtige Maßnahmen', 'Aufgaben, die bei minimalem Aufwand maximalen Ertrag bringen,']"
-low-hanging Fruit,i,style,anglicism,"['schneller, einfacher Erfolg', 'unaufwändige Optimierung, die schnell Wirkung zeigt,', 'unaufwändige, aber umsatzträchtige Maßnahme', 'Aufgabe, die bei minimalem Aufwand maximalen Ertrag bringt,']"
-low-hanging Fruits,i,style,anglicism,"['schnelle, einfache Erfolge', 'unaufwändige Optimierungen, die schnell Wirkung zeigen,', 'unaufwändige, aber umsatzträchtige Maßnahmen', 'Aufgaben, die bei minimalem Aufwand maximalen Ertrag bringen,']"
-lowhanging fruit,i,style,anglicism,"['schneller, einfacher Erfolg', 'unaufwändige Optimierung, die schnell Wirkung zeigt,', 'unaufwändige, aber umsatzträchtige Maßnahme', 'Aufgabe, die bei minimalem Aufwand maximalen Ertrag bringt,']"
-lowhanging fruits,i,style,anglicism,"['schnelle, einfache Erfolge', 'unaufwändige Optimierungen, die schnell Wirkung zeigen,', 'unaufwändige, aber umsatzträchtige Maßnahmen', 'Aufgaben, die bei minimalem Aufwand maximalen Ertrag bringen,']"
+low hanging Fruit,a+s,style,anglicism,"['schneller, einfacher Erfolg', 'unaufwändige Optimierung, die schnell Wirkung zeigt,', 'unaufwändige, aber umsatzträchtige Maßnahme', 'Aufgabe, die bei minimalem Aufwand maximalen Ertrag bringt,']"
+low hanging Fruits,a+s,style,anglicism,"['schnelle, einfache Erfolge', 'unaufwändige Optimierungen, die schnell Wirkung zeigen,', 'unaufwändige, aber umsatzträchtige Maßnahmen', 'Aufgaben, die bei minimalem Aufwand maximalen Ertrag bringen,']"
+low-hanging Fruit,a+s,style,anglicism,"['schneller, einfacher Erfolg', 'unaufwändige Optimierung, die schnell Wirkung zeigt,', 'unaufwändige, aber umsatzträchtige Maßnahme', 'Aufgabe, die bei minimalem Aufwand maximalen Ertrag bringt,']"
+low-hanging Fruits,a+s,style,anglicism,"['schnelle, einfache Erfolge', 'unaufwändige Optimierungen, die schnell Wirkung zeigen,', 'unaufwändige, aber umsatzträchtige Maßnahmen', 'Aufgaben, die bei minimalem Aufwand maximalen Ertrag bringen,']"
+lowhanging fruit,a+s,style,anglicism,"['schneller, einfacher Erfolg', 'unaufwändige Optimierung, die schnell Wirkung zeigt,', 'unaufwändige, aber umsatzträchtige Maßnahme', 'Aufgabe, die bei minimalem Aufwand maximalen Ertrag bringt,']"
+lowhanging fruits,a+s,style,anglicism,"['schnelle, einfache Erfolge', 'unaufwändige Optimierungen, die schnell Wirkung zeigen,', 'unaufwändige, aber umsatzträchtige Maßnahmen', 'Aufgaben, die bei minimalem Aufwand maximalen Ertrag bringen,']"
 mehr oder weniger,adv,style,filler,['-']
 meines Erachtens,adv,style,filler,['-']
-nach den Sternen greifen,s+v,style,exaggerating,"['sich Ziele setzen, die motivieren', 'auf gesteckte Ziele hinarbeiten', 'auf eine Vision hinarbeiten']"
+nach den Sternen greifen,i,style,exaggerating,"['sich Ziele setzen, die motivieren', 'auf gesteckte Ziele hinarbeiten', 'auf eine Vision hinarbeiten']"
 ohne Problem,s,style,exaggerating,"['leicht', 'reibungslos', 'praktisch', 'bequem', 'ohne großen Aufwand', 'mit Leichtigkeit']"
 ohne Zweifel,adv,style,filler,['-']
 ohne weiteres,adv,style,filler,['-']

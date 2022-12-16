@@ -6,7 +6,6 @@ from app.main import (
     app,
     redis,
     fetch_configs_for_request,
-    is_number_list_empty,
 )
 from app.model import model
 import json
@@ -75,26 +74,6 @@ def test_sentry_examples(ending_case_dir, snapshot, set_redis):
     # Snapshot the return value.
     snapshot.snapshot_dir = ending_case_dir
     snapshot.assert_match(output, "output.json")
-
-
-# This test is failling because singular/plural form of token cannot be determined. The workaround is applied, but this test case remain failing till permanent fix is found.
-@pytest.mark.parametrize(
-    "ending_case_dir",
-    get_dirs("tests/test_singular_plural"),
-)
-def test_singular_plural(ending_case_dir, snapshot):
-
-    # Read input files from the case directory.
-    input_json = ending_case_dir.joinpath("input.json").read_text()
-    # Call the tested function
-    text = json.loads(input_json)["text"]
-    token = model["en"](text.rstrip().replace("\n", " "))[0]
-    number = token.morph.get("Number")
-    response = is_number_list_empty(number, token, text)
-    logging.debug(
-        "Singular/plural form cannot be determined. This test will remain failing till this is fixed. The workaround is applied for now."
-    )
-    # assert response == False
 
 
 @pytest.mark.parametrize(
@@ -1174,13 +1153,13 @@ def test_abbreviation(abbr_case_dir, snapshot, set_redis):
 
 
 @pytest.mark.parametrize(
-    "english_plur_case_dir",
-    get_dirs("tests/test_english_plur"),
+    "test_sing_or_plur_dir",
+    get_dirs("tests/test_sing_or_plur"),
 )
-def test_english_plur(english_plur_case_dir, snapshot, set_redis):
+def test_sing_or_plur(test_sing_or_plur_dir, snapshot, set_redis):
 
     # Read input files from the case directory.
-    input_json = english_plur_case_dir.joinpath("input.json").read_text()
+    input_json = test_sing_or_plur_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
     response = client.post(
         "/v2.1/check",
@@ -1191,7 +1170,7 @@ def test_english_plur(english_plur_case_dir, snapshot, set_redis):
     # output must be string
     output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
     # Snapshot the return value.
-    snapshot.snapshot_dir = english_plur_case_dir
+    snapshot.snapshot_dir = test_sing_or_plur_dir
     snapshot.assert_match(output, "output.json")
 
 

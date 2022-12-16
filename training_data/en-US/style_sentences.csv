@@ -4,7 +4,7 @@ I mean,i,style,filler,['-']
 I think,i,style,filler,['-']
 I think we should,i,style,hollow,"[""Let's""]"
 It’s not that complicated,i,style,hollow,['Which part is confusing? I can help clarify']
-Kind regards,i,style,formality,"['Cordially', 'Thank you for reading', 'Sending you the best', 'Take care', 'With appreciation']"
+Kind regards,a+s,style,formality,"['Cordially', 'Thank you for reading', 'Sending you the best', 'Take care', 'With appreciation']"
 Make sure the juice is worth the squeeze,i,style,hollow,['Make sure this is worth the effort']
 Thanks for nothing.,i,style,hollow,"[""I'm uncomfortable with this situation."", 'I honestly would have appreciated your help.', 'Can we come to a more constructive solution?']"
 What we want is to,i,style,filler,"['We want to', 'Our goal:', ""Let's""]"
@@ -13,6 +13,7 @@ able to,a,style,hollow,"['in a position to', 'willing to', 'interested in', 'pre
 amongst others,s,style,filler,['-']
 are on the same page,i,style,hollow,"['agree', 'are in agreement', 'understand each other', 'speak the same language']"
 at the end of the day,i,style,hollow,"['when the results come in', 'in the end']"
+be state of the art,i,style,hollow,"['the highest point of technological achievement to date', 'the current highest level of development in the field']"
 bright mind,a+s,style,exaggerating,"['astute mind', 'creative mind', 'inventive mind', 'talent', 'engaged person(...)', 'person with different perspectives(...)', 'someone who comes up with interesting ideas(...)', 'someone who comes up with creative solutions(...)', 'astute minds', 'creative minds', 'inventive minds', 'talents']"
 clever head,a+s,style,exaggerating,"['competence', 'creativity', 'intelligence', 'talent', 'ability', 'capability', 'proficiency', 'education', 'creative person(...)', 'astute person(...)', 'inventive person(...)', 'someone with an eye for solutions(...)', 'someone with surprising ideas(...)']"
 click to,i,style,filler,['-']
@@ -37,9 +38,9 @@ high quality,a+s,style,hollow,"['adhering to rigorous standards(...)', 'using pr
 highly motivated,a,style,hollow,"['motivated', 'energetic', 'enterprising', 'spirited', 'happy to take the initiative(...)', 'willing to apply oneself(...)', 'keenly interested(...)']"
 key learnings,s,style,hollow,"[""what we've learned"", 'findings']"
 like crazy,i,style,exaggerating,"['fast and with great enthusiasm', 'a lot', ""like nobody's business"", 'without restraint', 'with speed and energy']"
-low hanging fruit,i,style,hollow,"['easy opportunities', 'easy pickings']"
-low-hanging fruit,i,style,hollow,"['easy opportunities', 'easy pickings']"
-lowhanging fruit,i,style,hollow,"['easy opportunities', 'easy pickings']"
+low hanging fruit,=a+s,style,hollow,"['easy opportunities', 'easy pickings']"
+low-hanging fruit,=a+s,style,hollow,"['easy opportunities', 'easy pickings']"
+lowhanging fruit,=a+s,style,hollow,"['easy opportunities', 'easy pickings']"
 market leader,s,style,exaggerating,"['--- be specific to build trust', 'company with the largest market share in the industry', 'company with the ability to influence the market', 'company with the largest profitability margin in the market', 'company with the products most relevant to the customer', 'companies with the largest market shares in the industry', 'companies with the ability to influence the market', 'companies with the largest profitability margin in the market', 'companies with the products most relevant to the customer']"
 market leadership,s,style,exaggerating,"['--- be specific to build trust', 'market share gain', 'having the largest market share in the industry', 'ability to influence the market', 'largest profitability margin in the market', 'market share gains', 'having the largest market shares in the industry', 'abilities to influence the markets', 'largest profitability margin in the market']"
 market leading,a,style,exaggerating,['market-influencing']
@@ -58,9 +59,8 @@ reach for the star,i,style,exaggerating,"['have aspirations', 'set motivating go
 reach to the star,i,style,exaggerating,"['have aspirations', 'set motivating goals', 'set inspiring milestones']"
 results driven,a,style,hollow,"['-', 'goal-oriented', 'keen to get things done(...)', 'motivated by milestones(...)', 'able to create momentum to get things done(...)', 'using targets to stay motivated(...)', 'focused on outcomes(...)']"
 risk carrier,s,style,exaggerating,['-']
-self driven,i,style,hollow,"['motivated', 'ardent', 'spirited', 'aspiring', 'sincere', 'industrious']"
+self driven,=a,style,hollow,"['motivated', 'ardent', 'spirited', 'aspiring', 'sincere', 'industrious']"
 self starter,s,style,exaggerating,['-']
-state of the art,i,style,hollow,"['the highest point of technological achievement to date', 'the current highest level of development in the field']"
 success rate,s,style,exaggerating,['-']
 success story,s,style,exaggerating,"['-', 'reference', 'person of the hour', 'case study', 'business case', 'case story', 'references', 'people of the hour', 'case studies', 'business cases', 'case stories']"
 take it offline,i,style,hollow,['talk about this later']
