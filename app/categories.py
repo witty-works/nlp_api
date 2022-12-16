@@ -490,7 +490,10 @@ categories = {
         "name": {"en": "Inclusive", "de": "Inklusiv"},
         "gravity": None,
         "importance": 3,
-        "url": {"en": None, "de": None},
+        "url": {
+            "en": "https://www.witty.works/en/categories/inclusive#inclusive",
+            "de": "https://www.witty.works/de/kategorien/inklusiv#inklusiv",
+        },
         "emoji": "✅",
     },
     "leadership": {

@@ -1,7 +1,6 @@
 Lemma,Word_Type,Category,Primary_subcategory,Alt_split
 Access,s,style,anglicism,['Zugriff']
 Actionables,s,style,anglicism,"['Aufgaben', 'Teilaufgaben', 'nächste Schritte']"
-Administration,s,style,anglicism,"['Verwaltung', 'Regierung', 'Büroarbeit']"
 Allnighter,s,style,anglicism,"['Nachtarbeit', 'durchgemachte Nacht', 'durchgearbeitete Nacht']"
 Alpha,s,style,exaggerating,"['Person, die ihr Team inspiriert(...)', 'Mensch mit Freude an Verantwortung(...)', 'Person, die ihrem Team mit Rat und Tat zur Seite steht(...)', 'Person, die das Team beim Erreichen von gemeinsamen Zielen unterstützt(...)', 'Leute, die ihre Teams inspirieren(...)', 'Menschen mit Freude an Verantwortung(...)', 'Leute, die ihrem Team mit Rat und Tat zur Seite stehen(...)', 'Leute, die das Team beim Erreichen von gemeinsamen Zielen unterstützen und lenken(...)']"
 Alpha-Chef,s,style,exaggerating,"['Person, die ihr Team inspiriert(...)', 'Mensch mit Freude an Verantwortung(...)', 'Person, die ihrem Team mit Rat und Tat zur Seite steht(...)', 'Person, die das Team beim Erreichen von gemeinsamen Zielen unterstützt(...)', 'Leute, die ihre Teams inspirieren(...)', 'Menschen mit Freude an Verantwortung(...)', 'Leute, die ihrem Team mit Rat und Tat zur Seite stehen(...)', 'Leute, die das Team beim Erreichen von gemeinsamen Zielen unterstützen und lenken(...)']"
@@ -16,13 +15,13 @@ Alphapersönlichkeit,s,style,exaggerating,"['Person, die ihr Team inspiriert(...
 Alphatier,s,style,exaggerating,"['Person, die ihr Team inspiriert(...)', 'Mensch mit Freude an Verantwortung(...)', 'Person, die ihrem Team mit Rat und Tat zur Seite steht(...)', 'Person, die das Team beim Erreichen von gemeinsamen Zielen unterstützt(...)', 'Leute, die ihre Teams inspirieren(...)', 'Menschen mit Freude an Verantwortung(...)', 'Leute, die ihrem Team mit Rat und Tat zur Seite stehen(...)', 'Leute, die das Team beim Erreichen von gemeinsamen Zielen unterstützen und lenken(...)']"
 Alphatyp,s,style,exaggerating,"['Person, die ihr Team inspiriert(...)', 'Mensch mit Freude an Verantwortung(...)', 'Person, die ihrem Team mit Rat und Tat zur Seite steht(...)', 'Person, die das Team beim Erreichen von gemeinsamen Zielen unterstützt(...)', 'Leute, die ihre Teams inspirieren(...)', 'Menschen mit Freude an Verantwortung(...)', 'Leute, die ihrem Team mit Rat und Tat zur Seite stehen(...)', 'Leute, die das Team beim Erreichen von gemeinsamen Zielen unterstützen und lenken(...)']"
 Alphaweibchen,s,style,exaggerating,"['Person, die ihr Team inspiriert(...)', 'Mensch mit Freude an Verantwortung(...)', 'Person, die ihrem Team mit Rat und Tat zur Seite steht(...)', 'Person, die das Team beim Erreichen von gemeinsamen Zielen unterstützt(...)', 'Leute, die ihre Teams inspirieren(...)', 'Menschen mit Freude an Verantwortung(...)', 'Leute, die ihrem Team mit Rat und Tat zur Seite stehen(...)', 'Leute, die das Team beim Erreichen von gemeinsamen Zielen unterstützen und lenken(...)']"
-Arbeitskraft,s,style,hollow,"['--- nicht auf Menschen beziehen', 'Personal', 'Mitarbeiter~in~/~Mitarbeiter', 'menschliche Kraft zu geistiger/körperlicher Arbeit(...)', 'Personal', 'Mitarbeitende', 'Mitarbeiter~innen~ und ~Mitarbeiter']"
+Arbeitskraft,s,style,hollow,"['--- nicht für Einzelperson', 'Personal', 'Mitarbeiter~in~/~Mitarbeiter', 'Arbeitnehmer~in~/~Arbeitnehmer', 'menschliche Kraft, (geistige, körperliche) Arbeit zu leisten(...)', 'Personal', 'Mitarbeitende', 'Arbeitnehmende', 'Mitarbeiter~innen~ und ~Mitarbeiter', 'Arbeitnehmer~innen~ und ~Arbeitnehmer']"
 Aufsteiger,s,style,exaggerating,"['Aufsteiger~in~/~Aufsteiger', 'aufmerksame Person, die mit neu gewonnenem Wissen weiterkommt(...)', 'Person, die aus Erfahrungen lernt(...)', 'Person, die Spaß an neuen Aufgaben hat(...)', 'Aufsteiger~innen~ und ~Aufsteiger', 'aufmerksame Menschen, die neu gewonnenes Wissen nutzen und weiterkommen(...)', 'Leute, die aus Erfahrungen lernen(...)', 'Leute, die Spaß an neuen Aufgaben haben(...)']"
 Brand,s,style,anglicism,"['Marke', 'Warenzeichen', 'Markenbezeichnung']"
 Briefing,s,style,anglicism,"['Pressekonferenz', 'kurze Besprechung', 'Anweisung', 'kurze Zusammenfassung', 'Einweisung ']"
 Bullet-point,s,style,anglicism,"['Aufzählungspunkt', 'Aufzählungspunkte']"
 Bulletpoint,s,style,anglicism,"['Aufzählungspunkt', 'Aufzählungspunkte']"
-Buyer,s,style,anglicism,"['Einkauf', 'Einkäufer~in~/~Einkäufer']"
+Buyer,s,style,anglicism,"['Einkauf', 'Einkäufer~in~/~Einkäufer', 'Einkäufer~innen~ und ~Einkäufer']"
 C-Level,s,style,anglicism,"['Führungsetage', 'obere Management']"
 CV,s,style,anglicism,['Lebenslauf']
 Call,s,style,anglicism,"['Telefonat', 'Video-Termin', 'Meeting', 'virtuelle Meeting', 'Bereitschaft', 'Telefonate', 'Meeting', 'Video-Termine', 'virtuelle Meetings']"
@@ -50,7 +49,7 @@ Eyecatcher,s,style,anglicism,['Blickfang']
 Fake,s,style,anglicism,['Fälschung']
 Flexibilität,s,style,hollow,"['Anpassungsfähigkeit', 'Aufgeschlossenheit gegenüber Wandel', 'Bereitschaft für Veränderung', 'Mobilität', 'Fähigkeit, sich schnell auf Neues umzustellen']"
 Flyer,s,style,anglicism,['Flugblatt']
-Gatekeeper,s,style,anglicism,"['Pforte', 'Empfang', 'Türhüter~in~/~Türhüter', 'Pförtner~in~/~Pförtner']"
+Gatekeeper,s,style,anglicism,"['Pforte', 'Empfang', 'Türhüter~in~/~Türhüter', 'Pförtner~in~/~Pförtner', 'Türhüter~innen~ und ~Türhüter', 'Pförtner~innen~ und ~Pförtner']"
 Geek,s,style,exaggerating,"['Mensch, der sich gern mit Technologie beschäftigt(...)', 'Mensch, der Spaß an Computern hat(...)', 'Mensch, der unseren Enthusiasmus für neue Medien teilt(...)', 'Mensch, der sich für ein Thema begeistert(...)', 'Mensch, der für ein Thema brennt(...)']"
 Gewinn,s,style,exaggerating,"['Bereicherung', 'Nutzen', 'Vorteil', 'positiver Ertrag', 'Nutzeffekt', 'Benefit', 'Vorzug']"
 Gewinner,s,style,exaggerating,"['Gewinner~in~/~Gewinner', 'Mensch, der nicht locker lässt(...)', 'Person, die sich vom Ziel nicht abbringen lässt(...)', 'Gewinner~innen~ und ~Gewinner', 'Menschen, die nicht locker lassen(...)', 'alle, die sich nicht von ihrem Ziel ablenken lassen(...)']"
@@ -78,7 +77,7 @@ Karrierechance,s,style,hollow,"['gute Aufstiegsmöglichkeit', 'Maßnahmen zur Ka
 Karrierefrau,s,style,exaggerating,"['engagierter Mensch', 'Person, die neu erworbenes Wissen kompetent einsetzt und weiterkommt(...)', 'Person, die sich kontinuierlich Ziele setzt und sie erreicht(...)']"
 Kämpfer,s,style,exaggerating,"['Mensch, der mit Disziplin auf ein Ziel hinarbeitet(...)', 'jemand, der für (...) einsteht', 'tatkräftiger Mensch(...)', 'jemand, der Aufgaben mit Elan anpackt(...)']"
 Kämpfernatur,s,style,exaggerating,"['Geradlinigkeit', 'Standhaftigkeit', 'Seelenstärke', 'tatkräftige Person', 'resilienter Mensch', 'Person, die Aufgaben mit Stetigkeit und Elan angeht(...)', 'Person, die mit Energie ans Werk geht(...)', 'Person, die sich voll innerer Energie für (...) einsetzt', 'Mensch, der Aufgaben beherzt anpackt(...)', 'Mensch, der bereit ist, sich neuen oder komplexen Situationen zu stellen(...)', 'jemand, der für (...) einsteht']"
-Könner,s,style,exaggerating,"['Fachkraft', 'Könner~in~/~Könner', 'jemand, der erfahren und fachkundig ist(...)', 'Person, die ihre Kompetenzen routiniert einsetzt(...)']"
+Könner,s,style,exaggerating,"['Fachkraft', 'Könner~in~/~Könner', 'jemand, der erfahren und fachkundig ist(...)', 'Person, die ihre Kompetenzen routiniert einsetzt(...)', 'Könner~innen~ und ~Könner']"
 Learnings,s,style,anglicism,"['Erkenntnisse', 'Einblicke', 'Einsichten', 'Lernprozesse']"
 Legal,s,style,anglicism,['Rechtsabteilung']
 Listening-mode,s,style,anglicism,['Zuhör-Modus']
