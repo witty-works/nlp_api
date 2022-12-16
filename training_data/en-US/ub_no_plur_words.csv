@@ -151,7 +151,7 @@ juvenile,a,unconscious_bias,age_young,age_young,"['adolescent', 'underage', 'pla
 kick-off,s,unconscious_bias,sports_terms,sports_terms,"['launch', 'project start', 'opening']",[],"['launch', 'project start', 'opening']"
 kickoff,s,unconscious_bias,sports_terms,sports_terms,"['launch', 'project start', 'opening']",[],"['launch', 'project start', 'opening']"
 kill,a,unconscious_bias,agentic,tech,"['stop', 'exit', 'cancel', 'force quit', 'force close']",[],"['stop', 'exit', 'cancel', 'force quit', 'force close']"
-kinsmen,s,unconscious_bias,gender_identity,gender_identity,['relatives'],[],['relatives']
+kinsmen,=s,unconscious_bias,gender_identity,gender_identity,['relatives'],[],['relatives']
 lame,a,unconscious_bias,mobility,mobility,"['boring', 'not helpful', 'ridiculous', 'old-fashioned', 'uncool', 'person with a mobility impairment(...)', 'paralyzed person(...)']",[],"['boring', 'not helpful', 'ridiculous', 'old-fashioned', 'uncool', 'person with a mobility impairment(...)', 'paralyzed person(...)']"
 learning-disabled,=a,unconscious_bias,cognitive_ability,cognitive_ability,['learning-different'],[],['learning-different']
 learningdisabled,=a,unconscious_bias,cognitive_ability,cognitive_ability,['learning-different'],[],['learning-different']
