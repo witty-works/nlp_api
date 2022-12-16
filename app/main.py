@@ -81,7 +81,7 @@ from app.model import model
 from app.rules import rules
 from app.sentry import set_up_sentry_sdk
 
-version = "1.39.6"
+version = "1.39.7"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -1591,7 +1591,7 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
         regexes = {config._gendereddenom_ending[config.german_gender_ending]: None}
         if config.german_gender_ending == ":in":
             regexes[r"\s((\S+):(\S+))"] = None
-        elif ending == "*in":
+        elif config.german_gender_ending == "*in":
             regexes[r"\s((\S+)\*(\S+))"] = None
 
         regexes.update(rules["d_f_m_regexes"])
@@ -2039,7 +2039,8 @@ def german_noun_analysis(word, genus_only=False):
 
         result["lemma"] = word
         if genus_only:
-            del result["flexion"]
+            if "flexion" in result:
+                del result["flexion"]
         else:
             word_prefix = word[0:i]
             for flexion in result["flexion"]:
