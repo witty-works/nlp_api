@@ -88,7 +88,7 @@ def fetch_rules(langs):
                 )
 
     if "de" in langs:
-        rules["de"]["ml_review"] = []
+        rules["de"]["context_check"] = []
 
         # list of "hollow word" sentences
         rules["de"]["terms_style"] = list(data["de"]["df_style_sentences"]["Lemma"])
@@ -650,7 +650,7 @@ def fetch_rules(langs):
                 )
             )
 
-        rules["en"]["ml_review"] = [
+        rules["en"]["context_check"] = [
             "fossil",
             "flexible",
             "impact",

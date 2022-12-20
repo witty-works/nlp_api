@@ -1,0 +1,19 @@
+[
+    {
+        "alternatives": [],
+        "category": "style",
+        "context": "How are you ninja?",
+        "end": 17,
+        "explanation": {
+            "context": null,
+            "icon": "😮‍💨",
+            "text": "Build trust by avoiding exaggerations",
+            "url": "https://www.witty.works/en/categories/style#exaggeration"
+        },
+        "gravity": 2.0,
+        "label": "Style: Exaggeration",
+        "start": 12,
+        "subcategory": "exaggerating",
+        "text": "ninja"
+    }
+]

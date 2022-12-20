@@ -1,0 +1,110 @@
+- name: "app"
+
+  variables:
+    env:
+      LANGS: '["en"]'
+
+  type: "python:3.9"
+
+  disk: 2048
+
+  resources:
+    base_memory: 512
+    memory_ratio: 512
+
+  dependencies:
+    python3:
+      pipenv: "2021.5.29"
+
+  web:
+    upstream:
+      socket_family: unix
+    commands:
+      start: |
+        blackfire-python gunicorn app.main:app -b unix:$SOCKET -w ${WORKERS} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
+
+  hooks:
+    build: |
+      set -e
+
+      pipenv install --system --deploy
+
+      pipenv run /opt/python/3.9/bin/python3.9 -m spacy download en_core_web_sm --no-cache-dir
+
+      pipenv run pybabel compile -d locales -l en_US -f
+      pipenv run pybabel compile -d locales -l en_GB -f
+
+      export FT_MODEL="lid.176.bin"
+
+      if [ ! -f "${PLATFORM_CACHE_DIR}/$FT_MODEL" ]; then
+        echo "Downloading ${FT_MODEL} ..."
+        cd "${PLATFORM_CACHE_DIR}"
+        curl https://dl.fbaipublicfiles.com/fasttext/supervised-models/${FT_MODEL} --output ${FT_MODEL}
+        cd ~
+      else
+        echo "Using cached ${FT_MODEL} model ..."
+      fi
+
+      echo "Installing archive of ${FT_MODEL} from '${PLATFORM_CACHE_DIR}/${FT_MODEL}' ..."
+      cp -R "${PLATFORM_CACHE_DIR}/${FT_MODEL}" ./training_data/.
+
+      echo "e613bda316ecb4f5e1924140eedf81b81c087d9a *training_data/lid.176.bin" | sha1sum -c -
+
+  relationships:
+    rediscache: "rediscache:redis"
+    de: "german:http"
+
+  crons:
+    generate-statistics:
+      spec: "0 1 * * 0"
+      cmd: |
+        if [ "$PLATFORM_BRANCH" = main ]; then
+            ./statistics.sh
+        fi
+    analyze-rules:
+      spec: "0 1 * * *"
+      cmd: |
+        if [ "$PLATFORM_BRANCH" = dev ]; then
+            ./analyze_rules.sh
+        fi
+
+  mounts:
+    "analyze_rules": "shared:files/analyze_rules"
+
+- name: "german"
+
+  variables:
+    env:
+      LANGS: '["de"]'
+      LANGUAGE_ENDPOINT_ENABLED_DE: true
+
+  type: "python:3.9"
+
+  disk: 2048
+
+  resources:
+    base_memory: 1024
+    memory_ratio: 1024
+
+  dependencies:
+    python3:
+      pipenv: "2021.5.29"
+
+  web:
+    upstream:
+      socket_family: unix
+    commands:
+      start: |
+        blackfire-python gunicorn app.main:app -b unix:$SOCKET -w ${DE_WORKERS} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
+
+  hooks:
+    build: |
+      set -e
+
+      pipenv install --system --deploy
+
+      pipenv run /opt/python/3.9/bin/python3.9 -m spacy download de_core_news_lg --no-cache-dir
+
+      pipenv run pybabel compile -d locales -l de_DE -f
+      pipenv run pybabel compile -d locales -l de_AT -f
+      pipenv run pybabel compile -d locales -l de_CH -f

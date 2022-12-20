@@ -68,3 +68,8 @@ class LangDetection:
             return self.get_default_locale(lang)
 
         return None
+
+
+@lru_cache()
+def get_lang_detection():
+    return LangDetection()

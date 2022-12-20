@@ -19,16 +19,20 @@ class Language(object):
     def __init__(self, locale):
         self.locale = locale
         self.lang = locale[0:2]
-
-        language = gettext.translation(
-            "messages", localedir="locales", languages=[locale.replace("-", "_")]
-        )
-
-        language.install()
-
-        self.gettext = language.gettext
+        self.gettext = None
 
     def _(self, message: str, placeholders={}):
+        if self.gettext == None:
+            language = gettext.translation(
+                "messages",
+                localedir="locales",
+                languages=[self.locale.replace("-", "_")],
+            )
+
+            language.install()
+
+            self.gettext = language.gettext
+
         message = self.gettext(message)
 
         for key in placeholders:
@@ -56,6 +60,17 @@ class LangWithAutoType(str, Enum):
     deDE = "de-DE"
     deCH = "de-CH"
     deAT = "de-AT"
+    enUS = "en-US"
+    enGB = "en-GB"
+
+
+class LangGermanVariantType(str, Enum):
+    deDE = "de-DE"
+    deCH = "de-CH"
+    deAT = "de-AT"
+
+
+class LangEnglishVariantType(str, Enum):
     enUS = "en-US"
     enGB = "en-GB"
 
@@ -295,6 +310,21 @@ class DomainType(str, Enum):
 class DomainConfig(BaseModel):
     list: List[str]
     type: DomainType
+
+
+class LanguageRequest(BaseModel):
+    version: float
+    text: str
+    config: Config
+    configs: dict
+
+
+class GermanLanguageRequest(LanguageRequest):
+    locale: LangGermanVariantType
+
+
+class EnglishLanguageRequest(LanguageRequest):
+    locale: LangEnglishVariantType
 
 
 class ConfRequest(BaseModel):

@@ -32,6 +32,64 @@ def test_read_main():
 
 
 @pytest.mark.parametrize(
+    "german_dir",
+    get_dirs("tests/test_german"),
+)
+def test_german_endpoint(german_dir, snapshot, set_redis):
+
+    # Read input files from the case directory.
+    input_json = german_dir.joinpath("input.json").read_text()
+    # Call the tested endpoint.
+    response = client.post(
+        "/german",
+        json=json.loads(input_json),
+    )
+    assert response.status_code == 403
+
+    response = client.post(
+        "/german",
+        json=json.loads(input_json),
+        headers={"X-German": "set"},
+    )
+    assert response.status_code == 200
+
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    # Snapshot the return value.
+    snapshot.snapshot_dir = german_dir
+    snapshot.assert_match(output, "output.json")
+
+
+@pytest.mark.parametrize(
+    "english_dir",
+    get_dirs("tests/test_english"),
+)
+def test_english_endpoint(english_dir, snapshot, set_redis):
+
+    # Read input files from the case directory.
+    input_json = english_dir.joinpath("input.json").read_text()
+    # Call the tested endpoint.
+    response = client.post(
+        "/english",
+        json=json.loads(input_json),
+    )
+    assert response.status_code == 403
+
+    response = client.post(
+        "/english",
+        json=json.loads(input_json),
+        headers={"X-English": "set"},
+    )
+    assert response.status_code == 200
+
+    # output must be string
+    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+    # Snapshot the return value.
+    snapshot.snapshot_dir = english_dir
+    snapshot.assert_match(output, "output.json")
+
+
+@pytest.mark.parametrize(
     "ending_case_dir",
     get_dirs("tests/test_highlight_position"),
 )
@@ -337,15 +395,6 @@ def test_language_detection_fail(fails_case_dir, snapshot, set_redis):
     # Snapshot the return value.
     snapshot.snapshot_dir = fails_case_dir
     snapshot.assert_match(output, "output.json")
-
-
-def test_categories():
-    response = client.get("/categories")
-    assert response.status_code == 200
-
-    first_record = response.json()
-
-    assert "hollow" in first_record
 
 
 def test_lemmatize():
