@@ -1249,7 +1249,7 @@ async def apply_languagetool_rules(
     list_results = []
 
     async with ClientSession(
-        connector=TCPConnector(verify_ssl=settings.languagetool_verify_ssl)
+        connector=TCPConnector(ssl=settings.languagetool_verify_ssl)
     ) as session:
 
         payload = {
