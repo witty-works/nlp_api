@@ -876,12 +876,6 @@ rules["en"]["list_false_column"] = [
     "nothing of the kind",
     "nurture leads",
     "objectives and key results",
-    "of a kind",
-    "of her kind",
-    "of his kind",
-    "of its kind",
-    "of one kind or another",
-    "of their kind",
     "on-time performance",
     "one-trick pony",
     "only as strong as",
@@ -1081,11 +1075,22 @@ pattern_lead_life = [
 # need to
 pattern_need_to = [[{"LEMMA": "need", "POS": "VERB"}, {"LEMMA": {"IN": ["to", "for"]}}]]
 
+# of a kind 'of a kind', 'of her kind', 'of his kind', 'of its kind', 'of one kind or another', 'of their kind',
+pattern_of_kind = [
+    [
+        {"LOWER": "of"},
+        {"POS": {"IN": ["DET", "PRON", "NUM"]}, "OP": "?"},
+        {"LOWER": "kind"},
+    ]
+]
+
+
 rules["en"]["pattern_false_positives"] = [
     pattern_master,
     pattern_lead_prepos,
     pattern_lead_life,
     pattern_need_to,
+    pattern_of_kind,
 ]
 
 rules["en"]["conjunctions"] = [
