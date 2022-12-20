@@ -7,7 +7,6 @@ from app.main import (
     redis,
     fetch_configs_for_request,
 )
-from app.model import model
 import json
 from app.models import (
     LangWithAutoType,

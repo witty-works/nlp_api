@@ -44,6 +44,8 @@ class Settings(BaseSettings):
     alternatives_max_count: int = 5
     context_checker_url: Optional[str]
     context_checker_api_key: Optional[str]
+    models: List = ["en_core_web_sm", "de_core_news_lg"]
+    langs: List = ["en", "de"]
 
     class Config:
         env_file = ".env"

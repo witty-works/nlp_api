@@ -82,8 +82,8 @@ from app.logger import set_up_logger
 from app.redis_setup import set_up_redis
 from app.languagetool import get_languagetool_url
 from app.azure_ad_b2c import initialize_aadb2c
-from app.model import model
-from app.rules import rules
+from app.model import fetch_nlp_model
+from app.rules import fetch_rules
 from app.sentry import set_up_sentry_sdk
 
 # probe.end()
@@ -99,6 +99,15 @@ lang_detection = LangDetection()
 initialize_aadb2c(settings)
 
 logging.debug("app started with settings: %s", settings)
+
+if len(settings.models) > 0:
+    model = {}
+    for spacy_model in settings.models:
+        lang = spacy_model[0:2]
+        if lang in settings.langs:
+            model[lang] = fetch_nlp_model(lang, spacy_model)
+
+    rules = fetch_rules(settings.langs)
 
 if (
     settings.slack_bot_token is not None and settings.slack_signing_secret is not None
@@ -472,10 +481,10 @@ async def post_auth_2_0(request: Request, response: Response):
 )
 async def get_debug_spacy(
     text: str,
-    locale: LangWithAutoType = "auto",
+    locale: LangWithAutoType = LangWithAutoType.AUTO,
     username: str = Depends(fetch_current_username),
 ):
-    if locale == "auto" or len(locale) == 2:
+    if locale == LangWithAutoType.AUTO or len(locale) == 2:
         locale = lang_detection.get_locale(
             text,
             locale,
@@ -1147,7 +1156,7 @@ def languagetool_matches(
             lang.lang == "de"
             and config.german_gender_ending == ":in"
             and match["rule"]["id"] == "LEERZEICHEN_HINTER_DOPPELPUNKT"
-            and text[start + 1 : end] in rules["de-DE"]["male_articles"]
+            and text[start + 1 : end] in rules["de"]["male_articles"]
         ):
             continue
 
@@ -1317,7 +1326,7 @@ def is_false_positive_match(list_false_positive, tokens, token):
 
 
 # create false positives patterns based on false positives column
-def false_pattern_match(tokens, lang):
+def false_pattern_match(tokens, lang: Language):
     matcher = Matcher(model[lang.lang].vocab)
 
     for false_positive in rules[lang.lang]["pattern_false_positives"]:
@@ -1326,14 +1335,16 @@ def false_pattern_match(tokens, lang):
     return matcher(tokens)
 
 
-def fetch_false_positive_matcher(tokens, lang):
+def fetch_false_positive_matcher(tokens, lang: Language):
     # create false positives list
-    phrase_matches_false = fetch_matches(tokens, rules["en"]["list_false_column"])
+    phrase_matches_false = fetch_matches(
+        lang, tokens, rules[lang.lang]["list_false_column"]
+    )
     word_matches_false = false_pattern_match(tokens, lang)
     return list(set(phrase_matches_false + word_matches_false))
 
 
-def fetch_matches(tokens, phrases):
+def fetch_matches(lang: Language, tokens, phrases):
     # Phrase matcher part to handle False positives with two words and special symbols
     matcher = PhraseMatcher(model[lang.lang].vocab, attr="LOWER")
 
@@ -1518,8 +1529,8 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             lang,
             text,
             tokens,
-            rules["de-DE"]["df_abbreviation"],
-            rules["de-DE"]["abbreviation"],
+            rules["de"]["df_abbreviation"],
+            rules["de"]["abbreviation"],
             True,
         )
 
@@ -1531,9 +1542,9 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             text,
             tokens,
             "openly_discriminating",
-            rules["de-DE"]["open_disc_words_data"],
-            rules["de-DE"]["open_disc_sentences_data"],
-            rules["de-DE"]["df_open_dis_sentence"],
+            rules["de"]["open_disc_words_data"],
+            rules["de"]["open_disc_sentences_data"],
+            rules["de"]["df_open_dis_sentence"],
         )
 
     if is_sub_category_enabled(version, config, "gendered"):
@@ -1545,9 +1556,9 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
                 text,
                 tokens,
                 "gendered",
-                rules["de-DE"]["gender_words_data_no_noun"],
-                rules["de-DE"]["gender_sentences_data"],
-                rules["de-DE"]["df_gendered_sentences"],
+                rules["de"]["gender_words_data_no_noun"],
+                rules["de"]["gender_sentences_data"],
+                rules["de"]["df_gendered_sentences"],
             )
             + gendered_denom_analysis_de(
                 version,
@@ -1555,8 +1566,8 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
                 lang,
                 text,
                 tokens,
-                rules["de-DE"]["gender_words_data"],
-                rules["de-DE"]["false_positives"].gender,
+                rules["de"]["gender_words_data"],
+                rules["de"]["false_positives"].gender,
             )
             + regex_matches(
                 version,
@@ -1607,9 +1618,9 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             lang,
             text,
             tokens,
-            rules["de-DE"]["bias_words_data_no_plur"],
-            rules["de-DE"]["bias_sentences_data"],
-            rules["de-DE"]["df_ub_sentences"],
+            rules["de"]["bias_words_data_no_plur"],
+            rules["de"]["bias_sentences_data"],
+            rules["de"]["df_ub_sentences"],
             "unconscious_bias",
         ) + word_noun(
             version,
@@ -1617,7 +1628,7 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             lang,
             text,
             tokens,
-            rules["de-DE"]["bias_words_data_noun"],
+            rules["de"]["bias_words_data_noun"],
             "unconscious_bias",
         )
 
@@ -1629,7 +1640,7 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             text,
             tokens,
             "inclusive",
-            rules["de-DE"]["df_communal_words"],
+            rules["de"]["df_communal_words"],
             None,
             [],
             [],
@@ -1644,9 +1655,9 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             text,
             tokens,
             "inclusive",
-            rules["de-DE"]["df_d_and_i_words"],
+            rules["de"]["df_d_and_i_words"],
             None,
-            rules["de-DE"]["df_terms_d_and_i_words"],
+            rules["de"]["df_terms_d_and_i_words"],
             [],
             "d_and_i",
         )
@@ -1672,10 +1683,10 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             lang,
             text,
             tokens,
-            rules["de-DE"]["terms_style"],
-            rules["de-DE"]["style_words_data"],
-            rules["de-DE"]["style_sentences_data"],
-            rules["de-DE"]["false_positives"].style,
+            rules["de"]["terms_style"],
+            rules["de"]["style_words_data"],
+            rules["de"]["style_sentences_data"],
+            rules["de"]["false_positives"].style,
         )
 
         list_full += detect_lower_cased_hashtags(
@@ -2291,11 +2302,11 @@ def plural_alternatives_en(
 
 
 def ignore_binary_inclusive_gendered_denom_analysis_de(
-    lang,
+    lang: Language,
     tokens,
     false_positives,
 ):
-    matches = fetch_matches(tokens, false_positives)
+    matches = fetch_matches(lang, tokens, false_positives)
     if matches.__len__() > 0:
         old_start = 0
         rest_text = []
@@ -2372,7 +2383,7 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
     match_feminine = None
     match_neuter = None
     match_alternative = None
-    for form, masculine, feminine, neuter, plural, alternative in rules["de-DE"][
+    for form, masculine, feminine, neuter, plural, alternative in rules["de"][
         "articles"
     ]:
         if form not in matches["forms"]:
@@ -2503,7 +2514,7 @@ def sentences_matcher(
 
         df_sentence = list(df_sentence["Lemma"])
 
-    matches = fetch_matches(tokens, df_sentence)
+    matches = fetch_matches(lang, tokens, df_sentence)
 
     if sentences_data is None:
         return sentences_matches(
@@ -2663,7 +2674,7 @@ def regex_matches(
                 if alternative_3 is not None:
                     alternatives.append(alternative_3)
             elif len(span.groups()) == 3:
-                if span.group(3) not in rules["de-DE"]["male_articles"]:
+                if span.group(3) not in rules["de"]["male_articles"]:
                     continue
                 if category != "inclusive":
                     alternatives = [span.group(2) + regexes[regex] + span.group(3)]
@@ -3134,7 +3145,7 @@ def literal_match(
 ):
     list_tokens = []
 
-    matches = fetch_matches(tokens, list(df_sentence["Lemma"]))
+    matches = fetch_matches(lang, tokens, list(df_sentence["Lemma"]))
     for match_id, start, end in matches:
         for (
             term,

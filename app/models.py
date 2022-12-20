@@ -99,7 +99,7 @@ class Config(BaseModel):
     store_context: bool = True
     simple_language: bool = False
     plan: Optional[str]
-    primary_language: Optional[LangWithAutoType]
+    primary_language: Optional[LangVariantType]
     preferred_languages: List = [LangWithAutoType.EN, LangWithAutoType.DE]
     _supported_langs = [
         LangType.DE,
@@ -145,12 +145,6 @@ class Config(BaseModel):
                 return mapping[v]
 
             raise ValueError("Not supported german_gender_ending: " + v)
-        return v
-
-    @validator("primary_language", pre=True)
-    def valid_primary_language(cls, v):
-        if v and v not in Config._supported_locales:
-            raise ValueError("Not supported primary_language: " + v)
         return v
 
     @validator("preferred_languages", pre=True)
@@ -353,7 +347,7 @@ class UserConfResponse(ConfRequest):
 class RequestIn(BaseModel):
     type: str = "check"
     text: str
-    lang: Optional[LangWithAutoType] = "auto"
+    lang: Optional[LangWithAutoType] = LangWithAutoType.AUTO
     id: Optional[str]
     client: Optional[str]
     config: Optional[Config] = Config()
