@@ -1,2 +1,3 @@
-cacheredis:
-    type: redis:6.0
+rediscache:
+    type: redis-persistent:6.0
+    disk: 256
