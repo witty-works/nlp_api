@@ -24,10 +24,19 @@
         {
             "alternatives": [
                 {
-                    "text": "dedicated"
+                    "text": "skilled person"
                 },
                 {
-                    "text": "committed"
+                    "text": "very proficient person"
+                },
+                {
+                    "text": "resourceful person"
+                },
+                {
+                    "text": "they"
+                },
+                {
+                    "text": "skilled people"
                 }
             ],
             "category": "style",

@@ -63,6 +63,32 @@
         {
             "alternatives": [
                 {
+                    "text": "verantwortungsfreudiger"
+                },
+                {
+                    "text": "verantwortlicher"
+                },
+                {
+                    "text": "selbstverantwortlicher"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "Als selbstständiger Projektleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambition",
+            "end": 19,
+            "explanation": {
+                "icon": "😒",
+                "text": "Spricht kooperativ denkende Menschen nicht an",
+                "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
+            },
+            "gravity": 2.0,
+            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "start": 4,
+            "subcategory": "agentic",
+            "text": "selbstständiger"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "lösen"
                 },
                 {
@@ -190,6 +216,38 @@
             "start": 84,
             "subcategory": "communal",
             "text": "gemeinsam"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Meilensteine"
+                },
+                {
+                    "text": "Teamziele"
+                },
+                {
+                    "text": "zuverlässiges Ergebnisse"
+                },
+                {
+                    "text": "Sternstunden"
+                },
+                {
+                    "text": "Resultate, das das Vertrauen unserer Kundschaften in uns bestätigt"
+                }
+            ],
+            "category": "style",
+            "context": "chsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielstrebig\nneue Höchstleistungen.",
+            "end": 168,
+            "explanation": {
+                "icon": "😮‍💨",
+                "text": "Auf Übertreibungen verzichten schafft Vertrauen",
+                "url": "https://www.witty.works/de/kategorien/stil#superlative"
+            },
+            "gravity": 2.0,
+            "label": "Stil: Superlative",
+            "start": 152,
+            "subcategory": "exaggerating",
+            "text": "Höchstleistungen"
         }
     ]
 }
