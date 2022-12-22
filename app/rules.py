@@ -919,11 +919,6 @@ rules["en"]["list_false_column"] = [
     "push the boundaries",
     "queer communities",
     "queer community",
-    "quick call",
-    "quick check",
-    "quick checks",
-    "quick exit",
-    "quick meeting",
     "really simple syndication",
     "residential camp",
     "residential camps",
@@ -1084,6 +1079,14 @@ pattern_of_kind = [
     ]
 ]
 
+# quick call', 'quick check', 'quick checks', 'quick exit', 'quick meeting',
+pattern_quick = [
+    [
+        {"LEMMA": "quick"},
+        {"LEMMA": {"IN": ["call", "check", "exit", "meeting"]}},
+    ]
+]
+
 
 rules["en"]["pattern_false_positives"] = [
     pattern_master,
@@ -1091,6 +1094,7 @@ rules["en"]["pattern_false_positives"] = [
     pattern_lead_life,
     pattern_need_to,
     pattern_of_kind,
+    pattern_quick,
 ]
 
 rules["en"]["conjunctions"] = [
