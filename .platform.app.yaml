@@ -48,7 +48,7 @@ hooks:
     echo "e613bda316ecb4f5e1924140eedf81b81c087d9a *training_data/lid.176.bin" | sha1sum -c -
 
 relationships:
-  rediscache: "cacheredis:redis"
+  rediscache: "rediscache:redis"
 
 crons:
   generate-statistics:
