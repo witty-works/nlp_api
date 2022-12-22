@@ -1,3 +1,8 @@
+# from blackfire import probe
+
+# probe.initialize()
+# probe.enable()
+
 import re
 import uvicorn
 import json
@@ -80,6 +85,8 @@ from app.azure_ad_b2c import initialize_aadb2c
 from app.model import model
 from app.rules import rules
 from app.sentry import set_up_sentry_sdk
+
+# probe.end()
 
 version = "1.39.8"
 

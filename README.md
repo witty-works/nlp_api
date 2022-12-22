@@ -156,6 +156,23 @@ Open your browser to http://localhost:8000/docs to view the OpenAPI UI.
 
 For an alternate view of the docs navigate to http://localhost:8000/redoc
 
+## Profiling locally
+
+```
+pipenv run blackfire-python uvicorn app.main:app --reload
+```
+
+
+Make sure you have a `.blackfire.ini`, get the settings from
+https://blackfire.io/docs/php/configuration
+
+Make sure you to select "Witty Works > NLP API" (defaults to "Personal")
+
+```
+BLACKFIRE_SERVER_ID=""
+BLACKFIRE_SERVER_TOKEN=""
+```
+
 ## Production Deployment
 
 Set an env variable `API_DOCS_AUTH_ENABLED` to `"true"` and for the
