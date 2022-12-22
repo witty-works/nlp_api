@@ -42,6 +42,8 @@ class Settings(BaseSettings):
     slack_bot_token: Optional[str]
     slack_organization_id: Optional[str]
     alternatives_max_count: int = 5
+    context_checker_url: Optional[str]
+    context_checker_api_key: Optional[str]
 
     class Config:
         env_file = ".env"

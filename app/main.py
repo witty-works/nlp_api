@@ -1416,12 +1416,70 @@ async def apply_language_rules(
                 configs["term_replacements"][term_replacement]["alternatives"][0]
             )
 
+    check_false_positives = False
+    sentences = None
     if len(false_positives):
+        check_false_positives = True
+    elif (
+        len(rules[lang.lang]["ml_review"])
+        and settings.context_checker_url
+        and settings.context_checker_api_key
+    ):
+        sentences = tokens.sents
+        check_false_positives = True
+
+    if check_false_positives:
         for result in list_results:
             if result.text in false_positives:
                 list_results.remove(result)
+            elif result.text.lower() in rules[lang.lang]["ml_review"]:
+                context_valid = await call_context_checker(sentences, result)
+                if not context_valid:
+                    list_results.remove(result)
 
     return list_results
+
+
+async def call_context_checker(sentences, result: ResultOut):
+    async with ClientSession(connector=TCPConnector(verify_ssl=True)) as session:
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": ("Bearer " + settings.context_checker_api_key),
+            "azureml-model-deployment": "default",
+        }
+
+        for sentence in sentences:
+            if result.end < sentence.end_char:
+                break
+
+        payload = {
+            "data": sentence.text,
+        }
+
+        async with session.post(
+            settings.context_checker_url, data=json.dumps(payload), headers=headers
+        ) as r:
+            try:
+                if r.status != 200:  # pragma: no cover
+                    result = await r.text()
+                    logging.error(result)
+
+                    raise Exception(result)
+
+                result = await r.json()
+                return result == "1"
+            except ClientError as err:  # pragma: no cover
+                result = "Problem communicating with context checker"
+                if r.status >= 500:
+                    try:
+                        response = await r.text()
+                        result += ": " + response
+                    except ClientError as err:
+                        result += ": " + str(err)
+                else:
+                    result += ": " + str(err)
+
+                logging.error(result)
 
 
 def is_sub_category_enabled(version: float, config: Config, subcategory: str):

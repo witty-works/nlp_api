@@ -2,6 +2,10 @@ name: run tests
 
 on: [push]
 
+env:
+  CONTEXT_CHECKER_URL: "https://setfit.eastus.inference.ml.azure.com/score"
+  CONTEXT_CHECKER_API_KEY: ${{ secrets.CONTEXT_CHECKER_API_KEY }}
+
 jobs:
   build:
     runs-on: ubuntu-latest

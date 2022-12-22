@@ -71,6 +71,13 @@ rules["d_f_m_regexes"] = {
     r"(?i)\s(\()?(d|x|\*)(\/v)?\/f(\/[*a-z])*(\))?": None,  # (d/f/m..)
 }
 
+rules["de"]["ml_review"] = []
+rules["en"]["ml_review"] = [
+    "fossil",
+    "flexible",
+    "impact",
+]
+
 data = {}
 
 for locale in files:
@@ -757,18 +764,6 @@ rules["en"]["list_false_column"] = [
     "force quit",
     "force to be reckoned",
     "force to reckon",
-    "fossil carbon",
-    "fossil energy",
-    "fossil finance",
-    "fossil find",
-    "fossil finding",
-    "fossil fuel",
-    "fossil fuels",
-    "fossil gen 6",
-    "fossil group",
-    "fossil promo",
-    "fossil smart watch",
-    "fossil watch",
     "fruit and vegetable",
     "fruit juice",
     "fruit loops",
