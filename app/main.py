@@ -1909,7 +1909,11 @@ def parse_word_types(word_types, lower_case=True):
         lemmatize = True
         word_types = word_types[1:]
 
-    return word_types.split("+"), lower_case, lemmatize
+    word_types = word_types.split("+")
+    if word_types == [""]:
+        word_types = []
+
+    return word_types, lower_case, lemmatize
 
 
 def is_word_match(
