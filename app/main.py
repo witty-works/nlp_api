@@ -81,7 +81,7 @@ from app.model import model
 from app.rules import rules
 from app.sentry import set_up_sentry_sdk
 
-version = "1.39.8"
+version = "1.39.9"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -1851,7 +1851,11 @@ def parse_word_types(word_types, lower_case=True):
         lemmatize = True
         word_types = word_types[1:]
 
-    return word_types.split("+"), lower_case, lemmatize
+    word_types = word_types.split("+")
+    if word_types == [""]:
+        word_types = []
+
+    return word_types, lower_case, lemmatize
 
 
 def is_word_match(
