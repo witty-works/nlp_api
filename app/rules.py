@@ -654,6 +654,7 @@ def fetch_rules(langs):
             "fossil",
             "flexible",
             "impact",
+            "dynamic",
         ]
 
         rules["en"]["list_false_column"] = [
@@ -1017,7 +1018,6 @@ def fetch_rules(langs):
             "would be great",
             "your best",
         ]
-
 
         # master of + noun
         pattern_master = [
