@@ -9,8 +9,9 @@ import json
 import secrets
 from aiohttp import ClientSession, TCPConnector, ClientError
 import copy
-from typing import Optional, Union
+from typing import Optional, Union, List
 from collections import defaultdict
+from pydantic import parse_obj_as
 
 from spacy.tokens import Doc
 from spacy.matcher import PhraseMatcher, Matcher
@@ -60,6 +61,8 @@ from app.models import (
     LangVariantType,
     SingularTheyType,
     Language,
+    GermanLanguageRequest,
+    EnglishLanguageRequest,
     RequestIn,
     Result,
     ResultOut,
@@ -75,15 +78,15 @@ from app.models import (
     ErrorMessage,
     PrettyJSONResponse,
 )
-from app.lang_detection import LangDetection
+from app.lang_detection import get_lang_detection
 from app.categories import categories
 from app.settings import get_settings
 from app.logger import set_up_logger
 from app.redis_setup import set_up_redis
 from app.languagetool import get_languagetool_url
 from app.azure_ad_b2c import initialize_aadb2c
-from app.model import model
-from app.rules import rules
+from app.model import fetch_nlp_model
+from app.rules import fetch_rules
 from app.sentry import set_up_sentry_sdk
 
 # probe.end()
@@ -95,10 +98,18 @@ logging = set_up_logger(settings)
 sentry_sdk = set_up_sentry_sdk(version, settings)
 languagetool_url = get_languagetool_url(settings)
 redis = set_up_redis(settings)
-lang_detection = LangDetection()
 initialize_aadb2c(settings)
 
 logging.debug("app started with settings: %s", settings)
+
+if len(settings.langs) > 0:
+    model = {}
+    for spacy_model in settings.models:
+        lang = spacy_model[0:2]
+        if lang in settings.langs:
+            model[lang] = fetch_nlp_model(lang, spacy_model)
+
+    rules = fetch_rules(settings.langs)
 
 if (
     settings.slack_bot_token is not None and settings.slack_signing_secret is not None
@@ -232,19 +243,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-categories_with_labels = {}
-languages = ["en", "de"]
-for language in languages:
-    lang = Language(language)
-    categories_with_labels[language] = copy.deepcopy(categories)
-    for category in categories_with_labels[language]:
-        parent_category = categories[category]["category"]
-
-        del categories_with_labels[language][category]["importance"]
-
-        categories_with_labels[language][category]["label"] = lang._(
-            "rules." + category + "_label"
-        )
 
 # https://languagetool.org/development/api/org/languagetool/rules/Categories.html
 lt_style_categories = [
@@ -319,6 +317,11 @@ async def post_exception(
 @app.get("/lt", include_in_schema=not settings.is_prod)
 def get_lt(username: str = Depends(fetch_current_username)):
     return languagetool_url
+
+
+@app.get("/settings", include_in_schema=not settings.is_prod)
+def get_lt(username: str = Depends(fetch_current_username)):
+    return settings
 
 
 @app.get("/docs", include_in_schema=False)
@@ -472,10 +475,11 @@ async def post_auth_2_0(request: Request, response: Response):
 )
 async def get_debug_spacy(
     text: str,
-    locale: LangWithAutoType = "auto",
+    locale: LangWithAutoType = LangWithAutoType.AUTO,
     username: str = Depends(fetch_current_username),
 ):
-    if locale == "auto" or len(locale) == 2:
+    if locale == LangWithAutoType.AUTO or len(locale) == 2:
+        lang_detection = get_lang_detection()
         locale = lang_detection.get_locale(
             text,
             locale,
@@ -519,9 +523,56 @@ async def get_debug_german_noun(
     return german_noun_analysis(word, genus_only)
 
 
-@app.get("/categories")
-def get_categories(lang: LangType = "de"):
-    return categories_with_labels[lang]
+@app.post(
+    "/german",
+    include_in_schema=not settings.is_prod,
+    response_class=JSONResponse,
+)
+async def german(request: Request, german_request: GermanLanguageRequest):
+    if not settings.language_endpoint_enabled_de and (
+        not settings.testing or "x-german" not in request.headers
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+        )
+
+    check_version(german_request.version)
+
+    lang = Language(german_request.locale)
+
+    return await german_rules(
+        german_request.version,
+        german_request.config,
+        german_request.configs,
+        lang,
+        german_request.text,
+    )
+
+
+@app.post(
+    "/english",
+    include_in_schema=not settings.is_prod,
+    response_class=JSONResponse,
+)
+async def english(request: Request, english_request: EnglishLanguageRequest):
+    if not settings.language_endpoint_enabled_en and (
+        not settings.testing or "x-english" not in request.headers
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+        )
+
+    check_version(english_request.version)
+
+    lang = Language(english_request.locale)
+
+    return await english_rules(
+        english_request.version,
+        english_request.config,
+        english_request.configs,
+        lang,
+        english_request.text,
+    )
 
 
 @app.post(
@@ -971,6 +1022,7 @@ def fetch_text(user_request_in):
         text = text[0 : settings.text_max_length]
         text = text.rsplit(" ", 1)[0]
 
+    lang_detection = get_lang_detection()
     locale = lang_detection.get_locale(
         text,
         user_request_in.lang,
@@ -986,18 +1038,21 @@ def fetch_text(user_request_in):
     return text, lang, limit_reached
 
 
+def check_version(version: float):
+    if version != 1.1 and version != 2.0 and version != 2.1:  # pragma: no cover
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Version not supported: " + str(version),
+        )
+
+
 async def check(
     version: float,
     request: Request,
     response: Response,
     user_request_in: RequestIn,
 ):
-    if version != 1.1 and version != 2.0 and version != 2.1:  # pragma: no cover
-        response.status_code = status.HTTP_400_BAD_REQUEST
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Version not supported: " + str(version),
-        )
+    check_version(version)
 
     user_email = fetch_user(request)
     if version == 2.0 and not user_email:
@@ -1147,7 +1202,7 @@ def languagetool_matches(
             lang.lang == "de"
             and config.german_gender_ending == ":in"
             and match["rule"]["id"] == "LEERZEICHEN_HINTER_DOPPELPUNKT"
-            and text[start + 1 : end] in rules["de-DE"]["male_articles"]
+            and text[start + 1 : end] in rules["de"]["male_articles"]
         ):
             continue
 
@@ -1234,45 +1289,9 @@ def languagetool_matches(
     return list_results
 
 
-async def apply_languagetool_rules(
-    version: float, config: Config, lang: Language, text: str
-):
-    list_results = []
-
-    async with ClientSession(
-        connector=TCPConnector(verify_ssl=settings.languagetool_verify_ssl)
-    ) as session:
-
-        payload = {
-            "text": text,
-            "language": lang.locale,
-        }
-
-        if config.simple_language and payload["language"] == "de-DE":
-            payload["language"] += "-x-simple-language"
-
-        if config.primary_language is not None:
-            payload["motherTongue"] = config.primary_language
-
-        if is_sub_category_enabled(version, config, "orthography"):
-            disabled_categories = [
-                "GENDER_NEUTRALITY",
-                "COLLOQUIALISMS",
-            ]
-
-            if "casing" in config.disabled_categories:
-                disabled_categories += ["CASING"]
-
-            if "style" in config.disabled_categories:
-                disabled_categories += lt_style_categories
-
-            payload["disabledCategories"] = disabled_categories
-        elif is_sub_category_enabled(version, config, "style"):
-            payload["enabledCategories"] = lt_style_categories
-        else:
-            return []
-
-        async with session.post(languagetool_url + "/check", data=payload) as r:
+async def fetch_json(url, payload, headers, name, ssl=True):
+    async with ClientSession(connector=TCPConnector(ssl=ssl)) as session:
+        async with session.post(url, data=payload, headers=headers) as r:
             try:
                 if r.status != 200:  # pragma: no cover
                     result = await r.text()
@@ -1280,10 +1299,9 @@ async def apply_languagetool_rules(
 
                     raise Exception(result)
 
-                result = await r.json()
-                list_results = languagetool_matches(version, config, lang, text, result)
+                return await r.json()
             except ClientError as err:  # pragma: no cover
-                result = "Problem communicating with LanguageTool"
+                result = "Problem communicating with " + name
                 if r.status >= 500:
                     try:
                         response = await r.text()
@@ -1295,7 +1313,53 @@ async def apply_languagetool_rules(
 
                 logging.error(result)
 
-    return list_results
+    return None
+
+
+async def apply_languagetool_rules(
+    version: float, config: Config, lang: Language, text: str
+):
+    payload = {
+        "text": text,
+        "language": lang.locale,
+    }
+
+    if config.simple_language and payload["language"] == "de-DE":
+        payload["language"] += "-x-simple-language"
+
+    if config.primary_language is not None:
+        payload["motherTongue"] = config.primary_language
+
+    if is_sub_category_enabled(version, config, "orthography"):
+        disabled_categories = [
+            "GENDER_NEUTRALITY",
+            "COLLOQUIALISMS",
+        ]
+
+        if "casing" in config.disabled_categories:
+            disabled_categories += ["CASING"]
+
+        if "style" in config.disabled_categories:
+            disabled_categories += lt_style_categories
+
+        payload["disabledCategories"] = disabled_categories
+    elif is_sub_category_enabled(version, config, "style"):
+        payload["enabledCategories"] = lt_style_categories
+    else:
+        return []
+
+    result = await fetch_json(
+        languagetool_url + "/check",
+        payload,
+        {},
+        "LanguageTool",
+        settings.languagetool_verify_ssl,
+    )
+
+    if result is None:
+        return []
+
+    return languagetool_matches(version, config, lang, text, result)
 
 
 def fetch_tokens(lang: Language, text: str):
@@ -1317,7 +1381,7 @@ def is_false_positive_match(list_false_positive, tokens, token):
 
 
 # create false positives patterns based on false positives column
-def false_pattern_match(tokens, lang):
+def false_pattern_match(tokens, lang: Language):
     matcher = Matcher(model[lang.lang].vocab)
 
     for false_positive in rules[lang.lang]["pattern_false_positives"]:
@@ -1326,14 +1390,16 @@ def false_pattern_match(tokens, lang):
     return matcher(tokens)
 
 
-def fetch_false_positive_matcher(tokens, lang):
+def fetch_false_positive_matcher(tokens, lang: Language):
     # create false positives list
-    phrase_matches_false = fetch_matches(tokens, rules["en"]["list_false_column"])
+    phrase_matches_false = fetch_matches(
+        lang, tokens, rules[lang.lang]["list_false_column"]
+    )
     word_matches_false = false_pattern_match(tokens, lang)
     return list(set(phrase_matches_false + word_matches_false))
 
 
-def fetch_matches(tokens, phrases):
+def fetch_matches(lang: Language, tokens, phrases):
     # Phrase matcher part to handle False positives with two words and special symbols
     matcher = PhraseMatcher(model[lang.lang].vocab, attr="LOWER")
 
@@ -1343,11 +1409,46 @@ def fetch_matches(tokens, phrases):
     return matcher(tokens)
 
 
+async def fetch_language_results(
+    url: str,
+    version: float,
+    config: Config,
+    configs: dict,
+    lang: Language,
+    text: str,
+):
+    if lang.lang == "de":
+        payload = GermanLanguageRequest(
+            version=version,
+            config=config,
+            configs=configs,
+            locale=lang.locale,
+            text=text,
+        )
+    else:
+        payload = EnglishLanguageRequest(
+            version=version,
+            config=config,
+            configs=configs,
+            locale=lang.locale,
+            text=text,
+        )
+
+    headers = {"content-type": "application/json"}
+
+    result = await fetch_json(
+        url, payload.json(), headers, "language endpoint " + lang.lang, False
+    )
+
+    if result is None:
+        return []
+
+    return parse_obj_as(List[ResultOut], result)
+
+
 async def apply_language_rules(
     version: float, config: Config, configs: dict, lang: Language, text: str
 ):
-    tokens = fetch_tokens(lang, text)
-
     list_results = []
     if is_sub_category_enabled(
         version, config, "orthography"
@@ -1358,60 +1459,85 @@ async def apply_language_rules(
             if not settings.is_prod:  # pragma: no cover
                 raise err
 
-    if lang.lang == "de":
-        list_results += german_rules(version, config, lang, tokens, text)
-    else:
-        list_results += english_rules(version, config, lang, tokens, text)
-
-    if "term_replacements" in configs:
-        term_replacements = {
-            "Lemma": [],
-            "Word_Type": [],
-            "Alt_split": [],
-            "Primary_subcategory": [],
-            "Explanation": [],
-        }
-
-        for term in configs["term_replacements"]:
-            term_replacement = configs["term_replacements"][term]
-
-            if (
-                "lang" in term_replacement
-                and term_replacement["lang"] is not None
-                and term_replacement["lang"] != lang.lang
-            ):
-                continue
-
-            if "word_type" in term_replacement:
-                word_type = term_replacement["word_type"]
-            else:
-                word_type = "-"
-
-            term_replacements["Lemma"].append(term)
-            term_replacements["Word_Type"].append(word_type)
-            term_replacements["Alt_split"].append(term_replacement["alternatives"])
-            term_replacements["Primary_subcategory"].append("corporate_rules")
-            term_replacements["Explanation"].append(term_replacement["explanation"])
-
-        term_replacements = list(
-            zip(
-                term_replacements["Lemma"],
-                term_replacements["Word_Type"],
-                term_replacements["Alt_split"],
-                term_replacements["Primary_subcategory"],
-                term_replacements["Explanation"],
-            )
-        )
-
-        list_results += rules_based_words_phrase_matcher(
+    if settings.language_endpoint_urls[lang.lang]:
+        list_results += await fetch_language_results(
+            settings.language_endpoint_urls[lang.lang],
             version,
             config,
+            configs,
             lang,
             text,
-            tokens,
-            "corporate_rules",
-            term_replacements,
         )
+    elif lang.lang == "de":
+        list_results += await german_rules(version, config, configs, lang, text)
+    elif lang.lang == "en":
+        list_results += await english_rules(version, config, configs, lang, text)
+
+    return apply_false_positives(list_results, configs)
+
+
+def apply_term_replacements(
+    tokens, version: float, config: Config, configs: dict, lang: Language, text: str
+):
+    if "term_replacements" not in configs:
+        return []
+
+    term_replacements = {
+        "Lemma": [],
+        "Word_Type": [],
+        "Alt_split": [],
+        "Primary_subcategory": [],
+        "Explanation": [],
+    }
+
+    for term in configs["term_replacements"]:
+        term_replacement = configs["term_replacements"][term]
+
+        if (
+            "lang" in term_replacement
+            and term_replacement["lang"] is not None
+            and term_replacement["lang"] != lang.lang
+        ):
+            continue
+
+        if "word_type" in term_replacement:
+            word_type = term_replacement["word_type"]
+        else:
+            word_type = "-"
+
+        term_replacements["Lemma"].append(term)
+        term_replacements["Word_Type"].append(word_type)
+        term_replacements["Alt_split"].append(term_replacement["alternatives"])
+        term_replacements["Primary_subcategory"].append("corporate_rules")
+        term_replacements["Explanation"].append(term_replacement["explanation"])
+
+    term_replacements = list(
+        zip(
+            term_replacements["Lemma"],
+            term_replacements["Word_Type"],
+            term_replacements["Alt_split"],
+            term_replacements["Primary_subcategory"],
+            term_replacements["Explanation"],
+        )
+    )
+
+    return rules_based_words_phrase_matcher(
+        version,
+        config,
+        lang,
+        text,
+        tokens,
+        "corporate_rules",
+        term_replacements,
+    )
+
+
+def apply_false_positives(
+    list_results: List,
+    configs: dict,
+):
+    if len(list_results) == 0:
+        return list_results
 
     false_positives = []
     if "false_positives" in configs:
@@ -1423,70 +1549,34 @@ async def apply_language_rules(
                 configs["term_replacements"][term_replacement]["alternatives"][0]
             )
 
-    check_false_positives = False
-    sentences = None
     if len(false_positives):
-        check_false_positives = True
-    elif (
-        len(rules[lang.lang]["ml_review"])
-        and settings.context_checker_url
-        and settings.context_checker_api_key
-    ):
-        sentences = tokens.sents
-        check_false_positives = True
-
-    if check_false_positives:
         for result in list_results:
             if result.text in false_positives:
                 list_results.remove(result)
-            elif result.text.lower() in rules[lang.lang]["ml_review"]:
-                context_valid = await call_context_checker(sentences, result)
-                if not context_valid:
-                    list_results.remove(result)
 
     return list_results
 
 
 async def call_context_checker(sentences, result: ResultOut):
-    async with ClientSession(connector=TCPConnector(verify_ssl=True)) as session:
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": ("Bearer " + settings.context_checker_api_key),
-            "azureml-model-deployment": "default",
-        }
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": ("Bearer " + settings.context_checker_api_key),
+        "azureml-model-deployment": "default",
+    }
 
-        for sentence in sentences:
-            if result.end < sentence.end_char:
-                break
+    for sentence in sentences:
+        if result.end < sentence.end_char:
+            break
 
-        payload = {
-            "data": sentence.text,
-        }
+    payload = {
+        "data": sentence.text,
+    }
 
-        async with session.post(
-            settings.context_checker_url, data=json.dumps(payload), headers=headers
-        ) as r:
-            try:
-                if r.status != 200:  # pragma: no cover
-                    result = await r.text()
-                    logging.error(result)
+    result = await fetch_json(
+        settings.context_checker_url, json.dumps(payload), headers, "context checker"
+    )
 
-                    raise Exception(result)
-
-                result = await r.json()
-                return result == "1"
-            except ClientError as err:  # pragma: no cover
-                result = "Problem communicating with context checker"
-                if r.status >= 500:
-                    try:
-                        response = await r.text()
-                        result += ": " + response
-                    except ClientError as err:
-                        result += ": " + str(err)
-                else:
-                    result += ": " + str(err)
-
-                logging.error(result)
+    return result == "1"
 
 
 def is_sub_category_enabled(version: float, config: Config, subcategory: str):
@@ -1508,7 +1598,27 @@ def is_sub_category_enabled(version: float, config: Config, subcategory: str):
     )
 
 
-def german_rules(version: float, config: Config, lang: Language, tokens, text: str):
+async def context_false_positives(lang: Language, tokens, list_results):
+    if (
+        len(rules[lang.lang]["context_check"])
+        and settings.context_checker_url
+        and settings.context_checker_api_key
+    ):
+        sentences = tokens.sents
+
+        for result in list_results:
+            if result.text.lower() in rules[lang.lang]["context_check"]:
+                context_valid = await call_context_checker(sentences, result)
+                if not context_valid:
+                    list_results.remove(result)
+
+    return list_results
+
+
+async def german_rules(
+    version: float, config: Config, configs: dict, lang: Language, text: str
+):
+    tokens = fetch_tokens(lang, text)
     list_full = []
 
     if is_sub_category_enabled(version, config, "abbreviation"):
@@ -1518,8 +1628,8 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             lang,
             text,
             tokens,
-            rules["de-DE"]["df_abbreviation"],
-            rules["de-DE"]["abbreviation"],
+            rules["de"]["df_abbreviation"],
+            rules["de"]["abbreviation"],
             True,
         )
 
@@ -1531,9 +1641,9 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             text,
             tokens,
             "openly_discriminating",
-            rules["de-DE"]["open_disc_words_data"],
-            rules["de-DE"]["open_disc_sentences_data"],
-            rules["de-DE"]["df_open_dis_sentence"],
+            rules["de"]["open_disc_words_data"],
+            rules["de"]["open_disc_sentences_data"],
+            rules["de"]["df_open_dis_sentence"],
         )
 
     if is_sub_category_enabled(version, config, "gendered"):
@@ -1545,9 +1655,9 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
                 text,
                 tokens,
                 "gendered",
-                rules["de-DE"]["gender_words_data_no_noun"],
-                rules["de-DE"]["gender_sentences_data"],
-                rules["de-DE"]["df_gendered_sentences"],
+                rules["de"]["gender_words_data_no_noun"],
+                rules["de"]["gender_sentences_data"],
+                rules["de"]["df_gendered_sentences"],
             )
             + gendered_denom_analysis_de(
                 version,
@@ -1555,8 +1665,8 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
                 lang,
                 text,
                 tokens,
-                rules["de-DE"]["gender_words_data"],
-                rules["de-DE"]["false_positives"].gender,
+                rules["de"]["gender_words_data"],
+                rules["de"]["false_positives"].gender,
             )
             + regex_matches(
                 version,
@@ -1607,9 +1717,9 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             lang,
             text,
             tokens,
-            rules["de-DE"]["bias_words_data_no_plur"],
-            rules["de-DE"]["bias_sentences_data"],
-            rules["de-DE"]["df_ub_sentences"],
+            rules["de"]["bias_words_data_no_plur"],
+            rules["de"]["bias_sentences_data"],
+            rules["de"]["df_ub_sentences"],
             "unconscious_bias",
         ) + word_noun(
             version,
@@ -1617,7 +1727,7 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             lang,
             text,
             tokens,
-            rules["de-DE"]["bias_words_data_noun"],
+            rules["de"]["bias_words_data_noun"],
             "unconscious_bias",
         )
 
@@ -1629,7 +1739,7 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             text,
             tokens,
             "inclusive",
-            rules["de-DE"]["df_communal_words"],
+            rules["de"]["df_communal_words"],
             None,
             [],
             [],
@@ -1644,9 +1754,9 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             text,
             tokens,
             "inclusive",
-            rules["de-DE"]["df_d_and_i_words"],
+            rules["de"]["df_d_and_i_words"],
             None,
-            rules["de-DE"]["df_terms_d_and_i_words"],
+            rules["de"]["df_terms_d_and_i_words"],
             [],
             "d_and_i",
         )
@@ -1672,10 +1782,10 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             lang,
             text,
             tokens,
-            rules["de-DE"]["terms_style"],
-            rules["de-DE"]["style_words_data"],
-            rules["de-DE"]["style_sentences_data"],
-            rules["de-DE"]["false_positives"].style,
+            rules["de"]["terms_style"],
+            rules["de"]["style_words_data"],
+            rules["de"]["style_sentences_data"],
+            rules["de"]["false_positives"].style,
         )
 
         list_full += detect_lower_cased_hashtags(
@@ -1687,10 +1797,15 @@ def german_rules(version: float, config: Config, lang: Language, tokens, text: s
             "style",
         )
 
-    return list_full
+    list_full += apply_term_replacements(tokens, version, config, configs, lang, text)
+
+    return await context_false_positives(lang, tokens, list_full)
 
 
-def english_rules(version: float, config: Config, lang: Language, tokens, text: str):
+async def english_rules(
+    version: float, config: Config, configs: dict, lang: Language, text: str
+):
+    tokens = fetch_tokens(lang, text)
     list_full = []
 
     words_data_en = defaultdict(list)
@@ -1896,7 +2011,9 @@ def english_rules(version: float, config: Config, lang: Language, tokens, text: 
             matches_false,
         )
 
-    return list_full
+    list_full += apply_term_replacements(tokens, version, config, configs, lang, text)
+
+    return await context_false_positives(lang, tokens, list_full)
 
 
 def parse_word_types(word_types, lower_case=True):
@@ -2291,11 +2408,11 @@ def plural_alternatives_en(
 
 
 def ignore_binary_inclusive_gendered_denom_analysis_de(
-    lang,
+    lang: Language,
     tokens,
     false_positives,
 ):
-    matches = fetch_matches(tokens, false_positives)
+    matches = fetch_matches(lang, tokens, false_positives)
     if matches.__len__() > 0:
         old_start = 0
         rest_text = []
@@ -2372,7 +2489,7 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
     match_feminine = None
     match_neuter = None
     match_alternative = None
-    for form, masculine, feminine, neuter, plural, alternative in rules["de-DE"][
+    for form, masculine, feminine, neuter, plural, alternative in rules["de"][
         "articles"
     ]:
         if form not in matches["forms"]:
@@ -2503,7 +2620,7 @@ def sentences_matcher(
 
         df_sentence = list(df_sentence["Lemma"])
 
-    matches = fetch_matches(tokens, df_sentence)
+    matches = fetch_matches(lang, tokens, df_sentence)
 
     if sentences_data is None:
         return sentences_matches(
@@ -2663,7 +2780,7 @@ def regex_matches(
                 if alternative_3 is not None:
                     alternatives.append(alternative_3)
             elif len(span.groups()) == 3:
-                if span.group(3) not in rules["de-DE"]["male_articles"]:
+                if span.group(3) not in rules["de"]["male_articles"]:
                     continue
                 if category != "inclusive":
                     alternatives = [span.group(2) + regexes[regex] + span.group(3)]
@@ -3134,7 +3251,7 @@ def literal_match(
 ):
     list_tokens = []
 
-    matches = fetch_matches(tokens, list(df_sentence["Lemma"]))
+    matches = fetch_matches(lang, tokens, list(df_sentence["Lemma"]))
     for match_id, start, end in matches:
         for (
             term,
