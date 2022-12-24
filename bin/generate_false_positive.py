@@ -71,6 +71,9 @@ clean_words = []
 all_file_allternatives = []
 for training_data_path in training_data_paths:
     with open(training_data_path) as f:
+        if not f.name.endswith(".csv"):
+            continue
+
         reader = csv.DictReader(f)
         column_names = reader.fieldnames
         if "Alt_split" in column_names:
