@@ -30,7 +30,7 @@ parser.add_argument(
     default="http://localhost:8000/",
 )
 args = parser.parse_args()
-false_positive_path = "training_data/de-DE/gender_false_positive.csv"
+false_positive_path = "training_data/de/gender_false_positive.csv"
 if os.path.exists(false_positive_path):
     os.remove(false_positive_path)
 
@@ -58,7 +58,7 @@ if not is_running:
     )
     exit(1)
 
-base_directory = "training_data/de-DE/"
+base_directory = "training_data/de/"
 training_data_paths = []
 for file in os.listdir(base_directory):
     training_data_paths.append(base_directory + file)

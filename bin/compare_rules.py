@@ -16,6 +16,9 @@ def parse_args():
 
 
 def get_data_from_files(locale):
+    if locale[0:2] == "de":
+        locale = "de"
+
     base_directory = "training_data/" + locale + "/"
     training_data_paths = []
     for file in os.listdir(base_directory):
