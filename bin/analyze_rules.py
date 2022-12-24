@@ -74,6 +74,9 @@ def get_current_words(original_languagetool_path, ignore_languagetool_path):
 
 
 def get_data_from_files(locale):
+    if locale[0:2] == "de":
+        locale = "de"
+
     base_directory = "training_data/" + locale + "/"
     training_data_paths = []
     for file in os.listdir(base_directory):
@@ -121,7 +124,12 @@ def get_data_from_files(locale):
                                 )
                                 print(word_types)
 
-                            if lemmatize and "words" in f.name and category not in ["inclusive", "openly_discriminating"]:
+                            if (
+                                lemmatize
+                                and "words" in f.name
+                                and category
+                                not in ["inclusive", "openly_discriminating"]
+                            ):
                                 all_lemma.append(lemma)
 
                     if "Alt_split" in row:
@@ -130,7 +138,7 @@ def get_data_from_files(locale):
                         try:
                             alternatives = json.loads(value)
                             if (
-                                locale[0:2] == "de"
+                                locale == "de"
                                 and str(f).find("abbreviations.csv") != -1
                             ):
                                 alternatives.pop(0)
@@ -377,12 +385,12 @@ def add_words_to_ignore(path_to_ignore_file, words_to_write):
             myfile.write("\n")
 
 
-def generate_german_articles(locale):
+def generate_german_articles():
     endings = Config._gendereddenom_ending.keys()
     all_alternatives = []
     articles = []
 
-    with open("training_data/" + locale + "/articles.csv") as f:
+    with open("training_data/de/articles.csv") as f:
         reader = csv.DictReader(f)
         for row in reader:
             all_alternatives.append(row["Alternative"])
@@ -436,12 +444,13 @@ def print_trigger_alternative_overlap(locale, all_triggers, words):
 
 
 args = parse_args()
-if args.Language.lower() == "de":
+lang = args.Language.lower()
+if lang == "de":
     locales = [
         "de-DE",
     ]
 
-elif args.Language.lower() == "en":
+elif lang == "en":
     locales = [
         "en-US",
     ]
@@ -464,7 +473,7 @@ for locale in locales:
 
     if locale == "de-DE":
         words = generate_correct_endings_german(all_alternatives)
-        words[locale] += generate_german_articles(locale)
+        words[locale] += generate_german_articles()
     else:
         words[locale] = generate_alternatives_english(all_alternatives)
 
