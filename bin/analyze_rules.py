@@ -12,7 +12,9 @@ from app.models import (
     GenderedRolesFormatType,
     Language,
 )
-from app.main import fetch_tokens, parse_word_types
+from app.main import parse_word_types
+from app.model import fetch_nlp_model
+from app.settings import get_settings
 from app.categories import categories
 
 log = logging.getLogger("urllib3")
@@ -463,6 +465,12 @@ else:
         "Please specify correct language argument. Valid values are 'de' or 'en' (not case-sensitive)."
     )
 
+settings = get_settings()
+for spacy_model in settings.models:
+    if spacy_model[0:2] == lang:
+        model = fetch_nlp_model(lang, spacy_model)
+        break
+
 words = {}
 lemmas = {}
 for locale in locales:
@@ -492,7 +500,7 @@ for locale in locales:
 
     all_lemma = sorted(all_lemma)
     for lemma in all_lemma:
-        tokens = fetch_tokens(lang, lemma)
+        tokens = model(lemma)
         if lemma.lower() != tokens[0].lemma_.lower():
             print(
                 "Lemma mismatch, got '"
