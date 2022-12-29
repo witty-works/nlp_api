@@ -1450,14 +1450,6 @@ async def apply_language_rules(
     version: float, config: Config, configs: dict, lang: Language, text: str
 ):
     list_results = []
-    if is_sub_category_enabled(
-        version, config, "orthography"
-    ) or is_sub_category_enabled(version, config, "style"):
-        try:
-            list_results += await apply_languagetool_rules(version, config, lang, text)
-        except Exception as err:
-            if not settings.is_prod:  # pragma: no cover
-                raise err
 
     if settings.language_endpoint_urls[lang.lang]:
         list_results += await fetch_language_results(
@@ -1618,8 +1610,9 @@ async def context_false_positives(lang: Language, tokens, list_results):
 async def german_rules(
     version: float, config: Config, configs: dict, lang: Language, text: str
 ):
+    list_full = await apply_languagetool_rules(version, config, lang, text)
+
     tokens = fetch_tokens(lang, text)
-    list_full = []
 
     if is_sub_category_enabled(version, config, "abbreviation"):
         list_full += literal_match(
@@ -1805,8 +1798,9 @@ async def german_rules(
 async def english_rules(
     version: float, config: Config, configs: dict, lang: Language, text: str
 ):
+    list_full = await apply_languagetool_rules(version, config, lang, text)
+
     tokens = fetch_tokens(lang, text)
-    list_full = []
 
     words_data_en = defaultdict(list)
     gendered_words_data_en = defaultdict(list)
