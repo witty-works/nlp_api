@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     logging_config_level: str = "ERROR"
     platform_environment_type: str = "development"
     platform_environment: str = "local"
-    languagetool_api: Optional[str]
+    languagetool_api: str = "https://lt.default.api.witty.works/v2"
     languagetool_verify_ssl: bool = True
     platform_relationships: Optional[str]
     api_docs_username: Optional[str]

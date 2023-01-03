@@ -83,7 +83,6 @@ from app.categories import categories
 from app.settings import get_settings
 from app.logger import set_up_logger
 from app.redis_setup import set_up_redis
-from app.languagetool import get_languagetool_url
 from app.azure_ad_b2c import initialize_aadb2c
 from app.model import fetch_nlp_model
 from app.rules import fetch_rules
@@ -96,7 +95,6 @@ version = "1.39.9"
 settings = get_settings()
 logging = set_up_logger(settings)
 sentry_sdk = set_up_sentry_sdk(version, settings)
-languagetool_url = get_languagetool_url(settings)
 redis = set_up_redis(settings)
 initialize_aadb2c(settings)
 
@@ -316,7 +314,7 @@ async def post_exception(
 
 @app.get("/lt", include_in_schema=not settings.is_prod)
 def get_lt(username: str = Depends(fetch_current_username)):
-    return languagetool_url
+    return settings.languagetool_api
 
 
 @app.get("/settings", include_in_schema=not settings.is_prod)
@@ -1349,7 +1347,7 @@ async def apply_languagetool_rules(
         return []
 
     result = await fetch_json(
-        languagetool_url + "/check",
+        settings.languagetool_api + "/check",
         payload,
         {},
         "LanguageTool",
