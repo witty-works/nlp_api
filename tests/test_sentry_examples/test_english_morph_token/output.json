@@ -5,34 +5,6 @@
         {
             "alternatives": [
                 {
-                    "text": "Sitar"
-                },
-                {
-                    "text": "Siar"
-                },
-                {
-                    "text": "Sizar"
-                },
-                {
-                    "text": "Si war"
-                }
-            ],
-            "category": "orthography",
-            "context": "Hi Siwar,\n\nit's the first time that we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA",
-            "end": 8,
-            "explanation": {
-                "icon": "❌",
-                "text": "Possible spelling mistake found."
-            },
-            "gravity": 1.0,
-            "label": "Spelling mistake",
-            "start": 3,
-            "subcategory": "typos",
-            "text": "Siwar"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "an"
                 }
             ],
