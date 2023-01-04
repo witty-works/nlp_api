@@ -1195,19 +1195,20 @@ def languagetool_matches(
         highlight_text = text[start:end]
 
         # Ignore capitalization after German salutation
-        if (
-            start > 5
-            and match["rule"]["id"] == "DE_CASE"
-            and text.lstrip().startswith(
-                (
-                    "Hallo",
-                    "Sehr geehrte",
-                    "Liebe",
-                )
+        if match["rule"]["category"]["id"] == "TYPOS":
+            subtext = (
+                text[0:start]
+                .lstrip()
+                .lower()
+                .replace("'", "")
+                .replace("'", "")
+                .split("\n")
             )
-            and "".join(text[0:start].split()).endswith(",")
-        ):
-            continue
+            if len(subtext) == 1 and any(
+                substring.lower() + " " in subtext[0]
+                for substring in rules[lang.lang]["salutations"]
+            ):
+                continue
 
         if (
             lang.lang == "de"
