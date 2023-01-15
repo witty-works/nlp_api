@@ -1,13 +1,22 @@
 {
     "detail": [
         {
+            "ctx": {
+                "enum_values": [
+                    "de-DE",
+                    "de-CH",
+                    "de-AT",
+                    "en-US",
+                    "en-GB"
+                ]
+            },
             "loc": [
                 "body",
                 "config",
                 "primary_language"
             ],
-            "msg": "Not supported primary_language: en-AU,en-DE",
-            "type": "value_error"
+            "msg": "value is not a valid enumeration member; permitted: 'de-DE', 'de-CH', 'de-AT', 'en-US', 'en-GB'",
+            "type": "type_error.enum"
         },
         {
             "loc": [

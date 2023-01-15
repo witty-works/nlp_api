@@ -25,3 +25,4 @@ openapi.json
 categories.csv
 subcategories.csv
 .python-version
+.blackfire.ini

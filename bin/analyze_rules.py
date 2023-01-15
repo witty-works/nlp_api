@@ -12,7 +12,9 @@ from app.models import (
     GenderedRolesFormatType,
     Language,
 )
-from app.main import fetch_tokens, parse_word_types
+from app.main import parse_word_types
+from app.model import fetch_nlp_model
+from app.settings import get_settings
 from app.categories import categories
 
 log = logging.getLogger("urllib3")
@@ -74,6 +76,9 @@ def get_current_words(original_languagetool_path, ignore_languagetool_path):
 
 
 def get_data_from_files(locale):
+    if locale[0:2] == "de":
+        locale = "de"
+
     base_directory = "training_data/" + locale + "/"
     training_data_paths = []
     for file in os.listdir(base_directory):
@@ -89,6 +94,9 @@ def get_data_from_files(locale):
 
     for training_data_path in training_data_paths:
         with open(training_data_path) as f:
+            if not f.name.endswith(".csv"):
+                continue
+
             reader = csv.DictReader(f)
             column_names = reader.fieldnames
             if "Lemma" in column_names:
@@ -121,7 +129,12 @@ def get_data_from_files(locale):
                                 )
                                 print(word_types)
 
-                            if lemmatize and "words" in f.name and category not in ["inclusive", "openly_discriminating"]:
+                            if (
+                                lemmatize
+                                and "words" in f.name
+                                and category
+                                not in ["inclusive", "openly_discriminating"]
+                            ):
                                 all_lemma.append(lemma)
 
                     if "Alt_split" in row:
@@ -130,7 +143,7 @@ def get_data_from_files(locale):
                         try:
                             alternatives = json.loads(value)
                             if (
-                                locale[0:2] == "de"
+                                locale == "de"
                                 and str(f).find("abbreviations.csv") != -1
                             ):
                                 alternatives.pop(0)
@@ -377,12 +390,12 @@ def add_words_to_ignore(path_to_ignore_file, words_to_write):
             myfile.write("\n")
 
 
-def generate_german_articles(locale):
+def generate_german_articles():
     endings = Config._gendereddenom_ending.keys()
     all_alternatives = []
     articles = []
 
-    with open("training_data/" + locale + "/articles.csv") as f:
+    with open("training_data/de/articles.csv") as f:
         reader = csv.DictReader(f)
         for row in reader:
             all_alternatives.append(row["Alternative"])
@@ -436,12 +449,13 @@ def print_trigger_alternative_overlap(locale, all_triggers, words):
 
 
 args = parse_args()
-if args.Language.lower() == "de":
+lang = args.Language.lower()
+if lang == "de":
     locales = [
         "de-DE",
     ]
 
-elif args.Language.lower() == "en":
+elif lang == "en":
     locales = [
         "en-US",
     ]
@@ -450,6 +464,12 @@ else:
     raise ValueError(
         "Please specify correct language argument. Valid values are 'de' or 'en' (not case-sensitive)."
     )
+
+settings = get_settings()
+for spacy_model in settings.models:
+    if spacy_model[0:2] == lang:
+        model = fetch_nlp_model(lang, spacy_model)
+        break
 
 words = {}
 lemmas = {}
@@ -464,7 +484,7 @@ for locale in locales:
 
     if locale == "de-DE":
         words = generate_correct_endings_german(all_alternatives)
-        words[locale] += generate_german_articles(locale)
+        words[locale] += generate_german_articles()
     else:
         words[locale] = generate_alternatives_english(all_alternatives)
 
@@ -480,7 +500,7 @@ for locale in locales:
 
     all_lemma = sorted(all_lemma)
     for lemma in all_lemma:
-        tokens = fetch_tokens(lang, lemma)
+        tokens = model(lemma)
         if lemma.lower() != tokens[0].lemma_.lower():
             print(
                 "Lemma mismatch, got '"

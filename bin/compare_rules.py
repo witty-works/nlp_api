@@ -16,6 +16,9 @@ def parse_args():
 
 
 def get_data_from_files(locale):
+    if locale[0:2] == "de":
+        locale = "de"
+
     base_directory = "training_data/" + locale + "/"
     training_data_paths = []
     for file in os.listdir(base_directory):
@@ -25,6 +28,9 @@ def get_data_from_files(locale):
 
     for training_data_path in training_data_paths:
         with open(training_data_path) as f:
+            if not f.name.endswith(".csv"):
+                continue
+
             reader = csv.DictReader(f)
             for row in reader:
                 if "Alt_split" in row:

@@ -19,16 +19,20 @@ class Language(object):
     def __init__(self, locale):
         self.locale = locale
         self.lang = locale[0:2]
-
-        language = gettext.translation(
-            "messages", localedir="locales", languages=[locale.replace("-", "_")]
-        )
-
-        language.install()
-
-        self.gettext = language.gettext
+        self.gettext = None
 
     def _(self, message: str, placeholders={}):
+        if self.gettext == None:
+            language = gettext.translation(
+                "messages",
+                localedir="locales",
+                languages=[self.locale.replace("-", "_")],
+            )
+
+            language.install()
+
+            self.gettext = language.gettext
+
         message = self.gettext(message)
 
         for key in placeholders:
@@ -56,6 +60,17 @@ class LangWithAutoType(str, Enum):
     deDE = "de-DE"
     deCH = "de-CH"
     deAT = "de-AT"
+    enUS = "en-US"
+    enGB = "en-GB"
+
+
+class LangGermanVariantType(str, Enum):
+    deDE = "de-DE"
+    deCH = "de-CH"
+    deAT = "de-AT"
+
+
+class LangEnglishVariantType(str, Enum):
     enUS = "en-US"
     enGB = "en-GB"
 
@@ -99,7 +114,7 @@ class Config(BaseModel):
     store_context: bool = True
     simple_language: bool = False
     plan: Optional[str]
-    primary_language: Optional[LangWithAutoType]
+    primary_language: Optional[LangVariantType]
     preferred_languages: List = [LangWithAutoType.EN, LangWithAutoType.DE]
     _supported_langs = [
         LangType.DE,
@@ -145,12 +160,6 @@ class Config(BaseModel):
                 return mapping[v]
 
             raise ValueError("Not supported german_gender_ending: " + v)
-        return v
-
-    @validator("primary_language", pre=True)
-    def valid_primary_language(cls, v):
-        if v and v not in Config._supported_locales:
-            raise ValueError("Not supported primary_language: " + v)
         return v
 
     @validator("preferred_languages", pre=True)
@@ -303,6 +312,21 @@ class DomainConfig(BaseModel):
     type: DomainType
 
 
+class LanguageRequest(BaseModel):
+    version: float
+    text: str
+    config: Config
+    configs: dict
+
+
+class GermanLanguageRequest(LanguageRequest):
+    locale: LangGermanVariantType
+
+
+class EnglishLanguageRequest(LanguageRequest):
+    locale: LangEnglishVariantType
+
+
 class ConfRequest(BaseModel):
     id: str
     name: str
@@ -353,7 +377,7 @@ class UserConfResponse(ConfRequest):
 class RequestIn(BaseModel):
     type: str = "check"
     text: str
-    lang: Optional[LangWithAutoType] = "auto"
+    lang: Optional[LangWithAutoType] = LangWithAutoType.AUTO
     id: Optional[str]
     client: Optional[str]
     config: Optional[Config] = Config()

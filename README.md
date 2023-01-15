@@ -15,7 +15,13 @@ This project has two key dependencies:
 
 # Installation instructions (with python3.9)
 
-## using Docker
+- Install Platform.sh CLI https://docs.platform.sh/development/cli.html
+  - Run `platform login`
+  - Run `platform project:set-remote` (select `witty`)
+  - Run `platform list` to find out what commands are available
+  - Run `platform help [command]` to find out details about a command
+
+## Using Docker
 
 1. Install Docker engine - https://docs.docker.com/engine/install/
 2. Pull images from Azure container registry:
@@ -49,7 +55,7 @@ docker run --rm --name nlp_api -p 8080:8080 --network "bridge" --env languagetoo
 
 You should see application running under http://localhost:8000/docs
 
-## using pipenv
+## Using pipenv
 
 ```
 pipenv install --dev
@@ -71,7 +77,7 @@ Compile PO files (done automatically during deployment:
 ./compile-translations.sh
 ```
 
-## using virtual environment (venv)
+## Using virtual environment (venv)
 
 ```
 python -m venv /path/to/new/virtual/environment
@@ -155,6 +161,22 @@ uvicorn app.main:app --reload
 Open your browser to http://localhost:8000/docs to view the OpenAPI UI.
 
 For an alternate view of the docs navigate to http://localhost:8000/redoc
+
+## Profiling locally
+
+```
+pipenv run blackfire-python uvicorn app.main:app --reload
+```
+
+Make sure you have a `.blackfire.ini`, get the settings from
+https://blackfire.io/docs/php/configuration
+
+Make sure you to select "Witty Works > NLP API" (defaults to "Personal")
+
+```
+BLACKFIRE_SERVER_ID=""
+BLACKFIRE_SERVER_TOKEN=""
+```
 
 ## Production Deployment
 

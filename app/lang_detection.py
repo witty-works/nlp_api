@@ -1,6 +1,7 @@
 import fasttext
 import os
-from app.models import Config
+from app.models import LangWithAutoType, Config
+from functools import lru_cache
 
 
 class LangDetection:
@@ -50,8 +51,8 @@ class LangDetection:
 
         return None
 
-    def get_locale(self, text, lang, language_preferences = [], variant_preferences = []):
-        if lang == "auto":
+    def get_locale(self, text, lang, language_preferences=[], variant_preferences=[]):
+        if lang == LangWithAutoType.AUTO:
             langs = self.predict_lang(text)
 
             locale = self.get_locale_by_variant(langs, variant_preferences)
@@ -67,3 +68,8 @@ class LangDetection:
             return self.get_default_locale(lang)
 
         return None
+
+
+@lru_cache()
+def get_lang_detection():
+    return LangDetection()

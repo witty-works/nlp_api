@@ -5,9 +5,8 @@ import json
 
 
 def set_up_redis(settings):  # pragma: no cover
-    platform_config = Config()
-
-    if platform_config.is_valid_platform():
+    if settings.platform_relationships and "rediscache" in settings.platform_relationships:
+        platform_config = Config()
         redis_credentials = platform_config.credentials("rediscache")
 
         settings.redis_host = redis_credentials["host"]
