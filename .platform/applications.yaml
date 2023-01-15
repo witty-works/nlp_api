@@ -10,7 +10,7 @@
 
   resources:
     base_memory: 768
-    memory_ratio: 768
+    memory_ratio: 512
 
   dependencies:
     python3:
