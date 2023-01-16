@@ -392,6 +392,19 @@ def get_german_gender_ending(
     return alternative_variations
 
 
+@app.get(
+    "/debug/configs",
+    include_in_schema=not settings.is_prod,
+    dependencies=[Depends(HTTPBearer(auto_error=False))],
+)
+async def get_config_debug(
+    user_email: str,
+    username: str = Depends(fetch_current_username),
+):  # pragma: no cover
+    user_request_in = RequestIn(text="")
+    return await fetch_configs_for_request(user_request_in, user_email)
+
+
 @app.post(
     "/debug/auth",
     include_in_schema=not settings.is_prod,
