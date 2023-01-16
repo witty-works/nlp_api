@@ -1554,19 +1554,24 @@ async def call_context_checker(sentences, result: ResultOut):
         "azureml-model-deployment": "default",
     }
 
-    for sentence in sentences:
-        if result.end < sentence.end_char:
+    sentence = None
+    for end_char in sentences:
+        if result.end <= end_char:
+            sentence = sentences[end_char]
             break
+
+    if sentence == None:
+        return True
 
     payload = {
         "data": sentence.text,
     }
 
-    result = await fetch_json(
+    context_valid = await fetch_json(
         settings.context_checker_url, json.dumps(payload), headers, "context checker"
     )
 
-    return result == "1"
+    return context_valid == "1"
 
 
 def is_sub_category_enabled(version: float, config: Config, subcategory: str):
@@ -1594,7 +1599,9 @@ async def context_false_positives(lang: Language, tokens, list_results):
         and settings.context_checker_url
         and settings.context_checker_api_key
     ):
-        sentences = tokens.sents
+        sentences = {}
+        for sentence in tokens.sents:
+            sentences[sentence.end_char] = sentence
 
         for result in list_results:
             if result.text.lower() in rules[lang.lang]["context_check"]:
