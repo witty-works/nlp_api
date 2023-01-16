@@ -335,6 +335,7 @@ class ConfRequest(BaseModel):
     term_replacements: Dict[str, TermReplacement] = {}
     domains: Optional[DomainConfig]
     config_hash: Optional[str]
+    sync_date: Optional[str]
 
 
 class UserConfRequest(ConfRequest):
