@@ -9,8 +9,8 @@
   disk: 2048
 
   resources:
-    base_memory: 768
-    memory_ratio: 768
+    base_memory: 1024
+    memory_ratio: 1024
 
   dependencies:
     python3:
