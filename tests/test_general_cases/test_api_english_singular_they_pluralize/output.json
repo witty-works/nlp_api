@@ -1,0 +1,66 @@
+{
+    "language": "en",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "They are"
+                }
+            ],
+            "category": "gendered",
+            "context": "He is amazing. She builds, cleans and refurbishes houses. This is all hers.",
+            "end": 5,
+            "explanation": {
+                "icon": "😟",
+                "text": "Pronouns that exclude non-binary people",
+                "url": "https://www.witty.works/en/categories/gendered#binary_pronouns"
+            },
+            "gravity": 2.0,
+            "label": "Gendered: Binary Pronouns",
+            "start": 0,
+            "subcategory": "binary_pronouns",
+            "text": "He is"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "They build"
+                }
+            ],
+            "category": "gendered",
+            "context": "He is amazing. She builds, cleans and refurbishes houses. This is all hers.",
+            "end": 25,
+            "explanation": {
+                "icon": "😟",
+                "text": "Pronouns that exclude non-binary people",
+                "url": "https://www.witty.works/en/categories/gendered#binary_pronouns"
+            },
+            "gravity": 2.0,
+            "label": "Gendered: Binary Pronouns",
+            "start": 15,
+            "subcategory": "binary_pronouns",
+            "text": "She builds"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "theirs"
+                }
+            ],
+            "category": "gendered",
+            "context": "He is amazing. She builds, cleans and refurbishes houses. This is all hers.",
+            "end": 74,
+            "explanation": {
+                "icon": "😟",
+                "text": "Pronouns that exclude non-binary people",
+                "url": "https://www.witty.works/en/categories/gendered#binary_pronouns"
+            },
+            "gravity": 2.0,
+            "label": "Gendered: Binary Pronouns",
+            "start": 70,
+            "subcategory": "binary_pronouns",
+            "text": "hers"
+        }
+    ]
+}
