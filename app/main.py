@@ -1510,16 +1510,16 @@ def apply_term_replacements(
 
         term_replacements["Lemma"].append(term)
         term_replacements["Word_Type"].append(word_type)
-        term_replacements["Alt_split"].append(term_replacement["alternatives"])
         term_replacements["Primary_subcategory"].append("corporate_rules")
+        term_replacements["Alt_split"].append(term_replacement["alternatives"])
         term_replacements["Explanation"].append(term_replacement["explanation"])
 
     term_replacements = list(
         zip(
             term_replacements["Lemma"],
             term_replacements["Word_Type"],
-            term_replacements["Alt_split"],
             term_replacements["Primary_subcategory"],
+            term_replacements["Alt_split"],
             term_replacements["Explanation"],
         )
     )
@@ -2402,7 +2402,7 @@ def alternatives_declension(token, lang, alternatives):
     ]
 
 
-def plural_alternatives_en(
+def plural_alternatives(
     token,
     alternative_plur,
     second_subcategory,
@@ -2643,20 +2643,9 @@ def sentences_matcher(
 
     for match_id, start, end in matches:
         span = tokens[start:end]
-        for sentence, *data in sentences_data:
+        for sentence, subcategory, alternatives in sentences_data:
             if span.text.lower() == sentence.lower():
-                rule_subcategory = subcategory
-
-                if len(data) == 2:
-                    rule_subcategory = data[1]
-                    alternatives = data[0]
-                elif len(data) == 1:
-                    if subcategory is None:
-                        rule_subcategory = data[0]
-                    else:
-                        alternatives = data[0]
-
-                if not is_sub_category_enabled(version, config, rule_subcategory):
+                if not is_sub_category_enabled(version, config, subcategory):
                     continue
 
                 list_tokens.append(
@@ -2667,7 +2656,7 @@ def sentences_matcher(
                         span.text,
                         full_text,
                         category,
-                        rule_subcategory,
+                        subcategory,
                         span.start_char,
                         span.end_char,
                         alternatives,
@@ -2833,7 +2822,7 @@ def ub_words_phrase_matcher_de(
     list_tokens = []
 
     for token in tokens:
-        for word, word_types, alternatives, subcategory in words_data:
+        for word, word_types, subcategory, alternatives in words_data:
             if not is_sub_category_enabled(version, config, subcategory):
                 continue
 
@@ -2891,9 +2880,9 @@ def gendered_denom_analysis_de(
         for (
             word,
             word_types,
+            subcategory,
             alternatives_sing,
             alternatives_plur,
-            subcategory,
         ) in words_data:
             if not is_sub_category_enabled(version, config, subcategory):
                 continue
@@ -2984,7 +2973,7 @@ def style_word_analysis_de(
             ):
                 continue
 
-        for word, word_types, alternatives, subcategory in words_data:
+        for word, word_types, subcategory, alternatives in words_data:
             if not is_sub_category_enabled(version, config, subcategory):
                 continue
 
@@ -3044,9 +3033,9 @@ def word_noun(
         for (
             word,
             word_types,
+            subcategory,
             alternatives_sing,
             alternatives_plur,
-            subcategory,
             *data,
         ) in words_data:
             if not is_sub_category_enabled(version, config, subcategory):
@@ -3061,8 +3050,9 @@ def word_noun(
 
             if is_singular:
                 alternatives = alternatives_sing
-            elif lang.lang == "en":
-                alternatives, subcategory = plural_alternatives_en(
+            elif len(data):
+                # Secondary_subcategory
+                alternatives, subcategory = plural_alternatives(
                     token,
                     alternatives_plur,
                     data[0],
@@ -3130,33 +3120,21 @@ def rules_based_words_phrase_matcher(
             icon = None
             explanation = None
 
-            if len(data) > 2 and data[2] is not None:
-                explanation = (
-                    data[2]["text"]
-                    if "text" in data[2] and data[2]["text"] != ""
-                    else None
-                )
-                url = (
-                    data[2]["url"]
-                    if "url" in data[2] and data[2]["url"] != ""
-                    else None
-                )
-                icon = (
-                    data[2]["icon"]
-                    if "icon" in data[2] and data[2]["icon"] != ""
-                    else None
-                )
+            if len(data):
+                subcategory = data[0]
 
-            if len(data) > 1:
-                subcategory = data[1]
-
-            if lang.lang == "en":
                 if len(data) > 1:
-                    alternatives = alternatives_declension(token, lang, data[0])
-                else:
-                    subcategory = data[0]
-            elif len(data) > 0:
-                alternatives = alternatives_declension(token, lang, data[0])
+                    alternatives = alternatives_declension(token, lang, data[1])
+
+                    if len(data) > 2 and data[2] is not None:
+                        if "text" in data[2] and data[2]["text"] != "":
+                            explanation = data[2]["text"]
+
+                        if "url" in data[2] and data[2]["url"] != "":
+                            url = data[2]["url"]
+
+                        if "icon" in data[2] and data[2]["icon"] != "":
+                            icon = data[2]["icon"]
 
             if not is_sub_category_enabled(version, config, subcategory):
                 continue
@@ -3214,7 +3192,7 @@ def homonyms_en(
     list_tokens = []
 
     for token in tokens:
-        for word, word_types, category, subcategory, alternatives in words_data:
+        for word, word_types, subcategory, alternatives, category in words_data:
             if not is_sub_category_enabled(version, config, subcategory):
                 continue
 
@@ -3261,10 +3239,9 @@ def literal_match(
         for (
             term,
             word_types,
-            category,
             subcategory,
             alternatives,
-            *explanation,
+            category,
         ) in term_list:
             if not is_sub_category_enabled(version, config, subcategory):
                 continue
