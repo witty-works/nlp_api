@@ -2087,9 +2087,9 @@ def fetch_word_types(token, lang, word_types=[], single_word=None):
 
     if token.pos_ == "VERB":
         if lang.lang == "de" and "a" in word_types:
-            return "a"
+            return ["a"]
 
-        return "v"
+        return ["v"]
 
     if token.pos_ == "NOUN" or token.pos_ == "PRON":
         return ["s"]
