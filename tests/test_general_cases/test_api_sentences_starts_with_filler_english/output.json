@@ -32,7 +32,7 @@
             "end": 10,
             "explanation": {
                 "icon": "❌",
-                "text": "Possible typo: you repeated a whitespace"
+                "text": "It seems like there are too many consecutive spaces here."
             },
             "gravity": 1.0,
             "label": "Typography",
