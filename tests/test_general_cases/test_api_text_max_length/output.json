@@ -354,6 +354,36 @@
             "text": "guys"
         },
         {
+            "alternatives": [],
+            "category": "inclusive",
+            "context": "Hey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately <NUMBER> metres east of the mo",
+            "end": 23,
+            "explanation": {
+                "icon": "✅",
+                "text": "Emphasizes cooperative attributes",
+                "url": "https://www.witty.works/en/categories/inclusive#communal"
+            },
+            "label": "Inclusive: Communal",
+            "start": 19,
+            "subcategory": "communal",
+            "text": "team"
+        },
+        {
+            "alternatives": [],
+            "category": "inclusive",
+            "context": "mately <NUMBER> metres east of the most south-easterly corner of <NUMBER> Batherton Close.\n\nHey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately <NUMBER> metres east of the mo",
+            "end": 644,
+            "explanation": {
+                "icon": "✅",
+                "text": "Emphasizes cooperative attributes",
+                "url": "https://www.witty.works/en/categories/inclusive#communal"
+            },
+            "label": "Inclusive: Communal",
+            "start": 640,
+            "subcategory": "communal",
+            "text": "team"
+        },
+        {
             "alternatives": [
                 {
                     "remove": true
