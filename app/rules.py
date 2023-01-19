@@ -139,9 +139,9 @@ def fetch_rules(langs):
             zip(
                 df_gender["Lemma"],
                 df_gender["Word_Type"],
+                df_gender["Primary_subcategory"],
                 map(ast.literal_eval, df_gender["Sg_all_split"]),
                 map(ast.literal_eval, df_gender["Pl_all_split"]),
-                df_gender["Primary_subcategory"],
             )
         )
         # df gendered no noun
@@ -151,8 +151,8 @@ def fetch_rules(langs):
             zip(
                 df_gendered_no_noun["Lemma"],
                 df_gendered_no_noun["Word_Type"],
-                map(ast.literal_eval, df_gendered_no_noun["Alt_split"]),
                 df_gendered_no_noun["Primary_subcategory"],
+                map(ast.literal_eval, df_gendered_no_noun["Alt_split"]),
             )
         )
         # articles
@@ -175,9 +175,9 @@ def fetch_rules(langs):
             zip(
                 df_bias["Lemma"],
                 df_bias["Word_Type"],
+                df_bias["Primary_subcategory"],
                 map(ast.literal_eval, df_bias["Sg_all_split"]),
                 map(ast.literal_eval, df_bias["Pl_all_split"]),
-                df_bias["Primary_subcategory"],
             )
         )
         # df unconscious bias words without plurals
@@ -187,8 +187,8 @@ def fetch_rules(langs):
             zip(
                 df_bias_no_plur["Lemma"],
                 df_bias_no_plur["Word_Type"],
-                map(ast.literal_eval, df_bias_no_plur["Alt_split"]),
                 df_bias_no_plur["Primary_subcategory"],
+                map(ast.literal_eval, df_bias_no_plur["Alt_split"]),
             )
         )
         # df style
@@ -198,8 +198,8 @@ def fetch_rules(langs):
             zip(
                 df_style["Lemma"],
                 df_style["Word_Type"],
-                map(ast.literal_eval, df_style["Alt_split"]),
                 df_style["Primary_subcategory"],
+                map(ast.literal_eval, df_style["Alt_split"]),
             )
         )
         # df open discrimination words
@@ -209,8 +209,8 @@ def fetch_rules(langs):
             zip(
                 df_discrimination_words["Lemma"],
                 df_discrimination_words["Word_Type"],
-                map(ast.literal_eval, df_discrimination_words["Alt_split"]),
                 df_discrimination_words["Primary_subcategory"],
+                map(ast.literal_eval, df_discrimination_words["Alt_split"]),
             )
         )
         # df abbreviation
@@ -220,9 +220,9 @@ def fetch_rules(langs):
             zip(
                 df_abbreviation["Lemma"],
                 df_abbreviation["Word_Type"],
-                df_abbreviation["Category"],
                 df_abbreviation["Primary_subcategory"],
                 map(ast.literal_eval, df_abbreviation["Alt_split"]),
+                df_abbreviation["Category"],
             )
         )
 
@@ -233,8 +233,8 @@ def fetch_rules(langs):
         rules["de"]["open_disc_sentences_data"] = list(
             zip(
                 df_discrimination_sentences["Lemma"],
-                map(ast.literal_eval, df_discrimination_sentences["Alt_split"]),
                 df_discrimination_sentences["Primary_subcategory"],
+                map(ast.literal_eval, df_discrimination_sentences["Alt_split"]),
             )
         )
         # df gendered sentences
@@ -243,8 +243,8 @@ def fetch_rules(langs):
         rules["de"]["gender_sentences_data"] = list(
             zip(
                 df_gendered_sentences["Lemma"],
-                map(ast.literal_eval, df_gendered_sentences["Alt_split"]),
                 df_gendered_sentences["Primary_subcategory"],
+                map(ast.literal_eval, df_gendered_sentences["Alt_split"]),
             )
         )
         # df unconscious bias sentences
@@ -253,8 +253,8 @@ def fetch_rules(langs):
         rules["de"]["bias_sentences_data"] = list(
             zip(
                 df_bias_sentences["Lemma"],
-                map(ast.literal_eval, df_bias_sentences["Alt_split"]),
                 df_bias_sentences["Primary_subcategory"],
+                map(ast.literal_eval, df_bias_sentences["Alt_split"]),
             )
         )
         # df style sentences
@@ -263,8 +263,8 @@ def fetch_rules(langs):
         rules["de"]["style_sentences_data"] = list(
             zip(
                 df_style_sentences["Lemma"],
-                map(ast.literal_eval, df_style_sentences["Alt_split"]),
                 df_style_sentences["Primary_subcategory"],
+                map(ast.literal_eval, df_style_sentences["Alt_split"]),
             )
         )
 
@@ -587,8 +587,8 @@ def fetch_rules(langs):
                 zip(
                     df_discrimination["Lemma"],
                     df_discrimination["Word_Type"],
-                    map(ast.literal_eval, df_discrimination["Alt_split"]),
                     df_discrimination["Primary_subcategory"],
+                    map(ast.literal_eval, df_discrimination["Alt_split"]),
                 )
             )
 
@@ -599,8 +599,8 @@ def fetch_rules(langs):
                 zip(
                     df_gender_no_noun["Lemma"],
                     df_gender_no_noun["Word_Type"],
-                    map(ast.literal_eval, df_gender_no_noun["Alt_split"]),
                     df_gender_no_noun["Primary_subcategory"],
+                    map(ast.literal_eval, df_gender_no_noun["Alt_split"]),
                 )
             )
 
@@ -611,8 +611,8 @@ def fetch_rules(langs):
                 zip(
                     df_style["Lemma"],
                     df_style["Word_Type"],
-                    map(ast.literal_eval, df_style["Alt_split"]),
                     df_style["Primary_subcategory"],
+                    map(ast.literal_eval, df_style["Alt_split"]),
                 )
             )
 
@@ -623,8 +623,8 @@ def fetch_rules(langs):
                 zip(
                     df_bias["Lemma"],
                     df_bias["Word_Type"],
-                    map(ast.literal_eval, df_bias["Alt_split"]),
                     df_bias["Primary_subcategory"],
+                    map(ast.literal_eval, df_bias["Alt_split"]),
                 )
             )
 
@@ -646,9 +646,9 @@ def fetch_rules(langs):
                 zip(
                     df_homonyms["Lemma"],
                     df_homonyms["Word_Type"],
-                    df_homonyms["Category"],
                     df_homonyms["Primary_subcategory"],
                     map(ast.literal_eval, df_homonyms["Alt_split"]),
+                    df_homonyms["Category"],
                 )
             )
 
@@ -659,9 +659,9 @@ def fetch_rules(langs):
                 zip(
                     df_abbreviation["Lemma"],
                     df_abbreviation["Word_Type"],
-                    df_abbreviation["Category"],
                     df_abbreviation["Primary_subcategory"],
                     map(ast.literal_eval, df_abbreviation["Alt_split"]),
+                    df_abbreviation["Category"],
                 )
             )
 
@@ -672,9 +672,9 @@ def fetch_rules(langs):
                 zip(
                     df_gender_noun["Lemma"],
                     df_gender_noun["Word_Type"],
+                    df_gender_noun["Primary_subcategory"],
                     map(ast.literal_eval, df_gender_noun["Sg_all_split"]),
                     map(ast.literal_eval, df_gender_noun["Pl_all_split"]),
-                    df_gender_noun["Primary_subcategory"],
                     df_gender_noun["Secondary_subcategory"],
                 )
             )
@@ -686,9 +686,9 @@ def fetch_rules(langs):
                 zip(
                     df_gendered_ub["Lemma"],
                     df_gendered_ub["Word_Type"],
+                    df_gendered_ub["Primary_subcategory"],
                     map(ast.literal_eval, df_gendered_ub["Sg_all_split"]),
                     map(ast.literal_eval, df_gendered_ub["Pl_all_split"]),
-                    df_gendered_ub["Primary_subcategory"],
                     df_gendered_ub["Secondary_subcategory"],
                 )
             )
@@ -710,8 +710,8 @@ def fetch_rules(langs):
             rules[locale]["open_dis_sentences"] = list(
                 zip(
                     df_open_dis_sentences["Lemma"],
-                    map(ast.literal_eval, df_open_dis_sentences["Alt_split"]),
                     df_open_dis_sentences["Primary_subcategory"],
+                    map(ast.literal_eval, df_open_dis_sentences["Alt_split"]),
                 )
             )
 
@@ -721,8 +721,8 @@ def fetch_rules(langs):
             rules[locale]["gender_sentences_data"] = list(
                 zip(
                     df_gendered_sentences["Lemma"],
-                    map(ast.literal_eval, df_gendered_sentences["Alt_split"]),
                     df_gendered_sentences["Primary_subcategory"],
+                    map(ast.literal_eval, df_gendered_sentences["Alt_split"]),
                 )
             )
 
@@ -732,8 +732,8 @@ def fetch_rules(langs):
             rules[locale]["style_sentences_data"] = list(
                 zip(
                     df_style_sentences["Lemma"],
-                    map(ast.literal_eval, df_style_sentences["Alt_split"]),
                     df_style_sentences["Primary_subcategory"],
+                    map(ast.literal_eval, df_style_sentences["Alt_split"]),
                 )
             )
 
@@ -743,8 +743,8 @@ def fetch_rules(langs):
             rules[locale]["bias_sentences_data"] = list(
                 zip(
                     df_bias_sentences["Lemma"],
-                    map(ast.literal_eval, df_bias_sentences["Alt_split"]),
                     df_bias_sentences["Primary_subcategory"],
+                    map(ast.literal_eval, df_bias_sentences["Alt_split"]),
                 )
             )
 
@@ -754,8 +754,8 @@ def fetch_rules(langs):
                 zip(
                     df_bias_singular_they["Lemma"],
                     df_bias_singular_they["Word_Type"],
-                    map(ast.literal_eval, df_bias_singular_they["Alt_split"]),
                     df_bias_singular_they["Primary_subcategory"],
+                    map(ast.literal_eval, df_bias_singular_they["Alt_split"]),
                 )
             )
 
