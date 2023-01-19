@@ -22,37 +22,6 @@
             "text": "liebe"
         },
         {
-            "alternatives": [
-                {
-                    "text": "Mensch"
-                },
-                {
-                    "text": "längs"
-                },
-                {
-                    "text": "Deng"
-                },
-                {
-                    "text": "menge"
-                },
-                {
-                    "text": "mengt"
-                }
-            ],
-            "category": "orthography",
-            "context": "liebe mensch",
-            "end": 12,
-            "explanation": {
-                "icon": "❌",
-                "text": "Möglicher Tippfehler gefunden."
-            },
-            "gravity": 1.0,
-            "label": "Rechtschreibfehler",
-            "start": 6,
-            "subcategory": "typos",
-            "text": "mensch"
-        },
-        {
             "alternatives": [],
             "category": "inclusive",
             "context": "liebe mensch",
