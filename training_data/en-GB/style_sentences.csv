@@ -1,6 +1,8 @@
 Lemma,Word_Type,Category,Primary_subcategory,Alt_split
 Fine. Whatever.,i,style,hollow,"[""I don't feel good about this. Can we talk about it?""]"
+I guess,i,style,filler,['-']
 I mean,i,style,filler,['-']
+I suppose,i,style,filler,['-']
 I think,i,style,filler,['-']
 I think we should,i,style,hollow,"[""Let's""]"
 It’s not that complicated,i,style,hollow,['Which part is confusing? I can help clarify']
@@ -9,12 +11,18 @@ Make sure the juice is worth the squeeze,i,style,hollow,['Make sure this is wort
 Thanks for nothing.,i,style,hollow,"[""I'm uncomfortable with this situation."", 'I honestly would have appreciated your help.', 'Can we come to a more constructive solution?']"
 What we want is to,i,style,filler,"['We want to', 'Our goal:', ""Let's""]"
 What we want to do is to,i,style,filler,"['We want to', 'Our goal:', ""Let's""]"
+a bit,adv,style,filler,['-']
+a little,adv,style,filler,['-']
+a lot,adv,style,filler,['-']
 able to,a,style,hollow,"['in a position to', 'willing to', 'interested in', 'prepared to', 'ready to', 'higher-ups', 'supervisors', 'executives']"
 amongst others,s,style,filler,['-']
+and then,conj,style,filler,['-']
 are on the same page,i,style,hollow,"['agree', 'are in agreement', 'understand each other', 'speak the same language']"
 at the end of the day,i,style,hollow,"['when the results come in', 'in the end']"
 be state of the art,i,style,hollow,"['the highest point of technological achievement to date', 'the current highest level of development in the field']"
+believe me,v,style,filler,['-']
 bright mind,a+s,style,exaggerating,"['astute mind', 'creative mind', 'inventive mind', 'talent', 'engaged person(...)', 'person with different perspectives(...)', 'someone who comes up with interesting ideas(...)', 'someone who comes up with creative solutions(...)', 'astute minds', 'creative minds', 'inventive minds', 'talents']"
+by the way,i,style,filler,['-']
 clever head,a+s,style,exaggerating,"['competence', 'creativity', 'intelligence', 'talent', 'ability', 'capability', 'proficiency', 'education', 'creative person(...)', 'astute person(...)', 'inventive person(...)', 'someone with an eye for solutions(...)', 'someone with surprising ideas(...)']"
 click to,i,style,filler,['-']
 core competencies,s,style,hollow,['what we do best']
@@ -29,6 +37,7 @@ first mover,s,style,exaggerating,"['the first to market a product', 'the first t
 flat hierarchy,a+s,style,hollow,"['responsible and self-organised way of working', 'room for personal initiative', 'short lines of communication', 'opportunities for employees to help shape the company', 'room for responsibility and freedom to organise their work', 'short chains of command', 'responsible and self-organised ways of working', 'room for personal initiative', 'short lines of communication', 'opportunities for employees to help shape the company', 'room for responsibility and freedom to organise their work at the operational level']"
 flat organisation,a+s,style,hollow,"['responsible and self-organised way of working', 'room for personal initiative', 'short lines of communication', 'opportunities for employees to help shape the company', 'room for responsibility and freedom to organise their work', 'short chains of command', 'responsible and self-organised ways of working', 'room for personal initiative', 'short lines of communication', 'opportunities for employees to help shape the company', 'room for responsibility and freedom to organise their work at the operational level']"
 for future reference,i,style,hollow,['What do you think about trying (...) instead?']
+for what it’s worth,i,style,filler,['-']
 front runner,s,style,exaggerating,"['-', 'favourite', 'person who sets the pace', 'probable winner', 'favourites', 'people who set the pace', 'probable winners']"
 go getter,s,style,exaggerating,"['bundle of energy', 'ball of fire', 'someone who sticks to their goal(...)', 'person happy to see things through(...)', 'someone who continues despite difficulty(...)', 'person loyal to their cause(...)', 'motivated people', 'energetic and focused colleagues']"
 go outside the box,i,style,hollow,"['take a new approach', 'jump from a maturing trend to an emerging trend', 'explore new business models', 'take a disruptive approach', 'rethink (a strategy)(...)', 'reinvent (a brand)(...)', 'redefine (a product)(...)']"
@@ -36,7 +45,10 @@ going forward,i,style,hollow,"['from now on', 'in the future']"
 high flyer,s,style,exaggerating,"['person who continues despite difficulties(...)', 'someone devoted to their purpose(...)', 'someone who sticks to their goal(...)', 'someone willing to see things through(...)']"
 high quality,a+s,style,hollow,"['adhering to rigorous standards(...)', 'using premium materials(...)', 'adhering to strict methods(...)', 'meeting exacting requirements(...)', 'dependable reliability(...)']"
 highly motivated,a,style,hollow,"['motivated', 'energetic', 'enterprising', 'spirited', 'happy to take the initiative(...)', 'willing to apply oneself(...)', 'keenly interested(...)']"
+in my humble opinion,i,style,filler,['-']
 key learnings,s,style,hollow,"[""what we've learnt"", 'findings']"
+kind of,i,style,filler,['-']
+like I said,i,style,filler,['-']
 like crazy,i,style,exaggerating,"['fast and with great enthusiasm', 'a lot', ""like nobody's business"", 'without restraint', 'with speed and energy']"
 low hanging fruit,=a+s,style,hollow,"['easy opportunities', 'easy pickings']"
 low-hanging fruit,=a+s,style,hollow,"['easy opportunities', 'easy pickings']"
@@ -47,12 +59,16 @@ market leading,a,style,exaggerating,['market-influencing']
 most of all,a,style,hollow,"['especially', 'in particular', 'mostly', 'more than any other', 'more than anyone else', 'to a greater degree than anything else']"
 move the needle on,i,style,hollow,"['provide a perceptible improvement in', 'increase activity in', 'have a measurable effect on', 'generate noticeable results in']"
 need to have a conversation around that,i,style,hollow,"['should talk about that', 'should discuss that']"
+needless to say,i,style,filler,['-']
 not move the needle,i,style,hollow,"['futile', 'have no effect on', 'have no measurable effect on']"
 number 1,i,style,exaggerating,"['critical', 'vital', 'key', 'crucial', 'paramount']"
 number one,i,style,exaggerating,"['critical', 'vital', 'key', 'crucial', 'paramount']"
+"okay, so",i,style,filler,['-']
 opinion leader,s,style,exaggerating,"['influencer', 'opinion shaper', 'influencers', 'opinion shapers']"
+or something,i,style,filler,['-']
 per my last email,i,style,hollow,['I’m following up on my previous email about']
 pioneering company,s,style,exaggerating,"['company paving the way for new technologies', 'companies paving the way for new technologies']"
+pretty much,i,style,filler,['-']
 proven track record,s,style,exaggerating,"['documented outcomes', 'portfolio of case studies', 'reference cases', 'documented outcomes', 'portfolio of case studies', 'reference cases']"
 push the envelope,i,style,hollow,"['push the boundaries', 'test the limits']"
 reach for the star,i,style,exaggerating,"['have aspirations', 'set motivating goals', 'set inspiring milestones']"
@@ -61,6 +77,7 @@ results driven,a,style,hollow,"['-', 'goal-oriented', 'keen to get things done(.
 risk carrier,s,style,exaggerating,['-']
 self driven,=a,style,hollow,"['motivated', 'ardent', 'spirited', 'aspiring', 'sincere', 'industrious']"
 self starter,s,style,exaggerating,['-']
+sort of,i,style,filler,['-']
 success rate,s,style,exaggerating,['-']
 success story,s,style,exaggerating,"['-', 'reference', 'person of the hour', 'case study', 'business case', 'case story', 'references', 'people of the hour', 'case studies', 'business cases', 'case stories']"
 take it offline,i,style,hollow,['talk about this later']
@@ -80,3 +97,6 @@ without problem,i,style,exaggerating,"['-', 'easily', 'smoothly', 'swimmingly', 
 without problems,i,style,exaggerating,"['-', 'easily', 'smoothly', 'swimmingly', 'without a hitch', 'without friction']"
 world leader,s,style,exaggerating,"['--- be specific to build trust', 'company with largest revenue share in the market(...)', 'with largest customer base in the segment(...)', 'brand to introduce the majority of technological advances in the market(...)']"
 world wide,a,style,hollow,"['--- be specific to build trust', 'in (...) countries', '(...) offices across (...) continents']"
+you know what I mean?,i,style,filler,['-']
+you know?,i,style,filler,['-']
+you see,i,style,filler,['-']
