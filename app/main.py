@@ -2090,6 +2090,8 @@ def is_false_positive(word, false_positive):
 
 
 def fetch_word_types(token, lang, word_types=[], single_word=None):
+    # https://machinelearningknowledge.ai/tutorial-on-spacy-part-of-speech-pos-tagging/
+
     if "adv" in word_types and token.pos_ == "ADV":
         return ["adv"]
 
@@ -2103,16 +2105,21 @@ def fetch_word_types(token, lang, word_types=[], single_word=None):
         return ["s"]
 
     adj_tags = {
+        "AFX",
         "ADJA",
         "ADJD",
         "ADV",
         "ADJ",
         "JJ",
+        "JJR",
+        "JJS",
+        "PDT"
+        "PRP$",
         "VVPP",
         "VAPP",
         "VMPP",
-        "JJR",
-        "JJS",
+        "WP$",
+        "WDT",
     }
     if token.tag_ in adj_tags or token.pos_ in adj_tags:
         return ["a"]
