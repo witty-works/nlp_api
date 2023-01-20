@@ -1533,6 +1533,7 @@ def fetch_rules(langs):
         ]
 
         rules["en"]["conjunctions"] = [
+            ",",
             "and",
             "but",
             "or",

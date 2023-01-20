@@ -1829,10 +1829,9 @@ async def english_rules(
     if lang.locale == "en-GB":
         words_data_en["od"] = rules["en-GB"]["open_disc_words_data"]
         words_data_en["ge"] = rules["en-GB"]["gender_words_data"]
-        words_data_en["ge-singular-they"] = (
-            rules["en-GB"]["gender_words_data"]
-            + rules["en-GB"]["bias_singular_they_alternatives"]
-        )
+        words_data_en["ge-singular-they"] = rules["en-GB"][
+            "bias_singular_they_alternatives"
+        ]
         words_data_en["style"] = rules["en-GB"]["style_words_data"]
         words_data_en["bias"] = rules["en-GB"]["bias_words_data"]
         words_data_en["homonym"] = rules["en-GB"]["homonyms_word"]
@@ -1849,10 +1848,9 @@ async def english_rules(
     else:
         words_data_en["od"] = rules["en-US"]["open_disc_words_data"]
         words_data_en["ge"] = rules["en-US"]["gender_words_data"]
-        words_data_en["ge-singular-they"] = (
-            rules["en-US"]["gender_words_data"]
-            + rules["en-US"]["bias_singular_they_alternatives"]
-        )
+        words_data_en["ge-singular-they"] = rules["en-US"][
+            "bias_singular_they_alternatives"
+        ]
         words_data_en["style"] = rules["en-US"]["style_words_data"]
         words_data_en["bias"] = rules["en-US"]["bias_words_data"]
         words_data_en["homonym"] = rules["en-US"]["homonyms_word"]
@@ -1904,6 +1902,19 @@ async def english_rules(
         )
 
     if is_sub_category_enabled(version, config, "gendered"):
+        list_full += rules_based_words_phrase_matcher(
+            version,
+            config,
+            lang,
+            text,
+            tokens,
+            "gendered",
+            words_data_en["ge"],
+            sentences_data_en["ge"],
+            rules[lang.locale]["df_gendered_sentence"],
+            matches_false,
+        )
+
         if config.singular_they == SingularTheyType.ALL_PRONOUNS:
             list_full += rules_based_words_phrase_matcher(
                 version,
@@ -1916,20 +1927,10 @@ async def english_rules(
                 sentences_data_en["ge"],
                 rules[lang.locale]["df_gendered_sentence"],
                 matches_false,
+                None,
+                True,
             )
-        else:
-            list_full += rules_based_words_phrase_matcher(
-                version,
-                config,
-                lang,
-                text,
-                tokens,
-                "gendered",
-                words_data_en["ge"],
-                sentences_data_en["ge"],
-                rules[lang.locale]["df_gendered_sentence"],
-                matches_false,
-            )
+
         list_full += word_noun(
             version,
             config,
@@ -3176,6 +3177,46 @@ def detect_filler_words_at_sentence_start(
     return text, alternatives
 
 
+def pluralize_they(lang, tokens, i):
+    alternative = "they"
+    verb_map = {
+        "is": "are",
+        "has": "have",
+    }
+
+    token = tokens[i]
+    text = token.text
+    next_i = i + 1
+    if tokens[next_i].text in verb_map:
+        text += token.whitespace_ + tokens[next_i].text
+        alternative += token.whitespace_ + verb_map[tokens[next_i].text]
+    else:
+        # she/he builds, cleans and refurbishes houses => they build, clean and refurbishe houses
+        prev_token = token
+        while (
+            tokens[next_i].text in rules[lang.lang]["conjunctions"]
+            and tokens[next_i + 1].text[-1] == "s"
+            and "v" in fetch_word_types(tokens[next_i + 1], lang)
+        ) or (
+            tokens[next_i].text[-1] == "s"
+            and "v" in fetch_word_types(tokens[next_i], lang)
+        ):
+            if tokens[next_i].text in rules[lang.lang]["conjunctions"]:
+                text += prev_token.whitespace_ + tokens[next_i].text
+                alternative += prev_token.whitespace_ + tokens[next_i].text
+                prev_token = tokens[next_i]
+                next_i += 1
+
+            text += prev_token.whitespace_ + tokens[next_i].text
+            ending_length = -2 if tokens[next_i].text[-2:] == "es" else -1
+            alternative += prev_token.whitespace_ + tokens[next_i].text[0:ending_length]
+
+            prev_token = tokens[next_i]
+            next_i += 1
+
+    return text, alternative
+
+
 def rules_based_words_phrase_matcher(
     version: float,
     config: Config,
@@ -3188,13 +3229,15 @@ def rules_based_words_phrase_matcher(
     df_sentence=None,
     matches_false=None,
     fallback_subcategory=None,
+    they=False,
 ):
     list_tokens = []
 
     alternatives = None
     subcategory = fallback_subcategory
 
-    for token in tokens:
+    for i in range(len(tokens)):
+        token = tokens[i]
         for word, word_types, *data in words_data:
             if not is_word_match(token, tokens, lang, word, word_types, matches_false):
                 continue
@@ -3202,12 +3245,21 @@ def rules_based_words_phrase_matcher(
             url = None
             icon = None
             explanation = None
+            text = token.text
+            start = token.idx + len(token.text)
 
             if len(data):
                 subcategory = data[0]
 
                 if len(data) > 1:
-                    alternatives = alternatives_declension(token, lang, data[1])
+                    alternatives = data[1]
+                    if they and "they" in alternatives:
+                        text, alternative = pluralize_they(lang, tokens, i)
+                        alternatives = [alternative]
+                    else:
+                        alternatives = alternatives_declension(
+                            token, lang, alternatives
+                        )
 
                     if len(data) > 2 and data[2] is not None:
                         if "text" in data[2] and data[2]["text"] != "":
@@ -3225,9 +3277,9 @@ def rules_based_words_phrase_matcher(
             text, alternatives = detect_filler_words_at_sentence_start(
                 subcategory,
                 alternatives,
-                token.text,
+                text,
                 full_text,
-                token.idx + len(token.text),
+                start,
             )
 
             list_tokens.append(
