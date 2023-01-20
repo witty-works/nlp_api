@@ -2165,11 +2165,6 @@ def german_noun_lookup(word):
 
     result = rules["de"]["german_nouns"][word]
     if not len(result):
-        logging.error(
-            "Unable to determine german noun data for: %s",
-            word,
-        )
-
         return None
 
     result = result[0]
@@ -2247,7 +2242,17 @@ def german_noun_analysis(word, genus_only=False):
                     word_prefix + result["flexion"][flexion].lower()
                 )
 
+        logging.error(
+            "Determined german noun data for '%s' as '%s'",
+            word, partial_word
+        )
+
         return result
+
+    logging.error(
+        "Unable to determine german noun data for: %s",
+        word,
+    )
 
     if genus_only:
         result = determine_genus_from_ending(
