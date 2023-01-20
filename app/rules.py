@@ -1074,9 +1074,14 @@ def fetch_rules(langs):
             ]
         ]
 
-        # need to
+        # need to, need for
         pattern_need_to = [
             [{"LEMMA": "need", "POS": "VERB"}, {"LEMMA": {"IN": ["to", "for"]}}]
+        ]
+        
+        # let alone
+        pattern_need_to = [
+            [{"LEMMA": "let", "POS": "VERB"}, {"LEMMA": {"IN": ["alone"]}}]
         ]
 
         # of a kind 'of a kind', 'of her kind', 'of his kind', 'of its kind', 'of one kind or another', 'of their kind',
