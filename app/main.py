@@ -18,6 +18,7 @@ from spacy.matcher import PhraseMatcher, Matcher
 import pandas as pd
 
 from inflex import Noun, Verb, Adjective
+import wordninja
 
 from fastapi import (
     FastAPI,
@@ -3308,9 +3309,19 @@ def detect_lower_cased_hashtags(
     matches = re.finditer(r"#(\w*)", full_text)
     for span in matches:
         if type(span) == re.Match:
+            alternatives = []
             text = span.group(1)
+            if lang.lang == "en":
+                words = wordninja.split(text)
+                if len(words) <= 1:
+                    continue
 
-            if len(text) < 5 or any(char.isupper() for char in text):
+                alternative = "#"
+                for word in words:
+                    alternative += word.capitalize()
+
+                alternatives.append(alternative)
+            elif len(text) < 5 or any(char.isupper() for char in text):
                 continue
 
             list_results.append(
@@ -3324,7 +3335,7 @@ def detect_lower_cased_hashtags(
                     subcategory,
                     span.start(),
                     span.end(),
-                    None,
+                    alternatives,
                     None,
                     explanation,
                 )

@@ -24,6 +24,7 @@ slack-bolt = "*"
 german-nouns = "*"
 inflex = "*"
 blackfire = "*"
+wordninja = "*"
 
 [dev-packages]
 click = "*"
