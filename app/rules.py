@@ -852,6 +852,7 @@ def fetch_rules(langs):
             "do the trick",
             "dwarf satellite",
             "dwarf star",
+            "each other",
             "epileptic episode",
             "epileptic episodes",
             "epileptic seizure",
@@ -884,6 +885,7 @@ def fetch_rules(langs):
             "force quit",
             "force to be reckoned",
             "force to reckon",
+            "fossil group",
             "fruit and vegetable",
             "fruit juice",
             "fruit loops",
@@ -1181,9 +1183,14 @@ def fetch_rules(langs):
             ]
         ]
 
-        # need to
+        # need to, need for
         pattern_need_to = [
             [{"LEMMA": "need", "POS": "VERB"}, {"LEMMA": {"IN": ["to", "for"]}}]
+        ]
+        
+        # let alone
+        pattern_let_alone = [
+            [{"LEMMA": "let", "POS": "VERB"}, {"LEMMA": {"IN": ["alone"]}}]
         ]
 
         # of a kind 'of a kind', 'of her kind', 'of his kind', 'of its kind', 'of one kind or another', 'of their kind',
@@ -1208,8 +1215,10 @@ def fetch_rules(langs):
             pattern_lead_prepos,
             pattern_lead_life,
             pattern_need_to,
+            pattern_let_alone,
             pattern_of_kind,
             pattern_quick,
+
         ]
 
         rules["en"]["conjunctions"] = [

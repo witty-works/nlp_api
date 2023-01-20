@@ -90,7 +90,8 @@ def get_data_from_files(locale):
     all_lemma = []
     all_categories = []
     all_secondary_subcategories = []
-    supported_word_types = {"s", "a", "adv", "v", "acr", "abbr", "i"}
+    # https://www.notion.so/witty-works/Rule-Guidelines-432792da944141b1b4d0a01de290aa43#aac0d966bfeb4e33a5a346bba45d5ea8
+    supported_word_types = {"s", "a", "adv", "v", "acr", "abbr", "i", "conj"}
 
     for training_data_path in training_data_paths:
         with open(training_data_path) as f:
