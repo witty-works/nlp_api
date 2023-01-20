@@ -2361,8 +2361,71 @@ def align_verb_form(lang, a_token, b_token):
 
         return b_text
     elif lang.lang == "de":
+        b_text = b_token.text
+
+        # check if "zu" was stripped from the word in the lemma
+        if "zu" in a_token.text and "zu" not in a_token.lemma_:
+            prefixes = (
+                "ge",
+                "er",
+                "be",
+                "ent",
+                "emp",
+                "ver",
+                "zer",
+                "hinter",
+                "miss",
+                "ob",
+            )
+
+            if b_text.startswith(prefixes):
+                return "zu " + b_text
+
+            prefixes = [
+                "ab",
+                "an",
+                "auf",
+                "aus",
+                "bei",
+                "ein",
+                "mit",
+                "nach",
+                "weg",
+                "zu",
+                "her",
+                "nach",
+                "überein",
+                "umher",
+            ]
+            for prefix in prefixes:
+                if b_text.startswith(prefix):
+                    return prefix + "zu" + b_text[len(prefix) :]
+
+            for prefix in rules["de"]["splittable_words"]:
+                if b_text.startswith(prefix):
+                    if b_text in rules["de"]["splittable_words"][prefix]:
+                        return prefix + "zu" + b_text[len(prefix) :]
+
+                    return "zu " + b_text
+
+            # detect "adjective + verb" case
+            i = 2  # skip the first 2 letters
+            while i < len(b_text) - 2:  # skip the last 2 letters
+                prefix = b_text[0:i]
+                partial_word = b_text[i:]
+                if partial_word in rules["de"]["verbs"]:
+                    tokens = fetch_tokens(lang, prefix + " " + partial_word)
+                    if "a" in fetch_word_types(
+                        tokens[0], lang
+                    ) and "v" in fetch_word_types(tokens[1], lang):
+                        return prefix + "zu" + partial_word
+
+                i += 1
+
+            return "zu " + b_text
+
         ending = a_token.text[len(a_token.lemma_) :]
-        return add_declension_german(b_token.text, ending)
+        return add_declension_german(b_text, ending)
 
     return b_token.text
 
