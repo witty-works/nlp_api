@@ -1080,7 +1080,7 @@ def fetch_rules(langs):
         ]
         
         # let alone
-        pattern_need_to = [
+        pattern_let_alone = [
             [{"LEMMA": "let", "POS": "VERB"}, {"LEMMA": {"IN": ["alone"]}}]
         ]
 
@@ -1106,8 +1106,10 @@ def fetch_rules(langs):
             pattern_lead_prepos,
             pattern_lead_life,
             pattern_need_to,
+            pattern_let_alone,
             pattern_of_kind,
             pattern_quick,
+
         ]
 
         rules["en"]["conjunctions"] = [
