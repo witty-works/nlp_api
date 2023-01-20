@@ -635,6 +635,10 @@ class ResultOut(BaseModel):
                 inspiration = True
                 if alternative[-5:] == "(...)":
                     alternative = alternative[0:-5]
+
+                if alternative_context is None:
+                    alternative_context = "💡 Inspiration"
+
             else:
                 add_inspiration_alternatives = False
 

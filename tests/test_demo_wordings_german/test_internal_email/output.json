@@ -136,10 +136,12 @@
         {
             "alternatives": [
                 {
+                    "context": "💡 Inspiration",
                     "inspiration": true,
                     "text": "einen langen Atem haben"
                 },
                 {
+                    "context": "💡 Inspiration",
                     "inspiration": true,
                     "text": "Fähigkeit, an Dingen dranzubleiben"
                 }
