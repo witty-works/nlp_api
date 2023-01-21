@@ -2143,7 +2143,20 @@ def check_word_types(token, lang, word_types=[], single_word=None):
     )
 
 
-def add_declension_german(text, ending):
+def add_declension_german(text, a_text, a_lemma):
+    prefix = a_text.lower()
+    while a_lemma[: len(prefix)] != prefix and prefix:
+        prefix = prefix[: len(prefix) - 1]
+        if not prefix:
+            break
+
+    ending = a_text[len(prefix) :]
+    remove = a_lemma[len(prefix) :]
+    if remove:
+        text = text[0 : -len(remove)]
+
+    if text[-1] == "t" and ending == "t":
+        text += "e"
     if text[-1] == "s":
         text += "s"
     elif text[-1] == "e" and ending[0] == "e":
@@ -2251,8 +2264,7 @@ def german_noun_analysis(word, genus_only=False):
                 )
 
         logging.error(
-            "Determined german noun data for '%s' as '%s'",
-            word, partial_word
+            "Determined german noun data for '%s' as '%s'", word, partial_word
         )
 
         return result
@@ -2333,10 +2345,75 @@ def align_adjective_form(lang, a_token, b_token):
 
         return b_text
     elif lang.lang == "de":
-        ending = a_token.text[len(a_token.lemma_) :]
-        return add_declension_german(b_token.text, ending)
+        return add_declension_german(b_token.text, a_token.text, a_token.lemma_)
 
     return b_token.text
+
+
+def german_verb_splittable(word, lang):
+    logging.error(
+        "Guessing how to split: %s",
+        word,
+    )
+
+    prefixes = (
+        "ge",
+        "er",
+        "be",
+        "ent",
+        "emp",
+        "ver",
+        "zer",
+        "hinter",
+        "miss",
+        "ob",
+    )
+
+    if word.startswith(prefixes):
+        return False
+
+    prefixes = [
+        "ab",
+        "an",
+        "auf",
+        "aus",
+        "bei",
+        "ein",
+        "mit",
+        "nach",
+        "weg",
+        "zu",
+        "her",
+        "nach",
+        "überein",
+        "umher",
+    ]
+    for prefix in prefixes:
+        if word.startswith(prefix):
+            return prefix
+
+    for prefix in rules["de"]["splittable_words"]:
+        if word.startswith(prefix):
+            if word in rules["de"]["splittable_words"][prefix]:
+                return prefix
+
+            return False
+
+    # detect "adjective + verb" case
+    i = 2  # skip the first 2 letters
+    while i < len(word) - 2:  # skip the last 2 letters
+        prefix = word[0:i]
+        partial_word = word[i:]
+        if partial_word in rules["de"]["verbs"]:
+            tokens = fetch_tokens(lang, prefix + " " + partial_word)
+            if "a" in fetch_word_types(tokens[0], lang) and "v" in fetch_word_types(
+                tokens[1], lang
+            ):
+                return prefix
+
+        i += 1
+
+    return False
 
 
 def align_verb_form(lang, a_token, b_token):
@@ -2362,71 +2439,34 @@ def align_verb_form(lang, a_token, b_token):
 
         return b_text
     elif lang.lang == "de":
+        a_text = a_token.text
         b_text = b_token.text
 
         # check if "zu" was stripped from the word in the lemma
-        if "zu" in a_token.text and "zu" not in a_token.lemma_:
-            prefixes = (
-                "ge",
-                "er",
-                "be",
-                "ent",
-                "emp",
-                "ver",
-                "zer",
-                "hinter",
-                "miss",
-                "ob",
-            )
+        if a_token.text.count("zu") > a_token.lemma_.count("zu"):
+            if b_text in rules["de"]["verbs"]:
+                prefix = rules["de"]["verbs"][b_text]["splittable_prefix"]
+            else:
+                prefix = german_verb_splittable(b_text, lang)
 
-            if b_text.startswith(prefixes):
-                return "zu " + b_text
+            if prefix:
+                b_text = prefix + "zu" + b_text[len(prefix) :]
+            else:
+                b_text = "zu " + b_text
 
-            prefixes = [
-                "ab",
-                "an",
-                "auf",
-                "aus",
-                "bei",
-                "ein",
-                "mit",
-                "nach",
-                "weg",
-                "zu",
-                "her",
-                "nach",
-                "überein",
-                "umher",
-            ]
-            for prefix in prefixes:
-                if b_text.startswith(prefix):
-                    return prefix + "zu" + b_text[len(prefix) :]
+            a_text = a_token.text.replace("zu", "")
+        # check if "ge" was stripped from the word in the lemma
+        elif a_token.text.count("ge") > a_token.lemma_.count("ge"):
+            if b_text in rules["de"]["verbs"]:
+                return rules["de"]["verbs"][b_text]["past_participle"]
 
-            for prefix in rules["de"]["splittable_words"]:
-                if b_text.startswith(prefix):
-                    if b_text in rules["de"]["splittable_words"][prefix]:
-                        return prefix + "zu" + b_text[len(prefix) :]
+            prefix = german_verb_splittable(b_text, lang)
+            if prefix:
+                b_text = prefix + "ge" + b_text[len(prefix) :]
 
-                    return "zu " + b_text
+            a_text = a_token.text.replace("ge", "")
 
-            # detect "adjective + verb" case
-            i = 2  # skip the first 2 letters
-            while i < len(b_text) - 2:  # skip the last 2 letters
-                prefix = b_text[0:i]
-                partial_word = b_text[i:]
-                if partial_word in rules["de"]["verbs"]:
-                    tokens = fetch_tokens(lang, prefix + " " + partial_word)
-                    if "a" in fetch_word_types(
-                        tokens[0], lang
-                    ) and "v" in fetch_word_types(tokens[1], lang):
-                        return prefix + "zu" + partial_word
-
-                i += 1
-
-            return "zu " + b_text
-
-        ending = a_token.text[len(a_token.lemma_) :]
-        return add_declension_german(b_text, ending)
+        return add_declension_german(b_text, a_text, a_token.lemma_)
 
     return b_token.text
 
