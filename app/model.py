@@ -397,6 +397,7 @@ def custom_lemmatizer_de(nlp, name):
         "zwischenmenschliche": "zwischenmenschlich",
         "äußerste": "äußerst",
         "Freundliche": "freundlich",
+        "türken": "türken",
     }
 
     return custom_lemmatizer(lemma_lookup)
@@ -589,6 +590,9 @@ def custom_lemmatizer_en(nlp, name):
         "wellestablished": "wellestablished",
         "wheelchair-bound": "wheelchair-bound",
         "world-wide": "world-wide",
+        "greed": "greed",
+        "redlining": "redlining",
+        "surpass": "surpass",
     }
 
     return custom_lemmatizer(lemma_lookup)
