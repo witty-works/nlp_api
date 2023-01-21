@@ -1,12 +1,9 @@
 import csv
 
 from app.main import german_verb_splittable
-from app.models import Language
 
 # csv header
 fieldnames = ["name", "area", "country_code2", "country_code3"]
-
-lang = Language("de-DE")
 
 with open("verbs.csv", "w", encoding="UTF8", newline="") as f:
     with open("./training_data/de/verbs.csv") as csv_file:
@@ -20,7 +17,7 @@ with open("verbs.csv", "w", encoding="UTF8", newline="") as f:
                 writer = csv.DictWriter(f, fieldnames=fieldnames)
                 writer.writeheader()
             elif line_count == 1:
-                prefix = german_verb_splittable(row[0], lang)
+                prefix = german_verb_splittable(row[0])
                 if prefix == False:
                     prefix = ""
 
