@@ -2114,7 +2114,7 @@ def fetch_word_types(token, lang, word_types=[], single_word=None):
         "JJ",
         "JJR",
         "JJS",
-        "PDT"
+        "PDT",
         "PRP$",
         "VVPP",
         "VAPP",
