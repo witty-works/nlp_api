@@ -24,6 +24,7 @@ from fastapi import (
     Response,
     HTTPException,
     Depends,
+    Query,
     status,
 )
 
@@ -55,8 +56,6 @@ from app.models import (
     GenderedRolesFormatType,
     GermanGenderEndingType,
     LangType,
-    LangWithAutoType,
-    LangVariantType,
     SingularTheyType,
     Language,
     GermanLanguageRequest,
@@ -484,24 +483,20 @@ async def post_auth_2_0(request: Request):
 )
 async def get_debug_spacy(
     text: str,
-    locale: LangWithAutoType = LangWithAutoType.AUTO,
+    lang: LangType,
     username: str = Depends(fetch_current_username),
 ):
-    if locale == LangWithAutoType.AUTO or len(locale) == 2:
-        lang_detection = get_lang_detection()
-        locale = lang_detection.get_locale(
-            text,
-            locale,
-            ["en", "de"],
-        )
+    if settings.language_endpoint_urls[lang]:
+        url = "/debug/spacy"
+        payload = {
+            "text": text,
+            "lang": lang.value,
+        }
 
-    if locale is None:
-        raise HTTPException(status_code=422, detail="Could not determine language")
-
-    lang = Language(locale)
+        return await fetch_json_from_language_service(lang, url, payload, True)
 
     results = []
-    tokens = fetch_tokens(lang.lang, text)
+    tokens = fetch_tokens(lang, text)
     for token in tokens:
         results.append(
             {
@@ -510,7 +505,7 @@ async def get_debug_spacy(
                 "start": token.idx,
                 "tag": token.tag_,
                 "pos": token.pos_,
-                "word_types": fetch_word_types(lang.lang, token),
+                "word_types": fetch_word_types(lang, token),
                 "morph": token.morph.get("Number"),
                 "foreign": token.morph.get("Foreign"),
             }
@@ -691,12 +686,34 @@ async def post_check_v2_1(
 @app.get("/lemmatize")
 async def lemmatize(
     text: str,
-    locale: Union[LangVariantType, LangType],
+    lang: LangType = None,
+    locale: LangType
+    | None = Query(
+        default=None,
+        description="Deprecated in favor of 'lang'",
+        deprecated=True,
+    ),
     username: str = Depends(fetch_current_username),
 ):
-    lang = Language(locale)
+    if lang == None:
+        if locale == None:
+            raise HTTPException(
+                status_code=422,
+                detail="Provide the 'lang' query parameter with a value of 'en' or 'de'.",
+            )
 
-    tokens = fetch_tokens(lang.lang, text)
+        lang = locale
+
+    if settings.language_endpoint_urls[lang]:  # pragma: no cover
+        url = "/lemmatize"
+        payload = {
+            "text": text,
+            "lang": lang.value,
+        }
+
+        return await fetch_json_from_language_service(lang, url, payload, True)
+
+    tokens = fetch_tokens(lang, text)
     if len(tokens) != 1:
         return None
 
@@ -1299,31 +1316,52 @@ def languagetool_matches(
     return list_results
 
 
-async def fetch_json(url, payload, headers, name, ssl=True):
+async def fetch_json_from_language_service(lang, url, payload, is_get=True):
+    url = settings.language_endpoint_urls[lang] + url
+    headers = {"content-type": "application/json"}
+    name = "language endpoint " + lang
+
+    if is_get:
+        return await fetch_json_get(url, payload, headers, name, False)
+
+    return await fetch_json_post(url, payload, headers, name, False)
+
+
+async def handle_response(r, name):
+    try:
+        if r.status != 200:  # pragma: no cover
+            result = await r.text()
+            logging.error(result)
+
+            raise Exception(result)
+
+        return await r.json()
+    except ClientError as err:  # pragma: no cover
+        result = "Problem communicating with " + name
+        if r.status >= 500:
+            try:
+                response = await r.text()
+                result += ": " + response
+            except ClientError as err:
+                result += ": " + str(err)
+        else:
+            result += ": " + str(err)
+
+        logging.error(result)
+
+    return result
+
+
+async def fetch_json_get(url, payload, headers, name, ssl=True):
+    async with ClientSession(connector=TCPConnector(ssl=ssl)) as session:
+        async with session.get(url, params=payload, headers=headers) as r:
+            return await handle_response(r, name)
+
+
+async def fetch_json_post(url, payload, headers, name, ssl=True):
     async with ClientSession(connector=TCPConnector(ssl=ssl)) as session:
         async with session.post(url, data=payload, headers=headers) as r:
-            try:
-                if r.status != 200:  # pragma: no cover
-                    result = await r.text()
-                    logging.error(result)
-
-                    raise Exception(result)
-
-                return await r.json()
-            except ClientError as err:  # pragma: no cover
-                result = "Problem communicating with " + name
-                if r.status >= 500:
-                    try:
-                        response = await r.text()
-                        result += ": " + response
-                    except ClientError as err:
-                        result += ": " + str(err)
-                else:
-                    result += ": " + str(err)
-
-                logging.error(result)
-
-    return None
+            return await handle_response(r, name)
 
 
 async def apply_languagetool_rules(
@@ -1358,7 +1396,7 @@ async def apply_languagetool_rules(
     else:
         return []
 
-    result = await fetch_json(
+    result = await fetch_json_post(
         settings.languagetool_api + "/check",
         payload,
         {},
@@ -1418,7 +1456,6 @@ def fetch_matches(lang, tokens, phrases):
 
 
 async def fetch_language_results(
-    url: str,
     version: float,
     config: Config,
     configs: dict,
@@ -1426,6 +1463,7 @@ async def fetch_language_results(
     text: str,
 ):
     if lang.lang == "de":
+        url = "/german"
         payload = GermanLanguageRequest(
             version=version,
             config=config,
@@ -1434,6 +1472,7 @@ async def fetch_language_results(
             text=text,
         )
     else:
+        url = "/english"
         payload = EnglishLanguageRequest(
             version=version,
             config=config,
@@ -1442,12 +1481,7 @@ async def fetch_language_results(
             text=text,
         )
 
-    headers = {"content-type": "application/json"}
-
-    result = await fetch_json(
-        url, payload.json(), headers, "language endpoint " + lang.lang, False
-    )
-
+    result = await fetch_json_from_language_service(lang.lang, url, payload.json())
     if result is None:
         return []
 
@@ -1461,7 +1495,6 @@ async def apply_language_rules(
 
     if settings.language_endpoint_urls[lang.lang]:
         list_results += await fetch_language_results(
-            settings.language_endpoint_urls[lang.lang],
             version,
             config,
             configs,
@@ -1616,7 +1649,7 @@ async def call_context_checker(sentences, result: ResultOut):
         "data": sentence.text,
     }
 
-    context_valid = await fetch_json(
+    context_valid = await fetch_json_post(
         settings.context_checker_url, json.dumps(payload), headers, "context checker"
     )
 
@@ -2179,11 +2212,11 @@ def find_common_prefix(a_text, a_lemma):
     return prefix
 
 
-def add_declension_german(text, a_text, a_lemma, injected_string = ""):
+def add_declension_german(text, a_text, a_lemma, injected_string=""):
     prefix = find_common_prefix(a_text, a_lemma)
     ending = a_text[len(prefix) :]
     if injected_string and ending[0 : len(injected_string)] == injected_string:
-        a_text = prefix + a_text[len(prefix)+len(injected_string):]
+        a_text = prefix + a_text[len(prefix) + len(injected_string) :]
         prefix = find_common_prefix(a_text, a_lemma)
         ending = a_text[len(prefix) :]
 
