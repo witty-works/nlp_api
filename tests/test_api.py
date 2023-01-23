@@ -398,7 +398,7 @@ def test_language_detection_fail(fails_case_dir, snapshot, set_redis):
 
 
 def test_lemmatize():
-    response = client.get("/lemmatize?locale=" + "en-US&text=running")
+    response = client.get("/lemmatize?locale=" + "en&text=running")
     assert response.status_code == 200
     result = response.json()
 
@@ -1081,7 +1081,7 @@ def test_german_gender_ending():
 
 
 def test_spacy():
-    request_data = {"text": "Das ist sehr ehrgeizig"}
+    request_data = {"text": "Das ist sehr ehrgeizig", "lang": "de"}
     response = client.get("/debug/spacy", params=request_data)
     assert response.status_code == 200
     response_content = json.loads(response.content)
