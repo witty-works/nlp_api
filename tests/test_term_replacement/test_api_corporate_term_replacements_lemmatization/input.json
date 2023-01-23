@@ -1,3 +1,6 @@
 {
-    "text": "I am foo bar! Not a fooooo. But I am also Foo. I ran far. I am always running"
+    "text": "I ran far. I am always running. This is the foo bar and not the wELT!",
+    "config": {
+        "disabled_categories": ["orthography"]
+    }
 }

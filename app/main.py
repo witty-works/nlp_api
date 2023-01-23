@@ -1485,7 +1485,10 @@ def apply_term_replacements(
     if "term_replacements" not in configs:
         return []
 
-    term_replacements = {
+    term_replacements_case_insensitive = {}
+    term_replacements_case_sensitive = {}
+
+    term_replacements_lemma = {
         "Lemma": [],
         "Word_Type": [],
         "Alt_split": [],
@@ -1508,31 +1511,63 @@ def apply_term_replacements(
         else:
             word_type = "-"
 
-        term_replacements["Lemma"].append(term)
-        term_replacements["Word_Type"].append(word_type)
-        term_replacements["Alt_split"].append(term_replacement["alternatives"])
-        term_replacements["Primary_subcategory"].append("corporate_rules")
-        term_replacements["Explanation"].append(term_replacement["explanation"])
+        if word_type == "-":
+            regexp = r"(?i)(\b" + term + r"\b)"
+            term_replacements_case_insensitive[regexp] = term_replacement
+        elif word_type == "=":
+            regexp = r"(\b" + term + r"\b)"
+            term_replacements_case_sensitive[regexp] = term_replacement
+        else:
+            term_replacements_lemma["Lemma"].append(term)
+            term_replacements_lemma["Word_Type"].append(word_type)
+            term_replacements_lemma["Alt_split"].append(term_replacement["alternatives"])
+            term_replacements_lemma["Primary_subcategory"].append("corporate_rules")
+            term_replacements_lemma["Explanation"].append(term_replacement["explanation"])
 
-    term_replacements = list(
-        zip(
-            term_replacements["Lemma"],
-            term_replacements["Word_Type"],
-            term_replacements["Alt_split"],
-            term_replacements["Primary_subcategory"],
-            term_replacements["Explanation"],
+    list_result = []
+
+    if len(term_replacements_case_insensitive):
+        list_result += regex_matches(
+            version,
+            config,
+            lang,
+            text,
+            term_replacements_case_insensitive,
+            "corporate_rules",
         )
-    )
 
-    return rules_based_words_phrase_matcher(
-        version,
-        config,
-        lang,
-        text,
-        tokens,
-        "corporate_rules",
-        term_replacements,
-    )
+    if len(term_replacements_case_sensitive):
+        list_result += regex_matches(
+            version,
+            config,
+            lang,
+            text,
+            term_replacements_case_sensitive,
+            "corporate_rules",
+        )
+
+    if len(term_replacements_lemma):
+        term_replacements = list(
+            zip(
+                term_replacements_lemma["Lemma"],
+                term_replacements_lemma["Word_Type"],
+                term_replacements_lemma["Alt_split"],
+                term_replacements_lemma["Primary_subcategory"],
+                term_replacements_lemma["Explanation"],
+            )
+        )
+
+        list_result += rules_based_words_phrase_matcher(
+            version,
+            config,
+            lang,
+            text,
+            tokens,
+            "corporate_rules",
+            term_replacements,
+        )
+
+    return list_result
 
 
 def apply_false_positives(
@@ -1684,9 +1719,9 @@ async def german_rules(
                 config,
                 lang,
                 text,
+                rules["m_f_regexes"],
                 categories["gendered"]["category"],
                 "gender_specific_abbreviation",
-                rules["m_f_regexes"],
             )
         )
 
@@ -1707,18 +1742,18 @@ async def german_rules(
             regexes[regex] = [config.german_gender_ending]
 
             if ending == ":in":
-                regexes[r"\s((\S+):(\S+))"] = config.german_gender_ending[0:1]
+                regexes[r"((\S+):(\S+))"] = config.german_gender_ending[0:1]
             elif ending == "*in":
-                regexes[r"\s((\S+)\*(\S+))"] = config.german_gender_ending[0:1]
+                regexes[r"((\S+)\*(\S+))"] = config.german_gender_ending[0:1]
 
         list_full += regex_matches(
             version,
             config,
             lang,
             text,
+            regexes,
             category,
             subcategory,
-            regexes,
         )
 
     if is_sub_category_enabled(version, config, "unconscious_bias"):
@@ -1776,14 +1811,14 @@ async def german_rules(
         category = categories[subcategory]["category"]
         regexes = {config._gendereddenom_ending[config.german_gender_ending]: None}
         if config.german_gender_ending == ":in":
-            regexes[r"\s((\S+):(\S+))"] = None
+            regexes[r"((\S+):(\S+))"] = None
         elif config.german_gender_ending == "*in":
-            regexes[r"\s((\S+)\*(\S+))"] = None
+            regexes[r"((\S+)\*(\S+))"] = None
 
         regexes.update(rules["d_f_m_regexes"])
 
         list_full += regex_matches(
-            version, config, lang, text, category, subcategory, regexes
+            version, config, lang, text, regexes, category, subcategory
         )
 
     if is_sub_category_enabled(version, config, "style"):
@@ -1943,9 +1978,9 @@ async def english_rules(
             config,
             lang,
             text,
+            rules["m_f_regexes"],
             categories["gendered"]["category"],
             "gender_specific_abbreviation",
-            rules["m_f_regexes"],
         )
 
     if is_sub_category_enabled(version, config, "inclusive"):
@@ -1959,9 +1994,9 @@ async def english_rules(
                 config,
                 lang,
                 text,
+                rules["d_f_m_regexes"],
                 category,
                 subcategory,
-                rules["d_f_m_regexes"],
             )
 
         list_full += rules_based_words_phrase_matcher(
@@ -2689,25 +2724,55 @@ def regex_matches(
     config: Config,
     lang,
     full_text,
-    category,
-    subcategory,
     regexes,
+    category,
+    subcategory=None,
 ):
     list_ending = []
     alternatives = None
+    if subcategory == None:
+        subcategory = category
 
     for regex in regexes:
         matches = re.finditer(regex, full_text)
+
         for span in matches:
             if type(span) != re.Match:
                 continue
 
             text = span.group(1)
+            start = span.start()
             explanation = None
-            if len(span.groups()) == 5 and subcategory == "d_and_i":
+            url = None
+            icon = None
+            # case-(in)sensitive term_replacements
+            if isinstance(regexes[regex], dict):
+                text = span.group(0)
+                alternatives = regexes[regex]["alternatives"]
+                if (
+                    "explanation" in regexes[regex]["explanation"]
+                    and regexes[regex]["explanation"]["explanation"] != ""
+                ):
+                    explanation = regexes[regex]["explanation"]["explanation"]
+
+                    if (
+                        "url" in regexes[regex]["explanation"]
+                        and regexes[regex]["explanation"]["url"] != ""
+                    ):
+                        url = regexes[regex]["explanation"]["url"]
+                    if (
+                        "icon" in regexes[regex]["explanation"]
+                        and regexes[regex]["explanation"]["icon"] != ""
+                    ):
+                        icon = regexes[regex]["explanation"]["icon"]
+            # d_f_m_regexes
+            elif len(span.groups()) == 5 and subcategory == "d_and_i":
                 text = span.group(0).lstrip()
+                start += 1
+            # m_f_regexes
             elif len(span.groups()) == 5:
                 text = span.group(0).lstrip()
+                start += 1
 
                 letters = [span.group(2), span.group(3)]
                 if span.group(4) is not None:
@@ -2815,11 +2880,13 @@ def regex_matches(
                     full_text,
                     category,
                     subcategory,
-                    span.start() + 1,
-                    span.end(),
+                    start,
+                    None,
                     alternatives,
                     None,
                     explanation,
+                    url,
+                    icon,
                 )
             )
 

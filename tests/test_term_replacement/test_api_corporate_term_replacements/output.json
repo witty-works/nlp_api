@@ -24,7 +24,7 @@
                 }
             ],
             "category": "orthography",
-            "context": "Ich bin foo bar! Und kein fooooo. Aber ich bin auch Foo.",
+            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT",
             "end": 11,
             "explanation": {
                 "icon": "❌",
@@ -39,12 +39,24 @@
         {
             "alternatives": [
                 {
-                    "text": "Voodoo"
+                    "text": "von"
+                },
+                {
+                    "text": "vom"
+                },
+                {
+                    "text": "vor"
+                },
+                {
+                    "text": "floh"
+                },
+                {
+                    "text": "Zoo"
                 }
             ],
             "category": "orthography",
-            "context": "Ich bin foo bar! Und kein fooooo. Aber ich bin auch Foo.",
-            "end": 32,
+            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT",
+            "end": 29,
             "explanation": {
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
@@ -53,15 +65,43 @@
             "label": "Rechtschreibfehler",
             "start": 26,
             "subcategory": "typos",
-            "text": "fooooo"
+            "text": "foo"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "barer"
+                },
+                {
+                    "text": "paar"
+                },
+                {
+                    "text": "parl"
+                },
+                {
+                    "text": "Harry"
+                },
+                {
+                    "text": "bar"
+                }
+            ],
+            "category": "orthography",
+            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT",
+            "end": 35,
+            "explanation": {
+                "icon": "❌",
+                "text": "Möglicher Tippfehler gefunden."
+            },
+            "gravity": 1.0,
+            "label": "Rechtschreibfehler",
+            "start": 30,
+            "subcategory": "typos",
+            "text": "barrr"
         },
         {
             "alternatives": [
                 {
                     "text": "Foto"
-                },
-                {
-                    "text": "Food"
                 },
                 {
                     "text": "Von"
@@ -70,41 +110,158 @@
                     "text": "Zoo"
                 },
                 {
-                    "text": "Form"
+                    "text": "Vom"
+                },
+                {
+                    "text": "Floh"
                 }
             ],
             "category": "orthography",
-            "context": "Ich bin foo bar! Und kein fooooo. Aber ich bin auch Foo.",
-            "end": 55,
+            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT",
+            "end": 53,
             "explanation": {
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
             },
             "gravity": 1.0,
             "label": "Rechtschreibfehler",
-            "start": 52,
+            "start": 50,
             "subcategory": "typos",
             "text": "Foo"
         },
         {
             "alternatives": [
                 {
-                    "text": "bar"
+                    "text": "Welt"
+                },
+                {
+                    "text": "weit"
+                },
+                {
+                    "text": "hält"
+                },
+                {
+                    "text": "Geld"
+                },
+                {
+                    "text": "Feld"
+                }
+            ],
+            "category": "orthography",
+            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT",
+            "end": 77,
+            "explanation": {
+                "icon": "❌",
+                "text": "Möglicher Tippfehler gefunden."
+            },
+            "gravity": 1.0,
+            "label": "Rechtschreibfehler",
+            "start": 73,
+            "subcategory": "typos",
+            "text": "welt"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Welt"
+                },
+                {
+                    "text": "Wels"
+                },
+                {
+                    "text": "Weit"
+                },
+                {
+                    "text": "Velo"
+                },
+                {
+                    "text": "Hält"
+                }
+            ],
+            "category": "orthography",
+            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT",
+            "end": 88,
+            "explanation": {
+                "icon": "❌",
+                "text": "Möglicher Tippfehler gefunden."
+            },
+            "gravity": 1.0,
+            "label": "Rechtschreibfehler",
+            "start": 84,
+            "subcategory": "typos",
+            "text": "WelT"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "world"
                 }
             ],
             "category": "corporate_rules",
-            "context": "Ich bin foo bar! Und kein fooooo. Aber ich bin auch Foo.",
-            "end": 11,
+            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT",
+            "end": 77,
             "explanation": {
-                "icon": "🥰",
-                "text": "better bar",
-                "url": "https://witty.works"
+                "text": "Wir schreiben lieber"
+            },
+            "gravity": 0.9,
+            "label": "Wörterbuch",
+            "start": 73,
+            "subcategory": "corporate_rules",
+            "text": "welt"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "world"
+                }
+            ],
+            "category": "corporate_rules",
+            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT",
+            "end": 88,
+            "explanation": {
+                "text": "Wir schreiben lieber"
+            },
+            "gravity": 0.9,
+            "label": "Wörterbuch",
+            "start": 84,
+            "subcategory": "corporate_rules",
+            "text": "WelT"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "world"
+                }
+            ],
+            "category": "corporate_rules",
+            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT",
+            "end": 99,
+            "explanation": {
+                "text": "Wir schreiben lieber"
+            },
+            "gravity": 0.9,
+            "label": "Wörterbuch",
+            "start": 95,
+            "subcategory": "corporate_rules",
+            "text": "WELT"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "ding ding"
+                }
+            ],
+            "category": "corporate_rules",
+            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT",
+            "end": 15,
+            "explanation": {
+                "text": "Wir schreiben lieber"
             },
             "gravity": 0.9,
             "label": "Wörterbuch",
             "start": 8,
             "subcategory": "corporate_rules",
-            "text": "foo"
+            "text": "foo bar"
         }
     ]
 }

@@ -1,3 +1,6 @@
 {
-    "text": "Ich bin foo bar! Und kein fooooo. Aber ich bin auch Foo."
+    "text": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT",
+    "config": {
+        "disabled_categories": ["orthography"]
+    }
 }
