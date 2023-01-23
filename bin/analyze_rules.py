@@ -10,7 +10,6 @@ from app.models import (
     ResultOut,
     Config,
     GenderedRolesFormatType,
-    Language,
 )
 from app.main import parse_word_types
 from app.model import fetch_nlp_model
@@ -508,8 +507,6 @@ for locale in locales:
         < (2 if len(word) <= 4 else 3)
     ]
     print_trigger_alternative_overlap(locale, all_triggers, words[locale])
-
-    lang = Language(locale)
 
     all_lemma = sorted(all_lemma)
     for lemma in all_lemma:
