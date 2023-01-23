@@ -18,7 +18,7 @@
                 }
             ],
             "category": "unconscious_bias",
-            "context": "Haben wir das sichergestellt? Wir haben noch viel sicherzustellen. Es gibt noch viel auszufechten.",
+            "context": "Haben wir das sichergestellt? Wir haben noch viel sicherzustellen. Es gibt noch viel auszufechten. Wir haben viel zu gewinnen.",
             "end": 28,
             "explanation": {
                 "icon": "😒",
@@ -47,7 +47,7 @@
                 }
             ],
             "category": "unconscious_bias",
-            "context": "Haben wir das sichergestellt? Wir haben noch viel sicherzustellen. Es gibt noch viel auszufechten.",
+            "context": "Haben wir das sichergestellt? Wir haben noch viel sicherzustellen. Es gibt noch viel auszufechten. Wir haben viel zu gewinnen.",
             "end": 65,
             "explanation": {
                 "icon": "😒",
@@ -73,7 +73,7 @@
                 }
             ],
             "category": "unconscious_bias",
-            "context": "Haben wir das sichergestellt? Wir haben noch viel sicherzustellen. Es gibt noch viel auszufechten.",
+            "context": "Haben wir das sichergestellt? Wir haben noch viel sicherzustellen. Es gibt noch viel auszufechten. Wir haben viel zu gewinnen.",
             "end": 97,
             "explanation": {
                 "icon": "😒",
@@ -85,6 +85,38 @@
             "start": 85,
             "subcategory": "agentic",
             "text": "auszufechten"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "zu erarbeiten"
+                },
+                {
+                    "text": "zu erwerben"
+                },
+                {
+                    "text": "dazuzulernen"
+                },
+                {
+                    "text": "zu interessieren"
+                },
+                {
+                    "text": "zu insistieren"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "hergestellt? Wir haben noch viel sicherzustellen. Es gibt noch viel auszufechten. Wir haben viel zu gewinnen.",
+            "end": 128,
+            "explanation": {
+                "icon": "😒",
+                "text": "Spricht kooperativ denkende Menschen nicht an",
+                "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
+            },
+            "gravity": 2.0,
+            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "start": 117,
+            "subcategory": "agentic",
+            "text": "zu gewinnen"
         }
     ]
 }
