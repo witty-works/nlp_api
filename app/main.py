@@ -2176,6 +2176,7 @@ def add_declension_german(text, a_text, a_lemma, injected_string=""):
     ending = a_text[len(prefix) :]
     if injected_string and ending[0 : len(injected_string)] == injected_string:
         a_text = prefix + a_text[len(prefix) + len(injected_string) :]
+        a_text = a_text.strip()
         prefix = find_common_prefix(a_text, a_lemma)
         ending = a_text[len(prefix) :]
 
@@ -2310,8 +2311,7 @@ def german_noun_analysis(word, genus_only=False):
     return result
 
 
-def align_noun_form(lang, a_token, b_token):
-    a_text = a_token.text
+def align_noun_form(lang, a_text, a_token, b_token):
     b_text = b_token.text
 
     if a_token.morph.get("Number") == b_token.morph.get("Number"):
@@ -2351,9 +2351,8 @@ def align_noun_form(lang, a_token, b_token):
     return b_text
 
 
-def align_adjective_form(lang, a_token, b_token):
+def align_adjective_form(lang, a_text, a_token, b_token):
     if lang == "en":
-        a_text = a_token.text
         b_text = b_token.lemma_
         a_adjective = Adjective(a_text)
         b_adjective = Adjective(b_text)
@@ -2373,7 +2372,7 @@ def align_adjective_form(lang, a_token, b_token):
 
         return b_text
     elif lang == "de":
-        return add_declension_german(b_token.text, a_token.text, a_token.lemma_)
+        return add_declension_german(b_token.text, a_text, a_token.lemma_)
 
     return b_token.text
 
@@ -2444,9 +2443,8 @@ def german_verb_splittable(word):
     return False
 
 
-def align_verb_form(lang, a_token, b_token):
+def align_verb_form(lang, a_text, a_token, b_token):
     if lang == "en":
-        a_text = a_token.text
         b_text = b_token.lemma_
         a_verb = Verb(a_text)
         b_verb = Verb(b_text)
@@ -2467,12 +2465,11 @@ def align_verb_form(lang, a_token, b_token):
 
         return b_text
     elif lang == "de":
-        a_text = a_token.text
         b_text = b_token.text
         injected_string = ""
 
         # check if "zu" was stripped from the word in the lemma
-        if a_token.text.count("zu") > a_token.lemma_.count("zu"):
+        if a_text.count("zu") > a_token.lemma_.count("zu"):
             if b_text in rules["de"]["verbs"]:
                 b_text = rules["de"]["verbs"][b_text]["infinitiv_zu"]
             else:
@@ -2499,11 +2496,7 @@ def align_verb_form(lang, a_token, b_token):
     return b_token.text
 
 
-def alternative_declension(lang, token, word_types, alternative):
-    text = token.text
-    if text == token.lemma_:
-        return alternative
-
+def alternative_declension(lang, text, token, word_types, alternative):
     if ResultOut.isInspirationAlternative(text, alternative):
         return alternative
 
@@ -2524,17 +2517,19 @@ def alternative_declension(lang, token, word_types, alternative):
                 )
 
             if "s" in word_types and "s" in alternative_word_types:
-                alternative_text = align_noun_form(lang, token, alternative_token)
+                alternative_text = align_noun_form(lang, text, token, alternative_token)
             elif previous == False and word_types_overlap(
                 word_types, alternative_word_types
             ):
                 previous = True
                 if "a" in alternative_word_types:
                     alternative_text = align_adjective_form(
-                        lang, token, alternative_token
+                        lang, text, token, alternative_token
                     )
                 elif "v" in alternative_word_types:
-                    alternative_text = align_verb_form(lang, token, alternative_token)
+                    alternative_text = align_verb_form(
+                        lang, text, token, alternative_token
+                    )
 
         new_alternative = (
             alternative_text + alternative_token.whitespace_ + new_alternative
@@ -2543,13 +2538,17 @@ def alternative_declension(lang, token, word_types, alternative):
     return new_alternative
 
 
-def alternatives_declension(lang, token, alternatives):
-    word_types = fetch_word_types(lang, token)
-    if word_types == []:
-        return alternatives
+def alternatives_declension(lang, token, alternatives, prev_token):
+    text = token.text
+    if lang == "de" and prev_token and prev_token.text == "zu":
+        text = "zu " + text
 
-    return [
-        alternative_declension(lang, token, word_types, alternative).strip()
+    word_types = fetch_word_types(lang, token)
+    if word_types == [] or text == token.lemma_:
+        return text, alternatives
+
+    return text, [
+        alternative_declension(lang, text, token, word_types, alternative).strip()
         for alternative in alternatives
     ]
 
@@ -2972,7 +2971,10 @@ def ub_words_phrase_matcher_de(
 ):
     list_tokens = []
 
-    for token in tokens:
+    token = None
+    for i in range(len(tokens)):
+        prev_token = token
+        token = tokens[i]
         for word, word_types, subcategory, alternatives in words_data:
             if not is_sub_category_enabled(version, config, subcategory):
                 continue
@@ -2980,19 +2982,21 @@ def ub_words_phrase_matcher_de(
             if not is_word_match(lang.lang, token, tokens, word, word_types):
                 continue
 
-            alternatives = alternatives_declension(lang.lang, token, alternatives)
+            text, alternatives = alternatives_declension(
+                lang.lang, token, alternatives, prev_token
+            )
 
             list_tokens.append(
                 ResultOut.factory(
                     version,
                     config,
                     lang,
-                    token.text,
+                    text,
                     full_text,
                     category,
                     subcategory,
                     token.idx,
-                    token.idx + len(token.text),
+                    token.idx + len(text),
                     alternatives,
                 )
             )
@@ -3109,7 +3113,10 @@ def style_word_analysis_de(
     category = "style"
     list_tokens = []
 
-    for token in tokens:
+    token = None
+    for i in range(len(tokens)):
+        prev_token = token
+        token = tokens[i]
         # check if the user query have false positives
         if is_false_positive(token.lemma_, false_positives):
             # recognise if there is Name of organisation or geographical name in the query
@@ -3131,14 +3138,16 @@ def style_word_analysis_de(
             if not is_word_match(lang.lang, token, tokens, word, word_types):
                 continue
 
-            alternatives = alternatives_declension(lang.lang, token, alternatives)
+            text, alternatives = alternatives_declension(
+                lang.lang, token, alternatives, prev_token
+            )
 
             text, alternatives = detect_filler_words_at_sentence_start(
                 subcategory,
                 alternatives,
-                token.text,
+                text,
                 full_text,
-                token.idx + len(token.text),
+                token.idx + len(text),
             )
 
             list_tokens.append(
@@ -3305,7 +3314,9 @@ def rules_based_words_phrase_matcher(
     alternatives = None
     subcategory = fallback_subcategory
 
+    token = None
     for i in range(len(tokens)):
+        prev_token = token
         token = tokens[i]
         for word, word_types, *data in words_data:
             if not is_word_match(
@@ -3328,8 +3339,8 @@ def rules_based_words_phrase_matcher(
                         text, alternative = pluralize_they(tokens, i)
                         alternatives = [alternative]
                     else:
-                        alternatives = alternatives_declension(
-                            lang.lang, token, alternatives
+                        text, alternatives = alternatives_declension(
+                            lang.lang, token, alternatives, prev_token
                         )
 
                     if len(data) > 2 and data[2] is not None:
@@ -3397,7 +3408,10 @@ def homonyms_en(
 ):
     list_tokens = []
 
-    for token in tokens:
+    token = None
+    for i in range(len(tokens)):
+        prev_token = token
+        token = tokens[i]
         for word, word_types, subcategory, alternatives, category in words_data:
             if not is_sub_category_enabled(version, config, subcategory):
                 continue
@@ -3407,19 +3421,21 @@ def homonyms_en(
             ):
                 continue
 
-            alternatives = alternatives_declension(lang.lang, token, alternatives)
+            text, alternatives = alternatives_declension(
+                lang.lang, token, alternatives, prev_token
+            )
 
             list_tokens.append(
                 ResultOut.factory(
                     version,
                     config,
                     lang,
-                    token.text,
+                    text,
                     full_text,
                     category,
                     subcategory,
                     token.idx,
-                    token.idx + len(token.text),
+                    token.idx + len(text),
                     alternatives,
                 )
             )
