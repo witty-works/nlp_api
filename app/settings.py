@@ -78,7 +78,7 @@ def get_settings():
 
             endpoint = settings.platform_relationships[lang][0]
             settings.language_endpoint_urls[lang] = (
-                "%(scheme)s://%(host)s:%(port)d/%(service)s" % endpoint
+                "%(scheme)s://%(host)s:%(port)d" % endpoint
             )
 
     return settings

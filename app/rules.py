@@ -95,7 +95,7 @@ def fetch_rules(langs):
         rules["de"]["verbs"] = {
             data["de"]["verbs"]["infinitiv"][i]: {
                 "past_participle": data["de"]["verbs"]["past_participle"][i],
-                "splittable_prefix": data["de"]["verbs"]["splittable_prefix"][i],
+                "infinitiv_zu": data["de"]["verbs"]["infinitiv_zu"][i],
             }
             for i in range(len(data["de"]["verbs"]["infinitiv"]))
         }

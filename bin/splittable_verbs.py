@@ -18,10 +18,10 @@ with open("verbs.csv", "w", encoding="UTF8", newline="") as f:
                 writer.writeheader()
             elif line_count == 1:
                 prefix = german_verb_splittable(row[0])
-                if prefix == False:
-                    prefix = ""
-
-                row[-1] = prefix
+                if prefix:
+                    row[-1] = prefix + "zu" + row[0][len(prefix) :]
+                else:
+                    row[-1] = "zu " + row[0]
 
                 row_dict = {fieldnames[i]: row[i] for i in range(len(fieldnames))}
 

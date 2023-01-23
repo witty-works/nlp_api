@@ -2139,14 +2139,24 @@ def check_word_types(lang, token, word_types=[], single_word=None):
     )
 
 
-def add_declension_german(text, a_text, a_lemma):
+def find_common_prefix(a_text, a_lemma):
     prefix = a_text.lower()
     while a_lemma[: len(prefix)] != prefix and prefix:
         prefix = prefix[: len(prefix) - 1]
         if not prefix:
             break
 
+    return prefix
+
+
+def add_declension_german(text, a_text, a_lemma, injected_string = ""):
+    prefix = find_common_prefix(a_text, a_lemma)
     ending = a_text[len(prefix) :]
+    if injected_string and ending[0 : len(injected_string)] == injected_string:
+        a_text = prefix + a_text[len(prefix)+len(injected_string):]
+        prefix = find_common_prefix(a_text, a_lemma)
+        ending = a_text[len(prefix) :]
+
     remove = a_lemma[len(prefix) :]
     if remove:
         text = text[0 : -len(remove)]
@@ -2437,20 +2447,20 @@ def align_verb_form(lang, a_token, b_token):
     elif lang == "de":
         a_text = a_token.text
         b_text = b_token.text
+        injected_string = ""
 
         # check if "zu" was stripped from the word in the lemma
         if a_token.text.count("zu") > a_token.lemma_.count("zu"):
             if b_text in rules["de"]["verbs"]:
-                prefix = rules["de"]["verbs"][b_text]["splittable_prefix"]
+                b_text = rules["de"]["verbs"][b_text]["infinitiv_zu"]
             else:
                 prefix = german_verb_splittable(b_text)
+                if prefix:
+                    b_text = prefix + "zu" + b_text[len(prefix) :]
+                else:
+                    b_text = "zu " + b_text
 
-            if prefix:
-                b_text = prefix + "zu" + b_text[len(prefix) :]
-            else:
-                b_text = "zu " + b_text
-
-            a_text = a_token.text.replace("zu", "")
+            injected_string = "zu"
         # check if "ge" was stripped from the word in the lemma
         elif a_token.text.count("ge") > a_token.lemma_.count("ge"):
             if b_text in rules["de"]["verbs"]:
@@ -2460,9 +2470,9 @@ def align_verb_form(lang, a_token, b_token):
             if prefix:
                 b_text = prefix + "ge" + b_text[len(prefix) :]
 
-            a_text = a_token.text.replace("ge", "")
+            injected_string = "ge"
 
-        return add_declension_german(b_text, a_text, a_token.lemma_)
+        return add_declension_german(b_text, a_text, a_token.lemma_, injected_string)
 
     return b_token.text
 
