@@ -47,7 +47,7 @@ highflyer,s,style,exaggerating,"['person who continues despite difficulties(...)
 highly,adv,style,filler,['-']
 hopefully,adv,style,filler,['-']
 imperative,a,style,exaggerating,"['critical', 'vital', 'essential']"
-important,a,style,hollow,"['vital', 'urgent', 'essential', 'influential', 'substantial ']"
+important,a,style,hollow,"['vital', 'urgent', 'essential', 'influential', 'substantial']"
 impressive,a,style,exaggerating,['-']
 innovation,s,style,hollow,"['reinvention', 'modernization', 'improvement', 'new creation', 'redesign', 'introduction of new ideas(...)', 'introduction of new methods(...)', 'reinventions', 'changes', 'modernizations', 'improvements', 'new creations', 'redesign']"
 innovative,a,style,hollow,"['imaginative', 'novel', 'creative', 'inventive', 'trend-setting', 'groundbreaking', 'inspired', 'forward-looking']"

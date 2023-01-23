@@ -177,6 +177,18 @@ def get_data_from_files(locale):
     print("Trigger for directory %s: %s " % (base_directory, str(len(all_triggers))))
 
     for alternative in all_alternatives:
+        if "\n" in alternative:
+            print("Misplaced \\n in alternative: " + alternative)
+
+        if "\t" in alternative:
+            print("Misplaced \\t in alternative: " + alternative)
+
+        if "|" in alternative:
+            print("Misplaced | in alternative: " + alternative)
+
+        if alternative != alternative.strip():
+            print("Additional whitespace in alternative: " + alternative)
+
         if re.search("^[^-]*--[^-]*$", alternative):
             print("Potential missing - in ' --- ': " + alternative)
 

@@ -34,7 +34,7 @@ Listening mode,s,style,anglicism,['Zuhör-Modus']
 Major Subject,s,style,anglicism,['Hauptfach']
 Media Monitoring,s,style,anglicism,['Medienbeobachtung']
 Message Marketing,s,style,anglicism,['Kommunikationsmarketing']
-Minimum Viable Product,s,style,anglicism,"['minimal funktionsfähiges Produkt', 'Startversion mit Grundfunktionen', 'erste Iteration der Dienstleistung mit minimalem Funktionsumfang', 'erste vermarktbare Fassung des Produkts mit Kernfunktionen', 'erste Marktversion, die Feedback zur Weiterentwicklung nutzt ']"
+Minimum Viable Product,s,style,anglicism,"['minimal funktionsfähiges Produkt', 'Startversion mit Grundfunktionen', 'erste Iteration der Dienstleistung mit minimalem Funktionsumfang', 'erste vermarktbare Fassung des Produkts mit Kernfunktionen', 'erste Marktversion, die Feedback zur Weiterentwicklung nutzt']"
 Must have,s,style,exaggerating,"['nützliches Merkmal', 'hilfreiche Fähigkeit', 'Kompetenz, die wichtig ist, um (...)', 'Erfahrung, die (...) ermöglicht', 'Kenntnis, die (...) erlaubt']"
 Nummer 1,s,style,exaggerating,"['Unternehmen, das im Markt Maßstäbe setzt(...)', 'wichtige Sache(...)', 'Ziel, das das Team inspiriert(...)', 'inspirierendes Teammitglied(...)', 'Mensch, der dem Team mit Rat und Tat zur Seite steht(...)', 'im Markt richtungweisendes Unternehmen(...)', 'Lieblings(...)']"
 Nummer eins,s,style,exaggerating,"['Unternehmen, das im Markt Maßstäbe setzt(...)', 'wichtige Sache(...)', 'Ziel, das das Team inspiriert(...)', 'inspirierendes Teammitglied(...)', 'Mensch, der dem Team mit Rat und Tat zur Seite steht(...)', 'im Markt richtungweisendes Unternehmen(...)', 'Lieblings(...)']"
@@ -120,7 +120,7 @@ outside the box,i,style,hollow,"['in neuen Mustern', 'frisch und kreativ', 'unko
 quer denken,v,style,hollow,"['in neuen Mustern denken', 'kreativ denken', 'über den eigenen Tellerrand blicken', 'lateral denken', 'aus einem neuen Blinkwinkel betrachten']"
 rasche Auffassungsgabe,a+s,style,hollow,"['das Wesentliche schnell erkennen', 'Gelerntes rasch anwenden']"
 samt und sonders,adv,style,filler,['-']
-schlaue Köpfe,a+s,style,exaggerating,"['Leute mit Durchblick', 'aufmerksame Menschen', 'erfindungsreiche Menschen', 'Menschen mit Blick fürs Wesentliche(...)', 'Menschen, der Erlerntes rasch anwenden können(...)', 'Menschen, die mitdenken(...)', 'Leute, die Erfahrung haben(...)', 'Menschen mit verschiedenen Perspektiven |(...)']"
+schlaue Köpfe,a+s,style,exaggerating,"['Leute mit Durchblick', 'aufmerksame Menschen', 'erfindungsreiche Menschen', 'Menschen mit Blick fürs Wesentliche(...)', 'Menschen, der Erlerntes rasch anwenden können(...)', 'Menschen, die mitdenken(...)', 'Leute, die Erfahrung haben(...)', 'Menschen mit verschiedenen Perspektiven (...)']"
 schlauer Kopf,a+s,style,exaggerating,"['jemand mit Durchblick', 'aufmerksame Person', 'erfindungsreicher Menschen', 'Mensch mit Blick fürs Wesentliche(...)', 'Person, die Erlerntes rasch anwenden kann(...)', 'aufmerksame Person, die mitdenkt(...)', 'jemand mit Erfahrung(...)', 'Mensch mit verschiedenen Perspektiven(...)']"
 schnelle Auffassungsgabe,a+s,style,hollow,"['das Wesentliche schnell erkennen', 'Gelerntes rasch anwenden']"
 sowohl als auch,adv,style,filler,['-']

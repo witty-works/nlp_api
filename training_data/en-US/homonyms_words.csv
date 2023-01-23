@@ -29,7 +29,7 @@ male,a,unconscious_bias,gender_identity,"['--- only if gender identity is releva
 male,s,unconscious_bias,gender_identity,"['person', 'adult', 'individual', 'you', 'they', 'person who self-identifies as male(...)', 'person who presents themselves in a culturally masculine way(...)', 'team', 'crowd', 'people', 'all', 'you all', 'persons', 'everyone']"
 man,v,gendered,hidden_image,"['staff', 'crew', 'occupy', 'work', 'use']"
 man,s,unconscious_bias,gender_identity,"['person', 'adult', 'individual', 'you', 'person who self-identifies as male(...)', 'person who presents themselves in a culturally masculine way(...)', 'people', 'team', 'crowd', 'all', 'you all', 'persons', 'everyone']"
-master,s,unconscious_bias,racist_source,"['main --- in technology', 'default --- in technology', 'primary --- in technology', 'root --- in technology', 'original ']"
+master,s,unconscious_bias,racist_source,"['main --- in technology', 'default --- in technology', 'primary --- in technology', 'root --- in technology', 'original']"
 master,v,unconscious_bias,agentic,"['learn', 'understand', 'overcome', 'regulate', 'manage', 'guide', 'become competent (in)(...)']"
 must-have,s,style,exaggerating,"['requirement', 'criterion', 'essential', 'required quality', 'requirements', 'criteria', 'essentials', 'required qualities']"
 must-have,a,style,exaggerating,"['essential', 'mission-critical', 'vital', 'beneficial', 'non-negotiable']"

@@ -593,6 +593,8 @@ class ResultOut(BaseModel):
         add_inspiration_alternatives = True
         cleaned_alternatives = {}
         for alternative in alternatives:
+            if alternative != " ":
+                alternative = alternative.strip()
             if alternative == text:
                 continue
 
