@@ -5,12 +5,12 @@
         {
             "alternatives": [
                 {
-                    "text": "Kund/-in"
+                    "text": "Kund/-innen"
                 }
             ],
             "category": "gendered",
             "context": "Wie geht es ihnen? Hallo Kund*innen und Kund*in. Hallo, die:der Kund:in. Bis du unser Matros/-in?",
-            "end": 32,
+            "end": 35,
             "explanation": {
                 "icon": "💯",
                 "text": "Nicht konsistente Geschlechts-Schreibweise",
@@ -20,7 +20,7 @@
             "label": "Geschlechtsspezifisch: Inklusive Endung",
             "start": 25,
             "subcategory": "gendered_denominations_ending",
-            "text": "Kund*in"
+            "text": "Kund*innen"
         },
         {
             "alternatives": [
@@ -45,26 +45,6 @@
         {
             "alternatives": [
                 {
-                    "text": "Kund/-in"
-                }
-            ],
-            "category": "gendered",
-            "context": "Wie geht es ihnen? Hallo Kund*innen und Kund*in. Hallo, die:der Kund:in. Bis du unser Matros/-in?",
-            "end": 71,
-            "explanation": {
-                "icon": "💯",
-                "text": "Nicht konsistente Geschlechts-Schreibweise",
-                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#inklusive_endung"
-            },
-            "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Inklusive Endung",
-            "start": 64,
-            "subcategory": "gendered_denominations_ending",
-            "text": "Kund:in"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "die/der"
                 }
             ],
@@ -81,6 +61,26 @@
             "start": 56,
             "subcategory": "gendered_denominations_ending",
             "text": "die:der"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Kund/-in"
+                }
+            ],
+            "category": "gendered",
+            "context": "Wie geht es ihnen? Hallo Kund*innen und Kund*in. Hallo, die:der Kund:in. Bis du unser Matros/-in?",
+            "end": 71,
+            "explanation": {
+                "icon": "💯",
+                "text": "Nicht konsistente Geschlechts-Schreibweise",
+                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#inklusive_endung"
+            },
+            "gravity": 2.0,
+            "label": "Geschlechtsspezifisch: Inklusive Endung",
+            "start": 64,
+            "subcategory": "gendered_denominations_ending",
+            "text": "Kund:in"
         },
         {
             "alternatives": [],

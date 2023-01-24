@@ -337,8 +337,8 @@
         {
             "alternatives": [],
             "category": "inclusive",
-            "context": "unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, v",
-            "end": 379,
+            "context": "unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verp",
+            "end": 382,
             "explanation": {
                 "icon": "✅",
                 "text": "Bestärkt Wert von Diversity, Gleichstellung und Inklusion",
@@ -347,7 +347,7 @@
             "label": "Inklusiv: Diversität & Inklusion",
             "start": 371,
             "subcategory": "d_and_i",
-            "text": "Leser*in"
+            "text": "Leser*innen"
         },
         {
             "alternatives": [

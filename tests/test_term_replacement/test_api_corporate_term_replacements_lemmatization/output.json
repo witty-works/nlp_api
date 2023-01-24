@@ -8,50 +8,51 @@
         {
             "alternatives": [
                 {
-                    "text": "voodoo"
+                    "text": "welt"
                 },
                 {
-                    "text": "hoodoo"
+                    "text": "well"
                 },
                 {
-                    "text": "Foolow"
+                    "text": "went"
                 },
                 {
-                    "text": "boohoo"
+                    "text": "west"
+                },
+                {
+                    "text": "West"
                 }
             ],
             "category": "orthography",
-            "context": "I am foo bar! Not a fooooo. But I am also Foo. I ran far. I am always running",
-            "end": 26,
+            "context": "I ran far. I am always running. This is the foo bar and not the wELT!",
+            "end": 68,
             "explanation": {
                 "icon": "❌",
                 "text": "Possible spelling mistake found."
             },
             "gravity": 1.0,
             "label": "Spelling mistake",
-            "start": 20,
+            "start": 64,
             "subcategory": "typos",
-            "text": "fooooo"
+            "text": "wELT"
         },
         {
             "alternatives": [
                 {
-                    "text": "bar"
+                    "text": "ding ding"
                 }
             ],
             "category": "corporate_rules",
-            "context": "I am foo bar! Not a fooooo. But I am also Foo. I ran far. I am always running",
-            "end": 8,
+            "context": "I ran far. I am always running. This is the foo bar and not the wELT!",
+            "end": 51,
             "explanation": {
-                "icon": "🥰",
-                "text": "better bar",
-                "url": "https://witty.works"
+                "text": "We prefer to write as follows"
             },
             "gravity": 0.9,
             "label": "Dictionary",
-            "start": 5,
+            "start": 44,
             "subcategory": "corporate_rules",
-            "text": "foo"
+            "text": "foo bar"
         },
         {
             "alternatives": [
@@ -60,8 +61,8 @@
                 }
             ],
             "category": "corporate_rules",
-            "context": "I am foo bar! Not a fooooo. But I am also Foo. I ran far. I am always running",
-            "end": 52,
+            "context": "I ran far. I am always running. This is the foo bar and not the wELT!",
+            "end": 5,
             "explanation": {
                 "icon": "🥰",
                 "text": "better not run",
@@ -69,7 +70,7 @@
             },
             "gravity": 0.9,
             "label": "Dictionary",
-            "start": 49,
+            "start": 2,
             "subcategory": "corporate_rules",
             "text": "ran"
         },
@@ -80,8 +81,8 @@
                 }
             ],
             "category": "corporate_rules",
-            "context": "I am foo bar! Not a fooooo. But I am also Foo. I ran far. I am always running",
-            "end": 77,
+            "context": "I ran far. I am always running. This is the foo bar and not the wELT!",
+            "end": 30,
             "explanation": {
                 "icon": "🥰",
                 "text": "better not run",
@@ -89,7 +90,7 @@
             },
             "gravity": 0.9,
             "label": "Dictionary",
-            "start": 70,
+            "start": 23,
             "subcategory": "corporate_rules",
             "text": "running"
         }
