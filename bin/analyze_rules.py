@@ -515,13 +515,7 @@ for locale in locales:
     for lemma in all_lemma:
         tokens = model(lemma)
         if lemma.lower() != tokens[0].lemma_.lower():
-            print(
-                "Lemma mismatch, got '"
-                + lemma
-                + "', spacy generates '"
-                + tokens[0].lemma_
-                + "'"
-            )
+            print('"' + lemma + '": "' + lemma + '", # ' + tokens[0].lemma_)
 
     lemmas[locale] = list(all_lemma)
 
