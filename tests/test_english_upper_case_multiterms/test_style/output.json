@@ -3,6 +3,21 @@
     "limit_reached": false,
     "results": [
         {
+            "alternatives": [],
+            "category": "inclusive",
+            "context": "Kind regards from London",
+            "end": 4,
+            "explanation": {
+                "icon": "✅",
+                "text": "Emphasizes cooperative attributes",
+                "url": "https://www.witty.works/en/categories/inclusive#communal"
+            },
+            "label": "Inclusive: Communal",
+            "start": 0,
+            "subcategory": "communal",
+            "text": "Kind"
+        },
+        {
             "alternatives": [
                 {
                     "text": "Cordially"
