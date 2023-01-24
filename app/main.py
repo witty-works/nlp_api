@@ -90,7 +90,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.40.6"
+version = "1.40.7"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -2810,8 +2810,8 @@ def regex_matches(
                 text = span.group(0)
                 alternatives = regexes[regex]["alternatives"]
                 if (
-                    "explanation" in regexes[regex]["explanation"]
-                    and isinstance(regexes[regex]["explanation"], dict)
+                    isinstance(regexes[regex]["explanation"], dict)
+                    and "explanation" in regexes[regex]["explanation"]
                     and regexes[regex]["explanation"]["explanation"] != ""
                 ):
                     explanation = regexes[regex]["explanation"]["explanation"]
