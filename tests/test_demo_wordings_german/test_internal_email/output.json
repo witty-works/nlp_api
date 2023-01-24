@@ -134,33 +134,6 @@
             "text": "Ehrgeiz"
         },
         {
-            "alternatives": [
-                {
-                    "context": "💡 Inspiration",
-                    "inspiration": true,
-                    "text": "einen langen Atem haben"
-                },
-                {
-                    "context": "💡 Inspiration",
-                    "inspiration": true,
-                    "text": "Fähigkeit, an Dingen dranzubleiben"
-                }
-            ],
-            "category": "unconscious_bias",
-            "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
-            "end": 85,
-            "explanation": {
-                "icon": "😒",
-                "text": "Spricht kooperativ denkende Menschen nicht an",
-                "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
-            },
-            "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentisch",
-            "start": 67,
-            "subcategory": "agentic",
-            "text": "Durchhaltevermögen"
-        },
-        {
             "alternatives": [],
             "category": "inclusive",
             "context": "hrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",

@@ -1556,8 +1556,8 @@ def apply_term_replacements(
             zip(
                 term_replacements_lemma["Lemma"],
                 term_replacements_lemma["Word_Type"],
-                term_replacements_lemma["Alt_split"],
                 term_replacements_lemma["Primary_subcategory"],
+                term_replacements_lemma["Alt_split"],
                 term_replacements_lemma["Explanation"],
             )
         )
@@ -2281,8 +2281,7 @@ def german_noun_analysis(word, genus_only=False):
                 )
 
         logging.error(
-            "Determined german noun data for '%s' as '%s'",
-            word, partial_word
+            "Determined german noun data for '%s' as '%s'", word, partial_word
         )
 
         return result

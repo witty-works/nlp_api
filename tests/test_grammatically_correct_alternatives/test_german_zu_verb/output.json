@@ -30,32 +30,6 @@
             "start": 20,
             "subcategory": "agentic",
             "text": "sicherzustellen"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "zu argumentieren"
-                },
-                {
-                    "text": "zu diskutieren"
-                },
-                {
-                    "text": "auszutauschen"
-                }
-            ],
-            "category": "unconscious_bias",
-            "context": "Wir haben noch viel sicherzustellen. Es gibt noch viel auszufechten.",
-            "end": 67,
-            "explanation": {
-                "icon": "😒",
-                "text": "Spricht kooperativ denkende Menschen nicht an",
-                "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
-            },
-            "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentisch",
-            "start": 55,
-            "subcategory": "agentic",
-            "text": "auszufechten"
         }
     ]
 }
