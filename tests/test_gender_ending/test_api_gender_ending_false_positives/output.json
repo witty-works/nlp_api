@@ -1,5 +1,26 @@
 {
     "language": "de",
     "limit_reached": false,
-    "results": []
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "Podcasts*in"
+                }
+            ],
+            "category": "gendered",
+            "context": "Das ist der Link <URL> beachte podcasts/in bzw. Podcasts/in",
+            "end": 88,
+            "explanation": {
+                "icon": "💯",
+                "text": "Nicht konsistente Geschlechts-Schreibweise",
+                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#inklusive_endung"
+            },
+            "gravity": 2.0,
+            "label": "Geschlechtsspezifisch: Inklusive Endung",
+            "start": 77,
+            "subcategory": "gendered_denominations_ending",
+            "text": "Podcasts/in"
+        }
+    ]
 }

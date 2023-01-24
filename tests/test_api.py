@@ -540,10 +540,21 @@ def set_redis():
             "Führungskräften",
         ],
         "term_replacements": {
-            "foo": {
-                "alternatives": ["bar"],
+            "foo bar": {
+                "alternatives": ["ding ding"],
+                "word_type": "=",
                 "explanation": {
-                    "text": "better bar",
+                    "text": "better ding",
+                    "icon": "🥰",
+                    "url": "https://witty.works",
+                },
+                "gravity": 3.0,
+            },
+            "welt": {
+                "alternatives": ["world"],
+                "lang": "de",
+                "explanation": {
+                    "text": "better world",
                     "icon": "🥰",
                     "url": "https://witty.works",
                 },
@@ -996,6 +1007,7 @@ def test_store_get_delete_rules():
             },
             "foo": {
                 "alternatives": ["bar"],
+                "word_type": "=",
                 "explanation": {
                     "text": "better bar",
                     "icon": "🥰",
