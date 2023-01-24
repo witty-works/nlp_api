@@ -1520,9 +1520,13 @@ def apply_term_replacements(
         else:
             term_replacements_lemma["Lemma"].append(term)
             term_replacements_lemma["Word_Type"].append(word_type)
-            term_replacements_lemma["Alt_split"].append(term_replacement["alternatives"])
+            term_replacements_lemma["Alt_split"].append(
+                term_replacement["alternatives"]
+            )
             term_replacements_lemma["Primary_subcategory"].append("corporate_rules")
-            term_replacements_lemma["Explanation"].append(term_replacement["explanation"])
+            term_replacements_lemma["Explanation"].append(
+                term_replacement["explanation"]
+            )
 
     list_result = []
 
@@ -1739,12 +1743,7 @@ async def german_rules(
             ):
                 continue
 
-            regexes[regex] = [config.german_gender_ending]
-
-            if ending == ":in":
-                regexes[r"((\S+):(\S+))"] = config.german_gender_ending[0:1]
-            elif ending == "*in":
-                regexes[r"((\S+)\*(\S+))"] = config.german_gender_ending[0:1]
+            regexes[regex] = config.german_gender_ending[0:-2]
 
         list_full += regex_matches(
             version,
@@ -1810,10 +1809,6 @@ async def german_rules(
         subcategory = "d_and_i"
         category = categories[subcategory]["category"]
         regexes = {config._gendereddenom_ending[config.german_gender_ending]: None}
-        if config.german_gender_ending == ":in":
-            regexes[r"((\S+):(\S+))"] = None
-        elif config.german_gender_ending == "*in":
-            regexes[r"((\S+)\*(\S+))"] = None
 
         regexes.update(rules["d_f_m_regexes"])
 
@@ -2856,18 +2851,24 @@ def regex_matches(
 
                 if alternative_3 is not None:
                     alternatives.append(alternative_3)
-            elif len(span.groups()) == 3:
-                if span.group(3) not in rules["de"]["male_articles"]:
-                    continue
-                if category != "inclusive":
-                    alternatives = [span.group(2) + regexes[regex] + span.group(3)]
+            # gender inclusive ending
             elif len(span.groups()) == 2:
-                text += span.group(2)
-
-                if category != "inclusive":
-                    alternatives = []
-                    for alternative in regexes[regex]:
-                        alternatives.append(span.groups()[0] + alternative)
+                text = span.group(0)
+                if (
+                    (
+                        text[0:1].islower()
+                        and span.group(2) in rules["de"]["male_articles"]
+                    )
+                    or text[0:1].isupper()
+                    and (span.group(2)[0:2] == "in" or span.group(2)[0:5] == "innen")
+                ):
+                    if category != "inclusive":
+                        separator = regexes[regex]
+                        if span.group(2) in rules["de"]["male_articles"]:
+                            separator = separator[0:1]
+                        alternatives = [span.group(1) + separator + span.group(2)]
+                else:
+                    continue
             elif category != "inclusive":
                 alternatives = regexes[regex]
 
