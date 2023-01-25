@@ -2756,10 +2756,13 @@ def sentences_matcher(
 
     for match_id, start, end in matches:
         span = tokens[start:end]
-        for sentence, subcategory, alternatives in sentences_data:
+        for sentence, subcategory, *data in sentences_data:
             if span.text.lower() == sentence.lower():
                 if not is_sub_category_enabled(version, config, subcategory):
                     continue
+
+                if len(data):
+                    alternatives = data[0]
 
                 list_tokens.append(
                     ResultOut.factory(
