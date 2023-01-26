@@ -93,13 +93,11 @@ def custom_lemmatizer_de(nlp, name):
         "international": "international",
         "internationale": "international",
         "Meister": "Meister",
-        "kämpfend": "kämpfend",
         "abgebrüht": "abgebrüht",
         "beherrschend": "beherrschend",
         "entscheidend": "entscheidend",
         "entschlossen": "entschlossen",
         "angewiesen": "angewiesen",
-        "berührt": "berührt",
         "besonnen": "besonnen",
         "betreut": "betreut",
         "bewegt": "bewegt",
@@ -107,7 +105,6 @@ def custom_lemmatizer_de(nlp, name):
         "engagiert": "engagiert",
         "entgegenkommend": "entgegenkommend",
         "ergreifend": "ergreifend",
-        "fördernd": "fördernd",
         "gerührt": "gerührt",
         "heiter": "heiter",
         "lieb": "lieb",
@@ -126,9 +123,7 @@ def custom_lemmatizer_de(nlp, name):
         "zusammenwirkend": "zusammenwirkend",
         "zustimmend": "zustimmend",
         "jünger": "jünger",
-        "ausgeprägt": "ausgeprägt",
         "ausgezeichnet": "ausgezeichnet",
-        "äußerst": "äußerst",
         "beeindruckend": "beeindruckend",
         "beste": "beste",
         "bester": "beste",
@@ -136,12 +131,10 @@ def custom_lemmatizer_de(nlp, name):
         "bestem": "beste",
         "bestes": "beste",
         "etabliert": "etabliert",
-        "führend": "führend",
         "fundiert": "fundiert",
         "gewandt": "gewandt",
         "Götter": "Götter",
         "hervorragend": "hervorragend",
-        "überzeugend": "überzeugend",
         "zwingend": "zwingend",
         "Alter": "Alter",
         "Bucklige": "Bucklige",
@@ -169,20 +162,16 @@ def custom_lemmatizer_de(nlp, name):
         "ermutigend": "ermutigend",
         "erprobt": "erprobt",
         "etliche": "etliche",
-        "fortwährend": "fortwährend",
-        "führen": "führen",
         "gewagt": "gewagt",
         "herrschend": "herrschend",
         "o.Ä.": "o.Ä.",
         "offenbar": "offenbar",
         "schlicht": "schlicht",
         "sicher": "sicher",
-        "stärker": "stärker",
         "treibend": "treibend",
         "u.Ä.": "u.Ä.",
         "u.ä.": "u.ä.",
         "zugegeben": "zugegeben",
-        "überzeugt": "überzeugt",
         "(x)aaS": "(x)aaS",
         "AP/AR": "AP/AR",
         "Behinderte": "Behinderte",
@@ -190,12 +179,8 @@ def custom_lemmatizer_de(nlp, name):
         "Illegale": "Illegale",
         "P/E": "P/E",
         "Schädigungen": "Schädigungen",
-        "beeinträchtigt": "beeinträchtigt",
         "behindert": "behindert",
-        "geschädigt": "geschädigt",
-        "verrückt": "verrückt",
         "versehrt": "versehrt",
-        "überfordert": "überfordert",
         "aktive": "aktiv",
         "ambitionierte": "ambitioniert",
         "androsexuelle": "androsexuell",
@@ -398,6 +383,61 @@ def custom_lemmatizer_de(nlp, name):
         "äußerste": "äußerst",
         "Freundliche": "freundlich",
         "türken": "türken",
+        "Höchstleistungen": "Höchstleistung",
+        "Führungskräfte": "Führungskraft",
+        "selbstständiger": "selbstständig",
+        "Alter": "Alter",  # alt
+        "Behinderte": "Behinderte",  # behindert
+        "Bisexuelle": "Bisexuelle",  # Bisexueller
+        "Bucklige": "Bucklige",  # bucklig
+        "Illegale": "Illegale",  # illegal
+        "Jeder": "Jeder",  # jed
+        "Meister": "Meister",  # meist
+        "Wilde": "Wilde",  # Wilder
+        "andauernd": "andauernd",  # andauern
+        "angreifend": "angreifend",  # angreifen
+        "anscheinend": "anscheinend",  # anscheinen
+        "auffallend": "auffallend",  # auffallen
+        "aufstrebend": "aufstrebend",  # aufstreben
+        "ausgeprägt": "ausgeprägt",  # ausprägen
+        "ausgerechnet": "ausgerechnet",  # ausrechnen
+        "ausgezeichnet": "ausgezeichnet",  # auszeichnen
+        "beeindruckend": "beeindruckend",  # beeindrucken
+        "beeinträchtigt": "beeinträchtigt",  # beeinträchtigen
+        "beherrschend": "beherrschend",  # beherrschen
+        "behindert": "behindert",  # behindern
+        "beste": "beste",  # gut
+        "bestimmend": "bestimmend",  # bestimmen
+        "bestimmt": "bestimmt",  # bestimmen
+        "einige": "einige",  # einig
+        "entscheidend": "entscheidend",  # entscheiden
+        "entschieden": "entschieden",  # entscheiden
+        "entschlossen": "entschlossen",  # entschließen
+        "erprobt": "erprobt",  # erproben
+        "etabliert": "etabliert",  # etablieren
+        "etliche": "etliche",  # etlich
+        "fortwährend": "fortwährend",  # fortwähren
+        "fundiert": "fundiert",  # fundieren
+        "führen": "führen",  # fahren
+        "führend": "führend",  # führen
+        "geschädigt": "geschädigt",  # schädigen
+        "gewagt": "gewagt",  # wagen
+        "gewandt": "gewandt",  # wenden
+        "herrschend": "herrschend",  # herrschen
+        "hervorragend": "hervorragend",  # hervorragen
+        "kämpfend": "kämpfend",  # kämpfen
+        "offenbar": "offenbar",  # offenbaren
+        "schlicht": "schlicht",  # schleichen
+        "stärker": "stärker",  # stark
+        "treibend": "treibend",  # treiben
+        "verrückt": "verrückt",  # verrücken
+        "versehrt": "versehrt",  # versehren
+        "zugegeben": "zugegeben",  # zugeben
+        "zwingend": "zwingend",  # zwingen
+        "äußerst": "äußerst",  # äußern
+        "überfordert": "überfordert",  # überfordern
+        "überzeugend": "überzeugend",  # überzeugen
+        "überzeugt": "überzeugt",  # überzeugen
     }
 
     return custom_lemmatizer(lemma_lookup)
@@ -426,11 +466,9 @@ def custom_lemmatizer_en(nlp, name):
         "battle-axe": "battle-axe",
         "bean-eater": "bean-eater",
         "bean-flicker": "bean-flicker",
-        "best": "best",
         "bin-Laden": "bin-Laden",
         "bin-laden": "bin-laden",
         "blind-sided": "blind-sided",
-        "bonkers": "bonkers",
         "brain-damaged": "brain-damaged",
         "braindamaged": "braindamaged",
         "bum-boy": "bum-boy",
@@ -445,7 +483,6 @@ def custom_lemmatizer_en(nlp, name):
         "butt-rider": "butt-rider",
         "butt-rustler": "butt-rustler",
         "bøsser": "bøsser",
-        "challenging": "challenging",
         "chi-chi-man": "chi-chi-man",
         "cis-gender": "cis-gender",
         "cis-gendered": "cis-gendered",
@@ -460,8 +497,6 @@ def custom_lemmatizer_en(nlp, name):
         "deformed": "deformed",
         "deranged": "deranged",
         "determined": "determined",
-        "dim-witted": "dim-witted",
-        "dimwitted": "dimwitted",
         "disabled": "disabled",
         "disfigured": "disfigured",
         "donut-muncher": "donut-muncher",
@@ -470,7 +505,6 @@ def custom_lemmatizer_en(nlp, name):
         "every-man": "every-man",
         "extra-ordinary": "extra-ordinary",
         "eye-opener": "eye-opener",
-        "feeble-minded": "feeble-minded",
         "feebleminded": "feebleminded",
         "first-class": "first-class",
         "first-mover": "first-mover",
@@ -484,13 +518,10 @@ def custom_lemmatizer_en(nlp, name):
         "fruit-packer": "fruit-packer",
         "fudge-packer": "fudge-packer",
         "fulfilling": "fulfilling",
-        "gals": "gals",
         "go-getter": "go-getter",
         "goal-getter": "goal-getter",
         "gogetter": "gogetter",
-        "gramps": "gramps",
         "grandfathered": "grandfathered",
-        "grandfathering": "grandfathering",
         "greaser": "greaser",
         "gun-man": "gun-man",
         "gym-bunny": "gym-bunny",
@@ -531,19 +562,13 @@ def custom_lemmatizer_en(nlp, name):
         "man-to-man": "man-to-man",
         "man-trap": "man-trap",
         "mansized": "mansized",
-        "manwards": "manwards",
         "market-leader": "market-leader",
-        "market-leading": "market-leading",
-        "marketleading": "marketleading",
         "mentoring": "mentoring",
         "micro-aggression": "micro-aggression",
         "middle-man": "middle-man",
         "must-have": "must-have",
-        "nuts": "nuts",
         "opinionated": "opinionated",
         "over-the-hill": "over-the-hill",
-        "performance-based": "performance-based",
-        "performancebased": "performancebased",
         "pow-wow": "pow-wow",
         "pro-active": "pro-active",
         "pussy-puncher": "pussy-puncher",
@@ -552,47 +577,64 @@ def custom_lemmatizer_en(nlp, name):
         "results-oriented": "results-oriented",
         "resultsoriented": "resultsoriented",
         "risk-taker": "risk-taker",
-        "risk-taking": "risk-taking",
-        "risktaking": "risktaking",
-        "scatterbrained": "scatterbrained",
         "self-confidence": "self-confidence",
         "self-confident": "self-confident",
-        "self-motivated": "self-motivated",
         "self-reliance": "self-reliance",
         "self-reliant": "self-reliant",
         "self-sufficiency": "self-sufficiency",
         "self-sufficient": "self-sufficient",
-        "selfmotivated": "selfmotivated",
         "sharing": "sharing",
         "slant-eye": "slant-eye",
         "spazzed": "spazzed",
-        "special-needs": "special-needs",
-        "specialneeds": "specialneeds",
         "state-of-the-art": "state-of-the-art",
-        "strong-minded": "strong-minded",
-        "strongminded": "strongminded",
         "switch-hitter": "switch-hitter",
         "taco-head": "taco-head",
         "team-player": "team-player",
         "thicklips": "thicklips",
-        "tongue-tied": "tongue-tied",
-        "tonguetied": "tonguetied",
         "top-performer": "top-performer",
         "top-performance": "top-performance",
         "top-performing": "top-performing",
-        "topperforming": "topperforming",
         "trans-man": "trans-man",
         "trans-woman": "trans-woman",
         "under-represented": "under-represented",
         "uterus-havers": "uterus-havers",
-        "uterushavers": "uterushavers",
         "well-established": "well-established",
         "wellestablished": "wellestablished",
         "wheelchair-bound": "wheelchair-bound",
         "world-wide": "world-wide",
         "greed": "greed",
-        "redlining": "redlining",
         "surpass": "surpass",
+        "best": "best",  # well
+        "bonkers": "bonkers",  # bonker
+        "challenging": "challenging",  # challenge
+        "compelling": "compelling",  # compel
+        "dim-witted": "dim-witted",  # dim-witte
+        "dimwitted": "dimwitted",  # dimwitte
+        "feeble-minded": "feeble-minded",  # feeble-minde
+        "gals": "gals",  # gal
+        "gramps": "gramps",  # gramp
+        "grandfathering": "grandfathering",  # grandfathere
+        "manwards": "manwards",  # manward
+        "market-leading": "market-leading",  # market-leade
+        "marketleading": "marketleading",  # marketleade
+        "nuts": "nuts",  # nut
+        "performance-based": "performance-based",  # performance-base
+        "performancebased": "performancebased",  # performancebase
+        "redlining": "redlining",  # redline
+        "risk-taking": "risk-taking",  # risk-take
+        "risktaking": "risktaking",  # risktake
+        "scatterbrained": "scatterbrained",  # scatterbraine
+        "self-motivated": "self-motivated",  # self-motivate
+        "selfmotivated": "selfmotivated",  # selfmotivate
+        "special-needs": "special-needs",  # special-need
+        "specialneeds": "specialneeds",  # specialneed
+        "strong-minded": "strong-minded",  # strong-minde
+        "strongminded": "strongminded",  # strongminde
+        "tongue-tied": "tongue-tied",  # tongue-tie
+        "tonguetied": "tonguetied",  # tonguetie
+        "top-performing": "top-performing",  # top-performe
+        "topperforming": "topperforming",  # topperforme
+        "uterushavers": "uterushavers",  # uterushaver
     }
 
     return custom_lemmatizer(lemma_lookup)
@@ -600,8 +642,14 @@ def custom_lemmatizer_en(nlp, name):
 
 def fetch_nlp_model(lang, spacy_model):
     model = spacy.load(spacy_model)
-
     model.tokenizer = custom_tokenizer(lang, model)
+
+    # Switch to non-trainable lemmatizer
+    model.remove_pipe("lemmatizer")
+    # Add non-trainable lemmatizer from language defaults
+    # and load lemmatizer tables from spacy-lookups-data
+    model.add_pipe("lemmatizer").initialize()
+
     model.add_pipe("custom_lemmatizer_" + lang, after="lemmatizer")
 
     return model

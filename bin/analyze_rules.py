@@ -10,7 +10,6 @@ from app.models import (
     ResultOut,
     Config,
     GenderedRolesFormatType,
-    Language,
 )
 from app.main import parse_word_types
 from app.model import fetch_nlp_model
@@ -509,19 +508,11 @@ for locale in locales:
     ]
     print_trigger_alternative_overlap(locale, all_triggers, words[locale])
 
-    lang = Language(locale)
-
     all_lemma = sorted(all_lemma)
     for lemma in all_lemma:
         tokens = model(lemma)
         if lemma.lower() != tokens[0].lemma_.lower():
-            print(
-                "Lemma mismatch, got '"
-                + lemma
-                + "', spacy generates '"
-                + tokens[0].lemma_
-                + "'"
-            )
+            print('"' + lemma + '": "' + lemma + '", # ' + tokens[0].lemma_)
 
     lemmas[locale] = list(all_lemma)
 

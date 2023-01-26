@@ -5,6 +5,35 @@
         {
             "alternatives": [
                 {
+                    "text": "bewirkt"
+                },
+                {
+                    "text": "ermöglicht"
+                },
+                {
+                    "text": "zuverlässig umgesetzt"
+                },
+                {
+                    "text": "gewährleistet"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "Haben wir das sichergestellt? Wir haben noch viel sicherzustellen. Es gibt noch viel auszufechten. Wir haben viel zu gewinnen.",
+            "end": 28,
+            "explanation": {
+                "icon": "😒",
+                "text": "Spricht kooperativ denkende Menschen nicht an",
+                "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
+            },
+            "gravity": 2.0,
+            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "start": 14,
+            "subcategory": "agentic",
+            "text": "sichergestellt"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "zu bewirken"
                 },
                 {
@@ -18,8 +47,8 @@
                 }
             ],
             "category": "unconscious_bias",
-            "context": "Wir haben noch viel sicherzustellen. Es gibt noch viel auszufechten.",
-            "end": 35,
+            "context": "Haben wir das sichergestellt? Wir haben noch viel sicherzustellen. Es gibt noch viel auszufechten. Wir haben viel zu gewinnen.",
+            "end": 65,
             "explanation": {
                 "icon": "😒",
                 "text": "Spricht kooperativ denkende Menschen nicht an",
@@ -27,7 +56,7 @@
             },
             "gravity": 2.0,
             "label": "Sprachliche Voreingenommenheit: Agentisch",
-            "start": 20,
+            "start": 50,
             "subcategory": "agentic",
             "text": "sicherzustellen"
         },
@@ -44,8 +73,8 @@
                 }
             ],
             "category": "unconscious_bias",
-            "context": "Wir haben noch viel sicherzustellen. Es gibt noch viel auszufechten.",
-            "end": 67,
+            "context": "Haben wir das sichergestellt? Wir haben noch viel sicherzustellen. Es gibt noch viel auszufechten. Wir haben viel zu gewinnen.",
+            "end": 97,
             "explanation": {
                 "icon": "😒",
                 "text": "Spricht kooperativ denkende Menschen nicht an",
@@ -53,9 +82,41 @@
             },
             "gravity": 2.0,
             "label": "Sprachliche Voreingenommenheit: Agentisch",
-            "start": 55,
+            "start": 85,
             "subcategory": "agentic",
             "text": "auszufechten"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "zu erarbeiten"
+                },
+                {
+                    "text": "zu erwerben"
+                },
+                {
+                    "text": "dazuzulernen"
+                },
+                {
+                    "text": "zu interessieren"
+                },
+                {
+                    "text": "zu insistieren"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "hergestellt? Wir haben noch viel sicherzustellen. Es gibt noch viel auszufechten. Wir haben viel zu gewinnen.",
+            "end": 128,
+            "explanation": {
+                "icon": "😒",
+                "text": "Spricht kooperativ denkende Menschen nicht an",
+                "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
+            },
+            "gravity": 2.0,
+            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "start": 117,
+            "subcategory": "agentic",
+            "text": "zu gewinnen"
         }
     ]
 }

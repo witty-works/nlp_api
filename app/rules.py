@@ -92,7 +92,13 @@ def fetch_rules(langs):
     if "de" in langs:
         rules["de"]["context_check"] = []
 
-        rules["de"]["verbs"] = list(data["de"]["verbs"]["infinitiv"])
+        rules["de"]["verbs"] = {
+            data["de"]["verbs"]["infinitiv"][i]: {
+                "past_participle": data["de"]["verbs"]["past_participle"][i],
+                "infinitiv_zu": data["de"]["verbs"]["infinitiv_zu"][i],
+            }
+            for i in range(len(data["de"]["verbs"]["infinitiv"]))
+        }
 
         # list of "hollow word" sentences
         rules["de"]["terms_style"] = list(data["de"]["df_style_sentences"]["Lemma"])
@@ -579,6 +585,7 @@ def fetch_rules(langs):
             "Großfürstin",
             "Grossfürstin",
         )
+
         rules["de"]["splittable_words"] = {
             "durch": [
                 "durchbeißen",
@@ -1498,7 +1505,7 @@ def fetch_rules(langs):
         pattern_need_to = [
             [{"LEMMA": "need", "POS": "VERB"}, {"LEMMA": {"IN": ["to", "for"]}}]
         ]
-        
+
         # let alone
         pattern_let_alone = [
             [{"LEMMA": "let", "POS": "VERB"}, {"LEMMA": {"IN": ["alone"]}}]
@@ -1529,7 +1536,6 @@ def fetch_rules(langs):
             pattern_let_alone,
             pattern_of_kind,
             pattern_quick,
-
         ]
 
         rules["en"]["conjunctions"] = [
