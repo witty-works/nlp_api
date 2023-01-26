@@ -1,0 +1,145 @@
+{
+    "$id": "https://schemas.massdriver.cloud/schemas/bundles/nlp-api-lang/schema-artifacts.json",
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "description": "Language specific NLP API (receives internal requests, applies language rules, check LanguageTool)",
+    "properties": {
+        "internal": {
+            "$id": "https://api.massdriver.cloud/artifact-definitions/massdriver/api",
+            "$md": {
+                "access": "public",
+                "name": "api"
+            },
+            "$schema": "http://json-schema.org/draft-07/schema",
+            "additionalProperties": false,
+            "description": "An arbitrary API.",
+            "properties": {
+                "data": {
+                    "properties": {
+                        "api": {
+                            "properties": {
+                                "hostname": {
+                                    "description": "Service host name. If a second host name is needed for internal vs external access, a second artifact is recommended.",
+                                    "type": "string"
+                                },
+                                "port": {
+                                    "$schema": "http://json-schema.org/draft-07/schema",
+                                    "description": "Port number",
+                                    "maximum": 65535,
+                                    "minimum": 0,
+                                    "title": "Port",
+                                    "type": "integer"
+                                },
+                                "protocol": {
+                                    "description": "API protocol",
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "hostname",
+                                "port"
+                            ],
+                            "type": "object"
+                        },
+                        "etc": {
+                            "additionalProperties": true,
+                            "description": "This field can be used to store arbitrary data to pass to downstream services.",
+                            "type": "object"
+                        }
+                    },
+                    "required": [
+                        "api"
+                    ],
+                    "type": "object"
+                },
+                "specs": {
+                    "additionalProperties": false,
+                    "properties": {
+                        "api": {
+                            "version": {
+                                "description": "API Version",
+                                "type": "string"
+                            }
+                        },
+                        "aws": {
+                            "$schema": "http://json-schema.org/draft-07/schema",
+                            "description": "",
+                            "properties": {
+                                "region": {
+                                    "$schema": "http://json-schema.org/draft-07/schema",
+                                    "description": "AWS Region to provision in.",
+                                    "examples": [
+                                        "us-west-2"
+                                    ],
+                                    "title": "Region",
+                                    "type": "string"
+                                }
+                            },
+                            "required": [],
+                            "title": "AWS Artifact Specs",
+                            "type": "object"
+                        },
+                        "azure": {
+                            "$schema": "http://json-schema.org/draft-07/schema",
+                            "description": "",
+                            "properties": {
+                                "region": {
+                                    "$schema": "http://json-schema.org/draft-07/schema",
+                                    "description": "Select the Azure region you'd like to provision your resources in.",
+                                    "title": "Azure Region",
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "region"
+                            ],
+                            "title": "Azure Artifact Specs",
+                            "type": "object"
+                        },
+                        "gcp": {
+                            "$schema": "http://json-schema.org/draft-07/schema",
+                            "description": "",
+                            "properties": {
+                                "project": {
+                                    "title": "GCP Project",
+                                    "type": "string"
+                                },
+                                "region": {
+                                    "$schema": "http://json-schema.org/draft-07/schema",
+                                    "description": "The GCP region to provision resources in.",
+                                    "examples": [
+                                        "us-east1",
+                                        "us-east4",
+                                        "us-west1",
+                                        "us-west2",
+                                        "us-west3",
+                                        "us-west4",
+                                        "us-central1"
+                                    ],
+                                    "title": "Region",
+                                    "type": "string"
+                                }
+                            },
+                            "required": [],
+                            "title": "GCP Artifact Specs",
+                            "type": "object"
+                        }
+                    },
+                    "required": [
+                        "api"
+                    ],
+                    "type": "object"
+                }
+            },
+            "required": [
+                "data",
+                "specs"
+            ],
+            "title": "API / Web Service",
+            "type": "object"
+        }
+    },
+    "required": [
+        "internal"
+    ],
+    "title": "nlp-api-lang"
+}

@@ -1,0 +1,7 @@
+{
+    "$id": "https://schemas.massdriver.cloud/schemas/bundles/nlp-api/schema-artifacts.json",
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "description": "NLP API Main app (receives requests, validates auth token, reads Redis config, dispatches to relevant language server)",
+    "properties": {},
+    "title": "nlp-api"
+}

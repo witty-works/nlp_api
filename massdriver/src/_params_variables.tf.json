@@ -1,0 +1,35 @@
+{
+    "variable": {
+        "args": {
+            "type": "any",
+            "default": null
+        },
+        "command": {
+            "type": "any",
+            "default": null
+        },
+        "configuration": {
+            "type": "any",
+            "default": null
+        },
+        "image": {
+            "type": "any"
+        },
+        "ingress": {
+            "type": "any"
+        },
+        "namespace": {
+            "type": "string"
+        },
+        "port": {
+            "type": "number",
+            "default": null
+        },
+        "replicas": {
+            "type": "any"
+        },
+        "resourceRequests": {
+            "type": "any"
+        }
+    }
+}

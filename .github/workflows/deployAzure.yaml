@@ -13,13 +13,26 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: pdm-project/setup-pdm@v3
         with:
           python-version: "3.11"
 
-      - name: Install pdm
+      - name: Install dependencies
         run: |
-          python -m pip install --upgrade pdm wheel
+          pdm sync
+
+      - name: Install FastText models
+        if: steps.cache-fasttext.outputs.cache-hit != 'true'
+        run: |
+          wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
+
+      - name: Compile translation
+        run: |
+          pdm run pybabel compile -d locales -l de_DE -f
+          pdm run pybabel compile -d locales -l de_AT -f
+          pdm run pybabel compile -d locales -l de_CH -f
+          pdm run pybabel compile -d locales -l en_US -f
+          pdm run pybabel compile -d locales -l en_GB -f
 
       - name: Update requirements.txt for Docker image
         run: |

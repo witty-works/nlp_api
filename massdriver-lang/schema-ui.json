@@ -1,0 +1,37 @@
+{
+    "ingress": {
+        "ui:order": [
+            "enabled",
+            "host",
+            "path",
+            "*"
+        ]
+    },
+    "replicas": {
+        "ui:order": [
+            "autoscalingEnabled",
+            "replicaCount",
+            "minReplicas",
+            "maxReplicas",
+            "targetCPUUtilizationPercentage",
+            "*"
+        ]
+    },
+    "resourceRequests": {
+        "memory": {
+            "ui:field": "conversionFieldData",
+            "unit": "Bytes"
+        }
+    },
+    "ui:order": [
+        "namespace",
+        "image",
+        "command",
+        "args",
+        "resourceRequests",
+        "replicas",
+        "port",
+        "ingress",
+        "*"
+    ]
+}

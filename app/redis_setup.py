@@ -17,7 +17,12 @@ def set_up_redis(settings):  # pragma: no cover
 
     if settings.redis_host:
         try:
-            return Redis(host=settings.redis_host, port=settings.redis_port)
+            return Redis(
+                host=settings.redis_host,
+                port=settings.redis_port,
+                username=settings.redis_username,
+                password=settings.redis_password,
+            )
         except Exception as e:
             pass
 

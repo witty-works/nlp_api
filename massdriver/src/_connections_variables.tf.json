@@ -1,0 +1,28 @@
+{
+    "variable": {
+        "aws_authentication": {
+            "type": "any",
+            "default": null
+        },
+        "azure_authentication": {
+            "type": "any",
+            "default": null
+        },
+        "config": {
+            "type": "any"
+        },
+        "english_api": {
+            "type": "any"
+        },
+        "gcp_authentication": {
+            "type": "any",
+            "default": null
+        },
+        "german_api": {
+            "type": "any"
+        },
+        "kubernetes_cluster": {
+            "type": "any"
+        }
+    }
+}

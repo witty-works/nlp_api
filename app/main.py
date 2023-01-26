@@ -1350,9 +1350,9 @@ async def fetch_json_from_language_service(
     name = "language endpoint " + lang
 
     if is_get:
-        return await fetch_json_get(url, payload, headers, name, False)
+        return await fetch_json_get(url, payload, headers, name)
 
-    return await fetch_json_post(url, payload, headers, name, False)
+    return await fetch_json_post(url, payload, headers, name)
 
 
 async def handle_response(r, name):
@@ -1380,15 +1380,15 @@ async def handle_response(r, name):
     return result
 
 
-async def fetch_json_get(url, payload, headers, name, ssl=True):
-    async with ClientSession(connector=TCPConnector(ssl=ssl)) as session:
-        async with session.get(url, params=payload, headers=headers) as r:
+async def fetch_json_get(url, payload, headers, name):
+    async with ClientSession(connector=TCPConnector(ssl=False)) as session:
+        async with session.get(url, params=payload, headers=headers, ssl=False) as r:
             return await handle_response(r, name)
 
 
-async def fetch_json_post(url, payload, headers, name, ssl=True):
-    async with ClientSession(connector=TCPConnector(ssl=ssl)) as session:
-        async with session.post(url, data=payload, headers=headers) as r:
+async def fetch_json_post(url, payload, headers, name):
+    async with ClientSession(connector=TCPConnector(ssl=False)) as session:
+        async with session.post(url, data=payload, headers=headers, ssl=False) as r:
             return await handle_response(r, name)
 
 
@@ -1432,7 +1432,6 @@ async def apply_languagetool_rules(
         payload,
         {},
         "LanguageTool",
-        settings.languagetool_verify_ssl,
     )
 
     if not isinstance(result, dict):
