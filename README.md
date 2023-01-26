@@ -112,8 +112,8 @@ setup. Build new image with the following commands:
 
 ```
 pdm export --prod -o requirements.txt
-python3.11 -m pip install -r requirements.txt
-docker build -t DockerImageName:DockerImageRelease
+DOCKER_BUILDKIT=0 docker build -t nlpapi . --no-cache
+docker run nlpapi
 ```
 
 ## Install Platform.sh CLI
