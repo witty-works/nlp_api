@@ -2546,13 +2546,15 @@ def alternative_declension(lang, text, token, word_types, alternative):
 
     new_alternative = ""
     previous = False
-    tokens = fetch_tokens(lang, alternative)
-    for alternative_token in reversed(tokens):
+    alternative_tokens = fetch_tokens(lang, alternative)
+    alternative_token = None
+    for i in reversed(range(len(alternative_tokens))):
+        alternative_token = alternative_tokens[i]
         alternative_text = alternative_token.text
         if alternative_text in rules[lang]["conjunctions"]:
             previous = False
         else:
-            if len(tokens) == 1:
+            if len(alternative_tokens) == 1:
                 # in this case we just assume it is the same to avoid issues with word type detection
                 alternative_word_types = word_types
             else:
@@ -2560,6 +2562,10 @@ def alternative_declension(lang, text, token, word_types, alternative):
                     lang, alternative_token, word_types, False
                 )
 
+            if "v" in word_types and lang == "en" and i == 0:
+                alternative_text = align_verb_form(
+                    lang, text, token, alternative_token
+                )
             if "s" in word_types and "s" in alternative_word_types:
                 alternative_text = align_noun_form(lang, text, token, alternative_token)
             elif previous == False and word_types_overlap(
