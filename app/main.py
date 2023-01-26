@@ -1317,7 +1317,7 @@ def languagetool_matches(
 
 
 async def fetch_json_from_language_service(
-    lang, url, payload, is_get=True
+    lang, url, payload, is_get=False
 ):  # pragma: no cover
     url = settings.language_endpoint_urls[lang] + url
     headers = {"content-type": "application/json"}
@@ -2563,9 +2563,7 @@ def alternative_declension(lang, text, token, word_types, alternative):
                 )
 
             if "v" in word_types and lang == "en" and i == 0:
-                alternative_text = align_verb_form(
-                    lang, text, token, alternative_token
-                )
+                alternative_text = align_verb_form(lang, text, token, alternative_token)
             if "s" in word_types and "s" in alternative_word_types:
                 alternative_text = align_noun_form(lang, text, token, alternative_token)
             elif previous == False and word_types_overlap(
