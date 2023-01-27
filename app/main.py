@@ -2545,7 +2545,7 @@ def align_verb_form(lang, a_text, a_token, b_token):
 
 
 def alternative_declension(lang, text, token, word_types, alternative):
-    if ResultOut.isInspirationAlternative(text, alternative):
+    if alternative == "-" or ResultOut.isInspirationAlternative(text, alternative):
         return alternative
 
     new_alternative = ""
