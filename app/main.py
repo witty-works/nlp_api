@@ -2228,14 +2228,21 @@ def add_declension_german(text, a_text, a_lemma, injected_string=""):
     if remove:
         text = text[0 : -len(remove)]
 
+    if a_lemma == "beste":
+        ending = "ste" + ending
+        if text[-1] == "t" or text[-1] == "s":
+            text += "e"
+
+    if len(text) > 2:
+        if text[-2:] == "em":
+            return text
+
     if text[-1] == "t" and ending == "t":
         text += "e"
-    if text[-1] == "s":
+        elif text[-1] == "s":
         text += "s"
     elif text[-1] == "e" and ending[0] == "e":
         text = text[0:-1]
-    elif text[-2:] == "em":
-        return text
 
     return text + ending
 
@@ -2589,7 +2596,8 @@ def alternatives_declension(lang, token, alternatives, prev_token):
         text = "zu " + text
 
     word_types = fetch_word_types(lang, token)
-    if word_types == [] or text == token.lemma_:
+
+    if word_types == [] or (text == token.lemma_ and token.lemma_ != "beste"):
         return text, alternatives
 
     return text, [
