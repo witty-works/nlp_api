@@ -2237,12 +2237,12 @@ def add_declension_german(text, a_text, a_lemma, injected_string=""):
         if text[-2:] == "em":
             return text
 
-    if text[-1] == "t" and ending == "t":
-        text += "e"
+        if text[-1] == "t" and ending == "t":
+            text += "e"
         elif text[-1] == "s":
-        text += "s"
-    elif text[-1] == "e" and ending[0] == "e":
-        text = text[0:-1]
+            text += "s"
+        elif text[-1] == "e" and ending[0] == "e":
+            text = text[0:-1]
 
     return text + ending
 
@@ -2367,7 +2367,7 @@ def align_noun_form(lang, a_text, a_token, b_token):
 
     if a_token.morph.get("Number") == b_token.morph.get("Number"):
         return b_text
-    
+
     if lang == "de":
         a_word = german_noun_analysis(a_text)
         if a_word is None:
@@ -2592,10 +2592,10 @@ def alternative_declension(lang, text, token, word_types, alternative):
 
 def alternatives_declension(lang, token, alternatives, prev_token):
     text = token.text
-    if lang == "de" and prev_token and prev_token.text == "zu":
-        text = "zu " + text
 
     word_types = fetch_word_types(lang, token)
+    if lang == "de" and "v" in word_types and prev_token and prev_token.text == "zu":
+        text = "zu " + text
 
     if word_types == [] or (text == token.lemma_ and token.lemma_ != "beste"):
         return text, alternatives
