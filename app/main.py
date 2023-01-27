@@ -2153,6 +2153,7 @@ def is_false_positive(word, false_positive):
 
 def fetch_word_types(lang, token, word_types=[], single_word=None):
     # https://machinelearningknowledge.ai/tutorial-on-spacy-part-of-speech-pos-tagging/
+    # https://github.com/explosion/spaCy/blob/master/spacy/glossary.py
 
     if "adv" in word_types and token.pos_ == "ADV":
         return ["adv"]
