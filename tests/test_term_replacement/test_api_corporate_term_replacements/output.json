@@ -201,7 +201,9 @@
             "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT",
             "end": 77,
             "explanation": {
-                "text": "Wir schreiben lieber"
+                "icon": "🥰",
+                "text": "better world",
+                "url": "https://witty.works/welt"
             },
             "gravity": 0.9,
             "label": "Wörterbuch",
@@ -219,7 +221,9 @@
             "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT",
             "end": 88,
             "explanation": {
-                "text": "Wir schreiben lieber"
+                "icon": "🥰",
+                "text": "better world",
+                "url": "https://witty.works/welt"
             },
             "gravity": 0.9,
             "label": "Wörterbuch",
@@ -237,7 +241,9 @@
             "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT",
             "end": 99,
             "explanation": {
-                "text": "Wir schreiben lieber"
+                "icon": "🥰",
+                "text": "better world",
+                "url": "https://witty.works/welt"
             },
             "gravity": 0.9,
             "label": "Wörterbuch",
@@ -255,7 +261,9 @@
             "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT",
             "end": 15,
             "explanation": {
-                "text": "Wir schreiben lieber"
+                "icon": "🥰",
+                "text": "better ding",
+                "url": "https://witty.works/foo bar"
             },
             "gravity": 0.9,
             "label": "Wörterbuch",

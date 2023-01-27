@@ -546,7 +546,7 @@ def set_redis():
                 "explanation": {
                     "text": "better ding",
                     "icon": "🥰",
-                    "url": "https://witty.works",
+                    "url": "https://witty.works/foo bar",
                 },
                 "gravity": 3.0,
             },
@@ -556,7 +556,7 @@ def set_redis():
                 "explanation": {
                     "text": "better world",
                     "icon": "🥰",
-                    "url": "https://witty.works",
+                    "url": "https://witty.works/welt",
                 },
                 "gravity": 3.0,
             },
@@ -566,8 +566,8 @@ def set_redis():
                 "alternatives": ["walk"],
                 "explanation": {
                     "text": "better not run",
-                    "icon": "🥰",
-                    "url": "https://witty.works",
+                    "icon": "💡",
+                    "url": "https://witty.works/run",
                 },
                 "gravity": 3.0,
             },
@@ -1001,7 +1001,7 @@ def test_store_get_delete_rules():
                 "explanation": {
                     "text": "better world",
                     "icon": "🥰",
-                    "url": "https://witty.works",
+                    "url": "https://witty.works/hello",
                 },
                 "gravity": 3.0,
             },
@@ -1011,7 +1011,7 @@ def test_store_get_delete_rules():
                 "explanation": {
                     "text": "better bar",
                     "icon": "🥰",
-                    "url": "https://witty.works",
+                    "url": "https://witty.works/foo",
                 },
                 "gravity": 3.0,
             },

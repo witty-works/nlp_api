@@ -2898,23 +2898,10 @@ def regex_matches(
             if isinstance(regexes[regex], dict):
                 text = span.group(0)
                 alternatives = regexes[regex]["alternatives"]
-                if (
-                    isinstance(regexes[regex]["explanation"], dict)
-                    and "explanation" in regexes[regex]["explanation"]
-                    and regexes[regex]["explanation"]["explanation"] != ""
-                ):
-                    explanation = regexes[regex]["explanation"]["explanation"]
-
-                    if (
-                        "url" in regexes[regex]["explanation"]
-                        and regexes[regex]["explanation"]["url"] != ""
-                    ):
-                        url = regexes[regex]["explanation"]["url"]
-                    if (
-                        "icon" in regexes[regex]["explanation"]
-                        and regexes[regex]["explanation"]["icon"] != ""
-                    ):
-                        icon = regexes[regex]["explanation"]["icon"]
+                if isinstance(regexes[regex]["explanation"], dict):
+                    explanation, url, icon = map(
+                        regexes[regex]["explanation"].get, ("text", "url", "icon")
+                    )
             # d_f_m_regexes
             elif len(span.groups()) == 5 and subcategory == "d_and_i":
                 text = span.group(0).lstrip()
@@ -3415,9 +3402,9 @@ def rules_based_words_phrase_matcher(
             ):
                 continue
 
+            explanation = None
             url = None
             icon = None
-            explanation = None
             text = token.text
             start = token.idx + len(token.text)
 
@@ -3435,14 +3422,9 @@ def rules_based_words_phrase_matcher(
                         )
 
                     if len(data) > 2 and data[2] is not None:
-                        if "text" in data[2] and data[2]["text"] != "":
-                            explanation = data[2]["text"]
-
-                        if "url" in data[2] and data[2]["url"] != "":
-                            url = data[2]["url"]
-
-                        if "icon" in data[2] and data[2]["icon"] != "":
-                            icon = data[2]["icon"]
+                        explanation, url, icon = map(
+                            data[2].get, ("text", "url", "icon")
+                        )
 
             if not is_sub_category_enabled(version, config, subcategory):
                 continue
