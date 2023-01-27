@@ -13,7 +13,7 @@ This project has two key dependencies:
 
 ---
 
-# Installation instructions (with python3.9)
+# Installation instructions (with python3.11)
 
 - Install Platform.sh CLI https://docs.platform.sh/development/cli.html
   - Run `platform login`
@@ -59,15 +59,15 @@ You should see application running under http://localhost:8000/docs
 
 ```
 pipenv install --dev
-pipenv run python3.9 -m spacy download en_core_web_sm --no-cache-dir
-pipenv run python3.9 -m spacy download de_core_news_lg --no-cache-dir
+pipenv run python3.11 -m spacy download en_core_web_md --no-cache-dir
+pipenv run python3.11 -m spacy download de_core_news_lg --no-cache-dir
 wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 ```
 
 Note to uninstall spacy models use
 
 ```
-pipenv uninstall en_core_web_sm
+pipenv uninstall en_core_web_md
 pipenv uninstall de_core_news_lg
 ```
 
@@ -82,8 +82,8 @@ Compile PO files (done automatically during deployment:
 ```
 python -m venv /path/to/new/virtual/environment
 source /path/to/new/virtual/environment/bin/active
-python3.9 -m spacy download en_core_web_sm --no-cache-dir
-python3.9 -m spacy download de_core_news_lg --no-cache-dir
+python3.11 -m spacy download en_core_web_md --no-cache-dir
+python3.11 -m spacy download de_core_news_lg --no-cache-dir
 ```
 
 Compile the translations in the spirit of `./compile-translations.sh`
@@ -115,7 +115,7 @@ setup. Create `requirements.txt` file (used by Docker image) and build new image
 with the following commands:
 
 ```
-python3.9 -m pip install -r requirements.txt
+python3.11 -m pip install -r requirements.txt
 docker build -t DockerImageName:DockerImageRelease
 ```
 

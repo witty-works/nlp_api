@@ -18,7 +18,7 @@ Alphaweibchen,s,style,exaggerating,"['Person, die ihr Team inspiriert(...)', 'Me
 Arbeitskraft,s,style,hollow,"['--- nicht für Einzelperson', 'Personal', 'Mitarbeiter~in~/~Mitarbeiter', 'Arbeitnehmer~in~/~Arbeitnehmer', 'menschliche Kraft, (geistige, körperliche) Arbeit zu leisten(...)', 'Personal', 'Mitarbeitende', 'Arbeitnehmende', 'Mitarbeiter~innen~ und ~Mitarbeiter', 'Arbeitnehmer~innen~ und ~Arbeitnehmer']"
 Aufsteiger,s,style,exaggerating,"['Aufsteiger~in~/~Aufsteiger', 'aufmerksame Person, die mit neu gewonnenem Wissen weiterkommt(...)', 'Person, die aus Erfahrungen lernt(...)', 'Person, die Spaß an neuen Aufgaben hat(...)', 'Aufsteiger~innen~ und ~Aufsteiger', 'aufmerksame Menschen, die neu gewonnenes Wissen nutzen und weiterkommen(...)', 'Leute, die aus Erfahrungen lernen(...)', 'Leute, die Spaß an neuen Aufgaben haben(...)']"
 Brand,s,style,anglicism,"['Marke', 'Warenzeichen', 'Markenbezeichnung']"
-Briefing,s,style,anglicism,"['Pressekonferenz', 'kurze Besprechung', 'Anweisung', 'kurze Zusammenfassung', 'Einweisung ']"
+Briefing,s,style,anglicism,"['Pressekonferenz', 'kurze Besprechung', 'Anweisung', 'kurze Zusammenfassung', 'Einweisung']"
 Bullet-point,s,style,anglicism,"['Aufzählungspunkt', 'Aufzählungspunkte']"
 Bulletpoint,s,style,anglicism,"['Aufzählungspunkt', 'Aufzählungspunkte']"
 Buyer,s,style,anglicism,"['Einkauf', 'Einkäufer~in~/~Einkäufer', 'Einkäufer~innen~ und ~Einkäufer']"
@@ -65,7 +65,7 @@ Held,s,style,exaggerating,"['loyaler Mensch', 'resiliente Persönlichkeit', 'ums
 High-potential,s,style,anglicism,"['vielversprechende~r Bewerber~in~/~Bewerber', 'Person mit hohem Potenzial(...)', 'vielversprechende Bewerber~innen~ und ~Bewerber', 'Personen mit hohem Potenzial(...)']"
 Highlight,s,style,anglicism,"['Höhepunkt', 'Glanzpunkt']"
 Highpotential,s,style,anglicism,"['vielversprechende~r Bewerber~in~/~Bewerber', 'Person mit hohem Potenzial(...)', 'vielversprechende Bewerber~innen~ und ~Bewerber', 'Personen mit hohem Potenzial(...)']"
-Höchstleistung,s,style,exaggerating,"['Meilenstein', 'Teamziel', 'zuverlässiges Ergebnis', 'Sternstunde', 'Resultat, das das Vertrauen unserer Kundschaft in uns bestätigt', 'Leistung, zu der alle gemeinsam beigetragen haben(...)', 'gemeinsame Leistung, die neue Maßstäbe gesetzt hat |(...)', 'Meilensteine', 'Teamziele', 'zuverlässige Ergebnisse', 'Sternstunden', 'Resultate, die das Vertrauen unserer Kundschaft in uns bestätigen', 'gemeinsame Leistungen, die neue Maßstäbe gesetzt haben']"
+Höchstleistung,s,style,exaggerating,"['Meilenstein', 'Teamziel', 'zuverlässiges Ergebnis', 'Sternstunde', 'Resultat, das das Vertrauen unserer Kundschaft in uns bestätigt', 'Leistung, zu der alle gemeinsam beigetragen haben(...)', 'gemeinsame Leistung, die neue Maßstäbe gesetzt hat (...)', 'Meilensteine', 'Teamziele', 'zuverlässige Ergebnisse', 'Sternstunden', 'Resultate, die das Vertrauen unserer Kundschaft in uns bestätigen', 'gemeinsame Leistungen, die neue Maßstäbe gesetzt haben']"
 Inner-Circle,s,style,anglicism,"['innere Kreis', 'kleine Kreis', 'engere Kreis']"
 Innercircle,s,style,anglicism,"['innere Kreis', 'kleine Kreis', 'engere Kreis']"
 Innovation,s,style,hollow,"['Neugestaltung', 'Erfindung', 'technischer Fortschritt', 'Neuerung', 'Neuschöpfung', 'Neuentwicklung']"
@@ -182,7 +182,7 @@ beinahe,adv,style,filler,['-']
 bekanntlich,adv,style,filler,['-']
 bereits,adv,style,filler,['-']
 besonders,adv,style,filler,['-']
-best-of-breed,a,style,anglicism,"['für diesen Geschäftszweck am besten passend', 'für diesen Anwendungsfall die effektivste', 'zu diesem Zweck empfehlenswerteste ']"
+best-of-breed,a,style,anglicism,"['für diesen Geschäftszweck am besten passend', 'für diesen Anwendungsfall die effektivste', 'zu diesem Zweck empfehlenswerteste']"
 beste,a,style,exaggerating,"['leicht', 'einfach', 'mühelos', 'wirkungsvoll', 'als positiv empfunden', 'erfüllend', 'befriedigend', 'bereichernd', 'schön', 'fein', 'gut', 'passend']"
 bestenfalls,adv,style,filler,['-']
 bloß,adv,style,filler,['-']

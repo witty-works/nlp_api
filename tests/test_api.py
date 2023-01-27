@@ -26,7 +26,7 @@ def get_dirs(path):
 
 
 def test_read_main():
-    response = client.get("/", allow_redirects=False)
+    response = client.get("/", follow_redirects=False)
     assert response.status_code == 301
     assert response.headers["Location"] == "https://www.witty.works/editor"
 
@@ -398,7 +398,7 @@ def test_language_detection_fail(fails_case_dir, snapshot, set_redis):
 
 
 def test_lemmatize():
-    response = client.get("/lemmatize?locale=" + "en-US&text=running")
+    response = client.get("/lemmatize?locale=" + "en&text=running")
     assert response.status_code == 200
     result = response.json()
 
@@ -546,7 +546,7 @@ def set_redis():
                 "explanation": {
                     "text": "better ding",
                     "icon": "🥰",
-                    "url": "https://witty.works",
+                    "url": "https://witty.works/foo bar",
                 },
                 "gravity": 3.0,
             },
@@ -556,7 +556,7 @@ def set_redis():
                 "explanation": {
                     "text": "better world",
                     "icon": "🥰",
-                    "url": "https://witty.works",
+                    "url": "https://witty.works/welt",
                 },
                 "gravity": 3.0,
             },
@@ -566,8 +566,8 @@ def set_redis():
                 "alternatives": ["walk"],
                 "explanation": {
                     "text": "better not run",
-                    "icon": "🥰",
-                    "url": "https://witty.works",
+                    "icon": "💡",
+                    "url": "https://witty.works/run",
                 },
                 "gravity": 3.0,
             },
@@ -1001,7 +1001,7 @@ def test_store_get_delete_rules():
                 "explanation": {
                     "text": "better world",
                     "icon": "🥰",
-                    "url": "https://witty.works",
+                    "url": "https://witty.works/hello",
                 },
                 "gravity": 3.0,
             },
@@ -1011,7 +1011,7 @@ def test_store_get_delete_rules():
                 "explanation": {
                     "text": "better bar",
                     "icon": "🥰",
-                    "url": "https://witty.works",
+                    "url": "https://witty.works/foo",
                 },
                 "gravity": 3.0,
             },
@@ -1093,7 +1093,7 @@ def test_german_gender_ending():
 
 
 def test_spacy():
-    request_data = {"text": "Das ist sehr ehrgeizig"}
+    request_data = {"text": "Das ist sehr ehrgeizig", "lang": "de"}
     response = client.get("/debug/spacy", params=request_data)
     assert response.status_code == 200
     response_content = json.loads(response.content)

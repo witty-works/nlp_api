@@ -10,7 +10,6 @@ from app.models import (
     ResultOut,
     Config,
     GenderedRolesFormatType,
-    Language,
 )
 from app.main import parse_word_types
 from app.model import fetch_nlp_model
@@ -90,7 +89,8 @@ def get_data_from_files(locale):
     all_lemma = []
     all_categories = []
     all_secondary_subcategories = []
-    supported_word_types = {"s", "a", "adv", "v", "acr", "abbr", "i"}
+    # https://www.notion.so/witty-works/Rule-Guidelines-432792da944141b1b4d0a01de290aa43#aac0d966bfeb4e33a5a346bba45d5ea8
+    supported_word_types = {"s", "a", "adv", "v", "acr", "abbr", "i", "conj"}
 
     for training_data_path in training_data_paths:
         with open(training_data_path) as f:
@@ -176,6 +176,18 @@ def get_data_from_files(locale):
     print("Trigger for directory %s: %s " % (base_directory, str(len(all_triggers))))
 
     for alternative in all_alternatives:
+        if "\n" in alternative:
+            print("Misplaced \\n in alternative: " + alternative)
+
+        if "\t" in alternative:
+            print("Misplaced \\t in alternative: " + alternative)
+
+        if "|" in alternative:
+            print("Misplaced | in alternative: " + alternative)
+
+        if alternative != alternative.strip():
+            print("Additional whitespace in alternative: " + alternative)
+
         if re.search("^[^-]*--[^-]*$", alternative):
             print("Potential missing - in ' --- ': " + alternative)
 
@@ -496,19 +508,11 @@ for locale in locales:
     ]
     print_trigger_alternative_overlap(locale, all_triggers, words[locale])
 
-    lang = Language(locale)
-
     all_lemma = sorted(all_lemma)
     for lemma in all_lemma:
         tokens = model(lemma)
         if lemma.lower() != tokens[0].lemma_.lower():
-            print(
-                "Lemma mismatch, got '"
-                + lemma
-                + "', spacy generates '"
-                + tokens[0].lemma_
-                + "'"
-            )
+            print('"' + lemma + '": "' + lemma + '", # ' + tokens[0].lemma_)
 
     lemmas[locale] = list(all_lemma)
 

@@ -87,14 +87,17 @@
         {
             "alternatives": [
                 {
+                    "context": "💡 Inspiration",
                     "inspiration": true,
                     "text": "jemand, der erfahren und fachkundig ist"
                 },
                 {
+                    "context": "💡 Inspiration",
                     "inspiration": true,
                     "text": "Person, die ihr Know-how und ihre Erfahrung kreativ einsetzt"
                 },
                 {
+                    "context": "💡 Inspiration",
                     "inspiration": true,
                     "text": "Mensch, der seine Fachkenntnis ständig vertieft"
                 }

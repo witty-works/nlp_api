@@ -46,7 +46,9 @@
             "context": "I ran far. I am always running. This is the foo bar and not the wELT!",
             "end": 51,
             "explanation": {
-                "text": "We prefer to write as follows"
+                "icon": "🥰",
+                "text": "better ding",
+                "url": "https://witty.works/foo bar"
             },
             "gravity": 0.9,
             "label": "Dictionary",
@@ -64,9 +66,9 @@
             "context": "I ran far. I am always running. This is the foo bar and not the wELT!",
             "end": 5,
             "explanation": {
-                "icon": "🥰",
+                "icon": "💡",
                 "text": "better not run",
-                "url": "https://witty.works"
+                "url": "https://witty.works/run"
             },
             "gravity": 0.9,
             "label": "Dictionary",
@@ -84,9 +86,9 @@
             "context": "I ran far. I am always running. This is the foo bar and not the wELT!",
             "end": 30,
             "explanation": {
-                "icon": "🥰",
+                "icon": "💡",
                 "text": "better not run",
-                "url": "https://witty.works"
+                "url": "https://witty.works/run"
             },
             "gravity": 0.9,
             "label": "Dictionary",

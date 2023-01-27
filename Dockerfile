@@ -1,4 +1,4 @@
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.9
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.11
 
 # setup ssh for app service ssh connection
 RUN apt-get update \
@@ -27,7 +27,7 @@ COPY --chown=wittyuser:wittyuser requirements.txt requirements.txt
 ENV PATH="/home/wittyuser/.local/bin:${PATH}"
 RUN pip install -r requirements.txt --user
 RUN mkdir files \
-  && spacy download en_core_web_sm \
+  && spacy download en_core_web_md \
   && spacy download de_core_news_lg
 COPY --chown=wittyuser:wittyuser . .
 RUN pybabel compile -d locales -l de_DE -f \

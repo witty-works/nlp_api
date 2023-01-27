@@ -158,7 +158,7 @@ M&A,acr,style,abbreviation,"['mergers and acquisitions', 'mergers and acquisitio
 M.A.,acr,style,abbreviation,"['Master of Arts', 'Master of Arts (M.A.)']"
 M.S.,acr,style,abbreviation,"['Master of Science', 'Master of Science (M.S.)']"
 M.Sc.,abbr,style,abbreviation,"['Master of Science', 'Master of Science (M.Sc.)']"
-MA,acr,style,abbreviation,['Master of Arts| Master of Arts (MA)']
+MA,acr,style,abbreviation,"['Master of Arts', 'Master of Arts (M.A.)']"
 MAT,acr,style,abbreviation,"['medication-assisted treatment (MAT) --- avoid this term', 'medication-assisted treatment --- avoid this term', 'pharmacotherapy', 'medications for substance use disorder (MSUD)', 'medications for opioid use disorder (MOUD)']"
 MBA,acr,style,abbreviation,"['Master of Business Administration', 'Master of Business Administration (MBA)']"
 MBI,acr,style,abbreviation,"['management buy-in', 'management buy-in (MBI)']"

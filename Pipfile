@@ -4,11 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-fastapi = {version = ">=0.81.0,<0.82.0"}
+fastapi = {version = ">=0.89.0,<0.90.0"}
 pydantic = {version = ">=1.2.0,<2.0.0"}
 uvicorn = {extras = ["standard"], version = "*"}
 gunicorn = "*"
-spacy = {version = ">=3.2.0,<3.3.0"}
+spacy = "*"
 pandas = "*"
 aiofiles = "*"
 babel = "*"
@@ -24,6 +24,7 @@ slack-bolt = "*"
 german-nouns = "*"
 inflex = "*"
 blackfire = "*"
+spacy-lookups-data = "*"
 
 [dev-packages]
 click = "*"
@@ -38,4 +39,4 @@ pytest-snapshot = "*"
 eng = ">=0.1.1"
 
 [requires]
-python_version = "3.9"
+python_version = "3.11"

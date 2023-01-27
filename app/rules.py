@@ -34,6 +34,8 @@ def fetch_rules(langs):
             "df_gender_false_positive": "gender_false_positive.csv",
             # load abbreviations
             "df_abbreviation": "abbreviations.csv",
+            # verbs
+            "verbs": "verbs.csv",
         },
         "en": {
             # load openly discriminating words
@@ -90,6 +92,14 @@ def fetch_rules(langs):
     if "de" in langs:
         rules["de"]["context_check"] = []
 
+        rules["de"]["verbs"] = {
+            data["de"]["verbs"]["infinitiv"][i]: {
+                "past_participle": data["de"]["verbs"]["past_participle"][i],
+                "infinitiv_zu": data["de"]["verbs"]["infinitiv_zu"][i],
+            }
+            for i in range(len(data["de"]["verbs"]["infinitiv"]))
+        }
+
         # list of "hollow word" sentences
         rules["de"]["terms_style"] = list(data["de"]["df_style_sentences"]["Lemma"])
 
@@ -139,9 +149,9 @@ def fetch_rules(langs):
             zip(
                 df_gender["Lemma"],
                 df_gender["Word_Type"],
+                df_gender["Primary_subcategory"],
                 map(ast.literal_eval, df_gender["Sg_all_split"]),
                 map(ast.literal_eval, df_gender["Pl_all_split"]),
-                df_gender["Primary_subcategory"],
             )
         )
         # df gendered no noun
@@ -151,8 +161,8 @@ def fetch_rules(langs):
             zip(
                 df_gendered_no_noun["Lemma"],
                 df_gendered_no_noun["Word_Type"],
-                map(ast.literal_eval, df_gendered_no_noun["Alt_split"]),
                 df_gendered_no_noun["Primary_subcategory"],
+                map(ast.literal_eval, df_gendered_no_noun["Alt_split"]),
             )
         )
         # articles
@@ -175,9 +185,9 @@ def fetch_rules(langs):
             zip(
                 df_bias["Lemma"],
                 df_bias["Word_Type"],
+                df_bias["Primary_subcategory"],
                 map(ast.literal_eval, df_bias["Sg_all_split"]),
                 map(ast.literal_eval, df_bias["Pl_all_split"]),
-                df_bias["Primary_subcategory"],
             )
         )
         # df unconscious bias words without plurals
@@ -187,8 +197,8 @@ def fetch_rules(langs):
             zip(
                 df_bias_no_plur["Lemma"],
                 df_bias_no_plur["Word_Type"],
-                map(ast.literal_eval, df_bias_no_plur["Alt_split"]),
                 df_bias_no_plur["Primary_subcategory"],
+                map(ast.literal_eval, df_bias_no_plur["Alt_split"]),
             )
         )
         # df style
@@ -198,8 +208,8 @@ def fetch_rules(langs):
             zip(
                 df_style["Lemma"],
                 df_style["Word_Type"],
-                map(ast.literal_eval, df_style["Alt_split"]),
                 df_style["Primary_subcategory"],
+                map(ast.literal_eval, df_style["Alt_split"]),
             )
         )
         # df open discrimination words
@@ -209,8 +219,8 @@ def fetch_rules(langs):
             zip(
                 df_discrimination_words["Lemma"],
                 df_discrimination_words["Word_Type"],
-                map(ast.literal_eval, df_discrimination_words["Alt_split"]),
                 df_discrimination_words["Primary_subcategory"],
+                map(ast.literal_eval, df_discrimination_words["Alt_split"]),
             )
         )
         # df abbreviation
@@ -220,9 +230,9 @@ def fetch_rules(langs):
             zip(
                 df_abbreviation["Lemma"],
                 df_abbreviation["Word_Type"],
-                df_abbreviation["Category"],
                 df_abbreviation["Primary_subcategory"],
                 map(ast.literal_eval, df_abbreviation["Alt_split"]),
+                df_abbreviation["Category"],
             )
         )
 
@@ -233,8 +243,8 @@ def fetch_rules(langs):
         rules["de"]["open_disc_sentences_data"] = list(
             zip(
                 df_discrimination_sentences["Lemma"],
-                map(ast.literal_eval, df_discrimination_sentences["Alt_split"]),
                 df_discrimination_sentences["Primary_subcategory"],
+                map(ast.literal_eval, df_discrimination_sentences["Alt_split"]),
             )
         )
         # df gendered sentences
@@ -243,8 +253,8 @@ def fetch_rules(langs):
         rules["de"]["gender_sentences_data"] = list(
             zip(
                 df_gendered_sentences["Lemma"],
-                map(ast.literal_eval, df_gendered_sentences["Alt_split"]),
                 df_gendered_sentences["Primary_subcategory"],
+                map(ast.literal_eval, df_gendered_sentences["Alt_split"]),
             )
         )
         # df unconscious bias sentences
@@ -253,8 +263,8 @@ def fetch_rules(langs):
         rules["de"]["bias_sentences_data"] = list(
             zip(
                 df_bias_sentences["Lemma"],
-                map(ast.literal_eval, df_bias_sentences["Alt_split"]),
                 df_bias_sentences["Primary_subcategory"],
+                map(ast.literal_eval, df_bias_sentences["Alt_split"]),
             )
         )
         # df style sentences
@@ -263,8 +273,8 @@ def fetch_rules(langs):
         rules["de"]["style_sentences_data"] = list(
             zip(
                 df_style_sentences["Lemma"],
-                map(ast.literal_eval, df_style_sentences["Alt_split"]),
                 df_style_sentences["Primary_subcategory"],
+                map(ast.literal_eval, df_style_sentences["Alt_split"]),
             )
         )
 
@@ -467,6 +477,423 @@ def fetch_rules(langs):
             },
         }
 
+        # https://de.wikipedia.org/wiki/Anrede
+        # https://karrierebibel.de/namenstitel/
+        rules["de"]["salutations"] = (
+            "Herr",
+            "Herrn",
+            "Frau",
+            "Fräulein",
+            "Sehr geehrter",
+            "Sehr geehrte",
+            "Hallo",
+            "Hello",
+            "Hi",
+            "Hey",
+            "Guten Morgen",
+            "Guten Tag",
+            "Guten Abend",
+            "Wie gehts",
+            "Wie geht's",
+            "Liebe",
+            "Sehr verehrte Frau",
+            "Sehr verehrter Herr",
+            "Liebste",
+            "Liebster",
+            "Prof.",
+            "Dr.",
+            "Ing.",
+            "Inf.",
+            "Dr. med.",
+            "Dr. med. dent.",
+            "Dr. med. vet.",
+            "Dr. phil.",
+            "Dr. rer. nat.",
+            "Dr. iur.",
+            "Dr. oec.",
+            "Dr. oec. publ.",
+            "Dr. h.c.",
+            "Dr. e.h.",
+            "Dr. mult.",
+            "Dr. des.",
+            "Dr. habil.",
+            "Dres.",
+            "Prof. med.",
+            "Prof. med. dent.",
+            "Prof. med. vet.",
+            "Prof. phil.",
+            "Prof. rer. nat.",
+            "Prof. iur.",
+            "Prof. oec.",
+            "Prof. oec. publ.",
+            "Prof. h.c.",
+            "Prof. e.h.",
+            "Prof. mult.",
+            "Prof. des.",
+            "Prof. habil.",
+            "Heiligkeit",
+            "Seligkeit",
+            "Heiliger Vater",
+            "Eminenz",
+            "Exzellenz",
+            "Bischof",
+            "Hochwürden",
+            "Hochwürdiger",
+            "Hochehrwürdiger",
+            "Wohlehrwürden",
+            "Hochwürdige",
+            "Mutter Oberin",
+            "Ehrwürdige Mutter",
+            "Ehrwürdigste  Mutter",
+            "Hochehrwürdige Mutter",
+            "Hochwürdiger Pater",
+            "Hochwürdiger Bruder",
+            "Ehrwürdige Schwester",
+            "Ehrwürdiger Bruder",
+            "Ehrwürdiger Herr",
+            "Ehrwürden",
+            "Allheiligkeit",
+            "Heiligkeit",
+            "Fürst",
+            "Fürstin",
+            "Prinzessin",
+            "Prinz",
+            "Herzog",
+            "Herzogin",
+            "Graf",
+            "Gräfin",
+            "Comtesse",
+            "Freiherr",
+            "Freifrau",
+            "Freiin",
+            "Baron",
+            "Baronin",
+            "Baronesse",
+            "Majestät",
+            "König",
+            "Königin",
+            "Kaiser",
+            "Kaiserin",
+            "Großherzog",
+            "Grossherzog",
+            "Großherzogin",
+            "Grossherzogin",
+            "Erzherzog",
+            "Erzherzogin",
+            "Großfürst",
+            "Grossfürst",
+            "Großfürstin",
+            "Grossfürstin",
+        )
+
+        rules["de"]["splittable_words"] = {
+            "durch": [
+                "durchbeißen",
+                "durchbeissen",
+                "durchblasen",
+                "durchblättern",
+                "durchbrausen",
+                "durchdringen",
+                "durchfahren",
+                "durchfallen",
+                "durchfeiern",
+                "durchgehen",
+                "durchglühen",
+                "durchkämpfen",
+                "durchklettern",
+                "durchkramen",
+                "durchkriechen",
+                "durchradeln",
+                "durchrauschen",
+                "durchrennen",
+                "durchrieseln",
+                "durchrinnen",
+                "durchschallen",
+                "durchscheinen",
+                "durchschlafen",
+                "durchschleichen",
+                "durchschnüffeln",
+                "durchschwitzen",
+                "durchsetzen",
+                "durchspringen",
+                "durchsteigen",
+                "durchstreichen",
+                "durchwachen",
+                "durchwachsen",
+                "durchwärmen",
+                "durchwaten",
+                "durchziehen",
+            ],
+            "fremd": [
+                "fremdschämen",
+            ],
+            "über": [
+                "überbeanspruchen",
+                "überbehüten",
+                "überbeißen",
+                "überbeissen",
+                "überbekommen",
+                "überbelasten",
+                "überbelegen",
+                "überbelichten",
+                "überbetonen",
+                "überbewerten",
+                "überbezahlen",
+                "überbleiben",
+                "überdramatisieren",
+                "übererfüllen",
+                "überessen",
+                "überfließen",
+                "überfliessen",
+                "übergehen",
+                "überhandnehmen",
+                "überhängen",
+                "überkippen",
+                "überkippen",
+                "überkochen",
+                "überlaufen",
+                "überleiten",
+                "überpflanzen",
+                "überschießen",
+                "überschiessen",
+                "überschlagen",
+                "übersprudeln",
+                "übersprühen",
+                "überstechen",
+                "übertreten",
+                "übertun",
+                "überversichern",
+                "überversorgen",
+                "überwallen",
+                "überwerfen",
+                "übrigbehalten",
+                "übrigbleiben",
+                "übrighaben",
+                "übriglassen",
+            ],
+            "offen": [
+                "offenbleiben",
+                "offenhalten",
+                "offenlassen",
+                "offenlegen",
+                "offenliegen",
+                "offenstehen",
+            ],
+            "um": [
+                "umackern",
+                "umadressieren",
+                "umändern",
+                "umarbeiten",
+                "umbauen",
+                "umbehalten",
+                "umbenennen",
+                "umbeschreiben",
+                "umbesinnen",
+                "umbestellen",
+                "umbetten",
+                "umbiegen",
+                "umbilden",
+                "umbinden",
+                "umblasen",
+                "umblättern",
+                "umblicken",
+                "umbranden",
+                "umbrausen",
+                "umbrechen",
+                "umbringen",
+                "umbuchen",
+                "umdatieren",
+                "umdecken",
+                "umdefinieren",
+                "umdeklarieren",
+                "umdekorieren",
+                "umdenken",
+                "umdeuten",
+                "umdichten",
+                "umdirigieren",
+                "umdisponieren",
+                "umdrehen",
+                "umdrucken",
+                "umdrücken",
+                "umentscheiden",
+                "umerziehen",
+                "umetikettieren",
+                "umfallen",
+                "umfälschen",
+                "umfärben",
+                "umfinanzieren",
+                "umfirmieren",
+                "umflaggen",
+                "umformatieren",
+                "umformulieren",
+                "umfragen",
+                "umfrisieren",
+                "umfüllen",
+                "umfunktionieren",
+                "umgehen",
+                "umgestalten",
+                "umgewöhnen",
+                "umgießen",
+                "umgiessen",
+                "umgraben",
+                "umgründen",
+                "umgruppieren",
+                "umgucken",
+                "umhaben",
+                "umhacken",
+                "umhängen",
+                "umhauen",
+                "umheben",
+                "umherblicken",
+                "umhinkönnen",
+                "umhören",
+                "uminterpretieren",
+                "umkehren",
+                "umkippen",
+                "umklappen",
+                "umknicken",
+                "umkommen",
+                "umkonstruieren",
+                "umkopieren",
+                "umkrempeln",
+                "umladen",
+                "umlagern",
+                "umlassen",
+                "umlauten",
+                "umlegen",
+                "umleiten",
+                "umlenken",
+                "umlernen",
+                "ummachen",
+                "ummelden",
+                "ummodeln",
+                "ummünzen",
+                "umnehmen",
+                "umnehmen",
+                "umnutzen",
+                "umoperieren",
+                "umordnen",
+                "umorganisieren",
+                "umorientieren",
+                "umpacken",
+                "umparken",
+                "umpflügen",
+                "umplanen",
+                "umpolen",
+                "umprägen",
+                "umprogrammieren",
+                "umpumpen",
+                "umpusten",
+                "umquartieren",
+                "umrangieren",
+                "umräumen",
+                "umrechnen",
+                "umrennen",
+                "umrubeln",
+                "umrühren",
+                "umrüsten",
+                "umsäbeln",
+                "umsacken",
+                "umsägen",
+                "umsatteln",
+                "umschaffen",
+                "umschalten",
+                "umschauen",
+                "umschichten",
+                "umschlagen",
+                "umschmeißen",
+                "umschmeissen",
+                "umschmelzen",
+                "umschmieden",
+                "umschminken",
+                "umschnallen",
+                "umschubsen",
+                "umschulden",
+                "umschulen",
+                "umschütten",
+                "umschwenken",
+                "umsehen",
+                "umsetzen",
+                "umsiedeln",
+                "umsinken",
+                "umsortieren",
+                "umspeichern",
+                "umspringen",
+                "umspritzen",
+                "umspulen",
+                "umstechen",
+                "umstecken",
+                "umsteigen",
+                "umstellen",
+                "umstempeln",
+                "umsteuern",
+                "umstilisieren",
+                "umstimmen",
+                "umstoßen",
+                "umstossen",
+                "umstrukturieren",
+                "umstufen",
+                "umstülpen",
+                "umstürzen",
+                "umtaufen",
+                "umtauschen",
+                "umteilen",
+                "umtopfen",
+                "umtragen",
+                "umtreiben",
+                "umtreten",
+                "umtun",
+                "umverteilen",
+                "umwälzen",
+                "umwandeln",
+                "umwechseln",
+                "umwehen",
+                "umwenden",
+                "umwerfen",
+                "umwerten",
+                "umwidmen",
+                "umwühlen",
+                "umzeichnen",
+                "umziehen",
+            ],
+            "unter": [
+                "unterbelegen",
+                "unterbelichten",
+                "unterbewerten",
+                "unterbezahlen",
+                "unterbringen",
+                "unterbügeln",
+                "unterbuttern",
+                "unterducken",
+                "untereinanderliegen",
+                "untereinanderstehen",
+                "unterfassen",
+                "untergehen",
+                "unterhaken",
+                "unterheben",
+                "unterjubeln",
+                "unterkommen",
+                "unterkriechen",
+                "unterkriegen",
+                "untermengen",
+                "unterordnen",
+                "unterpflügen",
+                "unterrühren",
+                "unterschieben",
+                "unterschlupfen",
+                "unterschlüpfen",
+                "unterschnallen",
+                "untersinken",
+                "untertauchen",
+                "untervermieten",
+                "unterversichern",
+                "unterversorgen",
+                "unterwühlen",
+                "uraufführen",
+                "unterspannen",
+            ],
+        }
+
     if "en" in langs:
         ### en-US & en-GB:
         for locale in locales["en"]:
@@ -478,8 +905,8 @@ def fetch_rules(langs):
                 zip(
                     df_discrimination["Lemma"],
                     df_discrimination["Word_Type"],
-                    map(ast.literal_eval, df_discrimination["Alt_split"]),
                     df_discrimination["Primary_subcategory"],
+                    map(ast.literal_eval, df_discrimination["Alt_split"]),
                 )
             )
 
@@ -490,8 +917,8 @@ def fetch_rules(langs):
                 zip(
                     df_gender_no_noun["Lemma"],
                     df_gender_no_noun["Word_Type"],
-                    map(ast.literal_eval, df_gender_no_noun["Alt_split"]),
                     df_gender_no_noun["Primary_subcategory"],
+                    map(ast.literal_eval, df_gender_no_noun["Alt_split"]),
                 )
             )
 
@@ -502,8 +929,8 @@ def fetch_rules(langs):
                 zip(
                     df_style["Lemma"],
                     df_style["Word_Type"],
-                    map(ast.literal_eval, df_style["Alt_split"]),
                     df_style["Primary_subcategory"],
+                    map(ast.literal_eval, df_style["Alt_split"]),
                 )
             )
 
@@ -514,8 +941,8 @@ def fetch_rules(langs):
                 zip(
                     df_bias["Lemma"],
                     df_bias["Word_Type"],
-                    map(ast.literal_eval, df_bias["Alt_split"]),
                     df_bias["Primary_subcategory"],
+                    map(ast.literal_eval, df_bias["Alt_split"]),
                 )
             )
 
@@ -537,9 +964,9 @@ def fetch_rules(langs):
                 zip(
                     df_homonyms["Lemma"],
                     df_homonyms["Word_Type"],
-                    df_homonyms["Category"],
                     df_homonyms["Primary_subcategory"],
                     map(ast.literal_eval, df_homonyms["Alt_split"]),
+                    df_homonyms["Category"],
                 )
             )
 
@@ -550,9 +977,9 @@ def fetch_rules(langs):
                 zip(
                     df_abbreviation["Lemma"],
                     df_abbreviation["Word_Type"],
-                    df_abbreviation["Category"],
                     df_abbreviation["Primary_subcategory"],
                     map(ast.literal_eval, df_abbreviation["Alt_split"]),
+                    df_abbreviation["Category"],
                 )
             )
 
@@ -563,9 +990,9 @@ def fetch_rules(langs):
                 zip(
                     df_gender_noun["Lemma"],
                     df_gender_noun["Word_Type"],
+                    df_gender_noun["Primary_subcategory"],
                     map(ast.literal_eval, df_gender_noun["Sg_all_split"]),
                     map(ast.literal_eval, df_gender_noun["Pl_all_split"]),
-                    df_gender_noun["Primary_subcategory"],
                     df_gender_noun["Secondary_subcategory"],
                 )
             )
@@ -577,9 +1004,9 @@ def fetch_rules(langs):
                 zip(
                     df_gendered_ub["Lemma"],
                     df_gendered_ub["Word_Type"],
+                    df_gendered_ub["Primary_subcategory"],
                     map(ast.literal_eval, df_gendered_ub["Sg_all_split"]),
                     map(ast.literal_eval, df_gendered_ub["Pl_all_split"]),
-                    df_gendered_ub["Primary_subcategory"],
                     df_gendered_ub["Secondary_subcategory"],
                 )
             )
@@ -601,8 +1028,8 @@ def fetch_rules(langs):
             rules[locale]["open_dis_sentences"] = list(
                 zip(
                     df_open_dis_sentences["Lemma"],
-                    map(ast.literal_eval, df_open_dis_sentences["Alt_split"]),
                     df_open_dis_sentences["Primary_subcategory"],
+                    map(ast.literal_eval, df_open_dis_sentences["Alt_split"]),
                 )
             )
 
@@ -612,8 +1039,8 @@ def fetch_rules(langs):
             rules[locale]["gender_sentences_data"] = list(
                 zip(
                     df_gendered_sentences["Lemma"],
-                    map(ast.literal_eval, df_gendered_sentences["Alt_split"]),
                     df_gendered_sentences["Primary_subcategory"],
+                    map(ast.literal_eval, df_gendered_sentences["Alt_split"]),
                 )
             )
 
@@ -623,8 +1050,8 @@ def fetch_rules(langs):
             rules[locale]["style_sentences_data"] = list(
                 zip(
                     df_style_sentences["Lemma"],
-                    map(ast.literal_eval, df_style_sentences["Alt_split"]),
                     df_style_sentences["Primary_subcategory"],
+                    map(ast.literal_eval, df_style_sentences["Alt_split"]),
                 )
             )
 
@@ -634,8 +1061,8 @@ def fetch_rules(langs):
             rules[locale]["bias_sentences_data"] = list(
                 zip(
                     df_bias_sentences["Lemma"],
-                    map(ast.literal_eval, df_bias_sentences["Alt_split"]),
                     df_bias_sentences["Primary_subcategory"],
+                    map(ast.literal_eval, df_bias_sentences["Alt_split"]),
                 )
             )
 
@@ -645,8 +1072,8 @@ def fetch_rules(langs):
                 zip(
                     df_bias_singular_they["Lemma"],
                     df_bias_singular_they["Word_Type"],
-                    map(ast.literal_eval, df_bias_singular_they["Alt_split"]),
                     df_bias_singular_they["Primary_subcategory"],
+                    map(ast.literal_eval, df_bias_singular_they["Alt_split"]),
                 )
             )
 
@@ -743,6 +1170,7 @@ def fetch_rules(langs):
             "do the trick",
             "dwarf satellite",
             "dwarf star",
+            "each other",
             "epileptic episode",
             "epileptic episodes",
             "epileptic seizure",
@@ -775,6 +1203,7 @@ def fetch_rules(langs):
             "force quit",
             "force to be reckoned",
             "force to reckon",
+            "fossil group",
             "fruit and vegetable",
             "fruit juice",
             "fruit loops",
@@ -1072,9 +1501,14 @@ def fetch_rules(langs):
             ]
         ]
 
-        # need to
+        # need to, need for
         pattern_need_to = [
             [{"LEMMA": "need", "POS": "VERB"}, {"LEMMA": {"IN": ["to", "for"]}}]
+        ]
+
+        # let alone
+        pattern_let_alone = [
+            [{"LEMMA": "let", "POS": "VERB"}, {"LEMMA": {"IN": ["alone"]}}]
         ]
 
         # of a kind 'of a kind', 'of her kind', 'of his kind', 'of its kind', 'of one kind or another', 'of their kind',
@@ -1099,11 +1533,13 @@ def fetch_rules(langs):
             pattern_lead_prepos,
             pattern_lead_life,
             pattern_need_to,
+            pattern_let_alone,
             pattern_of_kind,
             pattern_quick,
         ]
 
         rules["en"]["conjunctions"] = [
+            ",",
             "and",
             "but",
             "or",
@@ -1118,5 +1554,58 @@ def fetch_rules(langs):
             "that",
             "while",
         ]
+
+        rules["en"]["salutations"] = (
+            "Dear",
+            "Mrs.",
+            "Miss",
+            "Madam",
+            "Ms.",
+            "Dr.",
+            "Mr.",
+            "Hola",
+            "Prof.",
+            "Rev.",
+            "Lady",
+            "Sir",
+            "Capt.",
+            "Major",
+            "Lt.-Col.",
+            "Col.",
+            "Lady",
+            "Lt.-Cmdr.",
+            "The Hon.",
+            "Cmdr.",
+            "Flt. Lt.",
+            "Brgdr.",
+            "Judge",
+            "Lord",
+            "The Hon. Mrs",
+            "Wng. Cmdr.",
+            "Group Capt.",
+            "Rt. Hon. Lord",
+            "Revd. Father",
+            "Revd Canon",
+            "Maj.-Gen.",
+            "Air Cdre.",
+            "Viscount",
+            "Dame",
+            "Rear Admrl.",
+            "Good afternoon",
+            "Good evening",
+            "Good morning",
+            "Hi",
+            "Hey",
+            "Morning",
+            "Howdy",
+            "Hello",
+            "Greetings",
+            "Whats up",
+            "Good news",
+            "To",
+            "Yo",
+            "Sup",
+            "Holler",
+        )
 
     return rules

@@ -1,5 +1,6 @@
 import spacy
 from spacy.lang.en import English
+from spacy.lang.de import German
 
 from spacy.lang.char_classes import (
     ALPHA,
@@ -11,8 +12,10 @@ from spacy.lang.char_classes import (
 )
 from spacy.tokenizer import Tokenizer
 from spacy.util import compile_infix_regex
+from spacy.pipeline import Lemmatizer
+from spacy.lookups import Lookups
 
-# class for Lemmatizer
+
 class TokenLemmatizer:
     def __init__(self, lemma_table):
         self.lemma_table = lemma_table
@@ -25,404 +28,424 @@ class TokenLemmatizer:
         return doc
 
 
-# Custom tokenizers
-# English
-def custom_tokenizer_en(nlp):
-    infixes = (
-        LIST_ELLIPSES
-        + LIST_ICONS
-        + [
-            r"(?<=[0-9])[+\-\*^](?=[0-9-])",
-            r"(?<=[{al}{q}])\.(?=[{au}{q}])".format(
-                al=ALPHA_LOWER, au=ALPHA_UPPER, q=CONCAT_QUOTES
-            ),
-            r"(?<=[{a}]),(?=[{a}])".format(a=ALPHA),
-            # hyphen excluded from separators
-            # r"(?<=[{a}])(?:{h})(?=[{a}])".format(a=ALPHA, h=HYPHENS),
-            r"(?<=[{a}0-9])[:<>=/](?=[{a}])".format(a=ALPHA),
-        ]
-    )
+def custom_lemmatizer(lemma_lookup):
+    lemmatizer = TokenLemmatizer(lemma_lookup)
 
-    infix_re = compile_infix_regex(infixes)
+    lookups = Lookups()
+    lookups.add_table("lemma_lookup", lemma_lookup)
+    lemmatizer.lookups = lookups
 
-    return Tokenizer(
-        nlp.vocab,
-        prefix_search=nlp.tokenizer.prefix_search,
-        suffix_search=nlp.tokenizer.suffix_search,
-        infix_finditer=infix_re.finditer,
-        token_match=nlp.tokenizer.token_match,
-        rules=nlp.Defaults.tokenizer_exceptions,
-    )
+    return lemmatizer
 
 
-# German
-def custom_tokenizer_de(nlp):
-    _quotes = CONCAT_QUOTES.replace("'", "")
-    infixes = (
-        LIST_ELLIPSES
-        + LIST_ICONS
-        + [
-            r"(?<=[{al}])\.(?=[{au}])".format(al=ALPHA_LOWER, au=ALPHA_UPPER),
-            r"(?<=[{a}])[,!?](?=[{a}])".format(a=ALPHA),
-            # removed : [:<>=]
-            r"(?<=[{a}])[<>=](?=[{a}])".format(a=ALPHA),
-            r"(?<=[{a}]),(?=[{a}])".format(a=ALPHA),
-            r"(?<=[0-9{a}])\/(?=[0-9{a}])".format(a=ALPHA),
-            r"(?<=[{a}])([{q}\)\]\(\[])(?=[{a}])".format(a=ALPHA, q=_quotes),
-            r"(?<=[{a}])--(?=[{a}])".format(a=ALPHA),
-            r"(?<=[0-9])-(?=[0-9])",
-        ]
-    )
+def custom_tokenizer(lang, nlp):
+    if lang == "de":
+        infixes = (
+            LIST_ELLIPSES
+            + LIST_ICONS
+            + [
+                r"(?<=[{al}])\.(?=[{au}])".format(al=ALPHA_LOWER, au=ALPHA_UPPER),
+                r"(?<=[{a}])[,!?](?=[{a}])".format(a=ALPHA),
+                # removed : [:<>=]
+                r"(?<=[{a}])[<>=](?=[{a}])".format(a=ALPHA),
+                r"(?<=[{a}]),(?=[{a}])".format(a=ALPHA),
+                r"(?<=[0-9{a}])\/(?=[0-9{a}])".format(a=ALPHA),
+                r"(?<=[{a}])([{q}\)\]\(\[])(?=[{a}])".format(
+                    a=ALPHA, q=CONCAT_QUOTES.replace("'", "")
+                ),
+                r"(?<=[{a}])--(?=[{a}])".format(a=ALPHA),
+                r"(?<=[0-9])-(?=[0-9])",
+            ]
+        )
 
-    infix_re = compile_infix_regex(infixes)
-
-    return Tokenizer(
-        nlp.vocab,
-        prefix_search=nlp.tokenizer.prefix_search,
-        suffix_search=nlp.tokenizer.suffix_search,
-        infix_finditer=infix_re.finditer,
-        token_match=nlp.tokenizer.token_match,
-        rules=nlp.Defaults.tokenizer_exceptions,
-    )
-
-
-def fetch_nlp_model(lang, spacy_model):
-    # Model data
-    model = spacy.load(spacy_model)
-
-    if lang == "en":
-        # custom tokenizer for English
-        model.tokenizer = custom_tokenizer_en(model)
-
-        # add custom lemmatizer to the pipline
-        model.add_pipe("token_lemmatizer_en")
+        infix_re = compile_infix_regex(infixes)
     else:
-        # custom tokenizer for German
-        model.tokenizer = custom_tokenizer_de(model)
+        infixes = (
+            LIST_ELLIPSES
+            + LIST_ICONS
+            + [
+                r"(?<=[0-9])[+\-\*^](?=[0-9-])",
+                r"(?<=[{al}{q}])\.(?=[{au}{q}])".format(
+                    al=ALPHA_LOWER, au=ALPHA_UPPER, q=CONCAT_QUOTES
+                ),
+                r"(?<=[{a}]),(?=[{a}])".format(a=ALPHA),
+                # hyphen excluded from separators
+                # r"(?<=[{a}])(?:{h})(?=[{a}])".format(a=ALPHA, h=HYPHENS),
+                r"(?<=[{a}0-9])[:<>=/](?=[{a}])".format(a=ALPHA),
+            ]
+        )
 
-        lookup_table = model.get_pipe("lemmatizer").lookups.get_table("lemma_lookup")
+        infix_re = compile_infix_regex(infixes)
 
-        dict_lemma_lookup = {
-            "international": "international",
-            "internationale": "international",
-            "Meister": "Meister",
-            "kämpfend": "kämpfend",
-            "abgebrüht": "abgebrüht",
-            "beherrschend": "beherrschend",
-            "entscheidend": "entscheidend",
-            "entschlossen": "entschlossen",
-            "angewiesen": "angewiesen",
-            "berührt": "berührt",
-            "besonnen": "besonnen",
-            "betreut": "betreut",
-            "bewegt": "bewegt",
-            "einfühlend": "einfühlend",
-            "engagiert": "engagiert",
-            "entgegenkommend": "entgegenkommend",
-            "ergreifend": "ergreifend",
-            "fördernd": "fördernd",
-            "gerührt": "gerührt",
-            "heiter": "heiter",
-            "lieb": "lieb",
-            "mitfühlend": "mitfühlend",
-            "mitwirkend": "mitwirkend",
-            "motiviert": "motiviert",
-            "nährend": "nährend",
-            "teilnehmend": "teilnehmend",
-            "unterstützend": "unterstützend",
-            "verbindend": "verbindend",
-            "vermittelnd": "vermittelnd",
-            "vertraut": "vertraut",
-            "weich": "weich",
-            "zusammenhängend": "zusammenhängend",
-            "zusammenwirkend": "zusammenwirkend",
-            "zustimmend": "zustimmend",
-            "jünger": "jünger",
-            "ausgeprägt": "ausgeprägt",
-            "ausgezeichnet": "ausgezeichnet",
-            "äußerst": "äußerst",
-            "beeindruckend": "beeindruckend",
-            "beste": "beste",
-            "bester": "beste",
-            "besten": "beste",
-            "bestem": "beste",
-            "bestes": "beste",
-            "etabliert": "etabliert",
-            "führend": "führend",
-            "fundiert": "fundiert",
-            "gewandt": "gewandt",
-            "Götter": "Götter",
-            "hervorragend": "hervorragend",
-            "überzeugend": "überzeugend",
-            "zwingend": "zwingend",
-            "Alter": "Alter",
-            "Bucklige": "Bucklige",
-            "Grundsätze": "Grundsätze",
-            "Herrschaften": "Herrschaften",
-            "Jeder": "Jeder",
-            "Kanus": "Kanus",
-            "Spitzenunternehmen ": "Spitzenunternehmen",
-            "Trampel": "Trampel",
-            "Wettkämpfe": "Wettkämpfe",
-            "Wilde": "Wilde",
-            "Zusammenhänge": "Zusammenhänge",
-            "andauernd": "andauernd",
-            "angreifend": "angreifend",
-            "anscheinend": "anscheinend",
-            "auffallend": "auffallend",
-            "aufstrebend": "aufstrebend",
-            "ausgerechnet": "ausgerechnet",
-            "bestimmend": "bestimmend",
-            "bestimmt": "bestimmt",
-            "einige": "einige",
-            "entschieden": "entschieden",
-            "entspannt": "entspannt",
-            "erfüllend": "erfüllend",
-            "ermutigend": "ermutigend",
-            "erprobt": "erprobt",
-            "etliche": "etliche",
-            "fortwährend": "fortwährend",
-            "führen": "führen",
-            "gewagt": "gewagt",
-            "herrschend": "herrschend",
-            "o.Ä.": "o.Ä.",
-            "offenbar": "offenbar",
-            "schlicht": "schlicht",
-            "sicher": "sicher",
-            "stärker": "stärker",
-            "treibend": "treibend",
-            "u.Ä.": "u.Ä.",
-            "u.ä.": "u.ä.",
-            "zugegeben": "zugegeben",
-            "überzeugt": "überzeugt",
-            "(x)aaS": "(x)aaS",
-            "AP/AR": "AP/AR",
-            "Behinderte": "Behinderte",
-            "Bisexuelle": "Bisexuelle",
-            "Illegale": "Illegale",
-            "P/E": "P/E",
-            "Schädigungen": "Schädigungen",
-            "beeinträchtigt": "beeinträchtigt",
-            "behindert": "behindert",
-            "geschädigt": "geschädigt",
-            "verrückt": "verrückt",
-            "versehrt": "versehrt",
-            "überfordert": "überfordert",
-            "aktive": "aktiv",
-            "ambitionierte": "ambitioniert",
-            "androsexuelle": "androsexuell",
-            "angriffslustige": "angriffslustig",
-            "anspruchsvolle": "anspruchsvoll",
-            "asexuelle": "asexuell",
-            "athletische": "athletisch",
-            "aufstiegsorientierte": "aufstiegsorientiert",
-            "augenscheinliche": "augenscheinlich",
-            "augenöffnende": "augenöffnend",
-            "autonome": "autonom",
-            "autoritative": "autoritativ",
-            "beeinträchtigte": "beeinträchtigt",
-            "behinderte": "behindert",
-            "behindertengerechte": "behindertengerecht",
-            "berührte": "berührt",
-            "bescheidene": "bescheiden",
-            "bestimmte": "bestimmt",
-            "betreute": "betreut",
-            "bewegte": "bewegt",
-            "bisexuelle": "bisexuell",
-            "braune": "braun",
-            "brillante": "brillant",
-            "couragierte": "couragiert",
-            "debile": "debil",
-            "dienstleistungsorientierte": "dienstleistungsorientiert",
-            "dumme": "dumm",
-            "dunkelhäutige": "dunkelhäutig",
-            "durchsetzungsfähige": "durchsetzungsfähig",
-            "durchsetzungsstarke": "durchsetzungsstark",
-            "ehrgeizige": "ehrgeizig",
-            "eigensinnige": "eigensinnig",
-            "eigenständige": "eigenständig",
-            "eigenverantwortliche": "eigenverantwortlich",
-            "eigenwillige": "eigenwillig",
-            "emotionale": "emotional",
-            "empathische": "empathisch",
-            "engagierte": "engagiert",
-            "enthusiastische": "enthusiastisch",
-            "entscheidungsfreudige": "entscheidungsfreudig",
-            "entschlussfreudige": "entschlussfreudig",
-            "entspannte": "entspannt",
-            "erfinderische": "erfinderisch",
-            "erfindungsreiche": "erfindungsreich",
-            "erfolgshungrige": "erfolgshungrig",
-            "erprobte": "erprobt",
-            "etablierte": "etabliert",
-            "faire": "fair",
-            "fantastische": "fantastisch",
-            "feindselige": "feindselig",
-            "flexibele": "flexibel",
-            "freimütige": "freimütig",
-            "freundliche": "freundlich",
-            "fundierte": "fundiert",
-            "fördernde": "fördernd",
-            "fürsorgliche": "fürsorglich",
-            "gefühlsbetonte": "gefühlsbetont",
-            "gefühlsmässige": "gefühlsmässig",
-            "gehandicapierte": "gehandicapiert",
-            "gehandicapte": "gehandicapt",
-            "gelbe": "gelb",
-            "geldgierige": "geldgierig",
-            "gemeinschaftliche": "gemeinschaftlich",
-            "genderqueere": "genderqueer",
-            "gestalterische": "gestalterisch",
-            "gestresste": "gestresst",
-            "glückliche": "glücklich",
-            "grundsätzliche": "grundsätzlich",
-            "handicapierte": "handicapiert",
-            "hartnäckige": "hartnäckig",
-            "herausfordernde": "herausfordernd",
-            "herausgeforderte": "herausgefordert",
-            "herausragende": "herausragend",
-            "heteronormative": "heteronormativ",
-            "heterosexistische": "heterosexistisch",
-            "hoch-motivierte": "hoch-motiviert",
-            "hochmotivierte": "hochmotiviert",
-            "hochwertige": "hochwertig",
-            "homofeindliche": "homofeindlich",
-            "homonormative": "homonormativ",
-            "hysterische": "hysterisch",
-            "hörgeschädigte": "hörgeschädigt",
-            "identifizierene": "identifizieren",
-            "impulsive": "impulsiv",
-            "individuelle": "individuell",
-            "initiative": "initiativ",
-            "inklusive": "inklusiv",
-            "innovative": "innovativ",
-            "integere": "integer",
-            "intere": "inter",
-            "intersektionale": "intersektional",
-            "invalide": "invalid",
-            "junge": "jung",
-            "kollegiale": "kollegial",
-            "kommunikative": "kommunikativ",
-            "kompetitive": "kompetitiv",
-            "konkurrenzbetonte": "konkurrenzbetont",
-            "konkurrenzfähige": "konkurrenzfähig",
-            "konstruktive": "konstruktiv",
-            "kooperative": "kooperativ",
-            "kreative": "kreativ",
-            "kämpferische": "kämpferisch",
-            "lahme": "lahm",
-            "leistungsbereite": "leistungsbereit",
-            "lesbische": "lesbisch",
-            "liebliche": "lieblich",
-            "logische": "logisch",
-            "loyale": "loyal",
-            "lösungsorientierte": "lösungsorientiert",
-            "machthungrige": "machthungrig",
-            "militante": "militant",
-            "miteinandere": "miteinander",
-            "mongoloide": "mongoloid",
-            "motivierte": "motiviert",
-            "männliche": "männlich",
-            "nachgiebige": "nachgiebig",
-            "nette": "nett",
-            "neugierige": "neugierig",
-            "neurodivergente": "neurodivergent",
-            "neurotische": "neurotisch",
-            "normale": "normal",
-            "obligatorische": "obligatorisch",
-            "offenherzige": "offenherzig",
-            "pansexuelle": "pansexuell",
-            "partnerschaftliche": "partnerschaftlich",
-            "perfekte": "perfekt",
-            "performante": "performant",
-            "polyamore": "polyamor",
-            "pro-aktive": "pro-aktiv",
-            "proaktive": "proaktiv",
-            "problematische": "problematisch",
-            "queerfeministische": "queerfeministisch",
-            "questioninge": "questioning",
-            "resiliente": "resilient",
-            "respektvolle": "respektvoll",
-            "resultat-orientierte": "resultat-orientiert",
-            "resultatorientierte": "resultatorientiert",
-            "risikofreudige": "risikofreudig",
-            "robuste": "robust",
-            "rücksichtslose": "rücksichtslos",
-            "sanfte": "sanft",
-            "schwarze": "schwarz",
-            "schwerbehinderte": "schwerbehindert",
-            "schwerbeschädigte": "schwerbeschädigt",
-            "schöpferische": "schöpferisch",
-            "sehgeschädigte": "sehgeschädigt",
-            "sehre": "sehr",
-            "selbstbewusste": "selbstbewusst",
-            "selbstsichere": "selbstsicher",
-            "selbstständige": "selbstständig",
-            "selbständige": "selbständig",
-            "sensibele": "sensibel",
-            "sportlerische": "sportlerisch",
-            "sportliche": "sportlich",
-            "starke": "stark",
-            "stilsichere": "stilsicher",
-            "straight-actinge": "straight-acting",
-            "straightactinge": "straightacting",
-            "streitene": "streiten",
-            "streitlustige": "streitlustig",
-            "streitsüchtige": "streitsüchtig",
-            "sture": "stur",
-            "stärkere": "stärker",
-            "sympathische": "sympathisch",
-            "taktvolle": "taktvoll",
-            "taube": "taub",
-            "teamfähige": "teamfähig",
-            "teamorientierte": "teamorientiert",
-            "transsexuelle": "transsexuell",
-            "treue": "treu",
-            "umoperierte": "umoperiert",
-            "umsetzungsstarke": "umsetzungsstark",
-            "umsichtige": "umsichtig",
-            "unbeugsame": "unbeugsam",
-            "unisexe": "unisex",
-            "unnachgiebige": "unnachgiebig",
-            "unternehmungsfreudige": "unternehmungsfreudig",
-            "unwiderstehliche": "unwiderstehlich",
-            "verlässliche": "verlässlich",
-            "verrückte": "verrückt",
-            "versehrte": "versehrt",
-            "verständnisvolle": "verständnisvoll",
-            "vertraute": "vertraut",
-            "voneinandere": "voneinander",
-            "vor-alleme": "vor-allem",
-            "voralleme": "vorallem",
-            "waghalsige": "waghalsig",
-            "warme": "warm",
-            "weibliche": "weiblich",
-            "weltweite": "weltweit",
-            "wettbewerbsfähige": "wettbewerbsfähig",
-            "widerstandsfähige": "widerstandsfähig",
-            "zarte": "zart",
-            "zickige": "zickig",
-            "zielorientierte": "zielorientiert",
-            "zugetane": "zugetan",
-            "zusammene": "zusammen",
-            "zwingendermaßene": "zwingendermaßen",
-            "zwischenmenschliche": "zwischenmenschlich",
-            "äußerste": "äußerst",
-            "Führungskräfte": "Führungskraft",
-        }
+    return Tokenizer(
+        nlp.vocab,
+        prefix_search=nlp.tokenizer.prefix_search,
+        suffix_search=nlp.tokenizer.suffix_search,
+        infix_finditer=infix_re.finditer,
+        token_match=nlp.tokenizer.token_match,
+        rules=nlp.Defaults.tokenizer_exceptions,
+    )
 
-        # update the lookup table
-        for key in dict_lemma_lookup:
-            lookup_table.set(key, dict_lemma_lookup[key])
 
-    return model
+@German.factory("custom_lemmatizer_de")
+def custom_lemmatizer_de(nlp, name):
+    lemma_lookup = {
+        "international": "international",
+        "internationale": "international",
+        "Meister": "Meister",
+        "abgebrüht": "abgebrüht",
+        "beherrschend": "beherrschend",
+        "entscheidend": "entscheidend",
+        "entschlossen": "entschlossen",
+        "angewiesen": "angewiesen",
+        "besonnen": "besonnen",
+        "betreut": "betreut",
+        "bewegt": "bewegt",
+        "einfühlend": "einfühlend",
+        "engagiert": "engagiert",
+        "entgegenkommend": "entgegenkommend",
+        "ergreifend": "ergreifend",
+        "gerührt": "gerührt",
+        "heiter": "heiter",
+        "lieb": "lieb",
+        "liebe": "lieb",
+        "mitfühlend": "mitfühlend",
+        "mitwirkend": "mitwirkend",
+        "motiviert": "motiviert",
+        "nährend": "nährend",
+        "teilnehmend": "teilnehmend",
+        "unterstützend": "unterstützend",
+        "verbindend": "verbindend",
+        "vermittelnd": "vermittelnd",
+        "vertraut": "vertraut",
+        "weich": "weich",
+        "zusammenhängend": "zusammenhängend",
+        "zusammenwirkend": "zusammenwirkend",
+        "zustimmend": "zustimmend",
+        "jünger": "jünger",
+        "ausgezeichnet": "ausgezeichnet",
+        "beeindruckend": "beeindruckend",
+        "beste": "beste",
+        "bester": "beste",
+        "besten": "beste",
+        "bestem": "beste",
+        "bestes": "beste",
+        "etabliert": "etabliert",
+        "fundiert": "fundiert",
+        "gewandt": "gewandt",
+        "Götter": "Götter",
+        "hervorragend": "hervorragend",
+        "zwingend": "zwingend",
+        "Alter": "Alter",
+        "Bucklige": "Bucklige",
+        "Grundsätze": "Grundsätze",
+        "Herrschaften": "Herrschaften",
+        "Jeder": "Jeder",
+        "Kanus": "Kanus",
+        "Spitzenunternehmen ": "Spitzenunternehmen",
+        "Trampel": "Trampel",
+        "Wettkämpfe": "Wettkämpfe",
+        "Wilde": "Wilde",
+        "Zusammenhänge": "Zusammenhänge",
+        "andauernd": "andauernd",
+        "angreifend": "angreifend",
+        "anscheinend": "anscheinend",
+        "auffallend": "auffallend",
+        "aufstrebend": "aufstrebend",
+        "ausgerechnet": "ausgerechnet",
+        "bestimmend": "bestimmend",
+        "bestimmt": "bestimmt",
+        "einige": "einige",
+        "entschieden": "entschieden",
+        "entspannt": "entspannt",
+        "erfüllend": "erfüllend",
+        "ermutigend": "ermutigend",
+        "erprobt": "erprobt",
+        "etliche": "etliche",
+        "gewagt": "gewagt",
+        "herrschend": "herrschend",
+        "o.Ä.": "o.Ä.",
+        "offenbar": "offenbar",
+        "schlicht": "schlicht",
+        "sicher": "sicher",
+        "treibend": "treibend",
+        "u.Ä.": "u.Ä.",
+        "u.ä.": "u.ä.",
+        "zugegeben": "zugegeben",
+        "(x)aaS": "(x)aaS",
+        "AP/AR": "AP/AR",
+        "Behinderte": "Behinderte",
+        "Bisexuelle": "Bisexuelle",
+        "Illegale": "Illegale",
+        "P/E": "P/E",
+        "Schädigungen": "Schädigungen",
+        "behindert": "behindert",
+        "versehrt": "versehrt",
+        "aktive": "aktiv",
+        "ambitionierte": "ambitioniert",
+        "androsexuelle": "androsexuell",
+        "angriffslustige": "angriffslustig",
+        "anspruchsvolle": "anspruchsvoll",
+        "asexuelle": "asexuell",
+        "athletische": "athletisch",
+        "aufstiegsorientierte": "aufstiegsorientiert",
+        "augenscheinliche": "augenscheinlich",
+        "augenöffnende": "augenöffnend",
+        "autonome": "autonom",
+        "autoritative": "autoritativ",
+        "beeinträchtigte": "beeinträchtigt",
+        "behinderte": "behindert",
+        "behindertengerechte": "behindertengerecht",
+        "berührte": "berührt",
+        "bescheidene": "bescheiden",
+        "bestimmte": "bestimmt",
+        "betreute": "betreut",
+        "bewegte": "bewegt",
+        "bisexuelle": "bisexuell",
+        "braune": "braun",
+        "brillante": "brillant",
+        "couragierte": "couragiert",
+        "debile": "debil",
+        "dienstleistungsorientierte": "dienstleistungsorientiert",
+        "dumme": "dumm",
+        "dunkelhäutige": "dunkelhäutig",
+        "durchsetzungsfähige": "durchsetzungsfähig",
+        "durchsetzungsstarke": "durchsetzungsstark",
+        "ehrgeizige": "ehrgeizig",
+        "eigensinnige": "eigensinnig",
+        "eigenständige": "eigenständig",
+        "eigenverantwortliche": "eigenverantwortlich",
+        "eigenwillige": "eigenwillig",
+        "emotionale": "emotional",
+        "empathische": "empathisch",
+        "engagierte": "engagiert",
+        "enthusiastische": "enthusiastisch",
+        "entscheidungsfreudige": "entscheidungsfreudig",
+        "entschlussfreudige": "entschlussfreudig",
+        "entspannte": "entspannt",
+        "erfinderische": "erfinderisch",
+        "erfindungsreiche": "erfindungsreich",
+        "erfolgshungrige": "erfolgshungrig",
+        "erprobte": "erprobt",
+        "etablierte": "etabliert",
+        "faire": "fair",
+        "fantastische": "fantastisch",
+        "feindselige": "feindselig",
+        "flexibele": "flexibel",
+        "freimütige": "freimütig",
+        "freundliche": "freundlich",
+        "fundierte": "fundiert",
+        "fördernde": "fördernd",
+        "fürsorgliche": "fürsorglich",
+        "gefühlsbetonte": "gefühlsbetont",
+        "gefühlsmässige": "gefühlsmässig",
+        "gehandicapierte": "gehandicapiert",
+        "gehandicapte": "gehandicapt",
+        "gelbe": "gelb",
+        "geldgierige": "geldgierig",
+        "gemeinschaftliche": "gemeinschaftlich",
+        "genderqueere": "genderqueer",
+        "gestalterische": "gestalterisch",
+        "gestresste": "gestresst",
+        "glückliche": "glücklich",
+        "grundsätzliche": "grundsätzlich",
+        "handicapierte": "handicapiert",
+        "hartnäckige": "hartnäckig",
+        "herausfordernde": "herausfordernd",
+        "herausgeforderte": "herausgefordert",
+        "herausragende": "herausragend",
+        "heteronormative": "heteronormativ",
+        "heterosexistische": "heterosexistisch",
+        "hoch-motivierte": "hoch-motiviert",
+        "hochmotivierte": "hochmotiviert",
+        "hochwertige": "hochwertig",
+        "homofeindliche": "homofeindlich",
+        "homonormative": "homonormativ",
+        "hysterische": "hysterisch",
+        "hörgeschädigte": "hörgeschädigt",
+        "identifizierene": "identifizieren",
+        "impulsive": "impulsiv",
+        "individuelle": "individuell",
+        "initiative": "initiativ",
+        "inklusive": "inklusiv",
+        "innovative": "innovativ",
+        "integere": "integer",
+        "intere": "inter",
+        "intersektionale": "intersektional",
+        "invalide": "invalid",
+        "junge": "jung",
+        "kollegiale": "kollegial",
+        "kommunikative": "kommunikativ",
+        "kompetitive": "kompetitiv",
+        "konkurrenzbetonte": "konkurrenzbetont",
+        "konkurrenzfähige": "konkurrenzfähig",
+        "konstruktive": "konstruktiv",
+        "kooperative": "kooperativ",
+        "kreative": "kreativ",
+        "kämpferische": "kämpferisch",
+        "lahme": "lahm",
+        "leistungsbereite": "leistungsbereit",
+        "lesbische": "lesbisch",
+        "liebliche": "lieblich",
+        "logische": "logisch",
+        "loyale": "loyal",
+        "lösungsorientierte": "lösungsorientiert",
+        "machthungrige": "machthungrig",
+        "militante": "militant",
+        "miteinandere": "miteinander",
+        "mongoloide": "mongoloid",
+        "motivierte": "motiviert",
+        "männliche": "männlich",
+        "nachgiebige": "nachgiebig",
+        "nette": "nett",
+        "neugierige": "neugierig",
+        "neurodivergente": "neurodivergent",
+        "neurotische": "neurotisch",
+        "normale": "normal",
+        "obligatorische": "obligatorisch",
+        "offenherzige": "offenherzig",
+        "pansexuelle": "pansexuell",
+        "partnerschaftliche": "partnerschaftlich",
+        "perfekte": "perfekt",
+        "performante": "performant",
+        "polyamore": "polyamor",
+        "pro-aktive": "pro-aktiv",
+        "proaktive": "proaktiv",
+        "problematische": "problematisch",
+        "queerfeministische": "queerfeministisch",
+        "questioninge": "questioning",
+        "resiliente": "resilient",
+        "respektvolle": "respektvoll",
+        "resultat-orientierte": "resultat-orientiert",
+        "resultatorientierte": "resultatorientiert",
+        "risikofreudige": "risikofreudig",
+        "robuste": "robust",
+        "rücksichtslose": "rücksichtslos",
+        "sanfte": "sanft",
+        "schwarze": "schwarz",
+        "schwerbehinderte": "schwerbehindert",
+        "schwerbeschädigte": "schwerbeschädigt",
+        "schöpferische": "schöpferisch",
+        "sehgeschädigte": "sehgeschädigt",
+        "sehre": "sehr",
+        "selbstbewusste": "selbstbewusst",
+        "selbstsichere": "selbstsicher",
+        "selbstständige": "selbstständig",
+        "selbständige": "selbständig",
+        "sensibele": "sensibel",
+        "sportlerische": "sportlerisch",
+        "sportliche": "sportlich",
+        "starke": "stark",
+        "stilsichere": "stilsicher",
+        "straight-actinge": "straight-acting",
+        "straightactinge": "straightacting",
+        "streitene": "streiten",
+        "streitlustige": "streitlustig",
+        "streitsüchtige": "streitsüchtig",
+        "sture": "stur",
+        "stärkere": "stärker",
+        "sympathische": "sympathisch",
+        "taktvolle": "taktvoll",
+        "taube": "taub",
+        "teamfähige": "teamfähig",
+        "teamorientierte": "teamorientiert",
+        "transsexuelle": "transsexuell",
+        "treue": "treu",
+        "umoperierte": "umoperiert",
+        "umsetzungsstarke": "umsetzungsstark",
+        "umsichtige": "umsichtig",
+        "unbeugsame": "unbeugsam",
+        "unisexe": "unisex",
+        "unnachgiebige": "unnachgiebig",
+        "unternehmungsfreudige": "unternehmungsfreudig",
+        "unwiderstehliche": "unwiderstehlich",
+        "verlässliche": "verlässlich",
+        "verrückte": "verrückt",
+        "versehrte": "versehrt",
+        "verständnisvolle": "verständnisvoll",
+        "vertraute": "vertraut",
+        "voneinandere": "voneinander",
+        "vor-alleme": "vor-allem",
+        "voralleme": "vorallem",
+        "waghalsige": "waghalsig",
+        "warme": "warm",
+        "weibliche": "weiblich",
+        "weltweite": "weltweit",
+        "wettbewerbsfähige": "wettbewerbsfähig",
+        "widerstandsfähige": "widerstandsfähig",
+        "zarte": "zart",
+        "zickige": "zickig",
+        "zielorientierte": "zielorientiert",
+        "zugetane": "zugetan",
+        "zusammene": "zusammen",
+        "zwingendermaßene": "zwingendermaßen",
+        "zwischenmenschliche": "zwischenmenschlich",
+        "äußerste": "äußerst",
+        "Freundliche": "freundlich",
+        "türken": "türken",
+        "Höchstleistungen": "Höchstleistung",
+        "Führungskräfte": "Führungskraft",
+        "selbstständiger": "selbstständig",
+        "Alter": "Alter",  # alt
+        "Behinderte": "Behinderte",  # behindert
+        "Bisexuelle": "Bisexuelle",  # Bisexueller
+        "Bucklige": "Bucklige",  # bucklig
+        "Illegale": "Illegale",  # illegal
+        "Jeder": "Jeder",  # jed
+        "Meister": "Meister",  # meist
+        "Wilde": "Wilde",  # Wilder
+        "andauernd": "andauernd",  # andauern
+        "angreifend": "angreifend",  # angreifen
+        "anscheinend": "anscheinend",  # anscheinen
+        "auffallend": "auffallend",  # auffallen
+        "aufstrebend": "aufstrebend",  # aufstreben
+        "ausgeprägt": "ausgeprägt",  # ausprägen
+        "ausgerechnet": "ausgerechnet",  # ausrechnen
+        "ausgezeichnet": "ausgezeichnet",  # auszeichnen
+        "beeindruckend": "beeindruckend",  # beeindrucken
+        "beeinträchtigt": "beeinträchtigt",  # beeinträchtigen
+        "beherrschend": "beherrschend",  # beherrschen
+        "behindert": "behindert",  # behindern
+        "beste": "beste",  # gut
+        "bestimmend": "bestimmend",  # bestimmen
+        "bestimmt": "bestimmt",  # bestimmen
+        "einige": "einige",  # einig
+        "entscheidend": "entscheidend",  # entscheiden
+        "entschieden": "entschieden",  # entscheiden
+        "entschlossen": "entschlossen",  # entschließen
+        "erprobt": "erprobt",  # erproben
+        "etabliert": "etabliert",  # etablieren
+        "etliche": "etliche",  # etlich
+        "fortwährend": "fortwährend",  # fortwähren
+        "fundiert": "fundiert",  # fundieren
+        "führen": "führen",  # fahren
+        "führend": "führend",  # führen
+        "geschädigt": "geschädigt",  # schädigen
+        "gewagt": "gewagt",  # wagen
+        "gewandt": "gewandt",  # wenden
+        "herrschend": "herrschend",  # herrschen
+        "hervorragend": "hervorragend",  # hervorragen
+        "kämpfend": "kämpfend",  # kämpfen
+        "offenbar": "offenbar",  # offenbaren
+        "schlicht": "schlicht",  # schleichen
+        "stärker": "stärker",  # stark
+        "treibend": "treibend",  # treiben
+        "verrückt": "verrückt",  # verrücken
+        "versehrt": "versehrt",  # versehren
+        "zugegeben": "zugegeben",  # zugeben
+        "zwingend": "zwingend",  # zwingen
+        "äußerst": "äußerst",  # äußern
+        "überfordert": "überfordert",  # überfordern
+        "überzeugend": "überzeugend",  # überzeugen
+        "überzeugt": "überzeugt",  # überzeugen
+    }
 
-# call engish factory from spacy and apply the custom lemmatizer
-@English.factory("token_lemmatizer_en")
-def create_en_lemmatizer(nlp, name):
-    # English
-    # custom English dictionary to correct lemmas in SpaCy
-    dict_lemma_lookup = {
+    return custom_lemmatizer(lemma_lookup)
+
+
+@English.factory("custom_lemmatizer_en")
+def custom_lemmatizer_en(nlp, name):
+    lemma_lookup = {
         "Bin-Laden": "Bin-Laden",
         "Binladen": "Binladen",
         "Buckwheat": "Buckwheat",
@@ -443,11 +466,9 @@ def create_en_lemmatizer(nlp, name):
         "battle-axe": "battle-axe",
         "bean-eater": "bean-eater",
         "bean-flicker": "bean-flicker",
-        "best": "best",
         "bin-Laden": "bin-Laden",
         "bin-laden": "bin-laden",
         "blind-sided": "blind-sided",
-        "bonkers": "bonkers",
         "brain-damaged": "brain-damaged",
         "braindamaged": "braindamaged",
         "bum-boy": "bum-boy",
@@ -462,7 +483,6 @@ def create_en_lemmatizer(nlp, name):
         "butt-rider": "butt-rider",
         "butt-rustler": "butt-rustler",
         "bøsser": "bøsser",
-        "challenging": "challenging",
         "chi-chi-man": "chi-chi-man",
         "cis-gender": "cis-gender",
         "cis-gendered": "cis-gendered",
@@ -477,8 +497,6 @@ def create_en_lemmatizer(nlp, name):
         "deformed": "deformed",
         "deranged": "deranged",
         "determined": "determined",
-        "dim-witted": "dim-witted",
-        "dimwitted": "dimwitted",
         "disabled": "disabled",
         "disfigured": "disfigured",
         "donut-muncher": "donut-muncher",
@@ -487,7 +505,6 @@ def create_en_lemmatizer(nlp, name):
         "every-man": "every-man",
         "extra-ordinary": "extra-ordinary",
         "eye-opener": "eye-opener",
-        "feeble-minded": "feeble-minded",
         "feebleminded": "feebleminded",
         "first-class": "first-class",
         "first-mover": "first-mover",
@@ -501,13 +518,10 @@ def create_en_lemmatizer(nlp, name):
         "fruit-packer": "fruit-packer",
         "fudge-packer": "fudge-packer",
         "fulfilling": "fulfilling",
-        "gals": "gals",
         "go-getter": "go-getter",
         "goal-getter": "goal-getter",
         "gogetter": "gogetter",
-        "gramps": "gramps",
         "grandfathered": "grandfathered",
-        "grandfathering": "grandfathering",
         "greaser": "greaser",
         "gun-man": "gun-man",
         "gym-bunny": "gym-bunny",
@@ -548,19 +562,13 @@ def create_en_lemmatizer(nlp, name):
         "man-to-man": "man-to-man",
         "man-trap": "man-trap",
         "mansized": "mansized",
-        "manwards": "manwards",
         "market-leader": "market-leader",
-        "market-leading": "market-leading",
-        "marketleading": "marketleading",
         "mentoring": "mentoring",
         "micro-aggression": "micro-aggression",
         "middle-man": "middle-man",
         "must-have": "must-have",
-        "nuts": "nuts",
         "opinionated": "opinionated",
         "over-the-hill": "over-the-hill",
-        "performance-based": "performance-based",
-        "performancebased": "performancebased",
         "pow-wow": "pow-wow",
         "pro-active": "pro-active",
         "pussy-puncher": "pussy-puncher",
@@ -569,44 +577,79 @@ def create_en_lemmatizer(nlp, name):
         "results-oriented": "results-oriented",
         "resultsoriented": "resultsoriented",
         "risk-taker": "risk-taker",
-        "risk-taking": "risk-taking",
-        "risktaking": "risktaking",
-        "scatterbrained": "scatterbrained",
         "self-confidence": "self-confidence",
         "self-confident": "self-confident",
-        "self-motivated": "self-motivated",
         "self-reliance": "self-reliance",
         "self-reliant": "self-reliant",
         "self-sufficiency": "self-sufficiency",
         "self-sufficient": "self-sufficient",
-        "selfmotivated": "selfmotivated",
         "sharing": "sharing",
         "slant-eye": "slant-eye",
         "spazzed": "spazzed",
-        "special-needs": "special-needs",
-        "specialneeds": "specialneeds",
         "state-of-the-art": "state-of-the-art",
-        "strong-minded": "strong-minded",
-        "strongminded": "strongminded",
         "switch-hitter": "switch-hitter",
         "taco-head": "taco-head",
         "team-player": "team-player",
         "thicklips": "thicklips",
-        "tongue-tied": "tongue-tied",
-        "tonguetied": "tonguetied",
         "top-performer": "top-performer",
         "top-performance": "top-performance",
         "top-performing": "top-performing",
-        "topperforming": "topperforming",
         "trans-man": "trans-man",
         "trans-woman": "trans-woman",
         "under-represented": "under-represented",
         "uterus-havers": "uterus-havers",
-        "uterushavers": "uterushavers",
         "well-established": "well-established",
         "wellestablished": "wellestablished",
         "wheelchair-bound": "wheelchair-bound",
         "world-wide": "world-wide",
+        "greed": "greed",
+        "surpass": "surpass",
+        "best": "best",  # well
+        "bonkers": "bonkers",  # bonker
+        "challenging": "challenging",  # challenge
+        "compelling": "compelling",  # compel
+        "dim-witted": "dim-witted",  # dim-witte
+        "dimwitted": "dimwitted",  # dimwitte
+        "feeble-minded": "feeble-minded",  # feeble-minde
+        "gals": "gals",  # gal
+        "gramps": "gramps",  # gramp
+        "grandfathering": "grandfathering",  # grandfathere
+        "manwards": "manwards",  # manward
+        "market-leading": "market-leading",  # market-leade
+        "marketleading": "marketleading",  # marketleade
+        "nuts": "nuts",  # nut
+        "performance-based": "performance-based",  # performance-base
+        "performancebased": "performancebased",  # performancebase
+        "redlining": "redlining",  # redline
+        "risk-taking": "risk-taking",  # risk-take
+        "risktaking": "risktaking",  # risktake
+        "scatterbrained": "scatterbrained",  # scatterbraine
+        "self-motivated": "self-motivated",  # self-motivate
+        "selfmotivated": "selfmotivated",  # selfmotivate
+        "special-needs": "special-needs",  # special-need
+        "specialneeds": "specialneeds",  # specialneed
+        "strong-minded": "strong-minded",  # strong-minde
+        "strongminded": "strongminded",  # strongminde
+        "tongue-tied": "tongue-tied",  # tongue-tie
+        "tonguetied": "tonguetied",  # tonguetie
+        "top-performing": "top-performing",  # top-performe
+        "topperforming": "topperforming",  # topperforme
+        "uterushavers": "uterushavers",  # uterushaver
     }
 
-    return TokenLemmatizer(dict_lemma_lookup)
+    return custom_lemmatizer(lemma_lookup)
+
+
+def fetch_nlp_model(lang, spacy_model):
+    model = spacy.load(spacy_model)
+    model.tokenizer = custom_tokenizer(lang, model)
+
+    # Switch to non-trainable lemmatizer
+    model.remove_pipe("lemmatizer")
+    # Add non-trainable lemmatizer from language defaults
+    # and load lemmatizer tables from spacy-lookups-data
+    model.add_pipe("lemmatizer").initialize()
+
+    model.add_pipe("custom_lemmatizer_" + lang, after="lemmatizer")
+
+    return model
