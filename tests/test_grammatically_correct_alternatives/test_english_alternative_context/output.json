@@ -1,0 +1,33 @@
+{
+    "language": "en",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "froze"
+                },
+                {
+                    "text": "stopped responded"
+                },
+                {
+                    "text": "became unresponsive"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "We hanged the process.",
+            "end": 9,
+            "explanation": {
+                "context": "in technology",
+                "icon": "😒",
+                "text": "Repeats outdated ideas about mental health and wellbeing",
+                "url": "https://www.witty.works/en/categories/biased_language#mental_wellbeing"
+            },
+            "gravity": 2.0,
+            "label": "Biased Language: Mental Wellbeing",
+            "start": 3,
+            "subcategory": "mental_wellbeing",
+            "text": "hanged"
+        }
+    ]
+}

@@ -87,7 +87,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.41.1"
+version = "1.41.2"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -2545,8 +2545,21 @@ def align_verb_form(lang, a_text, a_token, b_token):
 
 
 def alternative_declension(lang, text, token, word_types, alternative):
-    if alternative == "-" or ResultOut.isInspirationAlternative(text, alternative):
-        return alternative
+    if "---" in alternative:
+        (
+            alternative,
+            alternative_context,
+        ) = ResultOut.parse_alternative_context(alternative)
+        alternative_context = " ---" + alternative_context
+    else:
+        alternative_context = ""
+
+    if (
+        alternative == ""
+        or alternative[0] == "-"
+        or ResultOut.isInspirationAlternative(text, alternative)
+    ):
+        return alternative + alternative_context
 
     new_alternative = ""
     previous = False
@@ -2587,7 +2600,7 @@ def alternative_declension(lang, text, token, word_types, alternative):
             alternative_text + alternative_token.whitespace_ + new_alternative
         )
 
-    return new_alternative
+    return new_alternative + alternative_context
 
 
 def alternatives_declension(lang, token, alternatives, prev_token):
