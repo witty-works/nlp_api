@@ -2360,13 +2360,8 @@ def align_noun_form(lang, a_text, a_token, b_token):
 
     if a_token.morph.get("Number") == b_token.morph.get("Number"):
         return b_text
-
-    if lang == "en":
-        if b_token.morph.get("Number") == ["Sing"]:
-            return Noun(b_text).plural()
-
-        return Noun(b_text).singular()
-    elif lang == "de":
+    
+    if lang == "de":
         a_word = german_noun_analysis(a_text)
         if a_word is None:
             return b_text
@@ -2392,33 +2387,36 @@ def align_noun_form(lang, a_text, a_token, b_token):
             if key in b_word["flexion"]:
                 return b_word["flexion"][key]
 
-    return b_text
+        return b_text
+
+    if b_token.morph.get("Number") == ["Sing"]:
+        return Noun(b_text).plural()
+
+    return Noun(b_text).singular()
 
 
 def align_adjective_form(lang, a_text, a_token, b_token):
-    if lang == "en":
-        b_text = b_token.lemma_
-        a_adjective = Adjective(a_text)
-        b_adjective = Adjective(b_text)
-
-        if a_adjective.is_singular():
-            b_text = b_adjective.singular()
-            b_adjective = Adjective(b_text)
-        elif a_adjective.is_plural():
-            b_text = b_adjective.plural()
-            b_adjective = Adjective(b_text)
-
-        a_adjective_lemma = Adjective(a_token.lemma_)
-        if a_adjective_lemma.comparative() == a_text:
-            b_text = b_adjective.comparative()
-        elif a_adjective_lemma.superlative() == a_text:
-            b_text = b_adjective.superlative()
-
-        return b_text
-    elif lang == "de":
+    if lang == "de":
         return add_declension_german(b_token.text, a_text, a_token.lemma_)
 
-    return b_token.text
+    b_text = b_token.lemma_
+    a_adjective = Adjective(a_text)
+    b_adjective = Adjective(b_text)
+
+    if a_adjective.is_singular():
+        b_text = b_adjective.singular()
+        b_adjective = Adjective(b_text)
+    elif a_adjective.is_plural():
+        b_text = b_adjective.plural()
+        b_adjective = Adjective(b_text)
+
+    a_adjective_lemma = Adjective(a_token.lemma_)
+    if a_adjective_lemma.comparative() == a_text:
+        b_text = b_adjective.comparative()
+    elif a_adjective_lemma.superlative() == a_text:
+        b_text = b_adjective.superlative()
+
+    return b_text
 
 
 def german_verb_splittable(word):  # pragma: no cover
@@ -2488,27 +2486,7 @@ def german_verb_splittable(word):  # pragma: no cover
 
 
 def align_verb_form(lang, a_text, a_token, b_token):
-    if lang == "en":
-        b_text = b_token.lemma_
-        a_verb = Verb(a_text)
-        b_verb = Verb(b_text)
-
-        if a_verb.is_singular():
-            b_text = b_verb.singular()
-            b_verb = Verb(b_text)
-        elif a_verb.is_plural():
-            b_text = b_verb.plural()
-            b_verb = Verb(b_text)
-
-        if a_verb.is_past():
-            b_text = b_verb.past()
-        elif a_verb.is_pres_part():
-            b_text = b_verb.pres_part()
-        elif a_verb.is_past_part():
-            b_text = b_verb.past_part()
-
-        return b_text
-    elif lang == "de":
+    if lang == "de":
         b_text = b_token.text
         injected_string = ""
 
@@ -2538,7 +2516,25 @@ def align_verb_form(lang, a_text, a_token, b_token):
 
         return add_declension_german(b_text, a_text, a_token.lemma_, injected_string)
 
-    return b_token.text
+    b_text = b_token.lemma_
+    a_verb = Verb(a_text)
+    b_verb = Verb(b_text)
+
+    if a_verb.is_singular():
+        b_text = b_verb.singular()
+        b_verb = Verb(b_text)
+    elif a_verb.is_plural():
+        b_text = b_verb.plural()
+        b_verb = Verb(b_text)
+
+    if a_verb.is_past():
+        b_text = b_verb.past()
+    elif a_verb.is_pres_part():
+        b_text = b_verb.pres_part()
+    elif a_verb.is_past_part():
+        b_text = b_verb.past_part()
+
+    return b_text
 
 
 def alternative_declension(lang, text, token, word_types, alternative):
