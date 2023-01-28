@@ -15,6 +15,7 @@ from app.main import parse_word_types
 from app.model import fetch_nlp_model
 from app.settings import get_settings
 from app.categories import categories
+from app.rules import fetch_rules
 
 log = logging.getLogger("urllib3")
 log.setLevel(logging.ERROR)
@@ -77,6 +78,7 @@ def get_current_words(original_languagetool_path, ignore_languagetool_path):
 def get_data_from_files(locale):
     if locale[0:2] == "de":
         locale = "de"
+        rules = fetch_rules(["de"])
 
     base_directory = "training_data/" + locale + "/"
     training_data_paths = []
@@ -136,6 +138,17 @@ def get_data_from_files(locale):
                                 not in ["inclusive", "openly_discriminating"]
                             ):
                                 all_lemma.append(lemma)
+
+                            if (
+                                locale == "de"
+                                and "v" in word_types
+                                and lemma not in rules["de"]["verbs"]
+                            ):
+                                print(
+                                    "Verb lemma '"
+                                    + lemma
+                                    + "' missing from /de/verbs.csv"
+                                )
 
                     if "Alt_split" in row:
                         value = row["Alt_split"]
