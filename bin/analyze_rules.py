@@ -16,6 +16,7 @@ from app.model import fetch_nlp_model
 from app.settings import get_settings
 from app.categories import categories
 from app.rules import fetch_rules
+from german_nouns.lookup import Nouns
 
 log = logging.getLogger("urllib3")
 log.setLevel(logging.ERROR)
@@ -79,6 +80,7 @@ def get_data_from_files(locale):
     if locale[0:2] == "de":
         locale = "de"
         rules = fetch_rules(["de"])
+        nouns = Nouns()
 
     base_directory = "training_data/" + locale + "/"
     training_data_paths = []
@@ -139,16 +141,29 @@ def get_data_from_files(locale):
                             ):
                                 all_lemma.append(lemma)
 
-                            if (
-                                locale == "de"
-                                and "v" in word_types
-                                and lemma not in rules["de"]["verbs"]
-                            ):
-                                print(
-                                    "Verb lemma '"
-                                    + lemma
-                                    + "' missing from /de/verbs.csv"
-                                )
+                            if " " not in lemma:
+                                if (
+                                    locale == "de"
+                                    and "v" in word_types
+                                    and lemma not in rules["de"]["verbs"]
+                                ):
+                                    print(
+                                        "Verb lemma '"
+                                        + lemma
+                                        + "' missing from /de/verbs.csv"
+                                    )
+
+                                if (
+                                    locale == "de"
+                                    and "s" in word_types
+                                    and len(nouns[lemma]) == 0
+                                    and category != "openly_discriminating"
+                                ):
+                                    print(
+                                        "Noun lemma '"
+                                        + lemma
+                                        + "' missing from german_nouns"
+                                    )
 
                     if "Alt_split" in row:
                         value = row["Alt_split"]
