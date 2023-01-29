@@ -252,7 +252,7 @@ SHA,acr,style,abbreviation,"['Shareholders Agreement (SHA)', 'Vereinbarung zwisc
 SM,acr,style,abbreviation,"['Servicemark (SM)', 'Social Media (SM)', 'Dienstleistungsmarke', 'Soziale Medien (SM)']"
 SMART,-acr,style,abbreviation,"['Specific, Measurable, Attainable, Realistic, Time-bound (SMART)', 'spezifisch, messbar, erreichbar, realistisch, zeitgebunden']"
 SMB,abbr,style,abbreviation,"['Small and Medium-sized Businesses (SMB)', 'kleine und mittlere Unternehmen (KMU)', 'kleine und mittlere Unternehmen']"
-SME,abbr,style,abbreviation,"['Subject Matter Expert (SME)', 'Small and Medium-sized Enterprises (SME)', 'kleine und mittlere Unternehmen', 'kleine und mittlere Unternehmen (KMU)', 'Fachexpertin~Fachexperte', 'Fachexpert~innen~ und ~Fachexperten']"
+SME,abbr,style,abbreviation,"['Subject Matter Expert (SME)', 'Small and Medium-sized Enterprises (SME)', 'kleine und mittlere Unternehmen', 'kleine und mittlere Unternehmen (KMU)', 'Fachexpert~in~/~Fachexperte', 'Fachexpert~innen~ und ~Fachexperten']"
 SMM,acr,style,abbreviation,"['Social Media Marketing', 'Social Media Marketing (SMM)']"
 SMS,acr,style,abbreviation,"['Short Message Service (SMS)', 'Kurznachrichtendienst']"
 SOW,acr,style,abbreviation,"['Scope of Work (SOW)', 'Auftragsumfang', 'Leistungsbild', 'Aufgabenstellung', 'Leistungsumfang']"

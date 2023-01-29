@@ -305,7 +305,7 @@ def analyze_correct_endings_german(word):
             print("Potential replace '/' with ' und ' in: " + word)
             issue_detected = True
 
-        if (
+        if sub_word.count("~") > 1 and (
             re.search("^.*[a-z]{3}in(nen)?[~ ].*$", sub_word)
             or re.search("^.*[a-z]{3}in~[^ ].*$", sub_word)
             or re.search("^.*[a-z]{3}innen~[^ ].*$", sub_word)
@@ -320,7 +320,7 @@ def analyze_correct_endings_german(word):
 
         if sub_word.count("~") == 3:
             elements = sub_word.split("~")
-            if not elements[3].startswith(elements[0]):
+            if not elements[3].startswith(elements[0]) and elements[2] != " und ":
                 if words[0] == elements[3]:
                     print(
                         "Potential case to word to the front '"
