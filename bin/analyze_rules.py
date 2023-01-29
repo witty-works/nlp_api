@@ -115,6 +115,22 @@ def get_data_from_files(locale):
                         subcategory = row["Primary_subcategory"]
                         all_categories.append(subcategory)
 
+                    alternatives = []
+                    if "Alt_split" in row:
+                        value = row["Alt_split"]
+                        value = value.replace("'", '"')
+                        try:
+                            alternatives = json.loads(value)
+                            if (
+                                locale == "de"
+                                and str(f).find("abbreviations.csv") != -1
+                            ):
+                                alternatives.pop(0)
+
+                            all_alternative_groups += alternatives
+                        except ValueError:
+                            continue
+
                     lemma = row["Lemma"].replace("'", '"')
                     if "Word_Type" in row:
                         word_type = row["Word_Type"]
@@ -141,44 +157,59 @@ def get_data_from_files(locale):
                             ):
                                 all_lemma.append(lemma)
 
-                            if " " not in lemma:
-                                if (
-                                    locale == "de"
-                                    and "v" in word_types
-                                    and lemma not in rules["de"]["verbs"]
-                                ):
-                                    print(
-                                        "Verb lemma '"
-                                        + lemma
-                                        + "' missing from /de/verbs.csv"
-                                    )
+                            if " " not in lemma and locale == "de":
+                                if "v" in word_types:
+                                    if lemma not in rules["de"]["verbs"]:
+                                        print(
+                                            "Verb lemma '"
+                                            + lemma
+                                            + "' missing from /de/verbs.csv"
+                                        )
 
-                                if (
-                                    locale == "de"
-                                    and "s" in word_types
-                                    and len(nouns[lemma]) == 0
-                                    and category != "openly_discriminating"
-                                ):
-                                    print(
-                                        "Noun lemma '"
-                                        + lemma
-                                        + "' missing from german_nouns"
-                                    )
+                                    for alternative in alternatives:
+                                        (
+                                            alternative,
+                                            alternative_context,
+                                            remove,
+                                        ) = ResultOut.parse_alternative(alternative)
+                                        if (
+                                            alternative
+                                            and " " not in alternative
+                                            and alternative not in rules["de"]["verbs"]
+                                        ):
+                                            print(
+                                                "Verb alternative '"
+                                                + alternative
+                                                + "' missing from /de/verbs.csv"
+                                            )
 
-                    if "Alt_split" in row:
-                        value = row["Alt_split"]
-                        value = value.replace("'", '"')
-                        try:
-                            alternatives = json.loads(value)
-                            if (
-                                locale == "de"
-                                and str(f).find("abbreviations.csv") != -1
-                            ):
-                                alternatives.pop(0)
+                                if "s" in word_types:
+                                    if (
+                                        category != "openly_discriminating"
+                                        and len(nouns[lemma]) == 0
+                                    ):
+                                        print(
+                                            "Noun lemma '"
+                                            + lemma
+                                            + "' missing from german_nouns"
+                                        )
 
-                            all_alternative_groups += alternatives
-                        except ValueError:
-                            continue
+                                    for alternative in alternatives:
+                                        (
+                                            alternative,
+                                            alternative_context,
+                                            remove,
+                                        ) = ResultOut.parse_alternative(alternative)
+                                        if (
+                                            alternative
+                                            and " " not in alternative
+                                            and len(nouns[alternative])
+                                        ):
+                                            print(
+                                                "Noun alternative '"
+                                                + alternative
+                                                + "' missing from german_nouns"
+                                            )
 
                     if subcategory not in [
                         "function",

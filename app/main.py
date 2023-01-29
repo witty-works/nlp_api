@@ -2545,25 +2545,27 @@ def align_verb_form(lang, a_text, a_token, b_token):
 
 
 def alternative_declension(lang, text, token, word_types, alternative):
-    if "---" in alternative:
-        (
-            alternative,
-            alternative_context,
-        ) = ResultOut.parse_alternative_context(alternative)
-        alternative_context = " ---" + alternative_context
-    else:
+    (
+        parsed_alternative,
+        alternative_context,
+        remove,
+    ) = ResultOut.parse_alternative(alternative)
+
+    if alternative_context is None:
         alternative_context = ""
+    else:
+        alternative_context = " ---" + alternative_context
 
     if (
-        alternative == ""
-        or alternative[0] == "-"
-        or ResultOut.isInspirationAlternative(text, alternative)
+        not parsed_alternative
+        or remove
+        or ResultOut.isInspirationAlternative(text, parsed_alternative)
     ):
-        return alternative + alternative_context
+        return alternative
 
     new_alternative = ""
     previous = False
-    alternative_tokens = fetch_tokens(lang, alternative)
+    alternative_tokens = fetch_tokens(lang, parsed_alternative)
     alternative_token = None
     for i in reversed(range(len(alternative_tokens))):
         alternative_token = alternative_tokens[i]
@@ -2755,10 +2757,12 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
             else:
                 article_alternative = article_text
         else:
-            if "---" in alternative:
-                alternative, alternative_context = ResultOut.parse_alternative_context(
-                    alternative
-                )
+            alternative, alternative_context, remove = ResultOut.parse_alternative(
+                alternative
+            )
+
+            if alternative is None:
+                continue
 
             words = alternative.split()
             word = german_noun_analysis(words[-1], True)
