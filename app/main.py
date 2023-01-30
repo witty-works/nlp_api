@@ -2224,16 +2224,16 @@ def add_declension_german(text, a_text, a_lemma, injected_string=""):
         prefix = find_common_prefix(a_text, a_lemma)
         ending = a_text[len(prefix) :]
 
-    remove = a_lemma[len(prefix) :]
-    if remove:
-        text = text[0 : -len(remove)]
-
     if a_lemma == "beste":
         ending = "ste" + ending
         if text[-1] == "t" or text[-1] == "s":
             text += "e"
+    else:
+        remove = a_lemma[len(prefix) :]
+        if remove:
+            text = text[0 : -len(remove)]
 
-    if len(text) > 2:
+    if ending != "" and len(text) > 2:
         if text[-2:] == "em":
             return text
 
