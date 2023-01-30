@@ -115,10 +115,10 @@ teamplayer,s,style,hollow,"['someone who values team effort over personal gains'
 though,adv,style,filler,['-']
 top-performance,s,style,exaggerating,"['substantial contribution to business success', 'amazing display of capability', 'history of delivering results(...)']"
 top-performer,s,style,exaggerating,"['mentor at heart', 'an inspiration to the team', 'an entrepreneur at heart', 'someone with an entrepreneurial mindset', 'someone who thrives on working toward milestones', 'mentors at heart', 'people who are an inspiration to the team', 'entrepreneurs at heart', 'people with an entrepreneurial mindset', 'people who thrive on working toward milestones']"
-top-performing,a,style,exaggerating,"['contributing to business success --- about a person', 'implementing goals with enthusiasm --- about a person', 'fulfilling customer expectations --- about a person']"
+top-performing,v,style,exaggerating,"['contributing to business success --- about a person', 'implementing goals with enthusiasm --- about a person', 'fulfilling customer expectations --- about a person']"
 topperformance,s,style,exaggerating,"['substantial contribution to business success', 'amazing display of capability', 'history of delivering results(...)']"
 topperformer,s,style,exaggerating,"['mentor at heart', 'an inspiration to the team', 'an entrepreneur at heart', 'someone with an entrepreneurial mindset', 'someone who thrives on working toward milestones', 'mentors at heart', 'people who are an inspiration to the team', 'entrepreneurs at heart', 'people with an entrepreneurial mindset', 'people who thrive on working toward milestones']"
-topperforming,a,style,exaggerating,"['contributing to business success --- about a person', 'implementing goals with enthusiasm --- about a person', 'fulfilling customer expectations --- about a person']"
+topperforming,v,style,exaggerating,"['contributing to business success --- about a person', 'implementing goals with enthusiasm --- about a person', 'fulfilling customer expectations --- about a person']"
 totally,adv,style,filler,['-']
 unique,a,style,hollow,"['original', 'distinctive', 'rare', 'diverse', 'in a class by itself']"
 utilise,v,style,hollow,['use']
