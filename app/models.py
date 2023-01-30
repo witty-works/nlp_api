@@ -603,28 +603,26 @@ class ResultOut(BaseModel):
             if "((" in alternative:
                 continue
 
-            alternative_context = None
-            remove = None
+            (
+                alternative,
+                alternative_context,
+                remove,
+            ) = ResultOut.parse_alternative(alternative)
+
+            if not alternative and not remove:
+                if explanation_context is None:
+                    explanation_context = alternative_context
+
+                continue
+
             if category != "orthography":
-                if "---" in alternative:
-                    (
-                        alternative,
-                        alternative_context,
-                    ) = ResultOut.parse_alternative_context(alternative)
-                    if alternative == "":
-                        if explanation_context is None:
-                            explanation_context = alternative_context
-
-                        continue
-
-                if is_upper:
+                if is_upper and alternative:
                     alternative = string.capwords(alternative[0:1]) + alternative[1:]
             else:
                 alternative = ResultOut.convert_sharp_ss(lang, alternative)
 
-            if alternative == "-" and version >= 1.1:
-                alternative = None
-                remove = True
+            if remove and version < 1.1:
+                alternative = ["-"]
 
             inspiration = None
             if ResultOut.isInspirationAlternative(text, alternative, subcategory):
@@ -679,9 +677,21 @@ class ResultOut(BaseModel):
         return cleaned_alternatives, explanation_context
 
     @staticmethod
-    def parse_alternative_context(alternative):
-        alternative, alternative_context = alternative.split("---")
-        return alternative.strip(), alternative_context.strip()
+    def parse_alternative(alternative):
+        if "---" in alternative:
+            alternative, alternative_context = alternative.split("---")
+            alternative = alternative.strip()
+            alternative_context = alternative_context.strip()
+        else:
+            alternative_context = None
+
+        if alternative == "-":
+            alternative = None
+            remove = True
+        else:
+            remove = None
+
+        return alternative, alternative_context, remove
 
     @staticmethod
     def convert_sharp_ss(lang, text):

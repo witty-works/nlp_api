@@ -15,6 +15,8 @@ from app.main import parse_word_types
 from app.model import fetch_nlp_model
 from app.settings import get_settings
 from app.categories import categories
+from app.rules import fetch_rules
+from german_nouns.lookup import Nouns
 
 log = logging.getLogger("urllib3")
 log.setLevel(logging.ERROR)
@@ -77,6 +79,8 @@ def get_current_words(original_languagetool_path, ignore_languagetool_path):
 def get_data_from_files(locale):
     if locale[0:2] == "de":
         locale = "de"
+        rules = fetch_rules(["de"])
+        nouns = Nouns()
 
     base_directory = "training_data/" + locale + "/"
     training_data_paths = []
@@ -111,6 +115,22 @@ def get_data_from_files(locale):
                         subcategory = row["Primary_subcategory"]
                         all_categories.append(subcategory)
 
+                    alternatives = []
+                    if "Alt_split" in row:
+                        value = row["Alt_split"]
+                        value = value.replace("'", '"')
+                        try:
+                            alternatives = json.loads(value)
+                            if (
+                                locale == "de"
+                                and str(f).find("abbreviations.csv") != -1
+                            ):
+                                alternatives.pop(0)
+
+                            all_alternative_groups += alternatives
+                        except ValueError:
+                            continue
+
                     lemma = row["Lemma"].replace("'", '"')
                     if "Word_Type" in row:
                         word_type = row["Word_Type"]
@@ -137,20 +157,59 @@ def get_data_from_files(locale):
                             ):
                                 all_lemma.append(lemma)
 
-                    if "Alt_split" in row:
-                        value = row["Alt_split"]
-                        value = value.replace("'", '"')
-                        try:
-                            alternatives = json.loads(value)
-                            if (
-                                locale == "de"
-                                and str(f).find("abbreviations.csv") != -1
-                            ):
-                                alternatives.pop(0)
+                            if " " not in lemma and locale == "de":
+                                if "v" in word_types:
+                                    if lemma not in rules["de"]["verbs"]:
+                                        print(
+                                            "Verb lemma '"
+                                            + lemma
+                                            + "' missing from /de/verbs.csv"
+                                        )
 
-                            all_alternative_groups += alternatives
-                        except ValueError:
-                            continue
+                                    for alternative in alternatives:
+                                        (
+                                            alternative,
+                                            alternative_context,
+                                            remove,
+                                        ) = ResultOut.parse_alternative(alternative)
+                                        if (
+                                            alternative
+                                            and " " not in alternative
+                                            and alternative not in rules["de"]["verbs"]
+                                        ):
+                                            print(
+                                                "Verb alternative '"
+                                                + alternative
+                                                + "' missing from /de/verbs.csv"
+                                            )
+
+                                if "s" in word_types:
+                                    if (
+                                        category != "openly_discriminating"
+                                        and len(nouns[lemma]) == 0
+                                    ):
+                                        print(
+                                            "Noun lemma '"
+                                            + lemma
+                                            + "' missing from german_nouns"
+                                        )
+
+                                    for alternative in alternatives:
+                                        (
+                                            alternative,
+                                            alternative_context,
+                                            remove,
+                                        ) = ResultOut.parse_alternative(alternative)
+                                        if (
+                                            alternative
+                                            and " " not in alternative
+                                            and len(nouns[alternative])
+                                        ):
+                                            print(
+                                                "Noun alternative '"
+                                                + alternative
+                                                + "' missing from german_nouns"
+                                            )
 
                     if subcategory not in [
                         "function",
@@ -246,7 +305,7 @@ def analyze_correct_endings_german(word):
             print("Potential replace '/' with ' und ' in: " + word)
             issue_detected = True
 
-        if (
+        if sub_word.count("~") > 1 and (
             re.search("^.*[a-z]{3}in(nen)?[~ ].*$", sub_word)
             or re.search("^.*[a-z]{3}in~[^ ].*$", sub_word)
             or re.search("^.*[a-z]{3}innen~[^ ].*$", sub_word)
@@ -261,7 +320,7 @@ def analyze_correct_endings_german(word):
 
         if sub_word.count("~") == 3:
             elements = sub_word.split("~")
-            if not elements[3].startswith(elements[0]):
+            if not elements[3].startswith(elements[0]) and elements[2] != " und ":
                 if words[0] == elements[3]:
                     print(
                         "Potential case to word to the front '"

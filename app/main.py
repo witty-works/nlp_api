@@ -87,7 +87,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.41.2"
+version = "1.41.3"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -1290,7 +1290,7 @@ def languagetool_matches(
             subcategory != "abbreviation" and subcategory != "anglicism"
         ):
             explanation = match["message"]
-            # may be removed once updated to LT 6.0 https://github.com/languagetool-org/languagetool/commit/e4f7d6a677483b069fd98dfc461a41623618767b
+            # may be removed once updated to LT 6.0 https://github.com/languagetool-org/languagetool/commit/e4f7d6a677483b069fd98dfc461.41.33618767b
             if explanation.startswith("Das Nomen „Trans"):
                 continue
         else:
@@ -2224,16 +2224,16 @@ def add_declension_german(text, a_text, a_lemma, injected_string=""):
         prefix = find_common_prefix(a_text, a_lemma)
         ending = a_text[len(prefix) :]
 
-    remove = a_lemma[len(prefix) :]
-    if remove:
-        text = text[0 : -len(remove)]
-
     if a_lemma == "beste":
         ending = "ste" + ending
         if text[-1] == "t" or text[-1] == "s":
             text += "e"
+    else:
+        remove = a_lemma[len(prefix) :]
+        if remove:
+            text = text[0 : -len(remove)]
 
-    if len(text) > 2:
+    if ending != "" and len(text) > 2:
         if text[-2:] == "em":
             return text
 
@@ -2545,25 +2545,27 @@ def align_verb_form(lang, a_text, a_token, b_token):
 
 
 def alternative_declension(lang, text, token, word_types, alternative):
-    if "---" in alternative:
-        (
-            alternative,
-            alternative_context,
-        ) = ResultOut.parse_alternative_context(alternative)
-        alternative_context = " ---" + alternative_context
-    else:
+    (
+        parsed_alternative,
+        alternative_context,
+        remove,
+    ) = ResultOut.parse_alternative(alternative)
+
+    if alternative_context is None:
         alternative_context = ""
+    else:
+        alternative_context = " ---" + alternative_context
 
     if (
-        alternative == ""
-        or alternative[0] == "-"
-        or ResultOut.isInspirationAlternative(text, alternative)
+        not parsed_alternative
+        or remove
+        or ResultOut.isInspirationAlternative(text, parsed_alternative)
     ):
-        return alternative + alternative_context
+        return alternative
 
     new_alternative = ""
     previous = False
-    alternative_tokens = fetch_tokens(lang, alternative)
+    alternative_tokens = fetch_tokens(lang, parsed_alternative)
     alternative_token = None
     for i in reversed(range(len(alternative_tokens))):
         alternative_token = alternative_tokens[i]
@@ -2755,10 +2757,12 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
             else:
                 article_alternative = article_text
         else:
-            if "---" in alternative:
-                alternative, alternative_context = ResultOut.parse_alternative_context(
-                    alternative
-                )
+            alternative, alternative_context, remove = ResultOut.parse_alternative(
+                alternative
+            )
+
+            if alternative is None:
+                continue
 
             words = alternative.split()
             word = german_noun_analysis(words[-1], True)
