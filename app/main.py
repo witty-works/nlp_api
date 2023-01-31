@@ -2018,7 +2018,6 @@ async def english_rules(
         )
 
     if is_sub_category_enabled(version, config, "inclusive"):
-
         if is_sub_category_enabled(version, config, "d_and_i"):
             subcategory = "d_and_i"
             category = categories[subcategory]["category"]
@@ -2371,7 +2370,7 @@ def german_noun_analysis(word, genus_only=False):
 def align_noun_form(lang, a_text, a_token, b_token):
     b_text = b_token.text
 
-    if a_token.morph.get("Number") == b_token.morph.get("Number"):
+    if a_token.morph.get("Number") == b_token.morph.get("Number") or b_text == "they":
         return b_text
 
     if lang == "de":
@@ -2404,6 +2403,9 @@ def align_noun_form(lang, a_text, a_token, b_token):
 
     if b_token.morph.get("Number") == ["Sing"]:
         return Noun(b_text).plural()
+
+    if b_token.morph.get("Number") == ["Plur"]:
+        return b_text
 
     return Noun(b_text).singular()
 
@@ -2569,10 +2571,14 @@ def alternative_declension(lang, text, token, word_types, alternative):
     ):
         return alternative
 
+    if parsed_alternative.count(" ") > 5:
+        return alternative
+
     new_alternative = ""
     previous = False
     alternative_tokens = fetch_tokens(lang, parsed_alternative)
     alternative_token = None
+    is_plural = False
     for i in reversed(range(len(alternative_tokens))):
         alternative_token = alternative_tokens[i]
         alternative_text = alternative_token.text
@@ -2594,6 +2600,9 @@ def alternative_declension(lang, text, token, word_types, alternative):
                         lang, text, token, alternative_token
                     )
                 elif "s" in word_types and "s" in alternative_word_types:
+                    if alternative_token.morph.get("Number") == ["Plur"]:
+                        is_plural = True
+
                     previous = True
                     alternative_text = align_noun_form(
                         lang, text, token, alternative_token
@@ -2614,6 +2623,12 @@ def alternative_declension(lang, text, token, word_types, alternative):
             alternative_text + alternative_token.whitespace_ + new_alternative
         )
 
+    if is_plural == False and text.startswith("a ") or text.startswith("an "):
+        if new_alternative[0].lower() in ["a", "e", "i", "o", "u"]:
+            new_alternative = "an " + new_alternative
+        else:
+            new_alternative = "a " + new_alternative
+
     return new_alternative + alternative_context
 
 
@@ -2622,8 +2637,16 @@ def alternatives_declension(lang, token, alternatives, prev_token):
     start = token.idx
 
     word_types = fetch_word_types(lang, token)
-    if lang == "de" and "v" in word_types and prev_token and prev_token.text == "zu":
-        text = "zu " + text
+    if lang == "de":
+        if "v" in word_types and prev_token and prev_token.text == "zu":
+            text = "zu " + text
+            start = prev_token.idx
+    elif lang == "en" and (
+        "s" in word_types
+        and prev_token
+        and (prev_token.text == "a" or prev_token.text == "an")
+    ):
+        text = prev_token.text + " " + text
         start = prev_token.idx
 
     if word_types == [] or (text == token.lemma_ and token.lemma_ != "beste"):
@@ -3306,7 +3329,10 @@ def word_noun(
 ):
     list_tokens = []
 
-    for token in tokens:
+    token = None
+    for i in range(len(tokens)):
+        prev_token = token
+        token = tokens[i]
         for (
             word,
             word_types,
@@ -3342,16 +3368,20 @@ def word_noun(
             else:
                 alternatives = alternatives_plur
 
+            text, start, alternatives = alternatives_declension(
+                lang.lang, token, alternatives, prev_token
+            )
+
             list_tokens.append(
                 ResultOut.factory(
                     version,
                     config,
                     lang,
-                    token.text,
+                    text,
                     full_text,
                     category,
                     subcategory,
-                    token.idx,
+                    start,
                     None,
                     alternatives,
                 )
