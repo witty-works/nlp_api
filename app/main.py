@@ -2607,18 +2607,24 @@ def alternative_declension(lang, text, token, word_types, alternative):
 
 def alternatives_declension(lang, token, alternatives, prev_token):
     text = token.text
+    start = token.idx
 
     word_types = fetch_word_types(lang, token)
     if lang == "de" and "v" in word_types and prev_token and prev_token.text == "zu":
         text = "zu " + text
+        start = prev_token.idx
 
     if word_types == [] or (text == token.lemma_ and token.lemma_ != "beste"):
-        return text, alternatives
+        return text, start, alternatives
 
-    return text, [
-        alternative_declension(lang, text, token, word_types, alternative).strip()
-        for alternative in alternatives
-    ]
+    return (
+        text,
+        start,
+        [
+            alternative_declension(lang, text, token, word_types, alternative).strip()
+            for alternative in alternatives
+        ],
+    )
 
 
 def plural_alternatives(
@@ -3081,7 +3087,7 @@ def ub_words_phrase_matcher_de(
             if not is_word_match(lang.lang, token, tokens, word, word_types):
                 continue
 
-            text, alternatives = alternatives_declension(
+            text, start, alternatives = alternatives_declension(
                 lang.lang, token, alternatives, prev_token
             )
 
@@ -3094,8 +3100,8 @@ def ub_words_phrase_matcher_de(
                     full_text,
                     category,
                     subcategory,
-                    token.idx,
-                    token.idx + len(text),
+                    start,
+                    None,
                     alternatives,
                 )
             )
@@ -3237,7 +3243,7 @@ def style_word_analysis_de(
             if not is_word_match(lang.lang, token, tokens, word, word_types):
                 continue
 
-            text, alternatives = alternatives_declension(
+            text, start, alternatives = alternatives_declension(
                 lang.lang, token, alternatives, prev_token
             )
 
@@ -3246,7 +3252,7 @@ def style_word_analysis_de(
                 alternatives,
                 text,
                 full_text,
-                token.idx + len(text),
+                start + len(text),
             )
 
             list_tokens.append(
@@ -3258,7 +3264,7 @@ def style_word_analysis_de(
                     full_text,
                     category,
                     subcategory,
-                    token.idx,
+                    start,
                     None,
                     alternatives,
                 )
@@ -3334,7 +3340,7 @@ def word_noun(
                     category,
                     subcategory,
                     token.idx,
-                    token.idx + len(token.text),
+                    None,
                     alternatives,
                 )
             )
@@ -3427,7 +3433,7 @@ def rules_based_words_phrase_matcher(
             url = None
             icon = None
             text = token.text
-            start = token.idx + len(token.text)
+            start = token.idx
 
             if len(data):
                 subcategory = data[0]
@@ -3438,7 +3444,7 @@ def rules_based_words_phrase_matcher(
                         text, alternative = pluralize_they(tokens, i)
                         alternatives = [alternative]
                     else:
-                        text, alternatives = alternatives_declension(
+                        text, start, alternatives = alternatives_declension(
                             lang.lang, token, alternatives, prev_token
                         )
 
@@ -3455,7 +3461,7 @@ def rules_based_words_phrase_matcher(
                 alternatives,
                 text,
                 full_text,
-                start,
+                start + len(token.text),
             )
 
             list_tokens.append(
@@ -3467,7 +3473,7 @@ def rules_based_words_phrase_matcher(
                     full_text,
                     category,
                     subcategory,
-                    token.idx,
+                    start,
                     None,
                     alternatives,
                     None,
@@ -3515,7 +3521,7 @@ def homonyms_en(
             ):
                 continue
 
-            text, alternatives = alternatives_declension(
+            text, start, alternatives = alternatives_declension(
                 lang.lang, token, alternatives, prev_token
             )
 
@@ -3528,8 +3534,8 @@ def homonyms_en(
                     full_text,
                     category,
                     subcategory,
-                    token.idx,
-                    token.idx + len(text),
+                    start,
+                    None,
                     alternatives,
                 )
             )
