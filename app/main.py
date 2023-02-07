@@ -1528,13 +1528,20 @@ def apply_term_replacements(
         "Explanation": [],
     }
 
-    for term in configs["term_replacements"]:
-        term_replacement = configs["term_replacements"][term]
+    for i in configs["term_replacements"]:
+        term_replacement = configs["term_replacements"][i]
+
+        if "term" in term_replacement:
+            term = term_replacement["term"]
+        else:
+            # BC code
+            term = i
 
         if (
             "lang" in term_replacement
-            and term_replacement["lang"] is not None
             and term_replacement["lang"] != lang.lang
+            # BC code
+            and term_replacement["lang"] is not None
         ):
             continue
 
