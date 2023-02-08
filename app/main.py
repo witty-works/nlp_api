@@ -1528,22 +1528,21 @@ def apply_term_replacements(
         "Explanation": [],
     }
 
-    for i in configs["term_replacements"]:
-        term_replacement = configs["term_replacements"][i]
+    for term in configs["term_replacements"]:
+        term_replacement = configs["term_replacements"][term]
 
-        if "term" in term_replacement:
-            term = term_replacement["term"]
-        else:
-            # BC code
-            term = i
+        if term[-3:] == "|en" or term[-3:] == "|de":
+            if term[-2:] != lang.lang:
+                continue
 
-        if (
-            "lang" in term_replacement
-            and term_replacement["lang"] != lang.lang
-            # BC code
-            and term_replacement["lang"] is not None
-        ):
-            continue
+            term = term[0:-3]
+        # BC code
+        elif "lang" in term_replacement:
+            if (
+                term_replacement["lang"] != lang.lang
+                and term_replacement["lang"] is not None
+            ):
+                continue
 
         if "word_type" in term_replacement:
             word_type = term_replacement["word_type"]

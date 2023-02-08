@@ -541,7 +541,6 @@ def set_redis():
         ],
         "term_replacements": {
             "foo bar|en": {
-                "term": "foo bar",
                 "alternatives": ["ding ding"],
                 "word_type": "=",
                 "explanation": {
@@ -552,7 +551,6 @@ def set_redis():
                 "gravity": 3.0,
             },
             "foo bar|de": {
-                "term": "foo bar",
                 "alternatives": ["ding ding"],
                 "word_type": "=",
                 "explanation": {
@@ -628,7 +626,6 @@ def set_redis():
         ],
         "term_replacements": {
             "dong|en": {
-                "term": "dong",
                 "alternatives": ["ding"],
                 "explanation": {
                     "text": "better dong",
@@ -638,7 +635,6 @@ def set_redis():
                 "gravity": 3.0,
             },
             "dong|de": {
-                "term": "dong",
                 "alternatives": ["ding"],
                 "explanation": {
                     "text": "better dong",
@@ -950,7 +946,6 @@ def test_store_get_delete_rules():
         "false_positives": ["ding", "dong"],
         "term_replacements": {
             "hello|en": {
-                "term": "hello",
                 "alternatives": ["world"],
                 "explanation": {
                     "text": "better hello",
@@ -960,7 +955,6 @@ def test_store_get_delete_rules():
                 "gravity": 3.0,
             },
             "hello|de": {
-                "term": "hello",
                 "alternatives": ["world"],
                 "explanation": {
                     "text": "better hello",
@@ -970,7 +964,6 @@ def test_store_get_delete_rules():
                 "gravity": 3.0,
             },
             "bim|en": {
-                "term": "bim",
                 "alternatives": ["bam"],
                 "explanation": {
                     "text": "better bim",
@@ -980,7 +973,6 @@ def test_store_get_delete_rules():
                 "gravity": 3.0,
             },
             "bim|de": {
-                "term": "bim",
                 "alternatives": ["bam"],
                 "explanation": {
                     "text": "better bim",
@@ -1052,7 +1044,6 @@ def test_store_get_delete_rules():
         "false_positives": ["hello", "world", "dong"],
         "term_replacements": {
             "hello|en": {
-                "term": "hello",
                 "alternatives": ["welt"],
                 "explanation": {
                     "text": "better world",
@@ -1062,7 +1053,6 @@ def test_store_get_delete_rules():
                 "gravity": 3.0,
             },
             "hello|de": {
-                "term": "hello",
                 "alternatives": ["welt"],
                 "explanation": {
                     "text": "better world",
@@ -1072,7 +1062,6 @@ def test_store_get_delete_rules():
                 "gravity": 3.0,
             },
             "foo|en": {
-                "term": "foo",
                 "alternatives": ["bar"],
                 "word_type": "=",
                 "explanation": {
@@ -1083,7 +1072,6 @@ def test_store_get_delete_rules():
                 "gravity": 3.0,
             },
             "foo|de": {
-                "term": "foo",
                 "alternatives": ["bar"],
                 "word_type": "=",
                 "explanation": {

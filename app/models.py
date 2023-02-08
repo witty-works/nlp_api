@@ -288,8 +288,6 @@ class Explanation(BaseModel):
 
 
 class TermReplacement(BaseModel):
-    # BC, should just be str
-    term: Optional[str]
     alternatives: List[str]
     explanation: Optional[Explanation]
     gravity: Optional[float]
