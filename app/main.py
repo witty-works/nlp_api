@@ -1537,12 +1537,12 @@ def apply_term_replacements(
 
             term = term[0:-3]
         # BC code
-        elif "lang" in term_replacement:
-            if (
-                term_replacement["lang"] != lang.lang
-                and term_replacement["lang"] is not None
-            ):
-                continue
+        elif (
+            "lang" in term_replacement
+            and term_replacement["lang"] != lang.lang
+            and term_replacement["lang"] is not None
+        ):
+            continue
 
         if "word_type" in term_replacement:
             word_type = term_replacement["word_type"]

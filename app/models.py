@@ -291,6 +291,7 @@ class TermReplacement(BaseModel):
     alternatives: List[str]
     explanation: Optional[Explanation]
     gravity: Optional[float]
+    # BC code
     lang: Optional[LangType]
     word_type: Optional[str]
 
