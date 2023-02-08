@@ -288,18 +288,12 @@ class Explanation(BaseModel):
 
 
 class TermReplacement(BaseModel):
+    term: str
     alternatives: List[str]
     explanation: Optional[Explanation]
     gravity: Optional[float]
     lang: Optional[LangType]
     word_type: Optional[str]
-
-
-class TermReplacement1_1(BaseModel):
-    term: str
-    alternatives: List[str]
-    explanation: Optional[Explanation]
-    gravity: Optional[int]
 
 
 class DomainType(str, Enum):

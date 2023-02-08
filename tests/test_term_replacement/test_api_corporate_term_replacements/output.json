@@ -194,7 +194,7 @@
         {
             "alternatives": [
                 {
-                    "text": "world"
+                    "text": "globus"
                 }
             ],
             "category": "corporate_rules",
@@ -202,7 +202,7 @@
             "end": 77,
             "explanation": {
                 "icon": "🥰",
-                "text": "better world",
+                "text": "better globus",
                 "url": "https://witty.works/welt"
             },
             "gravity": 0.9,
@@ -214,7 +214,7 @@
         {
             "alternatives": [
                 {
-                    "text": "world"
+                    "text": "globus"
                 }
             ],
             "category": "corporate_rules",
@@ -222,7 +222,7 @@
             "end": 88,
             "explanation": {
                 "icon": "🥰",
-                "text": "better world",
+                "text": "better globus",
                 "url": "https://witty.works/welt"
             },
             "gravity": 0.9,
@@ -234,7 +234,7 @@
         {
             "alternatives": [
                 {
-                    "text": "world"
+                    "text": "globus"
                 }
             ],
             "category": "corporate_rules",
@@ -242,7 +242,7 @@
             "end": 99,
             "explanation": {
                 "icon": "🥰",
-                "text": "better world",
+                "text": "better globus",
                 "url": "https://witty.works/welt"
             },
             "gravity": 0.9,
