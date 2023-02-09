@@ -3367,15 +3367,19 @@ def detect_filler_words_at_sentence_start(
 
 
 def pluralize_they(tokens, i):
+    token = tokens[i]
+    text = token.text
     alternative = "they"
+
+    next_i = i + 1
+    if len(tokens) <= next_i:
+        return text, alternative
+
     verb_map = {
         "is": "are",
         "has": "have",
     }
 
-    token = tokens[i]
-    text = token.text
-    next_i = i + 1
     if tokens[next_i].text in verb_map:
         text += token.whitespace_ + tokens[next_i].text
         alternative += token.whitespace_ + verb_map[tokens[next_i].text]
@@ -3383,7 +3387,8 @@ def pluralize_they(tokens, i):
         # she/he builds, cleans and refurbishes houses => they build, clean and refurbishe houses
         prev_token = token
         while (
-            tokens[next_i].text in rules["en"]["conjunctions"]
+            len(tokens) <= next_i + 1
+            and tokens[next_i].text in rules["en"]["conjunctions"]
             and tokens[next_i + 1].text[-1] == "s"
             and "v" in fetch_word_types("en", tokens[next_i + 1])
         ) or (
@@ -3395,6 +3400,8 @@ def pluralize_they(tokens, i):
                 alternative += prev_token.whitespace_ + tokens[next_i].text
                 prev_token = tokens[next_i]
                 next_i += 1
+                if len(tokens) <= next_i:
+                    break
 
             text += prev_token.whitespace_ + tokens[next_i].text
             ending_length = -2 if tokens[next_i].text[-2:] == "es" else -1
@@ -3402,6 +3409,8 @@ def pluralize_they(tokens, i):
 
             prev_token = tokens[next_i]
             next_i += 1
+            if len(tokens) <= next_i:
+                break
 
     return text, alternative
 
