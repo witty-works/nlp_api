@@ -87,7 +87,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.41.5"
+version = "1.41.6"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -1290,7 +1290,7 @@ def languagetool_matches(
             subcategory != "abbreviation" and subcategory != "anglicism"
         ):
             explanation = match["message"]
-            # may be removed once updated to LT 6.0 https://github.com/languagetool-org/languagetool/commit/e4f7d6a677483b069fd98dfc461.41.53618767b
+            # may be removed once updated to LT 6.0 https://github.com/languagetool-org/languagetool/commit/e4f7d6a677483b069fd98dfc461.41.63618767b
             if explanation.startswith("Das Nomen „Trans"):
                 continue
         else:
@@ -1531,10 +1531,16 @@ def apply_term_replacements(
     for term in configs["term_replacements"]:
         term_replacement = configs["term_replacements"][term]
 
-        if (
+        if term[-3:] == "|en" or term[-3:] == "|de":
+            if term[-2:] != lang.lang:
+                continue
+
+            term = term[0:-3]
+        # BC code
+        elif (
             "lang" in term_replacement
-            and term_replacement["lang"] is not None
             and term_replacement["lang"] != lang.lang
+            and term_replacement["lang"] is not None
         ):
             continue
 
@@ -3361,15 +3367,19 @@ def detect_filler_words_at_sentence_start(
 
 
 def pluralize_they(tokens, i):
+    token = tokens[i]
+    text = token.text
     alternative = "they"
+
+    next_i = i + 1
+    if len(tokens) <= next_i:
+        return text, alternative
+
     verb_map = {
         "is": "are",
         "has": "have",
     }
 
-    token = tokens[i]
-    text = token.text
-    next_i = i + 1
     if tokens[next_i].text in verb_map:
         text += token.whitespace_ + tokens[next_i].text
         alternative += token.whitespace_ + verb_map[tokens[next_i].text]
@@ -3377,7 +3387,8 @@ def pluralize_they(tokens, i):
         # she/he builds, cleans and refurbishes houses => they build, clean and refurbishe houses
         prev_token = token
         while (
-            tokens[next_i].text in rules["en"]["conjunctions"]
+            len(tokens) <= next_i + 1
+            and tokens[next_i].text in rules["en"]["conjunctions"]
             and tokens[next_i + 1].text[-1] == "s"
             and "v" in fetch_word_types("en", tokens[next_i + 1])
         ) or (
@@ -3389,6 +3400,8 @@ def pluralize_they(tokens, i):
                 alternative += prev_token.whitespace_ + tokens[next_i].text
                 prev_token = tokens[next_i]
                 next_i += 1
+                if len(tokens) <= next_i:
+                    break
 
             text += prev_token.whitespace_ + tokens[next_i].text
             ending_length = -2 if tokens[next_i].text[-2:] == "es" else -1
@@ -3396,6 +3409,8 @@ def pluralize_they(tokens, i):
 
             prev_token = tokens[next_i]
             next_i += 1
+            if len(tokens) <= next_i:
+                break
 
     return text, alternative
 

@@ -540,7 +540,7 @@ def set_redis():
             "Führungskräften",
         ],
         "term_replacements": {
-            "foo bar": {
+            "foo bar|en": {
                 "alternatives": ["ding ding"],
                 "word_type": "=",
                 "explanation": {
@@ -550,7 +550,17 @@ def set_redis():
                 },
                 "gravity": 3.0,
             },
-            "welt": {
+            "foo bar|de": {
+                "alternatives": ["ding ding"],
+                "word_type": "=",
+                "explanation": {
+                    "text": "better ding",
+                    "icon": "🥰",
+                    "url": "https://witty.works/foo bar",
+                },
+                "gravity": 3.0,
+            },
+            "welt|de": {
                 "alternatives": ["world"],
                 "lang": "de",
                 "explanation": {
@@ -615,7 +625,7 @@ def set_redis():
             "starker",
         ],
         "term_replacements": {
-            "dong": {
+            "dong|en": {
                 "alternatives": ["ding"],
                 "explanation": {
                     "text": "better dong",
@@ -623,7 +633,26 @@ def set_redis():
                     "url": "https://witty.works",
                 },
                 "gravity": 3.0,
-            }
+            },
+            "dong|de": {
+                "alternatives": ["ding"],
+                "explanation": {
+                    "text": "better dong",
+                    "icon": "🥰",
+                    "url": "https://witty.works",
+                },
+                "gravity": 3.0,
+            },
+            "welt|de": {
+                "alternatives": ["globus"],
+                "lang": "de",
+                "explanation": {
+                    "text": "better globus",
+                    "icon": "🥰",
+                    "url": "https://witty.works/welt",
+                },
+                "gravity": 3.0,
+            },
         },
         "domains": {
             "type": "allow",
@@ -916,7 +945,7 @@ def test_store_get_delete_rules():
         },
         "false_positives": ["ding", "dong"],
         "term_replacements": {
-            "hello": {
+            "hello|en": {
                 "alternatives": ["world"],
                 "explanation": {
                     "text": "better hello",
@@ -925,7 +954,25 @@ def test_store_get_delete_rules():
                 },
                 "gravity": 3.0,
             },
-            "bim": {
+            "hello|de": {
+                "alternatives": ["world"],
+                "explanation": {
+                    "text": "better hello",
+                    "icon": "🥰",
+                    "url": "https://witty.works",
+                },
+                "gravity": 3.0,
+            },
+            "bim|en": {
+                "alternatives": ["bam"],
+                "explanation": {
+                    "text": "better bim",
+                    "icon": "🥰",
+                    "url": "https://witty.works",
+                },
+                "gravity": 3.0,
+            },
+            "bim|de": {
                 "alternatives": ["bam"],
                 "explanation": {
                     "text": "better bim",
@@ -996,7 +1043,7 @@ def test_store_get_delete_rules():
         },
         "false_positives": ["hello", "world", "dong"],
         "term_replacements": {
-            "hello": {
+            "hello|en": {
                 "alternatives": ["welt"],
                 "explanation": {
                     "text": "better world",
@@ -1005,7 +1052,26 @@ def test_store_get_delete_rules():
                 },
                 "gravity": 3.0,
             },
-            "foo": {
+            "hello|de": {
+                "alternatives": ["welt"],
+                "explanation": {
+                    "text": "better world",
+                    "icon": "🥰",
+                    "url": "https://witty.works/hello",
+                },
+                "gravity": 3.0,
+            },
+            "foo|en": {
+                "alternatives": ["bar"],
+                "word_type": "=",
+                "explanation": {
+                    "text": "better bar",
+                    "icon": "🥰",
+                    "url": "https://witty.works/foo",
+                },
+                "gravity": 3.0,
+            },
+            "foo|de": {
                 "alternatives": ["bar"],
                 "word_type": "=",
                 "explanation": {
