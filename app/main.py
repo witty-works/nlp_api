@@ -2587,22 +2587,28 @@ def alternative_declension(lang, text, token, word_types, alternative):
                     lang, alternative_token, word_types, False
                 )
 
-            if "v" in word_types and lang == "en" and i == 0:
-                alternative_text = align_verb_form(lang, text, token, alternative_token)
-            if "s" in word_types and "s" in alternative_word_types:
-                alternative_text = align_noun_form(lang, text, token, alternative_token)
-            elif previous == False and word_types_overlap(
-                word_types, alternative_word_types
-            ):
-                previous = True
-                if "a" in alternative_word_types:
-                    alternative_text = align_adjective_form(
-                        lang, text, token, alternative_token
-                    )
-                elif "v" in alternative_word_types:
+            if previous == False:
+                if "v" in word_types and lang == "en" and i == 0:
+                    previous = True
                     alternative_text = align_verb_form(
                         lang, text, token, alternative_token
                     )
+                elif "s" in word_types and "s" in alternative_word_types:
+                    previous = True
+                    alternative_text = align_noun_form(
+                        lang, text, token, alternative_token
+                    )
+                elif word_types_overlap(word_types, alternative_word_types):
+                    if "a" in alternative_word_types:
+                        previous = True
+                        alternative_text = align_adjective_form(
+                            lang, text, token, alternative_token
+                        )
+                    elif "v" in alternative_word_types:
+                        previous = True
+                        alternative_text = align_verb_form(
+                            lang, text, token, alternative_token
+                        )
 
         new_alternative = (
             alternative_text + alternative_token.whitespace_ + new_alternative
