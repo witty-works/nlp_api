@@ -87,7 +87,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.41.6"
+version = "1.41.7"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -1290,7 +1290,7 @@ def languagetool_matches(
             subcategory != "abbreviation" and subcategory != "anglicism"
         ):
             explanation = match["message"]
-            # may be removed once updated to LT 6.0 https://github.com/languagetool-org/languagetool/commit/e4f7d6a677483b069fd98dfc461.41.63618767b
+            # may be removed once updated to LT 6.0 https://github.com/languagetool-org/languagetool/commit/e4f7d6a677483b069fd98dfc461.41.73618767b
             if explanation.startswith("Das Nomen „Trans"):
                 continue
         else:
@@ -2587,22 +2587,28 @@ def alternative_declension(lang, text, token, word_types, alternative):
                     lang, alternative_token, word_types, False
                 )
 
-            if "v" in word_types and lang == "en" and i == 0:
-                alternative_text = align_verb_form(lang, text, token, alternative_token)
-            if "s" in word_types and "s" in alternative_word_types:
-                alternative_text = align_noun_form(lang, text, token, alternative_token)
-            elif previous == False and word_types_overlap(
-                word_types, alternative_word_types
-            ):
-                previous = True
-                if "a" in alternative_word_types:
-                    alternative_text = align_adjective_form(
-                        lang, text, token, alternative_token
-                    )
-                elif "v" in alternative_word_types:
+            if previous == False:
+                if "v" in word_types and lang == "en" and i == 0:
+                    previous = True
                     alternative_text = align_verb_form(
                         lang, text, token, alternative_token
                     )
+                elif "s" in word_types and "s" in alternative_word_types:
+                    previous = True
+                    alternative_text = align_noun_form(
+                        lang, text, token, alternative_token
+                    )
+                elif word_types_overlap(word_types, alternative_word_types):
+                    if "a" in alternative_word_types:
+                        previous = True
+                        alternative_text = align_adjective_form(
+                            lang, text, token, alternative_token
+                        )
+                    elif "v" in alternative_word_types:
+                        previous = True
+                        alternative_text = align_verb_form(
+                            lang, text, token, alternative_token
+                        )
 
         new_alternative = (
             alternative_text + alternative_token.whitespace_ + new_alternative
