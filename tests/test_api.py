@@ -36,7 +36,6 @@ def test_read_main():
     get_dirs("tests/test_german"),
 )
 def test_german_endpoint(german_dir, snapshot, set_redis):
-
     # Read input files from the case directory.
     input_json = german_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
@@ -65,7 +64,6 @@ def test_german_endpoint(german_dir, snapshot, set_redis):
     get_dirs("tests/test_english"),
 )
 def test_english_endpoint(english_dir, snapshot, set_redis):
-
     # Read input files from the case directory.
     input_json = english_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
@@ -94,7 +92,6 @@ def test_english_endpoint(english_dir, snapshot, set_redis):
     get_dirs("tests/test_highlight_position"),
 )
 def test_highlight_position(ending_case_dir, snapshot, set_redis):
-
     # Read input files from the case directory.
     input_json = ending_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
@@ -116,7 +113,6 @@ def test_highlight_position(ending_case_dir, snapshot, set_redis):
     get_dirs("tests/test_sentry_examples"),
 )
 def test_sentry_examples(ending_case_dir, snapshot, set_redis):
-
     # Read input files from the case directory.
     input_json = ending_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
@@ -138,7 +134,6 @@ def test_sentry_examples(ending_case_dir, snapshot, set_redis):
     get_dirs("tests/test_spacy_model"),
 )
 def test_spacy_model(ending_case_dir, snapshot):
-
     # Read input files from the case directory.
     input_json = ending_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
@@ -160,7 +155,6 @@ def test_spacy_model(ending_case_dir, snapshot):
     get_dirs("tests/test_demo_wordings_english"),
 )
 def test_demo_wordings_english(ending_case_dir, snapshot, set_redis):
-
     # Read input files from the case directory.
     input_json = ending_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
@@ -182,7 +176,6 @@ def test_demo_wordings_english(ending_case_dir, snapshot, set_redis):
     get_dirs("tests/test_demo_wordings_german"),
 )
 def test_demo_wordings_german(ending_case_dir, snapshot, set_redis):
-
     # Read input files from the case directory.
     input_json = ending_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
@@ -204,7 +197,6 @@ def test_demo_wordings_german(ending_case_dir, snapshot, set_redis):
     get_dirs("tests/test_general_cases"),
 )
 def test_json(general_case_dir, snapshot, set_redis):
-
     # Read input files from the case directory.
     input_json = general_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
@@ -226,7 +218,6 @@ def test_json(general_case_dir, snapshot, set_redis):
     get_dirs("tests/test_1_1"),
 )
 def test_1_1_json(test_1_1_dir, snapshot):
-
     # Read input files from the case directory.
     input_json = test_1_1_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
@@ -244,7 +235,6 @@ def test_1_1_json(test_1_1_dir, snapshot):
     get_dirs("tests/test_2_0"),
 )
 def test_2_0_json(test_2_0_dir, snapshot, set_redis):
-
     # Read input files from the case directory.
     input_json = test_2_0_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
@@ -267,7 +257,6 @@ def test_2_0_json(test_2_0_dir, snapshot, set_redis):
     get_dirs("tests/test_witty_free"),
 )
 def test_witty_free_json(test_witty_free_dir, snapshot, set_redis):
-
     # Read input files from the case directory.
     input_json = test_witty_free_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
@@ -308,7 +297,6 @@ def test_1_1_authenticated_json(test_1_1_authenticated_dir, snapshot, set_redis)
     get_dirs("tests/test_languagetool"),
 )
 def test_orthoraphy(orthoraphy_case_dir, snapshot, set_redis):
-
     # Read input files from the case directory.
     input_json = orthoraphy_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
@@ -330,7 +318,6 @@ def test_orthoraphy(orthoraphy_case_dir, snapshot, set_redis):
     get_dirs("tests/test_gender_ending"),
 )
 def test_gender_ending(ending_case_dir, snapshot, set_redis):
-
     # Read input files from the case directory.
     input_json = ending_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
@@ -357,7 +344,6 @@ def test_api_missing_data():
     get_dirs("tests/test_language_detection"),
 )
 def test_language_detection(detection_case_dir, snapshot, set_redis):
-
     # Read input files from the case directory.
     input_json = detection_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
@@ -379,7 +365,6 @@ def test_language_detection(detection_case_dir, snapshot, set_redis):
     get_dirs("tests/test_fails"),
 )
 def test_language_detection_fail(fails_case_dir, snapshot, set_redis):
-
     # Read input files from the case directory.
     input_json = fails_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
@@ -1171,8 +1156,10 @@ def test_spacy():
             "start": 0,
             "tag": "PDS",
             "pos": "PRON",
+            "dep": "sb",
             "word_types": ["s"],
             "morph": ["Sing"],
+            "case": ["Nom"],
             "foreign": [],
         },
         {
@@ -1181,8 +1168,10 @@ def test_spacy():
             "start": 4,
             "tag": "VAFIN",
             "pos": "AUX",
+            "dep": "ROOT",
             "word_types": [],
             "morph": ["Sing"],
+            "case": [],
             "foreign": [],
         },
         {
@@ -1191,8 +1180,10 @@ def test_spacy():
             "start": 8,
             "tag": "ADV",
             "pos": "ADV",
+            "dep": "mo",
             "word_types": ["a"],
             "morph": [],
+            "case": [],
             "foreign": [],
         },
         {
@@ -1201,8 +1192,10 @@ def test_spacy():
             "start": 13,
             "tag": "ADJD",
             "pos": "ADV",
+            "dep": "pd",
             "word_types": ["a"],
             "morph": [],
+            "case": [],
             "foreign": [],
         },
     ]
@@ -1215,7 +1208,6 @@ def test_spacy():
     get_dirs("tests/test_lemmatizers"),
 )
 def test_lemmatizer(lemma_case_dir, snapshot):
-
     # Read input files from the case directory.
     input_json = lemma_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
@@ -1239,7 +1231,6 @@ def test_lemmatizer(lemma_case_dir, snapshot):
 def test_grammatically_correct_alternatives(
     grammatical_alternatives_case_dir, snapshot, set_redis
 ):
-
     # Read input files from the case directory.
     input_json = grammatical_alternatives_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
@@ -1261,7 +1252,6 @@ def test_grammatically_correct_alternatives(
     get_dirs("tests/test_abbreviation"),
 )
 def test_abbreviation(abbr_case_dir, snapshot, set_redis):
-
     # Read input files from the case directory.
     input_json = abbr_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
@@ -1283,7 +1273,6 @@ def test_abbreviation(abbr_case_dir, snapshot, set_redis):
     get_dirs("tests/test_sing_or_plur"),
 )
 def test_sing_or_plur(test_sing_or_plur_dir, snapshot, set_redis):
-
     # Read input files from the case directory.
     input_json = test_sing_or_plur_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
@@ -1305,7 +1294,6 @@ def test_sing_or_plur(test_sing_or_plur_dir, snapshot, set_redis):
     get_dirs("tests/test_uberlegen_word_type"),
 )
 def test_uberlegen_word_type(uberlegen_word_type_dir, snapshot, set_redis):
-
     # Read input files from the case directory.
     input_json = uberlegen_word_type_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
@@ -1329,7 +1317,6 @@ def test_uberlegen_word_type(uberlegen_word_type_dir, snapshot, set_redis):
 def test_english_false_positive_pattern(
     english_false_pos_pattern_case_dir, snapshot, set_redis
 ):
-
     # Read input files from the case directory.
     input_json = english_false_pos_pattern_case_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
@@ -1353,7 +1340,6 @@ def test_english_false_positive_pattern(
 def test_english_upper_case_multiterms(
     english_upper_case_multiterms_dir, snapshot, set_redis
 ):
-
     # Read input files from the case directory.
     input_json = english_upper_case_multiterms_dir.joinpath("input.json").read_text()
     # Call the tested endpoint.
