@@ -1,9 +1,5 @@
 - name: "app"
 
-  variables:
-    env:
-      LANGS: '["en"]'
-
   type: "python:3.11"
 
   disk: 2048
@@ -11,6 +7,8 @@
   resources:
     base_memory: 1024
     memory_ratio: 1024
+
+  container_profile: LOW_MEMORY
 
   dependencies:
     python3:
@@ -32,9 +30,6 @@
       pipenv run /opt/python/3.11/bin/python3.11 -m spacy download en_core_web_md --no-cache-dir
       pipenv run /opt/python/3.11/bin/python3.11 -m spacy download de_core_news_lg --no-cache-dir
 
-      pipenv run pybabel compile -d locales -l en_US -f
-      pipenv run pybabel compile -d locales -l en_GB -f
-
       export FT_MODEL="lid.176.bin"
 
       if [ ! -f "${PLATFORM_CACHE_DIR}/$FT_MODEL" ]; then
@@ -53,6 +48,7 @@
 
   relationships:
     rediscache: "rediscache:redis"
+    en: "english:http"
     de: "german:http"
 
   crons:
@@ -72,6 +68,45 @@
   mounts:
     "analyze_rules": "shared:files/analyze_rules"
 
+- name: "english"
+
+  variables:
+    env:
+      LANGS: '["en"]'
+      LANGUAGE_ENDPOINT_ENABLED_EN: true
+
+  type: "python:3.11"
+
+  disk: 2048
+
+  resources:
+    base_memory: 1024
+    memory_ratio: 1024
+
+  container_profile: HIGH_MEMORY
+
+  dependencies:
+    python3:
+      pipenv: "2021.5.29"
+
+  web:
+    upstream:
+      socket_family: unix
+    commands:
+      start: |
+        blackfire-python gunicorn app.main:app -b unix:$SOCKET -w ${EN_WORKERS} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
+
+  hooks:
+    build: |
+      set -e
+
+      pipenv install --system --deploy
+
+      pipenv run /opt/python/3.11/bin/python3.11 -m spacy download en_core_web_md --no-cache-dir
+
+      pipenv run pybabel compile -d locales -l en_US -f
+      pipenv run pybabel compile -d locales -l en_GB -f
+
 - name: "german"
 
   variables:
@@ -86,6 +121,8 @@
   resources:
     base_memory: 1024
     memory_ratio: 1024
+
+  container_profile: HIGHER_MEMORY
 
   dependencies:
     python3:
