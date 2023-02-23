@@ -88,7 +88,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.41.9"
+version = "1.41.10"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -1293,7 +1293,7 @@ def languagetool_matches(
             subcategory != "abbreviation" and subcategory != "anglicism"
         ):
             explanation = match["message"]
-            # may be removed once updated to LT 6.0 https://github.com/languagetool-org/languagetool/commit/e4f7d6a677483b069fd98dfc461.41.93618767b
+            # may be removed once updated to LT 6.0 https://github.com/languagetool-org/languagetool/commit/e4f7d6a677483b069fd98dfc461.41.103618767b
             if explanation.startswith("Das Nomen „Trans"):
                 continue
         else:
@@ -1409,7 +1409,7 @@ async def apply_languagetool_rules(
         settings.languagetool_verify_ssl,
     )
 
-    if result is None:
+    if not isinstance(result, dict):
         return []
 
     return languagetool_matches(version, config, lang, text, result)
@@ -3409,7 +3409,7 @@ def detect_filler_words_at_sentence_start(
 
 
 def token_is_conjunction(token):
-    return token.text == "," or token.pos_ == "CCONJ";
+    return token.text == "," or token.pos_ == "CCONJ"
 
 
 def pluralize_they(tokens, i):
@@ -3437,7 +3437,7 @@ def pluralize_they(tokens, i):
             and token_is_conjunction(tokens[next_i])
             and tokens[next_i + 1].text[-1] == "s"
         ) or (
-            next_i == i+ 1
+            next_i == i + 1
             and tokens[next_i].text[-1] == "s"
             and "v" in fetch_word_types("en", tokens[next_i])
         ):
