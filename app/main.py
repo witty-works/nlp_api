@@ -12,6 +12,7 @@ from typing import Optional, Union, List
 from collections import defaultdict
 from pydantic import parse_obj_as
 
+import spacy
 from spacy.tokens import Doc
 from spacy.matcher import PhraseMatcher, Matcher
 import pandas as pd
@@ -87,7 +88,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.41.8"
+version = "1.41.9"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -1292,7 +1293,7 @@ def languagetool_matches(
             subcategory != "abbreviation" and subcategory != "anglicism"
         ):
             explanation = match["message"]
-            # may be removed once updated to LT 6.0 https://github.com/languagetool-org/languagetool/commit/e4f7d6a677483b069fd98dfc461.41.83618767b
+            # may be removed once updated to LT 6.0 https://github.com/languagetool-org/languagetool/commit/e4f7d6a677483b069fd98dfc461.41.93618767b
             if explanation.startswith("Das Nomen „Trans"):
                 continue
         else:
@@ -2519,6 +2520,26 @@ def german_verb_splittable(word):  # pragma: no cover
     return False
 
 
+def fetch_verb_form(token):
+    if token.morph.get("Case") == ["Dat"]:
+        flexion = "dativ"
+    elif token.morph.get("Case") == ["Gen"]:
+        flexion = "genitiv"
+    elif token.morph.get("Case") == ["Nom"]:
+        flexion = "nominativ"
+    elif token.morph.get("Case") == ["Acc"]:
+        flexion = "akkusativ"
+    else:
+        return None
+
+    if token.morph.get("Number") == ["Sing"]:
+        flexion += " singular"
+    else:
+        flexion += " plural"
+
+    return flexion
+
+
 def align_verb_form(lang, a_text, a_token, b_token):
     if lang == "de":
         b_text = b_token.text
@@ -2733,6 +2754,9 @@ def match_binary_inclusive_gendered_denom_analysis_de(
 
 
 def fetch_article_for_flexion(flexion, word, article_text):
+    if flexion is None:
+        return None, None, None, None
+
     for form, masculine, feminine, neuter, plural, alternative in rules["de"][
         "articles"
     ]:
