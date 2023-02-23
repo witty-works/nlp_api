@@ -1409,7 +1409,7 @@ async def apply_languagetool_rules(
         settings.languagetool_verify_ssl,
     )
 
-    if result is None:
+    if not isinstance(result, dict):
         return []
 
     return languagetool_matches(version, config, lang, text, result)
@@ -3409,7 +3409,7 @@ def detect_filler_words_at_sentence_start(
 
 
 def token_is_conjunction(token):
-    return token.text == "," or token.pos_ == "CCONJ";
+    return token.text == "," or token.pos_ == "CCONJ"
 
 
 def pluralize_they(tokens, i):
@@ -3437,7 +3437,7 @@ def pluralize_they(tokens, i):
             and token_is_conjunction(tokens[next_i])
             and tokens[next_i + 1].text[-1] == "s"
         ) or (
-            next_i == i+ 1
+            next_i == i + 1
             and tokens[next_i].text[-1] == "s"
             and "v" in fetch_word_types("en", tokens[next_i])
         ):
