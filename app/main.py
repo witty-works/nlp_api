@@ -2018,7 +2018,6 @@ async def english_rules(
         )
 
     if is_sub_category_enabled(version, config, "inclusive"):
-
         if is_sub_category_enabled(version, config, "d_and_i"):
             subcategory = "d_and_i"
             category = categories[subcategory]["category"]
@@ -2368,6 +2367,26 @@ def german_noun_analysis(word, genus_only=False):
     return result
 
 
+def fetch_flexion(token):
+    if token.morph.get("Case") == ["Dat"]:
+        flexion = "dativ"
+    elif token.morph.get("Case") == ["Gen"]:
+        flexion = "genitiv"
+    elif token.morph.get("Case") == ["Nom"]:
+        flexion = "nominativ"
+    elif token.morph.get("Case") == ["Acc"]:
+        flexion = "akkusativ"
+    else:
+        return None
+
+    if token.morph.get("Number") == ["Sing"]:
+        flexion += " singular"
+    else:
+        flexion += " plural"
+
+    return flexion
+
+
 def align_noun_form(lang, a_text, a_token, b_token):
     b_text = b_token.text
 
@@ -2383,22 +2402,19 @@ def align_noun_form(lang, a_text, a_token, b_token):
         if b_word is None:
             return b_text
 
-        for flexion, value in a_word["flexion"].items():
-            if value != a_text:
-                continue
+        flexion = fetch_flexion(a_token)
+        if flexion is None:
+            return b_text
 
-            flexion = flexion.split()
-            flexion = flexion[0] + " " + flexion[1]
+        if flexion in b_word["flexion"]:
+            return b_word["flexion"][flexion]
 
-            if flexion in b_word["flexion"]:
-                return b_word["flexion"][flexion]
+        key = flexion + " 1"
+        if key not in b_word["flexion"]:
+            key = flexion + " stark"
 
-            key = flexion + " 1"
-            if key not in b_word["flexion"]:
-                key = flexion + " stark"
-
-            if key in b_word["flexion"]:
-                return b_word["flexion"][key]
+        if key in b_word["flexion"]:
+            return b_word["flexion"][key]
 
         return b_text
 
@@ -2691,49 +2707,11 @@ def match_binary_inclusive_gendered_denom_analysis_de(
     return text, start, category, subcategory
 
 
-def fetch_matching_flexions(text, word, is_plural_check=False):
-    matches = {
-        "is_plural": False,
-        "forms": [],
-    }
-
-    if "flexion" in word:
-        for flexion, value in word["flexion"].items():
-            if value == text:
-                words = flexion.replace("*", "").split()
-                if len(words) != 2:
-                    continue
-
-                if "plural" in words[1]:
-                    matches["is_plural"] = True
-                    if is_plural_check:
-                        break
-
-                matches["forms"].append(words[0])
-
-    return matches
-
-
-def fetch_alternatives_with_article(tokens, i, alternatives):
-    text = tokens[i].text
-    word = german_noun_analysis(text)
-    if word is None:
-        return None
-
-    matches = fetch_matching_flexions(text, word)
-    if len(matches["forms"]) == 0:
-        return None
-
-    matched_form = None
-    article_text = tokens[i - 1].text.lower()
-    match_masculine = None
-    match_feminine = None
-    match_neuter = None
-    match_alternative = None
+def fetch_article_for_flexion(flexion, word, article_text):
     for form, masculine, feminine, neuter, plural, alternative in rules["de"][
         "articles"
     ]:
-        if form not in matches["forms"]:
+        if form not in flexion:
             continue
 
         article_to_check = None
@@ -2745,25 +2723,25 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
             article_to_check = neuter
 
         if article_text == article_to_check:
-            if matched_form is None:
-                matched_form = form
-                match_masculine = masculine
-                match_feminine = feminine
-                match_neuter = neuter
-                match_alternative = alternative
-            elif matched_form != form:
-                if match_masculine != masculine:
-                    match_masculine = False
+            return masculine, feminine, neuter, alternative
 
-                if match_feminine != feminine:
-                    match_feminine = False
+    return None, None, None, None
 
-                if match_neuter != neuter:
-                    match_neuter = False
 
-                if match_alternative != alternative:
-                    match_alternative = False
+def fetch_alternatives_with_article(tokens, i, alternatives):
+    text = tokens[i].text
+    word = german_noun_analysis(text)
+    if word is None:
+        return None
 
+    article_text = tokens[i - 1].text.lower()
+
+    (
+        match_masculine,
+        match_feminine,
+        match_neuter,
+        match_alternative,
+    ) = fetch_article_for_flexion(fetch_flexion(tokens[i]), word, article_text)
     if match_alternative is None:
         return None
 
@@ -2775,30 +2753,30 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
             else:
                 article_alternative = article_text
         else:
-            alternative, alternative_context, remove = ResultOut.parse_alternative(
+            parse_alternative, alternative_context, remove = ResultOut.parse_alternative(
                 alternative
             )
 
-            if alternative is None:
+            if parse_alternative is None:
                 continue
 
-            words = alternative.split()
-            word = german_noun_analysis(words[-1], True)
-            if word is None:
-                article_alternative = tokens[i - 1].text
+            words = parse_alternative.split()
+            alternative_tokens = fetch_tokens("de", words[-1])
+            if alternative_tokens[0].morph.get("Number") == ["Plur"]:
+                article_alternative = ""
             else:
-                matches = fetch_matching_flexions(alternative, word, True)
-                if matches["is_plural"]:
-                    article_alternative = ""
-                elif word["genus"] == "m":
+                alternative_word = german_noun_analysis(words[-1], True)
+                if alternative_word is None:
+                    article_alternative = tokens[i - 1].text
+                elif alternative_word["genus"] == "m":
                     if match_masculine == False:
                         return None
                     article_alternative = match_masculine
-                elif word["genus"] == "n":
+                elif alternative_word["genus"] == "n":
                     if match_neuter == False:
                         return None
                     article_alternative = match_neuter
-                elif word["genus"] == "f" or alternative.endswith("in"):
+                elif alternative_word["genus"] == "f" or alternative.endswith("in"):
                     if match_feminine == False:
                         return None
                     article_alternative = match_feminine
