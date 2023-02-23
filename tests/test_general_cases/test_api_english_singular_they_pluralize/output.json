@@ -25,12 +25,12 @@
         {
             "alternatives": [
                 {
-                    "text": "They build"
+                    "text": "They build, clean and refurbish"
                 }
             ],
             "category": "gendered",
             "context": "He is amazing. She builds, cleans and refurbishes houses. This is all hers.",
-            "end": 25,
+            "end": 49,
             "explanation": {
                 "icon": "😟",
                 "text": "Pronouns that exclude non-binary people",
@@ -40,7 +40,7 @@
             "label": "Gendered: Binary Pronouns",
             "start": 15,
             "subcategory": "binary_pronouns",
-            "text": "She builds"
+            "text": "She builds, cleans and refurbishes"
         },
         {
             "alternatives": [

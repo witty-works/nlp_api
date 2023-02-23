@@ -501,13 +501,14 @@ class ResultOut(BaseModel):
             if isinstance(alternatives, Dict):
                 alternatives = list(alternatives.values())
 
-            (alternatives, explanation_context) = ResultOut.clean_alternatives(
+            (text, start, alternatives, explanation_context) = ResultOut.clean_alternatives(
                 version,
                 config,
                 lang,
                 text,
                 category,
                 subcategory,
+                start,
                 ResultOut.isUpper(text, full_text, start, category, lang),
                 alternatives,
                 explanation_context,
@@ -570,6 +571,7 @@ class ResultOut(BaseModel):
         text,
         category,
         subcategory,
+        start,
         is_upper,
         alternatives,
         explanation_context,
@@ -584,6 +586,14 @@ class ResultOut(BaseModel):
         if "^" in alternatives:
             alternatives.remove("^")
 
+        prefix = False
+        if text.startswith("zu "):
+            prefix = "zu "
+        elif text.startswith("a "):
+            prefix = "a "
+        elif text.startswith("an "):
+            prefix = "an "
+
         add_inspiration_alternatives = True
         cleaned_alternatives = {}
         for alternative in alternatives:
@@ -591,6 +601,9 @@ class ResultOut(BaseModel):
                 alternative = alternative.strip()
             if alternative == text:
                 continue
+
+            if prefix and not alternative.startswith(prefix):
+                prefix = False
 
             # requests for user input are not yet supported
             # https://wittyworks.productboard.com/roadmap/3751070-browser-extension/features/13529555/detail
@@ -668,7 +681,14 @@ class ResultOut(BaseModel):
         ):
             cleaned_alternatives = cleaned_alternatives[0:alternatives_max_count]
 
-        return cleaned_alternatives, explanation_context
+        if prefix:
+            prefix_lenth = len(prefix)
+            start+= prefix_lenth
+            text = text[prefix_lenth:]
+            for cleaned_alternative in cleaned_alternatives:
+                cleaned_alternative.text = cleaned_alternative.text[prefix_lenth:]
+
+        return text, start, cleaned_alternatives, explanation_context
 
     @staticmethod
     def parse_alternative(alternative):

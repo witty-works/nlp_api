@@ -87,7 +87,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.41.7"
+version = "1.41.8"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -505,8 +505,10 @@ async def get_debug_spacy(
                 "start": token.idx,
                 "tag": token.tag_,
                 "pos": token.pos_,
+                "dep": token.dep_,
                 "word_types": fetch_word_types(lang, token),
                 "morph": token.morph.get("Number"),
+                "case": token.morph.get("Case"),
                 "foreign": token.morph.get("Foreign"),
             }
         )
@@ -1290,7 +1292,7 @@ def languagetool_matches(
             subcategory != "abbreviation" and subcategory != "anglicism"
         ):
             explanation = match["message"]
-            # may be removed once updated to LT 6.0 https://github.com/languagetool-org/languagetool/commit/e4f7d6a677483b069fd98dfc461.41.73618767b
+            # may be removed once updated to LT 6.0 https://github.com/languagetool-org/languagetool/commit/e4f7d6a677483b069fd98dfc461.41.83618767b
             if explanation.startswith("Das Nomen „Trans"):
                 continue
         else:
@@ -2018,7 +2020,6 @@ async def english_rules(
         )
 
     if is_sub_category_enabled(version, config, "inclusive"):
-
         if is_sub_category_enabled(version, config, "d_and_i"):
             subcategory = "d_and_i"
             category = categories[subcategory]["category"]
@@ -2368,10 +2369,30 @@ def german_noun_analysis(word, genus_only=False):
     return result
 
 
+def fetch_flexion(token):
+    if token.morph.get("Case") == ["Dat"]:
+        flexion = "dativ"
+    elif token.morph.get("Case") == ["Gen"]:
+        flexion = "genitiv"
+    elif token.morph.get("Case") == ["Nom"]:
+        flexion = "nominativ"
+    elif token.morph.get("Case") == ["Acc"]:
+        flexion = "akkusativ"
+    else:
+        return None
+
+    if token.morph.get("Number") == ["Sing"]:
+        flexion += " singular"
+    else:
+        flexion += " plural"
+
+    return flexion
+
+
 def align_noun_form(lang, a_text, a_token, b_token):
     b_text = b_token.text
 
-    if a_token.morph.get("Number") == b_token.morph.get("Number"):
+    if a_token.morph.get("Number") == b_token.morph.get("Number") or b_text == "they":
         return b_text
 
     if lang == "de":
@@ -2383,27 +2404,27 @@ def align_noun_form(lang, a_text, a_token, b_token):
         if b_word is None:
             return b_text
 
-        for flexion, value in a_word["flexion"].items():
-            if value != a_text:
-                continue
+        flexion = fetch_flexion(a_token)
+        if flexion is None:
+            return b_text
 
-            flexion = flexion.split()
-            flexion = flexion[0] + " " + flexion[1]
+        if flexion in b_word["flexion"]:
+            return b_word["flexion"][flexion]
 
-            if flexion in b_word["flexion"]:
-                return b_word["flexion"][flexion]
+        key = flexion + " 1"
+        if key not in b_word["flexion"]:
+            key = flexion + " stark"
 
-            key = flexion + " 1"
-            if key not in b_word["flexion"]:
-                key = flexion + " stark"
-
-            if key in b_word["flexion"]:
-                return b_word["flexion"][key]
+        if key in b_word["flexion"]:
+            return b_word["flexion"][key]
 
         return b_text
 
     if b_token.morph.get("Number") == ["Sing"]:
         return Noun(b_text).plural()
+
+    if b_token.morph.get("Number") == ["Plur"]:
+        return b_text
 
     return Noun(b_text).singular()
 
@@ -2569,14 +2590,17 @@ def alternative_declension(lang, text, token, word_types, alternative):
     ):
         return alternative
 
+    if parsed_alternative.count(" ") > 5:
+        return alternative
+
     new_alternative = ""
     previous = False
+    is_plural = False
     alternative_tokens = fetch_tokens(lang, parsed_alternative)
-    alternative_token = None
     for i in reversed(range(len(alternative_tokens))):
         alternative_token = alternative_tokens[i]
         alternative_text = alternative_token.text
-        if alternative_text in rules[lang]["conjunctions"]:
+        if alternative_text != "," and token_is_conjunction(alternative_token):
             previous = False
         else:
             if len(alternative_tokens) == 1:
@@ -2594,6 +2618,9 @@ def alternative_declension(lang, text, token, word_types, alternative):
                         lang, text, token, alternative_token
                     )
                 elif "s" in word_types and "s" in alternative_word_types:
+                    if alternative_token.morph.get("Number") == ["Plur"]:
+                        is_plural = True
+
                     previous = True
                     alternative_text = align_noun_form(
                         lang, text, token, alternative_token
@@ -2614,6 +2641,12 @@ def alternative_declension(lang, text, token, word_types, alternative):
             alternative_text + alternative_token.whitespace_ + new_alternative
         )
 
+    if is_plural == False and text.startswith("a ") or text.startswith("an "):
+        if new_alternative[0].lower() in ["a", "e", "i", "o", "u"]:
+            new_alternative = "an " + new_alternative
+        else:
+            new_alternative = "a " + new_alternative
+
     return new_alternative + alternative_context
 
 
@@ -2622,8 +2655,16 @@ def alternatives_declension(lang, token, alternatives, prev_token):
     start = token.idx
 
     word_types = fetch_word_types(lang, token)
-    if lang == "de" and "v" in word_types and prev_token and prev_token.text == "zu":
-        text = "zu " + text
+    if lang == "de":
+        if "v" in word_types and prev_token and prev_token.text == "zu":
+            text = "zu " + text
+            start = prev_token.idx
+    elif lang == "en" and (
+        "s" in word_types
+        and prev_token
+        and (prev_token.text == "a" or prev_token.text == "an")
+    ):
+        text = prev_token.text + " " + text
         start = prev_token.idx
 
     if word_types == [] or (text == token.lemma_ and token.lemma_ != "beste"):
@@ -2691,49 +2732,11 @@ def match_binary_inclusive_gendered_denom_analysis_de(
     return text, start, category, subcategory
 
 
-def fetch_matching_flexions(text, word, is_plural_check=False):
-    matches = {
-        "is_plural": False,
-        "forms": [],
-    }
-
-    if "flexion" in word:
-        for flexion, value in word["flexion"].items():
-            if value == text:
-                words = flexion.replace("*", "").split()
-                if len(words) != 2:
-                    continue
-
-                if "plural" in words[1]:
-                    matches["is_plural"] = True
-                    if is_plural_check:
-                        break
-
-                matches["forms"].append(words[0])
-
-    return matches
-
-
-def fetch_alternatives_with_article(tokens, i, alternatives):
-    text = tokens[i].text
-    word = german_noun_analysis(text)
-    if word is None:
-        return None
-
-    matches = fetch_matching_flexions(text, word)
-    if len(matches["forms"]) == 0:
-        return None
-
-    matched_form = None
-    article_text = tokens[i - 1].text.lower()
-    match_masculine = None
-    match_feminine = None
-    match_neuter = None
-    match_alternative = None
+def fetch_article_for_flexion(flexion, word, article_text):
     for form, masculine, feminine, neuter, plural, alternative in rules["de"][
         "articles"
     ]:
-        if form not in matches["forms"]:
+        if form not in flexion:
             continue
 
         article_to_check = None
@@ -2745,25 +2748,25 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
             article_to_check = neuter
 
         if article_text == article_to_check:
-            if matched_form is None:
-                matched_form = form
-                match_masculine = masculine
-                match_feminine = feminine
-                match_neuter = neuter
-                match_alternative = alternative
-            elif matched_form != form:
-                if match_masculine != masculine:
-                    match_masculine = False
+            return masculine, feminine, neuter, alternative
 
-                if match_feminine != feminine:
-                    match_feminine = False
+    return None, None, None, None
 
-                if match_neuter != neuter:
-                    match_neuter = False
 
-                if match_alternative != alternative:
-                    match_alternative = False
+def fetch_alternatives_with_article(tokens, i, alternatives):
+    text = tokens[i].text
+    word = german_noun_analysis(text)
+    if word is None:
+        return None
 
+    article_text = tokens[i - 1].text.lower()
+
+    (
+        match_masculine,
+        match_feminine,
+        match_neuter,
+        match_alternative,
+    ) = fetch_article_for_flexion(fetch_flexion(tokens[i]), word, article_text)
     if match_alternative is None:
         return None
 
@@ -2775,30 +2778,32 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
             else:
                 article_alternative = article_text
         else:
-            alternative, alternative_context, remove = ResultOut.parse_alternative(
-                alternative
-            )
+            (
+                parse_alternative,
+                alternative_context,
+                remove,
+            ) = ResultOut.parse_alternative(alternative)
 
-            if alternative is None:
+            if parse_alternative is None:
                 continue
 
-            words = alternative.split()
-            word = german_noun_analysis(words[-1], True)
-            if word is None:
-                article_alternative = tokens[i - 1].text
+            words = parse_alternative.split()
+            alternative_tokens = fetch_tokens("de", words[-1])
+            if alternative_tokens[0].morph.get("Number") == ["Plur"]:
+                article_alternative = ""
             else:
-                matches = fetch_matching_flexions(alternative, word, True)
-                if matches["is_plural"]:
-                    article_alternative = ""
-                elif word["genus"] == "m":
+                alternative_word = german_noun_analysis(words[-1], True)
+                if alternative_word is None:
+                    article_alternative = tokens[i - 1].text
+                elif alternative_word["genus"] == "m":
                     if match_masculine == False:
                         return None
                     article_alternative = match_masculine
-                elif word["genus"] == "n":
+                elif alternative_word["genus"] == "n":
                     if match_neuter == False:
                         return None
                     article_alternative = match_neuter
-                elif word["genus"] == "f" or alternative.endswith("in"):
+                elif alternative_word["genus"] == "f" or alternative.endswith("in"):
                     if match_feminine == False:
                         return None
                     article_alternative = match_feminine
@@ -3306,7 +3311,10 @@ def word_noun(
 ):
     list_tokens = []
 
-    for token in tokens:
+    token = None
+    for i in range(len(tokens)):
+        prev_token = token
+        token = tokens[i]
         for (
             word,
             word_types,
@@ -3342,16 +3350,20 @@ def word_noun(
             else:
                 alternatives = alternatives_plur
 
+            text, start, alternatives = alternatives_declension(
+                lang.lang, token, alternatives, prev_token
+            )
+
             list_tokens.append(
                 ResultOut.factory(
                     version,
                     config,
                     lang,
-                    token.text,
+                    text,
                     full_text,
                     category,
                     subcategory,
-                    token.idx,
+                    start,
                     None,
                     alternatives,
                 )
@@ -3372,6 +3384,10 @@ def detect_filler_words_at_sentence_start(
     return text, alternatives
 
 
+def token_is_conjunction(token):
+    return token.text == "," or token.pos_ == "CCONJ";
+
+
 def pluralize_they(tokens, i):
     token = tokens[i]
     text = token.text
@@ -3390,18 +3406,18 @@ def pluralize_they(tokens, i):
         text += token.whitespace_ + tokens[next_i].text
         alternative += token.whitespace_ + verb_map[tokens[next_i].text]
     else:
-        # she/he builds, cleans and refurbishes houses => they build, clean and refurbishe houses
+        # she/he builds, cleans and refurbishes houses => they build, clean and refurbish houses
         prev_token = token
         while (
-            len(tokens) <= next_i + 1
-            and tokens[next_i].text in rules["en"]["conjunctions"]
+            len(tokens) > next_i + 1
+            and token_is_conjunction(tokens[next_i])
             and tokens[next_i + 1].text[-1] == "s"
-            and "v" in fetch_word_types("en", tokens[next_i + 1])
         ) or (
-            tokens[next_i].text[-1] == "s"
+            next_i == i+ 1
+            and tokens[next_i].text[-1] == "s"
             and "v" in fetch_word_types("en", tokens[next_i])
         ):
-            if tokens[next_i].text in rules["en"]["conjunctions"]:
+            if token_is_conjunction(tokens[next_i]):
                 text += prev_token.whitespace_ + tokens[next_i].text
                 alternative += prev_token.whitespace_ + tokens[next_i].text
                 prev_token = tokens[next_i]
