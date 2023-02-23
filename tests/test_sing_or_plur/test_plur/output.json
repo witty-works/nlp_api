@@ -5,20 +5,20 @@
         {
             "alternatives": [
                 {
-                    "text": "Engineering team"
+                    "text": "Engineering teams"
                 },
                 {
-                    "text": "Development team"
+                    "text": "Development teams"
                 },
                 {
-                    "text": "Engineering"
+                    "text": "Engineerings"
                 },
                 {
-                    "text": "Development"
+                    "text": "Developments"
                 }
             ],
             "category": "gendered",
-            "context": "Engineers usually work in industry.",
+            "context": "Engineers work in this industry.",
             "end": 9,
             "explanation": {
                 "icon": "😮",
