@@ -8,7 +8,7 @@
     base_memory: 1024
     memory_ratio: 1024
 
-  container_profile: LOW_MEMORY
+  container_profile: BALANCED
 
   dependencies:
     python3:
