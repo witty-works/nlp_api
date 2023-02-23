@@ -88,7 +88,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.41.8"
+version = "1.41.9"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -1293,7 +1293,7 @@ def languagetool_matches(
             subcategory != "abbreviation" and subcategory != "anglicism"
         ):
             explanation = match["message"]
-            # may be removed once updated to LT 6.0 https://github.com/languagetool-org/languagetool/commit/e4f7d6a677483b069fd98dfc461.41.83618767b
+            # may be removed once updated to LT 6.0 https://github.com/languagetool-org/languagetool/commit/e4f7d6a677483b069fd98dfc461.41.93618767b
             if explanation.startswith("Das Nomen „Trans"):
                 continue
         else:
