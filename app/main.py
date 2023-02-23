@@ -505,8 +505,10 @@ async def get_debug_spacy(
                 "start": token.idx,
                 "tag": token.tag_,
                 "pos": token.pos_,
+                "dep": token.dep_,
                 "word_types": fetch_word_types(lang, token),
                 "morph": token.morph.get("Number"),
+                "case": token.morph.get("Case"),
                 "foreign": token.morph.get("Foreign"),
             }
         )
@@ -2593,13 +2595,12 @@ def alternative_declension(lang, text, token, word_types, alternative):
 
     new_alternative = ""
     previous = False
-    alternative_tokens = fetch_tokens(lang, parsed_alternative)
-    alternative_token = None
     is_plural = False
+    alternative_tokens = fetch_tokens(lang, parsed_alternative)
     for i in reversed(range(len(alternative_tokens))):
         alternative_token = alternative_tokens[i]
         alternative_text = alternative_token.text
-        if alternative_text in rules[lang]["conjunctions"]:
+        if alternative_text != "," and token_is_conjunction(alternative_token):
             previous = False
         else:
             if len(alternative_tokens) == 1:
@@ -2777,9 +2778,11 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
             else:
                 article_alternative = article_text
         else:
-            parse_alternative, alternative_context, remove = ResultOut.parse_alternative(
-                alternative
-            )
+            (
+                parse_alternative,
+                alternative_context,
+                remove,
+            ) = ResultOut.parse_alternative(alternative)
 
             if parse_alternative is None:
                 continue
@@ -3381,6 +3384,10 @@ def detect_filler_words_at_sentence_start(
     return text, alternatives
 
 
+def token_is_conjunction(token):
+    return token.text == "," or token.pos_ == "CCONJ";
+
+
 def pluralize_they(tokens, i):
     token = tokens[i]
     text = token.text
@@ -3399,18 +3406,18 @@ def pluralize_they(tokens, i):
         text += token.whitespace_ + tokens[next_i].text
         alternative += token.whitespace_ + verb_map[tokens[next_i].text]
     else:
-        # she/he builds, cleans and refurbishes houses => they build, clean and refurbishe houses
+        # she/he builds, cleans and refurbishes houses => they build, clean and refurbish houses
         prev_token = token
         while (
-            len(tokens) <= next_i + 1
-            and tokens[next_i].text in rules["en"]["conjunctions"]
+            len(tokens) > next_i + 1
+            and token_is_conjunction(tokens[next_i])
             and tokens[next_i + 1].text[-1] == "s"
-            and "v" in fetch_word_types("en", tokens[next_i + 1])
         ) or (
-            tokens[next_i].text[-1] == "s"
+            next_i == i+ 1
+            and tokens[next_i].text[-1] == "s"
             and "v" in fetch_word_types("en", tokens[next_i])
         ):
-            if tokens[next_i].text in rules["en"]["conjunctions"]:
+            if token_is_conjunction(tokens[next_i]):
                 text += prev_token.whitespace_ + tokens[next_i].text
                 alternative += prev_token.whitespace_ + tokens[next_i].text
                 prev_token = tokens[next_i]
