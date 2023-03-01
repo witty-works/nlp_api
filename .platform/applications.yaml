@@ -23,7 +23,7 @@
       socket_family: unix
     commands:
       start: |
-        blackfire-python gunicorn app.main:app -b unix:$SOCKET -w ${WORKERS} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
+        blackfire-python gunicorn app.main:app -b unix:$SOCKET -w ${WORKERS} --threads ${THREADS} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
 
   hooks:
     build: |
@@ -100,7 +100,7 @@
       socket_family: unix
     commands:
       start: |
-        blackfire-python gunicorn app.main:app -b unix:$SOCKET -w ${DE_WORKERS} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
+        blackfire-python gunicorn app.main:app -b unix:$SOCKET -w ${DE_WORKERS} --threads ${THREADS_DE} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
 
   hooks:
     build: |
