@@ -21,7 +21,7 @@ excellent,a,style,exaggerating,"['-', 'remarkable', 'inspiring', 'very good', 'f
 exceptional,a,style,exaggerating,"['-', 'remarkable', 'inspiring', 'surprising', 'unusual', 'exemplary']"
 extra-ordinary,a,style,exaggerating,"['-', 'remarkable', 'inspiring', 'baffling', 'unusual', 'exemplary']"
 extraordinary,a,style,exaggerating,"['-', 'remarkable', 'inspiring', 'baffling', 'unusual', 'exemplary']"
-extreme,a,style,exaggerating,"['-', 'scute', 'major', 'substantial', 'severe', 'over-the-top', '']"
+extreme,a,style,exaggerating,"['-', 'scute', 'major', 'substantial', 'severe', 'over-the-top']"
 fairly,adv,style,filler,['-']
 fantastic,a,style,exaggerating,"['-', 'remarkable', 'inspiring', 'amazing', 'riveting', 'stimulating']"
 first-class,a,style,exaggerating,"['--- use only in programming', 'premium', 'quality-focused', 'luxurious', 'stylish', 'business --- in transportation']"
