@@ -65,7 +65,7 @@ Held,s,style,exaggerating,"['loyaler Mensch', 'resiliente Persönlichkeit', 'ums
 High-potential,s,style,anglicism,"['vielversprechende~r Bewerber~in~/~Bewerber', 'Person mit hohem Potenzial(...)', 'vielversprechende Bewerber~innen~ und ~Bewerber', 'Personen mit hohem Potenzial(...)']"
 Highlight,s,style,anglicism,"['Höhepunkt', 'Glanzpunkt']"
 Highpotential,s,style,anglicism,"['vielversprechende~r Bewerber~in~/~Bewerber', 'Person mit hohem Potenzial(...)', 'vielversprechende Bewerber~innen~ und ~Bewerber', 'Personen mit hohem Potenzial(...)']"
-Höchstleistung,s,style,exaggerating,"['Meilenstein', 'Teamziel', 'zuverlässiges Ergebnis', 'Sternstunde', 'Resultat, das das Vertrauen unserer Kundschaft in uns bestätigt', 'Leistung, zu der alle gemeinsam beigetragen haben(...)', 'gemeinsame Leistung, die neue Maßstäbe gesetzt hat (...)', 'Meilensteine', 'Teamziele', 'zuverlässige Ergebnisse', 'Sternstunden', 'Resultate, die das Vertrauen unserer Kundschaft in uns bestätigen', 'gemeinsame Leistungen, die neue Maßstäbe gesetzt haben']"
+Höchstleistung,s,style,exaggerating,"['Meilenstein', 'Teamziel', 'zuverlässiges Ergebnis', 'Sternstunde', 'gemeinsame Leistung, die neue Maßstäbe gesetzt hat(...)', 'Resultat, das das Vertrauen unserer Kundschaft bestätigt(...)', 'Meilensteine', 'Teamziele', 'zuverlässige Ergebnisse', 'Sternstunden']"
 Inner-Circle,s,style,anglicism,"['innere Kreis', 'kleine Kreis', 'engere Kreis']"
 Innercircle,s,style,anglicism,"['innere Kreis', 'kleine Kreis', 'engere Kreis']"
 Innovation,s,style,hollow,"['Neugestaltung', 'Erfindung', 'technischer Fortschritt', 'Neuerung', 'Neuschöpfung', 'Neuentwicklung']"
