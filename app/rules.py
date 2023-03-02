@@ -1184,6 +1184,8 @@ def fetch_rules(langs):
             "histrionic personality disorder",
             "holiday camp",
             "holiday camps",
+            "how many",
+            "How many",
             "identifies as female",
             "identifies as male",
             "identify as female",
