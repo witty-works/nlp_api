@@ -377,8 +377,8 @@ stets,adv,style,filler,['-']
 stilsicher,a,style,exaggerating,"['kultiviert', 'der Situation angemessen auftretend', 'Gepflogenheiten routiniert respektierend']"
 stressen,v,style,anglicism,"['betonen', 'hervorheben', 'mit Nachdruck bewerben', 'unterstreichen']"
 supporten,v,style,anglicism,['unterstützen']
-sweet-talken,v,style,anglicism,"['umgarnen', '']"
-sweettalken,v,style,anglicism,"['umgarnen', '']"
+sweet-talken,v,style,anglicism,['umgarnen']
+sweettalken,v,style,anglicism,['umgarnen']
 teamfähig,a,style,hollow,"['kooperationsfähig', 'offen gegenüber verschiedenen Menschen und Verhaltensweisen', 'fähig mit Unterschieden und Gemeinsamkeiten umzugehen', 'kommunikationsfähig', 'kompromissbereit zugunsten des gemeinsamen Ziels']"
 trotzdem,adv,style,filler,['-']
 umständehalber,adv,style,filler,['-']

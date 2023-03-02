@@ -124,7 +124,7 @@ schlaue Köpfe,a+s,style,exaggerating,"['Leute mit Durchblick', 'aufmerksame Men
 schlauer Kopf,a+s,style,exaggerating,"['jemand mit Durchblick', 'aufmerksame Person', 'erfindungsreicher Menschen', 'Mensch mit Blick fürs Wesentliche(...)', 'Person, die Erlerntes rasch anwenden kann(...)', 'aufmerksame Person, die mitdenkt(...)', 'jemand mit Erfahrung(...)', 'Mensch mit verschiedenen Perspektiven(...)']"
 schnelle Auffassungsgabe,a+s,style,hollow,"['das Wesentliche schnell erkennen', 'Gelerntes rasch anwenden']"
 sowohl als auch,adv,style,filler,['-']
-sweet talken,v,style,anglicism,"['umgarnen', '']"
+sweet talken,v,style,anglicism,['umgarnen']
 think outside of the box,i,style,hollow,"['brainstormen', 'aus neuen Blinkwinkeln betrachten', 'kreativ denken', 'gedankliches Neuland betraten', 'lateral denken']"
 tight getaktet,i,style,anglicism,"['eng getaktet', 'beschäftigt', 'ausgebucht', 'habe einen engen Terminplan', 'hat einen Termin nach dem anderen']"
 too barebone,i,style,anglicism,"['zu dünn', 'zu wenig schlüssig', 'zu unentwickelt', 'zu mager']"
