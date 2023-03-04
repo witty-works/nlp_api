@@ -508,9 +508,7 @@ async def get_debug_spacy(
                 "pos": token.pos_,
                 "dep": token.dep_,
                 "word_types": fetch_word_types(lang, token),
-                "morph": token.morph.get("Number"),
-                "case": token.morph.get("Case"),
-                "foreign": token.morph.get("Foreign"),
+                "morph": token.morph.to_dict(),
             }
         )
 
@@ -1372,6 +1370,9 @@ async def fetch_json_post(url, payload, headers, name, ssl=True):
 async def apply_languagetool_rules(
     version: float, config: Config, lang: Language, text: str
 ):
+    if settings.languagetool_api == "":
+        return []
+
     payload = {
         "text": text,
         "language": lang.locale,
@@ -2617,6 +2618,7 @@ def alternative_declension(lang, text, token, word_types, alternative):
     new_alternative = ""
     previous = False
     is_plural = False
+    first_alternative_word_types = False
     alternative_tokens = fetch_tokens(lang, parsed_alternative)
     for i in reversed(range(len(alternative_tokens))):
         alternative_token = alternative_tokens[i]
@@ -2631,6 +2633,9 @@ def alternative_declension(lang, text, token, word_types, alternative):
                 alternative_word_types = fetch_word_types(
                     lang, alternative_token, word_types, False
                 )
+
+            if first_alternative_word_types == False:
+                first_alternative_word_types = alternative_word_types
 
             if previous == False:
                 if "v" in word_types and lang == "en" and i == 0:
@@ -2662,11 +2667,18 @@ def alternative_declension(lang, text, token, word_types, alternative):
             alternative_text + alternative_token.whitespace_ + new_alternative
         )
 
-    if is_plural == False and text.startswith("a ") or text.startswith("an "):
-        if new_alternative[0].lower() in ["a", "e", "i", "o", "u"]:
-            new_alternative = "an " + new_alternative
-        else:
-            new_alternative = "a " + new_alternative
+    if lang == "en" and first_alternative_word_types:
+        if (
+            is_plural == False
+            and "s" in first_alternative_word_types
+            and (text.startswith("a ") or text.startswith("an "))
+            and not new_alternative.startswith(rules["en"]["a_not_startswith"])
+            and not new_alternative.endswith(rules["en"]["uncountables"])
+        ):
+            if new_alternative[0].lower() in ["a", "e", "i", "o", "u"]:
+                new_alternative = "an " + new_alternative
+            else:
+                new_alternative = "a " + new_alternative
 
     return new_alternative + alternative_context
 

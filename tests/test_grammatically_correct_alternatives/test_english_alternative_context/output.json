@@ -21,7 +21,7 @@
                 }
             ],
             "category": "gendered",
-            "context": "We hanged them up. We analyzed if this works. Are you a chairman or an addict?",
+            "context": "We hanged them up. We analyzed if this works. Are you a chairman or an addict? Are you a top-performer? This is an eye-opener.",
             "end": 64,
             "explanation": {
                 "icon": "💡",
@@ -37,6 +37,38 @@
         {
             "alternatives": [
                 {
+                    "text": "a mentor at heart"
+                },
+                {
+                    "text": "an inspiration to the team"
+                },
+                {
+                    "text": "an entrepreneur at heart"
+                },
+                {
+                    "text": "someone with an entrepreneurial mindset"
+                },
+                {
+                    "text": "someone who thrives on working toward milestones"
+                }
+            ],
+            "category": "style",
+            "context": "We hanged them up. We analyzed if this works. Are you a chairman or an addict? Are you a top-performer? This is an eye-opener.",
+            "end": 102,
+            "explanation": {
+                "icon": "😮‍💨",
+                "text": "Build trust by avoiding exaggerations",
+                "url": "https://www.witty.works/en/categories/style#exaggeration"
+            },
+            "gravity": 2.0,
+            "label": "Style: Exaggeration",
+            "start": 87,
+            "subcategory": "exaggerating",
+            "text": "a top-performer"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "froze"
                 },
                 {
@@ -47,7 +79,7 @@
                 }
             ],
             "category": "unconscious_bias",
-            "context": "We hanged them up. We analyzed if this works. Are you a chairman or an addict?",
+            "context": "We hanged them up. We analyzed if this works. Are you a chairman or an addict? Are you a top-performer? This",
             "end": 9,
             "explanation": {
                 "context": "in technology",
@@ -74,7 +106,7 @@
                 }
             ],
             "category": "unconscious_bias",
-            "context": "We hanged them up. We analyzed if this works. Are you a chairman or an addict?",
+            "context": "We hanged them up. We analyzed if this works. Are you a chairman or an addict? Are you a top-performer? This is an eye-opener.",
             "end": 30,
             "explanation": {
                 "icon": "😒",
@@ -93,14 +125,14 @@
                     "text": "a substance user"
                 },
                 {
-                    "text": "a substance use"
+                    "text": "substance use"
                 },
                 {
-                    "text": "a substance users"
+                    "text": "substance users"
                 }
             ],
             "category": "unconscious_bias",
-            "context": "We hanged them up. We analyzed if this works. Are you a chairman or an addict?",
+            "context": "We hanged them up. We analyzed if this works. Are you a chairman or an addict? Are you a top-performer? This is an eye-opener.",
             "end": 77,
             "explanation": {
                 "icon": "😒",
@@ -112,6 +144,35 @@
             "start": 68,
             "subcategory": "behavior",
             "text": "an addict"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "utterly shocking"
+                },
+                {
+                    "text": "a real surprise"
+                },
+                {
+                    "text": "utterly shocking news"
+                },
+                {
+                    "text": "real surprises"
+                }
+            ],
+            "category": "unconscious_bias",
+            "context": "em up. We analyzed if this works. Are you a chairman or an addict? Are you a top-performer? This is an eye-opener.",
+            "end": 125,
+            "explanation": {
+                "icon": "😒",
+                "text": "Repeats preconceived notions about the ability to see",
+                "url": "https://www.witty.works/en/categories/biased_language#vision"
+            },
+            "gravity": 2.0,
+            "label": "Biased Language: Vision",
+            "start": 112,
+            "subcategory": "vision",
+            "text": "an eye-opener"
         }
     ]
 }
