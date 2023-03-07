@@ -1158,9 +1158,12 @@ def test_spacy():
             "pos": "PRON",
             "dep": "sb",
             "word_types": ["s"],
-            "morph": ["Sing"],
-            "case": ["Nom"],
-            "foreign": [],
+            "morph": {
+                "Case": "Nom",
+                "Gender": "Neut",
+                "Number": "Sing",
+                "PronType": "Dem",
+            },
         },
         {
             "text": "ist",
@@ -1170,9 +1173,13 @@ def test_spacy():
             "pos": "AUX",
             "dep": "ROOT",
             "word_types": [],
-            "morph": ["Sing"],
-            "case": [],
-            "foreign": [],
+            "morph": {
+                "Mood": "Ind",
+                "Number": "Sing",
+                "Person": "3",
+                "Tense": "Pres",
+                "VerbForm": "Fin",
+            },
         },
         {
             "text": "sehr",
@@ -1182,9 +1189,7 @@ def test_spacy():
             "pos": "ADV",
             "dep": "mo",
             "word_types": ["a"],
-            "morph": [],
-            "case": [],
-            "foreign": [],
+            "morph": {},
         },
         {
             "text": "ehrgeizig",
@@ -1194,9 +1199,7 @@ def test_spacy():
             "pos": "ADV",
             "dep": "pd",
             "word_types": ["a"],
-            "morph": [],
-            "case": [],
-            "foreign": [],
+            "morph": {"Degree": "Pos"},
         },
     ]
 
