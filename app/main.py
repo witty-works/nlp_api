@@ -3377,8 +3377,15 @@ def word_noun(
             if is_singular is None:
                 continue
 
+            text = token.text
+            start = token.idx
+
             if is_singular:
                 alternatives = alternatives_sing
+
+                text, start, alternatives = alternatives_declension(
+                    lang.lang, token, alternatives, prev_token
+                )
             elif len(data):
                 # Secondary_subcategory
                 alternatives, subcategory = plural_alternatives(
@@ -3391,10 +3398,6 @@ def word_noun(
                     continue
             else:
                 alternatives = alternatives_plur
-
-            text, start, alternatives = alternatives_declension(
-                lang.lang, token, alternatives, prev_token
-            )
 
             list_tokens.append(
                 ResultOut.factory(
