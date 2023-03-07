@@ -2700,7 +2700,9 @@ def alternatives_declension(lang, token, alternatives, prev_token):
         text = prev_token.text + " " + text
         start = prev_token.idx
 
-    if word_types == [] or (text == token.lemma_ and token.lemma_ != "beste"):
+    if word_types == [] or (
+        text.lower() == token.lemma_.lower() and token.lemma_ != "beste"
+    ):
         return text, start, alternatives
 
     return (
