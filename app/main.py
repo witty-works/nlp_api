@@ -2067,19 +2067,16 @@ async def english_rules(
             sentences_data_en["style"],
             rules[lang.locale]["df_style_sentence"],
             matches_false,
-        )+ word_noun(
+        ) + word_noun(
             version,
             config,
             lang,
             text,
             tokens,
-            gendered_words_data_en["style"]["style"],
+            gendered_words_data_en["style"],
             "style",
             matches_false,
-        )
-
-
-        list_full += detect_lower_cased_hashtags(
+        ) + detect_lower_cased_hashtags(
             version,
             config,
             lang,

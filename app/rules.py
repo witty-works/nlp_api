@@ -16,8 +16,6 @@ def fetch_rules(langs):
             "df_articles": "articles.csv",
             # load style words
             "df_style_word": "style_words.csv",
-            "df_style_noun_word": "style_noun_words.csv",
-            "df_style_no_noun_word": "style_no_noun_words.csv",
             "df_style_sentences": "style_sentences.csv",
             # load openly discriminating words de
             "df_open_dis_word": "open_dis_words.csv",
@@ -47,7 +45,6 @@ def fetch_rules(langs):
             "df_inclusive_word": "inclusive_words.csv",
             "df_inclusive_sentence": "inclusive_sentences.csv",
             # load style words
-            #"df_style_word": "style_words.csv",
             "df_style_no_noun_word": "style_no_noun_words.csv",
             "df_style_noun_word": "style_noun_words.csv",
             "df_style_sentence": "style_sentences.csv",
@@ -947,7 +944,6 @@ def fetch_rules(langs):
                     df_style_noun["Primary_subcategory"],
                     map(ast.literal_eval, df_style_noun["Sg_all_split"]),
                     map(ast.literal_eval, df_style_noun["Pl_all_split"]),
-                    df_style_noun["Secondary_subcategory"],
                 )
             )
 
@@ -1679,7 +1675,6 @@ def fetch_rules(langs):
             " tar",
             " wool",
         )
-
 
         # master of + noun
         pattern_master = [
