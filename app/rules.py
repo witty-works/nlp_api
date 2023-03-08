@@ -15,7 +15,7 @@ def fetch_rules(langs):
             # load articles for gendered denom
             "df_articles": "articles.csv",
             # load style words
-            #"df_style_word": "style_words.csv",
+            "df_style_word": "style_words.csv",
             "df_style_noun_word": "style_noun_words.csv",
             "df_style_no_noun_word": "style_no_noun_words.csv",
             "df_style_sentences": "style_sentences.csv",
