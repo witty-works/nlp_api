@@ -51,7 +51,7 @@
     post_deploy: |
       set -e
 
-      ./start_workers.sh -t $THREADS -m 1 -a $PLATFORM_APPLICATION
+      ./start_workers.sh -t $THREADS -a $PLATFORM_APPLICATION
 
   relationships:
     rediscache: "rediscache:redis"

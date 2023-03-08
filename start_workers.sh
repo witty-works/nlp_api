@@ -43,6 +43,7 @@ echo "CPUs $CPUS, multiplier $MULTIPLIER and threads $THREADS\n"
 
 GUNICORN_MAIN_PID=$(pgrep gunicorn | head -n 1)
 RUNNING_WORKER_COUNT=$(pgrep gunicorn | wc -l | xargs)
+RUNNING_WORKER_COUNT=1
 
 echo "Currently running $RUNNING_WORKER_COUNT workers\n"
 
@@ -70,5 +71,6 @@ then
     echo "Starting worker $c"
     # https://docs.gunicorn.org/en/stable/faq.html#how-can-i-change-the-number-of-workers-dynamically
     kill -TTIN $GUNICORN_MAIN_PID
+    sleep 3
   done
 fi
