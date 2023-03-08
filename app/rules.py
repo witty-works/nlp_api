@@ -15,7 +15,9 @@ def fetch_rules(langs):
             # load articles for gendered denom
             "df_articles": "articles.csv",
             # load style words
-            "df_style_word": "style_words.csv",
+            #"df_style_word": "style_words.csv",
+            "df_style_noun_word": "style_noun_words.csv",
+            "df_style_no_noun_word": "style_no_noun_words.csv",
             "df_style_sentences": "style_sentences.csv",
             # load openly discriminating words de
             "df_open_dis_word": "open_dis_words.csv",
@@ -45,7 +47,9 @@ def fetch_rules(langs):
             "df_inclusive_word": "inclusive_words.csv",
             "df_inclusive_sentence": "inclusive_sentences.csv",
             # load style words
-            "df_style_word": "style_words.csv",
+            #"df_style_word": "style_words.csv",
+            "df_style_no_noun_word": "style_no_noun_words.csv",
+            "df_style_noun_word": "style_noun_words.csv",
             "df_style_sentence": "style_sentences.csv",
             # load gendered language
             "df_gendered_no_noun_word": "gendered_no_noun_words.csv",
@@ -846,7 +850,7 @@ def fetch_rules(langs):
             )
 
             # df style
-            df_style = data[locale]["df_style_word"]
+            df_style = data[locale]["df_style_no_noun_word"]
             # style: lemma + alternatives split + subcategory
             rules[locale]["style_words_data"] = list(
                 zip(
@@ -931,6 +935,19 @@ def fetch_rules(langs):
                     map(ast.literal_eval, df_gendered_ub["Sg_all_split"]),
                     map(ast.literal_eval, df_gendered_ub["Pl_all_split"]),
                     df_gendered_ub["Secondary_subcategory"],
+                )
+            )
+            # df style noun
+            df_style_noun = data[locale]["df_style_noun_word"]
+            # style noun: lemma + singular alternatives split + plural alternatives split + primary subcategory + secondary subcategory
+            rules[locale]["style_noun_words_data"] = list(
+                zip(
+                    df_style_noun["Lemma"],
+                    df_style_noun["Word_Type"],
+                    df_style_noun["Primary_subcategory"],
+                    map(ast.literal_eval, df_style_noun["Sg_all_split"]),
+                    map(ast.literal_eval, df_style_noun["Pl_all_split"]),
+                    df_style_noun["Secondary_subcategory"],
                 )
             )
 
