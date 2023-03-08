@@ -1,13 +1,10 @@
-import fasttext
-import os
 from app.models import LangWithAutoType, Config
 from functools import lru_cache
 
 
 class LangDetection:
-    def __init__(self):
-        pretrained_lang_model = os.getcwd() + "/training_data/lid.176.bin"
-        self.model = fasttext.load_model(pretrained_lang_model)
+    def __init__(self, model):
+        self.model = model
 
     def predict_lang(self, text, langs_max_match_count=5, threshold=0.2):
         langs, predictions = self.model.predict(
@@ -71,5 +68,5 @@ class LangDetection:
 
 
 @lru_cache()
-def get_lang_detection():
-    return LangDetection()
+def get_lang_detection(model):
+    return LangDetection(model)
