@@ -5,16 +5,16 @@
         {
             "alternatives": [
                 {
-                    "text": "Engineering teams"
+                    "text": "Engineering team"
                 },
                 {
-                    "text": "Development teams"
+                    "text": "Development team"
                 },
                 {
-                    "text": "Engineerings"
+                    "text": "Engineering"
                 },
                 {
-                    "text": "Developments"
+                    "text": "Development"
                 }
             ],
             "category": "gendered",
