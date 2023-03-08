@@ -2725,44 +2725,38 @@ def plural_alternatives(
     ], second_subcategory
 
 
-def ignore_binary_inclusive_gendered_denom_analysis_de(
-    tokens,
-    false_positives,
-):
-    matches = fetch_matches("de", tokens, false_positives)
-    if matches.__len__() > 0:
-        old_start = 0
-        rest_text = []
-
-        for match_id, start, end in matches:
-            part = tokens[old_start:start]
-            rest_text.append(part.text)
-            old_start = end
-
-        docs = list(model["de"].pipe(rest_text))
-        tokens = Doc.from_docs(docs)
-
-    return tokens
-
-
 def match_binary_inclusive_gendered_denom_analysis_de(
     config: Config, false_positives, full_text, token, category, subcategory
 ):
     text = token.text
     start = token.idx
-    if not ResultOut.genderedRolesFormatBinary(config.gendered_roles_format):
-        for false_positive in false_positives:
-            if not false_positive.endswith(text):
-                continue
 
+    for false_positive in false_positives:
+        if false_positive.startswith(text + " ") or false_positive.startswith(
+            text + "/"
+        ):
+            new_start = start
+        elif false_positive.endswith(text):
             new_start = start - len(false_positive.removesuffix(text))
-            if false_positive == full_text[new_start : new_start + len(false_positive)]:
-                start = new_start
-                text = false_positive
+        else:
+            continue
 
+        if false_positive == full_text[new_start : new_start + len(false_positive)]:
+            if (
+                ResultOut.genderedRolesFormatBinary(config.gendered_roles_format)
+                or "frau" in text.lower()
+            ):
+                return None, None, None, None
+
+            start = new_start
+            text = false_positive
+            if "mann" in text.lower():
+                subcategory = "gendered"
+            else:
                 subcategory = "gendered_denominations_ending"
-                category = categories[subcategory]["category"]
-                break
+
+            category = categories[subcategory]["category"]
+            break
 
     return text, start, category, subcategory
 
@@ -3184,11 +3178,6 @@ def gendered_denom_analysis_de(
 ):
     category = "gendered"
 
-    if ResultOut.genderedRolesFormatBinary(config.gendered_roles_format):
-        tokens = ignore_binary_inclusive_gendered_denom_analysis_de(
-            tokens, false_positives
-        )
-
     list_tokens = []
 
     for i in range(len(tokens)):
@@ -3231,6 +3220,21 @@ def gendered_denom_analysis_de(
                     category,
                     subcategory,
                 )
+
+                if text is None:
+                    continue
+
+                if not ResultOut.genderedRolesFormatBinary(
+                    config.gendered_roles_format
+                ):
+                    new_alternatives = []
+                    for alternative in alternatives:
+                        if (
+                            "frau" not in alternative.lower()
+                            or "mann" not in alternative.lower()
+                        ):
+                            new_alternatives.append(alternative)
+                    alternatives = new_alternatives
 
                 if i > 0 and is_singular:
                     alternatives_with_article = fetch_alternatives_with_article(
