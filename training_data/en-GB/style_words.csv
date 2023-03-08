@@ -13,7 +13,7 @@ competitor,s,style,exaggerating,"['market participant', 'market participants']"
 completely,adv,style,filler,['-']
 delicious,a,style,exaggerating,"['-', 'appealing', 'tasty', 'charming', 'refreshing', 'stimulating']"
 dynamic,a,style,hollow,"[""--- don't use for people"", 'lively', 'energetic', 'spirited', 'enthusiastic', 'committed', 'vibrant', 'effective', 'productive', 'adaptable']"
-establishment,s,style,hollow,"['business', 'organization', 'place of business', 'start', 'founding', 'process of setting up', 'public institution', 'private institution', 'dominant group', 'those with influence and control', 'businesses', 'organizations', 'places of business', 'start', 'founding', 'processes of setting up', 'public institutions', 'private institutions', 'dominant groups', 'people with influence and control']"
+establishment,s,style,hollow,"['business', 'organisation', 'place of business', 'start', 'founding', 'process of setting up', 'public institution', 'private institution', 'dominant group', 'those with influence and control', 'businesses', 'organisations', 'places of business', 'start', 'founding', 'processes of setting up', 'public institutions', 'private institutions', 'dominant groups', 'people with influence and control']"
 even,adv,style,filler,['-']
 exactly,adv,style,filler,['-']
 excellence,s,style,exaggerating,['-']
@@ -24,20 +24,20 @@ extraordinary,a,style,exaggerating,"['-', 'remarkable', 'inspiring', 'baffling',
 extreme,a,style,exaggerating,"['-', 'scute', 'major', 'substantial', 'severe', 'over-the-top']"
 fairly,adv,style,filler,['-']
 fantastic,a,style,exaggerating,"['-', 'remarkable', 'inspiring', 'amazing', 'riveting', 'stimulating']"
-first-class,a,style,exaggerating,"['--- use only in programming', 'premium', 'quality-focused', 'luxurious', 'stylish', 'business --- in transportation']"
+first-class,a,style,exaggerating,"['--- use only in programming', 'premium', 'quality-focused', 'luxurious', 'stylish', 'business --- in transport']"
 first-mover,s,style,exaggerating,"['the first to market a product', 'the first to offer a service', 'the first to seize a market opportunity', 'those first to market a product', 'those first to offer a service', 'those first to seize a market opportunity']"
-firstclass,a,style,exaggerating,"['--- use only in programming', 'premium', 'quality-focused', 'luxurious', 'stylish', 'business --- in transportation']"
+firstclass,a,style,exaggerating,"['--- use only in programming', 'premium', 'quality-focused', 'luxurious', 'stylish', 'business --- in transport']"
 firstmover,s,style,exaggerating,"['the first to market a product', 'the first to offer a service', 'the first to seize a market opportunity', 'those first to market a product', 'those first to offer a service', 'those first to seize a market opportunity']"
 flexible,a,style,hollow,"[""--- don't use for people"", 'adaptable', 'strategically nimble', 'pragmatic', 'open', 'agile', 'variable', 'mobile', 'defined by its users']"
-front-runner,s,style,exaggerating,"['-', 'favorite', 'person who sets the pace', 'probable winner', 'favorites', 'people who set the pace', 'probable winners']"
-frontrunner,s,style,exaggerating,"['-', 'favorite', 'person who sets the pace', 'probable winner', 'favorites', 'people who set the pace', 'probable winners']"
+front-runner,s,style,exaggerating,"['-', 'favourite', 'person who sets the pace', 'probable winner', 'favourites', 'people who set the pace', 'probable winners']"
+frontrunner,s,style,exaggerating,"['-', 'favourite', 'person who sets the pace', 'probable winner', 'favourites', 'people who set the pace', 'probable winners']"
 geek,s,style,exaggerating,"['-', 'techie', 'intellectual', 'bookworm', 'person devoted to academic pursuits', 'person with a high level of knowledge (skills) in', 'techies', 'intellectuals', 'bookworms', 'people devoted to academic pursuits', 'people with a high level of knowledge (skills) in']"
 generally,adv,style,filler,['-']
 global,a,style,hollow,"['--- be specific to build trust', 'in (...) countries', '(...) offices across (...) continents']"
 go-getter,s,style,exaggerating,"['bundle of energy', 'ball of fire', 'someone who sticks to their goal(...)', 'person happy to see things through(...)', 'someone who continues despite difficulty(...)', 'person loyal to their cause(...)', 'motivated people', 'energetic and focused colleagues']"
 god,s,style,exaggerating,['-']
 gogetter,s,style,exaggerating,"['bundle of energy', 'ball of fire', 'someone who sticks to their goal(...)', 'person happy to see things through(...)', 'someone who continues despite difficulty(...)', 'person loyal to their cause(...)', 'motivated people', 'energetic and focused colleagues']"
-good,a,style,hollow,"['admirable', 'acceptable', 'worthy', 'favorable', 'positive']"
+good,a,style,hollow,"['admirable', 'acceptable', 'worthy', 'favourable', 'positive']"
 great,a,style,hollow,"['much appreciated', 'considerable', 'substantial', 'significant', 'nicely']"
 hacker,s,style,exaggerating,"['-', 'technophile', 'techie', 'person with a high level of coding skills', 'technophiles', 'techies', 'people with a high level of coding skills']"
 hero,s,style,exaggerating,"['person of the hour', 'person making sacrifices for their team', 'role model', 'heroix', 'they', 'people of the hour', 'those making sacrifices for their team', 'role models', 'heroix']"
@@ -54,7 +54,7 @@ international,a,style,hollow,"['in ((number of)) countries', 'in ((specify count
 irresistible,a,style,exaggerating,['-']
 just,adv,style,filler,['-']
 kamikaze,s,style,exaggerating,['-']
-leverage,v,style,hollow,"['use', 'capitalize on']"
+leverage,v,style,hollow,"['use', 'capitalise on']"
 literally,adv,style,filler,['-']
 luminary,s,style,exaggerating,"['celebrity', 'icon', 'star', 'personality', 'person who is widely known', 'celebrities', 'icons', 'stars', 'personalities', 'people who are widely known']"
 mandatory,a,style,exaggerating,"['necessary', 'legally required', 'compulsory', 'nonelective', 'required']"
@@ -101,8 +101,8 @@ so,adv,style,filler,['-']
 somehow,adv,style,filler,['-']
 state-of-the-art,a,style,hollow,"['current', 'best available', 'advanced', 'sophisticated', 'technologically advanced', 'implementing the most recent methods(...)', 'involving fresh concepts(...)', 'employing the latest equipment(...)', 'using the latest techniques(...)', 'at the highest level of development(...)', 'using the newest ideas(...)']"
 success,s,style,exaggerating,"['positive outcome', ""a feather in one's cap"", 'popular', 'good result', 'reward for dedication and hard work', 'positive outcomes', ""feathers in one's cap"", 'popular', '(good) results', 'rewarded for dedication and hard work']"
-successful,a,style,exaggerating,"['-', 'productive', 'lucky', 'lucrative', 'practiced', 'skilled']"
-successfully,a,style,exaggerating,"['-', 'with good results', 'favorably']"
+successful,a,style,exaggerating,"['-', 'productive', 'lucky', 'lucrative', 'practised', 'skilled']"
+successfully,a,style,exaggerating,"['-', 'with good results', 'favourably']"
 suddenly,adv,style,filler,['-']
 super,adv,style,exaggerating,['-']
 superstar,s,style,exaggerating,['-']
@@ -119,7 +119,7 @@ topperformer,s,style,exaggerating,"['mentor at heart', 'an inspiration to the te
 topperforming,a,style,exaggerating,"['contributing to business success --- about a person', 'implementing goals with enthusiasm --- about a person', 'fulfilling customer expectations --- about a person']"
 totally,adv,style,filler,['-']
 unique,a,style,hollow,"['original', 'distinctive', 'rare', 'diverse', 'in a class by itself']"
-utilize,v,style,hollow,['use']
+utilise,v,style,hollow,['use']
 verifiable,a,style,exaggerating,"['documented', 'valid', 'reliable']"
 verifiably,adv,style,exaggerating,['-']
 very,adv,style,filler,['-']

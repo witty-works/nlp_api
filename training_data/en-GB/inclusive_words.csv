@@ -21,7 +21,7 @@ belong,v,inclusive,d_and_i
 blissful,a,inclusive,emotional_security
 calm,a,inclusive,emotional_security
 care,s,inclusive,communal
-centered,=a,inclusive,emotional_security
+centred,=a,inclusive,emotional_security
 cheer,v,inclusive,communal
 cheerful,a,inclusive,communal
 child,s,inclusive,communal
@@ -46,10 +46,10 @@ community,s,inclusive,communal
 compassion,s,inclusive,communal
 compassionate,a,inclusive,communal
 connect,v,inclusive,communal
-connection,s,inclusive,communal
+connexion,s,inclusive,communal
 considerate,a,inclusive,communal
 content,a,inclusive,emotional_security
-cooperate,v,inclusive,communal
+co-operate,v,inclusive,communal
 cooperation,s,inclusive,communal
 cooperative,a,inclusive,communal
 create,v,inclusive,communal
@@ -74,7 +74,7 @@ emotion,s,inclusive,communal
 emotional,a,inclusive,communal
 empathetic,a,inclusive,communal
 empathic,a,inclusive,communal
-empathize,v,inclusive,communal
+empathise,v,inclusive,communal
 empathy,s,inclusive,communal
 empowered,=a,inclusive,emotional_security
 enby,a,inclusive,d_and_i
@@ -218,7 +218,7 @@ supportive,a,inclusive,communal
 surprised,=a,inclusive,emotional_security
 sustainable,a,inclusive,communal
 sympathetic,a,inclusive,communal
-sympathize,v,inclusive,communal
+sympathise,v,inclusive,communal
 sympathy,s,inclusive,communal
 team,s,inclusive,communal
 tender,a,inclusive,communal
