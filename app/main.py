@@ -12,7 +12,6 @@ from typing import Optional, Union, List
 from collections import defaultdict
 from pydantic import parse_obj_as
 
-import spacy
 from spacy.tokens import Doc
 from spacy.matcher import PhraseMatcher, Matcher
 import pandas as pd
@@ -903,12 +902,18 @@ def is_token_singular(lang, token):
     if number:
         return "Sing" in number
 
-    if token.text[:1:] != "s":
+    if lang == "en" and token.text[-1:] == "s":
         return True
-    elif lang == "de":
+
+    return None
+
+
+def is_token_plural(lang, token):
+    is_singular = is_token_singular(lang, token)
+    if is_singular is None:
         return None
 
-    return False
+    return not is_singular
 
 
 def apply_configs(user_request_in: RequestIn, configs: dict, plan: str):
@@ -2422,10 +2427,10 @@ def align_noun_form(lang, a_text, a_token, b_token):
 
         return b_text
 
-    if b_token.morph.get("Number") == ["Sing"]:
+    is_singular = is_token_singular(lang, b_token)
+    if is_token_singular(lang, b_token):
         return Noun(b_text).plural()
-
-    if b_token.morph.get("Number") == ["Plur"]:
+    elif is_singular == False:
         return b_text
 
     return Noun(b_text).singular()
@@ -2617,7 +2622,7 @@ def alternative_declension(lang, text, token, word_types, alternative):
 
     new_alternative = ""
     previous = False
-    is_plural = False
+    is_plural_alternative = False
     first_alternative_word_types = False
     alternative_tokens = fetch_tokens(lang, parsed_alternative)
     for i in reversed(range(len(alternative_tokens))):
@@ -2644,8 +2649,8 @@ def alternative_declension(lang, text, token, word_types, alternative):
                         lang, text, token, alternative_token
                     )
                 elif "s" in word_types and "s" in alternative_word_types:
-                    if alternative_token.morph.get("Number") == ["Plur"]:
-                        is_plural = True
+                    if is_token_plural(lang, alternative_token):
+                        is_plural_alternative = True
 
                     previous = True
                     alternative_text = align_noun_form(
@@ -2669,7 +2674,7 @@ def alternative_declension(lang, text, token, word_types, alternative):
 
     if lang == "en" and first_alternative_word_types:
         if (
-            is_plural == False
+            is_plural_alternative == False
             and "s" in first_alternative_word_types
             and (text.startswith("a ") or text.startswith("an "))
             and not new_alternative.startswith(rules["en"]["a_not_startswith"])
@@ -2821,7 +2826,7 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
 
             words = parse_alternative.split()
             alternative_tokens = fetch_tokens("de", words[-1])
-            if alternative_tokens[0].morph.get("Number") == ["Plur"]:
+            if is_token_plural(lang, alternative_tokens[0]):
                 article_alternative = ""
             else:
                 alternative_word = german_noun_analysis(words[-1], True)
