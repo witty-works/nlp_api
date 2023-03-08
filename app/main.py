@@ -100,7 +100,7 @@ initialize_aadb2c(settings)
 
 logging.debug("app started with settings: %s", settings)
 
-if len(settings.langs) > 0:
+if len(settings.models) > 0:
     model = {}
     for spacy_model in settings.models:
         lang = spacy_model[0:2]

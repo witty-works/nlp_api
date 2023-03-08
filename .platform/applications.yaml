@@ -1,5 +1,9 @@
 - name: "app"
 
+  variables:
+    env:
+      MODELS: "[]"
+
   type: "python:3.11"
 
   disk: 2048
@@ -29,9 +33,6 @@
       PIPENV_CACHE_DIR=$PLATFORM_CACHE_DIR
       pipenv install --system --deploy
 
-      pipenv run /opt/python/3.11/bin/python3.11 -m spacy download en_core_web_md --no-cache-dir
-      pipenv run /opt/python/3.11/bin/python3.11 -m spacy download de_core_news_lg --no-cache-dir
-
       export FT_MODEL="lid.176.bin"
 
       if [ ! -f "${PLATFORM_CACHE_DIR}/$FT_MODEL" ]; then
@@ -56,23 +57,6 @@
     rediscache: "rediscache:redis"
     de: "german:http"
     en: "english:http"
-
-  crons:
-    generate-statistics:
-      spec: "0 1 * * 0"
-      cmd: |
-        if [ "$PLATFORM_BRANCH" = main ]; then
-            ./statistics.sh
-        fi
-    analyze-rules:
-      spec: "0 1 * * *"
-      cmd: |
-        if [ "$PLATFORM_BRANCH" = dev ]; then
-            ./analyze_rules.sh
-        fi
-
-  mounts:
-    "analyze_rules": "shared:files/analyze_rules"
 
 - name: "english"
 
@@ -119,6 +103,23 @@
 
       ./start_workers.sh -t $THREADS_EN -a $PLATFORM_APPLICATION
 
+  crons:
+    generate-statistics:
+      spec: "0 1 * * 0"
+      cmd: |
+        if [ "$PLATFORM_BRANCH" = main ]; then
+            ./statistics.sh -l=en-US
+        fi
+    analyze-rules:
+      spec: "0 1 * * *"
+      cmd: |
+        if [ "$PLATFORM_BRANCH" = dev ]; then
+            ./analyze_rules.sh -l=en
+        fi
+
+  mounts:
+    "analyze_rules": "shared:files/analyze_rules"
+
 - name: "german"
 
   variables:
@@ -164,3 +165,20 @@
       set -e
 
       ./start_workers.sh -t $THREADS_DE -a $PLATFORM_APPLICATION
+
+  crons:
+    generate-statistics:
+      spec: "0 1 * * 0"
+      cmd: |
+        if [ "$PLATFORM_BRANCH" = main ]; then
+            ./statistics.sh -l=de-DE
+        fi
+    analyze-rules:
+      spec: "0 1 * * *"
+      cmd: |
+        if [ "$PLATFORM_BRANCH" = dev ]; then
+            ./analyze_rules.sh -l=de
+        fi
+
+  mounts:
+    "analyze_rules": "shared:files/analyze_rules"
