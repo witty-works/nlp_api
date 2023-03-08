@@ -12,7 +12,7 @@
     base_memory: 1024
     memory_ratio: 1024
 
-  container_profile: BALANCED
+  container_profile: LOW_MEMORY
 
   dependencies:
     python3:
@@ -51,7 +51,7 @@
     post_deploy: |
       set -e
 
-      ./start_workers.sh -t $THREADS -a $PLATFORM_APPLICATION
+      ./start_workers.sh -t $THREADS -m 1 -a $PLATFORM_APPLICATION
 
   relationships:
     rediscache: "rediscache:redis"
