@@ -41,7 +41,7 @@
       echo "Done restoring from build cache"
       python3.11 -m pip install --upgrade pip
       echo "Installing Pipenv dependecies"
-      pipenv install --deploy
+      pipenv install --system --deploy
       SPACY_RELEASE=$(curl --silent "https://api.github.com/repos/explosion/spaCy/releases/latest" | jq -r .tag_name | sed -r 's/^.{1}//')
       echo "Downloading en_core_web_md-$SPACY_RELEASE"
       pipenv run /opt/python/3.11/bin/python3.11 -m spacy download en_core_web_md-$SPACY_RELEASE --direct
