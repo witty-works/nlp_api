@@ -40,9 +40,9 @@
       rsync -ar $PLATFORM_CACHE_DIR/$PLATFORM_APPLICATION_NAME/.global $HOME/.global
 
       pipenv install --system --deploy
-
-      pipenv run /opt/python/3.11/bin/python3.11 -m spacy download en_core_web_md
-      pipenv run /opt/python/3.11/bin/python3.11 -m spacy download de_core_news_lg
+      SPACY_RELEASE=$(curl --silent "https://api.github.com/repos/explosion/spaCy/releases/latest" | jq -r .tag_name | sed -r 's/^.{1}//')
+      pipenv run /opt/python/3.11/bin/python3.11 -m spacy download en_core_web_md-$SPACY_RELEASE --direct
+      pipenv run /opt/python/3.11/bin/python3.11 -m spacy download de_core_news_lg-$SPACY_RELEASE --direct
 
       pipenv run pybabel compile -d locales -l en_US -f
       pipenv run pybabel compile -d locales -l en_GB -f
