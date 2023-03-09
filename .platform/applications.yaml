@@ -30,7 +30,7 @@
   hooks: &hooks
     build: |
       set -e
-      du -sh 
+      du -sh $PLATFORM_CACHE_DIR
       mkdir -p $HOME/.local
       mkdir -p $PLATFORM_CACHE_DIR/.local
       mkdir -p $HOME/.global
