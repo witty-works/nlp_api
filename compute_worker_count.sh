@@ -39,17 +39,13 @@ while getopts "ht:a:c:m:" options; do
   esac
 done
 
-echo "CPUs $CPUS, multiplier $MULTIPLIER and threads $THREADS\n"
-
 GUNICORN_MAIN_PID=$(pgrep gunicorn | head -n 1)
 RUNNING_WORKER_COUNT=$(pgrep gunicorn | wc -l | xargs)
 RUNNING_WORKER_COUNT=1
 
-echo "Currently running $RUNNING_WORKER_COUNT workers\n"
-
 if [ $CPUS -lt 1 ]
 then
-  echo "CPUs below 1, so running only a single worker\n"
+  echo 1
   exit
 fi
 
@@ -59,18 +55,4 @@ THREAD_COUNT=$((($CPUS*$MULTIPLIER*2)+1))
 # https://medium.com/building-the-system/gunicorn-3-means-of-concurrency-efbb547674b7
 FINAL_WORKER_COUNT=$(( ( $THREAD_COUNT / $THREADS ) + ( $THREAD_COUNT % $THREADS > 0 ) ))
 
-echo "Aiming to run $THREAD_COUNT threads on $FINAL_WORKER_COUNT workers\n"
-
-MISSING_WORKERS="$(($FINAL_WORKER_COUNT-$RUNNING_WORKER_COUNT))";
-
-if [ $MISSING_WORKERS -ge 0 ]
-then
-  echo "Starting $MISSING_WORKERS additional workers to reach $FINAL_WORKER_COUNT workers\n"
-  for (( c=$RUNNING_WORKER_COUNT+1; c<=$FINAL_WORKER_COUNT; c++ ))
-  do
-    echo "Starting worker $c"
-    # https://docs.gunicorn.org/en/stable/faq.html#how-can-i-change-the-number-of-workers-dynamically
-    kill -TTIN $GUNICORN_MAIN_PID
-    sleep 3
-  done
-fi
+echo $FINAL_WORKER_COUNT

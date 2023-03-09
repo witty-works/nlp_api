@@ -23,7 +23,8 @@
       socket_family: unix
     commands:
       start: |
-        blackfire-python gunicorn app.main:app --preload -b unix:$SOCKET -w 1 --threads ${THREADS} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
+        FINAL_WORKER_COUNT=$(./compute_worker_count.sh -t $THREADS -a $PLATFORM_APPLICATION | head -n 1)
+        blackfire-python gunicorn app.main:app --preload -b unix:$SOCKET -w $FINAL_WORKER_COUNT --threads ${THREADS} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
 
   hooks:
     build: |
@@ -48,10 +49,6 @@
       cp -R "${PLATFORM_CACHE_DIR}/${FT_MODEL}" ./training_data/.
 
       echo "e613bda316ecb4f5e1924140eedf81b81c087d9a *training_data/lid.176.bin" | sha1sum -c -
-    post_deploy: |
-      set -e
-
-      ./start_workers.sh -t $THREADS -a $PLATFORM_APPLICATION
 
   relationships:
     rediscache: "rediscache:redis"
@@ -84,7 +81,8 @@
       socket_family: unix
     commands:
       start: |
-        blackfire-python gunicorn app.main:app --preload -b unix:$SOCKET -w 1 --threads ${THREADS_EN} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
+        FINAL_WORKER_COUNT=$(./compute_worker_count.sh -t $THREADS_EN -a $PLATFORM_APPLICATION | head -n 1)
+        blackfire-python gunicorn app.main:app --preload -b unix:$SOCKET -w $FINAL_WORKER_COUNT --threads ${THREADS_EN} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
 
   hooks:
     build: |
@@ -98,10 +96,6 @@
 
       pipenv run pybabel compile -d locales -l en_US -f
       pipenv run pybabel compile -d locales -l en_GB -f
-    post_deploy: |
-      set -e
-
-      ./start_workers.sh -t $THREADS_EN -a $PLATFORM_APPLICATION
 
   crons:
     generate-statistics:
@@ -146,7 +140,8 @@
       socket_family: unix
     commands:
       start: |
-        blackfire-python gunicorn app.main:app --preload -b unix:$SOCKET -w 1 --threads ${THREADS_DE} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
+        FINAL_WORKER_COUNT=$(./compute_worker_count.sh -t $THREADS_DE -a $PLATFORM_APPLICATION | head -n 1)
+        blackfire-python gunicorn app.main:app --preload -b unix:$SOCKET -w $FINAL_WORKER_COUNT --threads ${THREADS_DE} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
 
   hooks:
     build: |
@@ -161,10 +156,6 @@
       pipenv run pybabel compile -d locales -l de_DE -f
       pipenv run pybabel compile -d locales -l de_AT -f
       pipenv run pybabel compile -d locales -l de_CH -f
-    post_deploy: |
-      set -e
-
-      ./start_workers.sh -t $THREADS_DE -a $PLATFORM_APPLICATION
 
   crons:
     generate-statistics:
