@@ -1,5 +1,4 @@
 Lemma,Word_Type,Category,Primary_subcategory,Alt_split
-ninja,s,style,exaggerating,"['skilled person', 'very proficient person', 'resourceful person', 'they', 'person who continues despite difficulties(...)', 'someone devoted to their purpose(...)', 'someone who sticks to their goal(...)', 'someone willing to see things through(...)', 'skilled people', 'very proficient people', 'resourceful people']"
 Sincerely,a,style,formality,"['Best regards', 'All the best', 'Thank you', 'Have a wonderful day', 'Let us know if you need anything']"
 absolute,a,style,exaggerating,['-']
 absolutely,adv,style,filler,['-']
@@ -22,7 +21,7 @@ excellent,a,style,exaggerating,"['-', 'remarkable', 'inspiring', 'very good', 'f
 exceptional,a,style,exaggerating,"['-', 'remarkable', 'inspiring', 'surprising', 'unusual', 'exemplary']"
 extra-ordinary,a,style,exaggerating,"['-', 'remarkable', 'inspiring', 'baffling', 'unusual', 'exemplary']"
 extraordinary,a,style,exaggerating,"['-', 'remarkable', 'inspiring', 'baffling', 'unusual', 'exemplary']"
-extreme,a,style,exaggerating,"['-', 'scute', 'major', 'substantial', 'severe', 'over-the-top', '']"
+extreme,a,style,exaggerating,"['-', 'scute', 'major', 'substantial', 'severe', 'over-the-top']"
 fairly,adv,style,filler,['-']
 fantastic,a,style,exaggerating,"['-', 'remarkable', 'inspiring', 'amazing', 'riveting', 'stimulating']"
 first-class,a,style,exaggerating,"['--- use only in programming', 'premium', 'quality-focused', 'luxurious', 'stylish', 'business --- in transport']"
@@ -67,7 +66,6 @@ marketleading,a,style,exaggerating,['market-influencing']
 maybe,adv,style,filler,['-']
 muscle,s,style,exaggerating,"['capacity', 'influence', 'clout']"
 nerd,s,style,exaggerating,"['techie', 'intellectual', 'bookworm', 'person devoted to academic pursuits', 'person with a high level of knowledge (skills) in', 'techies', 'intellectuals', 'bookworms', 'people devoted to academic pursuits', 'people with a high level of knowledge (skills) in']"
-ninja,a,style,exaggerating,"['dedicated', 'committed']"
 normal,a,style,hollow,"['traditional', 'typical', 'common', 'routine', 'regular', 'conventional', 'customary', 'popular', 'reasonable', 'well-adjusted', 'rational', 'able to think clearly', 'able to use reason']"
 now,adv,style,filler,['-']
 okay,adv,style,filler,['-']
@@ -101,7 +99,7 @@ simply,adv,style,filler,['-']
 slightly,adv,style,filler,['-']
 so,adv,style,filler,['-']
 somehow,adv,style,filler,['-']
-state-of-the-art,a,style,hollow,"['current', 'best available', 'most advanced', 'most sophisticated', 'technologically most advanced', 'implementing the most recent methods(...)', 'involving fresh concepts(...)', 'employing the latest equipment(...)', 'using the latest techniques(...)', 'at the highest level of development(...)', 'using the newest ideas(...)']"
+state-of-the-art,a,style,hollow,"['current', 'best available', 'advanced', 'sophisticated', 'technologically advanced', 'implementing the most recent methods(...)', 'involving fresh concepts(...)', 'employing the latest equipment(...)', 'using the latest techniques(...)', 'at the highest level of development(...)', 'using the newest ideas(...)']"
 success,s,style,exaggerating,"['positive outcome', ""a feather in one's cap"", 'popular', 'good result', 'reward for dedication and hard work', 'positive outcomes', ""feathers in one's cap"", 'popular', '(good) results', 'rewarded for dedication and hard work']"
 successful,a,style,exaggerating,"['-', 'productive', 'lucky', 'lucrative', 'practised', 'skilled']"
 successfully,a,style,exaggerating,"['-', 'with good results', 'favourably']"
@@ -115,10 +113,10 @@ teamplayer,s,style,hollow,"['someone who values team effort over personal gains'
 though,adv,style,filler,['-']
 top-performance,s,style,exaggerating,"['substantial contribution to business success', 'amazing display of capability', 'history of delivering results(...)']"
 top-performer,s,style,exaggerating,"['mentor at heart', 'an inspiration to the team', 'an entrepreneur at heart', 'someone with an entrepreneurial mindset', 'someone who thrives on working toward milestones', 'mentors at heart', 'people who are an inspiration to the team', 'entrepreneurs at heart', 'people with an entrepreneurial mindset', 'people who thrive on working toward milestones']"
-top-performing,v,style,exaggerating,"['contributing to business success --- about a person', 'implementing goals with enthusiasm --- about a person', 'fulfilling customer expectations --- about a person']"
+top-performing,a,style,exaggerating,"['contributing to business success --- about a person', 'implementing goals with enthusiasm --- about a person', 'fulfilling customer expectations --- about a person']"
 topperformance,s,style,exaggerating,"['substantial contribution to business success', 'amazing display of capability', 'history of delivering results(...)']"
 topperformer,s,style,exaggerating,"['mentor at heart', 'an inspiration to the team', 'an entrepreneur at heart', 'someone with an entrepreneurial mindset', 'someone who thrives on working toward milestones', 'mentors at heart', 'people who are an inspiration to the team', 'entrepreneurs at heart', 'people with an entrepreneurial mindset', 'people who thrive on working toward milestones']"
-topperforming,v,style,exaggerating,"['contributing to business success --- about a person', 'implementing goals with enthusiasm --- about a person', 'fulfilling customer expectations --- about a person']"
+topperforming,a,style,exaggerating,"['contributing to business success --- about a person', 'implementing goals with enthusiasm --- about a person', 'fulfilling customer expectations --- about a person']"
 totally,adv,style,filler,['-']
 unique,a,style,hollow,"['original', 'distinctive', 'rare', 'diverse', 'in a class by itself']"
 utilise,v,style,hollow,['use']

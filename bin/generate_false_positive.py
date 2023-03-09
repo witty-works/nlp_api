@@ -21,15 +21,6 @@ sh = logging.StreamHandler(sys.stdout)
 sh.setFormatter(formatter)
 logging.getLogger().addHandler(sh)
 
-
-parser = argparse.ArgumentParser()
-parser.add_argument(
-    "-u",
-    "--URL",
-    help="Api url which should call check on training data, e.g. http://localhost:8000/",
-    default="http://localhost:8000/",
-)
-args = parser.parse_args()
 false_positive_path = "training_data/de/gender_false_positive.csv"
 if os.path.exists(false_positive_path):
     os.remove(false_positive_path)
@@ -37,26 +28,6 @@ if os.path.exists(false_positive_path):
 with open(false_positive_path, "w") as f:
     f.write("False_positives\n")
 
-# Run checks:
-def check_if_server_is_running(api_url):
-    try:
-        response = requests.get(api_url)
-        if response.status_code == 200:
-            return True
-        else:
-            return False
-    except requests.ConnectionError as e:
-        logging.error("Please first run the local server %s", api_url)
-        exit(1)
-
-
-is_running = check_if_server_is_running(args.URL)
-if not is_running:
-    logging.error(
-        "Cannot connect to server %s. Please check if server is running properly",
-        args.URL,
-    )
-    exit(1)
 
 base_directory = "training_data/de/"
 training_data_paths = []
@@ -115,54 +86,18 @@ regexes = [
     r"[A-Z]\w+\/[A-Z]\w+",
 ]
 
-potential_false_positive = defaultdict(list)
+false_positives = []
 for locale in words:
     for w in words[locale]:
         for regex in regexes:
             if re.fullmatch(regex, w):
-                potential_false_positive[locale].append(w)
+                false_positives.append([w])
                 break
 
-
-def checked_false_positive_list(api_url, potential_false_positive):
-    false_positive_checked = []
-    for locale in potential_false_positive:
-        for word in potential_false_positive[locale]:
-            response = requests.post(
-                api_url,
-                json={
-                    "text": "Hallo " + word,
-                    "lang": locale,
-                    "config": {
-                        "disabled_categories": ["orthography"],
-                    },
-                },
-            )
-
-            if response.status_code != 200:
-                print("Got error on: " + word)
-                continue
-
-            info = "trying: " + word + " for locale: " + locale
-            if response.json()["results"]:
-                false_positive_checked.append([word])
-                info += " - added"
-            else:
-                info += " - skipped"
-
-            print(info)
-
-    return false_positive_checked
-
-
-check_endpoint_url = args.URL + "v1.1/check"
-false_positive_checked = checked_false_positive_list(
-    check_endpoint_url, potential_false_positive
-)
 header = ["False_positives"]
 with open(false_positive_path, "w") as f:
     writer = csv.writer(f)
     # write the header
     writer.writerow(header)
     # write the data
-    writer.writerows(false_positive_checked)
+    writer.writerows(false_positives)

@@ -8,11 +8,11 @@ attention seeking,=a,gendered,female_stereotype,female_stereotype,"['outgoing', 
 back end developer,s,gendered,titles,generic_plural,"['they', 'back-end development', 'back-end development team', 'back-end developers', 'colleague in back-end development(...)']","['back-end developers', 'back-end development team', 'back-end development', 'colleagues in back-end development(...)']","['back-end development', 'they', 'colleague in back-end development(...)', 'back-end development team', 'back-end developers']"
 back-end developer,s,gendered,titles,generic_plural,"['they', 'back-end development', 'back-end development team', 'back-end developers', 'colleague in back-end development(...)']","['back-end developers', 'back-end development team', 'back-end development', 'colleagues in back-end development(...)']","['back-end development', 'they', 'colleague in back-end development(...)', 'back-end development team', 'back-end developers']"
 backend developer,s,gendered,titles,generic_plural,"['they', 'back-end development', 'back-end development team', 'back-end developers', 'colleague in back-end development(...)']","['back-end developers', 'back-end development team', 'back-end development', 'colleagues in back-end development(...)']","['back-end development', 'they', 'colleague in back-end development(...)', 'back-end development team', 'back-end developers']"
-big boy,a+s,gendered,leadership,leadership,"['higher-up', 'supervisor', 'executive', 'management', 'administration']","['management', 'administration']","['management', 'administration', 'higher-up', 'supervisor', 'executive']"
+big boy,i,gendered,leadership,leadership,"['higher-up', 'supervisor', 'executive', 'management', 'administration']","['management', 'administration']","['management', 'administration', 'higher-up', 'supervisor', 'executive']"
 boldly go where no man has gone before,i,gendered,hidden_image,hidden_image,['boldly go where no one has gone before'],[],['boldly go where no one has gone before']
 child prostitute,i,gendered,female_stereotype,female_stereotype,['sexual assault survivor'],[],['sexual assault survivor']
 child prostitutes,i,gendered,female_stereotype,female_stereotype,['sexual assault survivors'],[],['sexual assault survivors']
-common man,a+s,gendered,hidden_image,hidden_image,"['average person', 'average people', 'common person', 'common people']",[],"['average person', 'average people', 'common person', 'common people']"
+common man,i,gendered,hidden_image,hidden_image,"['average person', 'average people', 'common person', 'common people']",[],"['average person', 'average people', 'common person', 'common people']"
 delivery boy,i,gendered,titles,titles,"['courier', 'messenger']",[],"['courier', 'messenger']"
 delivery girl,i,gendered,titles,titles,"['courier', 'messenger']",[],"['courier', 'messenger']"
 delivery man,s,gendered,titles,titles,"['delivery person', 'they', 'delivery', 'delivery team', 'delivery staff', 'delivery persons', 'delivery people']","['delivery persons', 'delivery people', 'delivery team', 'delivery staff', 'delivery']","['delivery', 'delivery person', 'they', 'delivery team', 'delivery staff', 'delivery persons', 'delivery people']"
@@ -46,7 +46,7 @@ his/her,s,gendered,binary_pronouns,binary_pronouns,"['their', ""((given name's))
 in hysterics,i,gendered,female_stereotype,female_stereotype,"['very upset', 'angry', 'agitated']",[],"['very upset', 'angry', 'agitated']"
 lady doctor,s,gendered,titles,titles,"['doctor', 'they', 'medical staff', 'medical team', 'health care team', 'doctors']","['doctors', 'medical staff', 'medical team', 'health care team']","['doctor', 'they', 'medical staff', 'medical team', 'health care team', 'doctors']"
 maintenance man,s,gendered,titles,titles,"['maintenance person', 'maintenance worker', 'they', 'maintenance', 'maintenance staff', 'maintenance crew', 'maintenance workers']","['maintenance workers', 'maintenance staff', 'maintenance crew', 'maintenance']","['maintenance', 'maintenance person', 'maintenance worker', 'they', 'maintenance staff', 'maintenance crew', 'maintenance workers']"
-male nurse,a+s,gendered,titles,generic_plural,"['nurse', 'they', 'nursing', 'nursing personnel', 'nursing staff', 'nurses']","['nurses', 'nursing personnel', 'nursing staff', 'nursing']","['nursing', 'nurse', 'they', 'nursing personnel', 'nursing staff', 'nurses']"
+male nurse,i,gendered,titles,generic_plural,"['nurse', 'they', 'nursing', 'nursing personnel', 'nursing staff', 'nurses']","['nurses', 'nursing personnel', 'nursing staff', 'nursing']","['nursing', 'nurse', 'they', 'nursing personnel', 'nursing staff', 'nurses']"
 man bag,s,gendered,male_stereotype,male_stereotype,"['handbag', 'handbags']",['handbags'],"['handbag', 'handbags']"
 man bun,s,gendered,male_stereotype,male_stereotype,"['bun', 'buns']",['buns'],"['bun', 'buns']"
 man day,s,gendered,hidden_image,hidden_image,"['person-day', 'person-days']",['person-days'],"['person-day', 'person-days']"
@@ -70,15 +70,15 @@ master at,i,gendered,hidden_image,hidden_image,"['skilled at', 'proficient in', 
 masters at,i,gendered,hidden_image,hidden_image,"['skilled at', 'proficient in']","['people who have a creative way of(...)', 'people with a talent for(...)', 'people who have a high level of knowledge in(...)']","['skilled at', 'proficient in']"
 middle man,s,gendered,function,function,"['intermediary', 'mediator', 'go-between', 'intermediaries', 'mediators', 'go-betweens', 'person acting as an agent between two parties(...)']","['intermediaries', 'mediators', 'go-betweens', 'people acting as agents between two parties(...)']","['intermediary', 'mediator', 'go-between', 'person acting as an agent between two parties(...)', 'intermediaries', 'mediators', 'go-betweens']"
 no man is an island,i,gendered,hidden_image,hidden_image,['no one is an island --- if not a quote'],[],['no one is an island --- if not a quote']
-non consentual sex,a+s,gendered,female_stereotype,female_stereotype,['rape'],[],['rape']
-non-consentual sex,a+s,gendered,female_stereotype,female_stereotype,['rape'],[],['rape']
-nonconsentual sex,a+s,gendered,female_stereotype,female_stereotype,['rape'],[],['rape']
+non consentual sex,i,gendered,female_stereotype,female_stereotype,['rape'],[],['rape']
+non-consentual sex,i,gendered,female_stereotype,female_stereotype,['rape'],[],['rape']
+nonconsentual sex,i,gendered,female_stereotype,female_stereotype,['rape'],[],['rape']
 pick a fight,i,gendered,male_stereotype,male_stereotype,"['differ', 'disagree', 'start a debate', 'discuss options', 'present arguments']",[],"['differ', 'disagree', 'start a debate', 'discuss options', 'present arguments']"
-pink leadership,a+s,gendered,leadership,leadership,"['communal leadership', 'servant leadership', 'communal leaderships', 'servant leaderships']","['communal leaderships', 'servant leaderships']","['communal leadership', 'servant leadership', 'communal leaderships', 'servant leaderships']"
+pink leadership,i,gendered,leadership,leadership,"['communal leadership', 'servant leadership', 'communal leaderships', 'servant leaderships']","['communal leaderships', 'servant leaderships']","['communal leadership', 'servant leadership', 'communal leaderships', 'servant leaderships']"
 product owner,s,gendered,titles,generic_plural,"['they', 'product ownership', 'product owners']","['product owners', 'product ownership']","['product ownership', 'they', 'product owners']"
 project manager,s,gendered,titles,titles,"['person in project management', 'they', 'project management', 'people in project management', 'person managing the project(...)', 'someone in the project management role(...)']","['people in project management', 'project management', 'people managing projects(...)', 'people in project management roles(...)']","['project management', 'person in project management', 'they', 'person managing the project(...)', 'someone in the project management role(...)', 'people in project management']"
 rape victim,i,gendered,female_stereotype,female_stereotype,"['sexual assault survivor', 'sexual assault survivors']",['sexual assault survivors'],"['sexual assault survivor', 'sexual assault survivors']"
-seek attention,v+s,gendered,female_stereotype,female_stereotype,"['seek validation', 'be lively', 'be at ease in social situations', 'be outgoing']",[],"['seek validation', 'be lively', 'be at ease in social situations', 'be outgoing']"
+seek attention,i,gendered,female_stereotype,female_stereotype,"['seek validation', 'be lively', 'be at ease in social situations', 'be outgoing']",[],"['seek validation', 'be lively', 'be at ease in social situations', 'be outgoing']"
 service desk agent,s,gendered,titles,generic_plural,"['they', 'service desk', 'service desk agents']","['service desk agents', 'service desk']","['service desk', 'they', 'service desk agents']"
 sex with a minor,i,gendered,female_stereotype,female_stereotype,['rape of a minor'],[],['rape of a minor']
 sex with minors,i,gendered,female_stereotype,female_stereotype,['rape of minors'],[],['rape of minors']
@@ -86,8 +86,8 @@ she or he,s,gendered,binary_pronouns,binary_pronouns,"['they', '((given name))',
 she/he,s,gendered,binary_pronouns,binary_pronouns,"['they', '((given name))', '((given name family name))']",[],"['they', '((given name))', '((given name family name))']"
 stunt man,s,gendered,titles,titles,"['stunt person', 'stunt performer', 'stunt double', 'they', 'stunt people', 'stunt persons', 'stunt performers', 'stunt doubles']","['stunt persons', 'stunt performers', 'stunt doubles', 'stunt people']","['stunt person', 'stunt performer', 'stunt double', 'they', 'stunt people', 'stunt persons', 'stunt performers', 'stunt doubles']"
 take the lead,i,gendered,leadership,leadership,"['head up', 'take responsibility for', 'guide', 'coach', 'set a course', 'inspire']",[],"['head up', 'take responsibility for', 'guide', 'coach', 'set a course', 'inspire']"
-underage woman,a+s,gendered,female_stereotype,female_stereotype,['child'],[],['child']
-underage women,a+s,gendered,female_stereotype,female_stereotype,['children'],[],['children']
+underage woman,i,gendered,female_stereotype,female_stereotype,['child'],[],['child']
+underage women,i,gendered,female_stereotype,female_stereotype,['children'],[],['children']
 user of,i,gendered,function,function,['person using(...)'],[],['person using(...)']
 users of,i,gendered,function,function,['people using(...)'],[],['people using(...)']
 vice chairman,s,gendered,titles,titles,"['vice chairperson', 'they', 'vice chairpersons', 'vice chairpeople', '((name)) who serves as vice chair(...)']","['vice chairpersons', 'vice chairpeople', '((name)) who serve as vice chairs(...)']","['vice chairperson', 'they', '((name)) who serves as vice chair(...)', 'vice chairpersons', 'vice chairpeople']"

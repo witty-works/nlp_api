@@ -12,7 +12,6 @@ from typing import Optional, Union, List
 from collections import defaultdict
 from pydantic import parse_obj_as
 
-import spacy
 from spacy.tokens import Doc
 from spacy.matcher import PhraseMatcher, Matcher
 import pandas as pd
@@ -88,7 +87,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.41.10"
+version = "1.41.11"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -508,9 +507,7 @@ async def get_debug_spacy(
                 "pos": token.pos_,
                 "dep": token.dep_,
                 "word_types": fetch_word_types(lang, token),
-                "morph": token.morph.get("Number"),
-                "case": token.morph.get("Case"),
-                "foreign": token.morph.get("Foreign"),
+                "morph": token.morph.to_dict(),
             }
         )
 
@@ -905,12 +902,18 @@ def is_token_singular(lang, token):
     if number:
         return "Sing" in number
 
-    if token.text[:1:] != "s":
+    if lang == "en" and token.text[-1:] == "s":
         return True
-    elif lang == "de":
+
+    return None
+
+
+def is_token_plural(lang, token):
+    is_singular = is_token_singular(lang, token)
+    if is_singular is None:
         return None
 
-    return False
+    return not is_singular
 
 
 def apply_configs(user_request_in: RequestIn, configs: dict, plan: str):
@@ -1293,7 +1296,7 @@ def languagetool_matches(
             subcategory != "abbreviation" and subcategory != "anglicism"
         ):
             explanation = match["message"]
-            # may be removed once updated to LT 6.0 https://github.com/languagetool-org/languagetool/commit/e4f7d6a677483b069fd98dfc461.41.103618767b
+            # may be removed once updated to LT 6.0 https://github.com/languagetool-org/languagetool/commit/e4f7d6a677483b069fd98dfc461.41.113618767b
             if explanation.startswith("Das Nomen „Trans"):
                 continue
         else:
@@ -1372,6 +1375,9 @@ async def fetch_json_post(url, payload, headers, name, ssl=True):
 async def apply_languagetool_rules(
     version: float, config: Config, lang: Language, text: str
 ):
+    if settings.languagetool_api == "":
+        return []
+
     payload = {
         "text": text,
         "language": lang.locale,
@@ -2421,10 +2427,10 @@ def align_noun_form(lang, a_text, a_token, b_token):
 
         return b_text
 
-    if b_token.morph.get("Number") == ["Sing"]:
+    is_singular = is_token_singular(lang, b_token)
+    if is_token_singular(lang, b_token):
         return Noun(b_text).plural()
-
-    if b_token.morph.get("Number") == ["Plur"]:
+    elif is_singular == False:
         return b_text
 
     return Noun(b_text).singular()
@@ -2616,7 +2622,8 @@ def alternative_declension(lang, text, token, word_types, alternative):
 
     new_alternative = ""
     previous = False
-    is_plural = False
+    is_plural_alternative = False
+    first_alternative_word_types = False
     alternative_tokens = fetch_tokens(lang, parsed_alternative)
     for i in reversed(range(len(alternative_tokens))):
         alternative_token = alternative_tokens[i]
@@ -2632,6 +2639,9 @@ def alternative_declension(lang, text, token, word_types, alternative):
                     lang, alternative_token, word_types, False
                 )
 
+            if first_alternative_word_types == False:
+                first_alternative_word_types = alternative_word_types
+
             if previous == False:
                 if "v" in word_types and lang == "en" and i == 0:
                     previous = True
@@ -2639,8 +2649,8 @@ def alternative_declension(lang, text, token, word_types, alternative):
                         lang, text, token, alternative_token
                     )
                 elif "s" in word_types and "s" in alternative_word_types:
-                    if alternative_token.morph.get("Number") == ["Plur"]:
-                        is_plural = True
+                    if is_token_plural(lang, alternative_token):
+                        is_plural_alternative = True
 
                     previous = True
                     alternative_text = align_noun_form(
@@ -2662,11 +2672,18 @@ def alternative_declension(lang, text, token, word_types, alternative):
             alternative_text + alternative_token.whitespace_ + new_alternative
         )
 
-    if is_plural == False and text.startswith("a ") or text.startswith("an "):
-        if new_alternative[0].lower() in ["a", "e", "i", "o", "u"]:
-            new_alternative = "an " + new_alternative
-        else:
-            new_alternative = "a " + new_alternative
+    if lang == "en" and first_alternative_word_types:
+        if (
+            is_plural_alternative == False
+            and "s" in first_alternative_word_types
+            and (text.startswith("a ") or text.startswith("an "))
+            and not new_alternative.startswith(rules["en"]["a_not_startswith"])
+            and not new_alternative.endswith(rules["en"]["uncountables"])
+        ):
+            if new_alternative[0].lower() in ["a", "e", "i", "o", "u"]:
+                new_alternative = "an " + new_alternative
+            else:
+                new_alternative = "a " + new_alternative
 
     return new_alternative + alternative_context
 
@@ -2688,7 +2705,9 @@ def alternatives_declension(lang, token, alternatives, prev_token):
         text = prev_token.text + " " + text
         start = prev_token.idx
 
-    if word_types == [] or (text == token.lemma_ and token.lemma_ != "beste"):
+    if word_types == [] or (
+        text.lower() == token.lemma_.lower() and token.lemma_ != "beste"
+    ):
         return text, start, alternatives
 
     return (
@@ -2711,44 +2730,38 @@ def plural_alternatives(
     ], second_subcategory
 
 
-def ignore_binary_inclusive_gendered_denom_analysis_de(
-    tokens,
-    false_positives,
-):
-    matches = fetch_matches("de", tokens, false_positives)
-    if matches.__len__() > 0:
-        old_start = 0
-        rest_text = []
-
-        for match_id, start, end in matches:
-            part = tokens[old_start:start]
-            rest_text.append(part.text)
-            old_start = end
-
-        docs = list(model["de"].pipe(rest_text))
-        tokens = Doc.from_docs(docs)
-
-    return tokens
-
-
 def match_binary_inclusive_gendered_denom_analysis_de(
     config: Config, false_positives, full_text, token, category, subcategory
 ):
     text = token.text
     start = token.idx
-    if not ResultOut.genderedRolesFormatBinary(config.gendered_roles_format):
-        for false_positive in false_positives:
-            if not false_positive.endswith(text):
-                continue
 
+    for false_positive in false_positives:
+        if false_positive.startswith(text + " ") or false_positive.startswith(
+            text + "/"
+        ):
+            new_start = start
+        elif false_positive.endswith(text):
             new_start = start - len(false_positive.removesuffix(text))
-            if false_positive == full_text[new_start : new_start + len(false_positive)]:
-                start = new_start
-                text = false_positive
+        else:
+            continue
 
+        if false_positive == full_text[new_start : new_start + len(false_positive)]:
+            if (
+                ResultOut.genderedRolesFormatBinary(config.gendered_roles_format)
+                or "frau" in text.lower()
+            ):
+                return None, None, None, None
+
+            start = new_start
+            text = false_positive
+            if "mann" in text.lower():
+                subcategory = "gendered"
+            else:
                 subcategory = "gendered_denominations_ending"
-                category = categories[subcategory]["category"]
-                break
+
+            category = categories[subcategory]["category"]
+            break
 
     return text, start, category, subcategory
 
@@ -2813,7 +2826,7 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
 
             words = parse_alternative.split()
             alternative_tokens = fetch_tokens("de", words[-1])
-            if alternative_tokens[0].morph.get("Number") == ["Plur"]:
+            if is_token_plural(lang, alternative_tokens[0]):
                 article_alternative = ""
             else:
                 alternative_word = german_noun_analysis(words[-1], True)
@@ -3170,11 +3183,6 @@ def gendered_denom_analysis_de(
 ):
     category = "gendered"
 
-    if ResultOut.genderedRolesFormatBinary(config.gendered_roles_format):
-        tokens = ignore_binary_inclusive_gendered_denom_analysis_de(
-            tokens, false_positives
-        )
-
     list_tokens = []
 
     for i in range(len(tokens)):
@@ -3217,6 +3225,21 @@ def gendered_denom_analysis_de(
                     category,
                     subcategory,
                 )
+
+                if text is None:
+                    continue
+
+                if not ResultOut.genderedRolesFormatBinary(
+                    config.gendered_roles_format
+                ):
+                    new_alternatives = []
+                    for alternative in alternatives:
+                        if (
+                            "frau" not in alternative.lower()
+                            or "mann" not in alternative.lower()
+                        ):
+                            new_alternatives.append(alternative)
+                    alternatives = new_alternatives
 
                 if i > 0 and is_singular:
                     alternatives_with_article = fetch_alternatives_with_article(
@@ -3359,8 +3382,15 @@ def word_noun(
             if is_singular is None:
                 continue
 
+            text = token.text
+            start = token.idx
+
             if is_singular:
                 alternatives = alternatives_sing
+
+                text, start, alternatives = alternatives_declension(
+                    lang.lang, token, alternatives, prev_token
+                )
             elif len(data):
                 # Secondary_subcategory
                 alternatives, subcategory = plural_alternatives(
@@ -3373,10 +3403,6 @@ def word_noun(
                     continue
             else:
                 alternatives = alternatives_plur
-
-            text, start, alternatives = alternatives_declension(
-                lang.lang, token, alternatives, prev_token
-            )
 
             list_tokens.append(
                 ResultOut.factory(

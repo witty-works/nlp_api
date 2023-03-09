@@ -15,7 +15,7 @@
                 }
             ],
             "category": "gendered",
-            "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachfrau/Fachmann?",
+            "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachfrau/Fachmann? Fachfrau. Fachmann.",
             "end": 36,
             "explanation": {
                 "icon": "💯",
@@ -37,7 +37,33 @@
                     "text": "Fachkraft"
                 },
                 {
-                    "text": "Fachfrau*Fachmann"
+                    "text": "Fachpersonal"
+                },
+                {
+                    "text": "Fachkräfte"
+                }
+            ],
+            "category": "gendered",
+            "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachfrau/Fachmann? Fachfrau. Fachmann.",
+            "end": 77,
+            "explanation": {
+                "icon": "😟",
+                "text": "Schubladendenken nach Geschlechternormen",
+                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#geschlechtsspezifisch"
+            },
+            "gravity": 2.0,
+            "label": "Geschlechtsspezifisch",
+            "start": 60,
+            "subcategory": "gendered",
+            "text": "Fachfrau/Fachmann"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Fachperson"
+                },
+                {
+                    "text": "Fachkraft"
                 },
                 {
                     "text": "Fachpersonal"
@@ -47,18 +73,47 @@
                 }
             ],
             "category": "gendered",
-            "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachfrau/Fachmann?",
-            "end": 77,
+            "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachfrau/Fachmann? Fachfrau. Fachmann.",
+            "end": 87,
             "explanation": {
-                "icon": "💯",
-                "text": "Nicht konsistente Geschlechts-Schreibweise",
-                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#inklusive_endung"
+                "icon": "😟",
+                "text": "Schubladendenken nach Geschlechternormen",
+                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#geschlechtsspezifisch"
             },
             "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Inklusive Endung",
-            "start": 60,
-            "subcategory": "gendered_denominations_ending",
-            "text": "Fachfrau/Fachmann"
+            "label": "Geschlechtsspezifisch",
+            "start": 79,
+            "subcategory": "gendered",
+            "text": "Fachfrau"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Fachperson"
+                },
+                {
+                    "text": "Fachkraft"
+                },
+                {
+                    "text": "Fachpersonal"
+                },
+                {
+                    "text": "Fachkräfte"
+                }
+            ],
+            "category": "gendered",
+            "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachfrau/Fachmann? Fachfrau. Fachmann.",
+            "end": 97,
+            "explanation": {
+                "icon": "💡",
+                "text": "Viele denken bei diesem Wort zuerst an einen Mann",
+                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#spezielle_funktionen"
+            },
+            "gravity": 2.0,
+            "label": "Geschlechtsspezifisch: Spezielle Funktionen",
+            "start": 89,
+            "subcategory": "function",
+            "text": "Fachmann"
         }
     ]
 }
