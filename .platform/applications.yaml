@@ -30,14 +30,14 @@
   hooks: &hooks
     build: |
       set -e
-
+      du -sh 
       mkdir -p $HOME/.local
-      mkdir -p $PLATFORM_CACHE_DIR/$PLATFORM_APPLICATION_NAME/.local
+      mkdir -p $PLATFORM_CACHE_DIR/.local
       mkdir -p $HOME/.global
-      mkdir -p $PLATFORM_CACHE_DIR/$PLATFORM_APPLICATION_NAME/.global
+      mkdir -p $PLATFORM_CACHE_DIR/.global
       echo "Restoring from  build cache"
-      rsync -ar $PLATFORM_CACHE_DIR/$PLATFORM_APPLICATION_NAME/.local $HOME/.local
-      rsync -ar $PLATFORM_CACHE_DIR/$PLATFORM_APPLICATION_NAME/.global $HOME/.global
+      rsync -ar $PLATFORM_CACHE_DIR/.local $HOME/.local
+      rsync -ar $PLATFORM_CACHE_DIR/.global $HOME/.global
       echo "Done restoring from build cache"
       # pipenv run pip install --upgrade pip
       echo "Installing Pipenv dependecies"
@@ -56,8 +56,8 @@
       pipenv run pybabel compile -d locales -l de_CH -f
 
       echo "Saving to build cache"
-      rsync -ar $HOME/.local $PLATFORM_CACHE_DIR/$PLATFORM_APPLICATION_NAME/.local
-      rsync -ar $HOME/.global $PLATFORM_CACHE_DIR/$PLATFORM_APPLICATION_NAME/.global
+      rsync -ar $HOME/.local $PLATFORM_CACHE_DIR/.local
+      rsync -ar $HOME/.global $PLATFORM_CACHE_DIR/.global
       echo "Done saving to build cache"
   crons:
     generate-statistics:
