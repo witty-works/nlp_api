@@ -1650,7 +1650,6 @@ async def call_context_checker(sentences, result: ResultOut):
     headers = {
         "Content-Type": "application/json",
         "Authorization": ("Bearer " + settings.context_checker_api_key),
-        "azureml-model-deployment": "default",
     }
 
     sentence = None
