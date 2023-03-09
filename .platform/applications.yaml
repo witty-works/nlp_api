@@ -52,7 +52,7 @@
 
       rsync -ar $HOME/.local $PLATFORM_CACHE_DIR/$PLATFORM_APPLICATION_NAME/.local
       rsync -ar $HOME/.global $PLATFORM_CACHE_DIR/$PLATFORM_APPLICATION_NAME/.global
-
+      # forcing a rebuild
   crons:
     generate-statistics:
       spec: "0 1 * * 0"
