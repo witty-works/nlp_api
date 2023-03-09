@@ -35,24 +35,30 @@
       mkdir -p $PLATFORM_CACHE_DIR/$PLATFORM_APPLICATION_NAME/.local
       mkdir -p $HOME/.global
       mkdir -p $PLATFORM_CACHE_DIR/$PLATFORM_APPLICATION_NAME/.global
-
+      echo "Restoring from  build cache"
       rsync -ar $PLATFORM_CACHE_DIR/$PLATFORM_APPLICATION_NAME/.local $HOME/.local
       rsync -ar $PLATFORM_CACHE_DIR/$PLATFORM_APPLICATION_NAME/.global $HOME/.global
-
-      pipenv install --system --deploy
+      echo "Done restoring from build cache"
+      python3.11 -m pip install --upgrade pip
+      echo "Installing Pipenv dependecies"
+      pipenv install --deploy
       SPACY_RELEASE=$(curl --silent "https://api.github.com/repos/explosion/spaCy/releases/latest" | jq -r .tag_name | sed -r 's/^.{1}//')
+      echo "Downloading en_core_web_md-$SPACY_RELEASE"
       pipenv run /opt/python/3.11/bin/python3.11 -m spacy download en_core_web_md-$SPACY_RELEASE --direct
+      echo "Downloading en_core_web_md-$SPACY_RELEASE"
       pipenv run /opt/python/3.11/bin/python3.11 -m spacy download de_core_news_lg-$SPACY_RELEASE --direct
 
+      echo "Pybabel compile"
       pipenv run pybabel compile -d locales -l en_US -f
       pipenv run pybabel compile -d locales -l en_GB -f
       pipenv run pybabel compile -d locales -l de_DE -f
       pipenv run pybabel compile -d locales -l de_AT -f
       pipenv run pybabel compile -d locales -l de_CH -f
 
+      echo "Saving to build cache"
       rsync -ar $HOME/.local $PLATFORM_CACHE_DIR/$PLATFORM_APPLICATION_NAME/.local
       rsync -ar $HOME/.global $PLATFORM_CACHE_DIR/$PLATFORM_APPLICATION_NAME/.global
-      # forcing a rebuild
+      echo "Done saving to build cache"
   crons:
     generate-statistics:
       spec: "0 1 * * 0"
