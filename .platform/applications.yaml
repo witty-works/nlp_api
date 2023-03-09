@@ -39,7 +39,7 @@
       rsync -ar $PLATFORM_CACHE_DIR/$PLATFORM_APPLICATION_NAME/.local $HOME/.local
       rsync -ar $PLATFORM_CACHE_DIR/$PLATFORM_APPLICATION_NAME/.global $HOME/.global
       echo "Done restoring from build cache"
-      python3.11 -m pip install --upgrade pip
+      # pipenv run pip install --upgrade pip
       echo "Installing Pipenv dependecies"
       pipenv install --system --deploy
       SPACY_RELEASE=$(curl --silent "https://api.github.com/repos/explosion/spaCy/releases/latest" | jq -r .tag_name | sed -r 's/^.{1}//')
