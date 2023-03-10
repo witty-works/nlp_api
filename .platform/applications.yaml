@@ -47,12 +47,13 @@
       # We are locking spacy for the time being.
       SPACY_RELEASE=3.5.0
       echo "Downloading en_core_web_md-$SPACY_RELEASE"
-      wget -nc https://github.com/explosion/spacy-models/releases/download/en_core_web_md-$SPACY_RELEASE.tar.gz -O $PLATFORM_CACHE_DIR/en_core_web_md-$SPACY_RELEASE.tar.gz
-      pdm install $PLATFORM_CACHE_DIR/en_core_web_md-$SPACY_RELEASE.tar.gz
+      https://github.com/explosion/spacy-models/releases/download/sv_core_news_sm-3.5.0/sv_core_news_sm-3.5.0-py3-none-any.whl
+      wget -nc https://github.com/explosion/spacy-models/releases/download/en_core_web_md-$SPACY_RELEASE/en_core_web_md-$SPACY_RELEASE-py3-none-any.whl -O $PLATFORM_CACHE_DIR/en_core_web_md-$SPACY_RELEASE-py3-none-any.whl
+      pdm install $PLATFORM_CACHE_DIR/en_core_web_md-$SPACY_RELEASE-py3-none-any.whl
       #pdm run python -m spacy download en_core_web_md-$SPACY_RELEASE --direct
       echo "Downloading en_core_web_md-$SPACY_RELEASE"
-      wget -nc https://github.com/explosion/spacy-models/releases/download/de_core_news_lg-$SPACY_RELEASE.tar.gz -O $PLATFORM_CACHE_DIR/en_core_web_md-$SPACY_RELEASE.tar.gz
-      pdm install $PLATFORM_CACHE_DIR/de_core_news_lg-$SPACY_RELEASE.tar.gz
+      wget -nc https://github.com/explosion/spacy-models/releases/download/de_core_news_lg-$SPACY_RELEASE/de_core_news_lg-$SPACY_RELEASE-py3-none-any.whl -O $PLATFORM_CACHE_DIR/de_core_news_lg-$SPACY_RELEASE-py3-none-any.whl
+      pdm install $PLATFORM_CACHE_DIR/de_core_news_lg-$SPACY_RELEASE-py3-none-any.whl
       #pdm run python -m spacy download de_core_news_lg-$SPACY_RELEASE --direct
       echo "Pybabel compile"
       pdm run pybabel compile -d locales -l en_US -f
