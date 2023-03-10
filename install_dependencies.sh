@@ -3,7 +3,6 @@ mkdir -p $HOME/.global
 mkdir -p $HOME/.venv
 mkdir -p $PLATFORM_CACHE_DIR/.global 
 mkdir -p $PLATFORM_CACHE_DIR/.venv
-mkdir -p __pypackages__
 echo "Restoring from  build cache"
 rsync -ar $PLATFORM_CACHE_DIR/.venv/ $HOME/.venv
 rsync -ar $PLATFORM_CACHE_DIR/.global/ $HOME/.global
