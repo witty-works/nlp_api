@@ -39,7 +39,7 @@
       pip install pdm
       pdm config install.cache True
       pdm config cache_dir $PLATFORM_CACHE_DIR/pdm
-      pdm run python -m ensurepip --upgrade
+      pdm run python -m ensurepip
       pdm install
       echo "Pybabel compile"
       pdm run pybabel compile -d locales -l en_US -f
