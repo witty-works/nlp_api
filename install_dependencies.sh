@@ -15,7 +15,7 @@ pdm config python.use_venv false
 pdm config install.cache True
 pdm config cache_dir $PLATFORM_CACHE_DIR/pdm
 pdm run python -m ensurepip
-pdm install
+pdm sync --prod
 
 echo "Saving to build cache"
 #rsync -ar $HOME/.venv/ $PLATFORM_CACHE_DIR/.venv
