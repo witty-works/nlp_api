@@ -16,8 +16,6 @@ pip install pdm
 pdm config install.cache True
 pdm config cache_dir $HOME/.pdm
 
-pdm venv create
-sed -i 's/include-system-site-packages\ =\ false/include-system-site-packages\ =\ true/' .venv/pyvenv.cfg
 pdm run python -m ensurepip
 pdm sync --prod
 
