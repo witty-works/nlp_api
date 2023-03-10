@@ -41,19 +41,6 @@
       pdm config cache_dir $PLATFORM_CACHE_DIR/pdm
       pdm run python -m ensurepip --upgrade
       pdm install
-      # We need to asure we allow --user installs which is why we modify the venv configuration.
-      sed -i 's/include-system-site-packages\ =\ false/include-system-site-packages\ =\ true/' .venv/pyvenv.cfg
-      #SPACY_RELEASE=$(curl --silent "https://api.github.com/repos/explosion/spaCy/releases/latest" | jq -r .tag_name | sed -r 's/^.{1}//')
-      # We are locking spacy for the time being.
-      SPACY_RELEASE=3.5.0
-      echo "Downloading en_core_web_md-$SPACY_RELEASE"      
-      wget -nc https://github.com/explosion/spacy-models/releases/download/en_core_web_md-$SPACY_RELEASE/en_core_web_md-$SPACY_RELEASE-py3-none-any.whl -O $PLATFORM_CACHE_DIR/en_core_web_md-$SPACY_RELEASE-py3-none-any.whl
-      pdm install $PLATFORM_CACHE_DIR/en_core_web_md-$SPACY_RELEASE-py3-none-any.whl
-      #pdm run python -m spacy download en_core_web_md-$SPACY_RELEASE --direct
-      echo "Downloading en_core_web_md-$SPACY_RELEASE"
-      wget -nc https://github.com/explosion/spacy-models/releases/download/de_core_news_lg-$SPACY_RELEASE/de_core_news_lg-$SPACY_RELEASE-py3-none-any.whl -O $PLATFORM_CACHE_DIR/de_core_news_lg-$SPACY_RELEASE-py3-none-any.whl
-      pdm install $PLATFORM_CACHE_DIR/de_core_news_lg-$SPACY_RELEASE-py3-none-any.whl
-      #pdm run python -m spacy download de_core_news_lg-$SPACY_RELEASE --direct
       echo "Pybabel compile"
       pdm run pybabel compile -d locales -l en_US -f
       pdm run pybabel compile -d locales -l en_GB -f
