@@ -24,7 +24,7 @@ while getopts "ht:a:c:m:" options; do
       MULTIPLIER=${OPTARG}
       ;;
     a)
-      CPUS=$(echo ${OPTARG} | base64 --decode | jq '.resources.profile_size | tonumber | ceil')
+      CPUS=$(echo ${OPTARG} | base64 --decode | jq '.resources.profile_size | tonumber')
       ;;
     c)
       CPUS=${OPTARG}
@@ -39,11 +39,7 @@ while getopts "ht:a:c:m:" options; do
   esac
 done
 
-GUNICORN_MAIN_PID=$(pgrep gunicorn | head -n 1)
-RUNNING_WORKER_COUNT=$(pgrep gunicorn | wc -l | xargs)
-RUNNING_WORKER_COUNT=1
-
-if [ $CPUS -lt 1 ]
+if ((`echo $CPUS '<' 1|bc`))
 then
   echo 1
   exit
