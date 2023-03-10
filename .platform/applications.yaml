@@ -47,10 +47,10 @@
       # We are locking spacy for the time being.
       SPACY_RELEASE=3.5.0
       echo "Downloading en_core_web_md-$SPACY_RELEASE"
-      pdm  install en_core_web_md-$SPACY_RELEASE-py3-none-any.whl
+      pdm install https://github.com/explosion/spacy-models/releases/download/en_core_web_md-$SPACY_RELEASE.tar.gz
       #pdm run python -m spacy download en_core_web_md-$SPACY_RELEASE --direct
       echo "Downloading en_core_web_md-$SPACY_RELEASE"
-      pdm  install de_core_news_lg-$SPACY_RELEASE-py3-none-any.whl
+      pdm install https://github.com/explosion/spacy-models/releases/download/de_core_news_lg-$SPACY_RELEASE.tar.gz
       #pdm run python -m spacy download de_core_news_lg-$SPACY_RELEASE --direct
       echo "Pybabel compile"
       pdm run pybabel compile -d locales -l en_US -f
