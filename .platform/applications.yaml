@@ -30,6 +30,10 @@
   hooks: &hooks
     build: |
       set -e
+      pdm config install.cache true
+      pdm config cache_dir $PLATFORM_CACHE_DIR/pdm
+      pdm info
+      pdm info --env
       du -sh $PLATFORM_CACHE_DIR
       mkdir -p $HOME/.local
       mkdir -p $PLATFORM_CACHE_DIR/.local
