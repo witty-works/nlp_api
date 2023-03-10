@@ -32,7 +32,6 @@
       set -e
       pdm config install.cache True
       pdm config cache_dir $PLATFORM_CACHE_DIR/pdm
-      pdm config global_project.user_site True
       pdm info
       pdm info --env
       du -sh $PLATFORM_CACHE_DIR
@@ -43,10 +42,9 @@
       rsync -ar $PLATFORM_CACHE_DIR/.global $HOME/.global
       echo "Done restoring from build cache"
       echo "Installing pdm dependecies"
-      pdm run python -m ensurepip
+      pdm run python -m ensurepip --upgrade
       pdm install
       sed -i 's/include-system-site-packages\ =\ false/include-system-site-packages\ =\ true/' .venv/pyvenv.cfg
-      cat .venv/pyvenv.cfg
       #SPACY_RELEASE=$(curl --silent "https://api.github.com/repos/explosion/spaCy/releases/latest" | jq -r .tag_name | sed -r 's/^.{1}//')
       SPACY_RELEASE=3.5.0
       echo "Downloading en_core_web_md-$SPACY_RELEASE"
@@ -60,7 +58,8 @@
       pdm run pybabel compile -d locales -l de_DE -f
       pdm run pybabel compile -d locales -l de_AT -f
       pdm run pybabel compile -d locales -l de_CH -f
-      ls -la
+      ls -la .global
+      ls -la .local
       echo "Saving to build cache"
       rsync -ar $HOME/.venv $PLATFORM_CACHE_DIR/.venv
       rsync -ar $HOME/.global $PLATFORM_CACHE_DIR/.global
