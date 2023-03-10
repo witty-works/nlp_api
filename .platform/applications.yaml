@@ -17,7 +17,7 @@
 
   dependencies:
     python3:
-      pipenv: "2023.2.4"
+      pdm: "*"
 
   web:
     upstream:
@@ -39,21 +39,20 @@
       rsync -ar $PLATFORM_CACHE_DIR/.local $HOME/.local
       rsync -ar $PLATFORM_CACHE_DIR/.global $HOME/.global
       echo "Done restoring from build cache"
-      # pipenv run pip install --upgrade pip
-      echo "Installing Pipenv dependecies"
-      pipenv install --system --deploy
+      echo "Installing pdm dependecies"
+      pdm install
       SPACY_RELEASE=$(curl --silent "https://api.github.com/repos/explosion/spaCy/releases/latest" | jq -r .tag_name | sed -r 's/^.{1}//')
       echo "Downloading en_core_web_md-$SPACY_RELEASE"
-      pipenv run /opt/python/3.11/bin/python3.11 -m spacy download en_core_web_md-$SPACY_RELEASE --direct
+      pdm run python -m spacy download en_core_web_md-$SPACY_RELEASE --direct
       echo "Downloading en_core_web_md-$SPACY_RELEASE"
-      pipenv run /opt/python/3.11/bin/python3.11 -m spacy download de_core_news_lg-$SPACY_RELEASE --direct
+      pdm run python -m spacy download de_core_news_lg-$SPACY_RELEASE --direct
 
       echo "Pybabel compile"
-      pipenv run pybabel compile -d locales -l en_US -f
-      pipenv run pybabel compile -d locales -l en_GB -f
-      pipenv run pybabel compile -d locales -l de_DE -f
-      pipenv run pybabel compile -d locales -l de_AT -f
-      pipenv run pybabel compile -d locales -l de_CH -f
+      pdm run pybabel compile -d locales -l en_US -f
+      pdm run pybabel compile -d locales -l en_GB -f
+      pdm run pybabel compile -d locales -l de_DE -f
+      pdm run pybabel compile -d locales -l de_AT -f
+      pdm run pybabel compile -d locales -l de_CH -f
 
       echo "Saving to build cache"
       rsync -ar $HOME/.local $PLATFORM_CACHE_DIR/.local
@@ -95,7 +94,7 @@
 
   dependencies:
     python3:
-      pipenv: "2023.2.4"
+      pdm: "*"
 
   web:
     upstream:
@@ -143,7 +142,7 @@
 
   dependencies:
     python3:
-      pipenv: "2023.2.4"
+      pdm: "*"
 
   web:
     upstream:
