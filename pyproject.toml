@@ -25,7 +25,7 @@ description = ""
 authors = [
     {name = "Lukas Kahwe Smith", email = "lukas.smith@witty.works"},
 ]
-dependencies = ["fastapi<0.91.0,>=0.90.0", "pydantic<2.0.0,>=1.2.0", "uvicorn[standard]", "gunicorn", "spacy", "pandas", "aiofiles", "babel", "aiohttp", "sentry-sdk", "opencensus-ext-azure", "redis", "platformshconfig", "fakeredis", "fasttext", "fastapi-microsoft-identity", "slack-bolt", "german-nouns", "inflex", "blackfire", "spacy-lookups-data"]
+dependencies = ["fastapi<0.91.0,>=0.90.0", "pydantic<2.0.0,>=1.2.0", "uvicorn[standard]", "gunicorn", "spacy", "pandas", "aiofiles", "babel", "aiohttp", "sentry-sdk", "opencensus-ext-azure", "redis", "platformshconfig", "fakeredis", "fasttext-wheel", "fastapi-microsoft-identity", "slack-bolt", "german-nouns", "inflex", "blackfire", "spacy-lookups-data"]
 requires-python = ">=3.11"
 license = "Proprietary"
 
