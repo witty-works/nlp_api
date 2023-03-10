@@ -15,10 +15,6 @@
 
   container_profile: LOW_MEMORY
 
-  dependencies:
-    python3:
-      pdm: "*"
-
   web:
     upstream:
       socket_family: unix
@@ -30,8 +26,6 @@
   hooks: &hooks
     build: |
       set -e
-      pdm config install.cache True
-      pdm config cache_dir $PLATFORM_CACHE_DIR/pdm
       du -sh $PLATFORM_CACHE_DIR
       mkdir -p $HOME/.global
       mkdir -p $HOME/.venv
@@ -41,7 +35,10 @@
       rsync -ar $PLATFORM_CACHE_DIR/.venv/ $HOME/.venv
       rsync -ar $PLATFORM_CACHE_DIR/.global/ $HOME/.global
       echo "Done restoring from build cache"
-      echo "Installing pdm dependecies"
+      echo "Installing pdm and pdm dependecies"
+      pip install pdm
+      pdm config install.cache True
+      pdm config cache_dir $PLATFORM_CACHE_DIR/pdm
       pdm run python -m ensurepip --upgrade
       pdm install
       # We need to asure we allow --user installs which is why we modify the venv configuration.
@@ -53,7 +50,6 @@
       pdm run python -m spacy download en_core_web_md-$SPACY_RELEASE --direct
       echo "Downloading en_core_web_md-$SPACY_RELEASE"
       pdm run python -m spacy download de_core_news_lg-$SPACY_RELEASE --direct
-
       echo "Pybabel compile"
       pdm run pybabel compile -d locales -l en_US -f
       pdm run pybabel compile -d locales -l en_GB -f
@@ -145,10 +141,6 @@
     memory_ratio: 1024
 
   container_profile: LOW_MEMORY
-
-  dependencies:
-    python3:
-      pdm: "*"
 
   web:
     upstream:
