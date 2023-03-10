@@ -33,8 +33,10 @@
       pdm config install.cache True
       pdm config cache_dir $PLATFORM_CACHE_DIR/pdm
       du -sh $PLATFORM_CACHE_DIR
-      mkdir -p $HOME/.global $HOME/.venv
-      mkdir -p $PLATFORM_CACHE_DIR/.global $PLATFORM_CACHE_DIR/.venv
+      mkdir -p $HOME/.global
+      mkdir -p $HOME/.venv
+      mkdir -p $PLATFORM_CACHE_DIR/.global 
+      mkdir -p$PLATFORM_CACHE_DIR/.venv
       echo "Restoring from  build cache"
       rsync -ar $PLATFORM_CACHE_DIR/.venv/* $HOME/.venv/
       rsync -ar $PLATFORM_CACHE_DIR/.global/* $HOME/.global/
