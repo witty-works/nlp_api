@@ -10,7 +10,7 @@ rsync -ar $PLATFORM_CACHE_DIR/.global/ $HOME/.global
 echo "Done restoring from build cache"
 
 echo "Installing pdm and pdm dependecies"
-pip install pdm --user
+pip install pdm
 pdm config install.cache True
 pdm config cache_dir $PLATFORM_CACHE_DIR/pdm
 pdm run python -m ensurepip
