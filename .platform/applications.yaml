@@ -27,7 +27,12 @@
       set -e
 
       ./install_dependencies.sh
-
+      pdm run pybabel compile -d locales -l en_US -f
+      pdm run pybabel compile -d locales -l en_GB -f
+      pdm run pybabel compile -d locales -l de_DE -f
+      pdm run pybabel compile -d locales -l de_CH -f
+      pdm run pybabel compile -d locales -l de_AT -f
+      
       export FT_MODEL="lid.176.bin"
 
       if [ ! -f "${PLATFORM_CACHE_DIR}/$FT_MODEL" ]; then
@@ -73,15 +78,6 @@
       start: |
         FINAL_WORKER_COUNT=$(./compute_worker_count.sh -t $THREADS_EN -a $PLATFORM_APPLICATION | head -n 1)
         blackfire-python gunicorn app.main:app --preload -b unix:$SOCKET -w $FINAL_WORKER_COUNT --threads ${THREADS_EN} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
-
-  hooks:
-    build: |
-      set -e
-
-      ./install_dependencies.sh
-
-      pdm run pybabel compile -d locales -l en_US -f
-      pdm run pybabel compile -d locales -l en_GB -f
   crons:
     generate-statistics:
       spec: "0 1 * * 0"
@@ -128,12 +124,6 @@
         FINAL_WORKER_COUNT=$(./compute_worker_count.sh -t $THREADS_DE -a $PLATFORM_APPLICATION | head -n 1)
         blackfire-python gunicorn app.main:app --preload -b unix:$SOCKET -w $FINAL_WORKER_COUNT --threads ${THREADS_DE} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
 
-  hooks:
-    build: ./install_dependencies.sh
-
-      pdm run pybabel compile -d locales -l de_DE -f
-      pdm run pybabel compile -d locales -l de_CH -f
-      pdm run pybabel compile -d locales -l de_AT -f
 
   crons:
     generate-statistics:
