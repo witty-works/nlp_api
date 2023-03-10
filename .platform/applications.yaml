@@ -19,8 +19,8 @@
       socket_family: unix
     commands:
       start: |
-        # FINAL_WORKER_COUNT=$(./compute_worker_count.sh -t $THREADS -a $PLATFORM_APPLICATION | head -n 1)
-        gunicorn app.main:app --preload -b unix:$SOCKET -w 1 --threads 1 -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
+        FINAL_WORKER_COUNT=$(echo $PLATFORM_APPLICATION| base64 --decode | jq '.resources.profile_size | tonumber |ceil|2 * . |1 + . ')
+        gunicorn app.main:app --preload -b unix:$SOCKET -w $FINAL_WORKER_COUNT --threads 1 -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
 
   hooks:
     build: |
@@ -76,8 +76,9 @@
       socket_family: unix
     commands:
       start: |
-        FINAL_WORKER_COUNT=$(./compute_worker_count.sh -t $THREADS_EN -a $PLATFORM_APPLICATION | head -n 1)
-        blackfire-python gunicorn app.main:app --preload -b unix:$SOCKET -w $FINAL_WORKER_COUNT --threads ${THREADS_EN} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
+        FINAL_WORKER_COUNT=$(echo $PLATFORM_APPLICATION| base64 --decode | jq '.resources.profile_size | tonumber |ceil|2 * . |1 + . ')
+        gunicorn app.main:app --preload -b unix:$SOCKET -w $FINAL_WORKER_COUNT --threads 1 -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
+
   crons:
     generate-statistics:
       spec: "0 1 * * 0"
@@ -112,18 +113,13 @@
 
   container_profile: BALANCED
 
-  dependencies:
-    python3:
-      pdm: "*"
-
   web:
     upstream:
       socket_family: unix
     commands:
       start: |
-        FINAL_WORKER_COUNT=$(./compute_worker_count.sh -t $THREADS_DE -a $PLATFORM_APPLICATION | head -n 1)
-        blackfire-python gunicorn app.main:app --preload -b unix:$SOCKET -w $FINAL_WORKER_COUNT --threads ${THREADS_DE} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
-
+        FINAL_WORKER_COUNT=$(echo $PLATFORM_APPLICATION| base64 --decode | jq '.resources.profile_size | tonumber |ceil|2 * . |1 + . ')
+        gunicorn app.main:app --preload -b unix:$SOCKET -w $FINAL_WORKER_COUNT --threads 1 -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
 
   crons:
     generate-statistics:
