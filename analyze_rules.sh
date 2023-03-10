@@ -54,7 +54,7 @@ fi
     eval $pre_cmd
   fi
 
-  cmd="pipenv run $python -m bin.analyze_rules -l $lang -u $lt_url >> ./analyze_rules/$lang.txt"
+  cmd="pdm run $python -m bin.analyze_rules -l $lang -u $lt_url >> ./analyze_rules/$lang.txt"
 
   if ! [ $SEND_MAIL ]
   then

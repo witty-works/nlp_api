@@ -55,20 +55,20 @@ docker run --rm --name nlp_api -p 8080:8080 --network "bridge" --env languagetoo
 
 You should see application running under http://localhost:8000/docs
 
-## Using pipenv
+## Using pdm
 
 ```
-pipenv install --dev
-pipenv run python3.11 -m spacy download en_core_web_md --no-cache-dir
-pipenv run python3.11 -m spacy download de_core_news_lg --no-cache-dir
+pdm install --dev
+pdm run python3.11 -m spacy download en_core_web_md --no-cache-dir
+pdm run python3.11 -m spacy download de_core_news_lg --no-cache-dir
 wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 ```
 
 Note to uninstall spacy models use
 
 ```
-pipenv uninstall en_core_web_md
-pipenv uninstall de_core_news_lg
+pdm uninstall en_core_web_md
+pdm uninstall de_core_news_lg
 ```
 
 Compile PO files (done automatically during deployment:
@@ -93,7 +93,7 @@ Compile the translations in the spirit of `./compile-translations.sh`
 To update packages locally after Pipfile was changed, run the command:
 
 ```
-pipenv install --dev
+pdm install --dev
 ```
 
 ## Add new package
@@ -103,7 +103,7 @@ Following command will install the package and add it to the `Pipfile` and
 `Pipfile.lock`:
 
 ```
-pipenv install <package_name>
+pdm install <package_name>
 ```
 
 ## Docker image
@@ -149,7 +149,7 @@ You could alternatively set these variables in:
 ---
 
 ```
-pipenv run uvicorn app.main:app --reload
+pdm run uvicorn app.main:app --reload
 ```
 
 or
@@ -165,7 +165,7 @@ For an alternate view of the docs navigate to http://localhost:8000/redoc
 ## Profiling locally
 
 ```
-pipenv run blackfire-python uvicorn app.main:app --reload
+pdm run blackfire-python uvicorn app.main:app --reload
 ```
 
 Make sure you have a `.blackfire.ini`, get the settings from
@@ -220,19 +220,19 @@ https://www.notion.so/witty-works/Cloud-Deployment-Approaches-a5320f3e1b854e1e81
 To run the entire test suite
 
 ```
-pipenv run pytest -vv
+pdm run pytest -vv
 ```
 
 To only run the last failing tests
 
 ```
-pipenv run pytest -vv --lf
+pdm run pytest -vv --lf
 ```
 
 To update the fixtures with the current API responses run
 
 ```
-pipenv run pytest --snapshot-update
+pdm run pytest --snapshot-update
 ```
 
 Make sure to review the changes if they are indeed intended before commiting!
@@ -253,13 +253,13 @@ https://www.notion.so/witty-works/e68e073dd0a342fca2a6683c7a8b2341?v=b54da99f8a6
 Export to CSV
 
 ```
-pipenv run python -m bin.update_locales -i [CSV export]]
+pdm run python -m bin.update_locales -i [CSV export]]
 ```
 
 ## Analyze Rules
 
 ```
-pipenv run python -m bin.analyze_rules -l en
+pdm run python -m bin.analyze_rules -l en
 ```
 
 ## Update the ignore.txt
@@ -281,35 +281,35 @@ java -noverify -cp languagetool-server.jar org.languagetool.server.HTTPServer --
 3. Run the script to generate ignore words for German:
 
 ```
-pipenv run python -m bin.analyze_rules -p <path_to_ignore_file>
+pdm run python -m bin.analyze_rules -p <path_to_ignore_file>
 ```
 
 for English:
 
 ```
-pipenv run python -m bin.analyze_rules -l en -p <path_to_ignore_file>
+pdm run python -m bin.analyze_rules -l en -p <path_to_ignore_file>
 ```
 
 For example:
 
 ```
-pipenv run python -m bin.analyze_rules -l en -p ../languagetool/ignored_words/English/ignore.txt
-pipenv run python -m bin.analyze_rules -l de -p ../languagetool/ignored_words/German/ignore.txt
+pdm run python -m bin.analyze_rules -l en -p ../languagetool/ignored_words/English/ignore.txt
+pdm run python -m bin.analyze_rules -l de -p ../languagetool/ignored_words/German/ignore.txt
 ```
 
 ## Update the false positive list
 
 1. Run server locally (or restart to re-read the training data), for example
-   with pipenv:
+   with pdm:
 
 ```
-pipenv run uvicorn app.main:app --reload
+pdm run uvicorn app.main:app --reload
 ```
 
 2. Run the generate_false_positive.py file
 
 ```
-pipenv run python -m bin.generate_false_positive
+pdm run python -m bin.generate_false_positive
 ```
 
 If you get an error here, please repeat steps 1-2 and run the script again.
