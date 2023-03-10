@@ -1,0 +1,5 @@
+if [ -n "$PYTHONPATH" ]; then
+    export PYTHONPATH='/app/.global/lib/python3.11/site-packages/pdm/pep582':$PYTHONPATH
+else
+    export PYTHONPATH='/app/.global/lib/python3.11/site-packages/pdm/pep582'
+fi
