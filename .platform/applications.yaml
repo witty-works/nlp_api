@@ -19,8 +19,8 @@
       socket_family: unix
     commands:
       start: |
-        FINAL_WORKER_COUNT=$(./compute_worker_count.sh -t $THREADS -a $PLATFORM_APPLICATION | head -n 1)
-        blackfire-python gunicorn app.main:app --preload -b unix:$SOCKET -w $FINAL_WORKER_COUNT --threads ${THREADS} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
+        # FINAL_WORKER_COUNT=$(./compute_worker_count.sh -t $THREADS -a $PLATFORM_APPLICATION | head -n 1)
+        gunicorn app.main:app --preload -b unix:$SOCKET -w 1 --threads 1 -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
 
   hooks:
     build: |

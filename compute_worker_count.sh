@@ -24,7 +24,7 @@ while getopts "ht:a:c:m:" options; do
       MULTIPLIER=${OPTARG}
       ;;
     a)
-      CPUS=$(echo ${OPTARG} | base64 --decode | jq '.resources.profile_size | tonumber')
+      CPUS=$(echo ${OPTARG} | base64 --decode | jq '.resources.profile_size | tonumber |ceil')
       ;;
     c)
       CPUS=${OPTARG}
