@@ -12,6 +12,8 @@ echo "Installing pdm and pdm dependecies"
 pip install pdm
 pdm config install.cache True
 pdm config cache_dir $PLATFORM_CACHE_DIR/pdm
+pdm venv create
+sed -i 's/include-system-site-packages\ =\ false/include-system-site-packages\ =\ true/' .venv/pyvenv.cfg
 pdm run python -m ensurepip
 pdm sync --prod
 
