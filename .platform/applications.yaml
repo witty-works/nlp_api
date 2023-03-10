@@ -42,7 +42,7 @@
       rsync -ar $PLATFORM_CACHE_DIR/.global $HOME/.global
       echo "Done restoring from build cache"
       echo "Installing pdm dependecies"
-      pdm run -m ensurepip
+      pdm run python -m ensurepip
       pdm install
       SPACY_RELEASE=$(curl --silent "https://api.github.com/repos/explosion/spaCy/releases/latest" | jq -r .tag_name | sed -r 's/^.{1}//')
       echo "Downloading en_core_web_md-$SPACY_RELEASE"
