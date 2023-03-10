@@ -46,8 +46,7 @@
       #SPACY_RELEASE=$(curl --silent "https://api.github.com/repos/explosion/spaCy/releases/latest" | jq -r .tag_name | sed -r 's/^.{1}//')
       # We are locking spacy for the time being.
       SPACY_RELEASE=3.5.0
-      echo "Downloading en_core_web_md-$SPACY_RELEASE"
-      https://github.com/explosion/spacy-models/releases/download/sv_core_news_sm-3.5.0/sv_core_news_sm-3.5.0-py3-none-any.whl
+      echo "Downloading en_core_web_md-$SPACY_RELEASE"      
       wget -nc https://github.com/explosion/spacy-models/releases/download/en_core_web_md-$SPACY_RELEASE/en_core_web_md-$SPACY_RELEASE-py3-none-any.whl -O $PLATFORM_CACHE_DIR/en_core_web_md-$SPACY_RELEASE-py3-none-any.whl
       pdm install $PLATFORM_CACHE_DIR/en_core_web_md-$SPACY_RELEASE-py3-none-any.whl
       #pdm run python -m spacy download en_core_web_md-$SPACY_RELEASE --direct
