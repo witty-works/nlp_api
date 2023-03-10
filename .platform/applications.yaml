@@ -28,12 +28,7 @@
       set -e
 
       ./install_dependencies.sh
-      pdm run pybabel compile -d locales -l en_US -f
-      pdm run pybabel compile -d locales -l en_GB -f
-      pdm run pybabel compile -d locales -l de_DE -f
-      pdm run pybabel compile -d locales -l de_CH -f
-      pdm run pybabel compile -d locales -l de_AT -f
-      
+
       export FT_MODEL="lid.176.bin"
 
       if [ ! -f "${PLATFORM_CACHE_DIR}/$FT_MODEL" ]; then
@@ -81,6 +76,15 @@
         FINAL_WORKER_COUNT=$(echo $PLATFORM_APPLICATION| base64 --decode | jq '.resources.profile_size | tonumber |ceil|2 * . |1 + . ')
         gunicorn app.main:app --preload -b unix:$SOCKET -w $FINAL_WORKER_COUNT --threads 1 -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
 
+  hooks:
+    build: |
+      set -e
+
+      ./install_dependencies.sh
+
+      pdm run pybabel compile -d locales -l en_US -f
+      pdm run pybabel compile -d locales -l en_GB -f
+
   crons:
     generate-statistics:
       spec: "0 1 * * 0"
@@ -123,6 +127,16 @@
         eval $(pdm venv activate in-project)
         FINAL_WORKER_COUNT=$(echo $PLATFORM_APPLICATION| base64 --decode | jq '.resources.profile_size | tonumber |ceil|2 * . |1 + . ')
         gunicorn app.main:app --preload -b unix:$SOCKET -w $FINAL_WORKER_COUNT --threads 1 -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
+
+  hooks:
+    build: |
+      set -e
+
+      ./install_dependencies.sh
+
+      pdm run pybabel compile -d locales -l de_DE -f
+      pdm run pybabel compile -d locales -l de_CH -f
+      pdm run pybabel compile -d locales -l de_AT -f
 
   crons:
     generate-statistics:
