@@ -38,8 +38,8 @@
       mkdir -p $PLATFORM_CACHE_DIR/.global 
       mkdir -p $PLATFORM_CACHE_DIR/.venv
       echo "Restoring from  build cache"
-      rsync -ar $PLATFORM_CACHE_DIR/.venv/* $HOME/.venv/
-      rsync -ar $PLATFORM_CACHE_DIR/.global/* $HOME/.global/
+      rsync -ar $PLATFORM_CACHE_DIR/.venv/ $HOME/.venv
+      rsync -ar $PLATFORM_CACHE_DIR/.global/ $HOME/.global
       echo "Done restoring from build cache"
       echo "Installing pdm dependecies"
       pdm run python -m ensurepip --upgrade
@@ -61,8 +61,8 @@
       pdm run pybabel compile -d locales -l de_AT -f
       pdm run pybabel compile -d locales -l de_CH -f
       echo "Saving to build cache"
-      rsync -ar $HOME/.venv/* $PLATFORM_CACHE_DIR/.venv/
-      rsync -ar $HOME/.global/* $PLATFORM_CACHE_DIR/.global/
+      rsync -ar $HOME/.venv/ $PLATFORM_CACHE_DIR/.venv
+      rsync -ar $HOME/.global/ $PLATFORM_CACHE_DIR/.global
       echo "Done saving to build cache"
   crons:
     generate-statistics:
