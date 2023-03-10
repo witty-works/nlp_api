@@ -35,7 +35,7 @@
       pdm config global_project.user_site True
       pdm info
       pdm info --env
-      du -ha $PLATFORM_CACHE_DIR
+      du -sh $PLATFORM_CACHE_DIR
       mkdir -p $HOME/.global $HOME/.venv
       mkdir -p $PLATFORM_CACHE_DIR/.global $PLATFORM_CACHE_DIR/.venv
       echo "Restoring from  build cache"
