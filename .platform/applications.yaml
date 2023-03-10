@@ -45,6 +45,7 @@
       echo "Installing pdm dependecies"
       pdm run python -m ensurepip
       pdm install
+      sed -i 's/include-system-site-packages\ =\ false/include-system-site-packages\ =\ true/' .venv/pyvenv.cfg
       cat .venv/pyvenv.cfg
       SPACY_RELEASE=$(curl --silent "https://api.github.com/repos/explosion/spaCy/releases/latest" | jq -r .tag_name | sed -r 's/^.{1}//')
       echo "Downloading en_core_web_md-$SPACY_RELEASE"
