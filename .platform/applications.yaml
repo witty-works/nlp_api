@@ -30,8 +30,9 @@
   hooks: &hooks
     build: |
       set -e
-      pdm config install.cache true
+      pdm config install.cache True
       pdm config cache_dir $PLATFORM_CACHE_DIR/pdm
+      pdm config global_project.user_site True
       pdm info
       pdm info --env
       du -sh $PLATFORM_CACHE_DIR
@@ -44,6 +45,7 @@
       echo "Installing pdm dependecies"
       pdm run python -m ensurepip
       pdm install
+      cat .venv/pyvenv.cfg
       SPACY_RELEASE=$(curl --silent "https://api.github.com/repos/explosion/spaCy/releases/latest" | jq -r .tag_name | sed -r 's/^.{1}//')
       echo "Downloading en_core_web_md-$SPACY_RELEASE"
       pdm run python -m spacy download en_core_web_md-$SPACY_RELEASE --direct
