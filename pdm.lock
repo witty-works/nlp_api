@@ -199,7 +199,7 @@ summary = "Manage calls to calloc/free through Cython"
 [[package]]
 name = "de-core-news-lg"
 version = "3.5.0"
-url = "https://github.com/explosion/spacy-models/releases/download/de_core_news_lg-3.5.0/de_core_news_lg-3.5.0.tar.gz"
+url = "https://github.com/explosion/spacy-models/releases/download/de_core_news_lg-3.5.0/de_core_news_lg-3.5.0-py3-none-any.whl"
 summary = "German pipeline optimized for CPU. Components: tok2vec, tagger, morphologizer, parser, lemmatizer (trainable_lemmatizer), senter, ner."
 dependencies = [
     "spacy<3.6.0,>=3.5.0",
@@ -217,7 +217,7 @@ dependencies = [
 [[package]]
 name = "en-core-web-sm"
 version = "3.5.0"
-url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.5.0/en_core_web_sm-3.5.0.tar.gz"
+url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.5.0/en_core_web_md-3.5.0-py3-none-any.whl"
 summary = "English pipeline optimized for CPU. Components: tok2vec, tagger, parser, senter, ner, attribute_ruler, lemmatizer."
 dependencies = [
     "spacy<3.6.0,>=3.5.0",
@@ -1000,7 +1000,7 @@ dependencies = [
 
 [metadata]
 lock_version = "4.1"
-content_hash = "sha256:1709b087d91f7171dc9316f7879a24c9ebdb26e5cc7288a2851c08895c03245f"
+content_hash = "sha256:14454db39436e558844eb225cceaedaa065b9051d6954f637af713a8a06c1dfc"
 
 [metadata.files]
 "aiofiles 23.1.0" = [
@@ -1503,14 +1503,14 @@ content_hash = "sha256:1709b087d91f7171dc9316f7879a24c9ebdb26e5cc7288a2851c08895
     {url = "https://files.pythonhosted.org/packages/f7/04/34905a11acdf77f9788790871a2f8b19d2adc7a6f6f4df16f74b601e2866/cymem-2.0.7-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:4302df5793a320c4f4a263c7785d2fa7f29928d72cb83ebeb34d64a610f8d819"},
 ]
 "de-core-news-lg 3.5.0" = [
-    {url = "https://github.com/explosion/spacy-models/releases/download/de_core_news_lg-3.5.0/de_core_news_lg-3.5.0.tar.gz", hash = "sha256:401952e872572a0881d1e7ca6cd3b97ac6333a38c30622eb596aba3e0a7a7a50"},
+    {url = "https://github.com/explosion/spacy-models/releases/download/de_core_news_lg-3.5.0/de_core_news_lg-3.5.0-py3-none-any.whl", hash = "sha256:fcce8e827230b14517e361ca59bf2bd3faaec2752007eb5b5b43b6093d1381f0"},
 ]
 "ecdsa 0.18.0" = [
     {url = "https://files.pythonhosted.org/packages/09/d4/4f05f5d16a4863b30ba96c23b23e942da8889abfa1cdbabf2a0df12a4532/ecdsa-0.18.0-py2.py3-none-any.whl", hash = "sha256:80600258e7ed2f16b9aa1d7c295bd70194109ad5a30fdee0eaeefef1d4c559dd"},
     {url = "https://files.pythonhosted.org/packages/ff/7b/ba6547a76c468a0d22de93e89ae60d9561ec911f59532907e72b0d8bc0f1/ecdsa-0.18.0.tar.gz", hash = "sha256:190348041559e21b22a1d65cee485282ca11a6f81d503fddb84d5017e9ed1e49"},
 ]
 "en-core-web-sm 3.5.0" = [
-    {url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.5.0/en_core_web_sm-3.5.0.tar.gz", hash = "sha256:63d38fecdd4290635c7af4d4f6da50902bdc6c1732ce416b55c2b76c4b0c4626"},
+    {url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.5.0/en_core_web_md-3.5.0-py3-none-any.whl", hash = "sha256:b492fd2dfeee931dd60232fd1a122bb5c3542ebcd5d614f11844647050aa539e"},
 ]
 "eng 0.1.1" = [
     {url = "https://files.pythonhosted.org/packages/6c/66/1069dd48de09057e5705576e76fbe9e452464a49cfe425d444dfca4ff5e8/eng-0.1.1.tar.gz", hash = "sha256:08f54aee07de995085c743ec722da068357b84230786447a40ba76579aa85fd1"},
