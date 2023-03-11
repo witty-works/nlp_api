@@ -1,3 +1,4 @@
+echo "Creating cache dirs"
 du -sh $PLATFORM_CACHE_DIR
 mkdir -p $HOME/.global
 mkdir -p $HOME/.venv
@@ -18,7 +19,7 @@ pdm config install.cache True
 pdm config cache_dir $HOME/.pdm
 pdm run python -m ensurepip
 
-echo "Installing pdm dependencies"
+echo "Installing dependencies using pdm"
 pdm sync --prod
 
 echo "Saving to build cache"
