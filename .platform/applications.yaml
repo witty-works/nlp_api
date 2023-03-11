@@ -27,9 +27,7 @@
     build: |
       set -e
 
-      ./restore_dependencies.sh
-      ./install_pdm.sh
-      ./update_dependencies.sh
+      ./install_dependencies.sh
 
       export FT_MODEL="lid.176.bin"
 
@@ -82,8 +80,7 @@
     build: |
       set -e
 
-      ./restore_dependencies.sh
-      ./install_pdm.sh
+      ./install_dependencies.sh
 
       pdm run pybabel compile -d locales -l en_US -f
       pdm run pybabel compile -d locales -l en_GB -f
@@ -135,8 +132,7 @@
     build: |
       set -e
 
-      ./restore_dependencies.sh
-      ./install_pdm.sh
+      ./install_dependencies.sh
 
       pdm run pybabel compile -d locales -l de_DE -f
       pdm run pybabel compile -d locales -l de_CH -f
