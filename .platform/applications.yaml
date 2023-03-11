@@ -20,7 +20,7 @@
     commands:
       start: |
         eval $(pdm venv activate in-project)
-        FINAL_WORKER_COUNT=$(echo $PLATFORM_APPLICATION| base64 --decode | jq '.resources.profile_size | tonumber |ceil|2 * . |1 + . ')
+        FINAL_WORKER_COUNT=$(echo $PLATFORM_APPLICATION| base64 --decode | jq '.resources.profile_size | tonumber |floor|2 * . |1 + . ')
         gunicorn app.main:app --preload -b unix:$SOCKET -w $FINAL_WORKER_COUNT --threads 1 -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
 
   hooks:
@@ -73,7 +73,7 @@
     commands:
       start: |
         eval $(pdm venv activate in-project)
-        FINAL_WORKER_COUNT=$(echo $PLATFORM_APPLICATION| base64 --decode | jq '.resources.profile_size | tonumber |ceil|2 * . |1 + . ')
+        FINAL_WORKER_COUNT=$(echo $PLATFORM_APPLICATION| base64 --decode | jq '.resources.profile_size | tonumber |floor|2 * . |1 + . ')
         gunicorn app.main:app --preload -b unix:$SOCKET -w $FINAL_WORKER_COUNT --threads 1 -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
 
   hooks:
@@ -125,7 +125,7 @@
     commands:
       start: |
         eval $(pdm venv activate in-project)
-        FINAL_WORKER_COUNT=$(echo $PLATFORM_APPLICATION| base64 --decode | jq '.resources.profile_size | tonumber |ceil|2 * . |1 + . ')
+        FINAL_WORKER_COUNT=$(echo $PLATFORM_APPLICATION| base64 --decode | jq '.resources.profile_size | tonumber |floor|2 * . |1 + . ')
         gunicorn app.main:app --preload -b unix:$SOCKET -w $FINAL_WORKER_COUNT --threads 1 -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
 
   hooks:
