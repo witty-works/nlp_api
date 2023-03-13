@@ -132,38 +132,6 @@
         {
             "alternatives": [
                 {
-                    "text": "reinvention"
-                },
-                {
-                    "text": "modernization"
-                },
-                {
-                    "text": "improvement"
-                },
-                {
-                    "text": "new creation"
-                },
-                {
-                    "text": "redesign"
-                }
-            ],
-            "category": "style",
-            "context": "perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number <NUMBER> and innovation drives us.\nSincere regards,\nNadia",
-            "end": 153,
-            "explanation": {
-                "icon": "🙄",
-                "text": "Empty words distract from or undermine your message",
-                "url": "https://www.witty.works/en/categories/style#empty_words"
-            },
-            "gravity": 3.0,
-            "label": "Style: Empty Words",
-            "start": 143,
-            "subcategory": "hollow",
-            "text": "innovation"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "critical"
                 },
                 {
@@ -192,6 +160,38 @@
             "start": 130,
             "subcategory": "exaggerating",
             "text": "number 1"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "reinvention"
+                },
+                {
+                    "text": "modernization"
+                },
+                {
+                    "text": "improvement"
+                },
+                {
+                    "text": "new creation"
+                },
+                {
+                    "text": "redesign"
+                }
+            ],
+            "category": "style",
+            "context": "perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number <NUMBER> and innovation drives us.\nSincere regards,\nNadia",
+            "end": 153,
+            "explanation": {
+                "icon": "🙄",
+                "text": "Empty words distract from or undermine your message",
+                "url": "https://www.witty.works/en/categories/style#empty_words"
+            },
+            "gravity": 3.0,
+            "label": "Style: Empty Words",
+            "start": 143,
+            "subcategory": "hollow",
+            "text": "innovation"
         },
         {
             "alternatives": [
