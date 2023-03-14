@@ -2035,33 +2035,37 @@ async def english_rules(
         )
 
     if is_sub_category_enabled(version, config, "style"):
-        list_full += rules_based_words_phrase_matcher(
-            version,
-            config,
-            lang,
-            text,
-            tokens,
-            "style",
-            words_data_en["style"],
-            sentences_data_en["style"],
-            rules[lang.locale]["df_style_sentence"],
-            matches_false,
-        ) + word_noun(
-            version,
-            config,
-            lang,
-            text,
-            tokens,
-            gendered_words_data_en["style"],
-            "style",
-            matches_false,
-        ) + detect_lower_cased_hashtags(
-            version,
-            config,
-            lang,
-            text,
-            "style",
-            "style",
+        list_full += (
+            rules_based_words_phrase_matcher(
+                version,
+                config,
+                lang,
+                text,
+                tokens,
+                "style",
+                words_data_en["style"],
+                sentences_data_en["style"],
+                rules[lang.locale]["df_style_sentence"],
+                matches_false,
+            )
+            + word_noun(
+                version,
+                config,
+                lang,
+                text,
+                tokens,
+                gendered_words_data_en["style"],
+                "style",
+                matches_false,
+            )
+            + detect_lower_cased_hashtags(
+                version,
+                config,
+                lang,
+                text,
+                "style",
+                "style",
+            )
         )
 
     if is_sub_category_enabled(version, config, "unconscious_bias"):
