@@ -462,7 +462,7 @@ summary = "Fundamental package for array computing in Python"
 
 [[package]]
 name = "opencensus"
-version = "0.11.1"
+version = "0.11.2"
 summary = "A stats collection and distributed tracing framework"
 dependencies = [
     "google-api-core<3.0.0,>=1.0.0; python_version >= \"3.6\"",
@@ -476,12 +476,12 @@ summary = "OpenCensus Runtime Context"
 
 [[package]]
 name = "opencensus-ext-azure"
-version = "1.1.8"
+version = "1.1.9"
 summary = "OpenCensus Azure Monitor Exporter"
 dependencies = [
     "azure-core<2.0.0,>=1.12.0",
     "azure-identity<2.0.0,>=1.5.0",
-    "opencensus<1.0.0,>=0.11.1",
+    "opencensus<1.0.0,>=0.11.2",
     "psutil>=5.6.3",
     "requests>=2.19.0",
 ]
@@ -774,16 +774,16 @@ summary = "Python 2 and 3 compatibility utilities"
 
 [[package]]
 name = "slack-bolt"
-version = "1.16.3"
+version = "1.16.4"
 requires_python = ">=3.6"
 summary = "The Bolt Framework for Python"
 dependencies = [
-    "slack-sdk<4,>=3.18.5",
+    "slack-sdk<4,>=3.20.2",
 ]
 
 [[package]]
 name = "slack-sdk"
-version = "3.20.1"
+version = "3.20.2"
 requires_python = ">=3.6.0"
 summary = "The Slack API Platform SDK for Python"
 
@@ -2108,17 +2108,17 @@ content_hash = "sha256:14454db39436e558844eb225cceaedaa065b9051d6954f637af713a8a
     {url = "https://files.pythonhosted.org/packages/fa/df/53e8c0c8ccecf360b827a3d2b1b6060644c635c3149a9d6415a6fe4ccf44/numpy-1.24.2-cp310-cp310-win_amd64.whl", hash = "sha256:97cf27e51fa078078c649a51d7ade3c92d9e709ba2bfb97493007103c741f1d0"},
     {url = "https://files.pythonhosted.org/packages/ff/98/7b71cabcce208f8c67398e812068524e473a143342583d55955cbb92b463/numpy-1.24.2-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:d0a2db9d20117bf523dde15858398e7c0858aadca7c0f088ac0d6edd360e9ad2"},
 ]
-"opencensus 0.11.1" = [
-    {url = "https://files.pythonhosted.org/packages/11/1a/57a38800753202a24a73b7418d26ec32bcf24dcb2e926a49b35db2e45710/opencensus-0.11.1-py2.py3-none-any.whl", hash = "sha256:96a4375e97dfc30a5dffcbae6aba32f58e340178e673d0d2db2905ff2df3df20"},
-    {url = "https://files.pythonhosted.org/packages/b3/eb/fcb37453fc5f86f0f4afbe87e3bbf707dd701549fd5710c9867bb1283604/opencensus-0.11.1.tar.gz", hash = "sha256:b52dd6b4013c133a6be9f0ff2e9068c6401d3332b0ecc5faef3dd6c42166f6f3"},
+"opencensus 0.11.2" = [
+    {url = "https://files.pythonhosted.org/packages/0e/5e/8a5ca9e8c5b0baeef10468c9fcc9cd5f4e2ca21adcef55c5e54cfca82dbb/opencensus-0.11.2-py2.py3-none-any.whl", hash = "sha256:7a1a34b87c8db3d9984e97ff05739058342f24de1d700766d59044eee8fb3b3f"},
+    {url = "https://files.pythonhosted.org/packages/ff/0a/f9252eb2630f961b911b3dad1b3a9e34e3754d148ff18041fecec1324c7a/opencensus-0.11.2.tar.gz", hash = "sha256:6154042a236b9ecdd55a23dfbb2743bb3deacd0687e3e0391ec2e0c74950d66f"},
 ]
 "opencensus-context 0.1.3" = [
     {url = "https://files.pythonhosted.org/packages/10/68/162c97ea78c957d68ecf78a5c5041d2e25bd5562bdf5d89a6cbf7f8429bf/opencensus_context-0.1.3-py2.py3-none-any.whl", hash = "sha256:073bb0590007af276853009fac7e4bab1d523c3f03baf4cb4511ca38967c6039"},
     {url = "https://files.pythonhosted.org/packages/4c/96/3b6f638f6275a8abbd45e582448723bffa29c1fb426721dedb5c72f7d056/opencensus-context-0.1.3.tar.gz", hash = "sha256:a03108c3c10d8c80bb5ddf5c8a1f033161fa61972a9917f9b9b3a18517f0088c"},
 ]
-"opencensus-ext-azure 1.1.8" = [
-    {url = "https://files.pythonhosted.org/packages/14/c9/a2b06a963c56ebf50f52e74eafda120a4565ad415f3824c66f2cb7c5d6f6/opencensus-ext-azure-1.1.8.tar.gz", hash = "sha256:b29136b67da2645c32e9f3ba58692d63d308120ef2c32d0e048d9a5f5c3a82a4"},
-    {url = "https://files.pythonhosted.org/packages/f2/48/e019e99b2711874a5efbf4427f1fb045f73a201725f7397c5213eadc4a11/opencensus_ext_azure-1.1.8-py2.py3-none-any.whl", hash = "sha256:662859eb8bdc2d4cd93fd6d0e0c732604d9f8c3d5b8fc70ba6c68b003a40ae65"},
+"opencensus-ext-azure 1.1.9" = [
+    {url = "https://files.pythonhosted.org/packages/32/58/69e4fd5ad7134340997d2adcadb8c4acb4337d2c5e308cd82b364ad5af98/opencensus-ext-azure-1.1.9.tar.gz", hash = "sha256:507608b77e9d8eaab6ffd5ff11b7ceb87f54e4a6a940c4b814331b4d1b034151"},
+    {url = "https://files.pythonhosted.org/packages/f8/35/b601962a6de206f1043061e46eb8e2a47f9acbf509ec374c8f1a49122d5d/opencensus_ext_azure-1.1.9-py2.py3-none-any.whl", hash = "sha256:166c858e70fb7b39d01ff7d9f745588c521070ff2cfe177f77b63ee87f5076ac"},
 ]
 "packaging 23.0" = [
     {url = "https://files.pythonhosted.org/packages/47/d5/aca8ff6f49aa5565df1c826e7bf5e85a6df852ee063600c1efa5b932968c/packaging-23.0.tar.gz", hash = "sha256:b6ad297f8907de0fa2fe1ccbd26fdaf387f5f47c7275fedf8cce89f99446cf97"},
@@ -2418,13 +2418,13 @@ content_hash = "sha256:14454db39436e558844eb225cceaedaa065b9051d6954f637af713a8a
     {url = "https://files.pythonhosted.org/packages/71/39/171f1c67cd00715f190ba0b100d606d440a28c93c7714febeca8b79af85e/six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
     {url = "https://files.pythonhosted.org/packages/d9/5a/e7c31adbe875f2abbb91bd84cf2dc52d792b5a01506781dbcf25c91daf11/six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
 ]
-"slack-bolt 1.16.3" = [
-    {url = "https://files.pythonhosted.org/packages/10/fe/92b311e075ae6987e07b80dcb448559d461edf8b1aa9e6992e36e84cfe92/slack_bolt-1.16.3-py2.py3-none-any.whl", hash = "sha256:b97c063d17c1f3514da2738a9b70ef4a60be70df1911690391544d7850fc099a"},
-    {url = "https://files.pythonhosted.org/packages/9c/8e/1a364b4d48f9d5d776558e8477c9db1ea2b527fb14039728c7d1a46b07aa/slack_bolt-1.16.3.tar.gz", hash = "sha256:6b1680c6f6b441d7f3d9ae10ba16a64e76f0bd0eb9ebc60fe4ba84b1e255c653"},
+"slack-bolt 1.16.4" = [
+    {url = "https://files.pythonhosted.org/packages/6e/c1/de9159aae531ff43a9544582c2ffed9d4111e900505dbb12ea3ab55f4e39/slack_bolt-1.16.4-py2.py3-none-any.whl", hash = "sha256:21819e680b9ac64e9228ba3d586367bf550710c16d0f4dc1729fc81f7ec1ac55"},
+    {url = "https://files.pythonhosted.org/packages/ef/4a/876440e8b188bb960f39b7b9f488dc36e52d5a1691f02d01012a755e18e7/slack_bolt-1.16.4.tar.gz", hash = "sha256:3b4eeb72a7ecbfc83957de20d72196dfcef7b705bef8124719d703f7156094db"},
 ]
-"slack-sdk 3.20.1" = [
-    {url = "https://files.pythonhosted.org/packages/a2/ec/88c70f079aab8cc7251dfe27916ec85c4c240b2161d096e99b54d03d9af2/slack_sdk-3.20.1-py2.py3-none-any.whl", hash = "sha256:a23aa223fe52238196000afddef380292ea27148846ba31cc80c3fbc018bcfc8"},
-    {url = "https://files.pythonhosted.org/packages/e6/7a/dbbff720ce54f12684c233cb3708f586df4993a301bf2897d6c8380d302f/slack_sdk-3.20.1.tar.gz", hash = "sha256:0ba2eca9f0aeb66cc893a768e7ad2cdd74260c394b9b51666d4b665664d0cadd"},
+"slack-sdk 3.20.2" = [
+    {url = "https://files.pythonhosted.org/packages/a3/5f/807ee50b6098c4e1e036ad75d868c6c0a2f0bff503f2096675c5b1bc5a02/slack_sdk-3.20.2-py2.py3-none-any.whl", hash = "sha256:224fcb4fef9575226e76555d9a0acdbd93d7596a416bc3ae7b443b3b64e9f0e3"},
+    {url = "https://files.pythonhosted.org/packages/d6/ea/68e5d9df21fe120bf9e9d8e66ea978786d8fb15f8ebf2802dae799fe81be/slack_sdk-3.20.2.tar.gz", hash = "sha256:f61db1f6e49dd2ee84e82ddb5d1c5db7a5987b8be9ba975dc00799334c84f8cd"},
 ]
 "smart-open 6.3.0" = [
     {url = "https://files.pythonhosted.org/packages/47/80/c2d1bdd36c6b64ae566d9a29724291510e4f3796ce99639d3c2999286284/smart_open-6.3.0-py3-none-any.whl", hash = "sha256:b4c9ae193ad6d3e7add50944b86afa0d150bd821ab8ec21edb26d9a06b66f6a8"},
