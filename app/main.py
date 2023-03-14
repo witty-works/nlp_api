@@ -1915,6 +1915,7 @@ async def english_rules(
         inclusive_words_data_en = rules["en-GB"]["inclusive_words_data"]
         gendered_words_data_en["gendered"] = rules["en-GB"]["gender_noun_words_data"]
         gendered_words_data_en["bias"] = rules["en-GB"]["gender_bias_words_data"]
+        gendered_words_data_en["style"] = rules["en-GB"]["style_noun_words_data"]
         inclusive_sentences_data_en = rules["en-GB"]["inclusive_sentences_data"]
         sentences_data_en["od"] = rules["en-GB"]["open_dis_sentences"]
         sentences_data_en["ge"] = rules["en-GB"]["gender_sentences_data"]
@@ -1934,6 +1935,7 @@ async def english_rules(
         inclusive_words_data_en = rules["en-US"]["inclusive_words_data"]
         gendered_words_data_en["gendered"] = rules["en-US"]["gender_noun_words_data"]
         gendered_words_data_en["bias"] = rules["en-US"]["gender_bias_words_data"]
+        gendered_words_data_en["style"] = rules["en-US"]["style_noun_words_data"]
         inclusive_sentences_data_en = rules["en-US"]["inclusive_sentences_data"]
         sentences_data_en["od"] = rules["en-US"]["open_dis_sentences"]
         sentences_data_en["ge"] = rules["en-US"]["gender_sentences_data"]
@@ -2065,9 +2067,16 @@ async def english_rules(
             sentences_data_en["style"],
             rules[lang.locale]["df_style_sentence"],
             matches_false,
-        )
-
-        list_full += detect_lower_cased_hashtags(
+        ) + word_noun(
+            version,
+            config,
+            lang,
+            text,
+            tokens,
+            gendered_words_data_en["style"],
+            "style",
+            matches_false,
+        ) + detect_lower_cased_hashtags(
             version,
             config,
             lang,
