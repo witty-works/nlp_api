@@ -50,6 +50,7 @@
             "context": "Wir unterstützen leistungsstarke Mitarbeiter.",
             "end": 32,
             "explanation": {
+                "content": "video",
                 "icon": "😒",
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
@@ -66,6 +67,7 @@
             "context": "Wir unterstützen leistungsstarke Mitarbeiter.",
             "end": 16,
             "explanation": {
+                "content": "advanced",
                 "icon": "✅",
                 "text": "Betont kooperative Eigenschaften",
                 "url": "https://www.witty.works/de/kategorien/inklusiv#kommunal"

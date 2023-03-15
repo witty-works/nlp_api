@@ -40,6 +40,7 @@
             "context": "e are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number <NUMBER> and innovation drives us.\nSincere regards,\nNadia",
             "end": 121,
             "explanation": {
+                "content": "video",
                 "icon": "😒",
                 "text": "Doesn’t resonate with cooperative and supportive people",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
@@ -72,6 +73,7 @@
             "context": "e count.\nCompetition is our daily life and we love to be challenged.\nWe are number <NUMBER> and innovation drives us.\nSincere regards,\nNadia",
             "end": 160,
             "explanation": {
+                "content": "video",
                 "icon": "😒",
                 "text": "Doesn’t resonate with cooperative and supportive people",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
@@ -120,6 +122,7 @@
             "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.",
             "end": 23,
             "explanation": {
+                "content": "advanced",
                 "icon": "✅",
                 "text": "Emphasizes cooperative attributes",
                 "url": "https://www.witty.works/en/categories/inclusive#communal"
@@ -215,6 +218,7 @@
             "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number <NUMBER> and innovation d",
             "end": 55,
             "explanation": {
+                "content": "video",
                 "icon": "😒",
                 "text": "Doesn’t resonate with cooperative and supportive people",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
@@ -244,6 +248,7 @@
             "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number <NUMBER>",
             "end": 38,
             "explanation": {
+                "content": "video",
                 "icon": "😒",
                 "text": "Doesn’t resonate with cooperative and supportive people",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
