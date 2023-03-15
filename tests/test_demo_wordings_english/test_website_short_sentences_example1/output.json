@@ -8,6 +8,7 @@
             "context": "We support high performance employees.",
             "end": 10,
             "explanation": {
+                "content": "advanced",
                 "icon": "✅",
                 "text": "Emphasizes cooperative attributes",
                 "url": "https://www.witty.works/en/categories/inclusive#communal"
@@ -39,6 +40,7 @@
             "context": "We support high performance employees.",
             "end": 27,
             "explanation": {
+                "content": "video",
                 "icon": "😒",
                 "text": "Doesn’t resonate with cooperative and supportive people",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"

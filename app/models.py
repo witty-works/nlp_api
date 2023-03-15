@@ -48,6 +48,11 @@ class EventType(str, Enum):
     ERROR = "error"
 
 
+class ContentType(str, Enum):
+    ADVANCED = "advanced"
+    VIDEO = "video"
+
+
 class LangType(str, Enum):
     EN = "en"
     DE = "de"
@@ -400,6 +405,7 @@ class ResultExplanation(BaseModel):
     icon: Optional[str]
     url: Optional[str]
     context: Optional[str]
+    content: Optional[ContentType]
 
 
 class ResultOut(BaseModel):
@@ -432,6 +438,7 @@ class ResultOut(BaseModel):
         icon=None,
         gravity=None,
         explanation_context=None,
+        content=None,
     ):
         if end is None:
             end = start + len(text)
@@ -470,6 +477,9 @@ class ResultOut(BaseModel):
             and category_data["url"][lang.lang] is not None
         ):
             url = category_data["url"][lang.lang]
+        
+        if content is None and "content" in category_data:
+            content = ContentType(category_data["content"])
 
         explanation = (
             explanation
@@ -501,7 +511,12 @@ class ResultOut(BaseModel):
             if isinstance(alternatives, Dict):
                 alternatives = list(alternatives.values())
 
-            (text, start, alternatives, explanation_context) = ResultOut.clean_alternatives(
+            (
+                text,
+                start,
+                alternatives,
+                explanation_context,
+            ) = ResultOut.clean_alternatives(
                 version,
                 config,
                 lang,
@@ -524,6 +539,7 @@ class ResultOut(BaseModel):
             "icon": icon,
             "url": url,
             "context": explanation_context,
+            "content": content,
         }
 
         if version <= 1.1:
@@ -683,7 +699,7 @@ class ResultOut(BaseModel):
 
         if prefix:
             prefix_lenth = len(prefix)
-            start+= prefix_lenth
+            start += prefix_lenth
             text = text[prefix_lenth:]
             for cleaned_alternative in cleaned_alternatives:
                 cleaned_alternative.text = cleaned_alternative.text[prefix_lenth:]

@@ -359,6 +359,7 @@
             "context": "Hey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately <NUMBER> metres east of the mo",
             "end": 23,
             "explanation": {
+                "content": "advanced",
                 "icon": "✅",
                 "text": "Emphasizes cooperative attributes",
                 "url": "https://www.witty.works/en/categories/inclusive#communal"
@@ -374,6 +375,7 @@
             "context": "mately <NUMBER> metres east of the most south-easterly corner of <NUMBER> Batherton Close.\n\nHey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately <NUMBER> metres east of the mo",
             "end": 644,
             "explanation": {
+                "content": "advanced",
                 "icon": "✅",
                 "text": "Emphasizes cooperative attributes",
                 "url": "https://www.witty.works/en/categories/inclusive#communal"
@@ -445,6 +447,7 @@
             "context": "Hey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately <NUMBER> metres east of the most south corner of <NUMBER> Batherton",
             "end": 55,
             "explanation": {
+                "content": "video",
                 "icon": "😒",
                 "text": "Doesn’t resonate with cooperative and supportive people",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
@@ -477,6 +480,7 @@
             "context": "f the most south-easterly corner of <NUMBER> Batherton Close.\n\nHey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately <NUMBER> metres east of the most south corner of <NUMBER> Batherton",
             "end": 676,
             "explanation": {
+                "content": "video",
                 "icon": "😒",
                 "text": "Doesn’t resonate with cooperative and supportive people",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
@@ -506,6 +510,7 @@
             "context": "Hey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately <NUMBER> metres east of the most south corner",
             "end": 38,
             "explanation": {
+                "content": "video",
                 "icon": "😒",
                 "text": "Doesn’t resonate with cooperative and supportive people",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
@@ -535,6 +540,7 @@
             "context": "metres east of the most south-easterly corner of <NUMBER> Batherton Close.\n\nHey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately <NUMBER> metres east of the most south corner",
             "end": 659,
             "explanation": {
+                "content": "video",
                 "icon": "😒",
                 "text": "Doesn’t resonate with cooperative and supportive people",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"
