@@ -11,7 +11,7 @@
                 "content": "advanced",
                 "icon": "✅",
                 "text": "Emphasizes cooperative attributes",
-                "url": "https://www.witty.works/en/categories/inclusive#communal"
+                "url": "https://www.witty.works/en/subcategories/communal-language?reducedView=true"
             },
             "label": "Inclusive: Communal",
             "start": 0,
@@ -42,7 +42,7 @@
             "explanation": {
                 "icon": "🧊",
                 "text": "A less formal tone makes you sound more accessible",
-                "url": "https://www.witty.works/en/categories/style#formality"
+                "url": "https://www.witty.works/en/subcategories/formality?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Style: Formality",

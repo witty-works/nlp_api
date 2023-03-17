@@ -477,9 +477,15 @@ class ResultOut(BaseModel):
             and category_data["url"][lang.lang] is not None
         ):
             url = category_data["url"][lang.lang]
-        
-        if content is None and "content" in category_data:
-            content = ContentType(category_data["content"])
+            if version >= 2.2:
+                url += "?reducedView=true"
+
+        if (
+            content is None
+            and "content" in category_data
+            and lang.lang in category_data["content"]
+        ):
+            content = ContentType(category_data["content"][lang.lang])
 
         explanation = (
             explanation

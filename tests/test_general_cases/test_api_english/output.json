@@ -15,9 +15,10 @@
             "context": "We are searching for analytical ninja programmer for our customers. Ours are ass. We say servant leadership FTW.",
             "end": 37,
             "explanation": {
+                "content": "advanced",
                 "icon": "😮‍💨",
                 "text": "Build trust by avoiding exaggerations",
-                "url": "https://www.witty.works/en/categories/style#exaggeration"
+                "url": "https://www.witty.works/en/subcategories/exaggeration?reducedView=true"
             },
             "gravity": 2.0,
             "label": "Style: Exaggeration",
@@ -37,7 +38,7 @@
             "explanation": {
                 "icon": "🚫",
                 "text": "Offends and intimidates",
-                "url": "https://www.witty.works/en/categories/openly_discriminating#offensive_language"
+                "url": "https://www.witty.works/en/subcategories/offensive-language?reducedView=true"
             },
             "gravity": 1.0,
             "label": "Openly Discriminating: Offensive Language",
@@ -54,7 +55,7 @@
                 "content": "advanced",
                 "icon": "✅",
                 "text": "Emphasizes cooperative attributes",
-                "url": "https://www.witty.works/en/categories/inclusive#communal"
+                "url": "https://www.witty.works/en/subcategories/communal-language?reducedView=true"
             },
             "label": "Inclusive: Communal",
             "start": 89,
@@ -83,7 +84,7 @@
                 "content": "video",
                 "icon": "😒",
                 "text": "Doesn’t resonate with cooperative and supportive people",
-                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+                "url": "https://www.witty.works/en/subcategories/agentic-language?reducedView=true"
             },
             "gravity": 2.0,
             "label": "Biased Language: Agentic",

@@ -14,7 +14,7 @@
             "explanation": {
                 "icon": "🚫",
                 "text": " Verletzt und schüchtert ein",
-                "url": "https://www.witty.works/de/kategorien/offene_diskriminierung#beleidigende_und_einschüchternde_sprache"
+                "url": "https://www.witty.works/de/subkategorien/beleidigende-und-einschüchternde-sprache?reducedView=true"
             },
             "gravity": 1.0,
             "label": "Offene Diskriminierung: Beleidigende und Einschüchternde Sprache",
@@ -46,7 +46,7 @@
             "explanation": {
                 "icon": "😟",
                 "text": "Viele denken bei diesem Wort zuerst an einen Mann",
-                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#titel"
+                "url": "https://www.witty.works/de/subkategorien/aufgaben?reducedView=true"
             },
             "gravity": 2.0,
             "label": "Geschlechtsspezifisch: Titel",
@@ -78,7 +78,7 @@
             "explanation": {
                 "icon": "😮‍💨",
                 "text": "Auf Übertreibungen verzichten schafft Vertrauen",
-                "url": "https://www.witty.works/de/kategorien/stil#superlative"
+                "url": "https://www.witty.works/de/subkategorien/superlative?reducedView=true"
             },
             "gravity": 2.0,
             "label": "Stil: Superlative",

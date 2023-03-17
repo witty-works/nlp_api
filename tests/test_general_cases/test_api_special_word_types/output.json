@@ -11,7 +11,7 @@
                 "content": "advanced",
                 "icon": "✅",
                 "text": "Emphasizes cooperative attributes",
-                "url": "https://www.witty.works/en/categories/inclusive#communal"
+                "url": "https://www.witty.works/en/subcategories/communal-language?reducedView=true"
             },
             "label": "Inclusive: Communal",
             "start": 2,
@@ -26,7 +26,7 @@
             "explanation": {
                 "icon": "✅",
                 "text": "Conveys emotional security",
-                "url": "https://www.witty.works/en/categories/inclusive#positive_emotions"
+                "url": "https://www.witty.works/en/subcategories/positive-emotions?reducedView=true"
             },
             "label": "Inclusive: Positive Emotions",
             "start": 12,
@@ -43,9 +43,10 @@
             "context": "I felt very encouraged as a Deaf person.",
             "end": 11,
             "explanation": {
+                "content": "advanced",
                 "icon": "😟",
                 "text": "Filler words add words but no meaning",
-                "url": "https://www.witty.works/en/categories/style#filler_words"
+                "url": "https://www.witty.works/en/subcategories/filler-words?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Style: Filler Words",

@@ -5,11 +5,11 @@
         "context": "How are you ninja?",
         "end": 17,
         "explanation": {
-            "content": null,
+            "content": "advanced",
             "context": null,
             "icon": "😮‍💨",
             "text": "Build trust by avoiding exaggerations",
-            "url": "https://www.witty.works/en/categories/style#exaggeration"
+            "url": "https://www.witty.works/en/subcategories/exaggeration"
         },
         "gravity": 2.0,
         "label": "Style: Exaggeration",
