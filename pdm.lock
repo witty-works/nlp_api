@@ -215,7 +215,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "en-core-web-sm"
+name = "en-core-web-md"
 version = "3.5.0"
 url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.5.0/en_core_web_md-3.5.0-py3-none-any.whl"
 summary = "English pipeline optimized for CPU. Components: tok2vec, tagger, parser, senter, ner, attribute_ruler, lemmatizer."
@@ -231,7 +231,7 @@ summary = "Change British English to American English and vice versa."
 
 [[package]]
 name = "fakeredis"
-version = "2.10.0"
+version = "2.10.1"
 requires_python = ">=3.8,<4.0"
 summary = "Fake implementation of redis API for testing purposes."
 dependencies = [
@@ -753,7 +753,7 @@ dependencies = [
 
 [[package]]
 name = "sentry-sdk"
-version = "1.16.0"
+version = "1.17.0"
 summary = "Python client for Sentry (https://sentry.io)"
 dependencies = [
     "certifi",
@@ -923,7 +923,7 @@ summary = "HTTP library with thread-safe connection pooling, file post, and more
 
 [[package]]
 name = "uvicorn"
-version = "0.21.0"
+version = "0.21.1"
 requires_python = ">=3.7"
 summary = "The lightning-fast ASGI server."
 dependencies = [
@@ -933,7 +933,7 @@ dependencies = [
 
 [[package]]
 name = "uvicorn"
-version = "0.21.0"
+version = "0.21.1"
 extras = ["standard"]
 requires_python = ">=3.7"
 summary = "The lightning-fast ASGI server."
@@ -942,7 +942,7 @@ dependencies = [
     "httptools>=0.5.0",
     "python-dotenv>=0.13",
     "pyyaml>=5.1",
-    "uvicorn==0.21.0",
+    "uvicorn==0.21.1",
     "uvloop!=0.15.0,!=0.15.1,>=0.14.0; sys_platform != \"win32\" and (sys_platform != \"cygwin\" and platform_python_implementation != \"PyPy\")",
     "watchfiles>=0.13",
     "websockets>=10.4",
@@ -1000,7 +1000,7 @@ dependencies = [
 
 [metadata]
 lock_version = "4.1"
-content_hash = "sha256:14454db39436e558844eb225cceaedaa065b9051d6954f637af713a8a06c1dfc"
+content_hash = "sha256:fb9175f541d2bb3c31bbfed41441280de9d209ebb934b0ad623420555bff4b46"
 
 [metadata.files]
 "aiofiles 23.1.0" = [
@@ -1509,16 +1509,16 @@ content_hash = "sha256:14454db39436e558844eb225cceaedaa065b9051d6954f637af713a8a
     {url = "https://files.pythonhosted.org/packages/09/d4/4f05f5d16a4863b30ba96c23b23e942da8889abfa1cdbabf2a0df12a4532/ecdsa-0.18.0-py2.py3-none-any.whl", hash = "sha256:80600258e7ed2f16b9aa1d7c295bd70194109ad5a30fdee0eaeefef1d4c559dd"},
     {url = "https://files.pythonhosted.org/packages/ff/7b/ba6547a76c468a0d22de93e89ae60d9561ec911f59532907e72b0d8bc0f1/ecdsa-0.18.0.tar.gz", hash = "sha256:190348041559e21b22a1d65cee485282ca11a6f81d503fddb84d5017e9ed1e49"},
 ]
-"en-core-web-sm 3.5.0" = [
+"en-core-web-md 3.5.0" = [
     {url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.5.0/en_core_web_md-3.5.0-py3-none-any.whl", hash = "sha256:b492fd2dfeee931dd60232fd1a122bb5c3542ebcd5d614f11844647050aa539e"},
 ]
 "eng 0.1.1" = [
     {url = "https://files.pythonhosted.org/packages/6c/66/1069dd48de09057e5705576e76fbe9e452464a49cfe425d444dfca4ff5e8/eng-0.1.1.tar.gz", hash = "sha256:08f54aee07de995085c743ec722da068357b84230786447a40ba76579aa85fd1"},
     {url = "https://files.pythonhosted.org/packages/b8/ea/f5a6fa095c588e996c68f5dfdcb51048f37465fe3a7b6c2168cce6009daa/eng-0.1.1-py3-none-any.whl", hash = "sha256:78da254f6a69ed183791c733e94222c7684e8a385b3126954618c09bd45c98a8"},
 ]
-"fakeredis 2.10.0" = [
-    {url = "https://files.pythonhosted.org/packages/58/3c/1b654f943caac121ad7927493376bc1bd534384419396dda41caed7ac623/fakeredis-2.10.0.tar.gz", hash = "sha256:722644759bba4ad61fa38f0bb34939b7657f166ba35892f747e282407a196845"},
-    {url = "https://files.pythonhosted.org/packages/83/70/dd29eeca3d3cc6dd21f384c1e9d659c13c10bb749f3356121f64978dfcf4/fakeredis-2.10.0-py3-none-any.whl", hash = "sha256:7e66c96793688703a1da41256323ddaa1b3a2cab4ef793866839a937bb273915"},
+"fakeredis 2.10.1" = [
+    {url = "https://files.pythonhosted.org/packages/72/63/c5b03f0805be971c8384bca6994d8fa3d0125f5f106a8bc76d421b89d0d0/fakeredis-2.10.1.tar.gz", hash = "sha256:6f31e6213b724147f21d3f560ac2ea0b67cf4402a7ee98f5c338b7d5178151dc"},
+    {url = "https://files.pythonhosted.org/packages/bb/ba/a124ea15e3235fc11b904dbd49d098f39f216fec812b80b1dca7511e8934/fakeredis-2.10.1-py3-none-any.whl", hash = "sha256:c27e175da47ebe30174cc22e1a99155c5c3b8583d1b7a3c69008fdbf1c7096f1"},
 ]
 "fastapi 0.93.0" = [
     {url = "https://files.pythonhosted.org/packages/16/78/94f134a297b1d7ed57a2f6998a504f410bf832aff4dfcde8a409ffdf4273/fastapi-0.93.0-py3-none-any.whl", hash = "sha256:d6e6db5f096d67b475e2a09e1124983554f634fad50297de85fc3de0583df13a"},
@@ -2406,9 +2406,9 @@ content_hash = "sha256:14454db39436e558844eb225cceaedaa065b9051d6954f637af713a8a
     {url = "https://files.pythonhosted.org/packages/49/97/fa78e3d2f65c02c8e1268b9aba606569fe97f6c8f7c2d74394553347c145/rsa-4.9-py3-none-any.whl", hash = "sha256:90260d9058e514786967344d0ef75fa8727eed8a7d2e43ce9f4bcf1b536174f7"},
     {url = "https://files.pythonhosted.org/packages/aa/65/7d973b89c4d2351d7fb232c2e452547ddfa243e93131e7cfa766da627b52/rsa-4.9.tar.gz", hash = "sha256:e38464a49c6c85d7f1351b0126661487a7e0a14a50f1675ec50eb34d4f20ef21"},
 ]
-"sentry-sdk 1.16.0" = [
-    {url = "https://files.pythonhosted.org/packages/e4/03/4a3e03619eb41b4d9028d377869cc29a5a2095975ca9e8d9b64cb87e1450/sentry_sdk-1.16.0-py2.py3-none-any.whl", hash = "sha256:633edefead34d976ff22e7edc367cdf57768e24bc714615ccae746d9d91795ae"},
-    {url = "https://files.pythonhosted.org/packages/f7/37/24df9417889d23334c4646c2015c602f5194101426d6381ebd2453940e7c/sentry-sdk-1.16.0.tar.gz", hash = "sha256:a900845bd78c263d49695d48ce78a4bce1030bbd917e0b6cc021fc000c901113"},
+"sentry-sdk 1.17.0" = [
+    {url = "https://files.pythonhosted.org/packages/3e/f1/4bfd190f07f49f823eb9fe55b23c8be8a21aa9b9190df6d27721052fd046/sentry-sdk-1.17.0.tar.gz", hash = "sha256:ad40860325c94d1a656da70fba5a7c4dbb2f6809d3cc2d00f74ca0b608330f14"},
+    {url = "https://files.pythonhosted.org/packages/e5/c5/669e528a5ccb16c22ef239a8dc9e51c855a2bcea548e8d71808ce1438045/sentry_sdk-1.17.0-py2.py3-none-any.whl", hash = "sha256:3c4e898f7a3edf5a2042cd0dcab6ee124e2112189228c272c08ad15d3850c201"},
 ]
 "setuptools 67.6.0" = [
     {url = "https://files.pythonhosted.org/packages/25/f3/d68c20919bc774c6cb127f1762f2f2f999d700a58198556e883dd3700e58/setuptools-67.6.0.tar.gz", hash = "sha256:2ee892cd5f29f3373097f5a814697e397cf3ce313616df0af11231e2ad118077"},
@@ -2560,9 +2560,9 @@ content_hash = "sha256:14454db39436e558844eb225cceaedaa065b9051d6954f637af713a8a
     {url = "https://files.pythonhosted.org/packages/c5/52/fe421fb7364aa738b3506a2d99e4f3a56e079c0a798e9f4fa5e14c60922f/urllib3-1.26.14.tar.gz", hash = "sha256:076907bf8fd355cde77728471316625a4d2f7e713c125f51953bb5b3eecf4f72"},
     {url = "https://files.pythonhosted.org/packages/fe/ca/466766e20b767ddb9b951202542310cba37ea5f2d792dae7589f1741af58/urllib3-1.26.14-py2.py3-none-any.whl", hash = "sha256:75edcdc2f7d85b137124a6c3c9fc3933cdeaa12ecb9a6a959f22797a0feca7e1"},
 ]
-"uvicorn 0.21.0" = [
-    {url = "https://files.pythonhosted.org/packages/24/ec/9e3e7c74c342e22dabcf0c6875a40269283f4c8aec2d2f5802b988c570f7/uvicorn-0.21.0-py3-none-any.whl", hash = "sha256:e69e955cb621ae7b75f5590a814a4fcbfb14cb8f44a36dfe3c5c75ab8aee3ad5"},
-    {url = "https://files.pythonhosted.org/packages/7e/81/c817246fad66a4e90153f918710d94f422afdc9285cde039cacbb4dccbca/uvicorn-0.21.0.tar.gz", hash = "sha256:8635a388062222082f4b06225b867b74a7e4ef942124453d4d1d1a5cb3750932"},
+"uvicorn 0.21.1" = [
+    {url = "https://files.pythonhosted.org/packages/8c/f1/7c45fe2a09133e103dcf0621831545c268cd3f7a5d58dc7e470be91b2cd0/uvicorn-0.21.1-py3-none-any.whl", hash = "sha256:e47cac98a6da10cd41e6fd036d472c6f58ede6c5dbee3dbee3ef7a100ed97742"},
+    {url = "https://files.pythonhosted.org/packages/ea/fa/362dc074f4c886e4bff1d994ed1929ed2c2a5ba85827d8f1d745fbe66de2/uvicorn-0.21.1.tar.gz", hash = "sha256:0fac9cb342ba099e0d582966005f3fdba5b0290579fed4a6266dc702ca7bb032"},
 ]
 "uvloop 0.17.0" = [
     {url = "https://files.pythonhosted.org/packages/04/e3/e8c6b6b2ece6b0ab6033c62344d3de1706ed773d10c1798ee8afb0007b8c/uvloop-0.17.0-cp310-cp310-musllinux_1_1_x86_64.whl", hash = "sha256:8efcadc5a0003d3a6e887ccc1fb44dec25594f117a94e3127954c05cf144d811"},
