@@ -23,7 +23,7 @@ jobs:
 
       - name: Update requirements.txt for Docker image
         run: |
-          pdm requirements > requirements.txt
+          pdm export -o requirements.txt
 
       # build nlp api
       - run: |
