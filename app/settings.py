@@ -73,12 +73,10 @@ def get_settings():
             base64.b64decode(settings.platform_relationships)
         )
 
-        settings.fasttext = False
         for lang in settings.language_endpoint_urls:
             if lang not in settings.platform_relationships:
                 continue
 
-            settings.fasttext = True
             endpoint = settings.platform_relationships[lang][0]
             settings.language_endpoint_urls[lang] = (
                 "%(scheme)s://%(host)s:%(port)d" % endpoint

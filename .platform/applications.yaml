@@ -1,9 +1,5 @@
 - name: "app"
 
-  variables:
-    env:
-      MODELS: "[]"
-
   type: "python:3.11"
 
   disk: 2048
@@ -12,7 +8,7 @@
     base_memory: 1024
     memory_ratio: 1024
 
-  container_profile: LOW_MEMORY
+  container_profile: BALANCED
 
   web:
     upstream:
@@ -45,94 +41,8 @@
 
       echo "e613bda316ecb4f5e1924140eedf81b81c087d9a *training_data/lid.176.bin" | sha1sum -c -
 
-  relationships:
-    rediscache: "rediscache:redis"
-    de: "german:http"
-    en: "english:http"
-
-- name: "english"
-
-  variables:
-    env:
-      LANGS: '["en"]'
-      LANGUAGE_ENDPOINT_ENABLED_EN: true
-
-  type: "python:3.11"
-
-  disk: 2048
-
-  resources:
-    base_memory: 1024
-    memory_ratio: 1024
-
-  container_profile: LOW_MEMORY
-
-  web:
-    upstream:
-      socket_family: unix
-    commands:
-      start: |
-        eval $(pdm venv activate in-project)
-        FINAL_WORKER_COUNT=$(echo $PLATFORM_APPLICATION| base64 --decode | jq '.resources.profile_size | tonumber |floor|2 * . |1 + . ')
-        gunicorn app.main:app --preload -b unix:$SOCKET -w $FINAL_WORKER_COUNT --threads 1 -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
-
-  hooks:
-    build: |
-      set -e
-
-      ./install_dependencies.sh
-
       pdm run pybabel compile -d locales -l en_US -f
       pdm run pybabel compile -d locales -l en_GB -f
-
-  crons:
-    generate-statistics:
-      spec: "0 1 * * 0"
-      cmd: |
-        if [ "$PLATFORM_BRANCH" = main ]; then
-            ./statistics.sh -l=en-US
-        fi
-    analyze-rules:
-      spec: "0 1 * * *"
-      cmd: |
-        if [ "$PLATFORM_BRANCH" = dev ]; then
-            ./analyze_rules.sh -l=en
-        fi
-
-  mounts:
-    "analyze_rules": "shared:files/analyze_rules"
-
-- name: "german"
-
-  variables:
-    env:
-      LANGS: '["de"]'
-      LANGUAGE_ENDPOINT_ENABLED_DE: true
-
-  type: "python:3.11"
-
-  disk: 2048
-
-  resources:
-    base_memory: 1024
-    memory_ratio: 1024
-
-  container_profile: BALANCED
-
-  web:
-    upstream:
-      socket_family: unix
-    commands:
-      start: |
-        eval $(pdm venv activate in-project)
-        FINAL_WORKER_COUNT=$(echo $PLATFORM_APPLICATION| base64 --decode | jq '.resources.profile_size | tonumber |floor|2 * . |1 + . ')
-        gunicorn app.main:app --preload -b unix:$SOCKET -w $FINAL_WORKER_COUNT --threads 1 -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
-
-  hooks:
-    build: |
-      set -e
-
-      ./install_dependencies.sh
 
       pdm run pybabel compile -d locales -l de_DE -f
       pdm run pybabel compile -d locales -l de_CH -f
@@ -143,13 +53,13 @@
       spec: "0 1 * * 0"
       cmd: |
         if [ "$PLATFORM_BRANCH" = main ]; then
-            ./statistics.sh -l=de-DE
+            ./statistics.sh
         fi
     analyze-rules:
       spec: "0 1 * * *"
       cmd: |
         if [ "$PLATFORM_BRANCH" = dev ]; then
-            ./analyze_rules.sh -l=de
+            ./analyze_rules.sh
         fi
 
   mounts:
