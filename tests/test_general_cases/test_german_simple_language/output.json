@@ -145,7 +145,7 @@
             "explanation": {
                 "icon": "😉",
                 "text": "Werden alle Lesenden diese Abkürzung verstehen?",
-                "url": "https://www.witty.works/de/kategorien/stil#abkürzung"
+                "url": "https://www.witty.works/de/subkategorien/abkürzung?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Stil: Abkürzung",
@@ -161,7 +161,7 @@
             "explanation": {
                 "icon": "😉",
                 "text": "Anglizismen: Sicher, dass das alle Lesenden verstehen?",
-                "url": "https://www.witty.works/de/kategorien/stil#anglizismen"
+                "url": "https://www.witty.works/de/subkategorien/anglizismen?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Stil: Anglizismen",
@@ -177,7 +177,7 @@
             "explanation": {
                 "icon": "😉",
                 "text": "Anglizismen: Sicher, dass das alle Lesenden verstehen?",
-                "url": "https://www.witty.works/de/kategorien/stil#anglizismen"
+                "url": "https://www.witty.works/de/subkategorien/anglizismen?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Stil: Anglizismen",
@@ -238,7 +238,7 @@
             "explanation": {
                 "icon": "😉",
                 "text": "Anglizismen: Sicher, dass das alle Lesenden verstehen?",
-                "url": "https://www.witty.works/de/kategorien/stil#anglizismen"
+                "url": "https://www.witty.works/de/subkategorien/anglizismen?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Stil: Anglizismen",
@@ -294,7 +294,7 @@
             "explanation": {
                 "icon": "😉",
                 "text": "Werden alle Lesenden diese Abkürzung verstehen?",
-                "url": "https://www.witty.works/de/kategorien/stil#abkürzung"
+                "url": "https://www.witty.works/de/subkategorien/abkürzung?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Stil: Abkürzung",
@@ -324,10 +324,9 @@
             "context": "ere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie e",
             "end": 436,
             "explanation": {
-                "content": "video",
                 "icon": "😒",
                 "text": "Spricht kooperativ denkende Menschen nicht an",
-                "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
+                "url": "https://www.witty.works/de/subkategorien/agentisch?reducedView=true"
             },
             "gravity": 2.0,
             "label": "Sprachliche Voreingenommenheit: Agentisch",
@@ -343,7 +342,7 @@
             "explanation": {
                 "icon": "✅",
                 "text": "Bestärkt Wert von Diversity, Gleichstellung und Inklusion",
-                "url": "https://www.witty.works/de/kategorien/inklusiv#diversität_&_inklusion"
+                "url": "https://www.witty.works/de/subkategorien/diversität-and-inklusion?reducedView=true"
             },
             "label": "Inklusiv: Diversität & Inklusion",
             "start": 371,
@@ -362,7 +361,7 @@
             "explanation": {
                 "icon": "😟",
                 "text": "Füllwörter machen Text länger und unverständlicher",
-                "url": "https://www.witty.works/de/kategorien/stil#füllwörter"
+                "url": "https://www.witty.works/de/subkategorien/füllwörter?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Stil: Füllwörter",
@@ -382,7 +381,7 @@
             "explanation": {
                 "icon": "😟",
                 "text": "Füllwörter machen Text länger und unverständlicher",
-                "url": "https://www.witty.works/de/kategorien/stil#füllwörter"
+                "url": "https://www.witty.works/de/subkategorien/füllwörter?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Stil: Füllwörter",
@@ -402,7 +401,7 @@
             "explanation": {
                 "icon": "😟",
                 "text": "Füllwörter machen Text länger und unverständlicher",
-                "url": "https://www.witty.works/de/kategorien/stil#füllwörter"
+                "url": "https://www.witty.works/de/subkategorien/füllwörter?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Stil: Füllwörter",
@@ -434,7 +433,7 @@
             "explanation": {
                 "icon": "😉",
                 "text": "Anglizismen: Sicher, dass das alle Lesenden verstehen?",
-                "url": "https://www.witty.works/de/kategorien/stil#anglizismen"
+                "url": "https://www.witty.works/de/subkategorien/anglizismen?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Stil: Anglizismen",
@@ -463,7 +462,7 @@
             "explanation": {
                 "icon": "😉",
                 "text": "Anglizismen: Sicher, dass das alle Lesenden verstehen?",
-                "url": "https://www.witty.works/de/kategorien/stil#anglizismen"
+                "url": "https://www.witty.works/de/subkategorien/anglizismen?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Stil: Anglizismen",
@@ -483,7 +482,7 @@
             "explanation": {
                 "icon": "😟",
                 "text": "Füllwörter machen Text länger und unverständlicher",
-                "url": "https://www.witty.works/de/kategorien/stil#füllwörter"
+                "url": "https://www.witty.works/de/subkategorien/füllwörter?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Stil: Füllwörter",
@@ -503,7 +502,7 @@
             "explanation": {
                 "icon": "😟",
                 "text": "Füllwörter machen Text länger und unverständlicher",
-                "url": "https://www.witty.works/de/kategorien/stil#füllwörter"
+                "url": "https://www.witty.works/de/subkategorien/füllwörter?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Stil: Füllwörter",

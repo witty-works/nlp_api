@@ -43,7 +43,7 @@
                 "content": "video",
                 "icon": "😒",
                 "text": "Doesn’t resonate with cooperative and supportive people",
-                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+                "url": "https://www.witty.works/en/subcategories/agentic-language?reducedView=true"
             },
             "gravity": 2.0,
             "label": "Biased Language: Agentic",
@@ -76,7 +76,7 @@
                 "content": "video",
                 "icon": "😒",
                 "text": "Doesn’t resonate with cooperative and supportive people",
-                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+                "url": "https://www.witty.works/en/subcategories/agentic-language?reducedView=true"
             },
             "gravity": 2.0,
             "label": "Biased Language: Agentic",
@@ -106,9 +106,10 @@
             "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to",
             "end": 8,
             "explanation": {
+                "content": "advanced",
                 "icon": "💡",
                 "text": "People are more likely to picture men here",
-                "url": "https://www.witty.works/en/categories/gendered#special_functions"
+                "url": "https://www.witty.works/en/subcategories/special-functions?reducedView=true"
             },
             "gravity": 2.0,
             "label": "Gendered: Special Functions",
@@ -125,7 +126,7 @@
                 "content": "advanced",
                 "icon": "✅",
                 "text": "Emphasizes cooperative attributes",
-                "url": "https://www.witty.works/en/categories/inclusive#communal"
+                "url": "https://www.witty.works/en/subcategories/communal-language?reducedView=true"
             },
             "label": "Inclusive: Communal",
             "start": 19,
@@ -154,9 +155,10 @@
             "context": "ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number <NUMBER> and innovation drives us.\nSincere regards,\nNadia",
             "end": 138,
             "explanation": {
+                "content": "advanced",
                 "icon": "😮‍💨",
                 "text": "Build trust by avoiding exaggerations",
-                "url": "https://www.witty.works/en/categories/style#exaggeration"
+                "url": "https://www.witty.works/en/subcategories/exaggeration?reducedView=true"
             },
             "gravity": 2.0,
             "label": "Style: Exaggeration",
@@ -186,9 +188,10 @@
             "context": "perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number <NUMBER> and innovation drives us.\nSincere regards,\nNadia",
             "end": 153,
             "explanation": {
+                "content": "advanced",
                 "icon": "🙄",
                 "text": "Empty words distract from or undermine your message",
-                "url": "https://www.witty.works/en/categories/style#empty_words"
+                "url": "https://www.witty.works/en/subcategories/empty-words?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Style: Empty Words",
@@ -221,7 +224,7 @@
                 "content": "video",
                 "icon": "😒",
                 "text": "Doesn’t resonate with cooperative and supportive people",
-                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+                "url": "https://www.witty.works/en/subcategories/agentic-language?reducedView=true"
             },
             "gravity": 2.0,
             "label": "Biased Language: Agentic",
@@ -251,7 +254,7 @@
                 "content": "video",
                 "icon": "😒",
                 "text": "Doesn’t resonate with cooperative and supportive people",
-                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+                "url": "https://www.witty.works/en/subcategories/agentic-language?reducedView=true"
             },
             "gravity": 2.0,
             "label": "Biased Language: Agentic",

@@ -12,9 +12,10 @@
             "context": "How to #beanallybe<NUMBER>? Better using #beAnAlly",
             "end": 30,
             "explanation": {
+                "content": "advanced",
                 "icon": "😟",
                 "text": "Filler words add words but no meaning",
-                "url": "https://www.witty.works/en/categories/style#filler_words"
+                "url": "https://www.witty.works/en/subcategories/filler-words?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Style: Filler Words",
@@ -30,7 +31,7 @@
             "explanation": {
                 "icon": "😟",
                 "text": "When you capitalize words, everyone knows right away what you mean. #ForExample",
-                "url": "https://www.witty.works/en/categories/style#style"
+                "url": "https://www.witty.works/en/subcategories/style?reducedView=true"
             },
             "gravity": 2.0,
             "label": "Style",

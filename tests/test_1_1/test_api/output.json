@@ -76,7 +76,7 @@
             "explanation": {
                 "icon": "😟",
                 "text": "Viele denken bei diesem Wort zuerst an einen Mann",
-                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#titel"
+                "url": "https://www.witty.works/de/subkategorien/aufgaben"
             },
             "gravity": 2,
             "label": "Geschlechtsspezifisch: Titel",
@@ -108,7 +108,7 @@
             "explanation": {
                 "icon": "😮‍💨",
                 "text": "Auf Übertreibungen verzichten schafft Vertrauen",
-                "url": "https://www.witty.works/de/kategorien/stil#superlative"
+                "url": "https://www.witty.works/de/subkategorien/superlative"
             },
             "gravity": 2,
             "label": "Stil: Superlative",
@@ -128,7 +128,7 @@
             "explanation": {
                 "icon": "😟",
                 "text": "Füllwörter machen Text länger und unverständlicher",
-                "url": "https://www.witty.works/de/kategorien/stil#füllwörter"
+                "url": "https://www.witty.works/de/subkategorien/füllwörter"
             },
             "gravity": 3,
             "label": "Stil: Füllwörter",
@@ -160,7 +160,7 @@
             "explanation": {
                 "icon": "😮‍💨",
                 "text": "Auf Übertreibungen verzichten schafft Vertrauen",
-                "url": "https://www.witty.works/de/kategorien/stil#superlative"
+                "url": "https://www.witty.works/de/subkategorien/superlative"
             },
             "gravity": 2,
             "label": "Stil: Superlative",

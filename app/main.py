@@ -682,6 +682,42 @@ async def post_check_v2_1(
     )
 
 
+@app.post(
+    "/v2.2/check",
+    response_model=Union[ResultsOut, Result],
+    response_model_exclude_none=True,
+    dependencies=[Depends(HTTPBearer(auto_error=False))],
+)
+async def post_check_v2_2(
+    request: Request,
+    response: Response,
+    user_request_in: RequestIn,
+):
+    results, language, limit_reached, configs, user_email = await check(
+        2.2, request, response, user_request_in
+    )
+
+    if isinstance(results, Result):
+        return results
+
+    notifications = None
+    if "notifications" in configs and configs["notifications"] > 0:
+        notifications = configs["notifications"]
+
+    has_consented_to_mailing = None
+    if "has_consented_to_mailing" in configs:
+        has_consented_to_mailing = configs["has_consented_to_mailing"]
+
+    return ResultsOut(
+        results=results,
+        language=language,
+        limit_reached=limit_reached,
+        config_changed=fetch_config_change(configs, user_request_in),
+        notifications=notifications,
+        has_consented_to_mailing=has_consented_to_mailing,
+    )
+
+
 # data exchange routes
 @app.get("/lemmatize")
 async def lemmatize(
@@ -1071,7 +1107,9 @@ def fetch_text(user_request_in):
 
 
 def check_version(version: float):
-    if version != 1.1 and version != 2.0 and version != 2.1:  # pragma: no cover
+    if (
+        version != 1.1 and version != 2.0 and version != 2.1 and version != 2.2
+    ):  # pragma: no cover
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Version not supported: " + str(version),
@@ -2545,13 +2583,14 @@ def align_verb_form(lang, a_text, a_token, b_token):
         # check if "zu" was stripped from the word in the lemma
         if a_text.count("zu") > a_token.lemma_.count("zu"):
             if b_text in rules["de"]["verbs"]:
-                b_text = rules["de"]["verbs"][b_text]["infinitiv_zu"]
-            else:  # pragma: no cover
-                prefix = german_verb_splittable(b_text)
-                if prefix:
-                    b_text = prefix + "zu" + b_text[len(prefix) :]
-                else:
-                    b_text = "zu " + b_text
+                return rules["de"]["verbs"][b_text]["infinitiv_zu"]
+
+            # pragma: no cover
+            prefix = german_verb_splittable(b_text)
+            if prefix:
+                b_text = prefix + "zu" + b_text[len(prefix) :]
+            else:
+                b_text = "zu " + b_text
 
             injected_string = "zu"
         # check if "ge" was stripped from the word in the lemma
@@ -2565,6 +2604,15 @@ def align_verb_form(lang, a_text, a_token, b_token):
                 b_text = prefix + "ge" + b_text[len(prefix) :]
 
             injected_string = "ge"
+        elif b_text in rules["de"]["verbs"]:
+            morph = a_token.morph.to_dict()
+            if (
+                "Number" in morph
+                and morph["Number"] == "Sing"
+                and "Person" in morph
+                and morph["Person"] == "1"
+            ):
+                return rules["de"]["verbs"][b_text]["present_ich"]
 
         return add_declension_german(b_text, a_text, a_token.lemma_, injected_string)
 

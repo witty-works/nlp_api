@@ -20,7 +20,7 @@
             "explanation": {
                 "icon": "💯",
                 "text": "Nicht konsistente Geschlechts-Schreibweise",
-                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#inklusive_endung"
+                "url": "https://www.witty.works/de/subkategorien/inklusive-endung?reducedView=true"
             },
             "gravity": 2.0,
             "label": "Geschlechtsspezifisch: Inklusive Endung",
@@ -49,7 +49,7 @@
             "explanation": {
                 "icon": "😟",
                 "text": "Schubladendenken nach Geschlechternormen",
-                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#geschlechtsspezifisch"
+                "url": "https://www.witty.works/de/subkategorien/geschlechtsspezifisch?reducedView=true"
             },
             "gravity": 2.0,
             "label": "Geschlechtsspezifisch",
@@ -78,7 +78,7 @@
             "explanation": {
                 "icon": "😟",
                 "text": "Schubladendenken nach Geschlechternormen",
-                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#geschlechtsspezifisch"
+                "url": "https://www.witty.works/de/subkategorien/geschlechtsspezifisch?reducedView=true"
             },
             "gravity": 2.0,
             "label": "Geschlechtsspezifisch",
@@ -107,7 +107,7 @@
             "explanation": {
                 "icon": "💡",
                 "text": "Viele denken bei diesem Wort zuerst an einen Mann",
-                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#spezielle_funktionen"
+                "url": "https://www.witty.works/de/subkategorien/spezielle-funktionen?reducedView=true"
             },
             "gravity": 2.0,
             "label": "Geschlechtsspezifisch: Spezielle Funktionen",
