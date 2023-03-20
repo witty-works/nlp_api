@@ -757,11 +757,6 @@ async def lemmatize(
 
 
 @app.post(
-    "/organization/rules",
-    response_model=ConfResponse,
-    response_model_exclude_none=True,
-)
-@app.post(
     "/organization/configs",
     response_model=ConfResponse,
     response_model_exclude_none=True,
@@ -776,10 +771,6 @@ async def post_organization_configs(
 
 
 @app.delete(
-    "/organization/rules",
-    status_code=status.HTTP_204_NO_CONTENT,
-)
-@app.delete(
     "/organization/configs",
     status_code=status.HTTP_204_NO_CONTENT,
 )
@@ -790,12 +781,6 @@ async def delete_organiztion_configs(
     redis.delete(organization_id)
 
 
-@app.get(
-    "/organization/rules",
-    response_model=ConfResponse,
-    response_model_exclude_none=True,
-    responses={404: {"model": ErrorMessage}},
-)
 @app.get(
     "/organization/configs",
     response_model=ConfResponse,
@@ -810,11 +795,6 @@ async def get_organization_configs(
 
 
 @app.post(
-    "/user/rules",
-    response_model=UserConfResponse,
-    response_model_exclude_none=True,
-)
-@app.post(
     "/user/configs",
     response_model=UserConfResponse,
     response_model_exclude_none=True,
@@ -828,10 +808,6 @@ async def post_user_configs(
 
 
 @app.delete(
-    "/user/rules",
-    status_code=status.HTTP_204_NO_CONTENT,
-)
-@app.delete(
     "/user/configs",
     status_code=status.HTTP_204_NO_CONTENT,
 )
@@ -842,12 +818,6 @@ async def delete_user_configs(
     redis.delete(email)
 
 
-@app.get(
-    "/user/rules",
-    response_model=UserConfResponse,
-    response_model_exclude_none=True,
-    responses={404: {"model": ErrorMessage}},
-)
 @app.get(
     "/user/configs",
     response_model=UserConfResponse,
