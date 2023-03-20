@@ -8,6 +8,7 @@
             "context": "Our whole team is ambitious and strives for top performance.",
             "end": 14,
             "explanation": {
+                "content": "advanced",
                 "icon": "✅",
                 "text": "Emphasizes cooperative attributes",
                 "url": "https://www.witty.works/en/categories/inclusive#communal"
@@ -53,6 +54,7 @@
             "context": "Our whole team is ambitious and strives for top performance.",
             "end": 27,
             "explanation": {
+                "content": "video",
                 "context": "don't use for people",
                 "icon": "😒",
                 "text": "Doesn’t resonate with cooperative and supportive people",
@@ -86,6 +88,7 @@
             "context": "Our whole team is ambitious and strives for top performance.",
             "end": 59,
             "explanation": {
+                "content": "video",
                 "icon": "😒",
                 "text": "Doesn’t resonate with cooperative and supportive people",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"

@@ -51,6 +51,7 @@
             "context": "We are searching for analytical ninja programmer for our customers. Ours are ass. We say servant leadership FTW.",
             "end": 107,
             "explanation": {
+                "content": "advanced",
                 "icon": "✅",
                 "text": "Emphasizes cooperative attributes",
                 "url": "https://www.witty.works/en/categories/inclusive#communal"
@@ -79,6 +80,7 @@
             "context": "We are searching for analytical ninja programmer for our customers. Ours are ass. We say servant leadership FTW.",
             "end": 31,
             "explanation": {
+                "content": "video",
                 "icon": "😒",
                 "text": "Doesn’t resonate with cooperative and supportive people",
                 "url": "https://www.witty.works/en/categories/biased_language#agentic"

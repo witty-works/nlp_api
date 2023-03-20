@@ -77,6 +77,7 @@ categories = {
         "name": {"en": "Agentic", "de": "Agentisch"},
         "gravity": 2.0,
         "importance": 2,
+        "content": "video",
         "url": {
             "en": "https://www.witty.works/en/categories/biased_language#agentic",
             "de": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch",
@@ -218,6 +219,7 @@ categories = {
         "name": {"en": "Communal", "de": "Kommunal"},
         "gravity": None,
         "importance": 2,
+        "content": "advanced",
         "url": {
             "en": "https://www.witty.works/en/categories/inclusive#communal",
             "de": "https://www.witty.works/de/kategorien/inklusiv#kommunal",

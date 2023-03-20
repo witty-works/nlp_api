@@ -87,7 +87,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.41.12"
+version = "1.41.13"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -1901,44 +1901,25 @@ async def english_rules(
     sentences_data_en = defaultdict(list)
     matches_false = fetch_false_positive_matcher(lang.lang, tokens)
 
-    if lang.locale == "en-GB":
-        words_data_en["od"] = rules["en-GB"]["open_disc_words_data"]
-        words_data_en["ge"] = rules["en-GB"]["gender_words_data"]
-        words_data_en["ge-singular-they"] = rules["en-GB"][
-            "bias_singular_they_alternatives"
-        ]
-        words_data_en["style"] = rules["en-GB"]["style_words_data"]
-        words_data_en["bias"] = rules["en-GB"]["bias_words_data"]
-        words_data_en["homonym"] = rules["en-GB"]["homonyms_word"]
-        words_data_en["abbr"] = rules["en-GB"]["abbreviation"]
+    words_data_en["od"] = rules[lang.locale]["open_disc_words_data"]
+    words_data_en["ge"] = rules[lang.locale]["gender_words_data"]
+    words_data_en["ge-singular-they"] = rules[lang.locale][
+        "bias_singular_they_alternatives"
+    ]
+    words_data_en["style"] = rules[lang.locale]["style_words_data"]
+    words_data_en["bias"] = rules[lang.locale]["bias_words_data"]
+    words_data_en["homonym"] = rules[lang.locale]["homonyms_word"]
+    words_data_en["abbr"] = rules[lang.locale]["abbreviation"]
 
-        inclusive_words_data_en = rules["en-GB"]["inclusive_words_data"]
-        gendered_words_data_en["gendered"] = rules["en-GB"]["gender_noun_words_data"]
-        gendered_words_data_en["bias"] = rules["en-GB"]["gender_bias_words_data"]
-        inclusive_sentences_data_en = rules["en-GB"]["inclusive_sentences_data"]
-        sentences_data_en["od"] = rules["en-GB"]["open_dis_sentences"]
-        sentences_data_en["ge"] = rules["en-GB"]["gender_sentences_data"]
-        sentences_data_en["style"] = rules["en-GB"]["style_sentences_data"]
-        sentences_data_en["bias"] = rules["en-GB"]["bias_sentences_data"]
-    else:
-        words_data_en["od"] = rules["en-US"]["open_disc_words_data"]
-        words_data_en["ge"] = rules["en-US"]["gender_words_data"]
-        words_data_en["ge-singular-they"] = rules["en-US"][
-            "bias_singular_they_alternatives"
-        ]
-        words_data_en["style"] = rules["en-US"]["style_words_data"]
-        words_data_en["bias"] = rules["en-US"]["bias_words_data"]
-        words_data_en["homonym"] = rules["en-US"]["homonyms_word"]
-        words_data_en["abbr"] = rules["en-US"]["abbreviation"]
-
-        inclusive_words_data_en = rules["en-US"]["inclusive_words_data"]
-        gendered_words_data_en["gendered"] = rules["en-US"]["gender_noun_words_data"]
-        gendered_words_data_en["bias"] = rules["en-US"]["gender_bias_words_data"]
-        inclusive_sentences_data_en = rules["en-US"]["inclusive_sentences_data"]
-        sentences_data_en["od"] = rules["en-US"]["open_dis_sentences"]
-        sentences_data_en["ge"] = rules["en-US"]["gender_sentences_data"]
-        sentences_data_en["style"] = rules["en-US"]["style_sentences_data"]
-        sentences_data_en["bias"] = rules["en-US"]["bias_sentences_data"]
+    inclusive_words_data_en = rules[lang.locale]["inclusive_words_data"]
+    gendered_words_data_en["gendered"] = rules[lang.locale]["gender_noun_words_data"]
+    gendered_words_data_en["bias"] = rules[lang.locale]["gender_bias_words_data"]
+    gendered_words_data_en["style"] = rules[lang.locale]["style_noun_words_data"]
+    inclusive_sentences_data_en = rules[lang.locale]["inclusive_sentences_data"]
+    sentences_data_en["od"] = rules[lang.locale]["open_dis_sentences"]
+    sentences_data_en["ge"] = rules[lang.locale]["gender_sentences_data"]
+    sentences_data_en["style"] = rules[lang.locale]["style_sentences_data"]
+    sentences_data_en["bias"] = rules[lang.locale]["bias_sentences_data"]
 
     list_full += homonyms_en(
         version,
@@ -2054,26 +2035,37 @@ async def english_rules(
         )
 
     if is_sub_category_enabled(version, config, "style"):
-        list_full += rules_based_words_phrase_matcher(
-            version,
-            config,
-            lang,
-            text,
-            tokens,
-            "style",
-            words_data_en["style"],
-            sentences_data_en["style"],
-            rules[lang.locale]["df_style_sentence"],
-            matches_false,
-        )
-
-        list_full += detect_lower_cased_hashtags(
-            version,
-            config,
-            lang,
-            text,
-            "style",
-            "style",
+        list_full += (
+            rules_based_words_phrase_matcher(
+                version,
+                config,
+                lang,
+                text,
+                tokens,
+                "style",
+                words_data_en["style"],
+                sentences_data_en["style"],
+                rules[lang.locale]["df_style_sentence"],
+                matches_false,
+            )
+            + word_noun(
+                version,
+                config,
+                lang,
+                text,
+                tokens,
+                gendered_words_data_en["style"],
+                "style",
+                matches_false,
+            )
+            + detect_lower_cased_hashtags(
+                version,
+                config,
+                lang,
+                text,
+                "style",
+                "style",
+            )
         )
 
     if is_sub_category_enabled(version, config, "unconscious_bias"):
