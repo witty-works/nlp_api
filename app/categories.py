@@ -55,7 +55,7 @@ categories = {
         "importance": 2,
         "url": {
             "en": "https://www.witty.works/en/subcategories/50-years-and-older",
-            "de": "https://www.witty.works/de/subkategorien/50-jahre-und-Älter",
+            "de": "https://www.witty.works/de/subkategorien/50-jahre-und-älter",
         },
         "emoji": "😒",
     },
@@ -82,7 +82,7 @@ categories = {
         },
         "url": {
             "en": "https://www.witty.works/en/subcategories/agentic-language",
-            "de": "https://www.witty.works/de/subkategorien/agentisch",
+            "de": "https://www.witty.works/de/subkategorien/agentische-sprache",
         },
         "emoji": "😒",
     },
@@ -93,7 +93,6 @@ categories = {
         "gravity": 3.0,
         "importance": 2,
         "url": {
-            "en": "https://www.witty.works/en/subcategories/anglicism",
             "de": "https://www.witty.works/de/subkategorien/anglizismen",
         },
         "emoji": "😉",
@@ -271,12 +270,15 @@ categories = {
     "d_and_i": {
         "inclusive": True,
         "category": "inclusive",
-        "name": {"en": "Diversity & Inclusion", "de": "Diversität & Inklusion"},
+        "name": {
+            "en": "Diversity, equity, inclusion & belonging",
+            "de": "Diversität & Inklusion",
+        },
         "gravity": None,
         "importance": 3,
         "url": {
-            "en": "https://www.witty.works/en/subcategories/diversity-and-inclusion",
-            "de": "https://www.witty.works/de/subkategorien/diversität-and-inklusion",
+            "en": "https://www.witty.works/en/subcategories/diversity-equity-inclusion-and-belonging",
+            "de": "https://www.witty.works/de/subkategorien/diversität-und-inklusion",
         },
         "emoji": "✅",
     },
@@ -358,15 +360,15 @@ categories = {
     "function": {
         "inclusive": False,
         "category": "gendered",
-        "name": {"en": "Special Functions", "de": "Spezielle Funktionen"},
+        "name": {"en": "Generic masculine", "de": "Generisches Maskulinum"},
         "gravity": 2.0,
         "importance": 2,
         "content": {
             "en": "advanced",
         },
         "url": {
-            "en": "https://www.witty.works/en/subcategories/special-functions",
-            "de": "https://www.witty.works/de/subkategorien/spezielle-funktionen",
+            "en": "https://www.witty.works/en/subcategories/generic-masculine",
+            "de": "https://www.witty.works/de/subkategorien/generisches-maskulinum",
         },
         "emoji": "💡",
     },
@@ -523,12 +525,12 @@ categories = {
     "leadership": {
         "inclusive": False,
         "category": "gendered",
-        "name": {"en": "Leadership Stereotype", "de": "Führungsstereotyp"},
+        "name": {"en": "Traditional leadership", "de": "Traditionelles Führungsbild"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
-            "en": "https://www.witty.works/en/subcategories/leadership-stereotype",
-            "de": "https://www.witty.works/de/subkategorien/führungsstereotyp",
+            "en": "https://www.witty.works/en/subcategories/traditional-leadership",
+            "de": "https://www.witty.works/de/subkategorien/traditionelles-führungsbild",
         },
         "emoji": "😟",
     },
@@ -811,7 +813,7 @@ categories = {
     "titles": {
         "inclusive": False,
         "category": "gendered",
-        "name": {"en": "Titles", "de": "Titel"},
+        "name": {"en": "Jobs", "de": "Berufsbezeichnungen"},
         "gravity": 2.0,
         "importance": 2,
         "content": {
@@ -819,7 +821,7 @@ categories = {
         },
         "url": {
             "en": "https://www.witty.works/en/subcategories/jobs",
-            "de": "https://www.witty.works/de/subkategorien/aufgaben",
+            "de": "https://www.witty.works/de/subkategorien/berufsbezeichnungen",
         },
         "emoji": "😟",
     },
