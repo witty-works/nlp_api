@@ -215,9 +215,9 @@ dependencies = [
 ]
 
 [[package]]
-name = "en-core-web-md"
+name = "en-core-web-lg"
 version = "3.5.0"
-url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.5.0/en_core_web_md-3.5.0-py3-none-any.whl"
+url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.5.0/en_core_web_lg-3.5.0-py3-none-any.whl"
 summary = "English pipeline optimized for CPU. Components: tok2vec, tagger, parser, senter, ner, attribute_ruler, lemmatizer."
 dependencies = [
     "spacy<3.6.0,>=3.5.0",
@@ -1000,7 +1000,7 @@ dependencies = [
 
 [metadata]
 lock_version = "4.1"
-content_hash = "sha256:fb9175f541d2bb3c31bbfed41441280de9d209ebb934b0ad623420555bff4b46"
+content_hash = "sha256:b4b48e48f60c75cde31b48033eb086189ef6024f51ca2ae3bef6d83a067de3b4"
 
 [metadata.files]
 "aiofiles 23.1.0" = [
@@ -1509,8 +1509,8 @@ content_hash = "sha256:fb9175f541d2bb3c31bbfed41441280de9d209ebb934b0ad623420555
     {url = "https://files.pythonhosted.org/packages/09/d4/4f05f5d16a4863b30ba96c23b23e942da8889abfa1cdbabf2a0df12a4532/ecdsa-0.18.0-py2.py3-none-any.whl", hash = "sha256:80600258e7ed2f16b9aa1d7c295bd70194109ad5a30fdee0eaeefef1d4c559dd"},
     {url = "https://files.pythonhosted.org/packages/ff/7b/ba6547a76c468a0d22de93e89ae60d9561ec911f59532907e72b0d8bc0f1/ecdsa-0.18.0.tar.gz", hash = "sha256:190348041559e21b22a1d65cee485282ca11a6f81d503fddb84d5017e9ed1e49"},
 ]
-"en-core-web-md 3.5.0" = [
-    {url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.5.0/en_core_web_md-3.5.0-py3-none-any.whl", hash = "sha256:b492fd2dfeee931dd60232fd1a122bb5c3542ebcd5d614f11844647050aa539e"},
+"en-core-web-lg 3.5.0" = [
+    {url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.5.0/en_core_web_lg-3.5.0-py3-none-any.whl", hash = "sha256:c8ac64840c1eb3e3ca7bd38bd1e1c48fb0faeb2449d54d01d5ce629af4595775"},
 ]
 "eng 0.1.1" = [
     {url = "https://files.pythonhosted.org/packages/6c/66/1069dd48de09057e5705576e76fbe9e452464a49cfe425d444dfca4ff5e8/eng-0.1.1.tar.gz", hash = "sha256:08f54aee07de995085c743ec722da068357b84230786447a40ba76579aa85fd1"},

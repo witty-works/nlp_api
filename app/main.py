@@ -2117,6 +2117,11 @@ def parse_word_types(word_types, lower_case=True):
     if word_types is None:
         return [], lower_case, lemmatize
 
+    if word_types[0] == "~":
+        # exact match
+        lower_case = True
+        lemmatize = False
+        word_types = word_types[1:]
     if word_types[0] == "=":
         # exact match
         lower_case = False
@@ -2434,9 +2439,11 @@ def align_noun_form(lang, a_text, a_token, b_token):
         return b_text
 
     is_singular = is_token_singular(lang, b_token)
-    if is_token_singular(lang, b_token):
+
+    if is_singular == True or (is_singular is None and is_token_plural(lang, a_token)):
         return Noun(b_text).plural()
-    elif is_singular == False:
+
+    if is_singular == False:
         return b_text
 
     return Noun(b_text).singular()

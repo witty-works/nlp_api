@@ -59,31 +59,13 @@ You should see application running under http://localhost:8000/docs
 
 ```
 pdm install --dev
-pdm run python3.11 -m spacy download en_core_web_md --no-cache-dir
-pdm run python3.11 -m spacy download de_core_news_lg --no-cache-dir
 wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
-```
-
-Note to uninstall spacy models use
-
-```
-pdm uninstall en_core_web_md
-pdm uninstall de_core_news_lg
 ```
 
 Compile PO files (done automatically during deployment:
 
 ```
 ./compile-translations.sh
-```
-
-## Using virtual environment (venv)
-
-```
-python -m venv /path/to/new/virtual/environment
-source /path/to/new/virtual/environment/bin/active
-python3.11 -m spacy download en_core_web_md --no-cache-dir
-python3.11 -m spacy download de_core_news_lg --no-cache-dir
 ```
 
 Compile the translations in the spirit of `./compile-translations.sh`
@@ -111,10 +93,10 @@ pdm install <package_name>
 ### Build Docker image:
 
 After making changes in the code or in the Dockerfile, you can run the local
-setup. Create `requirements.txt` file (used by Docker image) and build new image
-with the following commands:
+setup. Build new image with the following commands:
 
 ```
+pdm export --prod -o requirements.txt
 python3.11 -m pip install -r requirements.txt
 docker build -t DockerImageName:DockerImageRelease
 ```
@@ -137,14 +119,6 @@ Note for the Mac users. Set environment variables with the following snippet:
 ```
 cp .env.development.mac .env
 ```
-
-You could alternatively set these variables in:
-
-- when using venv: set variables in a
-  `/path/to/new/virtual/environment/bin/activate` file. This way they will be
-  set each time virtual environment is activated.
-- when using conda: follow instructions in this article:
-  https://guillaume-martin.github.io/saving-environment-variables-in-conda.html
 
 ---
 
