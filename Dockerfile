@@ -26,9 +26,6 @@ ENV TESTING True
 COPY --chown=wittyuser:wittyuser requirements.txt requirements.txt
 ENV PATH="/home/wittyuser/.local/bin:${PATH}"
 RUN pip install -r requirements.txt --user
-RUN mkdir files \
-  && spacy download en_core_web_lg \
-  && spacy download de_core_news_lg
 COPY --chown=wittyuser:wittyuser . .
 RUN pybabel compile -d locales -l de_DE -f \
   && pybabel compile -d locales -l en_US -f
