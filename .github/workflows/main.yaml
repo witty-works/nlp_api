@@ -16,20 +16,13 @@ jobs:
           fetch-depth: 0
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: pdm-project/setup-pdm@v3
         with:
           python-version: "3.11"
-          cache: "pipenv"
-
-      - name: Install pipenv
-        run: |
-          python -m pip install --upgrade pipenv wheel
 
       - name: Install dependencies
         run: |
-          pipenv install --deploy --dev --verbose
-          pipenv run python -m spacy download en_core_web_md
-          pipenv run python -m spacy download de_core_news_lg
+          pdm sync
 
       - name: Caching FastText models
         id: cache-fasttext
@@ -48,11 +41,11 @@ jobs:
 
       - name: Compile translation
         run: |
-          pipenv run pybabel compile -d locales -l de_DE -f
-          pipenv run pybabel compile -d locales -l de_AT -f
-          pipenv run pybabel compile -d locales -l de_CH -f
-          pipenv run pybabel compile -d locales -l en_US -f
-          pipenv run pybabel compile -d locales -l en_GB -f
+          pdm run pybabel compile -d locales -l de_DE -f
+          pdm run pybabel compile -d locales -l de_AT -f
+          pdm run pybabel compile -d locales -l de_CH -f
+          pdm run pybabel compile -d locales -l en_US -f
+          pdm run pybabel compile -d locales -l en_GB -f
 
       #- if: startsWith(github.ref, 'refs/tags/') != true && github.ref != 'refs/heads/main'
       #  name: Use LT "dev" via .env file for anything but "main"
@@ -62,7 +55,7 @@ jobs:
       - name: Run test suite
         run: |
           export testing=True
-          pipenv run pytest --cov-config .coveragerc --cov=app -vv --cov-report=xml --cov-report=html
+          pdm run pytest --cov-config .coveragerc --cov=app -vv --cov-report=xml --cov-report=html
 
       - name: Override Coverage Source Path for Sonar
         run: |

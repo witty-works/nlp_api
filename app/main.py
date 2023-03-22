@@ -12,6 +12,9 @@ from typing import Optional, Union, List
 from collections import defaultdict
 from pydantic import parse_obj_as
 
+import os
+import fasttext
+
 from spacy.tokens import Doc
 from spacy.matcher import PhraseMatcher, Matcher
 import pandas as pd
@@ -97,7 +100,7 @@ initialize_aadb2c(settings)
 
 logging.debug("app started with settings: %s", settings)
 
-if len(settings.langs) > 0:
+if len(settings.models) > 0:
     model = {}
     for spacy_model in settings.models:
         lang = spacy_model[0:2]
@@ -105,6 +108,10 @@ if len(settings.langs) > 0:
             model[lang] = fetch_nlp_model(lang, spacy_model)
 
     rules = fetch_rules(settings.langs)
+
+if settings.fasttext:
+    pretrained_lang_model = os.getcwd() + "/training_data/lid.176.bin"
+    fasttext_model = fasttext.load_model(pretrained_lang_model)
 
 if (
     settings.slack_bot_token is not None and settings.slack_signing_secret is not None
@@ -1060,7 +1067,7 @@ def fetch_text(user_request_in):
         text = text[0 : settings.text_max_length]
         text = text.rsplit(" ", 1)[0]
 
-    lang_detection = get_lang_detection()
+    lang_detection = get_lang_detection(fasttext_model)
     locale = lang_detection.get_locale(
         text,
         user_request_in.lang,
@@ -2110,6 +2117,11 @@ def parse_word_types(word_types, lower_case=True):
     if word_types is None:
         return [], lower_case, lemmatize
 
+    if word_types[0] == "~":
+        # exact match
+        lower_case = True
+        lemmatize = False
+        word_types = word_types[1:]
     if word_types[0] == "=":
         # exact match
         lower_case = False
@@ -2427,9 +2439,11 @@ def align_noun_form(lang, a_text, a_token, b_token):
         return b_text
 
     is_singular = is_token_singular(lang, b_token)
-    if is_token_singular(lang, b_token):
+
+    if is_singular == True or (is_singular is None and is_token_plural(lang, a_token)):
         return Noun(b_text).plural()
-    elif is_singular == False:
+
+    if is_singular == False:
         return b_text
 
     return Noun(b_text).singular()

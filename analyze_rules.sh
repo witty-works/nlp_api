@@ -10,13 +10,16 @@ exit_abnormal() {
   exit 1
 }
 
-while getopts "hrne:" options; do
+while getopts "hrnl:" options; do
   case "${options}" in
     h)
       exit_abnormal
       ;;
     n)
       SEND_MAIL=false
+      ;;
+    n)
+      lang=${OPTARG}
       ;;
     :)
       echo "Error: -${OPTARG} requires an argument."
@@ -40,62 +43,53 @@ then
     python="python"
 fi
 
-langs=(
-  "de"
-  "en"
-)
-for i in ${!langs[@]}
-do
-    lang=${langs[$i]}
+  lang=${langs[$i]}
 
-    description="Analyze $lang rules"
-    file="./analyze_rules/$lang.txt"
-    prev_file="./analyze_rules/prev_$lang.txt"
-    if test -f "$file"
+  description="Analyze $lang rules"
+  file="./analyze_rules/$lang.txt"
+  prev_file="./analyze_rules/prev_$lang.txt"
+  if test -f "$file"
+  then
+    pre_cmd="mv $file $prev_file"
+    eval $pre_cmd
+  fi
+
+  cmd="pdm run $python -m bin.analyze_rules -l $lang -u $lt_url >> ./analyze_rules/$lang.txt"
+
+  if ! [ $SEND_MAIL ]
+  then
+      echo $description
+  fi
+
+  eval $cmd
+
+  if test -f "$prev_file"
+  then
+    diff="diff $prev_file $file"
+
+    if $SEND_MAIL
     then
-      pre_cmd="mv $file $prev_file"
-      eval $pre_cmd
+        diffoutput=`$diff`
+
+        if [ -z "$diffoutput" ]
+        then
+          echo "$lang diff is empty"
+        else
+          message+="\n\n$description"
+          message+="\n$diffoutput"
+          diff_not_empty=true
+        fi
+    else
+        echo "$lang diff from last run"
+        eval $diff
     fi
-
-    cmd="pipenv run $python -m bin.analyze_rules -l $lang -u $lt_url >> ./analyze_rules/$lang.txt"
-
-    if ! [ $SEND_MAIL ]
-    then
-        echo $description
-    fi
-
-    eval $cmd
-
-    if test -f "$prev_file"
-    then
-      diff="diff $prev_file $file"
-
-      if $SEND_MAIL
-      then
-          diffoutput=`$diff`
-
-          if [ -z "$diffoutput" ]
-          then
-            echo "$lang diff is empty"
-          else
-            message+="\n\n$description"
-            message+="\n$diffoutput"
-            diff_not_empty=true
-          fi
-      else
-          echo "$lang diff from last run"
-          eval $diff
-      fi
-    fi
-
-done
+  fi
 
 mj_payload(){
     currentDate=`date +"%Y-%m-%d"`
     messageJson=`echo "$message" | jq -Rsa .`
     messageJson=${messageJson//\\\\/\\}
-    base64de=`base64 -w 0 ./analyze_rules/de.txt`
-    base64en=`base64 -w 0 ./analyze_rules/en.txt`
+    base64de=`base64 -w 0 ./analyze_rules/{$lang}.txt`
 
     cat <<EOF
 {
@@ -103,7 +97,7 @@ mj_payload(){
     {
       "From": { "Email": "support@witty.works" },
       "To": [{ "Email": "$ANALYZE_RULES_EMAIL" }],
-      "Subject": "Witty Rules Analysis: $currentDate",
+      "Subject": "Witty Rules Analysis $lang: $currentDate",
       "TextPart": $messageJson,
       "Attachments": [
           {

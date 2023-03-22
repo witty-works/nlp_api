@@ -1,0 +1,58 @@
+[tool.pdm]
+[[tool.pdm.source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "click",
+    "polib",
+    "pytest",
+    "pytest-cov",
+    "python-dotenv",
+    "black",
+    "opencensus-ext-azure",
+    "pytest-asyncio",
+    "pytest-snapshot",
+]
+
+[project]
+name = "witty-works"
+version = ""
+description = ""
+authors = [
+    {name = "Lukas Kahwe Smith", email = "lukas.smith@witty.works"},
+]
+dependencies = [
+    "fastapi<0.94.0,>=0.93.0",
+    "pydantic<2.0.0,>=1.2.0",
+    "uvicorn[standard]",
+    "gunicorn",
+    "spacy",
+    "pandas",
+    "aiofiles",
+    "babel",
+    "aiohttp",
+    "sentry-sdk",
+    "opencensus-ext-azure",
+    "redis",
+    "platformshconfig",
+    "fakeredis",
+    "fasttext-wheel",
+    "fastapi-microsoft-identity",
+    "slack-bolt",
+    "german-nouns",
+    "inflex",
+    "blackfire",
+    "spacy-lookups-data",
+    "en-core-web-lg @ https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.5.0/en_core_web_lg-3.5.0-py3-none-any.whl",
+    "de-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/de_core_news_lg-3.5.0/de_core_news_lg-3.5.0-py3-none-any.whl",
+    "eng>=0.1.1",
+]
+requires-python = ">=3.11"
+license = "Proprietary"
+
+[build-system]
+requires = ["pdm-pep517>=1.0.0"]
+build-backend = "pdm.pep517.api"

@@ -45,13 +45,14 @@ class Settings(BaseSettings):
     alternatives_max_count: int = 5
     context_checker_url: Optional[str]
     context_checker_api_key: Optional[str]
-    models: List = ["en_core_web_md", "de_core_news_lg"]
+    models: List = ["en_core_web_lg", "de_core_news_lg"]
     langs: List = ["en", "de"]
     language_endpoint_enabled_de: bool = False
     language_endpoint_enabled_en: bool = False
     language_endpoint_url_de: Optional[str]
     language_endpoint_url_en: Optional[str]
     language_endpoint_urls: Optional[dict]
+    fasttext: bool = True
 
     class Config:
         env_file = ".env"
@@ -71,6 +72,7 @@ def get_settings():
         settings.platform_relationships = json.loads(
             base64.b64decode(settings.platform_relationships)
         )
+
         for lang in settings.language_endpoint_urls:
             if lang not in settings.platform_relationships:
                 continue
