@@ -4,11 +4,8 @@
 
   disk: 2048
 
-  resources:
-    base_memory: 1024
-    memory_ratio: 1024
-
-  container_profile: BALANCED
+  container_profile: HIGHER_MEMORY
+  initial_size: "0.5"
 
   web:
     upstream:
