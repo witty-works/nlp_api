@@ -630,7 +630,7 @@ class ResultOut(BaseModel):
                 alternative,
                 alternative_context,
                 remove,
-            ) = ResultOut.parse_alternative(alternative)
+            ) = ResultOut.parse_alternative(alternative, category != "orthography")
 
             if not alternative and not remove:
                 if explanation_context is None:
@@ -643,9 +643,6 @@ class ResultOut(BaseModel):
                     alternative = string.capwords(alternative[0:1]) + alternative[1:]
             else:
                 alternative = ResultOut.convert_sharp_ss(lang, alternative)
-
-            if remove and version < 1.1:
-                alternative = ["-"]
 
             inspiration = None
             if ResultOut.isInspirationAlternative(text, alternative, subcategory):
@@ -707,8 +704,8 @@ class ResultOut(BaseModel):
         return text, start, cleaned_alternatives, explanation_context
 
     @staticmethod
-    def parse_alternative(alternative):
-        if "---" in alternative:
+    def parse_alternative(alternative, parse_context=True):
+        if parse_context and "---" in alternative:
             alternative, alternative_context = alternative.split("---")
             alternative = alternative.strip()
             alternative_context = alternative_context.strip()
