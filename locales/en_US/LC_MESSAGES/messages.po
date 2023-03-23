@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2023-03-23 07:15\n"
-"PO-Revision-Date: 2023-03-23 07:15\n"
+"POT-Creation-Date: 2023-03-24 08:01\n"
+"PO-Revision-Date: 2023-03-24 08:01\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -15,7 +15,7 @@ msgid "rules.abbreviation_name"
 msgstr "Abbreviation"
 
 msgid "rules.abbreviation_explanation"
-msgstr "Are you sure people know what this stands for?"
+msgstr "Are you sure people know what this stands for? "
 
 msgid "rules.ability_name"
 msgstr "Ability"
@@ -51,7 +51,7 @@ msgid "rules.agentic_name"
 msgstr "Agentic language"
 
 msgid "rules.agentic_explanation"
-msgstr "Doesn’t resonate with team minded people"
+msgstr "Doesn’t resonate with team-minded people"
 
 msgid "rules.anglicism_name"
 msgstr "Anglicism"
@@ -81,7 +81,7 @@ msgid "rules.belief_name"
 msgstr "Belief"
 
 msgid "rules.belief_explanation"
-msgstr "Expression of a belief system not universally shared"
+msgstr "Expression of a belief system not universally sharedcal"
 
 msgid "rules.binary_pronouns_name"
 msgstr "Binary pronouns"
@@ -99,13 +99,13 @@ msgid "rules.classism_name"
 msgstr "Classism"
 
 msgid "rules.classism_explanation"
-msgstr "Implies socioeconomic status sets the value of a person"
+msgstr "Implies socioeconomic status sets the value of a person "
 
 msgid "rules.cognitive_ability_name"
 msgstr "Cognitive ability"
 
 msgid "rules.cognitive_ability_explanation"
-msgstr "Fuels preconceived notions about cognitive ability"
+msgstr "Fuels preconceived notions about cognitive ability "
 
 msgid "rules.cognitive_perception_name"
 msgstr "Cognitive perception"
@@ -150,10 +150,11 @@ msgid "rules.culture_explanation"
 msgstr "Implies cultural background sets the value of a person"
 
 msgid "rules.d_and_i_name"
-msgstr "Diversity, equity, inclusion & belonging"
+msgstr "DEIB"
 
 msgid "rules.d_and_i_explanation"
-msgstr "Emphasizes value of diversity, equity and inclusion"
+msgstr ""
+"Engage in conversations about diversity, equity, inclusion, and belonging"
 
 msgid "rules.emotional_security_name"
 msgstr "Positive emotions"
@@ -183,13 +184,13 @@ msgid "rules.filler_name"
 msgstr "Filler words"
 
 msgid "rules.filler_explanation"
-msgstr "Adds complexity but no meaning"
+msgstr "Adding complexity but no meaning"
 
 msgid "rules.formality_name"
 msgstr "Formality"
 
 msgid "rules.formality_explanation"
-msgstr "A less formal tone makes you sound more accessible"
+msgstr "Weniger Förmlichkeit schafft mehr emotionale Nähe"
 
 msgid "rules.function_name"
 msgstr "Generic masculine"
@@ -204,7 +205,7 @@ msgid "rules.gender_identity_explanation"
 msgstr "Give visibility to all genders"
 
 msgid "rules.gender_specific_abbreviation_name"
-msgstr "Gender specific abbreviation"
+msgstr "Gender-specific abbreviation"
 
 msgid "rules.gender_specific_abbreviation_explanation"
 msgstr "Men as default; non-binary persons are excluded"
@@ -354,7 +355,7 @@ msgid "rules.racism_explanation"
 msgstr "Racist"
 
 msgid "rules.racist_source_name"
-msgstr "Racist source"
+msgstr "Racist-source"
 
 msgid "rules.racist_source_explanation"
 msgstr "Suggests racist undertones"
@@ -405,7 +406,7 @@ msgid "rules.simple_language_name"
 msgstr "Plain English"
 
 msgid "rules.simple_language_explanation"
-msgstr "Helps you avoid mistakes and misunderstandings."
+msgstr "Helps you avoid mistakes and misunderstandings"
 
 msgid "rules.speech_name"
 msgstr "Speech ability"
@@ -420,10 +421,10 @@ msgid "rules.sports_terms_explanation"
 msgstr "Shuts out people not into this sport; overemphasizes competitiveness"
 
 msgid "rules.style_name"
-msgstr "Style"
+msgstr "Style issue"
 
 msgid "rules.style_explanation"
-msgstr ""
+msgstr "Keep language clear, credible, and easy to understand"
 
 msgid "rules.titles_name"
 msgstr "Jobs"

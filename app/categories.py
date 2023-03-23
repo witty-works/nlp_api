@@ -264,17 +264,15 @@ categories = {
     "d_and_i": {
         "inclusive": True,
         "category": "inclusive",
-        "name": {
-            "en": "Diversity, equity, inclusion & belonging",
-            "de": "Diversität & Inklusion",
-        },
+        "name": {"en": "DEIB", "de": "DEIB"},
         "gravity": None,
         "importance": 3,
         "url": {
-            "en": "https://www.witty.works/en/subcategories/diversity-equity-inclusion-and-belonging",
-            "de": "https://www.witty.works/de/subkategorien/diversität-und-inklusion",
+            "en": "https://www.witty.works/en/subcategories/diversity-equity-inclusion-belonging",
+            "de": "https://www.witty.works/de/subkategorien/vielfalt-gleichheit-teilhabe-zugehörigkeit",
         },
         "emoji": "✅",
+        "content": {"en": "advanced"},
     },
     "emotional_security": {
         "inclusive": True,
@@ -313,12 +311,12 @@ categories = {
     "female_stereotype": {
         "inclusive": False,
         "category": "gendered",
-        "name": {"en": "Female stereotype", "de": "Weiblicher Stereotyp"},
+        "name": {"en": "Female stereotype", "de": "Frauenklischee"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
             "en": "https://www.witty.works/en/subcategories/female-stereotype",
-            "de": "https://www.witty.works/de/subkategorien/weiblicher-stereotyp",
+            "de": "https://www.witty.works/de/subkategorien/frauenklischee",
         },
         "emoji": "😟",
     },
@@ -338,12 +336,12 @@ categories = {
     "formality": {
         "inclusive": False,
         "category": "style",
-        "name": {"en": "Formality", "de": "Formalität"},
+        "name": {"en": "Formality", "de": "Förmlichkeit"},
         "gravity": 3.0,
         "importance": 3,
         "url": {
             "en": "https://www.witty.works/en/subcategories/formality",
-            "de": "https://www.witty.works/de/subkategorien/formalität",
+            "de": "https://www.witty.works/de/subkategorien/förmlichkeit",
         },
         "emoji": "🧊",
     },
@@ -363,13 +361,13 @@ categories = {
     "gender_identity": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Gender binary", "de": "Geschlechtsidentität"},
+        "name": {"en": "Gender binary", "de": "Binäres Geschlecht"},
         "gravity": 2.0,
         "importance": 2,
         "content": {"en": "advanced"},
         "url": {
             "en": "https://www.witty.works/en/subcategories/gender-binary",
-            "de": "https://www.witty.works/de/subkategorien/geschlechtsidentität",
+            "de": "https://www.witty.works/de/subkategorien/binäres-geschlecht",
         },
         "emoji": "😒",
     },
@@ -377,7 +375,7 @@ categories = {
         "inclusive": False,
         "category": "gendered",
         "name": {
-            "en": "Gender specific abbreviation",
+            "en": "Gender-specific abbreviation",
             "de": "Geschlechter-Spezifische Abkürzung",
         },
         "gravity": 2.0,
@@ -424,12 +422,12 @@ categories = {
     "generic_plural": {
         "inclusive": False,
         "category": "gendered",
-        "name": {"en": "Generic plural", "de": "Generisches Plural"},
+        "name": {"en": "Generic plural", "de": "Generischer Plural"},
         "gravity": 3.0,
         "importance": 3,
         "url": {
             "en": "https://www.witty.works/en/subcategories/generic-plural",
-            "de": "https://www.witty.works/de/subkategorien/generisches-plural",
+            "de": "https://www.witty.works/de/subkategorien/generischer-plural",
         },
         "emoji": "😮",
     },
@@ -457,13 +455,13 @@ categories = {
     "hidden_image": {
         "inclusive": False,
         "category": "gendered",
-        "name": {"en": "Gender cues", "de": "Versteckter Ausdruck"},
+        "name": {"en": "Gender cues", "de": "Angedeutetes Gender"},
         "gravity": 2.0,
         "importance": 2,
         "content": {"en": "advanced"},
         "url": {
             "en": "https://www.witty.works/en/subcategories/gender-cues",
-            "de": "https://www.witty.works/de/subkategorien/versteckter-ausdruck",
+            "de": "https://www.witty.works/de/subkategorien/angedeutetes-gender",
         },
         "emoji": "😟",
     },
@@ -507,7 +505,7 @@ categories = {
     "leadership": {
         "inclusive": False,
         "category": "gendered",
-        "name": {"en": "Traditional leadership", "de": "Traditionelles Führungsbild"},
+        "name": {"en": "Traditional leadership", "de": "Führungsbild"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -532,12 +530,12 @@ categories = {
     "male_stereotype": {
         "inclusive": False,
         "category": "gendered",
-        "name": {"en": "Male stereotype", "de": "Männlicher Stereotyp"},
+        "name": {"en": "Male stereotype", "de": "Männerklischee"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
             "en": "https://www.witty.works/en/subcategories/male-stereotype",
-            "de": "https://www.witty.works/de/subkategorien/männlicher-stereotyp",
+            "de": "https://www.witty.works/de/subkategorien/männerklischee",
         },
         "emoji": "😟",
     },
@@ -615,13 +613,13 @@ categories = {
         "category": "openly_discriminating",
         "name": {
             "en": "Offensive language",
-            "de": "Beleidigende und einschüchternde Sprache",
+            "de": "Beleidigende und verletzende Sprache",
         },
         "gravity": 1.0,
         "importance": 1,
         "url": {
             "en": "https://www.witty.works/en/subcategories/offensive-language",
-            "de": "https://www.witty.works/de/subkategorien/beleidigende-und-einschüchternde-sprache",
+            "de": "https://www.witty.works/de/subkategorien/beleidigende-und-verletzende-sprache",
         },
         "emoji": "🚫",
     },
@@ -670,7 +668,7 @@ categories = {
     "racist_source": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Racist source", "de": "Rassistische Wurzel"},
+        "name": {"en": "Racist-source", "de": "Rassistische Wurzel"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -754,7 +752,10 @@ categories = {
         "name": {"en": "Plain English", "de": "Leichte Sprache"},
         "gravity": 3.0,
         "importance": 3,
-        "url": {"en": None, "de": None},
+        "url": {
+            "en": "https://www.witty.works/en/subcategories/plain-english",
+            "de": "https://www.witty.works/de/subkategorien/leichte-sprache",
+        },
         "emoji": "🙄",
         "content": {"en": "advanced"},
     },
@@ -785,11 +786,11 @@ categories = {
     "style": {
         "inclusive": False,
         "category": "style",
-        "name": {"en": "Style", "de": "Stil"},
+        "name": {"en": "Style issue", "de": "Stil"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
-            "en": "https://www.witty.works/en/subcategories/style",
+            "en": "https://www.witty.works/en/subcategories/style-issue",
             "de": "https://www.witty.works/de/subkategorien/stil",
         },
         "emoji": "😟",
@@ -797,13 +798,13 @@ categories = {
     "titles": {
         "inclusive": False,
         "category": "gendered",
-        "name": {"en": "Jobs", "de": "Berufsbezeichnungen"},
+        "name": {"en": "Jobs", "de": "Berufe"},
         "gravity": 2.0,
         "importance": 2,
         "content": {"en": "advanced"},
         "url": {
             "en": "https://www.witty.works/en/subcategories/jobs",
-            "de": "https://www.witty.works/de/subkategorien/berufsbezeichnungen",
+            "de": "https://www.witty.works/de/subkategorien/berufe",
         },
         "emoji": "😟",
     },

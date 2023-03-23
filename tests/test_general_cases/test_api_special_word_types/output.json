@@ -45,11 +45,11 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
-                "text": "Adds complexity but no meaning",
+                "text": "Adding complexity but no meaning",
                 "url": "https://www.witty.works/en/subcategories/filler-words?reducedView=true"
             },
             "gravity": 3.0,
-            "label": "Style: Filler words",
+            "label": "Style issue: Filler words",
             "start": 7,
             "subcategory": "filler",
             "text": "very"

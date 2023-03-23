@@ -58,11 +58,11 @@
             "end": 48,
             "explanation": {
                 "icon": "😟",
-                "text": "Viele denken bei diesem Wort zuerst an einen Mann",
-                "url": "https://www.witty.works/de/subkategorien/berufsbezeichnungen"
+                "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
+                "url": "https://www.witty.works/de/subkategorien/berufe"
             },
             "gravity": 2,
-            "label": "Geschlechtsspezifisch: Berufsbezeichnungen",
+            "label": "Geschlechtsspezifisch: Berufe",
             "start": 42,
             "subcategory": "titles",
             "text": "Kunden"

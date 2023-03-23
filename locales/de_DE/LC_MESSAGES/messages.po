@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2023-03-23 07:15\n"
-"PO-Revision-Date: 2023-03-23 07:15\n"
+"POT-Creation-Date: 2023-03-24 08:01\n"
+"PO-Revision-Date: 2023-03-24 08:01\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -117,7 +117,7 @@ msgid "rules.color_name"
 msgstr "Farbwörter"
 
 msgid "rules.color_explanation"
-msgstr "Keine Farb…."
+msgstr "Beschreibe gut und schlecht nicht mit Farbwörtern"
 
 msgid "rules.communal_name"
 msgstr "Kommunale Sprache"
@@ -150,10 +150,10 @@ msgid "rules.culture_explanation"
 msgstr "Impliziert kultureller Hintergrund bestimmt den Wert einer Person"
 
 msgid "rules.d_and_i_name"
-msgstr "Diversität & Inklusion"
+msgstr "DEIB"
 
 msgid "rules.d_and_i_explanation"
-msgstr "Bestärkt Wert von Diversity, Gleichstellung und Inklusion"
+msgstr "Stärkt Vielfalt, Gleichstellung, Teilhabe und Zugehörigkeit"
 
 msgid "rules.emotional_security_name"
 msgstr "Positive Emotionen"
@@ -174,7 +174,7 @@ msgid "rules.false_friends_explanation"
 msgstr ""
 
 msgid "rules.female_stereotype_name"
-msgstr "Weiblicher Stereotyp"
+msgstr "Frauenklischee"
 
 msgid "rules.female_stereotype_explanation"
 msgstr "Reduziert Frauen auf traditionelle Rollenklischees"
@@ -186,10 +186,10 @@ msgid "rules.filler_explanation"
 msgstr "Füllwörter machen Text länger und unverständlicher"
 
 msgid "rules.formality_name"
-msgstr "Formalität"
+msgstr "Förmlichkeit"
 
 msgid "rules.formality_explanation"
-msgstr "Weniger Förmlichkeit schafft mehr emotionale Nähe"
+msgstr "A less formal tone makes you sound more accessible"
 
 msgid "rules.function_name"
 msgstr "Generisches Maskulinum"
@@ -198,7 +198,7 @@ msgid "rules.function_explanation"
 msgstr "Viele denken bei diesem Wort zuerst an einen Mann"
 
 msgid "rules.gender_identity_name"
-msgstr "Geschlechtsidentität"
+msgstr "Binäres Geschlecht"
 
 msgid "rules.gender_identity_explanation"
 msgstr "Bedient die heteronormative Sicht von Geschlechteridentität"
@@ -228,7 +228,7 @@ msgid "rules.general_style_explanation"
 msgstr ""
 
 msgid "rules.generic_plural_name"
-msgstr "Generisches Plural"
+msgstr "Generischer Plural"
 
 msgid "rules.generic_plural_explanation"
 msgstr "Geschlechtsspezifisches Bild stark verankert. Im Plural weniger."
@@ -246,7 +246,7 @@ msgid "rules.hearing_explanation"
 msgstr "Bedient Vorurteile und Klischees über Hörvermögen"
 
 msgid "rules.hidden_image_name"
-msgstr "Versteckter Ausdruck"
+msgstr "Angedeutetes Gender"
 
 msgid "rules.hidden_image_explanation"
 msgstr "Wortteil macht andere Geschlechter unsichtbar"
@@ -270,7 +270,7 @@ msgid "rules.inclusive_explanation"
 msgstr "Lässt Zugehörigkeitsgefühl entstehen"
 
 msgid "rules.leadership_name"
-msgstr "Traditionelles Führungsbild"
+msgstr "Führungsbild"
 
 msgid "rules.leadership_explanation"
 msgstr "Bedient altmodisches Konzept von Führung"
@@ -282,7 +282,7 @@ msgid "rules.learning_explanation"
 msgstr "Bedient Vorurteile und Klischees über Lernfähigkeit"
 
 msgid "rules.male_stereotype_name"
-msgstr "Männlicher Stereotyp"
+msgstr "Männerklischee"
 
 msgid "rules.male_stereotype_explanation"
 msgstr "Reduziert Männer auf traditionelle Rollenklischees"
@@ -325,10 +325,10 @@ msgid "rules.mobility_explanation"
 msgstr "Nährt Klischees über Beweglichkeit oder Bewegungsfähigkeit"
 
 msgid "rules.offensive_language_name"
-msgstr "Beleidigende und einschüchternde Sprache"
+msgstr "Beleidigende und verletzende Sprache"
 
 msgid "rules.offensive_language_explanation"
-msgstr " Verletzt und schüchtert ein"
+msgstr "Verletzt und schüchtert ein"
 
 msgid "rules.openly_discriminating_name"
 msgstr "Offene Diskriminierung"
@@ -406,7 +406,7 @@ msgid "rules.simple_language_name"
 msgstr "Leichte Sprache"
 
 msgid "rules.simple_language_explanation"
-msgstr ""
+msgstr "Hilft dir Fehlern und Missverständnissen vorzubeugen"
 
 msgid "rules.speech_name"
 msgstr "Sprech-Fähigkeit"
@@ -427,12 +427,13 @@ msgstr "Stil"
 
 msgid "rules.style_explanation"
 msgstr ""
+"Sprich alle Leser*innen an mit klarer und unmissverständlicher Sprache "
 
 msgid "rules.titles_name"
-msgstr "Berufsbezeichnungen"
+msgstr "Berufe"
 
 msgid "rules.titles_explanation"
-msgstr "Viele denken bei diesem Wort zuerst an einen Mann"
+msgstr "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht"
 
 msgid "rules.transphobia_name"
 msgstr "Transphobie"

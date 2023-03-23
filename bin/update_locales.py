@@ -44,12 +44,13 @@ def read_csv(in_file, categories):
             "subcategory_name": None,
             "category_name": None,
             "hs_path": None,
+            "canonical_url": None,
             "hs_name": None,
             "language": None,
             "emoji": None,
             "short_explanation": None,
             "lead_video": None,
-            "sub_head": None,
+            "hard_facts": None,
             "gravity": None,
             "is_active": None,
         }
@@ -69,9 +70,6 @@ def read_csv(in_file, categories):
                         columns[column] = i
                 line_count += 1
             else:
-                if row[columns["is_active"]] == 0:
-                    continue
-
                 subcategory = row[columns["subcategory_name"]].strip()
                 language = row[columns["language"]]
 
@@ -109,15 +107,29 @@ def read_csv(in_file, categories):
                     categories[subcategory]["explanation"][language] = row[
                         columns["short_explanation"]
                     ]
-                if row[columns["lead_video"]]:
-                    categories[subcategory]["content"][language] = "video"
-                elif row[columns["sub_head"]]:
-                    categories[subcategory]["content"][language] = "advanced"
 
                 if row[columns["is_active"]] == "1":
-                    categories[subcategory]["url"][language] = (
+                    if row[columns["lead_video"]]:
+                        categories[subcategory]["content"][language] = "video"
+                    elif row[columns["hard_facts"]]:
+                        categories[subcategory]["content"][language] = "advanced"
+
+                    if (
                         base_url[language] + row[columns["hs_path"]]
-                    )
+                        != row[columns["canonical_url"]]
+                    ):
+                        print(
+                            "mismatch in 'hs_path': "
+                            + row[columns["hs_path"]]
+                            + " / "
+                            + row[columns["language"]]
+                            + " != "
+                            + row[columns["canonical_url"]]
+                        )
+
+                    categories[subcategory]["url"][language] = row[
+                        columns["canonical_url"]
+                    ]
 
     translated = ["name", "explanation"]
     sorted_categories = {}
