@@ -72,7 +72,7 @@ Compile the translations in the spirit of `./compile-translations.sh`
 
 ## Update dependencies locally
 
-To update packages locally after Pipfile was changed, run the command:
+To update packages locally after pyproject.toml/pdm.lock was changed, run the command:
 
 ```
 pdm install --dev
@@ -80,9 +80,9 @@ pdm install --dev
 
 ## Add new package
 
-When adding new package to the project, you need to updated existing Pipfile.
-Following command will install the package and add it to the `Pipfile` and
-`Pipfile.lock`:
+When adding new package to the project, you need to updated existing pyproject.toml.
+Following command will install the package and add it to the `pyproject.toml/pdm.lock` and
+`pyproject.toml/pdm.lock`:
 
 ```
 pdm install <package_name>
