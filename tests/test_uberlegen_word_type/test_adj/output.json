@@ -55,12 +55,13 @@
             "context": "Einflußvermögen der einzelnen Regierungen auf diese Märkte weit überlegen ist",
             "end": 73,
             "explanation": {
+                "content": "video",
                 "icon": "😒",
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
             "start": 64,
             "subcategory": "agentic",
             "text": "überlegen"

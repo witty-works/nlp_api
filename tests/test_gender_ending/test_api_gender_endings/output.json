@@ -29,7 +29,7 @@
                 "url": "https://www.witty.works/de/subkategorien/berufsbezeichnungen?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Titel",
+            "label": "Geschlechtsspezifisch: Berufsbezeichnungen",
             "start": 6,
             "subcategory": "titles",
             "text": "Kunde"
@@ -61,7 +61,7 @@
                 "url": "https://www.witty.works/de/subkategorien/berufsbezeichnungen?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Titel",
+            "label": "Geschlechtsspezifisch: Berufsbezeichnungen",
             "start": 31,
             "subcategory": "titles",
             "text": "Kunden"

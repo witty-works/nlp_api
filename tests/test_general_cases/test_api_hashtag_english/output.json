@@ -3,27 +3,6 @@
     "limit_reached": false,
     "results": [
         {
-            "alternatives": [
-                {
-                    "remove": true
-                }
-            ],
-            "category": "style",
-            "context": "How to #beanallybe<NUMBER>? Better using #beAnAlly",
-            "end": 30,
-            "explanation": {
-                "content": "advanced",
-                "icon": "😟",
-                "text": "Filler words add words but no meaning",
-                "url": "https://www.witty.works/en/subcategories/filler-words?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Style: Filler Words",
-            "start": 24,
-            "subcategory": "filler",
-            "text": "Better"
-        },
-        {
             "alternatives": [],
             "category": "style",
             "context": "How to #beanallybe<NUMBER>? Better using #beAnAlly",

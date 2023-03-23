@@ -42,11 +42,11 @@
             "explanation": {
                 "content": "video",
                 "icon": "😒",
-                "text": "Doesn’t resonate with cooperative and supportive people",
+                "text": "Doesn’t resonate with team minded people",
                 "url": "https://www.witty.works/en/subcategories/agentic-language?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Biased Language: Agentic",
+            "label": "Biased Language: Agentic language",
             "start": 111,
             "subcategory": "agentic",
             "text": "challenged"
@@ -75,11 +75,11 @@
             "explanation": {
                 "content": "video",
                 "icon": "😒",
-                "text": "Doesn’t resonate with cooperative and supportive people",
+                "text": "Doesn’t resonate with team minded people",
                 "url": "https://www.witty.works/en/subcategories/agentic-language?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Biased Language: Agentic",
+            "label": "Biased Language: Agentic language",
             "start": 154,
             "subcategory": "agentic",
             "text": "drives"
@@ -108,11 +108,11 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "💡",
-                "text": "People are more likely to picture men here",
+                "text": "People tend to picture men",
                 "url": "https://www.witty.works/en/subcategories/generic-masculine?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Gendered: Special Functions",
+            "label": "Gendered: Generic masculine",
             "start": 4,
             "subcategory": "function",
             "text": "guys"
@@ -125,10 +125,10 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "✅",
-                "text": "Emphasizes cooperative attributes",
+                "text": "Strengthens collaboration and a sense of community",
                 "url": "https://www.witty.works/en/subcategories/communal-language?reducedView=true"
             },
-            "label": "Inclusive: Communal",
+            "label": "Inclusive: Communal language",
             "start": 19,
             "subcategory": "communal",
             "text": "team"
@@ -157,7 +157,7 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😮‍💨",
-                "text": "Build trust by avoiding exaggerations",
+                "text": "Build trust by avoiding embellishments",
                 "url": "https://www.witty.works/en/subcategories/exaggeration?reducedView=true"
             },
             "gravity": 2.0,
@@ -190,11 +190,11 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "🙄",
-                "text": "Empty words distract from or undermine your message",
+                "text": "Undermine or distract from your messages",
                 "url": "https://www.witty.works/en/subcategories/empty-words?reducedView=true"
             },
             "gravity": 3.0,
-            "label": "Style: Empty Words",
+            "label": "Style: Empty words",
             "start": 143,
             "subcategory": "hollow",
             "text": "innovation"
@@ -223,11 +223,11 @@
             "explanation": {
                 "content": "video",
                 "icon": "😒",
-                "text": "Doesn’t resonate with cooperative and supportive people",
+                "text": "Doesn’t resonate with team minded people",
                 "url": "https://www.witty.works/en/subcategories/agentic-language?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Biased Language: Agentic",
+            "label": "Biased Language: Agentic language",
             "start": 43,
             "subcategory": "agentic",
             "text": "perseverance"
@@ -253,11 +253,11 @@
             "explanation": {
                 "content": "video",
                 "icon": "😒",
-                "text": "Doesn’t resonate with cooperative and supportive people",
+                "text": "Doesn’t resonate with team minded people",
                 "url": "https://www.witty.works/en/subcategories/agentic-language?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Biased Language: Agentic",
+            "label": "Biased Language: Agentic language",
             "start": 30,
             "subcategory": "agentic",
             "text": "ambition"

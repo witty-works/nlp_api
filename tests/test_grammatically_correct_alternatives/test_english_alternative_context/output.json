@@ -26,11 +26,11 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "💡",
-                "text": "People are more likely to picture men here",
+                "text": "People tend to picture men",
                 "url": "https://www.witty.works/en/subcategories/generic-masculine?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Gendered: Special Functions",
+            "label": "Gendered: Generic masculine",
             "start": 56,
             "subcategory": "function",
             "text": "chairman"
@@ -59,7 +59,7 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😮‍💨",
-                "text": "Build trust by avoiding exaggerations",
+                "text": "Build trust by avoiding embellishments",
                 "url": "https://www.witty.works/en/subcategories/exaggeration?reducedView=true"
             },
             "gravity": 2.0,
@@ -90,7 +90,7 @@
                 "url": "https://www.witty.works/en/subcategories/mental-wellbeing?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Biased Language: Mental Wellbeing",
+            "label": "Biased Language: Mental wellbeing",
             "start": 3,
             "subcategory": "mental_wellbeing",
             "text": "hanged"
@@ -113,11 +113,11 @@
             "explanation": {
                 "content": "video",
                 "icon": "😒",
-                "text": "Doesn’t resonate with cooperative and supportive people",
+                "text": "Doesn’t resonate with team minded people",
                 "url": "https://www.witty.works/en/subcategories/agentic-language?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Biased Language: Agentic",
+            "label": "Biased Language: Agentic language",
             "start": 22,
             "subcategory": "agentic",
             "text": "analyzed"

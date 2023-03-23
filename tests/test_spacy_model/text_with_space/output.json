@@ -24,11 +24,11 @@
                 "content": "video",
                 "context": "don't use for people",
                 "icon": "😒",
-                "text": "Doesn’t resonate with cooperative and supportive people",
+                "text": "Doesn’t resonate with team minded people",
                 "url": "https://www.witty.works/en/subcategories/agentic-language?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Biased Language: Agentic",
+            "label": "Biased Language: Agentic language",
             "start": 0,
             "subcategory": "agentic",
             "text": "Dominant"

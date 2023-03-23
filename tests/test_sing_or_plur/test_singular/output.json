@@ -26,11 +26,11 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
-                "text": "People are more likely to picture men here",
+                "text": "People tend to picture a specific gender",
                 "url": "https://www.witty.works/en/subcategories/jobs?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Gendered: Titles",
+            "label": "Gendered: Jobs",
             "start": 4,
             "subcategory": "titles",
             "text": "engineer"

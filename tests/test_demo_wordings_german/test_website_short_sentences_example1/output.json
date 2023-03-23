@@ -29,7 +29,7 @@
                 "url": "https://www.witty.works/de/subkategorien/berufsbezeichnungen?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Titel",
+            "label": "Geschlechtsspezifisch: Berufsbezeichnungen",
             "start": 33,
             "subcategory": "titles",
             "text": "Mitarbeiter"
@@ -50,12 +50,13 @@
             "context": "Wir unterstützen leistungsstarke Mitarbeiter.",
             "end": 32,
             "explanation": {
+                "content": "video",
                 "icon": "😒",
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
             "start": 17,
             "subcategory": "agentic",
             "text": "leistungsstarke"
@@ -70,7 +71,7 @@
                 "text": "Betont kooperative Eigenschaften",
                 "url": "https://www.witty.works/de/subkategorien/kommunale-sprache?reducedView=true"
             },
-            "label": "Inklusiv: Kommunal",
+            "label": "Inklusiv: Kommunale Sprache",
             "start": 4,
             "subcategory": "communal",
             "text": "unterstützen"

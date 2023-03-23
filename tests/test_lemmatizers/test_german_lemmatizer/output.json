@@ -1,21 +1,5 @@
 {
     "language": "de",
     "limit_reached": false,
-    "results": [
-        {
-            "alternatives": [],
-            "category": "inclusive",
-            "context": "Der Vorstand wird angewiesen",
-            "end": 28,
-            "explanation": {
-                "icon": "✅",
-                "text": "Betont kooperative Eigenschaften",
-                "url": "https://www.witty.works/de/subkategorien/kommunale-sprache?reducedView=true"
-            },
-            "label": "Inklusiv: Kommunal",
-            "start": 18,
-            "subcategory": "communal",
-            "text": "angewiesen"
-        }
-    ]
+    "results": []
 }

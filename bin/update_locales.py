@@ -3,75 +3,18 @@ from datetime import datetime
 import click
 import csv
 import polib
-import re
+from app.categories import categories
+from app.models import Language
 
 
-def parse_explanation(explanation):
-    icon = None
-    explanation = explanation.strip()
-    pipe_sign_position = explanation.find("|")
-    if pipe_sign_position != -1:
-        icon = explanation[0:pipe_sign_position]
-        explanation = explanation[pipe_sign_position + 1 :]
-
-    return icon, explanation
-
-
-def parse_row_column(locales, category, sub_category, columns, label, column, row):
-    msgid = "rules." + sub_category + "_" + label
-
-    result = {}
-    for locale in locales:
-        result[locale] = {}
-
-        if locale == "pot" or (category == "orthography" and label == "anchor"):
-            msgstr = ""
-        else:
-            msgstr = row[columns[column + " " + locale[0:2].upper()]].strip()
-
-            if msgstr == "n/a" or msgstr == "-":
-                msgstr = ""
-            elif msgstr == "" or msgstr == "Missing":
-                msgstr = ""
-                print(
-                    "Empty text given for '"
-                    + sub_category
-                    + "' key '"
-                    + label
-                    + "' ("
-                    + locale
-                    + ")"
-                )
-            elif label == "explanation" and sub_category != "corporate_rules":
-                if msgstr.find("|") == -1:
-                    print(
-                        "Pipesign missing for '"
-                        + sub_category
-                        + "' key '"
-                        + label
-                        + "' ("
-                        + locale
-                        + ")"
-                    )
-                else:
-                    result["emoji"], msgstr = parse_explanation(msgstr)
-
-        result[locale] = {
-            "msgid": msgid,
-            "msgstr": msgstr,
-        }
-
-    return result
-
-
-def read_csv(in_file):
-    poFiles = {"pot": polib.POFile(), "en_US": polib.POFile(), "de_DE": polib.POFile()}
-    locales = poFiles.keys()
+def read_csv(in_file, categories):
+    po_files = {"pot": polib.POFile(), "en_US": polib.POFile(), "de_DE": polib.POFile()}
+    locales = po_files.keys()
 
     for locale in locales:
         current_date = datetime.utcnow().strftime("%Y-%m-%d %H:%M")
 
-        poFiles[locale].metadata = {
+        po_files[locale].metadata = {
             "Project-Id-Version": "1.0",
             "Report-Msgid-Bugs-To": "engineering@witty.works",
             "POT-Creation-Date": current_date,
@@ -83,32 +26,38 @@ def read_csv(in_file):
             "Content-Transfer-Encoding": "8bit",
         }
 
+        if locale == "pot":
+            continue
+
+        lang = Language(locale)
+        for subcategory in categories.keys():
+            if "explanation" not in categories[subcategory]:
+                categories[subcategory]["explanation"] = {}
+
+            key = "rules." + subcategory + "_explanation"
+            categories[subcategory]["explanation"][lang.lang] = lang._(key)
+            if categories[subcategory]["explanation"][lang.lang] == key:
+                categories[subcategory]["explanation"][lang.lang] = ""
+
     with open(in_file, newline="") as csvfile:
         columns = {
-            "Subcategory": 0,
-            "Category": None,
-            "Name EN": None,
-            "Name DE": None,
-            "Anchor EN": None,
-            "Anchor DE": None,
-            "Short explanation EN": None,
-            "Short explanation DE": None,
-            "Inclusive?": None,
-            "Gravity": None,
-            "Importance": None,
-            "Status API": None,
-            "Status HubSpot": None,
+            "subcategory_name": None,
+            "category_name": None,
+            "hs_path": None,
+            "hs_name": None,
+            "language": None,
+            "emoji": None,
+            "short_explanation": None,
+            "lead_video": None,
+            "sub_head": None,
+            "gravity": None,
+            "is_active": None,
         }
 
-        columnMap = {
-            "name": "Name",
-            "anchor": "Anchor",
-            "explanation": "Short explanation",
+        base_url = {
+            "en": "https://www.witty.works/en/subcategories/",
+            "de": "https://www.witty.works/de/subkategorien/",
         }
-
-        gravities = {"red": 1.0, "orange": 2.0, "yellow": 3.0, "": 3.0, "none": None}
-
-        categories = {}
 
         line_count = 0
         reader = csv.reader(csvfile, skipinitialspace=True)
@@ -120,129 +69,91 @@ def read_csv(in_file):
                         columns[column] = i
                 line_count += 1
             else:
-                if row[columns["Status API"]] == "Idea":
+                if row[columns["is_active"]] == 0:
                     continue
 
-                sub_category = row[columns["Subcategory"]].strip()
-                if sub_category == "New Category":
-                    continue
+                subcategory = row[columns["subcategory_name"]].strip()
+                language = row[columns["language"]]
 
-                categories[sub_category] = {}
-
-                categories[sub_category]["inclusive"] = (
-                    row[columns["Inclusive?"]] == "👍"
-                )
-                categories[sub_category]["category"] = re.sub(
-                    "https://www\.notion\.so\/([_a-z]+)-[a-z0-9]+",
-                    "\\1",
-                    row[columns["Category"]],
+                categories[subcategory]["inclusive"] = (
+                    row[columns["category_name"]] == "inclusive"
                 )
 
-                for key in columnMap:
-                    category = categories[sub_category]["category"]
-                    categories[sub_category][key] = parse_row_column(
-                        locales,
-                        category,
-                        sub_category,
-                        columns,
-                        key,
-                        columnMap[key],
-                        row,
+                categories[subcategory]["category"] = row[
+                    columns["category_name"]
+                ].strip()
+
+                if "name" not in categories[subcategory]:
+                    categories[subcategory]["name"] = {}
+
+                if categories[subcategory]["inclusive"]:
+                    categories[subcategory]["gravity"] = None
+                    categories[subcategory]["importance"] = 3
+                else:
+                    categories[subcategory]["gravity"] = float(row[columns["gravity"]])
+                    categories[subcategory]["importance"] = int(row[columns["gravity"]])
+
+                if "content" not in categories[subcategory]:
+                    categories[subcategory]["content"] = {}
+
+                if "url" not in categories[subcategory]:
+                    categories[subcategory]["url"] = {}
+
+                categories[subcategory]["emoji"] = row[columns["emoji"]]
+
+                if "explanation" not in categories[subcategory]:
+                    categories[subcategory]["explanation"] = {}
+
+                categories[subcategory]["name"][language] = row[columns["hs_name"]]
+                if row[columns["short_explanation"]] != "":
+                    categories[subcategory]["explanation"][language] = row[
+                        columns["short_explanation"]
+                    ]
+                if row[columns["lead_video"]]:
+                    categories[subcategory]["content"][language] = "video"
+                elif row[columns["sub_head"]]:
+                    categories[subcategory]["content"][language] = "advanced"
+
+                if row[columns["is_active"]] == "1":
+                    categories[subcategory]["url"][language] = (
+                        base_url[language] + row[columns["hs_path"]]
                     )
 
-                if sub_category == "corporate_rules":
-                    gravity = 0.9
-                else:
-                    try:
-                        gravity = str(row[columns["Gravity"]])
-                        gravity = gravities[gravity]
-                    except ValueError:
-                        gravity = None
-
-                categories[sub_category]["gravity"] = gravity
-
-                try:
-                    importance = int(row[columns["Importance"]])
-                except ValueError:
-                    importance = 3.0
-                categories[sub_category]["importance"] = importance
-
-                if row[columns["Status HubSpot"]] == "Deployed":
-                    categories[sub_category]["url"] = {"en": True, "de": True}
-                elif row[columns["Status HubSpot"]] == "Missing English":
-                    print(sub_category + ": " + row[columns["Status HubSpot"]])
-                    categories[sub_category]["url"] = {"en": None, "de": True}
-                elif row[columns["Status HubSpot"]] == "Missing German":
-                    print(sub_category + ": " + row[columns["Status HubSpot"]])
-                    categories[sub_category]["url"] = {"en": True, "de": None}
-                else:
-                    categories[sub_category]["url"] = {"en": None, "de": None}
-
+    translated = ["name", "explanation"]
     sorted_categories = {}
-    for i in sorted(categories.keys()):
+    for subcategory in sorted(categories.keys()):
+        data = categories[subcategory]
+
         for locale in locales:
-            if locale == "pot":
-                continue
+            lang = locale[0:2]
+            for key in translated:
+                msgid = "rules." + subcategory + "_" + key
+                msgstr = ""
+                if locale != "pot" and lang in data[key]:
+                    msgstr = data[key][lang]
 
-            path = "categories" if locale[0:2] == "en" else "kategorien"
-            category = categories[i]["category"]
+                entry = polib.POEntry(msgid=msgid, msgstr=msgstr)
+                po_files[locale].append(entry)
 
-            if categories[i]["url"][locale[0:2]]:
-                categories[i]["url"][locale[0:2]] = (
-                    "https://www.witty.works/"
-                    + locale[0:2]
-                    + "/"
-                    + path
-                    + "/"
-                    + categories[category]["anchor"][locale]["msgstr"]
-                )
+        del data["explanation"]
 
-                if category != sub_category:
-                    categories[i]["url"][locale[0:2]] += (
-                        "#" + categories[i]["anchor"][locale]["msgstr"]
-                    )
+        if "content" in data and data["content"] == {}:
+            del data["content"]
 
-        sorted_categories[i] = categories[i]
-
-    for sub_category in sorted_categories:
-        for key in columnMap:
-            if key == "anchor":
-                del sorted_categories[sub_category][key]
-                continue
-
-            data = sorted_categories[sub_category][key]
-
-            for locale in locales:
-                entry = polib.POEntry(
-                    msgid=data[locale]["msgid"], msgstr=data[locale]["msgstr"]
-                )
-                poFiles[locale].append(entry)
-
-                if locale in sorted_categories[sub_category][key]:
-                    if locale != "pot":
-                        sorted_categories[sub_category][key][locale[0:2]] = data[
-                            locale
-                        ]["msgstr"]
-
-                del sorted_categories[sub_category][key][locale]
-
-                if "emoji" in data:
-                    sorted_categories[sub_category]["emoji"] = data["emoji"]
-
-        del sorted_categories[sub_category]["explanation"]
+        sorted_categories[subcategory] = data
 
     locales_path = os.path.dirname(__file__) + "/../locales"
 
     for locale in locales:
         if locale == "pot":
-            poFiles[locale].save(locales_path + "/messages.pot")
+            po_files[locale].save(locales_path + "/messages.pot")
         else:
             locale_path = locales_path + "/" + locale + "/LC_MESSAGES"
             os.makedirs(locale_path, exist_ok=True)
 
-            poFiles[locale].save(locale_path + "/messages.po")
-            poFiles[locale].to_binary()
-            poFiles[locale].save_as_mofile(locale_path + "/messages.mo")
+            po_files[locale].save(locale_path + "/messages.po")
+            po_files[locale].to_binary()
+            po_files[locale].save_as_mofile(locale_path + "/messages.mo")
 
     f = open(os.path.dirname(__file__) + "/../app/categories.py", "w")
     f.write("categories = " + repr(sorted_categories) + "\n")
@@ -260,7 +171,7 @@ def read_csv(in_file):
 )
 def process(in_file):
     """Processes the input file to generate new .pot and .po files"""
-    read_csv(in_file)
+    read_csv(in_file, categories)
     print(in_file)
 
 

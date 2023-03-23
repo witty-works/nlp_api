@@ -38,7 +38,7 @@ categories = {
     "age": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Age Information", "de": "Altersangabe"},
+        "name": {"en": "Age information", "de": "Altersangabe"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -50,7 +50,7 @@ categories = {
     "age_old": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "50 Years and Older", "de": "50 Jahre und Älter"},
+        "name": {"en": "50 years and older", "de": "50 Jahre und älter"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -62,7 +62,7 @@ categories = {
     "age_young": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "25 Years and Younger", "de": "25 Jahre und Jünger"},
+        "name": {"en": "25 years and younger", "de": "25 Jahre und jünger"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -74,12 +74,10 @@ categories = {
     "agentic": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Agentic", "de": "Agentisch"},
+        "name": {"en": "Agentic language", "de": "Agentische Sprache"},
         "gravity": 2.0,
         "importance": 2,
-        "content": {
-            "en": "video",
-        },
+        "content": {"en": "video", "de": "video"},
         "url": {
             "en": "https://www.witty.works/en/subcategories/agentic-language",
             "de": "https://www.witty.works/de/subkategorien/agentische-sprache",
@@ -91,10 +89,8 @@ categories = {
         "category": "style",
         "name": {"en": "Anglicism", "de": "Anglizismen"},
         "gravity": 3.0,
-        "importance": 2,
-        "url": {
-            "de": "https://www.witty.works/de/subkategorien/anglizismen",
-        },
+        "importance": 3,
+        "url": {"de": "https://www.witty.works/de/subkategorien/anglizismen"},
         "emoji": "😉",
     },
     "antimuslim": {
@@ -148,7 +144,7 @@ categories = {
     "binary_pronouns": {
         "inclusive": False,
         "category": "gendered",
-        "name": {"en": "Binary Pronouns", "de": "Binäre Pronomen"},
+        "name": {"en": "Binary pronouns", "de": "Binäre Pronomen"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -181,7 +177,7 @@ categories = {
     "cognitive_ability": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Cognitive Ability", "de": "Denkfähigkeit"},
+        "name": {"en": "Cognitive ability", "de": "Denkfähigkeit"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -193,7 +189,7 @@ categories = {
     "cognitive_perception": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Cognitive Perception", "de": "Wahrnehmung"},
+        "name": {"en": "Cognitive perception", "de": "Wahrnehmung"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -217,12 +213,10 @@ categories = {
     "communal": {
         "inclusive": True,
         "category": "inclusive",
-        "name": {"en": "Communal", "de": "Kommunal"},
+        "name": {"en": "Communal language", "de": "Kommunale Sprache"},
         "gravity": None,
-        "importance": 2,
-        "content": {
-            "en": "advanced",
-        },
+        "importance": 3,
+        "content": {"en": "advanced"},
         "url": {
             "en": "https://www.witty.works/en/subcategories/communal-language",
             "de": "https://www.witty.works/de/subkategorien/kommunale-sprache",
@@ -285,7 +279,7 @@ categories = {
     "emotional_security": {
         "inclusive": True,
         "category": "inclusive",
-        "name": {"en": "Positive Emotions", "de": "Positive Emotionen"},
+        "name": {"en": "Positive emotions", "de": "Positive Emotionen"},
         "gravity": None,
         "importance": 3,
         "url": {
@@ -300,9 +294,7 @@ categories = {
         "name": {"en": "Exaggeration", "de": "Superlative"},
         "gravity": 2.0,
         "importance": 2,
-        "content": {
-            "en": "advanced",
-        },
+        "content": {"en": "advanced"},
         "url": {
             "en": "https://www.witty.works/en/subcategories/exaggeration",
             "de": "https://www.witty.works/de/subkategorien/superlative",
@@ -321,7 +313,7 @@ categories = {
     "female_stereotype": {
         "inclusive": False,
         "category": "gendered",
-        "name": {"en": "Female Stereotype", "de": "Weiblicher Stereotyp"},
+        "name": {"en": "Female stereotype", "de": "Weiblicher Stereotyp"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -333,12 +325,10 @@ categories = {
     "filler": {
         "inclusive": False,
         "category": "style",
-        "name": {"en": "Filler Words", "de": "Füllwörter"},
+        "name": {"en": "Filler words", "de": "Füllwörter"},
         "gravity": 3.0,
-        "importance": 2,
-        "content": {
-            "en": "advanced",
-        },
+        "importance": 3,
+        "content": {"en": "advanced"},
         "url": {
             "en": "https://www.witty.works/en/subcategories/filler-words",
             "de": "https://www.witty.works/de/subkategorien/füllwörter",
@@ -363,9 +353,7 @@ categories = {
         "name": {"en": "Generic masculine", "de": "Generisches Maskulinum"},
         "gravity": 2.0,
         "importance": 2,
-        "content": {
-            "en": "advanced",
-        },
+        "content": {"en": "advanced"},
         "url": {
             "en": "https://www.witty.works/en/subcategories/generic-masculine",
             "de": "https://www.witty.works/de/subkategorien/generisches-maskulinum",
@@ -375,14 +363,12 @@ categories = {
     "gender_identity": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Gender Identity", "de": "Geschlechtsidentität"},
+        "name": {"en": "Gender binary", "de": "Geschlechtsidentität"},
         "gravity": 2.0,
         "importance": 2,
-        "content": {
-            "en": "advanced",
-        },
+        "content": {"en": "advanced"},
         "url": {
-            "en": "https://www.witty.works/en/subcategories/gender-identity",
+            "en": "https://www.witty.works/en/subcategories/gender-binary",
             "de": "https://www.witty.works/de/subkategorien/geschlechtsidentität",
         },
         "emoji": "😒",
@@ -391,8 +377,8 @@ categories = {
         "inclusive": False,
         "category": "gendered",
         "name": {
-            "en": "Gender Specific Abbreviation",
-            "de": "Geschlechter Spezifische Abkürzung",
+            "en": "Gender specific abbreviation",
+            "de": "Geschlechter-Spezifische Abkürzung",
         },
         "gravity": 2.0,
         "importance": 2,
@@ -438,7 +424,7 @@ categories = {
     "generic_plural": {
         "inclusive": False,
         "category": "gendered",
-        "name": {"en": "Generic Plural", "de": "Generisches Plural"},
+        "name": {"en": "Generic plural", "de": "Generisches Plural"},
         "gravity": 3.0,
         "importance": 3,
         "url": {
@@ -471,12 +457,10 @@ categories = {
     "hidden_image": {
         "inclusive": False,
         "category": "gendered",
-        "name": {"en": "Hidden Meaning", "de": "Versteckter Ausdruck"},
+        "name": {"en": "Gender cues", "de": "Versteckter Ausdruck"},
         "gravity": 2.0,
         "importance": 2,
-        "content": {
-            "en": "advanced",
-        },
+        "content": {"en": "advanced"},
         "url": {
             "en": "https://www.witty.works/en/subcategories/gender-cues",
             "de": "https://www.witty.works/de/subkategorien/versteckter-ausdruck",
@@ -486,12 +470,10 @@ categories = {
     "hollow": {
         "inclusive": False,
         "category": "style",
-        "name": {"en": "Empty Words", "de": "Worthülsen"},
+        "name": {"en": "Empty words", "de": "Worthülsen"},
         "gravity": 3.0,
         "importance": 3,
-        "content": {
-            "en": "advanced",
-        },
+        "content": {"en": "advanced"},
         "url": {
             "en": "https://www.witty.works/en/subcategories/empty-words",
             "de": "https://www.witty.works/de/subkategorien/worthülsen",
@@ -533,11 +515,12 @@ categories = {
             "de": "https://www.witty.works/de/subkategorien/traditionelles-führungsbild",
         },
         "emoji": "😟",
+        "content": {"en": "advanced"},
     },
     "learning": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Learning Ability", "de": "Lernfähigkeit"},
+        "name": {"en": "Learning ability", "de": "Lernfähigkeit"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -549,7 +532,7 @@ categories = {
     "male_stereotype": {
         "inclusive": False,
         "category": "gendered",
-        "name": {"en": "Male Stereotype", "de": "Männlicher Stereotyp"},
+        "name": {"en": "Male stereotype", "de": "Männlicher Stereotyp"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -561,7 +544,7 @@ categories = {
     "medical_state": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Medical State", "de": "Gesundheitsbild"},
+        "name": {"en": "Medical state", "de": "Gesundheitsbild"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -573,7 +556,7 @@ categories = {
     "mental_wellbeing": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Mental Wellbeing", "de": "Mentales Wohlbefinden"},
+        "name": {"en": "Mental wellbeing", "de": "Mentales Wohlbefinden"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -585,7 +568,7 @@ categories = {
     "migration": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Migration Background", "de": "Migrationshintergrund"},
+        "name": {"en": "Migration background", "de": "Migrationshintergrund"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -597,12 +580,12 @@ categories = {
     "military_source": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Military Source", "de": "Militaerische Wurzel"},
+        "name": {"en": "Military source", "de": "Militärische Wurzel"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
             "en": "https://www.witty.works/en/subcategories/military-source",
-            "de": "https://www.witty.works/de/subkategorien/militaerische-wurzel",
+            "de": "https://www.witty.works/de/subkategorien/militärische-wurzel",
         },
         "emoji": "🪖",
     },
@@ -631,8 +614,8 @@ categories = {
         "inclusive": False,
         "category": "openly_discriminating",
         "name": {
-            "en": "Offensive Language",
-            "de": "Beleidigende und Einschüchternde Sprache",
+            "en": "Offensive language",
+            "de": "Beleidigende und einschüchternde Sprache",
         },
         "gravity": 1.0,
         "importance": 1,
@@ -687,7 +670,7 @@ categories = {
     "racist_source": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Racist Source", "de": "Rassistische Wurzel"},
+        "name": {"en": "Racist source", "de": "Rassistische Wurzel"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -756,7 +739,7 @@ categories = {
     "sexual_orientation": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Sexual Orientation", "de": "Sexuelle Orientierung"},
+        "name": {"en": "Sexual orientation", "de": "Sexuelle Orientierung"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -773,11 +756,12 @@ categories = {
         "importance": 3,
         "url": {"en": None, "de": None},
         "emoji": "🙄",
+        "content": {"en": "advanced"},
     },
     "speech": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Speech Ability", "de": "Sprech-Fähigkeit"},
+        "name": {"en": "Speech ability", "de": "Sprech-Fähigkeit"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -789,7 +773,7 @@ categories = {
     "sports_terms": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Sports Terms", "de": "Sport-Jargon"},
+        "name": {"en": "Sports terms", "de": "Sport Jargon"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -816,9 +800,7 @@ categories = {
         "name": {"en": "Jobs", "de": "Berufsbezeichnungen"},
         "gravity": 2.0,
         "importance": 2,
-        "content": {
-            "en": "advanced",
-        },
+        "content": {"en": "advanced"},
         "url": {
             "en": "https://www.witty.works/en/subcategories/jobs",
             "de": "https://www.witty.works/de/subkategorien/berufsbezeichnungen",
@@ -879,7 +861,7 @@ categories = {
     "xenophobia": {
         "inclusive": False,
         "category": "openly_discriminating",
-        "name": {"en": "Xenophobia", "de": "Fremdenfeindlichkeit Xenophobie"},
+        "name": {"en": "Xenophobia", "de": "Fremdenfeindlichkeit / Xenophobie"},
         "gravity": 1.0,
         "importance": 1,
         "url": {
