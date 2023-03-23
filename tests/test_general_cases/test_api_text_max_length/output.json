@@ -313,11 +313,11 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "💡",
-                "text": "People are more likely to picture men here",
+                "text": "People tend to picture men",
                 "url": "https://www.witty.works/en/subcategories/generic-masculine?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Gendered: Special Functions",
+            "label": "Gendered: Generic masculine",
             "start": 4,
             "subcategory": "function",
             "text": "guys"
@@ -346,88 +346,14 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "💡",
-                "text": "People are more likely to picture men here",
+                "text": "People tend to picture men",
                 "url": "https://www.witty.works/en/subcategories/generic-masculine?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Gendered: Special Functions",
+            "label": "Gendered: Generic masculine",
             "start": 625,
             "subcategory": "function",
             "text": "guys"
-        },
-        {
-            "alternatives": [],
-            "category": "inclusive",
-            "context": "Hey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately <NUMBER> metres east of the mo",
-            "end": 23,
-            "explanation": {
-                "content": "advanced",
-                "icon": "✅",
-                "text": "Emphasizes cooperative attributes",
-                "url": "https://www.witty.works/en/subcategories/communal-language?reducedView=true"
-            },
-            "label": "Inclusive: Communal",
-            "start": 19,
-            "subcategory": "communal",
-            "text": "team"
-        },
-        {
-            "alternatives": [],
-            "category": "inclusive",
-            "context": "mately <NUMBER> metres east of the most south-easterly corner of <NUMBER> Batherton Close.\n\nHey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately <NUMBER> metres east of the mo",
-            "end": 644,
-            "explanation": {
-                "content": "advanced",
-                "icon": "✅",
-                "text": "Emphasizes cooperative attributes",
-                "url": "https://www.witty.works/en/subcategories/communal-language?reducedView=true"
-            },
-            "label": "Inclusive: Communal",
-            "start": 640,
-            "subcategory": "communal",
-            "text": "team"
-        },
-        {
-            "alternatives": [
-                {
-                    "remove": true
-                }
-            ],
-            "category": "style",
-            "context": "most southerly corner of Unit <NUMBER> Foundry Industrial Estate, Victoria Street, Widnes, proceeding in a generally east-north-easterly direction for approximately <NUMBER> metres to a point approximately <NUMBER> metres east-",
-            "end": 330,
-            "explanation": {
-                "content": "advanced",
-                "icon": "😟",
-                "text": "Filler words add words but no meaning",
-                "url": "https://www.witty.works/en/subcategories/filler-words?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Style: Filler Words",
-            "start": 321,
-            "subcategory": "filler",
-            "text": "generally"
-        },
-        {
-            "alternatives": [
-                {
-                    "remove": true
-                }
-            ],
-            "category": "style",
-            "context": "most southerly corner of Unit <NUMBER> Foundry Industrial Estate, Victoria Street, Widnes, proceeding in a generally east-north-easterly direction for approximately",
-            "end": 951,
-            "explanation": {
-                "content": "advanced",
-                "icon": "😟",
-                "text": "Filler words add words but no meaning",
-                "url": "https://www.witty.works/en/subcategories/filler-words?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Style: Filler Words",
-            "start": 942,
-            "subcategory": "filler",
-            "text": "generally"
         },
         {
             "alternatives": [
@@ -453,11 +379,11 @@
             "explanation": {
                 "content": "video",
                 "icon": "😒",
-                "text": "Doesn’t resonate with cooperative and supportive people",
+                "text": "Doesn’t resonate with team minded people",
                 "url": "https://www.witty.works/en/subcategories/agentic-language?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Biased Language: Agentic",
+            "label": "Biased Language: Agentic language",
             "start": 43,
             "subcategory": "agentic",
             "text": "perseverance"
@@ -486,11 +412,11 @@
             "explanation": {
                 "content": "video",
                 "icon": "😒",
-                "text": "Doesn’t resonate with cooperative and supportive people",
+                "text": "Doesn’t resonate with team minded people",
                 "url": "https://www.witty.works/en/subcategories/agentic-language?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Biased Language: Agentic",
+            "label": "Biased Language: Agentic language",
             "start": 664,
             "subcategory": "agentic",
             "text": "perseverance"
@@ -516,11 +442,11 @@
             "explanation": {
                 "content": "video",
                 "icon": "😒",
-                "text": "Doesn’t resonate with cooperative and supportive people",
+                "text": "Doesn’t resonate with team minded people",
                 "url": "https://www.witty.works/en/subcategories/agentic-language?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Biased Language: Agentic",
+            "label": "Biased Language: Agentic language",
             "start": 30,
             "subcategory": "agentic",
             "text": "ambition"
@@ -546,11 +472,11 @@
             "explanation": {
                 "content": "video",
                 "icon": "😒",
-                "text": "Doesn’t resonate with cooperative and supportive people",
+                "text": "Doesn’t resonate with team minded people",
                 "url": "https://www.witty.works/en/subcategories/agentic-language?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Biased Language: Agentic",
+            "label": "Biased Language: Agentic language",
             "start": 651,
             "subcategory": "agentic",
             "text": "ambition"

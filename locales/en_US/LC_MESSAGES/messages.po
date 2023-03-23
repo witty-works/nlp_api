@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-12-02 10:22\n"
-"PO-Revision-Date: 2022-12-02 10:22\n"
+"POT-Creation-Date: 2023-03-23 07:15\n"
+"PO-Revision-Date: 2023-03-23 07:15\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -30,28 +30,28 @@ msgid "rules.ableism_explanation"
 msgstr "Ableist"
 
 msgid "rules.age_name"
-msgstr "Age Information"
+msgstr "Age information"
 
 msgid "rules.age_explanation"
 msgstr "Is age relevant to your message?"
 
 msgid "rules.age_old_name"
-msgstr "50 Years and Older"
+msgstr "50 years and older"
 
 msgid "rules.age_old_explanation"
 msgstr "Reveals and feeds biases against people aged 50+"
 
 msgid "rules.age_young_name"
-msgstr "25 Years and Younger"
+msgstr "25 years and younger"
 
 msgid "rules.age_young_explanation"
 msgstr "Reveals and feeds biases against people under 25"
 
 msgid "rules.agentic_name"
-msgstr "Agentic"
+msgstr "Agentic language"
 
 msgid "rules.agentic_explanation"
-msgstr "Doesn’t resonate with cooperative and supportive people"
+msgstr "Doesn’t resonate with team minded people"
 
 msgid "rules.anglicism_name"
 msgstr "Anglicism"
@@ -84,7 +84,7 @@ msgid "rules.belief_explanation"
 msgstr "Expression of a belief system not universally shared"
 
 msgid "rules.binary_pronouns_name"
-msgstr "Binary Pronouns"
+msgstr "Binary pronouns"
 
 msgid "rules.binary_pronouns_explanation"
 msgstr "Pronouns that exclude non-binary people"
@@ -102,13 +102,13 @@ msgid "rules.classism_explanation"
 msgstr "Implies socioeconomic status sets the value of a person"
 
 msgid "rules.cognitive_ability_name"
-msgstr "Cognitive Ability"
+msgstr "Cognitive ability"
 
 msgid "rules.cognitive_ability_explanation"
 msgstr "Fuels preconceived notions about cognitive ability"
 
 msgid "rules.cognitive_perception_name"
-msgstr "Cognitive Perception"
+msgstr "Cognitive perception"
 
 msgid "rules.cognitive_perception_explanation"
 msgstr "Fuels preconceived notions about cognitive perception"
@@ -120,10 +120,10 @@ msgid "rules.color_explanation"
 msgstr "Don’t use colors to describe good or bad"
 
 msgid "rules.communal_name"
-msgstr "Communal"
+msgstr "Communal language"
 
 msgid "rules.communal_explanation"
-msgstr "Emphasizes cooperative attributes"
+msgstr "Strengthens collaboration and a sense of community"
 
 msgid "rules.compounding_name"
 msgstr "Compounding"
@@ -150,13 +150,13 @@ msgid "rules.culture_explanation"
 msgstr "Implies cultural background sets the value of a person"
 
 msgid "rules.d_and_i_name"
-msgstr "Diversity & Inclusion"
+msgstr "Diversity, equity, inclusion & belonging"
 
 msgid "rules.d_and_i_explanation"
 msgstr "Emphasizes value of diversity, equity and inclusion"
 
 msgid "rules.emotional_security_name"
-msgstr "Positive Emotions"
+msgstr "Positive emotions"
 
 msgid "rules.emotional_security_explanation"
 msgstr "Conveys emotional security"
@@ -165,7 +165,7 @@ msgid "rules.exaggerating_name"
 msgstr "Exaggeration"
 
 msgid "rules.exaggerating_explanation"
-msgstr "Build trust by avoiding exaggerations"
+msgstr "Build trust by avoiding embellishments"
 
 msgid "rules.false_friends_name"
 msgstr "False Friends Words"
@@ -174,16 +174,16 @@ msgid "rules.false_friends_explanation"
 msgstr ""
 
 msgid "rules.female_stereotype_name"
-msgstr "Female Stereotype"
+msgstr "Female stereotype"
 
 msgid "rules.female_stereotype_explanation"
 msgstr "Limits women to traditional roles and behaviors"
 
 msgid "rules.filler_name"
-msgstr "Filler Words"
+msgstr "Filler words"
 
 msgid "rules.filler_explanation"
-msgstr "Filler words add words but no meaning"
+msgstr "Adds complexity but no meaning"
 
 msgid "rules.formality_name"
 msgstr "Formality"
@@ -192,19 +192,19 @@ msgid "rules.formality_explanation"
 msgstr "A less formal tone makes you sound more accessible"
 
 msgid "rules.function_name"
-msgstr "Special Functions"
+msgstr "Generic masculine"
 
 msgid "rules.function_explanation"
-msgstr "People are more likely to picture men here"
+msgstr "People tend to picture men"
 
 msgid "rules.gender_identity_name"
-msgstr "Gender Identity"
+msgstr "Gender binary"
 
 msgid "rules.gender_identity_explanation"
-msgstr "Enforces the heteronormative view of gender identity"
+msgstr "Give visibility to all genders"
 
 msgid "rules.gender_specific_abbreviation_name"
-msgstr "Gender Specific Abbreviation"
+msgstr "Gender specific abbreviation"
 
 msgid "rules.gender_specific_abbreviation_explanation"
 msgstr "Men as default; non-binary persons are excluded"
@@ -228,7 +228,7 @@ msgid "rules.general_style_explanation"
 msgstr ""
 
 msgid "rules.generic_plural_name"
-msgstr "Generic Plural"
+msgstr "Generic plural"
 
 msgid "rules.generic_plural_explanation"
 msgstr "Gendered image deeply anchored. In plural less."
@@ -246,16 +246,16 @@ msgid "rules.hearing_explanation"
 msgstr "Fuels outdated ideas about the ability to hear"
 
 msgid "rules.hidden_image_name"
-msgstr "Hidden Meaning"
+msgstr "Gender cues"
 
 msgid "rules.hidden_image_explanation"
-msgstr "Word component impacting representation"
+msgstr "A part of this expression impacts representation"
 
 msgid "rules.hollow_name"
-msgstr "Empty Words"
+msgstr "Empty words"
 
 msgid "rules.hollow_explanation"
-msgstr "Empty words distract from or undermine your message"
+msgstr "Undermine or distract from your messages"
 
 msgid "rules.homophobia_name"
 msgstr "Homophobia"
@@ -270,43 +270,43 @@ msgid "rules.inclusive_explanation"
 msgstr "Creates sense of belonging"
 
 msgid "rules.leadership_name"
-msgstr "Leadership Stereotype"
+msgstr "Traditional leadership"
 
 msgid "rules.leadership_explanation"
-msgstr "Perpetuates outdated ideas about leading people"
+msgstr "Repeats outdated ideas about leading"
 
 msgid "rules.learning_name"
-msgstr "Learning Ability"
+msgstr "Learning ability"
 
 msgid "rules.learning_explanation"
 msgstr "Fuels outdated ideas about the ability to learn"
 
 msgid "rules.male_stereotype_name"
-msgstr "Male Stereotype"
+msgstr "Male stereotype"
 
 msgid "rules.male_stereotype_explanation"
 msgstr "Limits men to traditional roles and behaviors"
 
 msgid "rules.medical_state_name"
-msgstr "Medical State"
+msgstr "Medical state"
 
 msgid "rules.medical_state_explanation"
 msgstr "Repeats ableist stereotypes about health, illness, and wellbeing"
 
 msgid "rules.mental_wellbeing_name"
-msgstr "Mental Wellbeing"
+msgstr "Mental wellbeing"
 
 msgid "rules.mental_wellbeing_explanation"
 msgstr "Repeats outdated ideas about mental health and wellbeing"
 
 msgid "rules.migration_name"
-msgstr "Migration Background"
+msgstr "Migration background"
 
 msgid "rules.migration_explanation"
 msgstr "Feeds bias against people with a migration background"
 
 msgid "rules.military_source_name"
-msgstr "Military Source"
+msgstr "Military source"
 
 msgid "rules.military_source_explanation"
 msgstr "Reframes the business landscape as a theater of war"
@@ -324,7 +324,7 @@ msgid "rules.mobility_explanation"
 msgstr "Repeats preconceived ideas about motion or movement skills"
 
 msgid "rules.offensive_language_name"
-msgstr "Offensive Language"
+msgstr "Offensive language"
 
 msgid "rules.offensive_language_explanation"
 msgstr "Offends and intimidates"
@@ -354,7 +354,7 @@ msgid "rules.racism_explanation"
 msgstr "Racist"
 
 msgid "rules.racist_source_name"
-msgstr "Racist Source"
+msgstr "Racist source"
 
 msgid "rules.racist_source_explanation"
 msgstr "Suggests racist undertones"
@@ -396,7 +396,7 @@ msgid "rules.sexism_explanation"
 msgstr "Mysogynist"
 
 msgid "rules.sexual_orientation_name"
-msgstr "Sexual Orientation"
+msgstr "Sexual orientation"
 
 msgid "rules.sexual_orientation_explanation"
 msgstr "Promotes a heterosexual value system and roles"
@@ -405,16 +405,16 @@ msgid "rules.simple_language_name"
 msgstr "Plain English"
 
 msgid "rules.simple_language_explanation"
-msgstr ""
+msgstr "Helps you avoid mistakes and misunderstandings."
 
 msgid "rules.speech_name"
-msgstr "Speech Ability"
+msgstr "Speech ability"
 
 msgid "rules.speech_explanation"
 msgstr "Repeats preconceived notions about the ability to speak"
 
 msgid "rules.sports_terms_name"
-msgstr "Sports Terms"
+msgstr "Sports terms"
 
 msgid "rules.sports_terms_explanation"
 msgstr "Shuts out people not into this sport; overemphasizes competitiveness"
@@ -426,10 +426,10 @@ msgid "rules.style_explanation"
 msgstr ""
 
 msgid "rules.titles_name"
-msgstr "Titles"
+msgstr "Jobs"
 
 msgid "rules.titles_explanation"
-msgstr "People are more likely to picture men here"
+msgstr "People tend to picture a specific gender"
 
 msgid "rules.transphobia_name"
 msgstr "Transphobia"

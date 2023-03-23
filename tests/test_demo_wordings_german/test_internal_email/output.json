@@ -64,7 +64,7 @@
                 "url": "https://www.witty.works/de/subkategorien/berufsbezeichnungen?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Titel",
+            "label": "Geschlechtsspezifisch: Berufsbezeichnungen",
             "start": 13,
             "subcategory": "titles",
             "text": "Kollegen"
@@ -123,12 +123,13 @@
             "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreund",
             "end": 62,
             "explanation": {
+                "content": "video",
                 "icon": "😒",
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
             "start": 55,
             "subcategory": "agentic",
             "text": "Ehrgeiz"
@@ -150,12 +151,13 @@
             "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
             "end": 85,
             "explanation": {
+                "content": "video",
                 "icon": "😒",
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
             "start": 67,
             "subcategory": "agentic",
             "text": "Durchhaltevermögen"
@@ -173,12 +175,13 @@
             "context": "rte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
             "end": 124,
             "explanation": {
+                "content": "video",
                 "icon": "😒",
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
             "start": 109,
             "subcategory": "agentic",
             "text": "herausgefordert"
@@ -193,7 +196,7 @@
                 "text": "Betont kooperative Eigenschaften",
                 "url": "https://www.witty.works/de/subkategorien/kommunale-sprache?reducedView=true"
             },
-            "label": "Inklusiv: Kommunal",
+            "label": "Inklusiv: Kommunale Sprache",
             "start": 98,
             "subcategory": "communal",
             "text": "lieben"
@@ -208,7 +211,7 @@
                 "text": "Betont kooperative Eigenschaften",
                 "url": "https://www.witty.works/de/subkategorien/kommunale-sprache?reducedView=true"
             },
-            "label": "Inklusiv: Kommunal",
+            "label": "Inklusiv: Kommunale Sprache",
             "start": 156,
             "subcategory": "communal",
             "text": "Freundliche"

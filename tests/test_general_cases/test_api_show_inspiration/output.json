@@ -27,11 +27,11 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "💡",
-                "text": "People are more likely to picture men here",
+                "text": "People tend to picture men",
                 "url": "https://www.witty.works/en/subcategories/generic-masculine?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Gendered: Special Functions",
+            "label": "Gendered: Generic masculine",
             "start": 19,
             "subcategory": "function",
             "text": "a spokesman"

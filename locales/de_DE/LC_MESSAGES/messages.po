@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: engineering@witty.works\n"
-"POT-Creation-Date: 2022-12-02 10:22\n"
-"PO-Revision-Date: 2022-12-02 10:22\n"
+"POT-Creation-Date: 2023-03-23 07:15\n"
+"PO-Revision-Date: 2023-03-23 07:15\n"
 "Last-Translator: engineering@witty.works\n"
 "Language-Team: engineering@witty.works\n"
 "MIME-Version: 1.0\n"
@@ -36,19 +36,19 @@ msgid "rules.age_explanation"
 msgstr "Spielt das Alter hier eine Rolle?"
 
 msgid "rules.age_old_name"
-msgstr "50 Jahre und Älter"
+msgstr "50 Jahre und älter"
 
 msgid "rules.age_old_explanation"
 msgstr "Bedient Klischees über Menschen über 50"
 
 msgid "rules.age_young_name"
-msgstr "25 Jahre und Jünger"
+msgstr "25 Jahre und jünger"
 
 msgid "rules.age_young_explanation"
 msgstr "Bedient Klischees über Menschen unter 25"
 
 msgid "rules.agentic_name"
-msgstr "Agentisch"
+msgstr "Agentische Sprache"
 
 msgid "rules.agentic_explanation"
 msgstr "Spricht kooperativ denkende Menschen nicht an"
@@ -120,7 +120,7 @@ msgid "rules.color_explanation"
 msgstr "Keine Farb…."
 
 msgid "rules.communal_name"
-msgstr "Kommunal"
+msgstr "Kommunale Sprache"
 
 msgid "rules.communal_explanation"
 msgstr "Betont kooperative Eigenschaften"
@@ -192,7 +192,7 @@ msgid "rules.formality_explanation"
 msgstr "Weniger Förmlichkeit schafft mehr emotionale Nähe"
 
 msgid "rules.function_name"
-msgstr "Spezielle Funktionen"
+msgstr "Generisches Maskulinum"
 
 msgid "rules.function_explanation"
 msgstr "Viele denken bei diesem Wort zuerst an einen Mann"
@@ -204,7 +204,7 @@ msgid "rules.gender_identity_explanation"
 msgstr "Bedient die heteronormative Sicht von Geschlechteridentität"
 
 msgid "rules.gender_specific_abbreviation_name"
-msgstr "Geschlechter Spezifische Abkürzung"
+msgstr "Geschlechter-Spezifische Abkürzung"
 
 msgid "rules.gender_specific_abbreviation_explanation"
 msgstr "Männer als Standard; non-binäre Menschen ausgeschlossen"
@@ -270,7 +270,7 @@ msgid "rules.inclusive_explanation"
 msgstr "Lässt Zugehörigkeitsgefühl entstehen"
 
 msgid "rules.leadership_name"
-msgstr "Führungsstereotyp"
+msgstr "Traditionelles Führungsbild"
 
 msgid "rules.leadership_explanation"
 msgstr "Bedient altmodisches Konzept von Führung"
@@ -307,7 +307,7 @@ msgid "rules.migration_explanation"
 msgstr "Nährt Klischees über Menschen mit Migrationshintergrund"
 
 msgid "rules.military_source_name"
-msgstr "Militaerische Wurzel"
+msgstr "Militärische Wurzel"
 
 msgid "rules.military_source_explanation"
 msgstr "Inszeniert den Berufsalltag als Kriegsschauplatz"
@@ -325,7 +325,7 @@ msgid "rules.mobility_explanation"
 msgstr "Nährt Klischees über Beweglichkeit oder Bewegungsfähigkeit"
 
 msgid "rules.offensive_language_name"
-msgstr "Beleidigende und Einschüchternde Sprache"
+msgstr "Beleidigende und einschüchternde Sprache"
 
 msgid "rules.offensive_language_explanation"
 msgstr " Verletzt und schüchtert ein"
@@ -415,7 +415,7 @@ msgid "rules.speech_explanation"
 msgstr "Bedient Vorurteile und Klischees über Sprechfähigkeit"
 
 msgid "rules.sports_terms_name"
-msgstr "Sport-Jargon"
+msgstr "Sport Jargon"
 
 msgid "rules.sports_terms_explanation"
 msgstr ""
@@ -429,7 +429,7 @@ msgid "rules.style_explanation"
 msgstr ""
 
 msgid "rules.titles_name"
-msgstr "Titel"
+msgstr "Berufsbezeichnungen"
 
 msgid "rules.titles_explanation"
 msgstr "Viele denken bei diesem Wort zuerst an einen Mann"
@@ -465,7 +465,7 @@ msgid "rules.vision_explanation"
 msgstr "Nährt Vorurteile und Klischees über Sehfähigkeit"
 
 msgid "rules.xenophobia_name"
-msgstr "Fremdenfeindlichkeit Xenophobie"
+msgstr "Fremdenfeindlichkeit / Xenophobie"
 
 msgid "rules.xenophobia_explanation"
 msgstr "Fremdenfeindlich, xenophob"

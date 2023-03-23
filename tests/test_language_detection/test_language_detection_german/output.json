@@ -20,21 +20,6 @@
             "start": 0,
             "subcategory": "casing",
             "text": "liebe"
-        },
-        {
-            "alternatives": [],
-            "category": "inclusive",
-            "context": "liebe mensch",
-            "end": 5,
-            "explanation": {
-                "icon": "✅",
-                "text": "Betont kooperative Eigenschaften",
-                "url": "https://www.witty.works/de/subkategorien/kommunale-sprache?reducedView=true"
-            },
-            "label": "Inklusiv: Kommunal",
-            "start": 0,
-            "subcategory": "communal",
-            "text": "liebe"
         }
     ]
 }
