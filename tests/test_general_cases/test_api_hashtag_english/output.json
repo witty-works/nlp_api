@@ -3,26 +3,6 @@
     "limit_reached": false,
     "results": [
         {
-            "alternatives": [
-                {
-                    "remove": true
-                }
-            ],
-            "category": "style",
-            "context": "How to #beanallybe<NUMBER>? Better using #beAnAlly",
-            "end": 30,
-            "explanation": {
-                "icon": "😟",
-                "text": "Filler words add words but no meaning",
-                "url": "https://www.witty.works/en/categories/style#filler_words"
-            },
-            "gravity": 3.0,
-            "label": "Style: Filler Words",
-            "start": 24,
-            "subcategory": "filler",
-            "text": "Better"
-        },
-        {
             "alternatives": [],
             "category": "style",
             "context": "How to #beanallybe<NUMBER>? Better using #beAnAlly",
@@ -30,10 +10,10 @@
             "explanation": {
                 "icon": "😟",
                 "text": "When you capitalize words, everyone knows right away what you mean. #ForExample",
-                "url": "https://www.witty.works/en/categories/style#style"
+                "url": "https://www.witty.works/en/subcategories/style-issue?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Style",
+            "label": "Style issue",
             "start": 7,
             "subcategory": "style",
             "text": "#beanallybe2022"

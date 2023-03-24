@@ -75,11 +75,11 @@
             "end": 47,
             "explanation": {
                 "icon": "😟",
-                "text": "Viele denken bei diesem Wort zuerst an einen Mann",
-                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#titel"
+                "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
+                "url": "https://www.witty.works/de/subkategorien/berufe?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Titel",
+            "label": "Geschlechtsspezifisch: Berufe",
             "start": 41,
             "subcategory": "titles",
             "text": "Kunden"
@@ -115,7 +115,7 @@
             "explanation": {
                 "icon": "😮‍💨",
                 "text": "Auf Übertreibungen verzichten schafft Vertrauen",
-                "url": "https://www.witty.works/de/kategorien/stil#superlative"
+                "url": "https://www.witty.works/de/subkategorien/superlative?reducedView=true"
             },
             "gravity": 2.0,
             "label": "Stil: Superlative",

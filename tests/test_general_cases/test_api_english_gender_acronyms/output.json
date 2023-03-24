@@ -19,29 +19,13 @@
             "explanation": {
                 "icon": "😮",
                 "text": "Put underrepresented groups first and link to your equal opportunity policy",
-                "url": "https://www.witty.works/en/categories/gendered#gender_specific_abbreviation"
+                "url": "https://www.witty.works/en/subcategories/gender-specific-abbreviation?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Gendered: Gender Specific Abbreviation",
+            "label": "Gendered: Gender-specific abbreviation",
             "start": 8,
             "subcategory": "gender_specific_abbreviation",
             "text": "w/m/v"
-        },
-        {
-            "alternatives": [],
-            "category": "inclusive",
-            "context": "We need w/m/v people.",
-            "end": 7,
-            "explanation": {
-                "content": "advanced",
-                "icon": "✅",
-                "text": "Emphasizes cooperative attributes",
-                "url": "https://www.witty.works/en/categories/inclusive#communal"
-            },
-            "label": "Inclusive: Communal",
-            "start": 3,
-            "subcategory": "communal",
-            "text": "need"
         }
     ]
 }

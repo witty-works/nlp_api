@@ -10,10 +10,10 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "✅",
-                "text": "Emphasizes cooperative attributes",
-                "url": "https://www.witty.works/en/categories/inclusive#communal"
+                "text": "Strengthens collaboration and a sense of community",
+                "url": "https://www.witty.works/en/subcategories/communal-language?reducedView=true"
             },
-            "label": "Inclusive: Communal",
+            "label": "Inclusive: Communal language",
             "start": 0,
             "subcategory": "communal",
             "text": "Kind"
@@ -41,11 +41,11 @@
             "end": 12,
             "explanation": {
                 "icon": "🧊",
-                "text": "A less formal tone makes you sound more accessible",
-                "url": "https://www.witty.works/en/categories/style#formality"
+                "text": "Weniger Förmlichkeit schafft mehr emotionale Nähe",
+                "url": "https://www.witty.works/en/subcategories/formality?reducedView=true"
             },
             "gravity": 3.0,
-            "label": "Style: Formality",
+            "label": "Style issue: Formality",
             "start": 0,
             "subcategory": "formality",
             "text": "Kind regards"

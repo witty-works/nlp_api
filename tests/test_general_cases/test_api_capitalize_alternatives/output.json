@@ -25,11 +25,11 @@
             "end": 34,
             "explanation": {
                 "icon": "😟",
-                "text": "Viele denken bei diesem Wort zuerst an einen Mann",
-                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#titel"
+                "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
+                "url": "https://www.witty.works/de/subkategorien/berufe?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Titel",
+            "label": "Geschlechtsspezifisch: Berufe",
             "start": 28,
             "subcategory": "titles",
             "text": "Kunden"
@@ -59,10 +59,10 @@
                 "content": "video",
                 "icon": "😒",
                 "text": "Spricht kooperativ denkende Menschen nicht an",
-                "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
+                "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
             "start": 36,
             "subcategory": "agentic",
             "text": "Ehrgeiz"
@@ -87,10 +87,10 @@
                 "content": "video",
                 "icon": "😒",
                 "text": "Spricht kooperativ denkende Menschen nicht an",
-                "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
+                "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
             "start": 67,
             "subcategory": "agentic",
             "text": "Durchhaltevermögen"
@@ -120,10 +120,10 @@
                 "content": "video",
                 "icon": "😒",
                 "text": "Spricht kooperativ denkende Menschen nicht an",
-                "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
+                "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
             "start": 106,
             "subcategory": "agentic",
             "text": "Ehrgeiz"

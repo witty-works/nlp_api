@@ -21,12 +21,13 @@
             "context": "If a manager picks up this topic, he has to go the extra-mile to solve it.",
             "end": 12,
             "explanation": {
+                "content": "advanced",
                 "icon": "😟",
-                "text": "People are more likely to picture men here",
-                "url": "https://www.witty.works/en/categories/gendered#titles"
+                "text": "People tend to picture a specific gender",
+                "url": "https://www.witty.works/en/subcategories/jobs?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Gendered: Titles",
+            "label": "Gendered: Jobs",
             "start": 3,
             "subcategory": "titles",
             "text": "a manager"
@@ -46,11 +47,11 @@
             "explanation": {
                 "content": "video",
                 "icon": "😒",
-                "text": "Doesn’t resonate with cooperative and supportive people",
-                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+                "text": "Doesn’t resonate with team-minded people",
+                "url": "https://www.witty.works/en/subcategories/agentic-language?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Biased Language: Agentic",
+            "label": "Biased Language: Agentic language",
             "start": 44,
             "subcategory": "agentic",
             "text": "go the extra-mile"

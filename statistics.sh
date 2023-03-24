@@ -13,7 +13,7 @@ exit_abnormal() {
   exit 1
 }
 
-while getopts "hrne:" options; do
+while getopts "hrne:l:" options; do
   case "${options}" in
     h)
       exit_abnormal
@@ -26,6 +26,9 @@ while getopts "hrne:" options; do
       ;;
     e)
       ENV=${OPTARG}
+      ;;
+    l)
+      locale=${OPTARG}
       ;;
     :)
       echo "Error: -${OPTARG} requires an argument."
@@ -55,41 +58,28 @@ then
     echo "Connecting to $ENV";
 fi
 
-descriptions=(
-    "Number of German rules"
-    "Number of English rules"
-)
+description="Number of $locale rules"
 
 training_data_dir="training_data";
 
-cmds=(
-    "wc -l $training_data_dir/de-DE/*"
-    "wc -l $training_data_dir/en-US/*"
-)
+cmd="wc -l $training_data_dir/$locale/*"
 
-for i in ${!descriptions[@]};
-do
-    description=${descriptions[$i]}
-    cmd=${cmds[$i]};
+if $SEND_MAIL;
+then
+    message+="\n\n$description";
 
-    if $SEND_MAIL;
+    cmdoutput=`$cmd`
+    message+="\n$cmdoutput";
+else
+    echo $description
+
+    if $READ_REMOTE;
     then
-        message+="\n\n$description";
-
-        cmdoutput=`$cmd`
-        message+="\n$cmdoutput";
+      platform ssh -e $ENV -A app "$cmd";
     else
-        echo $description
-
-        if $READ_REMOTE;
-        then
-          platform ssh -e $ENV -A app "$cmd";
-        else
-          eval $cmd;
-        fi
+      eval $cmd;
     fi
-
-done
+fi
 
 mj_payload(){
     currentDate=`date +"%Y-%m-%d"`
@@ -102,7 +92,7 @@ mj_payload(){
     {
       "From": { "Email": "support@witty.works" },
       "To": [{ "Email": "$ANALYZE_RULES_EMAIL" }],
-      "Subject": "Witty Statistics: $currentDate",
+      "Subject": "Witty Statistics $locale: $currentDate",
       "TextPart": $messageJson
     }
   ]

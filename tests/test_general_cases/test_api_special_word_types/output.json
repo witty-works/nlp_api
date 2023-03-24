@@ -10,10 +10,10 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "✅",
-                "text": "Emphasizes cooperative attributes",
-                "url": "https://www.witty.works/en/categories/inclusive#communal"
+                "text": "Strengthens collaboration and a sense of community",
+                "url": "https://www.witty.works/en/subcategories/communal-language?reducedView=true"
             },
-            "label": "Inclusive: Communal",
+            "label": "Inclusive: Communal language",
             "start": 2,
             "subcategory": "communal",
             "text": "felt"
@@ -26,9 +26,9 @@
             "explanation": {
                 "icon": "✅",
                 "text": "Conveys emotional security",
-                "url": "https://www.witty.works/en/categories/inclusive#positive_emotions"
+                "url": "https://www.witty.works/en/subcategories/positive-emotions?reducedView=true"
             },
-            "label": "Inclusive: Positive Emotions",
+            "label": "Inclusive: Positive emotions",
             "start": 12,
             "subcategory": "emotional_security",
             "text": "encouraged"
@@ -43,12 +43,13 @@
             "context": "I felt very encouraged as a Deaf person.",
             "end": 11,
             "explanation": {
+                "content": "advanced",
                 "icon": "😟",
-                "text": "Filler words add words but no meaning",
-                "url": "https://www.witty.works/en/categories/style#filler_words"
+                "text": "Adding complexity but no meaning",
+                "url": "https://www.witty.works/en/subcategories/filler-words?reducedView=true"
             },
             "gravity": 3.0,
-            "label": "Style: Filler Words",
+            "label": "Style issue: Filler words",
             "start": 7,
             "subcategory": "filler",
             "text": "very"

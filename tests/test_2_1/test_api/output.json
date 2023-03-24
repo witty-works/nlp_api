@@ -27,7 +27,7 @@
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
             },
-            "gravity": 1,
+            "gravity": 1.0,
             "label": "Rechtschreibfehler",
             "start": 35,
             "subcategory": "typos",
@@ -46,7 +46,7 @@
                 "icon": "❌",
                 "text": "Wenn es sich hier um eine Infinitivgruppe (‚zu‘ + Grundform) handelt, muss in der Regel ein Komma gesetzt werden."
             },
-            "gravity": 1,
+            "gravity": 1.0,
             "label": "Kommasetzung",
             "start": 49,
             "subcategory": "orthography",
@@ -78,7 +78,7 @@
                 "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
                 "url": "https://www.witty.works/de/subkategorien/berufe"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Geschlechtsspezifisch: Berufe",
             "start": 43,
             "subcategory": "titles",
@@ -110,7 +110,7 @@
                 "text": "Auf Übertreibungen verzichten schafft Vertrauen",
                 "url": "https://www.witty.works/de/subkategorien/superlative"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Stil: Superlative",
             "start": 11,
             "subcategory": "exaggerating",
@@ -130,7 +130,7 @@
                 "text": "Füllwörter machen Text länger und unverständlicher",
                 "url": "https://www.witty.works/de/subkategorien/füllwörter"
             },
-            "gravity": 3,
+            "gravity": 3.0,
             "label": "Stil: Füllwörter",
             "start": 53,
             "subcategory": "filler",
@@ -162,7 +162,7 @@
                 "text": "Auf Übertreibungen verzichten schafft Vertrauen",
                 "url": "https://www.witty.works/de/subkategorien/superlative"
             },
-            "gravity": 2,
+            "gravity": 2.0,
             "label": "Stil: Superlative",
             "start": 84,
             "subcategory": "exaggerating",

@@ -12,6 +12,9 @@ from typing import Optional, Union, List
 from collections import defaultdict
 from pydantic import parse_obj_as
 
+import os
+import fasttext
+
 from spacy.tokens import Doc
 from spacy.matcher import PhraseMatcher, Matcher
 import pandas as pd
@@ -87,7 +90,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.41.14"
+version = "1.42.0"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -97,7 +100,7 @@ initialize_aadb2c(settings)
 
 logging.debug("app started with settings: %s", settings)
 
-if len(settings.langs) > 0:
+if len(settings.models) > 0:
     model = {}
     for spacy_model in settings.models:
         lang = spacy_model[0:2]
@@ -105,6 +108,10 @@ if len(settings.langs) > 0:
             model[lang] = fetch_nlp_model(lang, spacy_model)
 
     rules = fetch_rules(settings.langs)
+
+if settings.fasttext:
+    pretrained_lang_model = os.getcwd() + "/training_data/lid.176.bin"
+    fasttext_model = fasttext.load_model(pretrained_lang_model)
 
 if (
     settings.slack_bot_token is not None and settings.slack_signing_secret is not None
@@ -682,6 +689,42 @@ async def post_check_v2_1(
     )
 
 
+@app.post(
+    "/v2.2/check",
+    response_model=Union[ResultsOut, Result],
+    response_model_exclude_none=True,
+    dependencies=[Depends(HTTPBearer(auto_error=False))],
+)
+async def post_check_v2_2(
+    request: Request,
+    response: Response,
+    user_request_in: RequestIn,
+):
+    results, language, limit_reached, configs, user_email = await check(
+        2.2, request, response, user_request_in
+    )
+
+    if isinstance(results, Result):
+        return results
+
+    notifications = None
+    if "notifications" in configs and configs["notifications"] > 0:
+        notifications = configs["notifications"]
+
+    has_consented_to_mailing = None
+    if "has_consented_to_mailing" in configs:
+        has_consented_to_mailing = configs["has_consented_to_mailing"]
+
+    return ResultsOut(
+        results=results,
+        language=language,
+        limit_reached=limit_reached,
+        config_changed=fetch_config_change(configs, user_request_in),
+        notifications=notifications,
+        has_consented_to_mailing=has_consented_to_mailing,
+    )
+
+
 # data exchange routes
 @app.get("/lemmatize")
 async def lemmatize(
@@ -721,11 +764,6 @@ async def lemmatize(
 
 
 @app.post(
-    "/organization/rules",
-    response_model=ConfResponse,
-    response_model_exclude_none=True,
-)
-@app.post(
     "/organization/configs",
     response_model=ConfResponse,
     response_model_exclude_none=True,
@@ -740,10 +778,6 @@ async def post_organization_configs(
 
 
 @app.delete(
-    "/organization/rules",
-    status_code=status.HTTP_204_NO_CONTENT,
-)
-@app.delete(
     "/organization/configs",
     status_code=status.HTTP_204_NO_CONTENT,
 )
@@ -754,12 +788,6 @@ async def delete_organiztion_configs(
     redis.delete(organization_id)
 
 
-@app.get(
-    "/organization/rules",
-    response_model=ConfResponse,
-    response_model_exclude_none=True,
-    responses={404: {"model": ErrorMessage}},
-)
 @app.get(
     "/organization/configs",
     response_model=ConfResponse,
@@ -774,11 +802,6 @@ async def get_organization_configs(
 
 
 @app.post(
-    "/user/rules",
-    response_model=UserConfResponse,
-    response_model_exclude_none=True,
-)
-@app.post(
     "/user/configs",
     response_model=UserConfResponse,
     response_model_exclude_none=True,
@@ -792,10 +815,6 @@ async def post_user_configs(
 
 
 @app.delete(
-    "/user/rules",
-    status_code=status.HTTP_204_NO_CONTENT,
-)
-@app.delete(
     "/user/configs",
     status_code=status.HTTP_204_NO_CONTENT,
 )
@@ -806,12 +825,6 @@ async def delete_user_configs(
     redis.delete(email)
 
 
-@app.get(
-    "/user/rules",
-    response_model=UserConfResponse,
-    response_model_exclude_none=True,
-    responses={404: {"model": ErrorMessage}},
-)
 @app.get(
     "/user/configs",
     response_model=UserConfResponse,
@@ -1054,7 +1067,7 @@ def fetch_text(user_request_in):
         text = text[0 : settings.text_max_length]
         text = text.rsplit(" ", 1)[0]
 
-    lang_detection = get_lang_detection()
+    lang_detection = get_lang_detection(fasttext_model)
     locale = lang_detection.get_locale(
         text,
         user_request_in.lang,
@@ -1071,7 +1084,9 @@ def fetch_text(user_request_in):
 
 
 def check_version(version: float):
-    if version != 1.1 and version != 2.0 and version != 2.1:  # pragma: no cover
+    if (
+        version != 1.1 and version != 2.0 and version != 2.1 and version != 2.2
+    ):  # pragma: no cover
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Version not supported: " + str(version),
@@ -2102,6 +2117,11 @@ def parse_word_types(word_types, lower_case=True):
     if word_types is None:
         return [], lower_case, lemmatize
 
+    if word_types[0] == "~":
+        # exact match
+        lower_case = True
+        lemmatize = False
+        word_types = word_types[1:]
     if word_types[0] == "=":
         # exact match
         lower_case = False
@@ -2419,9 +2439,11 @@ def align_noun_form(lang, a_text, a_token, b_token):
         return b_text
 
     is_singular = is_token_singular(lang, b_token)
-    if is_token_singular(lang, b_token):
+
+    if is_singular == True or (is_singular is None and is_token_plural(lang, a_token)):
         return Noun(b_text).plural()
-    elif is_singular == False:
+
+    if is_singular == False:
         return b_text
 
     return Noun(b_text).singular()
@@ -2545,13 +2567,14 @@ def align_verb_form(lang, a_text, a_token, b_token):
         # check if "zu" was stripped from the word in the lemma
         if a_text.count("zu") > a_token.lemma_.count("zu"):
             if b_text in rules["de"]["verbs"]:
-                b_text = rules["de"]["verbs"][b_text]["infinitiv_zu"]
-            else:  # pragma: no cover
-                prefix = german_verb_splittable(b_text)
-                if prefix:
-                    b_text = prefix + "zu" + b_text[len(prefix) :]
-                else:
-                    b_text = "zu " + b_text
+                return rules["de"]["verbs"][b_text]["infinitiv_zu"]
+
+            # pragma: no cover
+            prefix = german_verb_splittable(b_text)
+            if prefix:
+                b_text = prefix + "zu" + b_text[len(prefix) :]
+            else:
+                b_text = "zu " + b_text
 
             injected_string = "zu"
         # check if "ge" was stripped from the word in the lemma
@@ -2565,6 +2588,15 @@ def align_verb_form(lang, a_text, a_token, b_token):
                 b_text = prefix + "ge" + b_text[len(prefix) :]
 
             injected_string = "ge"
+        elif b_text in rules["de"]["verbs"]:
+            morph = a_token.morph.to_dict()
+            if (
+                "Number" in morph
+                and morph["Number"] == "Sing"
+                and "Person" in morph
+                and morph["Person"] == "1"
+            ):
+                return rules["de"]["verbs"][b_text]["present_ich"]
 
         return add_declension_german(b_text, a_text, a_token.lemma_, injected_string)
 

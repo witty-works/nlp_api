@@ -22,10 +22,10 @@
             "explanation": {
                 "icon": "😮",
                 "text": "Nenne unterrepräsentierte Gruppen zuerst. Verlinke auf deine Leitlinie zur Gleichstellung.",
-                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#geschlechter_spezifische_abkürzung"
+                "url": "https://www.witty.works/de/subkategorien/geschlechter-spezifische-abkürzung?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Geschlechter Spezifische Abkürzung",
+            "label": "Geschlechtsspezifisch: Geschlechter-Spezifische Abkürzung",
             "start": 13,
             "subcategory": "gender_specific_abbreviation",
             "text": "m/f"
@@ -50,10 +50,10 @@
             "explanation": {
                 "icon": "😮",
                 "text": "Nenne unterrepräsentierte Gruppen zuerst. Verlinke auf deine Leitlinie zur Gleichstellung.",
-                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#geschlechter_spezifische_abkürzung"
+                "url": "https://www.witty.works/de/subkategorien/geschlechter-spezifische-abkürzung?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Geschlechter Spezifische Abkürzung",
+            "label": "Geschlechtsspezifisch: Geschlechter-Spezifische Abkürzung",
             "start": 38,
             "subcategory": "gender_specific_abbreviation",
             "text": "f/m/d"
@@ -65,10 +65,10 @@
             "end": 66,
             "explanation": {
                 "icon": "✅",
-                "text": "Bestärkt Wert von Diversity, Gleichstellung und Inklusion",
-                "url": "https://www.witty.works/de/kategorien/inklusiv#diversität_&_inklusion"
+                "text": "Stärkt Vielfalt, Gleichstellung, Teilhabe und Zugehörigkeit",
+                "url": "https://www.witty.works/de/subkategorien/vielfalt-gleichheit-teilhabe-zugehörigkeit?reducedView=true"
             },
-            "label": "Inklusiv: Diversität & Inklusion",
+            "label": "Inklusiv: DEIB",
             "start": 61,
             "subcategory": "d_and_i",
             "text": "d/f/m"
@@ -80,10 +80,10 @@
             "end": 77,
             "explanation": {
                 "icon": "✅",
-                "text": "Bestärkt Wert von Diversity, Gleichstellung und Inklusion",
-                "url": "https://www.witty.works/de/kategorien/inklusiv#diversität_&_inklusion"
+                "text": "Stärkt Vielfalt, Gleichstellung, Teilhabe und Zugehörigkeit",
+                "url": "https://www.witty.works/de/subkategorien/vielfalt-gleichheit-teilhabe-zugehörigkeit?reducedView=true"
             },
-            "label": "Inklusiv: Diversität & Inklusion",
+            "label": "Inklusiv: DEIB",
             "start": 72,
             "subcategory": "d_and_i",
             "text": "x/f/m"

@@ -47,11 +47,11 @@
             "end": 16,
             "explanation": {
                 "icon": "😉",
-                "text": "Are you sure people know what this stands for?",
-                "url": "https://www.witty.works/en/categories/style#abbreviation"
+                "text": "Are you sure people know what this stands for? ",
+                "url": "https://www.witty.works/en/subcategories/abbreviation?reducedView=true"
             },
             "gravity": 3.0,
-            "label": "Style: Abbreviation",
+            "label": "Style issue: Abbreviation",
             "start": 13,
             "subcategory": "abbreviation",
             "text": "asl"

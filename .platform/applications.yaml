@@ -1,39 +1,26 @@
 - name: "app"
 
-  variables:
-    env:
-      LANGS: '["en"]'
-
   type: "python:3.11"
 
   disk: 2048
 
-  resources:
-    base_memory: 1024
-    memory_ratio: 1024
-
-  dependencies:
-    python3:
-      pipenv: "2021.5.29"
+  container_profile: HIGHER_MEMORY
+  initial_size: "0.5"
 
   web:
     upstream:
       socket_family: unix
     commands:
       start: |
-        blackfire-python gunicorn app.main:app -b unix:$SOCKET -w ${WORKERS} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
+        eval $(pdm venv activate in-project)
+        FINAL_WORKER_COUNT=$(echo $PLATFORM_APPLICATION| base64 --decode | jq --argjson multiplier $MULTIPLIER '.resources.profile_size | tonumber |floor|2 * . |$multiplier * .|1 + . ')
+        gunicorn app.main:app --preload -b unix:$SOCKET -w $FINAL_WORKER_COUNT -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*" --worker-tmp-dir="/run"
 
   hooks:
     build: |
       set -e
 
-      pipenv install --system --deploy
-
-      pipenv run /opt/python/3.11/bin/python3.11 -m spacy download en_core_web_md --no-cache-dir
-      pipenv run /opt/python/3.11/bin/python3.11 -m spacy download de_core_news_lg --no-cache-dir
-
-      pipenv run pybabel compile -d locales -l en_US -f
-      pipenv run pybabel compile -d locales -l en_GB -f
+      ./install_dependencies.sh
 
       export FT_MODEL="lid.176.bin"
 
@@ -51,9 +38,12 @@
 
       echo "e613bda316ecb4f5e1924140eedf81b81c087d9a *training_data/lid.176.bin" | sha1sum -c -
 
-  relationships:
-    rediscache: "rediscache:redis"
-    de: "german:http"
+      pdm run pybabel compile -d locales -l en_US -f
+      pdm run pybabel compile -d locales -l en_GB -f
+
+      pdm run pybabel compile -d locales -l de_DE -f
+      pdm run pybabel compile -d locales -l de_CH -f
+      pdm run pybabel compile -d locales -l de_AT -f
 
   crons:
     generate-statistics:
@@ -72,40 +62,5 @@
   mounts:
     "analyze_rules": "shared:files/analyze_rules"
 
-- name: "german"
-
-  variables:
-    env:
-      LANGS: '["de"]'
-      LANGUAGE_ENDPOINT_ENABLED_DE: true
-
-  type: "python:3.11"
-
-  disk: 2048
-
-  resources:
-    base_memory: 1024
-    memory_ratio: 1024
-
-  dependencies:
-    python3:
-      pipenv: "2021.5.29"
-
-  web:
-    upstream:
-      socket_family: unix
-    commands:
-      start: |
-        blackfire-python gunicorn app.main:app -b unix:$SOCKET -w ${DE_WORKERS} -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
-
-  hooks:
-    build: |
-      set -e
-
-      pipenv install --system --deploy
-
-      pipenv run /opt/python/3.11/bin/python3.11 -m spacy download de_core_news_lg --no-cache-dir
-
-      pipenv run pybabel compile -d locales -l de_DE -f
-      pipenv run pybabel compile -d locales -l de_AT -f
-      pipenv run pybabel compile -d locales -l de_CH -f
+  relationships:
+    rediscache: "rediscache:redis"

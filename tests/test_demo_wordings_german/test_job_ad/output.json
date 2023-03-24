@@ -22,11 +22,11 @@
             "end": 33,
             "explanation": {
                 "icon": "😟",
-                "text": "Viele denken bei diesem Wort zuerst an einen Mann",
-                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#titel"
+                "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
+                "url": "https://www.witty.works/de/subkategorien/berufe?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Titel",
+            "label": "Geschlechtsspezifisch: Berufe",
             "start": 20,
             "subcategory": "titles",
             "text": "Projektleiter"
@@ -51,11 +51,11 @@
             "end": 134,
             "explanation": {
                 "icon": "😟",
-                "text": "Viele denken bei diesem Wort zuerst an einen Mann",
-                "url": "https://www.witty.works/de/kategorien/geschlechtsspezifisch#titel"
+                "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
+                "url": "https://www.witty.works/de/subkategorien/berufe?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Titel",
+            "label": "Geschlechtsspezifisch: Berufe",
             "start": 126,
             "subcategory": "titles",
             "text": "Kollegen"
@@ -79,10 +79,10 @@
                 "content": "video",
                 "icon": "😒",
                 "text": "Spricht kooperativ denkende Menschen nicht an",
-                "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
+                "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
             "start": 4,
             "subcategory": "agentic",
             "text": "selbstständiger"
@@ -109,10 +109,10 @@
                 "content": "video",
                 "icon": "😒",
                 "text": "Spricht kooperativ denkende Menschen nicht an",
-                "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
+                "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
             "start": 34,
             "subcategory": "agentic",
             "text": "leisten"
@@ -136,10 +136,10 @@
                 "content": "video",
                 "icon": "😒",
                 "text": "Spricht kooperativ denkende Menschen nicht an",
-                "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
+                "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
             "start": 46,
             "subcategory": "agentic",
             "text": "anspruchsvolle"
@@ -169,10 +169,10 @@
                 "content": "video",
                 "icon": "😒",
                 "text": "Spricht kooperativ denkende Menschen nicht an",
-                "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
+                "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
             "start": 111,
             "subcategory": "agentic",
             "text": "ambitionierten"
@@ -199,10 +199,10 @@
                 "content": "video",
                 "icon": "😒",
                 "text": "Spricht kooperativ denkende Menschen nicht an",
-                "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
+                "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
             "start": 135,
             "subcategory": "agentic",
             "text": "zielstrebig"
@@ -213,12 +213,11 @@
             "context": "Als selbstständiger Projektleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielstrebig\nneue Höchstleistungen.",
             "end": 93,
             "explanation": {
-                "content": "advanced",
                 "icon": "✅",
                 "text": "Betont kooperative Eigenschaften",
-                "url": "https://www.witty.works/de/kategorien/inklusiv#kommunal"
+                "url": "https://www.witty.works/de/subkategorien/kommunale-sprache?reducedView=true"
             },
-            "label": "Inklusiv: Kommunal",
+            "label": "Inklusiv: Kommunale Sprache",
             "start": 84,
             "subcategory": "communal",
             "text": "gemeinsam"
@@ -247,7 +246,7 @@
             "explanation": {
                 "icon": "😮‍💨",
                 "text": "Auf Übertreibungen verzichten schafft Vertrauen",
-                "url": "https://www.witty.works/de/kategorien/stil#superlative"
+                "url": "https://www.witty.works/de/subkategorien/superlative?reducedView=true"
             },
             "gravity": 2.0,
             "label": "Stil: Superlative",

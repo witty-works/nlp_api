@@ -12,6 +12,7 @@ __pycache__/
 *.py[cod]
 *.mo
 *Zone.Identifier
+.pdm.toml
 
 # Unit test / coverage reports
 .coverage

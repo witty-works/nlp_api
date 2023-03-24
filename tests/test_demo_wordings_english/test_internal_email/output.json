@@ -42,11 +42,11 @@
             "explanation": {
                 "content": "video",
                 "icon": "😒",
-                "text": "Doesn’t resonate with cooperative and supportive people",
-                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+                "text": "Doesn’t resonate with team-minded people",
+                "url": "https://www.witty.works/en/subcategories/agentic-language?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Biased Language: Agentic",
+            "label": "Biased Language: Agentic language",
             "start": 111,
             "subcategory": "agentic",
             "text": "challenged"
@@ -75,11 +75,11 @@
             "explanation": {
                 "content": "video",
                 "icon": "😒",
-                "text": "Doesn’t resonate with cooperative and supportive people",
-                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+                "text": "Doesn’t resonate with team-minded people",
+                "url": "https://www.witty.works/en/subcategories/agentic-language?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Biased Language: Agentic",
+            "label": "Biased Language: Agentic language",
             "start": 154,
             "subcategory": "agentic",
             "text": "drives"
@@ -106,12 +106,13 @@
             "context": "Hey guys,\nWe are a team where ambition and perseverance count.\nCompetition is our daily life and we love to",
             "end": 8,
             "explanation": {
+                "content": "advanced",
                 "icon": "💡",
-                "text": "People are more likely to picture men here",
-                "url": "https://www.witty.works/en/categories/gendered#special_functions"
+                "text": "People tend to picture men",
+                "url": "https://www.witty.works/en/subcategories/generic-masculine?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Gendered: Special Functions",
+            "label": "Gendered: Generic masculine",
             "start": 4,
             "subcategory": "function",
             "text": "guys"
@@ -124,10 +125,10 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "✅",
-                "text": "Emphasizes cooperative attributes",
-                "url": "https://www.witty.works/en/categories/inclusive#communal"
+                "text": "Strengthens collaboration and a sense of community",
+                "url": "https://www.witty.works/en/subcategories/communal-language?reducedView=true"
             },
-            "label": "Inclusive: Communal",
+            "label": "Inclusive: Communal language",
             "start": 19,
             "subcategory": "communal",
             "text": "team"
@@ -154,12 +155,13 @@
             "context": "ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number <NUMBER> and innovation drives us.\nSincere regards,\nNadia",
             "end": 138,
             "explanation": {
+                "content": "advanced",
                 "icon": "😮‍💨",
-                "text": "Build trust by avoiding exaggerations",
-                "url": "https://www.witty.works/en/categories/style#exaggeration"
+                "text": "Build trust by avoiding embellishments",
+                "url": "https://www.witty.works/en/subcategories/exaggeration?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Style: Exaggeration",
+            "label": "Style issue: Exaggeration",
             "start": 130,
             "subcategory": "exaggerating",
             "text": "number 1"
@@ -186,12 +188,13 @@
             "context": "perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number <NUMBER> and innovation drives us.\nSincere regards,\nNadia",
             "end": 153,
             "explanation": {
+                "content": "advanced",
                 "icon": "🙄",
-                "text": "Empty words distract from or undermine your message",
-                "url": "https://www.witty.works/en/categories/style#empty_words"
+                "text": "Undermine or distract from your messages",
+                "url": "https://www.witty.works/en/subcategories/empty-words?reducedView=true"
             },
             "gravity": 3.0,
-            "label": "Style: Empty Words",
+            "label": "Style issue: Empty words",
             "start": 143,
             "subcategory": "hollow",
             "text": "innovation"
@@ -220,11 +223,11 @@
             "explanation": {
                 "content": "video",
                 "icon": "😒",
-                "text": "Doesn’t resonate with cooperative and supportive people",
-                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+                "text": "Doesn’t resonate with team-minded people",
+                "url": "https://www.witty.works/en/subcategories/agentic-language?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Biased Language: Agentic",
+            "label": "Biased Language: Agentic language",
             "start": 43,
             "subcategory": "agentic",
             "text": "perseverance"
@@ -250,11 +253,11 @@
             "explanation": {
                 "content": "video",
                 "icon": "😒",
-                "text": "Doesn’t resonate with cooperative and supportive people",
-                "url": "https://www.witty.works/en/categories/biased_language#agentic"
+                "text": "Doesn’t resonate with team-minded people",
+                "url": "https://www.witty.works/en/subcategories/agentic-language?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Biased Language: Agentic",
+            "label": "Biased Language: Agentic language",
             "start": 30,
             "subcategory": "agentic",
             "text": "ambition"

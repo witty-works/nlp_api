@@ -10,10 +10,10 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "✅",
-                "text": "Emphasizes cooperative attributes",
-                "url": "https://www.witty.works/en/categories/inclusive#communal"
+                "text": "Strengthens collaboration and a sense of community",
+                "url": "https://www.witty.works/en/subcategories/communal-language?reducedView=true"
             },
-            "label": "Inclusive: Communal",
+            "label": "Inclusive: Communal language",
             "start": 25,
             "subcategory": "communal",
             "text": "needs"
@@ -26,10 +26,10 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "✅",
-                "text": "Emphasizes cooperative attributes",
-                "url": "https://www.witty.works/en/categories/inclusive#communal"
+                "text": "Strengthens collaboration and a sense of community",
+                "url": "https://www.witty.works/en/subcategories/communal-language?reducedView=true"
             },
-            "label": "Inclusive: Communal",
+            "label": "Inclusive: Communal language",
             "start": 69,
             "subcategory": "communal",
             "text": "team"

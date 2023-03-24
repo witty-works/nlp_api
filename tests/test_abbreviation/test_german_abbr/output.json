@@ -49,10 +49,10 @@
                 "context": "nur wenn die Person sich selbst so bezeichnet",
                 "icon": "😒",
                 "text": "Bedient die heteronormative Sicht von Geschlechteridentität",
-                "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#geschlechtsidentität"
+                "url": "https://www.witty.works/de/subkategorien/binäres-geschlecht?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Geschlechtsidentität",
+            "label": "Sprachliche Voreingenommenheit: Binäres Geschlecht",
             "start": 25,
             "subcategory": "gender_identity",
             "text": "Frauen"

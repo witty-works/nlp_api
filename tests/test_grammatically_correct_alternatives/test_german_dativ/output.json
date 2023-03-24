@@ -27,10 +27,10 @@
                 "content": "video",
                 "icon": "😒",
                 "text": "Spricht kooperativ denkende Menschen nicht an",
-                "url": "https://www.witty.works/de/kategorien/sprachliche_voreingenommenheit#agentisch"
+                "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentisch",
+            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
             "start": 25,
             "subcategory": "agentic",
             "text": "Prinzipien"
