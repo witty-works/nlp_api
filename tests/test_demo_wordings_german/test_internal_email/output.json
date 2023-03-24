@@ -60,11 +60,11 @@
             "end": 21,
             "explanation": {
                 "icon": "😟",
-                "text": "Viele denken bei diesem Wort zuerst an einen Mann",
-                "url": "https://www.witty.works/de/subkategorien/berufsbezeichnungen?reducedView=true"
+                "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
+                "url": "https://www.witty.works/de/subkategorien/berufe?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Berufsbezeichnungen",
+            "label": "Geschlechtsspezifisch: Berufe",
             "start": 13,
             "subcategory": "titles",
             "text": "Kollegen"
@@ -93,10 +93,10 @@
             "explanation": {
                 "icon": "😟",
                 "text": "Wortteil macht andere Geschlechter unsichtbar",
-                "url": "https://www.witty.works/de/subkategorien/versteckter-ausdruck?reducedView=true"
+                "url": "https://www.witty.works/de/subkategorien/angedeutetes-gender?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Versteckter Ausdruck",
+            "label": "Geschlechtsspezifisch: Angedeutetes Gender",
             "start": 31,
             "subcategory": "hidden_image",
             "text": "eine Mannschaft"
@@ -259,11 +259,11 @@
             "end": 12,
             "explanation": {
                 "icon": "🧊",
-                "text": "Weniger Förmlichkeit schafft mehr emotionale Nähe",
-                "url": "https://www.witty.works/de/subkategorien/formalität?reducedView=true"
+                "text": "A less formal tone makes you sound more accessible",
+                "url": "https://www.witty.works/de/subkategorien/förmlichkeit?reducedView=true"
             },
             "gravity": 3.0,
-            "label": "Stil: Formalität",
+            "label": "Stil: Förmlichkeit",
             "start": 0,
             "subcategory": "formality",
             "text": "Sehr geehrte"

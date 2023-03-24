@@ -9,7 +9,8 @@
             "end": 34,
             "explanation": {
                 "icon": "🙄",
-                "text": "Jeder Satz sollte nur eine Aussage enthalten. Können Sie diesen Satz in mehrere Sätze aufteilen?"
+                "text": "Jeder Satz sollte nur eine Aussage enthalten. Können Sie diesen Satz in mehrere Sätze aufteilen?",
+                "url": "https://www.witty.works/de/subkategorien/leichte-sprache?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Stil: Leichte Sprache",
@@ -24,7 +25,8 @@
             "end": 118,
             "explanation": {
                 "icon": "🙄",
-                "text": "Passiv gefunden. Benutzen Sie aktive Wörter."
+                "text": "Passiv gefunden. Benutzen Sie aktive Wörter.",
+                "url": "https://www.witty.works/de/subkategorien/leichte-sprache?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Stil: Leichte Sprache",
@@ -39,7 +41,8 @@
             "end": 145,
             "explanation": {
                 "icon": "🙄",
-                "text": "Dieses Wort hat mehr als dreizehn Buchstaben. Benutzen Sie kurze Wörter."
+                "text": "Dieses Wort hat mehr als dreizehn Buchstaben. Benutzen Sie kurze Wörter.",
+                "url": "https://www.witty.works/de/subkategorien/leichte-sprache?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Stil: Leichte Sprache",
@@ -54,7 +57,8 @@
             "end": 159,
             "explanation": {
                 "icon": "🙄",
-                "text": "Wenn möglich, keine Verneinungen benutzen."
+                "text": "Wenn möglich, keine Verneinungen benutzen.",
+                "url": "https://www.witty.works/de/subkategorien/leichte-sprache?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Stil: Leichte Sprache",
@@ -69,7 +73,8 @@
             "end": 183,
             "explanation": {
                 "icon": "🙄",
-                "text": "Vermeiden Sie abstrakte Wörter. Benutzen Sie möglichst konkrete Aussagen."
+                "text": "Vermeiden Sie abstrakte Wörter. Benutzen Sie möglichst konkrete Aussagen.",
+                "url": "https://www.witty.works/de/subkategorien/leichte-sprache?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Stil: Leichte Sprache",
@@ -84,7 +89,8 @@
             "end": 196,
             "explanation": {
                 "icon": "🙄",
-                "text": "Vermeiden Sie den Genitiv."
+                "text": "Vermeiden Sie den Genitiv.",
+                "url": "https://www.witty.works/de/subkategorien/leichte-sprache?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Stil: Leichte Sprache",
@@ -99,7 +105,8 @@
             "end": 216,
             "explanation": {
                 "icon": "🙄",
-                "text": "Vermeiden Sie den Konjunktiv."
+                "text": "Vermeiden Sie den Konjunktiv.",
+                "url": "https://www.witty.works/de/subkategorien/leichte-sprache?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Stil: Leichte Sprache",
@@ -114,7 +121,8 @@
             "end": 236,
             "explanation": {
                 "icon": "🙄",
-                "text": "Vermeiden Sie Nebensätze."
+                "text": "Vermeiden Sie Nebensätze.",
+                "url": "https://www.witty.works/de/subkategorien/leichte-sprache?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Stil: Leichte Sprache",
@@ -129,7 +137,8 @@
             "end": 252,
             "explanation": {
                 "icon": "🙄",
-                "text": "Vermeiden Sie Metaphern und bildhafte Sprache."
+                "text": "Vermeiden Sie Metaphern und bildhafte Sprache.",
+                "url": "https://www.witty.works/de/subkategorien/leichte-sprache?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Stil: Leichte Sprache",
@@ -192,7 +201,8 @@
             "end": 364,
             "explanation": {
                 "icon": "🙄",
-                "text": "Vermeiden Sie Nebensätze."
+                "text": "Vermeiden Sie Nebensätze.",
+                "url": "https://www.witty.works/de/subkategorien/leichte-sprache?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Stil: Leichte Sprache",
@@ -222,7 +232,8 @@
             "end": 420,
             "explanation": {
                 "icon": "🙄",
-                "text": "Vermeiden Sie abstrakte Wörter. Benutzen Sie möglichst konkrete Aussagen."
+                "text": "Vermeiden Sie abstrakte Wörter. Benutzen Sie möglichst konkrete Aussagen.",
+                "url": "https://www.witty.works/de/subkategorien/leichte-sprache?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Stil: Leichte Sprache",
@@ -253,7 +264,8 @@
             "end": 447,
             "explanation": {
                 "icon": "🙄",
-                "text": "Jeder Satz sollte nur eine Aussage enthalten. Können Sie diesen Satz in mehrere Sätze aufteilen?"
+                "text": "Jeder Satz sollte nur eine Aussage enthalten. Können Sie diesen Satz in mehrere Sätze aufteilen?",
+                "url": "https://www.witty.works/de/subkategorien/leichte-sprache?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Stil: Leichte Sprache",
@@ -268,7 +280,8 @@
             "end": 573,
             "explanation": {
                 "icon": "🙄",
-                "text": "Vermeiden Sie den Konjunktiv. Vermeiden Sie auch indirekte Rede."
+                "text": "Vermeiden Sie den Konjunktiv. Vermeiden Sie auch indirekte Rede.",
+                "url": "https://www.witty.works/de/subkategorien/leichte-sprache?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Stil: Leichte Sprache",
@@ -342,10 +355,10 @@
             "end": 382,
             "explanation": {
                 "icon": "✅",
-                "text": "Bestärkt Wert von Diversity, Gleichstellung und Inklusion",
-                "url": "https://www.witty.works/de/subkategorien/diversität-und-inklusion?reducedView=true"
+                "text": "Stärkt Vielfalt, Gleichstellung, Teilhabe und Zugehörigkeit",
+                "url": "https://www.witty.works/de/subkategorien/vielfalt-gleichheit-teilhabe-zugehörigkeit?reducedView=true"
             },
-            "label": "Inklusiv: Diversität & Inklusion",
+            "label": "Inklusiv: DEIB",
             "start": 371,
             "subcategory": "d_and_i",
             "text": "Leser*innen"

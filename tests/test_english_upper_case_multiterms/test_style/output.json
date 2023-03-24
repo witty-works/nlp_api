@@ -41,11 +41,11 @@
             "end": 12,
             "explanation": {
                 "icon": "🧊",
-                "text": "A less formal tone makes you sound more accessible",
+                "text": "Weniger Förmlichkeit schafft mehr emotionale Nähe",
                 "url": "https://www.witty.works/en/subcategories/formality?reducedView=true"
             },
             "gravity": 3.0,
-            "label": "Style: Formality",
+            "label": "Style issue: Formality",
             "start": 0,
             "subcategory": "formality",
             "text": "Kind regards"
