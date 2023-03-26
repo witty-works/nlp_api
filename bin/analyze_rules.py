@@ -585,6 +585,7 @@ original_languagetool_path = args.Original
 api_url = args.URL
 
 try:
+    print("Checking if LanguageTool is running ..")
     response = requests.get(api_url.rstrip("/check") + "/languages")
     assert response.status_code == 200
     languagetool_running = True
@@ -594,6 +595,7 @@ try:
     print("Following lemma may be spelling mistakes:")
     print("\n".join(sorted(lemma_spelling_mistakes)))
 except requests.ConnectionError:
+    print("LanguageTool is not running.")
     languagetool_running = False
 
 if args.Path:

@@ -31,59 +31,47 @@ while getopts "hrnl:" options; do
   esac
 done
 
-echo "Collecting data"
+echo "Collecting data for $lang"
 
 lt_url="https://lt.default.api.witty.works/v2/check"
 
 diff_not_empty=false
 
-python=`which python`
-if ! [[ "$python" =~ ^/ ]]
+description="Analyze $lang rules"
+file="./analyze_rules/$lang.txt"
+prev_file="./analyze_rules/prev_$lang.txt"
+if test -f "$file"
 then
-    python="python"
+  pre_cmd="mv $file $prev_file"
+  eval $pre_cmd
 fi
 
-  lang=${langs[$i]}
+cmd="pdm run python -m bin.analyze_rules -l $lang -u $lt_url >> ./analyze_rules/$lang.txt"
 
-  description="Analyze $lang rules"
-  file="./analyze_rules/$lang.txt"
-  prev_file="./analyze_rules/prev_$lang.txt"
-  if test -f "$file"
+echo "Executing cmd: $cmd"
+eval $cmd
+
+if test -f "$prev_file"
+then
+  diff="diff $prev_file $file"
+
+  if $SEND_MAIL
   then
-    pre_cmd="mv $file $prev_file"
-    eval $pre_cmd
+      diffoutput=`$diff`
+
+      if [ -z "$diffoutput" ]
+      then
+        echo "$lang diff is empty"
+      else
+        message+="\n\n$description"
+        message+="\n$diffoutput"
+        diff_not_empty=true
+      fi
+  else
+      echo "$lang diff from last run"
+      eval $diff
   fi
-
-  cmd="pdm run $python -m bin.analyze_rules -l $lang -u $lt_url >> ./analyze_rules/$lang.txt"
-
-  if ! [ $SEND_MAIL ]
-  then
-      echo $description
-  fi
-
-  eval $cmd
-
-  if test -f "$prev_file"
-  then
-    diff="diff $prev_file $file"
-
-    if $SEND_MAIL
-    then
-        diffoutput=`$diff`
-
-        if [ -z "$diffoutput" ]
-        then
-          echo "$lang diff is empty"
-        else
-          message+="\n\n$description"
-          message+="\n$diffoutput"
-          diff_not_empty=true
-        fi
-    else
-        echo "$lang diff from last run"
-        eval $diff
-    fi
-  fi
+fi
 
 mj_payload(){
     currentDate=`date +"%Y-%m-%d"`
