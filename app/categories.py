@@ -2,7 +2,6 @@ categories = {
     "abbreviation": {
         "inclusive": False,
         "category": "style",
-        "name": {"en": "Abbreviation", "de": "Abkürzung"},
         "gravity": 3.0,
         "importance": 3,
         "url": {
@@ -14,7 +13,6 @@ categories = {
     "ability": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Ability", "de": "Fähigkeiten"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -26,7 +24,6 @@ categories = {
     "ableism": {
         "inclusive": False,
         "category": "openly_discriminating",
-        "name": {"en": "Ableist", "de": "Behindertenfeindlichkeit"},
         "gravity": 1.0,
         "importance": 1,
         "url": {
@@ -38,7 +35,6 @@ categories = {
     "age": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Age information", "de": "Altersangabe"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -50,7 +46,6 @@ categories = {
     "age_old": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "50 years and older", "de": "50 Jahre und älter"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -62,7 +57,6 @@ categories = {
     "age_young": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "25 years and younger", "de": "25 Jahre und jünger"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -74,7 +68,6 @@ categories = {
     "agentic": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Agentic language", "de": "Agentische Sprache"},
         "gravity": 2.0,
         "importance": 2,
         "content": {"en": "video", "de": "video"},
@@ -87,7 +80,6 @@ categories = {
     "anglicism": {
         "inclusive": False,
         "category": "style",
-        "name": {"en": "Anglicism", "de": "Anglizismen"},
         "gravity": 3.0,
         "importance": 3,
         "url": {"de": "https://www.witty.works/de/subkategorien/anglizismen"},
@@ -96,7 +88,6 @@ categories = {
     "antimuslim": {
         "inclusive": False,
         "category": "openly_discriminating",
-        "name": {"en": "Islamophobia", "de": "Islamophobie"},
         "gravity": 1.0,
         "importance": 1,
         "url": {
@@ -108,7 +99,6 @@ categories = {
     "antisemitism": {
         "inclusive": False,
         "category": "openly_discriminating",
-        "name": {"en": "Anti-semitism", "de": "Anti-semitismus"},
         "gravity": 1.0,
         "importance": 1,
         "url": {
@@ -120,7 +110,6 @@ categories = {
     "behavior": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Behavior", "de": "Verhalten"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -132,7 +121,6 @@ categories = {
     "belief": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Belief", "de": "Glauben"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -144,7 +132,6 @@ categories = {
     "binary_pronouns": {
         "inclusive": False,
         "category": "gendered",
-        "name": {"en": "Binary pronouns", "de": "Binäre Pronomen"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -156,7 +143,6 @@ categories = {
     "casing": {
         "inclusive": False,
         "category": "orthography",
-        "name": {"en": "Casing", "de": "Groß- und Kleinschreibung"},
         "gravity": 1.0,
         "importance": 1,
         "url": {"en": None, "de": None},
@@ -165,7 +151,6 @@ categories = {
     "classism": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Classism", "de": "Klassismus"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -177,7 +162,6 @@ categories = {
     "cognitive_ability": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Cognitive ability", "de": "Denkfähigkeit"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -189,7 +173,6 @@ categories = {
     "cognitive_perception": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Cognitive perception", "de": "Wahrnehmung"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -201,7 +184,6 @@ categories = {
     "color": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Color", "de": "Farbwörter"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -213,7 +195,6 @@ categories = {
     "communal": {
         "inclusive": True,
         "category": "inclusive",
-        "name": {"en": "Communal language", "de": "Kommunale Sprache"},
         "gravity": None,
         "importance": 3,
         "content": {"en": "advanced"},
@@ -226,7 +207,6 @@ categories = {
     "compounding": {
         "inclusive": False,
         "category": "orthography",
-        "name": {"en": "Compounding", "de": "Zusammensetzung"},
         "gravity": 2.0,
         "importance": 2,
         "url": {"en": None, "de": None},
@@ -235,7 +215,6 @@ categories = {
     "confused_words": {
         "inclusive": False,
         "category": "orthography",
-        "name": {"en": "Easily Confused Words", "de": "Leicht Verwechselbare Wörter"},
         "gravity": 1.0,
         "importance": 1,
         "url": {"en": None, "de": None},
@@ -244,7 +223,6 @@ categories = {
     "corporate_rules": {
         "inclusive": False,
         "category": "corporate-rules",
-        "name": {"en": "Dictionary", "de": "Wörterbuch"},
         "gravity": 0.9,
         "importance": 1,
         "url": {"en": None, "de": None},
@@ -252,7 +230,6 @@ categories = {
     "culture": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Culture", "de": "Kultur"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -264,7 +241,6 @@ categories = {
     "d_and_i": {
         "inclusive": True,
         "category": "inclusive",
-        "name": {"en": "DEIB", "de": "DEIB"},
         "gravity": None,
         "importance": 3,
         "url": {
@@ -277,7 +253,6 @@ categories = {
     "emotional_security": {
         "inclusive": True,
         "category": "inclusive",
-        "name": {"en": "Positive emotions", "de": "Positive Emotionen"},
         "gravity": None,
         "importance": 3,
         "url": {
@@ -289,7 +264,6 @@ categories = {
     "exaggerating": {
         "inclusive": False,
         "category": "style",
-        "name": {"en": "Exaggeration", "de": "Superlative"},
         "gravity": 2.0,
         "importance": 2,
         "content": {"en": "advanced"},
@@ -302,7 +276,6 @@ categories = {
     "false_friends": {
         "inclusive": False,
         "category": "style",
-        "name": {"en": "False Friends Words", "de": "Falsche Freunde Wörter"},
         "gravity": 3.0,
         "importance": 3,
         "url": {"en": None, "de": None},
@@ -311,7 +284,6 @@ categories = {
     "female_stereotype": {
         "inclusive": False,
         "category": "gendered",
-        "name": {"en": "Female stereotype", "de": "Frauenklischee"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -323,7 +295,6 @@ categories = {
     "filler": {
         "inclusive": False,
         "category": "style",
-        "name": {"en": "Filler words", "de": "Füllwörter"},
         "gravity": 3.0,
         "importance": 3,
         "content": {"en": "advanced"},
@@ -336,7 +307,6 @@ categories = {
     "formality": {
         "inclusive": False,
         "category": "style",
-        "name": {"en": "Formality", "de": "Förmlichkeit"},
         "gravity": 3.0,
         "importance": 3,
         "url": {
@@ -348,7 +318,6 @@ categories = {
     "function": {
         "inclusive": False,
         "category": "gendered",
-        "name": {"en": "Generic masculine", "de": "Generisches Maskulinum"},
         "gravity": 2.0,
         "importance": 2,
         "content": {"en": "advanced"},
@@ -361,7 +330,6 @@ categories = {
     "gender_identity": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Gender binary", "de": "Binäres Geschlecht"},
         "gravity": 2.0,
         "importance": 2,
         "content": {"en": "advanced"},
@@ -374,10 +342,6 @@ categories = {
     "gender_specific_abbreviation": {
         "inclusive": False,
         "category": "gendered",
-        "name": {
-            "en": "Gender-specific abbreviation",
-            "de": "Geschlechter-Spezifische Abkürzung",
-        },
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -389,7 +353,6 @@ categories = {
     "gendered": {
         "inclusive": False,
         "category": "gendered",
-        "name": {"en": "Gendered", "de": "Geschlechtsspezifisch"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -401,7 +364,6 @@ categories = {
     "gendered_denominations_ending": {
         "inclusive": False,
         "category": "gendered",
-        "name": {"en": "Inclusive Ending", "de": "Inklusive Endung"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -413,7 +375,6 @@ categories = {
     "general_style": {
         "inclusive": False,
         "category": "style",
-        "name": {"en": "Miscellaneous", "de": "Verschiedenes"},
         "gravity": 3.0,
         "importance": 3,
         "url": {"en": None, "de": None},
@@ -422,7 +383,6 @@ categories = {
     "generic_plural": {
         "inclusive": False,
         "category": "gendered",
-        "name": {"en": "Generic plural", "de": "Generischer Plural"},
         "gravity": 3.0,
         "importance": 3,
         "url": {
@@ -434,7 +394,6 @@ categories = {
     "grammar": {
         "inclusive": False,
         "category": "orthography",
-        "name": {"en": "Grammar", "de": "Grammatik"},
         "gravity": 1.0,
         "importance": 1,
         "url": {"en": None, "de": None},
@@ -443,7 +402,6 @@ categories = {
     "hearing": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Hearing", "de": "Hörfähigkeit"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -455,7 +413,6 @@ categories = {
     "hidden_image": {
         "inclusive": False,
         "category": "gendered",
-        "name": {"en": "Gender cues", "de": "Angedeutetes Gender"},
         "gravity": 2.0,
         "importance": 2,
         "content": {"en": "advanced"},
@@ -468,7 +425,6 @@ categories = {
     "hollow": {
         "inclusive": False,
         "category": "style",
-        "name": {"en": "Empty words", "de": "Worthülsen"},
         "gravity": 3.0,
         "importance": 3,
         "content": {"en": "advanced"},
@@ -481,7 +437,6 @@ categories = {
     "homophobia": {
         "inclusive": False,
         "category": "openly_discriminating",
-        "name": {"en": "Homophobia", "de": "Homophobie"},
         "gravity": 1.0,
         "importance": 1,
         "url": {
@@ -493,7 +448,6 @@ categories = {
     "inclusive": {
         "inclusive": True,
         "category": "inclusive",
-        "name": {"en": "Inclusive", "de": "Inklusiv"},
         "gravity": None,
         "importance": 2,
         "url": {
@@ -505,7 +459,6 @@ categories = {
     "leadership": {
         "inclusive": False,
         "category": "gendered",
-        "name": {"en": "Traditional leadership", "de": "Führungsbild"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -518,7 +471,6 @@ categories = {
     "learning": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Learning ability", "de": "Lernfähigkeit"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -530,7 +482,6 @@ categories = {
     "male_stereotype": {
         "inclusive": False,
         "category": "gendered",
-        "name": {"en": "Male stereotype", "de": "Männerklischee"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -542,7 +493,6 @@ categories = {
     "medical_state": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Medical state", "de": "Gesundheitsbild"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -554,7 +504,6 @@ categories = {
     "mental_wellbeing": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Mental wellbeing", "de": "Mentales Wohlbefinden"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -566,7 +515,6 @@ categories = {
     "migration": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Migration background", "de": "Migrationshintergrund"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -578,7 +526,6 @@ categories = {
     "military_source": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Military source", "de": "Militärische Wurzel"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -590,7 +537,6 @@ categories = {
     "misc": {
         "inclusive": False,
         "category": "orthography",
-        "name": {"en": "Miscellaneous", "de": "Sonstiges"},
         "gravity": 2.0,
         "importance": 2,
         "url": {"en": None, "de": None},
@@ -599,7 +545,6 @@ categories = {
     "mobility": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Mobility", "de": "Mobilität"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -611,10 +556,6 @@ categories = {
     "offensive_language": {
         "inclusive": False,
         "category": "openly_discriminating",
-        "name": {
-            "en": "Offensive language",
-            "de": "Beleidigende und verletzende Sprache",
-        },
         "gravity": 1.0,
         "importance": 1,
         "url": {
@@ -626,7 +567,6 @@ categories = {
     "openly_discriminating": {
         "inclusive": False,
         "category": "openly_discriminating",
-        "name": {"en": "Openly Discriminating", "de": "Offene Diskriminierung"},
         "gravity": 1.0,
         "importance": 1,
         "url": {
@@ -638,7 +578,6 @@ categories = {
     "orthography": {
         "inclusive": False,
         "category": "orthography",
-        "name": {"en": "Orthography", "de": "Rechtschreibung"},
         "gravity": 1.0,
         "importance": 1,
         "url": {"en": None, "de": None},
@@ -647,7 +586,6 @@ categories = {
     "punctuation": {
         "inclusive": False,
         "category": "orthography",
-        "name": {"en": "Punctuation", "de": "Zeichensetzung"},
         "gravity": 1.0,
         "importance": 1,
         "url": {"en": None, "de": None},
@@ -656,7 +594,6 @@ categories = {
     "racism": {
         "inclusive": False,
         "category": "openly_discriminating",
-        "name": {"en": "Racism", "de": "Rassismus"},
         "gravity": 1.0,
         "importance": 1,
         "url": {
@@ -668,7 +605,6 @@ categories = {
     "racist_source": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Racist-source", "de": "Rassistische Wurzel"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -680,7 +616,6 @@ categories = {
     "redundancy": {
         "inclusive": False,
         "category": "style",
-        "name": {"en": "Redundanz", "de": "Redundancy"},
         "gravity": 3.0,
         "importance": 3,
         "url": {"en": None, "de": None},
@@ -689,7 +624,6 @@ categories = {
     "regionalisms": {
         "inclusive": False,
         "category": "style",
-        "name": {"en": "Regionalismus", "de": "Regionalisms"},
         "gravity": 3.0,
         "importance": 3,
         "url": {"en": None, "de": None},
@@ -698,7 +632,6 @@ categories = {
     "repetitions": {
         "inclusive": False,
         "category": "orthography",
-        "name": {"en": "Repetitions", "de": "Wiederholungen"},
         "gravity": 2.0,
         "importance": 2,
         "url": {"en": None, "de": None},
@@ -707,7 +640,6 @@ categories = {
     "repetitions_style": {
         "inclusive": False,
         "category": "style",
-        "name": {"en": "Repetitions", "de": "Wiederholungen"},
         "gravity": 3.0,
         "importance": 3,
         "url": {"en": None, "de": None},
@@ -716,7 +648,6 @@ categories = {
     "semantics": {
         "inclusive": False,
         "category": "style",
-        "name": {"en": "Semantics", "de": "Semantik"},
         "gravity": 3.0,
         "importance": 3,
         "url": {"en": None, "de": None},
@@ -725,7 +656,6 @@ categories = {
     "sexism": {
         "inclusive": False,
         "category": "openly_discriminating",
-        "name": {"en": "Sexism", "de": "Sexismus"},
         "gravity": 1.0,
         "importance": 1,
         "url": {
@@ -737,7 +667,6 @@ categories = {
     "sexual_orientation": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Sexual orientation", "de": "Sexuelle Orientierung"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -749,7 +678,6 @@ categories = {
     "simple_language": {
         "inclusive": False,
         "category": "style",
-        "name": {"en": "Plain English", "de": "Leichte Sprache"},
         "gravity": 3.0,
         "importance": 3,
         "url": {
@@ -762,7 +690,6 @@ categories = {
     "speech": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Speech ability", "de": "Sprech-Fähigkeit"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -774,7 +701,6 @@ categories = {
     "sports_terms": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Sports terms", "de": "Sport Jargon"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -786,7 +712,6 @@ categories = {
     "style": {
         "inclusive": False,
         "category": "style",
-        "name": {"en": "Style issue", "de": "Stil"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -798,7 +723,6 @@ categories = {
     "titles": {
         "inclusive": False,
         "category": "gendered",
-        "name": {"en": "Jobs", "de": "Berufe"},
         "gravity": 2.0,
         "importance": 2,
         "content": {"en": "advanced"},
@@ -811,7 +735,6 @@ categories = {
     "transphobia": {
         "inclusive": False,
         "category": "openly_discriminating",
-        "name": {"en": "Transphobia", "de": "Transphobie"},
         "gravity": 1.0,
         "importance": 1,
         "url": {
@@ -823,7 +746,6 @@ categories = {
     "typography": {
         "inclusive": False,
         "category": "orthography",
-        "name": {"en": "Typography", "de": "Typografie"},
         "gravity": 1.0,
         "importance": 1,
         "url": {"en": None, "de": None},
@@ -832,7 +754,6 @@ categories = {
     "typos": {
         "inclusive": False,
         "category": "orthography",
-        "name": {"en": "Typos", "de": "Rechtschreibfehler"},
         "gravity": 1.0,
         "importance": 1,
         "url": {"en": None, "de": None},
@@ -841,7 +762,6 @@ categories = {
     "unconscious_bias": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Biased Language", "de": "Sprachliche Voreingenommenheit"},
         "gravity": 2.0,
         "importance": 2,
         "url": {"en": None, "de": None},
@@ -850,7 +770,6 @@ categories = {
     "vision": {
         "inclusive": False,
         "category": "unconscious_bias",
-        "name": {"en": "Vision", "de": "Seh-Fähigkeit"},
         "gravity": 2.0,
         "importance": 2,
         "url": {
@@ -862,7 +781,6 @@ categories = {
     "xenophobia": {
         "inclusive": False,
         "category": "openly_discriminating",
-        "name": {"en": "Xenophobia", "de": "Fremdenfeindlichkeit / Xenophobie"},
         "gravity": 1.0,
         "importance": 1,
         "url": {
