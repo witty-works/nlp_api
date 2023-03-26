@@ -77,7 +77,7 @@ mj_payload(){
     currentDate=`date +"%Y-%m-%d"`
     messageJson=`echo "$message" | jq -Rsa .`
     messageJson=${messageJson//\\\\/\\}
-    base64de=`base64 -w 0 ./analyze_rules/$lang.txt`
+    base64Content=`base64 -w 0 ./analyze_rules/$lang.txt`
 
     cat <<EOF
 {
@@ -90,13 +90,8 @@ mj_payload(){
       "Attachments": [
           {
               "ContentType": "text/plain",
-              "Filename": "de.txt",
-              "Base64Content": "$base64de"
-          },
-          {
-              "ContentType": "text/plain",
-              "Filename": "en.txt",
-              "Base64Content": "$base64en"
+              "Filename": "$lang.txt",
+              "Base64Content": "$base64Content"
           }
       ]
     }
