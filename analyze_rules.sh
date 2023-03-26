@@ -2,7 +2,7 @@
 SEND_MAIL=true
 
 usage() {
-  echo "Usage: $0 [ -h ] [ -n ] " 1>&2 
+  echo "Usage: $0 [ -h ] [ -n ] [ -l ] " 1>&2 
 }
 
 exit_abnormal() {
@@ -18,7 +18,7 @@ while getopts "hrnl:" options; do
     n)
       SEND_MAIL=false
       ;;
-    n)
+    l)
       lang=${OPTARG}
       ;;
     :)
