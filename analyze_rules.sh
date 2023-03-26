@@ -77,7 +77,7 @@ mj_payload(){
     currentDate=`date +"%Y-%m-%d"`
     messageJson=`echo "$message" | jq -Rsa .`
     messageJson=${messageJson//\\\\/\\}
-    base64de=`base64 -w 0 ./analyze_rules/{$lang}.txt`
+    base64de=`base64 -w 0 ./analyze_rules/$lang.txt`
 
     cat <<EOF
 {
