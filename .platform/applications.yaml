@@ -50,13 +50,15 @@
       spec: "0 1 * * 0"
       cmd: |
         if [ "$PLATFORM_BRANCH" = main ]; then
-            ./statistics.sh
+            ./statistics.sh -l en-US
+            ./statistics.sh -l de
         fi
     analyze-rules:
       spec: "0 1 * * *"
       cmd: |
         if [ "$PLATFORM_BRANCH" = dev ]; then
-            ./analyze_rules.sh
+            ./analyze_rules.sh -l en
+            ./analyze_rules.sh -l de
         fi
 
   mounts:
