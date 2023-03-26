@@ -147,6 +147,7 @@ def read_csv(in_file, categories):
                 entry = polib.POEntry(msgid=msgid, msgstr=msgstr)
                 po_files[locale].append(entry)
 
+        del data["name"]
         del data["explanation"]
 
         if "content" in data and data["content"] == {}:
