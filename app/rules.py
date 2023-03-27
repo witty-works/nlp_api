@@ -97,6 +97,7 @@ def fetch_rules(langs):
             data["de"]["verbs"]["infinitiv"][i]: {
                 "past_participle": data["de"]["verbs"]["past_participle"][i],
                 "infinitiv_zu": data["de"]["verbs"]["infinitiv_zu"][i],
+                "present_ich": data["de"]["verbs"]["present_ich"][i],
             }
             for i in range(len(data["de"]["verbs"]["infinitiv"]))
         }
