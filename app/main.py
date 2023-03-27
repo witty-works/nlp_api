@@ -90,7 +90,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.42.1"
+version = "1.42.2"
 
 settings = get_settings()
 logging = set_up_logger(settings)
