@@ -28,7 +28,12 @@ def get_dirs(path):
 def test_read_main():
     response = client.get("/", follow_redirects=False)
     assert response.status_code == 301
-    assert response.headers["Location"] == "https://www.witty.works/editor"
+    assert response.headers["Location"] == "https://dashboard.witty.works/editor"
+
+
+def test_health():
+    response = client.get("/health", follow_redirects=False)
+    assert response.status_code == 200
 
 
 @pytest.mark.parametrize(

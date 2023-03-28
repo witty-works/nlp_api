@@ -316,6 +316,11 @@ async def post_exception(
     )
 
 
+@app.get("/health")
+def get_health():
+    return redis.ping()
+
+
 @app.get("/lt", include_in_schema=not settings.is_prod)
 def get_lt(username: str = Depends(fetch_current_username)):
     return settings.languagetool_api
@@ -344,7 +349,7 @@ def get_openapi_json(
 # public routes
 @app.get("/", include_in_schema=False)
 def get_root():
-    url = "https://www.witty.works/editor"
+    url = "https://dashboard.witty.works/editor"
     status_code = 301
 
     if not settings.is_prod and settings.testing == False:  # pragma: no cover
