@@ -316,6 +316,11 @@ async def post_exception(
     )
 
 
+@app.get("/health")
+def get_health():
+    return redis.ping()
+
+
 @app.get("/lt", include_in_schema=not settings.is_prod)
 def get_lt(username: str = Depends(fetch_current_username)):
     return settings.languagetool_api
