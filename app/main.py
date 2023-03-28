@@ -1722,7 +1722,11 @@ async def context_false_positives(lang, tokens, list_results):
             sentences[sentence.end_char] = sentence
 
         for result in list_results:
-            if result.text.lower() in rules[lang]["context_check"]:
+            words = result.text.lower().split()
+            if not len(words):
+                continue
+
+            if words[-1] in rules[lang]["context_check"]:
                 context_valid = await call_context_checker(sentences, result)
                 if not context_valid:
                     list_results.remove(result)
