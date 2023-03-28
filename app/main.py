@@ -935,7 +935,7 @@ def apply_configs(user_request_in: RequestIn, configs: dict, plan: str):
     for config in configs:
         data = configs[config]
         if data is not None and data["status"] == "force":
-            if config in ["inclusive", "style", "orthography"]:
+            if config in ["inclusive", "style", "orthography", "hr"]:
                 if data["value"]:
                     if config in disabled_categories:
                         disabled_categories.remove(config)
