@@ -1313,7 +1313,7 @@ def has_gender_denom_ending(text, full_text, offset, config: Config):
     return False
 
 
-def languagetool_matches(
+async def languagetool_matches(
     version: float, config: Config, lang: Language, full_text: str, offsets, result
 ):
     list_results = []
@@ -1418,21 +1418,21 @@ def languagetool_matches(
         else:
             explanation = None
 
-        list_results.append(
-            ResultOut.factory(
-                version,
-                config,
-                lang,
-                text,
-                full_text,
-                offsets,
-                subcategory,
-                start,
-                end,
-                alternatives,
-                label,
-                explanation,
-            )
+        list_results = await add_result(
+            list_results,
+            None,
+            version,
+            config,
+            lang,
+            text,
+            full_text,
+            offsets,
+            subcategory,
+            start,
+            end,
+            alternatives,
+            label,
+            explanation,
         )
 
     return list_results
@@ -1547,7 +1547,7 @@ async def apply_languagetool_rules(
     if not isinstance(result, dict):
         return []
 
-    return languagetool_matches(version, config, lang, text, offsets, result)
+    return await languagetool_matches(version, config, lang, text, offsets, result)
 
 
 def utf16len(c):
@@ -1691,7 +1691,7 @@ async def apply_language_rules(
     return apply_false_positives(list_results, configs)
 
 
-def apply_term_replacements(
+async def apply_term_replacements(
     version: float,
     config: Config,
     lang: Language,
@@ -1755,7 +1755,7 @@ def apply_term_replacements(
     list_result = []
 
     if len(term_replacements_case_insensitive):
-        list_result += regex_matches(
+        list_result += await regex_matches(
             version,
             config,
             lang,
@@ -1766,7 +1766,7 @@ def apply_term_replacements(
         )
 
     if len(term_replacements_case_sensitive):
-        list_result += regex_matches(
+        list_result += await regex_matches(
             version,
             config,
             lang,
@@ -1787,7 +1787,7 @@ def apply_term_replacements(
             )
         )
 
-        list_result += rules_based_words_phrase_matcher(
+        list_result += await rules_based_words_phrase_matcher(
             version,
             config,
             lang,
@@ -1930,7 +1930,7 @@ async def german_rules(
 
     tokens = fetch_tokens(lang.lang, text)
 
-    list_full += detect_non_inclusive_emoji(
+    list_full += await detect_non_inclusive_emoji(
         version,
         client,
         config,
@@ -1941,7 +1941,7 @@ async def german_rules(
     )
 
     if is_sub_category_enabled(config, "abbreviation"):
-        list_full += literal_match(
+        list_full += await literal_match(
             version,
             config,
             lang,
@@ -1953,7 +1953,7 @@ async def german_rules(
             True,
         )
 
-    list_full += rules_based_words_phrase_matcher(
+    list_full += await rules_based_words_phrase_matcher(
         version,
         config,
         lang,
@@ -1965,7 +1965,7 @@ async def german_rules(
         rules["de"]["df_open_dis_sentence"],
     )
 
-    list_full += rules_based_words_phrase_matcher(
+    list_full += await rules_based_words_phrase_matcher(
         version,
         config,
         lang,
@@ -1975,7 +1975,7 @@ async def german_rules(
         rules["de"]["gender_words_data_no_noun"],
         rules["de"]["gender_sentences_data"],
         rules["de"]["df_gendered_sentences"],
-    ) + gendered_denom_analysis_de(
+    ) + await gendered_denom_analysis_de(
         version,
         config,
         lang,
@@ -1987,7 +1987,7 @@ async def german_rules(
     )
 
     if is_sub_category_enabled(config, "gender_specific_abbreviation"):
-        list_full += regex_matches(
+        list_full += await regex_matches(
             version,
             config,
             lang,
@@ -2011,7 +2011,7 @@ async def german_rules(
 
             regexes[regex] = config.german_gender_ending[0:-2]
 
-        list_full += regex_matches(
+        list_full += await regex_matches(
             version,
             config,
             lang,
@@ -2021,7 +2021,7 @@ async def german_rules(
             subcategory,
         )
 
-    list_full += ub_words_phrase_matcher_de(
+    list_full += await ub_words_phrase_matcher_de(
         version,
         config,
         lang,
@@ -2033,7 +2033,7 @@ async def german_rules(
         rules["de"]["df_ub_sentences"],
     )
 
-    list_full += word_noun(
+    list_full += await word_noun(
         version,
         config,
         lang,
@@ -2044,7 +2044,7 @@ async def german_rules(
     )
 
     if is_sub_category_enabled(config, "communal"):
-        list_full += rules_based_words_phrase_matcher(
+        list_full += await rules_based_words_phrase_matcher(
             version,
             config,
             lang,
@@ -2059,7 +2059,7 @@ async def german_rules(
         )
 
     if is_sub_category_enabled(config, "d_and_i"):
-        list_full += rules_based_words_phrase_matcher(
+        list_full += await rules_based_words_phrase_matcher(
             version,
             config,
             lang,
@@ -2078,11 +2078,11 @@ async def german_rules(
 
         regexes.update(rules["d_f_m_regexes"])
 
-        list_full += regex_matches(
+        list_full += await regex_matches(
             version, config, lang, text, offsets, regexes, subcategory
         )
 
-    list_full += style_word_analysis_de(
+    list_full += await style_word_analysis_de(
         version,
         config,
         lang,
@@ -2095,7 +2095,7 @@ async def german_rules(
         rules["de"]["false_positives"].style,
     )
 
-    list_full += detect_lower_cased_hashtags(
+    list_full += await detect_lower_cased_hashtags(
         version,
         config,
         lang,
@@ -2103,11 +2103,11 @@ async def german_rules(
         offsets,
     )
 
-    list_full += apply_term_replacements(
+    list_full += await apply_term_replacements(
         version, config, lang, text, tokens, offsets, configs
     )
 
-    return await context_false_positives(lang.lang, tokens, list_full)
+    return list_full
 
 
 async def english_rules(
@@ -2124,7 +2124,7 @@ async def english_rules(
 
     tokens = fetch_tokens(lang.lang, text)
 
-    list_full += detect_non_inclusive_emoji(
+    list_full += await detect_non_inclusive_emoji(
         version,
         client,
         config,
@@ -2159,7 +2159,7 @@ async def english_rules(
     sentences_data_en["style"] = rules[lang.locale]["style_sentences_data"]
     sentences_data_en["bias"] = rules[lang.locale]["bias_sentences_data"]
 
-    list_full += homonyms_en(
+    list_full += await homonyms_en(
         version,
         config,
         lang,
@@ -2171,7 +2171,7 @@ async def english_rules(
     )
 
     if is_sub_category_enabled(config, "abbreviation"):
-        list_full += literal_match(
+        list_full += await literal_match(
             version,
             config,
             lang,
@@ -2183,7 +2183,7 @@ async def english_rules(
             True,
         )
 
-    list_full += rules_based_words_phrase_matcher(
+    list_full += await rules_based_words_phrase_matcher(
         version,
         config,
         lang,
@@ -2196,7 +2196,7 @@ async def english_rules(
         false_positive_matcher,
     )
 
-    list_full += rules_based_words_phrase_matcher(
+    list_full += await rules_based_words_phrase_matcher(
         version,
         config,
         lang,
@@ -2210,7 +2210,7 @@ async def english_rules(
     )
 
     if is_sub_category_enabled(config, "advanced_binary_pronouns"):
-        list_full += rules_based_words_phrase_matcher(
+        list_full += await rules_based_words_phrase_matcher(
             version,
             config,
             lang,
@@ -2225,7 +2225,7 @@ async def english_rules(
             True,
         )
 
-    list_full += word_noun(
+    list_full += await word_noun(
         version,
         config,
         lang,
@@ -2237,7 +2237,7 @@ async def english_rules(
     )
 
     if is_sub_category_enabled(config, "advanced_binary_pronouns"):
-        list_full += regex_matches(
+        list_full += await regex_matches(
             version,
             config,
             lang,
@@ -2250,7 +2250,7 @@ async def english_rules(
     if is_sub_category_enabled(config, "d_and_i"):
         subcategory = "d_and_i"
 
-        list_full += regex_matches(
+        list_full += await regex_matches(
             version,
             config,
             lang,
@@ -2260,7 +2260,7 @@ async def english_rules(
             subcategory,
         )
 
-    list_full += rules_based_words_phrase_matcher(
+    list_full += await rules_based_words_phrase_matcher(
         version,
         config,
         lang,
@@ -2273,7 +2273,7 @@ async def english_rules(
         false_positive_matcher,
     )
 
-    list_full += rules_based_words_phrase_matcher(
+    list_full += await rules_based_words_phrase_matcher(
         version,
         config,
         lang,
@@ -2286,7 +2286,7 @@ async def english_rules(
         false_positive_matcher,
     )
 
-    list_full += word_noun(
+    list_full += await word_noun(
         version,
         config,
         lang,
@@ -2297,7 +2297,7 @@ async def english_rules(
         false_positive_matcher,
     )
 
-    list_full += detect_lower_cased_hashtags(
+    list_full += await detect_lower_cased_hashtags(
         version,
         config,
         lang,
@@ -2305,7 +2305,7 @@ async def english_rules(
         offsets,
     )
 
-    list_full += rules_based_words_phrase_matcher(
+    list_full += await rules_based_words_phrase_matcher(
         version,
         config,
         lang,
@@ -2318,7 +2318,7 @@ async def english_rules(
         false_positive_matcher,
     )
 
-    list_full += word_noun(
+    list_full += await word_noun(
         version,
         config,
         lang,
@@ -2329,11 +2329,11 @@ async def english_rules(
         false_positive_matcher,
     )
 
-    list_full += apply_term_replacements(
+    list_full += await apply_term_replacements(
         version, config, lang, text, tokens, offsets, configs
     )
 
-    return await context_false_positives(lang.lang, tokens, list_full)
+    return list_full
 
 
 def parse_word_types(word_types, lower_case=True):
@@ -3038,7 +3038,7 @@ def match_binary_inclusive_gendered_denom_analysis_de(
         else:
             continue
 
-        if ResultOut.genderedRolesFormatBinary(config.gendered_roles_format):
+        if is_binary:
             return None, None, None
 
         start = tokens[new_i].idx
@@ -3135,7 +3135,87 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
     return alternatives_with_article
 
 
-def sentences_matches(
+async def check_context_valid(token, lang):
+    if (
+        not settings.context_checker
+        or not token
+        or token.lemma_ not in rules[lang]["context_check"]
+    ):
+        return True
+
+    sentence = token.sent.text
+
+    if not settings.context_checker_url:
+        return True
+
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": ("Bearer " + settings.context_checker_api_key),
+    }
+
+    payload = {
+        "data": sentence,
+    }
+
+    context_results = await fetch_json_post(
+        settings.context_checker_url, json.dumps(payload), headers, "context checker"
+    )
+
+    return context_results == '1'
+
+
+async def add_result(
+    list_results,
+    token,
+    version: float,
+    config: Config,
+    lang: Language,
+    text,
+    full_text,
+    offsets,
+    subcategory,
+    start,
+    end=None,
+    alternatives=None,
+    label=None,
+    explanation=None,
+    url=None,
+    icon=None,
+    gravity=None,
+    explanation_context=None,
+    content=None,
+    proficiency_level=None,
+):
+    if not await check_context_valid(token, lang.lang):
+        return list_results
+
+    list_results.append(
+        ResultOut.factory(
+            version,
+            config,
+            lang,
+            text,
+            full_text,
+            offsets,
+            subcategory,
+            start,
+            end,
+            alternatives,
+            label,
+            explanation,
+            url,
+            icon,
+            gravity,
+            explanation_context,
+            content,
+            proficiency_level,
+        )
+    )
+
+    return list_results
+
+
+async def sentences_matches(
     version: float,
     config: Config,
     lang,
@@ -3145,30 +3225,30 @@ def sentences_matches(
     subcategory,
     matches,
 ):
-    list_tokens = []
+    list_results = []
 
     if is_sub_category_enabled(config, subcategory):
         for match_id, start, end in matches:
             span = tokens[start:end]
 
-            list_tokens.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    span.text,
-                    full_text,
-                    offsets,
-                    subcategory,
-                    span.start_char,
-                    span.end_char,
-                )
+            list_results = await add_result(
+                list_results,
+                None,
+                version,
+                config,
+                lang,
+                span.text,
+                full_text,
+                offsets,
+                subcategory,
+                span.start_char,
+                span.end_char,
             )
 
-    return list_tokens
+    return list_results
 
 
-def sentences_matcher(
+async def sentences_matcher(
     version: float,
     config: Config,
     lang,
@@ -3179,18 +3259,18 @@ def sentences_matcher(
     df_sentence,
     subcategory=None,
 ):
-    list_tokens = []
+    list_results = []
 
     if not isinstance(df_sentence, list):
         if not isinstance(df_sentence, pd.DataFrame):
-            return list_tokens
+            return list_results
 
         df_sentence = list(df_sentence["Lemma"])
 
     matches = fetch_matches(lang.lang, tokens, df_sentence)
 
     if sentences_data is None:
-        return sentences_matches(
+        return await sentences_matches(
             version,
             config,
             lang,
@@ -3213,25 +3293,25 @@ def sentences_matcher(
                 if len(data):
                     alternatives = data[0]
 
-                list_tokens.append(
-                    ResultOut.factory(
-                        version,
-                        config,
-                        lang,
-                        span.text,
-                        full_text,
-                        offsets,
-                        subcategory,
-                        span.start_char,
-                        span.end_char,
-                        alternatives,
-                    )
+                list_results = await add_result(
+                    list_results,
+                    None,
+                    version,
+                    config,
+                    lang,
+                    span.text,
+                    full_text,
+                    offsets,
+                    subcategory,
+                    span.start_char,
+                    span.end_char,
+                    alternatives,
                 )
 
-    return list_tokens
+    return list_results
 
 
-def regex_matches(
+async def regex_matches(
     version: float,
     config: Config,
     lang,
@@ -3240,7 +3320,7 @@ def regex_matches(
     regexes,
     subcategory=None,
 ):
-    list_ending = []
+    list_results = []
     alternatives = None
     for regex in regexes:
         matches = re.finditer(regex, full_text)
@@ -3374,29 +3454,29 @@ def regex_matches(
             elif regexes[regex] is not None:
                 alternatives = regexes[regex]
 
-            list_ending.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    text,
-                    full_text,
-                    offsets,
-                    subcategory,
-                    start,
-                    None,
-                    alternatives,
-                    None,
-                    explanation,
-                    url,
-                    icon,
-                )
+            list_results = await add_result(
+                list_results,
+                None,
+                version,
+                config,
+                lang,
+                text,
+                full_text,
+                offsets,
+                subcategory,
+                start,
+                None,
+                alternatives,
+                None,
+                explanation,
+                url,
+                icon,
             )
 
-    return list_ending
+    return list_results
 
 
-def ub_words_phrase_matcher_de(
+async def ub_words_phrase_matcher_de(
     version: float,
     config: Config,
     lang,
@@ -3407,7 +3487,7 @@ def ub_words_phrase_matcher_de(
     sentences_data,
     df_sentence,
 ):
-    list_tokens = []
+    list_results = []
 
     token = None
     for i in range(len(tokens)):
@@ -3424,22 +3504,22 @@ def ub_words_phrase_matcher_de(
                 lang.lang, token, alternatives, prev_token
             )
 
-            list_tokens.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    text,
-                    full_text,
-                    offsets,
-                    subcategory,
-                    start,
-                    None,
-                    alternatives,
-                )
+            list_results = await add_result(
+                list_results,
+                token,
+                version,
+                config,
+                lang,
+                text,
+                full_text,
+                offsets,
+                subcategory,
+                start,
+                None,
+                alternatives,
             )
 
-    return list_tokens + sentences_matcher(
+    return list_results + await sentences_matcher(
         version,
         config,
         lang,
@@ -3451,7 +3531,7 @@ def ub_words_phrase_matcher_de(
     )
 
 
-def gendered_denom_analysis_de(
+async def gendered_denom_analysis_de(
     version: float,
     config: Config,
     lang,
@@ -3461,7 +3541,7 @@ def gendered_denom_analysis_de(
     words_data,
     false_positives,
 ):
-    list_tokens = []
+    list_results = []
 
     for i in range(len(tokens)):
         for (
@@ -3601,27 +3681,27 @@ def gendered_denom_analysis_de(
                     start = tokens[i - 1].idx
                     text = tokens[i - 1].text + " " + text
 
-            list_tokens.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    text,
-                    full_text,
-                    offsets,
-                    subcategory,
-                    start,
-                    None,
-                    alternatives,
-                )
+            list_results = await add_result(
+                list_results,
+                tokens[i],
+                version,
+                config,
+                lang,
+                text,
+                full_text,
+                offsets,
+                subcategory,
+                start,
+                None,
+                alternatives,
             )
 
             break
 
-    return list_tokens
+    return list_results
 
 
-def style_word_analysis_de(
+async def style_word_analysis_de(
     version: float,
     config: Config,
     lang,
@@ -3633,7 +3713,7 @@ def style_word_analysis_de(
     sentences_data,
     false_positives,
 ):
-    list_tokens = []
+    list_results = []
 
     token = None
     for i in range(len(tokens)):
@@ -3672,22 +3752,22 @@ def style_word_analysis_de(
                 start + len(text),
             )
 
-            list_tokens.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    text,
-                    full_text,
-                    offsets,
-                    subcategory,
-                    start,
-                    None,
-                    alternatives,
-                )
+            list_results = await add_result(
+                list_results,
+                token,
+                version,
+                config,
+                lang,
+                text,
+                full_text,
+                offsets,
+                subcategory,
+                start,
+                None,
+                alternatives,
             )
 
-    return list_tokens + sentences_matcher(
+    return list_results + await sentences_matcher(
         version,
         config,
         lang,
@@ -3699,7 +3779,7 @@ def style_word_analysis_de(
     )
 
 
-def word_noun(
+async def word_noun(
     version: float,
     config: Config,
     lang,
@@ -3709,7 +3789,7 @@ def word_noun(
     words_data,
     false_positive_matcher=None,
 ):
-    list_tokens = []
+    list_results = []
 
     token = None
     for i in range(len(tokens)):
@@ -3757,22 +3837,22 @@ def word_noun(
             else:
                 alternatives = alternatives_plur
 
-            list_tokens.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    text,
-                    full_text,
-                    offsets,
-                    subcategory,
-                    start,
-                    None,
-                    alternatives,
-                )
+            list_results = await add_result(
+                list_results,
+                token,
+                version,
+                config,
+                lang,
+                text,
+                full_text,
+                offsets,
+                subcategory,
+                start,
+                None,
+                alternatives,
             )
 
-    return list_tokens
+    return list_results
 
 
 def detect_filler_words_at_sentence_start(
@@ -3840,7 +3920,7 @@ def pluralize_they(tokens, i):
     return text, alternative
 
 
-def rules_based_words_phrase_matcher(
+async def rules_based_words_phrase_matcher(
     version: float,
     config: Config,
     lang,
@@ -3854,7 +3934,7 @@ def rules_based_words_phrase_matcher(
     fallback_subcategory=None,
     they=False,
 ):
-    list_tokens = []
+    list_results = []
 
     alternatives = None
     subcategory = fallback_subcategory
@@ -3940,29 +4020,26 @@ def rules_based_words_phrase_matcher(
                 start + len(token.text),
             )
 
-            list_tokens.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    text,
-                    full_text,
-                    offsets,
-                    subcategory,
-                    start,
-                    None,
-                    alternatives,
-                    None,
-                    explanation,
-                    url,
-                    icon,
-                )
+            list_results = await add_result(
+                list_results,
+                token,
+                version,
+                config,
+                lang,
+                text,
+                full_text,
+                offsets,
+                subcategory,
+                start,
+                None,
+                alternatives,
+                None,
+                explanation,
+                url,
+                icon,
             )
 
-            if get_proficiency_level(subcategory) == "openly_discriminating":
-                break
-
-    return list_tokens + sentences_matcher(
+    return list_results + await sentences_matcher(
         version,
         config,
         lang,
@@ -3976,7 +4053,7 @@ def rules_based_words_phrase_matcher(
 
 
 # english function to handle homonyms
-def homonyms_en(
+async def homonyms_en(
     version: float,
     config: Config,
     lang,
@@ -3986,7 +4063,7 @@ def homonyms_en(
     false_positive_matcher,
     words_data,
 ):
-    list_tokens = []
+    list_results = []
 
     token = None
     for i in range(len(tokens)):
@@ -4005,26 +4082,26 @@ def homonyms_en(
                 lang.lang, token, alternatives, prev_token
             )
 
-            list_tokens.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    text,
-                    full_text,
-                    offsets,
-                    subcategory,
-                    start,
-                    None,
-                    alternatives,
-                )
+            list_results = await add_result(
+                list_results,
+                token,
+                version,
+                config,
+                lang,
+                text,
+                full_text,
+                offsets,
+                subcategory,
+                start,
+                None,
+                alternatives,
             )
 
-    return list_tokens
+    return list_results
 
 
 # function to find exact match for abbreviations and term replacements
-def literal_match(
+async def literal_match(
     version: float,
     config: Config,
     lang,
@@ -4035,7 +4112,7 @@ def literal_match(
     term_list,
     lower_case=False,
 ):
-    list_tokens = []
+    list_results = []
 
     matches = fetch_matches(lang.lang, tokens, list(df_sentence["Lemma"]))
     for match_id, start, end in matches:
@@ -4061,25 +4138,25 @@ def literal_match(
             if text != term:
                 continue
 
-            list_tokens.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    span.text,
-                    full_text,
-                    offsets,
-                    subcategory,
-                    span.start_char,
-                    span.end_char,
-                    alternatives,
-                )
+            list_results = await add_result(
+                list_results,
+                None,
+                version,
+                config,
+                lang,
+                span.text,
+                full_text,
+                offsets,
+                subcategory,
+                span.start_char,
+                span.end_char,
+                alternatives,
             )
 
-    return list_tokens
+    return list_results
 
 
-def detect_lower_cased_hashtags(
+async def detect_lower_cased_hashtags(
     version: float,
     config: Config,
     lang,
@@ -4103,21 +4180,21 @@ def detect_lower_cased_hashtags(
             if len(text) < 5 or any(char.isupper() for char in text):
                 continue
 
-            list_results.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    "#" + text,
-                    full_text,
-                    offsets,
-                    subcategory,
-                    span.start(),
-                    span.end(),
-                    None,
-                    None,
-                    explanation,
-                )
+            list_results = await add_result(
+                list_results,
+                None,
+                version,
+                config,
+                lang,
+                "#" + text,
+                full_text,
+                offsets,
+                subcategory,
+                span.start(),
+                span.end(),
+                None,
+                None,
+                explanation,
             )
 
     return list_results
@@ -4137,7 +4214,7 @@ def get_emoji_context(alternative, lang):
     )
 
 
-def detect_non_inclusive_emoji(
+async def detect_non_inclusive_emoji(
     version: float,
     client: str,
     config: Config,
@@ -4259,19 +4336,19 @@ def detect_non_inclusive_emoji(
         if not subcategory or len(alternatives) == 1:
             continue
 
-        list_results.append(
-            ResultOut.factory(
-                version,
-                config,
-                lang,
-                token.text,
-                full_text,
-                offsets,
-                subcategory,
-                token.idx,
-                None,
-                alternatives,
-            )
+        list_results = await add_result(
+            list_results,
+            token,
+            version,
+            config,
+            lang,
+            token.text,
+            full_text,
+            offsets,
+            subcategory,
+            token.idx,
+            None,
+            alternatives,
         )
 
     return list_results

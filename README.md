@@ -74,11 +74,11 @@ You should see application running under http://localhost:8000/docs
 ## Using pdm
 
 ```
-pdm install --dev
+pdm sync --dev
 wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 ```
 
-Compile PO files:
+## Compile PO files (done automatically during deployment):
 
 ```
 ./compile-translations.sh
@@ -90,7 +90,7 @@ To update packages locally after pyproject.toml/pdm.lock was changed, run the
 command:
 
 ```
-pdm install --dev
+pdm sync
 ```
 
 ## Add new package
@@ -145,6 +145,12 @@ or
 
 ```
 uvicorn app.main:app --reload
+```
+
+or
+
+```
+gunicorn app.main:app --preload -b unix:127.0.0.1 -w 2 -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
 ```
 
 Open your browser to http://localhost:8000/docs to view the OpenAPI UI.
