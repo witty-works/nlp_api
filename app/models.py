@@ -1,5 +1,5 @@
 from pydantic import BaseModel, validator
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union, Any
 from enum import Enum
 
 import json, typing
@@ -425,20 +425,20 @@ class ResultOut(BaseModel):
         version: float,
         config: Config,
         lang: Language,
-        text,
-        full_text,
-        category,
-        subcategory,
-        start,
-        end=None,
-        alternatives=None,
-        label=None,
-        explanation=None,
-        url=None,
-        icon=None,
-        gravity=None,
-        explanation_context=None,
-        content=None,
+        text: str,
+        full_text: str,
+        category: str,
+        subcategory: str,
+        start: int,
+        end: Optional[int],
+        alternatives: Optional[list],
+        label: Optional[str],
+        explanation: Optional[str],
+        url: Optional[str],
+        icon: Optional[str],
+        gravity: Optional[int],
+        explanation_context: Optional[str],
+        content: Optional[str],
     ):
         if end is None:
             end = start + len(text)

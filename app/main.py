@@ -8,12 +8,15 @@ import uvicorn
 import json
 import secrets
 import aiohttp
+import requests
 from typing import Optional, Union, List
 from collections import defaultdict
 from pydantic import parse_obj_as
 
 import os
 import fasttext
+
+from setfit import SetFitModel
 
 from spacy.matcher import PhraseMatcher, Matcher
 import pandas as pd
@@ -79,7 +82,7 @@ from app.models import (
     ErrorMessage,
     PrettyJSONResponse,
 )
-from app.lang_detection import get_lang_detection
+from app.lang_detection import LangDetection
 from app.categories import categories
 from app.settings import get_settings
 from app.logger import set_up_logger
@@ -110,9 +113,29 @@ if len(settings.models) > 0:
 
     rules = fetch_rules(settings.langs)
 
+fasttext_model = None
 if settings.fasttext:
     pretrained_lang_model = os.getcwd() + "/training_data/lid.176.bin"
     fasttext_model = fasttext.load_model(pretrained_lang_model)
+
+lang_detection = LangDetection(fasttext_model)
+
+setfit_model = None
+if settings.context_checker:
+    pretrained_lang_model = os.getcwd() + "/files/context_aware_model"
+    if os.path.isfile(pretrained_lang_model + "/pytorch_model.bin"):
+        setfit_model = SetFitModel.from_pretrained(pretrained_lang_model)
+
+
+def post_fork(server, worker):
+    logging.info("Worker spawned (pid: %s)", worker.pid)
+
+    # pre-warm setfit
+    if setfit_model:
+        logging.info("Warming setfit")
+        setfit_model(["Hello guys"])
+        logging.info("Warming setfit done")
+
 
 if (
     settings.slack_bot_token is not None and settings.slack_signing_secret is not None
@@ -347,7 +370,11 @@ async def get_health():
         False,
     )
 
-    health = {"spelling": languagetool_health == "OK", "config": redis.ping()}
+    health = {
+        "spelling": languagetool_health == "OK",
+        "config": redis.ping(),
+        "setfit": setfit_model is not None,
+    }
 
     content = jsonable_encoder(health)
 
@@ -359,7 +386,6 @@ async def get_health():
             )
 
     return content
-
 
 @app.get("/lt", include_in_schema=not settings.is_prod)
 def get_lt(username: str = Depends(fetch_current_username)):
@@ -1112,7 +1138,6 @@ def fetch_text(user_request_in):
         text = text[0 : settings.text_max_length]
         text = text.rsplit(" ", 1)[0]
 
-    lang_detection = get_lang_detection(fasttext_model)
     locale = lang_detection.get_locale(
         text,
         user_request_in.lang,
@@ -1362,21 +1387,21 @@ def languagetool_matches(
         else:
             explanation = None
 
-        list_results.append(
-            ResultOut.factory(
-                version,
-                config,
-                lang,
-                highlight_text,
-                text,
-                category,
-                subcategory,
-                start,
-                end,
-                alternatives,
-                label,
-                explanation,
-            )
+        list_results = add_result(
+            list_results,
+            None,
+            version,
+            config,
+            lang,
+            highlight_text,
+            text,
+            category,
+            subcategory,
+            start,
+            end,
+            alternatives,
+            label,
+            explanation,
         )
 
     return list_results
@@ -1715,32 +1740,6 @@ def apply_false_positives(
     return list_results
 
 
-async def call_context_checker(sentences, result: ResultOut):
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": ("Bearer " + settings.context_checker_api_key),
-    }
-
-    sentence = None
-    for end_char in sentences:
-        if result.end <= end_char:
-            sentence = sentences[end_char]
-            break
-
-    if sentence == None:
-        return True
-
-    payload = {
-        "data": sentence.text,
-    }
-
-    context_valid = await fetch_json_post(
-        settings.context_checker_url, json.dumps(payload), headers, "context checker"
-    )
-
-    return context_valid == "1"
-
-
 def is_sub_category_enabled(version: float, config: Config, subcategory: str):
     if (
         subcategory not in categories
@@ -1758,29 +1757,6 @@ def is_sub_category_enabled(version: float, config: Config, subcategory: str):
     return float(config.maximum_importance) >= float(
         categories[subcategory]["importance"]
     )
-
-
-async def context_false_positives(lang, tokens, list_results):
-    if (
-        len(rules[lang]["context_check"])
-        and settings.context_checker_url
-        and settings.context_checker_api_key
-    ):
-        sentences = {}
-        for sentence in tokens.sents:
-            sentences[sentence.end_char] = sentence
-
-        for result in list_results:
-            words = result.text.lower().split()
-            if not len(words):
-                continue
-
-            if words[-1] in rules[lang]["context_check"]:
-                context_valid = await call_context_checker(sentences, result)
-                if not context_valid:
-                    list_results.remove(result)
-
-    return list_results
 
 
 async def german_rules(
@@ -1959,7 +1935,7 @@ async def german_rules(
 
     list_full += apply_term_replacements(tokens, version, config, configs, lang, text)
 
-    return await context_false_positives(lang.lang, tokens, list_full)
+    return list_full
 
 
 async def english_rules(
@@ -2166,7 +2142,7 @@ async def english_rules(
 
     list_full += apply_term_replacements(tokens, version, config, configs, lang, text)
 
-    return await context_false_positives(lang.lang, tokens, list_full)
+    return list_full
 
 
 def parse_word_types(word_types, lower_case=True):
@@ -2934,6 +2910,88 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
     return alternatives_with_article
 
 
+def check_context_valid(token, lang):
+    if (
+        not settings.context_checker
+        or not token
+        or token.lemma_ not in rules[lang]["context_check"]
+    ):
+        return True
+
+    sentence = token.sent.text
+
+    if setfit_model:
+        context = setfit_model([sentence])
+        return context.item() == 1
+
+    if not settings.context_checker_url:
+        return True
+
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": ("Bearer " + settings.context_checker_api_key),
+    }
+
+    payload = {
+        "data": sentence,
+    }
+
+    r = requests.post(url=settings.context_checker_url, headers=headers, json=payload)
+    if r.status_code != 200:
+        return True
+
+    return r.text == '"1"'
+
+
+def add_result(
+    list_results,
+    token,
+    version: float,
+    config: Config,
+    lang: Language,
+    text,
+    full_text,
+    category,
+    subcategory,
+    start,
+    end=None,
+    alternatives=None,
+    label=None,
+    explanation=None,
+    url=None,
+    icon=None,
+    gravity=None,
+    explanation_context=None,
+    content=None,
+):
+    if not check_context_valid(token, lang.lang):
+        return list_results
+
+    list_results.append(
+        ResultOut.factory(
+            version,
+            config,
+            lang,
+            text,
+            full_text,
+            category,
+            subcategory,
+            start,
+            end,
+            alternatives,
+            label,
+            explanation,
+            url,
+            icon,
+            gravity,
+            explanation_context,
+            content,
+        )
+    )
+
+    return list_results
+
+
 def sentences_matches(
     version: float,
     config: Config,
@@ -2944,27 +3002,27 @@ def sentences_matches(
     subcategory,
     matches,
 ):
-    list_tokens = []
+    list_results = []
 
     if is_sub_category_enabled(version, config, subcategory):
         for match_id, start, end in matches:
             span = tokens[start:end]
 
-            list_tokens.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    span.text,
-                    full_text,
-                    category,
-                    subcategory,
-                    span.start_char,
-                    span.end_char,
-                )
+            list_results = add_result(
+                list_results,
+                None,
+                version,
+                config,
+                lang,
+                span.text,
+                full_text,
+                category,
+                subcategory,
+                span.start_char,
+                span.end_char,
             )
 
-    return list_tokens
+    return list_results
 
 
 def sentences_matcher(
@@ -2978,11 +3036,11 @@ def sentences_matcher(
     category,
     subcategory=None,
 ):
-    list_tokens = []
+    list_results = []
 
     if not isinstance(df_sentence, list):
         if not isinstance(df_sentence, pd.DataFrame):
-            return list_tokens
+            return list_results
 
         df_sentence = list(df_sentence["Lemma"])
 
@@ -3012,22 +3070,22 @@ def sentences_matcher(
                 if len(data):
                     alternatives = data[0]
 
-                list_tokens.append(
-                    ResultOut.factory(
-                        version,
-                        config,
-                        lang,
-                        span.text,
-                        full_text,
-                        category,
-                        subcategory,
-                        span.start_char,
-                        span.end_char,
-                        alternatives,
-                    )
+                list_results = add_result(
+                    list_results,
+                    None,
+                    version,
+                    config,
+                    lang,
+                    span.text,
+                    full_text,
+                    category,
+                    subcategory,
+                    span.start_char,
+                    span.end_char,
+                    alternatives,
                 )
 
-    return list_tokens
+    return list_results
 
 
 def regex_matches(
@@ -3039,7 +3097,7 @@ def regex_matches(
     category,
     subcategory=None,
 ):
-    list_ending = []
+    list_results = []
     alternatives = None
     if subcategory == None:
         subcategory = category
@@ -3176,26 +3234,26 @@ def regex_matches(
             elif category != "inclusive":
                 alternatives = regexes[regex]
 
-            list_ending.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    text,
-                    full_text,
-                    category,
-                    subcategory,
-                    start,
-                    None,
-                    alternatives,
-                    None,
-                    explanation,
-                    url,
-                    icon,
-                )
+            list_results = add_result(
+                list_results,
+                None,
+                version,
+                config,
+                lang,
+                text,
+                full_text,
+                category,
+                subcategory,
+                start,
+                None,
+                alternatives,
+                None,
+                explanation,
+                url,
+                icon,
             )
 
-    return list_ending
+    return list_results
 
 
 def ub_words_phrase_matcher_de(
@@ -3209,7 +3267,7 @@ def ub_words_phrase_matcher_de(
     df_sentence,
     category,
 ):
-    list_tokens = []
+    list_results = []
 
     token = None
     for i in range(len(tokens)):
@@ -3226,22 +3284,22 @@ def ub_words_phrase_matcher_de(
                 lang.lang, token, alternatives, prev_token
             )
 
-            list_tokens.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    text,
-                    full_text,
-                    category,
-                    subcategory,
-                    start,
-                    None,
-                    alternatives,
-                )
+            list_results = add_result(
+                list_results,
+                token,
+                version,
+                config,
+                lang,
+                text,
+                full_text,
+                category,
+                subcategory,
+                start,
+                None,
+                alternatives,
             )
 
-    return list_tokens + sentences_matcher(
+    return list_results + sentences_matcher(
         version,
         config,
         lang,
@@ -3264,7 +3322,7 @@ def gendered_denom_analysis_de(
 ):
     category = "gendered"
 
-    list_tokens = []
+    list_results = []
 
     for i in range(len(tokens)):
         for (
@@ -3331,22 +3389,22 @@ def gendered_denom_analysis_de(
                         start = tokens[i - 1].idx
                         text = tokens[i - 1].text + " " + text
 
-                list_tokens.append(
-                    ResultOut.factory(
-                        version,
-                        config,
-                        lang,
-                        text,
-                        full_text,
-                        category,
-                        subcategory,
-                        start,
-                        None,
-                        alternatives,
-                    )
+                list_results = add_result(
+                    list_results,
+                    tokens[i],
+                    version,
+                    config,
+                    lang,
+                    text,
+                    full_text,
+                    category,
+                    subcategory,
+                    start,
+                    None,
+                    alternatives,
                 )
 
-    return list_tokens
+    return list_results
 
 
 def style_word_analysis_de(
@@ -3361,7 +3419,7 @@ def style_word_analysis_de(
     false_positives,
 ):
     category = "style"
-    list_tokens = []
+    list_results = []
 
     token = None
     for i in range(len(tokens)):
@@ -3400,22 +3458,22 @@ def style_word_analysis_de(
                 start + len(text),
             )
 
-            list_tokens.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    text,
-                    full_text,
-                    category,
-                    subcategory,
-                    start,
-                    None,
-                    alternatives,
-                )
+            list_results = add_result(
+                list_results,
+                token,
+                version,
+                config,
+                lang,
+                text,
+                full_text,
+                category,
+                subcategory,
+                start,
+                None,
+                alternatives,
             )
 
-    return list_tokens + sentences_matcher(
+    return list_results + sentences_matcher(
         version,
         config,
         lang,
@@ -3437,7 +3495,7 @@ def word_noun(
     category,
     matches_false=None,
 ):
-    list_tokens = []
+    list_results = []
 
     token = None
     for i in range(len(tokens)):
@@ -3485,22 +3543,22 @@ def word_noun(
             else:
                 alternatives = alternatives_plur
 
-            list_tokens.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    text,
-                    full_text,
-                    category,
-                    subcategory,
-                    start,
-                    None,
-                    alternatives,
-                )
+            list_results = add_result(
+                list_results,
+                token,
+                version,
+                config,
+                lang,
+                text,
+                full_text,
+                category,
+                subcategory,
+                start,
+                None,
+                alternatives,
             )
 
-    return list_tokens
+    return list_results
 
 
 def detect_filler_words_at_sentence_start(
@@ -3582,7 +3640,7 @@ def rules_based_words_phrase_matcher(
     fallback_subcategory=None,
     they=False,
 ):
-    list_tokens = []
+    list_results = []
 
     alternatives = None
     subcategory = fallback_subcategory
@@ -3632,26 +3690,26 @@ def rules_based_words_phrase_matcher(
                 start + len(token.text),
             )
 
-            list_tokens.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    text,
-                    full_text,
-                    category,
-                    subcategory,
-                    start,
-                    None,
-                    alternatives,
-                    None,
-                    explanation,
-                    url,
-                    icon,
-                )
+            list_results = add_result(
+                list_results,
+                token,
+                version,
+                config,
+                lang,
+                text,
+                full_text,
+                category,
+                subcategory,
+                start,
+                None,
+                alternatives,
+                None,
+                explanation,
+                url,
+                icon,
             )
 
-    return list_tokens + sentences_matcher(
+    return list_results + sentences_matcher(
         version,
         config,
         lang,
@@ -3674,7 +3732,7 @@ def homonyms_en(
     matches_false,
     words_data,
 ):
-    list_tokens = []
+    list_results = []
 
     token = None
     for i in range(len(tokens)):
@@ -3693,22 +3751,22 @@ def homonyms_en(
                 lang.lang, token, alternatives, prev_token
             )
 
-            list_tokens.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    text,
-                    full_text,
-                    category,
-                    subcategory,
-                    start,
-                    None,
-                    alternatives,
-                )
+            list_results = add_result(
+                list_results,
+                token,
+                version,
+                config,
+                lang,
+                text,
+                full_text,
+                category,
+                subcategory,
+                start,
+                None,
+                alternatives,
             )
 
-    return list_tokens
+    return list_results
 
 
 # function to find exact match for abbreviations and term replacements
@@ -3722,7 +3780,7 @@ def literal_match(
     term_list,
     lower_case=False,
 ):
-    list_tokens = []
+    list_results = []
 
     matches = fetch_matches(lang.lang, tokens, list(df_sentence["Lemma"]))
     for match_id, start, end in matches:
@@ -3749,22 +3807,22 @@ def literal_match(
             if text != term:
                 continue
 
-            list_tokens.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    span.text,
-                    full_text,
-                    category,
-                    subcategory,
-                    span.start_char,
-                    span.end_char,
-                    alternatives,
-                )
+            list_results = add_result(
+                list_results,
+                None,
+                version,
+                config,
+                lang,
+                span.text,
+                full_text,
+                category,
+                subcategory,
+                span.start_char,
+                span.end_char,
+                alternatives,
             )
 
-    return list_tokens
+    return list_results
 
 
 def detect_lower_cased_hashtags(
@@ -3790,21 +3848,21 @@ def detect_lower_cased_hashtags(
             if len(text) < 5 or any(char.isupper() for char in text):
                 continue
 
-            list_results.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    "#" + text,
-                    full_text,
-                    category,
-                    subcategory,
-                    span.start(),
-                    span.end(),
-                    None,
-                    None,
-                    explanation,
-                )
+            list_results = add_result(
+                list_results,
+                None,
+                version,
+                config,
+                lang,
+                "#" + text,
+                full_text,
+                category,
+                subcategory,
+                span.start(),
+                span.end(),
+                None,
+                None,
+                explanation,
             )
 
     return list_results

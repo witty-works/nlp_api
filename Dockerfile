@@ -12,24 +12,30 @@ RUN chmod +x /tmp/ssh_setup.sh \
   && (sleep 1;/tmp/ssh_setup.sh 2>&1 > /dev/null)
 
 # setup nlp api
-RUN pip install --upgrade pip
+RUN pip install --upgrade pip pdm wheel
+
 RUN groupadd -g 999 wittyuser && \
   useradd --create-home -r -u 999 -g wittyuser wittyuser
 USER wittyuser
+
 WORKDIR /home/wittyuser
+
 ENV APP_MODULE=app.main:app
-# app service in azure allows access to containers via localhost
-ENV LANGUAGETOOL_API=http://languagetool:8000/v2 
-ENV WORKERS 6
 ENV LOGGING_CONFIG_LEVEL ERROR
 ENV TESTING True
-COPY --chown=wittyuser:wittyuser requirements.txt requirements.txt
 ENV PATH="/home/wittyuser/.local/bin:${PATH}"
-RUN pip install -r requirements.txt --user
+
 COPY --chown=wittyuser:wittyuser . .
-RUN pybabel compile -d locales -l de_DE -f \
-  && pybabel compile -d locales -l en_US -f
+RUN pdm sync --prod
+
+RUN pdm run pybabel compile -d locales -l de_DE -f \
+  && pdm run pybabel compile -d locales -l de_AT -f \
+  && pdm run pybabel compile -d locales -l de_CH -f \
+  && pdm run pybabel compile -d locales -l en_US -f \
+  && pdm run pybabel compile -d locales -l en_GB -f
+
 RUN wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
+
 # azure app services needs port 80 or 8080 exposed
 ENV PORT 8080
 EXPOSE 8080 

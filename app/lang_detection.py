@@ -1,5 +1,4 @@
 from app.models import LangWithAutoType, Config
-from functools import lru_cache
 
 
 class LangDetection:
@@ -7,6 +6,9 @@ class LangDetection:
         self.model = model
 
     def predict_lang(self, text, langs_max_match_count=5, threshold=0.2):
+        if not self.model:
+            return []
+
         langs, predictions = self.model.predict(
             text.replace("\n", " "), k=langs_max_match_count, threshold=threshold
         )
@@ -65,8 +67,3 @@ class LangDetection:
             return self.get_default_locale(lang)
 
         return None
-
-
-@lru_cache()
-def get_lang_detection(model):
-    return LangDetection(model)

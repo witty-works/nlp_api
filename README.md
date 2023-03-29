@@ -58,11 +58,18 @@ You should see application running under http://localhost:8000/docs
 ## Using pdm
 
 ```
-pdm install --dev
+pdm sync --dev
 wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 ```
 
-Compile PO files:
+To run the setfit model locally run:
+
+```
+az ml model download --name setfit-classifier --version 2 --resource-group nlp-witty-europe --workspace-name workspace-witty-western-europe
+pdm run python -m bin.convert_to_cpu -i setfit-classifier/outputs
+```
+
+## Compile PO files (done automatically during deployment):
 
 ```
 ./compile-translations.sh
@@ -74,7 +81,7 @@ To update packages locally after pyproject.toml/pdm.lock was changed, run the
 command:
 
 ```
-pdm install --dev
+pdm sync
 ```
 
 ## Add new package
@@ -95,9 +102,7 @@ After making changes in the code or in the Dockerfile, you can run the local
 setup. Build new image with the following commands:
 
 ```
-pdm export --prod -o requirements.txt
-python3.11 -m pip install -r requirements.txt
-docker build -t DockerImageName:DockerImageRelease
+docker build .
 ```
 
 ## Install Platform.sh CLI
@@ -130,6 +135,10 @@ or
 ```
 uvicorn app.main:app --reload
 ```
+
+or
+
+gunicorn app.main:app --preload --timeout 120 -b unix:127.0.0.1 -w 2 -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*"
 
 Open your browser to http://localhost:8000/docs to view the OpenAPI UI.
 
@@ -166,6 +175,16 @@ platform project:clear-build-cache
 
 see:
 https://docs.platform.sh/development/troubleshoot.html#clear-the-build-cache
+
+### Update models in production
+
+```
+az ml model download --name setfit-classifier --version 2 --resource-group nlp-witty-europe --workspace-name workspace-witty-western-europe
+pdm run python -m bin.convert_to_cpu -i setfit-classifier/outputs
+
+rsync -azP files/context_aware_model/ "$(platform ssh -e main --pipe)":files/context_aware_model/
+platform environment:redeploy -e main
+```
 
 ## Example API call
 

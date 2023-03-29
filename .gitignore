@@ -5,8 +5,10 @@
 venv-nlp-api/
 
 training_data/lid.176.bin
+context_aware_model
+setfit-classifier
 
-analyze_rules/*
+files/*
 
 __pycache__/
 *.py[cod]

@@ -46,7 +46,7 @@ then
   eval $pre_cmd
 fi
 
-cmd="pdm run python -m bin.analyze_rules -l $lang -u $lt_url >> ./files/$lang.txt"
+cmd="pdm run python -m bin.analyze_rules -l $lang -u $lt_url >> ./files/analyze_rules/$lang.txt"
 
 echo "Executing cmd: $cmd"
 eval $cmd
