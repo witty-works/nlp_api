@@ -13,7 +13,6 @@ from app.models import (
     RequestIn,
 )
 
-client = TestClient(app)
 logging.basicConfig(
     level="DEBUG", format="[%(asctime)s] %(name)s %(levelname)s - %(message)s"
 )
@@ -26,14 +25,16 @@ def get_dirs(path):
 
 
 def test_read_main():
-    response = client.get("/", follow_redirects=False)
-    assert response.status_code == 301
-    assert response.headers["Location"] == "https://dashboard.witty.works/editor"
+    with TestClient(app) as client:
+        response = client.get("/", follow_redirects=False)
+        assert response.status_code == 301
+        assert response.headers["Location"] == "https://dashboard.witty.works/editor"
 
 
 def test_health():
-    response = client.get("/health", follow_redirects=False)
-    assert response.status_code == 200
+    with TestClient(app) as client:
+        response = client.get("/health", follow_redirects=False)
+        assert response.status_code == 200
 
 
 @pytest.mark.parametrize(
@@ -41,27 +42,28 @@ def test_health():
     get_dirs("tests/test_german"),
 )
 def test_german_endpoint(german_dir, snapshot, set_redis):
-    # Read input files from the case directory.
-    input_json = german_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    response = client.post(
-        "/german",
-        json=json.loads(input_json),
-    )
-    assert response.status_code == 403
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = german_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/german",
+            json=json.loads(input_json),
+        )
+        assert response.status_code == 403
 
-    response = client.post(
-        "/german",
-        json=json.loads(input_json),
-        headers={"X-German": "set"},
-    )
-    assert response.status_code == 200
+        response = client.post(
+            "/german",
+            json=json.loads(input_json),
+            headers={"X-German": "set"},
+        )
+        assert response.status_code == 200
 
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = german_dir
-    snapshot.assert_match(output, "output.json")
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = german_dir
+        snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
@@ -69,27 +71,28 @@ def test_german_endpoint(german_dir, snapshot, set_redis):
     get_dirs("tests/test_english"),
 )
 def test_english_endpoint(english_dir, snapshot, set_redis):
-    # Read input files from the case directory.
-    input_json = english_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    response = client.post(
-        "/english",
-        json=json.loads(input_json),
-    )
-    assert response.status_code == 403
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = english_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/english",
+            json=json.loads(input_json),
+        )
+        assert response.status_code == 403
 
-    response = client.post(
-        "/english",
-        json=json.loads(input_json),
-        headers={"X-English": "set"},
-    )
-    assert response.status_code == 200
+        response = client.post(
+            "/english",
+            json=json.loads(input_json),
+            headers={"X-English": "set"},
+        )
+        assert response.status_code == 200
 
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = english_dir
-    snapshot.assert_match(output, "output.json")
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = english_dir
+        snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
@@ -97,20 +100,21 @@ def test_english_endpoint(english_dir, snapshot, set_redis):
     get_dirs("tests/test_highlight_position"),
 )
 def test_highlight_position(ending_case_dir, snapshot, set_redis):
-    # Read input files from the case directory.
-    input_json = ending_case_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    response = client.post(
-        "/v2.2/check",
-        json=json.loads(input_json),
-        headers={"X-Auth": "default@gmail.com"},
-    )
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = ending_case_dir
-    snapshot.assert_match(output, "output.json")
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = ending_case_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.2/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "default@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = ending_case_dir
+        snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
@@ -118,20 +122,21 @@ def test_highlight_position(ending_case_dir, snapshot, set_redis):
     get_dirs("tests/test_sentry_examples"),
 )
 def test_sentry_examples(ending_case_dir, snapshot, set_redis):
-    # Read input files from the case directory.
-    input_json = ending_case_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    response = client.post(
-        "/v2.2/check",
-        json=json.loads(input_json),
-        headers={"X-Auth": "default@gmail.com"},
-    )
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = ending_case_dir
-    snapshot.assert_match(output, "output.json")
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = ending_case_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.2/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "default@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = ending_case_dir
+        snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
@@ -139,20 +144,21 @@ def test_sentry_examples(ending_case_dir, snapshot, set_redis):
     get_dirs("tests/test_spacy_model"),
 )
 def test_spacy_model(ending_case_dir, snapshot):
-    # Read input files from the case directory.
-    input_json = ending_case_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    response = client.post(
-        "/v2.2/check",
-        json=json.loads(input_json),
-        headers={"X-Auth": "default@gmail.com"},
-    )
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = ending_case_dir
-    snapshot.assert_match(output, "output.json")
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = ending_case_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.2/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "default@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = ending_case_dir
+        snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
@@ -160,20 +166,21 @@ def test_spacy_model(ending_case_dir, snapshot):
     get_dirs("tests/test_demo_wordings_english"),
 )
 def test_demo_wordings_english(ending_case_dir, snapshot, set_redis):
-    # Read input files from the case directory.
-    input_json = ending_case_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    response = client.post(
-        "/v2.2/check",
-        json=json.loads(input_json),
-        headers={"X-Auth": "default@gmail.com"},
-    )
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = ending_case_dir
-    snapshot.assert_match(output, "output.json")
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = ending_case_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.2/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "default@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = ending_case_dir
+        snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
@@ -181,20 +188,21 @@ def test_demo_wordings_english(ending_case_dir, snapshot, set_redis):
     get_dirs("tests/test_demo_wordings_german"),
 )
 def test_demo_wordings_german(ending_case_dir, snapshot, set_redis):
-    # Read input files from the case directory.
-    input_json = ending_case_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    response = client.post(
-        "/v2.2/check",
-        json=json.loads(input_json),
-        headers={"X-Auth": "default@gmail.com"},
-    )
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = ending_case_dir
-    snapshot.assert_match(output, "output.json")
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = ending_case_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.2/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "default@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = ending_case_dir
+        snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
@@ -202,20 +210,21 @@ def test_demo_wordings_german(ending_case_dir, snapshot, set_redis):
     get_dirs("tests/test_general_cases"),
 )
 def test_json(general_case_dir, snapshot, set_redis):
-    # Read input files from the case directory.
-    input_json = general_case_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    response = client.post(
-        "/v2.2/check",
-        json=json.loads(input_json),
-        headers={"X-Auth": "default@gmail.com"},
-    )
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = general_case_dir
-    snapshot.assert_match(output, "output.json")
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = general_case_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.2/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "default@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = general_case_dir
+        snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
@@ -223,16 +232,17 @@ def test_json(general_case_dir, snapshot, set_redis):
     get_dirs("tests/test_1_1"),
 )
 def test_1_1_json(test_1_1_dir, snapshot):
-    # Read input files from the case directory.
-    input_json = test_1_1_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    response = client.post("/v1.1/check", json=json.loads(input_json))
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = test_1_1_dir
-    snapshot.assert_match(output, "output.json")
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = test_1_1_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post("/v1.1/check", json=json.loads(input_json))
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = test_1_1_dir
+        snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
@@ -240,21 +250,22 @@ def test_1_1_json(test_1_1_dir, snapshot):
     get_dirs("tests/test_2_0"),
 )
 def test_2_0_json(test_2_0_dir, snapshot, set_redis):
-    # Read input files from the case directory.
-    input_json = test_2_0_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    response = client.post("/v2.0/check", json=json.loads(input_json))
-    assert response.status_code == 403
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = test_2_0_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post("/v2.0/check", json=json.loads(input_json))
+        assert response.status_code == 403
 
-    response = client.post(
-        "/v2.0/check", json=json.loads(input_json), headers={"X-Auth": "test@gmail.com"}
-    )
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = test_2_0_dir
-    snapshot.assert_match(output, "output.json")
+        response = client.post(
+            "/v2.0/check", json=json.loads(input_json), headers={"X-Auth": "test@gmail.com"}
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = test_2_0_dir
+        snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
@@ -262,24 +273,25 @@ def test_2_0_json(test_2_0_dir, snapshot, set_redis):
     get_dirs("tests/test_2_1"),
 )
 def test_2_1_json(test_2_1_dir, snapshot, set_redis):
-    # Read input files from the case directory.
-    input_json = test_2_1_dir.joinpath("input.json").read_text()
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = test_2_1_dir.joinpath("input.json").read_text()
 
-    response = client.post("/v2.1/check", json=json.loads(input_json))
-    assert response.status_code == 200
+        response = client.post("/v2.1/check", json=json.loads(input_json))
+        assert response.status_code == 200
 
-    # Call the tested endpoint.
-    response = client.post(
-        "/v2.1/check",
-        json=json.loads(input_json),
-        headers={"X-Auth": "default@gmail.com"},
-    )
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = test_2_1_dir
-    snapshot.assert_match(output, "output.json")
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.1/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "default@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = test_2_1_dir
+        snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
@@ -287,20 +299,21 @@ def test_2_1_json(test_2_1_dir, snapshot, set_redis):
     get_dirs("tests/test_witty_free"),
 )
 def test_witty_free_json(test_witty_free_dir, snapshot, set_redis):
-    # Read input files from the case directory.
-    input_json = test_witty_free_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    response = client.post(
-        "/v2.2/check",
-        json=json.loads(input_json),
-        headers={"X-Auth": "free@gmail.com"},
-    )
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = test_witty_free_dir
-    snapshot.assert_match(output, "output.json")
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = test_witty_free_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.2/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "free@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = test_witty_free_dir
+        snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
@@ -308,18 +321,19 @@ def test_witty_free_json(test_witty_free_dir, snapshot, set_redis):
     get_dirs("tests/test_1_1_authenticated"),
 )
 def test_1_1_authenticated_json(test_1_1_authenticated_dir, snapshot, set_redis):
-    # Read input files from the case directory.
-    input_json = test_1_1_authenticated_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    response = client.post(
-        "/v1.1/check", json=json.loads(input_json), headers={"X-Auth": "test@gmail.com"}
-    )
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = test_1_1_authenticated_dir
-    snapshot.assert_match(output, "output.json")
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = test_1_1_authenticated_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v1.1/check", json=json.loads(input_json), headers={"X-Auth": "test@gmail.com"}
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = test_1_1_authenticated_dir
+        snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
@@ -327,20 +341,21 @@ def test_1_1_authenticated_json(test_1_1_authenticated_dir, snapshot, set_redis)
     get_dirs("tests/test_languagetool"),
 )
 def test_orthoraphy(orthoraphy_case_dir, snapshot, set_redis):
-    # Read input files from the case directory.
-    input_json = orthoraphy_case_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    response = client.post(
-        "/v2.2/check",
-        json=json.loads(input_json),
-        headers={"X-Auth": "default@gmail.com"},
-    )
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = orthoraphy_case_dir
-    snapshot.assert_match(output, "output.json")
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = orthoraphy_case_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.2/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "default@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = orthoraphy_case_dir
+        snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
@@ -348,25 +363,27 @@ def test_orthoraphy(orthoraphy_case_dir, snapshot, set_redis):
     get_dirs("tests/test_gender_ending"),
 )
 def test_gender_ending(ending_case_dir, snapshot, set_redis):
-    # Read input files from the case directory.
-    input_json = ending_case_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    response = client.post(
-        "/v2.2/check",
-        json=json.loads(input_json),
-        headers={"X-Auth": "default@gmail.com"},
-    )
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = ending_case_dir
-    snapshot.assert_match(output, "output.json")
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = ending_case_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.2/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "default@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = ending_case_dir
+        snapshot.assert_match(output, "output.json")
 
 
 def test_api_missing_data():
-    response = client.post("/v2.2/check")
-    assert response.status_code == 422
+    with TestClient(app) as client:
+        response = client.post("/v2.2/check")
+        assert response.status_code == 422
 
 
 @pytest.mark.parametrize(
@@ -374,20 +391,21 @@ def test_api_missing_data():
     get_dirs("tests/test_language_detection"),
 )
 def test_language_detection(detection_case_dir, snapshot, set_redis):
-    # Read input files from the case directory.
-    input_json = detection_case_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    response = client.post(
-        "/v2.2/check",
-        json=json.loads(input_json),
-        headers={"X-Auth": "default@gmail.com"},
-    )
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = detection_case_dir
-    snapshot.assert_match(output, "output.json")
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = detection_case_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.2/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "default@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = detection_case_dir
+        snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
@@ -395,83 +413,89 @@ def test_language_detection(detection_case_dir, snapshot, set_redis):
     get_dirs("tests/test_fails"),
 )
 def test_language_detection_fail(fails_case_dir, snapshot, set_redis):
-    # Read input files from the case directory.
-    input_json = fails_case_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    response = client.post(
-        "/v2.2/check",
-        json=json.loads(input_json),
-        headers={"X-Auth": "default@gmail.com"},
-    )
-    assert response.status_code == 422
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = fails_case_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.2/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "default@gmail.com"},
+        )
+        assert response.status_code == 422
 
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = fails_case_dir
-    snapshot.assert_match(output, "output.json")
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = fails_case_dir
+        snapshot.assert_match(output, "output.json")
 
 
 def test_lemmatize():
-    response = client.get("/lemmatize?locale=" + "en&text=running")
-    assert response.status_code == 200
-    result = response.json()
+    with TestClient(app) as client:
+        response = client.get("/lemmatize?locale=" + "en&text=running")
+        assert response.status_code == 200
+        result = response.json()
 
-    assert result == "run"
+        assert result == "run"
 
 
 def test_invalid_access_token():
-    input_json = '{"text": "Hello world."}'
+    with TestClient(app) as client:
+        input_json = '{"text": "Hello world."}'
 
-    response = client.post(
-        "/v2.2/check",
-        json=json.loads(input_json),
-        headers={"authorization": "bearer invalid"},
-    )
+        response = client.post(
+            "/v2.2/check",
+            json=json.loads(input_json),
+            headers={"authorization": "bearer invalid"},
+        )
 
-    assert response.status_code == 403
-
-
-def test_config_changed(set_redis):
-    input_json = '{"text": "Hello world.", "config_hash": "foo"}'
-
-    response = client.post(
-        "/v2.2/check",
-        json=json.loads(input_json),
-        headers={"X-Auth": "default@gmail.com"},
-    )
-
-    assert response.status_code == 200
-    response_content = json.loads(response.content)
-    assert "config_changed" not in response_content
+        assert response.status_code == 403
 
 
 def test_config_changed(set_redis):
-    input_json = '{"text": "Hello world.", "config_hash": "foo"}'
+    with TestClient(app) as client:
+        input_json = '{"text": "Hello world.", "config_hash": "foo"}'
 
-    response = client.post(
-        "/v2.2/check",
-        json=json.loads(input_json),
-        headers={"X-Auth": "test@gmail.com"},
-    )
+        response = client.post(
+            "/v2.2/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "default@gmail.com"},
+        )
 
-    assert response.status_code == 200
-    response_content = json.loads(response.content)
-    assert response_content["config_changed"] == True
+        assert response.status_code == 200
+        response_content = json.loads(response.content)
+        assert "config_changed" not in response_content
+
+
+def test_config_changed(set_redis):
+    with TestClient(app) as client:
+        input_json = '{"text": "Hello world.", "config_hash": "foo"}'
+
+        response = client.post(
+            "/v2.2/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "test@gmail.com"},
+        )
+
+        assert response.status_code == 200
+        response_content = json.loads(response.content)
+        assert response_content["config_changed"] == True
 
 
 def test_config_organization_changed(set_redis):
-    input_json = '{"text": "Hello world.", "organization_config_hash": "bar"}'
+    with TestClient(app) as client:
+        input_json = '{"text": "Hello world.", "organization_config_hash": "bar"}'
 
-    response = client.post(
-        "/v2.2/check",
-        json=json.loads(input_json),
-        headers={"X-Auth": "test@gmail.com"},
-    )
+        response = client.post(
+            "/v2.2/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "test@gmail.com"},
+        )
 
-    assert response.status_code == 200
-    response_content = json.loads(response.content)
-    assert response_content["config_changed"] == True
+        assert response.status_code == 200
+        response_content = json.loads(response.content)
+        assert response_content["config_changed"] == True
 
 
 @pytest.fixture
@@ -685,18 +709,18 @@ def set_redis():
     get_dirs("tests/test_false_positive"),
 )
 def test_false_positive(test_false_positive_dir, snapshot, set_redis):
-    input_json = test_false_positive_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    client = TestClient(app)
-    response = client.post(
-        "/v2.2/check", json=json.loads(input_json), headers={"X-Auth": "test@gmail.com"}
-    )
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = test_false_positive_dir
-    snapshot.assert_match(output, "output.json")
+    with TestClient(app) as client:
+        input_json = test_false_positive_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.2/check", json=json.loads(input_json), headers={"X-Auth": "test@gmail.com"}
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = test_false_positive_dir
+        snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
@@ -704,16 +728,16 @@ def test_false_positive(test_false_positive_dir, snapshot, set_redis):
     get_dirs("tests/test_not_logged_in"),
 )
 def test_not_logged_in(test_not_logged_in_dir, snapshot):
-    input_json = test_not_logged_in_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    client = TestClient(app)
-    response = client.post("/v2.2/check", json=json.loads(input_json))
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = test_not_logged_in_dir
-    snapshot.assert_match(output, "output.json")
+    with TestClient(app) as client:
+        input_json = test_not_logged_in_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post("/v2.2/check", json=json.loads(input_json))
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = test_not_logged_in_dir
+        snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
@@ -721,18 +745,18 @@ def test_not_logged_in(test_not_logged_in_dir, snapshot):
     get_dirs("tests/test_term_replacement"),
 )
 def test_term_replacement(test_term_replacement_dir, snapshot, set_redis):
-    input_json = test_term_replacement_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    client = TestClient(app)
-    response = client.post(
-        "/v2.2/check", json=json.loads(input_json), headers={"X-Auth": "test@gmail.com"}
-    )
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = test_term_replacement_dir
-    snapshot.assert_match(output, "output.json")
+    with TestClient(app) as client:
+        input_json = test_term_replacement_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.2/check", json=json.loads(input_json), headers={"X-Auth": "test@gmail.com"}
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = test_term_replacement_dir
+        snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
@@ -740,23 +764,22 @@ def test_term_replacement(test_term_replacement_dir, snapshot, set_redis):
     get_dirs("tests/test_auth_1_1"),
 )
 def test_auth_1_1(test_auth_1_1_dir, snapshot, set_redis):
-    client = TestClient(app)
+    with TestClient(app) as client:
+        response = client.post("/auth")
+        assert response.status_code == 200
+        assert response.json() is None
 
-    response = client.post("/auth")
-    assert response.status_code == 200
-    assert response.json() is None
+        response = client.post("/auth", headers={"X-Auth": "missing@gmail.com"})
+        assert response.status_code == 200
+        assert response.json() == {}
 
-    response = client.post("/auth", headers={"X-Auth": "missing@gmail.com"})
-    assert response.status_code == 200
-    assert response.json() == {}
-
-    response = client.post("/auth", headers={"X-Auth": "test@gmail.com"})
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = test_auth_1_1_dir
-    snapshot.assert_match(output, "output.json")
+        response = client.post("/auth", headers={"X-Auth": "test@gmail.com"})
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = test_auth_1_1_dir
+        snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
@@ -764,21 +787,20 @@ def test_auth_1_1(test_auth_1_1_dir, snapshot, set_redis):
     get_dirs("tests/test_auth_2_0"),
 )
 def test_auth_2_0(test_auth_2_0_dir, snapshot, set_redis):
-    client = TestClient(app)
+    with TestClient(app) as client:
+        response = client.post("/v2.0/auth")
+        assert response.status_code == 403
 
-    response = client.post("/v2.0/auth")
-    assert response.status_code == 403
+        response = client.post("/v2.0/auth", headers={"X-Auth": "missing@gmail.com"})
+        assert response.status_code == 403
 
-    response = client.post("/v2.0/auth", headers={"X-Auth": "missing@gmail.com"})
-    assert response.status_code == 403
-
-    response = client.post("/v2.0/auth", headers={"X-Auth": "test@gmail.com"})
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = test_auth_2_0_dir
-    snapshot.assert_match(output, "output.json")
+        response = client.post("/v2.0/auth", headers={"X-Auth": "test@gmail.com"})
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = test_auth_2_0_dir
+        snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
@@ -788,14 +810,14 @@ def test_auth_2_0(test_auth_2_0_dir, snapshot, set_redis):
 def test_auth_2_0_team_analytics_opt_out(
     test_auth_2_0_team_analytics_opt_out_dir, snapshot, set_redis
 ):
-    client = TestClient(app)
-    response = client.post("/v2.0/auth", headers={"X-Auth": "default@gmail.com"})
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = test_auth_2_0_team_analytics_opt_out_dir
-    snapshot.assert_match(output, "output.json")
+    with TestClient(app) as client:
+        response = client.post("/v2.0/auth", headers={"X-Auth": "default@gmail.com"})
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = test_auth_2_0_team_analytics_opt_out_dir
+        snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
@@ -803,18 +825,18 @@ def test_auth_2_0_team_analytics_opt_out(
     get_dirs("tests/test_disable_categories"),
 )
 def test_disable_categories(test_disable_categories_dir, snapshot, set_redis):
-    input_json = test_disable_categories_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    client = TestClient(app)
-    response = client.post(
-        "/v2.2/check", json=json.loads(input_json), headers={"X-Auth": "test@gmail.com"}
-    )
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = test_disable_categories_dir
-    snapshot.assert_match(output, "output.json")
+    with TestClient(app) as client:
+        input_json = test_disable_categories_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.2/check", json=json.loads(input_json), headers={"X-Auth": "test@gmail.com"}
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = test_disable_categories_dir
+        snapshot.assert_match(output, "output.json")
 
 
 # test overwriting user configuration by organization forced rules
@@ -1003,237 +1025,240 @@ def test_store_get_delete_rules():
         },
     }
 
-    # check user is missing
-    response = client.get("/user/configs?email=" + user_request_data["email"])
-    assert response.status_code == 404
+    with TestClient(app) as client:
+        # check user is missing
+        response = client.get("/user/configs?email=" + user_request_data["email"])
+        assert response.status_code == 404
 
-    # create user rules
-    response = client.post("/user/configs", json=user_request_data)
-    assert_rules(response, user_request_data)
+        # create user rules
+        response = client.post("/user/configs", json=user_request_data)
+        assert_rules(response, user_request_data)
 
-    # update user rules
-    user_request_data["config"]["gendered_roles_format"]["value"] = "none"
-    response = client.post("/user/configs", json=user_request_data)
-    assert_rules(response, user_request_data)
+        # update user rules
+        user_request_data["config"]["gendered_roles_format"]["value"] = "none"
+        response = client.post("/user/configs", json=user_request_data)
+        assert_rules(response, user_request_data)
 
-    # check user is missing
-    response = client.get("/user/configs?email=bar")
-    assert response.status_code == 404
+        # check user is missing
+        response = client.get("/user/configs?email=bar")
+        assert response.status_code == 404
 
-    # check user exists
-    response = client.get("/user/configs?email=" + user_request_data["email"])
-    assert_rules(response, user_request_data)
+        # check user exists
+        response = client.get("/user/configs?email=" + user_request_data["email"])
+        assert_rules(response, user_request_data)
 
-    # check user is missing can be deleted
-    response = client.delete("/user/configs?email=foobar")
-    assert response.status_code == 204
+        # check user is missing can be deleted
+        response = client.delete("/user/configs?email=foobar")
+        assert response.status_code == 204
 
-    # check user is deleted
-    response = client.delete("/user/configs?email=" + user_request_data["email"])
-    assert response.status_code == 204
+        # check user is deleted
+        response = client.delete("/user/configs?email=" + user_request_data["email"])
+        assert response.status_code == 204
 
-    organization_request_data = {
-        "id": "TEST_organization",
-        "name": "Witty Works",
-        "plan": "witty_teams",
-        "config_hash": "foobaz",
-        "config": {
-            "preferred_variants": {
-                "value": ["en-GB"],
-                "status": "force",
-            },
-            "store_context": {
-                "value": True,
-                "status": "force",
-            },
-            "gendered_roles_format": {
-                "value": "binary_gender",
-                "status": "force",
-            },
-            "german_gender_ending": {
-                "value": "In",
-                "status": "suggestion",
-            },
-            "inclusive": {"value": True, "status": "force"},
-        },
-        "false_positives": ["hello", "world", "dong"],
-        "term_replacements": {
-            "hello|en": {
-                "alternatives": ["welt"],
-                "explanation": {
-                    "text": "better world",
-                    "icon": "🥰",
-                    "url": "https://witty.works/hello",
+        organization_request_data = {
+            "id": "TEST_organization",
+            "name": "Witty Works",
+            "plan": "witty_teams",
+            "config_hash": "foobaz",
+            "config": {
+                "preferred_variants": {
+                    "value": ["en-GB"],
+                    "status": "force",
                 },
-                "gravity": 3.0,
-            },
-            "hello|de": {
-                "alternatives": ["welt"],
-                "explanation": {
-                    "text": "better world",
-                    "icon": "🥰",
-                    "url": "https://witty.works/hello",
+                "store_context": {
+                    "value": True,
+                    "status": "force",
                 },
-                "gravity": 3.0,
-            },
-            "foo|en": {
-                "alternatives": ["bar"],
-                "word_type": "=",
-                "explanation": {
-                    "text": "better bar",
-                    "icon": "🥰",
-                    "url": "https://witty.works/foo",
+                "gendered_roles_format": {
+                    "value": "binary_gender",
+                    "status": "force",
                 },
-                "gravity": 3.0,
-            },
-            "foo|de": {
-                "alternatives": ["bar"],
-                "word_type": "=",
-                "explanation": {
-                    "text": "better bar",
-                    "icon": "🥰",
-                    "url": "https://witty.works/foo",
+                "german_gender_ending": {
+                    "value": "In",
+                    "status": "suggestion",
                 },
-                "gravity": 3.0,
+                "inclusive": {"value": True, "status": "force"},
             },
-        },
-        "domains": {
-            "type": "allow",
-            "list": [
-                "foo.bar",
-                "hello.de",
-            ],
-        },
-    }
+            "false_positives": ["hello", "world", "dong"],
+            "term_replacements": {
+                "hello|en": {
+                    "alternatives": ["welt"],
+                    "explanation": {
+                        "text": "better world",
+                        "icon": "🥰",
+                        "url": "https://witty.works/hello",
+                    },
+                    "gravity": 3.0,
+                },
+                "hello|de": {
+                    "alternatives": ["welt"],
+                    "explanation": {
+                        "text": "better world",
+                        "icon": "🥰",
+                        "url": "https://witty.works/hello",
+                    },
+                    "gravity": 3.0,
+                },
+                "foo|en": {
+                    "alternatives": ["bar"],
+                    "word_type": "=",
+                    "explanation": {
+                        "text": "better bar",
+                        "icon": "🥰",
+                        "url": "https://witty.works/foo",
+                    },
+                    "gravity": 3.0,
+                },
+                "foo|de": {
+                    "alternatives": ["bar"],
+                    "word_type": "=",
+                    "explanation": {
+                        "text": "better bar",
+                        "icon": "🥰",
+                        "url": "https://witty.works/foo",
+                    },
+                    "gravity": 3.0,
+                },
+            },
+            "domains": {
+                "type": "allow",
+                "list": [
+                    "foo.bar",
+                    "hello.de",
+                ],
+            },
+        }
 
-    # check organization is missing
-    response = client.get(
-        "/organization/configs?organization_id=" + organization_request_data["id"]
-    )
-    assert response.status_code == 404
+        # check organization is missing
+        response = client.get(
+            "/organization/configs?organization_id=" + organization_request_data["id"]
+        )
+        assert response.status_code == 404
 
-    # check organization is created
-    response = client.post("/organization/configs", json=organization_request_data)
-    assert_rules(response, organization_request_data)
+        # check organization is created
+        response = client.post("/organization/configs", json=organization_request_data)
+        assert_rules(response, organization_request_data)
 
-    # check organization is updated
-    organization_request_data["config"]["gendered_roles_format"]["value"] = "both"
-    response = client.post("/organization/configs", json=organization_request_data)
-    assert_rules(response, organization_request_data)
+        # check organization is updated
+        organization_request_data["config"]["gendered_roles_format"]["value"] = "both"
+        response = client.post("/organization/configs", json=organization_request_data)
+        assert_rules(response, organization_request_data)
 
-    # check user is missing
-    response = client.get("/user/configs?email=bar")
-    assert response.status_code == 404
+        # check user is missing
+        response = client.get("/user/configs?email=bar")
+        assert response.status_code == 404
 
-    # check user is still missing
-    response = client.get("/user/configs?email=" + user_request_data["email"])
-    assert response.status_code == 404
+        # check user is still missing
+        response = client.get("/user/configs?email=" + user_request_data["email"])
+        assert response.status_code == 404
 
-    # check user is created
-    response = client.post("/user/configs", json=user_request_data)
-    assert response.status_code == 200
+        # check user is created
+        response = client.post("/user/configs", json=user_request_data)
+        assert response.status_code == 200
 
-    # check user exists
-    response = client.get("/user/configs?email=" + user_request_data["email"])
+        # check user exists
+        response = client.get("/user/configs?email=" + user_request_data["email"])
 
-    assert_rules(response, user_request_data)
-    assert_rules(response, organization_request_data, "organization_")
+        assert_rules(response, user_request_data)
+        assert_rules(response, organization_request_data, "organization_")
 
-    # check organization missing can be deleted
-    response = client.delete("/organization/configs?organization_id=foobar")
-    assert response.status_code == 204
+        # check organization missing can be deleted
+        response = client.delete("/organization/configs?organization_id=foobar")
+        assert response.status_code == 204
 
-    # check organization deleted
-    response = client.delete("/organization/configs?organization_id=TEST_organization")
-    assert response.status_code == 204
+        # check organization deleted
+        response = client.delete("/organization/configs?organization_id=TEST_organization")
+        assert response.status_code == 204
 
-    # check deleted organization reverts to user rules
-    response = client.get("/user/configs?email=" + user_request_data["email"])
-    assert_rules(response, user_request_data)
+        # check deleted organization reverts to user rules
+        response = client.get("/user/configs?email=" + user_request_data["email"])
+        assert_rules(response, user_request_data)
 
 
 def test_german_gender_ending():
-    request_data = {
-        "alternative": "Sinti~ze~/~Sinti und Rom~nja~/~Roma",
-    }
-    response = client.get("/debug/german_gender_ending", params=request_data)
-    assert response.status_code == 200
-    response_content = json.loads(response.content)
+    with TestClient(app) as client:
+        request_data = {
+            "alternative": "Sinti~ze~/~Sinti und Rom~nja~/~Roma",
+        }
+        response = client.get("/debug/german_gender_ending", params=request_data)
+        assert response.status_code == 200
+        response_content = json.loads(response.content)
 
-    expected = [
-        "Sinti/ze und Rom/nja",
-        "Sinti_ze und Rom_nja",
-        "Sinti:ze und Rom:nja",
-        "Sinti*ze und Rom*nja",
-        "Sinti/-ze und Rom/-nja",
-        "Sintize/Sinti und Romnja/Roma",
-        "SintiZe und RomNja",
-    ]
+        expected = [
+            "Sinti/ze und Rom/nja",
+            "Sinti_ze und Rom_nja",
+            "Sinti:ze und Rom:nja",
+            "Sinti*ze und Rom*nja",
+            "Sinti/-ze und Rom/-nja",
+            "Sintize/Sinti und Romnja/Roma",
+            "SintiZe und RomNja",
+        ]
 
-    assert sorted(response_content) == sorted(expected)
+        assert sorted(response_content) == sorted(expected)
 
 
 def test_spacy():
-    request_data = {"text": "Das ist sehr ehrgeizig", "lang": "de"}
-    response = client.get("/debug/spacy", params=request_data)
-    assert response.status_code == 200
-    response_content = json.loads(response.content)
+    with TestClient(app) as client:
+        request_data = {"text": "Das ist sehr ehrgeizig", "lang": "de"}
+        response = client.get("/debug/spacy", params=request_data)
+        assert response.status_code == 200
+        response_content = json.loads(response.content)
 
-    expected = [
-        {
-            "text": "Das",
-            "lemma": "der",
-            "start": 0,
-            "tag": "PDS",
-            "pos": "PRON",
-            "dep": "sb",
-            "word_types": ["s"],
-            "morph": {
-                "Case": "Nom",
-                "Gender": "Neut",
-                "Number": "Sing",
-                "PronType": "Dem",
+        expected = [
+            {
+                "text": "Das",
+                "lemma": "der",
+                "start": 0,
+                "tag": "PDS",
+                "pos": "PRON",
+                "dep": "sb",
+                "word_types": ["s"],
+                "morph": {
+                    "Case": "Nom",
+                    "Gender": "Neut",
+                    "Number": "Sing",
+                    "PronType": "Dem",
+                },
             },
-        },
-        {
-            "text": "ist",
-            "lemma": "sein",
-            "start": 4,
-            "tag": "VAFIN",
-            "pos": "AUX",
-            "dep": "ROOT",
-            "word_types": [],
-            "morph": {
-                "Mood": "Ind",
-                "Number": "Sing",
-                "Person": "3",
-                "Tense": "Pres",
-                "VerbForm": "Fin",
+            {
+                "text": "ist",
+                "lemma": "sein",
+                "start": 4,
+                "tag": "VAFIN",
+                "pos": "AUX",
+                "dep": "ROOT",
+                "word_types": [],
+                "morph": {
+                    "Mood": "Ind",
+                    "Number": "Sing",
+                    "Person": "3",
+                    "Tense": "Pres",
+                    "VerbForm": "Fin",
+                },
             },
-        },
-        {
-            "text": "sehr",
-            "lemma": "sehr",
-            "start": 8,
-            "tag": "ADV",
-            "pos": "ADV",
-            "dep": "mo",
-            "word_types": ["a"],
-            "morph": {},
-        },
-        {
-            "text": "ehrgeizig",
-            "lemma": "ehrgeizig",
-            "start": 13,
-            "tag": "ADJD",
-            "pos": "ADV",
-            "dep": "pd",
-            "word_types": ["a"],
-            "morph": {"Degree": "Pos"},
-        },
-    ]
+            {
+                "text": "sehr",
+                "lemma": "sehr",
+                "start": 8,
+                "tag": "ADV",
+                "pos": "ADV",
+                "dep": "mo",
+                "word_types": ["a"],
+                "morph": {},
+            },
+            {
+                "text": "ehrgeizig",
+                "lemma": "ehrgeizig",
+                "start": 13,
+                "tag": "ADJD",
+                "pos": "ADV",
+                "dep": "pd",
+                "word_types": ["a"],
+                "morph": {"Degree": "Pos"},
+            },
+        ]
 
-    assert response_content == expected
+        assert response_content == expected
 
 
 @pytest.mark.parametrize(
@@ -1241,20 +1266,21 @@ def test_spacy():
     get_dirs("tests/test_lemmatizers"),
 )
 def test_lemmatizer(lemma_case_dir, snapshot):
-    # Read input files from the case directory.
-    input_json = lemma_case_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    response = client.post(
-        "/v2.2/check",
-        json=json.loads(input_json),
-        headers={"X-Auth": "default@gmail.com"},
-    )
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = lemma_case_dir
-    snapshot.assert_match(output, "output.json")
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = lemma_case_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.2/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "default@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = lemma_case_dir
+        snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
@@ -1264,20 +1290,21 @@ def test_lemmatizer(lemma_case_dir, snapshot):
 def test_grammatically_correct_alternatives(
     grammatical_alternatives_case_dir, snapshot, set_redis
 ):
-    # Read input files from the case directory.
-    input_json = grammatical_alternatives_case_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    response = client.post(
-        "/v2.2/check",
-        json=json.loads(input_json),
-        headers={"X-Auth": "default@gmail.com"},
-    )
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = grammatical_alternatives_case_dir
-    snapshot.assert_match(output, "output.json")
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = grammatical_alternatives_case_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.2/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "default@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = grammatical_alternatives_case_dir
+        snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
@@ -1285,20 +1312,21 @@ def test_grammatically_correct_alternatives(
     get_dirs("tests/test_abbreviation"),
 )
 def test_abbreviation(abbr_case_dir, snapshot, set_redis):
-    # Read input files from the case directory.
-    input_json = abbr_case_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    response = client.post(
-        "/v2.2/check",
-        json=json.loads(input_json),
-        headers={"X-Auth": "default@gmail.com"},
-    )
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = abbr_case_dir
-    snapshot.assert_match(output, "output.json")
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = abbr_case_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.2/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "default@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = abbr_case_dir
+        snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
@@ -1306,20 +1334,21 @@ def test_abbreviation(abbr_case_dir, snapshot, set_redis):
     get_dirs("tests/test_sing_or_plur"),
 )
 def test_sing_or_plur(test_sing_or_plur_dir, snapshot, set_redis):
-    # Read input files from the case directory.
-    input_json = test_sing_or_plur_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    response = client.post(
-        "/v2.2/check",
-        json=json.loads(input_json),
-        headers={"X-Auth": "default@gmail.com"},
-    )
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = test_sing_or_plur_dir
-    snapshot.assert_match(output, "output.json")
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = test_sing_or_plur_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.2/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "default@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = test_sing_or_plur_dir
+        snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
@@ -1327,20 +1356,21 @@ def test_sing_or_plur(test_sing_or_plur_dir, snapshot, set_redis):
     get_dirs("tests/test_uberlegen_word_type"),
 )
 def test_uberlegen_word_type(uberlegen_word_type_dir, snapshot, set_redis):
-    # Read input files from the case directory.
-    input_json = uberlegen_word_type_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    response = client.post(
-        "/v2.2/check",
-        json=json.loads(input_json),
-        headers={"X-Auth": "default@gmail.com"},
-    )
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = uberlegen_word_type_dir
-    snapshot.assert_match(output, "output.json")
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = uberlegen_word_type_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.2/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "default@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = uberlegen_word_type_dir
+        snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
@@ -1350,20 +1380,21 @@ def test_uberlegen_word_type(uberlegen_word_type_dir, snapshot, set_redis):
 def test_english_false_positive_pattern(
     english_false_pos_pattern_case_dir, snapshot, set_redis
 ):
-    # Read input files from the case directory.
-    input_json = english_false_pos_pattern_case_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    response = client.post(
-        "/v2.2/check",
-        json=json.loads(input_json),
-        headers={"X-Auth": "default@gmail.com"},
-    )
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = english_false_pos_pattern_case_dir
-    snapshot.assert_match(output, "output.json")
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = english_false_pos_pattern_case_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.2/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "default@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = english_false_pos_pattern_case_dir
+        snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
@@ -1373,17 +1404,18 @@ def test_english_false_positive_pattern(
 def test_english_upper_case_multiterms(
     english_upper_case_multiterms_dir, snapshot, set_redis
 ):
-    # Read input files from the case directory.
-    input_json = english_upper_case_multiterms_dir.joinpath("input.json").read_text()
-    # Call the tested endpoint.
-    response = client.post(
-        "/v2.2/check",
-        json=json.loads(input_json),
-        headers={"X-Auth": "default@gmail.com"},
-    )
-    assert response.status_code == 200
-    # output must be string
-    output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
-    # Snapshot the return value.
-    snapshot.snapshot_dir = english_upper_case_multiterms_dir
-    snapshot.assert_match(output, "output.json")
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = english_upper_case_multiterms_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.2/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "default@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(response.json(), sort_keys=True, indent=4, ensure_ascii=False)
+        # Snapshot the return value.
+        snapshot.snapshot_dir = english_upper_case_multiterms_dir
+        snapshot.assert_match(output, "output.json")

@@ -7,7 +7,7 @@ import re
 import uvicorn
 import json
 import secrets
-from aiohttp import ClientSession, TCPConnector, ClientError
+import aiohttp
 from typing import Optional, Union, List
 from collections import defaultdict
 from pydantic import parse_obj_as
@@ -15,7 +15,6 @@ from pydantic import parse_obj_as
 import os
 import fasttext
 
-from spacy.tokens import Doc
 from spacy.matcher import PhraseMatcher, Matcher
 import pandas as pd
 
@@ -31,6 +30,7 @@ from fastapi import (
     status,
 )
 
+from contextlib import asynccontextmanager
 from fastapi.responses import JSONResponse
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
@@ -224,6 +224,24 @@ async def handle_command_witty(
     await respond(blocks=blocks)
 
 
+session = None
+ssl_session = None
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global session
+    global ssl_session
+
+    session = aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False))
+    ssl_session = aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=True))
+
+    yield
+
+    await session.close()
+    await ssl_session.close()
+
+
 app = FastAPI(
     title="Witty NLP API",
     version=version,
@@ -232,6 +250,7 @@ app = FastAPI(
     docs_url=None,
     redoc_url=None,
     openapi_url=None,
+    lifespan=lifespan,
 )
 
 
@@ -1364,13 +1383,13 @@ async def handle_response(r, name):
             raise Exception(result)
 
         return await r.json()
-    except ClientError as err:  # pragma: no cover
+    except aiohttp.ClientError as err:  # pragma: no cover
         result = "Problem communicating with " + name
         if r.status >= 500:
             try:
                 response = await r.text()
                 result += ": " + response
-            except ClientError as err:
+            except aiohttp.ClientError as err:
                 result += ": " + str(err)
         else:
             result += ": " + str(err)
@@ -1381,15 +1400,21 @@ async def handle_response(r, name):
 
 
 async def fetch_json_get(url, payload, headers, name, ssl=True):
-    async with ClientSession(connector=TCPConnector(ssl=ssl)) as session:
-        async with session.get(url, params=payload, headers=headers) as r:
+    if ssl:
+        async with ssl_session.get(url, params=payload, headers=headers) as r:
             return await handle_response(r, name)
+
+    async with session.get(url, params=payload, headers=headers) as r:
+        return await handle_response(r, name)
 
 
 async def fetch_json_post(url, payload, headers, name, ssl=True):
-    async with ClientSession(connector=TCPConnector(ssl=ssl)) as session:
-        async with session.post(url, data=payload, headers=headers) as r:
+    if ssl:
+        async with ssl_session.post(url, data=payload, headers=headers) as r:
             return await handle_response(r, name)
+
+    async with session.post(url, data=payload, headers=headers) as r:
+        return await handle_response(r, name)
 
 
 async def apply_languagetool_rules(
