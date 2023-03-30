@@ -7,7 +7,7 @@ import re
 import uvicorn
 import json
 import secrets
-from aiohttp import ClientSession, TCPConnector, ClientError
+import aiohttp
 from typing import Optional, Union, List
 from collections import defaultdict
 from pydantic import parse_obj_as
@@ -15,7 +15,6 @@ from pydantic import parse_obj_as
 import os
 import fasttext
 
-from spacy.tokens import Doc
 from spacy.matcher import PhraseMatcher, Matcher
 import pandas as pd
 
@@ -31,6 +30,7 @@ from fastapi import (
     status,
 )
 
+from contextlib import asynccontextmanager
 from fastapi.responses import JSONResponse
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
@@ -90,7 +90,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.42.2"
+version = "1.42.3"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -224,6 +224,24 @@ async def handle_command_witty(
     await respond(blocks=blocks)
 
 
+session = None
+ssl_session = None
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global session
+    global ssl_session
+
+    session = aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False))
+    ssl_session = aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=True))
+
+    yield
+
+    await session.close()
+    await ssl_session.close()
+
+
 app = FastAPI(
     title="Witty NLP API",
     version=version,
@@ -232,6 +250,7 @@ app = FastAPI(
     docs_url=None,
     redoc_url=None,
     openapi_url=None,
+    lifespan=lifespan,
 )
 
 
@@ -316,6 +335,11 @@ async def post_exception(
     )
 
 
+@app.get("/health")
+def get_health():
+    return redis.ping()
+
+
 @app.get("/lt", include_in_schema=not settings.is_prod)
 def get_lt(username: str = Depends(fetch_current_username)):
     return settings.languagetool_api
@@ -344,7 +368,7 @@ def get_openapi_json(
 # public routes
 @app.get("/", include_in_schema=False)
 def get_root():
-    url = "https://www.witty.works/editor"
+    url = "https://dashboard.witty.works/editor"
     status_code = 301
 
     if not settings.is_prod and settings.testing == False:  # pragma: no cover
@@ -935,7 +959,7 @@ def apply_configs(user_request_in: RequestIn, configs: dict, plan: str):
     for config in configs:
         data = configs[config]
         if data is not None and data["status"] == "force":
-            if config in ["inclusive", "style", "orthography"]:
+            if config in ["inclusive", "style", "orthography", "hr"]:
                 if data["value"]:
                     if config in disabled_categories:
                         disabled_categories.remove(config)
@@ -1359,13 +1383,13 @@ async def handle_response(r, name):
             raise Exception(result)
 
         return await r.json()
-    except ClientError as err:  # pragma: no cover
+    except aiohttp.ClientError as err:  # pragma: no cover
         result = "Problem communicating with " + name
         if r.status >= 500:
             try:
                 response = await r.text()
                 result += ": " + response
-            except ClientError as err:
+            except aiohttp.ClientError as err:
                 result += ": " + str(err)
         else:
             result += ": " + str(err)
@@ -1376,15 +1400,21 @@ async def handle_response(r, name):
 
 
 async def fetch_json_get(url, payload, headers, name, ssl=True):
-    async with ClientSession(connector=TCPConnector(ssl=ssl)) as session:
-        async with session.get(url, params=payload, headers=headers) as r:
+    if ssl:
+        async with ssl_session.get(url, params=payload, headers=headers) as r:
             return await handle_response(r, name)
+
+    async with session.get(url, params=payload, headers=headers) as r:
+        return await handle_response(r, name)
 
 
 async def fetch_json_post(url, payload, headers, name, ssl=True):
-    async with ClientSession(connector=TCPConnector(ssl=ssl)) as session:
-        async with session.post(url, data=payload, headers=headers) as r:
+    if ssl:
+        async with ssl_session.post(url, data=payload, headers=headers) as r:
             return await handle_response(r, name)
+
+    async with session.post(url, data=payload, headers=headers) as r:
+        return await handle_response(r, name)
 
 
 async def apply_languagetool_rules(
@@ -1717,7 +1747,11 @@ async def context_false_positives(lang, tokens, list_results):
             sentences[sentence.end_char] = sentence
 
         for result in list_results:
-            if result.text.lower() in rules[lang]["context_check"]:
+            words = result.text.lower().split()
+            if not len(words):
+                continue
+
+            if words[-1] in rules[lang]["context_check"]:
                 context_valid = await call_context_checker(sentences, result)
                 if not context_valid:
                     list_results.remove(result)
