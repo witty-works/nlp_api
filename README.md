@@ -62,17 +62,16 @@ pdm install --dev
 wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 ```
 
-Compile PO files (done automatically during deployment:
+Compile PO files:
 
 ```
 ./compile-translations.sh
 ```
 
-Compile the translations in the spirit of `./compile-translations.sh`
-
 ## Update dependencies locally
 
-To update packages locally after pyproject.toml/pdm.lock was changed, run the command:
+To update packages locally after pyproject.toml/pdm.lock was changed, run the
+command:
 
 ```
 pdm install --dev
@@ -80,12 +79,12 @@ pdm install --dev
 
 ## Add new package
 
-When adding new package to the project, you need to updated existing pyproject.toml.
-Following command will install the package and add it to the `pyproject.toml/pdm.lock` and
-`pyproject.toml/pdm.lock`:
+When adding new package to the project, you need to updated existing
+pyproject.toml. Following command will install the package and add it to the
+`pyproject.toml/pdm.lock` and `pyproject.toml/pdm.lock`:
 
 ```
-pdm install <package_name>
+pdm add <package_name>
 ```
 
 ## Docker image
@@ -158,9 +157,6 @@ Set an env variable `API_DOCS_AUTH_ENABLED` to `"true"` and for the
 username/password called `API_DOCS_USERNAME` and `API_DOCS_PASSWORD` for basic
 auth for the API docs.
 
-Set an env variable `LANGUAGETOOL_API` to the URL endpoint of your LanguageTool
-server. Default is `https://api.languagetool.org/v2`.
-
 If the build fails due to "No space left on device" while installing the
 dependencies run:
 
@@ -171,7 +167,7 @@ platform project:clear-build-cache
 see:
 https://docs.platform.sh/development/troubleshoot.html#clear-the-build-cache
 
-## Example
+## Example API call
 
 ```
 curl -X 'POST' \
@@ -185,7 +181,7 @@ curl -X 'POST' \
 
 ## Cloud deployment
 
-Test deployment(proof of concept) was done on Azure Kubernetes service with
+Test deployment (proof of concept) was done on Azure Kubernetes service with
 Docker images attached to this repository. More about that:
 https://www.notion.so/witty-works/Cloud-Deployment-Approaches-a5320f3e1b854e1e817909d365118ee7#cd1d5b8f43d449088c59de1b816119fd
 
