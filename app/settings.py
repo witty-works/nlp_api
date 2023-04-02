@@ -82,4 +82,9 @@ def get_settings():
                 "%(scheme)s://%(host)s:%(port)d" % endpoint
             )
 
+        if "languagetool" in settings.platform_relationships:
+            endpoint = settings.platform_relationships["languagetool"][0]
+            settings.languagetool_api = "%(scheme)s://%(host)s:%(port)d/v2" % endpoint
+            settings.languagetool_verify_ssl = False
+
     return settings

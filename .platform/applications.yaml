@@ -66,3 +66,4 @@
 
   relationships:
     rediscache: "rediscache:redis"
+    languagetool: "languagetool:http"
