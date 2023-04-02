@@ -38,15 +38,15 @@ lt_url="https://lt.default.api.witty.works/v2/check"
 diff_not_empty=false
 
 description="Analyze $lang rules"
-file="./analyze_rules/$lang.txt"
-prev_file="./analyze_rules/prev_$lang.txt"
+file="./files/$lang.txt"
+prev_file="./files/prev_$lang.txt"
 if test -f "$file"
 then
   pre_cmd="mv $file $prev_file"
   eval $pre_cmd
 fi
 
-cmd="pdm run python -m bin.analyze_rules -l $lang -u $lt_url >> ./analyze_rules/$lang.txt"
+cmd="pdm run python -m bin.analyze_rules -l $lang -u $lt_url >> ./files/$lang.txt"
 
 echo "Executing cmd: $cmd"
 eval $cmd
@@ -77,7 +77,7 @@ mj_payload(){
     currentDate=`date +"%Y-%m-%d"`
     messageJson=`echo "$message" | jq -Rsa .`
     messageJson=${messageJson//\\\\/\\}
-    base64Content=`base64 -w 0 ./analyze_rules/$lang.txt`
+    base64Content=`base64 -w 0 ./files/$lang.txt`
 
     cat <<EOF
 {
