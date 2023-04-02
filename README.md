@@ -223,7 +223,7 @@ https://www.notion.so/witty-works/e68e073dd0a342fca2a6683c7a8b2341?v=b54da99f8a6
 Export to CSV
 
 ```
-pdm run python -m bin.update_locales -i [CSV export]]
+pdm run python -m bin.update_locales -i [CSV export]
 ```
 
 ## Analyze Rules
