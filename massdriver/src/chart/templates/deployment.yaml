@@ -52,16 +52,17 @@ spec:
           {{- if .Values.port }}
           ports:
             - containerPort: {{ .Values.port }}
+              name: http
               protocol: TCP
           {{- end }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           {{- end }}
-          {{- with .Values.readinessProbe }}
           readinessProbe:
-            {{- toYaml .Values.readinessProbe | nindent 12 }}
-          {{- end }}
+            httpGet:
+              path: /health
+              port: http
           resources:
             {{- with .Values.resourceRequests }}
             requests:
