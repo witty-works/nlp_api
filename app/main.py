@@ -31,6 +31,7 @@ from fastapi import (
 )
 
 from contextlib import asynccontextmanager
+from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
@@ -90,7 +91,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.42.4"
+version = "1.42.5"
 
 settings = get_settings()
 logging = set_up_logger(settings)
@@ -336,8 +337,28 @@ async def post_exception(
 
 
 @app.get("/health")
-def get_health():
-    return redis.ping()
+async def get_health():
+    languagetool_health = await fetch_json_get(
+        settings.languagetool_api + "/healthcheck",
+        {},
+        {},
+        "LanguageTool",
+        settings.languagetool_verify_ssl,
+        False,
+    )
+
+    health = {"spelling": languagetool_health == "OK", "config": redis.ping()}
+
+    content = jsonable_encoder(health)
+
+    for key in health:
+        if not health[key]:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=content,
+            )
+
+    return content
 
 
 @app.get("/lt", include_in_schema=not settings.is_prod)
@@ -1374,7 +1395,7 @@ async def fetch_json_from_language_service(
     return await fetch_json_post(url, payload, headers, name, False)
 
 
-async def handle_response(r, name):
+async def handle_response(r, name, json=True):
     try:
         if r.status != 200:  # pragma: no cover
             result = await r.text()
@@ -1382,7 +1403,10 @@ async def handle_response(r, name):
 
             raise Exception(result)
 
-        return await r.json()
+        if json:
+            return await r.json()
+
+        return await r.text()
     except aiohttp.ClientError as err:  # pragma: no cover
         result = "Problem communicating with " + name
         if r.status >= 500:
@@ -1399,22 +1423,22 @@ async def handle_response(r, name):
     return result
 
 
-async def fetch_json_get(url, payload, headers, name, ssl=True):
+async def fetch_json_get(url, payload, headers, name, ssl=True, json=True):
     if ssl:
         async with ssl_session.get(url, params=payload, headers=headers) as r:
-            return await handle_response(r, name)
+            return await handle_response(r, name, json)
 
     async with session.get(url, params=payload, headers=headers) as r:
-        return await handle_response(r, name)
+        return await handle_response(r, name, json)
 
 
-async def fetch_json_post(url, payload, headers, name, ssl=True):
+async def fetch_json_post(url, payload, headers, name, ssl=True, json=True):
     if ssl:
         async with ssl_session.post(url, data=payload, headers=headers) as r:
-            return await handle_response(r, name)
+            return await handle_response(r, name, json)
 
     async with session.post(url, data=payload, headers=headers) as r:
-        return await handle_response(r, name)
+        return await handle_response(r, name, json)
 
 
 async def apply_languagetool_rules(

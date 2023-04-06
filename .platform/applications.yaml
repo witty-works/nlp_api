@@ -62,7 +62,10 @@
         fi
 
   mounts:
-    "analyze_rules": "shared:files/analyze_rules"
+    "files":
+      source: service
+      service: files
+      source_path: files
 
   relationships:
     rediscache: "rediscache:redis"
