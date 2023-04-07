@@ -226,6 +226,7 @@
             "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben",
             "end": 4,
             "explanation": {
+                "content": "video",
                 "icon": "😟",
                 "text": "Füllwörter machen Text länger und unverständlicher",
                 "url": "https://www.witty.works/de/subkategorien/füllwörter?reducedView=true"

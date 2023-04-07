@@ -88,8 +88,9 @@
             "context": "Wie geht es ihnen? Hallo Kund*innen und Kund*in. Hallo, die:der Kund:in. Bis du unser Matros/-in?",
             "end": 96,
             "explanation": {
+                "content": "advanced",
                 "icon": "✅",
-                "text": "Stärkt Vielfalt, Gleichstellung, Teilhabe und Zugehörigkeit",
+                "text": "Fördere den Austausch über Vielfalt, Gleichheit, Teilhabe und Zugehörigkeit",
                 "url": "https://www.witty.works/de/subkategorien/vielfalt-gleichheit-teilhabe-zugehörigkeit?reducedView=true"
             },
             "label": "Inklusiv: DEIB",

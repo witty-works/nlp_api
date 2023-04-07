@@ -354,8 +354,9 @@
             "context": "unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verp",
             "end": 382,
             "explanation": {
+                "content": "advanced",
                 "icon": "✅",
-                "text": "Stärkt Vielfalt, Gleichstellung, Teilhabe und Zugehörigkeit",
+                "text": "Fördere den Austausch über Vielfalt, Gleichheit, Teilhabe und Zugehörigkeit",
                 "url": "https://www.witty.works/de/subkategorien/vielfalt-gleichheit-teilhabe-zugehörigkeit?reducedView=true"
             },
             "label": "Inklusiv: DEIB",
@@ -373,6 +374,7 @@
             "context": "Fügen Sie hier Ihren Text ein oder benutzen Sie diesen Text als Beispiel. Dieser Text wurde nur zum Testen geschrieben. Die Donaudampfschifffahrt darf da nicht fehlen. Und die Nutzung des Genitiv",
             "end": 95,
             "explanation": {
+                "content": "video",
                 "icon": "😟",
                 "text": "Füllwörter machen Text länger und unverständlicher",
                 "url": "https://www.witty.works/de/subkategorien/füllwörter?reducedView=true"
@@ -393,6 +395,7 @@
             "context": "um Testen geschrieben. Die Donaudampfschifffahrt darf da nicht fehlen. Und die Nutzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das brauch",
             "end": 201,
             "explanation": {
+                "content": "video",
                 "icon": "😟",
                 "text": "Füllwörter machen Text länger und unverständlicher",
                 "url": "https://www.witty.works/de/subkategorien/füllwörter?reducedView=true"
@@ -413,6 +416,7 @@
             "context": "n. Die Donaudampfschifffahrt darf da nicht fehlen. Und die Nutzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing und ei",
             "end": 222,
             "explanation": {
+                "content": "video",
                 "icon": "😟",
                 "text": "Füllwörter machen Text länger und unverständlicher",
                 "url": "https://www.witty.works/de/subkategorien/füllwörter?reducedView=true"
@@ -494,6 +498,7 @@
             "context": "hen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal wieder herausfinden müssen.",
             "end": 546,
             "explanation": {
+                "content": "video",
                 "icon": "😟",
                 "text": "Füllwörter machen Text länger und unverständlicher",
                 "url": "https://www.witty.works/de/subkategorien/füllwörter?reducedView=true"
@@ -514,6 +519,7 @@
             "context": "dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal wieder herausfinden müssen.",
             "end": 553,
             "explanation": {
+                "content": "video",
                 "icon": "😟",
                 "text": "Füllwörter machen Text länger und unverständlicher",
                 "url": "https://www.witty.works/de/subkategorien/füllwörter?reducedView=true"

@@ -38,8 +38,9 @@
             "context": "Ist der Arbeitgeber zufriedenstellend? Es wäre gut die*den Arbeitergeber*in zu bestärken.",
             "end": 58,
             "explanation": {
+                "content": "advanced",
                 "icon": "✅",
-                "text": "Stärkt Vielfalt, Gleichstellung, Teilhabe und Zugehörigkeit",
+                "text": "Fördere den Austausch über Vielfalt, Gleichheit, Teilhabe und Zugehörigkeit",
                 "url": "https://www.witty.works/de/subkategorien/vielfalt-gleichheit-teilhabe-zugehörigkeit?reducedView=true"
             },
             "label": "Inklusiv: DEIB",
@@ -53,8 +54,9 @@
             "context": "Ist der Arbeitgeber zufriedenstellend? Es wäre gut die*den Arbeitergeber*in zu bestärken.",
             "end": 75,
             "explanation": {
+                "content": "advanced",
                 "icon": "✅",
-                "text": "Stärkt Vielfalt, Gleichstellung, Teilhabe und Zugehörigkeit",
+                "text": "Fördere den Austausch über Vielfalt, Gleichheit, Teilhabe und Zugehörigkeit",
                 "url": "https://www.witty.works/de/subkategorien/vielfalt-gleichheit-teilhabe-zugehörigkeit?reducedView=true"
             },
             "label": "Inklusiv: DEIB",
