@@ -248,7 +248,7 @@ categories = {
             "de": "https://www.witty.works/de/subkategorien/vielfalt-gleichheit-teilhabe-zugehörigkeit",
         },
         "emoji": "✅",
-        "content": {"en": "advanced"},
+        "content": {"en": "advanced", "de": "advanced"},
     },
     "emotional_security": {
         "inclusive": True,
@@ -297,7 +297,7 @@ categories = {
         "category": "style",
         "gravity": 3.0,
         "importance": 3,
-        "content": {"en": "advanced"},
+        "content": {"en": "video", "de": "video"},
         "url": {
             "en": "https://www.witty.works/en/subcategories/filler-words",
             "de": "https://www.witty.works/de/subkategorien/füllwörter",

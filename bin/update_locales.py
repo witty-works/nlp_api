@@ -30,14 +30,16 @@ def read_csv(in_file, categories):
             continue
 
         lang = Language(locale)
+        translated = ["name", "explanation"]
         for subcategory in categories.keys():
-            if "explanation" not in categories[subcategory]:
-                categories[subcategory]["explanation"] = {}
+            for key in translated:
+                if key not in categories[subcategory]:
+                    categories[subcategory][key] = {}
 
-            key = "rules." + subcategory + "_explanation"
-            categories[subcategory]["explanation"][lang.lang] = lang._(key)
-            if categories[subcategory]["explanation"][lang.lang] == key:
-                categories[subcategory]["explanation"][lang.lang] = ""
+                transKey = "rules." + subcategory + "_" + key
+                categories[subcategory][key][lang.lang] = lang._(transKey)
+                if categories[subcategory][key][lang.lang] == transKey:
+                    categories[subcategory][key][lang.lang] = ""
 
     with open(in_file, newline="") as csvfile:
         columns = {
@@ -131,7 +133,6 @@ def read_csv(in_file, categories):
                         columns["canonical_url"]
                     ]
 
-    translated = ["name", "explanation"]
     sorted_categories = {}
     for subcategory in sorted(categories.keys()):
         data = categories[subcategory]
