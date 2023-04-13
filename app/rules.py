@@ -127,10 +127,12 @@ def fetch_rules(langs):
         )
 
         # dictionaries to handle false positives
-        rules["de"]["gender_false_positive"] = list(
-            data["de"]["df_gender_false_positive"]["False_positives"]
+        false_positive = namedtuple("FalsePositive", "gender style")
+        rules["de"]["false_positives"] = false_positive(
+            data["de"]["df_gender_false_positive"]["False_positives"],
+            ["international"],
         )
-        rules["de"]["style_false_positive"] = ["international"]
+
         rules["de"]["exceptions"] = [
             "Unternehmen",
             "Firma",
@@ -278,13 +280,6 @@ def fetch_rules(langs):
                 df_style_sentences["Primary_subcategory"],
                 map(ast.literal_eval, df_style_sentences["Alt_split"]),
             )
-        )
-
-        FalsePositive = namedtuple("FalsePositive", "gender style")
-
-        rules["de"]["false_positives"] = FalsePositive(
-            rules["de"]["gender_false_positive"],
-            rules["de"]["style_false_positive"],
         )
 
         rules["de"]["primary_german_genus_endings"] = {
