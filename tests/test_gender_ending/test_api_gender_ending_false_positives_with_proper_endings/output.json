@@ -20,6 +20,7 @@
                     "text": "Fachpersonal"
                 }
             ],
+            "category": "gendered",
             "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachfrau/Fachmann? Hallo Kundin/Kunde. Fachfrau. Fachmann.",
             "end": 107,
             "explanation": {
@@ -51,6 +52,7 @@
                     "text": "Fachpersonal"
                 }
             ],
+            "category": "gendered",
             "context": "Bewerberinnen und Bewerber? Oder haben wir eine/n Fachfrau/Fachmann? Hallo Kundin/Kunde. Fachfrau. Fachmann.",
             "end": 117,
             "explanation": {
@@ -59,7 +61,7 @@
                 "url": "https://www.witty.works/de/subkategorien/generisches-maskulinum?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Generisches Maskulinum",
+            "label": "Geschlechtsspezifisch: Generisches Maskulinum",
             "start": 109,
             "subcategory": "function",
             "text": "Fachmann"

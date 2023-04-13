@@ -2,14 +2,14 @@ import csv
 import json
 import os
 from collections import defaultdict
-import requests
+
 from app.models import (
     ResultOut,
     Config,
     GenderedRolesFormatType,
 )
 import re
-import argparse
+
 import logging
 import sys
 
@@ -42,12 +42,20 @@ clean_words = []
 all_file_allternatives = []
 for training_data_path in training_data_paths:
     with open(training_data_path) as f:
-        if not f.name.endswith(".csv"):
+        if (
+            not f.name.endswith(".csv")
+            or f.name.endswith("verbs.csv")
+            or f.name.endswith(false_positive_path)
+        ):
             continue
+
+        print("Reading" + f.name)
 
         reader = csv.DictReader(f)
         column_names = reader.fieldnames
         if "Alt_split" in column_names:
+            print(column_names)
+
             for row in reader:
                 value = row["Alt_split"]
                 value = value.replace("'", '"')
@@ -58,7 +66,7 @@ for training_data_path in training_data_paths:
 
 
 all_alternative_groups = set(all_alternative_groups)
-
+print("Alternatives " + str(len(all_alternative_groups)))
 for all_alternative_group in all_alternative_groups:
     all_alternatives.extend(all_alternative_group.split("|"))
 
@@ -81,18 +89,23 @@ for word in words["de-DE"]:
 
 regexes = [
     # e.g. Kundinnen und Kunden
-    r"[A-Z]\w+ und [A-Z]\w+",
+    r"[A-ZÄÜÖ]\w+ und [A-ZÄÜÖ]\w+",
     # e.g. Industriekauffrau/Industriekaufmann
-    r"[A-Z]\w+\/[A-Z]\w+",
+    r"[A-ZÄÜÖ]\w+\/[A-ZÄÜÖ]\w+",
 ]
 
 false_positives = []
 for locale in words:
+    print("Processing " + locale)
+    print("Words " + str(len(words[locale])))
     for w in words[locale]:
         for regex in regexes:
             if re.fullmatch(regex, w):
                 false_positives.append([w])
+
                 break
+
+print("False positives " + str(len(false_positives)))
 
 header = ["False_positives"]
 with open(false_positive_path, "w") as f:

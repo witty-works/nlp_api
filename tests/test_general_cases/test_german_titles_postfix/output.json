@@ -1,0 +1,219 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                },
+                {
+                    "text": "Taschenuhr"
+                }
+            ],
+            "category": "openly_discriminating",
+            "context": "Unser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Er ist eine Megadussel. Dussel. Megadusselsau. Ein Ingenieur kann das. Ein Elektroingenieur kann d",
+            "end": 94,
+            "explanation": {
+                "icon": "🚫",
+                "text": "Anti-semitisch",
+                "url": "https://www.witty.works/de/subkategorien/anti-semitismus?reducedView=true"
+            },
+            "gravity": 1.0,
+            "label": "Offene Diskriminierung: Anti-semitismus",
+            "start": 87,
+            "subcategory": "antisemitism",
+            "text": "Judenei"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "openly_discriminating",
+            "context": "charzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Er ist eine Megadussel. Dussel. Megadusselsau. Ein Ingenieur kann das. Ein Elektroingenieur kann das nicht.",
+            "end": 118,
+            "explanation": {
+                "icon": "🚫",
+                "text": "Verletzt und schüchtert ein",
+                "url": "https://www.witty.works/de/subkategorien/beleidigende-und-verletzende-sprache?reducedView=true"
+            },
+            "gravity": 1.0,
+            "label": "Offene Diskriminierung: Beleidigende und verletzende Sprache",
+            "start": 108,
+            "subcategory": "offensive_language",
+            "text": "Megadussel"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "openly_discriminating",
+            "context": "alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Er ist eine Megadussel. Dussel. Megadusselsau. Ein Ingenieur kann das. Ein Elektroingenieur kann das nicht.",
+            "end": 126,
+            "explanation": {
+                "icon": "🚫",
+                "text": "Verletzt und schüchtert ein",
+                "url": "https://www.witty.works/de/subkategorien/beleidigende-und-verletzende-sprache?reducedView=true"
+            },
+            "gravity": 1.0,
+            "label": "Offene Diskriminierung: Beleidigende und verletzende Sprache",
+            "start": 120,
+            "subcategory": "offensive_language",
+            "text": "Dussel"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "openly_discriminating",
+            "context": "achärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Er ist eine Megadussel. Dussel. Megadusselsau. Ein Ingenieur kann das. Ein Elektroingenieur kann das nicht.",
+            "end": 141,
+            "explanation": {
+                "icon": "🚫",
+                "text": "Verletzt und schüchtert ein",
+                "url": "https://www.witty.works/de/subkategorien/beleidigende-und-verletzende-sprache?reducedView=true"
+            },
+            "gravity": 1.0,
+            "label": "Offene Diskriminierung: Beleidigende und verletzende Sprache",
+            "start": 128,
+            "subcategory": "offensive_language",
+            "text": "Megadusselsau"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Unsere fachärztliche Untersuchung"
+                },
+                {
+                    "text": "Unser*e Fachärztin*Facharzt"
+                },
+                {
+                    "text": "Unser/e Fachärztin/Facharzt"
+                }
+            ],
+            "category": "gendered",
+            "context": "Unser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Er ist eine Megadu",
+            "end": 14,
+            "explanation": {
+                "icon": "😟",
+                "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
+                "url": "https://www.witty.works/de/subkategorien/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlechtsspezifisch: Berufe",
+            "start": 0,
+            "subcategory": "titles",
+            "text": "Unser Facharzt"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Fachärzt*innen"
+                },
+                {
+                    "text": "Fachärztinnen und Fachärzte"
+                },
+                {
+                    "text": "Fachärztliche Untersuchung"
+                }
+            ],
+            "category": "gendered",
+            "context": "Unser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Er ist eine Megadussel. Dussel. Megaduss",
+            "end": 36,
+            "explanation": {
+                "icon": "😟",
+                "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
+                "url": "https://www.witty.works/de/subkategorien/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlechtsspezifisch: Berufe",
+            "start": 27,
+            "subcategory": "titles",
+            "text": "Fachärzte"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Jüd*innen"
+                },
+                {
+                    "text": "Jüdinnen und Juden"
+                }
+            ],
+            "category": "gendered",
+            "context": "Unser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Er ist eine Megadussel. Dussel. Megadusselsau. Ein Ingenieur kann das. Ein Ele",
+            "end": 74,
+            "explanation": {
+                "icon": "💡",
+                "text": "Viele denken bei diesem Wort zuerst an einen Mann",
+                "url": "https://www.witty.works/de/subkategorien/generisches-maskulinum?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlechtsspezifisch: Generisches Maskulinum",
+            "start": 69,
+            "subcategory": "function",
+            "text": "Juden"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Eine auf einer Hochschule ausgebildete Technik-Fachkraft"
+                },
+                {
+                    "text": "Eine auf einer Fachhochschule ausgebildete Technik-Fachkraft"
+                },
+                {
+                    "text": "Ein Engineering"
+                },
+                {
+                    "text": "Eine Technik"
+                },
+                {
+                    "text": "Technikwissenschaften"
+                }
+            ],
+            "category": "gendered",
+            "context": "n wissen. Hier sind viele Juden. Er hat ein Judenei. Er ist eine Megadussel. Dussel. Megadusselsau. Ein Ingenieur kann das. Ein Elektroingenieur kann das nicht.",
+            "end": 156,
+            "explanation": {
+                "icon": "😟",
+                "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
+                "url": "https://www.witty.works/de/subkategorien/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlechtsspezifisch: Berufe",
+            "start": 143,
+            "subcategory": "titles",
+            "text": "Ein Ingenieur"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Ein*e Elektroingenieur*in"
+                },
+                {
+                    "text": "Ein/e Elektroingenieurin/Elektroingenieur"
+                }
+            ],
+            "category": "gendered",
+            "context": "e Juden. Er hat ein Judenei. Er ist eine Megadussel. Dussel. Megadusselsau. Ein Ingenieur kann das. Ein Elektroingenieur kann das nicht.",
+            "end": 187,
+            "explanation": {
+                "icon": "😟",
+                "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
+                "url": "https://www.witty.works/de/subkategorien/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlechtsspezifisch: Berufe",
+            "start": 167,
+            "subcategory": "titles",
+            "text": "Ein Elektroingenieur"
+        }
+    ]
+}
