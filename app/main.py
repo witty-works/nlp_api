@@ -2818,12 +2818,18 @@ def match_binary_inclusive_gendered_denom_analysis_de(
     start = token.idx
 
     for false_positive in false_positives:
-        if false_positive.startswith(text + " ") or false_positive.startswith(
-            text + "/"
-        ):
+        # check of the preceeding words match the false positive
+        if "/" in false_positive:
+            split_char = "/"
+        else:
+            split_char = " "
+
+        false_positive_words = false_positive.split(split_char)
+
+        if text.startswith(false_positive_words[-1]):
+            new_start = start - len(split_char.join(false_positive_words[:-1])) - 1
+        elif text.startswith(false_positive_words[0]):
             new_start = start
-        elif false_positive.endswith(text):
-            new_start = start - len(false_positive.removesuffix(text))
         else:
             continue
 
