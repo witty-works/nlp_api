@@ -2950,16 +2950,10 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
                 if alternative_word is None:
                     article_alternative = tokens[i - 1].text
                 elif alternative_word["genus"] == "m":
-                    if match_masculine == False:
-                        return None
                     article_alternative = match_masculine
                 elif alternative_word["genus"] == "n":
-                    if match_neuter == False:
-                        return None
                     article_alternative = match_neuter
                 elif alternative_word["genus"] == "f" or alternative.endswith("in"):
-                    if match_feminine == False:
-                        return None
                     article_alternative = match_feminine
 
         if article_alternative != "":
@@ -3382,13 +3376,12 @@ def gendered_denom_analysis_de(
             if match == "postfix":
                 alternatives = alternatives.copy()
                 for k, alternative in enumerate(alternatives):
-                    replacement = lemma
-                    alternative = alternative.replace(word, replacement)
+                    alternative = alternative.replace(word, text)
                     if word[0] == "A":
                         modified_word = "Ä" + word[1:]
                         modified_word_lower = "ä" + word[1:]
                         replacement = (
-                            replacement[0 : -len(modified_word)] + modified_word_lower
+                            lemma[0 : -len(modified_word)] + modified_word_lower
                         )
                         alternative = alternative.replace(
                             modified_word_lower, replacement.lower()
@@ -3405,6 +3398,25 @@ def gendered_denom_analysis_de(
                         or "mann" not in alternative.lower()
                     ):
                         new_alternatives.append(alternative)
+                alternatives = new_alternatives
+
+            flexion = fetch_flexion(tokens[i])
+            if "nominativ" not in flexion:
+                new_alternatives = []
+                for alternative in alternatives:
+                    if "~" in alternative:
+                        alternative_words = alternative.split("~")
+
+                        german_noun = german_noun_analysis(alternative_words[-1])
+                        if (
+                            german_noun is not None
+                            and "flexion" in german_noun
+                            and flexion in german_noun["flexion"]
+                        ):
+                            alternative_words[-1] = german_noun["flexion"][flexion]
+                            alternative = "~".join(alternative_words)
+
+                    new_alternatives.append(alternative)
                 alternatives = new_alternatives
 
             if i > 0 and is_singular:
