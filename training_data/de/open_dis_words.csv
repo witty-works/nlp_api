@@ -210,6 +210,7 @@ verkackt,a,openly_discriminating,offensive_language,['-']
 verschachern,v,openly_discriminating,antisemitism,"['-', 'verhökern', 'verramschen', 'verscherbeln', 'verscheuern', 'veräußern']"
 völkisch,a,openly_discriminating,racism,"['-', '--- nur als Beschreibung derselben Ideologie']"
 anal,s,openly_discriminating,base_homophobia,['-']
+arsch,s,openly_discriminating,base_offensive_language,['-']
 bums,s,openly_discriminating,base_sexism,['-']
 fresse,s,openly_discriminating,base_offensive_language,['-']
 juden,s,openly_discriminating,base_antisemitism,['-']

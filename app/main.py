@@ -3694,8 +3694,8 @@ def rules_based_words_phrase_matcher(
             if len(data):
                 subcategory = data[0]
 
-            postfix = subcategory.startswith("base_")
-            if postfix:
+            partial_matching = subcategory.startswith("base_")
+            if partial_matching:
                 subcategory = subcategory[len("base_") :]
                 match = False
             else:
@@ -3710,24 +3710,31 @@ def rules_based_words_phrase_matcher(
 
             if not match:
                 if (
-                    lang.lang == "en"
-                    or word == "Ische"
+                    not partial_matching
+                    or lang.lang == "en"
                     or category != "openly_discriminating"
                     or "s" not in word_types
                 ):
                     continue
 
                 token_lower = tokens[i].text.lower()
-                if postfix and (
-                    word == token_lower
-                    or (
-                        not token_lower.startswith(word)
-                        and not token_lower.endswith(word)
-                    )
-                ):
+                count = token_lower.count(word.lower())
+                if count == 0:
                     continue
 
-                if word.lower() not in token_lower:
+                # TODO add false positives in rules.py
+                data.append(
+                    [
+                        "barsch",
+                        "marsch",
+                    ]
+                )
+
+                if len(data) > 2 and data[2] is not None:
+                    for false_positive in data[2]:
+                        count = count - token_lower.count(false_positive.lower())
+
+                if count <= 0:
                     continue
 
                 alternatives = ["-"]
@@ -3750,7 +3757,11 @@ def rules_based_words_phrase_matcher(
                         lang.lang, token, alternatives, prev_token
                     )
 
-                if len(data) > 2 and data[2] is not None:
+                if (
+                    len(data) > 2
+                    and data[2] is not None
+                    and subcategory == "corporate_rules"
+                ):
                     explanation, url, icon = map(data[2].get, ("text", "url", "icon"))
 
             if not is_sub_category_enabled(version, config, subcategory):
