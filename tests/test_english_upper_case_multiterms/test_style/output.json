@@ -4,16 +4,17 @@
     "results": [
         {
             "alternatives": [],
-            "category": "inclusive",
+            "category": "social-motive",
             "context": "Kind regards from London",
             "end": 4,
             "explanation": {
                 "content": "advanced",
                 "icon": "✅",
                 "text": "Strengthens collaboration and a sense of community",
-                "url": "https://www.witty.works/en/subcategories/communal-language?reducedView=true"
+                "url": "https://www.witty.works/en/categories/social-motive/communal-language?reducedView=true"
             },
-            "label": "Inclusive: Communal language",
+            "label": "Social Motive: Communal language",
+            "proficiency_level": "inclusive",
             "start": 0,
             "subcategory": "communal",
             "text": "Kind"
@@ -36,18 +37,18 @@
                     "text": "With appreciation"
                 }
             ],
-            "category": "style",
+            "category": "acquired-diversity",
             "context": "Kind regards from London",
             "end": 12,
             "explanation": {
                 "icon": "🧊",
                 "text": "Weniger Förmlichkeit schafft mehr emotionale Nähe",
-                "url": "https://www.witty.works/en/subcategories/formality?reducedView=true"
+                "url": "https://www.witty.works/en/categories/acquired-diversity/formality?reducedView=true"
             },
-            "gravity": 3.0,
-            "label": "Style issue: Formality",
+            "label": "Acquired Diversity: Formality",
+            "proficiency_level": "unconscious_bias",
             "start": 0,
-            "subcategory": "formality",
+            "subcategory": "advanced_formality",
             "text": "Kind regards"
         }
     ]

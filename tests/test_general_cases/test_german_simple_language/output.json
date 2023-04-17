@@ -3,293 +3,6 @@
     "limit_reached": false,
     "results": [
         {
-            "alternatives": [],
-            "category": "style",
-            "context": "Fügen Sie hier Ihren Text ein oder benutzen Sie diesen Text als Beispiel. Dieser Text wurde nur zum Testen geschrieben. Die Donaudampf",
-            "end": 34,
-            "explanation": {
-                "icon": "🙄",
-                "text": "Jeder Satz sollte nur eine Aussage enthalten. Können Sie diesen Satz in mehrere Sätze aufteilen?",
-                "url": "https://www.witty.works/de/subkategorien/leichte-sprache?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Stil: Leichte Sprache",
-            "start": 30,
-            "subcategory": "simple_language",
-            "text": "oder"
-        },
-        {
-            "alternatives": [],
-            "category": "style",
-            "context": "ie hier Ihren Text ein oder benutzen Sie diesen Text als Beispiel. Dieser Text wurde nur zum Testen geschrieben. Die Donaudampfschifffahrt darf da nicht fehlen. Und die Nutzung des Genitivs auch nicht. Es wäre s",
-            "end": 118,
-            "explanation": {
-                "icon": "🙄",
-                "text": "Passiv gefunden. Benutzen Sie aktive Wörter.",
-                "url": "https://www.witty.works/de/subkategorien/leichte-sprache?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Stil: Leichte Sprache",
-            "start": 107,
-            "subcategory": "simple_language",
-            "text": "geschrieben"
-        },
-        {
-            "alternatives": [],
-            "category": "style",
-            "context": "t ein oder benutzen Sie diesen Text als Beispiel. Dieser Text wurde nur zum Testen geschrieben. Die Donaudampfschifffahrt darf da nicht fehlen. Und die Nutzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glüc",
-            "end": 145,
-            "explanation": {
-                "icon": "🙄",
-                "text": "Dieses Wort hat mehr als dreizehn Buchstaben. Benutzen Sie kurze Wörter.",
-                "url": "https://www.witty.works/de/subkategorien/leichte-sprache?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Stil: Leichte Sprache",
-            "start": 124,
-            "subcategory": "simple_language",
-            "text": "Donaudampfschifffahrt"
-        },
-        {
-            "alternatives": [],
-            "category": "style",
-            "context": "Text als Beispiel. Dieser Text wurde nur zum Testen geschrieben. Die Donaudampfschifffahrt darf da nicht fehlen. Und die Nutzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden",
-            "end": 159,
-            "explanation": {
-                "icon": "🙄",
-                "text": "Wenn möglich, keine Verneinungen benutzen.",
-                "url": "https://www.witty.works/de/subkategorien/leichte-sprache?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Stil: Leichte Sprache",
-            "start": 154,
-            "subcategory": "simple_language",
-            "text": "nicht"
-        },
-        {
-            "alternatives": [],
-            "category": "style",
-            "context": "eser Text wurde nur zum Testen geschrieben. Die Donaudampfschifffahrt darf da nicht fehlen. Und die Nutzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI g",
-            "end": 183,
-            "explanation": {
-                "icon": "🙄",
-                "text": "Vermeiden Sie abstrakte Wörter. Benutzen Sie möglichst konkrete Aussagen.",
-                "url": "https://www.witty.works/de/subkategorien/leichte-sprache?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Stil: Leichte Sprache",
-            "start": 176,
-            "subcategory": "simple_language",
-            "text": "Nutzung"
-        },
-        {
-            "alternatives": [],
-            "category": "style",
-            "context": "t wurde nur zum Testen geschrieben. Die Donaudampfschifffahrt darf da nicht fehlen. Und die Nutzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das b",
-            "end": 196,
-            "explanation": {
-                "icon": "🙄",
-                "text": "Vermeiden Sie den Genitiv.",
-                "url": "https://www.witty.works/de/subkategorien/leichte-sprache?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Stil: Leichte Sprache",
-            "start": 184,
-            "subcategory": "simple_language",
-            "text": "des Genitivs"
-        },
-        {
-            "alternatives": [],
-            "category": "style",
-            "context": "rieben. Die Donaudampfschifffahrt darf da nicht fehlen. Und die Nutzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing",
-            "end": 216,
-            "explanation": {
-                "icon": "🙄",
-                "text": "Vermeiden Sie den Konjunktiv.",
-                "url": "https://www.witty.works/de/subkategorien/leichte-sprache?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Stil: Leichte Sprache",
-            "start": 212,
-            "subcategory": "simple_language",
-            "text": "wäre"
-        },
-        {
-            "alternatives": [],
-            "category": "style",
-            "context": "pfschifffahrt darf da nicht fehlen. Und die Nutzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing und eine bessere Per",
-            "end": 236,
-            "explanation": {
-                "icon": "🙄",
-                "text": "Vermeiden Sie Nebensätze.",
-                "url": "https://www.witty.works/de/subkategorien/leichte-sprache?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Stil: Leichte Sprache",
-            "start": 232,
-            "subcategory": "simple_language",
-            "text": "dass"
-        },
-        {
-            "alternatives": [],
-            "category": "style",
-            "context": "ahrt darf da nicht fehlen. Und die Nutzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell",
-            "end": 252,
-            "explanation": {
-                "icon": "🙄",
-                "text": "Vermeiden Sie Metaphern und bildhafte Sprache.",
-                "url": "https://www.witty.works/de/subkategorien/leichte-sprache?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Stil: Leichte Sprache",
-            "start": 241,
-            "subcategory": "simple_language",
-            "text": "Glückspilze"
-        },
-        {
-            "alternatives": [],
-            "category": "style",
-            "context": "tzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine Leser*inne",
-            "end": 281,
-            "explanation": {
-                "icon": "😉",
-                "text": "Werden alle Lesenden diese Abkürzung verstehen?",
-                "url": "https://www.witty.works/de/subkategorien/abkürzung?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Stil: Abkürzung",
-            "start": 278,
-            "subcategory": "abbreviation",
-            "text": "KPI"
-        },
-        {
-            "alternatives": [],
-            "category": "style",
-            "context": ". Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer L",
-            "end": 315,
-            "explanation": {
-                "icon": "😉",
-                "text": "Anglizismen: Sicher, dass das alle Lesenden verstehen?",
-                "url": "https://www.witty.works/de/subkategorien/anglizismen?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Stil: Anglizismen",
-            "start": 307,
-            "subcategory": "anglicism",
-            "text": "Briefing"
-        },
-        {
-            "alternatives": [],
-            "category": "style",
-            "context": "ass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen",
-            "end": 344,
-            "explanation": {
-                "icon": "😉",
-                "text": "Anglizismen: Sicher, dass das alle Lesenden verstehen?",
-                "url": "https://www.witty.works/de/subkategorien/anglizismen?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Stil: Anglizismen",
-            "start": 333,
-            "subcategory": "anglicism",
-            "text": "Performance"
-        },
-        {
-            "alternatives": [],
-            "category": "style",
-            "context": "Haben sie unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie",
-            "end": 364,
-            "explanation": {
-                "icon": "🙄",
-                "text": "Vermeiden Sie Nebensätze.",
-                "url": "https://www.witty.works/de/subkategorien/leichte-sprache?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Stil: Leichte Sprache",
-            "start": 361,
-            "subcategory": "simple_language",
-            "text": "wie"
-        },
-        {
-            "alternatives": [],
-            "category": "style",
-            "context": "e KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort,",
-            "end": 377,
-            "explanation": {
-                "icon": "🤔",
-                "text": "Vermeiden Sie Sonderzeichen."
-            },
-            "gravity": 3.0,
-            "label": "Stil: Verschiedenes",
-            "start": 376,
-            "subcategory": "general_style",
-            "text": "*"
-        },
-        {
-            "alternatives": [],
-            "category": "style",
-            "context": "g und eine bessere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze,",
-            "end": 420,
-            "explanation": {
-                "icon": "🙄",
-                "text": "Vermeiden Sie abstrakte Wörter. Benutzen Sie möglichst konkrete Aussagen.",
-                "url": "https://www.witty.works/de/subkategorien/leichte-sprache?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Stil: Leichte Sprache",
-            "start": 414,
-            "subcategory": "simple_language",
-            "text": "Lösung"
-        },
-        {
-            "alternatives": [],
-            "category": "style",
-            "context": "ere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie e",
-            "end": 436,
-            "explanation": {
-                "icon": "😉",
-                "text": "Anglizismen: Sicher, dass das alle Lesenden verstehen?",
-                "url": "https://www.witty.works/de/subkategorien/anglizismen?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Stil: Anglizismen",
-            "start": 429,
-            "subcategory": "anglicism",
-            "text": "Problem"
-        },
-        {
-            "alternatives": [],
-            "category": "style",
-            "context": ". Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal",
-            "end": 447,
-            "explanation": {
-                "icon": "🙄",
-                "text": "Jeder Satz sollte nur eine Aussage enthalten. Können Sie diesen Satz in mehrere Sätze aufteilen?",
-                "url": "https://www.witty.works/de/subkategorien/leichte-sprache?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Stil: Leichte Sprache",
-            "start": 444,
-            "subcategory": "simple_language",
-            "text": "und"
-        },
-        {
-            "alternatives": [],
-            "category": "style",
-            "context": "*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal wieder herausfinden müssen.",
-            "end": 573,
-            "explanation": {
-                "icon": "🙄",
-                "text": "Vermeiden Sie den Konjunktiv. Vermeiden Sie auch indirekte Rede.",
-                "url": "https://www.witty.works/de/subkategorien/leichte-sprache?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Stil: Leichte Sprache",
-            "start": 476,
-            "subcategory": "simple_language",
-            "text": ", verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal wieder herausfinden müssen"
-        },
-        {
             "alternatives": [
                 {
                     "text": "Key Performance Indicator (KPI)"
@@ -301,18 +14,18 @@
                     "text": "Kennzahl"
                 }
             ],
-            "category": "style",
+            "category": "cultural-diversity",
             "context": "tzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine Leser*inne",
             "end": 281,
             "explanation": {
                 "icon": "😉",
                 "text": "Werden alle Lesenden diese Abkürzung verstehen?",
-                "url": "https://www.witty.works/de/subkategorien/abkürzung?reducedView=true"
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversit%C3%A4t/abkürzung?reducedView=true"
             },
-            "gravity": 3.0,
-            "label": "Stil: Abkürzung",
+            "label": "Kulturelle Diversität: Abkürzung",
+            "proficiency_level": "unconscious_bias",
             "start": 278,
-            "subcategory": "abbreviation",
+            "subcategory": "advanced_abbreviation",
             "text": "KPI"
         },
         {
@@ -333,7 +46,7 @@
                     "text": "komplexe Materie"
                 }
             ],
-            "category": "unconscious_bias",
+            "category": "social-motive",
             "context": "ere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie e",
             "end": 436,
             "explanation": {
@@ -342,24 +55,25 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
+            "label": "Soziale Motivation: Agentische Sprache",
+            "proficiency_level": "unconscious_bias",
             "start": 429,
             "subcategory": "agentic",
             "text": "Problem"
         },
         {
             "alternatives": [],
-            "category": "inclusive",
+            "category": "social-motive",
             "context": "unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verp",
             "end": 382,
             "explanation": {
                 "content": "advanced",
                 "icon": "✅",
                 "text": "Fördere den Austausch über Vielfalt, Gleichheit, Teilhabe und Zugehörigkeit",
-                "url": "https://www.witty.works/de/subkategorien/vielfalt-gleichheit-teilhabe-zugehörigkeit?reducedView=true"
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/vielfalt-gleichheit-teilhabe-zugehörigkeit?reducedView=true"
             },
-            "label": "Inklusiv: DEIB",
+            "label": "Soziale Motivation: DEIB",
+            "proficiency_level": "inclusive",
             "start": 371,
             "subcategory": "d_and_i",
             "text": "Leser*innen"
@@ -370,19 +84,19 @@
                     "remove": true
                 }
             ],
-            "category": "style",
+            "category": "cultural-diversity",
             "context": "Fügen Sie hier Ihren Text ein oder benutzen Sie diesen Text als Beispiel. Dieser Text wurde nur zum Testen geschrieben. Die Donaudampfschifffahrt darf da nicht fehlen. Und die Nutzung des Genitiv",
             "end": 95,
             "explanation": {
                 "content": "video",
                 "icon": "😟",
-                "text": "Füllwörter machen Text länger und unverständlicher",
-                "url": "https://www.witty.works/de/subkategorien/füllwörter?reducedView=true"
+                "text": "Wörter, die Text länger und weniger verständlicher machen",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversit%C3%A4t/füllwörter?reducedView=true"
             },
-            "gravity": 3.0,
-            "label": "Stil: Füllwörter",
+            "label": "Kulturelle Diversität: Füllwörter",
+            "proficiency_level": "unconscious_bias",
             "start": 92,
-            "subcategory": "filler",
+            "subcategory": "advanced_filler",
             "text": "nur"
         },
         {
@@ -391,19 +105,19 @@
                     "remove": true
                 }
             ],
-            "category": "style",
+            "category": "cultural-diversity",
             "context": "um Testen geschrieben. Die Donaudampfschifffahrt darf da nicht fehlen. Und die Nutzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das brauch",
             "end": 201,
             "explanation": {
                 "content": "video",
                 "icon": "😟",
-                "text": "Füllwörter machen Text länger und unverständlicher",
-                "url": "https://www.witty.works/de/subkategorien/füllwörter?reducedView=true"
+                "text": "Wörter, die Text länger und weniger verständlicher machen",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversit%C3%A4t/füllwörter?reducedView=true"
             },
-            "gravity": 3.0,
-            "label": "Stil: Füllwörter",
+            "label": "Kulturelle Diversität: Füllwörter",
+            "proficiency_level": "unconscious_bias",
             "start": 197,
-            "subcategory": "filler",
+            "subcategory": "advanced_filler",
             "text": "auch"
         },
         {
@@ -412,19 +126,19 @@
                     "remove": true
                 }
             ],
-            "category": "style",
+            "category": "cultural-diversity",
             "context": "n. Die Donaudampfschifffahrt darf da nicht fehlen. Und die Nutzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing und ei",
             "end": 222,
             "explanation": {
                 "content": "video",
                 "icon": "😟",
-                "text": "Füllwörter machen Text länger und unverständlicher",
-                "url": "https://www.witty.works/de/subkategorien/füllwörter?reducedView=true"
+                "text": "Wörter, die Text länger und weniger verständlicher machen",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversit%C3%A4t/füllwörter?reducedView=true"
             },
-            "gravity": 3.0,
-            "label": "Stil: Füllwörter",
+            "label": "Kulturelle Diversität: Füllwörter",
+            "proficiency_level": "unconscious_bias",
             "start": 217,
-            "subcategory": "filler",
+            "subcategory": "advanced_filler",
             "text": "sogar"
         },
         {
@@ -445,18 +159,18 @@
                     "text": "Einweisung"
                 }
             ],
-            "category": "style",
+            "category": "cultural-diversity",
             "context": ". Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer L",
             "end": 315,
             "explanation": {
                 "icon": "😉",
                 "text": "Anglizismen: Sicher, dass das alle Lesenden verstehen?",
-                "url": "https://www.witty.works/de/subkategorien/anglizismen?reducedView=true"
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversit%C3%A4t/anglizismen?reducedView=true"
             },
-            "gravity": 3.0,
-            "label": "Stil: Anglizismen",
+            "label": "Kulturelle Diversität: Anglizismen",
+            "proficiency_level": "unconscious_bias",
             "start": 307,
-            "subcategory": "anglicism",
+            "subcategory": "advanced_anglicism",
             "text": "Briefing"
         },
         {
@@ -474,18 +188,18 @@
                     "text": "Erfüllung"
                 }
             ],
-            "category": "style",
+            "category": "cultural-diversity",
             "context": "ass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen",
             "end": 344,
             "explanation": {
                 "icon": "😉",
                 "text": "Anglizismen: Sicher, dass das alle Lesenden verstehen?",
-                "url": "https://www.witty.works/de/subkategorien/anglizismen?reducedView=true"
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversit%C3%A4t/anglizismen?reducedView=true"
             },
-            "gravity": 3.0,
-            "label": "Stil: Anglizismen",
+            "label": "Kulturelle Diversität: Anglizismen",
+            "proficiency_level": "unconscious_bias",
             "start": 333,
-            "subcategory": "anglicism",
+            "subcategory": "advanced_anglicism",
             "text": "Performance"
         },
         {
@@ -494,19 +208,19 @@
                     "remove": true
                 }
             ],
-            "category": "style",
+            "category": "cultural-diversity",
             "context": "hen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal wieder herausfinden müssen.",
             "end": 546,
             "explanation": {
                 "content": "video",
                 "icon": "😟",
-                "text": "Füllwörter machen Text länger und unverständlicher",
-                "url": "https://www.witty.works/de/subkategorien/füllwörter?reducedView=true"
+                "text": "Wörter, die Text länger und weniger verständlicher machen",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversit%C3%A4t/füllwörter?reducedView=true"
             },
-            "gravity": 3.0,
-            "label": "Stil: Füllwörter",
+            "label": "Kulturelle Diversität: Füllwörter",
+            "proficiency_level": "unconscious_bias",
             "start": 540,
-            "subcategory": "filler",
+            "subcategory": "advanced_filler",
             "text": "einmal"
         },
         {
@@ -515,19 +229,19 @@
                     "remove": true
                 }
             ],
-            "category": "style",
+            "category": "cultural-diversity",
             "context": "dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal wieder herausfinden müssen.",
             "end": 553,
             "explanation": {
                 "content": "video",
                 "icon": "😟",
-                "text": "Füllwörter machen Text länger und unverständlicher",
-                "url": "https://www.witty.works/de/subkategorien/füllwörter?reducedView=true"
+                "text": "Wörter, die Text länger und weniger verständlicher machen",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversit%C3%A4t/füllwörter?reducedView=true"
             },
-            "gravity": 3.0,
-            "label": "Stil: Füllwörter",
+            "label": "Kulturelle Diversität: Füllwörter",
+            "proficiency_level": "unconscious_bias",
             "start": 547,
-            "subcategory": "filler",
+            "subcategory": "advanced_filler",
             "text": "wieder"
         }
     ]

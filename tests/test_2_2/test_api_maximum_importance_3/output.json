@@ -21,13 +21,13 @@
                 }
             ],
             "category": "orthography",
-            "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben.",
+            "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben. Für unseren Zusammenhalt im Team.",
             "end": 42,
             "explanation": {
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
             },
-            "gravity": 1,
+            "gravity": 2.0,
             "label": "Rechtschreibfehler",
             "start": 35,
             "subcategory": "typos",
@@ -40,49 +40,51 @@
                 }
             ],
             "category": "orthography",
-            "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben.",
+            "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben. Für unseren Zusammenhalt im Team.",
             "end": 52,
             "explanation": {
                 "icon": "❌",
                 "text": "Wenn es sich hier um eine Infinitivgruppe (‚zu‘ + Grundform) handelt, muss in der Regel ein Komma gesetzt werden."
             },
-            "gravity": 1,
+            "gravity": 2.0,
             "label": "Kommasetzung",
             "start": 49,
             "subcategory": "orthography",
             "text": " um"
         },
         {
-            "alternatives": [
-                {
-                    "text": "Auftraggebende"
-                },
-                {
-                    "text": "Bestellende"
-                },
-                {
-                    "text": "Kund*innen"
-                },
-                {
-                    "text": "Kundinnen und Kunden"
-                },
-                {
-                    "text": "Kundschaft"
-                }
-            ],
-            "category": "gendered",
-            "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben.",
+            "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben. Für unseren Zusammenhalt im T",
+            "end": 30,
+            "gravity": 3.0,
+            "proficiency_level": "unconscious_bias",
+            "start": 17,
+            "text": "Programmierer"
+        },
+        {
+            "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben. Für unseren Zusammenhalt im Team.",
             "end": 49,
-            "explanation": {
-                "icon": "😟",
-                "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
-                "url": "https://www.witty.works/de/subkategorien/berufe"
-            },
-            "gravity": 2,
-            "label": "Geschlechtsspezifisch: Berufe",
+            "gravity": 3.0,
+            "proficiency_level": "unconscious_bias",
             "start": 43,
-            "subcategory": "titles",
             "text": "Kunden"
+        },
+        {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "r für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben. Für unseren Zusammenhalt im Team.",
+            "end": 133,
+            "explanation": {
+                "content": "advanced",
+                "icon": "✅",
+                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Soziale Motivation: Kommunale Sprache",
+            "proficiency_level": "inclusive",
+            "start": 129,
+            "subcategory": "communal",
+            "text": "Team"
         },
         {
             "alternatives": [
@@ -102,39 +104,28 @@
                     "text": "Mensch, der seine Fachkenntnis ständig vertieft"
                 }
             ],
-            "category": "style",
-            "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben.",
+            "category": "social-motive",
+            "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben. Für unseren Zus",
             "end": 16,
             "explanation": {
+                "content": "advanced",
                 "icon": "😮‍💨",
-                "text": "Auf Übertreibungen verzichten schafft Vertrauen",
-                "url": "https://www.witty.works/de/subkategorien/superlative"
+                "text": "Überzogene Aussagen wirken weniger vertrauenswürdig",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/übertreibung?reducedView=true"
             },
-            "gravity": 2,
-            "label": "Stil: Superlative",
+            "gravity": 2.0,
+            "label": "Soziale Motivation: Übertreibung",
+            "proficiency_level": "unconscious_bias",
             "start": 11,
             "subcategory": "exaggerating",
             "text": "Ninja"
         },
         {
-            "alternatives": [
-                {
-                    "remove": true
-                }
-            ],
-            "category": "style",
-            "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben.",
+            "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben. Für unseren Zusammenhalt im Team.",
             "end": 57,
-            "explanation": {
-                "content": "video",
-                "icon": "😟",
-                "text": "Füllwörter machen Text länger und unverständlicher",
-                "url": "https://www.witty.works/de/subkategorien/füllwörter"
-            },
-            "gravity": 3,
-            "label": "Stil: Füllwörter",
+            "gravity": 3.0,
+            "proficiency_level": "unconscious_bias",
             "start": 53,
-            "subcategory": "filler",
             "text": "auch"
         },
         {
@@ -155,16 +146,18 @@
                     "text": "Lohn für Engagement"
                 }
             ],
-            "category": "style",
-            "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben.",
+            "category": "social-motive",
+            "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben. Für unseren Zusammenhalt im Team.",
             "end": 90,
             "explanation": {
+                "content": "advanced",
                 "icon": "😮‍💨",
-                "text": "Auf Übertreibungen verzichten schafft Vertrauen",
-                "url": "https://www.witty.works/de/subkategorien/superlative"
+                "text": "Überzogene Aussagen wirken weniger vertrauenswürdig",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/übertreibung?reducedView=true"
             },
-            "gravity": 2,
-            "label": "Stil: Superlative",
+            "gravity": 2.0,
+            "label": "Soziale Motivation: Übertreibung",
+            "proficiency_level": "unconscious_bias",
             "start": 84,
             "subcategory": "exaggerating",
             "text": "Erfolg"

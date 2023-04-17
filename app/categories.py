@@ -1,792 +1,167 @@
-categories = {
-    "abbreviation": {
-        "inclusive": False,
-        "category": "style",
-        "gravity": 3.0,
-        "importance": 3,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/abbreviation",
-            "de": "https://www.witty.works/de/subkategorien/abkürzung",
+import json
+from functools import lru_cache
+
+
+@lru_cache()
+def get_categories():
+    categories = {
+        "casing": {
+            "category": "orthography",
+            "emoji": "❌",
         },
-        "emoji": "😉",
-    },
-    "ability": {
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/ability",
-            "de": "https://www.witty.works/de/subkategorien/fähigkeiten",
+        "compounding": {
+            "category": "orthography",
+            "emoji": "⚠️",
         },
-        "emoji": "😒",
-    },
-    "ableism": {
-        "inclusive": False,
-        "category": "openly_discriminating",
-        "gravity": 1.0,
-        "importance": 1,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/ableist",
-            "de": "https://www.witty.works/de/subkategorien/behindertenfeindlichkeit",
+        "confused_words": {
+            "category": "orthography",
+            "emoji": "❌",
         },
-        "emoji": "🚫",
-    },
-    "age": {
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/age-information",
-            "de": "https://www.witty.works/de/subkategorien/altersangabe",
+        "grammar": {
+            "category": "orthography",
+            "emoji": "❌",
         },
-        "emoji": "🤔",
-    },
-    "age_old": {
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/50-years-and-older",
-            "de": "https://www.witty.works/de/subkategorien/50-jahre-und-älter",
+        "misc": {
+            "category": "orthography",
+            "emoji": "🤔",
         },
-        "emoji": "😒",
-    },
-    "age_young": {
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/25-years-and-younger",
-            "de": "https://www.witty.works/de/subkategorien/25-jahre-und-jünger",
+        "orthography": {
+            "category": "orthography",
+            "emoji": "❌",
         },
-        "emoji": "😒",
-    },
-    "agentic": {
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 2.0,
-        "importance": 2,
-        "content": {"en": "video", "de": "video"},
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/agentic-language",
-            "de": "https://www.witty.works/de/subkategorien/agentische-sprache",
+        "punctuation": {
+            "category": "orthography",
+            "emoji": "❌",
         },
-        "emoji": "😒",
-    },
-    "anglicism": {
-        "inclusive": False,
-        "category": "style",
-        "gravity": 3.0,
-        "importance": 3,
-        "url": {"de": "https://www.witty.works/de/subkategorien/anglizismen"},
-        "emoji": "😉",
-    },
-    "antimuslim": {
-        "inclusive": False,
-        "category": "openly_discriminating",
-        "gravity": 1.0,
-        "importance": 1,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/islamophobia",
-            "de": "https://www.witty.works/de/subkategorien/islamophobie",
+        "repetitions": {
+            "category": "orthography",
+            "emoji": "⚠️",
         },
-        "emoji": "🚫",
-    },
-    "antisemitism": {
-        "inclusive": False,
-        "category": "openly_discriminating",
-        "gravity": 1.0,
-        "importance": 1,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/anti-semitism",
-            "de": "https://www.witty.works/de/subkategorien/anti-semitismus",
+        "typography": {
+            "category": "orthography",
+            "emoji": "❌",
         },
-        "emoji": "🚫",
-    },
-    "behavior": {
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/behavior",
-            "de": "https://www.witty.works/de/subkategorien/verhalten",
+        "typos": {
+            "category": "orthography",
+            "emoji": "❌",
         },
-        "emoji": "😒",
-    },
-    "belief": {
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/belief",
-            "de": "https://www.witty.works/de/subkategorien/glauben",
+        "corporate_rules": {
+            "category": "corporate_rules",
+            "translations": {
+                "en": {
+                    "hs_name": "Dictionary",
+                },
+                "de": {
+                    "hs_name": "Wörterbuch",
+                },
+            },
         },
-        "emoji": "😒",
-    },
-    "binary_pronouns": {
-        "inclusive": False,
-        "category": "gendered",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/binary-pronouns",
-            "de": "https://www.witty.works/de/subkategorien/binäre-pronomen",
-        },
-        "emoji": "😟",
-    },
-    "casing": {
-        "inclusive": False,
-        "category": "orthography",
-        "gravity": 1.0,
-        "importance": 1,
-        "url": {"en": None, "de": None},
-        "emoji": "❌",
-    },
-    "classism": {
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/classism",
-            "de": "https://www.witty.works/de/subkategorien/klassismus",
-        },
-        "emoji": "😒",
-    },
-    "cognitive_ability": {
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/cognitive-ability",
-            "de": "https://www.witty.works/de/subkategorien/denkfähigkeit",
-        },
-        "emoji": "😒",
-    },
-    "cognitive_perception": {
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/cognitive-perception",
-            "de": "https://www.witty.works/de/subkategorien/wahrnehmung",
-        },
-        "emoji": "😒",
-    },
-    "color": {
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/color",
-            "de": "https://www.witty.works/de/subkategorien/farbwörter",
-        },
-        "emoji": "😒",
-    },
-    "communal": {
-        "inclusive": True,
-        "category": "inclusive",
-        "gravity": None,
-        "importance": 3,
-        "content": {"en": "advanced"},
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/communal-language",
-            "de": "https://www.witty.works/de/subkategorien/kommunale-sprache",
-        },
-        "emoji": "✅",
-    },
-    "compounding": {
-        "inclusive": False,
-        "category": "orthography",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {"en": None, "de": None},
-        "emoji": "⚠️",
-    },
-    "confused_words": {
-        "inclusive": False,
-        "category": "orthography",
-        "gravity": 1.0,
-        "importance": 1,
-        "url": {"en": None, "de": None},
-        "emoji": "❌",
-    },
-    "corporate_rules": {
-        "inclusive": False,
-        "category": "corporate-rules",
-        "gravity": 0.9,
-        "importance": 1,
-        "url": {"en": None, "de": None},
-    },
-    "culture": {
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/culture",
-            "de": "https://www.witty.works/de/subkategorien/kultur",
-        },
-        "emoji": "😒",
-    },
-    "d_and_i": {
-        "inclusive": True,
-        "category": "inclusive",
-        "gravity": None,
-        "importance": 3,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/diversity-equity-inclusion-belonging",
-            "de": "https://www.witty.works/de/subkategorien/vielfalt-gleichheit-teilhabe-zugehörigkeit",
-        },
-        "emoji": "✅",
-        "content": {"en": "advanced", "de": "advanced"},
-    },
-    "emotional_security": {
-        "inclusive": True,
-        "category": "inclusive",
-        "gravity": None,
-        "importance": 3,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/positive-emotions",
-            "de": "https://www.witty.works/de/subkategorien/positive-emotionen",
-        },
-        "emoji": "✅",
-    },
-    "exaggerating": {
-        "inclusive": False,
-        "category": "style",
-        "gravity": 2.0,
-        "importance": 2,
-        "content": {"en": "advanced"},
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/exaggeration",
-            "de": "https://www.witty.works/de/subkategorien/superlative",
-        },
-        "emoji": "😮\u200d💨",
-    },
-    "false_friends": {
-        "inclusive": False,
-        "category": "style",
-        "gravity": 3.0,
-        "importance": 3,
-        "url": {"en": None, "de": None},
-        "emoji": "🤔",
-    },
-    "female_stereotype": {
-        "inclusive": False,
-        "category": "gendered",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/female-stereotype",
-            "de": "https://www.witty.works/de/subkategorien/frauenklischee",
-        },
-        "emoji": "😟",
-    },
-    "filler": {
-        "inclusive": False,
-        "category": "style",
-        "gravity": 3.0,
-        "importance": 3,
-        "content": {"en": "video", "de": "video"},
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/filler-words",
-            "de": "https://www.witty.works/de/subkategorien/füllwörter",
-        },
-        "emoji": "😟",
-    },
-    "formality": {
-        "inclusive": False,
-        "category": "style",
-        "gravity": 3.0,
-        "importance": 3,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/formality",
-            "de": "https://www.witty.works/de/subkategorien/förmlichkeit",
-        },
-        "emoji": "🧊",
-    },
-    "function": {
-        "inclusive": False,
-        "category": "gendered",
-        "gravity": 2.0,
-        "importance": 2,
-        "content": {"en": "advanced"},
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/generic-masculine",
-            "de": "https://www.witty.works/de/subkategorien/generisches-maskulinum",
-        },
-        "emoji": "💡",
-    },
-    "gender_identity": {
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 2.0,
-        "importance": 2,
-        "content": {"en": "advanced"},
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/gender-binary",
-            "de": "https://www.witty.works/de/subkategorien/binäres-geschlecht",
-        },
-        "emoji": "😒",
-    },
-    "gender_specific_abbreviation": {
-        "inclusive": False,
-        "category": "gendered",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/gender-specific-abbreviation",
-            "de": "https://www.witty.works/de/subkategorien/geschlechter-spezifische-abkürzung",
-        },
-        "emoji": "😮",
-    },
-    "gendered": {
-        "inclusive": False,
-        "category": "gendered",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/gendered",
-            "de": "https://www.witty.works/de/subkategorien/geschlechtsspezifisch",
-        },
-        "emoji": "😟",
-    },
-    "gendered_denominations_ending": {
-        "inclusive": False,
-        "category": "gendered",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/inclusive-ending",
-            "de": "https://www.witty.works/de/subkategorien/inklusive-endung",
-        },
-        "emoji": "💯",
-    },
-    "general_style": {
-        "inclusive": False,
-        "category": "style",
-        "gravity": 3.0,
-        "importance": 3,
-        "url": {"en": None, "de": None},
-        "emoji": "🤔",
-    },
-    "generic_plural": {
-        "inclusive": False,
-        "category": "gendered",
-        "gravity": 3.0,
-        "importance": 3,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/generic-plural",
-            "de": "https://www.witty.works/de/subkategorien/generischer-plural",
-        },
-        "emoji": "😮",
-    },
-    "grammar": {
-        "inclusive": False,
-        "category": "orthography",
-        "gravity": 1.0,
-        "importance": 1,
-        "url": {"en": None, "de": None},
-        "emoji": "❌",
-    },
-    "hearing": {
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/hearing",
-            "de": "https://www.witty.works/de/subkategorien/hörfähigkeit",
-        },
-        "emoji": "😒",
-    },
-    "hidden_image": {
-        "inclusive": False,
-        "category": "gendered",
-        "gravity": 2.0,
-        "importance": 2,
-        "content": {"en": "advanced"},
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/gender-cues",
-            "de": "https://www.witty.works/de/subkategorien/angedeutetes-gender",
-        },
-        "emoji": "😟",
-    },
-    "hollow": {
-        "inclusive": False,
-        "category": "style",
-        "gravity": 3.0,
-        "importance": 3,
-        "content": {"en": "advanced"},
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/empty-words",
-            "de": "https://www.witty.works/de/subkategorien/worthülsen",
-        },
-        "emoji": "🙄",
-    },
-    "homophobia": {
-        "inclusive": False,
-        "category": "openly_discriminating",
-        "gravity": 1.0,
-        "importance": 1,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/homophobia",
-            "de": "https://www.witty.works/de/subkategorien/homophobie",
-        },
-        "emoji": "🚫",
-    },
-    "inclusive": {
-        "inclusive": True,
-        "category": "inclusive",
-        "gravity": None,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/inclusive",
-            "de": "https://www.witty.works/de/subkategorien/inklusiv",
-        },
-        "emoji": "✅",
-    },
-    "leadership": {
-        "inclusive": False,
-        "category": "gendered",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/traditional-leadership",
-            "de": "https://www.witty.works/de/subkategorien/traditionelles-führungsbild",
-        },
-        "emoji": "😟",
-        "content": {"en": "advanced"},
-    },
-    "learning": {
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/learning-ability",
-            "de": "https://www.witty.works/de/subkategorien/lernfähigkeit",
-        },
-        "emoji": "😒",
-    },
-    "male_stereotype": {
-        "inclusive": False,
-        "category": "gendered",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/male-stereotype",
-            "de": "https://www.witty.works/de/subkategorien/männerklischee",
-        },
-        "emoji": "😟",
-    },
-    "medical_state": {
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/medical-state",
-            "de": "https://www.witty.works/de/subkategorien/gesundheitsbild",
-        },
-        "emoji": "😒",
-    },
-    "mental_wellbeing": {
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/mental-wellbeing",
-            "de": "https://www.witty.works/de/subkategorien/mentales-wohlbefinden",
-        },
-        "emoji": "😒",
-    },
-    "migration": {
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/migration-background",
-            "de": "https://www.witty.works/de/subkategorien/migrationshintergrund",
-        },
-        "emoji": "😒",
-    },
-    "military_source": {
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/military-source",
-            "de": "https://www.witty.works/de/subkategorien/militärische-wurzel",
-        },
-        "emoji": "🪖",
-    },
-    "misc": {
-        "inclusive": False,
-        "category": "orthography",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {"en": None, "de": None},
-        "emoji": "🤔",
-    },
-    "mobility": {
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/mobility",
-            "de": "https://www.witty.works/de/subkategorien/mobilität",
-        },
-        "emoji": "😒",
-    },
-    "offensive_language": {
-        "inclusive": False,
-        "category": "openly_discriminating",
-        "gravity": 1.0,
-        "importance": 1,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/offensive-language",
-            "de": "https://www.witty.works/de/subkategorien/beleidigende-und-verletzende-sprache",
-        },
-        "emoji": "🚫",
-    },
-    "openly_discriminating": {
-        "inclusive": False,
-        "category": "openly_discriminating",
-        "gravity": 1.0,
-        "importance": 1,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/openly-discriminating",
-            "de": "https://www.witty.works/de/subkategorien/offene-diskriminierung",
-        },
-        "emoji": "🚫",
-    },
-    "orthography": {
-        "inclusive": False,
-        "category": "orthography",
-        "gravity": 1.0,
-        "importance": 1,
-        "url": {"en": None, "de": None},
-        "emoji": "❌",
-    },
-    "punctuation": {
-        "inclusive": False,
-        "category": "orthography",
-        "gravity": 1.0,
-        "importance": 1,
-        "url": {"en": None, "de": None},
-        "emoji": "❌",
-    },
-    "racism": {
-        "inclusive": False,
-        "category": "openly_discriminating",
-        "gravity": 1.0,
-        "importance": 1,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/racism",
-            "de": "https://www.witty.works/de/subkategorien/rassismus",
-        },
-        "emoji": "🚫",
-    },
-    "racist_source": {
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/racist-source",
-            "de": "https://www.witty.works/de/subkategorien/rassistische-wurzel",
-        },
-        "emoji": "😒",
-    },
-    "redundancy": {
-        "inclusive": False,
-        "category": "style",
-        "gravity": 3.0,
-        "importance": 3,
-        "url": {"en": None, "de": None},
-        "emoji": "🤔",
-    },
-    "regionalisms": {
-        "inclusive": False,
-        "category": "style",
-        "gravity": 3.0,
-        "importance": 3,
-        "url": {"en": None, "de": None},
-        "emoji": "🤔",
-    },
-    "repetitions": {
-        "inclusive": False,
-        "category": "orthography",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {"en": None, "de": None},
-        "emoji": "⚠️",
-    },
-    "repetitions_style": {
-        "inclusive": False,
-        "category": "style",
-        "gravity": 3.0,
-        "importance": 3,
-        "url": {"en": None, "de": None},
-        "emoji": "😟",
-    },
-    "semantics": {
-        "inclusive": False,
-        "category": "style",
-        "gravity": 3.0,
-        "importance": 3,
-        "url": {"en": None, "de": None},
-        "emoji": "🤔",
-    },
-    "sexism": {
-        "inclusive": False,
-        "category": "openly_discriminating",
-        "gravity": 1.0,
-        "importance": 1,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/sexism",
-            "de": "https://www.witty.works/de/subkategorien/sexismus",
-        },
-        "emoji": "🚫",
-    },
-    "sexual_orientation": {
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/sexual-orientation",
-            "de": "https://www.witty.works/de/subkategorien/sexuelle-orientierung",
-        },
-        "emoji": "😒",
-    },
-    "simple_language": {
-        "inclusive": False,
-        "category": "style",
-        "gravity": 3.0,
-        "importance": 3,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/plain-english",
-            "de": "https://www.witty.works/de/subkategorien/leichte-sprache",
-        },
-        "emoji": "🙄",
-        "content": {"en": "advanced"},
-    },
-    "speech": {
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/speech-ability",
-            "de": "https://www.witty.works/de/subkategorien/sprech-fähigkeit",
-        },
-        "emoji": "😒",
-    },
-    "sports_terms": {
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/sports-terms",
-            "de": "https://www.witty.works/de/subkategorien/sport-jargon",
-        },
-        "emoji": "🏅",
-    },
-    "style": {
-        "inclusive": False,
-        "category": "style",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/style-issue",
-            "de": "https://www.witty.works/de/subkategorien/stil",
-        },
-        "emoji": "😟",
-    },
-    "titles": {
-        "inclusive": False,
-        "category": "gendered",
-        "gravity": 2.0,
-        "importance": 2,
-        "content": {"en": "advanced"},
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/jobs",
-            "de": "https://www.witty.works/de/subkategorien/berufe",
-        },
-        "emoji": "😟",
-    },
-    "transphobia": {
-        "inclusive": False,
-        "category": "openly_discriminating",
-        "gravity": 1.0,
-        "importance": 1,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/transphobia",
-            "de": "https://www.witty.works/de/subkategorien/transphobie",
-        },
-        "emoji": "🚫",
-    },
-    "typography": {
-        "inclusive": False,
-        "category": "orthography",
-        "gravity": 1.0,
-        "importance": 1,
-        "url": {"en": None, "de": None},
-        "emoji": "❌",
-    },
-    "typos": {
-        "inclusive": False,
-        "category": "orthography",
-        "gravity": 1.0,
-        "importance": 1,
-        "url": {"en": None, "de": None},
-        "emoji": "❌",
-    },
-    "unconscious_bias": {
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {"en": None, "de": None},
-        "emoji": "😒",
-    },
-    "vision": {
-        "inclusive": False,
-        "category": "unconscious_bias",
-        "gravity": 2.0,
-        "importance": 2,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/vision",
-            "de": "https://www.witty.works/de/subkategorien/seh-fähigkeit",
-        },
-        "emoji": "😒",
-    },
-    "xenophobia": {
-        "inclusive": False,
-        "category": "openly_discriminating",
-        "gravity": 1.0,
-        "importance": 1,
-        "url": {
-            "en": "https://www.witty.works/en/subcategories/xenophobia",
-            "de": "https://www.witty.works/de/subkategorien/fremdenfeindlichkeit-xenophobie",
-        },
-        "emoji": "🚫",
-    },
-}
+    }
+
+    categories_file = open("training_data/categories.json")
+    categories.update(json.load(categories_file))
+
+    diversity_dimensions_drivers_file = open(
+        "training_data/diversity_dimension_drivers.json"
+    )
+    categories.update(json.load(diversity_dimensions_drivers_file))
+
+    return categories
+
+
+@lru_cache()
+def get_category_keys():
+    categories = get_categories()
+
+    category_keys = list(categories.keys())
+
+    category_advanced_keys = []
+    for category in category_keys:
+        category_data = categories[category]
+        category_advanced_keys.append(category + "_base")
+
+        if (
+            "category" in category_data
+            and "proficiency_level" in category_data
+            and "proficiency_level" != "openly_discriminating"
+        ):
+            category_advanced_keys.append("advanced_" + category)
+            category_advanced_keys.append("advanced_" + category + "_base")
+
+    return category_keys + category_advanced_keys
+
+@lru_cache()
+def get_proficiency_levels():
+    proficiency_levels_file = open("training_data/proficiency_levels.json")
+    return json.load(proficiency_levels_file)
+
+
+def get_category_name(category):
+    if category.startswith("advanced_"):
+        category = category.removeprefix("advanced_")
+
+    return category
+
+
+def get_category(category):
+    category = get_category_name(category)
+
+    categories = get_categories()
+    if category not in categories:
+        return None
+
+    return categories[category]
+
+
+def is_category_inclusive(category):
+    category_data = get_category(category)
+    if category_data is None or "proficiency_level" not in category_data:
+        return False
+
+    proficiency_levels = get_proficiency_levels()
+    if category_data["proficiency_level"] not in proficiency_levels:
+        return False
+
+    return proficiency_levels[category_data["proficiency_level"]]["inclusive"]
+
+
+def get_proficiency_level(category):
+    category_data = get_category(category)
+    if category_data is None:
+        return None
+
+    if "proficiency_level" not in category_data:
+        if "category" in category_data and category_data["category"] == "orthography":
+            return "orthography"
+
+        return None
+
+    if category_data["proficiency_level"] == "openly_discriminating":
+        return "openly_discriminating"
+
+    return "inclusive" if is_category_inclusive(category) else "unconscious_bias"
+
+
+def map_gravity(category):
+    if category == "corporate_rules":
+        return 0.9
+
+    proficiency_level = get_proficiency_level(category)
+    if proficiency_level is None:
+        return 2
+
+    if proficiency_level == "openly_discriminating":
+        return 1
+
+    if not category.startswith("advanced_"):
+        return 2
+
+    return 3
+
+
+def map_importance(category):
+    proficiency_level = get_proficiency_level(category)
+    if proficiency_level is None:
+        return 2.0
+
+    return float(map_gravity(category))

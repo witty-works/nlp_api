@@ -5,42 +5,47 @@
         {
             "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben.",
             "end": 42,
-            "gravity": 1.0,
             "start": 35,
             "text": "unseere"
         },
         {
             "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben.",
             "end": 52,
-            "gravity": 1.0,
             "start": 49,
             "text": " um"
         },
         {
             "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben.",
+            "end": 30,
+            "proficiency_level": "unconscious_bias",
+            "start": 17,
+            "text": "Programmierer"
+        },
+        {
+            "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben.",
             "end": 49,
-            "gravity": 2.0,
+            "proficiency_level": "unconscious_bias",
             "start": 43,
             "text": "Kunden"
         },
         {
             "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben.",
             "end": 16,
-            "gravity": 2.0,
+            "proficiency_level": "unconscious_bias",
             "start": 11,
             "text": "Ninja"
         },
         {
             "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben.",
             "end": 57,
-            "gravity": 3.0,
+            "proficiency_level": "unconscious_bias",
             "start": 53,
             "text": "auch"
         },
         {
             "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben.",
             "end": 90,
-            "gravity": 2.0,
+            "proficiency_level": "unconscious_bias",
             "start": 84,
             "text": "Erfolg"
         }

@@ -23,18 +23,19 @@
                     "text": "Team-Lenkung"
                 }
             ],
-            "category": "gendered",
+            "category": "gender-orientation",
             "context": "Ich bin eine starke Führungskraft! Wir sind alle Führungskräfte.",
             "end": 63,
             "explanation": {
+                "content": "advanced",
                 "icon": "💡",
                 "text": "Viele denken bei diesem Wort zuerst an einen Mann",
-                "url": "https://www.witty.works/de/subkategorien/generisches-maskulinum?reducedView=true"
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Generisches Maskulinum",
+            "label": "Geschlecht + Orientierung: Generisches Maskulinum",
+            "proficiency_level": "unconscious_bias",
             "start": 49,
-            "subcategory": "function",
+            "subcategory": "advanced_function",
             "text": "Führungskräfte"
         }
     ]

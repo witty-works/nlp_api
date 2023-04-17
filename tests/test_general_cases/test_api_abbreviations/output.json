@@ -27,7 +27,6 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake found."
             },
-            "gravity": 1.0,
             "label": "Spelling mistake",
             "start": 13,
             "subcategory": "typos",
@@ -42,18 +41,18 @@
                     "text": "American Sign Language (ASL)"
                 }
             ],
-            "category": "style",
+            "category": "cultural-diversity",
             "context": "Do you speak asl? I am taking a rest.",
             "end": 16,
             "explanation": {
                 "icon": "😉",
                 "text": "Are you sure people know what this stands for? ",
-                "url": "https://www.witty.works/en/subcategories/abbreviation?reducedView=true"
+                "url": "https://www.witty.works/en/categories/cultural-diversity/abbreviation?reducedView=true"
             },
-            "gravity": 3.0,
-            "label": "Style issue: Abbreviation",
+            "label": "Cultural Diversity: Abbreviation",
+            "proficiency_level": "unconscious_bias",
             "start": 13,
-            "subcategory": "abbreviation",
+            "subcategory": "advanced_abbreviation",
             "text": "asl"
         }
     ]

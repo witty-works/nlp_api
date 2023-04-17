@@ -14,12 +14,14 @@ from app.models import (
 from app.main import parse_word_types
 from app.model import fetch_nlp_model
 from app.settings import get_settings
-from app.categories import categories
+from app.categories import get_category_keys
 from app.rules import fetch_rules
 from german_nouns.lookup import Nouns
 
 log = logging.getLogger("urllib3")
 log.setLevel(logging.ERROR)
+
+category_keys = get_category_keys()
 
 
 def parse_args():
@@ -108,7 +110,6 @@ def get_data_from_files(locale):
                     category = None
                     if "Category" in row:
                         category = row["Category"]
-                        all_categories.append(category)
 
                     subcategory = None
                     if "Primary_subcategory" in row:
@@ -576,9 +577,9 @@ for locale in locales:
     lemmas[locale] = list(all_lemma)
 
     print("Missing (sub-)categories")
-    print(sorted(all_categories - set(categories.keys())))
+    print(sorted(all_categories - set(category_keys)))
     print("Missing secondary sub-categories")
-    print(sorted(all_secondary_subcategories - set(categories.keys())))
+    print(sorted(all_secondary_subcategories - set(category_keys)))
 
 
 original_languagetool_path = args.Original

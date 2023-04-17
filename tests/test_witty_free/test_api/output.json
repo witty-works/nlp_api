@@ -27,7 +27,6 @@
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
             },
-            "gravity": 1.0,
             "label": "Rechtschreibfehler",
             "start": 33,
             "subcategory": "typos",
@@ -46,48 +45,22 @@
                 "icon": "❌",
                 "text": "Wenn es sich hier um eine Infinitivgruppe (‚zu‘ + Grundform) handelt, muss in der Regel ein Komma gesetzt werden."
             },
-            "gravity": 1.0,
             "label": "Kommasetzung",
             "start": 47,
             "subcategory": "orthography",
             "text": " um"
         },
         {
-            "alternatives": [
-                {
-                    "text": "Auftraggebende"
-                },
-                {
-                    "text": "Bestellende"
-                },
-                {
-                    "text": "Kund*innen"
-                },
-                {
-                    "text": "Kundinnen und Kunden"
-                },
-                {
-                    "text": "Kundschaft"
-                }
-            ],
-            "category": "gendered",
             "context": "Wir suchen eine Arbeitskraft für unseere Kunden um Erfolg zu haben.",
             "end": 47,
-            "explanation": {
-                "icon": "😟",
-                "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
-                "url": "https://www.witty.works/de/subkategorien/berufe?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Berufe",
+            "proficiency_level": "unconscious_bias",
             "start": 41,
-            "subcategory": "titles",
             "text": "Kunden"
         },
         {
             "context": "Wir suchen eine Arbeitskraft für unseere Kunden um Erfolg zu haben.",
             "end": 28,
-            "gravity": 3.0,
+            "proficiency_level": "unconscious_bias",
             "start": 16,
             "text": "Arbeitskraft"
         },
@@ -109,16 +82,17 @@
                     "text": "Lohn für Engagement"
                 }
             ],
-            "category": "style",
+            "category": "social-motive",
             "context": "Wir suchen eine Arbeitskraft für unseere Kunden um Erfolg zu haben.",
             "end": 57,
             "explanation": {
+                "content": "advanced",
                 "icon": "😮‍💨",
-                "text": "Auf Übertreibungen verzichten schafft Vertrauen",
-                "url": "https://www.witty.works/de/subkategorien/superlative?reducedView=true"
+                "text": "Überzogene Aussagen wirken weniger vertrauenswürdig",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/übertreibung?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Stil: Superlative",
+            "label": "Soziale Motivation: Übertreibung",
+            "proficiency_level": "unconscious_bias",
             "start": 51,
             "subcategory": "exaggerating",
             "text": "Erfolg"

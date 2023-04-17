@@ -14,16 +14,16 @@
                     "text": "Bewerbung"
                 }
             ],
-            "category": "gendered",
+            "category": "gender-orientation",
             "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachfrau/Fachmann? Fachfrau. Fachmann.",
             "end": 36,
             "explanation": {
                 "icon": "💯",
                 "text": "Nicht konsistente Geschlechts-Schreibweise",
-                "url": "https://www.witty.works/de/subkategorien/inklusive-endung?reducedView=true"
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/inklusive-endung?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Inklusive Endung",
+            "label": "Geschlecht + Orientierung: Inklusive Endung",
+            "proficiency_level": "unconscious_bias",
             "start": 10,
             "subcategory": "gendered_denominations_ending",
             "text": "Bewerberinnen und Bewerber"
@@ -43,16 +43,17 @@
                     "text": "Fachkräfte"
                 }
             ],
-            "category": "gendered",
+            "category": "gender-orientation",
             "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachfrau/Fachmann? Fachfrau. Fachmann.",
             "end": 77,
             "explanation": {
+                "content": "advanced",
                 "icon": "💡",
                 "text": "Viele denken bei diesem Wort zuerst an einen Mann",
-                "url": "https://www.witty.works/de/subkategorien/generisches-maskulinum?reducedView=true"
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Generisches Maskulinum",
+            "label": "Geschlecht + Orientierung: Generisches Maskulinum",
+            "proficiency_level": "unconscious_bias",
             "start": 60,
             "subcategory": "function",
             "text": "Fachfrau/Fachmann"
@@ -72,47 +73,18 @@
                     "text": "Fachkräfte"
                 }
             ],
-            "category": "gendered",
-            "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachfrau/Fachmann? Fachfrau. Fachmann.",
-            "end": 87,
-            "explanation": {
-                "icon": "😟",
-                "text": "Schubladendenken nach Geschlechternormen",
-                "url": "https://www.witty.works/de/subkategorien/geschlechtsspezifisch?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Geschlechtsspezifisch",
-            "start": 79,
-            "subcategory": "gendered",
-            "text": "Fachfrau"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "Fachperson"
-                },
-                {
-                    "text": "Fachkraft"
-                },
-                {
-                    "text": "Fachpersonal"
-                },
-                {
-                    "text": "Fachkräfte"
-                }
-            ],
-            "category": "gendered",
+            "category": "gender-orientation",
             "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachfrau/Fachmann? Fachfrau. Fachmann.",
             "end": 97,
             "explanation": {
-                "icon": "💡",
-                "text": "Viele denken bei diesem Wort zuerst an einen Mann",
-                "url": "https://www.witty.works/de/subkategorien/generisches-maskulinum?reducedView=true"
+                "icon": "😟",
+                "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Generisches Maskulinum",
+            "label": "Geschlecht + Orientierung: Berufe",
+            "proficiency_level": "unconscious_bias",
             "start": 89,
-            "subcategory": "function",
+            "subcategory": "advanced_titles",
             "text": "Fachmann"
         }
     ]

@@ -4,31 +4,33 @@
     "results": [
         {
             "alternatives": [],
-            "category": "inclusive",
+            "category": "social-motive",
             "context": "I felt very encouraged as a Deaf person.",
             "end": 6,
             "explanation": {
                 "content": "advanced",
                 "icon": "✅",
                 "text": "Strengthens collaboration and a sense of community",
-                "url": "https://www.witty.works/en/subcategories/communal-language?reducedView=true"
+                "url": "https://www.witty.works/en/categories/social-motive/communal-language?reducedView=true"
             },
-            "label": "Inclusive: Communal language",
+            "label": "Social Motive: Communal language",
+            "proficiency_level": "inclusive",
             "start": 2,
             "subcategory": "communal",
             "text": "felt"
         },
         {
             "alternatives": [],
-            "category": "inclusive",
+            "category": "social-motive",
             "context": "I felt very encouraged as a Deaf person.",
             "end": 22,
             "explanation": {
                 "icon": "✅",
                 "text": "Conveys emotional security",
-                "url": "https://www.witty.works/en/subcategories/positive-emotions?reducedView=true"
+                "url": "https://www.witty.works/en/categories/social-motive/positive-emotions?reducedView=true"
             },
-            "label": "Inclusive: Positive emotions",
+            "label": "Social Motive: Positive emotions",
+            "proficiency_level": "inclusive",
             "start": 12,
             "subcategory": "emotional_security",
             "text": "encouraged"
@@ -39,19 +41,19 @@
                     "remove": true
                 }
             ],
-            "category": "style",
+            "category": "cultural-diversity",
             "context": "I felt very encouraged as a Deaf person.",
             "end": 11,
             "explanation": {
                 "content": "video",
                 "icon": "😟",
                 "text": "Adding complexity but no meaning",
-                "url": "https://www.witty.works/en/subcategories/filler-words?reducedView=true"
+                "url": "https://www.witty.works/en/categories/cultural-diversity/filler-words?reducedView=true"
             },
-            "gravity": 3.0,
-            "label": "Style issue: Filler words",
+            "label": "Cultural Diversity: Filler words",
+            "proficiency_level": "unconscious_bias",
             "start": 7,
-            "subcategory": "filler",
+            "subcategory": "advanced_filler",
             "text": "very"
         }
     ]

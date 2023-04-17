@@ -8,18 +8,18 @@
                     "text": "Kund/-innen"
                 }
             ],
-            "category": "gendered",
+            "category": "gender-orientation",
             "context": "Wie geht es ihnen? Hallo Kund*innen und Kund*in. Hallo, die:der Kund:in. Bis du unser Matros/-in?",
             "end": 35,
             "explanation": {
                 "icon": "💯",
                 "text": "Nicht konsistente Geschlechts-Schreibweise",
-                "url": "https://www.witty.works/de/subkategorien/inklusive-endung?reducedView=true"
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/inklusive-endung?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Inklusive Endung",
+            "label": "Geschlecht + Orientierung: Inklusive Endung",
+            "proficiency_level": "unconscious_bias",
             "start": 25,
-            "subcategory": "gendered_denominations_ending",
+            "subcategory": "advanced_gendered_denominations_ending",
             "text": "Kund*innen"
         },
         {
@@ -28,18 +28,18 @@
                     "text": "Kund/-in"
                 }
             ],
-            "category": "gendered",
+            "category": "gender-orientation",
             "context": "Wie geht es ihnen? Hallo Kund*innen und Kund*in. Hallo, die:der Kund:in. Bis du unser Matros/-in?",
             "end": 47,
             "explanation": {
                 "icon": "💯",
                 "text": "Nicht konsistente Geschlechts-Schreibweise",
-                "url": "https://www.witty.works/de/subkategorien/inklusive-endung?reducedView=true"
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/inklusive-endung?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Inklusive Endung",
+            "label": "Geschlecht + Orientierung: Inklusive Endung",
+            "proficiency_level": "unconscious_bias",
             "start": 40,
-            "subcategory": "gendered_denominations_ending",
+            "subcategory": "advanced_gendered_denominations_ending",
             "text": "Kund*in"
         },
         {
@@ -48,18 +48,18 @@
                     "text": "die/der"
                 }
             ],
-            "category": "gendered",
+            "category": "gender-orientation",
             "context": "Wie geht es ihnen? Hallo Kund*innen und Kund*in. Hallo, die:der Kund:in. Bis du unser Matros/-in?",
             "end": 63,
             "explanation": {
                 "icon": "💯",
                 "text": "Nicht konsistente Geschlechts-Schreibweise",
-                "url": "https://www.witty.works/de/subkategorien/inklusive-endung?reducedView=true"
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/inklusive-endung?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Inklusive Endung",
+            "label": "Geschlecht + Orientierung: Inklusive Endung",
+            "proficiency_level": "unconscious_bias",
             "start": 56,
-            "subcategory": "gendered_denominations_ending",
+            "subcategory": "advanced_gendered_denominations_ending",
             "text": "die:der"
         },
         {
@@ -68,32 +68,33 @@
                     "text": "Kund/-in"
                 }
             ],
-            "category": "gendered",
+            "category": "gender-orientation",
             "context": "Wie geht es ihnen? Hallo Kund*innen und Kund*in. Hallo, die:der Kund:in. Bis du unser Matros/-in?",
             "end": 71,
             "explanation": {
                 "icon": "💯",
                 "text": "Nicht konsistente Geschlechts-Schreibweise",
-                "url": "https://www.witty.works/de/subkategorien/inklusive-endung?reducedView=true"
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/inklusive-endung?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Inklusive Endung",
+            "label": "Geschlecht + Orientierung: Inklusive Endung",
+            "proficiency_level": "unconscious_bias",
             "start": 64,
-            "subcategory": "gendered_denominations_ending",
+            "subcategory": "advanced_gendered_denominations_ending",
             "text": "Kund:in"
         },
         {
             "alternatives": [],
-            "category": "inclusive",
+            "category": "social-motive",
             "context": "Wie geht es ihnen? Hallo Kund*innen und Kund*in. Hallo, die:der Kund:in. Bis du unser Matros/-in?",
             "end": 96,
             "explanation": {
                 "content": "advanced",
                 "icon": "✅",
                 "text": "Fördere den Austausch über Vielfalt, Gleichheit, Teilhabe und Zugehörigkeit",
-                "url": "https://www.witty.works/de/subkategorien/vielfalt-gleichheit-teilhabe-zugehörigkeit?reducedView=true"
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/vielfalt-gleichheit-teilhabe-zugehörigkeit?reducedView=true"
             },
-            "label": "Inklusiv: DEIB",
+            "label": "Soziale Motivation: DEIB",
+            "proficiency_level": "inclusive",
             "start": 86,
             "subcategory": "d_and_i",
             "text": "Matros/-in"

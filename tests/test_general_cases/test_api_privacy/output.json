@@ -11,7 +11,7 @@
                     "text": "keen and enthusiastic"
                 }
             ],
-            "category": "unconscious_bias",
+            "category": "social-motive",
             "context": "Name is Jones, an ambitious person. Phone number is <NUMBER>-<NUMBER>-<NUMBER> <URL> <EMAIL> my username is jones<NUMBER>",
             "end": 27,
             "explanation": {
@@ -19,10 +19,10 @@
                 "context": "don't use for people",
                 "icon": "😒",
                 "text": "Doesn’t resonate with team-minded people",
-                "url": "https://www.witty.works/en/subcategories/agentic-language?reducedView=true"
+                "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Biased Language: Agentic language",
+            "label": "Social Motive: Agentic language",
+            "proficiency_level": "unconscious_bias",
             "start": 18,
             "subcategory": "agentic",
             "text": "ambitious"

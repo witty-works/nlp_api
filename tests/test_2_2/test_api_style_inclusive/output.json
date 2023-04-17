@@ -1,9 +1,6 @@
 {
-    "config_changed": true,
-    "has_consented_to_mailing": true,
     "language": "de",
     "limit_reached": false,
-    "notifications": 5,
     "results": [
         {
             "alternatives": [
@@ -24,13 +21,13 @@
                 }
             ],
             "category": "orthography",
-            "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben.",
+            "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben. Für unseren Zusammenhalt im Team.",
             "end": 42,
             "explanation": {
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
             },
-            "gravity": 1.0,
+            "gravity": 2.0,
             "label": "Rechtschreibfehler",
             "start": 35,
             "subcategory": "typos",
@@ -43,48 +40,32 @@
                 }
             ],
             "category": "orthography",
-            "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben.",
+            "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben. Für unseren Zusammenhalt im Team.",
             "end": 52,
             "explanation": {
                 "icon": "❌",
                 "text": "Wenn es sich hier um eine Infinitivgruppe (‚zu‘ + Grundform) handelt, muss in der Regel ein Komma gesetzt werden."
             },
-            "gravity": 1.0,
+            "gravity": 2.0,
             "label": "Kommasetzung",
             "start": 49,
             "subcategory": "orthography",
             "text": " um"
         },
         {
-            "alternatives": [
-                {
-                    "text": "Auftraggebende"
-                },
-                {
-                    "text": "Bestellende"
-                },
-                {
-                    "text": "Kundinnen und Kunden"
-                },
-                {
-                    "text": "Kundschaft"
-                },
-                {
-                    "text": "Klientel"
-                }
-            ],
-            "category": "gendered",
-            "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben.",
+            "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben. Für unseren Zusammenhalt im T",
+            "end": 30,
+            "gravity": 3.0,
+            "proficiency_level": "unconscious_bias",
+            "start": 17,
+            "text": "Programmierer"
+        },
+        {
+            "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben. Für unseren Zusammenhalt im Team.",
             "end": 49,
-            "explanation": {
-                "icon": "😟",
-                "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
-                "url": "https://www.witty.works/de/subkategorien/berufe"
-            },
-            "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Berufe",
+            "gravity": 3.0,
+            "proficiency_level": "unconscious_bias",
             "start": 43,
-            "subcategory": "titles",
             "text": "Kunden"
         }
     ]

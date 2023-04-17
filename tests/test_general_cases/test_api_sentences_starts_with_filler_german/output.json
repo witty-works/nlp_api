@@ -1,5 +1,27 @@
 {
     "language": "de",
     "limit_reached": false,
-    "results": []
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "Auch, mir ist nicht klar, wie das alles funktioniert?",
+            "end": 4,
+            "explanation": {
+                "content": "video",
+                "icon": "😟",
+                "text": "Wörter, die Text länger und weniger verständlicher machen",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversit%C3%A4t/füllwörter?reducedView=true"
+            },
+            "label": "Kulturelle Diversität: Füllwörter",
+            "proficiency_level": "unconscious_bias",
+            "start": 0,
+            "subcategory": "advanced_filler",
+            "text": "Auch"
+        }
+    ]
 }

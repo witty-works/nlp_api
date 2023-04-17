@@ -50,7 +50,7 @@ now,adv,style,advanced_filler,['-'],['-'],['-']
 okay,adv,style,advanced_filler,['-'],['-'],['-']
 only,adv,style,advanced_filler,['-'],['-'],['-']
 other,a,style,advanced_hollow,"['alternative', 'further', 'different']",[],"['alternative', 'further', 'different']"
-outstanding,a,style,exaggerating,"['inspiring', 'well-deserved', 'skilful', 'awesome', 'marvellous']",[],"['inspiring', 'well-deserved', 'skilful', 'awesome', 'marvellous']"
+outstanding,a,style,exaggerating,"['inspiring', 'well-deserved', 'skillful', 'awesome', 'marvelous']",[],"['inspiring', 'well-deserved', 'skillful', 'awesome', 'marvelous']"
 passionate,a,style,advanced_hollow,"['enthusiastic', 'invested in', 'committed to', 'fascinated with', 'keenly interested in']",[],"['enthusiastic', 'invested in', 'committed to', 'fascinated with', 'keenly interested in']"
 perfect,a,style,exaggerating,['-'],['-'],['-']
 perhaps,adv,style,advanced_filler,['-'],['-'],['-']

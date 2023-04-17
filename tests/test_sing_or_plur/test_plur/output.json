@@ -17,16 +17,16 @@
                     "text": "Development"
                 }
             ],
-            "category": "gendered",
+            "category": "gender-orientation",
             "context": "Engineers work in this industry.",
             "end": 9,
             "explanation": {
                 "icon": "😮",
                 "text": "Gendered image deeply anchored. In plural less.",
-                "url": "https://www.witty.works/en/subcategories/generic-plural?reducedView=true"
+                "url": "https://www.witty.works/en/categories/gender-orientation/generic-plural?reducedView=true"
             },
-            "gravity": 3.0,
-            "label": "Gendered: Generic plural",
+            "label": "Gender + Orientation: Generic plural",
+            "proficiency_level": "unconscious_bias",
             "start": 0,
             "subcategory": "generic_plural",
             "text": "Engineers"

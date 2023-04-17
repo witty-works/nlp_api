@@ -15,7 +15,6 @@
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
             },
-            "gravity": 1.0,
             "label": "Rechtschreibfehler",
             "start": 10,
             "subcategory": "typos",
@@ -39,7 +38,7 @@
                     "text": "Chancen, zu zeigen, was man kann"
                 }
             ],
-            "category": "unconscious_bias",
+            "category": "social-motive",
             "context": "Wir haben aussergewöhnliche Herausforderungen vor uns.",
             "end": 45,
             "explanation": {
@@ -48,8 +47,8 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
+            "label": "Soziale Motivation: Agentische Sprache",
+            "proficiency_level": "unconscious_bias",
             "start": 28,
             "subcategory": "agentic",
             "text": "Herausforderungen"

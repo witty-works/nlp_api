@@ -236,7 +236,6 @@ def fetch_rules(langs):
                 df_abbreviation["Word_Type"],
                 df_abbreviation["Primary_subcategory"],
                 map(ast.literal_eval, df_abbreviation["Alt_split"]),
-                df_abbreviation["Category"],
             )
         )
 
@@ -879,27 +878,25 @@ def fetch_rules(langs):
 
             # df homonyms words
             df_homonyms = data[locale]["df_homonyms_words"]
-            # homonyms : lemma+word_type+category+subcategory+alternatives
+            # homonyms : lemma+word_type+subcategory+alternatives
             rules[locale]["homonyms_word"] = list(
                 zip(
                     df_homonyms["Lemma"],
                     df_homonyms["Word_Type"],
                     df_homonyms["Primary_subcategory"],
                     map(ast.literal_eval, df_homonyms["Alt_split"]),
-                    df_homonyms["Category"],
                 )
             )
 
             # df abbreviation english
             df_abbreviation = data[locale]["df_abbreviation"]
-            # abbreviation : lemma+category+subcategory+alternatives
+            # abbreviation : lemma+word_type+subcategory+alternatives
             rules[locale]["abbreviation"] = list(
                 zip(
                     df_abbreviation["Lemma"],
                     df_abbreviation["Word_Type"],
                     df_abbreviation["Primary_subcategory"],
                     map(ast.literal_eval, df_abbreviation["Alt_split"]),
-                    df_abbreviation["Category"],
                 )
             )
 

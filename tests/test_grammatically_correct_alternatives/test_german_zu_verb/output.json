@@ -17,7 +17,7 @@
                     "text": "gewährleistet"
                 }
             ],
-            "category": "unconscious_bias",
+            "category": "social-motive",
             "context": "Haben wir das sichergestellt? Wir haben noch viel sicherzustellen. Es gibt noch viel auszufechten. Wir haben viel zu gewinnen.",
             "end": 28,
             "explanation": {
@@ -26,8 +26,8 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
+            "label": "Soziale Motivation: Agentische Sprache",
+            "proficiency_level": "unconscious_bias",
             "start": 14,
             "subcategory": "agentic",
             "text": "sichergestellt"
@@ -47,7 +47,7 @@
                     "text": "zu gewährleisten"
                 }
             ],
-            "category": "unconscious_bias",
+            "category": "social-motive",
             "context": "Haben wir das sichergestellt? Wir haben noch viel sicherzustellen. Es gibt noch viel auszufechten. Wir haben viel zu gewinnen.",
             "end": 65,
             "explanation": {
@@ -56,8 +56,8 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
+            "label": "Soziale Motivation: Agentische Sprache",
+            "proficiency_level": "unconscious_bias",
             "start": 50,
             "subcategory": "agentic",
             "text": "sicherzustellen"
@@ -74,7 +74,7 @@
                     "text": "auszutauschen"
                 }
             ],
-            "category": "unconscious_bias",
+            "category": "social-motive",
             "context": "Haben wir das sichergestellt? Wir haben noch viel sicherzustellen. Es gibt noch viel auszufechten. Wir haben viel zu gewinnen.",
             "end": 97,
             "explanation": {
@@ -83,8 +83,8 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
+            "label": "Soziale Motivation: Agentische Sprache",
+            "proficiency_level": "unconscious_bias",
             "start": 85,
             "subcategory": "agentic",
             "text": "auszufechten"
@@ -107,7 +107,7 @@
                     "text": "zu insistieren"
                 }
             ],
-            "category": "unconscious_bias",
+            "category": "social-motive",
             "context": "sichergestellt? Wir haben noch viel sicherzustellen. Es gibt noch viel auszufechten. Wir haben viel zu gewinnen.",
             "end": 125,
             "explanation": {
@@ -116,8 +116,8 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
+            "label": "Soziale Motivation: Agentische Sprache",
+            "proficiency_level": "unconscious_bias",
             "start": 114,
             "subcategory": "agentic",
             "text": "zu gewinnen"

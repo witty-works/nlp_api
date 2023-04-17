@@ -5,6 +5,7 @@
 venv-nlp-api/
 
 training_data/lid.176.bin
+training_data/en-GB
 
 analyze_rules/*
 
