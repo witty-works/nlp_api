@@ -45,6 +45,8 @@ from starlette.responses import RedirectResponse
 
 from fastapi_microsoft_identity import validate_scope, get_token_claims
 
+import secure
+
 from slack_bolt.adapter.fastapi.async_handler import AsyncSlackRequestHandler
 from slack_bolt.app.async_app import AsyncApp
 from slack_sdk import WebClient
@@ -254,8 +256,23 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-
 security = HTTPBasic(auto_error=False)
+
+csp = secure.ContentSecurityPolicy().set(
+    "default-scr 'self' cdn.jsdelivr.net"
+)
+xfo = secure.XFrameOptions().deny()
+xxp = secure.XXSSProtection().set("1; mode=block")
+
+secure_headers = secure.Secure(csp=csp, xfo=xfo, xxp=xxp)
+
+
+@app.middleware("http")
+async def set_secure_headers(request, call_next):
+    response = await call_next(request)
+    secure_headers.framework.fastapi(response)
+    return response
+
 
 app.add_middleware(
     CORSMiddleware,
