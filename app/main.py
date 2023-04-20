@@ -354,17 +354,34 @@ async def post_exception(
 
 
 @app.get("/health")
-async def get_health():
-    languagetool_health = await fetch_json_get(
-        settings.languagetool_api + "/healthcheck",
-        {},
-        {},
-        "LanguageTool",
-        settings.languagetool_verify_ssl,
-        False,
-    )
+async def get_health(check_external: bool = False):
+    health = {}
 
-    health = {"spelling": languagetool_health == "OK", "config": redis.ping()}
+    langs = {
+        "en": "Hello guys",
+        "de": "Hallo Kunde",
+    }
+
+    for spacy_model in settings.models:
+        lang = spacy_model[0:2]
+        try:
+            fetch_tokens(lang, langs[lang])
+            health["model_" + lang] = True
+        except:
+            health["model_" + lang] = False
+
+    if check_external:
+        languagetool_health = await fetch_json_get(
+            settings.languagetool_api + "/healthcheck",
+            {},
+            {},
+            "LanguageTool",
+            settings.languagetool_verify_ssl,
+            False,
+        )
+
+        health["spelling"] = languagetool_health == "OK"
+        health["config"] = redis.ping()
 
     content = jsonable_encoder(health)
 
