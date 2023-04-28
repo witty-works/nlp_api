@@ -27,7 +27,6 @@
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
             },
-            "gravity": 1.0,
             "label": "Rechtschreibfehler",
             "start": 0,
             "subcategory": "typos",
@@ -51,7 +50,7 @@
                     "text": "tonangebend"
                 }
             ],
-            "category": "unconscious_bias",
+            "category": "social-motive",
             "context": "Einflußvermögen der einzelnen Regierungen auf diese Märkte weit überlegen ist",
             "end": 73,
             "explanation": {
@@ -60,8 +59,8 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
+            "label": "Soziale Motivation: Agentische Sprache",
+            "proficiency_level": "unconscious_bias",
             "start": 64,
             "subcategory": "agentic",
             "text": "überlegen"

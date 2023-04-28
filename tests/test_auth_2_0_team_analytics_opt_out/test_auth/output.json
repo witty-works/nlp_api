@@ -1,8 +1,12 @@
 {
-    "config": {},
+    "config": {
+        "categories": {}
+    },
     "id": "test-default",
     "name": "Tests Default",
-    "organization_config": {},
+    "organization_config": {
+        "categories": {}
+    },
     "organization_name": "Default",
     "plan": "witty_teams"
 }

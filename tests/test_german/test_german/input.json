@@ -1,9 +1,8 @@
 {
-    "version": 2.1,
+    "version": 2.3,
     "text": "Hallo Kunde",
     "config": {
       "store_context": true,
-      "simple_language": false,
       "plan": "string",
       "primary_language": "de-DE",
       "preferred_languages": [
@@ -15,11 +14,9 @@
         "de-DE"
       ],
       "german_gender_ending": "*in",
-      "disabled_categories": [],
+      "disabled_categories": ["advanced_binary_pronouns"],
       "gendered_roles_format": "both",
-      "singular_they": "he_or_she",
       "show_inspiration_alternatives": false,
-      "maximum_importance": 2,
       "alternatives_max_count": 0
     },
     "configs": {},

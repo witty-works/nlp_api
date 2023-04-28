@@ -8,22 +8,19 @@
                     "text": "a substance user"
                 },
                 {
-                    "text": "a substance use"
-                },
-                {
                     "text": "substance users"
                 }
             ],
-            "category": "unconscious_bias",
+            "category": "ability-physicality",
             "context": "Are you an addict",
             "end": 17,
             "explanation": {
                 "icon": "😒",
-                "text": "Frames authentic behaviour as undesirable and other",
-                "url": "https://www.witty.works/en/subcategories/behavior?reducedView=true"
+                "text": "Frames authentic behavior as undesirable and other",
+                "url": "https://www.witty.works/en/categories/ability-physicality/behavior?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Biased Language: Behaviour",
+            "label": "Ability + Physicality: Behavior",
+            "proficiency_level": "unconscious_bias",
             "start": 8,
             "subcategory": "behavior",
             "text": "an addict"

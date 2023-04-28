@@ -4,32 +4,34 @@
     "results": [
         {
             "alternatives": [],
-            "category": "inclusive",
+            "category": "social-motive",
             "context": "Es ist eine Kund/in. Eine gute Kund/in.",
             "end": 19,
             "explanation": {
                 "content": "advanced",
                 "icon": "✅",
                 "text": "Fördere den Austausch über Vielfalt, Gleichheit, Teilhabe und Zugehörigkeit",
-                "url": "https://www.witty.works/de/subkategorien/vielfalt-gleichheit-teilhabe-zugehörigkeit?reducedView=true"
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/vielfalt-gleichheit-teilhabe-zugehörigkeit?reducedView=true"
             },
-            "label": "Inklusiv: DEIB",
+            "label": "Soziale Motivation: DEIB",
+            "proficiency_level": "inclusive",
             "start": 12,
             "subcategory": "d_and_i",
             "text": "Kund/in"
         },
         {
             "alternatives": [],
-            "category": "inclusive",
+            "category": "social-motive",
             "context": "Es ist eine Kund/in. Eine gute Kund/in.",
             "end": 38,
             "explanation": {
                 "content": "advanced",
                 "icon": "✅",
                 "text": "Fördere den Austausch über Vielfalt, Gleichheit, Teilhabe und Zugehörigkeit",
-                "url": "https://www.witty.works/de/subkategorien/vielfalt-gleichheit-teilhabe-zugehörigkeit?reducedView=true"
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/vielfalt-gleichheit-teilhabe-zugehörigkeit?reducedView=true"
             },
-            "label": "Inklusiv: DEIB",
+            "label": "Soziale Motivation: DEIB",
+            "proficiency_level": "inclusive",
             "start": 31,
             "subcategory": "d_and_i",
             "text": "Kund/in"

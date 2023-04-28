@@ -263,8 +263,8 @@ pdm run python -m bin.analyze_rules -l en -p <path_to_ignore_file>
 For example:
 
 ```
-pdm run python -m bin.analyze_rules -l en -p ../languagetool/ignored_words/English/ignore.txt
-pdm run python -m bin.analyze_rules -l de -p ../languagetool/ignored_words/German/ignore.txt
+pdm run python -m bin.analyze_rules -l en -p ../languagetool-flexible/en_ignore.txt
+pdm run python -m bin.analyze_rules -l de -p ../languagetool-flexible/de_ignore.txt
 ```
 
 ## Update the false positive list

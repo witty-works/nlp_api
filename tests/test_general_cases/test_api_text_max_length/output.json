@@ -15,7 +15,6 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake. ‘metres’ is British English."
             },
-            "gravity": 1.0,
             "label": "Possible Typo",
             "start": 102,
             "subcategory": "typos",
@@ -37,7 +36,6 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake found."
             },
-            "gravity": 1.0,
             "label": "Spelling mistake",
             "start": 145,
             "subcategory": "typos",
@@ -59,7 +57,6 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake found."
             },
-            "gravity": 1.0,
             "label": "Spelling mistake",
             "start": 162,
             "subcategory": "typos",
@@ -78,7 +75,6 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake. ‘metres’ is British English."
             },
-            "gravity": 1.0,
             "label": "Possible Typo",
             "start": 191,
             "subcategory": "typos",
@@ -100,7 +96,6 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake found."
             },
-            "gravity": 1.0,
             "label": "Spelling mistake",
             "start": 297,
             "subcategory": "typos",
@@ -119,7 +114,6 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake. ‘metres’ is British English."
             },
-            "gravity": 1.0,
             "label": "Possible Typo",
             "start": 382,
             "subcategory": "typos",
@@ -138,7 +132,6 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake. ‘metres’ is British English."
             },
-            "gravity": 1.0,
             "label": "Possible Typo",
             "start": 418,
             "subcategory": "typos",
@@ -157,7 +150,6 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake. ‘metres’ is British English."
             },
-            "gravity": 1.0,
             "label": "Possible Typo",
             "start": 551,
             "subcategory": "typos",
@@ -179,7 +171,6 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake found."
             },
-            "gravity": 1.0,
             "label": "Spelling mistake",
             "start": 603,
             "subcategory": "typos",
@@ -198,7 +189,6 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake. ‘metres’ is British English."
             },
-            "gravity": 1.0,
             "label": "Possible Typo",
             "start": 723,
             "subcategory": "typos",
@@ -220,7 +210,6 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake found."
             },
-            "gravity": 1.0,
             "label": "Spelling mistake",
             "start": 766,
             "subcategory": "typos",
@@ -242,7 +231,6 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake found."
             },
-            "gravity": 1.0,
             "label": "Spelling mistake",
             "start": 783,
             "subcategory": "typos",
@@ -261,7 +249,6 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake. ‘metres’ is British English."
             },
-            "gravity": 1.0,
             "label": "Possible Typo",
             "start": 812,
             "subcategory": "typos",
@@ -283,7 +270,6 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake found."
             },
-            "gravity": 1.0,
             "label": "Spelling mistake",
             "start": 918,
             "subcategory": "typos",
@@ -307,19 +293,19 @@
                     "text": "you all"
                 }
             ],
-            "category": "gendered",
+            "category": "gender-orientation",
             "context": "Hey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately <NUMBER> metres",
             "end": 8,
             "explanation": {
                 "content": "advanced",
                 "icon": "💡",
                 "text": "People tend to picture men",
-                "url": "https://www.witty.works/en/subcategories/generic-masculine?reducedView=true"
+                "url": "https://www.witty.works/en/categories/gender-orientation/generic-masculine?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Gendered: Generic masculine",
+            "label": "Gender + Orientation: Generic masculine",
+            "proficiency_level": "unconscious_bias",
             "start": 4,
-            "subcategory": "function",
+            "subcategory": "advanced_function",
             "text": "guys"
         },
         {
@@ -340,20 +326,96 @@
                     "text": "you all"
                 }
             ],
-            "category": "gendered",
+            "category": "gender-orientation",
             "context": "et, and approximately <NUMBER> metres east of the most south-easterly corner of <NUMBER> Batherton Close.\n\nHey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately <NUMBER> metres",
             "end": 629,
             "explanation": {
                 "content": "advanced",
                 "icon": "💡",
                 "text": "People tend to picture men",
-                "url": "https://www.witty.works/en/subcategories/generic-masculine?reducedView=true"
+                "url": "https://www.witty.works/en/categories/gender-orientation/generic-masculine?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Gendered: Generic masculine",
+            "label": "Gender + Orientation: Generic masculine",
+            "proficiency_level": "unconscious_bias",
             "start": 625,
-            "subcategory": "function",
+            "subcategory": "advanced_function",
             "text": "guys"
+        },
+        {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "Hey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately <NUMBER> metres east of the mo",
+            "end": 23,
+            "explanation": {
+                "content": "advanced",
+                "icon": "✅",
+                "text": "Strengthens collaboration and a sense of community",
+                "url": "https://www.witty.works/en/categories/social-motive/communal-language?reducedView=true"
+            },
+            "label": "Social Motive: Communal language",
+            "proficiency_level": "inclusive",
+            "start": 19,
+            "subcategory": "communal",
+            "text": "team"
+        },
+        {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "mately <NUMBER> metres east of the most south-easterly corner of <NUMBER> Batherton Close.\n\nHey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately <NUMBER> metres east of the mo",
+            "end": 644,
+            "explanation": {
+                "content": "advanced",
+                "icon": "✅",
+                "text": "Strengthens collaboration and a sense of community",
+                "url": "https://www.witty.works/en/categories/social-motive/communal-language?reducedView=true"
+            },
+            "label": "Social Motive: Communal language",
+            "proficiency_level": "inclusive",
+            "start": 640,
+            "subcategory": "communal",
+            "text": "team"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "most southerly corner of Unit <NUMBER> Foundry Industrial Estate, Victoria Street, Widnes, proceeding in a generally east-north-easterly direction for approximately <NUMBER> metres to a point approximately <NUMBER> metres east-",
+            "end": 330,
+            "explanation": {
+                "content": "video",
+                "icon": "😟",
+                "text": "Adding complexity but no meaning",
+                "url": "https://www.witty.works/en/categories/cultural-diversity/filler-words?reducedView=true"
+            },
+            "label": "Cultural Diversity: Filler words",
+            "proficiency_level": "unconscious_bias",
+            "start": 321,
+            "subcategory": "advanced_filler",
+            "text": "generally"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "most southerly corner of Unit <NUMBER> Foundry Industrial Estate, Victoria Street, Widnes, proceeding in a generally east-north-easterly direction for approximately",
+            "end": 951,
+            "explanation": {
+                "content": "video",
+                "icon": "😟",
+                "text": "Adding complexity but no meaning",
+                "url": "https://www.witty.works/en/categories/cultural-diversity/filler-words?reducedView=true"
+            },
+            "label": "Cultural Diversity: Filler words",
+            "proficiency_level": "unconscious_bias",
+            "start": 942,
+            "subcategory": "advanced_filler",
+            "text": "generally"
         },
         {
             "alternatives": [
@@ -373,17 +435,17 @@
                     "text": "care"
                 }
             ],
-            "category": "unconscious_bias",
+            "category": "social-motive",
             "context": "Hey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately <NUMBER> metres east of the most south corner of <NUMBER> Batherton",
             "end": 55,
             "explanation": {
                 "content": "video",
                 "icon": "😒",
                 "text": "Doesn’t resonate with team-minded people",
-                "url": "https://www.witty.works/en/subcategories/agentic-language?reducedView=true"
+                "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Biased Language: Agentic language",
+            "label": "Social Motive: Agentic language",
+            "proficiency_level": "unconscious_bias",
             "start": 43,
             "subcategory": "agentic",
             "text": "perseverance"
@@ -406,17 +468,17 @@
                     "text": "care"
                 }
             ],
-            "category": "unconscious_bias",
+            "category": "social-motive",
             "context": "f the most south-easterly corner of <NUMBER> Batherton Close.\n\nHey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately <NUMBER> metres east of the most south corner of <NUMBER> Batherton",
             "end": 676,
             "explanation": {
                 "content": "video",
                 "icon": "😒",
                 "text": "Doesn’t resonate with team-minded people",
-                "url": "https://www.witty.works/en/subcategories/agentic-language?reducedView=true"
+                "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Biased Language: Agentic language",
+            "label": "Social Motive: Agentic language",
+            "proficiency_level": "unconscious_bias",
             "start": 664,
             "subcategory": "agentic",
             "text": "perseverance"
@@ -436,17 +498,17 @@
                     "text": "enthusiasm for working toward goals"
                 }
             ],
-            "category": "unconscious_bias",
+            "category": "social-motive",
             "context": "Hey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately <NUMBER> metres east of the most south corner",
             "end": 38,
             "explanation": {
                 "content": "video",
                 "icon": "😒",
                 "text": "Doesn’t resonate with team-minded people",
-                "url": "https://www.witty.works/en/subcategories/agentic-language?reducedView=true"
+                "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Biased Language: Agentic language",
+            "label": "Social Motive: Agentic language",
+            "proficiency_level": "unconscious_bias",
             "start": 30,
             "subcategory": "agentic",
             "text": "ambition"
@@ -466,17 +528,17 @@
                     "text": "enthusiasm for working toward goals"
                 }
             ],
-            "category": "unconscious_bias",
+            "category": "social-motive",
             "context": "metres east of the most south-easterly corner of <NUMBER> Batherton Close.\n\nHey guys, We are a team where ambition and perseverance count.\n\nA path from a point approximately <NUMBER> metres east of the most south corner",
             "end": 659,
             "explanation": {
                 "content": "video",
                 "icon": "😒",
                 "text": "Doesn’t resonate with team-minded people",
-                "url": "https://www.witty.works/en/subcategories/agentic-language?reducedView=true"
+                "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Biased Language: Agentic language",
+            "label": "Social Motive: Agentic language",
+            "proficiency_level": "unconscious_bias",
             "start": 651,
             "subcategory": "agentic",
             "text": "ambition"

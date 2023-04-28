@@ -5,33 +5,24 @@
         {
             "alternatives": [
                 {
-                    "text": "Mitarbeitende"
-                },
-                {
                     "text": "Mitarbeiter*innen"
                 },
                 {
                     "text": "Mitarbeiterinnen und Mitarbeiter"
-                },
-                {
-                    "text": "Personal"
-                },
-                {
-                    "text": "Mitarbeiterschaft"
                 }
             ],
-            "category": "gendered",
+            "category": "gender-orientation",
             "context": "Wir unterstützen leistungsstarke Mitarbeiter.",
             "end": 44,
             "explanation": {
                 "icon": "😟",
                 "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
-                "url": "https://www.witty.works/de/subkategorien/berufe?reducedView=true"
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Berufe",
+            "label": "Geschlecht + Orientierung: Berufe",
+            "proficiency_level": "unconscious_bias",
             "start": 33,
-            "subcategory": "titles",
+            "subcategory": "advanced_titles",
             "text": "Mitarbeiter"
         },
         {
@@ -46,7 +37,7 @@
                     "text": "kompetente"
                 }
             ],
-            "category": "unconscious_bias",
+            "category": "social-motive",
             "context": "Wir unterstützen leistungsstarke Mitarbeiter.",
             "end": 32,
             "explanation": {
@@ -55,23 +46,25 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
+            "label": "Soziale Motivation: Agentische Sprache",
+            "proficiency_level": "unconscious_bias",
             "start": 17,
             "subcategory": "agentic",
             "text": "leistungsstarke"
         },
         {
             "alternatives": [],
-            "category": "inclusive",
+            "category": "social-motive",
             "context": "Wir unterstützen leistungsstarke Mitarbeiter.",
             "end": 16,
             "explanation": {
+                "content": "advanced",
                 "icon": "✅",
-                "text": "Betont kooperative Eigenschaften",
-                "url": "https://www.witty.works/de/subkategorien/kommunale-sprache?reducedView=true"
+                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true"
             },
-            "label": "Inklusiv: Kommunale Sprache",
+            "label": "Soziale Motivation: Kommunale Sprache",
+            "proficiency_level": "inclusive",
             "start": 4,
             "subcategory": "communal",
             "text": "unterstützen"

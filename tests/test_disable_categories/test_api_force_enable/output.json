@@ -30,7 +30,6 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake found."
             },
-            "gravity": 1.0,
             "label": "Spelling mistake",
             "start": 2,
             "subcategory": "typos",

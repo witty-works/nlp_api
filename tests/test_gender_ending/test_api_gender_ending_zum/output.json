@@ -1,0 +1,38 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "zur Praxis"
+                },
+                {
+                    "text": "zur Untersuchung"
+                },
+                {
+                    "text": "zur*zum Fachärztin*Facharzt"
+                },
+                {
+                    "text": "zur/zum Fachärztin/Facharzt"
+                },
+                {
+                    "text": "medizinisches Team"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Ich gehe zum Facharzt.",
+            "end": 21,
+            "explanation": {
+                "icon": "😟",
+                "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "label": "Geschlecht + Orientierung: Berufe",
+            "proficiency_level": "unconscious_bias",
+            "start": 9,
+            "subcategory": "advanced_titles",
+            "text": "zum Facharzt"
+        }
+    ]
+}

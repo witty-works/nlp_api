@@ -15,7 +15,6 @@
                 "icon": "❌",
                 "text": "Ausser am Satzanfang werden nur Nomen und Eigennamen grossgeschrieben."
             },
-            "gravity": 1.0,
             "label": "Gross-/Kleinschreibung",
             "start": 39,
             "subcategory": "casing",

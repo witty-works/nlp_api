@@ -41,11 +41,7 @@ jobs:
 
       - name: Compile translation
         run: |
-          pdm run pybabel compile -d locales -l de_DE -f
-          pdm run pybabel compile -d locales -l de_AT -f
-          pdm run pybabel compile -d locales -l de_CH -f
-          pdm run pybabel compile -d locales -l en_US -f
-          pdm run pybabel compile -d locales -l en_GB -f
+          ./compile-translations.sh
 
       - if: startsWith(github.ref, 'refs/tags/') != true && github.ref != 'refs/heads/main'
         name: Use LT "dev" via .env file for anything but "main"

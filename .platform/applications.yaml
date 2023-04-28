@@ -38,12 +38,7 @@
 
       echo "e613bda316ecb4f5e1924140eedf81b81c087d9a *training_data/lid.176.bin" | sha1sum -c -
 
-      pdm run pybabel compile -d locales -l en_US -f
-      pdm run pybabel compile -d locales -l en_GB -f
-
-      pdm run pybabel compile -d locales -l de_DE -f
-      pdm run pybabel compile -d locales -l de_CH -f
-      pdm run pybabel compile -d locales -l de_AT -f
+      ./compile-translations.sh
 
   crons:
     generate-statistics:

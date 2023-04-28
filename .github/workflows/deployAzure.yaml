@@ -25,6 +25,10 @@ jobs:
         run: |
           pdm export --prod -o requirements.txt
 
+      - name: Compile translation
+        run: |
+          ./compile-translations.sh
+
       # build nlp api
       - run: |
           docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/nlpapi:${{ github.sha }}

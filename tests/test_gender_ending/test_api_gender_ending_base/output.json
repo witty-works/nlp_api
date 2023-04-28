@@ -1,0 +1,55 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "meine Praxis"
+                },
+                {
+                    "text": "meine Untersuchung"
+                },
+                {
+                    "text": "meine*n Fachärztin*Facharzt"
+                },
+                {
+                    "text": "meine/n Fachärztin/Facharzt"
+                },
+                {
+                    "text": "mein medizinisches Team"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Ich vertraue auf meinen Facharzt. Ich gehe zur Fachärztin/Facharzt",
+            "end": 32,
+            "explanation": {
+                "icon": "😟",
+                "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "label": "Geschlecht + Orientierung: Berufe",
+            "proficiency_level": "unconscious_bias",
+            "start": 17,
+            "subcategory": "advanced_titles",
+            "text": "meinen Facharzt"
+        },
+        {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "Ich vertraue auf meinen Facharzt. Ich gehe zur Fachärztin/Facharzt",
+            "end": 12,
+            "explanation": {
+                "content": "advanced",
+                "icon": "✅",
+                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true"
+            },
+            "label": "Soziale Motivation: Kommunale Sprache",
+            "proficiency_level": "inclusive",
+            "start": 4,
+            "subcategory": "communal",
+            "text": "vertraue"
+        }
+    ]
+}

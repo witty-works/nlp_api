@@ -27,7 +27,6 @@
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
             },
-            "gravity": 1.0,
             "label": "Rechtschreibfehler",
             "start": 0,
             "subcategory": "typos",
@@ -36,26 +35,34 @@
         {
             "alternatives": [
                 {
-                    "text": "Erwachsene"
+                    "text": "Frauen, Lesben, intersexuelle Personen, nicht-binäre-Personen, Trans*gender"
                 },
                 {
-                    "text": "alle"
+                    "text": "Frauen, Lesben, intersexuelle Personen, nicht-binäre-Personen, Trans/gender"
+                },
+                {
+                    "text": "Frauen, Lesben, intersexuelle Personen, nicht-binäre-Personen, Trans*gender (FLINT)"
+                },
+                {
+                    "text": "Frauen, Lesben, intersexuelle Personen, nicht-binäre-Personen, Trans/gender (FLINT)"
+                },
+                {
+                    "text": "Alle, die aufgrund ihrer Geschlechtsidentität und sexuellen Orientierung im Patriarchat diskriminiert werden"
                 }
             ],
-            "category": "unconscious_bias",
-            "context": "FLINT schließt lesbische Frauen explizit mit ein, um sich für mehr lesbische Sichtbarkeit zu solidarisieren.",
-            "end": 31,
+            "category": "cultural-diversity",
+            "context": "FLINT schließt lesbische Frauen explizit mit ein, um sich für mehr lesbische Sichtbarkeit zu solidarisier",
+            "end": 5,
             "explanation": {
-                "context": "nur wenn die Person sich selbst so bezeichnet",
-                "icon": "😒",
-                "text": "Bedient die heteronormative Sicht von Geschlechteridentität",
-                "url": "https://www.witty.works/de/subkategorien/binäres-geschlecht?reducedView=true"
+                "icon": "😉",
+                "text": "Werden alle Lesenden diese Abkürzung verstehen?",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversit%C3%A4t/abkürzung?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Binäres Geschlecht",
-            "start": 25,
-            "subcategory": "gender_identity",
-            "text": "Frauen"
+            "label": "Kulturelle Diversität: Abkürzung",
+            "proficiency_level": "unconscious_bias",
+            "start": 0,
+            "subcategory": "advanced_abbreviation",
+            "text": "FLINT"
         }
     ]
 }

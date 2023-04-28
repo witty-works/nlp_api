@@ -5,6 +5,26 @@
         {
             "alternatives": [
                 {
+                    "text": "they have"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "If a manager picks up this topic, he has to go the extra-mile to solve it.",
+            "end": 40,
+            "explanation": {
+                "icon": "😟",
+                "text": "Pronouns that exclude non-binary people",
+                "url": "https://www.witty.works/en/categories/gender-orientation/binary-pronouns?reducedView=true"
+            },
+            "label": "Gender + Orientation: Binary pronouns",
+            "proficiency_level": "unconscious_bias",
+            "start": 34,
+            "subcategory": "advanced_binary_pronouns",
+            "text": "he has"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "they"
                 },
                 {
@@ -17,19 +37,19 @@
                     "text": "managers"
                 }
             ],
-            "category": "gendered",
+            "category": "gender-orientation",
             "context": "If a manager picks up this topic, he has to go the extra-mile to solve it.",
             "end": 12,
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
                 "text": "People tend to picture a specific gender",
-                "url": "https://www.witty.works/en/subcategories/jobs?reducedView=true"
+                "url": "https://www.witty.works/en/categories/gender-orientation/jobs?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Gendered: Jobs",
+            "label": "Gender + Orientation: Jobs",
+            "proficiency_level": "unconscious_bias",
             "start": 3,
-            "subcategory": "titles",
+            "subcategory": "advanced_titles",
             "text": "a manager"
         },
         {
@@ -41,17 +61,17 @@
                     "text": "make a special effort"
                 }
             ],
-            "category": "unconscious_bias",
+            "category": "social-motive",
             "context": "If a manager picks up this topic, he has to go the extra-mile to solve it.",
             "end": 61,
             "explanation": {
                 "content": "video",
                 "icon": "😒",
                 "text": "Doesn’t resonate with team-minded people",
-                "url": "https://www.witty.works/en/subcategories/agentic-language?reducedView=true"
+                "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Biased Language: Agentic language",
+            "label": "Social Motive: Agentic language",
+            "proficiency_level": "unconscious_bias",
             "start": 44,
             "subcategory": "agentic",
             "text": "go the extra-mile"

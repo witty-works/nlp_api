@@ -20,16 +20,16 @@
                     "text": "Sinti*ze"
                 }
             ],
-            "category": "unconscious_bias",
+            "category": "cultural-diversity",
             "context": "Das sind Zigeuner. Aber es ist",
             "end": 17,
             "explanation": {
                 "icon": "😒",
-                "text": "Legt Vorurteile gegen rassifizierte Menschen nahe",
-                "url": "https://www.witty.works/de/subkategorien/rassistische-wurzel?reducedView=true"
+                "text": "Hat rassistische Hintergründe oder Konnotationen  ",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversit%C3%A4t/abstammung?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Rassistische Wurzel",
+            "label": "Kulturelle Diversität: Abstammung",
+            "proficiency_level": "unconscious_bias",
             "start": 9,
             "subcategory": "racist_source",
             "text": "Zigeuner"
