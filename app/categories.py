@@ -146,17 +146,10 @@ def map_gravity(category):
     if category == "corporate_rules":
         return 0.9
 
-    proficiency_level = get_proficiency_level(category)
-    if proficiency_level is None:
-        return 2
+    if is_category_inclusive(category):
+        return None
 
-    if proficiency_level == "openly_discriminating":
-        return 1
-
-    if not category.startswith("advanced_"):
-        return 2
-
-    return 3
+    return int(map_importance(category))
 
 
 def map_importance(category):
@@ -164,4 +157,14 @@ def map_importance(category):
     if proficiency_level is None:
         return 2.0
 
-    return float(map_gravity(category))
+    proficiency_level = get_proficiency_level(category)
+    if proficiency_level is None:
+        return 2.0
+
+    if proficiency_level == "openly_discriminating":
+        return 1.0
+
+    if not category.startswith("advanced_"):
+        return 2.0
+
+    return 3.0
