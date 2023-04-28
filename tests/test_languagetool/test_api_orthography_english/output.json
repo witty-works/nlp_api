@@ -27,6 +27,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake found."
             },
+            "gravity": 2.0,
             "label": "Spelling mistake",
             "start": 2,
             "subcategory": "typos",
@@ -45,6 +46,7 @@
                 "icon": "❌",
                 "text": "This sentence does not start with an uppercase letter."
             },
+            "gravity": 2.0,
             "label": "Capitalization",
             "start": 23,
             "subcategory": "casing",

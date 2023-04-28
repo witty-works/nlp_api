@@ -16,6 +16,7 @@
                 "text": "Pronouns that exclude non-binary people",
                 "url": "https://www.witty.works/en/categories/gender-orientation/binary-pronouns?reducedView=true"
             },
+            "gravity": 3.0,
             "label": "Gender + Orientation: Binary pronouns",
             "proficiency_level": "unconscious_bias",
             "start": 34,
@@ -46,6 +47,7 @@
                 "text": "People tend to picture a specific gender",
                 "url": "https://www.witty.works/en/categories/gender-orientation/jobs?reducedView=true"
             },
+            "gravity": 3.0,
             "label": "Gender + Orientation: Jobs",
             "proficiency_level": "unconscious_bias",
             "start": 3,
@@ -70,6 +72,7 @@
                 "text": "Doesn’t resonate with team-minded people",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
+            "gravity": 2.0,
             "label": "Social Motive: Agentic language",
             "proficiency_level": "unconscious_bias",
             "start": 44,

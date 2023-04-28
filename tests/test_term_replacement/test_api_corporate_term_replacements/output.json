@@ -30,6 +30,7 @@
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
             },
+            "gravity": 2.0,
             "label": "Rechtschreibfehler",
             "start": 8,
             "subcategory": "typos",
@@ -60,6 +61,7 @@
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
             },
+            "gravity": 2.0,
             "label": "Rechtschreibfehler",
             "start": 26,
             "subcategory": "typos",
@@ -90,6 +92,7 @@
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
             },
+            "gravity": 2.0,
             "label": "Rechtschreibfehler",
             "start": 30,
             "subcategory": "typos",
@@ -120,6 +123,7 @@
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
             },
+            "gravity": 2.0,
             "label": "Rechtschreibfehler",
             "start": 50,
             "subcategory": "typos",
@@ -150,6 +154,7 @@
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
             },
+            "gravity": 2.0,
             "label": "Rechtschreibfehler",
             "start": 73,
             "subcategory": "typos",
@@ -180,6 +185,7 @@
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
             },
+            "gravity": 2.0,
             "label": "Rechtschreibfehler",
             "start": 84,
             "subcategory": "typos",
@@ -199,6 +205,7 @@
                 "text": "better globus",
                 "url": "https://witty.works/welt"
             },
+            "gravity": 0.9,
             "label": "Wörterbuch",
             "start": 73,
             "subcategory": "corporate_rules",
@@ -218,6 +225,7 @@
                 "text": "better globus",
                 "url": "https://witty.works/welt"
             },
+            "gravity": 0.9,
             "label": "Wörterbuch",
             "start": 84,
             "subcategory": "corporate_rules",
@@ -237,6 +245,7 @@
                 "text": "better globus",
                 "url": "https://witty.works/welt"
             },
+            "gravity": 0.9,
             "label": "Wörterbuch",
             "start": 95,
             "subcategory": "corporate_rules",
@@ -256,6 +265,7 @@
                 "text": "better ding",
                 "url": "https://witty.works/foo bar"
             },
+            "gravity": 0.9,
             "label": "Wörterbuch",
             "start": 8,
             "subcategory": "corporate_rules",

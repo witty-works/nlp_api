@@ -29,6 +29,7 @@
                 "text": "People tend to picture a specific gender",
                 "url": "https://www.witty.works/en/categories/gender-orientation/jobs?reducedView=true"
             },
+            "gravity": 3.0,
             "label": "Gender + Orientation: Jobs",
             "proficiency_level": "unconscious_bias",
             "start": 4,

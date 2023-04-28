@@ -22,6 +22,7 @@
                 "text": "Nicht konsistente Geschlechts-Schreibweise",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/inklusive-endung?reducedView=true"
             },
+            "gravity": 2.0,
             "label": "Geschlecht + Orientierung: Inklusive Endung",
             "proficiency_level": "unconscious_bias",
             "start": 10,
@@ -52,6 +53,7 @@
                 "text": "Viele denken bei diesem Wort zuerst an einen Mann",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
             },
+            "gravity": 2.0,
             "label": "Geschlecht + Orientierung: Generisches Maskulinum",
             "proficiency_level": "unconscious_bias",
             "start": 60,
@@ -81,6 +83,7 @@
                 "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
             },
+            "gravity": 3.0,
             "label": "Geschlecht + Orientierung: Berufe",
             "proficiency_level": "unconscious_bias",
             "start": 89,

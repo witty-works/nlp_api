@@ -29,6 +29,7 @@
                 "text": "Doesn’t resonate with team-minded people",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
+            "gravity": 2.0,
             "label": "Social Motive: Agentic language",
             "proficiency_level": "unconscious_bias",
             "start": 70,
@@ -59,6 +60,7 @@
                 "text": "People tend to picture a specific gender",
                 "url": "https://www.witty.works/en/categories/gender-orientation/jobs?reducedView=true"
             },
+            "gravity": 3.0,
             "label": "Gender + Orientation: Jobs",
             "proficiency_level": "unconscious_bias",
             "start": 18,
@@ -89,6 +91,7 @@
                 "text": "People tend to picture a specific gender",
                 "url": "https://www.witty.works/en/categories/gender-orientation/jobs?reducedView=true"
             },
+            "gravity": 3.0,
             "label": "Gender + Orientation: Jobs",
             "proficiency_level": "unconscious_bias",
             "start": 18,
@@ -119,6 +122,7 @@
                 "text": "People tend to picture a specific gender",
                 "url": "https://www.witty.works/en/categories/gender-orientation/jobs?reducedView=true"
             },
+            "gravity": 3.0,
             "label": "Gender + Orientation: Jobs",
             "proficiency_level": "unconscious_bias",
             "start": 26,
@@ -169,6 +173,7 @@
                 "text": "Over-the-top statements make you sound less trustworthy",
                 "url": "https://www.witty.works/en/categories/social-motive/exaggeration?reducedView=true"
             },
+            "gravity": 2.0,
             "label": "Social Motive: Exaggeration",
             "proficiency_level": "unconscious_bias",
             "start": 58,
@@ -193,6 +198,7 @@
                 "text": "Over-the-top statements make you sound less trustworthy",
                 "url": "https://www.witty.works/en/categories/social-motive/exaggeration?reducedView=true"
             },
+            "gravity": 2.0,
             "label": "Social Motive: Exaggeration",
             "proficiency_level": "unconscious_bias",
             "start": 149,
@@ -220,6 +226,7 @@
                 "text": "Doesn’t resonate with team-minded people",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
+            "gravity": 2.0,
             "label": "Social Motive: Agentic language",
             "proficiency_level": "unconscious_bias",
             "start": 6,
@@ -245,6 +252,7 @@
                 "text": "Doesn’t resonate with team-minded people",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
+            "gravity": 2.0,
             "label": "Social Motive: Agentic language",
             "proficiency_level": "unconscious_bias",
             "start": 105,
@@ -278,6 +286,7 @@
                 "text": "Doesn’t resonate with team-minded people",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
+            "gravity": 2.0,
             "label": "Social Motive: Agentic language",
             "proficiency_level": "unconscious_bias",
             "start": 153,

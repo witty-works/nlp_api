@@ -19,6 +19,7 @@
                 "text": "Repeats preconceived notions about the ability to see",
                 "url": "https://www.witty.works/en/categories/ability-physicality/vision?reducedView=true"
             },
+            "gravity": 2.0,
             "label": "Ability + Physicality: Vision",
             "proficiency_level": "unconscious_bias",
             "start": 6,

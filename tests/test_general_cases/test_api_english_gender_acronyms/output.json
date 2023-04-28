@@ -21,6 +21,7 @@
                 "text": "Put underrepresented groups first and link to your equal opportunity policy",
                 "url": "https://www.witty.works/en/categories/gender-orientation/gender-specific-abbreviation?reducedView=true"
             },
+            "gravity": 2.0,
             "label": "Gender + Orientation: Gender-specific abbreviation",
             "proficiency_level": "unconscious_bias",
             "start": 8,

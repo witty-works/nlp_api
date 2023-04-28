@@ -20,6 +20,7 @@
                 "text": "Over-the-top statements make you sound less trustworthy",
                 "url": "https://www.witty.works/en/categories/social-motive/exaggeration?reducedView=true"
             },
+            "gravity": 2.0,
             "label": "Social Motive: Exaggeration",
             "proficiency_level": "unconscious_bias",
             "start": 32,
@@ -40,6 +41,7 @@
                 "text": "Language that aims to offend and intimidate",
                 "url": "https://www.witty.works/en/categories/social-motive/offensive-language?reducedView=true"
             },
+            "gravity": 1.0,
             "label": "Social Motive: Offensive language",
             "proficiency_level": "openly_discriminating",
             "start": 77,
@@ -87,6 +89,7 @@
                 "text": "Doesn’t resonate with team-minded people",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
+            "gravity": 2.0,
             "label": "Social Motive: Agentic language",
             "proficiency_level": "unconscious_bias",
             "start": 21,
