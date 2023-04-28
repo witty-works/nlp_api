@@ -15,6 +15,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake. ‘metres’ is British English."
             },
+            "gravity": 2.0,
             "label": "Possible Typo",
             "start": 102,
             "subcategory": "typos",
@@ -36,6 +37,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake found."
             },
+            "gravity": 2.0,
             "label": "Spelling mistake",
             "start": 145,
             "subcategory": "typos",
@@ -57,6 +59,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake found."
             },
+            "gravity": 2.0,
             "label": "Spelling mistake",
             "start": 162,
             "subcategory": "typos",
@@ -75,6 +78,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake. ‘metres’ is British English."
             },
+            "gravity": 2.0,
             "label": "Possible Typo",
             "start": 191,
             "subcategory": "typos",
@@ -96,6 +100,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake found."
             },
+            "gravity": 2.0,
             "label": "Spelling mistake",
             "start": 297,
             "subcategory": "typos",
@@ -114,6 +119,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake. ‘metres’ is British English."
             },
+            "gravity": 2.0,
             "label": "Possible Typo",
             "start": 382,
             "subcategory": "typos",
@@ -132,6 +138,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake. ‘metres’ is British English."
             },
+            "gravity": 2.0,
             "label": "Possible Typo",
             "start": 418,
             "subcategory": "typos",
@@ -150,6 +157,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake. ‘metres’ is British English."
             },
+            "gravity": 2.0,
             "label": "Possible Typo",
             "start": 551,
             "subcategory": "typos",
@@ -171,6 +179,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake found."
             },
+            "gravity": 2.0,
             "label": "Spelling mistake",
             "start": 603,
             "subcategory": "typos",
@@ -189,6 +198,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake. ‘metres’ is British English."
             },
+            "gravity": 2.0,
             "label": "Possible Typo",
             "start": 723,
             "subcategory": "typos",
@@ -210,6 +220,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake found."
             },
+            "gravity": 2.0,
             "label": "Spelling mistake",
             "start": 766,
             "subcategory": "typos",
@@ -231,6 +242,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake found."
             },
+            "gravity": 2.0,
             "label": "Spelling mistake",
             "start": 783,
             "subcategory": "typos",
@@ -249,6 +261,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake. ‘metres’ is British English."
             },
+            "gravity": 2.0,
             "label": "Possible Typo",
             "start": 812,
             "subcategory": "typos",
@@ -270,6 +283,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake found."
             },
+            "gravity": 2.0,
             "label": "Spelling mistake",
             "start": 918,
             "subcategory": "typos",
@@ -302,6 +316,7 @@
                 "text": "People tend to picture men",
                 "url": "https://www.witty.works/en/categories/gender-orientation/generic-masculine?reducedView=true"
             },
+            "gravity": 3.0,
             "label": "Gender + Orientation: Generic masculine",
             "proficiency_level": "unconscious_bias",
             "start": 4,
@@ -335,6 +350,7 @@
                 "text": "People tend to picture men",
                 "url": "https://www.witty.works/en/categories/gender-orientation/generic-masculine?reducedView=true"
             },
+            "gravity": 3.0,
             "label": "Gender + Orientation: Generic masculine",
             "proficiency_level": "unconscious_bias",
             "start": 625,
@@ -390,6 +406,7 @@
                 "text": "Adding complexity but no meaning",
                 "url": "https://www.witty.works/en/categories/cultural-diversity/filler-words?reducedView=true"
             },
+            "gravity": 3.0,
             "label": "Cultural Diversity: Filler words",
             "proficiency_level": "unconscious_bias",
             "start": 321,
@@ -411,6 +428,7 @@
                 "text": "Adding complexity but no meaning",
                 "url": "https://www.witty.works/en/categories/cultural-diversity/filler-words?reducedView=true"
             },
+            "gravity": 3.0,
             "label": "Cultural Diversity: Filler words",
             "proficiency_level": "unconscious_bias",
             "start": 942,
@@ -444,6 +462,7 @@
                 "text": "Doesn’t resonate with team-minded people",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
+            "gravity": 2.0,
             "label": "Social Motive: Agentic language",
             "proficiency_level": "unconscious_bias",
             "start": 43,
@@ -477,6 +496,7 @@
                 "text": "Doesn’t resonate with team-minded people",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
+            "gravity": 2.0,
             "label": "Social Motive: Agentic language",
             "proficiency_level": "unconscious_bias",
             "start": 664,
@@ -507,6 +527,7 @@
                 "text": "Doesn’t resonate with team-minded people",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
+            "gravity": 2.0,
             "label": "Social Motive: Agentic language",
             "proficiency_level": "unconscious_bias",
             "start": 30,
@@ -537,6 +558,7 @@
                 "text": "Doesn’t resonate with team-minded people",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
+            "gravity": 2.0,
             "label": "Social Motive: Agentic language",
             "proficiency_level": "unconscious_bias",
             "start": 651,

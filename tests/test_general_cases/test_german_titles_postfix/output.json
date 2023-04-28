@@ -19,6 +19,7 @@
                 "text": "Fällt unter antisemitische Verunglimpfungen",
                 "url": "https://www.witty.works/de/kategorien/glauben/antisemitismus?reducedView=true"
             },
+            "gravity": 1.0,
             "label": "Glauben: Antisemitismus",
             "proficiency_level": "openly_discriminating",
             "start": 87,
@@ -51,6 +52,7 @@
                 "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
             },
+            "gravity": 3.0,
             "label": "Geschlecht + Orientierung: Berufe",
             "proficiency_level": "unconscious_bias",
             "start": 0,
@@ -83,6 +85,7 @@
                 "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
             },
+            "gravity": 3.0,
             "label": "Geschlecht + Orientierung: Berufe",
             "proficiency_level": "unconscious_bias",
             "start": 27,
@@ -110,6 +113,7 @@
                 "text": "Viele denken bei diesem Wort zuerst an einen Mann",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
             },
+            "gravity": 2.0,
             "label": "Geschlecht + Orientierung: Generisches Maskulinum",
             "proficiency_level": "unconscious_bias",
             "start": 69,
@@ -142,6 +146,7 @@
                 "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
             },
+            "gravity": 3.0,
             "label": "Geschlecht + Orientierung: Berufe",
             "proficiency_level": "unconscious_bias",
             "start": 171,
@@ -168,6 +173,7 @@
                 "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
             },
+            "gravity": 3.0,
             "label": "Geschlecht + Orientierung: Berufe",
             "proficiency_level": "unconscious_bias",
             "start": 195,

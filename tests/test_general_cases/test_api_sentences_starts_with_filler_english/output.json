@@ -15,6 +15,7 @@
                 "icon": "❌",
                 "text": "Put a space after the comma, but not before the comma."
             },
+            "gravity": 2.0,
             "label": "Typography",
             "start": 6,
             "subcategory": "typography",
@@ -33,6 +34,7 @@
                 "icon": "❌",
                 "text": "It seems like there are too many consecutive spaces here."
             },
+            "gravity": 2.0,
             "label": "Typography",
             "start": 8,
             "subcategory": "typography",
@@ -53,6 +55,7 @@
                 "text": "Adding complexity but no meaning",
                 "url": "https://www.witty.works/en/categories/cultural-diversity/filler-words?reducedView=true"
             },
+            "gravity": 3.0,
             "label": "Cultural Diversity: Filler words",
             "proficiency_level": "unconscious_bias",
             "start": 0,

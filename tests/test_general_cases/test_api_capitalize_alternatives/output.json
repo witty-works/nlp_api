@@ -29,6 +29,7 @@
                 "text": "Viele denken bei diesem Wort zuerst an einen Mann",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
             },
+            "gravity": 3.0,
             "label": "Geschlecht + Orientierung: Generisches Maskulinum",
             "proficiency_level": "unconscious_bias",
             "start": 28,
@@ -62,6 +63,7 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
+            "gravity": 2.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 36,
@@ -90,6 +92,7 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
+            "gravity": 2.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 67,
@@ -123,6 +126,7 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
+            "gravity": 2.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 106,

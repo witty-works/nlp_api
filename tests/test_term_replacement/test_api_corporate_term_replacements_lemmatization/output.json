@@ -30,6 +30,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake found."
             },
+            "gravity": 2.0,
             "label": "Spelling mistake",
             "start": 64,
             "subcategory": "typos",
@@ -49,6 +50,7 @@
                 "text": "better ding",
                 "url": "https://witty.works/foo bar"
             },
+            "gravity": 0.9,
             "label": "Dictionary",
             "start": 44,
             "subcategory": "corporate_rules",
@@ -68,6 +70,7 @@
                 "text": "better not run",
                 "url": "https://witty.works/run"
             },
+            "gravity": 0.9,
             "label": "Dictionary",
             "start": 2,
             "subcategory": "corporate_rules",
@@ -87,6 +90,7 @@
                 "text": "better not run",
                 "url": "https://witty.works/run"
             },
+            "gravity": 0.9,
             "label": "Dictionary",
             "start": 23,
             "subcategory": "corporate_rules",

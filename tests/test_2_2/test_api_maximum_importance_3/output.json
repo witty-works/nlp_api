@@ -55,7 +55,6 @@
         {
             "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben. Für unseren Zusammenhalt im T",
             "end": 30,
-            "gravity": 3.0,
             "proficiency_level": "unconscious_bias",
             "start": 17,
             "text": "Programmierer"
@@ -63,7 +62,6 @@
         {
             "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben. Für unseren Zusammenhalt im Team.",
             "end": 49,
-            "gravity": 3.0,
             "proficiency_level": "unconscious_bias",
             "start": 43,
             "text": "Kunden"
@@ -79,7 +77,6 @@
                 "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true"
             },
-            "gravity": 2.0,
             "label": "Soziale Motivation: Kommunale Sprache",
             "proficiency_level": "inclusive",
             "start": 129,
@@ -123,7 +120,6 @@
         {
             "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben. Für unseren Zusammenhalt im Team.",
             "end": 57,
-            "gravity": 3.0,
             "proficiency_level": "unconscious_bias",
             "start": 53,
             "text": "auch"

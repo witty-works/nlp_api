@@ -514,8 +514,8 @@ class ResultOut(BaseModel):
         hide_details = config.plan is None
 
         # Logged-in but non paying user get all highlights
-        if config.plan == "witty_free":
-            hide_details = config.maximum_importance < map_importance(subcategory)
+        if config.plan == "witty_free" and subcategory.startswith("advanced_"):
+            hide_details = True
 
         if hide_details or alternatives is None or alternatives == []:
             alternatives = []
@@ -554,15 +554,14 @@ class ResultOut(BaseModel):
             "content": content,
         }
 
-        if version < 2.3:
-            gravity = map_gravity(subcategory)
-
         if hide_details:
             category = None
             subcategory = None
             alternatives = None
             label = None
             explanation = None
+        else:
+            gravity = map_gravity(subcategory)
 
         return ResultOut(
             text=text,

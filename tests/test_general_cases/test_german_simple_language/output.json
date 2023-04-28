@@ -22,6 +22,7 @@
                 "text": "Werden alle Lesenden diese Abkürzung verstehen?",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversit%C3%A4t/abkürzung?reducedView=true"
             },
+            "gravity": 3.0,
             "label": "Kulturelle Diversität: Abkürzung",
             "proficiency_level": "unconscious_bias",
             "start": 278,
@@ -55,6 +56,7 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
+            "gravity": 2.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 429,
@@ -93,6 +95,7 @@
                 "text": "Wörter, die Text länger und weniger verständlicher machen",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversit%C3%A4t/füllwörter?reducedView=true"
             },
+            "gravity": 3.0,
             "label": "Kulturelle Diversität: Füllwörter",
             "proficiency_level": "unconscious_bias",
             "start": 92,
@@ -114,6 +117,7 @@
                 "text": "Wörter, die Text länger und weniger verständlicher machen",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversit%C3%A4t/füllwörter?reducedView=true"
             },
+            "gravity": 3.0,
             "label": "Kulturelle Diversität: Füllwörter",
             "proficiency_level": "unconscious_bias",
             "start": 197,
@@ -135,6 +139,7 @@
                 "text": "Wörter, die Text länger und weniger verständlicher machen",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversit%C3%A4t/füllwörter?reducedView=true"
             },
+            "gravity": 3.0,
             "label": "Kulturelle Diversität: Füllwörter",
             "proficiency_level": "unconscious_bias",
             "start": 217,
@@ -167,6 +172,7 @@
                 "text": "Anglizismen: Sicher, dass das alle Lesenden verstehen?",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversit%C3%A4t/anglizismen?reducedView=true"
             },
+            "gravity": 3.0,
             "label": "Kulturelle Diversität: Anglizismen",
             "proficiency_level": "unconscious_bias",
             "start": 307,
@@ -196,6 +202,7 @@
                 "text": "Anglizismen: Sicher, dass das alle Lesenden verstehen?",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversit%C3%A4t/anglizismen?reducedView=true"
             },
+            "gravity": 3.0,
             "label": "Kulturelle Diversität: Anglizismen",
             "proficiency_level": "unconscious_bias",
             "start": 333,
@@ -217,6 +224,7 @@
                 "text": "Wörter, die Text länger und weniger verständlicher machen",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversit%C3%A4t/füllwörter?reducedView=true"
             },
+            "gravity": 3.0,
             "label": "Kulturelle Diversität: Füllwörter",
             "proficiency_level": "unconscious_bias",
             "start": 540,
@@ -238,6 +246,7 @@
                 "text": "Wörter, die Text länger und weniger verständlicher machen",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversit%C3%A4t/füllwörter?reducedView=true"
             },
+            "gravity": 3.0,
             "label": "Kulturelle Diversität: Füllwörter",
             "proficiency_level": "unconscious_bias",
             "start": 547,

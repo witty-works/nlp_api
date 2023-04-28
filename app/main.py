@@ -617,6 +617,9 @@ async def german(request: Request, german_request: GermanLanguageRequest):
 
     lang = Language(german_request.locale)
 
+    # BC code
+    german_request.config.maximum_importance = None
+
     return await german_rules(
         german_request.version,
         german_request.config,
@@ -642,6 +645,9 @@ async def english(request: Request, english_request: EnglishLanguageRequest):
     check_version(english_request.version)
 
     lang = Language(english_request.locale)
+
+    # BC code
+    english_request.config.maximum_importance = None
 
     return await english_rules(
         english_request.version,
@@ -984,8 +990,16 @@ def apply_configs(version: float, user_request_in: RequestIn, configs: dict, pla
             else:
                 user_request_in.config.__setattr__(config, data["value"])
 
+    if "categories" in configs:
+        user_request_in.config.__setattr__("maximum_importance", None)
+
+        # BC code - old browser extension
+        if disable_style or disable_inclusive:
+            disabled_categories = get_bc_disabled_categories(
+                disable_style, disable_inclusive
+            )
     # BC code - old configuration
-    if "categories" not in configs:
+    else:
         disable_inclusive = "inclusive" in disabled_categories
         disable_style = "style" in disabled_categories
         disable_orthography = "orthography" in disabled_categories
@@ -1012,11 +1026,6 @@ def apply_configs(version: float, user_request_in: RequestIn, configs: dict, pla
             user_request_in.config.gendered_roles_format
         ):
             disabled_categories.append("advanced_gendered_denominations_ending")
-    # BC code - old browser extension
-    elif disable_style or disable_inclusive:
-        disabled_categories = get_bc_disabled_categories(
-            disable_style, disable_inclusive
-        )
 
     user_request_in.config.__setattr__("disabled_categories", disabled_categories)
     user_request_in.config.__setattr__("plan", plan)
@@ -1054,7 +1063,11 @@ async def fetch_configs_for_request(
             set(configs["false_positives"] + configs["organization_false_positives"])
         )
 
-    if configs["plan"] != "witty_teams":
+    # BC code - okd configuration
+    if (
+        configs["plan"] != "witty_teams"
+        and user_request_in.config.maximum_importance is not None
+    ):
         user_request_in.config.maximum_importance = min(
             2.0, user_request_in.config.maximum_importance
         )
@@ -1784,7 +1797,8 @@ def is_sub_category_enabled(version: float, config: Config, subcategory: str):
     if version >= 2.1 and config.plan == "witty_free":
         return True
 
-    if version < 2.3:
+    # BC code - old configuration
+    if config.maximum_importance:
         return config.maximum_importance >= map_importance(subcategory)
 
     return True

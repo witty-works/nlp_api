@@ -15,6 +15,7 @@
                 "icon": "❌",
                 "text": "Dieser Satz fängt nicht mit einem großgeschriebenen Wort an."
             },
+            "gravity": 2.0,
             "label": "Groß-/Kleinschreibung",
             "start": 0,
             "subcategory": "casing",

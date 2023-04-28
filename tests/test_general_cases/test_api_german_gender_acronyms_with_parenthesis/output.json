@@ -24,6 +24,7 @@
                 "text": "Nenne unterrepräsentierte Gruppen zuerst. Verlinke auf deine Leitlinie zur Gleichstellung.",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/geschlechter-spezifische-abkürzung?reducedView=true"
             },
+            "gravity": 2.0,
             "label": "Geschlecht + Orientierung: Geschlechter-Spezifische Abkürzung",
             "proficiency_level": "unconscious_bias",
             "start": 13,
