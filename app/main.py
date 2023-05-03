@@ -1410,7 +1410,7 @@ def languagetool_matches(
         except KeyError:
             subcategory = "orthography"
 
-        if not is_sub_category_enabled(version, config, subcategory):
+        if not is_sub_category_enabled(config, subcategory):
             continue
 
         alternatives = fetch_alternatives(match)
@@ -1518,7 +1518,7 @@ async def apply_languagetool_rules(
         "enabledCategories": [],
     }
 
-    if is_sub_category_enabled(version, config, "advanced_plain_language"):
+    if is_sub_category_enabled(config, "advanced_plain_language"):
         # if payload["language"] == "de-DE":
         #    payload["language"] += "-x-simple-language"
 
@@ -1529,13 +1529,13 @@ async def apply_languagetool_rules(
     if config.primary_language is not None:
         payload["motherTongue"] = config.primary_language
 
-    if is_sub_category_enabled(version, config, "orthography"):
+    if is_sub_category_enabled(config, "orthography"):
         if "casing" in config.disabled_categories:
             payload["disabledCategories"].append("CASING")
 
         if "style" in config.disabled_categories:
             payload["disabledCategories"] += lt_style_categories
-    elif is_sub_category_enabled(version, config, "style"):
+    elif is_sub_category_enabled(config, "style"):
         payload["enabledCategories"] += lt_style_categories
     else:
         return []
@@ -1804,7 +1804,7 @@ async def call_context_checker(sentences, result: ResultOut):
     return context_valid == "1"
 
 
-def is_sub_category_enabled(version: float, config: Config, subcategory: str):
+def is_sub_category_enabled(config: Config, subcategory: str):
     if subcategory in config.disabled_categories:
         return False
 
@@ -1817,9 +1817,6 @@ def is_sub_category_enabled(version: float, config: Config, subcategory: str):
         and category_data["category"] in config.disabled_categories
     ):
         return False
-
-    if version >= 2.1 and config.plan == "witty_free":
-        return True
 
     # BC code - old configuration
     if config.maximum_importance:
@@ -1858,7 +1855,7 @@ async def german_rules(
 
     tokens = fetch_tokens(lang.lang, text)
 
-    if is_sub_category_enabled(version, config, "abbreviation"):
+    if is_sub_category_enabled(config, "abbreviation"):
         list_full += literal_match(
             version,
             config,
@@ -1900,7 +1897,7 @@ async def german_rules(
         rules["de"]["false_positives"].gender,
     )
 
-    if is_sub_category_enabled(version, config, "gender_specific_abbreviation"):
+    if is_sub_category_enabled(config, "gender_specific_abbreviation"):
         list_full += regex_matches(
             version,
             config,
@@ -1951,7 +1948,7 @@ async def german_rules(
         rules["de"]["bias_words_data_noun"],
     )
 
-    if is_sub_category_enabled(version, config, "communal"):
+    if is_sub_category_enabled(config, "communal"):
         list_full += rules_based_words_phrase_matcher(
             version,
             config,
@@ -1965,7 +1962,7 @@ async def german_rules(
             "communal",
         )
 
-    if is_sub_category_enabled(version, config, "d_and_i"):
+    if is_sub_category_enabled(config, "d_and_i"):
         list_full += rules_based_words_phrase_matcher(
             version,
             config,
@@ -2052,7 +2049,7 @@ async def english_rules(
         words_data_en["homonym"],
     )
 
-    if is_sub_category_enabled(version, config, "abbreviation"):
+    if is_sub_category_enabled(config, "abbreviation"):
         list_full += literal_match(
             version,
             config,
@@ -2088,7 +2085,7 @@ async def english_rules(
         matches_false,
     )
 
-    if is_sub_category_enabled(version, config, "advanced_binary_pronouns"):
+    if is_sub_category_enabled(config, "advanced_binary_pronouns"):
         list_full += rules_based_words_phrase_matcher(
             version,
             config,
@@ -2113,7 +2110,7 @@ async def english_rules(
         matches_false,
     )
 
-    if is_sub_category_enabled(version, config, "advanced_binary_pronouns"):
+    if is_sub_category_enabled(config, "advanced_binary_pronouns"):
         list_full += regex_matches(
             version,
             config,
@@ -2123,7 +2120,7 @@ async def english_rules(
             "gender_specific_abbreviation",
         )
 
-    if is_sub_category_enabled(version, config, "d_and_i"):
+    if is_sub_category_enabled(config, "d_and_i"):
         subcategory = "d_and_i"
 
         list_full += regex_matches(
@@ -3009,7 +3006,7 @@ def sentences_matches(
 ):
     list_tokens = []
 
-    if is_sub_category_enabled(version, config, subcategory):
+    if is_sub_category_enabled(config, subcategory):
         for match_id, start, end in matches:
             span = tokens[start:end]
 
@@ -3066,7 +3063,7 @@ def sentences_matcher(
         span = tokens[start:end]
         for sentence, subcategory, *data in sentences_data:
             if span.text.lower() == sentence.lower():
-                if not is_sub_category_enabled(version, config, subcategory):
+                if not is_sub_category_enabled(config, subcategory):
                     continue
 
                 if len(data):
@@ -3269,7 +3266,7 @@ def ub_words_phrase_matcher_de(
         prev_token = token
         token = tokens[i]
         for word, word_types, subcategory, alternatives in words_data:
-            if not is_sub_category_enabled(version, config, subcategory):
+            if not is_sub_category_enabled(config, subcategory):
                 continue
 
             if not is_word_match(lang.lang, token, tokens, word, word_types):
@@ -3327,7 +3324,7 @@ def gendered_denom_analysis_de(
             if postfix:
                 subcategory = subcategory[0 : -len("_base")]
 
-            if not is_sub_category_enabled(version, config, subcategory):
+            if not is_sub_category_enabled(config, subcategory):
                 continue
 
             match = is_word_match(
@@ -3499,7 +3496,7 @@ def style_word_analysis_de(
                 continue
 
         for word, word_types, subcategory, alternatives in words_data:
-            if not is_sub_category_enabled(version, config, subcategory):
+            if not is_sub_category_enabled(config, subcategory):
                 continue
 
             if not is_word_match(lang.lang, token, tokens, word, word_types):
@@ -3565,7 +3562,7 @@ def word_noun(
             alternatives_plur,
             *data,
         ) in words_data:
-            if not is_sub_category_enabled(version, config, subcategory):
+            if not is_sub_category_enabled(config, subcategory):
                 continue
 
             if not is_word_match(
@@ -3594,7 +3591,7 @@ def word_noun(
                     data[0],
                 )
 
-                if not is_sub_category_enabled(version, config, subcategory):
+                if not is_sub_category_enabled(config, subcategory):
                     continue
             else:
                 alternatives = alternatives_plur
@@ -3777,7 +3774,7 @@ def rules_based_words_phrase_matcher(
                 ):
                     explanation, url, icon = map(data[2].get, ("text", "url", "icon"))
 
-            if not is_sub_category_enabled(version, config, subcategory):
+            if not is_sub_category_enabled(config, subcategory):
                 continue
 
             text, alternatives = detect_filler_words_at_sentence_start(
@@ -3838,7 +3835,7 @@ def homonyms_en(
         prev_token = token
         token = tokens[i]
         for word, word_types, subcategory, alternatives in words_data:
-            if not is_sub_category_enabled(version, config, subcategory):
+            if not is_sub_category_enabled(config, subcategory):
                 continue
 
             if not is_word_match(
@@ -3888,7 +3885,7 @@ def literal_match(
             subcategory,
             alternatives,
         ) in term_list:
-            if not is_sub_category_enabled(version, config, subcategory):
+            if not is_sub_category_enabled(config, subcategory):
                 continue
 
             span = tokens[start:end]
