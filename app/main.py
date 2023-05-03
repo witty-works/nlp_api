@@ -99,7 +99,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.43.1"
+version = "1.43.2"
 
 categories = get_categories()
 settings = get_settings()
