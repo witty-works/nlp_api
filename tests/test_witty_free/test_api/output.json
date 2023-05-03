@@ -87,10 +87,38 @@
             "text": "Kunden"
         },
         {
+            "alternatives": [
+                {
+                    "text": "Personal"
+                },
+                {
+                    "text": "Mitarbeiter*in"
+                },
+                {
+                    "text": "Mitarbeiterin/Mitarbeiter"
+                },
+                {
+                    "text": "Arbeitnehmer*in"
+                },
+                {
+                    "text": "Arbeitnehmerin/Arbeitnehmer"
+                }
+            ],
+            "category": "cultural-diversity",
             "context": "Wir suchen eine Arbeitskraft für unseere Kunden um Erfolg zu haben.",
             "end": 28,
+            "explanation": {
+                "content": "advanced",
+                "context": "nicht für Einzelperson",
+                "icon": "🙄",
+                "text": "Schwächen die Wirkung deiner Botschaft",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversit%C3%A4t/worthülsen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Kulturelle Diversität: Worthülsen",
             "proficiency_level": "unconscious_bias",
             "start": 16,
+            "subcategory": "advanced_hollow",
             "text": "Arbeitskraft"
         },
         {

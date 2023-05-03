@@ -508,14 +508,8 @@ class ResultOut(BaseModel):
             explanation if explanation else lang._(subcategory_key, "short_explanation")
         )
 
-        hide_details = False
-
         # Not logged-in
         hide_details = config.plan is None
-
-        # Logged-in but non paying user get all highlights
-        if config.plan == "witty_free" and subcategory.startswith("advanced_"):
-            hide_details = True
 
         if hide_details or alternatives is None or alternatives == []:
             alternatives = []
