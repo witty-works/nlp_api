@@ -50,6 +50,14 @@
             "status": "suggestion",
             "value": "*in"
         },
+        "inclusive": {
+            "status": "suggestion",
+            "value": false
+        },
+        "orthography": {
+            "status": "suggestion",
+            "value": false
+        },
         "preferred_variants": {
             "status": "force",
             "value": [
@@ -59,6 +67,10 @@
         "store_context": {
             "status": "force",
             "value": true
+        },
+        "style": {
+            "status": "suggestion",
+            "value": false
         }
     },
     "organization_config_hash": "foobaz",

@@ -5,7 +5,19 @@
     "id": "test-default",
     "name": "Tests Default",
     "organization_config": {
-        "categories": {}
+        "categories": {},
+        "inclusive": {
+            "status": "suggestion",
+            "value": false
+        },
+        "orthography": {
+            "status": "suggestion",
+            "value": false
+        },
+        "style": {
+            "status": "suggestion",
+            "value": false
+        }
     },
     "organization_name": "Default",
     "plan": "witty_teams"
