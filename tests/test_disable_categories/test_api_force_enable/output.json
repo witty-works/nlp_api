@@ -35,6 +35,28 @@
             "start": 2,
             "subcategory": "typos",
             "text": "ammmm"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "I ammmm very creative.",
+            "end": 12,
+            "explanation": {
+                "content": "video",
+                "icon": "😟",
+                "text": "Adding complexity but no meaning",
+                "url": "https://www.witty.works/en/categories/cultural-diversity/filler-words?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Cultural Diversity: Filler words",
+            "proficiency_level": "unconscious_bias",
+            "start": 8,
+            "subcategory": "advanced_filler",
+            "text": "very"
         }
     ]
 }

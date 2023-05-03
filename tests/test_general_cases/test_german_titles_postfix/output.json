@@ -52,11 +52,11 @@
                 "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
             },
-            "gravity": 3.0,
+            "gravity": 2.0,
             "label": "Geschlecht + Orientierung: Berufe",
             "proficiency_level": "unconscious_bias",
             "start": 0,
-            "subcategory": "advanced_titles",
+            "subcategory": "titles",
             "text": "Unser Facharzt"
         },
         {
@@ -85,11 +85,11 @@
                 "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
             },
-            "gravity": 3.0,
+            "gravity": 2.0,
             "label": "Geschlecht + Orientierung: Berufe",
             "proficiency_level": "unconscious_bias",
             "start": 27,
-            "subcategory": "advanced_titles",
+            "subcategory": "titles",
             "text": "Fachärzte"
         },
         {
@@ -146,11 +146,11 @@
                 "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
             },
-            "gravity": 3.0,
+            "gravity": 2.0,
             "label": "Geschlecht + Orientierung: Berufe",
             "proficiency_level": "unconscious_bias",
             "start": 171,
-            "subcategory": "advanced_titles",
+            "subcategory": "titles",
             "text": "Ein Ingenieur"
         },
         {
@@ -173,11 +173,11 @@
                 "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
             },
-            "gravity": 3.0,
+            "gravity": 2.0,
             "label": "Geschlecht + Orientierung: Berufe",
             "proficiency_level": "unconscious_bias",
             "start": 195,
-            "subcategory": "advanced_titles",
+            "subcategory": "titles",
             "text": "Ein Elektroingenieur"
         }
     ]

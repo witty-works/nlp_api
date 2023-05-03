@@ -314,6 +314,6 @@ WYSIWYG,acr,style,advanced_abbreviation,"['what you see is what you get', 'what 
 WoW,acr,style,advanced_abbreviation,"['week-over-week', 'week-over-week (WoW)']"
 YTD,acr,style,advanced_abbreviation,"['year-to-date', 'year-to-date (YTD)']"
 YoY,acr,style,advanced_abbreviation,"['year-over-year', 'year over year', 'year-over-year (YoY)']"
-etc,abbr,style,advanced_filler,['-']
-etc.,abbr,style,advanced_filler,['-']
+etc,abbr,style,filler,['-']
+etc.,abbr,style,filler,['-']
 pervasive developmental disorder not otherwise specified,acr,unconscious_bias,behavior,"['autism', 'being on the autism spectrum', 'neurodivergence', 'Autistic', 'neurodivergent', 'person who has autism(...)', 'someone with autism(...)']"

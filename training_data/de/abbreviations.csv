@@ -298,11 +298,11 @@ b2b,abbr,style,advanced_anglicism,"['Business-to-Business', 'Business-to-Busines
 bcc,abbr,style,advanced_anglicism,['Blindkopie']
 cap table,abbr,style,advanced_abbreviation,"['Capitalization Table', 'Capitalization Table (CT)', 'tabellarische Aufstellung der Besitzverhältnisse im Unternehmen', 'Liste aller Beteiligungen am Unternehmen', 'Darstellung der Eigentumsstruktur']"
 cc,abbr,style,advanced_anglicism,['Kopie']
-etc,abbr,style,advanced_filler,['-']
-etc.,abbr,style,advanced_filler,['-']
+etc,abbr,style,filler,['-']
+etc.,abbr,style,filler,['-']
 ndH,acr,unconscious_bias,advanced_abbreviation,"['nichtdeutsche Herkunftssprache (ndH)', 'Mehrsprachigkeit']"
-o. Ä.,abbr,style,advanced_filler,['-']
-o. ä.,abbr,style,advanced_filler,['-']
-u.a.,abbr,style,advanced_filler,"['-', 'unter Anderem']"
-u.Ä.,abbr,style,advanced_filler,"['-', 'und Ähnliche', 'und Ähnliches']"
-u.ä.,abbr,style,advanced_filler,"['-', 'und ähnlich']"
+o. Ä.,abbr,style,filler,['-']
+o. ä.,abbr,style,filler,['-']
+u.a.,abbr,style,filler,"['-', 'unter Anderem']"
+u.Ä.,abbr,style,filler,"['-', 'und Ähnliche', 'und Ähnliches']"
+u.ä.,abbr,style,filler,"['-', 'und ähnlich']"

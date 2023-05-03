@@ -29,11 +29,11 @@
                 "text": "People tend to picture men",
                 "url": "https://www.witty.works/en/categories/gender-orientation/generic-masculine?reducedView=true"
             },
-            "gravity": 3.0,
+            "gravity": 2.0,
             "label": "Gender + Orientation: Generic masculine",
             "proficiency_level": "unconscious_bias",
             "start": 56,
-            "subcategory": "advanced_function",
+            "subcategory": "function",
             "text": "chairman"
         },
         {

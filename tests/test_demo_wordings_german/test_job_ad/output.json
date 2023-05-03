@@ -25,11 +25,11 @@
                 "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
             },
-            "gravity": 3.0,
+            "gravity": 2.0,
             "label": "Geschlecht + Orientierung: Berufe",
             "proficiency_level": "unconscious_bias",
             "start": 20,
-            "subcategory": "advanced_titles",
+            "subcategory": "titles",
             "text": "Projektleiter"
         },
         {
@@ -56,11 +56,11 @@
                 "text": "Viele denken bei diesem Wort zuerst an einen Mann",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
             },
-            "gravity": 3.0,
+            "gravity": 2.0,
             "label": "Geschlecht + Orientierung: Generisches Maskulinum",
             "proficiency_level": "unconscious_bias",
             "start": 126,
-            "subcategory": "advanced_function",
+            "subcategory": "function",
             "text": "Kollegen"
         },
         {

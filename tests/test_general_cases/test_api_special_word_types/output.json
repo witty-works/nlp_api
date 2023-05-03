@@ -50,11 +50,11 @@
                 "text": "Adding complexity but no meaning",
                 "url": "https://www.witty.works/en/categories/cultural-diversity/filler-words?reducedView=true"
             },
-            "gravity": 3.0,
+            "gravity": 2.0,
             "label": "Cultural Diversity: Filler words",
             "proficiency_level": "unconscious_bias",
             "start": 7,
-            "subcategory": "advanced_filler",
+            "subcategory": "filler",
             "text": "very"
         }
     ]

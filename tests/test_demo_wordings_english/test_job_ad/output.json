@@ -60,11 +60,11 @@
                 "text": "People tend to picture a specific gender",
                 "url": "https://www.witty.works/en/categories/gender-orientation/jobs?reducedView=true"
             },
-            "gravity": 3.0,
+            "gravity": 2.0,
             "label": "Gender + Orientation: Jobs",
             "proficiency_level": "unconscious_bias",
             "start": 18,
-            "subcategory": "advanced_titles",
+            "subcategory": "titles",
             "text": "project manager"
         },
         {
@@ -91,11 +91,11 @@
                 "text": "People tend to picture a specific gender",
                 "url": "https://www.witty.works/en/categories/gender-orientation/jobs?reducedView=true"
             },
-            "gravity": 3.0,
+            "gravity": 2.0,
             "label": "Gender + Orientation: Jobs",
             "proficiency_level": "unconscious_bias",
             "start": 18,
-            "subcategory": "advanced_titles",
+            "subcategory": "titles",
             "text": "project manager"
         },
         {
@@ -122,11 +122,11 @@
                 "text": "People tend to picture a specific gender",
                 "url": "https://www.witty.works/en/categories/gender-orientation/jobs?reducedView=true"
             },
-            "gravity": 3.0,
+            "gravity": 2.0,
             "label": "Gender + Orientation: Jobs",
             "proficiency_level": "unconscious_bias",
             "start": 26,
-            "subcategory": "advanced_titles",
+            "subcategory": "titles",
             "text": "manager"
         },
         {
