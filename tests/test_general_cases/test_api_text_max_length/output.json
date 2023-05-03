@@ -15,7 +15,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake. ‘metres’ is British English."
             },
-            "gravity": 2.0,
+            "gravity": 1.0,
             "label": "Possible Typo",
             "start": 102,
             "subcategory": "typos",
@@ -37,7 +37,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake found."
             },
-            "gravity": 2.0,
+            "gravity": 1.0,
             "label": "Spelling mistake",
             "start": 145,
             "subcategory": "typos",
@@ -59,7 +59,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake found."
             },
-            "gravity": 2.0,
+            "gravity": 1.0,
             "label": "Spelling mistake",
             "start": 162,
             "subcategory": "typos",
@@ -78,7 +78,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake. ‘metres’ is British English."
             },
-            "gravity": 2.0,
+            "gravity": 1.0,
             "label": "Possible Typo",
             "start": 191,
             "subcategory": "typos",
@@ -100,7 +100,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake found."
             },
-            "gravity": 2.0,
+            "gravity": 1.0,
             "label": "Spelling mistake",
             "start": 297,
             "subcategory": "typos",
@@ -119,7 +119,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake. ‘metres’ is British English."
             },
-            "gravity": 2.0,
+            "gravity": 1.0,
             "label": "Possible Typo",
             "start": 382,
             "subcategory": "typos",
@@ -138,7 +138,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake. ‘metres’ is British English."
             },
-            "gravity": 2.0,
+            "gravity": 1.0,
             "label": "Possible Typo",
             "start": 418,
             "subcategory": "typos",
@@ -157,7 +157,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake. ‘metres’ is British English."
             },
-            "gravity": 2.0,
+            "gravity": 1.0,
             "label": "Possible Typo",
             "start": 551,
             "subcategory": "typos",
@@ -179,7 +179,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake found."
             },
-            "gravity": 2.0,
+            "gravity": 1.0,
             "label": "Spelling mistake",
             "start": 603,
             "subcategory": "typos",
@@ -198,7 +198,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake. ‘metres’ is British English."
             },
-            "gravity": 2.0,
+            "gravity": 1.0,
             "label": "Possible Typo",
             "start": 723,
             "subcategory": "typos",
@@ -220,7 +220,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake found."
             },
-            "gravity": 2.0,
+            "gravity": 1.0,
             "label": "Spelling mistake",
             "start": 766,
             "subcategory": "typos",
@@ -242,7 +242,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake found."
             },
-            "gravity": 2.0,
+            "gravity": 1.0,
             "label": "Spelling mistake",
             "start": 783,
             "subcategory": "typos",
@@ -261,7 +261,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake. ‘metres’ is British English."
             },
-            "gravity": 2.0,
+            "gravity": 1.0,
             "label": "Possible Typo",
             "start": 812,
             "subcategory": "typos",
@@ -283,7 +283,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake found."
             },
-            "gravity": 2.0,
+            "gravity": 1.0,
             "label": "Spelling mistake",
             "start": 918,
             "subcategory": "typos",

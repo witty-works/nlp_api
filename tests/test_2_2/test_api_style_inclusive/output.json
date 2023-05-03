@@ -27,7 +27,7 @@
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
             },
-            "gravity": 2.0,
+            "gravity": 1.0,
             "label": "Rechtschreibfehler",
             "start": 35,
             "subcategory": "typos",
@@ -46,7 +46,7 @@
                 "icon": "❌",
                 "text": "Wenn es sich hier um eine Infinitivgruppe (‚zu‘ + Grundform) handelt, muss in der Regel ein Komma gesetzt werden."
             },
-            "gravity": 2.0,
+            "gravity": 1.0,
             "label": "Kommasetzung",
             "start": 49,
             "subcategory": "orthography",

@@ -15,7 +15,7 @@
                 "icon": "🤔",
                 "text": "Use “an” instead of ‘a’ if the following word starts with a vowel sound, e.g. ‘an article’, ‘an hour’."
             },
-            "gravity": 2.0,
+            "gravity": 1.0,
             "label": "Wrong article",
             "start": 55,
             "subcategory": "misc",
@@ -37,7 +37,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake found."
             },
-            "gravity": 2.0,
+            "gravity": 1.0,
             "label": "Spelling mistake",
             "start": 134,
             "subcategory": "typos",

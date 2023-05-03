@@ -90,6 +90,7 @@ def get_category_keys():
 
     return category_keys + category_advanced_keys
 
+
 @lru_cache()
 def get_proficiency_levels():
     proficiency_levels_file = open("training_data/proficiency_levels.json")
@@ -157,11 +158,10 @@ def map_importance(category):
     if proficiency_level is None:
         return 2.0
 
-    proficiency_level = get_proficiency_level(category)
-    if proficiency_level is None:
-        return 2.0
-
-    if proficiency_level == "openly_discriminating":
+    if (
+        proficiency_level == "orthography"
+        or proficiency_level == "openly_discriminating"
+    ):
         return 1.0
 
     if not category.startswith("advanced_"):

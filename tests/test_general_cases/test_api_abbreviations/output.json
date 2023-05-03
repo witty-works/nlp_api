@@ -27,7 +27,7 @@
                 "icon": "❌",
                 "text": "Possible spelling mistake found."
             },
-            "gravity": 2.0,
+            "gravity": 1.0,
             "label": "Spelling mistake",
             "start": 13,
             "subcategory": "typos",

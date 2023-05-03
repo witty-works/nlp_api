@@ -15,7 +15,7 @@
                 "icon": "❌",
                 "text": "Außer am Satzanfang werden nur Nomen und Eigennamen großgeschrieben."
             },
-            "gravity": 2.0,
+            "gravity": 1.0,
             "label": "Groß-/Kleinschreibung",
             "start": 22,
             "subcategory": "casing",
@@ -34,7 +34,7 @@
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
             },
-            "gravity": 2.0,
+            "gravity": 1.0,
             "label": "Rechtschreibfehler",
             "start": 168,
             "subcategory": "typos",

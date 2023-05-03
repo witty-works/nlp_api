@@ -1267,30 +1267,23 @@ def fetch_result_conf(configs: dict):
 
     config = RuleConfig.parse_obj(configs["config"])
 
-
     # BC code
     if "orthography" in organization_config.categories:
-        organization_config.orthography = organization_config.categories[
-            "orthography"
-        ]
+        organization_config.orthography = organization_config.categories["orthography"]
     else:
         organization_config.orthography = BooleanConfigType(
             value=False, status=StatusType("suggestion")
         )
 
     if "style" in organization_config.categories:
-        organization_config.style = organization_config.categories[
-            "style"
-        ]
+        organization_config.style = organization_config.categories["style"]
     else:
         organization_config.style = BooleanConfigType(
             value=False, status=StatusType("suggestion")
         )
 
     if "inclusive" in organization_config.categories:
-        organization_config.inclusive = organization_config.categories[
-            "inclusive"
-        ]
+        organization_config.inclusive = organization_config.categories["inclusive"]
     else:
         organization_config.inclusive = BooleanConfigType(
             value=False, status=StatusType("suggestion")

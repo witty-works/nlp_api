@@ -30,7 +30,7 @@
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
             },
-            "gravity": 2.0,
+            "gravity": 1.0,
             "label": "Rechtschreibfehler",
             "start": 8,
             "subcategory": "typos",
@@ -61,7 +61,7 @@
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
             },
-            "gravity": 2.0,
+            "gravity": 1.0,
             "label": "Rechtschreibfehler",
             "start": 26,
             "subcategory": "typos",
@@ -92,7 +92,7 @@
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
             },
-            "gravity": 2.0,
+            "gravity": 1.0,
             "label": "Rechtschreibfehler",
             "start": 30,
             "subcategory": "typos",
@@ -123,7 +123,7 @@
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
             },
-            "gravity": 2.0,
+            "gravity": 1.0,
             "label": "Rechtschreibfehler",
             "start": 50,
             "subcategory": "typos",
@@ -154,7 +154,7 @@
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
             },
-            "gravity": 2.0,
+            "gravity": 1.0,
             "label": "Rechtschreibfehler",
             "start": 73,
             "subcategory": "typos",
@@ -185,7 +185,7 @@
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
             },
-            "gravity": 2.0,
+            "gravity": 1.0,
             "label": "Rechtschreibfehler",
             "start": 84,
             "subcategory": "typos",

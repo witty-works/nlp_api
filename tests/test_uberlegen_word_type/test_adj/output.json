@@ -27,7 +27,7 @@
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
             },
-            "gravity": 2.0,
+            "gravity": 1.0,
             "label": "Rechtschreibfehler",
             "start": 0,
             "subcategory": "typos",
