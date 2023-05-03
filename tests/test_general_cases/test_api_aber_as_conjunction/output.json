@@ -8,16 +8,18 @@
                     "remove": true
                 }
             ],
-            "category": "style",
+            "category": "cultural-diversity",
             "context": "Na gut, wir gehen einkaufen, aber wir kaufen keine Süßigkeiten. Aber nachdem es so lange geregnet hatte, war der Weg aber zu matschig, um spazieren zu gehen.",
             "end": 82,
             "explanation": {
+                "content": "video",
                 "icon": "😟",
-                "text": "Füllwörter machen Text länger und unverständlicher",
-                "url": "https://www.witty.works/de/subkategorien/füllwörter?reducedView=true"
+                "text": "Wörter, die Text länger und weniger verständlicher machen",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversit%C3%A4t/füllwörter?reducedView=true"
             },
-            "gravity": 3.0,
-            "label": "Stil: Füllwörter",
+            "gravity": 2.0,
+            "label": "Kulturelle Diversität: Füllwörter",
+            "proficiency_level": "unconscious_bias",
             "start": 80,
             "subcategory": "filler",
             "text": "so"
@@ -28,16 +30,18 @@
                     "remove": true
                 }
             ],
-            "category": "style",
+            "category": "cultural-diversity",
             "context": "einkaufen, aber wir kaufen keine Süßigkeiten. Aber nachdem es so lange geregnet hatte, war der Weg aber zu matschig, um spazieren zu gehen.",
             "end": 121,
             "explanation": {
+                "content": "video",
                 "icon": "😟",
-                "text": "Füllwörter machen Text länger und unverständlicher",
-                "url": "https://www.witty.works/de/subkategorien/füllwörter?reducedView=true"
+                "text": "Wörter, die Text länger und weniger verständlicher machen",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversit%C3%A4t/füllwörter?reducedView=true"
             },
-            "gravity": 3.0,
-            "label": "Stil: Füllwörter",
+            "gravity": 2.0,
+            "label": "Kulturelle Diversität: Füllwörter",
+            "proficiency_level": "unconscious_bias",
             "start": 117,
             "subcategory": "filler",
             "text": "aber"

@@ -20,48 +20,19 @@
                     "text": "Fachpersonal"
                 }
             ],
-            "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachfrau/Fachmann? Hallo Kundin/Kunde. Fachfrau. Fachmann.",
-            "end": 107,
-            "explanation": {
-                "icon": "😟",
-                "text": "Schubladendenken nach Geschlechternormen",
-                "url": "https://www.witty.works/de/subkategorien/geschlechtsspezifisch?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Geschlechtsspezifisch",
-            "start": 99,
-            "subcategory": "gendered",
-            "text": "Fachfrau"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "Fachperson"
-                },
-                {
-                    "text": "Fachkraft"
-                },
-                {
-                    "text": "Fachfrau*Fachmann"
-                },
-                {
-                    "text": "Fachfrau/Fachmann"
-                },
-                {
-                    "text": "Fachpersonal"
-                }
-            ],
+            "category": "gender-orientation",
             "context": "Bewerberinnen und Bewerber? Oder haben wir eine/n Fachfrau/Fachmann? Hallo Kundin/Kunde. Fachfrau. Fachmann.",
             "end": 117,
             "explanation": {
-                "icon": "💡",
-                "text": "Viele denken bei diesem Wort zuerst an einen Mann",
-                "url": "https://www.witty.works/de/subkategorien/generisches-maskulinum?reducedView=true"
+                "icon": "😟",
+                "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Generisches Maskulinum",
+            "label": "Geschlecht + Orientierung: Berufe",
+            "proficiency_level": "unconscious_bias",
             "start": 109,
-            "subcategory": "function",
+            "subcategory": "titles",
             "text": "Fachmann"
         }
     ]

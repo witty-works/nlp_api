@@ -4,5 +4,23 @@
     "language": "de",
     "limit_reached": false,
     "notifications": 5,
-    "results": []
+    "results": [
+        {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "Greenpeace ist eine internationale Firma. Wir unterstützen trans Personen.",
+            "end": 58,
+            "explanation": {
+                "content": "advanced",
+                "icon": "✅",
+                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true"
+            },
+            "label": "Soziale Motivation: Kommunale Sprache",
+            "proficiency_level": "inclusive",
+            "start": 46,
+            "subcategory": "communal",
+            "text": "unterstützen"
+        }
+    ]
 }

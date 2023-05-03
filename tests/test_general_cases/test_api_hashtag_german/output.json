@@ -4,16 +4,17 @@
     "results": [
         {
             "alternatives": [],
-            "category": "style",
+            "category": "cultural-diversity",
             "context": "Wir sind #diebesten!",
             "end": 19,
             "explanation": {
                 "icon": "😟",
                 "text": "Wenn du Wörter großschreibst, wissen alle gleich, was du meinst. #ZumBeispiel",
-                "url": "https://www.witty.works/de/subkategorien/stil?reducedView=true"
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversit%C3%A4t/klarheit?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Stil",
+            "label": "Kulturelle Diversität: Klarheit",
+            "proficiency_level": "unconscious_bias",
             "start": 9,
             "subcategory": "style",
             "text": "#diebesten"

@@ -127,10 +127,12 @@ def fetch_rules(langs):
         )
 
         # dictionaries to handle false positives
-        rules["de"]["gender_false_positive"] = list(
-            data["de"]["df_gender_false_positive"]["False_positives"]
+        false_positive = namedtuple("FalsePositive", "gender style")
+        rules["de"]["false_positives"] = false_positive(
+            data["de"]["df_gender_false_positive"]["False_positives"],
+            ["international"],
         )
-        rules["de"]["style_false_positive"] = ["international"]
+
         rules["de"]["exceptions"] = [
             "Unternehmen",
             "Firma",
@@ -234,7 +236,6 @@ def fetch_rules(langs):
                 df_abbreviation["Word_Type"],
                 df_abbreviation["Primary_subcategory"],
                 map(ast.literal_eval, df_abbreviation["Alt_split"]),
-                df_abbreviation["Category"],
             )
         )
 
@@ -278,13 +279,6 @@ def fetch_rules(langs):
                 df_style_sentences["Primary_subcategory"],
                 map(ast.literal_eval, df_style_sentences["Alt_split"]),
             )
-        )
-
-        FalsePositive = namedtuple("FalsePositive", "gender style")
-
-        rules["de"]["false_positives"] = FalsePositive(
-            rules["de"]["gender_false_positive"],
-            rules["de"]["style_false_positive"],
         )
 
         rules["de"]["primary_german_genus_endings"] = {
@@ -884,27 +878,25 @@ def fetch_rules(langs):
 
             # df homonyms words
             df_homonyms = data[locale]["df_homonyms_words"]
-            # homonyms : lemma+word_type+category+subcategory+alternatives
+            # homonyms : lemma+word_type+subcategory+alternatives
             rules[locale]["homonyms_word"] = list(
                 zip(
                     df_homonyms["Lemma"],
                     df_homonyms["Word_Type"],
                     df_homonyms["Primary_subcategory"],
                     map(ast.literal_eval, df_homonyms["Alt_split"]),
-                    df_homonyms["Category"],
                 )
             )
 
             # df abbreviation english
             df_abbreviation = data[locale]["df_abbreviation"]
-            # abbreviation : lemma+category+subcategory+alternatives
+            # abbreviation : lemma+word_type+subcategory+alternatives
             rules[locale]["abbreviation"] = list(
                 zip(
                     df_abbreviation["Lemma"],
                     df_abbreviation["Word_Type"],
                     df_abbreviation["Primary_subcategory"],
                     map(ast.literal_eval, df_abbreviation["Alt_split"]),
-                    df_abbreviation["Category"],
                 )
             )
 
@@ -1200,6 +1192,47 @@ def fetch_rules(langs):
             "holiday camps",
             "how many",
             "How many",
+            "as many as",
+            "as many",
+            "the many",
+            "so many",
+            "many times", 
+            "too many", 
+            "many ways",  
+            "not many",
+            "many a",
+            "many another",
+            "many happy returns", 
+            "draft once reuse many",
+            "one many", 
+            "a good many", 
+            "many sided",
+            "a man of many parts", 
+            "many moons ago", 
+            "one too many", 
+            "countably many",
+            "many coloured",
+            "many colored", 
+            "many sidedness",
+            "many valued", 
+            "a great many", 
+            "many strings to bow",
+            "how many beans make five", 
+            "many an", 
+            "many irons in the fire",
+            "one too many", 
+            "many chambered", 
+            "many tailed bandage",
+            "many valued logic", 
+            "too many chiefs and not enough indians",
+            "many a time", 
+            "many hands make light work",
+            "many lobed",	
+            "many worlds interpretation",	
+            "with many interruptions",
+            "many minded", 
+            "many words", 
+            "write once read many",
             "identifies as female",
             "identifies as male",
             "identify as female",

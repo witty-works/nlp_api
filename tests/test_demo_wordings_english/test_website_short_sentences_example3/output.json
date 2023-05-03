@@ -10,17 +10,18 @@
                     "text": "Fun at work makes us happier, more productive, and more creative"
                 }
             ],
-            "category": "unconscious_bias",
+            "category": "social-motive",
             "context": "Our values? Work hard, play hard.",
             "end": 32,
             "explanation": {
                 "content": "video",
                 "icon": "😒",
                 "text": "Doesn’t resonate with team-minded people",
-                "url": "https://www.witty.works/en/subcategories/agentic-language?reducedView=true"
+                "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Biased Language: Agentic language",
+            "label": "Social Motive: Agentic language",
+            "proficiency_level": "unconscious_bias",
             "start": 12,
             "subcategory": "agentic",
             "text": "Work hard, play hard"

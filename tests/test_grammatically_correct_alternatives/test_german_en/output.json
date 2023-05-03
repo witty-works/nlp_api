@@ -20,16 +20,18 @@
                     "text": "zielführenden"
                 }
             ],
-            "category": "style",
+            "category": "social-motive",
             "context": "Unternehmen profitieren von einem erfolgreichen Management. Wie können wir das am besten machen?",
             "end": 47,
             "explanation": {
+                "content": "advanced",
                 "icon": "😮‍💨",
-                "text": "Auf Übertreibungen verzichten schafft Vertrauen",
-                "url": "https://www.witty.works/de/subkategorien/superlative?reducedView=true"
+                "text": "Überzogene Aussagen wirken weniger vertrauenswürdig",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/übertreibung?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Stil: Superlative",
+            "label": "Soziale Motivation: Übertreibung",
+            "proficiency_level": "unconscious_bias",
             "start": 34,
             "subcategory": "exaggerating",
             "text": "erfolgreichen"
@@ -52,16 +54,18 @@
                     "text": "als positiv empfundensten"
                 }
             ],
-            "category": "style",
+            "category": "social-motive",
             "context": "Unternehmen profitieren von einem erfolgreichen Management. Wie können wir das am besten machen?",
             "end": 88,
             "explanation": {
+                "content": "advanced",
                 "icon": "😮‍💨",
-                "text": "Auf Übertreibungen verzichten schafft Vertrauen",
-                "url": "https://www.witty.works/de/subkategorien/superlative?reducedView=true"
+                "text": "Überzogene Aussagen wirken weniger vertrauenswürdig",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/übertreibung?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Stil: Superlative",
+            "label": "Soziale Motivation: Übertreibung",
+            "proficiency_level": "unconscious_bias",
             "start": 82,
             "subcategory": "exaggerating",
             "text": "besten"

@@ -21,17 +21,18 @@
                     "text": "they"
                 }
             ],
-            "category": "gendered",
+            "category": "gender-orientation",
             "context": "We are looking for a spokesman.",
             "end": 30,
             "explanation": {
                 "content": "advanced",
                 "icon": "💡",
                 "text": "People tend to picture men",
-                "url": "https://www.witty.works/en/subcategories/generic-masculine?reducedView=true"
+                "url": "https://www.witty.works/en/categories/gender-orientation/generic-masculine?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Gendered: Generic masculine",
+            "label": "Gender + Orientation: Generic masculine",
+            "proficiency_level": "unconscious_bias",
             "start": 19,
             "subcategory": "function",
             "text": "a spokesman"

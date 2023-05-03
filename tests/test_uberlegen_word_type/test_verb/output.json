@@ -20,7 +20,7 @@
                     "text": "tonangebend"
                 }
             ],
-            "category": "unconscious_bias",
+            "category": "social-motive",
             "context": "Wenn wir uns mögliche Akquisitionen ansehen, überlegen wir uns",
             "end": 54,
             "explanation": {
@@ -30,7 +30,8 @@
                 "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
+            "label": "Soziale Motivation: Agentische Sprache",
+            "proficiency_level": "unconscious_bias",
             "start": 45,
             "subcategory": "agentic",
             "text": "überlegen"

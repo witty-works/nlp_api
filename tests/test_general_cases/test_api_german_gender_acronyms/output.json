@@ -16,16 +16,17 @@
                     "text": "*/f/m"
                 }
             ],
-            "category": "gendered",
+            "category": "gender-orientation",
             "context": "Wir brauchen m/f Menschen. Besser ist f/m/d. Und noch besser d/f/m oder x/f/m.",
             "end": 16,
             "explanation": {
                 "icon": "😮",
                 "text": "Nenne unterrepräsentierte Gruppen zuerst. Verlinke auf deine Leitlinie zur Gleichstellung.",
-                "url": "https://www.witty.works/de/subkategorien/geschlechter-spezifische-abkürzung?reducedView=true"
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/geschlechter-spezifische-abkürzung?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Geschlechter-Spezifische Abkürzung",
+            "label": "Geschlecht + Orientierung: Geschlechter-Spezifische Abkürzung",
+            "proficiency_level": "unconscious_bias",
             "start": 13,
             "subcategory": "gender_specific_abbreviation",
             "text": "m/f"
@@ -44,46 +45,51 @@
                     "text": "*/f/m"
                 }
             ],
-            "category": "gendered",
+            "category": "gender-orientation",
             "context": "Wir brauchen m/f Menschen. Besser ist f/m/d. Und noch besser d/f/m oder x/f/m.",
             "end": 43,
             "explanation": {
                 "icon": "😮",
                 "text": "Nenne unterrepräsentierte Gruppen zuerst. Verlinke auf deine Leitlinie zur Gleichstellung.",
-                "url": "https://www.witty.works/de/subkategorien/geschlechter-spezifische-abkürzung?reducedView=true"
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/geschlechter-spezifische-abkürzung?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Geschlechter-Spezifische Abkürzung",
+            "label": "Geschlecht + Orientierung: Geschlechter-Spezifische Abkürzung",
+            "proficiency_level": "unconscious_bias",
             "start": 38,
             "subcategory": "gender_specific_abbreviation",
             "text": "f/m/d"
         },
         {
             "alternatives": [],
-            "category": "inclusive",
+            "category": "social-motive",
             "context": "Wir brauchen m/f Menschen. Besser ist f/m/d. Und noch besser d/f/m oder x/f/m.",
             "end": 66,
             "explanation": {
+                "content": "advanced",
                 "icon": "✅",
-                "text": "Stärkt Vielfalt, Gleichstellung, Teilhabe und Zugehörigkeit",
-                "url": "https://www.witty.works/de/subkategorien/vielfalt-gleichheit-teilhabe-zugehörigkeit?reducedView=true"
+                "text": "Fördere den Austausch über Vielfalt, Gleichheit, Teilhabe und Zugehörigkeit",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/vielfalt-gleichheit-teilhabe-zugehörigkeit?reducedView=true"
             },
-            "label": "Inklusiv: DEIB",
+            "label": "Soziale Motivation: DEIB",
+            "proficiency_level": "inclusive",
             "start": 61,
             "subcategory": "d_and_i",
             "text": "d/f/m"
         },
         {
             "alternatives": [],
-            "category": "inclusive",
+            "category": "social-motive",
             "context": "Wir brauchen m/f Menschen. Besser ist f/m/d. Und noch besser d/f/m oder x/f/m.",
             "end": 77,
             "explanation": {
+                "content": "advanced",
                 "icon": "✅",
-                "text": "Stärkt Vielfalt, Gleichstellung, Teilhabe und Zugehörigkeit",
-                "url": "https://www.witty.works/de/subkategorien/vielfalt-gleichheit-teilhabe-zugehörigkeit?reducedView=true"
+                "text": "Fördere den Austausch über Vielfalt, Gleichheit, Teilhabe und Zugehörigkeit",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/vielfalt-gleichheit-teilhabe-zugehörigkeit?reducedView=true"
             },
-            "label": "Inklusiv: DEIB",
+            "label": "Soziale Motivation: DEIB",
+            "proficiency_level": "inclusive",
             "start": 72,
             "subcategory": "d_and_i",
             "text": "x/f/m"

@@ -8,18 +8,19 @@
                     "text": "They are"
                 }
             ],
-            "category": "gendered",
+            "category": "gender-orientation",
             "context": "He is amazing. She builds, cleans and refurbishes houses. This is all hers.",
             "end": 5,
             "explanation": {
                 "icon": "😟",
                 "text": "Pronouns that exclude non-binary people",
-                "url": "https://www.witty.works/en/subcategories/binary-pronouns?reducedView=true"
+                "url": "https://www.witty.works/en/categories/gender-orientation/binary-pronouns?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Gendered: Binary pronouns",
+            "gravity": 3.0,
+            "label": "Gender + Orientation: Binary pronouns",
+            "proficiency_level": "unconscious_bias",
             "start": 0,
-            "subcategory": "binary_pronouns",
+            "subcategory": "advanced_binary_pronouns",
             "text": "He is"
         },
         {
@@ -28,18 +29,19 @@
                     "text": "They build, clean and refurbish"
                 }
             ],
-            "category": "gendered",
+            "category": "gender-orientation",
             "context": "He is amazing. She builds, cleans and refurbishes houses. This is all hers.",
             "end": 49,
             "explanation": {
                 "icon": "😟",
                 "text": "Pronouns that exclude non-binary people",
-                "url": "https://www.witty.works/en/subcategories/binary-pronouns?reducedView=true"
+                "url": "https://www.witty.works/en/categories/gender-orientation/binary-pronouns?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Gendered: Binary pronouns",
+            "gravity": 3.0,
+            "label": "Gender + Orientation: Binary pronouns",
+            "proficiency_level": "unconscious_bias",
             "start": 15,
-            "subcategory": "binary_pronouns",
+            "subcategory": "advanced_binary_pronouns",
             "text": "She builds, cleans and refurbishes"
         },
         {
@@ -48,18 +50,19 @@
                     "text": "theirs"
                 }
             ],
-            "category": "gendered",
+            "category": "gender-orientation",
             "context": "He is amazing. She builds, cleans and refurbishes houses. This is all hers.",
             "end": 74,
             "explanation": {
                 "icon": "😟",
                 "text": "Pronouns that exclude non-binary people",
-                "url": "https://www.witty.works/en/subcategories/binary-pronouns?reducedView=true"
+                "url": "https://www.witty.works/en/categories/gender-orientation/binary-pronouns?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Gendered: Binary pronouns",
+            "gravity": 3.0,
+            "label": "Gender + Orientation: Binary pronouns",
+            "proficiency_level": "unconscious_bias",
             "start": 70,
-            "subcategory": "binary_pronouns",
+            "subcategory": "advanced_binary_pronouns",
             "text": "hers"
         }
     ]

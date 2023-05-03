@@ -2,7 +2,6 @@
     "type": "check",
     "text": "I ammmm very creative.",
     "config": {
-      "disabled_categories": ["style", "orthography"],
-      "maximum_importance": 3
+      "disabled_categories": ["communal", "filler", "orthography"]
     }
 }

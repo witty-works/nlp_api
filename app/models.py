@@ -6,12 +6,16 @@ import json, typing
 
 from starlette.responses import Response
 
-import gettext
 import string
 import re
-import math
 
-from app.categories import categories
+from app.categories import (
+    get_proficiency_level,
+    get_category,
+    get_category_name,
+    map_gravity,
+    map_importance,
+)
 from app.privacy_filter import get_privacy_filter
 
 
@@ -21,24 +25,22 @@ class Language(object):
         self.lang = locale[0:2]
         self.gettext = None
 
-    def _(self, message: str, placeholders={}):
-        if self.gettext == None:
-            language = gettext.translation(
-                "messages",
-                localedir="locales",
-                languages=[self.locale.replace("-", "_")],
-            )
+    def _(self, category, key):
+        try:
+            category_data = get_category(category)
 
-            language.install()
+            text = category_data["translations"][self.lang][key]
+            text = self.convert_sharp_ss(text)
+        except KeyError:
+            text = ""
 
-            self.gettext = language.gettext
+        return text
 
-        message = self.gettext(message)
+    def convert_sharp_ss(self, text):
+        if self.locale != "de-CH":
+            return text
 
-        for key in placeholders:
-            message = message.replace("%" + key, placeholders[key])
-
-        return message
+        return text.replace("ß", "ss")
 
 
 class EventType(str, Enum):
@@ -117,6 +119,7 @@ class GenderedRolesFormatType(str, Enum):
 
 class Config(BaseModel):
     store_context: bool = True
+    # BC code
     simple_language: bool = False
     plan: Optional[str]
     primary_language: Optional[LangVariantType]
@@ -144,8 +147,10 @@ class Config(BaseModel):
     }
     disabled_categories: List = []
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
+    # BC code
     singular_they: str = SingularTheyType.HE_OR_SHE
     show_inspiration_alternatives: bool = False
+    # BC code
     maximum_importance: float = 2.0
     alternatives_max_count: Optional[int]
 
@@ -205,6 +210,7 @@ class Config(BaseModel):
             return v.split(",")
         return v
 
+    # BC code
     # This is a quick fix, in principle we should adjust the model singular_they: SingularTheyType = SingularTheyType.HE_OR_SHE
     # and then also update the browser extension https://github.com/witty-works/browser-extension/pull/423
     @validator("singular_they", pre=True)
@@ -254,15 +260,22 @@ class SingularTheyConfigType(BaseModel):
 
 class RuleConfig(BaseModel):
     store_context: Optional[BooleanConfigType]
+    # BC code
     simple_language: Optional[BooleanConfigType]
     preferred_variants: Optional[LangVariantConfigType]
     german_gender_ending: Optional[GermanGenderEndingConfigType]
     gendered_roles_format: Optional[GenderedRolesFormatConfigType]
+    categories: Dict[str, BooleanConfigType] = {}
+    # BC code
     inclusive: Optional[BooleanConfigType]
+    # BC code
     style: Optional[BooleanConfigType]
+    # BC code
     orthography: Optional[BooleanConfigType]
+    # BC code
     singular_they: Optional[SingularTheyConfigType]
     show_inspiration_alternatives: Optional[BooleanConfigType]
+    # BC code
     maximum_importance: Optional[IntegerConfigType]
 
     @validator("german_gender_ending")
@@ -295,8 +308,9 @@ class Explanation(BaseModel):
 class TermReplacement(BaseModel):
     alternatives: List[str]
     explanation: Optional[Explanation]
-    gravity: Optional[float]
+    proficiency_level: Optional[str]
     # BC code
+    gravity: Optional[float]
     lang: Optional[LangType]
     word_type: Optional[str]
 
@@ -419,6 +433,7 @@ class ResultOut(BaseModel):
     label: Optional[str]
     explanation: Optional[ResultExplanation]
     gravity: Optional[float]
+    proficiency_level: Optional[str]
 
     @staticmethod
     def factory(
@@ -427,7 +442,6 @@ class ResultOut(BaseModel):
         lang: Language,
         text,
         full_text,
-        category,
         subcategory,
         start,
         end=None,
@@ -439,6 +453,7 @@ class ResultOut(BaseModel):
         gravity=None,
         explanation_context=None,
         content=None,
+        proficiency_level=None,
     ):
         if end is None:
             end = start + len(text)
@@ -452,64 +467,55 @@ class ResultOut(BaseModel):
             privacy_filter = get_privacy_filter()
             context = privacy_filter.clean_var(context)
 
-        params = {}
-        if subcategory == "gendered_denominations_ending":
-            params["gendered_denominations_ending"] = config.german_gender_ending
+        subcategory_name = get_category_name(subcategory)
+        subcategory_data = get_category(subcategory_name)
 
-        if subcategory in categories:
-            category_key = subcategory
+        if subcategory_data is not None and "category" in subcategory_data:
+            category = subcategory_data["category"]
+            subcategory_key = subcategory_name
+            category_data = subcategory_data
         else:
-            category_key = category
+            subcategory_key = subcategory
+            category = subcategory
+            category_data = get_category(category)
 
-        category_data = None
-        if category_key in categories:
-            category_data = categories[category_key]
+        if category_data is not None:
+            if icon is None and "emoji" in category_data:
+                icon = category_data["emoji"]
+
+            if proficiency_level is None and "proficiency_level" in category_data:
+                proficiency_level = get_proficiency_level(subcategory_key)
 
             if category != "orthography":
-                label = lang._("rules." + category_key + "_name")
-                if category != subcategory and category in categories:
-                    label = lang._("rules." + category + "_name") + ": " + label
+                label = lang._(subcategory_key, "hs_name")
+                category_label = lang._(category, "hs_name")
+                if category_label != "" and category_label != label:
+                    label = (
+                        category_label if label == "" else category_label + ": " + label
+                    )
 
-        if (
-            category != "orthography"
-            and category != "corporate_rules"
-            and url is None
-            and category_data["url"][lang.lang] is not None
-        ):
-            url = category_data["url"][lang.lang]
-            if version >= 2.2:
+                if lang._(subcategory_key, "lead_video"):
+                    content = ContentType("video")
+                elif lang._(subcategory_key, "hard_facts"):
+                    content = ContentType("advanced")
+
+        if category != "orthography" and category != "corporate_rules" and url is None:
+            url = lang._(subcategory, "canonical_url")
+            if url is not None:
                 url += "?reducedView=true"
 
-        if (
-            content is None
-            and "content" in category_data
-            and lang.lang in category_data["content"]
-        ):
-            content = ContentType(category_data["content"][lang.lang])
-
         explanation = (
-            explanation
-            if explanation
-            else lang._("rules." + category_key + "_explanation")
+            explanation if explanation else lang._(subcategory_key, "short_explanation")
         )
-
-        if icon is None and "emoji" in category_data:
-            icon = category_data["emoji"]
-
-        if gravity is None and "gravity" in category_data:
-            gravity = category_data["gravity"]
 
         hide_details = False
 
-        if version >= 2.1:
-            # Not logged-in
-            hide_details = config.plan is None
+        # Not logged-in
+        hide_details = config.plan is None
 
-            # Logged-in but non paying user get all highlights
-            if config.plan == "witty_free":
-                hide_details = float(config.maximum_importance) < float(
-                    categories[subcategory]["importance"]
-                )
+        # Logged-in but non paying user get all highlights
+        if config.plan == "witty_free" and subcategory.startswith("advanced_"):
+            hide_details = True
 
         if hide_details or alternatives is None or alternatives == []:
             alternatives = []
@@ -537,8 +543,8 @@ class ResultOut(BaseModel):
             )
 
         if category == "orthography":
-            label = ResultOut.convert_sharp_ss(lang, label)
-            explanation = ResultOut.convert_sharp_ss(lang, explanation)
+            label = lang.convert_sharp_ss(label)
+            explanation = lang.convert_sharp_ss(explanation)
 
         explanation = {
             "text": explanation,
@@ -548,29 +554,14 @@ class ResultOut(BaseModel):
             "content": content,
         }
 
-        if version <= 1.1:
-            if gravity is not None:
-                gravity = math.ceil(gravity)
-
-            return ResultOut1_1(
-                text=text,
-                context=context,
-                category=category,
-                subcategory=subcategory,
-                start=start,
-                end=end,
-                alternatives=alternatives,
-                label=label,
-                explanation=explanation,
-                gravity=gravity,
-            )
-
         if hide_details:
             category = None
             subcategory = None
             alternatives = None
             label = None
             explanation = None
+        else:
+            gravity = map_gravity(subcategory)
 
         return ResultOut(
             text=text,
@@ -583,6 +574,7 @@ class ResultOut(BaseModel):
             label=label,
             explanation=explanation,
             gravity=gravity,
+            proficiency_level=proficiency_level,
         )
 
     @staticmethod
@@ -618,6 +610,7 @@ class ResultOut(BaseModel):
 
         add_inspiration_alternatives = True
         cleaned_alternatives = {}
+
         for alternative in alternatives:
             if alternative != " ":
                 alternative = alternative.strip()
@@ -648,7 +641,7 @@ class ResultOut(BaseModel):
                 if is_upper and alternative:
                     alternative = string.capwords(alternative[0:1]) + alternative[1:]
             else:
-                alternative = ResultOut.convert_sharp_ss(lang, alternative)
+                alternative = lang.convert_sharp_ss(alternative)
 
             inspiration = None
             if ResultOut.isInspirationAlternative(text, alternative, subcategory):
@@ -677,13 +670,12 @@ class ResultOut(BaseModel):
                     continue
 
                 key = variation
-                if version >= 1.1:
-                    variation = ResultAlternative(
-                        text=variation,
-                        remove=remove,
-                        inspiration=inspiration,
-                        context=alternative_context,
-                    )
+                variation = ResultAlternative(
+                    text=variation,
+                    remove=remove,
+                    inspiration=inspiration,
+                    context=alternative_context,
+                )
 
                 cleaned_alternatives[key] = variation
 
@@ -725,13 +717,6 @@ class ResultOut(BaseModel):
             remove = None
 
         return alternative, alternative_context, remove
-
-    @staticmethod
-    def convert_sharp_ss(lang, text):
-        if lang.locale != "de-CH":
-            return text
-
-        return text.replace("ß", "ss")
 
     @staticmethod
     def isUpper(text, full_text, start, category, lang):
@@ -896,10 +881,6 @@ class ResultOut(BaseModel):
         return alternative_variations
 
 
-class ResultOut1_1(ResultOut):
-    gravity: Optional[int]
-
-
 class ErrorMessage(BaseModel):
     message: str
 
@@ -926,14 +907,11 @@ class Result(BaseModel):
         object.__setattr__(self, "detail", detail)
 
 
-class ResultConf1_1(BaseModel):
+class ResultConf(BaseModel):
     id: str
     name: str
     plan: Optional[str]
     config: Optional[RuleConfig]
-
-
-class ResultConf(ResultConf1_1):
     organization_id: Optional[str]
     organization_name: Optional[str]
     organization_config: Optional[RuleConfig]
@@ -941,13 +919,6 @@ class ResultConf(ResultConf1_1):
     organization_domains: Optional[DomainConfig]
     config_hash: Optional[str]
     organization_config_hash: Optional[str]
-
-
-class ResultsOut1_1(BaseModel):
-    results: List[ResultOut1_1]
-    language: str
-    limit_reached: bool
-    organization_config: Union[ResultConf1_1, dict, None]
 
 
 class ResultsOut(BaseModel):

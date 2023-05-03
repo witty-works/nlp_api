@@ -55,18 +55,20 @@
                     "text": "Team"
                 }
             ],
-            "category": "gendered",
+            "category": "gender-orientation",
             "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgeford",
             "end": 21,
             "explanation": {
-                "icon": "😟",
-                "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
-                "url": "https://www.witty.works/de/subkategorien/berufe?reducedView=true"
+                "content": "advanced",
+                "icon": "💡",
+                "text": "Viele denken bei diesem Wort zuerst an einen Mann",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Berufe",
+            "label": "Geschlecht + Orientierung: Generisches Maskulinum",
+            "proficiency_level": "unconscious_bias",
             "start": 13,
-            "subcategory": "titles",
+            "subcategory": "function",
             "text": "Kollegen"
         },
         {
@@ -87,16 +89,17 @@
                     "text": "Gruppen"
                 }
             ],
-            "category": "gendered",
+            "category": "gender-orientation",
             "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle",
             "end": 46,
             "explanation": {
                 "icon": "😟",
                 "text": "Wortteil macht andere Geschlechter unsichtbar",
-                "url": "https://www.witty.works/de/subkategorien/angedeutetes-gender?reducedView=true"
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/angedeutetes-gender?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Angedeutetes Gender",
+            "label": "Geschlecht + Orientierung: Angedeutetes Gender",
+            "proficiency_level": "unconscious_bias",
             "start": 31,
             "subcategory": "hidden_image",
             "text": "eine Mannschaft"
@@ -119,7 +122,7 @@
                     "text": "Entwicklungsmotivation"
                 }
             ],
-            "category": "unconscious_bias",
+            "category": "social-motive",
             "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreund",
             "end": 62,
             "explanation": {
@@ -129,7 +132,8 @@
                 "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
+            "label": "Soziale Motivation: Agentische Sprache",
+            "proficiency_level": "unconscious_bias",
             "start": 55,
             "subcategory": "agentic",
             "text": "Ehrgeiz"
@@ -147,7 +151,7 @@
                     "text": "Fähigkeit, an Dingen dranzubleiben"
                 }
             ],
-            "category": "unconscious_bias",
+            "category": "social-motive",
             "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
             "end": 85,
             "explanation": {
@@ -157,7 +161,8 @@
                 "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
+            "label": "Soziale Motivation: Agentische Sprache",
+            "proficiency_level": "unconscious_bias",
             "start": 67,
             "subcategory": "agentic",
             "text": "Durchhaltevermögen"
@@ -171,7 +176,7 @@
                     "text": "vor spannende Fragen gestellt"
                 }
             ],
-            "category": "unconscious_bias",
+            "category": "social-motive",
             "context": "rte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
             "end": 124,
             "explanation": {
@@ -181,37 +186,42 @@
                 "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
+            "label": "Soziale Motivation: Agentische Sprache",
+            "proficiency_level": "unconscious_bias",
             "start": 109,
             "subcategory": "agentic",
             "text": "herausgefordert"
         },
         {
             "alternatives": [],
-            "category": "inclusive",
+            "category": "social-motive",
             "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
             "end": 104,
             "explanation": {
+                "content": "advanced",
                 "icon": "✅",
-                "text": "Betont kooperative Eigenschaften",
-                "url": "https://www.witty.works/de/subkategorien/kommunale-sprache?reducedView=true"
+                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true"
             },
-            "label": "Inklusiv: Kommunale Sprache",
+            "label": "Soziale Motivation: Kommunale Sprache",
+            "proficiency_level": "inclusive",
             "start": 98,
             "subcategory": "communal",
             "text": "lieben"
         },
         {
             "alternatives": [],
-            "category": "inclusive",
+            "category": "social-motive",
             "context": "hrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
             "end": 167,
             "explanation": {
+                "content": "advanced",
                 "icon": "✅",
-                "text": "Betont kooperative Eigenschaften",
-                "url": "https://www.witty.works/de/subkategorien/kommunale-sprache?reducedView=true"
+                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true"
             },
-            "label": "Inklusiv: Kommunale Sprache",
+            "label": "Soziale Motivation: Kommunale Sprache",
+            "proficiency_level": "inclusive",
             "start": 156,
             "subcategory": "communal",
             "text": "Freundliche"
@@ -222,16 +232,18 @@
                     "remove": true
                 }
             ],
-            "category": "style",
+            "category": "cultural-diversity",
             "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben",
             "end": 4,
             "explanation": {
+                "content": "video",
                 "icon": "😟",
-                "text": "Füllwörter machen Text länger und unverständlicher",
-                "url": "https://www.witty.works/de/subkategorien/füllwörter?reducedView=true"
+                "text": "Wörter, die Text länger und weniger verständlicher machen",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversit%C3%A4t/füllwörter?reducedView=true"
             },
-            "gravity": 3.0,
-            "label": "Stil: Füllwörter",
+            "gravity": 2.0,
+            "label": "Kulturelle Diversität: Füllwörter",
+            "proficiency_level": "unconscious_bias",
             "start": 0,
             "subcategory": "filler",
             "text": "Sehr"
@@ -254,18 +266,19 @@
                     "text": "Liebe/Lieber"
                 }
             ],
-            "category": "style",
+            "category": "acquired-diversity",
             "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, her",
             "end": 12,
             "explanation": {
                 "icon": "🧊",
                 "text": "A less formal tone makes you sound more accessible",
-                "url": "https://www.witty.works/de/subkategorien/förmlichkeit?reducedView=true"
+                "url": "https://www.witty.works/de/kategorien/erworbene-diversit%C3%A4t/förmlichkeit?reducedView=true"
             },
             "gravity": 3.0,
-            "label": "Stil: Förmlichkeit",
+            "label": "Erworbene Diversität: Förmlichkeit",
+            "proficiency_level": "unconscious_bias",
             "start": 0,
-            "subcategory": "formality",
+            "subcategory": "advanced_formality",
             "text": "Sehr geehrte"
         }
     ]

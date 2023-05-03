@@ -20,18 +20,20 @@
                     "text": "Kundschaft"
                 }
             ],
-            "category": "gendered",
+            "category": "gender-orientation",
             "context": "Wir suchen alles für unsere Kunden: Ehrgeiz ist unser Schlüssel.\n\n\nDurchhaltevermögen benötigen wir.\n\n\n\n\n\nEhrgeiz ist am wichtigsten",
             "end": 34,
             "explanation": {
-                "icon": "😟",
-                "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
-                "url": "https://www.witty.works/de/subkategorien/berufe?reducedView=true"
+                "content": "advanced",
+                "icon": "💡",
+                "text": "Viele denken bei diesem Wort zuerst an einen Mann",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Berufe",
+            "label": "Geschlecht + Orientierung: Generisches Maskulinum",
+            "proficiency_level": "unconscious_bias",
             "start": 28,
-            "subcategory": "titles",
+            "subcategory": "function",
             "text": "Kunden"
         },
         {
@@ -52,7 +54,7 @@
                     "text": "Entwicklungsmotivation"
                 }
             ],
-            "category": "unconscious_bias",
+            "category": "social-motive",
             "context": "Wir suchen alles für unsere Kunden: Ehrgeiz ist unser Schlüssel.\n\n\nDurchhaltevermögen benötigen wir.\n\n\n\n\n\nEhrgeiz ist am wichtigsten",
             "end": 43,
             "explanation": {
@@ -62,7 +64,8 @@
                 "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
+            "label": "Soziale Motivation: Agentische Sprache",
+            "proficiency_level": "unconscious_bias",
             "start": 36,
             "subcategory": "agentic",
             "text": "Ehrgeiz"
@@ -80,7 +83,7 @@
                     "text": "Fähigkeit, an Dingen dranzubleiben"
                 }
             ],
-            "category": "unconscious_bias",
+            "category": "social-motive",
             "context": "Wir suchen alles für unsere Kunden: Ehrgeiz ist unser Schlüssel.\n\n\nDurchhaltevermögen benötigen wir.\n\n\n\n\n\nEhrgeiz ist am wichtigsten",
             "end": 85,
             "explanation": {
@@ -90,7 +93,8 @@
                 "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
+            "label": "Soziale Motivation: Agentische Sprache",
+            "proficiency_level": "unconscious_bias",
             "start": 67,
             "subcategory": "agentic",
             "text": "Durchhaltevermögen"
@@ -113,7 +117,7 @@
                     "text": "Entwicklungsmotivation"
                 }
             ],
-            "category": "unconscious_bias",
+            "category": "social-motive",
             "context": "chen alles für unsere Kunden: Ehrgeiz ist unser Schlüssel.\n\n\nDurchhaltevermögen benötigen wir.\n\n\n\n\n\nEhrgeiz ist am wichtigsten",
             "end": 113,
             "explanation": {
@@ -123,7 +127,8 @@
                 "url": "https://www.witty.works/de/subkategorien/agentische-sprache?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Agentische Sprache",
+            "label": "Soziale Motivation: Agentische Sprache",
+            "proficiency_level": "unconscious_bias",
             "start": 106,
             "subcategory": "agentic",
             "text": "Ehrgeiz"

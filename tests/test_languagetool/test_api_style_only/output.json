@@ -1,5 +1,27 @@
 {
     "language": "de",
     "limit_reached": false,
-    "results": []
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "liebe es"
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "Ich liebs wenn du singst",
+            "end": 9,
+            "explanation": {
+                "icon": "😟",
+                "text": "Möchten Sie die standardsprachliche Alternative „liebe es“ verwenden?",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversit%C3%A4t/klarheit?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Kulturelle Diversität: Klarheit",
+            "proficiency_level": "unconscious_bias",
+            "start": 4,
+            "subcategory": "style",
+            "text": "liebs"
+        }
+    ]
 }

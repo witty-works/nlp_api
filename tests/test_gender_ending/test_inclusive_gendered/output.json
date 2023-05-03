@@ -4,32 +4,34 @@
     "results": [
         {
             "alternatives": [],
-            "category": "inclusive",
+            "category": "social-motive",
             "context": "We need to aid those who needs. The analysis team likes to work as a team.",
             "end": 30,
             "explanation": {
                 "content": "advanced",
                 "icon": "✅",
                 "text": "Strengthens collaboration and a sense of community",
-                "url": "https://www.witty.works/en/subcategories/communal-language?reducedView=true"
+                "url": "https://www.witty.works/en/categories/social-motive/communal-language?reducedView=true"
             },
-            "label": "Inclusive: Communal language",
+            "label": "Social Motive: Communal language",
+            "proficiency_level": "inclusive",
             "start": 25,
             "subcategory": "communal",
             "text": "needs"
         },
         {
             "alternatives": [],
-            "category": "inclusive",
+            "category": "social-motive",
             "context": "We need to aid those who needs. The analysis team likes to work as a team.",
             "end": 73,
             "explanation": {
                 "content": "advanced",
                 "icon": "✅",
                 "text": "Strengthens collaboration and a sense of community",
-                "url": "https://www.witty.works/en/subcategories/communal-language?reducedView=true"
+                "url": "https://www.witty.works/en/categories/social-motive/communal-language?reducedView=true"
             },
-            "label": "Inclusive: Communal language",
+            "label": "Social Motive: Communal language",
+            "proficiency_level": "inclusive",
             "start": 69,
             "subcategory": "communal",
             "text": "team"

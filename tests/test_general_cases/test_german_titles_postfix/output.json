@@ -1,0 +1,184 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                },
+                {
+                    "text": "Taschenuhr"
+                }
+            ],
+            "category": "religion",
+            "context": "Unser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Arsch. Arschhund. Katzenarschhund. Katzenarsch. Barsch. Barscharschmarsch. Ein Ingenieur kann das.",
+            "end": 94,
+            "explanation": {
+                "icon": "🚫",
+                "text": "Fällt unter antisemitische Verunglimpfungen",
+                "url": "https://www.witty.works/de/kategorien/glauben/antisemitismus?reducedView=true"
+            },
+            "gravity": 1.0,
+            "label": "Glauben: Antisemitismus",
+            "proficiency_level": "openly_discriminating",
+            "start": 87,
+            "subcategory": "antisemitism",
+            "text": "Judenei"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Unsere Praxis"
+                },
+                {
+                    "text": "Unsere Untersuchung"
+                },
+                {
+                    "text": "Unser*e Fachärztin*Facharzt"
+                },
+                {
+                    "text": "Unser/e Fachärztin/Facharzt"
+                },
+                {
+                    "text": "Unser medizinisches Team"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Unser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Arsch. Arschhund.",
+            "end": 14,
+            "explanation": {
+                "icon": "😟",
+                "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufe",
+            "proficiency_level": "unconscious_bias",
+            "start": 0,
+            "subcategory": "titles",
+            "text": "Unser Facharzt"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Fachärzt*innen"
+                },
+                {
+                    "text": "Fachärztinnen und Fachärzte"
+                },
+                {
+                    "text": "Medizinisches Team"
+                },
+                {
+                    "text": "Praxis"
+                },
+                {
+                    "text": "Untersuchung"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Unser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Arsch. Arschhund. Katzenarschhund. Katze",
+            "end": 36,
+            "explanation": {
+                "icon": "😟",
+                "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufe",
+            "proficiency_level": "unconscious_bias",
+            "start": 27,
+            "subcategory": "titles",
+            "text": "Fachärzte"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Jüd*innen"
+                },
+                {
+                    "text": "Jüdinnen und Juden"
+                },
+                {
+                    "remove": true
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Unser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Arsch. Arschhund. Katzenarschhund. Katzenarsch. Barsch. Barscharschmarsch. Ein",
+            "end": 74,
+            "explanation": {
+                "content": "advanced",
+                "icon": "💡",
+                "text": "Viele denken bei diesem Wort zuerst an einen Mann",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Generisches Maskulinum",
+            "proficiency_level": "unconscious_bias",
+            "start": 69,
+            "subcategory": "function",
+            "text": "Juden"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Eine auf einer Hochschule ausgebildete Technik-Fachkraft"
+                },
+                {
+                    "text": "Eine auf einer Fachhochschule ausgebildete Technik-Fachkraft"
+                },
+                {
+                    "text": "Ein Engineering"
+                },
+                {
+                    "text": "Eine Technik"
+                },
+                {
+                    "text": "Technikwissenschaften"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "den. Er hat ein Judenei. Arsch. Arschhund. Katzenarschhund. Katzenarsch. Barsch. Barscharschmarsch. Ein Ingenieur kann das. Ein Elektroingenieur kann das nicht.",
+            "end": 184,
+            "explanation": {
+                "icon": "😟",
+                "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufe",
+            "proficiency_level": "unconscious_bias",
+            "start": 171,
+            "subcategory": "titles",
+            "text": "Ein Ingenieur"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Eine Elektrotechnik"
+                },
+                {
+                    "text": "Ein*e Elektroingenieur*in"
+                },
+                {
+                    "text": "Ein/e Elektroingenieurin/Elektroingenieur"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Arsch. Arschhund. Katzenarschhund. Katzenarsch. Barsch. Barscharschmarsch. Ein Ingenieur kann das. Ein Elektroingenieur kann das nicht.",
+            "end": 215,
+            "explanation": {
+                "icon": "😟",
+                "text": "Viele denken bei diesem Wort zuerst an spezifisches Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufe",
+            "proficiency_level": "unconscious_bias",
+            "start": 195,
+            "subcategory": "titles",
+            "text": "Ein Elektroingenieur"
+        }
+    ]
+}

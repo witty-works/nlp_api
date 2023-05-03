@@ -20,16 +20,17 @@
                     "text": "Unser/e Vorgesetzte/Vorgesetzter"
                 }
             ],
-            "category": "gendered",
+            "category": "gender-orientation",
             "context": "Unser Boss ist ok.",
             "end": 10,
             "explanation": {
                 "icon": "😟",
                 "text": "Bedient altmodisches Konzept von Führung",
-                "url": "https://www.witty.works/de/subkategorien/traditionelles-führungsbild?reducedView=true"
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/führungsbild?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Geschlechtsspezifisch: Führungsbild",
+            "label": "Geschlecht + Orientierung: Führungsbild",
+            "proficiency_level": "unconscious_bias",
             "start": 0,
             "subcategory": "leadership",
             "text": "Unser Boss"

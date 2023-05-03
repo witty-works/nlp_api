@@ -20,16 +20,17 @@
                     "text": "Sinti*ze"
                 }
             ],
-            "category": "unconscious_bias",
+            "category": "cultural-diversity",
             "context": "Wir sind alle Zigeuner.\nIch bin ein Zigeuner und du eine Zigeunerin.",
             "end": 22,
             "explanation": {
                 "icon": "😒",
-                "text": "Legt Vorurteile gegen rassifizierte Menschen nahe",
-                "url": "https://www.witty.works/de/subkategorien/rassistische-wurzel?reducedView=true"
+                "text": "Hat rassistische Hintergründe oder Konnotationen  ",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversit%C3%A4t/abstammung?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Rassistische Wurzel",
+            "label": "Kulturelle Diversität: Abstammung",
+            "proficiency_level": "unconscious_bias",
             "start": 14,
             "subcategory": "racist_source",
             "text": "Zigeuner"
@@ -52,16 +53,17 @@
                     "text": "Sint*eza"
                 }
             ],
-            "category": "unconscious_bias",
+            "category": "cultural-diversity",
             "context": "Wir sind alle Zigeuner.\nIch bin ein Zigeuner und du eine Zigeunerin.",
             "end": 44,
             "explanation": {
                 "icon": "😒",
-                "text": "Legt Vorurteile gegen rassifizierte Menschen nahe",
-                "url": "https://www.witty.works/de/subkategorien/rassistische-wurzel?reducedView=true"
+                "text": "Hat rassistische Hintergründe oder Konnotationen  ",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversit%C3%A4t/abstammung?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Rassistische Wurzel",
+            "label": "Kulturelle Diversität: Abstammung",
+            "proficiency_level": "unconscious_bias",
             "start": 36,
             "subcategory": "racist_source",
             "text": "Zigeuner"
@@ -81,16 +83,17 @@
                     "text": "Sint/iza"
                 }
             ],
-            "category": "unconscious_bias",
+            "category": "cultural-diversity",
             "context": "Wir sind alle Zigeuner.\nIch bin ein Zigeuner und du eine Zigeunerin.",
             "end": 67,
             "explanation": {
                 "icon": "😒",
-                "text": "Legt Vorurteile gegen rassifizierte Menschen nahe",
-                "url": "https://www.witty.works/de/subkategorien/rassistische-wurzel?reducedView=true"
+                "text": "Hat rassistische Hintergründe oder Konnotationen  ",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversit%C3%A4t/abstammung?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Sprachliche Voreingenommenheit: Rassistische Wurzel",
+            "label": "Kulturelle Diversität: Abstammung",
+            "proficiency_level": "unconscious_bias",
             "start": 57,
             "subcategory": "racist_source",
             "text": "Zigeunerin"
