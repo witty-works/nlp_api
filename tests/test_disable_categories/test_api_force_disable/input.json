@@ -2,6 +2,6 @@
     "type": "check",
     "text": "I am very creative.",
     "config": {
-      "disabled_categories": ["communal", "filler"]
+      "disabled_categories": ["communal"]
     }
 }
