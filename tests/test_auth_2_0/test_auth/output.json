@@ -55,8 +55,8 @@
             "value": false
         },
         "orthography": {
-            "status": "suggestion",
-            "value": false
+            "status": "force",
+            "value": true
         },
         "preferred_variants": {
             "status": "force",

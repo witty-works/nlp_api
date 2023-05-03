@@ -1269,9 +1269,9 @@ def fetch_result_conf(configs: dict):
 
 
     # BC code
-    if "orthograhpy" in organization_config.categories:
+    if "orthography" in organization_config.categories:
         organization_config.orthography = organization_config.categories[
-            "orthograhpy"
+            "orthography"
         ]
     else:
         organization_config.orthography = BooleanConfigType(
