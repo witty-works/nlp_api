@@ -139,8 +139,8 @@ IaaS,acr,style,advanced_abbreviation,"['infrastructure as a service', 'infrastru
 JS,acr,style,advanced_abbreviation,"['JavaScript', 'JavaScript (JS)']"
 JSON,acr,style,advanced_abbreviation,"['JavaScript object notation', 'JavaScript object notation (JSON)']"
 KISS,acr,style,advanced_abbreviation,"['Keep it simple, sweets', 'Keep it simple, stupid (KISS)', 'Keep it simple, obvious']"
-KPI,acr,style,advanced_abbreviation,"['key performance indicator', 'key performance indicators', 'key performance indicator (KPI)', 'key performance indicators (KPI)']"
-KPIs,acr,style,advanced_abbreviation,"['key performance indicators', 'key performance indicators (KPIs)']"
+KPI,acr,style,abbreviation,"['key performance indicator', 'key performance indicators', 'key performance indicator (KPI)', 'key performance indicators (KPI)']"
+KPIs,acr,style,abbreviation,"['key performance indicators', 'key performance indicators (KPIs)']"
 LAMP,acr,style,advanced_abbreviation,"['Linux, Apache, MySQL, PHP', 'Linux, Apache, MySQL, PHP (LAMP)', 'Linux, Apache, MySQL, Python', 'Linux, Apache, MySQL, Python (LAMP)', 'Linux, Apache, MySQL, Perl', 'Linux, Apache, MySQL, Perl (LAMP)']"
 LBFM,abbr,openly_discriminating,sexism,['-']
 LBO,acr,style,advanced_abbreviation,"['leveraged buyout', 'leveraged buyout (LBO)']"
@@ -175,7 +175,7 @@ MSP,acr,style,advanced_abbreviation,"['multi-sided platform', 'multi-sided platf
 MSc,abbr,style,advanced_abbreviation,"['Master of Science', 'Master of Science (MSc)']"
 MTD,acr,style,advanced_abbreviation,"['month-to-date', 'month-to-date (MTD)']"
 MVC,acr,style,advanced_abbreviation,"['model-view-controller', 'model-view-controller (MVC)']"
-MVP,acr,style,advanced_abbreviation,"['minimum viable product', 'minimum viable product (MVP)']"
+MVP,acr,style,abbreviation,"['minimum viable product', 'minimum viable product (MVP)']"
 MoM,acr,style,advanced_abbreviation,"['month-over-month', 'month-over-month (MoM)']"
 N/A,acr,style,advanced_abbreviation,"['not applicable', 'not available']"
 NAV,acr,style,advanced_abbreviation,"['net asset value', 'net asset value (NAV)']"
@@ -248,7 +248,7 @@ ROE,acr,style,advanced_abbreviation,"['return on equity', 'return on equity (ROE
 ROFL,acr,style,advanced_abbreviation,['Rolling on floor laughing!']
 ROFLOL,acr,style,advanced_abbreviation,['Rolling on floor laughing out loud!']
 ROFR,acr,style,advanced_abbreviation,"['right of first refusal', 'right of first refusal (ROFR)']"
-ROI,acr,style,advanced_abbreviation,"['return on investment', 'return on investment (ROI)']"
+ROI,acr,style,abbreviation,"['return on investment', 'return on investment (ROI)']"
 ROR,acr,style,advanced_abbreviation,"['Ruby on Rails', 'Ruby on Rails (ROR)']"
 ROS,acr,style,advanced_abbreviation,"['run of site', 'run of site (ROS)']"
 RSS,acr,style,advanced_abbreviation,"['rich site summary', 'Rich Site Summary (RSS)', 'really simple syndication']"
