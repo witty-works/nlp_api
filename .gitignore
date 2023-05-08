@@ -28,3 +28,4 @@ categories.csv
 subcategories.csv
 .python-version
 .blackfire.ini
+.pdm-python

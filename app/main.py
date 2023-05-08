@@ -99,7 +99,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.43.2"
+version = "1.43.3"
 
 categories = get_categories()
 settings = get_settings()
@@ -428,15 +428,10 @@ def get_openapi_json(
 # public routes
 @app.get("/", include_in_schema=False)
 def get_root():
-    url = "https://dashboard.witty.works/editor"
-    status_code = 301
-
     if not settings.is_prod and settings.testing == False:  # pragma: no cover
-        url = "/docs"
-        status_code = 302
+        return RedirectResponse(url="/docs", status_code=302)
 
-    return RedirectResponse(url=url, status_code=status_code)
-
+    return "Witty NLP API: https://witty.works"
 
 @app.get(
     "/save_openapi_json",
@@ -2394,6 +2389,10 @@ def german_noun_lookup(word):
         return None
 
     result = result[0]
+    if "flexion" in result:
+        for flexion in list(result["flexion"].keys()):
+            if "1" in flexion:
+                result["flexion"][flexion.replace(" 1", "")] = result["flexion"][flexion]
 
     if "genus" in result:
         return result
@@ -2529,10 +2528,7 @@ def align_noun_form(lang, a_text, a_token, b_token):
         if flexion in b_word["flexion"]:
             return b_word["flexion"][flexion]
 
-        key = flexion + " 1"
-        if key not in b_word["flexion"]:
-            key = flexion + " stark"
-
+        key = flexion + " stark"
         if key in b_word["flexion"]:
             return b_word["flexion"][key]
 
@@ -3347,6 +3343,7 @@ def gendered_denom_analysis_de(
                     result is None
                     or "flexion" not in result
                     or "nominativ plural" not in result["flexion"]
+                    or "nominativ singular" not in result["flexion"]
                     or not tokens[i].text.endswith(
                         result["flexion"]["nominativ plural"].lower()
                     )

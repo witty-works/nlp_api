@@ -41,7 +41,7 @@ leading,=a,style,advanced_hollow,"['guiding', 'with the largest market share in 
 leverage,v,style,advanced_hollow,"['use', 'capitalize on']",[],"['use', 'capitalize on']"
 literally,adv,style,filler,['-'],['-'],['-']
 mandatory,a,style,exaggerating,"['necessary', 'legally required', 'compulsory', 'nonelective', 'required']",[],"['necessary', 'legally required', 'compulsory', 'nonelective', 'required']"
-many,a,style,advanced_hollow,"['a multitude of', 'a host of', 'numerous', 'multiple', 'countless']",[],"['a multitude of', 'a host of', 'numerous', 'multiple', 'countless']"
+many,a,style,hollow,"['a multitude of', 'a host of', 'numerous', 'multiple', 'countless']",[],"['a multitude of', 'a host of', 'numerous', 'multiple', 'countless']"
 market-leading,a,style,exaggerating,['market-influencing'],[],['market-influencing']
 marketleading,a,style,exaggerating,['market-influencing'],[],['market-influencing']
 maybe,adv,style,filler,['-'],['-'],['-']
