@@ -27,8 +27,7 @@ def get_dirs(path):
 def test_read_main():
     with TestClient(app) as client:
         response = client.get("/", follow_redirects=False)
-        assert response.status_code == 301
-        assert response.headers["Location"] == "https://dashboard.witty.works/editor"
+        assert response.status_code == 200
 
 
 def test_health():

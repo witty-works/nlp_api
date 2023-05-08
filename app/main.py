@@ -428,15 +428,10 @@ def get_openapi_json(
 # public routes
 @app.get("/", include_in_schema=False)
 def get_root():
-    url = "https://dashboard.witty.works/editor"
-    status_code = 301
-
     if not settings.is_prod and settings.testing == False:  # pragma: no cover
-        url = "/docs"
-        status_code = 302
+        return RedirectResponse(url="/docs", status_code=302)
 
-    return RedirectResponse(url=url, status_code=status_code)
-
+    return "Witty NLP API: https://witty.works"
 
 @app.get(
     "/save_openapi_json",
