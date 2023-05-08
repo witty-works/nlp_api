@@ -442,6 +442,7 @@ class ResultOut(BaseModel):
         lang: Language,
         text,
         full_text,
+        offsets,
         subcategory,
         start,
         end=None,
@@ -557,13 +558,20 @@ class ResultOut(BaseModel):
         else:
             gravity = map_gravity(subcategory)
 
+        if offsets and len(offsets["chars"]) > end:
+            utf16_start = offsets["chars"][start]
+            utf16_end = offsets["chars"][end]
+        else:
+            utf16_start = start
+            utf16_end = end
+
         return ResultOut(
             text=text,
             context=context,
             category=category,
             subcategory=subcategory,
-            start=start,
-            end=end,
+            start=utf16_start,
+            end=utf16_end,
             alternatives=alternatives,
             label=label,
             explanation=explanation,
