@@ -19,10 +19,10 @@
                 "lead_text": "<p>Our world is full of people from all walks of life and backgrounds. They have different ancestries, languages, traditions, and ways of life. Their biographies and ethnic and cultural identities transcend national borders. Witty flags cultural stereotyping, discriminatory language related to migration, Yiddish pejoratives, and the vocabulary of Nazi Germany. We point out racist slurs and language with racist undertones and connotations. You can mitigate risks related to language barriers by avoiding abbreviations, acronyms, fillers, and empty words that contribute to misunderstandings in multilingual environments.<\/p>",
                 "lead_image": [],
                 "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/man-hours.png",
+                    "src": "https:\/\/www.witty.works\/hubfs\/Group%2051-1.png",
                     "width": "605",
                     "height": "404",
-                    "alt": "An illustration of Witty showing the phrase 'The master bedroom [main bedroom] of this appartment is exquisite.' The words in brackets are shown as alternatives."
+                    "alt": "An illustration of Witty showing the phrase 'The master bedroom [main bedroom] of this apartment is exquisite.' The words in brackets are shown as alternatives."
                 }
             },
             "de": {
@@ -126,6 +126,7 @@
                 "titles"
             ],
             "openly_discriminating": [
+                "LGBTQIA-hate",
                 "homophobia",
                 "sexism",
                 "transphobia"

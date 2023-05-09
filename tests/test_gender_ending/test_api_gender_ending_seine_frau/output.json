@@ -21,6 +21,7 @@
             "context": "Was ist seine Frau?",
             "end": 18,
             "explanation": {
+                "content": "advanced",
                 "icon": "😒",
                 "text": "Bedient die heteronormative Sicht von Geschlechteridentität",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäres-geschlecht?reducedView=true"
@@ -54,6 +55,7 @@
             "context": "Was ist seine Frau?",
             "end": 18,
             "explanation": {
+                "content": "advanced",
                 "context": "nur wenn die Person sich selbst so bezeichnet",
                 "icon": "😒",
                 "text": "Bedient die heteronormative Sicht von Geschlechteridentität",
