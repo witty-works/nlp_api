@@ -72,6 +72,247 @@ def fetch_rules(langs):
         "d_f_m_regexes": {
             r"(?i)\s(\()?(d|x|\*)(\/v)?\/f(\/[*a-z])*(\))?": None,  # (d/f/m..)
         },
+        "skin_tones": {
+            "all": [
+                "",
+                "_dark_skin_tone",
+                "_medium_skin_tone",
+                "_medium-dark_skin_tone",
+                "_medium-light_skin_tone",
+            ],
+            "full": [
+                "_dark_skin_tone",
+                "_medium_skin_tone",
+                "_medium-dark_skin_tone",
+                "_medium-light_skin_tone",
+            ],
+            "minimal": [
+                "_dark_skin_tone",
+                "_medium_skin_tone",
+            ],
+        },
+        "emoji": {
+            "group_gender_and": {
+                "skin_tone": True,
+                "subcategory": {
+                    "sexual_orientation": [
+                        "people",
+                        "women",
+                        "men",
+                    ],
+                },
+                "rules": [
+                    "woman_and_man",
+                    "man_and_woman",
+                ],
+            },
+            "group_gender": {
+                "skin_tone": True,
+                "subcategory": {
+                    "sexual_orientation": [
+                        "woman_woman",
+                        "man_man",
+                    ],
+                },
+                "rules": [
+                    "woman_man",
+                    "man_woman",
+                ],
+            },
+            "person_gender": {
+                "skin_tone": True,
+                "subcategory": {
+                    "gender_identity": [
+                        "person",
+                    ],
+                },
+                "rules": [
+                    "woman",
+                    "man",
+                ],
+            },
+            "child_gender": {
+                "skin_tone": True,
+                "subcategory": {
+                    "gender_identity": [
+                        "child",
+                    ]
+                },
+                "rules": [
+                    "boy",
+                    "girl",
+                ],
+            },
+            "culture_food": {
+                "skin_tone": False,
+                "subcategory": {
+                    "culture": [
+                        "green_salad",
+                        "falafel",
+                        "dumpling",
+                        "bento",
+                        "curry",
+                        "taco",
+                        "stuffed_flatbread",
+                    ],
+                },
+                "rules": [
+                    "french_fries",
+                    "hamburger",
+                    "bacon",
+                    "meat_on_bone",
+                    "hotdog",
+                    "cut_of_meat",
+                ],
+            },
+            "culture_cutlery": {
+                "skin_tone": False,
+                "subcategory": {
+                    "culture": [
+                        "chopsticks",
+                    ],
+                },
+                "rules": [
+                    "fork_and_knife",
+                    "spoon",
+                ],
+            },
+            "culture_hotdrink": {
+                "skin_tone": False,
+                "subcategory": {
+                    "culture": [
+                        "teapot",
+                        "tea",
+                    ],
+                },
+                "rules": [
+                    "coffee",
+                ],
+            },
+            "culture_softdrink": {
+                "skin_tone": False,
+                "subcategory": {
+                    "culture": [
+                        "bubble_tea",
+                        "beverage_box",
+                        "glass_of_milk",
+                    ],
+                },
+                "rules": [
+                    "cup_with_straw",
+                    "tropical_drink",
+                    "beer",
+                    "beers",
+                    "wine_glass",
+                ],
+            },
+            "culture_sport": {
+                "skin_tone": False,
+                "subcategory": {
+                    "sports_terms": [
+                        "cricket_game",
+                        "boomerang",
+                        "ping_pong",
+                        "rugby_football",
+                        "rugby_football",
+                        "lacrosse",
+                        "flying_disc",
+                    ],
+                },
+                "rules": [
+                    "american_football",
+                    "soccer",
+                    "baseball",
+                    "basketball",
+                    "tennis",
+                    "volleyball",
+                    "field_hockey",
+                    "ice_hockey",
+                    "ice_skate",
+                ],
+            },
+            "religion_symbols": {
+                "skin_tone": False,
+                "subcategory": {
+                    "belief": [
+                        "place_of_worship",
+                        "menorah",
+                        "om",
+                        "orthodox_cross",
+                        "star_and_crescent",
+                        "star_of_david",
+                        "wheel_of_dharma",
+                    ],
+                },
+                "rules": [
+                    "latin_cross",
+                ],
+            },
+            "religion_buildings": {
+                "skin_tone": False,
+                "subcategory": {
+                    "belief": [
+                        "synagogue",
+                        "mosque",
+                        "hindu_temple",
+                    ],
+                },
+                "rules": [
+                    "church",
+                ],
+            },
+            "parent_feeding": {
+                "skin_tone": True,
+                "subcategory": {
+                    "sexual_orientation": [
+                        "person_feeding_baby",
+                        "man_feeding_baby",
+                    ],
+                },
+                "rules": [
+                    "feeding_baby",
+                ],
+            },
+            "parent_pregnant": {
+                "skin_tone": True,
+                "subcategory": {
+                    "sexual_orientation": [
+                        "pregnant_person",
+                        "pregnant_man",
+                    ],
+                },
+                "rules": [
+                    "pregnant_woman",
+                ],
+            },
+            "advanced_person": {
+                "skin_tone": True,
+                "subcategory": {
+                    "advanced_hearing": [
+                        "deaf_person",
+                    ],
+                    "advanced_belief": [
+                        "woman_with_headscarf",
+                        "man_with_turban",
+                    ],
+                    "advanced_vision": [
+                        "person_with_white_cane",
+                    ],
+                    "advanced_ability": [
+                        "person_in_manual_wheelchair",
+                    ],
+                    "advanced_age_old": [
+                        "older_person",
+                    ],
+                    "advanced_age_young": [
+                        "child",
+                    ],
+                },
+                "rules": [
+                    "person",
+                ],
+            },
+        },
     }
 
     locales = {
@@ -1196,42 +1437,42 @@ def fetch_rules(langs):
             "as many",
             "the many",
             "so many",
-            "many times", 
-            "too many", 
-            "many ways",  
+            "many times",
+            "too many",
+            "many ways",
             "not many",
             "many a",
             "many another",
-            "many happy returns", 
+            "many happy returns",
             "draft once reuse many",
-            "one many", 
-            "a good many", 
+            "one many",
+            "a good many",
             "many sided",
-            "a man of many parts", 
-            "many moons ago", 
-            "one too many", 
+            "a man of many parts",
+            "many moons ago",
+            "one too many",
             "countably many",
             "many coloured",
-            "many colored", 
+            "many colored",
             "many sidedness",
-            "many valued", 
-            "a great many", 
+            "many valued",
+            "a great many",
             "many strings to bow",
-            "how many beans make five", 
-            "many an", 
+            "how many beans make five",
+            "many an",
             "many irons in the fire",
-            "one too many", 
-            "many chambered", 
+            "one too many",
+            "many chambered",
             "many tailed bandage",
-            "many valued logic", 
+            "many valued logic",
             "too many chiefs and not enough indians",
-            "many a time", 
+            "many a time",
             "many hands make light work",
-            "many lobed",	
-            "many worlds interpretation",	
+            "many lobed",
+            "many worlds interpretation",
             "with many interruptions",
-            "many minded", 
-            "many words", 
+            "many minded",
+            "many words",
             "write once read many",
             "identifies as female",
             "identifies as male",
