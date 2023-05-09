@@ -1326,7 +1326,7 @@ def has_gender_denom_ending(text, full_text, offset, config: Config):
 
 
 def languagetool_matches(
-    version: float, config: Config, lang: Language, text: str, result
+    version: float, config: Config, lang: Language, full_text: str, offsets, result
 ):
     list_results = []
     ignore = ["@", "#"]
@@ -1338,12 +1338,19 @@ def languagetool_matches(
     for match in result["matches"]:
         start = int(match["offset"])
         end = start + int(match["length"])
-        highlight_text = text[start:end]
+
+        if offsets and len(offsets["utf16_chars"]) > start:
+            start = offsets["utf16_chars"][start]
+
+        if offsets and len(offsets["utf16_chars"]) > end:
+            end = offsets["utf16_chars"][end]
+
+        text = full_text[start:end]
 
         # Ignore capitalization after German salutation
         if match["rule"]["category"]["id"] == "TYPOS":
             subtext = (
-                text[0:start]
+                full_text[0:start]
                 .lstrip()
                 .lower()
                 .replace("'", "")
@@ -1360,20 +1367,18 @@ def languagetool_matches(
             lang.lang == "de"
             and config.german_gender_ending == ":in"
             and match["rule"]["id"] == "LEERZEICHEN_HINTER_DOPPELPUNKT"
-            and text[start + 1 : end] in rules["de"]["male_articles"]
+            and full_text[start + 1 : end] in rules["de"]["male_articles"]
         ):
             continue
 
-        # ignore text that starts with @ or #
-        if highlight_text[0:1] in ignore or (
-            start > 0 and text[start - 1 : start] in ignore
+        # ignore full_text that starts with @ or #
+        if text[0:1] in ignore or (
+            start > 0 and full_text[start - 1 : start] in ignore
         ):
             continue
 
         # ignore german gender ending as spelling mistakes
-        if gendered_denom and has_gender_denom_ending(
-            highlight_text, text, start, config
-        ):
+        if gendered_denom and has_gender_denom_ending(text, full_text, start, config):
             continue
 
         try:
@@ -1428,8 +1433,9 @@ def languagetool_matches(
                 version,
                 config,
                 lang,
-                highlight_text,
                 text,
+                full_text,
+                offsets,
                 subcategory,
                 start,
                 end,
@@ -1502,7 +1508,7 @@ async def fetch_json_post(url, payload, headers, name, ssl=True, json=True):
 
 
 async def apply_languagetool_rules(
-    version: float, config: Config, lang: Language, text: str
+    version: float, config: Config, lang: Language, text: str, offsets
 ):
     if settings.languagetool_api == "":
         return []
@@ -1547,12 +1553,41 @@ async def apply_languagetool_rules(
     if not isinstance(result, dict):
         return []
 
-    return languagetool_matches(version, config, lang, text, result)
+    return languagetool_matches(version, config, lang, text, offsets, result)
+
+
+def utf16len(c):
+    """Returns the length of the single character 'c'
+    in UTF-16 code units."""
+    return 1 if ord(c) < 65536 else 2
 
 
 def fetch_tokens(lang, text: str):
-    # apply SpaCy pre-built model
     return model[lang](text.rstrip().replace("\n", " "))
+
+
+def utf16_offsets(text):
+    utf16offset = 0
+
+    offsets = {
+        "chars": [],
+        "utf16_chars": [],
+    }
+
+    counter = 0
+    for char in [*text]:
+        offsets["chars"].append(counter + utf16offset)
+        offsets["utf16_chars"].append(counter - utf16offset)
+
+        counter += 1
+
+        if utf16len(char) > 1:
+            utf16offset += 1
+
+    offsets["chars"].append(counter + utf16offset)
+    offsets["utf16_chars"].append(counter - utf16offset)
+
+    return offsets if utf16offset else False
 
 
 # matcher to false positives
@@ -1650,7 +1685,13 @@ async def apply_language_rules(
 
 
 def apply_term_replacements(
-    tokens, version: float, config: Config, configs: dict, lang: Language, text: str
+    version: float,
+    config: Config,
+    lang: Language,
+    text: str,
+    tokens,
+    offsets,
+    configs: dict,
 ):
     if "term_replacements" not in configs:
         return []
@@ -1712,6 +1753,7 @@ def apply_term_replacements(
             config,
             lang,
             text,
+            offsets,
             term_replacements_case_insensitive,
             "corporate_rules",
         )
@@ -1722,6 +1764,7 @@ def apply_term_replacements(
             config,
             lang,
             text,
+            offsets,
             term_replacements_case_sensitive,
             "corporate_rules",
         )
@@ -1743,6 +1786,7 @@ def apply_term_replacements(
             lang,
             text,
             tokens,
+            offsets,
             term_replacements,
         )
 
@@ -1847,7 +1891,9 @@ async def context_false_positives(lang, tokens, list_results):
 async def german_rules(
     version: float, config: Config, configs: dict, lang: Language, text: str
 ):
-    list_full = await apply_languagetool_rules(version, config, lang, text)
+    offsets = utf16_offsets(text)
+
+    list_full = await apply_languagetool_rules(version, config, lang, text, offsets)
 
     tokens = fetch_tokens(lang.lang, text)
 
@@ -1858,6 +1904,7 @@ async def german_rules(
             lang,
             text,
             tokens,
+            offsets,
             rules["de"]["df_abbreviation"],
             rules["de"]["abbreviation"],
             True,
@@ -1869,6 +1916,7 @@ async def german_rules(
         lang,
         text,
         tokens,
+        offsets,
         rules["de"]["open_disc_words_data"],
         rules["de"]["open_disc_sentences_data"],
         rules["de"]["df_open_dis_sentence"],
@@ -1880,6 +1928,7 @@ async def german_rules(
         lang,
         text,
         tokens,
+        offsets,
         rules["de"]["gender_words_data_no_noun"],
         rules["de"]["gender_sentences_data"],
         rules["de"]["df_gendered_sentences"],
@@ -1889,6 +1938,7 @@ async def german_rules(
         lang,
         text,
         tokens,
+        offsets,
         rules["de"]["gender_words_data"],
         rules["de"]["false_positives"].gender,
     )
@@ -1899,6 +1949,7 @@ async def german_rules(
             config,
             lang,
             text,
+            offsets,
             rules["m_f_regexes"],
             "gender_specific_abbreviation",
         )
@@ -1922,6 +1973,7 @@ async def german_rules(
             config,
             lang,
             text,
+            offsets,
             regexes,
             subcategory,
         )
@@ -1932,6 +1984,7 @@ async def german_rules(
         lang,
         text,
         tokens,
+        offsets,
         rules["de"]["bias_words_data_no_plur"],
         rules["de"]["bias_sentences_data"],
         rules["de"]["df_ub_sentences"],
@@ -1941,6 +1994,7 @@ async def german_rules(
         lang,
         text,
         tokens,
+        offsets,
         rules["de"]["bias_words_data_noun"],
     )
 
@@ -1951,6 +2005,7 @@ async def german_rules(
             lang,
             text,
             tokens,
+            offsets,
             rules["de"]["df_communal_words"],
             None,
             [],
@@ -1965,6 +2020,7 @@ async def german_rules(
             lang,
             text,
             tokens,
+            offsets,
             rules["de"]["df_d_and_i_words"],
             None,
             rules["de"]["df_terms_d_and_i_words"],
@@ -1977,7 +2033,9 @@ async def german_rules(
 
         regexes.update(rules["d_f_m_regexes"])
 
-        list_full += regex_matches(version, config, lang, text, regexes, subcategory)
+        list_full += regex_matches(
+            version, config, lang, text, offsets, regexes, subcategory
+        )
 
     list_full += style_word_analysis_de(
         version,
@@ -1985,6 +2043,7 @@ async def german_rules(
         lang,
         text,
         tokens,
+        offsets,
         rules["de"]["terms_style"],
         rules["de"]["style_words_data"],
         rules["de"]["style_sentences_data"],
@@ -1996,9 +2055,12 @@ async def german_rules(
         config,
         lang,
         text,
+        offsets,
     )
 
-    list_full += apply_term_replacements(tokens, version, config, configs, lang, text)
+    list_full += apply_term_replacements(
+        version, config, lang, text, tokens, offsets, configs
+    )
 
     return await context_false_positives(lang.lang, tokens, list_full)
 
@@ -2006,7 +2068,9 @@ async def german_rules(
 async def english_rules(
     version: float, config: Config, configs: dict, lang: Language, text: str
 ):
-    list_full = await apply_languagetool_rules(version, config, lang, text)
+    offsets = utf16_offsets(text)
+
+    list_full = await apply_languagetool_rules(version, config, lang, text, offsets)
 
     tokens = fetch_tokens(lang.lang, text)
 
@@ -2041,6 +2105,7 @@ async def english_rules(
         lang,
         text,
         tokens,
+        offsets,
         matches_false,
         words_data_en["homonym"],
     )
@@ -2052,6 +2117,7 @@ async def english_rules(
             lang,
             text,
             tokens,
+            offsets,
             rules[lang.locale]["df_abbreviation"],
             words_data_en["abbr"],
             True,
@@ -2063,6 +2129,7 @@ async def english_rules(
         lang,
         text,
         tokens,
+        offsets,
         words_data_en["od"],
         sentences_data_en["od"],
         rules[lang.locale]["df_open_dis_sentence"],
@@ -2075,6 +2142,7 @@ async def english_rules(
         lang,
         text,
         tokens,
+        offsets,
         words_data_en["ge"],
         sentences_data_en["ge"],
         rules[lang.locale]["df_gendered_sentence"],
@@ -2088,6 +2156,7 @@ async def english_rules(
             lang,
             text,
             tokens,
+            offsets,
             words_data_en["ge-singular-they"],
             sentences_data_en["ge"],
             rules[lang.locale]["df_gendered_sentence"],
@@ -2102,6 +2171,7 @@ async def english_rules(
         lang,
         text,
         tokens,
+        offsets,
         gendered_words_data_en["gendered"],
         matches_false,
     )
@@ -2112,6 +2182,7 @@ async def english_rules(
             config,
             lang,
             text,
+            offsets,
             rules["m_f_regexes"],
             "gender_specific_abbreviation",
         )
@@ -2124,6 +2195,7 @@ async def english_rules(
             config,
             lang,
             text,
+            offsets,
             rules["d_f_m_regexes"],
             subcategory,
         )
@@ -2134,6 +2206,7 @@ async def english_rules(
         lang,
         text,
         tokens,
+        offsets,
         inclusive_words_data_en,
         inclusive_sentences_data_en,
         rules[lang.locale]["df_inclusive_sentence"],
@@ -2147,6 +2220,7 @@ async def english_rules(
             lang,
             text,
             tokens,
+            offsets,
             words_data_en["style"],
             sentences_data_en["style"],
             rules[lang.locale]["df_style_sentence"],
@@ -2158,6 +2232,7 @@ async def english_rules(
             lang,
             text,
             tokens,
+            offsets,
             gendered_words_data_en["style"],
             matches_false,
         )
@@ -2166,6 +2241,7 @@ async def english_rules(
             config,
             lang,
             text,
+            offsets,
         )
     )
 
@@ -2175,6 +2251,7 @@ async def english_rules(
         lang,
         text,
         tokens,
+        offsets,
         words_data_en["bias"],
         sentences_data_en["bias"],
         rules[lang.locale]["df_ub_sentence"],
@@ -2185,11 +2262,14 @@ async def english_rules(
         lang,
         text,
         tokens,
+        offsets,
         gendered_words_data_en["bias"],
         matches_false,
     )
 
-    list_full += apply_term_replacements(tokens, version, config, configs, lang, text)
+    list_full += apply_term_replacements(
+        version, config, lang, text, tokens, offsets, configs
+    )
 
     return await context_false_positives(lang.lang, tokens, list_full)
 
@@ -3000,6 +3080,7 @@ def sentences_matches(
     lang,
     full_text,
     tokens,
+    offsets,
     subcategory,
     matches,
 ):
@@ -3016,6 +3097,7 @@ def sentences_matches(
                     lang,
                     span.text,
                     full_text,
+                    offsets,
                     subcategory,
                     span.start_char,
                     span.end_char,
@@ -3031,6 +3113,7 @@ def sentences_matcher(
     lang,
     full_text,
     tokens,
+    offsets,
     sentences_data,
     df_sentence,
     subcategory=None,
@@ -3052,6 +3135,7 @@ def sentences_matcher(
             lang,
             full_text,
             tokens,
+            offsets,
             subcategory,
             matches,
         )
@@ -3075,6 +3159,7 @@ def sentences_matcher(
                         lang,
                         span.text,
                         full_text,
+                        offsets,
                         subcategory,
                         span.start_char,
                         span.end_char,
@@ -3090,6 +3175,7 @@ def regex_matches(
     config: Config,
     lang,
     full_text,
+    offsets,
     regexes,
     subcategory=None,
 ):
@@ -3234,6 +3320,7 @@ def regex_matches(
                     lang,
                     text,
                     full_text,
+                    offsets,
                     subcategory,
                     start,
                     None,
@@ -3254,6 +3341,7 @@ def ub_words_phrase_matcher_de(
     lang,
     full_text,
     tokens,
+    offsets,
     words_data,
     sentences_data,
     df_sentence,
@@ -3282,6 +3370,7 @@ def ub_words_phrase_matcher_de(
                     lang,
                     text,
                     full_text,
+                    offsets,
                     subcategory,
                     start,
                     None,
@@ -3295,6 +3384,7 @@ def ub_words_phrase_matcher_de(
         lang,
         full_text,
         tokens,
+        offsets,
         sentences_data,
         df_sentence,
     )
@@ -3306,6 +3396,7 @@ def gendered_denom_analysis_de(
     lang,
     full_text,
     tokens,
+    offsets,
     words_data,
     false_positives,
 ):
@@ -3452,6 +3543,7 @@ def gendered_denom_analysis_de(
                     lang,
                     text,
                     full_text,
+                    offsets,
                     subcategory,
                     start,
                     None,
@@ -3470,6 +3562,7 @@ def style_word_analysis_de(
     lang,
     full_text,
     tokens,
+    offsets,
     df_sentences,
     words_data,
     sentences_data,
@@ -3521,6 +3614,7 @@ def style_word_analysis_de(
                     lang,
                     text,
                     full_text,
+                    offsets,
                     subcategory,
                     start,
                     None,
@@ -3534,6 +3628,7 @@ def style_word_analysis_de(
         lang,
         full_text,
         tokens,
+        offsets,
         sentences_data,
         df_sentences,
     )
@@ -3545,6 +3640,7 @@ def word_noun(
     lang,
     full_text,
     tokens,
+    offsets,
     words_data,
     matches_false=None,
 ):
@@ -3603,6 +3699,7 @@ def word_noun(
                     lang,
                     text,
                     full_text,
+                    offsets,
                     subcategory,
                     start,
                     None,
@@ -3684,6 +3781,7 @@ def rules_based_words_phrase_matcher(
     lang,
     full_text,
     tokens,
+    offsets,
     words_data,
     sentences_data=None,
     df_sentence=None,
@@ -3792,6 +3890,7 @@ def rules_based_words_phrase_matcher(
                     lang,
                     text,
                     full_text,
+                    offsets,
                     subcategory,
                     start,
                     None,
@@ -3812,6 +3911,7 @@ def rules_based_words_phrase_matcher(
         lang,
         full_text,
         tokens,
+        offsets,
         sentences_data,
         df_sentence,
         fallback_subcategory,
@@ -3825,6 +3925,7 @@ def homonyms_en(
     lang,
     full_text,
     tokens,
+    offsets,
     matches_false,
     words_data,
 ):
@@ -3854,6 +3955,7 @@ def homonyms_en(
                     lang,
                     text,
                     full_text,
+                    offsets,
                     subcategory,
                     start,
                     None,
@@ -3871,6 +3973,7 @@ def literal_match(
     lang,
     full_text,
     tokens,
+    offsets,
     df_sentence,
     term_list,
     lower_case=False,
@@ -3908,6 +4011,7 @@ def literal_match(
                     lang,
                     span.text,
                     full_text,
+                    offsets,
                     subcategory,
                     span.start_char,
                     span.end_char,
@@ -3923,6 +4027,7 @@ def detect_lower_cased_hashtags(
     config: Config,
     lang,
     full_text,
+    offsets,
 ):
     subcategory = "style"
 
@@ -3948,6 +4053,7 @@ def detect_lower_cased_hashtags(
                     lang,
                     "#" + text,
                     full_text,
+                    offsets,
                     subcategory,
                     span.start(),
                     span.end(),
