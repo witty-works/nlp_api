@@ -433,6 +433,7 @@ def get_root():
 
     return "Witty NLP API: https://witty.works"
 
+
 @app.get(
     "/save_openapi_json",
     include_in_schema=not settings.is_prod,
@@ -2392,7 +2393,9 @@ def german_noun_lookup(word):
     if "flexion" in result:
         for flexion in list(result["flexion"].keys()):
             if "1" in flexion:
-                result["flexion"][flexion.replace(" 1", "")] = result["flexion"][flexion]
+                result["flexion"][flexion.replace(" 1", "")] = result["flexion"][
+                    flexion
+                ]
 
     if "genus" in result:
         return result
@@ -3415,7 +3418,7 @@ def gendered_denom_analysis_de(
                 alternatives = new_alternatives
 
             flexion = fetch_flexion(tokens[i])
-            if "nominativ" not in flexion:
+            if flexion is not flexion and "nominativ" not in flexion:
                 new_alternatives = []
                 for alternative in alternatives:
                     if "~" in alternative:
