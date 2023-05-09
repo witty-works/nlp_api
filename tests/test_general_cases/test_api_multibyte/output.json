@@ -1,0 +1,96 @@
+{
+    "language": "en",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "goal"
+                },
+                {
+                    "text": "gooey"
+                },
+                {
+                    "text": "Gomal"
+                }
+            ],
+            "category": "orthography",
+            "context": "😀 Power 𐐀 is our gooal my ninja",
+            "end": 24,
+            "explanation": {
+                "icon": "❌",
+                "text": "Possible spelling mistake found."
+            },
+            "gravity": 1.0,
+            "label": "Spelling mistake",
+            "start": 19,
+            "subcategory": "typos",
+            "text": "gooal"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "skilled person"
+                },
+                {
+                    "text": "very proficient person"
+                },
+                {
+                    "text": "resourceful person"
+                },
+                {
+                    "text": "they"
+                },
+                {
+                    "text": "skilled people"
+                }
+            ],
+            "category": "social-motive",
+            "context": "😀 Power 𐐀 is our gooal my ninja",
+            "end": 33,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😮‍💨",
+                "text": "Over-the-top statements make you sound less trustworthy",
+                "url": "https://www.witty.works/en/categories/social-motive/exaggeration?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Social Motive: Exaggeration",
+            "proficiency_level": "unconscious_bias",
+            "start": 28,
+            "subcategory": "exaggerating",
+            "text": "ninja"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "capacity"
+                },
+                {
+                    "text": "energy"
+                },
+                {
+                    "text": "aptitude"
+                },
+                {
+                    "text": "capacities"
+                }
+            ],
+            "category": "social-motive",
+            "context": "😀 Power 𐐀 is our gooal my ninja",
+            "end": 8,
+            "explanation": {
+                "content": "video",
+                "icon": "😒",
+                "text": "Doesn’t resonate with team-minded people",
+                "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Social Motive: Agentic language",
+            "proficiency_level": "unconscious_bias",
+            "start": 3,
+            "subcategory": "agentic",
+            "text": "Power"
+        }
+    ]
+}
