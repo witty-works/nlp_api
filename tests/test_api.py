@@ -1207,6 +1207,7 @@ def test_spacy():
                 "tag": "PDS",
                 "pos": "PRON",
                 "dep": "sb",
+                "entity": None,
                 "word_types": ["s"],
                 "morph": {
                     "Case": "Nom",
@@ -1222,6 +1223,7 @@ def test_spacy():
                 "tag": "VAFIN",
                 "pos": "AUX",
                 "dep": "ROOT",
+                "entity": None,
                 "word_types": [],
                 "morph": {
                     "Mood": "Ind",
@@ -1238,6 +1240,7 @@ def test_spacy():
                 "tag": "ADV",
                 "pos": "ADV",
                 "dep": "mo",
+                "entity": None,
                 "word_types": ["a"],
                 "morph": {},
             },
@@ -1248,6 +1251,7 @@ def test_spacy():
                 "tag": "ADJD",
                 "pos": "ADV",
                 "dep": "pd",
+                "entity": None,
                 "word_types": ["a"],
                 "morph": {"Degree": "Pos"},
             },

@@ -72,6 +72,12 @@ def fetch_rules(langs):
         "d_f_m_regexes": {
             r"(?i)\s(\()?(d|x|\*)(\/v)?\/f(\/[*a-z])*(\))?": None,  # (d/f/m..)
         },
+        "named_entity_labels": {
+            "PER": "Named person or family.",
+            "ORG": "Companies, agencies, institutions, etc.",
+            # "DATE": "Absolute or relative dates or periods",
+            "LOC": "Non-GPE locations, mountain ranges, bodies of water",
+        },
     }
 
     locales = {

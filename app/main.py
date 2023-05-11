@@ -16,7 +16,11 @@ import os
 import fasttext
 
 from spacy.matcher import PhraseMatcher, Matcher
+from spacy.tokens import Token
 import pandas as pd
+
+from flair.data import Sentence
+from flair.nn import Classifier
 
 from inflex import Noun, Verb, Adjective
 
@@ -111,12 +115,15 @@ initialize_aadb2c(settings)
 logging.debug("app started with settings: %s", settings)
 
 if len(settings.models) > 0:
+    Token.set_extension("entity", default=None)
+
     model = {}
     for spacy_model in settings.models:
         lang = spacy_model[0:2]
         if lang in settings.langs:
             model[lang] = fetch_nlp_model(lang, spacy_model)
 
+    tagger = Classifier.load("ner-large")
     rules = fetch_rules(settings.langs)
 
 if settings.fasttext:
@@ -577,6 +584,7 @@ async def get_debug_spacy(
                 "tag": token.tag_,
                 "pos": token.pos_,
                 "dep": token.dep_,
+                "entity": token._.entity,
                 "word_types": fetch_word_types(lang, token),
                 "morph": token.morph.to_dict(),
             }
@@ -1326,14 +1334,27 @@ def has_gender_denom_ending(text, full_text, offset, config: Config):
 
 
 def languagetool_matches(
-    version: float, config: Config, lang: Language, full_text: str, offsets, result
+    version: float,
+    config: Config,
+    lang: Language,
+    full_text: str,
+    tokens,
+    offsets,
+    result,
 ):
     list_results = []
+    if len(result["matches"]) == 0:
+        return list_results
+
     ignore = ["@", "#"]
 
     gendered_denom = lang.lang == "de" and ResultOut.genderedRolesFormatInclusive(
         config.gendered_roles_format
     )
+
+    tokens_by_start = {}
+    for token in tokens:
+        tokens_by_start[token.idx] = token
 
     for match in result["matches"]:
         start = int(match["offset"])
@@ -1347,21 +1368,13 @@ def languagetool_matches(
 
         text = full_text[start:end]
 
-        # Ignore capitalization after German salutation
-        if match["rule"]["category"]["id"] == "TYPOS":
-            subtext = (
-                full_text[0:start]
-                .lstrip()
-                .lower()
-                .replace("'", "")
-                .replace("'", "")
-                .split("\n")
-            )
-            if len(subtext) == 1 and any(
-                substring.lower() + " " in subtext[0]
-                for substring in rules[lang.lang]["salutations"]
-            ):
-                continue
+        # ignore typos in named entities
+        if (
+            match["rule"]["category"]["id"] == "TYPOS"
+            and start in tokens_by_start
+            and tokens_by_start[start]._.entity in rules["named_entity_labels"]
+        ):
+            continue
 
         if (
             lang.lang == "de"
@@ -1508,7 +1521,7 @@ async def fetch_json_post(url, payload, headers, name, ssl=True, json=True):
 
 
 async def apply_languagetool_rules(
-    version: float, config: Config, lang: Language, text: str, offsets
+    version: float, config: Config, lang: Language, text: str, tokens, offsets
 ):
     if settings.languagetool_api == "":
         return []
@@ -1553,7 +1566,7 @@ async def apply_languagetool_rules(
     if not isinstance(result, dict):
         return []
 
-    return languagetool_matches(version, config, lang, text, offsets, result)
+    return languagetool_matches(version, config, lang, text, tokens, offsets, result)
 
 
 def utf16len(c):
@@ -1563,7 +1576,27 @@ def utf16len(c):
 
 
 def fetch_tokens(lang, text: str):
-    return model[lang](text.rstrip().replace("\n", " "))
+    tokens = model[lang](text.rstrip().replace("\n", " "))
+    entites = {}
+
+    for sentence in tokens.sents:
+        ner_sentence = Sentence(sentence.text)
+        tagger.predict(ner_sentence)
+        for entity in ner_sentence.get_spans("ner"):
+            if entity.score < 0.7:
+                continue
+
+            words = entity.text.split()
+            offset = sentence.start_char + entity.start_position
+            for word in words:
+                entites[offset] = entity.tag
+                offset += len(word) + 1
+
+    for token in tokens:
+        if token.idx in entites:
+            token._.entity = entites[token.idx]
+
+    return tokens
 
 
 def utf16_offsets(text):
@@ -1893,9 +1926,11 @@ async def german_rules(
 ):
     offsets = utf16_offsets(text)
 
-    list_full = await apply_languagetool_rules(version, config, lang, text, offsets)
-
     tokens = fetch_tokens(lang.lang, text)
+
+    list_full = await apply_languagetool_rules(
+        version, config, lang, text, tokens, offsets
+    )
 
     if is_sub_category_enabled(config, "abbreviation"):
         list_full += literal_match(
@@ -1941,6 +1976,7 @@ async def german_rules(
         offsets,
         rules["de"]["gender_words_data"],
         rules["de"]["false_positives"].gender,
+        True,
     )
 
     if is_sub_category_enabled(config, "gender_specific_abbreviation"):
@@ -2070,9 +2106,11 @@ async def english_rules(
 ):
     offsets = utf16_offsets(text)
 
-    list_full = await apply_languagetool_rules(version, config, lang, text, offsets)
-
     tokens = fetch_tokens(lang.lang, text)
+
+    list_full = await apply_languagetool_rules(
+        version, config, lang, text, tokens, offsets
+    )
 
     words_data_en = defaultdict(list)
     gendered_words_data_en = defaultdict(list)
@@ -3399,6 +3437,7 @@ def gendered_denom_analysis_de(
     offsets,
     words_data,
     false_positives,
+    skip_entities=True,
 ):
     list_tokens = []
 
@@ -3410,6 +3449,9 @@ def gendered_denom_analysis_de(
             alternatives_sing,
             alternatives_plur,
         ) in words_data:
+            if skip_entities and tokens[i]._.entity in rules["named_entity_labels"]:
+                continue
+
             postfix = subcategory.endswith("_base")
             if postfix:
                 subcategory = subcategory[0 : -len("_base")]
