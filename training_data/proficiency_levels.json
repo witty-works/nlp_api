@@ -1,11 +1,13 @@
 {
     "openly_discriminating": {
+        "hs_path": "",
         "hs_name": "",
         "inclusive": false,
         "sort": "0",
         "emoji": "\ud83d\udeab",
         "translations": {
             "en": {
+                "hs_path": "slurs-hate-speech",
                 "hs_name": "Slurs + hate speech",
                 "canonical_url": "https:\/\/www.witty.works\/en\/proficiency-levels\/slurs-hate-speech",
                 "name": "Slurs + hate speech",
@@ -13,6 +15,7 @@
                 "lead_image": []
             },
             "de": {
+                "hs_path": "verunglimpfung-hassrede",
                 "hs_name": "Verunglimpfung + Hassrede",
                 "canonical_url": "https:\/\/www.witty.works\/en\/kompetenzstufen\/verunglimpfung-hassrede",
                 "name": "Verunglimpfung + Hassrede",
@@ -22,12 +25,14 @@
         }
     },
     "unconscious_bias": {
+        "hs_path": "",
         "hs_name": "",
         "inclusive": false,
         "sort": "1",
         "emoji": "\ud83d\udca1",
         "translations": {
             "en": {
+                "hs_path": "unconscious-bias",
                 "hs_name": "Unconscious bias",
                 "canonical_url": "https:\/\/www.witty.works\/en\/proficiency-levels\/unconscious-bias",
                 "name": "Unconscious bias",
@@ -35,6 +40,7 @@
                 "lead_image": []
             },
             "de": {
+                "hs_path": "unbewusste-voreingenommenheiten",
                 "hs_name": "Unbewusste Voreingenommenheiten",
                 "canonical_url": "https:\/\/www.witty.works\/en\/kompetenzstufen\/unbewusste-voreingenommenheiten",
                 "name": "Unbewusste Voreingenommenheiten",
@@ -44,12 +50,14 @@
         }
     },
     "ancestry": {
+        "hs_path": "",
         "hs_name": "",
         "inclusive": false,
         "sort": "2",
         "emoji": "",
         "translations": {
             "en": {
+                "hs_path": "ancestry",
                 "hs_name": "Ancestry",
                 "canonical_url": "",
                 "name": "Ancestry",
@@ -57,6 +65,7 @@
                 "lead_image": []
             },
             "de": {
+                "hs_path": "abstammung",
                 "hs_name": "Abstammung",
                 "canonical_url": "",
                 "name": "Abstammung",
@@ -66,12 +75,14 @@
         }
     },
     "visible": {
+        "hs_path": "",
         "hs_name": "",
         "inclusive": false,
         "sort": "2",
         "emoji": "",
         "translations": {
             "en": {
+                "hs_path": "visible",
                 "hs_name": "Visible",
                 "canonical_url": "",
                 "name": "Visible",
@@ -79,6 +90,7 @@
                 "lead_image": []
             },
             "de": {
+                "hs_path": "sichtbar",
                 "hs_name": "Sichtbar",
                 "canonical_url": "",
                 "name": "Sichtbar",
@@ -88,12 +100,14 @@
         }
     },
     "language-clarity": {
+        "hs_path": "",
         "hs_name": "",
         "inclusive": false,
         "sort": "2",
         "emoji": "",
         "translations": {
             "en": {
+                "hs_path": "language-clarity",
                 "hs_name": "Language clarity",
                 "canonical_url": "",
                 "name": "Language clarity",
@@ -101,6 +115,7 @@
                 "lead_image": []
             },
             "de": {
+                "hs_path": "sprachliche-klarheit",
                 "hs_name": "Sprachliche Klarheit",
                 "canonical_url": "",
                 "name": "Sprachliche Klarheit",
@@ -110,12 +125,14 @@
         }
     },
     "age": {
+        "hs_path": "",
         "hs_name": "",
         "inclusive": false,
         "sort": "2",
         "emoji": "",
         "translations": {
             "en": {
+                "hs_path": "age",
                 "hs_name": "Age",
                 "canonical_url": "",
                 "name": "Age",
@@ -123,6 +140,7 @@
                 "lead_image": []
             },
             "de": {
+                "hs_path": "alter",
                 "hs_name": "Alter",
                 "canonical_url": "",
                 "name": "Alter",
@@ -132,12 +150,14 @@
         }
     },
     "invisible": {
+        "hs_path": "",
         "hs_name": "",
         "inclusive": false,
         "sort": "3",
         "emoji": "",
         "translations": {
             "en": {
+                "hs_path": "invisible",
                 "hs_name": "Invisible",
                 "canonical_url": "",
                 "name": "Invisible",
@@ -145,6 +165,7 @@
                 "lead_image": []
             },
             "de": {
+                "hs_path": "unsichtbar",
                 "hs_name": "Unsichtbar",
                 "canonical_url": "",
                 "name": "Unsichtbar",
@@ -154,12 +175,14 @@
         }
     },
     "inclusive": {
+        "hs_path": "",
         "hs_name": "",
         "inclusive": true,
         "sort": "20",
         "emoji": "\u2705",
         "translations": {
             "en": {
+                "hs_path": "inclusion",
                 "hs_name": "Inclusion",
                 "canonical_url": "https:\/\/www.witty.works\/en\/proficiency-levels\/inclusion",
                 "name": "Inclusion",
@@ -167,6 +190,7 @@
                 "lead_image": []
             },
             "de": {
+                "hs_path": "inklusion",
                 "hs_name": "Inklusion",
                 "canonical_url": "https:\/\/www.witty.works\/en\/kompetenzstufen\/inklusion",
                 "name": "Inklusion",

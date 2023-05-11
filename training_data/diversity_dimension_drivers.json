@@ -1,5 +1,6 @@
 {
     "LGBTQIA-hate": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "openly_discriminating",
         "emoji": "\ud83d\udeab",
@@ -10,6 +11,7 @@
         ]
     },
     "abbreviation": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "language-clarity",
         "emoji": "\ud83d\ude09",
@@ -21,6 +23,7 @@
         ],
         "translations": {
             "en": {
+                "hs_path": "abbreviation",
                 "hs_name": "Abbreviation",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/abbreviation",
                 "is_active": "1",
@@ -52,20 +55,24 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "abbreviation",
-                "emoji": "\ud83d\ude09",
-                "gravity": "3"
+                "anchor": "abbreviation"
             },
             "de": {
+                "hs_path": "abk\u00fcrzung",
                 "hs_name": "Abk\u00fcrzung",
-                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit%C3%A4t\/abk\u00fcrzung",
+                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/abk\u00fcrzung",
                 "is_active": "1",
                 "name": "Werden alle Lesenden diese Abk\u00fcrzung verstehen?",
                 "short_explanation": "Werden alle Lesenden diese Abk\u00fcrzung verstehen?",
                 "sub_head": "Schreib die Abk\u00fcrzungen und Akronyme aus. So vermeidest zu Missverst\u00e4ndnisse und vermittelst allen ein sicheres Gef\u00fchl.",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Abk%C3%BCrzungen.png",
+                    "width": "605",
+                    "height": "443",
+                    "alt": "Eine Illustration von Witty des Satzes 'Untersch\u00e4tzen Sie niemals den Einfluss von [SMM] auf WOM.'. Als Alternative f\u00fcr den Begriff in Klammern wird 'Social-Media Marketing' vorgeschlagen."
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -83,13 +90,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "abk\u00fcrzung",
-                "emoji": "\ud83d\ude09",
-                "gravity": "3"
+                "anchor": "abk\u00fcrzung"
             }
         }
     },
     "ability": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude12",
@@ -97,6 +103,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "ability",
                 "hs_name": "Ability",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/ability",
                 "is_active": "1",
@@ -123,11 +130,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "ability",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "ability"
             },
             "de": {
+                "hs_path": "f\u00e4higkeiten",
                 "hs_name": "F\u00e4higkeiten",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/f\u00e4higkeiten",
                 "is_active": "1",
@@ -154,13 +160,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "f\u00e4higkeiten",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "f\u00e4higkeiten"
             }
         }
     },
     "ableism": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "openly_discriminating",
         "emoji": "\ud83d\udeab",
@@ -168,6 +173,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "ableist",
                 "hs_name": "Ableist",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/ableist",
                 "is_active": "1",
@@ -199,11 +205,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "ableist",
-                "emoji": "\ud83d\udeab",
-                "gravity": "1"
+                "anchor": "ableist"
             },
             "de": {
+                "hs_path": "behindertenfeindlichkeit",
                 "hs_name": "Behindertenfeindlichkeit",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/behindertenfeindlichkeit",
                 "is_active": "1",
@@ -230,13 +235,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "behindertenfeindlichkeit",
-                "emoji": "\ud83d\udeab",
-                "gravity": "1"
+                "anchor": "behindertenfeindlichkeit"
             }
         }
     },
     "age": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "age",
         "emoji": "\ud83e\udd14",
@@ -244,6 +248,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "age-information",
                 "hs_name": "Age information",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/acquired-diversity\/age-information",
                 "is_active": "1",
@@ -270,13 +275,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "age_information",
-                "emoji": "\ud83e\udd14",
-                "gravity": "2"
+                "anchor": "age_information"
             },
             "de": {
+                "hs_path": "altersangabe",
                 "hs_name": "Altersangabe",
-                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/erworbene-diversit%C3%A4t\/altersangabe",
+                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/erworbene-diversit\u00e4t\/altersangabe",
                 "is_active": "1",
                 "name": "Spielt das Alter hier eine Rolle?",
                 "short_explanation": "Spielt das Alter hier eine Rolle?",
@@ -301,13 +305,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "altersangabe",
-                "emoji": "\ud83e\udd14",
-                "gravity": "2"
+                "anchor": "altersangabe"
             }
         }
     },
     "age_old": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "age",
         "emoji": "\ud83d\ude12",
@@ -315,6 +318,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "50-years-and-older",
                 "hs_name": "50 years and older",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/acquired-diversity\/50-years-and-older",
                 "is_active": "1",
@@ -346,13 +350,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "50_years_and_older",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "50_years_and_older"
             },
             "de": {
+                "hs_path": "50-jahre-und-\u00e4lter",
                 "hs_name": "50 Jahre und \u00e4lter",
-                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/erworbene-diversit%C3%A4t\/50-jahre-und-\u00e4lter",
+                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/erworbene-diversit\u00e4t\/50-jahre-und-\u00e4lter",
                 "is_active": "1",
                 "name": "Bedient Klischees \u00fcber Menschen \u00fcber 50",
                 "short_explanation": "Bedient Klischees \u00fcber Menschen \u00fcber 50",
@@ -382,13 +385,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "50_jahre_und_\u00e4lter",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "50_jahre_und_\u00e4lter"
             }
         }
     },
     "age_young": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "age",
         "emoji": "\ud83d\ude12",
@@ -396,6 +398,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "25-years-and-younger",
                 "hs_name": "25 years and younger",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/acquired-diversity\/25-years-and-younger",
                 "is_active": "1",
@@ -427,13 +430,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "25_years_and_younger",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "25_years_and_younger"
             },
             "de": {
+                "hs_path": "25-jahre-und-j\u00fcnger",
                 "hs_name": "25 Jahre und j\u00fcnger",
-                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/erworbene-diversit%C3%A4t\/25-jahre-und-j\u00fcnger",
+                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/erworbene-diversit\u00e4t\/25-jahre-und-j\u00fcnger",
                 "is_active": "1",
                 "name": "Bedient Klischees \u00fcber Menschen unter 25",
                 "short_explanation": "Bedient Klischees \u00fcber Menschen unter 25",
@@ -458,13 +460,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "25_jahre_und_j\u00fcnger",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "25_jahre_und_j\u00fcnger"
             }
         }
     },
     "agentic": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude12",
@@ -477,6 +478,7 @@
         ],
         "translations": {
             "en": {
+                "hs_path": "agentic-language",
                 "hs_name": "Agentic language",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/social-motive\/agentic-language",
                 "is_active": "1",
@@ -491,10 +493,10 @@
                     "alt": "Illustration: A man in a suit with his arms akimbo The image title says Agentic language."
                 },
                 "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Agentic%20language.png",
+                    "src": "https:\/\/www.witty.works\/hubfs\/Agentic%20language-1.png",
                     "width": "605",
                     "height": "433",
-                    "alt": "An illustration of Witty showing the phrase ' In Q4, Brandon, our Head of Sales, out-performed competitors, growing total revenue [our sales team grew total revenue] by 53%.' The words in brackets are shown as alternatives."
+                    "alt": "Eine Illustration von Witty des Satzes 'In this new project manager role, [assertiveness] and [determination] are crucial.'. Als Alternative f\u00fcr den Begriff in Klammern wird \u2018focus\u2019 vorgeschlagen."
                 },
                 "soft_explanation": "<p style=\"\"><span style=\"color: #000000;\">As we grow up, we learn to associate words like <\/span><em><span style=\"color: #000000;\">take charge<\/span><\/em><span style=\"color: #000000;\">, <\/span><em><span style=\"color: #000000;\">determined<\/span><\/em><span style=\"color: #000000;\">, or <\/span><em><span style=\"color: #000000;\">outperforming <\/span><\/em><span style=\"color: #000000;\">with men, power, and the pursuit of personal success. These words are called <\/span><em><span style=\"color: #000000;\">agentic<\/span><\/em><span style=\"color: #000000;\">. They put self-advancement over collaboration. But women and Generation Z are socialized to value collaboration. By avoiding agentic words, you help build an environment where all genders and ages feel they can thrive.<\/span><\/p>",
                 "hard_facts": "<p>In companies that favor agentic words, men are more likely to be considered leadership material. If agentic language is associated with leadership, can\u2019t women simply adopt agentic language to show their capacity to lead and succeed? Unfortunately, it\u2019s not that easy.<\/p>\n<p>Studies show that women who \u201cspeak agentic\u201d are judged more harshly and considered less likable than their male counterparts. In 3 out of 4 performance reviews, women are criticized for assertiveness in tone and language. This assertiveness double-bind is the <em>Goldilocks Dilemma<\/em>. Not catering to expectations of how women should speak adversely affects their access to promotions or career opportunities. And not speaking like leaders does, too.&nbsp;<\/p>\n<p>The opposite of agentic words are <a href=\"https:\/\/www.witty.works\/en\/subcategories\/communal-language\" rel=\"noopener\" target=\"_blank\">communal words<\/a>. By replacing agentic with communal concepts, organizations show they value team-minded thinking and mutual support. Which, in turn, raises their workplace appeal among people who identify as female and those who prefer working in teams.<\/p>",
@@ -513,13 +515,12 @@
                 "meme_2_alt_text": "Invitation text: Draw inspiration from people who pave the way for inclusion as thought leaders and change makers. Click to meet witty talks",
                 "meme_2_url": "https:\/\/www.witty.works\/witty-talks",
                 "read_on": "<span style=\"\"><a href=\"https:\/\/www.witty.works\/en\/blog\/gendered-wording-in-job-ads-scientific-findings\" rel=\"noopener\" target=\"_blank\">Gendered Wording in Job Ads - Scientific Findings<\/a><span style=\"color: #000000;\">, <\/span>witty.works blog<\/span>",
-                "anchor": "agentic",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "agentic"
             },
             "de": {
+                "hs_path": "agentische-sprache",
                 "hs_name": "Agentische Sprache",
-                "canonical_url": "https:\/\/www.witty.works\/de\/subkategorien\/agentische-sprache",
+                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/soziale-motivation\/agentische-sprache",
                 "is_active": "1",
                 "name": "Spricht kooperativ denkende Menschen nicht an",
                 "short_explanation": "Spricht kooperativ denkende Menschen nicht an",
@@ -549,13 +550,12 @@
                 "meme_2_alt_text": "Text auf Farbfl\u00e4che: Lass dich von Menschen inspirieren, die Inklusion den Weg ebnen. Schaltfl\u00e4che klicken, um Witty Talks zu sehen",
                 "meme_2_url": "https:\/\/www.witty.works\/witty-talks",
                 "read_on": "<span style=\"\"><a href=\"https:\/\/www.witty.works\/en\/blog\/gendered-wording-in-job-ads-scientific-findings\" rel=\"noopener\" target=\"_blank\">Gendered Wording in Job Ads - Scientific Findings<\/a><span style=\"color: #000000;\">, <\/span>witty.works blog<\/span>",
-                "anchor": "agentisch",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "agentisch"
             }
         }
     },
     "anglicism": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "language-clarity",
         "emoji": "\ud83d\ude09",
@@ -563,8 +563,9 @@
         "related_subcategories": [],
         "translations": {
             "de": {
+                "hs_path": "anglizismen",
                 "hs_name": "Anglizismen",
-                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit%C3%A4t\/anglizismen",
+                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/anglizismen",
                 "is_active": "1",
                 "name": "Werden alle diesen Anglizismus verstehen?",
                 "short_explanation": "Anglizismen: Sicher, dass das alle Lesenden verstehen?",
@@ -589,13 +590,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "anglizismen",
-                "emoji": "\ud83d\ude09",
-                "gravity": "3"
+                "anchor": "anglizismen"
             }
         }
     },
     "antimuslim": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "openly_discriminating",
         "emoji": "\ud83d\udeab",
@@ -603,6 +603,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "islamophobia-and-anti-muslim-sentiment",
                 "hs_name": "Islamophobia and anti-muslim sentiment",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/religion\/islamophobia-and-anti-muslim-sentiment",
                 "is_active": "1",
@@ -629,11 +630,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "islamophobia",
-                "emoji": "\ud83d\udeab",
-                "gravity": "1"
+                "anchor": "islamophobia"
             },
             "de": {
+                "hs_path": "islam-und-muslimfeindlichkeit",
                 "hs_name": "Islam- und Muslimfeindlichkeit",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/glauben\/islam-und-muslimfeindlichkeit",
                 "is_active": "1",
@@ -660,13 +660,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "islamophobie",
-                "emoji": "\ud83d\udeab",
-                "gravity": "1"
+                "anchor": "islamophobie"
             }
         }
     },
     "antisemitism": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "openly_discriminating",
         "emoji": "\ud83d\udeab",
@@ -674,6 +673,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "anti-semitism",
                 "hs_name": "Anti-semitism",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/religion\/anti-semitism",
                 "is_active": "1",
@@ -700,11 +700,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "anti-semitism",
-                "emoji": "\ud83d\udeab",
-                "gravity": "1"
+                "anchor": "anti-semitism"
             },
             "de": {
+                "hs_path": "antisemitismus",
                 "hs_name": "Antisemitismus",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/glauben\/antisemitismus",
                 "is_active": "1",
@@ -731,13 +730,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "anti-semitismus",
-                "emoji": "\ud83d\udeab",
-                "gravity": "1"
+                "anchor": "anti-semitismus"
             }
         }
     },
     "behavior": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "visible",
         "emoji": "\ud83d\ude12",
@@ -745,6 +743,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "behavior",
                 "hs_name": "Behavior",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/behavior",
                 "is_active": "1",
@@ -771,11 +770,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "behavior",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "behavior"
             },
             "de": {
+                "hs_path": "verhalten",
                 "hs_name": "Verhalten",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/verhalten",
                 "is_active": "1",
@@ -802,13 +800,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "verhalten",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "verhalten"
             }
         }
     },
     "belief": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude12",
@@ -816,6 +813,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "belief",
                 "hs_name": "Belief",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/religion\/belief",
                 "is_active": "1",
@@ -847,11 +845,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "belief",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "belief"
             },
             "de": {
+                "hs_path": "glauben",
                 "hs_name": "Glauben",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/glauben\/glauben",
                 "is_active": "1",
@@ -883,13 +880,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "glauben",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "glauben"
             }
         }
     },
     "binary_pronouns": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude1f",
@@ -897,6 +893,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "binary-pronouns",
                 "hs_name": "Binary pronouns",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/binary-pronouns",
                 "is_active": "1",
@@ -933,11 +930,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "binary_pronouns",
-                "emoji": "\ud83d\ude1f",
-                "gravity": "2"
+                "anchor": "binary_pronouns"
             },
             "de": {
+                "hs_path": "bin\u00e4re-pronomen",
                 "hs_name": "Bin\u00e4re Pronomen",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/bin\u00e4re-pronomen",
                 "is_active": "1",
@@ -951,7 +947,12 @@
                     "height": "525",
                     "alt": "Illustration: Eine Person sagt: \"Er? Sie?\" Eine andere Person sagt: \"Wir. Alle. Du.\" Eine dritte Person antwortet mit einem Herz in Regenbogenfarben."
                 },
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Bin%C3%A4re%20Pronomen.png",
+                    "width": "605",
+                    "height": "412",
+                    "alt": "Eine Illustration von Witty des Satzes 'Wenn jemand Hilfe braucht, kann [er oder sie] mich jederzeit ansprechen.'. Als Alternative f\u00fcr den Begriff in Klammern wird 'bin ich jederzeit f\u00fcr alle ansprechbar' vorgeschlagen."
+                },
                 "soft_explanation": "Mit der Form <em>er oder sie<\/em> beabsichtigen wir, alle Geschlechter zu erfassen. Aber es gibt mehr als nur zwei Geschlechter, sowohl biologisch als auch sozial. Daher schlie\u00dfen wir mit \"er oder sie\" einen gro\u00dfen Teil des Geschlechtsspektrums aus.",
                 "hard_facts": "<strong>USA:<\/strong> Laut einer Studie des Williams Institute aus dem Jahr 2021 identifizieren sich sch\u00e4tzungsweise 1,2 Millionen amerikanische Erwachsene im Alter zwischen 18 und 60 Jahren als nicht-bin\u00e4r, was 11 % der LGBTQ-Bev\u00f6lkerung in dieser Altersgruppe ausmacht. Eine Umfrage von The Trevor Project aus dem Jahr 2020 ergab, dass sich 26 % der LGBTQ-Jugendlichen (im Alter von 13-24 Jahren) in den USA als nicht-bin\u00e4r identifizieren.<br><br><strong>Brasilien:<\/strong> Eine 2021 in Scientific Reports ver\u00f6ffentlichte Umfrage ergab, dass 1,19 % der brasilianischen Erwachsenen nicht-bin\u00e4r sind.<br><br><strong>Kanada:<\/strong> Im April 2022 ver\u00f6ffentlichte Statistics Canada die Ergebnisse der Volksz\u00e4hlung von 2021, womit Kanada das erste Land war, das eine Kernfrage zur Geschlechtsidentit\u00e4t stellte, und stellte fest, dass 41.355 Kanadier*innen im Alter von 15 Jahren und \u00e4lter sich als nicht-bin\u00e4r identifizieren.<br><br><strong>Schweiz:<\/strong> Eine Umfrage aus dem Jahr 2021 ergab, dass sich 0,4 % der Erwachsenen in der Schweiz als nicht-bin\u00e4r bezeichnen. Die Umfrage unter 2.690 in der Schweiz lebenden Personen wurde gewichtet, um die Gesamtbev\u00f6lkerung widerzuspiegeln.<br><br>Quelle: <a href=\"https:\/\/en.wikipedia.org\/wiki\/Non-binary_gender\" rel=\"noopener\" target=\"_blank\">Wikipedia \"Non-binary gender\"<\/a>",
                 "hero_figure": "",
@@ -969,13 +970,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "bin\u00e4re_pronomen",
-                "emoji": "\ud83d\ude1f",
-                "gravity": "2"
+                "anchor": "bin\u00e4re_pronomen"
             }
         }
     },
     "classism": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude12",
@@ -983,6 +983,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "classism",
                 "hs_name": "Classism",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/acquired-diversity\/classism",
                 "is_active": "1",
@@ -1014,13 +1015,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "classism",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "classism"
             },
             "de": {
+                "hs_path": "klassismus",
                 "hs_name": "Klassismus",
-                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/erworbene-diversit%C3%A4t\/klassismus",
+                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/erworbene-diversit\u00e4t\/klassismus",
                 "is_active": "1",
                 "name": "Impliziert sozio\u00f6konomischer Status bestimmt den Wert einer Person",
                 "short_explanation": "Impliziert sozio\u00f6konomischer Status bestimmt den Wert einer Person",
@@ -1045,13 +1045,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "klassismus",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "klassismus"
             }
         }
     },
     "cognitive_ability": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "invisible",
         "emoji": "\ud83d\ude12",
@@ -1059,6 +1058,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "cognitive-ability",
                 "hs_name": "Cognitive ability",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/cognitive-ability",
                 "is_active": "1",
@@ -1085,11 +1085,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "cognitive_ability",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "cognitive_ability"
             },
             "de": {
+                "hs_path": "denkf\u00e4higkeit",
                 "hs_name": "Denkf\u00e4higkeit",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/denkf\u00e4higkeit",
                 "is_active": "1",
@@ -1116,13 +1115,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "denkf\u00e4higkeit",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "denkf\u00e4higkeit"
             }
         }
     },
     "cognitive_perception": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "invisible",
         "emoji": "\ud83d\ude12",
@@ -1130,6 +1128,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "cognitive-perception",
                 "hs_name": "Cognitive perception",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/cognitive-perception",
                 "is_active": "1",
@@ -1156,11 +1155,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "cognitive_perception",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "cognitive_perception"
             },
             "de": {
+                "hs_path": "wahrnehmung",
                 "hs_name": "Wahrnehmung",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/wahrnehmung",
                 "is_active": "1",
@@ -1169,7 +1167,12 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Wahrnehmung.png",
+                    "width": "605",
+                    "height": "435",
+                    "alt": "Eine Illustration von Witty des Satzes 'Die Leute von der Veranstaltungsplanung? Die sind doch [verr\u00fcckt].\u2019. Als Alternative f\u00fcr den Begriff in Klammern wird 'Ihre Vorschl\u00e4ge sind zu teuer und nicht praktikabel.' vorgeschlagen."
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -1187,13 +1190,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "wahrnehmung",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "wahrnehmung"
             }
         }
     },
     "color": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "ancestry",
         "emoji": "\ud83d\ude12",
@@ -1206,6 +1208,7 @@
         ],
         "translations": {
             "en": {
+                "hs_path": "color",
                 "hs_name": "Color",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/color",
                 "is_active": "1",
@@ -1232,13 +1235,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "color",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "color"
             },
             "de": {
+                "hs_path": "farbw\u00f6rter",
                 "hs_name": "Farbw\u00f6rter",
-                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit%C3%A4t\/farbw\u00f6rter",
+                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/farbw\u00f6rter",
                 "is_active": "1",
                 "name": "Beschreibe gut, schlecht oder Menschen nicht durch Farben",
                 "short_explanation": "Beschreibe gut und schlecht nicht mit Farbw\u00f6rtern",
@@ -1263,13 +1265,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "farbw\u00f6rter",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "farbw\u00f6rter"
             }
         }
     },
     "communal": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "inclusive",
         "emoji": "\u2705",
@@ -1282,6 +1283,7 @@
         ],
         "translations": {
             "en": {
+                "hs_path": "communal-language",
                 "hs_name": "Communal language",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/social-motive\/communal-language",
                 "is_active": "1",
@@ -1318,11 +1320,10 @@
                 "meme_2_alt_text": "Invitation text: Draw inspiration from people who pave the way for inclusion as thought leaders and change makers. Click to meet witty talks",
                 "meme_2_url": "https:\/\/www.witty.works\/witty-talks",
                 "read_on": "<a href=\"https:\/\/www.witty.works\/en\/blog\/gendered-wording-in-job-ads-scientific-findings\" style=\"\"><em><span>Gendered Wording in Job Ads - Scientific Findings<\/span><\/em><\/a><span style=\" color: #000000;\">, <\/span><a href=\"https:\/\/www.witty.works\/blog\" style=\"\"><span>witty.works blog<\/span><\/a><span style=\" color: #000000;\">, post 2021<\/span>",
-                "anchor": "communal",
-                "emoji": "\u2705",
-                "gravity": "0"
+                "anchor": "communal"
             },
             "de": {
+                "hs_path": "kommunale-sprache",
                 "hs_name": "Kommunale Sprache",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/soziale-motivation\/kommunale-sprache",
                 "is_active": "1",
@@ -1336,7 +1337,12 @@
                     "height": "525",
                     "alt": "Illustration: Eine gemischte Gruppe von Menschen, die sich die H\u00e4nde reichen"
                 },
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Kommunale%20Sprache.png",
+                    "width": "605",
+                    "height": "319",
+                    "alt": " Eine Illustration von Witty des Satzes 'Wir sind [teamorientiert] und [unterst\u00fctzen] uns gegenseitig."
+                },
                 "soft_explanation": "Wir lernen W\u00f6rter wie <em>Unterst\u00fctzung <\/em>oder <em>F\u00fcrsorge <\/em>mit Frauen, emotionaler Verbundenheit und gemeinschaftlichem Streben zu assoziieren. Diese W\u00f6rter werden als kommunal bezeichnet. Sie kommen bei Menschen gut an, die kollaboratives Denken sch\u00e4tzen, bei Frauen und der Generation Z. Gerade die Komplexit\u00e4t heutiger Gesch\u00e4ftsmodelle und Berufsfelder macht kollaboratives Denken zu einer erfolgsentscheidenden Eigenschaft. Das macht kommunale Sprache ist ein Win-win-Instrument in der F\u00f6rderung von Inklusion und Teameffizienz. Sie motiviert gemeinschaftsorientierte Menschen, ohne all jene abzuschrecken, die selbst keine kommunalen Begriffe W\u00f6rter verwenden.",
                 "hard_facts": "<p>Insbesondere Frauen, die Generation Z und teamorientierte Fachkr\u00e4fte f\u00fchlen sich durch Unternehmen angesprochen, die inklusiv kommunizieren. Erhebungen zeigen, dass Stellenanzeigen, die kommunale W\u00f6rter verwenden, bis zu 42 % mehr Bewerbungen von Frauen erhalten als Anzeigen, die agentische W\u00f6rter verwenden \u2013 ohne dabei Bewerbungen von M\u00e4nnern einzub\u00fc\u00dfen.<\/p>\n<p><a href=\"https:\/\/www.witty.works\/de\/subkategorien\/agentische-sprache\" rel=\"noopener\" target=\"_blank\">Agentische Sprache<\/a> ist das Gegenst\u00fcck zu kommunaler Sprache. Sie steht im Kontext einer Duldungskultur, die das Handeln \u00fcber das Denken setzt. Kurz gesagt: \u201eLieber schnell handeln und sp\u00e4ter um Vergebung bitten\u201c. J\u00fcngste Studien zeigen, dass dies aus gesch\u00e4ftlicher Sicht ein schlechter Rat sein kann. Unternehmen, die in ihren Leitbildern eine sorgf\u00e4ltige Entscheidungsfindung - die oft eine gemeinsame Anstrengung voraussetzt \u2013 \u00fcber schnelles Handeln setzen, seltener disziplinarisch gegen Diskriminierung am Arbeitsplatz vorgehen m\u00fcssen.<\/p>\n<p>Unternehmen, die in ihrer Kommunikation Gemeinschaftlichkeit und gegenseitigen Respekt betonen, tragen weniger Reputationsrisiken. Und es gibt Anhaltspunkte, dass eine Unternehmenskultur, die die N\u00f6te von Mitarbeitenden nicht als individuelles Problem, sondern als kollektive Aufgabe formuliert, das Zusammengeh\u00f6rigkeitsgef\u00fchl und das Wohlbefinden von Mitarbeitenden st\u00e4rkt.<\/p>\n<p>Kommunale Sprache schafft nicht nur ein inklusiveres Arbeitsklima, sondern sorgt auch f\u00fcr mehr Sicherheit am Arbeitsplatz. Ein Bericht aus dem Jahr 2018 \u00fcber sexuelle Bel\u00e4stigung im akademischen Umfeld kommt zu dem Ergebnis: \u201eDie Atmosph\u00e4re einer Organisation entscheidet, mit welcher Wahrscheinlichkeit es am Arbeitsplatz zu F\u00e4llen sexueller Bel\u00e4stigung kommt.\u201c<\/p>",
                 "hero_figure": "https:\/\/www.witty.works\/hubfs\/teams%20make%20better%20choices%20DE.png,1280,720,",
@@ -1354,13 +1360,12 @@
                 "meme_2_alt_text": "Text auf Farbfl\u00e4che: Lass dich von Menschen inspirieren, die Inklusion den Weg ebnen. Schaltfl\u00e4che klicken, um Witty Talks zu sehen",
                 "meme_2_url": "https:\/\/www.witty.works\/witty-talks",
                 "read_on": "<a href=\"https:\/\/www.witty.works\/en\/blog\/gendered-wording-in-job-ads-scientific-findings\"><em><span>Gendered Wording in Job Ads - Scientific Findings<\/span><\/em><\/a><span>,&nbsp;<\/span><a href=\"https:\/\/www.witty.works\/blog\"><span>witty.works blog<\/span><\/a><span>&nbsp;2021<\/span>",
-                "anchor": "kommunal",
-                "emoji": "\u2705",
-                "gravity": "0"
+                "anchor": "kommunal"
             }
         }
     },
     "culture": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude12",
@@ -1368,6 +1373,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "cultural-stereotype",
                 "hs_name": "Cultural stereotype",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/cultural-stereotype",
                 "is_active": "1",
@@ -1394,13 +1400,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "culture",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "culture"
             },
             "de": {
+                "hs_path": "kultur",
                 "hs_name": "Kultur",
-                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit%C3%A4t\/kultur",
+                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/kultur",
                 "is_active": "1",
                 "name": "Impliziert kultureller Hintergrund bestimmt den Wert einer Person",
                 "short_explanation": "Impliziert kultureller Hintergrund bestimmt den Wert einer Person",
@@ -1425,13 +1430,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "kultur",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "kultur"
             }
         }
     },
     "d_and_i": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "inclusive",
         "emoji": "\u2705",
@@ -1441,6 +1445,7 @@
         ],
         "translations": {
             "en": {
+                "hs_path": "diversity-equity-inclusion-belonging",
                 "hs_name": "DEIB",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/social-motive\/diversity-equity-inclusion-belonging",
                 "is_active": "1",
@@ -1477,11 +1482,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "<a href=\"https:\/\/www.witty.works\/en\/blog\/how-tracking-language-patterns-can-help-create-a-more-inclusive-workplace\" rel=\"noopener\" target=\"_blank\">How Tracking Language Patterns Can Help Create a More Inclusive Workplace. Barbara Sch\u00fcl\u00e9 (March 13, 2023). Witty Works Blog.<\/a>",
-                "anchor": "diversity_&_inclusion",
-                "emoji": "\u2705",
-                "gravity": "0"
+                "anchor": "diversity_&_inclusion"
             },
             "de": {
+                "hs_path": "vielfalt-gleichheit-teilhabe-zugeh\u00f6rigkeit",
                 "hs_name": "DEIB",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/soziale-motivation\/vielfalt-gleichheit-teilhabe-zugeh\u00f6rigkeit",
                 "is_active": "1",
@@ -1495,7 +1499,12 @@
                     "height": "525",
                     "alt": "Illustration einer vielf\u00e4ltigen Gruppe mit 5 Personen unterschiedlichen Alters, K\u00f6rperbaus und ethnischer Herkunft"
                 },
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/DEIB%20(1).png",
+                    "width": "605",
+                    "height": "451",
+                    "alt": "Eine Illustration von Witty des Satzes 'Wir wollen  [ein diversit\u00e4tsfreundliches Umfeld schaffen]\u2019. Als Alternative f\u00fcr den Begriff in Klammern wird 'zusammen eine Atmosph\u00e4re schaffen,  in der sich alle sicher und willkommen  f\u00fchlen' vorgeschlagen."
+                },
                 "soft_explanation": "Vielfalt, Gleichheit, Teilhabe und Zugeh\u00f6rigkeit werden im Alltag oft nach dem englischen <em>Diversity, Equity, Inclusion and Belonging <\/em>als DEIB abgek\u00fcrzt<em>. <\/em>Diese Begriffe stehen heute im Mittelpunkt eines lebendigen Dialogs um gemeinsame Werte und eine offene Kultur. Menschen in Gespr\u00e4che \u00fcber DEIB einzubeziehen, tr\u00e4gt nicht nur zur Sensibilisierung f\u00fcr Inklusionsthemen bei. Es st\u00e4rkt auch das Engagement f\u00fcr einen respektvollen Umgang an einem Arbeitsplatz, der alle Menschen sieht und einbezieht. Ein gemeinsamer Wortschatz rund um Inklusion und Vielfalt beugt Verwirrung und Missverst\u00e4ndnissen vor - und sorgt f\u00fcr positive Dynamik auf dem Weg zu einer inklusiven Kultur.",
                 "hard_facts": "Ob Kundschaft oder Belegschaft, f\u00fcr viele Menschen ist das Streben nach mehr Vielfalt, Gleichheit, Teilhabe und Zugeh\u00f6rigkeit (DEIB) ein wichtiges Ziel, sowohl f\u00fcr die Arbeitsplatzkultur als auch f\u00fcr den Unternehmenserfolg. 38 Prozent der Verbraucher*innen bringen Marken, die in ihrer Werbung Vielfalt betonen, mehr Vertrauen entgegen. Bei Latinx+ (85 Prozent), People of Color (79 Prozent), Menschen mit asiatischem oder pazifischem Kulturhintergrund (79 Prozent), LGBTQ+ (85 Prozent), Millennials (77 Prozent) und Teenagern (76 Prozent) ist die Wahrscheinlichkeit, dass sie einer auf Vielfalt bedachten Marke vertrauen, mehr als doppelt so hoch.<br><br>F\u00fcr die Marken arbeitgebender Unternehmen k\u00f6nnte ein ernsthaftes Engagement f\u00fcr Vielfalt, Gleichheit, Teilhabe und Zugeh\u00f6rigkeit die Zukunft von Pipeline und Kandidatenpool sichern. Die Generation Z hat klare Vorstellungen, wenn es um die Werte geht, die sie von k\u00fcnftigen Arbeitspl\u00e4tzen erwartet. In einer Monster-Studie gaben 83 Prozent der Befragten an, dass das Engagement eines Unternehmens f\u00fcr Vielfalt und Inklusion ein wichtiger Faktor bei der Wahl des Arbeitgebenden ist.<br><br>Auch f\u00fcr Menschen, die sich als Frauen identifizieren, ist DEIB ein wesentlicher Faktor. In einer McKinsey-Umfrage gaben weibliche F\u00fchrungskr\u00e4fte mehr als 1,5-mal so oft wie m\u00e4nnliche F\u00fchrungskr\u00e4fte an, dass sie den Arbeitsplatz gewechselt haben, weil sie f\u00fcr ein Unternehmen arbeiten wollten, das sich st\u00e4rker f\u00fcr DEIB engagiert.",
                 "hero_figure": "https:\/\/www.witty.works\/hubfs\/Swithun%20Mason%20Quote%20Deutsch%20MasonBreese.png,1024,576,",
@@ -1513,13 +1522,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "<p><a href=\"https:\/\/www.witty.works\/en\/blog\/how-tracking-language-patterns-can-help-create-a-more-inclusive-workplace\" rel=\"noopener\" target=\"_blank\">How Tracking Language Patterns Can Help Create a More Inclusive Workplace. Barbara Sch\u00fcl\u00e9 (March 13, 2023). Witty Works Blog.<\/a><\/p>",
-                "anchor": "diversit\u00e4t_&_inklusion",
-                "emoji": "\u2705",
-                "gravity": "0"
+                "anchor": "diversit\u00e4t_&_inklusion"
             }
         }
     },
     "emotional_security": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "inclusive",
         "emoji": "\u2705",
@@ -1527,6 +1535,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "positive-emotions",
                 "hs_name": "Positive emotions",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/social-motive\/positive-emotions",
                 "is_active": "1",
@@ -1553,11 +1562,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "positive_emotions",
-                "emoji": "\u2705",
-                "gravity": "0"
+                "anchor": "positive_emotions"
             },
             "de": {
+                "hs_path": "positive-emotionen",
                 "hs_name": "Positive Emotionen",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/soziale-motivation\/positive-emotionen",
                 "is_active": "1",
@@ -1584,13 +1592,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "positive_emotionen",
-                "emoji": "\u2705",
-                "gravity": "0"
+                "anchor": "positive_emotionen"
             }
         }
     },
     "exaggerating": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude2e\u200d\ud83d\udca8",
@@ -1601,6 +1608,7 @@
         ],
         "translations": {
             "en": {
+                "hs_path": "exaggeration",
                 "hs_name": "Exaggeration",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/social-motive\/exaggeration",
                 "is_active": "1",
@@ -1637,11 +1645,10 @@
                 "meme_2_alt_text": "Invitation text: Draw inspiration from people who pave the way for inclusion as thought leaders and change makers. Click to meet witty talks",
                 "meme_2_url": "https:\/\/www.witty.works\/witty-talks",
                 "read_on": "",
-                "anchor": "exaggeration",
-                "emoji": "\ud83d\ude2e\u200d\ud83d\udca8",
-                "gravity": "2"
+                "anchor": "exaggeration"
             },
             "de": {
+                "hs_path": "\u00fcbertreibung",
                 "hs_name": "\u00dcbertreibung",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/soziale-motivation\/\u00fcbertreibung",
                 "is_active": "1",
@@ -1655,7 +1662,12 @@
                     "height": "525",
                     "alt": "Illustration, die eine Person in Hosen zeigt, die sagt: \"TOTAL  GLOBAL! Die Nummer 1! UN\u00dcBERTROFFEN! UNSCHLAGBAR! WELTKLASSE! Alles in Gro\u00dfbuchstaben. Eine Person im Rock h\u00f6rt zu. "
                 },
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/%C3%9Cbertreibung.png",
+                    "width": "605",
+                    "height": "435",
+                    "alt": " Eine Illustration von Witty des Satzes 'Vertrauen Sie uns Ihre Marke an.  [Wir sind die Besten in der ganzen Branche.]\u2019. Als Alternative f\u00fcr den Begriff in Klammern wird 'Wir schaffen Vertrauen in Ihr  Unternehmen.' vorgeschlagen."
+                },
                 "soft_explanation": "<p><span>Der Beste! Das Gr\u00f6\u00dfte! Laute Botschaften finden sich \u00fcberall. Wir meinen, dass wir mit lauten Botschaften Leserinnen und Leser besser erreichen und \u00fcberzeugen k\u00f6nnen. Es stimmt, \u00dcbertreibung bringt Aufmerksamkeit. Aber gleichzeitig schadet sie unserer Glaubw\u00fcrdigkeit. Die Social-Media-affine Generation Z durchschaut \u00fcbertriebene Behauptungen besonders schnell. Wenn wir ehrlich und geradlinig sind, bauen Menschen leichter Vertrauen auf und nehmen uns als ernstzunehmende*n Ansprechpartner*in wahr.<\/span><\/p>",
                 "hard_facts": "<p><span>Dramatisiert, ausgeschm\u00fcckt, aufgebauscht und \u00fcberspitzt: \u00dcbertreibungen sollen Aufmerksamkeit erregen und beeindrucken. Aber das Publikum wei\u00df: Wenn\u2019s zu sch\u00f6n klingt, um wahr zu sein, ist es das wohl auch. Studien zeigen, Leute k\u00f6nnen die Absicht hinter \u00dcbertreibungen erkennen, ohne auf sie hereinzufallen. \u00dcbertreibung verr\u00e4t immer auch die dahinter liegende Absicht - Manipulation. Und das kann den ersten Eindruck tr\u00fcben.<\/span><\/p>\n<p><span>Im Bestreben, Talente f\u00fcr sich zu begeistern, sind Unternehmen geneigt, mit ihrem Status und ihren Leistungen zu prahlen. Diese Aufschneiderei kann Bewerbende abschrecken. Sei es, weil sie an der Ernsthaftigkeit des Unternehmens zweifeln oder glauben, in einer lauten Kultur nicht mithalten zu k\u00f6nnen. Ein weiterer Nachteil von \u00dcbertreibung: Sie macht Leuten Lust, uns das Gegenteil zu beweisen. <\/span><\/p>\n<p><span>Wenn wir einen Standpunkt vertreten oder eine Idee r\u00fcberbringen wollen, die uns wichtig ist, suchen wir nach Stilmitteln, die unserer Botschaft Gewicht geben. Mit Bedacht eingesetzt, macht eine gut platzierte \u00dcbertreibung Argumente anschaulicher oder einpr\u00e4gsamer. \u00dcberspitzungen machen Geschichten oder Pointen unterhaltsamer. Aber wenn du im gesch\u00e4ftlichen Umfeld Beziehungen und Vertrauen aufbauen willst, sind konkrete Zahlen, \u00fcberpr\u00fcfbare Argumente und sachliche Sprache ein guter Weg.<\/span><\/p>",
                 "hero_figure": "https:\/\/www.witty.works\/hubfs\/76%25%20der%20Befragten%20%20halten%20Werbung%20f%C3%BCr%20%C3%9Cbertreibung%20DE.png,1024,576,",
@@ -1673,13 +1685,12 @@
                 "meme_2_alt_text": "Text auf Farbfl\u00e4che: Lass dich von Menschen inspirieren, die Inklusion den Weg ebnen. Schaltfl\u00e4che klicken, um Witty Talks zu sehen",
                 "meme_2_url": "https:\/\/www.witty.works\/witty-talks",
                 "read_on": "",
-                "anchor": "superlative",
-                "emoji": "\ud83d\ude2e\u200d\ud83d\udca8",
-                "gravity": "2"
+                "anchor": "superlative"
             }
         }
     },
     "female_stereotype": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude1f",
@@ -1687,6 +1698,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "female-stereotype",
                 "hs_name": "Female stereotype",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/female-stereotype",
                 "is_active": "1",
@@ -1713,11 +1725,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "female_stereotype",
-                "emoji": "\ud83d\ude1f",
-                "gravity": "2"
+                "anchor": "female_stereotype"
             },
             "de": {
+                "hs_path": "frauenklischee",
                 "hs_name": "Frauenklischee",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/frauenklischee",
                 "is_active": "1",
@@ -1744,13 +1755,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "weiblicher_stereotyp",
-                "emoji": "\ud83d\ude1f",
-                "gravity": "2"
+                "anchor": "weiblicher_stereotyp"
             }
         }
     },
     "filler": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "language-clarity",
         "emoji": "\ud83d\ude1f",
@@ -1761,6 +1771,7 @@
         ],
         "translations": {
             "en": {
+                "hs_path": "filler-words",
                 "hs_name": "Filler words",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/filler-words",
                 "is_active": "1",
@@ -1797,13 +1808,12 @@
                 "meme_2_alt_text": "Invitation text: Draw inspiration from people who pave the way for inclusion as thought leaders and change makers. Click to meet witty talks",
                 "meme_2_url": "https:\/\/www.witty.works\/witty-talks",
                 "read_on": "",
-                "anchor": "filler_words",
-                "emoji": "\ud83d\ude1f",
-                "gravity": "3"
+                "anchor": "filler_words"
             },
             "de": {
+                "hs_path": "f\u00fcllw\u00f6rter",
                 "hs_name": "F\u00fcllw\u00f6rter",
-                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit%C3%A4t\/f\u00fcllw\u00f6rter",
+                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/f\u00fcllw\u00f6rter",
                 "is_active": "1",
                 "name": "Machen Texte l\u00e4nger und unverst\u00e4ndlicher",
                 "short_explanation": "W\u00f6rter, die Text l\u00e4nger und weniger verst\u00e4ndlicher machen",
@@ -1815,7 +1825,12 @@
                     "height": "500",
                     "alt": "Illustration einer vielf\u00e4ltigen Gruppe von l\u00e4chelnden Menschen, die einer Person zuh\u00f6ren. Ihre Sprechblase ist eine Mischung aus W\u00f6rtern und Wolken."
                 },
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/F%C3%BCllw%C3%B6rter.png",
+                    "width": "605",
+                    "height": "435",
+                    "alt": "Eine Illustration von Witty des Satzes \u2018[Wohlgemerkt], wir haben unser Umsatzziel [zweifelsfrei] erreicht.'. Witty schl\u00e4gt vor, die Begriffe in Klammern wegzulassen."
+                },
                 "soft_explanation": "<em>\u00c4hm<\/em>, <em>irgendwie<\/em>, <em>du wei\u00dft schon<\/em>: F\u00fcllw\u00f6rter sind in unseren S\u00e4tzen und Gespr\u00e4chen allgegenw\u00e4rtig. Aber F\u00fcllw\u00f6rter k\u00f6nnen H\u00fcrden sein. Sie lenken von der Botschaft ab, die wir r\u00fcberbringen wollen - und machen sie f\u00fcr viele unverst\u00e4ndlicher. F\u00fcllw\u00f6rter sind eine der gr\u00f6\u00dften Herausforderungen f\u00fcr die Zusammenarbeit von Menschen mit unterschiedlichem Sprachhintergrund: Sie f\u00fchren zu Missverst\u00e4ndnissen in der t\u00e4glichen Kommunikation.",
                 "hard_facts": "Wenn du F\u00fcllw\u00f6rter in Teambesprechungen sparsam und gezielt einsetzt, kannst du damit zeigen, dass du einen kooperativen Ansatz bevorzugst. Wenn du aber mit Menschen mit unterschiedlichen sprachlichen Hintergr\u00fcnden und einer anderen Art der Sprachverarbeitung zusammenarbeitest, solltest du F\u00fcllw\u00f6rter vermeiden, damit dich auch wirklich alle verstehen.<br><br>F\u00fcllw\u00f6rter k\u00f6nnen einen Hinweis auf die Machtdynamik in einer Gespr\u00e4chssituation geben. Wenn du viele F\u00fcllw\u00f6rter verwendest, k\u00f6nnte das darauf hindeuten, dass du die Machtdynamik einer Gruppe nicht herausfordern willst. Du hast ein Teammitglied, das \u00fcberm\u00e4\u00dfig viele Ausschlussklauseln und z\u00f6gerliche F\u00fcllw\u00f6rter verwendet? Zeig Interesse und biete dich f\u00fcr ein Gespr\u00e4ch an.",
                 "hero_figure": "https:\/\/www.witty.works\/hubfs\/Sprachbarrieren%20sind%20die%20m%C3%B6gliche%20Ursache%20f%C3%BCr%2025%20Prozent%20aller%20Unf%C3%A4lle%20am%20Arbeitsplatz.png,1024,576,",
@@ -1833,13 +1848,12 @@
                 "meme_2_alt_text": "Text auf Farbfl\u00e4che: Lass dich von Menschen inspirieren, die Inklusion den Weg ebnen. Schaltfl\u00e4che klicken, um Witty Talks zu sehen",
                 "meme_2_url": "https:\/\/www.witty.works\/witty-talks",
                 "read_on": "",
-                "anchor": "f\u00fcllw\u00f6rter",
-                "emoji": "\ud83d\ude1f",
-                "gravity": "3"
+                "anchor": "f\u00fcllw\u00f6rter"
             }
         }
     },
     "formality": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83e\uddca",
@@ -1847,6 +1861,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "formality",
                 "hs_name": "Formality",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/acquired-diversity\/formality",
                 "is_active": "1",
@@ -1873,13 +1888,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "formality",
-                "emoji": "\ud83e\uddca",
-                "gravity": "3"
+                "anchor": "formality"
             },
             "de": {
+                "hs_path": "f\u00f6rmlichkeit",
                 "hs_name": "F\u00f6rmlichkeit",
-                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/erworbene-diversit%C3%A4t\/f\u00f6rmlichkeit",
+                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/erworbene-diversit\u00e4t\/f\u00f6rmlichkeit",
                 "is_active": "1",
                 "name": "Weniger F\u00f6rmlichkeit schafft mehr emotionale N\u00e4he",
                 "short_explanation": "A less formal tone makes you sound more accessible",
@@ -1904,13 +1918,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "formalit\u00e4t",
-                "emoji": "\ud83e\uddca",
-                "gravity": "3"
+                "anchor": "formalit\u00e4t"
             }
         }
     },
     "function": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\udca1",
@@ -1924,6 +1937,7 @@
         ],
         "translations": {
             "en": {
+                "hs_path": "generic-masculine",
                 "hs_name": "Generic masculine",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/generic-masculine",
                 "is_active": "1",
@@ -1960,11 +1974,10 @@
                 "meme_2_alt_text": "Invitation text: Draw inspiration from people who pave the way for inclusion as thought leaders and change makers. Click to meet witty talks",
                 "meme_2_url": "https:\/\/www.witty.works\/witty-talks",
                 "read_on": "<div><a href=\"https:\/\/www.witty.works\/en\/blog\/gendered-wording-in-job-ads-scientific-findings\" rel=\"noopener\" target=\"_blank\">Gendered Wording in Job Ads - Scientific Findings, Witty Blog<\/a><\/div>\n<div><a href=\"https:\/\/www.witty.works\/en\/blog\/gender-inclusive-writing-in-german\" rel=\"noopener\" target=\"_blank\">How to write inclusively in gendered languages like German, Witty Blog<\/a><\/div>\n<div><a href=\"https:\/\/www.witty.works\/en\/blog\/being-good-guy-doesn-t-cut-it\" rel=\"noopener\" target=\"_blank\">Being a \"good guy\" doesn't cut it, Witty Blog<\/a><\/div>",
-                "anchor": "special_functions",
-                "emoji": "\ud83d\udca1",
-                "gravity": "2"
+                "anchor": "special_functions"
             },
             "de": {
+                "hs_path": "generisches-maskulinum",
                 "hs_name": "Generisches Maskulinum",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/generisches-maskulinum",
                 "is_active": "1",
@@ -1978,7 +1991,12 @@
                     "height": "409",
                     "alt": "Illustration: Ein Mann im Anzug mit verschr\u00e4nkten Armen steht im Scheinwerferlicht, umgeben von einer vielf\u00e4ltigen Menschenmenge im Schatten"
                 },
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Generisches%20Maskulinum.png",
+                    "width": "605",
+                    "height": "395",
+                    "alt": "Eine Illustration von Witty des Satzes \u2018[Hat ein Arzt] au\u00dferhalb des Krankenhauses Bereitschaftsdienst, ...'. Als Alternative f\u00fcr den Begriff in Klammern wird 'Haben \u00c4rzt*innen' vorgeschlagen."
+                },
                 "soft_explanation": "<p><span>Treffen sich ein Superheld, ein Chirurg und ein Priester in einer Bar. Wenn vor deinem geistigen Auge gerade drei M\u00e4nner am Tresen standen, ist dein Gehirn \u00fcber Geschlechterklischees gestolpert. Sie entstehen durch die traditionellen Rollenbilder, mit denen wir aufwachsen. Unser Gehirn braucht einen kleinen Schubs, um zu erkennen, dass die drei trans, nicht-bin\u00e4r, Frauen oder eine gemischte Gruppe sein k\u00f6nnten. Es gibt mehrere M\u00f6glichkeiten, wie du Lesende inspirieren kannst, alle Geschlechterm\u00f6glichkeiten zu sehen (siehe unten).<\/span><\/p>",
                 "hard_facts": "<p><span style=\"\">Das generische Maskulinum nennt man die grammatisch m\u00e4nnliche Form, die als Oberbegriff f\u00fcr Berufe und gemischte Personengruppen verwendet wird. Es wurzelt in der Vorstellung, dass M\u00e4nner die menschliche Norm sind. <\/span><span style=\"\">Diese Denkweise ist tief in unserer Kultur und Geschichte verwurzelt. Das m\u00e4nnlich orientierte Rollenverst\u00e4ndnis pr\u00e4gt unsere Rechtssprache. Es pr\u00e4gt, wie unser Gehirn das Geschlecht von W\u00f6rtern wie <em>Offizier <\/em>oder <em>F\u00fchrungskraft <\/em>interpretiert. Diese Neigung wird durch Sprache verst\u00e4rkt, die Geschlechterstereotypen aufgreift und unreflektiert wiederholt.<\/span><\/p>\n<p><span style=\"\">Gleichzeitig untergraben Geschlechterstereotypen in Rollen und Berufen, die Repr\u00e4sentation all jener Menschen, die sich \u00fcber Geschlechterklischees hinwegsetzen. Geschlechterklischees reduzieren Menschen auf traditionelle Rollen, Geschlechtsidentit\u00e4ten und geschlechtsspezifische Ausdr\u00fccke. Sie machen marginalisierte Geschlechter im \u00f6ffentlichen Raum unsichtbar. <\/span><\/p>\n<p><span style=\"\">Unsere geschlechtliche Interpretation von W\u00f6rtern kann sich \u00e4ndern, zum Beispiel wenn mehr Menschen nicht-traditionelle Geschlechterrollen \u00fcbernehmen. Und es gibt Hinweise, dass unsere Sprache Geschlechterwahrnehmung nicht nur widerspiegelt, sondern beeinflusst. Eine Studie aus dem Jahr 2019 ergab, dass geschlechtsneutrale Pronomen zu einer positiveren Einstellung gegen\u00fcber Frauen und LGBTQIA+ Menschen f\u00fchren. Sie zeigt, Sprache ist der Schl\u00fcssel zu mehr Inklusion.<\/span><\/p>\n<p><span style=\"\"><strong>Was du tun kannst, um alle Geschlechter einzubeziehen<\/strong><br>1 - Konzentriere dich auf die Aktivit\u00e4t: <em>alle, die teilnehmen<\/em>, statt <em>Teilnehmer<\/em><br>2 - Vermeide W\u00f6rter mit einem geschlechtsspezifischen Unterton wie <em>Rockstar<\/em>, <em>Guru <\/em>oder <em>Superheld<\/em>. Experimentiere mit <em>Star<\/em>, <em>Supertalent <\/em>oder <em>Gurvis und Gurus<\/em>.<br>3 \u2013 Setze ein inklusives Genderzeichen ein.<br>4 &nbsp;\u2013 Formuliere mit geschlechtsneutralen W\u00f6rtern um.<br><\/span><\/p>",
                 "hero_figure": "https:\/\/www.witty.works\/hubfs\/52%25%20der%20Agentu-Direktoren%20sind%20M%C3%A4nner%20DE%20.png,1024,576,",
@@ -1996,13 +2014,12 @@
                 "meme_2_alt_text": "Text auf Farbfl\u00e4che: Lass dich von Menschen inspirieren, die Inklusion den Weg ebnen. Schaltfl\u00e4che klicken, um Witty Talks zu sehen",
                 "meme_2_url": "https:\/\/www.witty.works\/witty-talks",
                 "read_on": "<div><a href=\"https:\/\/www.witty.works\/en\/blog\/gendered-wording-in-job-ads-scientific-findings\" rel=\"noopener\" target=\"_blank\">Gendered Wording in Job Ads - Scientific Findings, Witty Blog<\/a><\/div>\n<div><a href=\"https:\/\/www.witty.works\/en\/blog\/gender-inclusive-writing-in-german\" rel=\"noopener\" target=\"_blank\">How to write inclusively in gendered languages like German, Witty Blog<\/a><\/div>\n<div><a href=\"https:\/\/www.witty.works\/en\/blog\/being-good-guy-doesn-t-cut-it\" rel=\"noopener\" target=\"_blank\">Being a \"good guy\" doesn't cut it, Witty Blog<\/a><\/div>",
-                "anchor": "spezielle_funktionen",
-                "emoji": "\ud83d\udca1",
-                "gravity": "2"
+                "anchor": "spezielle_funktionen"
             }
         }
     },
     "gender_identity": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude12",
@@ -2015,6 +2032,7 @@
         ],
         "translations": {
             "en": {
+                "hs_path": "gender-binary",
                 "hs_name": "Gender binary",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/gender-binary",
                 "is_active": "1",
@@ -2051,11 +2069,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "gender_identity",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "gender_identity"
             },
             "de": {
+                "hs_path": "bin\u00e4res-geschlecht",
                 "hs_name": "Bin\u00e4res Geschlecht",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/bin\u00e4res-geschlecht",
                 "is_active": "1",
@@ -2069,7 +2086,12 @@
                     "height": "525",
                     "alt": "Illustration einer Gruppe von Menschen mit unterschiedlicher geschlechtlicher Identit\u00e4t, unterschiedlichem Alter, ethnischem Hintergrund und verschiedenen K\u00f6rperformen, die alle LGBTQUIA+ sind"
                 },
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Bin%C3%A4res%20Geschlecht.png",
+                    "width": "605",
+                    "height": "412",
+                    "alt": "Eine Illustration von Witty des Satzes 'Meine Damen und Herren'. Als Alternative f\u00fcr den Begriff in Klammern wird \u2018Hallo \u2018zusammen vorgeschlagen."
+                },
                 "soft_explanation": "Von der Farben f\u00fcr Babys \u00fcber die Rollenverteilung in der Familie bis hin zu getrennten Toiletten - die Vorstellung von einer zweigeschlechtlichen Welt durchdringt jeden Aspekt unserer Gesellschaft. Uns wird gelehrt, dass wir aufgrund unserer Biologie ein bestimmtes Geschlecht haben. Einmal zugewiesen, bleibt uns dieses zugewiesene Geschlecht uns - ein Leben lang. Aber unser Verst\u00e4ndnis des Geschlechterspektrums hat sich weiterentwickelt. Hilf allen geschlechtlichen Identit\u00e4ten, sich sicher und inkludiert zu f\u00fchlen. Teile deine Pronomen. Sprich Menschen direkt oder mit ihrem Namen an. Verwende geschlechtsneutrale Begriffe. Und frage dich: \"Was w\u00fcrde ich schreiben, wenn diese Person kein bestimmtes Geschlecht h\u00e4tte?\"",
                 "hard_facts": "Das bin\u00e4re Geschlecht ist ein soziales und kulturelles Konstrukt. Es ordnet alle Menschen einem von zwei Geschlechtern zu - weiblich oder m\u00e4nnlich. Diese Geschlechter werden bei der Geburt auf der Grundlage des biologischen Geschlechts eines Kindes zugewiesen. Gesellschaftliche Normen legen geschlechtsspezifische Erwartungen an Aussehen, Kleidung und Verhalten fest. Sie bestimmen, wie sich ein Geschlecht bewegen und sprechen soll, welche Rolle es in der \u00d6ffentlichkeit und im Privaten spielt und zu welchem Geschlecht es sich hingezogen f\u00fchlt. Nicht konforme Geschlechtsidentit\u00e4ten und -ausdr\u00fccke werden zur Kenntnis genommen - und verurteilt, ja sogar bestraft.<br><br>Das bin\u00e4re Geschlechterkonzept ignoriert die komplexe Realit\u00e4t des Geschlechts. Das innere Gef\u00fchl einer Person f\u00fcr ihr Geschlecht kann sich nicht nur im Laufe ihres Lebens, sondern auch im Laufe des Tages \u00e4ndern. Eine Person kann das Gef\u00fchl haben, dass ihr K\u00f6rper, das zugewiesene Cisgender oder das soziale Geschlecht nicht das widerspiegelt, wie sie selbst ihr Geschlecht identifiziert, ausdr\u00fcckt oder erlebt.&nbsp;<br><br>Je mehr wir \u00fcber Geschlecht lernen, desto weniger wissen wir. Es sind die j\u00fcngeren Generationen, die das Bewusstsein f\u00fcr Geschlechtervielfalt sch\u00e4rfen. J\u00fcngere Menschen akzeptieren Geschlechtsidentit\u00e4ten jenseits des bin\u00e4ren Geschlechts eher. Sie empfinden ihr eigenes Geschlecht eher als flie\u00dfend. Und die Generation Z beginnt, den Arbeitsplatz umzugestalten. Studien zeigen, dass sie von zuk\u00fcnftigen Arbeitgeber*innen erwarten, dass sie ihre Werte teilen und ihre Vielfalt widerspiegeln. Und dazu geh\u00f6ren auch geschlechtliche Identit\u00e4ten.",
                 "hero_figure": "https:\/\/www.witty.works\/hubfs\/Witty%20Works%20Learning%20Bites%20Bin%C3%A4res%20Geschlecht%20ipsos.png,1024,576,",
@@ -2087,13 +2109,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "geschlechtsidentit\u00e4t",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "geschlechtsidentit\u00e4t"
             }
         }
     },
     "gender_specific_abbreviation": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude2e",
@@ -2101,6 +2122,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "gender-specific-abbreviation",
                 "hs_name": "Gender-specific abbreviation",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/gender-specific-abbreviation",
                 "is_active": "1",
@@ -2127,11 +2149,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "gender_specific_abbreviation",
-                "emoji": "\ud83d\ude2e",
-                "gravity": "2"
+                "anchor": "gender_specific_abbreviation"
             },
             "de": {
+                "hs_path": "geschlechter-spezifische-abk\u00fcrzung",
                 "hs_name": "Geschlechter-Spezifische Abk\u00fcrzung",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/geschlechter-spezifische-abk\u00fcrzung",
                 "is_active": "1",
@@ -2140,7 +2161,12 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Geschlechter-Spezifische%20Abk%C3%BCrzung.png",
+                    "width": "605",
+                    "height": "422",
+                    "alt": "Eine Illustration von Witty des Satzes 'Consultant (m\/f\/d)'. Als Alternative f\u00fcr den Begriff in Klammern wird \u2018(d\/f\/m)\u2019 vorgeschlagen."
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -2158,13 +2184,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "geschlechter_spezifische_abk\u00fcrzung",
-                "emoji": "\ud83d\ude2e",
-                "gravity": "2"
+                "anchor": "geschlechter_spezifische_abk\u00fcrzung"
             }
         }
     },
     "gendered_denominations_ending": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\udcaf",
@@ -2172,6 +2197,7 @@
         "related_subcategories": [],
         "translations": {
             "de": {
+                "hs_path": "inklusive-endung",
                 "hs_name": "Inklusive Endung",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/inklusive-endung",
                 "is_active": "1",
@@ -2198,13 +2224,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "inklusive_endung",
-                "emoji": "\ud83d\udcaf",
-                "gravity": "2"
+                "anchor": "inklusive_endung"
             }
         }
     },
     "generic_plural": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude2e",
@@ -2217,6 +2242,7 @@
         ],
         "translations": {
             "en": {
+                "hs_path": "generic-plural",
                 "hs_name": "Generic plural",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/generic-plural",
                 "is_active": "1",
@@ -2243,11 +2269,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "generic_plural",
-                "emoji": "\ud83d\ude2e",
-                "gravity": "3"
+                "anchor": "generic_plural"
             },
             "de": {
+                "hs_path": "generischer-plural",
                 "hs_name": "Generischer Plural",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/generischer-plural",
                 "is_active": "1",
@@ -2274,13 +2299,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "generisches_plural",
-                "emoji": "\ud83d\ude2e",
-                "gravity": "3"
+                "anchor": "generisches_plural"
             }
         }
     },
     "hearing": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "invisible",
         "emoji": "\ud83d\ude12",
@@ -2288,6 +2312,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "hearing",
                 "hs_name": "Hearing",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/hearing",
                 "is_active": "1",
@@ -2319,11 +2344,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "hearing",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "hearing"
             },
             "de": {
+                "hs_path": "h\u00f6rf\u00e4higkeit",
                 "hs_name": "H\u00f6rf\u00e4higkeit",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/h\u00f6rf\u00e4higkeit",
                 "is_active": "1",
@@ -2350,13 +2374,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "h\u00f6rf\u00e4higkeit",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "h\u00f6rf\u00e4higkeit"
             }
         }
     },
     "hidden_image": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude1f",
@@ -2369,6 +2392,7 @@
         ],
         "translations": {
             "en": {
+                "hs_path": "gender-cues",
                 "hs_name": "Gender cues",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/gender-cues",
                 "is_active": "1",
@@ -2405,11 +2429,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "hidden_meaning",
-                "emoji": "\ud83d\ude1f",
-                "gravity": "2"
+                "anchor": "hidden_meaning"
             },
             "de": {
+                "hs_path": "angedeutetes-gender",
                 "hs_name": "Angedeutetes Gender",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/angedeutetes-gender",
                 "is_active": "1",
@@ -2446,13 +2469,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "versteckter_ausdruck",
-                "emoji": "\ud83d\ude1f",
-                "gravity": "2"
+                "anchor": "versteckter_ausdruck"
             }
         }
     },
     "hollow": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "language-clarity",
         "emoji": "\ud83d\ude44",
@@ -2463,6 +2485,7 @@
         ],
         "translations": {
             "en": {
+                "hs_path": "empty-words",
                 "hs_name": "Empty words",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/empty-words",
                 "is_active": "1",
@@ -2499,13 +2522,12 @@
                 "meme_2_alt_text": "Invitation text: Draw inspiration from people who pave the way for inclusion as thought leaders and change makers. Click to meet witty talks",
                 "meme_2_url": "https:\/\/www.witty.works\/witty-talks",
                 "read_on": "",
-                "anchor": "empty_words",
-                "emoji": "\ud83d\ude44",
-                "gravity": "3"
+                "anchor": "empty_words"
             },
             "de": {
+                "hs_path": "worth\u00fclsen",
                 "hs_name": "Worth\u00fclsen",
-                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit%C3%A4t\/worth\u00fclsen",
+                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/worth\u00fclsen",
                 "is_active": "1",
                 "name": "Schw\u00e4chen die Wirkung deiner Botschaft",
                 "short_explanation": "Schw\u00e4chen die Wirkung deiner Botschaft",
@@ -2517,7 +2539,12 @@
                     "height": "525",
                     "alt": "Illustration: Eine Person sagt, \"...den Druck rausnehmen und um die Ecke denken.\" Die andere Person sagt \"Klar!\", aber denkt \"Welche Ecke?\"  "
                 },
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Worth%C3%BClsen.png",
+                    "width": "605",
+                    "height": "386",
+                    "alt": "Eine Illustration von Witty des Satzes 'Klar k\u00f6nnen wir [niedrig h\u00e4ngende Fr\u00fcchte identifizieren].\u2019. Als Alternative f\u00fcr den Begriff in Klammern wird 'g\u00fcnstige Gelegenheiten erkennen' vorgeschlagen."
+                },
                 "soft_explanation": "Worth\u00fclsen gibt es \u00fcberall. Sie versprechen <em>ein attraktives Gehalt<\/em>, locken mit <em>flachen Hierarchien <\/em>oder bieten <em>personalisierte Kundenerlebnisse<\/em>. Diese Begriffe und Phrasen sind so schwammig und \u00fcberstrapaziert, sie sind bedeutungslos geworden. Worth\u00fclsen langweilen, ver\u00e4rgern, und sie verunsichern. Denn das Schwammige kann sich kalkuliert anf\u00fchlen - wie Augenwischerei, weil jemand nicht konkret sein kann oder will. Du willst Menschen helfen, sich auf deine Worte einzulassen? Sei authentisch. Sei konkret. Verwende Zahlen und greifbare Beispiele.",
                 "hard_facts": "<p>Du magst Phrasen und leere Worte frustrierend, aber harmlos finden. Das sind sie nicht. Sie wirken sich auf Gesch\u00e4ftserfolg und Umsatz aus.<\/p>\n<ul>\n<li>Leere Floskeln und Worth\u00fclsen beeintr\u00e4chtigen deine Suche nach Talenten. Vage Formulierungen in Stellenanzeigen schrecken qualifizierte Menschen ab, die greifbare Informationen und Transparenz bevorzugen. Warum sollten sie Zeit in eine Bewerbung investieren, wenn ein Unternehmen nicht offen \u00fcber die Fakten spricht, die sie f\u00fcr eine fundierte Entscheidung ben\u00f6tigen?<\/li>\n<li>Abgestandene Klischees machen deine Marke unsichtbar. Mit generischen Botschaften aus dem Blabla-W\u00f6rterbuch der Wirtschaft klingen dein Marketing, deine Werbung und deine Talentakquise so wie alle anderen. Wie soll dein Publikum erkennen, was dich auszeichnet?<\/li>\n<li>Nebul\u00f6se Unternehmenswerte, Visionen und Missionen lassen Zielgruppen kalt - oder verwirren sie. Es ist schwierig, zusammen auf gemeinsame Meilensteine hinzuarbeiten, wenn \u00fcbergeordnete Ziele unklar bleiben - und leere Phrasen dir nicht verraten, wie du sie erreichen sollst.<\/li>\n<\/ul>\nEine lebendige Sprache und konkrete Aussagen helfen Menschen, dich zu sehen, sich mit dir zu identifizieren und zu verstehen, was dir wichtig ist.Eine lebendige Sprache und konkrete Botschaften helfen den Menschen, dich zu sehen, sich mit dir zu identifizieren und zu verstehen, was f\u00fcr dich wichtig ist.",
                 "hero_figure": "https:\/\/www.witty.works\/hubfs\/41%25%20feel%20left%20out%20by%20business%20jargon%20DE%20.png,1024,576,",
@@ -2535,13 +2562,12 @@
                 "meme_2_alt_text": "Text auf Farbfl\u00e4che: Lass dich von Menschen inspirieren, die Inklusion den Weg ebnen. Schaltfl\u00e4che klicken, um Witty Talks zu sehen",
                 "meme_2_url": "https:\/\/www.witty.works\/witty-talks",
                 "read_on": "",
-                "anchor": "worth\u00fclsen",
-                "emoji": "\ud83d\ude44",
-                "gravity": "3"
+                "anchor": "worth\u00fclsen"
             }
         }
     },
     "homophobia": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "openly_discriminating",
         "emoji": "\ud83d\udeab",
@@ -2549,6 +2575,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "homophobia",
                 "hs_name": "Homophobia",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/homophobia",
                 "is_active": "1",
@@ -2575,11 +2602,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "homophobia",
-                "emoji": "\ud83d\udeab",
-                "gravity": "1"
+                "anchor": "homophobia"
             },
             "de": {
+                "hs_path": "homophobie",
                 "hs_name": "Homophobie",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/homophobie",
                 "is_active": "1",
@@ -2606,13 +2632,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "homophobie",
-                "emoji": "\ud83d\udeab",
-                "gravity": "1"
+                "anchor": "homophobie"
             }
         }
     },
     "leadership": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude1f",
@@ -2626,6 +2651,7 @@
         ],
         "translations": {
             "en": {
+                "hs_path": "traditional-leadership",
                 "hs_name": "Traditional leadership",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/traditional-leadership",
                 "is_active": "1",
@@ -2662,11 +2688,10 @@
                 "meme_2_alt_text": "Invitation text: Draw inspiration from people who pave the way for inclusion as thought leaders and change makers. Click to meet witty talks",
                 "meme_2_url": "https:\/\/www.witty.works\/witty-talks",
                 "read_on": "<p><a href=\"https:\/\/www.witty.works\/en\/blog\/three-recommendations-how-to-get-women-into-leadership-positions\" rel=\"noopener\" target=\"_blank\">3 recommendations how to get Women in Tech &amp; Digital into leadership positions<\/a>, Witty Works Blog, 2019<\/p>\n<p>&nbsp;<\/p>",
-                "anchor": "leadership_stereotype",
-                "emoji": "\ud83d\ude1f",
-                "gravity": "2"
+                "anchor": "leadership_stereotype"
             },
             "de": {
+                "hs_path": "f\u00fchrungsbild",
                 "hs_name": "F\u00fchrungsbild",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/f\u00fchrungsbild",
                 "is_active": "1",
@@ -2698,13 +2723,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "f\u00fchrungsstereotyp",
-                "emoji": "\ud83d\ude1f",
-                "gravity": "2"
+                "anchor": "f\u00fchrungsstereotyp"
             }
         }
     },
     "learning": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "invisible",
         "emoji": "\ud83d\ude12",
@@ -2712,6 +2736,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "learning-ability",
                 "hs_name": "Learning ability",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/learning-ability",
                 "is_active": "1",
@@ -2738,11 +2763,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "learning_ability",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "learning_ability"
             },
             "de": {
+                "hs_path": "lernf\u00e4higkeit",
                 "hs_name": "Lernf\u00e4higkeit",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/lernf\u00e4higkeit",
                 "is_active": "1",
@@ -2769,13 +2793,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "lernf\u00e4higkeit",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "lernf\u00e4higkeit"
             }
         }
     },
     "male_stereotype": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude1f",
@@ -2783,6 +2806,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "male-stereotype",
                 "hs_name": "Male stereotype",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/male-stereotype",
                 "is_active": "1",
@@ -2809,11 +2833,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "male_stereotype",
-                "emoji": "\ud83d\ude1f",
-                "gravity": "2"
+                "anchor": "male_stereotype"
             },
             "de": {
+                "hs_path": "m\u00e4nnerklischee",
                 "hs_name": "M\u00e4nnerklischee",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/m\u00e4nnerklischee",
                 "is_active": "1",
@@ -2840,13 +2863,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "m\u00e4nnlicher_stereotyp",
-                "emoji": "\ud83d\ude1f",
-                "gravity": "2"
+                "anchor": "m\u00e4nnlicher_stereotyp"
             }
         }
     },
     "medical_state": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "visible",
         "emoji": "\ud83d\ude12",
@@ -2854,6 +2876,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "medical-state",
                 "hs_name": "Medical state",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/medical-state",
                 "is_active": "1",
@@ -2880,11 +2903,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "medical_state",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "medical_state"
             },
             "de": {
+                "hs_path": "gesundheitsbild",
                 "hs_name": "Gesundheitsbild",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/gesundheitsbild",
                 "is_active": "1",
@@ -2911,13 +2933,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "gesundheitsbild",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "gesundheitsbild"
             }
         }
     },
     "mental_wellbeing": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "invisible",
         "emoji": "\ud83d\ude12",
@@ -2925,6 +2946,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "mental-wellbeing",
                 "hs_name": "Mental wellbeing",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/mental-wellbeing",
                 "is_active": "1",
@@ -2956,11 +2978,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "mental_wellbeing",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "mental_wellbeing"
             },
             "de": {
+                "hs_path": "mentales-wohlbefinden",
                 "hs_name": "Mentales Wohlbefinden",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/mentales-wohlbefinden",
                 "is_active": "1",
@@ -2968,7 +2989,12 @@
                 "short_explanation": "Bedient \u00fcberholte Vorstellungen von mentaler Gesundheit oder Wohlbefinden",
                 "sub_head": "",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Mentales%20Wohlbefinden.png",
+                    "width": "605",
+                    "height": "372",
+                    "alt": " Eine Illustration von Witty des Satzes 'Mason ist so [zwanghaft], wenn es um die Ablage geht.'. Als Alternative f\u00fcr den Begriff in Klammern wird \u2018perfektionistisch\u2019 vorgeschlagen."
+                },
                 "example_image": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -2987,13 +3013,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "mentales_wohlbefinden",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "mentales_wohlbefinden"
             }
         }
     },
     "migration": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude12",
@@ -3001,6 +3026,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "migration-background",
                 "hs_name": "Migration background",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/migration-background",
                 "is_active": "1",
@@ -3027,13 +3053,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "migration_background",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "migration_background"
             },
             "de": {
+                "hs_path": "migrationshintergrund",
                 "hs_name": "Migrationshintergrund",
-                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit%C3%A4t\/migrationshintergrund",
+                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/migrationshintergrund",
                 "is_active": "1",
                 "name": "N\u00e4hrt Klischees \u00fcber Menschen mit internationaler Biografie",
                 "short_explanation": "N\u00e4hrt Klischees \u00fcber Menschen mit internationaler Biografie",
@@ -3058,13 +3083,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "migrationshintergrund",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "migrationshintergrund"
             }
         }
     },
     "military_source": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83e\ude96",
@@ -3072,6 +3096,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "military-inspired-lingo",
                 "hs_name": "Military-inspired lingo",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/social-motive\/military-inspired-lingo",
                 "is_active": "1",
@@ -3103,11 +3128,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "military_source",
-                "emoji": "\ud83e\ude96",
-                "gravity": "2"
+                "anchor": "military_source"
             },
             "de": {
+                "hs_path": "milit\u00e4risch-inspirierter-jargon",
                 "hs_name": "Milit\u00e4risch-inspirierter Jargon",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/soziale-motivation\/milit\u00e4risch-inspirierter-jargon",
                 "is_active": "1",
@@ -3139,13 +3163,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "milit\u00e4rische_wurzel",
-                "emoji": "\ud83e\ude96",
-                "gravity": "2"
+                "anchor": "milit\u00e4rische_wurzel"
             }
         }
     },
     "mobility": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "visible",
         "emoji": "\ud83d\ude12",
@@ -3153,6 +3176,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "mobility",
                 "hs_name": "Mobility",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/mobility",
                 "is_active": "1",
@@ -3179,11 +3203,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "mobility",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "mobility"
             },
             "de": {
+                "hs_path": "mobilit\u00e4t",
                 "hs_name": "Mobilit\u00e4t",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/mobilit\u00e4t",
                 "is_active": "1",
@@ -3192,7 +3215,12 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/F%C3%A4higkeiten.png",
+                    "width": "671",
+                    "height": "483",
+                    "alt": "Eine Illustration von Witty des Satzes 'Eine unserer ersten Ma\u00dfnahmen war die Einrichtung von [behindertengerechten] Toiletten.'. Als Alternative f\u00fcr den Begriff in Klammern wird 'barrierefreien' vorgeschlagen. "
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -3210,13 +3238,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "mobilit\u00e4t",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "mobilit\u00e4t"
             }
         }
     },
     "nazi_language": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude12",
@@ -3224,6 +3251,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "nazi-language",
                 "hs_name": "Nazi Language",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/nazi-language",
                 "is_active": "1",
@@ -3250,13 +3278,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "",
-                "emoji": "",
-                "gravity": ""
+                "anchor": ""
             },
             "de": {
+                "hs_path": "nazi-sprache",
                 "hs_name": "Sprache des Nazis",
-                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit%C3%A4t\/nazi-sprache",
+                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/nazi-sprache",
                 "is_active": "1",
                 "name": "Zitiert das entmenschlichende Vokabular des Nazi-Regimes",
                 "short_explanation": "Stammt aus dem entmenschlichenden Vokabular des Nazi-Regimes ",
@@ -3281,13 +3308,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "",
-                "emoji": "",
-                "gravity": ""
+                "anchor": ""
             }
         }
     },
     "offensive_language": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "openly_discriminating",
         "emoji": "\ud83d\udeab",
@@ -3295,6 +3321,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "offensive-language",
                 "hs_name": "Offensive language",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/social-motive\/offensive-language",
                 "is_active": "1",
@@ -3326,11 +3353,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "offensive_language",
-                "emoji": "\ud83d\udeab",
-                "gravity": "1"
+                "anchor": "offensive_language"
             },
             "de": {
+                "hs_path": "beleidigende-und-verletzende-sprache",
                 "hs_name": "Beleidigende und verletzende Sprache",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/soziale-motivation\/beleidigende-und-verletzende-sprache",
                 "is_active": "1",
@@ -3362,13 +3388,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "beleidigende_und_einsch\u00fcchternde_sprache",
-                "emoji": "\ud83d\udeab",
-                "gravity": "1"
+                "anchor": "beleidigende_und_einsch\u00fcchternde_sprache"
             }
         }
     },
     "physicality": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude1f",
@@ -3376,6 +3401,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "physicality",
                 "hs_name": "Physicality",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/physicality",
                 "is_active": "1",
@@ -3402,11 +3428,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "",
-                "emoji": "",
-                "gravity": ""
+                "anchor": ""
             },
             "de": {
+                "hs_path": "k\u00f6rperlichkeit",
                 "hs_name": "K\u00f6rperlichkeit",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/k\u00f6rperlichkeit",
                 "is_active": "1",
@@ -3433,13 +3458,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "",
-                "emoji": "",
-                "gravity": ""
+                "anchor": ""
             }
         }
     },
     "plain_language": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "language-clarity",
         "emoji": "\ud83d\ude44",
@@ -3451,6 +3475,7 @@
         ],
         "translations": {
             "en": {
+                "hs_path": "plain-english",
                 "hs_name": "Plain English",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/plain-english",
                 "is_active": "1",
@@ -3487,13 +3512,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "plain_english",
-                "emoji": "\ud83d\ude44",
-                "gravity": "3"
+                "anchor": "plain_english"
             },
             "de": {
+                "hs_path": "leichte-sprache",
                 "hs_name": "Leichte Sprache",
-                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit%C3%A4t\/leichte-sprache",
+                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/leichte-sprache",
                 "is_active": "1",
                 "name": "Beugt durch kurze, direkte und einfache Sprache Missverst\u00e4ndnissen vor  ",
                 "short_explanation": "Kurze und klare Sprache beugt Fehlern und Missverst\u00e4ndnissen vor",
@@ -3523,13 +3547,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "leichte_sprache",
-                "emoji": "\ud83d\ude44",
-                "gravity": "3"
+                "anchor": "leichte_sprache"
             }
         }
     },
     "racism": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "openly_discriminating",
         "emoji": "\ud83d\udeab",
@@ -3537,6 +3560,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "racism",
                 "hs_name": "Racism",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/racism",
                 "is_active": "1",
@@ -3563,13 +3587,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "racism",
-                "emoji": "\ud83d\udeab",
-                "gravity": "1"
+                "anchor": "racism"
             },
             "de": {
+                "hs_path": "rassismus",
                 "hs_name": "Rassismus",
-                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit%C3%A4t\/rassismus",
+                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/rassismus",
                 "is_active": "1",
                 "name": "F\u00e4llt unter rassistische Verunglimpfungen",
                 "short_explanation": "F\u00e4llt unter rassistische Verunglimpfungen",
@@ -3594,13 +3617,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "rassismus",
-                "emoji": "\ud83d\udeab",
-                "gravity": "1"
+                "anchor": "rassismus"
             }
         }
     },
     "racist_source": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "ancestry",
         "emoji": "\ud83d\ude12",
@@ -3608,6 +3630,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "ancestry",
                 "hs_name": "Ancestry",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/ancestry",
                 "is_active": "1",
@@ -3639,13 +3662,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "racist_source",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "racist_source"
             },
             "de": {
+                "hs_path": "abstammung",
                 "hs_name": "Abstammung",
-                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit%C3%A4t\/abstammung",
+                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/abstammung",
                 "is_active": "1",
                 "name": "Hat rassistische Hintergr\u00fcnde oder Konnotationen  ",
                 "short_explanation": "Hat rassistische Hintergr\u00fcnde oder Konnotationen  ",
@@ -3670,13 +3692,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "rassistische_wurzel",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "rassistische_wurzel"
             }
         }
     },
     "sexism": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "openly_discriminating",
         "emoji": "\ud83d\udeab",
@@ -3684,6 +3705,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "sexism",
                 "hs_name": "Sexism",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/sexism",
                 "is_active": "1",
@@ -3710,11 +3732,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "sexism",
-                "emoji": "\ud83d\udeab",
-                "gravity": "1"
+                "anchor": "sexism"
             },
             "de": {
+                "hs_path": "sexismus",
                 "hs_name": "Sexismus",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/sexismus",
                 "is_active": "1",
@@ -3741,13 +3762,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "sexismus",
-                "emoji": "\ud83d\udeab",
-                "gravity": "1"
+                "anchor": "sexismus"
             }
         }
     },
     "sexual_orientation": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude12",
@@ -3755,6 +3775,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "sexual-orientation",
                 "hs_name": "Sexual orientation",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/sexual-orientation",
                 "is_active": "1",
@@ -3786,11 +3807,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "sexual_orientation",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "sexual_orientation"
             },
             "de": {
+                "hs_path": "sexuelle-orientierung",
                 "hs_name": "Sexuelle Orientierung",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/sexuelle-orientierung",
                 "is_active": "1",
@@ -3799,7 +3819,12 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Sexuelle%20Orientierung.png",
+                    "width": "605",
+                    "height": "412",
+                    "alt": "Eine Illustration von Witty des Satzes 'Eure [Ehefrauen] sind herzlich zur Weihnachtsfeier des Vorstands eingeladen.'. Als Alternative f\u00fcr den Begriff in Klammern wird 'Partner*innen' vorgeschlagen."
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -3817,13 +3842,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "sexuelle_orientierung",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "sexuelle_orientierung"
             }
         }
     },
     "speech": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "invisible",
         "emoji": "\ud83d\ude12",
@@ -3831,6 +3855,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "speech-ability",
                 "hs_name": "Speech ability",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/speech-ability",
                 "is_active": "1",
@@ -3862,11 +3887,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "speech_ability",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "speech_ability"
             },
             "de": {
+                "hs_path": "sprech-f\u00e4higkeit",
                 "hs_name": "Sprech-F\u00e4higkeit",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/sprech-f\u00e4higkeit",
                 "is_active": "1",
@@ -3875,7 +3899,12 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Sprech-F%C3%A4higkeit.png",
+                    "width": "605",
+                    "height": "372",
+                    "alt": "Eine Illustration von Witty des Satzes 'Der Anlasser stottert schon wieder.'. Als Alternative f\u00fcr den Begriff in Klammern wird 'verursacht schon wieder Fehlz\u00fcndungen' vorgeschlagen."
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -3893,13 +3922,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "sprech-f\u00e4higkeit",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "sprech-f\u00e4higkeit"
             }
         }
     },
     "sports_terms": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83c\udfc5",
@@ -3907,6 +3935,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "sports-terms",
                 "hs_name": "Sports terms",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/social-motive\/sports-terms",
                 "is_active": "1",
@@ -3938,11 +3967,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "sports_terms",
-                "emoji": "\ud83c\udfc5",
-                "gravity": "2"
+                "anchor": "sports_terms"
             },
             "de": {
+                "hs_path": "sport-jargon",
                 "hs_name": "Sport Jargon",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/soziale-motivation\/sport-jargon",
                 "is_active": "1",
@@ -3951,7 +3979,12 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Sport%20Jargon.png",
+                    "width": "605",
+                    "height": "435",
+                    "alt": "Eine Illustration von Witty des Satzes 'Der Einkauf k\u00e4mpft mit harten Bandagen. Wir sind an einem Punkt in den Verhandlungen angekommen, wo der [Chef in den Ring steigen] muss.'. Als Alternative f\u00fcr den Begriff in Klammern wird 'die Gesch\u00e4ftsleitung \u00fcbernehmen' vorgeschlagen."
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -3969,13 +4002,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "sport_jargon",
-                "emoji": "\ud83c\udfc5",
-                "gravity": "2"
+                "anchor": "sport_jargon"
             }
         }
     },
     "style": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "language-clarity",
         "emoji": "\ud83d\ude1f",
@@ -3983,6 +4015,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "clarity",
                 "hs_name": "Clarity",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/clarity",
                 "is_active": "1",
@@ -4014,13 +4047,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "style",
-                "emoji": "\ud83d\ude1f",
-                "gravity": "2"
+                "anchor": "style"
             },
             "de": {
+                "hs_path": "klarheit",
                 "hs_name": "Klarheit",
-                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit%C3%A4t\/klarheit",
+                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/klarheit",
                 "is_active": "1",
                 "name": "Macht den Satz komplizierter und schwerer verst\u00e4ndlich",
                 "short_explanation": "Sprich Leser*innen in klaren und unmissverst\u00e4ndlichen Worten an",
@@ -4050,13 +4082,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "stil",
-                "emoji": "\ud83d\ude1f",
-                "gravity": "2"
+                "anchor": "stil"
             }
         }
     },
     "titles": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude1f",
@@ -4069,6 +4100,7 @@
         ],
         "translations": {
             "en": {
+                "hs_path": "jobs",
                 "hs_name": "Jobs",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/jobs",
                 "is_active": "1",
@@ -4105,11 +4137,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "<span style=\"\"><a href=\"https:\/\/www.witty.works\/en\/blog\/gendered-wording-in-job-ads-scientific-findings\" rel=\"noopener\" target=\"_blank\"><span style=\"color: #000000;\">Gendered Wording in Job Ads - Scientific Findings, Witty Blog<\/span><\/a><span style=\"color: #000000;\"><br><\/span><a href=\"https:\/\/www.witty.works\/en\/blog\/gender-inclusive-writing-in-german\" rel=\"noopener\" target=\"_blank\"><span style=\"color: #000000;\">How to write inclusively in gendered languages like German, Witty Blog<\/span><\/a><span style=\"color: #000000;\"><br><\/span><a href=\"https:\/\/www.witty.works\/en\/blog\/being-good-guy-doesn-t-cut-it\" rel=\"noopener\" target=\"_blank\"><span style=\"color: #000000;\">Being a \"good guy\" doesn't cut it, Witty Blog<\/span><\/a><\/span>",
-                "anchor": "titles",
-                "emoji": "\ud83d\ude1f",
-                "gravity": "2"
+                "anchor": "titles"
             },
             "de": {
+                "hs_path": "berufe",
                 "hs_name": "Berufe",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/berufe",
                 "is_active": "1",
@@ -4123,7 +4154,12 @@
                     "height": "525",
                     "alt": "Illustration von Astronautin und Astronaut, K\u00fcnstlerin und K\u00fcnstler, Pflegerin und Pfleger, Professorin und Professor, Bauarbeiterin und Bauarbeiter "
                 },
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Berufe.png",
+                    "width": "605",
+                    "height": "395",
+                    "alt": "Eine Illustration von Witty des Satzes \u2018[Hat ein Arzt] au\u00dferhalb des Krankenhauses Bereitschaftsdienst, ...'. Als Alternative f\u00fcr den Begriff in Klammern wird 'Haben \u00c4rzt*innen' vorgeschlagen."
+                },
                 "soft_explanation": "Wir verwenden Berufsbezeichnungen, um zu verstehen, ob wir f\u00fcr die Stelle, die ein Unternehmen besetzen m\u00f6chte, geeignet sind. Und dazu geh\u00f6rt auch unser Geschlecht. 79 % aller Stellenanzeigen geben, wenn auch unabsichtlich, das Geschlecht der Person vor, die die Stelle aus\u00fcben soll. Auch die Vorbilder aus der Kindheit beeinflussen, ob wir Frauen oder M\u00e4nner visualisieren, wenn wir an einen Job denken. Diese Vorurteile schr\u00e4nken die Pools und Pipelines ein - und die Karriereoptionen und -aussichten von Menschen aller Geschlechter und Hintergr\u00fcnde. Um einen inklusiven Stil zu verfolgen, solltest du geschlechtsneutrale Beschreibungen f\u00fcr &nbsp;Aufgabenbereiche entwickeln.",
                 "hard_facts": "<p>Studien legen nahe, dass wir schon sehr fr\u00fch Geschlechterstereotypen \u00fcber Berufe entwickeln. Belege f\u00fcr diese Voreingenommenheit finden sich bereits im Sprachgebrauch von Kindern im Alter von 3 Jahren. Sie beeinflusst, ob wir uns als Erwachsene einen bestimmten Beruf vorstellen k\u00f6nnen und somit unsere Berufswahl. Und sie hat Einfluss darauf, wie wir Berufsbezeichnungen lesen, nicht als Hinweis auf eine ausgeschriebene Stelle, sondern auch darauf, ob in einer Unternehmenskultur, Inklusion gro\u00df geschrieben wird.<\/p>\n<p>Die Art und Weise, wie Stellenbezeichnungen formuliert sind, beeinflusst auf subtile Weise unsere Wahrnehmung der zu erwartenden Karriereaussichten und unser Zugeh\u00f6rigkeitsgef\u00fchl. Sie k\u00f6nnen signalisieren, wie offen ein Unternehmen f\u00fcr geschlechtergerechte Bef\u00f6rderungspraktiken ist, wie viel Prestige es mit einer Position verbindet und ob es Wert auf vielf\u00e4ltige Perspektiven und Flexibilit\u00e4t am Arbeitsplatz legt. Die Ergebnisse deuten darauf hin, dass stereotype m\u00e4nnliche Berufsbezeichnungen Frauen zu der Annahme verleiten k\u00f6nnen, dass das Unternehmen mehr M\u00e4nner als Frauen besch\u00e4ftigt und dass Frauen f\u00fcr diese Stelle nicht geeignet sind. Kurz gesagt, sie lassen eine Stelle f\u00fcr sie weniger attraktiv erscheinen.<\/p>\n<p>Geschlechtsneutrale Bezeichnungen im gesamten Unternehmen k\u00f6nnen ein starkes Signal setzen. Sie signalisieren Mitarbeiter*innen und Bewerber*innen, dass es dem Unternehmen ernst ist mit der F\u00f6rderung von Vielfalt, Gleichberechtigung, Inklusion und Zugeh\u00f6rigkeit. Und es zeigt, dass man sich der Mechanismen auf Unternehmensebene, die bestehende Ungleichheiten am Arbeitsplatz verst\u00e4rken und aufrechterhalten, bewusst ist und bereit ist, sie anzugehen.<\/p>",
                 "hero_figure": "https:\/\/www.witty.works\/hubfs\/52%25%20der%20Agentu-Direktoren%20sind%20M%C3%A4nner%20DE%20.png,1024,576,",
@@ -4141,13 +4177,12 @@
                 "meme_2_alt_text": "Text auf Farbfl\u00e4che: Lass dich von Menschen inspirieren, die Inklusion den Weg ebnen. Schaltfl\u00e4che klicken, um Witty Talks zu sehen",
                 "meme_2_url": "https:\/\/www.witty.works\/witty-talks",
                 "read_on": "<div><a href=\"https:\/\/www.witty.works\/en\/blog\/gendered-wording-in-job-ads-scientific-findings\" rel=\"noopener\" target=\"_blank\">Gendered Wording in Job Ads - Scientific Findings, Witty Blog<\/a><\/div>\n<div><a href=\"https:\/\/www.witty.works\/en\/blog\/gender-inclusive-writing-in-german\" rel=\"noopener\" target=\"_blank\">How to write inclusively in gendered languages like German, Witty Blog<\/a><\/div>\n<div><a href=\"https:\/\/www.witty.works\/en\/blog\/being-good-guy-doesn-t-cut-it\" rel=\"noopener\" target=\"_blank\">Being a \"good guy\" doesn't cut it, Witty Blog<\/a><\/div>",
-                "anchor": "titel",
-                "emoji": "\ud83d\ude1f",
-                "gravity": "2"
+                "anchor": "titel"
             }
         }
     },
     "transphobia": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "openly_discriminating",
         "emoji": "\ud83d\udeab",
@@ -4155,6 +4190,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "transphobia",
                 "hs_name": "Transphobia",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/transphobia",
                 "is_active": "1",
@@ -4181,11 +4217,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "transphobia",
-                "emoji": "\ud83d\udeab",
-                "gravity": "1"
+                "anchor": "transphobia"
             },
             "de": {
+                "hs_path": "transphobie",
                 "hs_name": "Transphobie",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/transphobie",
                 "is_active": "1",
@@ -4212,13 +4247,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "transphobie",
-                "emoji": "\ud83d\udeab",
-                "gravity": "1"
+                "anchor": "transphobie"
             }
         }
     },
     "vision": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "invisible",
         "emoji": "\ud83d\ude12",
@@ -4226,6 +4260,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "vision",
                 "hs_name": "Vision",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/vision",
                 "is_active": "1",
@@ -4252,11 +4287,10 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "vision",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "vision"
             },
             "de": {
+                "hs_path": "seh-f\u00e4higkeit",
                 "hs_name": "Seh-F\u00e4higkeit",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/seh-f\u00e4higkeit",
                 "is_active": "1",
@@ -4283,13 +4317,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "seh-f\u00e4higkeit",
-                "emoji": "\ud83d\ude12",
-                "gravity": "2"
+                "anchor": "seh-f\u00e4higkeit"
             }
         }
     },
     "xenophobia": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "openly_discriminating",
         "emoji": "\ud83d\udeab",
@@ -4297,6 +4330,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "xenophobia",
                 "hs_name": "Xenophobia",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/xenophobia",
                 "is_active": "1",
@@ -4323,13 +4357,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "xenophobia",
-                "emoji": "\ud83d\udeab",
-                "gravity": "1"
+                "anchor": "xenophobia"
             },
             "de": {
+                "hs_path": "fremdenfeindlichkeit-xenophobie",
                 "hs_name": "Fremdenfeindlichkeit \/ Xenophobie",
-                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit%C3%A4t\/fremdenfeindlichkeit-xenophobie",
+                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/fremdenfeindlichkeit-xenophobie",
                 "is_active": "1",
                 "name": "Stellt eine fremdenfeindliche Verunglimpfung dar",
                 "short_explanation": "Fremdenfeindlich, xenophob",
@@ -4354,13 +4387,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "fremdenfeindlichkeit_xenophobie",
-                "emoji": "\ud83d\udeab",
-                "gravity": "1"
+                "anchor": "fremdenfeindlichkeit_xenophobie"
             }
         }
     },
     "yiddish-pejoratives": {
+        "hs_path": "",
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude12",
@@ -4368,6 +4400,7 @@
         "related_subcategories": [],
         "translations": {
             "en": {
+                "hs_path": "yiddish-pejoratives",
                 "hs_name": "Yiddish pejoratives",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/yiddish-pejoratives",
                 "is_active": "1",
@@ -4394,13 +4427,12 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "",
-                "emoji": "",
-                "gravity": ""
+                "anchor": ""
             },
             "de": {
+                "hs_path": "negative-verwendung-jiddischer-worte",
                 "hs_name": "Negative Verwendung jiddischer Worte",
-                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit%C3%A4t\/negative-verwendung-jiddischer-worte",
+                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/negative-verwendung-jiddischer-worte",
                 "is_active": "1",
                 "name": "Deutet jiddische W\u00f6rter abwertend um",
                 "short_explanation": "Abwertende Umdeutung eines neutralen oder positiven jiddischen Wortes",
@@ -4425,9 +4457,7 @@
                 "meme_2_alt_text": "",
                 "meme_2_url": "",
                 "read_on": "",
-                "anchor": "",
-                "emoji": "",
-                "gravity": ""
+                "anchor": ""
             }
         }
     }

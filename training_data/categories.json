@@ -1,5 +1,6 @@
 {
     "cultural-diversity": {
+        "hs_path": "",
         "hs_name": "Cultural Diversity",
         "icon": {
             "src": "https:\/\/www.witty.works\/hubfs\/icon%20-%20racial%20bias-1.svg",
@@ -10,6 +11,7 @@
         "sort": "1",
         "translations": {
             "en": {
+                "hs_path": "cultural-diversity",
                 "hs_name": "Cultural Diversity",
                 "name": "Cultural Diversity",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity",
@@ -26,6 +28,7 @@
                 }
             },
             "de": {
+                "hs_path": "kulturelle-diversit\u00e4t",
                 "hs_name": "Kulturelle Diversit\u00e4t",
                 "name": "Kulturelle Diversit\u00e4t",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t",
@@ -68,6 +71,7 @@
         }
     },
     "gender-orientation": {
+        "hs_path": "",
         "hs_name": "",
         "icon": {
             "src": "https:\/\/www.witty.works\/hubfs\/icon%20-%20gender%20bias.svg",
@@ -78,6 +82,7 @@
         "sort": "2",
         "translations": {
             "en": {
+                "hs_path": "gender-orientation",
                 "hs_name": "Gender + Orientation",
                 "name": "Gender + Orientation",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation",
@@ -94,6 +99,7 @@
                 }
             },
             "de": {
+                "hs_path": "geschlecht-orientierung",
                 "hs_name": "Geschlecht + Orientierung",
                 "name": "Geschlecht + Orientierung",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung",
@@ -134,6 +140,7 @@
         }
     },
     "ability-physicality": {
+        "hs_path": "",
         "hs_name": "",
         "icon": {
             "src": "https:\/\/www.witty.works\/hubfs\/icon%20-%20disabled%20bias-1.svg",
@@ -144,6 +151,7 @@
         "sort": "3",
         "translations": {
             "en": {
+                "hs_path": "ability-physicality",
                 "hs_name": "Ability + Physicality",
                 "name": "Ability + Physicality",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality",
@@ -160,6 +168,7 @@
                 }
             },
             "de": {
+                "hs_path": "f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit",
                 "hs_name": "F\u00e4higkeiten + Erkrankungen + K\u00f6rperlichkeit",
                 "name": "F\u00e4higkeiten + Erkrankungen + K\u00f6rperlichkeit",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit",
@@ -201,6 +210,7 @@
         }
     },
     "religion": {
+        "hs_path": "",
         "hs_name": "",
         "icon": {
             "src": "https:\/\/www.witty.works\/hubfs\/icon%20-%20faith%20bias.svg",
@@ -211,6 +221,7 @@
         "sort": "4",
         "translations": {
             "en": {
+                "hs_path": "religion",
                 "hs_name": "Religion",
                 "name": "Religion",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/religion",
@@ -227,6 +238,7 @@
                 }
             },
             "de": {
+                "hs_path": "glauben",
                 "hs_name": "Glauben",
                 "name": "Glauben",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/glauben",
@@ -254,6 +266,7 @@
         }
     },
     "acquired-diversity": {
+        "hs_path": "",
         "hs_name": "",
         "icon": {
             "src": "https:\/\/www.witty.works\/hubfs\/icon%20-%20age%20bias-1.svg",
@@ -264,6 +277,7 @@
         "sort": "5",
         "translations": {
             "en": {
+                "hs_path": "acquired-diversity",
                 "hs_name": "Acquired Diversity",
                 "name": "Acquired Diversity",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/acquired-diversity",
@@ -280,6 +294,7 @@
                 }
             },
             "de": {
+                "hs_path": "erworbene-diversit\u00e4t",
                 "hs_name": "Erworbene Diversit\u00e4t",
                 "name": "Erworbene Diversit\u00e4t",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/erworbene-diversit\u00e4t",
@@ -309,6 +324,7 @@
         }
     },
     "social-motive": {
+        "hs_path": "",
         "hs_name": "",
         "icon": {
             "src": "https:\/\/www.witty.works\/hubfs\/icon%20-%20sexual%20orientation.svg",
@@ -319,6 +335,7 @@
         "sort": "6",
         "translations": {
             "en": {
+                "hs_path": "social-motive",
                 "hs_name": "Social Motive",
                 "name": "Social Motive",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/social-motive",
@@ -335,6 +352,7 @@
                 }
             },
             "de": {
+                "hs_path": "soziale-motivation",
                 "hs_name": "Soziale Motivation",
                 "name": "Soziale Motivation",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/soziale-motivation",
