@@ -33,7 +33,8 @@ platform e:curl -e main /deployments/next -X PATCH -d '{"webapps":
 Adjust instance count:
 
 ```
-platform e:curl -e main /deployments/next -X PATCH -d '{"webapps": {"app": {"instance_count": "3"}}}'
+platform e:curl -e main /deployments/next -X PATCH -d '{"webapps":
+  {"app": {"resources": {"instance_count": "2"}},"languagetool": {"resources": {"instance_count": "2"}}}}'
 ```
 
 ## Using Docker
