@@ -2,8 +2,6 @@
 
   type: "python:3.11"
 
-  disk: 2048
-
   container_profile: HIGHER_MEMORY
   initial_size: "0.5"
 
