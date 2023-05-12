@@ -21,6 +21,21 @@ This project has two key dependencies:
   - Run `platform list` to find out what commands are available
   - Run `platform help [command]` to find out details about a command
 
+## Adjust size on platform.sh
+
+Adjust server size:
+
+```
+platform e:curl -e main /deployments/next -X PATCH -d '{"webapps":
+  {"app": {"resources": {"profile_size": "8"}},"languagetool": {"resources": {"profile_size": "4"}}}}'
+```
+
+Adjust instance count:
+
+```
+platform e:curl -e main /deployments/next -X PATCH -d '{"webapps": {"app": {"instance_count": "3"}}}'
+```
+
 ## Using Docker
 
 1. Install Docker engine - https://docs.docker.com/engine/install/
