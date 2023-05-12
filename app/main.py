@@ -1525,8 +1525,8 @@ async def apply_languagetool_rules(
     }
 
     if is_sub_category_enabled(config, "advanced_plain_language"):
-        # if payload["language"] == "de-DE":
-        #    payload["language"] += "-x-simple-language"
+        if payload["language"] == "de-DE":
+            payload["language"] += "-x-simple-language"
 
         payload["enabledCategories"].append("PLAIN_ENGLISH")
     else:

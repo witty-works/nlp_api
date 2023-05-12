@@ -5,28 +5,6 @@
         {
             "alternatives": [
                 {
-                    "text": "latest"
-                }
-            ],
-            "category": "cultural-diversity",
-            "context": "Our efforts continue to be geared to offering the best state-of-the-art technology",
-            "end": 71,
-            "explanation": {
-                "content": "advanced",
-                "icon": "🙄",
-                "text": "Use “latest”.",
-                "url": "https://www.witty.works/en/categories/cultural-diversity/plain-english?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Cultural Diversity: Plain English",
-            "proficiency_level": "unconscious_bias",
-            "start": 55,
-            "subcategory": "advanced_plain_language",
-            "text": "state-of-the-art"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "preferred"
                 },
                 {
