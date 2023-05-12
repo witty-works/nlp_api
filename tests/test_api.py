@@ -521,7 +521,11 @@ def set_redis():
         "email": "default@gmail.com",
         "organization_id": "test-default-org",
         "name": "Tests Default",
-        "config": {"categories": {}},
+        "config": {
+            "categories": {
+                "advanced_plain_language": {"value": False, "status": "force"},
+            },
+        },
         "false_positives": [],
         "term_replacements": {},
         "domains": None,
@@ -561,6 +565,7 @@ def set_redis():
                 "status": "force",
             },
             "categories": {
+                "advanced_plain_language": {"value": False, "status": "force"},
                 "emotional_security": {"value": True, "status": "force"},
                 "abbreviation": {"value": False, "status": "force"},
             },
@@ -1433,4 +1438,33 @@ def test_english_upper_case_multiterms(
         )
         # Snapshot the return value.
         snapshot.snapshot_dir = english_upper_case_multiterms_dir
+        snapshot.assert_match(output, "output.json")
+
+
+
+@pytest.mark.parametrize(
+    "german_plain_language_dir",
+    get_dirs("tests/test_german_plain_language"),
+)
+def test_german_plain_language(
+    german_plain_language_dir, snapshot, set_redis
+):
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = german_plain_language_dir.joinpath(
+            "input.json"
+        ).read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.3/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "free@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(
+            response.json(), sort_keys=True, indent=4, ensure_ascii=False
+        )
+        # Snapshot the return value.
+        snapshot.snapshot_dir = german_plain_language_dir
         snapshot.assert_match(output, "output.json")
