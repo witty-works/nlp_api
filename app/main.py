@@ -383,7 +383,6 @@ async def get_health(check_external: bool = False):
             "LanguageTool",
             settings.languagetool_verify_ssl,
             False,
-            1,
         )
 
         health["spelling"] = languagetool_health == "OK"
@@ -1457,9 +1456,13 @@ async def fetch_json_from_language_service(
     name = "language endpoint " + lang
 
     if is_get:
-        return await fetch_json_get(url, payload, headers, name, False)
+        return await fetch_json_get(
+            url, payload, headers, name, settings.languagetool_verify_ssl
+        )
 
-    return await fetch_json_post(url, payload, headers, name, False)
+    return await fetch_json_post(
+        url, payload, headers, name, settings.languagetool_verify_ssl
+    )
 
 
 async def handle_response(r, name, json=True):
@@ -1490,25 +1493,21 @@ async def handle_response(r, name, json=True):
     return result
 
 
-async def fetch_json_get(url, payload, headers, name, ssl=True, json=True, timeout=10):
+async def fetch_json_get(url, payload, headers, name, ssl=True, json=True):
     if ssl:
-        async with ssl_session.get(
-            url, params=payload, headers=headers, timeout=timeout
-        ) as r:
+        async with ssl_session.get(url, params=payload, headers=headers) as r:
             return await handle_response(r, name, json)
 
-    async with session.get(url, params=payload, headers=headers, timeout=timeout) as r:
+    async with session.get(url, params=payload, headers=headers) as r:
         return await handle_response(r, name, json)
 
 
-async def fetch_json_post(url, payload, headers, name, ssl=True, json=True, timeout=10):
+async def fetch_json_post(url, payload, headers, name, ssl=True, json=True):
     if ssl:
-        async with ssl_session.post(
-            url, data=payload, headers=headers, timeout=timeout
-        ) as r:
+        async with ssl_session.post(url, data=payload, headers=headers) as r:
             return await handle_response(r, name, json)
 
-    async with session.post(url, data=payload, headers=headers, timeout=timeout) as r:
+    async with session.post(url, data=payload, headers=headers) as r:
         return await handle_response(r, name, json)
 
 
