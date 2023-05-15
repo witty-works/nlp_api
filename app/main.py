@@ -47,6 +47,9 @@ from fastapi_microsoft_identity import validate_scope, get_token_claims
 
 import secure
 
+import emoji
+from cmp_version import VersionString
+
 from slack_bolt.adapter.fastapi.async_handler import AsyncSlackRequestHandler
 from slack_bolt.app.async_app import AsyncApp
 from slack_sdk import WebClient
@@ -147,7 +150,7 @@ async def handle_command_witty(
 ):  # pragma: no cover
     await ack()
 
-    user_request_in = RequestIn(text=body["text"])
+    user_request_in = RequestIn(client="slack-1.0.0", text=body["text"])
     text, lang, limit_reached = fetch_text(user_request_in)
 
     if lang is None:
@@ -172,7 +175,7 @@ async def handle_command_witty(
 
     user_request_in.config.__setattr__("alternatives_max_count", None)
     results = await apply_language_rules(
-        version, user_request_in.config, configs, lang, text
+        version, user_request_in.client, user_request_in.config, configs, lang, text
     )
 
     analyzed_text = f"*Analyzed*: {text}"
@@ -579,6 +582,8 @@ async def get_debug_spacy(
                 "dep": token.dep_,
                 "word_types": fetch_word_types(lang, token),
                 "morph": token.morph.to_dict(),
+                "is_emoji": token._.is_emoji,
+                "emoji_desc": token._.emoji_desc,
             }
         )
 
@@ -620,6 +625,7 @@ async def german(request: Request, german_request: GermanLanguageRequest):
 
     return await german_rules(
         german_request.version,
+        german_request.client,
         german_request.config,
         german_request.configs,
         lang,
@@ -649,6 +655,7 @@ async def english(request: Request, english_request: EnglishLanguageRequest):
 
     return await english_rules(
         english_request.version,
+        english_request.client,
         english_request.config,
         english_request.configs,
         lang,
@@ -1201,7 +1208,7 @@ async def check(
         configs = {}
     else:
         results = await apply_language_rules(
-            version, user_request_in.config, configs, lang, text
+            version, user_request_in.client, user_request_in.config, configs, lang, text
         )
 
         language = lang.lang
@@ -1636,6 +1643,7 @@ def fetch_matches(lang, tokens, phrases):
 
 async def fetch_language_results(  # pragma: no cover
     version: float,
+    client: str,
     config: Config,
     configs: dict,
     lang: Language,
@@ -1645,6 +1653,7 @@ async def fetch_language_results(  # pragma: no cover
         url = "/german"
         payload = GermanLanguageRequest(
             version=version,
+            client=client,
             config=config,
             configs=configs,
             locale=lang.locale,
@@ -1654,6 +1663,7 @@ async def fetch_language_results(  # pragma: no cover
         url = "/english"
         payload = EnglishLanguageRequest(
             version=version,
+            client=client,
             config=config,
             configs=configs,
             locale=lang.locale,
@@ -1668,22 +1678,32 @@ async def fetch_language_results(  # pragma: no cover
 
 
 async def apply_language_rules(
-    version: float, config: Config, configs: dict, lang: Language, text: str
+    version: float,
+    client: str,
+    config: Config,
+    configs: dict,
+    lang: Language,
+    text: str,
 ):
     list_results = []
+
+    client = VersionString(client)
 
     if settings.language_endpoint_urls[lang.lang]:
         list_results += await fetch_language_results(
             version,
+            client,
             config,
             configs,
             lang,
             text,
         )
     elif lang.lang == "de":
-        list_results += await german_rules(version, config, configs, lang, text)
+        list_results += await german_rules(version, client, config, configs, lang, text)
     elif lang.lang == "en":
-        list_results += await english_rules(version, config, configs, lang, text)
+        list_results += await english_rules(
+            version, client, config, configs, lang, text
+        )
 
     return apply_false_positives(list_results, configs)
 
@@ -1893,13 +1913,28 @@ async def context_false_positives(lang, tokens, list_results):
 
 
 async def german_rules(
-    version: float, config: Config, configs: dict, lang: Language, text: str
+    version: float,
+    client: str,
+    config: Config,
+    configs: dict,
+    lang: Language,
+    text: str,
 ):
     offsets = utf16_offsets(text)
 
     list_full = await apply_languagetool_rules(version, config, lang, text, offsets)
 
     tokens = fetch_tokens(lang.lang, text)
+
+    list_full += detect_non_inclusive_emoji(
+        version,
+        client,
+        config,
+        lang,
+        text,
+        tokens,
+        offsets,
+    )
 
     if is_sub_category_enabled(config, "abbreviation"):
         list_full += literal_match(
@@ -1992,7 +2027,9 @@ async def german_rules(
         rules["de"]["bias_words_data_no_plur"],
         rules["de"]["bias_sentences_data"],
         rules["de"]["df_ub_sentences"],
-    ) + word_noun(
+    )
+
+    list_full += word_noun(
         version,
         config,
         lang,
@@ -2070,13 +2107,28 @@ async def german_rules(
 
 
 async def english_rules(
-    version: float, config: Config, configs: dict, lang: Language, text: str
+    version: float,
+    client: str,
+    config: Config,
+    configs: dict,
+    lang: Language,
+    text: str,
 ):
     offsets = utf16_offsets(text)
 
     list_full = await apply_languagetool_rules(version, config, lang, text, offsets)
 
     tokens = fetch_tokens(lang.lang, text)
+
+    list_full += detect_non_inclusive_emoji(
+        version,
+        client,
+        config,
+        lang,
+        text,
+        tokens,
+        offsets,
+    )
 
     words_data_en = defaultdict(list)
     gendered_words_data_en = defaultdict(list)
@@ -2217,36 +2269,36 @@ async def english_rules(
         matches_false,
     )
 
-    list_full += (
-        rules_based_words_phrase_matcher(
-            version,
-            config,
-            lang,
-            text,
-            tokens,
-            offsets,
-            words_data_en["style"],
-            sentences_data_en["style"],
-            rules[lang.locale]["df_style_sentence"],
-            matches_false,
-        )
-        + word_noun(
-            version,
-            config,
-            lang,
-            text,
-            tokens,
-            offsets,
-            gendered_words_data_en["style"],
-            matches_false,
-        )
-        + detect_lower_cased_hashtags(
-            version,
-            config,
-            lang,
-            text,
-            offsets,
-        )
+    list_full += rules_based_words_phrase_matcher(
+        version,
+        config,
+        lang,
+        text,
+        tokens,
+        offsets,
+        words_data_en["style"],
+        sentences_data_en["style"],
+        rules[lang.locale]["df_style_sentence"],
+        matches_false,
+    )
+
+    list_full += word_noun(
+        version,
+        config,
+        lang,
+        text,
+        tokens,
+        offsets,
+        gendered_words_data_en["style"],
+        matches_false,
+    )
+
+    list_full += detect_lower_cased_hashtags(
+        version,
+        config,
+        lang,
+        text,
+        offsets,
     )
 
     list_full += rules_based_words_phrase_matcher(
@@ -2260,7 +2312,9 @@ async def english_rules(
         sentences_data_en["bias"],
         rules[lang.locale]["df_ub_sentence"],
         matches_false,
-    ) + word_noun(
+    )
+
+    list_full += word_noun(
         version,
         config,
         lang,
@@ -4066,6 +4120,158 @@ def detect_lower_cased_hashtags(
                     explanation,
                 )
             )
+
+    return list_results
+
+
+def get_emoji(emoji_text):
+    return emoji.emojize(":" + emoji_text + ":", language="alias")
+
+
+def get_emoji_context(alternative, lang):
+    return (
+        "--- "
+        + emoji.demojize(alternative, language=lang)
+        .replace(":", "")
+        .replace("_", " ")
+        .title()
+    )
+
+
+def detect_non_inclusive_emoji(
+    version: float,
+    client: str,
+    config: Config,
+    lang,
+    full_text,
+    tokens,
+    offsets,
+):
+    list_results = []
+
+    if client and client < VersionString("1.28.0.1"):
+        return list_results
+
+    token_count = len(tokens)
+    for i in range(token_count):
+        token = tokens[i]
+        if not token._.is_emoji:
+            continue
+
+        # 👨🏽‍👩🏽‍👧🏽 case https://github.com/carpedm20/emoji/issues/204
+        if (i + 1 < token_count and tokens[i + 1].text.endswith("\u200d")) or (
+            i > 0 and tokens[i - 1].text.endswith("\u200d")
+        ):
+            continue
+
+        alternatives = [get_emoji_context(token.text, lang.lang)]
+
+        emoji_description = token._.emoji_desc
+        emoji_base = emoji_description.replace(" light skin tone", "")
+        emoji_base = emoji_base.replace(" ", "_")
+
+        for emoji_config_name in rules["emoji"]:
+            emoji_config = rules["emoji"][emoji_config_name]
+            included = False
+            for rule in emoji_config["rules"]:
+                if rule in emoji_base:
+                    included = rule
+                    break
+
+            if not included:
+                continue
+
+            emojis = []
+            for subcategory in emoji_config["subcategory"]:
+                if is_sub_category_enabled(config, subcategory):
+                    emojis += emoji_config["subcategory"][subcategory]
+
+            if emojis == []:
+                continue
+
+            if (
+                "skin_tone" not in emoji_base
+                and emoji_config["skin_tone"]
+                and len(emojis) <= 3
+            ):
+                skin_tones = (
+                    rules["skin_tones"]["full"]
+                    if len(emojis) == 1
+                    else rules["skin_tones"]["minimal"]
+                )
+            else:
+                skin_tones = []
+
+            for alternative_text in emojis:
+                alternative_text = emoji_base.replace(rule, alternative_text)
+                alternative = get_emoji(alternative_text)
+
+                # if person is not available, then check of "woman" is available
+                if ":" in alternative and emoji_config_name == "person_gender":
+                    alternative_text = emoji_base.replace(rule, "woman")
+                    alternative = get_emoji(alternative_text)
+
+                if ":" not in alternative and alternative != token.text:
+                    alternatives.append(
+                        alternative + " " + get_emoji_context(alternative, lang.lang)
+                    )
+
+            for alternative_text in emojis:
+                alternative_text = emoji_base.replace(rule, alternative_text)
+
+                for skin_tone in skin_tones:
+                    alternative_skin_tone_text = alternative_text + skin_tone
+                    alternative = get_emoji(alternative_skin_tone_text)
+
+                    # if person is not available, then check of "woman" is available
+                    if ":" in alternative and emoji_config_name == "person_gender":
+                        alternative_skin_tone_text = (
+                            emoji_base.replace(rule, "woman") + skin_tone
+                        )
+                        alternative = get_emoji(alternative_skin_tone_text)
+
+                    if ":" not in alternative and alternative != token.text:
+                        alternatives.append(
+                            alternative
+                            + " "
+                            + get_emoji_context(alternative, lang.lang)
+                        )
+
+            if len(alternatives) == 1:
+                continue
+
+            # match found
+            break
+
+        if (
+            len(alternatives) == 1
+            and "light skin tone" in emoji_description
+            and "medium" not in emoji_description
+        ):
+            for skin_tone in rules["skin_tones"]["all"]:
+                alternative = get_emoji(emoji_base + skin_tone)
+                if ":" not in alternative and alternative != token.text:
+                    alternatives.append(
+                        alternative + " " + get_emoji_context(alternative, lang.lang)
+                    )
+
+        if len(alternatives) == 1:
+            continue
+
+        list_results.append(
+            ResultOut.factory(
+                version,
+                config,
+                lang,
+                token.text,
+                full_text,
+                offsets,
+                subcategory,
+                token.idx,
+                None,
+                alternatives,
+            )
+        )
 
     return list_results
 

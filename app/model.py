@@ -642,6 +642,7 @@ def custom_lemmatizer_en(nlp, name):
 
 def fetch_nlp_model(lang, spacy_model):
     model = spacy.load(spacy_model)
+    model.add_pipe("emoji", first=True)
     model.tokenizer = custom_tokenizer(lang, model)
 
     # Switch to non-trainable lemmatizer

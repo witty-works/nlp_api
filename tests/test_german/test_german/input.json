@@ -1,6 +1,7 @@
 {
     "version": 2.3,
     "text": "Hallo Kunde",
+    "client": "1.28.0",
     "config": {
       "store_context": true,
       "plan": "string",
