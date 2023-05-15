@@ -584,7 +584,7 @@ def set_redis():
                     "icon": "🥰",
                     "url": "https://witty.works/foo bar",
                 },
-                "gravity": 3.0,
+                "proficiency_level": "unconscious_bias",
             },
             "foo bar|de": {
                 "alternatives": ["ding ding"],
@@ -594,7 +594,7 @@ def set_redis():
                     "icon": "🥰",
                     "url": "https://witty.works/foo bar",
                 },
-                "gravity": 3.0,
+                "proficiency_level": "unconscious_bias",
             },
             "welt|de": {
                 "alternatives": ["world"],
@@ -604,7 +604,7 @@ def set_redis():
                     "icon": "🥰",
                     "url": "https://witty.works/welt",
                 },
-                "gravity": 3.0,
+                "proficiency_level": "unconscious_bias",
             },
             "run": {
                 "lang": "en",
@@ -615,7 +615,7 @@ def set_redis():
                     "icon": "💡",
                     "url": "https://witty.works/run",
                 },
-                "gravity": 3.0,
+                "proficiency_level": "unconscious_bias",
             },
         },
         "domains": {
@@ -670,7 +670,6 @@ def set_redis():
                     "icon": "🥰",
                     "url": "https://witty.works",
                 },
-                "gravity": 3.0,
             },
             "dong|de": {
                 "alternatives": ["ding"],
@@ -679,7 +678,6 @@ def set_redis():
                     "icon": "🥰",
                     "url": "https://witty.works",
                 },
-                "gravity": 3.0,
             },
             "welt|de": {
                 "alternatives": ["globus"],
@@ -689,7 +687,6 @@ def set_redis():
                     "icon": "🥰",
                     "url": "https://witty.works/welt",
                 },
-                "gravity": 3.0,
             },
         },
         "domains": {
@@ -985,7 +982,7 @@ def test_store_get_delete_rules():
                     "icon": "🥰",
                     "url": "https://witty.works",
                 },
-                "gravity": 3.0,
+                "proficiency_level": "unconscious_bias",
             },
             "hello|de": {
                 "alternatives": ["world"],
@@ -994,7 +991,7 @@ def test_store_get_delete_rules():
                     "icon": "🥰",
                     "url": "https://witty.works",
                 },
-                "gravity": 3.0,
+                "proficiency_level": "unconscious_bias",
             },
             "bim|en": {
                 "alternatives": ["bam"],
@@ -1003,7 +1000,6 @@ def test_store_get_delete_rules():
                     "icon": "🥰",
                     "url": "https://witty.works",
                 },
-                "gravity": 3.0,
             },
             "bim|de": {
                 "alternatives": ["bam"],
@@ -1012,7 +1008,6 @@ def test_store_get_delete_rules():
                     "icon": "🥰",
                     "url": "https://witty.works",
                 },
-                "gravity": 3.0,
             },
         },
         "domains": {
@@ -1086,7 +1081,7 @@ def test_store_get_delete_rules():
                         "icon": "🥰",
                         "url": "https://witty.works/hello",
                     },
-                    "gravity": 3.0,
+                    "proficiency_level": "unconscious_bias",
                 },
                 "hello|de": {
                     "alternatives": ["welt"],
@@ -1095,7 +1090,7 @@ def test_store_get_delete_rules():
                         "icon": "🥰",
                         "url": "https://witty.works/hello",
                     },
-                    "gravity": 3.0,
+                    "proficiency_level": "unconscious_bias",
                 },
                 "foo|en": {
                     "alternatives": ["bar"],
@@ -1105,7 +1100,6 @@ def test_store_get_delete_rules():
                         "icon": "🥰",
                         "url": "https://witty.works/foo",
                     },
-                    "gravity": 3.0,
                 },
                 "foo|de": {
                     "alternatives": ["bar"],
@@ -1115,7 +1109,6 @@ def test_store_get_delete_rules():
                         "icon": "🥰",
                         "url": "https://witty.works/foo",
                     },
-                    "gravity": 3.0,
                 },
             },
             "domains": {

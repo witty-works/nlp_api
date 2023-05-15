@@ -4,15 +4,24 @@
     "results": [
         {
             "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben.",
-            "end": 42,
-            "start": 35,
-            "text": "unseere"
+            "end": 30,
+            "proficiency_level": "unconscious_bias",
+            "start": 17,
+            "text": "Programmierer"
         },
         {
             "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben.",
             "end": 52,
-            "start": 49,
-            "text": " um"
+            "proficiency_level": "unconscious_bias",
+            "start": 50,
+            "text": "um"
+        },
+        {
+            "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben.",
+            "end": 83,
+            "proficiency_level": "unconscious_bias",
+            "start": 74,
+            "text": "Projekten"
         },
         {
             "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben.",
