@@ -51,6 +51,9 @@ dependencies = [
     "de-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/de_core_news_lg-3.5.0/de_core_news_lg-3.5.0-py3-none-any.whl",
     "eng>=0.1.1",
     "secure>=0.3.0",
+    "spacymoji>=3.0.1",
+    "emoji>=0.6.0",
+    "cmp-version>=3.0.0",
 ]
 requires-python = ">=3.11"
 license = "Proprietary"

@@ -151,6 +151,11 @@ dependencies = [
 ]
 
 [[package]]
+name = "cmp-version"
+version = "3.0.0"
+summary = "A script and python module to compare version numbers. Use this to compare the version strings of packages, modules, really anything."
+
+[[package]]
 name = "colorama"
 version = "0.4.6"
 requires_python = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7"
@@ -213,6 +218,12 @@ summary = "ECDSA cryptographic signature library (pure python)"
 dependencies = [
     "six>=1.9.0",
 ]
+
+[[package]]
+name = "emoji"
+version = "2.2.0"
+requires_python = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+summary = "Emoji for Python"
 
 [[package]]
 name = "en-core-web-lg"
@@ -869,6 +880,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "spacymoji"
+version = "3.1.0"
+requires_python = ">=3.6"
+summary = "spaCy pipeline component for adding emoji metadata to Doc, Token and Span objects"
+dependencies = [
+    "emoji<3.0,>=2.0",
+    "spacy<4.0.0,>=3.0.0",
+]
+
+[[package]]
 name = "srsly"
 version = "2.4.6"
 requires_python = ">=3.6"
@@ -1016,7 +1037,7 @@ dependencies = [
 [metadata]
 lock_version = "4.2"
 groups = ["default", "dev"]
-content_hash = "sha256:ff0a28420e7c8075f25f4afb353eb223ab622df00d8a578152954581c76cfb2f"
+content_hash = "sha256:30479ecc69e7bae0978827c88424c6a7a0c084d6b376b5c5d492ea9bdd3346e9"
 
 [metadata.files]
 "aiofiles 23.1.0" = [
@@ -1402,6 +1423,9 @@ content_hash = "sha256:ff0a28420e7c8075f25f4afb353eb223ab622df00d8a578152954581c
     {url = "https://files.pythonhosted.org/packages/59/87/84326af34517fca8c58418d148f2403df25303e02736832403587318e9e8/click-8.1.3.tar.gz", hash = "sha256:7682dc8afb30297001674575ea00d1814d808d6a36af415a82bd481d37ba7b8e"},
     {url = "https://files.pythonhosted.org/packages/c2/f1/df59e28c642d583f7dacffb1e0965d0e00b218e0186d7858ac5233dce840/click-8.1.3-py3-none-any.whl", hash = "sha256:bb4d8133cb15a609f44e8213d9b391b0809795062913b383c62be0ee95b1db48"},
 ]
+"cmp-version 3.0.0" = [
+    {url = "https://files.pythonhosted.org/packages/61/d2/b79dc36a234554319cb1c346340eaaa162101bfe808ce9d68cf02bb4d7f1/cmp_version-3.0.0.tar.gz", hash = "sha256:3a61ff0052f514f9f5d427034b7be8d0eac30d9884aed4bb28f0a14bdaef8f0f"},
+]
 "colorama 0.4.6" = [
     {url = "https://files.pythonhosted.org/packages/d1/d6/3965ed04c63042e047cb6a3e6ed1a63a35087b6a609aa3a15ed8ac56c221/colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"},
     {url = "https://files.pythonhosted.org/packages/d8/53/6f443c9a4a8358a93a6792e2acffb9d9d5cb0a5cfd8802644b7b1c9a02e4/colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44"},
@@ -1524,6 +1548,9 @@ content_hash = "sha256:ff0a28420e7c8075f25f4afb353eb223ab622df00d8a578152954581c
 "ecdsa 0.18.0" = [
     {url = "https://files.pythonhosted.org/packages/09/d4/4f05f5d16a4863b30ba96c23b23e942da8889abfa1cdbabf2a0df12a4532/ecdsa-0.18.0-py2.py3-none-any.whl", hash = "sha256:80600258e7ed2f16b9aa1d7c295bd70194109ad5a30fdee0eaeefef1d4c559dd"},
     {url = "https://files.pythonhosted.org/packages/ff/7b/ba6547a76c468a0d22de93e89ae60d9561ec911f59532907e72b0d8bc0f1/ecdsa-0.18.0.tar.gz", hash = "sha256:190348041559e21b22a1d65cee485282ca11a6f81d503fddb84d5017e9ed1e49"},
+]
+"emoji 2.2.0" = [
+    {url = "https://files.pythonhosted.org/packages/56/3c/26aefc6bbfa015e1dabbabd6881103e236c7ae67fabb3265fef0c85e89b5/emoji-2.2.0.tar.gz", hash = "sha256:a2986c21e4aba6b9870df40ef487a17be863cb7778dcf1c01e25917b7cd210bb"},
 ]
 "en-core-web-lg 3.5.0" = [
     {url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.5.0/en_core_web_lg-3.5.0-py3-none-any.whl", hash = "sha256:c8ac64840c1eb3e3ca7bd38bd1e1c48fb0faeb2449d54d01d5ce629af4595775"},
@@ -2504,6 +2531,10 @@ content_hash = "sha256:ff0a28420e7c8075f25f4afb353eb223ab622df00d8a578152954581c
 "spacy-lookups-data 1.0.3" = [
     {url = "https://files.pythonhosted.org/packages/0e/59/b747b8fff9561bb858555c527e3f219fe603547f2d8be23b5ee084394e1b/spacy_lookups_data-1.0.3-py2.py3-none-any.whl", hash = "sha256:2f35e52319c3a3112ddd97d9c09c214d877ed1e994f2cf733a0c5861ae98ecb6"},
     {url = "https://files.pythonhosted.org/packages/72/cc/0fc40728ca86612c60de09c450eb4c91973677ab22ef4a5f93f96ef3050e/spacy_lookups_data-1.0.3.tar.gz", hash = "sha256:ab6865548fb866d479090e31108a7e25ed192a11fcb09896e7116328cdc52be1"},
+]
+"spacymoji 3.1.0" = [
+    {url = "https://files.pythonhosted.org/packages/3c/5d/cf1f18f9c3a88fc2cd51aad40f7bfeb9657d3c2c937ff950ede3e6029079/spacymoji-3.1.0-py2.py3-none-any.whl", hash = "sha256:443df056e4bf23afb1f6ff8a372d9088e02d5eb2bd4a37a51fa0d19c35d0312b"},
+    {url = "https://files.pythonhosted.org/packages/ef/25/fc60fecc03e34078f32402694139bab644e6f64a45341a3270539a93bf8b/spacymoji-3.1.0.tar.gz", hash = "sha256:55f171fd88bb1131ea7dd19754541c3f9206b19d608ed965b5f95e1e81107e94"},
 ]
 "srsly 2.4.6" = [
     {url = "https://files.pythonhosted.org/packages/03/46/bfa8823b635ca9867c130d6a52506d132249293063a5cb0fee0358014d84/srsly-2.4.6-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:0522d9aeaf58c6d58ee0cec247653a460545422d3266b2d970df7af1530f3dcc"},

@@ -521,7 +521,11 @@ def set_redis():
         "email": "default@gmail.com",
         "organization_id": "test-default-org",
         "name": "Tests Default",
-        "config": {"categories": {}},
+        "config": {
+            "categories": {
+                "advanced_plain_language": {"value": False, "status": "force"},
+            },
+        },
         "false_positives": [],
         "term_replacements": {},
         "domains": None,
@@ -561,6 +565,7 @@ def set_redis():
                 "status": "force",
             },
             "categories": {
+                "advanced_plain_language": {"value": False, "status": "force"},
                 "emotional_security": {"value": True, "status": "force"},
                 "abbreviation": {"value": False, "status": "force"},
             },
@@ -1194,16 +1199,28 @@ def test_german_gender_ending():
 
 def test_spacy():
     with TestClient(app) as client:
-        request_data = {"text": "Das ist sehr ehrgeizig", "lang": "de"}
+        request_data = {"text": "👩🏻‍🚒 Das ist sehr ehrgeizig 😃", "lang": "de"}
         response = client.get("/debug/spacy", params=request_data)
         assert response.status_code == 200
         response_content = json.loads(response.content)
 
         expected = [
             {
+                "text": "👩🏻‍🚒",
+                "lemma": "👩🏻‍🚒",
+                "start": 0,
+                "tag": "NE",
+                "pos": "PROPN",
+                "dep": "ROOT",
+                "word_types": [],
+                "morph": {"Case": "Nom", "Gender": "Fem", "Number": "Sing"},
+                "is_emoji": True,
+                "emoji_desc": "woman firefighter light skin tone",
+            },
+            {
                 "text": "Das",
                 "lemma": "der",
-                "start": 0,
+                "start": 5,
                 "tag": "PDS",
                 "pos": "PRON",
                 "dep": "sb",
@@ -1214,11 +1231,13 @@ def test_spacy():
                     "Number": "Sing",
                     "PronType": "Dem",
                 },
+                "is_emoji": False,
+                "emoji_desc": None,
             },
             {
                 "text": "ist",
                 "lemma": "sein",
-                "start": 4,
+                "start": 9,
                 "tag": "VAFIN",
                 "pos": "AUX",
                 "dep": "ROOT",
@@ -1230,26 +1249,44 @@ def test_spacy():
                     "Tense": "Pres",
                     "VerbForm": "Fin",
                 },
+                "is_emoji": False,
+                "emoji_desc": None,
             },
             {
                 "text": "sehr",
                 "lemma": "sehr",
-                "start": 8,
+                "start": 13,
                 "tag": "ADV",
                 "pos": "ADV",
                 "dep": "mo",
                 "word_types": ["a"],
                 "morph": {},
+                "is_emoji": False,
+                "emoji_desc": None,
             },
             {
                 "text": "ehrgeizig",
                 "lemma": "ehrgeizig",
-                "start": 13,
+                "start": 18,
                 "tag": "ADJD",
                 "pos": "ADV",
                 "dep": "pd",
                 "word_types": ["a"],
                 "morph": {"Degree": "Pos"},
+                "is_emoji": False,
+                "emoji_desc": None,
+            },
+            {
+                "text": "😃",
+                "lemma": "😃",
+                "start": 28,
+                "tag": "KON",
+                "pos": "CCONJ",
+                "dep": "cd",
+                "word_types": [],
+                "morph": {},
+                "is_emoji": True,
+                "emoji_desc": "grinning face with big eyes",
             },
         ]
 
@@ -1433,4 +1470,33 @@ def test_english_upper_case_multiterms(
         )
         # Snapshot the return value.
         snapshot.snapshot_dir = english_upper_case_multiterms_dir
+        snapshot.assert_match(output, "output.json")
+
+
+
+@pytest.mark.parametrize(
+    "german_plain_language_dir",
+    get_dirs("tests/test_german_plain_language"),
+)
+def test_german_plain_language(
+    german_plain_language_dir, snapshot, set_redis
+):
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = german_plain_language_dir.joinpath(
+            "input.json"
+        ).read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.3/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "free@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(
+            response.json(), sort_keys=True, indent=4, ensure_ascii=False
+        )
+        # Snapshot the return value.
+        snapshot.snapshot_dir = german_plain_language_dir
         snapshot.assert_match(output, "output.json")

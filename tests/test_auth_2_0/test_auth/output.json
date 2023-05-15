@@ -5,6 +5,10 @@
                 "status": "force",
                 "value": false
             },
+            "advanced_plain_language": {
+                "status": "force",
+                "value": false
+            },
             "emotional_security": {
                 "status": "force",
                 "value": true

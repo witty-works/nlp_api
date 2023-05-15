@@ -1,6 +1,11 @@
 {
     "config": {
-        "categories": {}
+        "categories": {
+            "advanced_plain_language": {
+                "status": "force",
+                "value": false
+            }
+        }
     },
     "id": "test-default",
     "name": "Tests Default",

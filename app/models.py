@@ -328,6 +328,7 @@ class DomainConfig(BaseModel):
 class LanguageRequest(BaseModel):
     version: float
     text: str
+    client: str
     config: Config
     configs: dict
 
