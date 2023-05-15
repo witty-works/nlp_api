@@ -568,6 +568,7 @@ def set_redis():
                 "advanced_plain_language": {"value": False, "status": "force"},
                 "emotional_security": {"value": True, "status": "force"},
                 "abbreviation": {"value": False, "status": "force"},
+                "belief": {"value": True, "status": "force"},
             },
         },
         "false_positives": [
@@ -653,7 +654,9 @@ def set_redis():
             },
             "categories": {
                 "emotional_security": {"value": False, "status": "force"},
+                "abbreviation": {"value": True, "status": "force"},
                 "orthography": {"value": True, "status": "force"},
+                "belief": {"value": False, "status": "force"},
             },
         },
         "false_positives": [
@@ -1439,14 +1442,10 @@ def test_english_upper_case_multiterms(
     "german_plain_language_dir",
     get_dirs("tests/test_german_plain_language"),
 )
-def test_german_plain_language(
-    german_plain_language_dir, snapshot, set_redis
-):
+def test_german_plain_language(german_plain_language_dir, snapshot, set_redis):
     with TestClient(app) as client:
         # Read input files from the case directory.
-        input_json = german_plain_language_dir.joinpath(
-            "input.json"
-        ).read_text()
+        input_json = german_plain_language_dir.joinpath("input.json").read_text()
         # Call the tested endpoint.
         response = client.post(
             "/v2.3/check",

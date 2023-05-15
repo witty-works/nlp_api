@@ -9,6 +9,10 @@
                 "status": "force",
                 "value": false
             },
+            "belief": {
+                "status": "force",
+                "value": true
+            },
             "emotional_security": {
                 "status": "force",
                 "value": true
@@ -37,6 +41,14 @@
     "name": "Tests User",
     "organization_config": {
         "categories": {
+            "abbreviation": {
+                "status": "force",
+                "value": true
+            },
+            "belief": {
+                "status": "force",
+                "value": false
+            },
             "emotional_security": {
                 "status": "force",
                 "value": false

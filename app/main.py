@@ -943,7 +943,13 @@ def get_bc_disabled_categories(disable_style, disable_inclusive, advanced_enable
     return disabled_categories
 
 
-def apply_configs(version: float, user_request_in: RequestIn, configs: dict, plan: str):
+def apply_configs(
+    version: float,
+    user_request_in: RequestIn,
+    configs: dict,
+    plan: str,
+    overwrite_enabled_categories: bool = True,
+):
     disabled_categories = user_request_in.config.disabled_categories
 
     # BC code - old browser extension
@@ -966,7 +972,10 @@ def apply_configs(version: float, user_request_in: RequestIn, configs: dict, pla
                 if category_data["value"]:
                     if category in disabled_categories:
                         disabled_categories.remove(category)
-                elif category not in disabled_categories:
+                elif (
+                    category not in disabled_categories
+                    and overwrite_enabled_categories
+                ):
                     disabled_categories.append(category)
         elif config == "store_context":
             if (
@@ -1012,7 +1021,11 @@ async def fetch_configs_for_request(
 
     if "organization_config" in configs:
         apply_configs(
-            version, user_request_in, configs["organization_config"], configs["plan"]
+            version,
+            user_request_in,
+            configs["organization_config"],
+            configs["plan"],
+            False,
         )
 
         configs["term_replacements"] |= configs["organization_term_replacements"]
