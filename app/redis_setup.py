@@ -14,10 +14,18 @@ def set_up_redis(settings):  # pragma: no cover
 
         settings.redis_host = redis_credentials["host"]
         settings.redis_port = redis_credentials["port"]
+        settings.redis_verify_ssl = False
 
     if settings.redis_host:
         try:
-            return Redis(host=settings.redis_host, port=settings.redis_port)
+            return Redis(
+                host=settings.redis_host,
+                port=settings.redis_port,
+                username=settings.redis_username,
+                password=settings.redis_password,
+                ssl=settings.redis_verify_ssl,
+                ssl_cert_reqs="none",
+            )
         except Exception as e:
             pass
 

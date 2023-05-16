@@ -97,11 +97,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "blackfire"
-version = "1.16.6"
-summary = "Blackfire Python SDK"
-
-[[package]]
 name = "blis"
 version = "0.7.9"
 summary = "The Blis BLAS-like linear algebra library, as a self-contained C-extension."
@@ -1187,52 +1182,6 @@ content_hash = "sha256:30479ecc69e7bae0978827c88424c6a7a0c084d6b376b5c5d492ea9bd
     {url = "https://files.pythonhosted.org/packages/dd/19/875b5006e40ea69a4120671f50317100b24732f2b877203722c91bc4eef3/black-23.1.0-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:162e37d49e93bd6eb6f1afc3e17a3d23a823042530c37c3c42eeeaf026f38468"},
     {url = "https://files.pythonhosted.org/packages/e6/0a/9a5fca4a2ca07d4dbc3b00445c9353f05ea182b000f68c9ad6ba1da87a47/black-23.1.0-cp38-cp38-macosx_10_16_universal2.whl", hash = "sha256:0052dba51dec07ed029ed61b18183942043e00008ec65d5028814afaab9a22fd"},
     {url = "https://files.pythonhosted.org/packages/f1/89/ccc28cb74a66c094b609295b009b5e0350c10b75661d2450eeed2f60ce37/black-23.1.0-cp311-cp311-macosx_10_16_x86_64.whl", hash = "sha256:382998821f58e5c8238d3166c492139573325287820963d2f7de4d518bd76958"},
-]
-"blackfire 1.16.6" = [
-    {url = "https://files.pythonhosted.org/packages/02/57/a500e071fdf97c81a24a9e7b1e1d788305e312345c0248f0ed09cb365c86/blackfire-1.16.6-cp310-cp310-macosx_11_0_x86_64.whl", hash = "sha256:6ac0e0fe829491eb80a9775d4d113903ad2843b131c26fe524c37f3b6c087b6c"},
-    {url = "https://files.pythonhosted.org/packages/02/85/e1c8d7c71b0ab74be98638770fabad108fc7724b03da232aedfa1164d2e6/blackfire-1.16.6-cp35-cp35m-win32.whl", hash = "sha256:b8224de04e13e93c96553fa2a76446a1b66770483db241fe939ddbb8148cec6a"},
-    {url = "https://files.pythonhosted.org/packages/08/52/7de7156964a7d148ef6f987bc94d30aba9704a3772c6ebc7825b1801d533/blackfire-1.16.6-cp37-cp37m-win32.whl", hash = "sha256:0faf31a0d2dd7b59537ff55f2ea5b352c052ba17239e72ee2c0086a7870a7a44"},
-    {url = "https://files.pythonhosted.org/packages/20/67/017e9352605ec602a440f2638b1c40bb71296bae425b28c70e7f9def86d2/blackfire-1.16.6-cp35-cp35m-win_amd64.whl", hash = "sha256:081d00a64be5a94b6b2ce9ac03543104954bcdbc52874382d1b49d40691ad99f"},
-    {url = "https://files.pythonhosted.org/packages/26/c3/f84ac369ec0f58593d313cbe0a581624c2122d4cdf0ae1353f30e6050c33/blackfire-1.16.6-cp37-cp37m-macosx_11_0_arm64.whl", hash = "sha256:85a4f5df38611bf380cf7294fb3469e70308a4dbc7100b12f6080db5b71b893c"},
-    {url = "https://files.pythonhosted.org/packages/28/a8/4cd43fe60a2985cf066c7c10cc80bbbd2f33a61297ac2ce2185f8018d412/blackfire-1.16.6-cp27-cp27m-win_amd64.whl", hash = "sha256:4678d6c484c616c32a9d2915b875d4db8f9d30054d3b1d93986fb3844a80f0aa"},
-    {url = "https://files.pythonhosted.org/packages/38/61/5c5d6aedec438a8a102f7a42ac91ebdd1987ca75cd65268845d18af6776b/blackfire-1.16.6-cp36-cp36m-musllinux_1_1_x86_64.whl", hash = "sha256:1e72bbd01805d88196b7e19800826934f8d46fec31ae8aeeb384686ec326cc96"},
-    {url = "https://files.pythonhosted.org/packages/3e/27/9d97025a081e523127ffaeca1844dcdf845e2ad6385dd04fe5095ec842f3/blackfire-1.16.6-cp27-cp27m-macosx_11_0_x86_64.whl", hash = "sha256:c479bc14401e5583437e41f56f1c435fb8fa687b822a90d6fc8637a1d9c65902"},
-    {url = "https://files.pythonhosted.org/packages/3f/74/ccdad49e8f205fbbb94633a9cc9d906870b8a10a110f62d96bd19532432b/blackfire-1.16.6-cp311-cp311-musllinux_1_1_x86_64.whl", hash = "sha256:0a93df2cbea7aca4334af7bb581e3b905e5aa954d79a7a2c67cdd338e3230bea"},
-    {url = "https://files.pythonhosted.org/packages/40/66/a4f8bbe41ee459d1e2c52ec6bf697cf3b6e992d2f84b108ff802938f7516/blackfire-1.16.6-cp37-cp37m-macosx_11_0_x86_64.whl", hash = "sha256:315f72157d6595a544301aeb0ca696765d699a4d4c21452b1b5dc401018b43c6"},
-    {url = "https://files.pythonhosted.org/packages/45/9a/e1a9f58b4a92b4960409af8a101b581076431e17c52453f0ada3c9cb9074/blackfire-1.16.6-cp311-cp311-macosx_11_0_x86_64.whl", hash = "sha256:098bcff8875e99ffe5cd7e1a8b9e402acbbaed51287359f411e979921afa0461"},
-    {url = "https://files.pythonhosted.org/packages/46/2e/f8c7cf2e98702930d2482089d8764c994302a0b74996ca8a4abd8a791dc3/blackfire-1.16.6-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:7dcd2c9794b200c367f2100aa949a71de17cd1c52b512ee8de562b84f98cb020"},
-    {url = "https://files.pythonhosted.org/packages/48/1f/4488d8b2c3ba98329698a86c618fed2a7c7928b9afcfaecaf82275b36f21/blackfire-1.16.6-cp38-cp38-win32.whl", hash = "sha256:19e200fd96e578b15acc2b04071a4bc2ace1b60670773f03f92b581b82ce9bd4"},
-    {url = "https://files.pythonhosted.org/packages/4a/57/d149c311aa19ec62d4551dc33c4032472e664f8ddb7e9c076fdbc23276aa/blackfire-1.16.6-cp39-cp39-win_amd64.whl", hash = "sha256:17cb491796f0395d0e27b7c71170747ea3fe4d1f3229a4a272899d7d106bb5b1"},
-    {url = "https://files.pythonhosted.org/packages/4c/ba/04c9b69d2a326c72242c853dec88ea0ad7723f14db32261d5d76a99422fb/blackfire-1.16.6-cp38-cp38-macosx_11_0_x86_64.whl", hash = "sha256:dbe99e0567ded1f880a10631969743d8739ba76b9b8368ea0aa4f8083b0dfe76"},
-    {url = "https://files.pythonhosted.org/packages/4d/07/32d187c9cf80b48c37863ed9cd8ec21a0786e7a8e2c79d978ba7da5d164a/blackfire-1.16.6-cp27-cp27mu-manylinux2010_x86_64.whl", hash = "sha256:7151cf1a1f641427957b4b9e72e82263c28faea03888dee63e2234ff093a3422"},
-    {url = "https://files.pythonhosted.org/packages/52/66/b0fa66d7714ac0fe63db7c21ccd815c43bde8ffaaf7cb2e4e9dfad22d031/blackfire-1.16.6-cp35-cp35m-manylinux2010_x86_64.whl", hash = "sha256:69a049bd277006de5ba8e869fda34b384ec4b9ec3deb483edf561f41dfa01ad6"},
-    {url = "https://files.pythonhosted.org/packages/53/6f/909db4a5b21983e07e50a9a31b8d0792b77206fa25ac386600fb12d22be1/blackfire-1.16.6-cp34-cp34m-win32.whl", hash = "sha256:b8961a9f2cf2aca12496d47a563d2313d9b04a3fc7ad3a80257fde78d8cb8ac2"},
-    {url = "https://files.pythonhosted.org/packages/63/91/3e0f3007d320183f303ff22e0ed7d0d5e19cb5d18f6b6ad6c95b22188503/blackfire-1.16.6-cp27-cp27m-win32.whl", hash = "sha256:e3b4bb02d2efc67decd078d77721ff2a03347fdbe93adc12de148332be15a513"},
-    {url = "https://files.pythonhosted.org/packages/69/e4/2c9d3cfdf4fb93dd0c8ae71dbb56c22a68c4277dc06f5c874032ab4cd4f0/blackfire-1.16.6-cp36-cp36m-win32.whl", hash = "sha256:93b8c8305477b7d794495e036e2637cdf7a57baace37a06a006953248d2af48e"},
-    {url = "https://files.pythonhosted.org/packages/6f/da/589204154cf428e9c363b0c859552ad6769634f6a2239919d4d1da374f60/blackfire-1.16.6-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:da8d938f8042486da74edbb1fdcca2d8f624ab799b63d4d146e0af06cbdb18ae"},
-    {url = "https://files.pythonhosted.org/packages/80/6c/ca2d11e4acebb0763d8a16a3772e192f33d7b720ed45098fab50e61ecb3c/blackfire-1.16.6-cp310-cp310-win_amd64.whl", hash = "sha256:517a1ec02fe8a8c34b73a69ce7b2902c0363297c12f697016cccb0e4075f963d"},
-    {url = "https://files.pythonhosted.org/packages/87/e9/a0522fb7c4bb9b508d5d9789f33a5c38e1f4c7cd279542cb7d9f0ac19a26/blackfire-1.16.6-cp37-cp37m-musllinux_1_1_x86_64.whl", hash = "sha256:d295f3a8150c0cbd254cc537e6f6cbe1fc86dd81124868b2b0b960b947e5005d"},
-    {url = "https://files.pythonhosted.org/packages/92/02/92389a3f1fd528838dd9cb287714fb35d502b2f2329441d11047bd7b9192/blackfire-1.16.6-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:0a5d8f2df658369353da482e27e05eb75b01bb1e2eddad4ef107d18462f025fa"},
-    {url = "https://files.pythonhosted.org/packages/93/04/649ee939f4ea9b745e58a4fdca6053ba8d6699666815ead3a954b68cd797/blackfire-1.16.6-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:74b89fdc7bce049a0d210df8ebdcf76d104fb065530b7538c54df5100999a1b4"},
-    {url = "https://files.pythonhosted.org/packages/97/39/3055657d9b69b77d40712c3558d71b7cf4f35f870a48b695431abe2d5c1d/blackfire-1.16.6-cp36-cp36m-manylinux2014_x86_64.whl", hash = "sha256:10be8da8b557121fdeb65de7b7b9be847429bad35652b8da402332f216dc417b"},
-    {url = "https://files.pythonhosted.org/packages/a1/86/263d2364a4ccbaf15ce60b48bac4413726f9f91d11b75c8fd6c3525203c8/blackfire-1.16.6-cp27-cp27mu-manylinux1_x86_64.whl", hash = "sha256:dcffaa62ae35d926822468f93e32bafe23fcff6f2e2c62b0eebd9311790f0a94"},
-    {url = "https://files.pythonhosted.org/packages/a1/db/135a5fe74f21b6859de874fa5e8fe02c9d898847afdf11e7a4dc41163926/blackfire-1.16.6-cp38-cp38-win_amd64.whl", hash = "sha256:e6968d2e5a85985e038d30c312b98ddfc46bf355042a2ebfb2c6197fdf079624"},
-    {url = "https://files.pythonhosted.org/packages/ac/02/dab040c398f5460c43a89032de0138a0c7c3e0d275234936b453a0209463/blackfire-1.16.6-cp39-cp39-manylinux2014_x86_64.whl", hash = "sha256:98b5bda61e61dc8eea24ca5244f7e769fe48a9ba7bfac67966958a51431f5e8e"},
-    {url = "https://files.pythonhosted.org/packages/b5/79/48fe4f3f79767ec58d489c55adb647e0b30beeee5e62a0519817cacd5fac/blackfire-1.16.6-cp37-cp37m-manylinux2014_x86_64.whl", hash = "sha256:a70b826178817b7c532c1c399e6f8641b29c4d9a2dc26792747f7a494b43f0b4"},
-    {url = "https://files.pythonhosted.org/packages/b7/c5/e115f056ed105258acf77fa6db30832a1fbdd6ac3eac603ef9f35a756998/blackfire-1.16.6-cp38-cp38-musllinux_1_1_x86_64.whl", hash = "sha256:290e2300498ad8e70acca7d687c0455b7e75350016e9e66ceef30957041426d9"},
-    {url = "https://files.pythonhosted.org/packages/bb/25/d7b26c16828d3e62c1fffb9741e69fc89898716b30a162519c7d19090cf3/blackfire-1.16.6-cp38-cp38-manylinux2014_x86_64.whl", hash = "sha256:1c903642b27eef297d3d1b05d0868e7f4499d239f74f3fe7913699cfcb98f16c"},
-    {url = "https://files.pythonhosted.org/packages/bb/6e/babb9e313c5da6e00b14b1e93f16c405f459b0a45b25039948a851ecdf14/blackfire-1.16.6-cp35-cp35m-manylinux1_x86_64.whl", hash = "sha256:255efc52593faf70b7707fcb30596d4fb0032f0eab5cc81493c0ed759eab7c69"},
-    {url = "https://files.pythonhosted.org/packages/d4/25/2c8bd58327ffcdb349f94a1c5147406653cb76dc28c33867a5a021f54e29/blackfire-1.16.6-cp36-cp36m-win_amd64.whl", hash = "sha256:2786c8b261afa973adee18fd26bb1cb428e867340eee51e50b3e92419049038c"},
-    {url = "https://files.pythonhosted.org/packages/d4/9f/c52cd3977e43030c9bbf8af29c96513996b991d60407e7cf4f8571627aff/blackfire-1.16.6-cp37-cp37m-win_amd64.whl", hash = "sha256:66d0f0d0d648e57da53b47e27b020f8d3c5c8d176b7ca565dfb04861876a1daa"},
-    {url = "https://files.pythonhosted.org/packages/d7/ce/4bbed82d692cf492f82e66f371c00f2a1df25e333dee3f9e386ce50310aa/blackfire-1.16.6-cp311-cp311-win_amd64.whl", hash = "sha256:4422c33104338f6628ce9961fb4518bd71074bcdf1f7a50bccb81a3b39d5ac03"},
-    {url = "https://files.pythonhosted.org/packages/da/35/d92596b12c0a537dee30a1bace9c65c21d4d5e1507acec7cd5a759f52237/blackfire-1.16.6-cp39-cp39-musllinux_1_1_x86_64.whl", hash = "sha256:c5d4333a7fba8de669c32c23ada24103d16e73c4522ee0729a4ca556c9120b80"},
-    {url = "https://files.pythonhosted.org/packages/db/ad/39654b500aa563adcab3e1c9a6a4fd06137eec2ba9a12579de7f924b849f/blackfire-1.16.6-cp39-cp39-macosx_11_0_x86_64.whl", hash = "sha256:501d48539de89cfe82ae91554a45ba656ff4ef5842f1e46571671ef91a5eb225"},
-    {url = "https://files.pythonhosted.org/packages/e9/2d/fcd99beabf04cd60f4009c1cce38557396dcc5e9356659b70c5a8ab9730a/blackfire-1.16.6-cp36-cp36m-macosx_11_0_x86_64.whl", hash = "sha256:49998d9eba784ddbc82a49f5cad17a3261a8a503167d0dbc12f1cf0b9b1b0a77"},
-    {url = "https://files.pythonhosted.org/packages/ed/1a/d2e9f453f770acf520e1b99a58602e19b79aded1ba1f017c7a930db9eda8/blackfire-1.16.6-cp27-cp27m-manylinux2010_x86_64.whl", hash = "sha256:506b37d4798c64fb7d2bb3cdb3086d7b8bd1786a9467b248a849f31a0fd8b9ce"},
-    {url = "https://files.pythonhosted.org/packages/f3/21/d25d360c52e95adea04cf1272c08cab98ab36b052c9d21cbb7e08ed34b03/blackfire-1.16.6-cp310-cp310-manylinux2014_x86_64.whl", hash = "sha256:1e3098ad28f4548afdfaf2d2dc5ea5b9c7d3b9a1b8a5d1e6f1d998c0d9ac5e52"},
-    {url = "https://files.pythonhosted.org/packages/f3/34/c1508e3d540a526ba8c2a68ed04c96886a74a0020f795b86473728efd6bb/blackfire-1.16.6-cp310-cp310-musllinux_1_1_x86_64.whl", hash = "sha256:ad8eac95effe5e4cece8dabb0c260ddfec3dd6afe77f13ff425700a738491c97"},
-    {url = "https://files.pythonhosted.org/packages/f7/7e/589bb71d89e1be6bc29a3199f6209a5d98f8c83bfdab7924d973710cd20d/blackfire-1.16.6-cp311-cp311-manylinux2014_x86_64.whl", hash = "sha256:6ff9c3ffc116fb8624624e250f1a6e161076fcaf3599a2aeb77cb09b3a8bee0d"},
-    {url = "https://files.pythonhosted.org/packages/fb/fd/681652616adc5eca85566b9a9c39883c2c0d603da659c532997902d78ffa/blackfire-1.16.6-cp27-cp27m-manylinux1_x86_64.whl", hash = "sha256:c61948632ec7797d5408dc89bd0affacefe0f54b06e3a07a73936484db3ab409"},
 ]
 "blis 0.7.9" = [
     {url = "https://files.pythonhosted.org/packages/07/0f/59e6458349338cbc968def7f215fa1ccb4ba03b913d4f0e55b4ab8e7c142/blis-0.7.9-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:6d12475e588a322e66a18346a3faa9eb92523504042e665c193d1b9b0b3f0482"},
