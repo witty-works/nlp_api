@@ -3505,8 +3505,11 @@ def gendered_denom_analysis_de(
 
             if match == "postfix":
                 alternatives = alternatives.copy()
+                prefix = tokens[i].lemma_.removesuffix(word.lower())
                 for k, alternative in enumerate(alternatives):
                     alternative = alternative.replace(word, text)
+                    if alternative[0] == "~":
+                        alternative = prefix + alternative[1].lower() + alternative[2:]
                     if word[0] == "A":
                         modified_word = "Ä" + word[1:]
                         modified_word_lower = "ä" + word[1:]
