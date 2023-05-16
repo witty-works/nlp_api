@@ -1,8 +1,7 @@
 name: Deploy to Massdriver
 on:
   push:
-    # TODO update to main after merge
-    branches: [feature/massdriver]
+    branches: [main]
 
 jobs:
   push_and_deploy:
