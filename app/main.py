@@ -620,9 +620,6 @@ async def german(request: Request, german_request: GermanLanguageRequest):
 
     lang = Language(german_request.locale)
 
-    # BC code
-    german_request.config.maximum_importance = None
-
     return await german_rules(
         german_request.version,
         german_request.client,
@@ -649,9 +646,6 @@ async def english(request: Request, english_request: EnglishLanguageRequest):
     check_version(english_request.version)
 
     lang = Language(english_request.locale)
-
-    # BC code
-    english_request.config.maximum_importance = None
 
     return await english_rules(
         english_request.version,
@@ -956,14 +950,20 @@ def get_bc_disabled_categories(disable_style, disable_inclusive, advanced_enable
     return disabled_categories
 
 
-def apply_configs(version: float, user_request_in: RequestIn, configs: dict, plan: str):
+def apply_configs(
+    version: float,
+    user_request_in: RequestIn,
+    configs: dict,
+    plan: str,
+    overwrite_enabled_categories: bool = True,
+):
     disabled_categories = user_request_in.config.disabled_categories
 
     # BC code - old browser extension
     disable_inclusive = disable_style = None
     if version < 2.3:
-        disable_inclusive = "inclusive" in user_request_in.config.disabled_categories
-        disable_style = "style" in user_request_in.config.disabled_categories
+        disable_inclusive = "inclusive" in disabled_categories
+        disable_style = "style" in disabled_categories
 
     for config in configs:
         data = configs[config]
@@ -979,58 +979,26 @@ def apply_configs(version: float, user_request_in: RequestIn, configs: dict, pla
                 if category_data["value"]:
                     if category in disabled_categories:
                         disabled_categories.remove(category)
-                elif category not in disabled_categories:
+                elif (
+                    category not in disabled_categories
+                    and overwrite_enabled_categories
+                ):
                     disabled_categories.append(category)
+        elif config == "store_context":
+            if (
+                plan == "witty_teams"
+                and data["status"] == "force"
+                and not data["value"]
+            ):
+                user_request_in.config.__setattr__("store_context", False)
         elif data["status"] == "force":
-            # BC code
-            if config in ["inclusive", "style", "orthography"]:
-                if data["value"]:
-                    if config in disabled_categories:
-                        disabled_categories.remove(config)
-                elif config not in disabled_categories:
-                    disabled_categories.append(config)
-            elif config == "store_context":
-                if plan == "witty_teams" and not data["value"]:
-                    user_request_in.config.__setattr__("store_context", False)
-            else:
-                user_request_in.config.__setattr__(config, data["value"])
+            user_request_in.config.__setattr__(config, data["value"])
 
-    if "categories" in configs:
-        user_request_in.config.__setattr__("maximum_importance", None)
-
-        # BC code - old browser extension
-        if disable_style or disable_inclusive:
-            disabled_categories = get_bc_disabled_categories(
-                disable_style, disable_inclusive
-            )
-    # BC code - old configuration
-    else:
-        disable_inclusive = "inclusive" in disabled_categories
-        disable_style = "style" in disabled_categories
-        disable_orthography = "orthography" in disabled_categories
-
-        advanced_enabled = (
-            True if user_request_in.config.maximum_importance >= 3.0 else False
-        )
-
+    # BC code - old browser extension
+    if "categories" in configs and disable_style or disable_inclusive:
         disabled_categories = get_bc_disabled_categories(
-            disable_style, disable_inclusive, advanced_enabled
+            disable_style, disable_inclusive
         )
-
-        if disable_orthography:
-            disabled_categories.append("orthography")
-
-        if user_request_in.config.singular_they != SingularTheyType.ALL_PRONOUNS:
-            disabled_categories.append("advanced_binary_pronouns")
-
-        if user_request_in.config.simple_language != True:
-            disabled_categories.append("advanced_plain_language")
-            disabled_categories.append("plain_language")
-
-        if ResultOut.getGenderedRolesFormatBinary(
-            user_request_in.config.gendered_roles_format
-        ):
-            disabled_categories.append("advanced_gendered_denominations_ending")
 
     user_request_in.config.__setattr__("disabled_categories", disabled_categories)
     user_request_in.config.__setattr__("plan", plan)
@@ -1060,21 +1028,16 @@ async def fetch_configs_for_request(
 
     if "organization_config" in configs:
         apply_configs(
-            version, user_request_in, configs["organization_config"], configs["plan"]
+            version,
+            user_request_in,
+            configs["organization_config"],
+            configs["plan"],
+            False,
         )
 
         configs["term_replacements"] |= configs["organization_term_replacements"]
         configs["false_positives"] = list(
             set(configs["false_positives"] + configs["organization_false_positives"])
-        )
-
-    # BC code - okd configuration
-    if (
-        configs["plan"] != "witty_teams"
-        and user_request_in.config.maximum_importance is not None
-    ):
-        user_request_in.config.maximum_importance = min(
-            2.0, user_request_in.config.maximum_importance
         )
 
     return configs
@@ -1269,28 +1232,6 @@ def fetch_result_conf(configs: dict):
     plan = configs["plan"]
 
     config = RuleConfig.parse_obj(configs["config"])
-
-    # BC code
-    if "orthography" in organization_config.categories:
-        organization_config.orthography = organization_config.categories["orthography"]
-    else:
-        organization_config.orthography = BooleanConfigType(
-            value=False, status=StatusType("suggestion")
-        )
-
-    if "style" in organization_config.categories:
-        organization_config.style = organization_config.categories["style"]
-    else:
-        organization_config.style = BooleanConfigType(
-            value=False, status=StatusType("suggestion")
-        )
-
-    if "inclusive" in organization_config.categories:
-        organization_config.inclusive = organization_config.categories["inclusive"]
-    else:
-        organization_config.inclusive = BooleanConfigType(
-            value=False, status=StatusType("suggestion")
-        )
 
     return ResultConf(
         id=configs["id"],
@@ -1881,10 +1822,6 @@ def is_sub_category_enabled(config: Config, subcategory: str):
         and category_data["category"] in config.disabled_categories
     ):
         return False
-
-    # BC code - old configuration
-    if config.maximum_importance:
-        return config.maximum_importance >= map_importance(subcategory)
 
     return True
 

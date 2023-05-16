@@ -119,8 +119,6 @@ class GenderedRolesFormatType(str, Enum):
 
 class Config(BaseModel):
     store_context: bool = True
-    # BC code
-    simple_language: bool = False
     plan: Optional[str]
     primary_language: Optional[LangVariantType]
     preferred_languages: List = [LangWithAutoType.EN, LangWithAutoType.DE]
@@ -147,11 +145,7 @@ class Config(BaseModel):
     }
     disabled_categories: List = []
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
-    # BC code
-    singular_they: str = SingularTheyType.HE_OR_SHE
     show_inspiration_alternatives: bool = False
-    # BC code
-    maximum_importance: float = 2.0
     alternatives_max_count: Optional[int]
 
     @validator("german_gender_ending")
@@ -210,18 +204,6 @@ class Config(BaseModel):
             return v.split(",")
         return v
 
-    # BC code
-    # This is a quick fix, in principle we should adjust the model singular_they: SingularTheyType = SingularTheyType.HE_OR_SHE
-    # and then also update the browser extension https://github.com/witty-works/browser-extension/pull/423
-    @validator("singular_they", pre=True)
-    def valid_singular_they(cls, v):
-        if isinstance(v, bool):
-            if v:
-                return SingularTheyType.ALL_PRONOUNS
-
-            return SingularTheyType.HE_OR_SHE
-        return v
-
 
 class StatusType(str, Enum):
     FORCE = "force"
@@ -260,8 +242,6 @@ class SingularTheyConfigType(BaseModel):
 
 class RuleConfig(BaseModel):
     store_context: Optional[BooleanConfigType]
-    # BC code
-    simple_language: Optional[BooleanConfigType]
     preferred_variants: Optional[LangVariantConfigType]
     german_gender_ending: Optional[GermanGenderEndingConfigType]
     gendered_roles_format: Optional[GenderedRolesFormatConfigType]
@@ -272,11 +252,7 @@ class RuleConfig(BaseModel):
     style: Optional[BooleanConfigType]
     # BC code
     orthography: Optional[BooleanConfigType]
-    # BC code
-    singular_they: Optional[SingularTheyConfigType]
     show_inspiration_alternatives: Optional[BooleanConfigType]
-    # BC code
-    maximum_importance: Optional[IntegerConfigType]
 
     @validator("german_gender_ending")
     def valid_german_gender_ending(cls, v: str):
@@ -309,8 +285,6 @@ class TermReplacement(BaseModel):
     alternatives: List[str]
     explanation: Optional[Explanation]
     proficiency_level: Optional[str]
-    # BC code
-    gravity: Optional[float]
     lang: Optional[LangType]
     word_type: Optional[str]
 
