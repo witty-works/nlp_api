@@ -12,11 +12,11 @@
                 "text": "Anglizismen: Sicher, dass das alle Lesenden verstehen?",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/anglizismen?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Kulturelle Diversität: Anglizismen",
             "proficiency_level": "unconscious_bias",
             "start": 17,
-            "subcategory": "anglicism",
+            "subcategory": "advanced_anglicism",
             "text": "Programmierer"
         },
         {
@@ -46,11 +46,11 @@
                 "text": "Anglizismen: Sicher, dass das alle Lesenden verstehen?",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/anglizismen?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Kulturelle Diversität: Anglizismen",
             "proficiency_level": "unconscious_bias",
             "start": 74,
-            "subcategory": "anglicism",
+            "subcategory": "advanced_anglicism",
             "text": "Projekten"
         },
         {

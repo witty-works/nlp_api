@@ -980,8 +980,7 @@ def apply_configs(
                     if category in disabled_categories:
                         disabled_categories.remove(category)
                 elif (
-                    category not in disabled_categories
-                    and overwrite_enabled_categories
+                    category not in disabled_categories and overwrite_enabled_categories
                 ):
                     disabled_categories.append(category)
         elif config == "store_context":
@@ -1345,7 +1344,7 @@ def languagetool_matches(
                     match["rule"]["id"] == "ANGLIZISMEN"
                     or "Fremdwörter" in match["message"]
                 ):
-                    subcategory = "anglicism"
+                    subcategory = "advanced_anglicism"
                 else:
                     subcategory = "plain_language"
             elif match["rule"]["category"]["name"] == "Leichte Sprache":
@@ -1371,7 +1370,9 @@ def languagetool_matches(
             except KeyError:
                 pass
 
-        if subcategory != "abbreviation" and subcategory != "anglicism":
+        if subcategory.endswith("abbreviation") and not subcategory.endswith(
+            "anglicism"
+        ):
             explanation = match["message"]
         else:
             explanation = None
