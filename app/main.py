@@ -546,7 +546,9 @@ async def post_auth_2_0(request: Request):
         configs["config"] = bc_old_categories(configs["config"])
 
     if "organization_config" in configs:
-        configs["organization_config"] = bc_old_categories(configs["organization_config"])
+        configs["organization_config"] = bc_old_categories(
+            configs["organization_config"]
+        )
 
     config = fetch_result_conf(configs)
 
@@ -555,11 +557,12 @@ async def post_auth_2_0(request: Request):
 
     return config
 
+
 def bc_old_categories(config):
     # BC code
     old_categories = ["style", "inclusive", "orthography"]
     for old_category in old_categories:
-        if old_category in config:
+        if old_category in config and config[old_category] is not None:
             continue
 
         if old_category in config["categories"]:
@@ -571,6 +574,7 @@ def bc_old_categories(config):
             }
 
     return config
+
 
 @app.get(
     "/debug/spacy",
