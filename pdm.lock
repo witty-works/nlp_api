@@ -1032,7 +1032,7 @@ dependencies = [
 [metadata]
 lock_version = "4.2"
 groups = ["default", "dev"]
-content_hash = "sha256:30479ecc69e7bae0978827c88424c6a7a0c084d6b376b5c5d492ea9bdd3346e9"
+content_hash = "sha256:b6d69d6cc93645878e5e35f50146588c11253c9bcab8e3bab8ee901cebcc4b3f"
 
 [metadata.files]
 "aiofiles 23.1.0" = [

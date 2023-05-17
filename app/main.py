@@ -542,6 +542,12 @@ async def post_auth_2_0(request: Request):
             status_code=status.HTTP_403_FORBIDDEN,
         )
 
+    if "config" in configs:
+        configs["config"] = bc_old_categories(configs["config"])
+
+    if "organization_config" in configs:
+        configs["organization_config"] = bc_old_categories(configs["organization_config"])
+
     config = fetch_result_conf(configs)
 
     if "team_analytics" in configs and not configs["team_analytics"]:
@@ -549,6 +555,22 @@ async def post_auth_2_0(request: Request):
 
     return config
 
+def bc_old_categories(config):
+    # BC code
+    old_categories = ["style", "inclusive", "orthography"]
+    for old_category in old_categories:
+        if old_category in config:
+            continue
+
+        if old_category in config["categories"]:
+            config[old_category] = config["categories"][old_category]
+        else:
+            config[old_category] = {
+                "value": False,
+                "status": "suggestion",
+            }
+
+    return config
 
 @app.get(
     "/debug/spacy",

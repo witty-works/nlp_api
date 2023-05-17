@@ -22,11 +22,23 @@
             "status": "force",
             "value": "In"
         },
+        "inclusive": {
+            "status": "suggestion",
+            "value": false
+        },
+        "orthography": {
+            "status": "suggestion",
+            "value": false
+        },
         "preferred_variants": {
             "status": "force",
             "value": [
                 "en-GB"
             ]
+        },
+        "style": {
+            "status": "suggestion",
+            "value": false
         }
     },
     "config_hash": "foobar",
@@ -66,6 +78,14 @@
             "status": "suggestion",
             "value": "*in"
         },
+        "inclusive": {
+            "status": "suggestion",
+            "value": false
+        },
+        "orthography": {
+            "status": "force",
+            "value": true
+        },
         "preferred_variants": {
             "status": "force",
             "value": [
@@ -75,6 +95,10 @@
         "store_context": {
             "status": "force",
             "value": true
+        },
+        "style": {
+            "status": "suggestion",
+            "value": false
         }
     },
     "organization_config_hash": "foobaz",
