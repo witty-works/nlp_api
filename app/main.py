@@ -102,7 +102,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.43.8"
+version = "1.43.9"
 
 categories = get_categories()
 settings = get_settings()
@@ -542,10 +542,36 @@ async def post_auth_2_0(request: Request):
             status_code=status.HTTP_403_FORBIDDEN,
         )
 
+    if "config" in configs:
+        configs["config"] = bc_old_categories(configs["config"])
+
+    if "organization_config" in configs:
+        configs["organization_config"] = bc_old_categories(
+            configs["organization_config"]
+        )
+
     config = fetch_result_conf(configs)
 
     if "team_analytics" in configs and not configs["team_analytics"]:
         config.organization_id = None
+
+    return config
+
+
+def bc_old_categories(config):
+    # BC code
+    old_categories = ["style", "inclusive", "orthography"]
+    for old_category in old_categories:
+        if old_category in config and config[old_category] is not None:
+            continue
+
+        if old_category in config["categories"]:
+            config[old_category] = config["categories"][old_category]
+        else:
+            config[old_category] = {
+                "value": False,
+                "status": "suggestion",
+            }
 
     return config
 
