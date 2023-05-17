@@ -3,54 +3,55 @@
     "limit_reached": false,
     "results": [
         {
-            "alternatives": [
-                {
-                    "text": "unsere"
-                },
-                {
-                    "text": "unserer"
-                },
-                {
-                    "text": "untere"
-                },
-                {
-                    "text": "unser"
-                },
-                {
-                    "text": "unserem"
-                }
-            ],
-            "category": "orthography",
+            "alternatives": [],
+            "category": "cultural-diversity",
             "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben.",
-            "end": 42,
+            "end": 30,
             "explanation": {
-                "icon": "❌",
-                "text": "Möglicher Tippfehler gefunden."
+                "icon": "😉",
+                "text": "Anglizismen: Sicher, dass das alle Lesenden verstehen?",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/anglizismen?reducedView=true"
             },
-            "gravity": 1.0,
-            "label": "Rechtschreibfehler",
-            "start": 35,
-            "subcategory": "typos",
-            "text": "unseere"
+            "gravity": 3.0,
+            "label": "Kulturelle Diversität: Anglizismen",
+            "proficiency_level": "unconscious_bias",
+            "start": 17,
+            "subcategory": "advanced_anglicism",
+            "text": "Programmierer"
         },
         {
-            "alternatives": [
-                {
-                    "text": ", um"
-                }
-            ],
-            "category": "orthography",
+            "alternatives": [],
+            "category": "cultural-diversity",
             "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben.",
             "end": 52,
             "explanation": {
-                "icon": "❌",
-                "text": "Wenn es sich hier um eine Infinitivgruppe (‚zu‘ + Grundform) handelt, muss in der Regel ein Komma gesetzt werden."
+                "icon": "🙄",
+                "text": "Vermeiden Sie Nebensätze.",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/leichte-sprache?reducedView=true"
             },
-            "gravity": 1.0,
-            "label": "Kommasetzung",
-            "start": 49,
-            "subcategory": "orthography",
-            "text": " um"
+            "gravity": 3.0,
+            "label": "Kulturelle Diversität: Leichte Sprache",
+            "proficiency_level": "unconscious_bias",
+            "start": 50,
+            "subcategory": "advanced_plain_language",
+            "text": "um"
+        },
+        {
+            "alternatives": [],
+            "category": "cultural-diversity",
+            "context": "Wir suchen Ninja Programmierer für unseere Kunden um auch bei schwierigen Projekten Erfolg zu haben.",
+            "end": 83,
+            "explanation": {
+                "icon": "😉",
+                "text": "Anglizismen: Sicher, dass das alle Lesenden verstehen?",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/anglizismen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Kulturelle Diversität: Anglizismen",
+            "proficiency_level": "unconscious_bias",
+            "start": 74,
+            "subcategory": "advanced_anglicism",
+            "text": "Projekten"
         },
         {
             "alternatives": [

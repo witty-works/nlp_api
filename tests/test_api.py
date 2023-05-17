@@ -568,6 +568,7 @@ def set_redis():
                 "advanced_plain_language": {"value": False, "status": "force"},
                 "emotional_security": {"value": True, "status": "force"},
                 "abbreviation": {"value": False, "status": "force"},
+                "belief": {"value": True, "status": "force"},
             },
         },
         "false_positives": [
@@ -584,7 +585,7 @@ def set_redis():
                     "icon": "🥰",
                     "url": "https://witty.works/foo bar",
                 },
-                "gravity": 3.0,
+                "proficiency_level": "unconscious_bias",
             },
             "foo bar|de": {
                 "alternatives": ["ding ding"],
@@ -594,7 +595,7 @@ def set_redis():
                     "icon": "🥰",
                     "url": "https://witty.works/foo bar",
                 },
-                "gravity": 3.0,
+                "proficiency_level": "unconscious_bias",
             },
             "welt|de": {
                 "alternatives": ["world"],
@@ -604,7 +605,7 @@ def set_redis():
                     "icon": "🥰",
                     "url": "https://witty.works/welt",
                 },
-                "gravity": 3.0,
+                "proficiency_level": "unconscious_bias",
             },
             "run": {
                 "lang": "en",
@@ -615,7 +616,7 @@ def set_redis():
                     "icon": "💡",
                     "url": "https://witty.works/run",
                 },
-                "gravity": 3.0,
+                "proficiency_level": "unconscious_bias",
             },
         },
         "domains": {
@@ -653,7 +654,9 @@ def set_redis():
             },
             "categories": {
                 "emotional_security": {"value": False, "status": "force"},
+                "abbreviation": {"value": True, "status": "force"},
                 "orthography": {"value": True, "status": "force"},
+                "belief": {"value": False, "status": "force"},
             },
         },
         "false_positives": [
@@ -670,7 +673,6 @@ def set_redis():
                     "icon": "🥰",
                     "url": "https://witty.works",
                 },
-                "gravity": 3.0,
             },
             "dong|de": {
                 "alternatives": ["ding"],
@@ -679,7 +681,6 @@ def set_redis():
                     "icon": "🥰",
                     "url": "https://witty.works",
                 },
-                "gravity": 3.0,
             },
             "welt|de": {
                 "alternatives": ["globus"],
@@ -689,7 +690,6 @@ def set_redis():
                     "icon": "🥰",
                     "url": "https://witty.works/welt",
                 },
-                "gravity": 3.0,
             },
         },
         "domains": {
@@ -985,7 +985,7 @@ def test_store_get_delete_rules():
                     "icon": "🥰",
                     "url": "https://witty.works",
                 },
-                "gravity": 3.0,
+                "proficiency_level": "unconscious_bias",
             },
             "hello|de": {
                 "alternatives": ["world"],
@@ -994,7 +994,7 @@ def test_store_get_delete_rules():
                     "icon": "🥰",
                     "url": "https://witty.works",
                 },
-                "gravity": 3.0,
+                "proficiency_level": "unconscious_bias",
             },
             "bim|en": {
                 "alternatives": ["bam"],
@@ -1003,7 +1003,6 @@ def test_store_get_delete_rules():
                     "icon": "🥰",
                     "url": "https://witty.works",
                 },
-                "gravity": 3.0,
             },
             "bim|de": {
                 "alternatives": ["bam"],
@@ -1012,7 +1011,6 @@ def test_store_get_delete_rules():
                     "icon": "🥰",
                     "url": "https://witty.works",
                 },
-                "gravity": 3.0,
             },
         },
         "domains": {
@@ -1086,7 +1084,7 @@ def test_store_get_delete_rules():
                         "icon": "🥰",
                         "url": "https://witty.works/hello",
                     },
-                    "gravity": 3.0,
+                    "proficiency_level": "unconscious_bias",
                 },
                 "hello|de": {
                     "alternatives": ["welt"],
@@ -1095,7 +1093,7 @@ def test_store_get_delete_rules():
                         "icon": "🥰",
                         "url": "https://witty.works/hello",
                     },
-                    "gravity": 3.0,
+                    "proficiency_level": "unconscious_bias",
                 },
                 "foo|en": {
                     "alternatives": ["bar"],
@@ -1105,7 +1103,6 @@ def test_store_get_delete_rules():
                         "icon": "🥰",
                         "url": "https://witty.works/foo",
                     },
-                    "gravity": 3.0,
                 },
                 "foo|de": {
                     "alternatives": ["bar"],
@@ -1115,7 +1112,6 @@ def test_store_get_delete_rules():
                         "icon": "🥰",
                         "url": "https://witty.works/foo",
                     },
-                    "gravity": 3.0,
                 },
             },
             "domains": {
@@ -1478,14 +1474,10 @@ def test_english_upper_case_multiterms(
     "german_plain_language_dir",
     get_dirs("tests/test_german_plain_language"),
 )
-def test_german_plain_language(
-    german_plain_language_dir, snapshot, set_redis
-):
+def test_german_plain_language(german_plain_language_dir, snapshot, set_redis):
     with TestClient(app) as client:
         # Read input files from the case directory.
-        input_json = german_plain_language_dir.joinpath(
-            "input.json"
-        ).read_text()
+        input_json = german_plain_language_dir.joinpath("input.json").read_text()
         # Call the tested endpoint.
         response = client.post(
             "/v2.3/check",

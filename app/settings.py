@@ -35,9 +35,12 @@ class Settings(BaseSettings):
     aadb2c_expected_scope: Optional[str]
     redis_host: Optional[str]
     redis_port: Optional[str]
+    redis_username: Optional[str]
+    redis_password: Optional[str]
     redis_default_user: Optional[str]
     redis_default_rules: Optional[str]
     redis_default_organization_rules: Optional[str]
+    redis_verify_ssl: bool = True
     slack_signing_secret: Optional[str]
     slack_bot_token: Optional[str]
     slack_organization_id: Optional[str]
@@ -52,6 +55,7 @@ class Settings(BaseSettings):
     language_endpoint_url_en: Optional[str]
     language_endpoint_urls: Optional[dict]
     fasttext: bool = True
+    overwrite_enabled_user_categories: bool = False
 
     class Config:
         env_file = ".env"
