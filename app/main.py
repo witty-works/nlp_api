@@ -1031,7 +1031,7 @@ async def fetch_configs_for_request(
             user_request_in,
             configs["organization_config"],
             configs["plan"],
-            False,
+            settings.overwrite_enabled_user_categories,
         )
 
         configs["term_replacements"] |= configs["organization_term_replacements"]

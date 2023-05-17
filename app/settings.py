@@ -55,6 +55,7 @@ class Settings(BaseSettings):
     language_endpoint_url_en: Optional[str]
     language_endpoint_urls: Optional[dict]
     fasttext: bool = True
+    overwrite_enabled_user_categories: bool = False
 
     class Config:
         env_file = ".env"
