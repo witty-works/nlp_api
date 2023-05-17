@@ -1370,7 +1370,7 @@ def languagetool_matches(
             except KeyError:
                 pass
 
-        if subcategory.endswith("abbreviation") and not subcategory.endswith(
+        if not subcategory.endswith("abbreviation") and not subcategory.endswith(
             "anglicism"
         ):
             explanation = match["message"]
