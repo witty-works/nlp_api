@@ -23,11 +23,11 @@
                 "text": "Viele denken zuerst an bestimmtes Geschlecht",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Geschlecht + Orientierung: Berufe",
             "proficiency_level": "unconscious_bias",
             "start": 22,
-            "subcategory": "titles",
+            "subcategory": "advanced_titles",
             "text": "Manager"
         }
     ]

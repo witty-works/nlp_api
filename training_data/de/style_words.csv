@@ -309,8 +309,8 @@ mithin,adv,style,filler,['-']
 mitunter,adv,style,filler,['-']
 möglicherweise,adv,style,filler,['-']
 möglichst,adv,style,filler,['-']
-nachweisbar,a,style,exaggerating,"['dokumentiert', 'nachvollziehbar', 'belegbar']"
-nachweisen,v,style,exaggerating,"['dokumentieren', 'nachvollziehbar aufzeigen']"
+nachweisbar,a,style,exaggerating,"['dokumentiert', 'nachvollziehbar', 'belegbar', 'messbar']"
+nachweisen,v,style,exaggerating,"['dokumentieren', 'nachvollziehbar aufzeigen', 'messen']"
 naturgemäß,adv,style,filler,['-']
 natürlich,adv,style,filler,['-']
 neuerdings,adv,style,filler,['-']
