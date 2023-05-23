@@ -127,6 +127,9 @@ def is_category_inclusive(category):
 
 
 def get_proficiency_level(category):
+    if category == "openly_discriminating":
+        return "openly_discriminating"
+
     category_data = get_category(category)
     if category_data is None:
         return None
