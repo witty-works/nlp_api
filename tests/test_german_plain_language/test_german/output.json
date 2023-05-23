@@ -311,11 +311,11 @@
                 "text": "Werden alle Lesenden diese Abkürzung verstehen?",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/abkürzung?reducedView=true"
             },
-            "gravity": 3.0,
+            "gravity": 2.0,
             "label": "Kulturelle Diversität: Abkürzung",
             "proficiency_level": "unconscious_bias",
             "start": 278,
-            "subcategory": "advanced_abbreviation",
+            "subcategory": "abbreviation",
             "text": "KPI"
         },
         {
