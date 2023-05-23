@@ -98,10 +98,7 @@ def get_proficiency_levels():
 
 
 def get_category_name(category):
-    if category.startswith("advanced_"):
-        category = category.removeprefix("advanced_")
-
-    return category
+    return category.removeprefix("advanced_").removesuffix("_base")
 
 
 def get_category(category):
