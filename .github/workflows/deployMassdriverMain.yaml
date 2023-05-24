@@ -58,7 +58,7 @@ jobs:
           target: main
           manifest: nlpapi
           set: |
-            .image.tag = "${{ github.sha }}"
+            .image.tag = "main: ${{ github.sha }}"
 
       - name: Deploy App
         uses: massdriver-cloud/actions/app_deploy@v3
