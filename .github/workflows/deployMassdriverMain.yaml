@@ -44,7 +44,7 @@ jobs:
           image-name: nlpapi
           artifact: ${{ secrets.AUTHENTICATION_ARTIFACT_ID }}
           region: westeurope
-          image-tag: ${{ github.sha }}
+          image-tag: "main-${{ github.sha }}"
 
       - name: Publish Bundle
         uses: massdriver-cloud/actions/bundle_publish@v3
