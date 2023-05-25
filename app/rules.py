@@ -466,6 +466,7 @@ def fetch_rules(langs):
                 df_discrimination_words["Word_Type"],
                 df_discrimination_words["Primary_subcategory"],
                 map(ast.literal_eval, df_discrimination_words["Alt_split"]),
+                map(ast.literal_eval, df_discrimination_words["False_Positives"]),
             )
         )
         # df abbreviation

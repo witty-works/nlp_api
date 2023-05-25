@@ -3434,7 +3434,7 @@ def gendered_denom_analysis_de(
         ) in words_data:
             postfix = subcategory.endswith("_base")
             if postfix:
-                subcategory = subcategory[0 : -len("_base")]
+                subcategory = subcategory.removesuffix("_base")
 
             if not is_sub_category_enabled(config, subcategory):
                 continue
@@ -3826,7 +3826,7 @@ def rules_based_words_phrase_matcher(
 
             partial_matching = subcategory.endswith("_base")
             if partial_matching:
-                subcategory = subcategory[0 : -len("_base")]
+                subcategory = subcategory.removesuffix("_base")
                 match = False
             else:
                 match = is_word_match(
@@ -3842,6 +3842,7 @@ def rules_based_words_phrase_matcher(
                 if (
                     not partial_matching
                     or lang.lang == "en"
+                    or len(data) < 3
                     or get_proficiency_level(subcategory) != "openly_discriminating"
                     or "s" not in word_types
                 ):
@@ -3852,24 +3853,13 @@ def rules_based_words_phrase_matcher(
                 if count == 0:
                     continue
 
-                # TODO add false positives in rules.py
-                data.append(
-                    [
-                        "barsch",
-                        "marsch",
-                    ]
-                )
-
                 if len(data) > 2 and data[2] is not None:
+                    # False Positives
                     for false_positive in data[2]:
                         count = count - token_lower.count(false_positive.lower())
 
                 if count <= 0:
                     continue
-
-                alternatives = ["-"]
-                if len(data):
-                    data[1] = alternatives
 
             explanation = None
             url = None

@@ -98,10 +98,7 @@ def get_proficiency_levels():
 
 
 def get_category_name(category):
-    if category.startswith("advanced_"):
-        category = category.removeprefix("advanced_")
-
-    return category
+    return category.removeprefix("advanced_").removesuffix("_base")
 
 
 def get_category(category):
@@ -127,6 +124,9 @@ def is_category_inclusive(category):
 
 
 def get_proficiency_level(category):
+    if category == "openly_discriminating":
+        return "openly_discriminating"
+
     category_data = get_category(category)
     if category_data is None:
         return None
