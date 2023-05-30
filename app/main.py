@@ -508,6 +508,7 @@ async def get_config_debug(
     return {
         "configs": configs,
         "result_configs": result_configs,
+        "user_request_in": user_request_in,
     }
 
 
