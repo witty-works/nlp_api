@@ -102,7 +102,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.43.9"
+version = "1.43.10"
 
 categories = get_categories()
 settings = get_settings()
@@ -4111,6 +4111,7 @@ def detect_non_inclusive_emoji(
 
     token_count = len(tokens)
     for i in range(token_count):
+        subcategory = None
         token = tokens[i]
         if not token._.is_emoji:
             continue
@@ -4205,6 +4206,7 @@ def detect_non_inclusive_emoji(
             and "light skin tone" in emoji_description
             and "medium" not in emoji_description
         ):
+            subcategory = "culture"
             for skin_tone in rules["skin_tones"]["all"]:
                 alternative = get_emoji(emoji_base + skin_tone)
                 if ":" not in alternative and alternative != token.text:
@@ -4212,7 +4214,7 @@ def detect_non_inclusive_emoji(
                         alternative + " " + get_emoji_context(alternative, lang.lang)
                     )
 
-        if len(alternatives) == 1:
+        if not subcategory or len(alternatives) == 1:
             continue
 
         list_results.append(
