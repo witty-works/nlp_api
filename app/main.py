@@ -102,7 +102,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.43.10"
+version = "1.43.11"
 
 categories = get_categories()
 settings = get_settings()
@@ -490,7 +490,26 @@ async def get_config_debug(
 ):  # pragma: no cover
     user_request_in = RequestIn(text="")
     version = 2.3
-    return await fetch_configs_for_request(version, user_request_in, user_email)
+
+    try:
+        configs = await fetch_user_organization_configs(user_email)
+        result_configs = await fetch_configs_for_request(
+            version, user_request_in, user_email
+        )
+        del result_configs["organization_config"]
+        del result_configs["organization_domains"]
+        del result_configs["organization_false_positives"]
+        del result_configs["organization_term_replacements"]
+
+    except HTTPException:
+        configs = None
+        result_configs = None
+
+    return {
+        "configs": configs,
+        "result_configs": result_configs,
+        "user_request_in": user_request_in,
+    }
 
 
 @app.post(
