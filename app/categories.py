@@ -4,62 +4,8 @@ from functools import lru_cache
 
 @lru_cache()
 def get_categories():
-    categories = {
-        "casing": {
-            "category": "orthography",
-            "emoji": "❌",
-        },
-        "compounding": {
-            "category": "orthography",
-            "emoji": "⚠️",
-        },
-        "confused_words": {
-            "category": "orthography",
-            "emoji": "❌",
-        },
-        "grammar": {
-            "category": "orthography",
-            "emoji": "❌",
-        },
-        "misc": {
-            "category": "orthography",
-            "emoji": "🤔",
-        },
-        "orthography": {
-            "category": "orthography",
-            "emoji": "❌",
-        },
-        "punctuation": {
-            "category": "orthography",
-            "emoji": "❌",
-        },
-        "repetitions": {
-            "category": "orthography",
-            "emoji": "⚠️",
-        },
-        "typography": {
-            "category": "orthography",
-            "emoji": "❌",
-        },
-        "typos": {
-            "category": "orthography",
-            "emoji": "❌",
-        },
-        "corporate_rules": {
-            "category": "corporate_rules",
-            "translations": {
-                "en": {
-                    "hs_name": "Dictionary",
-                },
-                "de": {
-                    "hs_name": "Wörterbuch",
-                },
-            },
-        },
-    }
-
     categories_file = open("training_data/categories.json")
-    categories.update(json.load(categories_file))
+    categories = json.load(categories_file)
 
     diversity_dimensions_drivers_file = open(
         "training_data/diversity_dimension_drivers.json"
