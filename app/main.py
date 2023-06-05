@@ -2918,8 +2918,7 @@ def alternative_declension(lang, text, token, word_types, alternative):
     if lang == "en" and first_alternative_word_types:
         if (
             is_plural_alternative == False
-            and "s" in first_alternative_word_types
-            and (text.startswith("a ") or text.startswith("an "))
+            and (text.lower().startswith("a ") or text.lower().startswith("an "))
             and not new_alternative.startswith(rules["en"]["a_not_startswith"])
             and not new_alternative.endswith(rules["en"]["uncountables"])
         ):
@@ -2941,9 +2940,8 @@ def alternatives_declension(lang, token, alternatives, prev_token):
             text = "zu " + text
             start = prev_token.idx
     elif lang == "en" and (
-        "s" in word_types
-        and prev_token
-        and (prev_token.text == "a" or prev_token.text == "an")
+        prev_token
+        and (prev_token.text.lower() == "a" or prev_token.text.lower() == "an")
     ):
         text = prev_token.text + " " + text
         start = prev_token.idx

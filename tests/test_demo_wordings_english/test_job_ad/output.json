@@ -208,13 +208,13 @@
         {
             "alternatives": [
                 {
-                    "text": "impartial"
+                    "text": "an impartial"
                 },
                 {
-                    "text": "freelance"
+                    "text": "a freelance"
                 },
                 {
-                    "text": "consulting"
+                    "text": "a consult"
                 }
             ],
             "category": "social-motive",
@@ -229,9 +229,9 @@
             "gravity": 2.0,
             "label": "Social Motive: Agentic language",
             "proficiency_level": "unconscious_bias",
-            "start": 6,
+            "start": 3,
             "subcategory": "agentic",
-            "text": "independent"
+            "text": "an independent"
         },
         {
             "alternatives": [
