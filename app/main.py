@@ -3847,10 +3847,12 @@ def rules_based_words_phrase_matcher(
                 subcategory = data[0]
 
             partial_matching = subcategory.endswith("_base")
-            if partial_matching:
-                subcategory = subcategory.removesuffix("_base")
+            subcategory = subcategory.removesuffix("_base")
+
+            if partial_matching and settings.partial_matching:
                 match = False
             else:
+                partial_matching = False
                 match = is_word_match(
                     lang.lang,
                     token,
