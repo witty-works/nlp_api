@@ -3487,7 +3487,7 @@ def gendered_denom_analysis_de(
                 is_singular = False
             else:
                 lemma = tokens[i].lemma_
-                is_singular = is_token_singular(lang, tokens[i])
+                is_singular = is_token_singular(lang.lang, tokens[i])
                 if is_singular is None:
                     continue
 
