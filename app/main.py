@@ -933,7 +933,7 @@ def is_token_singular(lang, token):
         return "Sing" in number
 
     if lang == "en" and token.text[-1:] == "s":
-        return True
+        return False
 
     return None
 
