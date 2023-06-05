@@ -65,7 +65,6 @@ from app.models import (
     GenderedRolesFormatType,
     GermanGenderEndingType,
     LangType,
-    SingularTheyType,
     Language,
     GermanLanguageRequest,
     EnglishLanguageRequest,
@@ -81,8 +80,6 @@ from app.models import (
     ResultConf,
     ErrorMessage,
     PrettyJSONResponse,
-    BooleanConfigType,
-    StatusType,
 )
 from app.lang_detection import get_lang_detection
 from app.categories import (
@@ -90,7 +87,6 @@ from app.categories import (
     get_category,
     is_category_inclusive,
     get_proficiency_level,
-    map_importance,
 )
 from app.settings import get_settings
 from app.logger import set_up_logger
