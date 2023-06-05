@@ -90,6 +90,7 @@ def custom_tokenizer(lang, nlp):
 @German.factory("custom_lemmatizer_de")
 def custom_lemmatizer_de(nlp, name):
     lemma_lookup = {
+        "Manntage": "Manntag",
         "international": "international",
         "internationale": "international",
         "Meister": "Meister",
