@@ -1,14 +1,14 @@
-Lemma,Word_Type,Category,Primary_subcategory,Alt_split
-Gay Lobby,s,openly_discriminating,homophobia,['-']
-Homo erectus,s,openly_discriminating,homophobia,['-']
-LGBT Lobby,s,openly_discriminating,homophobia,['-']
-LGBT Mafia,s,openly_discriminating,homophobia,['-']
-LGBTIQ Lobby,s,openly_discriminating,homophobia,['-']
-Lärm wie in der Judenschule,i,openly_discriminating,antisemitism,"['ganz schönes Durcheinander', 'fürchterlicher Krach', 'grausamer Lärm']"
-Ober Diva,s,openly_discriminating,sexism,['-']
-Trans Lobby,s,openly_discriminating,transphobia,['-']
-alte Jungfer,a+s,openly_discriminating,sexism,['-']
-alte Schachtel,a+s,openly_discriminating,sexism,['-']
-jüdische Hast,a+s,openly_discriminating,antisemitism,"['-', 'Eile', 'Hektik']"
-vom anderen Ufer,i,openly_discriminating,homophobia,"['-', 'schwul', 'lesbisch']"
-warmer Bruder,a+s,openly_discriminating,homophobia,['-']
+Lemma,Word_Type,Category,Primary_subcategory,Alt_split,False_Positives
+Gay Lobby,s,openly_discriminating,homophobia,['-'],[]
+Homo erectus,s,openly_discriminating,homophobia,['-'],[]
+LGBT Lobby,s,openly_discriminating,homophobia,['-'],[]
+LGBT Mafia,s,openly_discriminating,homophobia,['-'],[]
+LGBTIQ Lobby,s,openly_discriminating,homophobia,['-'],[]
+Lärm wie in der Judenschule,i,openly_discriminating,antisemitism,"['ganz schönes Durcheinander', 'fürchterlicher Krach', 'grausamer Lärm']",[]
+Ober Diva,s,openly_discriminating,sexism,['-'],[]
+Trans Lobby,s,openly_discriminating,transphobia,['-'],[]
+alte Jungfer,a+s,openly_discriminating,sexism,['-'],[]
+alte Schachtel,a+s,openly_discriminating,sexism,['-'],[]
+jüdische Hast,a+s,openly_discriminating,antisemitism,"['-', 'Eile', 'Hektik']",[]
+vom anderen Ufer,i,openly_discriminating,homophobia,"['-', 'schwul', 'lesbisch']",[]
+warmer Bruder,a+s,openly_discriminating,homophobia,['-'],[]

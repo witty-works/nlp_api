@@ -102,7 +102,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.43.11"
+version = "1.43.12"
 
 categories = get_categories()
 settings = get_settings()
@@ -2918,8 +2918,7 @@ def alternative_declension(lang, text, token, word_types, alternative):
     if lang == "en" and first_alternative_word_types:
         if (
             is_plural_alternative == False
-            and "s" in first_alternative_word_types
-            and (text.startswith("a ") or text.startswith("an "))
+            and (text.lower().startswith("a ") or text.lower().startswith("an "))
             and not new_alternative.startswith(rules["en"]["a_not_startswith"])
             and not new_alternative.endswith(rules["en"]["uncountables"])
         ):
@@ -2941,9 +2940,8 @@ def alternatives_declension(lang, token, alternatives, prev_token):
             text = "zu " + text
             start = prev_token.idx
     elif lang == "en" and (
-        "s" in word_types
-        and prev_token
-        and (prev_token.text == "a" or prev_token.text == "an")
+        prev_token
+        and (prev_token.text.lower() == "a" or prev_token.text.lower() == "an")
     ):
         text = prev_token.text + " " + text
         start = prev_token.idx
@@ -3453,7 +3451,7 @@ def gendered_denom_analysis_de(
         ) in words_data:
             postfix = subcategory.endswith("_base")
             if postfix:
-                subcategory = subcategory[0 : -len("_base")]
+                subcategory = subcategory.removesuffix("_base")
 
             if not is_sub_category_enabled(config, subcategory):
                 continue
@@ -3524,8 +3522,11 @@ def gendered_denom_analysis_de(
 
             if match == "postfix":
                 alternatives = alternatives.copy()
+                prefix = tokens[i].lemma_.removesuffix(word.lower())
                 for k, alternative in enumerate(alternatives):
                     alternative = alternative.replace(word, text)
+                    if alternative[0] == "~":
+                        alternative = prefix + alternative[1].lower() + alternative[2:]
                     if word[0] == "A":
                         modified_word = "Ä" + word[1:]
                         modified_word_lower = "ä" + word[1:]
@@ -3844,10 +3845,12 @@ def rules_based_words_phrase_matcher(
                 subcategory = data[0]
 
             partial_matching = subcategory.endswith("_base")
-            if partial_matching:
-                subcategory = subcategory[0 : -len("_base")]
+            subcategory = subcategory.removesuffix("_base")
+
+            if partial_matching and settings.partial_matching:
                 match = False
             else:
+                partial_matching = False
                 match = is_word_match(
                     lang.lang,
                     token,
@@ -3861,6 +3864,7 @@ def rules_based_words_phrase_matcher(
                 if (
                     not partial_matching
                     or lang.lang == "en"
+                    or len(data) < 3
                     or get_proficiency_level(subcategory) != "openly_discriminating"
                     or "s" not in word_types
                 ):
@@ -3871,24 +3875,13 @@ def rules_based_words_phrase_matcher(
                 if count == 0:
                     continue
 
-                # TODO add false positives in rules.py
-                data.append(
-                    [
-                        "barsch",
-                        "marsch",
-                    ]
-                )
-
                 if len(data) > 2 and data[2] is not None:
+                    # False Positives
                     for false_positive in data[2]:
                         count = count - token_lower.count(false_positive.lower())
 
                 if count <= 0:
                     continue
-
-                alternatives = ["-"]
-                if len(data):
-                    data[1] = alternatives
 
             explanation = None
             url = None

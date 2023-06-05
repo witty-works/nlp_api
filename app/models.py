@@ -594,9 +594,6 @@ class ResultOut(BaseModel):
             if alternative == text:
                 continue
 
-            if prefix and not alternative.startswith(prefix):
-                prefix = False
-
             # requests for user input are not yet supported
             # https://wittyworks.productboard.com/roadmap/3751070-browser-extension/features/13529555/detail
             if "((" in alternative:
@@ -607,6 +604,9 @@ class ResultOut(BaseModel):
                 alternative_context,
                 remove,
             ) = ResultOut.parse_alternative(alternative, category != "orthography")
+
+            if prefix and not remove and not alternative.startswith(prefix):
+                prefix = False
 
             if not alternative and not remove:
                 if explanation_context is None:
@@ -674,6 +674,9 @@ class ResultOut(BaseModel):
             start += prefix_lenth
             text = text[prefix_lenth:]
             for cleaned_alternative in cleaned_alternatives:
+                if cleaned_alternative.text is None:
+                    continue
+
                 cleaned_alternative.text = cleaned_alternative.text[prefix_lenth:]
 
         return text, start, cleaned_alternatives, explanation_context

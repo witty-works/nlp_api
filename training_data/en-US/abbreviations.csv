@@ -79,7 +79,7 @@ DEIB,acr,style,advanced_abbreviation,"['diversity, equity, inclusion, and belong
 DFLE,acr,style,advanced_abbreviation,"['dependency-free life expectancy', 'dependency-free life expectancy DFLE)', 'metric that confuses quality of life with health --- avoid if possible(...)']"
 DFLY,abbr,style,advanced_abbreviation,"['-', 'dependency-free life-years', 'dependency-free life-years (DFLY)', 'metric that confuses quality of life with health --- avoid if possible(...)']"
 DFLYs,abbr,style,advanced_abbreviation,"['-', 'dependency-free life-years', 'dependency-free life-years (DFLYs)', 'metric that confuses quality of life with health --- avoid if possible(...)']"
-DIY,acr,style,advanced_abbreviation,"['do-it-yourself', 'do-it-yourself (DIY)']"
+DIY,acr,style,abbreviation,"['do-it-yourself', 'do-it-yourself (DIY)']"
 DM,acr,style,advanced_abbreviation,"['direct message', 'direct mail', 'private message', 'send a direct message to']"
 DNS,acr,style,advanced_abbreviation,"['domain name system', 'domain name system (DNS)']"
 DOE,acr,style,advanced_abbreviation,['depending on experience']
