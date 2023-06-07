@@ -1825,32 +1825,6 @@ def apply_false_positives(
     return list_results
 
 
-async def call_context_checker(sentences, result: ResultOut):
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": ("Bearer " + settings.context_checker_api_key),
-    }
-
-    sentence = None
-    for end_char in sentences:
-        if result.end <= end_char:
-            sentence = sentences[end_char]
-            break
-
-    if sentence == None:
-        return True
-
-    payload = {
-        "data": sentence.text,
-    }
-
-    context_valid = await fetch_json_post(
-        settings.context_checker_url, json.dumps(payload), headers, "context checker"
-    )
-
-    return context_valid == "1"
-
-
 def is_sub_category_enabled(config: Config, subcategory: str):
     if subcategory in config.disabled_categories:
         return False
@@ -1870,23 +1844,74 @@ def is_sub_category_enabled(config: Config, subcategory: str):
 
 async def context_false_positives(lang, tokens, list_results):
     if (
-        len(rules[lang]["context_check"])
-        and settings.context_checker_url
-        and settings.context_checker_api_key
+        len(rules[lang]["context_check"]) == 0
+        or not settings.context_checker_url
+        or not settings.context_checker_api_key
     ):
-        sentences = {}
-        for sentence in tokens.sents:
-            sentences[sentence.end_char] = sentence
+        return list_results
 
-        for result in list_results:
-            words = result.text.lower().split()
-            if not len(words):
+    sentences = {}
+    sentences_to_check = {}
+    for i in range(len(list_results)):
+        result = list_results[i]
+        words = result.text.lower().split()
+        if not len(words):
+            continue
+
+        # a fossil => fossil
+        if words[-1] in rules[lang]["context_check"]:
+            if sentences == {}:
+                for sentence in tokens.sents:
+                    sentences[sentence.end_char] = sentence.text
+
+            sentence = None
+            for end_char in sentences:
+                if result.end <= end_char:
+                    sentence = sentences[end_char]
+                    break
+
+            if sentence is None:
                 continue
 
-            if words[-1] in rules[lang]["context_check"]:
-                context_valid = await call_context_checker(sentences, result)
-                if not context_valid:
-                    list_results.remove(result)
+            if sentence in sentences_to_check:
+                sentences_to_check[sentence].append(i)
+            else:
+                sentences_to_check[sentence] = [i]
+
+    if sentences_to_check == {}:
+        return list_results
+
+    sentences = list(sentences_to_check.keys())
+
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": ("Bearer " + settings.context_checker_api_key),
+    }
+
+    payload = {
+        "data": sentences,
+    }
+
+    context_results = await fetch_json_post(
+        settings.context_checker_url, json.dumps(payload), headers, "context checker"
+    )
+
+    keys_to_remove = []
+    for i in range(len(sentences)):
+        sentence = sentences[i]
+        if context_results[i] == "1":
+            continue
+
+        for result_key in sentences_to_check[sentence]:
+            if result_key in keys_to_remove:
+                continue
+
+            keys_to_remove.append(result_key)
+
+    # ensure we remove from the end so that the list indexes remain the same
+    keys_to_remove.sort(reverse=True)
+    for key_to_remove in keys_to_remove:
+        list_results.pop(key_to_remove)
 
     return list_results
 
