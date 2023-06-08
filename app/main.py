@@ -2877,7 +2877,7 @@ def alternative_declension(lang, text, token, word_types, alternative):
     if (
         not parsed_alternative
         or remove
-        or ResultOut.isInspirationAlternative(text, parsed_alternative)
+        or ResultOut.isInspirationAlternative(parsed_alternative)
     ):
         return alternative
 

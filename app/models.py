@@ -621,7 +621,7 @@ class ResultOut(BaseModel):
                 alternative = lang.convert_sharp_ss(alternative)
 
             inspiration = None
-            if ResultOut.isInspirationAlternative(text, alternative, subcategory):
+            if ResultOut.isInspirationAlternative(alternative, subcategory):
                 if (
                     not config.show_inspiration_alternatives
                     and not add_inspiration_alternatives
@@ -722,7 +722,7 @@ class ResultOut(BaseModel):
         return sum(map(str(text).count, [" ", "-"]))
 
     @staticmethod
-    def isInspirationAlternative(text, alternative, subcategory=None):
+    def isInspirationAlternative(alternative, subcategory=None):
         return (
             alternative is not None
             and subcategory != "abbreviation"
