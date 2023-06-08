@@ -605,7 +605,12 @@ class ResultOut(BaseModel):
                 remove,
             ) = ResultOut.parse_alternative(alternative, category != "orthography")
 
-            if prefix and not remove and not alternative.startswith(prefix):
+            if (
+                prefix
+                and not remove
+                and not alternative.startswith(prefix)
+                and not ResultOut.isInspirationAlternative(alternative)
+            ):
                 prefix = False
 
             if not alternative and not remove:
@@ -674,7 +679,11 @@ class ResultOut(BaseModel):
             start += prefix_length
             text = text[prefix_length:]
             for cleaned_alternative in cleaned_alternatives:
-                if cleaned_alternative.text is None:
+                if (
+                    cleaned_alternative.text is None
+                    or cleaned_alternative.remove
+                    or cleaned_alternative.inspiration
+                ):
                     continue
 
                 cleaned_alternative.text = cleaned_alternative.text[prefix_length:]
