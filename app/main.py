@@ -3574,7 +3574,7 @@ def gendered_denom_analysis_de(
                 alternatives = new_alternatives
 
             flexion = fetch_flexion(token)
-            if flexion is not flexion and "nominativ" not in flexion:
+            if flexion is not None and "nominativ" not in flexion:
                 new_alternatives = []
                 for alternative in alternatives:
                     if "~" in alternative:
