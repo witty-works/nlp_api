@@ -3078,7 +3078,8 @@ def fetch_article_for_flexion(flexion, word, article_text):
 
 
 def fetch_alternatives_with_article(tokens, i, alternatives):
-    text = tokens[i].text
+    token = tokens[i]
+    text = token.text
     word = german_noun_analysis(text)
     if word is None:
         return None
@@ -3090,7 +3091,7 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
         match_feminine,
         match_neuter,
         match_alternative,
-    ) = fetch_article_for_flexion(fetch_flexion(tokens[i]), word, article_text)
+    ) = fetch_article_for_flexion(fetch_flexion(token), word, article_text)
     if match_alternative is None:
         return None
 
@@ -3477,9 +3478,10 @@ def gendered_denom_analysis_de(
             if not is_sub_category_enabled(config, subcategory):
                 continue
 
+            token = tokens[i]
             match = is_word_match(
                 lang.lang,
-                tokens[i],
+                token,
                 tokens,
                 word,
                 word_types,
@@ -3498,21 +3500,21 @@ def gendered_denom_analysis_de(
                     or "flexion" not in result
                     or "nominativ plural" not in result["flexion"]
                     or "nominativ singular" not in result["flexion"]
-                    or not tokens[i].text.endswith(
+                    or not token.text.endswith(
                         result["flexion"]["nominativ plural"].lower()
                     )
                 ):
                     continue
 
                 match = "postfix"
-                lemma = tokens[i].lemma_.replace(
+                lemma = token.lemma_.replace(
                     result["flexion"]["nominativ plural"].lower(),
                     result["flexion"]["nominativ singular"].lower(),
                 )
                 is_singular = False
             else:
-                lemma = tokens[i].lemma_
-                is_singular = is_token_singular(lang.lang, tokens[i])
+                lemma = token.lemma_
+                is_singular = is_token_singular(lang.lang, token)
                 if is_singular is None:
                     continue
 
@@ -3543,7 +3545,7 @@ def gendered_denom_analysis_de(
 
             if match == "postfix":
                 alternatives = alternatives.copy()
-                prefix = tokens[i].lemma_.removesuffix(word.lower())
+                prefix = token.lemma_.removesuffix(word.lower())
                 for k, alternative in enumerate(alternatives):
                     alternative = alternative.replace(word, text)
                     if alternative[0] == "~":
@@ -3571,7 +3573,7 @@ def gendered_denom_analysis_de(
                         new_alternatives.append(alternative)
                 alternatives = new_alternatives
 
-            flexion = fetch_flexion(tokens[i])
+            flexion = fetch_flexion(token)
             if flexion is not flexion and "nominativ" not in flexion:
                 new_alternatives = []
                 for alternative in alternatives:
@@ -3891,7 +3893,7 @@ def rules_based_words_phrase_matcher(
                 ):
                     continue
 
-                token_lower = tokens[i].text.lower()
+                token_lower = token.text.lower()
                 count = token_lower.count(word.lower())
                 if count == 0:
                     continue
