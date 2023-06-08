@@ -670,14 +670,14 @@ class ResultOut(BaseModel):
             cleaned_alternatives = cleaned_alternatives[0:alternatives_max_count]
 
         if prefix:
-            prefix_lenth = len(prefix)
-            start += prefix_lenth
-            text = text[prefix_lenth:]
+            prefix_length = len(prefix)
+            start += prefix_length
+            text = text[prefix_length:]
             for cleaned_alternative in cleaned_alternatives:
                 if cleaned_alternative.text is None:
                     continue
 
-                cleaned_alternative.text = cleaned_alternative.text[prefix_lenth:]
+                cleaned_alternative.text = cleaned_alternative.text[prefix_length:]
 
         return text, start, cleaned_alternatives, explanation_context
 
