@@ -636,6 +636,7 @@ class ResultOut(BaseModel):
                 inspiration = True
                 if alternative[-5:] == "(...)":
                     alternative = alternative[0:-5]
+                    alternative.strip()
 
                 if alternative_context is None:
                     alternative_context = "💡 Inspiration"
