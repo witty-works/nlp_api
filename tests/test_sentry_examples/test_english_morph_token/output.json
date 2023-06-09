@@ -71,31 +71,6 @@
         {
             "alternatives": [
                 {
-                    "text": "person responsible for"
-                },
-                {
-                    "text": "heads of"
-                }
-            ],
-            "category": "gender-orientation",
-            "context": "Hi Siwar,\n\nit's the first time that we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n\nFossil Group Europe GmbH\nRiehenring <NUMBER>\n\n<NUMBER> Basel\nSWITZERLAND\n<URL>",
-            "end": 83,
-            "explanation": {
-                "content": "video",
-                "icon": "😟",
-                "text": "Repeats outdated ideas about leading",
-                "url": "https://www.witty.works/en/categories/gender-orientation/traditional-leadership?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Gender + Orientation: Traditional leadership",
-            "proficiency_level": "unconscious_bias",
-            "start": 76,
-            "subcategory": "leadership",
-            "text": "Head of"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "they"
                 },
                 {
