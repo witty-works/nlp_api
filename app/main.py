@@ -1585,11 +1585,11 @@ def utf16_offsets(text):
 
 
 # matcher to false positives
-def is_false_positive_match(list_false_positive, tokens, token):
-    if list_false_positive is None:
+def is_false_positive_match(false_positive_matcher, tokens, token):
+    if false_positive_matcher is None:
         return False
 
-    for match_id, start, end in list_false_positive:
+    for match_id, start, end in false_positive_matcher:
         span_false = tokens[start:end]
         if token.idx in range(span_false.start_char, span_false.end_char):
             return True
@@ -1609,9 +1609,9 @@ def false_pattern_match(lang, tokens):
 
 def fetch_false_positive_matcher(lang, tokens):
     # create false positives list
-    phrase_matches_false = fetch_matches(lang, tokens, rules[lang]["list_false_column"])
-    word_matches_false = false_pattern_match(lang, tokens)
-    return list(set(phrase_matches_false + word_matches_false))
+    phrase_false_positive_matcher = fetch_matches(lang, tokens, rules[lang]["list_false_column"])
+    word_false_positive_matcher = false_pattern_match(lang, tokens)
+    return list(set(phrase_false_positive_matcher + word_false_positive_matcher))
 
 
 def fetch_matches(lang, tokens, phrases):
@@ -2137,7 +2137,7 @@ async def english_rules(
     words_data_en = defaultdict(list)
     gendered_words_data_en = defaultdict(list)
     sentences_data_en = defaultdict(list)
-    matches_false = fetch_false_positive_matcher(lang.lang, tokens)
+    false_positive_matcher = fetch_false_positive_matcher(lang.lang, tokens)
 
     words_data_en["od"] = rules[lang.locale]["open_disc_words_data"]
     words_data_en["ge"] = rules[lang.locale]["gender_words_data"]
@@ -2166,7 +2166,7 @@ async def english_rules(
         text,
         tokens,
         offsets,
-        matches_false,
+        false_positive_matcher,
         words_data_en["homonym"],
     )
 
@@ -2193,7 +2193,7 @@ async def english_rules(
         words_data_en["od"],
         sentences_data_en["od"],
         rules[lang.locale]["df_open_dis_sentence"],
-        matches_false,
+        false_positive_matcher,
     )
 
     list_full += rules_based_words_phrase_matcher(
@@ -2206,7 +2206,7 @@ async def english_rules(
         words_data_en["ge"],
         sentences_data_en["ge"],
         rules[lang.locale]["df_gendered_sentence"],
-        matches_false,
+        false_positive_matcher,
     )
 
     if is_sub_category_enabled(config, "advanced_binary_pronouns"):
@@ -2220,7 +2220,7 @@ async def english_rules(
             words_data_en["ge-singular-they"],
             [],
             [],
-            matches_false,
+            false_positive_matcher,
             None,
             True,
         )
@@ -2233,7 +2233,7 @@ async def english_rules(
         tokens,
         offsets,
         gendered_words_data_en["gendered"],
-        matches_false,
+        false_positive_matcher,
     )
 
     if is_sub_category_enabled(config, "advanced_binary_pronouns"):
@@ -2270,7 +2270,7 @@ async def english_rules(
         inclusive_words_data_en,
         inclusive_sentences_data_en,
         rules[lang.locale]["df_inclusive_sentence"],
-        matches_false,
+        false_positive_matcher,
     )
 
     list_full += rules_based_words_phrase_matcher(
@@ -2283,7 +2283,7 @@ async def english_rules(
         words_data_en["style"],
         sentences_data_en["style"],
         rules[lang.locale]["df_style_sentence"],
-        matches_false,
+        false_positive_matcher,
     )
 
     list_full += word_noun(
@@ -2294,7 +2294,7 @@ async def english_rules(
         tokens,
         offsets,
         gendered_words_data_en["style"],
-        matches_false,
+        false_positive_matcher,
     )
 
     list_full += detect_lower_cased_hashtags(
@@ -2315,7 +2315,7 @@ async def english_rules(
         words_data_en["bias"],
         sentences_data_en["bias"],
         rules[lang.locale]["df_ub_sentence"],
-        matches_false,
+        false_positive_matcher,
     )
 
     list_full += word_noun(
@@ -2326,7 +2326,7 @@ async def english_rules(
         tokens,
         offsets,
         gendered_words_data_en["bias"],
-        matches_false,
+        false_positive_matcher,
     )
 
     list_full += apply_term_replacements(
@@ -2371,7 +2371,7 @@ def is_word_match(
     tokens,
     word,
     word_types,
-    matches_false=None,
+    false_positive_matcher=None,
     lower_case=True,
     postfix=False,
 ):
@@ -2393,7 +2393,7 @@ def is_word_match(
     if not check_word_types(lang, token, word_types, True):
         return False
 
-    match = is_false_positive_match(matches_false, tokens, token) == False
+    match = is_false_positive_match(false_positive_matcher, tokens, token) == False
     if match and postfix:
         return "postfix"
 
@@ -3707,7 +3707,7 @@ def word_noun(
     tokens,
     offsets,
     words_data,
-    matches_false=None,
+    false_positive_matcher=None,
 ):
     list_tokens = []
 
@@ -3727,7 +3727,7 @@ def word_noun(
                 continue
 
             if not is_word_match(
-                lang.lang, token, tokens, word, word_types, matches_false
+                lang.lang, token, tokens, word, word_types, false_positive_matcher
             ):
                 continue
 
@@ -3850,7 +3850,7 @@ def rules_based_words_phrase_matcher(
     words_data,
     sentences_data=None,
     df_sentence=None,
-    matches_false=None,
+    false_positive_matcher=None,
     fallback_subcategory=None,
     they=False,
 ):
@@ -3880,7 +3880,7 @@ def rules_based_words_phrase_matcher(
                     tokens,
                     word,
                     word_types,
-                    matches_false,
+                    false_positive_matcher,
                 )
 
             if not match:
@@ -3983,7 +3983,7 @@ def homonyms_en(
     full_text,
     tokens,
     offsets,
-    matches_false,
+    false_positive_matcher,
     words_data,
 ):
     list_tokens = []
@@ -3997,7 +3997,7 @@ def homonyms_en(
                 continue
 
             if not is_word_match(
-                lang.lang, token, tokens, word, word_types, matches_false, False
+                lang.lang, token, tokens, word, word_types, false_positive_matcher, False
             ):
                 continue
 
