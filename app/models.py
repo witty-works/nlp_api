@@ -605,7 +605,12 @@ class ResultOut(BaseModel):
                 remove,
             ) = ResultOut.parse_alternative(alternative, category != "orthography")
 
-            if prefix and not remove and not alternative.startswith(prefix):
+            if (
+                prefix
+                and not remove
+                and not alternative.startswith(prefix)
+                and not ResultOut.isInspirationAlternative(alternative)
+            ):
                 prefix = False
 
             if not alternative and not remove:
@@ -621,7 +626,7 @@ class ResultOut(BaseModel):
                 alternative = lang.convert_sharp_ss(alternative)
 
             inspiration = None
-            if ResultOut.isInspirationAlternative(text, alternative, subcategory):
+            if ResultOut.isInspirationAlternative(alternative, subcategory):
                 if (
                     not config.show_inspiration_alternatives
                     and not add_inspiration_alternatives
@@ -631,6 +636,7 @@ class ResultOut(BaseModel):
                 inspiration = True
                 if alternative[-5:] == "(...)":
                     alternative = alternative[0:-5]
+                    alternative.strip()
 
                 if alternative_context is None:
                     alternative_context = "💡 Inspiration"
@@ -670,14 +676,18 @@ class ResultOut(BaseModel):
             cleaned_alternatives = cleaned_alternatives[0:alternatives_max_count]
 
         if prefix:
-            prefix_lenth = len(prefix)
-            start += prefix_lenth
-            text = text[prefix_lenth:]
+            prefix_length = len(prefix)
+            start += prefix_length
+            text = text[prefix_length:]
             for cleaned_alternative in cleaned_alternatives:
-                if cleaned_alternative.text is None:
+                if (
+                    cleaned_alternative.text is None
+                    or cleaned_alternative.remove
+                    or cleaned_alternative.inspiration
+                ):
                     continue
 
-                cleaned_alternative.text = cleaned_alternative.text[prefix_lenth:]
+                cleaned_alternative.text = cleaned_alternative.text[prefix_length:]
 
         return text, start, cleaned_alternatives, explanation_context
 
@@ -722,7 +732,7 @@ class ResultOut(BaseModel):
         return sum(map(str(text).count, [" ", "-"]))
 
     @staticmethod
-    def isInspirationAlternative(text, alternative, subcategory=None):
+    def isInspirationAlternative(alternative, subcategory=None):
         return (
             alternative is not None
             and subcategory != "abbreviation"

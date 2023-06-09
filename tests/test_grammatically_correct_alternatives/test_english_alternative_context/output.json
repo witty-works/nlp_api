@@ -76,9 +76,9 @@
             "gravity": 2.0,
             "label": "Social Motive: Exaggeration",
             "proficiency_level": "unconscious_bias",
-            "start": 87,
+            "start": 89,
             "subcategory": "exaggerating",
-            "text": "a top-performer"
+            "text": "top-performer"
         },
         {
             "alternatives": [

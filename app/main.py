@@ -65,7 +65,6 @@ from app.models import (
     GenderedRolesFormatType,
     GermanGenderEndingType,
     LangType,
-    SingularTheyType,
     Language,
     GermanLanguageRequest,
     EnglishLanguageRequest,
@@ -81,8 +80,6 @@ from app.models import (
     ResultConf,
     ErrorMessage,
     PrettyJSONResponse,
-    BooleanConfigType,
-    StatusType,
 )
 from app.lang_detection import get_lang_detection
 from app.categories import (
@@ -90,7 +87,6 @@ from app.categories import (
     get_category,
     is_category_inclusive,
     get_proficiency_level,
-    map_importance,
 )
 from app.settings import get_settings
 from app.logger import set_up_logger
@@ -102,7 +98,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.43.12"
+version = "1.43.13"
 
 categories = get_categories()
 settings = get_settings()
@@ -937,7 +933,7 @@ def is_token_singular(lang, token):
         return "Sing" in number
 
     if lang == "en" and token.text[-1:] == "s":
-        return True
+        return False
 
     return None
 
@@ -1589,11 +1585,11 @@ def utf16_offsets(text):
 
 
 # matcher to false positives
-def is_false_positive_match(list_false_positive, tokens, token):
-    if list_false_positive is None:
+def is_false_positive_match(false_positive_matcher, tokens, token):
+    if false_positive_matcher is None:
         return False
 
-    for match_id, start, end in list_false_positive:
+    for match_id, start, end in false_positive_matcher:
         span_false = tokens[start:end]
         if token.idx in range(span_false.start_char, span_false.end_char):
             return True
@@ -1613,9 +1609,9 @@ def false_pattern_match(lang, tokens):
 
 def fetch_false_positive_matcher(lang, tokens):
     # create false positives list
-    phrase_matches_false = fetch_matches(lang, tokens, rules[lang]["list_false_column"])
-    word_matches_false = false_pattern_match(lang, tokens)
-    return list(set(phrase_matches_false + word_matches_false))
+    phrase_false_positive_matcher = fetch_matches(lang, tokens, rules[lang]["list_false_column"])
+    word_false_positive_matcher = false_pattern_match(lang, tokens)
+    return list(set(phrase_false_positive_matcher + word_false_positive_matcher))
 
 
 def fetch_matches(lang, tokens, phrases):
@@ -1829,32 +1825,6 @@ def apply_false_positives(
     return list_results
 
 
-async def call_context_checker(sentences, result: ResultOut):
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": ("Bearer " + settings.context_checker_api_key),
-    }
-
-    sentence = None
-    for end_char in sentences:
-        if result.end <= end_char:
-            sentence = sentences[end_char]
-            break
-
-    if sentence == None:
-        return True
-
-    payload = {
-        "data": sentence.text,
-    }
-
-    context_valid = await fetch_json_post(
-        settings.context_checker_url, json.dumps(payload), headers, "context checker"
-    )
-
-    return context_valid == "1"
-
-
 def is_sub_category_enabled(config: Config, subcategory: str):
     if subcategory in config.disabled_categories:
         return False
@@ -1874,23 +1844,74 @@ def is_sub_category_enabled(config: Config, subcategory: str):
 
 async def context_false_positives(lang, tokens, list_results):
     if (
-        len(rules[lang]["context_check"])
-        and settings.context_checker_url
-        and settings.context_checker_api_key
+        len(rules[lang]["context_check"]) == 0
+        or not settings.context_checker_url
+        or not settings.context_checker_api_key
     ):
-        sentences = {}
-        for sentence in tokens.sents:
-            sentences[sentence.end_char] = sentence
+        return list_results
 
-        for result in list_results:
-            words = result.text.lower().split()
-            if not len(words):
+    sentences = {}
+    sentences_to_check = {}
+    for i in range(len(list_results)):
+        result = list_results[i]
+        words = result.text.lower().split()
+        if not len(words):
+            continue
+
+        # a fossil => fossil
+        if words[-1] in rules[lang]["context_check"]:
+            if sentences == {}:
+                for sentence in tokens.sents:
+                    sentences[sentence.end_char] = sentence.text
+
+            sentence = None
+            for end_char in sentences:
+                if result.end <= end_char:
+                    sentence = sentences[end_char]
+                    break
+
+            if sentence is None:
                 continue
 
-            if words[-1] in rules[lang]["context_check"]:
-                context_valid = await call_context_checker(sentences, result)
-                if not context_valid:
-                    list_results.remove(result)
+            if sentence in sentences_to_check:
+                sentences_to_check[sentence].append(i)
+            else:
+                sentences_to_check[sentence] = [i]
+
+    if sentences_to_check == {}:
+        return list_results
+
+    sentences = list(sentences_to_check.keys())
+
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": ("Bearer " + settings.context_checker_api_key),
+    }
+
+    payload = {
+        "data": sentences,
+    }
+
+    context_results = await fetch_json_post(
+        settings.context_checker_url, json.dumps(payload), headers, "context checker"
+    )
+
+    keys_to_remove = []
+    for i in range(len(sentences)):
+        sentence = sentences[i]
+        if context_results[i] == "1":
+            continue
+
+        for result_key in sentences_to_check[sentence]:
+            if result_key in keys_to_remove:
+                continue
+
+            keys_to_remove.append(result_key)
+
+    # ensure we remove from the end so that the list indexes remain the same
+    keys_to_remove.sort(reverse=True)
+    for key_to_remove in keys_to_remove:
+        list_results.pop(key_to_remove)
 
     return list_results
 
@@ -2116,7 +2137,7 @@ async def english_rules(
     words_data_en = defaultdict(list)
     gendered_words_data_en = defaultdict(list)
     sentences_data_en = defaultdict(list)
-    matches_false = fetch_false_positive_matcher(lang.lang, tokens)
+    false_positive_matcher = fetch_false_positive_matcher(lang.lang, tokens)
 
     words_data_en["od"] = rules[lang.locale]["open_disc_words_data"]
     words_data_en["ge"] = rules[lang.locale]["gender_words_data"]
@@ -2145,7 +2166,7 @@ async def english_rules(
         text,
         tokens,
         offsets,
-        matches_false,
+        false_positive_matcher,
         words_data_en["homonym"],
     )
 
@@ -2172,7 +2193,7 @@ async def english_rules(
         words_data_en["od"],
         sentences_data_en["od"],
         rules[lang.locale]["df_open_dis_sentence"],
-        matches_false,
+        false_positive_matcher,
     )
 
     list_full += rules_based_words_phrase_matcher(
@@ -2185,7 +2206,7 @@ async def english_rules(
         words_data_en["ge"],
         sentences_data_en["ge"],
         rules[lang.locale]["df_gendered_sentence"],
-        matches_false,
+        false_positive_matcher,
     )
 
     if is_sub_category_enabled(config, "advanced_binary_pronouns"):
@@ -2197,9 +2218,9 @@ async def english_rules(
             tokens,
             offsets,
             words_data_en["ge-singular-they"],
-            sentences_data_en["ge"],
-            rules[lang.locale]["df_gendered_sentence"],
-            matches_false,
+            [],
+            [],
+            false_positive_matcher,
             None,
             True,
         )
@@ -2212,7 +2233,7 @@ async def english_rules(
         tokens,
         offsets,
         gendered_words_data_en["gendered"],
-        matches_false,
+        false_positive_matcher,
     )
 
     if is_sub_category_enabled(config, "advanced_binary_pronouns"):
@@ -2249,7 +2270,7 @@ async def english_rules(
         inclusive_words_data_en,
         inclusive_sentences_data_en,
         rules[lang.locale]["df_inclusive_sentence"],
-        matches_false,
+        false_positive_matcher,
     )
 
     list_full += rules_based_words_phrase_matcher(
@@ -2262,7 +2283,7 @@ async def english_rules(
         words_data_en["style"],
         sentences_data_en["style"],
         rules[lang.locale]["df_style_sentence"],
-        matches_false,
+        false_positive_matcher,
     )
 
     list_full += word_noun(
@@ -2273,7 +2294,7 @@ async def english_rules(
         tokens,
         offsets,
         gendered_words_data_en["style"],
-        matches_false,
+        false_positive_matcher,
     )
 
     list_full += detect_lower_cased_hashtags(
@@ -2294,7 +2315,7 @@ async def english_rules(
         words_data_en["bias"],
         sentences_data_en["bias"],
         rules[lang.locale]["df_ub_sentence"],
-        matches_false,
+        false_positive_matcher,
     )
 
     list_full += word_noun(
@@ -2305,7 +2326,7 @@ async def english_rules(
         tokens,
         offsets,
         gendered_words_data_en["bias"],
-        matches_false,
+        false_positive_matcher,
     )
 
     list_full += apply_term_replacements(
@@ -2350,7 +2371,7 @@ def is_word_match(
     tokens,
     word,
     word_types,
-    matches_false=None,
+    false_positive_matcher=None,
     lower_case=True,
     postfix=False,
 ):
@@ -2372,7 +2393,7 @@ def is_word_match(
     if not check_word_types(lang, token, word_types, True):
         return False
 
-    match = is_false_positive_match(matches_false, tokens, token) == False
+    match = is_false_positive_match(false_positive_matcher, tokens, token) == False
     if match and postfix:
         return "postfix"
 
@@ -2856,7 +2877,7 @@ def alternative_declension(lang, text, token, word_types, alternative):
     if (
         not parsed_alternative
         or remove
-        or ResultOut.isInspirationAlternative(text, parsed_alternative)
+        or ResultOut.isInspirationAlternative(parsed_alternative)
     ):
         return alternative
 
@@ -3057,7 +3078,8 @@ def fetch_article_for_flexion(flexion, word, article_text):
 
 
 def fetch_alternatives_with_article(tokens, i, alternatives):
-    text = tokens[i].text
+    token = tokens[i]
+    text = token.text
     word = german_noun_analysis(text)
     if word is None:
         return None
@@ -3069,7 +3091,7 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
         match_feminine,
         match_neuter,
         match_alternative,
-    ) = fetch_article_for_flexion(fetch_flexion(tokens[i]), word, article_text)
+    ) = fetch_article_for_flexion(fetch_flexion(token), word, article_text)
     if match_alternative is None:
         return None
 
@@ -3456,9 +3478,10 @@ def gendered_denom_analysis_de(
             if not is_sub_category_enabled(config, subcategory):
                 continue
 
+            token = tokens[i]
             match = is_word_match(
                 lang.lang,
-                tokens[i],
+                token,
                 tokens,
                 word,
                 word_types,
@@ -3477,21 +3500,21 @@ def gendered_denom_analysis_de(
                     or "flexion" not in result
                     or "nominativ plural" not in result["flexion"]
                     or "nominativ singular" not in result["flexion"]
-                    or not tokens[i].text.endswith(
+                    or not token.text.endswith(
                         result["flexion"]["nominativ plural"].lower()
                     )
                 ):
                     continue
 
                 match = "postfix"
-                lemma = tokens[i].lemma_.replace(
+                lemma = token.lemma_.replace(
                     result["flexion"]["nominativ plural"].lower(),
                     result["flexion"]["nominativ singular"].lower(),
                 )
                 is_singular = False
             else:
-                lemma = tokens[i].lemma_
-                is_singular = is_token_singular(lang, tokens[i])
+                lemma = token.lemma_
+                is_singular = is_token_singular(lang.lang, token)
                 if is_singular is None:
                     continue
 
@@ -3522,7 +3545,7 @@ def gendered_denom_analysis_de(
 
             if match == "postfix":
                 alternatives = alternatives.copy()
-                prefix = tokens[i].lemma_.removesuffix(word.lower())
+                prefix = token.lemma_.removesuffix(word.lower())
                 for k, alternative in enumerate(alternatives):
                     alternative = alternative.replace(word, text)
                     if alternative[0] == "~":
@@ -3550,8 +3573,8 @@ def gendered_denom_analysis_de(
                         new_alternatives.append(alternative)
                 alternatives = new_alternatives
 
-            flexion = fetch_flexion(tokens[i])
-            if flexion is not flexion and "nominativ" not in flexion:
+            flexion = fetch_flexion(token)
+            if flexion is not None and "nominativ" not in flexion:
                 new_alternatives = []
                 for alternative in alternatives:
                     if "~" in alternative:
@@ -3684,7 +3707,7 @@ def word_noun(
     tokens,
     offsets,
     words_data,
-    matches_false=None,
+    false_positive_matcher=None,
 ):
     list_tokens = []
 
@@ -3704,7 +3727,7 @@ def word_noun(
                 continue
 
             if not is_word_match(
-                lang.lang, token, tokens, word, word_types, matches_false
+                lang.lang, token, tokens, word, word_types, false_positive_matcher
             ):
                 continue
 
@@ -3827,7 +3850,7 @@ def rules_based_words_phrase_matcher(
     words_data,
     sentences_data=None,
     df_sentence=None,
-    matches_false=None,
+    false_positive_matcher=None,
     fallback_subcategory=None,
     they=False,
 ):
@@ -3857,7 +3880,7 @@ def rules_based_words_phrase_matcher(
                     tokens,
                     word,
                     word_types,
-                    matches_false,
+                    false_positive_matcher,
                 )
 
             if not match:
@@ -3870,7 +3893,7 @@ def rules_based_words_phrase_matcher(
                 ):
                     continue
 
-                token_lower = tokens[i].text.lower()
+                token_lower = token.text.lower()
                 count = token_lower.count(word.lower())
                 if count == 0:
                     continue
@@ -3960,7 +3983,7 @@ def homonyms_en(
     full_text,
     tokens,
     offsets,
-    matches_false,
+    false_positive_matcher,
     words_data,
 ):
     list_tokens = []
@@ -3974,7 +3997,7 @@ def homonyms_en(
                 continue
 
             if not is_word_match(
-                lang.lang, token, tokens, word, word_types, matches_false, False
+                lang.lang, token, tokens, word, word_types, false_positive_matcher, False
             ):
                 continue
 
