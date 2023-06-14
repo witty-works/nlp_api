@@ -134,10 +134,27 @@ def get_data_from_files(locale):
 
                     lemma = row["Lemma"].replace("'", '"')
                     if "Word_Type" in row:
+                        word_count = lemma.count(" ") + 1
+
                         word_type = row["Word_Type"]
                         if word_type is None:
                             print("Lemma '%s' is missing a word type." % (lemma))
+                            word_count = 0
                         else:
+                            word_type_list = word_type.split("|")
+                            words = lemma.replace("/", " ").replace(",", " ").split()
+
+                        if len(word_type_list) < word_count:
+                            print(
+                                "Lemma '%s' mismatch with word type '%s'."
+                                % (lemma, word_type)
+                            )
+                            word_count = 0
+
+                        for i in range(word_count):
+                            word_type = word_type_list[i]
+                            word = words[i]
+
                             word_type = word_type.replace("'", '"')
                             word_types, lower_case, lemmatize = parse_word_types(
                                 word_type
@@ -156,15 +173,14 @@ def get_data_from_files(locale):
                                 and category
                                 not in ["inclusive", "openly_discriminating"]
                             ):
-                                all_lemma.append(lemma)
+                                all_lemma.append(word)
 
                             if " " not in lemma and locale == "de":
                                 if "v" in word_types:
-                                    if lemma not in rules["de"]["verbs"]:
+                                    if word not in rules["de"]["verbs"]:
                                         print(
-                                            "Verb lemma '"
-                                            + lemma
-                                            + "' missing from /de/verbs.csv"
+                                            "Lemma '%s' contains verb lemma '%s' missing from /de/verbs.csv"
+                                            % (lemma, word)
                                         )
 
                                     for alternative in alternatives:
@@ -179,20 +195,18 @@ def get_data_from_files(locale):
                                             and alternative not in rules["de"]["verbs"]
                                         ):
                                             print(
-                                                "Verb alternative '"
-                                                + alternative
-                                                + "' missing from /de/verbs.csv"
+                                                "Alternative '%s' verb lemma missing from /de/verbs.csv"
+                                                % (alternative)
                                             )
 
                                 if "s" in word_types:
                                     if (
                                         category != "openly_discriminating"
-                                        and len(nouns[lemma]) == 0
+                                        and len(nouns[word]) == 0
                                     ):
                                         print(
-                                            "Noun lemma '"
-                                            + lemma
-                                            + "' missing from german_nouns"
+                                            "Lemma '%s' contains noun lemma '%s' missing from german_nouns"
+                                            % (lemma, word)
                                         )
 
                                     for alternative in alternatives:
@@ -207,9 +221,8 @@ def get_data_from_files(locale):
                                             and len(nouns[alternative])
                                         ):
                                             print(
-                                                "Noun alternative '"
-                                                + alternative
-                                                + "' missing from german_nouns"
+                                                "Alternative '%s' noun lemma missing from german_nouns"
+                                                % (alternative)
                                             )
 
                     if subcategory not in [
