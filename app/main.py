@@ -1335,22 +1335,6 @@ def languagetool_matches(
 
         text = full_text[start:end]
 
-        # Ignore capitalization after German salutation
-        if match["rule"]["category"]["id"] == "TYPOS":
-            subtext = (
-                full_text[0:start]
-                .lstrip()
-                .lower()
-                .replace("'", "")
-                .replace("'", "")
-                .split("\n")
-            )
-            if len(subtext) == 1 and any(
-                substring.lower() + " " in subtext[0]
-                for substring in rules[lang.lang]["salutations"]
-            ):
-                continue
-
         if (
             lang.lang == "de"
             and config.german_gender_ending == ":in"
@@ -1609,7 +1593,9 @@ def false_pattern_match(lang, tokens):
 
 def fetch_false_positive_matcher(lang, tokens):
     # create false positives list
-    phrase_false_positive_matcher = fetch_matches(lang, tokens, rules[lang]["list_false_column"])
+    phrase_false_positive_matcher = fetch_matches(
+        lang, tokens, rules[lang]["list_false_column"]
+    )
     word_false_positive_matcher = false_pattern_match(lang, tokens)
     return list(set(phrase_false_positive_matcher + word_false_positive_matcher))
 
@@ -1842,76 +1828,146 @@ def is_sub_category_enabled(config: Config, subcategory: str):
     return True
 
 
-async def context_false_positives(lang, tokens, list_results):
+def false_positive_checks(result: ResultOut):
+    words = result.text.lower().split()
+
+    checks = []
+    if not len(words):
+        return checks
+
+    # a fossil => fossil
+    if words[-1] in rules[lang]["context_check"]:
+        checks.append("predict")
+
     if (
-        len(rules[lang]["context_check"]) == 0
-        or not settings.context_checker_url
-        or not settings.context_checker_api_key
+        result.subcategory == "typos"
+        or result.subcategory == "titles"
+        or result.subcategory == "function"
     ):
+        checks.append("recognize")
+
+    return checks
+
+
+async def context_false_positives(lang, tokens, list_results):
+    if not settings.context_checker_url:
         return list_results
 
     sentences = {}
-    sentences_to_check = {}
+    sentences_to_check = {
+        "predict": {},
+        "recognize": {},
+    }
     for i in range(len(list_results)):
         result = list_results[i]
-        words = result.text.lower().split()
-        if not len(words):
-            continue
+        checks = false_positive_checks(result)
 
-        # a fossil => fossil
-        if words[-1] in rules[lang]["context_check"]:
+        if checks != []:
             if sentences == {}:
                 for sentence in tokens.sents:
-                    sentences[sentence.end_char] = sentence.text
+                    sentences[sentence.text] = {
+                        "start": sentence.start_char,
+                        "end": sentence.end_char,
+                    }
 
             sentence = None
-            for end_char in sentences:
-                if result.end <= end_char:
-                    sentence = sentences[end_char]
+            for key in sentences:
+                if result.end <= sentences[key]["end"]:
+                    sentence = key
                     break
 
             if sentence is None:
                 continue
 
-            if sentence in sentences_to_check:
-                sentences_to_check[sentence].append(i)
+        if "predict" in checks:
+            if sentence in sentences_to_check["predict"]:
+                sentences_to_check["predict"][sentence].append(i)
             else:
-                sentences_to_check[sentence] = [i]
+                sentences_to_check["predict"][sentence] = [i]
 
-    if sentences_to_check == {}:
+        if "recognize" in checks:
+            if sentence in sentences_to_check["recognize"]:
+                sentences_to_check["recognize"][sentence].append(i)
+            else:
+                sentences_to_check["recognize"][sentence] = [i]
+
+    if sentences_to_check["predict"] == {} and sentences_to_check["recognize"] == {}:
         return list_results
-
-    sentences = list(sentences_to_check.keys())
 
     headers = {
         "Content-Type": "application/json",
-        "Authorization": ("Bearer " + settings.context_checker_api_key),
     }
 
-    payload = {
-        "data": sentences,
-    }
-
-    context_results = await fetch_json_post(
-        settings.context_checker_url, json.dumps(payload), headers, "context checker"
-    )
+    if settings.context_checker_api_key:
+        headers["Authorization"] = "Bearer " + settings.context_checker_api_key
 
     keys_to_remove = []
-    for i in range(len(sentences)):
-        sentence = sentences[i]
-        if context_results[i] == "1":
-            continue
 
-        for result_key in sentences_to_check[sentence]:
-            if result_key in keys_to_remove:
+    if sentences_to_check["predict"] != {}:
+        predict_sentences = list(sentences_to_check["predict"].keys())
+
+        payload = {
+            "sentences": predict_sentences,
+            "lang": lang.lang,
+        }
+
+        context_results = await fetch_json_post(
+            settings.context_checker_url + "/predict",
+            json.dumps(payload),
+            headers,
+            "false positive predict",
+        )
+
+        for i in range(len(predict_sentences)):
+            sentence = predict_sentences[i]
+            if context_results[i]:
                 continue
 
-            keys_to_remove.append(result_key)
+            for result_key in sentences_to_check["predict"][sentence]:
+                if result_key in keys_to_remove:
+                    continue
 
-    # ensure we remove from the end so that the list indexes remain the same
-    keys_to_remove.sort(reverse=True)
-    for key_to_remove in keys_to_remove:
-        list_results.pop(key_to_remove)
+                keys_to_remove.append(result_key)
+
+    if sentences_to_check["recognize"] != {}:
+        recognize_sentences = list(sentences_to_check["recognize"].keys())
+
+        payload = {
+            "sentences": recognize_sentences,
+        }
+
+        context_results = await fetch_json_post(
+            settings.context_checker_url + "/recognize",
+            json.dumps(payload),
+            headers,
+            "false positive recognize",
+        )
+
+        keys_to_remove = []
+        for i in range(len(recognize_sentences)):
+            sentence = recognize_sentences[i]
+            if context_results[i] == []:
+                continue
+
+            for result_key in sentences_to_check["recognize"][sentence]:
+                if result_key in keys_to_remove:
+                    continue
+
+                result = list_results[result_key]
+                start = str(result.start - sentences[sentence]["start"])
+                if (
+                    start not in context_results[i]
+                    or context_results[i][start] not in rules["named_entity_labels"]
+                ):
+                    continue
+
+                keys_to_remove.append(result_key)
+
+    if keys_to_remove != []:
+        # ensure we remove from the end so that the list indexes remain the same
+        keys_to_remove.sort(reverse=True)
+        for key_to_remove in keys_to_remove:
+            list_results.pop(key_to_remove)
 
     return list_results
 
@@ -3997,7 +4053,13 @@ def homonyms_en(
                 continue
 
             if not is_word_match(
-                lang.lang, token, tokens, word, word_types, false_positive_matcher, False
+                lang.lang,
+                token,
+                tokens,
+                word,
+                word_types,
+                false_positive_matcher,
+                False,
             ):
                 continue
 
