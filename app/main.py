@@ -12,6 +12,8 @@ from typing import Optional, Union, List
 from collections import defaultdict
 from pydantic import parse_obj_as
 
+from setfit import SetFitModel
+
 import os
 import fasttext
 
@@ -108,6 +110,13 @@ redis = set_up_redis(settings)
 initialize_aadb2c(settings)
 
 logging.debug("app started with settings: %s", settings)
+setfit_models = {}
+if settings.predict:
+    for lang in settings.langs:
+        pretrained_lang_model = os.getcwd() + "/files/" + lang + "/context"
+        setfit_models[lang] = SetFitModel.from_pretrained(pretrained_lang_model)
+        setfit_models[lang].eval()
+        setfit_models[lang].share_memory()
 
 if len(settings.models) > 0:
     model = {}
@@ -3144,6 +3153,11 @@ async def check_context_valid(token, lang):
         return True
 
     sentence = token.sent.text
+
+    if lang in setfit_models:
+        context = setfit_models[lang]([sentence])
+
+        return context.item() == 1
 
     if not settings.context_checker_url:
         return True
