@@ -5,10 +5,19 @@
         {
             "alternatives": [
                 {
+                    "text": "Mitarbeitende"
+                },
+                {
                     "text": "Mitarbeiter*innen"
                 },
                 {
                     "text": "Mitarbeiterinnen und Mitarbeiter"
+                },
+                {
+                    "text": "Personal"
+                },
+                {
+                    "text": "Mitarbeiterschaft"
                 }
             ],
             "category": "gender-orientation",
