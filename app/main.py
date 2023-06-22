@@ -83,6 +83,7 @@ from app.models import (
 )
 from app.lang_detection import get_lang_detection
 from app.categories import (
+    get_category_keys,
     get_categories,
     get_category,
     is_category_inclusive,
@@ -98,7 +99,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.43.14"
+version = "1.43.15"
 
 categories = get_categories()
 settings = get_settings()
@@ -1054,6 +1055,10 @@ async def fetch_configs_for_request(
     )
 
     if not user_email:
+        user_request_in.config.__setattr__(
+            "disabled_categories", get_category_keys(True)
+        )
+
         return {}
 
     try:
@@ -1609,7 +1614,9 @@ def false_pattern_match(lang, tokens):
 
 def fetch_false_positive_matcher(lang, tokens):
     # create false positives list
-    phrase_false_positive_matcher = fetch_matches(lang, tokens, rules[lang]["list_false_column"])
+    phrase_false_positive_matcher = fetch_matches(
+        lang, tokens, rules[lang]["list_false_column"]
+    )
     word_false_positive_matcher = false_pattern_match(lang, tokens)
     return list(set(phrase_false_positive_matcher + word_false_positive_matcher))
 
@@ -3997,7 +4004,13 @@ def homonyms_en(
                 continue
 
             if not is_word_match(
-                lang.lang, token, tokens, word, word_types, false_positive_matcher, False
+                lang.lang,
+                token,
+                tokens,
+                word,
+                word_types,
+                false_positive_matcher,
+                False,
             ):
                 continue
 

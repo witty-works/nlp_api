@@ -16,7 +16,7 @@ def get_categories():
 
 
 @lru_cache()
-def get_category_keys():
+def get_category_keys(only_category_advanced_keys=False):
     categories = get_categories()
 
     category_keys = list(categories.keys())
@@ -33,6 +33,9 @@ def get_category_keys():
         ):
             category_advanced_keys.append("advanced_" + category)
             category_advanced_keys.append("advanced_" + category + "_base")
+
+    if only_category_advanced_keys:
+        return category_advanced_keys
 
     return category_keys + category_advanced_keys
 
