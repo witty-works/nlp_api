@@ -2434,6 +2434,9 @@ def fetch_word_types(lang, token, word_types=[], single_word=None):
 
         return ["v"]
 
+    if token.lemma_ in rules["de"]["verbs"]:
+        return ["v"]
+
     if token.pos_ == "NOUN" or token.pos_ == "PRON":
         return ["s"]
 

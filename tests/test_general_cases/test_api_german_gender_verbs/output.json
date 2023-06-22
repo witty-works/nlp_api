@@ -1,0 +1,58 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "Abschachern"
+                }
+            ],
+            "category": "orthography",
+            "context": "Wir sind am abschachern.",
+            "end": 23,
+            "explanation": {
+                "icon": "❌",
+                "text": "„Abschachern“ scheint hier ein Nomen zu sein (am = an dem) und muss dann großgeschrieben werden."
+            },
+            "gravity": 1.0,
+            "label": "Groß-/Kleinschreibung",
+            "start": 12,
+            "subcategory": "casing",
+            "text": "abschachern"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "abgewinnen"
+                },
+                {
+                    "text": "abkaufen"
+                },
+                {
+                    "text": "ablocken"
+                },
+                {
+                    "text": "abluchsen"
+                },
+                {
+                    "text": "mit zweifelhaften Methoden abhandeln"
+                }
+            ],
+            "category": "religion",
+            "context": "Wir sind am abschachern.",
+            "end": 23,
+            "explanation": {
+                "icon": "🚫",
+                "text": "Fällt unter antisemitische Verunglimpfungen",
+                "url": "https://www.witty.works/de/kategorien/glauben/antisemitismus?reducedView=true"
+            },
+            "gravity": 1.0,
+            "label": "Glauben: Antisemitismus",
+            "proficiency_level": "openly_discriminating",
+            "start": 12,
+            "subcategory": "antisemitism",
+            "text": "abschachern"
+        }
+    ]
+}
