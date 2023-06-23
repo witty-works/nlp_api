@@ -18,38 +18,6 @@
             "start": 13,
             "subcategory": "communal",
             "text": "motiviert"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "engagiert"
-                },
-                {
-                    "text": "begeisterungsfähig"
-                },
-                {
-                    "text": "zur Eigeninitiative"
-                },
-                {
-                    "text": "bereit, sich zu engagieren"
-                }
-            ],
-            "category": "cultural-diversity",
-            "context": "Bist du hoch motiviert?",
-            "end": 22,
-            "explanation": {
-                "content": "advanced",
-                "context": "nicht auf Menschen beziehen",
-                "icon": "🙄",
-                "text": "Schwächen die Wirkung deiner Botschaft",
-                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/worthülsen?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Kulturelle Diversität: Worthülsen",
-            "proficiency_level": "unconscious_bias",
-            "start": 8,
-            "subcategory": "advanced_hollow",
-            "text": "hoch motiviert"
         }
     ]
 }
