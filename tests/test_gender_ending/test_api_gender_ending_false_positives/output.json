@@ -5,11 +5,129 @@
         {
             "alternatives": [
                 {
+                    "text": "Arbeiter*innen"
+                },
+                {
+                    "text": "Arbeiterinnen und Arbeiter"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Das ist der Link <URL> beachte podcasts/in bzw. Podcasts/in. Er ist Arbeiter, Mitarbeiter und Lagerarbeiter. Sie ist Sacharbeiterin/Mitarbeiter",
+            "end": 105,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Viele denken zuerst an bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Berufe",
+            "proficiency_level": "unconscious_bias",
+            "start": 97,
+            "subcategory": "advanced_titles",
+            "text": "Arbeiter"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Mitarbeitende"
+                },
+                {
+                    "text": "Mitarbeiter*innen"
+                },
+                {
+                    "text": "Mitarbeiterinnen und Mitarbeiter"
+                },
+                {
+                    "text": "Personal"
+                },
+                {
+                    "text": "Mitarbeiterschaft"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "der Link <URL> beachte podcasts/in bzw. Podcasts/in. Er ist Arbeiter, Mitarbeiter und Lagerarbeiter. Sie ist Sacharbeiterin/Mitarbeiter",
+            "end": 118,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Viele denken zuerst an bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufe",
+            "proficiency_level": "unconscious_bias",
+            "start": 107,
+            "subcategory": "titles",
+            "text": "Mitarbeiter"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Lagerarbeiter*innen"
+                },
+                {
+                    "text": "Lagerarbeiterinnen und Lagerarbeiter"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "<URL> beachte podcasts/in bzw. Podcasts/in. Er ist Arbeiter, Mitarbeiter und Lagerarbeiter. Sie ist Sacharbeiterin/Mitarbeiter",
+            "end": 136,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Viele denken zuerst an bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufe",
+            "proficiency_level": "unconscious_bias",
+            "start": 123,
+            "subcategory": "titles",
+            "text": "Lagerarbeiter"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Mitarbeit"
+                },
+                {
+                    "text": "Mitarbeiter*in"
+                },
+                {
+                    "text": "Mitarbeiterin/Mitarbeiter"
+                },
+                {
+                    "text": "Personal"
+                },
+                {
+                    "text": "Mitarbeiterschaft"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "odcasts/in bzw. Podcasts/in. Er ist Arbeiter, Mitarbeiter und Lagerarbeiter. Sie ist Sacharbeiterin/Mitarbeiter",
+            "end": 172,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Viele denken zuerst an bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufe",
+            "proficiency_level": "unconscious_bias",
+            "start": 161,
+            "subcategory": "titles",
+            "text": "Mitarbeiter"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "Podcasts*in"
                 }
             ],
             "category": "gender-orientation",
-            "context": "Das ist der Link <URL> beachte podcasts/in bzw. Podcasts/in",
+            "context": "Das ist der Link <URL> beachte podcasts/in bzw. Podcasts/in. Er ist Arbeiter, Mitarbeiter und Lagerarbeiter. Sie ist Sacharbeiterin/Mitarbeiter",
             "end": 88,
             "explanation": {
                 "icon": "💯",

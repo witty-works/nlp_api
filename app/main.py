@@ -3060,6 +3060,7 @@ def match_binary_inclusive_gendered_denom_analysis_de(
     tokens,
     i,
     subcategory,
+    postfix,
 ):
     tokens_length = len(tokens)
     token = tokens[i]
@@ -3078,25 +3079,60 @@ def match_binary_inclusive_gendered_denom_analysis_de(
 
         false_positive_words = false_positive.lower().split(split_char)
 
-        if (
-            tokens_length > i + 3
-            and tokens[i + 1].text == split_char.strip()
-            and tokens[i + 2].text.lower().endswith(false_positive_words[1])
+        # [token]/foo - [token] und foo
+        check_before = (
+            tokens_length > i + 2 and tokens[i + 1].text == split_char.strip()
+        )
+
+        # foo/[token] - foo und [token] - foo und [token]n
+        check_after = i >= 2 and tokens[i - 1].text == split_char.strip()
+
+        if not check_before and not check_after:
+            continue
+
+        if postfix:
+            if (
+                check_before
+                and tokens[i].text.lower().endswith(false_positive_words[0])
+                and tokens[i + 2].text.lower().endswith(false_positive_words[1])
+            ):
+                if "frau" in text.lower():
+                    return None, None, None
+
+                new_i = i
+                prefix = text[0 : -len(false_positive_words[0])]
+            elif (
+                check_after
+                and tokens[i - 2].text.lower().endswith(false_positive_words[0])
+                and (
+                    tokens[i].text.lower().endswith(false_positive_words[1])
+                    or tokens[i].text.lower().endswith(false_positive_words[1] + "n")
+                )
+            ):
+                new_i = i - 2
+                false_positive_length = len(false_positive_words[1])
+                if tokens[i].text.lower().endswith(false_positive_words[1] + "n"):
+                    false_positive_length += 1
+
+                prefix = text[0:-(false_positive_length)]
+            else:
+                continue
+
+            if not tokens[new_i].text.startswith(prefix):
+                continue
+        elif (
+            check_before
+            and tokens[i].text.lower() == false_positive_words[0]
+            and tokens[i + 2].text.lower() == false_positive_words[1]
         ):
             if "frau" in text.lower():
                 return None, None, None
 
-            # [token]/foo - [token] und foo
             new_i = i
-        elif (
-            i >= 2
-            and tokens[i - 1].text == split_char.strip()
-            and (
-                tokens[i - 2].text.lower().endswith(false_positive_words[0])
-                or tokens[i - 2].text.lower().endswith(false_positive_words[0] + "n")
-            )
+        elif check_after and (
+            tokens[i - 2].text.lower() == false_positive_words[0]
+            or tokens[i - 2].text.lower() == false_positive_words[0] + "n"
         ):
-            # foo/[token] - foo und [token] - foo und [token]n
             new_i = i - 2
         else:
             continue
@@ -3111,7 +3147,7 @@ def match_binary_inclusive_gendered_denom_analysis_de(
             "function" if "mann" in text.lower() else "gendered_denominations_ending"
         )
 
-        return text, start, subcategory
+        break
 
     return text, start, subcategory
 
@@ -3609,6 +3645,7 @@ def gendered_denom_analysis_de(
                 tokens,
                 i,
                 subcategory,
+                postfix,
             )
 
             if text is None:
