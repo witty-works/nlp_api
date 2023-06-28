@@ -390,7 +390,7 @@ dynamisch,a,style,advanced_hollow,"['--- nicht auf Menschen beziehen', 'lebendig
 flexibel,a,style,advanced_hollow,"['--- nicht auf Menschen beziehen', 'anpassungsfähig', 'strategisch wendig', 'pragmatisch', 'offen', 'beweglich', 'agil', 'variabel', 'mobil', 'durch die Nutzenden definiert']"
 Flexibilität,s,style,advanced_hollow,"['Anpassungsfähigkeit', 'Aufgeschlossenheit gegenüber Wandel', 'Bereitschaft für Veränderung', 'Mobilität', 'Fähigkeit, sich schnell auf Neues umzustellen']"
 global,a,style,advanced_hollow,"['in vielen Ländern vertreten', 'auf allen Kontinenten vertreten', 'in ((Länder)) tätig', 'in vielen Ländern ((Kontinente)) tätig(...)', 'mit ((Zahl)) Niederlassungen auf ((Zahl)) Kontinenten(...)']"
-hoch-motiviert,a,style,advanced_hollow,"['--- nicht auf Menschen beziehen', 'engagiert', 'begeisterungsfähig', 'zur Eigeninitiative', 'bereit, sich zu engagieren']"
+hoch motiviert,a|v,style,advanced_hollow,"['--- nicht auf Menschen beziehen', 'engagiert', 'begeisterungsfähig', 'zur Eigeninitiative', 'bereit, sich zu engagieren']"
 hochwertig,a,style,advanced_hollow,"['von guter Qualität', 'dauerhaft', 'stabil', 'belastbar', 'wertbeständig']"
 Innovation,s,style,advanced_hollow,"['Neugestaltung', 'Erfindung', 'technischer Fortschritt', 'Neuerung', 'Neuschöpfung', 'Neuentwicklung']"
 Innovationskraft,s,style,advanced_hollow,"['Erfindungsreichtum', 'Kreativität', 'Fähigkeit, Ideen in Lösungen umzusetzen', 'Umsetzungskraft']"
