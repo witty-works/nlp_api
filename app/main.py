@@ -99,7 +99,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.43.15"
+version = "1.44.0"
 
 categories = get_categories()
 settings = get_settings()
@@ -267,10 +267,20 @@ app = FastAPI(
 security = HTTPBasic(auto_error=False)
 
 csp = secure.ContentSecurityPolicy().set("default-scr 'self' cdn.jsdelivr.net")
+hsts = secure.StrictTransportSecurity().include_subdomains().preload().max_age(31536000)
+referrer = secure.ReferrerPolicy().no_referrer()
+cache_value = secure.CacheControl().no_cache()
 xfo = secure.XFrameOptions().deny()
 xxp = secure.XXSSProtection().set("1; mode=block")
 
-secure_headers = secure.Secure(csp=csp, xfo=xfo, xxp=xxp)
+secure_headers = secure.Secure(
+    csp=csp,
+    hsts=hsts,
+    referrer=referrer,
+    cache=cache_value,
+    xfo=xfo,
+    xxp=xxp,
+)
 
 
 @app.middleware("http")
@@ -2346,7 +2356,7 @@ async def english_rules(
 def parse_word_types(word_types, lower_case=True):
     lemmatize = True
 
-    if word_types is None:
+    if word_types is None or word_types == "":
         return [], lower_case, lemmatize
 
     if word_types[0] == "~":
@@ -2378,9 +2388,9 @@ def is_word_match(
     tokens,
     word,
     word_types,
-    false_positive_matcher=None,
-    lower_case=True,
-    postfix=False,
+    false_positive_matcher,
+    lower_case,
+    postfix,
 ):
     word_types, lower_case, lemmatize = parse_word_types(word_types, lower_case)
 
@@ -2392,19 +2402,59 @@ def is_word_match(
     if lower_case and (lang == "en" or "s" not in word_types):
         token_word = token_word.lower()
 
-    if token_word == word:
-        postfix = False
-    elif not postfix or not token_word.endswith(word.lower()):
+    if token_word != word and (not postfix or not token_word.endswith(word.lower())):
         return False
 
     if not check_word_types(lang, token, word_types, True):
         return False
 
-    match = is_false_positive_match(false_positive_matcher, tokens, token) == False
-    if match and postfix:
-        return "postfix"
+    return is_false_positive_match(false_positive_matcher, tokens, token) == False
 
-    return match
+
+def is_phrase_match(
+    lang,
+    i,
+    tokens,
+    word,
+    word_types,
+    matches_false=None,
+    lower_case=True,
+    postfix=False,
+):
+    text = ""
+    words = word.split()
+    word_types = word_types.split("|")
+    words_count = len(words)
+
+    if words_count == 1:
+        word_types = [word_types[-1]]
+    else:
+        postfix = False
+
+    word_token = None
+    for k in range(words_count):
+        if word_token:
+            text += word_token.whitespace_
+
+        try:
+            word_token = tokens[i + k]
+            if not is_word_match(
+                lang,
+                word_token,
+                tokens,
+                words[k],
+                word_types[k],
+                matches_false,
+                lower_case,
+                postfix,
+            ):
+                return False
+        except IndexError:
+            return False
+
+        text += word_token.text
+
+    return text
 
 
 """Function to catch the words related to False Positive in the user query"""
@@ -2432,6 +2482,9 @@ def fetch_word_types(lang, token, word_types=[], single_word=None):
         if lang == "de" and "a" in word_types:
             return ["a"]
 
+        return ["v"]
+
+    if token.lemma_ in rules["de"]["verbs"]:
         return ["v"]
 
     if token.pos_ == "NOUN" or token.pos_ == "PRON":
@@ -2869,7 +2922,7 @@ def align_verb_form(lang, a_text, a_token, b_token):
     return b_text
 
 
-def alternative_declension(lang, text, token, word_types, alternative):
+def alternative_declension(lang, text, token, word_types, prepend_word, alternative):
     (
         parsed_alternative,
         alternative_context,
@@ -2891,88 +2944,96 @@ def alternative_declension(lang, text, token, word_types, alternative):
     if parsed_alternative.count(" ") > 5:
         return alternative
 
-    new_alternative = ""
-    previous = False
-    is_plural_alternative = False
-    first_alternative_word_types = False
     alternative_tokens = fetch_tokens(lang, parsed_alternative)
-    for i in reversed(range(len(alternative_tokens))):
-        alternative_token = alternative_tokens[i]
-        alternative_text = alternative_token.text
-        if alternative_text != "," and token_is_conjunction(alternative_token):
-            previous = False
-        else:
-            if len(alternative_tokens) == 1:
-                # in this case we just assume it is the same to avoid issues with word type detection
-                alternative_word_types = word_types
+    word_count = text.count(" ")
+    if prepend_word:
+        word_count -= 1
+
+    is_plural_alternative = False
+    if word_count:
+        # TODO figure out how to modify phrases
+        new_alternative = alternative
+        is_plural_alternative = is_token_plural(lang, alternative_tokens[-1])
+    else:
+        new_alternative = ""
+        previous = False
+        for i in reversed(range(len(alternative_tokens))):
+            alternative_token = alternative_tokens[i]
+            alternative_text = alternative_token.text
+            if alternative_text != "," and token_is_conjunction(alternative_token):
+                previous = False
             else:
-                alternative_word_types = fetch_word_types(
-                    lang, alternative_token, word_types, False
-                )
-
-            if first_alternative_word_types == False:
-                first_alternative_word_types = alternative_word_types
-
-            if previous == False:
-                if "v" in word_types and lang == "en" and i == 0:
-                    previous = True
-                    alternative_text = align_verb_form(
-                        lang, text, token, alternative_token
+                if len(alternative_tokens) == 1:
+                    # in this case we just assume it is the same to avoid issues with word type detection
+                    alternative_word_types = word_types
+                else:
+                    alternative_word_types = fetch_word_types(
+                        lang, alternative_token, word_types, False
                     )
-                elif "s" in word_types and "s" in alternative_word_types:
-                    if is_token_plural(lang, alternative_token):
-                        is_plural_alternative = True
 
-                    previous = True
-                    alternative_text = align_noun_form(
-                        lang, text, token, alternative_token
-                    )
-                elif word_types_overlap(word_types, alternative_word_types):
-                    if "a" in alternative_word_types:
-                        previous = True
-                        alternative_text = align_adjective_form(
-                            lang, text, token, alternative_token
-                        )
-                    elif "v" in alternative_word_types:
+                if previous == False:
+                    if "v" in word_types and lang == "en" and i == 0:
                         previous = True
                         alternative_text = align_verb_form(
                             lang, text, token, alternative_token
                         )
+                    elif "s" in word_types and "s" in alternative_word_types:
+                        if is_token_plural(lang, alternative_token):
+                            is_plural_alternative = True
 
-        new_alternative = (
-            alternative_text + alternative_token.whitespace_ + new_alternative
-        )
+                        previous = True
+                        alternative_text = align_noun_form(
+                            lang, text, token, alternative_token
+                        )
+                    elif word_types_overlap(word_types, alternative_word_types):
+                        if "a" in alternative_word_types:
+                            previous = True
+                            alternative_text = align_adjective_form(
+                                lang, text, token, alternative_token
+                            )
+                        elif "v" in alternative_word_types:
+                            previous = True
+                            alternative_text = align_verb_form(
+                                lang, text, token, alternative_token
+                            )
 
-    if lang == "en" and first_alternative_word_types:
-        if (
-            is_plural_alternative == False
-            and (text.lower().startswith("a ") or text.lower().startswith("an "))
-            and not new_alternative.startswith(rules["en"]["a_not_startswith"])
-            and not new_alternative.endswith(rules["en"]["uncountables"])
-        ):
-            if new_alternative[0].lower() in ["a", "e", "i", "o", "u"]:
-                new_alternative = "an " + new_alternative
-            else:
-                new_alternative = "a " + new_alternative
+            new_alternative = (
+                alternative_text + alternative_token.whitespace_ + new_alternative
+            )
+
+    if (
+        lang == "en"
+        and prepend_word
+        and is_plural_alternative == False
+        and not new_alternative.startswith(rules["en"]["a_not_startswith"])
+        and not new_alternative.endswith(rules["en"]["uncountables"])
+    ):
+        if new_alternative[0].lower() in ["a", "e", "i", "o", "u"]:
+            new_alternative = "an " + new_alternative
+        else:
+            new_alternative = "a " + new_alternative
 
     return new_alternative + alternative_context
 
 
-def alternatives_declension(lang, token, alternatives, prev_token):
-    text = token.text
+def alternatives_declension(lang, text, token, alternatives, prev_token):
     start = token.idx
 
     word_types = fetch_word_types(lang, token)
+    prepend_word = False
+
     if lang == "de":
         if "v" in word_types and prev_token and prev_token.text == "zu":
             text = "zu " + text
             start = prev_token.idx
+            prepend_word = True
     elif lang == "en" and (
         prev_token
         and (prev_token.text.lower() == "a" or prev_token.text.lower() == "an")
     ):
         text = prev_token.text + " " + text
         start = prev_token.idx
+        prepend_word = True
 
     if word_types == [] or (
         text.lower() == token.lemma_.lower() and token.lemma_ != "beste"
@@ -2983,7 +3044,9 @@ def alternatives_declension(lang, token, alternatives, prev_token):
         text,
         start,
         [
-            alternative_declension(lang, text, token, word_types, alternative).strip()
+            alternative_declension(
+                lang, text, token, word_types, prepend_word, alternative
+            ).strip()
             for alternative in alternatives
         ],
     )
@@ -3000,17 +3063,21 @@ def plural_alternatives(
 
 
 def match_binary_inclusive_gendered_denom_analysis_de(
-    version: float, config: Config, false_positives, full_text, tokens, i, subcategory
+    config: Config,
+    false_positives,
+    full_text,
+    text,
+    tokens,
+    i,
+    subcategory,
+    postfix,
 ):
     tokens_length = len(tokens)
     token = tokens[i]
-    text = token.text
     start = token.idx
 
     if tokens_length <= 2:
         return text, start, subcategory
-
-    is_binary = ResultOut.genderedRolesFormatBinary(config.gendered_roles_format)
 
     for false_positive in false_positives:
         if "/" in false_positive:
@@ -3022,25 +3089,60 @@ def match_binary_inclusive_gendered_denom_analysis_de(
 
         false_positive_words = false_positive.lower().split(split_char)
 
-        if (
-            tokens_length > i + 3
-            and tokens[i + 1].text == split_char.strip()
-            and tokens[i + 2].text.lower().endswith(false_positive_words[1])
+        # [token]/foo - [token] und foo
+        check_before = (
+            tokens_length > i + 2 and tokens[i + 1].text == split_char.strip()
+        )
+
+        # foo/[token] - foo und [token] - foo und [token]n
+        check_after = i >= 2 and tokens[i - 1].text == split_char.strip()
+
+        if not check_before and not check_after:
+            continue
+
+        if postfix:
+            if (
+                check_before
+                and tokens[i].text.lower().endswith(false_positive_words[0])
+                and tokens[i + 2].text.lower().endswith(false_positive_words[1])
+            ):
+                if "frau" in text.lower():
+                    return None, None, None
+
+                new_i = i
+                prefix = text[0 : -len(false_positive_words[0])]
+            elif (
+                check_after
+                and tokens[i - 2].text.lower().endswith(false_positive_words[0])
+                and (
+                    tokens[i].text.lower().endswith(false_positive_words[1])
+                    or tokens[i].text.lower().endswith(false_positive_words[1] + "n")
+                )
+            ):
+                new_i = i - 2
+                false_positive_length = len(false_positive_words[1])
+                if tokens[i].text.lower().endswith(false_positive_words[1] + "n"):
+                    false_positive_length += 1
+
+                prefix = text[0:-(false_positive_length)]
+            else:
+                continue
+
+            if not tokens[new_i].text.startswith(prefix):
+                continue
+        elif (
+            check_before
+            and tokens[i].text.lower() == false_positive_words[0]
+            and tokens[i + 2].text.lower() == false_positive_words[1]
         ):
             if "frau" in text.lower():
                 return None, None, None
 
-            # [token]/foo - [token] und foo
             new_i = i
-        elif (
-            i >= 2
-            and tokens[i - 1].text == split_char.strip()
-            and (
-                tokens[i - 2].text.lower().endswith(false_positive_words[0])
-                or tokens[i - 2].text.lower().endswith(false_positive_words[0] + "n")
-            )
+        elif check_after and (
+            tokens[i - 2].text.lower() == false_positive_words[0]
+            or tokens[i - 2].text.lower() == false_positive_words[0] + "n"
         ):
-            # foo/[token] - foo und [token] - foo und [token]n
             new_i = i - 2
         else:
             continue
@@ -3055,7 +3157,7 @@ def match_binary_inclusive_gendered_denom_analysis_de(
             "function" if "mann" in text.lower() else "gendered_denominations_ending"
         )
 
-        return text, start, subcategory
+        break
 
     return text, start, subcategory
 
@@ -3424,11 +3526,19 @@ def ub_words_phrase_matcher_de(
             if not is_sub_category_enabled(config, subcategory):
                 continue
 
-            if not is_word_match(lang.lang, token, tokens, word, word_types):
+            text = is_phrase_match(
+                lang.lang,
+                i,
+                tokens,
+                word,
+                word_types,
+            )
+
+            if not text:
                 continue
 
             text, start, alternatives = alternatives_declension(
-                lang.lang, token, alternatives, prev_token
+                lang.lang, text, token, alternatives, prev_token
             )
 
             list_tokens.append(
@@ -3486,9 +3596,9 @@ def gendered_denom_analysis_de(
                 continue
 
             token = tokens[i]
-            match = is_word_match(
+            text = is_phrase_match(
                 lang.lang,
-                token,
+                i,
                 tokens,
                 word,
                 word_types,
@@ -3497,7 +3607,7 @@ def gendered_denom_analysis_de(
                 postfix,
             )
 
-            if not match:
+            if not text:
                 if not postfix:
                     continue
 
@@ -3513,11 +3623,11 @@ def gendered_denom_analysis_de(
                 ):
                     continue
 
-                match = "postfix"
                 lemma = token.lemma_.replace(
                     result["flexion"]["nominativ plural"].lower(),
                     result["flexion"]["nominativ singular"].lower(),
                 )
+                text = token.text
                 is_singular = False
             else:
                 lemma = token.lemma_
@@ -3538,23 +3648,24 @@ def gendered_denom_analysis_de(
                 start,
                 subcategory,
             ) = match_binary_inclusive_gendered_denom_analysis_de(
-                version,
                 config,
                 false_positives,
                 full_text,
+                text,
                 tokens,
                 i,
                 subcategory,
+                postfix,
             )
 
             if text is None:
                 continue
 
-            if match == "postfix":
+            if postfix and lemma.endswith(word.lower()):
                 alternatives = alternatives.copy()
                 prefix = token.lemma_.removesuffix(word.lower())
                 for k, alternative in enumerate(alternatives):
-                    alternative = alternative.replace(word, text)
+                    alternative = alternative.replace(word, lemma)
                     if alternative[0] == "~":
                         alternative = prefix + alternative[1].lower() + alternative[2:]
                     if word[0] == "A":
@@ -3664,11 +3775,19 @@ def style_word_analysis_de(
             if not is_sub_category_enabled(config, subcategory):
                 continue
 
-            if not is_word_match(lang.lang, token, tokens, word, word_types):
+            text = is_phrase_match(
+                lang.lang,
+                i,
+                tokens,
+                word,
+                word_types,
+            )
+
+            if not text:
                 continue
 
             text, start, alternatives = alternatives_declension(
-                lang.lang, token, alternatives, prev_token
+                lang.lang, text, token, alternatives, prev_token
             )
 
             text, alternatives = detect_filler_words_at_sentence_start(
@@ -3733,23 +3852,34 @@ def word_noun(
             if not is_sub_category_enabled(config, subcategory):
                 continue
 
-            if not is_word_match(
-                lang.lang, token, tokens, word, word_types, false_positive_matcher
-            ):
+            text = is_phrase_match(
+                lang.lang,
+                i,
+                tokens,
+                word,
+                word_types,
+                false_positive_matcher,
+            )
+
+            if not text:
                 continue
 
-            is_singular = is_token_singular(lang.lang, token)
-            if is_singular is None:
-                continue
+            word_count = word.count(" ")
+            while word_count >= 0:
+                is_plural = is_token_plural(lang.lang, tokens[i + word_count])
+                if is_plural is None:
+                    word_count -= 1
+                    continue
 
-            text = token.text
+                break
+
             start = token.idx
 
-            if is_singular:
+            if not is_plural:
                 alternatives = alternatives_sing
 
                 text, start, alternatives = alternatives_declension(
-                    lang.lang, token, alternatives, prev_token
+                    lang.lang, text, token, alternatives, prev_token
                 )
             elif len(data):
                 # Secondary_subcategory
@@ -3878,19 +4008,19 @@ def rules_based_words_phrase_matcher(
             subcategory = subcategory.removesuffix("_base")
 
             if partial_matching and settings.partial_matching:
-                match = False
+                text = False
             else:
                 partial_matching = False
-                match = is_word_match(
+                text = is_phrase_match(
                     lang.lang,
-                    token,
+                    i,
                     tokens,
                     word,
                     word_types,
                     false_positive_matcher,
                 )
 
-            if not match:
+            if not text:
                 if (
                     not partial_matching
                     or lang.lang == "en"
@@ -3900,7 +4030,8 @@ def rules_based_words_phrase_matcher(
                 ):
                     continue
 
-                token_lower = token.text.lower()
+                text = token.text
+                token_lower = text.lower()
                 count = token_lower.count(word.lower())
                 if count == 0:
                     continue
@@ -3916,7 +4047,6 @@ def rules_based_words_phrase_matcher(
             explanation = None
             url = None
             icon = None
-            text = token.text
             start = token.idx
 
             if len(data) > 1:
@@ -3926,7 +4056,7 @@ def rules_based_words_phrase_matcher(
                     alternatives = [alternative]
                 else:
                     text, start, alternatives = alternatives_declension(
-                        lang.lang, token, alternatives, prev_token
+                        lang.lang, token.text, token, alternatives, prev_token
                     )
 
                 if (
@@ -4003,19 +4133,21 @@ def homonyms_en(
             if not is_sub_category_enabled(config, subcategory):
                 continue
 
-            if not is_word_match(
+            text = is_phrase_match(
                 lang.lang,
-                token,
+                i,
                 tokens,
                 word,
                 word_types,
                 false_positive_matcher,
                 False,
-            ):
+            )
+
+            if not text:
                 continue
 
             text, start, alternatives = alternatives_declension(
-                lang.lang, token, alternatives, prev_token
+                lang.lang, text, token, alternatives, prev_token
             )
 
             list_tokens.append(

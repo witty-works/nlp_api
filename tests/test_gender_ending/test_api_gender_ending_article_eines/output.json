@@ -5,10 +5,19 @@
         {
             "alternatives": [
                 {
-                    "text": "einer*eines Mitarbeiters*in"
+                    "text": "einer Mitarbeit"
                 },
                 {
-                    "text": "einer/eines Mitarbeitersin/Mitarbeiters"
+                    "text": "einer*eines Mitarbeiter*in"
+                },
+                {
+                    "text": "einer/eines Mitarbeiterin/Mitarbeiters"
+                },
+                {
+                    "text": "eines Personal"
+                },
+                {
+                    "text": "einer Mitarbeiterschaft"
                 }
             ],
             "category": "gender-orientation",

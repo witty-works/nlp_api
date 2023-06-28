@@ -1253,6 +1253,11 @@ def fetch_rules(langs):
             "flexible",
             "impact",
             "dynamic",
+            "best",
+            "alone",
+            "retarded",
+            "brilliant",
+            "retard",
         ]
 
         rules["en"]["list_false_column"] = [

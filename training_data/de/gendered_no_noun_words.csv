@@ -1,9 +1,10 @@
 Lemma,Word_Type,Category,Primary_subcategory,Sg_all_split,Pl_all_split,Alt_split
-benutzerfreundlich,a,gendered,advanced_hidden_image,"['benutzungsfreundlich', 'einfach zu nutzen', 'leicht zu bedienen']",[],"['benutzungsfreundlich', 'einfach zu nutzen', 'leicht zu bedienen']"
 dämlich,a,gendered,female_stereotype,"['ungünstig', 'ahnungslos', 'ungeschickt', 'unbeholfen', 'trostlos']",[],"['ungünstig', 'ahnungslos', 'ungeschickt', 'unbeholfen', 'trostlos']"
-herrlich,a,gendered,advanced_hidden_image,"['wunderbar', 'schön', 'großartig']",[],"['wunderbar', 'schön', 'großartig']"
 jammern,v,gendered,female_stereotype,"['kritisieren', 'Unbehagen äußern(...)', 'sich beschweren(...)', 'untröstlich sein(...)', '(mögliche) Konsequenzen aufzeigen(...)']",[],"['kritisieren', 'Unbehagen äußern(...)', 'sich beschweren(...)', 'untröstlich sein(...)', '(mögliche) Konsequenzen aufzeigen(...)']"
-leserfreundlich,a,gendered,advanced_hidden_image,['lesefreundlich'],[],['lesefreundlich']
-meisterhaft,a,gendered,advanced_hidden_image,"['fachkundig', 'kompetent', 'mit Erfahrung']",[],"['fachkundig', 'kompetent', 'mit Erfahrung']"
 nörgeln,v,gendered,female_stereotype,"['motivieren', 'kommentieren', 'sich beschweren', 'untröstlich sein', 'zu Verbesserungen ermutigen(...)', 'Unbehagen äußern(...)', 'Leid empfinden über(...)', 'offen Besorgnisse teilen(...)', 'Erwartungen kommunizieren(...)', 'offen Bedenken äußern(...)', 'Feedback geben(...)', 'an (...) erinnern']",[],"['motivieren', 'kommentieren', 'sich beschweren', 'untröstlich sein', 'zu Verbesserungen ermutigen(...)', 'Unbehagen äußern(...)', 'Leid empfinden über(...)', 'offen Besorgnisse teilen(...)', 'Erwartungen kommunizieren(...)', 'offen Bedenken äußern(...)', 'Feedback geben(...)', 'an (...) erinnern']"
 zickig,a,gendered,female_stereotype,"['anderer Ansicht', 'uneinsichtig']",[],"['anderer Ansicht', 'uneinsichtig']"
+benutzerfreundlich,a,gendered,advanced_hidden_image,"['benutzungsfreundlich', 'einfach zu nutzen', 'leicht zu bedienen']",[],"['benutzungsfreundlich', 'einfach zu nutzen', 'leicht zu bedienen']"
+herrlich,a,gendered,advanced_hidden_image,"['wunderbar', 'schön', 'großartig']",[],"['wunderbar', 'schön', 'großartig']"
+leserfreundlich,a,gendered,advanced_hidden_image,['lesefreundlich'],[],['lesefreundlich']
+meisterhaft,a,gendered,advanced_hidden_image,"['fachkundig', 'kompetent', 'mit Erfahrung']",[],"['fachkundig', 'kompetent', 'mit Erfahrung']"
+Callcenter-Agent,s|s,gendered,titles,['Callcenter-Agent~in~/~Callcenter-Agent'],['Callcenter-Agent~innen~ und ~Callcenter-Agenten'],"['Callcenter-Agent~in~/~Callcenter-Agent', 'Callcenter-Agent~innen~ und ~Callcenter-Agenten']"
