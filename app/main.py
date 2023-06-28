@@ -267,10 +267,20 @@ app = FastAPI(
 security = HTTPBasic(auto_error=False)
 
 csp = secure.ContentSecurityPolicy().set("default-scr 'self' cdn.jsdelivr.net")
+hsts = secure.StrictTransportSecurity().include_subdomains().preload().max_age(31536000)
+referrer = secure.ReferrerPolicy().no_referrer()
+cache_value = secure.CacheControl().no_cache()
 xfo = secure.XFrameOptions().deny()
 xxp = secure.XXSSProtection().set("1; mode=block")
 
-secure_headers = secure.Secure(csp=csp, xfo=xfo, xxp=xxp)
+secure_headers = secure.Secure(
+    csp=csp,
+    hsts=hsts,
+    referrer=referrer,
+    cache=cache_value,
+    xfo=xfo,
+    xxp=xxp,
+)
 
 
 @app.middleware("http")
