@@ -39,27 +39,7 @@
         {
             "alternatives": [
                 {
-                    "text": "ding ding"
-                }
-            ],
-            "category": "corporate_rules",
-            "context": "I ran far. I am always running. This is the foo bar and not the wELT!",
-            "end": 51,
-            "explanation": {
-                "icon": "🥰",
-                "text": "better ding",
-                "url": "https://witty.works/foo bar"
-            },
-            "gravity": 0.9,
-            "label": "Dictionary",
-            "start": 44,
-            "subcategory": "corporate_rules",
-            "text": "foo bar"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "walked"
+                    "text": "walk"
                 }
             ],
             "category": "corporate_rules",
@@ -79,7 +59,7 @@
         {
             "alternatives": [
                 {
-                    "text": "walking"
+                    "text": "walk"
                 }
             ],
             "category": "corporate_rules",
@@ -95,6 +75,26 @@
             "start": 23,
             "subcategory": "corporate_rules",
             "text": "running"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "ding ding"
+                }
+            ],
+            "category": "corporate_rules",
+            "context": "I ran far. I am always running. This is the foo bar and not the wELT!",
+            "end": 51,
+            "explanation": {
+                "icon": "🥰",
+                "text": "better ding",
+                "url": "https://witty.works/foo bar"
+            },
+            "gravity": 0.9,
+            "label": "Dictionary",
+            "start": 44,
+            "subcategory": "corporate_rules",
+            "text": "foo bar"
         }
     ]
 }

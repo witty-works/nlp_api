@@ -1602,17 +1602,7 @@ def apply_term_replacements(
     if "term_replacements" not in configs:
         return []
 
-    term_replacements_case_insensitive = {}
-    term_replacements_case_sensitive = {}
-
-    term_replacements_lemma = {
-        "Lemma": [],
-        "Word_Type": [],
-        "Alt_split": [],
-        "Primary_subcategory": [],
-        "Explanation": [],
-    }
-
+    term_replacements = []
     for term in configs["term_replacements"]:
         term_replacement = configs["term_replacements"][term]
 
@@ -1632,71 +1622,34 @@ def apply_term_replacements(
         if "word_type" in term_replacement:
             word_type = term_replacement["word_type"]
         else:
-            word_type = "-"
+            word_type = "~"
 
-        if word_type == "-":
-            regexp = r"(?i)(\b" + term + r"\b)"
-            term_replacements_case_insensitive[regexp] = term_replacement
-        elif word_type == "=":
-            regexp = r"(\b" + term + r"\b)"
-            term_replacements_case_sensitive[regexp] = term_replacement
-        else:
-            term_replacements_lemma["Lemma"].append(term)
-            term_replacements_lemma["Word_Type"].append(word_type)
-            term_replacements_lemma["Primary_subcategory"].append("corporate_rules")
-            term_replacements_lemma["Alt_split"].append(
-                term_replacement["alternatives"]
-            )
-            term_replacements_lemma["Explanation"].append(
-                term_replacement["explanation"]
-            )
+        word_count = term.count(" ") + 1
+        if word_count > 1:
+            word_type = "|".join([word_type] * word_count)
 
-    list_result = []
-
-    if len(term_replacements_case_insensitive):
-        list_result += regex_matches(
-            version,
-            config,
-            lang,
-            text,
-            offsets,
-            term_replacements_case_insensitive,
-            "corporate_rules",
+        term_replacements.append(
+            [
+                term,
+                word_type,
+                "corporate_rules",
+                term_replacement["alternatives"],
+                term_replacement["explanation"],
+            ]
         )
 
-    if len(term_replacements_case_sensitive):
-        list_result += regex_matches(
-            version,
-            config,
-            lang,
-            text,
-            offsets,
-            term_replacements_case_sensitive,
-            "corporate_rules",
-        )
+    if len(term_replacements) == 0:
+        return []
 
-    if len(term_replacements_lemma):
-        term_replacements = list(
-            zip(
-                term_replacements_lemma["Lemma"],
-                term_replacements_lemma["Word_Type"],
-                term_replacements_lemma["Primary_subcategory"],
-                term_replacements_lemma["Alt_split"],
-                term_replacements_lemma["Explanation"],
-            )
-        )
-
-        list_result += rules_based_words_phrase_matcher(
-            version,
-            config,
-            lang,
-            text,
-            tokens,
-            offsets,
-            term_replacements,
-        )
-
-    return list_result
+    return simple_match(
+        version,
+        config,
+        lang,
+        text,
+        tokens,
+        offsets,
+        term_replacements,
+    )
 
 
 def apply_false_positives(
@@ -3205,18 +3158,8 @@ def regex_matches(
             text = span.group(1)
             start = span.start()
             explanation = None
-            url = None
-            icon = None
-            # case-(in)sensitive term_replacements
-            if isinstance(regexes[regex], dict):
-                text = span.group(0)
-                alternatives = regexes[regex]["alternatives"]
-                if isinstance(regexes[regex]["explanation"], dict):
-                    explanation, url, icon = map(
-                        regexes[regex]["explanation"].get, ("text", "url", "icon")
-                    )
             # d_f_m_regexes
-            elif len(span.groups()) == 5 and subcategory == "d_and_i":
+            if len(span.groups()) == 5 and subcategory == "d_and_i":
                 text = span.group(0).lstrip()
                 start += 1
             # m_f_regexes
@@ -3341,8 +3284,6 @@ def regex_matches(
                     alternatives,
                     None,
                     explanation,
-                    url,
-                    icon,
                 )
             )
 
@@ -3891,9 +3832,6 @@ def rules_based_words_phrase_matcher(
                 if count <= 0:
                     continue
 
-            explanation = None
-            url = None
-            icon = None
             start = token.idx
 
             if len(data) > 1:
@@ -3901,17 +3839,10 @@ def rules_based_words_phrase_matcher(
                 if they and "they" in alternatives:
                     text, alternative = pluralize_they(tokens, i)
                     alternatives = [alternative]
-                else:
+                elif word.count(" ") == 0:
                     text, start, alternatives = alternatives_declension(
                         lang.lang, token.text, token, alternatives, prev_token
                     )
-
-                if (
-                    len(data) > 2
-                    and data[2] is not None
-                    and subcategory == "corporate_rules"
-                ):
-                    explanation, url, icon = map(data[2].get, ("text", "url", "icon"))
 
             if not is_sub_category_enabled(config, subcategory):
                 continue
@@ -3937,9 +3868,6 @@ def rules_based_words_phrase_matcher(
                     None,
                     alternatives,
                     None,
-                    explanation,
-                    url,
-                    icon,
                 )
             )
 
@@ -4015,7 +3943,77 @@ def homonyms_en(
     return list_tokens
 
 
-# function to find exact match for abbreviations and term replacements
+def simple_match(
+    version: float,
+    config: Config,
+    lang,
+    full_text,
+    tokens,
+    offsets,
+    words_data,
+):
+    list_tokens = []
+
+    token = None
+    for i in range(len(tokens)):
+        prev_token = token
+        token = tokens[i]
+        for word, word_types, subcategory, alternatives, *data in words_data:
+            if not is_sub_category_enabled(config, subcategory):
+                continue
+
+            text = is_phrase_match(
+                lang.lang,
+                i,
+                tokens,
+                word,
+                word_types,
+            )
+
+            if not text:
+                continue
+
+            if text.count(" ") > 0:
+                text, start, alternatives = alternatives_declension(
+                    lang.lang, text, token, alternatives, prev_token
+                )
+            else:
+                start = token.idx
+
+            if (
+                len(data) > 0
+                and data[0] is not None
+                and subcategory == "corporate_rules"
+            ):
+                explanation, url, icon = map(data[0].get, ("text", "url", "icon"))
+            else:
+                explanation = None
+                url = None
+                icon = None
+
+            list_tokens.append(
+                ResultOut.factory(
+                    version,
+                    config,
+                    lang,
+                    text,
+                    full_text,
+                    offsets,
+                    subcategory,
+                    start,
+                    None,
+                    alternatives,
+                    None,
+                    explanation,
+                    url,
+                    icon,
+                )
+            )
+
+    return list_tokens
+
+
+# function to find exact match for abbreviations
 def literal_match(
     version: float,
     config: Config,
