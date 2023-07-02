@@ -1513,9 +1513,6 @@ def utf16_offsets(text):
 
 # matcher to false positives
 def is_false_positive_match(false_positive_matcher, tokens, token):
-    if false_positive_matcher is None:
-        return False
-
     for match_id, start, end in false_positive_matcher:
         span_false = tokens[start:end]
         if token.idx in range(span_false.start_char, span_false.end_char):
@@ -1624,7 +1621,7 @@ def apply_term_replacements(
         else:
             word_type = "~"
 
-        word_count = term.count(" ") + 1
+        word_count = token_count(term, lang.lang)
         if word_count > 1:
             word_type = "|".join([word_type] * word_count)
 
@@ -1779,16 +1776,14 @@ async def german_rules(
     list_full = []
 
     if is_sub_category_enabled(config, "abbreviation"):
-        list_full += literal_match(
+        list_full += simple_match(
             version,
             config,
             lang,
             text,
             tokens,
             offsets,
-            rules["de"]["df_abbreviation"],
             rules["de"]["abbreviation"],
-            True,
         )
 
     list_full += rules_based_words_phrase_matcher(
@@ -1989,16 +1984,14 @@ async def english_rules(
     )
 
     if is_sub_category_enabled(config, "abbreviation"):
-        list_full += literal_match(
+        list_full += simple_match(
             version,
             config,
             lang,
             text,
             tokens,
             offsets,
-            rules[lang.locale]["df_abbreviation"],
             words_data_en["abbr"],
-            True,
         )
 
     list_full += rules_based_words_phrase_matcher(
@@ -2198,12 +2191,16 @@ def is_word_match(
 
     if lower_case and (lang == "en" or "s" not in word_types):
         token_word = token_word.lower()
+        word = word.lower()
 
     if token_word != word and (not postfix or not token_word.endswith(word.lower())):
         return False
 
     if not check_word_types(lang, token, word_types, True):
         return False
+
+    if false_positive_matcher is None:
+        return True
 
     return is_false_positive_match(false_positive_matcher, tokens, token) == False
 
@@ -2219,17 +2216,17 @@ def is_phrase_match(
     postfix=False,
 ):
     text = ""
-    words = word.split()
+    words = tokenize(word, lang)
     word_types = word_types.split("|")
-    words_count = len(words)
+    word_count = len(words)
 
-    if words_count == 1:
+    if word_count == 1:
         word_types = [word_types[-1]]
     else:
         postfix = False
 
     word_token = None
-    for k in range(words_count):
+    for k in range(word_count):
         if word_token:
             text += word_token.whitespace_
 
@@ -2719,6 +2716,14 @@ def align_verb_form(lang, a_text, a_token, b_token):
     return b_text
 
 
+def tokenize(text, lang):
+    return [i.text for i in model[lang].tokenizer(text)]
+
+
+def token_count(text, lang):
+    return len(tokenize(text, lang))
+
+
 def alternative_declension(lang, text, token, word_types, prepend_word, alternative):
     (
         parsed_alternative,
@@ -2742,12 +2747,12 @@ def alternative_declension(lang, text, token, word_types, prepend_word, alternat
         return alternative
 
     alternative_tokens = fetch_tokens(lang, parsed_alternative)
-    word_count = text.count(" ")
+    word_count = token_count(text, lang)
     if prepend_word:
         word_count -= 1
 
     is_plural_alternative = False
-    if word_count:
+    if word_count > 1:
         # TODO figure out how to modify phrases
         new_alternative = alternative
         is_plural_alternative = is_token_plural(lang, alternative_tokens[-1])
@@ -3652,11 +3657,13 @@ def word_noun(
             if not text:
                 continue
 
-            word_count = word.count(" ")
-            while word_count >= 0:
-                is_plural = is_token_plural(lang.lang, tokens[i + word_count])
+            additional_token_count = token_count(word, lang.lang) - 1
+            while additional_token_count >= 0:
+                is_plural = is_token_plural(
+                    lang.lang, tokens[i + additional_token_count]
+                )
                 if is_plural is None:
-                    word_count -= 1
+                    additional_token_count -= 1
                     continue
 
                 break
@@ -4007,62 +4014,6 @@ def simple_match(
                     explanation,
                     url,
                     icon,
-                )
-            )
-
-    return list_tokens
-
-
-# function to find exact match for abbreviations
-def literal_match(
-    version: float,
-    config: Config,
-    lang,
-    full_text,
-    tokens,
-    offsets,
-    df_sentence,
-    term_list,
-    lower_case=False,
-):
-    list_tokens = []
-
-    matches = fetch_matches(lang.lang, tokens, list(df_sentence["Lemma"]))
-    for match_id, start, end in matches:
-        for (
-            term,
-            word_types,
-            subcategory,
-            alternatives,
-        ) in term_list:
-            if not is_sub_category_enabled(config, subcategory):
-                continue
-
-            span = tokens[start:end]
-            text = span.text
-            lower_case_rule = lower_case
-            if lower_case and word_types != "":
-                word_types, lower_case_rule, lemmatize = parse_word_types(word_types)
-
-            if lower_case_rule:
-                text = text.lower()
-                term = term.lower()
-
-            if text != term:
-                continue
-
-            list_tokens.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    span.text,
-                    full_text,
-                    offsets,
-                    subcategory,
-                    span.start_char,
-                    span.end_char,
-                    alternatives,
                 )
             )
 
