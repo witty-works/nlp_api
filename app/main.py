@@ -2253,7 +2253,7 @@ async def english_rules(
         false_positive_matcher,
     )
 
-    if is_sub_category_enabled(config, "advanced_binary_pronouns"):
+    if is_sub_category_enabled(config, "gender_specific_abbreviation"):
         list_full += regex_matches(
             version,
             config,
