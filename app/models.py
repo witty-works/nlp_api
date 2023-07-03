@@ -14,7 +14,6 @@ from app.categories import (
     get_category,
     get_category_name,
     map_gravity,
-    map_importance,
 )
 from app.privacy_filter import get_privacy_filter
 
