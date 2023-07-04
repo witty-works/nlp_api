@@ -49,11 +49,6 @@ class Settings(BaseSettings):
     context_checker_api_key: Optional[str]
     models: List = ["en_core_web_lg", "de_core_news_lg"]
     langs: List = ["en", "de"]
-    language_endpoint_enabled_de: bool = False
-    language_endpoint_enabled_en: bool = False
-    language_endpoint_url_de: Optional[str]
-    language_endpoint_url_en: Optional[str]
-    language_endpoint_urls: Optional[dict]
     fasttext: bool = True
     overwrite_enabled_user_categories: bool = False
     partial_matching: bool = False
@@ -67,24 +62,10 @@ def get_settings():
     settings = Settings()
     settings.is_prod = settings.platform_environment_type == "production"
 
-    settings.language_endpoint_urls = {
-        "de": settings.language_endpoint_url_de,
-        "en": settings.language_endpoint_url_en,
-    }
-
     if settings.platform_relationships:
         settings.platform_relationships = json.loads(
             base64.b64decode(settings.platform_relationships)
         )
-
-        for lang in settings.language_endpoint_urls:
-            if lang not in settings.platform_relationships:
-                continue
-
-            endpoint = settings.platform_relationships[lang][0]
-            settings.language_endpoint_urls[lang] = (
-                "%(scheme)s://%(host)s:%(port)d" % endpoint
-            )
 
         if "languagetool" in settings.platform_relationships:
             endpoint = settings.platform_relationships["languagetool"][0]
