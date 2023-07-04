@@ -1830,28 +1830,53 @@ async def german_rules(
             "gender_specific_abbreviation",
         )
 
-    if ResultOut.genderedRolesFormatInclusive(config.gendered_roles_format):
-        subcategory = "advanced_gendered_denominations_ending"
-
-        regexes = {}
-        for ending, regex in config._gendereddenom_ending.items():
+    if is_sub_category_enabled(
+        config, "advanced_gendered_denominations_ending"
+    ) and ResultOut.genderedRolesFormatInclusive(config.gendered_roles_format):
+        endings = []
+        for key, regexp in config._gendereddenom_ending.items():
             if (
-                config.german_gender_ending == ending
+                config.german_gender_ending == key
                 # avoid issues with LinkedIn
-                or ending == GermanGenderEndingType.CAPITAL_LETTER
+                or key == GermanGenderEndingType.CAPITAL_LETTER
             ):
                 continue
 
-            regexes[regex] = config.german_gender_ending[0:-2]
+            ending = [
+                "^" + regexp + "$",
+                config._gendereddenom_ending_word_type[key],
+                "advanced_gendered_denominations_ending",
+                [config.german_gender_ending],
+            ]
 
-        list_full += regex_matches(
+            endings.append(ending)
+
+            ending = [
+                "^" + regexp + "nen$",
+                config._gendereddenom_ending_word_type[key],
+                "advanced_gendered_denominations_ending",
+                [config.german_gender_ending + "nen"],
+            ]
+
+            endings.append(ending)
+
+            ending = [
+                "^" + regexp + "nen$",
+                config._gendereddenom_ending_word_type[key],
+                "advanced_gendered_denominations_ending",
+                [config.german_gender_ending + "nen"],
+            ]
+
+            endings.append(ending)
+
+        list_full += simple_match(
             version,
             config,
             lang,
             text,
+            tokens,
             offsets,
-            regexes,
-            subcategory,
+            endings,
         )
 
     list_full += ub_words_phrase_matcher_de(
@@ -1892,6 +1917,8 @@ async def german_rules(
         )
 
     if is_sub_category_enabled(config, "d_and_i"):
+        subcategory = "d_and_i"
+
         list_full += rules_based_words_phrase_matcher(
             version,
             config,
@@ -1903,16 +1930,33 @@ async def german_rules(
             None,
             rules["de"]["df_terms_d_and_i_words"],
             [],
-            "d_and_i",
+            subcategory,
         )
 
-        subcategory = "d_and_i"
-        regexes = {config._gendereddenom_ending[config.german_gender_ending]: None}
+        # avoid issues with LinkedIn
+        if config.german_gender_ending != GermanGenderEndingType.CAPITAL_LETTER:
+            endings = [
+                [
+                    "^"
+                    + config._gendereddenom_ending[config.german_gender_ending]
+                    + "(nen)?$",
+                    config._gendereddenom_ending_word_type[config.german_gender_ending],
+                    subcategory,
+                ],
+            ]
 
-        regexes.update(rules["d_f_m_regexes"])
+            list_full += simple_match(
+                version, config, lang, text, tokens, offsets, endings
+            )
 
         list_full += regex_matches(
-            version, config, lang, text, offsets, regexes, subcategory
+            version,
+            config,
+            lang,
+            text,
+            offsets,
+            rules["d_f_m_regexes"],
+            subcategory,
         )
 
     list_full += style_word_analysis_de(
@@ -2215,11 +2259,38 @@ def is_phrase_match(
     lower_case=True,
     postfix=False,
 ):
-    text = ""
-    words = tokenize(word, lang)
-    word_types = word_types.split("|")
-    word_count = len(words)
+    if word_types.startswith("regexp"):
+        token_offsets = word_types.removeprefix("regexp")
+        if token_offsets == "":
+            text = check_text = tokens[i].text
+        else:
+            text = check_text = ""
 
+            # regexp-1,3
+            try:
+                token_offsets = token_offsets.split(",")
+                token_offsets[0] = int(token_offsets[0])
+                token_offsets[1] = int(token_offsets[1])
+                while token_offsets[0] < token_offsets[1]:
+                    subtext = tokens[i + token_offsets[0]].text
+                    if token_offsets[0] + 1 < token_offsets[1]:
+                        subtext += tokens[i + token_offsets[0]].whitespace_
+
+                    check_text += subtext
+                    if token_offsets[0] >= 0:
+                        text += subtext
+
+                    token_offsets[0] += 1
+            except IndexError:
+                return False
+
+        return text if re.search(word, check_text) else False
+
+    text = ""
+    word_types = word_types.split("|")
+
+    words = tokenize(word, lang)
+    word_count = len(words)
     if word_count == 1:
         word_types = [word_types[-1]]
     else:
@@ -3254,24 +3325,6 @@ def regex_matches(
 
                 if alternative_3 is not None:
                     alternatives.append(alternative_3)
-            # gender inclusive ending
-            elif len(span.groups()) == 2:
-                text = span.group(0)
-                if (
-                    (
-                        text[0:1].islower()
-                        and span.group(2) in rules["de"]["male_articles"]
-                    )
-                    or text[0:1].isupper()
-                    and (span.group(2)[0:2] == "in" or span.group(2)[0:5] == "innen")
-                ):
-                    separator = regexes[regex]
-                    if separator is not None:
-                        if span.group(2) in rules["de"]["male_articles"]:
-                            separator = separator[0:1]
-                        alternatives = [span.group(1) + separator + span.group(2)]
-                else:
-                    continue
             elif regexes[regex] is not None:
                 alternatives = regexes[regex]
 
@@ -3965,7 +4018,7 @@ def simple_match(
     for i in range(len(tokens)):
         prev_token = token
         token = tokens[i]
-        for word, word_types, subcategory, alternatives, *data in words_data:
+        for word, word_types, subcategory, *data in words_data:
             if not is_sub_category_enabled(config, subcategory):
                 continue
 
@@ -3980,23 +4033,27 @@ def simple_match(
             if not text:
                 continue
 
+            alternatives = []
+            explanation = None
+            url = None
+            icon = None
+
+            if len(data):
+                alternatives = data[0]
+
+                if (
+                    len(data) > 1
+                    and data[1] is not None
+                    and subcategory == "corporate_rules"
+                ):
+                    explanation, url, icon = map(data[1].get, ("text", "url", "icon"))
+
             if text.count(" ") > 0:
                 text, start, alternatives = alternatives_declension(
                     lang.lang, text, token, alternatives, prev_token
                 )
             else:
                 start = token.idx
-
-            if (
-                len(data) > 0
-                and data[0] is not None
-                and subcategory == "corporate_rules"
-            ):
-                explanation, url, icon = map(data[0].get, ("text", "url", "icon"))
-            else:
-                explanation = None
-                url = None
-                icon = None
 
             list_tokens.append(
                 ResultOut.factory(

@@ -123,7 +123,7 @@
         {
             "alternatives": [
                 {
-                    "text": "Podcasts*in"
+                    "text": "*in"
                 }
             ],
             "category": "gender-orientation",
@@ -137,9 +137,9 @@
             "gravity": 3.0,
             "label": "Geschlecht + Orientierung: Inklusive Endung",
             "proficiency_level": "unconscious_bias",
-            "start": 77,
+            "start": 85,
             "subcategory": "advanced_gendered_denominations_ending",
-            "text": "Podcasts/in"
+            "text": "/in"
         }
     ]
 }
