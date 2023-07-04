@@ -1854,15 +1854,6 @@ async def german_rules(
 
             endings.append(ending)
 
-            ending = [
-                "^" + regexp + "nen$",
-                config._gendereddenom_ending_word_type[key],
-                "advanced_gendered_denominations_ending",
-                [config.german_gender_ending + "nen"],
-            ]
-
-            endings.append(ending)
-
         list_full += regex_match(
             version,
             config,

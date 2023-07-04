@@ -26,27 +26,6 @@
         {
             "alternatives": [
                 {
-                    "text": "/-innen"
-                }
-            ],
-            "category": "gender-orientation",
-            "context": "Wie geht es ihnen? Hallo Kund*innen und Kund*in. Hallo, die:der Kund:in. Bis du unser Matros/-in?",
-            "end": 35,
-            "explanation": {
-                "icon": "💯",
-                "text": "Nicht konsistente Geschlechts-Schreibweise",
-                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/inklusive-endung?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Geschlecht + Orientierung: Inklusive Endung",
-            "proficiency_level": "unconscious_bias",
-            "start": 25,
-            "subcategory": "advanced_gendered_denominations_ending",
-            "text": "Kund*innen"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "/-in"
                 }
             ],
