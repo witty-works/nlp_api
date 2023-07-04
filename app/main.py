@@ -1820,7 +1820,7 @@ async def german_rules(
     )
 
     if is_sub_category_enabled(config, "gender_specific_abbreviation"):
-        list_full += simple_match(
+        list_full += regex_match(
             version, config, lang, text, tokens, offsets, rules["m_f_regexes"]
         )
 
@@ -1863,7 +1863,7 @@ async def german_rules(
 
             endings.append(ending)
 
-        list_full += simple_match(
+        list_full += regex_match(
             version,
             config,
             lang,
@@ -1939,11 +1939,11 @@ async def german_rules(
                 ],
             ]
 
-            list_full += simple_match(
+            list_full += regex_match(
                 version, config, lang, text, tokens, offsets, endings
             )
 
-        list_full += simple_match(
+        list_full += regex_match(
             version, config, lang, text, tokens, offsets, rules["d_f_m_regexes"]
         )
 
@@ -1960,12 +1960,8 @@ async def german_rules(
         rules["de"]["false_positives"].style,
     )
 
-    list_full += detect_lower_cased_hashtags(
-        version,
-        config,
-        lang,
-        text,
-        offsets,
+    list_full += regex_match(
+        version, config, lang, text, tokens, offsets, rules["de"]["hashtags"]
     )
 
     return list_full
@@ -2080,12 +2076,12 @@ async def english_rules(
     )
 
     if is_sub_category_enabled(config, "gender_specific_abbreviation"):
-        list_full += simple_match(
+        list_full += regex_match(
             version, config, lang, text, tokens, offsets, rules["m_f_regexes"]
         )
 
     if is_sub_category_enabled(config, "d_and_i"):
-        list_full += simple_match(
+        list_full += regex_match(
             version, config, lang, text, tokens, offsets, rules["d_f_m_regexes"]
         )
 
@@ -2126,12 +2122,8 @@ async def english_rules(
         false_positive_matcher,
     )
 
-    list_full += detect_lower_cased_hashtags(
-        version,
-        config,
-        lang,
-        text,
-        offsets,
+    list_full += regex_match(
+        version, config, lang, text, tokens, offsets, rules["en"]["hashtags"]
     )
 
     list_full += rules_based_words_phrase_matcher(
@@ -3834,66 +3826,124 @@ def simple_match(
             if not is_sub_category_enabled(config, subcategory):
                 continue
 
-            if word_types.startswith("regexp"):
-                regexp_metadata = word_types.removeprefix("regexp")
-                if regexp_metadata == "":
-                    text = check_text = tokens[i].text
-                # regexp_metadata = "-1,3:/"
-                else:
-                    regexp_metadata, connector_string = regexp_metadata.split(":")
-                    text = check_text = ""
+            text = is_phrase_match(
+                lang.lang,
+                i,
+                tokens,
+                word,
+                word_types,
+            )
 
-                    try:
-                        token_offsets = regexp_metadata.split(",")
-                        token_offsets[0] = int(token_offsets[0])
-                        token_offsets[1] = int(token_offsets[1])
+            if not text:
+                continue
 
-                        if (
-                            i > 0
-                            and tokens[i + token_offsets[0] - 1].text
-                            == connector_string
-                        ):
+            alternatives = []
+            explanation = None
+            url = None
+            icon = None
+
+            if len(data):
+                alternatives = data[0]
+
+                if len(data) > 1 and data[1] is not None:
+                    explanation, url, icon = map(data[1].get, ("text", "url", "icon"))
+
+            text, start, alternatives = alternatives_declension(
+                lang.lang, text, token, alternatives, prev_token
+            )
+
+            list_tokens.append(
+                ResultOut.factory(
+                    version,
+                    config,
+                    lang,
+                    text,
+                    full_text,
+                    offsets,
+                    subcategory,
+                    start,
+                    None,
+                    alternatives,
+                    None,
+                    explanation,
+                    url,
+                    icon,
+                )
+            )
+
+    return list_tokens
+
+
+def regex_match(
+    version: float,
+    config: Config,
+    lang,
+    full_text,
+    tokens,
+    offsets,
+    words_data,
+):
+    list_tokens = []
+
+    token = None
+    for i in range(len(tokens)):
+        token = tokens[i]
+        for word, word_types, subcategory, *data in words_data:
+            if not is_sub_category_enabled(config, subcategory):
+                continue
+
+            if word_types == "":
+                text = check_text = tokens[i].text
+            # regexp_metadata = "-1,3:/"
+            else:
+                regexp_metadata, connector_string = word_types.split(":")
+                text = check_text = ""
+
+                try:
+                    token_offsets = regexp_metadata.split(",")
+                    token_offsets[0] = int(token_offsets[0])
+                    token_offsets[1] = int(token_offsets[1])
+
+                    multi_part = token_offsets[1] - token_offsets[0] > 1
+                    if not multi_part:
+                        if token.text != connector_string:
                             continue
 
-                        while token_offsets[0] < token_offsets[1]:
-                            offset_token = tokens[i + token_offsets[0]]
+                        text = check_text = connector_string
+                    elif (
+                        i > 0
+                        and tokens[i + token_offsets[0] - 1].text == connector_string
+                    ):
+                        continue
 
-                            check_text += offset_token.text
-                            if token_offsets[0] >= 0:
-                                text += offset_token.text
+                    while token_offsets[0] < token_offsets[1]:
+                        offset_token = tokens[i + token_offsets[0]]
 
-                            if offset_token.whitespace_ != "":
-                                break
+                        check_text += offset_token.text
+                        if token_offsets[0] >= 0:
+                            text += offset_token.text
 
-                            token_offsets[0] += 1
-                            if tokens[i + token_offsets[0]].text != connector_string:
-                                break
+                        if offset_token.whitespace_ != "":
+                            break
 
-                            check_text += connector_string
-                            if token_offsets[0] >= 0:
-                                text += connector_string
+                        token_offsets[0] += 1
+                        if tokens[i + token_offsets[0]].text != connector_string:
+                            break
 
-                            token_offsets[0] += 1
-                    except IndexError:
-                        pass
+                        check_text += connector_string
+                        if token_offsets[0] >= 0:
+                            text += connector_string
 
-                # handle "Noch besser x/f/m."
-                text = text.rstrip(".")
-                check_text = check_text.rstrip(".")
+                        token_offsets[0] += 1
+                except IndexError:
+                    pass
 
-                if text == "" or not re.search(word, check_text):
-                    continue
-            else:
-                text = is_phrase_match(
-                    lang.lang,
-                    i,
-                    tokens,
-                    word,
-                    word_types,
-                )
+            # handle "Noch besser x/f/m."
+            text = text.rstrip(".")
+            check_text = check_text.rstrip(".")
 
-                if not text:
-                    continue
+            if text == "" or not re.search(word, check_text):
+                continue
 
             alternatives = []
             explanation = None
@@ -3907,6 +3957,7 @@ def simple_match(
                     explanation, url, icon = map(data[1].get, ("text", "url", "icon"))
 
             start = token.idx
+
             if subcategory == "gender_specific_abbreviation":
                 parenthesis = (
                     i > 0
@@ -3999,10 +4050,6 @@ def simple_match(
 
                 if alternative_3 is not None:
                     alternatives.append(alternative_3)
-            elif text.count(" ") > 0:
-                text, start, alternatives = alternatives_declension(
-                    lang.lang, text, token, alternatives, prev_token
-                )
 
             list_tokens.append(
                 ResultOut.factory(
@@ -4024,50 +4071,6 @@ def simple_match(
             )
 
     return list_tokens
-
-
-def detect_lower_cased_hashtags(
-    version: float,
-    config: Config,
-    lang,
-    full_text,
-    offsets,
-):
-    subcategory = "style"
-
-    list_results = []
-
-    if lang.lang == "de":
-        explanation = "Wenn du Wörter großschreibst, wissen alle gleich, was du meinst. #ZumBeispiel"
-    else:
-        explanation = "When you capitalize words, everyone knows right away what you mean. #ForExample"
-
-    matches = re.finditer(r"#(\w*)", full_text)
-    for span in matches:
-        if type(span) == re.Match:
-            text = span.group(1)
-
-            if len(text) < 5 or any(char.isupper() for char in text):
-                continue
-
-            list_results.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    "#" + text,
-                    full_text,
-                    offsets,
-                    subcategory,
-                    span.start(),
-                    span.end(),
-                    None,
-                    None,
-                    explanation,
-                )
-            )
-
-    return list_results
 
 
 def get_emoji(emoji_text):

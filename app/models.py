@@ -143,12 +143,12 @@ class Config(BaseModel):
         GermanGenderEndingType.CAPITAL_LETTER: r"[A-ZÄÖÜ][a-zäöü]+In",
     }
     _gendereddenom_ending_word_type = {
-        GermanGenderEndingType.STAR: "regexp",
-        GermanGenderEndingType.UNDERSCORE: "regexp",
-        GermanGenderEndingType.COLON: "regexp",
-        GermanGenderEndingType.SLASH: "regexp-1,2:/",
-        GermanGenderEndingType.SLASH_DASH: "regexp",
-        GermanGenderEndingType.CAPITAL_LETTER: "regexp",
+        GermanGenderEndingType.STAR: "",
+        GermanGenderEndingType.UNDERSCORE: "",
+        GermanGenderEndingType.COLON: "",
+        GermanGenderEndingType.SLASH: "-1,2:/",
+        GermanGenderEndingType.SLASH_DASH: "",
+        GermanGenderEndingType.CAPITAL_LETTER: "",
     }
     disabled_categories: List = []
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH

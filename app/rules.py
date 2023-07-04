@@ -70,13 +70,13 @@ def fetch_rules(langs):
             # (m/f..)
             [
                 re.compile(r"^m/(f|w)(\/[*a-z])*(\))?$", re.IGNORECASE),
-                "regexp0,7:/",
+                "0,7:/",
                 "gender_specific_abbreviation",
             ],
             # (f/m..)
             [
                 re.compile(r"^(f|w)/m(\/[*a-z])*(\))?$", re.IGNORECASE),
-                "regexp0,7:/",
+                "0,7:/",
                 "gender_specific_abbreviation",
             ],
         ],
@@ -84,7 +84,7 @@ def fetch_rules(langs):
         "d_f_m_regexes": [
             [
                 re.compile(r"^(d|x|\*)(/v)?/f(/v)?/m(/v)?$", re.IGNORECASE),
-                "regexp0,7:/",
+                "0,7:/",
                 "d_and_i",
             ],
         ],
@@ -348,6 +348,19 @@ def fetch_rules(langs):
                 )
 
     if "de" in langs:
+        rules["de"]["hashtags"] = [
+            # "#foobar"
+            [
+                re.compile(r"^#(?!.*[A-Z])\w\w\w\w\w+$"),
+                "1,2:#",
+                "style",
+                [],
+                {
+                    "text": "Wenn du Wörter großschreibst, wissen alle gleich, was du meinst. #ZumBeispiel"
+                },
+            ],
+        ]
+
         rules["de"]["context_check"] = []
 
         rules["de"]["verbs"] = {
@@ -1274,6 +1287,19 @@ def fetch_rules(langs):
             "retarded",
             "brilliant",
             "retard",
+        ]
+
+        rules["en"]["hashtags"] = [
+            # "#foobar"
+            [
+                re.compile(r"^#(?!.*[A-Z])\w\w\w\w\w+$"),
+                "1,2:#",
+                "style",
+                [],
+                {
+                    "text": "When you capitalize words, everyone knows right away what you mean. #ForExample"
+                },
+            ],
         ]
 
         rules["en"]["list_false_column"] = [
