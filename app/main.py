@@ -1820,14 +1820,8 @@ async def german_rules(
     )
 
     if is_sub_category_enabled(config, "gender_specific_abbreviation"):
-        list_full += regex_matches(
-            version,
-            config,
-            lang,
-            text,
-            offsets,
-            rules["m_f_regexes"],
-            "gender_specific_abbreviation",
+        list_full += simple_match(
+            version, config, lang, text, tokens, offsets, rules["m_f_regexes"]
         )
 
     if is_sub_category_enabled(
@@ -1949,14 +1943,8 @@ async def german_rules(
                 version, config, lang, text, tokens, offsets, endings
             )
 
-        list_full += regex_matches(
-            version,
-            config,
-            lang,
-            text,
-            offsets,
-            rules["d_f_m_regexes"],
-            subcategory,
+        list_full += simple_match(
+            version, config, lang, text, tokens, offsets, rules["d_f_m_regexes"]
         )
 
     list_full += style_word_analysis_de(
@@ -2092,27 +2080,13 @@ async def english_rules(
     )
 
     if is_sub_category_enabled(config, "gender_specific_abbreviation"):
-        list_full += regex_matches(
-            version,
-            config,
-            lang,
-            text,
-            offsets,
-            rules["m_f_regexes"],
-            "gender_specific_abbreviation",
+        list_full += simple_match(
+            version, config, lang, text, tokens, offsets, rules["m_f_regexes"]
         )
 
     if is_sub_category_enabled(config, "d_and_i"):
-        subcategory = "d_and_i"
-
-        list_full += regex_matches(
-            version,
-            config,
-            lang,
-            text,
-            offsets,
-            rules["d_f_m_regexes"],
-            subcategory,
+        list_full += simple_match(
+            version, config, lang, text, tokens, offsets, rules["d_f_m_regexes"]
         )
 
     list_full += rules_based_words_phrase_matcher(
@@ -2259,33 +2233,6 @@ def is_phrase_match(
     lower_case=True,
     postfix=False,
 ):
-    if word_types.startswith("regexp"):
-        token_offsets = word_types.removeprefix("regexp")
-        if token_offsets == "":
-            text = check_text = tokens[i].text
-        else:
-            text = check_text = ""
-
-            # regexp-1,3
-            try:
-                token_offsets = token_offsets.split(",")
-                token_offsets[0] = int(token_offsets[0])
-                token_offsets[1] = int(token_offsets[1])
-                while token_offsets[0] < token_offsets[1]:
-                    subtext = tokens[i + token_offsets[0]].text
-                    if token_offsets[0] + 1 < token_offsets[1]:
-                        subtext += tokens[i + token_offsets[0]].whitespace_
-
-                    check_text += subtext
-                    if token_offsets[0] >= 0:
-                        text += subtext
-
-                    token_offsets[0] += 1
-            except IndexError:
-                return False
-
-        return text if re.search(word, check_text) else False
-
     text = ""
     word_types = word_types.split("|")
 
@@ -3213,141 +3160,6 @@ def sentences_matcher(
     return list_tokens
 
 
-def regex_matches(
-    version: float,
-    config: Config,
-    lang,
-    full_text,
-    offsets,
-    regexes,
-    subcategory=None,
-):
-    list_ending = []
-    alternatives = None
-    for regex in regexes:
-        matches = re.finditer(regex, full_text)
-
-        for span in matches:
-            if type(span) != re.Match:
-                continue
-
-            text = span.group(1)
-            start = span.start()
-            explanation = None
-            # d_f_m_regexes
-            if len(span.groups()) == 5 and subcategory == "d_and_i":
-                text = span.group(0).lstrip()
-                start += 1
-            # m_f_regexes
-            elif len(span.groups()) == 5:
-                text = span.group(0).lstrip()
-                start += 1
-
-                letters = [span.group(2), span.group(3)]
-                if span.group(4) is not None:
-                    letters = letters + span.group(4)[1:].split("/")
-
-                letters = list(map(lambda x: x.upper(), letters))
-                is_lower = span.group(2).islower()
-
-                veteran_letter = "V"
-                diverse_letter = "D"
-                if diverse_letter not in letters and "*" not in letters:
-                    letters.append(diverse_letter)
-
-                x_letter = "X"
-                without_x = True
-                if "X" in letters:
-                    letters.remove("X")
-                    without_x = False
-
-                without_v = True
-                if "V" in letters:
-                    letters.remove("V")
-                    without_v = False
-
-                if "W" in letters:
-                    letters.remove("W")
-                    letters.append("F")
-
-                alternative = "/".join(sorted(letters))
-                if is_lower:
-                    alternative = alternative.lower()
-                    diverse_letter = diverse_letter.lower()
-                    veteran_letter = veteran_letter.lower()
-                    x_letter = x_letter.lower()
-
-                parenthesis = False if span.group(1) is None else True
-                if parenthesis:
-                    alternative = "(" + alternative + ")"
-
-                context_v = "--- include veterans"
-                if lang.lang == "de":
-                    context_d = "--- Divers (EU) / m. Behinderung (NA)"
-                    context_remove = "--- Nutze geschlechtsneutrale Job-Titel"
-                    explanation = "Nenne unterrepräsentierte Gruppen zuerst. Verlinke auf deine Leitlinie zur Gleichstellung."
-                else:
-                    context_d = "--- disabled (NA) / diverse (EU)"
-                    context_remove = "--- Use gender neutral job title"
-                    explanation = "Put underrepresented groups first and link to your equal opportunity policy"
-
-                alternative_3 = None
-                if "*" in alternative:
-                    alternative_2 = alternative.replace("*", diverse_letter)
-                    alternative_v = alternative_2
-                    alternative_2 += context_d
-                    if not without_x:
-                        alternative_3 = alternative.replace("*", x_letter)
-                else:
-                    alternative_2 = alternative.replace(diverse_letter, "*")
-                    alternative_v = alternative
-                    if not without_x:
-                        alternative_3 = alternative.replace(diverse_letter, x_letter)
-                    alternative += context_d
-
-                if lang.lang == "en":
-                    alternative_v = alternative_v.replace(
-                        diverse_letter, diverse_letter + "/" + veteran_letter
-                    )
-
-                    if without_v == False:
-                        alternative = alternative_v + context_d
-                    else:
-                        alternative_v += context_v
-
-                alternatives = ["- " + context_remove, alternative]
-
-                if lang.lang == "en" and without_v:
-                    alternatives.append(alternative_v)
-
-                if lang.lang == "de" or "*" in alternative:
-                    alternatives.append(alternative_2)
-
-                if alternative_3 is not None:
-                    alternatives.append(alternative_3)
-            elif regexes[regex] is not None:
-                alternatives = regexes[regex]
-
-            list_ending.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    text,
-                    full_text,
-                    offsets,
-                    subcategory,
-                    start,
-                    None,
-                    alternatives,
-                    None,
-                    explanation,
-                )
-            )
-
-    return list_ending
-
-
 def ub_words_phrase_matcher_de(
     version: float,
     config: Config,
@@ -4022,16 +3834,66 @@ def simple_match(
             if not is_sub_category_enabled(config, subcategory):
                 continue
 
-            text = is_phrase_match(
-                lang.lang,
-                i,
-                tokens,
-                word,
-                word_types,
-            )
+            if word_types.startswith("regexp"):
+                regexp_metadata = word_types.removeprefix("regexp")
+                if regexp_metadata == "":
+                    text = check_text = tokens[i].text
+                # regexp_metadata = "-1,3:/"
+                else:
+                    regexp_metadata, connector_string = regexp_metadata.split(":")
+                    text = check_text = ""
 
-            if not text:
-                continue
+                    try:
+                        token_offsets = regexp_metadata.split(",")
+                        token_offsets[0] = int(token_offsets[0])
+                        token_offsets[1] = int(token_offsets[1])
+
+                        if (
+                            i > 0
+                            and tokens[i + token_offsets[0] - 1].text
+                            == connector_string
+                        ):
+                            continue
+
+                        while token_offsets[0] < token_offsets[1]:
+                            offset_token = tokens[i + token_offsets[0]]
+
+                            check_text += offset_token.text
+                            if token_offsets[0] >= 0:
+                                text += offset_token.text
+
+                            if offset_token.whitespace_ != "":
+                                break
+
+                            token_offsets[0] += 1
+                            if tokens[i + token_offsets[0]].text != connector_string:
+                                break
+
+                            check_text += connector_string
+                            if token_offsets[0] >= 0:
+                                text += connector_string
+
+                            token_offsets[0] += 1
+                    except IndexError:
+                        pass
+
+                # handle "Noch besser x/f/m."
+                text = text.rstrip(".")
+                check_text = check_text.rstrip(".")
+
+                if text == "" or not re.search(word, check_text):
+                    continue
+            else:
+                text = is_phrase_match(
+                    lang.lang,
+                    i,
+                    tokens,
+                    word,
+                    word_types,
+                )
+
+                if not text:
+                    continue
 
             alternatives = []
             explanation = None
@@ -4041,19 +3903,106 @@ def simple_match(
             if len(data):
                 alternatives = data[0]
 
-                if (
-                    len(data) > 1
-                    and data[1] is not None
-                    and subcategory == "corporate_rules"
-                ):
+                if len(data) > 1 and data[1] is not None:
                     explanation, url, icon = map(data[1].get, ("text", "url", "icon"))
 
-            if text.count(" ") > 0:
+            start = token.idx
+            if subcategory == "gender_specific_abbreviation":
+                parenthesis = (
+                    i > 0
+                    and tokens[i - 1].text == "("
+                    and tokens[i + len(text)].text == ")"
+                )
+
+                letters = text
+                if parenthesis:
+                    letters = letters[1:-1]
+
+                letters = text.split("/")
+
+                letters = list(map(lambda x: x.upper(), letters))
+                is_lower = text[0].islower()
+
+                veteran_letter = "V"
+                diverse_letter = "D"
+                if diverse_letter not in letters and "*" not in letters:
+                    letters.append(diverse_letter)
+
+                x_letter = "X"
+                without_x = True
+                if "X" in letters:
+                    letters.remove("X")
+                    without_x = False
+
+                without_v = True
+                if "V" in letters:
+                    letters.remove("V")
+                    without_v = False
+
+                if "W" in letters:
+                    letters.remove("W")
+                    letters.append("F")
+
+                alternative = "/".join(sorted(letters))
+                if is_lower:
+                    alternative = alternative.lower()
+                    diverse_letter = diverse_letter.lower()
+                    veteran_letter = veteran_letter.lower()
+                    x_letter = x_letter.lower()
+
+                if parenthesis:
+                    start -= 1
+                    text = "(" + text + ")"
+                    alternative = "(" + alternative + ")"
+
+                context_v = "--- include veterans"
+                if lang.lang == "de":
+                    context_d = "--- Divers (EU) / m. Behinderung (NA)"
+                    context_remove = "--- Nutze geschlechtsneutrale Job-Titel"
+                    explanation = "Nenne unterrepräsentierte Gruppen zuerst. Verlinke auf deine Leitlinie zur Gleichstellung."
+                else:
+                    context_d = "--- disabled (NA) / diverse (EU)"
+                    context_remove = "--- Use gender neutral job title"
+                    explanation = "Put underrepresented groups first and link to your equal opportunity policy"
+
+                alternative_3 = None
+                if "*" in alternative:
+                    alternative_2 = alternative.replace("*", diverse_letter)
+                    alternative_v = alternative_2
+                    alternative_2 += context_d
+                    if not without_x:
+                        alternative_3 = alternative.replace("*", x_letter)
+                else:
+                    alternative_2 = alternative.replace(diverse_letter, "*")
+                    alternative_v = alternative
+                    if not without_x:
+                        alternative_3 = alternative.replace(diverse_letter, x_letter)
+                    alternative += context_d
+
+                if lang.lang == "en":
+                    alternative_v = alternative_v.replace(
+                        diverse_letter, diverse_letter + "/" + veteran_letter
+                    )
+
+                    if without_v == False:
+                        alternative = alternative_v + context_d
+                    else:
+                        alternative_v += context_v
+
+                alternatives = ["- " + context_remove, alternative]
+
+                if lang.lang == "en" and without_v:
+                    alternatives.append(alternative_v)
+
+                if lang.lang == "de" or "*" in alternative:
+                    alternatives.append(alternative_2)
+
+                if alternative_3 is not None:
+                    alternatives.append(alternative_3)
+            elif text.count(" ") > 0:
                 text, start, alternatives = alternatives_declension(
                     lang.lang, text, token, alternatives, prev_token
                 )
-            else:
-                start = token.idx
 
             list_tokens.append(
                 ResultOut.factory(

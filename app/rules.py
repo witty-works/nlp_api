@@ -3,6 +3,7 @@ import ast
 from collections import namedtuple
 from german_nouns.lookup import Nouns
 from app.models import LangWithAutoType
+import re
 
 
 def fetch_rules(langs):
@@ -65,13 +66,28 @@ def fetch_rules(langs):
     }
 
     rules = {
-        "m_f_regexes": {
-            r"(?i)\s(\()?(m)\/(f|w)(\/[*a-z])*(\))?": None,  # (m/f..)
-            r"(?i)\s(\()?(f|w)\/(m)(\/[*a-z])*(\))?": None,  # (f/m..)
-        },
-        "d_f_m_regexes": {
-            r"(?i)\s(\()?(d|x|\*)(\/v)?\/f(\/[*a-z])*(\))?": None,  # (d/f/m..)
-        },
+        "m_f_regexes": [
+            # (m/f..)
+            [
+                re.compile(r"^m/(f|w)(\/[*a-z])*(\))?$", re.IGNORECASE),
+                "regexp0,7:/",
+                "gender_specific_abbreviation",
+            ],
+            # (f/m..)
+            [
+                re.compile(r"^(f|w)/m(\/[*a-z])*(\))?$", re.IGNORECASE),
+                "regexp0,7:/",
+                "gender_specific_abbreviation",
+            ],
+        ],
+        # (d/f/m/v)
+        "d_f_m_regexes": [
+            [
+                re.compile(r"^(d|x|\*)(/v)?/f(/v)?/m(/v)?$", re.IGNORECASE),
+                "regexp0,7:/",
+                "d_and_i",
+            ],
+        ],
         "skin_tones": {
             "all": [
                 "",

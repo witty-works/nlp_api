@@ -146,7 +146,7 @@ class Config(BaseModel):
         GermanGenderEndingType.STAR: "regexp",
         GermanGenderEndingType.UNDERSCORE: "regexp",
         GermanGenderEndingType.COLON: "regexp",
-        GermanGenderEndingType.SLASH: "regexp-1,2",
+        GermanGenderEndingType.SLASH: "regexp-1,2:/",
         GermanGenderEndingType.SLASH_DASH: "regexp",
         GermanGenderEndingType.CAPITAL_LETTER: "regexp",
     }
