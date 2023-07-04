@@ -612,15 +612,6 @@ async def get_debug_spacy(
     lang: LangType,
     username: str = Depends(fetch_current_username),
 ):
-    if settings.language_endpoint_urls[lang]:  # pragma: no cover
-        url = "/debug/spacy"
-        payload = {
-            "text": text,
-            "lang": lang.value,
-        }
-
-        return await fetch_json_from_language_service(lang, url, payload, True)
-
     results = []
     tokens = fetch_tokens(lang, text)
     for token in tokens:
@@ -653,60 +644,6 @@ async def get_debug_german_noun(
     username: str = Depends(fetch_current_username),
 ):
     return german_noun_analysis(word, genus_only)
-
-
-@app.post(
-    "/german",
-    include_in_schema=not settings.is_prod,
-    response_class=JSONResponse,
-)
-async def german(request: Request, german_request: GermanLanguageRequest):
-    if not settings.language_endpoint_enabled_de and (
-        not settings.testing or "x-german" not in request.headers
-    ):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-        )
-
-    check_version(german_request.version)
-
-    lang = Language(german_request.locale)
-
-    return await german_rules(
-        german_request.version,
-        german_request.client,
-        german_request.config,
-        german_request.configs,
-        lang,
-        german_request.text,
-    )
-
-
-@app.post(
-    "/english",
-    include_in_schema=not settings.is_prod,
-    response_class=JSONResponse,
-)
-async def english(request: Request, english_request: EnglishLanguageRequest):
-    if not settings.language_endpoint_enabled_en and (
-        not settings.testing or "x-english" not in request.headers
-    ):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-        )
-
-    check_version(english_request.version)
-
-    lang = Language(english_request.locale)
-
-    return await english_rules(
-        english_request.version,
-        english_request.client,
-        english_request.config,
-        english_request.configs,
-        lang,
-        english_request.text,
-    )
 
 
 @app.post(
@@ -774,15 +711,6 @@ async def lemmatize(
             )
 
         lang = locale
-
-    if settings.language_endpoint_urls[lang]:  # pragma: no cover
-        url = "/lemmatize"
-        payload = {
-            "text": text,
-            "lang": lang.value,
-        }
-
-        return await fetch_json_from_language_service(lang, url, payload, True)
 
     tokens = fetch_tokens(lang, text)
     if len(tokens) != 1:
@@ -1453,23 +1381,6 @@ def languagetool_matches(
     return list_results
 
 
-async def fetch_json_from_language_service(
-    lang, url, payload, is_get=False
-):  # pragma: no cover
-    url = settings.language_endpoint_urls[lang] + url
-    headers = {"content-type": "application/json"}
-    name = "language endpoint " + lang
-
-    if is_get:
-        return await fetch_json_get(
-            url, payload, headers, name, settings.languagetool_verify_ssl
-        )
-
-    return await fetch_json_post(
-        url, payload, headers, name, settings.languagetool_verify_ssl
-    )
-
-
 async def handle_response(r, name, json=True):
     try:
         if r.status != 200:  # pragma: no cover
@@ -1641,42 +1552,6 @@ def fetch_matches(lang, tokens, phrases):
     return matcher(tokens)
 
 
-async def fetch_language_results(  # pragma: no cover
-    version: float,
-    client: str,
-    config: Config,
-    configs: dict,
-    lang: Language,
-    text: str,
-):
-    if lang.lang == "de":
-        url = "/german"
-        payload = GermanLanguageRequest(
-            version=version,
-            client=client,
-            config=config,
-            configs=configs,
-            locale=lang.locale,
-            text=text,
-        )
-    else:
-        url = "/english"
-        payload = EnglishLanguageRequest(
-            version=version,
-            client=client,
-            config=config,
-            configs=configs,
-            locale=lang.locale,
-            text=text,
-        )
-
-    result = await fetch_json_from_language_service(lang.lang, url, payload.json())
-    if result is None:
-        return []
-
-    return parse_obj_as(List[ResultOut], result)
-
-
 async def apply_language_rules(
     version: float,
     client: str,
@@ -1685,25 +1560,31 @@ async def apply_language_rules(
     lang: Language,
     text: str,
 ):
-    list_results = []
+    tokens = fetch_tokens(lang.lang, text)
+    offsets = utf16_offsets(text)
 
-    client = VersionString(client)
-
-    if settings.language_endpoint_urls[lang.lang]:
-        list_results += await fetch_language_results(
-            version,
-            client,
-            config,
-            configs,
-            lang,
-            text,
-        )
-    elif lang.lang == "de":
-        list_results += await german_rules(version, client, config, configs, lang, text)
+    if lang.lang == "de":
+        list_results = await german_rules(version, config, tokens, offsets, lang, text)
     elif lang.lang == "en":
-        list_results += await english_rules(
-            version, client, config, configs, lang, text
-        )
+        list_results = await english_rules(version, config, tokens, offsets, lang, text)
+
+    list_results = await apply_languagetool_rules(
+        version, config, lang, text, offsets
+    ) + await context_false_positives(lang.lang, tokens, list_results)
+
+    list_results += detect_non_inclusive_emoji(
+        version,
+        VersionString(client),
+        config,
+        lang,
+        text,
+        tokens,
+        offsets,
+    )
+
+    list_results += apply_term_replacements(
+        version, config, lang, text, tokens, offsets, configs
+    )
 
     return apply_false_positives(list_results, configs)
 
@@ -1935,27 +1816,13 @@ async def context_false_positives(lang, tokens, list_results):
 
 async def german_rules(
     version: float,
-    client: str,
     config: Config,
-    configs: dict,
+    tokens,
+    offsets: dict,
     lang: Language,
     text: str,
 ):
-    offsets = utf16_offsets(text)
-
-    list_full = await apply_languagetool_rules(version, config, lang, text, offsets)
-
-    tokens = fetch_tokens(lang.lang, text)
-
-    list_full += detect_non_inclusive_emoji(
-        version,
-        client,
-        config,
-        lang,
-        text,
-        tokens,
-        offsets,
-    )
+    list_full = []
 
     if is_sub_category_enabled(config, "abbreviation"):
         list_full += literal_match(
@@ -2120,37 +1987,17 @@ async def german_rules(
         offsets,
     )
 
-    list_full += apply_term_replacements(
-        version, config, lang, text, tokens, offsets, configs
-    )
-
-    return await context_false_positives(lang.lang, tokens, list_full)
+    return list_full
 
 
 async def english_rules(
     version: float,
-    client: str,
     config: Config,
-    configs: dict,
+    tokens,
+    offsets: dict,
     lang: Language,
     text: str,
 ):
-    offsets = utf16_offsets(text)
-
-    list_full = await apply_languagetool_rules(version, config, lang, text, offsets)
-
-    tokens = fetch_tokens(lang.lang, text)
-
-    list_full += detect_non_inclusive_emoji(
-        version,
-        client,
-        config,
-        lang,
-        text,
-        tokens,
-        offsets,
-    )
-
     words_data_en = defaultdict(list)
     gendered_words_data_en = defaultdict(list)
     sentences_data_en = defaultdict(list)
@@ -2176,7 +2023,7 @@ async def english_rules(
     sentences_data_en["style"] = rules[lang.locale]["style_sentences_data"]
     sentences_data_en["bias"] = rules[lang.locale]["bias_sentences_data"]
 
-    list_full += homonyms_en(
+    list_full = homonyms_en(
         version,
         config,
         lang,
@@ -2346,11 +2193,7 @@ async def english_rules(
         false_positive_matcher,
     )
 
-    list_full += apply_term_replacements(
-        version, config, lang, text, tokens, offsets, configs
-    )
-
-    return await context_false_positives(lang.lang, tokens, list_full)
+    return list_full
 
 
 def parse_word_types(word_types, lower_case=True):
