@@ -135,12 +135,12 @@ class Config(BaseModel):
     ]
     german_gender_ending: GermanGenderEndingType = GermanGenderEndingType.STAR
     _gendereddenom_ending = {
-        GermanGenderEndingType.STAR: r"[A-ZÄÖÜ][a-zäöü]+\*in",
-        GermanGenderEndingType.UNDERSCORE: r"[A-ZÄÖÜ][a-zäöü]+_in",
-        GermanGenderEndingType.COLON: r"[A-ZÄÖÜ][a-zäöü]+:in",
-        GermanGenderEndingType.SLASH: r"[A-ZÄÖÜ][a-zäöü]+/in",
-        GermanGenderEndingType.SLASH_DASH: r"[A-ZÄÖÜ][a-zäöü]+/-in",
-        GermanGenderEndingType.CAPITAL_LETTER: r"[A-ZÄÖÜ][a-zäöü]+In",
+        GermanGenderEndingType.STAR: re.compile(r"^[A-ZÄÖÜ][a-zäöü]+\*in(nen)?$"),
+        GermanGenderEndingType.UNDERSCORE: re.compile(r"^[A-ZÄÖÜ][a-zäöü]+_in(nen)?$"),
+        GermanGenderEndingType.COLON: re.compile(r"^[A-ZÄÖÜ][a-zäöü]+:in(nen)?$"),
+        GermanGenderEndingType.SLASH: re.compile(r"^[A-ZÄÖÜ][a-zäöü]+/in(nen)?$"),
+        GermanGenderEndingType.SLASH_DASH: re.compile(r"^[A-ZÄÖÜ][a-zäöü]+/-in(nen)?$"),
+        GermanGenderEndingType.CAPITAL_LETTER: re.compile(r"^[A-ZÄÖÜ][a-zäöü]+In(nen)?$"),
     }
     _gendereddenom_ending_word_type = {
         GermanGenderEndingType.STAR: "",

@@ -1837,19 +1837,10 @@ async def german_rules(
                 continue
 
             ending = [
-                "^" + regexp + "$",
+                regexp,
                 config._gendereddenom_ending_word_type[key],
                 "advanced_gendered_denominations_ending",
                 [config.german_gender_ending],
-            ]
-
-            endings.append(ending)
-
-            ending = [
-                "^" + regexp + "nen$",
-                config._gendereddenom_ending_word_type[key],
-                "advanced_gendered_denominations_ending",
-                [config.german_gender_ending + "nen"],
             ]
 
             endings.append(ending)
@@ -1922,9 +1913,7 @@ async def german_rules(
         if config.german_gender_ending != GermanGenderEndingType.CAPITAL_LETTER:
             endings = [
                 [
-                    "^"
-                    + config._gendereddenom_ending[config.german_gender_ending]
-                    + "(nen)?$",
+                    config._gendereddenom_ending[config.german_gender_ending],
                     config._gendereddenom_ending_word_type[config.german_gender_ending],
                     subcategory,
                 ],
@@ -3955,7 +3944,10 @@ def regex_match(
 
             start = token.idx
 
-            if subcategory == "gender_specific_abbreviation":
+            if subcategory == "advanced_gendered_denominations_ending":
+                if text[-3:] == "nen":
+                    alternatives = [alternatives[0] + "nen"]
+            elif subcategory == "gender_specific_abbreviation":
                 parenthesis = (
                     i > 0
                     and tokens[i - 1].text == "("
