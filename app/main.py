@@ -99,7 +99,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.44.0"
+version = "1.44.1"
 
 categories = get_categories()
 settings = get_settings()
@@ -2253,7 +2253,7 @@ async def english_rules(
         false_positive_matcher,
     )
 
-    if is_sub_category_enabled(config, "advanced_binary_pronouns"):
+    if is_sub_category_enabled(config, "gender_specific_abbreviation"):
         list_full += regex_matches(
             version,
             config,
@@ -2364,7 +2364,7 @@ def parse_word_types(word_types, lower_case=True):
         lower_case = True
         lemmatize = False
         word_types = word_types[1:]
-    if word_types[0] == "=":
+    elif word_types[0] == "=":
         # exact match
         lower_case = False
         lemmatize = False
@@ -3588,6 +3588,10 @@ def gendered_denom_analysis_de(
             alternatives_sing,
             alternatives_plur,
         ) in words_data:
+            token = tokens[i]
+            if not token.text[0].isupper():
+                continue
+
             postfix = subcategory.endswith("_base")
             if postfix:
                 subcategory = subcategory.removesuffix("_base")
@@ -3595,7 +3599,6 @@ def gendered_denom_analysis_de(
             if not is_sub_category_enabled(config, subcategory):
                 continue
 
-            token = tokens[i]
             text = is_phrase_match(
                 lang.lang,
                 i,
@@ -3661,7 +3664,7 @@ def gendered_denom_analysis_de(
             if text is None:
                 continue
 
-            if postfix and lemma.endswith(word.lower()):
+            if postfix and lemma != word.lower() and lemma.endswith(word.lower()):
                 alternatives = alternatives.copy()
                 prefix = token.lemma_.removesuffix(word.lower())
                 for k, alternative in enumerate(alternatives):

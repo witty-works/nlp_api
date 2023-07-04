@@ -5,11 +5,42 @@
         {
             "alternatives": [
                 {
+                    "text": "Mitarbeiter"
+                },
+                {
+                    "text": "mitarbeiten"
+                },
+                {
+                    "text": "mitarbeitet"
+                },
+                {
+                    "text": "mitarbeite"
+                },
+                {
+                    "text": "mitarbeitete"
+                }
+            ],
+            "category": "orthography",
+            "context": "Sie ist eine Kund/in auf LinkedIn. Er ist mitarbeiter",
+            "end": 53,
+            "explanation": {
+                "icon": "❌",
+                "text": "Möglicher Tippfehler gefunden."
+            },
+            "gravity": 1.0,
+            "label": "Rechtschreibfehler",
+            "start": 42,
+            "subcategory": "typos",
+            "text": "mitarbeiter"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "Kund*in"
                 }
             ],
             "category": "gender-orientation",
-            "context": "Sie ist eine Kund/in auf LinkedIn.",
+            "context": "Sie ist eine Kund/in auf LinkedIn. Er ist mitarbeiter",
             "end": 20,
             "explanation": {
                 "icon": "💯",
