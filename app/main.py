@@ -2155,6 +2155,12 @@ def parse_word_types(word_types, lower_case=True):
         lower_case = True
         lemmatize = False
         word_types = word_types[1:]
+    # BC code, should use "~" or some other approach instead
+    elif word_types == "acr" or word_types == "abbr":
+        # exact match
+        lower_case = True
+        lemmatize = False
+        word_types = ""
     elif word_types[0] == "=":
         # exact match
         lower_case = False
