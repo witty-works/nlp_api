@@ -1150,6 +1150,7 @@ def test_spacy():
                 "morph": {"Case": "Nom", "Gender": "Fem", "Number": "Sing"},
                 "is_emoji": True,
                 "emoji_desc": "woman firefighter light skin tone",
+                "whitespace": " ",
             },
             {
                 "text": "Das",
@@ -1167,6 +1168,7 @@ def test_spacy():
                 },
                 "is_emoji": False,
                 "emoji_desc": None,
+                "whitespace": " ",
             },
             {
                 "text": "ist",
@@ -1185,6 +1187,7 @@ def test_spacy():
                 },
                 "is_emoji": False,
                 "emoji_desc": None,
+                "whitespace": " ",
             },
             {
                 "text": "sehr",
@@ -1197,6 +1200,7 @@ def test_spacy():
                 "morph": {},
                 "is_emoji": False,
                 "emoji_desc": None,
+                "whitespace": " ",
             },
             {
                 "text": "ehrgeizig",
@@ -1209,6 +1213,7 @@ def test_spacy():
                 "morph": {"Degree": "Pos"},
                 "is_emoji": False,
                 "emoji_desc": None,
+                "whitespace": " ",
             },
             {
                 "text": "😃",
@@ -1221,6 +1226,7 @@ def test_spacy():
                 "morph": {},
                 "is_emoji": True,
                 "emoji_desc": "grinning face with big eyes",
+                "whitespace": "",
             },
         ]
 

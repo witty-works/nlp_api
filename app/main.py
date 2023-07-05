@@ -627,6 +627,7 @@ async def get_debug_spacy(
                 "morph": token.morph.to_dict(),
                 "is_emoji": token._.is_emoji,
                 "emoji_desc": token._.emoji_desc,
+                "whitespace": token.whitespace_,
             }
         )
 
