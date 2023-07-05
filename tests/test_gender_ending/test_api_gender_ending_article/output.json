@@ -35,6 +35,23 @@
             "alternatives": [],
             "category": "social-motive",
             "context": "Ist der Arbeitgeber zufriedenstellend? Es wäre gut die*den Arbeitergeber*in zu bestärken.",
+            "end": 58,
+            "explanation": {
+                "content": "advanced",
+                "icon": "✅",
+                "text": "Fördere den Austausch über Vielfalt, Gleichheit, Teilhabe und Zugehörigkeit",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/vielfalt-gleichheit-teilhabe-zugehörigkeit?reducedView=true"
+            },
+            "label": "Soziale Motivation: DEIB",
+            "proficiency_level": "inclusive",
+            "start": 51,
+            "subcategory": "d_and_i",
+            "text": "die*den"
+        },
+        {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "Ist der Arbeitgeber zufriedenstellend? Es wäre gut die*den Arbeitergeber*in zu bestärken.",
             "end": 75,
             "explanation": {
                 "content": "advanced",

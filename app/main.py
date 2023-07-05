@@ -1827,6 +1827,8 @@ async def german_rules(
     if is_sub_category_enabled(
         config, "advanced_gendered_denominations_ending"
     ) and ResultOut.genderedRolesFormatInclusive(config.gendered_roles_format):
+        subcategory = "advanced_gendered_denominations_ending"
+
         endings = []
         for key, regexp in config._gendereddenom_ending.items():
             if (
@@ -1839,11 +1841,21 @@ async def german_rules(
             ending = [
                 regexp,
                 config._gendereddenom_ending_word_type[key],
-                "advanced_gendered_denominations_ending",
+                subcategory,
                 [config.german_gender_ending],
             ]
 
             endings.append(ending)
+
+            # GermanGenderEndingType.SLASH_DASH is redundant to GermanGenderEndingType.SLASH
+            if key != GermanGenderEndingType.SLASH_DASH:
+                ending = [
+                    config._gendereddenom_ending_article[key],
+                    ("" if key[0] != "/" else "-1,2") + "," + key[0],
+                    subcategory,
+                ]
+
+                endings.append(ending)
 
         list_full += regex_match(
             version,
@@ -1917,10 +1929,17 @@ async def german_rules(
                     config._gendereddenom_ending_word_type[config.german_gender_ending],
                     subcategory,
                 ],
+                [
+                    config._gendereddenom_ending_article[config.german_gender_ending],
+                    ("" if config.german_gender_ending[0] != "/" else "-1,1")
+                    + ","
+                    + config.german_gender_ending[0],
+                    subcategory,
+                ],
             ]
 
             list_full += regex_match(
-                version, config, lang, text, tokens, offsets, endings
+                version, config, lang, text, tokens, offsets, endings, "gender_denom"
             )
 
         list_full += regex_match(
@@ -3868,6 +3887,7 @@ def regex_match(
     tokens,
     offsets,
     words_data,
+    check_case=None,
 ):
     list_tokens = []
 
@@ -3878,15 +3898,19 @@ def regex_match(
             if not is_sub_category_enabled(config, subcategory):
                 continue
 
-            if word_types == "":
-                text = check_text = tokens[i].text
-            # regexp_metadata = "-1,3:/"
+            token_offsets = word_types.split(",")
+            # ",_" or "1,7,/"
+            if token_offsets[0] == "" or len(token_offsets) == 3:
+                connector_string = token_offsets.pop()
             else:
-                regexp_metadata, connector_string = word_types.split(":")
+                connector_string = ""
+
+            if len(token_offsets) != 2:
+                text = check_text = tokens[i].text
+            else:
                 text = check_text = ""
 
                 try:
-                    token_offsets = regexp_metadata.split(",")
                     token_offsets[0] = int(token_offsets[0])
                     token_offsets[1] = int(token_offsets[1])
 
@@ -3944,8 +3968,31 @@ def regex_match(
 
             start = token.idx
 
-            if subcategory == "advanced_gendered_denominations_ending":
-                if text[-3:] == "nen":
+            if subcategory == "d_and_i":
+                if check_case == "gender_denom" and check_text.islower():
+                    text_split = text.split(connector_string)
+                    if (
+                        text_split[0] not in rules["de"]["female_articles"]
+                        or text_split[1] not in rules["de"]["male_articles"]
+                    ):
+                        continue
+
+            elif subcategory == "advanced_gendered_denominations_ending":
+                if check_text.islower():
+                    if connector_string == "/" and tokens[i - 1].text.islower():
+                        text = tokens[i - 1].text + text
+
+                    text_split = text.split(connector_string)
+                    if (
+                        text_split[0] not in rules["de"]["female_articles"]
+                        or text_split[1] not in rules["de"]["male_articles"]
+                    ):
+                        continue
+
+                    alternatives = [
+                        text.replace(connector_string, config.german_gender_ending[0])
+                    ]
+                elif text[-3:] == "nen":
                     alternatives = [alternatives[0] + "nen"]
             elif subcategory == "gender_specific_abbreviation":
                 parenthesis = (

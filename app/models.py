@@ -140,13 +140,23 @@ class Config(BaseModel):
         GermanGenderEndingType.COLON: re.compile(r"^[A-ZÄÖÜ][a-zäöü]+:in(nen)?$"),
         GermanGenderEndingType.SLASH: re.compile(r"^[A-ZÄÖÜ][a-zäöü]+/in(nen)?$"),
         GermanGenderEndingType.SLASH_DASH: re.compile(r"^[A-ZÄÖÜ][a-zäöü]+/-in(nen)?$"),
-        GermanGenderEndingType.CAPITAL_LETTER: re.compile(r"^[A-ZÄÖÜ][a-zäöü]+In(nen)?$"),
+        GermanGenderEndingType.CAPITAL_LETTER: re.compile(
+            r"^[A-ZÄÖÜ][a-zäöü]+In(nen)?$"
+        ),
+    }
+    _gendereddenom_ending_article = {
+        GermanGenderEndingType.STAR: re.compile(r"^[a-zäöü]{3,7}\*[a-zäöü]{3,7}$"),
+        GermanGenderEndingType.UNDERSCORE: re.compile(r"^[a-zäöü]{3,7}_[a-zäöü]{3,7}$"),
+        GermanGenderEndingType.COLON: re.compile(r"^[a-zäöü]{3,7}:[a-zäöü]{3,7}$"),
+        GermanGenderEndingType.SLASH: re.compile(r"^[a-zäöü]{3,7}/[a-zäöü]{3,7}$"),
+        GermanGenderEndingType.SLASH_DASH: re.compile(r"^[a-zäöü]{3,7}/[a-zäöü]{3,7}$"),
+        GermanGenderEndingType.CAPITAL_LETTER: None,
     }
     _gendereddenom_ending_word_type = {
         GermanGenderEndingType.STAR: "",
         GermanGenderEndingType.UNDERSCORE: "",
         GermanGenderEndingType.COLON: "",
-        GermanGenderEndingType.SLASH: "-1,2:/",
+        GermanGenderEndingType.SLASH: "-1,2,/",
         GermanGenderEndingType.SLASH_DASH: "",
         GermanGenderEndingType.CAPITAL_LETTER: "",
     }

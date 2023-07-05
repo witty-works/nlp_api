@@ -70,13 +70,13 @@ def fetch_rules(langs):
             # (m/f..)
             [
                 re.compile(r"^m/(f|w)(\/[*a-z])*(\))?$", re.IGNORECASE),
-                "0,7:/",
+                "0,7,/",
                 "gender_specific_abbreviation",
             ],
             # (f/m..)
             [
                 re.compile(r"^(f|w)/m(\/[*a-z])*(\))?$", re.IGNORECASE),
-                "0,7:/",
+                "0,7,/",
                 "gender_specific_abbreviation",
             ],
         ],
@@ -84,7 +84,7 @@ def fetch_rules(langs):
         "d_f_m_regexes": [
             [
                 re.compile(r"^(d|x|\*)(/v)?/f(/v)?/m(/v)?$", re.IGNORECASE),
-                "0,7:/",
+                "0,7,/",
                 "d_and_i",
             ],
         ],
@@ -352,7 +352,7 @@ def fetch_rules(langs):
             # "#foobar"
             [
                 re.compile(r"^#(?!.*[A-Z])\w\w\w\w\w+$"),
-                "1,2:#",
+                "1,2,#",
                 "style",
                 [],
                 {
@@ -451,6 +451,7 @@ def fetch_rules(langs):
             )
         )
         rules["de"]["male_articles"] = list(data["de"]["df_articles"]["Masculine"])
+        rules["de"]["female_articles"] = list(data["de"]["df_articles"]["Feminine"])
 
         # df unconscious bias nouns with plural
         df_bias = data["de"]["df_ub_plur_word"]
@@ -1293,7 +1294,7 @@ def fetch_rules(langs):
             # "#foobar"
             [
                 re.compile(r"^#(?!.*[A-Z])\w\w\w\w\w+$"),
-                "1,2:#",
+                "1,2,#",
                 "style",
                 [],
                 {
