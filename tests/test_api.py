@@ -37,13 +37,13 @@ def test_health():
 
 
 @pytest.mark.parametrize(
-    "ending_case_dir",
+    "highlight_position_dir",
     get_dirs("tests/test_highlight_position"),
 )
-def test_highlight_position(ending_case_dir, snapshot, set_redis):
+def test_highlight_position(highlight_position_dir, snapshot, set_redis):
     with TestClient(app) as client:
         # Read input files from the case directory.
-        input_json = ending_case_dir.joinpath("input.json").read_text()
+        input_json = highlight_position_dir.joinpath("input.json").read_text()
         # Call the tested endpoint.
         response = client.post(
             "/v2.3/check",
@@ -56,18 +56,18 @@ def test_highlight_position(ending_case_dir, snapshot, set_redis):
             response.json(), sort_keys=True, indent=4, ensure_ascii=False
         )
         # Snapshot the return value.
-        snapshot.snapshot_dir = ending_case_dir
+        snapshot.snapshot_dir = highlight_position_dir
         snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
-    "ending_case_dir",
+    "sentry_examples_dir",
     get_dirs("tests/test_sentry_examples"),
 )
-def test_sentry_examples(ending_case_dir, snapshot, set_redis):
+def test_sentry_examples(sentry_examples_dir, snapshot, set_redis):
     with TestClient(app) as client:
         # Read input files from the case directory.
-        input_json = ending_case_dir.joinpath("input.json").read_text()
+        input_json = sentry_examples_dir.joinpath("input.json").read_text()
         # Call the tested endpoint.
         response = client.post(
             "/v2.3/check",
@@ -80,18 +80,18 @@ def test_sentry_examples(ending_case_dir, snapshot, set_redis):
             response.json(), sort_keys=True, indent=4, ensure_ascii=False
         )
         # Snapshot the return value.
-        snapshot.snapshot_dir = ending_case_dir
+        snapshot.snapshot_dir = sentry_examples_dir
         snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
-    "ending_case_dir",
+    "spacy_model_dir",
     get_dirs("tests/test_spacy_model"),
 )
-def test_spacy_model(ending_case_dir, snapshot):
+def test_spacy_model(spacy_model_dir, snapshot):
     with TestClient(app) as client:
         # Read input files from the case directory.
-        input_json = ending_case_dir.joinpath("input.json").read_text()
+        input_json = spacy_model_dir.joinpath("input.json").read_text()
         # Call the tested endpoint.
         response = client.post(
             "/v2.3/check",
@@ -104,18 +104,18 @@ def test_spacy_model(ending_case_dir, snapshot):
             response.json(), sort_keys=True, indent=4, ensure_ascii=False
         )
         # Snapshot the return value.
-        snapshot.snapshot_dir = ending_case_dir
+        snapshot.snapshot_dir = spacy_model_dir
         snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
-    "ending_case_dir",
+    "demo_wordings_english_dir",
     get_dirs("tests/test_demo_wordings_english"),
 )
-def test_demo_wordings_english(ending_case_dir, snapshot, set_redis):
+def test_demo_wordings_english(demo_wordings_english_dir, snapshot, set_redis):
     with TestClient(app) as client:
         # Read input files from the case directory.
-        input_json = ending_case_dir.joinpath("input.json").read_text()
+        input_json = demo_wordings_english_dir.joinpath("input.json").read_text()
         # Call the tested endpoint.
         response = client.post(
             "/v2.3/check",
@@ -128,18 +128,18 @@ def test_demo_wordings_english(ending_case_dir, snapshot, set_redis):
             response.json(), sort_keys=True, indent=4, ensure_ascii=False
         )
         # Snapshot the return value.
-        snapshot.snapshot_dir = ending_case_dir
+        snapshot.snapshot_dir = demo_wordings_english_dir
         snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
-    "ending_case_dir",
+    "demo_wordings_german_dir",
     get_dirs("tests/test_demo_wordings_german"),
 )
-def test_demo_wordings_german(ending_case_dir, snapshot, set_redis):
+def test_demo_wordings_german(demo_wordings_german_dir, snapshot, set_redis):
     with TestClient(app) as client:
         # Read input files from the case directory.
-        input_json = ending_case_dir.joinpath("input.json").read_text()
+        input_json = demo_wordings_german_dir.joinpath("input.json").read_text()
         # Call the tested endpoint.
         response = client.post(
             "/v2.3/check",
@@ -152,7 +152,7 @@ def test_demo_wordings_german(ending_case_dir, snapshot, set_redis):
             response.json(), sort_keys=True, indent=4, ensure_ascii=False
         )
         # Snapshot the return value.
-        snapshot.snapshot_dir = ending_case_dir
+        snapshot.snapshot_dir = demo_wordings_german_dir
         snapshot.assert_match(output, "output.json")
 
 
