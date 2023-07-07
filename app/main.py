@@ -1794,6 +1794,15 @@ async def german_rules(
         tokens,
         offsets,
         rules["de"]["open_disc_words_data"],
+    )
+
+    list_full += sentences_matcher(
+        version,
+        config,
+        lang,
+        text,
+        tokens,
+        offsets,
         rules["de"]["open_disc_sentences_data"],
         rules["de"]["df_open_dis_sentence"],
     )
@@ -1806,9 +1815,9 @@ async def german_rules(
         tokens,
         offsets,
         rules["de"]["gender_words_data_no_noun"],
-        rules["de"]["gender_sentences_data"],
-        rules["de"]["df_gendered_sentences"],
-    ) + gendered_denom_analysis_de(
+    )
+
+    list_full += gendered_denom_analysis_de(
         version,
         config,
         lang,
@@ -1875,6 +1884,15 @@ async def german_rules(
         tokens,
         offsets,
         rules["de"]["bias_words_data_no_plur"],
+    )
+
+    list_full += sentences_matcher(
+        version,
+        config,
+        lang,
+        text,
+        tokens,
+        offsets,
         rules["de"]["bias_sentences_data"],
         rules["de"]["df_ub_sentences"],
     )
@@ -1898,8 +1916,6 @@ async def german_rules(
             tokens,
             offsets,
             rules["de"]["df_communal_words"],
-            None,
-            [],
             [],
             "communal",
         )
@@ -1915,9 +1931,19 @@ async def german_rules(
             tokens,
             offsets,
             rules["de"]["df_d_and_i_words"],
+            [],
+            subcategory,
+        )
+
+        list_full += sentences_matcher(
+            version,
+            config,
+            lang,
+            text,
+            tokens,
+            offsets,
             None,
             rules["de"]["df_terms_d_and_i_words"],
-            [],
             subcategory,
         )
 
@@ -1953,10 +1979,19 @@ async def german_rules(
         text,
         tokens,
         offsets,
-        rules["de"]["terms_style"],
         rules["de"]["style_words_data"],
-        rules["de"]["style_sentences_data"],
         rules["de"]["false_positives"].style,
+    )
+
+    list_full += sentences_matcher(
+        version,
+        config,
+        lang,
+        text,
+        tokens,
+        offsets,
+        rules["de"]["style_sentences_data"],
+        rules["de"]["terms_style"],
     )
 
     list_full += regex_match(
@@ -2029,9 +2064,18 @@ async def english_rules(
         tokens,
         offsets,
         words_data_en["od"],
+        false_positive_matcher,
+    )
+
+    list_full += sentences_matcher(
+        version,
+        config,
+        lang,
+        text,
+        tokens,
+        offsets,
         sentences_data_en["od"],
         rules[lang.locale]["df_open_dis_sentence"],
-        false_positive_matcher,
     )
 
     list_full += rules_based_words_phrase_matcher(
@@ -2042,9 +2086,18 @@ async def english_rules(
         tokens,
         offsets,
         words_data_en["ge"],
+        false_positive_matcher,
+    )
+
+    list_full += sentences_matcher(
+        version,
+        config,
+        lang,
+        text,
+        tokens,
+        offsets,
         sentences_data_en["ge"],
         rules[lang.locale]["df_gendered_sentence"],
-        false_positive_matcher,
     )
 
     if is_sub_category_enabled(config, "advanced_binary_pronouns"):
@@ -2056,8 +2109,6 @@ async def english_rules(
             tokens,
             offsets,
             words_data_en["ge-singular-they"],
-            [],
-            [],
             false_positive_matcher,
             None,
             True,
@@ -2092,9 +2143,18 @@ async def english_rules(
         tokens,
         offsets,
         inclusive_words_data_en,
+        false_positive_matcher,
+    )
+
+    list_full += sentences_matcher(
+        version,
+        config,
+        lang,
+        text,
+        tokens,
+        offsets,
         inclusive_sentences_data_en,
         rules[lang.locale]["df_inclusive_sentence"],
-        false_positive_matcher,
     )
 
     list_full += rules_based_words_phrase_matcher(
@@ -2105,9 +2165,18 @@ async def english_rules(
         tokens,
         offsets,
         words_data_en["style"],
+        false_positive_matcher,
+    )
+
+    list_full += sentences_matcher(
+        version,
+        config,
+        lang,
+        text,
+        tokens,
+        offsets,
         sentences_data_en["style"],
         rules[lang.locale]["df_style_sentence"],
-        false_positive_matcher,
     )
 
     list_full += word_noun(
@@ -2133,9 +2202,18 @@ async def english_rules(
         tokens,
         offsets,
         words_data_en["bias"],
+        false_positive_matcher,
+    )
+
+    list_full += sentences_matcher(
+        version,
+        config,
+        lang,
+        text,
+        tokens,
+        offsets,
         sentences_data_en["bias"],
         rules[lang.locale]["df_ub_sentence"],
-        false_positive_matcher,
     )
 
     list_full += word_noun(
@@ -3165,8 +3243,6 @@ def ub_words_phrase_matcher_de(
     tokens,
     offsets,
     words_data,
-    sentences_data,
-    df_sentence,
 ):
     list_tokens = []
 
@@ -3208,16 +3284,7 @@ def ub_words_phrase_matcher_de(
                 )
             )
 
-    return list_tokens + sentences_matcher(
-        version,
-        config,
-        lang,
-        full_text,
-        tokens,
-        offsets,
-        sentences_data,
-        df_sentence,
-    )
+    return list_tokens
 
 
 def gendered_denom_analysis_de(
@@ -3401,9 +3468,7 @@ def style_word_analysis_de(
     full_text,
     tokens,
     offsets,
-    df_sentences,
     words_data,
-    sentences_data,
     false_positives,
 ):
     list_tokens = []
@@ -3468,16 +3533,7 @@ def style_word_analysis_de(
                 )
             )
 
-    return list_tokens + sentences_matcher(
-        version,
-        config,
-        lang,
-        full_text,
-        tokens,
-        offsets,
-        sentences_data,
-        df_sentences,
-    )
+    return list_tokens
 
 
 def word_noun(
@@ -3642,8 +3698,6 @@ def rules_based_words_phrase_matcher(
     tokens,
     offsets,
     words_data,
-    sentences_data=None,
-    df_sentence=None,
     false_positive_matcher=None,
     fallback_subcategory=None,
     they=False,
@@ -3743,17 +3797,7 @@ def rules_based_words_phrase_matcher(
             if get_proficiency_level(subcategory) == "openly_discriminating":
                 break
 
-    return list_tokens + sentences_matcher(
-        version,
-        config,
-        lang,
-        full_text,
-        tokens,
-        offsets,
-        sentences_data,
-        df_sentence,
-        fallback_subcategory,
-    )
+    return list_tokens
 
 
 # english function to handle homonyms
