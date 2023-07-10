@@ -1923,7 +1923,8 @@ async def german_rules(
         if i < new_i:
             continue
 
-        if len(tokens[i].text) <= 1:
+        token_text = tokens[i].text
+        if len(tokens[i].text) <= 1 or not token_text[0].isalpha():
             new_i += 1
             continue
 
@@ -2247,7 +2248,8 @@ async def english_rules(
         if i < new_i:
             continue
 
-        if len(tokens[i].text) <= 1:
+        token_text = tokens[i].text
+        if len(tokens[i].text) <= 1 or not token_text[0].isalpha():
             new_i += 1
             continue
 
