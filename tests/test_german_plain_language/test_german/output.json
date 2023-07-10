@@ -294,84 +294,6 @@
         {
             "alternatives": [
                 {
-                    "text": "Key Performance Indicator (KPI)"
-                },
-                {
-                    "text": "Leistungskennzahl"
-                },
-                {
-                    "text": "Kennzahl"
-                }
-            ],
-            "category": "cultural-diversity",
-            "context": "tzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine Leser*inne",
-            "end": 281,
-            "explanation": {
-                "icon": "😉",
-                "text": "Werden alle Lesenden diese Abkürzung verstehen?",
-                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/abkürzung?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Kulturelle Diversität: Abkürzung",
-            "proficiency_level": "unconscious_bias",
-            "start": 278,
-            "subcategory": "abbreviation",
-            "text": "KPI"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "Kernfrage"
-                },
-                {
-                    "text": "komplexe Aufgabe"
-                },
-                {
-                    "text": "Schwierigkeit"
-                },
-                {
-                    "text": "Hindernis"
-                },
-                {
-                    "text": "komplexe Materie"
-                }
-            ],
-            "category": "social-motive",
-            "context": "ere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie e",
-            "end": 436,
-            "explanation": {
-                "content": "video",
-                "icon": "😒",
-                "text": "Spricht kooperativ denkende Menschen nicht an",
-                "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Soziale Motivation: Agentische Sprache",
-            "proficiency_level": "unconscious_bias",
-            "start": 429,
-            "subcategory": "agentic",
-            "text": "Problem"
-        },
-        {
-            "alternatives": [],
-            "category": "social-motive",
-            "context": "unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verp",
-            "end": 382,
-            "explanation": {
-                "content": "advanced",
-                "icon": "✅",
-                "text": "Fördere den Austausch über Vielfalt, Gleichheit, Teilhabe und Zugehörigkeit",
-                "url": "https://www.witty.works/de/kategorien/soziale-motivation/vielfalt-gleichheit-teilhabe-zugehörigkeit?reducedView=true"
-            },
-            "label": "Soziale Motivation: DEIB",
-            "proficiency_level": "inclusive",
-            "start": 371,
-            "subcategory": "d_and_i",
-            "text": "Leser*innen"
-        },
-        {
-            "alternatives": [
-                {
                     "remove": true
                 }
             ],
@@ -438,6 +360,33 @@
         {
             "alternatives": [
                 {
+                    "text": "Key Performance Indicator (KPI)"
+                },
+                {
+                    "text": "Leistungskennzahl"
+                },
+                {
+                    "text": "Kennzahl"
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "tzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine Leser*inne",
+            "end": 281,
+            "explanation": {
+                "icon": "😉",
+                "text": "Werden alle Lesenden diese Abkürzung verstehen?",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/abkürzung?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Kulturelle Diversität: Abkürzung",
+            "proficiency_level": "unconscious_bias",
+            "start": 278,
+            "subcategory": "abbreviation",
+            "text": "KPI"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "Pressekonferenz"
                 },
                 {
@@ -497,6 +446,57 @@
             "start": 333,
             "subcategory": "advanced_anglicism",
             "text": "Performance"
+        },
+        {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verp",
+            "end": 382,
+            "explanation": {
+                "content": "advanced",
+                "icon": "✅",
+                "text": "Fördere den Austausch über Vielfalt, Gleichheit, Teilhabe und Zugehörigkeit",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/vielfalt-gleichheit-teilhabe-zugehörigkeit?reducedView=true"
+            },
+            "label": "Soziale Motivation: DEIB",
+            "proficiency_level": "inclusive",
+            "start": 371,
+            "subcategory": "d_and_i",
+            "text": "Leser*innen"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Kernfrage"
+                },
+                {
+                    "text": "komplexe Aufgabe"
+                },
+                {
+                    "text": "Schwierigkeit"
+                },
+                {
+                    "text": "Hindernis"
+                },
+                {
+                    "text": "komplexe Materie"
+                }
+            ],
+            "category": "social-motive",
+            "context": "ere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie e",
+            "end": 436,
+            "explanation": {
+                "content": "video",
+                "icon": "😒",
+                "text": "Spricht kooperativ denkende Menschen nicht an",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Soziale Motivation: Agentische Sprache",
+            "proficiency_level": "unconscious_bias",
+            "start": 429,
+            "subcategory": "agentic",
+            "text": "Problem"
         },
         {
             "alternatives": [

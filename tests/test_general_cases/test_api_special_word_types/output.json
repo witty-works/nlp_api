@@ -20,22 +20,6 @@
             "text": "felt"
         },
         {
-            "alternatives": [],
-            "category": "social-motive",
-            "context": "I felt very encouraged as a Deaf person.",
-            "end": 22,
-            "explanation": {
-                "icon": "✅",
-                "text": "Conveys emotional security",
-                "url": "https://www.witty.works/en/categories/social-motive/positive-emotions?reducedView=true"
-            },
-            "label": "Social Motive: Positive emotions",
-            "proficiency_level": "inclusive",
-            "start": 12,
-            "subcategory": "emotional_security",
-            "text": "encouraged"
-        },
-        {
             "alternatives": [
                 {
                     "remove": true
@@ -56,6 +40,22 @@
             "start": 7,
             "subcategory": "filler",
             "text": "very"
+        },
+        {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "I felt very encouraged as a Deaf person.",
+            "end": 22,
+            "explanation": {
+                "icon": "✅",
+                "text": "Conveys emotional security",
+                "url": "https://www.witty.works/en/categories/social-motive/positive-emotions?reducedView=true"
+            },
+            "label": "Social Motive: Positive emotions",
+            "proficiency_level": "inclusive",
+            "start": 12,
+            "subcategory": "emotional_security",
+            "text": "encouraged"
         }
     ]
 }

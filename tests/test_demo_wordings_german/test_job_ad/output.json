@@ -5,65 +5,6 @@
         {
             "alternatives": [
                 {
-                    "text": "Projektleitung"
-                },
-                {
-                    "text": "Projektleiter*in"
-                },
-                {
-                    "text": "Projektleiterin/Projektleiter"
-                }
-            ],
-            "category": "gender-orientation",
-            "context": "Als selbstständiger Projektleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollege",
-            "end": 33,
-            "explanation": {
-                "content": "advanced",
-                "icon": "😟",
-                "text": "Viele denken zuerst an bestimmtes Geschlecht",
-                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Geschlecht + Orientierung: Berufe",
-            "proficiency_level": "unconscious_bias",
-            "start": 20,
-            "subcategory": "titles",
-            "text": "Projektleiter"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "Kolleg*innen"
-                },
-                {
-                    "text": "Kolleginnen und Kollegen"
-                },
-                {
-                    "text": "Kollegschaft"
-                },
-                {
-                    "text": "Team"
-                }
-            ],
-            "category": "gender-orientation",
-            "context": "tleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielstrebig\nneue Höchstleistungen.",
-            "end": 134,
-            "explanation": {
-                "content": "advanced",
-                "icon": "💡",
-                "text": "Viele denken bei diesem Wort zuerst an einen Mann",
-                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Geschlecht + Orientierung: Generisches Maskulinum",
-            "proficiency_level": "unconscious_bias",
-            "start": 126,
-            "subcategory": "function",
-            "text": "Kollegen"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "verantwortungsfreudiger"
                 },
                 {
@@ -88,6 +29,34 @@
             "start": 4,
             "subcategory": "agentic",
             "text": "selbstständiger"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Projektleitung"
+                },
+                {
+                    "text": "Projektleiter*in"
+                },
+                {
+                    "text": "Projektleiterin/Projektleiter"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Als selbstständiger Projektleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollege",
+            "end": 33,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Viele denken zuerst an bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufe",
+            "proficiency_level": "unconscious_bias",
+            "start": 20,
+            "subcategory": "titles",
+            "text": "Projektleiter"
         },
         {
             "alternatives": [
@@ -149,6 +118,23 @@
             "text": "anspruchsvolle"
         },
         {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "Als selbstständiger Projektleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielstrebig\nneue Höchstleistungen.",
+            "end": 93,
+            "explanation": {
+                "content": "video",
+                "icon": "✅",
+                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true"
+            },
+            "label": "Soziale Motivation: Kommunale Sprache",
+            "proficiency_level": "inclusive",
+            "start": 84,
+            "subcategory": "communal",
+            "text": "gemeinsam"
+        },
+        {
             "alternatives": [
                 {
                     "text": "engagierten"
@@ -185,6 +171,37 @@
         {
             "alternatives": [
                 {
+                    "text": "Kolleg*innen"
+                },
+                {
+                    "text": "Kolleginnen und Kollegen"
+                },
+                {
+                    "text": "Kollegschaft"
+                },
+                {
+                    "text": "Team"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "tleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielstrebig\nneue Höchstleistungen.",
+            "end": 134,
+            "explanation": {
+                "content": "advanced",
+                "icon": "💡",
+                "text": "Viele denken bei diesem Wort zuerst an einen Mann",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Generisches Maskulinum",
+            "proficiency_level": "unconscious_bias",
+            "start": 126,
+            "subcategory": "function",
+            "text": "Kollegen"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "umsetzungsfreudig"
                 },
                 {
@@ -212,23 +229,6 @@
             "start": 135,
             "subcategory": "agentic",
             "text": "zielstrebig"
-        },
-        {
-            "alternatives": [],
-            "category": "social-motive",
-            "context": "Als selbstständiger Projektleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielstrebig\nneue Höchstleistungen.",
-            "end": 93,
-            "explanation": {
-                "content": "video",
-                "icon": "✅",
-                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
-                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true"
-            },
-            "label": "Soziale Motivation: Kommunale Sprache",
-            "proficiency_level": "inclusive",
-            "start": 84,
-            "subcategory": "communal",
-            "text": "gemeinsam"
         },
         {
             "alternatives": [
