@@ -1513,6 +1513,9 @@ def utf16_offsets(text):
 
 # matcher to false positives
 def is_false_positive_match(false_positive_matcher, tokens, token):
+    if false_positive_matcher is None:
+        return False
+
     for match_id, start, end in false_positive_matcher:
         span_false = tokens[start:end]
         if token.idx in range(span_false.start_char, span_false.end_char):
@@ -2291,9 +2294,6 @@ def is_word_match(
 
     if not check_word_types(lang, token, word_types, True):
         return False
-
-    if false_positive_matcher is None:
-        return True
 
     return is_false_positive_match(false_positive_matcher, tokens, token) == False
 
@@ -3235,6 +3235,238 @@ def sentences_matcher(
     return list_tokens
 
 
+def regex_match(
+    version: float,
+    config: Config,
+    lang,
+    full_text,
+    tokens,
+    offsets,
+    words_data,
+    check_case=None,
+):
+    list_tokens = []
+
+    token = None
+    for i in range(len(tokens)):
+        token = tokens[i]
+        for word, word_types, subcategory, *data in words_data:
+            if not is_sub_category_enabled(config, subcategory):
+                continue
+
+            token_offsets = word_types.split(",")
+            # ",_" or "1,7,/"
+            if token_offsets[0] == "" or len(token_offsets) == 3:
+                connector_string = token_offsets.pop()
+            else:
+                connector_string = ""
+
+            # run regex on exactly the token
+            if len(token_offsets) != 2:
+                text = check_text = tokens[i].text
+            else:
+                text = check_text = ""
+
+                try:
+                    token_offsets[0] = int(token_offsets[0])
+                    token_offsets[1] = int(token_offsets[1])
+
+                    multi_part = token_offsets[1] - token_offsets[0] > 1
+                    if not multi_part:
+                        if token.text != connector_string:
+                            continue
+
+                        text = check_text = connector_string
+                    elif (
+                        i > 0
+                        and tokens[i + token_offsets[0] - 1].text == connector_string
+                    ):
+                        continue
+
+                    while token_offsets[0] < token_offsets[1]:
+                        offset_token = tokens[i + token_offsets[0]]
+
+                        check_text += offset_token.text
+                        if token_offsets[0] >= 0:
+                            text += offset_token.text
+
+                        if offset_token.whitespace_ != "":
+                            break
+
+                        token_offsets[0] += 1
+                        if tokens[i + token_offsets[0]].text != connector_string:
+                            break
+
+                        check_text += connector_string
+                        if token_offsets[0] >= 0:
+                            text += connector_string
+
+                        token_offsets[0] += 1
+                except IndexError:
+                    pass
+
+            # handle "Noch besser x/f/m."
+            text = text.rstrip(".")
+            check_text = check_text.rstrip(".")
+
+            if text == "" or not re.search(word, check_text):
+                continue
+
+            alternatives = []
+            explanation = None
+            url = None
+            icon = None
+
+            if len(data):
+                alternatives = data[0]
+
+                if len(data) > 1 and data[1] is not None:
+                    explanation, url, icon = map(data[1].get, ("text", "url", "icon"))
+
+            start = token.idx
+
+            if subcategory == "d_and_i":
+                if check_case == "gender_denom" and check_text.islower():
+                    text_split = text.split(connector_string)
+                    if (
+                        text_split[0] not in rules["de"]["female_articles"]
+                        or text_split[1] not in rules["de"]["male_articles"]
+                    ):
+                        continue
+
+            elif subcategory == "advanced_gendered_denominations_ending":
+                if check_text.islower():
+                    if connector_string == "/" and tokens[i - 1].text.islower():
+                        text = tokens[i - 1].text + text
+
+                    text_split = text.split(connector_string)
+                    if (
+                        text_split[0] not in rules["de"]["female_articles"]
+                        or text_split[1] not in rules["de"]["male_articles"]
+                    ):
+                        continue
+
+                    alternatives = [
+                        text.replace(connector_string, config.german_gender_ending[0])
+                    ]
+                # Kundinnen -> Kund*innen
+                elif text[-3:] == "nen":
+                    alternatives = [alternatives[0] + "nen"]
+            elif subcategory == "gender_specific_abbreviation":
+                parenthesis = (
+                    i > 0
+                    and tokens[i - 1].text == "("
+                    and tokens[i + len(text)].text == ")"
+                )
+
+                letters = text
+                if parenthesis:
+                    letters = letters[1:-1]
+
+                letters = text.split("/")
+
+                letters = list(map(lambda x: x.upper(), letters))
+                is_lower = text[0].islower()
+
+                veteran_letter = "V"
+                diverse_letter = "D"
+                if diverse_letter not in letters and "*" not in letters:
+                    letters.append(diverse_letter)
+
+                x_letter = "X"
+                without_x = True
+                if "X" in letters:
+                    letters.remove("X")
+                    without_x = False
+
+                without_v = True
+                if "V" in letters:
+                    letters.remove("V")
+                    without_v = False
+
+                if "W" in letters:
+                    letters.remove("W")
+                    letters.append("F")
+
+                alternative = "/".join(sorted(letters))
+                if is_lower:
+                    alternative = alternative.lower()
+                    diverse_letter = diverse_letter.lower()
+                    veteran_letter = veteran_letter.lower()
+                    x_letter = x_letter.lower()
+
+                if parenthesis:
+                    start -= 1
+                    text = "(" + text + ")"
+                    alternative = "(" + alternative + ")"
+
+                context_v = "--- include veterans"
+                if lang.lang == "de":
+                    context_d = "--- Divers (EU) / m. Behinderung (NA)"
+                    context_remove = "--- Nutze geschlechtsneutrale Job-Titel"
+                    explanation = "Nenne unterrepräsentierte Gruppen zuerst. Verlinke auf deine Leitlinie zur Gleichstellung."
+                else:
+                    context_d = "--- disabled (NA) / diverse (EU)"
+                    context_remove = "--- Use gender neutral job title"
+                    explanation = "Put underrepresented groups first and link to your equal opportunity policy"
+
+                alternative_3 = None
+                if "*" in alternative:
+                    alternative_2 = alternative.replace("*", diverse_letter)
+                    alternative_v = alternative_2
+                    alternative_2 += context_d
+                    if not without_x:
+                        alternative_3 = alternative.replace("*", x_letter)
+                else:
+                    alternative_2 = alternative.replace(diverse_letter, "*")
+                    alternative_v = alternative
+                    if not without_x:
+                        alternative_3 = alternative.replace(diverse_letter, x_letter)
+                    alternative += context_d
+
+                if lang.lang == "en":
+                    alternative_v = alternative_v.replace(
+                        diverse_letter, diverse_letter + "/" + veteran_letter
+                    )
+
+                    if without_v == False:
+                        alternative = alternative_v + context_d
+                    else:
+                        alternative_v += context_v
+
+                alternatives = ["- " + context_remove, alternative]
+
+                if lang.lang == "en" and without_v:
+                    alternatives.append(alternative_v)
+
+                if lang.lang == "de" or "*" in alternative:
+                    alternatives.append(alternative_2)
+
+                if alternative_3 is not None:
+                    alternatives.append(alternative_3)
+
+            list_tokens.append(
+                ResultOut.factory(
+                    version,
+                    config,
+                    lang,
+                    text,
+                    full_text,
+                    offsets,
+                    subcategory,
+                    start,
+                    None,
+                    alternatives,
+                    None,
+                    explanation,
+                    url,
+                    icon,
+                )
+            )
+
+    return list_tokens
+
+
 def ub_words_phrase_matcher_de(
     version: float,
     config: Config,
@@ -3900,236 +4132,6 @@ def simple_match(
             text, start, alternatives = alternatives_declension(
                 lang.lang, text, token, alternatives, prev_token
             )
-
-            list_tokens.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    text,
-                    full_text,
-                    offsets,
-                    subcategory,
-                    start,
-                    None,
-                    alternatives,
-                    None,
-                    explanation,
-                    url,
-                    icon,
-                )
-            )
-
-    return list_tokens
-
-
-def regex_match(
-    version: float,
-    config: Config,
-    lang,
-    full_text,
-    tokens,
-    offsets,
-    words_data,
-    check_case=None,
-):
-    list_tokens = []
-
-    token = None
-    for i in range(len(tokens)):
-        token = tokens[i]
-        for word, word_types, subcategory, *data in words_data:
-            if not is_sub_category_enabled(config, subcategory):
-                continue
-
-            token_offsets = word_types.split(",")
-            # ",_" or "1,7,/"
-            if token_offsets[0] == "" or len(token_offsets) == 3:
-                connector_string = token_offsets.pop()
-            else:
-                connector_string = ""
-
-            if len(token_offsets) != 2:
-                text = check_text = tokens[i].text
-            else:
-                text = check_text = ""
-
-                try:
-                    token_offsets[0] = int(token_offsets[0])
-                    token_offsets[1] = int(token_offsets[1])
-
-                    multi_part = token_offsets[1] - token_offsets[0] > 1
-                    if not multi_part:
-                        if token.text != connector_string:
-                            continue
-
-                        text = check_text = connector_string
-                    elif (
-                        i > 0
-                        and tokens[i + token_offsets[0] - 1].text == connector_string
-                    ):
-                        continue
-
-                    while token_offsets[0] < token_offsets[1]:
-                        offset_token = tokens[i + token_offsets[0]]
-
-                        check_text += offset_token.text
-                        if token_offsets[0] >= 0:
-                            text += offset_token.text
-
-                        if offset_token.whitespace_ != "":
-                            break
-
-                        token_offsets[0] += 1
-                        if tokens[i + token_offsets[0]].text != connector_string:
-                            break
-
-                        check_text += connector_string
-                        if token_offsets[0] >= 0:
-                            text += connector_string
-
-                        token_offsets[0] += 1
-                except IndexError:
-                    pass
-
-            # handle "Noch besser x/f/m."
-            text = text.rstrip(".")
-            check_text = check_text.rstrip(".")
-
-            if text == "" or not re.search(word, check_text):
-                continue
-
-            alternatives = []
-            explanation = None
-            url = None
-            icon = None
-
-            if len(data):
-                alternatives = data[0]
-
-                if len(data) > 1 and data[1] is not None:
-                    explanation, url, icon = map(data[1].get, ("text", "url", "icon"))
-
-            start = token.idx
-
-            if subcategory == "d_and_i":
-                if check_case == "gender_denom" and check_text.islower():
-                    text_split = text.split(connector_string)
-                    if (
-                        text_split[0] not in rules["de"]["female_articles"]
-                        or text_split[1] not in rules["de"]["male_articles"]
-                    ):
-                        continue
-
-            elif subcategory == "advanced_gendered_denominations_ending":
-                if check_text.islower():
-                    if connector_string == "/" and tokens[i - 1].text.islower():
-                        text = tokens[i - 1].text + text
-
-                    text_split = text.split(connector_string)
-                    if (
-                        text_split[0] not in rules["de"]["female_articles"]
-                        or text_split[1] not in rules["de"]["male_articles"]
-                    ):
-                        continue
-
-                    alternatives = [
-                        text.replace(connector_string, config.german_gender_ending[0])
-                    ]
-                elif text[-3:] == "nen":
-                    alternatives = [alternatives[0] + "nen"]
-            elif subcategory == "gender_specific_abbreviation":
-                parenthesis = (
-                    i > 0
-                    and tokens[i - 1].text == "("
-                    and tokens[i + len(text)].text == ")"
-                )
-
-                letters = text
-                if parenthesis:
-                    letters = letters[1:-1]
-
-                letters = text.split("/")
-
-                letters = list(map(lambda x: x.upper(), letters))
-                is_lower = text[0].islower()
-
-                veteran_letter = "V"
-                diverse_letter = "D"
-                if diverse_letter not in letters and "*" not in letters:
-                    letters.append(diverse_letter)
-
-                x_letter = "X"
-                without_x = True
-                if "X" in letters:
-                    letters.remove("X")
-                    without_x = False
-
-                without_v = True
-                if "V" in letters:
-                    letters.remove("V")
-                    without_v = False
-
-                if "W" in letters:
-                    letters.remove("W")
-                    letters.append("F")
-
-                alternative = "/".join(sorted(letters))
-                if is_lower:
-                    alternative = alternative.lower()
-                    diverse_letter = diverse_letter.lower()
-                    veteran_letter = veteran_letter.lower()
-                    x_letter = x_letter.lower()
-
-                if parenthesis:
-                    start -= 1
-                    text = "(" + text + ")"
-                    alternative = "(" + alternative + ")"
-
-                context_v = "--- include veterans"
-                if lang.lang == "de":
-                    context_d = "--- Divers (EU) / m. Behinderung (NA)"
-                    context_remove = "--- Nutze geschlechtsneutrale Job-Titel"
-                    explanation = "Nenne unterrepräsentierte Gruppen zuerst. Verlinke auf deine Leitlinie zur Gleichstellung."
-                else:
-                    context_d = "--- disabled (NA) / diverse (EU)"
-                    context_remove = "--- Use gender neutral job title"
-                    explanation = "Put underrepresented groups first and link to your equal opportunity policy"
-
-                alternative_3 = None
-                if "*" in alternative:
-                    alternative_2 = alternative.replace("*", diverse_letter)
-                    alternative_v = alternative_2
-                    alternative_2 += context_d
-                    if not without_x:
-                        alternative_3 = alternative.replace("*", x_letter)
-                else:
-                    alternative_2 = alternative.replace(diverse_letter, "*")
-                    alternative_v = alternative
-                    if not without_x:
-                        alternative_3 = alternative.replace(diverse_letter, x_letter)
-                    alternative += context_d
-
-                if lang.lang == "en":
-                    alternative_v = alternative_v.replace(
-                        diverse_letter, diverse_letter + "/" + veteran_letter
-                    )
-
-                    if without_v == False:
-                        alternative = alternative_v + context_d
-                    else:
-                        alternative_v += context_v
-
-                alternatives = ["- " + context_remove, alternative]
-
-                if lang.lang == "en" and without_v:
-                    alternatives.append(alternative_v)
-
-                if lang.lang == "de" or "*" in alternative:
-                    alternatives.append(alternative_2)
-
-                if alternative_3 is not None:
-                    alternatives.append(alternative_3)
 
             list_tokens.append(
                 ResultOut.factory(
