@@ -36,7 +36,7 @@
         {
             "alternatives": [
                 {
-                    "text": "Kund*in"
+                    "text": "*in"
                 }
             ],
             "category": "gender-orientation",
@@ -50,9 +50,9 @@
             "gravity": 3.0,
             "label": "Geschlecht + Orientierung: Inklusive Endung",
             "proficiency_level": "unconscious_bias",
-            "start": 13,
+            "start": 17,
             "subcategory": "advanced_gendered_denominations_ending",
-            "text": "Kund/in"
+            "text": "/in"
         }
     ]
 }

@@ -1602,17 +1602,7 @@ def apply_term_replacements(
     if "term_replacements" not in configs:
         return []
 
-    term_replacements_case_insensitive = {}
-    term_replacements_case_sensitive = {}
-
-    term_replacements_lemma = {
-        "Lemma": [],
-        "Word_Type": [],
-        "Alt_split": [],
-        "Primary_subcategory": [],
-        "Explanation": [],
-    }
-
+    term_replacements = []
     for term in configs["term_replacements"]:
         term_replacement = configs["term_replacements"][term]
 
@@ -1632,71 +1622,34 @@ def apply_term_replacements(
         if "word_type" in term_replacement:
             word_type = term_replacement["word_type"]
         else:
-            word_type = "-"
+            word_type = "~"
 
-        if word_type == "-":
-            regexp = r"(?i)(\b" + term + r"\b)"
-            term_replacements_case_insensitive[regexp] = term_replacement
-        elif word_type == "=":
-            regexp = r"(\b" + term + r"\b)"
-            term_replacements_case_sensitive[regexp] = term_replacement
-        else:
-            term_replacements_lemma["Lemma"].append(term)
-            term_replacements_lemma["Word_Type"].append(word_type)
-            term_replacements_lemma["Primary_subcategory"].append("corporate_rules")
-            term_replacements_lemma["Alt_split"].append(
-                term_replacement["alternatives"]
-            )
-            term_replacements_lemma["Explanation"].append(
-                term_replacement["explanation"]
-            )
+        word_count = token_count(term, lang.lang)
+        if word_count > 1:
+            word_type = "|".join([word_type] * word_count)
 
-    list_result = []
-
-    if len(term_replacements_case_insensitive):
-        list_result += regex_matches(
-            version,
-            config,
-            lang,
-            text,
-            offsets,
-            term_replacements_case_insensitive,
-            "corporate_rules",
+        term_replacements.append(
+            [
+                term,
+                word_type,
+                "corporate_rules",
+                term_replacement["alternatives"],
+                term_replacement["explanation"],
+            ]
         )
 
-    if len(term_replacements_case_sensitive):
-        list_result += regex_matches(
-            version,
-            config,
-            lang,
-            text,
-            offsets,
-            term_replacements_case_sensitive,
-            "corporate_rules",
-        )
+    if len(term_replacements) == 0:
+        return []
 
-    if len(term_replacements_lemma):
-        term_replacements = list(
-            zip(
-                term_replacements_lemma["Lemma"],
-                term_replacements_lemma["Word_Type"],
-                term_replacements_lemma["Primary_subcategory"],
-                term_replacements_lemma["Alt_split"],
-                term_replacements_lemma["Explanation"],
-            )
-        )
-
-        list_result += rules_based_words_phrase_matcher(
-            version,
-            config,
-            lang,
-            text,
-            tokens,
-            offsets,
-            term_replacements,
-        )
-
-    return list_result
+    return simple_match(
+        version,
+        config,
+        lang,
+        text,
+        tokens,
+        offsets,
+        term_replacements,
+    )
 
 
 def apply_false_positives(
@@ -1826,16 +1779,14 @@ async def german_rules(
     list_full = []
 
     if is_sub_category_enabled(config, "abbreviation"):
-        list_full += literal_match(
+        list_full += simple_match(
             version,
             config,
             lang,
             text,
             tokens,
             offsets,
-            rules["de"]["df_abbreviation"],
             rules["de"]["abbreviation"],
-            True,
         )
 
     list_full += rules_based_words_phrase_matcher(
@@ -1846,6 +1797,15 @@ async def german_rules(
         tokens,
         offsets,
         rules["de"]["open_disc_words_data"],
+    )
+
+    list_full += sentences_matcher(
+        version,
+        config,
+        lang,
+        text,
+        tokens,
+        offsets,
         rules["de"]["open_disc_sentences_data"],
         rules["de"]["df_open_dis_sentence"],
     )
@@ -1858,9 +1818,9 @@ async def german_rules(
         tokens,
         offsets,
         rules["de"]["gender_words_data_no_noun"],
-        rules["de"]["gender_sentences_data"],
-        rules["de"]["df_gendered_sentences"],
-    ) + gendered_denom_analysis_de(
+    )
+
+    list_full += gendered_denom_analysis_de(
         version,
         config,
         lang,
@@ -1872,38 +1832,51 @@ async def german_rules(
     )
 
     if is_sub_category_enabled(config, "gender_specific_abbreviation"):
-        list_full += regex_matches(
-            version,
-            config,
-            lang,
-            text,
-            offsets,
-            rules["m_f_regexes"],
-            "gender_specific_abbreviation",
+        list_full += regex_match(
+            version, config, lang, text, tokens, offsets, rules["m_f_regexes"]
         )
 
-    if ResultOut.genderedRolesFormatInclusive(config.gendered_roles_format):
+    if is_sub_category_enabled(
+        config, "advanced_gendered_denominations_ending"
+    ) and ResultOut.genderedRolesFormatInclusive(config.gendered_roles_format):
         subcategory = "advanced_gendered_denominations_ending"
 
-        regexes = {}
-        for ending, regex in config._gendereddenom_ending.items():
+        endings = []
+        for key, regexp in config._gendereddenom_ending.items():
             if (
-                config.german_gender_ending == ending
+                config.german_gender_ending == key
                 # avoid issues with LinkedIn
-                or ending == GermanGenderEndingType.CAPITAL_LETTER
+                or key == GermanGenderEndingType.CAPITAL_LETTER
             ):
                 continue
 
-            regexes[regex] = config.german_gender_ending[0:-2]
+            ending = [
+                regexp,
+                config._gendereddenom_ending_word_type[key],
+                subcategory,
+                [config.german_gender_ending],
+            ]
 
-        list_full += regex_matches(
+            endings.append(ending)
+
+            # GermanGenderEndingType.SLASH_DASH is redundant to GermanGenderEndingType.SLASH
+            if key != GermanGenderEndingType.SLASH_DASH:
+                ending = [
+                    config._gendereddenom_ending_article[key],
+                    ("" if key[0] != "/" else "-1,2") + "," + key[0],
+                    subcategory,
+                ]
+
+                endings.append(ending)
+
+        list_full += regex_match(
             version,
             config,
             lang,
             text,
+            tokens,
             offsets,
-            regexes,
-            subcategory,
+            endings,
         )
 
     list_full += ub_words_phrase_matcher_de(
@@ -1914,6 +1887,15 @@ async def german_rules(
         tokens,
         offsets,
         rules["de"]["bias_words_data_no_plur"],
+    )
+
+    list_full += sentences_matcher(
+        version,
+        config,
+        lang,
+        text,
+        tokens,
+        offsets,
         rules["de"]["bias_sentences_data"],
         rules["de"]["df_ub_sentences"],
     )
@@ -1937,13 +1919,13 @@ async def german_rules(
             tokens,
             offsets,
             rules["de"]["df_communal_words"],
-            None,
-            [],
             [],
             "communal",
         )
 
     if is_sub_category_enabled(config, "d_and_i"):
+        subcategory = "d_and_i"
+
         list_full += rules_based_words_phrase_matcher(
             version,
             config,
@@ -1952,19 +1934,45 @@ async def german_rules(
             tokens,
             offsets,
             rules["de"]["df_d_and_i_words"],
-            None,
-            rules["de"]["df_terms_d_and_i_words"],
             [],
-            "d_and_i",
+            subcategory,
         )
 
-        subcategory = "d_and_i"
-        regexes = {config._gendereddenom_ending[config.german_gender_ending]: None}
+        list_full += sentences_matcher(
+            version,
+            config,
+            lang,
+            text,
+            tokens,
+            offsets,
+            None,
+            rules["de"]["df_terms_d_and_i_words"],
+            subcategory,
+        )
 
-        regexes.update(rules["d_f_m_regexes"])
+        # avoid issues with LinkedIn
+        if config.german_gender_ending != GermanGenderEndingType.CAPITAL_LETTER:
+            endings = [
+                [
+                    config._gendereddenom_ending[config.german_gender_ending],
+                    config._gendereddenom_ending_word_type[config.german_gender_ending],
+                    subcategory,
+                ],
+                [
+                    config._gendereddenom_ending_article[config.german_gender_ending],
+                    ("" if config.german_gender_ending[0] != "/" else "-1,1")
+                    + ","
+                    + config.german_gender_ending[0],
+                    subcategory,
+                ],
+            ]
 
-        list_full += regex_matches(
-            version, config, lang, text, offsets, regexes, subcategory
+            list_full += regex_match(
+                version, config, lang, text, tokens, offsets, endings, "gender_denom"
+            )
+
+        list_full += regex_match(
+            version, config, lang, text, tokens, offsets, rules["d_f_m_regexes"]
         )
 
     list_full += style_word_analysis_de(
@@ -1974,18 +1982,23 @@ async def german_rules(
         text,
         tokens,
         offsets,
-        rules["de"]["terms_style"],
         rules["de"]["style_words_data"],
-        rules["de"]["style_sentences_data"],
         rules["de"]["false_positives"].style,
     )
 
-    list_full += detect_lower_cased_hashtags(
+    list_full += sentences_matcher(
         version,
         config,
         lang,
         text,
+        tokens,
         offsets,
+        rules["de"]["style_sentences_data"],
+        rules["de"]["terms_style"],
+    )
+
+    list_full += regex_match(
+        version, config, lang, text, tokens, offsets, rules["de"]["hashtags"]
     )
 
     return list_full
@@ -2036,16 +2049,14 @@ async def english_rules(
     )
 
     if is_sub_category_enabled(config, "abbreviation"):
-        list_full += literal_match(
+        list_full += simple_match(
             version,
             config,
             lang,
             text,
             tokens,
             offsets,
-            rules[lang.locale]["df_abbreviation"],
             words_data_en["abbr"],
-            True,
         )
 
     list_full += rules_based_words_phrase_matcher(
@@ -2056,9 +2067,18 @@ async def english_rules(
         tokens,
         offsets,
         words_data_en["od"],
+        false_positive_matcher,
+    )
+
+    list_full += sentences_matcher(
+        version,
+        config,
+        lang,
+        text,
+        tokens,
+        offsets,
         sentences_data_en["od"],
         rules[lang.locale]["df_open_dis_sentence"],
-        false_positive_matcher,
     )
 
     list_full += rules_based_words_phrase_matcher(
@@ -2069,9 +2089,18 @@ async def english_rules(
         tokens,
         offsets,
         words_data_en["ge"],
+        false_positive_matcher,
+    )
+
+    list_full += sentences_matcher(
+        version,
+        config,
+        lang,
+        text,
+        tokens,
+        offsets,
         sentences_data_en["ge"],
         rules[lang.locale]["df_gendered_sentence"],
-        false_positive_matcher,
     )
 
     if is_sub_category_enabled(config, "advanced_binary_pronouns"):
@@ -2083,8 +2112,6 @@ async def english_rules(
             tokens,
             offsets,
             words_data_en["ge-singular-they"],
-            [],
-            [],
             false_positive_matcher,
             None,
             True,
@@ -2102,27 +2129,13 @@ async def english_rules(
     )
 
     if is_sub_category_enabled(config, "gender_specific_abbreviation"):
-        list_full += regex_matches(
-            version,
-            config,
-            lang,
-            text,
-            offsets,
-            rules["m_f_regexes"],
-            "gender_specific_abbreviation",
+        list_full += regex_match(
+            version, config, lang, text, tokens, offsets, rules["m_f_regexes"]
         )
 
     if is_sub_category_enabled(config, "d_and_i"):
-        subcategory = "d_and_i"
-
-        list_full += regex_matches(
-            version,
-            config,
-            lang,
-            text,
-            offsets,
-            rules["d_f_m_regexes"],
-            subcategory,
+        list_full += regex_match(
+            version, config, lang, text, tokens, offsets, rules["d_f_m_regexes"]
         )
 
     list_full += rules_based_words_phrase_matcher(
@@ -2133,9 +2146,18 @@ async def english_rules(
         tokens,
         offsets,
         inclusive_words_data_en,
+        false_positive_matcher,
+    )
+
+    list_full += sentences_matcher(
+        version,
+        config,
+        lang,
+        text,
+        tokens,
+        offsets,
         inclusive_sentences_data_en,
         rules[lang.locale]["df_inclusive_sentence"],
-        false_positive_matcher,
     )
 
     list_full += rules_based_words_phrase_matcher(
@@ -2146,9 +2168,18 @@ async def english_rules(
         tokens,
         offsets,
         words_data_en["style"],
+        false_positive_matcher,
+    )
+
+    list_full += sentences_matcher(
+        version,
+        config,
+        lang,
+        text,
+        tokens,
+        offsets,
         sentences_data_en["style"],
         rules[lang.locale]["df_style_sentence"],
-        false_positive_matcher,
     )
 
     list_full += word_noun(
@@ -2162,12 +2193,8 @@ async def english_rules(
         false_positive_matcher,
     )
 
-    list_full += detect_lower_cased_hashtags(
-        version,
-        config,
-        lang,
-        text,
-        offsets,
+    list_full += regex_match(
+        version, config, lang, text, tokens, offsets, rules["en"]["hashtags"]
     )
 
     list_full += rules_based_words_phrase_matcher(
@@ -2178,9 +2205,18 @@ async def english_rules(
         tokens,
         offsets,
         words_data_en["bias"],
+        false_positive_matcher,
+    )
+
+    list_full += sentences_matcher(
+        version,
+        config,
+        lang,
+        text,
+        tokens,
+        offsets,
         sentences_data_en["bias"],
         rules[lang.locale]["df_ub_sentence"],
-        false_positive_matcher,
     )
 
     list_full += word_noun(
@@ -2208,6 +2244,12 @@ def parse_word_types(word_types, lower_case=True):
         lower_case = True
         lemmatize = False
         word_types = word_types[1:]
+    # BC code, should use "~" or some other approach instead
+    elif word_types == "acr" or word_types == "abbr":
+        # exact match
+        lower_case = True
+        lemmatize = False
+        word_types = ""
     elif word_types[0] == "=":
         # exact match
         lower_case = False
@@ -2245,6 +2287,7 @@ def is_word_match(
 
     if lower_case and (lang == "en" or "s" not in word_types):
         token_word = token_word.lower()
+        word = word.lower()
 
     if token_word != word and (not postfix or not token_word.endswith(word.lower())):
         return False
@@ -2266,17 +2309,17 @@ def is_phrase_match(
     postfix=False,
 ):
     text = ""
-    words = word.split()
     word_types = word_types.split("|")
-    words_count = len(words)
 
-    if words_count == 1:
+    words = tokenize(word, lang)
+    word_count = len(words)
+    if word_count == 1:
         word_types = [word_types[-1]]
     else:
         postfix = False
 
     word_token = None
-    for k in range(words_count):
+    for k in range(word_count):
         if word_token:
             text += word_token.whitespace_
 
@@ -2766,6 +2809,14 @@ def align_verb_form(lang, a_text, a_token, b_token):
     return b_text
 
 
+def tokenize(text, lang):
+    return [i.text for i in model[lang].tokenizer(text)]
+
+
+def token_count(text, lang):
+    return len(tokenize(text, lang))
+
+
 def alternative_declension(lang, text, token, word_types, prepend_word, alternative):
     (
         parsed_alternative,
@@ -2789,12 +2840,12 @@ def alternative_declension(lang, text, token, word_types, prepend_word, alternat
         return alternative
 
     alternative_tokens = fetch_tokens(lang, parsed_alternative)
-    word_count = text.count(" ")
+    word_count = token_count(text, lang)
     if prepend_word:
         word_count -= 1
 
     is_plural_alternative = False
-    if word_count:
+    if word_count > 1:
         # TODO figure out how to modify phrases
         new_alternative = alternative
         is_plural_alternative = is_token_plural(lang, alternative_tokens[-1])
@@ -3184,52 +3235,138 @@ def sentences_matcher(
     return list_tokens
 
 
-def regex_matches(
+def regex_match(
     version: float,
     config: Config,
     lang,
     full_text,
+    tokens,
     offsets,
-    regexes,
-    subcategory=None,
+    words_data,
+    check_case=None,
 ):
-    list_ending = []
-    alternatives = None
-    for regex in regexes:
-        matches = re.finditer(regex, full_text)
+    list_tokens = []
 
-        for span in matches:
-            if type(span) != re.Match:
+    token = None
+    for i in range(len(tokens)):
+        token = tokens[i]
+        for word, word_types, subcategory, *data in words_data:
+            if not is_sub_category_enabled(config, subcategory):
                 continue
 
-            text = span.group(1)
-            start = span.start()
+            token_offsets = word_types.split(",")
+            # ",_" or "1,7,/"
+            if token_offsets[0] == "" or len(token_offsets) == 3:
+                connector_string = token_offsets.pop()
+            else:
+                connector_string = ""
+
+            # run regex on exactly the token
+            if len(token_offsets) != 2:
+                text = check_text = tokens[i].text
+            else:
+                text = check_text = ""
+
+                try:
+                    token_offsets[0] = int(token_offsets[0])
+                    token_offsets[1] = int(token_offsets[1])
+
+                    multi_part = token_offsets[1] - token_offsets[0] > 1
+                    if not multi_part:
+                        if token.text != connector_string:
+                            continue
+
+                        text = check_text = connector_string
+                    elif (
+                        i > 0
+                        and tokens[i + token_offsets[0] - 1].text == connector_string
+                    ):
+                        continue
+
+                    while token_offsets[0] < token_offsets[1]:
+                        offset_token = tokens[i + token_offsets[0]]
+
+                        check_text += offset_token.text
+                        if token_offsets[0] >= 0:
+                            text += offset_token.text
+
+                        if offset_token.whitespace_ != "":
+                            break
+
+                        token_offsets[0] += 1
+                        if tokens[i + token_offsets[0]].text != connector_string:
+                            break
+
+                        check_text += connector_string
+                        if token_offsets[0] >= 0:
+                            text += connector_string
+
+                        token_offsets[0] += 1
+                except IndexError:
+                    pass
+
+            # handle "Noch besser x/f/m."
+            text = text.rstrip(".")
+            check_text = check_text.rstrip(".")
+
+            if text == "" or not re.search(word, check_text):
+                continue
+
+            alternatives = []
             explanation = None
             url = None
             icon = None
-            # case-(in)sensitive term_replacements
-            if isinstance(regexes[regex], dict):
-                text = span.group(0)
-                alternatives = regexes[regex]["alternatives"]
-                if isinstance(regexes[regex]["explanation"], dict):
-                    explanation, url, icon = map(
-                        regexes[regex]["explanation"].get, ("text", "url", "icon")
-                    )
-            # d_f_m_regexes
-            elif len(span.groups()) == 5 and subcategory == "d_and_i":
-                text = span.group(0).lstrip()
-                start += 1
-            # m_f_regexes
-            elif len(span.groups()) == 5:
-                text = span.group(0).lstrip()
-                start += 1
 
-                letters = [span.group(2), span.group(3)]
-                if span.group(4) is not None:
-                    letters = letters + span.group(4)[1:].split("/")
+            if len(data):
+                alternatives = data[0]
+
+                if len(data) > 1 and data[1] is not None:
+                    explanation, url, icon = map(data[1].get, ("text", "url", "icon"))
+
+            start = token.idx
+
+            if subcategory == "d_and_i":
+                if check_case == "gender_denom" and check_text.islower():
+                    text_split = text.split(connector_string)
+                    if (
+                        text_split[0] not in rules["de"]["female_articles"]
+                        or text_split[1] not in rules["de"]["male_articles"]
+                    ):
+                        continue
+
+            elif subcategory == "advanced_gendered_denominations_ending":
+                if check_text.islower():
+                    if connector_string == "/" and tokens[i - 1].text.islower():
+                        text = tokens[i - 1].text + text
+
+                    text_split = text.split(connector_string)
+                    if (
+                        text_split[0] not in rules["de"]["female_articles"]
+                        or text_split[1] not in rules["de"]["male_articles"]
+                    ):
+                        continue
+
+                    alternatives = [
+                        text.replace(connector_string, config.german_gender_ending[0])
+                    ]
+                # Kundinnen -> Kund*innen
+                elif text[-3:] == "nen":
+                    alternatives = [alternatives[0] + "nen"]
+            elif subcategory == "gender_specific_abbreviation":
+                parenthesis = (
+                    i > 0
+                    and tokens[i - 1].text == "("
+                    and tokens[i + len(text)].text == ")"
+                )
+
+                letters = text
+                if parenthesis:
+                    letters = letters[1:-1]
+
+                letters = text.split("/")
 
                 letters = list(map(lambda x: x.upper(), letters))
-                is_lower = span.group(2).islower()
+                is_lower = text[0].islower()
 
                 veteran_letter = "V"
                 diverse_letter = "D"
@@ -3258,8 +3395,9 @@ def regex_matches(
                     veteran_letter = veteran_letter.lower()
                     x_letter = x_letter.lower()
 
-                parenthesis = False if span.group(1) is None else True
                 if parenthesis:
+                    start -= 1
+                    text = "(" + text + ")"
                     alternative = "(" + alternative + ")"
 
                 context_v = "--- include veterans"
@@ -3306,28 +3444,8 @@ def regex_matches(
 
                 if alternative_3 is not None:
                     alternatives.append(alternative_3)
-            # gender inclusive ending
-            elif len(span.groups()) == 2:
-                text = span.group(0)
-                if (
-                    (
-                        text[0:1].islower()
-                        and span.group(2) in rules["de"]["male_articles"]
-                    )
-                    or text[0:1].isupper()
-                    and (span.group(2)[0:2] == "in" or span.group(2)[0:5] == "innen")
-                ):
-                    separator = regexes[regex]
-                    if separator is not None:
-                        if span.group(2) in rules["de"]["male_articles"]:
-                            separator = separator[0:1]
-                        alternatives = [span.group(1) + separator + span.group(2)]
-                else:
-                    continue
-            elif regexes[regex] is not None:
-                alternatives = regexes[regex]
 
-            list_ending.append(
+            list_tokens.append(
                 ResultOut.factory(
                     version,
                     config,
@@ -3346,7 +3464,7 @@ def regex_matches(
                 )
             )
 
-    return list_ending
+    return list_tokens
 
 
 def ub_words_phrase_matcher_de(
@@ -3357,8 +3475,6 @@ def ub_words_phrase_matcher_de(
     tokens,
     offsets,
     words_data,
-    sentences_data,
-    df_sentence,
 ):
     list_tokens = []
 
@@ -3400,16 +3516,7 @@ def ub_words_phrase_matcher_de(
                 )
             )
 
-    return list_tokens + sentences_matcher(
-        version,
-        config,
-        lang,
-        full_text,
-        tokens,
-        offsets,
-        sentences_data,
-        df_sentence,
-    )
+    return list_tokens
 
 
 def gendered_denom_analysis_de(
@@ -3593,9 +3700,7 @@ def style_word_analysis_de(
     full_text,
     tokens,
     offsets,
-    df_sentences,
     words_data,
-    sentences_data,
     false_positives,
 ):
     list_tokens = []
@@ -3660,16 +3765,7 @@ def style_word_analysis_de(
                 )
             )
 
-    return list_tokens + sentences_matcher(
-        version,
-        config,
-        lang,
-        full_text,
-        tokens,
-        offsets,
-        sentences_data,
-        df_sentences,
-    )
+    return list_tokens
 
 
 def word_noun(
@@ -3711,11 +3807,13 @@ def word_noun(
             if not text:
                 continue
 
-            word_count = word.count(" ")
-            while word_count >= 0:
-                is_plural = is_token_plural(lang.lang, tokens[i + word_count])
+            additional_token_count = token_count(word, lang.lang) - 1
+            while additional_token_count >= 0:
+                is_plural = is_token_plural(
+                    lang.lang, tokens[i + additional_token_count]
+                )
                 if is_plural is None:
-                    word_count -= 1
+                    additional_token_count -= 1
                     continue
 
                 break
@@ -3832,8 +3930,6 @@ def rules_based_words_phrase_matcher(
     tokens,
     offsets,
     words_data,
-    sentences_data=None,
-    df_sentence=None,
     false_positive_matcher=None,
     fallback_subcategory=None,
     they=False,
@@ -3891,9 +3987,6 @@ def rules_based_words_phrase_matcher(
                 if count <= 0:
                     continue
 
-            explanation = None
-            url = None
-            icon = None
             start = token.idx
 
             if len(data) > 1:
@@ -3901,17 +3994,10 @@ def rules_based_words_phrase_matcher(
                 if they and "they" in alternatives:
                     text, alternative = pluralize_they(tokens, i)
                     alternatives = [alternative]
-                else:
+                elif word.count(" ") == 0:
                     text, start, alternatives = alternatives_declension(
                         lang.lang, token.text, token, alternatives, prev_token
                     )
-
-                if (
-                    len(data) > 2
-                    and data[2] is not None
-                    and subcategory == "corporate_rules"
-                ):
-                    explanation, url, icon = map(data[2].get, ("text", "url", "icon"))
 
             if not is_sub_category_enabled(config, subcategory):
                 continue
@@ -3937,26 +4023,13 @@ def rules_based_words_phrase_matcher(
                     None,
                     alternatives,
                     None,
-                    explanation,
-                    url,
-                    icon,
                 )
             )
 
             if get_proficiency_level(subcategory) == "openly_discriminating":
                 break
 
-    return list_tokens + sentences_matcher(
-        version,
-        config,
-        lang,
-        full_text,
-        tokens,
-        offsets,
-        sentences_data,
-        df_sentence,
-        fallback_subcategory,
-    )
+    return list_tokens
 
 
 # english function to handle homonyms
@@ -4015,104 +4088,71 @@ def homonyms_en(
     return list_tokens
 
 
-# function to find exact match for abbreviations and term replacements
-def literal_match(
+def simple_match(
     version: float,
     config: Config,
     lang,
     full_text,
     tokens,
     offsets,
-    df_sentence,
-    term_list,
-    lower_case=False,
+    words_data,
 ):
     list_tokens = []
 
-    matches = fetch_matches(lang.lang, tokens, list(df_sentence["Lemma"]))
-    for match_id, start, end in matches:
-        for (
-            term,
-            word_types,
-            subcategory,
-            alternatives,
-        ) in term_list:
+    token = None
+    for i in range(len(tokens)):
+        prev_token = token
+        token = tokens[i]
+        for word, word_types, subcategory, *data in words_data:
             if not is_sub_category_enabled(config, subcategory):
                 continue
 
-            span = tokens[start:end]
-            text = span.text
-            lower_case_rule = lower_case
-            if lower_case and word_types != "":
-                word_types, lower_case_rule, lemmatize = parse_word_types(word_types)
+            text = is_phrase_match(
+                lang.lang,
+                i,
+                tokens,
+                word,
+                word_types,
+            )
 
-            if lower_case_rule:
-                text = text.lower()
-                term = term.lower()
-
-            if text != term:
+            if not text:
                 continue
+
+            alternatives = []
+            explanation = None
+            url = None
+            icon = None
+
+            if len(data):
+                alternatives = data[0]
+
+                if len(data) > 1 and data[1] is not None:
+                    explanation, url, icon = map(data[1].get, ("text", "url", "icon"))
+
+            text, start, alternatives = alternatives_declension(
+                lang.lang, text, token, alternatives, prev_token
+            )
 
             list_tokens.append(
                 ResultOut.factory(
                     version,
                     config,
                     lang,
-                    span.text,
+                    text,
                     full_text,
                     offsets,
                     subcategory,
-                    span.start_char,
-                    span.end_char,
+                    start,
+                    None,
                     alternatives,
+                    None,
+                    explanation,
+                    url,
+                    icon,
                 )
             )
 
     return list_tokens
-
-
-def detect_lower_cased_hashtags(
-    version: float,
-    config: Config,
-    lang,
-    full_text,
-    offsets,
-):
-    subcategory = "style"
-
-    list_results = []
-
-    if lang.lang == "de":
-        explanation = "Wenn du Wörter großschreibst, wissen alle gleich, was du meinst. #ZumBeispiel"
-    else:
-        explanation = "When you capitalize words, everyone knows right away what you mean. #ForExample"
-
-    matches = re.finditer(r"#(\w*)", full_text)
-    for span in matches:
-        if type(span) == re.Match:
-            text = span.group(1)
-
-            if len(text) < 5 or any(char.isupper() for char in text):
-                continue
-
-            list_results.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    "#" + text,
-                    full_text,
-                    offsets,
-                    subcategory,
-                    span.start(),
-                    span.end(),
-                    None,
-                    None,
-                    explanation,
-                )
-            )
-
-    return list_results
 
 
 def get_emoji(emoji_text):

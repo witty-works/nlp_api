@@ -194,6 +194,26 @@
         {
             "alternatives": [
                 {
+                    "text": "ding ding"
+                }
+            ],
+            "category": "corporate_rules",
+            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT",
+            "end": 15,
+            "explanation": {
+                "icon": "🥰",
+                "text": "better ding",
+                "url": "https://witty.works/foo bar"
+            },
+            "gravity": 0.9,
+            "label": "Wörterbuch",
+            "start": 8,
+            "subcategory": "corporate_rules",
+            "text": "foo bar"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "globus"
                 }
             ],
@@ -250,26 +270,6 @@
             "start": 95,
             "subcategory": "corporate_rules",
             "text": "WELT"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "ding ding"
-                }
-            ],
-            "category": "corporate_rules",
-            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT",
-            "end": 15,
-            "explanation": {
-                "icon": "🥰",
-                "text": "better ding",
-                "url": "https://witty.works/foo bar"
-            },
-            "gravity": 0.9,
-            "label": "Wörterbuch",
-            "start": 8,
-            "subcategory": "corporate_rules",
-            "text": "foo bar"
         }
     ]
 }

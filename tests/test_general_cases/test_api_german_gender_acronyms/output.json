@@ -17,7 +17,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Wir brauchen m/f Menschen. Besser ist f/m/d. Und noch besser d/f/m oder x/f/m.",
+            "context": "Wir brauchen m/f Menschen. Besser ist f/m/d! Und noch besser d/f/m oder x/f/m.",
             "end": 16,
             "explanation": {
                 "icon": "😮",
@@ -46,7 +46,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Wir brauchen m/f Menschen. Besser ist f/m/d. Und noch besser d/f/m oder x/f/m.",
+            "context": "Wir brauchen m/f Menschen. Besser ist f/m/d! Und noch besser d/f/m oder x/f/m.",
             "end": 43,
             "explanation": {
                 "icon": "😮",
@@ -63,7 +63,7 @@
         {
             "alternatives": [],
             "category": "social-motive",
-            "context": "Wir brauchen m/f Menschen. Besser ist f/m/d. Und noch besser d/f/m oder x/f/m.",
+            "context": "Wir brauchen m/f Menschen. Besser ist f/m/d! Und noch besser d/f/m oder x/f/m.",
             "end": 66,
             "explanation": {
                 "content": "advanced",
@@ -80,7 +80,7 @@
         {
             "alternatives": [],
             "category": "social-motive",
-            "context": "Wir brauchen m/f Menschen. Besser ist f/m/d. Und noch besser d/f/m oder x/f/m.",
+            "context": "Wir brauchen m/f Menschen. Besser ist f/m/d! Und noch besser d/f/m oder x/f/m.",
             "end": 77,
             "explanation": {
                 "content": "advanced",

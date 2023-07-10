@@ -15,9 +15,9 @@
             },
             "label": "Soziale Motivation: DEIB",
             "proficiency_level": "inclusive",
-            "start": 12,
+            "start": 16,
             "subcategory": "d_and_i",
-            "text": "Kund/in"
+            "text": "/in"
         },
         {
             "alternatives": [],
@@ -32,9 +32,9 @@
             },
             "label": "Soziale Motivation: DEIB",
             "proficiency_level": "inclusive",
-            "start": 31,
+            "start": 35,
             "subcategory": "d_and_i",
-            "text": "Kund/in"
+            "text": "/in"
         }
     ]
 }
