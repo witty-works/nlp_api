@@ -1777,6 +1777,137 @@ async def german_rules(
             if i < new_i:
                 continue
 
+        if is_sub_category_enabled(config, "gender_specific_abbreviation"):
+            new_i = regex_match(
+                version,
+                config,
+                lang,
+                text,
+                i,
+                tokens,
+                offsets,
+                list_full,
+                rules["m_f_regexes"],
+            )
+
+            if i < new_i:
+                continue
+
+        if is_sub_category_enabled(config, "d_and_i"):
+            new_i = regex_match(
+                version,
+                config,
+                lang,
+                text,
+                i,
+                tokens,
+                offsets,
+                list_full,
+                rules["d_f_m_regexes"],
+            )
+
+            if i < new_i:
+                continue
+
+            # avoid issues with LinkedIn
+            if config.german_gender_ending != GermanGenderEndingType.CAPITAL_LETTER:
+                endings = [
+                    [
+                        config._gendereddenom_ending[config.german_gender_ending],
+                        config._gendereddenom_ending_word_type[
+                            config.german_gender_ending
+                        ],
+                        "d_and_i",
+                    ],
+                    [
+                        config._gendereddenom_ending_article[
+                            config.german_gender_ending
+                        ],
+                        ("" if config.german_gender_ending[0] != "/" else "-1,1")
+                        + ","
+                        + config.german_gender_ending[0],
+                        "d_and_i",
+                    ],
+                ]
+
+                new_i = regex_match(
+                    version,
+                    config,
+                    lang,
+                    text,
+                    i,
+                    tokens,
+                    offsets,
+                    list_full,
+                    endings,
+                )
+
+                if i < new_i:
+                    continue
+
+        if is_sub_category_enabled(
+            config, "advanced_gendered_denominations_ending"
+        ) and ResultOut.genderedRolesFormatInclusive(config.gendered_roles_format):
+            subcategory = "advanced_gendered_denominations_ending"
+
+            endings = []
+            for key, regexp in config._gendereddenom_ending.items():
+                if (
+                    config.german_gender_ending == key
+                    # avoid issues with LinkedIn
+                    or key == GermanGenderEndingType.CAPITAL_LETTER
+                ):
+                    continue
+
+                ending = [
+                    regexp,
+                    config._gendereddenom_ending_word_type[key],
+                    subcategory,
+                    [config.german_gender_ending],
+                ]
+
+                endings.append(ending)
+
+                # GermanGenderEndingType.SLASH_DASH is redundant to GermanGenderEndingType.SLASH
+                if key != GermanGenderEndingType.SLASH_DASH:
+                    ending = [
+                        config._gendereddenom_ending_article[key],
+                        ("" if key[0] != "/" else "-1,2") + "," + key[0],
+                        subcategory,
+                    ]
+
+                    endings.append(ending)
+
+            new_i = regex_match(
+                version,
+                config,
+                lang,
+                text,
+                i,
+                tokens,
+                offsets,
+                list_full,
+                endings,
+            )
+
+            if i < new_i:
+                continue
+
+        new_i = detect_non_inclusive_emoji(
+            version,
+            config,
+            VersionString(client),
+            lang,
+            text,
+            i,
+            tokens,
+            offsets,
+            list_full,
+        )
+
+        if i < new_i:
+            continue
+
         new_i = regex_match(
             version,
             config,
@@ -1792,19 +1923,8 @@ async def german_rules(
         if i < new_i:
             continue
 
-        new_i = detect_non_inclusive_emoji(
-            version,
-            config,
-            VersionString(client),
-            lang,
-            text,
-            i,
-            tokens,
-            offsets,
-            list_full,
-        )
-
-        if i < new_i:
+        if len(tokens[i].text) <= 1:
+            new_i += 1
             continue
 
         if is_sub_category_enabled(config, "abbreviation"):
@@ -1869,70 +1989,6 @@ async def german_rules(
         if i < new_i:
             continue
 
-        if is_sub_category_enabled(config, "gender_specific_abbreviation"):
-            new_i = regex_match(
-                version,
-                config,
-                lang,
-                text,
-                i,
-                tokens,
-                offsets,
-                list_full,
-                rules["m_f_regexes"],
-            )
-
-            if i < new_i:
-                continue
-
-        if is_sub_category_enabled(
-            config, "advanced_gendered_denominations_ending"
-        ) and ResultOut.genderedRolesFormatInclusive(config.gendered_roles_format):
-            subcategory = "advanced_gendered_denominations_ending"
-
-            endings = []
-            for key, regexp in config._gendereddenom_ending.items():
-                if (
-                    config.german_gender_ending == key
-                    # avoid issues with LinkedIn
-                    or key == GermanGenderEndingType.CAPITAL_LETTER
-                ):
-                    continue
-
-                ending = [
-                    regexp,
-                    config._gendereddenom_ending_word_type[key],
-                    subcategory,
-                    [config.german_gender_ending],
-                ]
-
-                endings.append(ending)
-
-                # GermanGenderEndingType.SLASH_DASH is redundant to GermanGenderEndingType.SLASH
-                if key != GermanGenderEndingType.SLASH_DASH:
-                    ending = [
-                        config._gendereddenom_ending_article[key],
-                        ("" if key[0] != "/" else "-1,2") + "," + key[0],
-                        subcategory,
-                    ]
-
-                    endings.append(ending)
-
-            new_i = regex_match(
-                version,
-                config,
-                lang,
-                text,
-                i,
-                tokens,
-                offsets,
-                list_full,
-                endings,
-            )
-
-            if i < new_i:
-                continue
-
         new_i = ub_words_phrase_matcher_de(
             version,
             config,
@@ -1996,58 +2052,6 @@ async def german_rules(
                 rules["de"]["df_d_and_i_words"],
                 [],
                 subcategory,
-            )
-
-            if i < new_i:
-                continue
-
-            # avoid issues with LinkedIn
-            if config.german_gender_ending != GermanGenderEndingType.CAPITAL_LETTER:
-                endings = [
-                    [
-                        config._gendereddenom_ending[config.german_gender_ending],
-                        config._gendereddenom_ending_word_type[
-                            config.german_gender_ending
-                        ],
-                        subcategory,
-                    ],
-                    [
-                        config._gendereddenom_ending_article[
-                            config.german_gender_ending
-                        ],
-                        ("" if config.german_gender_ending[0] != "/" else "-1,1")
-                        + ","
-                        + config.german_gender_ending[0],
-                        subcategory,
-                    ],
-                ]
-
-                new_i = regex_match(
-                    version,
-                    config,
-                    lang,
-                    text,
-                    i,
-                    tokens,
-                    offsets,
-                    list_full,
-                    endings,
-                    "gender_denom",
-                )
-
-                if i < new_i:
-                    continue
-
-            new_i = regex_match(
-                version,
-                config,
-                lang,
-                text,
-                i,
-                tokens,
-                offsets,
-                list_full,
-                rules["d_f_m_regexes"],
             )
 
             if i < new_i:
@@ -2181,6 +2185,53 @@ async def english_rules(
             if i < new_i:
                 continue
 
+        if is_sub_category_enabled(config, "gender_specific_abbreviation"):
+            new_i = regex_match(
+                version,
+                config,
+                lang,
+                text,
+                i,
+                tokens,
+                offsets,
+                list_full,
+                rules["m_f_regexes"],
+            )
+
+            if i < new_i:
+                continue
+
+        if is_sub_category_enabled(config, "d_and_i"):
+            new_i = regex_match(
+                version,
+                config,
+                lang,
+                text,
+                i,
+                tokens,
+                offsets,
+                list_full,
+                rules["d_f_m_regexes"],
+            )
+
+            if i < new_i:
+                continue
+
+        new_i = detect_non_inclusive_emoji(
+            version,
+            config,
+            VersionString(client),
+            lang,
+            text,
+            i,
+            tokens,
+            offsets,
+            list_full,
+        )
+
+        if i < new_i:
+            continue
+
         new_i = regex_match(
             version,
             config,
@@ -2196,19 +2247,8 @@ async def english_rules(
         if i < new_i:
             continue
 
-        new_i = detect_non_inclusive_emoji(
-            version,
-            config,
-            VersionString(client),
-            lang,
-            text,
-            i,
-            tokens,
-            offsets,
-            list_full,
-        )
-
-        if i < new_i:
+        if len(tokens[i].text) <= 1:
+            new_i += 1
             continue
 
         new_i = homonyms_en(
@@ -2309,38 +2349,6 @@ async def english_rules(
 
         if i < new_i:
             continue
-
-        if is_sub_category_enabled(config, "gender_specific_abbreviation"):
-            new_i = regex_match(
-                version,
-                config,
-                lang,
-                text,
-                i,
-                tokens,
-                offsets,
-                list_full,
-                rules["m_f_regexes"],
-            )
-
-            if i < new_i:
-                continue
-
-        if is_sub_category_enabled(config, "d_and_i"):
-            new_i = regex_match(
-                version,
-                config,
-                lang,
-                text,
-                i,
-                tokens,
-                offsets,
-                list_full,
-                rules["d_f_m_regexes"],
-            )
-
-            if i < new_i:
-                continue
 
         new_i = rules_based_words_phrase_matcher(
             version,
