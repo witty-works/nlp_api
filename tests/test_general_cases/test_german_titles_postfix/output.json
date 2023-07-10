@@ -5,30 +5,6 @@
         {
             "alternatives": [
                 {
-                    "remove": true
-                },
-                {
-                    "text": "Taschenuhr"
-                }
-            ],
-            "category": "religion",
-            "context": "Unser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Arsch. Arschhund. Katzenarschhund. Katzenarsch. Barsch. Barscharschmarsch. Ein Ingenieur kann das.",
-            "end": 94,
-            "explanation": {
-                "icon": "🚫",
-                "text": "Fällt unter antisemitische Verunglimpfungen",
-                "url": "https://www.witty.works/de/kategorien/glauben/antisemitismus?reducedView=true"
-            },
-            "gravity": 1.0,
-            "label": "Glauben: Antisemitismus",
-            "proficiency_level": "openly_discriminating",
-            "start": 87,
-            "subcategory": "antisemitism",
-            "text": "Judenei"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "Unsere Praxis"
                 },
                 {
@@ -121,6 +97,30 @@
             "start": 69,
             "subcategory": "function",
             "text": "Juden"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                },
+                {
+                    "text": "Taschenuhr"
+                }
+            ],
+            "category": "religion",
+            "context": "Unser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Arsch. Arschhund. Katzenarschhund. Katzenarsch. Barsch. Barscharschmarsch. Ein Ingenieur kann das.",
+            "end": 94,
+            "explanation": {
+                "icon": "🚫",
+                "text": "Fällt unter antisemitische Verunglimpfungen",
+                "url": "https://www.witty.works/de/kategorien/glauben/antisemitismus?reducedView=true"
+            },
+            "gravity": 1.0,
+            "label": "Glauben: Antisemitismus",
+            "proficiency_level": "openly_discriminating",
+            "start": 87,
+            "subcategory": "antisemitism",
+            "text": "Judenei"
         },
         {
             "alternatives": [

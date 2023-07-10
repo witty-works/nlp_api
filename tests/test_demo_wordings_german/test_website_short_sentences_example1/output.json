@@ -3,6 +3,51 @@
     "limit_reached": false,
     "results": [
         {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "Wir unterstützen leistungsstarke Mitarbeiter.",
+            "end": 16,
+            "explanation": {
+                "content": "video",
+                "icon": "✅",
+                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true"
+            },
+            "label": "Soziale Motivation: Kommunale Sprache",
+            "proficiency_level": "inclusive",
+            "start": 4,
+            "subcategory": "communal",
+            "text": "unterstützen"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "engagierte"
+                },
+                {
+                    "text": "tatkräftige"
+                },
+                {
+                    "text": "kompetente"
+                }
+            ],
+            "category": "social-motive",
+            "context": "Wir unterstützen leistungsstarke Mitarbeiter.",
+            "end": 32,
+            "explanation": {
+                "content": "video",
+                "icon": "😒",
+                "text": "Spricht kooperativ denkende Menschen nicht an",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Soziale Motivation: Agentische Sprache",
+            "proficiency_level": "unconscious_bias",
+            "start": 17,
+            "subcategory": "agentic",
+            "text": "leistungsstarke"
+        },
+        {
             "alternatives": [
                 {
                     "text": "Mitarbeitende"
@@ -35,51 +80,6 @@
             "start": 33,
             "subcategory": "titles",
             "text": "Mitarbeiter"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "engagierte"
-                },
-                {
-                    "text": "tatkräftige"
-                },
-                {
-                    "text": "kompetente"
-                }
-            ],
-            "category": "social-motive",
-            "context": "Wir unterstützen leistungsstarke Mitarbeiter.",
-            "end": 32,
-            "explanation": {
-                "content": "video",
-                "icon": "😒",
-                "text": "Spricht kooperativ denkende Menschen nicht an",
-                "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Soziale Motivation: Agentische Sprache",
-            "proficiency_level": "unconscious_bias",
-            "start": 17,
-            "subcategory": "agentic",
-            "text": "leistungsstarke"
-        },
-        {
-            "alternatives": [],
-            "category": "social-motive",
-            "context": "Wir unterstützen leistungsstarke Mitarbeiter.",
-            "end": 16,
-            "explanation": {
-                "content": "video",
-                "icon": "✅",
-                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
-                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true"
-            },
-            "label": "Soziale Motivation: Kommunale Sprache",
-            "proficiency_level": "inclusive",
-            "start": 4,
-            "subcategory": "communal",
-            "text": "unterstützen"
         }
     ]
 }

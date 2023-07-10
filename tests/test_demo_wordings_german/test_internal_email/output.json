@@ -43,6 +43,28 @@
         {
             "alternatives": [
                 {
+                    "remove": true
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben",
+            "end": 4,
+            "explanation": {
+                "content": "video",
+                "icon": "😟",
+                "text": "Wörter, die Text länger und weniger verständlicher machen",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/füllwörter?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Kulturelle Diversität: Füllwörter",
+            "proficiency_level": "unconscious_bias",
+            "start": 0,
+            "subcategory": "filler",
+            "text": "Sehr"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "Kolleg*innen"
                 },
                 {
@@ -163,6 +185,23 @@
             "text": "Durchhaltevermögen"
         },
         {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
+            "end": 104,
+            "explanation": {
+                "content": "video",
+                "icon": "✅",
+                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true"
+            },
+            "label": "Soziale Motivation: Kommunale Sprache",
+            "proficiency_level": "inclusive",
+            "start": 98,
+            "subcategory": "communal",
+            "text": "lieben"
+        },
+        {
             "alternatives": [
                 {
                     "text": "vor interessante Aufgaben gestellt"
@@ -190,23 +229,6 @@
         {
             "alternatives": [],
             "category": "social-motive",
-            "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
-            "end": 104,
-            "explanation": {
-                "content": "video",
-                "icon": "✅",
-                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
-                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true"
-            },
-            "label": "Soziale Motivation: Kommunale Sprache",
-            "proficiency_level": "inclusive",
-            "start": 98,
-            "subcategory": "communal",
-            "text": "lieben"
-        },
-        {
-            "alternatives": [],
-            "category": "social-motive",
             "context": "hrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
             "end": 167,
             "explanation": {
@@ -220,28 +242,6 @@
             "start": 156,
             "subcategory": "communal",
             "text": "Freundliche"
-        },
-        {
-            "alternatives": [
-                {
-                    "remove": true
-                }
-            ],
-            "category": "cultural-diversity",
-            "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben",
-            "end": 4,
-            "explanation": {
-                "content": "video",
-                "icon": "😟",
-                "text": "Wörter, die Text länger und weniger verständlicher machen",
-                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/füllwörter?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Kulturelle Diversität: Füllwörter",
-            "proficiency_level": "unconscious_bias",
-            "start": 0,
-            "subcategory": "filler",
-            "text": "Sehr"
         },
         {
             "alternatives": [

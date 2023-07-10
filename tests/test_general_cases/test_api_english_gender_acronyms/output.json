@@ -3,6 +3,23 @@
     "limit_reached": false,
     "results": [
         {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "We need w/m/v people.",
+            "end": 7,
+            "explanation": {
+                "content": "video",
+                "icon": "✅",
+                "text": "Strengthens collaboration and a sense of community",
+                "url": "https://www.witty.works/en/categories/social-motive/communal-language?reducedView=true"
+            },
+            "label": "Social Motive: Communal language",
+            "proficiency_level": "inclusive",
+            "start": 3,
+            "subcategory": "communal",
+            "text": "need"
+        },
+        {
             "alternatives": [
                 {
                     "context": "Use gender neutral job title",
@@ -27,23 +44,6 @@
             "start": 8,
             "subcategory": "gender_specific_abbreviation",
             "text": "w/m/v"
-        },
-        {
-            "alternatives": [],
-            "category": "social-motive",
-            "context": "We need w/m/v people.",
-            "end": 7,
-            "explanation": {
-                "content": "video",
-                "icon": "✅",
-                "text": "Strengthens collaboration and a sense of community",
-                "url": "https://www.witty.works/en/categories/social-motive/communal-language?reducedView=true"
-            },
-            "label": "Social Motive: Communal language",
-            "proficiency_level": "inclusive",
-            "start": 3,
-            "subcategory": "communal",
-            "text": "need"
         }
     ]
 }
