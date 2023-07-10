@@ -160,7 +160,7 @@ def test_demo_wordings_german(demo_wordings_german_dir, snapshot, set_redis):
     "general_case_dir",
     get_dirs("tests/test_general_cases"),
 )
-def test_json(general_case_dir, snapshot, set_redis):
+def test_general_cases(general_case_dir, snapshot, set_redis):
     with TestClient(app) as client:
         # Read input files from the case directory.
         input_json = general_case_dir.joinpath("input.json").read_text()
