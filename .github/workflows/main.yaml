@@ -3,8 +3,10 @@ name: run tests
 on: [push]
 
 env:
-  CONTEXT_CHECKER_URL: "https://setfit.westeurope.inference.ml.azure.com/score"
+  CONTEXT_CHECKER_URL: "https://setfit-english.westeurope.inference.ml.azure.com/score"
   CONTEXT_CHECKER_API_KEY: ${{ secrets.CONTEXT_CHECKER_API_KEY }}
+  CONTEXT_CHECKER_URL_DE: "https://setfit-german.westeurope.inference.ml.azure.com/score"
+  CONTEXT_CHECKER_API_KEY_DE: ${{ secrets.CONTEXT_CHECKER_API_KEY_DE }}
 
 jobs:
   build:

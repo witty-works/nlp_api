@@ -1461,6 +1461,7 @@ def languagetool_matches(
                 client,
                 lang,
                 text,
+                text,
                 full_text,
                 offsets,
                 subcategory,
@@ -1803,23 +1804,14 @@ def is_sub_category_enabled(config: Config, subcategory: str):
 
 
 async def context_false_positives(lang, tokens, list_results):
-    if (
-        len(rules[lang]["context_check"]) == 0
-        or not settings.context_checker_url
-        or not settings.context_checker_api_key
-    ):
+    if lang not in settings.context_checker or len(rules[lang]["context_check"]) == 0:
         return list_results
 
     sentences = {}
     sentences_to_check = defaultdict(list)
     for i in range(len(list_results)):
         result = list_results[i]
-        words = result.text.lower().split()
-        if not len(words):
-            continue
-
-        # a fossil => fossil
-        if words[-1] in rules[lang]["context_check"]:
+        if result.lemma in rules[lang]["context_check"]:
             if len(sentences) == 0:
                 for sentence in tokens.sents:
                     sentences[sentence.end_char] = sentence.text
@@ -1842,7 +1834,7 @@ async def context_false_positives(lang, tokens, list_results):
 
     headers = {
         "Content-Type": "application/json",
-        "Authorization": ("Bearer " + settings.context_checker_api_key),
+        "Authorization": ("Bearer " + settings.context_checker[lang]["api_key"]),
     }
 
     payload = {
@@ -1850,7 +1842,10 @@ async def context_false_positives(lang, tokens, list_results):
     }
 
     context_results = await fetch_json_post(
-        settings.context_checker_url, json.dumps(payload), headers, "context checker"
+        settings.context_checker[lang]["url"],
+        json.dumps(payload),
+        headers,
+        "context checker",
     )
 
     keys_to_remove = []
@@ -3668,6 +3663,7 @@ def sentences_matcher(
                     client,
                     lang,
                     span.text,
+                    span.text,
                     full_text,
                     offsets,
                     subcategory,
@@ -3890,6 +3886,7 @@ def regex_match(
                 client,
                 lang,
                 text,
+                token.lemma_,
                 full_text,
                 offsets,
                 rule.subcategory,
@@ -4039,6 +4036,7 @@ def gendered_denom_analysis_de(
                 client,
                 lang,
                 text,
+                token.lemma_,
                 full_text,
                 offsets,
                 subcategory,
@@ -4114,6 +4112,7 @@ def style_word_analysis_de(
                 client,
                 lang,
                 text,
+                token.lemma_,
                 full_text,
                 offsets,
                 rule.subcategory,
@@ -4199,6 +4198,7 @@ def word_noun(
                 client,
                 lang,
                 text,
+                token.lemma_,
                 full_text,
                 offsets,
                 subcategory,
@@ -4366,6 +4366,7 @@ def rules_based_words_phrase_matcher(
                 client,
                 lang,
                 text,
+                token.lemma_,
                 full_text,
                 offsets,
                 subcategory,
@@ -4422,6 +4423,7 @@ def simple_match(
                 client,
                 lang,
                 text,
+                tokens[i].lemma_,
                 full_text,
                 offsets,
                 rule.subcategory,
@@ -4579,6 +4581,7 @@ def detect_non_inclusive_emoji(
                 client,
                 lang,
                 token.text,
+                token.lemma_,
                 full_text,
                 offsets,
                 subcategory,

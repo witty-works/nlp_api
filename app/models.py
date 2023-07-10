@@ -1,4 +1,4 @@
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, Field, validator
 from typing import Dict, List, Optional, Union
 from enum import Enum
 from collections import namedtuple
@@ -398,6 +398,7 @@ class ResultExplanation(BaseModel):
 
 class ResultOut(BaseModel):
     text: str
+    lemma: str | None = Field(default=None, exclude=True, title="lemma")
     context: Optional[str]
     category: Optional[str]
     subcategory: Optional[str]
@@ -416,6 +417,7 @@ class ResultOut(BaseModel):
         client: namedtuple,
         lang: Language,
         text,
+        lemma,
         full_text,
         offsets,
         subcategory,
@@ -538,6 +540,7 @@ class ResultOut(BaseModel):
 
         return ResultOut(
             text=text,
+            lemma=lemma,
             context=context,
             category=category,
             subcategory=subcategory,

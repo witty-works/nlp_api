@@ -452,7 +452,10 @@ def fetch_rules(model):
 
         rules["de"]["false_positives_phrases"] = []
 
-        rules["de"]["context_check"] = []
+        rules["de"]["context_check"] = [
+            "unabhängig",
+            "entschieden",
+        ]
 
         rules["de"]["verbs"] = {
             data["de"]["verbs"]["infinitiv"][i]: {
