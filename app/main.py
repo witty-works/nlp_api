@@ -1726,6 +1726,15 @@ async def context_false_positives(lang, tokens, list_results):
     return list_results
 
 
+def check_continue(i, new_i, tokens):
+    if new_i < i:
+        logging.error("Incorrect new_i: expected %i < %i for %s", i, new_i, tokens[i])
+
+        return False
+
+    return i < new_i
+
+
 async def german_rules(
     version: float,
     config: Config,
@@ -1756,7 +1765,7 @@ async def german_rules(
                 term_replacements,
             )
 
-            if i < new_i:
+            if check_continue(i, new_i, tokens):
                 continue
 
         if is_sub_category_enabled(config, "gender_specific_abbreviation"):
@@ -1772,7 +1781,7 @@ async def german_rules(
                 rules["m_f_regexes"],
             )
 
-            if i < new_i:
+            if check_continue(i, new_i, tokens):
                 continue
 
         subcategory = "d_and_i"
@@ -1789,7 +1798,7 @@ async def german_rules(
                 rules["d_f_m_regexes"],
             )
 
-            if i < new_i:
+            if check_continue(i, new_i, tokens):
                 continue
 
             # avoid issues with LinkedIn
@@ -1825,7 +1834,7 @@ async def german_rules(
                     endings,
                 )
 
-                if i < new_i:
+                if check_continue(i, new_i, tokens):
                     continue
 
         subcategory = "advanced_gendered_denominations_ending"
@@ -1872,7 +1881,7 @@ async def german_rules(
                 endings,
             )
 
-            if i < new_i:
+            if check_continue(i, new_i, tokens):
                 continue
 
         new_i = detect_non_inclusive_emoji(
@@ -1887,7 +1896,7 @@ async def german_rules(
             list_full,
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         new_i = regex_match(
@@ -1902,7 +1911,7 @@ async def german_rules(
             rules["de"]["hashtags"],
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         token_text = tokens[i].text
@@ -1923,7 +1932,7 @@ async def german_rules(
                 rules["de"]["abbreviation"],
             )
 
-            if i < new_i:
+            if check_continue(i, new_i, tokens):
                 continue
 
         new_i = rules_based_words_phrase_matcher(
@@ -1938,7 +1947,7 @@ async def german_rules(
             rules["de"]["open_disc_words_data"],
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         new_i = rules_based_words_phrase_matcher(
@@ -1953,7 +1962,7 @@ async def german_rules(
             rules["de"]["gender_words_data_no_noun"],
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         new_i = gendered_denom_analysis_de(
@@ -1969,7 +1978,7 @@ async def german_rules(
             rules["de"]["false_positives"].gender,
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         new_i = simple_match(
@@ -1984,7 +1993,7 @@ async def german_rules(
             rules["de"]["bias_words_data_no_plur"],
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         new_i = word_noun(
@@ -1999,7 +2008,7 @@ async def german_rules(
             rules["de"]["bias_words_data_noun"],
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         subcategory = "communal"
@@ -2018,7 +2027,7 @@ async def german_rules(
                 subcategory,
             )
 
-            if i < new_i:
+            if check_continue(i, new_i, tokens):
                 continue
 
         subcategory = "d_and_i"
@@ -2037,7 +2046,7 @@ async def german_rules(
                 subcategory,
             )
 
-            if i < new_i:
+            if check_continue(i, new_i, tokens):
                 continue
 
         new_i = style_word_analysis_de(
@@ -2053,7 +2062,7 @@ async def german_rules(
             rules["de"]["false_positives"].style,
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         new_i += 1
@@ -2166,7 +2175,7 @@ async def english_rules(
                 term_replacements,
             )
 
-            if i < new_i:
+            if check_continue(i, new_i, tokens):
                 continue
 
         if is_sub_category_enabled(config, "gender_specific_abbreviation"):
@@ -2182,7 +2191,7 @@ async def english_rules(
                 rules["m_f_regexes"],
             )
 
-            if i < new_i:
+            if check_continue(i, new_i, tokens):
                 continue
 
         if is_sub_category_enabled(config, "d_and_i"):
@@ -2198,7 +2207,7 @@ async def english_rules(
                 rules["d_f_m_regexes"],
             )
 
-            if i < new_i:
+            if check_continue(i, new_i, tokens):
                 continue
 
         new_i = detect_non_inclusive_emoji(
@@ -2213,7 +2222,7 @@ async def english_rules(
             list_full,
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         new_i = regex_match(
@@ -2228,7 +2237,7 @@ async def english_rules(
             rules["en"]["hashtags"],
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         token_text = tokens[i].text
@@ -2250,7 +2259,7 @@ async def english_rules(
             False,
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         if is_sub_category_enabled(config, "abbreviation"):
@@ -2266,7 +2275,7 @@ async def english_rules(
                 words_data_en["abbr"],
             )
 
-            if i < new_i:
+            if check_continue(i, new_i, tokens):
                 continue
 
         new_i = rules_based_words_phrase_matcher(
@@ -2282,7 +2291,7 @@ async def english_rules(
             false_positive_matcher,
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         new_i = rules_based_words_phrase_matcher(
@@ -2298,7 +2307,7 @@ async def english_rules(
             false_positive_matcher,
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         if is_sub_category_enabled(config, "advanced_binary_pronouns"):
@@ -2317,7 +2326,7 @@ async def english_rules(
                 True,
             )
 
-            if i < new_i:
+            if check_continue(i, new_i, tokens):
                 continue
 
         new_i = word_noun(
@@ -2333,7 +2342,7 @@ async def english_rules(
             false_positive_matcher,
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         new_i = rules_based_words_phrase_matcher(
@@ -2349,7 +2358,7 @@ async def english_rules(
             false_positive_matcher,
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         new_i = rules_based_words_phrase_matcher(
@@ -2365,7 +2374,7 @@ async def english_rules(
             false_positive_matcher,
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         new_i = word_noun(
@@ -2381,7 +2390,7 @@ async def english_rules(
             false_positive_matcher,
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         new_i = rules_based_words_phrase_matcher(
@@ -2397,7 +2406,7 @@ async def english_rules(
             false_positive_matcher,
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         new_i = word_noun(
@@ -2413,7 +2422,7 @@ async def english_rules(
             false_positive_matcher,
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         new_i += 1
