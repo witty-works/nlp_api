@@ -70,17 +70,6 @@ class LangWithAutoType(str, Enum):
     enGB = "en-GB"
 
 
-class LangGermanVariantType(str, Enum):
-    deDE = "de-DE"
-    deCH = "de-CH"
-    deAT = "de-AT"
-
-
-class LangEnglishVariantType(str, Enum):
-    enUS = "en-US"
-    enGB = "en-GB"
-
-
 class LangVariantType(str, Enum):
     deDE = "de-DE"
     deCH = "de-CH"
@@ -322,14 +311,6 @@ class LanguageRequest(BaseModel):
     client: str
     config: Config
     configs: dict
-
-
-class GermanLanguageRequest(LanguageRequest):
-    locale: LangGermanVariantType
-
-
-class EnglishLanguageRequest(LanguageRequest):
-    locale: LangEnglishVariantType
 
 
 class ConfRequest(BaseModel):

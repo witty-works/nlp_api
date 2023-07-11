@@ -66,8 +66,6 @@ from app.models import (
     GermanGenderEndingType,
     LangType,
     Language,
-    GermanLanguageRequest,
-    EnglishLanguageRequest,
     RequestIn,
     Result,
     ResultOut,
