@@ -1972,7 +1972,7 @@ async def german_rules(
         if i < new_i:
             continue
 
-        new_i = ub_words_phrase_matcher_de(
+        new_i = simple_match(
             version,
             config,
             lang,
@@ -2236,7 +2236,7 @@ async def english_rules(
             new_i += 1
             continue
 
-        new_i = homonyms_en(
+        new_i = simple_match(
             version,
             config,
             lang,
@@ -2245,8 +2245,9 @@ async def english_rules(
             tokens,
             offsets,
             list_full,
-            false_positive_matcher,
             words_data_en["homonym"],
+            false_positive_matcher,
+            False,
         )
 
         if i < new_i:
@@ -3708,56 +3709,6 @@ def regex_match(
     return i
 
 
-def ub_words_phrase_matcher_de(
-    version: float,
-    config: Config,
-    lang,
-    full_text,
-    i,
-    tokens,
-    offsets,
-    list_full,
-    words_data,
-):
-    for word, word_types, subcategory, alternatives in words_data:
-        if not is_sub_category_enabled(config, subcategory):
-            continue
-
-        skip_token, text = is_phrase_match(
-            lang.lang,
-            i,
-            tokens,
-            word,
-            word_types,
-        )
-
-        if not text:
-            continue
-
-        text, start, alternatives = alternatives_declension(
-            lang.lang, text, i, tokens, alternatives
-        )
-
-        list_full.append(
-            ResultOut.factory(
-                version,
-                config,
-                lang,
-                text,
-                full_text,
-                offsets,
-                subcategory,
-                start,
-                None,
-                alternatives,
-            )
-        )
-
-        return skip_token
-
-    return i
-
-
 def gendered_denom_analysis_de(
     version: float,
     config: Config,
@@ -4265,60 +4216,6 @@ def rules_based_words_phrase_matcher(
     return i
 
 
-# english function to handle homonyms
-def homonyms_en(
-    version: float,
-    config: Config,
-    lang,
-    full_text,
-    i,
-    tokens,
-    offsets,
-    list_full,
-    false_positive_matcher,
-    words_data,
-):
-    for word, word_types, subcategory, alternatives in words_data:
-        if not is_sub_category_enabled(config, subcategory):
-            continue
-
-        skip_token, text = is_phrase_match(
-            lang.lang,
-            i,
-            tokens,
-            word,
-            word_types,
-            false_positive_matcher,
-            False,
-        )
-
-        if not text:
-            continue
-
-        text, start, alternatives = alternatives_declension(
-            lang.lang, text, i, tokens, alternatives
-        )
-
-        list_full.append(
-            ResultOut.factory(
-                version,
-                config,
-                lang,
-                text,
-                full_text,
-                offsets,
-                subcategory,
-                start,
-                None,
-                alternatives,
-            )
-        )
-
-        return skip_token
-
-    return i
-
-
 def simple_match(
     version: float,
     config: Config,
@@ -4329,6 +4226,8 @@ def simple_match(
     offsets,
     list_full,
     words_data,
+    false_positive_matcher = None,
+    lower_case = True,
 ):
     for word, word_types, subcategory, *data in words_data:
         if not is_sub_category_enabled(config, subcategory):
@@ -4340,6 +4239,8 @@ def simple_match(
             tokens,
             word,
             word_types,
+            false_positive_matcher,
+            lower_case,
         )
 
         if not text:
