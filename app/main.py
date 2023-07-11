@@ -693,24 +693,9 @@ async def post_check_v2_3(
 @app.get("/lemmatize")
 async def lemmatize(
     text: str,
-    lang: LangType = None,
-    locale: LangType
-    | None = Query(
-        default=None,
-        description="Deprecated in favor of 'lang'",
-        deprecated=True,
-    ),
+    lang: LangType,
     username: str = Depends(fetch_current_username),
 ):
-    if lang == None:
-        if locale == None:
-            raise HTTPException(
-                status_code=422,
-                detail="Provide the 'lang' query parameter with a value of 'en' or 'de'.",
-            )
-
-        lang = locale
-
     tokens = fetch_tokens(lang, text)
     if len(tokens) != 1:
         return None
