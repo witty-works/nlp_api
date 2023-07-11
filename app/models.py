@@ -689,12 +689,12 @@ class ResultOut(BaseModel):
 
     @staticmethod
     def parse_alternative(alternative, parse_context=True):
+        alternative_context = None
         if parse_context and "---" in alternative:
-            alternative, alternative_context = alternative.split("---")
-            alternative = alternative.strip()
-            alternative_context = alternative_context.strip()
-        else:
-            alternative_context = None
+            alternative_split = alternative.split("---")
+            if len(alternative_split) == 2:
+                alternative = alternative_split[0].strip()
+                alternative_context = alternative_split[1].strip()
 
         if alternative == "-":
             alternative = None
