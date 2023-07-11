@@ -3,6 +3,7 @@ import ast
 from collections import namedtuple
 from german_nouns.lookup import Nouns
 from app.models import LangWithAutoType
+import re
 
 
 def fetch_rules(langs):
@@ -65,13 +66,28 @@ def fetch_rules(langs):
     }
 
     rules = {
-        "m_f_regexes": {
-            r"(?i)\s(\()?(m)\/(f|w)(\/[*a-z])*(\))?": None,  # (m/f..)
-            r"(?i)\s(\()?(f|w)\/(m)(\/[*a-z])*(\))?": None,  # (f/m..)
-        },
-        "d_f_m_regexes": {
-            r"(?i)\s(\()?(d|x|\*)(\/v)?\/f(\/[*a-z])*(\))?": None,  # (d/f/m..)
-        },
+        "m_f_regexes": [
+            # (m/f..)
+            [
+                re.compile(r"^m/(f|w)(\/[*a-z])*(\))?$", re.IGNORECASE),
+                "0,7,/",
+                "gender_specific_abbreviation",
+            ],
+            # (f/m..)
+            [
+                re.compile(r"^(f|w)/m(\/[*a-z])*(\))?$", re.IGNORECASE),
+                "0,7,/",
+                "gender_specific_abbreviation",
+            ],
+        ],
+        # (d/f/m/v)
+        "d_f_m_regexes": [
+            [
+                re.compile(r"^(d|x|\*)(/v)?/f(/v)?/m(/v)?$", re.IGNORECASE),
+                "0,7,/",
+                "d_and_i",
+            ],
+        ],
         "skin_tones": {
             "all": [
                 "",
@@ -332,6 +348,19 @@ def fetch_rules(langs):
                 )
 
     if "de" in langs:
+        rules["de"]["hashtags"] = [
+            # "#foobar"
+            [
+                re.compile(r"^#(?!.*[A-Z])\w\w\w\w\w+$"),
+                "1,2,#",
+                "style",
+                [],
+                {
+                    "text": "Wenn du Wörter großschreibst, wissen alle gleich, was du meinst. #ZumBeispiel"
+                },
+            ],
+        ]
+
         rules["de"]["context_check"] = []
 
         rules["de"]["verbs"] = {
@@ -422,6 +451,7 @@ def fetch_rules(langs):
             )
         )
         rules["de"]["male_articles"] = list(data["de"]["df_articles"]["Masculine"])
+        rules["de"]["female_articles"] = list(data["de"]["df_articles"]["Feminine"])
 
         # df unconscious bias nouns with plural
         df_bias = data["de"]["df_ub_plur_word"]
@@ -1258,6 +1288,19 @@ def fetch_rules(langs):
             "retarded",
             "brilliant",
             "retard",
+        ]
+
+        rules["en"]["hashtags"] = [
+            # "#foobar"
+            [
+                re.compile(r"^#(?!.*[A-Z])\w\w\w\w\w+$"),
+                "1,2,#",
+                "style",
+                [],
+                {
+                    "text": "When you capitalize words, everyone knows right away what you mean. #ForExample"
+                },
+            ],
         ]
 
         rules["en"]["list_false_column"] = [

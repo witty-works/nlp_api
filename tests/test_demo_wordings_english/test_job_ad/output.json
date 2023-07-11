@@ -5,24 +5,18 @@
         {
             "alternatives": [
                 {
-                    "text": "tests"
+                    "text": "an impartial"
                 },
                 {
-                    "text": "trials"
+                    "text": "a freelance"
                 },
                 {
-                    "text": "burning questions"
-                },
-                {
-                    "text": "complex situations"
-                },
-                {
-                    "text": "difficult tasks"
+                    "text": "a consult"
                 }
             ],
             "category": "social-motive",
-            "context": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
-            "end": 80,
+            "context": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious co",
+            "end": 17,
             "explanation": {
                 "content": "video",
                 "icon": "😒",
@@ -32,40 +26,9 @@
             "gravity": 2.0,
             "label": "Social Motive: Agentic language",
             "proficiency_level": "unconscious_bias",
-            "start": 70,
+            "start": 3,
             "subcategory": "agentic",
-            "text": "challenges"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "project management"
-                },
-                {
-                    "text": "person in project management"
-                },
-                {
-                    "text": "they"
-                },
-                {
-                    "text": "people in project management"
-                }
-            ],
-            "category": "gender-orientation",
-            "context": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you wi",
-            "end": 33,
-            "explanation": {
-                "content": "advanced",
-                "icon": "😟",
-                "text": "People tend to picture a specific gender",
-                "url": "https://www.witty.works/en/categories/gender-orientation/jobs?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Gender + Orientation: Jobs",
-            "proficiency_level": "unconscious_bias",
-            "start": 18,
-            "subcategory": "titles",
-            "text": "project manager"
+            "text": "an independent"
         },
         {
             "alternatives": [
@@ -97,23 +60,6 @@
             "start": 26,
             "subcategory": "titles",
             "text": "manager"
-        },
-        {
-            "alternatives": [],
-            "category": "social-motive",
-            "context": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
-            "end": 94,
-            "explanation": {
-                "content": "video",
-                "icon": "✅",
-                "text": "Strengthens collaboration and a sense of community",
-                "url": "https://www.witty.works/en/categories/social-motive/communal-language?reducedView=true"
-            },
-            "label": "Social Motive: Communal language",
-            "proficiency_level": "inclusive",
-            "start": 86,
-            "subcategory": "communal",
-            "text": "together"
         },
         {
             "alternatives": [
@@ -152,43 +98,24 @@
         {
             "alternatives": [
                 {
-                    "text": "substantial contribution to business success"
+                    "text": "tests"
                 },
                 {
-                    "text": "amazing display of capability"
+                    "text": "trials"
+                },
+                {
+                    "text": "burning questions"
+                },
+                {
+                    "text": "complex situations"
+                },
+                {
+                    "text": "difficult tasks"
                 }
             ],
             "category": "social-motive",
-            "context": "rking on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
-            "end": 164,
-            "explanation": {
-                "content": "advanced",
-                "icon": "😮‍💨",
-                "text": "Over-the-top statements make you sound less trustworthy",
-                "url": "https://www.witty.works/en/categories/social-motive/exaggeration?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Social Motive: Exaggeration",
-            "proficiency_level": "unconscious_bias",
-            "start": 149,
-            "subcategory": "exaggerating",
-            "text": "top performance"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "an impartial"
-                },
-                {
-                    "text": "a freelance"
-                },
-                {
-                    "text": "a consult"
-                }
-            ],
-            "category": "social-motive",
-            "context": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious co",
-            "end": 17,
+            "context": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
+            "end": 80,
             "explanation": {
                 "content": "video",
                 "icon": "😒",
@@ -198,9 +125,26 @@
             "gravity": 2.0,
             "label": "Social Motive: Agentic language",
             "proficiency_level": "unconscious_bias",
-            "start": 3,
+            "start": 70,
             "subcategory": "agentic",
-            "text": "an independent"
+            "text": "challenges"
+        },
+        {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
+            "end": 94,
+            "explanation": {
+                "content": "video",
+                "icon": "✅",
+                "text": "Strengthens collaboration and a sense of community",
+                "url": "https://www.witty.works/en/categories/social-motive/communal-language?reducedView=true"
+            },
+            "label": "Social Motive: Communal language",
+            "proficiency_level": "inclusive",
+            "start": 86,
+            "subcategory": "communal",
+            "text": "together"
         },
         {
             "alternatives": [
@@ -261,6 +205,62 @@
             "start": 153,
             "subcategory": "agentic",
             "text": "performance"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "project management"
+                },
+                {
+                    "text": "person in project management"
+                },
+                {
+                    "text": "they"
+                },
+                {
+                    "text": "people in project management"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you wi",
+            "end": 33,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "People tend to picture a specific gender",
+                "url": "https://www.witty.works/en/categories/gender-orientation/jobs?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Gender + Orientation: Jobs",
+            "proficiency_level": "unconscious_bias",
+            "start": 18,
+            "subcategory": "titles",
+            "text": "project manager"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "substantial contribution to business success"
+                },
+                {
+                    "text": "amazing display of capability"
+                }
+            ],
+            "category": "social-motive",
+            "context": "rking on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
+            "end": 164,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😮‍💨",
+                "text": "Over-the-top statements make you sound less trustworthy",
+                "url": "https://www.witty.works/en/categories/social-motive/exaggeration?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Social Motive: Exaggeration",
+            "proficiency_level": "unconscious_bias",
+            "start": 149,
+            "subcategory": "exaggerating",
+            "text": "top performance"
         }
     ]
 }

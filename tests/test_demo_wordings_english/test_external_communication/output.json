@@ -5,28 +5,6 @@
         {
             "alternatives": [
                 {
-                    "text": "they have"
-                }
-            ],
-            "category": "gender-orientation",
-            "context": "If a manager picks up this topic, he has to go the extra-mile to solve it.",
-            "end": 40,
-            "explanation": {
-                "content": "advanced",
-                "icon": "😟",
-                "text": "Pronouns that exclude non-binary people",
-                "url": "https://www.witty.works/en/categories/gender-orientation/binary-pronouns?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Gender + Orientation: Binary pronouns",
-            "proficiency_level": "unconscious_bias",
-            "start": 34,
-            "subcategory": "advanced_binary_pronouns",
-            "text": "he has"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "they"
                 },
                 {
@@ -54,6 +32,28 @@
             "start": 3,
             "subcategory": "titles",
             "text": "a manager"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "they have"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "If a manager picks up this topic, he has to go the extra-mile to solve it.",
+            "end": 40,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Pronouns that exclude non-binary people",
+                "url": "https://www.witty.works/en/categories/gender-orientation/binary-pronouns?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Gender + Orientation: Binary pronouns",
+            "proficiency_level": "unconscious_bias",
+            "start": 34,
+            "subcategory": "advanced_binary_pronouns",
+            "text": "he has"
         },
         {
             "alternatives": [

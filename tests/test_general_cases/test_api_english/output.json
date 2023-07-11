@@ -5,6 +5,37 @@
         {
             "alternatives": [
                 {
+                    "text": "logical"
+                },
+                {
+                    "text": "systematical"
+                },
+                {
+                    "text": "investigative"
+                },
+                {
+                    "text": "explorative"
+                }
+            ],
+            "category": "social-motive",
+            "context": "We are searching for analytical ninja programmer for our customers. Ours are ass. We say servant leadership FTW.",
+            "end": 31,
+            "explanation": {
+                "content": "video",
+                "icon": "😒",
+                "text": "Doesn’t resonate with team-minded people",
+                "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Social Motive: Agentic language",
+            "proficiency_level": "unconscious_bias",
+            "start": 21,
+            "subcategory": "agentic",
+            "text": "analytical"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "dedicated"
                 },
                 {
@@ -64,37 +95,6 @@
             "start": 89,
             "subcategory": "communal",
             "text": "servant leadership"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "logical"
-                },
-                {
-                    "text": "systematical"
-                },
-                {
-                    "text": "investigative"
-                },
-                {
-                    "text": "explorative"
-                }
-            ],
-            "category": "social-motive",
-            "context": "We are searching for analytical ninja programmer for our customers. Ours are ass. We say servant leadership FTW.",
-            "end": 31,
-            "explanation": {
-                "content": "video",
-                "icon": "😒",
-                "text": "Doesn’t resonate with team-minded people",
-                "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Social Motive: Agentic language",
-            "proficiency_level": "unconscious_bias",
-            "start": 21,
-            "subcategory": "agentic",
-            "text": "analytical"
         }
     ]
 }

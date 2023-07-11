@@ -70,17 +70,6 @@ class LangWithAutoType(str, Enum):
     enGB = "en-GB"
 
 
-class LangGermanVariantType(str, Enum):
-    deDE = "de-DE"
-    deCH = "de-CH"
-    deAT = "de-AT"
-
-
-class LangEnglishVariantType(str, Enum):
-    enUS = "en-US"
-    enGB = "en-GB"
-
-
 class LangVariantType(str, Enum):
     deDE = "de-DE"
     deCH = "de-CH"
@@ -135,12 +124,30 @@ class Config(BaseModel):
     ]
     german_gender_ending: GermanGenderEndingType = GermanGenderEndingType.STAR
     _gendereddenom_ending = {
-        GermanGenderEndingType.STAR: r"(?i)(\b[a-zäöü]+)\*([a-z]+\b)",
-        GermanGenderEndingType.UNDERSCORE: r"(?i)(\b[a-zäöü]+)_([a-z]+\b)",
-        GermanGenderEndingType.COLON: r"(?i)(\b[a-zäöü]+):([a-z]+\b)",
-        GermanGenderEndingType.SLASH: r"(?i)(\b[a-zäöü]+)/([a-z]+\b)",
-        GermanGenderEndingType.SLASH_DASH: r"(?i)(\b[a-zäöü]+)/-([a-z]+\b)",
-        GermanGenderEndingType.CAPITAL_LETTER: r"(?i)(\b[a-zäöü]+)([a-z]+\b)",
+        GermanGenderEndingType.STAR: re.compile(r"^[A-ZÄÖÜ][a-zäöü]+\*in(nen)?$"),
+        GermanGenderEndingType.UNDERSCORE: re.compile(r"^[A-ZÄÖÜ][a-zäöü]+_in(nen)?$"),
+        GermanGenderEndingType.COLON: re.compile(r"^[A-ZÄÖÜ][a-zäöü]+:in(nen)?$"),
+        GermanGenderEndingType.SLASH: re.compile(r"^[A-ZÄÖÜ][a-zäöü]+/in(nen)?$"),
+        GermanGenderEndingType.SLASH_DASH: re.compile(r"^[A-ZÄÖÜ][a-zäöü]+/-in(nen)?$"),
+        GermanGenderEndingType.CAPITAL_LETTER: re.compile(
+            r"^[A-ZÄÖÜ][a-zäöü]+In(nen)?$"
+        ),
+    }
+    _gendereddenom_ending_article = {
+        GermanGenderEndingType.STAR: re.compile(r"^[a-zäöü]{3,7}\*[a-zäöü]{3,7}$"),
+        GermanGenderEndingType.UNDERSCORE: re.compile(r"^[a-zäöü]{3,7}_[a-zäöü]{3,7}$"),
+        GermanGenderEndingType.COLON: re.compile(r"^[a-zäöü]{3,7}:[a-zäöü]{3,7}$"),
+        GermanGenderEndingType.SLASH: re.compile(r"^[a-zäöü]{3,7}/[a-zäöü]{3,7}$"),
+        GermanGenderEndingType.SLASH_DASH: re.compile(r"^[a-zäöü]{3,7}/[a-zäöü]{3,7}$"),
+        GermanGenderEndingType.CAPITAL_LETTER: None,
+    }
+    _gendereddenom_ending_word_type = {
+        GermanGenderEndingType.STAR: "",
+        GermanGenderEndingType.UNDERSCORE: "",
+        GermanGenderEndingType.COLON: "",
+        GermanGenderEndingType.SLASH: "-1,2,/",
+        GermanGenderEndingType.SLASH_DASH: "",
+        GermanGenderEndingType.CAPITAL_LETTER: "",
     }
     disabled_categories: List = []
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
@@ -304,14 +311,6 @@ class LanguageRequest(BaseModel):
     client: str
     config: Config
     configs: dict
-
-
-class GermanLanguageRequest(LanguageRequest):
-    locale: LangGermanVariantType
-
-
-class EnglishLanguageRequest(LanguageRequest):
-    locale: LangEnglishVariantType
 
 
 class ConfRequest(BaseModel):
@@ -498,7 +497,6 @@ class ResultOut(BaseModel):
                 alternatives,
                 explanation_context,
             ) = ResultOut.clean_alternatives(
-                version,
                 config,
                 lang,
                 text,
@@ -555,7 +553,6 @@ class ResultOut(BaseModel):
 
     @staticmethod
     def clean_alternatives(
-        version: float,
         config: Config,
         lang: Language,
         text,
@@ -692,12 +689,12 @@ class ResultOut(BaseModel):
 
     @staticmethod
     def parse_alternative(alternative, parse_context=True):
+        alternative_context = None
         if parse_context and "---" in alternative:
-            alternative, alternative_context = alternative.split("---")
-            alternative = alternative.strip()
-            alternative_context = alternative_context.strip()
-        else:
-            alternative_context = None
+            alternative_split = alternative.split("---")
+            if len(alternative_split) == 2:
+                alternative = alternative_split[0].strip()
+                alternative_context = alternative_split[1].strip()
 
         if alternative == "-":
             alternative = None
@@ -710,10 +707,7 @@ class ResultOut(BaseModel):
     @staticmethod
     def isUpper(text, full_text, start, category, lang):
         if category != "orthography" and text[0:1].isupper():
-            if lang.lang == "de":
-                punctuation = "[.!?:]"
-            else:
-                punctuation = "[.!?]"
+            punctuation = "[.!?:]" if lang.lang == "de" else "[.!?]"
 
             preceeding_text = full_text[max(0, start - 5) : start]
             if (
@@ -818,10 +812,7 @@ class ResultOut(BaseModel):
             else:
                 separator = "/"
         elif german_gender_ending == "/-in":
-            if alternative.count("~") > 1:
-                separator = "/-"
-            else:
-                separator = "/"
+            separator = "/-" if alternative.count("~") > 1 else "/"
         else:
             separator = german_gender_ending[0:1]
 

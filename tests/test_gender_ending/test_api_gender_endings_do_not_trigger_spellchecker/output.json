@@ -5,7 +5,7 @@
         {
             "alternatives": [
                 {
-                    "text": "Kund/-innen"
+                    "text": "/-innen"
                 }
             ],
             "category": "gender-orientation",
@@ -26,7 +26,7 @@
         {
             "alternatives": [
                 {
-                    "text": "Kund/-in"
+                    "text": "/-in"
                 }
             ],
             "category": "gender-orientation",
@@ -68,7 +68,7 @@
         {
             "alternatives": [
                 {
-                    "text": "Kund/-in"
+                    "text": "/-in"
                 }
             ],
             "category": "gender-orientation",

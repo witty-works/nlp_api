@@ -30,6 +30,37 @@
         {
             "alternatives": [
                 {
+                    "text": "capacity"
+                },
+                {
+                    "text": "energy"
+                },
+                {
+                    "text": "aptitude"
+                },
+                {
+                    "text": "capacities"
+                }
+            ],
+            "category": "social-motive",
+            "context": "😀 Power 𐐀 is our gooal my ninja",
+            "end": 8,
+            "explanation": {
+                "content": "video",
+                "icon": "😒",
+                "text": "Doesn’t resonate with team-minded people",
+                "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Social Motive: Agentic language",
+            "proficiency_level": "unconscious_bias",
+            "start": 3,
+            "subcategory": "agentic",
+            "text": "Power"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "skilled person"
                 },
                 {
@@ -60,37 +91,6 @@
             "start": 28,
             "subcategory": "exaggerating",
             "text": "ninja"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "capacity"
-                },
-                {
-                    "text": "energy"
-                },
-                {
-                    "text": "aptitude"
-                },
-                {
-                    "text": "capacities"
-                }
-            ],
-            "category": "social-motive",
-            "context": "😀 Power 𐐀 is our gooal my ninja",
-            "end": 8,
-            "explanation": {
-                "content": "video",
-                "icon": "😒",
-                "text": "Doesn’t resonate with team-minded people",
-                "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Social Motive: Agentic language",
-            "proficiency_level": "unconscious_bias",
-            "start": 3,
-            "subcategory": "agentic",
-            "text": "Power"
         }
     ]
 }

@@ -37,75 +37,13 @@ def test_health():
 
 
 @pytest.mark.parametrize(
-    "german_dir",
-    get_dirs("tests/test_german"),
-)
-def test_german_endpoint(german_dir, snapshot, set_redis):
-    with TestClient(app) as client:
-        # Read input files from the case directory.
-        input_json = german_dir.joinpath("input.json").read_text()
-        # Call the tested endpoint.
-        response = client.post(
-            "/german",
-            json=json.loads(input_json),
-        )
-        assert response.status_code == 403
-
-        response = client.post(
-            "/german",
-            json=json.loads(input_json),
-            headers={"X-German": "set"},
-        )
-        assert response.status_code == 200
-
-        # output must be string
-        output = json.dumps(
-            response.json(), sort_keys=True, indent=4, ensure_ascii=False
-        )
-        # Snapshot the return value.
-        snapshot.snapshot_dir = german_dir
-        snapshot.assert_match(output, "output.json")
-
-
-@pytest.mark.parametrize(
-    "english_dir",
-    get_dirs("tests/test_english"),
-)
-def test_english_endpoint(english_dir, snapshot, set_redis):
-    with TestClient(app) as client:
-        # Read input files from the case directory.
-        input_json = english_dir.joinpath("input.json").read_text()
-        # Call the tested endpoint.
-        response = client.post(
-            "/english",
-            json=json.loads(input_json),
-        )
-        assert response.status_code == 403
-
-        response = client.post(
-            "/english",
-            json=json.loads(input_json),
-            headers={"X-English": "set"},
-        )
-        assert response.status_code == 200
-
-        # output must be string
-        output = json.dumps(
-            response.json(), sort_keys=True, indent=4, ensure_ascii=False
-        )
-        # Snapshot the return value.
-        snapshot.snapshot_dir = english_dir
-        snapshot.assert_match(output, "output.json")
-
-
-@pytest.mark.parametrize(
-    "ending_case_dir",
+    "highlight_position_dir",
     get_dirs("tests/test_highlight_position"),
 )
-def test_highlight_position(ending_case_dir, snapshot, set_redis):
+def test_highlight_position(highlight_position_dir, snapshot, set_redis):
     with TestClient(app) as client:
         # Read input files from the case directory.
-        input_json = ending_case_dir.joinpath("input.json").read_text()
+        input_json = highlight_position_dir.joinpath("input.json").read_text()
         # Call the tested endpoint.
         response = client.post(
             "/v2.3/check",
@@ -118,18 +56,18 @@ def test_highlight_position(ending_case_dir, snapshot, set_redis):
             response.json(), sort_keys=True, indent=4, ensure_ascii=False
         )
         # Snapshot the return value.
-        snapshot.snapshot_dir = ending_case_dir
+        snapshot.snapshot_dir = highlight_position_dir
         snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
-    "ending_case_dir",
+    "sentry_examples_dir",
     get_dirs("tests/test_sentry_examples"),
 )
-def test_sentry_examples(ending_case_dir, snapshot, set_redis):
+def test_sentry_examples(sentry_examples_dir, snapshot, set_redis):
     with TestClient(app) as client:
         # Read input files from the case directory.
-        input_json = ending_case_dir.joinpath("input.json").read_text()
+        input_json = sentry_examples_dir.joinpath("input.json").read_text()
         # Call the tested endpoint.
         response = client.post(
             "/v2.3/check",
@@ -142,18 +80,18 @@ def test_sentry_examples(ending_case_dir, snapshot, set_redis):
             response.json(), sort_keys=True, indent=4, ensure_ascii=False
         )
         # Snapshot the return value.
-        snapshot.snapshot_dir = ending_case_dir
+        snapshot.snapshot_dir = sentry_examples_dir
         snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
-    "ending_case_dir",
+    "spacy_model_dir",
     get_dirs("tests/test_spacy_model"),
 )
-def test_spacy_model(ending_case_dir, snapshot):
+def test_spacy_model(spacy_model_dir, snapshot):
     with TestClient(app) as client:
         # Read input files from the case directory.
-        input_json = ending_case_dir.joinpath("input.json").read_text()
+        input_json = spacy_model_dir.joinpath("input.json").read_text()
         # Call the tested endpoint.
         response = client.post(
             "/v2.3/check",
@@ -166,18 +104,18 @@ def test_spacy_model(ending_case_dir, snapshot):
             response.json(), sort_keys=True, indent=4, ensure_ascii=False
         )
         # Snapshot the return value.
-        snapshot.snapshot_dir = ending_case_dir
+        snapshot.snapshot_dir = spacy_model_dir
         snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
-    "ending_case_dir",
+    "demo_wordings_english_dir",
     get_dirs("tests/test_demo_wordings_english"),
 )
-def test_demo_wordings_english(ending_case_dir, snapshot, set_redis):
+def test_demo_wordings_english(demo_wordings_english_dir, snapshot, set_redis):
     with TestClient(app) as client:
         # Read input files from the case directory.
-        input_json = ending_case_dir.joinpath("input.json").read_text()
+        input_json = demo_wordings_english_dir.joinpath("input.json").read_text()
         # Call the tested endpoint.
         response = client.post(
             "/v2.3/check",
@@ -190,18 +128,18 @@ def test_demo_wordings_english(ending_case_dir, snapshot, set_redis):
             response.json(), sort_keys=True, indent=4, ensure_ascii=False
         )
         # Snapshot the return value.
-        snapshot.snapshot_dir = ending_case_dir
+        snapshot.snapshot_dir = demo_wordings_english_dir
         snapshot.assert_match(output, "output.json")
 
 
 @pytest.mark.parametrize(
-    "ending_case_dir",
+    "demo_wordings_german_dir",
     get_dirs("tests/test_demo_wordings_german"),
 )
-def test_demo_wordings_german(ending_case_dir, snapshot, set_redis):
+def test_demo_wordings_german(demo_wordings_german_dir, snapshot, set_redis):
     with TestClient(app) as client:
         # Read input files from the case directory.
-        input_json = ending_case_dir.joinpath("input.json").read_text()
+        input_json = demo_wordings_german_dir.joinpath("input.json").read_text()
         # Call the tested endpoint.
         response = client.post(
             "/v2.3/check",
@@ -214,7 +152,7 @@ def test_demo_wordings_german(ending_case_dir, snapshot, set_redis):
             response.json(), sort_keys=True, indent=4, ensure_ascii=False
         )
         # Snapshot the return value.
-        snapshot.snapshot_dir = ending_case_dir
+        snapshot.snapshot_dir = demo_wordings_german_dir
         snapshot.assert_match(output, "output.json")
 
 
@@ -222,7 +160,7 @@ def test_demo_wordings_german(ending_case_dir, snapshot, set_redis):
     "general_case_dir",
     get_dirs("tests/test_general_cases"),
 )
-def test_json(general_case_dir, snapshot, set_redis):
+def test_general_cases(general_case_dir, snapshot, set_redis):
     with TestClient(app) as client:
         # Read input files from the case directory.
         input_json = general_case_dir.joinpath("input.json").read_text()
@@ -399,7 +337,7 @@ def test_language_detection_fail(fails_case_dir, snapshot, set_redis):
 
 def test_lemmatize():
     with TestClient(app) as client:
-        response = client.get("/lemmatize?locale=" + "en&text=running")
+        response = client.get("/lemmatize?lang=" + "en&text=running")
         assert response.status_code == 200
         result = response.json()
 
@@ -1212,6 +1150,7 @@ def test_spacy():
                 "morph": {"Case": "Nom", "Gender": "Fem", "Number": "Sing"},
                 "is_emoji": True,
                 "emoji_desc": "woman firefighter light skin tone",
+                "whitespace": " ",
             },
             {
                 "text": "Das",
@@ -1229,6 +1168,7 @@ def test_spacy():
                 },
                 "is_emoji": False,
                 "emoji_desc": None,
+                "whitespace": " ",
             },
             {
                 "text": "ist",
@@ -1247,6 +1187,7 @@ def test_spacy():
                 },
                 "is_emoji": False,
                 "emoji_desc": None,
+                "whitespace": " ",
             },
             {
                 "text": "sehr",
@@ -1259,6 +1200,7 @@ def test_spacy():
                 "morph": {},
                 "is_emoji": False,
                 "emoji_desc": None,
+                "whitespace": " ",
             },
             {
                 "text": "ehrgeizig",
@@ -1271,6 +1213,7 @@ def test_spacy():
                 "morph": {"Degree": "Pos"},
                 "is_emoji": False,
                 "emoji_desc": None,
+                "whitespace": " ",
             },
             {
                 "text": "😃",
@@ -1283,6 +1226,7 @@ def test_spacy():
                 "morph": {},
                 "is_emoji": True,
                 "emoji_desc": "grinning face with big eyes",
+                "whitespace": "",
             },
         ]
 
@@ -1467,7 +1411,6 @@ def test_english_upper_case_multiterms(
         # Snapshot the return value.
         snapshot.snapshot_dir = english_upper_case_multiterms_dir
         snapshot.assert_match(output, "output.json")
-
 
 
 @pytest.mark.parametrize(

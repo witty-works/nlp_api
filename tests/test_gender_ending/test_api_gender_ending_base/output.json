@@ -3,6 +3,23 @@
     "limit_reached": false,
     "results": [
         {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "Ich vertraue auf meinen Facharzt. Ich gehe zur Fachärztin/Facharzt",
+            "end": 12,
+            "explanation": {
+                "content": "video",
+                "icon": "✅",
+                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true"
+            },
+            "label": "Soziale Motivation: Kommunale Sprache",
+            "proficiency_level": "inclusive",
+            "start": 4,
+            "subcategory": "communal",
+            "text": "vertraue"
+        },
+        {
             "alternatives": [
                 {
                     "text": "meine Praxis"
@@ -35,23 +52,6 @@
             "start": 17,
             "subcategory": "titles",
             "text": "meinen Facharzt"
-        },
-        {
-            "alternatives": [],
-            "category": "social-motive",
-            "context": "Ich vertraue auf meinen Facharzt. Ich gehe zur Fachärztin/Facharzt",
-            "end": 12,
-            "explanation": {
-                "content": "video",
-                "icon": "✅",
-                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
-                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true"
-            },
-            "label": "Soziale Motivation: Kommunale Sprache",
-            "proficiency_level": "inclusive",
-            "start": 4,
-            "subcategory": "communal",
-            "text": "vertraue"
         }
     ]
 }

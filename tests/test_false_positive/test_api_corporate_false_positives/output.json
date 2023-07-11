@@ -8,12 +8,6 @@
         {
             "alternatives": [
                 {
-                    "text": "Verantwortungtragende"
-                },
-                {
-                    "text": "Verantwortliche"
-                },
-                {
                     "text": "Leitung"
                 },
                 {
@@ -21,11 +15,17 @@
                 },
                 {
                     "text": "Team-Lenkung"
+                },
+                {
+                    "text": "Lenkung"
+                },
+                {
+                    "text": "Management"
                 }
             ],
             "category": "gender-orientation",
             "context": "Ich bin eine starke Führungskraft! Wir sind alle Führungskräfte.",
-            "end": 63,
+            "end": 33,
             "explanation": {
                 "content": "advanced",
                 "icon": "💡",
@@ -35,9 +35,9 @@
             "gravity": 2.0,
             "label": "Geschlecht + Orientierung: Generisches Maskulinum",
             "proficiency_level": "unconscious_bias",
-            "start": 49,
+            "start": 20,
             "subcategory": "function",
-            "text": "Führungskräfte"
+            "text": "Führungskraft"
         }
     ]
 }
