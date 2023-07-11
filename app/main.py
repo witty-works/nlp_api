@@ -2882,10 +2882,7 @@ def align_noun_form(lang, a_text, a_token, b_token):
     return Noun(b_text).singular()
 
 
-def align_adjective_form(lang, a_text, a_token, b_token):
-    if lang == "de":
-        return add_declension_german(b_token.text, a_text, a_token.lemma_)
-
+def align_adjective_form_english(a_text, a_token, b_token):
     b_text = b_token.lemma_
     a_adjective = Adjective(a_text)
     b_adjective = Adjective(b_text)
@@ -2904,6 +2901,13 @@ def align_adjective_form(lang, a_text, a_token, b_token):
         b_text = b_adjective.superlative()
 
     return b_text
+
+
+def align_adjective_form(lang, a_text, a_token, b_token):
+    if lang == "de":
+        return add_declension_german(b_token.text, a_text, a_token.lemma_)
+
+    return align_adjective_form_english(a_text, a_token, b_token)
 
 
 def german_verb_splittable(word):  # pragma: no cover
@@ -4226,8 +4230,8 @@ def simple_match(
     offsets,
     list_full,
     words_data,
-    false_positive_matcher = None,
-    lower_case = True,
+    false_positive_matcher=None,
+    lower_case=True,
 ):
     for word, word_types, subcategory, *data in words_data:
         if not is_sub_category_enabled(config, subcategory):
