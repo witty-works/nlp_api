@@ -497,7 +497,6 @@ class ResultOut(BaseModel):
                 alternatives,
                 explanation_context,
             ) = ResultOut.clean_alternatives(
-                version,
                 config,
                 lang,
                 text,
@@ -554,7 +553,6 @@ class ResultOut(BaseModel):
 
     @staticmethod
     def clean_alternatives(
-        version: float,
         config: Config,
         lang: Language,
         text,
@@ -709,10 +707,7 @@ class ResultOut(BaseModel):
     @staticmethod
     def isUpper(text, full_text, start, category, lang):
         if category != "orthography" and text[0:1].isupper():
-            if lang.lang == "de":
-                punctuation = "[.!?:]"
-            else:
-                punctuation = "[.!?]"
+            punctuation = "[.!?:]" if lang.lang == "de" else "[.!?]"
 
             preceeding_text = full_text[max(0, start - 5) : start]
             if (
@@ -817,10 +812,7 @@ class ResultOut(BaseModel):
             else:
                 separator = "/"
         elif german_gender_ending == "/-in":
-            if alternative.count("~") > 1:
-                separator = "/-"
-            else:
-                separator = "/"
+            separator = "/-" if alternative.count("~") > 1 else "/"
         else:
             separator = german_gender_ending[0:1]
 
