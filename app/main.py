@@ -2026,7 +2026,7 @@ async def german_rules(
                 offsets,
                 list_full,
                 rules["de"]["df_communal_words"],
-                [],
+                None,
                 subcategory,
             )
 
@@ -2069,57 +2069,6 @@ async def german_rules(
             continue
 
         new_i += 1
-
-    sentences_matcher(
-        version,
-        config,
-        lang,
-        text,
-        tokens,
-        offsets,
-        list_full,
-        rules["de"]["open_disc_sentences_data"],
-        rules["de"]["df_open_dis_sentence"],
-    )
-
-    sentences_matcher(
-        version,
-        config,
-        lang,
-        text,
-        tokens,
-        offsets,
-        list_full,
-        rules["de"]["style_sentences_data"],
-        rules["de"]["terms_style"],
-    )
-
-    sentences_matcher(
-        version,
-        config,
-        lang,
-        text,
-        tokens,
-        offsets,
-        list_full,
-        rules["de"]["bias_sentences_data"],
-        rules["de"]["df_ub_sentences"],
-    )
-
-    subcategory = "d_and_i"
-    if is_sub_category_enabled(config, subcategory):
-        sentences_matcher(
-            version,
-            config,
-            lang,
-            text,
-            tokens,
-            offsets,
-            list_full,
-            None,
-            rules["de"]["df_terms_d_and_i_words"],
-            subcategory,
-        )
 
     return list_full
 
@@ -2438,8 +2387,8 @@ async def english_rules(
         tokens,
         offsets,
         list_full,
-        sentences_data_en["od"],
         rules[lang.locale]["df_open_dis_sentence"],
+        sentences_data_en["od"],
     )
 
     sentences_matcher(
@@ -2450,8 +2399,8 @@ async def english_rules(
         tokens,
         offsets,
         list_full,
-        sentences_data_en["ge"],
         rules[lang.locale]["df_gendered_sentence"],
+        sentences_data_en["ge"],
     )
 
     sentences_matcher(
@@ -2462,8 +2411,8 @@ async def english_rules(
         tokens,
         offsets,
         list_full,
-        inclusive_sentences_data_en,
         rules[lang.locale]["df_inclusive_sentence"],
+        inclusive_sentences_data_en,
     )
 
     sentences_matcher(
@@ -2474,8 +2423,8 @@ async def english_rules(
         tokens,
         offsets,
         list_full,
-        sentences_data_en["style"],
         rules[lang.locale]["df_style_sentence"],
+        sentences_data_en["style"],
     )
 
     sentences_matcher(
@@ -2486,8 +2435,8 @@ async def english_rules(
         tokens,
         offsets,
         list_full,
-        sentences_data_en["bias"],
         rules[lang.locale]["df_ub_sentence"],
+        sentences_data_en["bias"],
     )
 
     return list_full
@@ -3393,41 +3342,6 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
     return alternatives_with_article
 
 
-def sentences_matches(
-    version: float,
-    config: Config,
-    lang,
-    full_text,
-    tokens,
-    offsets,
-    list_full,
-    subcategory,
-    matches,
-):
-    list_tokens = []
-
-    if is_sub_category_enabled(config, subcategory):
-        for match_id, start, end in matches:
-            span = tokens[start:end]
-
-            list_tokens.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    span.text,
-                    full_text,
-                    offsets,
-                    list_full,
-                    subcategory,
-                    span.start_char,
-                    span.end_char,
-                )
-            )
-
-    return list_tokens
-
-
 def sentences_matcher(
     version: float,
     config: Config,
@@ -3436,59 +3350,42 @@ def sentences_matcher(
     tokens,
     offsets,
     list_full,
-    sentences_data,
     df_sentence,
-    subcategory=None,
+    sentences_data,
 ):
-    if not isinstance(df_sentence, list):
-        if not isinstance(df_sentence, pd.DataFrame):
-            return
-
-        df_sentence = list(df_sentence["Lemma"])
+    if len(df_sentence) == 0 or len(sentences_data) == 0:
+        return
 
     matches = fetch_matches(lang.lang, tokens, df_sentence)
-
-    if sentences_data is None:
-        sentences_matches(
-            version,
-            config,
-            lang,
-            full_text,
-            tokens,
-            offsets,
-            list_full,
-            subcategory,
-            matches,
-        )
-
-        return
 
     alternatives = None
 
     for match_id, start, end in matches:
         span = tokens[start:end]
         for sentence, subcategory, *data in sentences_data:
-            if span.text.lower() == sentence.lower():
-                if not is_sub_category_enabled(config, subcategory):
-                    continue
+            if (
+                not is_sub_category_enabled(config, subcategory)
+                or span.text.lower() != sentence.lower()
+            ):
+                continue
 
-                if len(data):
-                    alternatives = data[0]
+            if len(data):
+                alternatives = data[0]
 
-                list_full.append(
-                    ResultOut.factory(
-                        version,
-                        config,
-                        lang,
-                        span.text,
-                        full_text,
-                        offsets,
-                        subcategory,
-                        span.start_char,
-                        span.end_char,
-                        alternatives,
-                    )
+            list_full.append(
+                ResultOut.factory(
+                    version,
+                    config,
+                    lang,
+                    span.text,
+                    full_text,
+                    offsets,
+                    subcategory,
+                    span.start_char,
+                    span.end_char,
+                    alternatives,
                 )
+            )
 
 
 def regex_match(
@@ -3819,21 +3716,30 @@ def gendered_denom_analysis_de(
         if text is None:
             continue
 
-        if postfix and lemma != word.lower() and lemma.endswith(word.lower()):
+        if postfix:
             alternatives = alternatives.copy()
-            prefix = token.lemma_.removesuffix(word.lower())
+            prefix = (
+                token.lemma_.removesuffix(word.lower())
+                if len(token.lemma_) != len(word)
+                else ""
+            )
             for k, alternative in enumerate(alternatives):
                 alternative = alternative.replace(word, lemma)
-                if alternative[0] == "~":
-                    alternative = prefix + alternative[1].lower() + alternative[2:]
-                if word[0] == "A":
-                    modified_word = "Ä" + word[1:]
-                    modified_word_lower = "ä" + word[1:]
-                    replacement = lemma[0 : -len(modified_word)] + modified_word_lower
-                    alternative = alternative.replace(
-                        modified_word_lower, replacement.lower()
-                    )
-                    alternative = alternative.replace(modified_word, replacement)
+                if prefix:
+                    if alternative[0] == "~":
+                        alternative = prefix + alternative[1].lower() + alternative[2:]
+                    if word[0] == "A":
+                        modified_word = "Ä" + word[1:]
+                        modified_word_lower = "ä" + word[1:]
+                        replacement = (
+                            lemma[0 : -len(modified_word)] + modified_word_lower
+                        )
+                        alternative = alternative.replace(
+                            modified_word_lower, replacement.lower()
+                        )
+                        alternative = alternative.replace(modified_word, replacement)
+                elif alternative[0] == "~":
+                    alternative = alternative[1:]
 
                 alternatives[k] = alternative
 
@@ -4147,12 +4053,10 @@ def rules_based_words_phrase_matcher(
             subcategory = data[0]
 
         partial_matching = subcategory.endswith("_base")
-        subcategory = subcategory.removesuffix("_base")
-
-        if partial_matching and settings.partial_matching:
+        if partial_matching:
             text = False
+            subcategory = subcategory.removesuffix("_base")
         else:
-            partial_matching = False
             skip_token, text = is_phrase_match(
                 lang.lang,
                 i,
@@ -4179,9 +4083,8 @@ def rules_based_words_phrase_matcher(
                 continue
 
             if len(data) > 2 and data[2] is not None:
-                # False Positives
                 for false_positive in data[2]:
-                    count = count - token_lower.count(false_positive.lower())
+                    count -= token_lower.count(false_positive.lower())
 
             if count <= 0:
                 continue

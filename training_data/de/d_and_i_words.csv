@@ -6,7 +6,8 @@ androsexuell,a,inclusive,d_and_i
 Asexualität,s,inclusive,d_and_i
 asexuell,a,inclusive,d_and_i
 Ballroom,s,inclusive,d_and_i
-bigender,s,inclusive,d_and_i
+Ballroom Community,s,inclusive,d_and_i
+Bigender,s,inclusive,d_and_i
 Binder,s,inclusive,d_and_i
 Biphobie,s,inclusive,d_and_i
 Bisexualität,s,inclusive,d_and_i
@@ -18,6 +19,7 @@ Cissexismus,s,inclusive,d_and_i
 Coming-out,s,inclusive,d_and_i
 Deadname,s,inclusive,d_and_i
 divers,a,inclusive,d_and_i
+diverser Hintergrund,s,inclusive,d_and_i
 Diversität,s,inclusive,d_and_i
 Drag-King,s,inclusive,d_and_i
 Drag-Künstler~in,s,inclusive,d_and_i
@@ -26,11 +28,13 @@ Enby,s,inclusive,d_and_i
 fair,a,inclusive,d_and_i
 Femboy,s,inclusive,d_and_i
 gay,a,inclusive,d_and_i
+Gender Bending,s,inclusive,d_and_i
 Gender-Dysphorie,s,inclusive,d_and_i
 Gender-Euphorie,s,inclusive,d_and_i
 Gender-Mainstreaming,s,inclusive,d_and_i
 genderqueer,a,inclusive,d_and_i
 Geschlechtsausdruck,s,inclusive,d_and_i
+geschlechtsneutrale Pronomen,a|s,inclusive,d_and_i
 Gleichstellung,s,inclusive,d_and_i
 heteronormativ,a,inclusive,d_and_i
 Heteronormativität,s,inclusive,d_and_i
@@ -45,10 +49,12 @@ Inklusion,s,inclusive,d_and_i
 inklusiv,a,inclusive,d_and_i
 inter,a,inclusive,d_and_i
 Intergeschlechtlichkeit,s,inclusive,d_and_i
+internalisierte Homophobie,a|s,inclusive,d_and_i
 Interphobie,s,inclusive,d_and_i
 intersektional,a,inclusive,d_and_i
 Intersektionalität,s,inclusive,d_and_i
 Intersexualität,s,inclusive,d_and_i
+keine Diskriminierung,s,inclusive,d_and_i
 Kultur,s,inclusive,d_and_i
 Latinx,s,inclusive,d_and_i
 Latine,s,inclusive,d_and_i
@@ -70,6 +76,7 @@ queerfeministisch,a,inclusive,d_and_i
 questioning,a,inclusive,d_and_i
 Regenbogen-Familie,s,inclusive,d_and_i
 Religion,s,inclusive,d_and_i
+sexuelle Orientierung,s,inclusive,d_and_i
 sicher,a,inclusive,d_and_i
 Sicherheit,s,inclusive,d_and_i
 Sinnhaftigkeit,s,inclusive,d_and_i
@@ -77,6 +84,7 @@ straight-acting,a,inclusive,d_and_i
 Token,s,inclusive,d_and_i
 Transition,s,inclusive,d_and_i
 unterrepräsentiert,a,inclusive,d_and_i
+unterschiedlicher Hintergrund,s,inclusive,d_and_i
 Unterstützer~in,s,inclusive,d_and_i
 Verbündete~r,s,inclusive,d_and_i
 Vielfalt,s,inclusive,d_and_i

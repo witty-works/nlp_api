@@ -110,9 +110,6 @@
         {
             "alternatives": [
                 {
-                    "text": "Mitarbeit"
-                },
-                {
                     "text": "Mitarbeiter*in"
                 },
                 {
@@ -123,6 +120,9 @@
                 },
                 {
                     "text": "Mitarbeiterschaft"
+                },
+                {
+                    "text": "Belegschaft"
                 }
             ],
             "category": "gender-orientation",

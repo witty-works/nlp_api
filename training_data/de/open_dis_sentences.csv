@@ -1,8 +1,0 @@
-Lemma,Word_Type,Category,Primary_subcategory,Alt_split,False_Positives
-jüdische Hast,a+s,openly_discriminating,antisemitism,"['-', 'Eile', 'Hektik']",[]
-Lärm wie in der Judenschule,i,openly_discriminating,antisemitism,"['ganz schönes Durcheinander', 'fürchterlicher Krach', 'grausamer Lärm']",[]
-Homo erectus,s,openly_discriminating,homophobia,['-'],[]
-vom anderen Ufer,i,openly_discriminating,homophobia,"['-', 'schwul', 'lesbisch']",[]
-warmer Bruder,a+s,openly_discriminating,homophobia,['-'],[]
-alte Jungfer,a+s,openly_discriminating,sexism,['-'],[]
-alte Schachtel,a+s,openly_discriminating,sexism,['-'],[]

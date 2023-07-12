@@ -5,12 +5,6 @@
         {
             "alternatives": [
                 {
-                    "text": "Unsere Praxis"
-                },
-                {
-                    "text": "Unsere Untersuchung"
-                },
-                {
                     "text": "Unser*e Fachärztin*Facharzt"
                 },
                 {
@@ -21,7 +15,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Unser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Arsch. Arschhund.",
+            "context": "Unser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Hure. Hurehund. Ka",
             "end": 14,
             "explanation": {
                 "content": "advanced",
@@ -46,16 +40,10 @@
                 },
                 {
                     "text": "Medizinisches Team"
-                },
-                {
-                    "text": "Praxis"
-                },
-                {
-                    "text": "Untersuchung"
                 }
             ],
             "category": "gender-orientation",
-            "context": "Unser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Arsch. Arschhund. Katzenarschhund. Katze",
+            "context": "Unser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Hure. Hurehund. Katzenhurehund. Katzenhu",
             "end": 36,
             "explanation": {
                 "content": "advanced",
@@ -83,7 +71,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Unser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Arsch. Arschhund. Katzenarschhund. Katzenarsch. Barsch. Barscharschmarsch. Ein",
+            "context": "Unser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Hure. Hurehund. Katzenhurehund. Katzenhure. Mandschure. Mandschurehuremhure. E",
             "end": 74,
             "explanation": {
                 "content": "advanced",
@@ -108,7 +96,7 @@
                 }
             ],
             "category": "religion",
-            "context": "Unser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Arsch. Arschhund. Katzenarschhund. Katzenarsch. Barsch. Barscharschmarsch. Ein Ingenieur kann das.",
+            "context": "Unser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Hure. Hurehund. Katzenhurehund. Katzenhure. Mandschure. Mandschurehuremhure. Ein Ingenieur kann da",
             "end": 94,
             "explanation": {
                 "icon": "🚫",
@@ -125,42 +113,138 @@
         {
             "alternatives": [
                 {
-                    "text": "Eine auf einer Hochschule ausgebildete Technik-Fachkraft"
-                },
-                {
-                    "text": "Eine auf einer Fachhochschule ausgebildete Technik-Fachkraft"
-                },
-                {
-                    "text": "Ein Engineering"
-                },
-                {
-                    "text": "Eine Technik"
-                },
-                {
-                    "text": "Technikwissenschaften"
+                    "remove": true
                 }
             ],
             "category": "gender-orientation",
-            "context": "den. Er hat ein Judenei. Arsch. Arschhund. Katzenarschhund. Katzenarsch. Barsch. Barscharschmarsch. Ein Ingenieur kann das. Ein Elektroingenieur kann das nicht.",
-            "end": 184,
+            "context": "Unser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Hure. Hurehund. Katzenhurehund. Katzenhure. Mandschure. Mandschurehuremhure. Ein Ingenieur kann das. Ein",
+            "end": 100,
+            "explanation": {
+                "icon": "🚫",
+                "text": "Fällt unter sexistische Verunglimpfungen",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/sexismus?reducedView=true"
+            },
+            "gravity": 1.0,
+            "label": "Geschlecht + Orientierung: Sexismus",
+            "proficiency_level": "openly_discriminating",
+            "start": 96,
+            "subcategory": "advanced_sexism",
+            "text": "Hure"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "ser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Hure. Hurehund. Katzenhurehund. Katzenhure. Mandschure. Mandschurehuremhure. Ein Ingenieur kann das. Ein Elektroin",
+            "end": 110,
+            "explanation": {
+                "icon": "🚫",
+                "text": "Fällt unter sexistische Verunglimpfungen",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/sexismus?reducedView=true"
+            },
+            "gravity": 1.0,
+            "label": "Geschlecht + Orientierung: Sexismus",
+            "proficiency_level": "openly_discriminating",
+            "start": 102,
+            "subcategory": "advanced_sexism",
+            "text": "Hurehund"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "zt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Hure. Hurehund. Katzenhurehund. Katzenhure. Mandschure. Mandschurehuremhure. Ein Ingenieur kann das. Ein Elektroingenieur kann das",
+            "end": 126,
+            "explanation": {
+                "icon": "🚫",
+                "text": "Fällt unter sexistische Verunglimpfungen",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/sexismus?reducedView=true"
+            },
+            "gravity": 1.0,
+            "label": "Geschlecht + Orientierung: Sexismus",
+            "proficiency_level": "openly_discriminating",
+            "start": 112,
+            "subcategory": "advanced_sexism",
+            "text": "Katzenhurehund"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "achärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Hure. Hurehund. Katzenhurehund. Katzenhure. Mandschure. Mandschurehuremhure. Ein Ingenieur kann das. Ein Elektroingenieur kann das nicht.",
+            "end": 138,
+            "explanation": {
+                "icon": "🚫",
+                "text": "Fällt unter sexistische Verunglimpfungen",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/sexismus?reducedView=true"
+            },
+            "gravity": 1.0,
+            "label": "Geschlecht + Orientierung: Sexismus",
+            "proficiency_level": "openly_discriminating",
+            "start": 128,
+            "subcategory": "advanced_sexism",
+            "text": "Katzenhure"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Hier sind viele Juden. Er hat ein Judenei. Hure. Hurehund. Katzenhurehund. Katzenhure. Mandschure. Mandschurehuremhure. Ein Ingenieur kann das. Ein Elektroingenieur kann das nicht.",
+            "end": 171,
+            "explanation": {
+                "icon": "🚫",
+                "text": "Fällt unter sexistische Verunglimpfungen",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/sexismus?reducedView=true"
+            },
+            "gravity": 1.0,
+            "label": "Geschlecht + Orientierung: Sexismus",
+            "proficiency_level": "openly_discriminating",
+            "start": 152,
+            "subcategory": "advanced_sexism",
+            "text": "Mandschurehuremhure"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Ein*e Ingenieur*in"
+                },
+                {
+                    "text": "Ein/e Ingenieurin/Ingenieur"
+                },
+                {
+                    "text": "Ein Engineering-Team"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "n. Er hat ein Judenei. Hure. Hurehund. Katzenhurehund. Katzenhure. Mandschure. Mandschurehuremhure. Ein Ingenieur kann das. Ein Elektroingenieur kann das nicht.",
+            "end": 186,
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
                 "text": "Viele denken zuerst an bestimmtes Geschlecht",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Geschlecht + Orientierung: Berufe",
             "proficiency_level": "unconscious_bias",
-            "start": 171,
-            "subcategory": "titles",
+            "start": 173,
+            "subcategory": "advanced_titles",
             "text": "Ein Ingenieur"
         },
         {
             "alternatives": [
-                {
-                    "text": "Eine Elektrotechnik"
-                },
                 {
                     "text": "Ein*e Elektroingenieur*in"
                 },
@@ -169,8 +253,8 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Arsch. Arschhund. Katzenarschhund. Katzenarsch. Barsch. Barscharschmarsch. Ein Ingenieur kann das. Ein Elektroingenieur kann das nicht.",
-            "end": 215,
+            "context": "ure. Hurehund. Katzenhurehund. Katzenhure. Mandschure. Mandschurehuremhure. Ein Ingenieur kann das. Ein Elektroingenieur kann das nicht.",
+            "end": 217,
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
@@ -180,7 +264,7 @@
             "gravity": 2.0,
             "label": "Geschlecht + Orientierung: Berufe",
             "proficiency_level": "unconscious_bias",
-            "start": 195,
+            "start": 197,
             "subcategory": "titles",
             "text": "Ein Elektroingenieur"
         }
