@@ -97,7 +97,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.45.2"
+version = "1.45.3"
 
 categories = get_categories()
 settings = get_settings()
@@ -3519,7 +3519,7 @@ def regex_match(
         # run regex on exactly the token
         if len(token_offsets) != 2:
             text = check_text = tokens[i].text
-            start_token = 1
+            start_token = i
         else:
             try:
                 text = check_text = ""
