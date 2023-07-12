@@ -3510,48 +3510,48 @@ def regex_match(
             continue
 
         token_offsets = word_types.split(",")
+        connector_string = ""
+
         # ",_" or "1,7,/"
         if token_offsets[0] == "" or len(token_offsets) == 3:
             connector_string = token_offsets.pop()
-        else:
-            connector_string = ""
 
         # run regex on exactly the token
         if len(token_offsets) != 2:
             text = check_text = tokens[i].text
             start_token = 1
         else:
-            text = check_text = ""
-
             try:
-                start_token = int(token_offsets[0])
-                max_end_token = int(token_offsets[1])
+                text = check_text = ""
+                start_token = int(token_offsets[0]) + i
+                max_end_token = int(token_offsets[1]) + i
 
                 multi_part = max_end_token - start_token > 1
+                # "1,2,#" => "#forever"
                 if not multi_part:
                     if token.text != connector_string:
                         continue
 
                     text = check_text = connector_string
-                elif i > 0 and tokens[i + start_token - 1].text == connector_string:
+                elif tokens[start_token + 1].text != connector_string:
                     continue
 
                 while start_token < max_end_token:
-                    offset_token = tokens[i + start_token]
+                    offset_token = tokens[start_token]
 
                     check_text += offset_token.text
-                    if start_token >= 0:
+                    if start_token >= i:
                         text += offset_token.text
 
                     if offset_token.whitespace_ != "":
                         break
 
                     start_token += 1
-                    if tokens[i + start_token].text != connector_string:
+                    if tokens[start_token].text != connector_string:
                         break
 
                     check_text += connector_string
-                    if start_token >= 0:
+                    if start_token >= i:
                         text += connector_string
 
                     start_token += 1
@@ -3699,7 +3699,7 @@ def regex_match(
             if alternative_3 is not None:
                 alternatives.append(alternative_3)
 
-        skip_token = start_token
+        skip_token = start_token + 1
 
         list_full.append(
             ResultOut.factory(
