@@ -522,6 +522,10 @@ def fetch_rules(langs):
                 map(ast.literal_eval, df_discrimination_sentences["Alt_split"]),
             )
         )
+        data["de"]["df_open_dis_sentence"] = list(
+            data["de"]["df_open_dis_sentence"]["Lemma"]
+        )
+
         # df gendered sentences
         df_gendered_sentences = data["de"]["df_gendered_sentences"]
         # gendered: sentences + alternatives split + subcategory
@@ -542,6 +546,8 @@ def fetch_rules(langs):
                 map(ast.literal_eval, df_bias_sentences["Alt_split"]),
             )
         )
+        data["de"]["df_ub_sentences"] = list(data["de"]["df_ub_sentences"]["Lemma"])
+
         # df style sentences
         df_style_sentences = data["de"]["df_style_sentences"]
         # style: sentences + alternatives + subcategory
@@ -551,6 +557,9 @@ def fetch_rules(langs):
                 df_style_sentences["Primary_subcategory"],
                 map(ast.literal_eval, df_style_sentences["Alt_split"]),
             )
+        )
+        data["de"]["df_style_sentences"] = list(
+            data["de"]["df_style_sentences"]["Lemma"]
         )
 
         rules["de"]["primary_german_genus_endings"] = {
@@ -1222,6 +1231,9 @@ def fetch_rules(langs):
                     df_inclusive_sentences["Primary_subcategory"],
                 )
             )
+            data[locale]["df_inclusive_sentence"] = list(
+                data[locale]["df_inclusive_sentence"]["Lemma"]
+            )
 
             # df open discrimination sentences
             df_open_dis_sentences = data[locale]["df_open_dis_sentence"]
@@ -1232,6 +1244,9 @@ def fetch_rules(langs):
                     df_open_dis_sentences["Primary_subcategory"],
                     map(ast.literal_eval, df_open_dis_sentences["Alt_split"]),
                 )
+            )
+            data[locale]["df_open_dis_sentence"] = list(
+                data[locale]["df_open_dis_sentence"]["Lemma"]
             )
 
             # df gendered sentences
@@ -1244,6 +1259,9 @@ def fetch_rules(langs):
                     map(ast.literal_eval, df_gendered_sentences["Alt_split"]),
                 )
             )
+            data[locale]["df_gendered_sentence"] = list(
+                data[locale]["df_gendered_sentence"]["Lemma"]
+            )
 
             # df style sentences
             df_style_sentences = data[locale]["df_style_sentence"]
@@ -1255,6 +1273,9 @@ def fetch_rules(langs):
                     map(ast.literal_eval, df_style_sentences["Alt_split"]),
                 )
             )
+            data[locale]["df_style_sentence"] = list(
+                data[locale]["df_style_sentence"]["Lemma"]
+            )
 
             # df unconscious bias sentences
             df_bias_sentences = data[locale]["df_ub_sentence"]
@@ -1265,6 +1286,9 @@ def fetch_rules(langs):
                     df_bias_sentences["Primary_subcategory"],
                     map(ast.literal_eval, df_bias_sentences["Alt_split"]),
                 )
+            )
+            data[locale]["df_ub_sentence"] = list(
+                data[locale]["df_ub_sentence"]["Lemma"]
             )
 
             df_bias_singular_they = data[locale]["df_ub_singular_they"]
