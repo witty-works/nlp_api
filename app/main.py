@@ -97,7 +97,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.45.1"
+version = "1.45.2"
 
 categories = get_categories()
 settings = get_settings()
@@ -1726,6 +1726,18 @@ async def context_false_positives(lang, tokens, list_results):
     return list_results
 
 
+def check_continue(i, new_i, tokens):
+    if new_i == i:
+        return False
+
+    if new_i < i:
+        logging.error("Incorrect new_i: expected %i < %i for %s", i, new_i, tokens[i])
+
+        return False
+
+    return True
+
+
 async def german_rules(
     version: float,
     config: Config,
@@ -1756,7 +1768,7 @@ async def german_rules(
                 term_replacements,
             )
 
-            if i < new_i:
+            if check_continue(i, new_i, tokens):
                 continue
 
         if is_sub_category_enabled(config, "gender_specific_abbreviation"):
@@ -1772,7 +1784,7 @@ async def german_rules(
                 rules["m_f_regexes"],
             )
 
-            if i < new_i:
+            if check_continue(i, new_i, tokens):
                 continue
 
         subcategory = "d_and_i"
@@ -1789,7 +1801,7 @@ async def german_rules(
                 rules["d_f_m_regexes"],
             )
 
-            if i < new_i:
+            if check_continue(i, new_i, tokens):
                 continue
 
             # avoid issues with LinkedIn
@@ -1825,7 +1837,7 @@ async def german_rules(
                     endings,
                 )
 
-                if i < new_i:
+                if check_continue(i, new_i, tokens):
                     continue
 
         subcategory = "advanced_gendered_denominations_ending"
@@ -1872,7 +1884,7 @@ async def german_rules(
                 endings,
             )
 
-            if i < new_i:
+            if check_continue(i, new_i, tokens):
                 continue
 
         new_i = detect_non_inclusive_emoji(
@@ -1887,7 +1899,7 @@ async def german_rules(
             list_full,
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         new_i = regex_match(
@@ -1902,7 +1914,7 @@ async def german_rules(
             rules["de"]["hashtags"],
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         token_text = tokens[i].text
@@ -1923,7 +1935,7 @@ async def german_rules(
                 rules["de"]["abbreviation"],
             )
 
-            if i < new_i:
+            if check_continue(i, new_i, tokens):
                 continue
 
         new_i = rules_based_words_phrase_matcher(
@@ -1938,7 +1950,7 @@ async def german_rules(
             rules["de"]["open_disc_words_data"],
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         new_i = rules_based_words_phrase_matcher(
@@ -1953,7 +1965,7 @@ async def german_rules(
             rules["de"]["gender_words_data_no_noun"],
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         new_i = gendered_denom_analysis_de(
@@ -1969,7 +1981,7 @@ async def german_rules(
             rules["de"]["false_positives"].gender,
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         new_i = simple_match(
@@ -1984,7 +1996,7 @@ async def german_rules(
             rules["de"]["bias_words_data_no_plur"],
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         new_i = word_noun(
@@ -1999,7 +2011,7 @@ async def german_rules(
             rules["de"]["bias_words_data_noun"],
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         subcategory = "communal"
@@ -2018,7 +2030,7 @@ async def german_rules(
                 subcategory,
             )
 
-            if i < new_i:
+            if check_continue(i, new_i, tokens):
                 continue
 
         subcategory = "d_and_i"
@@ -2037,7 +2049,7 @@ async def german_rules(
                 subcategory,
             )
 
-            if i < new_i:
+            if check_continue(i, new_i, tokens):
                 continue
 
         new_i = style_word_analysis_de(
@@ -2053,7 +2065,7 @@ async def german_rules(
             rules["de"]["false_positives"].style,
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         new_i += 1
@@ -2166,7 +2178,7 @@ async def english_rules(
                 term_replacements,
             )
 
-            if i < new_i:
+            if check_continue(i, new_i, tokens):
                 continue
 
         if is_sub_category_enabled(config, "gender_specific_abbreviation"):
@@ -2182,7 +2194,7 @@ async def english_rules(
                 rules["m_f_regexes"],
             )
 
-            if i < new_i:
+            if check_continue(i, new_i, tokens):
                 continue
 
         if is_sub_category_enabled(config, "d_and_i"):
@@ -2198,7 +2210,7 @@ async def english_rules(
                 rules["d_f_m_regexes"],
             )
 
-            if i < new_i:
+            if check_continue(i, new_i, tokens):
                 continue
 
         new_i = detect_non_inclusive_emoji(
@@ -2213,7 +2225,7 @@ async def english_rules(
             list_full,
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         new_i = regex_match(
@@ -2228,7 +2240,7 @@ async def english_rules(
             rules["en"]["hashtags"],
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         token_text = tokens[i].text
@@ -2250,7 +2262,7 @@ async def english_rules(
             False,
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         if is_sub_category_enabled(config, "abbreviation"):
@@ -2266,7 +2278,7 @@ async def english_rules(
                 words_data_en["abbr"],
             )
 
-            if i < new_i:
+            if check_continue(i, new_i, tokens):
                 continue
 
         new_i = rules_based_words_phrase_matcher(
@@ -2282,7 +2294,7 @@ async def english_rules(
             false_positive_matcher,
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         new_i = rules_based_words_phrase_matcher(
@@ -2298,7 +2310,7 @@ async def english_rules(
             false_positive_matcher,
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         if is_sub_category_enabled(config, "advanced_binary_pronouns"):
@@ -2317,7 +2329,7 @@ async def english_rules(
                 True,
             )
 
-            if i < new_i:
+            if check_continue(i, new_i, tokens):
                 continue
 
         new_i = word_noun(
@@ -2333,7 +2345,7 @@ async def english_rules(
             false_positive_matcher,
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         new_i = rules_based_words_phrase_matcher(
@@ -2349,7 +2361,7 @@ async def english_rules(
             false_positive_matcher,
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         new_i = rules_based_words_phrase_matcher(
@@ -2365,7 +2377,7 @@ async def english_rules(
             false_positive_matcher,
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         new_i = word_noun(
@@ -2381,7 +2393,7 @@ async def english_rules(
             false_positive_matcher,
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         new_i = rules_based_words_phrase_matcher(
@@ -2397,7 +2409,7 @@ async def english_rules(
             false_positive_matcher,
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         new_i = word_noun(
@@ -2413,7 +2425,7 @@ async def english_rules(
             false_positive_matcher,
         )
 
-        if i < new_i:
+        if check_continue(i, new_i, tokens):
             continue
 
         new_i += 1
@@ -3498,48 +3510,48 @@ def regex_match(
             continue
 
         token_offsets = word_types.split(",")
+        connector_string = ""
+
         # ",_" or "1,7,/"
         if token_offsets[0] == "" or len(token_offsets) == 3:
             connector_string = token_offsets.pop()
-        else:
-            connector_string = ""
 
         # run regex on exactly the token
         if len(token_offsets) != 2:
             text = check_text = tokens[i].text
             start_token = 1
         else:
-            text = check_text = ""
-
             try:
-                start_token = int(token_offsets[0])
-                max_end_token = int(token_offsets[1])
+                text = check_text = ""
+                start_token = int(token_offsets[0]) + i
+                max_end_token = int(token_offsets[1]) + i
 
                 multi_part = max_end_token - start_token > 1
+                # "1,2,#" => "#forever"
                 if not multi_part:
                     if token.text != connector_string:
                         continue
 
                     text = check_text = connector_string
-                elif i > 0 and tokens[i + start_token - 1].text == connector_string:
+                elif tokens[start_token + 1].text != connector_string:
                     continue
 
                 while start_token < max_end_token:
-                    offset_token = tokens[i + start_token]
+                    offset_token = tokens[start_token]
 
                     check_text += offset_token.text
-                    if start_token >= 0:
+                    if start_token >= i:
                         text += offset_token.text
 
                     if offset_token.whitespace_ != "":
                         break
 
                     start_token += 1
-                    if tokens[i + start_token].text != connector_string:
+                    if tokens[start_token].text != connector_string:
                         break
 
                     check_text += connector_string
-                    if start_token >= 0:
+                    if start_token >= i:
                         text += connector_string
 
                     start_token += 1
@@ -3687,7 +3699,7 @@ def regex_match(
             if alternative_3 is not None:
                 alternatives.append(alternative_3)
 
-        skip_token = start_token
+        skip_token = start_token + 1
 
         list_full.append(
             ResultOut.factory(
