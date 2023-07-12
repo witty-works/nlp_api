@@ -4080,12 +4080,10 @@ def rules_based_words_phrase_matcher(
             subcategory = data[0]
 
         partial_matching = subcategory.endswith("_base")
-        subcategory = subcategory.removesuffix("_base")
-
-        if partial_matching and settings.partial_matching:
+        if partial_matching:
             text = False
+            subcategory = subcategory.removesuffix("_base")
         else:
-            partial_matching = False
             skip_token, text = is_phrase_match(
                 lang.lang,
                 i,
@@ -4112,9 +4110,8 @@ def rules_based_words_phrase_matcher(
                 continue
 
             if len(data) > 2 and data[2] is not None:
-                # False Positives
                 for false_positive in data[2]:
-                    count = count - token_lower.count(false_positive.lower())
+                    count -= token_lower.count(false_positive.lower())
 
             if count <= 0:
                 continue
