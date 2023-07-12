@@ -12,23 +12,17 @@ def fetch_rules(langs):
             # load Gender (nouns, not nouns) and sentences de
             "df_gender_ct": "gendered_noun_words.csv",
             "df_gender_no_noun_word": "gendered_no_noun_words.csv",
-            "df_gendered_sentences": "gendered_sentences.csv",
             # load articles for gendered denom
             "df_articles": "articles.csv",
             # load style words
             "df_style_word": "style_words.csv",
-            "df_style_sentences": "style_sentences.csv",
             # load openly discriminating words de
             "df_open_dis_word": "open_dis_words.csv",
-            "df_open_dis_sentence": "open_dis_sentences.csv",
             # load unconscious_bias word (nouns with plurals and nouns, adj, verbs without plural) and sentences de
             "df_ub_plur_word": "ub_plur_words.csv",
             "df_ub_no_plur_word": "ub_no_plur_words.csv",
-            "df_ub_sentences": "ub_sentences.csv",
             # load inslusive words
             "df_d_and_i_words": "d_and_i_words.csv",
-            # load inslusive sentences
-            "df_d_and_i_words_sentences": "d_and_i_sentences.csv",
             # load communal coded terms
             "df_communal_words": "communal.csv",
             # load gender false positive
@@ -371,24 +365,7 @@ def fetch_rules(langs):
             }
             for i in range(len(data["de"]["verbs"]["infinitiv"]))
         }
-
-        # list of "hollow word" sentences
-        rules["de"]["terms_style"] = list(data["de"]["df_style_sentences"]["Lemma"])
-
-        # list of "d_and_i_words word" sentences
-        rules["de"]["df_terms_d_and_i_words"] = list(
-            data["de"]["df_d_and_i_words_sentences"]["Lemma"],
-        )
-
-        # list of "d_and_i_words word" sentences
-        rules["de"]["df_d_and_i_words"] = list(
-            zip(
-                data["de"]["df_d_and_i_words"]["Lemma"],
-                data["de"]["df_d_and_i_words"]["Word_Type"],
-            )
-        )
-
-        # list of "df_communal_words word" sentences
+        # list of "df_communal_words" words
         rules["de"]["df_communal_words"] = list(
             zip(
                 data["de"]["df_communal_words"]["Lemma"],
@@ -509,57 +486,6 @@ def fetch_rules(langs):
                 df_abbreviation["Primary_subcategory"],
                 map(ast.literal_eval, df_abbreviation["Alt_split"]),
             )
-        )
-
-        ## sentences:
-        # df open discrimination sentence
-        df_discrimination_sentences = data["de"]["df_open_dis_sentence"]
-        # open discrimination: sentences +alternatives split + subcategory
-        rules["de"]["open_disc_sentences_data"] = list(
-            zip(
-                df_discrimination_sentences["Lemma"],
-                df_discrimination_sentences["Primary_subcategory"],
-                map(ast.literal_eval, df_discrimination_sentences["Alt_split"]),
-            )
-        )
-        data["de"]["df_open_dis_sentence"] = list(
-            data["de"]["df_open_dis_sentence"]["Lemma"]
-        )
-
-        # df gendered sentences
-        df_gendered_sentences = data["de"]["df_gendered_sentences"]
-        # gendered: sentences + alternatives split + subcategory
-        rules["de"]["gender_sentences_data"] = list(
-            zip(
-                df_gendered_sentences["Lemma"],
-                df_gendered_sentences["Primary_subcategory"],
-                map(ast.literal_eval, df_gendered_sentences["Alt_split"]),
-            )
-        )
-        # df unconscious bias sentences
-        df_bias_sentences = data["de"]["df_ub_sentences"]
-        # unconscious bias: sentences + alternatives split + subcategory
-        rules["de"]["bias_sentences_data"] = list(
-            zip(
-                df_bias_sentences["Lemma"],
-                df_bias_sentences["Primary_subcategory"],
-                map(ast.literal_eval, df_bias_sentences["Alt_split"]),
-            )
-        )
-        data["de"]["df_ub_sentences"] = list(data["de"]["df_ub_sentences"]["Lemma"])
-
-        # df style sentences
-        df_style_sentences = data["de"]["df_style_sentences"]
-        # style: sentences + alternatives + subcategory
-        rules["de"]["style_sentences_data"] = list(
-            zip(
-                df_style_sentences["Lemma"],
-                df_style_sentences["Primary_subcategory"],
-                map(ast.literal_eval, df_style_sentences["Alt_split"]),
-            )
-        )
-        data["de"]["df_style_sentences"] = list(
-            data["de"]["df_style_sentences"]["Lemma"]
         )
 
         rules["de"]["primary_german_genus_endings"] = {

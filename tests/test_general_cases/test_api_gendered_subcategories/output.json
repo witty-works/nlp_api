@@ -5,9 +5,6 @@
         {
             "alternatives": [
                 {
-                    "text": "das Management"
-                },
-                {
                     "text": "die*der Manager*in"
                 },
                 {
@@ -34,12 +31,6 @@
             "alternatives": [
                 {
                     "text": "deine Leitungsperson"
-                },
-                {
-                    "text": "deine Leitung"
-                },
-                {
-                    "text": "dein Management"
                 },
                 {
                     "text": "dein*e Vorgesetzte*r"

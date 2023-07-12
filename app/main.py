@@ -2026,7 +2026,7 @@ async def german_rules(
                 offsets,
                 list_full,
                 rules["de"]["df_communal_words"],
-                [],
+                None,
                 subcategory,
             )
 
@@ -2069,57 +2069,6 @@ async def german_rules(
             continue
 
         new_i += 1
-
-    sentences_matcher(
-        version,
-        config,
-        lang,
-        text,
-        tokens,
-        offsets,
-        list_full,
-        rules["de"]["df_open_dis_sentence"],
-        rules["de"]["open_disc_sentences_data"],
-    )
-
-    sentences_matcher(
-        version,
-        config,
-        lang,
-        text,
-        tokens,
-        offsets,
-        list_full,
-        rules["de"]["terms_style"],
-        rules["de"]["style_sentences_data"],
-    )
-
-    sentences_matcher(
-        version,
-        config,
-        lang,
-        text,
-        tokens,
-        offsets,
-        list_full,
-        rules["de"]["df_ub_sentences"],
-        rules["de"]["bias_sentences_data"],
-    )
-
-    subcategory = "d_and_i"
-    if is_sub_category_enabled(config, subcategory):
-        sentences_matcher(
-            version,
-            config,
-            lang,
-            text,
-            tokens,
-            offsets,
-            list_full,
-            rules["de"]["df_terms_d_and_i_words"],
-            None,
-            subcategory,
-        )
 
     return list_full
 
@@ -3794,21 +3743,30 @@ def gendered_denom_analysis_de(
         if text is None:
             continue
 
-        if postfix and lemma != word.lower() and lemma.endswith(word.lower()):
+        if postfix:
             alternatives = alternatives.copy()
-            prefix = token.lemma_.removesuffix(word.lower())
+            prefix = (
+                token.lemma_.removesuffix(word.lower())
+                if len(token.lemma_) != len(word)
+                else ""
+            )
             for k, alternative in enumerate(alternatives):
                 alternative = alternative.replace(word, lemma)
-                if alternative[0] == "~":
-                    alternative = prefix + alternative[1].lower() + alternative[2:]
-                if word[0] == "A":
-                    modified_word = "Ä" + word[1:]
-                    modified_word_lower = "ä" + word[1:]
-                    replacement = lemma[0 : -len(modified_word)] + modified_word_lower
-                    alternative = alternative.replace(
-                        modified_word_lower, replacement.lower()
-                    )
-                    alternative = alternative.replace(modified_word, replacement)
+                if prefix:
+                    if alternative[0] == "~":
+                        alternative = prefix + alternative[1].lower() + alternative[2:]
+                    if word[0] == "A":
+                        modified_word = "Ä" + word[1:]
+                        modified_word_lower = "ä" + word[1:]
+                        replacement = (
+                            lemma[0 : -len(modified_word)] + modified_word_lower
+                        )
+                        alternative = alternative.replace(
+                            modified_word_lower, replacement.lower()
+                        )
+                        alternative = alternative.replace(modified_word, replacement)
+                elif alternative[0] == "~":
+                    alternative = alternative[1:]
 
                 alternatives[k] = alternative
 
