@@ -1727,12 +1727,15 @@ async def context_false_positives(lang, tokens, list_results):
 
 
 def check_continue(i, new_i, tokens):
+    if new_i == i:
+        return False
+
     if new_i < i:
         logging.error("Incorrect new_i: expected %i < %i for %s", i, new_i, tokens[i])
 
         return False
 
-    return i < new_i
+    return True
 
 
 async def german_rules(
