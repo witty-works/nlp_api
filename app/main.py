@@ -3351,39 +3351,12 @@ def sentences_matcher(
     offsets,
     list_full,
     df_sentence,
-    sentences_data=None,
-    subcategory=None,
+    sentences_data,
 ):
-    if len(df_sentence) == 0:
+    if len(df_sentence) == 0 or len(sentences_data) == 0:
         return
 
     matches = fetch_matches(lang.lang, tokens, df_sentence)
-
-    if sentences_data is None:
-        if not is_sub_category_enabled(config, subcategory):
-            return
-
-        for match_id, start, end in matches:
-            span = tokens[start:end]
-
-            list_full.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    lang,
-                    span.text,
-                    full_text,
-                    offsets,
-                    subcategory,
-                    span.start_char,
-                    span.end_char,
-                )
-            )
-
-        return
-
-    if len(sentences_data) == 0:
-        return
 
     alternatives = None
 
