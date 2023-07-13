@@ -238,6 +238,40 @@
             "text": "herausgefordert"
         },
         {
+            "alternatives": [
+                {
+                    "text": "vertrauen auf"
+                },
+                {
+                    "text": "vertrauen"
+                },
+                {
+                    "text": "ermutigen"
+                },
+                {
+                    "text": "helfen"
+                },
+                {
+                    "text": "unterstützen"
+                }
+            ],
+            "category": "social-motive",
+            "context": "schaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
+            "end": 149,
+            "explanation": {
+                "content": "video",
+                "icon": "😒",
+                "text": "Spricht kooperativ denkende Menschen nicht an",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Soziale Motivation: Agentische Sprache",
+            "proficiency_level": "unconscious_bias",
+            "start": 140,
+            "subcategory": "agentic",
+            "text": "zähle auf"
+        },
+        {
             "alternatives": [],
             "category": "social-motive",
             "context": "hrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",

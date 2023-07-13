@@ -2,16 +2,16 @@ Lemma,Word_Type,Category,Primary_subcategory,Alt_split
 Traction,s,style,advanced_anglicism,"['Zugkraft', 'greifen(...)', 'Fuß (fassen)(...)', 'an Boden (gewinnen)(...)', 'Fahrt (aufnehmen)(...)']"
 adressieren,v,style,advanced_anglicism,"['besprechen', 'beschäftigen mit', 'angehen', 'mit (...) befassen', 'nehmen (...) dem Thema an', 'nehmen (...) der Sache an']"
 world-class,a,style,advanced_anglicism,"['Weltklasse sein', 'mit guten Erfolgschancen auf dem Weltmarkt(...)', 'mit Weltformat(...)', 'hat das Potenzial, sich auf dem Weltmarkt durchzusetzen(...)']"
-due diligence,s,style,advanced_anglicism,"['Sorgfaltsprüfung', 'Risikoprüfung', 'Nachhaltigkeitsprüfung', 'Rechtsprüfung', 'Prüfung unter aller gebotenen Sorgfalt(...)']"
+due diligence,|,style,advanced_anglicism,"['Sorgfaltsprüfung', 'Risikoprüfung', 'Nachhaltigkeitsprüfung', 'Rechtsprüfung', 'Prüfung unter aller gebotenen Sorgfalt(...)']"
 Lowlight,s,style,advanced_anglicism,"['Tiefpunkt', 'Schatten in der Licht-und-Schatten-Betrachtung(...)']"
 Access,s,style,advanced_anglicism,['Zugriff']
-Account Manager,s,style,advanced_anglicism,"['Kundenbetreuer~in~/~Kundenbetreuer', 'Kundenbetreuung(...)', 'Kundenbetreuer~innen~ und ~Kundenbetreuer']"
+Account Manager,|,style,advanced_anglicism,"['Kundenbetreuer~in~/~Kundenbetreuer', 'Kundenbetreuung(...)', 'Kundenbetreuer~innen~ und ~Kundenbetreuer']"
 across the board,||s,style,advanced_anglicism,"['mit allen', 'für alle', 'mit allen Abteilungen', 'mit allen Teams', 'für alle Beteiligten']"
 Actionables,s,style,advanced_anglicism,"['Aufgaben', 'Teilaufgaben', 'nächste Schritte']"
 adden,v,style,advanced_anglicism,"['hinzufügen', 'einladen', 'einwerfen', 'ergänzen', 'verbessern']"
 agreed,a,style,advanced_anglicism,"['einer Meinung', 'zugesagt', 'eingewilligt', 'angenommen', 'vereinbart']"
 Allnighter,s,style,advanced_anglicism,"['Nachtarbeit', 'durchgemachte Nacht', 'durchgearbeitete Nacht']"
-Art Director,s,style,advanced_anglicism,"['Werbegestalter~in~/~Werbegestalter', 'Werbegestaltung(...)', 'Werbegestalter~innen~ und ~Werbegestalter']"
+Art Director,|,style,advanced_anglicism,"['Werbegestalter~in~/~Werbegestalter', 'Werbegestaltung(...)', 'Werbegestalter~innen~ und ~Werbegestalter']"
 asapst,a,style,advanced_anglicism,"['baldigst', 'schleunigst', 'so schnell es geht', 'so schnell wie möglich']"
 auf dem Screen,||s,style,advanced_anglicism,"['zu erledigen', 'auf dem Tagesplan', 'auf dem Schirm']"
 best-of-breed,a,style,advanced_anglicism,"['für diesen Geschäftszweck am besten passend', 'für diesen Anwendungsfall die effektivste', 'zu diesem Zweck empfehlenswerteste']"
@@ -24,22 +24,22 @@ C-Level,s,style,advanced_anglicism,"['Führungsetage', 'obere Management']"
 Call,s,style,advanced_anglicism,"['Telefonat', 'Video-Termin', 'Meeting', 'virtuelle Meeting', 'Bereitschaft', 'Telefonate', 'Meeting', 'Video-Termine', 'virtuelle Meetings']"
 canceln,v,style,advanced_anglicism,"['stornieren', 'absagen']"
 Case,s,style,advanced_anglicism,"['Fallstudie', 'Projekt', 'Fall', 'Auftrag']"
-Case Study,s,style,advanced_anglicism,['Fallstudie']
-Cash Flow,s,style,advanced_anglicism,['Kapitalfluss']
+Case Study,|,style,advanced_anglicism,['Fallstudie']
+Cash Flow,|,style,advanced_anglicism,['Kapitalfluss']
 Certificate,s,style,advanced_anglicism,"['Zeugnis', 'Zertifikat']"
 challenged,a,style,advanced_anglicism,"['hinterfragt', 'auf den Prüfstand gebracht', 'in Frage gestellt', 'genauer angesehen', 'zur Sprache gebracht']"
 challengen,v,style,advanced_anglicism,"['hinterfragen', 'auf den Prüfstand bringen', 'in Frage stellen', 'genauer ansehen', 'zur Sprache bringen']"
 Charts,s,style,advanced_anglicism,['Hitliste']
 closen,v,style,advanced_anglicism,"['abschließen', 'zu Ende bringen', 'unterzeichnen', 'zur Unterschrift bringen']"
 committen,v,style,advanced_anglicism,"['zusagen', 'fest zusagen', 'dabei sein', 'mitmachen', 'unterstützen']"
-Content Manager,s,style,advanced_anglicism,"['Online-Redakteur~in~/~Online-Redakteur', '~Online-Redaktion(...)', '~Internetredaktion(...)', 'Online-Redakteur~innen~ und ~Online-Redakteur']"
-Convenience Goods,s,style,advanced_anglicism,['Klein- und Bequemlichkeitsbedarf']
+Content Manager,s|s,style,advanced_anglicism,"['Online-Redakteur~in~/~Online-Redakteur', '~Online-Redaktion(...)', '~Internetredaktion(...)', 'Online-Redakteur~innen~ und ~Online-Redakteur']"
+Convenience Goods,|,style,advanced_anglicism,['Klein- und Bequemlichkeitsbedarf']
 Cover your ass,v||s,style,advanced_anglicism,"['Halt dich bedeckt', ""Sicher' dich ab"", ""Sicher' dich rechtlich ab"", ""Beug' mal für den Fall der Fälle vor"", 'Geh auf Nummer Sicher']"
 Cover-your-ass-Klausel,s,style,advanced_anglicism,['Haftungsausschluss-Klausel']
 Crash,s,style,advanced_anglicism,['Absturz']
-Customer Relationship Manager,s,style,advanced_anglicism,"['Kundenbetreuer~in~/~Kundenbetreuer', '~Kundenbetreuung(...)', 'Kundenbetreuer~innen~ und ~Kundenbetreuer']"
+Customer Relationship Manager,||,style,advanced_anglicism,"['Kundenbetreuer~in~/~Kundenbetreuer', '~Kundenbetreuung(...)', 'Kundenbetreuer~innen~ und ~Kundenbetreuer']"
 CV,s,style,advanced_anglicism,['Lebenslauf']
-Data Base,s,style,advanced_anglicism,['Datenbank']
+Database,s,style,advanced_anglicism,['Datenbank']
 Deadline,s,style,advanced_anglicism,['Abgabetermin']
 Debriefing,s,style,advanced_anglicism,"['Nachbesprechung', 'Schlussbesprechung']"
 Deck,s,style,advanced_anglicism,"['Präsentation', 'Präsentationen']"
@@ -48,8 +48,8 @@ Event,s,style,advanced_anglicism,['Veranstaltung']
 Eyecatcher,s,style,advanced_anglicism,['Blickfang']
 Fake,s,style,advanced_anglicism,['Fälschung']
 fast-lane,s,style,advanced_anglicism,['Überholspur']
-Field Operator,s,style,advanced_anglicism,"['Außendienstmitarbeiter~in~/~Außendienstmitarbeiter', '~Außendienst(...)', 'Außendienstmitarbeiter~innen~ und ~Außendienstmitarbeiter']"
-Financial Plan,s,style,advanced_anglicism,['Finanzplan']
+Field Operator,|,style,advanced_anglicism,"['Außendienstmitarbeiter~in~/~Außendienstmitarbeiter', '~Außendienst(...)', 'Außendienstmitarbeiter~innen~ und ~Außendienstmitarbeiter']"
+Financial Plan,|,style,advanced_anglicism,['Finanzplan']
 Flyer,s,style,advanced_anglicism,['Flugblatt']
 Gatekeeper,s,style,advanced_anglicism,"['Türhüter~in~/~Türhüter', 'Pförtner~in~/~Pförtner', 'Pforte(...)', 'Empfang(...)', 'Türhüter~innen~ und ~Türhüter', 'Pförtner~innen~ und ~Pförtner']"
 gegreenlightet,a,style,advanced_anglicism,"['freigegeben', 'grünes Licht gegeben']"
@@ -59,32 +59,32 @@ hard sell,a|s,style,advanced_anglicism,['schwer zu verkaufen']
 High-potential,s,style,advanced_anglicism,"['vielversprechende~r Bewerber~in~/~Bewerber', 'Person mit hohem Potenzial(...)', 'vielversprechende Bewerber~innen~ und ~Bewerber', 'Personen mit hohem Potenzial(...)']"
 high-priority,a,style,advanced_anglicism,"['wichtig', 'dringend', 'vordringlich', 'priorisiert', 'mit hoher Priorität']"
 Highlight,s,style,advanced_anglicism,"['Höhepunkt', 'Glanzpunkt']"
-Human Resources,s,style,advanced_anglicism,['Personalverwaltung']
+Human Resources,|,style,advanced_anglicism,['Personalverwaltung']
 in a Nutshell,||s,style,advanced_anglicism,"['kurz gesagt', 'kurz und bündig', 'in einem Wort', 'auf eine einfache Formel gebracht', 'auf den Punkt gebracht']"
 in den Loop nehmen,||s|v,style,advanced_anglicism,"['auf den Verteiler nehmen', 'einbinden', 'auf dem Laufenden halten']"
-Industrial Design,s,style,advanced_anglicism,"['Industriedesign', 'industrielle Formgebung']"
-Industrial Marketing,s,style,advanced_anglicism,['Industriemarketing']
+Industrial Design,|s,style,advanced_anglicism,"['Industriedesign', 'industrielle Formgebung']"
+Industrial Marketing,|s,style,advanced_anglicism,['Industriemarketing']
 Inner-Circle,s,style,advanced_anglicism,"['innere Kreis', 'kleine Kreis', 'engere Kreis']"
 insane,a,style,advanced_anglicism,"['hektisch', 'fahrig', 'besorgt', 'echt unglücklich', 'durchgedreht']"
 Insights,s,style,advanced_anglicism,"['Erkenntnisse', 'Einblicke', 'Einsichten']"
 Internship,s,style,advanced_anglicism,['Praktikum']
-Joint Venture,s,style,advanced_anglicism,['Gemeinschaftsunternehmen']
-Key Account Manager,s,style,advanced_anglicism,"['Großkundenbetreuer~in~/~Großkundenbetreuer', 'Großkundenbetreuung(...)', 'Großkundenbetreuer~innen~ und ~Großkundenbetreuer']"
+Joint Venture,|,style,advanced_anglicism,['Gemeinschaftsunternehmen']
+Key Account Manager,||,style,advanced_anglicism,"['Großkundenbetreuer~in~/~Großkundenbetreuer', 'Großkundenbetreuung(...)', 'Großkundenbetreuer~innen~ und ~Großkundenbetreuer']"
 Key learnings,s|s,style,advanced_anglicism,"['wichtigsten Erkenntnisse', 'Schlüsselerfahrungen', 'wichtigsten Lehren', 'Schlüsselqualifikationen']"
 Learnings,s,style,advanced_anglicism,"['Erkenntnisse', 'Einblicke', 'Einsichten', 'Lernprozesse']"
 Legal,s,style,advanced_anglicism,['Rechtsabteilung']
-Life Cycle,s,style,advanced_anglicism,['Lebenszyklus']
-Life Style,s,style,advanced_anglicism,['Lebensstil']
+Life Cycle,|,style,advanced_anglicism,['Lebenszyklus']
+Life Style,|,style,advanced_anglicism,['Lebensstil']
 Listening-mode,s,style,advanced_anglicism,['Zuhör-Modus']
 Look,s,style,advanced_anglicism,['Aussehen']
 low-hanging Fruit,a|s,style,advanced_anglicism,"['schneller, einfacher Erfolg', 'unaufwändige Optimierung, die schnell Wirkung zeigt,', 'unaufwändige, aber umsatzträchtige Maßnahme', 'Aufgabe, die bei minimalem Aufwand maximalen Ertrag bringt,']"
 low-hanging Fruits,a|s,style,advanced_anglicism,"['schnelle, einfache Erfolge', 'unaufwändige Optimierungen, die schnell Wirkung zeigen,', 'unaufwändige, aber umsatzträchtige Maßnahmen', 'Aufgaben, die bei minimalem Aufwand maximalen Ertrag bringen,']"
 Low-Interest-Product,s,style,advanced_anglicism,['Klein- und Bequemlichkeitsbedarf']
-Major Subject,s,style,advanced_anglicism,['Hauptfach']
-Media Monitoring,s,style,advanced_anglicism,['Medienbeobachtung']
+Major Subject,|,style,advanced_anglicism,['Hauptfach']
+Media Monitoring,|,style,advanced_anglicism,['Medienbeobachtung']
 Meeting,s,style,advanced_anglicism,['Besprechung']
 Message-Marketing,s,style,advanced_anglicism,['Kommunikationsmarketing']
-Minimum Viable Product,s,style,advanced_anglicism,"['minimal funktionsfähiges Produkt', 'Startversion mit Grundfunktionen', 'erste Iteration der Dienstleistung mit minimalem Funktionsumfang', 'erste vermarktbare Fassung des Produkts mit Kernfunktionen', 'erste Marktversion, die Feedback zur Weiterentwicklung nutzt']"
+Minimum Viable Product,||,style,advanced_anglicism,"['minimal funktionsfähiges Produkt', 'Startversion mit Grundfunktionen', 'erste Iteration der Dienstleistung mit minimalem Funktionsumfang', 'erste vermarktbare Fassung des Produkts mit Kernfunktionen', 'erste Marktversion, die Feedback zur Weiterentwicklung nutzt']"
 No-Name-Product,s,style,advanced_anglicism,['namenloses Produkt']
 on the beach,||s,style,advanced_anglicism,"['im Strandurlaub', 'ohne Auftrag', 'zum Zusehen verurteilt']"
 on the same Page,||a|s,style,advanced_anglicism,"['einer Meinung', 'auf dem gleichen Kenntnisstand', 'einhelliger Meinung']"
@@ -93,42 +93,42 @@ on-time,a,style,advanced_anglicism,['im Zeitplan']
 Password,s,style,advanced_anglicism,['Kennwort']
 Performance,s,style,advanced_anglicism,"['Leistung', 'Durchsatz', 'Leistungsfähigkeit', 'Erfüllung']"
 pitchen,v,style,advanced_anglicism,"['verkaufen', 'bewerben', 'Verkaufsgespräch führen']"
-Profit Center,s,style,advanced_anglicism,['Ertragszentrum']
-Public Marketing,s,style,advanced_anglicism,['Öffentlichkeitsmarketing']
-Public Relations,s,style,advanced_anglicism,['Öffentlichkeitsarbeit']
+Profit Center,|,style,advanced_anglicism,['Ertragszentrum']
+Public Marketing,|,style,advanced_anglicism,['Öffentlichkeitsmarketing']
+Public Relations,|,style,advanced_anglicism,['Öffentlichkeitsarbeit']
 Ranking,s,style,advanced_anglicism,['Rangfolge']
-Reference Group,s,style,advanced_anglicism,['Referenzgruppe']
-reingestafft,a,style,advanced_anglicism,"['zugeteilt', 'Personal zugewiesen', 'Personenstunden bewilligt']"
+Reference Group,|,style,advanced_anglicism,['Referenzgruppe']
+reingestafft,=,style,advanced_anglicism,"['zugeteilt', 'Personal zugewiesen', 'Personenstunden bewilligt']"
 reinstaffen,v,style,advanced_anglicism,"['zuteilen', 'Personal zuweisen', 'Personenstunden bewilligen']"
 Responsibilities,s,style,advanced_anglicism,['Aufgabengebiete']
 resyncen,v,style,advanced_anglicism,"['abstimmen', 'koordinieren', 'abgleichen', 'in Einklang bringen']"
 Sabbatical,s,style,advanced_anglicism,['Auszeit']
 Salary,s,style,advanced_anglicism,['Gehalt']
 Sales,s,style,advanced_anglicism,['Verkaufskatalog']
-Sales Portfolio,s,style,advanced_anglicism,['Vetrieb']
-Sales Promotion,s,style,advanced_anglicism,['Verkaufsförderung']
+Sales Portfolio,|,style,advanced_anglicism,['Vetrieb']
+Sales Promotion,|,style,advanced_anglicism,['Verkaufsförderung']
 Sales-Pitch,s,style,advanced_anglicism,"['Verkaufsmasche', 'Verkaufstaktik', 'Verkaufsargumentation', 'Kundenansprache', 'Verkaufspräsentation']"
 Sample,s,style,advanced_anglicism,['Verkaufskatalog']
 Save my ass,v||s,style,advanced_anglicism,"[""Halt' mir den Rücken frei""]"
 Save-my-ass-Memo,v||s|s,style,advanced_anglicism,"['Ich-sicher-mich-vorsorglich-ab-Memo', 'Ich-steh-gut-da-Memo']"
-SEO Manager,s,style,advanced_anglicism,"['Spezialist~in~/~Spezialist in der Suchmaschinenoptimierung', 'Suchmaschinenoptimierung(...)', 'Spezialist~innen~ und ~Spezialisten in der Suchmaschinenoptimierung']"
+SEO Manager,|s,style,advanced_anglicism,"['Spezialist~in~/~Spezialist in der Suchmaschinenoptimierung', 'Suchmaschinenoptimierung(...)', 'Spezialist~innen~ und ~Spezialisten in der Suchmaschinenoptimierung']"
 Service,s,style,advanced_anglicism,['Diensleistung']
 shiften,v,style,advanced_anglicism,"['umverteilen', 'verschieben', 'versetzen']"
-Shopping Center,s,style,advanced_anglicism,['Einkaufszentrum']
+Shopping Center,|,style,advanced_anglicism,['Einkaufszentrum']
 skippen,v,style,advanced_anglicism,"['weglassen', 'außer Acht lassen', 'überspringen', 'durchwinken', 'ignorieren']"
 stressen,v,style,advanced_anglicism,"['betonen', 'hervorheben', 'mit Nachdruck bewerben', 'unterstreichen']"
-Supply Chain Manager,s,style,advanced_anglicism,"['Mitarbeiter~in~/~Mitarbeiter in der Lieferkette', '~Lieferkette(...)', 'Mitarbeiter~innen~ und ~Mitarbeiter in der Lieferkette']"
+Supply Chain Manager,||,style,advanced_anglicism,"['Mitarbeiter~in~/~Mitarbeiter in der Lieferkette', '~Lieferkette(...)', 'Mitarbeiter~innen~ und ~Mitarbeiter in der Lieferkette']"
 supporten,v,style,advanced_anglicism,['unterstützen']
 sweet-talken,v,style,advanced_anglicism,['umgarnen']
 tight getaktet,a|a,style,advanced_anglicism,"['eng getaktet', 'beschäftigt', 'ausgebucht', 'habe einen engen Terminplan', 'hat einen Termin nach dem anderen']"
 too barebone,|a,style,advanced_anglicism,"['zu dünn', 'zu wenig schlüssig', 'zu unentwickelt', 'zu mager']"
 Topic,s,style,advanced_anglicism,"['Thema', 'Aufgabenstellung', 'Thematik', 'Gesprächsgegenstand', 'Inhalt']"
-Trade Mart,s,style,advanced_anglicism,['Großhandelszentrum']
+Trade Mart,|,style,advanced_anglicism,['Großhandelszentrum']
 Update,s,style,advanced_anglicism,['Aktualisierung']
 Vacancy,s,style,advanced_anglicism,['Freie Stelle']
 value-adden,v,style,advanced_anglicism,"['beitragen', 'etwas beitragen', 'sinnvollen Beitrag leisten']"
 Wallpaper,s,style,advanced_anglicism,['Bildschirmhintergrund']
-Work Experience,s,style,advanced_anglicism,['Arbeitserfahrung']
+Work Experience,|,style,advanced_anglicism,['Arbeitserfahrung']
 Workflow,s,style,advanced_anglicism,['Arbeitsablauf']
 Sehr geehrte,adv|~a,style,advanced_formality,"['-', 'Guten Tag', 'Hallo', 'Lieb~e~/~Lieber', 'Guten Tag, lieb~e~/~lieber', 'Guten Tag', 'Liebe', 'Liebe alle', 'Hallo zusammen', 'Hallo, liebe Zuhörende und Lesende']"
 Sehr geehrter,adv|~a,style,advanced_formality,"['Guten Tag', 'Hallo', 'Lieb~e~/~Lieber', 'Guten Tag, lieb~e~/~lieber', 'Guten Tag', 'Liebe', 'Liebe alle', 'Hallo zusammen', 'Hallo, liebe Zuhörende und Lesende']"
@@ -250,9 +250,8 @@ nachweisbar,a,style,exaggerating,"['dokumentiert', 'nachvollziehbar', 'belegbar'
 nachweisen,v,style,exaggerating,"['dokumentieren', 'nachvollziehbar aufzeigen', 'messen']"
 Nerd,s,style,exaggerating,"['Mensch, der sich gern mit Technologie beschäftigt(...)', 'Mensch, der Spaß an Computern hat(...)', 'Mensch, der unseren Enthusiasmus für neue Medien teilt(...)', 'Mensch, der sich für ein Thema begeistert(...)', 'Mensch, der für ein Thema brennt(...)']"
 Ninja,s,style,exaggerating,"['jemand, der erfahren und fachkundig ist(...)', 'Person, die ihr Know-how und ihre Erfahrung kreativ einsetzt(...)', 'Mensch, der seine Fachkenntnis ständig vertieft(...)']"
-Nummer 1,s,style,exaggerating,"['Unternehmen, das im Markt Maßstäbe setzt(...)', 'wichtige Sache(...)', 'Ziel, das das Team inspiriert(...)', 'inspirierendes Teammitglied(...)', 'Mensch, der dem Team mit Rat und Tat zur Seite steht(...)', 'im Markt richtungweisendes Unternehmen(...)', 'Lieblings(...)']"
-Nummer eins,s,style,exaggerating,"['Unternehmen, das im Markt Maßstäbe setzt(...)', 'wichtige Sache(...)', 'Ziel, das das Team inspiriert(...)', 'inspirierendes Teammitglied(...)', 'Mensch, der dem Team mit Rat und Tat zur Seite steht(...)', 'im Markt richtungweisendes Unternehmen(...)', 'Lieblings(...)']"
-ohne Problem,s,style,exaggerating,"['leicht', 'reibungslos', 'praktisch', 'bequem', 'ohne großen Aufwand', 'mit Leichtigkeit']"
+Nummer 1,s|num,style,exaggerating,"['Unternehmen, das im Markt Maßstäbe setzt(...)', 'wichtige Sache(...)', 'Ziel, das das Team inspiriert(...)', 'inspirierendes Teammitglied(...)', 'Mensch, der dem Team mit Rat und Tat zur Seite steht(...)', 'im Markt richtungweisendes Unternehmen(...)', 'Lieblings(...)']"
+ohne Problem,|s,style,exaggerating,"['leicht', 'reibungslos', 'praktisch', 'bequem', 'ohne großen Aufwand', 'mit Leichtigkeit']"
 perfekt,a,style,exaggerating,"['ausgereift', 'passend', 'zielführend', 'effektiv', 'interessant', 'geeignet', 'umfassend', 'richtig', 'angebracht', 'gültig', 'gleichwertig', 'praktisch', 'unkompliziert', 'in vollem Umfang']"
 Performer,s,style,exaggerating,"['Performer~in~/~Performer', 'jemand, der sich auf die nächsten Schritte fokussiert(...)', 'Person, die engagiert in ihren Aufgaben ist(...)', 'unternehmerisch denkender Mensch(...)', 'Performer~innen~ und ~Performer']"
 Pionier,s,style,exaggerating,"['Inspiration', 'Pionier~in~/~Pioniere', 'Wegbereiter~in~/~Wegbereiter', 'Person mit zukunftsweisenden Ideen(...)', 'Person, die Neuland betritt(...)', 'Person, die gewohnte Bahnen verlässt(...)', 'Mensch, der bereit ist, sich neuen Situationen zu stellen(...)', 'Mensch, der Visionen verwirklichen will(...)', 'experimentierfreudiger Mensch(...)', 'Mensch, der Verantwortung übernimmt(...)', 'jemand, der mit gutem Beispiel vorangeht(...)', 'erfinderischer Mensch(...)', 'einfallsreicher Mensch(...)', 'jemand, der inspiriert(...)', 'jemand, der eine Vision vermittelt(...)', 'jemand, der Neues ausprobieren will(...)', 'Pionier~innen~ und ~Pioniere', 'Wegbereiter~innen~ und ~Wegbereiter']"
@@ -278,7 +277,7 @@ Top-Performer,s,style,exaggerating,"['Kümmerer', 'Tatmensch', 'umsetzungsfreudi
 Traumaufgabe,s,style,exaggerating,"['Aufgabe, die den eigenen Wünschen entspricht', 'Aufgabe, für die sich jemand mit Freude engagiert', 'Aufgabe, die inspiriert und motiviert']"
 Traumjob,s,style,exaggerating,"['Job, der den persönlichen Wünschen entspricht', 'interessanter Job', 'gut bezahlter Job', 'Job in einem engagierten offenen Team']"
 Treiber,s,style,exaggerating,"['Person, die den Takt vorgibt(...)', 'Person, die motiviert(...)', 'Person, die die Initiative ergreift(...)', 'Person, die dem Team hilft, gemeinsame Ziele zu erreichen(...)', 'Motivierende']"
-über dem Durchschnitt,IIs,style,exaggerating,"['viel', 'ausgesprochen', 'hochgradig', 'mehr als', 'zutiefst', 'mit Feuereifer']"
+über dem Durchschnitt,||s,style,exaggerating,"['viel', 'ausgesprochen', 'hochgradig', 'mehr als', 'zutiefst', 'mit Feuereifer']"
 überdurchschnittlich,a,style,exaggerating,"['viel', 'ausgesprochen', 'hochgradig', 'mehr als', 'zutiefst', 'mit Feuereifer']"
 Überflieger,s,style,exaggerating,"['kompetenter Mensch', 'fähiger Mensch', 'tatkräftige Person', 'Tatmensch', 'Überflieger~in~/~Überflieger', 'jemand, der durch Kompetenz überrascht(...)', 'jemand, der Meilensteine leicht und kreativ umsetzt(...)', 'kompetenter Mensch', 'fähiger Mensch', 'tatkräftige Person', 'Tatmensch', 'schlussendlich', 'jemand, der durch Kompetenz überrascht(...)', 'jemand, der Meilensteine leicht und kreativ umsetzt(...)']"
 Weltherrschaft,s,style,exaggerating,"['tonangebende Rolle', 'einflussreiche Position', 'überwiegende Marktpräsenz', 'Position, die erlaubt, im Markt Maßstäbe zu setzen', 'Rolle, in der man Weg und Richtung weist']"
@@ -289,7 +288,7 @@ Winner-Typ,s,style,exaggerating,"['umsetzungsfreudiger Mensch(...)', 'Mensch, de
 aber,adv,style,filler,['-']
 abermals,adv,style,filler,['-']
 allein,adv,style,filler,['-']
-allem Anschein nach,adv,style,filler,['-']
+allem Anschein nach,|s|,style,filler,['-']
 allemal,adv,style,filler,['-']
 allenfalls,adv,style,filler,['-']
 allenthalben,adv,style,filler,['-']
@@ -297,20 +296,20 @@ allerdings,adv,style,filler,['-']
 allesamt,adv,style,filler,['-']
 allzu,adv,style,filler,['-']
 also,adv,style,filler,['-']
-an sich,adv,style,filler,['-']
+an sich,|s,style,filler,['-']
 andauernd,a,style,filler,['-']
 andererseits,adv,style,filler,['-']
 andernfalls,adv,style,filler,['-']
 anscheinend,a,style,filler,['-']
 auch,adv,style,filler,['-']
 auffallend,a,style,filler,['-']
-aufs Neue,adv,style,filler,['-']
+aufs Neue,|~s,style,filler,['-']
 augenscheinlich,a,style,filler,['-']
 ausdrücklich,a,style,filler,['-']
 ausgerechnet,a,style,filler,['-']
 ausnahmslos,adv,style,filler,['-']
 außerdem,adv,style,filler,['-']
-bei weitem,adv,style,filler,['-']
+bei weitem,|a,style,filler,['-']
 beinahe,adv,style,filler,['-']
 bekanntlich,adv,style,filler,['-']
 bereits,adv,style,filler,['-']
@@ -323,14 +322,14 @@ dagegen,adv,style,filler,['-']
 daher,adv,style,filler,['-']
 damals,adv,style,filler,['-']
 danach,adv,style,filler,['-']
-dann und wann,adv,style,filler,['-']
+dann und wann,a|conj|a,style,filler,['-']
 demgegenüber,adv,style,filler,['-']
 demgemäß,adv,style,filler,['-']
 demnach,adv,style,filler,['-']
 denn,adv,style,filler,['-']
 dennoch,adv,style,filler,['-']
-des Öfteren,adv,style,filler,['-']
-des ungeachtet,adv,style,filler,['-']
+des Öfteren,|s,style,filler,['-']
+des ungeachtet,~|,style,filler,['-']
 deshalb,adv,style,filler,['-']
 deswegen,adv,style,filler,['-']
 doch,adv,style,filler,['-']
@@ -338,8 +337,8 @@ durchaus,adv,style,filler,['-']
 durchweg,adv,style,filler,['-']
 eben,adv,style,filler,['-']
 eigentlich,adv,style,filler,['-']
-ein bisschen,adv,style,filler,['-']
-ein wenig,adv,style,filler,['-']
+ein bisschen,v|s,style,filler,['-']
+ein wenig,v|a,style,filler,['-']
 einerseits,adv,style,filler,['-']
 einiger,s,style,filler,['-']
 einigermaßen,adv,style,filler,['-']
@@ -356,7 +355,7 @@ fortwährend,adv,style,filler,['-']
 fraglos,adv,style,filler,['-']
 freilich,adv,style,filler,['-']
 ganz,adv,style,filler,['-']
-ganz und gar,adv,style,filler,['-']
+ganz und gar,a|conj|a,style,filler,['-']
 gänzlich,adv,style,filler,['-']
 gar,adv,style,filler,['-']
 gelegentlich,adv,style,filler,['-']
@@ -371,17 +370,17 @@ glücklicherweise,adv,style,filler,['-']
 größtenteils,adv,style,filler,['-']
 halt,adv,style,filler,['-']
 häufig,adv,style,filler,['-']
-hie und da,adv,style,filler,['-']
+hie und da,a|conj|a,style,filler,['-']
 hingegen,adv,style,filler,['-']
 hinlänglich,adv,style,filler,['-']
 höchst,adv,style,filler,['-']
 höchstens,adv,style,filler,['-']
-im Allgemeinen,adv,style,filler,['-']
+im Allgemeinen,|a,style,filler,['-']
 immer,adv,style,filler,['-']
 immerhin,adv,style,filler,['-']
 immerzu,adv,style,filler,['-']
-in der Tat,adv,style,filler,['-']
-in diesem Zusammenhang,adv,style,filler,['-']
+in der Tat,||s,style,filler,['-']
+in diesem Zusammenhang,||s,style,filler,['-']
 indessen,adv,style,filler,['-']
 infolgedessen,adv,style,filler,['-']
 insbesondere,adv,style,filler,['-']
@@ -394,7 +393,7 @@ irgendwie,adv,style,filler,['-']
 irgendwo,adv,style,filler,['-']
 je,adv,style,filler,['-']
 jedenfalls,adv,style,filler,['-']
-jedoch jemals,adv,style,filler,['-']
+jedoch jemals,a|a,style,filler,['-']
 kaum,adv,style,filler,['-']
 keinesfalls,adv,style,filler,['-']
 keineswegs,adv,style,filler,['-']
@@ -407,9 +406,9 @@ mal schnell,adv|a,style,filler,['-']
 mal eben,adv|adv,style,filler,['-']
 mal einfach,adv|adv,style,filler,['-']
 manchmal,adv,style,filler,['-']
-mehr oder weniger,adv,style,filler,['-']
+mehr oder weniger,a|conj|,style,filler,['-']
 mehrfach,adv,style,filler,['-']
-meines Erachtens,adv,style,filler,['-']
+meines Erachtens,|s,style,filler,['-']
 meinetwegen,adv,style,filler,['-']
 meist,adv,style,filler,['-']
 meistens,adv,style,filler,['-']
@@ -433,8 +432,8 @@ offenbar,adv,style,filler,['-']
 offenkundig,adv,style,filler,['-']
 offensichtlich,adv,style,filler,['-']
 oft,adv,style,filler,['-']
-ohne weiteres,adv,style,filler,['-']
-ohne Zweifel,adv,style,filler,['-']
+ohne weiteres,|a,style,filler,['-']
+ohne Zweifel,|s,style,filler,['-']
 ohnedies,adv,style,filler,['-']
 partout,adv,style,filler,['-']
 plötzlich,adv,style,filler,['-']
@@ -447,7 +446,7 @@ restlos,adv,style,filler,['-']
 richtiggehend,adv,style,filler,['-']
 rundheraus,adv,style,filler,['-']
 rundum,adv,style,filler,['-']
-samt und sonders,adv,style,filler,['-']
+samt und sonders,|conj|a,style,filler,['-']
 sattsam,adv,style,filler,['-']
 schlicht,adv,style,filler,['-']
 schlichtweg,adv,style,filler,['-']
@@ -465,7 +464,7 @@ so,adv,style,filler,['-']
 sogar,adv,style,filler,['-']
 sonst,adv,style,filler,['-']
 sowieso,adv,style,filler,['-']
-sowohl als auch,adv,style,filler,['-']
+sowohl als auch,conj|conj|a,style,filler,['-']
 sozusagen,adv,style,filler,['-']
 stellenweise,adv,style,filler,['-']
 stets,adv,style,filler,['-']
@@ -497,7 +496,7 @@ vollends,adv,style,filler,['-']
 völlig,adv,style,filler,['-']
 vollkommen,adv,style,filler,['-']
 vollständig,adv,style,filler,['-']
-von neuem,adv,style,filler,['-']
+von neuem,|a,style,filler,['-']
 wahrscheinlich,adv,style,filler,['-']
 weidlich,adv,style,filler,['-']
 weitgehend,adv,style,filler,['-']
