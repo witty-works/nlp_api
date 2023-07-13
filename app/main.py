@@ -612,7 +612,18 @@ async def get_debug_spacy(
 ):
     results = []
     tokens = fetch_tokens(lang, text)
+    word_type_rule = None
     for token in tokens:
+        if word_type_rule is None:
+            word_type_rule = ""
+        else:
+            word_type_rule += "|"
+
+        word_types = fetch_word_types(lang, token)
+        if token.text != token.lemma_:
+            word_type_rule += "~"
+        word_type_rule += "+".join(word_types)
+
         results.append(
             {
                 "text": token.text,
@@ -621,7 +632,7 @@ async def get_debug_spacy(
                 "tag": token.tag_,
                 "pos": token.pos_,
                 "dep": token.dep_,
-                "word_types": fetch_word_types(lang, token),
+                "word_types": word_types,
                 "morph": token.morph.to_dict(),
                 "is_emoji": token._.is_emoji,
                 "emoji_desc": token._.emoji_desc,
@@ -629,7 +640,7 @@ async def get_debug_spacy(
             }
         )
 
-    return results
+    return [{"word_type": word_type_rule}] + results
 
 
 @app.get(
@@ -2464,13 +2475,6 @@ def parse_word_types(word_types, lower_case=True):
             lower_case = False
             lemmatize = True
             word_types = word_types[1:]
-        case _:
-            # BC code, should use "~" or some other approach instead
-            if word_types == "acr" or word_types == "abbr":
-                # exact match
-                lower_case = True
-                lemmatize = False
-                word_types = ""
 
     word_types = word_types.split("+")
     if word_types == [""]:
@@ -2610,6 +2614,12 @@ def fetch_word_types(lang, token, word_types=[], single_word=None):
 
     if token.pos_ == "PROPN" and single_word is not None and len(word_types):
         return word_types[0:1]
+
+    if token.tag_ == "CARD" or token.pos_ == "NUM":
+        return ["num"]
+
+    if token.tag_ == "KON" or token.pos_ == "CCONJ":
+        return ["conj"]
 
     return []
 
