@@ -3418,7 +3418,6 @@ def sentences_matches(
                     span.text,
                     full_text,
                     offsets,
-                    list_full,
                     subcategory,
                     span.start_char,
                     span.end_char,
