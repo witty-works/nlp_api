@@ -22,8 +22,9 @@ class Settings(BaseSettings):
     instrumentation_key: str = ""
     testing: bool = False
     sentry_dsn: Optional[str]
-    sentry_traces_sample_rate: float = 0.2
-    sentry_sample_rate: float = 0.2
+    sentry_traces_sample_rate: float = 0.0
+    sentry_sample_rate: float = 0.0
+    sentry_profiles_sample_rate: float = 0.0
     text_max_length: int = 1000
     is_prod: bool = False
     terms_of_service: str = "https://www.witty.works/privacy"
