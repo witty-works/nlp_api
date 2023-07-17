@@ -78,6 +78,7 @@ from app.models import (
     ResultConf,
     ErrorMessage,
     PrettyJSONResponse,
+    RuleFunctions,
 )
 from app.lang_detection import get_lang_detection
 from app.categories import (
@@ -598,6 +599,145 @@ def bc_old_categories(config):
             }
 
     return config
+
+
+@app.get(
+    "/debug/rule",
+    include_in_schema=not settings.is_prod,
+    response_model=ResultsOut,
+    response_model_exclude_none=True,
+)
+async def get_debug_rule(
+    text: str,
+    lang: LangType,
+    rule: str,
+    function: RuleFunctions = RuleFunctions.SIMPLE,
+    word_type: str = "",
+    lower_case: bool = True,
+    alternatives: str = None,
+    username: str = Depends(fetch_current_username),
+):
+    lang = Language(lang)
+    config = Config(plan="witty_teams")
+    if alternatives is not None:
+        alternatives = alternatives.split("|")
+        alternatives = list(map(str.strip, alternatives))
+
+    tokens = fetch_tokens(lang.lang, text)
+    offsets = utf16_offsets(text)
+    false_positive_matcher = fetch_false_positive_matcher(lang.lang, tokens)
+
+    subcategory = "corporate_rules"
+
+    match (function):
+        case RuleFunctions.DENOM_DE:
+            word_data = [[rule, word_type, subcategory, alternatives, alternatives]]
+        case RuleFunctions.NOUN:
+            word_data = [[rule, word_type, subcategory, alternatives, alternatives]]
+        # case RuleFunctions.SIMPLE:
+        # case RuleFunctions.REGEX:
+        # case RuleFunctions.PHRASE:
+        # case RuleFunctions.STYLE_DE:
+        case _:
+            word_data = [[rule, word_type, subcategory, alternatives]]
+
+    list_full = []
+
+    i = new_i = 0
+    token_count = len(tokens)
+    while new_i < token_count:
+        i = new_i
+
+        match (function):
+            case RuleFunctions.SIMPLE:
+                new_i = simple_match(
+                    version,
+                    config,
+                    lang,
+                    text,
+                    i,
+                    tokens,
+                    offsets,
+                    list_full,
+                    word_data,
+                    false_positive_matcher,
+                    lower_case,
+                )
+            case RuleFunctions.REGEX:
+                new_i = regex_match(
+                    version,
+                    config,
+                    lang,
+                    text,
+                    i,
+                    tokens,
+                    offsets,
+                    list_full,
+                    word_data,
+                    lower_case,
+                )
+            case RuleFunctions.PHRASE:
+                new_i = rules_based_words_phrase_matcher(
+                    version,
+                    config,
+                    lang,
+                    text,
+                    i,
+                    tokens,
+                    offsets,
+                    list_full,
+                    word_data,
+                    false_positive_matcher,
+                    subcategory,
+                    True,
+                )
+            case RuleFunctions.DENOM_DE:
+                new_i = gendered_denom_analysis_de(
+                    version,
+                    config,
+                    lang,
+                    text,
+                    i,
+                    tokens,
+                    offsets,
+                    list_full,
+                    word_data,
+                )
+            case RuleFunctions.NOUN:
+                new_i = word_noun(
+                    version,
+                    config,
+                    lang,
+                    text,
+                    i,
+                    tokens,
+                    offsets,
+                    list_full,
+                    word_data,
+                    false_positive_matcher,
+                )
+            case RuleFunctions.STYLE_DE:
+                new_i = style_word_analysis_de(
+                    version,
+                    config,
+                    lang,
+                    text,
+                    i,
+                    tokens,
+                    offsets,
+                    list_full,
+                    word_data,
+                )
+
+        if check_continue(i, new_i, tokens):
+            continue
+
+        new_i += 1
+
+    return ResultsOut(
+        results=list_full,
+        language=lang.lang,
+    )
 
 
 @app.get(
@@ -1989,7 +2129,6 @@ async def german_rules(
             offsets,
             list_full,
             rules["de"]["gender_words_data"],
-            rules["de"]["false_positives"].gender,
         )
 
         if check_continue(i, new_i, tokens):
@@ -2073,7 +2212,6 @@ async def german_rules(
             offsets,
             list_full,
             rules["de"]["style_words_data"],
-            rules["de"]["false_positives"].style,
         )
 
         if check_continue(i, new_i, tokens):
@@ -3171,7 +3309,6 @@ def plural_alternatives(
 
 def match_binary_inclusive_gendered_denom_analysis_de(
     config: Config,
-    false_positives,
     full_text,
     text,
     tokens,
@@ -3186,6 +3323,7 @@ def match_binary_inclusive_gendered_denom_analysis_de(
     if tokens_length <= 2:
         return text, start, subcategory
 
+    false_positives = rules["de"]["false_positives"].gender
     for false_positive in false_positives:
         # "foo/bar" case vs. "foo und bar" case
         split_char = "/" if "/" in false_positive else " und "
@@ -3642,7 +3780,6 @@ def gendered_denom_analysis_de(
     offsets,
     list_full,
     words_data,
-    false_positives,
 ):
     token = tokens[i]
 
@@ -3714,7 +3851,6 @@ def gendered_denom_analysis_de(
             subcategory,
         ) = match_binary_inclusive_gendered_denom_analysis_de(
             config,
-            false_positives,
             full_text,
             text,
             tokens,
@@ -3822,11 +3958,11 @@ def style_word_analysis_de(
     offsets,
     list_full,
     words_data,
-    false_positives,
 ):
     token = tokens[i]
 
     # check if the user query have false positives
+    false_positives = rules["de"]["false_positives"].style
     if is_false_positive(token.lemma_, false_positives):
         # recognise if there is Name of organisation or geographical name in the query
         if len(tokens.ents) > 0:
