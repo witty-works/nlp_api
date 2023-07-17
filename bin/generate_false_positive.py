@@ -61,7 +61,7 @@ for training_data_path in training_data_paths:
                 value = value.replace("'", '"')
                 try:
                     all_alternative_groups += json.loads(value)
-                except:
+                except Exception:
                     continue
 
 

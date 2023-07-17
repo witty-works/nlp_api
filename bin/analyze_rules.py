@@ -70,7 +70,7 @@ def get_current_words(original_languagetool_path, ignore_languagetool_path):
         ) as f:
             lines = f.readlines()
             for line in lines:
-                if start == True:
+                if start is True:
                     li = line.strip()
                     current_words.append(li)
                 if line == "# Old words (added by LT): \n":
