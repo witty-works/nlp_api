@@ -615,6 +615,7 @@ async def get_debug_rule(
     word_type: str = "",
     lower_case: bool = True,
     alternatives: str = None,
+    alternatives_plural: str = None,
     username: str = Depends(fetch_current_username),
 ):
     lang = Language(lang)
@@ -631,9 +632,13 @@ async def get_debug_rule(
 
     match (function):
         case RuleFunctions.DENOM_DE:
-            word_data = [[rule, word_type, subcategory, alternatives, alternatives]]
+            word_data = [
+                [rule, word_type, subcategory, alternatives, alternatives_plural]
+            ]
         case RuleFunctions.NOUN:
-            word_data = [[rule, word_type, subcategory, alternatives, alternatives]]
+            word_data = [
+                [rule, word_type, subcategory, alternatives, alternatives_plural]
+            ]
         # case RuleFunctions.SIMPLE:
         # case RuleFunctions.REGEX:
         # case RuleFunctions.PHRASE:
