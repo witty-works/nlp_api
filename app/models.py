@@ -148,15 +148,13 @@ class Config(BaseModel):
         GermanGenderEndingType.COLON: re.compile(r"^[a-zäöü]{3,7}:[a-zäöü]{3,7}$"),
         GermanGenderEndingType.SLASH: re.compile(r"^[a-zäöü]{3,7}/[a-zäöü]{3,7}$"),
         GermanGenderEndingType.SLASH_DASH: re.compile(r"^[a-zäöü]{3,7}/[a-zäöü]{3,7}$"),
-        GermanGenderEndingType.CAPITAL_LETTER: None,
     }
     _gendereddenom_ending_word_type = {
-        GermanGenderEndingType.STAR: ",*",
-        GermanGenderEndingType.UNDERSCORE: ",_",
-        GermanGenderEndingType.COLON: ",:",
+        GermanGenderEndingType.STAR: "*",
+        GermanGenderEndingType.UNDERSCORE: "_",
+        GermanGenderEndingType.COLON: ":",
         GermanGenderEndingType.SLASH: "-1,2,/",
         GermanGenderEndingType.SLASH_DASH: ",/",
-        GermanGenderEndingType.CAPITAL_LETTER: "",
     }
     disabled_categories: List = []
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
