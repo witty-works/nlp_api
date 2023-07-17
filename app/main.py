@@ -3532,7 +3532,10 @@ def regex_match(
                         continue
 
                     text = check_text = connector_string
-                elif tokens[start_token + 1].text != connector_string:
+                elif (
+                    start_token + 1 >= len(tokens)
+                    or tokens[start_token + 1].text != connector_string
+                ):
                     continue
 
                 while start_token < max_end_token:

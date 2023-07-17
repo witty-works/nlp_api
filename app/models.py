@@ -142,11 +142,11 @@ class Config(BaseModel):
         GermanGenderEndingType.CAPITAL_LETTER: None,
     }
     _gendereddenom_ending_word_type = {
-        GermanGenderEndingType.STAR: "",
-        GermanGenderEndingType.UNDERSCORE: "",
-        GermanGenderEndingType.COLON: "",
+        GermanGenderEndingType.STAR: ",*",
+        GermanGenderEndingType.UNDERSCORE: ",_",
+        GermanGenderEndingType.COLON: ",:",
         GermanGenderEndingType.SLASH: "-1,2,/",
-        GermanGenderEndingType.SLASH_DASH: "",
+        GermanGenderEndingType.SLASH_DASH: ",/",
         GermanGenderEndingType.CAPITAL_LETTER: "",
     }
     disabled_categories: List = []
