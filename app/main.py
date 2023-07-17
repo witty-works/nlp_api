@@ -97,7 +97,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.45.6"
+version = "1.45.7"
 
 categories = get_categories()
 settings = get_settings()
@@ -2567,16 +2567,16 @@ def is_phrase_match(
     lower_case=True,
     postfix=False,
 ):
-    text = ""
     word_types = word_types.split("|")
-
-    words = tokenize(word, lang)
-    word_count = len(words)
-    if word_count == 1:
-        word_types = [word_types[-1]]
+    if len(word_types) == 1:
+        words = [word]
+        word_count = 1
     else:
+        words = tokenize(word, lang)
+        word_count = len(words)
         postfix = False
 
+    text = ""
     word_token = None
     for k in range(word_count):
         if word_token:
