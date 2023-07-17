@@ -3509,15 +3509,14 @@ def regex_match(
             continue
 
         token_offsets = word_types.split(",")
-        connector_string = ""
-
-        # ",_" or "1,7,/"
-        if token_offsets[0] == "" or len(token_offsets) == 3:
-            connector_string = token_offsets.pop()
+        connector_string = token_offsets.pop()
 
         # run regex on exactly the token
         if len(token_offsets) != 2:
             text = check_text = tokens[i].text
+            if connector_string not in tokens[i].text:
+                continue
+
             start_token = i
         else:
             try:
