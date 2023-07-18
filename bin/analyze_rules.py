@@ -70,7 +70,7 @@ def get_current_words(original_languagetool_path, ignore_languagetool_path):
         ) as f:
             lines = f.readlines()
             for line in lines:
-                if start == True:
+                if start is True:
                     li = line.strip()
                     current_words.append(li)
                 if line == "# Old words (added by LT): \n":
@@ -92,11 +92,11 @@ def get_data_from_files(locale):
     all_alternative_groups = []
     all_alternatives = []
     all_triggers = []
-    all_lemma = []
+    all_lemma = {}
     all_categories = []
     all_secondary_subcategories = []
     # https://www.notion.so/witty-works/Rule-Guidelines-432792da944141b1b4d0a01de290aa43#aac0d966bfeb4e33a5a346bba45d5ea8
-    supported_word_types = {"s", "a", "adv", "v", "acr", "abbr", "i", "conj"}
+    supported_word_types = {"s", "a", "adv", "v", "conj", "num"}
 
     for training_data_path in training_data_paths:
         with open(training_data_path) as f:
@@ -173,7 +173,10 @@ def get_data_from_files(locale):
                                 and category
                                 not in ["inclusive", "openly_discriminating"]
                             ):
-                                all_lemma.append(word)
+                                if word not in all_lemma:
+                                    all_lemma[word] = []
+
+                                all_lemma[word].append(lemma)
 
                             if " " not in lemma and locale == "de":
                                 if "v" in word_types:
@@ -192,6 +195,9 @@ def get_data_from_files(locale):
                                         if (
                                             alternative
                                             and " " not in alternative
+                                            and not ResultOut.isInspirationAlternative(
+                                                alternative
+                                            )
                                             and alternative not in rules["de"]["verbs"]
                                         ):
                                             print(
@@ -251,21 +257,22 @@ def get_data_from_files(locale):
     for alternative in all_alternatives:
         if "\n" in alternative:
             print("Misplaced \\n in alternative: " + alternative)
-
-        if "\t" in alternative:
+        elif "\t" in alternative:
             print("Misplaced \\t in alternative: " + alternative)
-
-        if "|" in alternative:
+        elif "|" in alternative:
             print("Misplaced | in alternative: " + alternative)
-
-        if alternative != alternative.strip():
-            print("Additional whitespace in alternative: " + alternative)
+        elif alternative != alternative.strip():
+            print(
+                "Additional whitespace in alternative: "
+                + alternative
+                + str(len(alternative))
+            )
 
         if re.search("^[^-]*--[^-]*$", alternative):
             print("Potential missing - in ' --- ': " + alternative)
 
     return (
-        set(all_lemma),
+        all_lemma,
         set(all_triggers),
         set(all_alternatives),
         set(all_categories),
@@ -520,7 +527,7 @@ def update_ignore_file(words, original_languagetool_path, path_to_ignore_file):
     words_to_write = check_words_spelling(words, current_words, used_words)
 
     newly_added_words = intersection(words_to_write, used_words)
-    print("Newly added words: " + str(len(newly_added_words)))
+    print("\nNewly added words: " + str(len(newly_added_words)))
     if newly_added_words and len(newly_added_words) < 20:
         print("\n".join(sorted(newly_added_words)))
 
@@ -529,7 +536,7 @@ def update_ignore_file(words, original_languagetool_path, path_to_ignore_file):
 
 
 def print_trigger_alternative_overlap(locale, all_triggers, words):
-    print("Trigger words, overlapping with alternatives for locale: " + locale)
+    print("\nTrigger words, overlapping with alternatives for locale: " + locale)
     print("\n".join(sorted(intersection(all_triggers, words))))
 
 
@@ -581,13 +588,21 @@ for locale in locales:
     ]
     print_trigger_alternative_overlap(locale, all_triggers, words[locale])
 
-    all_lemma = sorted(all_lemma)
-    for lemma in all_lemma:
-        tokens = model(lemma)
-        if lemma.lower() != tokens[0].lemma_.lower():
-            print('"' + lemma + '": "' + lemma + '", # ' + tokens[0].lemma_)
+    myKeys = list(all_lemma.keys())
+    myKeys.sort()
+    for lemma_word in {i: all_lemma[i] for i in myKeys}:
+        tokens = model(lemma_word)
+        if lemma_word.lower() != tokens[0].lemma_.lower():
+            print(
+                '"'
+                + lemma_word
+                + '": "'
+                + tokens[0].lemma_
+                + '", # '
+                + " || ".join(all_lemma[lemma_word])
+            )
 
-    lemmas[locale] = list(all_lemma)
+    lemmas[locale] = all_lemma.keys()
 
     print("Missing (sub-)categories")
     print(sorted(all_categories - set(category_keys)))

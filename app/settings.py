@@ -22,8 +22,9 @@ class Settings(BaseSettings):
     instrumentation_key: str = ""
     testing: bool = False
     sentry_dsn: Optional[str]
-    sentry_traces_sample_rate: float = 0.2
-    sentry_sample_rate: float = 0.2
+    sentry_traces_sample_rate: float = 0.0
+    sentry_sample_rate: float = 0.0
+    sentry_profiles_sample_rate: float = 0.0
     text_max_length: int = 1000
     is_prod: bool = False
     terms_of_service: str = "https://www.witty.works/privacy"
@@ -48,10 +49,8 @@ class Settings(BaseSettings):
     context_checker_url: Optional[str]
     context_checker_api_key: Optional[str]
     models: List = ["en_core_web_lg", "de_core_news_lg"]
-    langs: List = ["en", "de"]
     fasttext: bool = True
     overwrite_enabled_user_categories: bool = False
-    partial_matching: bool = False
 
     class Config:
         env_file = ".env"

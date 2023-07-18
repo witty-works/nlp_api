@@ -70,6 +70,15 @@ class LangWithAutoType(str, Enum):
     enGB = "en-GB"
 
 
+class RuleFunctions(str, Enum):
+    SIMPLE = "simple_match"
+    REGEX = "regex_match"
+    PHRASE = "rules_based_words_phrase_matcher"
+    DENOM_DE = "gendered_denom_analysis_de"
+    NOUN = "word_noun"
+    STYLE_DE = "style_word_analysis_de"
+
+
 class LangVariantType(str, Enum):
     deDE = "de-DE"
     deCH = "de-CH"
@@ -902,7 +911,7 @@ class ResultConf(BaseModel):
 class ResultsOut(BaseModel):
     results: List[ResultOut]
     language: str
-    limit_reached: bool
+    limit_reached: bool = False
     config_changed: Optional[bool]
     notifications: Optional[int]
     has_consented_to_mailing: Optional[bool]

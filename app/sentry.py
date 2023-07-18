@@ -6,6 +6,8 @@ from sentry_sdk.integrations.fastapi import FastApiIntegration
 from app.privacy_filter import get_privacy_filter
 from app.privacy_filter import PrivacyFilter
 
+from urllib.parse import urlparse
+
 
 def sentry_clean_sensitive_frame(
     frame, privacy_filter: PrivacyFilter
@@ -30,9 +32,19 @@ def sentry_clean_event_data(event, hint):  # pragma: no cover
     return event
 
 
+def sentry_filter_transactions(event, hint):
+    url_string = event["request"]["url"]
+    parsed_url = urlparse(url_string)
+
+    if parsed_url.path.endswith("/check"):
+        return event
+
+    return None
+
+
 # Sentry SDK set up
 def set_up_sentry_sdk(version, settings):
-    if not settings.sentry_dsn or settings.testing == True:
+    if not settings.sentry_dsn or settings.testing is True:
         return None
 
     integrations = [
@@ -43,12 +55,14 @@ def set_up_sentry_sdk(version, settings):
 
     sentry_sdk.init(
         dsn=settings.sentry_dsn,
-        traces_sample_rate=settings.sentry_traces_sample_rate,
         sample_rate=settings.sentry_sample_rate,
+        traces_sample_rate=settings.sentry_traces_sample_rate,
+        profiles_sample_rate=settings.sentry_profiles_sample_rate,
         integrations=integrations,
         release=version,
         environment=settings.platform_environment,
         before_send=sentry_clean_event_data,
+        before_send_transaction=sentry_filter_transactions,
     )
 
     return sentry_sdk

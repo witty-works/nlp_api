@@ -5,41 +5,6 @@
         {
             "alternatives": [
                 {
-                    "text": "Person"
-                },
-                {
-                    "text": "eine/einer"
-                },
-                {
-                    "text": "Mensch"
-                },
-                {
-                    "text": "ErwachseneR"
-                },
-                {
-                    "text": "Erwachsene/Erwachsener"
-                }
-            ],
-            "category": "gender-orientation",
-            "context": "Was ist seine Frau?",
-            "end": 18,
-            "explanation": {
-                "content": "advanced",
-                "context": "nur wenn die Person sich selbst so bezeichnet",
-                "icon": "😒",
-                "text": "Bedient die heteronormative Sicht von Geschlechteridentität",
-                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäres-geschlecht?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Geschlecht + Orientierung: Binäres Geschlecht",
-            "proficiency_level": "unconscious_bias",
-            "start": 14,
-            "subcategory": "gender_identity",
-            "text": "Frau"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "seinE Begleitung"
                 },
                 {
