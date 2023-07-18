@@ -985,24 +985,27 @@ async def fetch_user_organization_configs(email: str):
             )
 
             configs["plan"] = organization_configs["plan"]
+
             configs["organization_name"] = organization_configs["name"]
 
-            if "config_hash" in organization_configs:
-                configs["organization_config_hash"] = organization_configs[
-                    "config_hash"
-                ]
-            else:
-                configs["organization_config_hash"] = None
+            configs["organization_config_hash"] = (
+                organization_configs["config_hash"]
+                if "config_hash" in organization_configs
+                else None
+            )
 
-            if "domains" in organization_configs:
-                configs["organization_domains"] = organization_configs["domains"]
-            else:
-                configs["organization_domains"] = {}
+            configs["organization_domains"] = (
+                organization_configs["domains"]
+                if "domains" in organization_configs
+                else {}
+            )
 
             configs["organization_config"] = organization_configs["config"]
+
             configs["organization_term_replacements"] = organization_configs[
                 "term_replacements"
             ]
+
             configs["organization_false_positives"] = organization_configs[
                 "false_positives"
             ]
@@ -1352,10 +1355,11 @@ def fetch_result_conf(configs: dict):
     if "config" not in configs:
         return None
 
-    if "organization_config" in configs:
-        organization_config = RuleConfig.parse_obj(configs["organization_config"])
-    else:
-        organization_config = None
+    organization_config = (
+        RuleConfig.parse_obj(configs["organization_config"])
+        if "organization_config" in configs
+        else None
+    )
 
     plan = configs["plan"]
 
