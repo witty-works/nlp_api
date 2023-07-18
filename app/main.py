@@ -857,6 +857,16 @@ async def lemmatize(
     return tokens[0].lemma_
 
 
+# data exchange routes
+@app.get("/tokenize")
+async def tokenize(
+    text: str,
+    lang: LangType,
+    username: str = Depends(fetch_current_username),
+):
+    return tokenize(lang, text)
+
+
 @app.post(
     "/organization/configs",
     response_model=ConfResponse,
@@ -3278,7 +3288,7 @@ def align_verb_form(lang, a_text, a_token, b_token):
     return align_verb_form_english(a_text, b_token)
 
 
-def tokenize(text, lang):
+def tokenize(lang, text):
     return [i.text for i in model[lang].tokenizer(text)]
 
 
@@ -3303,7 +3313,7 @@ def alternative_declension(lang, text, token, word_types, prepend_word, alternat
     if parsed_alternative.count(" ") > 5:
         return alternative
 
-    word_count = len(tokenize(text, lang))
+    word_count = len(tokenize(lang, text))
     if prepend_word:
         word_count -= 1
 
@@ -4487,7 +4497,7 @@ def detect_non_inclusive_emoji(
     ):
         return i
 
-    alternatives = [get_emoji_context(token.text, lang.lang)]
+    alternatives = [get_emoji_context(lang.lang, token.text)]
 
     emoji_description = token._.emoji_desc
     emoji_base = emoji_description.replace(" light skin tone", "")
