@@ -384,7 +384,7 @@ def test_config_changed(set_redis):
 
         assert response.status_code == 200
         response_content = json.loads(response.content)
-        assert response_content["config_changed"] == True
+        assert response_content["config_changed"] is True
 
 
 def test_config_organization_changed(set_redis):
@@ -399,7 +399,7 @@ def test_config_organization_changed(set_redis):
 
         assert response.status_code == 200
         response_content = json.loads(response.content)
-        assert response_content["config_changed"] == True
+        assert response_content["config_changed"] is True
 
 
 @pytest.fixture
@@ -789,7 +789,7 @@ def test_fetch_configs_for_request(event_loop, set_redis):
         fetch_configs_for_request(2.3, test_request, "test@gmail.com")
     )
     assert hasattr(test_request.config, "store_context")
-    assert test_request.config.store_context == True
+    assert test_request.config.store_context is True
     assert test_request.config.preferred_variants == ["en-GB"]
     assert test_request.config.german_gender_ending == "In"
     assert test_request.config.gendered_roles_format == "binary_gender"
@@ -813,7 +813,7 @@ def test_fetch_user_rules_suggestion(event_loop, set_redis):
     event_loop.run_until_complete(
         fetch_configs_for_request(2.3, test_request, "non_existant@gmail.com")
     )
-    assert test_request.config.store_context == True
+    assert test_request.config.store_context is True
     assert test_request.config.primary_language == "de-DE"
     assert test_request.config.preferred_languages == ["de"]
     assert test_request.config.preferred_variants == ["de-DE"]
@@ -832,7 +832,7 @@ def test_set_organization_rules(event_loop, set_redis):
     event_loop.run_until_complete(
         fetch_configs_for_request(2.3, test_request, "test@gmail.com")
     )
-    assert test_request.config.store_context == True
+    assert test_request.config.store_context is True
     assert test_request.config.preferred_variants == ["en-GB"]
     assert test_request.config.german_gender_ending == "In"
     assert test_request.config.gendered_roles_format == "binary_gender"
@@ -850,7 +850,7 @@ def test_set_default_rules(event_loop):
     event_loop.run_until_complete(
         fetch_configs_for_request(2.3, test_request, "non_existant@gmail.com")
     )
-    assert test_request.config.store_context == True
+    assert test_request.config.store_context is True
     assert test_request.config.primary_language is None
     assert test_request.config.preferred_languages == [
         LangWithAutoType.EN,

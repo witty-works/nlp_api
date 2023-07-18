@@ -44,7 +44,7 @@ def sentry_filter_transactions(event, hint):
 
 # Sentry SDK set up
 def set_up_sentry_sdk(version, settings):
-    if not settings.sentry_dsn or settings.testing == True:
+    if not settings.sentry_dsn or settings.testing is True:
         return None
 
     integrations = [

@@ -49,7 +49,6 @@ class Settings(BaseSettings):
     context_checker_url: Optional[str]
     context_checker_api_key: Optional[str]
     models: List = ["en_core_web_lg", "de_core_news_lg"]
-    langs: List = ["en", "de"]
     fasttext: bool = True
     overwrite_enabled_user_categories: bool = False
 
