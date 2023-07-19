@@ -3339,13 +3339,14 @@ def alternative_declension(lang, text, token, word_types, prepend_word, alternat
         word_count -= 1
 
     alternative_tokens = fetch_tokens(lang, parsed_alternative)
-    is_plural_alternative = False
     if word_count > 1:
         # TODO figure out how to modify phrases
         new_alternative = parsed_alternative
         is_plural_alternative = is_token_plural(lang, alternative_tokens[-1])
     else:
         new_alternative = ""
+        is_plural_alternative = False
+    
         previous = False
         for i in reversed(range(len(alternative_tokens))):
             alternative_token = alternative_tokens[i]
