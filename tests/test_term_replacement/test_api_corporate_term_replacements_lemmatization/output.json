@@ -86,7 +86,7 @@
             "context": "I ran far. I am always running. This is the foo bar and not the wELT!",
             "end": 51,
             "explanation": {
-                "icon": "🥰",
+                "icon": "❗",
                 "text": "better ding",
                 "url": "https://witty.works/foo bar"
             },

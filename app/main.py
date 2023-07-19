@@ -98,7 +98,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.46.0"
+version = "1.46.1"
 
 categories = get_categories()
 settings = get_settings()
@@ -845,7 +845,7 @@ async def post_check_v2_3(
 
 # data exchange routes
 @app.get("/lemmatize")
-async def lemmatize(
+async def get_lemmatize(
     text: str,
     lang: LangType,
     username: str = Depends(fetch_current_username),
@@ -855,6 +855,16 @@ async def lemmatize(
         return None
 
     return tokens[0].lemma_
+
+
+# data exchange routes
+@app.get("/tokenize")
+async def get_tokenize(
+    text: str,
+    lang: LangType,
+    username: str = Depends(fetch_current_username),
+):
+    return tokenize(text, lang)
 
 
 @app.post(
@@ -975,24 +985,27 @@ async def fetch_user_organization_configs(email: str):
             )
 
             configs["plan"] = organization_configs["plan"]
+
             configs["organization_name"] = organization_configs["name"]
 
-            if "config_hash" in organization_configs:
-                configs["organization_config_hash"] = organization_configs[
-                    "config_hash"
-                ]
-            else:
-                configs["organization_config_hash"] = None
+            configs["organization_config_hash"] = (
+                organization_configs["config_hash"]
+                if "config_hash" in organization_configs
+                else None
+            )
 
-            if "domains" in organization_configs:
-                configs["organization_domains"] = organization_configs["domains"]
-            else:
-                configs["organization_domains"] = {}
+            configs["organization_domains"] = (
+                organization_configs["domains"]
+                if "domains" in organization_configs
+                else {}
+            )
 
             configs["organization_config"] = organization_configs["config"]
+
             configs["organization_term_replacements"] = organization_configs[
                 "term_replacements"
             ]
+
             configs["organization_false_positives"] = organization_configs[
                 "false_positives"
             ]
@@ -1342,10 +1355,11 @@ def fetch_result_conf(configs: dict):
     if "config" not in configs:
         return None
 
-    if "organization_config" in configs:
-        organization_config = RuleConfig.parse_obj(configs["organization_config"])
-    else:
-        organization_config = None
+    organization_config = (
+        RuleConfig.parse_obj(configs["organization_config"])
+        if "organization_config" in configs
+        else None
+    )
 
     plan = configs["plan"]
 

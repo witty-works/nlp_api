@@ -78,10 +78,10 @@ def get_current_words(original_languagetool_path, ignore_languagetool_path):
     return current_words
 
 
-def get_data_from_files(locale):
+def get_data_from_files(model, locale):
     if locale[0:2] == "de":
         locale = "de"
-        rules = fetch_rules(["de"])
+        rules = fetch_rules({"de": model})
         nouns = Nouns()
 
     base_directory = "training_data/" + locale + "/"
@@ -572,7 +572,7 @@ for locale in locales:
         all_alternatives,
         all_categories,
         all_secondary_subcategories,
-    ) = get_data_from_files(locale)
+    ) = get_data_from_files(model, locale)
 
     if locale == "de-DE":
         words = generate_correct_endings_german(all_alternatives)

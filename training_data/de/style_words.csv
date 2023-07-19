@@ -13,7 +13,7 @@ agreed,a,style,advanced_anglicism,"['einer Meinung', 'zugesagt', 'eingewilligt',
 Allnighter,s,style,advanced_anglicism,"['Nachtarbeit', 'durchgemachte Nacht', 'durchgearbeitete Nacht']"
 Art Director,|,style,advanced_anglicism,"['Werbegestalter~in~/~Werbegestalter', 'Werbegestaltung(...)', 'Werbegestalter~innen~ und ~Werbegestalter']"
 asapst,a,style,advanced_anglicism,"['baldigst', 'schleunigst', 'so schnell es geht', 'so schnell wie möglich']"
-auf dem Screen,||s,style,advanced_anglicism,"['zu erledigen', 'auf dem Tagesplan', 'auf dem Schirm']"
+auf dem Screen,|~|s,style,advanced_anglicism,"['zu erledigen', 'auf dem Tagesplan', 'auf dem Schirm']"
 best-of-breed,a,style,advanced_anglicism,"['für diesen Geschäftszweck am besten passend', 'für diesen Anwendungsfall die effektivste', 'zu diesem Zweck empfehlenswerteste']"
 beyond words,|s,style,advanced_anglicism,['ohne Worte']
 Brand,s,style,advanced_anglicism,"['Marke', 'Warenzeichen', 'Markenbezeichnung']"
@@ -61,7 +61,7 @@ high-priority,a,style,advanced_anglicism,"['wichtig', 'dringend', 'vordringlich'
 Highlight,s,style,advanced_anglicism,"['Höhepunkt', 'Glanzpunkt']"
 Human Resources,|,style,advanced_anglicism,['Personalverwaltung']
 in a Nutshell,||s,style,advanced_anglicism,"['kurz gesagt', 'kurz und bündig', 'in einem Wort', 'auf eine einfache Formel gebracht', 'auf den Punkt gebracht']"
-in den Loop nehmen,||s|v,style,advanced_anglicism,"['auf den Verteiler nehmen', 'einbinden', 'auf dem Laufenden halten']"
+in den Loop nehmen,|~|s|v,style,advanced_anglicism,"['auf den Verteiler nehmen', 'einbinden', 'auf dem Laufenden halten']"
 Industrial Design,|s,style,advanced_anglicism,"['Industriedesign', 'industrielle Formgebung']"
 Industrial Marketing,|s,style,advanced_anglicism,['Industriemarketing']
 Inner-Circle,s,style,advanced_anglicism,"['innere Kreis', 'kleine Kreis', 'engere Kreis']"
@@ -86,8 +86,8 @@ Meeting,s,style,advanced_anglicism,['Besprechung']
 Message-Marketing,s,style,advanced_anglicism,['Kommunikationsmarketing']
 Minimum Viable Product,||,style,advanced_anglicism,"['minimal funktionsfähiges Produkt', 'Startversion mit Grundfunktionen', 'erste Iteration der Dienstleistung mit minimalem Funktionsumfang', 'erste vermarktbare Fassung des Produkts mit Kernfunktionen', 'erste Marktversion, die Feedback zur Weiterentwicklung nutzt']"
 No-Name-Product,s,style,advanced_anglicism,['namenloses Produkt']
-on the beach,||s,style,advanced_anglicism,"['im Strandurlaub', 'ohne Auftrag', 'zum Zusehen verurteilt']"
-on the same Page,||a|s,style,advanced_anglicism,"['einer Meinung', 'auf dem gleichen Kenntnisstand', 'einhelliger Meinung']"
+on the beach,||,style,advanced_anglicism,"['im Strandurlaub', 'ohne Auftrag', 'zum Zusehen verurteilt']"
+on the same Page,||~|,style,advanced_anglicism,"['einer Meinung', 'auf dem gleichen Kenntnisstand', 'einhelliger Meinung']"
 on-budget,a,style,advanced_anglicism,['im Budgetrahmen']
 on-time,a,style,advanced_anglicism,['im Zeitplan']
 Password,s,style,advanced_anglicism,['Kennwort']
@@ -139,8 +139,8 @@ Team-player,s,style,advanced_hollow,"['Teamplayer~in~/~Teamplayer', 'Person, die
 Arbeitskraft,s,style,advanced_hollow,"['--- nicht für Einzelperson', 'Personal', 'Mitarbeiter~in~/~Mitarbeiter', 'Arbeitnehmer~in~/~Arbeitnehmer', 'menschliche Kraft, (geistige, körperliche) Arbeit zu leisten(...)', 'Personal', 'Mitarbeitende', 'Arbeitnehmende', 'Mitarbeiter~innen~ und ~Mitarbeiter', 'Arbeitnehmer~innen~ und ~Arbeitnehmer']"
 aktiv,a,style,advanced_hollow,"['--- nicht auf Menschen beziehen', 'lebendig', 'tatkräftig', 'lebhaft', 'enthusiastisch', 'engagiert', 'energiegeladen', 'vital', 'eifrig', 'anpassungsfähig', 'schwungvoll']"
 dynamisch,a,style,advanced_hollow,"['--- nicht auf Menschen beziehen', 'lebendig', 'tatkräftig', 'lebhaft', 'enthusiastisch', 'engagiert', 'energiegeladen', 'vital', 'eifrig', 'anpassungsfähig', 'schwungvoll']"
-flache Hierarchie,a|s,style,advanced_hollow,"['kurze Entscheidungswege', 'verantwortliche und eigenorganisierte Arbeitsweise', 'Raum für Eigeninitiative', 'kurze Kommunikationswege', 'Mitgestaltungsmöglichkeiten für Mitarbeitende', 'Betriebsebene mit viel Kompetenzen und Entscheidungsmöglichkeiten']"
-flache Organisation,a|s,style,advanced_hollow,"['kurze Entscheidungswege', 'verantwortliche und eigenorganisierte Arbeitsweise', 'Raum für Eigeninitiative', 'kurze Kommunikationswege', 'Mitgestaltungsmöglichkeiten für Mitarbeitende', 'Betriebsebene mit viel Kompetenzen und Entscheidungsmöglichkeiten']"
+flache Hierarchie,~a|s,style,advanced_hollow,"['kurze Entscheidungswege', 'verantwortliche und eigenorganisierte Arbeitsweise', 'Raum für Eigeninitiative', 'kurze Kommunikationswege', 'Mitgestaltungsmöglichkeiten für Mitarbeitende', 'Betriebsebene mit viel Kompetenzen und Entscheidungsmöglichkeiten']"
+flache Organisation,~a|s,style,advanced_hollow,"['kurze Entscheidungswege', 'verantwortliche und eigenorganisierte Arbeitsweise', 'Raum für Eigeninitiative', 'kurze Kommunikationswege', 'Mitgestaltungsmöglichkeiten für Mitarbeitende', 'Betriebsebene mit viel Kompetenzen und Entscheidungsmöglichkeiten']"
 flexibel,a,style,advanced_hollow,"['--- nicht auf Menschen beziehen', 'anpassungsfähig', 'strategisch wendig', 'pragmatisch', 'offen', 'beweglich', 'agil', 'variabel', 'mobil', 'durch die Nutzenden definiert']"
 Flexibilität,s,style,advanced_hollow,"['Anpassungsfähigkeit', 'Aufgeschlossenheit gegenüber Wandel', 'Bereitschaft für Veränderung', 'Mobilität', 'Fähigkeit, sich schnell auf Neues umzustellen']"
 hoch motiviert,a|v,style,advanced_hollow,"['--- nicht auf Menschen beziehen', 'engagiert', 'begeisterungsfähig', 'zur Eigeninitiative', 'bereit, sich zu engagieren']"
@@ -157,21 +157,20 @@ Organisationstalent,s,style,advanced_hollow,"['Organisationsfähigkeit', 'Geübt
 outside the box,adv||s,style,advanced_hollow,"['in neuen Mustern', 'frisch und kreativ', 'unkonventionell', 'Neuland beschreitend', 'abseits ausgetretener Pfade']"
 quer-denken,v,style,advanced_hollow,"['in neuen Mustern denken', 'kreativ denken', 'über den eigenen Tellerrand blicken', 'lateral denken', 'aus einem neuen Blinkwinkel betrachten']"
 Querdenken,s,style,advanced_hollow,"['die Fähigkeit, in neuen Mustern zu denken', 'Hinterfragen', 'unkonventionelle Betrachtungsweise', 'die Fähigkeit, über den eigenen Tellerrand zu blicken']"
-rasche Auffassungsgabe,a|s,style,advanced_hollow,"['das Wesentliche schnell erkennen', 'Gelerntes rasch anwenden']"
-schnelle Auffassungsgabe,a|s,style,advanced_hollow,"['das Wesentliche schnell erkennen', 'Gelerntes rasch anwenden']"
+rasche Auffassungsgabe,~a|s,style,advanced_hollow,"['das Wesentliche schnell erkennen', 'Gelerntes rasch anwenden']"
+schnellen Auffassungsgabe,~a|s,style,advanced_hollow,"['das Wesentliche schnell erkennen', 'Gelerntes rasch anwenden']"
 state of the art,~|~|~|~,style,advanced_hollow,"['auf dem neuesten Stand der Technik', 'aktuellen Standards entsprechend', 'im Einklang mit dem letzten Stand der Forschung', 'auf dem höchsten Stand der technologischen Entwicklung', 'fachüblich']"
 teamfähig,a,style,advanced_hollow,"['kooperationsfähig', 'offen gegenüber verschiedenen Menschen und Verhaltensweisen', 'fähig mit Unterschieden und Gemeinsamkeiten umzugehen', 'kommunikationsfähig', 'kompromissbereit zugunsten des gemeinsamen Ziels']"
 Teamfähigkeit,s,style,advanced_hollow,"['Kooperationsfähigkeit', 'Akzeptanz gegenüber verschiedenen Menschen und Verhaltensweisen', 'Fähigkeit mit Unterschieden und Gemeinsamkeiten umzugehen', 'Kommunikationsfähigkeit', 'Kompromissbereitschaft zugunsten des gemeinsamen Ziels']"
 think outside of the box,~|~|~|~|~s,style,advanced_hollow,"['brainstormen', 'aus neuen Blinkwinkeln betrachten', 'kreativ denken', 'gedankliches Neuland betraten', 'lateral denken']"
 unkonventionell denken,adv|v,style,advanced_hollow,"['brainstormen', 'aus neuen Blinkwinkeln betrachten', 'kreativ denken', 'gedankliches Neuland betraten', 'lateral denken']"
-unkonventionell gedacht,adv|a,style,advanced_hollow,"['in neuen Mustern gedacht', 'aus einem neuen Blickwinkel betrachtet', 'lateral gedacht', 'kreativ gedacht', 'über den eigenen Tellerrand geblickt']"
+unkonventionell gedacht,a|~v,style,advanced_hollow,"['in neuen Mustern gedacht', 'aus einem neuen Blickwinkel betrachtet', 'lateral gedacht', 'kreativ gedacht', 'über den eigenen Tellerrand geblickt']"
 vor-allem,a,style,advanced_hollow,"['als Wichtigstes', 'namentlich', 'vorrangig']"
 übertreffen,v,style,exaggerating,"['kompetent und enthusiastisch umsetzen', 'mit Elan und Leichtigkeit erreichen', 'an Meilensteinen wachsen(...)']"
 ausgezeichnet,a,style,exaggerating,"['gut', 'bemerkenswert', 'mit einem Preis gewürdigt', 'öffentlich geehrt', 'auf (...) stolz sein dürfen']"
-belegte Erfolgsgeschichte,a|s,style,exaggerating,"['belegte Gelingen', 'Beweis für den positiven Verlauf', 'Geschichte der positiven Entwicklung', 'positive Unternehmungsentwicklung', 'Beispiele, die belegen, wie wir gesetzte Ziele erreichen(...)', 'Meilensteine, die dokumentieren, was wir (...) können']"
-nach den Sternen greifen,||s|v,style,exaggerating,"['sich motivierende Ziele setzen', 'auf Meilensteine hinarbeiten', 'eine Vision haben, die (jemanden) inspiriert(...)']"
+nach den Sternen greifen,|~|~s|v,style,exaggerating,"['sich motivierende Ziele setzen', 'auf Meilensteine hinarbeiten', 'eine Vision haben, die (jemanden) inspiriert(...)']"
 Top-Performance,s,style,exaggerating,"['Engagement', 'erfreuliches Ergebnis', 'Kompetenz', 'Bravourstück', 'einen Meilenstein mit Leichtigkeit erreicht haben(...)']"
-bestens etablierte,adv|a,style,exaggerating,"['anerkannte', 'akzeptierte', 'verwurzelte', 'eingeführte', 'bekannte', 'bewährte', 'aufgebaute', 'einen Ruf (als ...) erworben haben', 'eingerichtet(...)', 'eine stabile Grundlage geschaffen(...)', 'sich einen Namen gemacht haben (für ...)']"
+bestens etablierte,~a|~a,style,exaggerating,"['anerkannte', 'akzeptierte', 'verwurzelte', 'eingeführte', 'bekannte', 'bewährte', 'aufgebaute', 'einen Ruf (als ...) erworben haben', 'eingerichtet(...)', 'eine stabile Grundlage geschaffen(...)', 'sich einen Namen gemacht haben (für ...)']"
 Höchstleistung,s,style,exaggerating,"['Meilenstein', 'Teamziel', 'zuverlässiges Ergebnis', 'Sternstunde', 'gemeinsame Leistung, die neue Maßstäbe gesetzt hat(...)', 'Resultat, das das Vertrauen unserer Kundschaft bestätigt(...)', 'Meilensteine', 'Teamziele', 'zuverlässige Ergebnisse', 'Sternstunden']"
 Hardliner,s,style,exaggerating,"['Verfechter~in~/~Verfechter', 'jemand, der ungern Kompromisse eingeht(...)', 'Mensch, der für seine Ziele eintritt(...)', 'Verfechter~innen~ und ~Verfechter']"
 unwiderstehlich,a,style,exaggerating,"['einnehmend', 'interessant', 'einladend', 'effektiv', 'Kundenbedürfnisse identifiziert und bedient haben(...)']"
@@ -181,7 +180,7 @@ Extrameile gehen,s|v,style,exaggerating,"['Spaß am Mit- und Weiterdenken haben(
 Pionierunternehmen,s,style,exaggerating,"['richtungweisendes Unternehmen(...)', 'Unternehmen, das mit gutem Beispiel vorangeht(...)', 'Unternehmen, das sich auf Neues einlässt(...)', 'Unternehmen, das neue Wege geht(...)', 'Unternehmen, das inspiriert(...)', 'Unternehmen, das Maßstäbe im (...) setzt', 'verantwortungsbewusstes Unternehmen, das anderen den Weg bereitet(...)']"
 obligatorisch,a,style,exaggerating,"['nützlich', 'hilfreich', 'wichtig, um (...)']"
 erfolgreich,a,style,exaggerating,"['fähig', 'gelungen', 'gewinnbringend', 'produktiv', 'zielführend', 'wirkungsvoll(...)', 'ertragreich(...)', 'mit gutem Ergebnis(...)', 'mit Leichtigkeit(...)', 'alle Meilensteine erreicht(...)']"
-hohe Ziele,a|s,style,exaggerating,"['Meilensteine', 'Etappenziele', 'Ziele, die motivieren(...)', 'Vorhaben, die begeistern(...)']"
+hohe Ziele,~a|~s,style,exaggerating,"['Meilensteine', 'Etappenziele', 'Ziele, die motivieren(...)', 'Vorhaben, die begeistern(...)']"
 absolut,a,style,exaggerating,"['durch und durch', 'real', 'umfassend', 'uneingeschränkt', 'gründlich', 'gerne', 'zuverlässig']"
 Alpha,s,style,exaggerating,"['Person, die ihr Team inspiriert(...)', 'Mensch mit Freude an Verantwortung(...)', 'Person, die ihrem Team mit Rat und Tat zur Seite steht(...)', 'Person, die das Team beim Erreichen von gemeinsamen Zielen unterstützt(...)', 'Leute, die ihre Teams inspirieren(...)', 'Menschen mit Freude an Verantwortung(...)', 'Leute, die ihrem Team mit Rat und Tat zur Seite stehen(...)', 'Leute, die das Team beim Erreichen von gemeinsamen Zielen unterstützen und lenken(...)']"
 Alpha-Chef,s,style,exaggerating,"['Person, die ihr Team inspiriert(...)', 'Mensch mit Freude an Verantwortung(...)', 'Person, die ihrem Team mit Rat und Tat zur Seite steht(...)', 'Person, die das Team beim Erreichen von gemeinsamen Zielen unterstützt(...)', 'Leute, die ihre Teams inspirieren(...)', 'Menschen mit Freude an Verantwortung(...)', 'Leute, die ihrem Team mit Rat und Tat zur Seite stehen(...)', 'Leute, die das Team beim Erreichen von gemeinsamen Zielen unterstützen und lenken(...)']"
@@ -208,7 +207,7 @@ Erfolgserlebnis,s,style,exaggerating,"['Freude über die kompetente Umsetzung ge
 Erfolgsfaktor,s,style,exaggerating,"['Faktor im Erreichen gemeinsamer Ziele', 'Schlüssel zum guten Ergebnis', 'Anziehungskraft steigernder Aspekt', 'Erhöhung der Zugkraft', 'Beitrag zum guten Gelingen']"
 Erfolgsgeschichte,s,style,exaggerating,"['gelungenes Beispiel', 'Geschichte, wie wir gemeinsame Ziele erreichen', 'Beweis für den positiven Verlauf', 'Geschichte der positiven Entwicklung', 'Bericht über die positive Unternehmung', 'Beispiel, das zeigt, wie uns das gelungen ist']"
 Erfolgsquote,s,style,exaggerating,"['positiver Beitrag zum Gesamtergebnis', 'Anteil am Erreichen gemeinsamer Ziele', 'Mitwirkung am positiven Verlauf', 'Beitrag zum gemeinsamen guten Gelingen']"
-"Erst die Arbeit, dann das Vergnügen",||s|||s,style,exaggerating,['Zusammen und mit Freude an der Sache geht alles leichter und besser.']
+"Erst die Arbeit, dann das Vergnügen",~|~|s||~|~|s,style,exaggerating,['Zusammen und mit Freude an der Sache geht alles leichter und besser.']
 erstklassig,a,style,exaggerating,"['mit einem Auge für Qualität', 'zuverlässig und präzise', 'ansprechend', 'gehoben', 'rein', 'bevorzugt', 'sorgfältig ausgewählt']"
 Establishment,s,style,exaggerating,"['bessere Gesellschaft', 'bessere Kreise', 'gut situierte Kreise', 'soziale Oberschicht', 'in Kaderkreisen']"
 etabliert,a,style,exaggerating,"['anerkannt', 'akzeptiert', 'sich einen Namen gemacht habend', 'verwurzelt', 'eingerichtet', 'geltend', 'eingeführt', 'bekannt', 'bewährt', 'aufgebaut']"
@@ -218,7 +217,7 @@ fantastisch,a,style,exaggerating,"['inspirierend', 'begeisternd', 'motivierend']
 führend,a,style,exaggerating,"['bedeutend', 'wichtig', 'bekannt', 'Maßstäbe setzend', 'einflussreich', 'richtungweisend', 'tonangebend', 'wegweisend']"
 fundiert,a,style,exaggerating,"['mit Know-how', 'mit Erfahrung']"
 Geek,s,style,exaggerating,"['Mensch, der sich gern mit Technologie beschäftigt(...)', 'Mensch, der Spaß an Computern hat(...)', 'Mensch, der unseren Enthusiasmus für neue Medien teilt(...)', 'Mensch, der sich für ein Thema begeistert(...)', 'Mensch, der für ein Thema brennt(...)']"
-gehen die Extrameile,v||s,style,exaggerating,"['haben Spaß am Mit- und Weiterdenken', 'engagieren sich für Kundenzufriedenheit', 'blicken über den Tellerrand', 'haben Spaß daran, Kundschaft durch unerwartete und kreative Lösungen zu begeistern(...)']"
+gehen die Extrameile,v|~|s,style,exaggerating,"['haben Spaß am Mit- und Weiterdenken', 'engagieren sich für Kundenzufriedenheit', 'blicken über den Tellerrand', 'haben Spaß daran, Kundschaft durch unerwartete und kreative Lösungen zu begeistern(...)']"
 gewandt,a,style,exaggerating,"['geschickt', 'umsichtig', 'diplomatisch', 'behände', 'routiniert', 'beweglich', 'eloquent', 'anpassungsfähig']"
 Gewinn,s,style,exaggerating,"['Bereicherung', 'Nutzen', 'Vorteil', 'positiver Ertrag', 'Nutzeffekt', 'Benefit', 'Vorzug']"
 Gewinner,s,style,exaggerating,"['Gewinner~in~/~Gewinner', 'Mensch, der nicht locker lässt(...)', 'Person, die sich vom Ziel nicht abbringen lässt(...)', 'Gewinner~innen~ und ~Gewinner', 'Menschen, die nicht locker lassen(...)', 'alle, die sich nicht von ihrem Ziel ablenken lassen(...)']"
@@ -231,17 +230,13 @@ Held,s,style,exaggerating,"['loyaler Mensch', 'resiliente Persönlichkeit', 'ums
 heller Geist,a|s,style,exaggerating,"['Mensch mit Ideen(...)', 'Mensch mit Blick fürs Wesentliche(...)', 'Person, die Erlerntes rasch anwenden kann(...)', 'Mensch mit Erfindungsgeist(...)', 'jemand, der Zusammenhänge schnell erfasst(...)']"
 herausragend,a,style,exaggerating,"['kreativ', 'einfallsreich', 'gut', 'überraschend', 'eindrucksvoll', 'erfreulich', 'zur großen Zufriedenheit aller']"
 hervorragend,a,style,exaggerating,"['kreativ', 'einfallsreich', 'gut', 'überraschend', 'eindrucksvoll', 'erfreulich', 'zur großen Zufriedenheit aller']"
-hohes Verantwortungsbewusstsein,a|s,style,exaggerating,"['Freude an Verantwortung', 'Sorgfältigkeit', 'Umsicht und Sorgfslt im Angehen von Aufgaben', 'beim Betreuen von Aufgaben das große Ganze im Blick(...)']"
+hohes Verantwortungsbewusstsein,~a|s,style,exaggerating,"['Freude an Verantwortung', 'Sorgfältigkeit', 'Umsicht und Sorgfslt im Angehen von Aufgaben', 'beim Betreuen von Aufgaben das große Ganze im Blick(...)']"
 Kamikaze,s,style,exaggerating,"['Person, die sich für gemeinsame Ziele engagiert(...)', 'fokussierter und resilienter Mensch(...)', 'jemand, der mit Energie ein Ziel verfolgt(...)', 'jemand, der für (...) einsteht']"
 Kämpfer,s,style,exaggerating,"['Mensch, der mit Disziplin auf ein Ziel hinarbeitet(...)', 'jemand, der für (...) einsteht', 'tatkräftiger Mensch(...)', 'jemand, der Aufgaben mit Elan anpackt(...)']"
 Kämpfernatur,s,style,exaggerating,"['Geradlinigkeit', 'Standhaftigkeit', 'Seelenstärke', 'tatkräftige Person', 'resilienter Mensch', 'Person, die Aufgaben mit Stetigkeit und Elan angeht(...)', 'Person, die mit Energie ans Werk geht(...)', 'Person, die sich voll innerer Energie für (...) einsetzt', 'Mensch, der Aufgaben beherzt anpackt(...)', 'Mensch, der bereit ist, sich neuen oder komplexen Situationen zu stellen(...)', 'jemand, der für (...) einsteht']"
 Karrierefrau,s,style,exaggerating,"['engagierter Mensch', 'Person, die neu erworbenes Wissen kompetent einsetzt und weiterkommt(...)', 'Person, die sich kontinuierlich Ziele setzt und sie erreicht(...)']"
 kein Problem,|s,style,exaggerating,"['keine Umstände', 'ein Leichtes', 'ohne großen Aufwand zu erledigen', 'mit Leichtigkeit']"
-kluge Köpfe,a|s,style,exaggerating,"['Menschen, die mitdenken(...)', 'Menschen, die sich mit Themen intensiv beschäftigen(...)', 'Menschen mit verschiedenen Perspektiven(...)', 'Menschen, die interessante Schlüsse ziehen(...)']"
-klugem Kopf,a|s,style,exaggerating,"['Mensch mit Durchblick(...)', 'Mensch, der mitdenkt(...)', 'Person, die sich mit Themen intensiv beschäftigt(...)', 'jemand mit anderen Perspektiven(...)', 'Mensch, der interessante Schlüsse zieht(...)']"
-klugen Kopf,a|s,style,exaggerating,"['Mensch mit Durchblick(...)', 'Mensch, der mitdenkt(...)', 'Person, die sich mit Themen intensiv beschäftigt(...)', 'jemand mit anderen Perspektiven(...)', 'Mensch, der interessante Schlüsse zieht(...)']"
-klugen Köpfen,a|s,style,exaggerating,"['Menschen, die mitdenken(...)', 'Menschen, die sich mit Themen intensiv beschäftigen(...)', 'Menschen mit verschiedenen Perspektiven(...)', 'Menschen, die interessante Schlüsse ziehen(...)']"
-kluger Kopf,a|s,style,exaggerating,"['Mensch mit Durchblick(...)', 'Mensch, der mitdenkt(...)', 'Person, die sich mit Themen intensiv beschäftigt(...)', 'jemand mit anderen Perspektiven(...)', 'Mensch, der interessante Schlüsse zieht(...)']"
+klug Kopf,a|s,style,exaggerating,"['Mensch mit Durchblick(...)', 'Mensch, der mitdenkt(...)', 'Person, die sich mit Themen intensiv beschäftigt(...)', 'jemand mit anderen Perspektiven(...)', 'Mensch, der interessante Schlüsse zieht(...)']"
 Könner,s,style,exaggerating,"['Fachkraft', 'Könner~in~/~Könner', 'jemand, der erfahren und fachkundig ist(...)', 'Person, die ihre Kompetenzen routiniert einsetzt(...)', 'Könner~innen~ und ~Könner']"
 Marktführer,s,style,exaggerating,"['Marktführer~in~/~Marktführer', 'Unternehmen, das im Markt Maßstäbe setzt(...)', 'Unternehmen mit überwiegender Marktpräsenz(...)', 'in der Branche richtungweisendes Unternehmen(...)', 'im Markt wegweisendes Unternehmen(...)', 'Marktführer~innen~ und ~Marktführer', 'Unternehmen, die im Markt Maßstäbe setzen(...)', 'Unternehmen mit überwiegender Marktpräsenz(...)', 'in der Branche richtungweisende Unternehmen(...)', 'im Markt wegweisende Unternehmen(...)']"
 Muskel,s,style,exaggerating,"['Tatmensch', 'Person, die Aufgaben mit Elan angeht(...)', 'Person, die mit Energie ans Werk geht(...)', 'Person, die sich voll (...) einsetzt', 'Mensch, der Aufgaben beherzt anpackt(...)']"
@@ -264,8 +259,8 @@ Schindluder treiben,s|v,style,exaggerating,"['schlecht behandeln', 'Misswirtscha
 treiben Schindluder,v|s,style,exaggerating,"['schlecht behandeln', 'Misswirtschaft treiben', 'misshandeln', 'ausbeuten', 'nicht angemessen pflegen']"
 Schindluderei betreiben,s|v,style,exaggerating,"['schlecht behandeln', 'Misswirtschaft treiben', 'misshandeln', 'ausbeuten', 'nicht angemessen pflegen']"
 betreiben Schindluderei,v|s,style,exaggerating,"['schlecht behandeln', 'Misswirtschaft treiben', 'misshandeln', 'ausbeuten', 'nicht angemessen pflegen']"
-schlaue Köpfe,a|s,style,exaggerating,"['Leute mit Durchblick', 'aufmerksame Menschen', 'erfindungsreiche Menschen', 'Menschen mit Blick fürs Wesentliche(...)', 'Menschen, die Erlerntes rasch anwenden können(...)', 'Leute, die mitdenken(...)', 'Leute, die Erfahrung haben(...)', 'Menschen mit verschiedenen Perspektiven(...)']"
-schlauer Kopf,a|s,style,exaggerating,"['aufmerksame Person', 'erfindungsreicher Menschen', 'jemand mit Durchblick(...)', 'Mensch mit Blick fürs Wesentliche(...)', 'Person, die Erlerntes rasch anwenden kann(...)', 'Person, die mitdenkt(...)', 'jemand mit Erfahrung(...)', 'Mensch mit verschiedenen Perspektiven(...)']"
+schlaue Köpfe,~a|~s,style,exaggerating,"['Leute mit Durchblick', 'aufmerksame Menschen', 'erfindungsreiche Menschen', 'Menschen mit Blick fürs Wesentliche(...)', 'Menschen, die Erlerntes rasch anwenden können(...)', 'Leute, die mitdenken(...)', 'Leute, die Erfahrung haben(...)', 'Menschen mit verschiedenen Perspektiven(...)']"
+schlauer Kopf,~a|s,style,exaggerating,"['aufmerksame Person', 'erfindungsreicher Menschen', 'jemand mit Durchblick(...)', 'Mensch mit Blick fürs Wesentliche(...)', 'Person, die Erlerntes rasch anwenden kann(...)', 'Person, die mitdenkt(...)', 'jemand mit Erfahrung(...)', 'Mensch mit verschiedenen Perspektiven(...)']"
 Scorer,s,style,exaggerating,"['strebsamer Mensch', 'fleißiger Mensch', 'umsetzungsfreudiger Mensch', 'tatkräftiger Mensch', 'Tatmensch', 'Mensch, der Meilensteine erreichen will(...)', 'Mensch, der Aufgaben engagiert angeht(...)', 'jemand, der mit dem Team gemeinsame Ziele umsetzt(...)', 'jemand, der mit dem Team Aufgaben anpackt(...)', 'jemand, der unternehmerisch denkt(...)', 'jemand, der Ziele mit Elan umsetzt(...)']"
 Selbstanlasser,s,style,exaggerating,"['Mensch, der gemeinsame Ziele mit Energie anpackt(...)', 'Person, die gern die Initiative ergreift(...)', 'jemand, den Meilensteine motivieren(...)']"
 Spitzenleistung,s,style,exaggerating,"['Einsatz', 'Kompetenz', 'Meilenstein', 'Bravourstück', 'Ergebnis, das zum Geschäftserfolg beiträgt', 'erreichte Meilensteine', 'wiederholter Einsatz', 'Resultate, die zum Geschäftserfolg beitragen']"
@@ -277,7 +272,7 @@ Top-Performer,s,style,exaggerating,"['Kümmerer', 'Tatmensch', 'umsetzungsfreudi
 Traumaufgabe,s,style,exaggerating,"['Aufgabe, die den eigenen Wünschen entspricht', 'Aufgabe, für die sich jemand mit Freude engagiert', 'Aufgabe, die inspiriert und motiviert']"
 Traumjob,s,style,exaggerating,"['Job, der den persönlichen Wünschen entspricht', 'interessanter Job', 'gut bezahlter Job', 'Job in einem engagierten offenen Team']"
 Treiber,s,style,exaggerating,"['Person, die den Takt vorgibt(...)', 'Person, die motiviert(...)', 'Person, die die Initiative ergreift(...)', 'Person, die dem Team hilft, gemeinsame Ziele zu erreichen(...)', 'Motivierende']"
-über dem Durchschnitt,||s,style,exaggerating,"['viel', 'ausgesprochen', 'hochgradig', 'mehr als', 'zutiefst', 'mit Feuereifer']"
+über dem Durchschnitt,|~|s,style,exaggerating,"['viel', 'ausgesprochen', 'hochgradig', 'mehr als', 'zutiefst', 'mit Feuereifer']"
 überdurchschnittlich,a,style,exaggerating,"['viel', 'ausgesprochen', 'hochgradig', 'mehr als', 'zutiefst', 'mit Feuereifer']"
 Überflieger,s,style,exaggerating,"['kompetenter Mensch', 'fähiger Mensch', 'tatkräftige Person', 'Tatmensch', 'Überflieger~in~/~Überflieger', 'jemand, der durch Kompetenz überrascht(...)', 'jemand, der Meilensteine leicht und kreativ umsetzt(...)', 'kompetenter Mensch', 'fähiger Mensch', 'tatkräftige Person', 'Tatmensch', 'schlussendlich', 'jemand, der durch Kompetenz überrascht(...)', 'jemand, der Meilensteine leicht und kreativ umsetzt(...)']"
 Weltherrschaft,s,style,exaggerating,"['tonangebende Rolle', 'einflussreiche Position', 'überwiegende Marktpräsenz', 'Position, die erlaubt, im Markt Maßstäbe zu setzen', 'Rolle, in der man Weg und Richtung weist']"
@@ -288,7 +283,7 @@ Winner-Typ,s,style,exaggerating,"['umsetzungsfreudiger Mensch(...)', 'Mensch, de
 aber,adv,style,filler,['-']
 abermals,adv,style,filler,['-']
 allein,adv,style,filler,['-']
-allem Anschein nach,|s|,style,filler,['-']
+allem Anschein nach,~|s|,style,filler,['-']
 allemal,adv,style,filler,['-']
 allenfalls,adv,style,filler,['-']
 allenthalben,adv,style,filler,['-']
@@ -309,7 +304,7 @@ ausdrücklich,a,style,filler,['-']
 ausgerechnet,a,style,filler,['-']
 ausnahmslos,adv,style,filler,['-']
 außerdem,adv,style,filler,['-']
-bei weitem,|a,style,filler,['-']
+bei weitem,|~a,style,filler,['-']
 beinahe,adv,style,filler,['-']
 bekanntlich,adv,style,filler,['-']
 bereits,adv,style,filler,['-']
@@ -328,7 +323,7 @@ demgemäß,adv,style,filler,['-']
 demnach,adv,style,filler,['-']
 denn,adv,style,filler,['-']
 dennoch,adv,style,filler,['-']
-des Öfteren,|s,style,filler,['-']
+des Öfteren,~|s,style,filler,['-']
 des ungeachtet,~|,style,filler,['-']
 deshalb,adv,style,filler,['-']
 deswegen,adv,style,filler,['-']
@@ -337,15 +332,15 @@ durchaus,adv,style,filler,['-']
 durchweg,adv,style,filler,['-']
 eben,adv,style,filler,['-']
 eigentlich,adv,style,filler,['-']
-ein bisschen,v|s,style,filler,['-']
-ein wenig,v|a,style,filler,['-']
+ein bisschen,~|,style,filler,['-']
+ein wenig,~|,style,filler,['-']
 einerseits,adv,style,filler,['-']
-einiger,s,style,filler,['-']
+einiger,~,style,filler,['-']
 einigermaßen,adv,style,filler,['-']
 einmal,adv,style,filler,['-']
 ergo,adv,style,filler,['-']
 erheblich,adv,style,filler,['-']
-etlicher,s,style,filler,['-']
+etlicher,~,style,filler,['-']
 etwa,adv,style,filler,['-']
 fast,adv,style,filler,['-']
 folgendermaßen,adv,style,filler,['-']
@@ -375,12 +370,12 @@ hingegen,adv,style,filler,['-']
 hinlänglich,adv,style,filler,['-']
 höchst,adv,style,filler,['-']
 höchstens,adv,style,filler,['-']
-im Allgemeinen,|a,style,filler,['-']
+im Allgemeinen,|~a,style,filler,['-']
 immer,adv,style,filler,['-']
 immerhin,adv,style,filler,['-']
 immerzu,adv,style,filler,['-']
 in der Tat,||s,style,filler,['-']
-in diesem Zusammenhang,||s,style,filler,['-']
+in diesem Zusammenhang,|~|s,style,filler,['-']
 indessen,adv,style,filler,['-']
 infolgedessen,adv,style,filler,['-']
 insbesondere,adv,style,filler,['-']
@@ -402,13 +397,13 @@ lediglich,adv,style,filler,['-']
 leider,adv,style,filler,['-']
 letztlich,adv,style,filler,['-']
 mal,adv,style,filler,['-']
-mal schnell,adv|a,style,filler,['-']
+mal schnell,a|~v,style,filler,['-']
 mal eben,adv|adv,style,filler,['-']
 mal einfach,adv|adv,style,filler,['-']
 manchmal,adv,style,filler,['-']
-mehr oder weniger,a|conj|,style,filler,['-']
+mehr oder weniger,a|conj|~,style,filler,['-']
 mehrfach,adv,style,filler,['-']
-meines Erachtens,|s,style,filler,['-']
+meines Erachtens,~|~s,style,filler,['-']
 meinetwegen,adv,style,filler,['-']
 meist,adv,style,filler,['-']
 meistens,adv,style,filler,['-']
@@ -432,7 +427,7 @@ offenbar,adv,style,filler,['-']
 offenkundig,adv,style,filler,['-']
 offensichtlich,adv,style,filler,['-']
 oft,adv,style,filler,['-']
-ohne weiteres,|a,style,filler,['-']
+ohne weiteres,|~a,style,filler,['-']
 ohne Zweifel,|s,style,filler,['-']
 ohnedies,adv,style,filler,['-']
 partout,adv,style,filler,['-']
@@ -496,7 +491,7 @@ vollends,adv,style,filler,['-']
 völlig,adv,style,filler,['-']
 vollkommen,adv,style,filler,['-']
 vollständig,adv,style,filler,['-']
-von neuem,|a,style,filler,['-']
+von neuem,|~a,style,filler,['-']
 wahrscheinlich,adv,style,filler,['-']
 weidlich,adv,style,filler,['-']
 weitgehend,adv,style,filler,['-']
