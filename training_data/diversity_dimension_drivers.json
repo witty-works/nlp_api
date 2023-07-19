@@ -4731,6 +4731,7 @@
     },
     "corporate_rules": {
         "category": "corporate_rules",
+        "emoji": "\u2757",
         "translations": {
             "en": {
                 "hs_name": "Dictionary"
