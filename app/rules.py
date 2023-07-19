@@ -1,9 +1,10 @@
 import pandas as pd
 import ast
+import re
 from collections import namedtuple
 from german_nouns.lookup import Nouns
 from app.models import LangWithAutoType
-import re
+from app.categories import is_base_category
 
 
 def build_rules(
@@ -28,7 +29,7 @@ def build_rules(
         ]
 
         if "Primary_subcategory" in df:
-            if filter_base is False and "_base" in df["Primary_subcategory"][i]:
+            if filter_base is False and is_base_category(df["Primary_subcategory"][i]):
                 continue
 
             rule.append(df["Primary_subcategory"][i])
@@ -51,7 +52,7 @@ def build_rules(
             continue
 
         key = words[0].lower()
-        if postfix and "_base" in df["Primary_subcategory"][i]:
+        if postfix and is_base_category(df["Primary_subcategory"][i]):
             # shortest base word, "Arzt"
             key = key[-4:]
 

@@ -10,7 +10,6 @@ import secrets
 import aiohttp
 from typing import Optional, Union, List
 from collections import defaultdict
-from pydantic import parse_obj_as
 
 import os
 import fasttext
@@ -26,7 +25,6 @@ from fastapi import (
     Response,
     HTTPException,
     Depends,
-    Query,
     status,
 )
 
@@ -87,6 +85,9 @@ from app.categories import (
     get_category,
     is_category_inclusive,
     get_proficiency_level,
+    is_base_category,
+    remove_base,
+    add_advanced,
 )
 from app.settings import get_settings
 from app.logger import set_up_logger
@@ -1088,9 +1089,9 @@ def get_bc_disabled_categories(disable_style, disable_inclusive, advanced_enable
             not is_inclusive and disable_style and category in old_style_category
         ):
             disabled_categories.append(category)
-            disabled_categories.append("advanced_" + category)
+            disabled_categories.append(add_advanced(category))
         elif not advanced_enabled:
-            disabled_categories.append("advanced_" + category)
+            disabled_categories.append(add_advanced(category))
 
     if disable_inclusive:
         disabled_categories.append("inclusive")
@@ -3346,7 +3347,7 @@ def alternative_declension(lang, text, token, word_types, prepend_word, alternat
     else:
         new_alternative = ""
         is_plural_alternative = False
-    
+
         previous = False
         for i in reversed(range(len(alternative_tokens))):
             alternative_token = alternative_tokens[i]
@@ -3948,9 +3949,9 @@ def gendered_denom_analysis_de(
         if not token.text[0].isupper():
             continue
 
-        postfix = subcategory.endswith("_base")
+        postfix = is_base_category(subcategory)
         if postfix:
-            subcategory = subcategory.removesuffix("_base")
+            subcategory = remove_base(subcategory)
 
         if not is_sub_category_enabled(config, subcategory):
             continue
@@ -4330,8 +4331,8 @@ def rules_based_words_phrase_matcher(
         if len(data):
             subcategory = data[0]
 
-        if subcategory.endswith("_base"):
-            subcategory = subcategory.removesuffix("_base")
+        if is_base_category(subcategory):
+            subcategory = remove_base(subcategory)
             if (
                 len(data) < 3
                 or get_proficiency_level(subcategory) != "openly_discriminating"
