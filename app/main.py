@@ -609,8 +609,8 @@ async def get_debug_rule(
     text: str,
     lang: LangType,
     rule: str,
+    word_types: str,
     function: RuleFunctions = RuleFunctions.SIMPLE,
-    word_type: str = "",
     lower_case: bool = True,
     alternatives: str = None,
     alternatives_plural: str = None,
@@ -622,6 +622,7 @@ async def get_debug_rule(
         alternatives = alternatives.split("|")
         alternatives = list(map(str.strip, alternatives))
 
+    word_types = word_types.split("|")
     tokens = fetch_tokens(lang.lang, text)
     offsets = utf16_offsets(text)
     false_positive_matcher = fetch_false_positive_matcher(lang.lang, tokens)
@@ -631,18 +632,34 @@ async def get_debug_rule(
     match (function):
         case RuleFunctions.DENOM_DE:
             word_data = [
-                [rule, word_type, subcategory, alternatives, alternatives_plural]
+                [
+                    rule,
+                    tokenize(rule, lang.lang),
+                    word_types,
+                    subcategory,
+                    alternatives,
+                    alternatives_plural,
+                ]
             ]
         case RuleFunctions.NOUN:
             word_data = [
-                [rule, word_type, subcategory, alternatives, alternatives_plural]
+                [
+                    rule,
+                    tokenize(rule, lang.lang),
+                    word_types,
+                    subcategory,
+                    alternatives,
+                    alternatives_plural,
+                ]
             ]
         # case RuleFunctions.SIMPLE:
         # case RuleFunctions.REGEX:
         # case RuleFunctions.PHRASE:
         # case RuleFunctions.STYLE_DE:
         case _:
-            word_data = [[rule, word_type, subcategory, alternatives]]
+            word_data = [
+                [rule, tokenize(rule, lang.lang), word_types, subcategory, alternatives]
+            ]
 
     list_full = []
 
@@ -3325,7 +3342,7 @@ def alternative_declension(lang, text, token, word_types, prepend_word, alternat
     is_plural_alternative = False
     if word_count > 1:
         # TODO figure out how to modify phrases
-        new_alternative = alternative
+        new_alternative = parsed_alternative
         is_plural_alternative = is_token_plural(lang, alternative_tokens[-1])
     else:
         new_alternative = ""
@@ -3392,8 +3409,10 @@ def alternative_declension(lang, text, token, word_types, prepend_word, alternat
 
 def alternatives_declension(lang, text, i, tokens, alternatives):
     token = tokens[i]
-
     start = token.idx
+
+    if alternatives == None or alternatives == []:
+        return text, start, alternatives
 
     word_types = fetch_word_types(lang, token)
     prepend_word = False

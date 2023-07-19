@@ -1131,6 +1131,48 @@ def test_german_gender_ending():
         assert sorted(response_content) == sorted(expected)
 
 
+def test_rule():
+    with TestClient(app) as client:
+        request_data = {
+            "text": "She has special needs",
+            "lang": "en",
+            "rule": "have special need",
+            "function": "simple_match",
+            "word_types": "v|a|s",
+            "lower_case": True,
+            "alternatives": "foo|   bar | ding --- dong",
+            "alternatives_plural": "",
+        }
+        response = client.get("/debug/rule", params=request_data)
+        assert response.status_code == 200
+        response_content = json.loads(response.content)
+
+        expected = {
+            "results": [
+                {
+                    "text": "has special needs",
+                    "context": "She has special needs",
+                    "category": "corporate_rules",
+                    "subcategory": "corporate_rules",
+                    "start": 4,
+                    "end": 21,
+                    "alternatives": [
+                        {"text": "foo"},
+                        {"text": "bar"},
+                        {"text": "ding", "context": "dong"},
+                    ],
+                    "label": "Dictionary",
+                    "explanation": {"text": "", "icon": "❗"},
+                    "gravity": 0.9,
+                }
+            ],
+            "language": "en",
+            "limit_reached": False,
+        }
+
+        assert response_content == expected
+
+
 def test_spacy():
     with TestClient(app) as client:
         request_data = {
