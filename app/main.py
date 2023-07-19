@@ -94,6 +94,7 @@ from app.azure_ad_b2c import initialize_aadb2c
 from app.model import fetch_nlp_model
 from app.rules import fetch_rules, Rule
 from app.sentry import set_up_sentry_sdk
+from app.model import lemma_plural_lookup
 
 # probe.end()
 
@@ -782,6 +783,7 @@ async def get_debug_spacy(
                 "word_types": word_types,
                 "morph": token.morph.to_dict(),
                 "is_emoji": token._.is_emoji,
+                "is_singular": is_token_singular(lang, token),
                 "emoji_desc": token._.emoji_desc,
                 "whitespace": token.whitespace_,
             }
@@ -1022,6 +1024,9 @@ async def fetch_user_organization_configs(email: str):
 
 
 def is_token_singular(lang, token):
+    if token.text in lemma_plural_lookup[lang]:
+        return False
+
     number = token.morph.get("Number")
     if number:
         return "Sing" in number
