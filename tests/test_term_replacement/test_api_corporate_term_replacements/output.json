@@ -201,9 +201,8 @@
             "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT",
             "end": 15,
             "explanation": {
-                "icon": "🥰",
-                "text": "better ding",
-                "url": "https://witty.works/foo bar"
+                "icon": "❗",
+                "text": "better ding"
             },
             "gravity": 0.9,
             "label": "Wörterbuch",

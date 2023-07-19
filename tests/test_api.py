@@ -520,7 +520,7 @@ def set_redis():
                 "word_type": "=",
                 "explanation": {
                     "text": "better ding",
-                    "icon": "🥰",
+                    "icon": None,
                     "url": "https://witty.works/foo bar",
                 },
                 "proficiency_level": "unconscious_bias",
@@ -530,8 +530,8 @@ def set_redis():
                 "word_type": "=",
                 "explanation": {
                     "text": "better ding",
-                    "icon": "🥰",
-                    "url": "https://witty.works/foo bar",
+                    "icon": None,
+                    "url": None,
                 },
                 "proficiency_level": "unconscious_bias",
             },
