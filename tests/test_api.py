@@ -1136,12 +1136,12 @@ def test_rule():
         request_data = {
             "text": "She has special needs",
             "lang": "en",
-            "rule": "have special need",
+            "lemma": "have special need",
             "function": "simple_match",
             "word_types": "v|a|s",
             "lower_case": True,
             "alternatives": "foo|   bar | ding --- dong",
-            "alternatives_plural": "",
+            "plural_alternatives": None,
         }
         response = client.get("/debug/rule", params=request_data)
         assert response.status_code == 200
