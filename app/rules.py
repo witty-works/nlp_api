@@ -1,10 +1,45 @@
 import pandas as pd
 import ast
 import re
+from typing import Optional
 from collections import namedtuple
 from german_nouns.lookup import Nouns
 from app.models import LangWithAutoType
 from app.categories import is_base_category
+
+
+class Rule:
+    lemma: str
+    words: tuple
+    word_types: tuple
+    subcategory: Optional[str]
+    alternatives: Optional[tuple]
+    plural_alternatives: Optional[tuple]
+    secondary_subcategory: Optional[str]
+    false_positives: Optional[tuple]
+    explanation: Optional[str]
+    url: Optional[str]
+    icon: Optional[str]
+
+    def __init__(
+        self,
+        lemma,
+        words,
+        word_types,
+        subcategory=None,
+        alternatives=None,
+    ):
+        self.lemma = lemma
+        self.words = words
+        self.word_types = word_types
+        self.subcategory = subcategory
+        self.alternatives = alternatives
+        self.plural_alternatives = None
+        self.secondary_subcategory = None
+        self.false_positives = None
+        self.explanation = None
+        self.url = None
+        self.icon = None
 
 
 def build_rules(
@@ -19,42 +54,38 @@ def build_rules(
     df_rules = [] if filter_base is True else {}
 
     for i, lemma in enumerate(df["Lemma"]):
-        words = [i.text for i in model.tokenizer(lemma)]
-        word_types = df["Word_Type"][i].split("|")
-
-        rule = [
+        rule = Rule(
             lemma,
-            words,
-            word_types,
-        ]
+            tuple([i.text for i in model.tokenizer(lemma)]),
+            tuple(df["Word_Type"][i].split("|")),
+        )
 
+        key = rule.words[0].lower()
         if "Primary_subcategory" in df:
             if filter_base is False and is_base_category(df["Primary_subcategory"][i]):
                 continue
 
-            rule.append(df["Primary_subcategory"][i])
+            rule.subcategory = df["Primary_subcategory"][i]
+            if postfix and is_base_category(rule.subcategory):
+                # shortest base word, "Arzt"
+                key = key[-4:]
 
         singular_key = "Sg_all_split" if plural else "Alt_split"
         if singular_key in df:
-            rule.append(ast.literal_eval(df[singular_key][i]))
+            rule.alternatives = ast.literal_eval(df[singular_key][i])
 
         if plural:
-            rule.append(ast.literal_eval(df["Pl_all_split"][i]))
+            rule.plural_alternatives = ast.literal_eval(df["Pl_all_split"][i])
 
         if secondary_subcategory:
-            rule.append(df["Secondary_subcategory"][i])
+            rule.secondary_subcategory = df["Secondary_subcategory"][i]
 
         if false_positives:
-            rule.append(ast.literal_eval(df["False_Positives"][i]))
+            rule.false_positives = ast.literal_eval(df["False_Positives"][i])
 
         if filter_base is True:
             df_rules.append(rule)
             continue
-
-        key = words[0].lower()
-        if postfix and is_base_category(df["Primary_subcategory"][i]):
-            # shortest base word, "Arzt"
-            key = key[-4:]
 
         if key in df_rules:
             df_rules[key].append(rule)
@@ -120,25 +151,28 @@ def fetch_rules(model):
     rules = {
         "m_f_regexes": [
             # (m/f..)
-            [
+            Rule(
                 re.compile(r"^m/(f|w)(\/[*a-z])*(\))?$", re.IGNORECASE),
-                "0,7,/",
+                None,
+                (0, 7, "/"),
                 "gender_specific_abbreviation",
-            ],
+            ),
             # (f/m..)
-            [
+            Rule(
                 re.compile(r"^(f|w)/m(\/[*a-z])*(\))?$", re.IGNORECASE),
-                "0,7,/",
+                None,
+                (0, 7, "/"),
                 "gender_specific_abbreviation",
-            ],
+            ),
         ],
         # (d/f/m/v)
         "d_f_m_regexes": [
-            [
+            Rule(
                 re.compile(r"^(d|x|\*)(/v)?/f(/v)?/m(/v)?$", re.IGNORECASE),
-                "0,7,/",
+                None,
+                (0, 7, "/"),
                 "d_and_i",
-            ],
+            ),
         ],
         "skin_tones": {
             "all": [
@@ -404,18 +438,17 @@ def fetch_rules(model):
     if "de" in langs:
         lang = "de"
 
-        rules["de"]["hashtags"] = [
-            # "#foobar"
-            [
-                re.compile(r"^#(?!.*[A-Z])\w\w\w\w\w+$"),
-                "1,2,#",
-                "style",
-                [],
-                {
-                    "text": "Wenn du Wörter großschreibst, wissen alle gleich, was du meinst. #ZumBeispiel"
-                },
-            ],
-        ]
+        # "#foobar"
+        rule = Rule(
+            re.compile(r"^#(?!.*[A-Z])\w\w\w\w\w+$"),
+            None,
+            (1, 2, "#"),
+            "style",
+        )
+
+        rule.explanation = "Wenn du Wörter großschreibst, wissen alle gleich, was du meinst. #ZumBeispiel"
+
+        rules["de"]["hashtags"] = [rule]
 
         rules["de"]["context_check"] = []
 
@@ -1202,18 +1235,17 @@ def fetch_rules(model):
             "retard",
         ]
 
-        rules["en"]["hashtags"] = [
-            # "#foobar"
-            [
-                re.compile(r"^#(?!.*[A-Z])\w\w\w\w\w+$"),
-                "1,2,#",
-                "style",
-                [],
-                {
-                    "text": "When you capitalize words, everyone knows right away what you mean. #ForExample"
-                },
-            ],
-        ]
+        # "#foobar"
+        rule = Rule(
+            re.compile(r"^#(?!.*[A-Z])\w\w\w\w\w+$"),
+            None,
+            (1, 2, "#"),
+            "style",
+        )
+
+        rule.explanation = "When you capitalize words, everyone knows right away what you mean. #ForExample"
+
+        rules["en"]["hashtags"] = [rule]
 
         rules["en"]["list_false_column"] = [
             "Air Force",
