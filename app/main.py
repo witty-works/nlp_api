@@ -932,9 +932,6 @@ async def post_user_configs(
     user_configs: UserConfRequest, username: str = Depends(fetch_current_username)
 ):
     redis.set(user_configs.email.lower(), user_configs.json())
-    # TODO remove once all emails have been lower cased in redis
-    if user_configs.email.lower() != user_configs.email:
-        redis.delete(user_configs.email)
 
     return user_configs
 
@@ -986,10 +983,6 @@ async def fetch_user_configs_from_redis(
 ):
     configs = redis.get(email)
     if not configs:
-        # TODO remove once all emails have been lower cased in redis
-        if email != email.lower():
-            return await fetch_user_configs_from_redis(email.lower())
-
         raise HTTPException(status_code=404, detail="User configs not found")
 
     return json.loads(configs)
