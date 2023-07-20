@@ -98,7 +98,7 @@ from app.sentry import set_up_sentry_sdk
 
 # probe.end()
 
-version = "1.46.1"
+version = "1.46.2"
 
 categories = get_categories()
 settings = get_settings()
@@ -913,7 +913,10 @@ async def get_organization_configs(
 async def post_user_configs(
     user_configs: UserConfRequest, username: str = Depends(fetch_current_username)
 ):
-    redis.set(user_configs.email, user_configs.json())
+    redis.set(user_configs.email.lower(), user_configs.json())
+    # TODO remove once all emails have been lower cased in redis
+    if user_configs.email.lower() != user_configs.email:
+        redis.delete(user_configs.email)
 
     return user_configs
 
@@ -926,7 +929,7 @@ async def delete_user_configs(
     email: str,
     username: str = Depends(fetch_current_username),
 ):
-    redis.delete(email)
+    redis.delete(email.lower())
 
 
 @app.get(
@@ -965,6 +968,10 @@ async def fetch_user_configs_from_redis(
 ):
     configs = redis.get(email)
     if not configs:
+        # TODO remove once all emails have been lower cased in redis
+        if email != email.lower():
+            return await fetch_user_configs_from_redis(email.lower())
+
         raise HTTPException(status_code=404, detail="User configs not found")
 
     return json.loads(configs)
