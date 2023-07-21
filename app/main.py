@@ -9,7 +9,7 @@ import json
 import secrets
 import aiohttp
 from typing import Optional, Union, List
-from collections import namedtuple
+from collections import defaultdict, namedtuple
 import os
 import fasttext
 
@@ -1877,7 +1877,7 @@ async def context_false_positives(lang, tokens, list_results):
         return list_results
 
     sentences = {}
-    sentences_to_check = {}
+    sentences_to_check = defaultdict(list)
     for i in range(len(list_results)):
         result = list_results[i]
         words = result.text.lower().split()
@@ -1886,7 +1886,7 @@ async def context_false_positives(lang, tokens, list_results):
 
         # a fossil => fossil
         if words[-1] in rules[lang]["context_check"]:
-            if sentences == {}:
+            if len(sentences) == 0:
                 for sentence in tokens.sents:
                     sentences[sentence.end_char] = sentence.text
 
@@ -1899,10 +1899,7 @@ async def context_false_positives(lang, tokens, list_results):
             if sentence is None:
                 continue
 
-            if sentence in sentences_to_check:
-                sentences_to_check[sentence].append(i)
-            else:
-                sentences_to_check[sentence] = [i]
+            sentences_to_check[sentence].append(i)
 
     if sentences_to_check == {}:
         return list_results
