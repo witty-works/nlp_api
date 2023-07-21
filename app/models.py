@@ -1,7 +1,7 @@
 from pydantic import BaseModel, validator
 from typing import Dict, List, Optional, Union
 from enum import Enum
-
+from collections import namedtuple
 import json, typing
 
 from starlette.responses import Response
@@ -419,6 +419,7 @@ class ResultOut(BaseModel):
     def factory(
         version: float,
         config: Config,
+        client: namedtuple,
         lang: Language,
         text,
         full_text,
@@ -482,7 +483,7 @@ class ResultOut(BaseModel):
 
         if category != "orthography" and category != "corporate_rules" and url is None:
             url = lang._(subcategory, "canonical_url")
-            if url is not None:
+            if url is not None and client.name == "web-ext":
                 url += "?reducedView=true"
 
         explanation = (

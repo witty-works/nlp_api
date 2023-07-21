@@ -9,8 +9,7 @@ import json
 import secrets
 import aiohttp
 from typing import Optional, Union, List
-from collections import defaultdict
-
+from collections import defaultdict, namedtuple
 import os
 import fasttext
 
@@ -145,7 +144,7 @@ async def handle_command_witty(
 ):  # pragma: no cover
     await ack()
 
-    user_request_in = RequestIn(client="slack-1.0.0", text=body["text"])
+    user_request_in = RequestIn(client="slack:1.0.0", text=body["text"])
     text, lang, limit_reached = fetch_text(user_request_in)
 
     if lang is None:
@@ -644,6 +643,7 @@ async def get_debug_rule(
 
     custom_rules = [rule]
     list_full = []
+    client = parse_client("debug:" + version)
 
     i = new_i = 0
     token_count = len(tokens)
@@ -655,6 +655,7 @@ async def get_debug_rule(
                 new_i = simple_match(
                     version,
                     config,
+                    client,
                     lang,
                     text,
                     i,
@@ -669,6 +670,7 @@ async def get_debug_rule(
                 new_i = regex_match(
                     version,
                     config,
+                    client,
                     lang,
                     text,
                     i,
@@ -682,6 +684,7 @@ async def get_debug_rule(
                 new_i = rules_based_words_phrase_matcher(
                     version,
                     config,
+                    client,
                     lang,
                     text,
                     i,
@@ -697,6 +700,7 @@ async def get_debug_rule(
                 new_i = gendered_denom_analysis_de(
                     version,
                     config,
+                    client,
                     lang,
                     text,
                     i,
@@ -709,6 +713,7 @@ async def get_debug_rule(
                 new_i = word_noun(
                     version,
                     config,
+                    client,
                     lang,
                     text,
                     i,
@@ -722,6 +727,7 @@ async def get_debug_rule(
                 new_i = style_word_analysis_de(
                     version,
                     config,
+                    client,
                     lang,
                     text,
                     i,
@@ -1405,7 +1411,13 @@ def has_gender_denom_ending(text, full_text, offset, config: Config):
 
 
 def languagetool_matches(
-    version: float, config: Config, lang: Language, full_text: str, offsets, result
+    version: float,
+    config: Config,
+    client: namedtuple,
+    lang: Language,
+    full_text: str,
+    offsets,
+    result,
 ):
     list_results = []
     ignore = ["@", "#"]
@@ -1513,6 +1525,7 @@ def languagetool_matches(
             ResultOut.factory(
                 version,
                 config,
+                client,
                 lang,
                 text,
                 full_text,
@@ -1576,7 +1589,12 @@ async def fetch_json_post(url, payload, headers, name, ssl=True, json=True):
 
 
 async def apply_languagetool_rules(
-    version: float, config: Config, lang: Language, text: str, offsets
+    version: float,
+    config: Config,
+    client: namedtuple,
+    lang: Language,
+    text: str,
+    offsets,
 ):
     if settings.languagetool_api == "":
         return []
@@ -1621,7 +1639,7 @@ async def apply_languagetool_rules(
     if not isinstance(result, dict):
         return []
 
-    return languagetool_matches(version, config, lang, text, offsets, result)
+    return languagetool_matches(version, config, client, lang, text, offsets, result)
 
 
 def utf16len(c):
@@ -1700,6 +1718,19 @@ def fetch_matches(lang, tokens, phrases):
     return matcher(tokens)
 
 
+def parse_client(client: str):
+    if client is None:
+        client = "1.0.0"
+
+    if ":" in client:
+        client = client.split(":")
+    else:
+        client = ["web-ext", client]
+
+    parsed_client = namedtuple("client", "name version")
+    return parsed_client(client[0], client[1])
+
+
 async def apply_language_rules(
     version: float,
     client: str,
@@ -1710,6 +1741,7 @@ async def apply_language_rules(
 ):
     tokens = fetch_tokens(lang.lang, text)
     offsets = utf16_offsets(text)
+    client = parse_client(client)
 
     term_replacement_rules = fetch_term_replacements(configs, lang)
 
@@ -1726,7 +1758,7 @@ async def apply_language_rules(
             list_results = []
 
     list_results = await apply_languagetool_rules(
-        version, config, lang, text, offsets
+        version, config, client, lang, text, offsets
     ) + await context_false_positives(lang.lang, tokens, list_results)
 
     return apply_false_positives(list_results, configs)
@@ -1926,7 +1958,7 @@ async def german_rules(
     version: float,
     config: Config,
     term_replacement_rules: list,
-    client: str,
+    client: namedtuple,
     tokens,
     offsets: dict,
     lang: Language,
@@ -1965,6 +1997,7 @@ async def german_rules(
             new_i = simple_match(
                 version,
                 config,
+                client,
                 lang,
                 text,
                 i,
@@ -1981,6 +2014,7 @@ async def german_rules(
             new_i = regex_match(
                 version,
                 config,
+                client,
                 lang,
                 text,
                 i,
@@ -1998,6 +2032,7 @@ async def german_rules(
             new_i = regex_match(
                 version,
                 config,
+                client,
                 lang,
                 text,
                 i,
@@ -2040,6 +2075,7 @@ async def german_rules(
                 new_i = regex_match(
                     version,
                     config,
+                    client,
                     lang,
                     text,
                     i,
@@ -2093,6 +2129,7 @@ async def german_rules(
             new_i = regex_match(
                 version,
                 config,
+                client,
                 lang,
                 text,
                 i,
@@ -2108,7 +2145,7 @@ async def german_rules(
         new_i = detect_non_inclusive_emoji(
             version,
             config,
-            VersionString(client),
+            client,
             lang,
             text,
             i,
@@ -2123,6 +2160,7 @@ async def german_rules(
         new_i = regex_match(
             version,
             config,
+            client,
             lang,
             text,
             i,
@@ -2144,6 +2182,7 @@ async def german_rules(
             new_i = simple_match(
                 version,
                 config,
+                client,
                 lang,
                 text,
                 i,
@@ -2163,6 +2202,7 @@ async def german_rules(
         new_i = rules_based_words_phrase_matcher(
             version,
             config,
+            client,
             lang,
             text,
             i,
@@ -2182,6 +2222,7 @@ async def german_rules(
         new_i = rules_based_words_phrase_matcher(
             version,
             config,
+            client,
             lang,
             text,
             i,
@@ -2197,6 +2238,7 @@ async def german_rules(
         new_i = rules_based_words_phrase_matcher(
             version,
             config,
+            client,
             lang,
             text,
             i,
@@ -2217,6 +2259,7 @@ async def german_rules(
             new_i = gendered_denom_analysis_de(
                 version,
                 config,
+                client,
                 lang,
                 text,
                 i,
@@ -2237,6 +2280,7 @@ async def german_rules(
         new_i = simple_match(
             version,
             config,
+            client,
             lang,
             text,
             i,
@@ -2256,6 +2300,7 @@ async def german_rules(
         new_i = word_noun(
             version,
             config,
+            client,
             lang,
             text,
             i,
@@ -2277,6 +2322,7 @@ async def german_rules(
             new_i = rules_based_words_phrase_matcher(
                 version,
                 config,
+                client,
                 lang,
                 text,
                 i,
@@ -2300,6 +2346,7 @@ async def german_rules(
             new_i = rules_based_words_phrase_matcher(
                 version,
                 config,
+                client,
                 lang,
                 text,
                 i,
@@ -2321,6 +2368,7 @@ async def german_rules(
         new_i = style_word_analysis_de(
             version,
             config,
+            client,
             lang,
             text,
             i,
@@ -2346,7 +2394,7 @@ async def english_rules(
     version: float,
     config: Config,
     term_replacement_rules: list,
-    client: str,
+    client: namedtuple,
     tokens,
     offsets: dict,
     lang: Language,
@@ -2368,6 +2416,7 @@ async def english_rules(
             new_i = simple_match(
                 version,
                 config,
+                client,
                 lang,
                 text,
                 i,
@@ -2384,6 +2433,7 @@ async def english_rules(
             new_i = regex_match(
                 version,
                 config,
+                client,
                 lang,
                 text,
                 i,
@@ -2400,6 +2450,7 @@ async def english_rules(
             new_i = regex_match(
                 version,
                 config,
+                client,
                 lang,
                 text,
                 i,
@@ -2415,7 +2466,7 @@ async def english_rules(
         new_i = detect_non_inclusive_emoji(
             version,
             config,
-            VersionString(client),
+            client,
             lang,
             text,
             i,
@@ -2430,6 +2481,7 @@ async def english_rules(
         new_i = regex_match(
             version,
             config,
+            client,
             lang,
             text,
             i,
@@ -2450,6 +2502,7 @@ async def english_rules(
         new_i = simple_match(
             version,
             config,
+            client,
             lang,
             text,
             i,
@@ -2472,6 +2525,7 @@ async def english_rules(
             new_i = simple_match(
                 version,
                 config,
+                client,
                 lang,
                 text,
                 i,
@@ -2491,6 +2545,7 @@ async def english_rules(
         new_i = rules_based_words_phrase_matcher(
             version,
             config,
+            client,
             lang,
             text,
             i,
@@ -2511,6 +2566,7 @@ async def english_rules(
         new_i = rules_based_words_phrase_matcher(
             version,
             config,
+            client,
             lang,
             text,
             i,
@@ -2532,6 +2588,7 @@ async def english_rules(
             new_i = rules_based_words_phrase_matcher(
                 version,
                 config,
+                client,
                 lang,
                 text,
                 i,
@@ -2554,6 +2611,7 @@ async def english_rules(
         new_i = word_noun(
             version,
             config,
+            client,
             lang,
             text,
             i,
@@ -2574,6 +2632,7 @@ async def english_rules(
         new_i = rules_based_words_phrase_matcher(
             version,
             config,
+            client,
             lang,
             text,
             i,
@@ -2594,6 +2653,7 @@ async def english_rules(
         new_i = rules_based_words_phrase_matcher(
             version,
             config,
+            client,
             lang,
             text,
             i,
@@ -2614,6 +2674,7 @@ async def english_rules(
         new_i = word_noun(
             version,
             config,
+            client,
             lang,
             text,
             i,
@@ -2634,6 +2695,7 @@ async def english_rules(
         new_i = rules_based_words_phrase_matcher(
             version,
             config,
+            client,
             lang,
             text,
             i,
@@ -2654,6 +2716,7 @@ async def english_rules(
         new_i = word_noun(
             version,
             config,
+            client,
             lang,
             text,
             i,
@@ -2676,6 +2739,7 @@ async def english_rules(
     sentences_matcher(
         version,
         config,
+        client,
         lang,
         text,
         tokens,
@@ -2688,6 +2752,7 @@ async def english_rules(
     sentences_matcher(
         version,
         config,
+        client,
         lang,
         text,
         tokens,
@@ -2700,6 +2765,7 @@ async def english_rules(
     sentences_matcher(
         version,
         config,
+        client,
         lang,
         text,
         tokens,
@@ -2712,6 +2778,7 @@ async def english_rules(
     sentences_matcher(
         version,
         config,
+        client,
         lang,
         text,
         tokens,
@@ -2724,6 +2791,7 @@ async def english_rules(
     sentences_matcher(
         version,
         config,
+        client,
         lang,
         text,
         tokens,
@@ -3622,6 +3690,7 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
 def sentences_matcher(
     version: float,
     config: Config,
+    client: namedtuple,
     lang,
     full_text,
     tokens,
@@ -3653,6 +3722,7 @@ def sentences_matcher(
                 ResultOut.factory(
                     version,
                     config,
+                    client,
                     lang,
                     span.text,
                     full_text,
@@ -3668,6 +3738,7 @@ def sentences_matcher(
 def regex_match(
     version: float,
     config: Config,
+    client: namedtuple,
     lang,
     full_text,
     i,
@@ -3873,6 +3944,7 @@ def regex_match(
             ResultOut.factory(
                 version,
                 config,
+                client,
                 lang,
                 text,
                 full_text,
@@ -3896,6 +3968,7 @@ def regex_match(
 def gendered_denom_analysis_de(
     version: float,
     config: Config,
+    client: namedtuple,
     lang,
     full_text,
     i,
@@ -4020,6 +4093,7 @@ def gendered_denom_analysis_de(
             ResultOut.factory(
                 version,
                 config,
+                client,
                 lang,
                 text,
                 full_text,
@@ -4039,6 +4113,7 @@ def gendered_denom_analysis_de(
 def style_word_analysis_de(
     version: float,
     config: Config,
+    client: namedtuple,
     lang,
     full_text,
     i,
@@ -4093,6 +4168,7 @@ def style_word_analysis_de(
             ResultOut.factory(
                 version,
                 config,
+                client,
                 lang,
                 text,
                 full_text,
@@ -4112,6 +4188,7 @@ def style_word_analysis_de(
 def word_noun(
     version: float,
     config: Config,
+    client: namedtuple,
     lang,
     full_text,
     i,
@@ -4175,6 +4252,7 @@ def word_noun(
             ResultOut.factory(
                 version,
                 config,
+                client,
                 lang,
                 text,
                 full_text,
@@ -4259,6 +4337,7 @@ def pluralize_they(tokens, i):
 def rules_based_words_phrase_matcher(
     version: float,
     config: Config,
+    client: namedtuple,
     lang,
     full_text,
     i,
@@ -4338,6 +4417,7 @@ def rules_based_words_phrase_matcher(
             ResultOut.factory(
                 version,
                 config,
+                client,
                 lang,
                 text,
                 full_text,
@@ -4358,6 +4438,7 @@ def rules_based_words_phrase_matcher(
 def simple_match(
     version: float,
     config: Config,
+    client: namedtuple,
     lang,
     full_text,
     i,
@@ -4392,6 +4473,7 @@ def simple_match(
             ResultOut.factory(
                 version,
                 config,
+                client,
                 lang,
                 text,
                 full_text,
@@ -4429,7 +4511,7 @@ def get_emoji_context(alternative, lang):
 def detect_non_inclusive_emoji(
     version: float,
     config: Config,
-    client: str,
+    client: namedtuple,
     lang,
     full_text,
     i,
@@ -4437,7 +4519,7 @@ def detect_non_inclusive_emoji(
     offsets,
     list_full,
 ):
-    if client and client < VersionString("1.28.0.1"):
+    if client.name == "web-ext" and client.version < VersionString("1.28.0.1"):
         return i
 
     token = tokens[i]
@@ -4548,6 +4630,7 @@ def detect_non_inclusive_emoji(
             ResultOut.factory(
                 version,
                 config,
+                client,
                 lang,
                 token.text,
                 full_text,
