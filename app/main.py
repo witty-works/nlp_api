@@ -9,12 +9,11 @@ import json
 import secrets
 import aiohttp
 from typing import Optional, Union, List
-from collections import defaultdict, namedtuple
+from collections import namedtuple
 import os
 import fasttext
 
 from spacy.matcher import PhraseMatcher, Matcher
-import pandas as pd
 
 from inflex import Noun, Verb, Adjective
 
@@ -1748,11 +1747,25 @@ async def apply_language_rules(
     match lang.lang:
         case "de":
             list_results = await german_rules(
-                version, config, term_replacement_rules, client, tokens, offsets, lang, text
+                version,
+                config,
+                term_replacement_rules,
+                client,
+                tokens,
+                offsets,
+                lang,
+                text,
             )
         case "en":
             list_results = await english_rules(
-                version, config, term_replacement_rules, client, tokens, offsets, lang, text
+                version,
+                config,
+                term_replacement_rules,
+                client,
+                tokens,
+                offsets,
+                lang,
+                text,
             )
         case _:
             list_results = []
@@ -2950,7 +2963,9 @@ def fetch_word_types(lang, token, word_types=None, single_word=None):
         return ("s",)
 
     if token.pos_ == "PROPN" and single_word is not None and len(word_types):
-        return tuple(word_types[0:1],)
+        return tuple(
+            word_types[0:1],
+        )
 
     if token.tag_ == "CARD" or token.pos_ == "NUM":
         return ("num",)
@@ -3494,15 +3509,6 @@ def alternatives_declension(lang, text, i, tokens, alternatives):
             for alternative in alternatives
         ],
     )
-
-
-def plural_alternatives(
-    token,
-    rule,
-):
-    return [
-        item for item in rule.plural_alternatives if item != token.text.lower()
-    ], rule.secondary_subcategory
 
 
 def match_binary_inclusive_gendered_denom_analysis_de(
@@ -4232,18 +4238,19 @@ def word_noun(
         start = token.idx
         subcategory = rule.subcategory
 
-        if not is_plural:
+        if is_plural:
+            alternatives = rule.plural_alternatives
+            for alternative in alternatives:
+                # Remove "Engineers" from the alternatives if this is what triggered
+                if alternative.lower() == token.text.lower():
+                    alternatives.remove(alternative)
+
+            if rule.secondary_subcategory is not None:
+                subcategory = rule.secondary_subcategory
+        else:
             text, start, alternatives = alternatives_declension(
                 lang.lang, text, i, tokens, rule.alternatives
             )
-        elif rule.secondary_subcategory is not None:
-            # Secondary_subcategory
-            alternatives, subcategory = plural_alternatives(
-                token,
-                rule,
-            )
-        else:
-            alternatives = rule.plural_alternatives
 
         if not is_sub_category_enabled(config, subcategory):
             continue
@@ -4353,6 +4360,8 @@ def rules_based_words_phrase_matcher(
 
     for rule in filtered_rules:
         subcategory = rule.subcategory if rule.subcategory else fallback_subcategory
+        if subcategory is None:
+            continue
 
         if is_base_category(subcategory):
             subcategory = remove_base(subcategory)
