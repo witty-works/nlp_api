@@ -12,6 +12,7 @@ from typing import Optional, Union, List
 from collections import defaultdict, namedtuple
 import os
 import fasttext
+from setfit import SetFitModel
 
 from spacy.matcher import PhraseMatcher, Matcher
 
@@ -118,6 +119,14 @@ rules = fetch_rules(model)
 if settings.fasttext:
     pretrained_lang_model = os.getcwd() + "/training_data/lid.176.bin"
     fasttext_model = fasttext.load_model(pretrained_lang_model)
+
+setfit_model = {}
+if settings.context_checker:
+    pretrained_lang_model = os.getcwd() + "/models/context_aware_model/en"
+    if os.path.isfile(pretrained_lang_model + "/pytorch_model.bin"):
+        setfit_model["en"] = SetFitModel.from_pretrained(pretrained_lang_model)
+        setfit_model["en"].model_body.share_memory()
+        setfit_model["en"].model_body.eval()
 
 if (
     settings.slack_bot_token is not None and settings.slack_signing_secret is not None
@@ -1772,7 +1781,7 @@ async def apply_language_rules(
 
     list_results = await apply_languagetool_rules(
         version, config, client, lang, text, offsets
-    ) + await context_false_positives(lang.lang, tokens, list_results)
+    ) + context_false_positives(lang.lang, tokens, list_results)
 
     return apply_false_positives(list_results, configs)
 
@@ -1868,11 +1877,11 @@ def is_sub_category_enabled(config: Config, subcategory: str):
     return True
 
 
-async def context_false_positives(lang, tokens, list_results):
+def context_false_positives(lang, tokens, list_results):
     if (
         len(rules[lang]["context_check"]) == 0
-        or not settings.context_checker_url
-        or not settings.context_checker_api_key
+        or not settings.context_checker
+        or lang not in setfit_model
     ):
         return list_results
 
@@ -1906,23 +1915,13 @@ async def context_false_positives(lang, tokens, list_results):
 
     sentences = list(sentences_to_check.keys())
 
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": ("Bearer " + settings.context_checker_api_key),
-    }
-
-    payload = {
-        "data": sentences,
-    }
-
-    context_results = await fetch_json_post(
-        settings.context_checker_url, json.dumps(payload), headers, "context checker"
-    )
+    context_results = setfit_model[lang](sentences)
+    context_results = list(map(bool, context_results))
 
     keys_to_remove = []
     for i in range(len(sentences)):
         sentence = sentences[i]
-        if context_results[i] == "1":
+        if context_results[i]:
             continue
 
         for result_key in sentences_to_check[sentence]:

@@ -4,4 +4,8 @@ rediscache:
 
 files:
     type: network-storage:2.0
-    disk: 1024
+    disk: 256
+
+models:
+    type: network-storage:2.0
+    disk: 4096

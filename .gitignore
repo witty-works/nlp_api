@@ -31,6 +31,9 @@ subcategories.csv
 .pdm-python
 requirements.txt
 
+setfit_classifier
+models
+
 # Massdriver files to ignore
 **/schema-artifacts.json
 **/schema-connections.json

@@ -84,6 +84,24 @@ Compile PO files:
 ./compile-translations.sh
 ```
 
+## Setup setfit models
+
+### To run the setfit model locally run:
+
+Note replace the values for the parameters accordingly:
+
+```
+az ml model download --name setfit_classifier --version 3 --resource-group nlp-witty-europe --workspace-name workspace-witty-western-europe
+pdm run python -m bin.convert_to_cpu -i setfit_classifier/outputs
+```
+
+### Upload setfit models:
+
+```
+rsync -azP models/ "$(platform ssh -e main --pipe)":models/
+platform environment:redeploy -e main
+```
+
 ## Update dependencies locally
 
 To update packages locally after pyproject.toml/pdm.lock was changed, run the

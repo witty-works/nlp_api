@@ -48,6 +48,7 @@ class Settings(BaseSettings):
     alternatives_max_count: int = 5
     context_checker_url: Optional[str]
     context_checker_api_key: Optional[str]
+    context_checker: Optional[bool]
     models: List = ["en_core_web_lg", "de_core_news_lg"]
     fasttext: bool = True
     overwrite_enabled_user_categories: bool = False

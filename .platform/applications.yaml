@@ -12,7 +12,7 @@
       start: |
         eval $(pdm venv activate in-project)
         FINAL_WORKER_COUNT=$(echo $PLATFORM_APPLICATION| base64 --decode | jq --argjson multiplier $MULTIPLIER '.resources.profile_size | tonumber |floor|2 * . |$multiplier * .|1 + . ')
-        gunicorn app.main:app --preload -b unix:$SOCKET -w $FINAL_WORKER_COUNT -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*" --worker-tmp-dir="/run"
+        gunicorn app.main:app --preload --timeout 500 -b unix:$SOCKET -w $FINAL_WORKER_COUNT -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*" --worker-tmp-dir="/run"
 
   hooks:
     build: |
@@ -59,6 +59,10 @@
       source: service
       service: files
       source_path: files
+    "models":
+      source: service
+      service: models
+      source_path: models
 
   relationships:
     rediscache: "rediscache:redis"
