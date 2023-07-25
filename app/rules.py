@@ -450,6 +450,8 @@ def fetch_rules(model):
 
         rules["de"]["hashtags"] = [rule]
 
+        rules["de"]["false_positives_phrases"] = []
+
         rules["de"]["context_check"] = []
 
         rules["de"]["verbs"] = {
@@ -1247,7 +1249,7 @@ def fetch_rules(model):
 
         rules["en"]["hashtags"] = [rule]
 
-        rules["en"]["list_false_column"] = [
+        rules["en"]["false_positives_phrases"] = [
             "Air Force",
             "Armed forces",
             "Indian Act",

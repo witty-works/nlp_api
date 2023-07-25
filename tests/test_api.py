@@ -621,7 +621,7 @@ def set_redis():
                 },
             },
             "welt|de": {
-                "alternatives": ["globus"],
+                "alternatives": ["globus (welt)"],
                 "lang": "de",
                 "explanation": {
                     "text": "better globus",
@@ -1016,7 +1016,7 @@ def test_store_get_delete_rules():
             "false_positives": ["hello", "world", "dong"],
             "term_replacements": {
                 "hello|en": {
-                    "alternatives": ["welt"],
+                    "alternatives": ["world"],
                     "explanation": {
                         "text": "better world",
                         "icon": "🥰",
@@ -1025,7 +1025,7 @@ def test_store_get_delete_rules():
                     "proficiency_level": "unconscious_bias",
                 },
                 "hello|de": {
-                    "alternatives": ["welt"],
+                    "alternatives": ["world"],
                     "explanation": {
                         "text": "better world",
                         "icon": "🥰",
