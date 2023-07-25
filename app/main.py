@@ -620,7 +620,7 @@ async def get_debug_rule(
 
     tokens = fetch_tokens(lang.lang, text)
     offsets = utf16_offsets(text)
-    false_positive_matcher = fetch_false_positive_matcher(lang.lang, tokens)
+    false_positive_matcher = fetch_false_positive_matchers(lang.lang, tokens)
 
     if alternatives is not None:
         alternatives = alternatives.split("|")
@@ -1689,25 +1689,16 @@ def is_false_positive_match(false_positive_matcher, tokens, token):
 
 
 # create false positives patterns based on false positives column
-def false_pattern_match(lang, tokens):
+def fetch_false_positive_matcher(lang, tokens, false_positives):
     matcher = Matcher(model[lang].vocab)
 
-    for false_positive in rules[lang]["pattern_false_positives"]:
+    for false_positive in false_positives:
         matcher.add("FalsePositivesList", false_positive)
 
     return matcher(tokens)
 
 
-def fetch_false_positive_matcher(lang, tokens):
-    # create false positives list
-    phrase_false_positive_matcher = fetch_matches(
-        lang, tokens, rules[lang]["list_false_column"]
-    )
-    word_false_positive_matcher = false_pattern_match(lang, tokens)
-    return list(set(phrase_false_positive_matcher + word_false_positive_matcher))
-
-
-def fetch_matches(lang, tokens, phrases):
+def fetch_phrase_matcher(lang, tokens, phrases):
     # Phrase matcher part to handle False positives with two words and special symbols
     matcher = PhraseMatcher(model[lang].vocab, attr="LOWER")
 
@@ -1715,6 +1706,22 @@ def fetch_matches(lang, tokens, phrases):
     patterns = [model[lang].make_doc(text) for text in phrases]
     matcher.add("TerminologyList", patterns)
     return matcher(tokens)
+
+
+def fetch_false_positive_matchers(lang, tokens):
+    false_positive_matcher = fetch_phrase_matcher(
+        lang, tokens, rules[lang]["false_positives_phrases"]
+    )
+
+    # create false positives list
+    if "pattern_false_positives" not in rules[lang]:
+        return false_positive_matcher
+
+    phrase_false_positive_matcher = fetch_false_positive_matcher(
+        lang, tokens, rules[lang]["pattern_false_positives"]
+    )
+
+    return list(set(phrase_false_positive_matcher + false_positive_matcher))
 
 
 def parse_client(client: str):
@@ -1742,14 +1749,14 @@ async def apply_language_rules(
     offsets = utf16_offsets(text)
     client = parse_client(client)
 
-    term_replacement_rules = fetch_term_replacements(configs, lang)
+    term_replacements = fetch_term_replacements(configs, tokens, lang.lang)
 
     match lang.lang:
         case "de":
             list_results = await german_rules(
                 version,
                 config,
-                term_replacement_rules,
+                term_replacements,
                 client,
                 tokens,
                 offsets,
@@ -1760,7 +1767,7 @@ async def apply_language_rules(
             list_results = await english_rules(
                 version,
                 config,
-                term_replacement_rules,
+                term_replacements,
                 client,
                 tokens,
                 offsets,
@@ -1779,24 +1786,27 @@ async def apply_language_rules(
 
 def fetch_term_replacements(
     configs: dict,
-    lang: Language,
+    tokens,
+    lang: str,
 ):
+    term_replacements = namedtuple("term_replacements", "rules false_positive_matcher")
     if "term_replacements" not in configs:
-        return []
+        return term_replacements([], None)
 
     term_replacement_rules = []
+    alternatives = []
     for lemma in configs["term_replacements"]:
         term_replacement = configs["term_replacements"][lemma]
 
         if lemma[-3:] == "|en" or lemma[-3:] == "|de":
-            if lemma[-2:] != lang.lang:
+            if lemma[-2:] != lang:
                 continue
 
             lemma = lemma[0:-3]
         # BC code
         elif (
             "lang" in term_replacement
-            and term_replacement["lang"] != lang.lang
+            and term_replacement["lang"] != lang
             and term_replacement["lang"] is not None
         ):
             continue
@@ -1805,8 +1815,9 @@ def fetch_term_replacements(
             term_replacement["word_type"] if "word_type" in term_replacement else "~"
         )
 
-        words = tokenize(lemma, lang.lang)
+        words = tokenize(lemma, lang)
         word_types = tuple([word_type] * len(words))
+        alternatives += term_replacement["alternatives"]
 
         rule = Rule(
             lemma,
@@ -1823,7 +1834,9 @@ def fetch_term_replacements(
 
         term_replacement_rules.append(rule)
 
-    return term_replacement_rules
+    false_positive_matcher = fetch_phrase_matcher(lang, tokens, alternatives)
+
+    return term_replacements(term_replacement_rules, false_positive_matcher)
 
 
 def apply_false_positives(
@@ -1836,12 +1849,6 @@ def apply_false_positives(
     false_positives = []
     if "false_positives" in configs:
         false_positives = configs["false_positives"]
-
-    if "term_replacements" in configs:
-        for term_replacement in configs["term_replacements"]:
-            false_positives.append(
-                configs["term_replacements"][term_replacement]["alternatives"][0]
-            )
 
     if len(false_positives):
         for result in list_results:
@@ -1967,7 +1974,7 @@ def fetch_word_rules(rules, token_lower, lemma_lower, postfix_text=False):
 async def german_rules(
     version: float,
     config: Config,
-    term_replacement_rules: list,
+    term_replacements: namedtuple,
     client: namedtuple,
     tokens,
     offsets: dict,
@@ -2003,7 +2010,7 @@ async def german_rules(
 
         lemma_lower = token.lemma_.lower()
 
-        if len(term_replacement_rules):
+        if len(term_replacements.rules):
             new_i = simple_match(
                 version,
                 config,
@@ -2014,7 +2021,8 @@ async def german_rules(
                 tokens,
                 offsets,
                 list_full,
-                term_replacement_rules,
+                term_replacements.rules,
+                term_replacements.false_positive_matcher,
             )
 
             if check_continue(i, new_i, tokens):
@@ -2403,14 +2411,14 @@ async def german_rules(
 async def english_rules(
     version: float,
     config: Config,
-    term_replacement_rules: list,
+    term_replacements: namedtuple,
     client: namedtuple,
     tokens,
     offsets: dict,
     lang: Language,
     text: str,
 ):
-    false_positive_matcher = fetch_false_positive_matcher(lang.lang, tokens)
+    false_positive_matcher = fetch_false_positive_matchers(lang.lang, tokens)
 
     list_full = []
     i = new_i = 0
@@ -2422,7 +2430,7 @@ async def english_rules(
         token_lower = token.text.lower()
         lemma_lower = token.lemma_.lower()
 
-        if len(term_replacement_rules):
+        if len(term_replacements.rules):
             new_i = simple_match(
                 version,
                 config,
@@ -2433,7 +2441,8 @@ async def english_rules(
                 tokens,
                 offsets,
                 list_full,
-                term_replacement_rules,
+                term_replacements.rules,
+                term_replacements.false_positive_matcher,
             )
 
             if check_continue(i, new_i, tokens):
@@ -3705,7 +3714,7 @@ def sentences_matcher(
     if len(df_sentence) == 0 or len(sentences_data) == 0:
         return
 
-    matches = fetch_matches(lang.lang, tokens, df_sentence)
+    matches = fetch_phrase_matcher(lang.lang, tokens, df_sentence)
 
     alternatives = None
 
