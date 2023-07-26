@@ -56,6 +56,30 @@
             "start": 13,
             "subcategory": "advanced_abbreviation",
             "text": "asl"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "representational state transfer"
+                },
+                {
+                    "text": "representational state transfer (REST)"
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "Do you speak asl? I am taking a rest.",
+            "end": 36,
+            "explanation": {
+                "icon": "😉",
+                "text": "Are you sure people know what this stands for? ",
+                "url": "https://www.witty.works/en/categories/cultural-diversity/abbreviation?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Cultural Diversity: Abbreviation",
+            "proficiency_level": "unconscious_bias",
+            "start": 32,
+            "subcategory": "advanced_abbreviation",
+            "text": "rest"
         }
     ]
 }
