@@ -447,7 +447,7 @@ class ResultOut(BaseModel):
             context = full_text[context_start:context_end]
 
             privacy_filter = get_privacy_filter()
-            context = privacy_filter.clean_var(context)
+            context = privacy_filter.clean_var(context, lang.lang)
 
         subcategory_name = get_category_name(subcategory)
         subcategory_data = get_category(subcategory_name)

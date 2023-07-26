@@ -1,5 +1,6 @@
 import re
 from functools import lru_cache
+from text_to_num import alpha2digit
 
 
 class PrivacyFilter:
@@ -55,8 +56,8 @@ class PrivacyFilter:
             re.IGNORECASE,
         )
 
-    def remove_numbers(self, text):
-        return re.sub(r"\d+", "<NUMBER>", text)
+    def remove_numbers(self, text, lang):
+        return re.sub(r"\d+", "<NUMBER>", alpha2digit(text, lang))
 
     def remove_email(self, text):
         return re.sub(
@@ -70,31 +71,31 @@ class PrivacyFilter:
         text = re.sub(self.url_re, "<URL>", text)
         return text
 
-    def filter_regular_expressions(self, text):
+    def filter_regular_expressions(self, text, lang):
         text = self.remove_email(text)
         text = self.remove_url(text)
-        text = self.remove_numbers(text)
+        text = self.remove_numbers(text, lang)
         return text.strip()
 
-    def clean(self, text):
-        return self.filter_regular_expressions(text)
+    def clean(self, text, lang):
+        return self.filter_regular_expressions(text, lang)
 
-    def clean_dict(self, dict):
+    def clean_dict(self, dict, lang):
         for dict_key in dict.keys():
-            dict[dict_key] = self.clean_var(dict[dict_key])
+            dict[dict_key] = self.clean_var(dict[dict_key], lang)
 
         return dict
 
-    def clean_var(self, var):
+    def clean_var(self, var, lang):
         if isinstance(var, str):
-            var = self.clean(var)
+            var = self.clean(var, lang)
 
         if isinstance(var, dict):
-            var = self.clean_dict(var)
+            var = self.clean_dict(var, lang)
 
         if isinstance(var, list):
             for key in range(len(var)):
-                var[key] = self.clean_var(var[key])
+                var[key] = self.clean_var(var[key], lang)
 
         return var
 

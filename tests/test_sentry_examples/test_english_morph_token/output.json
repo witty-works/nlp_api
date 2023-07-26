@@ -9,7 +9,7 @@
                 }
             ],
             "category": "orthography",
-            "context": "Hi Siwar,\n\nit's the first time that we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n\nFossil Group Europe GmbH\nRiehenring <NUMBER>\n\n<NUMBER> B",
+            "context": "Hi Siwar,\n\nit's the first time that we are looking for a intern Thomas Jung Head of Talent Acquisition EMEA Fossil Group Europe GmbH Riehenring <NUMBER> <NUMBER> B",
             "end": 56,
             "explanation": {
                 "icon": "🤔",
@@ -31,7 +31,7 @@
                 }
             ],
             "category": "orthography",
-            "context": "t we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n\nFossil Group Europe GmbH\nRiehenring <NUMBER>\n\n<NUMBER> Basel\nSWITZERLAND\n<URL>\nt: +<NUMBER> <NUMBER> <NUMBER> <NUMBER> <NUMBER>\nm: +<NUMBER> <NUMBER> <NUMBER> <NUMBER> <NUMBER>\ne: tjung@fo",
+            "context": "t we are looking for a intern Thomas Jung Head of Talent Acquisition EMEA Fossil Group Europe GmbH Riehenring <NUMBER> <NUMBER> Basel SWITZERLAND <URL> t: +<NUMBER> <NUMBER> <NUMBER> <NUMBER> <NUMBER> m: +<NUMBER> <NUMBER> <NUMBER> <NUMBER> <NUMBER> e: tjung@fo",
             "end": 144,
             "explanation": {
                 "icon": "❌",
@@ -56,7 +56,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Hi Siwar,\n\nit's the first time that we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n\nFossil Group Europe GmbH\nRiehenring <NUMBER>\n\n<NUMBER> Basel\nSW",
+            "context": "Hi Siwar,\n\nit's the first time that we are looking for a intern Thomas Jung Head of Talent Acquisition EMEA Fossil Group Europe GmbH Riehenring <NUMBER> <NUMBER> Basel SW",
             "end": 63,
             "explanation": {
                 "content": "advanced",
@@ -81,7 +81,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Hi Siwar,\n\nit's the first time that we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n\nFossil Group Europe GmbH\nRiehenring <NUMBER>\n\n<NUMBER> Basel\nSWITZERLAND\n<URL>",
+            "context": "Hi Siwar,\n\nit's the first time that we are looking for a intern Thomas Jung Head of Talent Acquisition EMEA Fossil Group Europe GmbH Riehenring <NUMBER> <NUMBER> Basel SWITZERLAND <URL>",
             "end": 83,
             "explanation": {
                 "content": "advanced",

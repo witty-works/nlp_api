@@ -13,7 +13,9 @@ def sentry_clean_sensitive_frame(
     frame, privacy_filter: PrivacyFilter
 ):  # pragma: no cover
     for var_name in frame.get("vars", None):
-        frame["vars"][var_name] = privacy_filter.clean_var(frame["vars"][var_name])
+        frame["vars"][var_name] = privacy_filter.clean_var(
+            frame["vars"][var_name], "en"
+        )
 
     return frame
 
