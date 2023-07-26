@@ -2927,6 +2927,9 @@ def fetch_word_types(lang, token, word_types=None, single_word=None):
     # https://machinelearningknowledge.ai/tutorial-on-spacy-part-of-speech-pos-tagging/
     # https://github.com/explosion/spaCy/blob/master/spacy/glossary.py
 
+    if token._.is_emoji:
+        return ("emoji",)
+
     if word_types is None:
         word_types = ()
 
@@ -2976,9 +2979,6 @@ def fetch_word_types(lang, token, word_types=None, single_word=None):
         return tuple(
             word_types[0:1],
         )
-
-    if token.tag_ == "CARD" or token.pos_ == "NUM":
-        return ("num",)
 
     if token.tag_ == "KON" or token.pos_ == "CCONJ":
         return ("conj",)

@@ -1176,7 +1176,7 @@ def test_rule():
 def test_spacy():
     with TestClient(app) as client:
         request_data = {
-            "text": "👩🏻‍🚒 Das ist sehr ehrgeizig Nummer 1 eins 😃",
+            "text": "👩🏻‍🚒 Das ist sehr ehrgeizig 😃",
             "lang": "de",
         }
         response = client.get("/debug/spacy", params=request_data)
@@ -1184,7 +1184,7 @@ def test_spacy():
         response_content = json.loads(response.content)
 
         expected = [
-            {"word_type": "|~s|~|a|a|s|num|num|conj"},
+            {"word_type": "emoji|~s|~|a|a|emoji"},
             {
                 "text": "👩🏻‍🚒",
                 "lemma": "👩🏻‍🚒",
@@ -1192,7 +1192,7 @@ def test_spacy():
                 "tag": "NE",
                 "pos": "PROPN",
                 "dep": "ROOT",
-                "word_types": [],
+                "word_types": ["emoji"],
                 "morph": {"Case": "Nom", "Gender": "Fem", "Number": "Sing"},
                 "is_emoji": True,
                 "emoji_desc": "woman firefighter light skin tone",
@@ -1254,7 +1254,7 @@ def test_spacy():
                 "start": 18,
                 "tag": "ADJD",
                 "pos": "ADV",
-                "dep": "mo",
+                "dep": "pd",
                 "word_types": ["a"],
                 "morph": {"Degree": "Pos"},
                 "is_emoji": False,
@@ -1262,52 +1262,13 @@ def test_spacy():
                 "whitespace": " ",
             },
             {
-                "text": "Nummer",
-                "lemma": "Nummer",
-                "start": 28,
-                "tag": "NN",
-                "pos": "NOUN",
-                "dep": "pd",
-                "word_types": ["s"],
-                "morph": {"Case": "Nom", "Gender": "Fem", "Number": "Sing"},
-                "is_emoji": False,
-                "emoji_desc": None,
-                "whitespace": " ",
-            },
-            {
-                "text": "1",
-                "lemma": "1",
-                "start": 35,
-                "tag": "CARD",
-                "pos": "NUM",
-                "dep": "nk",
-                "word_types": ["num"],
-                "morph": {},
-                "is_emoji": False,
-                "emoji_desc": None,
-                "whitespace": " ",
-            },
-            {
-                "text": "eins",
-                "lemma": "eins",
-                "start": 37,
-                "tag": "CARD",
-                "pos": "NUM",
-                "dep": "nk",
-                "word_types": ["num"],
-                "morph": {},
-                "is_emoji": False,
-                "emoji_desc": None,
-                "whitespace": " ",
-            },
-            {
                 "text": "😃",
                 "lemma": "😃",
-                "start": 42,
+                "start": 28,
                 "tag": "KON",
                 "pos": "CCONJ",
                 "dep": "cd",
-                "word_types": ["conj"],
+                "word_types": ["emoji"],
                 "morph": {},
                 "is_emoji": True,
                 "emoji_desc": "grinning face with big eyes",
