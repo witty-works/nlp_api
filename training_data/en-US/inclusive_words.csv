@@ -79,7 +79,7 @@ motivate,v,inclusive,communal
 motivation,s,inclusive,communal
 need,v,inclusive,communal
 nurture,v,inclusive,communal
-part time,a,inclusive,communal
+part time,s|s,inclusive,communal
 participate,v,inclusive,communal
 pleasant,a,inclusive,communal
 please,v,inclusive,communal
@@ -217,7 +217,7 @@ loving,=a,inclusive,emotional_security
 mellow,a,inclusive,emotional_security
 moved,=a,inclusive,emotional_security
 open,a,inclusive,emotional_security
-open hearted,=a,inclusive,emotional_security
+open hearted,v|a,inclusive,emotional_security
 optimistic,a,inclusive,emotional_security
 peaceful,a,inclusive,emotional_security
 pleased,=a,inclusive,emotional_security
