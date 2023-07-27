@@ -259,12 +259,6 @@ class RuleConfig(BaseModel):
     german_gender_ending: Optional[GermanGenderEndingConfigType]
     gendered_roles_format: Optional[GenderedRolesFormatConfigType]
     categories: Dict[str, BooleanConfigType] = {}
-    # BC code
-    inclusive: Optional[BooleanConfigType]
-    # BC code
-    style: Optional[BooleanConfigType]
-    # BC code
-    orthography: Optional[BooleanConfigType]
     show_inspiration_alternatives: Optional[BooleanConfigType]
 
     @validator("german_gender_ending")

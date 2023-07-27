@@ -181,34 +181,6 @@ def test_general_cases(general_case_dir, snapshot, set_redis):
 
 
 @pytest.mark.parametrize(
-    "test_2_2_dir",
-    get_dirs("tests/test_2_2"),
-)
-def test_2_2_json(test_2_2_dir, snapshot, set_redis):
-    with TestClient(app) as client:
-        # Read input files from the case directory.
-        input_json = test_2_2_dir.joinpath("input.json").read_text()
-
-        response = client.post("/v2.2/check", json=json.loads(input_json))
-        assert response.status_code == 200
-
-        # Call the tested endpoint.
-        response = client.post(
-            "/v2.2/check",
-            json=json.loads(input_json),
-            headers={"X-Auth": "2_2@gmail.com"},
-        )
-        assert response.status_code == 200
-        # output must be string
-        output = json.dumps(
-            response.json(), sort_keys=True, indent=4, ensure_ascii=False
-        )
-        # Snapshot the return value.
-        snapshot.snapshot_dir = test_2_2_dir
-        snapshot.assert_match(output, "output.json")
-
-
-@pytest.mark.parametrize(
     "test_witty_free_dir",
     get_dirs("tests/test_witty_free"),
 )

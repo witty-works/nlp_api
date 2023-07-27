@@ -582,10 +582,10 @@ async def post_auth_2_0(request: Request):
 
 
 def bc_old_categories(config):
-    # BC code
+    # BC code for browser version before 1.29.0
     old_categories = ["style", "inclusive", "orthography"]
     for old_category in old_categories:
-        if old_category in config and config[old_category] is not None:
+        if old_category in config:
             continue
 
         if old_category in config["categories"]:
@@ -822,20 +822,6 @@ async def post_debug_check(
 
 
 @app.post(
-    "/v2.2/check",
-    response_model=Union[ResultsOut, Result],
-    response_model_exclude_none=True,
-    dependencies=[Depends(HTTPBearer(auto_error=False))],
-)
-async def post_check_v2_2(
-    request: Request,
-    response: Response,
-    user_request_in: RequestIn,
-):
-    return await check(request, response, user_request_in, 2.2)
-
-
-@app.post(
     "/v2.3/check",
     response_model=Union[ResultsOut, Result],
     response_model_exclude_none=True,
@@ -1045,51 +1031,6 @@ def is_token_plural(lang, token):
     return not is_singular
 
 
-# BC code
-def get_bc_disabled_categories(disable_style, disable_inclusive, advanced_enabled=True):
-    old_style_category = [
-        "abbreviation",
-        "anglicism",
-        "exaggerating",
-        "false_friends",
-        "filler",
-        "formality",
-        "general_style",
-        "hollow",
-        "redundancy",
-        "regionalisms",
-        "repetitions_style",
-        "semantics",
-        "plain_language",
-        "style",
-    ]
-
-    disabled_categories = []
-
-    categories = get_categories()
-    for category in categories:
-        category_data = categories[category]
-        if (
-            "proficiency_level" not in category_data
-            or category_data["proficiency_level"] == "openly_discriminating"
-        ):
-            continue
-
-        is_inclusive = is_category_inclusive(category)
-        if (is_inclusive and disable_inclusive) or (
-            not is_inclusive and disable_style and category in old_style_category
-        ):
-            disabled_categories.append(category)
-            disabled_categories.append(add_advanced(category))
-        elif not advanced_enabled:
-            disabled_categories.append(add_advanced(category))
-
-    if disable_inclusive:
-        disabled_categories.append("inclusive")
-
-    return disabled_categories
-
-
 def apply_configs(
     version: float,
     user_request_in: RequestIn,
@@ -1098,12 +1039,6 @@ def apply_configs(
     overwrite_enabled_categories: bool = True,
 ):
     disabled_categories = user_request_in.config.disabled_categories
-
-    # BC code - old browser extension
-    disable_inclusive = disable_style = None
-    if version < 2.3:
-        disable_inclusive = "inclusive" in disabled_categories
-        disable_style = "style" in disabled_categories
 
     for config in configs:
         data = configs[config]
@@ -1132,12 +1067,6 @@ def apply_configs(
                 user_request_in.config.__setattr__("store_context", False)
         elif data["status"] == "force":
             user_request_in.config.__setattr__(config, data["value"])
-
-    # BC code - old browser extension
-    if "categories" in configs and disable_style or disable_inclusive:
-        disabled_categories = get_bc_disabled_categories(
-            disable_style, disable_inclusive
-        )
 
     user_request_in.config.__setattr__("disabled_categories", disabled_categories)
     user_request_in.config.__setattr__("plan", plan)
@@ -1278,7 +1207,7 @@ def fetch_text(user_request_in):
 
 
 def check_version(version: float):
-    if version != 2.2 and version != 2.3:  # pragma: no cover
+    if version != 2.3:  # pragma: no cover
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Version not supported: " + str(version),
@@ -1808,13 +1737,6 @@ def fetch_term_replacements(
                 continue
 
             lemma = lemma[0:-3]
-        # BC code
-        elif (
-            "lang" in term_replacement
-            and term_replacement["lang"] != lang
-            and term_replacement["lang"] is not None
-        ):
-            continue
 
         word_type = (
             term_replacement["word_type"] if "word_type" in term_replacement else "~"
