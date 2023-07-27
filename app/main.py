@@ -2682,71 +2682,6 @@ async def english_rules(
 
         new_i += 1
 
-    sentences_matcher(
-        version,
-        config,
-        client,
-        lang,
-        text,
-        tokens,
-        offsets,
-        list_full,
-        rules[lang.locale]["df_open_dis_sentence"],
-        rules[lang.locale]["open_dis_sentences"],
-    )
-
-    sentences_matcher(
-        version,
-        config,
-        client,
-        lang,
-        text,
-        tokens,
-        offsets,
-        list_full,
-        rules[lang.locale]["df_gendered_sentence"],
-        rules[lang.locale]["gender_sentences_data"],
-    )
-
-    sentences_matcher(
-        version,
-        config,
-        client,
-        lang,
-        text,
-        tokens,
-        offsets,
-        list_full,
-        rules[lang.locale]["df_inclusive_sentence"],
-        rules[lang.locale]["inclusive_sentences_data"],
-    )
-
-    sentences_matcher(
-        version,
-        config,
-        client,
-        lang,
-        text,
-        tokens,
-        offsets,
-        list_full,
-        rules[lang.locale]["df_style_sentence"],
-        rules[lang.locale]["style_sentences_data"],
-    )
-
-    sentences_matcher(
-        version,
-        config,
-        client,
-        lang,
-        text,
-        tokens,
-        offsets,
-        list_full,
-        rules[lang.locale]["df_ub_sentence"],
-        rules[lang.locale]["bias_sentences_data"],
-    )
-
     return list_full
 
 
@@ -3628,54 +3563,6 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
         alternatives_with_article.append(article_alternative + alternative)
 
     return alternatives_with_article
-
-
-def sentences_matcher(
-    version: float,
-    config: Config,
-    client: namedtuple,
-    lang,
-    full_text,
-    tokens,
-    offsets,
-    list_full,
-    df_sentence,
-    sentences_data,
-):
-    if len(df_sentence) == 0 or len(sentences_data) == 0:
-        return
-
-    matches = fetch_phrase_matcher(lang.lang, tokens, df_sentence)
-
-    alternatives = None
-
-    for match_id, start, end in matches:
-        span = tokens[start:end]
-        for sentence, subcategory, *data in sentences_data:
-            if (
-                not is_sub_category_enabled(config, subcategory)
-                or span.text.lower() != sentence.lower()
-            ):
-                continue
-
-            if len(data):
-                alternatives = data[0]
-
-            list_full.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    client,
-                    lang,
-                    span.text,
-                    full_text,
-                    offsets,
-                    subcategory,
-                    span.start_char,
-                    span.end_char,
-                    alternatives,
-                )
-            )
 
 
 def regex_match(

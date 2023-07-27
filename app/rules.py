@@ -124,22 +124,18 @@ def fetch_rules(model):
         "en": {
             # load openly discriminating words
             "df_open_dis_word": "open_dis_words.csv",
-            "df_open_dis_sentence": "open_dis_sentences.csv",
             # load inclusive language
             "df_inclusive_word": "inclusive_words.csv",
-            "df_inclusive_sentence": "inclusive_sentences.csv",
             # load style words
             "df_style_no_noun_word": "style_no_noun_words.csv",
             "df_style_noun_word": "style_noun_words.csv",
             "df_style_sentence": "style_sentences.csv",
             # load gendered language
             "df_gendered_no_noun_word": "gendered_no_noun_words.csv",
-            "df_gendered_sentence": "gendered_sentences.csv",
             "df_gendered_noun_word": "gendered_noun_words.csv",
             # load unconscious_bias word (nouns with sing/plural, other words (nouns without sing/plur, verb, adj, adv)) and sentences en
             "df_ub_plur_word": "ub_plur_words.csv",
             "df_ub_no_plur_word": "ub_no_plur_words.csv",
-            "df_ub_sentence": "ub_sentences.csv",
             "df_ub_singular_they": "ub_singular_they.csv",
             # load homonyms
             "df_homonyms_words": "homonyms_words.csv",
@@ -1148,76 +1144,6 @@ def fetch_rules(model):
             # style noun: lemma + singular alternatives split + plural alternatives split + primary subcategory + secondary subcategory
             rules[locale]["style_noun_words_data"] = build_rules(
                 model[lang], data[locale]["df_style_noun_word"], plural=True
-            )
-
-            ##sentences
-            # df inclusive sentences
-            df_inclusive_sentences = data[locale]["df_inclusive_sentence"]
-            # inclusive sentences: lemma + subcategory
-            rules[locale]["inclusive_sentences_data"] = list(
-                zip(
-                    df_inclusive_sentences["Lemma"],
-                    df_inclusive_sentences["Primary_subcategory"],
-                )
-            )
-            data[locale]["df_inclusive_sentence"] = list(
-                data[locale]["df_inclusive_sentence"]["Lemma"]
-            )
-
-            # df open discrimination sentences
-            df_open_dis_sentences = data[locale]["df_open_dis_sentence"]
-            # open discrimination sentences: lemma + alternatives split + subcategory
-            rules[locale]["open_dis_sentences"] = list(
-                zip(
-                    df_open_dis_sentences["Lemma"],
-                    df_open_dis_sentences["Primary_subcategory"],
-                    map(ast.literal_eval, df_open_dis_sentences["Alt_split"]),
-                )
-            )
-            data[locale]["df_open_dis_sentence"] = list(
-                data[locale]["df_open_dis_sentence"]["Lemma"]
-            )
-
-            # df gendered sentences
-            df_gendered_sentences = data[locale]["df_gendered_sentence"]
-            # gendered sentences: lemma + alternatives split + primary subcategory
-            rules[locale]["gender_sentences_data"] = list(
-                zip(
-                    df_gendered_sentences["Lemma"],
-                    df_gendered_sentences["Primary_subcategory"],
-                    map(ast.literal_eval, df_gendered_sentences["Alt_split"]),
-                )
-            )
-            data[locale]["df_gendered_sentence"] = list(
-                data[locale]["df_gendered_sentence"]["Lemma"]
-            )
-
-            # df style sentences
-            df_style_sentences = data[locale]["df_style_sentence"]
-            # style sentences: lemma + alternatives split + subcategory
-            rules[locale]["style_sentences_data"] = list(
-                zip(
-                    df_style_sentences["Lemma"],
-                    df_style_sentences["Primary_subcategory"],
-                    map(ast.literal_eval, df_style_sentences["Alt_split"]),
-                )
-            )
-            data[locale]["df_style_sentence"] = list(
-                data[locale]["df_style_sentence"]["Lemma"]
-            )
-
-            # df unconscious bias sentences
-            df_bias_sentences = data[locale]["df_ub_sentence"]
-            # unconscious bias sentences: lemma + alternatives split + subcategory
-            rules[locale]["bias_sentences_data"] = list(
-                zip(
-                    df_bias_sentences["Lemma"],
-                    df_bias_sentences["Primary_subcategory"],
-                    map(ast.literal_eval, df_bias_sentences["Alt_split"]),
-                )
-            )
-            data[locale]["df_ub_sentence"] = list(
-                data[locale]["df_ub_sentence"]["Lemma"]
             )
 
             # unconscious bias singular they: lemma + alternatives split + subcategory
