@@ -129,7 +129,6 @@ def fetch_rules(model):
             # load style words
             "df_style_no_noun_word": "style_no_noun_words.csv",
             "df_style_noun_word": "style_noun_words.csv",
-            "df_style_sentence": "style_sentences.csv",
             # load gendered language
             "df_gendered_no_noun_word": "gendered_no_noun_words.csv",
             "df_gendered_noun_word": "gendered_noun_words.csv",
