@@ -98,7 +98,7 @@ from app.model import lemma_plural_lookup
 
 # probe.end()
 
-version = "1.46.3"
+version = "1.46.4"
 
 categories = get_categories()
 settings = get_settings()
@@ -1363,10 +1363,10 @@ def languagetool_matches(
         start = int(match["offset"])
         end = start + int(match["length"])
 
-        if offsets and len(offsets["utf16_chars"]) > start:
+        if offsets and start in offsets["utf16_chars"]:
             start = offsets["utf16_chars"][start]
 
-        if offsets and len(offsets["utf16_chars"]) > end:
+        if offsets and end in offsets["utf16_chars"]:
             end = offsets["utf16_chars"][end]
 
         text = full_text[start:end]
@@ -1591,21 +1591,21 @@ def utf16_offsets(text):
 
     offsets = {
         "chars": [],
-        "utf16_chars": [],
+        "utf16_chars": {},
     }
 
     counter = 0
     for char in [*text]:
         offsets["chars"].append(counter + utf16offset)
-        offsets["utf16_chars"].append(counter - utf16offset)
+        offsets["utf16_chars"][counter + utf16offset] = counter
 
         counter += 1
 
-        if utf16len(char) > 1:
+        if utf16len(char) > 1 or emoji.is_emoji(char):
             utf16offset += 1
 
     offsets["chars"].append(counter + utf16offset)
-    offsets["utf16_chars"].append(counter - utf16offset)
+    offsets["utf16_chars"][counter + utf16offset] = counter
 
     return offsets if utf16offset else False
 
