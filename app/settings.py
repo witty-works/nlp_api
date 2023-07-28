@@ -46,8 +46,11 @@ class Settings(BaseSettings):
     slack_bot_token: Optional[str]
     slack_organization_id: Optional[str]
     alternatives_max_count: int = 5
+    context_checker: dict = {}
     context_checker_url: Optional[str]
     context_checker_api_key: Optional[str]
+    context_checker_url_de: Optional[str]
+    context_checker_api_key_de: Optional[str]
     models: List = ["en_core_web_lg", "de_core_news_lg"]
     fasttext: bool = True
     overwrite_enabled_user_categories: bool = False
@@ -60,6 +63,20 @@ class Settings(BaseSettings):
 def get_settings():
     settings = Settings()
     settings.is_prod = settings.platform_environment_type == "production"
+
+    settings.context_checker = {}
+
+    if settings.context_checker_url and settings.context_checker_api_key:
+        settings.context_checker["en"] = {
+            "url": settings.context_checker_url,
+            "api_key": settings.context_checker_api_key,
+        }
+
+    if settings.context_checker_url_de and settings.context_checker_api_key_de:
+        settings.context_checker["de"] = {
+            "url": settings.context_checker_url_de,
+            "api_key": settings.context_checker_api_key_de,
+        }
 
     if settings.platform_relationships:
         settings.platform_relationships = json.loads(
