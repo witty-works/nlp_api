@@ -24,7 +24,7 @@
                 }
             ],
             "category": "orthography",
-            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT",
+            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus",
             "end": 11,
             "explanation": {
                 "icon": "❌",
@@ -55,7 +55,7 @@
                 }
             ],
             "category": "orthography",
-            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT",
+            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt)",
             "end": 29,
             "explanation": {
                 "icon": "❌",
@@ -86,7 +86,7 @@
                 }
             ],
             "category": "orthography",
-            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT",
+            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt)",
             "end": 35,
             "explanation": {
                 "icon": "❌",
@@ -117,7 +117,7 @@
                 }
             ],
             "category": "orthography",
-            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT",
+            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt)",
             "end": 53,
             "explanation": {
                 "icon": "❌",
@@ -148,7 +148,7 @@
                 }
             ],
             "category": "orthography",
-            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT",
+            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt)",
             "end": 77,
             "explanation": {
                 "icon": "❌",
@@ -179,7 +179,7 @@
                 }
             ],
             "category": "orthography",
-            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT",
+            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt)",
             "end": 88,
             "explanation": {
                 "icon": "❌",
@@ -194,11 +194,73 @@
         {
             "alternatives": [
                 {
+                    "text": "Globus"
+                },
+                {
+                    "text": "global"
+                },
+                {
+                    "text": "grobes"
+                },
+                {
+                    "text": "klopft"
+                },
+                {
+                    "text": "Flops"
+                }
+            ],
+            "category": "orthography",
+            "context": "in foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt)",
+            "end": 111,
+            "explanation": {
+                "icon": "❌",
+                "text": "Möglicher Tippfehler gefunden."
+            },
+            "gravity": 1.0,
+            "label": "Rechtschreibfehler",
+            "start": 105,
+            "subcategory": "typos",
+            "text": "globus"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Welt"
+                },
+                {
+                    "text": "weit"
+                },
+                {
+                    "text": "hält"
+                },
+                {
+                    "text": "Geld"
+                },
+                {
+                    "text": "Feld"
+                }
+            ],
+            "category": "orthography",
+            "context": "ar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt)",
+            "end": 117,
+            "explanation": {
+                "icon": "❌",
+                "text": "Möglicher Tippfehler gefunden."
+            },
+            "gravity": 1.0,
+            "label": "Rechtschreibfehler",
+            "start": 113,
+            "subcategory": "typos",
+            "text": "welt"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "ding ding"
                 }
             ],
             "category": "corporate_rules",
-            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT",
+            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (we",
             "end": 15,
             "explanation": {
                 "icon": "❗",
@@ -213,11 +275,11 @@
         {
             "alternatives": [
                 {
-                    "text": "globus"
+                    "text": "globus (welt)"
                 }
             ],
             "category": "corporate_rules",
-            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT",
+            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt)",
             "end": 77,
             "explanation": {
                 "icon": "🥰",
@@ -233,11 +295,11 @@
         {
             "alternatives": [
                 {
-                    "text": "globus"
+                    "text": "globus (welt)"
                 }
             ],
             "category": "corporate_rules",
-            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT",
+            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt)",
             "end": 88,
             "explanation": {
                 "icon": "🥰",
@@ -253,11 +315,11 @@
         {
             "alternatives": [
                 {
-                    "text": "globus"
+                    "text": "globus (welt)"
                 }
             ],
             "category": "corporate_rules",
-            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT",
+            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt)",
             "end": 99,
             "explanation": {
                 "icon": "🥰",

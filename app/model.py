@@ -12,7 +12,6 @@ from spacy.lang.char_classes import (
 )
 from spacy.tokenizer import Tokenizer
 from spacy.util import compile_infix_regex
-from spacy.pipeline import Lemmatizer
 from spacy.lookups import Lookups
 
 
@@ -25,17 +24,8 @@ class TokenLemmatizer:
             # Overwrite the token.lemma_ if there's an entry in the data
             if token.text in self.lemma_table:
                 token.lemma_ = self.lemma_table.get(token.text, token.lemma_)
+
         return doc
-
-
-def custom_lemmatizer(lemma_lookup):
-    lemmatizer = TokenLemmatizer(lemma_lookup)
-
-    lookups = Lookups()
-    lookups.add_table("lemma_lookup", lemma_lookup)
-    lemmatizer.lookups = lookups
-
-    return lemmatizer
 
 
 def custom_tokenizer(lang, nlp):
@@ -87,13 +77,133 @@ def custom_tokenizer(lang, nlp):
     )
 
 
-@German.factory("custom_lemmatizer_de")
-def custom_lemmatizer_de(nlp, name):
-    lemma_lookup = {
+lemma_plural_lookup = {
+    "de": {
         "Manntage": "Manntag",
+        "Höchstleistungen": "Höchstleistung",
+        "Schädigungen": "Schädigung",
+        "Führungskräfte": "Führungskraft",
+        "Kanus": "Kanu",
+    },
+    "en": {},
+}
+
+lemma_lookup = {
+    "de": {
+        "Insights": "Insights",
+        "Learnings": "Learnings",
+        "Dreads": "Dreads",
+        "Charts": "Charts",
+        "Wilde": "Wilder",
+        "Behinderte": "Behinderte",
+        "Bisexuelle": "Bisexuelle",
+        "Illegale": "Illegale",
+        "Alter": "Alter",
+        "Bucklige": "Bucklige",
+        "Herrschaften": "Herrschaft",
+        "Jeder": "Jeder",
+        "Meister": "Meister",
+        "Spitzenunternehmen ": "Spitzenunternehmen",
+        "Trampel": "Trampel",
+        "Expertenwissen": "Expertenwissen",
+        "Mannstunde": "Mannstunde",
+        "Mutterkonzern": "Mutterkonzern",
+        "Vorgesetzter": "Vorgesetzter",
+        "Abgeordneter": "Abgeordneter",
+        "Apparateglasbläser": "Apparateglasbläser",
+        "Eisenbahnbetriebsleiter": "Eisenbahnbetriebsleiter",
+        "Front-Ender": "Front-Ender",
+        "Gebäudereiniger": "Gebäudereiniger",
+        "Konzepter": "Konzepter",
+        "Vergolder": "Vergolder",
+        "Elan": "Elan",
+        "Vertrauen": "Vertrauen",
+        "Bigender": "Bigender",
+        "Cisgender": "Cisgender",
+        "Drag-Künstler~in": "Drag-Künstler~in",
+        "Token": "Token",
+        "Angestellter": "Angestellter",
+        "Technologe": "Technologe",
+        "Beschäftigter": "Beschäftigter",
+        "Hungerhaken": "Hungerhaken",
+        "Krisperl": "Krisperl",
+        "Schielauge": "Schielauge",
+        "Vollpfosten": "Vollpfosten",
+        "Ische": "Ische",
+        "Judenstern": "Judenstern",
+        "Spacken": "Spacken",
+        "Tunte": "Tunte",
+        "Analgurke": "Analgurke",
+        "Analhengst": "Analhengst",
+        "Analratte": "Analratte",
+        "Analruine": "Analruine",
+        "Arschsau": "Arschsau",
+        "Eselficker": "Eselficker",
+        "Schwulenehe": "Schwulenehe",
+        "Schwulette": "Schwulette",
+        "Sodomit": "Sodomit",
+        "Strichjunge": "Strichjunge",
+        "Arschgeige": "Arschgeige",
+        "Hottentotte": "Hottentotte",
+        "Schlitzauge": "Schlitzauge",
+        "Beißzange": "Beißzange",
+        "Dreilochstute": "Dreilochstute",
+        "Fickschlitten": "Fickschlitten",
+        "Mauerblümchen": "Mauerblümchen",
+        "Nuttenarsch": "Nuttenarsch",
+        "Pissgurke": "Pissgurke",
+        "Prostituierte": "Prostituierte",
+        "Schnepfe": "Schnepfe",
+        "Schrappnelle": "Schrappnelle",
+        "Spermarutsche": "Spermarutsche",
+        "Stinksau": "Stinksau",
+        "Strichmädchen": "Strichmädchen",
+        "Tratschtante": "Tratschtante",
+        "Vogelscheuche": "Vogelscheuche",
+        "Penismädchen": "Penismädchen",
+        "Transe": "Transe",
+        "Barbar": "Barbar",
+        "Inselaffe": "Inselaffe",
+        "DALY": "DALY",
+        "EBITDA": "EBITDA",
+        "IM": "IM",
+        "SWOT": "SWOT",
+        "Allnighter": "Allnighter",
+        "Bullet-point": "Bullet-point",
+        "No-Name-Product": "No-Name-Product",
+        "Wallpaper": "Wallpaper",
+        "Alphaweibchen": "Alphaweibchen",
+        "Performer": "Performer",
+        "Pionierunternehmen": "Pionierunternehmen",
+        "Normale": "Normale",
+        "Normaler": "Normaler",
+        "Altergenosse": "Altergenosse",
+        "Idealalter": "Idealalter",
+        "Durchsetzungsvermögen": "Durchsetzungsvermögen",
+        "Entschlussfreudigkeit": "Entschlussfreudigkeit",
+        "Dunkelhäutige": "Dunkelhäutige",
+        "Farbige": "Farbige",
+        "Hellhäutige": "Hellhäutige",
+        "Asiate": "Asiate",
+        "Bisexueller": "Bisexueller",
+        "Transmensch": "Transmensch",
+        "Workaholic": "Workaholic",
+        "Asylant": "Asylant",
+        "Einheimische": "Einheimische",
+        "Einheimischer": "Einheimischer",
+        "Illegaler": "Illegaler",
+        "Scheinasylant": "Scheinasylant",
+        "Kollateralschaden": "Kollateralschaden",
+        "Eingeborene": "Eingeborene",
+        "Eingeborener": "Eingeborener",
+        "Zigeunersprache": "Zigeunersprache",
+        "Blinde": "Blinde",
+        "Blinder": "Blinder",
+        "Lernpate": "Lernpate",
+        "Behinderter": "Behinderter",
+        "Heiminsasse": "Heiminsasse",
         "international": "international",
         "internationale": "international",
-        "Meister": "Meister",
         "abgebrüht": "abgebrüht",
         "beherrschend": "beherrschend",
         "entscheidend": "entscheidend",
@@ -134,20 +244,8 @@ def custom_lemmatizer_de(nlp, name):
         "etabliert": "etabliert",
         "fundiert": "fundiert",
         "gewandt": "gewandt",
-        "Götter": "Götter",
         "hervorragend": "hervorragend",
         "zwingend": "zwingend",
-        "Alter": "Alter",
-        "Bucklige": "Bucklige",
-        "Grundsätze": "Grundsätze",
-        "Herrschaften": "Herrschaften",
-        "Jeder": "Jeder",
-        "Kanus": "Kanus",
-        "Spitzenunternehmen ": "Spitzenunternehmen",
-        "Trampel": "Trampel",
-        "Wettkämpfe": "Wettkämpfe",
-        "Wilde": "Wilde",
-        "Zusammenhänge": "Zusammenhänge",
         "andauernd": "andauernd",
         "angreifend": "angreifend",
         "anscheinend": "anscheinend",
@@ -175,11 +273,12 @@ def custom_lemmatizer_de(nlp, name):
         "zugegeben": "zugegeben",
         "(x)aaS": "(x)aaS",
         "AP/AR": "AP/AR",
-        "Behinderte": "Behinderte",
-        "Bisexuelle": "Bisexuelle",
-        "Illegale": "Illegale",
         "P/E": "P/E",
-        "Schädigungen": "Schädigungen",
+        "Asoziale": "Asoziale",
+        "Hofmedium": "Hofmedium",
+        "Verrückter": "Verrückter",
+        "Wahnsinnige": "Wahnsinnige",
+        "Wahnsinniger": "Wahnsinniger",
         "behindert": "behindert",
         "versehrt": "versehrt",
         "aktive": "aktiv",
@@ -376,10 +475,8 @@ def custom_lemmatizer_de(nlp, name):
         "zwingendermaßene": "zwingendermaßen",
         "zwischenmenschliche": "zwischenmenschlich",
         "äußerste": "äußerst",
-        "Freundliche": "freundlich",
+        "freundliche": "freundlich",
         "türken": "türken",
-        "Höchstleistungen": "Höchstleistung",
-        "Führungskräfte": "Führungskraft",
         "selbstständiger": "selbstständig",
         "ausgeprägt": "ausgeprägt",
         "beeinträchtigt": "beeinträchtigt",
@@ -394,33 +491,13 @@ def custom_lemmatizer_de(nlp, name):
         "überfordert": "überfordert",
         "überzeugend": "überzeugend",
         "überzeugt": "überzeugt",
-        "Angestellter": "Angestellter",
-        "Technologe": "Technologe",
-        "Beschäftigter": "Beschäftigter",
-        "Lernpate": "Lernpate",
         "anwenderbezogen": "anwenderbezogen",
-        "Expertenwissen": "Expertenwissen",
-        "Mannstunde": "Mannstunde",
-        "Mutterkonzern": "Mutterkonzern",
-        "Vorgesetzter": "Vorgesetzter",
-        "Abgeordneter": "Abgeordneter",
-        "Apparateglasbläser": "Apparateglasbläser",
-        "Eisenbahnbetriebsleiter": "Eisenbahnbetriebsleiter",
-        "Front-Ender": "Front-Ender",
-        "Gebäudereiniger": "Gebäudereiniger",
-        "Konzepter": "Konzepter",
-        "Vergolder": "Vergolder",
         "berührt": "berührt",
-        "Elan": "Elan",
         "gefühlsbetont": "gefühlsbetont",
         "gefühlsmässig": "gefühlsmässig",
         "kollegial": "kollegial",
         "resilient": "resilient",
         "teamorientiert": "teamorientiert",
-        "Vertrauen": "Vertrauen",
-        "Bigender": "Bigender",
-        "Cisgender": "Cisgender",
-        "Drag-Künstler~in": "Drag-Künstler~in",
         "gay": "gay",
         "genderqueer": "genderqueer",
         "intersektional": "intersektional",
@@ -429,81 +506,27 @@ def custom_lemmatizer_de(nlp, name):
         "polyamor": "polyamor",
         "queerfeministisch": "queerfeministisch",
         "questioning": "questioning",
-        "Token": "Token",
         "unterrepräsentiert": "unterrepräsentiert",
-        "Hungerhaken": "Hungerhaken",
-        "Krisperl": "Krisperl",
-        "Schielauge": "Schielauge",
-        "Vollpfosten": "Vollpfosten",
-        "Ische": "Ische",
-        "Judenstern": "Judenstern",
         "mauscheln": "mauscheln",
         "schachern": "schachern",
-        "Spacken": "Spacken",
-        "Tunte": "Tunte",
-        "Analgurke": "Analgurke",
-        "Analhengst": "Analhengst",
-        "Analratte": "Analratte",
-        "Analruine": "Analruine",
-        "Arschsau": "Arschsau",
-        "Eselficker": "Eselficker",
-        "Schwulenehe": "Schwulenehe",
-        "Schwulette": "Schwulette",
-        "Sodomit": "Sodomit",
-        "Strichjunge": "Strichjunge",
-        "Arschgeige": "Arschgeige",
         "verdammt": "verdammt",
         "verfickt": "verfickt",
         "verflucht": "verflucht",
         "verkackt": "verkackt",
-        "Hottentotte": "Hottentotte",
-        "Schlitzauge": "Schlitzauge",
-        "Beißzange": "Beißzange",
-        "Dreilochstute": "Dreilochstute",
-        "Fickschlitten": "Fickschlitten",
-        "Mauerblümchen": "Mauerblümchen",
-        "Nuttenarsch": "Nuttenarsch",
-        "Pissgurke": "Pissgurke",
-        "Prostituierte": "Prostituierte",
-        "Schnepfe": "Schnepfe",
-        "Schrappnelle": "Schrappnelle",
-        "Spermarutsche": "Spermarutsche",
-        "Stinksau": "Stinksau",
-        "Strichmädchen": "Strichmädchen",
-        "Tratschtante": "Tratschtante",
-        "Vogelscheuche": "Vogelscheuche",
-        "Penismädchen": "Penismädchen",
-        "Transe": "Transe",
-        "Barbar": "Barbar",
-        "Inselaffe": "Inselaffe",
-        "DALY": "DALY",
-        "EBITDA": "EBITDA",
-        "IM": "IM",
-        "SWOT": "SWOT",
-        "Allnighter": "Allnighter",
         "asapst": "asapst",
         "attn": "attn",
         "b2b": "b2b",
-        "Bullet-point": "Bullet-point",
         "canceln": "canceln",
         "challenged": "challenged",
         "challengen": "challengen",
-        "Charts": "Charts",
         "closen": "closen",
         "committen": "committen",
         "gegreenlighted": "gegreenlighted",
         "insane": "insane",
-        "Insights": "Insights",
-        "Learnings": "Learnings",
-        "No-Name-Product": "No-Name-Product",
         "reingestafft": "reingestafft",
         "reinstaffen": "reinstaffen",
         "Responsibilities": "Responsibilities",
         "resyncen": "resyncen",
-        "Wallpaper": "Wallpaper",
-        "Alphaweibchen": "Alphaweibchen",
-        "Performer": "Performer",
-        "Pionierunternehmen": "Pionierunternehmen",
         "stilsicher": "stilsicher",
         "folgendermaßen": "folgendermaßen",
         "höchst": "höchst",
@@ -516,22 +539,14 @@ def custom_lemmatizer_de(nlp, name):
         "vollends": "vollends",
         "zweifelsohne": "zweifelsohne",
         "lösungsorientiert": "lösungsorientiert",
-        "Behinderter": "Behinderter",
         "gehandicapiert": "gehandicapiert",
         "gehandicapt": "gehandicapt",
         "handicapiert": "handicapiert",
-        "Heiminsasse": "Heiminsasse",
         "invalid": "invalid",
-        "Normale": "Normale",
-        "Normaler": "Normaler",
         "schwerbeschädigt": "schwerbeschädigt",
         "verzwergeln": "verzwergeln",
         "verzwergen": "verzwergen",
-        "Altergenosse": "Altergenosse",
-        "Idealalter": "Idealalter",
         "couragiert": "couragiert",
-        "Durchsetzungsvermögen": "Durchsetzungsvermögen",
-        "Entschlussfreudigkeit": "Entschlussfreudigkeit",
         "getrieben": "getrieben",
         "hartgesotten": "hartgesotten",
         "herausgefordert": "herausgefordert",
@@ -547,20 +562,12 @@ def custom_lemmatizer_de(nlp, name):
         "verfechten": "verfechten",
         "abschachern": "abschachern",
         "ultraorthodox": "ultraorthodox",
-        "Asoziale": "Asoziale",
-        "Hofmedium": "Hofmedium",
         "behämmert": "behämmert",
         "bescheuert": "bescheuert",
         "gehirnamputiert": "gehirnamputiert",
         "minderbegabt": "minderbegabt",
         "schwachsinnig": "schwachsinnig",
-        "Verrückter": "Verrückter",
-        "Wahnsinnige": "Wahnsinnige",
-        "Wahnsinniger": "Wahnsinniger",
         "braun": "braun",
-        "Dunkelhäutige": "Dunkelhäutige",
-        "Farbige": "Farbige",
-        "Hellhäutige": "Hellhäutige",
         "kaffeebraun": "kaffeebraun",
         "karamellfarben": "karamellfarben",
         "kohlrabenschwarz": "kohlrabenschwarz",
@@ -569,43 +576,21 @@ def custom_lemmatizer_de(nlp, name):
         "schwarzfahren": "schwarzfahren",
         "Schwarzliste": "Schwarzliste",
         "schwarzmalen": "schwarzmalen",
-        "Asiate": "Asiate",
         "erschachern": "erschachern",
-        "Bisexueller": "Bisexueller",
-        "Transmensch": "Transmensch",
         "transsexuell": "transsexuell",
         "hörgeschädigt": "hörgeschädigt",
         "taubstumm": "taubstumm",
         "mongoloid": "mongoloid",
         "gestresst": "gestresst",
-        "Workaholic": "Workaholic",
-        "Asylant": "Asylant",
         "deutschtürkisch": "deutschtürkisch",
-        "Einheimische": "Einheimische",
-        "Einheimischer": "Einheimischer",
-        "Illegaler": "Illegaler",
-        "Scheinasylant": "Scheinasylant",
         "türkischstämmig": "türkischstämmig",
         "überfremdet": "überfremdet",
-        "Kollateralschaden": "Kollateralschaden",
-        "Dreads": "Dreads",
-        "Eingeborene": "Eingeborene",
-        "Eingeborener": "Eingeborener",
         "schwarzafrikanisch": "schwarzafrikanisch",
-        "Zigeunersprache": "Zigeunersprache",
-        "Blinde": "Blinde",
-        "Blinder": "Blinder",
         "sehgeschädigt": "sehgeschädigt",
         "Sehschwäche": "Sehschwäche",
         "fett": "fett",
-    }
-
-    return custom_lemmatizer(lemma_lookup)
-
-
-@English.factory("custom_lemmatizer_en")
-def custom_lemmatizer_en(nlp, name):
-    lemma_lookup = {
+    },
+    "en": {
         "Bin-Laden": "Bin-Laden",
         "Binladen": "Binladen",
         "Buckwheat": "Buckwheat",
@@ -795,9 +780,27 @@ def custom_lemmatizer_en(nlp, name):
         "top-performing": "top-performing",  # top-performe
         "topperforming": "topperforming",  # topperforme
         "uterushavers": "uterushavers",  # uterushaver
-    }
+    },
+}
 
-    return custom_lemmatizer(lemma_lookup)
+lemma_lookup["de"].update(lemma_plural_lookup["de"])
+lemma_lookup["en"].update(lemma_plural_lookup["en"])
+
+
+def custom_lemmatizer(lang):
+    lemmatizer = TokenLemmatizer(lemma_lookup[lang])
+
+    lookups = Lookups()
+    lookups.add_table("lemma_lookup", lemma_lookup[lang])
+    lemmatizer.lookups = lookups
+
+    return lemmatizer
+
+
+@German.factory("custom_lemmatizer_factory")
+@English.factory("custom_lemmatizer_factory")
+def custom_lemmatizer_factory(nlp, name):
+    return custom_lemmatizer(nlp.lang)
 
 
 def fetch_nlp_model(lang, spacy_model):
@@ -811,6 +814,6 @@ def fetch_nlp_model(lang, spacy_model):
     # and load lemmatizer tables from spacy-lookups-data
     model.add_pipe("lemmatizer").initialize()
 
-    model.add_pipe("custom_lemmatizer_" + lang, after="lemmatizer")
+    model.add_pipe("custom_lemmatizer_factory", after="lemmatizer")
 
     return model

@@ -74,7 +74,7 @@ You should see application running under http://localhost:8000/docs
 ## Using pdm
 
 ```
-pdm install --dev
+pdm sync --dev
 wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 ```
 
@@ -90,7 +90,7 @@ To update packages locally after pyproject.toml/pdm.lock was changed, run the
 command:
 
 ```
-pdm install --dev
+pdm sync --dev
 ```
 
 ## Add new package

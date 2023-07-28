@@ -1,7 +1,7 @@
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, Field, validator
 from typing import Dict, List, Optional, Union
 from enum import Enum
-
+from collections import namedtuple
 import json, typing
 
 from starlette.responses import Response
@@ -150,11 +150,11 @@ class Config(BaseModel):
         GermanGenderEndingType.SLASH_DASH: re.compile(r"^[a-zäöü]{3,7}/[a-zäöü]{3,7}$"),
     }
     _gendereddenom_ending_word_type = {
-        GermanGenderEndingType.STAR: "*",
-        GermanGenderEndingType.UNDERSCORE: "_",
-        GermanGenderEndingType.COLON: ":",
-        GermanGenderEndingType.SLASH: "-1,2,/",
-        GermanGenderEndingType.SLASH_DASH: ",/",
+        GermanGenderEndingType.STAR: (None, None, "*"),
+        GermanGenderEndingType.UNDERSCORE: (None, None, ":"),
+        GermanGenderEndingType.COLON: (None, None, ":"),
+        GermanGenderEndingType.SLASH: (-1, 2, "/"),
+        GermanGenderEndingType.SLASH_DASH: (None, None, "/"),
     }
     disabled_categories: List = []
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
@@ -259,12 +259,6 @@ class RuleConfig(BaseModel):
     german_gender_ending: Optional[GermanGenderEndingConfigType]
     gendered_roles_format: Optional[GenderedRolesFormatConfigType]
     categories: Dict[str, BooleanConfigType] = {}
-    # BC code
-    inclusive: Optional[BooleanConfigType]
-    # BC code
-    style: Optional[BooleanConfigType]
-    # BC code
-    orthography: Optional[BooleanConfigType]
     show_inspiration_alternatives: Optional[BooleanConfigType]
 
     @validator("german_gender_ending")
@@ -404,6 +398,7 @@ class ResultExplanation(BaseModel):
 
 class ResultOut(BaseModel):
     text: str
+    lemma: str | None = Field(default=None, exclude=True, title="lemma")
     context: Optional[str]
     category: Optional[str]
     subcategory: Optional[str]
@@ -419,8 +414,10 @@ class ResultOut(BaseModel):
     def factory(
         version: float,
         config: Config,
+        client: namedtuple,
         lang: Language,
         text,
+        lemma,
         full_text,
         offsets,
         subcategory,
@@ -482,7 +479,7 @@ class ResultOut(BaseModel):
 
         if category != "orthography" and category != "corporate_rules" and url is None:
             url = lang._(subcategory, "canonical_url")
-            if url is not None:
+            if url is not None and client.name == "web-ext":
                 url += "?reducedView=true"
 
         explanation = (
@@ -492,12 +489,9 @@ class ResultOut(BaseModel):
         # Not logged-in
         hide_details = config.plan is None
 
-        if hide_details or alternatives is None or alternatives == []:
+        if hide_details or alternatives is None or len(alternatives) == 0:
             alternatives = []
         else:
-            if isinstance(alternatives, Dict):
-                alternatives = list(alternatives.values())
-
             (
                 text,
                 start,
@@ -546,6 +540,7 @@ class ResultOut(BaseModel):
 
         return ResultOut(
             text=text,
+            lemma=lemma,
             context=context,
             category=category,
             subcategory=subcategory,
@@ -571,6 +566,8 @@ class ResultOut(BaseModel):
         explanation_context,
         alternatives_max_count,
     ):
+        alternatives = list(alternatives)
+
         # remove empty strings
         if "" in alternatives:
             alternatives.remove("")

@@ -181,34 +181,6 @@ def test_general_cases(general_case_dir, snapshot, set_redis):
 
 
 @pytest.mark.parametrize(
-    "test_2_2_dir",
-    get_dirs("tests/test_2_2"),
-)
-def test_2_2_json(test_2_2_dir, snapshot, set_redis):
-    with TestClient(app) as client:
-        # Read input files from the case directory.
-        input_json = test_2_2_dir.joinpath("input.json").read_text()
-
-        response = client.post("/v2.2/check", json=json.loads(input_json))
-        assert response.status_code == 200
-
-        # Call the tested endpoint.
-        response = client.post(
-            "/v2.2/check",
-            json=json.loads(input_json),
-            headers={"X-Auth": "2_2@gmail.com"},
-        )
-        assert response.status_code == 200
-        # output must be string
-        output = json.dumps(
-            response.json(), sort_keys=True, indent=4, ensure_ascii=False
-        )
-        # Snapshot the return value.
-        snapshot.snapshot_dir = test_2_2_dir
-        snapshot.assert_match(output, "output.json")
-
-
-@pytest.mark.parametrize(
     "test_witty_free_dir",
     get_dirs("tests/test_witty_free"),
 )
@@ -621,7 +593,7 @@ def set_redis():
                 },
             },
             "welt|de": {
-                "alternatives": ["globus"],
+                "alternatives": ["globus (welt)"],
                 "lang": "de",
                 "explanation": {
                     "text": "better globus",
@@ -1016,7 +988,7 @@ def test_store_get_delete_rules():
             "false_positives": ["hello", "world", "dong"],
             "term_replacements": {
                 "hello|en": {
-                    "alternatives": ["welt"],
+                    "alternatives": ["world"],
                     "explanation": {
                         "text": "better world",
                         "icon": "🥰",
@@ -1025,7 +997,7 @@ def test_store_get_delete_rules():
                     "proficiency_level": "unconscious_bias",
                 },
                 "hello|de": {
-                    "alternatives": ["welt"],
+                    "alternatives": ["world"],
                     "explanation": {
                         "text": "better world",
                         "icon": "🥰",
@@ -1131,10 +1103,52 @@ def test_german_gender_ending():
         assert sorted(response_content) == sorted(expected)
 
 
+def test_rule():
+    with TestClient(app) as client:
+        request_data = {
+            "text": "She has special needs",
+            "lang": "en",
+            "lemma": "have special need",
+            "function": "simple_match",
+            "word_types": "v|a|s",
+            "lower_case": True,
+            "alternatives": "foo|   bar | ding --- dong",
+            "plural_alternatives": None,
+        }
+        response = client.get("/debug/rule", params=request_data)
+        assert response.status_code == 200
+        response_content = json.loads(response.content)
+
+        expected = {
+            "results": [
+                {
+                    "text": "has special needs",
+                    "context": "She has special needs",
+                    "category": "corporate_rules",
+                    "subcategory": "corporate_rules",
+                    "start": 4,
+                    "end": 21,
+                    "alternatives": [
+                        {"text": "foo"},
+                        {"text": "bar"},
+                        {"text": "ding", "context": "dong"},
+                    ],
+                    "label": "Dictionary",
+                    "explanation": {"text": "", "icon": "❗"},
+                    "gravity": 0.9,
+                }
+            ],
+            "language": "en",
+            "limit_reached": False,
+        }
+
+        assert response_content == expected
+
+
 def test_spacy():
     with TestClient(app) as client:
         request_data = {
-            "text": "👩🏻‍🚒 Das ist sehr ehrgeizig Nummer 1 eins 😃",
+            "text": "👩🏻‍🚒 Das ist sehr ehrgeizig 😃",
             "lang": "de",
         }
         response = client.get("/debug/spacy", params=request_data)
@@ -1142,7 +1156,7 @@ def test_spacy():
         response_content = json.loads(response.content)
 
         expected = [
-            {"word_type": "|~s|~|a|a|s|num|num|conj"},
+            {"word_type": "emoji|~s|~|a|a|emoji"},
             {
                 "text": "👩🏻‍🚒",
                 "lemma": "👩🏻‍🚒",
@@ -1150,9 +1164,10 @@ def test_spacy():
                 "tag": "NE",
                 "pos": "PROPN",
                 "dep": "ROOT",
-                "word_types": [],
+                "word_types": ["emoji"],
                 "morph": {"Case": "Nom", "Gender": "Fem", "Number": "Sing"},
                 "is_emoji": True,
+                "is_singular": True,
                 "emoji_desc": "woman firefighter light skin tone",
                 "whitespace": " ",
             },
@@ -1171,6 +1186,7 @@ def test_spacy():
                     "PronType": "Dem",
                 },
                 "is_emoji": False,
+                "is_singular": True,
                 "emoji_desc": None,
                 "whitespace": " ",
             },
@@ -1190,6 +1206,7 @@ def test_spacy():
                     "VerbForm": "Fin",
                 },
                 "is_emoji": False,
+                "is_singular": True,
                 "emoji_desc": None,
                 "whitespace": " ",
             },
@@ -1203,6 +1220,7 @@ def test_spacy():
                 "word_types": ["a"],
                 "morph": {},
                 "is_emoji": False,
+                "is_singular": None,
                 "emoji_desc": None,
                 "whitespace": " ",
             },
@@ -1212,62 +1230,25 @@ def test_spacy():
                 "start": 18,
                 "tag": "ADJD",
                 "pos": "ADV",
-                "dep": "mo",
+                "dep": "pd",
                 "word_types": ["a"],
                 "morph": {"Degree": "Pos"},
                 "is_emoji": False,
-                "emoji_desc": None,
-                "whitespace": " ",
-            },
-            {
-                "text": "Nummer",
-                "lemma": "Nummer",
-                "start": 28,
-                "tag": "NN",
-                "pos": "NOUN",
-                "dep": "pd",
-                "word_types": ["s"],
-                "morph": {"Case": "Nom", "Gender": "Fem", "Number": "Sing"},
-                "is_emoji": False,
-                "emoji_desc": None,
-                "whitespace": " ",
-            },
-            {
-                "text": "1",
-                "lemma": "1",
-                "start": 35,
-                "tag": "CARD",
-                "pos": "NUM",
-                "dep": "nk",
-                "word_types": ["num"],
-                "morph": {},
-                "is_emoji": False,
-                "emoji_desc": None,
-                "whitespace": " ",
-            },
-            {
-                "text": "eins",
-                "lemma": "eins",
-                "start": 37,
-                "tag": "CARD",
-                "pos": "NUM",
-                "dep": "nk",
-                "word_types": ["num"],
-                "morph": {},
-                "is_emoji": False,
+                "is_singular": None,
                 "emoji_desc": None,
                 "whitespace": " ",
             },
             {
                 "text": "😃",
                 "lemma": "😃",
-                "start": 42,
+                "start": 28,
                 "tag": "KON",
                 "pos": "CCONJ",
                 "dep": "cd",
-                "word_types": ["conj"],
+                "word_types": ["emoji"],
                 "morph": {},
                 "is_emoji": True,
+                "is_singular": None,
                 "emoji_desc": "grinning face with big eyes",
                 "whitespace": "",
             },
