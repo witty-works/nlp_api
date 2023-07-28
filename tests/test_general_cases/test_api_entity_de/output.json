@@ -1,0 +1,28 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "höflicher Mensch"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Hallo Herr Müller.",
+            "end": 10,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😒",
+                "text": "Bedient die heteronormative Sicht von Geschlechteridentität",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäres-geschlecht?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Binäres Geschlecht",
+            "proficiency_level": "unconscious_bias",
+            "start": 6,
+            "subcategory": "gender_identity",
+            "text": "Herr"
+        }
+    ]
+}

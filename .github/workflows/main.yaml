@@ -7,6 +7,8 @@ env:
   CONTEXT_CHECKER_API_KEY: ${{ secrets.CONTEXT_CHECKER_API_KEY }}
   CONTEXT_CHECKER_URL_DE: "https://setfit-german.westeurope.inference.ml.azure.com/score"
   CONTEXT_CHECKER_API_KEY_DE: ${{ secrets.CONTEXT_CHECKER_API_KEY_DE }}
+  ENTITY_CHECKER_URL: "https://witty-works-flair-ner-english-large.hf.space/"
+  ENTITY_CHECKER_API_KEY: ${{ secrets.ENTITY_CHECKER_API_KEY }}
 
 jobs:
   build:

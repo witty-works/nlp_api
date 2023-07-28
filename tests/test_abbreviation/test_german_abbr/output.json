@@ -5,37 +5,6 @@
         {
             "alternatives": [
                 {
-                    "text": "FLN"
-                },
-                {
-                    "text": "MINT"
-                },
-                {
-                    "text": "FIN"
-                },
-                {
-                    "text": "TWINT"
-                },
-                {
-                    "text": "VLAN"
-                }
-            ],
-            "category": "orthography",
-            "context": "FLINT schließt lesbische Frauen explizit mit ein, um sich für mehr lesbische Sichtbarkeit zu solidarisier",
-            "end": 5,
-            "explanation": {
-                "icon": "❌",
-                "text": "Möglicher Tippfehler gefunden."
-            },
-            "gravity": 1.0,
-            "label": "Rechtschreibfehler",
-            "start": 0,
-            "subcategory": "typos",
-            "text": "FLINT"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "Frauen, Lesben, intersexuelle Personen, nicht-binäre-Personen, Trans*gender"
                 },
                 {

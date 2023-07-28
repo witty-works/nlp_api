@@ -51,6 +51,9 @@ class Settings(BaseSettings):
     context_checker_api_key: Optional[str]
     context_checker_url_de: Optional[str]
     context_checker_api_key_de: Optional[str]
+    entity_checker: dict = {}
+    entity_checker_api_key: Optional[str]
+    entity_checker_url: Optional[str]
     models: List = ["en_core_web_lg", "de_core_news_lg"]
     fasttext: bool = True
     overwrite_enabled_user_categories: bool = False
@@ -73,16 +76,22 @@ def get_settings():
     if settings.minimum_version_word_plugin:
         settings.minimum_versions["word-plugin"] = settings.minimum_version_word_plugin
 
-    if settings.context_checker_url and settings.context_checker_api_key:
+    if settings.context_checker_url:
         settings.context_checker["en"] = {
             "url": settings.context_checker_url,
             "api_key": settings.context_checker_api_key,
         }
 
-    if settings.context_checker_url_de and settings.context_checker_api_key_de:
+    if settings.context_checker_url_de:
         settings.context_checker["de"] = {
             "url": settings.context_checker_url_de,
             "api_key": settings.context_checker_api_key_de,
+        }
+
+    if settings.entity_checker_url:
+        settings.entity_checker = {
+            "url": settings.entity_checker_url,
+            "api_key": settings.entity_checker_api_key,
         }
 
     if settings.platform_relationships:

@@ -26,6 +26,8 @@ from fastapi import (
     status,
 )
 
+from gradio_client import Client as GradioClient
+
 from contextlib import asynccontextmanager
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
@@ -83,6 +85,7 @@ from app.categories import (
     get_category_keys,
     get_categories,
     get_category,
+    get_category_name,
     get_proficiency_level,
     is_base_category,
     remove_base,
@@ -1735,9 +1738,12 @@ async def apply_language_rules(
         case _:
             list_results = []
 
-    list_results = await apply_languagetool_rules(
-        version, config, client, lang, text, offsets
-    ) + await context_false_positives(lang.lang, tokens, list_results)
+    list_results = (
+        await apply_languagetool_rules(version, config, client, lang, text, offsets)
+        + list_results
+    )
+
+    list_results = await context_false_positives(lang.lang, tokens, list_results)
 
     return apply_false_positives(list_results, configs)
 
@@ -1826,62 +1832,140 @@ def is_sub_category_enabled(config: Config, subcategory: str):
     return True
 
 
-async def context_false_positives(lang, tokens, list_results):
-    if lang not in settings.context_checker or len(rules[lang]["context_check"]) == 0:
-        return list_results
+def false_positive_checks(lang, result: ResultOut):
+    checks = []
 
+    if (
+        lang in settings.context_checker
+        and result.lemma in rules[lang]["context_check"]
+    ):
+        checks.append("context")
+
+    if (
+        "url" in settings.entity_checker
+        and len(result.lemma)
+        and result.lemma[0].isupper()
+        and result.subcategory is not None
+        and get_category_name(result.subcategory) in ["typos", "titles", "function"]
+    ):
+        checks.append("entity")
+
+    return checks
+
+
+async def context_false_positives(lang, tokens, list_results):
     sentences = {}
-    sentences_to_check = defaultdict(list)
+
+    sentences_to_check = {
+        "context": defaultdict(list),
+        "entity": defaultdict(list),
+    }
+
     for i in range(len(list_results)):
         result = list_results[i]
-        if result.lemma in rules[lang]["context_check"]:
+        checks = false_positive_checks(lang, result)
+
+        if len(checks):
             if len(sentences) == 0:
                 for sentence in tokens.sents:
-                    sentences[sentence.end_char] = sentence.text
+                    sentences[sentence.text] = {
+                        "start": sentence.start_char,
+                        "end": sentence.end_char,
+                    }
 
             sentence = None
-            for end_char in sentences:
-                if result.end <= end_char:
-                    sentence = sentences[end_char]
+            for key in sentences:
+                if result.end <= sentences[key]["end"]:
+                    sentence = key
                     break
 
             if sentence is None:
                 continue
 
-            sentences_to_check[sentence].append(i)
+            for check in checks:
+                sentences_to_check[check][sentence].append(i)
 
-    if sentences_to_check == {}:
+    if (
+        len(sentences_to_check["context"]) == 0
+        and len(sentences_to_check["entity"]) == 0
+    ):
         return list_results
 
-    sentences = list(sentences_to_check.keys())
-
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": ("Bearer " + settings.context_checker[lang]["api_key"]),
-    }
-
-    payload = {
-        "data": sentences,
-    }
-
-    context_results = await fetch_json_post(
-        settings.context_checker[lang]["url"],
-        json.dumps(payload),
-        headers,
-        "context checker",
-    )
-
     keys_to_remove = []
-    for i in range(len(sentences)):
-        sentence = sentences[i]
-        if context_results[i] == "1":
-            continue
+    if len(sentences_to_check["context"]) > 0:
+        context_sentences = list(sentences_to_check["context"].keys())
 
-        for result_key in sentences_to_check[sentence]:
-            if result_key in keys_to_remove:
+        headers = {
+            "Content-Type": "application/json",
+        }
+
+        if len(settings.context_checker[lang]["api_key"]):
+            headers["Authorization"] = "Bearer " + settings.context_checker[lang]["api_key"]
+
+        payload = {
+            "data": context_sentences,
+        }
+
+        context_results = await fetch_json_post(
+            settings.context_checker[lang]["url"],
+            json.dumps(payload),
+            headers,
+            "context checker",
+        )
+
+        for i in range(len(context_sentences)):
+            if context_results[i] == "1":
                 continue
 
-            keys_to_remove.append(result_key)
+            sentence = context_sentences[i]
+            for result_key in sentences_to_check["context"][sentence]:
+                if result_key in keys_to_remove:
+                    continue
+
+                keys_to_remove.append(result_key)
+
+    if len(sentences_to_check["entity"]) > 0:
+        named_entity_labels = [
+            "PER",  # Named person or family
+            "ORG",  # Companies, agencies, institutions, etc.
+            # "DATE", # Absolute or relative dates or periods
+            "LOC",  # Non-GPE locations, mountain ranges, bodies of water
+        ]
+        entity_sentences = list(sentences_to_check["entity"].keys())
+
+        client = GradioClient(
+            settings.entity_checker["url"], hf_token=settings.entity_checker["api_key"]
+        )
+
+        entity_results = []
+        for sentence in entity_sentences:
+            entity_results = client.predict(sentence, api_name="/predict")
+
+            try:
+                f = open(entity_results)
+                entity_results = json.load(f)
+            except:
+                continue
+
+            for result_key in sentences_to_check["entity"][sentence]:
+                if result_key in keys_to_remove:
+                    continue
+
+                result = list_results[result_key]
+                start = result.start - sentences[sentence]["start"]
+                end = result.end - sentences[sentence]["start"]
+                entity_start = sentences[sentence]["start"]
+                for entity_result in entity_results:
+                    entity_end = entity_start + len(entity_result[0])
+                    if (
+                        entity_result[1] in named_entity_labels
+                        and start <= entity_start
+                        and end >= entity_end
+                    ):
+                        keys_to_remove.append(result_key)
+                        break
+
+                    entity_start = entity_end
 
     # ensure we remove from the end so that the list indexes remain the same
     keys_to_remove.sort(reverse=True)
@@ -3681,8 +3765,8 @@ def regex_match(
         # handle "Kund(-innen)"
         if text == ")" and "(" in check_text:
             ending_start = check_text.find("(")
-            text = check_text[ending_start :]
-            start = tokens[i-1].idx + ending_start
+            text = check_text[ending_start:]
+            start = tokens[i - 1].idx + ending_start
 
         alternatives = rule.alternatives
         explanation = rule.explanation

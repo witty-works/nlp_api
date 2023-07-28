@@ -53,6 +53,7 @@ dependencies = [
     "spacymoji>=3.0.1",
     "emoji>=0.6.0",
     "cmp-version>=3.0.0",
+    "gradio-client>=0.4.0",
 ]
 requires-python = ">=3.11"
 license = "Proprietary"
