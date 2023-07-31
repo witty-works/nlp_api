@@ -95,7 +95,6 @@ def get_data_from_files(model, locale, details):
     for file in os.listdir(base_directory):
         if not file.startswith("."):
             training_data_paths.append(base_directory + file)
-    all_alternative_groups = []
     all_alternatives = []
     all_triggers = []
     all_lemma = {}
@@ -134,7 +133,7 @@ def get_data_from_files(model, locale, details):
                             ):
                                 alternatives.pop(0)
 
-                            all_alternative_groups += alternatives
+                            all_alternatives += alternatives
                         except ValueError:
                             continue
 
@@ -251,11 +250,9 @@ def get_data_from_files(model, locale, details):
 
     print(
         "All alternative groups for directory %s: %s"
-        % (base_directory, str(len(all_alternative_groups)))
+        % (base_directory, str(len(all_alternatives)))
     )
 
-    for all_alternative_group in all_alternative_groups:
-        all_alternatives.extend(all_alternative_group.split("|"))
     print(
         "Alternatives for directory %s: %s "
         % (base_directory, str(len(all_alternatives)))
