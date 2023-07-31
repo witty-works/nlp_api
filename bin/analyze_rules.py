@@ -39,6 +39,12 @@ def parse_args():
         default="de",
     )
     parser.add_argument(
+        "-d",
+        "--Details",
+        help="If to output missing verb/adjective/noun issues",
+        default=False,
+    )
+    parser.add_argument(
         "-p", "--Path", help="Path to languagetool ignore.txt file ", default=False
     )
     parser.add_argument(
@@ -78,7 +84,7 @@ def get_current_words(original_languagetool_path, ignore_languagetool_path):
     return current_words
 
 
-def get_data_from_files(model, locale):
+def get_data_from_files(model, locale, details):
     if locale[0:2] == "de":
         locale = "de"
         rules = fetch_rules({"de": model})
@@ -180,7 +186,7 @@ def get_data_from_files(model, locale):
 
                             if " " not in lemma and locale == "de":
                                 if "v" in word_types:
-                                    if word not in rules["de"]["verbs"]:
+                                    if word not in rules["de"]["verbs"] and details:
                                         print(
                                             "Lemma '%s' contains verb lemma '%s' missing from /de/verbs.csv"
                                             % (lemma, word)
@@ -199,6 +205,7 @@ def get_data_from_files(model, locale):
                                                 alternative
                                             )
                                             and alternative not in rules["de"]["verbs"]
+                                            and details
                                         ):
                                             print(
                                                 "Alternative '%s' verb lemma missing from /de/verbs.csv"
@@ -209,6 +216,7 @@ def get_data_from_files(model, locale):
                                     if (
                                         category != "openly_discriminating"
                                         and len(nouns[word]) == 0
+                                        and details
                                     ):
                                         print(
                                             "Lemma '%s' contains noun lemma '%s' missing from german_nouns"
@@ -225,6 +233,7 @@ def get_data_from_files(model, locale):
                                             alternative
                                             and " " not in alternative
                                             and len(nouns[alternative])
+                                            and details
                                         ):
                                             print(
                                                 "Alternative '%s' noun lemma missing from german_nouns"
@@ -557,6 +566,8 @@ else:
         "Please specify correct language argument. Valid values are 'de' or 'en' (not case-sensitive)."
     )
 
+details = bool(args.Details)
+
 settings = get_settings()
 for spacy_model in settings.models:
     if spacy_model[0:2] == lang:
@@ -572,7 +583,7 @@ for locale in locales:
         all_alternatives,
         all_categories,
         all_secondary_subcategories,
-    ) = get_data_from_files(model, locale)
+    ) = get_data_from_files(model, locale, details)
 
     if locale == "de-DE":
         words = generate_correct_endings_german(all_alternatives)
