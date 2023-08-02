@@ -955,7 +955,7 @@ async def fetch_organization_configs_from_redis(
 async def fetch_user_configs_from_redis(
     email: str,
 ):
-    configs = redis.get(email)
+    configs = redis.get(email.lower())
     if not configs:
         raise HTTPException(status_code=404, detail="User configs not found")
 
