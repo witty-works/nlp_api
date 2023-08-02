@@ -602,6 +602,7 @@ lemma_lookup = {
         "Jewbacca": "Jewbacca",
         "Jewgene": "Jewgene",
         "Sincerely": "Sincerely",
+        "good-looking": "good-looking",
         "able-bodied": "able-bodied",
         "ablebodied": "ablebodied",
         "afro-saxon": "afro-saxon",

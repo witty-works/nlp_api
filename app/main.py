@@ -98,7 +98,7 @@ from app.model import lemma_plural_lookup
 
 # probe.end()
 
-version = "1.46.4"
+version = "1.46.5"
 
 categories = get_categories()
 settings = get_settings()
@@ -955,7 +955,7 @@ async def fetch_organization_configs_from_redis(
 async def fetch_user_configs_from_redis(
     email: str,
 ):
-    configs = redis.get(email)
+    configs = redis.get(email.lower())
     if not configs:
         raise HTTPException(status_code=404, detail="User configs not found")
 
