@@ -57,11 +57,13 @@ from slack_bolt import Ack, Respond
 from slack_sdk.web.async_client import AsyncWebClient
 
 from app.models import (
+    Client,
     Config,
     GenderedRolesFormatType,
     GermanGenderEndingType,
     LangType,
     Language,
+    BaseRequestIn,
     RequestIn,
     Result,
     ResultOut,
@@ -166,8 +168,9 @@ async def handle_command_witty(
         )
 
     user_request_in.config.__setattr__("alternatives_max_count", None)
+    client = parse_client(user_request_in.client)
     results = await apply_language_rules(
-        version, user_request_in.client, user_request_in.config, configs, lang, text
+        version, client, user_request_in.config, configs, lang, text
     )
 
     analyzed_text = f"*Analyzed*: {text}"
@@ -549,7 +552,12 @@ async def post_auth_debug(
     response_model_exclude_none=True,
     dependencies=[Depends(HTTPBearer(auto_error=False))],
 )
-async def post_auth_2_0(request: Request):
+async def post_auth_2_0(request: Request, user_request_in: BaseRequestIn = None):
+    client = parse_client(
+        user_request_in.client if user_request_in is not None else None
+    )
+    check_client_version(client)
+
     user_email = fetch_user(request)
     if not user_email:
         raise HTTPException(
@@ -1204,11 +1212,21 @@ def fetch_text(user_request_in):
     return text, lang, limit_reached
 
 
-def check_version(version: float):
+def check_api_version(version: float):
     if version != 2.3:  # pragma: no cover
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Version not supported: " + str(version),
+            detail=f"API version '{version}' not supported, please use version '2.3'.",
+        )
+
+
+def check_client_version(client: Client):
+    if client.name in settings.minimum_versions and client.version < VersionString(
+        settings.minimum_versions[client.name]
+    ):  # pragma: no cover
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Client version '{client.version}' not supported, please use at least '{settings.minimum_versions[client.name]}'.",
         )
 
 
@@ -1218,8 +1236,11 @@ async def check(
     user_request_in: RequestIn,
     version: Optional[float],
 ):
+    client = parse_client(user_request_in.client)
+    check_client_version(client)
+
     if version is not None:
-        check_version(version)
+        check_api_version(version)
 
         user_email = fetch_user(request)
         configs = await fetch_configs_for_request(version, user_request_in, user_email)
@@ -1238,7 +1259,7 @@ async def check(
         configs = {}
     else:
         results = await apply_language_rules(
-            version, user_request_in.client, user_request_in.config, configs, lang, text
+            version, client, user_request_in.config, configs, lang, text
         )
 
         language = lang.lang
@@ -1344,7 +1365,7 @@ def has_gender_denom_ending(text, full_text, offset, config: Config):
 def languagetool_matches(
     version: float,
     config: Config,
-    client: namedtuple,
+    client: Client,
     lang: Language,
     full_text: str,
     offsets,
@@ -1523,7 +1544,7 @@ async def fetch_json_post(url, payload, headers, name, ssl=True, json=True):
 async def apply_languagetool_rules(
     version: float,
     config: Config,
-    client: namedtuple,
+    client: Client,
     lang: Language,
     text: str,
     offsets,
@@ -1662,20 +1683,19 @@ def fetch_false_positive_matchers(lang, tokens):
 
 def parse_client(client: str):
     if client is None:
-        client = "1.0.0"
+        client = "0.0.0"
 
     if ":" in client:
         client = client.split(":")
     else:
         client = ["web-ext", client]
 
-    parsed_client = namedtuple("client", "name version")
-    return parsed_client(client[0], client[1])
+    return Client(name=client[0], version=client[1])
 
 
 async def apply_language_rules(
     version: float,
-    client: str,
+    client: Client,
     config: Config,
     configs: dict,
     lang: Language,
@@ -1683,7 +1703,6 @@ async def apply_language_rules(
 ):
     tokens = fetch_tokens(lang.lang, text)
     offsets = utf16_offsets(text)
-    client = parse_client(client)
 
     term_replacements = fetch_term_replacements(configs, tokens, lang.lang)
 
@@ -1898,7 +1917,7 @@ async def german_rules(
     version: float,
     config: Config,
     term_replacements: namedtuple,
-    client: namedtuple,
+    client: Client,
     tokens,
     offsets: dict,
     lang: Language,
@@ -2335,7 +2354,7 @@ async def english_rules(
     version: float,
     config: Config,
     term_replacements: namedtuple,
-    client: namedtuple,
+    client: Client,
     tokens,
     offsets: dict,
     lang: Language,
@@ -3559,7 +3578,7 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
 def regex_match(
     version: float,
     config: Config,
-    client: namedtuple,
+    client: Client,
     lang,
     full_text,
     i,
@@ -3790,7 +3809,7 @@ def regex_match(
 def gendered_denom_analysis_de(
     version: float,
     config: Config,
-    client: namedtuple,
+    client: Client,
     lang,
     full_text,
     i,
@@ -3936,7 +3955,7 @@ def gendered_denom_analysis_de(
 def style_word_analysis_de(
     version: float,
     config: Config,
-    client: namedtuple,
+    client: Client,
     lang,
     full_text,
     i,
@@ -4012,7 +4031,7 @@ def style_word_analysis_de(
 def word_noun(
     version: float,
     config: Config,
-    client: namedtuple,
+    client: Client,
     lang,
     full_text,
     i,
@@ -4163,7 +4182,7 @@ def pluralize_they(tokens, i):
 def rules_based_words_phrase_matcher(
     version: float,
     config: Config,
-    client: namedtuple,
+    client: Client,
     lang,
     full_text,
     i,
@@ -4267,7 +4286,7 @@ def rules_based_words_phrase_matcher(
 def simple_match(
     version: float,
     config: Config,
-    client: namedtuple,
+    client: Client,
     lang,
     full_text,
     i,
@@ -4341,7 +4360,7 @@ def get_emoji_context(alternative, lang):
 def detect_non_inclusive_emoji(
     version: float,
     config: Config,
-    client: namedtuple,
+    client: Client,
     lang,
     full_text,
     i,

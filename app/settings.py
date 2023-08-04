@@ -54,6 +54,9 @@ class Settings(BaseSettings):
     models: List = ["en_core_web_lg", "de_core_news_lg"]
     fasttext: bool = True
     overwrite_enabled_user_categories: bool = False
+    minimum_version_web_ext: Optional[str]
+    minimum_version_word_plugin: Optional[str]
+    minimum_versions: dict = {}
 
     class Config:
         env_file = ".env"
@@ -64,7 +67,11 @@ def get_settings():
     settings = Settings()
     settings.is_prod = settings.platform_environment_type == "production"
 
-    settings.context_checker = {}
+    if settings.minimum_version_web_ext:
+        settings.minimum_versions["web-ext"] = settings.minimum_version_web_ext
+
+    if settings.minimum_version_word_plugin:
+        settings.minimum_versions["word-plugin"] = settings.minimum_version_word_plugin
 
     if settings.context_checker_url and settings.context_checker_api_key:
         settings.context_checker["en"] = {
