@@ -81,11 +81,9 @@ from app.categories import (
     get_category_keys,
     get_categories,
     get_category,
-    is_category_inclusive,
     get_proficiency_level,
     is_base_category,
     remove_base,
-    add_advanced,
 )
 from app.settings import get_settings
 from app.logger import set_up_logger
