@@ -18,7 +18,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "If a manager picks up this topic, he has to go the extra-mile to solve it.",
+            "context": "If a manager picks up this topic, he has to go the extra mile to solve it.",
             "end": 12,
             "explanation": {
                 "content": "advanced",
@@ -40,7 +40,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "If a manager picks up this topic, he has to go the extra-mile to solve it.",
+            "context": "If a manager picks up this topic, he has to go the extra mile to solve it.",
             "end": 40,
             "explanation": {
                 "content": "advanced",
@@ -56,16 +56,9 @@
             "text": "he has"
         },
         {
-            "alternatives": [
-                {
-                    "text": "think ahead"
-                },
-                {
-                    "text": "make a special effort"
-                }
-            ],
+            "alternatives": [],
             "category": "social-motive",
-            "context": "If a manager picks up this topic, he has to go the extra-mile to solve it.",
+            "context": "If a manager picks up this topic, he has to go the extra mile to solve it.",
             "end": 61,
             "explanation": {
                 "content": "video",
@@ -78,7 +71,7 @@
             "proficiency_level": "unconscious_bias",
             "start": 44,
             "subcategory": "agentic",
-            "text": "go the extra-mile"
+            "text": "go the extra mile"
         }
     ]
 }
