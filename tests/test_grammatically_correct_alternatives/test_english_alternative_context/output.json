@@ -117,7 +117,33 @@
             "text": "an addict"
         },
         {
-            "alternatives": [],
+            "alternatives": [
+                {
+                    "context": "💡 Inspiration",
+                    "inspiration": true,
+                    "text": "mentor at heart"
+                },
+                {
+                    "context": "💡 Inspiration",
+                    "inspiration": true,
+                    "text": "inspiration to the team"
+                },
+                {
+                    "context": "💡 Inspiration",
+                    "inspiration": true,
+                    "text": "entrepreneur at heart"
+                },
+                {
+                    "context": "💡 Inspiration",
+                    "inspiration": true,
+                    "text": "someone with an entrepreneurial mindset"
+                },
+                {
+                    "context": "💡 Inspiration",
+                    "inspiration": true,
+                    "text": "someone who thrives on working toward milestones"
+                }
+            ],
             "category": "social-motive",
             "context": "We hanged them up. We analyzed if this works. Are you a chairman or an addict? Are you a top performer? This is an eye-opener.",
             "end": 102,
@@ -166,50 +192,6 @@
             "start": 112,
             "subcategory": "vision",
             "text": "an eye-opener"
-        },
-        {
-            "alternatives": [
-                {
-                    "context": "💡 Inspiration",
-                    "inspiration": true,
-                    "text": "mentor at heart"
-                },
-                {
-                    "context": "💡 Inspiration",
-                    "inspiration": true,
-                    "text": "inspiration to the team"
-                },
-                {
-                    "context": "💡 Inspiration",
-                    "inspiration": true,
-                    "text": "entrepreneur at heart"
-                },
-                {
-                    "context": "💡 Inspiration",
-                    "inspiration": true,
-                    "text": "someone with an entrepreneurial mindset"
-                },
-                {
-                    "context": "💡 Inspiration",
-                    "inspiration": true,
-                    "text": "someone who thrives on working toward milestones"
-                }
-            ],
-            "category": "social-motive",
-            "context": "We hanged them up. We analyzed if this works. Are you a chairman or an addict? Are you a top performer? This is an eye-opener.",
-            "end": 102,
-            "explanation": {
-                "content": "advanced",
-                "icon": "😮‍💨",
-                "text": "Over-the-top statements make you sound less trustworthy",
-                "url": "https://www.witty.works/en/categories/social-motive/exaggeration?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Social Motive: Exaggeration",
-            "proficiency_level": "unconscious_bias",
-            "start": 89,
-            "subcategory": "exaggerating",
-            "text": "top performer"
         }
     ]
 }

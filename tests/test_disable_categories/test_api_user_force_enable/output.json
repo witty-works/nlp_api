@@ -8,6 +8,31 @@
         {
             "alternatives": [
                 {
+                    "text": "dedicated"
+                },
+                {
+                    "text": "committed"
+                }
+            ],
+            "category": "social-motive",
+            "context": "Hello ninja. You are our MVP.",
+            "end": 11,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😮‍💨",
+                "text": "Over-the-top statements make you sound less trustworthy",
+                "url": "https://www.witty.works/en/categories/social-motive/exaggeration?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Social Motive: Exaggeration",
+            "proficiency_level": "unconscious_bias",
+            "start": 6,
+            "subcategory": "exaggerating",
+            "text": "ninja"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "minimum viable product"
                 },
                 {
@@ -15,53 +40,19 @@
                 }
             ],
             "category": "cultural-diversity",
-            "context": "Merry Xmas everyone. You are our MVP.",
-            "end": 36,
+            "context": "Hello ninja. You are our MVP.",
+            "end": 28,
             "explanation": {
                 "icon": "😉",
                 "text": "Are you sure people know what this stands for? ",
                 "url": "https://www.witty.works/en/categories/cultural-diversity/abbreviation?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Cultural Diversity: Abbreviation",
             "proficiency_level": "unconscious_bias",
-            "start": 33,
-            "subcategory": "abbreviation",
+            "start": 25,
+            "subcategory": "advanced_abbreviation",
             "text": "MVP"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "Season's greeting"
-                },
-                {
-                    "text": "(Have) a great winterbreak"
-                },
-                {
-                    "text": "Wishing you a winter break filled with joy, love, and laughter"
-                },
-                {
-                    "text": "Best wishes for the holidays"
-                },
-                {
-                    "text": "A very happy New Year"
-                }
-            ],
-            "category": "religion",
-            "context": "Merry Xmas everyone. You are our MVP.",
-            "end": 10,
-            "explanation": {
-                "context": "ask about their traditions, if possible",
-                "icon": "😒",
-                "text": "Expression of a belief system not universally sharedcal",
-                "url": "https://www.witty.works/en/categories/religion/belief?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Religion: Belief",
-            "proficiency_level": "unconscious_bias",
-            "start": 0,
-            "subcategory": "belief",
-            "text": "Merry Xmas"
         }
     ]
 }

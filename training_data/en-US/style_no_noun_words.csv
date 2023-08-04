@@ -31,9 +31,9 @@ key learning,~s|s,style,advanced_hollow,"[""what we've learned"", 'findings']",[
 leading,~a,style,advanced_hollow,"['guiding', 'with the largest market share in (industry)(...)', 'with largest revenue share in the market(...)', 'with largest customer base in the segment(...)', 'who introduces the majority of technological advances in the market(...)']",[],"['guiding', 'with the largest market share in (industry)(...)', 'with largest revenue share in the market(...)', 'with largest customer base in the segment(...)', 'who introduces the majority of technological advances in the market(...)']"
 leverage,v,style,advanced_hollow,"['use', 'capitalize on']",[],"['use', 'capitalize on']"
 low-hanging fruit,~a|s,style,advanced_hollow,"['easy opportunities', 'easy pickings']",[],"['easy opportunities', 'easy pickings']"
-Make sure the juice is worth the squeeze,v|adv||s|v|a||~s,style,advanced_hollow,['Make sure this is worth the effort'],[],['Make sure this is worth the effort']
+Make sure the juice is worth the squeeze,v|adv||s|~v|a||~s,style,advanced_hollow,['Make sure this is worth the effort'],[],['Make sure this is worth the effort']
 many,a,style,advanced_hollow,"['a multitude of', 'a host of', 'numerous', 'multiple', 'countless']",[],"['a multitude of', 'a host of', 'numerous', 'multiple', 'countless']"
-most of all,a,style,advanced_hollow,"['especially', 'in particular', 'mostly', 'more than any other', 'more than anyone else', 'to a greater degree than anything else', 'x(...)']",[],"['especially', 'in particular', 'mostly', 'more than any other', 'more than anyone else', 'to a greater degree than anything else', 'x(...)']"
+most of all,a||s,style,advanced_hollow,"['especially', 'in particular', 'mostly', 'more than any other', 'more than anyone else', 'to a greater degree than anything else', 'x(...)']",[],"['especially', 'in particular', 'mostly', 'more than any other', 'more than anyone else', 'to a greater degree than anything else', 'x(...)']"
 move the needle on,v||~s|,style,advanced_hollow,"['provide a perceptible improvement in', 'increase activity in', 'have a measurable effect on', 'generate noticeable results in']",[],"['provide a perceptible improvement in', 'increase activity in', 'have a measurable effect on', 'generate noticeable results in']"
 need to have a conversation around,v||v||~s|,style,advanced_hollow,"['should talk about', 'should discuss']",[],"['should talk about', 'should discuss']"
 normal,a,style,advanced_hollow,"['traditional', 'typical', 'common', 'routine', 'regular', 'conventional', 'customary', 'popular', 'reasonable', 'well-adjusted', 'rational', 'able to think clearly', 'able to use reason']",[],"['traditional', 'typical', 'common', 'routine', 'regular', 'conventional', 'customary', 'popular', 'reasonable', 'well-adjusted', 'rational', 'able to think clearly', 'able to use reason']"
@@ -51,7 +51,7 @@ take it offline,v|~s|a,style,advanced_hollow,['talk about this later'],[],['talk
 Thanks for nothing.,~s||s,style,advanced_hollow,"[""I'm uncomfortable with this situation."", 'I honestly would have appreciated your help.', 'Can we come to a more constructive solution?']",[],"[""I'm uncomfortable with this situation."", 'I honestly would have appreciated your help.', 'Can we come to a more constructive solution?']"
 think outside the box,v|a||~s,style,advanced_hollow,"['think differently', 'explore new ideas', 'think creatively', 'use lateral thinking', 'look beyond the obvious', 'use parallel thinking(...)', 'consider (...) from a fresh perspective', 'look (at ...) with fresh eyes', 'approach (...) from a new angle', 'deviate from existing practices(...)']",[],"['think differently', 'explore new ideas', 'think creatively', 'use lateral thinking', 'look beyond the obvious', 'use parallel thinking(...)', 'consider (...) from a fresh perspective', 'look (at ...) with fresh eyes', 'approach (...) from a new angle', 'deviate from existing practices(...)']"
 unique,a,style,advanced_hollow,"['original', 'distinctive', 'rare', 'diverse', 'in a class by itself']",[],"['original', 'distinctive', 'rare', 'diverse', 'in a class by itself']"
-unique to,a,style,advanced_hollow,"['exclusive to', 'particular to', 'characteristic of', 'typical of', 'peculiar to']",[],"['exclusive to', 'particular to', 'characteristic of', 'typical of', 'peculiar to']"
+unique to,a|,style,advanced_hollow,"['exclusive to', 'particular to', 'characteristic of', 'typical of', 'peculiar to']",[],"['exclusive to', 'particular to', 'characteristic of', 'typical of', 'peculiar to']"
 utilize,v,style,advanced_hollow,['use'],[],['use']
 world-wide,a,style,advanced_hollow,"['--- be specific to build trust', 'in (...) countries', '(...) offices across (...) continents']",['--- be specific to build trust'],"['--- be specific to build trust', 'in (...) countries', '(...) offices across (...) continents']"
 absolute,a,style,exaggerating,['-'],['-'],['-']
@@ -104,17 +104,17 @@ winning type,~s|s,style,exaggerating,"['-', 'competitive person(...)', 'person m
 without any problem,||s,style,exaggerating,"['easily', 'smoothly', 'swimmingly', 'without a hitch', 'without friction', '-']",['-'],"['-', 'easily', 'smoothly', 'swimmingly', 'without a hitch', 'without friction']"
 without problem,|s,style,exaggerating,"['easily', 'smoothly', 'swimmingly', 'without a hitch', 'without friction', '-']",['-'],"['-', 'easily', 'smoothly', 'swimmingly', 'without a hitch', 'without friction']"
 world leader,~s|s,style,exaggerating,"['--- be specific to build trust', 'company with largest revenue share in the market(...)', 'with largest customer base in the segment(...)', 'brand to introduce the majority of technological advances in the market(...)']","['--- be specific to build trust', 'companies with largest revenue share in the market(...)', 'with largest customer base in the segment(...)', 'brand to introduce the majority of technological advances in the market(...)']","['--- be specific to build trust', 'company with largest revenue share in the market(...)', 'with largest customer base in the segment(...)', 'brand to introduce the majority of technological advances in the market(...)']"
-a bit,adv,style,filler,['-'],['-'],['-']
-a little,adv,style,filler,['-'],['-'],['-']
-a lot,adv,style,filler,['-'],['-'],['-']
+a bit,|,style,filler,['-'],['-'],['-']
+a little,|,style,filler,['-'],['-'],['-']
+a lot,|,style,filler,['-'],['-'],['-']
 absolutely,adv,style,filler,['-'],['-'],['-']
 actually,adv,style,filler,['-'],['-'],['-']
 almost,adv,style,filler,['-'],['-'],['-']
 amongst others,|~s,style,filler,['-'],['-'],['-']
-and then,conj,style,filler,['-'],['-'],['-']
+and then,conj|,style,filler,['-'],['-'],['-']
 basically,adv,style,filler,['-'],['-'],['-']
-believe me,v,style,filler,['-'],['-'],['-']
-by no means,||,style,filler,['-'],['-'],['-']
+believe me,v|~s,style,filler,['-'],['-'],['-']
+by no means,||~,style,filler,['-'],['-'],['-']
 by the way,||~s,style,filler,['-'],['-'],['-']
 can be used to,~v|~v|~v|,style,filler,['can'],[],['can']
 clearly,adv,style,filler,['-'],['-'],['-']

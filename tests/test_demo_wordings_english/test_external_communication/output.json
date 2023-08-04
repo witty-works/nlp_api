@@ -56,7 +56,14 @@
             "text": "he has"
         },
         {
-            "alternatives": [],
+            "alternatives": [
+                {
+                    "text": "think ahead"
+                },
+                {
+                    "text": "make a special effort"
+                }
+            ],
             "category": "social-motive",
             "context": "If a manager picks up this topic, he has to go the extra mile to solve it.",
             "end": 61,
