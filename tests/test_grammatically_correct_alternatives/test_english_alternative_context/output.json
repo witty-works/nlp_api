@@ -119,39 +119,6 @@
         {
             "alternatives": [
                 {
-                    "text": "a shocking"
-                },
-                {
-                    "text": "a real surprise"
-                },
-                {
-                    "text": "an enlightening"
-                },
-                {
-                    "text": "a wake-up call"
-                },
-                {
-                    "text": "shocking news"
-                }
-            ],
-            "category": "ability-physicality",
-            "context": "em up. We analyzed if this works. Are you a chairman or an addict? Are you a top performer? This is an eye-opener.",
-            "end": 125,
-            "explanation": {
-                "icon": "😒",
-                "text": "Repeats preconceived notions about the ability to see",
-                "url": "https://www.witty.works/en/categories/ability-physicality/vision?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Ability + Physicality: Vision",
-            "proficiency_level": "unconscious_bias",
-            "start": 112,
-            "subcategory": "vision",
-            "text": "an eye-opener"
-        },
-        {
-            "alternatives": [
-                {
                     "context": "💡 Inspiration",
                     "inspiration": true,
                     "text": "mentor at heart"
@@ -192,6 +159,39 @@
             "start": 89,
             "subcategory": "exaggerating",
             "text": "top performer"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "a shocking"
+                },
+                {
+                    "text": "a real surprise"
+                },
+                {
+                    "text": "an enlightening"
+                },
+                {
+                    "text": "a wake-up call"
+                },
+                {
+                    "text": "shocking news"
+                }
+            ],
+            "category": "ability-physicality",
+            "context": "em up. We analyzed if this works. Are you a chairman or an addict? Are you a top performer? This is an eye-opener.",
+            "end": 125,
+            "explanation": {
+                "icon": "😒",
+                "text": "Repeats preconceived notions about the ability to see",
+                "url": "https://www.witty.works/en/categories/ability-physicality/vision?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Ability + Physicality: Vision",
+            "proficiency_level": "unconscious_bias",
+            "start": 112,
+            "subcategory": "vision",
+            "text": "an eye-opener"
         }
     ]
 }

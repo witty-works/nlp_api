@@ -373,14 +373,6 @@ class RequestIn(BaseModel):
     organization_config_hash: Optional[str]
 
 
-class RequestInEvent(RequestIn):
-    type: EventType
-    context: Optional[str]
-    start: Optional[int]
-    end: Optional[int]
-    details: Dict[str, str]
-
-
 class ResultAlternative(BaseModel):
     text: Optional[str]
     remove: Optional[bool]

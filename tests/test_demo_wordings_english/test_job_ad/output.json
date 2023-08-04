@@ -33,16 +33,16 @@
         {
             "alternatives": [
                 {
+                    "text": "project management"
+                },
+                {
+                    "text": "person in project management"
+                },
+                {
                     "text": "they"
                 },
                 {
-                    "text": "management"
-                },
-                {
-                    "text": "management team"
-                },
-                {
-                    "text": "managers"
+                    "text": "people in project management"
                 }
             ],
             "category": "gender-orientation",
@@ -57,9 +57,9 @@
             "gravity": 2.0,
             "label": "Gender + Orientation: Jobs",
             "proficiency_level": "unconscious_bias",
-            "start": 26,
+            "start": 18,
             "subcategory": "titles",
-            "text": "manager"
+            "text": "project manager"
         },
         {
             "alternatives": [
@@ -171,71 +171,6 @@
             "start": 105,
             "subcategory": "agentic",
             "text": "ambitious"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "effectiveness"
-                },
-                {
-                    "text": "accomplishments"
-                },
-                {
-                    "text": "capabilities"
-                },
-                {
-                    "text": "fulfillment"
-                },
-                {
-                    "text": "efficiency"
-                }
-            ],
-            "category": "social-motive",
-            "context": "g on\nexceptional challenges and, together\nwith your ambitious colleagues, you will strive for a top performance.",
-            "end": 164,
-            "explanation": {
-                "content": "video",
-                "icon": "😒",
-                "text": "Doesn’t resonate with team-minded people",
-                "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Social Motive: Agentic language",
-            "proficiency_level": "unconscious_bias",
-            "start": 153,
-            "subcategory": "agentic",
-            "text": "performance"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "project management"
-                },
-                {
-                    "text": "person in project management"
-                },
-                {
-                    "text": "they"
-                },
-                {
-                    "text": "people in project management"
-                }
-            ],
-            "category": "gender-orientation",
-            "context": "As an independent project manager, you will be working on\nexceptional challenges and, together\nwith your ambitious colleagues, you wi",
-            "end": 33,
-            "explanation": {
-                "content": "advanced",
-                "icon": "😟",
-                "text": "People tend to picture a specific gender",
-                "url": "https://www.witty.works/en/categories/gender-orientation/jobs?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Gender + Orientation: Jobs",
-            "proficiency_level": "unconscious_bias",
-            "start": 18,
-            "subcategory": "titles",
-            "text": "project manager"
         },
         {
             "alternatives": [

@@ -81,11 +81,9 @@ from app.categories import (
     get_category_keys,
     get_categories,
     get_category,
-    is_category_inclusive,
     get_proficiency_level,
     is_base_category,
     remove_base,
-    add_advanced,
 )
 from app.settings import get_settings
 from app.logger import set_up_logger
@@ -98,7 +96,7 @@ from app.model import lemma_plural_lookup
 
 # probe.end()
 
-version = "1.46.5"
+version = "1.46.6"
 
 categories = get_categories()
 settings = get_settings()
@@ -1611,13 +1609,16 @@ def utf16_offsets(text):
 
 
 # matcher to false positives
-def is_false_positive_match(false_positive_matcher, tokens, token):
+def is_false_positive_match(false_positive_matcher, i, tokens, lemma):
     if false_positive_matcher is None:
         return False
 
+    index = tokens[i].idx
     for match_id, start, end in false_positive_matcher:
         span_false = tokens[start:end]
-        if token.idx in range(span_false.start_char, span_false.end_char):
+        if tokens[start:end].lemma_ != lemma and index in range(
+            span_false.start_char, span_false.end_char
+        ):
             return True
 
     return False
@@ -2257,6 +2258,26 @@ async def german_rules(
         if check_continue(i, new_i, tokens):
             continue
 
+        new_i = style_word_analysis_de(
+            version,
+            config,
+            client,
+            lang,
+            text,
+            i,
+            tokens,
+            offsets,
+            list_full,
+            fetch_word_rules(
+                rules["de"]["style_words_data"],
+                token_lower,
+                lemma_lower,
+            ),
+        )
+
+        if check_continue(i, new_i, tokens):
+            continue
+
         subcategory = "communal"
         if is_sub_category_enabled(config, subcategory):
             new_i = rules_based_words_phrase_matcher(
@@ -2304,26 +2325,6 @@ async def german_rules(
 
             if check_continue(i, new_i, tokens):
                 continue
-
-        new_i = style_word_analysis_de(
-            version,
-            config,
-            client,
-            lang,
-            text,
-            i,
-            tokens,
-            offsets,
-            list_full,
-            fetch_word_rules(
-                rules["de"]["style_words_data"],
-                token_lower,
-                lemma_lower,
-            ),
-        )
-
-        if check_continue(i, new_i, tokens):
-            continue
 
         new_i += 1
 
@@ -2581,27 +2582,6 @@ async def english_rules(
             offsets,
             list_full,
             fetch_word_rules(
-                rules[lang.locale]["inclusive_words_data"],
-                token_lower,
-                lemma_lower,
-            ),
-            false_positive_matcher,
-        )
-
-        if check_continue(i, new_i, tokens):
-            continue
-
-        new_i = rules_based_words_phrase_matcher(
-            version,
-            config,
-            client,
-            lang,
-            text,
-            i,
-            tokens,
-            offsets,
-            list_full,
-            fetch_word_rules(
                 rules[lang.locale]["style_words_data"],
                 token_lower,
                 lemma_lower,
@@ -2675,72 +2655,28 @@ async def english_rules(
         if check_continue(i, new_i, tokens):
             continue
 
+        new_i = rules_based_words_phrase_matcher(
+            version,
+            config,
+            client,
+            lang,
+            text,
+            i,
+            tokens,
+            offsets,
+            list_full,
+            fetch_word_rules(
+                rules[lang.locale]["inclusive_words_data"],
+                token_lower,
+                lemma_lower,
+            ),
+            false_positive_matcher,
+        )
+
+        if check_continue(i, new_i, tokens):
+            continue
+
         new_i += 1
-
-    sentences_matcher(
-        version,
-        config,
-        client,
-        lang,
-        text,
-        tokens,
-        offsets,
-        list_full,
-        rules[lang.locale]["df_open_dis_sentence"],
-        rules[lang.locale]["open_dis_sentences"],
-    )
-
-    sentences_matcher(
-        version,
-        config,
-        client,
-        lang,
-        text,
-        tokens,
-        offsets,
-        list_full,
-        rules[lang.locale]["df_gendered_sentence"],
-        rules[lang.locale]["gender_sentences_data"],
-    )
-
-    sentences_matcher(
-        version,
-        config,
-        client,
-        lang,
-        text,
-        tokens,
-        offsets,
-        list_full,
-        rules[lang.locale]["df_inclusive_sentence"],
-        rules[lang.locale]["inclusive_sentences_data"],
-    )
-
-    sentences_matcher(
-        version,
-        config,
-        client,
-        lang,
-        text,
-        tokens,
-        offsets,
-        list_full,
-        rules[lang.locale]["df_style_sentence"],
-        rules[lang.locale]["style_sentences_data"],
-    )
-
-    sentences_matcher(
-        version,
-        config,
-        client,
-        lang,
-        text,
-        tokens,
-        offsets,
-        list_full,
-        rules[lang.locale]["df_ub_sentence"],
-        rules[lang.locale]["bias_sentences_data"],
-    )
 
     return list_full
 
@@ -2778,10 +2714,8 @@ def parse_word_types(word_types, lower_case=True):
 def is_word_match(
     lang,
     token,
-    tokens,
     word,
     word_types,
-    false_positive_matcher,
     lower_case,
     postfix,
 ):
@@ -2796,10 +2730,7 @@ def is_word_match(
     if token_word != word and (not postfix or not token_word.endswith(word.lower())):
         return False
 
-    if not check_word_types(lang, token, word_types, True):
-        return False
-
-    return is_false_positive_match(false_positive_matcher, tokens, token) is False
+    return check_word_types(lang, token, word_types, True)
 
 
 def is_phrase_match(
@@ -2807,7 +2738,7 @@ def is_phrase_match(
     i,
     tokens,
     rule: Rule,
-    matches_false=None,
+    false_positive_matcher=None,
     lower_case=True,
     postfix=False,
 ):
@@ -2816,28 +2747,28 @@ def is_phrase_match(
         postfix = False
 
     text = ""
-    word_token = None
     for k in range(word_count):
-        if word_token:
-            text += word_token.whitespace_
-
         try:
+            if k > 0:
+                text += word_token.whitespace_
+
             word_token = tokens[i + k]
             if not is_word_match(
                 lang,
                 word_token,
-                tokens,
                 rule.words[k],
                 rule.word_types[k],
-                matches_false,
                 lower_case,
                 postfix,
             ):
                 return None, False
+
+            text += word_token.text
         except IndexError:
             return None, False
 
-        text += word_token.text
+    if is_false_positive_match(false_positive_matcher, i, tokens, rule.lemma):
+        return None, False
 
     return i + k + 1, text
 
@@ -3625,55 +3556,6 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
     return alternatives_with_article
 
 
-def sentences_matcher(
-    version: float,
-    config: Config,
-    client: namedtuple,
-    lang,
-    full_text,
-    tokens,
-    offsets,
-    list_full,
-    df_sentence,
-    sentences_data,
-):
-    if len(df_sentence) == 0 or len(sentences_data) == 0:
-        return
-
-    matches = fetch_phrase_matcher(lang.lang, tokens, df_sentence)
-
-    alternatives = None
-
-    for match_id, start, end in matches:
-        span = tokens[start:end]
-        for sentence, subcategory, *data in sentences_data:
-            if (
-                not is_sub_category_enabled(config, subcategory)
-                or span.text.lower() != sentence.lower()
-            ):
-                continue
-
-            if len(data):
-                alternatives = data[0]
-
-            list_full.append(
-                ResultOut.factory(
-                    version,
-                    config,
-                    client,
-                    lang,
-                    span.text,
-                    span.text,
-                    full_text,
-                    offsets,
-                    subcategory,
-                    span.start_char,
-                    span.end_char,
-                    alternatives,
-                )
-            )
-
-
 def regex_match(
     version: float,
     config: Config,
@@ -4336,7 +4218,7 @@ def rules_based_words_phrase_matcher(
         if not text:
             continue
 
-        alternatives = None
+        alternatives = rule.alternatives
         start = token.idx
 
         if rule.alternatives:
@@ -4345,7 +4227,7 @@ def rules_based_words_phrase_matcher(
                 alternatives = [alternative]
             elif rule.lemma.count(" ") == 0:
                 text, start, alternatives = alternatives_declension(
-                    lang.lang, token.text, i, tokens, rule.alternatives
+                    lang.lang, token.text, i, tokens, alternatives
                 )
 
         if not is_sub_category_enabled(config, subcategory):

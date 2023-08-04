@@ -3,23 +3,6 @@
     "limit_reached": false,
     "results": [
         {
-            "alternatives": [],
-            "category": "social-motive",
-            "context": "Kind regards from London",
-            "end": 4,
-            "explanation": {
-                "content": "video",
-                "icon": "✅",
-                "text": "Strengthens collaboration and a sense of community",
-                "url": "https://www.witty.works/en/categories/social-motive/communal-language?reducedView=true"
-            },
-            "label": "Social Motive: Communal language",
-            "proficiency_level": "inclusive",
-            "start": 0,
-            "subcategory": "communal",
-            "text": "Kind"
-        },
-        {
             "alternatives": [
                 {
                     "text": "Cordially"
