@@ -24,19 +24,10 @@
         {
             "alternatives": [
                 {
-                    "text": "skilled person"
+                    "text": "dedicated"
                 },
                 {
-                    "text": "very proficient person"
-                },
-                {
-                    "text": "resourceful person"
-                },
-                {
-                    "text": "they"
-                },
-                {
-                    "text": "skilled people"
+                    "text": "committed"
                 }
             ],
             "category": "social-motive",

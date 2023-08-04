@@ -48,40 +48,6 @@
         {
             "alternatives": [
                 {
-                    "text": "effectiveness"
-                },
-                {
-                    "text": "accomplishments"
-                },
-                {
-                    "text": "capabilities"
-                },
-                {
-                    "text": "fulfillment"
-                },
-                {
-                    "text": "efficiency"
-                }
-            ],
-            "category": "social-motive",
-            "context": "Our whole team is ambitious and strives for top performance.",
-            "end": 59,
-            "explanation": {
-                "content": "video",
-                "icon": "😒",
-                "text": "Doesn’t resonate with team-minded people",
-                "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Social Motive: Agentic language",
-            "proficiency_level": "unconscious_bias",
-            "start": 48,
-            "subcategory": "agentic",
-            "text": "performance"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "substantial contribution to business success"
                 },
                 {

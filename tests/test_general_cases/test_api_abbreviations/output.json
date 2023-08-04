@@ -5,37 +5,6 @@
         {
             "alternatives": [
                 {
-                    "text": "ASL"
-                },
-                {
-                    "text": "as"
-                },
-                {
-                    "text": "all"
-                },
-                {
-                    "text": "ask"
-                },
-                {
-                    "text": "ash"
-                }
-            ],
-            "category": "orthography",
-            "context": "Do you speak asl? I am taking a rest.",
-            "end": 16,
-            "explanation": {
-                "icon": "❌",
-                "text": "Possible spelling mistake found."
-            },
-            "gravity": 1.0,
-            "label": "Spelling mistake",
-            "start": 13,
-            "subcategory": "typos",
-            "text": "asl"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "American Sign Language"
                 },
                 {
@@ -43,7 +12,7 @@
                 }
             ],
             "category": "cultural-diversity",
-            "context": "Do you speak asl? I am taking a rest.",
+            "context": "Do you speak ASL? I am taking a rest.",
             "end": 16,
             "explanation": {
                 "icon": "😉",
@@ -55,7 +24,7 @@
             "proficiency_level": "unconscious_bias",
             "start": 13,
             "subcategory": "advanced_abbreviation",
-            "text": "asl"
+            "text": "ASL"
         }
     ]
 }
