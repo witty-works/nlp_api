@@ -115,6 +115,50 @@
         {
             "alternatives": [
                 {
+                    "context": "💡 Inspiration",
+                    "inspiration": true,
+                    "text": "for the mentor at heart"
+                },
+                {
+                    "context": "💡 Inspiration",
+                    "inspiration": true,
+                    "text": "for every inspiration to the team"
+                },
+                {
+                    "context": "💡 Inspiration",
+                    "inspiration": true,
+                    "text": "resonating with the entrepreneur at heart"
+                },
+                {
+                    "context": "💡 Inspiration",
+                    "inspiration": true,
+                    "text": "appealing to an entrepreneurial mindset"
+                },
+                {
+                    "context": "💡 Inspiration",
+                    "inspiration": true,
+                    "text": "motivating for someone who thrives on working toward milestones"
+                }
+            ],
+            "category": "social-motive",
+            "context": "class (or low-class) families are not our target audience. Are you a top-performing person? Are you a top-performer. We are a top-performing team.",
+            "end": 121,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😮‍💨",
+                "text": "Over-the-top statements make you sound less trustworthy",
+                "url": "https://www.witty.works/en/categories/social-motive/exaggeration?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Social Motive: Exaggeration",
+            "proficiency_level": "unconscious_bias",
+            "start": 108,
+            "subcategory": "exaggerating",
+            "text": "top-performer"
+        },
+        {
+            "alternatives": [
+                {
                     "context": "about a person",
                     "text": "a contributing to business success"
                 },
