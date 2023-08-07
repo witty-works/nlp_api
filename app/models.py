@@ -18,6 +18,11 @@ from app.categories import (
 from app.privacy_filter import get_privacy_filter
 
 
+class Client(BaseModel):
+    name: Optional[str]
+    version: Optional[str]
+
+
 class Language(object):
     def __init__(self, locale):
         self.locale = locale
@@ -362,12 +367,15 @@ class UserConfResponse(ConfRequest):
     team_analytics: Optional[bool]
 
 
-class RequestIn(BaseModel):
+class BaseRequestIn(BaseModel):
+    client: Optional[str]
+
+
+class RequestIn(BaseRequestIn):
     type: str = "check"
     text: str
     lang: Optional[LangWithAutoType] = LangWithAutoType.AUTO
     id: Optional[str]
-    client: Optional[str]
     config: Optional[Config] = Config()
     config_hash: Optional[str]
     organization_config_hash: Optional[str]
