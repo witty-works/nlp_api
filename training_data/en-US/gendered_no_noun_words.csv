@@ -22,7 +22,7 @@ he or she,~s||~s,gendered,binary_pronouns,binary_pronouns,"['they', '((given nam
 he/she,~s||~s,gendered,binary_pronouns,binary_pronouns,"['they', '((given name))', '((given name family name))']",[],"['they', '((given name))', '((given name family name))']",
 her or him,~s||~s,gendered,binary_pronouns,binary_pronouns,"['them', '((given name))', '((given name family name))']",[],"['them', '((given name))', '((given name family name))']",
 her or his,s||s,gendered,binary_pronouns,binary_pronouns,"['their', ""((given name's))""]",[],"['their', ""((given name's))""]",
-her/him,s|s,gendered,binary_pronouns,binary_pronouns,"['them', '((given name))', '((given name family name))']",[],"['them', '((given name))', '((given name family name))']",
+her/him,~s||~s,gendered,binary_pronouns,binary_pronouns,"['them', '((given name))', '((given name family name))']",[],"['them', '((given name))', '((given name family name))']",
 her/his,~s||~s,gendered,binary_pronouns,binary_pronouns,"['their', ""((given name's))""]",[],"['their', ""((given name's))""]",
 hers or his,~s||~s,gendered,binary_pronouns,binary_pronouns,"['theirs', ""((given name's and given name's))""]",[],"['theirs', ""((given name's and given name's))""]",
 herself or himself,~s||~s,gendered,binary_pronouns,binary_pronouns,"['themself', 'theirself', 'self']",[],"['themself', 'theirself', 'self']",

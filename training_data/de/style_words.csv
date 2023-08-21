@@ -110,7 +110,7 @@ Sales Promotion,|,style,advanced_anglicism,['Verkaufsförderung']
 Sales-Pitch,s,style,advanced_anglicism,"['Verkaufsmasche', 'Verkaufstaktik', 'Verkaufsargumentation', 'Kundenansprache', 'Verkaufspräsentation']"
 Sample,s,style,advanced_anglicism,['Verkaufskatalog']
 Save my ass,v||s,style,advanced_anglicism,"[""Halt' mir den Rücken frei""]"
-Save-my-ass-Memo,v||s|s,style,advanced_anglicism,"['Ich-sicher-mich-vorsorglich-ab-Memo', 'Ich-steh-gut-da-Memo']"
+Save-my-ass-Memo,~,style,advanced_anglicism,"['Ich-sicher-mich-vorsorglich-ab-Memo', 'Ich-steh-gut-da-Memo']"
 SEO Manager,|s,style,advanced_anglicism,"['Spezialist~in~/~Spezialist in der Suchmaschinenoptimierung', 'Suchmaschinenoptimierung(...)', 'Spezialist~innen~ und ~Spezialisten in der Suchmaschinenoptimierung']"
 Service,s,style,advanced_anglicism,['Diensleistung']
 shiften,v,style,advanced_anglicism,"['umverteilen', 'verschieben', 'versetzen']"
@@ -487,7 +487,7 @@ vergleichsweise,adv,style,filler,['-']
 vermutlich,adv,style,filler,['-']
 vielfach,adv,style,filler,['-']
 vielleicht,adv,style,filler,['-']
-voll und ganz,adv,style,filler,['-']
+voll und ganz,||,style,filler,['-']
 vollends,adv,style,filler,['-']
 völlig,adv,style,filler,['-']
 vollkommen,adv,style,filler,['-']
