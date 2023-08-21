@@ -479,6 +479,9 @@ class ResultOut(BaseModel):
 
         if category != "orthography" and category != "corporate_rules" and url is None:
             url = lang._(subcategory, "canonical_url")
+            if url is not None and len(url) == 0:
+                url = None
+
             if url is not None and client.name == "web-ext":
                 url += "?reducedView=true"
 

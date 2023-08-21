@@ -246,19 +246,19 @@
                     "text": "🧑"
                 },
                 {
-                    "context": "Erwachsener Dunkle Hautfarbe",
+                    "context": "Person Dunkle Hautfarbe",
                     "text": "🧑🏿"
                 },
                 {
-                    "context": "Erwachsener Mittlere Hautfarbe",
+                    "context": "Person Mittlere Hautfarbe",
                     "text": "🧑🏽"
                 },
                 {
-                    "context": "Erwachsener Mitteldunkle Hautfarbe",
+                    "context": "Person Mitteldunkle Hautfarbe",
                     "text": "🧑🏾"
                 },
                 {
-                    "context": "Erwachsener Mittelhelle Hautfarbe",
+                    "context": "Person Mittelhelle Hautfarbe",
                     "text": "🧑🏼"
                 }
             ],
@@ -321,11 +321,11 @@
         {
             "alternatives": [
                 {
-                    "context": "Familie Frau, Frau Und Mädchen",
+                    "context": "Familie Frau Frau Und Mädchen",
                     "text": "👩‍👩‍👧"
                 },
                 {
-                    "context": "Familie Mann, Mann Und Mädchen",
+                    "context": "Familie Mann Mann Und Mädchen",
                     "text": "👨‍👨‍👧"
                 }
             ],
@@ -333,7 +333,7 @@
             "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut.",
             "end": 61,
             "explanation": {
-                "context": "Familie Mann, Frau Und Mädchen",
+                "context": "Familie Mann Frau Und Mädchen",
                 "icon": "😒",
                 "text": "Vermittelt ein heterosexuelles Werte- und Rollen-System",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/sexuelle-orientierung?reducedView=true"
