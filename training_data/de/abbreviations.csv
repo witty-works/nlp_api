@@ -1,5 +1,5 @@
 Lemma,Word_Type,Category,Primary_subcategory,Alt_split
-(x)aaS,~,style,advanced_abbreviation,"['something as a service ((x)aaS)', 'etwas als Dienstleistung', 'etwas als Dienstleistung ((x)aaS)']"
+(x)aaS,|||,style,advanced_abbreviation,"['something as a service ((x)aaS)', 'etwas als Dienstleistung', 'etwas als Dienstleistung ((x)aaS)']"
 ACCT,~,style,advanced_abbreviation,"['Account', 'Konto']"
 ADD,~,style,advanced_abbreviation,"['Attention Deficit Disorder', 'Attention Deficit Disorder (ADD)', 'Aufmerksamkeitsdefizitstörung', 'Aufmerksamkeitsdefizitstörung (ADS)']"
 ADHD,~,style,advanced_abbreviation,"['Attention Deficit Hyperactivity Disorder', 'Attention Deficit Hyperactivity Disorder (ADHD)', 'Aufmerksamkeitsdefizit-Hyperaktivitätsstörung', 'Aufmerksamkeitsdefizit-Hyperaktivitätsstörung (ADHS)']"
@@ -10,7 +10,7 @@ AJAX,~,style,advanced_abbreviation,"['Asynchrones JavaScript und XML', 'Asynchro
 AKA,~,style,advanced_abbreviation,"['also known as', 'auch bekannt als']"
 AMP,~,style,advanced_abbreviation,"['Accelerated Mobile Pages', 'Accelerated Mobile Pages (AMP)', 'beschleunigte Mobilseiten']"
 AP,~,style,advanced_abbreviation,"['Accounts Payable', 'Accounts Payable (AP)', 'Kreditorenbuchhaltung']"
-AP/AR,~,style,advanced_abbreviation,"['Accounts Payable/Receivable', 'Accounts Payable/Receivable (AP/AR)', 'Kreditoren- und Debitorenbuchhaltung']"
+AP/AR,||,style,advanced_abbreviation,"['Accounts Payable/Receivable', 'Accounts Payable/Receivable (AP/AR)', 'Kreditoren- und Debitorenbuchhaltung']"
 API,~,style,advanced_abbreviation,"['Application Program Interface (API)', 'Anwendungsprogrammschnittstelle', 'Application Programming Interface (API)', 'Anwendungsprogrammierschnittstelle']"
 AR,~,style,advanced_abbreviation,"['Accounts Receivable', 'Accounts Receivable (AR)', 'Debitorenbuchhaltung']"
 ARIA,~,style,advanced_abbreviation,"['Accessible Rich Internet Applications', 'Accessible Rich Internet Applications (ARIA)', 'ARIA-Initiative zur Verbesserung der Zugänglichkeit von Webseiten und Webanwendungen für Menschen mit Behinderungen']"
@@ -165,7 +165,7 @@ MSP,~,style,advanced_abbreviation,"['Multi-sided Platform (MSP)', 'Mehrseitige P
 MTD,~,style,advanced_abbreviation,"['Month-to-Date (MTD)', 'diesen Monat', 'seit Monatsanfang', 'Monat bis dato']"
 MVC,~,style,advanced_abbreviation,"['Model-View-Controller (MVC)', 'Softwarearchitektur, die die Logik einer Anwendung von ihrer Präsentation trennt']"
 MVP,~,style,advanced_abbreviation,"['Minimum Viable Product (MVP)', 'Produkt in Minimalausführung', 'minimal überlebensfähiges Produkt', 'minimal funktionsfähige Iteration eines Produkts']"
-N/A,~,style,advanced_abbreviation,"['not applicable', 'not available', 'unzutreffend', 'nicht verfügbar', 'nicht angegeben']"
+N/A,||,style,advanced_abbreviation,"['not applicable', 'not available', 'unzutreffend', 'nicht verfügbar', 'nicht angegeben']"
 NAV,~,style,advanced_abbreviation,"['Net Asset Value (NAV)', 'Nettoinventarwert']"
 NBD,~,style,advanced_abbreviation,"['No big deal', 'Keine große Angelegenheit', 'eine Kleinigkeit', 'Kein Thema!', 'Nicht so schlimm']"
 NDA,~,style,advanced_abbreviation,"['Non-disclosure Agreement (NDA)', 'Geheimhaltungsvereinbarung']"
@@ -189,7 +189,7 @@ OTB,~,style,advanced_abbreviation,"['outside the box', 'unkonventionell', 'um di
 OTC,~,style,advanced_abbreviation,"['Over-the-Counter (OTC)', 'über den Ladentisch', 'im Einzelhandel erhältlich']"
 OTP,~,style,advanced_abbreviation,"['over-the-top', 'One-Time-Password', 'On-Time-Performance', 'übertrieben', 'Einmalpasswort', 'pünktlich erbrachte Leistung']"
 P-card,~,style,advanced_abbreviation,"['Purchasing-Card (P-card)', 'Procurement-Card (P-card)', 'Einkaufskarte', 'Geschäftskreditkarte', 'Kundenkarte']"
-P/E,~,style,advanced_abbreviation,"['Price-to-Earnings (P/E)', 'Kurs-Gewinn-Verhältnis']"
+P/E,||,style,advanced_abbreviation,"['Price-to-Earnings (P/E)', 'Kurs-Gewinn-Verhältnis']"
 P&L,~,style,advanced_abbreviation,"['Profit-and-Loss-Statement (P&L)', 'Gewinn- und Verlustrechnung']"
 PaaS,~,style,advanced_abbreviation,"['Platform-as-a-Service (PaaS)', 'Plattform als Dienstleistung']"
 PIK,~,style,advanced_abbreviation,"['Payments-in-kind (PIK)', 'Zahlungen in Form von Sachleistungen']"
@@ -295,7 +295,6 @@ JK,~,style,advanced_anglicism,"['just kidding', 'nur ein Scherz', 'nicht ernst g
 TBA,~,style,advanced_anglicism,"['to be announced', 'wird noch bekannt gegeben', 'steht noch nicht fest', 'wird noch erledigt']"
 etc,~,style,filler,['-']
 etc.,~,style,filler,['-']
-o. ä.,|,style,filler,['-']
-u.a.,~,style,filler,"['-', 'unter Anderem']"
-u.ä.,~,style,filler,"['-', 'und ähnlich']"
-u.Ä.,~,style,filler,"['-', 'und Ähnliche', 'und Ähnliches']"
+o.ä.,,style,filler,['-']
+u.ä.,|,style,filler,"['-', 'und ähnlich']"
+u.Ä.,|,style,filler,"['-', 'und Ähnliche', 'und Ähnliches']"

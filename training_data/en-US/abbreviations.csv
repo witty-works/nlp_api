@@ -1,5 +1,5 @@
 Lemma,Word_Type,Category,Primary_subcategory,Alt_split
-(x)aaS,=,style,advanced_abbreviation,"['something as a service', 'something as a service ((x)aaS)']"
+(x)aaS,|~,style,advanced_abbreviation,"['something as a service', 'something as a service ((x)aaS)']"
 A.M.,=,style,advanced_abbreviation,"['Master of Arts', 'Master of Arts (A.M.)']"
 ACCT,=,style,advanced_abbreviation,['account']
 ADHD,=,style,advanced_abbreviation,"['attention deficit hyperactivity disorder', 'attention deficit hyperactivity disorder (ADHD)', 'person with attention deficit hyperactivity disorder(...)', 'fidgety(...)', 'restless(...)', 'easily bored(...)']"
@@ -8,7 +8,7 @@ AJAX,=,style,advanced_abbreviation,"['asynchronous JavaScript and XML', 'asynchr
 AKA,=,style,advanced_abbreviation,['also known as']
 AMP,=,style,advanced_abbreviation,"['accelerated mobile pages', 'accelerated mobile pages (AMP)']"
 AP,=,style,advanced_abbreviation,"['accounts payable', 'accounts payable (AP)']"
-AP/AR,=,style,advanced_abbreviation,"['Accounts Payable/Receivable', 'Accounts Payable/Receivable (AP/AR)']"
+AP/AR,||,style,advanced_abbreviation,"['Accounts Payable/Receivable', 'Accounts Payable/Receivable (AP/AR)']"
 API,=,style,advanced_abbreviation,"['application program interface', 'application program interface (API)', 'application programming interface', 'application programming interface (API)']"
 AR,=,style,advanced_abbreviation,"['accounts receivable', 'accounts receivable (AR)']"
 ARIA,=,style,advanced_abbreviation,"['accessible rich internet applications', 'accessible rich internet applications (ARIA)']"
@@ -153,7 +153,7 @@ LTV,=,style,advanced_abbreviation,"['lifetime value', 'lifetime value (LTV)']"
 LWOP,=,style,advanced_abbreviation,['leave without pay']
 M.A.,=,style,advanced_abbreviation,"['Master of Arts', 'Master of Arts (M.A.)']"
 M.S.,=,style,advanced_abbreviation,"['Master of Science', 'Master of Science (M.S.)']"
-M.Sc.,=,style,advanced_abbreviation,"['Master of Science', 'Master of Science (M.Sc.)']"
+M.Sc.,|,style,advanced_abbreviation,"['Master of Science', 'Master of Science (M.Sc.)']"
 M&A,=,style,advanced_abbreviation,"['mergers and acquisitions', 'mergers and acquisitions (M&A)']"
 MA,=,style,advanced_abbreviation,"['Master of Arts', 'Master of Arts (MA)']"
 MAT,=,style,advanced_abbreviation,"['medication-assisted treatment (MAT) --- avoid this term', 'medication-assisted treatment --- avoid this term', 'pharmacotherapy', 'medications for substance use disorder (MSUD)', 'medications for opioid use disorder (MOUD)']"
@@ -174,7 +174,7 @@ MSP,=,style,advanced_abbreviation,"['multi-sided platform', 'multi-sided platfor
 MTD,=,style,advanced_abbreviation,"['month-to-date', 'month-to-date (MTD)']"
 MVC,=,style,advanced_abbreviation,"['model-view-controller', 'model-view-controller (MVC)']"
 MVP,=,style,advanced_abbreviation,"['minimum viable product', 'minimum viable product (MVP)']"
-N/A,=,style,advanced_abbreviation,"['not applicable', 'not available']"
+N/A,||~,style,advanced_abbreviation,"['not applicable', 'not available']"
 NAV,=,style,advanced_abbreviation,"['net asset value', 'net asset value (NAV)']"
 NBD,=,style,advanced_abbreviation,['No big deal.']
 NDA,=,style,advanced_abbreviation,"['non-disclosure agreement', 'non-disclosure agreement (NDA)']"
@@ -199,7 +199,7 @@ OTC,=,style,advanced_abbreviation,"['over the counter', 'over the counter (OTC)'
 OTP,=,style,advanced_abbreviation,"['over-the-top', 'one-time password', 'one-time passcode', 'on-time performance']"
 OUD,=,style,advanced_abbreviation,"['opioid use disorder (OUD)', 'opioid use disorder']"
 P-card,=,style,advanced_abbreviation,"['purchase card', 'purchase card (P-card)']"
-P/E,=,style,advanced_abbreviation,"['price to earnings', 'price to earnings (P/E)']"
+P/E,~||~,style,advanced_abbreviation,"['price to earnings', 'price to earnings (P/E)']"
 P&L,=,style,advanced_abbreviation,"['profit and loss statement', 'profit and loss statement (P&L)']"
 PaaS,=,style,advanced_abbreviation,"['platform as a service', 'platform as a service (PaaS)']"
 PIK,=,style,advanced_abbreviation,"['payments in kind', 'payments in kind (PIK)']"
@@ -252,7 +252,7 @@ SaaS,=,style,advanced_abbreviation,"['software as a service', 'software as a ser
 SAFE,=,style,advanced_abbreviation,"['simple agreement for future equity', 'simple agreement for future equity (SAFE)']"
 SBIC,=,style,advanced_abbreviation,"['small business investment company', 'small business investment company (SBIC)']"
 SBIR,=,style,advanced_abbreviation,"['Small Business Innovation Research', 'Small Business Innovation Research (SBIR)']"
-Sc.M.,=,style,advanced_abbreviation,"['Master of Science', 'Master of Science (Sc.M.)']"
+Sc.M.,||,style,advanced_abbreviation,"['Master of Science', 'Master of Science (Sc.M.)']"
 SCCE,=,style,advanced_abbreviation,"['Society for Corporate Compliance and Ethics', 'Society for Corporate Compliance and Ethics (SCCE)']"
 SCM,=,style,advanced_abbreviation,"['source control management --- in technology', 'source control management (SCM) --- in technology', 'source code management', 'Master of Science --- degree', 'Master of Science (ScM)']"
 SEC,=,style,advanced_abbreviation,"['Securities and Exchange Commission', 'Securities and Exchange Commission (SEC)']"

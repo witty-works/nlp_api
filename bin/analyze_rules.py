@@ -11,7 +11,7 @@ from app.models import (
     Config,
     GenderedRolesFormatType,
 )
-from app.main import parse_word_types
+from app.main import parse_word_types, tokenize
 from app.model import fetch_nlp_model
 from app.settings import get_settings
 from app.categories import get_category_keys
@@ -137,22 +137,21 @@ def get_data_from_files(model, locale, details):
                         except ValueError:
                             continue
 
-                    lemma = row["Lemma"].replace("'", '"')
+                    lemma = row["Lemma"]
                     if "Word_Type" in row:
-                        word_count = lemma.count(" ") + 1
+                        words = tokenize(lemma, locale[0:2])
+                        word_count = len(words)
 
                         word_type = row["Word_Type"]
                         if word_type is None:
                             print("Lemma '%s' is missing a word type." % (lemma))
-                            word_count = 0
                         else:
                             word_type_list = word_type.split("|")
-                            words = lemma.replace("/", " ").replace(",", " ").split()
 
-                        if len(word_type_list) < word_count:
+                        if len(word_type_list) != word_count:
                             print(
-                                "Lemma '%s' mismatch with word type '%s'."
-                                % (lemma, word_type)
+                                "Lemma '%s' (%i) mismatch with word type '%s' (%i)."
+                                % (lemma, len(word_type_list), word_type, word_count)
                             )
                             word_count = 0
 
