@@ -98,6 +98,8 @@ class GermanGenderEndingType(str, Enum):
     UNDERSCORE = "_in"
     STAR = "*in"
     COLON = ":in"
+    PARENTHESIS_DASH = "(-)"
+    PARENTHESIS = "()"
     CAPITAL_LETTER = "In"
     STR_SLASH = "slash_in"
     STR_SLASH_DASH = "slash_dash_in"
@@ -143,6 +145,12 @@ class Config(BaseModel):
         GermanGenderEndingType.COLON: re.compile(r"^[A-ZÄÖÜ][a-zäöü]+:in(nen)?$"),
         GermanGenderEndingType.SLASH: re.compile(r"^[A-ZÄÖÜ][a-zäöü]+/in(nen)?$"),
         GermanGenderEndingType.SLASH_DASH: re.compile(r"^[A-ZÄÖÜ][a-zäöü]+/-in(nen)?$"),
+        GermanGenderEndingType.PARENTHESIS_DASH: re.compile(
+            r"^[A-ZÄÖÜ][a-zäöü]+\(-in(nen)?\)$"
+        ),
+        GermanGenderEndingType.PARENTHESIS: re.compile(
+            r"^[A-ZÄÖÜ][a-zäöü]+\(in(nen)?\)$"
+        ),
         GermanGenderEndingType.CAPITAL_LETTER: re.compile(
             r"^[A-ZÄÖÜ][a-zäöü]+In(nen)?$"
         ),
@@ -153,13 +161,17 @@ class Config(BaseModel):
         GermanGenderEndingType.COLON: re.compile(r"^[a-zäöü]{3,7}:[a-zäöü]{3,7}$"),
         GermanGenderEndingType.SLASH: re.compile(r"^[a-zäöü]{3,7}/[a-zäöü]{3,7}$"),
         GermanGenderEndingType.SLASH_DASH: re.compile(r"^[a-zäöü]{3,7}/[a-zäöü]{3,7}$"),
+        GermanGenderEndingType.CAPITAL_LETTER: re.compile(r"^[a-zäöü]{3,7}/[a-zäöü]{3,7}$"),
     }
     _gendereddenom_ending_word_type = {
-        GermanGenderEndingType.STAR: (None, None, "*"),
-        GermanGenderEndingType.UNDERSCORE: (None, None, ":"),
-        GermanGenderEndingType.COLON: (None, None, ":"),
+        GermanGenderEndingType.STAR: (0, 0, "*"),
+        GermanGenderEndingType.UNDERSCORE: (0, 0, "_"),
+        GermanGenderEndingType.COLON: (0, 0, ":"),
         GermanGenderEndingType.SLASH: (-1, 2, "/"),
-        GermanGenderEndingType.SLASH_DASH: (None, None, "/"),
+        GermanGenderEndingType.SLASH_DASH: (0, 0, "/"),
+        GermanGenderEndingType.PARENTHESIS_DASH: (-1, 2, ")"),
+        GermanGenderEndingType.PARENTHESIS: (-1, 4, "("),
+        GermanGenderEndingType.CAPITAL_LETTER: (0, 0, "I"),
     }
     disabled_categories: List = []
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH

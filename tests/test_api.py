@@ -1091,13 +1091,13 @@ def test_german_gender_ending():
         response_content = json.loads(response.content)
 
         expected = [
-            "Sinti/ze und Rom/nja",
-            "Sinti_ze und Rom_nja",
-            "Sinti:ze und Rom:nja",
             "Sinti*ze und Rom*nja",
-            "Sinti/-ze und Rom/-nja",
             "Sintize/Sinti und Romnja/Roma",
+            "Sinti_ze und Rom_nja",
             "SintiZe und RomNja",
+            "Sinti/ze und Rom/nja",
+            "Sinti:ze und Rom:nja",
+            "Sinti/-ze und Rom/-nja",
         ]
 
         assert sorted(response_content) == sorted(expected)

@@ -98,7 +98,7 @@ from app.model import lemma_plural_lookup
 
 # probe.end()
 
-version = "1.46.8"
+version = "1.46.9"
 
 categories = get_categories()
 settings = get_settings()
@@ -475,6 +475,9 @@ def get_german_gender_ending(
         german_gender_endings = [german_gender_ending]
 
     for german_gender_ending in german_gender_endings:
+        if german_gender_ending not in Config._gendereddenom_ending_article:
+            continue
+
         alternative_variations.update(
             ResultOut.getAlternativeVariations(
                 GenderedRolesFormatType.BOTH, german_gender_ending, alternative
@@ -2005,23 +2008,23 @@ async def german_rules(
             if check_continue(i, new_i, tokens):
                 continue
 
-            # avoid issues with LinkedIn
-            if config.german_gender_ending != GermanGenderEndingType.CAPITAL_LETTER:
-                word_types = (
-                    (-1, 1, config.german_gender_ending[0])
-                    if config.german_gender_ending[0] == "/"
-                    else (None, None, config.german_gender_ending[0])
-                )
+            word_types = (
+                (-1, 1, config.german_gender_ending[0])
+                if config.german_gender_ending[0] == "/"
+                else (None, None, config.german_gender_ending[0])
+            )
 
-                endings = [
-                    Rule(
-                        config._gendereddenom_ending[config.german_gender_ending],
-                        None,
-                        config._gendereddenom_ending_word_type[
-                            config.german_gender_ending
-                        ],
-                        subcategory,
-                    ),
+            endings = [
+                Rule(
+                    config._gendereddenom_ending[config.german_gender_ending],
+                    None,
+                    config._gendereddenom_ending_word_type[config.german_gender_ending],
+                    subcategory,
+                ),
+            ]
+
+            if config.german_gender_ending in config._gendereddenom_ending_article:
+                endings.append(
                     Rule(
                         config._gendereddenom_ending_article[
                             config.german_gender_ending
@@ -2029,24 +2032,24 @@ async def german_rules(
                         None,
                         word_types,
                         subcategory,
-                    ),
-                ]
-
-                new_i = regex_match(
-                    version,
-                    config,
-                    client,
-                    lang,
-                    text,
-                    i,
-                    tokens,
-                    offsets,
-                    list_full,
-                    endings,
+                    )
                 )
 
-                if check_continue(i, new_i, tokens):
-                    continue
+            new_i = regex_match(
+                version,
+                config,
+                client,
+                lang,
+                text,
+                i,
+                tokens,
+                offsets,
+                list_full,
+                endings,
+            )
+
+            if check_continue(i, new_i, tokens):
+                continue
 
         subcategory = "advanced_gendered_denominations_ending"
         if is_sub_category_enabled(
@@ -2054,11 +2057,7 @@ async def german_rules(
         ) and ResultOut.genderedRolesFormatInclusive(config.gendered_roles_format):
             endings = []
             for key, regexp in config._gendereddenom_ending.items():
-                if (
-                    config.german_gender_ending == key
-                    # avoid issues with LinkedIn
-                    or key == GermanGenderEndingType.CAPITAL_LETTER
-                ):
+                if config.german_gender_ending == key:
                     continue
 
                 ending = Rule(
@@ -2071,8 +2070,12 @@ async def german_rules(
 
                 endings.append(ending)
 
-                # GermanGenderEndingType.SLASH_DASH is redundant to GermanGenderEndingType.SLASH
-                if key != GermanGenderEndingType.SLASH_DASH:
+                if (
+                    # GermanGenderEndingType.SLASH_DASH is redundant to GermanGenderEndingType.SLASH
+                    key != GermanGenderEndingType.SLASH_DASH
+                    # only check if relevant regexp is defined
+                    and key in config._gendereddenom_ending_article
+                ):
                     word_types = (
                         (-1, 2, key[0]) if key[0] == "/" else (None, None, key[0])
                     )
@@ -3595,11 +3598,12 @@ def regex_match(
             continue
 
         connector_string = rule.word_types[-1]
+        start = token.idx
 
         # run regex on exactly the token
         if rule.word_types[0] is None:
-            text = check_text = tokens[i].text
-            if connector_string not in tokens[i].text:
+            text = check_text = token.text
+            if connector_string not in token.text:
                 continue
 
             start_token = i
@@ -3609,18 +3613,27 @@ def regex_match(
                 start_token = rule.word_types[0] + i
                 max_end_token = rule.word_types[1] + i
 
-                multi_part = max_end_token - start_token > 1
-                # "1,2,#" => "#forever"
-                if not multi_part:
-                    if token.text != connector_string:
+                if start_token == max_end_token:
+                    check_text = token.text
+                    connector_string_start = check_text.find(connector_string)
+                    if connector_string_start == -1:
                         continue
 
-                    text = check_text = connector_string
-                elif (
-                    start_token + 1 >= len(tokens)
-                    or tokens[start_token + 1].text != connector_string
-                ):
-                    continue
+                    text = check_text[connector_string_start:]
+                    start += connector_string_start
+                else:
+                    multi_part = max_end_token - start_token > 1
+                    # "1,2,#" => "#forever"
+                    if not multi_part:
+                        if token.text != connector_string:
+                            continue
+
+                        text = check_text = connector_string
+                    elif (
+                        start_token + 1 >= len(tokens)
+                        or tokens[start_token + 1].text != connector_string
+                    ):
+                        continue
 
                 while start_token < max_end_token:
                     offset_token = tokens[start_token]
@@ -3640,6 +3653,15 @@ def regex_match(
                     if start_token >= i:
                         text += connector_string
 
+                    if connector_string == "(":
+                        connector_string = ")"
+
+                    if (
+                        connector_string == ")"
+                        and tokens[start_token].text == connector_string
+                    ):
+                        break
+
                     start_token += 1
             except IndexError:
                 pass
@@ -3651,11 +3673,21 @@ def regex_match(
         if text == "" or not re.search(rule.lemma, check_text):
             continue
 
+        if connector_string == "I":
+            check_text = check_text.lower().capitalize()
+            if german_noun_lookup(check_text) is None:
+                continue
+
+        # handle "Kund(-innen)"
+        if text == ")" and "(" in check_text:
+            ending_start = check_text.find("(")
+            text = check_text[ending_start :]
+            start = tokens[i-1].idx + ending_start
+
         alternatives = rule.alternatives
         explanation = rule.explanation
         url = rule.url
         icon = rule.icon
-        start = token.idx
 
         if rule.subcategory == "d_and_i":
             if check_case == "gender_denom" and check_text.islower():
@@ -3682,7 +3714,7 @@ def regex_match(
                     text.replace(connector_string, config.german_gender_ending[0])
                 ]
             # Kundinnen -> Kund*innen
-            elif text[-3:] == "nen":
+            elif "innen" in text:
                 alternatives = [alternatives[0] + "nen"]
         elif rule.subcategory == "gender_specific_abbreviation":
             parenthesis = (
