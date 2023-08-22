@@ -19,9 +19,9 @@
             "gravity": 3.0,
             "label": "Geschlecht + Orientierung: Inklusive Endung",
             "proficiency_level": "unconscious_bias",
-            "start": 25,
+            "start": 29,
             "subcategory": "advanced_gendered_denominations_ending",
-            "text": "Kund*innen"
+            "text": "*innen"
         },
         {
             "alternatives": [
@@ -40,9 +40,9 @@
             "gravity": 3.0,
             "label": "Geschlecht + Orientierung: Inklusive Endung",
             "proficiency_level": "unconscious_bias",
-            "start": 40,
+            "start": 44,
             "subcategory": "advanced_gendered_denominations_ending",
-            "text": "Kund*in"
+            "text": "*in"
         },
         {
             "alternatives": [
@@ -82,9 +82,9 @@
             "gravity": 3.0,
             "label": "Geschlecht + Orientierung: Inklusive Endung",
             "proficiency_level": "unconscious_bias",
-            "start": 64,
+            "start": 68,
             "subcategory": "advanced_gendered_denominations_ending",
-            "text": "Kund:in"
+            "text": ":in"
         },
         {
             "alternatives": [],
@@ -99,9 +99,9 @@
             },
             "label": "Soziale Motivation: DEIB",
             "proficiency_level": "inclusive",
-            "start": 86,
+            "start": 92,
             "subcategory": "d_and_i",
-            "text": "Matros/-in"
+            "text": "/-in"
         }
     ]
 }

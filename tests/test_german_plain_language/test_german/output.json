@@ -450,7 +450,7 @@
         {
             "alternatives": [],
             "category": "social-motive",
-            "context": "unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verp",
+            "context": "e KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verp",
             "end": 382,
             "explanation": {
                 "content": "advanced",
@@ -460,9 +460,9 @@
             },
             "label": "Soziale Motivation: DEIB",
             "proficiency_level": "inclusive",
-            "start": 371,
+            "start": 376,
             "subcategory": "d_and_i",
-            "text": "Leser*innen"
+            "text": "*innen"
         },
         {
             "alternatives": [
