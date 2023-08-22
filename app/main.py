@@ -3712,7 +3712,7 @@ def regex_match(
                     text.replace(connector_string, config.german_gender_ending[0])
                 ]
             # Kundinnen -> Kund*innen
-            elif text[-3:] == "nen":
+            elif "innen" in text:
                 alternatives = [alternatives[0] + "nen"]
         elif rule.subcategory == "gender_specific_abbreviation":
             parenthesis = (

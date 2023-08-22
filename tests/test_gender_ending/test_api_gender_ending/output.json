@@ -21,7 +21,7 @@
                 }
             ],
             "category": "orthography",
-            "context": "Sie ist eine Kund/in auf LinkedIn. Er ist mitarbeiter",
+            "context": "Sie ist eine Kund/in auf LinkedIn. Er ist mitarbeiter und sie sind Ärzt(-innen).",
             "end": 53,
             "explanation": {
                 "icon": "❌",
@@ -36,11 +36,42 @@
         {
             "alternatives": [
                 {
+                    "text": "Erst"
+                },
+                {
+                    "text": "Arzt"
+                },
+                {
+                    "text": "Erste"
+                },
+                {
+                    "text": "Erbt"
+                },
+                {
+                    "text": "Fast"
+                }
+            ],
+            "category": "orthography",
+            "context": "Sie ist eine Kund/in auf LinkedIn. Er ist mitarbeiter und sie sind Ärzt(-innen).",
+            "end": 71,
+            "explanation": {
+                "icon": "❌",
+                "text": "Möglicher Tippfehler gefunden."
+            },
+            "gravity": 1.0,
+            "label": "Rechtschreibfehler",
+            "start": 67,
+            "subcategory": "typos",
+            "text": "Ärzt"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "*in"
                 }
             ],
             "category": "gender-orientation",
-            "context": "Sie ist eine Kund/in auf LinkedIn. Er ist mitarbeiter",
+            "context": "Sie ist eine Kund/in auf LinkedIn. Er ist mitarbeiter und sie sind Ärzt(-innen).",
             "end": 20,
             "explanation": {
                 "icon": "💯",
@@ -53,6 +84,27 @@
             "start": 17,
             "subcategory": "advanced_gendered_denominations_ending",
             "text": "/in"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "*innen"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Sie ist eine Kund/in auf LinkedIn. Er ist mitarbeiter und sie sind Ärzt(-innen).",
+            "end": 86,
+            "explanation": {
+                "icon": "💯",
+                "text": "Nicht konsistente Geschlechts-Schreibweise",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/inklusive-endung?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Inklusive Endung",
+            "proficiency_level": "unconscious_bias",
+            "start": 78,
+            "subcategory": "advanced_gendered_denominations_ending",
+            "text": "(-innen)"
         }
     ]
 }
