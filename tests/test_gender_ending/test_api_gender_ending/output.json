@@ -93,7 +93,7 @@
             ],
             "category": "gender-orientation",
             "context": "Sie ist eine Kund/in auf LinkedIn. Er ist mitarbeiter und sie sind Ärzt(-innen).",
-            "end": 86,
+            "end": 79,
             "explanation": {
                 "icon": "💯",
                 "text": "Nicht konsistente Geschlechts-Schreibweise",
@@ -102,7 +102,7 @@
             "gravity": 3.0,
             "label": "Geschlecht + Orientierung: Inklusive Endung",
             "proficiency_level": "unconscious_bias",
-            "start": 78,
+            "start": 71,
             "subcategory": "advanced_gendered_denominations_ending",
             "text": "(-innen)"
         }
