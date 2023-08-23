@@ -3681,8 +3681,8 @@ def regex_match(
         # handle "Kund(-innen)"
         if text == ")" and "(" in check_text:
             ending_start = check_text.find("(")
-            text = check_text[ending_start :]
-            start = tokens[i-1].idx + ending_start
+            text = check_text[ending_start:]
+            start = tokens[i - 1].idx + ending_start
 
         alternatives = rule.alternatives
         explanation = rule.explanation
