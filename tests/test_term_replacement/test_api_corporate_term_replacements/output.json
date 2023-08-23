@@ -101,37 +101,6 @@
         {
             "alternatives": [
                 {
-                    "text": "Foto"
-                },
-                {
-                    "text": "Von"
-                },
-                {
-                    "text": "Zoo"
-                },
-                {
-                    "text": "Vom"
-                },
-                {
-                    "text": "Floh"
-                }
-            ],
-            "category": "orthography",
-            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt)",
-            "end": 53,
-            "explanation": {
-                "icon": "❌",
-                "text": "Möglicher Tippfehler gefunden."
-            },
-            "gravity": 1.0,
-            "label": "Rechtschreibfehler",
-            "start": 50,
-            "subcategory": "typos",
-            "text": "Foo"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "Welt"
                 },
                 {
@@ -159,37 +128,6 @@
             "start": 73,
             "subcategory": "typos",
             "text": "welt"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "Welt"
-                },
-                {
-                    "text": "Wels"
-                },
-                {
-                    "text": "Weit"
-                },
-                {
-                    "text": "Velo"
-                },
-                {
-                    "text": "Hält"
-                }
-            ],
-            "category": "orthography",
-            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt)",
-            "end": 88,
-            "explanation": {
-                "icon": "❌",
-                "text": "Möglicher Tippfehler gefunden."
-            },
-            "gravity": 1.0,
-            "label": "Rechtschreibfehler",
-            "start": 84,
-            "subcategory": "typos",
-            "text": "WelT"
         },
         {
             "alternatives": [
