@@ -252,7 +252,7 @@ SaaS,=,style,advanced_abbreviation,"['software as a service', 'software as a ser
 SAFE,=,style,advanced_abbreviation,"['simple agreement for future equity', 'simple agreement for future equity (SAFE)']"
 SBIC,=,style,advanced_abbreviation,"['small business investment company', 'small business investment company (SBIC)']"
 SBIR,=,style,advanced_abbreviation,"['Small Business Innovation Research', 'Small Business Innovation Research (SBIR)']"
-Sc.M.,|||,style,advanced_abbreviation,"['Master of Science', 'Master of Science (Sc.M.)']"
+Sc.M.,,style,advanced_abbreviation,"['Master of Science', 'Master of Science (Sc.M.)']"
 SCCE,=,style,advanced_abbreviation,"['Society for Corporate Compliance and Ethics', 'Society for Corporate Compliance and Ethics (SCCE)']"
 SCM,=,style,advanced_abbreviation,"['source control management --- in technology', 'source control management (SCM) --- in technology', 'source code management', 'Master of Science --- degree', 'Master of Science (ScM)']"
 SEC,=,style,advanced_abbreviation,"['Securities and Exchange Commission', 'Securities and Exchange Commission (SEC)']"
