@@ -325,9 +325,10 @@ class ConfRequest(BaseModel):
     config: RuleConfig
     false_positives: List[str] = []
     term_replacements: Dict[str, TermReplacement] = {}
-    domains: Optional[DomainConfig] = None
-    config_hash: Optional[str] = None
-    sync_date: Optional[str] = None
+    domains: Optional[DomainConfig]
+    config_hash: Optional[str]
+    sync_date: Optional[str]
+    llm_enabled: Optional[bool]
 
 
 class UserConfRequest(ConfRequest):
@@ -931,3 +932,21 @@ class PrettyJSONResponse(Response):
             indent=4,
             separators=(", ", ": "),
         ).encode("utf-8")
+
+
+class RephraseIn(BaseModel):
+    originalSentence: str
+    wordToBeReplaced: str
+    alternative: str
+    id: str
+    client: str
+    config_hash: Optional[str]
+    organization_config_hash: Optional[str]
+
+
+class RephraseOut(BaseModel):
+    id: str
+    name: str
+    plan: Optional[str]
+    sentence: str
+    config_changed: Optional[bool]

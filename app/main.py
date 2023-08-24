@@ -79,6 +79,8 @@ from app.models import (
     ErrorMessage,
     PrettyJSONResponse,
     RuleIn,
+    RephraseIn,
+    RephraseOut,
 )
 from app.lang_detection import get_lang_detection
 from app.categories import (
@@ -154,14 +156,14 @@ async def handle_command_witty(
     try:
         user = await client.users_info(user=body["user_id"])
         configs = await fetch_configs_for_request(
-            version, user_request_in, user.data["user"]["profile"]["email"]
+            user_request_in, user.data["user"]["profile"]["email"]
         )
     except KeyError:
         pass
 
     if configs == {} and settings.slack_organization_id:
         configs = await fetch_organization_configs_for_request(
-            user_request_in, settings.slack_organization_id
+            version, user_request_in, settings.slack_organization_id
         )
 
     user_request_in.config.__setattr__("alternatives_max_count", None)
@@ -506,10 +508,8 @@ async def get_config_debug(
     version = "2.3"
 
     try:
-        configs = await fetch_user_organization_configs(user_email)
-        result_configs = await fetch_configs_for_request(
-            version, user_request_in, user_email
-        )
+        configs = await fetch_user_organization_configs(version, user_email)
+        result_configs = await fetch_configs_for_request(version, user_request_in, user_email)
         del result_configs["organization_config"]
         del result_configs["organization_domains"]
         del result_configs["organization_false_positives"]
@@ -575,6 +575,7 @@ async def post_auth_2_0(request: Request, user_request_in: BaseRequestIn = None)
 
     version = "2.3"
     configs = await fetch_configs_for_request(version, RequestIn(text=""), user_email)
+
     if configs == {}:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -790,6 +791,21 @@ async def post_check_v2_3(
     return await check(request, response, user_request_in, "2.3")
 
 
+@app.post(
+    "/v1.0/rephrase",
+    # response_model=Union[RephraseOut, Result],
+    response_model_exclude_none=True,
+    dependencies=[Depends(HTTPBearer(auto_error=False))],
+)
+async def post_rephrase_v1_0(
+    request: Request,
+    response: Response,
+    rephrase_in: RephraseIn,
+):
+    return await rephrase(request, response, rephrase_in)
+
+
+# data exchange routes
 @app.get("/lemmatize")
 async def get_lemmatize(
     text: str,
@@ -961,6 +977,8 @@ async def fetch_user_organization_configs(email: str):
     configs["organization_name"] = None
     configs["organization_config_hash"] = None
     configs["organization_domains"] = None
+    if "llm_enabled" not in configs:
+        configs["llm_enabled"] = False
 
     if "organization_id" in configs and configs["organization_id"] is not None:
         try:
@@ -993,6 +1011,10 @@ async def fetch_user_organization_configs(email: str):
             configs["organization_false_positives"] = organization_configs[
                 "false_positives"
             ]
+
+            if "llm_enabled" in organization_configs:
+                configs["llm_enabled"] = organization_configs["llm_enabled"]
+
         except HTTPException:
             pass
     else:
@@ -1024,7 +1046,10 @@ def is_token_plural(lang, token):
 
 
 def apply_configs(
-    user_request_in: RequestIn, configs: dict, plan: str, force_disables: bool = True
+    user_request_in: RequestIn,
+    configs: dict,
+    plan: str,
+    overwrite_enabled_categories: bool = True,
 ):
     disabled_categories = user_request_in.config.disabled_categories
 
@@ -1089,7 +1114,7 @@ async def fetch_configs_for_request(
     if not configs or type(configs) is not dict:
         return {}
 
-    apply_configs(user_request_in, configs["config"], configs["plan"])
+    apply_configs(version, user_request_in, configs["config"], configs["plan"])
 
     if "organization_config" in configs:
         apply_configs(
@@ -1108,7 +1133,7 @@ async def fetch_configs_for_request(
 
 
 async def fetch_organization_configs_for_request(
-    user_request_in: RequestIn, organization_id=Optional[str]
+    version: str, user_request_in: RequestIn, organization_id=Optional[str]
 ):
     user_request_in.config.__setattr__("store_context", True)
 
@@ -1124,7 +1149,7 @@ async def fetch_organization_configs_for_request(
         if configs["configs"][config]["status"] == "suggestion":
             configs["configs"][config]["status"] = "force"
 
-    apply_configs(user_request_in, configs["config"], configs["plan"])
+    apply_configs(version, user_request_in, configs["config"], configs["plan"])
 
     return configs
 
@@ -1257,10 +1282,11 @@ async def check(
 
         user_email = await fetch_user(request)
         configs = await fetch_configs_for_request(version, user_request_in, user_email)
+
     else:
         # debug
         configs = {"categories": {}}
-        apply_configs(user_request_in, configs, "witty_teams")
+        apply_configs(version, user_request_in, configs, "witty_teams")
 
     text, lang, limit_reached = fetch_text(user_request_in)
 
@@ -1291,29 +1317,116 @@ async def check(
         results=results,
         language=language,
         limit_reached=limit_reached,
-        config_changed=fetch_config_change(configs, user_request_in),
+        config_changed=fetch_config_change(
+            configs,
+            user_request_in.config_hash,
+            user_request_in.organization_config_hash,
+        ),
         notifications=notifications,
         has_consented_to_mailing=has_consented_to_mailing,
     )
 
 
+async def rephrase(
+    request: Request,
+    response: Response,
+    rephrase_in: RephraseIn,
+):
+    client = parse_client(rephrase_in.client)
+    check_client_version(client)
+
+    user_email = fetch_user(request)
+    if user_email is None:
+        response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+        return Result.factory("No user found, so LLM use is not enabled.")
+
+    configs = await fetch_user_organization_configs(user_email)
+    if "llm_enabled" not in configs or not configs["llm_enabled"]:
+        response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+        return Result.factory("LLM use is not enabled for user.")
+
+    headers = {
+        "Content-Type": "application/json",
+    }
+
+    if settings.rephrase["api_key"]:
+        headers["Authorization"] = "Bearer " + settings.rephrase["api_key"]
+
+    prompt = (
+        "Rephrase the sentence '%s' replacing the word '%s' with the phrase '%s'. Make the output in the json format."
+        % (
+            rephrase_in.originalSentence,
+            rephrase_in.wordToBeReplaced,
+            rephrase_in.alternative,
+        )
+    )
+
+    payload = {
+        "inputs": prompt,
+        "parameters": {
+            "num_return_sequences": 1,
+            "min_length": 500,
+            "max_length": 2000,
+            "max_new_tokens": 250,
+        },
+        "options": {
+            "wait_for_model": True,
+            "use_cache": False,
+        },
+    }
+
+    rephrase_result = await fetch_json_post(
+        settings.rephrase["url"],
+        json.dumps(payload),
+        headers,
+        "rephrase",
+    )
+
+    sentence = None
+    if len(rephrase_result) == 1 and "generated_text" in rephrase_result[0]:
+        print(rephrase_result[0]["generated_text"])
+        generated_text = rephrase_result[0]["generated_text"]
+        # Find the index where the JSON object starts
+        start_idx = generated_text.find("{")
+
+        # Find the index where the JSON object ends
+        end_idx = generated_text.rfind("}")
+
+        if start_idx != -1 or end_idx != -1:
+            # Extract the JSON object string
+            try:
+                data = generated_text[start_idx : end_idx + 1]
+                data = json.loads(data)
+                sentence = data["output"]
+            except:
+                pass
+
+    if sentence is None:
+        response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+        return Result.factory("Sentence could not be generated")
+
+    return RephraseOut(
+        id=configs["id"],
+        name=configs["name"],
+        plan=configs["plan"],
+        sentence=sentence,
+        config_changed=fetch_config_change(
+            configs, rephrase_in.config_hash, rephrase_in.organization_config_hash
+        ),
+    )
+
+
 def fetch_config_change(
     configs: dict,
-    user_request_in: Optional[RequestIn] = None,
+    config_hash,
+    organization_config_hash,
 ):
-    if not user_request_in:
-        return True
-
-    if (
-        "config_hash" in configs
-        and user_request_in.config_hash != configs["config_hash"]
-    ):
+    if "config_hash" in configs and config_hash != configs["config_hash"]:
         return True
 
     if (
         "organization_config_hash" in configs
-        and user_request_in.organization_config_hash
-        != configs["organization_config_hash"]
+        and organization_config_hash != configs["organization_config_hash"]
     ):
         return True
 
@@ -1337,7 +1450,7 @@ def fetch_result_conf(configs: dict):
     return ResultConf(
         id=configs["id"],
         name=configs["name"],
-        plan=plan,
+        plan=configs["plan"],
         config=config,
         organization_id=configs["organization_id"],
         organization_name=configs["organization_name"],

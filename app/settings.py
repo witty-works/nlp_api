@@ -60,6 +60,9 @@ class Settings(BaseSettings):
     context_checker_api_key: Optional[str] = ""
     context_checker_url_de: Optional[str] = ""
     context_checker_api_key_de: Optional[str] = ""
+    rephrase: dict = {}
+    rephrase_url: Optional[str] = ""
+    rephrase_api_key: Optional[str] = ""
     models: List = ["en_core_web_lg", "de_core_news_lg"]
     fasttext: bool = True
     minimum_version_web_ext: Optional[str] = ""
@@ -104,6 +107,12 @@ def get_settings():
         settings.context_checker["de"] = {
             "url": settings.context_checker_url_de,
             "api_key": settings.context_checker_api_key_de,
+        }
+
+    if settings.rephrase_url:
+        settings.rephrase = {
+            "url": settings.rephrase_url,
+            "api_key": settings.rephrase_api_key,
         }
 
     if settings.platform_relationships:
