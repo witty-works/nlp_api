@@ -98,7 +98,7 @@ from app.model import lemma_plural_lookup
 
 # probe.end()
 
-version = "1.46.9"
+version = "1.46.10"
 
 categories = get_categories()
 settings = get_settings()
@@ -785,6 +785,7 @@ async def get_debug_spacy(
             {
                 "text": token.text,
                 "lemma": token.lemma_,
+                "ner": token.ent_type_,
                 "start": token.idx,
                 "tag": token.tag_,
                 "pos": token.pos_,
@@ -1371,9 +1372,21 @@ def languagetool_matches(
     client: Client,
     lang: Language,
     full_text: str,
+    tokens,
     offsets,
     result,
 ):
+    if (
+        not isinstance(result, dict)
+        or "matches" not in result
+        or len(result["matches"]) == 0
+    ):
+        return []
+
+    entities = []
+    for ent in tokens.ents:
+        entities.append(ent)
+
     list_results = []
     ignore = ["@", "#"]
 
@@ -1393,7 +1406,27 @@ def languagetool_matches(
 
         text = full_text[start:end]
 
-        # Ignore capitalization after German salutation
+        # Ignore typos on names
+        if match["rule"]["category"]["id"] == "TYPOS" and text[0:1].isupper():
+            is_entity = False
+            for entity in entities:
+                if (
+                    entity.start_char >= start
+                    and entity.start_char < end
+                    and entity.end_char >= end
+                ) or (
+                    entity.start_char <= start
+                    and entity.end_char > start
+                    and entity.end_char <= end
+                ):
+                    is_entity = entity.label_ in rules["named_entity_labels"]["names"]
+                    break
+
+            if is_entity:
+                continue
+
+        # Ignore capitalization after salutation
+        # Todo: Train NER to handle salutations better like "\n Hallo Konstantina\n\nWie geht es dir?"
         if match["rule"]["category"]["id"] == "TYPOS":
             subtext = (
                 full_text[0:start]
@@ -1550,6 +1583,7 @@ async def apply_languagetool_rules(
     client: Client,
     lang: Language,
     text: str,
+    tokens,
     offsets,
 ):
     if settings.languagetool_api == "":
@@ -1592,10 +1626,9 @@ async def apply_languagetool_rules(
         settings.languagetool_verify_ssl,
     )
 
-    if not isinstance(result, dict):
-        return []
-
-    return languagetool_matches(version, config, client, lang, text, offsets, result)
+    return languagetool_matches(
+        version, config, client, lang, text, tokens, offsets, result
+    )
 
 
 def utf16len(c):
@@ -1736,7 +1769,7 @@ async def apply_language_rules(
             list_results = []
 
     list_results = await apply_languagetool_rules(
-        version, config, client, lang, text, offsets
+        version, config, client, lang, text, tokens, offsets
     ) + await context_false_positives(lang.lang, tokens, list_results)
 
     return apply_false_positives(list_results, configs)
@@ -3681,8 +3714,8 @@ def regex_match(
         # handle "Kund(-innen)"
         if text == ")" and "(" in check_text:
             ending_start = check_text.find("(")
-            text = check_text[ending_start :]
-            start = tokens[i-1].idx + ending_start
+            text = check_text[ending_start:]
+            start = tokens[i - 1].idx + ending_start
 
         alternatives = rule.alternatives
         explanation = rule.explanation
@@ -3851,6 +3884,13 @@ def gendered_denom_analysis_de(
     filtered_rules: list[Rule],
 ):
     token = tokens[i]
+
+    # Juden is type MISC
+    if (
+        token.ent_type_ in rules["named_entity_labels"]["names"]
+        and token.ent_type_ != "MISC"
+    ):
+        return i
 
     for rule in filtered_rules:
         postfix = is_base_category(rule.subcategory)

@@ -144,6 +144,34 @@ def fetch_rules(model):
     }
 
     rules = {
+        "named_entity_labels": {
+            "names": (
+                "PER",  # Named person or family
+                "ORG",  # Companies, agencies, institutions, etc.
+                "PERSON",  # People, including fictional
+                "GPE",  # Countries, cities, states
+                "LOC",  # Non-GPE locations, mountain ranges, bodies of water
+                "PRODUCT",  # Objects, vehicles, foods, etc. (not services)
+                "EVENT",  # Named hurricanes, battles, wars, sports events, etc.
+                "FAC",  # Buildings, airports, highways, bridges, etc.
+                "LANGUAGE",  # Any named language
+                "LAW",  # Named documents made into laws.
+                "NORP",  # Nationalities or religious or political groups
+                "WORK_OF_ART",  # Titles of books, songs, etc.
+                "MISC",  # Miscellaneous entities, e.g., events, nationalities, products, or works of art.
+            ),
+            "numbers": (
+                "MONEY",  # Monetary values, including unit
+                "CARDINAL",  # Numerals that do not fall under another type
+                "ORDINAL",  # "first", "second", etc.
+                "QUANTITY",  # Measurements, as of weight or distance
+                "PERCENT",  # Percentage, including "%"
+            ),
+            "datetime": (
+                "DATE",  # Absolute or relative dates or periods
+                "TIME",  # Times smaller than a day
+            ),
+        },
         "m_f_regexes": [
             # (m/f..)
             Rule(

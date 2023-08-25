@@ -34,7 +34,7 @@ def custom_tokenizer(lang, nlp):
             LIST_ELLIPSES
             + LIST_ICONS
             + [
-                r"(?<=[{al}])\.(?=[{au}])".format(al=ALPHA_LOWER, au=ALPHA_UPPER),
+                r"(?<=[{al}])\\.(?=[{au}])".format(al=ALPHA_LOWER, au=ALPHA_UPPER),
                 r"(?<=[{a}])[,!?](?=[{a}])".format(a=ALPHA),
                 # removed : [:<>=]
                 r"(?<=[{a}])[<>=](?=[{a}])".format(a=ALPHA),
@@ -49,17 +49,23 @@ def custom_tokenizer(lang, nlp):
         )
 
         infix_re = compile_infix_regex(infixes)
+
+        # https://github.com/explosion/spaCy/discussions/12930
+        suffixes = nlp.Defaults.suffixes + [r"\."]
+        suffix_regex = spacy.util.compile_suffix_regex(suffixes)
+        nlp.tokenizer.suffix_search = suffix_regex.search
     else:
+        # https://spacy.io/usage/linguistic-features#tokenization
         infixes = (
             LIST_ELLIPSES
             + LIST_ICONS
             + [
-                r"(?<=[0-9])[+\-\*^](?=[0-9-])",
-                r"(?<=[{al}{q}])\.(?=[{au}{q}])".format(
+                r"(?<=[0-9])[+\\-\\*^](?=[0-9-])",
+                r"(?<=[{al}{q}])\\.(?=[{au}{q}])".format(
                     al=ALPHA_LOWER, au=ALPHA_UPPER, q=CONCAT_QUOTES
                 ),
                 r"(?<=[{a}]),(?=[{a}])".format(a=ALPHA),
-                # hyphen excluded from separators
+                # ✅ Commented out regex that splits on hyphens between letters:
                 # r"(?<=[{a}])(?:{h})(?=[{a}])".format(a=ALPHA, h=HYPHENS),
                 r"(?<=[{a}0-9])[:<>=/](?=[{a}])".format(a=ALPHA),
             ]

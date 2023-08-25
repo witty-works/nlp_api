@@ -1,0 +1,79 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "context": "Nutze geschlechtsneutrale Job-Titel",
+                    "remove": true
+                },
+                {
+                    "context": "Divers (EU) / m. Behinderung (NA)",
+                    "text": "d/f/m"
+                },
+                {
+                    "text": "*/f/m"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Wir brauchen m/f. Wir sind die Nummer <NUMBER>.",
+            "end": 16,
+            "explanation": {
+                "icon": "😮",
+                "text": "Nenne unterrepräsentierte Gruppen zuerst. Verlinke auf deine Leitlinie zur Gleichstellung.",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/geschlechter-spezifische-abkürzung?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Geschlechter-Spezifische Abkürzung",
+            "proficiency_level": "unconscious_bias",
+            "start": 13,
+            "subcategory": "gender_specific_abbreviation",
+            "text": "m/f"
+        },
+        {
+            "alternatives": [
+                {
+                    "context": "💡 Inspiration",
+                    "inspiration": true,
+                    "text": "Unternehmen, das im Markt Maßstäbe setzt"
+                },
+                {
+                    "context": "💡 Inspiration",
+                    "inspiration": true,
+                    "text": "wichtige Sache"
+                },
+                {
+                    "context": "💡 Inspiration",
+                    "inspiration": true,
+                    "text": "Ziel, das das Team inspiriert"
+                },
+                {
+                    "context": "💡 Inspiration",
+                    "inspiration": true,
+                    "text": "inspirierendes Teammitglied"
+                },
+                {
+                    "context": "💡 Inspiration",
+                    "inspiration": true,
+                    "text": "Mensch, der dem Team mit Rat und Tat zur Seite steht"
+                }
+            ],
+            "category": "social-motive",
+            "context": "Wir brauchen m/f. Wir sind die Nummer <NUMBER>.",
+            "end": 39,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😮‍💨",
+                "text": "Überzogene Aussagen wirken weniger vertrauenswürdig",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/übertreibung?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Soziale Motivation: Übertreibung",
+            "proficiency_level": "unconscious_bias",
+            "start": 31,
+            "subcategory": "exaggerating",
+            "text": "Nummer 1"
+        }
+    ]
+}
