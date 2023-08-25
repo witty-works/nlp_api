@@ -24,50 +24,6 @@
         {
             "alternatives": [
                 {
-                    "text": "Bather ton"
-                },
-                {
-                    "text": "Atherton"
-                }
-            ],
-            "category": "orthography",
-            "context": "rseverance count.\n\nA path from a point approximately <NUMBER> metres east of the most south corner of <NUMBER> Batherton Close, Widnes and approximately <NUMBER> metres east-south-east of the most southerly corner of Unit <NUMBER> F",
-            "end": 154,
-            "explanation": {
-                "icon": "❌",
-                "text": "Possible spelling mistake found."
-            },
-            "gravity": 1.0,
-            "label": "Spelling mistake",
-            "start": 145,
-            "subcategory": "typos",
-            "text": "Batherton"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "Wines"
-                },
-                {
-                    "text": "Widens"
-                }
-            ],
-            "category": "orthography",
-            "context": "A path from a point approximately <NUMBER> metres east of the most south corner of <NUMBER> Batherton Close, Widnes and approximately <NUMBER> metres east-south-east of the most southerly corner of Unit <NUMBER> Foundry Industr",
-            "end": 168,
-            "explanation": {
-                "icon": "❌",
-                "text": "Possible spelling mistake found."
-            },
-            "gravity": 1.0,
-            "label": "Spelling mistake",
-            "start": 162,
-            "subcategory": "typos",
-            "text": "Widnes"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "meters"
                 }
             ],
@@ -83,28 +39,6 @@
             "start": 191,
             "subcategory": "typos",
             "text": "metres"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "Wines"
-                },
-                {
-                    "text": "Widens"
-                }
-            ],
-            "category": "orthography",
-            "context": "east-south-east of the most southerly corner of Unit <NUMBER> Foundry Industrial Estate, Victoria Street, Widnes, proceeding in a generally east-north-easterly direction for approximately <NUMBER> metres to a point app",
-            "end": 303,
-            "explanation": {
-                "icon": "❌",
-                "text": "Possible spelling mistake found."
-            },
-            "gravity": 1.0,
-            "label": "Spelling mistake",
-            "start": 297,
-            "subcategory": "typos",
-            "text": "Widnes"
         },
         {
             "alternatives": [
@@ -166,28 +100,6 @@
         {
             "alternatives": [
                 {
-                    "text": "Bather ton"
-                },
-                {
-                    "text": "Atherton"
-                }
-            ],
-            "category": "orthography",
-            "context": "Estate, Victoria Street, and approximately <NUMBER> metres east of the most south-easterly corner of <NUMBER> Batherton Close.\n\nHey guys, We are a team where ambition and perseverance count.\n\nA path from a point approxi",
-            "end": 612,
-            "explanation": {
-                "icon": "❌",
-                "text": "Possible spelling mistake found."
-            },
-            "gravity": 1.0,
-            "label": "Spelling mistake",
-            "start": 603,
-            "subcategory": "typos",
-            "text": "Batherton"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "meters"
                 }
             ],
@@ -207,50 +119,6 @@
         {
             "alternatives": [
                 {
-                    "text": "Bather ton"
-                },
-                {
-                    "text": "Atherton"
-                }
-            ],
-            "category": "orthography",
-            "context": "rseverance count.\n\nA path from a point approximately <NUMBER> metres east of the most south corner of <NUMBER> Batherton Close, Widnes and approximately <NUMBER> metres east-south-east of the most southerly corner of Unit <NUMBER> F",
-            "end": 775,
-            "explanation": {
-                "icon": "❌",
-                "text": "Possible spelling mistake found."
-            },
-            "gravity": 1.0,
-            "label": "Spelling mistake",
-            "start": 766,
-            "subcategory": "typos",
-            "text": "Batherton"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "Wines"
-                },
-                {
-                    "text": "Widens"
-                }
-            ],
-            "category": "orthography",
-            "context": "A path from a point approximately <NUMBER> metres east of the most south corner of <NUMBER> Batherton Close, Widnes and approximately <NUMBER> metres east-south-east of the most southerly corner of Unit <NUMBER> Foundry Industr",
-            "end": 789,
-            "explanation": {
-                "icon": "❌",
-                "text": "Possible spelling mistake found."
-            },
-            "gravity": 1.0,
-            "label": "Spelling mistake",
-            "start": 783,
-            "subcategory": "typos",
-            "text": "Widnes"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "meters"
                 }
             ],
@@ -266,28 +134,6 @@
             "start": 812,
             "subcategory": "typos",
             "text": "metres"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "Wines"
-                },
-                {
-                    "text": "Widens"
-                }
-            ],
-            "category": "orthography",
-            "context": "east-south-east of the most southerly corner of Unit <NUMBER> Foundry Industrial Estate, Victoria Street, Widnes, proceeding in a generally east-north-easterly direction for approximately",
-            "end": 924,
-            "explanation": {
-                "icon": "❌",
-                "text": "Possible spelling mistake found."
-            },
-            "gravity": 1.0,
-            "label": "Spelling mistake",
-            "start": 918,
-            "subcategory": "typos",
-            "text": "Widnes"
         },
         {
             "alternatives": [
