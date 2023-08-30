@@ -109,6 +109,30 @@ def test_spacy_model(spacy_model_dir, snapshot):
 
 
 @pytest.mark.parametrize(
+    "chunking_issues_dir",
+    get_dirs("tests/test_chunking_issues"),
+)
+def test_chunking_issues_dir(chunking_issues_dir, snapshot, set_redis):
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = chunking_issues_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.3/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "default@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(
+            response.json(), sort_keys=True, indent=4, ensure_ascii=False
+        )
+        # Snapshot the return value.
+        snapshot.snapshot_dir = chunking_issues_dir
+        snapshot.assert_match(output, "output.json")
+
+
+@pytest.mark.parametrize(
     "demo_wordings_english_dir",
     get_dirs("tests/test_demo_wordings_english"),
 )

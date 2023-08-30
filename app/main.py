@@ -1406,6 +1406,18 @@ def languagetool_matches(
 
         text = full_text[start:end]
 
+        # Ignore case issues at the start of sentence due to chunking issues
+        # https://github.com/witty-works/browser-extension/pull/880
+        if match["rule"]["id"] == "UPPERCASE_SENTENCE_START" and (
+            start == 0 or full_text[0:start].isspace()
+        ):
+            continue
+
+        if match["rule"]["id"] == "WHITESPACE_RULE" and (
+            start == 0 or full_text[0:end].isspace()
+        ):
+            continue
+
         # Ignore typos on names
         if match["rule"]["category"]["id"] == "TYPOS" and text[0:1].isupper():
             is_entity = False
@@ -1600,7 +1612,8 @@ async def apply_languagetool_rules(
         if payload["language"] == "de-DE":
             payload["language"] += "-x-simple-language"
 
-        payload["enabledCategories"].append("PLAIN_ENGLISH")
+        if payload["language"][0:2] == "en":
+            payload["enabledCategories"].append("PLAIN_ENGLISH")
     else:
         payload["disabledCategories"].append("PLAIN_ENGLISH")
 
