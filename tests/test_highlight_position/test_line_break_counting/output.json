@@ -5,25 +5,6 @@
         {
             "alternatives": [
                 {
-                    "text": "Helo"
-                }
-            ],
-            "category": "orthography",
-            "context": "helo ninja",
-            "end": 6,
-            "explanation": {
-                "icon": "❌",
-                "text": "This sentence does not start with an uppercase letter."
-            },
-            "gravity": 1.0,
-            "label": "Capitalization",
-            "start": 2,
-            "subcategory": "casing",
-            "text": "helo"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "dedicated"
                 },
                 {
