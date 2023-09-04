@@ -1070,7 +1070,8 @@ def apply_configs(
                     disabled_categories.append(category)
         elif config == "store_context":
             if (
-                plan == "witty_teams"
+                plan is not None
+                and plan != "witty_free"
                 and data["status"] == "force"
                 and not data["value"]
             ):
