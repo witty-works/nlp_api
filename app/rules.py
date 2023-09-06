@@ -9,6 +9,7 @@ from app.categories import is_base_category
 
 
 class Rule:
+    name: str
     lemma: str
     words: tuple
     word_types: tuple
@@ -23,12 +24,14 @@ class Rule:
 
     def __init__(
         self,
+        name,
         lemma,
         words,
         word_types,
         subcategory=None,
         alternatives=None,
     ):
+        self.name = name
         self.lemma = lemma
         self.words = words
         self.word_types = word_types
@@ -55,6 +58,7 @@ def build_rules(
 
     for i, lemma in enumerate(df["Lemma"]):
         rule = Rule(
+            lemma,
             lemma,
             tuple([i.text for i in model.tokenizer(lemma)]),
             tuple(df["Word_Type"][i].split("|")),
@@ -173,24 +177,24 @@ def fetch_rules(model):
             ),
         },
         "m_f_regexes": [
-            # (m/f..)
             Rule(
+                "(m/f..)",
                 re.compile(r"^m/(f|w)(\/[*a-z])*(\))?$", re.IGNORECASE),
                 None,
                 (0, 7, "/"),
                 "gender_specific_abbreviation",
             ),
-            # (f/m..)
             Rule(
+                "(f/m..)",
                 re.compile(r"^(f|w)/m(\/[*a-z])*(\))?$", re.IGNORECASE),
                 None,
                 (0, 7, "/"),
                 "gender_specific_abbreviation",
             ),
         ],
-        # (d/f/m/v)
         "d_f_m_regexes": [
             Rule(
+                "(d/f/m/v)",
                 re.compile(r"^(d|x|\*)(/v)?/f(/v)?/m(/v)?$", re.IGNORECASE),
                 None,
                 (0, 7, "/"),
@@ -461,8 +465,8 @@ def fetch_rules(model):
     if "de" in langs:
         lang = "de"
 
-        # "#foobar"
         rule = Rule(
+            "#foobar",
             re.compile(r"^#(?!.*[A-Z])\w\w\w\w\w+$"),
             None,
             (1, 2, "#"),
@@ -1193,8 +1197,8 @@ def fetch_rules(model):
             "retard",
         ]
 
-        # "#foobar"
         rule = Rule(
+            "#foobar",
             re.compile(r"^#(?!.*[A-Z])\w\w\w\w\w+$"),
             None,
             (1, 2, "#"),

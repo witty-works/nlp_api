@@ -637,6 +637,7 @@ async def get_debug_rule(
         alternatives = tuple(map(str.strip, alternatives))
 
     rule = Rule(
+        "test",
         lemma,
         tokenize(lemma, lang.lang),
         tuple(word_types.split("|")),
@@ -1819,6 +1820,7 @@ def fetch_term_replacements(
 
         rule = Rule(
             lemma,
+            lemma,
             words,
             word_types,
             "corporate_rules",
@@ -2063,6 +2065,7 @@ async def german_rules(
 
             endings = [
                 Rule(
+                    config.german_gender_ending + "",
                     config._gendereddenom_ending[config.german_gender_ending],
                     None,
                     config._gendereddenom_ending_word_type[config.german_gender_ending],
@@ -2073,6 +2076,7 @@ async def german_rules(
             if config.german_gender_ending in config._gendereddenom_ending_article:
                 endings.append(
                     Rule(
+                        config.german_gender_ending + " article",
                         config._gendereddenom_ending_article[
                             config.german_gender_ending
                         ],
@@ -2108,6 +2112,7 @@ async def german_rules(
                     continue
 
                 ending = Rule(
+                    key + "",
                     regexp,
                     None,
                     config._gendereddenom_ending_word_type[key],
@@ -2128,6 +2133,7 @@ async def german_rules(
                     )
 
                     ending = Rule(
+                        key + "article",
                         config._gendereddenom_ending_article[key],
                         None,
                         word_types,
