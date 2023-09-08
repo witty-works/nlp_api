@@ -4,6 +4,8 @@
         "hs_name": "",
         "proficiency_level": "openly_discriminating",
         "emoji": "\ud83d\udeab",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "gender-orientation",
         "related_subcategories": [
             "homophobia",
@@ -15,6 +17,8 @@
         "hs_name": "",
         "proficiency_level": "language-clarity",
         "emoji": "\ud83d\ude09",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "cultural-diversity",
         "related_subcategories": [
             "anglicism",
@@ -103,6 +107,8 @@
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude12",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -187,6 +193,8 @@
         "hs_name": "",
         "proficiency_level": "openly_discriminating",
         "emoji": "\ud83d\udeab",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -276,6 +284,8 @@
         "hs_name": "",
         "proficiency_level": "age",
         "emoji": "\ud83e\udd14",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "acquired-diversity",
         "related_subcategories": [],
         "translations": {
@@ -289,7 +299,12 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Age%20information.png",
+                    "width": "605",
+                    "height": "401",
+                    "alt": "An illustration of Witty shows the phrase 'We need matured [experienced] leaders for this project.\u2019 The words in brackets are shown as alternatives."
+                },
                 "example_image_advanced": "",
                 "example_image_alt_text_advanced": "",
                 "soft_explanation": "",
@@ -355,6 +370,8 @@
         "hs_name": "",
         "proficiency_level": "age",
         "emoji": "\ud83d\ude12",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "acquired-diversity",
         "related_subcategories": [],
         "translations": {
@@ -439,6 +456,8 @@
         "hs_name": "",
         "proficiency_level": "age",
         "emoji": "\ud83d\ude12",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "acquired-diversity",
         "related_subcategories": [],
         "translations": {
@@ -489,7 +508,12 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/25%20Jahre%20und%20j%C3%BCnger.png",
+                    "width": "671",
+                    "height": "467",
+                    "alt": "Eine Illustration des Satzes 'Unsere Praktikantin ist noch gr\u00fcn hinter den Ohren. [muss noch dazulernen]\u2019. Die von Witty vorgeschlagene Alternative ist in Klammern."
+                },
                 "example_image_advanced": "",
                 "example_image_alt_text_advanced": "",
                 "soft_explanation": "",
@@ -518,6 +542,8 @@
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude12",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "social-motive",
         "related_subcategories": [
             "communal",
@@ -583,7 +609,12 @@
                     "height": "1446",
                     "alt": "Illustration: Ein Mann im Anzug mit verschr\u00e4nkten Armen. Der Titel des Bildes lautet \"Agentische Sprache\"."
                 },
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Agentische%20Sprache.png",
+                    "width": "835",
+                    "height": "423",
+                    "alt": "Eine Illustration des Satzes 'Unsere Mannschaft [Unser Team] ist ehrgeizig [engagiert]\u2019. Die von Witty vorgeschlagene Alternative ist in Klammern."
+                },
                 "example_image_advanced": "",
                 "example_image_alt_text_advanced": "",
                 "soft_explanation": "Wenn wir heranwachsen, verbinden wir W\u00f6rter wie <em>\u00fcbernehmen<\/em>, <em>entschlossen <\/em>oder <em>\u00fcbertreffen<\/em> mit M\u00e4nnern, Macht und dem Streben nach pers\u00f6nlichem Erfolg. Diese W\u00f6rter bezeichnet man als agentisch. Sie stellen das eigene Fortkommen \u00fcber die Zusammenarbeit. Frauen und die Generation Z sind allerdings so sozialisiert, dass sie Zusammenarbeit als wertvoll empfinden. Indem du agentische W\u00f6rter meidest, f\u00f6rderst du ein Umfeld, das allen Geschlechtern und Altersgruppen das Gef\u00fchl vermittelt, dass sie sich frei entfalten k\u00f6nnen.",
@@ -612,6 +643,8 @@
         "hs_name": "",
         "proficiency_level": "language-clarity",
         "emoji": "\ud83d\ude09",
+        "has_en_rules": "false",
+        "has_de_rules": "true",
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -625,7 +658,12 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Anglizismen-1.png",
+                    "width": "663",
+                    "height": "429",
+                    "alt": "Eine Illustration des Satzes 'Wir m\u00fcssen on-time und on-budget [im Zeit- und Budgetrahmen] sein.\u2019 Die von Witty vorgeschlagene Alternative ist in Klammern."
+                },
                 "example_image_advanced": "",
                 "example_image_alt_text_advanced": "",
                 "soft_explanation": "",
@@ -654,6 +692,8 @@
         "hs_name": "",
         "proficiency_level": "openly_discriminating",
         "emoji": "\ud83d\udeab",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "religion",
         "related_subcategories": [],
         "translations": {
@@ -738,6 +778,8 @@
         "hs_name": "",
         "proficiency_level": "openly_discriminating",
         "emoji": "\ud83d\udeab",
+        "has_en_rules": "true",
+        "has_de_rules": "false",
         "category": "religion",
         "related_subcategories": [],
         "translations": {
@@ -822,6 +864,8 @@
         "hs_name": "",
         "proficiency_level": "visible",
         "emoji": "\ud83d\ude12",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -906,6 +950,8 @@
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude12",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "religion",
         "related_subcategories": [],
         "translations": {
@@ -990,6 +1036,8 @@
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude1f",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -1084,6 +1132,8 @@
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude12",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "acquired-diversity",
         "related_subcategories": [],
         "translations": {
@@ -1134,7 +1184,12 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Klassismus.png",
+                    "width": "605",
+                    "height": "415",
+                    "alt": "Eine Illustration des Satzes 'Sie hat es als Arbeiterkinder [Kind auf einfachen Verh\u00e4ltnissen] zur Akademikerin geschafft.\u2019. Die von Witty vorgeschlagene Alternative ist in Klammern."
+                },
                 "example_image_advanced": "",
                 "example_image_alt_text_advanced": "",
                 "soft_explanation": "",
@@ -1163,6 +1218,8 @@
         "hs_name": "",
         "proficiency_level": "invisible",
         "emoji": "\ud83d\ude12",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -1247,6 +1304,8 @@
         "hs_name": "",
         "proficiency_level": "invisible",
         "emoji": "\ud83d\ude12",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -1331,6 +1390,8 @@
         "hs_name": "",
         "proficiency_level": "ancestry",
         "emoji": "\ud83d\ude12",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "cultural-diversity",
         "related_subcategories": [
             "culture",
@@ -1420,6 +1481,8 @@
         "hs_name": "",
         "proficiency_level": "inclusive",
         "emoji": "\u2705",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "social-motive",
         "related_subcategories": [
             "agentic",
@@ -1519,6 +1582,8 @@
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude12",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -1603,6 +1668,8 @@
         "hs_name": "",
         "proficiency_level": "inclusive",
         "emoji": "\u2705",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "social-motive",
         "related_subcategories": [
             "communal"
@@ -1624,10 +1691,10 @@
                     "alt": "Illustration of a diverse group with 5 people of different ages, body shapes and ethnic background"
                 },
                 "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/DEIB.png",
+                    "src": "https:\/\/www.witty.works\/hubfs\/DEIB%20(1)-1.png",
                     "width": "605",
-                    "height": "427",
-                    "alt": "An illustration of Witty showing the phrase 'We want to create a diversity-friendly [an atmosphere together where everyone feels safe and free to contribute] environment.' The words in brackets are shown as alternatives."
+                    "height": "319",
+                    "alt": "An illustration of Witty showing the phrase 'We want to create an atmosphere together where everyone  feels safe and free to contribute'. The word \"safe\" is highlighted in green. "
                 },
                 "example_image_advanced": "",
                 "example_image_alt_text_advanced": "",
@@ -1666,10 +1733,10 @@
                     "alt": "Illustration einer vielf\u00e4ltigen Gruppe mit 5 Personen unterschiedlichen Alters, K\u00f6rperbaus und ethnischer Herkunft"
                 },
                 "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/DEIB%20(1).png",
+                    "src": "https:\/\/www.witty.works\/hubfs\/DEIB-1.png",
                     "width": "605",
-                    "height": "451",
-                    "alt": "Eine Illustration von Witty des Satzes 'Wir wollen  [ein diversit\u00e4tsfreundliches Umfeld schaffen]\u2019. Als Alternative f\u00fcr den Begriff in Klammern wird 'zusammen eine Atmosph\u00e4re schaffen,  in der sich alle sicher und willkommen  f\u00fchlen' vorgeschlagen."
+                    "height": "319",
+                    "alt": "Eine Illustration von Witty des Satzes ''Vielfalt zu f\u00f6rdern, ist eine Kernstrategie in unserem Unternehmen.' Das Wort Vielfalt ist gr\u00fcn unterstrichen."
                 },
                 "example_image_advanced": "",
                 "example_image_alt_text_advanced": "",
@@ -1699,6 +1766,8 @@
         "hs_name": "",
         "proficiency_level": "inclusive",
         "emoji": "\u2705",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "social-motive",
         "related_subcategories": [],
         "translations": {
@@ -1712,7 +1781,12 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Positive%20emotions.png",
+                    "width": "605",
+                    "height": "319",
+                    "alt": "An illustration of the phrase \"She gave an animated and delightful talk to the team.\" The words \"animated\" and \"delightful\" are marked in green."
+                },
                 "example_image_advanced": "",
                 "example_image_alt_text_advanced": "",
                 "soft_explanation": "",
@@ -1744,7 +1818,12 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Positive%20Emotionen.png",
+                    "width": "605",
+                    "height": "319",
+                    "alt": "Eine Illustration des Satzes \"Die Stimmung in unserem Team ist lebendig\". Das Wort \"lebendig\" ist gr\u00fcn unterstrichen."
+                },
                 "example_image_advanced": "",
                 "example_image_alt_text_advanced": "",
                 "soft_explanation": "",
@@ -1773,6 +1852,8 @@
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude2e\u200d\ud83d\udca8",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "social-motive",
         "related_subcategories": [
             "filler",
@@ -1870,6 +1951,8 @@
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude1f",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -1954,6 +2037,8 @@
         "hs_name": "",
         "proficiency_level": "language-clarity",
         "emoji": "\ud83d\ude1f",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "cultural-diversity",
         "related_subcategories": [
             "exaggerating",
@@ -2051,6 +2136,8 @@
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83e\uddca",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "acquired-diversity",
         "related_subcategories": [],
         "translations": {
@@ -2135,6 +2222,8 @@
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\udca1",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "gender-orientation",
         "related_subcategories": [
             "female_stereotype",
@@ -2235,6 +2324,8 @@
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude12",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "gender-orientation",
         "related_subcategories": [
             "d_and_i",
@@ -2334,6 +2425,8 @@
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude2e",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -2347,7 +2440,12 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Geschlechter-Spezifische%20Abk%C3%BCrzung-1.png",
+                    "width": "605",
+                    "height": "407",
+                    "alt": "Eine Illustration des Satzes 'F\u00fcr unsere Partner im Gro\u00dfraum Frankfurt sowie andere St\u00e4dte suchen wir ab sofort motivierte und engagierte Erzieher, Kinderpfleger und Sozialp\u00e4dagogen (m\/w) [(d\/w\/m)].\u2019 Die von Witty vorgeschlagene Alternative ist in eckigen Klammern."
+                },
                 "example_image_advanced": "",
                 "example_image_alt_text_advanced": "",
                 "soft_explanation": "",
@@ -2413,6 +2511,8 @@
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\udcaf",
+        "has_en_rules": "false",
+        "has_de_rules": "true",
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -2426,7 +2526,12 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Inklusive%20Endung.png",
+                    "width": "605",
+                    "height": "381",
+                    "alt": "Eine Illustration des Satzes \u2018Liebe Kund*innen und PartnerInnen [Partner*innen]\u2019. Die von Witty vorgeschlagene Alternative ist in Klammern."
+                },
                 "example_image_advanced": "",
                 "example_image_alt_text_advanced": "",
                 "soft_explanation": "",
@@ -2455,6 +2560,8 @@
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude2e",
+        "has_en_rules": "true",
+        "has_de_rules": "false",
         "category": "gender-orientation",
         "related_subcategories": [
             "gender_identity",
@@ -2473,7 +2580,12 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Generischer%20Plural.png",
+                    "width": "605",
+                    "height": "436",
+                    "alt": "Eine Illustration des Satzes 'F\u00fcr unsere Partner im Gro\u00dfraum Frankfurt sowie andere St\u00e4dte suchen wir ab sofort motivierte und engagierte Erzieher, Kinderpfleger und Sozialp\u00e4dagogen [Erzieher*innen, Kinderpfleger*innen und Sozialp\u00e4dagog*innen].\u2019 Die von Witty vorgeschlagene Alternative ist in Klammern."
+                },
                 "example_image_advanced": "",
                 "example_image_alt_text_advanced": "",
                 "soft_explanation": "",
@@ -2539,6 +2651,8 @@
         "hs_name": "",
         "proficiency_level": "invisible",
         "emoji": "\ud83d\ude12",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -2589,7 +2703,12 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/H%C3%B6rf%C3%A4higkeit.png",
+                    "width": "605",
+                    "height": "404",
+                    "alt": "Eine Illustration des Satzes \u2018Die Kundin ist auf taube Ohren sto\u00dfen [wurde ignoriert]. Die von Witty vorgeschlagene Alternative ist in Klammern."
+                },
                 "example_image_advanced": "",
                 "example_image_alt_text_advanced": "",
                 "soft_explanation": "",
@@ -2618,6 +2737,8 @@
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude1f",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "gender-orientation",
         "related_subcategories": [
             "female_stereotype",
@@ -2717,6 +2838,8 @@
         "hs_name": "",
         "proficiency_level": "language-clarity",
         "emoji": "\ud83d\ude44",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "cultural-diversity",
         "related_subcategories": [
             "exaggerating",
@@ -2814,6 +2937,8 @@
         "hs_name": "",
         "proficiency_level": "openly_discriminating",
         "emoji": "\ud83d\udeab",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -2898,6 +3023,8 @@
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude1f",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "gender-orientation",
         "related_subcategories": [
             "agentic",
@@ -2954,7 +3081,7 @@
                 "hs_name": "F\u00fchrungsbild",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/f\u00fchrungsbild",
                 "is_active": "1",
-                "name": "Bedient altmodisches Konzept von F\u00fchrung_",
+                "name": "Bedient altmodisches Konzept von F\u00fchrung.",
                 "short_explanation": "Bedient altmodisches Konzept von F\u00fchrung",
                 "sub_head": "Um alle Geschlechteridentit\u00e4ten in F\u00fchrungsrollen zu unterst\u00fctzen, vermeide m\u00e4nnliche Stereotypen und starre Hierarchien, wenn du \u00fcber F\u00fchrung sprichst",
                 "lead_video": "",
@@ -2964,7 +3091,12 @@
                     "height": "525",
                     "alt": "Illustration einer vielf\u00e4ltigen Gruppe mit 5 Personen unterschiedlichen Alters, K\u00f6rperbaus und ethnischer Herkunft"
                 },
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/F%C3%BChrungsbild.png",
+                    "width": "663",
+                    "height": "429",
+                    "alt": "Eine Illustration des Satzes \u2018In diesem Projekt war er immer Herr der Lage [hatte er immer alles unter Kontrolle]\u2019. Die von Witty vorgeschlagene Alternative ist in Klammern."
+                },
                 "example_image_advanced": "",
                 "example_image_alt_text_advanced": "",
                 "soft_explanation": "Im Laufe unserer Geschichte deckten sich die Vorstellungen von einer effektiven F\u00fchrungspers\u00f6nlichkeit mit m\u00e4nnlichen Eigenschaften - zielstrebig, wettbewerbsorientiert und autorit\u00e4r. Traditionell weibliche Eigenschaften wurden nicht als F\u00fchrungsqualit\u00e4ten wahrgenommen. Heute haben wir andere Vorstellungen davon, was wir heute von F\u00fchrungskr\u00e4ften erwarten. Die Vermeidung von m\u00e4nnlichen F\u00fchrungsstereotypen hilft dabei, einen Raum zu schaffen, in dem Menschen mit der F\u00e4higkeit, uns zu unterst\u00fctzen, zu ermutigen und zu inspirieren, f\u00fcr eine gemeinsame Sache zu arbeiten, unabh\u00e4ngig von ihrer Geschlechtsidentit\u00e4t F\u00fchrungsaufgaben \u00fcbernehmen k\u00f6nnen.",
@@ -2993,6 +3125,8 @@
         "hs_name": "",
         "proficiency_level": "invisible",
         "emoji": "\ud83d\ude12",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -3077,6 +3211,8 @@
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude1f",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -3161,6 +3297,8 @@
         "hs_name": "",
         "proficiency_level": "visible",
         "emoji": "\ud83d\ude12",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -3210,13 +3348,13 @@
                 "short_explanation": "Bedient Stereotypen von Gesundheit und Krankheit",
                 "sub_head": "",
                 "lead_video": "",
-                "lead_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Gesundheitsbild%20(1).png",
+                "lead_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Gesundheitsbild-1.png",
                     "width": "605",
                     "height": "413",
                     "alt": "Eine Illustration des Satzes 'Seit dem Unfall ist sie ein Pflegefall [jemand mit Assistenzbedarf].\u2019. Die von Witty vorgeschlagene Alternative ist in Klammern."
                 },
-                "example_image": [],
                 "example_image_advanced": "",
                 "example_image_alt_text_advanced": "",
                 "soft_explanation": "",
@@ -3245,6 +3383,8 @@
         "hs_name": "",
         "proficiency_level": "invisible",
         "emoji": "\ud83d\ude12",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -3294,13 +3434,13 @@
                 "short_explanation": "Bedient \u00fcberholte Vorstellungen von mentaler Gesundheit oder Wohlbefinden",
                 "sub_head": "",
                 "lead_video": "",
-                "lead_image": {
+                "lead_image": [],
+                "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Mentales%20Wohlbefinden.png",
                     "width": "605",
                     "height": "372",
                     "alt": " Eine Illustration von Witty des Satzes 'Mason ist so [zwanghaft], wenn es um die Ablage geht.'. Als Alternative f\u00fcr den Begriff in Klammern wird \u2018perfektionistisch\u2019 vorgeschlagen."
                 },
-                "example_image": [],
                 "example_image_advanced": "",
                 "example_image_alt_text_advanced": "",
                 "soft_explanation": "",
@@ -3329,6 +3469,8 @@
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude12",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -3413,6 +3555,8 @@
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83e\ude96",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "social-motive",
         "related_subcategories": [],
         "translations": {
@@ -3497,6 +3641,8 @@
         "hs_name": "",
         "proficiency_level": "visible",
         "emoji": "\ud83d\ude12",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -3581,6 +3727,8 @@
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude12",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -3595,7 +3743,7 @@
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Nazi%20language.png",
+                    "src": "https:\/\/www.witty.works\/hubfs\/Nazi%20language-1.png",
                     "width": "605",
                     "height": "405",
                     "alt": " An illustration of Witty showing the phrase 'We have to stop experimenting and start looking for a [final] solution.' The word final should be removed.  "
@@ -3665,6 +3813,8 @@
         "hs_name": "",
         "proficiency_level": "openly_discriminating",
         "emoji": "\ud83d\udeab",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "social-motive",
         "related_subcategories": [],
         "translations": {
@@ -3759,6 +3909,8 @@
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude1f",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -3843,6 +3995,8 @@
         "hs_name": "",
         "proficiency_level": "language-clarity",
         "emoji": "\ud83d\ude44",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "cultural-diversity",
         "related_subcategories": [
             "abbreviation",
@@ -3936,6 +4090,8 @@
         "hs_name": "",
         "proficiency_level": "openly_discriminating",
         "emoji": "\ud83d\udeab",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -4020,6 +4176,8 @@
         "hs_name": "",
         "proficiency_level": "ancestry",
         "emoji": "\ud83d\ude12",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -4104,6 +4262,8 @@
         "hs_name": "",
         "proficiency_level": "openly_discriminating",
         "emoji": "\ud83d\udeab",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -4188,6 +4348,8 @@
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude12",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -4272,6 +4434,8 @@
         "hs_name": "",
         "proficiency_level": "invisible",
         "emoji": "\ud83d\ude12",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -4356,6 +4520,8 @@
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83c\udfc5",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "social-motive",
         "related_subcategories": [],
         "translations": {
@@ -4440,6 +4606,8 @@
         "hs_name": "",
         "proficiency_level": "language-clarity",
         "emoji": "\ud83d\ude1f",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -4534,6 +4702,8 @@
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude1f",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "gender-orientation",
         "related_subcategories": [
             "female_stereotype",
@@ -4633,6 +4803,8 @@
         "hs_name": "",
         "proficiency_level": "openly_discriminating",
         "emoji": "\ud83d\udeab",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -4717,6 +4889,8 @@
         "hs_name": "",
         "proficiency_level": "invisible",
         "emoji": "\ud83d\ude12",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -4801,6 +4975,8 @@
         "hs_name": "",
         "proficiency_level": "openly_discriminating",
         "emoji": "\ud83d\udeab",
+        "has_en_rules": "true",
+        "has_de_rules": "true",
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -4885,6 +5061,8 @@
         "hs_name": "",
         "proficiency_level": "unconscious_bias",
         "emoji": "\ud83d\ude12",
+        "has_en_rules": "false",
+        "has_de_rules": "true",
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
