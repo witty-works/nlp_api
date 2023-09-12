@@ -16,6 +16,7 @@ dev = [
     "pytest-asyncio",
     "pytest-snapshot",
     "pytest-env>=0.8.1",
+    "httpx>=0.25.0",
 ]
 
 [project]
@@ -41,7 +42,6 @@ dependencies = [
     "platformshconfig",
     "fakeredis",
     "fasttext-wheel",
-    "fastapi-microsoft-identity",
     "slack-bolt",
     "german-nouns",
     "inflex",
@@ -53,6 +53,7 @@ dependencies = [
     "spacymoji>=3.0.1",
     "emoji>=0.6.0",
     "cmp-version>=3.0.0",
+    "python-jose>=3.3.0",
 ]
 requires-python = ">=3.11"
 license = "Proprietary"

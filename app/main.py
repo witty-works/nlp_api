@@ -39,7 +39,12 @@ from fastapi.security import (
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import RedirectResponse
 
-from fastapi_microsoft_identity import validate_scope, get_token_claims
+from app.auth_service import (
+    validate_scope,
+    get_token_claims,
+    decode_B2C_JWT,
+    decode_JWT,
+)
 
 import secure
 
@@ -90,7 +95,6 @@ from app.categories import (
 from app.settings import get_settings
 from app.logger import set_up_logger
 from app.redis_setup import set_up_redis
-from app.azure_ad_b2c import initialize_aadb2c
 from app.model import fetch_nlp_model
 from app.rules import fetch_rules, Rule
 from app.sentry import set_up_sentry_sdk
@@ -105,7 +109,6 @@ settings = get_settings()
 logging = set_up_logger(settings)
 sentry_sdk = set_up_sentry_sdk(version, settings)
 redis = set_up_redis(settings)
-initialize_aadb2c(settings)
 
 logging.debug("app started with settings: %s", settings)
 
@@ -1151,18 +1154,15 @@ async def fetch_organization_configs_for_request(
 
 def fetch_email_from_claims(claims):
     try:  # pragma: no cover
-        if claims["aud"] != settings.aadb2c_client_id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="access token does not match client id",
-            )
-
         if "email" in claims:
             return claims["email"]
 
         if "emails" in claims and len(claims["emails"]) > 0:
             return claims["emails"][0]
 
+        # Office SSO
+        if "preferred_username" in claims:
+            return claims["preferred_username"]
     except KeyError:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -1180,14 +1180,34 @@ def fetch_user(request: Request):
         "authorization"
     ].lower().startswith("bearer"):
         try:
-            validate_scope(settings.aadb2c_expected_scope, request)
-            claims = get_token_claims(request)
-        except Exception:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN, detail="access token invalid"
-            )
+            unverified_claims = get_token_claims(request)
+            for key in settings.sso_configs:
+                config = settings.sso_configs[key]
+                if unverified_claims["aud"] != config["client_id"]:
+                    continue
 
-        return fetch_email_from_claims(claims)
+                if "domain" in config:
+                    decode_B2C_JWT(
+                        request,
+                        config["rsa_key"],
+                        config["tenant_id"],
+                        config["client_id"],
+                        config["domain"],
+                    )
+                else:
+                    decode_JWT(
+                        request,
+                        config["rsa_key"],
+                        config["tenant_id"],
+                        config["client_id"],
+                    )
+                validate_scope(settings.aadb2c_expected_scope, request)
+                claims = get_token_claims(request)
+                return fetch_email_from_claims(claims)
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN, detail=str(e.args[0])
+            )
 
     if settings.testing:
         if "x-auth" in request.headers:

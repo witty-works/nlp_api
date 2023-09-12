@@ -29,11 +29,27 @@ class Settings(BaseSettings):
     is_prod: bool = False
     terms_of_service: str = "https://www.witty.works/privacy"
     contact: str = "support@witty.works"
+
     aadb2c_tenant_id: Optional[str]
     aadb2c_client_id: Optional[str]
     aadb2c_policy: Optional[str]
     aadb2c_domain: Optional[str]
     aadb2c_expected_scope: Optional[str]
+    aadb2c_rsa_kid: Optional[str]
+    aadb2c_rsa_kty: str = "RSA"
+    aadb2c_rsa_n: Optional[str]
+    aadb2c_rsa_e: str = "AQAB"
+
+    office_sso_tenant_id: Optional[str]
+    office_sso_client_id: Optional[str]
+    office_sso_expected_scope: Optional[str]
+    office_sso_rsa_kid: Optional[str]
+    office_sso_rsa_kty: str = "RSA"
+    office_sso_rsa_n: Optional[str]
+    office_sso_rsa_e: str = "AQAB"
+
+    sso_configs: dict = {}
+
     redis_host: Optional[str]
     redis_port: Optional[str]
     redis_username: Optional[str]
@@ -66,6 +82,33 @@ class Settings(BaseSettings):
 def get_settings():
     settings = Settings()
     settings.is_prod = settings.platform_environment_type == "production"
+
+    settings.sso_configs = {
+        "aadb2c": {
+            "tenant_id": settings.aadb2c_tenant_id,
+            "client_id": settings.aadb2c_client_id,
+            "policy": settings.aadb2c_policy,
+            "domain": settings.aadb2c_domain,
+            "expected_scope": settings.aadb2c_expected_scope,
+            "rsa_key": {
+                "kid": settings.aadb2c_rsa_kid,
+                "kty": settings.aadb2c_rsa_kty,
+                "e": settings.aadb2c_rsa_e,
+                "n": settings.aadb2c_rsa_n,
+            },
+        },
+        "office_sso": {
+            "tenant_id": settings.office_sso_tenant_id,
+            "client_id": settings.office_sso_client_id,
+            "expected_scope": settings.office_sso_expected_scope,
+            "rsa_key": {
+                "kid": settings.office_sso_rsa_kid,
+                "kty": settings.office_sso_rsa_kty,
+                "e": settings.office_sso_rsa_e,
+                "n": settings.office_sso_rsa_n,
+            },
+        },
+    }
 
     if settings.minimum_version_web_ext:
         settings.minimum_versions["web-ext"] = settings.minimum_version_web_ext
