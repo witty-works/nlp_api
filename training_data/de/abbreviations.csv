@@ -123,7 +123,7 @@ ICYMI,~,style,advanced_abbreviation,"['In case you missed it', 'Nur für den Fal
 IDE,~,style,advanced_abbreviation,"['Integrated Development Environment (IDE)', 'integrierte Entwicklungsumgebung']"
 IDK,~,style,advanced_abbreviation,"[""I don't know"", 'Keine Ahnung', 'Das weiß ich leider nicht', 'Nur eine Vermutung', 'Nur eine Annahme']"
 IIRC,~,style,advanced_abbreviation,"['If I remember correctly,', 'Wenn ich mich recht entsinne,', 'Wenn ich mich richtig erinnere,']"
-IM,~,style,advanced_abbreviation,"['Instant Messaging (IM)', 'Sofortnachrichten', 'Direktnachrichten']"
+IM,=,style,advanced_abbreviation,"['Instant Messaging (IM)', 'Sofortnachrichten', 'Direktnachrichten']"
 IMHO,~,style,advanced_abbreviation,"['In my humble opinion,', 'Meiner bescheidenen Ansicht nach', 'Meiner unmaßgeblichen Meinung nach']"
 IMO,~,style,advanced_abbreviation,"['In my opinion', 'Meiner Meinung nach', 'Aus meiner Sicht', 'In meinen Augen']"
 IP,~,style,advanced_abbreviation,"['Internet Protocol (IP)', 'Internetprotokoll']"
