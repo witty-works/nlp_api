@@ -5,21 +5,21 @@
         {
             "alternatives": [
                 {
-                    "text": "Prevailing"
+                    "text": "prevailing"
                 },
                 {
-                    "text": "Guiding"
+                    "text": "guiding"
                 },
                 {
-                    "text": "Main"
+                    "text": "main"
                 },
                 {
-                    "text": "Primary"
+                    "text": "primary"
                 }
             ],
             "category": "social-motive",
-            "context": "Dominant",
-            "end": 8,
+            "context": "Are you Dominant",
+            "end": 16,
             "explanation": {
                 "content": "video",
                 "context": "don't use for people",
@@ -30,7 +30,7 @@
             "gravity": 2.0,
             "label": "Social Motive: Agentic language",
             "proficiency_level": "unconscious_bias",
-            "start": 0,
+            "start": 8,
             "subcategory": "agentic",
             "text": "Dominant"
         }

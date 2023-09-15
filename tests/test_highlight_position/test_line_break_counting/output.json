@@ -12,8 +12,8 @@
                 }
             ],
             "category": "social-motive",
-            "context": "helo ninja",
-            "end": 12,
+            "context": "hello ninja warrior",
+            "end": 13,
             "explanation": {
                 "content": "advanced",
                 "icon": "😮‍💨",
@@ -23,7 +23,7 @@
             "gravity": 2.0,
             "label": "Social Motive: Exaggeration",
             "proficiency_level": "unconscious_bias",
-            "start": 7,
+            "start": 8,
             "subcategory": "exaggerating",
             "text": "ninja"
         }
