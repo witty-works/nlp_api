@@ -98,7 +98,7 @@ from app.model import lemma_plural_lookup
 
 # probe.end()
 
-version = "1.46.12"
+version = "1.47.0"
 
 categories = get_categories()
 settings = get_settings()
@@ -637,6 +637,7 @@ async def get_debug_rule(
         alternatives = tuple(map(str.strip, alternatives))
 
     rule = Rule(
+        "test",
         lemma,
         tokenize(lemma, lang.lang),
         tuple(word_types.split("|")),
@@ -1070,7 +1071,8 @@ def apply_configs(
                     disabled_categories.append(category)
         elif config == "store_context":
             if (
-                plan == "witty_teams"
+                plan is not None
+                and plan != "witty_free"
                 and data["status"] == "force"
                 and not data["value"]
             ):
@@ -1818,6 +1820,7 @@ def fetch_term_replacements(
 
         rule = Rule(
             lemma,
+            lemma,
             words,
             word_types,
             "corporate_rules",
@@ -2062,6 +2065,7 @@ async def german_rules(
 
             endings = [
                 Rule(
+                    config.german_gender_ending + "",
                     config._gendereddenom_ending[config.german_gender_ending],
                     None,
                     config._gendereddenom_ending_word_type[config.german_gender_ending],
@@ -2072,6 +2076,7 @@ async def german_rules(
             if config.german_gender_ending in config._gendereddenom_ending_article:
                 endings.append(
                     Rule(
+                        config.german_gender_ending + " article",
                         config._gendereddenom_ending_article[
                             config.german_gender_ending
                         ],
@@ -2107,6 +2112,7 @@ async def german_rules(
                     continue
 
                 ending = Rule(
+                    key + "",
                     regexp,
                     None,
                     config._gendereddenom_ending_word_type[key],
@@ -2127,6 +2133,7 @@ async def german_rules(
                     )
 
                     ending = Rule(
+                        key + "article",
                         config._gendereddenom_ending_article[key],
                         None,
                         word_types,
@@ -4586,4 +4593,10 @@ def detect_non_inclusive_emoji(
 if __name__ == "__main__":  # pragma: no cover
     # If this is being ran directly as a script, run an internal uvicorn server
     # to service API requests
-    uvicorn.run(app, host="0.0.0.0", port=8000, log_level=settings.logging_config_level)
+    uvicorn.run(
+        app,
+        host="0.0.0.0",
+        port=8000,
+        log_level=settings.logging_config_level,
+        server_header=False,
+    )

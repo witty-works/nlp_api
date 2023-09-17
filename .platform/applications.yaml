@@ -3,7 +3,6 @@
   type: "python:3.11"
 
   container_profile: HIGHER_MEMORY
-  initial_size: "0.5"
 
   web:
     upstream:
@@ -56,8 +55,7 @@
 
   mounts:
     "files":
-      source: service
-      service: files
+      source: local
       source_path: files
 
   relationships:
