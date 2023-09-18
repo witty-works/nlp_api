@@ -4164,18 +4164,11 @@ def word_noun(
 
             break
 
-        start = token.idx
         subcategory = rule.subcategory
 
         if is_plural:
+            start = token.idx
             alternatives = rule.plural_alternatives
-            for alternative in alternatives:
-                # Remove "Engineers" from the alternatives if this is what triggered
-                if alternative.lower() == token.text.lower():
-                    alternatives.remove(alternative)
-
-            if rule.secondary_subcategory is not None:
-                subcategory = rule.secondary_subcategory
         else:
             text, start, alternatives = alternatives_declension(
                 lang.lang, text, i, tokens, rule.alternatives
