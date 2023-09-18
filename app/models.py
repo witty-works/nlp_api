@@ -606,8 +606,6 @@ class ResultOut(BaseModel):
         for alternative in alternatives:
             if alternative != " ":
                 alternative = alternative.strip()
-            if alternative == text:
-                continue
 
             # requests for user input are not yet supported
             # https://wittyworks.productboard.com/roadmap/3751070-browser-extension/features/13529555/detail
@@ -639,6 +637,9 @@ class ResultOut(BaseModel):
                     alternative = string.capwords(alternative[0:1]) + alternative[1:]
             else:
                 alternative = lang.convert_sharp_ss(alternative)
+
+            if alternative == text:
+                continue
 
             inspiration = None
             if ResultOut.isInspirationAlternative(alternative, subcategory):

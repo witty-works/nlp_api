@@ -18,19 +18,54 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Engineers work in this industry.",
+            "context": "Engineers work in this industry. Being an experienced engineer is useful.",
             "end": 9,
             "explanation": {
-                "icon": "😮",
-                "text": "Gendered image deeply anchored. In plural less.",
-                "url": "https://www.witty.works/en/categories/gender-orientation/generic-plural?reducedView=true"
+                "content": "advanced",
+                "icon": "😟",
+                "text": "People tend to picture a specific gender",
+                "url": "https://www.witty.works/en/categories/gender-orientation/jobs?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Gender + Orientation: Generic plural",
+            "label": "Gender + Orientation: Jobs",
             "proficiency_level": "unconscious_bias",
             "start": 0,
-            "subcategory": "generic_plural",
+            "subcategory": "titles",
             "text": "Engineers"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "they"
+                },
+                {
+                    "text": "engineering"
+                },
+                {
+                    "text": "development"
+                },
+                {
+                    "text": "engineering team"
+                },
+                {
+                    "text": "development team"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Engineers work in this industry. Being an experienced engineer is useful.",
+            "end": 62,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "People tend to picture a specific gender",
+                "url": "https://www.witty.works/en/categories/gender-orientation/jobs?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Gender + Orientation: Jobs",
+            "proficiency_level": "unconscious_bias",
+            "start": 54,
+            "subcategory": "titles",
+            "text": "engineer"
         }
     ]
 }
