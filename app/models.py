@@ -950,3 +950,28 @@ class RephraseOut(BaseModel):
     plan: Optional[str]
     sentence: str
     config_changed: Optional[bool]
+
+
+class Rephrase(BaseModel):
+    sentence: str = Field(description="Sentence to rephrase")
+    words: str = Field(description="Words to replace in the sentence")
+    alternative_words: str = Field(description="Alternative words for the sentence")
+    rephrased_sentence: str = Field(description="Rephrased sentence")
+
+    @validator("sentence")
+    def sentence_length(cls, field):
+        if len(field) > 200:
+            raise ValueError("Sentence too long")
+        return field
+
+    @validator("words")
+    def words_length(cls, field):
+        if len(field) > 20:
+            raise ValueError("Words too long")
+        return field
+
+    @validator("alternative_words")
+    def alternative_words_length(cls, field):
+        if len(field) > 50:
+            raise ValueError("Alternative words too long")
+        return field

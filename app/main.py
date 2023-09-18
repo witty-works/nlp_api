@@ -81,6 +81,7 @@ from app.models import (
     RuleIn,
     RephraseIn,
     RephraseOut,
+    Rephrase,
 )
 from app.lang_detection import get_lang_detection
 from app.categories import (
@@ -1327,6 +1328,14 @@ async def check(
     )
 
 
+from langchain.output_parsers import PydanticOutputParser
+from langchain.prompts import (
+    PromptTemplate,
+    ChatPromptTemplate,
+    HumanMessagePromptTemplate,
+)
+
+
 async def rephrase(
     request: Request,
     response: Response,
@@ -1352,17 +1361,21 @@ async def rephrase(
     if settings.rephrase["api_key"]:
         headers["Authorization"] = "Bearer " + settings.rephrase["api_key"]
 
-    prompt = (
-        "Rephrase the sentence '%s' replacing the word '%s' with the phrase '%s'. Make the output in the json format."
-        % (
-            rephrase_in.originalSentence,
-            rephrase_in.wordToBeReplaced,
-            rephrase_in.alternative,
-        )
+    parser = PydanticOutputParser(pydantic_object=Rephrase)
+    prompt = PromptTemplate(
+        template="Rephrase the sentence '{sentence}' replacing the words '{words}' with the alternative words '{alternative_words}' to produce the rephrased sentence.\n{format_instructions}.",
+        input_variables=["sentence", "words", "alternative_words"],
+        partial_variables={"format_instructions": parser.get_format_instructions()},
+    )
+
+    input_prompt = prompt.format_prompt(
+        sentence=rephrase_in.originalSentence,
+        words=rephrase_in.wordToBeReplaced,
+        alternative_words=rephrase_in.alternative,
     )
 
     payload = {
-        "inputs": prompt,
+        "inputs": input_prompt.to_string(),
         "parameters": {
             "num_return_sequences": 1,
             "min_length": 500,
@@ -1380,7 +1393,13 @@ async def rephrase(
         json.dumps(payload),
         headers,
         "rephrase",
+        True,
+        False,
     )
+
+    return [input_prompt.to_string(), rephrase_result]
+
+    rephrased = parser.parse(rephrase_result)
 
     sentence = None
     if len(rephrase_result) == 1 and "generated_text" in rephrase_result[0]:

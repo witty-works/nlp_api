@@ -56,6 +56,7 @@ dependencies = [
     "cmp-version>=3.0.0",
     "python-jose>=3.3.0",
     "async-lru>=2.0.4",
+    "langchain>=0.0.345",
 ]
 requires-python = ">=3.11"
 license = "Proprietary"
