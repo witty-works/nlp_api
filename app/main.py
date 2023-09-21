@@ -2212,27 +2212,6 @@ async def german_rules(
             new_i += 1
             continue
 
-        if is_sub_category_enabled(config, "abbreviation"):
-            new_i = simple_match(
-                version,
-                config,
-                client,
-                lang,
-                text,
-                i,
-                tokens,
-                offsets,
-                list_full,
-                fetch_word_rules(
-                    rules["de"]["abbreviation"],
-                    token_lower,
-                    lemma_lower,
-                ),
-            )
-
-            if check_continue(i, new_i, tokens):
-                continue
-
         new_i = rules_based_words_phrase_matcher(
             version,
             config,
@@ -2370,6 +2349,27 @@ async def german_rules(
 
         if check_continue(i, new_i, tokens):
             continue
+
+        if is_sub_category_enabled(config, "abbreviation"):
+            new_i = simple_match(
+                version,
+                config,
+                client,
+                lang,
+                text,
+                i,
+                tokens,
+                offsets,
+                list_full,
+                fetch_word_rules(
+                    rules["de"]["abbreviation"],
+                    token_lower,
+                    lemma_lower,
+                ),
+            )
+
+            if check_continue(i, new_i, tokens):
+                continue
 
         subcategory = "communal"
         if is_sub_category_enabled(config, subcategory):
@@ -2533,49 +2533,6 @@ async def english_rules(
         if len(tokens[i].text) <= 1 or not token_text[0].isalpha():
             new_i += 1
             continue
-
-        new_i = simple_match(
-            version,
-            config,
-            client,
-            lang,
-            text,
-            i,
-            tokens,
-            offsets,
-            list_full,
-            fetch_word_rules(
-                rules[lang.locale]["homonyms_word"],
-                token_lower,
-                lemma_lower,
-            ),
-            false_positive_matcher,
-            False,
-        )
-
-        if check_continue(i, new_i, tokens):
-            continue
-
-        if is_sub_category_enabled(config, "abbreviation"):
-            new_i = simple_match(
-                version,
-                config,
-                client,
-                lang,
-                text,
-                i,
-                tokens,
-                offsets,
-                list_full,
-                fetch_word_rules(
-                    rules[lang.locale]["abbreviation"],
-                    token_lower,
-                    lemma_lower,
-                ),
-            )
-
-            if check_continue(i, new_i, tokens):
-                continue
 
         new_i = rules_based_words_phrase_matcher(
             version,
@@ -2744,6 +2701,49 @@ async def english_rules(
             ),
             false_positive_matcher,
         )
+
+        new_i = simple_match(
+            version,
+            config,
+            client,
+            lang,
+            text,
+            i,
+            tokens,
+            offsets,
+            list_full,
+            fetch_word_rules(
+                rules[lang.locale]["homonyms_word"],
+                token_lower,
+                lemma_lower,
+            ),
+            false_positive_matcher,
+            False,
+        )
+
+        if check_continue(i, new_i, tokens):
+            continue
+
+        if is_sub_category_enabled(config, "abbreviation"):
+            new_i = simple_match(
+                version,
+                config,
+                client,
+                lang,
+                text,
+                i,
+                tokens,
+                offsets,
+                list_full,
+                fetch_word_rules(
+                    rules[lang.locale]["abbreviation"],
+                    token_lower,
+                    lemma_lower,
+                ),
+            )
+
+            if check_continue(i, new_i, tokens):
+                continue
 
         if check_continue(i, new_i, tokens):
             continue
