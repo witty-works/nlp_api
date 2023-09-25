@@ -1430,10 +1430,12 @@ def languagetool_matches(
 
         # Ignore case issues at the start of sentence due to chunking issues
         # https://github.com/witty-works/browser-extension/pull/880
-        if match["rule"]["id"] == "UPPERCASE_SENTENCE_START" and (
-            start == 0 or full_text[0:start].isspace()
-        ):
-            continue
+        if match["rule"]["id"] == "DE_CASE":
+            preceeding_text = full_text[start - 10 : start]
+            preceeding_text = preceeding_text.rstrip(" ")
+            # check if before the word there is only spaces and a newline or tab
+            if len(preceeding_text) and preceeding_text[-1] in ["\n", "\t"]:
+                continue
 
         if match["rule"]["id"] == "WHITESPACE_RULE" and (
             start == 0 or full_text[0:end].isspace()
@@ -1611,6 +1613,15 @@ async def fetch_json_post(url, payload, headers, name, ssl=True, json=True):
         return await handle_response(r, name, json)
 
 
+def convert_to_csv(payload, key):
+    if len(payload[key]):
+        payload[key] = ",".join(payload[key])
+    else:
+        del payload[key]
+
+    return payload
+
+
 async def apply_languagetool_rules(
     version: float,
     config: Config,
@@ -1628,6 +1639,9 @@ async def apply_languagetool_rules(
         "language": lang.locale,
         "disabledCategories": ["GENDER_NEUTRALITY", "COLLOQUIALISMS"],
         "enabledCategories": [],
+        # Ignore case issues at the start of sentence due to chunking issues
+        # https://github.com/witty-works/browser-extension/pull/880
+        "disabledRules": ["UPPERCASE_SENTENCE_START"],
     }
 
     if is_sub_category_enabled(config, "advanced_plain_language"):
@@ -1652,6 +1666,10 @@ async def apply_languagetool_rules(
         payload["enabledCategories"] += lt_style_categories
     else:
         return []
+
+    payload = convert_to_csv(payload, "disabledCategories")
+    payload = convert_to_csv(payload, "enabledCategories")
+    payload = convert_to_csv(payload, "disabledRules")
 
     result = await fetch_json_post(
         settings.languagetool_api + "/check",
