@@ -98,7 +98,7 @@ from app.model import lemma_plural_lookup
 
 # probe.end()
 
-version = "1.47.0"
+version = "1.47.1"
 
 categories = get_categories()
 settings = get_settings()
@@ -1410,10 +1410,12 @@ def languagetool_matches(
 
         # Ignore case issues at the start of sentence due to chunking issues
         # https://github.com/witty-works/browser-extension/pull/880
-        if match["rule"]["id"] == "UPPERCASE_SENTENCE_START" and (
-            start == 0 or full_text[0:start].isspace()
-        ):
-            continue
+        if match["rule"]["id"] == "DE_CASE":
+            preceeding_text = full_text[start - 10 : start]
+            preceeding_text = preceeding_text.rstrip(" ")
+            # check if before the word there is only spaces and a newline or tab
+            if len(preceeding_text) and preceeding_text[-1] in ["\n", "\t"]:
+                continue
 
         if match["rule"]["id"] == "WHITESPACE_RULE" and (
             start == 0 or full_text[0:end].isspace()
@@ -1591,6 +1593,15 @@ async def fetch_json_post(url, payload, headers, name, ssl=True, json=True):
         return await handle_response(r, name, json)
 
 
+def convert_to_csv(payload, key):
+    if len(payload[key]):
+        payload[key] = ",".join(payload[key])
+    else:
+        del payload[key]
+
+    return payload
+
+
 async def apply_languagetool_rules(
     version: float,
     config: Config,
@@ -1608,6 +1619,9 @@ async def apply_languagetool_rules(
         "language": lang.locale,
         "disabledCategories": ["GENDER_NEUTRALITY", "COLLOQUIALISMS"],
         "enabledCategories": [],
+        # Ignore case issues at the start of sentence due to chunking issues
+        # https://github.com/witty-works/browser-extension/pull/880
+        "disabledRules": ["UPPERCASE_SENTENCE_START"],
     }
 
     if is_sub_category_enabled(config, "advanced_plain_language"):
@@ -1632,6 +1646,10 @@ async def apply_languagetool_rules(
         payload["enabledCategories"] += lt_style_categories
     else:
         return []
+
+    payload = convert_to_csv(payload, "disabledCategories")
+    payload = convert_to_csv(payload, "enabledCategories")
+    payload = convert_to_csv(payload, "disabledRules")
 
     result = await fetch_json_post(
         settings.languagetool_api + "/check",
@@ -2194,27 +2212,6 @@ async def german_rules(
             new_i += 1
             continue
 
-        if is_sub_category_enabled(config, "abbreviation"):
-            new_i = simple_match(
-                version,
-                config,
-                client,
-                lang,
-                text,
-                i,
-                tokens,
-                offsets,
-                list_full,
-                fetch_word_rules(
-                    rules["de"]["abbreviation"],
-                    token_lower,
-                    lemma_lower,
-                ),
-            )
-
-            if check_continue(i, new_i, tokens):
-                continue
-
         new_i = rules_based_words_phrase_matcher(
             version,
             config,
@@ -2352,6 +2349,27 @@ async def german_rules(
 
         if check_continue(i, new_i, tokens):
             continue
+
+        if is_sub_category_enabled(config, "abbreviation"):
+            new_i = simple_match(
+                version,
+                config,
+                client,
+                lang,
+                text,
+                i,
+                tokens,
+                offsets,
+                list_full,
+                fetch_word_rules(
+                    rules["de"]["abbreviation"],
+                    token_lower,
+                    lemma_lower,
+                ),
+            )
+
+            if check_continue(i, new_i, tokens):
+                continue
 
         subcategory = "communal"
         if is_sub_category_enabled(config, subcategory):
@@ -2515,49 +2533,6 @@ async def english_rules(
         if len(tokens[i].text) <= 1 or not token_text[0].isalpha():
             new_i += 1
             continue
-
-        new_i = simple_match(
-            version,
-            config,
-            client,
-            lang,
-            text,
-            i,
-            tokens,
-            offsets,
-            list_full,
-            fetch_word_rules(
-                rules[lang.locale]["homonyms_word"],
-                token_lower,
-                lemma_lower,
-            ),
-            false_positive_matcher,
-            False,
-        )
-
-        if check_continue(i, new_i, tokens):
-            continue
-
-        if is_sub_category_enabled(config, "abbreviation"):
-            new_i = simple_match(
-                version,
-                config,
-                client,
-                lang,
-                text,
-                i,
-                tokens,
-                offsets,
-                list_full,
-                fetch_word_rules(
-                    rules[lang.locale]["abbreviation"],
-                    token_lower,
-                    lemma_lower,
-                ),
-            )
-
-            if check_continue(i, new_i, tokens):
-                continue
 
         new_i = rules_based_words_phrase_matcher(
             version,
@@ -2726,6 +2701,49 @@ async def english_rules(
             ),
             false_positive_matcher,
         )
+
+        new_i = simple_match(
+            version,
+            config,
+            client,
+            lang,
+            text,
+            i,
+            tokens,
+            offsets,
+            list_full,
+            fetch_word_rules(
+                rules[lang.locale]["homonyms_word"],
+                token_lower,
+                lemma_lower,
+            ),
+            false_positive_matcher,
+            False,
+        )
+
+        if check_continue(i, new_i, tokens):
+            continue
+
+        if is_sub_category_enabled(config, "abbreviation"):
+            new_i = simple_match(
+                version,
+                config,
+                client,
+                lang,
+                text,
+                i,
+                tokens,
+                offsets,
+                list_full,
+                fetch_word_rules(
+                    rules[lang.locale]["abbreviation"],
+                    token_lower,
+                    lemma_lower,
+                ),
+            )
+
+            if check_continue(i, new_i, tokens):
+                continue
 
         if check_continue(i, new_i, tokens):
             continue
@@ -4164,18 +4182,11 @@ def word_noun(
 
             break
 
-        start = token.idx
         subcategory = rule.subcategory
 
         if is_plural:
+            start = token.idx
             alternatives = rule.plural_alternatives
-            for alternative in alternatives:
-                # Remove "Engineers" from the alternatives if this is what triggered
-                if alternative.lower() == token.text.lower():
-                    alternatives.remove(alternative)
-
-            if rule.secondary_subcategory is not None:
-                subcategory = rule.secondary_subcategory
         else:
             text, start, alternatives = alternatives_declension(
                 lang.lang, text, i, tokens, rule.alternatives

@@ -5,38 +5,19 @@
         {
             "alternatives": [
                 {
-                    "text": "wir"
-                }
-            ],
-            "category": "orthography",
-            "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert",
-            "end": 25,
-            "explanation": {
-                "icon": "❌",
-                "text": "Außer am Satzanfang werden nur Nomen und Eigennamen großgeschrieben."
-            },
-            "gravity": 1.0,
-            "label": "Groß-/Kleinschreibung",
-            "start": 22,
-            "subcategory": "casing",
-            "text": "Wir"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "Grüße"
                 }
             ],
             "category": "orthography",
             "context": "urchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
-            "end": 174,
+            "end": 176,
             "explanation": {
                 "icon": "❌",
                 "text": "Möglicher Tippfehler gefunden."
             },
             "gravity": 1.0,
             "label": "Rechtschreibfehler",
-            "start": 168,
+            "start": 170,
             "subcategory": "typos",
             "text": "Grüsse"
         },
@@ -59,7 +40,7 @@
                 }
             ],
             "category": "acquired-diversity",
-            "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, her",
+            "context": "Sehr geehrte Kollegen\n  Wir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, h",
             "end": 12,
             "explanation": {
                 "icon": "🧊",
@@ -89,7 +70,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgeford",
+            "context": "Sehr geehrte Kollegen\n  Wir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefo",
             "end": 21,
             "explanation": {
                 "content": "advanced",
@@ -117,8 +98,8 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle",
-            "end": 46,
+            "context": "Sehr geehrte Kollegen\n  Wir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle",
+            "end": 48,
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
@@ -128,7 +109,7 @@
             "gravity": 2.0,
             "label": "Geschlecht + Orientierung: Angedeutetes Gender",
             "proficiency_level": "unconscious_bias",
-            "start": 31,
+            "start": 33,
             "subcategory": "hidden_image",
             "text": "eine Mannschaft"
         },
@@ -151,8 +132,8 @@
                 }
             ],
             "category": "social-motive",
-            "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreund",
-            "end": 62,
+            "context": "Sehr geehrte Kollegen\n  Wir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreund",
+            "end": 64,
             "explanation": {
                 "content": "video",
                 "icon": "😒",
@@ -162,7 +143,7 @@
             "gravity": 2.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
-            "start": 55,
+            "start": 57,
             "subcategory": "agentic",
             "text": "Ehrgeiz"
         },
@@ -180,8 +161,8 @@
                 }
             ],
             "category": "social-motive",
-            "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
-            "end": 85,
+            "context": "Sehr geehrte Kollegen\n  Wir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
+            "end": 87,
             "explanation": {
                 "content": "video",
                 "icon": "😒",
@@ -191,15 +172,15 @@
             "gravity": 2.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
-            "start": 67,
+            "start": 69,
             "subcategory": "agentic",
             "text": "Durchhaltevermögen"
         },
         {
             "alternatives": [],
             "category": "social-motive",
-            "context": "Sehr geehrte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
-            "end": 104,
+            "context": "Sehr geehrte Kollegen\n  Wir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
+            "end": 106,
             "explanation": {
                 "content": "video",
                 "icon": "✅",
@@ -208,7 +189,7 @@
             },
             "label": "Soziale Motivation: Kommunale Sprache",
             "proficiency_level": "inclusive",
-            "start": 98,
+            "start": 100,
             "subcategory": "communal",
             "text": "lieben"
         },
@@ -222,8 +203,8 @@
                 }
             ],
             "category": "social-motive",
-            "context": "rte Kollegen\nWir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
-            "end": 124,
+            "context": "e Kollegen\n  Wir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
+            "end": 126,
             "explanation": {
                 "content": "video",
                 "icon": "😒",
@@ -233,7 +214,7 @@
             "gravity": 2.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
-            "start": 109,
+            "start": 111,
             "subcategory": "agentic",
             "text": "herausgefordert"
         },
@@ -257,7 +238,7 @@
             ],
             "category": "social-motive",
             "context": "schaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
-            "end": 149,
+            "end": 151,
             "explanation": {
                 "content": "video",
                 "icon": "😒",
@@ -267,7 +248,7 @@
             "gravity": 2.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
-            "start": 140,
+            "start": 142,
             "subcategory": "agentic",
             "text": "zähle auf"
         },
@@ -275,7 +256,7 @@
             "alternatives": [],
             "category": "social-motive",
             "context": "hrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
-            "end": 167,
+            "end": 169,
             "explanation": {
                 "content": "video",
                 "icon": "✅",
@@ -284,7 +265,7 @@
             },
             "label": "Soziale Motivation: Kommunale Sprache",
             "proficiency_level": "inclusive",
-            "start": 156,
+            "start": 158,
             "subcategory": "communal",
             "text": "Freundliche"
         }

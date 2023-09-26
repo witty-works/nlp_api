@@ -1,7 +1,7 @@
 Lemma,Word_Type,Category,Primary_subcategory,Alt_split
 (x)aaS,|||,style,advanced_abbreviation,"['something as a service ((x)aaS)', 'etwas als Dienstleistung', 'etwas als Dienstleistung ((x)aaS)']"
 ACCT,~,style,advanced_abbreviation,"['Account', 'Konto']"
-ADD,~,style,advanced_abbreviation,"['Attention Deficit Disorder', 'Attention Deficit Disorder (ADD)', 'Aufmerksamkeitsdefizitstörung', 'Aufmerksamkeitsdefizitstörung (ADS)']"
+ADD,=,style,advanced_abbreviation,"['Attention Deficit Disorder', 'Attention Deficit Disorder (ADD)', 'Aufmerksamkeitsdefizitstörung', 'Aufmerksamkeitsdefizitstörung (ADS)']"
 ADHD,~,style,advanced_abbreviation,"['Attention Deficit Hyperactivity Disorder', 'Attention Deficit Hyperactivity Disorder (ADHD)', 'Aufmerksamkeitsdefizit-Hyperaktivitätsstörung', 'Aufmerksamkeitsdefizit-Hyperaktivitätsstörung (ADHS)']"
 ADHS,~,style,advanced_abbreviation,"['Aufmerksamkeitsdefizit-Hyperaktivitätsstörung', 'Aufmerksamkeitsdefizit-Hyperaktivitätsstörung (ADHS)']"
 ADS,~,style,advanced_abbreviation,"['Aufmerksamkeitsdefizitstörung', 'Aufmerksamkeitsdefizitstörung (ADS)']"

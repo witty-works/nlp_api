@@ -1,25 +1,5 @@
 {
     "language": "de",
     "limit_reached": false,
-    "results": [
-        {
-            "alternatives": [
-                {
-                    "text": "Uns"
-                }
-            ],
-            "category": "orthography",
-            "context": "Wie geht es euch? uns geht es gut.",
-            "end": 24,
-            "explanation": {
-                "icon": "❌",
-                "text": "Dieser Satz fängt nicht mit einem großgeschriebenen Wort an."
-            },
-            "gravity": 1.0,
-            "label": "Groß-/Kleinschreibung",
-            "start": 21,
-            "subcategory": "casing",
-            "text": "uns"
-        }
-    ]
+    "results": []
 }

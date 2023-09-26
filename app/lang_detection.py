@@ -12,8 +12,12 @@ class LangDetection:
         )
 
         result = []
-        for lang in langs:
-            result.append(lang[-2:])
+        for i in range(len(langs)):
+            prediction_min = 0.3 if i == 0 else predictions[0] * 0.9
+            if predictions[i] < prediction_min:
+                continue
+
+            result.append(langs[i][-2:])
 
         return result
 

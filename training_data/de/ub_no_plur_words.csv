@@ -354,11 +354,11 @@ psychisch krank,a|~a,unconscious_bias,cognitive_perception,"['psychisch beeintr�
 psychische Behinderung,~a|s,unconscious_bias,cognitive_perception,"['psychosoziale Beeinträchtigung', 'psychische Einschränkung']",[],"['psychosoziale Beeinträchtigung', 'psychische Einschränkung']"
 Schwarzmalerei,s,unconscious_bias,color,"['Pessimismus', 'pessimistische Sicht', 'Neigung, nur Schattenseiten zu sehen', 'Neigung, alles in düsteren Farben auszumalen(...)']",[],"['Pessimismus', 'pessimistische Sicht', 'Neigung, nur Schattenseiten zu sehen', 'Neigung, alles in düsteren Farben auszumalen(...)']"
 Blacklist,s,unconscious_bias,color,"['Sperrliste', 'Ausschlussliste', 'Vermeidungsliste']",[],"['Sperrliste', 'Ausschlussliste', 'Vermeidungsliste']"
-braun,a,unconscious_bias,color,['of Color'],[],['of Color']
+braun,a,unconscious_bias,advanced_color,['of Color...'],[],['of Color...']
 der schwarz Peter,|a|,unconscious_bias,color,"['die schwierigen Sachen', 'die Verantwortung', 'die Schuld', 'unangenehme Aufgaben']",[],"['die schwierigen Sachen', 'die Verantwortung', 'die Schuld', 'unangenehme Aufgaben']"
-dunkelhäutig,a,unconscious_bias,color,"['of color', 'Person of Color', 'BIPoC', 'PoC', '-']",['-'],"['-', 'of color', 'Person of Color', 'BIPoC', 'PoC']"
+dunkelhäutig,a,unconscious_bias,color,"['of Color...', 'Person of Color', 'BIPoC', 'PoC', '-']",['-'],"['-', 'of Color...', 'Person of Color', 'BIPoC', 'PoC']"
 farbig,a,unconscious_bias,color,"['Schwarz', '--- nicht auf Menschen beziehen']",['--- nicht auf Menschen beziehen'],"['--- nicht auf Menschen beziehen', 'Schwarz']"
-gelb,a,unconscious_bias,color,['of Color'],[],['of Color']
+gelb,a,unconscious_bias,advanced_color,['of Color...'],[],['of Color...']
 hellhäutig,a,unconscious_bias,color,['-'],['-'],['-']
 Hellhäutige,=s,unconscious_bias,color,"['Person', 'Mensch', '-']",['-'],"['-', 'Person', 'Mensch']"
 Hellhäutiger,=s,unconscious_bias,color,"['Person', 'Mensch', '-']",['-'],"['-', 'Person', 'Mensch']"
@@ -366,7 +366,7 @@ kaffeebraun,a,unconscious_bias,color,"['--- nicht auf Menschen beziehen', '-']",
 karamellfarben,a,unconscious_bias,color,"['--- nicht auf Menschen beziehen', '-']",['-'],"['-', '--- nicht auf Menschen beziehen']"
 kohlrabenschwarz,a,unconscious_bias,color,"['schwarz', 'fies (Er hat einen fiesen Humor)', 'gemein', 'düster']",[],"['schwarz', 'fies (Er hat einen fiesen Humor)', 'gemein', 'düster']"
 schokobraun,a,unconscious_bias,color,"['--- nicht auf Menschen beziehen', '-']",['-'],"['-', '--- nicht auf Menschen beziehen']"
-schwarz,a,unconscious_bias,color,"['Schwarz', 'afrodiasporisch', 'of Color', 'afrodeutsch', '--- nicht für Menschen oder ihr Handeln']",['--- nicht für Menschen oder ihr Handeln'],"['--- nicht für Menschen oder ihr Handeln', 'Schwarz', 'afrodiasporisch', 'of Color', 'afrodeutsch']"
+schwarz,a,unconscious_bias,advanced_color,"['Schwarz', 'afrodiasporisch', 'of Color...', 'afrodeutsch', '--- nicht für Menschen oder ihr Handeln']",['--- nicht für Menschen oder ihr Handeln'],"['--- nicht für Menschen oder ihr Handeln', 'Schwarz', 'afrodiasporisch', 'of Color...', 'afrodeutsch']"
 Schwarzarbeit,s,unconscious_bias,color,"['Schattenwirtschaft', 'Scheinselbständigkeit', 'Leistung, für die keine Steuer abgeführt wird', 'Arbeit, für die keine Sozialabgaben geleistet werden']",[],"['Schattenwirtschaft', 'Scheinselbständigkeit', 'Leistung, für die keine Steuer abgeführt wird', 'Arbeit, für die keine Sozialabgaben geleistet werden']"
 schwarzarbeiten,v,unconscious_bias,color,"['Arbeit gegen bar und ohne Rechnung verrichten', 'arbeiten, ohne gemeldet zu sein', 'Arbeit ohne Abführung von Steuern oder Sozialabgaben verrichten', 'pfuschen --- Österreich']",[],"['Arbeit gegen bar und ohne Rechnung verrichten', 'arbeiten, ohne gemeldet zu sein', 'Arbeit ohne Abführung von Steuern oder Sozialabgaben verrichten', 'pfuschen --- Österreich']"
 schwarz Liste,a|s,unconscious_bias,color,"['Negativliste', 'Sperrliste', 'Verbotsliste', 'Index']","['Negativlisten', 'Sperrlisten', 'Verbotslisten', 'Indizes']","['Negativliste', 'Sperrliste', 'Verbotsliste', 'Index', 'Negativlisten', 'Sperrlisten', 'Verbotslisten', 'Indizes']"
