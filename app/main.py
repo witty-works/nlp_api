@@ -36,6 +36,7 @@ from fastapi.security import (
     HTTPBasicCredentials,
     HTTPBearer,
 )
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import RedirectResponse
 
@@ -118,6 +119,9 @@ for spacy_model in settings.models:
     model[lang] = fetch_nlp_model(lang, spacy_model)
 
 rules = fetch_rules(model)
+
+# https://www.notion.so/witty-works/Rule-Guidelines-432792da944141b1b4d0a01de290aa43#aac0d966bfeb4e33a5a346bba45d5ea8
+supported_word_types = {"s", "a", "adv", "v", "conj"}
 
 if settings.fasttext:
     pretrained_lang_model = os.getcwd() + "/training_data/lid.176.bin"
@@ -849,7 +853,6 @@ async def post_check_v2_3(
     return await check(request, response, user_request_in, 2.3)
 
 
-# data exchange routes
 @app.get("/lemmatize")
 async def get_lemmatize(
     text: str,
@@ -863,7 +866,6 @@ async def get_lemmatize(
     return tokens[0].lemma_
 
 
-# data exchange routes
 @app.get("/tokenize")
 async def get_tokenize(
     text: str,
@@ -871,6 +873,35 @@ async def get_tokenize(
     username: str = Depends(fetch_current_username),
 ):
     return tokenize(text, lang)
+
+
+@app.get("/validate-word-type")
+async def get_tokenize(
+    text: str,
+    word_types: str,
+    lang: LangType,
+    username: str = Depends(fetch_current_username),
+):
+    tokens = fetch_tokens(lang, text)
+    word_type_list = word_types.split("|")
+
+    if len(tokens) != len(word_type_list):
+        raise RequestValidationError(
+            f"Word type '{word_types}' count does not match text token count '{len(tokens)}' for text '{text}'."
+        )
+
+    for word_type in word_type_list:
+        parsed_word_type, lower_case, lemmatize = parse_word_types(word_type)
+
+        if not set(parsed_word_type).issubset(supported_word_types):
+            differences = ",".join(
+                set.difference(set(parsed_word_type), supported_word_types)
+            )
+            raise RequestValidationError(
+                f"Word type '{word_type}' within '{word_types}' contains unsupported word type: {differences}"
+            )
+
+    return "ok"
 
 
 @app.post(

@@ -346,11 +346,38 @@ def test_language_detection_fail(fails_case_dir, snapshot, set_redis):
 
 def test_lemmatize():
     with TestClient(app) as client:
-        response = client.get("/lemmatize?lang=" + "en&text=running")
+        response = client.get("/lemmatize?lang=en&text=running")
         assert response.status_code == 200
         result = response.json()
 
         assert result == "run"
+
+
+def test_tokenize():
+    with TestClient(app) as client:
+        response = client.get("/tokenize?lang=en&text=running23 is the best.")
+        assert response.status_code == 200
+        result = response.json()
+
+        assert result == ["running23", "is", "the", "best", "."]
+
+
+def test_validate_word_type():
+    with TestClient(app) as client:
+        url = "/validate-word-type?lang=en&text=running is the best&"
+        response = client.get(url)
+        assert response.status_code == 422
+
+        response = client.get(url + "word_types=s")
+        assert response.status_code == 422
+
+        response = client.get(url + "word_types=s|~v|s|c")
+        assert response.status_code == 422
+
+        response = client.get(url + "word_types=s|~v|s|conj")
+        result = response.json()
+
+        assert result == "ok"
 
 
 def test_invalid_access_token():
