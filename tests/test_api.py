@@ -362,9 +362,9 @@ def test_tokenize():
         assert result == ["running23", "is", "the", "best", "."]
 
 
-def test_validate_word_type():
+def test_parse_word_type():
     with TestClient(app) as client:
-        url = "/validate-word-type?lang=en&text=running is the best&"
+        url = "/parse-word-type?lang=en&text=running is the best&"
         response = client.get(url)
         assert response.status_code == 422
 
@@ -374,10 +374,15 @@ def test_validate_word_type():
         response = client.get(url + "word_types=s|~v|s|c")
         assert response.status_code == 422
 
-        response = client.get(url + "word_types=s|~v|s|conj")
+        response = client.get(url + "word_types=s|~v|s|=conj")
         result = response.json()
 
-        assert result == "ok"
+        assert result == [
+            {"word_types": ["s"], "lower_case": True, "lemmatize": True},
+            {"word_types": ["v"], "lower_case": True, "lemmatize": False},
+            {"word_types": ["s"], "lower_case": True, "lemmatize": True},
+            {"word_types": ["conj"], "lower_case": False, "lemmatize": False},
+        ]
 
 
 def test_invalid_access_token():

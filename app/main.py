@@ -875,7 +875,7 @@ async def get_tokenize(
     return tokenize(text, lang)
 
 
-@app.get("/validate-word-type")
+@app.get("/parse-word-type")
 async def get_tokenize(
     text: str,
     word_types: str,
@@ -890,6 +890,7 @@ async def get_tokenize(
             f"Word type '{word_types}' count does not match text token count '{len(tokens)}' for text '{text}'."
         )
 
+    parsed_word_types = []
     for word_type in word_type_list:
         parsed_word_type, lower_case, lemmatize = parse_word_types(word_type)
 
@@ -901,7 +902,15 @@ async def get_tokenize(
                 f"Word type '{word_type}' within '{word_types}' contains unsupported word type: {differences}"
             )
 
-    return "ok"
+        parsed_word_types.append(
+            {
+                "word_types": parsed_word_type,
+                "lower_case": lower_case,
+                "lemmatize": lemmatize,
+            }
+        )
+
+    return parsed_word_types
 
 
 @app.post(
