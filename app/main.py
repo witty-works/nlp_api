@@ -128,7 +128,7 @@ if settings.fasttext:
     fasttext_model = fasttext.load_model(pretrained_lang_model)
 
 if (
-    settings.slack_bot_token is not None and settings.slack_signing_secret is not None
+    settings.slack_bot_token and settings.slack_signing_secret
 ):  # pragma: no cover
     bolt = AsyncApp(
         token=settings.slack_bot_token, signing_secret=settings.slack_signing_secret
@@ -331,7 +331,7 @@ def fetch_current_username(
         )
 
     # Verify the credentials as usual
-    if settings.api_docs_username is None or settings.api_docs_password is None:
+    if not settings.api_docs_username or not settings.api_docs_password :
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Incorrect user configuration",
@@ -477,12 +477,12 @@ def get_german_gender_ending(
 ):
     alternative_variations = set()
 
-    german_gender_endings = Config._gendereddenom_ending.keys()
+    german_gender_endings = Config._gendereddenom_ending.default.keys()
     if german_gender_ending is not None:
         german_gender_endings = [german_gender_ending]
 
     for german_gender_ending in german_gender_endings:
-        if german_gender_ending not in Config._gendereddenom_ending_article:
+        if german_gender_ending not in Config._gendereddenom_ending_article.default:
             continue
 
         alternative_variations.update(
@@ -1671,7 +1671,7 @@ async def apply_languagetool_rules(
     tokens,
     offsets,
 ):
-    if settings.languagetool_api == "":
+    if not settings.languagetool_api:
         return []
 
     payload = {

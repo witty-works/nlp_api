@@ -2,39 +2,44 @@
     "detail": [
         {
             "ctx": {
-                "enum_values": [
-                    "de-DE",
-                    "de-CH",
-                    "de-AT",
-                    "en-US",
-                    "en-GB"
-                ]
+                "expected": "'de-DE', 'de-CH', 'de-AT', 'en-US' or 'en-GB'"
             },
+            "input": "en-AU,en-DE",
             "loc": [
                 "body",
                 "config",
                 "primary_language"
             ],
-            "msg": "value is not a valid enumeration member; permitted: 'de-DE', 'de-CH', 'de-AT', 'en-US', 'en-GB'",
-            "type": "type_error.enum"
+            "msg": "Input should be 'de-DE', 'de-CH', 'de-AT', 'en-US' or 'en-GB'",
+            "type": "enum"
         },
         {
+            "ctx": {
+                "error": {}
+            },
+            "input": "fr",
             "loc": [
                 "body",
                 "config",
                 "preferred_languages"
             ],
-            "msg": "Contains not supported preferred_languages: fr",
-            "type": "value_error"
+            "msg": "Value error, Contains not supported preferred_languages: fr",
+            "type": "value_error",
+            "url": "https://errors.pydantic.dev/2.4/v/value_error"
         },
         {
+            "ctx": {
+                "error": {}
+            },
+            "input": "en-AU",
             "loc": [
                 "body",
                 "config",
                 "preferred_variants"
             ],
-            "msg": "Contains not supported preferred_variants: en-AU",
-            "type": "value_error"
+            "msg": "Value error, Contains not supported preferred_variants: en-AU",
+            "type": "value_error",
+            "url": "https://errors.pydantic.dev/2.4/v/value_error"
         }
     ]
 }

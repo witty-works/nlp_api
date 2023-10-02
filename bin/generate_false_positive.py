@@ -71,7 +71,7 @@ for all_alternative_group in all_alternative_groups:
     all_alternatives.extend(all_alternative_group.split("|"))
 
 
-endings = Config._gendereddenom_ending.keys()
+endings = Config._gendereddenom_ending.default.keys()
 for word in all_alternatives:
     if "~" in word:
         for german_gender_ending in endings:
