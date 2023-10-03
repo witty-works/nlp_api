@@ -375,7 +375,7 @@ def analyze_correct_endings_german(word):
 
         if issue_detected:
             alternative_variations = set()
-            for german_gender_ending in Config._gendereddenom_ending.keys():
+            for german_gender_ending in Config._gendereddenom_ending.default.keys():
                 alternative_variations.update(
                     ResultOut.getAlternativeVariations(
                         GenderedRolesFormatType.BOTH, german_gender_ending, sub_word
@@ -387,7 +387,7 @@ def analyze_correct_endings_german(word):
 
 
 def generate_correct_endings_german(all_alternatives):
-    endings = Config._gendereddenom_ending.keys()
+    endings = Config._gendereddenom_ending.default.keys()
 
     clean_words = []
     for word in sorted(all_alternatives):
@@ -486,7 +486,7 @@ def add_words_to_ignore(path_to_ignore_file, words_to_write):
 
 
 def generate_german_articles():
-    endings = Config._gendereddenom_ending.keys()
+    endings = Config._gendereddenom_ending.default.keys()
     all_alternatives = []
     articles = []
 

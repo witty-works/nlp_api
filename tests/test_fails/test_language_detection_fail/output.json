@@ -2,23 +2,15 @@
     "detail": [
         {
             "ctx": {
-                "enum_values": [
-                    "auto",
-                    "en",
-                    "de",
-                    "de-DE",
-                    "de-CH",
-                    "de-AT",
-                    "en-US",
-                    "en-GB"
-                ]
+                "expected": "'auto', 'en', 'de', 'de-DE', 'de-CH', 'de-AT', 'en-US' or 'en-GB'"
             },
+            "input": "es",
             "loc": [
                 "body",
                 "lang"
             ],
-            "msg": "value is not a valid enumeration member; permitted: 'auto', 'en', 'de', 'de-DE', 'de-CH', 'de-AT', 'en-US', 'en-GB'",
-            "type": "type_error.enum"
+            "msg": "Input should be 'auto', 'en', 'de', 'de-DE', 'de-CH', 'de-AT', 'en-US' or 'en-GB'",
+            "type": "enum"
         }
     ]
 }

@@ -62,10 +62,10 @@ class LangDetection:
 
             return self.get_locale_by_lang(langs, language_preferences)
 
-        if lang in Config._supported_locales:
+        if lang in Config._supported_locales.default:
             return lang
 
-        if lang in Config._supported_langs:
+        if lang in Config._supported_langs.default:
             return self.get_default_locale(lang)
 
         return None
