@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, validator
+from pydantic import field_validator, BaseModel, Field
 from typing import Dict, List, Optional, Union
 from enum import Enum
 from collections import namedtuple
@@ -19,8 +19,8 @@ from app.privacy_filter import get_privacy_filter
 
 
 class Client(BaseModel):
-    name: Optional[str]
-    version: Optional[str]
+    name: Optional[str] = None
+    version: Optional[str] = None
 
 
 class Language(object):
@@ -123,8 +123,8 @@ class GenderedRolesFormatType(str, Enum):
 
 class Config(BaseModel):
     store_context: bool = True
-    plan: Optional[str]
-    primary_language: Optional[LangVariantType]
+    plan: Optional[str] = None
+    primary_language: Optional[LangVariantType] = None
     preferred_languages: List = [LangWithAutoType.EN, LangWithAutoType.DE]
     _supported_langs = [
         LangType.DE,
@@ -176,11 +176,12 @@ class Config(BaseModel):
     disabled_categories: List = []
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
     show_inspiration_alternatives: bool = False
-    alternatives_max_count: Optional[int]
+    alternatives_max_count: Optional[int] = None
 
-    @validator("german_gender_ending")
+    @field_validator("german_gender_ending")
+    @classmethod
     def valid_german_gender_ending(cls, v: str):
-        if v not in Config._gendereddenom_ending:
+        if v not in Config._gendereddenom_ending.default:
             mapping = {
                 GermanGenderEndingType.STR_SLASH: GermanGenderEndingType.SLASH,
                 GermanGenderEndingType.STR_SLASH_DASH: GermanGenderEndingType.SLASH_DASH,
@@ -196,14 +197,15 @@ class Config(BaseModel):
             raise ValueError("Not supported german_gender_ending: " + v)
         return v
 
-    @validator("preferred_languages", pre=True)
+    @field_validator("preferred_languages", mode="before")
+    @classmethod
     def valid_preferred_languages(cls, v):
         if isinstance(v, str) and v != "":
             v = [s.strip() for s in v.split(",")]
 
         if isinstance(v, list) and v != []:
             for lang in v:
-                if lang not in Config._supported_langs:
+                if lang not in Config._supported_langs.default:
                     raise ValueError(
                         "Contains not supported preferred_languages: " + ",".join(v)
                     )
@@ -212,14 +214,15 @@ class Config(BaseModel):
 
         return []
 
-    @validator("preferred_variants", pre=True)
+    @field_validator("preferred_variants", mode="before")
+    @classmethod
     def valid_preferred_variants(cls, v):
         if isinstance(v, str) and v != "":
             v = [s.strip() for s in v.split(",")]
 
         if isinstance(v, list) and v != []:
             for lang in v:
-                if lang not in Config._supported_locales:
+                if lang not in Config._supported_locales.default:
                     raise ValueError(
                         "Contains not supported preferred_variants: " + ",".join(v)
                     )
@@ -228,7 +231,8 @@ class Config(BaseModel):
 
         return []
 
-    @validator("disabled_categories", pre=True)
+    @field_validator("disabled_categories", mode="before")
+    @classmethod
     def valid_disabled_categories(cls, v):
         if isinstance(v, str):
             return v.split(",")
@@ -271,27 +275,29 @@ class SingularTheyConfigType(BaseModel):
 
 
 class RuleConfig(BaseModel):
-    store_context: Optional[BooleanConfigType]
-    preferred_variants: Optional[LangVariantConfigType]
-    german_gender_ending: Optional[GermanGenderEndingConfigType]
-    gendered_roles_format: Optional[GenderedRolesFormatConfigType]
+    store_context: Optional[BooleanConfigType] = None
+    preferred_variants: Optional[LangVariantConfigType] = None
+    german_gender_ending: Optional[GermanGenderEndingConfigType] = None
+    gendered_roles_format: Optional[GenderedRolesFormatConfigType] = None
     categories: Dict[str, BooleanConfigType] = {}
-    show_inspiration_alternatives: Optional[BooleanConfigType]
+    show_inspiration_alternatives: Optional[BooleanConfigType] = None
 
-    @validator("german_gender_ending")
+    @field_validator("german_gender_ending")
+    @classmethod
     def valid_german_gender_ending(cls, v: str):
         if "value" in v and v["value"] not in Config._gendereddenom_ending:
             raise ValueError("Not supported german_gender_ending")
         return v
 
-    @validator("preferred_variants", pre=True)
+    @field_validator("preferred_variants", mode="before")
+    @classmethod
     def valid_preferred_variants(cls, v):
         if "value" in v and isinstance(v["value"], str) and v["value"] != "":
             v["value"] = [s.strip() for s in v.split(",")]
 
         if isinstance(v["value"], list) and v["value"] != []:
             for lang in v["value"]:
-                if lang not in Config._supported_locales:
+                if lang not in Config._supported_locales.default:
                     raise ValueError(
                         "Contains not supported preferred_variants: " + ",".join(v)
                     )
@@ -301,16 +307,16 @@ class RuleConfig(BaseModel):
 
 class Explanation(BaseModel):
     text: str
-    icon: Optional[str]
-    url: Optional[str]
+    icon: Optional[str] = None
+    url: Optional[str] = None
 
 
 class TermReplacement(BaseModel):
     alternatives: List[str]
-    explanation: Optional[Explanation]
-    proficiency_level: Optional[str]
-    lang: Optional[LangType]
-    word_type: Optional[str]
+    explanation: Optional[Explanation] = None
+    proficiency_level: Optional[str] = None
+    lang: Optional[LangType] = None
+    word_type: Optional[str] = None
 
 
 class DomainType(str, Enum):
@@ -337,17 +343,17 @@ class ConfRequest(BaseModel):
     config: RuleConfig
     false_positives: List[str] = []
     term_replacements: Dict[str, TermReplacement] = {}
-    domains: Optional[DomainConfig]
-    config_hash: Optional[str]
-    sync_date: Optional[str]
+    domains: Optional[DomainConfig] = None
+    config_hash: Optional[str] = None
+    sync_date: Optional[str] = None
 
 
 class UserConfRequest(ConfRequest):
     email: str
-    organization_id: Optional[str]
-    notifications: Optional[int]
-    has_consented_to_mailing: Optional[bool]
-    team_analytics: Optional[bool]
+    organization_id: Optional[str] = None
+    notifications: Optional[int] = None
+    has_consented_to_mailing: Optional[bool] = None
+    team_analytics: Optional[bool] = None
 
 
 class OrganizationConfRequest(ConfRequest):
@@ -357,70 +363,70 @@ class OrganizationConfRequest(ConfRequest):
 class ConfResponse(BaseModel):
     id: str
     name: str
-    plan: Optional[str]
+    plan: Optional[str] = None
     config: RuleConfig
     false_positives: List[str] = []
     term_replacements: Dict[str, TermReplacement] = {}
-    domains: Optional[DomainConfig]
-    config_hash: Optional[str]
+    domains: Optional[DomainConfig] = None
+    config_hash: Optional[str] = None
 
 
 class UserConfResponse(ConfRequest):
     email: str
-    organization_id: Optional[str]
-    organization_name: Optional[str]
-    organization_config: Optional[RuleConfig]
+    organization_id: Optional[str] = None
+    organization_name: Optional[str] = None
+    organization_config: Optional[RuleConfig] = None
     organization_false_positives: Optional[List[str]] = []
     organization_term_replacements: Optional[Dict[str, TermReplacement]] = {}
-    organization_domains: Optional[DomainConfig]
-    organization_config_hash: Optional[str]
-    notifications: Optional[int]
-    has_consented_to_mailing: Optional[bool]
-    team_analytics: Optional[bool]
+    organization_domains: Optional[DomainConfig] = None
+    organization_config_hash: Optional[str] = None
+    notifications: Optional[int] = None
+    has_consented_to_mailing: Optional[bool] = None
+    team_analytics: Optional[bool] = None
 
 
 class BaseRequestIn(BaseModel):
-    client: Optional[str]
+    client: Optional[str] = None
 
 
 class RequestIn(BaseRequestIn):
     type: str = "check"
     text: str
     lang: Optional[LangWithAutoType] = LangWithAutoType.AUTO
-    id: Optional[str]
+    id: Optional[str] = None
     config: Optional[Config] = Config()
-    config_hash: Optional[str]
-    organization_config_hash: Optional[str]
+    config_hash: Optional[str] = None
+    organization_config_hash: Optional[str] = None
 
 
 class ResultAlternative(BaseModel):
-    text: Optional[str]
-    remove: Optional[bool]
-    inspiration: Optional[bool]
-    context: Optional[str]
+    text: Optional[str] = None
+    remove: Optional[bool] = None
+    inspiration: Optional[bool] = None
+    context: Optional[str] = None
 
 
 class ResultExplanation(BaseModel):
     text: str
-    icon: Optional[str]
-    url: Optional[str]
-    context: Optional[str]
-    content: Optional[ContentType]
+    icon: Optional[str] = None
+    url: Optional[str] = None
+    context: Optional[str] = None
+    content: Optional[ContentType] = None
 
 
 class ResultOut(BaseModel):
     text: str
     lemma: str | None = Field(default=None, exclude=True, title="lemma")
-    context: Optional[str]
-    category: Optional[str]
-    subcategory: Optional[str]
+    context: Optional[str] = None
+    category: Optional[str] = None
+    subcategory: Optional[str] = None
     start: int
     end: int
-    alternatives: Union[List[ResultAlternative], None]
-    label: Optional[str]
-    explanation: Optional[ResultExplanation]
-    gravity: Optional[float]
-    proficiency_level: Optional[str]
+    alternatives: Union[List[ResultAlternative], None] = None
+    label: Optional[str] = None
+    explanation: Optional[ResultExplanation] = None
+    gravity: Optional[float] = None
+    proficiency_level: Optional[str] = None
 
     @staticmethod
     def factory(
@@ -910,24 +916,24 @@ class Result(BaseModel):
 class ResultConf(BaseModel):
     id: str
     name: str
-    plan: Optional[str]
-    config: Optional[RuleConfig]
-    organization_id: Optional[str]
-    organization_name: Optional[str]
-    organization_config: Optional[RuleConfig]
-    domains: Optional[DomainConfig]
-    organization_domains: Optional[DomainConfig]
-    config_hash: Optional[str]
-    organization_config_hash: Optional[str]
+    plan: Optional[str] = None
+    config: Optional[RuleConfig] = None
+    organization_id: Optional[str] = None
+    organization_name: Optional[str] = None
+    organization_config: Optional[RuleConfig] = None
+    domains: Optional[DomainConfig] = None
+    organization_domains: Optional[DomainConfig] = None
+    config_hash: Optional[str] = None
+    organization_config_hash: Optional[str] = None
 
 
 class ResultsOut(BaseModel):
     results: List[ResultOut]
     language: str
     limit_reached: bool = False
-    config_changed: Optional[bool]
-    notifications: Optional[int]
-    has_consented_to_mailing: Optional[bool]
+    config_changed: Optional[bool] = None
+    notifications: Optional[int] = None
+    has_consented_to_mailing: Optional[bool] = None
 
 
 class PrettyJSONResponse(Response):

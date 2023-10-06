@@ -36,10 +36,16 @@ from fastapi.security import (
     HTTPBasicCredentials,
     HTTPBearer,
 )
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import RedirectResponse
 
-from fastapi_microsoft_identity import validate_scope, get_token_claims
+from app.auth_service import (
+    validate_scope,
+    get_token_claims,
+    decode_B2C_JWT,
+    decode_JWT,
+)
 
 import secure
 
@@ -90,7 +96,6 @@ from app.categories import (
 from app.settings import get_settings
 from app.logger import set_up_logger
 from app.redis_setup import set_up_redis
-from app.azure_ad_b2c import initialize_aadb2c
 from app.model import fetch_nlp_model
 from app.rules import fetch_rules, Rule
 from app.sentry import set_up_sentry_sdk
@@ -98,14 +103,13 @@ from app.model import lemma_plural_lookup
 
 # probe.end()
 
-version = "1.47.1"
+version = "1.48.0"
 
 categories = get_categories()
 settings = get_settings()
 logging = set_up_logger(settings)
 sentry_sdk = set_up_sentry_sdk(version, settings)
 redis = set_up_redis(settings)
-initialize_aadb2c(settings)
 
 logging.debug("app started with settings: %s", settings)
 
@@ -116,13 +120,14 @@ for spacy_model in settings.models:
 
 rules = fetch_rules(model)
 
+# https://www.notion.so/witty-works/Rule-Guidelines-432792da944141b1b4d0a01de290aa43#aac0d966bfeb4e33a5a346bba45d5ea8
+supported_word_types = {"s", "a", "adv", "v", "conj"}
+
 if settings.fasttext:
     pretrained_lang_model = os.getcwd() + "/training_data/lid.176.bin"
     fasttext_model = fasttext.load_model(pretrained_lang_model)
 
-if (
-    settings.slack_bot_token is not None and settings.slack_signing_secret is not None
-):  # pragma: no cover
+if settings.slack_bot_token and settings.slack_signing_secret:  # pragma: no cover
     bolt = AsyncApp(
         token=settings.slack_bot_token, signing_secret=settings.slack_signing_secret
     )
@@ -324,7 +329,7 @@ def fetch_current_username(
         )
 
     # Verify the credentials as usual
-    if settings.api_docs_username is None or settings.api_docs_password is None:
+    if not settings.api_docs_username or not settings.api_docs_password:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Incorrect user configuration",
@@ -470,12 +475,12 @@ def get_german_gender_ending(
 ):
     alternative_variations = set()
 
-    german_gender_endings = Config._gendereddenom_ending.keys()
+    german_gender_endings = Config._gendereddenom_ending.default.keys()
     if german_gender_ending is not None:
         german_gender_endings = [german_gender_ending]
 
     for german_gender_ending in german_gender_endings:
-        if german_gender_ending not in Config._gendereddenom_ending_article:
+        if german_gender_ending not in Config._gendereddenom_ending_article.default:
             continue
 
         alternative_variations.update(
@@ -846,7 +851,6 @@ async def post_check_v2_3(
     return await check(request, response, user_request_in, 2.3)
 
 
-# data exchange routes
 @app.get("/lemmatize")
 async def get_lemmatize(
     text: str,
@@ -860,7 +864,6 @@ async def get_lemmatize(
     return tokens[0].lemma_
 
 
-# data exchange routes
 @app.get("/tokenize")
 async def get_tokenize(
     text: str,
@@ -868,6 +871,44 @@ async def get_tokenize(
     username: str = Depends(fetch_current_username),
 ):
     return tokenize(text, lang)
+
+
+@app.get("/parse-word-type")
+async def get_tokenize(
+    text: str,
+    word_types: str,
+    lang: LangType,
+    username: str = Depends(fetch_current_username),
+):
+    tokens = fetch_tokens(lang, text)
+    word_type_list = word_types.split("|")
+
+    if len(tokens) != len(word_type_list):
+        raise RequestValidationError(
+            f"Word type '{word_types}' count does not match text token count '{len(tokens)}' for text '{text}'."
+        )
+
+    parsed_word_types = []
+    for word_type in word_type_list:
+        parsed_word_type, lower_case, lemmatize = parse_word_types(word_type)
+
+        if not set(parsed_word_type).issubset(supported_word_types):
+            differences = ",".join(
+                set.difference(set(parsed_word_type), supported_word_types)
+            )
+            raise RequestValidationError(
+                f"Word type '{word_type}' within '{word_types}' contains unsupported word type: {differences}"
+            )
+
+        parsed_word_types.append(
+            {
+                "word_types": parsed_word_type,
+                "lower_case": lower_case,
+                "lemmatize": lemmatize,
+            }
+        )
+
+    return parsed_word_types
 
 
 @app.post(
@@ -1028,7 +1069,7 @@ def is_token_singular(lang, token):
     if number:
         return "Sing" in number
 
-    if lang == "en" and token.text[-1:] == "s":
+    if lang == "en" and token.text.endswith("s"):
         return False
 
     return None
@@ -1094,9 +1135,15 @@ async def fetch_configs_for_request(
     )
 
     if not user_email:
-        user_request_in.config.__setattr__(
-            "disabled_categories", get_category_keys(True)
-        )
+        # debug
+        if version is None:
+            user_request_in.config.__setattr__(
+                "disabled_categories", ["advanced_plain_language"]
+            )
+        else:
+            user_request_in.config.__setattr__(
+                "disabled_categories", get_category_keys(True)
+            )
 
         return {}
 
@@ -1151,18 +1198,15 @@ async def fetch_organization_configs_for_request(
 
 def fetch_email_from_claims(claims):
     try:  # pragma: no cover
-        if claims["aud"] != settings.aadb2c_client_id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="access token does not match client id",
-            )
-
         if "email" in claims:
             return claims["email"]
 
         if "emails" in claims and len(claims["emails"]) > 0:
             return claims["emails"][0]
 
+        # Office SSO
+        if "preferred_username" in claims:
+            return claims["preferred_username"]
     except KeyError:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -1180,14 +1224,34 @@ def fetch_user(request: Request):
         "authorization"
     ].lower().startswith("bearer"):
         try:
-            validate_scope(settings.aadb2c_expected_scope, request)
-            claims = get_token_claims(request)
-        except Exception:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN, detail="access token invalid"
-            )
+            unverified_claims = get_token_claims(request)
+            for key in settings.sso_configs:
+                config = settings.sso_configs[key]
+                if unverified_claims["aud"] != config["client_id"]:
+                    continue
 
-        return fetch_email_from_claims(claims)
+                if "domain" in config:
+                    decode_B2C_JWT(
+                        request,
+                        config["rsa_key"],
+                        config["tenant_id"],
+                        config["client_id"],
+                        config["domain"],
+                    )
+                else:
+                    decode_JWT(
+                        request,
+                        config["rsa_key"],
+                        config["tenant_id"],
+                        config["client_id"],
+                    )
+                validate_scope(settings.aadb2c_expected_scope, request)
+                claims = get_token_claims(request)
+                return fetch_email_from_claims(claims)
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN, detail=str(e.args[0])
+            )
 
     if settings.testing:
         if "x-auth" in request.headers:
@@ -1611,7 +1675,7 @@ async def apply_languagetool_rules(
     tokens,
     offsets,
 ):
-    if settings.languagetool_api == "":
+    if not settings.languagetool_api:
         return []
 
     payload = {
@@ -1822,8 +1886,8 @@ def fetch_term_replacements(
     for lemma in configs["term_replacements"]:
         term_replacement = configs["term_replacements"][lemma]
 
-        if lemma[-3:] == "|en" or lemma[-3:] == "|de":
-            if lemma[-2:] != lang:
+        if lemma.endswith("|en") or lemma.endswith("|de"):
+            if not lemma.endswith(lang):
                 continue
 
             lemma = lemma[0:-3]
@@ -2970,7 +3034,7 @@ def add_declension_german(text, a_text, a_lemma, injected_string=""):
             text = text[0 : -len(remove)]
 
     if ending != "" and len(text) > 2:
-        if text[-2:] == "em":
+        if text.endswith("em"):
             return text
 
         if text[-1] == "t" and ending == "t":
@@ -4157,11 +4221,6 @@ def word_noun(
         if not is_sub_category_enabled(config, rule.subcategory):
             continue
 
-        if rule.secondary_subcategory is not None and not is_sub_category_enabled(
-            config, rule.secondary_subcategory
-        ):
-            continue
-
         skip_token, text = is_phrase_match(
             lang.lang,
             i,
@@ -4182,18 +4241,16 @@ def word_noun(
 
             break
 
-        subcategory = rule.subcategory
-
         if is_plural:
+            if text in rule.alternatives:
+                continue
+
             start = token.idx
             alternatives = rule.plural_alternatives
         else:
             text, start, alternatives = alternatives_declension(
                 lang.lang, text, i, tokens, rule.alternatives
             )
-
-        if not is_sub_category_enabled(config, subcategory):
-            continue
 
         list_full.append(
             ResultOut.factory(
@@ -4205,7 +4262,7 @@ def word_noun(
                 token.lemma_,
                 full_text,
                 offsets,
-                subcategory,
+                rule.subcategory,
                 start,
                 None,
                 alternatives,
@@ -4271,7 +4328,7 @@ def pluralize_they(tokens, i):
                     break
 
             text += prev_token.whitespace_ + tokens[next_i].text
-            ending_length = -2 if tokens[next_i].text[-2:] == "es" else -1
+            ending_length = -2 if tokens[next_i].text.endswith("hes") else -1
             alternative += prev_token.whitespace_ + tokens[next_i].text[0:ending_length]
 
             prev_token = tokens[next_i]
