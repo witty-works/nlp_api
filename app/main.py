@@ -4324,7 +4324,7 @@ def pluralize_they(tokens, i):
                     break
 
             text += prev_token.whitespace_ + tokens[next_i].text
-            ending_length = -2 if tokens[next_i].text[-2:] == "es" else -1
+            ending_length = -2 if tokens[next_i].text.endswith("hes") else -1
             alternative += prev_token.whitespace_ + tokens[next_i].text[0:ending_length]
 
             prev_token = tokens[next_i]
