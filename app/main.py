@@ -4241,18 +4241,16 @@ def word_noun(
 
             break
 
-        subcategory = rule.subcategory
-
         if is_plural:
+            if text in rule.alternatives:
+                continue
+
             start = token.idx
             alternatives = rule.plural_alternatives
         else:
             text, start, alternatives = alternatives_declension(
                 lang.lang, text, i, tokens, rule.alternatives
             )
-
-        if not is_sub_category_enabled(config, subcategory):
-            continue
 
         list_full.append(
             ResultOut.factory(
@@ -4264,7 +4262,7 @@ def word_noun(
                 token.lemma_,
                 full_text,
                 offsets,
-                subcategory,
+                rule.subcategory,
                 start,
                 None,
                 alternatives,
