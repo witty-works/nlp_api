@@ -127,9 +127,7 @@ if settings.fasttext:
     pretrained_lang_model = os.getcwd() + "/training_data/lid.176.bin"
     fasttext_model = fasttext.load_model(pretrained_lang_model)
 
-if (
-    settings.slack_bot_token and settings.slack_signing_secret
-):  # pragma: no cover
+if settings.slack_bot_token and settings.slack_signing_secret:  # pragma: no cover
     bolt = AsyncApp(
         token=settings.slack_bot_token, signing_secret=settings.slack_signing_secret
     )
@@ -331,7 +329,7 @@ def fetch_current_username(
         )
 
     # Verify the credentials as usual
-    if not settings.api_docs_username or not settings.api_docs_password :
+    if not settings.api_docs_username or not settings.api_docs_password:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Incorrect user configuration",
