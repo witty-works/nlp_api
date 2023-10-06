@@ -4215,11 +4215,6 @@ def word_noun(
         if not is_sub_category_enabled(config, rule.subcategory):
             continue
 
-        if rule.secondary_subcategory is not None and not is_sub_category_enabled(
-            config, rule.secondary_subcategory
-        ):
-            continue
-
         skip_token, text = is_phrase_match(
             lang.lang,
             i,
