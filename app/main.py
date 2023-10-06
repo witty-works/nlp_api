@@ -1069,7 +1069,7 @@ def is_token_singular(lang, token):
     if number:
         return "Sing" in number
 
-    if lang == "en" and token.text[-1:] == "s":
+    if lang == "en" and token.text.endswith("s"):
         return False
 
     return None
@@ -1135,9 +1135,15 @@ async def fetch_configs_for_request(
     )
 
     if not user_email:
-        user_request_in.config.__setattr__(
-            "disabled_categories", get_category_keys(True)
-        )
+        # debug
+        if version is None:
+            user_request_in.config.__setattr__(
+                "disabled_categories", ["advanced_plain_language"]
+            )
+        else:
+            user_request_in.config.__setattr__(
+                "disabled_categories", get_category_keys(True)
+            )
 
         return {}
 
@@ -1880,8 +1886,8 @@ def fetch_term_replacements(
     for lemma in configs["term_replacements"]:
         term_replacement = configs["term_replacements"][lemma]
 
-        if lemma[-3:] == "|en" or lemma[-3:] == "|de":
-            if lemma[-2:] != lang:
+        if lemma.endswith("|en") or lemma.endswith("|de"):
+            if not lemma.endswith(lang):
                 continue
 
             lemma = lemma[0:-3]
@@ -3028,7 +3034,7 @@ def add_declension_german(text, a_text, a_lemma, injected_string=""):
             text = text[0 : -len(remove)]
 
     if ending != "" and len(text) > 2:
-        if text[-2:] == "em":
+        if text.endswith("em"):
             return text
 
         if text[-1] == "t" and ending == "t":
