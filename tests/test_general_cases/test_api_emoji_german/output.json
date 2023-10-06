@@ -190,11 +190,11 @@
             "explanation": {
                 "context": "Pommes Frites",
                 "icon": "😒",
-                "text": "Impliziert kultureller Hintergrund bestimmt den Wert einer Person",
-                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/kultur?reducedView=true"
+                "text": "Reduziert eine Person auf ein kulturelles Klischee",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/kulturelles-stereotyp?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Kulturelle Diversität: Kultur",
+            "label": "Kulturelle Diversität: Kulturelles Sterotyp",
             "proficiency_level": "unconscious_bias",
             "start": 39,
             "subcategory": "culture",
@@ -229,11 +229,11 @@
             "explanation": {
                 "context": "Ok-Zeichen Helle Hautfarbe",
                 "icon": "😒",
-                "text": "Impliziert kultureller Hintergrund bestimmt den Wert einer Person",
-                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/kultur?reducedView=true"
+                "text": "Reduziert eine Person auf ein kulturelles Klischee",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/kulturelles-stereotyp?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Kulturelle Diversität: Kultur",
+            "label": "Kulturelle Diversität: Kulturelles Sterotyp",
             "proficiency_level": "unconscious_bias",
             "start": 42,
             "subcategory": "culture",
