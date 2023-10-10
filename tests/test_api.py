@@ -1239,38 +1239,44 @@ def test_rule():
             "text": "She has special needs",
             "lang": "en",
             "lemma": "have special need",
-            "function": "simple_match",
+            "subcategories": ["corporate_rules"],
             "word_types": "v|a|s",
             "lower_case": True,
-            "alternatives": "foo|   bar | ding --- dong",
-            "plural_alternatives": None,
+            "alternatives": [
+                {
+                    "lemma": "foo",
+                },
+                {
+                    "lemma": "bar",
+                },
+                {
+                    "lemma": "ding",
+                    "label": "dong",
+                },
+            ],
         }
-        response = client.get("/debug/rule", params=request_data)
+        response = client.post("/debug/rule", json=request_data)
         assert response.status_code == 200
         response_content = json.loads(response.content)
 
-        expected = {
-            "results": [
-                {
-                    "text": "has special needs",
-                    "context": "She has special needs",
-                    "category": "corporate_rules",
-                    "subcategory": "corporate_rules",
-                    "start": 4,
-                    "end": 21,
-                    "alternatives": [
-                        {"text": "foo"},
-                        {"text": "bar"},
-                        {"text": "ding", "context": "dong"},
-                    ],
-                    "label": "Dictionary",
-                    "explanation": {"text": "", "icon": "❗"},
-                    "gravity": 0.9,
-                }
-            ],
-            "language": "en",
-            "limit_reached": False,
-        }
+        expected = [
+            {
+                "text": "has special needs",
+                "context": "She has special needs",
+                "category": "corporate_rules",
+                "subcategory": "corporate_rules",
+                "start": 4,
+                "end": 21,
+                "alternatives": [
+                    {"text": "foo"},
+                    {"text": "bar"},
+                    {"text": "ding", "context": "dong"},
+                ],
+                "label": "Dictionary",
+                "explanation": {"text": "", "icon": "❗"},
+                "gravity": 0.9,
+            }
+        ]
 
         assert response_content == expected
 
