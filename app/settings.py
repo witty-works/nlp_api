@@ -69,7 +69,6 @@ class Settings(BaseSettings):
     context_checker_api_key_de: Optional[str] = ""
     models: List = ["en_core_web_lg", "de_core_news_lg"]
     fasttext: bool = True
-    overwrite_enabled_user_categories: bool = False
     minimum_version_web_ext: Optional[str] = ""
     minimum_version_word_plugin: Optional[str] = ""
     minimum_versions: dict = {}
