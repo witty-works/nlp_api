@@ -273,7 +273,6 @@ hsts = secure.StrictTransportSecurity().include_subdomains().preload().max_age(3
 referrer = secure.ReferrerPolicy().no_referrer()
 cache_value = secure.CacheControl().no_cache()
 xfo = secure.XFrameOptions().deny()
-xxp = secure.XXSSProtection().set("1; mode=block")
 
 secure_headers = secure.Secure(
     csp=csp,
@@ -281,7 +280,6 @@ secure_headers = secure.Secure(
     referrer=referrer,
     cache=cache_value,
     xfo=xfo,
-    xxp=xxp,
 )
 
 
