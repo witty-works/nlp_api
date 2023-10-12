@@ -273,7 +273,6 @@ hsts = secure.StrictTransportSecurity().include_subdomains().preload().max_age(3
 referrer = secure.ReferrerPolicy().no_referrer()
 cache_value = secure.CacheControl().no_cache()
 xfo = secure.XFrameOptions().deny()
-xxp = secure.XXSSProtection().set("1; mode=block")
 
 secure_headers = secure.Secure(
     csp=csp,
@@ -281,7 +280,6 @@ secure_headers = secure.Secure(
     referrer=referrer,
     cache=cache_value,
     xfo=xfo,
-    xxp=xxp,
 )
 
 
@@ -842,7 +840,7 @@ async def post_organization_configs(
     organization_configs: OrganizationConfRequest,
     username: str = Depends(fetch_current_username),
 ):
-    redis.set(organization_configs.id, organization_configs.json())
+    redis.set(organization_configs.id, organization_configs.model_dump_json())
 
     return organization_configs
 
@@ -879,7 +877,7 @@ async def get_organization_configs(
 async def post_user_configs(
     user_configs: UserConfRequest, username: str = Depends(fetch_current_username)
 ):
-    redis.set(user_configs.email.lower(), user_configs.json())
+    redis.set(user_configs.email.lower(), user_configs.model_dump_json())
 
     return user_configs
 
@@ -1305,14 +1303,14 @@ def fetch_result_conf(configs: dict):
         return None
 
     organization_config = (
-        RuleConfig.parse_obj(configs["organization_config"])
+        RuleConfig.model_validate(configs["organization_config"])
         if "organization_config" in configs
         else None
     )
 
     plan = configs["plan"]
 
-    config = RuleConfig.parse_obj(configs["config"])
+    config = RuleConfig.model_validate(configs["config"])
 
     return ResultConf(
         id=configs["id"],
