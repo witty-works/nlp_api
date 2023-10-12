@@ -3973,15 +3973,11 @@ def gendered_denom_alternatives(
     return text, start, alternatives
 
 
-def is_false_positive(full_text, tokens, i, rule):
-    if (
-        rule.false_positives is None
-        or len(rule.false_positives) == 0
-        and i < len(tokens)
-    ):
+def is_false_positive(full_text, token, rule):
+    if rule.false_positives is None or len(rule.false_positives) == 0:
         return False
 
-    partial_text = full_text[tokens[i + 1].idx :]
+    partial_text = full_text[token.idx :]
     for false_positive in rule.false_positives:
         if partial_text.startswith(false_positive):
             return True
@@ -4060,7 +4056,7 @@ def rule_check(
                 lower_case,
             )
 
-            if not text or is_false_positive(full_text, tokens, i, rule):
+            if not text or is_false_positive(full_text, token, rule):
                 continue
 
         if rule.is_gendered_denom_rule():
