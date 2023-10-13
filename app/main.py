@@ -14,6 +14,7 @@ import os
 import fasttext
 
 from spacy.matcher import PhraseMatcher, Matcher
+from spacy import displacy
 
 from inflex import Noun, Verb, Adjective
 
@@ -726,6 +727,22 @@ async def get_debug_spacy(
         )
 
     return [{"word_type": word_type_rule}] + results
+
+
+@app.get(
+    "/debug/displacy",
+    include_in_schema=not settings.is_prod,
+)
+async def get_debug_spacy(
+    text: str,
+    lang: LangType,
+    username: str = Depends(fetch_current_username),
+):
+    tokens = fetch_tokens(lang, text)
+
+    sentence_spans = list(tokens.sents)
+    data = displacy.render(sentence_spans, style="dep")
+    return Response(content=data, media_type="application/xml")
 
 
 @app.get(
