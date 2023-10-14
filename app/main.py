@@ -3227,9 +3227,8 @@ def align_noun_form(lang, a_text, a_token, b_token):
 
 
 def align_adjective_form_english(a_text, a_token, b_token):
-    b_text = b_token.lemma_
     a_adjective = Adjective(a_text)
-    b_adjective = Adjective(b_text)
+    b_adjective = Adjective(b_token.text)
 
     if a_adjective.is_singular():
         b_text = b_adjective.singular()
