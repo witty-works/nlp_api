@@ -792,9 +792,13 @@ async def post_check_v2_3(
 async def get_lemmatize(
     text: str,
     lang: LangType,
+    all: bool = False,
     username: str = Depends(fetch_current_username),
 ):
     tokens = fetch_tokens(lang, text)
+    if all:
+        return tuple([i.lemma_ for i in tokens])
+
     if len(tokens) != 1:
         return None
 

@@ -352,6 +352,20 @@ def test_lemmatize():
 
         assert result == "run"
 
+        response = client.get("/lemmatize?lang=en&text=I am running up the hills.")
+        assert response.status_code == 200
+        result = response.json()
+
+        assert result == None
+
+        response = client.get(
+            "/lemmatize?lang=en&text=I am running up the hills.&all=true"
+        )
+        assert response.status_code == 200
+        result = response.json()
+
+        assert result == ["I", "be", "run", "up", "the", "hill", "."]
+
 
 def test_tokenize():
     with TestClient(app) as client:
