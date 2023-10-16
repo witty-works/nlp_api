@@ -703,10 +703,10 @@ async def get_debug_spacy(
         else:
             word_type_rule += "|"
 
-        word_types = fetch_word_types(lang, token)
+        word_type = fetch_word_type(lang, token)
         if token.text != token.lemma_:
             word_type_rule += "~"
-        word_type_rule += "+".join(word_types)
+        word_type_rule += word_type
 
         results.append(
             {
@@ -717,7 +717,7 @@ async def get_debug_spacy(
                 "tag": token.tag_,
                 "pos": token.pos_,
                 "dep": token.dep_,
-                "word_types": word_types,
+                "word_type": word_type,
                 "morph": token.morph.to_dict(),
                 "is_emoji": token._.is_emoji,
                 "is_singular": is_token_singular(lang, token),
@@ -814,7 +814,7 @@ async def get_tokenize(
     return tokenize(text, lang)
 
 
-@app.get("/parse-word-type")
+@app.get("/parse-word-types")
 async def get_tokenize(
     text: str,
     word_types: str,
@@ -831,19 +831,16 @@ async def get_tokenize(
 
     parsed_word_types = []
     for word_type in word_type_list:
-        parsed_word_type, lower_case, lemmatize = parse_word_types(word_type)
+        parsed_word_type, lower_case, lemmatize = parse_word_type(word_type)
 
-        if not set(parsed_word_type).issubset(supported_word_types):
-            differences = ",".join(
-                set.difference(set(parsed_word_type), supported_word_types)
-            )
+        if parsed_word_type not in supported_word_types:
             raise RequestValidationError(
-                f"Word type '{word_type}' within '{word_types}' contains unsupported word type: {differences}"
+                f"Word type '{word_type}' within '{word_types}' contains unsupported word type '{parsed_word_type}'"
             )
 
         parsed_word_types.append(
             {
-                "word_types": parsed_word_type,
+                "word_type": parsed_word_type,
                 "lower_case": lower_case,
                 "lemmatize": lemmatize,
             }
@@ -2779,56 +2776,52 @@ async def english_rules(
     return list_full
 
 
-def parse_word_types(word_types, lower_case=True):
+def parse_word_type(word_type, lower_case=True):
     lemmatize = True
 
-    if word_types is None or word_types == "":
-        return (), lower_case, lemmatize
+    if word_type is None or word_type == "":
+        return "", lower_case, lemmatize
 
-    match word_types[0]:
+    match word_type[0]:
         case "~":
             # exact match
             lower_case = True
             lemmatize = False
-            word_types = word_types[1:]
+            word_type = word_type[1:]
         case "=":
             # exact match
             lower_case = False
             lemmatize = False
-            word_types = word_types[1:]
+            word_type = word_type[1:]
         case "-":
             # force lower case off
             lower_case = False
             lemmatize = True
-            word_types = word_types[1:]
+            word_type = word_type[1:]
 
-    word_types = word_types.split("+")
-    if word_types == [""]:
-        word_types = ()
-
-    return tuple(word_types), lower_case, lemmatize
+    return word_type, lower_case, lemmatize
 
 
 def is_word_match(
     lang,
     token,
     word,
-    word_types,
+    word_type,
     lower_case,
     suffix,
 ):
-    word_types, lower_case, lemmatize = parse_word_types(word_types, lower_case)
+    word_type, lower_case, lemmatize = parse_word_type(word_type, lower_case)
 
     token_word = token.lemma_ if lemmatize else token.text
 
-    if lower_case and (lang == "en" or "s" not in word_types):
+    if lower_case and (lang == "en" or "s" not in word_type):
         token_word = token_word.lower()
         word = word.lower()
 
     if token_word != word and (not suffix or not token_word.endswith(word.lower())):
         return False
 
-    return check_word_types(lang, token, word_types, True)
+    return check_word_type(lang, token, word_type, True)
 
 
 def is_phrase_match(
@@ -2875,18 +2868,18 @@ def is_phrase_match(
 """Function to change adjectives to -en form in alternatives"""
 
 
-def fetch_word_types(lang, token, word_types=None, single_word=None):
+def fetch_word_type(lang, token, word_type=None, single_word=None):
     # https://machinelearningknowledge.ai/tutorial-on-spacy-part-of-speech-pos-tagging/
     # https://github.com/explosion/spaCy/blob/master/spacy/glossary.py
 
     if token._.is_emoji:
-        return ("emoji",)
+        return "emoji"
 
-    if word_types is None:
-        word_types = ()
+    if word_type is None:
+        word_type = ""
 
-    if "adv" in word_types and token.pos_ == "ADV":
-        return ("adv",)
+    if "adv" in word_type and token.pos_ == "ADV":
+        return "adv"
 
     if (
         lang == "en"
@@ -2895,19 +2888,19 @@ def fetch_word_types(lang, token, word_types=None, single_word=None):
         and not token.text.endswith("-")
     ):
         tokens = fetch_tokens(lang, token.text.replace("-", " "))
-        return fetch_word_types(lang, tokens[0], word_types, single_word)
+        return fetch_word_type(lang, tokens[0], word_type, single_word)
 
     if token.pos_ == "VERB":
-        if lang == "de" and "a" in word_types:
-            return ("a",)
+        if lang == "de" and "a" in word_type:
+            return "a"
 
-        return ("v",)
+        return "v"
 
     if token.lemma_ in rules["de"]["verbs"]:
-        return ("v",)
+        return "v"
 
     if token.pos_ == "NOUN" or token.pos_ == "PRON":
-        return ("s",)
+        return "s"
 
     adj_tags = {
         "AFX",
@@ -2927,29 +2920,25 @@ def fetch_word_types(lang, token, word_types=None, single_word=None):
         "WDT",
     }
     if token.tag_ in adj_tags or token.pos_ in adj_tags:
-        return ("a",)
+        return "a"
 
     if token.tag_ == "NN":
-        return ("s",)
+        return "s"
 
-    if token.pos_ == "PROPN" and single_word is not None and len(word_types):
-        return tuple(
-            word_types[0:1],
-        )
+    if token.pos_ == "PROPN" and single_word is not None and len(word_type):
+        return word_type[0:1]
 
     if token.tag_ == "KON" or token.pos_ == "CCONJ":
-        return ("conj",)
+        return "conj"
 
-    return ()
+    return ""
 
 
-def check_word_types(lang, token, word_types=[], single_word=None):
-    if len(word_types) == 0:
+def check_word_type(lang, token, word_type="", single_word=None):
+    if len(word_type) == 0:
         return True
 
-    return word_types_overlap(
-        fetch_word_types(lang, token, word_types, single_word), word_types
-    )
+    return word_type == fetch_word_type(lang, token, word_type, single_word)
 
 
 def find_common_prefix(a_text, a_lemma):
@@ -2992,10 +2981,6 @@ def add_declension_german(text, a_text, a_lemma, injected_string=""):
             text = text[0:-1]
 
     return text + ending
-
-
-def word_types_overlap(a_word_types, b_word_types):
-    return not set(a_word_types).isdisjoint(b_word_types)
 
 
 def determine_genus_from_ending(word, german_genus_endings):
@@ -3256,7 +3241,7 @@ def german_verb_splittable(word):  # pragma: no cover
         partial_word = word[i:]
         if partial_word in rules["de"]["verbs"]:
             tokens = fetch_tokens("de", prefix + " " + partial_word)
-            if "a" in fetch_word_types("de", tokens[0]) and "v" in fetch_word_types(
+            if "a" == fetch_word_type("de", tokens[0]) and "v" == fetch_word_type(
                 "de", tokens[1]
             ):
                 return prefix
@@ -3340,7 +3325,7 @@ def tokenize(text, lang):
     return tuple([i.text for i in model[lang].tokenizer(text)])
 
 
-def alternative_declension(lang, text, token, word_types, prepend_word, alternative):
+def alternative_declension(lang, text, token, word_type, prepend_word, alternative):
     (
         parsed_alternative,
         alternative_context,
@@ -3383,19 +3368,21 @@ def alternative_declension(lang, text, token, word_types, prepend_word, alternat
             else:
                 if len(alternative_tokens) == 1:
                     # in this case we just assume it is the same to avoid issues with word type detection
-                    alternative_word_types = word_types
+                    alternative_word_type = word_type
                 else:
-                    alternative_word_types = fetch_word_types(
-                        lang, alternative_token, word_types, False
+                    alternative_word_type = fetch_word_type(
+                        lang, alternative_token, word_type, False
                     )
 
                 if previous is False:
-                    if "v" in word_types and lang == "en" and i == 0:
+                    if "v" == word_type and (
+                        (lang == "en" and i == 0) or "v" in alternative_word_type
+                    ):
                         previous = True
                         alternative_text = align_verb_form(
                             lang, text, token, alternative_token
                         )
-                    elif "s" in word_types and "s" in alternative_word_types:
+                    elif "s" == word_type and "s" == alternative_word_type:
                         if is_token_plural(lang, alternative_token):
                             is_plural_alternative = True
 
@@ -3403,17 +3390,11 @@ def alternative_declension(lang, text, token, word_types, prepend_word, alternat
                         alternative_text = align_noun_form(
                             lang, text, token, alternative_token
                         )
-                    elif word_types_overlap(word_types, alternative_word_types):
-                        if "a" in alternative_word_types:
-                            previous = True
-                            alternative_text = align_adjective_form(
-                                lang, text, token, alternative_token
-                            )
-                        elif "v" in alternative_word_types:
-                            previous = True
-                            alternative_text = align_verb_form(
-                                lang, text, token, alternative_token
-                            )
+                    elif "a" == word_type and "a" == alternative_word_type:
+                        previous = True
+                        alternative_text = align_adjective_form(
+                            lang, text, token, alternative_token
+                        )
 
             new_alternative = (
                 alternative_text + alternative_token.whitespace_ + new_alternative
@@ -3442,13 +3423,13 @@ def alternatives_declension(lang, text, i, tokens, alternatives):
     if alternatives == None or len(alternatives) == 0:
         return text, start, alternatives
 
-    word_types = fetch_word_types(lang, token)
+    word_type = fetch_word_type(lang, token)
     prepend_word = False
     prev_token = None if i == 0 else tokens[i - 1]
 
     match lang:
         case "de":
-            if "v" in word_types and prev_token and prev_token.text == "zu":
+            if "v" == word_type and prev_token and prev_token.text == "zu":
                 text = "zu " + text
                 start = prev_token.idx
                 prepend_word = True
@@ -3460,7 +3441,7 @@ def alternatives_declension(lang, text, i, tokens, alternatives):
                 start = prev_token.idx
                 prepend_word = True
 
-    if len(word_types) == 0 or (
+    if len(word_type) == 0 or (
         text.lower() == token.lemma_.lower() and token.lemma_ != "beste"
     ):
         return text, start, alternatives
@@ -3470,7 +3451,7 @@ def alternatives_declension(lang, text, i, tokens, alternatives):
         start,
         [
             alternative_declension(
-                lang, text, token, word_types, prepend_word, alternative
+                lang, text, token, word_type, prepend_word, alternative
             ).strip()
             for alternative in alternatives
         ],
@@ -4211,7 +4192,7 @@ def pluralize_they(tokens, i):
         ) or (
             next_i == i + 1
             and tokens[next_i].text[-1] == "s"
-            and "v" in fetch_word_types("en", tokens[next_i])
+            and "v" == fetch_word_type("en", tokens[next_i])
         ):
             if token_is_conjunction(tokens[next_i]):
                 text += prev_token.whitespace_ + tokens[next_i].text

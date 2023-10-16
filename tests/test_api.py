@@ -376,9 +376,9 @@ def test_tokenize():
         assert result == ["running23", "is", "the", "best", "."]
 
 
-def test_parse_word_type():
+def test_parse_word_types():
     with TestClient(app) as client:
-        url = "/parse-word-type?lang=en&text=running is the best&"
+        url = "/parse-word-types?lang=en&text=running is the best&"
         response = client.get(url)
         assert response.status_code == 422
 
@@ -392,10 +392,10 @@ def test_parse_word_type():
         result = response.json()
 
         assert result == [
-            {"word_types": ["s"], "lower_case": True, "lemmatize": True},
-            {"word_types": ["v"], "lower_case": True, "lemmatize": False},
-            {"word_types": ["s"], "lower_case": True, "lemmatize": True},
-            {"word_types": ["conj"], "lower_case": False, "lemmatize": False},
+            {"word_type": "s", "lower_case": True, "lemmatize": True},
+            {"word_type": "v", "lower_case": True, "lemmatize": False},
+            {"word_type": "s", "lower_case": True, "lemmatize": True},
+            {"word_type": "conj", "lower_case": False, "lemmatize": False},
         ]
 
 
@@ -1315,7 +1315,7 @@ def test_spacy():
                 "tag": "NE",
                 "pos": "PROPN",
                 "dep": "ROOT",
-                "word_types": ["emoji"],
+                "word_type": "emoji",
                 "morph": {"Case": "Nom", "Gender": "Fem", "Number": "Sing"},
                 "is_emoji": True,
                 "is_singular": True,
@@ -1330,7 +1330,7 @@ def test_spacy():
                 "tag": "PDS",
                 "pos": "PRON",
                 "dep": "sb",
-                "word_types": ["s"],
+                "word_type": "s",
                 "morph": {
                     "Case": "Nom",
                     "Gender": "Neut",
@@ -1350,7 +1350,7 @@ def test_spacy():
                 "tag": "VAFIN",
                 "pos": "AUX",
                 "dep": "ROOT",
-                "word_types": [],
+                "word_type": "",
                 "morph": {
                     "Mood": "Ind",
                     "Number": "Sing",
@@ -1371,7 +1371,7 @@ def test_spacy():
                 "tag": "ADV",
                 "pos": "ADV",
                 "dep": "mo",
-                "word_types": ["a"],
+                "word_type": "a",
                 "morph": {},
                 "is_emoji": False,
                 "is_singular": None,
@@ -1386,7 +1386,7 @@ def test_spacy():
                 "tag": "ADJD",
                 "pos": "ADV",
                 "dep": "mo",
-                "word_types": ["a"],
+                "word_type": "a",
                 "morph": {"Degree": "Pos"},
                 "is_emoji": False,
                 "is_singular": None,
@@ -1401,7 +1401,7 @@ def test_spacy():
                 "tag": "NN",
                 "pos": "NOUN",
                 "dep": "pd",
-                "word_types": ["s"],
+                "word_type": "s",
                 "morph": {"Case": "Nom", "Gender": "Masc", "Number": "Sing"},
                 "is_emoji": False,
                 "is_singular": True,
@@ -1416,7 +1416,7 @@ def test_spacy():
                 "tag": "NE",
                 "pos": "PROPN",
                 "dep": "nk",
-                "word_types": [],
+                "word_type": "",
                 "morph": {"Case": "Nom", "Gender": "Masc", "Number": "Sing"},
                 "is_emoji": False,
                 "is_singular": True,
@@ -1431,7 +1431,7 @@ def test_spacy():
                 "tag": "APPR",
                 "pos": "ADP",
                 "dep": "mo",
-                "word_types": [],
+                "word_type": "",
                 "morph": {},
                 "is_emoji": False,
                 "is_singular": None,
@@ -1446,7 +1446,7 @@ def test_spacy():
                 "tag": "NE",
                 "pos": "PROPN",
                 "dep": "nk",
-                "word_types": [],
+                "word_type": "",
                 "morph": {"Case": "Dat", "Gender": "Neut", "Number": "Sing"},
                 "is_emoji": False,
                 "is_singular": True,
@@ -1461,7 +1461,7 @@ def test_spacy():
                 "tag": "KON",
                 "pos": "CCONJ",
                 "dep": "punct",
-                "word_types": ["emoji"],
+                "word_type": "emoji",
                 "morph": {},
                 "is_emoji": True,
                 "is_singular": None,
