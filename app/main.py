@@ -2884,7 +2884,12 @@ def fetch_word_types(lang, token, word_types=None, single_word=None):
     if "adv" in word_types and token.pos_ == "ADV":
         return ("adv",)
 
-    if lang == "en" and "-" in token.text:
+    if (
+        lang == "en"
+        and "-" in token.text
+        and not token.text.startswith("-")
+        and not token.text.endswith("-")
+    ):
         tokens = fetch_tokens(lang, token.text.replace("-", " "))
         return fetch_word_types(lang, tokens[0], word_types, single_word)
 
