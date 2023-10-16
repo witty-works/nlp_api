@@ -833,7 +833,7 @@ async def get_tokenize(
     for word_type in word_type_list:
         parsed_word_type, lower_case, lemmatize = parse_word_type(word_type)
 
-        if parsed_word_type not in supported_word_types:
+        if parsed_word_type != "" and parsed_word_type not in supported_word_types:
             raise RequestValidationError(
                 f"Word type '{word_type}' within '{word_types}' contains unsupported word type '{parsed_word_type}'"
             )
