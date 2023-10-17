@@ -11,7 +11,7 @@ from app.models import (
     Config,
     GenderedRolesFormatType,
 )
-from app.main import parse_word_types, tokenize, supported_word_types
+from app.main import parse_word_type, tokenize, supported_word_types
 from app.model import fetch_nlp_model
 from app.settings import get_settings
 from app.categories import get_category_keys
@@ -158,16 +158,16 @@ def get_data_from_files(model, locale, details):
                             word = words[i]
 
                             word_type = word_type.replace("'", '"')
-                            word_types, lower_case, lemmatize = parse_word_types(
+                            word_type, lower_case, lemmatize = parse_word_type(
                                 word_type
                             )
 
-                            if not set(word_types).issubset(supported_word_types):
+                            if word_type not in supported_word_types:
                                 print(
                                     "Lemma '%s' contains an incorrect word type '%s'."
                                     % (lemma, word_type)
                                 )
-                                print(word_types)
+                                print(word_type)
 
                             if (
                                 lemmatize
@@ -181,7 +181,7 @@ def get_data_from_files(model, locale, details):
                                 all_lemma[word].append(lemma)
 
                             if " " not in lemma and locale == "de":
-                                if "v" in word_types:
+                                if "v" == word_type:
                                     if word not in rules["de"]["verbs"] and details:
                                         print(
                                             "Lemma '%s' contains verb lemma '%s' missing from /de/verbs.csv"
@@ -208,7 +208,7 @@ def get_data_from_files(model, locale, details):
                                                 % (alternative)
                                             )
 
-                                if "s" in word_types:
+                                if "s" == word_type:
                                     if (
                                         category != "openly_discriminating"
                                         and len(nouns[word]) == 0
