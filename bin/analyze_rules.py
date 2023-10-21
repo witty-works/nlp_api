@@ -162,7 +162,7 @@ def get_data_from_files(model, locale, details):
                                 word_type
                             )
 
-                            if word_type not in supported_word_types:
+                            if word_type != "" and word_type not in supported_word_types:
                                 print(
                                     "Lemma '%s' contains an incorrect word type '%s'."
                                     % (lemma, word_type)
