@@ -2,6 +2,8 @@
 
 NLP API for inclusive language: https://api.witty.works
 
+Including LanguageTool for spellchecking
+
 ## Resources
 
 This project has two key dependencies:

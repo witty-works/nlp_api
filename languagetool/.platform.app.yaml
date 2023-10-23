@@ -1,0 +1,34 @@
+name: languagetool
+type: "java:19"
+
+container_profile: HIGHER_MEMORY
+
+web:
+  commands:
+    start: |
+      java -Xms${MEMORY}M -Xmx${MEMORY}M -XX:+UseG1GC -XX:+UseStringDeduplication -cp languagetool-server.jar org.languagetool.server.HTTPServer --public --config config.properties --port $PORT --allow-origin "*"
+
+hooks:
+  build: |
+    export SERVER="languagetool-server.jar"
+    export VERSION="6.2"
+    export LT="LanguageTool"
+    if [ ! -d "${PLATFORM_CACHE_DIR}/${LT}-${VERSION}" ]; then
+      echo "Downloading ${LT} ${VERSION} ..."
+      (
+        cd "${PLATFORM_CACHE_DIR}"
+        rm -rf "${LT}*"
+        export FILE="${LT}-${VERSION}.zip"
+        [ ! -f "$FILE" ] && curl -O https://languagetool.org/download/${FILE}
+        unzip $FILE
+        rm -rf $FILE
+        cd ~
+      )
+    else
+      echo "Using cached archive of ${LT} ${VERSION} ..."
+    fi
+
+    echo "Installing archive of ${LT} ${VERSION} from '${PLATFORM_CACHE_DIR}/${LT}-${VERSION}' ..."
+    cp -R "${PLATFORM_CACHE_DIR}/${LT}-${VERSION}"/* .
+    cp de_ignore.txt org/languagetool/resource/de/hunspell/ignore.txt
+    cp en_ignore.txt org/languagetool/resource/en/hunspell/ignore.txt
