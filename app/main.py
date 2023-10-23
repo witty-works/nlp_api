@@ -169,7 +169,7 @@ async def handle_command_witty(
 
     if configs == {} and settings.slack_organization_id:
         configs = await fetch_organization_configs_for_request(
-            version, user_request_in, settings.slack_organization_id
+            user_request_in, settings.slack_organization_id
         )
 
     user_request_in.config.__setattr__("alternatives_max_count", None)
@@ -1022,11 +1022,9 @@ def is_token_plural(lang, token):
 
 
 def apply_configs(
-    version: float,
     user_request_in: RequestIn,
     configs: dict,
     plan: str,
-    overwrite_enabled_categories: bool = True,
 ):
     disabled_categories = user_request_in.config.disabled_categories
 
@@ -1044,9 +1042,7 @@ def apply_configs(
                 if category_data["value"]:
                     if category in disabled_categories:
                         disabled_categories.remove(category)
-                elif (
-                    category not in disabled_categories and overwrite_enabled_categories
-                ):
+                elif category not in disabled_categories:
                     disabled_categories.append(category)
         elif config == "store_context":
             if (
@@ -1093,15 +1089,13 @@ async def fetch_configs_for_request(
     if not configs or type(configs) is not dict:
         return {}
 
-    apply_configs(version, user_request_in, configs["config"], configs["plan"])
+    apply_configs(user_request_in, configs["config"], configs["plan"])
 
     if "organization_config" in configs:
         apply_configs(
-            version,
             user_request_in,
             configs["organization_config"],
             configs["plan"],
-            False,
         )
 
         configs["term_replacements"] |= configs["organization_term_replacements"]
@@ -1113,7 +1107,7 @@ async def fetch_configs_for_request(
 
 
 async def fetch_organization_configs_for_request(
-    version: float, user_request_in: RequestIn, organization_id=Optional[str]
+    user_request_in: RequestIn, organization_id=Optional[str]
 ):
     user_request_in.config.__setattr__("store_context", True)
 
@@ -1129,7 +1123,7 @@ async def fetch_organization_configs_for_request(
         if configs["configs"][config]["status"] == "suggestion":
             configs["configs"][config]["status"] = "force"
 
-    apply_configs(version, user_request_in, configs["config"], configs["plan"])
+    apply_configs(user_request_in, configs["config"], configs["plan"])
 
     return configs
 
@@ -1256,7 +1250,7 @@ async def check(
         # debug
         version = 2.3
         configs = {"categories": {}}
-        apply_configs(version, user_request_in, configs, "witty_teams")
+        apply_configs(user_request_in, configs, "witty_teams")
 
     text, lang, limit_reached = fetch_text(user_request_in)
 
