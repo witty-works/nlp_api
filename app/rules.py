@@ -2,18 +2,25 @@ import pandas as pd
 import ast
 import re
 from typing import Optional
-from collections import namedtuple
 from german_nouns.lookup import Nouns
-from app.models import LangWithAutoType
-from app.categories import is_base_category
+from app.models import LangWithAutoType, RuleType
+from app.categories import (
+    is_base_category,
+    remove_base,
+    get_proficiency_level,
+    is_advanced_category,
+    get_category_name,
+)
 
 
 class Rule:
     name: str
+    lang: str
     lemma: str
     words: tuple
     word_types: tuple
     subcategory: Optional[str]
+    is_advanced: bool = False
     alternatives: Optional[tuple]
     plural_alternatives: Optional[tuple]
     secondary_subcategory: Optional[str]
@@ -21,10 +28,12 @@ class Rule:
     explanation: Optional[str]
     url: Optional[str]
     icon: Optional[str]
+    type: Optional[RuleType] = RuleType.DEFAULT
 
     def __init__(
         self,
         name,
+        lang,
         lemma,
         words,
         word_types,
@@ -32,11 +41,13 @@ class Rule:
         alternatives=None,
     ):
         self.name = name
+        self.lang = lang
         self.lemma = lemma
         self.words = words
         self.word_types = word_types
-        self.subcategory = subcategory
-        self.alternatives = alternatives
+        self.subcategory = self.parse_subcategory(subcategory)
+
+        self.alternatives = self.filter_alternatives(alternatives)
         self.plural_alternatives = None
         self.secondary_subcategory = None
         self.false_positives = None
@@ -44,21 +55,61 @@ class Rule:
         self.url = None
         self.icon = None
 
+    def parse_subcategory(self, subcategory):
+        if subcategory is None:
+            return None
+
+        if is_base_category(subcategory):
+            subcategory = remove_base(subcategory)
+            if get_proficiency_level(subcategory) == "openly_discriminating":
+                if len(self.word_types) > 0 and "s" in self.word_types[0]:
+                    self.type = RuleType.SUBSTRING
+            else:
+                self.type = RuleType.SUFFIX
+
+        if is_advanced_category(subcategory):
+            self.is_advanced = True
+            subcategory = get_category_name(subcategory)
+
+        return subcategory
+
+    def filter_alternatives(self, alternatives):
+        if alternatives is None:
+            return None
+
+        return list(filter(lambda alternative: "((" not in alternative, alternatives))
+
+    def is_gendered_denom_rule(self):
+        return self.lang == "de" and (
+            self.subcategory
+            in [
+                "titles",
+                "function",
+                "hidden_image",
+                "leadership",
+                "male_stereotype",
+                "female_stereotype",
+                "gendered_denominations_ending",
+            ]
+        )
+
 
 def build_rules(
     model,
+    lang,
     df,
     plural=False,
-    postfix=False,
     secondary_subcategory=False,
     false_positives=False,
     filter_base=None,
+    fallback_subcategory=None,
 ):
     df_rules = [] if filter_base is True else {}
 
     for i, lemma in enumerate(df["Lemma"]):
         rule = Rule(
             lemma,
+            lang,
             lemma,
             tuple([i.text for i in model.tokenizer(lemma)]),
             tuple(df["Word_Type"][i].split("|")),
@@ -69,17 +120,24 @@ def build_rules(
             if filter_base is False and is_base_category(df["Primary_subcategory"][i]):
                 continue
 
-            rule.subcategory = df["Primary_subcategory"][i]
-            if postfix and is_base_category(rule.subcategory):
+            rule.subcategory = rule.parse_subcategory(df["Primary_subcategory"][i])
+            if rule.type == RuleType.SUFFIX:
                 # shortest base word, "Arzt"
                 key = key[-4:]
 
+        if rule.subcategory is None:
+            rule.subcategory = fallback_subcategory
+
         singular_key = "Sg_all_split" if plural else "Alt_split"
         if singular_key in df:
-            rule.alternatives = ast.literal_eval(df[singular_key][i])
+            rule.alternatives = rule.filter_alternatives(
+                ast.literal_eval(df[singular_key][i])
+            )
 
         if plural:
-            rule.plural_alternatives = ast.literal_eval(df["Pl_all_split"][i])
+            rule.plural_alternatives = rule.filter_alternatives(
+                ast.literal_eval(df["Pl_all_split"][i])
+            )
 
         if secondary_subcategory:
             rule.secondary_subcategory = df["Secondary_subcategory"][i]
@@ -179,6 +237,7 @@ def fetch_rules(model):
         "m_f_regexes": [
             Rule(
                 "(m/f..)",
+                None,
                 re.compile(r"^m/(f|w)(\/[*a-z])*(\))?$", re.IGNORECASE),
                 None,
                 (0, 7, "/"),
@@ -186,6 +245,7 @@ def fetch_rules(model):
             ),
             Rule(
                 "(f/m..)",
+                None,
                 re.compile(r"^(f|w)/m(\/[*a-z])*(\))?$", re.IGNORECASE),
                 None,
                 (0, 7, "/"),
@@ -195,6 +255,7 @@ def fetch_rules(model):
         "d_f_m_regexes": [
             Rule(
                 "(d/f/m/v)",
+                None,
                 re.compile(r"^(d|x|\*)(/v)?/f(/v)?/m(/v)?$", re.IGNORECASE),
                 None,
                 (0, 7, "/"),
@@ -467,6 +528,7 @@ def fetch_rules(model):
 
         rule = Rule(
             "#foobar",
+            "de",
             re.compile(r"^#(?!.*[A-Z])\w\w\w\w\w+$"),
             None,
             (1, 2, "#"),
@@ -494,20 +556,25 @@ def fetch_rules(model):
         }
         # list of "df_communal_words" words
         rules["de"]["communal_words"] = build_rules(
-            model[lang], data["de"]["df_communal_words"]
+            model[lang],
+            "de",
+            data["de"]["df_communal_words"],
+            fallback_subcategory="communal",
         )
 
         # list of "df_d_and_i_words" words
         rules["de"]["d_and_i_words"] = build_rules(
-            model[lang], data["de"]["df_d_and_i_words"]
+            model[lang],
+            "de",
+            data["de"]["df_d_and_i_words"],
+            fallback_subcategory="d_and_i",
         )
 
         # dictionaries to handle false positives
-        false_positive = namedtuple("FalsePositive", "gender style")
-        rules["de"]["false_positives"] = false_positive(
-            data["de"]["df_gender_false_positive"]["False_positives"],
-            ["international"],
-        )
+        rules["de"]["false_positives"] = ["international"]
+        rules["de"]["gender_false_positives"] = data["de"]["df_gender_false_positive"][
+            "False_positives"
+        ]
 
         rules["de"]["exceptions"] = [
             "Unternehmen",
@@ -522,13 +589,13 @@ def fetch_rules(model):
 
         ### de-DE:
         rules["de"]["gender_words_data"] = build_rules(
-            model[lang], data["de"]["df_gender_ct"], plural=True, postfix=True
+            model[lang], "de", data["de"]["df_gender_ct"], plural=True
         )
 
         # df gendered no noun
         # gendered: words + alternatives split + subcategory
         rules["de"]["gender_words_data_no_noun"] = build_rules(
-            model[lang], data["de"]["df_gender_no_noun_word"]
+            model[lang], "de", data["de"]["df_gender_no_noun_word"]
         )
 
         # articles
@@ -548,29 +615,31 @@ def fetch_rules(model):
         # df unconscious bias nouns with plural
         # unconscious bias: words + singular alternatives split + plural alternatives split + subcategory
         rules["de"]["bias_words_data_noun"] = build_rules(
-            model[lang], data["de"]["df_ub_plur_word"], plural=True
+            model[lang], "de", data["de"]["df_ub_plur_word"], plural=True
         )
 
         # df unconscious bias words without plurals
         rules["de"]["bias_words_data_no_plur"] = build_rules(
-            model[lang], data["de"]["df_ub_no_plur_word"]
+            model[lang], "de", data["de"]["df_ub_no_plur_word"]
         )
 
         # df style
         # style: words + alternatives + subcategory
         rules["de"]["style_words_data"] = build_rules(
-            model[lang], data["de"]["df_style_word"]
+            model[lang], "de", data["de"]["df_style_word"]
         )
         # df open discrimination words
         # open discrimination: words + alternative_split + subcategory
         rules["de"]["open_disc_words_data"] = build_rules(
             model[lang],
+            "de",
             data["de"]["df_open_dis_word"],
             false_positives=True,
             filter_base=False,
         )
         rules["de"]["open_disc_words_data_base"] = build_rules(
             model[lang],
+            "de",
             data["de"]["df_open_dis_word"],
             false_positives=True,
             filter_base=True,
@@ -578,7 +647,7 @@ def fetch_rules(model):
 
         # df abbreviation
         rules["de"]["abbreviation"] = build_rules(
-            model[lang], data["de"]["df_abbreviation"]
+            model[lang], "de", data["de"]["df_abbreviation"]
         )
 
         rules["de"]["primary_german_genus_endings"] = {
@@ -1122,47 +1191,48 @@ def fetch_rules(model):
             # df open discrimination words
             # open discrimination: lemma + alternatives split + subcategory
             rules[locale]["open_disc_words_data"] = build_rules(
-                model[lang], data[locale]["df_open_dis_word"]
+                model[lang], "en", data[locale]["df_open_dis_word"]
             )
 
             # df open discrimination words gender no noun
             # gender no noun: lemma + alternatives split + subcategory
             rules[locale]["gender_words_data"] = build_rules(
-                model[lang], data[locale]["df_gendered_no_noun_word"]
+                model[lang], "en", data[locale]["df_gendered_no_noun_word"]
             )
 
             # df style
             # style: lemma + alternatives split + subcategory
             rules[locale]["style_words_data"] = build_rules(
-                model[lang], data[locale]["df_style_no_noun_word"]
+                model[lang], "en", data[locale]["df_style_no_noun_word"]
             )
 
             # df unconscious bias
             # unconscious bias: lemma + alternatives split + subcategory
             rules[locale]["bias_words_data"] = build_rules(
-                model[lang], data[locale]["df_ub_no_plur_word"]
+                model[lang], "en", data[locale]["df_ub_no_plur_word"]
             )
 
             # df inclusive
             # inclusive: lemma + subcategory)
             rules[locale]["inclusive_words_data"] = build_rules(
-                model[lang], data[locale]["df_inclusive_word"]
+                model[lang], "en", data[locale]["df_inclusive_word"]
             )
 
             # df homonyms words
             rules[locale]["homonyms_word"] = build_rules(
-                model[lang], data[locale]["df_homonyms_words"]
+                model[lang], "en", data[locale]["df_homonyms_words"]
             )
 
             # df abbreviation english
             rules[locale]["abbreviation"] = build_rules(
-                model[lang], data[locale]["df_abbreviation"]
+                model[lang], "en", data[locale]["df_abbreviation"]
             )
 
             # df gendered noun
             # gendered noun: lemma + singular alternatives split + plural alternatives split + primary subcategory + secondary subcategory
             rules[locale]["gender_noun_words_data"] = build_rules(
                 model[lang],
+                "en",
                 data[locale]["df_gendered_noun_word"],
                 plural=True,
                 secondary_subcategory=True,
@@ -1171,18 +1241,18 @@ def fetch_rules(model):
             # df gendered unconscious bias plural
             # gendered unconscious bias plural: lemma + singular alternatives split + plural alternatives split + subcategory
             rules[locale]["gender_bias_words_data"] = build_rules(
-                model[lang], data[locale]["df_ub_plur_word"], plural=True
+                model[lang], "en", data[locale]["df_ub_plur_word"], plural=True
             )
 
             # df style noun
             # style noun: lemma + singular alternatives split + plural alternatives split + primary subcategory + secondary subcategory
             rules[locale]["style_noun_words_data"] = build_rules(
-                model[lang], data[locale]["df_style_noun_word"], plural=True
+                model[lang], "en", data[locale]["df_style_noun_word"], plural=True
             )
 
             # unconscious bias singular they: lemma + alternatives split + subcategory
             rules[locale]["bias_singular_they_alternatives"] = build_rules(
-                model[lang], data[locale]["df_ub_singular_they"]
+                model[lang], "en", data[locale]["df_ub_singular_they"]
             )
 
         rules["en"]["context_check"] = [
@@ -1197,8 +1267,11 @@ def fetch_rules(model):
             "retard",
         ]
 
+        rules["en"]["false_positives"] = []
+
         rule = Rule(
             "#foobar",
+            "en",
             re.compile(r"^#(?!.*[A-Z])\w\w\w\w\w+$"),
             None,
             (1, 2, "#"),

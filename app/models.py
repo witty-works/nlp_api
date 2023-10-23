@@ -75,13 +75,11 @@ class LangWithAutoType(str, Enum):
     enGB = "en-GB"
 
 
-class RuleFunctions(str, Enum):
-    SIMPLE = "simple_match"
-    REGEX = "regex_match"
-    PHRASE = "rules_based_words_phrase_matcher"
-    DENOM_DE = "gendered_denom_analysis_de"
-    NOUN = "word_noun"
-    STYLE_DE = "style_word_analysis_de"
+class RuleType(str, Enum):
+    DEFAULT = "default"
+    PREFIX = "prefix"
+    SUFFIX = "suffix"
+    SUBSTRING = "substring"
 
 
 class LangVariantType(str, Enum):
@@ -119,6 +117,27 @@ class GenderedRolesFormatType(str, Enum):
     BOTH = "both"
     INCLUSIVE_GENDER = "inclusive_gender"
     BINARY_GENDER = "binary_gender"
+
+
+class Alternative(BaseModel):
+    lemma: str
+    word_types: Optional[str] = None
+    type: Optional[str] = None
+    label: Optional[str] = None
+    pluralization: Optional[str] = None
+    is_inspiration: Optional[bool] = False
+    is_advanced: Optional[bool] = False
+
+
+class RuleIn(BaseModel):
+    text: str
+    lang: LangType
+    lemma: str
+    word_types: str
+    subcategories: list[str]
+    lower_case: bool = True
+    alternatives: Optional[list[Alternative]] = []
+    false_positives: Optional[list[str]] = []
 
 
 class Config(BaseModel):
@@ -161,7 +180,9 @@ class Config(BaseModel):
         GermanGenderEndingType.COLON: re.compile(r"^[a-zäöü]{3,7}:[a-zäöü]{3,7}$"),
         GermanGenderEndingType.SLASH: re.compile(r"^[a-zäöü]{3,7}/[a-zäöü]{3,7}$"),
         GermanGenderEndingType.SLASH_DASH: re.compile(r"^[a-zäöü]{3,7}/[a-zäöü]{3,7}$"),
-        GermanGenderEndingType.CAPITAL_LETTER: re.compile(r"^[a-zäöü]{3,7}/[a-zäöü]{3,7}$"),
+        GermanGenderEndingType.CAPITAL_LETTER: re.compile(
+            r"^[a-zäöü]{3,7}/[a-zäöü]{3,7}$"
+        ),
     }
     _gendereddenom_ending_word_type = {
         GermanGenderEndingType.STAR: (0, 0, "*"),
