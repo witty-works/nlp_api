@@ -98,113 +98,16 @@ class Rule:
         )
 
 
-def build_rules(
-    model,
-    lang,
-    df,
-    plural=False,
-    secondary_subcategory=False,
-    false_positives=False,
-    filter_base=None,
-    fallback_subcategory=None,
-):
-    df_rules = [] if filter_base is True else {}
-
-    for i, lemma in enumerate(df["Lemma"]):
-        rule = Rule(
-            lemma,
-            lang,
-            lemma,
-            tuple([i.text for i in model.tokenizer(lemma)]),
-            df["Word_Type"][i],
-        )
-
-        key = rule.words[0].lower()
-        if "Primary_subcategory" in df:
-            if filter_base is False and is_base_category(df["Primary_subcategory"][i]):
-                continue
-
-            rule.subcategory = rule.parse_subcategory(df["Primary_subcategory"][i])
-            if rule.type == RuleType.SUFFIX:
-                # shortest base word, "Arzt"
-                key = key[-4:]
-
-        if rule.subcategory is None:
-            rule.subcategory = fallback_subcategory
-
-        singular_key = "Sg_all_split" if plural else "Alt_split"
-        if singular_key in df:
-            rule.alternatives = rule.filter_alternatives(
-                ast.literal_eval(df[singular_key][i])
-            )
-
-        if plural:
-            rule.plural_alternatives = rule.filter_alternatives(
-                ast.literal_eval(df["Pl_all_split"][i])
-            )
-
-        if secondary_subcategory:
-            rule.secondary_subcategory = df["Secondary_subcategory"][i]
-
-        if false_positives:
-            rule.false_positives = ast.literal_eval(df["False_Positives"][i])
-
-        if filter_base is True:
-            df_rules.append(rule)
-            continue
-
-        if key in df_rules:
-            df_rules[key].append(rule)
-        else:
-            df_rules[key] = [rule]
-
-    return df_rules
-
-
 def fetch_rules(model):
     files = {
         "de": {
-            # load Gender (nouns, not nouns) and sentences de
-            "df_gender_ct": "gendered_noun_words.csv",
-            "df_gender_no_noun_word": "gendered_no_noun_words.csv",
             # load articles for gendered denom
             "df_articles": "articles.csv",
-            # load style words
-            "df_style_word": "style_words.csv",
-            # load openly discriminating words de
-            "df_open_dis_word": "open_dis_words.csv",
-            # load unconscious_bias word (nouns with plurals and nouns, adj, verbs without plural) and sentences de
-            "df_ub_plur_word": "ub_plur_words.csv",
-            "df_ub_no_plur_word": "ub_no_plur_words.csv",
-            # load inslusive words
-            "df_d_and_i_words": "d_and_i_words.csv",
-            # load communal coded terms
-            "df_communal_words": "communal.csv",
-            # load abbreviations
-            "df_abbreviation": "abbreviations.csv",
+            "df_gender_false_positive": "gender_false_positive.csv",
             # verbs
             "verbs": "verbs.csv",
         },
-        "en": {
-            # load openly discriminating words
-            "df_open_dis_word": "open_dis_words.csv",
-            # load inclusive language
-            "df_inclusive_word": "inclusive_words.csv",
-            # load style words
-            "df_style_no_noun_word": "style_no_noun_words.csv",
-            "df_style_noun_word": "style_noun_words.csv",
-            # load gendered language
-            "df_gendered_no_noun_word": "gendered_no_noun_words.csv",
-            "df_gendered_noun_word": "gendered_noun_words.csv",
-            # load unconscious_bias word (nouns with sing/plural, other words (nouns without sing/plur, verb, adj, adv)) and sentences en
-            "df_ub_plur_word": "ub_plur_words.csv",
-            "df_ub_no_plur_word": "ub_no_plur_words.csv",
-            "df_ub_singular_they": "ub_singular_they.csv",
-            # load homonyms
-            "df_homonyms_words": "homonyms_words.csv",
-            # load abbreviations
-            "df_abbreviation": "abbreviations.csv",
-        },
+        "en": {},
     }
 
     rules = {
@@ -602,21 +505,6 @@ def fetch_rules(model):
             }
             for i in range(len(data["de"]["verbs"]["infinitiv"]))
         }
-        # list of "df_communal_words" words
-        rules["de"]["communal_words"] = build_rules(
-            model[lang],
-            "de",
-            data["de"]["df_communal_words"],
-            fallback_subcategory="communal",
-        )
-
-        # list of "df_d_and_i_words" words
-        rules["de"]["d_and_i_words"] = build_rules(
-            model[lang],
-            "de",
-            data["de"]["df_d_and_i_words"],
-            fallback_subcategory="d_and_i",
-        )
 
         # dictionaries to handle false positives
         rules["de"]["false_positives"] = ["international"]
@@ -632,17 +520,6 @@ def fetch_rules(model):
             "Gliederung",
         ]
 
-        ### de-DE:
-        rules["de"]["gender_words_data"] = build_rules(
-            model[lang], "de", data["de"]["df_gender_ct"], plural=True
-        )
-
-        # df gendered no noun
-        # gendered: words + alternatives split + subcategory
-        rules["de"]["gender_words_data_no_noun"] = build_rules(
-            model[lang], "de", data["de"]["df_gender_no_noun_word"]
-        )
-
         # articles
         rules["de"]["articles"] = list(
             zip(
@@ -656,44 +533,6 @@ def fetch_rules(model):
         )
         rules["de"]["male_articles"] = list(data["de"]["df_articles"]["Masculine"])
         rules["de"]["female_articles"] = list(data["de"]["df_articles"]["Feminine"])
-
-        # df unconscious bias nouns with plural
-        # unconscious bias: words + singular alternatives split + plural alternatives split + subcategory
-        rules["de"]["bias_words_data_noun"] = build_rules(
-            model[lang], "de", data["de"]["df_ub_plur_word"], plural=True
-        )
-
-        # df unconscious bias words without plurals
-        rules["de"]["bias_words_data_no_plur"] = build_rules(
-            model[lang], "de", data["de"]["df_ub_no_plur_word"]
-        )
-
-        # df style
-        # style: words + alternatives + subcategory
-        rules["de"]["style_words_data"] = build_rules(
-            model[lang], "de", data["de"]["df_style_word"]
-        )
-        # df open discrimination words
-        # open discrimination: words + alternative_split + subcategory
-        rules["de"]["open_disc_words_data"] = build_rules(
-            model[lang],
-            "de",
-            data["de"]["df_open_dis_word"],
-            false_positives=True,
-            filter_base=False,
-        )
-        rules["de"]["open_disc_words_data_base"] = build_rules(
-            model[lang],
-            "de",
-            data["de"]["df_open_dis_word"],
-            false_positives=True,
-            filter_base=True,
-        )
-
-        # df abbreviation
-        rules["de"]["abbreviation"] = build_rules(
-            model[lang], "de", data["de"]["df_abbreviation"]
-        )
 
         rules["de"]["primary_german_genus_endings"] = {
             "n": [
@@ -1228,78 +1067,6 @@ def fetch_rules(model):
         }
 
     if "en" in langs:
-        lang = "en"
-
-        ### en-US & en-GB:
-        for locale in locales["en"]:
-            ## words:
-            # df open discrimination words
-            # open discrimination: lemma + alternatives split + subcategory
-            rules[locale]["open_disc_words_data"] = build_rules(
-                model[lang], "en", data[locale]["df_open_dis_word"]
-            )
-
-            # df open discrimination words gender no noun
-            # gender no noun: lemma + alternatives split + subcategory
-            rules[locale]["gender_words_data"] = build_rules(
-                model[lang], "en", data[locale]["df_gendered_no_noun_word"]
-            )
-
-            # df style
-            # style: lemma + alternatives split + subcategory
-            rules[locale]["style_words_data"] = build_rules(
-                model[lang], "en", data[locale]["df_style_no_noun_word"]
-            )
-
-            # df unconscious bias
-            # unconscious bias: lemma + alternatives split + subcategory
-            rules[locale]["bias_words_data"] = build_rules(
-                model[lang], "en", data[locale]["df_ub_no_plur_word"]
-            )
-
-            # df inclusive
-            # inclusive: lemma + subcategory)
-            rules[locale]["inclusive_words_data"] = build_rules(
-                model[lang], "en", data[locale]["df_inclusive_word"]
-            )
-
-            # df homonyms words
-            rules[locale]["homonyms_word"] = build_rules(
-                model[lang], "en", data[locale]["df_homonyms_words"]
-            )
-
-            # df abbreviation english
-            rules[locale]["abbreviation"] = build_rules(
-                model[lang], "en", data[locale]["df_abbreviation"]
-            )
-
-            # df gendered noun
-            # gendered noun: lemma + singular alternatives split + plural alternatives split + primary subcategory + secondary subcategory
-            rules[locale]["gender_noun_words_data"] = build_rules(
-                model[lang],
-                "en",
-                data[locale]["df_gendered_noun_word"],
-                plural=True,
-                secondary_subcategory=True,
-            )
-
-            # df gendered unconscious bias plural
-            # gendered unconscious bias plural: lemma + singular alternatives split + plural alternatives split + subcategory
-            rules[locale]["gender_bias_words_data"] = build_rules(
-                model[lang], "en", data[locale]["df_ub_plur_word"], plural=True
-            )
-
-            # df style noun
-            # style noun: lemma + singular alternatives split + plural alternatives split + primary subcategory + secondary subcategory
-            rules[locale]["style_noun_words_data"] = build_rules(
-                model[lang], "en", data[locale]["df_style_noun_word"], plural=True
-            )
-
-            # unconscious bias singular they: lemma + alternatives split + subcategory
-            rules[locale]["bias_singular_they_alternatives"] = build_rules(
-                model[lang], "en", data[locale]["df_ub_singular_they"]
-            )
-
         rules["en"]["context_check"] = [
             "fossil",
             "flexible",

@@ -26,11 +26,11 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 6,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "leistet"
         },
         {
@@ -77,12 +77,12 @@
                 "text": "Überzogene Aussagen wirken weniger vertrauenswürdig",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/übertreibung?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Soziale Motivation: Übertreibung",
+            "gravity": 3.0,
+            "label": "Erworbene Diversität: 50 Jahre und älter",
             "proficiency_level": "unconscious_bias",
-            "start": 109,
-            "subcategory": "exaggerating",
-            "text": "beste"
+            "start": 71,
+            "subcategory": "age_old_advanced",
+            "text": "ältesten"
         }
     ]
 }
