@@ -44,6 +44,12 @@ def parse_args():
         help="If to output missing verb/adjective/noun issues",
         default=False,
     )
+    parser.add_argument(
+        "-i",
+        "--IgnoreFile",
+        help="If to udpate the ignore file",
+        default=False,
+    )
     return parser.parse_args()
 
 
@@ -509,7 +515,7 @@ def is_file(path_to_file):
 
 
 def update_ignore_file(words, lang):
-    path_to_ignore_file = f"/languagetool/{lang}_ignore.text"
+    path_to_ignore_file = f"/languagetool/{lang}_ignore.txt"
     current_words = get_current_words(path_to_ignore_file)
     used_words = generate_used_words_list(path_to_ignore_file)
     words_to_write = check_words_spelling(words, current_words, used_words)
@@ -602,6 +608,7 @@ for locale in locales:
 
 api_url = args.URL
 
+
 try:
     print("Checking if LanguageTool is running ..")
     response = requests.get(api_url.rstrip("/check") + "/languages")
@@ -620,5 +627,6 @@ if not languagetool_running:
     print("Please first run the local server %s" % api_url)
     exit(1)
 
-print("Checking alternatives for spelling mistakes ..")
-update_ignore_file(words, lang)
+if bool(args.IgnoreFile):
+    print("Checking alternatives for spelling mistakes and updating ignore file ..")
+    update_ignore_file(words, lang)
