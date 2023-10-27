@@ -45,42 +45,29 @@ def parse_args():
         default=False,
     )
     parser.add_argument(
-        "-p", "--Path", help="Path to languagetool ignore.txt file ", default=False
-    )
-    parser.add_argument(
-        "-o",
-        "--Original",
-        help="Path to original languagetool ignore.txt file, like LanguageTool-5.5/org/languagetool/resource/de/hunspell/ignore.txt. Use only when running script for the first time.",
-        default="",
+        "-i",
+        "--IgnoreFile",
+        help="If to udpate the ignore file",
+        default=False,
     )
     return parser.parse_args()
 
 
-def get_current_words(original_languagetool_path, ignore_languagetool_path):
+def get_current_words(ignore_languagetool_path):
     current_words = []
-    if original_languagetool_path:
-        with open(
-            original_languagetool_path,
-            "r",
-        ) as f:
-            lines = f.readlines()
-            for line in lines:
+    start = False
+    with open(
+        ignore_languagetool_path,
+        "r",
+    ) as f:
+        lines = f.readlines()
+        for line in lines:
+            if start is True:
                 li = line.strip()
-                if not li.startswith("#"):
-                    current_words.append(li)
-    else:
-        start = False
-        with open(
-            ignore_languagetool_path,
-            "r",
-        ) as f:
-            lines = f.readlines()
-            for line in lines:
-                if start is True:
-                    li = line.strip()
-                    current_words.append(li)
-                if line == "# Old words (added by LT): \n":
-                    start = True
+                current_words.append(li)
+            if line == "# Old words (added by LT): \n":
+                start = True
+
     return current_words
 
 
@@ -162,7 +149,10 @@ def get_data_from_files(model, locale, details):
                                 word_type
                             )
 
-                            if word_type != "" and word_type not in supported_word_types:
+                            if (
+                                word_type != ""
+                                and word_type not in supported_word_types
+                            ):
                                 print(
                                     "Lemma '%s' contains an incorrect word type '%s'."
                                     % (lemma, word_type)
@@ -524,8 +514,9 @@ def is_file(path_to_file):
     return False
 
 
-def update_ignore_file(words, original_languagetool_path, path_to_ignore_file):
-    current_words = get_current_words(original_languagetool_path, path_to_ignore_file)
+def update_ignore_file(words, lang):
+    path_to_ignore_file = f"/languagetool/{lang}_ignore.txt"
+    current_words = get_current_words(path_to_ignore_file)
     used_words = generate_used_words_list(path_to_ignore_file)
     words_to_write = check_words_spelling(words, current_words, used_words)
 
@@ -615,8 +606,8 @@ for locale in locales:
     print(sorted(all_secondary_subcategories - set(category_keys)))
 
 
-original_languagetool_path = args.Original
 api_url = args.URL
+
 
 try:
     print("Checking if LanguageTool is running ..")
@@ -632,16 +623,10 @@ except requests.ConnectionError:
     print("LanguageTool is not running.")
     languagetool_running = False
 
-if args.Path:
-    if not languagetool_running:
-        print("Please first run the local server %s" % api_url)
-        exit(1)
+if not languagetool_running:
+    print("Please first run the local server %s" % api_url)
+    exit(1)
 
-    path_to_ignore_file = args.Path
-    if not is_file(path_to_ignore_file):
-        raise FileNotFoundError("File %s cannot be found." % path_to_ignore_file)
-    if args.Original and not is_file(original_languagetool_path):
-        raise FileNotFoundError("File %s cannot be found." % original_languagetool_path)
-
-    print("Checking alternatives for spelling mistakes ..")
-    update_ignore_file(words, original_languagetool_path, path_to_ignore_file)
+if bool(args.IgnoreFile):
+    print("Checking alternatives for spelling mistakes and updating ignore file ..")
+    update_ignore_file(words, lang)

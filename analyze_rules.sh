@@ -33,7 +33,7 @@ done
 
 echo "Collecting data for $lang"
 
-lt_url="https://lt.default.api.witty.works/v2/check"
+lt_url="https://lt.dev-54ta5gq-2ycn7tlsdvd2o.fr-4.platformsh.site/v2/check"
 
 diff_not_empty=false
 

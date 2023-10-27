@@ -1,3 +1,0 @@
-[submodule "languagetool"]
-	path = languagetool
-	url = git@github.com:witty-works/languagetool.git

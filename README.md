@@ -2,6 +2,8 @@
 
 NLP API for inclusive language: https://api.witty.works
 
+Including LanguageTool for spellchecking
+
 ## Resources
 
 This project has two key dependencies:
@@ -279,8 +281,8 @@ pdm run python -m bin.analyze_rules -l en -p <path_to_ignore_file>
 For example:
 
 ```
-pdm run python -m bin.analyze_rules -l en -p ../languagetool-flexible/en_ignore.txt
-pdm run python -m bin.analyze_rules -l de -p ../languagetool-flexible/de_ignore.txt
+pdm run python -m bin.analyze_rules -l en
+pdm run python -m bin.analyze_rules -l de
 ```
 
 ## Update the false positive list
