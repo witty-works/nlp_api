@@ -5,10 +5,10 @@
         {
             "alternatives": [
                 {
-                    "text": "Auftraggebende"
+                    "text": "beziehende Person"
                 },
                 {
-                    "text": "Bestellende"
+                    "text": "beauftragende Firma"
                 },
                 {
                     "text": "Kund*innen"
@@ -63,26 +63,15 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 36,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "Ehrgeiz"
         },
         {
-            "alternatives": [
-                {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "Einen langen Atem haben"
-                },
-                {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "Fähigkeit, an Dingen dranzubleiben"
-                }
-            ],
+            "alternatives": [],
             "category": "social-motive",
             "context": "Wir suchen alles für unsere Kunden: Ehrgeiz ist unser Schlüssel.\n\n\nDurchhaltevermögen benötigen wir.\n\n\n\n\n\nEhrgeiz ist am wichtigsten",
             "end": 85,
@@ -92,11 +81,11 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 67,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "Durchhaltevermögen"
         },
         {
@@ -126,11 +115,11 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 106,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "Ehrgeiz"
         }
     ]

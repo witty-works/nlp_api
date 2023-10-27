@@ -24,19 +24,19 @@
         {
             "alternatives": [
                 {
-                    "text": "people"
+                    "text": "you"
                 },
                 {
-                    "text": "folks"
+                    "text": "they"
                 },
                 {
                     "text": "friends"
                 },
                 {
-                    "text": "all"
+                    "text": "someone I know"
                 },
                 {
-                    "text": "you all"
+                    "text": "person I'm friendly with"
                 }
             ],
             "category": "gender-orientation",
@@ -75,16 +75,7 @@
         {
             "alternatives": [
                 {
-                    "text": "growth mindset"
-                },
-                {
                     "text": "dedication"
-                },
-                {
-                    "text": "willingness to go after a dream"
-                },
-                {
-                    "text": "enthusiasm for working toward goals"
                 }
             ],
             "category": "social-motive",
@@ -96,11 +87,11 @@
                 "text": "Doesn’t resonate with team-minded people",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Social Motive: Agentic language",
             "proficiency_level": "unconscious_bias",
             "start": 30,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "ambition"
         },
         {
@@ -130,43 +121,12 @@
                 "text": "Doesn’t resonate with team-minded people",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Social Motive: Agentic language",
             "proficiency_level": "unconscious_bias",
             "start": 43,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "perseverance"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "questioned"
-                },
-                {
-                    "text": "cross-examined"
-                },
-                {
-                    "text": "re-evaluated"
-                },
-                {
-                    "text": "objected to"
-                }
-            ],
-            "category": "social-motive",
-            "context": "e are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number <NUMBER> and innovation drives us.\nSincere regards,\nNadia",
-            "end": 121,
-            "explanation": {
-                "content": "video",
-                "icon": "😒",
-                "text": "Doesn’t resonate with team-minded people",
-                "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Social Motive: Agentic language",
-            "proficiency_level": "unconscious_bias",
-            "start": 111,
-            "subcategory": "agentic",
-            "text": "challenged"
         },
         {
             "alternatives": [
@@ -195,11 +155,11 @@
                 "text": "Over-the-top statements make you sound less trustworthy",
                 "url": "https://www.witty.works/en/categories/social-motive/exaggeration?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Social Motive: Exaggeration",
             "proficiency_level": "unconscious_bias",
             "start": 130,
-            "subcategory": "exaggerating",
+            "subcategory": "exaggerating_advanced",
             "text": "number 1"
         },
         {
@@ -212,9 +172,6 @@
                 },
                 {
                     "text": "improvement"
-                },
-                {
-                    "text": "new creation"
                 },
                 {
                     "text": "redesign"
@@ -233,25 +190,16 @@
             "label": "Cultural Diversity: Empty words",
             "proficiency_level": "unconscious_bias",
             "start": 143,
-            "subcategory": "advanced_hollow",
+            "subcategory": "hollow_advanced",
             "text": "innovation"
         },
         {
             "alternatives": [
                 {
-                    "text": "invests in"
-                },
-                {
                     "text": "supports"
                 },
                 {
-                    "text": "works toward"
-                },
-                {
-                    "text": "takes responsibility for"
-                },
-                {
-                    "text": "dedicates"
+                    "text": "motivates"
                 }
             ],
             "category": "social-motive",
@@ -263,11 +211,11 @@
                 "text": "Doesn’t resonate with team-minded people",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Social Motive: Agentic language",
             "proficiency_level": "unconscious_bias",
             "start": 154,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "drives"
         }
     ]

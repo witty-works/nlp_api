@@ -82,7 +82,7 @@
             "label": "Geschlecht + Orientierung: Inklusive Endung",
             "proficiency_level": "unconscious_bias",
             "start": 17,
-            "subcategory": "advanced_gendered_denominations_ending",
+            "subcategory": "gendered_denominations_ending_advanced",
             "text": "/in"
         },
         {
@@ -103,7 +103,7 @@
             "label": "Geschlecht + Orientierung: Inklusive Endung",
             "proficiency_level": "unconscious_bias",
             "start": 71,
-            "subcategory": "advanced_gendered_denominations_ending",
+            "subcategory": "gendered_denominations_ending_advanced",
             "text": "(-innen)"
         }
     ]

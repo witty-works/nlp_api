@@ -11,10 +11,10 @@
                     "text": "Kundin/Kunde"
                 },
                 {
-                    "text": "Kundschaft"
+                    "text": "beziehende Person"
                 },
                 {
-                    "text": "Klientel"
+                    "text": "beauftragende Firma"
                 }
             ],
             "category": "gender-orientation",
@@ -36,10 +36,10 @@
         {
             "alternatives": [
                 {
-                    "text": "Auftraggebende"
+                    "text": "beziehende Person"
                 },
                 {
-                    "text": "Bestellende"
+                    "text": "beauftragende Firma"
                 },
                 {
                     "text": "Kund*innen"

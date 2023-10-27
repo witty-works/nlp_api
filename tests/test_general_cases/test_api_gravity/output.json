@@ -36,10 +36,10 @@
         {
             "alternatives": [
                 {
-                    "text": "Auftraggebende"
+                    "text": "beziehende Person"
                 },
                 {
-                    "text": "Bestellende"
+                    "text": "beauftragende Firma"
                 },
                 {
                     "text": "Kund*innen"

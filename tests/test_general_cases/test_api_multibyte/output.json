@@ -37,9 +37,6 @@
                 },
                 {
                     "text": "aptitude"
-                },
-                {
-                    "text": "capacities"
                 }
             ],
             "category": "social-motive",
@@ -51,29 +48,29 @@
                 "text": "Doesn’t resonate with team-minded people",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Social Motive: Agentic language",
             "proficiency_level": "unconscious_bias",
             "start": 3,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "Power"
         },
         {
             "alternatives": [
                 {
-                    "text": "skilled person"
-                },
-                {
-                    "text": "very proficient person"
+                    "text": "they"
                 },
                 {
                     "text": "resourceful person"
                 },
                 {
-                    "text": "they"
+                    "text": "person who continues despite difficulties"
                 },
                 {
-                    "text": "skilled people"
+                    "text": "someone who sticks to their goal"
+                },
+                {
+                    "text": "someone willing to see things through"
                 }
             ],
             "category": "social-motive",
@@ -85,11 +82,11 @@
                 "text": "Over-the-top statements make you sound less trustworthy",
                 "url": "https://www.witty.works/en/categories/social-motive/exaggeration?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Social Motive: Exaggeration",
             "proficiency_level": "unconscious_bias",
             "start": 28,
-            "subcategory": "exaggerating",
+            "subcategory": "exaggerating_advanced",
             "text": "ninja"
         }
     ]

@@ -1,6 +1,6 @@
 {
     "text": "FLINT schließt lesbische Frauen explizit mit ein, um sich für mehr lesbische Sichtbarkeit zu solidarisieren.",
     "config": {
-        "disabled_categories": ["advanced_plain_language", "d_and_i", "gender_identity"]
+        "disabled_categories": ["plain_language_advanced", "d_and_i", "gender_identity"]
     }
 }

@@ -5,34 +5,6 @@
         {
             "alternatives": [
                 {
-                    "text": "verantwortungsfreudiger"
-                },
-                {
-                    "text": "verantwortlicher"
-                },
-                {
-                    "text": "selbstverantwortlicher"
-                }
-            ],
-            "category": "social-motive",
-            "context": "Als selbstständiger Projektleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambition",
-            "end": 19,
-            "explanation": {
-                "content": "video",
-                "icon": "😒",
-                "text": "Spricht kooperativ denkende Menschen nicht an",
-                "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Soziale Motivation: Agentische Sprache",
-            "proficiency_level": "unconscious_bias",
-            "start": 4,
-            "subcategory": "agentic",
-            "text": "selbstständiger"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "Projektleiter*in"
                 },
                 {
@@ -79,40 +51,12 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 34,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "leisten"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "sorgfältige"
-                },
-                {
-                    "text": "präzise"
-                },
-                {
-                    "text": "komplexe"
-                }
-            ],
-            "category": "social-motive",
-            "context": "Als selbstständiger Projektleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielstrebig\nneue Höchstle",
-            "end": 60,
-            "explanation": {
-                "content": "video",
-                "icon": "😒",
-                "text": "Spricht kooperativ denkende Menschen nicht an",
-                "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Soziale Motivation: Agentische Sprache",
-            "proficiency_level": "unconscious_bias",
-            "start": 46,
-            "subcategory": "agentic",
-            "text": "anspruchsvolle"
         },
         {
             "alternatives": [],
@@ -149,26 +93,29 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 111,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "ambitionierten"
         },
         {
             "alternatives": [
                 {
+                    "text": "Teammitglied"
+                },
+                {
+                    "text": "Person, die im selben Team arbeitet"
+                },
+                {
+                    "text": "Person, die im selben Unternehmen arbeitet"
+                },
+                {
+                    "text": "Person, die man von der Arbeit kennt"
+                },
+                {
                     "text": "Kolleg*innen"
-                },
-                {
-                    "text": "Kolleginnen und Kollegen"
-                },
-                {
-                    "text": "Kollegschaft"
-                },
-                {
-                    "text": "Team"
                 }
             ],
             "category": "gender-orientation",
@@ -211,11 +158,11 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 135,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "zielstrebig"
         },
         {
@@ -227,7 +174,7 @@
                     "text": "Teamziele"
                 },
                 {
-                    "text": "zuverlässiges Ergebnisse"
+                    "text": "zuverlässiges Ergebnis"
                 },
                 {
                     "text": "Sternstunden"
@@ -245,11 +192,11 @@
                 "text": "Überzogene Aussagen wirken weniger vertrauenswürdig",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/übertreibung?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Soziale Motivation: Übertreibung",
             "proficiency_level": "unconscious_bias",
             "start": 152,
-            "subcategory": "exaggerating",
+            "subcategory": "exaggerating_advanced",
             "text": "Höchstleistungen"
         }
     ]

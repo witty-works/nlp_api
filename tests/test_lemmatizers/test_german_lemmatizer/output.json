@@ -1,23 +1,5 @@
 {
     "language": "de",
     "limit_reached": false,
-    "results": [
-        {
-            "alternatives": [],
-            "category": "social-motive",
-            "context": "Der Vorstand wird angewiesen",
-            "end": 28,
-            "explanation": {
-                "content": "video",
-                "icon": "✅",
-                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
-                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true"
-            },
-            "label": "Soziale Motivation: Kommunale Sprache",
-            "proficiency_level": "inclusive",
-            "start": 18,
-            "subcategory": "communal",
-            "text": "angewiesen"
-        }
-    ]
+    "results": []
 }

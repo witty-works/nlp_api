@@ -83,6 +83,22 @@ class RuleType(str, Enum):
     SUBSTRING = "substring"
 
 
+class RuleLabelEnum():
+    DEFAULT = "default"
+    NOT_FOR_PEOPLE = "not_for_people"
+    BE_SPECIFIC = "be_specific"
+    NAME_DISABILITY = "name_disability"
+    ONLY_IF_GENDER_IDENTITY_RELEVANT = "only_if_gender_identity_relevant"
+    NOT_FOR_NON_COMBAT = "not_for_non_combat"
+    ASK_FOR_PREFERENCE = "ask_for_preference"
+    ASK_ABOUT_TRADITIONS = "ask_about_traditions"
+    ONLY_WHEN_REFERENCING_RELIGIOUS_PRACTICE = (
+        "only_when_referencing_religious_practice"
+    )
+    DONT_USE_FOR_SUBSTANCE_USE = "dont_use_for_substance_use"
+    DONT_USE_TO_DESCRIBE_QUALITY = "dont_use_to_describe_quality"
+    USE_IN_TECH_ONLY = "use_in_tech_only"
+
 class LangVariantType(str, Enum):
     deDE = "de-DE"
     deCH = "de-CH"
@@ -120,10 +136,11 @@ class Alternative:
     words: list
     word_types: Optional[list] = None
     type: Optional[str] = None
-    label: Optional[str] = ""
+    label: Optional[str] = None
     pluralization: Optional[str] = "default"
     is_inspiration: Optional[bool] = False
     is_advanced: Optional[bool] = False
+    is_remove: Optional[bool] = False
 
     def __init__(
         self,
@@ -144,12 +161,13 @@ class Rule:
     word_types: tuple
     subcategory: Optional[str]
     is_advanced: bool = False
-    alternatives: Optional[tuple]
-    false_positives: Optional[tuple]
-    explanation: Optional[str]
-    url: Optional[str]
-    icon: Optional[str]
+    alternatives: Optional[list[Alternative]] = []
+    false_positives: Optional[list[str]] = []
+    explanation: Optional[str] = None
+    url: Optional[str] = None
+    icon: Optional[str] = None
     type: Optional[RuleType] = RuleType.DEFAULT
+    label: Optional[str] = None
 
     def __init__(
         self,
@@ -172,10 +190,6 @@ class Rule:
         self.subcategory = self.parse_subcategory(subcategory)
 
         self.alternatives = self.filter_alternatives(alternatives)
-        self.false_positives = None
-        self.explanation = None
-        self.url = None
-        self.icon = None
 
     def parse_subcategory(self, subcategory):
         if subcategory is None:
@@ -187,7 +201,7 @@ class Rule:
 
         return subcategory
 
-    def filter_alternatives(self, alternatives):
+    def filter_alternatives(self, alternatives: list):
         if alternatives is None:
             return None
 
@@ -214,22 +228,23 @@ class Rule:
 class AlternativeIn(BaseModel):
     lemma: str
     words: tuple
-    word_types: Optional[tuple] = None
+    word_types: Optional[list] = None
     type: Optional[str] = None
     label: Optional[str] = None
     pluralization: Optional[str] = "default"
     is_inspiration: Optional[bool] = False
     is_advanced: Optional[bool] = False
-
+    is_remove: Optional[bool] = False
 
 class RuleIn(BaseModel):
     text: str
     lang: LangType
     lemma: str
-    word_types: str
+    word_types: list
     subcategories: list[str]
     alternatives: Optional[list[AlternativeIn]] = []
     false_positives: Optional[list[str]] = []
+    label: Optional[str] = None
 
 
 class Config(BaseModel):
@@ -524,9 +539,9 @@ class ResultOut(BaseModel):
         explanation=None,
         url=None,
         icon=None,
-        gravity=None,
         explanation_context=None,
         content=None,
+        gravity=None,
         proficiency_level=None,
     ):
         if end is None:
@@ -595,17 +610,14 @@ class ResultOut(BaseModel):
                 text,
                 start,
                 alternatives,
-                explanation_context,
             ) = ResultOut.clean_alternatives(
                 config,
                 lang,
                 text,
                 category,
-                subcategory,
                 start,
                 ResultOut.isUpper(text, full_text, start, category, lang),
                 alternatives,
-                explanation_context,
                 config.alternatives_max_count,
             )
 
@@ -658,11 +670,9 @@ class ResultOut(BaseModel):
         lang: Language,
         text,
         category,
-        subcategory,
         start,
         is_upper,
         alternatives: list[Alternative],
-        explanation_context,
         alternatives_max_count,
     ):
         if alternatives is None:
@@ -679,29 +689,26 @@ class ResultOut(BaseModel):
         cleaned_alternatives = {}
 
         for alternative in alternatives:
-            # remove until we can properly handle this in the UI
-            # https://www.notion.so/witty-works/Rule-Guidelines-432792da944141b1b4d0a01de290aa43#9ab16aeb0c19416ca0b72fde152b5d86
-            if "^" in alternative.lemma:
-                continue
+            if alternative.is_remove:
+                variation = ResultAlternative(
+                    remove=True,
+                    context=alternative.label,
+                )
 
-            if alternative != " ":
-                alternative.lemma = alternative.lemma.strip()
+                cleaned_alternatives[alternative.lemma] = variation
+            else:
+                if alternative != " ":
+                    alternative.lemma = alternative.lemma.strip()
 
-            # requests for user input are not yet supported
-            # https://wittyworks.productboard.com/roadmap/3751070-browser-extension/features/13529555/detail
-            if "((" in alternative.lemma:
-                continue
-
-            if not alternative.is_remove:
                 if (
                     prefix
                     and not alternative.is_inspiration
-                    and not alternative.startswith(prefix)
+                    and not alternative.lemma.startswith(prefix)
                 ):
                     prefix = False
 
                 if category != "orthography":
-                    if is_upper and alternative:
+                    if is_upper and alternative.lemma:
                         alternative.lemma = (
                             string.capwords(alternative.lemma[0:1])
                             + alternative.lemma[1:]
@@ -719,23 +726,22 @@ class ResultOut(BaseModel):
                     if len(alternative.label):
                         alternative.label = "💡"
 
-            if "~" in alternative.lemma:
-                alternative_variations = ResultOut.getAlternativeVariations(
-                    config.gendered_roles_format,
-                    config.german_gender_ending,
-                    alternative,
-                )
+                if "~" in alternative.lemma:
+                    alternative_variations = ResultOut.getAlternativeVariations(
+                        config.gendered_roles_format,
+                        config.german_gender_ending,
+                        alternative,
+                    )
 
-                cleaned_alternatives.update(alternative_variations)
-            else:
-                variation = ResultAlternative(
-                    text=alternative.lemma,
-                    remove=True if alternative.is_remove else None,
-                    inspiration=True if alternative.is_inspiration else None,
-                    context=alternative.label,
-                )
+                    cleaned_alternatives.update(alternative_variations)
+                else:
+                    variation = ResultAlternative(
+                        text=alternative.lemma,
+                        inspiration=True if alternative.is_inspiration else None,
+                        context=alternative.label,
+                    )
 
-                cleaned_alternatives[alternative.lemma] = variation
+                    cleaned_alternatives[alternative.lemma] = variation
 
             if (
                 alternatives_max_count is not None
@@ -764,7 +770,7 @@ class ResultOut(BaseModel):
 
                 cleaned_alternative.text = cleaned_alternative.text[prefix_length:]
 
-        return text, start, cleaned_alternatives, explanation_context
+        return text, start, cleaned_alternatives
 
     @staticmethod
     def isUpper(text, full_text, start, category, lang):

@@ -3,37 +3,21 @@
     "limit_reached": false,
     "results": [
         {
-            "alternatives": [
-                {
-                    "text": "Cordially"
-                },
-                {
-                    "text": "Thank you for reading"
-                },
-                {
-                    "text": "Sending you the best"
-                },
-                {
-                    "text": "Take care"
-                },
-                {
-                    "text": "With appreciation"
-                }
-            ],
-            "category": "acquired-diversity",
+            "alternatives": [],
+            "category": "social-motive",
             "context": "Kind regards from London",
-            "end": 12,
+            "end": 4,
             "explanation": {
-                "icon": "🧊",
-                "text": "Weniger Förmlichkeit schafft mehr emotionale Nähe",
-                "url": "https://www.witty.works/en/categories/acquired-diversity/formality?reducedView=true"
+                "content": "video",
+                "icon": "✅",
+                "text": "Strengthens collaboration and a sense of community",
+                "url": "https://www.witty.works/en/categories/social-motive/communal-language?reducedView=true"
             },
-            "gravity": 3.0,
-            "label": "Acquired Diversity: Formality",
-            "proficiency_level": "unconscious_bias",
+            "label": "Social Motive: Communal language",
+            "proficiency_level": "inclusive",
             "start": 0,
-            "subcategory": "advanced_formality",
-            "text": "Kind regards"
+            "subcategory": "communal",
+            "text": "Kind"
         }
     ]
 }

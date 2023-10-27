@@ -1,7 +1,7 @@
 {
     "config": {
         "categories": {
-            "advanced_plain_language": {
+            "plain_language_advanced": {
                 "status": "force",
                 "value": false
             }

@@ -4,7 +4,7 @@ from german_nouns.lookup import Nouns
 from app.models import LangWithAutoType, Rule
 
 
-def fetch_rules(model):
+def fetch_rules(langs):
     files = {
         "de": {
             # load articles for gendered denom
@@ -286,26 +286,26 @@ def fetch_rules(model):
                     "pregnant_woman",
                 ],
             },
-            "advanced_person": {
+            "person_advanced": {
                 "skin_tone": True,
                 "subcategory": {
-                    "advanced_hearing": [
+                    "hearing_advanced": [
                         "deaf_person",
                     ],
-                    "advanced_belief": [
+                    "belief_advanced": [
                         "woman_with_headscarf",
                         "man_with_turban",
                     ],
-                    "advanced_vision": [
+                    "vision_advanced": [
                         "person_with_white_cane",
                     ],
-                    "advanced_ability": [
+                    "ability_advanced": [
                         "person_in_manual_wheelchair",
                     ],
-                    "advanced_age_old": [
+                    "age_old_advanced": [
                         "older_person",
                     ],
-                    "advanced_age_young": [
+                    "age_young_advanced": [
                         "child",
                     ],
                 },
@@ -320,8 +320,6 @@ def fetch_rules(model):
         "de": [LangWithAutoType.DE],
         "en": [LangWithAutoType.enUS, LangWithAutoType.enGB],
     }
-
-    langs = model.keys()
 
     data = {}
     for lang in langs:
@@ -413,8 +411,6 @@ def fetch_rules(model):
         }
 
         # dictionaries to handle false positives
-        rules["de"]["false_positives"] = ["international"]
-
         rules["de"]["exceptions"] = [
             "Unternehmen",
             "Firma",
@@ -984,8 +980,6 @@ def fetch_rules(model):
             "brilliant",
             "retard",
         ]
-
-        rules["en"]["false_positives"] = []
 
         rule = Rule(
             "#foobar",

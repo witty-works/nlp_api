@@ -45,15 +45,15 @@ def get_proficiency_levels():
 
 
 def is_advanced_category(category):
-    return category.startswith("advanced_")
+    return category.endswith("_advanced")
 
 
 def add_advanced(category):
-    return "advanced_" + category
+    return category + "_advanced"
 
 
 def get_category_name(category):
-    return category.removeprefix("advanced_")
+    return category.removesuffix("_advanced")
 
 
 def get_category(category):

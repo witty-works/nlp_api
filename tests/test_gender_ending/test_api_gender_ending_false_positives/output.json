@@ -20,7 +20,7 @@
             "label": "Geschlecht + Orientierung: Inklusive Endung",
             "proficiency_level": "unconscious_bias",
             "start": 85,
-            "subcategory": "advanced_gendered_denominations_ending",
+            "subcategory": "gendered_denominations_ending_advanced",
             "text": "/in"
         },
         {
@@ -51,19 +51,19 @@
         {
             "alternatives": [
                 {
-                    "text": "Mitarbeitende"
-                },
-                {
                     "text": "Mitarbeiter*innen"
                 },
                 {
                     "text": "Mitarbeiterinnen und Mitarbeiter"
                 },
                 {
-                    "text": "Personal"
+                    "text": "*Personal"
                 },
                 {
-                    "text": "Mitarbeiterschaft"
+                    "text": "/Personal"
+                },
+                {
+                    "text": "*Mitarbeiterschaft"
                 }
             ],
             "category": "gender-orientation",
@@ -84,6 +84,9 @@
         },
         {
             "alternatives": [
+                {
+                    "text": "Lagerfachkraft"
+                },
                 {
                     "text": "Lagerarbeiter*innen"
                 },
@@ -114,15 +117,6 @@
                 },
                 {
                     "text": "Mitarbeiterin/Mitarbeiter"
-                },
-                {
-                    "text": "Personal"
-                },
-                {
-                    "text": "Mitarbeiterschaft"
-                },
-                {
-                    "text": "Belegschaft"
                 }
             ],
             "category": "gender-orientation",

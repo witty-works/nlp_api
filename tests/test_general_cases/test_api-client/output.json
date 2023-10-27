@@ -5,18 +5,12 @@
         {
             "alternatives": [
                 {
-                    "context": "💡",
-                    "inspiration": true,
                     "text": "jemand, der erfahren und fachkundig ist"
                 },
                 {
-                    "context": "💡",
-                    "inspiration": true,
                     "text": "Person, die ihr Know-how und ihre Erfahrung kreativ einsetzt"
                 },
                 {
-                    "context": "💡",
-                    "inspiration": true,
                     "text": "Mensch, der seine Fachkenntnis ständig vertieft"
                 }
             ],
@@ -29,23 +23,26 @@
                 "text": "Überzogene Aussagen wirken weniger vertrauenswürdig",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/übertreibung"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Soziale Motivation: Übertreibung",
             "proficiency_level": "unconscious_bias",
             "start": 11,
-            "subcategory": "exaggerating",
+            "subcategory": "exaggerating_advanced",
             "text": "Ninja"
         },
         {
             "alternatives": [
                 {
-                    "text": "Programmierende"
-                },
-                {
                     "text": "Programmierer*innen"
                 },
                 {
                     "text": "Programmiererinnen und Programmierer"
+                },
+                {
+                    "text": "*Programmprogrammprogrammierende"
+                },
+                {
+                    "text": "/Programmprogrammprogrammierende"
                 }
             ],
             "category": "gender-orientation",
@@ -67,10 +64,10 @@
         {
             "alternatives": [
                 {
-                    "text": "Auftraggebende"
+                    "text": "beziehende Person"
                 },
                 {
-                    "text": "Bestellende"
+                    "text": "beauftragende Firma"
                 },
                 {
                     "text": "Kund*innen"
@@ -137,7 +134,7 @@
             "label": "Geschlecht + Orientierung: Sexismus",
             "proficiency_level": "openly_discriminating",
             "start": 77,
-            "subcategory": "advanced_sexism",
+            "subcategory": "sexism",
             "text": "Luder"
         }
     ]

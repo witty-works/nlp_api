@@ -5,24 +5,20 @@
         {
             "alternatives": [
                 {
+                    "text": "Man Firefighter"
+                },
+                {
                     "context": "Woman Firefighter",
                     "text": "👩‍🚒"
                 },
                 {
-                    "context": "Woman Firefighter Dark Skin Tone",
                     "text": "👩🏿‍🚒"
                 },
                 {
-                    "context": "Woman Firefighter Medium Skin Tone",
                     "text": "👩🏽‍🚒"
                 },
                 {
-                    "context": "Woman Firefighter Medium-Dark Skin Tone",
                     "text": "👩🏾‍🚒"
-                },
-                {
-                    "context": "Woman Firefighter Medium-Light Skin Tone",
-                    "text": "👩🏼‍🚒"
                 }
             ],
             "category": "gender-orientation",
@@ -30,7 +26,6 @@
             "end": 5,
             "explanation": {
                 "content": "advanced",
-                "context": "Man Firefighter",
                 "icon": "😒",
                 "text": "Impacts the visibility of marginalized genders",
                 "url": "https://www.witty.works/en/categories/gender-orientation/gender-binary?reducedView=true"
@@ -45,19 +40,18 @@
         {
             "alternatives": [
                 {
-                    "context": "Woman Firefighter Dark Skin Tone",
+                    "text": "Woman Firefighter"
+                },
+                {
                     "text": "👩🏿‍🚒"
                 },
                 {
-                    "context": "Woman Firefighter Medium Skin Tone",
                     "text": "👩🏽‍🚒"
                 },
                 {
-                    "context": "Woman Firefighter Medium-Dark Skin Tone",
                     "text": "👩🏾‍🚒"
                 },
                 {
-                    "context": "Woman Firefighter Medium-Light Skin Tone",
                     "text": "👩🏼‍🚒"
                 }
             ],
@@ -66,7 +60,6 @@
             "end": 11,
             "explanation": {
                 "content": "advanced",
-                "context": "Woman Firefighter",
                 "icon": "😒",
                 "text": "Impacts the visibility of marginalized genders",
                 "url": "https://www.witty.works/en/categories/gender-orientation/gender-binary?reducedView=true"
@@ -81,24 +74,20 @@
         {
             "alternatives": [
                 {
+                    "text": "Man Firefighter Light Skin Tone"
+                },
+                {
                     "context": "Woman Firefighter",
                     "text": "👩‍🚒"
                 },
                 {
-                    "context": "Woman Firefighter Dark Skin Tone",
                     "text": "👩🏿‍🚒"
                 },
                 {
-                    "context": "Woman Firefighter Medium Skin Tone",
                     "text": "👩🏽‍🚒"
                 },
                 {
-                    "context": "Woman Firefighter Medium-Dark Skin Tone",
                     "text": "👩🏾‍🚒"
-                },
-                {
-                    "context": "Woman Firefighter Medium-Light Skin Tone",
-                    "text": "👩🏼‍🚒"
                 }
             ],
             "category": "gender-orientation",
@@ -106,7 +95,6 @@
             "end": 19,
             "explanation": {
                 "content": "advanced",
-                "context": "Man Firefighter Light Skin Tone",
                 "icon": "😒",
                 "text": "Impacts the visibility of marginalized genders",
                 "url": "https://www.witty.works/en/categories/gender-orientation/gender-binary?reducedView=true"
@@ -121,6 +109,9 @@
         {
             "alternatives": [
                 {
+                    "text": "Man Firefighter Medium Skin Tone"
+                },
+                {
                     "context": "Woman Firefighter Medium Skin Tone",
                     "text": "👩🏽‍🚒"
                 }
@@ -130,7 +121,6 @@
             "end": 35,
             "explanation": {
                 "content": "advanced",
-                "context": "Man Firefighter Medium Skin Tone",
                 "icon": "😒",
                 "text": "Impacts the visibility of marginalized genders",
                 "url": "https://www.witty.works/en/categories/gender-orientation/gender-binary?reducedView=true"
@@ -144,6 +134,9 @@
         },
         {
             "alternatives": [
+                {
+                    "text": "French Fries"
+                },
                 {
                     "context": "Green Salad",
                     "text": "🥗"
@@ -159,17 +152,12 @@
                 {
                     "context": "Bento Box",
                     "text": "🍱"
-                },
-                {
-                    "context": "Curry Rice",
-                    "text": "🍛"
                 }
             ],
             "category": "cultural-diversity",
             "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Everything is fine.",
             "end": 41,
             "explanation": {
-                "context": "French Fries",
                 "icon": "😒",
                 "text": "Suggests an idea of a person's culture defines their identity",
                 "url": "https://www.witty.works/en/categories/cultural-diversity/cultural-stereotype?reducedView=true"
@@ -183,6 +171,9 @@
         },
         {
             "alternatives": [
+                {
+                    "text": "Ok Hand Light Skin Tone"
+                },
                 {
                     "context": "Ok Hand",
                     "text": "👌"
@@ -198,17 +189,12 @@
                 {
                     "context": "Ok Hand Medium-Dark Skin Tone",
                     "text": "👌🏾"
-                },
-                {
-                    "context": "Ok Hand Medium-Light Skin Tone",
-                    "text": "👌🏼"
                 }
             ],
             "category": "cultural-diversity",
             "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Everything is fine.",
             "end": 46,
             "explanation": {
-                "context": "Ok Hand Light Skin Tone",
                 "icon": "😒",
                 "text": "Suggests an idea of a person's culture defines their identity",
                 "url": "https://www.witty.works/en/categories/cultural-diversity/cultural-stereotype?reducedView=true"
@@ -222,6 +208,9 @@
         },
         {
             "alternatives": [
+                {
+                    "text": "Woman"
+                },
                 {
                     "context": "Person",
                     "text": "🧑"
@@ -237,10 +226,6 @@
                 {
                     "context": "Person Medium-Dark Skin Tone",
                     "text": "🧑🏾"
-                },
-                {
-                    "context": "Person Medium-Light Skin Tone",
-                    "text": "🧑🏼"
                 }
             ],
             "category": "gender-orientation",
@@ -248,7 +233,6 @@
             "end": 49,
             "explanation": {
                 "content": "advanced",
-                "context": "Woman",
                 "icon": "😒",
                 "text": "Impacts the visibility of marginalized genders",
                 "url": "https://www.witty.works/en/categories/gender-orientation/gender-binary?reducedView=true"
@@ -262,6 +246,9 @@
         },
         {
             "alternatives": [
+                {
+                    "text": "Woman And Man Holding Hands"
+                },
                 {
                     "context": "People Holding Hands",
                     "text": "🧑‍🤝‍🧑"
@@ -277,17 +264,12 @@
                 {
                     "context": "People Holding Hands Dark Skin Tone",
                     "text": "🧑🏿‍🤝‍🧑🏿"
-                },
-                {
-                    "context": "People Holding Hands Medium Skin Tone",
-                    "text": "🧑🏽‍🤝‍🧑🏽"
                 }
             ],
             "category": "gender-orientation",
             "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Everything is fine.",
             "end": 52,
             "explanation": {
-                "context": "Woman And Man Holding Hands",
                 "icon": "😒",
                 "text": "Promotes a heterosexual value system and roles",
                 "url": "https://www.witty.works/en/categories/gender-orientation/sexual-orientation?reducedView=true"
@@ -302,6 +284,9 @@
         {
             "alternatives": [
                 {
+                    "text": "Family Man Woman Girl"
+                },
+                {
                     "context": "Family Woman Woman Girl",
                     "text": "👩‍👩‍👧"
                 },
@@ -314,7 +299,6 @@
             "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Everything is fine.",
             "end": 61,
             "explanation": {
-                "context": "Family Man Woman Girl",
                 "icon": "😒",
                 "text": "Promotes a heterosexual value system and roles",
                 "url": "https://www.witty.works/en/categories/gender-orientation/sexual-orientation?reducedView=true"

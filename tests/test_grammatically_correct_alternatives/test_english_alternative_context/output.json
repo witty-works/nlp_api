@@ -6,12 +6,6 @@
             "alternatives": [
                 {
                     "text": "froze"
-                },
-                {
-                    "text": "stopped responded"
-                },
-                {
-                    "text": "became unresponsive"
                 }
             ],
             "category": "ability-physicality",
@@ -23,11 +17,11 @@
                 "text": "Repeats outdated ideas about mental health and wellbeing",
                 "url": "https://www.witty.works/en/categories/ability-physicality/mental-wellbeing?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Ability + Physicality: Mental wellbeing",
             "proficiency_level": "unconscious_bias",
             "start": 3,
-            "subcategory": "mental_wellbeing",
+            "subcategory": "mental_wellbeing_advanced",
             "text": "hanged"
         },
         {
@@ -39,7 +33,7 @@
                     "text": "interpretted"
                 },
                 {
-                    "text": "closely examined"
+                    "text": "closely examine"
                 }
             ],
             "category": "social-motive",
@@ -51,29 +45,29 @@
                 "text": "Doesn’t resonate with team-minded people",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Social Motive: Agentic language",
             "proficiency_level": "unconscious_bias",
             "start": 22,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "analyzed"
         },
         {
             "alternatives": [
                 {
-                    "text": "chair"
+                    "text": "they"
                 },
                 {
-                    "text": "chairperson"
+                    "text": "a chair"
                 },
                 {
-                    "text": "committee head"
+                    "text": "a chairperson"
                 },
                 {
-                    "text": "presiding officer"
+                    "text": "a coordinator"
                 },
                 {
-                    "text": "coordinator"
+                    "text": "a committee head"
                 }
             ],
             "category": "gender-orientation",
@@ -88,9 +82,9 @@
             "gravity": 2.0,
             "label": "Gender + Orientation: Generic masculine",
             "proficiency_level": "unconscious_bias",
-            "start": 56,
+            "start": 54,
             "subcategory": "function",
-            "text": "chairman"
+            "text": "a chairman"
         },
         {
             "alternatives": [
@@ -98,7 +92,13 @@
                     "text": "a substance user"
                 },
                 {
-                    "text": "substance users"
+                    "text": "a person with substance use disorder"
+                },
+                {
+                    "text": "someone physically or psychologically dependent on a substance"
+                },
+                {
+                    "text": "someone who display compulsive behavior"
                 }
             ],
             "category": "ability-physicality",
@@ -109,38 +109,28 @@
                 "text": "Frames authentic behavior as undesirable and other",
                 "url": "https://www.witty.works/en/categories/ability-physicality/behavior?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Ability + Physicality: Behavior",
             "proficiency_level": "unconscious_bias",
             "start": 68,
-            "subcategory": "behavior",
+            "subcategory": "behavior_advanced",
             "text": "an addict"
         },
         {
             "alternatives": [
                 {
-                    "context": "💡",
-                    "inspiration": true,
                     "text": "mentor at heart"
                 },
                 {
-                    "context": "💡",
-                    "inspiration": true,
                     "text": "inspiration to the team"
                 },
                 {
-                    "context": "💡",
-                    "inspiration": true,
                     "text": "entrepreneur at heart"
                 },
                 {
-                    "context": "💡",
-                    "inspiration": true,
                     "text": "someone with an entrepreneurial mindset"
                 },
                 {
-                    "context": "💡",
-                    "inspiration": true,
                     "text": "someone who thrives on working toward milestones"
                 }
             ],
@@ -153,29 +143,20 @@
                 "text": "Over-the-top statements make you sound less trustworthy",
                 "url": "https://www.witty.works/en/categories/social-motive/exaggeration?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Social Motive: Exaggeration",
             "proficiency_level": "unconscious_bias",
             "start": 89,
-            "subcategory": "exaggerating",
+            "subcategory": "exaggerating_advanced",
             "text": "top performer"
         },
         {
             "alternatives": [
                 {
-                    "text": "a shocking"
+                    "text": "a shock"
                 },
                 {
-                    "text": "a real surprise"
-                },
-                {
-                    "text": "an enlightening"
-                },
-                {
-                    "text": "a wake-up call"
-                },
-                {
-                    "text": "shocking news"
+                    "text": "a revelation"
                 }
             ],
             "category": "ability-physicality",
@@ -186,11 +167,11 @@
                 "text": "Repeats preconceived notions about the ability to see",
                 "url": "https://www.witty.works/en/categories/ability-physicality/vision?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Ability + Physicality: Vision",
             "proficiency_level": "unconscious_bias",
             "start": 112,
-            "subcategory": "vision",
+            "subcategory": "vision_advanced",
             "text": "an eye-opener"
         }
     ]

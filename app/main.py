@@ -82,6 +82,7 @@ from app.models import (
     RuleIn,
     Alternative,
     Rule,
+    RuleLabelEnum,
 )
 from app.lang_detection import get_lang_detection
 from app.categories import (
@@ -96,7 +97,6 @@ from app.redis_setup import set_up_redis
 from app.model import fetch_nlp_model
 from app.rules import fetch_rules
 from app.sentry import set_up_sentry_sdk
-from app.model import lemma_plural_lookup
 
 version = "1.50.1"
 
@@ -108,14 +108,8 @@ redis = set_up_redis(settings)
 
 logging.debug("app started with settings: %s", settings)
 
-model = {}
-for spacy_model in settings.models:
-    lang = spacy_model[0:2]
-    model[lang] = fetch_nlp_model(lang, spacy_model)
-
-rules = fetch_rules(model)
 source = sqlite3.connect("./database/db.sqlite3")
-rules_db = sqlite3.connect(":memory:")
+rules_db = sqlite3.connect(":memory:", check_same_thread=False)
 source.backup(rules_db)
 source.close()
 
@@ -125,8 +119,10 @@ rule_columns = {
     "lemma": 1,
     "language": 2,
     "lemma_json": 3,
-    "word_types_json": 4,
-    "diversity_dimension_json": 5,
+    "label": 4,
+    "label_type": 5,
+    "word_types_json": 6,
+    "diversity_dimension_json": 7,
 }
 alternative_columns = {
     "lemma": 0,
@@ -137,6 +133,27 @@ alternative_columns = {
     "is_advanced": 5,
     "label": 6,
 }
+
+model = {}
+lemma_plural_lookup = {}
+langs = []
+for spacy_model in settings.models:
+    lang = spacy_model[0:2]
+    langs.append(lang)
+    query = f"SELECT text, lemma, is_plural FROM rules_lemmatization WHERE language = ?"
+    parameters = [lang]
+    lookup = {}
+    lemma_plural_lookup[lang] = {}
+    for row in rules_cursor.execute(query, parameters):
+        lookup[row[0]] = row[1]
+        if row[2]:
+            lemma_plural_lookup[lang][row[0]] = row[1]
+
+    model[lang] = fetch_nlp_model(lang, spacy_model, lookup)
+    lookup = None
+
+rules = fetch_rules(langs)
+
 
 # https://www.notion.so/witty-works/Rule-Guidelines-432792da944141b1b4d0a01de290aa43#aac0d966bfeb4e33a5a346bba45d5ea8
 supported_word_types = {"n", "a", "adv", "v", "conj"}
@@ -496,7 +513,7 @@ def get_german_gender_ending(
             ResultOut.getAlternativeVariations(
                 GenderedRolesFormatType.BINARY_GENDER,
                 german_gender_ending,
-                alternative,
+                Alternative(alternative),
             )
         )
     else:
@@ -512,7 +529,7 @@ def get_german_gender_ending(
                 ResultOut.getAlternativeVariations(
                     GenderedRolesFormatType.BOTH,
                     german_gender_ending,
-                    alternative,
+                    Alternative(alternative),
                 )
             )
 
@@ -670,6 +687,7 @@ async def post_debug_rule(
             alternative.pluralization = alternative_in.pluralization
             alternative.is_inspiration = alternative_in.is_inspiration
             alternative.is_advanced = alternative_in.is_advanced
+            alternative.is_remove = alternative_in.is_remove
 
             alternative_list.append(alternative)
     else:
@@ -688,6 +706,7 @@ async def post_debug_rule(
 
         rule.alternatives = alternative_list
         rule.false_positives = rule_data.false_positives
+        rule.label = rule_data.label
 
         rules.append(rule)
 
@@ -1069,6 +1088,10 @@ def apply_configs(
                 if category_data["status"] != "force":
                     continue
 
+                # BC handling for old category names -> needs to be fixed in the dashboard
+                if category.startswith("advanced_"):
+                    category = category.removeprefix("advanced_") + "_advanced"
+
                 if category_data["value"]:
                     if category in disabled_categories:
                         disabled_categories.remove(category)
@@ -1102,7 +1125,7 @@ async def fetch_configs_for_request(
         # debug
         if version is None:
             user_request_in.config.__setattr__(
-                "disabled_categories", ["advanced_plain_language"]
+                "disabled_categories", ["plain_language_advanced"]
             )
         else:
             user_request_in.config.__setattr__(
@@ -1385,7 +1408,7 @@ def fetch_alternatives(match):
         for replacement in match["replacements"]:
             value = replacement["value"]
             value = value if value != "" else "-"
-            alternatives.append(value)
+            alternatives.append(Alternative(value))
 
     return alternatives
 
@@ -1519,7 +1542,7 @@ def languagetool_matches(
             elif subcategory in lt_style_categories:
                 subcategory = "style"
             elif subcategory == "PLAIN_ENGLISH":
-                subcategory = "advanced_plain_language"
+                subcategory = "plain_language_advanced"
             elif subcategory == "DIFFICULT_WORDS":
                 if match["rule"]["id"] == "ABKUERZUNG":
                     subcategory = "abbreviation"
@@ -1527,11 +1550,11 @@ def languagetool_matches(
                     match["rule"]["id"] == "ANGLIZISMEN"
                     or "Fremdwörter" in match["message"]
                 ):
-                    subcategory = "advanced_anglicism"
+                    subcategory = "anglicism_advanced"
                 else:
                     subcategory = "plain_language"
             elif match["rule"]["category"]["name"] == "Leichte Sprache":
-                subcategory = "advanced_plain_language"
+                subcategory = "plain_language_advanced"
             else:
                 subcategory = subcategory.lower()
                 if subcategory == "style":
@@ -1661,7 +1684,7 @@ async def apply_languagetool_rules(
         ],
     }
 
-    if is_sub_category_enabled(config, "advanced_plain_language"):
+    if is_sub_category_enabled(config, "plain_language_advanced"):
         if payload["language"] == "de-DE":
             payload["language"] += "-x-simple-language"
 
@@ -1865,11 +1888,12 @@ def fetch_term_replacements(
         )
 
         words = tokenize(lemma, lang)
-        word_types = tuple([word_type] * len(words))
+        word_type, lower_case, lemmatize = parse_word_type(word_type)
+        word_types = tuple(
+            [{"word_type": word_type, "lower_case": lower_case, "lemmatize": lemmatize}]
+            * len(words)
+        )
         all_alternatives += term_replacement["alternatives"]
-        alternatives = []
-        for alternative in term_replacement["alternatives"]:
-            alternatives.append(Alternative(alternative))
 
         rule = Rule(
             lemma,
@@ -1878,7 +1902,7 @@ def fetch_term_replacements(
             words,
             word_types,
             "corporate_rules",
-            alternatives,
+            term_replacement["alternatives"],
         )
 
         if term_replacement["explanation"] is not None:
@@ -2006,7 +2030,7 @@ def check_continue(i, new_i, tokens):
     return True
 
 
-def fetch_word_rules(token):
+def fetch_word_rules(lang: Language, token):
     column_list = ", ".join(rule_columns.keys())
 
     token_lower = token.text.lower()
@@ -2030,26 +2054,24 @@ def fetch_word_rules(token):
         else:
             filters = {
                 "(first_token = ? and first_is_word_type_lemmatize = 0 and first_is_word_type_lower_case = 1)": token_lower,
-                "(first_token = ? and first_is_word_type_lower_case = 0 and first_is_word_type_lower_case = 0)": token.text,
+                "(first_token = ? and first_is_word_type_lemmatize = 0 and first_is_word_type_lower_case = 0)": token.text,
             }
 
-        if token.text == token_lower:
+        if token.lemma_ == lemma_lower:
             filters[
-                "(first_token = ? and first_is_word_type_lemmatize = 0)"
-            ] = token.text
+                "(first_token = ? and first_is_word_type_lemmatize = 1)"
+            ] = token.lemma_
         else:
             filters[
-                "(first_token = ? and first_is_word_type_lemmatize = 0 and first_is_word_type_lower_case = 1)"
+                "(first_token = ? and first_is_word_type_lemmatize = 1 and first_is_word_type_lower_case = 1)"
             ] = lemma_lower
             filters[
-                "(first_token = ? and first_is_word_type_lower_case = 0 and first_is_word_type_lower_case = 0)"
+                "(first_token = ? and first_is_word_type_lemmatize = 1 and first_is_word_type_lower_case = 0)"
             ] = token.lemma_
 
     filter_list = " OR ".join(filters.keys())
-    query = (
-        f"SELECT {column_list} FROM rules_rule WHERE is_active = 1 and {filter_list}"
-    )
-    parameters = list(filters.values())
+    query = f"SELECT {column_list} FROM rules_rule WHERE is_active = 1 and language = ? and {filter_list} ORDER BY LENGTH(lemma) DESC, first_is_word_type_lemmatize ASC"
+    parameters = [lang.lang] + list(filters.values())
 
     return rules_cursor.execute(query, parameters)
 
@@ -2059,7 +2081,8 @@ def fetch_rule_alternatives(rule: Rule, is_singular: bool) -> list[Alternative]:
         return rule.alternatives
 
     column_list = ", ".join(alternative_columns.keys())
-    query = f"SELECT {column_list} FROM rules_alternative WHERE is_active = 1 and rule_id = ?"
+    # https://wittyworks.productboard.com/roadmap/3751070-browser-extension/features/13529555/detail
+    query = f"SELECT {column_list} FROM rules_alternative WHERE is_active = 1 and is_placeholder = 0 and rule_id = ?"
     parameters = [rule.name]
     if is_singular is not None:
         query += " and pluralization != ?"
@@ -2067,12 +2090,27 @@ def fetch_rule_alternatives(rule: Rule, is_singular: bool) -> list[Alternative]:
 
     alternatives = []
     for row in rules_cursor.execute(query + " ORDER BY 'order' ASC", parameters):
+        lemma = row[alternative_columns["lemma"]]
+        # remove until we can properly handle this in the UI
+        # https://www.notion.so/witty-works/Rule-Guidelines-432792da944141b1b4d0a01de290aa43#9ab16aeb0c19416ca0b72fde152b5d86
+        if "^" in lemma:
+            continue
+
+        is_remove = row[alternative_columns["is_remove"]]
+        if is_remove:
+            lemma = None
+            lemma_json = ()
+            word_types_json = ()
+        else:
+            lemma_json = json.loads(row[alternative_columns["lemma_json"]])
+            word_types_json = json.loads(row[alternative_columns["word_types_json"]])
+
         alternative = Alternative(
-            row[alternative_columns["lemma"]],
-            json.loads(row[alternative_columns["lemma_json"]]),
-            json.loads(row[alternative_columns["word_types_json"]]),
+            lemma,
+            lemma_json,
+            word_types_json,
         )
-        alternative.is_remove = row[alternative_columns["is_remove"]]
+        alternative.is_remove = is_remove
         alternative.is_inspiration = row[alternative_columns["is_inspiration"]]
         alternative.is_advanced = row[alternative_columns["is_advanced"]]
         alternative.label = row[alternative_columns["label"]]
@@ -2088,6 +2126,20 @@ def is_valid_text(text):
         text = text.replace(char, "")
 
     return text.isalpha()
+
+
+def fetch_false_positives(rule: Rule) -> list[str]:
+    if len(rule.false_positives):
+        return list(rule.false_positives)
+
+    query = f"SELECT false_positive FROM rules_falsepositive WHERE rule_id = ?"
+    parameters = [rule.name]
+
+    false_positives = []
+    for row in rules_cursor.execute(query, parameters):
+        false_positives.append(row[0])
+
+    return false_positives
 
 
 async def german_rules(
@@ -2222,7 +2274,7 @@ async def german_rules(
             if check_continue(i, new_i, tokens):
                 continue
 
-        subcategory = "advanced_gendered_denominations_ending"
+        subcategory = "gendered_denominations_ending_advanced"
         if is_sub_category_enabled(
             config, subcategory
         ) and ResultOut.genderedRolesFormatInclusive(config.gendered_roles_format):
@@ -2238,7 +2290,7 @@ async def german_rules(
                     None,
                     config._gendereddenom_ending_word_type[key],
                     subcategory,
-                    (Alternative(config.german_gender_ending),),
+                    (config.german_gender_ending,),
                 )
 
                 endings.append(ending)
@@ -2325,6 +2377,7 @@ async def german_rules(
             offsets,
             list_full,
             fetch_word_rules(
+                lang,
                 token,
             ),
         )
@@ -2451,6 +2504,7 @@ async def english_rules(
             offsets,
             list_full,
             fetch_word_rules(
+                lang,
                 token,
             ),
             false_positive_matcher,
@@ -3052,9 +3106,9 @@ def alternative_declension(
     lang, text, token, word_type, prepend_word, alternative: Alternative
 ):
     if (
-        len(alternative.lemma) == 0
-        or alternative.is_remove
+        alternative.is_remove
         or alternative.is_inspiration
+        or len(alternative.lemma) == 0
         or "~" in alternative.lemma
     ):
         return alternative
@@ -3142,8 +3196,6 @@ def alternatives_declension(lang, text, i, tokens, alternatives):
         return text, start, alternatives
 
     word_type = fetch_word_type(lang, token)
-    if word_type == "":
-        return text, start, alternatives
 
     prepend_word = False
     prev_token = None if i == 0 else tokens[i - 1]
@@ -3205,7 +3257,9 @@ def match_binary_inclusive_gendered_denom_analysis_de(
         if alternative.lemma[0] == "~":
             alternative.lemma = alternative.lemma[1:]
             if prefix:
-                alternative.lemma = prefix + alternative.lemma[0].lower() + alternative.lemma[1:]
+                alternative.lemma = (
+                    prefix + alternative.lemma[0].lower() + alternative.lemma[1:]
+                )
         elif "~" in alternative.lemma:
             if prefix:
                 alternative.lemma = alternative.lemma.replace(
@@ -3213,10 +3267,16 @@ def match_binary_inclusive_gendered_denom_analysis_de(
                 )
                 if rule.lemma[0] == "A":
                     lemma = "Ä" + rule.lemma[1:]
-                    alternative.lemma = alternative.lemma.replace(lemma, prefix + lemma.lower())
+                    alternative.lemma = alternative.lemma.replace(
+                        lemma, prefix + lemma.lower()
+                    )
 
             # handle "eines Mitarbeiters" => "Mitarbeiterin/Mitarbeiters"
-            if is_singular and text[-1] == "s" and alternative.lemma.startswith(text[:-1]):
+            if (
+                is_singular
+                and text[-1] == "s"
+                and alternative.lemma.startswith(text[:-1])
+            ):
                 alternative.lemma += "s"
             # handle "Partnern" => "Partnerinnen und Partnern"
             elif (
@@ -3227,14 +3287,17 @@ def match_binary_inclusive_gendered_denom_analysis_de(
                 alternative.lemma += "n"
 
         if binary or (
-            "frau" not in alternative.lemma.lower() and "mann" not in alternative.lemma.lower()
+            "frau" not in alternative.lemma.lower()
+            and "mann" not in alternative.lemma.lower()
         ):
             new_alternatives.append(alternative)
 
         if "~" not in alternative.lemma:
             continue
 
-        generated_alternative = ResultOut.getGenderedRolesFormatBinary(alternative.lemma)
+        generated_alternative = ResultOut.getGenderedRolesFormatBinary(
+            alternative.lemma
+        )
         generated_alternative = generated_alternative.removesuffix(text)
 
         if (
@@ -3315,7 +3378,7 @@ def fetch_alternatives_with_article(tokens, i, alternatives: list[Alternative]):
 
     alternatives_with_article = []
     for alternative in alternatives:
-        if "~" in alternative:
+        if "~" in alternative.lemma:
             article_alternative = (
                 match_alternative if match_alternative else article_text
             )
@@ -3344,7 +3407,7 @@ def fetch_alternatives_with_article(tokens, i, alternatives: list[Alternative]):
 
         if article_alternative != "":
             article_alternative += tokens[i - 1].whitespace_
-            alternative.lemma = article_alternative + alternative
+            alternative.lemma = article_alternative + alternative.lemma
 
         alternatives_with_article.append(alternative)
 
@@ -3487,11 +3550,13 @@ def regex_match(
                     continue
 
                 alternatives = [
-                    text.replace(connector_string, config.german_gender_ending[0])
+                    Alternative(
+                        text.replace(connector_string, config.german_gender_ending[0])
+                    )
                 ]
             # Kundinnen -> Kund*innen
             elif "innen" in text:
-                alternatives = [alternatives[0] + "nen"]
+                alternatives = [Alternative(alternatives[0].lemma + "nen")]
         elif rule.subcategory == "gender_specific_abbreviation":
             parenthesis = (
                 i > 0
@@ -3541,47 +3606,57 @@ def regex_match(
                 text = f"({text})"
                 alternative = f"({alternative})"
 
-            context_v = "--- include veterans"
+            context_v = "include veterans"
             match lang.lang:
                 case "de":
-                    context_d = "--- Divers (EU) / m. Behinderung (NA)"
-                    context_remove = "--- Nutze geschlechtsneutrale Job-Titel"
+                    context_d = "Divers (EU) / m. Behinderung (NA)"
+                    context_remove = "Nutze geschlechtsneutrale Job-Titel"
                     explanation = "Nenne unterrepräsentierte Gruppen zuerst. Verlinke auf deine Leitlinie zur Gleichstellung."
                 case "en":
-                    context_d = "--- disabled (NA) / diverse (EU)"
-                    context_remove = "--- Use gender neutral job title"
+                    context_d = "disabled (NA) / diverse (EU)"
+                    context_remove = "Use gender neutral job title"
                     explanation = "Put underrepresented groups first and link to your equal opportunity policy"
 
             alternative_3 = None
-            if "*" in alternative:
-                alternative_2 = alternative.replace("*", diverse_letter)
+            alternative = Alternative(alternative)
+            if "*" in alternative.lemma:
+                alternative_2 = alternative.lemma.replace("*", diverse_letter)
                 alternative_v = alternative_2
-                alternative_2 += context_d
+                alternative_2 = Alternative(alternative_2)
+                alternative_2.label = context_d
                 if not without_x:
-                    alternative_3 = alternative.replace("*", x_letter)
+                    alternative_3 = alternative.lemma.replace("*", x_letter)
+                    alternative_3 = Alternative(alternative_3)
             else:
-                alternative_2 = alternative.replace(diverse_letter, "*")
-                alternative_v = alternative
+                alternative_2 = alternative.lemma.replace(diverse_letter, "*")
+                alternative_2 = Alternative(alternative_2)
+                alternative_v = alternative.lemma
                 if not without_x:
-                    alternative_3 = alternative.replace(diverse_letter, x_letter)
-                alternative += context_d
+                    alternative_3 = alternative.lemma.replace(diverse_letter, x_letter)
+                    alternative_3 = Alternative(alternative_3)
+
+                alternative.label = context_d
 
             if lang.lang == "en":
                 alternative_v = alternative_v.replace(
                     diverse_letter, diverse_letter + "/" + veteran_letter
                 )
+                alternative_v = Alternative(alternative_v)
 
                 if without_v is False:
-                    alternative = alternative_v + context_d
+                    alternative.label = context_d
                 else:
-                    alternative_v += context_v
+                    alternative_v.label = context_v
 
-            alternatives = ["- " + context_remove, alternative]
+            remove_alternative = Alternative("-")
+            remove_alternative.is_remove = True
+            remove_alternative.label = context_remove
+            alternatives = [remove_alternative, alternative]
 
             if lang.lang == "en" and without_v:
                 alternatives.append(alternative_v)
 
-            if lang.lang == "de" or "*" in alternative:
+            if lang.lang == "de" or "*" in alternative.lemma:
                 alternatives.append(alternative_2)
 
             if alternative_3 is not None:
@@ -3615,15 +3690,48 @@ def regex_match(
 
 
 def is_false_positive(full_text, token, rule):
-    if rule.false_positives is None or len(rule.false_positives) == 0:
-        return False
-
     partial_text = full_text[token.idx :]
-    for false_positive in rule.false_positives:
+    for false_positive in fetch_false_positives(rule):
         if partial_text.startswith(false_positive):
             return True
 
     return False
+
+
+def map_rule_label_type(lang, label_type):
+    label_types = {
+        "de": {
+            RuleLabelEnum.BE_SPECIFIC: "Describe the specific concern",
+            RuleLabelEnum.NOT_FOR_PEOPLE: "Don't use this word for people",
+            RuleLabelEnum.NAME_DISABILITY: "Name the disability or condition",
+            RuleLabelEnum.ONLY_IF_GENDER_IDENTITY_RELEVANT: "Only if gender identity is relevant",
+            RuleLabelEnum.NOT_FOR_NON_COMBAT: "Don't use in a non-combat context",
+            RuleLabelEnum.ASK_FOR_PREFERENCE: "Only if preference explicitly stated",
+            RuleLabelEnum.ONLY_WHEN_REFERENCING_RELIGIOUS_PRACTICE: "Only use in reference to religious practice",
+            RuleLabelEnum.USE_IN_TECH_ONLY: "Use in programming only",
+            RuleLabelEnum.DONT_USE_TO_DESCRIBE_QUALITY: "Don't use to describe value or quality",
+            RuleLabelEnum.DONT_USE_FOR_SUBSTANCE_USE: "Don't use in the context of substance use",
+            RuleLabelEnum.ASK_ABOUT_TRADITIONS: "Ask about their traditions, if possible",
+        },
+        "en": {
+            RuleLabelEnum.BE_SPECIFIC: "Describe the specific concern",
+            RuleLabelEnum.NOT_FOR_PEOPLE: "Don't use this word for people",
+            RuleLabelEnum.NAME_DISABILITY: "Name the disability or condition",
+            RuleLabelEnum.ONLY_IF_GENDER_IDENTITY_RELEVANT: "Only if gender identity is relevant",
+            RuleLabelEnum.NOT_FOR_NON_COMBAT: "Don't use in a non-combat context",
+            RuleLabelEnum.ASK_FOR_PREFERENCE: "Only if preference explicitly stated",
+            RuleLabelEnum.ONLY_WHEN_REFERENCING_RELIGIOUS_PRACTICE: "Only use in reference to religious practice",
+            RuleLabelEnum.USE_IN_TECH_ONLY: "Use in programming only",
+            RuleLabelEnum.DONT_USE_TO_DESCRIBE_QUALITY: "Don't use to describe value or quality",
+            RuleLabelEnum.DONT_USE_FOR_SUBSTANCE_USE: "Don't use in the context of substance use",
+            RuleLabelEnum.ASK_ABOUT_TRADITIONS: "Ask about their traditions, if possible",
+        },
+    }
+
+    if label_type not in label_types[lang]:
+        return None
+
+    return label_types[lang][label_type]
 
 
 def rule_check(
@@ -3642,12 +3750,6 @@ def rule_check(
     if not is_valid_text(token.text):
         return i
 
-    # check if the user query have false positives
-    if token.lemma_ in rules[lang.lang]["false_positives"]:
-        # recognise if there is Name of organisation or geographical name in the query
-        if len(tokens.ents) > 0:
-            return i
-
     if token.lemma_ == "aber" and lang.lang == "de":
         preceeding_text = full_text[max(0, token.idx - 5) : token.idx]
         if (
@@ -3662,6 +3764,12 @@ def rule_check(
             if len(subcategories) == 0:
                 continue
 
+            label = (
+                rule[rule_columns["label"]]
+                if rule[rule_columns["label_type"]] == "default"
+                else map_rule_label_type(lang.lang, rule[rule_columns["label_type"]])
+            )
+
             rule = Rule(
                 rule[rule_columns["id"]],
                 rule[rule_columns["language"]],
@@ -3670,6 +3778,8 @@ def rule_check(
                 json.loads(rule[rule_columns["word_types_json"]]),
                 subcategories[0],
             )
+
+            rule.label = label
 
         subcategory = rule.subcategory
         if rule.is_advanced:
@@ -3821,9 +3931,9 @@ def rule_check(
                 break
 
             alternatives = fetch_rule_alternatives(rule, is_singular)
-            if len(alternatives) == 0 and is_singular:
+            if len(alternatives) > 0:
                 # TODO make it possible to handle cases with multiple alternatives
-                if len(alternatives) == 1 and alternatives[0] == "they":
+                if len(alternatives) == 1 and alternatives[0].lemma == "they":
                     text, alternative = pluralize_they(text, tokens, i)
                     alternatives = [Alternative(alternative)]
                 elif rule.lemma.count(" ") == 0:
@@ -3856,6 +3966,7 @@ def rule_check(
                 rule.explanation,
                 rule.url,
                 rule.icon,
+                rule.label,
             )
         )
 
@@ -3932,8 +4043,7 @@ def get_emoji(emoji_text):
 
 def get_emoji_context(alternative, lang):
     return (
-        "--- "
-        + emoji.demojize(alternative, language=lang)
+        emoji.demojize(alternative, language=lang)
         .replace(":", "")
         .replace("_", " ")
         .title()
@@ -3965,7 +4075,7 @@ def detect_non_inclusive_emoji(
     ):
         return i
 
-    alternatives = [get_emoji_context(token.text, lang.lang)]
+    alternatives = [Alternative(get_emoji_context(token.text, lang.lang))]
 
     emoji_description = token._.emoji_desc
     emoji_base = emoji_description.replace(" light skin tone", "")
@@ -4014,9 +4124,9 @@ def detect_non_inclusive_emoji(
                 alternative = get_emoji(alternative_text)
 
             if ":" not in alternative and alternative != token.text:
-                alternatives.append(
-                    alternative + " " + get_emoji_context(alternative, lang.lang)
-                )
+                alternative = Alternative(alternative)
+                alternative.label = get_emoji_context(alternative.lemma, lang.lang)
+                alternatives.append(alternative)
 
         for alternative_text in emojis:
             alternative_text = emoji_base.replace(rule, alternative_text)
@@ -4030,12 +4140,14 @@ def detect_non_inclusive_emoji(
                     alternative_skin_tone_text = (
                         emoji_base.replace(rule, "woman") + skin_tone
                     )
-                    alternative = get_emoji(alternative_skin_tone_text)
+                    alternatives.append(
+                        Alternative(get_emoji(alternative_skin_tone_text))
+                    )
 
                 if ":" not in alternative and alternative != token.text:
-                    alternatives.append(
-                        alternative + " " + get_emoji_context(alternative, lang.lang)
-                    )
+                    alternative = Alternative(alternative)
+                    alternative.label = get_emoji_context(alternative.lemma, lang.lang)
+                    alternatives.append(alternative)
 
         if len(alternatives) == 1:
             continue
@@ -4052,9 +4164,9 @@ def detect_non_inclusive_emoji(
         for skin_tone in rules["skin_tones"]["all"]:
             alternative = get_emoji(emoji_base + skin_tone)
             if ":" not in alternative and alternative != token.text:
-                alternatives.append(
-                    alternative + " " + get_emoji_context(alternative, lang.lang)
-                )
+                alternative = Alternative(alternative)
+                alternative.label = get_emoji_context(alternative.lemma, lang.lang)
+                alternatives.append(alternative)
 
     if subcategory and len(alternatives) > 1:
         list_full.append(

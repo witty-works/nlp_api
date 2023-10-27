@@ -16,7 +16,7 @@
             "label": "Kulturelle Diversität: Leichte Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 48,
-            "subcategory": "advanced_plain_language",
+            "subcategory": "plain_language_advanced",
             "text": "um"
         },
         {
@@ -47,20 +47,20 @@
                 "text": "Schwächen die Wirkung deiner Botschaft",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/worthülsen?reducedView=true"
             },
-            "gravity": 3.0,
+            "gravity": 2.0,
             "label": "Kulturelle Diversität: Worthülsen",
             "proficiency_level": "unconscious_bias",
             "start": 16,
-            "subcategory": "advanced_hollow",
+            "subcategory": "hollow",
             "text": "Arbeitskraft"
         },
         {
             "alternatives": [
                 {
-                    "text": "Auftraggebende"
+                    "text": "beziehende Person"
                 },
                 {
-                    "text": "Bestellende"
+                    "text": "beauftragende Firma"
                 },
                 {
                     "text": "Kund*innen"
@@ -115,11 +115,11 @@
                 "text": "Überzogene Aussagen wirken weniger vertrauenswürdig",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/übertreibung?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Soziale Motivation: Übertreibung",
             "proficiency_level": "unconscious_bias",
             "start": 51,
-            "subcategory": "exaggerating",
+            "subcategory": "exaggerating_advanced",
             "text": "Erfolg"
         }
     ]

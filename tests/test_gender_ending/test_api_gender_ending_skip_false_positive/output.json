@@ -5,10 +5,16 @@
         {
             "alternatives": [
                 {
-                    "text": "Bewerbende"
+                    "text": "Person, die sich bewirbt"
                 },
                 {
                     "text": "Bewerber*innen"
+                },
+                {
+                    "text": "*Bewerbenden"
+                },
+                {
+                    "text": "Personen, die sich bewerben"
                 }
             ],
             "category": "gender-orientation",
@@ -29,13 +35,13 @@
         {
             "alternatives": [
                 {
-                    "text": "Fachperson"
+                    "text": "*Fachperson"
                 },
                 {
-                    "text": "Fachkraft"
+                    "text": "*Fachkraft"
                 },
                 {
-                    "text": "Fachpersonal"
+                    "text": "jemand vom Fach"
                 }
             ],
             "category": "gender-orientation",
@@ -57,13 +63,13 @@
         {
             "alternatives": [
                 {
-                    "text": "Fachperson"
+                    "text": "*Fachperson"
                 },
                 {
-                    "text": "Fachkraft"
+                    "text": "*Fachkraft"
                 },
                 {
-                    "text": "Fachpersonal"
+                    "text": "Jemand vom Fach"
                 }
             ],
             "category": "gender-orientation",

@@ -3,14 +3,7 @@
     "limit_reached": false,
     "results": [
         {
-            "alternatives": [
-                {
-                    "text": "Die Polizeikraft"
-                },
-                {
-                    "text": "Die Polizei"
-                }
-            ],
+            "alternatives": [],
             "category": "gender-orientation",
             "context": "Der Polizist hat es gesehen.",
             "end": 12,

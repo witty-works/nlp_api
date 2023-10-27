@@ -22,16 +22,16 @@
             "end": 16,
             "explanation": {
                 "content": "video",
-                "context": "don't use for people",
+                "context": "Don't use this word for people",
                 "icon": "😒",
                 "text": "Doesn’t resonate with team-minded people",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Social Motive: Agentic language",
             "proficiency_level": "unconscious_bias",
             "start": 8,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "Dominant"
         }
     ]

@@ -1,34 +1,5 @@
 {
     "language": "de",
     "limit_reached": false,
-    "results": [
-        {
-            "alternatives": [
-                {
-                    "text": "Personentage"
-                },
-                {
-                    "text": "Arbeitstage"
-                },
-                {
-                    "text": "Tagessätze"
-                }
-            ],
-            "category": "gender-orientation",
-            "context": "Das sind viele Manntage",
-            "end": 23,
-            "explanation": {
-                "content": "advanced",
-                "icon": "😟",
-                "text": "Wortteil macht andere Geschlechter unsichtbar",
-                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/angedeutetes-gender?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Geschlecht + Orientierung: Angedeutetes Gender",
-            "proficiency_level": "unconscious_bias",
-            "start": 15,
-            "subcategory": "advanced_hidden_image",
-            "text": "Manntage"
-        }
-    ]
+    "results": []
 }

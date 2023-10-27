@@ -24,24 +24,20 @@
         {
             "alternatives": [
                 {
+                    "text": "Feuerwehrmann"
+                },
+                {
                     "context": "Feuerwehrfrau",
                     "text": "👩‍🚒"
                 },
                 {
-                    "context": "Feuerwehrfrau Dunkle Hautfarbe",
                     "text": "👩🏿‍🚒"
                 },
                 {
-                    "context": "Feuerwehrfrau Mittlere Hautfarbe",
                     "text": "👩🏽‍🚒"
                 },
                 {
-                    "context": "Feuerwehrfrau Mitteldunkle Hautfarbe",
                     "text": "👩🏾‍🚒"
-                },
-                {
-                    "context": "Feuerwehrfrau Mittelhelle Hautfarbe",
-                    "text": "👩🏼‍🚒"
                 }
             ],
             "category": "gender-orientation",
@@ -49,7 +45,6 @@
             "end": 5,
             "explanation": {
                 "content": "advanced",
-                "context": "Feuerwehrmann",
                 "icon": "😒",
                 "text": "Bedient die heteronormative Sicht von Geschlechteridentität",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäres-geschlecht?reducedView=true"
@@ -64,19 +59,18 @@
         {
             "alternatives": [
                 {
-                    "context": "Feuerwehrfrau Dunkle Hautfarbe",
+                    "text": "Feuerwehrfrau"
+                },
+                {
                     "text": "👩🏿‍🚒"
                 },
                 {
-                    "context": "Feuerwehrfrau Mittlere Hautfarbe",
                     "text": "👩🏽‍🚒"
                 },
                 {
-                    "context": "Feuerwehrfrau Mitteldunkle Hautfarbe",
                     "text": "👩🏾‍🚒"
                 },
                 {
-                    "context": "Feuerwehrfrau Mittelhelle Hautfarbe",
                     "text": "👩🏼‍🚒"
                 }
             ],
@@ -85,7 +79,6 @@
             "end": 11,
             "explanation": {
                 "content": "advanced",
-                "context": "Feuerwehrfrau",
                 "icon": "😒",
                 "text": "Bedient die heteronormative Sicht von Geschlechteridentität",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäres-geschlecht?reducedView=true"
@@ -100,24 +93,20 @@
         {
             "alternatives": [
                 {
+                    "text": "Feuerwehrmann Helle Hautfarbe"
+                },
+                {
                     "context": "Feuerwehrfrau",
                     "text": "👩‍🚒"
                 },
                 {
-                    "context": "Feuerwehrfrau Dunkle Hautfarbe",
                     "text": "👩🏿‍🚒"
                 },
                 {
-                    "context": "Feuerwehrfrau Mittlere Hautfarbe",
                     "text": "👩🏽‍🚒"
                 },
                 {
-                    "context": "Feuerwehrfrau Mitteldunkle Hautfarbe",
                     "text": "👩🏾‍🚒"
-                },
-                {
-                    "context": "Feuerwehrfrau Mittelhelle Hautfarbe",
-                    "text": "👩🏼‍🚒"
                 }
             ],
             "category": "gender-orientation",
@@ -125,7 +114,6 @@
             "end": 19,
             "explanation": {
                 "content": "advanced",
-                "context": "Feuerwehrmann Helle Hautfarbe",
                 "icon": "😒",
                 "text": "Bedient die heteronormative Sicht von Geschlechteridentität",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäres-geschlecht?reducedView=true"
@@ -140,6 +128,9 @@
         {
             "alternatives": [
                 {
+                    "text": "Feuerwehrmann Mittlere Hautfarbe"
+                },
+                {
                     "context": "Feuerwehrfrau Mittlere Hautfarbe",
                     "text": "👩🏽‍🚒"
                 }
@@ -149,7 +140,6 @@
             "end": 35,
             "explanation": {
                 "content": "advanced",
-                "context": "Feuerwehrmann Mittlere Hautfarbe",
                 "icon": "😒",
                 "text": "Bedient die heteronormative Sicht von Geschlechteridentität",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäres-geschlecht?reducedView=true"
@@ -163,6 +153,9 @@
         },
         {
             "alternatives": [
+                {
+                    "text": "Pommes Frites"
+                },
                 {
                     "context": "Salat",
                     "text": "🥗"
@@ -178,17 +171,12 @@
                 {
                     "context": "Bento-Box",
                     "text": "🍱"
-                },
-                {
-                    "context": "Reis Mit Curry",
-                    "text": "🍛"
                 }
             ],
             "category": "cultural-diversity",
             "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut.",
             "end": 41,
             "explanation": {
-                "context": "Pommes Frites",
                 "icon": "😒",
                 "text": "Reduziert eine Person auf ein kulturelles Klischee",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/kulturelles-stereotyp?reducedView=true"
@@ -202,6 +190,9 @@
         },
         {
             "alternatives": [
+                {
+                    "text": "Ok-Zeichen Helle Hautfarbe"
+                },
                 {
                     "context": "Ok-Zeichen",
                     "text": "👌"
@@ -217,17 +208,12 @@
                 {
                     "context": "Ok-Zeichen Mitteldunkle Hautfarbe",
                     "text": "👌🏾"
-                },
-                {
-                    "context": "Ok-Zeichen Mittelhelle Hautfarbe",
-                    "text": "👌🏼"
                 }
             ],
             "category": "cultural-diversity",
             "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut.",
             "end": 46,
             "explanation": {
-                "context": "Ok-Zeichen Helle Hautfarbe",
                 "icon": "😒",
                 "text": "Reduziert eine Person auf ein kulturelles Klischee",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/kulturelles-stereotyp?reducedView=true"
@@ -241,6 +227,9 @@
         },
         {
             "alternatives": [
+                {
+                    "text": "Frau"
+                },
                 {
                     "context": "Person",
                     "text": "🧑"
@@ -256,10 +245,6 @@
                 {
                     "context": "Person Mitteldunkle Hautfarbe",
                     "text": "🧑🏾"
-                },
-                {
-                    "context": "Person Mittelhelle Hautfarbe",
-                    "text": "🧑🏼"
                 }
             ],
             "category": "gender-orientation",
@@ -267,7 +252,6 @@
             "end": 49,
             "explanation": {
                 "content": "advanced",
-                "context": "Frau",
                 "icon": "😒",
                 "text": "Bedient die heteronormative Sicht von Geschlechteridentität",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäres-geschlecht?reducedView=true"
@@ -281,6 +265,9 @@
         },
         {
             "alternatives": [
+                {
+                    "text": "Mann Und Frau Halten Hände"
+                },
                 {
                     "context": "Sich An Den Händen Haltende Personen",
                     "text": "🧑‍🤝‍🧑"
@@ -296,17 +283,12 @@
                 {
                     "context": "Sich An Den Händen Haltende Personen Dunkle Hautfarbe",
                     "text": "🧑🏿‍🤝‍🧑🏿"
-                },
-                {
-                    "context": "Sich An Den Händen Haltende Personen Mittlere Hautfarbe",
-                    "text": "🧑🏽‍🤝‍🧑🏽"
                 }
             ],
             "category": "gender-orientation",
             "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut.",
             "end": 52,
             "explanation": {
-                "context": "Mann Und Frau Halten Hände",
                 "icon": "😒",
                 "text": "Vermittelt ein heterosexuelles Werte- und Rollen-System",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/sexuelle-orientierung?reducedView=true"
@@ -321,6 +303,9 @@
         {
             "alternatives": [
                 {
+                    "text": "Familie Mann Frau Und Mädchen"
+                },
+                {
                     "context": "Familie Frau Frau Und Mädchen",
                     "text": "👩‍👩‍👧"
                 },
@@ -333,7 +318,6 @@
             "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut.",
             "end": 61,
             "explanation": {
-                "context": "Familie Mann Frau Und Mädchen",
                 "icon": "😒",
                 "text": "Vermittelt ein heterosexuelles Werte- und Rollen-System",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/sexuelle-orientierung?reducedView=true"

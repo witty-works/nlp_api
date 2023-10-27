@@ -16,7 +16,7 @@
             "label": "Kulturelle Diversität: Leichte Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 30,
-            "subcategory": "advanced_plain_language",
+            "subcategory": "plain_language_advanced",
             "text": "oder"
         },
         {
@@ -33,7 +33,7 @@
             "label": "Kulturelle Diversität: Leichte Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 107,
-            "subcategory": "advanced_plain_language",
+            "subcategory": "plain_language_advanced",
             "text": "geschrieben"
         },
         {
@@ -67,7 +67,7 @@
             "label": "Kulturelle Diversität: Leichte Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 154,
-            "subcategory": "advanced_plain_language",
+            "subcategory": "plain_language_advanced",
             "text": "nicht"
         },
         {
@@ -101,7 +101,7 @@
             "label": "Kulturelle Diversität: Leichte Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 184,
-            "subcategory": "advanced_plain_language",
+            "subcategory": "plain_language_advanced",
             "text": "des Genitivs"
         },
         {
@@ -118,7 +118,7 @@
             "label": "Kulturelle Diversität: Leichte Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 212,
-            "subcategory": "advanced_plain_language",
+            "subcategory": "plain_language_advanced",
             "text": "wäre"
         },
         {
@@ -135,7 +135,7 @@
             "label": "Kulturelle Diversität: Leichte Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 232,
-            "subcategory": "advanced_plain_language",
+            "subcategory": "plain_language_advanced",
             "text": "dass"
         },
         {
@@ -179,14 +179,14 @@
             "end": 315,
             "explanation": {
                 "icon": "😉",
-                "text": "Anglizismen: Sicher, dass das alle Lesenden verstehen?",
+                "text": "Vermeiden Sie Fremdwörter / Anglizismen.",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/anglizismen?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Kulturelle Diversität: Anglizismen",
             "proficiency_level": "unconscious_bias",
             "start": 307,
-            "subcategory": "advanced_anglicism",
+            "subcategory": "anglicism_advanced",
             "text": "Briefing"
         },
         {
@@ -196,14 +196,14 @@
             "end": 344,
             "explanation": {
                 "icon": "😉",
-                "text": "Anglizismen: Sicher, dass das alle Lesenden verstehen?",
+                "text": "Vermeiden Sie schwierige Wörter und Fremdwörter.",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/anglizismen?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Kulturelle Diversität: Anglizismen",
             "proficiency_level": "unconscious_bias",
             "start": 333,
-            "subcategory": "advanced_anglicism",
+            "subcategory": "anglicism_advanced",
             "text": "Performance"
         },
         {
@@ -220,7 +220,7 @@
             "label": "Kulturelle Diversität: Leichte Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 361,
-            "subcategory": "advanced_plain_language",
+            "subcategory": "plain_language_advanced",
             "text": "wie"
         },
         {
@@ -247,14 +247,14 @@
             "end": 436,
             "explanation": {
                 "icon": "😉",
-                "text": "Anglizismen: Sicher, dass das alle Lesenden verstehen?",
+                "text": "Vermeiden Sie schwierige Wörter und Fremdwörter.",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/anglizismen?reducedView=true"
             },
             "gravity": 3.0,
             "label": "Kulturelle Diversität: Anglizismen",
             "proficiency_level": "unconscious_bias",
             "start": 429,
-            "subcategory": "advanced_anglicism",
+            "subcategory": "anglicism_advanced",
             "text": "Problem"
         },
         {
@@ -271,7 +271,7 @@
             "label": "Kulturelle Diversität: Leichte Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 444,
-            "subcategory": "advanced_plain_language",
+            "subcategory": "plain_language_advanced",
             "text": "und"
         },
         {
@@ -288,7 +288,7 @@
             "label": "Kulturelle Diversität: Leichte Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 476,
-            "subcategory": "advanced_plain_language",
+            "subcategory": "plain_language_advanced",
             "text": ", verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal wieder herausfinden müssen"
         },
         {
@@ -310,7 +310,7 @@
             "label": "Kulturelle Diversität: Füllwörter",
             "proficiency_level": "unconscious_bias",
             "start": 92,
-            "subcategory": "advanced_filler",
+            "subcategory": "filler_advanced",
             "text": "nur"
         },
         {
@@ -332,7 +332,7 @@
             "label": "Kulturelle Diversität: Füllwörter",
             "proficiency_level": "unconscious_bias",
             "start": 197,
-            "subcategory": "advanced_filler",
+            "subcategory": "filler_advanced",
             "text": "auch"
         },
         {
@@ -354,19 +354,22 @@
             "label": "Kulturelle Diversität: Füllwörter",
             "proficiency_level": "unconscious_bias",
             "start": 217,
-            "subcategory": "advanced_filler",
+            "subcategory": "filler_advanced",
             "text": "sogar"
         },
         {
             "alternatives": [
                 {
-                    "text": "Key Performance Indicator (KPI)"
+                    "text": "key performance indicator"
                 },
                 {
-                    "text": "Leistungskennzahl"
+                    "text": "key performance indicators"
                 },
                 {
-                    "text": "Kennzahl"
+                    "text": "key performance indicator (KPI)"
+                },
+                {
+                    "text": "key performance indicators (KPI)"
                 }
             ],
             "category": "cultural-diversity",
@@ -414,7 +417,7 @@
             "label": "Kulturelle Diversität: Anglizismen",
             "proficiency_level": "unconscious_bias",
             "start": 307,
-            "subcategory": "advanced_anglicism",
+            "subcategory": "anglicism_advanced",
             "text": "Briefing"
         },
         {
@@ -444,7 +447,7 @@
             "label": "Kulturelle Diversität: Anglizismen",
             "proficiency_level": "unconscious_bias",
             "start": 333,
-            "subcategory": "advanced_anglicism",
+            "subcategory": "anglicism_advanced",
             "text": "Performance"
         },
         {
@@ -491,11 +494,11 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 429,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "Problem"
         },
         {
@@ -517,7 +520,7 @@
             "label": "Kulturelle Diversität: Füllwörter",
             "proficiency_level": "unconscious_bias",
             "start": 540,
-            "subcategory": "advanced_filler",
+            "subcategory": "filler_advanced",
             "text": "einmal"
         },
         {
@@ -539,7 +542,7 @@
             "label": "Kulturelle Diversität: Füllwörter",
             "proficiency_level": "unconscious_bias",
             "start": 547,
-            "subcategory": "advanced_filler",
+            "subcategory": "filler_advanced",
             "text": "wieder"
         }
     ]

@@ -5,32 +5,30 @@
         {
             "alternatives": [
                 {
-                    "text": "Engineering team"
+                    "text": "Ingenieur*innen"
                 },
                 {
-                    "text": "Development team"
+                    "text": "Ingenieurinnen und Ingenieure"
                 },
                 {
-                    "text": "Engineering"
+                    "text": "Engineering-Teams"
                 },
                 {
-                    "text": "Development"
+                    "text": "Auf einer Hoch-/Fachschule ausgebildete Technik-Fachleute"
                 }
             ],
-            "category": "gender-orientation",
+            "category": "cultural-diversity",
             "context": "Engineers work in this industry. Being an experienced engineer is useful.",
             "end": 9,
             "explanation": {
-                "content": "advanced",
-                "icon": "😟",
-                "text": "People tend to picture a specific gender",
-                "url": "https://www.witty.works/en/categories/gender-orientation/jobs?reducedView=true"
+                "icon": "😉",
+                "text": ""
             },
             "gravity": 2.0,
-            "label": "Gender + Orientation: Jobs",
+            "label": "Cultural Diversity",
             "proficiency_level": "unconscious_bias",
             "start": 0,
-            "subcategory": "titles",
+            "subcategory": "anglicism",
             "text": "Engineers"
         },
         {
@@ -45,10 +43,10 @@
                     "text": "development"
                 },
                 {
-                    "text": "engineering team"
+                    "text": "development team"
                 },
                 {
-                    "text": "development team"
+                    "text": "person filling a role in engineering"
                 }
             ],
             "category": "gender-orientation",

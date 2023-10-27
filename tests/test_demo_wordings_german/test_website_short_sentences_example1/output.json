@@ -40,18 +40,15 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 17,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "leistungsstarke"
         },
         {
             "alternatives": [
-                {
-                    "text": "Mitarbeitende"
-                },
                 {
                     "text": "Mitarbeiter*innen"
                 },
@@ -59,10 +56,13 @@
                     "text": "Mitarbeiterinnen und Mitarbeiter"
                 },
                 {
-                    "text": "Personal"
+                    "text": "*Personal"
                 },
                 {
-                    "text": "Mitarbeiterschaft"
+                    "text": "/Personal"
+                },
+                {
+                    "text": "*Mitarbeiterschaft"
                 }
             ],
             "category": "gender-orientation",

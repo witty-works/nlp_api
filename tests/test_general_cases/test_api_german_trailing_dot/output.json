@@ -34,28 +34,18 @@
         {
             "alternatives": [
                 {
-                    "context": "💡",
-                    "inspiration": true,
                     "text": "Unternehmen, das im Markt Maßstäbe setzt"
                 },
                 {
-                    "context": "💡",
-                    "inspiration": true,
                     "text": "wichtige Sache"
                 },
                 {
-                    "context": "💡",
-                    "inspiration": true,
                     "text": "Ziel, das das Team inspiriert"
                 },
                 {
-                    "context": "💡",
-                    "inspiration": true,
                     "text": "inspirierendes Teammitglied"
                 },
                 {
-                    "context": "💡",
-                    "inspiration": true,
                     "text": "Mensch, der dem Team mit Rat und Tat zur Seite steht"
                 }
             ],
@@ -68,11 +58,11 @@
                 "text": "Überzogene Aussagen wirken weniger vertrauenswürdig",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/übertreibung?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Soziale Motivation: Übertreibung",
             "proficiency_level": "unconscious_bias",
             "start": 31,
-            "subcategory": "exaggerating",
+            "subcategory": "exaggerating_advanced",
             "text": "Nummer 1"
         }
     ]
