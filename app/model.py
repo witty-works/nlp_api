@@ -47,13 +47,6 @@ def custom_tokenizer(lang, nlp):
                 r"(?<=[0-9])-(?=[0-9])",
             ]
         )
-
-        infix_re = compile_infix_regex(infixes)
-
-        # https://github.com/explosion/spaCy/discussions/12930
-        suffixes = nlp.Defaults.suffixes + [r"\."]
-        suffix_regex = spacy.util.compile_suffix_regex(suffixes)
-        nlp.tokenizer.suffix_search = suffix_regex.search
     else:
         # https://spacy.io/usage/linguistic-features#tokenization
         infixes = (
@@ -71,7 +64,12 @@ def custom_tokenizer(lang, nlp):
             ]
         )
 
-        infix_re = compile_infix_regex(infixes)
+    infix_re = compile_infix_regex(infixes)
+
+    # https://github.com/explosion/spaCy/discussions/12930
+    suffixes = nlp.Defaults.suffixes + [r"\."]
+    suffix_regex = spacy.util.compile_suffix_regex(suffixes)
+    nlp.tokenizer.suffix_search = suffix_regex.search
 
     return Tokenizer(
         nlp.vocab,
