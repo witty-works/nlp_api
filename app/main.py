@@ -80,6 +80,8 @@ from app.models import (
     ErrorMessage,
     PrettyJSONResponse,
     RuleIn,
+    Alternative,
+    Rule,
 )
 from app.lang_detection import get_lang_detection
 from app.categories import (
@@ -92,7 +94,7 @@ from app.settings import get_settings
 from app.logger import set_up_logger
 from app.redis_setup import set_up_redis
 from app.model import fetch_nlp_model
-from app.rules import fetch_rules, Rule
+from app.rules import fetch_rules
 from app.sentry import set_up_sentry_sdk
 from app.model import lemma_plural_lookup
 
@@ -125,6 +127,15 @@ rule_columns = {
     "lemma_json": 3,
     "word_types_json": 4,
     "diversity_dimension_json": 5,
+}
+alternative_columns = {
+    "lemma": 0,
+    "lemma_json": 1,
+    "word_types_json": 2,
+    "is_remove": 3,
+    "is_inspiration": 4,
+    "is_advanced": 5,
+    "label": 6,
 }
 
 # https://www.notion.so/witty-works/Rule-Guidelines-432792da944141b1b4d0a01de290aa43#aac0d966bfeb4e33a5a346bba45d5ea8
@@ -648,19 +659,24 @@ async def post_debug_rule(
 
     if rule_data.alternatives is not None:
         alternative_list = []
-        for alternative in rule_data.alternatives:
-            alternative = alternative.lemma.strip() + (
-                "" if alternative.label is None else " --- " + alternative.label
+        for alternative_in in rule_data.alternatives:
+            alternative = Alternative(
+                lemma=alternative_in.lemma,
+                words=alternative_in.words,
+                word_types=alternative_in.word_types,
             )
+
+            alternative.label = alternative_in.label
+            alternative.pluralization = alternative_in.pluralization
+            alternative.is_inspiration = alternative_in.is_inspiration
+            alternative.is_advanced = alternative_in.is_advanced
+
             alternative_list.append(alternative)
     else:
         alternative_list = None
 
     rules = []
     for subcategory in rule_data.subcategories:
-        if subcategory.endswith("_advanced"):
-            subcategory = "advanced_" + subcategory.removesuffix("_advanced")
-
         rule = Rule(
             "test",
             rule_data.lang,
@@ -693,7 +709,6 @@ async def post_debug_rule(
                 list_full,
                 [rule],
                 false_positive_matcher,
-                rule_data.lower_case,
             )
 
         i += 1
@@ -1835,7 +1850,7 @@ def fetch_term_replacements(
         return term_replacements([], None)
 
     term_replacement_rules = []
-    alternatives = []
+    all_alternatives = []
     for lemma in configs["term_replacements"]:
         term_replacement = configs["term_replacements"][lemma]
 
@@ -1851,7 +1866,10 @@ def fetch_term_replacements(
 
         words = tokenize(lemma, lang)
         word_types = tuple([word_type] * len(words))
-        alternatives += term_replacement["alternatives"]
+        all_alternatives += term_replacement["alternatives"]
+        alternatives = []
+        for alternative in term_replacement["alternatives"]:
+            alternatives.append(Alternative(alternative))
 
         rule = Rule(
             lemma,
@@ -1860,7 +1878,7 @@ def fetch_term_replacements(
             words,
             word_types,
             "corporate_rules",
-            term_replacement["alternatives"],
+            alternatives,
         )
 
         if term_replacement["explanation"] is not None:
@@ -1870,7 +1888,7 @@ def fetch_term_replacements(
 
         term_replacement_rules.append(rule)
 
-    false_positive_matcher = fetch_phrase_matcher(lang, tokens, alternatives)
+    false_positive_matcher = fetch_phrase_matcher(lang, tokens, all_alternatives)
 
     return term_replacements(term_replacement_rules, false_positive_matcher)
 
@@ -2036,11 +2054,12 @@ def fetch_word_rules(token):
     return rules_cursor.execute(query, parameters)
 
 
-def fetch_rule_alternatives(rule: Rule, is_singular: bool):
+def fetch_rule_alternatives(rule: Rule, is_singular: bool) -> list[Alternative]:
     if isinstance(rule.name, str):
         return rule.alternatives
 
-    query = "SELECT lemma, is_inspiration FROM rules_alternative WHERE is_active = 1 and rule_id = ?"
+    column_list = ", ".join(alternative_columns.keys())
+    query = f"SELECT {column_list} FROM rules_alternative WHERE is_active = 1 and rule_id = ?"
     parameters = [rule.name]
     if is_singular is not None:
         query += " and pluralization != ?"
@@ -2048,9 +2067,16 @@ def fetch_rule_alternatives(rule: Rule, is_singular: bool):
 
     alternatives = []
     for row in rules_cursor.execute(query + " ORDER BY 'order' ASC", parameters):
-        alternative = row[0]
-        if row[1]:
-            row[0] += " ..."
+        alternative = Alternative(
+            row[alternative_columns["lemma"]],
+            json.loads(row[alternative_columns["lemma_json"]]),
+            json.loads(row[alternative_columns["word_types_json"]]),
+        )
+        alternative.is_remove = row[alternative_columns["is_remove"]]
+        alternative.is_inspiration = row[alternative_columns["is_inspiration"]]
+        alternative.is_advanced = row[alternative_columns["is_advanced"]]
+        alternative.label = row[alternative_columns["label"]]
+
         alternatives.append(alternative)
 
     return alternatives
@@ -2212,7 +2238,7 @@ async def german_rules(
                     None,
                     config._gendereddenom_ending_word_type[key],
                     subcategory,
-                    (config.german_gender_ending,),
+                    (Alternative(config.german_gender_ending),),
                 )
 
                 endings.append(ending)
@@ -3022,36 +3048,28 @@ def tokenize(text, lang):
     return tuple([i.text for i in model[lang].tokenizer(text)])
 
 
-def alternative_declension(lang, text, token, word_type, prepend_word, alternative):
-    (
-        parsed_alternative,
-        alternative_context,
-        remove,
-    ) = ResultOut.parse_alternative(alternative)
-
-    alternative_context = (
-        "" if alternative_context is None else " ---" + alternative_context
-    )
-
+def alternative_declension(
+    lang, text, token, word_type, prepend_word, alternative: Alternative
+):
     if (
-        not parsed_alternative
-        or remove
-        or ResultOut.isInspirationAlternative(parsed_alternative)
-        or "~" in parsed_alternative
+        len(alternative.lemma) == 0
+        or alternative.is_remove
+        or alternative.is_inspiration
+        or "~" in alternative.lemma
     ):
         return alternative
 
-    if parsed_alternative.count(" ") > 5:
+    if len(alternative.words) > 5:
         return alternative
 
-    word_count = len(tokenize(text, lang))
+    word_count = len(alternative.words)
     if prepend_word:
         word_count -= 1
 
-    alternative_tokens = fetch_tokens(lang, parsed_alternative)
+    alternative_tokens = fetch_tokens(lang, alternative.lemma)
     if word_count > 1:
         # TODO figure out how to modify phrases
-        new_alternative = parsed_alternative
+        new_alternative = alternative.lemma
         is_plural_alternative = is_token_plural(lang, alternative_tokens[-1])
     else:
         new_alternative = ""
@@ -3111,7 +3129,9 @@ def alternative_declension(lang, text, token, word_type, prepend_word, alternati
             else "a " + new_alternative
         )
 
-    return new_alternative + alternative_context
+    alternative.lemma = new_alternative
+
+    return alternative
 
 
 def alternatives_declension(lang, text, i, tokens, alternatives):
@@ -3148,7 +3168,7 @@ def alternatives_declension(lang, text, i, tokens, alternatives):
         [
             alternative_declension(
                 lang, text, token, word_type, prepend_word, alternative
-            ).strip()
+            )
             for alternative in alternatives
         ],
     )
@@ -3271,7 +3291,7 @@ def fetch_article_for_flexion(flexion, word, article_text):
     return None, None, None, None
 
 
-def fetch_alternatives_with_article(tokens, i, alternatives):
+def fetch_alternatives_with_article(tokens, i, alternatives: list[Alternative]):
     if alternatives is None:
         return []
 
@@ -3289,6 +3309,7 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
         match_neuter,
         match_alternative,
     ) = fetch_article_for_flexion(fetch_flexion(token), word, article_text)
+
     if match_alternative is None:
         return None
 
@@ -3299,21 +3320,14 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
                 match_alternative if match_alternative else article_text
             )
         else:
-            (
-                parse_alternative,
-                alternative_context,
-                remove,
-            ) = ResultOut.parse_alternative(alternative)
-
-            if parse_alternative is None:
+            if alternative.is_remove:
                 continue
 
-            words = parse_alternative.split()
-            alternative_tokens = fetch_tokens("de", words[-1])
+            alternative_tokens = fetch_tokens("de", alternative.words[-1])
             if is_token_plural(lang, alternative_tokens[0]):
                 article_alternative = ""
             else:
-                alternative_word = german_noun_analysis(words[-1], True)
+                alternative_word = german_noun_analysis(alternative.words[-1], True)
                 if alternative_word is None:
                     article_alternative = tokens[i - 1].text
                 else:
@@ -3330,8 +3344,9 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
 
         if article_alternative != "":
             article_alternative += tokens[i - 1].whitespace_
+            alternative.lemma = article_alternative + alternative
 
-        alternatives_with_article.append(article_alternative + alternative)
+        alternatives_with_article.append(alternative)
 
     return alternatives_with_article
 
@@ -3794,7 +3809,7 @@ def rule_check(
 
         else:
             start = token.idx
-            additional_token_count = len(tokenize(rule.lemma, lang.lang)) - 1
+            additional_token_count = len(rule.words) - 1
             while additional_token_count >= 0:
                 is_singular = is_token_singular(
                     lang.lang, tokens[i + additional_token_count]
@@ -3810,7 +3825,7 @@ def rule_check(
                 # TODO make it possible to handle cases with multiple alternatives
                 if len(alternatives) == 1 and alternatives[0] == "they":
                     text, alternative = pluralize_they(text, tokens, i)
-                    alternatives = [alternative]
+                    alternatives = [Alternative(alternative)]
                 elif rule.lemma.count(" ") == 0:
                     text, start, alternatives = alternatives_declension(
                         lang.lang, token.text, i, tokens, alternatives

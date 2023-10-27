@@ -14,6 +14,7 @@ from app.categories import (
     get_category,
     get_category_name,
     map_gravity,
+    is_advanced_category,
 )
 from app.privacy_filter import get_privacy_filter
 
@@ -114,12 +115,109 @@ class GenderedRolesFormatType(str, Enum):
     BINARY_GENDER = "binary_gender"
 
 
-class Alternative(BaseModel):
+class Alternative:
     lemma: str
-    word_types: Optional[str] = None
+    words: list
+    word_types: Optional[list] = None
+    type: Optional[str] = None
+    label: Optional[str] = ""
+    pluralization: Optional[str] = "default"
+    is_inspiration: Optional[bool] = False
+    is_advanced: Optional[bool] = False
+
+    def __init__(
+        self,
+        lemma,
+        words: list = None,
+        word_types: list = None,
+    ):
+        self.lemma = lemma
+        self.words = [lemma] if words is None else words
+        self.word_types = word_types
+
+
+class Rule:
+    name: str
+    lang: str
+    lemma: str
+    words: tuple
+    word_types: tuple
+    subcategory: Optional[str]
+    is_advanced: bool = False
+    alternatives: Optional[tuple]
+    false_positives: Optional[tuple]
+    explanation: Optional[str]
+    url: Optional[str]
+    icon: Optional[str]
+    type: Optional[RuleType] = RuleType.DEFAULT
+
+    def __init__(
+        self,
+        name,
+        lang,
+        lemma,
+        words,
+        word_types,
+        subcategory=None,
+        alternatives=None,
+    ):
+        self.name = name
+        self.lang = lang
+        self.lemma = lemma
+        self.words = words
+        if isinstance(word_types, str):
+            # BC code s -> n
+            word_types = tuple(word_types.replace("s", "n").split("|"))
+        self.word_types = word_types
+        self.subcategory = self.parse_subcategory(subcategory)
+
+        self.alternatives = self.filter_alternatives(alternatives)
+        self.false_positives = None
+        self.explanation = None
+        self.url = None
+        self.icon = None
+
+    def parse_subcategory(self, subcategory):
+        if subcategory is None:
+            return None
+
+        if is_advanced_category(subcategory):
+            self.is_advanced = True
+            subcategory = get_category_name(subcategory)
+
+        return subcategory
+
+    def filter_alternatives(self, alternatives):
+        if alternatives is None:
+            return None
+
+        alternatives = list(
+            filter(lambda alternative: "((" not in alternative, alternatives)
+        )
+        return list(map(lambda alternative: Alternative(alternative), alternatives))
+
+    def is_gendered_denom_rule(self):
+        return self.lang == "de" and (
+            self.subcategory
+            in [
+                "titles",
+                "function",
+                "hidden_image",
+                "leadership",
+                "male_stereotype",
+                "female_stereotype",
+                "gendered_denominations_ending",
+            ]
+        )
+
+
+class AlternativeIn(BaseModel):
+    lemma: str
+    words: tuple
+    word_types: Optional[tuple] = None
     type: Optional[str] = None
     label: Optional[str] = None
-    pluralization: Optional[str] = None
+    pluralization: Optional[str] = "default"
     is_inspiration: Optional[bool] = False
     is_advanced: Optional[bool] = False
 
@@ -130,8 +228,7 @@ class RuleIn(BaseModel):
     lemma: str
     word_types: str
     subcategories: list[str]
-    lower_case: bool = True
-    alternatives: Optional[list[Alternative]] = []
+    alternatives: Optional[list[AlternativeIn]] = []
     false_positives: Optional[list[str]] = []
 
 
@@ -564,23 +661,12 @@ class ResultOut(BaseModel):
         subcategory,
         start,
         is_upper,
-        alternatives,
+        alternatives: list[Alternative],
         explanation_context,
         alternatives_max_count,
     ):
         if alternatives is None:
             return []
-
-        alternatives = list(alternatives)
-
-        # remove empty strings
-        if "" in alternatives:
-            alternatives.remove("")
-
-        # remove until we can properly handle this in the UI
-        # https://www.notion.so/witty-works/Rule-Guidelines-432792da944141b1b4d0a01de290aa43#9ab16aeb0c19416ca0b72fde152b5d86
-        if "^" in alternatives:
-            alternatives.remove("^")
 
         prefix = False
         if text.startswith("zu "):
@@ -590,83 +676,66 @@ class ResultOut(BaseModel):
         elif text.startswith("an "):
             prefix = "an "
 
-        add_inspiration_alternatives = True
         cleaned_alternatives = {}
 
         for alternative in alternatives:
+            # remove until we can properly handle this in the UI
+            # https://www.notion.so/witty-works/Rule-Guidelines-432792da944141b1b4d0a01de290aa43#9ab16aeb0c19416ca0b72fde152b5d86
+            if "^" in alternative.lemma:
+                continue
+
             if alternative != " ":
-                alternative = alternative.strip()
+                alternative.lemma = alternative.lemma.strip()
 
             # requests for user input are not yet supported
             # https://wittyworks.productboard.com/roadmap/3751070-browser-extension/features/13529555/detail
-            if "((" in alternative:
+            if "((" in alternative.lemma:
                 continue
 
-            (
-                alternative,
-                alternative_context,
-                remove,
-            ) = ResultOut.parse_alternative(alternative, category != "orthography")
-
-            if (
-                prefix
-                and not remove
-                and not alternative.startswith(prefix)
-                and not ResultOut.isInspirationAlternative(alternative)
-            ):
-                prefix = False
-
-            if not alternative and not remove:
-                if explanation_context is None:
-                    explanation_context = alternative_context
-
-                continue
-
-            if category != "orthography":
-                if is_upper and alternative:
-                    alternative = string.capwords(alternative[0:1]) + alternative[1:]
-            elif alternative is not None:
-                alternative = lang.convert_sharp_ss(alternative)
-
-            if alternative == text:
-                continue
-
-            inspiration = None
-            if ResultOut.isInspirationAlternative(alternative, subcategory):
+            if not alternative.is_remove:
                 if (
-                    not config.show_inspiration_alternatives
-                    and not add_inspiration_alternatives
+                    prefix
+                    and not alternative.is_inspiration
+                    and not alternative.startswith(prefix)
                 ):
+                    prefix = False
+
+                if category != "orthography":
+                    if is_upper and alternative:
+                        alternative.lemma = (
+                            string.capwords(alternative.lemma[0:1])
+                            + alternative.lemma[1:]
+                        )
+                elif alternative.lemma is not None:
+                    alternative.lemma = lang.convert_sharp_ss(alternative.lemma)
+
+                if alternative.lemma == text:
                     continue
 
-                inspiration = True
-                if alternative[-5:] == "(...)":
-                    alternative = alternative[0:-5]
-                    alternative.strip()
+                if alternative.is_inspiration:
+                    if not config.show_inspiration_alternatives:
+                        continue
 
-                if alternative_context is None:
-                    alternative_context = "💡"
+                    if len(alternative.label):
+                        alternative.label = "💡"
 
-            else:
-                add_inspiration_alternatives = False
-
-            alternative_variations = ResultOut.getAlternativeVariations(
-                config.gendered_roles_format, config.german_gender_ending, alternative
-            )
-
-            for variation in alternative_variations:
-                if variation in cleaned_alternatives:
-                    continue
-
-                key = variation
-                variation = ResultAlternative(
-                    text=variation,
-                    remove=remove,
-                    inspiration=inspiration,
-                    context=alternative_context,
+            if "~" in alternative.lemma:
+                alternative_variations = ResultOut.getAlternativeVariations(
+                    config.gendered_roles_format,
+                    config.german_gender_ending,
+                    alternative,
                 )
 
-                cleaned_alternatives[key] = variation
+                cleaned_alternatives.update(alternative_variations)
+            else:
+                variation = ResultAlternative(
+                    text=alternative.lemma,
+                    remove=True if alternative.is_remove else None,
+                    inspiration=True if alternative.is_inspiration else None,
+                    context=alternative.label,
+                )
+
+                cleaned_alternatives[alternative.lemma] = variation
 
             if (
                 alternatives_max_count is not None
@@ -698,23 +767,6 @@ class ResultOut(BaseModel):
         return text, start, cleaned_alternatives, explanation_context
 
     @staticmethod
-    def parse_alternative(alternative, parse_context=True):
-        alternative_context = None
-        if parse_context and "---" in alternative:
-            alternative_split = alternative.split("---")
-            if len(alternative_split) == 2:
-                alternative = alternative_split[0].strip()
-                alternative_context = alternative_split[1].strip()
-
-        if alternative == "-":
-            alternative = None
-            remove = True
-        else:
-            remove = None
-
-        return alternative, alternative_context, remove
-
-    @staticmethod
     def isUpper(text, full_text, start, category, lang):
         if category != "orthography" and text[0:1].isupper():
             punctuation = "[.!?:]" if lang.lang == "de" else "[.!?]"
@@ -735,39 +787,27 @@ class ResultOut(BaseModel):
         return sum(map(str(text).count, [" ", "-"]))
 
     @staticmethod
-    def isInspirationAlternative(alternative, subcategory=None):
-        return (
-            alternative is not None
-            and subcategory != "abbreviation"
-            and (alternative.count("...") > 0)
-        )
-
-    @staticmethod
     def getAlternativeVariations(
         gendered_roles_format: GenderedRolesFormatType,
         german_gender_ending: GermanGenderEndingType,
-        alternative: str,
+        alternative: Alternative,
     ):
-        if alternative and "~" in alternative:
-            if gendered_roles_format == GenderedRolesFormatType.NONE:
-                return []
+        if gendered_roles_format == GenderedRolesFormatType.NONE:
+            return {}
 
-            return ResultOut.getGenderedRoleFormatVariations(
-                gendered_roles_format, german_gender_ending, alternative
-            )
-
-        return [alternative]
+        return ResultOut.getGenderedRoleFormatVariations(
+            gendered_roles_format, german_gender_ending, alternative
+        )
 
     @staticmethod
     def getGenderedRoleFormatVariations(
         gendered_roles_format: GenderedRolesFormatType,
         german_gender_ending: GermanGenderEndingType,
-        alternative: str,
+        alternative: Alternative,
     ):
         alternative_variations = []
 
-        alternative = alternative.replace("~ und ~", "~~und~~")
-        words = alternative.split()
+        words = alternative.lemma.replace("~ und ~", "~~und~~").split()
         variations_count = 1
         for i, word in enumerate(words):
             if "~" in word:
@@ -792,7 +832,18 @@ class ResultOut(BaseModel):
                 if i < len(words) - 1:
                     alternative_variations[v] = alternative_variations[v] + " "
 
-        return alternative_variations
+        cleaned_alternatives = {}
+        for variation in alternative_variations:
+            key = variation
+            variation = ResultAlternative(
+                text=variation,
+                inspiration=True if alternative.is_inspiration else None,
+                context=alternative.label,
+            )
+
+            cleaned_alternatives[key] = variation
+
+        return cleaned_alternatives
 
     @staticmethod
     def getGenderedRolesFormatBinary(alternative):
