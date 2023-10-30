@@ -2812,7 +2812,9 @@ def is_word_match(
         token_word = token_word.lower()
         word = word.lower()
 
-    if token_word != word and (not suffix or not token_word.endswith(word.lower())):
+    if token_word != word and (
+        not suffix or not token_word.lower().endswith(word.lower())
+    ):
         return False
 
     return check_word_type(lang, token, word_type, True)
@@ -4024,6 +4026,7 @@ def rule_check(
             rule.is_gendered_denom_rule()
             and token.ent_type_ in rules["named_entity_labels"]["names"]
             and token.ent_type_ != "MISC"
+            and token.ent_type_ != "ORG"
         ):
             return i
 
