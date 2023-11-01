@@ -1159,7 +1159,10 @@ def fetch_user(request: Request):
             unverified_claims = get_token_claims(request)
             for key in settings.sso_configs:
                 config = settings.sso_configs[key]
-                if unverified_claims["aud"] != config["client_id"]:
+                if (
+                    "aud" not in unverified_claims
+                    or unverified_claims["aud"] != config["client_id"]
+                ):
                     continue
 
                 if "domain" in config:
@@ -1184,6 +1187,11 @@ def fetch_user(request: Request):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN, detail=str(e.args[0])
             )
+
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Token provided did not map to a valid client ID",
+        )
 
     if settings.testing:
         if "x-auth" in request.headers:
