@@ -1007,7 +1007,7 @@ def is_token_singular(lang, token):
     if number:
         return "Sing" in number
 
-    if lang == "en" and token.text.endswith("s"):
+    if lang == "en" and token.pos == "NOUN" and token.text.endswith("s"):
         return False
 
     return None
