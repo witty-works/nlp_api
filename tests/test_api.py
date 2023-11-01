@@ -412,14 +412,14 @@ def test_invalid_access_token():
         assert response.status_code == 403
 
 
-def test_config_changed(set_redis):
+def test_config_not_changed(set_redis):
     with TestClient(app) as client:
-        input_json = '{"text": "Hello world.", "config_hash": "foo"}'
+        input_json = '{"text": "Hello world.", "config_hash": "foobar", "organization_config_hash": "foobaz"}'
 
         response = client.post(
             "/v2.3/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-Auth": "test@gmail.com"},
         )
 
         assert response.status_code == 200
