@@ -103,7 +103,7 @@ from app.model import lemma_plural_lookup
 
 # probe.end()
 
-version = "1.49.1"
+version = "1.49.2"
 
 categories = get_categories()
 settings = get_settings()
