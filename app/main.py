@@ -3283,15 +3283,11 @@ def align_verb_form_german(a_text, a_token, b_token):
             b_text = prefix + "ge" + b_text[len(prefix) :]
 
         injected_string = "ge"
-    elif b_text in rules["de"]["verbs"]:
-        morph = a_token.morph.to_dict()
-        if (
-            "Number" in morph
-            and morph["Number"] == "Sing"
-            and "Person" in morph
-            and morph["Person"] == "1"
-        ):
-            return rules["de"]["verbs"][b_text]["present_ich"]
+
+    if b_text in rules["de"]["verbs"] and a_token.lemma_ in rules["de"]["verbs"]:
+        for form in rules["de"]["verbs"][a_token.lemma_]:
+            if rules["de"]["verbs"][a_token.lemma_][form] == a_text:
+                return rules["de"]["verbs"][b_token.lemma_][form]
 
     return add_declension_german(b_text, a_text, a_token.lemma_, injected_string)
 

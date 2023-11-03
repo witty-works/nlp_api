@@ -548,9 +548,16 @@ def fetch_rules(model):
 
         rules["de"]["verbs"] = {
             data["de"]["verbs"]["infinitiv"][i]: {
-                "past_participle": data["de"]["verbs"]["past_participle"][i],
-                "infinitiv_zu": data["de"]["verbs"]["infinitiv_zu"][i],
                 "present_ich": data["de"]["verbs"]["present_ich"][i],
+                "present_du": data["de"]["verbs"]["present_du"][i],
+                "present_pronoun": data["de"]["verbs"]["present_pronoun"][i],
+                "past_tense_ich": data["de"]["verbs"]["past_tense_ich"][i],
+                "past_participle": data["de"]["verbs"]["past_participle"][i],
+                "conjunctive_ich": data["de"]["verbs"]["conjunctive_ich"][i],
+                "imperativ_singular": data["de"]["verbs"]["imperativ_singular"][i],
+                "imperativ_plural": data["de"]["verbs"]["imperativ_plural"][i],
+                "helping_verb": data["de"]["verbs"]["helping_verb"][i],
+                "infinitiv_zu": data["de"]["verbs"]["infinitiv_zu"][i],
             }
             for i in range(len(data["de"]["verbs"]["infinitiv"]))
         }
