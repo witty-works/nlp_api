@@ -1,0 +1,103 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [],
+            "category": "orthography",
+            "context": "Witty leistet Unterstützung in mehr als <NUMBER> Diversitätsdimensionen. Die ältesten haben Träume.",
+            "end": 65,
+            "explanation": {
+                "icon": "❌",
+                "text": "Möglicher Tippfehler gefunden."
+            },
+            "gravity": 1.0,
+            "label": "Rechtschreibfehler",
+            "start": 43,
+            "subcategory": "typos",
+            "text": "Diversitätsdimensionen"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "löst"
+                },
+                {
+                    "text": "erledigt"
+                },
+                {
+                    "text": "packt an"
+                },
+                {
+                    "text": "erarbeitet"
+                }
+            ],
+            "category": "social-motive",
+            "context": "Witty leistet Unterstützung in mehr als <NUMBER> Diversitätsdimensionen. Die ältesten haben Träume.",
+            "end": 13,
+            "explanation": {
+                "content": "video",
+                "icon": "😒",
+                "text": "Spricht kooperativ denkende Menschen nicht an",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Soziale Motivation: Agentische Sprache",
+            "proficiency_level": "unconscious_bias",
+            "start": 6,
+            "subcategory": "agentic",
+            "text": "leistet"
+        },
+        {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "Witty leistet Unterstützung in mehr als <NUMBER> Diversitätsdimensionen. Die ältesten haben Träume.",
+            "end": 27,
+            "explanation": {
+                "content": "video",
+                "icon": "✅",
+                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true"
+            },
+            "label": "Soziale Motivation: Kommunale Sprache",
+            "proficiency_level": "inclusive",
+            "start": 14,
+            "subcategory": "communal",
+            "text": "Unterstützung"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "ältersten"
+                },
+                {
+                    "text": "erfahrensten"
+                },
+                {
+                    "text": "kundigsten"
+                },
+                {
+                    "text": "routiniertesten"
+                },
+                {
+                    "text": "unaufgeregtesten"
+                }
+            ],
+            "category": "acquired-diversity",
+            "context": "Witty leistet Unterstützung in mehr als <NUMBER> Diversitätsdimensionen. Die ältesten haben Träume.",
+            "end": 79,
+            "explanation": {
+                "context": "nur erwähnen, wenn relevant",
+                "icon": "😒",
+                "text": "Bedient Klischees über Menschen über 50",
+                "url": "https://www.witty.works/de/kategorien/erworbene-diversität/50-jahre-und-älter?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Erworbene Diversität: 50 Jahre und älter",
+            "proficiency_level": "unconscious_bias",
+            "start": 71,
+            "subcategory": "age_old",
+            "text": "ältesten"
+        }
+    ]
+}
