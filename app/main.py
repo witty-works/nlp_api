@@ -2956,13 +2956,19 @@ def find_common_prefix(a_text, a_lemma):
 
 
 def add_declension_german(text, a_text, a_lemma, injected_string=""):
-    prefix = find_common_prefix(a_text, a_lemma)
+    prefix = find_common_prefix(
+        a_text.replace("ä", "a").replace("ö", "o").replace("ü", "u"),
+        a_lemma.replace("ä", "a").replace("ö", "o").replace("ü", "u"),
+    )
     ending = a_text[len(prefix) :]
     if injected_string and ending[0 : len(injected_string)] == injected_string:
         a_text = prefix + a_text[len(prefix) + len(injected_string) :]
         a_text = a_text.strip()
         prefix = find_common_prefix(a_text, a_lemma)
         ending = a_text[len(prefix) :]
+
+    if (a_lemma[-1] == "t" or a_lemma[-1] == "s") and len(ending) and ending[0] == "e":
+        ending = ending[1:]
 
     if a_lemma == "beste":
         ending = "ste" + ending
@@ -2977,7 +2983,13 @@ def add_declension_german(text, a_text, a_lemma, injected_string=""):
         if text.endswith("em"):
             return text
 
-        if text[-1] == "t" and ending == "t":
+        if (text[-1] == "t") and (
+            ending[0] == "t" or ending[0] == "s" or ending[0] == "n"
+        ):
+            text += "e"
+        elif (text[-1] == "h" or text[-1] == "n") and (
+            ending[0] == "t" or ending[0] == "n"
+        ):
             text += "e"
         elif text[-1] == "s":
             text += "s"
