@@ -103,7 +103,7 @@ from app.model import lemma_plural_lookup
 
 # probe.end()
 
-version = "1.49.1"
+version = "1.49.2"
 
 categories = get_categories()
 settings = get_settings()
@@ -1007,7 +1007,7 @@ def is_token_singular(lang, token):
     if number:
         return "Sing" in number
 
-    if lang == "en" and token.text.endswith("s"):
+    if lang == "en" and token.pos == "NOUN" and token.text.endswith("s"):
         return False
 
     return None
@@ -1159,7 +1159,10 @@ def fetch_user(request: Request):
             unverified_claims = get_token_claims(request)
             for key in settings.sso_configs:
                 config = settings.sso_configs[key]
-                if unverified_claims["aud"] != config["client_id"]:
+                if (
+                    "aud" not in unverified_claims
+                    or unverified_claims["aud"] != config["client_id"]
+                ):
                     continue
 
                 if "domain" in config:
@@ -1184,6 +1187,11 @@ def fetch_user(request: Request):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN, detail=str(e.args[0])
             )
+
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Token provided did not map to a valid client ID",
+        )
 
     if settings.testing:
         if "x-auth" in request.headers:
@@ -2812,7 +2820,9 @@ def is_word_match(
         token_word = token_word.lower()
         word = word.lower()
 
-    if token_word != word and (not suffix or not token_word.endswith(word.lower())):
+    if token_word != word and (
+        not suffix or not token_word.lower().endswith(word.lower())
+    ):
         return False
 
     return check_word_type(lang, token, word_type, True)
@@ -2946,13 +2956,19 @@ def find_common_prefix(a_text, a_lemma):
 
 
 def add_declension_german(text, a_text, a_lemma, injected_string=""):
-    prefix = find_common_prefix(a_text, a_lemma)
+    prefix = find_common_prefix(
+        a_text.replace("ä", "a").replace("ö", "o").replace("ü", "u"),
+        a_lemma.replace("ä", "a").replace("ö", "o").replace("ü", "u"),
+    )
     ending = a_text[len(prefix) :]
     if injected_string and ending[0 : len(injected_string)] == injected_string:
         a_text = prefix + a_text[len(prefix) + len(injected_string) :]
         a_text = a_text.strip()
         prefix = find_common_prefix(a_text, a_lemma)
         ending = a_text[len(prefix) :]
+
+    if (a_lemma[-1] == "t" or a_lemma[-1] == "s") and len(ending) and ending[0] == "e":
+        ending = ending[1:]
 
     if a_lemma == "beste":
         ending = "ste" + ending
@@ -2967,7 +2983,13 @@ def add_declension_german(text, a_text, a_lemma, injected_string=""):
         if text.endswith("em"):
             return text
 
-        if text[-1] == "t" and ending == "t":
+        if (text[-1] == "t") and (
+            ending[0] == "t" or ending[0] == "s" or ending[0] == "n"
+        ):
+            text += "e"
+        elif (text[-1] == "h" or text[-1] == "n") and (
+            ending[0] == "t" or ending[0] == "n"
+        ):
             text += "e"
         elif text[-1] == "s":
             text += "s"
@@ -3273,15 +3295,11 @@ def align_verb_form_german(a_text, a_token, b_token):
             b_text = prefix + "ge" + b_text[len(prefix) :]
 
         injected_string = "ge"
-    elif b_text in rules["de"]["verbs"]:
-        morph = a_token.morph.to_dict()
-        if (
-            "Number" in morph
-            and morph["Number"] == "Sing"
-            and "Person" in morph
-            and morph["Person"] == "1"
-        ):
-            return rules["de"]["verbs"][b_text]["present_ich"]
+
+    if b_text in rules["de"]["verbs"] and a_token.lemma_ in rules["de"]["verbs"]:
+        for form in rules["de"]["verbs"][a_token.lemma_]:
+            if rules["de"]["verbs"][a_token.lemma_][form] == a_text:
+                return rules["de"]["verbs"][b_token.lemma_][form]
 
     return add_declension_german(b_text, a_text, a_token.lemma_, injected_string)
 
@@ -4024,6 +4042,7 @@ def rule_check(
             rule.is_gendered_denom_rule()
             and token.ent_type_ in rules["named_entity_labels"]["names"]
             and token.ent_type_ != "MISC"
+            and token.ent_type_ != "ORG"
         ):
             return i
 

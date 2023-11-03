@@ -24,6 +24,7 @@ tokens = {
     "azureadbc_valid_expired": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkN6d1lJSEUyNG5oRFNTdkhhT1pxaVNwTFV4UkFXZjluQ2kydEtnMXRCME0iLCJ0eXAiOiJKV1QifQ.eyJjdXJyZW50VGltZSI6MTY5NDU4OTkxMSwiZW1haWwiOiJsdWthcy5zbWl0aEB3aXR0eS53b3JrcyIsIm5hbWUiOiJmb28iLCJpZHAiOiJnb29nbGUuY29tIiwic3ViIjoiMjVlMDUwYTUtYTJmZC00MzZmLWE1YmUtM2I5NmZmZDAxOTU4Iiwib3RoZXJNYWlscyI6WyJsdWthcy5zbWl0aEB3aXR0eS53b3JrcyJdLCJleHRlbnNpb25fdGVybXNPZlVzZUNvbnNlbnREYXRlVGltZSI6MTY2Mjg5Mjk2OCwiZXh0ZW5zaW9uX01haWxpbmdDb25zZW50ZWQiOiJZZXMiLCJ0ZXJtc09mVXNlQ29uc2VudFJlcXVpcmVkIjpmYWxzZSwidGlkIjoiODE5MzJmZTEtZjI1ZS00M2ZjLWI2NzQtMDAyZmY4MjM1Mzg5Iiwic2NwIjoiYWNjZXNzX2FzX3VzZXIiLCJhenAiOiI3ZTA5MDMwOC01NzVhLTRlN2QtODRlNC03OGM4M2QwODNhYjYiLCJ2ZXIiOiIxLjAiLCJpYXQiOjE2OTQ1ODk5NjIsImF1ZCI6IjdlMDkwMzA4LTU3NWEtNGU3ZC04NGU0LTc4YzgzZDA4M2FiNiIsImV4cCI6MTY5NDY3NjM2MiwiaXNzIjoiaHR0cHM6Ly93aXR0eXdvcmtzZGV2LmIyY2xvZ2luLmNvbS84MTkzMmZlMS1mMjVlLTQzZmMtYjY3NC0wMDJmZjgyMzUzODkvdjIuMC8iLCJuYmYiOjE2OTQ1ODk5NjJ9.JtXTKr8pUEBQ5-hO1ak-L1IocXQdOW6rNaCS5DD1DAvt8ldo-n9APQVw8mqWlYmukrelqH48VwguYiCcD5-Lc8seWfX5lywXT4mnfsJscqGQr7iVL1s6GNBp2wsaRLNf6l8qzIVWa0UDREACdgUpJRmbvObILZa6z42E5ghOO9RxxVCsCKg6hwKKhtY2w6UEs1u26JF7BKHH7XFoX88CfG-kqVfhVw_zb_bOIhDrEGflWZzKdKx9LfaLS1VQjVY1I_IW1nL1EQaBo286MHpzLdxzeyLf6Jo9ASzgAeEqKD6v2PPEHrTbJDMkpNFtFw0XdQTT904vQNn8wml3Lck32w",
     "office_valid_expired": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ii1LSTNROW5OUjdiUm9meG1lWm9YcWJIWkdldyJ9.eyJhdWQiOiIzMTE3YmU1YS0zMzIzLTQ1M2YtODEwZC04Nzk1YmFjN2YzMWQiLCJpc3MiOiJodHRwczovL2xvZ2luLm1pY3Jvc29mdG9ubGluZS5jb20vN2JkMjJlODQtMzRiMS00YjdiLWI2ZjctNGNkN2RhMGE1ZTRhL3YyLjAiLCJpYXQiOjE2OTQ3ODQyMzcsIm5iZiI6MTY5NDc4NDIzNywiZXhwIjoxNjk0NzkyNzEyLCJhaW8iOiJBWFFBaS84VUFBQUFKNTlNcTk2UVBwYkZabUltNGtCRGRvRHZPaHJwREx3UDVzNlVNbklmcS9UNWR4R3BsZUIyTG9wVzZhVk5OYm4xbFlQTnFuOHRiMk5QS1A3NnNlRnc1ano3aktoMGppZDkzRXZFUFAzUzNhcTZ2c25JbFNJVmJGZzViUjNGZlgvKzNmdWNBZUJ3elo5aVRTckY1dk5YNkE9PSIsImF6cCI6ImQzNTkwZWQ2LTUyYjMtNDEwMi1hZWZmLWFhZDIyOTJhYjAxYyIsImF6cGFjciI6IjAiLCJuYW1lIjoiTHVrYXMgU21pdGgiLCJvaWQiOiJiMjNhOTc4My05NDdhLTRkMDgtYWMyYy02ZDE5ZjFlNTYwYWUiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJsdWthcy5zbWl0aEB3aXR0eS53b3JrcyIsInJoIjoiMC5BWUVBaEM3U2U3RTBlMHUyOTB6WDJncGVTbHEtRnpFak16OUZnUTJIbGJySDh4MkJBSVUuIiwic2NwIjoiYWNjZXNzX2FzX3VzZXIiLCJzdWIiOiJtcnMzdGVZVVdXblFyX2syakxDd1pleXRpZUVlWHBZV0ZHaTBCRWx2blFJIiwidGlkIjoiN2JkMjJlODQtMzRiMS00YjdiLWI2ZjctNGNkN2RhMGE1ZTRhIiwidXRpIjoid0RXOUdRMTFaa0NsS2lFaTNBbVJBQSIsInZlciI6IjIuMCJ9.ZQ6LuAHdQALJO5Wq05eXlz19NUEUs9bOQ54l8DDwZ-_0hOKhc6-USvNMXYKl6TV_o20c2cC5UgR5zKMEbXoLPpdcgzngH-S46cQsCVZollIzeSV21NC-APEF2FreSw91xxeFI6Mq9sGYUsbCi9k08aPnEMM_dtciNbXtcTg7y7ChCOQE4NcKHfsU9XGlbHku1isBUmLNDG7dcDFISAU0Sufws1TKwN3NIAlZSr52HAiSPV926caGpIAtghAarGEkSOlS52qMlboNVw5zhCZKu-AgplQR5artgJDbCs-yVNwHgO2VVNUeQmL8H16IJlCeFxCtJvVOWM_DTBQTdzyZcQ",
     "other_valid_expired": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+    "third_party_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
 }
 
 logging.basicConfig(
@@ -412,14 +413,14 @@ def test_invalid_access_token():
         assert response.status_code == 403
 
 
-def test_config_changed(set_redis):
+def test_config_not_changed(set_redis):
     with TestClient(app) as client:
-        input_json = '{"text": "Hello world.", "config_hash": "foo"}'
+        input_json = '{"text": "Hello world.", "config_hash": "foobar", "organization_config_hash": "foobaz"}'
 
         response = client.post(
             "/v2.3/check",
             json=json.loads(input_json),
-            headers={"X-Auth": "default@gmail.com"},
+            headers={"X-Auth": "test@gmail.com"},
         )
 
         assert response.status_code == 200
@@ -805,6 +806,13 @@ def test_auth_2_0_team_analytics_opt_out(
 
 def test_auth_token_validation():
     with TestClient(app) as client:
+        response = client.post(
+            "/v2.0/auth",
+            json={},
+            headers={"Authorization": "Bearer " + tokens["third_party_token"]},
+        )
+        assert response.status_code == 403
+
         response = client.post(
             "/v2.0/auth",
             json={},
