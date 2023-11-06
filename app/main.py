@@ -2128,6 +2128,70 @@ def is_valid_text(text):
     return text.isalpha()
 
 
+def fetch_declensions(lang, word_type, b_text, a_text=None):
+    config = {
+        "en": {
+            "v": {
+                "name": "rules_englishverb",
+                "columns": [
+                    "base_form",
+                    "past_tense",
+                    "past_participle",
+                    "present_participle",
+                    "third_person_singular",
+                ],
+            },
+            "a": {
+                "name": "rules_englishadjective",
+                "columns": ["base_form", "comparative", "superlative", "is_absolute"],
+            },
+            "s": {"name": "rules_englishnoun", "columns": ["base_form", "plural"]},
+        },
+        "de": {
+            "v": {"name": "rules_germanverb", "columns": ["base_form"]},
+            "a": {"name": "rules_germanadjective", "columns": ["base_form"]},
+            "s": {"name": "rules_germannoun", "columns": ["base_form"]},
+        },
+    }
+
+    column_list = ", ".join(config[lang][word_type]["columns"])
+    table_name = config[lang][word_type]["name"]
+
+    filters = ["base_form = ?"]
+    parameters = [b_text]
+    if a_text is not None:
+        for column in config[lang][word_type]["columns"]:
+            if column == "is_absolute":
+                continue
+
+            filters.append(f"{column} = ?")
+            parameters.append(a_text)
+
+    filter_list = " OR ".join(filters)
+
+    query = f"SELECT {column_list} FROM {table_name} WHERE {filter_list}"
+
+    a_result = None
+    b_result = None
+    for row in rules_cursor.execute(query, parameters):
+        if row[0] == b_text:
+            b_result = dict(zip(config[lang][word_type]["columns"], row))
+        else:
+            a_result = dict(zip(config[lang][word_type]["columns"], row))
+
+    if a_text is not None and a_result is None:
+        logging.error(
+            f"Could not find {word_type} form for '{a_text}'",
+        )
+
+    if b_result is None:
+        logging.error(
+            f"Could not find {word_type} form for '{b_text}'",
+        )
+
+    return a_result, b_result
+
+
 def fetch_false_positives(rule: Rule) -> list[str]:
     if len(rule.false_positives):
         return list(rule.false_positives)
@@ -2898,34 +2962,57 @@ def align_noun_form(lang, a_text, a_token, b_token):
 
     is_singular = is_token_singular(lang, b_token)
 
+    a_result, b_result = fetch_declensions(lang, "s", b_token.lemma_)
+
     if is_singular is True or (is_singular is None and is_token_plural(lang, a_token)):
-        return Noun(b_text).plural()
+        return b_result["plural"] if b_result is not None else Noun(b_text).plural()
 
     if is_singular is False:
         return b_text
 
-    return Noun(b_text).singular()
+    return b_result["base_form"] if b_result is not None else Noun(b_text).singular()
 
 
-def align_adjective_form_english(a_text, a_token, b_token):
-    a_adjective = Adjective(a_text)
-    b_adjective = Adjective(b_token.text)
+def align_adjective_form_english(a_token, b_token):
+    # use a_token.text to handle "consulting"
+    a_text_lower = a_token.text.lower()
+    a_result, b_result = fetch_declensions(
+        "en", "a", b_token.text.lower(), a_text_lower
+    )
+    if a_result is not None:
+        target_form = (
+            "base_form"
+            if a_result["is_absolute"]
+            else find_matching_form(a_result, a_text_lower)
+        )
+    else:
+        # Fallback code
+        a_adjective_lemma = Adjective(a_token.lemma_)
+        if a_adjective_lemma.is_singular() == a_text_lower:
+            target_form = "singular"
+        elif a_adjective_lemma.comparative() == a_text_lower:
+            target_form = "comparative"
+        elif a_adjective_lemma.superlative() == a_text_lower:
+            target_form = "superlative"
+        else:
+            target_form = None
 
-    if a_adjective.is_singular():
-        b_text = b_adjective.singular()
-        b_adjective = Adjective(b_text)
-    elif a_adjective.is_plural():
-        b_text = b_adjective.plural()
-        b_adjective = Adjective(b_text)
+    if target_form is None:
+        return b_token.lemma_
 
-    a_adjective_lemma = Adjective(a_token.lemma_)
-    if a_token.lemma_ != a_text:
-        if a_adjective_lemma.comparative() == a_text:
-            b_text = b_adjective.comparative()
-        elif a_adjective_lemma.superlative() == a_text:
-            b_text = b_adjective.superlative()
+    if b_result is None:
+        b_adjective = Adjective(b_token.lemma_)
 
-    return b_text
+        if target_form == "singular":
+            return b_adjective.singular()
+        if target_form == "comparative":
+            return b_adjective.comparative()
+        if target_form == "superlative":
+            return b_adjective.superlative()
+
+        return b_token.lemma_
+
+    return b_result["base_form"] if b_result["is_absolute"] else b_result[target_form]
 
 
 def align_adjective_form(lang, a_text, a_token, b_token):
@@ -2963,7 +3050,7 @@ def align_adjective_form(lang, a_text, a_token, b_token):
 
         return b_token.text + ending
 
-    return align_adjective_form_english(a_text, a_token, b_token)
+    return align_adjective_form_english(a_token, b_token)
 
 
 def german_verb_splittable(word):  # pragma: no cover
@@ -3032,6 +3119,14 @@ def german_verb_splittable(word):  # pragma: no cover
     return False
 
 
+def find_matching_form(forms, text):
+    for form in forms:
+        if forms[form] == text:
+            return form
+
+    return None
+
+
 def align_verb_form_german(a_text, a_token, b_token):
     b_text = b_token.text
     injected_string = ""
@@ -3062,33 +3157,49 @@ def align_verb_form_german(a_text, a_token, b_token):
         injected_string = "ge"
 
     if b_text in rules["de"]["verbs"] and a_token.lemma_ in rules["de"]["verbs"]:
-        for form in rules["de"]["verbs"][a_token.lemma_]:
-            if rules["de"]["verbs"][a_token.lemma_][form] == a_text:
-                return rules["de"]["verbs"][b_token.lemma_][form]
+        form = find_matching_form(rules["de"]["verbs"][a_token.lemma_], a_text)
+        if form:
+            return rules["de"]["verbs"][b_token.lemma_][form]
 
     return add_declension_german(b_text, a_text, a_token.lemma_, injected_string)
 
 
 def align_verb_form_english(a_text, b_token):
-    b_text = b_token.lemma_
-    a_verb = Verb(a_text)
-    b_verb = Verb(b_text)
+    a_result, b_result = fetch_declensions("en", "v", b_token.text.lower(), a_text)
+    if a_result is not None:
+        target_form = find_matching_form(a_result, a_text.lower())
+    else:
+        # Fallback code
+        a_verb = Verb(a_text)
+        if a_verb.is_singular():
+            target_form = "third_person_singular"
+        elif a_verb.is_past():
+            target_form = "past_tense"
+        elif a_verb.is_pres_part():
+            target_form = "present_participle"
+        elif a_verb.is_past_part():
+            target_form = "past_participle"
+        else:
+            target_form = None
 
-    if a_verb.is_singular():
-        b_text = b_verb.singular()
-        b_verb = Verb(b_text)
-    elif a_verb.is_plural():
-        b_text = b_verb.plural()
-        b_verb = Verb(b_text)
+    if target_form is None:
+        return b_token.lemma_
 
-    if a_verb.is_past():
-        b_text = b_verb.past()
-    elif a_verb.is_pres_part():
-        b_text = b_verb.pres_part()
-    elif a_verb.is_past_part():
-        b_text = b_verb.past_part()
+    if b_result is None:
+        b_verb = Verb(b_token.lemma_)
 
-    return b_text
+        if target_form == "third_person_singular":
+            return b_verb.singular()
+        elif target_form == "past_tense":
+            return b_verb.past()
+        elif target_form == "present_participle":
+            return b_verb.pres_part()
+        elif target_form == "past_participle":
+            return b_verb.past_part()
+
+        return b_token.lemma_
+
+    return b_result[target_form]
 
 
 def align_verb_form(lang, a_text, a_token, b_token):
