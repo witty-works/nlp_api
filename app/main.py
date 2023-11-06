@@ -1022,9 +1022,7 @@ def is_token_plural(lang, token):
 
 
 def apply_configs(
-    user_request_in: RequestIn,
-    configs: dict,
-    plan: str,
+    user_request_in: RequestIn, configs: dict, plan: str, force_disables: bool = True
 ):
     disabled_categories = user_request_in.config.disabled_categories
 
@@ -1042,7 +1040,7 @@ def apply_configs(
                 if category_data["value"]:
                     if category in disabled_categories:
                         disabled_categories.remove(category)
-                elif category not in disabled_categories:
+                elif force_disables and category not in disabled_categories:
                     disabled_categories.append(category)
         elif config == "store_context":
             if (
@@ -1096,6 +1094,7 @@ async def fetch_configs_for_request(
             user_request_in,
             configs["organization_config"],
             configs["plan"],
+            False,
         )
 
         configs["term_replacements"] |= configs["organization_term_replacements"]
