@@ -1,8 +1,3 @@
-# from blackfire import probe
-
-# probe.initialize()
-# probe.enable()
-
 import re
 import uvicorn
 import json
@@ -100,8 +95,6 @@ from app.model import fetch_nlp_model
 from app.rules import fetch_rules, Rule
 from app.sentry import set_up_sentry_sdk
 from app.model import lemma_plural_lookup
-
-# probe.end()
 
 version = "1.49.3"
 
