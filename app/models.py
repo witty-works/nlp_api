@@ -203,7 +203,7 @@ class Rule:
 
     def filter_alternatives(self, alternatives: list):
         if alternatives is None:
-            return None
+            return []
 
         alternatives = list(
             filter(lambda alternative: "((" not in alternative, alternatives)
