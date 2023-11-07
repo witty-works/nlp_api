@@ -83,7 +83,7 @@ class RuleType(str, Enum):
     SUBSTRING = "substring"
 
 
-class RuleLabelEnum():
+class RuleLabelEnum:
     DEFAULT = "default"
     NOT_FOR_PEOPLE = "not_for_people"
     BE_SPECIFIC = "be_specific"
@@ -98,6 +98,7 @@ class RuleLabelEnum():
     DONT_USE_FOR_SUBSTANCE_USE = "dont_use_for_substance_use"
     DONT_USE_TO_DESCRIBE_QUALITY = "dont_use_to_describe_quality"
     USE_IN_TECH_ONLY = "use_in_tech_only"
+
 
 class LangVariantType(str, Enum):
     deDE = "de-DE"
@@ -235,6 +236,7 @@ class AlternativeIn(BaseModel):
     is_inspiration: Optional[bool] = False
     is_advanced: Optional[bool] = False
     is_remove: Optional[bool] = False
+
 
 class RuleIn(BaseModel):
     text: str
