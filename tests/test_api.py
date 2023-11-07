@@ -1267,7 +1267,7 @@ def test_rule():
             "word_types": [
                 {"word_type": "v", "lower_case": True, "lemmatize": True},
                 {"word_type": "a", "lower_case": True, "lemmatize": True},
-                {"word_type": "s", "lower_case": True, "lemmatize": True},
+                {"word_type": "n", "lower_case": True, "lemmatize": True},
             ],
             "alternatives": [
                 {
