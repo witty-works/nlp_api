@@ -168,6 +168,7 @@ class Rule:
     icon: Optional[str] = None
     type: Optional[RuleType] = RuleType.DEFAULT
     label: Optional[str] = None
+    pattern: Optional[str] = None
 
     def __init__(
         self,

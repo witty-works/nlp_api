@@ -2627,6 +2627,24 @@ def parse_word_type(word_type, lower_case=True):
     return word_type, lower_case, lemmatize
 
 
+def check_pattern(tokens, pattern, i_pattern_start, offset):
+    for word_type in pattern:
+        if i_pattern_start < 0 or i_pattern_start > len(tokens):
+            return False
+
+        allow_skip = word_type.endswith("*")
+        if allow_skip:
+            word_type = word_type.removesuffix("*")
+            while check_word_type(lang, tokens[i_pattern_start], word_type, True, True):
+                i_pattern_start -= 1
+        elif not check_word_type(lang, tokens[i_pattern_start], word_type, True):
+            return False
+        else:
+            i_pattern_start += offset
+
+    return True
+
+
 def is_word_match(
     lang,
     token,
@@ -2684,13 +2702,33 @@ def is_phrase_match(
     if is_false_positive_match(false_positive_matcher, i, tokens, rule.lemma):
         return None, False
 
+    if rule.pattern is not None:
+        pattern = rule.pattern.split("|")
+
+        lemma_position = 0
+        for word_type in pattern:
+            if word_type == "l":
+                break
+            lemma_position += 1
+
+        if lemma_position > 0:
+            prefix_pattern = pattern[0:lemma_position]
+            prefix_pattern.reverse()
+            if not check_pattern(tokens, prefix_pattern, i - 1, -1):
+                return None, False
+
+        suffix_pattern = pattern[lemma_position + 1 :]
+        if len(suffix_pattern):
+            if not check_pattern(tokens, suffix_pattern, i + 1, 1):
+                return None, False
+
     return i + k + 1, text
 
 
 """Function to change adjectives to -en form in alternatives"""
 
 
-def fetch_word_type(lang, token, word_type=None, single_word=None):
+def fetch_word_type(lang, token, word_type=None, single_word=None, strict=False):
     # https://machinelearningknowledge.ai/tutorial-on-spacy-part-of-speech-pos-tagging/
     # https://github.com/explosion/spaCy/blob/master/spacy/glossary.py
 
@@ -2716,7 +2754,7 @@ def fetch_word_type(lang, token, word_type=None, single_word=None):
         return fetch_word_type(lang, tokens[0], word_type, single_word)
 
     if token.pos_ == "VERB":
-        if lang == "de" and "a" in word_type:
+        if not strict and lang == "de" and "a" in word_type:
             return "a"
 
         return "v"
@@ -2761,11 +2799,11 @@ def fetch_word_type(lang, token, word_type=None, single_word=None):
     return ""
 
 
-def check_word_type(lang, token, word_type="", single_word=None):
+def check_word_type(lang, token, word_type="", single_word=None, strict=False):
     if len(word_type) == 0:
         return True
 
-    return word_type == fetch_word_type(lang, token, word_type, single_word)
+    return word_type == fetch_word_type(lang, token, word_type, single_word, strict)
 
 
 def find_common_prefix(a_text, a_lemma):
@@ -3886,6 +3924,30 @@ def rule_check(
             or re.search(r"[.!?:,]\s*$", preceeding_text, re.MULTILINE) is not None
         ):
             return i
+
+    rule = Rule(
+        "langsam",
+        "de",
+        "langsam",
+        ("langsam",),
+        ({"word_type": "a", "lower_case": True, "lemmatize": True},),
+        "agentic",
+    )
+    rule.pattern = "v|a*|l"
+
+    filtered_rules.append(rule)
+
+    rule = Rule(
+        "test",
+        "de",
+        "nervig",
+        ("nervig",),
+        ({"word_type": "a", "lower_case": True, "lemmatize": True},),
+        "agentic",
+    )
+    rule.pattern = "l|v"
+
+    filtered_rules.append(rule)
 
     for rule in filtered_rules:
         if not isinstance(rule, Rule):
