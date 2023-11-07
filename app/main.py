@@ -121,7 +121,7 @@ for spacy_model in settings.models:
 rules = fetch_rules(model)
 
 # https://www.notion.so/witty-works/Rule-Guidelines-432792da944141b1b4d0a01de290aa43#aac0d966bfeb4e33a5a346bba45d5ea8
-supported_word_types = {"s", "a", "adv", "v", "conj"}
+supported_word_types = {"n", "a", "adv", "v", "conj"}
 
 if settings.fasttext:
     pretrained_lang_model = os.getcwd() + "/training_data/lid.176.bin"
@@ -648,7 +648,7 @@ async def post_debug_rule(
             rule_data.lang,
             rule_data.lemma,
             tokenize(rule_data.lemma, rule_data.lang),
-            tuple(rule_data.word_types.split("|")),
+            rule_data.word_types,
             subcategory,
         )
 
@@ -2903,7 +2903,7 @@ def fetch_word_type(lang, token, word_type=None, single_word=None):
         return "v"
 
     if token.pos_ == "NOUN" or token.pos_ == "PRON":
-        return "s"
+        return "n"
 
     adj_tags = {
         "AFX",
@@ -2926,7 +2926,7 @@ def fetch_word_type(lang, token, word_type=None, single_word=None):
         return "a"
 
     if token.tag_ == "NN":
-        return "s"
+        return "n"
 
     if token.pos_ == "PROPN" and single_word is not None and len(word_type):
         return word_type[0:1]
@@ -3393,7 +3393,7 @@ def alternative_declension(lang, text, token, word_type, prepend_word, alternati
                         alternative_text = align_verb_form(
                             lang, text, token, alternative_token
                         )
-                    elif "s" == word_type and "s" == alternative_word_type:
+                    elif "n" == word_type and "n" == alternative_word_type:
                         if is_token_plural(lang, alternative_token):
                             is_plural_alternative = True
 
