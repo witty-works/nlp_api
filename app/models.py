@@ -14,7 +14,6 @@ from app.categories import (
     get_category,
     get_category_name,
     map_gravity,
-    is_advanced_category,
 )
 from app.privacy_filter import get_privacy_filter
 
@@ -160,7 +159,7 @@ class Rule:
     lemma: str
     words: tuple
     word_types: tuple
-    subcategory: Optional[str]
+    subcategories: Optional[list[str]] = []
     is_advanced: bool = False
     alternatives: Optional[list[Alternative]] = []
     false_positives: Optional[list[str]] = []
@@ -177,7 +176,7 @@ class Rule:
         lemma,
         words,
         word_types,
-        subcategory=None,
+        subcategories=None,
         alternatives=None,
     ):
         self.name = name
@@ -188,42 +187,21 @@ class Rule:
             # BC code s -> n
             word_types = tuple(word_types.replace("s", "n").split("|"))
         self.word_types = word_types
-        self.subcategory = self.parse_subcategory(subcategory)
 
-        self.alternatives = self.filter_alternatives(alternatives)
-
-    def parse_subcategory(self, subcategory):
-        if subcategory is None:
-            return None
-
-        if is_advanced_category(subcategory):
-            self.is_advanced = True
-            subcategory = get_category_name(subcategory)
-
-        return subcategory
-
-    def filter_alternatives(self, alternatives: list):
+        if subcategories is None:
+            subcategories = []
+        self.subcategories = subcategories
         if alternatives is None:
-            return []
+            alternatives = []
+        else:
+            alternatives = list(
+                filter(lambda alternative: "((" not in alternative, alternatives)
+            )
+            alternatives = list(
+                map(lambda alternative: Alternative(alternative), alternatives)
+            )
 
-        alternatives = list(
-            filter(lambda alternative: "((" not in alternative, alternatives)
-        )
-        return list(map(lambda alternative: Alternative(alternative), alternatives))
-
-    def is_gendered_denom_rule(self):
-        return self.lang == "de" and (
-            self.subcategory
-            in [
-                "titles",
-                "function",
-                "hidden_image",
-                "leadership",
-                "male_stereotype",
-                "female_stereotype",
-                "gendered_denominations_ending",
-            ]
-        )
+        self.alternatives = alternatives
 
 
 class AlternativeIn(BaseModel):

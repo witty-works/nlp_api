@@ -89,7 +89,7 @@ from app.categories import (
     get_category_keys,
     get_categories,
     get_category,
-    add_advanced,
+    get_category_name,
 )
 from app.settings import get_settings
 from app.logger import set_up_logger
@@ -693,22 +693,20 @@ async def post_debug_rule(
     else:
         alternative_list = None
 
-    rules = []
-    for subcategory in rule_data.subcategories:
-        rule = Rule(
-            "test",
-            rule_data.lang,
-            rule_data.lemma,
-            tokenize(rule_data.lemma, rule_data.lang),
-            rule_data.word_types,
-            subcategory,
-        )
+    rule = Rule(
+        "test",
+        rule_data.lang,
+        rule_data.lemma,
+        tokenize(rule_data.lemma, rule_data.lang),
+        rule_data.word_types,
+        rule_data.subcategories,
+    )
 
-        rule.alternatives = alternative_list
-        rule.false_positives = rule_data.false_positives
-        rule.label = rule_data.label
+    rule.alternatives = alternative_list
+    rule.false_positives = rule_data.false_positives
+    rule.label = rule_data.label
 
-        rules.append(rule)
+    rules = [rule]
 
     list_full = []
     client = parse_client("debug:" + version)
@@ -1936,21 +1934,42 @@ def apply_false_positives(
     return list_results
 
 
-def is_sub_category_enabled(config: Config, subcategory: str):
-    if subcategory in config.disabled_categories:
-        return False
+def is_sub_category_enabled(config: Config, subcategories: list[str]):
+    if isinstance(subcategories, str):
+        subcategories = [subcategories]
 
-    category_data = get_category(subcategory)
-    if category_data is None:
-        return False
+    for subcategory in subcategories:
+        if subcategory in config.disabled_categories:
+            continue
 
-    if (
-        "category" in category_data
-        and category_data["category"] in config.disabled_categories
-    ):
-        return False
+        category_data = get_category(subcategory)
+        if category_data is None:
+            continue
 
-    return True
+        if (
+            "category" in category_data
+            and category_data["category"] in config.disabled_categories
+        ):
+            continue
+
+        return subcategory
+
+    return False
+
+
+def is_gendered_denom_rule(lang, subcategory):
+    return lang == "de" and (
+        get_category_name(subcategory)
+        in [
+            "titles",
+            "function",
+            "hidden_image",
+            "leadership",
+            "male_stereotype",
+            "female_stereotype",
+            "gendered_denominations_ending",
+        ]
+    )
 
 
 async def context_false_positives(lang, tokens, list_results):
@@ -3540,7 +3559,8 @@ def regex_match(
     token = tokens[i]
 
     for rule in filtered_rules:
-        if not is_sub_category_enabled(config, rule.subcategory):
+        subcategory = is_sub_category_enabled(config, rule.subcategories)
+        if not subcategory:
             continue
 
         connector_string = rule.word_types[-1]
@@ -3630,16 +3650,12 @@ def regex_match(
             text = check_text[ending_start:]
             start = tokens[i - 1].idx + ending_start
 
-        subcategory = rule.subcategory
-        if rule.is_advanced:
-            subcategory = add_advanced(subcategory)
-
         alternatives = rule.alternatives
         explanation = rule.explanation
         url = rule.url
         icon = rule.icon
 
-        if rule.subcategory == "d_and_i":
+        if subcategory == "d_and_i":
             if check_case == "gender_denom" and check_text.islower():
                 text_split = text.split(connector_string)
                 if (
@@ -3648,7 +3664,7 @@ def regex_match(
                 ):
                     continue
 
-        elif rule.subcategory == "gendered_denominations_ending" and rule.is_advanced:
+        elif subcategory == "gendered_denominations_ending_advanced":
             if check_text.islower():
                 if connector_string == "/" and tokens[i - 1].text.islower():
                     text = tokens[i - 1].text + text
@@ -3668,7 +3684,7 @@ def regex_match(
             # Kundinnen -> Kund*innen
             elif "innen" in text:
                 alternatives = [Alternative(alternatives[0].lemma + "nen")]
-        elif rule.subcategory == "gender_specific_abbreviation":
+        elif subcategory == "gender_specific_abbreviation":
             parenthesis = (
                 i > 0
                 and tokens[i - 1].text == "("
@@ -3887,21 +3903,18 @@ def rule_check(
                 rule[rule_columns["lemma"]],
                 json.loads(rule[rule_columns["lemma_json"]]),
                 json.loads(rule[rule_columns["word_types_json"]]),
-                subcategories[0],
+                subcategories,
             )
 
             rule.label = label
 
-        subcategory = rule.subcategory
-        if rule.is_advanced:
-            subcategory = add_advanced(subcategory)
-
-        if not is_sub_category_enabled(config, subcategory):
+        subcategory = is_sub_category_enabled(config, rule.subcategories)
+        if not subcategory:
             continue
 
         # Skip case "Juden" if used as a name
         if (
-            rule.is_gendered_denom_rule()
+            is_gendered_denom_rule(lang.lang, subcategory)
             and token.ent_type_ in rules["named_entity_labels"]["names"]
             and token.ent_type_ != "MISC"
             and token.ent_type_ != "ORG"
@@ -3994,7 +4007,7 @@ def rule_check(
             if not text or is_false_positive(full_text, token, rule):
                 continue
 
-        if rule.is_gendered_denom_rule():
+        if is_gendered_denom_rule(lang.lang, subcategory):
             is_singular = is_token_singular(lang.lang, token)
             if is_singular is None:
                 continue
