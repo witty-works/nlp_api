@@ -5,35 +5,6 @@
         {
             "alternatives": [
                 {
-                    "text": "Ingenieur*innen"
-                },
-                {
-                    "text": "Ingenieurinnen und Ingenieure"
-                },
-                {
-                    "text": "Engineering-Teams"
-                },
-                {
-                    "text": "Auf einer Hoch-/Fachschule ausgebildete Technik-Fachleute"
-                }
-            ],
-            "category": "cultural-diversity",
-            "context": "Engineers work in this industry. Being an experienced engineer is useful.",
-            "end": 9,
-            "explanation": {
-                "icon": "😉",
-                "text": ""
-            },
-            "gravity": 2.0,
-            "label": "Cultural Diversity",
-            "proficiency_level": "unconscious_bias",
-            "start": 0,
-            "subcategory": "anglicism",
-            "text": "Engineers"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "they"
                 },
                 {

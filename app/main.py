@@ -2070,7 +2070,7 @@ def fetch_word_rules(lang: Language, token):
             ] = token.lemma_
 
     filter_list = " OR ".join(filters.keys())
-    query = f"SELECT {column_list} FROM rules_rule WHERE is_active = 1 and language = ? and {filter_list} ORDER BY LENGTH(lemma) DESC, first_is_word_type_lemmatize ASC"
+    query = f"SELECT {column_list} FROM rules_rule WHERE is_active = 1 and language = ? and ({filter_list}) ORDER BY LENGTH(lemma) DESC, first_is_word_type_lemmatize ASC"
     parameters = [lang.lang] + list(filters.values())
 
     return rules_cursor.execute(query, parameters)
