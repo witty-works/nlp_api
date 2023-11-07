@@ -2092,7 +2092,7 @@ def fetch_word_rules(lang: Language, token):
     query = f"SELECT {column_list} FROM rules_rule WHERE is_active = 1 and language = ? and ({filter_list}) ORDER BY LENGTH(lemma) DESC, first_is_word_type_lemmatize ASC"
     parameters = [lang.lang] + list(filters.values())
 
-    return rules_cursor.execute(query, parameters)
+    return rules_cursor.execute(query, parameters).fetchall()
 
 
 def fetch_rule_alternatives(rule: Rule, is_singular: bool) -> list[Alternative]:
@@ -2208,7 +2208,7 @@ def fetch_declensions(lang, word_type, b_text, a_text=None):
             f"Could not find {word_type} form for '{b_text}'",
         )
 
-    return a_result, b_result
+    return b_result, a_result
 
 
 def fetch_false_positives(rule: Rule) -> list[str]:
@@ -2721,8 +2721,10 @@ def fetch_word_type(lang, token, word_type=None, single_word=None):
 
         return "v"
 
-    if token.lemma_ in rules["de"]["verbs"]:
-        return "v"
+    if lang == "de":
+        b_result, a_result = fetch_declensions("de", "v", token.lemma_)
+        if b_result is not None:
+            return "v"
 
     if token.pos_ == "NOUN" or token.pos_ == "PRON":
         return "n"
@@ -2981,7 +2983,7 @@ def align_noun_form(lang, a_text, a_token, b_token):
 
     is_singular = is_token_singular(lang, b_token)
 
-    a_result, b_result = fetch_declensions(lang, "s", b_token.lemma_)
+    b_result, a_result = fetch_declensions(lang, "s", b_token.lemma_)
 
     if is_singular is True or (is_singular is None and is_token_plural(lang, a_token)):
         return b_result["plural"] if b_result is not None else Noun(b_text).plural()
@@ -2995,7 +2997,7 @@ def align_noun_form(lang, a_text, a_token, b_token):
 def align_adjective_form_english(a_token, b_token):
     # use a_token.text to handle "consulting"
     a_text_lower = a_token.text.lower()
-    a_result, b_result = fetch_declensions(
+    b_result, a_result = fetch_declensions(
         "en", "a", b_token.text.lower(), a_text_lower
     )
     if a_result is not None:
@@ -3184,7 +3186,7 @@ def align_verb_form_german(a_text, a_token, b_token):
 
 
 def align_verb_form_english(a_text, b_token):
-    a_result, b_result = fetch_declensions("en", "v", b_token.text.lower(), a_text)
+    b_result, a_result = fetch_declensions("en", "v", b_token.text.lower(), a_text)
     if a_result is not None:
         target_form = find_matching_form(a_result, a_text.lower())
     else:
@@ -3919,7 +3921,7 @@ def rule_check(
             and token.ent_type_ != "MISC"
             and token.ent_type_ != "ORG"
         ):
-            return i
+            continue
 
         if rule.type == RuleType.SUBSTRING:
             text = token.text
