@@ -285,23 +285,6 @@ pdm run python -m bin.analyze_rules -l en
 pdm run python -m bin.analyze_rules -l de
 ```
 
-## Update the false positive list
-
-1. Run server locally (or restart to re-read the training data), for example
-   with pdm:
-
-```
-pdm run uvicorn app.main:app --reload
-```
-
-2. Run the generate_false_positive.py file
-
-```
-pdm run python -m bin.generate_false_positive
-```
-
-If you get an error here, please repeat steps 1-2 and run the script again.
-
 ## Collect statistics
 
 Run `./statistics.sh` to fetch statistics locally and remotely. See

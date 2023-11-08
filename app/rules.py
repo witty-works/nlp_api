@@ -180,8 +180,6 @@ def fetch_rules(model):
             "df_d_and_i_words": "d_and_i_words.csv",
             # load communal coded terms
             "df_communal_words": "communal.csv",
-            # load gender false positive
-            "df_gender_false_positive": "gender_false_positive.csv",
             # load abbreviations
             "df_abbreviation": "abbreviations.csv",
             # verbs
@@ -583,9 +581,6 @@ def fetch_rules(model):
 
         # dictionaries to handle false positives
         rules["de"]["false_positives"] = ["international"]
-        rules["de"]["gender_false_positives"] = data["de"]["df_gender_false_positive"][
-            "False_positives"
-        ]
 
         rules["de"]["exceptions"] = [
             "Unternehmen",
