@@ -1,7 +1,7 @@
 import pandas as pd
 import re
 from german_nouns.lookup import Nouns
-from app.models import LangWithAutoType, Rule
+from app.models import LangWithAutoType, Rule, EntityType
 
 
 def fetch_rules(langs):
@@ -18,7 +18,7 @@ def fetch_rules(langs):
 
     rules = {
         "named_entity_labels": {
-            "names": (
+            EntityType.NAME: (
                 "PER",  # Named person or family
                 "ORG",  # Companies, agencies, institutions, etc.
                 "PERSON",  # People, including fictional
@@ -33,14 +33,18 @@ def fetch_rules(langs):
                 "WORK_OF_ART",  # Titles of books, songs, etc.
                 "MISC",  # Miscellaneous entities, e.g., events, nationalities, products, or works of art.
             ),
-            "numbers": (
+            EntityType.PERSON: (
+                "PER",  # Named person or family
+                "PERSON",  # People, including fictional
+            ),
+            EntityType.NUMBER: (
                 "MONEY",  # Monetary values, including unit
                 "CARDINAL",  # Numerals that do not fall under another type
                 "ORDINAL",  # "first", "second", etc.
                 "QUANTITY",  # Measurements, as of weight or distance
                 "PERCENT",  # Percentage, including "%"
             ),
-            "datetime": (
+            EntityType.DATETIME: (
                 "DATE",  # Absolute or relative dates or periods
                 "TIME",  # Times smaller than a day
             ),

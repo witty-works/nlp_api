@@ -82,6 +82,16 @@ class RuleType(str, Enum):
     SUBSTRING = "substring"
 
 
+class EntityType(str, Enum):
+    DEFAULT = "default"
+    NAME = "name"
+    NON_NAME = "non_name"
+    PERSON = "person"
+    NON_PERSON = "non_person"
+    NUMBER = "number"
+    DATETIME = "datetime"
+
+
 class RuleLabelEnum:
     DEFAULT = "default"
     NOT_FOR_PEOPLE = "not_for_people"
@@ -169,6 +179,7 @@ class Rule:
     type: Optional[RuleType] = RuleType.DEFAULT
     label: Optional[str] = None
     pattern: Optional[str] = None
+    entity_type: Optional[EntityType] = EntityType.DEFAULT
 
     def __init__(
         self,
@@ -226,6 +237,7 @@ class RuleIn(BaseModel):
     alternatives: Optional[list[AlternativeIn]] = []
     false_positives: Optional[list[str]] = []
     label: Optional[str] = None
+    entity_type: Optional[EntityType] = EntityType.DEFAULT
 
 
 class Config(BaseModel):

@@ -83,6 +83,7 @@ from app.models import (
     Alternative,
     Rule,
     RuleLabelEnum,
+    EntityType,
 )
 from app.lang_detection import get_lang_detection
 from app.categories import (
@@ -1491,7 +1492,9 @@ def languagetool_matches(
                     and entity.end_char > start
                     and entity.end_char <= end
                 ):
-                    is_entity = entity.label_ in rules["named_entity_labels"]["names"]
+                    is_entity = (
+                        entity.label_ in rules["named_entity_labels"][EntityType.NAME]
+                    )
                     break
 
             if is_entity:
@@ -3976,14 +3979,44 @@ def rule_check(
         if not subcategory:
             continue
 
-        # Skip case "Juden" if used as a name
-        if (
-            is_gendered_denom_rule(lang.lang, subcategory)
-            and token.ent_type_ in rules["named_entity_labels"]["names"]
-            and token.ent_type_ != "MISC"
-            and token.ent_type_ != "ORG"
-        ):
-            continue
+        # TODO add entity type on the rule editor
+        if rule.lemma == "international":
+            rule.entity_type = EntityType.NON_NAME
+        else:
+            rule.entity_type = (
+                EntityType.NON_PERSON
+                if is_gendered_denom_rule(lang.lang, subcategory)
+                else EntityType.DEFAULT
+            )
+
+        if rule.entity_type != EntityType.DEFAULT:
+            match rule.entity_type:
+                case EntityType.NON_PERSON:
+                    if (
+                        token.ent_type_
+                        and token.ent_type_
+                        in rules["named_entity_labels"][EntityType.PERSON]
+                    ):
+                        continue
+                case EntityType.PERSON:
+                    if (
+                        token.ent_type_
+                        not in rules["named_entity_labels"][EntityType.PERSON]
+                    ):
+                        continue
+                case EntityType.NON_NAME:
+                    if (
+                        token.ent_type_
+                        and token.ent_type_
+                        in rules["named_entity_labels"][EntityType.NAME]
+                    ):
+                        continue
+                case EntityType.NAME:
+                    if (
+                        token.ent_type_
+                        not in rules["named_entity_labels"][EntityType.NAME]
+                    ):
+                        continue
 
         if rule.type == RuleType.SUBSTRING:
             text = token.text

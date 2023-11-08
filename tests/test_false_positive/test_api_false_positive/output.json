@@ -6,10 +6,35 @@
     "notifications": 5,
     "results": [
         {
+            "alternatives": [
+                {
+                    "text": "in vielen Ländern vertreten"
+                },
+                {
+                    "text": "auf allen Kontinenten vertreten"
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "Greenpeace International ist eine internationale Firma. Wir unterstützen trans Personen.",
+            "end": 48,
+            "explanation": {
+                "content": "advanced",
+                "icon": "🙄",
+                "text": "Schwächen die Wirkung deiner Botschaft",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/worthülsen?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Kulturelle Diversität: Worthülsen",
+            "proficiency_level": "unconscious_bias",
+            "start": 34,
+            "subcategory": "hollow",
+            "text": "internationale"
+        },
+        {
             "alternatives": [],
             "category": "social-motive",
-            "context": "Greenpeace ist eine internationale Firma. Wir unterstützen trans Personen.",
-            "end": 58,
+            "context": "Greenpeace International ist eine internationale Firma. Wir unterstützen trans Personen.",
+            "end": 72,
             "explanation": {
                 "content": "video",
                 "icon": "✅",
@@ -18,7 +43,7 @@
             },
             "label": "Soziale Motivation: Kommunale Sprache",
             "proficiency_level": "inclusive",
-            "start": 46,
+            "start": 60,
             "subcategory": "communal",
             "text": "unterstützen"
         }
