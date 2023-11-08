@@ -4,50 +4,5 @@
     "language": "de",
     "limit_reached": false,
     "notifications": 5,
-    "results": [
-        {
-            "alternatives": [
-                {
-                    "context": "💡 Inspiration",
-                    "inspiration": true,
-                    "text": "verantwortliche Person"
-                },
-                {
-                    "context": "💡 Inspiration",
-                    "inspiration": true,
-                    "text": "Person, die die Vision kommuniziert"
-                },
-                {
-                    "context": "💡 Inspiration",
-                    "inspiration": true,
-                    "text": "Person, die ihr Team unterstützt und coacht"
-                },
-                {
-                    "context": "💡 Inspiration",
-                    "inspiration": true,
-                    "text": "Person, die mit Rat und Tat zur Seite steht"
-                },
-                {
-                    "context": "💡 Inspiration",
-                    "inspiration": true,
-                    "text": "Leitung"
-                }
-            ],
-            "category": "gender-orientation",
-            "context": "Ich bin eine starke Führungskraft! Wir sind alle Führungskräfte.",
-            "end": 33,
-            "explanation": {
-                "content": "advanced",
-                "icon": "💡",
-                "text": "Viele denken bei diesem Wort zuerst an einen Mann",
-                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Geschlecht + Orientierung: Generisches Maskulinum",
-            "proficiency_level": "unconscious_bias",
-            "start": 20,
-            "subcategory": "function",
-            "text": "Führungskraft"
-        }
-    ]
+    "results": []
 }

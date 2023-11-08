@@ -1866,7 +1866,7 @@ def apply_false_positives(
         false_positives = configs["false_positives"]
 
     if len(false_positives):
-        for result in list_results:
+        for result in list_results.copy():
             if result.text in false_positives:
                 list_results.remove(result)
 
