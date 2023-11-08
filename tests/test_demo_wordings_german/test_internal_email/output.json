@@ -60,16 +60,16 @@
                     "text": "Teammitglied"
                 },
                 {
-                    "text": "Person, die im selben Team arbeitet"
-                },
-                {
-                    "text": "Person, die im selben Unternehmen arbeitet"
-                },
-                {
-                    "text": "Person, die man von der Arbeit kennt"
-                },
-                {
                     "text": "Kolleg*innen"
+                },
+                {
+                    "text": "Kolleginnen und Kollegen"
+                },
+                {
+                    "text": "Kollegschaft"
+                },
+                {
+                    "text": "Team"
                 }
             ],
             "category": "gender-orientation",

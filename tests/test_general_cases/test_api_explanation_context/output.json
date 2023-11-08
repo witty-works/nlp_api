@@ -3,21 +3,36 @@
     "limit_reached": false,
     "results": [
         {
-            "alternatives": [],
-            "category": "social-motive",
+            "alternatives": [
+                {
+                    "text": "engagiert"
+                },
+                {
+                    "text": "begeisterungsfähig"
+                },
+                {
+                    "text": "zur Eigeninitiative"
+                },
+                {
+                    "text": "bereit, sich zu engagieren"
+                }
+            ],
+            "category": "cultural-diversity",
             "context": "Bist du hoch motiviert?",
             "end": 22,
             "explanation": {
-                "content": "video",
-                "icon": "✅",
-                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
-                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true"
+                "content": "advanced",
+                "context": "nicht auf Menschen beziehen",
+                "icon": "🙄",
+                "text": "Schwächen die Wirkung deiner Botschaft",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/worthülsen?reducedView=true"
             },
-            "label": "Soziale Motivation: Kommunale Sprache",
-            "proficiency_level": "inclusive",
-            "start": 13,
-            "subcategory": "communal",
-            "text": "motiviert"
+            "gravity": 3.0,
+            "label": "Kulturelle Diversität: Worthülsen",
+            "proficiency_level": "unconscious_bias",
+            "start": 8,
+            "subcategory": "hollow_advanced",
+            "text": "hoch motiviert"
         }
     ]
 }

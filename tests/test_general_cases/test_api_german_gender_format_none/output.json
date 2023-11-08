@@ -51,12 +51,6 @@
         {
             "alternatives": [
                 {
-                    "text": "beziehende Person"
-                },
-                {
-                    "text": "beauftragende Firma"
-                },
-                {
                     "text": "Kundschaft"
                 },
                 {
@@ -64,6 +58,12 @@
                 },
                 {
                     "text": "Auftraggebende"
+                },
+                {
+                    "text": "Bestellende"
+                },
+                {
+                    "text": "beziehende Personen"
                 }
             ],
             "category": "gender-orientation",

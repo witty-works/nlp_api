@@ -131,6 +131,37 @@
         {
             "alternatives": [
                 {
+                    "text": "questioned"
+                },
+                {
+                    "text": "cross-examined"
+                },
+                {
+                    "text": "re-evaluated"
+                },
+                {
+                    "text": "object to"
+                }
+            ],
+            "category": "social-motive",
+            "context": "e are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number <NUMBER> and innovation drives us.\nSincere regards,\nNadia",
+            "end": 121,
+            "explanation": {
+                "content": "video",
+                "icon": "😒",
+                "text": "Doesn’t resonate with team-minded people",
+                "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Social Motive: Agentic language",
+            "proficiency_level": "unconscious_bias",
+            "start": 111,
+            "subcategory": "agentic_advanced",
+            "text": "challenged"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "critical"
                 },
                 {
