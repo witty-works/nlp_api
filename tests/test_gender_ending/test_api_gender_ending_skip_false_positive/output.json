@@ -8,7 +8,7 @@
                     "text": "Bewerber*innen"
                 },
                 {
-                    "text": "*Bewerbenden"
+                    "text": "Bewerbende"
                 },
                 {
                     "text": "Personen, die sich bewerben"
@@ -32,10 +32,10 @@
         {
             "alternatives": [
                 {
-                    "text": "*Fachperson"
+                    "text": "Fachperson"
                 },
                 {
-                    "text": "*Fachkraft"
+                    "text": "Fachkraft"
                 },
                 {
                     "text": "jemand vom Fach"
@@ -60,10 +60,10 @@
         {
             "alternatives": [
                 {
-                    "text": "*Fachperson"
+                    "text": "Fachperson"
                 },
                 {
-                    "text": "*Fachkraft"
+                    "text": "Fachkraft"
                 },
                 {
                     "text": "Jemand vom Fach"

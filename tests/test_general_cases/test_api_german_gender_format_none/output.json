@@ -31,7 +31,11 @@
             "text": "Ninja"
         },
         {
-            "alternatives": [],
+            "alternatives": [
+                {
+                    "text": "Programmierende"
+                }
+            ],
             "category": "gender-orientation",
             "context": "Wir suchen Ninja Programmierer für unsere Kunden",
             "end": 30,

@@ -9,7 +9,6 @@ def fetch_rules(langs):
         "de": {
             # load articles for gendered denom
             "df_articles": "articles.csv",
-            "df_gender_false_positive": "gender_false_positive.csv",
             # verbs
             "verbs": "verbs.csv",
         },
