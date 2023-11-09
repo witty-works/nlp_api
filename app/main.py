@@ -3472,59 +3472,82 @@ def match_binary_inclusive_gendered_denom_analysis_de(
     is_singular,
     rule: Rule,
 ):
-    tokens_length = len(tokens)
     token = tokens[i]
     start = token.idx
 
-    if tokens_length <= 2:
-        return text, start, subcategory
+    if rule.type == RuleType.SUFFIX and rule.lemma != tokens[i].lemma_:
+        prefix_end = text.lower().replace("ä", "a").find(rule.lemma.lower())
+        prefix = text[0:prefix_end]
+    else:
+        prefix = ""
 
-    alternatives = gendered_denom_alternatives(tokens, i, rule, is_singular)
-
+    match = False
+    binary = ResultOut.genderedRolesFormatBinary(config.gendered_roles_format)
+    alternatives = rule.alternatives if is_singular else rule.plural_alternatives
+    new_alternatives = []
     for alternative in alternatives:
+        if alternative[0] == "~":
+            alternative = alternative[1:]
+            if prefix:
+                alternative = prefix + alternative[0].lower() + alternative[1:]
+        elif "~" in alternative:
+            if prefix:
+                alternative = alternative.replace(
+                    rule.lemma, prefix + rule.lemma[0].lower() + rule.lemma[1:]
+                )
+                if rule.lemma[0] == "A":
+                    lemma = "Ä" + rule.lemma[1:]
+                    alternative = alternative.replace(lemma, prefix + lemma.lower())
+
+            # handle "eines Mitarbeiters" => "Mitarbeiterin/Mitarbeiters"
+            if is_singular and text[-1] == "s" and alternative.startswith(text[:-1]):
+                alternative += "s"
+            # handle "Partnern" => "Partnerinnen und Partnern"
+            elif (
+                not is_singular
+                and text[-1] == "n"
+                and alternative.startswith(text[:-1])
+            ):
+                alternative += "n"
+
+        if binary or (
+            "frau" not in alternative.lower() and "mann" not in alternative.lower()
+        ):
+            new_alternatives.append(alternative)
+
         if "~" not in alternative:
             continue
 
-        alternative = alternative.replace(
-            rule.lemma,
-            text
-            if not text.endswith("n") or text.endswith("mann")
-            else (
-                text.removesuffix("n")
-                if not text.endswith("en")
-                else text.removesuffix("en")
-            ),
-        )
         generated_alternative = ResultOut.getGenderedRolesFormatBinary(alternative)
-        generated_alternative = generated_alternative.removesuffix(token.text)
+        generated_alternative = generated_alternative.removesuffix(text)
 
         if (
             full_text[start - len(generated_alternative) : start]
             != generated_alternative
         ):
-            break
+            continue
 
-        if ResultOut.genderedRolesFormatBinary(config.gendered_roles_format):
+        if binary:
             return None, None, None, None
 
-        new_i = i - 2
-        start = tokens[new_i].idx
-        text = full_text[start : (tokens[new_i + 2].idx + len(tokens[new_i + 2].text))]
+        if match == False:
+            subcategory = (
+                "function"
+                if "mann" in text.lower()
+                else "gendered_denominations_ending"
+            )
 
-        subcategory = (
-            "function" if "mann" in text.lower() else "gendered_denominations_ending"
-        )
+            new_i = i - 2
+            if new_i < 0:
+                continue
 
-        break
+            start = tokens[new_i].idx
+            text = full_text[
+                start : (tokens[new_i + 2].idx + len(tokens[new_i + 2].text))
+            ]
+            match = True
 
-    if not ResultOut.genderedRolesFormatBinary(config.gendered_roles_format):
-        new_alternatives = []
-        for alternative in alternatives:
-            if "frau" not in alternative.lower() or "mann" not in alternative.lower():
-                new_alternatives.append(alternative)
-        alternatives = new_alternatives
-
-    return text, start, subcategory, alternatives
+    return text, start, subcategory, new_alternatives
 
 
 def fetch_article_for_flexion(flexion, word, article_text):
@@ -3876,60 +3899,6 @@ def regex_match(
         return skip_token
 
     return i
-
-
-def gendered_denom_alternatives(tokens, i, rule: Rule, is_singular):
-    token = tokens[i]
-    alternatives = rule.alternatives if is_singular else rule.plural_alternatives
-
-    if rule.type == RuleType.SUFFIX:
-        alternatives = alternatives.copy()
-        prefix = (
-            token.lemma_.removesuffix(rule.lemma.lower())
-            if len(token.lemma_) != len(rule.lemma)
-            else ""
-        )
-
-        for k, alternative in enumerate(alternatives):
-            alternative = alternative.replace(rule.lemma, token.lemma_)
-            if prefix:
-                if alternative[0] == "~":
-                    alternative = prefix + alternative[1].lower() + alternative[2:]
-                if rule.lemma[0] == "A":
-                    modified_word = "Ä" + rule.lemma[1:]
-                    modified_word_lower = "ä" + rule.lemma[1:]
-                    replacement = (
-                        token.lemma_[0 : -len(modified_word)] + modified_word_lower
-                    )
-                    alternative = alternative.replace(
-                        modified_word_lower, replacement.lower()
-                    )
-                    alternative = alternative.replace(modified_word, replacement)
-            elif alternative[0] == "~":
-                alternative = alternative[1:]
-
-            alternatives[k] = alternative
-
-    flexion = fetch_flexion(token)
-    if flexion is not None and "nominativ" not in flexion:
-        new_alternatives = []
-        for alternative in alternatives:
-            if "~" in alternative:
-                alternative_words = alternative.split("~")
-
-                german_noun = german_noun_analysis(alternative_words[-1])
-                if (
-                    german_noun is not None
-                    and "flexion" in german_noun
-                    and flexion in german_noun["flexion"]
-                ):
-                    alternative_words[-1] = german_noun["flexion"][flexion]
-                    alternative = "~".join(alternative_words)
-
-            new_alternatives.append(alternative)
-        alternatives = new_alternatives
-
-    return alternatives
 
 
 def is_false_positive(full_text, token, rule):
