@@ -682,7 +682,7 @@ class ResultOut(BaseModel):
                     alternative.strip()
 
                 if alternative_context is None:
-                    alternative_context = "💡 Inspiration"
+                    alternative_context = "💡"
 
             else:
                 add_inspiration_alternatives = False
