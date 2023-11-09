@@ -18,7 +18,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Hallo Kunde. Wir geben unseren Kunden alles.",
+            "context": "Hallo Kunde. Wir geben unseren Kunden alles. Ausbildnerinnen und Ausbildner.",
             "end": 11,
             "explanation": {
                 "content": "advanced",
@@ -52,7 +52,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Hallo Kunde. Wir geben unseren Kunden alles.",
+            "context": "Hallo Kunde. Wir geben unseren Kunden alles. Ausbildnerinnen und Ausbildner.",
             "end": 37,
             "explanation": {
                 "content": "advanced",

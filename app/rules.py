@@ -44,10 +44,14 @@ class Rule:
         self.lang = lang
         self.lemma = lemma
         self.words = words
+        if isinstance(word_types, str):
+            # BC code s -> n
+            word_types = tuple(word_types.replace("s", "n").split("|"))
         self.word_types = word_types
-        self.subcategory = self.parse_subcategory(subcategory)
 
+        self.subcategory = self.parse_subcategory(subcategory)
         self.alternatives = self.filter_alternatives(alternatives)
+
         self.plural_alternatives = None
         self.secondary_subcategory = None
         self.false_positives = None
@@ -62,7 +66,7 @@ class Rule:
         if is_base_category(subcategory):
             subcategory = remove_base(subcategory)
             if get_proficiency_level(subcategory) == "openly_discriminating":
-                if len(self.word_types) > 0 and "s" in self.word_types[0]:
+                if len(self.word_types) > 0 and "n" in self.word_types[0]:
                     self.type = RuleType.SUBSTRING
             else:
                 self.type = RuleType.SUFFIX
@@ -112,7 +116,7 @@ def build_rules(
             lang,
             lemma,
             tuple([i.text for i in model.tokenizer(lemma)]),
-            tuple(df["Word_Type"][i].split("|")),
+            df["Word_Type"][i],
         )
 
         key = rule.words[0].lower()
@@ -176,8 +180,6 @@ def fetch_rules(model):
             "df_d_and_i_words": "d_and_i_words.csv",
             # load communal coded terms
             "df_communal_words": "communal.csv",
-            # load gender false positive
-            "df_gender_false_positive": "gender_false_positive.csv",
             # load abbreviations
             "df_abbreviation": "abbreviations.csv",
             # verbs
@@ -579,9 +581,6 @@ def fetch_rules(model):
 
         # dictionaries to handle false positives
         rules["de"]["false_positives"] = ["international"]
-        rules["de"]["gender_false_positives"] = data["de"]["df_gender_false_positive"][
-            "False_positives"
-        ]
 
         rules["de"]["exceptions"] = [
             "Unternehmen",

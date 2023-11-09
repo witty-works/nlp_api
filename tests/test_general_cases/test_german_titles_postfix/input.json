@@ -1,6 +1,8 @@
 {
-  "text": "Unser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Hure. Hurehund. Katzenhurehund. Katzenhure. Mandschure. Mandschurehuremhure. Ein Ingenieur kann das. Ein Elektroingenieur kann das nicht.",
+  "text": "Unser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Hure. Hurehund. Katzenhurehund. Katzenhure. Mandschure. Mandschurehuremhure. Ein Ingenieur kann das. Ein Elektroingenieur kann das nicht. Das du das mitunterzeichnet?",
   "config": {
-    "disabled_categories": ["orthography"]
+    "disabled_categories": [
+      "orthography"
+    ]
   }
 }

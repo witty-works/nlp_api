@@ -198,7 +198,7 @@ def get_data_from_files(model, locale, details):
                                                 % (alternative)
                                             )
 
-                                if "s" == word_type:
+                                if "n" == word_type:
                                     if (
                                         category != "openly_discriminating"
                                         and len(nouns[word]) == 0

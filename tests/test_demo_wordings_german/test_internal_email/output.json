@@ -150,12 +150,12 @@
         {
             "alternatives": [
                 {
-                    "context": "💡 Inspiration",
+                    "context": "💡",
                     "inspiration": true,
                     "text": "einen langen Atem haben"
                 },
                 {
-                    "context": "💡 Inspiration",
+                    "context": "💡",
                     "inspiration": true,
                     "text": "Fähigkeit, an Dingen dranzubleiben"
                 }

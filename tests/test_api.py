@@ -383,19 +383,19 @@ def test_parse_word_types():
         response = client.get(url)
         assert response.status_code == 422
 
-        response = client.get(url + "word_types=s")
+        response = client.get(url + "word_types=n")
         assert response.status_code == 422
 
-        response = client.get(url + "word_types=s|~v|s|c")
+        response = client.get(url + "word_types=n|~v|n|c")
         assert response.status_code == 422
 
-        response = client.get(url + "word_types=s|~v|s|=conj")
+        response = client.get(url + "word_types=n|~v|n|=conj")
         result = response.json()
 
         assert result == [
-            {"word_type": "s", "lower_case": True, "lemmatize": True},
+            {"word_type": "n", "lower_case": True, "lemmatize": True},
             {"word_type": "v", "lower_case": True, "lemmatize": False},
-            {"word_type": "s", "lower_case": True, "lemmatize": True},
+            {"word_type": "n", "lower_case": True, "lemmatize": True},
             {"word_type": "conj", "lower_case": False, "lemmatize": False},
         ]
 
@@ -1314,7 +1314,7 @@ def test_spacy():
         response_content = json.loads(response.content)
 
         expected = [
-            {"word_type": "emoji|~s|~|a|a|s||||emoji"},
+            {"word_type": "emoji|~n|~|a|a|n||||emoji"},
             {
                 "text": "👩🏻‍🚒",
                 "lemma": "👩🏻‍🚒",
@@ -1338,7 +1338,7 @@ def test_spacy():
                 "tag": "PDS",
                 "pos": "PRON",
                 "dep": "sb",
-                "word_type": "s",
+                "word_type": "n",
                 "morph": {
                     "Case": "Nom",
                     "Gender": "Neut",
@@ -1409,7 +1409,7 @@ def test_spacy():
                 "tag": "NN",
                 "pos": "NOUN",
                 "dep": "pd",
-                "word_type": "s",
+                "word_type": "n",
                 "morph": {"Case": "Nom", "Gender": "Masc", "Number": "Sing"},
                 "is_emoji": False,
                 "is_singular": True,
