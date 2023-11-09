@@ -3990,6 +3990,8 @@ def is_false_positive(full_text, token, rule):
         if partial_text.startswith(false_positive):
             return True
 
+    return False
+
 
 def rule_check(
     version: float,
@@ -4041,17 +4043,74 @@ def rule_check(
         if rule.type == RuleType.SUBSTRING:
             text = token.text
             token_lower = text.lower()
-            count = token_lower.count(rule.lemma.lower())
+            rule_lemma_lower = rule.lemma.lower()
+            count = token_lower.count(rule_lemma_lower)
             if count == 0:
                 continue
 
+            standard_words = [
+                "zusammen",
+                "schaft",
+                "nieder",
+                "hinter",
+                "wider",
+                "unter",
+                "reich",
+                "ismus",
+                "über",
+                "voll",
+                "nach",
+                "miss",
+                "ling",
+                "lich",
+                "lein",
+                "leer",
+                "keit",
+                "heit",
+                "haft",
+                "chen",
+                "zer",
+                "weg",
+                "vor",
+                "ver",
+                "ver",
+                "ung",
+                "tum",
+                "nis",
+                "mit",
+                "los",
+                "hin",
+                "her",
+                "ent",
+                "emp",
+                "ein",
+                "ein",
+                "dar",
+                "bei",
+                "aus",
+                "auf",
+                "arm",
+                "zu",
+                "un",
+                "um",
+                "ob",
+                "le",
+                "in",
+                "ge",
+                "er",
+                "be",
+                "an",
+                "ab",
+            ]
             if rule.false_positives is not None:
-                for false_positive in rule.false_positives:
-                    count -= token_lower.count(false_positive.lower())
-                    if count <= 0:
-                        break
+                standard_words = rule.false_positives + standard_words
 
-            if count <= 0:
+            for standard_word in standard_words:
+                if standard_word.lower() not in rule_lemma_lower:
+                    token_lower = token_lower.replace(standard_word.lower(), "")
+
+            count = token_lower.count(rule_lemma_lower)
+            if count == 0:
                 continue
 
             skip_token = i + 1
