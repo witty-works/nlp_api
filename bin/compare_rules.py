@@ -98,8 +98,6 @@ def get_data_file(file):
 
 
 args = parse_args()
-
-args = parse_args()
 training_data_lemmas = get_data_from_files(args.Locale)
 
 if not is_file(args.File):
