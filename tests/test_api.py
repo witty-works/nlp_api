@@ -1322,7 +1322,7 @@ def test_spacy():
         response_content = json.loads(response.content)
 
         expected = [
-            {"word_type": "emoji|~n|~v|a|a|n||v||emoji"},
+            {"word_type": "emoji|~n|~v|a|a|n||||emoji"},
             {
                 "text": "👩🏻‍🚒",
                 "lemma": "👩🏻‍🚒",
@@ -1447,7 +1447,7 @@ def test_spacy():
                 "tag": "APPR",
                 "pos": "ADP",
                 "dep": "mo",
-                "word_type": "v",
+                "word_type": "",
                 "morph": {},
                 "is_emoji": False,
                 "is_singular": None,

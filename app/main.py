@@ -109,10 +109,13 @@ redis = set_up_redis(settings)
 
 logging.debug("app started with settings: %s", settings)
 
-source = sqlite3.connect("./database/db.sqlite3")
 rules_db = sqlite3.connect(":memory:", check_same_thread=False)
-source.backup(rules_db)
-source.close()
+if settings.import_from_dump:
+    rules_db.executescript(open("./database/dump.sql", "r").read())
+else:
+    source = sqlite3.connect("./database/db.sqlite3")
+    source.backup(rules_db)
+    source.close()
 
 rules_cursor = rules_db.cursor()
 rule_columns = {
@@ -145,7 +148,8 @@ for spacy_model in settings.models:
     parameters = [lang]
     lookup = {}
     lemma_plural_lookup[lang] = {}
-    for row in rules_cursor.execute(query, parameters):
+    rows = rules_cursor.execute(query, parameters).fetchall()
+    for row in rows:
         lookup[row[0]] = row[1]
         if row[2]:
             lemma_plural_lookup[lang][row[0]] = row[1]
@@ -153,6 +157,7 @@ for spacy_model in settings.models:
     model[lang] = fetch_nlp_model(lang, spacy_model, lookup)
     lookup = None
 
+rules_cursor.execute(f"DROP table IF EXISTS rules_lemmatization")
 rules = fetch_rules(langs)
 
 
@@ -4296,7 +4301,8 @@ def detect_non_inclusive_emoji(
     ):
         return i
 
-    alternatives = [Alternative(get_emoji_context(token.text, lang.lang))]
+    alternatives = []
+    explanation_context = get_emoji_context(token.text, lang.lang)
 
     emoji_description = token._.emoji_desc
     emoji_base = emoji_description.replace(" light skin tone", "")
@@ -4361,9 +4367,7 @@ def detect_non_inclusive_emoji(
                     alternative_skin_tone_text = (
                         emoji_base.replace(rule, "woman") + skin_tone
                     )
-                    alternatives.append(
-                        Alternative(get_emoji(alternative_skin_tone_text))
-                    )
+                    alternative = get_emoji(alternative_skin_tone_text)
 
                 if ":" not in alternative and alternative != token.text:
                     alternative = Alternative(alternative)
@@ -4403,6 +4407,11 @@ def detect_non_inclusive_emoji(
                 token.idx,
                 None,
                 alternatives,
+                None,
+                None,
+                None,
+                None,
+                explanation_context,
             )
         )
 
