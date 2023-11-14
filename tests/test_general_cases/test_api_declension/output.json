@@ -53,9 +53,6 @@
         {
             "alternatives": [
                 {
-                    "text": "ältersten"
-                },
-                {
                     "text": "erfahrensten"
                 },
                 {
@@ -66,6 +63,9 @@
                 },
                 {
                     "text": "unaufgeregtesten"
+                },
+                {
+                    "text": "informiertesten"
                 }
             ],
             "category": "acquired-diversity",

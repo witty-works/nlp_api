@@ -2952,6 +2952,10 @@ def add_declension_german(text, a_text, a_lemma, injected_string=""):
         a_text.replace("ä", "a").replace("ö", "o").replace("ü", "u"),
         a_lemma.replace("ä", "a").replace("ö", "o").replace("ü", "u"),
     )
+
+    if prefix == "alt" and text == "älter":
+        return a_text
+
     ending = a_text[len(prefix) :]
     if injected_string and ending[0 : len(injected_string)] == injected_string:
         a_text = prefix + a_text[len(prefix) + len(injected_string) :]
@@ -2975,14 +2979,18 @@ def add_declension_german(text, a_text, a_lemma, injected_string=""):
         if text.endswith("em"):
             return text
 
-        if (text[-1] == "t") and (
-            ending[0] == "t" or ending[0] == "s" or ending[0] == "n"
-        ):
-            text += "e"
-        elif (text[-1] == "h" or text[-1] == "n") and (
-            ending[0] == "t" or ending[0] == "n"
-        ):
-            text += "e"
+        e_ending_letters = ["t", "n", "c", "v", "r", "h"]
+        e_start_letters = ["t", "s", "n", "r"]
+        if text[-1] in e_ending_letters and ending[0] in e_start_letters:
+            # einfachsten
+            if (
+                not text.endswith("en")
+                and not text.endswith("in")
+                and not text.endswith("ön")
+                and text[-1] != "h"
+                and ending[0:1] != "st"
+            ) or ending[0] == "n":
+                text += "e"
         elif text[-1] == "s":
             text += "s"
         elif text[-1] == "e" and ending[0] == "e":
