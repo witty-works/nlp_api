@@ -38,7 +38,16 @@
         {
             "alternatives": [
                 {
-                    "text": "Erwachsene"
+                    "text": "Personen"
+                },
+                {
+                    "text": "eine*einer"
+                },
+                {
+                    "text": "eine/einer"
+                },
+                {
+                    "text": "Menschen"
                 },
                 {
                     "text": "alle"
@@ -58,7 +67,7 @@
             "label": "Geschlecht + Orientierung: Binäres Geschlecht",
             "proficiency_level": "unconscious_bias",
             "start": 25,
-            "subcategory": "advanced_gender_identity",
+            "subcategory": "gender_identity_advanced",
             "text": "Frauen"
         }
     ]

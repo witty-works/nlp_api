@@ -5,19 +5,7 @@
         {
             "alternatives": [
                 {
-                    "text": "Person"
-                },
-                {
-                    "text": "eine*einer"
-                },
-                {
-                    "text": "eine/einer"
-                },
-                {
-                    "text": "Mensch"
-                },
-                {
-                    "text": "Erwachsene*r"
+                    "text": "höflicher Mensch"
                 }
             ],
             "category": "gender-orientation",
@@ -25,7 +13,6 @@
             "end": 10,
             "explanation": {
                 "content": "advanced",
-                "context": "nur wenn die Person sich selbst so bezeichnet",
                 "icon": "😒",
                 "text": "Bedient die heteronormative Sicht von Geschlechteridentität",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäres-geschlecht?reducedView=true"
@@ -34,25 +21,13 @@
             "label": "Geschlecht + Orientierung: Binäres Geschlecht",
             "proficiency_level": "unconscious_bias",
             "start": 6,
-            "subcategory": "advanced_gender_identity",
+            "subcategory": "gender_identity_advanced",
             "text": "Herr"
         },
         {
             "alternatives": [
                 {
-                    "text": "Person"
-                },
-                {
-                    "text": "eine*einer"
-                },
-                {
-                    "text": "eine/einer"
-                },
-                {
-                    "text": "Mensch"
-                },
-                {
-                    "text": "Erwachsene*r"
+                    "text": "höflicher Mensch"
                 }
             ],
             "category": "gender-orientation",
@@ -60,7 +35,6 @@
             "end": 62,
             "explanation": {
                 "content": "advanced",
-                "context": "nur wenn die Person sich selbst so bezeichnet",
                 "icon": "😒",
                 "text": "Bedient die heteronormative Sicht von Geschlechteridentität",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäres-geschlecht?reducedView=true"
@@ -69,7 +43,7 @@
             "label": "Geschlecht + Orientierung: Binäres Geschlecht",
             "proficiency_level": "unconscious_bias",
             "start": 58,
-            "subcategory": "advanced_gender_identity",
+            "subcategory": "gender_identity_advanced",
             "text": "Herr"
         },
         {
