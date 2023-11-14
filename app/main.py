@@ -3493,6 +3493,8 @@ def match_binary_inclusive_gendered_denom_analysis_de(
     binary = ResultOut.genderedRolesFormatBinary(config.gendered_roles_format)
     alternatives = rule.alternatives if is_singular else rule.plural_alternatives
     new_alternatives = []
+    if alternatives is None:
+        alternatives = []
     for alternative in alternatives:
         if alternative[0] == "~":
             alternative = alternative[1:]
@@ -3584,6 +3586,9 @@ def fetch_article_for_flexion(flexion, word, article_text):
 
 
 def fetch_alternatives_with_article(tokens, i, alternatives):
+    if alternatives is None:
+        return []
+
     token = tokens[i]
     text = token.text
     word = german_noun_analysis(text)

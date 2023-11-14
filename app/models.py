@@ -608,6 +608,9 @@ class ResultOut(BaseModel):
         explanation_context,
         alternatives_max_count,
     ):
+        if alternatives is None:
+            return []
+
         alternatives = list(alternatives)
 
         # remove empty strings
