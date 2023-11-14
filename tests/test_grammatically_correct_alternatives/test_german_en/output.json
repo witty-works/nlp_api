@@ -21,7 +21,7 @@
                 }
             ],
             "category": "social-motive",
-            "context": "Unternehmen profitieren von einem erfolgreichen Management. Wie können wir das am besten machen?",
+            "context": "Unternehmen profitieren von einem erfolgreichen Management. Wie können wir das am besten machen? Mit einem ausgeprägten Gespür.",
             "end": 47,
             "explanation": {
                 "content": "advanced",
@@ -55,7 +55,7 @@
                 }
             ],
             "category": "social-motive",
-            "context": "Unternehmen profitieren von einem erfolgreichen Management. Wie können wir das am besten machen?",
+            "context": "Unternehmen profitieren von einem erfolgreichen Management. Wie können wir das am besten machen? Mit einem ausgeprägten Gespür.",
             "end": 88,
             "explanation": {
                 "content": "advanced",
@@ -69,6 +69,40 @@
             "start": 82,
             "subcategory": "exaggerating",
             "text": "besten"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "sichtbaren"
+                },
+                {
+                    "text": "intensiven"
+                },
+                {
+                    "text": "wahrnehmbaren"
+                },
+                {
+                    "text": "gründlichen"
+                },
+                {
+                    "text": "spürbaren"
+                }
+            ],
+            "category": "social-motive",
+            "context": "hmen profitieren von einem erfolgreichen Management. Wie können wir das am besten machen? Mit einem ausgeprägten Gespür.",
+            "end": 119,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😮‍💨",
+                "text": "Überzogene Aussagen wirken weniger vertrauenswürdig",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/übertreibung?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Soziale Motivation: Übertreibung",
+            "proficiency_level": "unconscious_bias",
+            "start": 107,
+            "subcategory": "exaggerating",
+            "text": "ausgeprägten"
         }
     ]
 }

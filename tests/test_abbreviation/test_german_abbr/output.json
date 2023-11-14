@@ -34,6 +34,32 @@
             "start": 0,
             "subcategory": "advanced_abbreviation",
             "text": "FLINT"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Erwachsene"
+                },
+                {
+                    "text": "alle"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "FLINT schließt lesbische Frauen explizit mit ein, um sich für mehr lesbische Sichtbarkeit zu solidarisieren.",
+            "end": 31,
+            "explanation": {
+                "content": "advanced",
+                "context": "nur wenn die Person sich selbst so bezeichnet",
+                "icon": "😒",
+                "text": "Bedient die heteronormative Sicht von Geschlechteridentität",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäres-geschlecht?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Binäres Geschlecht",
+            "proficiency_level": "unconscious_bias",
+            "start": 25,
+            "subcategory": "advanced_gender_identity",
+            "text": "Frauen"
         }
     ]
 }

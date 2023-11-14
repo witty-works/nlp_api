@@ -5,7 +5,19 @@
         {
             "alternatives": [
                 {
-                    "text": "höflicher Mensch"
+                    "text": "Person"
+                },
+                {
+                    "text": "eine*einer"
+                },
+                {
+                    "text": "eine/einer"
+                },
+                {
+                    "text": "Mensch"
+                },
+                {
+                    "text": "Erwachsene*r"
                 }
             ],
             "category": "gender-orientation",
@@ -13,6 +25,7 @@
             "end": 10,
             "explanation": {
                 "content": "advanced",
+                "context": "nur wenn die Person sich selbst so bezeichnet",
                 "icon": "😒",
                 "text": "Bedient die heteronormative Sicht von Geschlechteridentität",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäres-geschlecht?reducedView=true"
@@ -27,7 +40,19 @@
         {
             "alternatives": [
                 {
-                    "text": "höflicher Mensch"
+                    "text": "Person"
+                },
+                {
+                    "text": "eine*einer"
+                },
+                {
+                    "text": "eine/einer"
+                },
+                {
+                    "text": "Mensch"
+                },
+                {
+                    "text": "Erwachsene*r"
                 }
             ],
             "category": "gender-orientation",
@@ -35,6 +60,7 @@
             "end": 62,
             "explanation": {
                 "content": "advanced",
+                "context": "nur wenn die Person sich selbst so bezeichnet",
                 "icon": "😒",
                 "text": "Bedient die heteronormative Sicht von Geschlechteridentität",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäres-geschlecht?reducedView=true"
