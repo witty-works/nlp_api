@@ -3,7 +3,18 @@
     "limit_reached": false,
     "results": [
         {
-            "alternatives": [],
+            "alternatives": [
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "market participant"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "market participants"
+                }
+            ],
             "category": "social-motive",
             "context": "We are always one step ahead of our competitors.",
             "end": 47,

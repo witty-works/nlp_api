@@ -151,7 +151,18 @@
             "text": "Ehrgeiz"
         },
         {
-            "alternatives": [],
+            "alternatives": [
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "einen langen Atem haben"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Fähigkeit, an Dingen dranzubleiben"
+                }
+            ],
             "category": "social-motive",
             "context": "Sehr geehrte Kollegen\n  Wir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
             "end": 87,

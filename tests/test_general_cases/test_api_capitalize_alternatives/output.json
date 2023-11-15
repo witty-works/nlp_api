@@ -71,7 +71,18 @@
             "text": "Ehrgeiz"
         },
         {
-            "alternatives": [],
+            "alternatives": [
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Einen langen Atem haben"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Fähigkeit, an Dingen dranzubleiben"
+                }
+            ],
             "category": "social-motive",
             "context": "Wir suchen alles für unsere Kunden: Ehrgeiz ist unser Schlüssel.\n\n\nDurchhaltevermögen benötigen wir.\n\n\n\n\n\nEhrgeiz ist am wichtigsten",
             "end": 85,

@@ -713,10 +713,9 @@ class ResultOut(BaseModel):
                     continue
 
                 if alternative.is_inspiration:
-                    if not config.show_inspiration_alternatives:
-                        continue
-
-                    if len(alternative.label):
+                    if alternative.label is not None and len(alternative.label):
+                        alternative.label = "💡 " + alternative.label
+                    else:
                         alternative.label = "💡"
 
                 if "~" in alternative.lemma:

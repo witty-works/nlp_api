@@ -2103,7 +2103,9 @@ def fetch_word_rules(lang: Language, token):
     return rules_cursor.execute(query, parameters).fetchall()
 
 
-def fetch_rule_alternatives(rule: Rule, is_singular: bool) -> list[Alternative]:
+def fetch_rule_alternatives(
+    rule: Rule, is_singular: bool, show_inspiration_alternatives: bool
+) -> list[Alternative]:
     if isinstance(rule.name, str):
         return rule.alternatives
 
@@ -2115,8 +2117,16 @@ def fetch_rule_alternatives(rule: Rule, is_singular: bool) -> list[Alternative]:
         query += " and pluralization != ?"
         parameters.append("plural_only" if is_singular else "singular_only")
 
+    if not show_inspiration_alternatives:
+        query += " and is_inspiration = ?"
+        parameters.append(0)
+
     alternatives = []
-    for row in rules_cursor.execute(query + " ORDER BY 'order' ASC", parameters):
+    rows = rules_cursor.execute(query + " ORDER BY 'order' ASC", parameters).fetchall()
+    if not show_inspiration_alternatives and len(rows) == 0:
+        return fetch_rule_alternatives(rule, is_singular, True)
+
+    for row in rows:
         lemma = row[alternative_columns["lemma"]]
         # remove until we can properly handle this in the UI
         # https://www.notion.so/witty-works/Rule-Guidelines-432792da944141b1b4d0a01de290aa43#9ab16aeb0c19416ca0b72fde152b5d86
@@ -3427,7 +3437,9 @@ def match_binary_inclusive_gendered_denom_analysis_de(
 
     match = False
     binary = ResultOut.genderedRolesFormatBinary(config.gendered_roles_format)
-    alternatives = fetch_rule_alternatives(rule, is_singular)
+    alternatives = fetch_rule_alternatives(
+        rule, is_singular, config.show_inspiration_alternatives
+    )
     new_alternatives = []
     if alternatives is None:
         alternatives = []
@@ -4156,7 +4168,9 @@ def rule_check(
 
                 break
 
-            alternatives = fetch_rule_alternatives(rule, is_singular)
+            alternatives = fetch_rule_alternatives(
+                rule, is_singular, config.show_inspiration_alternatives
+            )
             if len(alternatives) > 0:
                 # TODO make it possible to handle cases with multiple alternatives
                 if len(alternatives) == 1 and alternatives[0].lemma == "they":
