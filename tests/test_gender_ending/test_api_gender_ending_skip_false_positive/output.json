@@ -9,9 +9,6 @@
                 },
                 {
                     "text": "Bewerbende"
-                },
-                {
-                    "text": "Personen, die sich bewerben"
                 }
             ],
             "category": "gender-orientation",
@@ -36,9 +33,6 @@
                 },
                 {
                     "text": "Fachkraft"
-                },
-                {
-                    "text": "jemand vom Fach"
                 }
             ],
             "category": "gender-orientation",
@@ -64,9 +58,6 @@
                 },
                 {
                     "text": "Fachkraft"
-                },
-                {
-                    "text": "Jemand vom Fach"
                 }
             ],
             "category": "gender-orientation",

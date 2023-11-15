@@ -6,15 +6,6 @@
             "alternatives": [
                 {
                     "text": "a substance user"
-                },
-                {
-                    "text": "a person with substance use disorder"
-                },
-                {
-                    "text": "someone physically or psychologically dependent on a substance"
-                },
-                {
-                    "text": "someone who display compulsive behavior"
                 }
             ],
             "category": "ability-physicality",

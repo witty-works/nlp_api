@@ -75,23 +75,11 @@
             "alternatives": [
                 {
                     "text": "they"
-                },
-                {
-                    "text": "person responsible for"
-                },
-                {
-                    "text": "person who supports and motivates the team"
-                },
-                {
-                    "text": "someone who communicates a shared vision"
-                },
-                {
-                    "text": "someone who helps identify milestones"
                 }
             ],
             "category": "gender-orientation",
             "context": "Hi Siwar,\n\nit's the first time that we are looking for a intern\nThomas Jung\nHead of Talent Acquisition EMEA\n\nFossil Group Europe GmbH\nRiehenring <NUMBER>\n\n<NUMBER> Basel\nSWITZERLAND\n<URL>",
-            "end": 83,
+            "end": 80,
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
@@ -103,7 +91,7 @@
             "proficiency_level": "unconscious_bias",
             "start": 76,
             "subcategory": "leadership_advanced",
-            "text": "Head of"
+            "text": "Head"
         }
     ]
 }
