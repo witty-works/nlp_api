@@ -1,5 +1,30 @@
 {
     "language": "en",
     "limit_reached": false,
-    "results": []
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Fun at work makes us happier, more productive, and more creative"
+                }
+            ],
+            "category": "social-motive",
+            "context": "Our values? Work hard, play hard.",
+            "end": 32,
+            "explanation": {
+                "content": "video",
+                "icon": "😒",
+                "text": "Doesn’t resonate with team-minded people",
+                "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Social Motive: Agentic language",
+            "proficiency_level": "unconscious_bias",
+            "start": 12,
+            "subcategory": "agentic_advanced",
+            "text": "Work hard, play hard"
+        }
+    ]
 }

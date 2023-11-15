@@ -24,13 +24,13 @@
         {
             "alternatives": [
                 {
+                    "remove": true
+                },
+                {
                     "text": "Guten Tag"
                 },
                 {
                     "text": "Hallo"
-                },
-                {
-                    "remove": true
                 },
                 {
                     "text": "Liebe"

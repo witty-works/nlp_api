@@ -5,6 +5,9 @@
         {
             "alternatives": [
                 {
+                    "remove": true
+                },
+                {
                     "text": "remarkable"
                 },
                 {
@@ -15,9 +18,6 @@
                 },
                 {
                     "text": "unusual"
-                },
-                {
-                    "text": "exemplary"
                 }
             ],
             "category": "social-motive",

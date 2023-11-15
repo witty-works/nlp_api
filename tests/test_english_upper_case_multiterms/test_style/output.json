@@ -3,21 +3,47 @@
     "limit_reached": false,
     "results": [
         {
-            "alternatives": [],
-            "category": "social-motive",
+            "alternatives": [
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Cordially"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Thank you for reading"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Sending you the best"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Take care"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "With appreciation"
+                }
+            ],
+            "category": "acquired-diversity",
             "context": "Kind regards from London",
-            "end": 4,
+            "end": 12,
             "explanation": {
-                "content": "video",
-                "icon": "✅",
-                "text": "Strengthens collaboration and a sense of community",
-                "url": "https://www.witty.works/en/categories/social-motive/communal-language?reducedView=true"
+                "icon": "🧊",
+                "text": "Weniger Förmlichkeit schafft mehr emotionale Nähe",
+                "url": "https://www.witty.works/en/categories/acquired-diversity/formality?reducedView=true"
             },
-            "label": "Social Motive: Communal language",
-            "proficiency_level": "inclusive",
+            "gravity": 3.0,
+            "label": "Acquired Diversity: Formality",
+            "proficiency_level": "unconscious_bias",
             "start": 0,
-            "subcategory": "communal",
-            "text": "Kind"
+            "subcategory": "formality_advanced",
+            "text": "Kind regards"
         }
     ]
 }

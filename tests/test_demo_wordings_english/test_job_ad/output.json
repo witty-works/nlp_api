@@ -33,10 +33,10 @@
         {
             "alternatives": [
                 {
-                    "text": "they"
+                    "text": "project management"
                 },
                 {
-                    "text": "project management"
+                    "text": "they"
                 },
                 {
                     "text": "person in project management"
@@ -67,6 +67,9 @@
         {
             "alternatives": [
                 {
+                    "remove": true
+                },
+                {
                     "text": "remarkable"
                 },
                 {
@@ -77,9 +80,6 @@
                 },
                 {
                     "text": "unusual"
-                },
-                {
-                    "text": "exemplary"
                 }
             ],
             "category": "social-motive",

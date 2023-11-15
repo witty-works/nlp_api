@@ -123,10 +123,11 @@ rule_columns = {
     "lemma": 1,
     "language": 2,
     "lemma_json": 3,
-    "label": 4,
-    "label_type": 5,
-    "word_types_json": 6,
-    "diversity_dimension_json": 7,
+    "type": 4,
+    "label": 5,
+    "label_type": 6,
+    "word_types_json": 7,
+    "diversity_dimension_json": 8,
 }
 alternative_columns = {
     "lemma": 0,
@@ -2057,48 +2058,60 @@ def check_continue(i, new_i, tokens):
     return True
 
 
-def fetch_word_rules(lang: Language, token):
+def fetch_rules(lang: Language, token, suffix_check: bool = False):
     column_list = ", ".join(rule_columns.keys())
 
-    token_lower = token.text.lower()
-    lemma_lower = token.lemma_.lower()
+    if suffix_check:
+        first_token_check = "first_token LIKE ?"
+        text = "%" + token.text[-4:]
+        lemma = "%" + token.lemma_[-4:]
+        token_lower = text.lower()
+        lemma_lower = lemma.lower()
+    else:
+        first_token_check = "first_token = ?"
+        text = token.text
+        lemma = token.lemma_
+        token_lower = text.lower()
+        lemma_lower = lemma.lower()
 
     if token.text == token.lemma_:
-        if token_lower == token.text:
+        if token_lower == text:
             filters = {
-                "first_token = ?": token.text,
+                first_token_check: text,
             }
         else:
             filters = {
-                "(first_token = ? and first_is_word_type_lower_case = 1)": token_lower,
-                "(first_token = ? and first_is_word_type_lower_case = 0)": token.text,
+                f"({first_token_check} and first_is_word_type_lower_case = 1)": token_lower,
+                f"({first_token_check} and first_is_word_type_lower_case = 0)": text,
             }
     else:
-        if token.text == token_lower:
+        if text == token_lower:
             filters = {
-                "(first_token = ? and first_is_word_type_lemmatize = 0)": token.text,
+                f"({first_token_check} and first_is_word_type_lemmatize = 0)": text,
             }
         else:
             filters = {
-                "(first_token = ? and first_is_word_type_lemmatize = 0 and first_is_word_type_lower_case = 1)": token_lower,
-                "(first_token = ? and first_is_word_type_lemmatize = 0 and first_is_word_type_lower_case = 0)": token.text,
+                f"({first_token_check} and first_is_word_type_lemmatize = 0 and first_is_word_type_lower_case = 1)": token_lower,
+                f"({first_token_check} and first_is_word_type_lemmatize = 0 and first_is_word_type_lower_case = 0)": token.text,
             }
 
-        if token.lemma_ == lemma_lower:
+        if lemma == lemma_lower:
             filters[
-                "(first_token = ? and first_is_word_type_lemmatize = 1)"
-            ] = token.lemma_
+                f"({first_token_check} and first_is_word_type_lemmatize = 1)"
+            ] = lemma
         else:
             filters[
-                "(first_token = ? and first_is_word_type_lemmatize = 1 and first_is_word_type_lower_case = 1)"
+                f"({first_token_check} and first_is_word_type_lemmatize = 1 and first_is_word_type_lower_case = 1)"
             ] = lemma_lower
             filters[
-                "(first_token = ? and first_is_word_type_lemmatize = 1 and first_is_word_type_lower_case = 0)"
-            ] = token.lemma_
+                f"({first_token_check} and first_is_word_type_lemmatize = 1 and first_is_word_type_lower_case = 0)"
+            ] = lemma
 
     filter_list = " OR ".join(filters.keys())
-    query = f"SELECT {column_list} FROM rules_rule WHERE is_active = 1 and language = ? and ({filter_list}) ORDER BY LENGTH(lemma) DESC, first_is_word_type_lemmatize ASC"
-    parameters = [lang.lang] + list(filters.values())
+    query = f"SELECT {column_list} FROM rules_rule WHERE is_active = 1 and language = ? and type = ? and ({filter_list}) ORDER BY LENGTH(lemma) DESC, first_is_word_type_lemmatize ASC"
+    parameters = [lang.lang, "suffix" if suffix_check else "default"] + list(
+        filters.values()
+    )
 
     return rules_cursor.execute(query, parameters).fetchall()
 
@@ -2477,9 +2490,29 @@ async def german_rules(
             tokens,
             offsets,
             list_full,
-            fetch_word_rules(
+            fetch_rules(
                 lang,
                 token,
+            ),
+        )
+
+        if check_continue(i, new_i, tokens):
+            continue
+
+        new_i = rule_check(
+            version,
+            config,
+            client,
+            lang,
+            text,
+            i,
+            tokens,
+            offsets,
+            list_full,
+            fetch_rules(
+                lang,
+                token,
+                True,
             ),
         )
 
@@ -2604,9 +2637,30 @@ async def english_rules(
             tokens,
             offsets,
             list_full,
-            fetch_word_rules(
+            fetch_rules(
                 lang,
                 token,
+            ),
+            false_positive_matcher,
+        )
+
+        if check_continue(i, new_i, tokens):
+            continue
+
+        new_i = rule_check(
+            version,
+            config,
+            client,
+            lang,
+            text,
+            i,
+            tokens,
+            offsets,
+            list_full,
+            fetch_rules(
+                lang,
+                token,
+                True,
             ),
             false_positive_matcher,
         )
@@ -3945,6 +3999,7 @@ def rule_check(
         ):
             return i
 
+    # TODO remove
     rule = Rule(
         "langsam",
         "de",
@@ -3957,6 +4012,7 @@ def rule_check(
 
     filtered_rules.append(rule)
 
+    # TODO remove
     rule = Rule(
         "test",
         "de",
@@ -3975,11 +4031,13 @@ def rule_check(
             if len(subcategories) == 0:
                 continue
 
-            label = (
+            rule_label = (
                 rule[rule_columns["label"]]
                 if rule[rule_columns["label_type"]] == "default"
                 else map_rule_label_type(lang.lang, rule[rule_columns["label_type"]])
             )
+
+            rule_type = rule[rule_columns["type"]]
 
             rule = Rule(
                 rule[rule_columns["id"]],
@@ -3990,7 +4048,8 @@ def rule_check(
                 subcategories,
             )
 
-            rule.label = label
+            rule.label = rule_label
+            rule.type = rule_type
 
         subcategory = is_sub_category_enabled(config, rule.subcategories)
         if not subcategory:

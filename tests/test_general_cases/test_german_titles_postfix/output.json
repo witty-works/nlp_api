@@ -5,6 +5,59 @@
         {
             "alternatives": [
                 {
+                    "text": "Unser*e Fachärztin*Facharzt"
+                },
+                {
+                    "text": "Unser/e Fachärztin/Facharzt"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Unser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Hure. Hurehund. Ka",
+            "end": 14,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Viele denken zuerst an bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufe",
+            "proficiency_level": "unconscious_bias",
+            "start": 0,
+            "subcategory": "titles",
+            "text": "Unser Facharzt"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Fachärzt*innen"
+                },
+                {
+                    "text": "Fachärztinnen und Fachärzte"
+                },
+                {
+                    "text": "Medizinisches Team"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Unser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Hure. Hurehund. Katzenhurehund. Katzenhu",
+            "end": 36,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Viele denken zuerst an bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufe",
+            "proficiency_level": "unconscious_bias",
+            "start": 27,
+            "subcategory": "titles",
+            "text": "Fachärzte"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "Jüd*innen"
                 },
                 {
@@ -33,10 +86,10 @@
         {
             "alternatives": [
                 {
-                    "text": "Taschenuhr"
+                    "remove": true
                 },
                 {
-                    "remove": true
+                    "text": "Taschenuhr"
                 }
             ],
             "category": "religion",
@@ -74,6 +127,27 @@
             "start": 96,
             "subcategory": "sexism",
             "text": "Hure"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "achärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Hure. Hurehund. Katzenhurehund. Katzenhure. Mandschure. Mandschurehuremhure. Ein Ingenieur kann das. Ein Elektroingenieur kann das nicht. Das",
+            "end": 138,
+            "explanation": {
+                "icon": "🚫",
+                "text": "Fällt unter sexistische Verunglimpfungen",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/sexismus?reducedView=true"
+            },
+            "gravity": 1.0,
+            "label": "Geschlecht + Orientierung: Sexismus",
+            "proficiency_level": "openly_discriminating",
+            "start": 128,
+            "subcategory": "sexism",
+            "text": "Katzenhure"
         },
         {
             "alternatives": [
