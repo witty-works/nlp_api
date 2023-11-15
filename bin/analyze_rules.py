@@ -15,7 +15,7 @@ from app.main import parse_word_type, tokenize, supported_word_types
 from app.model import fetch_nlp_model
 from app.settings import get_settings
 from app.categories import get_category_keys
-from app.rules import fetch_rules
+from app.rules import fetch_static_rules
 from german_nouns.lookup import Nouns
 
 log = logging.getLogger("urllib3")
@@ -74,7 +74,7 @@ def get_current_words(ignore_languagetool_path):
 def get_data_from_files(model, locale, details):
     if locale[0:2] == "de":
         locale = "de"
-        rules = fetch_rules({"de": model})
+        rules = fetch_static_rules(["de"])
         nouns = Nouns()
 
     base_directory = "training_data/" + locale + "/"

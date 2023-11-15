@@ -4,7 +4,7 @@ from german_nouns.lookup import Nouns
 from app.models import LangWithAutoType, Rule, EntityType
 
 
-def fetch_rules(langs):
+def fetch_static_rules(langs):
     files = {
         "de": {
             # load articles for gendered denom
@@ -336,8 +336,6 @@ def fetch_rules(langs):
                 )
 
     if "de" in langs:
-        lang = "de"
-
         rule = Rule(
             "#foobar",
             "de",

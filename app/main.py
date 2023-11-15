@@ -96,7 +96,7 @@ from app.settings import get_settings
 from app.logger import set_up_logger
 from app.redis_setup import set_up_redis
 from app.model import fetch_nlp_model
-from app.rules import fetch_rules
+from app.rules import fetch_static_rules
 from app.sentry import set_up_sentry_sdk
 
 version = "1.50.1"
@@ -158,7 +158,7 @@ for spacy_model in settings.models:
     lookup = None
 
 rules_cursor.execute(f"DROP table IF EXISTS rules_lemmatization")
-rules = fetch_rules(langs)
+rules = fetch_static_rules(langs)
 
 
 # https://www.notion.so/witty-works/Rule-Guidelines-432792da944141b1b4d0a01de290aa43#aac0d966bfeb4e33a5a346bba45d5ea8
