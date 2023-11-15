@@ -129,6 +129,8 @@ rule_columns = {
     "word_types_json": 7,
     "diversity_dimension_json": 8,
 }
+rule_column_list = ", ".join(rule_columns.keys())
+
 alternative_columns = {
     "lemma": 0,
     "lemma_json": 1,
@@ -138,14 +140,16 @@ alternative_columns = {
     "is_advanced": 5,
     "label": 6,
 }
+alternative_column_list = ", ".join(alternative_columns.keys())
 
 model = {}
 lemma_plural_lookup = {}
+substring_rules = {}
 langs = []
 for spacy_model in settings.models:
     lang = spacy_model[0:2]
     langs.append(lang)
-    query = f"SELECT text, lemma, is_plural FROM rules_lemmatization WHERE language = ?"
+    query = "SELECT text, lemma, is_plural FROM rules_lemmatization WHERE language = ?"
     parameters = [lang]
     lookup = {}
     lemma_plural_lookup[lang] = {}
@@ -157,6 +161,14 @@ for spacy_model in settings.models:
 
     model[lang] = fetch_nlp_model(lang, spacy_model, lookup)
     lookup = None
+
+    query = f"SELECT {rule_column_list} FROM rules_rule WHERE is_active = 1 and language = ? and type = ? ORDER BY LENGTH(lemma) DESC, first_is_word_type_lemmatize ASC"
+    parameters = [lang, RuleType.SUBSTRING]
+    rows = rules_cursor.execute(query, parameters).fetchall()
+    substring_rules[lang] = {}
+    for row in rows:
+        substring_rules[lang][row[rule_columns["lemma"]].lower()] = row
+
 
 rules_cursor.execute(f"DROP table IF EXISTS rules_lemmatization")
 rules = fetch_static_rules(langs)
@@ -2058,9 +2070,7 @@ def check_continue(i, new_i, tokens):
     return True
 
 
-def fetch_rules(lang: Language, token, suffix_check: bool = False):
-    column_list = ", ".join(rule_columns.keys())
-
+def fetch_rules(lang: str, token, suffix_check: bool = False):
     if suffix_check:
         first_token_check = "first_token LIKE ?"
         text = "%" + token.text[-4:]
@@ -2108,12 +2118,18 @@ def fetch_rules(lang: Language, token, suffix_check: bool = False):
             ] = lemma
 
     filter_list = " OR ".join(filters.keys())
-    query = f"SELECT {column_list} FROM rules_rule WHERE is_active = 1 and language = ? and type = ? and ({filter_list}) ORDER BY LENGTH(lemma) DESC, first_is_word_type_lemmatize ASC"
-    parameters = [lang.lang, "suffix" if suffix_check else "default"] + list(
+    query = f"SELECT {rule_column_list} FROM rules_rule WHERE is_active = 1 and language = ? and type = ? and ({filter_list}) ORDER BY LENGTH(lemma) DESC, first_is_word_type_lemmatize ASC"
+    parameters = [lang, RuleType.SUFFIX if suffix_check else RuleType.DEFAULT] + list(
         filters.values()
     )
 
-    return rules_cursor.execute(query, parameters).fetchall()
+    rows = rules_cursor.execute(query, parameters).fetchall()
+    if suffix_check:
+        for lemma in substring_rules[lang]:
+            if lemma in token.text.lower():
+                rows.append(substring_rules[lang][lemma])
+
+    return rows
 
 
 def fetch_rule_alternatives(
@@ -2122,9 +2138,8 @@ def fetch_rule_alternatives(
     if isinstance(rule.name, str):
         return rule.alternatives
 
-    column_list = ", ".join(alternative_columns.keys())
     # https://wittyworks.productboard.com/roadmap/3751070-browser-extension/features/13529555/detail
-    query = f"SELECT {column_list} FROM rules_alternative WHERE is_active = 1 and is_placeholder = 0 and rule_id = ?"
+    query = f"SELECT {alternative_column_list} FROM rules_alternative WHERE is_active = 1 and is_placeholder = 0 and rule_id = ?"
     parameters = [rule.name]
     if is_singular is not None:
         query += " and pluralization != ?"
@@ -2491,7 +2506,7 @@ async def german_rules(
             offsets,
             list_full,
             fetch_rules(
-                lang,
+                lang.lang,
                 token,
             ),
         )
@@ -2510,7 +2525,7 @@ async def german_rules(
             offsets,
             list_full,
             fetch_rules(
-                lang,
+                lang.lang,
                 token,
                 True,
             ),
@@ -2638,7 +2653,7 @@ async def english_rules(
             offsets,
             list_full,
             fetch_rules(
-                lang,
+                lang.lang,
                 token,
             ),
             false_positive_matcher,
@@ -2658,7 +2673,7 @@ async def english_rules(
             offsets,
             list_full,
             fetch_rules(
-                lang,
+                lang.lang,
                 token,
                 True,
             ),
@@ -4034,7 +4049,7 @@ def rule_check(
 
             rule_label = (
                 rule[rule_columns["label"]]
-                if rule[rule_columns["label_type"]] == "default"
+                if rule[rule_columns["label_type"]] == RuleLabelEnum.DEFAULT
                 else map_rule_label_type(lang.lang, rule[rule_columns["label_type"]])
             )
 

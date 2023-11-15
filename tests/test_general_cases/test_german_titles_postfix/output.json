@@ -135,6 +135,48 @@
                 }
             ],
             "category": "gender-orientation",
+            "context": "ser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Hure. Hurehund. Katzenhurehund. Katzenhure. Mandschure. Mandschurehuremhure. Ein Ingenieur kann das. Ein Elektroin",
+            "end": 110,
+            "explanation": {
+                "icon": "🚫",
+                "text": "Fällt unter sexistische Verunglimpfungen",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/sexismus?reducedView=true"
+            },
+            "gravity": 1.0,
+            "label": "Geschlecht + Orientierung: Sexismus",
+            "proficiency_level": "openly_discriminating",
+            "start": 102,
+            "subcategory": "sexism",
+            "text": "Hurehund"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "zt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Hure. Hurehund. Katzenhurehund. Katzenhure. Mandschure. Mandschurehuremhure. Ein Ingenieur kann das. Ein Elektroingenieur kann das",
+            "end": 126,
+            "explanation": {
+                "icon": "🚫",
+                "text": "Fällt unter sexistische Verunglimpfungen",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/sexismus?reducedView=true"
+            },
+            "gravity": 1.0,
+            "label": "Geschlecht + Orientierung: Sexismus",
+            "proficiency_level": "openly_discriminating",
+            "start": 112,
+            "subcategory": "sexism",
+            "text": "Katzenhurehund"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "gender-orientation",
             "context": "achärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Hure. Hurehund. Katzenhurehund. Katzenhure. Mandschure. Mandschurehuremhure. Ein Ingenieur kann das. Ein Elektroingenieur kann das nicht. Das",
             "end": 138,
             "explanation": {
@@ -148,6 +190,48 @@
             "start": 128,
             "subcategory": "sexism",
             "text": "Katzenhure"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "fern wissen. Hier sind viele Juden. Er hat ein Judenei. Hure. Hurehund. Katzenhurehund. Katzenhure. Mandschure. Mandschurehuremhure. Ein Ingenieur kann das. Ein Elektroingenieur kann das nicht. Das du das mitun",
+            "end": 150,
+            "explanation": {
+                "icon": "🚫",
+                "text": "Fällt unter sexistische Verunglimpfungen",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/sexismus?reducedView=true"
+            },
+            "gravity": 1.0,
+            "label": "Geschlecht + Orientierung: Sexismus",
+            "proficiency_level": "openly_discriminating",
+            "start": 140,
+            "subcategory": "sexism",
+            "text": "Mandschure"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Hier sind viele Juden. Er hat ein Judenei. Hure. Hurehund. Katzenhurehund. Katzenhure. Mandschure. Mandschurehuremhure. Ein Ingenieur kann das. Ein Elektroingenieur kann das nicht. Das du das mitunterzeichnet?",
+            "end": 171,
+            "explanation": {
+                "icon": "🚫",
+                "text": "Fällt unter sexistische Verunglimpfungen",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/sexismus?reducedView=true"
+            },
+            "gravity": 1.0,
+            "label": "Geschlecht + Orientierung: Sexismus",
+            "proficiency_level": "openly_discriminating",
+            "start": 152,
+            "subcategory": "sexism",
+            "text": "Mandschurehuremhure"
         },
         {
             "alternatives": [

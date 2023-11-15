@@ -139,6 +139,27 @@
             "start": 77,
             "subcategory": "sexism",
             "text": "Luder"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "suchen Ninja Programmierer für unsere Kunden und keinen Armleuchter oder Luder. Wir machen ja kein Schindluder!",
+            "end": 114,
+            "explanation": {
+                "icon": "🚫",
+                "text": "Fällt unter sexistische Verunglimpfungen",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/sexismus"
+            },
+            "gravity": 1.0,
+            "label": "Geschlecht + Orientierung: Sexismus",
+            "proficiency_level": "openly_discriminating",
+            "start": 103,
+            "subcategory": "sexism",
+            "text": "Schindluder"
         }
     ]
 }
