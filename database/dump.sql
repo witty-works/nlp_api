@@ -33159,9 +33159,9 @@ INSERT INTO "rules_rule" VALUES(2207,'2023-11-15','2023-11-15 14:06:48.978811','
 INSERT INTO "rules_rule" VALUES(2208,'2023-11-15','2023-11-15 14:06:51.306636','','de','unbedingt Wille','a|n',0,1,NULL,NULL,NULL,'["unbedingt", "Wille"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}, {"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'unbedingt Wille','default','default',1,1,'unbedingt','a','["agentic_advanced"]',NULL,0);
 INSERT INTO "rules_rule" VALUES(2209,'2023-11-15','2023-11-15 14:06:54.298404','','de','zählen auf','v|',0,1,NULL,NULL,NULL,'["z\u00e4hlen", "auf"]','[{"word_type": "v", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'zählen auf','default','default',1,1,'zählen','v','["agentic_advanced"]',NULL,0);
 INSERT INTO "rules_rule" VALUES(2210,'2023-11-15','2023-11-15 14:06:56.446368','','de','Zielstrebigkeit','n',0,1,NULL,NULL,NULL,'["Zielstrebigkeit"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'Zielstrebigkeit','default','default',1,1,'zielstrebigkeit','n','["agentic_advanced"]',NULL,0);
-INSERT INTO "rules_rule" VALUES(2211,'2023-11-15','2023-11-15 14:07:00.523080','','de','abschachern','v',0,1,NULL,NULL,NULL,'["abschachern"]','[{"word_type": "v", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'abschachern','default','default',1,1,'abschachern','v','[]',NULL,0);
-INSERT INTO "rules_rule" VALUES(2212,'2023-11-15','2023-11-15 14:07:04.689211','','de','Geschacher','n',0,1,NULL,NULL,NULL,'["Geschacher"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'Geschacher','default','default',1,1,'geschacher','n','[]',NULL,0);
-INSERT INTO "rules_rule" VALUES(2213,'2023-11-15','2023-11-15 14:07:08.717403','','de','Geschachere','n',0,1,NULL,NULL,NULL,'["Geschachere"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'Geschachere','default','default',1,1,'geschachere','n','[]',NULL,0);
+INSERT INTO "rules_rule" VALUES(2211,'2023-11-15','2023-11-15 19:19:10.227153','','de','abschachern','v',0,1,1,NULL,NULL,'["abschachern"]','[{"word_type": "v", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'abschachern','default','default',1,1,'abschachern','v','["antisemitism"]',NULL,0);
+INSERT INTO "rules_rule" VALUES(2212,'2023-11-15','2023-11-15 19:16:43.730193','','de','Geschacher','n',0,1,1,NULL,NULL,'["Geschacher"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'Geschacher','default','default',1,1,'geschacher','n','["antisemitism"]',NULL,0);
+INSERT INTO "rules_rule" VALUES(2213,'2023-11-15','2023-11-15 19:16:36.826755','','de','Geschachere','n',0,1,1,NULL,NULL,'["Geschachere"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'Geschachere','default','default',1,1,'geschachere','n','["antisemitism"]',NULL,0);
 INSERT INTO "rules_rule" VALUES(2214,'2023-11-15','2023-11-15 14:07:10.582619','','de','auffallen durch sein Verhalten','v||~|~n',0,1,NULL,NULL,NULL,'["auffallen", "durch", "sein", "Verhalten"]','[{"word_type": "v", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": false}, {"word_type": "n", "lower_case": true, "lemmatize": false}]',1,NULL,NULL,NULL,'auffallen durch sein Verhalten','default','default',1,1,'auffallen','v','["behavior_advanced"]',NULL,0);
 INSERT INTO "rules_rule" VALUES(2215,'2023-11-15','2023-11-15 14:07:13.628254','','de','auffälliges Verhalten','~a|n',0,1,NULL,NULL,NULL,'["auff\u00e4lliges", "Verhalten"]','[{"word_type": "a", "lower_case": true, "lemmatize": false}, {"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'auffälliges Verhalten','default','default',0,1,'auffälliges','a','["behavior_advanced"]',NULL,0);
 INSERT INTO "rules_rule" VALUES(2216,'2023-11-15','2023-11-15 14:07:16.611781','','de','Einzelgänger','n',0,1,NULL,NULL,NULL,'["Einzelg\u00e4nger"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'Einzelgänger','default','default',1,1,'einzelgänger','n','["behavior"]',NULL,0);
@@ -41198,6 +41198,9 @@ INSERT INTO "rules_rulediversitydimension" VALUES(0,'2023-11-15','2023-11-15 16:
 INSERT INTO "rules_rulediversitydimension" VALUES(0,'2023-11-15','2023-11-15 16:25:13.530444',103,4948,5050);
 INSERT INTO "rules_rulediversitydimension" VALUES(0,'2023-11-15','2023-11-15 16:25:14.597688',103,4949,5051);
 INSERT INTO "rules_rulediversitydimension" VALUES(0,'2023-11-15','2023-11-15 16:25:15.630090',103,4950,5052);
+INSERT INTO "rules_rulediversitydimension" VALUES(0,'2023-11-15','2023-11-15 19:12:59.799482',17,2211,5053);
+INSERT INTO "rules_rulediversitydimension" VALUES(0,'2023-11-15','2023-11-15 19:13:33.338929',17,2213,5054);
+INSERT INTO "rules_rulediversitydimension" VALUES(0,'2023-11-15','2023-11-15 19:13:46.144956',17,2212,5055);
 CREATE UNIQUE INDEX "rules_rulediversitydimension_rule_id_diversity_dimension_id_f527a04c_uniq" ON "rules_rulediversitydimension" ("rule_id", "diversity_dimension_id");
 CREATE INDEX "rules_rulediversitydimension_order_e517289f" ON "rules_rulediversitydimension" ("order");
 CREATE INDEX "rules_rulediversitydimension_diversity_dimension_id_272b365b" ON "rules_rulediversitydimension" ("diversity_dimension_id");
@@ -41223,7 +41226,7 @@ CREATE INDEX "rules_germannoun_createdby_id_3a615587" ON "rules_germannoun" ("cr
 CREATE INDEX "rules_germanadjective_createdby_id_4e588ab9" ON "rules_germanadjective" ("createdby_id");
 CREATE INDEX "rules_englishadjective_createdby_id_559f9739" ON "rules_englishadjective" ("createdby_id");
 DELETE FROM "sqlite_sequence";
-INSERT INTO "sqlite_sequence" VALUES('rules_rulediversitydimension',5052);
+INSERT INTO "sqlite_sequence" VALUES('rules_rulediversitydimension',5055);
 INSERT INTO "sqlite_sequence" VALUES('rules_falsepositive',1214);
 INSERT INTO "sqlite_sequence" VALUES('rules_rule',4950);
 INSERT INTO "sqlite_sequence" VALUES('rules_alternative',17167);
