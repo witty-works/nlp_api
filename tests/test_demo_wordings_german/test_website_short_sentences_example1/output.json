@@ -20,17 +20,7 @@
             "text": "unterstützen"
         },
         {
-            "alternatives": [
-                {
-                    "text": "engagierte"
-                },
-                {
-                    "text": "tatkräftige"
-                },
-                {
-                    "text": "kompetente"
-                }
-            ],
+            "alternatives": [],
             "category": "social-motive",
             "context": "Wir unterstützen leistungsstarke Mitarbeiter.",
             "end": 32,

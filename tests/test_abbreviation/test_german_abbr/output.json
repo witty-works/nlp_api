@@ -38,19 +38,10 @@
         {
             "alternatives": [
                 {
-                    "text": "Personen"
-                },
-                {
-                    "text": "eine*einer"
-                },
-                {
-                    "text": "eine/einer"
-                },
-                {
-                    "text": "Menschen"
-                },
-                {
                     "text": "alle"
+                },
+                {
+                    "text": "Erwachsene"
                 }
             ],
             "category": "gender-orientation",

@@ -5,19 +5,13 @@
         {
             "alternatives": [
                 {
-                    "text": "Personentag"
-                },
-                {
-                    "text": "Arbeitstag"
-                },
-                {
-                    "text": "Tagessatz"
-                },
-                {
                     "text": "Personentage"
                 },
                 {
                     "text": "Arbeitstage"
+                },
+                {
+                    "text": "Tagessätze"
                 }
             ],
             "category": "gender-orientation",

@@ -39,9 +39,6 @@
         {
             "alternatives": [
                 {
-                    "text": "tests"
-                },
-                {
                     "text": "trials"
                 }
             ],

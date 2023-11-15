@@ -3,23 +3,7 @@
     "limit_reached": false,
     "results": [
         {
-            "alternatives": [
-                {
-                    "text": "Ethiken"
-                },
-                {
-                    "text": "Methoden"
-                },
-                {
-                    "text": "Werten"
-                },
-                {
-                    "text": "Richtlinien"
-                },
-                {
-                    "text": "Regeln"
-                }
-            ],
+            "alternatives": [],
             "category": "social-motive",
             "context": "Einhaltung von ethischen Prinzipien.",
             "end": 35,

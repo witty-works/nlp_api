@@ -5,19 +5,19 @@
         {
             "alternatives": [
                 {
-                    "text": "Kernfragen"
-                },
-                {
                     "text": "komplexe Aufgaben"
                 },
                 {
                     "text": "Schwierigkeiten"
                 },
                 {
-                    "text": "Hindernisse"
+                    "text": "Schwachpunkte"
                 },
                 {
-                    "text": "komplexe Materien"
+                    "text": "Beeinträchtigungen"
+                },
+                {
+                    "text": "Hindernisse"
                 }
             ],
             "category": "social-motive",

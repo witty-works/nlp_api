@@ -138,12 +138,6 @@
         {
             "alternatives": [
                 {
-                    "text": "you"
-                },
-                {
-                    "text": "they"
-                },
-                {
                     "text": "teams"
                 },
                 {
@@ -151,6 +145,12 @@
                 },
                 {
                     "text": "people"
+                },
+                {
+                    "text": "folks"
+                },
+                {
+                    "text": "friends"
                 }
             ],
             "category": "gender-orientation",
@@ -267,12 +267,6 @@
         {
             "alternatives": [
                 {
-                    "text": "you"
-                },
-                {
-                    "text": "they"
-                },
-                {
                     "text": "teams"
                 },
                 {
@@ -280,6 +274,12 @@
                 },
                 {
                     "text": "people"
+                },
+                {
+                    "text": "folks"
+                },
+                {
+                    "text": "friends"
                 }
             ],
             "category": "gender-orientation",

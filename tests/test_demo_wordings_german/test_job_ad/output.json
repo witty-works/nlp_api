@@ -56,20 +56,7 @@
             "text": "Projektleiter"
         },
         {
-            "alternatives": [
-                {
-                    "text": "lösen"
-                },
-                {
-                    "text": "erledigen"
-                },
-                {
-                    "text": "anpacken"
-                },
-                {
-                    "text": "erarbeiten"
-                }
-            ],
+            "alternatives": [],
             "category": "social-motive",
             "context": "Als selbstständiger Projektleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielst",
             "end": 41,
@@ -87,17 +74,7 @@
             "text": "leisten"
         },
         {
-            "alternatives": [
-                {
-                    "text": "sorgfältige"
-                },
-                {
-                    "text": "präzise"
-                },
-                {
-                    "text": "komplexe"
-                }
-            ],
+            "alternatives": [],
             "category": "social-motive",
             "context": "Als selbstständiger Projektleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielstrebig\nneue Höchstle",
             "end": 60,
@@ -132,23 +109,7 @@
             "text": "gemeinsam"
         },
         {
-            "alternatives": [
-                {
-                    "text": "engagierten"
-                },
-                {
-                    "text": "entwicklungsmotivierten"
-                },
-                {
-                    "text": "unternehmerischen denkend"
-                },
-                {
-                    "text": "bereit, größere Verantwortung zu übernehmen"
-                },
-                {
-                    "text": "interessiert an persönlichem Wachstum"
-                }
-            ],
+            "alternatives": [],
             "category": "social-motive",
             "context": "tändiger Projektleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielstrebig\nneue Höchstleistungen.",
             "end": 125,
@@ -167,9 +128,6 @@
         },
         {
             "alternatives": [
-                {
-                    "text": "Teammitglied"
-                },
                 {
                     "text": "Kolleg*innen"
                 },
@@ -239,13 +197,10 @@
                     "text": "Teamziele"
                 },
                 {
-                    "text": "zuverlässiges Ergebnisse"
+                    "text": "zuverlässige Ergebnisse"
                 },
                 {
                     "text": "Sternstunden"
-                },
-                {
-                    "text": "zuverlässige Ergebnisse"
                 }
             ],
             "category": "social-motive",
