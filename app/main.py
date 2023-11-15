@@ -3885,7 +3885,8 @@ def regex_match(
                 alternative_v = Alternative(alternative_v)
 
                 if without_v is False:
-                    alternative.label = context_d
+                    alternative_v.label = context_d
+                    alternative = alternative_v
                 else:
                     alternative_v.label = context_v
 
