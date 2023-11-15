@@ -1,5 +1,23 @@
 {
     "language": "de",
     "limit_reached": false,
-    "results": []
+    "results": [
+        {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "Dies ist eine angewiesene Regel",
+            "end": 25,
+            "explanation": {
+                "content": "video",
+                "icon": "✅",
+                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true"
+            },
+            "label": "Soziale Motivation: Kommunale Sprache",
+            "proficiency_level": "inclusive",
+            "start": 14,
+            "subcategory": "communal",
+            "text": "angewiesene"
+        }
+    ]
 }
