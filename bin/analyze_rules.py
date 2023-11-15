@@ -11,7 +11,7 @@ from app.models import (
     Config,
     GenderedRolesFormatType,
 )
-from app.main import parse_word_type, tokenize, supported_word_types
+from app.main import parse_word_type, tokenize, supported_word_types, lookup
 from app.model import fetch_nlp_model
 from app.settings import get_settings
 from app.categories import get_category_keys
@@ -556,7 +556,7 @@ details = bool(args.Details)
 settings = get_settings()
 for spacy_model in settings.models:
     if spacy_model[0:2] == lang:
-        model = fetch_nlp_model(lang, spacy_model)
+        model = fetch_nlp_model(lang, spacy_model, lookup)
         break
 
 words = {}
