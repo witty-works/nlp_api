@@ -3281,7 +3281,7 @@ def tokenize(text, lang):
 
 
 def alternative_declension(
-    lang, text, token, word_type, prepend_word, alternative: Alternative
+    lang, text, token, word_type, prepend_word, rule: Rule, alternative: Alternative
 ):
     if (
         alternative.is_remove
@@ -3294,7 +3294,7 @@ def alternative_declension(
     if len(alternative.words) > 5:
         return alternative
 
-    word_count = len(alternative.words)
+    word_count = len(rule.words)
     if prepend_word:
         word_count -= 1
 
@@ -3366,7 +3366,7 @@ def alternative_declension(
     return alternative
 
 
-def alternatives_declension(lang, text, i, tokens, alternatives):
+def alternatives_declension(lang, text, i, tokens, rule: Rule, alternatives):
     token = tokens[i]
     start = token.idx
 
@@ -3397,7 +3397,7 @@ def alternatives_declension(lang, text, i, tokens, alternatives):
         start,
         [
             alternative_declension(
-                lang, text, token, word_type, prepend_word, alternative
+                lang, text, token, word_type, prepend_word, rule, alternative
             )
             for alternative in alternatives
         ],
@@ -4164,7 +4164,7 @@ def rule_check(
                     alternatives = [Alternative(alternative)]
                 elif rule.lemma.count(" ") == 0:
                     text, start, alternatives = alternatives_declension(
-                        lang.lang, token.text, i, tokens, alternatives
+                        lang.lang, token.text, i, tokens, rule, alternatives
                     )
 
                     if subcategory == "filler":
