@@ -3,7 +3,33 @@
     "limit_reached": false,
     "results": [
         {
-            "alternatives": [],
+            "alternatives": [
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Cordially"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Thank you for reading"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Sending you the best"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Take care"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "With appreciation"
+                }
+            ],
             "category": "acquired-diversity",
             "context": "Kind regards from London",
             "end": 12,

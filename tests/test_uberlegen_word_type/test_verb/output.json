@@ -3,7 +3,28 @@
     "limit_reached": false,
     "results": [
         {
-            "alternatives": [],
+            "alternatives": [
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "das Vertrauen der Kundschaft besitzend"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "beeinflussend"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "den Markt beeinflussend"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "den Maßstab setzend"
+                }
+            ],
             "category": "social-motive",
             "context": "Wenn wir uns mögliche Akquisitionen ansehen, überlegen wir uns",
             "end": 54,

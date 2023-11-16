@@ -20,7 +20,23 @@
             "text": "unterstützen"
         },
         {
-            "alternatives": [],
+            "alternatives": [
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "interessiert am Erarbeiten von Meilensteinen"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "enthusiastisch bei der Umsetzung"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "mit Energie bei der Sache"
+                }
+            ],
             "category": "social-motive",
             "context": "Wir unterstützen leistungsstarke Mitarbeiter.",
             "end": 32,

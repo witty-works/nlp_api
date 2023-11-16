@@ -56,7 +56,23 @@
             "text": "Projektleiter"
         },
         {
-            "alternatives": [],
+            "alternatives": [
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "enthusiastisch umsetzen"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "mit Energie angehen"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "tatkräftig sein"
+                }
+            ],
             "category": "social-motive",
             "context": "Als selbstständiger Projektleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielst",
             "end": 41,
@@ -74,7 +90,23 @@
             "text": "leisten"
         },
         {
-            "alternatives": [],
+            "alternatives": [
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "durch neue Problemstellungen motiviert"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "mit Blick für das Wesentliche"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "hinterfragt Zahlen (Fakten, Informationen, ...), bevor sie ihnen vertraut"
+                }
+            ],
             "category": "social-motive",
             "context": "Als selbstständiger Projektleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielstrebig\nneue Höchstle",
             "end": 60,
@@ -109,7 +141,18 @@
             "text": "gemeinsam"
         },
         {
-            "alternatives": [],
+            "alternatives": [
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "engagiert im Hinarbeiten auf (gemeinsame, gesetzte, ...) Ziele"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "interessiert, neues Wissen und neue Erfahrung anzuwenden"
+                }
+            ],
             "category": "social-motive",
             "context": "tändiger Projektleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielstrebig\nneue Höchstleistungen.",
             "end": 125,

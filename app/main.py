@@ -2141,18 +2141,22 @@ def fetch_rule_alternatives(
     # https://wittyworks.productboard.com/roadmap/3751070-browser-extension/features/13529555/detail
     query = f"SELECT {alternative_column_list} FROM rules_alternative WHERE is_active = 1 and is_placeholder = 0 and rule_id = ?"
     parameters = [rule.name]
+
+    query += " and is_inspiration = ?"
+    parameters.append(int(show_inspiration_alternatives))
+
+    # TODO ignore pluralization for inspirations?
     if is_singular is not None:
         query += " and pluralization != ?"
         parameters.append("plural_only" if is_singular else "singular_only")
 
-    if not show_inspiration_alternatives:
-        query += " and is_inspiration = ?"
-        parameters.append(0)
-
     alternatives = []
     rows = rules_cursor.execute(query + " ORDER BY 'order' ASC", parameters).fetchall()
-    if not show_inspiration_alternatives and len(rows) == 0:
-        return fetch_rule_alternatives(rule, is_singular, True)
+    if len(rows) == 0:
+        if not show_inspiration_alternatives:
+            return fetch_rule_alternatives(rule, is_singular, True)
+        if is_singular is not None:
+            return fetch_rule_alternatives(rule, None, True)
 
     for row in rows:
         lemma = row[alternative_columns["lemma"]]
