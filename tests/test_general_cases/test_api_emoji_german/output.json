@@ -140,6 +140,30 @@
         {
             "alternatives": [
                 {
+                    "context": "Feuerwehrfrau Mittlere Hautfarbe",
+                    "text": "👩🏽‍🚒"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut.",
+            "end": 35,
+            "explanation": {
+                "content": "advanced",
+                "context": "Feuerwehrmann Mittlere Hautfarbe",
+                "icon": "😒",
+                "text": "Bedient die heteronormative Sicht von Geschlechteridentität",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäres-geschlecht?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Binäres Geschlecht",
+            "proficiency_level": "unconscious_bias",
+            "start": 28,
+            "subcategory": "gender_identity",
+            "text": "👨🏽‍🚒"
+        },
+        {
+            "alternatives": [
+                {
                     "context": "Salat",
                     "text": "🥗"
                 },
@@ -175,6 +199,45 @@
             "start": 39,
             "subcategory": "culture",
             "text": "🍟"
+        },
+        {
+            "alternatives": [
+                {
+                    "context": "Ok-Zeichen",
+                    "text": "👌"
+                },
+                {
+                    "context": "Ok-Zeichen Dunkle Hautfarbe",
+                    "text": "👌🏿"
+                },
+                {
+                    "context": "Ok-Zeichen Mittlere Hautfarbe",
+                    "text": "👌🏽"
+                },
+                {
+                    "context": "Ok-Zeichen Mitteldunkle Hautfarbe",
+                    "text": "👌🏾"
+                },
+                {
+                    "context": "Ok-Zeichen Mittelhelle Hautfarbe",
+                    "text": "👌🏼"
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut.",
+            "end": 46,
+            "explanation": {
+                "context": "Ok-Zeichen Helle Hautfarbe",
+                "icon": "😒",
+                "text": "Reduziert eine Person auf ein kulturelles Klischee",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/kulturelles-stereotyp?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Kulturelle Diversität: Kulturelles Sterotyp",
+            "proficiency_level": "unconscious_bias",
+            "start": 42,
+            "subcategory": "culture",
+            "text": "👌🏻"
         },
         {
             "alternatives": [

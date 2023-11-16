@@ -4470,7 +4470,7 @@ def detect_non_inclusive_emoji(
         break
 
     if (
-        len(alternatives) == 1
+        len(alternatives) == 0
         and "light skin tone" in emoji_description
         and "medium" not in emoji_description
     ):
@@ -4482,7 +4482,7 @@ def detect_non_inclusive_emoji(
                 alternative.label = get_emoji_context(alternative.lemma, lang.lang)
                 alternatives.append(alternative)
 
-    if subcategory and len(alternatives) > 1:
+    if subcategory and len(alternatives) >= 1:
         list_full.append(
             ResultOut.factory(
                 config,
