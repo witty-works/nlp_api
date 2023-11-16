@@ -3796,6 +3796,7 @@ def regex_match(
             parenthesis = (
                 i > 0
                 and tokens[i - 1].text == "("
+                and len(tokens) > i + len(text)
                 and tokens[i + len(text)].text == ")"
             )
 
