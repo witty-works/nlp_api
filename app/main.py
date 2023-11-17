@@ -162,7 +162,7 @@ for spacy_model in settings.models:
     model[lang] = fetch_nlp_model(lang, spacy_model, lookup)
     lookup = None
 
-    query = f"SELECT {rule_column_list} FROM rules_rule WHERE is_active = 1 and language = ? and type = ? ORDER BY LENGTH(lemma) DESC, first_is_word_type_lemmatize ASC"
+    query = f"SELECT {rule_column_list} FROM rules_rule WHERE is_active = 1 and language = ? and type = ? ORDER BY lemma_length DESC, first_is_word_type_lemmatize ASC"
     parameters = [lang, RuleType.SUBSTRING]
     rows = rules_cursor.execute(query, parameters).fetchall()
     substring_rules[lang] = {}
@@ -2118,7 +2118,7 @@ def fetch_rules(lang: str, token, suffix_check: bool = False):
             ] = lemma
 
     filter_list = " OR ".join(filters.keys())
-    query = f"SELECT {rule_column_list} FROM rules_rule WHERE is_active = 1 and language = ? and type = ? and ({filter_list}) ORDER BY LENGTH(lemma) DESC, first_is_word_type_lemmatize ASC"
+    query = f"SELECT {rule_column_list} FROM rules_rule WHERE is_active = 1 and language = ? and type = ? and ({filter_list}) ORDER BY lemma_length DESC, first_is_word_type_lemmatize ASC"
     parameters = [lang, RuleType.SUFFIX if suffix_check else RuleType.DEFAULT] + list(
         filters.values()
     )
