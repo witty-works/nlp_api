@@ -1795,6 +1795,9 @@ def is_false_positive_match(false_positive_matcher, i, tokens, lemma):
 
 # create false positives patterns based on false positives column
 def fetch_false_positive_matcher(lang, tokens, false_positives):
+    if len(false_positives) == 0:
+        return []
+
     matcher = Matcher(model[lang].vocab)
 
     for false_positive in false_positives:
@@ -1810,6 +1813,7 @@ def fetch_phrase_matcher(lang, tokens, phrases):
     # Only run model.make_doc to speed things up
     patterns = [model[lang].make_doc(text) for text in phrases]
     matcher.add("TerminologyList", patterns)
+
     return matcher(tokens)
 
 
@@ -2728,7 +2732,9 @@ def check_pattern(tokens, pattern, i_pattern_start, offset):
         allow_skip = word_type.endswith("*")
         if allow_skip:
             word_type = word_type.removesuffix("*")
-            while check_word_type(lang, tokens[i_pattern_start], word_type, True, True):
+            while i_pattern_start >= 0 and check_word_type(
+                lang, tokens[i_pattern_start], word_type, True, True
+            ):
                 i_pattern_start -= 1
         elif not check_word_type(lang, tokens[i_pattern_start], word_type, True):
             return False

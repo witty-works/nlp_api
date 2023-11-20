@@ -1310,6 +1310,44 @@ def test_rule():
 
         assert response_content == expected
 
+        request_data = {
+            "text": "Du arbeitest sehr sehr langsam",
+            "lang": "de",
+            "lemma": "langsam",
+            "pattern": "v|a*|l",
+            "label": "bar",
+            "subcategories": ["corporate_rules"],
+            "word_types": [
+                {"word_type": "a", "lower_case": True, "lemmatize": True},
+            ],
+            "alternatives": [
+                {
+                    "lemma": "foo",
+                    "words": ("foo",),
+                }
+            ],
+        }
+        response = client.post("/debug/rule", json=request_data)
+        assert response.status_code == 200
+        response_content = json.loads(response.content)
+
+        expected = [
+            {
+                "text": "langsam",
+                "context": "Du arbeitest sehr sehr langsam",
+                "category": "corporate_rules",
+                "subcategory": "corporate_rules",
+                "start": 23,
+                "end": 30,
+                "alternatives": [{"text": "foo"}],
+                "label": "Wörterbuch",
+                "explanation": {"text": "", "icon": "❗", "context": "bar"},
+                "gravity": 0.9,
+            }
+        ]
+
+        assert response_content == expected
+
 
 def test_spacy():
     with TestClient(app) as client:
