@@ -3075,32 +3075,23 @@ def german_noun_analysis(word, genus_only=False):
         if result != None:
             return result
 
-    # skip the first 2 letters
-    i = 2
+    words = rules["de"]["german_nouns"].parse_compound(word)
+    result = german_noun_analysis(words[-1], genus_only)
 
-    # skip the last 2 letters
-    while i < len(word) - 2:
-        partial_word = word[i:]
-
-        result = german_noun_lookup(partial_word.capitalize())
-        if result is None:
-            i += 1
-            continue
-
-        result["lemma"] = word
+    if result is not None:
         if genus_only:
-            if "flexion" in result:
-                del result["flexion"]
+            del result["flexion"]
         else:
-            word_prefix = word[0:i]
+            word_prefix = words[0]
+            for partial_word in words[1:-1]:
+                word_prefix += partial_word.lower()
+
             for flexion in result["flexion"]:
                 result["flexion"][flexion] = (
                     word_prefix + result["flexion"][flexion].lower()
                 )
 
-        logging.error(
-            "Determined german noun data for '%s' as '%s'", word, partial_word
-        )
+        logging.error("Determined german noun data for '%s' as '%s'", word, words[-1])
 
         return result
 
@@ -3352,6 +3343,7 @@ def alternative_declension(lang, text, token, word_type, prepend_word, alternati
         not parsed_alternative
         or remove
         or ResultOut.isInspirationAlternative(parsed_alternative)
+        or "~" in parsed_alternative
     ):
         return alternative
 
