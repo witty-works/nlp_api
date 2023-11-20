@@ -71,10 +71,19 @@
         {
             "alternatives": [
                 {
-                    "text": "Rom/ni"
+                    "text": "Rom/-ni"
                 },
                 {
-                    "text": "Sint/iza"
+                    "text": "Romni/Rom"
+                },
+                {
+                    "text": "Sint/-iza"
+                },
+                {
+                    "text": "Sintiza/Sinto"
+                },
+                {
+                    "text": "Sint/-eza"
                 }
             ],
             "category": "cultural-diversity",

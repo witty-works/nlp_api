@@ -2298,9 +2298,11 @@ async def german_rules(
         i = new_i
 
         token = tokens[i]
-        token_lower = token.text.lower()
-        if token.text[0].isupper() and len(token.text) > 3:
-            result = german_noun_lookup(token.text, False)
+        if check_word_type(lang, token, "n", True) and len(token.text) > 3:
+            token_text = token.text.removesuffix("innen").removesuffix("in")
+            if token_text != token.text:
+                token_text = token_text.replace("ä", "a")
+            result = german_noun_lookup(token_text, False)
             if (
                 result is not None
                 and "flexion" in result
@@ -2308,10 +2310,13 @@ async def german_rules(
                 and "nominativ singular" in result["flexion"]
                 and token.lemma_ != result["flexion"]["nominativ singular"]
             ):
-                token.lemma_ = token_lower.replace(
+                token.lemma_ = token_text.lower().replace(
                     result["flexion"]["nominativ plural"].lower(),
                     result["flexion"]["nominativ singular"].lower(),
-                ).capitalize()
+                )
+
+                if token.text[0].isupper():
+                    token.lemma_ = token.lemma_.capitalize()
 
                 logging.error(
                     "Missing lemma lookup for '%s' => '%s'", token.text, token.lemma_
@@ -3495,9 +3500,8 @@ def alternatives_declension(lang, text, i, tokens, rule: Rule, alternatives):
     )
 
 
-def match_binary_inclusive_gendered_denom_analysis_de(
+def gendered_denom_analysis_de(
     config: Config,
-    full_text,
     text,
     tokens,
     i,
@@ -3505,9 +3509,6 @@ def match_binary_inclusive_gendered_denom_analysis_de(
     is_singular,
     rule: Rule,
 ):
-    token = tokens[i]
-    start = token.idx
-
     if rule.type == RuleType.SUFFIX and rule.lemma != tokens[i].lemma_:
         prefix_end = (
             text.lower().replace("ä", "a").find(rule.lemma.lower().replace("ä", "a"))
@@ -3516,7 +3517,7 @@ def match_binary_inclusive_gendered_denom_analysis_de(
     else:
         prefix = ""
 
-    match = False
+    binary_case = False
     binary = ResultOut.genderedRolesFormatBinary(config.gendered_roles_format)
     alternatives = fetch_rule_alternatives(
         rule, is_singular, config.show_inspiration_alternatives
@@ -3569,35 +3570,67 @@ def match_binary_inclusive_gendered_denom_analysis_de(
         generated_alternative = ResultOut.getGenderedRolesFormatBinary(
             alternative.lemma
         )
-        generated_alternative = generated_alternative.removesuffix(text)
-
-        if (
-            full_text[start - len(generated_alternative) : start]
-            != generated_alternative
-        ):
+        split_char = " und " if " und " in generated_alternative else "/"
+        generated_alternatives = generated_alternative.split(split_char)
+        if len(generated_alternatives) != 2:
+            logging.error(
+                f"Rule '{rule.name}' has a malformed alternative '{alternative.lemma}' => '{generated_alternative}'."
+            )
             continue
 
-        if binary:
-            return None, None, None, None
+        try:
+            index = generated_alternatives.index(text)
+        except ValueError:
+            continue
 
-        if match == False:
+        other_index = 0 if index == 1 else 1
+
+        # case text = Mitarbeiterinnen: Mitarbeiter und Mitarbeiterinnen
+        # case text = Mitarbeiter: Mitarbeiterinnen und Mitarbeiter
+        if (
+            i >= 2
+            and tokens[i - 1].text == split_char.strip()
+            and tokens[i - 2].text.startswith(generated_alternatives[other_index])
+        ):
+            return None, None, None
+
+        binary_case = (
+            len(tokens) >= i + 2
+            and tokens[i + 1].text == split_char.strip()
+            and tokens[i + 2].text.startswith(generated_alternatives[other_index])
+        )
+
+        # case text = Mitarbeiter: Mitarbeiter und Mitarbeiterinnen
+        # case text = Mitarbeiterinnen: Mitarbeiterinnen und Mitarbeiter
+        if binary and binary_case:
+            if index == 1:
+                # change order Mitarbeiter und Mitarbeiterinnen => Mitarbeiterinnen und Mitarbeiter
+                alternative.lemma = generated_alternative
+                new_alternatives = [alternative]
+                break
+
+            return None, None, None
+
+    if binary_case:
+        text += (
+            tokens[i].whitespace_
+            + tokens[i + 1].text
+            + tokens[i + 1].whitespace_
+            + tokens[i + 2].text
+        )
+
+        if binary:
+            subcategory = "gendered_denominations_ending_advanced"
+        else:
             subcategory = (
                 "function"
                 if "mann" in text.lower()
                 else "gendered_denominations_ending"
             )
+            if rule.is_advanced:
+                subcategory += "_advanced"
 
-            new_i = i - 2
-            if new_i < 0:
-                continue
-
-            start = tokens[new_i].idx
-            text = full_text[
-                start : (tokens[new_i + 2].idx + len(tokens[new_i + 2].text))
-            ]
-            match = True
-
-    return text, start, subcategory, new_alternatives
+    return text, subcategory, new_alternatives
 
 
 def fetch_article_for_flexion(flexion, word, article_text):
@@ -4188,12 +4221,10 @@ def rule_check(
 
             (
                 text,
-                start,
                 subcategory,
                 alternatives,
-            ) = match_binary_inclusive_gendered_denom_analysis_de(
+            ) = gendered_denom_analysis_de(
                 config,
-                full_text,
                 text,
                 tokens,
                 i,
@@ -4205,6 +4236,7 @@ def rule_check(
             if not text:
                 continue
 
+            start = token.idx
             if i > 0 and is_singular:
                 alternatives_with_article = fetch_alternatives_with_article(
                     tokens, i, alternatives

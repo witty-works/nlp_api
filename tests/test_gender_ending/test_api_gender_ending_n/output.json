@@ -1,5 +1,27 @@
 {
     "language": "de",
     "limit_reached": false,
-    "results": []
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "Investorinnen und Investoren"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Wir suchen für unsere Firma Investoren und Investorinnen bzw. Partnerinnen und Partnern",
+            "end": 56,
+            "explanation": {
+                "icon": "💯",
+                "text": "Nicht konsistente Geschlechts-Schreibweise",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/inklusive-endung?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Inklusive Endung",
+            "proficiency_level": "unconscious_bias",
+            "start": 28,
+            "subcategory": "gendered_denominations_ending_advanced",
+            "text": "Investoren und Investorinnen"
+        }
+    ]
 }

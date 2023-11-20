@@ -12,7 +12,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachfrau/Fachmann? Fachfrau. Fachmann.",
+            "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachmann/Fachfrau? Fachfrau. Fachmann.",
             "end": 36,
             "explanation": {
                 "icon": "💯",
@@ -36,7 +36,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachfrau/Fachmann? Fachfrau. Fachmann.",
+            "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachmann/Fachfrau? Fachfrau. Fachmann.",
             "end": 77,
             "explanation": {
                 "content": "advanced",
@@ -49,7 +49,7 @@
             "proficiency_level": "unconscious_bias",
             "start": 60,
             "subcategory": "function",
-            "text": "Fachfrau/Fachmann"
+            "text": "Fachmann/Fachfrau"
         },
         {
             "alternatives": [
@@ -61,7 +61,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachfrau/Fachmann? Fachfrau. Fachmann.",
+            "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachmann/Fachfrau? Fachfrau. Fachmann.",
             "end": 97,
             "explanation": {
                 "content": "advanced",
