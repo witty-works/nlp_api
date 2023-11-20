@@ -237,6 +237,7 @@ class RuleIn(BaseModel):
     alternatives: Optional[list[AlternativeIn]] = []
     false_positives: Optional[list[str]] = []
     label: Optional[str] = None
+    pattern: Optional[str] = None
     entity_type: Optional[EntityType] = EntityType.DEFAULT
 
 

@@ -123,11 +123,12 @@ rule_columns = {
     "lemma": 1,
     "language": 2,
     "lemma_json": 3,
-    "type": 4,
-    "label": 5,
-    "label_type": 6,
-    "word_types_json": 7,
-    "diversity_dimension_json": 8,
+    "pattern": 4,
+    "type": 5,
+    "label": 6,
+    "label_type": 7,
+    "word_types_json": 8,
+    "diversity_dimension_json": 9,
 }
 rule_column_list = ", ".join(rule_columns.keys())
 
@@ -721,6 +722,7 @@ async def post_debug_rule(
         rule_data.subcategories,
     )
 
+    rule.pattern = rule_data.pattern
     rule.alternatives = alternative_list
     rule.false_positives = rule_data.false_positives
     rule.label = rule_data.label
@@ -4019,47 +4021,13 @@ def rule_check(
         ):
             return i
 
-    # TODO remove
-    rule = Rule(
-        "langsam",
-        "de",
-        "langsam",
-        ("langsam",),
-        ({"word_type": "a", "lower_case": True, "lemmatize": True},),
-        "agentic",
-    )
-    rule.pattern = "v|a*|l"
-
-    filtered_rules.append(rule)
-
-    # TODO remove
-    rule = Rule(
-        "test",
-        "de",
-        "nervig",
-        ("nervig",),
-        ({"word_type": "a", "lower_case": True, "lemmatize": True},),
-        "agentic",
-    )
-    rule.pattern = "l|v"
-
-    filtered_rules.append(rule)
-
     for rule in filtered_rules:
         if not isinstance(rule, Rule):
             subcategories = json.loads(rule[rule_columns["diversity_dimension_json"]])
             if len(subcategories) == 0:
                 continue
 
-            rule_label = (
-                rule[rule_columns["label"]]
-                if rule[rule_columns["label_type"]] == RuleLabelEnum.DEFAULT
-                else map_rule_label_type(lang.lang, rule[rule_columns["label_type"]])
-            )
-
-            rule_type = rule[rule_columns["type"]]
-
-            rule = Rule(
+            adhoc_rule = Rule(
                 rule[rule_columns["id"]],
                 rule[rule_columns["language"]],
                 rule[rule_columns["lemma"]],
@@ -4068,8 +4036,15 @@ def rule_check(
                 subcategories,
             )
 
-            rule.label = rule_label
-            rule.type = rule_type
+            adhoc_rule.pattern = rule[rule_columns["pattern"]]
+            adhoc_rule.label = (
+                rule[rule_columns["label"]]
+                if rule[rule_columns["label_type"]] == RuleLabelEnum.DEFAULT
+                else map_rule_label_type(lang.lang, rule[rule_columns["label_type"]])
+            )
+            adhoc_rule.type = rule[rule_columns["type"]]
+
+            rule = adhoc_rule
 
         subcategory = is_sub_category_enabled(config, rule.subcategories)
         if not subcategory:
