@@ -21,7 +21,7 @@
                 }
             ],
             "category": "cultural-diversity",
-            "context": "Wir sind alle Zigeuner.\nIch bin ein Zigeuner und du eine Zigeunerin.",
+            "context": "Wir sind alle Zigeuner.\nIch bin ein Zigeuner und du eine Zigeunerin und du eine Zigeuner*in.",
             "end": 22,
             "explanation": {
                 "icon": "😒",
@@ -54,7 +54,7 @@
                 }
             ],
             "category": "cultural-diversity",
-            "context": "Wir sind alle Zigeuner.\nIch bin ein Zigeuner und du eine Zigeunerin.",
+            "context": "Wir sind alle Zigeuner.\nIch bin ein Zigeuner und du eine Zigeunerin und du eine Zigeuner*in.",
             "end": 44,
             "explanation": {
                 "icon": "😒",
@@ -87,7 +87,7 @@
                 }
             ],
             "category": "cultural-diversity",
-            "context": "Wir sind alle Zigeuner.\nIch bin ein Zigeuner und du eine Zigeunerin.",
+            "context": "Wir sind alle Zigeuner.\nIch bin ein Zigeuner und du eine Zigeunerin und du eine Zigeuner*in.",
             "end": 67,
             "explanation": {
                 "icon": "😒",
@@ -100,6 +100,39 @@
             "start": 57,
             "subcategory": "racist_source_advanced",
             "text": "Zigeunerin"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Rom*ni"
+                },
+                {
+                    "text": "Romni/Rom"
+                },
+                {
+                    "text": "Sint*iza"
+                },
+                {
+                    "text": "Sintiza/Sinto"
+                },
+                {
+                    "text": "Sint*eza"
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "Wir sind alle Zigeuner.\nIch bin ein Zigeuner und du eine Zigeunerin und du eine Zigeuner*in.",
+            "end": 91,
+            "explanation": {
+                "icon": "😒",
+                "text": "Hat rassistische Hintergründe oder Konnotationen  ",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/abstammung?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Kulturelle Diversität: Abstammung",
+            "proficiency_level": "unconscious_bias",
+            "start": 80,
+            "subcategory": "racist_source_advanced",
+            "text": "Zigeuner*in"
         }
     ]
 }

@@ -2059,10 +2059,12 @@ def is_sub_category_enabled(config: Config, subcategories: list[str]):
     return False
 
 
-def is_gendered_denom_rule(lang, subcategory):
-    return lang == "de" and (
-        get_category_name(subcategory)
-        in [
+def is_gendered_denom_rule(lang, subcategories):
+    if lang != "de":
+        return False
+
+    if isinstance(subcategories, str):
+        return get_category_name(subcategories) in [
             "titles",
             "function",
             "hidden_image",
@@ -2071,7 +2073,12 @@ def is_gendered_denom_rule(lang, subcategory):
             "female_stereotype",
             "gendered_denominations_ending",
         ]
-    )
+
+    for subcategory in subcategories:
+        if is_gendered_denom_rule(lang, subcategory):
+            return True
+
+    return False
 
 
 async def context_false_positives(lang, tokens, list_results):
@@ -2213,9 +2220,14 @@ def fetch_rules(
                 lang, us_text, translit_english(lemma, "us"), suffix_check, True
             )
 
+    is_gender_star_ending_ = is_gender_star_ending(text)
+
     rules = []
     for row in rows:
-        rules.append(create_rule(row, rewrite_to_uk))
+        rule = create_rule(row, rewrite_to_uk)
+        if is_gender_star_ending_ and is_gendered_denom_rule(lang, rule.subcategories):
+            continue
+        rules.append(rule)
 
     if suffix_check:
         text_lower = text.lower()
@@ -2288,7 +2300,7 @@ def fetch_rule_alternatives(
 
 
 def is_valid_text(text):
-    allowed_chars = ["-", "_", ":"]
+    allowed_chars = ["-", "_", ":", "*"]
     for char in allowed_chars:
         text = text.replace(char, "")
 
@@ -2348,6 +2360,33 @@ def fetch_false_positives(rule: Rule) -> list[str]:
     return false_positives
 
 
+def is_gender_star_ending(text):
+    if text.endswith("In") or text.endswith("Innen"):
+        return True
+
+    if not text.endswith("in") and not text.endswith("innen"):
+        return False
+
+    text = text.removesuffix("in").removesuffix("innen")
+    if len(text) == 0:
+        return False
+
+    return text[-1] in ["*", ":", "-", "_"]
+
+
+def remove_gender_ending(text):
+    return (
+        text.removesuffix("innen")
+        .removesuffix("in")
+        .removesuffix("Innen")
+        .removesuffix("In")
+        .removesuffix(":")
+        .removesuffix("*")
+        .removesuffix("_")
+        .removesuffix("-")
+    )
+
+
 async def german_rules(
     config: Config,
     term_replacements: namedtuple,
@@ -2366,7 +2405,7 @@ async def german_rules(
 
         token = tokens[i]
         if check_word_type(lang, token, "n", True) and len(token.text) > 3:
-            token_text = token.text.removesuffix("innen").removesuffix("in")
+            token_text = remove_gender_ending(token.text)
             if token_text != token.text:
                 token_text = token_text.replace("ä", "a")
             result = german_noun_lookup(token_text, False)
@@ -2384,10 +2423,6 @@ async def german_rules(
 
                 if token.text[0].isupper():
                     token.lemma_ = token.lemma_.capitalize()
-
-                logging.error(
-                    "Missing lemma lookup for '%s' => '%s'", token.text, token.lemma_
-                )
 
         if len(term_replacements.rules):
             new_i = rule_check(
@@ -2422,8 +2457,7 @@ async def german_rules(
             if check_continue(i, new_i, tokens):
                 continue
 
-        subcategory = "d_and_i"
-        if is_sub_category_enabled(config, subcategory):
+        if is_sub_category_enabled(config, "d_and_i"):
             new_i = regex_match(
                 config,
                 client,
@@ -2439,6 +2473,80 @@ async def german_rules(
             if check_continue(i, new_i, tokens):
                 continue
 
+        new_i = detect_non_inclusive_emoji(
+            config,
+            client,
+            lang,
+            text,
+            i,
+            tokens,
+            offsets,
+            list_full,
+        )
+
+        if check_continue(i, new_i, tokens):
+            continue
+
+        token_text = tokens[i].text
+
+        if token_text[0] == "#":
+            new_i = regex_match(
+                config,
+                client,
+                lang,
+                text,
+                i,
+                tokens,
+                offsets,
+                list_full,
+                rules["de"]["hashtags"],
+            )
+
+            if check_continue(i, new_i, tokens):
+                continue
+
+        if is_valid_text(token_text) and len(token_text) > 1:
+            new_i = rule_check(
+                config,
+                client,
+                lang,
+                text,
+                i,
+                tokens,
+                offsets,
+                list_full,
+                fetch_rules(
+                    lang.lang,
+                    token.text,
+                    token.lemma_,
+                ),
+            )
+
+            if check_continue(i, new_i, tokens):
+                continue
+
+            new_i = rule_check(
+                config,
+                client,
+                lang,
+                text,
+                i,
+                tokens,
+                offsets,
+                list_full,
+                fetch_rules(
+                    lang.lang,
+                    token.text,
+                    token.lemma_,
+                    True,
+                ),
+            )
+
+            if check_continue(i, new_i, tokens):
+                continue
+
+        subcategory = "d_and_i"
+        if is_sub_category_enabled(config, subcategory):
             word_types = (
                 (-1, 1, config.german_gender_ending[0])
                 if config.german_gender_ending[0] == "/"
@@ -2541,82 +2649,6 @@ async def german_rules(
 
             if check_continue(i, new_i, tokens):
                 continue
-
-        new_i = detect_non_inclusive_emoji(
-            config,
-            client,
-            lang,
-            text,
-            i,
-            tokens,
-            offsets,
-            list_full,
-        )
-
-        if check_continue(i, new_i, tokens):
-            continue
-
-        token_text = tokens[i].text
-
-        if token_text[0] == "#":
-            new_i = regex_match(
-                config,
-                client,
-                lang,
-                text,
-                i,
-                tokens,
-                offsets,
-                list_full,
-                rules["de"]["hashtags"],
-            )
-
-            if check_continue(i, new_i, tokens):
-                continue
-
-        if not is_valid_text(token_text):
-            new_i += 1
-            continue
-
-        new_i = rule_check(
-            config,
-            client,
-            lang,
-            text,
-            i,
-            tokens,
-            offsets,
-            list_full,
-            fetch_rules(
-                lang.lang,
-                token.text,
-                token.lemma_,
-            ),
-        )
-
-        if check_continue(i, new_i, tokens):
-            continue
-
-        new_i = rule_check(
-            version,
-            config,
-            client,
-            lang,
-            text,
-            i,
-            tokens,
-            offsets,
-            list_full,
-            fetch_rules(
-                lang.lang,
-                token.text,
-                token.lemma_,
-                True,
-            ),
-        )
-
-        if check_continue(i, new_i, tokens):
-            continue
 
         new_i += 1
 
@@ -2723,7 +2755,9 @@ async def english_rules(
             if check_continue(i, new_i, tokens):
                 continue
 
-        if not is_valid_text(token_text):
+        if not is_valid_text(token_text) or (
+            len(token_text) <= 1 or token_text.lower() == "i"
+        ):
             new_i += 1
             continue
 
@@ -2748,7 +2782,6 @@ async def english_rules(
             continue
 
         new_i = rule_check(
-            version,
             config,
             client,
             lang,
