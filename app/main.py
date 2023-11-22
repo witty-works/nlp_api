@@ -4118,7 +4118,7 @@ def rule_check(
                     alternatives = rule.plural_alternatives
                 # TODO make it possible to handle cases with multiple alternatives
                 elif len(alternatives) == 1 and alternatives[0] == "they":
-                    text, alternative = pluralize_they(tokens, i)
+                    text, alternative = pluralize_they(text, tokens, i)
                     alternatives = [alternative]
                 elif rule.lemma.count(" ") == 0:
                     text, start, alternatives = alternatives_declension(
@@ -4173,9 +4173,8 @@ def token_is_conjunction(token):
     return token.text == "," or token.pos_ == "CCONJ"
 
 
-def pluralize_they(tokens, i):
+def pluralize_they(text, tokens, i):
     token = tokens[i]
-    text = token.text
     alternative = "they"
 
     next_i = i + 1
