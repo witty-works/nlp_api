@@ -96,7 +96,7 @@ from app.rules import fetch_rules, Rule
 from app.sentry import set_up_sentry_sdk
 from app.model import lemma_plural_lookup
 
-version = "1.49.5"
+version = "1.49.6"
 
 categories = get_categories()
 settings = get_settings()
