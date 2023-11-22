@@ -3,21 +3,35 @@
     "limit_reached": false,
     "results": [
         {
-            "alternatives": [],
+            "alternatives": [
+                {
+                    "text": "resilient"
+                },
+                {
+                    "text": "erfahren"
+                },
+                {
+                    "text": "geübt"
+                },
+                {
+                    "text": "gelassen"
+                }
+            ],
             "category": "social-motive",
-            "context": "Dies ist eine angewiesene Regel",
-            "end": 25,
+            "context": "Dieser Mensch ist hartgesotten.",
+            "end": 30,
             "explanation": {
                 "content": "video",
-                "icon": "✅",
-                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
-                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true"
+                "icon": "😒",
+                "text": "Spricht kooperativ denkende Menschen nicht an",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
             },
-            "label": "Soziale Motivation: Kommunale Sprache",
-            "proficiency_level": "inclusive",
-            "start": 14,
-            "subcategory": "communal",
-            "text": "angewiesene"
+            "gravity": 3.0,
+            "label": "Soziale Motivation: Agentische Sprache",
+            "proficiency_level": "unconscious_bias",
+            "start": 18,
+            "subcategory": "agentic_advanced",
+            "text": "hartgesotten"
         }
     ]
 }

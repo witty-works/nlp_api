@@ -94,17 +94,12 @@
                 {
                     "context": "💡",
                     "inspiration": true,
-                    "text": "durch neue Problemstellungen motiviert"
-                },
-                {
-                    "context": "💡",
-                    "inspiration": true,
                     "text": "mit Blick für das Wesentliche"
                 },
                 {
                     "context": "💡",
                     "inspiration": true,
-                    "text": "hinterfragt Zahlen (Fakten, Informationen, ...), bevor sie ihnen vertraut"
+                    "text": "vertraut Zahlen (Fakten, Informationen) erst, wenn sie geprüft wurden"
                 }
             ],
             "category": "social-motive",
@@ -210,9 +205,6 @@
                 },
                 {
                     "text": "fleißig"
-                },
-                {
-                    "text": "engagiert und fokussiert"
                 }
             ],
             "category": "social-motive",

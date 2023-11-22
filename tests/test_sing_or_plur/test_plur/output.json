@@ -5,52 +5,12 @@
         {
             "alternatives": [
                 {
-                    "text": "Engineerings"
-                },
-                {
-                    "text": "Developments"
-                },
-                {
-                    "text": "Engineering teams"
-                },
-                {
-                    "text": "Development teams"
+                    "text": "they are"
                 }
             ],
             "category": "gender-orientation",
             "context": "Engineers work in this industry. Being an experienced engineer is useful.",
-            "end": 9,
-            "explanation": {
-                "content": "advanced",
-                "icon": "😟",
-                "text": "People tend to picture a specific gender",
-                "url": "https://www.witty.works/en/categories/gender-orientation/jobs?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Gender + Orientation: Jobs",
-            "proficiency_level": "unconscious_bias",
-            "start": 0,
-            "subcategory": "titles",
-            "text": "Engineers"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "engineering"
-                },
-                {
-                    "text": "development"
-                },
-                {
-                    "text": "they"
-                },
-                {
-                    "text": "development team"
-                }
-            ],
-            "category": "gender-orientation",
-            "context": "Engineers work in this industry. Being an experienced engineer is useful.",
-            "end": 62,
+            "end": 65,
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
@@ -62,7 +22,7 @@
             "proficiency_level": "unconscious_bias",
             "start": 54,
             "subcategory": "titles",
-            "text": "engineer"
+            "text": "engineer is"
         }
     ]
 }

@@ -9,8 +9,6 @@ def fetch_static_rules(langs):
         "de": {
             # load articles for gendered denom
             "df_articles": "articles.csv",
-            # verbs
-            "verbs": "verbs.csv",
         },
         "en": {},
     }
@@ -355,61 +353,6 @@ def fetch_static_rules(langs):
             "unabhängig",
             "entschieden",
         ]
-
-        rules["de"]["absolute_adjectives"] = [
-            "empfunden",
-            "absolut",
-            "blind",
-            "eckig",
-            "dreieckig",
-            "viereckig",
-            "fünfeckig",
-            "x-eckig",
-            "endgültig",
-            "entscheidend",
-            "einzig",
-            "extrem",
-            "falsch",
-            "fertig",
-            "ganz",
-            "gleich",
-            "hauptsächlich",
-            "ideal",
-            "lauwarm",
-            "lebendig",
-            "leer",
-            "maximal",
-            "minimal",
-            "mündlich",
-            "optimal",
-            "richtig",
-            "schwanger",
-            "sterblich",
-            "täglich",
-            "wöchentlich",
-            "monatlich",
-            "tot",
-            "total",
-            "unnahbar",
-            "voll",
-            "vollkommen",
-        ]
-
-        rules["de"]["verbs"] = {
-            data["de"]["verbs"]["infinitiv"][i]: {
-                "present_ich": data["de"]["verbs"]["present_ich"][i],
-                "present_du": data["de"]["verbs"]["present_du"][i],
-                "present_pronoun": data["de"]["verbs"]["present_pronoun"][i],
-                "past_tense_ich": data["de"]["verbs"]["past_tense_ich"][i],
-                "past_participle": data["de"]["verbs"]["past_participle"][i],
-                "conjunctive_ich": data["de"]["verbs"]["conjunctive_ich"][i],
-                "imperativ_singular": data["de"]["verbs"]["imperativ_singular"][i],
-                "imperativ_plural": data["de"]["verbs"]["imperativ_plural"][i],
-                "helping_verb": data["de"]["verbs"]["helping_verb"][i],
-                "infinitiv_zu": data["de"]["verbs"]["infinitiv_zu"][i],
-            }
-            for i in range(len(data["de"]["verbs"]["infinitiv"]))
-        }
 
         # dictionaries to handle false positives
         rules["de"]["exceptions"] = [

@@ -5,16 +5,7 @@
         {
             "alternatives": [
                 {
-                    "text": "engineering"
-                },
-                {
-                    "text": "development"
-                },
-                {
                     "text": "they"
-                },
-                {
-                    "text": "development team"
                 }
             ],
             "category": "gender-orientation",

@@ -143,6 +143,46 @@ alternative_columns = {
 }
 alternative_column_list = ", ".join(alternative_columns.keys())
 
+declensions_config = {
+    "en": {
+        "v": {
+            "name": "rules_englishverb",
+            "columns": [
+                "base_form",
+                "past_tense",
+                "past_participle",
+                "present_participle",
+                "third_person_singular",
+            ],
+        },
+        "a": {
+            "name": "rules_englishadjective",
+            "columns": ["base_form", "comparative", "superlative", "is_absolute"],
+        },
+        "s": {"name": "rules_englishnoun", "columns": ["base_form", "plural"]},
+    },
+    "de": {
+        "v": {
+            "name": "rules_germanverb",
+            "columns": [
+                "base_form",
+                "present_ich",
+                "present_du",
+                "present_pronoun",
+                "past_tense_ich",
+                "past_participle",
+                "conjunctive_ich",
+                "imperativ_singular",
+                "imperativ_plural",
+                "helping_verb",
+                "infinitiv_zu",
+            ],
+        },
+        "a": {"name": "rules_germanadjective", "columns": ["base_form"]},
+        "s": {"name": "rules_germannoun", "columns": ["base_form"]},
+    },
+}
+
 model = {}
 lemma_plural_lookup = {}
 substring_rules = {}
@@ -2204,38 +2244,13 @@ def is_valid_text(text):
 
 
 def fetch_declensions(lang, word_type, b_text, a_text=None):
-    config = {
-        "en": {
-            "v": {
-                "name": "rules_englishverb",
-                "columns": [
-                    "base_form",
-                    "past_tense",
-                    "past_participle",
-                    "present_participle",
-                    "third_person_singular",
-                ],
-            },
-            "a": {
-                "name": "rules_englishadjective",
-                "columns": ["base_form", "comparative", "superlative", "is_absolute"],
-            },
-            "s": {"name": "rules_englishnoun", "columns": ["base_form", "plural"]},
-        },
-        "de": {
-            "v": {"name": "rules_germanverb", "columns": ["base_form"]},
-            "a": {"name": "rules_germanadjective", "columns": ["base_form"]},
-            "s": {"name": "rules_germannoun", "columns": ["base_form"]},
-        },
-    }
-
-    column_list = ", ".join(config[lang][word_type]["columns"])
-    table_name = config[lang][word_type]["name"]
+    column_list = ", ".join(declensions_config[lang][word_type]["columns"])
+    table_name = declensions_config[lang][word_type]["name"]
 
     filters = ["base_form = ?"]
     parameters = [b_text]
     if a_text is not None:
-        for column in config[lang][word_type]["columns"]:
+        for column in declensions_config[lang][word_type]["columns"]:
             if column == "is_absolute":
                 continue
 
@@ -2250,9 +2265,9 @@ def fetch_declensions(lang, word_type, b_text, a_text=None):
     b_result = None
     for row in rules_cursor.execute(query, parameters):
         if row[0] == b_text:
-            b_result = dict(zip(config[lang][word_type]["columns"], row))
+            b_result = dict(zip(declensions_config[lang][word_type]["columns"], row))
         else:
-            a_result = dict(zip(config[lang][word_type]["columns"], row))
+            a_result = dict(zip(declensions_config[lang][word_type]["columns"], row))
 
     if a_text is not None and a_result is None:
         logging.error(
@@ -3270,7 +3285,8 @@ def german_verb_splittable(word):  # pragma: no cover
     while i < len(word) - 2:  # skip the last 2 letters
         prefix = word[0:i]
         partial_word = word[i:]
-        if partial_word in rules["de"]["verbs"]:
+        partial_word_result, result = fetch_declensions("de", "v", partial_word)
+        if partial_word_result is not None:
             tokens = fetch_tokens("de", prefix + " " + partial_word)
             if "a" == fetch_word_type("de", tokens[0]) and "v" == fetch_word_type(
                 "de", tokens[1]
@@ -3294,10 +3310,12 @@ def align_verb_form_german(a_text, a_token, b_token):
     b_text = b_token.text
     injected_string = ""
 
+    b_result, a_result = fetch_declensions("de", "v", b_text, a_text)
+
     # check if "zu" was stripped from the word in the lemma
     if a_text.count("zu") > a_token.lemma_.count("zu"):
-        if b_text in rules["de"]["verbs"]:
-            return rules["de"]["verbs"][b_text]["infinitiv_zu"]
+        if b_result is not None and bool(b_result["infinitiv_zu"]):
+            return b_result["infinitiv_zu"]
 
         # pragma: no cover
         prefix = german_verb_splittable(b_text)
@@ -3309,8 +3327,8 @@ def align_verb_form_german(a_text, a_token, b_token):
         injected_string = "zu"
     # check if "ge" was stripped from the word in the lemma
     elif a_token.text.count("ge") > a_token.lemma_.count("ge"):
-        if b_text in rules["de"]["verbs"]:
-            return rules["de"]["verbs"][b_text]["past_participle"]
+        if b_result is not None and bool(b_result["past_participle"]):
+            return b_result["past_participle"]
 
         # pragma: no cover
         prefix = german_verb_splittable(b_text)
@@ -3318,11 +3336,10 @@ def align_verb_form_german(a_text, a_token, b_token):
             b_text = prefix + "ge" + b_text[len(prefix) :]
 
         injected_string = "ge"
-
-    if b_text in rules["de"]["verbs"] and a_token.lemma_ in rules["de"]["verbs"]:
-        form = find_matching_form(rules["de"]["verbs"][a_token.lemma_], a_text)
-        if form:
-            return rules["de"]["verbs"][b_token.lemma_][form]
+    elif b_result is not None and a_result is not None:
+        form = find_matching_form(a_result, a_text)
+        if form and len(b_result[form]):
+            return b_result[form]
 
     return add_declension_german(b_text, a_text, a_token.lemma_, injected_string)
 
