@@ -1980,6 +1980,14 @@ def fetch_word_rules(rules, token_lower, lemma_lower, suffix_text=False):
     return word_rules
 
 
+def is_valid_text(text):
+    allowed_chars = ["-", "_", ":"]
+    for char in allowed_chars:
+        text = text.replace(char, "")
+
+    return text.isalpha()
+
+
 async def german_rules(
     version: float,
     config: Config,
@@ -2211,7 +2219,7 @@ async def german_rules(
             if check_continue(i, new_i, tokens):
                 continue
 
-        if len(tokens[i].text) <= 1 or not token_text[0].replace("-", "").isalpha():
+        if not is_valid_text(token_text):
             new_i += 1
             continue
 
@@ -2529,7 +2537,7 @@ async def english_rules(
             if check_continue(i, new_i, tokens):
                 continue
 
-        if len(tokens[i].text) <= 1 or not token_text[0].replace("-", "").isalpha():
+        if not is_valid_text(token_text):
             new_i += 1
             continue
 
@@ -2875,7 +2883,7 @@ def fetch_word_type(lang, token, word_type=None, single_word=None):
     if token._.is_emoji:
         return "emoji"
 
-    if not token.lemma_.replace("-", "").isalpha():
+    if not is_valid_text(token.text):
         return ""
 
     if word_type is None:
@@ -3941,7 +3949,7 @@ def rule_check(
     lower_case=True,
 ):
     token = tokens[i]
-    if not token.lemma_.replace("-", "").isalpha():
+    if not is_valid_text(token.text):
         return i
 
     # check if the user query have false positives
