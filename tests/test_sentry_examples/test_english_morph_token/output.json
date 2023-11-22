@@ -47,6 +47,9 @@
             "alternatives": [
                 {
                     "text": "they"
+                },
+                {
+                    "text": "an internship"
                 }
             ],
             "category": "gender-orientation",
@@ -61,9 +64,9 @@
             "gravity": 2.0,
             "label": "Gender + Orientation: Generic masculine",
             "proficiency_level": "unconscious_bias",
-            "start": 57,
+            "start": 55,
             "subcategory": "function",
-            "text": "intern"
+            "text": "a intern"
         },
         {
             "alternatives": [

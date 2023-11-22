@@ -5,12 +5,18 @@
         {
             "alternatives": [
                 {
-                    "text": "they are"
+                    "text": "they"
+                },
+                {
+                    "text": "engineering"
+                },
+                {
+                    "text": "development"
                 }
             ],
             "category": "gender-orientation",
             "context": "Engineers work in this industry. Being an experienced engineer is useful.",
-            "end": 65,
+            "end": 62,
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
@@ -22,7 +28,7 @@
             "proficiency_level": "unconscious_bias",
             "start": 54,
             "subcategory": "titles",
-            "text": "engineer is"
+            "text": "engineer"
         }
     ]
 }
