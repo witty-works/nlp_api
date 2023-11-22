@@ -35,8 +35,6 @@
 
       echo "e613bda316ecb4f5e1924140eedf81b81c087d9a *training_data/lid.176.bin" | sha1sum -c -
 
-      ./compile-translations.sh
-
   crons:
     generate-statistics:
       spec: "0 1 * * 0"

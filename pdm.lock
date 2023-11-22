@@ -6,7 +6,7 @@ groups = ["default", "dev"]
 cross_platform = true
 static_urls = false
 lock_version = "4.3"
-content_hash = "sha256:81ac752886e8296c107ec9752c306b1cc028c0f729682303aeae903b93ea1754"
+content_hash = "sha256:e0196220f76893bfc6972b26b3ac9e4ba7f87a5ec861eed0f7441a09ce19c180"
 
 [[package]]
 name = "aiofiles"
@@ -688,16 +688,6 @@ dependencies = [
 ]
 files = [
     {file = "en_core_web_lg-3.6.0-py3-none-any.whl", hash = "sha256:9012584a8fcf5bc61bedb13a4b511fb81ffff9f770958ee06366671be10632e9"},
-]
-
-[[package]]
-name = "eng"
-version = "0.1.1"
-requires_python = ">=3.6"
-summary = "Change British English to American English and vice versa."
-files = [
-    {file = "eng-0.1.1-py3-none-any.whl", hash = "sha256:78da254f6a69ed183791c733e94222c7684e8a385b3126954618c09bd45c98a8"},
-    {file = "eng-0.1.1.tar.gz", hash = "sha256:08f54aee07de995085c743ec722da068357b84230786447a40ba76579aa85fd1"},
 ]
 
 [[package]]
