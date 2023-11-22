@@ -84,6 +84,7 @@ from app.models import (
     Rule,
     RuleLabelEnum,
     EntityType,
+    translit_english,
 )
 from app.lang_detection import get_lang_detection
 from app.categories import (
@@ -183,6 +184,32 @@ declensions_config = {
     },
 }
 
+
+def create_rule(row, rewrite_to_uk: bool = False):
+    rule = Rule(
+        row[rule_columns["id"]],
+        row[rule_columns["language"]],
+        row[rule_columns["lemma"]],
+        json.loads(row[rule_columns["lemma_json"]]),
+        json.loads(row[rule_columns["word_types_json"]]),
+        json.loads(row[rule_columns["diversity_dimension_json"]]),
+    )
+
+    if rewrite_to_uk:
+        rule.lemma = translit_english(rule.lemma, "uk")
+        rule.words = translit_english(rule.words, "uk")
+
+    rule.pattern = row[rule_columns["pattern"]]
+    rule.label = (
+        row[rule_columns["label"]]
+        if row[rule_columns["label_type"]] == RuleLabelEnum.DEFAULT
+        else map_rule_label_type(lang.lang, row[rule_columns["label_type"]])
+    )
+    rule.type = row[rule_columns["type"]]
+
+    return rule
+
+
 model = {}
 lemma_plural_lookup = {}
 substring_rules = {}
@@ -208,8 +235,16 @@ for spacy_model in settings.models:
     rows = rules_cursor.execute(query, parameters).fetchall()
     substring_rules[lang] = {}
     for row in rows:
-        substring_rules[lang][row[rule_columns["lemma"]].lower()] = row
+        rule = create_rule(row)
+        substring_rules[lang][rule.lemma.lower()] = rule
 
+        if lang != "en":
+            continue
+
+        uk_lemma = translit_english(rule.lemma, "uk")
+        if uk_lemma != rule.lemma:
+            rule = create_rule(row, True)
+            substring_rules[lang][rule.lemma.lower()] = rule
 
 rules_cursor.execute(f"DROP table IF EXISTS rules_lemmatization")
 rules = fetch_static_rules(langs)
@@ -2116,70 +2151,83 @@ def check_continue(i, new_i, tokens):
     return True
 
 
-def fetch_rules(lang: str, token, suffix_check: bool = False):
+def fetch_rules(
+    lang: str, text, lemma, suffix_check: bool = False, rewrite_to_uk: bool = False
+):
     if suffix_check:
         first_token_check = "first_token LIKE ?"
-        text = "%" + token.text[-4:]
-        lemma = "%" + token.lemma_[-4:]
-        token_lower = text.lower()
-        lemma_lower = lemma.lower()
+        text_filter = "%" + text[-4:]
+        lemma_filter = "%" + lemma[-4:]
     else:
         first_token_check = "first_token = ?"
-        text = token.text
-        lemma = token.lemma_
-        token_lower = text.lower()
-        lemma_lower = lemma.lower()
+        text_filter = text
+        lemma_filter = lemma
 
-    if token.text == token.lemma_:
-        if token_lower == text:
+    token_filter_lower = text_filter.lower()
+    lemma_filter_lower = lemma_filter.lower()
+
+    if text == lemma:
+        if token_filter_lower == text_filter:
             filters = {
-                first_token_check: text,
+                first_token_check: text_filter,
             }
         else:
             filters = {
-                f"({first_token_check} and first_is_word_type_lower_case = 1)": token_lower,
-                f"({first_token_check} and first_is_word_type_lower_case = 0)": text,
+                f"({first_token_check} and first_is_word_type_lower_case = 1)": token_filter_lower,
+                f"({first_token_check} and first_is_word_type_lower_case = 0)": text_filter,
             }
     else:
-        if text == token_lower:
+        if text_filter == token_filter_lower:
             filters = {
-                f"({first_token_check} and first_is_word_type_lemmatize = 0)": text,
+                f"({first_token_check} and first_is_word_type_lemmatize = 0)": text_filter,
             }
         else:
             filters = {
-                f"({first_token_check} and first_is_word_type_lemmatize = 0 and first_is_word_type_lower_case = 1)": token_lower,
-                f"({first_token_check} and first_is_word_type_lemmatize = 0 and first_is_word_type_lower_case = 0)": token.text,
+                f"({first_token_check} and first_is_word_type_lemmatize = 0 and first_is_word_type_lower_case = 1)": token_filter_lower,
+                f"({first_token_check} and first_is_word_type_lemmatize = 0 and first_is_word_type_lower_case = 0)": text_filter,
             }
 
-        if lemma == lemma_lower:
+        if lemma_filter == lemma_filter_lower:
             filters[
                 f"({first_token_check} and first_is_word_type_lemmatize = 1)"
-            ] = lemma
+            ] = lemma_filter
         else:
             filters[
                 f"({first_token_check} and first_is_word_type_lemmatize = 1 and first_is_word_type_lower_case = 1)"
-            ] = lemma_lower
+            ] = lemma_filter_lower
             filters[
                 f"({first_token_check} and first_is_word_type_lemmatize = 1 and first_is_word_type_lower_case = 0)"
-            ] = lemma
+            ] = lemma_filter
 
     filter_list = " OR ".join(filters.keys())
-    query = f"SELECT {rule_column_list} FROM rules_rule WHERE is_active = 1 and language = ? and type = ? and ({filter_list}) ORDER BY lemma_length DESC, first_is_word_type_lemmatize ASC"
+    query = f"SELECT {rule_column_list} FROM rules_rule WHERE is_active = 1 and language = ? and type = ? and diversity_dimension_json != '[]' and ({filter_list}) ORDER BY lemma_length DESC, first_is_word_type_lemmatize ASC"
     parameters = [lang, RuleType.SUFFIX if suffix_check else RuleType.DEFAULT] + list(
         filters.values()
     )
 
     rows = rules_cursor.execute(query, parameters).fetchall()
-    if suffix_check:
-        for lemma in substring_rules[lang]:
-            if lemma in token.text.lower():
-                rows.append(substring_rules[lang][lemma])
+    if not rewrite_to_uk and lang == "en" and len(rows) == 0:
+        us_text = translit_english(text, "us")
+        if us_text != text:
+            return fetch_rules(
+                lang, us_text, translit_english(lemma, "us"), suffix_check, True
+            )
 
-    return rows
+    rules = []
+    for row in rows:
+        rules.append(create_rule(row, rewrite_to_uk))
+
+    if suffix_check:
+        text_lower = text.lower()
+        for lemma in substring_rules[lang]:
+            if lemma in text_lower:
+                rules.append(substring_rules[lang][lemma])
+
+    return rules
 
 
 def fetch_rule_alternatives(
-    rule: Rule, is_singular: bool, show_inspiration_alternatives: bool
+    rule: Rule, is_singular: bool, show_inspiration_alternatives: bool, locale: str = ""
 ) -> list[Alternative]:
     if isinstance(rule.name, str):
         return rule.alternatives
@@ -2219,6 +2267,10 @@ def fetch_rule_alternatives(
         else:
             lemma_json = json.loads(row[alternative_columns["lemma_json"]])
             word_types_json = json.loads(row[alternative_columns["word_types_json"]])
+
+        if lemma and locale == "en-GB":
+            lemma = translit_english(lemma, "uk")
+            lemma_json = translit_english(lemma_json, "uk")
 
         alternative = Alternative(
             lemma,
@@ -2537,7 +2589,8 @@ async def german_rules(
             list_full,
             fetch_rules(
                 lang.lang,
-                token,
+                token.text,
+                token.lemma_,
             ),
         )
 
@@ -2556,7 +2609,8 @@ async def german_rules(
             list_full,
             fetch_rules(
                 lang.lang,
-                token,
+                token.text,
+                token.lemma_,
                 True,
             ),
         )
@@ -2684,7 +2738,8 @@ async def english_rules(
             list_full,
             fetch_rules(
                 lang.lang,
-                token,
+                token.text,
+                token.lemma_,
             ),
             false_positive_matcher,
         )
@@ -2704,7 +2759,8 @@ async def english_rules(
             list_full,
             fetch_rules(
                 lang.lang,
-                token,
+                token.text,
+                token.lemma_,
                 True,
             ),
             false_positive_matcher,
@@ -4056,7 +4112,7 @@ def map_rule_label_type(lang, label_type):
 def rule_check(
     config: Config,
     client: Client,
-    lang,
+    lang: Language,
     full_text,
     i,
     tokens,
@@ -4078,30 +4134,6 @@ def rule_check(
             return i
 
     for rule in filtered_rules:
-        if not isinstance(rule, Rule):
-            subcategories = json.loads(rule[rule_columns["diversity_dimension_json"]])
-            if len(subcategories) == 0:
-                continue
-
-            adhoc_rule = Rule(
-                rule[rule_columns["id"]],
-                rule[rule_columns["language"]],
-                rule[rule_columns["lemma"]],
-                json.loads(rule[rule_columns["lemma_json"]]),
-                json.loads(rule[rule_columns["word_types_json"]]),
-                subcategories,
-            )
-
-            adhoc_rule.pattern = rule[rule_columns["pattern"]]
-            adhoc_rule.label = (
-                rule[rule_columns["label"]]
-                if rule[rule_columns["label_type"]] == RuleLabelEnum.DEFAULT
-                else map_rule_label_type(lang.lang, rule[rule_columns["label_type"]])
-            )
-            adhoc_rule.type = rule[rule_columns["type"]]
-
-            rule = adhoc_rule
-
         subcategory = is_sub_category_enabled(config, rule.subcategories)
         if not subcategory:
             continue
@@ -4278,7 +4310,7 @@ def rule_check(
                 break
 
             alternatives = fetch_rule_alternatives(
-                rule, is_singular, config.show_inspiration_alternatives
+                rule, is_singular, config.show_inspiration_alternatives, lang.locale
             )
             if len(alternatives) > 0:
                 # TODO make it possible to handle cases with multiple alternatives
@@ -4402,7 +4434,7 @@ def get_emoji_context(alternative, lang):
 def detect_non_inclusive_emoji(
     config: Config,
     client: Client,
-    lang,
+    lang: Language,
     full_text,
     i,
     tokens,

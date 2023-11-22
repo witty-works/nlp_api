@@ -9,13 +9,27 @@ from starlette.responses import Response
 import string
 import re
 
+from eng import TextFixer, Target
+
 from app.categories import (
     get_proficiency_level,
     get_category,
     get_category_name,
     map_gravity,
 )
+
 from app.privacy_filter import get_privacy_filter
+
+
+def translit_english(text, target):
+    if text is None:
+        return text
+
+    if isinstance(text, str):
+        fixer = TextFixer(content=text, target=Target(target))
+        return fixer.apply()
+
+    return [translit_english(word, target) for word in text]
 
 
 class Client(BaseModel):
@@ -619,14 +633,6 @@ class ResultOut(BaseModel):
             label = lang.convert_sharp_ss(label)
             explanation = lang.convert_sharp_ss(explanation)
 
-        explanation = {
-            "text": explanation,
-            "icon": icon,
-            "url": url,
-            "context": explanation_context,
-            "content": content,
-        }
-
         if hide_details:
             category = None
             subcategory = None
@@ -635,6 +641,19 @@ class ResultOut(BaseModel):
             explanation = None
         else:
             gravity = map_gravity(subcategory)
+
+            if lang.locale == "en-GB":
+                label = translit_english(label, "uk")
+                explanation = translit_english(explanation, "uk")
+                explanation_context = translit_english(explanation_context, "uk")
+
+            explanation = {
+                "text": explanation,
+                "icon": icon,
+                "url": url,
+                "context": explanation_context,
+                "content": content,
+            }
 
         if offsets and len(offsets["chars"]) > end:
             utf16_start = offsets["chars"][start]
