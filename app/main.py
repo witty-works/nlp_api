@@ -96,7 +96,7 @@ from app.rules import fetch_rules, Rule
 from app.sentry import set_up_sentry_sdk
 from app.model import lemma_plural_lookup
 
-version = "1.49.5"
+version = "1.49.6"
 
 categories = get_categories()
 settings = get_settings()
@@ -1980,6 +1980,14 @@ def fetch_word_rules(rules, token_lower, lemma_lower, suffix_text=False):
     return word_rules
 
 
+def is_valid_text(text):
+    allowed_chars = ["-", "_", ":"]
+    for char in allowed_chars:
+        text = text.replace(char, "")
+
+    return text.isalpha()
+
+
 async def german_rules(
     version: float,
     config: Config,
@@ -2192,24 +2200,26 @@ async def german_rules(
         if check_continue(i, new_i, tokens):
             continue
 
-        new_i = regex_match(
-            version,
-            config,
-            client,
-            lang,
-            text,
-            i,
-            tokens,
-            offsets,
-            list_full,
-            rules["de"]["hashtags"],
-        )
-
-        if check_continue(i, new_i, tokens):
-            continue
-
         token_text = tokens[i].text
-        if len(tokens[i].text) <= 1 or not token_text[0].isalpha():
+
+        if token_text[0] == "#":
+            new_i = regex_match(
+                version,
+                config,
+                client,
+                lang,
+                text,
+                i,
+                tokens,
+                offsets,
+                list_full,
+                rules["de"]["hashtags"],
+            )
+
+            if check_continue(i, new_i, tokens):
+                continue
+
+        if not is_valid_text(token_text):
             new_i += 1
             continue
 
@@ -2508,24 +2518,26 @@ async def english_rules(
         if check_continue(i, new_i, tokens):
             continue
 
-        new_i = regex_match(
-            version,
-            config,
-            client,
-            lang,
-            text,
-            i,
-            tokens,
-            offsets,
-            list_full,
-            rules["en"]["hashtags"],
-        )
-
-        if check_continue(i, new_i, tokens):
-            continue
-
         token_text = tokens[i].text
-        if len(tokens[i].text) <= 1 or not token_text[0].isalpha():
+
+        if token_text[0] == "#":
+            new_i = regex_match(
+                version,
+                config,
+                client,
+                lang,
+                text,
+                i,
+                tokens,
+                offsets,
+                list_full,
+                rules["en"]["hashtags"],
+            )
+
+            if check_continue(i, new_i, tokens):
+                continue
+
+        if not is_valid_text(token_text):
             new_i += 1
             continue
 
@@ -2871,6 +2883,9 @@ def fetch_word_type(lang, token, word_type=None, single_word=None):
     if token._.is_emoji:
         return "emoji"
 
+    if not is_valid_text(token.text):
+        return ""
+
     if word_type is None:
         word_type = ""
 
@@ -3075,32 +3090,23 @@ def german_noun_analysis(word, genus_only=False):
         if result != None:
             return result
 
-    # skip the first 2 letters
-    i = 2
+    words = rules["de"]["german_nouns"].parse_compound(word)
+    result = german_noun_analysis(words[-1], genus_only)
 
-    # skip the last 2 letters
-    while i < len(word) - 2:
-        partial_word = word[i:]
-
-        result = german_noun_lookup(partial_word.capitalize())
-        if result is None:
-            i += 1
-            continue
-
-        result["lemma"] = word
+    if result is not None:
         if genus_only:
-            if "flexion" in result:
-                del result["flexion"]
+            del result["flexion"]
         else:
-            word_prefix = word[0:i]
+            word_prefix = words[0]
+            for partial_word in words[1:-1]:
+                word_prefix += partial_word.lower()
+
             for flexion in result["flexion"]:
                 result["flexion"][flexion] = (
                     word_prefix + result["flexion"][flexion].lower()
                 )
 
-        logging.error(
-            "Determined german noun data for '%s' as '%s'", word, partial_word
-        )
+        logging.error("Determined german noun data for '%s' as '%s'", word, words[-1])
 
         return result
 
@@ -3352,6 +3358,7 @@ def alternative_declension(lang, text, token, word_type, prepend_word, alternati
         not parsed_alternative
         or remove
         or ResultOut.isInspirationAlternative(parsed_alternative)
+        or "~" in parsed_alternative
     ):
         return alternative
 
@@ -3796,6 +3803,7 @@ def regex_match(
             parenthesis = (
                 i > 0
                 and tokens[i - 1].text == "("
+                and len(tokens) > i + len(text)
                 and tokens[i + len(text)].text == ")"
             )
 
@@ -3941,6 +3949,8 @@ def rule_check(
     lower_case=True,
 ):
     token = tokens[i]
+    if not is_valid_text(token.text):
+        return i
 
     # check if the user query have false positives
     if token.lemma_ in rules[lang.lang]["false_positives"]:
@@ -4116,7 +4126,7 @@ def rule_check(
                     alternatives = rule.plural_alternatives
                 # TODO make it possible to handle cases with multiple alternatives
                 elif len(alternatives) == 1 and alternatives[0] == "they":
-                    text, alternative = pluralize_they(tokens, i)
+                    text, alternative = pluralize_they(text, tokens, i)
                     alternatives = [alternative]
                 elif rule.lemma.count(" ") == 0:
                     text, start, alternatives = alternatives_declension(
@@ -4171,9 +4181,8 @@ def token_is_conjunction(token):
     return token.text == "," or token.pos_ == "CCONJ"
 
 
-def pluralize_they(tokens, i):
+def pluralize_they(text, tokens, i):
     token = tokens[i]
-    text = token.text
     alternative = "they"
 
     next_i = i + 1
