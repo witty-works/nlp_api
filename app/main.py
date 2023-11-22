@@ -2192,24 +2192,26 @@ async def german_rules(
         if check_continue(i, new_i, tokens):
             continue
 
-        new_i = regex_match(
-            version,
-            config,
-            client,
-            lang,
-            text,
-            i,
-            tokens,
-            offsets,
-            list_full,
-            rules["de"]["hashtags"],
-        )
-
-        if check_continue(i, new_i, tokens):
-            continue
-
         token_text = tokens[i].text
-        if len(tokens[i].text) <= 1 or not token_text[0].isalpha():
+
+        if token_text[0] == "#":
+            new_i = regex_match(
+                version,
+                config,
+                client,
+                lang,
+                text,
+                i,
+                tokens,
+                offsets,
+                list_full,
+                rules["de"]["hashtags"],
+            )
+
+            if check_continue(i, new_i, tokens):
+                continue
+
+        if len(tokens[i].text) <= 1 or not token_text[0].replace("-", "").isalpha():
             new_i += 1
             continue
 
@@ -2508,24 +2510,26 @@ async def english_rules(
         if check_continue(i, new_i, tokens):
             continue
 
-        new_i = regex_match(
-            version,
-            config,
-            client,
-            lang,
-            text,
-            i,
-            tokens,
-            offsets,
-            list_full,
-            rules["en"]["hashtags"],
-        )
-
-        if check_continue(i, new_i, tokens):
-            continue
-
         token_text = tokens[i].text
-        if len(tokens[i].text) <= 1 or not token_text[0].isalpha():
+
+        if token_text[0] == "#":
+            new_i = regex_match(
+                version,
+                config,
+                client,
+                lang,
+                text,
+                i,
+                tokens,
+                offsets,
+                list_full,
+                rules["en"]["hashtags"],
+            )
+
+            if check_continue(i, new_i, tokens):
+                continue
+
+        if len(tokens[i].text) <= 1 or not token_text[0].replace("-", "").isalpha():
             new_i += 1
             continue
 
@@ -2870,6 +2874,9 @@ def fetch_word_type(lang, token, word_type=None, single_word=None):
 
     if token._.is_emoji:
         return "emoji"
+
+    if not token.lemma_.replace("-", "").isalpha():
+        return ""
 
     if word_type is None:
         word_type = ""
@@ -3934,6 +3941,8 @@ def rule_check(
     lower_case=True,
 ):
     token = tokens[i]
+    if not token.lemma_.replace("-", "").isalpha():
+        return i
 
     # check if the user query have false positives
     if token.lemma_ in rules[lang.lang]["false_positives"]:
