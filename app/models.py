@@ -326,14 +326,6 @@ class DomainConfig(BaseModel):
     type: DomainType
 
 
-class LanguageRequest(BaseModel):
-    version: float
-    text: str
-    client: str
-    config: Config
-    configs: dict
-
-
 class ConfRequest(BaseModel):
     id: str
     name: str
