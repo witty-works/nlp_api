@@ -55,7 +55,7 @@
 
   mounts:
     "files":
-      source: local
+      source: storage
       source_path: files
 
   relationships:
