@@ -148,7 +148,7 @@ async def handle_command_witty(
         await respond(f"Witty could not determine a language for '{text}'.")
         return
 
-    version = 2.3
+    version = "2.3"
     configs = {}
 
     try:
@@ -167,7 +167,7 @@ async def handle_command_witty(
     user_request_in.config.__setattr__("alternatives_max_count", None)
     client = parse_client(user_request_in.client)
     results = await apply_language_rules(
-        version, client, user_request_in.config, configs, lang, text
+        client, user_request_in.config, configs, lang, text
     )
 
     analyzed_text = f"*Analyzed*: {text}"
@@ -503,7 +503,7 @@ async def get_config_debug(
     username: str = Depends(fetch_current_username),
 ):  # pragma: no cover
     user_request_in = RequestIn(text="")
-    version = 2.3
+    version = "2.3"
 
     try:
         configs = await fetch_user_organization_configs(user_email)
@@ -538,7 +538,7 @@ async def post_auth_debug(
     if not user_email:
         return user_email
 
-    version = 2.3
+    version = "2.3"
     configs = await fetch_configs_for_request(version, user_request_in, user_email)
 
     if "authorization" in request.headers and request.headers[
@@ -573,7 +573,7 @@ async def post_auth_2_0(request: Request, user_request_in: BaseRequestIn = None)
             status_code=status.HTTP_403_FORBIDDEN,
         )
 
-    version = 2.3
+    version = "2.3"
     configs = await fetch_configs_for_request(version, RequestIn(text=""), user_email)
     if configs == {}:
         raise HTTPException(
@@ -668,7 +668,6 @@ async def post_debug_rule(
     while i < token_count:
         for rule in rules:
             rule_check(
-                version,
                 config,
                 client,
                 lang,
@@ -788,7 +787,7 @@ async def post_check_v2_3(
     response: Response,
     user_request_in: RequestIn,
 ):
-    return await check(request, response, user_request_in, 2.3)
+    return await check(request, response, user_request_in, "2.3")
 
 
 @app.get("/lemmatize")
@@ -1061,7 +1060,7 @@ def apply_configs(
 
 
 async def fetch_configs_for_request(
-    version: float, user_request_in: RequestIn, user_email=Optional[str]
+    version: str, user_request_in: RequestIn, user_email=Optional[str]
 ):
     user_request_in.config.__setattr__("store_context", True)
     user_request_in.config.__setattr__("plan", None)
@@ -1225,8 +1224,8 @@ def fetch_text(user_request_in):
     return text, lang, limit_reached
 
 
-def check_api_version(version: float):
-    if version != 2.3:  # pragma: no cover
+def check_api_version(version: str):
+    if version != "2.3":  # pragma: no cover
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"API version '{version}' not supported, please use version '2.3'.",
@@ -1247,7 +1246,7 @@ async def check(
     request: Request,
     response: Response,
     user_request_in: RequestIn,
-    version: Optional[float],
+    version: str,
 ):
     client = parse_client(user_request_in.client)
     check_client_version(client)
@@ -1259,7 +1258,6 @@ async def check(
         configs = await fetch_configs_for_request(version, user_request_in, user_email)
     else:
         # debug
-        version = 2.3
         configs = {"categories": {}}
         apply_configs(user_request_in, configs, "witty_teams")
 
@@ -1272,7 +1270,7 @@ async def check(
         configs = {}
     else:
         results = await apply_language_rules(
-            version, client, user_request_in.config, configs, lang, text
+            client, user_request_in.config, configs, lang, text
         )
 
         language = lang.lang
@@ -1376,7 +1374,6 @@ def has_gender_denom_ending(text, full_text, offset, config: Config):
 
 
 def languagetool_matches(
-    version: float,
     config: Config,
     client: Client,
     lang: Language,
@@ -1534,7 +1531,6 @@ def languagetool_matches(
 
         list_results.append(
             ResultOut.factory(
-                version,
                 config,
                 client,
                 lang,
@@ -1610,7 +1606,6 @@ def convert_to_csv(payload, key):
 
 
 async def apply_languagetool_rules(
-    version: float,
     config: Config,
     client: Client,
     lang: Language,
@@ -1667,7 +1662,7 @@ async def apply_languagetool_rules(
     )
 
     return languagetool_matches(
-        version, config, client, lang, text, tokens, offsets, result
+        config, client, lang, text, tokens, offsets, result
     )
 
 
@@ -1770,7 +1765,6 @@ def parse_client(client: str):
 
 
 async def apply_language_rules(
-    version: float,
     client: Client,
     config: Config,
     configs: dict,
@@ -1785,7 +1779,6 @@ async def apply_language_rules(
     match lang.lang:
         case "de":
             list_results = await german_rules(
-                version,
                 config,
                 term_replacements,
                 client,
@@ -1796,7 +1789,6 @@ async def apply_language_rules(
             )
         case "en":
             list_results = await english_rules(
-                version,
                 config,
                 term_replacements,
                 client,
@@ -1809,7 +1801,7 @@ async def apply_language_rules(
             list_results = []
 
     list_results = await apply_languagetool_rules(
-        version, config, client, lang, text, tokens, offsets
+        config, client, lang, text, tokens, offsets
     ) + await context_false_positives(lang.lang, tokens, list_results)
 
     return apply_false_positives(list_results, configs)
@@ -2000,7 +1992,6 @@ def is_valid_text(text):
 
 
 async def german_rules(
-    version: float,
     config: Config,
     term_replacements: namedtuple,
     client: Client,
@@ -2040,7 +2031,6 @@ async def german_rules(
 
         if len(term_replacements.rules):
             new_i = rule_check(
-                version,
                 config,
                 client,
                 lang,
@@ -2058,7 +2048,6 @@ async def german_rules(
 
         if is_sub_category_enabled(config, "gender_specific_abbreviation"):
             new_i = regex_match(
-                version,
                 config,
                 client,
                 lang,
@@ -2076,7 +2065,6 @@ async def german_rules(
         subcategory = "d_and_i"
         if is_sub_category_enabled(config, subcategory):
             new_i = regex_match(
-                version,
                 config,
                 client,
                 lang,
@@ -2123,7 +2111,6 @@ async def german_rules(
                 )
 
             new_i = regex_match(
-                version,
                 config,
                 client,
                 lang,
@@ -2181,7 +2168,6 @@ async def german_rules(
                     endings.append(ending)
 
             new_i = regex_match(
-                version,
                 config,
                 client,
                 lang,
@@ -2197,7 +2183,6 @@ async def german_rules(
                 continue
 
         new_i = detect_non_inclusive_emoji(
-            version,
             config,
             client,
             lang,
@@ -2215,7 +2200,6 @@ async def german_rules(
 
         if token_text[0] == "#":
             new_i = regex_match(
-                version,
                 config,
                 client,
                 lang,
@@ -2235,7 +2219,6 @@ async def german_rules(
             continue
 
         new_i = rule_check(
-            version,
             config,
             client,
             lang,
@@ -2255,7 +2238,6 @@ async def german_rules(
             continue
 
         new_i = rule_check(
-            version,
             config,
             client,
             lang,
@@ -2271,7 +2253,6 @@ async def german_rules(
             continue
 
         new_i = rule_check(
-            version,
             config,
             client,
             lang,
@@ -2292,7 +2273,6 @@ async def german_rules(
 
         if token.text[0].isupper():
             new_i = rule_check(
-                version,
                 config,
                 client,
                 lang,
@@ -2313,7 +2293,6 @@ async def german_rules(
             continue
 
         new_i = rule_check(
-            version,
             config,
             client,
             lang,
@@ -2333,7 +2312,6 @@ async def german_rules(
             continue
 
         new_i = rule_check(
-            version,
             config,
             client,
             lang,
@@ -2353,7 +2331,6 @@ async def german_rules(
             continue
 
         new_i = rule_check(
-            version,
             config,
             client,
             lang,
@@ -2374,7 +2351,6 @@ async def german_rules(
 
         if is_sub_category_enabled(config, "abbreviation"):
             new_i = rule_check(
-                version,
                 config,
                 client,
                 lang,
@@ -2395,7 +2371,6 @@ async def german_rules(
 
         if is_sub_category_enabled(config, "communal"):
             new_i = rule_check(
-                version,
                 config,
                 client,
                 lang,
@@ -2416,7 +2391,6 @@ async def german_rules(
 
         if is_sub_category_enabled(config, "d_and_i"):
             new_i = rule_check(
-                version,
                 config,
                 client,
                 lang,
@@ -2441,7 +2415,6 @@ async def german_rules(
 
 
 async def english_rules(
-    version: float,
     config: Config,
     term_replacements: namedtuple,
     client: Client,
@@ -2464,7 +2437,6 @@ async def english_rules(
 
         if len(term_replacements.rules):
             new_i = rule_check(
-                version,
                 config,
                 client,
                 lang,
@@ -2482,7 +2454,6 @@ async def english_rules(
 
         if is_sub_category_enabled(config, "gender_specific_abbreviation"):
             new_i = regex_match(
-                version,
                 config,
                 client,
                 lang,
@@ -2499,7 +2470,6 @@ async def english_rules(
 
         if is_sub_category_enabled(config, "d_and_i"):
             new_i = regex_match(
-                version,
                 config,
                 client,
                 lang,
@@ -2515,7 +2485,6 @@ async def english_rules(
                 continue
 
         new_i = detect_non_inclusive_emoji(
-            version,
             config,
             client,
             lang,
@@ -2533,7 +2502,6 @@ async def english_rules(
 
         if token_text[0] == "#":
             new_i = regex_match(
-                version,
                 config,
                 client,
                 lang,
@@ -2553,7 +2521,6 @@ async def english_rules(
             continue
 
         new_i = rule_check(
-            version,
             config,
             client,
             lang,
@@ -2574,7 +2541,6 @@ async def english_rules(
             continue
 
         new_i = rule_check(
-            version,
             config,
             client,
             lang,
@@ -2596,7 +2562,6 @@ async def english_rules(
 
         if is_sub_category_enabled(config, "advanced_binary_pronouns"):
             new_i = rule_check(
-                version,
                 config,
                 client,
                 lang,
@@ -2617,7 +2582,6 @@ async def english_rules(
                 continue
 
         new_i = rule_check(
-            version,
             config,
             client,
             lang,
@@ -2638,7 +2602,6 @@ async def english_rules(
             continue
 
         new_i = rule_check(
-            version,
             config,
             client,
             lang,
@@ -2659,7 +2622,6 @@ async def english_rules(
             continue
 
         new_i = rule_check(
-            version,
             config,
             client,
             lang,
@@ -2680,7 +2642,6 @@ async def english_rules(
             continue
 
         new_i = rule_check(
-            version,
             config,
             client,
             lang,
@@ -2701,7 +2662,6 @@ async def english_rules(
             continue
 
         new_i = rule_check(
-            version,
             config,
             client,
             lang,
@@ -2722,7 +2682,6 @@ async def english_rules(
             continue
 
         new_i = rule_check(
-            version,
             config,
             client,
             lang,
@@ -2745,7 +2704,6 @@ async def english_rules(
 
         if is_sub_category_enabled(config, "abbreviation"):
             new_i = rule_check(
-                version,
                 config,
                 client,
                 lang,
@@ -2768,7 +2726,6 @@ async def english_rules(
             continue
 
         new_i = rule_check(
-            version,
             config,
             client,
             lang,
@@ -3669,7 +3626,6 @@ def fetch_alternatives_with_article(tokens, i, alternatives):
 
 
 def regex_match(
-    version: float,
     config: Config,
     client: Client,
     lang,
@@ -3909,7 +3865,6 @@ def regex_match(
 
         list_full.append(
             ResultOut.factory(
-                version,
                 config,
                 client,
                 lang,
@@ -3946,7 +3901,6 @@ def is_false_positive(full_text, token, rule):
 
 
 def rule_check(
-    version: float,
     config: Config,
     client: Client,
     lang,
@@ -4154,7 +4108,6 @@ def rule_check(
 
         list_full.append(
             ResultOut.factory(
-                version,
                 config,
                 client,
                 lang,
@@ -4255,7 +4208,6 @@ def get_emoji_context(alternative, lang):
 
 
 def detect_non_inclusive_emoji(
-    version: float,
     config: Config,
     client: Client,
     lang,
@@ -4374,7 +4326,6 @@ def detect_non_inclusive_emoji(
     if subcategory and len(alternatives) > 1:
         list_full.append(
             ResultOut.factory(
-                version,
                 config,
                 client,
                 lang,

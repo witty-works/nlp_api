@@ -419,7 +419,6 @@ class ResultOut(BaseModel):
 
     @staticmethod
     def factory(
-        version: float,
         config: Config,
         client: namedtuple,
         lang: Language,
