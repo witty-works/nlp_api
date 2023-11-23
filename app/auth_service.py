@@ -39,14 +39,9 @@ def get_token_auth_header(request: Request):
     return __get_token(auth)
 
 
-def get_token_claims(request: Request):
+def get_unverified_token_claims(request: Request):
     token = get_token_auth_header(request)
-    return __get_token_claims(token)
-
-
-def validate_scope(required_scope: str, request: Request):
-    token = get_token_auth_header(request)
-    return __validate_scope(required_scope, token)
+    return __get_unverified_token_claims(token)
 
 
 def decode_B2C_JWT(
@@ -55,30 +50,34 @@ def decode_B2C_JWT(
     tenant_id_: str,
     client_id_: str,
     b2c_domain_name_: str,
+    scope: str,
 ):
     token = get_token_auth_header(request)
     issuer = f"https://{b2c_domain_name_}.b2clogin.com/{tenant_id_}/v2.0/".lower()
     audience = client_id_
 
-    return __decode_JWT(token, rsa_key, issuer, audience)
+    return __decode_JWT(token, rsa_key, issuer, audience, scope)
 
 
-def decode_JWT(request: Request, rsa_key: dict, tenant_id_: str, client_id_: str):
+def decode_JWT(
+    request: Request, rsa_key: dict, tenant_id_: str, client_id_: str, scope: str
+):
     token = get_token_auth_header(request)
     issuer = f"https://login.microsoftonline.com/{tenant_id_}/v2.0"
     audience = f"{client_id_}"
 
-    return __decode_JWT(token, rsa_key, issuer, audience)
+    return __decode_JWT(token, rsa_key, issuer, audience, scope)
 
 
 def __decode_JWT(
-    token,
-    rsa_key,
-    issuer,
-    audience,
+    token: str,
+    rsa_key: str,
+    issuer: str,
+    audience: str,
+    scope: str,
 ):
     try:
-        jwt.decode(
+        claims = jwt.decode(
             token, rsa_key, algorithms=["RS256"], audience=audience, issuer=issuer
         )
     except jwt.ExpiredSignatureError:
@@ -90,33 +89,32 @@ def __decode_JWT(
     except Exception:
         raise AuthError("Token error: Unable to parse authentication", 401)
 
+    __validate_scope(scope, claims)
 
-def __validate_scope(required_scope: str, token: str):
-    has_valid_scope = False
-    unverified_claims = jwt.get_unverified_claims(token)
+    return claims
+
+
+def __validate_scope(required_scope: str, claims: dict):
     ## check to ensure that either a valid scope is present in the token
-    if unverified_claims.get("scp") is None:
+    if claims.get("scp") is None:
         raise AuthError(
             "IDW10201: No scope was found in the bearer token",
             403,
         )
 
-    if unverified_claims.get("scp"):
-        # the scp claim is a space delimited string
-        token_scopes = unverified_claims["scp"].split()
-        for token_scope in token_scopes:
-            if token_scope.lower() == required_scope.lower():
-                has_valid_scope = True
-    else:
+    if not claims.get("scp"):
         raise AuthError("IDW10201: No scope claim was found in the bearer token", 403)
 
-    if not has_valid_scope:
-        raise AuthError(
-            f'IDW10203: The "scope" or "scp" claim does not contain scopes {required_scope} or was not found',
-            403,
-        )
+    # the scp claim is a space delimited string
+    token_scopes = claims["scp"].split()
+    for token_scope in token_scopes:
+        if token_scope.lower() == required_scope.lower():
+            return True
 
-    return unverified_claims
+    raise AuthError(
+        f'IDW10203: The "scope" or "scp" claim does not contain scopes {required_scope} or was not found',
+        403,
+    )
 
 
 def __get_token(auth: str):
@@ -140,6 +138,6 @@ def __get_token(auth: str):
     return token
 
 
-def __get_token_claims(token: str):
+def __get_unverified_token_claims(token: str):
     unverified_claims = jwt.get_unverified_claims(token)
     return unverified_claims

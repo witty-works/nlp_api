@@ -37,8 +37,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import RedirectResponse
 
 from app.auth_service import (
-    validate_scope,
-    get_token_claims,
+    get_unverified_token_claims,
     decode_B2C_JWT,
     decode_JWT,
 )
@@ -534,12 +533,12 @@ async def post_auth_debug(
     if "authorization" in request.headers and request.headers[
         "authorization"
     ].lower().startswith("bearer"):
-        claim = get_token_claims(request)
+        unverified_claims = get_unverified_token_claims(request)
     else:
-        claim = "using auth token override"
+        unverified_claims = "using auth token override"
 
     return {
-        "claim": claim,
+        "claim": unverified_claims,
         "configs": configs,
         "user_request_in": user_request_in,
     }
@@ -1148,7 +1147,7 @@ def fetch_user(request: Request):
         "authorization"
     ].lower().startswith("bearer"):
         try:
-            unverified_claims = get_token_claims(request)
+            unverified_claims = get_unverified_token_claims(request)
             for key in settings.sso_configs:
                 config = settings.sso_configs[key]
                 if (
@@ -1158,22 +1157,23 @@ def fetch_user(request: Request):
                     continue
 
                 if "domain" in config:
-                    decode_B2C_JWT(
+                    claims = decode_B2C_JWT(
                         request,
                         config["rsa_key"],
                         config["tenant_id"],
                         config["client_id"],
                         config["domain"],
+                        settings.aadb2c_expected_scope,
                     )
                 else:
-                    decode_JWT(
+                    claims = decode_JWT(
                         request,
                         config["rsa_key"],
                         config["tenant_id"],
                         config["client_id"],
+                        settings.aadb2c_expected_scope,
                     )
-                validate_scope(settings.aadb2c_expected_scope, request)
-                claims = get_token_claims(request)
+
                 return fetch_email_from_claims(claims)
         except Exception as e:
             raise HTTPException(

@@ -13,7 +13,7 @@ from app.auth_service import (
     AuthError,
     __validate_scope,
     __get_token,
-    __get_token_claims,
+    __get_unverified_token_claims,
 )
 from app.models import (
     LangWithAutoType,
@@ -853,18 +853,20 @@ def test_disable_categories(test_disable_categories_dir, snapshot, set_redis):
 
 def test_validate_scope(event_loop, set_redis):
     try:
-        claims = __validate_scope("access_as_user", tokens["azureadbc_valid_expired"])
+        claims = __get_unverified_token_claims(tokens["azureadbc_valid_expired"])
+        valid = __validate_scope("access_as_user", claims)
     except:
-        claims = False
+        valid = False
 
-    assert claims is not False
+    assert valid is not False
 
     try:
-        claims = __validate_scope("access_as_user", tokens["other_valid_expired"])
+        claims = __get_unverified_token_claims(tokens["other_valid_expired"])
+        valid = __validate_scope("access_as_user", claims)
     except:
-        claims = False
+        valid = False
 
-    assert claims is False
+    assert valid is False
 
 
 def test_token(event_loop, set_redis):
@@ -890,7 +892,7 @@ def test_token(event_loop, set_redis):
 
 
 def test_token_claims(event_loop, set_redis):
-    claims = __get_token_claims(tokens["azureadbc_valid_expired"])
+    claims = __get_unverified_token_claims(tokens["azureadbc_valid_expired"])
 
     assert claims is not False
 
