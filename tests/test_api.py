@@ -11,9 +11,9 @@ from app.main import (
 )
 from app.auth_service import (
     AuthError,
-    __validate_scope,
-    __get_token,
-    __get_unverified_token_claims,
+    validate_scope_,
+    get_token_,
+    get_unverified_token_claims_,
 )
 from app.models import (
     LangWithAutoType,
@@ -853,16 +853,16 @@ def test_disable_categories(test_disable_categories_dir, snapshot, set_redis):
 
 def test_validate_scope(event_loop, set_redis):
     try:
-        claims = __get_unverified_token_claims(tokens["azureadbc_valid_expired"])
-        valid = __validate_scope("access_as_user", claims)
+        claims = get_unverified_token_claims_(tokens["azureadbc_valid_expired"])
+        valid = validate_scope_("access_as_user", claims)
     except:
         valid = False
 
     assert valid is not False
 
     try:
-        claims = __get_unverified_token_claims(tokens["other_valid_expired"])
-        valid = __validate_scope("access_as_user", claims)
+        claims = get_unverified_token_claims_(tokens["other_valid_expired"])
+        valid = validate_scope_("access_as_user", claims)
     except:
         valid = False
 
@@ -871,28 +871,28 @@ def test_validate_scope(event_loop, set_redis):
 
 def test_token(event_loop, set_redis):
     try:
-        token = __get_token("")
+        token = get_token_("")
     except AuthError as e:
         token = False
 
     assert token is False
 
     try:
-        token = __get_token("invalid")
+        token = get_token_("invalid")
     except AuthError as e:
         token = False
 
     assert token is False
 
-    token = __get_token("bearer invalid")
+    token = get_token_("bearer invalid")
     assert token == "invalid"
 
-    token = __get_token("bearer " + tokens["azureadbc_valid_expired"])
+    token = get_token_("bearer " + tokens["azureadbc_valid_expired"])
     assert token == tokens["azureadbc_valid_expired"]
 
 
 def test_token_claims(event_loop, set_redis):
-    claims = __get_unverified_token_claims(tokens["azureadbc_valid_expired"])
+    claims = get_unverified_token_claims_(tokens["azureadbc_valid_expired"])
 
     assert claims is not False
 

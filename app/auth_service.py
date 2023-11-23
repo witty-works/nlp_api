@@ -36,15 +36,15 @@ class AuthError(Exception):
 
 def get_token_auth_header(request: Request):
     auth = request.headers.get("Authorization", None)
-    return __get_token(auth)
+    return get_token_(auth)
 
 
 def get_unverified_token_claims(request: Request):
     token = get_token_auth_header(request)
-    return __get_unverified_token_claims(token)
+    return get_unverified_token_claims_(token)
 
 
-def decode_B2C_JWT(
+def decode_b2c_jwt(
     request: Request,
     rsa_key: dict,
     tenant_id_: str,
@@ -56,20 +56,20 @@ def decode_B2C_JWT(
     issuer = f"https://{b2c_domain_name_}.b2clogin.com/{tenant_id_}/v2.0/".lower()
     audience = client_id_
 
-    return __decode_JWT(token, rsa_key, issuer, audience, scope)
+    return decode_jwt_(token, rsa_key, issuer, audience, scope)
 
 
-def decode_JWT(
+def decode_jwt(
     request: Request, rsa_key: dict, tenant_id_: str, client_id_: str, scope: str
 ):
     token = get_token_auth_header(request)
     issuer = f"https://login.microsoftonline.com/{tenant_id_}/v2.0"
     audience = f"{client_id_}"
 
-    return __decode_JWT(token, rsa_key, issuer, audience, scope)
+    return decode_jwt_(token, rsa_key, issuer, audience, scope)
 
 
-def __decode_JWT(
+def decode_jwt_(
     token: str,
     rsa_key: str,
     issuer: str,
@@ -89,12 +89,12 @@ def __decode_JWT(
     except Exception:
         raise AuthError("Token error: Unable to parse authentication", 401)
 
-    __validate_scope(scope, claims)
+    validate_scope_(scope, claims)
 
     return claims
 
 
-def __validate_scope(required_scope: str, claims: dict):
+def validate_scope_(required_scope: str, claims: dict):
     ## check to ensure that either a valid scope is present in the token
     if claims.get("scp") is None:
         raise AuthError(
@@ -117,7 +117,7 @@ def __validate_scope(required_scope: str, claims: dict):
     )
 
 
-def __get_token(auth: str):
+def get_token_(auth: str):
     if not auth:
         raise AuthError("Authentication error: Authorization header is missing", 401)
 
@@ -138,6 +138,6 @@ def __get_token(auth: str):
     return token
 
 
-def __get_unverified_token_claims(token: str):
+def get_unverified_token_claims_(token: str):
     unverified_claims = jwt.get_unverified_claims(token)
     return unverified_claims

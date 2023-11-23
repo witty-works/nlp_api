@@ -38,8 +38,8 @@ from starlette.responses import RedirectResponse
 
 from app.auth_service import (
     get_unverified_token_claims,
-    decode_B2C_JWT,
-    decode_JWT,
+    decode_b2c_jwt,
+    decode_jwt,
 )
 
 import secure
@@ -1157,7 +1157,7 @@ def fetch_user(request: Request):
                     continue
 
                 if "domain" in config:
-                    claims = decode_B2C_JWT(
+                    claims = decode_b2c_jwt(
                         request,
                         config["rsa_key"],
                         config["tenant_id"],
@@ -1166,7 +1166,7 @@ def fetch_user(request: Request):
                         settings.aadb2c_expected_scope,
                     )
                 else:
-                    claims = decode_JWT(
+                    claims = decode_jwt(
                         request,
                         config["rsa_key"],
                         config["tenant_id"],
