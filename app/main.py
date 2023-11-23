@@ -466,19 +466,30 @@ def get_german_gender_ending(
 ):
     alternative_variations = set()
 
-    german_gender_endings = Config._gendereddenom_ending.default.keys()
-    if german_gender_ending is not None:
-        german_gender_endings = [german_gender_ending]
-
-    for german_gender_ending in german_gender_endings:
-        if german_gender_ending not in Config._gendereddenom_ending_article.default:
-            continue
-
+    if german_gender_ending == GermanGenderEndingType.BINARY:
         alternative_variations.update(
             ResultOut.getAlternativeVariations(
-                GenderedRolesFormatType.BOTH, german_gender_ending, alternative
+                GenderedRolesFormatType.BINARY_GENDER,
+                german_gender_ending,
+                alternative,
             )
         )
+    else:
+        german_gender_endings = Config._gendereddenom_ending.default.keys()
+        if german_gender_ending is not None:
+            german_gender_endings = [german_gender_ending]
+
+        for german_gender_ending in german_gender_endings:
+            if german_gender_ending not in Config._gendereddenom_ending_article.default:
+                continue
+
+            alternative_variations.update(
+                ResultOut.getAlternativeVariations(
+                    GenderedRolesFormatType.BOTH,
+                    german_gender_ending,
+                    alternative,
+                )
+            )
 
     return alternative_variations
 
