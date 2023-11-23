@@ -279,13 +279,6 @@ class RuleConfig(BaseModel):
     categories: Dict[str, BooleanConfigType] = {}
     show_inspiration_alternatives: Optional[BooleanConfigType] = None
 
-    @field_validator("german_gender_ending")
-    @classmethod
-    def valid_german_gender_ending(cls, v: str):
-        if "value" in v and v["value"] not in Config._gendereddenom_ending:
-            raise ValueError("Not supported german_gender_ending")
-        return v
-
     @field_validator("preferred_variants", mode="before")
     @classmethod
     def valid_preferred_variants(cls, v):
