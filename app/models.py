@@ -194,13 +194,6 @@ class Config(BaseModel):
     show_inspiration_alternatives: bool = False
     alternatives_max_count: Optional[int] = None
 
-    @field_validator("german_gender_ending")
-    @classmethod
-    def valid_german_gender_ending(cls, v: str):
-        if v not in Config._gendereddenom_ending.default:
-            raise ValueError("Not supported german_gender_ending: " + v)
-        return v
-
     @field_validator("preferred_languages", mode="before")
     @classmethod
     def valid_preferred_languages(cls, v):
