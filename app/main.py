@@ -2186,28 +2186,28 @@ def fetch_rules(
     else:
         if text_filter == token_filter_lower:
             filters = {
-                f"({first_token_check} and first_is_word_type_lemmatize = 0)": text_filter,
+                f"({first_token_check} AND first_is_word_type_lemmatize = 0)": text_filter,
             }
         else:
             filters = {
-                f"({first_token_check} and first_is_word_type_lemmatize = 0 and first_is_word_type_lower_case = 1)": token_filter_lower,
-                f"({first_token_check} and first_is_word_type_lemmatize = 0 and first_is_word_type_lower_case = 0)": text_filter,
+                f"({first_token_check} AND first_is_word_type_lemmatize = 0 AND first_is_word_type_lower_case = 1)": token_filter_lower,
+                f"({first_token_check} AND first_is_word_type_lemmatize = 0 AND first_is_word_type_lower_case = 0)": text_filter,
             }
 
         if lemma_filter == lemma_filter_lower:
             filters[
-                f"({first_token_check} and first_is_word_type_lemmatize = 1)"
+                f"({first_token_check} AND first_is_word_type_lemmatize = 1)"
             ] = lemma_filter
         else:
             filters[
-                f"({first_token_check} and first_is_word_type_lemmatize = 1 and first_is_word_type_lower_case = 1)"
+                f"({first_token_check} AND first_is_word_type_lemmatize = 1 AND first_is_word_type_lower_case = 1)"
             ] = lemma_filter_lower
             filters[
-                f"({first_token_check} and first_is_word_type_lemmatize = 1 and first_is_word_type_lower_case = 0)"
+                f"({first_token_check} AND first_is_word_type_lemmatize = 1 AND first_is_word_type_lower_case = 0)"
             ] = lemma_filter
 
     filter_list = " OR ".join(filters.keys())
-    query = f"SELECT {rule_column_list} FROM rules_rule WHERE is_active = 1 and language = ? and type = ? and diversity_dimension_json != '[]' and ({filter_list}) ORDER BY lemma_length DESC, first_is_word_type_lemmatize ASC"
+    query = f"SELECT {rule_column_list} FROM rules_rule WHERE is_active = 1 AND language = ? AND type = ? AND diversity_dimension_json != '[]' AND ({filter_list}) ORDER BY lemma_length DESC, first_is_word_type_lemmatize ASC"
     parameters = [lang, RuleType.SUFFIX if suffix_check else RuleType.DEFAULT] + list(
         filters.values()
     )
