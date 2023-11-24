@@ -2409,6 +2409,13 @@ async def german_rules(
             if token_text != token.text:
                 token_text = token_text.replace("ä", "a")
             result = german_noun_lookup(token_text, False)
+            if result is None and "-" in token_text:
+                words = token_text.split("-")
+                result = german_noun_lookup(token_text[-1], False)
+                prefix = "-".join(words[0:-1]) + "-"
+            else:
+                prefix = ""
+
             if (
                 result is not None
                 and "flexion" in result
@@ -2416,7 +2423,7 @@ async def german_rules(
                 and "nominativ singular" in result["flexion"]
                 and token.lemma_ != result["flexion"]["nominativ singular"]
             ):
-                token.lemma_ = token_text.lower().replace(
+                token.lemma_ = prefix + token_text.lower().replace(
                     result["flexion"]["nominativ plural"].lower(),
                     result["flexion"]["nominativ singular"].lower(),
                 )
@@ -3615,6 +3622,47 @@ def gendered_denom_analysis_de(
     is_singular,
     rule: Rule,
 ):
+    prefix_words = None
+    if "-" in text:
+        words = text.split("-")
+        if len(words) > 1:
+            words = words[0:-1]
+            word_filter = ("?," * len(words)).removesuffix(",")
+            parameters = words.copy()
+
+            if "in" in text:
+                query = f"SELECT female_form, base_form FROM rules_germannoun WHERE female_form IN ({word_filter})"
+                rows = rules_cursor.execute(query, parameters).fetchall()
+                word_lookup = {}
+                for row in rows:
+                    word_lookup[row[0]] = row[1]
+
+                parameters = []
+                for word in words:
+                    if word in word_lookup:
+                        word = word_lookup[word]
+
+                    parameters.append(word)
+
+                words = parameters.copy()
+
+            split_char = "/" if is_singular else " und "
+            query = f"SELECT DISTINCT r.lemma, a.lemma FROM rules_alternative as a INNER JOIN rules_rule as r on a.rule_id = r.id WHERE r.language = 'de' AND r.lemma IN ({word_filter}) and a.lemma LIKE ?"
+            parameters.append(f"%{split_char}%")
+
+            rows = rules_cursor.execute(query, parameters).fetchall()
+            if len(rows) == len(words):
+                rule.type = RuleType.DEFAULT
+                word_lookup = {}
+                for row in rows:
+                    word_lookup[row[0]] = row[1]
+
+                prefix_words = []
+                for word in words:
+                    prefix_words.append(word_lookup[word])
+
+                prefix_words = "-".join(prefix_words) + "-"
+
     if rule.type == RuleType.SUFFIX and rule.lemma != tokens[i].lemma_:
         prefix_end = (
             text.lower().replace("ä", "a").find(rule.lemma.lower().replace("ä", "a"))
@@ -3639,7 +3687,9 @@ def gendered_denom_analysis_de(
                     prefix + alternative.lemma[0].lower() + alternative.lemma[1:]
                 )
         elif "~" in alternative.lemma:
-            if prefix:
+            if prefix_words:
+                alternative.lemma = prefix_words + alternative.lemma
+            elif prefix:
                 alternative.lemma = alternative.lemma.replace(
                     rule.lemma, prefix + rule.lemma[0].lower() + rule.lemma[1:]
                 )
@@ -4174,7 +4224,7 @@ def rule_check(
         # TODO add entity type on the rule editor
         if rule.lemma == "international":
             rule.entity_type = EntityType.NON_NAME
-        else:
+        elif "-" not in token.text:
             rule.entity_type = (
                 EntityType.NON_PERSON
                 if is_gendered_denom_rule(lang.lang, subcategory)
