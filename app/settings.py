@@ -35,18 +35,11 @@ class Settings(BaseSettings):
     aadb2c_policy: Optional[str] = ""
     aadb2c_domain: Optional[str] = ""
     aadb2c_expected_scope: Optional[str] = ""
-    aadb2c_rsa_kid: Optional[str] = ""
-    aadb2c_rsa_kty: str = "RSA"
-    aadb2c_rsa_n: Optional[str] = ""
-    aadb2c_rsa_e: str = "AQAB"
 
     office_sso_tenant_id: Optional[str] = ""
     office_sso_client_id: Optional[str] = ""
     office_sso_expected_scope: Optional[str] = ""
-    office_sso_rsa_kid: Optional[str] = ""
-    office_sso_rsa_kty: str = "RSA"
-    office_sso_rsa_n: Optional[str] = ""
-    office_sso_rsa_e: str = "AQAB"
+
 
     sso_configs: dict = {}
 
@@ -87,23 +80,11 @@ def get_settings():
             "policy": settings.aadb2c_policy,
             "domain": settings.aadb2c_domain,
             "expected_scope": settings.aadb2c_expected_scope,
-            "rsa_key": {
-                "kid": settings.aadb2c_rsa_kid,
-                "kty": settings.aadb2c_rsa_kty,
-                "e": settings.aadb2c_rsa_e,
-                "n": settings.aadb2c_rsa_n,
-            },
         },
         "office_sso": {
             "tenant_id": settings.office_sso_tenant_id,
             "client_id": settings.office_sso_client_id,
             "expected_scope": settings.office_sso_expected_scope,
-            "rsa_key": {
-                "kid": settings.office_sso_rsa_kid,
-                "kty": settings.office_sso_rsa_kty,
-                "e": settings.office_sso_rsa_e,
-                "n": settings.office_sso_rsa_n,
-            },
         },
     }
 
