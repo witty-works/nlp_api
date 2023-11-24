@@ -534,7 +534,7 @@ async def get_config_debug(
 async def post_auth_debug(
     request: Request, user_request_in: RequestIn
 ):  # pragma: no cover
-    user_email = fetch_user(request)
+    user_email = await fetch_user(request)
     if not user_email:
         return user_email
 
@@ -567,7 +567,7 @@ async def post_auth_2_0(request: Request, user_request_in: BaseRequestIn = None)
     )
     check_client_version(client)
 
-    user_email = fetch_user(request)
+    user_email = await fetch_user(request)
     if not user_email:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -1152,7 +1152,7 @@ def fetch_email_from_claims(claims):
     )
 
 
-def fetch_user(request: Request):
+async def fetch_user(request: Request):
     if "authorization" in request.headers and request.headers[
         "authorization"
     ].lower().startswith("bearer"):
@@ -1167,21 +1167,22 @@ def fetch_user(request: Request):
                     continue
 
                 if "domain" in config:
-                    claims = decode_b2c_jwt(
+                    claims = await decode_b2c_jwt(
+                        ssl_session,
                         request,
-                        config["rsa_key"],
                         config["tenant_id"],
                         config["client_id"],
                         config["domain"],
-                        settings.aadb2c_expected_scope,
+                        config["policy"],
+                        config["expected_scope"],
                     )
                 else:
-                    claims = decode_jwt(
+                    claims = await decode_jwt(
+                        ssl_session,
                         request,
-                        config["rsa_key"],
                         config["tenant_id"],
                         config["client_id"],
-                        settings.aadb2c_expected_scope,
+                        config["expected_scope"],
                     )
 
                 return fetch_email_from_claims(claims)
@@ -1254,7 +1255,7 @@ async def check(
     if version is not None:
         check_api_version(version)
 
-        user_email = fetch_user(request)
+        user_email = await fetch_user(request)
         configs = await fetch_configs_for_request(version, user_request_in, user_email)
     else:
         # debug

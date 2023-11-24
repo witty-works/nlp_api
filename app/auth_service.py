@@ -24,6 +24,7 @@ SOFTWARE.
 
 from fastapi import Request
 from jose import jwt
+from async_lru import alru_cache
 
 
 class AuthError(Exception):
@@ -44,34 +45,46 @@ def get_unverified_token_claims(request: Request):
     return get_unverified_token_claims_(token)
 
 
-def decode_b2c_jwt(
+async def get_rsa_key(session, token, url):
+    unverified_header = jwt.get_unverified_header(token)
+    return await get_rsa_key_(session, unverified_header["kid"], url)
+
+
+async def decode_b2c_jwt(
+    session,
     request: Request,
-    rsa_key: dict,
-    tenant_id_: str,
-    client_id_: str,
-    b2c_domain_name_: str,
+    tenant_id: str,
+    client_id: str,
+    b2c_domain_name: str,
+    b2c_policy_name: str,
     scope: str,
 ):
     token = get_token_auth_header(request)
-    issuer = f"https://{b2c_domain_name_}.b2clogin.com/{tenant_id_}/v2.0/".lower()
-    audience = client_id_
+    issuer = f"https://{b2c_domain_name}.b2clogin.com/{tenant_id}/v2.0/".lower()
+    audience = client_id
+
+    key_url = f"https://{b2c_domain_name}.b2clogin.com/{b2c_domain_name}.onmicrosoft.com/{b2c_policy_name}/discovery/v2.0/keys"
+    rsa_key = await get_rsa_key(session, token, key_url)
 
     return decode_jwt_(token, rsa_key, issuer, audience, scope)
 
 
-def decode_jwt(
-    request: Request, rsa_key: dict, tenant_id_: str, client_id_: str, scope: str
+async def decode_jwt(
+    session, request: Request, tenant_id: str, client_id: str, scope: str
 ):
     token = get_token_auth_header(request)
-    issuer = f"https://login.microsoftonline.com/{tenant_id_}/v2.0"
-    audience = f"{client_id_}"
+    issuer = f"https://login.microsoftonline.com/{tenant_id}/v2.0"
+    audience = f"{client_id}"
+
+    key_url = f"https://login.microsoftonline.com/{tenant_id}/discovery/v2.0/keys"
+    rsa_key = await get_rsa_key(session, token, key_url)
 
     return decode_jwt_(token, rsa_key, issuer, audience, scope)
 
 
 def decode_jwt_(
     token: str,
-    rsa_key: str,
+    rsa_key: dict,
     issuer: str,
     audience: str,
     scope: str,
@@ -141,3 +154,24 @@ def get_token_(auth: str):
 def get_unverified_token_claims_(token: str):
     unverified_claims = jwt.get_unverified_claims(token)
     return unverified_claims
+
+
+@alru_cache(maxsize=8)
+async def get_rsa_key_(session, kid, url):
+    async with session.get(url) as r:
+        if r.status != 200:  # pragma: no cover
+            error = await r.text()
+            raise AuthError("Fetching RSA key resulted: " + error)
+
+        jwks = await r.json()
+        for key in jwks["keys"]:
+            if key["kid"] == kid:
+                return {
+                    "kty": key["kty"],
+                    "kid": key["kid"],
+                    "use": key["use"],
+                    "n": key["n"],
+                    "e": key["e"],
+                }
+
+    raise AuthError("Unable to fetch RSA key")
