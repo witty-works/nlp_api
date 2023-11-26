@@ -99,12 +99,7 @@ class GermanGenderEndingType(str, Enum):
     PARENTHESIS_DASH = "(-)"
     PARENTHESIS = "()"
     CAPITAL_LETTER = "In"
-    STR_SLASH = "slash_in"
-    STR_SLASH_DASH = "slash_dash_in"
-    STR_UNDERSCORE = "underscore_in"
-    STR_STAR = "asterisk_in"
-    STR_COLON = "colon_in"
-    STR_CAPITAL_LETTER = "uppercase_in"
+    BINARY = "binary"
 
 
 class SingularTheyType(str, Enum):
@@ -199,25 +194,6 @@ class Config(BaseModel):
     show_inspiration_alternatives: bool = False
     alternatives_max_count: Optional[int] = None
 
-    @field_validator("german_gender_ending")
-    @classmethod
-    def valid_german_gender_ending(cls, v: str):
-        if v not in Config._gendereddenom_ending.default:
-            mapping = {
-                GermanGenderEndingType.STR_SLASH: GermanGenderEndingType.SLASH,
-                GermanGenderEndingType.STR_SLASH_DASH: GermanGenderEndingType.SLASH_DASH,
-                GermanGenderEndingType.STR_UNDERSCORE: GermanGenderEndingType.UNDERSCORE,
-                GermanGenderEndingType.STR_STAR: GermanGenderEndingType.STAR,
-                GermanGenderEndingType.STR_COLON: GermanGenderEndingType.COLON,
-                GermanGenderEndingType.STR_CAPITAL_LETTER: GermanGenderEndingType.CAPITAL_LETTER,
-            }
-
-            if v in mapping:
-                return mapping[v]
-
-            raise ValueError("Not supported german_gender_ending: " + v)
-        return v
-
     @field_validator("preferred_languages", mode="before")
     @classmethod
     def valid_preferred_languages(cls, v):
@@ -303,13 +279,6 @@ class RuleConfig(BaseModel):
     categories: Dict[str, BooleanConfigType] = {}
     show_inspiration_alternatives: Optional[BooleanConfigType] = None
 
-    @field_validator("german_gender_ending")
-    @classmethod
-    def valid_german_gender_ending(cls, v: str):
-        if "value" in v and v["value"] not in Config._gendereddenom_ending:
-            raise ValueError("Not supported german_gender_ending")
-        return v
-
     @field_validator("preferred_variants", mode="before")
     @classmethod
     def valid_preferred_variants(cls, v):
@@ -348,14 +317,6 @@ class DomainType(str, Enum):
 class DomainConfig(BaseModel):
     list: List[str]
     type: DomainType
-
-
-class LanguageRequest(BaseModel):
-    version: float
-    text: str
-    client: str
-    config: Config
-    configs: dict
 
 
 class ConfRequest(BaseModel):
@@ -451,7 +412,6 @@ class ResultOut(BaseModel):
 
     @staticmethod
     def factory(
-        version: float,
         config: Config,
         client: namedtuple,
         lang: Language,

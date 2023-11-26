@@ -24,6 +24,7 @@ SOFTWARE.
 
 from fastapi import Request
 from jose import jwt
+from async_lru import alru_cache
 
 
 class AuthError(Exception):
@@ -36,49 +37,60 @@ class AuthError(Exception):
 
 def get_token_auth_header(request: Request):
     auth = request.headers.get("Authorization", None)
-    return __get_token(auth)
+    return get_token_(auth)
 
 
-def get_token_claims(request: Request):
+def get_unverified_token_claims(request: Request):
     token = get_token_auth_header(request)
-    return __get_token_claims(token)
+    return get_unverified_token_claims_(token)
 
 
-def validate_scope(required_scope: str, request: Request):
-    token = get_token_auth_header(request)
-    return __validate_scope(required_scope, token)
+async def get_rsa_key(session, token, url):
+    unverified_header = jwt.get_unverified_header(token)
+    return await get_rsa_key_(session, unverified_header["kid"], url)
 
 
-def decode_B2C_JWT(
+async def decode_b2c_jwt(
+    session,
     request: Request,
-    rsa_key: dict,
-    tenant_id_: str,
-    client_id_: str,
-    b2c_domain_name_: str,
+    tenant_id: str,
+    client_id: str,
+    b2c_domain_name: str,
+    b2c_policy_name: str,
+    scope: str,
 ):
     token = get_token_auth_header(request)
-    issuer = f"https://{b2c_domain_name_}.b2clogin.com/{tenant_id_}/v2.0/".lower()
-    audience = client_id_
+    issuer = f"https://{b2c_domain_name}.b2clogin.com/{tenant_id}/v2.0/".lower()
+    audience = client_id
 
-    return __decode_JWT(token, rsa_key, issuer, audience)
+    key_url = f"https://{b2c_domain_name}.b2clogin.com/{b2c_domain_name}.onmicrosoft.com/{b2c_policy_name}/discovery/v2.0/keys"
+    rsa_key = await get_rsa_key(session, token, key_url)
+
+    return decode_jwt_(token, rsa_key, issuer, audience, scope)
 
 
-def decode_JWT(request: Request, rsa_key: dict, tenant_id_: str, client_id_: str):
+async def decode_jwt(
+    session, request: Request, tenant_id: str, client_id: str, scope: str
+):
     token = get_token_auth_header(request)
-    issuer = f"https://login.microsoftonline.com/{tenant_id_}/v2.0"
-    audience = f"{client_id_}"
+    issuer = f"https://login.microsoftonline.com/{tenant_id}/v2.0"
+    audience = f"{client_id}"
 
-    return __decode_JWT(token, rsa_key, issuer, audience)
+    key_url = f"https://login.microsoftonline.com/{tenant_id}/discovery/v2.0/keys"
+    rsa_key = await get_rsa_key(session, token, key_url)
+
+    return decode_jwt_(token, rsa_key, issuer, audience, scope)
 
 
-def __decode_JWT(
-    token,
-    rsa_key,
-    issuer,
-    audience,
+def decode_jwt_(
+    token: str,
+    rsa_key: dict,
+    issuer: str,
+    audience: str,
+    scope: str,
 ):
     try:
-        jwt.decode(
+        claims = jwt.decode(
             token, rsa_key, algorithms=["RS256"], audience=audience, issuer=issuer
         )
     except jwt.ExpiredSignatureError:
@@ -90,36 +102,35 @@ def __decode_JWT(
     except Exception:
         raise AuthError("Token error: Unable to parse authentication", 401)
 
+    validate_scope_(scope, claims)
 
-def __validate_scope(required_scope: str, token: str):
-    has_valid_scope = False
-    unverified_claims = jwt.get_unverified_claims(token)
+    return claims
+
+
+def validate_scope_(required_scope: str, claims: dict):
     ## check to ensure that either a valid scope is present in the token
-    if unverified_claims.get("scp") is None:
+    if claims.get("scp") is None:
         raise AuthError(
             "IDW10201: No scope was found in the bearer token",
             403,
         )
 
-    if unverified_claims.get("scp"):
-        # the scp claim is a space delimited string
-        token_scopes = unverified_claims["scp"].split()
-        for token_scope in token_scopes:
-            if token_scope.lower() == required_scope.lower():
-                has_valid_scope = True
-    else:
+    if not claims.get("scp"):
         raise AuthError("IDW10201: No scope claim was found in the bearer token", 403)
 
-    if not has_valid_scope:
-        raise AuthError(
-            f'IDW10203: The "scope" or "scp" claim does not contain scopes {required_scope} or was not found',
-            403,
-        )
+    # the scp claim is a space delimited string
+    token_scopes = claims["scp"].split()
+    for token_scope in token_scopes:
+        if token_scope.lower() == required_scope.lower():
+            return True
 
-    return unverified_claims
+    raise AuthError(
+        f'IDW10203: The "scope" or "scp" claim does not contain scopes {required_scope} or was not found',
+        403,
+    )
 
 
-def __get_token(auth: str):
+def get_token_(auth: str):
     if not auth:
         raise AuthError("Authentication error: Authorization header is missing", 401)
 
@@ -140,6 +151,27 @@ def __get_token(auth: str):
     return token
 
 
-def __get_token_claims(token: str):
+def get_unverified_token_claims_(token: str):
     unverified_claims = jwt.get_unverified_claims(token)
     return unverified_claims
+
+
+@alru_cache(maxsize=8)
+async def get_rsa_key_(session, kid, url):
+    async with session.get(url) as r:
+        if r.status != 200:  # pragma: no cover
+            error = await r.text()
+            raise AuthError("Fetching RSA key resulted: " + error)
+
+        jwks = await r.json()
+        for key in jwks["keys"]:
+            if key["kid"] == kid:
+                return {
+                    "kty": key["kty"],
+                    "kid": key["kid"],
+                    "use": key["use"],
+                    "n": key["n"],
+                    "e": key["e"],
+                }
+
+    raise AuthError("Unable to fetch RSA key")
