@@ -1622,9 +1622,13 @@ async def apply_languagetool_rules(
         "language": lang.locale,
         "disabledCategories": ["GENDER_NEUTRALITY", "COLLOQUIALISMS"],
         "enabledCategories": [],
-        # Ignore case issues at the start of sentence due to chunking issues
-        # https://github.com/witty-works/browser-extension/pull/880
-        "disabledRules": ["UPPERCASE_SENTENCE_START"],
+        "disabledRules": [
+            # Ignore case issues at the start of sentence due to chunking issues
+            # https://github.com/witty-works/browser-extension/pull/880
+            "UPPERCASE_SENTENCE_START",
+            # Ignore "70%", "100km" needing a space between the unit
+            "EINHEIT_LEERZEICHEN",
+        ],
     }
 
     if is_sub_category_enabled(config, "advanced_plain_language"):
@@ -1662,9 +1666,7 @@ async def apply_languagetool_rules(
         settings.languagetool_verify_ssl,
     )
 
-    return languagetool_matches(
-        config, client, lang, text, tokens, offsets, result
-    )
+    return languagetool_matches(config, client, lang, text, tokens, offsets, result)
 
 
 def utf16len(c):
