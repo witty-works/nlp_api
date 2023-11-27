@@ -126,10 +126,11 @@ rule_columns = {
     "lemma_json": 3,
     "pattern": 4,
     "type": 5,
-    "label": 6,
-    "label_type": 7,
-    "word_types_json": 8,
-    "diversity_dimension_json": 9,
+    "entity_type": 6,
+    "label": 7,
+    "label_type": 8,
+    "word_types_json": 9,
+    "diversity_dimension_json": 10,
 }
 rule_column_list = ", ".join(rule_columns.keys())
 
@@ -206,6 +207,7 @@ def create_rule(row, rewrite_to_uk: bool = False):
         else map_rule_label_type(lang.lang, row[rule_columns["label_type"]])
     )
     rule.type = row[rule_columns["type"]]
+    rule.entity_type = row[rule_columns["entity_type"]]
 
     return rule
 
@@ -4220,16 +4222,6 @@ def rule_check(
         subcategory = is_sub_category_enabled(config, rule.subcategories)
         if not subcategory:
             continue
-
-        # TODO add entity type on the rule editor
-        if rule.lemma == "international":
-            rule.entity_type = EntityType.NON_NAME
-        elif "-" not in token.text:
-            rule.entity_type = (
-                EntityType.NON_PERSON
-                if is_gendered_denom_rule(lang.lang, subcategory)
-                else EntityType.DEFAULT
-            )
 
         if rule.entity_type != EntityType.DEFAULT:
             match rule.entity_type:
