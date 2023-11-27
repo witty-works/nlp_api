@@ -31,8 +31,16 @@ cursor = source.cursor()
 
 cursor.execute(f"DROP table IF EXISTS rules_source")
 cursor.execute(f"DROP table IF EXISTS rules_diversitydimension")
+cursor.execute(f"DROP table IF EXISTS rules_rulediversitydimension")
 cursor.execute(f"DROP table IF EXISTS rules_category")
 cursor.execute(f"DROP table IF EXISTS rules_trainingsentence")
+
+tables = ["rules_germanverb", "rules_germanadjective", "rules_germannoun", "rules_englishverb", "rules_englishadjective", "rules_englishnoun", "rules_falsepositive", "rules_alternative", "rules_rule"]
+columns = ["created_at", "updated_at", "comment"]
+
+for table in tables:
+    for column in columns:
+        cursor.execute(f"ALTER TABLE {table} DROP COLUMN {column}")
 
 query = "SELECT name FROM sqlite_master WHERE type='table' and name NOT LIKE 'sqlite_%' and name NOT LIKE 'rules_%'"
 cursor.execute(query)
