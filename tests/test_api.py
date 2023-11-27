@@ -1360,9 +1360,7 @@ def test_spacy():
         response_content = json.loads(response.content)
 
         expected = [
-            {
-                "word_type": "emoji|~n|~|a|a|n||||emoji"
-            },
+            {"word_type": "emoji|~n|~v|a|a|n||||emoji"},
             {
                 "text": "👩🏻‍🚒",
                 "lemma": "👩🏻‍🚒",
@@ -1372,15 +1370,11 @@ def test_spacy():
                 "pos": "PROPN",
                 "dep": "ROOT",
                 "word_type": "emoji",
-                "morph": {
-                "Case": "Nom",
-                "Gender": "Fem",
-                "Number": "Sing"
-                },
+                "morph": {"Case": "Nom", "Gender": "Fem", "Number": "Sing"},
                 "is_emoji": True,
                 "is_singular": True,
                 "emoji_desc": "woman firefighter light skin tone",
-                "whitespace": " "
+                "whitespace": " ",
             },
             {
                 "text": "Das",
@@ -1392,15 +1386,15 @@ def test_spacy():
                 "dep": "sb",
                 "word_type": "n",
                 "morph": {
-                "Case": "Nom",
-                "Gender": "Neut",
-                "Number": "Sing",
-                "PronType": "Dem"
+                    "Case": "Nom",
+                    "Gender": "Neut",
+                    "Number": "Sing",
+                    "PronType": "Dem",
                 },
                 "is_emoji": False,
                 "is_singular": True,
                 "emoji_desc": None,
-                "whitespace": " "
+                "whitespace": " ",
             },
             {
                 "text": "ist",
@@ -1410,18 +1404,18 @@ def test_spacy():
                 "tag": "VAFIN",
                 "pos": "AUX",
                 "dep": "ROOT",
-                "word_type": "",
+                "word_type": "v",
                 "morph": {
-                "Mood": "Ind",
-                "Number": "Sing",
-                "Person": "3",
-                "Tense": "Pres",
-                "VerbForm": "Fin"
+                    "Mood": "Ind",
+                    "Number": "Sing",
+                    "Person": "3",
+                    "Tense": "Pres",
+                    "VerbForm": "Fin",
                 },
                 "is_emoji": False,
                 "is_singular": True,
                 "emoji_desc": None,
-                "whitespace": " "
+                "whitespace": " ",
             },
             {
                 "text": "sehr",
@@ -1436,7 +1430,7 @@ def test_spacy():
                 "is_emoji": False,
                 "is_singular": None,
                 "emoji_desc": None,
-                "whitespace": " "
+                "whitespace": " ",
             },
             {
                 "text": "ehrgeizig",
@@ -1447,13 +1441,11 @@ def test_spacy():
                 "pos": "ADV",
                 "dep": "mo",
                 "word_type": "a",
-                "morph": {
-                "Degree": "Pos"
-                },
+                "morph": {"Degree": "Pos"},
                 "is_emoji": False,
                 "is_singular": None,
                 "emoji_desc": None,
-                "whitespace": " "
+                "whitespace": " ",
             },
             {
                 "text": "Herr",
@@ -1464,15 +1456,11 @@ def test_spacy():
                 "pos": "NOUN",
                 "dep": "pd",
                 "word_type": "n",
-                "morph": {
-                "Case": "Nom",
-                "Gender": "Masc",
-                "Number": "Sing"
-                },
+                "morph": {"Case": "Nom", "Gender": "Masc", "Number": "Sing"},
                 "is_emoji": False,
                 "is_singular": True,
                 "emoji_desc": None,
-                "whitespace": " "
+                "whitespace": " ",
             },
             {
                 "text": "Müller",
@@ -1483,15 +1471,11 @@ def test_spacy():
                 "pos": "PROPN",
                 "dep": "nk",
                 "word_type": "",
-                "morph": {
-                "Case": "Nom",
-                "Gender": "Masc",
-                "Number": "Sing"
-                },
+                "morph": {"Case": "Nom", "Gender": "Masc", "Number": "Sing"},
                 "is_emoji": False,
                 "is_singular": True,
                 "emoji_desc": None,
-                "whitespace": " "
+                "whitespace": " ",
             },
             {
                 "text": "in",
@@ -1506,7 +1490,7 @@ def test_spacy():
                 "is_emoji": False,
                 "is_singular": None,
                 "emoji_desc": None,
-                "whitespace": " "
+                "whitespace": " ",
             },
             {
                 "text": "London",
@@ -1517,15 +1501,11 @@ def test_spacy():
                 "pos": "PROPN",
                 "dep": "nk",
                 "word_type": "",
-                "morph": {
-                "Case": "Dat",
-                "Gender": "Neut",
-                "Number": "Sing"
-                },
+                "morph": {"Case": "Dat", "Gender": "Neut", "Number": "Sing"},
                 "is_emoji": False,
                 "is_singular": True,
                 "emoji_desc": None,
-                "whitespace": " "
+                "whitespace": " ",
             },
             {
                 "text": "😃",
@@ -1540,9 +1520,9 @@ def test_spacy():
                 "is_emoji": True,
                 "is_singular": None,
                 "emoji_desc": "grinning face with big eyes",
-                "whitespace": ""
-            }
-            ]
+                "whitespace": "",
+            },
+        ]
 
         assert response_content == expected
 

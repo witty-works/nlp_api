@@ -161,7 +161,7 @@ declensions_config = {
             "name": "rules_englishadjective",
             "columns": ["base_form", "comparative", "superlative", "is_absolute"],
         },
-        "s": {"name": "rules_englishnoun", "columns": ["base_form", "plural"]},
+        "n": {"name": "rules_englishnoun", "columns": ["base_form", "plural"]},
     },
     "de": {
         "v": {
@@ -180,8 +180,11 @@ declensions_config = {
                 "infinitiv_zu",
             ],
         },
-        "a": {"name": "rules_germanadjective", "columns": ["base_form"]},
-        "s": {"name": "rules_germannoun", "columns": ["base_form"]},
+        "a": {
+            "name": "rules_germanadjective",
+            "columns": ["base_form", "comparative", "superlative", "is_absolute"],
+        },
+        "n": {"name": "rules_germannoun", "columns": ["base_form"]},
     },
 }
 
@@ -2309,43 +2312,35 @@ def is_valid_text(text):
     return text.isalpha()
 
 
-def fetch_declensions(lang, word_type, b_text, a_text=None):
+def fetch_declensions(lang, word_type, text):
     column_list = ", ".join(declensions_config[lang][word_type]["columns"])
     table_name = declensions_config[lang][word_type]["name"]
 
     filters = ["base_form = ?"]
-    parameters = [b_text]
-    if a_text is not None:
-        for column in declensions_config[lang][word_type]["columns"]:
-            if column == "is_absolute":
-                continue
+    parameters = [text]
+    for column in declensions_config[lang][word_type]["columns"]:
+        if column == "is_absolute":
+            continue
 
-            filters.append(f"{column} = ?")
-            parameters.append(a_text)
+        filters.append(f"{column} = ?")
+        parameters.append(text)
 
+    parameters.append(text)
     filter_list = " OR ".join(filters)
 
-    query = f"SELECT {column_list} FROM {table_name} WHERE {filter_list}"
+    query = f"SELECT {column_list} FROM {table_name} WHERE {filter_list} ORDER BY IIF(base_form = ?, 1, 0) DESC, LENGTH(base_form) DESC LIMIT 1"
 
-    a_result = None
-    b_result = None
-    for row in rules_cursor.execute(query, parameters):
-        if row[0] == b_text:
-            b_result = dict(zip(declensions_config[lang][word_type]["columns"], row))
-        else:
-            a_result = dict(zip(declensions_config[lang][word_type]["columns"], row))
+    result = None
+    rows = rules_cursor.execute(query, parameters).fetchall()
+    for row in rows:
+        result = dict(zip(declensions_config[lang][word_type]["columns"], row))
 
-    if a_text is not None and a_result is None:
+    if result is None:
         logging.error(
-            f"Could not find {word_type} form for '{a_text}'",
+            f"Could not find {word_type} form for '{text}'",
         )
 
-    if b_result is None:
-        logging.error(
-            f"Could not find {word_type} form for '{b_text}'",
-        )
-
-    return b_result, a_result
+    return result
 
 
 def fetch_false_positives(rule: Rule) -> list[str]:
@@ -2871,7 +2866,7 @@ def is_word_match(
 ):
     token_word = token.lemma_ if word_type["lemmatize"] else token.text
 
-    if word_type["lower_case"] and (lang == "en" or "s" != word_type["word_type"]):
+    if word_type["lower_case"] and (lang == "en" or "n" != word_type["word_type"]):
         token_word = token_word.lower()
         word = word.lower()
 
@@ -2977,11 +2972,19 @@ def fetch_word_type(lang, token, word_type=None, single_word=None, strict=False)
         return "v"
 
     if lang == "de":
-        b_result, a_result = fetch_declensions("de", "v", token.lemma_)
+        b_result = fetch_declensions("de", "v", token.lemma_)
         if b_result is not None:
             return "v"
 
     if token.pos_ == "NOUN" or token.pos_ == "PRON":
+        if (
+            not strict
+            and lang == "en"
+            and "a" in word_type
+            and token.dep_ == "compound"
+        ):
+            return "a"
+
         return "n"
 
     adj_tags = {
@@ -3238,7 +3241,7 @@ def align_noun_form(lang, a_text, a_token, b_token):
 
     is_singular = is_token_singular(lang, b_token)
 
-    b_result, a_result = fetch_declensions(lang, "s", b_token.lemma_)
+    b_result = fetch_declensions(lang, "n", b_token.lemma_)
 
     if is_singular is True or (is_singular is None and is_token_plural(lang, a_token)):
         return b_result["plural"] if b_result is not None else Noun(b_text).plural()
@@ -3246,15 +3249,13 @@ def align_noun_form(lang, a_text, a_token, b_token):
     if is_singular is False:
         return b_text
 
-    return b_result["base_form"] if b_result is not None else Noun(b_text).singular()
+    return Noun(b_text).singular()
 
 
-def align_adjective_form_english(a_token, b_token):
+def align_adjective_form_english(a_token, b_token, a_result, b_result):
     # use a_token.text to handle "consulting"
     a_text_lower = a_token.text.lower()
-    b_result, a_result = fetch_declensions(
-        "en", "a", b_token.text.lower(), a_text_lower
-    )
+
     if a_result is not None:
         target_form = (
             "base_form"
@@ -3274,7 +3275,7 @@ def align_adjective_form_english(a_token, b_token):
             target_form = None
 
     if target_form is None:
-        return b_token.lemma_
+        return b_token.text
 
     if b_result is None:
         b_adjective = Adjective(b_token.lemma_)
@@ -3286,47 +3287,60 @@ def align_adjective_form_english(a_token, b_token):
         if target_form == "superlative":
             return b_adjective.superlative()
 
-        return b_token.lemma_
+        return b_token.text
 
-    return b_result["base_form"] if b_result["is_absolute"] else b_result[target_form]
+    return b_result[target_form]
 
 
-def align_adjective_form(lang, a_text, a_token, b_token):
-    if lang == "de":
-        if (
-            a_token.text in rules["de"]["absolute_adjectives"]
-            or b_token.text in rules["de"]["absolute_adjectives"]
-        ):
+def align_adjective_form_german(a_token, b_token, a_result, b_result):
+    a_text = a_token.text
+
+    if a_result is not None and a_text == a_result["base_form"]:
+        if a_result["is_absolute"] == False:
             return b_token.text
 
-        ending = "sten"
-        if a_text.endswith(ending):
-            if b_token.text.endswith("t") or b_token.text.endswith("s"):
-                ending = "e" + ending
-            return b_token.text + ending
-
-        ending = "ste"
-        if a_text.endswith(ending):
-            if b_token.text.endswith("t") or b_token.text.endswith("s"):
-                ending = "e" + ending
-            return b_token.text + ending
-
-        if len(a_text) < 2:
+        if b_result is not None and b_result["is_absolute"] == True:
             return b_token.text
 
-        ending = a_text[-2:]
-        if ending[0] != "e":
-            ending = ending[1:]
-
-        if ending[0] != "e":
-            return b_token.text
-
-        if b_token.text[-1] == "e":
-            ending = ending[1:]
-
+    ending = "sten"
+    if a_text.endswith(ending):
+        if b_token.text.endswith("t") or b_token.text.endswith("s"):
+            ending = "e" + ending
         return b_token.text + ending
 
-    return align_adjective_form_english(a_token, b_token)
+    ending = "ste"
+    if a_text.endswith(ending):
+        if b_token.text.endswith("t") or b_token.text.endswith("s"):
+            ending = "e" + ending
+        return b_token.text + ending
+
+    if len(a_text) < 2:
+        return b_token.text
+
+    ending = a_text[-2:]
+    if ending[0] != "e":
+        ending = ending[1:]
+
+    if ending[0] != "e":
+        return b_token.text
+
+    if b_token.text[-1] == "e":
+        ending = ending[1:]
+
+    return b_token.text + ending
+
+
+def align_adjective_form(lang, a_token, b_token):
+    a_result = fetch_declensions(lang, "a", a_token.lemma_.lower())
+
+    b_result = fetch_declensions(lang, "a", b_token.lemma_.lower())
+    if b_result is None:
+        b_result = fetch_declensions(lang, "a", b_token.text.lower())
+
+    if lang == "de":
+        return align_adjective_form_german(a_token, b_token, a_result, b_result)
+
+    return align_adjective_form_english(a_token, b_token, a_result, b_result)
 
 
 def german_verb_splittable(word):  # pragma: no cover
@@ -3383,7 +3397,7 @@ def german_verb_splittable(word):  # pragma: no cover
     while i < len(word) - 2:  # skip the last 2 letters
         prefix = word[0:i]
         partial_word = word[i:]
-        partial_word_result, result = fetch_declensions("de", "v", partial_word)
+        partial_word_result = fetch_declensions("de", "v", partial_word)
         if partial_word_result is not None:
             tokens = fetch_tokens("de", prefix + " " + partial_word)
             if "a" == fetch_word_type("de", tokens[0]) and "v" == fetch_word_type(
@@ -3408,7 +3422,8 @@ def align_verb_form_german(a_text, a_token, b_token):
     b_text = b_token.text
     injected_string = ""
 
-    b_result, a_result = fetch_declensions("de", "v", b_text, a_text)
+    a_result = fetch_declensions("de", "v", a_text)
+    b_result = fetch_declensions("de", "v", b_text)
 
     # check if "zu" was stripped from the word in the lemma
     if a_text.count("zu") > a_token.lemma_.count("zu"):
@@ -3443,7 +3458,9 @@ def align_verb_form_german(a_text, a_token, b_token):
 
 
 def align_verb_form_english(a_text, b_token):
-    b_result, a_result = fetch_declensions("en", "v", b_token.text.lower(), a_text)
+    a_result = fetch_declensions("en", "v", a_text)
+    b_result = fetch_declensions("en", "v", b_token.text.lower())
+
     if a_result is not None:
         target_form = find_matching_form(a_result, a_text.lower())
     else:
@@ -3552,7 +3569,7 @@ def alternative_declension(
                     elif "a" == word_type and "a" == alternative_word_type:
                         previous = True
                         alternative_text = align_adjective_form(
-                            lang, text, token, alternative_token
+                            lang, token, alternative_token
                         )
 
             new_alternative = (
@@ -3584,7 +3601,11 @@ def alternatives_declension(lang, text, i, tokens, rule: Rule, alternatives):
     if alternatives == None or len(alternatives) == 0:
         return text, start, alternatives
 
-    word_type = fetch_word_type(lang, token)
+    word_type = (
+        rule.word_types[0]["word_type"]
+        if (len(rule.word_types) == 1 and rule.word_types[0]["word_type"] != "")
+        else fetch_word_type(lang, token)
+    )
 
     prepend_word = False
     prev_token = None if i == 0 else tokens[i - 1]
