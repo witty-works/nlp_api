@@ -2343,6 +2343,7 @@ def is_valid_text(text):
 
 
 def fetch_declensions(lang, word_type, text):
+    text = text.title() if lang == "de" and word_type == "n" else text.lower()
     column_list = ", ".join(declensions_config[lang][word_type]["columns"])
     table_name = declensions_config[lang][word_type]["name"]
 
@@ -2955,7 +2956,7 @@ def is_phrase_match(
 """Function to change adjectives to -en form in alternatives"""
 
 
-def fetch_word_type(lang, token, word_type=None, single_word=None, strict=False):
+def fetch_word_type(lang, token, word_type=None, single_word=False, strict=False):
     # https://machinelearningknowledge.ai/tutorial-on-spacy-part-of-speech-pos-tagging/
     # https://github.com/explosion/spaCy/blob/master/spacy/glossary.py
 
@@ -2986,22 +2987,6 @@ def fetch_word_type(lang, token, word_type=None, single_word=None, strict=False)
 
         return "v"
 
-    if lang == "de":
-        b_result = fetch_declensions("de", "v", token.lemma_)
-        if b_result is not None:
-            return "v"
-
-    if token.pos_ == "NOUN" or token.pos_ == "PRON":
-        if (
-            not strict
-            and lang == "en"
-            and "a" in word_type
-            and token.dep_ == "compound"
-        ):
-            return "a"
-
-        return "n"
-
     adj_tags = {
         "AFX",
         "ADJA",
@@ -3022,14 +3007,22 @@ def fetch_word_type(lang, token, word_type=None, single_word=None, strict=False)
     if token.tag_ in adj_tags or token.pos_ in adj_tags:
         return "a"
 
-    if token.tag_ == "NN":
-        return "n"
+    if token.pos_ == "NOUN" or token.pos_ == "PRON" or token.tag_ == "NN":
+        if lang == "de":
+            if token.text[0].islower():
+                result = fetch_declensions("de", "v", token.text)
+                if result is not None:
+                    return "v"
+        elif not strict and "a" in word_type and token.dep_ == "compound":
+            return "a"
 
-    if token.pos_ == "PROPN" and single_word is not None and len(word_type):
-        return word_type[0:1]
+        return "n"
 
     if token.tag_ == "KON" or token.pos_ == "CCONJ":
         return "conj"
+
+    if token.pos_ == "PROPN":
+        return word_type
 
     return ""
 
@@ -3194,11 +3187,11 @@ def align_noun_form(lang, a_token, b_token):
         return b_text
 
     if lang == "de":
-        a_result = fetch_declensions(lang, "n", a_token.lemma_)
+        a_result = fetch_declensions(lang, "n", a_token.text)
         if a_result is None:
             return b_text
 
-        b_result = fetch_declensions(lang, "n", b_token.lemma_)
+        b_result = fetch_declensions(lang, "n", b_token.text)
         if b_result is None:
             return b_text
 
@@ -3213,7 +3206,7 @@ def align_noun_form(lang, a_token, b_token):
 
     is_singular = is_token_singular(lang, b_token)
 
-    b_result = fetch_declensions(lang, "n", b_token.lemma_)
+    b_result = fetch_declensions(lang, "n", b_token.text)
     if is_singular is True or (is_singular is None and is_token_plural(lang, a_token)):
         return b_result["plural"] if b_result is not None else Noun(b_text).plural()
 
@@ -3302,11 +3295,11 @@ def align_adjective_form_german(a_token, b_token, a_result, b_result):
 
 
 def align_adjective_form(lang, a_token, b_token):
-    a_result = fetch_declensions(lang, "a", a_token.lemma_.lower())
+    a_result = fetch_declensions(lang, "a", a_token.text)
 
-    b_result = fetch_declensions(lang, "a", b_token.lemma_.lower())
+    b_result = fetch_declensions(lang, "a", b_token.text)
     if b_result is None:
-        b_result = fetch_declensions(lang, "a", b_token.text.lower())
+        b_result = fetch_declensions(lang, "a", b_token.text)
 
     if lang == "de":
         return align_adjective_form_german(a_token, b_token, a_result, b_result)
@@ -3430,7 +3423,7 @@ def align_verb_form_german(a_text, a_token, b_token):
 
 def align_verb_form_english(a_text, b_token):
     a_result = fetch_declensions("en", "v", a_text)
-    b_result = fetch_declensions("en", "v", b_token.text.lower())
+    b_result = fetch_declensions("en", "v", b_token.text)
 
     if a_result is not None:
         target_form = find_matching_form(a_result, a_text.lower())

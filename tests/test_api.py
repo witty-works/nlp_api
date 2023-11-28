@@ -1360,7 +1360,7 @@ def test_spacy():
         response_content = json.loads(response.content)
 
         expected = [
-            {"word_type": "emoji|~n|~v|a|a|n||||emoji"},
+            {"word_type": "emoji|~n|~|a|a|n||||emoji"},
             {
                 "text": "👩🏻‍🚒",
                 "lemma": "👩🏻‍🚒",
@@ -1404,7 +1404,7 @@ def test_spacy():
                 "tag": "VAFIN",
                 "pos": "AUX",
                 "dep": "ROOT",
-                "word_type": "v",
+                "word_type": "",
                 "morph": {
                     "Mood": "Ind",
                     "Number": "Sing",
