@@ -35,27 +35,6 @@
 
       echo "e613bda316ecb4f5e1924140eedf81b81c087d9a *training_data/lid.176.bin" | sha1sum -c -
 
-  crons:
-    generate-statistics:
-      spec: "0 1 * * 0"
-      cmd: |
-        if [ "$PLATFORM_BRANCH" = main ]; then
-            ./statistics.sh -l en-US
-            ./statistics.sh -l de
-        fi
-    analyze-rules:
-      spec: "0 1 * * *"
-      cmd: |
-        if [ "$PLATFORM_BRANCH" = dev ]; then
-            ./analyze_rules.sh -l en
-            ./analyze_rules.sh -l de
-        fi
-
-  mounts:
-    "files":
-      source: storage
-      source_path: files
-
   relationships:
     rediscache: "rediscache:redis"
     languagetool: "languagetool:http"
