@@ -184,7 +184,21 @@ declensions_config = {
             "name": "rules_germanadjective",
             "columns": ["base_form", "comparative", "superlative", "is_absolute"],
         },
-        "n": {"name": "rules_germannoun", "columns": ["base_form"]},
+        "n": {
+            "name": "rules_germannoun",
+            "columns": [
+                "gender_1",
+                "base_form",
+                "female_form",
+                "male_form",
+                "sg_nom_acc",
+                "sg_dat",
+                "sg_gen",
+                "pl_nom_acc",
+                "pl_gen",
+                "pl_dat",
+            ],
+        },
     },
 }
 
@@ -231,6 +245,23 @@ for spacy_model in settings.models:
         lookup[row[0]] = row[1]
         if row[2]:
             lemma_plural_lookup[lang][row[0]] = row[1]
+
+    if lang == "de":
+        columns = declensions_config["de"]["n"]["columns"]
+        column_count = len(columns)
+        column_filter = ", ".join(columns)
+        base_form_i = columns.index("base_form")
+        male_form_i = columns.index("male_form")
+
+        query = f"SELECT {column_filter} FROM rules_germannoun"
+        rows = rules_cursor.execute(query).fetchall()
+        for row in rows:
+            target = row[male_form_i] if row[male_form_i] else row[base_form_i]
+            for i in range(column_count):
+                if row[i] and row[i] != target and row[i] != row[base_form_i]:
+                    lookup[row[i]] = target
+                    if columns[i].startswith("pl_"):
+                        lemma_plural_lookup[lang][row[i]] = target
 
     model[lang] = fetch_nlp_model(lang, spacy_model, lookup)
     lookup = None
@@ -902,10 +933,9 @@ async def get_debug_spacy(
 )
 async def get_debug_german_noun(
     word: str,
-    genus_only: bool = False,
     username: str = Depends(fetch_current_username),
 ):
-    return german_noun_analysis(word, genus_only)
+    return german_noun_lookup(word)
 
 
 @app.post(
@@ -2319,7 +2349,7 @@ def fetch_declensions(lang, word_type, text):
     filters = ["base_form = ?"]
     parameters = [text]
     for column in declensions_config[lang][word_type]["columns"]:
-        if column == "is_absolute":
+        if column in ["is_absolute", "gender_1", "female_form", "male_form"]:
             continue
 
         filters.append(f"{column} = ?")
@@ -2332,8 +2362,8 @@ def fetch_declensions(lang, word_type, text):
 
     result = None
     rows = rules_cursor.execute(query, parameters).fetchall()
-    for row in rows:
-        result = dict(zip(declensions_config[lang][word_type]["columns"], row))
+    if len(rows):
+        result = dict(zip(declensions_config[lang][word_type]["columns"], rows[0]))
 
     if result is None:
         logging.error(
@@ -2401,32 +2431,17 @@ async def german_rules(
         i = new_i
 
         token = tokens[i]
-        if check_word_type(lang, token, "n", True) and len(token.text) > 3:
-            token_text = remove_gender_ending(token.text)
-            if token_text != token.text:
-                token_text = token_text.replace("ä", "a")
-            result = german_noun_lookup(token_text, False)
-            if result is None and "-" in token_text:
-                words = token_text.split("-")
-                result = german_noun_lookup(token_text[-1], False)
-                prefix = "-".join(words[0:-1]) + "-"
-            else:
-                prefix = ""
-
-            if (
-                result is not None
-                and "flexion" in result
-                and "nominativ plural" in result["flexion"]
-                and "nominativ singular" in result["flexion"]
-                and token.lemma_ != result["flexion"]["nominativ singular"]
-            ):
-                token.lemma_ = prefix + token_text.lower().replace(
-                    result["flexion"]["nominativ plural"].lower(),
-                    result["flexion"]["nominativ singular"].lower(),
-                )
-
-                if token.text[0].isupper():
-                    token.lemma_ = token.lemma_.capitalize()
+        if (
+            token.text == token.lemma_
+            and token.text[0].isupper()
+            and check_word_type(lang, token, "n", True)
+            and len(token.text) > 3
+        ):
+            word = remove_gender_ending(token.text)
+            result = german_noun_lookup(word)
+            if result is not None:
+                target = "male_form" if result["male_form"] else "base_form"
+                token.lemma_ = result[target]
 
         if len(term_replacements.rules):
             new_i = rule_check(
@@ -3083,112 +3098,73 @@ def add_declension_german(text, a_text, a_lemma, injected_string=""):
     return text + ending
 
 
-def determine_genus_from_ending(word, german_genus_endings):
-    for genus in german_genus_endings:
-        for ending in german_genus_endings[genus]:
+def determine_gender_from_ending(word, german_gender_endings):
+    for gender in german_gender_endings:
+        for ending in german_gender_endings[gender]:
             if word.endswith(ending):
-                return {"genus": genus}
+                return gender
 
     return None
 
 
-def german_noun_lookup(word, log=True):
-    if word in rules["de"]["gender_neutral_nouns"]:
-        return rules["de"]["gender_neutral_nouns"][word]
-
-    result = rules["de"]["german_nouns"][word]
-    if not len(result):
-        return None
-
-    result = result[0]
-    if "flexion" in result:
-        for flexion in list(result["flexion"].keys()):
-            if "1" in flexion:
-                result["flexion"][flexion.replace(" 1", "")] = result["flexion"][
-                    flexion
-                ]
-
-    if "genus" in result:
-        return result
-
-    if "genus 1" in result:
-        result["genus"] = result["genus 1"]
-
-        return result
-
-    if word[-5:].lower() == "leute":
-        result["is_plural"] = True
-        result["genus"] = "f"
-
-        return result
-
-    genus_result = determine_genus_from_ending(
-        word, rules["de"]["primary_german_genus_endings"]
-    )
-    if genus_result is None or "genus" not in genus_result:
-        genus_result = determine_genus_from_ending(
-            word, rules["de"]["secondary_german_genus_endings"]
-        )
-        if genus_result is None or "genus" not in genus_result:
-            if log:
-                logging.error(
-                    "Unable to determine german noun genus for: %s",
-                    word,
-                )
-
-            return None
-
-    result["genus"] = genus_result["genus"]
-
-    return result
-
-
-def german_noun_analysis(word, genus_only=False):
-    if "..." in word:
-        return None
+def german_noun_gender_lookup(word):
+    if word.endswith("leute") or word.endswith("kraft"):
+        return "feminine"
 
     result = german_noun_lookup(word)
-    if result != None:
-        return result
-
-    if genus_only:
-        result = determine_genus_from_ending(
+    if result is None:
+        gender = determine_gender_from_ending(
             word, rules["de"]["primary_german_genus_endings"]
         )
 
-        if result != None:
-            return result
+        if gender is None:
+            gender = determine_gender_from_ending(
+                word, rules["de"]["secondary_german_genus_endings"]
+            )
 
-    words = rules["de"]["german_nouns"].parse_compound(word)
-    if len(words) > 1:
-        result = german_noun_analysis(words[-1], genus_only)
+        return gender
 
-    if result is not None:
-        if genus_only:
-            del result["flexion"]
-        else:
-            word_prefix = words[0]
-            for partial_word in words[1:-1]:
-                word_prefix += partial_word.lower()
+    return result["gender_1"]
 
-            for flexion in result["flexion"]:
-                result["flexion"][flexion] = (
-                    word_prefix + result["flexion"][flexion].lower()
+
+def german_noun_lookup(text):
+    word = text
+    result = fetch_declensions("de", "n", word)
+    if result is None and "-" in word:
+        words = word.split("-")
+        word = words[-1]
+        result = fetch_declensions("de", "n", word)
+        lower = False
+        prefix = "-".join(words[0:-1]) + "-"
+    else:
+        lower = True
+        prefix = ""
+
+    if result is None:
+        while len(word) > 3:
+            words = rules["de"]["german_nouns"].parse_compound(word)
+            if len(words) == 0:
+                break
+
+            word = words[-1]
+            result = fetch_declensions("de", "n", word)
+            if result is not None:
+                for form in result:
+                    if result[form] is None:
+                        continue
+                    ending_lower = result[form].lower()
+                    if text.endswith(ending_lower):
+                        lower = True
+                        prefix = text.removesuffix(ending_lower)
+
+                break
+
+    if prefix and result is not None:
+        for form in result:
+            if form != "gender_1" and result[form] is not None:
+                result[form] = prefix + (
+                    result[form].lower() if lower else result[form]
                 )
-
-        logging.error("Determined german noun data for '%s' as '%s'", word, words[-1])
-
-        return result
-
-    logging.error(
-        "Unable to determine german noun data for: %s",
-        word,
-    )
-
-    if genus_only:
-        result = determine_genus_from_ending(
-            word, rules["de"]["secondary_german_genus_endings"]
-        )
 
     return result
 
@@ -3211,38 +3187,33 @@ def fetch_flexion(token):
     return flexion
 
 
-def align_noun_form(lang, a_text, a_token, b_token):
+def align_noun_form(lang, a_token, b_token):
     b_text = b_token.text
 
     if a_token.morph.get("Number") == b_token.morph.get("Number") or b_text == "they":
         return b_text
 
     if lang == "de":
-        a_word = german_noun_analysis(a_text)
-        if a_word is None:
+        a_result = fetch_declensions(lang, "n", a_token.lemma_)
+        if a_result is None:
             return b_text
 
-        b_word = german_noun_analysis(b_text)
-        if b_word is None:
+        b_result = fetch_declensions(lang, "n", b_token.lemma_)
+        if b_result is None:
             return b_text
 
-        flexion = fetch_flexion(a_token)
-        if flexion is None:
+        target_form = find_matching_form(a_result, a_token.text)
+        if target_form is None:
             return b_text
 
-        if flexion in b_word["flexion"]:
-            return b_word["flexion"][flexion]
-
-        key = flexion + " stark"
-        if key in b_word["flexion"]:
-            return b_word["flexion"][key]
+        if target_form in b_result and b_result[target_form]:
+            return b_result[target_form]
 
         return b_text
 
     is_singular = is_token_singular(lang, b_token)
 
     b_result = fetch_declensions(lang, "n", b_token.lemma_)
-
     if is_singular is True or (is_singular is None and is_token_plural(lang, a_token)):
         return b_result["plural"] if b_result is not None else Noun(b_text).plural()
 
@@ -3564,7 +3535,7 @@ def alternative_declension(
 
                         previous = True
                         alternative_text = align_noun_form(
-                            lang, text, token, alternative_token
+                            lang, token, alternative_token
                         )
                     elif "a" == word_type and "a" == alternative_word_type:
                         previous = True
@@ -3812,7 +3783,7 @@ def gendered_denom_analysis_de(
     return text, subcategory, new_alternatives
 
 
-def fetch_article_for_flexion(flexion, word, article_text):
+def fetch_article_for_flexion(flexion, gender, article_text):
     if flexion is None:
         return None, None, None, None
 
@@ -3823,12 +3794,12 @@ def fetch_article_for_flexion(flexion, word, article_text):
             continue
 
         article_to_check = None
-        match word["genus"]:
-            case "m":
+        match gender:
+            case "masculine":
                 article_to_check = masculine
-            case "f":
+            case "feminine":
                 article_to_check = feminine
-            case "n":
+            case "neuter":
                 article_to_check = neuter
 
         if article_text == article_to_check:
@@ -3843,8 +3814,8 @@ def fetch_alternatives_with_article(tokens, i, alternatives: list[Alternative]):
 
     token = tokens[i]
     text = token.text
-    word = german_noun_analysis(text)
-    if word is None:
+    gender = german_noun_gender_lookup(text)
+    if gender is None:
         return None
 
     article_text = tokens[i - 1].text.lower()
@@ -3854,7 +3825,7 @@ def fetch_alternatives_with_article(tokens, i, alternatives: list[Alternative]):
         match_feminine,
         match_neuter,
         match_alternative,
-    ) = fetch_article_for_flexion(fetch_flexion(token), word, article_text)
+    ) = fetch_article_for_flexion(fetch_flexion(token), gender, article_text)
 
     if match_alternative is None:
         return None
@@ -3873,16 +3844,16 @@ def fetch_alternatives_with_article(tokens, i, alternatives: list[Alternative]):
             if is_token_plural(lang, alternative_tokens[0]):
                 article_alternative = ""
             else:
-                alternative_word = german_noun_analysis(alternative.words[-1], True)
-                if alternative_word is None:
+                gender = german_noun_gender_lookup(alternative.words[-1])
+                if gender is None:
                     article_alternative = tokens[i - 1].text
                 else:
-                    match alternative_word["genus"]:
-                        case "m":
+                    match gender:
+                        case "masculine":
                             article_alternative = match_masculine
-                        case "n":
+                        case "neuter":
                             article_alternative = match_neuter
-                        case "f":
+                        case "feminine":
                             article_alternative = match_feminine
                         case _:
                             if alternative.endswith("in"):

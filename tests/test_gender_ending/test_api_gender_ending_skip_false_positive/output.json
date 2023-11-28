@@ -62,6 +62,31 @@
             ],
             "category": "gender-orientation",
             "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachmann/Fachfrau? Fachfrau. Fachmann.",
+            "end": 87,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Viele denken zuerst an bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufe",
+            "proficiency_level": "unconscious_bias",
+            "start": 79,
+            "subcategory": "titles",
+            "text": "Fachfrau"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Fachperson"
+                },
+                {
+                    "text": "Fachkraft"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachmann/Fachfrau? Fachfrau. Fachmann.",
             "end": 97,
             "explanation": {
                 "content": "advanced",

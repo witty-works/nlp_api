@@ -380,8 +380,8 @@ def fetch_static_rules(langs):
         rules["de"]["male_articles"] = list(data["de"]["df_articles"]["Masculine"])
         rules["de"]["female_articles"] = list(data["de"]["df_articles"]["Feminine"])
 
-        rules["de"]["primary_german_genus_endings"] = {
-            "n": [
+        rules["de"]["primary_german_gender_endings"] = {
+            "neuter": [
                 "chen",
                 "ett",
                 "eau",
@@ -396,7 +396,7 @@ def fetch_static_rules(langs):
                 "tum",
                 "um",
             ],
-            "f": [
+            "feminine": [
                 "in",
                 "a",
                 "ade",
@@ -423,7 +423,7 @@ def fetch_static_rules(langs):
                 "ur",
                 "schaft",
             ],
-            "m": [
+            "masculine": [
                 "ant",
                 "ast",
                 "ich",
@@ -440,18 +440,18 @@ def fetch_static_rules(langs):
             ],
         }
 
-        rules["de"]["secondary_german_genus_endings"] = {
+        rules["de"]["secondary_german_gender_endings"] = {
             # 3 out of four words ending with -nis and -sal are neuter nouns
-            "n": [
+            "neuter": [
                 "nis",
                 "sal",
             ],
             # There are exceptions such as Postillion, which is masculine while the oberwhelming majority of -ion words in German is feminine.
-            "f": [
+            "feminine": [
                 "ion",
             ],
             # More than half of  words ending with -er, -en, -el are masculine
-            "m": [
+            "masculine": [
                 "er",
                 "en",
                 "el",
@@ -476,7 +476,7 @@ def fetch_static_rules(langs):
                 },
                 "lemma": "Ierende",
                 "pos": ["Substantiv", "adjektivische Deklination"],
-                "genus": "f",
+                "gender": "feminine",
             },
             "Gebende": {
                 "flexion": {
@@ -491,7 +491,7 @@ def fetch_static_rules(langs):
                 },
                 "lemma": "Gebende",
                 "pos": ["Substantiv", "adjektivische Deklination"],
-                "genus": "f",
+                "gender": "feminine",
             },
         }
 
