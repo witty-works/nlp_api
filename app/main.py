@@ -3488,7 +3488,9 @@ def match_binary_inclusive_gendered_denom_analysis_de(
     start = token.idx
 
     if rule.type == RuleType.SUFFIX and rule.lemma != tokens[i].lemma_:
-        prefix_end = text.lower().replace("ä", "a").find(rule.lemma.lower())
+        prefix_end = (
+            text.lower().replace("ä", "a").find(rule.lemma.lower().replace("ä", "a"))
+        )
         prefix = text[0:prefix_end]
     else:
         prefix = ""
