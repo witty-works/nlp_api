@@ -3147,7 +3147,7 @@ def determine_gender_from_ending(word: str, german_gender_endings: list) -> str 
 
 
 def german_noun_gender_lookup(word: str) -> str:
-    if word.endswith("leute") or word.endswith("kraft"):
+    if word.endswith("leute") or word.endswith("kraft") or word.endswith("person"):
         return "feminine"
 
     result = german_noun_lookup(word)
@@ -3254,7 +3254,11 @@ def align_noun_form(lang: str, a_token: Token, b_token: Token) -> str:
 
     b_result = fetch_declensions(lang, "n", b_token.text)
     if is_singular is True or (is_singular is None and is_token_plural(lang, a_token)):
-        return b_result["plural"] if b_result is not None and "plural" in b_result else Noun(b_text).plural()
+        return (
+            b_result["plural"]
+            if b_result is not None and "plural" in b_result
+            else Noun(b_text).plural()
+        )
 
     if is_singular is False:
         return b_text
@@ -3457,7 +3461,11 @@ def align_verb_form_german(a_text: str, a_token: Token, b_token: Token) -> str:
         injected_string = "zu"
     # check if "ge" was stripped from the word in the lemma
     elif a_token.text.count("ge") > a_token.lemma_.count("ge"):
-        if b_result is not None and "past_participle" in b_result and b_result["past_participle"]:
+        if (
+            b_result is not None
+            and "past_participle" in b_result
+            and b_result["past_participle"]
+        ):
             return b_result["past_participle"]
 
         # pragma: no cover
