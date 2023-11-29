@@ -106,6 +106,12 @@ class EntityType(str, Enum):
     DATETIME = "datetime"
 
 
+class PluralizationType(str, Enum):
+    DEFAULT = "default"
+    SINGULAR_ONLY = "singular_only"
+    PLURAL_ONLY = "plural_only"
+
+
 class RuleLabelEnum:
     DEFAULT = "default"
     NOT_FOR_PEOPLE = "not_for_people"
@@ -161,7 +167,7 @@ class Alternative:
     word_types: Optional[list] = None
     type: Optional[str] = None
     label: Optional[str] = None
-    pluralization: Optional[str] = "default"
+    pluralization: Optional[PluralizationType] = PluralizationType.DEFAULT
     is_inspiration: Optional[bool] = False
     is_advanced: Optional[bool] = False
     is_remove: Optional[bool] = False
@@ -194,6 +200,7 @@ class Rule:
     label: Optional[str] = None
     pattern: Optional[str] = None
     entity_type: Optional[EntityType] = EntityType.DEFAULT
+    pluralization: Optional[PluralizationType] = PluralizationType.DEFAULT
 
     def __init__(
         self,
@@ -253,6 +260,7 @@ class RuleIn(BaseModel):
     label: Optional[str] = None
     pattern: Optional[str] = None
     entity_type: Optional[EntityType] = EntityType.DEFAULT
+    pluralization: Optional[PluralizationType] = PluralizationType.DEFAULT
 
 
 class Config(BaseModel):
@@ -548,10 +556,10 @@ class ResultOut(BaseModel):
         text: str,
         lemma: str,
         full_text: str,
-        offsets: list,
+        offsets: dict,
         subcategory: str,
         start: int,
-        end: str = None,
+        end: int = None,
         alternatives: list[Alternative] = None,
         label: str = None,
         explanation: str = None,

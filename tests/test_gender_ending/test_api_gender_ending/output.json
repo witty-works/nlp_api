@@ -67,6 +67,37 @@
         {
             "alternatives": [
                 {
+                    "text": "Du"
+                },
+                {
+                    "text": "Dich"
+                },
+                {
+                    "text": "Sie*er"
+                },
+                {
+                    "text": "Sie/er"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Sie ist eine Kund/in auf LinkedIn. Er ist mitarbeiter und sie sind Ärzt(-innen).",
+            "end": 3,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Binäre Pronomen",
+            "proficiency_level": "unconscious_bias",
+            "start": 0,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "Sie"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "*in"
                 }
             ],
@@ -84,6 +115,37 @@
             "start": 17,
             "subcategory": "gendered_denominations_ending_advanced",
             "text": "/in"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Du"
+                },
+                {
+                    "text": "Sie"
+                },
+                {
+                    "text": "Sie*er"
+                },
+                {
+                    "text": "Sie/er"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Sie ist eine Kund/in auf LinkedIn. Er ist mitarbeiter und sie sind Ärzt(-innen).",
+            "end": 37,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Binäre Pronomen",
+            "proficiency_level": "unconscious_bias",
+            "start": 35,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "Er"
         },
         {
             "alternatives": [

@@ -360,6 +360,37 @@
         {
             "alternatives": [
                 {
+                    "text": "du"
+                },
+                {
+                    "text": "dich"
+                },
+                {
+                    "text": "sie*er"
+                },
+                {
+                    "text": "sie/er"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "ifffahrt darf da nicht fehlen. Und die Nutzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing und eine bessere Perform",
+            "end": 240,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Binäre Pronomen",
+            "proficiency_level": "unconscious_bias",
+            "start": 237,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "Sie"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "Key Performance Indicator (KPI)"
                 },
                 {
@@ -497,6 +528,40 @@
             "start": 429,
             "subcategory": "agentic_advanced",
             "text": "Problem"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "du"
+                },
+                {
+                    "text": "Sie"
+                },
+                {
+                    "text": "dich"
+                },
+                {
+                    "text": "sie*er"
+                },
+                {
+                    "text": "sie/er"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "oblem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal wieder herausfinden müssen.",
+            "end": 534,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Binäre Pronomen",
+            "proficiency_level": "unconscious_bias",
+            "start": 531,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "sie"
         },
         {
             "alternatives": [

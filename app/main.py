@@ -86,6 +86,7 @@ from app.models import (
     Rule,
     RuleLabelEnum,
     EntityType,
+    PluralizationType,
     translit_english,
 )
 from app.lang_detection import get_lang_detection
@@ -120,31 +121,39 @@ else:
     source.backup(rules_db)
     source.close()
 
+
+def invert_list_to_dict(list_to_convert: list) -> dict:
+    return dict(zip(list_to_convert, list(range(len(list_to_convert)))))
+
+
 rules_cursor = rules_db.cursor()
 rule_columns = {
-    "id": 0,
-    "lemma": 1,
-    "language": 2,
-    "lemma_json": 3,
-    "pattern": 4,
-    "type": 5,
-    "entity_type": 6,
-    "label": 7,
-    "label_type": 8,
-    "word_types_json": 9,
-    "diversity_dimension_json": 10,
+    "id",
+    "lemma",
+    "language",
+    "lemma_json",
+    "pattern",
+    "type",
+    "entity_type",
+    "label",
+    "label_type",
+    "pluralization",
+    "word_types_json",
+    "diversity_dimension_json",
 }
+rule_columns = invert_list_to_dict(rule_columns)
 rule_column_list = ", ".join(rule_columns.keys())
 
 alternative_columns = {
-    "lemma": 0,
-    "lemma_json": 1,
-    "word_types_json": 2,
-    "is_remove": 3,
-    "is_inspiration": 4,
-    "is_advanced": 5,
-    "label": 6,
+    "lemma",
+    "lemma_json",
+    "word_types_json",
+    "is_remove",
+    "is_inspiration",
+    "is_advanced",
+    "label",
 }
+alternative_columns = invert_list_to_dict(alternative_columns)
 alternative_column_list = ", ".join(alternative_columns.keys())
 
 declensions_config = {
@@ -226,6 +235,7 @@ def create_rule(row, rewrite_to_uk: bool = False) -> Rule:
         else map_rule_label_type(lang.lang, row[rule_columns["label_type"]])
     )
     rule.type = row[rule_columns["type"]]
+    rule.pluralization = row[rule_columns["pluralization"]]
     rule.entity_type = row[rule_columns["entity_type"]]
 
     return rule
@@ -284,7 +294,7 @@ for spacy_model in settings.models:
             rule = create_rule(row, True)
             substring_rules[lang][rule.lemma.lower()] = rule
 
-rules_cursor.execute(f"DROP table IF EXISTS rules_lemmatization")
+rules_cursor.execute("DROP table IF EXISTS rules_lemmatization")
 rules = fetch_static_rules(langs)
 
 
@@ -824,6 +834,8 @@ async def post_debug_rule(
     rule.alternatives = alternative_list
     rule.false_positives = rule_data.false_positives
     rule.label = rule_data.label
+    rule.entity_type = rule_data.entity_type
+    rule.pluralization = rule_data.pluralization
 
     rules = [rule]
 
@@ -1613,7 +1625,7 @@ def languagetool_matches(
                 continue
 
         # Ignore capitalization after salutation
-        # Todo: Train NER to handle salutations better like "\n Hallo Konstantina\n\nWie geht es dir?"
+        # TODO: Train NER to handle salutations better like "\n Hallo Konstantina\n\nWie geht es dir?"
         if match["rule"]["category"]["id"] == "TYPOS":
             subtext = (
                 full_text[0:start]
@@ -2301,7 +2313,10 @@ def fetch_rules(
 
 
 def fetch_rule_alternatives(
-    rule: Rule, is_singular: bool, show_inspiration_alternatives: bool, locale: str = ""
+    rule: Rule,
+    is_singular: bool | None,
+    show_inspiration_alternatives: bool,
+    locale: str = "",
 ) -> list[Alternative]:
     if isinstance(rule.name, str):
         return rule.alternatives
@@ -2405,7 +2420,7 @@ def fetch_false_positives(rule: Rule) -> list[str]:
     if len(rule.false_positives):
         return list(rule.false_positives)
 
-    query = f"SELECT false_positive FROM rules_falsepositive WHERE rule_id = ?"
+    query = "SELECT false_positive FROM rules_falsepositive WHERE rule_id = ?"
     parameters = [rule.name]
 
     false_positives = []
@@ -2912,7 +2927,9 @@ def is_word_match(
 ) -> bool:
     token_word = token.lemma_ if word_type["lemmatize"] else token.text
 
-    if word_type["lower_case"] and (lang == "en" or "n" != word_type["word_type"]):
+    if word_type["lower_case"] and (
+        lang == "en" or "n" != word_type["word_type"] or token.lemma_[0].islower()
+    ):
         token_word = token_word.lower()
         word = word.lower()
 
@@ -3079,7 +3096,9 @@ def check_word_type(
 
 
 def find_common_prefix(a_text: str, a_lemma: str) -> str:
-    prefix = a_text.lower()
+    prefix = a_text.replace("ä", "a").replace("ö", "o").replace("ü", "u").lower()
+    a_lemma = a_lemma.replace("ä", "a").replace("ö", "o").replace("ü", "u")
+
     while a_lemma[: len(prefix)] != prefix and prefix:
         prefix = prefix[: len(prefix) - 1]
         if not prefix:
@@ -3092,12 +3111,9 @@ def add_declension_german(
     text: str, a_text: str, a_lemma: str, injected_string: str = ""
 ) -> str:
     prefix = find_common_prefix(
-        a_text.replace("ä", "a").replace("ö", "o").replace("ü", "u"),
-        a_lemma.replace("ä", "a").replace("ö", "o").replace("ü", "u"),
+        a_text,
+        a_lemma,
     )
-
-    if prefix == "alt" and text == "älter":
-        return a_text
 
     ending = a_text[len(prefix) :]
     if injected_string and ending[0 : len(injected_string)] == injected_string:
@@ -3541,7 +3557,7 @@ def alternative_declension(
     text: str,
     token: Token,
     word_type: str,
-    prepend_word: str,
+    prepend_word: bool,
     rule: Rule,
     alternative: Alternative,
 ) -> Alternative:
@@ -3635,7 +3651,7 @@ def alternatives_declension(
     tokens: Doc,
     rule: Rule,
     alternatives: list[Alternative],
-) -> list[Alternative]:
+) -> (str, int, list[Alternative]):
     token = tokens[i]
     start = token.idx
 
@@ -3683,7 +3699,7 @@ def gendered_denom_analysis_de(
     tokens: Doc,
     i: int,
     subcategory: str,
-    is_singular: bool,
+    is_singular: bool | None,
     rule: Rule,
 ) -> (str | None, str | None, list[Alternative] | None):
     prefix_words = None
@@ -4404,8 +4420,33 @@ def rule_check(
             if not text or is_false_positive(full_text, token, rule):
                 continue
 
-        if is_gendered_denom_rule(lang.lang, subcategory):
+        is_gendered_denom_rule_ = is_gendered_denom_rule(lang.lang, subcategory)
+
+        if is_gendered_denom_rule_:
             is_singular = is_token_singular(lang.lang, token)
+        else:
+            is_singular = None
+            additional_token_count = len(rule.words) - 1
+            while additional_token_count >= 0:
+                is_singular = is_token_singular(
+                    lang.lang, tokens[i + additional_token_count]
+                )
+                if is_singular is None:
+                    additional_token_count -= 1
+                    continue
+
+                break
+
+        if is_singular == True:
+            if rule.pluralization == PluralizationType.PLURAL_ONLY:
+                continue
+        elif (
+            is_singular == False
+            and rule.pluralization == PluralizationType.SINGULAR_ONLY
+        ):
+            continue
+
+        if is_gendered_denom_rule_:
             if is_singular is None:
                 continue
 
@@ -4439,20 +4480,11 @@ def rule_check(
 
         else:
             start = token.idx
-            additional_token_count = len(rule.words) - 1
-            while additional_token_count >= 0:
-                is_singular = is_token_singular(
-                    lang.lang, tokens[i + additional_token_count]
-                )
-                if is_singular is None:
-                    additional_token_count -= 1
-                    continue
-
-                break
 
             alternatives = fetch_rule_alternatives(
                 rule, is_singular, config.show_inspiration_alternatives, lang.locale
             )
+
             if len(alternatives) > 0:
                 # TODO make it possible to handle cases with multiple alternatives
                 if len(alternatives) == 1 and alternatives[0].lemma == "they":
@@ -4502,7 +4534,7 @@ def detect_filler_words_at_sentence_start(
 ) -> (str, list[Alternative]):
     if alternatives == ["-"] and text[0].isupper():
         match = re.search(r"(\s*,\s*)(\S+)", full_text[end : end + 30])
-        if type(match) == re.Match:
+        if isinstance(match, re.Match):
             text += match.group(0)
             alternatives = [match.group(2).capitalize()]
 
