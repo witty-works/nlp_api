@@ -3057,7 +3057,8 @@ def german_noun_analysis(word, genus_only=False):
             return result
 
     words = rules["de"]["german_nouns"].parse_compound(word)
-    result = german_noun_analysis(words[-1], genus_only)
+    if len(words) > 1:
+        result = german_noun_analysis(words[-1], genus_only)
 
     if result is not None:
         if genus_only:
