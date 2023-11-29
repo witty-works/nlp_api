@@ -1717,7 +1717,9 @@ def languagetool_matches(
     return list_results
 
 
-async def handle_response(r: aiohttp.ClientResponse, name: str, json: bool = True) -> any:
+async def handle_response(
+    r: aiohttp.ClientResponse, name: str, json: bool = True
+) -> any:
     try:
         if r.status != 200:  # pragma: no cover
             result = await r.text()
@@ -2928,7 +2930,7 @@ def is_phrase_match(
     tokens: Doc,
     rule: Rule,
     false_positive_matcher: list = None,
-) -> (int| None, str | None):
+) -> (int | None, str | None):
     suffix = rule.type == RuleType.SUFFIX
 
     word_count = len(rule.words)
@@ -3619,7 +3621,12 @@ def alternative_declension(
 
 
 def alternatives_declension(
-    lang: str, text: str, i: int, tokens: Doc, rule: Rule, alternatives: list[Alternative]
+    lang: str,
+    text: str,
+    i: int,
+    tokens: Doc,
+    rule: Rule,
+    alternatives: list[Alternative],
 ) -> list[Alternative]:
     token = tokens[i]
     start = token.idx
@@ -3838,7 +3845,9 @@ def gendered_denom_analysis_de(
     return text, subcategory, new_alternatives
 
 
-def fetch_article_for_flexion(flexion: str, gender: str, article_text: str) -> (str, str, str, str):
+def fetch_article_for_flexion(
+    flexion: str, gender: str, article_text: str
+) -> (str, str, str, str):
     if flexion is None:
         return None, None, None, None
 
@@ -3865,7 +3874,7 @@ def fetch_article_for_flexion(flexion: str, gender: str, article_text: str) -> (
 
 def fetch_alternatives_with_article(
     tokens: Doc, i: int, alternatives: list[Alternative]
-) -> str:
+) -> list[Alternative] | None:
     if alternatives is None:
         return []
 
