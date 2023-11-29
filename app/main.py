@@ -1551,7 +1551,7 @@ def languagetool_matches(
     lang: Language,
     full_text: str,
     tokens: Doc,
-    offsets: list,
+    offsets: dict,
     matches: list,
 ) -> list:
     entities = []
@@ -1794,7 +1794,7 @@ async def apply_languagetool_rules(
     lang: Language,
     text: str,
     tokens: Doc,
-    offsets: list,
+    offsets: dict,
 ) -> list:
     if not settings.languagetool_api:
         return []
@@ -2907,7 +2907,7 @@ def is_word_match(
     lang: str,
     token: Token,
     word: str,
-    word_type: str,
+    word_type: dict,
     suffix: str,
 ) -> bool:
     token_word = token.lemma_ if word_type["lemmatize"] else token.text
@@ -4581,7 +4581,7 @@ def detect_non_inclusive_emoji(
     full_text: str,
     i: int,
     tokens: Doc,
-    offsets: list,
+    offsets: dict,
     list_full: list,
 ) -> list:
     if client.name == "web-ext" and client.version < VersionString("1.28.0.1"):
