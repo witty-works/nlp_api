@@ -17050,8 +17050,8 @@ INSERT INTO "rules_alternative" VALUES(19026,0,'polite person',NULL,0,1,NULL,NUL
 INSERT INTO "rules_alternative" VALUES(19027,1,'polite individual',NULL,0,1,NULL,NULL,4932,NULL,'["polite", "individual"]','[]','default','singular_only',0,0,'en',0);
 INSERT INTO "rules_alternative" VALUES(19028,2,'polite people',NULL,0,1,NULL,NULL,4932,NULL,'["polite", "people"]','[]','default','plural_only',0,0,'en',0);
 INSERT INTO "rules_alternative" VALUES(19029,3,'polite individuals',NULL,0,1,NULL,NULL,4932,NULL,'["polite", "individuals"]','[]','default','plural_only',0,0,'en',0);
-INSERT INTO "rules_alternative" VALUES(19030,0,'Träger~in~/~Träger',NULL,0,1,NULL,NULL,4933,NULL,'["Tr\u00e4ger~in~/~Tr\u00e4ger"]','[]','default','singular_only',0,0,'en',0);
-INSERT INTO "rules_alternative" VALUES(19031,1,'Träger~innen~ und ~Träger',NULL,0,1,NULL,NULL,4933,NULL,'["Tr\u00e4ger~innen~", "und", "~Tr\u00e4ger"]','[]','default','plural_only',0,0,'en',0);
+INSERT INTO "rules_alternative" VALUES(19030,0,'Träger~in~/~Träger',NULL,0,1,NULL,NULL,4933,NULL,'["Tr\u00e4ger~in~/~Tr\u00e4ger"]','[]','default','singular_only',0,0,'de',0);
+INSERT INTO "rules_alternative" VALUES(19031,1,'Träger~innen~ und ~Träger',NULL,0,1,NULL,NULL,4933,NULL,'["Tr\u00e4ger~innen~", "und", "~Tr\u00e4ger"]','[]','default','plural_only',0,0,'de',0);
 CREATE TABLE "rules_englishadjective" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "base_form" varchar(255) NOT NULL UNIQUE, "comparative" varchar(255) NULL, "superlative" varchar(255) NULL, "createdby_id" integer NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED, "is_absolute" bool NOT NULL);
 INSERT INTO "rules_englishadjective" VALUES(1,'abnormal','more abnormal','most abnormal',NULL,0);
 INSERT INTO "rules_englishadjective" VALUES(2,'atypical','more atypical','most atypical',NULL,0);
@@ -29620,7 +29620,7 @@ INSERT INTO "rules_rule" VALUES(4929,'en','wetback','n',NULL,0,1,NULL,NULL,9,'["
 INSERT INTO "rules_rule" VALUES(4930,'en','yank','n',NULL,0,1,NULL,NULL,9,'["yank"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'yank','default','default',1,1,'yank','["xenophobia"]',0,4,NULL,'default','default');
 INSERT INTO "rules_rule" VALUES(4931,'en','yankee','n',NULL,0,1,NULL,NULL,9,'["yankee"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'yankee','default','default',1,1,'yankee','["xenophobia"]',0,6,NULL,'default','default');
 INSERT INTO "rules_rule" VALUES(4932,'en','polite Japanese','a|n',NULL,0,1,NULL,NULL,NULL,'["polite", "Japanese"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}, {"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'polite Japanese','default','default',1,1,'polite','["culture"]',0,15,NULL,'default','default');
-INSERT INTO "rules_rule" VALUES(4933,'en','Träger','n',NULL,0,1,1,NULL,NULL,'["Tr\u00e4ger"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'Träger','suffix','default',1,1,'träger','["titles"]',0,6,NULL,'default','default');
+INSERT INTO "rules_rule" VALUES(4933,'de','Träger','n',NULL,0,1,1,NULL,NULL,'["Tr\u00e4ger"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'Träger','suffix','default',1,1,'träger','["titles"]',0,6,NULL,'default','default');
 CREATE INDEX "rules_falsepositive_createdby_id_0fd6c5fc" ON "rules_falsepositive" ("createdby_id");
 CREATE INDEX "rules_falsepositive_rule_id_b806a78a" ON "rules_falsepositive" ("rule_id");
 CREATE UNIQUE INDEX "rules_falsepositive_rule_id_false_positive_90b7937b_uniq" ON "rules_falsepositive" ("rule_id", "false_positive");

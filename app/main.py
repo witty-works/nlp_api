@@ -3169,12 +3169,12 @@ def german_noun_gender_lookup(word: str) -> str:
     result = german_noun_lookup(word)
     if result is None:
         gender = determine_gender_from_ending(
-            word, rules["de"]["primary_german_genus_endings"]
+            word, rules["de"]["primary_german_gender_endings"]
         )
 
         if gender is None:
             gender = determine_gender_from_ending(
-                word, rules["de"]["secondary_german_genus_endings"]
+                word, rules["de"]["secondary_german_gender_endings"]
             )
 
         return gender
