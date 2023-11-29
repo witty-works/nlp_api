@@ -21,7 +21,7 @@ from app.categories import (
 from app.privacy_filter import get_privacy_filter
 
 
-def translit_english(text, target):
+def translit_english(text: str, target: str) -> list[str]:
     if text is None:
         return text
 
@@ -38,12 +38,12 @@ class Client(BaseModel):
 
 
 class Language(object):
-    def __init__(self, locale):
+    def __init__(self, locale: str):
         self.locale = locale
         self.lang = locale[0:2]
         self.gettext = None
 
-    def _(self, category, key):
+    def _(self, category: str, key: str) -> str:
         try:
             category_data = get_category(category)
 
@@ -54,7 +54,7 @@ class Language(object):
 
         return text
 
-    def convert_sharp_ss(self, text):
+    def convert_sharp_ss(self, text: str) -> str:
         if self.locale != "de-CH":
             return text
 
@@ -168,7 +168,7 @@ class Alternative:
 
     def __init__(
         self,
-        lemma,
+        lemma: str,
         words: list = None,
         word_types: list = None,
     ):
@@ -197,9 +197,9 @@ class Rule:
 
     def __init__(
         self,
-        name,
-        lang,
-        lemma,
+        name: str,
+        lang: str,
+        lemma: str,
         words,
         word_types,
         subcategories=None,
@@ -259,12 +259,12 @@ class Config(BaseModel):
     store_context: bool = True
     plan: Optional[str] = None
     primary_language: Optional[LangVariantType] = None
-    preferred_languages: List = [LangWithAutoType.EN, LangWithAutoType.DE]
+    preferred_languages: list = [LangWithAutoType.EN, LangWithAutoType.DE]
     _supported_langs = [
         LangType.DE,
         LangType.EN,
     ]
-    preferred_variants: List = [LangWithAutoType.enUS, LangWithAutoType.deDE]
+    preferred_variants: list = [LangWithAutoType.enUS, LangWithAutoType.deDE]
     _supported_locales = [
         LangWithAutoType.deDE,
         LangWithAutoType.deCH,
@@ -274,19 +274,29 @@ class Config(BaseModel):
     ]
     german_gender_ending: GermanGenderEndingType = GermanGenderEndingType.STAR
     _gendereddenom_ending = {
-        GermanGenderEndingType.STAR: re.compile(r"^[A-ZÄÖÜ][a-zäöü]+\*in(nen)?$"),
-        GermanGenderEndingType.UNDERSCORE: re.compile(r"^[A-ZÄÖÜ][a-zäöü]+_in(nen)?$"),
-        GermanGenderEndingType.COLON: re.compile(r"^[A-ZÄÖÜ][a-zäöü]+:in(nen)?$"),
-        GermanGenderEndingType.SLASH: re.compile(r"^[A-ZÄÖÜ][a-zäöü]+/in(nen)?$"),
-        GermanGenderEndingType.SLASH_DASH: re.compile(r"^[A-ZÄÖÜ][a-zäöü]+/-in(nen)?$"),
-        GermanGenderEndingType.PARENTHESIS_DASH: re.compile(
-            r"^[A-ZÄÖÜ][a-zäöü]+\(-in(nen)?\)$"
+        GermanGenderEndingType.STAR: re.compile(
+            r"^([A-ZÄÖÜ][a-zäöü]+)\*(innen|in|r|nja|ze|iza|eza)$"
         ),
-        GermanGenderEndingType.PARENTHESIS: re.compile(
-            r"^[A-ZÄÖÜ][a-zäöü]+\(in(nen)?\)$"
+        GermanGenderEndingType.UNDERSCORE: re.compile(
+            r"^([A-ZÄÖÜ][a-zäöü]+)_(innen|in|r|nja|ze|iza|eza)$"
+        ),
+        GermanGenderEndingType.COLON: re.compile(
+            r"^([A-ZÄÖÜ][a-zäöü]+):(innen|in|r|nja|ze|iza|eza)$"
+        ),
+        GermanGenderEndingType.SLASH: re.compile(
+            r"^([A-ZÄÖÜ][a-zäöü]+)/(innen|in|r|nja|ze|iza|eza)$"
+        ),
+        GermanGenderEndingType.SLASH_DASH: re.compile(
+            r"^([A-ZÄÖÜ][a-zäöü]+)/-(innen|in|r|nja|ze|iza|eza)$"
         ),
         GermanGenderEndingType.CAPITAL_LETTER: re.compile(
-            r"^[A-ZÄÖÜ][a-zäöü]+In(nen)?$"
+            r"^([A-ZÄÖÜ][a-zäöü]+)(In(nen)|R|Nja|Ze)$"
+        ),
+        GermanGenderEndingType.PARENTHESIS_DASH: re.compile(
+            r"^^([A-ZÄÖÜ][a-zäöü]+)\(-(innen|in|r|nja|ze|iza|eza)\)$"
+        ),
+        GermanGenderEndingType.PARENTHESIS: re.compile(
+            r"^([A-ZÄÖÜ][a-zäöü]+)\((innen|in|r|nja|ze|iza|eza)\)$"
         ),
     }
     _gendereddenom_ending_article = {
@@ -309,7 +319,7 @@ class Config(BaseModel):
         GermanGenderEndingType.PARENTHESIS: (-1, 4, "("),
         GermanGenderEndingType.CAPITAL_LETTER: (0, 0, "I"),
     }
-    disabled_categories: List = []
+    disabled_categories: list = []
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
     show_inspiration_alternatives: bool = False
     alternatives_max_count: Optional[int] = None
@@ -372,7 +382,7 @@ class IntegerConfigType(BaseModel):
 
 
 class LangVariantConfigType(BaseModel):
-    value: List[LangVariantType]
+    value: list[LangVariantType]
     status: StatusType
 
 
@@ -396,7 +406,7 @@ class RuleConfig(BaseModel):
     preferred_variants: Optional[LangVariantConfigType] = None
     german_gender_ending: Optional[GermanGenderEndingConfigType] = None
     gendered_roles_format: Optional[GenderedRolesFormatConfigType] = None
-    categories: Dict[str, BooleanConfigType] = {}
+    categories: dict[str, BooleanConfigType] = {}
     show_inspiration_alternatives: Optional[BooleanConfigType] = None
 
     @field_validator("preferred_variants", mode="before")
@@ -422,7 +432,7 @@ class Explanation(BaseModel):
 
 
 class TermReplacement(BaseModel):
-    alternatives: List[str]
+    alternatives: list[str]
     explanation: Optional[Explanation] = None
     proficiency_level: Optional[str] = None
     lang: Optional[LangType] = None
@@ -435,7 +445,7 @@ class DomainType(str, Enum):
 
 
 class DomainConfig(BaseModel):
-    list: List[str]
+    list: list[str]
     type: DomainType
 
 
@@ -443,8 +453,8 @@ class ConfRequest(BaseModel):
     id: str
     name: str
     config: RuleConfig
-    false_positives: List[str] = []
-    term_replacements: Dict[str, TermReplacement] = {}
+    false_positives: list[str] = []
+    term_replacements: dict[str, TermReplacement] = {}
     domains: Optional[DomainConfig] = None
     config_hash: Optional[str] = None
     sync_date: Optional[str] = None
@@ -467,8 +477,8 @@ class ConfResponse(BaseModel):
     name: str
     plan: Optional[str] = None
     config: RuleConfig
-    false_positives: List[str] = []
-    term_replacements: Dict[str, TermReplacement] = {}
+    false_positives: list[str] = []
+    term_replacements: dict[str, TermReplacement] = {}
     domains: Optional[DomainConfig] = None
     config_hash: Optional[str] = None
 
@@ -478,8 +488,8 @@ class UserConfResponse(ConfRequest):
     organization_id: Optional[str] = None
     organization_name: Optional[str] = None
     organization_config: Optional[RuleConfig] = None
-    organization_false_positives: Optional[List[str]] = []
-    organization_term_replacements: Optional[Dict[str, TermReplacement]] = {}
+    organization_false_positives: Optional[list[str]] = []
+    organization_term_replacements: Optional[dict[str, TermReplacement]] = {}
     organization_domains: Optional[DomainConfig] = None
     organization_config_hash: Optional[str] = None
     notifications: Optional[int] = None
@@ -524,7 +534,7 @@ class ResultOut(BaseModel):
     subcategory: Optional[str] = None
     start: int
     end: int
-    alternatives: Union[List[ResultAlternative], None] = None
+    alternatives: Union[list[ResultAlternative], None] = None
     label: Optional[str] = None
     explanation: Optional[ResultExplanation] = None
     gravity: Optional[float] = None
@@ -535,22 +545,22 @@ class ResultOut(BaseModel):
         config: Config,
         client: namedtuple,
         lang: Language,
-        text,
-        lemma,
-        full_text,
-        offsets,
-        subcategory,
-        start,
-        end=None,
-        alternatives=None,
-        label=None,
-        explanation=None,
-        url=None,
-        icon=None,
-        explanation_context=None,
-        content=None,
-        gravity=None,
-        proficiency_level=None,
+        text: str,
+        lemma: str,
+        full_text: str,
+        offsets: list,
+        subcategory: str,
+        start: int,
+        end: str = None,
+        alternatives: list[Alternative] = None,
+        label: str = None,
+        explanation: str = None,
+        url: str = None,
+        icon: str = None,
+        explanation_context: str = None,
+        content: str = None,
+        gravity: float = None,
+        proficiency_level: str = None,
     ):
         if end is None:
             end = start + len(text)
@@ -681,12 +691,12 @@ class ResultOut(BaseModel):
     def clean_alternatives(
         config: Config,
         lang: Language,
-        text,
-        category,
-        start,
-        is_upper,
+        text: str,
+        category: str,
+        start: int,
+        is_upper: bool,
         alternatives: list[Alternative],
-        alternatives_max_count,
+        alternatives_max_count: int,
     ):
         if alternatives is None:
             return []
@@ -785,7 +795,7 @@ class ResultOut(BaseModel):
         return text, start, cleaned_alternatives
 
     @staticmethod
-    def isUpper(text, full_text, start, category, lang):
+    def isUpper(text: str, full_text: str, start: int, category: str, lang: str):
         if category != "orthography" and text[0:1].isupper():
             punctuation = "[.!?:]" if lang.lang == "de" else "[.!?]"
 
@@ -801,7 +811,7 @@ class ResultOut(BaseModel):
         return False
 
     @staticmethod
-    def countWords(text):
+    def countWords(text: str):
         return sum(map(str(text).count, [" ", "-"]))
 
     @staticmethod
@@ -864,19 +874,23 @@ class ResultOut(BaseModel):
         return cleaned_alternatives
 
     @staticmethod
-    def getGenderedRolesFormatBinary(alternative):
+    def getGenderedRolesFormatBinary(alternative: str):
         if alternative.count("~") > 1 or alternative.find("~innenschaft") != -1:
             return alternative.replace("~", "")
 
         return alternative.replace("~", "/")
 
     @staticmethod
-    def getGenderedRolesFormatInclusive(german_gender_ending, alternative):
+    def getGenderedRolesFormatInclusive(german_gender_ending: str, alternative: str):
         if "-" in alternative:
             alternatives = alternative.split("-")
             new_alternative = []
             for alternative in alternatives:
-                new_alternative.append(ResultOut.getGenderedRolesFormatInclusive(german_gender_ending, alternative))
+                new_alternative.append(
+                    ResultOut.getGenderedRolesFormatInclusive(
+                        german_gender_ending, alternative
+                    )
+                )
 
             return "-".join(new_alternative)
 
@@ -909,14 +923,14 @@ class ResultOut(BaseModel):
         return beginning + separator + ending
 
     @staticmethod
-    def genderedRolesFormatInclusive(gendered_roles_format):
+    def genderedRolesFormatInclusive(gendered_roles_format: str):
         return gendered_roles_format in [
             GenderedRolesFormatType.BOTH,
             GenderedRolesFormatType.INCLUSIVE_GENDER,
         ]
 
     @staticmethod
-    def genderedRolesFormatBinary(gendered_roles_format):
+    def genderedRolesFormatBinary(gendered_roles_format: str):
         return gendered_roles_format in [
             GenderedRolesFormatType.BOTH,
             GenderedRolesFormatType.BINARY_GENDER,
@@ -926,7 +940,7 @@ class ResultOut(BaseModel):
     def getGenderedRoles(
         gendered_roles_format: GenderedRolesFormatType,
         german_gender_ending: GermanGenderEndingType,
-        alternative,
+        alternative: str,
     ):
         alternative_variations = []
         if ResultOut.genderedRolesFormatInclusive(gendered_roles_format):
@@ -953,10 +967,10 @@ class ErrorMessage(BaseModel):
 
 
 class Result(BaseModel):
-    detail: List
+    detail: list
 
     @staticmethod
-    def factory(detail):
+    def factory(detail: str):
         detail = [
             {
                 "loc": [
@@ -970,7 +984,7 @@ class Result(BaseModel):
 
         return Result(detail)
 
-    def __init__(self, detail):
+    def __init__(self, detail: str):
         object.__setattr__(self, "detail", detail)
 
 
@@ -989,7 +1003,7 @@ class ResultConf(BaseModel):
 
 
 class ResultsOut(BaseModel):
-    results: List[ResultOut]
+    results: list[ResultOut]
     language: str
     limit_reached: bool = False
     config_changed: Optional[bool] = None

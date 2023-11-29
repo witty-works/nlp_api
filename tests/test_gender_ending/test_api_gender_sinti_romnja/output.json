@@ -21,7 +21,7 @@
                 }
             ],
             "category": "cultural-diversity",
-            "context": "Wir sind alle Zigeuner.\nIch bin ein Zigeuner und du eine Zigeunerin und du eine Zigeuner*in.",
+            "context": "Wir sind alle Zigeuner.\nIch bin ein Zigeuner und du eine Zigeunerin und du eine Zigeuner*in. Und eine Kopftuchträger*in.",
             "end": 22,
             "explanation": {
                 "icon": "😒",
@@ -54,7 +54,7 @@
                 }
             ],
             "category": "cultural-diversity",
-            "context": "Wir sind alle Zigeuner.\nIch bin ein Zigeuner und du eine Zigeunerin und du eine Zigeuner*in.",
+            "context": "Wir sind alle Zigeuner.\nIch bin ein Zigeuner und du eine Zigeunerin und du eine Zigeuner*in. Und eine Kopftuchträger*in.",
             "end": 44,
             "explanation": {
                 "icon": "😒",
@@ -87,7 +87,7 @@
                 }
             ],
             "category": "cultural-diversity",
-            "context": "Wir sind alle Zigeuner.\nIch bin ein Zigeuner und du eine Zigeunerin und du eine Zigeuner*in.",
+            "context": "Wir sind alle Zigeuner.\nIch bin ein Zigeuner und du eine Zigeunerin und du eine Zigeuner*in. Und eine Kopftuchträger*in.",
             "end": 67,
             "explanation": {
                 "icon": "😒",
@@ -120,7 +120,7 @@
                 }
             ],
             "category": "cultural-diversity",
-            "context": "Wir sind alle Zigeuner.\nIch bin ein Zigeuner und du eine Zigeunerin und du eine Zigeuner*in.",
+            "context": "Wir sind alle Zigeuner.\nIch bin ein Zigeuner und du eine Zigeunerin und du eine Zigeuner*in. Und eine Kopftuchträger*in.",
             "end": 91,
             "explanation": {
                 "icon": "😒",
@@ -133,6 +133,30 @@
             "start": 80,
             "subcategory": "racist_source_advanced",
             "text": "Zigeuner*in"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "praktizierende Muslimin"
+                },
+                {
+                    "text": "praktizierende Muslima"
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "r sind alle Zigeuner.\nIch bin ein Zigeuner und du eine Zigeunerin und du eine Zigeuner*in. Und eine Kopftuchträger*in.",
+            "end": 119,
+            "explanation": {
+                "icon": "😒",
+                "text": "Reduziert eine Person auf ein kulturelles Klischee",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/kulturelles-stereotyp?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Kulturelle Diversität: Kulturelles Sterotyp",
+            "proficiency_level": "unconscious_bias",
+            "start": 102,
+            "subcategory": "culture_advanced",
+            "text": "Kopftuchträger*in"
         }
     ]
 }
