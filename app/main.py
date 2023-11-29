@@ -3243,16 +3243,16 @@ def align_noun_form(lang: str, a_token: Token, b_token: Token) -> str:
         if target_form is None:
             return b_text
 
-        if target_form in b_result and b_result[target_form]:
-            return b_result[target_form]
+        if target_form not in b_result or not b_result[target_form]:
+            return b_text
 
-        return b_text
+        return b_result[target_form]
 
     is_singular = is_token_singular(lang, b_token)
 
     b_result = fetch_declensions(lang, "n", b_token.text)
     if is_singular is True or (is_singular is None and is_token_plural(lang, a_token)):
-        return b_result["plural"] if b_result is not None else Noun(b_text).plural()
+        return b_result["plural"] if b_result is not None and "plural" in b_result else Noun(b_text).plural()
 
     if is_singular is False:
         return b_text
@@ -3297,6 +3297,9 @@ def align_adjective_form_english(
         if target_form == "superlative":
             return b_adjective.superlative()
 
+        return b_token.text
+
+    if target_form not in b_result or not b_result[target_form]:
         return b_token.text
 
     return b_result[target_form]
@@ -3452,7 +3455,7 @@ def align_verb_form_german(a_text: str, a_token: Token, b_token: Token) -> str:
         injected_string = "zu"
     # check if "ge" was stripped from the word in the lemma
     elif a_token.text.count("ge") > a_token.lemma_.count("ge"):
-        if b_result is not None and bool(b_result["past_participle"]):
+        if b_result is not None and "past_participle" in b_result and b_result["past_participle"]:
             return b_result["past_participle"]
 
         # pragma: no cover
@@ -3463,7 +3466,7 @@ def align_verb_form_german(a_text: str, a_token: Token, b_token: Token) -> str:
         injected_string = "ge"
     elif b_result is not None and a_result is not None:
         form = find_matching_form(a_result, a_text)
-        if form and len(b_result[form]):
+        if form in b_result and b_result[form]:
             return b_result[form]
 
     return add_declension_german(b_text, a_text, a_token.lemma_, injected_string)
@@ -3504,6 +3507,9 @@ def align_verb_form_english(a_text: str, b_token: Token) -> str:
         elif target_form == "past_participle":
             return b_verb.past_part()
 
+        return b_token.lemma_
+
+    if target_form not in b_result or not b_result[target_form]:
         return b_token.lemma_
 
     return b_result[target_form]
