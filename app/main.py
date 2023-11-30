@@ -127,7 +127,7 @@ def invert_list_to_dict(list_to_convert: list) -> dict:
 
 
 rules_cursor = rules_db.cursor()
-rule_columns = {
+rule_columns = [
     "id",
     "lemma",
     "language",
@@ -140,11 +140,11 @@ rule_columns = {
     "pluralization",
     "word_types_json",
     "diversity_dimension_json",
-}
+]
 rule_columns = invert_list_to_dict(rule_columns)
 rule_column_list = ", ".join(rule_columns.keys())
 
-alternative_columns = {
+alternative_columns = [
     "lemma",
     "lemma_json",
     "word_types_json",
@@ -152,7 +152,7 @@ alternative_columns = {
     "is_inspiration",
     "is_advanced",
     "label",
-}
+]
 alternative_columns = invert_list_to_dict(alternative_columns)
 alternative_column_list = ", ".join(alternative_columns.keys())
 
@@ -4490,7 +4490,7 @@ def rule_check(
                 if len(alternatives) == 1 and alternatives[0].lemma == "they":
                     text, alternative = pluralize_they(text, tokens, i)
                     alternatives = [Alternative(alternative)]
-                elif rule.lemma.count(" ") == 0:
+                elif len(rule.words) == 1:
                     text, start, alternatives = alternatives_declension(
                         lang.lang, token.text, i, tokens, rule, alternatives
                     )

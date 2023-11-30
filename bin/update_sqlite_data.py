@@ -29,11 +29,11 @@ os.system(f"cp {args.File} ./database/db.sqlite3")
 source = sqlite3.connect("./database/db.sqlite3")
 cursor = source.cursor()
 
-cursor.execute(f"DROP table IF EXISTS rules_source")
-cursor.execute(f"DROP table IF EXISTS rules_diversitydimension")
-cursor.execute(f"DROP table IF EXISTS rules_rulediversitydimension")
-cursor.execute(f"DROP table IF EXISTS rules_category")
-cursor.execute(f"DROP table IF EXISTS rules_trainingsentence")
+cursor.execute("DROP table IF EXISTS rules_source")
+cursor.execute("DROP table IF EXISTS rules_diversitydimension")
+cursor.execute("DROP table IF EXISTS rules_rulediversitydimension")
+cursor.execute("DROP table IF EXISTS rules_category")
+cursor.execute("DROP table IF EXISTS rules_trainingsentence")
 
 tables = ["rules_germanverb", "rules_germanadjective", "rules_germannoun", "rules_englishverb", "rules_englishadjective", "rules_englishnoun", "rules_falsepositive", "rules_alternative", "rules_rule"]
 columns = ["created_at", "updated_at", "comment"]

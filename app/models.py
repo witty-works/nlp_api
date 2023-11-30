@@ -216,9 +216,6 @@ class Rule:
         self.lang = lang
         self.lemma = lemma
         self.words = words
-        if isinstance(word_types, str):
-            # BC code s -> n
-            word_types = tuple(word_types.replace("s", "n").split("|"))
         self.word_types = word_types
 
         if subcategories is None:
@@ -542,7 +539,7 @@ class ResultOut(BaseModel):
     subcategory: Optional[str] = None
     start: int
     end: int
-    alternatives: Union[list[ResultAlternative], None] = None
+    alternatives: list[ResultAlternative] | None = None
     label: Optional[str] = None
     explanation: Optional[ResultExplanation] = None
     gravity: Optional[float] = None
@@ -559,16 +556,16 @@ class ResultOut(BaseModel):
         offsets: dict,
         subcategory: str,
         start: int,
-        end: int = None,
-        alternatives: list[Alternative] = None,
-        label: str = None,
-        explanation: str = None,
-        url: str = None,
-        icon: str = None,
-        explanation_context: str = None,
-        content: str = None,
-        gravity: float = None,
-        proficiency_level: str = None,
+        end: int | None,
+        alternatives: list[Alternative] | None,
+        label: str | None,
+        explanation: str | None,
+        url: str| None = None,
+        icon: str| None = None,
+        explanation_context: str| None = None,
+        content: str| None = None,
+        gravity: float| None = None,
+        proficiency_level: str| None = None,
     ):
         if end is None:
             end = start + len(text)
@@ -817,10 +814,6 @@ class ResultOut(BaseModel):
                 return True
 
         return False
-
-    @staticmethod
-    def countWords(text: str):
-        return sum(map(str(text).count, [" ", "-"]))
 
     @staticmethod
     def getAlternativeVariations(
