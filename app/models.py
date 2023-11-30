@@ -625,7 +625,7 @@ class ResultOut(BaseModel):
             if category != "orthography":
                 if is_upper and alternative:
                     alternative = string.capwords(alternative[0:1]) + alternative[1:]
-            else:
+            elif alternative is not None:
                 alternative = lang.convert_sharp_ss(alternative)
 
             if alternative == text:

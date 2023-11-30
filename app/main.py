@@ -95,7 +95,7 @@ from app.rules import fetch_rules, Rule
 from app.sentry import set_up_sentry_sdk
 from app.model import lemma_plural_lookup
 
-version = "1.50.0"
+version = "1.50.1"
 
 categories = get_categories()
 settings = get_settings()
@@ -1622,9 +1622,13 @@ async def apply_languagetool_rules(
         "language": lang.locale,
         "disabledCategories": ["GENDER_NEUTRALITY", "COLLOQUIALISMS"],
         "enabledCategories": [],
-        # Ignore case issues at the start of sentence due to chunking issues
-        # https://github.com/witty-works/browser-extension/pull/880
-        "disabledRules": ["UPPERCASE_SENTENCE_START"],
+        "disabledRules": [
+            # Ignore case issues at the start of sentence due to chunking issues
+            # https://github.com/witty-works/browser-extension/pull/880
+            "UPPERCASE_SENTENCE_START",
+            # Ignore "70%", "100km" needing a space between the unit
+            "EINHEIT_LEERZEICHEN",
+        ],
     }
 
     if is_sub_category_enabled(config, "advanced_plain_language"):
@@ -1662,9 +1666,7 @@ async def apply_languagetool_rules(
         settings.languagetool_verify_ssl,
     )
 
-    return languagetool_matches(
-        config, client, lang, text, tokens, offsets, result
-    )
+    return languagetool_matches(config, client, lang, text, tokens, offsets, result)
 
 
 def utf16len(c):
@@ -2950,14 +2952,9 @@ def add_declension_german(text, a_text, a_lemma, injected_string=""):
     if (a_lemma[-1] == "t" or a_lemma[-1] == "s") and len(ending) and ending[0] == "e":
         ending = ending[1:]
 
-    if a_lemma == "beste":
-        ending = "ste" + ending
-        if text[-1] == "t" or text[-1] == "s":
-            text += "e"
-    else:
-        remove = a_lemma[len(prefix) :]
-        if remove:
-            text = text[0 : -len(remove)]
+    remove = a_lemma[len(prefix) :]
+    if remove:
+        text = text[0 : -len(remove)]
 
     if ending != "" and len(text) > 2:
         if text.endswith("em"):
@@ -3060,7 +3057,8 @@ def german_noun_analysis(word, genus_only=False):
             return result
 
     words = rules["de"]["german_nouns"].parse_compound(word)
-    result = german_noun_analysis(words[-1], genus_only)
+    if len(words) > 1:
+        result = german_noun_analysis(words[-1], genus_only)
 
     if result is not None:
         if genus_only:
@@ -3161,17 +3159,49 @@ def align_adjective_form_english(a_text, a_token, b_token):
         b_adjective = Adjective(b_text)
 
     a_adjective_lemma = Adjective(a_token.lemma_)
-    if a_adjective_lemma.comparative() == a_text:
-        b_text = b_adjective.comparative()
-    elif a_adjective_lemma.superlative() == a_text:
-        b_text = b_adjective.superlative()
+    if a_token.lemma_ != a_text:
+        if a_adjective_lemma.comparative() == a_text:
+            b_text = b_adjective.comparative()
+        elif a_adjective_lemma.superlative() == a_text:
+            b_text = b_adjective.superlative()
 
     return b_text
 
 
 def align_adjective_form(lang, a_text, a_token, b_token):
     if lang == "de":
-        return add_declension_german(b_token.text, a_text, a_token.lemma_)
+        if (
+            a_token.text in rules["de"]["absolute_adjectives"]
+            or b_token.text in rules["de"]["absolute_adjectives"]
+        ):
+            return b_token.text
+
+        ending = "sten"
+        if a_text.endswith(ending):
+            if b_token.text.endswith("t") or b_token.text.endswith("s"):
+                ending = "e" + ending
+            return b_token.text + ending
+
+        ending = "ste"
+        if a_text.endswith(ending):
+            if b_token.text.endswith("t") or b_token.text.endswith("s"):
+                ending = "e" + ending
+            return b_token.text + ending
+
+        if len(a_text) < 2:
+            return b_token.text
+
+        ending = a_text[-2:]
+        if ending[0] != "e":
+            ending = ending[1:]
+
+        if ending[0] != "e":
+            return b_token.text
+
+        if b_token.text[-1] == "e":
+            ending = ending[1:]
+
+        return b_token.text + ending
 
     return align_adjective_form_english(a_text, a_token, b_token)
 
@@ -3412,6 +3442,9 @@ def alternatives_declension(lang, text, i, tokens, alternatives):
         return text, start, alternatives
 
     word_type = fetch_word_type(lang, token)
+    if word_type == "":
+        return text, start, alternatives
+
     prepend_word = False
     prev_token = None if i == 0 else tokens[i - 1]
 
@@ -3428,11 +3461,6 @@ def alternatives_declension(lang, text, i, tokens, alternatives):
                 text = prev_token.text + " " + text
                 start = prev_token.idx
                 prepend_word = True
-
-    if len(word_type) == 0 or (
-        text.lower() == token.lemma_.lower() and token.lemma_ != "beste"
-    ):
-        return text, start, alternatives
 
     return (
         text,
@@ -3460,7 +3488,9 @@ def match_binary_inclusive_gendered_denom_analysis_de(
     start = token.idx
 
     if rule.type == RuleType.SUFFIX and rule.lemma != tokens[i].lemma_:
-        prefix_end = text.lower().replace("ä", "a").find(rule.lemma.lower())
+        prefix_end = (
+            text.lower().replace("ä", "a").find(rule.lemma.lower().replace("ä", "a"))
+        )
         prefix = text[0:prefix_end]
     else:
         prefix = ""

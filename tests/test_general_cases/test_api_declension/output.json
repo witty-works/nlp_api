@@ -18,7 +18,7 @@
                 }
             ],
             "category": "social-motive",
-            "context": "Witty leistet Unterstützung in mehr als <NUMBER> Diversitätsdimensionen. Die ältesten haben Träume.",
+            "context": "Witty leistet Unterstützung in mehr als <NUMBER> Diversitätsdimensionen. Die ältesten haben Träume. Das ist unsere best",
             "end": 13,
             "explanation": {
                 "content": "video",
@@ -36,7 +36,7 @@
         {
             "alternatives": [],
             "category": "social-motive",
-            "context": "Witty leistet Unterstützung in mehr als <NUMBER> Diversitätsdimensionen. Die ältesten haben Träume.",
+            "context": "Witty leistet Unterstützung in mehr als <NUMBER> Diversitätsdimensionen. Die ältesten haben Träume. Das ist unsere beste Idee.",
             "end": 27,
             "explanation": {
                 "content": "video",
@@ -53,36 +53,36 @@
         {
             "alternatives": [
                 {
-                    "text": "erfahrensten"
+                    "text": "leichteste"
                 },
                 {
-                    "text": "kundigsten"
+                    "text": "einfachste"
                 },
                 {
-                    "text": "routiniertesten"
+                    "text": "müheloseste"
                 },
                 {
-                    "text": "unaufgeregtesten"
+                    "text": "wirkungsvollste"
                 },
                 {
-                    "text": "informiertesten"
+                    "text": "als positiv empfunden"
                 }
             ],
-            "category": "acquired-diversity",
-            "context": "Witty leistet Unterstützung in mehr als <NUMBER> Diversitätsdimensionen. Die ältesten haben Träume.",
-            "end": 79,
+            "category": "social-motive",
+            "context": "stet Unterstützung in mehr als <NUMBER> Diversitätsdimensionen. Die ältesten haben Träume. Das ist unsere beste Idee.",
+            "end": 114,
             "explanation": {
-                "context": "nur erwähnen, wenn relevant",
-                "icon": "😒",
-                "text": "Bedient Klischees über Menschen über 50",
-                "url": "https://www.witty.works/de/kategorien/erworbene-diversität/50-jahre-und-älter?reducedView=true"
+                "content": "advanced",
+                "icon": "😮‍💨",
+                "text": "Überzogene Aussagen wirken weniger vertrauenswürdig",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/übertreibung?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Erworbene Diversität: 50 Jahre und älter",
+            "label": "Soziale Motivation: Übertreibung",
             "proficiency_level": "unconscious_bias",
-            "start": 71,
-            "subcategory": "age_old",
-            "text": "ältesten"
+            "start": 109,
+            "subcategory": "exaggerating",
+            "text": "beste"
         }
     ]
 }
