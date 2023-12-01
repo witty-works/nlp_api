@@ -45,14 +45,14 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
-                "text": "Viele denken zuerst an bestimmtes Geschlecht",
-                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+                "text": "Bedient altmodisches Konzept von Führung",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/führungsbild?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Geschlecht + Orientierung: Berufe",
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Führungsbild",
             "proficiency_level": "unconscious_bias",
             "start": 20,
-            "subcategory": "titles",
+            "subcategory": "leadership_advanced",
             "text": "Projektleiter"
         },
         {
@@ -140,12 +140,27 @@
                 {
                     "context": "💡",
                     "inspiration": true,
+                    "text": "bereit, größere Verantwortung zu übernehmen"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "interessiert an persönlichem Wachstum"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
                     "text": "engagiert im Hinarbeiten auf (gemeinsame, gesetzte, ...) Ziele"
                 },
                 {
                     "context": "💡",
                     "inspiration": true,
                     "text": "interessiert, neues Wissen und neue Erfahrung anzuwenden"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "unternehmerisch denkend"
                 }
             ],
             "category": "social-motive",
