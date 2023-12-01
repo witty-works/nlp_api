@@ -4420,22 +4420,16 @@ def rule_check(
             if not text or is_false_positive(full_text, token, rule):
                 continue
 
-        is_gendered_denom_rule_ = is_gendered_denom_rule(lang.lang, subcategory)
 
-        if is_gendered_denom_rule_:
-            is_singular = is_token_singular(lang.lang, token)
-        else:
-            is_singular = None
-            additional_token_count = len(rule.words) - 1
-            while additional_token_count >= 0:
-                is_singular = is_token_singular(
-                    lang.lang, tokens[i + additional_token_count]
-                )
-                if is_singular is None:
-                    additional_token_count -= 1
-                    continue
+        is_singular = None
+        for k in range(len(rule.words)):
+            is_singular = is_token_singular(
+                lang.lang, tokens[i + k]
+            )
+            if is_singular is None:
+                continue
 
-                break
+            break
 
         if is_singular == True:
             if rule.pluralization == PluralizationType.PLURAL_ONLY:
@@ -4446,7 +4440,7 @@ def rule_check(
         ):
             continue
 
-        if is_gendered_denom_rule_:
+        if is_gendered_denom_rule(lang.lang, subcategory):
             if is_singular is None:
                 continue
 
