@@ -3002,9 +3002,6 @@ def is_phrase_match(
     return i + k + 1, text
 
 
-"""Function to change adjectives to -en form in alternatives"""
-
-
 def fetch_word_type(
     lang: str,
     token: Token,
@@ -3185,7 +3182,10 @@ def german_noun_gender_lookup(word: str) -> str:
 def german_noun_lookup(text: str) -> dict:
     word = text
     result = fetch_declensions("de", "n", word)
-    if result is None and "-" in word:
+    if result is not None:
+        return result
+
+    if "-" in word:
         words = word.split("-")
         word = words[-1]
         result = fetch_declensions("de", "n", word)
@@ -3195,31 +3195,30 @@ def german_noun_lookup(text: str) -> dict:
         lower = True
         prefix = ""
 
-    if result is None:
-        while len(word) > 3:
-            words = rules["de"]["german_nouns"].parse_compound(word)
-            if len(words) == 0:
-                break
+    while len(word) > 3 and result is None:
+        words = rules["de"]["german_nouns"].parse_compound(word)
+        if len(words) == 0:
+            break
 
-            word = words[-1]
-            result = fetch_declensions("de", "n", word)
-            if result is not None:
-                for form in result:
-                    if result[form] is None:
-                        continue
-                    ending_lower = result[form].lower()
-                    if text.endswith(ending_lower):
-                        lower = True
-                        prefix = text.removesuffix(ending_lower)
+        word = words[-1]
+        result = fetch_declensions("de", "n", word)
+        if result is not None:
+            for form in result:
+                if result[form] is None:
+                    continue
 
-                break
+                ending_lower = result[form].lower()
+                if text.endswith(ending_lower):
+                    lower = True
+                    prefix += text.removesuffix(ending_lower)
+                    break
 
-    if prefix and result is not None:
-        for form in result:
-            if form != "gender_1" and result[form] is not None:
-                result[form] = prefix + (
-                    result[form].lower() if lower else result[form]
-                )
+    if prefix == "" or result is None:
+        return result
+
+    for form in result:
+        if not form.startswith("gender") and result[form] is not None:
+            result[form] = prefix + (result[form].lower() if lower else result[form])
 
     return result
 
@@ -3450,7 +3449,7 @@ def german_verb_splittable(word: str) -> str | None:  # pragma: no cover
 def find_matching_form(forms: dict, text: str) -> str | None:
     for form in forms:
         if forms[form] == text:
-            return form
+            return form.removesuffix("_2")
 
     return None
 
@@ -4420,12 +4419,9 @@ def rule_check(
             if not text or is_false_positive(full_text, token, rule):
                 continue
 
-
         is_singular = None
         for k in range(len(rule.words)):
-            is_singular = is_token_singular(
-                lang.lang, tokens[i + k]
-            )
+            is_singular = is_token_singular(lang.lang, tokens[i + k])
             if is_singular is None:
                 continue
 
