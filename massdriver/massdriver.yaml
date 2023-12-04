@@ -41,14 +41,6 @@ app:
       required: true
       title: "Sentry DSN"
       description: "fetch from sentry.io"
-    MJ_APIKEY_PRIVATE:
-      required: true
-      title: "Mailjet Private API key"
-      description: "fetch from mailjet.com"
-    MJ_APIKEY_PUBLIC:
-      required: true
-      title: "Mailjet Public API key"
-      description: "fetch from mailjet.com"
     SLACK_BOT_TOKEN:
       required: true
       title: "Slack Bot Token"
