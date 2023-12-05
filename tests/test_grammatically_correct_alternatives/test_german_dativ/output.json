@@ -3,10 +3,26 @@
     "limit_reached": false,
     "results": [
         {
-            "alternatives": [],
+            "alternatives": [
+                {
+                    "text": "Ethik"
+                },
+                {
+                    "text": "Methode"
+                },
+                {
+                    "text": "Wert"
+                },
+                {
+                    "text": "Richtlinie"
+                },
+                {
+                    "text": "Regel"
+                }
+            ],
             "category": "social-motive",
-            "context": "Einhaltung von ethischen Prinzipien.",
-            "end": 35,
+            "context": "Einhaltung vom ethischen Prinzip.",
+            "end": 32,
             "explanation": {
                 "content": "video",
                 "icon": "😒",
@@ -18,7 +34,7 @@
             "proficiency_level": "unconscious_bias",
             "start": 25,
             "subcategory": "agentic_advanced",
-            "text": "Prinzipien"
+            "text": "Prinzip"
         }
     ]
 }
