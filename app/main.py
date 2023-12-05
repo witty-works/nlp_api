@@ -3136,6 +3136,10 @@ def add_declension_german(
     if (a_lemma[-1] == "t" or a_lemma[-1] == "s") and len(ending) and ending[0] == "e":
         ending = ending[1:]
 
+    # likely we did not find a useful ending (ie. 'gewinnen' for case 'gewannen' would give use 'annen')
+    if len(ending) > 3:
+        return text
+
     remove = a_lemma[len(prefix) :]
     if remove:
         text = text[0 : -len(remove)]

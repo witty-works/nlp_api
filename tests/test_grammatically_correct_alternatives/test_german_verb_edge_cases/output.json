@@ -1,0 +1,40 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "erarbeiten"
+                },
+                {
+                    "text": "erwerben"
+                },
+                {
+                    "text": "dazulernen"
+                },
+                {
+                    "text": "interessieren"
+                },
+                {
+                    "text": "insistieren"
+                }
+            ],
+            "category": "social-motive",
+            "context": "Welche Resultate gewannen sie daraus?",
+            "end": 25,
+            "explanation": {
+                "content": "video",
+                "icon": "😒",
+                "text": "Spricht kooperativ denkende Menschen nicht an",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Soziale Motivation: Agentische Sprache",
+            "proficiency_level": "unconscious_bias",
+            "start": 17,
+            "subcategory": "agentic_advanced",
+            "text": "gewannen"
+        }
+    ]
+}
