@@ -5,24 +5,19 @@
         {
             "alternatives": [
                 {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "das Vertrauen der Kundschaft besitzend"
+                    "text": "angesehen"
                 },
                 {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "beeinflussend"
+                    "text": "fortschrittlich"
                 },
                 {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "den Markt beeinflussend"
+                    "text": "kompetent"
                 },
                 {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "den Maßstab setzend"
+                    "text": "einflussreich"
+                },
+                {
+                    "text": "tonangebend"
                 }
             ],
             "category": "social-motive",

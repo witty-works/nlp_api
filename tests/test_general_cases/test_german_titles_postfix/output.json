@@ -241,27 +241,6 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "fern wissen. Hier sind viele Juden. Er hat ein Judenei. Hure. Hurehund. Katzenhurehund. Katzenhure. Mandschure. Mandschurehuremhure. Ein Ingenieur kann das. Ein Elektroingenieur kann das nicht. Das du das mitun",
-            "end": 150,
-            "explanation": {
-                "icon": "🚫",
-                "text": "Fällt unter sexistische Verunglimpfungen",
-                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/sexismus?reducedView=true"
-            },
-            "gravity": 1.0,
-            "label": "Geschlecht + Orientierung: Sexismus",
-            "proficiency_level": "openly_discriminating",
-            "start": 140,
-            "subcategory": "sexism",
-            "text": "Mandschure"
-        },
-        {
-            "alternatives": [
-                {
-                    "remove": true
-                }
-            ],
-            "category": "gender-orientation",
             "context": "Hier sind viele Juden. Er hat ein Judenei. Hure. Hurehund. Katzenhurehund. Katzenhure. Mandschure. Mandschurehuremhure. Ein Ingenieur kann das. Ein Elektroingenieur kann das nicht. Das du das mitunterzeichnet?",
             "end": 171,
             "explanation": {

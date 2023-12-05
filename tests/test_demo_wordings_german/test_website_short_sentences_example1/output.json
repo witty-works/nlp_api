@@ -22,19 +22,13 @@
         {
             "alternatives": [
                 {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "interessiert am Erarbeiten von Meilensteinen"
+                    "text": "engagierte"
                 },
                 {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "enthusiastisch bei der Umsetzung"
+                    "text": "tatkräftige"
                 },
                 {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "mit Energie bei der Sache"
+                    "text": "kompetente"
                 }
             ],
             "category": "social-motive",

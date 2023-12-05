@@ -61,19 +61,16 @@
         {
             "alternatives": [
                 {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "enthusiastisch umsetzen"
+                    "text": "lösen"
                 },
                 {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "mit Energie angehen"
+                    "text": "erledigen"
                 },
                 {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "tatkräftig sein"
+                    "text": "anpacken"
+                },
+                {
+                    "text": "erarbeiten"
                 }
             ],
             "category": "social-motive",
@@ -95,14 +92,13 @@
         {
             "alternatives": [
                 {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "mit Blick für das Wesentliche"
+                    "text": "sorgfältige"
                 },
                 {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "vertraut Zahlen (Fakten, Informationen) erst, wenn sie geprüft wurden"
+                    "text": "präzise"
+                },
+                {
+                    "text": "komplexe"
                 }
             ],
             "category": "social-motive",
@@ -141,29 +137,10 @@
         {
             "alternatives": [
                 {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "bereit, größere Verantwortung zu übernehmen"
+                    "text": "engagierten"
                 },
                 {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "interessiert an persönlichem Wachstum"
-                },
-                {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "engagiert im Hinarbeiten auf (gemeinsame, gesetzte, ...) Ziele"
-                },
-                {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "interessiert, neues Wissen und neue Erfahrung anzuwenden"
-                },
-                {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "unternehmerisch denkend"
+                    "text": "entwicklungsmotivierten"
                 }
             ],
             "category": "social-motive",

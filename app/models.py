@@ -21,17 +21,6 @@ from app.categories import (
 from app.privacy_filter import get_privacy_filter
 
 
-def translit_english(text: str, target: str) -> list[str]:
-    if text is None:
-        return text
-
-    if isinstance(text, str):
-        fixer = TextFixer(content=text, target=Target(target))
-        return fixer.apply()
-
-    return [translit_english(word, target) for word in text]
-
-
 class Client(BaseModel):
     name: Optional[str] = None
     version: Optional[str] = None
@@ -55,10 +44,28 @@ class Language(object):
         return text
 
     def convert_sharp_ss(self, text: str) -> str:
-        if self.locale != "de-CH":
+        if self.locale == "de-CH":
+            return self.convert_to(text, self.locale)
+        
+        return text
+
+    @staticmethod
+    def convert_to(text: str|list|tuple|None, locale: str | None = None) -> str|list:
+        if text is None or locale is None:
             return text
 
-        return text.replace("ß", "ss")
+        if not isinstance(text, str):
+            return [Language.convert_to(word, locale) for word in text]
+
+        if locale[0:2] == "en":
+            target = "uk" if locale == "en-GB" else "us"
+            fixer = TextFixer(content=text, target=Target(target))
+            return fixer.apply()
+
+        if locale == "de-CH":
+            return text.replace("ß", "ss")
+
+        return text
 
 
 class EventType(str, Enum):
@@ -560,12 +567,12 @@ class ResultOut(BaseModel):
         alternatives: list[Alternative] | None,
         label: str | None,
         explanation: str | None,
-        url: str| None = None,
-        icon: str| None = None,
-        explanation_context: str| None = None,
-        content: str| None = None,
-        gravity: float| None = None,
-        proficiency_level: str| None = None,
+        url: str | None = None,
+        icon: str | None = None,
+        explanation_context: str | None = None,
+        content: str | None = None,
+        gravity: float | None = None,
+        proficiency_level: str | None = None,
     ):
         if end is None:
             end = start + len(text)
@@ -658,9 +665,11 @@ class ResultOut(BaseModel):
             gravity = map_gravity(subcategory)
 
             if lang.locale == "en-GB":
-                label = translit_english(label, "uk")
-                explanation = translit_english(explanation, "uk")
-                explanation_context = translit_english(explanation_context, "uk")
+                label = Language.convert_to(label, lang.locale)
+                explanation = Language.convert_to(explanation, lang.locale)
+                explanation_context = Language.convert_to(
+                    explanation_context, lang.locale
+                )
 
             explanation = {
                 "text": explanation,

@@ -87,7 +87,6 @@ from app.models import (
     RuleLabelEnum,
     EntityType,
     PluralizationType,
-    translit_english,
 )
 from app.lang_detection import get_lang_detection
 from app.categories import (
@@ -218,7 +217,7 @@ declensions_config = {
 }
 
 
-def create_rule(row, rewrite_to_uk: bool = False) -> Rule:
+def create_rule(row, rewrite_to: str = None) -> Rule:
     rule = Rule(
         row[rule_columns["id"]],
         row[rule_columns["language"]],
@@ -228,9 +227,9 @@ def create_rule(row, rewrite_to_uk: bool = False) -> Rule:
         json.loads(row[rule_columns["diversity_dimension_json"]]),
     )
 
-    if rewrite_to_uk:
-        rule.lemma = translit_english(rule.lemma, "uk")
-        rule.words = translit_english(rule.words, "uk")
+    if rewrite_to:
+        rule.lemma = Language.convert_to(rule.lemma, "en-GB")
+        rule.words = Language.convert_to(rule.words, "en-GB")
 
     rule.pattern = row[rule_columns["pattern"]]
     rule.label = (
@@ -243,6 +242,24 @@ def create_rule(row, rewrite_to_uk: bool = False) -> Rule:
     rule.entity_type = row[rule_columns["entity_type"]]
 
     return rule
+
+
+def fetch_false_positives(rule: Rule, rewrite_to: str = None) -> list[str]:
+    if len(rule.false_positives):
+        return list(rule.false_positives)
+
+    query = "SELECT false_positive FROM rules_falsepositive WHERE rule_id = ?"
+    parameters = [rule.name]
+
+    false_positives = []
+    for row in rules_cursor.execute(query, parameters):
+        false_positives.append(row[0])
+        if rewrite_to:
+            false_positive = Language.convert_to(row[0], rewrite_to)
+            if row[0] != false_positive:
+                false_positives.append(false_positive)
+
+    return false_positives
 
 
 model = {}
@@ -288,14 +305,14 @@ for spacy_model in settings.models:
     substring_rules[lang] = {}
     for row in rows:
         rule = create_rule(row)
+        rule.false_positives = fetch_false_positives(rule)
         substring_rules[lang][rule.lemma.lower()] = rule
 
-        if lang != "en":
-            continue
-
-        uk_lemma = translit_english(rule.lemma, "uk")
-        if uk_lemma != rule.lemma:
-            rule = create_rule(row, True)
+        rewrite_to = "en-GB" if lang == "en" else "de-CH"
+        rewritten_lemma = Language.convert_to(rule.lemma, rewrite_to)
+        if rule.lemma != rewritten_lemma:
+            rule = create_rule(row, rewrite_to)
+            rule.false_positives = fetch_false_positives(rule, rewrite_to)
             substring_rules[lang][rule.lemma.lower()] = rule
 
 rules_cursor.execute("DROP table IF EXISTS rules_lemmatization")
@@ -1621,7 +1638,8 @@ def languagetool_matches(
                     and entity.end_char <= end
                 ):
                     is_entity = (
-                        entity.label_ in static_rules["named_entity_labels"][EntityType.NAME]
+                        entity.label_
+                        in static_rules["named_entity_labels"][EntityType.NAME]
                     )
                     break
 
@@ -2139,7 +2157,10 @@ def is_gendered_denom_rule(lang: str, subcategories) -> bool:
 
 
 async def context_false_positives(lang: str, tokens: Doc, list_results: list):
-    if lang not in settings.context_checker or len(static_rules[lang]["context_check"]) == 0:
+    if (
+        lang not in settings.context_checker
+        or len(static_rules[lang]["context_check"]) == 0
+    ):
         return list_results
 
     sentences = {}
@@ -2221,7 +2242,7 @@ def fetch_rules(
     text: str,
     lemma: str,
     suffix_check: bool = False,
-    rewrite_to_uk: bool = False,
+    rewrite_to: str = None,
 ) -> list[Rule]:
     if suffix_check:
         first_token_check = "first_token LIKE ?"
@@ -2276,16 +2297,17 @@ def fetch_rules(
 
     rows = rules_cursor.execute(query, parameters).fetchall()
     if lang == "en":
-        if not rewrite_to_uk and len(rows) == 0:
-            us_text = translit_english(text, "us")
+        if rewrite_to is None and len(rows) == 0:
+            rewrite_to = "en-US"
+            us_text = Language.convert_to(text, rewrite_to)
             if us_text != text:
                 return fetch_rules(
                     lang,
                     token,
                     us_text,
-                    translit_english(lemma, "us"),
+                    Language.convert_to(lemma, rewrite_to),
                     suffix_check,
-                    True,
+                    "en-US",
                 )
 
         is_gender_star_ending_ = False
@@ -2302,7 +2324,7 @@ def fetch_rules(
 
     rules = []
     for row in rows:
-        rule = create_rule(row, rewrite_to_uk)
+        rule = create_rule(row, rewrite_to)
         if is_gender_star_ending_ and is_gendered_denom_rule(lang, rule.subcategories):
             continue
         rules.append(rule)
@@ -2320,7 +2342,7 @@ def fetch_rule_alternatives(
     rule: Rule,
     is_singular: bool | None,
     show_inspiration_alternatives: bool,
-    locale: str = "",
+    locale: str,
 ) -> list[Alternative]:
     if isinstance(rule.name, str):
         return rule.alternatives
@@ -2343,9 +2365,9 @@ def fetch_rule_alternatives(
     rows = rules_cursor.execute(query, parameters).fetchall()
     if len(rows) == 0:
         if not show_inspiration_alternatives:
-            return fetch_rule_alternatives(rule, is_singular, True)
+            return fetch_rule_alternatives(rule, is_singular, True, locale)
         if is_singular is not None:
-            return fetch_rule_alternatives(rule, None, True)
+            return fetch_rule_alternatives(rule, None, True, locale)
 
     for row in rows:
         lemma = row[alternative_columns["lemma"]]
@@ -2364,8 +2386,8 @@ def fetch_rule_alternatives(
             word_types_json = json.loads(row[alternative_columns["word_types_json"]])
 
         if lemma and locale == "en-GB":
-            lemma = translit_english(lemma, "uk")
-            lemma_json = translit_english(lemma_json, "uk")
+            lemma = Language.convert_to(lemma, locale)
+            lemma_json = Language.convert_to(lemma_json, locale)
 
         alternative = Alternative(
             lemma,
@@ -2420,20 +2442,6 @@ def fetch_declensions(lang: str, word_type: str, text: str) -> dict:
         )
 
     return result
-
-
-def fetch_false_positives(rule: Rule) -> list[str]:
-    if len(rule.false_positives):
-        return list(rule.false_positives)
-
-    query = "SELECT false_positive FROM rules_falsepositive WHERE rule_id = ?"
-    parameters = [rule.name]
-
-    false_positives = []
-    for row in rules_cursor.execute(query, parameters):
-        false_positives.append(row[0])
-
-    return false_positives
 
 
 def is_gender_star_ending(text: str) -> bool | list:
@@ -3702,6 +3710,7 @@ def alternatives_declension(
 
 def gendered_denom_analysis_de(
     config: Config,
+    lang: Language,
     text: str,
     tokens: Doc,
     i: int,
@@ -3761,7 +3770,7 @@ def gendered_denom_analysis_de(
     binary_case = False
     binary = ResultOut.genderedRolesFormatBinary(config.gendered_roles_format)
     alternatives = fetch_rule_alternatives(
-        rule, is_singular, config.show_inspiration_alternatives
+        rule, is_singular, config.show_inspiration_alternatives, lang.locale
     )
     new_alternatives = []
     if alternatives is None:
@@ -4454,6 +4463,7 @@ def rule_check(
                 alternatives,
             ) = gendered_denom_analysis_de(
                 config,
+                lang,
                 text,
                 tokens,
                 i,
