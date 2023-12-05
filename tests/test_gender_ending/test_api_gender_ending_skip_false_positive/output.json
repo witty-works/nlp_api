@@ -9,6 +9,9 @@
                 },
                 {
                     "text": "Bewerbende"
+                },
+                {
+                    "text": "Bewerbung"
                 }
             ],
             "category": "gender-orientation",
@@ -28,6 +31,9 @@
         },
         {
             "alternatives": [
+                {
+                    "text": "Fachpersonal"
+                },
                 {
                     "text": "Fachperson"
                 },
@@ -54,6 +60,9 @@
         {
             "alternatives": [
                 {
+                    "text": "Fachpersonal"
+                },
+                {
                     "text": "Fachperson"
                 },
                 {
@@ -78,6 +87,9 @@
         },
         {
             "alternatives": [
+                {
+                    "text": "Fachpersonal"
+                },
                 {
                     "text": "Fachperson"
                 },

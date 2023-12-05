@@ -76,6 +76,18 @@
             "alternatives": [
                 {
                     "text": "dedication"
+                },
+                {
+                    "text": "goals"
+                },
+                {
+                    "text": "plans"
+                },
+                {
+                    "text": "career goals"
+                },
+                {
+                    "text": "dreams"
                 }
             ],
             "category": "social-motive",
@@ -206,6 +218,9 @@
                 },
                 {
                     "text": "redesign"
+                },
+                {
+                    "text": "reinventions"
                 }
             ],
             "category": "cultural-diversity",

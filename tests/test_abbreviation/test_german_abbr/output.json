@@ -38,10 +38,10 @@
         {
             "alternatives": [
                 {
-                    "text": "alle"
+                    "text": "Erwachsene"
                 },
                 {
-                    "text": "Erwachsene"
+                    "text": "alle"
                 }
             ],
             "category": "gender-orientation",

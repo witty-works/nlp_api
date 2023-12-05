@@ -9,6 +9,15 @@
                 },
                 {
                     "text": "Unser/e Fachärztin/Facharzt"
+                },
+                {
+                    "text": "Unser medizinisches Team"
+                },
+                {
+                    "text": "Unser Praxis"
+                },
+                {
+                    "text": "Unsere Untersuchung"
                 }
             ],
             "category": "gender-orientation",
@@ -37,6 +46,12 @@
                 },
                 {
                     "text": "Medizinisches Team"
+                },
+                {
+                    "text": "Praxis"
+                },
+                {
+                    "text": "Untersuchung"
                 }
             ],
             "category": "gender-orientation",
@@ -83,16 +98,16 @@
         {
             "alternatives": [
                 {
-                    "text": "Du"
-                },
-                {
-                    "text": "Sie"
-                },
-                {
                     "text": "Sie*er"
                 },
                 {
                     "text": "Sie/er"
+                },
+                {
+                    "text": "Du"
+                },
+                {
+                    "text": "Sie"
                 }
             ],
             "category": "gender-orientation",
@@ -268,6 +283,15 @@
                 },
                 {
                     "text": "Ein/e Ingenieurin/Ingenieur"
+                },
+                {
+                    "text": "Ein Engineering-Team"
+                },
+                {
+                    "text": "Ein Engineering"
+                },
+                {
+                    "text": "Eine Technik"
                 }
             ],
             "category": "gender-orientation",
@@ -293,6 +317,15 @@
                 },
                 {
                     "text": "Ein/e Elektroingenieurin/Elektroingenieur"
+                },
+                {
+                    "text": "Ein Elektroengineering-Team"
+                },
+                {
+                    "text": "Ein Elektroengineering"
+                },
+                {
+                    "text": "Eine Elektrotechnik"
                 }
             ],
             "category": "gender-orientation",

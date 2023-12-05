@@ -360,16 +360,16 @@
         {
             "alternatives": [
                 {
-                    "text": "du"
-                },
-                {
-                    "text": "dich"
-                },
-                {
                     "text": "sie*er"
                 },
                 {
                     "text": "sie/er"
+                },
+                {
+                    "text": "du"
+                },
+                {
+                    "text": "dich"
                 }
             ],
             "category": "gender-orientation",
@@ -532,6 +532,12 @@
         {
             "alternatives": [
                 {
+                    "text": "sie*er"
+                },
+                {
+                    "text": "sie/er"
+                },
+                {
                     "text": "du"
                 },
                 {
@@ -539,12 +545,6 @@
                 },
                 {
                     "text": "dich"
-                },
-                {
-                    "text": "sie*er"
-                },
-                {
-                    "text": "sie/er"
                 }
             ],
             "category": "gender-orientation",

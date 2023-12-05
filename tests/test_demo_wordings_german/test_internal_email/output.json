@@ -148,35 +148,6 @@
             "text": "Ehrgeiz"
         },
         {
-            "alternatives": [
-                {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "einen langen Atem haben"
-                },
-                {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "Fähigkeit, an Dingen dranzubleiben"
-                }
-            ],
-            "category": "social-motive",
-            "context": "Sehr geehrte Kollegen\n  Wir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
-            "end": 87,
-            "explanation": {
-                "content": "video",
-                "icon": "😒",
-                "text": "Spricht kooperativ denkende Menschen nicht an",
-                "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Soziale Motivation: Agentische Sprache",
-            "proficiency_level": "unconscious_bias",
-            "start": 69,
-            "subcategory": "agentic_advanced",
-            "text": "Durchhaltevermögen"
-        },
-        {
             "alternatives": [],
             "category": "social-motive",
             "context": "Sehr geehrte Kollegen\n  Wir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",

@@ -190,6 +190,18 @@
             "alternatives": [
                 {
                     "text": "dedication"
+                },
+                {
+                    "text": "goals"
+                },
+                {
+                    "text": "plans"
+                },
+                {
+                    "text": "career goals"
+                },
+                {
+                    "text": "dreams"
                 }
             ],
             "category": "social-motive",
@@ -319,6 +331,18 @@
             "alternatives": [
                 {
                     "text": "dedication"
+                },
+                {
+                    "text": "goals"
+                },
+                {
+                    "text": "plans"
+                },
+                {
+                    "text": "career goals"
+                },
+                {
+                    "text": "dreams"
                 }
             ],
             "category": "social-motive",

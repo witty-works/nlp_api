@@ -67,16 +67,16 @@
         {
             "alternatives": [
                 {
-                    "text": "Du"
-                },
-                {
-                    "text": "Dich"
-                },
-                {
                     "text": "Sie*er"
                 },
                 {
                     "text": "Sie/er"
+                },
+                {
+                    "text": "Du"
+                },
+                {
+                    "text": "Dich"
                 }
             ],
             "category": "gender-orientation",
@@ -119,16 +119,16 @@
         {
             "alternatives": [
                 {
-                    "text": "Du"
-                },
-                {
-                    "text": "Sie"
-                },
-                {
                     "text": "Sie*er"
                 },
                 {
                     "text": "Sie/er"
+                },
+                {
+                    "text": "Du"
+                },
+                {
+                    "text": "Sie"
                 }
             ],
             "category": "gender-orientation",
@@ -154,6 +154,15 @@
                 },
                 {
                     "text": "Mitarbeiterin/Mitarbeiter"
+                },
+                {
+                    "text": "Personal"
+                },
+                {
+                    "text": "Mitarbeiterschaft"
+                },
+                {
+                    "text": "Belegschaft"
                 }
             ],
             "category": "gender-orientation",

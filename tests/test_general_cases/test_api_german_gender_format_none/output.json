@@ -40,6 +40,9 @@
             "alternatives": [
                 {
                     "text": "Programmierende"
+                },
+                {
+                    "text": "Programmierung"
                 }
             ],
             "category": "gender-orientation",

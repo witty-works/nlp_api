@@ -5,16 +5,19 @@
         {
             "alternatives": [
                 {
-                    "text": "Fachperson"
-                },
-                {
-                    "text": "Fachkraft"
-                },
-                {
                     "text": "Fachfrau*Fachmann"
                 },
                 {
                     "text": "Fachfrau/Fachmann"
+                },
+                {
+                    "text": "Fachpersonal"
+                },
+                {
+                    "text": "Fachperson"
+                },
+                {
+                    "text": "Fachkraft"
                 }
             ],
             "category": "gender-orientation",
@@ -36,16 +39,19 @@
         {
             "alternatives": [
                 {
-                    "text": "Fachperson"
-                },
-                {
-                    "text": "Fachkraft"
-                },
-                {
                     "text": "Fachfrau*Fachmann"
                 },
                 {
                     "text": "Fachfrau/Fachmann"
+                },
+                {
+                    "text": "Fachpersonal"
+                },
+                {
+                    "text": "Fachperson"
+                },
+                {
+                    "text": "Fachkraft"
                 }
             ],
             "category": "gender-orientation",

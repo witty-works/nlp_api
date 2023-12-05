@@ -5,16 +5,16 @@
         {
             "alternatives": [
                 {
-                    "text": "seinE Begleitung"
-                },
-                {
-                    "text": "seine/sein Begleitung"
-                },
-                {
                     "text": "seinE PartnerIn"
                 },
                 {
                     "text": "seine/sein Partnerin/Partner"
+                },
+                {
+                    "text": "seinE Begleitung"
+                },
+                {
+                    "text": "seine/sein Begleitung"
                 }
             ],
             "category": "gender-orientation",

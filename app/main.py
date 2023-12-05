@@ -202,12 +202,16 @@ declensions_config = {
                 "base_form",
                 "female_form",
                 "male_form",
-                "sg_nom_acc",
+                "sg_nom",
                 "sg_dat",
                 "sg_gen",
-                "pl_nom_acc",
-                "pl_gen",
+                "sg_acc",
+                "pl_nom",
                 "pl_dat",
+                "pl_gen",
+                "pl_acc",
+                "sg_dat_2",
+                "sg_gen_2",
             ],
         },
     },
@@ -295,7 +299,7 @@ for spacy_model in settings.models:
             substring_rules[lang][rule.lemma.lower()] = rule
 
 rules_cursor.execute("DROP table IF EXISTS rules_lemmatization")
-rules = fetch_static_rules(langs)
+static_rules = fetch_static_rules(langs)
 
 
 # https://www.notion.so/witty-works/Rule-Guidelines-432792da944141b1b4d0a01de290aa43#aac0d966bfeb4e33a5a346bba45d5ea8
@@ -1617,7 +1621,7 @@ def languagetool_matches(
                     and entity.end_char <= end
                 ):
                     is_entity = (
-                        entity.label_ in rules["named_entity_labels"][EntityType.NAME]
+                        entity.label_ in static_rules["named_entity_labels"][EntityType.NAME]
                     )
                     break
 
@@ -1637,7 +1641,7 @@ def languagetool_matches(
             )
             if len(subtext) == 1 and any(
                 substring.lower() + " " in subtext[0]
-                for substring in rules[lang.lang]["salutations"]
+                for substring in static_rules[lang.lang]["salutations"]
             ):
                 continue
 
@@ -1645,7 +1649,7 @@ def languagetool_matches(
             lang.lang == "de"
             and config.german_gender_ending == ":in"
             and match["rule"]["id"] == "LEERZEICHEN_HINTER_DOPPELPUNKT"
-            and full_text[start + 1 : end] in rules["de"]["male_articles"]
+            and full_text[start + 1 : end] in static_rules["de"]["male_articles"]
         ):
             continue
 
@@ -1947,15 +1951,15 @@ def fetch_phrase_matcher(lang: str, tokens: Doc, phrases: list) -> list:
 
 def fetch_false_positive_matchers(lang: str, tokens: Doc) -> list:
     false_positive_matcher = fetch_phrase_matcher(
-        lang, tokens, rules[lang]["false_positives_phrases"]
+        lang, tokens, static_rules[lang]["false_positives_phrases"]
     )
 
     # create false positives list
-    if "pattern_false_positives" not in rules[lang]:
+    if "pattern_false_positives" not in static_rules[lang]:
         return false_positive_matcher
 
     phrase_false_positive_matcher = fetch_false_positive_matcher(
-        lang, tokens, rules[lang]["pattern_false_positives"]
+        lang, tokens, static_rules[lang]["pattern_false_positives"]
     )
 
     return list(set(phrase_false_positive_matcher + false_positive_matcher))
@@ -2135,14 +2139,14 @@ def is_gendered_denom_rule(lang: str, subcategories) -> bool:
 
 
 async def context_false_positives(lang: str, tokens: Doc, list_results: list):
-    if lang not in settings.context_checker or len(rules[lang]["context_check"]) == 0:
+    if lang not in settings.context_checker or len(static_rules[lang]["context_check"]) == 0:
         return list_results
 
     sentences = {}
     sentences_to_check = defaultdict(list)
     for i in range(len(list_results)):
         result = list_results[i]
-        if result.lemma in rules[lang]["context_check"]:
+        if result.lemma in static_rules[lang]["context_check"]:
             if len(sentences) == 0:
                 for sentence in tokens.sents:
                     sentences[sentence.end_char] = sentence.text
@@ -2304,10 +2308,10 @@ def fetch_rules(
         rules.append(rule)
 
     if suffix_check:
-        text_lower = text.lower()
-        for lemma in substring_rules[lang]:
-            if lemma in text_lower:
-                rules.append(substring_rules[lang][lemma])
+        text_lower = token.text.lower()
+        for substring in substring_rules[lang]:
+            if substring in text_lower:
+                rules.append(substring_rules[lang][substring])
 
     return rules
 
@@ -2333,8 +2337,10 @@ def fetch_rule_alternatives(
         query += " and pluralization != ?"
         parameters.append("plural_only" if is_singular else "singular_only")
 
+    query += " ORDER BY `order` ASC"
+
     alternatives = []
-    rows = rules_cursor.execute(query + " ORDER BY 'order' ASC", parameters).fetchall()
+    rows = rules_cursor.execute(query, parameters).fetchall()
     if len(rows) == 0:
         if not show_inspiration_alternatives:
             return fetch_rule_alternatives(rule, is_singular, True)
@@ -2512,7 +2518,7 @@ async def german_rules(
                 tokens,
                 offsets,
                 list_full,
-                rules["m_f_regexes"],
+                static_rules["m_f_regexes"],
             )
 
             if check_continue(i, new_i, tokens):
@@ -2528,7 +2534,7 @@ async def german_rules(
                 tokens,
                 offsets,
                 list_full,
-                rules["d_f_m_regexes"],
+                static_rules["d_f_m_regexes"],
             )
 
             if check_continue(i, new_i, tokens):
@@ -2560,7 +2566,7 @@ async def german_rules(
                 tokens,
                 offsets,
                 list_full,
-                rules["de"]["hashtags"],
+                static_rules["de"]["hashtags"],
             )
 
             if check_continue(i, new_i, tokens):
@@ -2764,7 +2770,7 @@ async def english_rules(
                 tokens,
                 offsets,
                 list_full,
-                rules["m_f_regexes"],
+                static_rules["m_f_regexes"],
             )
 
             if check_continue(i, new_i, tokens):
@@ -2780,7 +2786,7 @@ async def english_rules(
                 tokens,
                 offsets,
                 list_full,
-                rules["d_f_m_regexes"],
+                static_rules["d_f_m_regexes"],
             )
 
             if check_continue(i, new_i, tokens):
@@ -2812,7 +2818,7 @@ async def english_rules(
                 tokens,
                 offsets,
                 list_full,
-                rules["en"]["hashtags"],
+                static_rules["en"]["hashtags"],
             )
 
             if check_continue(i, new_i, tokens):
@@ -3166,12 +3172,12 @@ def german_noun_gender_lookup(word: str) -> str:
     result = german_noun_lookup(word)
     if result is None:
         gender = determine_gender_from_ending(
-            word, rules["de"]["primary_german_gender_endings"]
+            word, static_rules["de"]["primary_german_gender_endings"]
         )
 
         if gender is None:
             gender = determine_gender_from_ending(
-                word, rules["de"]["secondary_german_gender_endings"]
+                word, static_rules["de"]["secondary_german_gender_endings"]
             )
 
         return gender
@@ -3196,7 +3202,7 @@ def german_noun_lookup(text: str) -> dict:
         prefix = ""
 
     while len(word) > 3 and result is None:
-        words = rules["de"]["german_nouns"].parse_compound(word)
+        words = static_rules["de"]["german_nouns"].parse_compound(word)
         if len(words) == 0:
             break
 
@@ -3271,7 +3277,9 @@ def align_noun_form(lang: str, a_token: Token, b_token: Token) -> str:
     if is_singular is True or (is_singular is None and is_token_plural(lang, a_token)):
         return (
             b_result["plural"]
-            if b_result is not None and "plural" in b_result
+            if b_result is not None
+            and "plural" in b_result
+            and b_result["plural"] is not None
             else Noun(b_text).plural()
         )
 
@@ -3421,9 +3429,9 @@ def german_verb_splittable(word: str) -> str | None:  # pragma: no cover
         if word.startswith(prefix):
             return prefix
 
-    for prefix in rules["de"]["splittable_words"]:
+    for prefix in static_rules["de"]["splittable_words"]:
         if word.startswith(prefix):
-            if word in rules["de"]["splittable_words"][prefix]:
+            if word in static_rules["de"]["splittable_words"][prefix]:
                 return prefix
 
             return None
@@ -3629,8 +3637,8 @@ def alternative_declension(
         lang == "en"
         and prepend_word
         and is_plural_alternative is False
-        and not new_alternative.startswith(rules["en"]["a_not_startswith"])
-        and not new_alternative.endswith(rules["en"]["uncountables"])
+        and not new_alternative.startswith(static_rules["en"]["a_not_startswith"])
+        and not new_alternative.endswith(static_rules["en"]["uncountables"])
     ):
         new_alternative = (
             "an " + new_alternative
@@ -3874,7 +3882,7 @@ def fetch_article_for_flexion(
     if flexion is None:
         return None, None, None, None
 
-    for form, masculine, feminine, neuter, plural, alternative in rules["de"][
+    for form, masculine, feminine, neuter, plural, alternative in static_rules["de"][
         "articles"
     ]:
         if form not in flexion:
@@ -3966,12 +3974,12 @@ def regex_match(
     tokens: Doc,
     offsets: dict,
     list_full: list,
-    filtered_rules: list[Rule],
+    rules: list[Rule],
     check_case=None,
 ) -> list:
     token = tokens[i]
 
-    for rule in filtered_rules:
+    for rule in rules:
         subcategory = is_sub_category_enabled(config, rule.subcategories)
         if not subcategory:
             continue
@@ -4072,8 +4080,8 @@ def regex_match(
             if check_case == "gender_denom" and check_text.islower():
                 text_split = text.split(connector_string)
                 if (
-                    text_split[0] not in rules["de"]["female_articles"]
-                    or text_split[1] not in rules["de"]["male_articles"]
+                    text_split[0] not in static_rules["de"]["female_articles"]
+                    or text_split[1] not in static_rules["de"]["male_articles"]
                 ):
                     continue
 
@@ -4084,8 +4092,8 @@ def regex_match(
 
                 text_split = text.split(connector_string)
                 if (
-                    text_split[0] not in rules["de"]["female_articles"]
-                    or text_split[1] not in rules["de"]["male_articles"]
+                    text_split[0] not in static_rules["de"]["female_articles"]
+                    or text_split[1] not in static_rules["de"]["male_articles"]
                 ):
                     continue
 
@@ -4284,7 +4292,7 @@ def rule_check(
     tokens: Doc,
     offsets: dict,
     list_full: list,
-    filtered_rules: list[Rule],
+    rules: list[Rule],
     false_positive_matcher: list = None,
 ) -> list:
     token = tokens[i]
@@ -4299,7 +4307,7 @@ def rule_check(
         ):
             return i
 
-    for rule in filtered_rules:
+    for rule in rules:
         subcategory = is_sub_category_enabled(config, rule.subcategories)
         if not subcategory:
             continue
@@ -4310,26 +4318,26 @@ def rule_check(
                     if (
                         token.ent_type_
                         and token.ent_type_
-                        in rules["named_entity_labels"][EntityType.PERSON]
+                        in static_rules["named_entity_labels"][EntityType.PERSON]
                     ):
                         continue
                 case EntityType.PERSON:
                     if (
                         token.ent_type_
-                        not in rules["named_entity_labels"][EntityType.PERSON]
+                        not in static_rules["named_entity_labels"][EntityType.PERSON]
                     ):
                         continue
                 case EntityType.NON_NAME:
                     if (
                         token.ent_type_
                         and token.ent_type_
-                        in rules["named_entity_labels"][EntityType.NAME]
+                        in static_rules["named_entity_labels"][EntityType.NAME]
                     ):
                         continue
                 case EntityType.NAME:
                     if (
                         token.ent_type_
-                        not in rules["named_entity_labels"][EntityType.NAME]
+                        not in static_rules["named_entity_labels"][EntityType.NAME]
                     ):
                         continue
 
@@ -4629,8 +4637,8 @@ def detect_non_inclusive_emoji(
     emoji_base = emoji_base.replace(" ", "_")
 
     subcategory = None
-    for emoji_config_name in rules["emoji"]:
-        emoji_config = rules["emoji"][emoji_config_name]
+    for emoji_config_name in static_rules["emoji"]:
+        emoji_config = static_rules["emoji"][emoji_config_name]
         included = False
         for rule in emoji_config["rules"]:
             if rule in emoji_base:
@@ -4654,9 +4662,9 @@ def detect_non_inclusive_emoji(
             and len(emojis) <= 3
         ):
             skin_tones = (
-                rules["skin_tones"]["full"]
+                static_rules["skin_tones"]["full"]
                 if len(emojis) == 1
-                else rules["skin_tones"]["minimal"]
+                else static_rules["skin_tones"]["minimal"]
             )
         else:
             skin_tones = []
@@ -4706,7 +4714,7 @@ def detect_non_inclusive_emoji(
         and "medium" not in emoji_description
     ):
         subcategory = "culture"
-        for skin_tone in rules["skin_tones"]["all"]:
+        for skin_tone in static_rules["skin_tones"]["all"]:
             alternative = get_emoji(emoji_base + skin_tone)
             if ":" not in alternative and alternative != token.text:
                 alternative = Alternative(alternative)
