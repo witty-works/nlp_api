@@ -912,7 +912,7 @@ def test_fetch_configs_for_request(event_loop, set_redis):
     }
     test_request = RequestIn(**request_data)
     event_loop.run_until_complete(
-        fetch_configs_for_request(test_request, "test@gmail.com")
+        fetch_configs_for_request("2.3", test_request, "test@gmail.com")
     )
     assert hasattr(test_request.config, "store_context")
     assert test_request.config.store_context is True
@@ -937,7 +937,7 @@ def test_fetch_user_rules_suggestion(event_loop, set_redis):
     }
     test_request = RequestIn(**request_data)
     event_loop.run_until_complete(
-        fetch_configs_for_request(test_request, "non_existant@gmail.com")
+        fetch_configs_for_request("2.3", test_request, "non_existant@gmail.com")
     )
     assert test_request.config.store_context is True
     assert test_request.config.primary_language == "de-DE"
@@ -956,7 +956,7 @@ def test_set_organization_rules(event_loop, set_redis):
     }
     test_request = RequestIn(**request_data)
     event_loop.run_until_complete(
-        fetch_configs_for_request(test_request, "test@gmail.com")
+        fetch_configs_for_request("2.3", test_request, "test@gmail.com")
     )
     assert test_request.config.store_context is True
     assert test_request.config.preferred_variants == ["en-GB"]
@@ -974,7 +974,7 @@ def test_set_default_rules(event_loop):
     test_request = RequestIn(**request_data)
 
     event_loop.run_until_complete(
-        fetch_configs_for_request(test_request, "non_existant@gmail.com")
+        fetch_configs_for_request("2.3", test_request, "non_existant@gmail.com")
     )
     assert test_request.config.store_context is True
     assert test_request.config.primary_language is None
@@ -1018,6 +1018,8 @@ def test_store_get_delete_rules():
         "email": "foo@bar.com",
         "name": "Test User",
         "config_hash": "foobar",
+        "llm_enabled": True,
+        
         "organization_id": "TEST_organization",
         "config": {
             "preferred_variants": {

@@ -326,9 +326,9 @@ class ConfRequest(BaseModel):
     false_positives: List[str] = []
     term_replacements: Dict[str, TermReplacement] = {}
     domains: Optional[DomainConfig]
-    config_hash: Optional[str]
-    sync_date: Optional[str]
-    llm_enabled: Optional[bool]
+    config_hash: Optional[str] = None
+    sync_date: Optional[str] = None
+    llm_enabled: Optional[bool] = None
 
 
 class UserConfRequest(ConfRequest):
@@ -940,16 +940,16 @@ class RephraseIn(BaseModel):
     alternative: str
     id: str
     client: str
-    config_hash: Optional[str]
-    organization_config_hash: Optional[str]
+    config_hash: Optional[str] = None
+    organization_config_hash: Optional[str] = None
 
 
 class RephraseOut(BaseModel):
     id: str
     name: str
-    plan: Optional[str]
+    plan: Optional[str] = None
     sentence: str
-    config_changed: Optional[bool]
+    config_changed: Optional[bool] = None
 
 
 class Rephrase(BaseModel):
@@ -958,19 +958,22 @@ class Rephrase(BaseModel):
     alternative_words: str = Field(description="Alternative words for the sentence")
     rephrased_sentence: str = Field(description="Rephrased sentence")
 
-    @validator("sentence")
+    @field_validator("sentence")
+    @classmethod
     def sentence_length(cls, field):
         if len(field) > 200:
             raise ValueError("Sentence too long")
         return field
 
-    @validator("words")
+    @field_validator("words")
+    @classmethod
     def words_length(cls, field):
         if len(field) > 20:
             raise ValueError("Words too long")
         return field
 
-    @validator("alternative_words")
+    @field_validator("alternative_words")
+    @classmethod
     def alternative_words_length(cls, field):
         if len(field) > 50:
             raise ValueError("Alternative words too long")
