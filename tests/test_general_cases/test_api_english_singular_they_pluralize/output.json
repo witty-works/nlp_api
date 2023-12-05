@@ -47,7 +47,11 @@
             "text": "She builds, cleans and refurbishes"
         },
         {
-            "alternatives": [],
+            "alternatives": [
+                {
+                    "text": "theirs"
+                }
+            ],
             "category": "gender-orientation",
             "context": "He is amazing. She builds, cleans and refurbishes houses. This is all hers.",
             "end": 74,
