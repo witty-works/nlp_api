@@ -829,7 +829,7 @@ async def post_debug_rule(
         for alternative_in in rule_data.alternatives:
             alternative = Alternative(
                 lemma=alternative_in.lemma,
-                words=alternative_in.words,
+                words=tokenize(alternative_in.lemma, rule_data.lang),
                 word_types=alternative_in.word_types,
             )
 

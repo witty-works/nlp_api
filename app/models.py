@@ -244,7 +244,6 @@ class Rule:
 
 class AlternativeIn(BaseModel):
     lemma: str
-    words: tuple
     word_types: Optional[list] = None
     type: Optional[str] = None
     label: Optional[str] = None
