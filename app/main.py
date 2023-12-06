@@ -150,6 +150,7 @@ alternative_columns = [
     "is_remove",
     "is_inspiration",
     "is_advanced",
+    "is_collective_noun",
     "label",
 ]
 alternative_columns = invert_list_to_dict(alternative_columns)
@@ -836,6 +837,7 @@ async def post_debug_rule(
             alternative.pluralization = alternative_in.pluralization
             alternative.is_inspiration = alternative_in.is_inspiration
             alternative.is_advanced = alternative_in.is_advanced
+            alternative.is_collective_noun = alternative_in.is_collective_noun
             alternative.is_remove = alternative_in.is_remove
 
             alternative_list.append(alternative)
@@ -2397,6 +2399,7 @@ def fetch_rule_alternatives(
         alternative.is_remove = is_remove
         alternative.is_inspiration = row[alternative_columns["is_inspiration"]]
         alternative.is_advanced = row[alternative_columns["is_advanced"]]
+        alternative.is_collective_noun = row[alternative_columns["is_collective_noun"]]
         alternative.label = row[alternative_columns["label"]]
 
         alternatives.append(alternative)
@@ -3632,6 +3635,26 @@ def tokenize(text: str, lang: str) -> tuple:
     return tuple([i.text for i in model[lang].tokenizer(text)])
 
 
+def alternative_a_english(
+    alternative: str,
+    prepend_word: bool,
+    is_plural_alternative: bool,
+) -> str:
+    if (
+        prepend_word
+        and is_plural_alternative is False
+        and not alternative.startswith(static_rules["en"]["a_not_startswith"])
+        and not alternative.endswith(static_rules["en"]["uncountables"])
+    ):
+        alternative = (
+            "an " + alternative
+            if alternative[0].lower() in ["a", "e", "i", "o", "u"]
+            else "a " + alternative
+        )
+
+    return alternative
+
+
 def alternative_declension(
     lang: str,
     text: str,
@@ -3693,8 +3716,10 @@ def alternative_declension(
                             is_plural_alternative = True
 
                         previous = True
-                        alternative_text = align_noun_form(
-                            lang, token, alternative_token
+                        alternative_text = (
+                            alternative_token.text
+                            if alternative.is_collective_noun
+                            else align_noun_form(lang, token, alternative_token)
                         )
                     elif "a" == word_type and "a" == alternative_word_type:
                         previous = True
@@ -3706,20 +3731,14 @@ def alternative_declension(
                 alternative_text + alternative_token.whitespace_ + new_alternative
             )
 
-    if (
-        lang == "en"
-        and prepend_word
-        and is_plural_alternative is False
-        and not new_alternative.startswith(static_rules["en"]["a_not_startswith"])
-        and not new_alternative.endswith(static_rules["en"]["uncountables"])
-    ):
-        new_alternative = (
-            "an " + new_alternative
-            if new_alternative[0].lower() in ["a", "e", "i", "o", "u"]
-            else "a " + new_alternative
+    if lang == "en":
+        alternative.lemma = alternative_a_english(
+            new_alternative, prepend_word, is_plural_alternative
         )
-
-    alternative.lemma = new_alternative
+    else:
+        alternative.lemma = new_alternative
+        if lang == "de" and is_plural_alternative and alternative.is_collective_noun:
+            alternative.is_inspiration = True
 
     return alternative
 

@@ -177,6 +177,7 @@ class Alternative:
     pluralization: Optional[PluralizationType] = PluralizationType.DEFAULT
     is_inspiration: Optional[bool] = False
     is_advanced: Optional[bool] = False
+    is_collective_noun: Optional[bool] = False
     is_remove: Optional[bool] = False
 
     def __init__(
@@ -250,6 +251,7 @@ class AlternativeIn(BaseModel):
     pluralization: Optional[str] = "default"
     is_inspiration: Optional[bool] = False
     is_advanced: Optional[bool] = False
+    is_collective_noun: Optional[bool] = False
     is_remove: Optional[bool] = False
 
 
