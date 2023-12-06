@@ -2412,6 +2412,20 @@ def is_valid_text(text: str) -> bool:
     return text.isalpha()
 
 
+def get_target_form_from_declension(
+    result: dict, target_form: str, fallback: str = None
+):
+    if (
+        result is None
+        or target_form not in result
+        or result[target_form] is None
+        or result[target_form] == ""
+    ):
+        return fallback
+
+    return result[target_form]
+
+
 def fetch_declensions(lang: str, word_type: str, text: str) -> dict:
     text = text.title() if lang == "de" and word_type == "n" else text.lower()
     column_list = ", ".join(declensions_config[lang][word_type]["columns"])
@@ -3118,9 +3132,11 @@ def find_common_prefix(a_text: str, a_lemma: str) -> str:
     return prefix
 
 
-def add_declension_german(
+def generate_german_verb_declension(
     text: str, a_text: str, a_lemma: str, injected_string: str = ""
 ) -> str:
+    original_text = text
+
     prefix = find_common_prefix(
         a_text,
         a_lemma,
@@ -3138,32 +3154,36 @@ def add_declension_german(
 
     # likely we did not find a useful ending (ie. 'gewinnen' for case 'gewannen' would give use 'annen')
     if len(ending) > 3:
-        return text
+        ending = ""
+    else:
+        remove = a_lemma[len(prefix) :]
+        if remove:
+            text = text[0 : -len(remove)]
 
-    remove = a_lemma[len(prefix) :]
-    if remove:
-        text = text[0 : -len(remove)]
+        if ending != "" and len(text) > 2:
+            if text.endswith("em"):
+                ending = ""
+            else:
+                e_ending_letters = ["t", "n", "c", "v", "r", "h"]
+                e_start_letters = ["t", "s", "n", "r"]
+                if text[-1] in e_ending_letters and ending[0] in e_start_letters:
+                    # einfachsten
+                    if (
+                        not text.endswith("en")
+                        and not text.endswith("in")
+                        and not text.endswith("ön")
+                        and text[-1] != "h"
+                        and ending[0:1] != "st"
+                    ) or ending[0] == "n":
+                        text += "e"
+                elif text[-1] == "s":
+                    text += "s"
+                elif text[-1] == "e" and ending[0] == "e":
+                    text = text[0:-1]
 
-    if ending != "" and len(text) > 2:
-        if text.endswith("em"):
-            return text
-
-        e_ending_letters = ["t", "n", "c", "v", "r", "h"]
-        e_start_letters = ["t", "s", "n", "r"]
-        if text[-1] in e_ending_letters and ending[0] in e_start_letters:
-            # einfachsten
-            if (
-                not text.endswith("en")
-                and not text.endswith("in")
-                and not text.endswith("ön")
-                and text[-1] != "h"
-                and ending[0:1] != "st"
-            ) or ending[0] == "n":
-                text += "e"
-        elif text[-1] == "s":
-            text += "s"
-        elif text[-1] == "e" and ending[0] == "e":
-            text = text[0:-1]
+    logging.error(
+        f"German verb declension not found for '{a_text}' (lemma '{a_lemma}'): prefix '{prefix}', ending '{ending}' applies to '{original_text}' => {text}"
+    )
 
     return text + ending
 
@@ -3262,43 +3282,57 @@ def fetch_flexion(token: Token) -> str | None:
 def align_noun_form(lang: str, a_token: Token, b_token: Token) -> str:
     b_text = b_token.text
 
-    if a_token.morph.get("Number") == b_token.morph.get("Number") or b_text == "they":
-        return b_text
-
     if lang == "de":
         a_result = fetch_declensions(lang, "n", a_token.text)
         if a_result is None:
+            logging.error(f"German noun declension not found for '{a_token.text}'")
+
             return b_text
 
         b_result = fetch_declensions(lang, "n", b_token.text)
         if b_result is None:
+            logging.error(f"German noun declension not found for '{b_token.text}'")
+
             return b_text
 
         target_form = find_matching_form(a_result, a_token.text)
         if target_form is None:
+            logging.error(
+                f"German noun declension form not found for '{a_token.text}': {json.dumps(a_result)}"
+            )
+
             return b_text
 
-        if target_form not in b_result or not b_result[target_form]:
+        text = get_target_form_from_declension(b_result, target_form)
+        if text is None:
+            logging.error(
+                f"German noun target form '{target_form}' for '{b_token.text}' (lemma: '{b_token.lemma_}') missing: '{json.dumps(b_result)}'."
+            )
+
             return b_text
 
-        return b_result[target_form]
+        return text
 
-    is_singular = is_token_singular(lang, b_token)
-
-    b_result = fetch_declensions(lang, "n", b_token.text)
-    if is_singular is True or (is_singular is None and is_token_plural(lang, a_token)):
-        return (
-            b_result["plural"]
-            if b_result is not None
-            and "plural" in b_result
-            and b_result["plural"] is not None
-            else Noun(b_text).plural()
-        )
-
-    if is_singular is False:
+    if b_text == "they":
         return b_text
 
-    return Noun(b_text).singular()
+    if (
+        is_token_singular(lang, a_token) is not False
+        or is_token_singular(lang, b_token) is not True
+    ):
+        return b_text
+
+    b_result = fetch_declensions(lang, "n", b_token.text)
+
+    text = get_target_form_from_declension(b_result, "plural")
+    if text is None:
+        logging.error(
+            f"English noun plural for '{b_token.text}' (lemma: '{b_token.lemma_}') missing: '{json.dumps(b_result)}'."
+        )
+
+        return Noun(b_text).plural()
+
+    return text
 
 
 def align_adjective_form_english(
@@ -3326,24 +3360,39 @@ def align_adjective_form_english(
             target_form = None
 
     if target_form is None:
+        logging.error(
+            f"English adjective target form could not be determined for '{a_token.text}' (lemma: '{a_token.lemma_}')."
+        )
+
         return b_token.text
 
     if b_result is None:
         b_adjective = Adjective(b_token.lemma_)
 
         if target_form == "singular":
-            return b_adjective.singular()
-        if target_form == "comparative":
-            return b_adjective.comparative()
-        if target_form == "superlative":
-            return b_adjective.superlative()
+            text = b_adjective.singular()
+        elif target_form == "comparative":
+            text = b_adjective.comparative()
+        elif target_form == "superlative":
+            text = b_adjective.superlative()
+        else:
+            text = b_token.text
 
-        return b_token.text
+        logging.error(
+            f"English adjective data missing for '{b_token.text}' (lemma: '{b_token.lemma_}'), generated '{text}' for target form '{target_form}'."
+        )
 
-    if target_form not in b_result or not b_result[target_form]:
-        return b_token.text
+        return text
 
-    return b_result[target_form]
+    text = get_target_form_from_declension(b_result, target_form)
+    if text is None:
+        logging.error(
+            f"English adjective target form {target_form} for '{b_token.text}' (lemma: '{b_token.lemma_}') missing: {json.dump(b_result)}"
+        )
+
+        return text
+
+    return text
 
 
 def align_adjective_form_german(
@@ -3355,43 +3404,38 @@ def align_adjective_form_german(
         if a_result["is_absolute"] == False:
             return b_token.text
 
-        if b_result is not None and b_result["is_absolute"] == True:
-            return b_token.text
-
-    ending = "sten"
-    if a_text.endswith(ending):
-        if b_token.text.endswith("t") or b_token.text.endswith("s"):
-            ending = "e" + ending
-        return b_token.text + ending
-
-    ending = "ste"
-    if a_text.endswith(ending):
-        if b_token.text.endswith("t") or b_token.text.endswith("s"):
-            ending = "e" + ending
-        return b_token.text + ending
+    if b_result is not None and b_result["is_absolute"] == True:
+        return b_token.text
 
     if len(a_text) < 2:
-        return b_token.text
+        ending = ""
+    elif a_text.endswith("sten"):
+        ending = "sten"
+    elif a_text.endswith("ste"):
+        ending = "ste"
+    else:
+        ending = a_text[-2:]
+        if ending[0] != "e":
+            ending = ending[1:]
 
-    ending = a_text[-2:]
     if ending[0] != "e":
+        if not ending.startswith("ste"):
+            ending = ""
+        elif b_token.text.endswith("t") or b_token.text.endswith("s"):
+            ending = "e" + ending
+    elif b_token.text[-1] == "e":
         ending = ending[1:]
 
-    if ending[0] != "e":
-        return b_token.text
+    text = b_token.text + ending
 
-    if b_token.text[-1] == "e":
-        ending = ending[1:]
+    logging.error(f"German adjective for '{b_token.text}' generated as {text}")
 
-    return b_token.text + ending
+    return text
 
 
 def align_adjective_form(lang: str, a_token: Token, b_token: Token) -> str:
     a_result = fetch_declensions(lang, "a", a_token.text)
-
     b_result = fetch_declensions(lang, "a", b_token.text)
-    if b_result is None:
-        b_result = fetch_declensions(lang, "a", b_token.text)
 
     if lang == "de":
         return align_adjective_form_german(a_token, b_token, a_result, b_result)
@@ -3514,7 +3558,9 @@ def align_verb_form_german(a_text: str, a_token: Token, b_token: Token) -> str:
         if form in b_result and b_result[form]:
             return b_result[form]
 
-    return add_declension_german(b_text, a_text, a_token.lemma_, injected_string)
+    return generate_german_verb_declension(
+        b_text, a_text, a_token.lemma_, injected_string
+    )
 
 
 def align_verb_form_english(a_text: str, b_token: Token) -> str:
@@ -3537,6 +3583,10 @@ def align_verb_form_english(a_text: str, b_token: Token) -> str:
         else:
             target_form = None
 
+        logging.error(
+            f"English verb target form '{str(target_form)}' determined via fallback for '{a_text}'."
+        )
+
     if target_form is None:
         return b_token.lemma_
 
@@ -3544,20 +3594,31 @@ def align_verb_form_english(a_text: str, b_token: Token) -> str:
         b_verb = Verb(b_token.lemma_)
 
         if target_form == "third_person_singular":
-            return b_verb.singular()
+            text = b_verb.singular()
         elif target_form == "past_tense":
-            return b_verb.past()
+            text = b_verb.past()
         elif target_form == "present_participle":
-            return b_verb.pres_part()
+            text = b_verb.pres_part()
         elif target_form == "past_participle":
-            return b_verb.past_part()
+            text = b_verb.past_part()
+        else:
+            text = b_token.lemma_
 
-        return b_token.lemma_
+        logging.error(
+            f"English verb target form '{target_form}' for '{b_token.text}' (lemma: '{b_token.lemma_}') generated '{text}'."
+        )
 
-    if target_form not in b_result or not b_result[target_form]:
-        return b_token.lemma_
+        return text
 
-    return b_result[target_form]
+    text = get_target_form_from_declension(b_result, target_form)
+    if text is None:
+        logging.error(
+            f"English verb target form '{target_form}' for '{b_token.text}' (lemma: '{b_token.lemma_}') missing: '{json.dumps(b_result)}'."
+        )
+
+        return text
+
+    return text
 
 
 def align_verb_form(lang: str, a_text: str, a_token: Token, b_token: Token) -> str:
