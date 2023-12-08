@@ -2453,11 +2453,6 @@ def fetch_declensions(lang: str, word_type: str, text: str) -> dict:
     if len(rows):
         result = dict(zip(declensions_config[lang][word_type]["columns"], rows[0]))
 
-    if result is None:
-        logging.error(
-            f"Could not find {word_type} form for '{text}'",
-        )
-
     return result
 
 
