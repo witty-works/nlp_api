@@ -30,13 +30,13 @@
                     "text": "Guten Tag"
                 },
                 {
-                    "text": "Hallo"
+                    "text": "Liebe"
                 },
                 {
-                    "text": "Liebe*r"
+                    "text": "Liebe alle"
                 },
                 {
-                    "text": "Liebe/Lieber"
+                    "text": "Hallo zusammen"
                 }
             ],
             "category": "acquired-diversity",
@@ -51,7 +51,7 @@
             "label": "Erworbene Diversität: Förmlichkeit",
             "proficiency_level": "unconscious_bias",
             "start": 0,
-            "subcategory": "advanced_formality",
+            "subcategory": "formality_advanced",
             "text": "Sehr geehrte"
         },
         {
@@ -140,41 +140,12 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 57,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "Ehrgeiz"
-        },
-        {
-            "alternatives": [
-                {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "einen langen Atem haben"
-                },
-                {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "Fähigkeit, an Dingen dranzubleiben"
-                }
-            ],
-            "category": "social-motive",
-            "context": "Sehr geehrte Kollegen\n  Wir sind eine Mannschaft, in der Ehrgeiz und\nDurchhaltevermögen zählen. Wir lieben es, herausgefordert zu werden.\nIch zähle auf euch.\nFreundliche\nGrüsse\nNadia",
-            "end": 87,
-            "explanation": {
-                "content": "video",
-                "icon": "😒",
-                "text": "Spricht kooperativ denkende Menschen nicht an",
-                "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Soziale Motivation: Agentische Sprache",
-            "proficiency_level": "unconscious_bias",
-            "start": 69,
-            "subcategory": "agentic",
-            "text": "Durchhaltevermögen"
         },
         {
             "alternatives": [],
@@ -211,11 +182,11 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 111,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "herausgefordert"
         },
         {
@@ -245,11 +216,11 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 142,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "zähle auf"
         },
         {

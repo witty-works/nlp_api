@@ -6,7 +6,7 @@ groups = ["default", "dev"]
 cross_platform = true
 static_urls = false
 lock_version = "4.3"
-content_hash = "sha256:81ac752886e8296c107ec9752c306b1cc028c0f729682303aeae903b93ea1754"
+content_hash = "sha256:6cb7aa87bdc0a673baebbdad8c4f05b0b67b23e1d42483c09654b14b7ea88bb8"
 
 [[package]]
 name = "aiofiles"

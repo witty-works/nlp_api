@@ -138,6 +138,12 @@
         {
             "alternatives": [
                 {
+                    "text": "team"
+                },
+                {
+                    "text": "crowd"
+                },
+                {
                     "text": "people"
                 },
                 {
@@ -145,12 +151,6 @@
                 },
                 {
                     "text": "friends"
-                },
-                {
-                    "text": "all"
-                },
-                {
-                    "text": "you all"
                 }
             ],
             "category": "gender-orientation",
@@ -189,16 +189,19 @@
         {
             "alternatives": [
                 {
-                    "text": "growth mindset"
-                },
-                {
                     "text": "dedication"
                 },
                 {
-                    "text": "willingness to go after a dream"
+                    "text": "goals"
                 },
                 {
-                    "text": "enthusiasm for working toward goals"
+                    "text": "plans"
+                },
+                {
+                    "text": "career goals"
+                },
+                {
+                    "text": "dreams"
                 }
             ],
             "category": "social-motive",
@@ -210,11 +213,11 @@
                 "text": "Doesn’t resonate with team-minded people",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Social Motive: Agentic language",
             "proficiency_level": "unconscious_bias",
             "start": 30,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "ambition"
         },
         {
@@ -244,11 +247,11 @@
                 "text": "Doesn’t resonate with team-minded people",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Social Motive: Agentic language",
             "proficiency_level": "unconscious_bias",
             "start": 43,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "perseverance"
         },
         {
@@ -270,11 +273,17 @@
             "label": "Cultural Diversity: Filler words",
             "proficiency_level": "unconscious_bias",
             "start": 321,
-            "subcategory": "advanced_filler",
+            "subcategory": "filler_advanced",
             "text": "generally"
         },
         {
             "alternatives": [
+                {
+                    "text": "team"
+                },
+                {
+                    "text": "crowd"
+                },
                 {
                     "text": "people"
                 },
@@ -283,12 +292,6 @@
                 },
                 {
                     "text": "friends"
-                },
-                {
-                    "text": "all"
-                },
-                {
-                    "text": "you all"
                 }
             ],
             "category": "gender-orientation",
@@ -327,16 +330,19 @@
         {
             "alternatives": [
                 {
-                    "text": "growth mindset"
-                },
-                {
                     "text": "dedication"
                 },
                 {
-                    "text": "willingness to go after a dream"
+                    "text": "goals"
                 },
                 {
-                    "text": "enthusiasm for working toward goals"
+                    "text": "plans"
+                },
+                {
+                    "text": "career goals"
+                },
+                {
+                    "text": "dreams"
                 }
             ],
             "category": "social-motive",
@@ -348,11 +354,11 @@
                 "text": "Doesn’t resonate with team-minded people",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Social Motive: Agentic language",
             "proficiency_level": "unconscious_bias",
             "start": 651,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "ambition"
         },
         {
@@ -382,11 +388,11 @@
                 "text": "Doesn’t resonate with team-minded people",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Social Motive: Agentic language",
             "proficiency_level": "unconscious_bias",
             "start": 664,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "perseverance"
         },
         {
@@ -408,7 +414,7 @@
             "label": "Cultural Diversity: Filler words",
             "proficiency_level": "unconscious_bias",
             "start": 942,
-            "subcategory": "advanced_filler",
+            "subcategory": "filler_advanced",
             "text": "generally"
         }
     ]

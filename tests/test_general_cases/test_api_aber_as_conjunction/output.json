@@ -21,7 +21,7 @@
             "label": "Kulturelle Diversität: Füllwörter",
             "proficiency_level": "unconscious_bias",
             "start": 80,
-            "subcategory": "advanced_filler",
+            "subcategory": "filler_advanced",
             "text": "so"
         },
         {
@@ -43,7 +43,7 @@
             "label": "Kulturelle Diversität: Füllwörter",
             "proficiency_level": "unconscious_bias",
             "start": 117,
-            "subcategory": "advanced_filler",
+            "subcategory": "filler_advanced",
             "text": "aber"
         }
     ]

@@ -23,11 +23,11 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 4,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "selbstständiger"
         },
         {
@@ -37,6 +37,9 @@
                 },
                 {
                     "text": "Projektleiterin/Projektleiter"
+                },
+                {
+                    "text": "Projektleitung"
                 }
             ],
             "category": "gender-orientation",
@@ -48,11 +51,11 @@
                 "text": "Bedient altmodisches Konzept von Führung",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/führungsbild?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Geschlecht + Orientierung: Führungsbild",
             "proficiency_level": "unconscious_bias",
             "start": 20,
-            "subcategory": "leadership",
+            "subcategory": "leadership_advanced",
             "text": "Projektleiter"
         },
         {
@@ -79,11 +82,11 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 34,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "leisten"
         },
         {
@@ -107,11 +110,11 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 46,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "anspruchsvolle"
         },
         {
@@ -149,11 +152,11 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 111,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "ambitionierten"
         },
         {
@@ -197,9 +200,6 @@
                 },
                 {
                     "text": "fleißig"
-                },
-                {
-                    "text": "engagiert und fokussiert"
                 }
             ],
             "category": "social-motive",
@@ -211,11 +211,11 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 135,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "zielstrebig"
         },
         {
@@ -227,13 +227,10 @@
                     "text": "Teamziele"
                 },
                 {
-                    "text": "zuverlässiges Ergebnisse"
+                    "text": "zuverlässige Ergebnisse"
                 },
                 {
                     "text": "Sternstunden"
-                },
-                {
-                    "text": "zuverlässige Ergebnisse"
                 }
             ],
             "category": "social-motive",
@@ -245,11 +242,11 @@
                 "text": "Überzogene Aussagen wirken weniger vertrauenswürdig",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/übertreibung?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Soziale Motivation: Übertreibung",
             "proficiency_level": "unconscious_bias",
             "start": 152,
-            "subcategory": "exaggerating",
+            "subcategory": "exaggerating_advanced",
             "text": "Höchstleistungen"
         }
     ]

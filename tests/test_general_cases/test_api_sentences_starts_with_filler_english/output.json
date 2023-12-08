@@ -24,7 +24,7 @@
         {
             "alternatives": [
                 {
-                    "text": " "
+                    "text": ""
                 }
             ],
             "category": "orthography",
@@ -59,7 +59,7 @@
             "label": "Cultural Diversity: Filler words",
             "proficiency_level": "unconscious_bias",
             "start": 0,
-            "subcategory": "advanced_filler",
+            "subcategory": "filler_advanced",
             "text": "Rather"
         }
     ]

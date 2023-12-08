@@ -25,15 +25,6 @@
             "alternatives": [
                 {
                     "text": "Working-class"
-                },
-                {
-                    "text": "Socio-economically disadvantaged"
-                },
-                {
-                    "text": "From an economically disadvantaged background"
-                },
-                {
-                    "text": "From underprivileged and underserved communities"
                 }
             ],
             "category": "acquired-diversity",
@@ -55,15 +46,6 @@
             "alternatives": [
                 {
                     "text": "working-class"
-                },
-                {
-                    "text": "socio-economically disadvantaged"
-                },
-                {
-                    "text": "from an economically disadvantaged background"
-                },
-                {
-                    "text": "from underprivileged and underserved communities"
                 }
             ],
             "category": "acquired-diversity",
@@ -74,26 +56,29 @@
                 "text": "Implies socioeconomic status sets the value of a person ",
                 "url": "https://www.witty.works/en/categories/acquired-diversity/classism?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Acquired Diversity: Classism",
             "proficiency_level": "unconscious_bias",
             "start": 16,
-            "subcategory": "classism",
+            "subcategory": "classism_advanced",
             "text": "low-class"
         },
         {
             "alternatives": [
                 {
-                    "context": "about a person",
-                    "text": "a contributing to business success"
+                    "context": "💡 about a person",
+                    "inspiration": true,
+                    "text": "contributing to business success"
                 },
                 {
-                    "context": "about a person",
+                    "context": "💡 about a person",
+                    "inspiration": true,
                     "text": "implementing goals with enthusiasm"
                 },
                 {
-                    "context": "about a person",
-                    "text": "a fulfilling customer expectations"
+                    "context": "💡 about a person",
+                    "inspiration": true,
+                    "text": "fulfilling customer expectations"
                 }
             ],
             "category": "social-motive",
@@ -101,16 +86,17 @@
             "end": 89,
             "explanation": {
                 "content": "advanced",
+                "context": "Don't use this word to describe a person",
                 "icon": "😮‍💨",
                 "text": "Over-the-top statements make you sound less trustworthy",
                 "url": "https://www.witty.works/en/categories/social-motive/exaggeration?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Social Motive: Exaggeration",
             "proficiency_level": "unconscious_bias",
-            "start": 73,
-            "subcategory": "exaggerating",
-            "text": "a top-performing"
+            "start": 75,
+            "subcategory": "exaggerating_advanced",
+            "text": "top-performing"
         },
         {
             "alternatives": [
@@ -149,26 +135,29 @@
                 "text": "Over-the-top statements make you sound less trustworthy",
                 "url": "https://www.witty.works/en/categories/social-motive/exaggeration?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Social Motive: Exaggeration",
             "proficiency_level": "unconscious_bias",
             "start": 108,
-            "subcategory": "exaggerating",
+            "subcategory": "exaggerating_advanced",
             "text": "top-performer"
         },
         {
             "alternatives": [
                 {
-                    "context": "about a person",
-                    "text": "a contributing to business success"
+                    "context": "💡 about a person",
+                    "inspiration": true,
+                    "text": "contributing to business success"
                 },
                 {
-                    "context": "about a person",
+                    "context": "💡 about a person",
+                    "inspiration": true,
                     "text": "implementing goals with enthusiasm"
                 },
                 {
-                    "context": "about a person",
-                    "text": "a fulfilling customer expectations"
+                    "context": "💡 about a person",
+                    "inspiration": true,
+                    "text": "fulfilling customer expectations"
                 }
             ],
             "category": "social-motive",
@@ -176,16 +165,17 @@
             "end": 146,
             "explanation": {
                 "content": "advanced",
+                "context": "Don't use this word to describe a person",
                 "icon": "😮‍💨",
                 "text": "Over-the-top statements make you sound less trustworthy",
                 "url": "https://www.witty.works/en/categories/social-motive/exaggeration?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Social Motive: Exaggeration",
             "proficiency_level": "unconscious_bias",
-            "start": 130,
-            "subcategory": "exaggerating",
-            "text": "a top-performing"
+            "start": 132,
+            "subcategory": "exaggerating_advanced",
+            "text": "top-performing"
         },
         {
             "alternatives": [],

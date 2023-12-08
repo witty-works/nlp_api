@@ -5,16 +5,16 @@
         {
             "alternatives": [
                 {
-                    "text": "seinE Begleitung"
-                },
-                {
-                    "text": "seine/sein Begleitung"
-                },
-                {
                     "text": "seinE PartnerIn"
                 },
                 {
                     "text": "seine/sein Partnerin/Partner"
+                },
+                {
+                    "text": "seinE Begleitung"
+                },
+                {
+                    "text": "seine/sein Begleitung"
                 }
             ],
             "category": "gender-orientation",
@@ -26,11 +26,11 @@
                 "text": "Bedient die heteronormative Sicht von Geschlechteridentität",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäres-geschlecht?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Geschlecht + Orientierung: Binäres Geschlecht",
             "proficiency_level": "unconscious_bias",
             "start": 8,
-            "subcategory": "gender_identity",
+            "subcategory": "gender_identity_advanced",
             "text": "seine Frau"
         }
     ]

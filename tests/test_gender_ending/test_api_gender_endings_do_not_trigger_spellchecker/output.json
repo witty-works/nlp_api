@@ -20,7 +20,7 @@
             "label": "Geschlecht + Orientierung: Inklusive Endung",
             "proficiency_level": "unconscious_bias",
             "start": 29,
-            "subcategory": "advanced_gendered_denominations_ending",
+            "subcategory": "gendered_denominations_ending_advanced",
             "text": "*innen"
         },
         {
@@ -41,7 +41,7 @@
             "label": "Geschlecht + Orientierung: Inklusive Endung",
             "proficiency_level": "unconscious_bias",
             "start": 44,
-            "subcategory": "advanced_gendered_denominations_ending",
+            "subcategory": "gendered_denominations_ending_advanced",
             "text": "*in"
         },
         {
@@ -62,7 +62,7 @@
             "label": "Geschlecht + Orientierung: Inklusive Endung",
             "proficiency_level": "unconscious_bias",
             "start": 56,
-            "subcategory": "advanced_gendered_denominations_ending",
+            "subcategory": "gendered_denominations_ending_advanced",
             "text": "die:der"
         },
         {
@@ -83,7 +83,7 @@
             "label": "Geschlecht + Orientierung: Inklusive Endung",
             "proficiency_level": "unconscious_bias",
             "start": 68,
-            "subcategory": "advanced_gendered_denominations_ending",
+            "subcategory": "gendered_denominations_ending_advanced",
             "text": ":in"
         },
         {

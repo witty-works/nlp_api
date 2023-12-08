@@ -5,21 +5,24 @@
         {
             "alternatives": [
                 {
-                    "text": "resilient"
+                    "text": "erarbeiten"
                 },
                 {
-                    "text": "erfahren"
+                    "text": "erwerben"
                 },
                 {
-                    "text": "geübt"
+                    "text": "dazulernen"
                 },
                 {
-                    "text": "gelassen"
+                    "text": "interessieren"
+                },
+                {
+                    "text": "insistieren"
                 }
             ],
             "category": "social-motive",
-            "context": "Dieser Mensch ist hartgesotten.",
-            "end": 30,
+            "context": "Welche Resultate gewannen sie daraus?",
+            "end": 25,
             "explanation": {
                 "content": "video",
                 "icon": "😒",
@@ -29,9 +32,9 @@
             "gravity": 3.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
-            "start": 18,
+            "start": 17,
             "subcategory": "agentic_advanced",
-            "text": "hartgesotten"
+            "text": "gewannen"
         }
     ]
 }

@@ -8,10 +8,10 @@
                     "text": "Unsere Leitungsperson"
                 },
                 {
-                    "text": "Unser*e Vorgesetzte*r"
+                    "text": "Unsere Leitung"
                 },
                 {
-                    "text": "Unser/e Vorgesetzte/Vorgesetzter"
+                    "text": "Unser Management"
                 }
             ],
             "category": "gender-orientation",
@@ -23,11 +23,11 @@
                 "text": "Bedient altmodisches Konzept von Führung",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/führungsbild?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Geschlecht + Orientierung: Führungsbild",
             "proficiency_level": "unconscious_bias",
             "start": 0,
-            "subcategory": "leadership",
+            "subcategory": "leadership_advanced",
             "text": "Unser Boss"
         }
     ]

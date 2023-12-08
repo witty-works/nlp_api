@@ -517,7 +517,7 @@ def set_redis():
         "name": "Tests Default",
         "config": {
             "categories": {
-                "advanced_plain_language": {"value": False, "status": "force"},
+                "plain_language_advanced": {"value": False, "status": "force"},
             },
         },
         "false_positives": [],
@@ -559,7 +559,7 @@ def set_redis():
                 "status": "force",
             },
             "categories": {
-                "advanced_plain_language": {"value": False, "status": "force"},
+                "plain_language_advanced": {"value": False, "status": "force"},
                 "emotional_security": {"value": True, "status": "force"},
                 "abbreviation": {"value": False, "status": "force"},
                 "belief": {"value": True, "status": "force"},
@@ -1264,17 +1264,23 @@ def test_rule():
             "lang": "en",
             "lemma": "have special need",
             "subcategories": ["corporate_rules"],
-            "word_types": "v|a|s",
-            "lower_case": True,
+            "word_types": [
+                {"word_type": "v", "lower_case": True, "lemmatize": True},
+                {"word_type": "a", "lower_case": True, "lemmatize": True},
+                {"word_type": "n", "lower_case": True, "lemmatize": True},
+            ],
             "alternatives": [
                 {
                     "lemma": "foo",
+                    "words": ("foo",),
                 },
                 {
                     "lemma": "bar",
+                    "words": ("bar",),
                 },
                 {
                     "lemma": "ding",
+                    "words": ("ding",),
                     "label": "dong",
                 },
             ],
@@ -1298,6 +1304,44 @@ def test_rule():
                 ],
                 "label": "Dictionary",
                 "explanation": {"text": "", "icon": "❗"},
+                "gravity": 0.9,
+            }
+        ]
+
+        assert response_content == expected
+
+        request_data = {
+            "text": "Du arbeitest sehr sehr langsam",
+            "lang": "de",
+            "lemma": "langsam",
+            "pattern": "v|a*|l",
+            "label": "bar",
+            "subcategories": ["corporate_rules"],
+            "word_types": [
+                {"word_type": "a", "lower_case": True, "lemmatize": True},
+            ],
+            "alternatives": [
+                {
+                    "lemma": "foo",
+                    "words": ("foo",),
+                }
+            ],
+        }
+        response = client.post("/debug/rule", json=request_data)
+        assert response.status_code == 200
+        response_content = json.loads(response.content)
+
+        expected = [
+            {
+                "text": "langsam",
+                "context": "Du arbeitest sehr sehr langsam",
+                "category": "corporate_rules",
+                "subcategory": "corporate_rules",
+                "start": 23,
+                "end": 30,
+                "alternatives": [{"text": "foo"}],
+                "label": "Wörterbuch",
+                "explanation": {"text": "", "icon": "❗", "context": "bar"},
                 "gravity": 0.9,
             }
         ]

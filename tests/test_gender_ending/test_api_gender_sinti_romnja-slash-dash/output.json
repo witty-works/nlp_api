@@ -8,7 +8,7 @@
                     "text": "Sinti/-ze und Rom/-nja"
                 },
                 {
-                    "text": "Sintize und Sinti und Romnja/Roma"
+                    "text": "Sintize/Sinti und Romnja/Roma"
                 },
                 {
                     "text": "Rom/-nja"
@@ -28,11 +28,11 @@
                 "text": "Hat rassistische Hintergründe oder Konnotationen  ",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/abstammung?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Kulturelle Diversität: Abstammung",
             "proficiency_level": "unconscious_bias",
             "start": 14,
-            "subcategory": "racist_source",
+            "subcategory": "racist_source_advanced",
             "text": "Zigeuner"
         },
         {
@@ -61,20 +61,29 @@
                 "text": "Hat rassistische Hintergründe oder Konnotationen  ",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/abstammung?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Kulturelle Diversität: Abstammung",
             "proficiency_level": "unconscious_bias",
             "start": 36,
-            "subcategory": "racist_source",
+            "subcategory": "racist_source_advanced",
             "text": "Zigeuner"
         },
         {
             "alternatives": [
                 {
-                    "text": "Rom/ni"
+                    "text": "Rom/-ni"
                 },
                 {
-                    "text": "Sint/iza"
+                    "text": "Romni/Rom"
+                },
+                {
+                    "text": "Sint/-iza"
+                },
+                {
+                    "text": "Sintiza/Sinto"
+                },
+                {
+                    "text": "Sint/-eza"
                 }
             ],
             "category": "cultural-diversity",
@@ -85,11 +94,11 @@
                 "text": "Hat rassistische Hintergründe oder Konnotationen  ",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/abstammung?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Kulturelle Diversität: Abstammung",
             "proficiency_level": "unconscious_bias",
             "start": 57,
-            "subcategory": "racist_source",
+            "subcategory": "racist_source_advanced",
             "text": "Zigeunerin"
         }
     ]

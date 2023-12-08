@@ -6,25 +6,78 @@
             "alternatives": [
                 {
                     "text": "a substance user"
-                },
-                {
-                    "text": "substance users"
                 }
             ],
             "category": "ability-physicality",
-            "context": "Are you an addict",
+            "context": "Are you an addict? We do use the phrase coloured people. We use PoC.",
             "end": 17,
             "explanation": {
                 "icon": "😒",
-                "text": "Frames authentic behavior as undesirable and other",
+                "text": "Frames authentic behaviour as undesirable and other",
                 "url": "https://www.witty.works/en/categories/ability-physicality/behavior?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Ability + Physicality: Behavior",
+            "gravity": 3.0,
+            "label": "Ability + Physicality: Behaviour",
             "proficiency_level": "unconscious_bias",
             "start": 8,
-            "subcategory": "behavior",
+            "subcategory": "behavior_advanced",
             "text": "an addict"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "Are you an addict? We do use the phrase coloured people. We use PoC.",
+            "end": 55,
+            "explanation": {
+                "icon": "😒",
+                "text": "Avoid language with racist roots, undertones, or connotations",
+                "url": "https://www.witty.works/en/categories/cultural-diversity/ancestry?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Cultural Diversity: Ancestry",
+            "proficiency_level": "unconscious_bias",
+            "start": 40,
+            "subcategory": "racist_source",
+            "text": "coloured people"
+        },
+        {
+            "alternatives": [
+                {
+                    "context": "in marketing",
+                    "text": "point of contact"
+                },
+                {
+                    "text": "point of contact (POC)"
+                },
+                {
+                    "context": "in film, science, engineering",
+                    "text": "proof of concept (POC)"
+                },
+                {
+                    "text": "People of Colour"
+                },
+                {
+                    "text": "People of Colour (POC)"
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "Are you an addict? We do use the phrase coloured people. We use PoC.",
+            "end": 67,
+            "explanation": {
+                "icon": "😉",
+                "text": "Are you sure people know what this stands for? ",
+                "url": "https://www.witty.works/en/categories/cultural-diversity/abbreviation?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Cultural Diversity: Abbreviation",
+            "proficiency_level": "unconscious_bias",
+            "start": 64,
+            "subcategory": "abbreviation_advanced",
+            "text": "PoC"
         }
     ]
 }

@@ -36,12 +36,6 @@
         {
             "alternatives": [
                 {
-                    "text": "Auftraggebende"
-                },
-                {
-                    "text": "Bestellende"
-                },
-                {
                     "text": "KundInnen"
                 },
                 {
@@ -49,6 +43,12 @@
                 },
                 {
                     "text": "Kundschaft"
+                },
+                {
+                    "text": "Klientel"
+                },
+                {
+                    "text": "Auftraggebende"
                 }
             ],
             "category": "gender-orientation",

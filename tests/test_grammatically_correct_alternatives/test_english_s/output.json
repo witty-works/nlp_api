@@ -17,11 +17,11 @@
                 "text": "Pronouns that exclude non-binary people",
                 "url": "https://www.witty.works/en/categories/gender-orientation/binary-pronouns?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Gender + Orientation: Binary pronouns",
             "proficiency_level": "unconscious_bias",
             "start": 8,
-            "subcategory": "binary_pronouns",
+            "subcategory": "binary_pronouns_advanced",
             "text": "she decides"
         },
         {
@@ -48,11 +48,11 @@
                 "text": "Doesn’t resonate with team-minded people",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Social Motive: Agentic language",
             "proficiency_level": "unconscious_bias",
             "start": 12,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "decides"
         }
     ]

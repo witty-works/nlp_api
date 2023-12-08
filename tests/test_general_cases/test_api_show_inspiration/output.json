@@ -5,6 +5,9 @@
         {
             "alternatives": [
                 {
+                    "text": "they"
+                },
+                {
                     "text": "a press officer"
                 },
                 {
@@ -16,9 +19,6 @@
                 {
                     "context": "if gender is known",
                     "text": "a spokeswoman"
-                },
-                {
-                    "text": "they"
                 }
             ],
             "category": "gender-orientation",

@@ -67,6 +67,37 @@
         {
             "alternatives": [
                 {
+                    "text": "Sie*er"
+                },
+                {
+                    "text": "Sie/er"
+                },
+                {
+                    "text": "Du"
+                },
+                {
+                    "text": "Dich"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Sie ist eine Kund/in auf LinkedIn. Er ist mitarbeiter und sie sind Ärzt(-innen).",
+            "end": 3,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Binäre Pronomen",
+            "proficiency_level": "unconscious_bias",
+            "start": 0,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "Sie"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "*in"
                 }
             ],
@@ -82,8 +113,73 @@
             "label": "Geschlecht + Orientierung: Inklusive Endung",
             "proficiency_level": "unconscious_bias",
             "start": 17,
-            "subcategory": "advanced_gendered_denominations_ending",
+            "subcategory": "gendered_denominations_ending_advanced",
             "text": "/in"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Sie*er"
+                },
+                {
+                    "text": "Sie/er"
+                },
+                {
+                    "text": "Du"
+                },
+                {
+                    "text": "Sie"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Sie ist eine Kund/in auf LinkedIn. Er ist mitarbeiter und sie sind Ärzt(-innen).",
+            "end": 37,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Binäre Pronomen",
+            "proficiency_level": "unconscious_bias",
+            "start": 35,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "Er"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Mitarbeiter*in"
+                },
+                {
+                    "text": "Mitarbeiterin/Mitarbeiter"
+                },
+                {
+                    "text": "Personal"
+                },
+                {
+                    "text": "Mitarbeiterschaft"
+                },
+                {
+                    "text": "Belegschaft"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Sie ist eine Kund/in auf LinkedIn. Er ist mitarbeiter und sie sind Ärzt(-innen).",
+            "end": 53,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Viele denken zuerst an bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufe",
+            "proficiency_level": "unconscious_bias",
+            "start": 42,
+            "subcategory": "titles",
+            "text": "mitarbeiter"
         },
         {
             "alternatives": [
@@ -103,7 +199,7 @@
             "label": "Geschlecht + Orientierung: Inklusive Endung",
             "proficiency_level": "unconscious_bias",
             "start": 71,
-            "subcategory": "advanced_gendered_denominations_ending",
+            "subcategory": "gendered_denominations_ending_advanced",
             "text": "(-innen)"
         }
     ]

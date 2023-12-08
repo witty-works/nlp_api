@@ -43,3 +43,4 @@ requirements.txt
 **/_connections_variables.tf.json
 **/_md_variables.tf.json
 **/_params_variables.tf.json
+database/db.sqlite3

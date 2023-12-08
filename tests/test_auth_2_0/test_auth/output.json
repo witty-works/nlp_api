@@ -5,10 +5,6 @@
                 "status": "force",
                 "value": false
             },
-            "advanced_plain_language": {
-                "status": "force",
-                "value": false
-            },
             "belief": {
                 "status": "force",
                 "value": true
@@ -16,6 +12,10 @@
             "emotional_security": {
                 "status": "force",
                 "value": true
+            },
+            "plain_language_advanced": {
+                "status": "force",
+                "value": false
             }
         },
         "german_gender_ending": {
