@@ -3294,13 +3294,15 @@ def align_noun_form(lang: str, a_token: Token, b_token: Token) -> str:
     if lang == "de":
         a_result = fetch_declensions(lang, "n", a_token.text)
         if a_result is None:
-            logging.error(f"German noun declension not found for '{a_token.text}'")
+            if not a_token.text.isupper() and len(a_token.text) > 2:
+                logging.error(f"German noun declension not found for '{a_token.text}'")
 
             return b_text
 
         b_result = fetch_declensions(lang, "n", b_token.text)
         if b_result is None:
-            logging.error(f"German noun declension not found for '{b_token.text}'")
+            if not b_token.text.isupper() and len(b_token.text) > 2:
+                logging.error(f"German noun declension not found for '{b_token.text}'")
 
             return b_text
 
@@ -3369,9 +3371,10 @@ def align_adjective_form_english(
             target_form = None
 
     if target_form is None:
-        logging.error(
-            f"English adjective target form could not be determined for '{a_token.text}' (lemma: '{a_token.lemma_}')."
-        )
+        if not a_token.text.isupper() and len(a_token.text) > 2:
+            logging.error(
+                f"English adjective target form could not be determined for '{a_token.text}' (lemma: '{a_token.lemma_}')."
+            )
 
         return b_token.text
 
@@ -3395,11 +3398,12 @@ def align_adjective_form_english(
 
     text = get_target_form_from_declension(b_result, target_form)
     if text is None:
-        logging.error(
-            f"English adjective target form {target_form} for '{b_token.text}' (lemma: '{b_token.lemma_}') missing: {json.dump(b_result)}"
-        )
+        if not b_token.text.isupper() and len(b_token.text) > 2:
+            logging.error(
+                f"English adjective target form {target_form} for '{b_token.text}' (lemma: '{b_token.lemma_}') missing: {json.dump(b_result)}"
+            )
 
-        return text
+        return b_token.text
 
     return text
 
@@ -3436,8 +3440,6 @@ def align_adjective_form_german(
         ending = ending[1:]
 
     text = b_token.text + ending
-
-    logging.error(f"German adjective for '{b_token.text}' generated as {text}")
 
     return text
 
