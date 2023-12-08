@@ -2948,9 +2948,16 @@ def is_word_match(
     lang: str,
     token: Token,
     word: str,
-    word_type: dict,
+    word_type: dict | None,
     suffix: str,
 ) -> bool:
+    if word_type is None:
+        word_type = {
+            "word_type": "",
+            "lemmatize": True,
+            "lower_case": True,
+        }
+
     token_word = token.lemma_ if word_type["lemmatize"] else token.text
 
     if word_type["lower_case"] and (
@@ -2977,28 +2984,32 @@ def is_phrase_match(
     suffix = rule.type == RuleType.SUFFIX
 
     word_count = len(rule.words)
-    if len(rule.word_types) > 1:
+    word_types_count = len(rule.word_types)
+    if word_count > 1:
         suffix = False
 
     text = ""
     for k in range(word_count):
+        if k > 0:
+            text += word_token.whitespace_
+
         try:
-            if k > 0:
-                text += word_token.whitespace_
-
             word_token = tokens[i + k]
-            if not is_word_match(
-                lang,
-                word_token,
-                rule.words[k],
-                rule.word_types[k],
-                suffix,
-            ):
-                return None, None
-
-            text += word_token.text
         except IndexError:
             return None, None
+
+        word_type = rule.word_types[k] if k < word_types_count else None
+
+        if not is_word_match(
+            lang,
+            word_token,
+            rule.words[k],
+            word_type,
+            suffix,
+        ):
+            return None, None
+
+        text += word_token.text
 
     if false_positive_matcher is not None and is_false_positive_match(
         false_positive_matcher, i, tokens, rule.lemma
