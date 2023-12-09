@@ -296,6 +296,8 @@ def fetch_static_rules(langs):
                     "belief_advanced": [
                         "woman_with_headscarf",
                         "man_with_turban",
+                        "man_in_lotus_position",  # Representing meditation, often associated with Eastern religions
+                        "man_with_skullcap",  # Representing a man wearing a skullcap, found in various religious traditions
                     ],
                     "vision_advanced": [
                         "person_with_white_cane",
@@ -309,9 +311,128 @@ def fetch_static_rules(langs):
                     "age_young_advanced": [
                         "child",
                     ],
+                    "culture_advanced": [
+                        "man_with_chinese_cap",  # Representing a man wearing a traditional Chinese cap, linked to certain cultural practices
+                    ],
                 },
                 "rules": [
                     "person",
+                ],
+            },
+            "holiday_symbols": {
+                "skin_tone": False,
+                "subcategory": {
+                    "belief": [
+                        "gift",  # Universal gift-giving
+                        "star",  # General festivity
+                        "candle",  # Diwali, Hanukkah
+                        "party_popper",  # Celebration
+                        "palm_tree",  # Palm tree
+                        "snowflake",  # Winter theme
+                        "snowman",  # Winter theme
+                        "menorah",  # Hanukkah
+                        "dreidel",  # Hanukkah
+                        "star_of_david",  # Judaism symbol
+                    ],
+                },
+                "rules": [
+                    "Christmas_tree",
+                ],
+            },
+            "holiday_santa": {
+                "skin_tone": True,
+                "subcategory": {
+                    "belief": [
+                        "Mrs._Claus",
+                        "Santa_Claus",
+                    ],
+                },
+                "rules": [
+                    "Santa_Claus",
+                    "Mrs._Claus",
+                ],
+            },
+            "military_terms": {
+                "skin_tone": False,
+                "subcategory": {
+                    "military_source": [
+                        "dove",
+                        "peace_symbol",
+                        "white_flag",
+                        "handshake",
+                    ],
+                },
+                "rules": [
+                    "military_helmet",
+                    "crossed_swords",
+                    "shield",
+                    "bomb",
+                    "dagger",
+                ],
+            },
+            "military_medal": {
+                "skin_tone": False,
+                "subcategory": {
+                    "military_source": [
+                        "sports_medal",
+                        "3rd_place_medal",
+                        "2nd_place_medal",
+                        "1st_place_medal",
+                    ],
+                },
+                "rules": [
+                    "military_medal",
+                ],
+            },
+            "gender_orientation_holding_hands": {
+                "skin_tone": True,
+                "subcategory": {
+                    "sexual_orientation": [
+                        "people_holding_hands",
+                        "rainbow_flag",
+                        "transgender_flag",
+                    ],
+                },
+                "rules": [
+                    "man_and_woman_holding_hands",
+                ],
+            },
+            "gender_orientation_love": {
+                "skin_tone": True,
+                "subcategory": {
+                    "sexual_orientation": [
+                        "kiss_woman_woman",
+                        "kiss_man_man",
+                    ],
+                },
+                "rules": [
+                    "kiss_woman_man",
+                    "kiss_man_woman",
+                ],
+            },
+            "cultural_diversity": {
+                "skin_tone": False,
+                "subcategory": {
+                    "culture": [
+                        "globe_with_meridians",
+                        "globe_showing_asia_australia",
+                    ],
+                },
+                "rules": [
+                    "globe_showing_Europe-Africa",
+                    "globe_showing_Americas",
+                ],
+            },
+            "offensive_language": {
+                "skin_tone": False,
+                "subcategory": {
+                    "offensive_language": [
+                        "-",
+                        "stop_sign",
+                    ],
+                },
+                "rules": [
+                    "middle_finger",
                 ],
             },
         },
