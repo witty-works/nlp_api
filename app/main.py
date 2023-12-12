@@ -1694,8 +1694,9 @@ def languagetool_matches(
                 subcategory = "plain_language_advanced"
             elif subcategory == "DIFFICULT_WORDS":
                 if match["rule"]["id"] == "ABKUERZUNG":
-                    subcategory = "abbreviation"
-                elif (
+                    continue
+
+                if (
                     match["rule"]["id"] == "ANGLIZISMEN"
                     or "Fremdwörter" in match["message"]
                 ):
@@ -1725,7 +1726,7 @@ def languagetool_matches(
             except KeyError:
                 pass
 
-        if not subcategory.endswith("abbreviation") and not subcategory.endswith(
+        if not subcategory.startswith("abbreviation") and not subcategory.startswith(
             "anglicism"
         ):
             explanation = match["message"]
@@ -1935,7 +1936,7 @@ def is_false_positive_match(
     false_positive_matcher: list, i: int, tokens: Doc, lemma: str
 ) -> bool:
     index = tokens[i].idx
-    for match_id, start, end in false_positive_matcher:
+    for _, start, end in false_positive_matcher:
         span_false = tokens[start:end]
         if tokens[start:end].lemma_ != lemma and index in range(
             span_false.start_char, span_false.end_char
@@ -4339,11 +4340,26 @@ def regex_match(
     return i
 
 
-def is_false_positive(full_text: str, token: Token, rule: Rule) -> bool:
-    partial_text = full_text[token.idx :]
-    for false_positive in fetch_false_positives(rule):
-        if partial_text.startswith(false_positive):
-            return True
+def is_false_positive(full_text: str, i: int, tokens: Doc, rule: Rule) -> bool:
+    false_positives = fetch_false_positives(rule)
+    if len(false_positives) == 0:
+        return False
+
+    i_window_min = max(0, i - 5)
+    i_window_max = min(len(tokens) - 1, i + 5)
+
+    partial_text = full_text[
+        tokens[i_window_min].idx : tokens[i_window_max].idx
+        + len(tokens[i_window_max].text)
+    ]
+
+    start = tokens[i].idx - tokens[i_window_min].idx
+    end = start + len(tokens[i].text)
+
+    for false_positive in false_positives:
+        for m in re.finditer(re.escape(false_positive), partial_text):
+            if m.start() <= start and m.end() >= end:
+                return True
 
     return False
 
@@ -4525,7 +4541,7 @@ def rule_check(
                 false_positive_matcher,
             )
 
-            if not text or is_false_positive(full_text, token, rule):
+            if not text or is_false_positive(full_text, i, tokens, rule):
                 continue
 
         is_singular = None
