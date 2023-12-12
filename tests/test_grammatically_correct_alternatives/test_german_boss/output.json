@@ -23,11 +23,11 @@
                 "text": "Bedient altmodisches Konzept von Führung",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/führungsbild?reducedView=true"
             },
-            "gravity": 3.0,
+            "gravity": 2.0,
             "label": "Geschlecht + Orientierung: Führungsbild",
             "proficiency_level": "unconscious_bias",
             "start": 0,
-            "subcategory": "leadership_advanced",
+            "subcategory": "leadership",
             "text": "Unser Boss"
         }
     ]
