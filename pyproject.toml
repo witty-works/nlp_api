@@ -49,13 +49,12 @@ dependencies = [
     "spacy-lookups-data",
     "en-core-web-lg @ https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.6.0/en_core_web_lg-3.6.0-py3-none-any.whl",
     "de-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/de_core_news_lg-3.6.0/de_core_news_lg-3.6.0-py3-none-any.whl",
-    "eng>=0.1.1",
     "secure>=0.3.0",
     "spacymoji>=3.0.1",
     "emoji>=0.6.0",
     "cmp-version>=3.0.0",
     "python-jose>=3.3.0",
-    "async-lru>=2.0.4",
+    "eng>=0.1.1",
 ]
 requires-python = ">=3.11"
 license = "Proprietary"

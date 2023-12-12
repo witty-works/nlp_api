@@ -1168,16 +1168,18 @@ async def fetch_user(request: Request):
 
                 if "domain" in config:
                     claims = await decode_b2c_jwt(
+                        redis,
                         ssl_session,
                         request,
                         config["tenant_id"],
                         config["client_id"],
+                        config["expected_scope"],
                         config["domain"],
                         config["policy"],
-                        config["expected_scope"],
                     )
                 else:
                     claims = await decode_jwt(
+                        redis,
                         ssl_session,
                         request,
                         config["tenant_id"],
