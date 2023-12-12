@@ -24,7 +24,7 @@ SOFTWARE.
 
 from fastapi import Request
 from jose import jwt
-from async_lru import alru_cache
+import json
 
 
 class AuthError(Exception):
@@ -45,39 +45,48 @@ def get_unverified_token_claims(request: Request):
     return get_unverified_token_claims_(token)
 
 
-async def get_rsa_key(session, token, url):
+async def get_rsa_key(redis, session, token, url):
     unverified_header = jwt.get_unverified_header(token)
-    return await get_rsa_key_(session, unverified_header["kid"], url)
+    key = "rsa_kid_" + unverified_header["kid"]
+    rsa_key = redis.get(key)
+    if rsa_key:
+        return json.loads(rsa_key)
+
+    rsa_key = await get_rsa_key_(session, unverified_header["kid"], url)
+    redis.set(key, json.dumps(rsa_key))
+
+    return rsa_key
 
 
 async def decode_b2c_jwt(
+    redis,
     session,
     request: Request,
     tenant_id: str,
     client_id: str,
+    scope: str,
     b2c_domain_name: str,
     b2c_policy_name: str,
-    scope: str,
 ):
     token = get_token_auth_header(request)
     issuer = f"https://{b2c_domain_name}.b2clogin.com/{tenant_id}/v2.0/".lower()
     audience = client_id
 
     key_url = f"https://{b2c_domain_name}.b2clogin.com/{b2c_domain_name}.onmicrosoft.com/{b2c_policy_name}/discovery/v2.0/keys"
-    rsa_key = await get_rsa_key(session, token, key_url)
+    rsa_key = await get_rsa_key(redis, session, token, key_url)
 
     return decode_jwt_(token, rsa_key, issuer, audience, scope)
 
 
 async def decode_jwt(
-    session, request: Request, tenant_id: str, client_id: str, scope: str
+    redis, session, request: Request, tenant_id: str, client_id: str, scope: str
 ):
     token = get_token_auth_header(request)
     issuer = f"https://login.microsoftonline.com/{tenant_id}/v2.0"
     audience = f"{client_id}"
 
     key_url = f"https://login.microsoftonline.com/{tenant_id}/discovery/v2.0/keys"
-    rsa_key = await get_rsa_key(session, token, key_url)
+    rsa_key = await get_rsa_key(redis, session, token, key_url)
 
     return decode_jwt_(token, rsa_key, issuer, audience, scope)
 
@@ -156,7 +165,6 @@ def get_unverified_token_claims_(token: str):
     return unverified_claims
 
 
-@alru_cache(maxsize=8)
 async def get_rsa_key_(session, kid, url):
     async with session.get(url) as r:
         if r.status != 200:  # pragma: no cover
