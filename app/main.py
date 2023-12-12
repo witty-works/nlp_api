@@ -95,7 +95,7 @@ from app.rules import fetch_rules, Rule
 from app.sentry import set_up_sentry_sdk
 from app.model import lemma_plural_lookup
 
-version = "1.50.1"
+version = "1.50.2"
 
 categories = get_categories()
 settings = get_settings()
@@ -1168,16 +1168,18 @@ async def fetch_user(request: Request):
 
                 if "domain" in config:
                     claims = await decode_b2c_jwt(
+                        redis,
                         ssl_session,
                         request,
                         config["tenant_id"],
                         config["client_id"],
+                        config["expected_scope"],
                         config["domain"],
                         config["policy"],
-                        config["expected_scope"],
                     )
                 else:
                     claims = await decode_jwt(
+                        redis,
                         ssl_session,
                         request,
                         config["tenant_id"],
