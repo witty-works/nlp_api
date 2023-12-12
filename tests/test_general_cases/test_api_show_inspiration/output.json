@@ -8,6 +8,11 @@
                     "text": "they"
                 },
                 {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "person speaking for (...)"
+                },
+                {
                     "text": "a press officer"
                 },
                 {
@@ -15,10 +20,6 @@
                 },
                 {
                     "text": "a representative"
-                },
-                {
-                    "context": "if gender is known",
-                    "text": "a spokeswoman"
                 }
             ],
             "category": "gender-orientation",

@@ -2353,8 +2353,9 @@ def fetch_rule_alternatives(
     query = f"SELECT {alternative_column_list} FROM rules_alternative WHERE is_active = 1 and is_placeholder = 0 and rule_id = ?"
     parameters = [rule.name]
 
-    query += " and is_inspiration = ?"
-    parameters.append(int(show_inspiration_alternatives))
+    if not show_inspiration_alternatives:
+        query += " and is_inspiration = ?"
+        parameters.append(0)
 
     # TODO ignore pluralization for inspirations?
     if is_singular is not None:
