@@ -4772,6 +4772,13 @@ def detect_non_inclusive_emoji(
             skin_tones = []
 
         for alternative_text in emojis:
+            if alternative_text == "-":
+                alternative = Alternative("-")
+                alternative.is_remove = True
+                alternatives.append(alternative)
+
+                continue
+
             alternative_text = emoji_base.replace(rule, alternative_text)
             alternative = get_emoji(alternative_text)
 
