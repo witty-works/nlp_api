@@ -46,11 +46,13 @@ class Language(object):
     def convert_sharp_ss(self, text: str) -> str:
         if self.locale == "de-CH":
             return self.convert_to(text, self.locale)
-        
+
         return text
 
     @staticmethod
-    def convert_to(text: str|list|tuple|None, locale: str | None = None) -> str|list:
+    def convert_to(
+        text: str | list | tuple | None, locale: str | None = None
+    ) -> str | list:
         if text is None or locale is None:
             return text
 
@@ -207,6 +209,7 @@ class Rule:
     type: Optional[RuleType] = RuleType.DEFAULT
     label: Optional[str] = None
     pattern: Optional[str] = None
+    is_pattern_match: Optional[bool] = None
     entity_type: Optional[EntityType] = EntityType.DEFAULT
     pluralization: Optional[PluralizationType] = PluralizationType.DEFAULT
 
@@ -264,6 +267,7 @@ class RuleIn(BaseModel):
     false_positives: Optional[list[str]] = []
     label: Optional[str] = None
     pattern: Optional[str] = None
+    is_pattern_match: Optional[bool] = None
     entity_type: Optional[EntityType] = EntityType.DEFAULT
     pluralization: Optional[PluralizationType] = PluralizationType.DEFAULT
 
