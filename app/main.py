@@ -3073,13 +3073,19 @@ def fetch_word_type(
     if token._.is_emoji:
         return "emoji"
 
+    if token.pos_ == "NUM":
+        if "num" != word_type and token.tag_ in ["CARD", "CD"]:
+            return "card"
+
+        return "num"
+
     if not is_valid_text(token.text):
         return ""
 
     if word_type is None:
         word_type = ""
 
-    if "adv" in word_type and token.pos_ == "ADV":
+    if "adv" == word_type and token.pos_ == "ADV":
         return "adv"
 
     if (
