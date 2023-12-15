@@ -102,7 +102,7 @@ from app.model import fetch_nlp_model
 from app.rules import fetch_static_rules
 from app.sentry import set_up_sentry_sdk
 
-version = "1.50.2"
+version = "1.50.3"
 
 categories = get_categories()
 settings = get_settings()
