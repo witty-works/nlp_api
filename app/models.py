@@ -16,6 +16,7 @@ from app.categories import (
     get_category,
     get_category_name,
     map_gravity,
+    is_sub_category_enabled,
 )
 
 from app.privacy_filter import get_privacy_filter
@@ -220,7 +221,7 @@ class Rule:
         lemma: str,
         words,
         word_types,
-        subcategories=None,
+        subcategories: list[str] | None = None,
         alternatives=None,
     ):
         self.name = name
@@ -650,6 +651,7 @@ class ResultOut(BaseModel):
                 lang,
                 text,
                 category,
+                subcategory_name,
                 start,
                 ResultOut.isUpper(text, full_text, start, category, lang),
                 alternatives,
@@ -712,6 +714,7 @@ class ResultOut(BaseModel):
         lang: Language,
         text: str,
         category: str,
+        subcategory_name: str,
         start: int,
         is_upper: bool,
         alternatives: list[Alternative],
@@ -731,6 +734,11 @@ class ResultOut(BaseModel):
         cleaned_alternatives = {}
 
         for alternative in alternatives:
+            if alternative.is_advanced and not is_sub_category_enabled(
+                config.disabled_categories, subcategory_name + "_advanced"
+            ):
+                continue
+
             if alternative.is_remove:
                 variation = ResultAlternative(
                     remove=True,

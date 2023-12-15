@@ -53,7 +53,7 @@ def fetch_static_rules(langs):
                 re.compile(r"^m/(f|w)(\/[*a-z])*(\))?$", re.IGNORECASE),
                 None,
                 (0, 7, "/"),
-                "gender_specific_abbreviation",
+                ["gender_specific_abbreviation"],
             ),
             Rule(
                 "(f/m..)",
@@ -61,7 +61,7 @@ def fetch_static_rules(langs):
                 re.compile(r"^(f|w)/m(\/[*a-z])*(\))?$", re.IGNORECASE),
                 None,
                 (0, 7, "/"),
-                "gender_specific_abbreviation",
+                ["gender_specific_abbreviation"],
             ),
         ],
         "d_f_m_regexes": [
@@ -71,7 +71,7 @@ def fetch_static_rules(langs):
                 re.compile(r"^(d|x|\*)(/v)?/f(/v)?/m(/v)?$", re.IGNORECASE),
                 None,
                 (0, 7, "/"),
-                "d_and_i",
+                ["d_and_i"],
             ),
         ],
         "skin_tones": {
@@ -461,7 +461,7 @@ def fetch_static_rules(langs):
             re.compile(r"^#(?!.*[A-Z])\w\w\w\w\w+$"),
             None,
             (1, 2, "#"),
-            "plain_language",
+            ["plain_language"],
         )
 
         rule.explanation = "Wenn du Wörter großschreibst, wissen alle gleich, was du meinst. #ZumBeispiel"
@@ -1052,7 +1052,7 @@ def fetch_static_rules(langs):
             re.compile(r"^#(?!.*[A-Z])\w\w\w\w\w+$"),
             None,
             (1, 2, "#"),
-            "plain_language",
+            ["plain_language"],
         )
 
         rule.explanation = "When you capitalize words, everyone knows right away what you mean. #ForExample"

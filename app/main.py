@@ -92,8 +92,9 @@ from app.lang_detection import get_lang_detection
 from app.categories import (
     get_category_keys,
     get_categories,
-    get_category,
     get_category_name,
+    is_sub_category_enabled,
+    find_first_enabled_sub_category,
 )
 from app.settings import get_settings
 from app.logger import set_up_logger
@@ -1719,7 +1720,7 @@ def languagetool_matches(
         except KeyError:
             subcategory = "orthography"
 
-        if not is_sub_category_enabled(config, subcategory):
+        if not is_sub_category_enabled(config.disabled_categories, subcategory):
             continue
 
         alternatives = fetch_alternatives(match)
@@ -1860,7 +1861,7 @@ async def apply_languagetool_rules(
     ):
         payload["level"] = "picky"
 
-    if is_sub_category_enabled(config, "plain_language_advanced"):
+    if is_sub_category_enabled(config.disabled_categories, "plain_language_advanced"):
         if payload["language"] == "de-DE":
             payload["language"] += "-x-simple-language"
 
@@ -1872,13 +1873,13 @@ async def apply_languagetool_rules(
     if config.primary_language is not None:
         payload["motherTongue"] = config.primary_language
 
-    if is_sub_category_enabled(config, "orthography"):
+    if is_sub_category_enabled(config.disabled_categories, "orthography"):
         if "casing" in config.disabled_categories:
             payload["disabledCategories"].append("CASING")
 
         if "plain_language" in config.disabled_categories:
             payload["disabledCategories"] += lt_style_categories
-    elif is_sub_category_enabled(config, "plain_language"):
+    elif is_sub_category_enabled(config.disabled_categories, "plain_language"):
         payload["enabledCategories"] += lt_style_categories
     else:
         return []
@@ -2062,6 +2063,7 @@ def fetch_term_replacements(
 
     term_replacement_rules = []
     all_alternatives = []
+    subcategories = ["corporate_rules"]
     for lemma in configs["term_replacements"]:
         term_replacement = configs["term_replacements"][lemma]
 
@@ -2089,7 +2091,7 @@ def fetch_term_replacements(
             lemma,
             words,
             word_types,
-            "corporate_rules",
+            subcategories,
             term_replacement["alternatives"],
         )
 
@@ -2122,29 +2124,6 @@ def apply_false_positives(
                 list_results.remove(result)
 
     return list_results
-
-
-def is_sub_category_enabled(config: Config, subcategories: list[str]) -> bool | str:
-    if isinstance(subcategories, str):
-        subcategories = [subcategories]
-
-    for subcategory in subcategories:
-        if subcategory in config.disabled_categories:
-            continue
-
-        category_data = get_category(subcategory)
-        if category_data is None:
-            continue
-
-        if (
-            "category" in category_data
-            and category_data["category"] in config.disabled_categories
-        ):
-            continue
-
-        return subcategory
-
-    return False
 
 
 def is_gendered_denom_rule(lang: str, subcategories) -> bool:
@@ -2540,7 +2519,9 @@ async def german_rules(
             if check_continue(i, new_i, tokens):
                 continue
 
-        if is_sub_category_enabled(config, "gender_specific_abbreviation"):
+        if is_sub_category_enabled(
+            config.disabled_categories, "gender_specific_abbreviation"
+        ):
             new_i = regex_match(
                 config,
                 client,
@@ -2556,7 +2537,7 @@ async def german_rules(
             if check_continue(i, new_i, tokens):
                 continue
 
-        if is_sub_category_enabled(config, "d_and_i"):
+        if is_sub_category_enabled(config.disabled_categories, "d_and_i"):
             new_i = regex_match(
                 config,
                 client,
@@ -2647,7 +2628,8 @@ async def german_rules(
                 continue
 
         subcategory = "d_and_i"
-        if is_sub_category_enabled(config, subcategory):
+        if is_sub_category_enabled(config.disabled_categories, subcategory):
+            subcategories = [subcategory]
             word_types = (
                 (-1, 1, config.german_gender_ending[0])
                 if config.german_gender_ending[0] == "/"
@@ -2661,7 +2643,7 @@ async def german_rules(
                     config._gendereddenom_ending[config.german_gender_ending],
                     None,
                     config._gendereddenom_ending_word_type[config.german_gender_ending],
-                    subcategory,
+                    subcategories,
                 ),
             ]
 
@@ -2675,7 +2657,7 @@ async def german_rules(
                         ],
                         None,
                         word_types,
-                        subcategory,
+                        subcategories,
                     )
                 )
 
@@ -2696,8 +2678,9 @@ async def german_rules(
 
         subcategory = "gendered_denominations_ending_advanced"
         if is_sub_category_enabled(
-            config, subcategory
+            config.disabled_categories, subcategory
         ) and ResultOut.genderedRolesFormatInclusive(config.gendered_roles_format):
+            subcategories = [subcategory]
             endings = []
             for key, regexp in config._gendereddenom_ending.items():
                 if config.german_gender_ending == key:
@@ -2709,7 +2692,7 @@ async def german_rules(
                     regexp,
                     None,
                     config._gendereddenom_ending_word_type[key],
-                    subcategory,
+                    subcategories,
                     (config.german_gender_ending,),
                 )
 
@@ -2731,7 +2714,7 @@ async def german_rules(
                         config._gendereddenom_ending_article[key],
                         None,
                         word_types,
-                        subcategory,
+                        subcategories,
                     )
 
                     endings.append(ending)
@@ -2792,7 +2775,9 @@ async def english_rules(
             if check_continue(i, new_i, tokens):
                 continue
 
-        if is_sub_category_enabled(config, "gender_specific_abbreviation"):
+        if is_sub_category_enabled(
+            config.disabled_categories, "gender_specific_abbreviation"
+        ):
             new_i = regex_match(
                 config,
                 client,
@@ -2808,7 +2793,7 @@ async def english_rules(
             if check_continue(i, new_i, tokens):
                 continue
 
-        if is_sub_category_enabled(config, "d_and_i"):
+        if is_sub_category_enabled(config.disabled_categories, "d_and_i"):
             new_i = regex_match(
                 config,
                 client,
@@ -4017,7 +4002,8 @@ def gendered_denom_analysis_de(
                 if "mann" in text.lower()
                 else "gendered_denominations_ending"
             )
-            if rule.is_advanced:
+
+            if alternative.is_advanced:
                 subcategory += "_advanced"
 
     return text, subcategory, new_alternatives
@@ -4127,7 +4113,9 @@ def regex_match(
     token = tokens[i]
 
     for rule in rules:
-        subcategory = is_sub_category_enabled(config, rule.subcategories)
+        subcategory = find_first_enabled_sub_category(
+            config.disabled_categories, rule.subcategories
+        )
         if not subcategory:
             continue
 
@@ -4470,7 +4458,9 @@ def rule_check(
             return i
 
     for rule in rules:
-        subcategory = is_sub_category_enabled(config, rule.subcategories)
+        subcategory = find_first_enabled_sub_category(
+            config.disabled_categories, rule.subcategories
+        )
         if not subcategory:
             continue
 
@@ -4813,7 +4803,7 @@ def detect_non_inclusive_emoji(
 
         emojis = []
         for subcategory in emoji_config["subcategory"]:
-            if is_sub_category_enabled(config, subcategory):
+            if is_sub_category_enabled(config.disabled_categories, subcategory):
                 emojis += emoji_config["subcategory"][subcategory]
 
         if len(emojis) == 0:
