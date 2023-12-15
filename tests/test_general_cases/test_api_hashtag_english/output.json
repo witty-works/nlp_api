@@ -8,15 +8,16 @@
             "context": "How to #beanallybe<NUMBER>? Better using #beAnAlly",
             "end": 22,
             "explanation": {
-                "icon": "😟",
+                "content": "advanced",
+                "icon": "🙄",
                 "text": "When you capitalize words, everyone knows right away what you mean. #ForExample",
-                "url": "https://www.witty.works/en/categories/cultural-diversity/clarity?reducedView=true"
+                "url": "https://www.witty.works/en/categories/cultural-diversity/plain-english?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Cultural Diversity: Clarity",
+            "label": "Cultural Diversity: Plain English",
             "proficiency_level": "unconscious_bias",
             "start": 7,
-            "subcategory": "style",
+            "subcategory": "plain_language",
             "text": "#beanallybe2022"
         },
         {

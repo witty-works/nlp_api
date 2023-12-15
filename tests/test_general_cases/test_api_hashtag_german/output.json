@@ -8,15 +8,15 @@
             "context": "Wir sind #diebesten!",
             "end": 19,
             "explanation": {
-                "icon": "😟",
+                "icon": "🙄",
                 "text": "Wenn du Wörter großschreibst, wissen alle gleich, was du meinst. #ZumBeispiel",
-                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/klarheit?reducedView=true"
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/leichte-sprache?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Kulturelle Diversität: Klarheit",
+            "label": "Kulturelle Diversität: Leichte Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 9,
-            "subcategory": "style",
+            "subcategory": "plain_language",
             "text": "#diebesten"
         }
     ]

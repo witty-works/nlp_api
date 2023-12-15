@@ -1691,7 +1691,7 @@ def languagetool_matches(
             if match["rule"]["id"] in ["SONDERZEICHEN", "ROEMISCHE_ZAHL"]:
                 continue
             elif subcategory in lt_style_categories:
-                subcategory = "style"
+                subcategory = "plain_language"
             elif subcategory == "PLAIN_ENGLISH":
                 subcategory = "plain_language_advanced"
             elif subcategory == "DIFFICULT_WORDS":
@@ -1704,13 +1704,13 @@ def languagetool_matches(
                 ):
                     subcategory = "anglicism_advanced"
                 else:
-                    subcategory = "plain_language"
+                    subcategory = "plain_language_advanced"
             elif match["rule"]["category"]["name"] == "Leichte Sprache":
                 subcategory = "plain_language_advanced"
             else:
                 subcategory = subcategory.lower()
                 if subcategory == "style":
-                    subcategory = "general_style"
+                    subcategory = "plain_language"
                 elif subcategory not in categories:
                     subcategory = "orthography"
         except KeyError:
@@ -1852,6 +1852,11 @@ async def apply_languagetool_rules(
         ],
     }
 
+    if payload["language"][0:2] == "en" and is_sub_category_enabled(
+        config, "plain_language"
+    ):
+        payload["level"] = "picky"
+
     if is_sub_category_enabled(config, "plain_language_advanced"):
         if payload["language"] == "de-DE":
             payload["language"] += "-x-simple-language"
@@ -1868,9 +1873,9 @@ async def apply_languagetool_rules(
         if "casing" in config.disabled_categories:
             payload["disabledCategories"].append("CASING")
 
-        if "style" in config.disabled_categories:
+        if "plain_language" in config.disabled_categories:
             payload["disabledCategories"] += lt_style_categories
-    elif is_sub_category_enabled(config, "style"):
+    elif is_sub_category_enabled(config, "plain_language"):
         payload["enabledCategories"] += lt_style_categories
     else:
         return []

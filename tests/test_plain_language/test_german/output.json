@@ -46,11 +46,11 @@
                 "text": "Dieses Wort hat mehr als dreizehn Buchstaben. Benutzen Sie kurze Wörter.",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/leichte-sprache?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Kulturelle Diversität: Leichte Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 124,
-            "subcategory": "plain_language",
+            "subcategory": "plain_language_advanced",
             "text": "Donaudampfschifffahrt"
         },
         {
@@ -80,11 +80,11 @@
                 "text": "Vermeiden Sie abstrakte Wörter. Benutzen Sie möglichst konkrete Aussagen.",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/leichte-sprache?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Kulturelle Diversität: Leichte Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 176,
-            "subcategory": "plain_language",
+            "subcategory": "plain_language_advanced",
             "text": "Nutzung"
         },
         {
@@ -148,11 +148,11 @@
                 "text": "Vermeiden Sie Metaphern und bildhafte Sprache.",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/leichte-sprache?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Kulturelle Diversität: Leichte Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 241,
-            "subcategory": "plain_language",
+            "subcategory": "plain_language_advanced",
             "text": "Glückspilze"
         },
         {
@@ -216,11 +216,11 @@
                 "text": "Vermeiden Sie abstrakte Wörter. Benutzen Sie möglichst konkrete Aussagen.",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/leichte-sprache?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Kulturelle Diversität: Leichte Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 414,
-            "subcategory": "plain_language",
+            "subcategory": "plain_language_advanced",
             "text": "Lösung"
         },
         {

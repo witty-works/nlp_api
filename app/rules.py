@@ -461,7 +461,7 @@ def fetch_static_rules(langs):
             re.compile(r"^#(?!.*[A-Z])\w\w\w\w\w+$"),
             None,
             (1, 2, "#"),
-            "style",
+            "plain_language",
         )
 
         rule.explanation = "Wenn du Wörter großschreibst, wissen alle gleich, was du meinst. #ZumBeispiel"
@@ -1052,7 +1052,7 @@ def fetch_static_rules(langs):
             re.compile(r"^#(?!.*[A-Z])\w\w\w\w\w+$"),
             None,
             (1, 2, "#"),
-            "style",
+            "plain_language",
         )
 
         rule.explanation = "When you capitalize words, everyone knows right away what you mean. #ForExample"
