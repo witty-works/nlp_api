@@ -1348,6 +1348,38 @@ def test_rule():
 
         assert response_content == expected
 
+        request_data = {
+            "text": "Wir suchen super schnelle Entwickler unter 30",
+            "lang": "de",
+            "lemma": "unter",
+            "pattern": "a*|n|l|card",
+            "is_pattern_match": 1,
+            "label": "bar",
+            "subcategories": ["corporate_rules"],
+            "word_types": [],
+            "alternatives": [],
+        }
+        response = client.post("/debug/rule", json=request_data)
+        assert response.status_code == 200
+        response_content = json.loads(response.content)
+
+        expected = [
+            {
+                "text": "super schnelle Entwickler unter 30",
+                "context": "Wir suchen super schnelle Entwickler unter <NUMBER>",
+                "category": "corporate_rules",
+                "subcategory": "corporate_rules",
+                "start": 37,
+                "end": 71,
+                "alternatives": [],
+                "label": "Wörterbuch",
+                "explanation": {"text": "", "icon": "❗", "context": "bar"},
+                "gravity": 0.9,
+            }
+        ]
+
+        assert response_content == expected
+
 
 def test_spacy():
     with TestClient(app) as client:

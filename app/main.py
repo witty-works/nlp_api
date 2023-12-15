@@ -132,6 +132,7 @@ rule_columns = [
     "language",
     "lemma_json",
     "pattern",
+    "is_pattern_match",
     "type",
     "entity_type",
     "label",
@@ -233,6 +234,7 @@ def create_rule(row, rewrite_to: str = None) -> Rule:
         rule.words = Language.convert_to(rule.words, "en-GB")
 
     rule.pattern = row[rule_columns["pattern"]]
+    rule.is_pattern_match = row[rule_columns["is_pattern_match"]]
     rule.label = (
         row[rule_columns["label"]]
         if row[rule_columns["label_type"]] == RuleLabelEnum.DEFAULT
@@ -854,6 +856,7 @@ async def post_debug_rule(
     )
 
     rule.pattern = rule_data.pattern
+    rule.is_pattern_match = rule_data.is_pattern_match
     rule.alternatives = alternative_list
     rule.false_positives = rule_data.false_positives
     rule.label = rule_data.label
@@ -2928,7 +2931,8 @@ def parse_word_type(word_type: str, lower_case: bool = True) -> (str, bool, bool
     return word_type, lower_case, lemmatize
 
 
-def check_pattern(tokens: Doc, pattern: str, i_pattern_start: int, offset: int) -> bool:
+def check_pattern(tokens: Doc, pattern: str, i_pattern_start: int, offset: int) -> bool | int:
+    count = 0
     for word_type in pattern:
         if i_pattern_start < 0 or i_pattern_start > len(tokens):
             return False
@@ -2940,12 +2944,14 @@ def check_pattern(tokens: Doc, pattern: str, i_pattern_start: int, offset: int) 
                 lang, tokens[i_pattern_start], word_type, True, True
             ):
                 i_pattern_start -= 1
-        elif not check_word_type(lang, tokens[i_pattern_start], word_type, True):
-            return False
-        else:
+                count += 1
+        elif check_word_type(lang, tokens[i_pattern_start], word_type, True):
             i_pattern_start += offset
+            count += 1
+        else:
+            return False
 
-    return True
+    return count
 
 
 def is_word_match(
@@ -2992,6 +2998,7 @@ def is_phrase_match(
     if word_count > 1:
         suffix = False
 
+    skip_i = i
     text = ""
     for k in range(word_count):
         if k > 0:
@@ -3000,7 +3007,7 @@ def is_phrase_match(
         try:
             word_token = tokens[i + k]
         except IndexError:
-            return None, None
+            return i, None, None
 
         word_type = rule.word_types[k] if k < word_types_count else None
 
@@ -3011,18 +3018,22 @@ def is_phrase_match(
             word_type,
             suffix,
         ):
-            return None, None
+            return i, None, None
 
         text += word_token.text
+
+        skip_i += 1
 
     if false_positive_matcher is not None and is_false_positive_match(
         false_positive_matcher, i, tokens, rule.lemma
     ):
-        return None, None
+        return i, None, None
 
     if rule.pattern is not None:
         pattern = rule.pattern.split("|")
 
+        token_count = 1
+        prefix_tokens_match_count = 0
         lemma_position = 0
         for word_type in pattern:
             if word_type == "l":
@@ -3032,15 +3043,33 @@ def is_phrase_match(
         if lemma_position > 0:
             prefix_pattern = pattern[0:lemma_position]
             prefix_pattern.reverse()
-            if not check_pattern(tokens, prefix_pattern, i - 1, -1):
-                return None, None
+            tokens_match_count = check_pattern(tokens, prefix_pattern, i - 1, -1)
+            if not tokens_match_count:
+                return i, None, None
+            
+            token_count+= tokens_match_count
+            prefix_tokens_match_count+= tokens_match_count
 
         suffix_pattern = pattern[lemma_position + 1 :]
         if len(suffix_pattern):
-            if not check_pattern(tokens, suffix_pattern, i + 1, 1):
-                return None, None
+            tokens_match_count = check_pattern(tokens, suffix_pattern, i + 1, 1)
+            if not tokens_match_count:
+                return i, None, None
 
-    return i + k + 1, text
+            token_count+= tokens_match_count
+
+        if rule.is_pattern_match:
+            i -= prefix_tokens_match_count
+            text = ""
+            for k in range(token_count):
+                if k > 0:
+                    text += word_token.whitespace_
+
+                text += tokens[i + k].text
+
+            skip_i = i + token_count + 1
+
+    return i, skip_i, text
 
 
 def fetch_word_type(
@@ -3056,13 +3085,19 @@ def fetch_word_type(
     if token._.is_emoji:
         return "emoji"
 
+    if token.pos_ == "NUM":
+        if "num" != word_type and token.tag_ in ["CARD", "CD"]:
+            return "card"
+
+        return "num"
+
     if not is_valid_text(token.text):
         return ""
 
     if word_type is None:
         word_type = ""
 
-    if "adv" in word_type and token.pos_ == "ADV":
+    if "adv" == word_type and token.pos_ == "ADV":
         return "adv"
 
     if (
@@ -4536,7 +4571,7 @@ def rule_check(
 
             skip_token = i + 1
         else:
-            skip_token, text = is_phrase_match(
+            i, skip_token, text = is_phrase_match(
                 lang.lang,
                 i,
                 tokens,
@@ -4609,7 +4644,7 @@ def rule_check(
                 if len(alternatives) == 1 and alternatives[0].lemma == "they":
                     text, alternative = pluralize_they(text, tokens, i)
                     alternatives = [Alternative(alternative)]
-                elif len(rule.words) == 1:
+                elif len(rule.words) == 1 and not rule.is_pattern_match:
                     text, start, alternatives = alternatives_declension(
                         lang.lang, token.text, i, tokens, rule, alternatives
                     )
