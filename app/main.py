@@ -3561,8 +3561,10 @@ def german_verb_splittable(word: str) -> str | None:  # pragma: no cover
 
 
 def find_matching_form(forms: dict, text: str) -> str | None:
+    text_lower = text.lower()
+
     for form in forms:
-        if forms[form] == text:
+        if forms[form] is not None and forms[form].lower() == text_lower:
             return form.removesuffix("_2")
 
     return None
