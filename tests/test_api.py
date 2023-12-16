@@ -1740,13 +1740,13 @@ def test_english_upper_case_multiterms(
 
 
 @pytest.mark.parametrize(
-    "german_plain_language_dir",
-    get_dirs("tests/test_german_plain_language"),
+    "plain_language_dir",
+    get_dirs("tests/test_plain_language"),
 )
-def test_german_plain_language(german_plain_language_dir, snapshot, set_redis):
+def test_plain_language(plain_language_dir, snapshot, set_redis):
     with TestClient(app) as client:
         # Read input files from the case directory.
-        input_json = german_plain_language_dir.joinpath("input.json").read_text()
+        input_json = plain_language_dir.joinpath("input.json").read_text()
         # Call the tested endpoint.
         response = client.post(
             "/v2.3/check",
@@ -1759,5 +1759,5 @@ def test_german_plain_language(german_plain_language_dir, snapshot, set_redis):
             response.json(), sort_keys=True, indent=4, ensure_ascii=False
         )
         # Snapshot the return value.
-        snapshot.snapshot_dir = german_plain_language_dir
+        snapshot.snapshot_dir = plain_language_dir
         snapshot.assert_match(output, "output.json")

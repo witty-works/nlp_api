@@ -5,6 +5,37 @@
         {
             "alternatives": [
                 {
+                    "text": "she."
+                },
+                {
+                    "text": "she!"
+                },
+                {
+                    "text": "she?"
+                },
+                {
+                    "text": "she:"
+                },
+                {
+                    "text": "she,"
+                }
+            ],
+            "category": "orthography",
+            "context": "Is this all he could do? Why she",
+            "end": 32,
+            "explanation": {
+                "icon": "❌",
+                "text": "Please add a punctuation mark at the end of paragraph."
+            },
+            "gravity": 1.0,
+            "label": "Punctuation",
+            "start": 29,
+            "subcategory": "punctuation",
+            "text": "she"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "they"
                 }
             ],

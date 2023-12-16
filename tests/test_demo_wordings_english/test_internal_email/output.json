@@ -24,6 +24,37 @@
         {
             "alternatives": [
                 {
+                    "text": "Nadia."
+                },
+                {
+                    "text": "Nadia!"
+                },
+                {
+                    "text": "Nadia?"
+                },
+                {
+                    "text": "Nadia:"
+                },
+                {
+                    "text": "Nadia,"
+                }
+            ],
+            "category": "orthography",
+            "context": "daily life and we love to be challenged.\nWe are number <NUMBER> and innovation drives us.\nSincere regards,\nNadia",
+            "end": 187,
+            "explanation": {
+                "icon": "❌",
+                "text": "Please add a punctuation mark at the end of paragraph."
+            },
+            "gravity": 1.0,
+            "label": "Punctuation",
+            "start": 182,
+            "subcategory": "punctuation",
+            "text": "Nadia"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "team"
                 },
                 {
