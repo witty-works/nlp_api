@@ -3333,14 +3333,14 @@ def align_noun_form(lang: str, a_token: Token, b_token: Token) -> str:
     if lang == "de":
         a_result = fetch_declensions(lang, "n", a_token.text)
         if a_result is None:
-            if not a_token.text.isupper() and len(a_token.text) > 2:
+            if len(a_token.text) > 2:
                 logging.error(f"German noun declension not found for '{a_token.text}'")
 
             return b_text
 
         b_result = fetch_declensions(lang, "n", b_token.text)
         if b_result is None:
-            if not b_token.text.isupper() and len(b_token.text) > 2:
+            if len(b_token.text) > 2:
                 logging.error(f"German noun declension not found for '{b_token.text}'")
 
             return b_text
@@ -3410,7 +3410,7 @@ def align_adjective_form_english(
             target_form = None
 
     if target_form is None:
-        if not a_token.text.isupper() and len(a_token.text) > 2:
+        if len(a_token.text) > 2:
             logging.error(
                 f"English adjective target form could not be determined for '{a_token.text}' (lemma: '{a_token.lemma_}')."
             )
@@ -3437,7 +3437,7 @@ def align_adjective_form_english(
 
     text = get_target_form_from_declension(b_result, target_form)
     if text is None:
-        if not b_token.text.isupper() and len(b_token.text) > 2:
+        if len(b_token.text) > 2:
             logging.error(
                 f"English adjective target form {target_form} for '{b_token.text}' (lemma: '{b_token.lemma_}') missing: {json.dump(b_result)}"
             )
