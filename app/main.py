@@ -358,13 +358,12 @@ async def handle_command_witty(
         await respond(f"Witty could not determine a language for '{text}'.")
         return
 
-    version = "2.3"
     configs = {}
 
     try:
         user = await client.users_info(user=body["user_id"])
         configs = await fetch_configs_for_request(
-            version, user_request_in, user.data["user"]["profile"]["email"]
+            user_request_in, user.data["user"]["profile"]["email"]
         )
     except KeyError:
         pass
@@ -698,13 +697,10 @@ async def get_config_debug(
     username: str = Depends(fetch_current_username),
 ):  # pragma: no cover
     user_request_in = RequestIn(text="")
-    version = "2.3"
 
     try:
         configs = await fetch_user_organization_configs(user_email)
-        result_configs = await fetch_configs_for_request(
-            version, user_request_in, user_email
-        )
+        result_configs = await fetch_configs_for_request(user_request_in, user_email)
         del result_configs["organization_config"]
         del result_configs["organization_domains"]
         del result_configs["organization_false_positives"]
@@ -733,8 +729,7 @@ async def post_auth_debug(
     if not user_email:
         return user_email
 
-    version = "2.3"
-    configs = await fetch_configs_for_request(version, user_request_in, user_email)
+    configs = await fetch_configs_for_request(user_request_in, user_email)
 
     if "authorization" in request.headers and request.headers[
         "authorization"
@@ -768,8 +763,7 @@ async def post_auth_2_0(request: Request, user_request_in: BaseRequestIn = None)
             status_code=status.HTTP_403_FORBIDDEN,
         )
 
-    version = "2.3"
-    configs = await fetch_configs_for_request(version, RequestIn(text=""), user_email)
+    configs = await fetch_configs_for_request(RequestIn(text=""), user_email)
     if configs == {}:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -1267,7 +1261,7 @@ def apply_configs(
 
 
 async def fetch_configs_for_request(
-    version: str, user_request_in: RequestIn, user_email=Optional[str]
+    user_request_in: RequestIn, user_email=Optional[str]
 ) -> dict:
     user_request_in.config.__setattr__("store_context", True)
     user_request_in.config.__setattr__("plan", None)
@@ -1276,15 +1270,9 @@ async def fetch_configs_for_request(
     )
 
     if not user_email:
-        # debug
-        if version is None:
-            user_request_in.config.__setattr__(
-                "disabled_categories", ["plain_language_advanced"]
-            )
-        else:
-            user_request_in.config.__setattr__(
-                "disabled_categories", get_category_keys(True)
-            )
+        user_request_in.config.__setattr__(
+            "disabled_categories", get_category_keys(True)
+        )
 
         return {}
 
@@ -1465,9 +1453,14 @@ async def check(
         check_api_version(version)
 
         user_email = await fetch_user(request)
-        configs = await fetch_configs_for_request(version, user_request_in, user_email)
+        configs = await fetch_configs_for_request(user_request_in, user_email)
     else:
         # debug
+        if user_request_in.config.disabled_categories == []:
+            user_request_in.config.__setattr__(
+                "disabled_categories", "plain_language_advanced"
+            )
+
         configs = {"categories": {}}
         apply_configs(user_request_in, configs, "witty_teams")
 
