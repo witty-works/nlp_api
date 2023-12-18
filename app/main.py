@@ -2936,7 +2936,9 @@ def parse_word_type(word_type: str, lower_case: bool = True) -> (str, bool, bool
     return word_type, lower_case, lemmatize
 
 
-def check_pattern(tokens: Doc, pattern: str, i_pattern_start: int, offset: int) -> bool | int:
+def check_pattern(
+    tokens: Doc, pattern: str, i_pattern_start: int, offset: int
+) -> bool | int:
     count = 0
     for word_type in pattern:
         if i_pattern_start < 0 or i_pattern_start > len(tokens):
@@ -3051,9 +3053,9 @@ def is_phrase_match(
             tokens_match_count = check_pattern(tokens, prefix_pattern, i - 1, -1)
             if not tokens_match_count:
                 return i, None, None
-            
-            token_count+= tokens_match_count
-            prefix_tokens_match_count+= tokens_match_count
+
+            token_count += tokens_match_count
+            prefix_tokens_match_count += tokens_match_count
 
         suffix_pattern = pattern[lemma_position + 1 :]
         if len(suffix_pattern):
@@ -3061,7 +3063,7 @@ def is_phrase_match(
             if not tokens_match_count:
                 return i, None, None
 
-            token_count+= tokens_match_count
+            token_count += tokens_match_count
 
         if rule.is_pattern_match:
             i -= prefix_tokens_match_count
