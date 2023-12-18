@@ -1667,7 +1667,7 @@ def languagetool_matches(
             lang.lang == "de"
             and config.german_gender_ending == ":in"
             and match["rule"]["id"] == "LEERZEICHEN_HINTER_DOPPELPUNKT"
-            and full_text[start + 1 : end] in static_rules["de"]["male_articles"]
+            and full_text[start + 1 : end] in static_rules["de"]["masculine_articles"]
         ):
             continue
 
@@ -2445,7 +2445,7 @@ def fetch_declensions(lang: str, word_type: str, text: str) -> dict:
         if column in ["is_absolute", "gender_1", "female_form", "male_form"]:
             continue
 
-        filters.append(f"{column} = ?")
+        filters.append(f"{column} = ? COLLATE NOCASE")
         parameters.append(text)
 
     parameters.append(text)
@@ -3327,52 +3327,54 @@ def fetch_flexion(token: Token) -> str | None:
     return flexion
 
 
-def align_noun_form(lang: str, a_token: Token, b_token: Token) -> str:
-    b_text = b_token.text
+def align_noun_form_german(a_token: Token, b_token: Token) -> str:
+    if a_token.text in static_rules["de"]["articles"]:
+        return b_token.text
 
-    if lang == "de":
-        a_result = fetch_declensions(lang, "n", a_token.text)
-        if a_result is None:
-            if len(a_token.text) > 2:
-                logging.error(f"German noun declension not found for '{a_token.text}'")
+    a_result = fetch_declensions("de", "n", a_token.text)
+    if a_result is None:
+        if len(a_token.text) > 2:
+            logging.error(f"German noun declension not found for '{a_token.text}'")
 
-            return b_text
+        return b_token.text
 
-        b_result = fetch_declensions(lang, "n", b_token.text)
-        if b_result is None:
-            if len(b_token.text) > 2:
-                logging.error(f"German noun declension not found for '{b_token.text}'")
+    b_result = fetch_declensions("de", "n", b_token.text)
+    if b_result is None:
+        if len(b_token.text) > 2:
+            logging.error(f"German noun declension not found for '{b_token.text}'")
 
-            return b_text
+        return b_token.text
 
-        target_form = find_matching_form(a_result, a_token.text)
-        if target_form is None:
-            logging.error(
-                f"German noun declension form not found for '{a_token.text}': {json.dumps(a_result)}"
-            )
+    target_form = find_matching_form(a_result, a_token.text)
+    if target_form is None:
+        logging.error(
+            f"German noun declension form not found for '{a_token.text}': {json.dumps(a_result)}"
+        )
 
-            return b_text
+        return b_token.text
 
-        text = get_target_form_from_declension(b_result, target_form)
-        if text is None:
-            logging.error(
-                f"German noun target form '{target_form}' for '{b_token.text}' (lemma: '{b_token.lemma_}') missing: '{json.dumps(b_result)}'."
-            )
+    text = get_target_form_from_declension(b_result, target_form)
+    if text is None:
+        logging.error(
+            f"German noun target form '{target_form}' for '{b_token.text}' (lemma: '{b_token.lemma_}') missing: '{json.dumps(b_result)}'."
+        )
 
-            return b_text
+        return b_token.text
 
-        return text
+    return text
 
-    if b_text == "they":
-        return b_text
+
+def align_noun_form_english(a_token: Token, b_token: Token) -> str:
+    if b_token.text == "they":
+        return b_token.text
 
     if (
-        is_token_singular(lang, a_token) is not False
-        or is_token_singular(lang, b_token) is not True
+        is_token_singular("en", a_token) is not False
+        or is_token_singular("en", b_token) is not True
     ):
-        return b_text
+        return b_token.text
 
-    b_result = fetch_declensions(lang, "n", b_token.text)
+    b_result = fetch_declensions("en", "n", b_token.text)
 
     text = get_target_form_from_declension(b_result, "plural")
     if text is None:
@@ -3380,9 +3382,16 @@ def align_noun_form(lang: str, a_token: Token, b_token: Token) -> str:
             f"English noun plural for '{b_token.text}' (lemma: '{b_token.lemma_}') missing: '{json.dumps(b_result)}'."
         )
 
-        return Noun(b_text).plural()
+        return Noun(b_token.text).plural()
 
     return text
+
+
+def align_noun_form(lang: str, a_token: Token, b_token: Token) -> str:
+    if lang == "de":
+        return align_noun_form_german(a_token, b_token)
+
+    return align_noun_form_english(a_token, b_token)
 
 
 def align_adjective_form_english(
@@ -4024,23 +4033,11 @@ def fetch_article_for_flexion(
     if flexion is None:
         return None, None, None, None
 
-    for form, masculine, feminine, neuter, plural, alternative in static_rules["de"][
-        "articles"
-    ]:
-        if form not in flexion:
-            continue
+    if article_text not in static_rules["de"][gender + "_articles"]:
+        return None, None, None, None
 
-        article_to_check = None
-        match gender:
-            case "masculine":
-                article_to_check = masculine
-            case "feminine":
-                article_to_check = feminine
-            case "neuter":
-                article_to_check = neuter
-
-        if article_text == article_to_check:
-            return masculine, feminine, neuter, alternative
+    article_forms = static_rules["de"][gender + "_articles"][article_text]
+    return article_forms[1], article_forms[2], article_forms[3], article_forms[5]
 
     return None, None, None, None
 
@@ -4222,8 +4219,8 @@ def regex_match(
             if check_case == "gender_denom" and check_text.islower():
                 text_split = text.split(connector_string)
                 if (
-                    text_split[0] not in static_rules["de"]["female_articles"]
-                    or text_split[1] not in static_rules["de"]["male_articles"]
+                    text_split[0] not in static_rules["de"]["feminine_articles"]
+                    or text_split[1] not in static_rules["de"]["masculine_articles"]
                 ):
                     continue
 
@@ -4234,8 +4231,8 @@ def regex_match(
 
                 text_split = text.split(connector_string)
                 if (
-                    text_split[0] not in static_rules["de"]["female_articles"]
-                    or text_split[1] not in static_rules["de"]["male_articles"]
+                    text_split[0] not in static_rules["de"]["feminine_articles"]
+                    or text_split[1] not in static_rules["de"]["masculine_articles"]
                 ):
                     continue
 

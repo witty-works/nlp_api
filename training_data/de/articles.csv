@@ -12,10 +12,10 @@ genitiv,jedes,jeder,jedes,alle,jeder~jedes
 genitiv,jeden,jeder,jeden,alle,jeder~jeden
 dativ,jedem,jeder,jedem,alle,jeder~jedem
 akkusativ,jeden,jede,jedes,alle,jede~n
-nominativ,unser,unsere,unser,unsere,unser~e
 nominativ,unser,unsre,unser,unsre,unser~unsre
-genitiv,unseres,unserer,unseres,unserer,unserer~unseres
+nominativ,unser,unsere,unser,unsere,unser~e
 genitiv,unsres,unsrer,unsres,unsrer,unsrer~unsres
+genitiv,unseres,unserer,unseres,unserer,unserer~unseres
 dativ,unserem,unserer,unserem,unseren,unserer~unserem
 dativ,unserm,unsrer,unserm,unsern,unsrer~unserm
 dativ,unsrem,unsrer,unsrem,unsren,unsrer~unsrem
@@ -52,3 +52,14 @@ nominativ,zum,zur,,,zur~zum
 genitiv,zum,zur,,,zur~zum
 dativ,zum,zur,,,zur~zum
 akkusativ,zum,zur,,,zur~zum
+nominativ,jemand,jemand,jemand,,jemand
+genitiv,jemandes,jemandes,jemandes,,jemandes
+genitiv,jemands,jemands,jemands,,jemands
+dativ,jemandem,jemandem,jemandem,,jemandem
+dativ,jemand,jemand,jemand,,jemand
+akkusativ,jemanden,jemanden,jemanden,,jemanden
+akkusativ,jemand,jemand,jemand,,jemand
+nominativ,er,sie,es,sie,sie~er
+genitiv,seiner,ihrer,seiner,ihrer,ihrer~seiner
+dativ,ihm,ihr,ihm,ihnen,ihr~ihm
+akkusativ,ihn,sie,es,sie,sie~ihn

@@ -13,7 +13,7 @@ def fetch_static_rules(langs):
         "en": {},
     }
 
-    rules = {
+    static_rules = {
         "named_entity_labels": {
             EntityType.NAME: (
                 "PER",  # Named person or family
@@ -445,9 +445,9 @@ def fetch_static_rules(langs):
 
     data = {}
     for lang in langs:
-        rules[lang] = {}
+        static_rules[lang] = {}
         for locale in locales[lang]:
-            rules[locale] = data[locale] = {}
+            static_rules[locale] = data[locale] = {}
             for csv in files[lang]:
                 data[locale][csv] = pd.read_csv(
                     "training_data/" + locale + "/" + files[lang][csv],
@@ -466,17 +466,17 @@ def fetch_static_rules(langs):
 
         rule.explanation = "Wenn du Wörter großschreibst, wissen alle gleich, was du meinst. #ZumBeispiel"
 
-        rules["de"]["hashtags"] = [rule]
+        static_rules["de"]["hashtags"] = [rule]
 
-        rules["de"]["false_positives_phrases"] = []
+        static_rules["de"]["false_positives_phrases"] = []
 
-        rules["de"]["context_check"] = [
+        static_rules["de"]["context_check"] = [
             "unabhängig",
             "entschieden",
         ]
 
         # dictionaries to handle false positives
-        rules["de"]["exceptions"] = [
+        static_rules["de"]["exceptions"] = [
             "Unternehmen",
             "Firma",
             "Gruppe",
@@ -488,7 +488,7 @@ def fetch_static_rules(langs):
         ]
 
         # articles
-        rules["de"]["articles"] = list(
+        articles = list(
             zip(
                 data["de"]["df_articles"]["Form"],
                 data["de"]["df_articles"]["Masculine"],
@@ -498,10 +498,24 @@ def fetch_static_rules(langs):
                 data["de"]["df_articles"]["Alternative"],
             )
         )
-        rules["de"]["male_articles"] = list(data["de"]["df_articles"]["Masculine"])
-        rules["de"]["female_articles"] = list(data["de"]["df_articles"]["Feminine"])
 
-        rules["de"]["primary_german_gender_endings"] = {
+        static_rules["de"]["masculine_articles"] = dict(
+            zip(list(data["de"]["df_articles"]["Masculine"]), articles)
+        )
+        static_rules["de"]["feminine_articles"] = dict(
+            zip(list(data["de"]["df_articles"]["Feminine"]), articles)
+        )
+        static_rules["de"]["neuter_articles"] = dict(
+            zip(list(data["de"]["df_articles"]["Neuter"]), articles)
+        )
+
+        static_rules["de"]["articles"] = (
+            list(static_rules["de"]["feminine_articles"].keys())
+            + list(static_rules["de"]["masculine_articles"].keys())
+            + list(static_rules["de"]["neuter_articles"].keys())
+        )
+
+        static_rules["de"]["primary_german_gender_endings"] = {
             "neuter": [
                 "chen",
                 "ett",
@@ -561,7 +575,7 @@ def fetch_static_rules(langs):
             ],
         }
 
-        rules["de"]["secondary_german_gender_endings"] = {
+        static_rules["de"]["secondary_german_gender_endings"] = {
             # 3 out of four words ending with -nis and -sal are neuter nouns
             "neuter": [
                 "nis",
@@ -579,11 +593,11 @@ def fetch_static_rules(langs):
             ],
         }
 
-        rules["de"]["german_nouns"] = Nouns()
+        static_rules["de"]["german_nouns"] = Nouns()
 
-        rules["de"]["pattern_false_positives"] = []
+        static_rules["de"]["pattern_false_positives"] = []
 
-        rules["de"]["gender_neutral_nouns"] = {
+        static_rules["de"]["gender_neutral_nouns"] = {
             "Ierende": {
                 "flexion": {
                     "nominativ singular": "Ierende",
@@ -618,7 +632,7 @@ def fetch_static_rules(langs):
 
         # https://de.wikipedia.org/wiki/Anrede
         # https://karrierebibel.de/namenstitel/
-        rules["de"]["salutations"] = (
+        static_rules["de"]["salutations"] = (
             "Herr",
             "Herrn",
             "Frau",
@@ -725,7 +739,7 @@ def fetch_static_rules(langs):
             "Grossfürstin",
         )
 
-        rules["de"]["splittable_words"] = {
+        static_rules["de"]["splittable_words"] = {
             "durch": [
                 "durchbeißen",
                 "durchbeissen",
@@ -1034,7 +1048,7 @@ def fetch_static_rules(langs):
         }
 
     if "en" in langs:
-        rules["en"]["context_check"] = [
+        static_rules["en"]["context_check"] = [
             "fossil",
             "flexible",
             "impact",
@@ -1057,9 +1071,9 @@ def fetch_static_rules(langs):
 
         rule.explanation = "When you capitalize words, everyone knows right away what you mean. #ForExample"
 
-        rules["en"]["hashtags"] = [rule]
+        static_rules["en"]["hashtags"] = [rule]
 
-        rules["en"]["false_positives_phrases"] = [
+        static_rules["en"]["false_positives_phrases"] = [
             "Air Force",
             "Armed forces",
             "Indian Act",
@@ -1466,7 +1480,7 @@ def fetch_static_rules(langs):
             "your best",
         ]
 
-        rules["en"]["a_not_startswith"] = (
+        static_rules["en"]["a_not_startswith"] = (
             "a ",
             "an ",
             "someone",
@@ -1477,7 +1491,7 @@ def fetch_static_rules(langs):
             "everyone",
         )
 
-        rules["en"]["uncountables"] = (
+        static_rules["en"]["uncountables"] = (
             " ethics",
             " accommodation",
             " information",
@@ -1836,7 +1850,7 @@ def fetch_static_rules(langs):
             ]
         ]
 
-        rules["en"]["pattern_false_positives"] = [
+        static_rules["en"]["pattern_false_positives"] = [
             pattern_master,
             pattern_lead_prepos,
             pattern_lead_life,
@@ -1846,7 +1860,7 @@ def fetch_static_rules(langs):
             pattern_quick,
         ]
 
-        rules["en"]["salutations"] = (
+        static_rules["en"]["salutations"] = (
             "Dear",
             "Mrs.",
             "Miss",
@@ -1899,4 +1913,4 @@ def fetch_static_rules(langs):
             "Holler",
         )
 
-    return rules
+    return static_rules
