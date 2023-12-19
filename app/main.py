@@ -3333,14 +3333,22 @@ def align_noun_form_german(a_token: Token, b_token: Token) -> str:
 
     a_result = fetch_declensions("de", "n", a_token.text)
     if a_result is None:
-        if len(a_token.text) > 2:
+        if (
+            len(a_token.text) > 2
+            and a_token.text[0].isupper()
+            and not a_token.text.isupper()
+        ):
             logging.error(f"German noun declension not found for '{a_token.text}'")
 
         return b_token.text
 
     b_result = fetch_declensions("de", "n", b_token.text)
     if b_result is None:
-        if len(b_token.text) > 2:
+        if (
+            len(b_token.text) > 2
+            and b_token.text[0].isupper()
+            and not b_token.text.isupper()
+        ):
             logging.error(f"German noun declension not found for '{b_token.text}'")
 
         return b_token.text
