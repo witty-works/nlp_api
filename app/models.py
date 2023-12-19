@@ -899,15 +899,16 @@ class ResultOut(BaseModel):
     def getGenderedRolesFormatInclusive(german_gender_ending: str, alternative: str):
         if "-" in alternative:
             alternatives = alternative.split("-")
-            new_alternative = []
-            for alternative in alternatives:
-                new_alternative.append(
-                    ResultOut.getGenderedRolesFormatInclusive(
-                        german_gender_ending, alternative
+            new_alternatives = []
+            for new_alternative in alternatives:
+                if "~" in new_alternative:
+                    new_alternative = ResultOut.getGenderedRolesFormatInclusive(
+                        german_gender_ending, new_alternative
                     )
-                )
 
-            return "-".join(new_alternative)
+                new_alternatives.append(new_alternative)
+
+            return "-".join(new_alternatives)
 
         variants = alternative.split("~")
         beginning = str(variants[0])

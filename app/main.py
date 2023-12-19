@@ -3929,15 +3929,17 @@ def gendered_denom_analysis_de(
         if alternative.lemma[0] == "~":
             alternative.lemma = alternative.lemma[1:]
             if prefix:
+                lemma_first_char = alternative.lemma[0] if prefix[-1] == "-" else alternative.lemma[0].lower()
                 alternative.lemma = (
-                    prefix + alternative.lemma[0].lower() + alternative.lemma[1:]
+                    prefix + lemma_first_char + alternative.lemma[1:]
                 )
         elif "~" in alternative.lemma:
             if prefix_words:
                 alternative.lemma = prefix_words + alternative.lemma
             elif prefix:
+                lemma_first_char = rule.lemma[0] if prefix[-1] == "-" else rule.lemma[0].lower()
                 alternative.lemma = alternative.lemma.replace(
-                    rule.lemma, prefix + rule.lemma[0].lower() + rule.lemma[1:]
+                    rule.lemma, prefix + lemma_first_char + rule.lemma[1:]
                 )
                 if rule.lemma[0] == "A":
                     lemma = "Ä" + rule.lemma[1:]
