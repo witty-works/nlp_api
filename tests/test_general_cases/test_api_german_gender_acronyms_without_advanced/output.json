@@ -9,19 +9,23 @@
                     "remove": true
                 },
                 {
-                    "text": "(*/F/M)"
+                    "context": "Divers (EU) / m. Behinderung (NA)",
+                    "text": "(m/f/d)"
                 },
                 {
                     "context": "Divers (EU) / m. Behinderung (NA)",
-                    "text": "(D/F/M)"
+                    "text": "(d/f/m)"
+                },
+                {
+                    "text": "(m/f/*)"
                 },
                 {
                     "text": "Alle Gender"
                 }
             ],
             "category": "gender-orientation",
-            "context": "Wir brauchen (M/W/*) Menschen.",
-            "end": 20,
+            "context": "Wir brauchen (m/w) Menschen oder Menschen (m/w/d).",
+            "end": 18,
             "explanation": {
                 "icon": "😮",
                 "text": "Nenne unterrepräsentierte Gruppen zuerst. Verlinke auf deine Leitlinie zur Gleichstellung.",
@@ -32,7 +36,7 @@
             "proficiency_level": "unconscious_bias",
             "start": 13,
             "subcategory": "gender_specific_abbreviation",
-            "text": "(M/W/*)"
+            "text": "(m/w)"
         }
     ]
 }

@@ -4253,6 +4253,10 @@ def regex_match(
             elif "innen" in text:
                 alternatives = [Alternative(alternatives[0].lemma + "nen")]
         elif subcategory == "gender_specific_abbreviation":
+            has_advanced = is_sub_category_enabled(
+                config, "gender_specific_abbreviation_advanced"
+            )
+
             parenthesis = (
                 i > 0
                 and tokens[i - 1].text == "("
@@ -4273,6 +4277,8 @@ def regex_match(
             diverse_letter = "D"
             if diverse_letter not in letters and "*" not in letters:
                 letters.append(diverse_letter)
+            elif not has_advanced:
+                continue
 
             x_letter = "X"
             without_x = True
@@ -4286,10 +4292,15 @@ def regex_match(
                 without_v = False
 
             if "W" in letters:
-                letters.remove("W")
-                letters.append("F")
+                for i in range(len(letters)):
+                    if letters[i] == "W":
+                        letters[i] = "F"
+                        break
 
-            alternative = "/".join(sorted(letters))
+            if has_advanced:
+                letters = sorted(letters)
+
+            alternative = "/".join(letters)
             if is_lower:
                 alternative = alternative.lower()
                 diverse_letter = diverse_letter.lower()
@@ -4349,6 +4360,18 @@ def regex_match(
             remove_alternative.label = context_remove
             alternatives = [remove_alternative, alternative]
 
+            if not has_advanced:
+                alternative_sorted = Alternative("/".join(sorted(letters)))
+                alternative_sorted.label = context_d
+
+                if parenthesis:
+                    alternative_sorted.lemma = f"({alternative_sorted.lemma})"
+
+                if is_lower:
+                    alternative_sorted.lemma = alternative_sorted.lemma.lower()
+
+                alternatives.append(alternative_sorted)
+
             if lang.lang == "en" and without_v:
                 alternatives.append(alternative_v)
 
@@ -4357,6 +4380,10 @@ def regex_match(
 
             if alternative_3 is not None:
                 alternatives.append(alternative_3)
+
+            alternatives.append(
+                Alternative("Alle Gender" if lang.lang == "de" else "all gender")
+            )
 
         skip_token = start_token + 1
 

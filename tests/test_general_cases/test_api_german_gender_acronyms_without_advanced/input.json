@@ -1,0 +1,6 @@
+{
+    "text": "Wir brauchen (m/w) Menschen oder Menschen (m/w/d).",
+    "config": {
+        "disabled_categories": ["gender_specific_abbreviation_advanced"]
+    }
+}
