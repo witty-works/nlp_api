@@ -5,12 +5,20 @@
         {
             "alternatives": [
                 {
-                    "text": "They are"
+                    "text": "They"
+                },
+                {
+                    "context": "specify 'given name'",
+                    "text": "((given name))"
+                },
+                {
+                    "context": "specify 'given name family name'",
+                    "text": "((given name family name))"
                 }
             ],
             "category": "gender-orientation",
             "context": "He is amazing. She builds, cleans and refurbishes houses. This is all hers.",
-            "end": 5,
+            "end": 2,
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
@@ -22,17 +30,25 @@
             "proficiency_level": "unconscious_bias",
             "start": 0,
             "subcategory": "binary_pronouns_advanced",
-            "text": "He is"
+            "text": "He"
         },
         {
             "alternatives": [
                 {
-                    "text": "They build, clean and refurbish"
+                    "text": "They"
+                },
+                {
+                    "context": "specify 'given name'",
+                    "text": "((given name))"
+                },
+                {
+                    "context": "specify 'given name family name'",
+                    "text": "((given name family name))"
                 }
             ],
             "category": "gender-orientation",
             "context": "He is amazing. She builds, cleans and refurbishes houses. This is all hers.",
-            "end": 49,
+            "end": 18,
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
@@ -44,12 +60,16 @@
             "proficiency_level": "unconscious_bias",
             "start": 15,
             "subcategory": "binary_pronouns_advanced",
-            "text": "She builds, cleans and refurbishes"
+            "text": "She"
         },
         {
             "alternatives": [
                 {
                     "text": "theirs"
+                },
+                {
+                    "context": "specify 'given name's'",
+                    "text": "((given name's))"
                 }
             ],
             "category": "gender-orientation",

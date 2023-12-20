@@ -5,6 +5,14 @@
         {
             "alternatives": [
                 {
+                    "context": "'Vorname' nennen",
+                    "text": "((Vorname))"
+                },
+                {
+                    "context": "'Vorname' und 'Familienname' nennen",
+                    "text": "((Vorname)) ((Familienname))"
+                },
+                {
                     "text": "höflicher Mensch"
                 }
             ],
@@ -27,6 +35,14 @@
         },
         {
             "alternatives": [
+                {
+                    "context": "'Vorname' nennen",
+                    "text": "((Vorname))"
+                },
+                {
+                    "context": "'Vorname' und 'Familienname' nennen",
+                    "text": "((Vorname)) ((Familienname))"
+                },
                 {
                     "text": "höflicher Mensch"
                 }

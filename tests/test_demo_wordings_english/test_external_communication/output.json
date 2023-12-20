@@ -33,12 +33,20 @@
         {
             "alternatives": [
                 {
-                    "text": "they have"
+                    "text": "they"
+                },
+                {
+                    "context": "specify 'given name'",
+                    "text": "((given name))"
+                },
+                {
+                    "context": "specify 'given name family name'",
+                    "text": "((given name family name))"
                 }
             ],
             "category": "gender-orientation",
             "context": "If a manager picks up this topic, he has to go the extra mile to solve it.",
-            "end": 40,
+            "end": 36,
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
@@ -50,7 +58,7 @@
             "proficiency_level": "unconscious_bias",
             "start": 34,
             "subcategory": "binary_pronouns_advanced",
-            "text": "he has"
+            "text": "he"
         },
         {
             "alternatives": [
