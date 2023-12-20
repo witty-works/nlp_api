@@ -29,24 +29,30 @@ os.system(f"cp {args.File} ./database/db.sqlite3")
 source = sqlite3.connect("./database/db.sqlite3")
 cursor = source.cursor()
 
-cursor.execute("DROP table IF EXISTS rules_source")
-cursor.execute("DROP table IF EXISTS rules_diversitydimension")
-cursor.execute("DROP table IF EXISTS rules_rulediversitydimension")
-cursor.execute("DROP table IF EXISTS rules_category")
-cursor.execute("DROP table IF EXISTS rules_trainingsentence")
-
-tables = ["rules_germanverb", "rules_germanadjective", "rules_germannoun", "rules_englishverb", "rules_englishadjective", "rules_englishnoun", "rules_falsepositive", "rules_alternative", "rules_rule"]
+tables_to_keep = [
+    "rules_germanverb",
+    "rules_germanadjective",
+    "rules_germannoun",
+    "rules_englishverb",
+    "rules_englishadjective",
+    "rules_englishnoun",
+    "rules_falsepositive",
+    "rules_alternative",
+    "rules_rule",
+    "rules_lemmatization",
+]
 columns = ["created_at", "updated_at", "comment"]
 
-for table in tables:
+for table in tables_to_keep:
     for column in columns:
         cursor.execute(f"ALTER TABLE {table} DROP COLUMN {column}")
 
-query = "SELECT name FROM sqlite_master WHERE type='table' and name NOT LIKE 'sqlite_%' and name NOT LIKE 'rules_%'"
+query = "SELECT name FROM sqlite_master WHERE type='table' and name NOT LIKE 'sqlite_%'"
 cursor.execute(query)
-
 for table in cursor.fetchall():
-    cursor.execute(f"DROP table IF EXISTS {table[0]}")
+    if table[0] not in tables_to_keep:
+        cursor.execute(f"DROP table IF EXISTS {table[0]}")
+
 with open("./database/dump.sql", "w") as f:
     for line in source.iterdump():
         f.write("%s\n" % line)
