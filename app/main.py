@@ -1845,6 +1845,9 @@ async def apply_languagetool_rules(
             "UPPERCASE_SENTENCE_START",
             # Ignore "70%", "100km" needing a space between the unit
             "EINHEIT_LEERZEICHEN",
+            # Ignore unpaired brackets like a)
+            "EN_UNPAIRED_BRACKETS",
+            "UNPAIRED_BRACKETS",
         ],
     }
 
