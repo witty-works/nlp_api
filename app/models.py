@@ -195,6 +195,7 @@ class Alternative:
 
 class Rule:
     name: str
+    parent_id: Optional[int]
     lang: str
     lemma: str
     words: tuple

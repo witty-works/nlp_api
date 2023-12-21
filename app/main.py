@@ -135,6 +135,7 @@ def invert_list_to_dict(list_to_convert: list) -> dict:
 rules_cursor = rules_db.cursor()
 rule_columns = [
     "id",
+    "parent_id",
     "lemma",
     "language",
     "lemma_json",
@@ -240,6 +241,7 @@ def create_rule(row, rewrite_to: str = None) -> Rule:
         rule.lemma = Language.convert_to(rule.lemma, "en-GB")
         rule.words = Language.convert_to(rule.words, "en-GB")
 
+    rule.parent_id = row[rule_columns["parent_id"]]
     rule.pattern = row[rule_columns["pattern"]]
     rule.is_pattern_match = row[rule_columns["is_pattern_match"]]
     rule.label = (
@@ -2365,7 +2367,7 @@ def fetch_rule_alternatives(
 
     # https://wittyworks.productboard.com/roadmap/3751070-browser-extension/features/13529555/detail
     query = f"SELECT {alternative_column_list} FROM rules_alternative WHERE is_active = 1 and is_placeholder = 0 and rule_id = ?"
-    parameters = [rule.name]
+    parameters = [rule.parent_id if rule.parent_id else rule.name]
 
     if not show_inspiration_alternatives:
         query += " and is_inspiration = ?"
