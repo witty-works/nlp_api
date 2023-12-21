@@ -4420,9 +4420,9 @@
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Abstammung-3.png",
+                    "src": "https:\/\/www.witty.works\/hubfs\/Abstammung%20(1).png",
                     "width": "605",
-                    "height": "414",
+                    "height": "373",
                     "alt": ""
                 },
                 "example_image_advanced": [],
@@ -4804,106 +4804,6 @@
                 "meme_2_url": "",
                 "read_on": "",
                 "anchor": "sport_jargon"
-            }
-        }
-    },
-    "style": {
-        "hs_path": "",
-        "hs_name": "",
-        "proficiency_level": "language-clarity",
-        "is_active": "1",
-        "emoji": "\ud83d\ude1f",
-        "has_en_rules": "true",
-        "has_de_rules": "true",
-        "category": "cultural-diversity",
-        "related_subcategories": [],
-        "translations": {
-            "en": {
-                "hs_path": "clarity",
-                "hs_name": "Clarity",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/clarity",
-                "is_active": "1",
-                "name": "Style issues add complexity and make your message harder to grasp",
-                "short_explanation": "Keep language clear, credible, and easy to understand",
-                "sub_head": "",
-                "lead_video": "",
-                "lead_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/plain%20language.png",
-                    "width": "900",
-                    "height": "525",
-                    "alt": "Illustration of a man and a woman with speech bubbles. One speech bubble shows a tangle of lines. The other speech bubble show a neatly roled up line "
-                },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Clarity-1.png",
-                    "width": "605",
-                    "height": "403",
-                    "alt": ""
-                },
-                "example_image_advanced": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Clarity%20Advanced%20(1).png",
-                    "width": "605",
-                    "height": "403",
-                    "alt": ""
-                },
-                "soft_explanation": "",
-                "hard_facts": "",
-                "hero_figure": "",
-                "hero_figure_alt_text": "",
-                "hero_figure_url": "",
-                "hero_fact": "",
-                "hero_fact_alt_text": "",
-                "hero_fact_url": "",
-                "inclusive_sentence": "",
-                "non_inclusive_sentence": "",
-                "meme": "",
-                "meme_alt_text": "",
-                "meme_url": "",
-                "meme_2": "",
-                "meme_2_alt_text": "",
-                "meme_2_url": "",
-                "read_on": "",
-                "anchor": "style"
-            },
-            "de": {
-                "hs_path": "klarheit",
-                "hs_name": "Klarheit",
-                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/klarheit",
-                "is_active": "1",
-                "name": "Macht den Satz komplizierter und schwerer verst\u00e4ndlich",
-                "short_explanation": "Sprich Leser*innen in klaren und unmissverst\u00e4ndlichen Worten an",
-                "sub_head": "",
-                "lead_video": "",
-                "lead_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/plain%20language.png",
-                    "width": "900",
-                    "height": "525",
-                    "alt": "Illustration von zwei Personen in maskuliner und femininer Kleidung mit Sprechblasen. Eine Sprechblase zeigt ein Kn\u00e4uel aus Schn\u00fcren. Die andere Sprechblase zeigt eine sauber aufgerollte Schnur "
-                },
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Klarheit.png",
-                    "width": "605",
-                    "height": "415",
-                    "alt": "Eine Illustration des Satzes 'F\u00fcr unser neues Projekt suchen wir engagierte Teamplayer. [Leute, die gut und gern mit anderen zusammenarbeiten]\u2019. Die von Witty vorgeschlagene Alternative ist in Klammern."
-                },
-                "example_image_advanced": [],
-                "soft_explanation": "",
-                "hard_facts": "",
-                "hero_figure": "",
-                "hero_figure_alt_text": "",
-                "hero_figure_url": "",
-                "hero_fact": "",
-                "hero_fact_alt_text": "",
-                "hero_fact_url": "",
-                "inclusive_sentence": "",
-                "non_inclusive_sentence": "",
-                "meme": "",
-                "meme_alt_text": "",
-                "meme_url": "",
-                "meme_2": "",
-                "meme_2_alt_text": "",
-                "meme_2_url": "",
-                "read_on": "",
-                "anchor": "stil"
             }
         }
     },
