@@ -1,6 +1,6 @@
 {
     "text": "We are looking for a spokesman.",
     "config": {
-        "show_inspiration_alternatives": false
+        "show_inspiration_alternatives": true
     }
 }

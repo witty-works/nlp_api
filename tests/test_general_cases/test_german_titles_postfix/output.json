@@ -12,6 +12,12 @@
                 },
                 {
                     "text": "Unser medizinisches Team"
+                },
+                {
+                    "text": "Unser Praxis"
+                },
+                {
+                    "text": "Unsere Untersuchung"
                 }
             ],
             "category": "gender-orientation",
@@ -40,6 +46,12 @@
                 },
                 {
                     "text": "Medizinisches Team"
+                },
+                {
+                    "text": "Praxis"
+                },
+                {
+                    "text": "Untersuchung"
                 }
             ],
             "category": "gender-orientation",
@@ -65,9 +77,6 @@
                 },
                 {
                     "text": "Jüdinnen und Juden"
-                },
-                {
-                    "remove": true
                 }
             ],
             "category": "gender-orientation",
@@ -85,6 +94,37 @@
             "start": 69,
             "subcategory": "function",
             "text": "Juden"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Sie*er"
+                },
+                {
+                    "text": "Sie/er"
+                },
+                {
+                    "text": "Du"
+                },
+                {
+                    "text": "Sie"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Unser Facharzt weiß alles. Fachärzte liefern wissen. Hier sind viele Juden. Er hat ein Judenei. Hure. Hurehund. Katzenhurehund. Katzenhure. Mandschure. Mandschurehuremhure. Ein I",
+            "end": 78,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Binäre Pronomen",
+            "proficiency_level": "unconscious_bias",
+            "start": 76,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "Er"
         },
         {
             "alternatives": [
@@ -128,7 +168,7 @@
             "label": "Geschlecht + Orientierung: Sexismus",
             "proficiency_level": "openly_discriminating",
             "start": 96,
-            "subcategory": "advanced_sexism",
+            "subcategory": "sexism",
             "text": "Hure"
         },
         {
@@ -149,7 +189,7 @@
             "label": "Geschlecht + Orientierung: Sexismus",
             "proficiency_level": "openly_discriminating",
             "start": 102,
-            "subcategory": "advanced_sexism",
+            "subcategory": "sexism",
             "text": "Hurehund"
         },
         {
@@ -170,7 +210,7 @@
             "label": "Geschlecht + Orientierung: Sexismus",
             "proficiency_level": "openly_discriminating",
             "start": 112,
-            "subcategory": "advanced_sexism",
+            "subcategory": "sexism",
             "text": "Katzenhurehund"
         },
         {
@@ -191,7 +231,7 @@
             "label": "Geschlecht + Orientierung: Sexismus",
             "proficiency_level": "openly_discriminating",
             "start": 128,
-            "subcategory": "advanced_sexism",
+            "subcategory": "sexism",
             "text": "Katzenhure"
         },
         {
@@ -212,7 +252,7 @@
             "label": "Geschlecht + Orientierung: Sexismus",
             "proficiency_level": "openly_discriminating",
             "start": 152,
-            "subcategory": "advanced_sexism",
+            "subcategory": "sexism",
             "text": "Mandschurehuremhure"
         },
         {
@@ -225,6 +265,12 @@
                 },
                 {
                     "text": "Ein Engineering-Team"
+                },
+                {
+                    "text": "Ein Engineering"
+                },
+                {
+                    "text": "Eine Technik"
                 }
             ],
             "category": "gender-orientation",
@@ -253,6 +299,12 @@
                 },
                 {
                     "text": "Ein Elektroengineering-Team"
+                },
+                {
+                    "text": "Ein Elektroengineering"
+                },
+                {
+                    "text": "Eine Elektrotechnik"
                 }
             ],
             "category": "gender-orientation",

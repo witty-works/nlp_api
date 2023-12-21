@@ -1,215 +1,21 @@
 import pandas as pd
-import ast
 import re
-from typing import Optional
 from german_nouns.lookup import Nouns
-from app.models import LangWithAutoType, RuleType
-from app.categories import (
-    is_base_category,
-    remove_base,
-    get_proficiency_level,
-    is_advanced_category,
-    get_category_name,
-)
+from app.models import LangWithAutoType, Rule, EntityType
 
 
-class Rule:
-    name: str
-    lang: str
-    lemma: str
-    words: tuple
-    word_types: tuple
-    subcategory: Optional[str]
-    is_advanced: bool = False
-    alternatives: Optional[tuple]
-    plural_alternatives: Optional[tuple]
-    secondary_subcategory: Optional[str]
-    false_positives: Optional[tuple]
-    explanation: Optional[str]
-    url: Optional[str]
-    icon: Optional[str]
-    type: Optional[RuleType] = RuleType.DEFAULT
-
-    def __init__(
-        self,
-        name,
-        lang,
-        lemma,
-        words,
-        word_types,
-        subcategory=None,
-        alternatives=None,
-    ):
-        self.name = name
-        self.lang = lang
-        self.lemma = lemma
-        self.words = words
-        if isinstance(word_types, str):
-            # BC code s -> n
-            word_types = tuple(word_types.replace("s", "n").split("|"))
-        self.word_types = word_types
-
-        self.subcategory = self.parse_subcategory(subcategory)
-        self.alternatives = self.filter_alternatives(alternatives)
-
-        self.plural_alternatives = None
-        self.secondary_subcategory = None
-        self.false_positives = None
-        self.explanation = None
-        self.url = None
-        self.icon = None
-
-    def parse_subcategory(self, subcategory):
-        if subcategory is None:
-            return None
-
-        if is_base_category(subcategory):
-            subcategory = remove_base(subcategory)
-            if get_proficiency_level(subcategory) == "openly_discriminating":
-                if len(self.word_types) > 0 and "n" in self.word_types[0]:
-                    self.type = RuleType.SUBSTRING
-            else:
-                self.type = RuleType.SUFFIX
-
-        if is_advanced_category(subcategory):
-            self.is_advanced = True
-            subcategory = get_category_name(subcategory)
-
-        return subcategory
-
-    def filter_alternatives(self, alternatives):
-        if alternatives is None:
-            return None
-
-        return list(filter(lambda alternative: "((" not in alternative, alternatives))
-
-    def is_gendered_denom_rule(self):
-        return self.lang == "de" and (
-            self.subcategory
-            in [
-                "titles",
-                "function",
-                "hidden_image",
-                "leadership",
-                "male_stereotype",
-                "female_stereotype",
-                "gendered_denominations_ending",
-            ]
-        )
-
-
-def build_rules(
-    model,
-    lang,
-    df,
-    plural=False,
-    secondary_subcategory=False,
-    false_positives=False,
-    filter_base=None,
-    fallback_subcategory=None,
-):
-    df_rules = [] if filter_base is True else {}
-
-    for i, lemma in enumerate(df["Lemma"]):
-        rule = Rule(
-            lemma,
-            lang,
-            lemma,
-            tuple([i.text for i in model.tokenizer(lemma)]),
-            df["Word_Type"][i],
-        )
-
-        key = rule.words[0].lower()
-        if "Primary_subcategory" in df:
-            if filter_base is False and is_base_category(df["Primary_subcategory"][i]):
-                continue
-
-            rule.subcategory = rule.parse_subcategory(df["Primary_subcategory"][i])
-            if rule.type == RuleType.SUFFIX:
-                # shortest base word, "Arzt"
-                key = key[-4:]
-
-        if rule.subcategory is None:
-            rule.subcategory = fallback_subcategory
-
-        singular_key = "Sg_all_split" if plural else "Alt_split"
-        if singular_key in df:
-            rule.alternatives = rule.filter_alternatives(
-                ast.literal_eval(df[singular_key][i])
-            )
-
-        if plural:
-            rule.plural_alternatives = rule.filter_alternatives(
-                ast.literal_eval(df["Pl_all_split"][i])
-            )
-
-        if secondary_subcategory:
-            rule.secondary_subcategory = df["Secondary_subcategory"][i]
-
-        if false_positives:
-            rule.false_positives = ast.literal_eval(df["False_Positives"][i])
-
-        if filter_base is True:
-            df_rules.append(rule)
-            continue
-
-        if key in df_rules:
-            df_rules[key].append(rule)
-        else:
-            df_rules[key] = [rule]
-
-    return df_rules
-
-
-def fetch_rules(model):
+def fetch_static_rules(langs):
     files = {
         "de": {
-            # load Gender (nouns, not nouns) and sentences de
-            "df_gender_ct": "gendered_noun_words.csv",
-            "df_gender_no_noun_word": "gendered_no_noun_words.csv",
             # load articles for gendered denom
             "df_articles": "articles.csv",
-            # load style words
-            "df_style_word": "style_words.csv",
-            # load openly discriminating words de
-            "df_open_dis_word": "open_dis_words.csv",
-            # load unconscious_bias word (nouns with plurals and nouns, adj, verbs without plural) and sentences de
-            "df_ub_plur_word": "ub_plur_words.csv",
-            "df_ub_no_plur_word": "ub_no_plur_words.csv",
-            # load inslusive words
-            "df_d_and_i_words": "d_and_i_words.csv",
-            # load communal coded terms
-            "df_communal_words": "communal.csv",
-            # load abbreviations
-            "df_abbreviation": "abbreviations.csv",
-            # verbs
-            "verbs": "verbs.csv",
         },
-        "en": {
-            # load openly discriminating words
-            "df_open_dis_word": "open_dis_words.csv",
-            # load inclusive language
-            "df_inclusive_word": "inclusive_words.csv",
-            # load style words
-            "df_style_no_noun_word": "style_no_noun_words.csv",
-            "df_style_noun_word": "style_noun_words.csv",
-            # load gendered language
-            "df_gendered_no_noun_word": "gendered_no_noun_words.csv",
-            "df_gendered_noun_word": "gendered_noun_words.csv",
-            # load unconscious_bias word (nouns with sing/plural, other words (nouns without sing/plur, verb, adj, adv)) and sentences en
-            "df_ub_plur_word": "ub_plur_words.csv",
-            "df_ub_no_plur_word": "ub_no_plur_words.csv",
-            "df_ub_singular_they": "ub_singular_they.csv",
-            # load homonyms
-            "df_homonyms_words": "homonyms_words.csv",
-            # load abbreviations
-            "df_abbreviation": "abbreviations.csv",
-        },
+        "en": {},
     }
 
-    rules = {
+    static_rules = {
         "named_entity_labels": {
-            "names": (
+            EntityType.NAME: (
                 "PER",  # Named person or family
                 "ORG",  # Companies, agencies, institutions, etc.
                 "PERSON",  # People, including fictional
@@ -224,14 +30,18 @@ def fetch_rules(model):
                 "WORK_OF_ART",  # Titles of books, songs, etc.
                 "MISC",  # Miscellaneous entities, e.g., events, nationalities, products, or works of art.
             ),
-            "numbers": (
+            EntityType.PERSON: (
+                "PER",  # Named person or family
+                "PERSON",  # People, including fictional
+            ),
+            EntityType.NUMBER: (
                 "MONEY",  # Monetary values, including unit
                 "CARDINAL",  # Numerals that do not fall under another type
                 "ORDINAL",  # "first", "second", etc.
                 "QUANTITY",  # Measurements, as of weight or distance
                 "PERCENT",  # Percentage, including "%"
             ),
-            "datetime": (
+            EntityType.DATETIME: (
                 "DATE",  # Absolute or relative dates or periods
                 "TIME",  # Times smaller than a day
             ),
@@ -477,31 +287,152 @@ def fetch_rules(model):
                     "pregnant_woman",
                 ],
             },
-            "advanced_person": {
+            "person_advanced": {
                 "skin_tone": True,
                 "subcategory": {
-                    "advanced_hearing": [
+                    "hearing_advanced": [
                         "deaf_person",
                     ],
-                    "advanced_belief": [
+                    "belief_advanced": [
                         "woman_with_headscarf",
                         "man_with_turban",
+                        "man_in_lotus_position",  # Representing meditation, often associated with Eastern religions
+                        "man_with_skullcap",  # Representing a man wearing a skullcap, found in various religious traditions
                     ],
-                    "advanced_vision": [
+                    "vision_advanced": [
                         "person_with_white_cane",
                     ],
-                    "advanced_ability": [
+                    "ability_advanced": [
                         "person_in_manual_wheelchair",
                     ],
-                    "advanced_age_old": [
+                    "age_old_advanced": [
                         "older_person",
                     ],
-                    "advanced_age_young": [
+                    "age_young_advanced": [
                         "child",
+                    ],
+                    "culture_advanced": [
+                        "man_with_chinese_cap",  # Representing a man wearing a traditional Chinese cap, linked to certain cultural practices
                     ],
                 },
                 "rules": [
                     "person",
+                ],
+            },
+            "holiday_symbols": {
+                "skin_tone": False,
+                "subcategory": {
+                    "belief": [
+                        "gift",  # Universal gift-giving
+                        "star",  # General festivity
+                        "candle",  # Diwali, Hanukkah
+                        "party_popper",  # Celebration
+                        "palm_tree",  # Palm tree
+                        "snowflake",  # Winter theme
+                        "snowman",  # Winter theme
+                        "menorah",  # Hanukkah
+                        "dreidel",  # Hanukkah
+                        "star_of_david",  # Judaism symbol
+                    ],
+                },
+                "rules": [
+                    "Christmas_tree",
+                ],
+            },
+            "holiday_santa": {
+                "skin_tone": True,
+                "subcategory": {
+                    "belief": [
+                        "Mrs._Claus",
+                        "Santa_Claus",
+                    ],
+                },
+                "rules": [
+                    "Santa_Claus",
+                    "Mrs._Claus",
+                ],
+            },
+            "military_terms": {
+                "skin_tone": False,
+                "subcategory": {
+                    "military_source": [
+                        "dove",
+                        "peace_symbol",
+                        "white_flag",
+                        "handshake",
+                    ],
+                },
+                "rules": [
+                    "military_helmet",
+                    "crossed_swords",
+                    "shield",
+                    "bomb",
+                    "dagger",
+                ],
+            },
+            "military_medal": {
+                "skin_tone": False,
+                "subcategory": {
+                    "military_source": [
+                        "sports_medal",
+                        "3rd_place_medal",
+                        "2nd_place_medal",
+                        "1st_place_medal",
+                    ],
+                },
+                "rules": [
+                    "military_medal",
+                ],
+            },
+            "gender_orientation_holding_hands": {
+                "skin_tone": True,
+                "subcategory": {
+                    "sexual_orientation": [
+                        "people_holding_hands",
+                        "rainbow_flag",
+                        "transgender_flag",
+                    ],
+                },
+                "rules": [
+                    "man_and_woman_holding_hands",
+                ],
+            },
+            "gender_orientation_love": {
+                "skin_tone": True,
+                "subcategory": {
+                    "sexual_orientation": [
+                        "kiss_woman_woman",
+                        "kiss_man_man",
+                    ],
+                },
+                "rules": [
+                    "kiss_woman_man",
+                    "kiss_man_woman",
+                ],
+            },
+            "cultural_diversity": {
+                "skin_tone": False,
+                "subcategory": {
+                    "culture": [
+                        "globe_with_meridians",
+                        "globe_showing_asia_australia",
+                    ],
+                },
+                "rules": [
+                    "globe_showing_Europe-Africa",
+                    "globe_showing_Americas",
+                ],
+            },
+            "offensive_language": {
+                "skin_tone": False,
+                "subcategory": {
+                    "offensive_language": [
+                        "-",
+                        "stop_sign",
+                    ],
+                },
+                "rules": [
+                    "middle_finger",
                 ],
             },
         },
@@ -512,13 +443,11 @@ def fetch_rules(model):
         "en": [LangWithAutoType.enUS, LangWithAutoType.enGB],
     }
 
-    langs = model.keys()
-
     data = {}
     for lang in langs:
-        rules[lang] = {}
+        static_rules[lang] = {}
         for locale in locales[lang]:
-            rules[locale] = data[locale] = {}
+            static_rules[locale] = data[locale] = {}
             for csv in files[lang]:
                 data[locale][csv] = pd.read_csv(
                     "training_data/" + locale + "/" + files[lang][csv],
@@ -526,102 +455,28 @@ def fetch_rules(model):
                 )
 
     if "de" in langs:
-        lang = "de"
-
         rule = Rule(
             "#foobar",
             "de",
             re.compile(r"^#(?!.*[A-Z])\w\w\w\w\w+$"),
             None,
             (1, 2, "#"),
-            "style",
+            "plain_language",
         )
 
         rule.explanation = "Wenn du Wörter großschreibst, wissen alle gleich, was du meinst. #ZumBeispiel"
 
-        rules["de"]["hashtags"] = [rule]
+        static_rules["de"]["hashtags"] = [rule]
 
-        rules["de"]["false_positives_phrases"] = []
+        static_rules["de"]["false_positives_phrases"] = []
 
-        rules["de"]["context_check"] = [
+        static_rules["de"]["context_check"] = [
             "unabhängig",
             "entschieden",
         ]
 
-        rules["de"]["absolute_adjectives"] = [
-            "empfunden",
-            "absolut",
-            "blind",
-            "eckig",
-            "dreieckig",
-            "viereckig",
-            "fünfeckig",
-            "x-eckig",
-            "endgültig",
-            "entscheidend",
-            "einzig",
-            "extrem",
-            "falsch",
-            "fertig",
-            "ganz",
-            "gleich",
-            "hauptsächlich",
-            "ideal",
-            "lauwarm",
-            "lebendig",
-            "leer",
-            "maximal",
-            "minimal",
-            "mündlich",
-            "optimal",
-            "richtig",
-            "schwanger",
-            "sterblich",
-            "täglich",
-            "wöchentlich",
-            "monatlich",
-            "tot",
-            "total",
-            "unnahbar",
-            "voll",
-            "vollkommen",
-        ]
-
-        rules["de"]["verbs"] = {
-            data["de"]["verbs"]["infinitiv"][i]: {
-                "present_ich": data["de"]["verbs"]["present_ich"][i],
-                "present_du": data["de"]["verbs"]["present_du"][i],
-                "present_pronoun": data["de"]["verbs"]["present_pronoun"][i],
-                "past_tense_ich": data["de"]["verbs"]["past_tense_ich"][i],
-                "past_participle": data["de"]["verbs"]["past_participle"][i],
-                "conjunctive_ich": data["de"]["verbs"]["conjunctive_ich"][i],
-                "imperativ_singular": data["de"]["verbs"]["imperativ_singular"][i],
-                "imperativ_plural": data["de"]["verbs"]["imperativ_plural"][i],
-                "helping_verb": data["de"]["verbs"]["helping_verb"][i],
-                "infinitiv_zu": data["de"]["verbs"]["infinitiv_zu"][i],
-            }
-            for i in range(len(data["de"]["verbs"]["infinitiv"]))
-        }
-        # list of "df_communal_words" words
-        rules["de"]["communal_words"] = build_rules(
-            model[lang],
-            "de",
-            data["de"]["df_communal_words"],
-            fallback_subcategory="communal",
-        )
-
-        # list of "df_d_and_i_words" words
-        rules["de"]["d_and_i_words"] = build_rules(
-            model[lang],
-            "de",
-            data["de"]["df_d_and_i_words"],
-            fallback_subcategory="d_and_i",
-        )
-
         # dictionaries to handle false positives
-        rules["de"]["false_positives"] = ["international"]
-
-        rules["de"]["exceptions"] = [
+        static_rules["de"]["exceptions"] = [
             "Unternehmen",
             "Firma",
             "Gruppe",
@@ -632,19 +487,8 @@ def fetch_rules(model):
             "Gliederung",
         ]
 
-        ### de-DE:
-        rules["de"]["gender_words_data"] = build_rules(
-            model[lang], "de", data["de"]["df_gender_ct"], plural=True
-        )
-
-        # df gendered no noun
-        # gendered: words + alternatives split + subcategory
-        rules["de"]["gender_words_data_no_noun"] = build_rules(
-            model[lang], "de", data["de"]["df_gender_no_noun_word"]
-        )
-
         # articles
-        rules["de"]["articles"] = list(
+        articles = list(
             zip(
                 data["de"]["df_articles"]["Form"],
                 data["de"]["df_articles"]["Masculine"],
@@ -654,49 +498,25 @@ def fetch_rules(model):
                 data["de"]["df_articles"]["Alternative"],
             )
         )
-        rules["de"]["male_articles"] = list(data["de"]["df_articles"]["Masculine"])
-        rules["de"]["female_articles"] = list(data["de"]["df_articles"]["Feminine"])
 
-        # df unconscious bias nouns with plural
-        # unconscious bias: words + singular alternatives split + plural alternatives split + subcategory
-        rules["de"]["bias_words_data_noun"] = build_rules(
-            model[lang], "de", data["de"]["df_ub_plur_word"], plural=True
+        static_rules["de"]["masculine_articles"] = dict(
+            zip(list(data["de"]["df_articles"]["Masculine"]), articles)
         )
-
-        # df unconscious bias words without plurals
-        rules["de"]["bias_words_data_no_plur"] = build_rules(
-            model[lang], "de", data["de"]["df_ub_no_plur_word"]
+        static_rules["de"]["feminine_articles"] = dict(
+            zip(list(data["de"]["df_articles"]["Feminine"]), articles)
+        )
+        static_rules["de"]["neuter_articles"] = dict(
+            zip(list(data["de"]["df_articles"]["Neuter"]), articles)
         )
 
-        # df style
-        # style: words + alternatives + subcategory
-        rules["de"]["style_words_data"] = build_rules(
-            model[lang], "de", data["de"]["df_style_word"]
-        )
-        # df open discrimination words
-        # open discrimination: words + alternative_split + subcategory
-        rules["de"]["open_disc_words_data"] = build_rules(
-            model[lang],
-            "de",
-            data["de"]["df_open_dis_word"],
-            false_positives=True,
-            filter_base=False,
-        )
-        rules["de"]["open_disc_words_data_base"] = build_rules(
-            model[lang],
-            "de",
-            data["de"]["df_open_dis_word"],
-            false_positives=True,
-            filter_base=True,
+        static_rules["de"]["articles"] = (
+            list(static_rules["de"]["feminine_articles"].keys())
+            + list(static_rules["de"]["masculine_articles"].keys())
+            + list(static_rules["de"]["neuter_articles"].keys())
         )
 
-        # df abbreviation
-        rules["de"]["abbreviation"] = build_rules(
-            model[lang], "de", data["de"]["df_abbreviation"]
-        )
-
-        rules["de"]["primary_german_genus_endings"] = {
-            "n": [
+        static_rules["de"]["primary_german_gender_endings"] = {
+            "neuter": [
                 "chen",
                 "ett",
                 "eau",
@@ -711,7 +531,7 @@ def fetch_rules(model):
                 "tum",
                 "um",
             ],
-            "f": [
+            "feminine": [
                 "in",
                 "a",
                 "ade",
@@ -738,7 +558,7 @@ def fetch_rules(model):
                 "ur",
                 "schaft",
             ],
-            "m": [
+            "masculine": [
                 "ant",
                 "ast",
                 "ich",
@@ -755,29 +575,29 @@ def fetch_rules(model):
             ],
         }
 
-        rules["de"]["secondary_german_genus_endings"] = {
+        static_rules["de"]["secondary_german_gender_endings"] = {
             # 3 out of four words ending with -nis and -sal are neuter nouns
-            "n": [
+            "neuter": [
                 "nis",
                 "sal",
             ],
             # There are exceptions such as Postillion, which is masculine while the oberwhelming majority of -ion words in German is feminine.
-            "f": [
+            "feminine": [
                 "ion",
             ],
             # More than half of  words ending with -er, -en, -el are masculine
-            "m": [
+            "masculine": [
                 "er",
                 "en",
                 "el",
             ],
         }
 
-        rules["de"]["german_nouns"] = Nouns()
+        static_rules["de"]["german_nouns"] = Nouns()
 
-        rules["de"]["pattern_false_positives"] = []
+        static_rules["de"]["pattern_false_positives"] = []
 
-        rules["de"]["gender_neutral_nouns"] = {
+        static_rules["de"]["gender_neutral_nouns"] = {
             "Ierende": {
                 "flexion": {
                     "nominativ singular": "Ierende",
@@ -791,7 +611,7 @@ def fetch_rules(model):
                 },
                 "lemma": "Ierende",
                 "pos": ["Substantiv", "adjektivische Deklination"],
-                "genus": "f",
+                "gender": "feminine",
             },
             "Gebende": {
                 "flexion": {
@@ -806,13 +626,13 @@ def fetch_rules(model):
                 },
                 "lemma": "Gebende",
                 "pos": ["Substantiv", "adjektivische Deklination"],
-                "genus": "f",
+                "gender": "feminine",
             },
         }
 
         # https://de.wikipedia.org/wiki/Anrede
         # https://karrierebibel.de/namenstitel/
-        rules["de"]["salutations"] = (
+        static_rules["de"]["salutations"] = (
             "Herr",
             "Herrn",
             "Frau",
@@ -919,7 +739,7 @@ def fetch_rules(model):
             "Grossfürstin",
         )
 
-        rules["de"]["splittable_words"] = {
+        static_rules["de"]["splittable_words"] = {
             "durch": [
                 "durchbeißen",
                 "durchbeissen",
@@ -1228,79 +1048,7 @@ def fetch_rules(model):
         }
 
     if "en" in langs:
-        lang = "en"
-
-        ### en-US & en-GB:
-        for locale in locales["en"]:
-            ## words:
-            # df open discrimination words
-            # open discrimination: lemma + alternatives split + subcategory
-            rules[locale]["open_disc_words_data"] = build_rules(
-                model[lang], "en", data[locale]["df_open_dis_word"]
-            )
-
-            # df open discrimination words gender no noun
-            # gender no noun: lemma + alternatives split + subcategory
-            rules[locale]["gender_words_data"] = build_rules(
-                model[lang], "en", data[locale]["df_gendered_no_noun_word"]
-            )
-
-            # df style
-            # style: lemma + alternatives split + subcategory
-            rules[locale]["style_words_data"] = build_rules(
-                model[lang], "en", data[locale]["df_style_no_noun_word"]
-            )
-
-            # df unconscious bias
-            # unconscious bias: lemma + alternatives split + subcategory
-            rules[locale]["bias_words_data"] = build_rules(
-                model[lang], "en", data[locale]["df_ub_no_plur_word"]
-            )
-
-            # df inclusive
-            # inclusive: lemma + subcategory)
-            rules[locale]["inclusive_words_data"] = build_rules(
-                model[lang], "en", data[locale]["df_inclusive_word"]
-            )
-
-            # df homonyms words
-            rules[locale]["homonyms_word"] = build_rules(
-                model[lang], "en", data[locale]["df_homonyms_words"]
-            )
-
-            # df abbreviation english
-            rules[locale]["abbreviation"] = build_rules(
-                model[lang], "en", data[locale]["df_abbreviation"]
-            )
-
-            # df gendered noun
-            # gendered noun: lemma + singular alternatives split + plural alternatives split + primary subcategory + secondary subcategory
-            rules[locale]["gender_noun_words_data"] = build_rules(
-                model[lang],
-                "en",
-                data[locale]["df_gendered_noun_word"],
-                plural=True,
-                secondary_subcategory=True,
-            )
-
-            # df gendered unconscious bias plural
-            # gendered unconscious bias plural: lemma + singular alternatives split + plural alternatives split + subcategory
-            rules[locale]["gender_bias_words_data"] = build_rules(
-                model[lang], "en", data[locale]["df_ub_plur_word"], plural=True
-            )
-
-            # df style noun
-            # style noun: lemma + singular alternatives split + plural alternatives split + primary subcategory + secondary subcategory
-            rules[locale]["style_noun_words_data"] = build_rules(
-                model[lang], "en", data[locale]["df_style_noun_word"], plural=True
-            )
-
-            # unconscious bias singular they: lemma + alternatives split + subcategory
-            rules[locale]["bias_singular_they_alternatives"] = build_rules(
-                model[lang], "en", data[locale]["df_ub_singular_they"]
-            )
-
-        rules["en"]["context_check"] = [
+        static_rules["en"]["context_check"] = [
             "fossil",
             "flexible",
             "impact",
@@ -1312,22 +1060,20 @@ def fetch_rules(model):
             "retard",
         ]
 
-        rules["en"]["false_positives"] = []
-
         rule = Rule(
             "#foobar",
             "en",
             re.compile(r"^#(?!.*[A-Z])\w\w\w\w\w+$"),
             None,
             (1, 2, "#"),
-            "style",
+            "plain_language",
         )
 
         rule.explanation = "When you capitalize words, everyone knows right away what you mean. #ForExample"
 
-        rules["en"]["hashtags"] = [rule]
+        static_rules["en"]["hashtags"] = [rule]
 
-        rules["en"]["false_positives_phrases"] = [
+        static_rules["en"]["false_positives_phrases"] = [
             "Air Force",
             "Armed forces",
             "Indian Act",
@@ -1734,7 +1480,7 @@ def fetch_rules(model):
             "your best",
         ]
 
-        rules["en"]["a_not_startswith"] = (
+        static_rules["en"]["a_not_startswith"] = (
             "a ",
             "an ",
             "someone",
@@ -1745,7 +1491,7 @@ def fetch_rules(model):
             "everyone",
         )
 
-        rules["en"]["uncountables"] = (
+        static_rules["en"]["uncountables"] = (
             " ethics",
             " accommodation",
             " information",
@@ -2104,7 +1850,7 @@ def fetch_rules(model):
             ]
         ]
 
-        rules["en"]["pattern_false_positives"] = [
+        static_rules["en"]["pattern_false_positives"] = [
             pattern_master,
             pattern_lead_prepos,
             pattern_lead_life,
@@ -2114,7 +1860,7 @@ def fetch_rules(model):
             pattern_quick,
         ]
 
-        rules["en"]["salutations"] = (
+        static_rules["en"]["salutations"] = (
             "Dear",
             "Mrs.",
             "Miss",
@@ -2167,4 +1913,4 @@ def fetch_rules(model):
             "Holler",
         )
 
-    return rules
+    return static_rules

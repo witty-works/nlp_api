@@ -517,7 +517,7 @@ def set_redis():
         "name": "Tests Default",
         "config": {
             "categories": {
-                "advanced_plain_language": {"value": False, "status": "force"},
+                "plain_language_advanced": {"value": False, "status": "force"},
             },
         },
         "false_positives": [],
@@ -559,7 +559,7 @@ def set_redis():
                 "status": "force",
             },
             "categories": {
-                "advanced_plain_language": {"value": False, "status": "force"},
+                "plain_language_advanced": {"value": False, "status": "force"},
                 "emotional_security": {"value": True, "status": "force"},
                 "abbreviation": {"value": False, "status": "force"},
                 "belief": {"value": True, "status": "force"},
@@ -912,7 +912,7 @@ def test_fetch_configs_for_request(event_loop, set_redis):
     }
     test_request = RequestIn(**request_data)
     event_loop.run_until_complete(
-        fetch_configs_for_request(2.3, test_request, "test@gmail.com")
+        fetch_configs_for_request(test_request, "test@gmail.com")
     )
     assert hasattr(test_request.config, "store_context")
     assert test_request.config.store_context is True
@@ -937,7 +937,7 @@ def test_fetch_user_rules_suggestion(event_loop, set_redis):
     }
     test_request = RequestIn(**request_data)
     event_loop.run_until_complete(
-        fetch_configs_for_request(2.3, test_request, "non_existant@gmail.com")
+        fetch_configs_for_request(test_request, "non_existant@gmail.com")
     )
     assert test_request.config.store_context is True
     assert test_request.config.primary_language == "de-DE"
@@ -956,7 +956,7 @@ def test_set_organization_rules(event_loop, set_redis):
     }
     test_request = RequestIn(**request_data)
     event_loop.run_until_complete(
-        fetch_configs_for_request(2.3, test_request, "test@gmail.com")
+        fetch_configs_for_request(test_request, "test@gmail.com")
     )
     assert test_request.config.store_context is True
     assert test_request.config.preferred_variants == ["en-GB"]
@@ -974,7 +974,7 @@ def test_set_default_rules(event_loop):
     test_request = RequestIn(**request_data)
 
     event_loop.run_until_complete(
-        fetch_configs_for_request(2.3, test_request, "non_existant@gmail.com")
+        fetch_configs_for_request(test_request, "non_existant@gmail.com")
     )
     assert test_request.config.store_context is True
     assert test_request.config.primary_language is None
@@ -1264,17 +1264,23 @@ def test_rule():
             "lang": "en",
             "lemma": "have special need",
             "subcategories": ["corporate_rules"],
-            "word_types": "v|a|s",
-            "lower_case": True,
+            "word_types": [
+                {"word_type": "v", "lower_case": True, "lemmatize": True},
+                {"word_type": "a", "lower_case": True, "lemmatize": True},
+                {"word_type": "n", "lower_case": True, "lemmatize": True},
+            ],
             "alternatives": [
                 {
                     "lemma": "foo",
+                    "words": ("foo",),
                 },
                 {
                     "lemma": "bar",
+                    "words": ("bar",),
                 },
                 {
                     "lemma": "ding",
+                    "words": ("ding",),
                     "label": "dong",
                 },
             ],
@@ -1298,6 +1304,76 @@ def test_rule():
                 ],
                 "label": "Dictionary",
                 "explanation": {"text": "", "icon": "❗"},
+                "gravity": 0.9,
+            }
+        ]
+
+        assert response_content == expected
+
+        request_data = {
+            "text": "Du arbeitest sehr sehr langsam",
+            "lang": "de",
+            "lemma": "langsam",
+            "pattern": "v|a*|l",
+            "label": "bar",
+            "subcategories": ["corporate_rules"],
+            "word_types": [
+                {"word_type": "a", "lower_case": True, "lemmatize": True},
+            ],
+            "alternatives": [
+                {
+                    "lemma": "foo",
+                    "words": ("foo",),
+                }
+            ],
+        }
+        response = client.post("/debug/rule", json=request_data)
+        assert response.status_code == 200
+        response_content = json.loads(response.content)
+
+        expected = [
+            {
+                "text": "langsam",
+                "context": "Du arbeitest sehr sehr langsam",
+                "category": "corporate_rules",
+                "subcategory": "corporate_rules",
+                "start": 23,
+                "end": 30,
+                "alternatives": [{"text": "foo"}],
+                "label": "Wörterbuch",
+                "explanation": {"text": "", "icon": "❗", "context": "bar"},
+                "gravity": 0.9,
+            }
+        ]
+
+        assert response_content == expected
+
+        request_data = {
+            "text": "Wir suchen super schnelle Entwickler unter 30",
+            "lang": "de",
+            "lemma": "unter",
+            "pattern": "a*|n|l|card",
+            "is_pattern_match": 1,
+            "label": "bar",
+            "subcategories": ["corporate_rules"],
+            "word_types": [],
+            "alternatives": [],
+        }
+        response = client.post("/debug/rule", json=request_data)
+        assert response.status_code == 200
+        response_content = json.loads(response.content)
+
+        expected = [
+            {
+                "text": "super schnelle Entwickler unter 30",
+                "context": "Wir suchen super schnelle Entwickler unter <NUMBER>",
+                "category": "corporate_rules",
+                "subcategory": "corporate_rules",
+                "start": 37,
+                "end": 71,
+                "alternatives": [],
+                "label": "Wörterbuch",
+                "explanation": {"text": "", "icon": "❗", "context": "bar"},
                 "gravity": 0.9,
             }
         ]
@@ -1664,13 +1740,13 @@ def test_english_upper_case_multiterms(
 
 
 @pytest.mark.parametrize(
-    "german_plain_language_dir",
-    get_dirs("tests/test_german_plain_language"),
+    "plain_language_dir",
+    get_dirs("tests/test_plain_language"),
 )
-def test_german_plain_language(german_plain_language_dir, snapshot, set_redis):
+def test_plain_language(plain_language_dir, snapshot, set_redis):
     with TestClient(app) as client:
         # Read input files from the case directory.
-        input_json = german_plain_language_dir.joinpath("input.json").read_text()
+        input_json = plain_language_dir.joinpath("input.json").read_text()
         # Call the tested endpoint.
         response = client.post(
             "/v2.3/check",
@@ -1683,5 +1759,5 @@ def test_german_plain_language(german_plain_language_dir, snapshot, set_redis):
             response.json(), sort_keys=True, indent=4, ensure_ascii=False
         )
         # Snapshot the return value.
-        snapshot.snapshot_dir = german_plain_language_dir
+        snapshot.snapshot_dir = plain_language_dir
         snapshot.assert_match(output, "output.json")

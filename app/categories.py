@@ -24,15 +24,13 @@ def get_category_keys(only_category_advanced_keys=False):
     category_advanced_keys = []
     for category in category_keys:
         category_data = categories[category]
-        category_advanced_keys.append(category + "_base")
 
         if (
             "category" in category_data
             and "proficiency_level" in category_data
             and "proficiency_level" != "openly_discriminating"
         ):
-            category_advanced_keys.append(add_advanced(category))
-            category_advanced_keys.append(add_advanced(category) + "_base")
+            category_advanced_keys.append(category + "_advanced")
 
     if only_category_advanced_keys:
         return category_advanced_keys
@@ -46,24 +44,8 @@ def get_proficiency_levels():
     return json.load(proficiency_levels_file)
 
 
-def is_base_category(category):
-    return category.endswith("_base")
-
-
-def is_advanced_category(category):
-    return category.startswith("advanced_")
-
-
-def remove_base(category):
-    return category.removesuffix("_base")
-
-
-def add_advanced(category):
-    return "advanced_" + category
-
-
 def get_category_name(category):
-    return remove_base(category.removeprefix("advanced_"))
+    return category.removesuffix("_advanced")
 
 
 def get_category(category):
@@ -129,7 +111,7 @@ def map_importance(category):
     ):
         return 1.0
 
-    if not is_advanced_category(category):
+    if not category.endswith("_advanced"):
         return 2.0
 
     return 3.0

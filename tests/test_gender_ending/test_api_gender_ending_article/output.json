@@ -5,14 +5,14 @@
         {
             "alternatives": [
                 {
-                    "context": "wenn GmbH, Einzelfirma oder AG",
-                    "text": "die Arbeitgeberin"
-                },
-                {
                     "text": "die*der Arbeitgeber*in"
                 },
                 {
                     "text": "die/der Arbeitgeberin/Arbeitgeber"
+                },
+                {
+                    "context": "wenn GmbH, Einzelfirma oder AG",
+                    "text": "die Arbeitgeberin"
                 }
             ],
             "category": "gender-orientation",

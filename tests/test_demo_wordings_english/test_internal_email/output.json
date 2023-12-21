@@ -24,6 +24,43 @@
         {
             "alternatives": [
                 {
+                    "text": "Nadia."
+                },
+                {
+                    "text": "Nadia!"
+                },
+                {
+                    "text": "Nadia?"
+                },
+                {
+                    "text": "Nadia:"
+                },
+                {
+                    "text": "Nadia,"
+                }
+            ],
+            "category": "orthography",
+            "context": "daily life and we love to be challenged.\nWe are number <NUMBER> and innovation drives us.\nSincere regards,\nNadia",
+            "end": 187,
+            "explanation": {
+                "icon": "❌",
+                "text": "Please add a punctuation mark at the end of paragraph."
+            },
+            "gravity": 1.0,
+            "label": "Punctuation",
+            "start": 182,
+            "subcategory": "punctuation",
+            "text": "Nadia"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "team"
+                },
+                {
+                    "text": "crowd"
+                },
+                {
                     "text": "people"
                 },
                 {
@@ -31,12 +68,6 @@
                 },
                 {
                     "text": "friends"
-                },
-                {
-                    "text": "all"
-                },
-                {
-                    "text": "you all"
                 }
             ],
             "category": "gender-orientation",
@@ -75,16 +106,19 @@
         {
             "alternatives": [
                 {
-                    "text": "growth mindset"
-                },
-                {
                     "text": "dedication"
                 },
                 {
-                    "text": "willingness to go after a dream"
+                    "text": "goals"
                 },
                 {
-                    "text": "enthusiasm for working toward goals"
+                    "text": "plans"
+                },
+                {
+                    "text": "career goals"
+                },
+                {
+                    "text": "dreams"
                 }
             ],
             "category": "social-motive",
@@ -130,11 +164,11 @@
                 "text": "Doesn’t resonate with team-minded people",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Social Motive: Agentic language",
             "proficiency_level": "unconscious_bias",
             "start": 43,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "perseverance"
         },
         {
@@ -214,10 +248,10 @@
                     "text": "improvement"
                 },
                 {
-                    "text": "new creation"
+                    "text": "redesign"
                 },
                 {
-                    "text": "redesign"
+                    "text": "reinventions"
                 }
             ],
             "category": "cultural-diversity",
@@ -233,25 +267,16 @@
             "label": "Cultural Diversity: Empty words",
             "proficiency_level": "unconscious_bias",
             "start": 143,
-            "subcategory": "advanced_hollow",
+            "subcategory": "hollow_advanced",
             "text": "innovation"
         },
         {
             "alternatives": [
                 {
-                    "text": "invests in"
-                },
-                {
                     "text": "supports"
                 },
                 {
-                    "text": "works toward"
-                },
-                {
-                    "text": "takes responsibility for"
-                },
-                {
-                    "text": "dedicates"
+                    "text": "motivates"
                 }
             ],
             "category": "social-motive",

@@ -66,6 +66,8 @@ class Settings(BaseSettings):
     minimum_version_word_plugin: Optional[str] = ""
     minimum_versions: dict = {}
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+    import_from_dump: bool = True
+    log_missing_declension: bool = True
 
 
 @lru_cache()

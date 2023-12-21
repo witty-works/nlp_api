@@ -1,0 +1,42 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "context": "Nutze geschlechtsneutrale Job-Titel",
+                    "remove": true
+                },
+                {
+                    "context": "Divers (EU) / m. Behinderung (NA)",
+                    "text": "(m/f/d)"
+                },
+                {
+                    "context": "Divers (EU) / m. Behinderung (NA)",
+                    "text": "(d/f/m)"
+                },
+                {
+                    "text": "(m/f/*)"
+                },
+                {
+                    "text": "Alle Gender"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Wir brauchen (m/w) Menschen oder Menschen (m/w/d).",
+            "end": 18,
+            "explanation": {
+                "icon": "😮",
+                "text": "Nenne unterrepräsentierte Gruppen zuerst. Verlinke auf deine Leitlinie zur Gleichstellung.",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/geschlechter-spezifische-abkürzung?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Geschlechter-Spezifische Abkürzung",
+            "proficiency_level": "unconscious_bias",
+            "start": 13,
+            "subcategory": "gender_specific_abbreviation",
+            "text": "(m/w)"
+        }
+    ]
+}

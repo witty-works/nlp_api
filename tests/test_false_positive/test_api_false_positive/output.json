@@ -6,10 +6,66 @@
     "notifications": 5,
     "results": [
         {
+            "alternatives": [
+                {
+                    "text": "Indikator"
+                },
+                {
+                    "text": "Indikators"
+                },
+                {
+                    "text": "Indikation"
+                },
+                {
+                    "text": "Indikativ"
+                },
+                {
+                    "text": "Induktor"
+                }
+            ],
+            "category": "orthography",
+            "context": "national ist eine internationale Firma. Wir unterstützen trans Personen mit unseren Key Performance Indicator (KPI). Dank diesen KPI wird es besser.",
+            "end": 125,
+            "explanation": {
+                "icon": "❌",
+                "text": "Möglicher Tippfehler gefunden."
+            },
+            "gravity": 1.0,
+            "label": "Rechtschreibfehler",
+            "start": 116,
+            "subcategory": "typos",
+            "text": "Indicator"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "in vielen Ländern vertretene"
+                },
+                {
+                    "text": "auf allen Kontinenten vertretene"
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "Greenpeace International ist eine internationale Firma. Wir unterstützen trans Personen mit unseren Key Performance Indicator (KPI). Dank diesen KPI",
+            "end": 48,
+            "explanation": {
+                "content": "advanced",
+                "icon": "🙄",
+                "text": "Schwächen die Wirkung deiner Botschaft",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/worthülsen?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Kulturelle Diversität: Worthülsen",
+            "proficiency_level": "unconscious_bias",
+            "start": 34,
+            "subcategory": "hollow",
+            "text": "internationale"
+        },
+        {
             "alternatives": [],
             "category": "social-motive",
-            "context": "Greenpeace ist eine internationale Firma. Wir unterstützen trans Personen.",
-            "end": 58,
+            "context": "Greenpeace International ist eine internationale Firma. Wir unterstützen trans Personen mit unseren Key Performance Indicator (KPI). Dank diesen KPI wird es besser.",
+            "end": 72,
             "explanation": {
                 "content": "video",
                 "icon": "✅",
@@ -18,9 +74,66 @@
             },
             "label": "Soziale Motivation: Kommunale Sprache",
             "proficiency_level": "inclusive",
-            "start": 46,
+            "start": 60,
             "subcategory": "communal",
             "text": "unterstützen"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Leistung"
+                },
+                {
+                    "text": "Durchsatz"
+                },
+                {
+                    "text": "Leistungsfähigkeit"
+                },
+                {
+                    "text": "Erfüllung"
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "npeace International ist eine internationale Firma. Wir unterstützen trans Personen mit unseren Key Performance Indicator (KPI). Dank diesen KPI wird es besser.",
+            "end": 115,
+            "explanation": {
+                "icon": "😉",
+                "text": "Anglizismen: Sicher, dass das alle Lesenden verstehen?",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/anglizismen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Kulturelle Diversität: Anglizismen",
+            "proficiency_level": "unconscious_bias",
+            "start": 104,
+            "subcategory": "anglicism_advanced",
+            "text": "Performance"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Key Performance Indicator (KPI)"
+                },
+                {
+                    "text": "Leistungskennzahl"
+                },
+                {
+                    "text": "Kennzahl"
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "ale Firma. Wir unterstützen trans Personen mit unseren Key Performance Indicator (KPI). Dank diesen KPI wird es besser.",
+            "end": 148,
+            "explanation": {
+                "icon": "😉",
+                "text": "Werden alle Lesenden diese Abkürzung verstehen?",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/abkürzung?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Kulturelle Diversität: Abkürzung",
+            "proficiency_level": "unconscious_bias",
+            "start": 145,
+            "subcategory": "abbreviation_advanced",
+            "text": "KPI"
         }
     ]
 }

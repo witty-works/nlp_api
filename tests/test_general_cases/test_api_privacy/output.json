@@ -6,9 +6,6 @@
             "alternatives": [
                 {
                     "text": "a growth-minded"
-                },
-                {
-                    "text": "a keen and enthusiastic"
                 }
             ],
             "category": "social-motive",
@@ -16,7 +13,7 @@
             "end": 27,
             "explanation": {
                 "content": "video",
-                "context": "don't use for people",
+                "context": "Try not to use this word to describe people",
                 "icon": "😒",
                 "text": "Doesn’t resonate with team-minded people",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"

@@ -9,6 +9,9 @@
                 },
                 {
                     "text": "die/der Managerin/Manager"
+                },
+                {
+                    "text": "das Management"
                 }
             ],
             "category": "gender-orientation",
@@ -33,10 +36,10 @@
                     "text": "deine Leitungsperson"
                 },
                 {
-                    "text": "dein*e Vorgesetzte*r"
+                    "text": "deine Leitung"
                 },
                 {
-                    "text": "dein/e Vorgesetzte/Vorgesetzter"
+                    "text": "dein Management"
                 }
             ],
             "category": "gender-orientation",

@@ -5,18 +5,28 @@
         {
             "alternatives": [
                 {
+                    "context": "💡",
+                    "inspiration": true,
                     "text": "Cordially"
                 },
                 {
+                    "context": "💡",
+                    "inspiration": true,
                     "text": "Thank you for reading"
                 },
                 {
+                    "context": "💡",
+                    "inspiration": true,
                     "text": "Sending you the best"
                 },
                 {
+                    "context": "💡",
+                    "inspiration": true,
                     "text": "Take care"
                 },
                 {
+                    "context": "💡",
+                    "inspiration": true,
                     "text": "With appreciation"
                 }
             ],
@@ -32,7 +42,7 @@
             "label": "Acquired Diversity: Formality",
             "proficiency_level": "unconscious_bias",
             "start": 0,
-            "subcategory": "advanced_formality",
+            "subcategory": "formality_advanced",
             "text": "Kind regards"
         }
     ]

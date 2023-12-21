@@ -20,8 +20,39 @@
             "label": "Geschlecht + Orientierung: Inklusive Endung",
             "proficiency_level": "unconscious_bias",
             "start": 85,
-            "subcategory": "advanced_gendered_denominations_ending",
+            "subcategory": "gendered_denominations_ending_advanced",
             "text": "/in"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Sie*er"
+                },
+                {
+                    "text": "Sie/er"
+                },
+                {
+                    "text": "Du"
+                },
+                {
+                    "text": "Sie"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Das ist der Link <URL> beachte podcasts/in bzw. Podcasts/in. Er ist Arbeiter, Mitarbeiter und Lagerarbeiter. Sie ist Sacharbeiterin/Mitarbeiter",
+            "end": 92,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Binäre Pronomen",
+            "proficiency_level": "unconscious_bias",
+            "start": 90,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "Er"
         },
         {
             "alternatives": [
@@ -30,6 +61,9 @@
                 },
                 {
                     "text": "Arbeiterinnen und Arbeiter"
+                },
+                {
+                    "text": "Arbeit"
                 }
             ],
             "category": "gender-orientation",
@@ -51,9 +85,6 @@
         {
             "alternatives": [
                 {
-                    "text": "Mitarbeitende"
-                },
-                {
                     "text": "Mitarbeiter*innen"
                 },
                 {
@@ -64,6 +95,9 @@
                 },
                 {
                     "text": "Mitarbeiterschaft"
+                },
+                {
+                    "text": "Belegschaft"
                 }
             ],
             "category": "gender-orientation",
@@ -89,6 +123,9 @@
                 },
                 {
                     "text": "Lagerarbeiterinnen und Lagerarbeiter"
+                },
+                {
+                    "text": "Lagerarbeit"
                 }
             ],
             "category": "gender-orientation",
@@ -106,6 +143,37 @@
             "start": 123,
             "subcategory": "titles",
             "text": "Lagerarbeiter"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Sie*er"
+                },
+                {
+                    "text": "Sie/er"
+                },
+                {
+                    "text": "Du"
+                },
+                {
+                    "text": "Dich"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "/podcasts/in, beachte podcasts/in bzw. Podcasts/in. Er ist Arbeiter, Mitarbeiter und Lagerarbeiter. Sie ist Sacharbeiterin/Mitarbeiter",
+            "end": 141,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Binäre Pronomen",
+            "proficiency_level": "unconscious_bias",
+            "start": 138,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "Sie"
         },
         {
             "alternatives": [

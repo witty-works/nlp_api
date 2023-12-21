@@ -37,6 +37,9 @@
                 },
                 {
                     "text": "Projektleiterin/Projektleiter"
+                },
+                {
+                    "text": "Projektleitung"
                 }
             ],
             "category": "gender-orientation",
@@ -107,11 +110,11 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 46,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "anspruchsvolle"
         },
         {
@@ -149,11 +152,11 @@
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
             "start": 111,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "ambitionierten"
         },
         {
@@ -197,9 +200,6 @@
                 },
                 {
                     "text": "fleißig"
-                },
-                {
-                    "text": "engagiert und fokussiert"
                 }
             ],
             "category": "social-motive",
@@ -227,13 +227,10 @@
                     "text": "Teamziele"
                 },
                 {
-                    "text": "zuverlässiges Ergebnisse"
+                    "text": "zuverlässige Ergebnisse"
                 },
                 {
                     "text": "Sternstunden"
-                },
-                {
-                    "text": "zuverlässige Ergebnisse"
                 }
             ],
             "category": "social-motive",

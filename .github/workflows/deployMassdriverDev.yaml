@@ -30,10 +30,6 @@ jobs:
         run: |
           pdm export --prod -o requirements.txt --without-hashes
 
-      - name: Compile translation
-        run: |
-          ./compile-translations.sh
-
       - name: Install Massdriver CLI
         uses: massdriver-cloud/actions@v3
 

@@ -40,6 +40,9 @@
             "alternatives": [
                 {
                     "text": "Programmierende"
+                },
+                {
+                    "text": "Programmierung"
                 }
             ],
             "category": "gender-orientation",
@@ -61,16 +64,16 @@
         {
             "alternatives": [
                 {
-                    "text": "Auftraggebende"
-                },
-                {
-                    "text": "Bestellende"
-                },
-                {
                     "text": "Kundschaft"
                 },
                 {
                     "text": "Klientel"
+                },
+                {
+                    "text": "Auftraggebende"
+                },
+                {
+                    "text": "Bestellende"
                 }
             ],
             "category": "gender-orientation",

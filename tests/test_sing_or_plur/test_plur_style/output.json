@@ -5,6 +5,13 @@
         {
             "alternatives": [
                 {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "market participant"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
                     "text": "market participants"
                 }
             ],
@@ -17,11 +24,11 @@
                 "text": "Over-the-top statements make you sound less trustworthy",
                 "url": "https://www.witty.works/en/categories/social-motive/exaggeration?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Social Motive: Exaggeration",
             "proficiency_level": "unconscious_bias",
             "start": 36,
-            "subcategory": "exaggerating",
+            "subcategory": "exaggerating_advanced",
             "text": "competitors"
         }
     ]

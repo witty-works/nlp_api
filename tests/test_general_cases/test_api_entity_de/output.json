@@ -5,19 +5,7 @@
         {
             "alternatives": [
                 {
-                    "text": "Person"
-                },
-                {
-                    "text": "eine*einer"
-                },
-                {
-                    "text": "eine/einer"
-                },
-                {
-                    "text": "Mensch"
-                },
-                {
-                    "text": "Erwachsene*r"
+                    "text": "höflicher Mensch"
                 }
             ],
             "category": "gender-orientation",
@@ -34,25 +22,13 @@
             "label": "Geschlecht + Orientierung: Binäres Geschlecht",
             "proficiency_level": "unconscious_bias",
             "start": 6,
-            "subcategory": "advanced_gender_identity",
+            "subcategory": "gender_identity_advanced",
             "text": "Herr"
         },
         {
             "alternatives": [
                 {
-                    "text": "Person"
-                },
-                {
-                    "text": "eine*einer"
-                },
-                {
-                    "text": "eine/einer"
-                },
-                {
-                    "text": "Mensch"
-                },
-                {
-                    "text": "Erwachsene*r"
+                    "text": "höflicher Mensch"
                 }
             ],
             "category": "gender-orientation",
@@ -69,7 +45,7 @@
             "label": "Geschlecht + Orientierung: Binäres Geschlecht",
             "proficiency_level": "unconscious_bias",
             "start": 58,
-            "subcategory": "advanced_gender_identity",
+            "subcategory": "gender_identity_advanced",
             "text": "Herr"
         },
         {

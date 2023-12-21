@@ -80,12 +80,6 @@ pdm sync --dev
 wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 ```
 
-Compile PO files:
-
-```
-./compile-translations.sh
-```
-
 ## Update dependencies locally
 
 To update packages locally after pyproject.toml/pdm.lock was changed, run the

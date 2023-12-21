@@ -1,0 +1,118 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "Bäcker*in-Confiseur*in-Konditor*in"
+                },
+                {
+                    "text": "Bäckerin/Bäcker-Confiseurin/Confiseur-Konditorin/Konditor"
+                },
+                {
+                    "text": "Konditorei"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Bäcker-Confiseur-Konditor oder Bäckerin-Confiseurin-Konditorin oder Bäcker-Confiseur-Konditorin oder Immobilien-Asset-Manager",
+            "end": 25,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Viele denken zuerst an bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufe",
+            "proficiency_level": "unconscious_bias",
+            "start": 0,
+            "subcategory": "titles",
+            "text": "Bäcker-Confiseur-Konditor"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Bäcker*in-Confiseur*in-Konditor*in"
+                },
+                {
+                    "text": "Bäckerin/Bäcker-Confiseurin/Confiseur-Konditorin/Konditor"
+                },
+                {
+                    "text": "Konditorei"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Bäcker-Confiseur-Konditor oder Bäckerin-Confiseurin-Konditorin oder Bäcker-Confiseur-Konditorin oder Immobilien-Asset-Manager",
+            "end": 62,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Viele denken zuerst an bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufe",
+            "proficiency_level": "unconscious_bias",
+            "start": 31,
+            "subcategory": "titles",
+            "text": "Bäckerin-Confiseurin-Konditorin"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Bäcker*in-Confiseur*in-Konditor*in"
+                },
+                {
+                    "text": "Bäckerin/Bäcker-Confiseurin/Confiseur-Konditorin/Konditor"
+                },
+                {
+                    "text": "Konditorei"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Bäcker-Confiseur-Konditor oder Bäckerin-Confiseurin-Konditorin oder Bäcker-Confiseur-Konditorin oder Immobilien-Asset-Manager",
+            "end": 95,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Viele denken zuerst an bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufe",
+            "proficiency_level": "unconscious_bias",
+            "start": 68,
+            "subcategory": "titles",
+            "text": "Bäcker-Confiseur-Konditorin"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Immobilien-Asset-Manager*in-Asset-Manager"
+                },
+                {
+                    "text": "Immobilien-Asset-Managerin/Immobilien-Asset-Manager"
+                },
+                {
+                    "text": "Immobilien-Asset-Management"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "äcker-Confiseur-Konditor oder Bäckerin-Confiseurin-Konditorin oder Bäcker-Confiseur-Konditorin oder Immobilien-Asset-Manager",
+            "end": 125,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Viele denken zuerst an bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufe",
+            "proficiency_level": "unconscious_bias",
+            "start": 101,
+            "subcategory": "titles",
+            "text": "Immobilien-Asset-Manager"
+        }
+    ]
+}

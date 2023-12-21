@@ -5,6 +5,37 @@
         {
             "alternatives": [
                 {
+                    "text": "she."
+                },
+                {
+                    "text": "she!"
+                },
+                {
+                    "text": "she?"
+                },
+                {
+                    "text": "she:"
+                },
+                {
+                    "text": "she,"
+                }
+            ],
+            "category": "orthography",
+            "context": "Is this all he could do? Why she",
+            "end": 32,
+            "explanation": {
+                "icon": "❌",
+                "text": "Please add a punctuation mark at the end of paragraph."
+            },
+            "gravity": 1.0,
+            "label": "Punctuation",
+            "start": 29,
+            "subcategory": "punctuation",
+            "text": "she"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "they"
                 }
             ],
@@ -17,11 +48,11 @@
                 "text": "Pronouns that exclude non-binary people",
                 "url": "https://www.witty.works/en/categories/gender-orientation/binary-pronouns?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Gender + Orientation: Binary pronouns",
             "proficiency_level": "unconscious_bias",
             "start": 12,
-            "subcategory": "binary_pronouns",
+            "subcategory": "binary_pronouns_advanced",
             "text": "he"
         },
         {
@@ -39,11 +70,11 @@
                 "text": "Pronouns that exclude non-binary people",
                 "url": "https://www.witty.works/en/categories/gender-orientation/binary-pronouns?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Gender + Orientation: Binary pronouns",
             "proficiency_level": "unconscious_bias",
             "start": 29,
-            "subcategory": "binary_pronouns",
+            "subcategory": "binary_pronouns_advanced",
             "text": "she"
         }
     ]

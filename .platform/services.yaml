@@ -1,2 +1,0 @@
-rediscache:
-    type: redis-persistent:6.0

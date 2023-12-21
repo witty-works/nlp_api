@@ -6,19 +6,12 @@
             "alternatives": [
                 {
                     "text": "froze"
-                },
-                {
-                    "text": "stopped responded"
-                },
-                {
-                    "text": "became unresponsive"
                 }
             ],
             "category": "ability-physicality",
             "context": "We hanged them up. We analyzed if this works. Are you a chairman or an addict? Are you a top performer? This",
             "end": 9,
             "explanation": {
-                "context": "in technology",
                 "icon": "😒",
                 "text": "Repeats outdated ideas about mental health and wellbeing",
                 "url": "https://www.witty.works/en/categories/ability-physicality/mental-wellbeing?reducedView=true"
@@ -51,29 +44,29 @@
                 "text": "Doesn’t resonate with team-minded people",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Social Motive: Agentic language",
             "proficiency_level": "unconscious_bias",
             "start": 22,
-            "subcategory": "agentic",
+            "subcategory": "agentic_advanced",
             "text": "analyzed"
         },
         {
             "alternatives": [
                 {
-                    "text": "chair"
+                    "text": "they"
                 },
                 {
-                    "text": "chairperson"
+                    "text": "a chair"
                 },
                 {
-                    "text": "committee head"
+                    "text": "a chairperson"
                 },
                 {
-                    "text": "presiding officer"
+                    "text": "a coordinator"
                 },
                 {
-                    "text": "coordinator"
+                    "text": "a committee head"
                 }
             ],
             "category": "gender-orientation",
@@ -88,17 +81,14 @@
             "gravity": 2.0,
             "label": "Gender + Orientation: Generic masculine",
             "proficiency_level": "unconscious_bias",
-            "start": 56,
+            "start": 54,
             "subcategory": "function",
-            "text": "chairman"
+            "text": "a chairman"
         },
         {
             "alternatives": [
                 {
                     "text": "a substance user"
-                },
-                {
-                    "text": "substance users"
                 }
             ],
             "category": "ability-physicality",
@@ -119,29 +109,13 @@
         {
             "alternatives": [
                 {
-                    "context": "💡",
-                    "inspiration": true,
                     "text": "mentor at heart"
                 },
                 {
-                    "context": "💡",
-                    "inspiration": true,
                     "text": "inspiration to the team"
                 },
                 {
-                    "context": "💡",
-                    "inspiration": true,
                     "text": "entrepreneur at heart"
-                },
-                {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "someone with an entrepreneurial mindset"
-                },
-                {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "someone who thrives on working toward milestones"
                 }
             ],
             "category": "social-motive",
@@ -163,19 +137,13 @@
         {
             "alternatives": [
                 {
-                    "text": "a shocking"
+                    "text": "a shock"
                 },
                 {
-                    "text": "a real surprise"
+                    "text": "a revelation"
                 },
                 {
-                    "text": "an enlightening"
-                },
-                {
-                    "text": "a wake-up call"
-                },
-                {
-                    "text": "shocking news"
+                    "text": "revelations"
                 }
             ],
             "category": "ability-physicality",
@@ -186,11 +154,11 @@
                 "text": "Repeats preconceived notions about the ability to see",
                 "url": "https://www.witty.works/en/categories/ability-physicality/vision?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Ability + Physicality: Vision",
             "proficiency_level": "unconscious_bias",
             "start": 112,
-            "subcategory": "vision",
+            "subcategory": "vision_advanced",
             "text": "an eye-opener"
         }
     ]

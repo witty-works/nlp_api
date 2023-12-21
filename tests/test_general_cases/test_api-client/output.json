@@ -39,13 +39,16 @@
         {
             "alternatives": [
                 {
-                    "text": "Programmierende"
-                },
-                {
                     "text": "Programmierer*innen"
                 },
                 {
                     "text": "Programmiererinnen und Programmierer"
+                },
+                {
+                    "text": "Programmierende"
+                },
+                {
+                    "text": "Programmierung"
                 }
             ],
             "category": "gender-orientation",
@@ -67,12 +70,6 @@
         {
             "alternatives": [
                 {
-                    "text": "Auftraggebende"
-                },
-                {
-                    "text": "Bestellende"
-                },
-                {
                     "text": "Kund*innen"
                 },
                 {
@@ -80,6 +77,12 @@
                 },
                 {
                     "text": "Kundschaft"
+                },
+                {
+                    "text": "Klientel"
+                },
+                {
+                    "text": "Auftraggebende"
                 }
             ],
             "category": "gender-orientation",
@@ -137,7 +140,7 @@
             "label": "Geschlecht + Orientierung: Sexismus",
             "proficiency_level": "openly_discriminating",
             "start": 77,
-            "subcategory": "advanced_sexism",
+            "subcategory": "sexism",
             "text": "Luder"
         }
     ]
