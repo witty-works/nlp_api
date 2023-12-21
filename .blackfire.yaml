@@ -1,0 +1,15 @@
+scenarios: |
+    #!blackfire-player
+    scenario
+        name "Check Performance Regression"
+        visit url('/debug/check')
+            method 'POST'
+            param text "Sehr geehrte Kollegen,\nWir sind ein Mannschaft, in dem Ehrgeiz und Durchhaltevermögen zählen. Wir suchen die Herausgeforderung.\nIch zähle auf euch.\nFreundliche Grüße\nArnau"
+            json true
+            assert main.wall_time <= 50ms * var('performance_multiplier')
+
+tests:
+  "The /debug/check endpoint should be fast":
+    path: "/debug/check"
+    assertions:
+      - "main.wall_time < 100ms"

@@ -1,0 +1,104 @@
+applications:
+  app:
+    source:
+      root: "/"
+
+    type: "python:3.11"
+
+    container_profile: HIGHER_MEMORY
+
+    web:
+      upstream:
+        socket_family: unix
+      commands:
+        start: |
+          eval $(pdm venv activate in-project)
+          FINAL_WORKER_COUNT=$(echo $PLATFORM_APPLICATION| base64 --decode | jq --argjson multiplier $MULTIPLIER '.resources.profile_size | tonumber |floor|2 * . |$multiplier * .|1 + .|floor ')
+          blackfire-python gunicorn app.main:app --preload -b unix:$SOCKET -w $FINAL_WORKER_COUNT -k uvicorn.workers.UvicornWorker --forwarded-allow-ips="*" --worker-tmp-dir="/run" --max-requests $MAX_REQUESTS --max-requests-jitter $MAX_REQUESTS_JITTER
+
+    hooks:
+      build: |
+        set -e
+
+        ./install_dependencies.sh
+
+        export FT_MODEL="lid.176.bin"
+
+        if [ ! -f "${PLATFORM_CACHE_DIR}/$FT_MODEL" ]; then
+          echo "Downloading ${FT_MODEL} ..."
+          cd "${PLATFORM_CACHE_DIR}"
+          curl https://dl.fbaipublicfiles.com/fasttext/supervised-models/${FT_MODEL} --output ${FT_MODEL}
+          cd ~
+        else
+          echo "Using cached ${FT_MODEL} model ..."
+        fi
+
+        echo "Installing archive of ${FT_MODEL} from '${PLATFORM_CACHE_DIR}/${FT_MODEL}' ..."
+        cp -R "${PLATFORM_CACHE_DIR}/${FT_MODEL}" ./training_data/.
+
+        echo "e613bda316ecb4f5e1924140eedf81b81c087d9a *training_data/lid.176.bin" | sha1sum -c -
+
+    relationships:
+      rediscache: "rediscache:redis"
+      languagetool: "languagetool:http"
+
+  languagetool:
+    source:
+      root: "/languagetool"
+
+    type: "java:19"
+
+    container_profile: HIGHER_MEMORY
+
+    web:
+      commands:
+        start: |
+          java -Xms${MEMORY}M -Xmx${MEMORY}M -XX:+UseG1GC -XX:+UseStringDeduplication -cp languagetool-server.jar org.languagetool.server.HTTPServer --public --config config.properties --port $PORT --allow-origin "*"
+
+    hooks:
+      build: |
+        export SERVER="languagetool-server.jar"
+        export VERSION="6.2"
+        export LT="LanguageTool"
+        if [ ! -d "${PLATFORM_CACHE_DIR}/${LT}-${VERSION}" ]; then
+          echo "Downloading ${LT} ${VERSION} ..."
+          (
+            cd "${PLATFORM_CACHE_DIR}"
+            rm -rf "${LT}*"
+            export FILE="${LT}-${VERSION}.zip"
+            [ ! -f "$FILE" ] && curl -O https://languagetool.org/download/${FILE}
+            unzip $FILE
+            rm -rf $FILE
+            cd ~
+          )
+        else
+          echo "Using cached archive of ${LT} ${VERSION} ..."
+        fi
+
+        echo "Installing archive of ${LT} ${VERSION} from '${PLATFORM_CACHE_DIR}/${LT}-${VERSION}' ..."
+        cp -R "${PLATFORM_CACHE_DIR}/${LT}-${VERSION}"/* .
+        cp de_ignore.txt org/languagetool/resource/de/hunspell/ignore.txt
+        cp en_ignore.txt org/languagetool/resource/en/hunspell/ignore.txt
+
+routes:
+  "https://{default}/":
+    type: upstream
+    upstream: "app:http"
+    tls:
+      strict_transport_security:
+        enabled: true
+        include_subdomains: true
+        preload: true
+
+  "https://lt.{default}/":
+    type: upstream
+    upstream: "languagetool:http"
+    tls:
+      strict_transport_security:
+        enabled: true
+        include_subdomains: true
+        preload: true
+
+services:
+  rediscache:
+    type: redis-persistent:6.0

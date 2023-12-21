@@ -1,3 +1,11 @@
+from blackfire_conprof.profiler import Profiler
+import os
+
+application_name="Witty NLP API"
+if os.environ.get("PLATFORM_ENVIRONMENT_TYPE"):
+    profiler = Profiler(application_name=application_name)
+    profiler.start()
+
 import re
 import uvicorn
 import json
@@ -5,7 +13,6 @@ import secrets
 import aiohttp
 from typing import Optional, Union, List
 from collections import defaultdict, namedtuple
-import os
 import fasttext
 import sqlite3
 
@@ -458,7 +465,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="Witty NLP API",
+    title=application_name,
     version=version,
     terms_of_service=settings.terms_of_service,
     contact=settings.contact,
@@ -628,7 +635,7 @@ def get_root():
     if not settings.is_prod and settings.testing is False:  # pragma: no cover
         return RedirectResponse(url="/docs", status_code=302)
 
-    return "Witty NLP API: https://witty.works"
+    return application_name + ": https://witty.works"
 
 
 @app.get(
