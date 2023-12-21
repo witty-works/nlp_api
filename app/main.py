@@ -3241,9 +3241,10 @@ def generate_german_verb_declension(
                 elif text[-1] == "e" and ending[0] == "e":
                     text = text[0:-1]
 
-    logging.error(
-        f"German verb declension not found for '{a_text}' (lemma '{a_lemma}'): prefix '{prefix}', ending '{ending}' applies to '{original_text}' => {text}"
-    )
+    if settings.log_missing_declension:
+        logging.error(
+            f"German verb declension not found for '{a_text}' (lemma '{a_lemma}'): prefix '{prefix}', ending '{ending}' applies to '{original_text}' => {text}"
+        )
 
     return text + ending
 
@@ -3346,7 +3347,8 @@ def align_noun_form_german(a_token: Token, b_token: Token) -> str:
     a_result = fetch_declensions("de", "n", a_token.text)
     if a_result is None:
         if (
-            len(a_token.text) > 2
+            settings.log_missing_declension
+            and len(a_token.text) > 2
             and a_token.text[0].isupper()
             and not a_token.text.isupper()
         ):
@@ -3357,7 +3359,8 @@ def align_noun_form_german(a_token: Token, b_token: Token) -> str:
     b_result = fetch_declensions("de", "n", b_token.text)
     if b_result is None:
         if (
-            len(b_token.text) > 2
+            settings.log_missing_declension
+            and len(b_token.text) > 2
             and b_token.text[0].isupper()
             and not b_token.text.isupper()
         ):
@@ -3367,17 +3370,19 @@ def align_noun_form_german(a_token: Token, b_token: Token) -> str:
 
     target_form = find_matching_form(a_result, a_token.text)
     if target_form is None:
-        logging.error(
-            f"German noun declension form not found for '{a_token.text}': {json.dumps(a_result)}"
-        )
+        if settings.log_missing_declension:
+            logging.error(
+                f"German noun declension form not found for '{a_token.text}': {json.dumps(a_result)}"
+            )
 
         return b_token.text
 
     text = get_target_form_from_declension(b_result, target_form)
     if text is None:
-        logging.error(
-            f"German noun target form '{target_form}' for '{b_token.text}' (lemma: '{b_token.lemma_}') missing: '{json.dumps(b_result)}'."
-        )
+        if settings.log_missing_declension:
+            logging.error(
+                f"German noun target form '{target_form}' for '{b_token.text}' (lemma: '{b_token.lemma_}') missing: '{json.dumps(b_result)}'."
+            )
 
         return b_token.text
 
@@ -3398,9 +3403,10 @@ def align_noun_form_english(a_token: Token, b_token: Token) -> str:
 
     text = get_target_form_from_declension(b_result, "plural")
     if text is None:
-        logging.error(
-            f"English noun plural for '{b_token.text}' (lemma: '{b_token.lemma_}') missing: '{json.dumps(b_result)}'."
-        )
+        if settings.log_missing_declension:
+            logging.error(
+                f"English noun plural for '{b_token.text}' (lemma: '{b_token.lemma_}') missing: '{json.dumps(b_result)}'."
+            )
 
         return Noun(b_token.text).plural()
 
@@ -3439,7 +3445,7 @@ def align_adjective_form_english(
             target_form = None
 
     if target_form is None:
-        if len(a_token.text) > 2:
+        if settings.log_missing_declension and len(a_token.text) > 2:
             logging.error(
                 f"English adjective target form could not be determined for '{a_token.text}' (lemma: '{a_token.lemma_}')."
             )
@@ -3458,15 +3464,16 @@ def align_adjective_form_english(
         else:
             text = b_token.text
 
-        logging.error(
-            f"English adjective data missing for '{b_token.text}' (lemma: '{b_token.lemma_}'), generated '{text}' for target form '{target_form}'."
-        )
+        if settings.log_missing_declension:
+            logging.error(
+                f"English adjective data missing for '{b_token.text}' (lemma: '{b_token.lemma_}'), generated '{text}' for target form '{target_form}'."
+            )
 
         return text
 
     text = get_target_form_from_declension(b_result, target_form)
     if text is None:
-        if len(b_token.text) > 2:
+        if settings.log_missing_declension and len(b_token.text) > 2:
             logging.error(
                 f"English adjective target form {target_form} for '{b_token.text}' (lemma: '{b_token.lemma_}') missing: {json.dump(b_result)}"
             )
@@ -3523,10 +3530,11 @@ def align_adjective_form(lang: str, a_token: Token, b_token: Token) -> str:
 
 
 def german_verb_splittable(word: str) -> str | None:  # pragma: no cover
-    logging.error(
-        "Guessing how to split: %s",
-        word,
-    )
+    if settings.log_missing_declension:
+        logging.error(
+            "Guessing how to split: %s",
+            word,
+        )
 
     prefixes = (
         "ge",
@@ -3664,9 +3672,10 @@ def align_verb_form_english(a_text: str, b_token: Token) -> str:
         else:
             target_form = None
 
-        logging.error(
-            f"English verb target form '{str(target_form)}' determined via fallback for '{a_text}'."
-        )
+        if settings.log_missing_declension:
+            logging.error(
+                f"English verb target form '{str(target_form)}' determined via fallback for '{a_text}'."
+            )
 
     if target_form is None:
         return b_token.lemma_
@@ -3685,17 +3694,19 @@ def align_verb_form_english(a_text: str, b_token: Token) -> str:
         else:
             text = b_token.lemma_
 
-        logging.error(
-            f"English verb target form '{target_form}' for '{b_token.text}' (lemma: '{b_token.lemma_}') generated '{text}'."
-        )
+        if settings.log_missing_declension:
+            logging.error(
+                f"English verb target form '{target_form}' for '{b_token.text}' (lemma: '{b_token.lemma_}') generated '{text}'."
+            )
 
         return text
 
     text = get_target_form_from_declension(b_result, target_form)
     if text is None:
-        logging.error(
-            f"English verb target form '{target_form}' for '{b_token.text}' (lemma: '{b_token.lemma_}') missing: '{json.dumps(b_result)}'."
-        )
+        if settings.log_missing_declension:
+            logging.error(
+                f"English verb target form '{target_form}' for '{b_token.text}' (lemma: '{b_token.lemma_}') missing: '{json.dumps(b_result)}'."
+            )
 
         return text
 
