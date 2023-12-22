@@ -228,7 +228,7 @@ declensions_config = {
 }
 
 
-def create_rule(row, rewrite_to: str = None) -> Rule:
+def create_rule(lang, row, rewrite_to: str = None) -> Rule:
     rule = Rule(
         row[rule_columns["id"]],
         row[rule_columns["language"]],
@@ -248,7 +248,7 @@ def create_rule(row, rewrite_to: str = None) -> Rule:
     rule.label = (
         row[rule_columns["label"]]
         if row[rule_columns["label_type"]] == RuleLabelEnum.DEFAULT
-        else map_rule_label_type(lang.lang, row[rule_columns["label_type"]])
+        else map_rule_label_type(lang, row[rule_columns["label_type"]])
     )
     rule.type = row[rule_columns["type"]]
     rule.pluralization = row[rule_columns["pluralization"]]
@@ -318,14 +318,14 @@ for spacy_model in settings.models:
     rows = rules_db.execute(query, parameters).fetchall()
     substring_rules[lang] = {}
     for row in rows:
-        rule = create_rule(row)
+        rule = create_rule(lang, row)
         rule.false_positives = fetch_false_positives(rule)
         substring_rules[lang][rule.lemma.lower()] = rule
 
         rewrite_to = "en-GB" if lang == "en" else "de-CH"
         rewritten_lemma = Language.convert_to(rule.lemma, rewrite_to)
         if rule.lemma != rewritten_lemma:
-            rule = create_rule(row, rewrite_to)
+            rule = create_rule(lang, row, rewrite_to)
             rule.false_positives = fetch_false_positives(rule, rewrite_to)
             substring_rules[lang][rule.lemma.lower()] = rule
 
@@ -2346,7 +2346,7 @@ def fetch_rules(
 
     rules = []
     for row in rows:
-        rule = create_rule(row, rewrite_to)
+        rule = create_rule(lang, row, rewrite_to)
         if is_gender_star_ending_ and is_gendered_denom_rule(lang, rule.subcategories):
             continue
         rules.append(rule)
