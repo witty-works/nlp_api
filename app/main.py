@@ -1,4 +1,13 @@
 import os
+
+if os.environ.get("BLACKFIRE_ENABLE_CONTINUOUS_PROFILING"):
+    try:
+        from blackfire_conprof.profiler import Profiler
+        profiler = Profiler()
+        profiler.start(application_name=os.environ.get("PLATFORM_APPLICATION_NAME"))
+    except:
+        pass
+
 import re
 import uvicorn
 import json
