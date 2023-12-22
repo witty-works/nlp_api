@@ -111,7 +111,7 @@ from app.model import fetch_nlp_model
 from app.rules import fetch_static_rules
 from app.sentry import set_up_sentry_sdk
 
-version = "2.0.1"
+version = "2.0.2"
 
 categories = get_categories()
 settings = get_settings()
@@ -3345,7 +3345,7 @@ def fetch_flexion(token: Token) -> str | None:
 
 
 def align_noun_form_german(a_token: Token, b_token: Token) -> str:
-    if a_token.text in static_rules["de"]["articles"]:
+    if a_token.text.lower() in static_rules["de"]["articles"]:
         return b_token.text
 
     a_result = fetch_declensions("de", "n", a_token.text)
