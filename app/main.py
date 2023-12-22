@@ -3345,7 +3345,7 @@ def fetch_flexion(token: Token) -> str | None:
 
 
 def align_noun_form_german(a_token: Token, b_token: Token) -> str:
-    if a_token.text in static_rules["de"]["articles"]:
+    if a_token.text.lower() in static_rules["de"]["articles"]:
         return b_token.text
 
     a_result = fetch_declensions("de", "n", a_token.text)
