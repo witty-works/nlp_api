@@ -1,11 +1,4 @@
-from blackfire_conprof.profiler import Profiler
 import os
-
-application_name="Witty NLP API"
-if os.environ.get("PLATFORM_ENVIRONMENT_TYPE"):
-    profiler = Profiler(application_name=application_name)
-    profiler.start()
-
 import re
 import uvicorn
 import json
@@ -465,6 +458,7 @@ async def lifespan(app: FastAPI):
     await session.close()
     await ssl_session.close()
 
+application_name="Witty NLP API"
 
 app = FastAPI(
     title=application_name,
@@ -3241,7 +3235,7 @@ def generate_german_verb_declension(
                 elif text[-1] == "e" and ending[0] == "e":
                     text = text[0:-1]
 
-    if settings.log_missing_declension:
+    if settings.log_missing_declension and not a_text.isupper():
         logging.error(
             f"German verb declension not found for '{a_text}' (lemma '{a_lemma}'): prefix '{prefix}', ending '{ending}' applies to '{original_text}' => {text}"
         )
@@ -3370,7 +3364,7 @@ def align_noun_form_german(a_token: Token, b_token: Token) -> str:
 
     target_form = find_matching_form(a_result, a_token.text)
     if target_form is None:
-        if settings.log_missing_declension:
+        if settings.log_missing_declension and not a_token.text.isupper():
             logging.error(
                 f"German noun declension form not found for '{a_token.text}': {json.dumps(a_result)}"
             )
@@ -3379,7 +3373,7 @@ def align_noun_form_german(a_token: Token, b_token: Token) -> str:
 
     text = get_target_form_from_declension(b_result, target_form)
     if text is None:
-        if settings.log_missing_declension:
+        if settings.log_missing_declension and not b_token.text.isupper():
             logging.error(
                 f"German noun target form '{target_form}' for '{b_token.text}' (lemma: '{b_token.lemma_}') missing: '{json.dumps(b_result)}'."
             )
@@ -3403,7 +3397,7 @@ def align_noun_form_english(a_token: Token, b_token: Token) -> str:
 
     text = get_target_form_from_declension(b_result, "plural")
     if text is None:
-        if settings.log_missing_declension:
+        if settings.log_missing_declension and not b_token.text.isupper():
             logging.error(
                 f"English noun plural for '{b_token.text}' (lemma: '{b_token.lemma_}') missing: '{json.dumps(b_result)}'."
             )
@@ -3464,7 +3458,7 @@ def align_adjective_form_english(
         else:
             text = b_token.text
 
-        if settings.log_missing_declension:
+        if settings.log_missing_declension and not b_token.text.isupper():
             logging.error(
                 f"English adjective data missing for '{b_token.text}' (lemma: '{b_token.lemma_}'), generated '{text}' for target form '{target_form}'."
             )
@@ -3530,7 +3524,7 @@ def align_adjective_form(lang: str, a_token: Token, b_token: Token) -> str:
 
 
 def german_verb_splittable(word: str) -> str | None:  # pragma: no cover
-    if settings.log_missing_declension:
+    if settings.log_missing_declension and not word.isupper():
         logging.error(
             "Guessing how to split: %s",
             word,
@@ -3672,7 +3666,7 @@ def align_verb_form_english(a_text: str, b_token: Token) -> str:
         else:
             target_form = None
 
-        if settings.log_missing_declension:
+        if settings.log_missing_declension and not a_text.isupper():
             logging.error(
                 f"English verb target form '{str(target_form)}' determined via fallback for '{a_text}'."
             )
@@ -3694,7 +3688,7 @@ def align_verb_form_english(a_text: str, b_token: Token) -> str:
         else:
             text = b_token.lemma_
 
-        if settings.log_missing_declension:
+        if settings.log_missing_declension and not b_token.text.isupper():
             logging.error(
                 f"English verb target form '{target_form}' for '{b_token.text}' (lemma: '{b_token.lemma_}') generated '{text}'."
             )
@@ -3703,7 +3697,7 @@ def align_verb_form_english(a_text: str, b_token: Token) -> str:
 
     text = get_target_form_from_declension(b_result, target_form)
     if text is None:
-        if settings.log_missing_declension:
+        if settings.log_missing_declension and not b_token.text.isupper():
             logging.error(
                 f"English verb target form '{target_form}' for '{b_token.text}' (lemma: '{b_token.lemma_}') missing: '{json.dumps(b_result)}'."
             )
@@ -3994,10 +3988,13 @@ def gendered_denom_analysis_de(
         if "~" not in alternative.lemma:
             continue
 
+        split_char = " und " if " und " in alternative.lemma else "/"
+        if split_char not in alternative.lemma:
+            continue
+
         generated_alternative = ResultOut.getGenderedRolesFormatBinary(
             alternative.lemma
         )
-        split_char = " und " if " und " in generated_alternative else "/"
         generated_alternatives = generated_alternative.split(split_char)
         if len(generated_alternatives) != 2:
             logging.error(
