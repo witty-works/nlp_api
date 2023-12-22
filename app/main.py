@@ -111,7 +111,7 @@ from app.model import fetch_nlp_model
 from app.rules import fetch_static_rules
 from app.sentry import set_up_sentry_sdk
 
-version = "2.0.3"
+version = "2.0.4"
 
 categories = get_categories()
 settings = get_settings()
@@ -134,7 +134,6 @@ def invert_list_to_dict(list_to_convert: list) -> dict:
     return dict(zip(list_to_convert, list(range(len(list_to_convert)))))
 
 
-rules_cursor = rules_db.cursor()
 rule_columns = [
     "id",
     "parent_id",
@@ -266,7 +265,8 @@ def fetch_false_positives(rule: Rule, rewrite_to: str = None) -> list[str]:
     parameters = [rule.name]
 
     false_positives = []
-    for row in rules_cursor.execute(query, parameters):
+    rows = rules_db.execute(query, parameters).fetchall()
+    for row in rows:
         false_positives.append(row[0])
         if rewrite_to:
             false_positive = Language.convert_to(row[0], rewrite_to)
@@ -287,7 +287,7 @@ for spacy_model in settings.models:
     parameters = [lang]
     lookup = {}
     lemma_plural_lookup[lang] = {}
-    rows = rules_cursor.execute(query, parameters).fetchall()
+    rows = rules_db.execute(query, parameters).fetchall()
     for row in rows:
         lookup[row[0]] = row[1]
         if row[2]:
@@ -301,7 +301,7 @@ for spacy_model in settings.models:
         male_form_i = columns.index("male_form")
 
         query = f"SELECT {column_filter} FROM rules_germannoun"
-        rows = rules_cursor.execute(query).fetchall()
+        rows = rules_db.execute(query).fetchall()
         for row in rows:
             target = row[male_form_i] if row[male_form_i] else row[base_form_i]
             for i in range(column_count):
@@ -315,7 +315,7 @@ for spacy_model in settings.models:
 
     query = f"SELECT {rule_column_list} FROM rules_rule WHERE is_active = 1 and language = ? and type = ? ORDER BY lemma_length DESC, first_is_word_type_lemmatize ASC"
     parameters = [lang, RuleType.SUBSTRING]
-    rows = rules_cursor.execute(query, parameters).fetchall()
+    rows = rules_db.execute(query, parameters).fetchall()
     substring_rules[lang] = {}
     for row in rows:
         rule = create_rule(row)
@@ -329,7 +329,7 @@ for spacy_model in settings.models:
             rule.false_positives = fetch_false_positives(rule, rewrite_to)
             substring_rules[lang][rule.lemma.lower()] = rule
 
-rules_cursor.execute("DROP table IF EXISTS rules_lemmatization")
+rules_db.execute("DROP table IF EXISTS rules_lemmatization")
 static_rules = fetch_static_rules(langs)
 
 
@@ -2317,7 +2317,7 @@ def fetch_rules(
         filters.values()
     )
 
-    rows = rules_cursor.execute(query, parameters).fetchall()
+    rows = rules_db.execute(query, parameters).fetchall()
     if lang == "en":
         if rewrite_to is None and len(rows) == 0:
             rewrite_to = "en-US"
@@ -2385,7 +2385,7 @@ def fetch_rule_alternatives(
     query += " ORDER BY `order` ASC"
 
     alternatives = []
-    rows = rules_cursor.execute(query, parameters).fetchall()
+    rows = rules_db.execute(query, parameters).fetchall()
     if len(rows) == 0:
         if not show_inspiration_alternatives:
             return fetch_rule_alternatives(rule, is_singular, True, locale)
@@ -2470,7 +2470,7 @@ def fetch_declensions(lang: str, word_type: str, text: str) -> dict:
     query = f"SELECT {column_list} FROM {table_name} WHERE {filter_list} ORDER BY IIF(base_form = ?, 1, 0) DESC, LENGTH(base_form) DESC LIMIT 1"
 
     result = None
-    rows = rules_cursor.execute(query, parameters).fetchall()
+    rows = rules_db.execute(query, parameters).fetchall()
     if len(rows):
         result = dict(zip(declensions_config[lang][word_type]["columns"], rows[0]))
 
@@ -3905,7 +3905,7 @@ def gendered_denom_analysis_de(
 
             if "in" in text:
                 query = f"SELECT female_form, base_form FROM rules_germannoun WHERE female_form IN ({word_filter})"
-                rows = rules_cursor.execute(query, parameters).fetchall()
+                rows = rules_db.execute(query, parameters).fetchall()
                 word_lookup = {}
                 for row in rows:
                     word_lookup[row[0]] = row[1]
@@ -3923,7 +3923,7 @@ def gendered_denom_analysis_de(
             query = f"SELECT DISTINCT r.lemma, a.lemma FROM rules_alternative as a INNER JOIN rules_rule as r on a.rule_id = r.id WHERE r.language = 'de' AND r.lemma IN ({word_filter}) and a.lemma LIKE ?"
             parameters.append(f"%{split_char}%")
 
-            rows = rules_cursor.execute(query, parameters).fetchall()
+            rows = rules_db.execute(query, parameters).fetchall()
             if len(rows) == len(words):
                 rule.type = RuleType.DEFAULT
                 word_lookup = {}
