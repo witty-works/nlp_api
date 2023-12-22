@@ -458,7 +458,8 @@ async def lifespan(app: FastAPI):
     await session.close()
     await ssl_session.close()
 
-application_name="Witty NLP API"
+
+application_name = "Witty NLP API"
 
 app = FastAPI(
     title=application_name,
@@ -3946,15 +3947,19 @@ def gendered_denom_analysis_de(
         if alternative.lemma[0] == "~":
             alternative.lemma = alternative.lemma[1:]
             if prefix:
-                lemma_first_char = alternative.lemma[0] if prefix[-1] == "-" else alternative.lemma[0].lower()
-                alternative.lemma = (
-                    prefix + lemma_first_char + alternative.lemma[1:]
+                lemma_first_char = (
+                    alternative.lemma[0]
+                    if prefix[-1] == "-"
+                    else alternative.lemma[0].lower()
                 )
+                alternative.lemma = prefix + lemma_first_char + alternative.lemma[1:]
         elif "~" in alternative.lemma:
             if prefix_words:
                 alternative.lemma = prefix_words + alternative.lemma
             elif prefix:
-                lemma_first_char = rule.lemma[0] if prefix[-1] == "-" else rule.lemma[0].lower()
+                lemma_first_char = (
+                    rule.lemma[0] if prefix[-1] == "-" else rule.lemma[0].lower()
+                )
                 alternative.lemma = alternative.lemma.replace(
                     rule.lemma, prefix + lemma_first_char + rule.lemma[1:]
                 )
@@ -3988,18 +3993,18 @@ def gendered_denom_analysis_de(
         if "~" not in alternative.lemma:
             continue
 
-        split_char = " und " if " und " in alternative.lemma else "/"
-        if split_char not in alternative.lemma:
-            continue
-
         generated_alternative = ResultOut.getGenderedRolesFormatBinary(
             alternative.lemma
         )
+
+        split_char = " und " if " und " in generated_alternative else "/"
         generated_alternatives = generated_alternative.split(split_char)
+
         if len(generated_alternatives) != 2:
-            logging.error(
-                f"Rule '{rule.name}' has a malformed alternative '{alternative.lemma}' => '{generated_alternative}'."
-            )
+            if generated_alternative in split_char:
+                logging.error(
+                    f"Rule '{rule.name}' has a malformed alternative '{alternative.lemma}' => '{generated_alternative}'."
+                )
             continue
 
         try:
