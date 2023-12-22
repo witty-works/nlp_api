@@ -4,4 +4,3 @@ pdm run python -m ensurepip
 
 echo "Installing dependencies using pdm"
 pdm sync --prod
-pdm add blackfire blackfire_conprof
