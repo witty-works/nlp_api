@@ -3,6 +3,21 @@
     "limit_reached": false,
     "results": [
         {
+            "alternatives": [],
+            "category": "orthography",
+            "context": "Witty leistet Unterstützung in mehr als <NUMBER> Diversitätsdimensionen. Sie sind alt. Das ist unsere beste Idee.",
+            "end": 65,
+            "explanation": {
+                "icon": "❌",
+                "text": "Möglicher Tippfehler gefunden."
+            },
+            "gravity": 1.0,
+            "label": "Rechtschreibfehler",
+            "start": 43,
+            "subcategory": "typos",
+            "text": "Diversitätsdimensionen"
+        },
+        {
             "alternatives": [
                 {
                     "text": "löst"
