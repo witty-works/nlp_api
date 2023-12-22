@@ -27,7 +27,6 @@ if not is_file(args.File):
 
 os.system(f"cp {args.File} ./database/db.sqlite3")
 source = sqlite3.connect("./database/db.sqlite3")
-cursor = source.cursor()
 
 tables_to_keep = [
     "rules_germanverb",
@@ -45,13 +44,12 @@ columns = ["created_at", "updated_at", "comment"]
 
 for table in tables_to_keep:
     for column in columns:
-        cursor.execute(f"ALTER TABLE {table} DROP COLUMN {column}")
+        source.execute(f"ALTER TABLE {table} DROP COLUMN {column}")
 
 query = "SELECT name FROM sqlite_master WHERE type='table' and name NOT LIKE 'sqlite_%'"
-cursor.execute(query)
-for table in cursor.fetchall():
+for table in source.execute(query).fetchall():
     if table[0] not in tables_to_keep:
-        cursor.execute(f"DROP table IF EXISTS {table[0]}")
+        source.execute(f"DROP table IF EXISTS {table[0]}")
 
 with open("./database/dump.sql", "w") as f:
     for line in source.iterdump():
