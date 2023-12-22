@@ -4083,8 +4083,6 @@ def fetch_article_for_flexion(
     article_forms = static_rules["de"][gender + "_articles"][article_text]
     return article_forms[1], article_forms[2], article_forms[3], article_forms[5]
 
-    return None, None, None, None
-
 
 def fetch_alternatives_with_article(
     tokens: Doc, i: int, alternatives: list[Alternative]
@@ -4121,7 +4119,7 @@ def fetch_alternatives_with_article(
                 continue
 
             alternative_tokens = fetch_tokens("de", alternative.words[-1])
-            if is_token_plural(lang, alternative_tokens[0]):
+            if is_token_plural("de", alternative_tokens[0]):
                 article_alternative = ""
             else:
                 gender = german_noun_gender_lookup(alternative.words[-1])
