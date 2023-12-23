@@ -119,7 +119,7 @@ from app.query_definitions import (
     declensions_config,
 )
 
-version = "2.0.4"
+version = "2.1.0"
 
 categories = get_categories()
 settings = get_settings()
