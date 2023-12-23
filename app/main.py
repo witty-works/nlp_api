@@ -330,8 +330,8 @@ for spacy_model in settings.models:
             substring_rules[lang][rule.lemma.lower()] = rule
 
 rules_db.execute("DROP table IF EXISTS rules_lemmatization")
-static_rules = fetch_static_rules(langs)
 
+static_rules = fetch_static_rules()
 
 # https://www.notion.so/witty-works/Rule-Guidelines-432792da944141b1b4d0a01de290aa43#aac0d966bfeb4e33a5a346bba45d5ea8
 supported_word_types = {"n", "a", "adv", "v", "conj"}
