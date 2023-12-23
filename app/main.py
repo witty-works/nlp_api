@@ -124,66 +124,10 @@ version = "2.0.4"
 categories = get_categories()
 settings = get_settings()
 logging = set_up_logger(settings)
-sentry_sdk = set_up_sentry_sdk(version, settings)
-redis = set_up_redis(settings)
-
 logging.debug("app started with settings: %s", settings)
 
-rules_db = sqlite3.connect(":memory:", check_same_thread=False)
-if settings.import_from_dump:
-    rules_db.executescript(open("./database/dump.sql", "r").read())
-else:
-    source = sqlite3.connect("./database/db.sqlite3")
-    source.backup(rules_db)
-    source.close()
-
-
-def create_rule(lang, row, rewrite_to: str = None) -> Rule:
-    rule = Rule(
-        row[rule_columns["id"]],
-        row[rule_columns["language"]],
-        row[rule_columns["lemma"]],
-        json.loads(row[rule_columns["lemma_json"]]),
-        json.loads(row[rule_columns["word_types_json"]]),
-        json.loads(row[rule_columns["diversity_dimension_json"]]),
-    )
-
-    if rewrite_to:
-        rule.lemma = Language.convert_to(rule.lemma, "en-GB")
-        rule.words = Language.convert_to(rule.words, "en-GB")
-
-    rule.parent_id = row[rule_columns["parent_id"]]
-    rule.pattern = row[rule_columns["pattern"]]
-    rule.is_pattern_match = row[rule_columns["is_pattern_match"]]
-    rule.label = (
-        row[rule_columns["label"]]
-        if row[rule_columns["label_type"]] == RuleLabelEnum.DEFAULT
-        else map_rule_label_type(lang, row[rule_columns["label_type"]])
-    )
-    rule.type = row[rule_columns["type"]]
-    rule.pluralization = row[rule_columns["pluralization"]]
-    rule.entity_type = row[rule_columns["entity_type"]]
-
-    return rule
-
-
-def fetch_false_positives(rule: Rule, rewrite_to: str = None) -> list[str]:
-    if len(rule.false_positives):
-        return list(rule.false_positives)
-
-    query = "SELECT false_positive FROM rules_falsepositive WHERE rule_id = ?"
-    parameters = [rule.name]
-
-    false_positives = []
-    rows = rules_db.execute(query, parameters).fetchall()
-    for row in rows:
-        false_positives.append(row[0])
-        if rewrite_to:
-            false_positive = Language.convert_to(row[0], rewrite_to)
-            if row[0] != false_positive:
-                false_positives.append(false_positive)
-
-    return false_positives
+sentry_sdk = set_up_sentry_sdk(version, settings)
+redis = set_up_redis(settings)
 
 
 with open("./training_data/lookup.json", "r") as fp:
@@ -192,37 +136,11 @@ with open("./training_data/lookup.json", "r") as fp:
 with open("./training_data/lemma_plural_lookup.json", "r") as fp:
     lemma_plural_lookup = json.load(fp)
 
-model = {}
-substring_rules = {}
-for spacy_model in settings.models:
-    lang = spacy_model[0:2]
-
-    model[lang] = fetch_nlp_model(lang, spacy_model, lookup[lang])
-
-    query = f"SELECT {rule_column_list} FROM rules_rule WHERE is_active = 1 and language = ? and type = ? ORDER BY lemma_length DESC, first_is_word_type_lemmatize ASC"
-    parameters = [lang, RuleType.SUBSTRING]
-    rows = rules_db.execute(query, parameters).fetchall()
-    substring_rules[lang] = {}
-    for row in rows:
-        rule = create_rule(lang, row)
-        rule.false_positives = fetch_false_positives(rule)
-        substring_rules[lang][rule.lemma.lower()] = rule
-
-        rewrite_to = "en-GB" if lang == "en" else "de-CH"
-        rewritten_lemma = Language.convert_to(rule.lemma, rewrite_to)
-        if rule.lemma != rewritten_lemma:
-            rule = create_rule(lang, row, rewrite_to)
-            rule.false_positives = fetch_false_positives(rule, rewrite_to)
-            substring_rules[lang][rule.lemma.lower()] = rule
-
 static_rules = fetch_static_rules()
 
 # https://www.notion.so/witty-works/Rule-Guidelines-432792da944141b1b4d0a01de290aa43#aac0d966bfeb4e33a5a346bba45d5ea8
 supported_word_types = {"n", "a", "adv", "v", "conj"}
 
-if settings.fasttext:
-    pretrained_lang_model = os.getcwd() + "/training_data/lid.176.bin"
-    fasttext_model = fasttext.load_model(pretrained_lang_model)
 
 if settings.slack_bot_token and settings.slack_signing_secret:  # pragma: no cover
     bolt = AsyncApp(
@@ -334,17 +252,106 @@ async def handle_command_witty(
     await respond(blocks=blocks)
 
 
+def create_rule(lang, row, rewrite_to: str = None) -> Rule:
+    rule = Rule(
+        row[rule_columns["id"]],
+        row[rule_columns["language"]],
+        row[rule_columns["lemma"]],
+        json.loads(row[rule_columns["lemma_json"]]),
+        json.loads(row[rule_columns["word_types_json"]]),
+        json.loads(row[rule_columns["diversity_dimension_json"]]),
+    )
+
+    if rewrite_to:
+        rule.lemma = Language.convert_to(rule.lemma, "en-GB")
+        rule.words = Language.convert_to(rule.words, "en-GB")
+
+    rule.parent_id = row[rule_columns["parent_id"]]
+    rule.pattern = row[rule_columns["pattern"]]
+    rule.is_pattern_match = row[rule_columns["is_pattern_match"]]
+    rule.label = (
+        row[rule_columns["label"]]
+        if row[rule_columns["label_type"]] == RuleLabelEnum.DEFAULT
+        else map_rule_label_type(lang, row[rule_columns["label_type"]])
+    )
+    rule.type = row[rule_columns["type"]]
+    rule.pluralization = row[rule_columns["pluralization"]]
+    rule.entity_type = row[rule_columns["entity_type"]]
+
+    return rule
+
+
+def fetch_false_positives(rule: Rule, rewrite_to: str = None) -> list[str]:
+    if len(rule.false_positives):
+        return list(rule.false_positives)
+
+    query = "SELECT false_positive FROM rules_falsepositive WHERE rule_id = ?"
+    parameters = [rule.name]
+
+    false_positives = []
+    rows = rules_db.execute(query, parameters).fetchall()
+    for row in rows:
+        false_positives.append(row[0])
+        if rewrite_to:
+            false_positive = Language.convert_to(row[0], rewrite_to)
+            if row[0] != false_positive:
+                false_positives.append(false_positive)
+
+    return false_positives
+
+
+model = {}
+for spacy_model in settings.models:
+    lang = spacy_model[0:2]
+
+    model[lang] = fetch_nlp_model(lang, spacy_model, lookup[lang])
+
+if settings.fasttext:
+    pretrained_lang_model = os.getcwd() + "/training_data/lid.176.bin"
+    fasttext_model = fasttext.load_model(pretrained_lang_model)
+
 session = None
 ssl_session = None
+rules_db = None
+substring_rules = {}
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global session
     global ssl_session
+    global rules_db
+    global substring_rules
+
+    global model
 
     session = aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False))
     ssl_session = aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=True))
+
+    rules_db = sqlite3.connect(":memory:", check_same_thread=False)
+    if settings.import_from_dump:
+        rules_db.executescript(open("./database/dump.sql", "r").read())
+    else:
+        source = sqlite3.connect("./database/db.sqlite3")
+        source.backup(rules_db)
+        source.close()
+
+    for lang in model:
+        query = f"SELECT {rule_column_list} FROM rules_rule WHERE is_active = 1 and language = ? and type = ? ORDER BY lemma_length DESC, first_is_word_type_lemmatize ASC"
+        parameters = [lang, RuleType.SUBSTRING]
+        rows = rules_db.execute(query, parameters).fetchall()
+        substring_rules[lang] = {}
+        for row in rows:
+            rule = create_rule(lang, row)
+            rule.false_positives = fetch_false_positives(rule)
+            substring_rules[lang][rule.lemma.lower()] = rule
+
+            rewrite_to = "en-GB" if lang == "en" else "de-CH"
+            rewritten_lemma = Language.convert_to(rule.lemma, rewrite_to)
+            if rule.lemma != rewritten_lemma:
+                rule = create_rule(lang, row, rewrite_to)
+                rule.false_positives = fetch_false_positives(rule, rewrite_to)
+                substring_rules[lang][rule.lemma.lower()] = rule
 
     yield
 
