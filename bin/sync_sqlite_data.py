@@ -1,6 +1,9 @@
 import sqlite3
 import argparse
 import os
+import json
+
+from app.query_definitions import declensions_config
 
 
 def parse_args():
@@ -50,6 +53,46 @@ query = "SELECT name FROM sqlite_master WHERE type='table' and name NOT LIKE 'sq
 for table in source.execute(query).fetchall():
     if table[0] not in tables_to_keep:
         source.execute(f"DROP table IF EXISTS {table[0]}")
+
+
+lookup = {}
+lemma_plural_lookup = {}
+langs = ["en", "de"]
+for lang in langs:
+    query = "SELECT text, lemma, is_plural FROM rules_lemmatization WHERE language = ?"
+    parameters = [lang]
+    lookup[lang] = {}
+    lemma_plural_lookup[lang] = {}
+    rows = source.execute(query, parameters).fetchall()
+    for row in rows:
+        lookup[lang][row[0]] = row[1]
+        if row[2]:
+            lemma_plural_lookup[lang][row[0]] = row[1]
+
+    if lang == "de":
+        columns = declensions_config["de"]["n"]["columns"]
+        column_count = len(columns)
+        column_filter = ", ".join(columns)
+        base_form_i = columns.index("base_form")
+        male_form_i = columns.index("male_form")
+
+        query = f"SELECT {column_filter} FROM rules_germannoun"
+        rows = source.execute(query).fetchall()
+        for row in rows:
+            target = row[male_form_i] if row[male_form_i] else row[base_form_i]
+            for i in range(column_count):
+                if row[i] and row[i] != target and row[i] != row[base_form_i]:
+                    lookup[lang][row[i]] = target
+                    if columns[i].startswith("pl_"):
+                        lemma_plural_lookup[lang][row[i]] = target
+
+with open("./training_data/lookup.json", "w") as fp:
+    json.dump(lookup, fp, indent=2)
+
+with open("./training_data/lemma_plural_lookup.json", "w") as fp:
+    json.dump(lemma_plural_lookup, fp, indent=2)
+
+source.execute("DROP table IF EXISTS rules_lemmatization")
 
 with open("./database/dump.sql", "w") as f:
     for line in source.iterdump():
