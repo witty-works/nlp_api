@@ -4,7 +4,7 @@ from german_nouns.lookup import Nouns
 from app.models import LangWithAutoType, Rule, EntityType
 
 
-def fetch_static_rules(langs):
+def fetch_static_rules():
     files = {
         "de": {
             # load articles for gendered denom
@@ -12,6 +12,7 @@ def fetch_static_rules(langs):
         },
         "en": {},
     }
+    langs = files.keys()
 
     static_rules = {
         "named_entity_labels": {
