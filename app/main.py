@@ -328,13 +328,19 @@ async def lifespan(app: FastAPI):
     session = aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False))
     ssl_session = aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=True))
 
-    rules_db = sqlite3.connect(":memory:", check_same_thread=False)
-    if settings.import_from_dump:
-        rules_db.executescript(open("./database/dump.sql", "r").read())
-    else:
-        source = sqlite3.connect("./database/db.sqlite3")
-        source.backup(rules_db)
-        source.close()
+    in_memory_url = "file:rules_db?mode=memory&cache=shared&uri=true"
+    rules_db = sqlite3.connect(in_memory_url, check_same_thread=False)
+
+    query = "SELECT name FROM sqlite_master WHERE type='table' AND name='rules_rule'"
+    exists = rules_db.execute(query).fetchone()
+
+    if exists is None:
+        if settings.import_from_dump:
+            rules_db.executescript(open("./database/dump.sql", "r").read())
+        else:
+            source = sqlite3.connect("./database/db.sqlite3")
+            source.backup(rules_db)
+            source.close()
 
     for lang in model:
         query = f"SELECT {rule_column_list} FROM rules_rule WHERE is_active = 1 and language = ? and type = ? ORDER BY lemma_length DESC, first_is_word_type_lemmatize ASC"
