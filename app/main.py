@@ -3,6 +3,7 @@ import os
 if os.environ.get("BLACKFIRE_ENABLE_CONTINUOUS_PROFILING"):
     try:
         from blackfire_conprof.profiler import Profiler
+
         profiler = Profiler()
         profiler.start(application_name=os.environ.get("PLATFORM_APPLICATION_NAME"))
     except:
@@ -110,6 +111,13 @@ from app.redis_setup import set_up_redis
 from app.model import fetch_nlp_model
 from app.rules import fetch_static_rules
 from app.sentry import set_up_sentry_sdk
+from app.query_definitions import (
+    rule_columns,
+    rule_column_list,
+    alternative_columns,
+    alternative_column_list,
+    declensions_config,
+)
 
 version = "2.0.4"
 
@@ -128,104 +136,6 @@ else:
     source = sqlite3.connect("./database/db.sqlite3")
     source.backup(rules_db)
     source.close()
-
-
-def invert_list_to_dict(list_to_convert: list) -> dict:
-    return dict(zip(list_to_convert, list(range(len(list_to_convert)))))
-
-
-rule_columns = [
-    "id",
-    "parent_id",
-    "lemma",
-    "language",
-    "lemma_json",
-    "pattern",
-    "is_pattern_match",
-    "type",
-    "entity_type",
-    "label",
-    "label_type",
-    "pluralization",
-    "word_types_json",
-    "diversity_dimension_json",
-]
-rule_columns = invert_list_to_dict(rule_columns)
-rule_column_list = ", ".join(rule_columns.keys())
-
-alternative_columns = [
-    "lemma",
-    "lemma_json",
-    "word_types_json",
-    "is_remove",
-    "is_inspiration",
-    "is_advanced",
-    "is_collective_noun",
-    "label",
-]
-alternative_columns = invert_list_to_dict(alternative_columns)
-alternative_column_list = ", ".join(alternative_columns.keys())
-
-declensions_config = {
-    "en": {
-        "v": {
-            "name": "rules_englishverb",
-            "columns": [
-                "base_form",
-                "past_tense",
-                "past_participle",
-                "present_participle",
-                "third_person_singular",
-            ],
-        },
-        "a": {
-            "name": "rules_englishadjective",
-            "columns": ["base_form", "comparative", "superlative", "is_absolute"],
-        },
-        "n": {"name": "rules_englishnoun", "columns": ["base_form", "plural"]},
-    },
-    "de": {
-        "v": {
-            "name": "rules_germanverb",
-            "columns": [
-                "base_form",
-                "present_ich",
-                "present_du",
-                "present_pronoun",
-                "past_tense_ich",
-                "past_participle",
-                "conjunctive_ich",
-                "imperativ_singular",
-                "imperativ_plural",
-                "helping_verb",
-                "infinitiv_zu",
-            ],
-        },
-        "a": {
-            "name": "rules_germanadjective",
-            "columns": ["base_form", "comparative", "superlative", "is_absolute"],
-        },
-        "n": {
-            "name": "rules_germannoun",
-            "columns": [
-                "gender_1",
-                "base_form",
-                "female_form",
-                "male_form",
-                "sg_nom",
-                "sg_dat",
-                "sg_gen",
-                "sg_acc",
-                "pl_nom",
-                "pl_dat",
-                "pl_gen",
-                "pl_acc",
-                "sg_dat_2",
-                "sg_gen_2",
-            ],
-        },
-    },
-}
 
 
 def create_rule(lang, row, rewrite_to: str = None) -> Rule:
@@ -276,42 +186,18 @@ def fetch_false_positives(rule: Rule, rewrite_to: str = None) -> list[str]:
     return false_positives
 
 
+with open("./training_data/lookup.json", "r") as fp:
+    lookup = json.load(fp)
+
+with open("./training_data/lemma_plural_lookup.json", "r") as fp:
+    lemma_plural_lookup = json.load(fp)
+
 model = {}
-lemma_plural_lookup = {}
 substring_rules = {}
-langs = []
 for spacy_model in settings.models:
     lang = spacy_model[0:2]
-    langs.append(lang)
-    query = "SELECT text, lemma, is_plural FROM rules_lemmatization WHERE language = ?"
-    parameters = [lang]
-    lookup = {}
-    lemma_plural_lookup[lang] = {}
-    rows = rules_db.execute(query, parameters).fetchall()
-    for row in rows:
-        lookup[row[0]] = row[1]
-        if row[2]:
-            lemma_plural_lookup[lang][row[0]] = row[1]
 
-    if lang == "de":
-        columns = declensions_config["de"]["n"]["columns"]
-        column_count = len(columns)
-        column_filter = ", ".join(columns)
-        base_form_i = columns.index("base_form")
-        male_form_i = columns.index("male_form")
-
-        query = f"SELECT {column_filter} FROM rules_germannoun"
-        rows = rules_db.execute(query).fetchall()
-        for row in rows:
-            target = row[male_form_i] if row[male_form_i] else row[base_form_i]
-            for i in range(column_count):
-                if row[i] and row[i] != target and row[i] != row[base_form_i]:
-                    lookup[row[i]] = target
-                    if columns[i].startswith("pl_"):
-                        lemma_plural_lookup[lang][row[i]] = target
-
-    model[lang] = fetch_nlp_model(lang, spacy_model, lookup)
-    lookup = None
+    model[lang] = fetch_nlp_model(lang, spacy_model, lookup[lang])
 
     query = f"SELECT {rule_column_list} FROM rules_rule WHERE is_active = 1 and language = ? and type = ? ORDER BY lemma_length DESC, first_is_word_type_lemmatize ASC"
     parameters = [lang, RuleType.SUBSTRING]
@@ -328,8 +214,6 @@ for spacy_model in settings.models:
             rule = create_rule(lang, row, rewrite_to)
             rule.false_positives = fetch_false_positives(rule, rewrite_to)
             substring_rules[lang][rule.lemma.lower()] = rule
-
-rules_db.execute("DROP table IF EXISTS rules_lemmatization")
 
 static_rules = fetch_static_rules()
 
