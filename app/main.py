@@ -14,7 +14,7 @@ import uvicorn
 import json
 import secrets
 import aiohttp
-from typing import Optional, Union, List
+from typing import Optional, Union
 from collections import defaultdict, namedtuple
 import fasttext
 import aiosqlite
@@ -725,7 +725,7 @@ def bc_old_categories(config: dict) -> dict:
 @app.post(
     "/debug/rule",
     include_in_schema=not settings.is_prod,
-    response_model=List[ResultOut],
+    response_model=list[ResultOut],
     response_model_exclude_none=True,
 )
 async def post_debug_rule(
@@ -2383,7 +2383,7 @@ async def fetch_declensions(lang: str, word_type: str, text: str) -> dict:
     return result
 
 
-def is_gender_star_ending(text: str) -> bool | list:
+def is_gender_star_ending(text: str) -> bool | re.Match:
     for regexp in Config._gendereddenom_ending.default:
         match = re.search(Config._gendereddenom_ending.default[regexp], text)
         if match:
