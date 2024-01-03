@@ -13,7 +13,7 @@ from spacy.lang.char_classes import (
 from spacy.tokenizer import Tokenizer
 from spacy.util import compile_infix_regex
 from spacy.lookups import Lookups
-
+from app.models import LangType
 
 class TokenLemmatizer:
     def __init__(self, lemma_table):
@@ -29,7 +29,7 @@ class TokenLemmatizer:
 
 
 def custom_tokenizer(lang, nlp):
-    if lang == "de":
+    if lang == LangType.DE:
         infixes = (
             LIST_ELLIPSES
             + LIST_ICONS
