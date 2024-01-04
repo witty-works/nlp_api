@@ -44,7 +44,7 @@ class Language(object):
         return text
 
     def convert_sharp_ss(self, text: str) -> str:
-        if self.locale == "de-CH":
+        if self.locale == LangVariantType.deCH:
             return self.convert_to(text, self.locale)
 
         return text
@@ -64,7 +64,7 @@ class Language(object):
             fixer = TextFixer(content=text, target=Target(target))
             return fixer.apply()
 
-        if locale == "de-CH":
+        if locale == LangVariantType.deCH:
             return text.replace("ß", "ss")
 
         return text
@@ -85,6 +85,22 @@ class ContentType(str, Enum):
 class LangType(str, Enum):
     EN = "en"
     DE = "de"
+
+class BasicWordType(str, Enum):
+    VERB = "v"
+    ADJECTIVE = "a"
+    NOUN = "n"
+
+# https://www.notion.so/witty-works/Rule-Guidelines-432792da944141b1b4d0a01de290aa43#aac0d966bfeb4e33a5a346bba45d5ea8
+class WordType(str, Enum):
+    VERB = "v"
+    ADJECTIVE = "a"
+    ADVERB = "adv"
+    NOUN = "n"
+    EMOJI = "emoji"
+    CONJUNCTION = "conj"
+    NUMBER = "num"
+    CARDINAL = "card"
 
 
 class LangWithAutoType(str, Enum):
@@ -652,7 +668,7 @@ class ResultOut(BaseModel):
                 text,
                 category,
                 start,
-                ResultOut.isUpper(text, full_text, start, category, lang),
+                ResultOut.isUpper(text, full_text, start, category, lang.lang),
                 alternatives,
                 config.alternatives_max_count,
             )
@@ -817,7 +833,7 @@ class ResultOut(BaseModel):
     @staticmethod
     def isUpper(text: str, full_text: str, start: int, category: str, lang: str):
         if category != "orthography" and text[0:1].isupper():
-            punctuation = "[.!?:]" if lang.lang == "de" else "[.!?]"
+            punctuation = "[.!?:]" if lang == LangType.DE else "[.!?]"
 
             preceeding_text = full_text[max(0, start - 5) : start]
             if (

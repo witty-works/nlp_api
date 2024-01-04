@@ -1,16 +1,16 @@
 import pandas as pd
 import re
 from german_nouns.lookup import Nouns
-from app.models import LangWithAutoType, Rule, EntityType
+from app.models import LangWithAutoType, Rule, EntityType, LangType
 
 
 def fetch_static_rules():
     files = {
-        "de": {
+        LangType.DE: {
             # load articles for gendered denom
             "df_articles": "articles.csv",
         },
-        "en": {},
+        LangType.EN: {},
     }
     langs = files.keys()
 
@@ -440,8 +440,8 @@ def fetch_static_rules():
     }
 
     locales = {
-        "de": [LangWithAutoType.DE],
-        "en": [LangWithAutoType.enUS, LangWithAutoType.enGB],
+        LangType.DE: [LangWithAutoType.DE],
+        LangType.EN: [LangWithAutoType.enUS, LangWithAutoType.enGB],
     }
 
     data = {}
@@ -455,10 +455,10 @@ def fetch_static_rules():
                     keep_default_na=False,
                 )
 
-    if "de" in langs:
+    if LangType.DE in langs:
         rule = Rule(
             "#foobar",
-            "de",
+            LangType.DE,
             re.compile(r"^#(?!.*[A-Z])\w\w\w\w\w+$"),
             None,
             (1, 2, "#"),
@@ -467,17 +467,17 @@ def fetch_static_rules():
 
         rule.explanation = "Wenn du Wörter großschreibst, wissen alle gleich, was du meinst. #ZumBeispiel"
 
-        static_rules["de"]["hashtags"] = [rule]
+        static_rules[LangType.DE]["hashtags"] = [rule]
 
-        static_rules["de"]["false_positives_phrases"] = []
+        static_rules[LangType.DE]["false_positives_phrases"] = []
 
-        static_rules["de"]["context_check"] = [
+        static_rules[LangType.DE]["context_check"] = [
             "unabhängig",
             "entschieden",
         ]
 
         # dictionaries to handle false positives
-        static_rules["de"]["exceptions"] = [
+        static_rules[LangType.DE]["exceptions"] = [
             "Unternehmen",
             "Firma",
             "Gruppe",
@@ -491,32 +491,32 @@ def fetch_static_rules():
         # articles
         articles = list(
             zip(
-                data["de"]["df_articles"]["Form"],
-                data["de"]["df_articles"]["Masculine"],
-                data["de"]["df_articles"]["Feminine"],
-                data["de"]["df_articles"]["Neuter"],
-                data["de"]["df_articles"]["Plural"],
-                data["de"]["df_articles"]["Alternative"],
+                data[LangType.DE]["df_articles"]["Form"],
+                data[LangType.DE]["df_articles"]["Masculine"],
+                data[LangType.DE]["df_articles"]["Feminine"],
+                data[LangType.DE]["df_articles"]["Neuter"],
+                data[LangType.DE]["df_articles"]["Plural"],
+                data[LangType.DE]["df_articles"]["Alternative"],
             )
         )
 
-        static_rules["de"]["masculine_articles"] = dict(
-            zip(list(data["de"]["df_articles"]["Masculine"]), articles)
+        static_rules[LangType.DE]["masculine_articles"] = dict(
+            zip(list(data[LangType.DE]["df_articles"]["Masculine"]), articles)
         )
-        static_rules["de"]["feminine_articles"] = dict(
-            zip(list(data["de"]["df_articles"]["Feminine"]), articles)
+        static_rules[LangType.DE]["feminine_articles"] = dict(
+            zip(list(data[LangType.DE]["df_articles"]["Feminine"]), articles)
         )
-        static_rules["de"]["neuter_articles"] = dict(
-            zip(list(data["de"]["df_articles"]["Neuter"]), articles)
-        )
-
-        static_rules["de"]["articles"] = (
-            list(static_rules["de"]["feminine_articles"].keys())
-            + list(static_rules["de"]["masculine_articles"].keys())
-            + list(static_rules["de"]["neuter_articles"].keys())
+        static_rules[LangType.DE]["neuter_articles"] = dict(
+            zip(list(data[LangType.DE]["df_articles"]["Neuter"]), articles)
         )
 
-        static_rules["de"]["primary_german_gender_endings"] = {
+        static_rules[LangType.DE]["articles"] = (
+            list(static_rules[LangType.DE]["feminine_articles"].keys())
+            + list(static_rules[LangType.DE]["masculine_articles"].keys())
+            + list(static_rules[LangType.DE]["neuter_articles"].keys())
+        )
+
+        static_rules[LangType.DE]["primary_german_gender_endings"] = {
             "neuter": [
                 "chen",
                 "ett",
@@ -576,7 +576,7 @@ def fetch_static_rules():
             ],
         }
 
-        static_rules["de"]["secondary_german_gender_endings"] = {
+        static_rules[LangType.DE]["secondary_german_gender_endings"] = {
             # 3 out of four words ending with -nis and -sal are neuter nouns
             "neuter": [
                 "nis",
@@ -594,11 +594,11 @@ def fetch_static_rules():
             ],
         }
 
-        static_rules["de"]["german_nouns"] = Nouns()
+        static_rules[LangType.DE]["german_nouns"] = Nouns()
 
-        static_rules["de"]["pattern_false_positives"] = []
+        static_rules[LangType.DE]["pattern_false_positives"] = []
 
-        static_rules["de"]["gender_neutral_nouns"] = {
+        static_rules[LangType.DE]["gender_neutral_nouns"] = {
             "Ierende": {
                 "flexion": {
                     "nominativ singular": "Ierende",
@@ -633,7 +633,7 @@ def fetch_static_rules():
 
         # https://de.wikipedia.org/wiki/Anrede
         # https://karrierebibel.de/namenstitel/
-        static_rules["de"]["salutations"] = (
+        static_rules[LangType.DE]["salutations"] = (
             "Herr",
             "Herrn",
             "Frau",
@@ -740,7 +740,7 @@ def fetch_static_rules():
             "Grossfürstin",
         )
 
-        static_rules["de"]["splittable_words"] = {
+        static_rules[LangType.DE]["splittable_words"] = {
             "durch": [
                 "durchbeißen",
                 "durchbeissen",
@@ -1048,8 +1048,8 @@ def fetch_static_rules():
             ],
         }
 
-    if "en" in langs:
-        static_rules["en"]["context_check"] = [
+    if LangType.EN in langs:
+        static_rules[LangType.EN]["context_check"] = [
             "fossil",
             "flexible",
             "impact",
@@ -1063,7 +1063,7 @@ def fetch_static_rules():
 
         rule = Rule(
             "#foobar",
-            "en",
+            LangType.EN,
             re.compile(r"^#(?!.*[A-Z])\w\w\w\w\w+$"),
             None,
             (1, 2, "#"),
@@ -1072,9 +1072,9 @@ def fetch_static_rules():
 
         rule.explanation = "When you capitalize words, everyone knows right away what you mean. #ForExample"
 
-        static_rules["en"]["hashtags"] = [rule]
+        static_rules[LangType.EN]["hashtags"] = [rule]
 
-        static_rules["en"]["false_positives_phrases"] = [
+        static_rules[LangType.EN]["false_positives_phrases"] = [
             "Air Force",
             "Armed forces",
             "Indian Act",
@@ -1481,7 +1481,7 @@ def fetch_static_rules():
             "your best",
         ]
 
-        static_rules["en"]["a_not_startswith"] = (
+        static_rules[LangType.EN]["a_not_startswith"] = (
             "a ",
             "an ",
             "someone",
@@ -1492,7 +1492,7 @@ def fetch_static_rules():
             "everyone",
         )
 
-        static_rules["en"]["uncountables"] = (
+        static_rules[LangType.EN]["uncountables"] = (
             " ethics",
             " accommodation",
             " information",
@@ -1851,7 +1851,7 @@ def fetch_static_rules():
             ]
         ]
 
-        static_rules["en"]["pattern_false_positives"] = [
+        static_rules[LangType.EN]["pattern_false_positives"] = [
             pattern_master,
             pattern_lead_prepos,
             pattern_lead_life,
@@ -1861,7 +1861,7 @@ def fetch_static_rules():
             pattern_quick,
         ]
 
-        static_rules["en"]["salutations"] = (
+        static_rules[LangType.EN]["salutations"] = (
             "Dear",
             "Mrs.",
             "Miss",

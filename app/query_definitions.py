@@ -1,3 +1,5 @@
+from app.models import BasicWordType, LangType
+
 def invert_list_to_dict(list_to_convert: list) -> dict:
     return dict(zip(list_to_convert, list(range(len(list_to_convert)))))
 
@@ -35,8 +37,8 @@ alternative_columns = invert_list_to_dict(alternative_columns)
 alternative_column_list = ", ".join(alternative_columns.keys())
 
 declensions_config = {
-    "en": {
-        "v": {
+    LangType.EN: {
+        BasicWordType.VERB: {
             "name": "rules_englishverb",
             "columns": [
                 "base_form",
@@ -46,14 +48,14 @@ declensions_config = {
                 "third_person_singular",
             ],
         },
-        "a": {
+        BasicWordType.ADJECTIVE: {
             "name": "rules_englishadjective",
             "columns": ["base_form", "comparative", "superlative", "is_absolute"],
         },
-        "n": {"name": "rules_englishnoun", "columns": ["base_form", "plural"]},
+        BasicWordType.NOUN: {"name": "rules_englishnoun", "columns": ["base_form", "plural"]},
     },
-    "de": {
-        "v": {
+    LangType.DE: {
+        BasicWordType.VERB: {
             "name": "rules_germanverb",
             "columns": [
                 "base_form",
@@ -69,11 +71,11 @@ declensions_config = {
                 "infinitiv_zu",
             ],
         },
-        "a": {
+        BasicWordType.ADJECTIVE: {
             "name": "rules_germanadjective",
             "columns": ["base_form", "comparative", "superlative", "is_absolute"],
         },
-        "n": {
+        BasicWordType.NOUN: {
             "name": "rules_germannoun",
             "columns": [
                 "gender_1",

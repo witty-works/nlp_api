@@ -216,13 +216,13 @@ files = [
 
 [[package]]
 name = "blackfire-conprof"
-version = "0.1.3"
+version = "1.0.0"
 summary = "Blackfire Continuous Profiler"
 dependencies = [
     "ddtrace==1.13.3",
 ]
 files = [
-    {file = "blackfire_conprof-0.1.3-py3-none-any.whl", hash = "sha256:0ae29fa440f737941f6b58f41c4485d820abd1d9d8585183ef7fef738d3c4621"},
+    {file = "blackfire_conprof-1.0.0-py3-none-any.whl", hash = "sha256:54fcda93ca35d29d8807d41c02da076f07661f81dfa0bb90097887042c30675b"},
 ]
 
 [[package]]

@@ -2,34 +2,38 @@ import logging
 import os
 import sys
 
+
 # Logging set up
 def set_up_logger(settings):
-    logging.basicConfig(level=settings.logging_config_level)
-    logging.getLogger().handlers.clear()
-    formatter = logging.Formatter("[%(asctime)s] %(name)s %(levelname)s - %(message)s")
+    logger = logging.getLogger("nlp_api")
+    logger.handlers.clear()
 
     if settings.logging_enabled:
+        formatter = logging.Formatter(
+            "[%(asctime)s] %(name)s %(levelname)s - %(message)s"
+        )
+
         if settings.instrumentation_key:
             from opencensus.ext.azure.log_exporter import AzureLogHandler
 
-            ah = AzureLogHandler(
+            handler = AzureLogHandler(
                 connection_string="InstrumentationKey={}".format(
                     settings.instrumentation_key
                 )
             )
-            ah.setFormatter(formatter)
-            logging.getLogger().addHandler(ah)
+            handler.setFormatter(formatter)
         elif settings.logging_config_filename == "stdout":
-            sh = logging.StreamHandler(sys.stdout)
-            sh.setFormatter(formatter)
-            logging.getLogger().addHandler(sh)
+            handler = logging.StreamHandler(sys.stdout)
+            handler.setFormatter(formatter)
         else:
             filename = os.path.abspath(settings.logging_config_filename)
             os.makedirs(os.path.dirname(filename), exist_ok=True)
-            fh = logging.FileHandler(filename=filename)
-            fh.setFormatter(formatter)
-            logging.getLogger().addHandler(fh)
+            handler = logging.FileHandler(filename=filename)
+            handler.setFormatter(formatter)
     else:
-        logging.getLogger().addHandler(logging.NullHandler())
+        handler = logging.NullHandler()
 
-    return logging
+    logger.addHandler(handler)
+    logger.setLevel(settings.logging_config_level)
+
+    return logger

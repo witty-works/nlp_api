@@ -3,7 +3,7 @@ from functools import lru_cache
 import json
 import base64
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
+from app.models import LangType
 
 class Settings(BaseSettings):
     """Load environment variables to python objects using pydantic."""
@@ -97,13 +97,13 @@ def get_settings():
         settings.minimum_versions["word-plugin"] = settings.minimum_version_word_plugin
 
     if settings.context_checker_url and settings.context_checker_api_key:
-        settings.context_checker["en"] = {
+        settings.context_checker[LangType.EN] = {
             "url": settings.context_checker_url,
             "api_key": settings.context_checker_api_key,
         }
 
     if settings.context_checker_url_de and settings.context_checker_api_key_de:
-        settings.context_checker["de"] = {
+        settings.context_checker[LangType.DE] = {
             "url": settings.context_checker_url_de,
             "api_key": settings.context_checker_api_key_de,
         }

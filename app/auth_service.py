@@ -169,7 +169,7 @@ async def get_rsa_key_(session, kid, url):
     async with session.get(url) as r:
         if r.status != 200:  # pragma: no cover
             error = await r.text()
-            raise AuthError("Fetching RSA key resulted: " + error)
+            raise AuthError("Fetching RSA key resulted: " + error, 400)
 
         jwks = await r.json()
         for key in jwks["keys"]:
@@ -182,4 +182,4 @@ async def get_rsa_key_(session, kid, url):
                     "e": key["e"],
                 }
 
-    raise AuthError("Unable to fetch RSA key")
+    raise AuthError("Unable to fetch RSA key", 400)
