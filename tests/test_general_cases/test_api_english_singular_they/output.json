@@ -37,6 +37,14 @@
             "alternatives": [
                 {
                     "text": "they"
+                },
+                {
+                    "context": "specify 'given name'",
+                    "text": "((given name))"
+                },
+                {
+                    "context": "specify 'given name family name'",
+                    "text": "((given name family name))"
                 }
             ],
             "category": "gender-orientation",
@@ -59,6 +67,14 @@
             "alternatives": [
                 {
                     "text": "they"
+                },
+                {
+                    "context": "specify 'given name'",
+                    "text": "((given name))"
+                },
+                {
+                    "context": "specify 'given name family name'",
+                    "text": "((given name family name))"
                 }
             ],
             "category": "gender-orientation",

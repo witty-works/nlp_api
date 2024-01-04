@@ -2340,6 +2340,7 @@ async def fetch_rules(
 
 
 async def fetch_rule_alternatives(
+    client: Client,
     rule: Rule,
     is_singular: bool | None,
     show_inspiration_alternatives: bool,
@@ -2348,9 +2349,16 @@ async def fetch_rule_alternatives(
     if isinstance(rule.name, str):
         return rule.alternatives
 
-    # https://wittyworks.productboard.com/roadmap/3751070-browser-extension/features/13529555/detail
-    query = f"SELECT {alternative_column_list} FROM rules_alternative WHERE is_active = 1 and is_placeholder = 0 and rule_id = ?"
-    parameters = [rule.parent_id if rule.parent_id else rule.name]
+    query = f"SELECT {alternative_column_list} FROM rules_alternative WHERE is_active = 1 and rule_id = ?"
+
+    if (
+        client.name == "web-ext"
+        and client.version != "0.0.0"
+        and client.version < VersionString("1.30.2")
+    ):
+        query += " and is_placeholder = 0"
+
+    parameters = [rule.name]
 
     if not show_inspiration_alternatives:
         query += " and is_inspiration = ?"
@@ -2367,9 +2375,11 @@ async def fetch_rule_alternatives(
     rows = await fetch_rows(query, parameters)
     if len(rows) == 0:
         if not show_inspiration_alternatives:
-            return await fetch_rule_alternatives(rule, is_singular, True, locale)
+            return await fetch_rule_alternatives(
+                client, rule, is_singular, True, locale
+            )
         if is_singular is not None:
-            return await fetch_rule_alternatives(rule, None, True, locale)
+            return await fetch_rule_alternatives(client, rule, None, True, locale)
 
     for row in rows:
         lemma = row[alternative_columns["lemma"]]
@@ -3596,7 +3606,7 @@ def align_form_adjective_german(
     text = target_token.text
     if target_result is not None and text != target_result["base_form"]:
         return text
-    
+
     if target_form is None:
         ending = ""
     elif target_form in [
@@ -4080,6 +4090,7 @@ async def alternatives_declension(
 
 async def gendered_denom_analysis_de(
     config: Config,
+    client: Client,
     lang: Language,
     text: str,
     tokens: Doc,
@@ -4140,7 +4151,7 @@ async def gendered_denom_analysis_de(
     binary_case = False
     binary = ResultOut.genderedRolesFormatBinary(config.gendered_roles_format)
     alternatives = await fetch_rule_alternatives(
-        rule, is_singular, config.show_inspiration_alternatives, lang.locale
+        client, rule, is_singular, config.show_inspiration_alternatives, lang.locale
     )
     new_alternatives = []
     if alternatives is None:
@@ -4872,6 +4883,7 @@ async def rule_check(
                 alternatives,
             ) = await gendered_denom_analysis_de(
                 config,
+                client,
                 lang,
                 text,
                 tokens,
@@ -4899,7 +4911,11 @@ async def rule_check(
             start = token.idx
 
             alternatives = await fetch_rule_alternatives(
-                rule, is_singular, config.show_inspiration_alternatives, lang.locale
+                client,
+                rule,
+                is_singular,
+                config.show_inspiration_alternatives,
+                lang.locale,
             )
 
             if len(alternatives) > 0:
@@ -5033,7 +5049,11 @@ def detect_non_inclusive_emoji(
     offsets: dict,
     list_full: list,
 ) -> list:
-    if client.name == "web-ext" and client.version < VersionString("1.28.0.1"):
+    if (
+        client.name == "web-ext"
+        and client.version != "0.0.0"
+        and client.version < VersionString("1.28.0.1")
+    ):
         return i
 
     token = tokens[i]

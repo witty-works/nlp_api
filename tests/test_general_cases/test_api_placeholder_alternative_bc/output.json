@@ -1,0 +1,28 @@
+{
+    "language": "en",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "They are"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "He is ok",
+            "end": 5,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Pronouns that exclude non-binary people",
+                "url": "https://www.witty.works/en/categories/gender-orientation/binary-pronouns?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Gender + Orientation: Binary pronouns",
+            "proficiency_level": "unconscious_bias",
+            "start": 0,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "He is"
+        }
+    ]
+}
