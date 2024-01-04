@@ -22,11 +22,11 @@ class LangDetection:
         return result
 
     def get_default_locale(self, lang):
-        if lang == "en":
-            return "en-US"
+        if lang == LangWithAutoType.EN:
+            return LangWithAutoType.enUS
 
-        if lang == "de":
-            return "de-DE"
+        if lang == LangWithAutoType.DE:
+            return LangWithAutoType.deDE
 
         return None
 

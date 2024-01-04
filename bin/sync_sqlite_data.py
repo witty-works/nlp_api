@@ -4,7 +4,7 @@ import os
 import json
 
 from app.query_definitions import declensions_config
-
+from app.models import LangType, LangVariantType
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -12,7 +12,7 @@ def parse_args():
         "-l",
         "--Locale",
         help="Locale to compare",
-        default="de-DE",
+        default=LangVariantType.deDE,
     )
     parser.add_argument("-f", "--File", help="File to compare", default=False)
     return parser.parse_args()
@@ -57,7 +57,7 @@ for table in source.execute(query).fetchall():
 
 lookup = {}
 lemma_plural_lookup = {}
-langs = ["en", "de"]
+langs = [LangType.EN, LangType.DE]
 for lang in langs:
     query = "SELECT text, lemma, is_plural FROM rules_lemmatization WHERE language = ?"
     parameters = [lang]
@@ -69,8 +69,8 @@ for lang in langs:
         if row[2]:
             lemma_plural_lookup[lang][row[0]] = row[1]
 
-    if lang == "de":
-        columns = declensions_config["de"]["n"]["columns"]
+    if lang == LangType.DE:
+        columns = declensions_config[LangType.DE]["n"]["columns"]
         column_count = len(columns)
         column_filter = ", ".join(columns)
         base_form_i = columns.index("base_form")

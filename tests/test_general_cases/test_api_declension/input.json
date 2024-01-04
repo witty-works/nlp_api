@@ -1,3 +1,6 @@
 {
-    "text": "Witty leistet Unterstützung in mehr als 50 Diversitätsdimensionen. Sie sind alt. Das ist unsere beste Idee."
+    "text": "Witty leistet Unterstützung in mehr als 50 Diversitätsdimensionen. Sie sind alt. Das ist unsere beste Idee.",
+    "config": {
+        "show_inspiration_alternatives": true
+      }
 }
