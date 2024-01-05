@@ -36,6 +36,10 @@
                 },
                 {
                     "text": "Sie"
+                },
+                {
+                    "context": "'Vorname' nennen",
+                    "text": "((Vorname))"
                 }
             ],
             "category": "gender-orientation",
@@ -157,6 +161,10 @@
                 },
                 {
                     "text": "Dich"
+                },
+                {
+                    "context": "'Vorname' nennen",
+                    "text": "((Vorname))"
                 }
             ],
             "category": "gender-orientation",

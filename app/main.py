@@ -122,7 +122,7 @@ from app.query_definitions import (
     declensions_config,
 )
 
-version = "2.1.1"
+version = "2.1.2"
 
 categories = get_categories()
 settings = get_settings()
@@ -359,7 +359,7 @@ async def lifespan(app: FastAPI):
             await source.close()
 
     for lang in model:
-        query = f"SELECT {rule_column_list} FROM rules_rule WHERE is_active = 1 and language = ? and type = ? ORDER BY lemma_length DESC, first_is_word_type_lemmatize ASC"
+        query = f"SELECT {rule_column_list} FROM rules_rule WHERE language = ? and type = ? ORDER BY lemma_length DESC, first_is_word_type_lemmatize ASC"
         parameters = [lang, RuleType.SUBSTRING]
         rows = await fetch_rows(query, parameters)
 
@@ -2291,7 +2291,7 @@ async def fetch_rules(
             ] = lemma_filter
 
     filter_list = " OR ".join(filters.keys())
-    query = f"SELECT {rule_column_list} FROM rules_rule WHERE is_active = 1 AND language = ? AND type = ? AND diversity_dimension_json != '[]' AND ({filter_list}) ORDER BY lemma_length DESC, first_is_word_type_lemmatize ASC"
+    query = f"SELECT {rule_column_list} FROM rules_rule WHERE language = ? AND type = ? AND diversity_dimension_json != '[]' AND ({filter_list}) ORDER BY lemma_length DESC, first_is_word_type_lemmatize ASC"
     parameters = [lang, RuleType.SUFFIX if suffix_check else RuleType.DEFAULT] + list(
         filters.values()
     )
@@ -2340,6 +2340,7 @@ async def fetch_rules(
 
 
 async def fetch_rule_alternatives(
+    client: Client,
     rule: Rule,
     is_singular: bool | None,
     show_inspiration_alternatives: bool,
@@ -2348,9 +2349,16 @@ async def fetch_rule_alternatives(
     if isinstance(rule.name, str):
         return rule.alternatives
 
-    # https://wittyworks.productboard.com/roadmap/3751070-browser-extension/features/13529555/detail
-    query = f"SELECT {alternative_column_list} FROM rules_alternative WHERE is_active = 1 and is_placeholder = 0 and rule_id = ?"
-    parameters = [rule.parent_id if rule.parent_id else rule.name]
+    query = f"SELECT {alternative_column_list} FROM rules_alternative WHERE rule_id = ?"
+
+    if (
+        client.name == "web-ext"
+        and client.version != "0.0.0"
+        and client.version < VersionString("1.30.2")
+    ):
+        query += " and is_placeholder = 0"
+
+    parameters = [rule.name]
 
     if not show_inspiration_alternatives:
         query += " and is_inspiration = ?"
@@ -2367,9 +2375,11 @@ async def fetch_rule_alternatives(
     rows = await fetch_rows(query, parameters)
     if len(rows) == 0:
         if not show_inspiration_alternatives:
-            return await fetch_rule_alternatives(rule, is_singular, True, locale)
+            return await fetch_rule_alternatives(
+                client, rule, is_singular, True, locale
+            )
         if is_singular is not None:
-            return await fetch_rule_alternatives(rule, None, True, locale)
+            return await fetch_rule_alternatives(client, rule, None, True, locale)
 
     for row in rows:
         lemma = row[alternative_columns["lemma"]]
@@ -3469,17 +3479,19 @@ async def find_form(lang: LangType, word_type: WordType, i: int, tokens: Doc):
                 return await find_form_verb_german(i, tokens)
 
             return await find_form_verb_english(i, tokens)
-        case WordType.ADJECTIVE:
+        case WordType.ADJECTIVE | WordType.ADVERB:
             if lang == LangType.DE:
                 return await find_form_adjective_german(i, tokens)
 
             return await find_form_adjective_english(i, tokens)
 
-    #    case WordType.NOUN:
-    if lang == LangType.DE:
-        return await find_form_noun_german(i, tokens)
+        case WordType.NOUN:
+            if lang == LangType.DE:
+                return await find_form_noun_german(i, tokens)
 
-    return await find_form_noun_english(i, tokens)
+            return await find_form_noun_english(i, tokens)
+
+    return tokens[i].idx, tokens[i].text, tokens[i].lemma_, None
 
 
 def align_form_noun_german(
@@ -3596,7 +3608,7 @@ def align_form_adjective_german(
     text = target_token.text
     if target_result is not None and text != target_result["base_form"]:
         return text
-    
+
     if target_form is None:
         ending = ""
     elif target_form in [
@@ -3637,6 +3649,9 @@ async def align_form_adjective(
     source_lemma: str,
     target_token: Token,
 ) -> str:
+    if target_form == "no_change":
+        return target_token.text
+
     target_result = await fetch_declensions(lang, WordType.ADJECTIVE, target_token.text)
 
     if lang == LangType.DE:
@@ -3882,6 +3897,9 @@ async def align_form_verb(
     source_lemma: str,
     target_token: Token,
 ) -> str:
+    if target_form == "no_change":
+        return target_token.text
+
     target_result = await fetch_declensions(lang, WordType.VERB, target_token.text)
 
     if lang == LangType.DE:
@@ -4080,6 +4098,7 @@ async def alternatives_declension(
 
 async def gendered_denom_analysis_de(
     config: Config,
+    client: Client,
     lang: Language,
     text: str,
     tokens: Doc,
@@ -4140,7 +4159,7 @@ async def gendered_denom_analysis_de(
     binary_case = False
     binary = ResultOut.genderedRolesFormatBinary(config.gendered_roles_format)
     alternatives = await fetch_rule_alternatives(
-        rule, is_singular, config.show_inspiration_alternatives, lang.locale
+        client, rule, is_singular, config.show_inspiration_alternatives, lang.locale
     )
     new_alternatives = []
     if alternatives is None:
@@ -4872,6 +4891,7 @@ async def rule_check(
                 alternatives,
             ) = await gendered_denom_analysis_de(
                 config,
+                client,
                 lang,
                 text,
                 tokens,
@@ -4899,7 +4919,11 @@ async def rule_check(
             start = token.idx
 
             alternatives = await fetch_rule_alternatives(
-                rule, is_singular, config.show_inspiration_alternatives, lang.locale
+                client,
+                rule,
+                is_singular,
+                config.show_inspiration_alternatives,
+                lang.locale,
             )
 
             if len(alternatives) > 0:
@@ -5033,7 +5057,11 @@ def detect_non_inclusive_emoji(
     offsets: dict,
     list_full: list,
 ) -> list:
-    if client.name == "web-ext" and client.version < VersionString("1.28.0.1"):
+    if (
+        client.name == "web-ext"
+        and client.version != "0.0.0"
+        and client.version < VersionString("1.28.0.1")
+    ):
         return i
 
     token = tokens[i]

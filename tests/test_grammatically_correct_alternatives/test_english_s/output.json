@@ -5,12 +5,20 @@
         {
             "alternatives": [
                 {
-                    "text": "they decide"
+                    "text": "they"
+                },
+                {
+                    "context": "specify 'given name'",
+                    "text": "((given name))"
+                },
+                {
+                    "context": "specify 'given name family name'",
+                    "text": "((given name family name))"
                 }
             ],
             "category": "gender-orientation",
             "context": "What if she decides to step down?",
-            "end": 19,
+            "end": 11,
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
@@ -22,7 +30,7 @@
             "proficiency_level": "unconscious_bias",
             "start": 8,
             "subcategory": "binary_pronouns_advanced",
-            "text": "she decides"
+            "text": "she"
         },
         {
             "alternatives": [
