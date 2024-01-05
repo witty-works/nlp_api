@@ -709,7 +709,7 @@
     "Zugriffen": "Zugriff",
     "Zugriffes": "Zugriff",
     "Achtsamkeiten": "Achtsamkeit",
-    "neuter": "Vogueing",
+    "neuter": "Verh\u00e4ltnis",
     "Actionables": "Actionable",
     "Aufgaben": "Aufgabe",
     "Teilaufgaben": "Teilaufgabe",
@@ -5054,6 +5054,10 @@
     "Materien": "Materie",
     "Sozialheldin": "Sozialheld",
     "Sozialhelden": "Sozialheld",
-    "Sozialheldinnen": "Sozialheld"
+    "Sozialheldinnen": "Sozialheld",
+    "Personalwesens": "Personalwesen",
+    "Verh\u00e4ltnisses": "Verh\u00e4ltnis",
+    "Verh\u00e4ltnisse": "Verh\u00e4ltnis",
+    "Verh\u00e4ltnissen": "Verh\u00e4ltnis"
   }
 }
