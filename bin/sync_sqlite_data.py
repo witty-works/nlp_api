@@ -6,6 +6,7 @@ import json
 from app.query_definitions import declensions_config
 from app.models import LangType, LangVariantType
 
+
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -54,6 +55,8 @@ for table in source.execute(query).fetchall():
     if table[0] not in tables_to_keep:
         source.execute(f"DROP table IF EXISTS {table[0]}")
 
+source.execute("DELETE FROM rules_alternative WHERE is_active = 0 OR rule_id IN (SELECT id FROM rules_rule WHERE is_active = 0)")
+source.execute("DELETE FROM rules_rule WHERE is_active = 0")
 
 lookup = {}
 lemma_plural_lookup = {}

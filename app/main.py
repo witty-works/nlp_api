@@ -359,7 +359,7 @@ async def lifespan(app: FastAPI):
             await source.close()
 
     for lang in model:
-        query = f"SELECT {rule_column_list} FROM rules_rule WHERE is_active = 1 and language = ? and type = ? ORDER BY lemma_length DESC, first_is_word_type_lemmatize ASC"
+        query = f"SELECT {rule_column_list} FROM rules_rule WHERE language = ? and type = ? ORDER BY lemma_length DESC, first_is_word_type_lemmatize ASC"
         parameters = [lang, RuleType.SUBSTRING]
         rows = await fetch_rows(query, parameters)
 
@@ -2291,7 +2291,7 @@ async def fetch_rules(
             ] = lemma_filter
 
     filter_list = " OR ".join(filters.keys())
-    query = f"SELECT {rule_column_list} FROM rules_rule WHERE is_active = 1 AND language = ? AND type = ? AND diversity_dimension_json != '[]' AND ({filter_list}) ORDER BY lemma_length DESC, first_is_word_type_lemmatize ASC"
+    query = f"SELECT {rule_column_list} FROM rules_rule WHERE language = ? AND type = ? AND diversity_dimension_json != '[]' AND ({filter_list}) ORDER BY lemma_length DESC, first_is_word_type_lemmatize ASC"
     parameters = [lang, RuleType.SUFFIX if suffix_check else RuleType.DEFAULT] + list(
         filters.values()
     )
@@ -2349,7 +2349,7 @@ async def fetch_rule_alternatives(
     if isinstance(rule.name, str):
         return rule.alternatives
 
-    query = f"SELECT {alternative_column_list} FROM rules_alternative WHERE is_active = 1 and rule_id = ?"
+    query = f"SELECT {alternative_column_list} FROM rules_alternative WHERE rule_id = ?"
 
     if (
         client.name == "web-ext"
@@ -3492,6 +3492,7 @@ async def find_form(lang: LangType, word_type: WordType, i: int, tokens: Doc):
             return await find_form_noun_english(i, tokens)
 
     return tokens[i].idx, tokens[i].text, tokens[i].lemma_, None
+
 
 def align_form_noun_german(
     target_form: str, target_token: Token, target_result: dict
