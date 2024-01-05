@@ -3501,7 +3501,7 @@ def align_form_noun_german(
     if text is None:
         if settings.log_missing_declension and not target_token.text.isupper():
             logger.error(
-                f"German noun target form '{target_form}' for '{target_token.text}' (lemma: '{target_token.lemma_}') missing: '{json.dumps(target_result)}'."
+                f"German noun target form '{str(target_form)}' for '{target_token.text}' (lemma: '{target_token.lemma_}') missing: '{json.dumps(target_result)}'."
             )
 
         return target_token.text
@@ -3583,7 +3583,7 @@ def align_form_adjective_english(
 
         if settings.log_missing_declension and not target_token.text.isupper():
             logger.error(
-                f"English adjective data missing for '{target_token.text}' (lemma: '{target_token.lemma_}'), generated '{text}' for target form '{target_form}'."
+                f"English adjective data missing for '{target_token.text}' (lemma: '{target_token.lemma_}'), generated '{text}' for target form '{str(target_form)}'."
             )
 
         return text
@@ -3592,7 +3592,7 @@ def align_form_adjective_english(
     if text is None:
         if settings.log_missing_declension and len(target_token.text) > 2:
             logger.error(
-                f"English adjective target form {target_form} for '{target_token.text}' (lemma: '{target_token.lemma_}') missing: {json.dumps(target_result)}"
+                f"English adjective target form '{str(target_form)}' for '{target_token.text}' (lemma: '{target_token.lemma_}') missing: {json.dumps(target_result)}"
             )
 
         return target_token.text
@@ -3873,7 +3873,7 @@ def align_form_verb_english(
 
         if settings.log_missing_declension and not target_token.text.isupper():
             logger.error(
-                f"English verb target form '{target_form}' for '{target_token.text}' (lemma: '{target_token.lemma_}') generated '{text}'."
+                f"English verb target form '{str(target_form)}' for '{target_token.text}' (lemma: '{target_token.lemma_}') generated '{text}'."
             )
 
         return text
@@ -3882,7 +3882,7 @@ def align_form_verb_english(
     if text is None:
         if settings.log_missing_declension and not target_token.text.isupper():
             logger.error(
-                f"English verb target form '{target_form}' for '{target_token.text}' (lemma: '{target_token.lemma_}') missing: '{json.dumps(target_result)}'."
+                f"English verb target form '{str(target_form)}' for '{target_token.text}' (lemma: '{target_token.lemma_}') missing: '{json.dumps(target_result)}'."
             )
 
         return text
