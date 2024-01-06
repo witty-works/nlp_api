@@ -2450,10 +2450,17 @@ async def fetch_declensions(
     column_list = ", ".join(declensions_config[lang][word_type]["columns"])
     table_name = declensions_config[lang][word_type]["name"]
 
-    filters = ["base_form = ?"]
-    parameters = [text]
+    filters = []
+    parameters = []
     for column in declensions_config[lang][word_type]["columns"]:
-        if column in ["is_absolute", "gender_1", "female_form", "male_form"]:
+        if column in [
+            "is_absolute",
+            "gender_1",
+            "gender_2",
+            "female_form",
+            "male_form",
+            "helping_verb",
+        ]:
             continue
 
         filters.append(f"{column} = ? COLLATE NOCASE")
