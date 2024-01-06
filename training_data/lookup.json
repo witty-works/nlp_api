@@ -701,7 +701,7 @@
     "Abgeordnete": "Abgeordneter",
     "Abgeordnetem": "Abgeordneter",
     "Abgeordneten": "Abgeordneter",
-    "feminine": "Sozialheld",
+    "feminine": "Pfuscher",
     "Abh\u00e4ngigkeiten": "Abh\u00e4ngigkeit",
     "Accesses": "Access",
     "Zugriffs": "Zugriff",
@@ -779,6 +779,7 @@
     "Einblicken": "Einblicke",
     "Einblickes": "Einblicke",
     "Altergenossen": "Altergenosse",
+    "Gleichaltrigen": "Gleichaltriger",
     "Gleichaltrige": "Gleichaltriger",
     "Gleichaltrigers": "Gleichaltriger",
     "Gleichaltrigere": "Gleichaltriger",
@@ -3961,6 +3962,7 @@
     "Schwarzarbeiterin": "Schwarzarbeiter",
     "Schwarzarbeiters": "Schwarzarbeiter",
     "Schwarzarbeitern": "Schwarzarbeiter",
+    "Pfuscherin": "Pfuscher",
     "Pfuschers": "Pfuscher",
     "Pfuschern": "Pfuscher",
     "Tags": "Tag",
@@ -4453,6 +4455,10 @@
     "Vermittlungen": "Vermittlung",
     "Vernichtungen": "Vernichtung",
     "Verpflichtungen": "Verpflichtung",
+    "Verramschungs": "Verramschung",
+    "Verramschungen": "Verramschung",
+    "Verscherbelungs": "Verscherbelung",
+    "Verscherbelungen": "Verscherbelung",
     "Ver\u00e4u\u00dferungen": "Ver\u00e4u\u00dferung",
     "Verkaufs": "Verkauf",
     "Verk\u00e4ufe": "Verkauf",
@@ -5058,6 +5064,7 @@
     "Personalwesens": "Personalwesen",
     "Verh\u00e4ltnisses": "Verh\u00e4ltnis",
     "Verh\u00e4ltnisse": "Verh\u00e4ltnis",
-    "Verh\u00e4ltnissen": "Verh\u00e4ltnis"
+    "Verh\u00e4ltnissen": "Verh\u00e4ltnis",
+    "Pfuscherinnen": "Pfuscher"
   }
 }
