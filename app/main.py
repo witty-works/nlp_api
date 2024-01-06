@@ -3498,7 +3498,13 @@ async def find_form(lang: LangType, word_type: WordType, i: int, tokens: Doc):
 
             return await find_form_noun_english(i, tokens)
 
-    return tokens[i].idx, tokens[i].text, tokens[i].lemma_, None
+    token = tokens[i]
+    if settings.log_missing_declension and len(token.text) > 3 and not token.text.isupper():
+        logger.error(
+            f"Declension in '{lang}' not found for '{token.text}' (lemma: '{token.lemma_}')"
+        )
+
+    return token.idx, token.text, token.lemma_, None
 
 
 def align_form_noun_german(
@@ -3535,7 +3541,7 @@ def align_form_noun_english(
 
 
 async def align_form_noun(lang: LangType, target_form: str, target_token: Token) -> str:
-    if target_form == "no_change":
+    if target_form == "no_change" or target_form is None:
         return target_token.text
 
     target_result = await fetch_declensions(lang, WordType.NOUN, target_token.text)
@@ -3656,7 +3662,7 @@ async def align_form_adjective(
     source_lemma: str,
     target_token: Token,
 ) -> str:
-    if target_form == "no_change":
+    if target_form == "no_change" or target_form is None:
         return target_token.text
 
     target_result = await fetch_declensions(lang, WordType.ADJECTIVE, target_token.text)
@@ -3904,7 +3910,7 @@ async def align_form_verb(
     source_lemma: str,
     target_token: Token,
 ) -> str:
-    if target_form == "no_change":
+    if target_form == "no_change" or target_form is None:
         return target_token.text
 
     target_result = await fetch_declensions(lang, WordType.VERB, target_token.text)
