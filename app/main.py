@@ -2351,18 +2351,18 @@ async def fetch_rule_alternatives(
 
     query = f"SELECT {alternative_column_list} FROM rules_alternative WHERE rule_id = ?"
 
-    if (
-        client.name == "web-ext"
-        and client.version != "0.0.0"
-        and client.version < VersionString("1.30.2")
-    ):
-        query += " and is_placeholder = 0"
-
     parameters = [rule.name]
 
     if not show_inspiration_alternatives:
         query += " and is_inspiration = ?"
         parameters.append(0)
+    else:
+        if (
+            client.name == "web-ext"
+            and client.version != "0.0.0"
+            and client.version < VersionString("1.30.2")
+        ):
+            query += " and is_placeholder = 0"
 
     # TODO ignore pluralization for inspirations?
     if is_singular is not None:
@@ -2407,7 +2407,10 @@ async def fetch_rule_alternatives(
             word_types_json,
         )
         alternative.is_remove = is_remove
-        alternative.is_inspiration = row[alternative_columns["is_inspiration"]]
+        alternative.is_inspiration = (
+            row[alternative_columns["is_inspiration"]]
+            or row[alternative_columns["is_placeholder"]]
+        )
         alternative.is_advanced = row[alternative_columns["is_advanced"]]
         alternative.is_collective_noun = row[alternative_columns["is_collective_noun"]]
         alternative.label = row[alternative_columns["label"]]
@@ -3499,7 +3502,11 @@ async def find_form(lang: LangType, word_type: WordType, i: int, tokens: Doc):
             return await find_form_noun_english(i, tokens)
 
     token = tokens[i]
-    if settings.log_missing_declension and len(token.text) > 3 and not token.text.isupper():
+    if (
+        settings.log_missing_declension
+        and len(token.text) > 3
+        and not token.text.isupper()
+    ):
         logger.error(
             f"Declension in '{lang}' not found for '{token.text}' (lemma: '{token.lemma_}')"
         )

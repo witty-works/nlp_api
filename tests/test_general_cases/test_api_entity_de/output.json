@@ -5,11 +5,13 @@
         {
             "alternatives": [
                 {
-                    "context": "'Vorname' nennen",
+                    "context": "💡 'Vorname' nennen",
+                    "inspiration": true,
                     "text": "((Vorname))"
                 },
                 {
-                    "context": "'Vorname' und 'Familienname' nennen",
+                    "context": "💡 'Vorname' und 'Familienname' nennen",
+                    "inspiration": true,
                     "text": "((Vorname)) ((Familienname))"
                 },
                 {
@@ -36,11 +38,13 @@
         {
             "alternatives": [
                 {
-                    "context": "'Vorname' nennen",
+                    "context": "💡 'Vorname' nennen",
+                    "inspiration": true,
                     "text": "((Vorname))"
                 },
                 {
-                    "context": "'Vorname' und 'Familienname' nennen",
+                    "context": "💡 'Vorname' und 'Familienname' nennen",
+                    "inspiration": true,
                     "text": "((Vorname)) ((Familienname))"
                 },
                 {

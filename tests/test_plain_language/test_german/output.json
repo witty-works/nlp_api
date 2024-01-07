@@ -355,7 +355,8 @@
                     "text": "dich"
                 },
                 {
-                    "context": "'Vorname' nennen",
+                    "context": "💡 'Vorname' nennen",
+                    "inspiration": true,
                     "text": "((Vorname))"
                 }
             ],

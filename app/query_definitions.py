@@ -28,6 +28,7 @@ alternative_columns = [
     "lemma_json",
     "word_types_json",
     "is_remove",
+    "is_placeholder",
     "is_inspiration",
     "is_advanced",
     "is_collective_noun",

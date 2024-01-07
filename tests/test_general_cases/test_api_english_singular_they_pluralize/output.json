@@ -8,11 +8,13 @@
                     "text": "They"
                 },
                 {
-                    "context": "specify 'given name'",
+                    "context": "💡 specify 'given name'",
+                    "inspiration": true,
                     "text": "((given name))"
                 },
                 {
-                    "context": "specify 'given name family name'",
+                    "context": "💡 specify 'given name family name'",
+                    "inspiration": true,
                     "text": "((given name family name))"
                 }
             ],
@@ -38,11 +40,13 @@
                     "text": "They"
                 },
                 {
-                    "context": "specify 'given name'",
+                    "context": "💡 specify 'given name'",
+                    "inspiration": true,
                     "text": "((given name))"
                 },
                 {
-                    "context": "specify 'given name family name'",
+                    "context": "💡 specify 'given name family name'",
+                    "inspiration": true,
                     "text": "((given name family name))"
                 }
             ],
@@ -68,7 +72,8 @@
                     "text": "theirs"
                 },
                 {
-                    "context": "specify 'given name's'",
+                    "context": "💡 specify 'given name's'",
+                    "inspiration": true,
                     "text": "((given name's))"
                 }
             ],

@@ -79,7 +79,8 @@
                     "text": "Dich"
                 },
                 {
-                    "context": "'Vorname' nennen",
+                    "context": "💡 'Vorname' nennen",
+                    "inspiration": true,
                     "text": "((Vorname))"
                 }
             ],
@@ -135,7 +136,8 @@
                     "text": "Sie"
                 },
                 {
-                    "context": "'Vorname' nennen",
+                    "context": "💡 'Vorname' nennen",
+                    "inspiration": true,
                     "text": "((Vorname))"
                 }
             ],
