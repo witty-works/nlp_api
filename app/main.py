@@ -4076,7 +4076,12 @@ async def alternatives_declension(
     rule: Rule,
     alternatives: list[Alternative],
 ) -> (str, int, list[Alternative]):
-    if alternatives == None or len(alternatives) == 0:
+    if (
+        len(rule.words) > 1
+        or rule.is_pattern_match
+        or alternatives == None
+        or len(alternatives) == 0
+    ):
         return text, tokens[i].idx, alternatives
 
     word_type = (
@@ -4951,12 +4956,12 @@ async def rule_check(
                 if len(alternatives) == 1 and alternatives[0].lemma == "they":
                     text, alternative = await pluralize_they(text, tokens, i)
                     alternatives = [Alternative(alternative)]
-                elif len(rule.words) == 1 and not rule.is_pattern_match:
+                elif not subcategory.startswith("abbreviation"):
                     text, start, alternatives = await alternatives_declension(
-                        lang.lang, token.text, i, tokens, rule, alternatives
+                        lang.lang, text, i, tokens, rule, alternatives
                     )
 
-                    if subcategory == "filler":
+                    if subcategory.startswith("filler"):
                         text, alternatives = detect_filler_words_at_sentence_start(
                             alternatives,
                             text,
