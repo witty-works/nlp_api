@@ -3409,7 +3409,7 @@ async def find_form_adjective_german(i: int, tokens: Doc):
 
 async def find_form_adjective_english(i: int, tokens: Doc):
     token = tokens[i]
-    forms = await fetch_declensions(LangType.DE, WordType.ADJECTIVE, token.text)
+    forms = await fetch_declensions(LangType.EN, WordType.ADJECTIVE, token.text)
 
     if forms is not None:
         if forms["is_absolute"]:
