@@ -122,7 +122,7 @@ from app.query_definitions import (
     declensions_config,
 )
 
-version = "2.1.2"
+version = "2.1.3"
 
 categories = get_categories()
 settings = get_settings()
@@ -3409,7 +3409,7 @@ async def find_form_adjective_german(i: int, tokens: Doc):
 
 async def find_form_adjective_english(i: int, tokens: Doc):
     token = tokens[i]
-    forms = await fetch_declensions(LangType.DE, WordType.ADJECTIVE, token.text)
+    forms = await fetch_declensions(LangType.EN, WordType.ADJECTIVE, token.text)
 
     if forms is not None:
         if forms["is_absolute"]:
@@ -3424,7 +3424,8 @@ async def find_form_adjective_english(i: int, tokens: Doc):
     if text_lower == token.lemma_:
         target_form = "no_change"
     else:
-        adjective = Adjective(token.lemma_)
+        adjective = Adjective(token.lemma_.lower())
+
         if adjective.is_singular() == text_lower:
             target_form = "singular"
         elif adjective.comparative() == text_lower:
@@ -3878,7 +3879,7 @@ def align_form_verb_english(
         return target_token.lemma_
 
     if target_result is None:
-        b_verb = Verb(target_token.lemma_)
+        b_verb = Verb(target_token.lemma_.lower())
 
         if target_form == "third_person_singular":
             text = b_verb.singular()
