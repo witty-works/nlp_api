@@ -5,12 +5,22 @@
         {
             "alternatives": [
                 {
-                    "text": "They are"
+                    "text": "They"
+                },
+                {
+                    "context": "💡 specify 'given name'",
+                    "inspiration": true,
+                    "text": "((given name))"
+                },
+                {
+                    "context": "💡 specify 'given name family name'",
+                    "inspiration": true,
+                    "text": "((given name family name))"
                 }
             ],
             "category": "gender-orientation",
             "context": "He is ok",
-            "end": 5,
+            "end": 2,
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
@@ -22,7 +32,7 @@
             "proficiency_level": "unconscious_bias",
             "start": 0,
             "subcategory": "binary_pronouns_advanced",
-            "text": "He is"
+            "text": "He"
         }
     ]
 }

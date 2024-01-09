@@ -122,7 +122,7 @@ from app.query_definitions import (
     declensions_config,
 )
 
-version = "2.1.2"
+version = "2.1.3"
 
 categories = get_categories()
 settings = get_settings()
@@ -2351,18 +2351,18 @@ async def fetch_rule_alternatives(
 
     query = f"SELECT {alternative_column_list} FROM rules_alternative WHERE rule_id = ?"
 
-    if (
-        client.name == "web-ext"
-        and client.version != "0.0.0"
-        and client.version < VersionString("1.30.2")
-    ):
-        query += " and is_placeholder = 0"
-
     parameters = [rule.name]
 
     if not show_inspiration_alternatives:
         query += " and is_inspiration = ?"
         parameters.append(0)
+    else:
+        if (
+            client.name == "web-ext"
+            and client.version != "0.0.0"
+            and client.version < VersionString("1.30.2")
+        ):
+            query += " and is_placeholder = 0"
 
     # TODO ignore pluralization for inspirations?
     if is_singular is not None:
@@ -2407,7 +2407,10 @@ async def fetch_rule_alternatives(
             word_types_json,
         )
         alternative.is_remove = is_remove
-        alternative.is_inspiration = row[alternative_columns["is_inspiration"]]
+        alternative.is_inspiration = (
+            row[alternative_columns["is_inspiration"]]
+            or row[alternative_columns["is_placeholder"]]
+        )
         alternative.is_advanced = row[alternative_columns["is_advanced"]]
         alternative.is_collective_noun = row[alternative_columns["is_collective_noun"]]
         alternative.label = row[alternative_columns["label"]]
@@ -2450,10 +2453,17 @@ async def fetch_declensions(
     column_list = ", ".join(declensions_config[lang][word_type]["columns"])
     table_name = declensions_config[lang][word_type]["name"]
 
-    filters = ["base_form = ?"]
-    parameters = [text]
+    filters = []
+    parameters = []
     for column in declensions_config[lang][word_type]["columns"]:
-        if column in ["is_absolute", "gender_1", "female_form", "male_form"]:
+        if column in [
+            "is_absolute",
+            "gender_1",
+            "gender_2",
+            "female_form",
+            "male_form",
+            "helping_verb",
+        ]:
             continue
 
         filters.append(f"{column} = ? COLLATE NOCASE")
@@ -3399,7 +3409,7 @@ async def find_form_adjective_german(i: int, tokens: Doc):
 
 async def find_form_adjective_english(i: int, tokens: Doc):
     token = tokens[i]
-    forms = await fetch_declensions(LangType.DE, WordType.ADJECTIVE, token.text)
+    forms = await fetch_declensions(LangType.EN, WordType.ADJECTIVE, token.text)
 
     if forms is not None:
         if forms["is_absolute"]:
@@ -3414,7 +3424,8 @@ async def find_form_adjective_english(i: int, tokens: Doc):
     if text_lower == token.lemma_:
         target_form = "no_change"
     else:
-        adjective = Adjective(token.lemma_)
+        adjective = Adjective(token.lemma_.lower())
+
         if adjective.is_singular() == text_lower:
             target_form = "singular"
         elif adjective.comparative() == text_lower:
@@ -3491,7 +3502,17 @@ async def find_form(lang: LangType, word_type: WordType, i: int, tokens: Doc):
 
             return await find_form_noun_english(i, tokens)
 
-    return tokens[i].idx, tokens[i].text, tokens[i].lemma_, None
+    token = tokens[i]
+    if (
+        settings.log_missing_declension
+        and len(token.text) > 3
+        and not token.text.isupper()
+    ):
+        logger.error(
+            f"Declension in '{lang}' not found for '{token.text}' (lemma: '{token.lemma_}')"
+        )
+
+    return token.idx, token.text, token.lemma_, None
 
 
 def align_form_noun_german(
@@ -3501,7 +3522,7 @@ def align_form_noun_german(
     if text is None:
         if settings.log_missing_declension and not target_token.text.isupper():
             logger.error(
-                f"German noun target form '{target_form}' for '{target_token.text}' (lemma: '{target_token.lemma_}') missing: '{json.dumps(target_result)}'."
+                f"German noun target form '{str(target_form)}' for '{target_token.text}' (lemma: '{target_token.lemma_}') missing: '{json.dumps(target_result)}'."
             )
 
         return target_token.text
@@ -3528,7 +3549,7 @@ def align_form_noun_english(
 
 
 async def align_form_noun(lang: LangType, target_form: str, target_token: Token) -> str:
-    if target_form == "no_change":
+    if target_form == "no_change" or target_form is None:
         return target_token.text
 
     target_result = await fetch_declensions(lang, WordType.NOUN, target_token.text)
@@ -3583,7 +3604,7 @@ def align_form_adjective_english(
 
         if settings.log_missing_declension and not target_token.text.isupper():
             logger.error(
-                f"English adjective data missing for '{target_token.text}' (lemma: '{target_token.lemma_}'), generated '{text}' for target form '{target_form}'."
+                f"English adjective data missing for '{target_token.text}' (lemma: '{target_token.lemma_}'), generated '{text}' for target form '{str(target_form)}'."
             )
 
         return text
@@ -3592,7 +3613,7 @@ def align_form_adjective_english(
     if text is None:
         if settings.log_missing_declension and len(target_token.text) > 2:
             logger.error(
-                f"English adjective target form {target_form} for '{target_token.text}' (lemma: '{target_token.lemma_}') missing: {json.dumps(target_result)}"
+                f"English adjective target form '{str(target_form)}' for '{target_token.text}' (lemma: '{target_token.lemma_}') missing: {json.dumps(target_result)}"
             )
 
         return target_token.text
@@ -3649,7 +3670,7 @@ async def align_form_adjective(
     source_lemma: str,
     target_token: Token,
 ) -> str:
-    if target_form == "no_change":
+    if target_form == "no_change" or target_form is None:
         return target_token.text
 
     target_result = await fetch_declensions(lang, WordType.ADJECTIVE, target_token.text)
@@ -3858,7 +3879,7 @@ def align_form_verb_english(
         return target_token.lemma_
 
     if target_result is None:
-        b_verb = Verb(target_token.lemma_)
+        b_verb = Verb(target_token.lemma_.lower())
 
         if target_form == "third_person_singular":
             text = b_verb.singular()
@@ -3873,7 +3894,7 @@ def align_form_verb_english(
 
         if settings.log_missing_declension and not target_token.text.isupper():
             logger.error(
-                f"English verb target form '{target_form}' for '{target_token.text}' (lemma: '{target_token.lemma_}') generated '{text}'."
+                f"English verb target form '{str(target_form)}' for '{target_token.text}' (lemma: '{target_token.lemma_}') generated '{text}'."
             )
 
         return text
@@ -3882,7 +3903,7 @@ def align_form_verb_english(
     if text is None:
         if settings.log_missing_declension and not target_token.text.isupper():
             logger.error(
-                f"English verb target form '{target_form}' for '{target_token.text}' (lemma: '{target_token.lemma_}') missing: '{json.dumps(target_result)}'."
+                f"English verb target form '{str(target_form)}' for '{target_token.text}' (lemma: '{target_token.lemma_}') missing: '{json.dumps(target_result)}'."
             )
 
         return text
@@ -3897,7 +3918,7 @@ async def align_form_verb(
     source_lemma: str,
     target_token: Token,
 ) -> str:
-    if target_form == "no_change":
+    if target_form == "no_change" or target_form is None:
         return target_token.text
 
     target_result = await fetch_declensions(lang, WordType.VERB, target_token.text)
@@ -4056,7 +4077,12 @@ async def alternatives_declension(
     rule: Rule,
     alternatives: list[Alternative],
 ) -> (str, int, list[Alternative]):
-    if alternatives == None or len(alternatives) == 0:
+    if (
+        len(rule.words) > 1
+        or rule.is_pattern_match
+        or alternatives == None
+        or len(alternatives) == 0
+    ):
         return text, tokens[i].idx, alternatives
 
     word_type = (
@@ -4931,12 +4957,12 @@ async def rule_check(
                 if len(alternatives) == 1 and alternatives[0].lemma == "they":
                     text, alternative = await pluralize_they(text, tokens, i)
                     alternatives = [Alternative(alternative)]
-                elif len(rule.words) == 1 and not rule.is_pattern_match:
+                elif not subcategory.startswith("abbreviation"):
                     text, start, alternatives = await alternatives_declension(
-                        lang.lang, token.text, i, tokens, rule, alternatives
+                        lang.lang, text, i, tokens, rule, alternatives
                     )
 
-                    if subcategory == "filler":
+                    if subcategory.startswith("filler"):
                         text, alternatives = detect_filler_words_at_sentence_start(
                             alternatives,
                             text,

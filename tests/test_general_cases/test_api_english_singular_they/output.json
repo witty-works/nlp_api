@@ -39,11 +39,13 @@
                     "text": "they"
                 },
                 {
-                    "context": "specify 'given name'",
+                    "context": "💡 specify 'given name'",
+                    "inspiration": true,
                     "text": "((given name))"
                 },
                 {
-                    "context": "specify 'given name family name'",
+                    "context": "💡 specify 'given name family name'",
+                    "inspiration": true,
                     "text": "((given name family name))"
                 }
             ],
@@ -69,11 +71,13 @@
                     "text": "they"
                 },
                 {
-                    "context": "specify 'given name'",
+                    "context": "💡 specify 'given name'",
+                    "inspiration": true,
                     "text": "((given name))"
                 },
                 {
-                    "context": "specify 'given name family name'",
+                    "context": "💡 specify 'given name family name'",
+                    "inspiration": true,
                     "text": "((given name family name))"
                 }
             ],
