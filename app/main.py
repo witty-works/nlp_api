@@ -3424,7 +3424,8 @@ async def find_form_adjective_english(i: int, tokens: Doc):
     if text_lower == token.lemma_:
         target_form = "no_change"
     else:
-        adjective = Adjective(token.lemma_)
+        adjective = Adjective(token.lemma_.lower())
+
         if adjective.is_singular() == text_lower:
             target_form = "singular"
         elif adjective.comparative() == text_lower:
@@ -3878,7 +3879,7 @@ def align_form_verb_english(
         return target_token.lemma_
 
     if target_result is None:
-        b_verb = Verb(target_token.lemma_)
+        b_verb = Verb(target_token.lemma_.lower())
 
         if target_form == "third_person_singular":
             text = b_verb.singular()
