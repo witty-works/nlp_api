@@ -3505,6 +3505,7 @@ async def find_form(lang: LangType, word_type: WordType, i: int, tokens: Doc):
     token = tokens[i]
     if (
         settings.log_missing_declension
+        and len(word_type)
         and len(token.text) > 3
         and not token.text.isupper()
     ):
