@@ -2434,7 +2434,7 @@ def get_target_declension_form(target_result: dict, target_form: str):
 
     if target_result[target_form] is None or target_result[target_form] == "":
         return target_result["base_form"]
-    
+
     return target_result[target_form]
 
 
@@ -3506,7 +3506,7 @@ async def find_form(lang: LangType, word_type: WordType, i: int, tokens: Doc):
         and not token.text.isupper()
     ):
         logger.error(
-            f"Declension in '{lang}' not found for '{token.text}' (lemma: '{token.lemma_}')"
+            f"Declension in '{lang}' not found for '{token.text}' (lemma: '{token.lemma_}', tag: '{token.tag_}, pos: '{token.pos_}')"
         )
 
     return token.idx, token.text, token.lemma_, None
@@ -3515,6 +3515,13 @@ async def find_form(lang: LangType, word_type: WordType, i: int, tokens: Doc):
 def align_form_noun_german(
     target_form: str, target_token: Token, target_result: dict
 ) -> str:
+    # TODO determine correct form
+    if (
+        target_token.text.islower()
+        or target_token.text.lower() in static_rules[LangType.DE]["articles"]
+    ):
+        return target_token.text
+
     text = get_target_declension_form(target_result, target_form)
     if text is None:
         if settings.log_missing_declension and not target_token.text.isupper():
