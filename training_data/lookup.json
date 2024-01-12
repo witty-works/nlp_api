@@ -697,11 +697,11 @@
     "\u00fcberfremdet": "\u00fcberfremdet",
     "\u00fcberzeugend": "\u00fcberzeugend",
     "\u00fcberzeugt": "\u00fcberzeugt",
-    "masculine": "Sozialheld",
+    "masculine": "Unterst\u00fctzender",
     "Abgeordnete": "Abgeordneter",
     "Abgeordnetem": "Abgeordneter",
     "Abgeordneten": "Abgeordneter",
-    "feminine": "Ehegatte",
+    "feminine": "Nation",
     "Abh\u00e4ngigkeiten": "Abh\u00e4ngigkeit",
     "Accesses": "Access",
     "Zugriffs": "Zugriff",
@@ -5082,6 +5082,9 @@
     "Resultate": "Resultat",
     "Resultaten": "Resultat",
     "Resultate\u2076": "Resultat",
-    "Resultats": "Resultat"
+    "Resultats": "Resultat",
+    "Unterst\u00fctzende": "Unterst\u00fctzender",
+    "Unterst\u00fctzenden": "Unterst\u00fctzender",
+    "Nationen": "Nation"
   }
 }
