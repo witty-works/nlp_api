@@ -2428,17 +2428,13 @@ def is_valid_text(text: str) -> bool:
     return text.isalpha()
 
 
-def get_target_declension_form(
-    target_result: dict, target_form: str, fallback: str = None
-):
-    if (
-        target_result is None
-        or target_form not in target_result
-        or target_result[target_form] is None
-        or target_result[target_form] == ""
-    ):
-        return fallback
+def get_target_declension_form(target_result: dict, target_form: str):
+    if target_result is None or target_form not in target_result:
+        return None
 
+    if target_result[target_form] is None or target_result[target_form] == "":
+        return target_result["base_form"]
+    
     return target_result[target_form]
 
 
