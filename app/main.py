@@ -2490,16 +2490,7 @@ def is_gender_star_ending(text: str) -> bool | re.Match:
 def remove_gender_ending(text: str) -> str:
     match = is_gender_star_ending(text)
     if match:
-        if text.lower().endswith("r"):
-            suffix = "r"
-        elif match[1].endswith("d"):
-            suffix = "e"
-        elif match[2] == "iza" or match[2] == "eza":
-            suffix = "o"
-        else:
-            suffix = ""
-
-        text = match[1] + suffix
+        text = match[1] + match[2]
 
     return text
 
