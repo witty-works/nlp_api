@@ -37,16 +37,6 @@
             "alternatives": [
                 {
                     "text": "they"
-                },
-                {
-                    "context": "💡 specify 'given name'",
-                    "inspiration": true,
-                    "text": "((given name))"
-                },
-                {
-                    "context": "💡 specify 'given name family name'",
-                    "inspiration": true,
-                    "text": "((given name family name))"
                 }
             ],
             "category": "gender-orientation",
@@ -69,16 +59,6 @@
             "alternatives": [
                 {
                     "text": "they"
-                },
-                {
-                    "context": "💡 specify 'given name'",
-                    "inspiration": true,
-                    "text": "((given name))"
-                },
-                {
-                    "context": "💡 specify 'given name family name'",
-                    "inspiration": true,
-                    "text": "((given name family name))"
                 }
             ],
             "category": "gender-orientation",

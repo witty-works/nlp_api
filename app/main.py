@@ -2354,15 +2354,12 @@ async def fetch_rule_alternatives(
     parameters = [rule.name]
 
     if not show_inspiration_alternatives:
-        query += " and is_inspiration = ?"
-        parameters.append(0)
-    else:
-        if (
-            client.name == "web-ext"
-            and client.version != "0.0.0"
-            and client.version < VersionString("1.30.2")
-        ):
-            query += " and is_placeholder = 0"
+        query += " and is_inspiration = 0"
+        query += " and is_placeholder = 0"
+    elif client.name != "web-ext" or (
+        client.version != "0.0.0" and client.version <= VersionString("1.30.2")
+    ):
+        query += " and is_placeholder = 0"
 
     # TODO ignore pluralization for inspirations?
     if is_singular is not None:

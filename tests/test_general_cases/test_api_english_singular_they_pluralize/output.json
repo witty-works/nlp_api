@@ -5,22 +5,12 @@
         {
             "alternatives": [
                 {
-                    "text": "They"
-                },
-                {
-                    "context": "💡 specify 'given name'",
-                    "inspiration": true,
-                    "text": "((given name))"
-                },
-                {
-                    "context": "💡 specify 'given name family name'",
-                    "inspiration": true,
-                    "text": "((given name family name))"
+                    "text": "They are"
                 }
             ],
             "category": "gender-orientation",
             "context": "He is amazing. She builds, cleans and refurbishes houses. This is all hers.",
-            "end": 2,
+            "end": 5,
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
@@ -32,27 +22,17 @@
             "proficiency_level": "unconscious_bias",
             "start": 0,
             "subcategory": "binary_pronouns_advanced",
-            "text": "He"
+            "text": "He is"
         },
         {
             "alternatives": [
                 {
-                    "text": "They"
-                },
-                {
-                    "context": "💡 specify 'given name'",
-                    "inspiration": true,
-                    "text": "((given name))"
-                },
-                {
-                    "context": "💡 specify 'given name family name'",
-                    "inspiration": true,
-                    "text": "((given name family name))"
+                    "text": "They build, clean and refurbish"
                 }
             ],
             "category": "gender-orientation",
             "context": "He is amazing. She builds, cleans and refurbishes houses. This is all hers.",
-            "end": 18,
+            "end": 49,
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
@@ -64,17 +44,12 @@
             "proficiency_level": "unconscious_bias",
             "start": 15,
             "subcategory": "binary_pronouns_advanced",
-            "text": "She"
+            "text": "She builds, cleans and refurbishes"
         },
         {
             "alternatives": [
                 {
                     "text": "theirs"
-                },
-                {
-                    "context": "💡 specify 'given name's'",
-                    "inspiration": true,
-                    "text": "((given name's))"
                 }
             ],
             "category": "gender-orientation",
