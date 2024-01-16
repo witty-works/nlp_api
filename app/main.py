@@ -2063,8 +2063,11 @@ def fetch_term_replacements(
             term_replacement["word_type"] if "word_type" in term_replacement else "~"
         )
 
-        words = tokenize(lemma, lang)
         word_type, lower_case, lemmatize = parse_word_type(word_type)
+        if lower_case and not lemmatize:
+            lemma = lemma.lower()
+
+        words = tokenize(lemma, lang)
         word_types = tuple(
             [{"word_type": word_type, "lower_case": lower_case, "lemmatize": lemmatize}]
             * len(words)
