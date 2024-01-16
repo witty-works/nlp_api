@@ -277,6 +277,34 @@
         {
             "alternatives": [
                 {
+                    "text": "ihren*seinen"
+                },
+                {
+                    "text": "ihren/seinen"
+                },
+                {
+                    "text": "deinen"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Fügen Sie hier Ihren Text ein oder benutzen Sie diesen Text als Beispiel. Dieser Text wurde nur zum Testen geschrieben.",
+            "end": 20,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Binäre Pronomen",
+            "proficiency_level": "unconscious_bias",
+            "start": 15,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "Ihren"
+        },
+        {
+            "alternatives": [
+                {
                     "remove": true
                 }
             ],
@@ -471,6 +499,40 @@
             "start": 376,
             "subcategory": "d_and_i",
             "text": "*innen"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "ihr*ihm"
+                },
+                {
+                    "text": "ihr/ihm"
+                },
+                {
+                    "text": "dir"
+                },
+                {
+                    "text": "dein"
+                },
+                {
+                    "text": "Ihnen"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "bessere Performance. Stell dir vor, wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus den",
+            "end": 428,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Binäre Pronomen",
+            "proficiency_level": "unconscious_bias",
+            "start": 425,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "ihr"
         },
         {
             "alternatives": [

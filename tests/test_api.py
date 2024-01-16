@@ -1392,7 +1392,7 @@ def test_spacy():
         response_content = json.loads(response.content)
 
         expected = [
-            {"word_type": "emoji|~n|~|a|a|n||||emoji"},
+            {"word_type": "emoji|~pron|~|a|a|n||||emoji"},
             {
                 "text": "👩🏻‍🚒",
                 "lemma": "👩🏻‍🚒",
@@ -1416,7 +1416,7 @@ def test_spacy():
                 "tag": "PDS",
                 "pos": "PRON",
                 "dep": "sb",
-                "word_type": "n",
+                "word_type": "pron",
                 "morph": {
                     "Case": "Nom",
                     "Gender": "Neut",

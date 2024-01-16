@@ -3131,18 +3131,38 @@ async def fetch_word_type(
         "JJ",
         "JJR",
         "JJS",
-        "PDT",
-        "PRP$",
         "VVPP",
         "VAPP",
         "VMPP",
-        "WP$",
-        "WDT",
     }
     if token.tag_ in adj_tags or token.pos_ in adj_tags:
         return WordType.ADJECTIVE
 
-    if token.pos_ == "NOUN" or token.pos_ == "PRON" or token.tag_ == "NN":
+    pronoun_tags = [
+        "PDAT",
+        "PDS",
+        "PIAT",
+        "PIDAT",
+        "PIS",
+        "PPER",
+        "PPOSAT",
+        "PPOSS",
+        "PRELAT",
+        "PRELS",
+        "PRF",
+        "PRP$",
+        "PRON",
+        "PDT",
+        "WP$",
+        "WDT",
+    ]
+    if token.pos_ in pronoun_tags or token.tag_ in pronoun_tags:
+        if word_type == WordType.NOUN:
+            return WordType.NOUN
+
+        return WordType.PRONOUN
+
+    if token.pos_ == "NOUN" or token.tag_ == "NN":
         if lang == LangType.DE:
             if token.text[0].islower():
                 result = await fetch_declensions(LangType.DE, WordType.VERB, token.text)
@@ -3480,7 +3500,7 @@ async def find_form(lang: LangType, word_type: WordType, i: int, tokens: Doc):
 
             return await find_form_adjective_english(i, tokens)
 
-        case WordType.NOUN:
+        case WordType.NOUN | WordType.PRONOUN:
             if lang == LangType.DE:
                 return await find_form_noun_german(i, tokens)
 
