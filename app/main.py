@@ -4146,6 +4146,8 @@ async def gendered_denom_analysis_de(
     rule: Rule,
 ) -> (str | None, str | None, list[Alternative] | None):
     prefix_words = None
+    prefix = ""
+
     if "-" in text:
         words = text.split("-")
         if len(words) > 1:
@@ -4185,14 +4187,17 @@ async def gendered_denom_analysis_de(
                     prefix_words.append(word_lookup[word])
 
                 prefix_words = "-".join(prefix_words) + "-"
+            else:
+                prefix = "-".join(words) + "-"
 
-    if rule.type == RuleType.SUFFIX and rule.lemma != tokens[i].lemma_:
+    if rule.type == RuleType.SUFFIX and tokens[i].lemma_.endswith(rule.lemma.lower()):
+        # strip of last two chars to handle "Beauftragter" vs. "Beauftragten"
         prefix_end = (
-            text.lower().replace("ä", "a").find(rule.lemma.lower().replace("ä", "a"))
+            text.lower()
+            .replace("ä", "a")
+            .find(rule.lemma.lower().replace("ä", "a")[0:-2])
         )
         prefix = text[0:prefix_end]
-    else:
-        prefix = ""
 
     binary_case = False
     binary = ResultOut.genderedRolesFormatBinary(config.gendered_roles_format)
@@ -4219,8 +4224,9 @@ async def gendered_denom_analysis_de(
                 lemma_first_char = (
                     rule.lemma[0] if prefix[-1] == "-" else rule.lemma[0].lower()
                 )
+                # strip of last two chars to handle "Beauftragte" vs. "Beauftragter"
                 alternative.lemma = alternative.lemma.replace(
-                    rule.lemma, prefix + lemma_first_char + rule.lemma[1:]
+                    rule.lemma[0:-2], prefix + lemma_first_char + rule.lemma[1:-2]
                 )
                 if rule.lemma[0] == "A":
                     lemma = "Ä" + rule.lemma[1:]
