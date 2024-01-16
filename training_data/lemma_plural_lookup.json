@@ -1823,7 +1823,7 @@
     "Empfangskr\u00e4ften": "Empfangskraft",
     "Rindviecher": "Rindvieh",
     "Rindviechern": "Rindvieh",
-    "Risken": "Risiko",
+    "Risiken": "Risiko",
     "Optionen": "Option",
     "Risikotr\u00e4gern": "Risikotr\u00e4ger",
     "Risikotr\u00e4gerinnen": "Risikotr\u00e4ger",
@@ -2601,6 +2601,11 @@
     "Resultaten": "Resultat",
     "Unterst\u00fctzende": "Unterst\u00fctzender",
     "Unterst\u00fctzenden": "Unterst\u00fctzender",
-    "Nationen": "Nation"
+    "Nationen": "Nation",
+    "Belastbarkeiten\u2070": "Belastbarkeit",
+    "Eigent\u00fcmern": "Eigent\u00fcmer",
+    "Altweibern": "Altweiber",
+    "Telefone": "Telefon",
+    "Telefonen": "Telefon"
   }
 }

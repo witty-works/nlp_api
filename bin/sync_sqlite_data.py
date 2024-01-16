@@ -74,6 +74,8 @@ for lang in langs:
 
     if lang == LangType.DE:
         columns = declensions_config[LangType.DE]["n"]["columns"]
+        columns.remove("gender_1")
+
         column_count = len(columns)
         column_filter = ", ".join(columns)
         base_form_i = columns.index("base_form")
