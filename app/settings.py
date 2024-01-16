@@ -4,6 +4,8 @@ import json
 import base64
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from app.models import LangType
+from platformshconfig import Config
+
 
 class Settings(BaseSettings):
     """Load environment variables to python objects using pydantic."""
@@ -39,7 +41,6 @@ class Settings(BaseSettings):
     office_sso_tenant_id: Optional[str] = ""
     office_sso_client_id: Optional[str] = ""
     office_sso_expected_scope: Optional[str] = ""
-
 
     sso_configs: dict = {}
 
@@ -117,5 +118,16 @@ def get_settings():
             endpoint = settings.platform_relationships["languagetool"][0]
             settings.languagetool_api = "%(scheme)s://%(host)s:%(port)d/v2" % endpoint
             settings.languagetool_verify_ssl = False
+
+    if (
+        settings.platform_relationships
+        and "rediscache" in settings.platform_relationships
+    ):
+        platform_config = Config()
+        redis_credentials = platform_config.credentials("rediscache")
+
+        settings.redis_host = redis_credentials["host"]
+        settings.redis_port = redis_credentials["port"]
+        settings.redis_verify_ssl = False
 
     return settings

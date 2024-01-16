@@ -1,21 +1,10 @@
 from redis import Redis
-from platformshconfig import Config
 from fakeredis import FakeStrictRedis
 import json
+from app.settings import Settings
 
 
-def set_up_redis(settings):  # pragma: no cover
-    if (
-        settings.platform_relationships
-        and "rediscache" in settings.platform_relationships
-    ):
-        platform_config = Config()
-        redis_credentials = platform_config.credentials("rediscache")
-
-        settings.redis_host = redis_credentials["host"]
-        settings.redis_port = redis_credentials["port"]
-        settings.redis_verify_ssl = False
-
+def set_up_redis(settings: Settings):  # pragma: no cover
     if settings.redis_host:
         try:
             return Redis(
