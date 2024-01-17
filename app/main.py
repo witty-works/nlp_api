@@ -122,7 +122,7 @@ from app.query_definitions import (
     declensions_config,
 )
 
-version = "2.1.4"
+version = "2.1.5"
 
 categories = get_categories()
 settings = get_settings()
@@ -2063,8 +2063,11 @@ def fetch_term_replacements(
             term_replacement["word_type"] if "word_type" in term_replacement else "~"
         )
 
-        words = tokenize(lemma, lang)
         word_type, lower_case, lemmatize = parse_word_type(word_type)
+        if lower_case and not lemmatize:
+            lemma = lemma.lower()
+
+        words = tokenize(lemma, lang)
         word_types = tuple(
             [{"word_type": word_type, "lower_case": lower_case, "lemmatize": lemmatize}]
             * len(words)
@@ -2354,15 +2357,12 @@ async def fetch_rule_alternatives(
     parameters = [rule.name]
 
     if not show_inspiration_alternatives:
-        query += " and is_inspiration = ?"
-        parameters.append(0)
-    else:
-        if (
-            client.name == "web-ext"
-            and client.version != "0.0.0"
-            and client.version < VersionString("1.30.2")
-        ):
-            query += " and is_placeholder = 0"
+        query += " and is_inspiration = 0"
+        query += " and is_placeholder = 0"
+    elif client.name != "web-ext" or (
+        client.version != "0.0.0" and client.version <= VersionString("1.30.2")
+    ):
+        query += " and is_placeholder = 0"
 
     # TODO ignore pluralization for inspirations?
     if is_singular is not None:
@@ -2490,16 +2490,7 @@ def is_gender_star_ending(text: str) -> bool | re.Match:
 def remove_gender_ending(text: str) -> str:
     match = is_gender_star_ending(text)
     if match:
-        if text.lower().endswith("r"):
-            suffix = "r"
-        elif match[1].endswith("d"):
-            suffix = "e"
-        elif match[2] == "iza" or match[2] == "eza":
-            suffix = "o"
-        else:
-            suffix = ""
-
-        text = match[1] + suffix
+        text = match[1] + match[2]
 
     return text
 
@@ -3143,18 +3134,38 @@ async def fetch_word_type(
         "JJ",
         "JJR",
         "JJS",
-        "PDT",
-        "PRP$",
         "VVPP",
         "VAPP",
         "VMPP",
-        "WP$",
-        "WDT",
     }
     if token.tag_ in adj_tags or token.pos_ in adj_tags:
         return WordType.ADJECTIVE
 
-    if token.pos_ == "NOUN" or token.pos_ == "PRON" or token.tag_ == "NN":
+    pronoun_tags = [
+        "PDAT",
+        "PDS",
+        "PIAT",
+        "PIDAT",
+        "PIS",
+        "PPER",
+        "PPOSAT",
+        "PPOSS",
+        "PRELAT",
+        "PRELS",
+        "PRF",
+        "PRP$",
+        "PRON",
+        "PDT",
+        "WP$",
+        "WDT",
+    ]
+    if token.pos_ in pronoun_tags or token.tag_ in pronoun_tags:
+        if word_type == WordType.NOUN:
+            return WordType.NOUN
+
+        return WordType.PRONOUN
+
+    if token.pos_ == "NOUN" or token.tag_ == "NN":
         if lang == LangType.DE:
             if token.text[0].islower():
                 result = await fetch_declensions(LangType.DE, WordType.VERB, token.text)
@@ -3492,7 +3503,7 @@ async def find_form(lang: LangType, word_type: WordType, i: int, tokens: Doc):
 
             return await find_form_adjective_english(i, tokens)
 
-        case WordType.NOUN:
+        case WordType.NOUN | WordType.PRONOUN:
             if lang == LangType.DE:
                 return await find_form_noun_german(i, tokens)
 
@@ -4138,6 +4149,8 @@ async def gendered_denom_analysis_de(
     rule: Rule,
 ) -> (str | None, str | None, list[Alternative] | None):
     prefix_words = None
+    prefix = ""
+
     if "-" in text:
         words = text.split("-")
         if len(words) > 1:
@@ -4177,14 +4190,17 @@ async def gendered_denom_analysis_de(
                     prefix_words.append(word_lookup[word])
 
                 prefix_words = "-".join(prefix_words) + "-"
+            else:
+                prefix = "-".join(words) + "-"
 
-    if rule.type == RuleType.SUFFIX and rule.lemma != tokens[i].lemma_:
+    if rule.type == RuleType.SUFFIX and tokens[i].lemma_.endswith(rule.lemma.lower()):
+        # strip of last two chars to handle "Beauftragter" vs. "Beauftragten"
         prefix_end = (
-            text.lower().replace("ä", "a").find(rule.lemma.lower().replace("ä", "a"))
+            text.lower()
+            .replace("ä", "a")
+            .find(rule.lemma.lower().replace("ä", "a")[0:-2])
         )
         prefix = text[0:prefix_end]
-    else:
-        prefix = ""
 
     binary_case = False
     binary = ResultOut.genderedRolesFormatBinary(config.gendered_roles_format)
@@ -4211,8 +4227,9 @@ async def gendered_denom_analysis_de(
                 lemma_first_char = (
                     rule.lemma[0] if prefix[-1] == "-" else rule.lemma[0].lower()
                 )
+                # strip of last two chars to handle "Beauftragte" vs. "Beauftragter"
                 alternative.lemma = alternative.lemma.replace(
-                    rule.lemma, prefix + lemma_first_char + rule.lemma[1:]
+                    rule.lemma[0:-2], prefix + lemma_first_char + rule.lemma[1:-2]
                 )
                 if rule.lemma[0] == "A":
                     lemma = "Ä" + rule.lemma[1:]

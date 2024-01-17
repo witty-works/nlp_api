@@ -5,16 +5,6 @@
         {
             "alternatives": [
                 {
-                    "context": "💡 'Vorname' nennen",
-                    "inspiration": true,
-                    "text": "((Vorname))"
-                },
-                {
-                    "context": "💡 'Vorname' und 'Familienname' nennen",
-                    "inspiration": true,
-                    "text": "((Vorname)) ((Familienname))"
-                },
-                {
                     "text": "höflicher Mensch"
                 }
             ],
@@ -37,16 +27,6 @@
         },
         {
             "alternatives": [
-                {
-                    "context": "💡 'Vorname' nennen",
-                    "inspiration": true,
-                    "text": "((Vorname))"
-                },
-                {
-                    "context": "💡 'Vorname' und 'Familienname' nennen",
-                    "inspiration": true,
-                    "text": "((Vorname)) ((Familienname))"
-                },
                 {
                     "text": "höflicher Mensch"
                 }

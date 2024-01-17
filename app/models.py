@@ -97,6 +97,7 @@ class WordType(str, Enum):
     ADJECTIVE = "a"
     ADVERB = "adv"
     NOUN = "n"
+    PRONOUN = "pron"
     EMOJI = "emoji"
     CONJUNCTION = "conj"
     NUMBER = "num"
