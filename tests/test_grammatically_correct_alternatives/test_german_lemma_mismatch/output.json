@@ -1,0 +1,149 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "ausgenommen"
+                },
+                {
+                    "text": "geprellt"
+                },
+                {
+                    "text": "abkassiert"
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "In der Vergangenheit wurden Menschen abgezockt. Er zockte ab. Er zockte uns ab.",
+            "end": 46,
+            "explanation": {
+                "icon": "😒",
+                "text": "Abwertende Umdeutung eines neutralen oder positiven jiddischen Wortes",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/negative-verwendung-jiddischer-worte?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Kulturelle Diversität: Negative Verwendung jiddischer Worte",
+            "proficiency_level": "unconscious_bias",
+            "start": 37,
+            "subcategory": "yiddish-pejoratives_advanced",
+            "text": "abgezockt"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Sie*er"
+                },
+                {
+                    "text": "Sie/er"
+                },
+                {
+                    "text": "Du"
+                },
+                {
+                    "text": "Sie"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "In der Vergangenheit wurden Menschen abgezockt. Er zockte ab. Er zockte uns ab.",
+            "end": 50,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Binäre Pronomen",
+            "proficiency_level": "unconscious_bias",
+            "start": 48,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "Er"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "nahm aus"
+                },
+                {
+                    "text": "prellte"
+                },
+                {
+                    "text": "kassierte ab"
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "In der Vergangenheit wurden Menschen abgezockt. Er zockte ab. Er zockte uns ab.",
+            "end": 60,
+            "explanation": {
+                "icon": "😒",
+                "text": "Abwertende Umdeutung eines neutralen oder positiven jiddischen Wortes",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/negative-verwendung-jiddischer-worte?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Kulturelle Diversität: Negative Verwendung jiddischer Worte",
+            "proficiency_level": "unconscious_bias",
+            "start": 51,
+            "subcategory": "yiddish-pejoratives_advanced",
+            "text": "zockte ab"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Sie*er"
+                },
+                {
+                    "text": "Sie/er"
+                },
+                {
+                    "text": "Du"
+                },
+                {
+                    "text": "Sie"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "In der Vergangenheit wurden Menschen abgezockt. Er zockte ab. Er zockte uns ab.",
+            "end": 64,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Binäre Pronomen",
+            "proficiency_level": "unconscious_bias",
+            "start": 62,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "Er"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "ausnehmen"
+                },
+                {
+                    "text": "prellen"
+                },
+                {
+                    "text": "abkassieren"
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "In der Vergangenheit wurden Menschen abgezockt. Er zockte ab. Er zockte uns ab.",
+            "end": 71,
+            "explanation": {
+                "icon": "😒",
+                "text": "Abwertende Umdeutung eines neutralen oder positiven jiddischen Wortes",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/negative-verwendung-jiddischer-worte?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Kulturelle Diversität: Negative Verwendung jiddischer Worte",
+            "proficiency_level": "unconscious_bias",
+            "start": 65,
+            "subcategory": "yiddish-pejoratives_advanced",
+            "text": "zockte"
+        }
+    ]
+}
