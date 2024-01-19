@@ -110,7 +110,7 @@ from app.categories import (
 )
 from app.settings import get_settings
 from app.logger import set_up_logger
-from app.redis_setup import set_up_redis
+from app.redis_setup import get_user_id, set_up_redis
 from app.model import fetch_nlp_model
 from app.rules import fetch_static_rules
 from app.sentry import set_up_sentry_sdk
@@ -120,9 +120,10 @@ from app.query_definitions import (
     alternative_columns,
     alternative_column_list,
     declensions_config,
+    verb_form_map,
 )
 
-version = "2.1.5"
+version = "2.1.6"
 
 categories = get_categories()
 settings = get_settings()
@@ -853,6 +854,9 @@ async def post_debug_rule(
     i = 0
     token_count = len(tokens)
     while i < token_count:
+        if rule_data.lang == LangType.DE:
+            tokens[i].lemma_ = await german_lemmatization(tokens, i)
+
         for rule in rules:
             await rule_check(
                 config,
@@ -1082,7 +1086,7 @@ async def get_organization_configs(
 async def post_user_configs(
     user_configs: UserConfRequest, username: str = Depends(fetch_current_username)
 ):
-    redis.set(user_configs.email.lower(), user_configs.model_dump_json())
+    redis.set(get_user_id(user_configs.email), user_configs.model_dump_json())
 
     return user_configs
 
@@ -1095,7 +1099,7 @@ async def delete_user_configs(
     email: str,
     username: str = Depends(fetch_current_username),
 ):
-    redis.delete(email.lower())
+    redis.delete(get_user_id(email))
 
 
 @app.get(
@@ -1132,9 +1136,12 @@ async def fetch_organization_configs_from_redis(
 async def fetch_user_configs_from_redis(
     email: str,
 ) -> dict:
-    configs = redis.get(email.lower())
+    configs = redis.get(get_user_id(email))
     if not configs:
-        raise HTTPException(status_code=404, detail="User configs not found")
+        # BC code
+        configs = redis.get(email.lower())
+        if not configs:
+            raise HTTPException(status_code=404, detail="User configs not found")
 
     return json.loads(configs)
 
@@ -2495,6 +2502,60 @@ def remove_gender_ending(text: str) -> str:
     return text
 
 
+async def german_lemmatization(tokens: Doc, i: int):
+    token = tokens[i]
+    if token.text != token.lemma_:
+        return token.lemma_
+
+    word_type = await fetch_word_type(LangType.DE, token)
+
+    match word_type:
+        case WordType.NOUN:
+            if not token.text[0].isupper() or len(token.text) <= 3:
+                return token.lemma_
+
+            word = remove_gender_ending(token.text)
+            result = await german_noun_lookup(word)
+            if result is not None:
+                target = "male_form" if result["male_form"] else "base_form"
+                return result[target]
+        case WordType.VERB:
+            verb_form = token.morph.get("VerbForm")
+            verb_form = verb_form[0] if len(verb_form) else ""
+
+            if verb_form not in verb_form_map:
+                return token.lemma_
+
+            column_name = False
+            if isinstance(verb_form_map[verb_form], dict):
+                tense = token.morph.get("Tense")
+                tense = tense[0] if len(tense) else ""
+                person = token.morph.get("Person")
+                person = person[0] if len(person) else ""
+
+                if (
+                    tense in verb_form_map[verb_form]
+                    and person in verb_form_map[verb_form][tense]
+                ):
+                    parameters = [token.lemma_ + "%"]
+                    operator = "LIKE"
+                    column_name = verb_form_map[verb_form][tense][person]
+            else:
+                parameters = [token.lemma_]
+                operator = "="
+                column_name = verb_form_map[verb_form]
+
+            if column_name:
+                table_name = declensions_config[LangType.DE][WordType.VERB]["name"]
+                query = f"SELECT base_form FROM {table_name} WHERE {column_name} {operator} ? LIMIT 1"
+
+                rows = await fetch_rows(query, parameters)
+                if len(rows):
+                    return rows[0][0]
+
+    return token.lemma_
+
+
 async def german_rules(
     config: Config,
     term_replacements: namedtuple,
@@ -2512,17 +2573,7 @@ async def german_rules(
         i = new_i
 
         token = tokens[i]
-        if (
-            token.text == token.lemma_
-            and token.text[0].isupper()
-            and await check_word_type(lang, token, WordType.NOUN, True)
-            and len(token.text) > 3
-        ):
-            word = remove_gender_ending(token.text)
-            result = await german_noun_lookup(word)
-            if result is not None:
-                target = "male_form" if result["male_form"] else "base_form"
-                token.lemma_ = result[target]
+        token.lemma_ = await german_lemmatization(tokens, i)
 
         if len(term_replacements.rules):
             new_i = await rule_check(
@@ -3317,6 +3368,7 @@ async def find_form_verb_german(i: int, tokens: Doc):
         lemma = prev_token.lemma_ + " " + text
         start = prev_token.idx
     else:
+        # TODO missing handling for "Er zockte uns ab"
         next_token = None if i == len(tokens) - 1 else tokens[i + 1]
         if next_token and next_token.text in [
             "ab",

@@ -10,12 +10,10 @@ from app.models import LangType, LangVariantType
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "-l",
-        "--Locale",
-        help="Locale to compare",
-        default=LangVariantType.deDE,
+        "-f",
+        "--file",
+        help="File to compare",
     )
-    parser.add_argument("-f", "--File", help="File to compare", default=False)
     return parser.parse_args()
 
 
@@ -26,10 +24,10 @@ def is_file(path_to_file):
 
 
 args = parse_args()
-if not is_file(args.File):
-    raise FileNotFoundError("File %s cannot be found." % args.File)
+if not is_file(args.file):
+    raise FileNotFoundError("File %s cannot be found." % args.file)
 
-os.system(f"cp {args.File} ./database/db.sqlite3")
+os.system(f"cp {args.file} ./database/db.sqlite3")
 source = sqlite3.connect("./database/db.sqlite3")
 
 tables_to_keep = [
@@ -55,7 +53,9 @@ for table in source.execute(query).fetchall():
     if table[0] not in tables_to_keep:
         source.execute(f"DROP table IF EXISTS {table[0]}")
 
-source.execute("DELETE FROM rules_alternative WHERE is_active = 0 OR rule_id IN (SELECT id FROM rules_rule WHERE is_active = 0)")
+source.execute(
+    "DELETE FROM rules_alternative WHERE is_active = 0 OR rule_id IN (SELECT id FROM rules_rule WHERE is_active = 0)"
+)
 source.execute("DELETE FROM rules_rule WHERE is_active = 0")
 
 lookup = {}

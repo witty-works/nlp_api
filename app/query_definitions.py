@@ -97,3 +97,19 @@ declensions_config = {
         },
     },
 }
+
+verb_form_map = {
+    "Part": "past_participle",
+    "Inf": "infinitiv_zu",
+    "Fin": {
+        "Past": {
+            "1": "past_tense_ich",
+            "3": "past_tense_ich",
+        },
+        "Pres": {
+            "1": "present_ich",
+            "2": "present_du",
+            "3": "present_pronoun",
+        },
+    },
+}
