@@ -19,6 +19,8 @@ from app.models import (
     LangWithAutoType,
     RequestIn,
 )
+from app.redis_setup import get_user_id
+
 
 tokens = {
     "azureadbc_valid_expired": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkN6d1lJSEUyNG5oRFNTdkhhT1pxaVNwTFV4UkFXZjluQ2kydEtnMXRCME0iLCJ0eXAiOiJKV1QifQ.eyJjdXJyZW50VGltZSI6MTY5NDU4OTkxMSwiZW1haWwiOiJsdWthcy5zbWl0aEB3aXR0eS53b3JrcyIsIm5hbWUiOiJmb28iLCJpZHAiOiJnb29nbGUuY29tIiwic3ViIjoiMjVlMDUwYTUtYTJmZC00MzZmLWE1YmUtM2I5NmZmZDAxOTU4Iiwib3RoZXJNYWlscyI6WyJsdWthcy5zbWl0aEB3aXR0eS53b3JrcyJdLCJleHRlbnNpb25fdGVybXNPZlVzZUNvbnNlbnREYXRlVGltZSI6MTY2Mjg5Mjk2OCwiZXh0ZW5zaW9uX01haWxpbmdDb25zZW50ZWQiOiJZZXMiLCJ0ZXJtc09mVXNlQ29uc2VudFJlcXVpcmVkIjpmYWxzZSwidGlkIjoiODE5MzJmZTEtZjI1ZS00M2ZjLWI2NzQtMDAyZmY4MjM1Mzg5Iiwic2NwIjoiYWNjZXNzX2FzX3VzZXIiLCJhenAiOiI3ZTA5MDMwOC01NzVhLTRlN2QtODRlNC03OGM4M2QwODNhYjYiLCJ2ZXIiOiIxLjAiLCJpYXQiOjE2OTQ1ODk5NjIsImF1ZCI6IjdlMDkwMzA4LTU3NWEtNGU3ZC04NGU0LTc4YzgzZDA4M2FiNiIsImV4cCI6MTY5NDY3NjM2MiwiaXNzIjoiaHR0cHM6Ly93aXR0eXdvcmtzZGV2LmIyY2xvZ2luLmNvbS84MTkzMmZlMS1mMjVlLTQzZmMtYjY3NC0wMDJmZjgyMzUzODkvdjIuMC8iLCJuYmYiOjE2OTQ1ODk5NjJ9.JtXTKr8pUEBQ5-hO1ak-L1IocXQdOW6rNaCS5DD1DAvt8ldo-n9APQVw8mqWlYmukrelqH48VwguYiCcD5-Lc8seWfX5lywXT4mnfsJscqGQr7iVL1s6GNBp2wsaRLNf6l8qzIVWa0UDREACdgUpJRmbvObILZa6z42E5ghOO9RxxVCsCKg6hwKKhtY2w6UEs1u26JF7BKHH7XFoX88CfG-kqVfhVw_zb_bOIhDrEGflWZzKdKx9LfaLS1VQjVY1I_IW1nL1EQaBo286MHpzLdxzeyLf6Jo9ASzgAeEqKD6v2PPEHrTbJDMkpNFtFw0XdQTT904vQNn8wml3Lck32w",
@@ -472,7 +474,7 @@ def set_redis():
         "notifications": 0,
     }
 
-    redis.set(user_object["email"], json.dumps(user_object))
+    redis.set(get_user_id(user_object["email"]), json.dumps(user_object))
 
     organization_object = {
         "id": user_object["organization_id"],
@@ -496,7 +498,7 @@ def set_redis():
         "notifications": 0,
     }
 
-    redis.set(user_object["email"], json.dumps(user_object))
+    redis.set(get_user_id(user_object["email"]), json.dumps(user_object))
 
     organization_object = {
         "id": user_object["organization_id"],
@@ -528,7 +530,7 @@ def set_redis():
         "team_analytics": False,
     }
 
-    redis.set(user_object["email"], json.dumps(user_object))
+    redis.set(get_user_id(user_object["email"]), json.dumps(user_object))
 
     organization_object = {
         "id": user_object["organization_id"],
@@ -623,7 +625,7 @@ def set_redis():
         "team_analytics": True,
     }
 
-    redis.set(user_object["email"], json.dumps(user_object))
+    redis.set(get_user_id(user_object["email"]), json.dumps(user_object))
 
     organization_object = {
         "id": user_object["organization_id"],

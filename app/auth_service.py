@@ -47,7 +47,7 @@ def get_unverified_token_claims(request: Request):
 
 async def get_rsa_key(redis, session, token, url):
     unverified_header = jwt.get_unverified_header(token)
-    key = "rsa_kid_" + unverified_header["kid"]
+    key = "rsa_kid:" + unverified_header["kid"]
     rsa_key = redis.get(key)
     if rsa_key:
         return json.loads(rsa_key)

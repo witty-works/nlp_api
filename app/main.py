@@ -110,7 +110,7 @@ from app.categories import (
 )
 from app.settings import get_settings
 from app.logger import set_up_logger
-from app.redis_setup import set_up_redis
+from app.redis_setup import get_user_id, set_up_redis
 from app.model import fetch_nlp_model
 from app.rules import fetch_static_rules
 from app.sentry import set_up_sentry_sdk
@@ -1086,7 +1086,7 @@ async def get_organization_configs(
 async def post_user_configs(
     user_configs: UserConfRequest, username: str = Depends(fetch_current_username)
 ):
-    redis.set(user_configs.email.lower(), user_configs.model_dump_json())
+    redis.set(get_user_id(user_configs.email), user_configs.model_dump_json())
 
     return user_configs
 
@@ -1099,7 +1099,7 @@ async def delete_user_configs(
     email: str,
     username: str = Depends(fetch_current_username),
 ):
-    redis.delete(email.lower())
+    redis.delete(get_user_id(email))
 
 
 @app.get(
@@ -1136,9 +1136,12 @@ async def fetch_organization_configs_from_redis(
 async def fetch_user_configs_from_redis(
     email: str,
 ) -> dict:
-    configs = redis.get(email.lower())
+    configs = redis.get(get_user_id(email))
     if not configs:
-        raise HTTPException(status_code=404, detail="User configs not found")
+        # BC code
+        configs = redis.get(email.lower())
+        if not configs:
+            raise HTTPException(status_code=404, detail="User configs not found")
 
     return json.loads(configs)
 
