@@ -15,7 +15,7 @@ This project has two key dependencies:
 
 ---
 
-# Installation instructions (with python3.11)
+# Installation instructions (with python3.12)
 
 - Install Platform.sh CLI https://docs.platform.sh/development/cli.html
   - Run `platform login`
@@ -76,6 +76,9 @@ You should see application running under http://localhost:8000/docs
 ## Using pdm
 
 ```
+pdm venv create 3.12
+pdm use
+pdm venv activate
 pdm sync --dev
 wget -P training_data https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
 ```
