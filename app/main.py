@@ -4203,6 +4203,7 @@ async def gendered_denom_analysis_de(
 ) -> (str | None, str | None, list[Alternative] | None):
     prefix_words = None
     prefix = ""
+    is_singular = True if is_singular is None else is_singular
 
     if "-" in text:
         words = text.split("-")
@@ -4982,9 +4983,6 @@ async def rule_check(
             continue
 
         if is_gendered_denom_rule(lang.lang, subcategory):
-            if is_singular is None:
-                continue
-
             (
                 text,
                 subcategory,
