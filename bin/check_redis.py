@@ -1,18 +1,30 @@
+from redis import Redis
 import json
 import argparse
-
-from app.redis_setup import set_up_redis
-from app.settings import get_settings
-
-settings = get_settings()
-redis = set_up_redis(settings)
 
 
 def parse_args():
     parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "-h",
+        "--host",
+        help="Redis host",
+        default="127.0.0.1",
+        type=str,
+    )
+
     parser.add_argument(
         "-p",
-        "--pattern",
+        "--port",
+        help="Redis port",
+        default="30000",
+        type=str,
+    )
+
+    parser.add_argument(
+        "-s",
+        "--search_pattern",
         help="Search pattern",
         default="*",
         type=str,
@@ -32,11 +44,16 @@ def parse_args():
 
 args = parse_args()
 
+redis = Redis(
+    host=args.redis_host,
+    port=args.redis_port,
+)
+
 i = 0
 users = 0
 teams = 0
 rsa = 0
-for key in redis.scan_iter(args.pattern):
+for key in redis.scan_iter(args.search_pattern):
     i += 1
 
     key = key.decode("utf-8")

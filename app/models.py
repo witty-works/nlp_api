@@ -1,5 +1,5 @@
 from pydantic import field_validator, BaseModel, Field
-from typing import Dict, List, Optional, Union
+from typing import Optional
 from enum import Enum
 from collections import namedtuple
 import json, typing
@@ -86,10 +86,12 @@ class LangType(str, Enum):
     EN = "en"
     DE = "de"
 
+
 class BasicWordType(str, Enum):
     VERB = "v"
     ADJECTIVE = "a"
     NOUN = "n"
+
 
 # https://www.notion.so/witty-works/Rule-Guidelines-432792da944141b1b4d0a01de290aa43#aac0d966bfeb4e33a5a346bba45d5ea8
 class WordType(str, Enum):

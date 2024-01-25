@@ -123,7 +123,7 @@ from app.query_definitions import (
     verb_form_map,
 )
 
-version = "2.1.6"
+version = "2.2.0"
 
 categories = get_categories()
 settings = get_settings()
@@ -2447,12 +2447,13 @@ def get_target_declension_form(target_result: dict, target_form: str):
 
 async def fetch_declensions(
     lang: LangType, word_type: BasicWordType, text: str
-) -> dict:
+) -> dict | None:
     text = (
-        text.title()
+        text.capitalize()
         if lang == LangType.DE and word_type == BasicWordType.NOUN
         else text.lower()
     )
+
     column_list = ", ".join(declensions_config[lang][word_type]["columns"])
     table_name = declensions_config[lang][word_type]["name"]
 
@@ -2477,12 +2478,11 @@ async def fetch_declensions(
 
     query = f"SELECT {column_list} FROM {table_name} WHERE {filter_list} ORDER BY IIF(base_form = ?, 1, 0) DESC, LENGTH(base_form) DESC LIMIT 1"
 
-    result = None
     rows = await fetch_rows(query, parameters)
     if len(rows):
-        result = dict(zip(declensions_config[lang][word_type]["columns"], rows[0]))
+        return dict(zip(declensions_config[lang][word_type]["columns"], rows[0]))
 
-    return result
+    return None
 
 
 def is_gender_star_ending(text: str) -> bool | re.Match:
@@ -3508,7 +3508,8 @@ async def find_form_noun_german(i: int, tokens: Doc):
     if token.text.lower() in static_rules[LangType.DE]["articles"]:
         return token.idx, token.text, token.lemma_, "no_change"
 
-    forms = await fetch_declensions(LangType.DE, WordType.NOUN, token.text)
+    text = remove_gender_ending(token.text)
+    forms = await fetch_declensions(LangType.DE, WordType.NOUN, text)
     if forms is None:
         if (
             settings.log_missing_declension
@@ -3520,14 +3521,14 @@ async def find_form_noun_german(i: int, tokens: Doc):
 
         return token.idx, token.text, token.lemma_, None
 
-    target_form = find_matching_form(forms, token.text)
+    target_form = find_matching_form(forms, text)
     if (
         target_form is None
         and settings.log_missing_declension
         and not token.text.isupper()
     ):
         logger.error(
-            f"German adjective target form could not be determined for '{token.text}' (lemma: '{token.lemma_}')."
+            f"German noun target form could not be determined for '{token.text}' (lemma: '{token.lemma_}')."
         )
 
     return token.idx, token.text, token.lemma_, target_form
@@ -3827,7 +3828,7 @@ def find_matching_form(forms: dict | None, text: str) -> str | None:
     text_lower = text.lower()
 
     for form in forms:
-        if forms[form] is not None and forms[form].lower() == text_lower:
+        if isinstance(forms[form], str) and forms[form].lower() == text_lower:
             return form.removesuffix("_2")
 
     return None

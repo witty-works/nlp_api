@@ -3,7 +3,7 @@ applications:
     source:
       root: "/"
 
-    type: "python:3.11"
+    type: "python:3.12"
 
     container_profile: HIGHER_MEMORY
 
