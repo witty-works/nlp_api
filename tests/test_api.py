@@ -462,6 +462,19 @@ def test_config_organization_changed(set_redis):
 
 @pytest.fixture
 def set_redis():
+    # test-missing-org@gmail.com
+    user_object = {
+        "id": "test-missing-org",
+        "email": "test-missing-org@gmail.com",
+        "organization_id": "test-missing-org",
+        "name": "Tests Missing Org",
+        "config": {},
+        "false_positives": [],
+        "term_replacements": {},
+        "notifications": 0,
+    }
+
+    redis.set(get_user_id(user_object["email"]), json.dumps(user_object))
     # 2_2@gmail.com
     user_object = {
         "id": "test-2_2",
@@ -738,6 +751,29 @@ def test_not_logged_in(test_not_logged_in_dir, snapshot):
         )
         # Snapshot the return value.
         snapshot.snapshot_dir = test_not_logged_in_dir
+        snapshot.assert_match(output, "output.json")
+
+
+@pytest.mark.parametrize(
+    "test_logged_in_missing_org_dir",
+    get_dirs("tests/test_logged_in_missing_org"),
+)
+def test_logged_in_missing_org(test_logged_in_missing_org_dir, snapshot, set_redis):
+    with TestClient(app) as client:
+        input_json = test_logged_in_missing_org_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.3/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "test-missing-org@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(
+            response.json(), sort_keys=True, indent=4, ensure_ascii=False
+        )
+        # Snapshot the return value.
+        snapshot.snapshot_dir = test_logged_in_missing_org_dir
         snapshot.assert_match(output, "output.json")
 
 
@@ -1085,6 +1121,80 @@ def test_store_get_delete_rules():
         },
     }
 
+    organization_request_data = {
+        "id": "TEST_organization",
+        "name": "Witty Works",
+        "plan": "witty_teams",
+        "config_hash": "foobaz",
+        "config": {
+            "preferred_variants": {
+                "value": ["en-GB"],
+                "status": "force",
+            },
+            "store_context": {
+                "value": True,
+                "status": "force",
+            },
+            "gendered_roles_format": {
+                "value": "binary_gender",
+                "status": "force",
+            },
+            "german_gender_ending": {
+                "value": "In",
+                "status": "suggestion",
+            },
+            "categories": {
+                "emotional_security": {"value": True, "status": "force"},
+            },
+        },
+        "false_positives": ["hello", "world", "dong"],
+        "term_replacements": {
+            "hello|en": {
+                "alternatives": ["world"],
+                "explanation": {
+                    "text": "better world",
+                    "icon": "🥰",
+                    "url": "https://witty.works/hello",
+                },
+                "proficiency_level": "unconscious_bias",
+            },
+            "hello|de": {
+                "alternatives": ["world"],
+                "explanation": {
+                    "text": "better world",
+                    "icon": "🥰",
+                    "url": "https://witty.works/hello",
+                },
+                "proficiency_level": "unconscious_bias",
+            },
+            "foo|en": {
+                "alternatives": ["bar"],
+                "word_type": "=",
+                "explanation": {
+                    "text": "better bar",
+                    "icon": "🥰",
+                    "url": "https://witty.works/foo",
+                },
+            },
+            "foo|de": {
+                "alternatives": ["bar"],
+                "word_type": "=",
+                "explanation": {
+                    "text": "better bar",
+                    "icon": "🥰",
+                    "url": "https://witty.works/foo",
+                },
+            },
+        },
+        "domains": {
+            "type": "allow",
+            "list": [
+                "foo.bar",
+                "hello.de",
+            ],
+        },
+    }
+
     with TestClient(app) as client:
         # check user is missing
         response = client.get("/user/configs?email=" + user_request_data["email"])
@@ -1103,6 +1213,20 @@ def test_store_get_delete_rules():
         response = client.get("/user/configs?email=bar")
         assert response.status_code == 404
 
+        # check user exists but org missing
+        response = client.get("/user/configs?email=" + user_request_data["email"])
+        assert response.content == b'{"detail":"Organization configs not found"}'
+
+        # check organization is missing
+        response = client.get(
+            "/organization/configs?organization_id=" + organization_request_data["id"]
+        )
+        assert response.status_code == 404
+
+        # check organization is created
+        response = client.post("/organization/configs", json=organization_request_data)
+        assert_rules(response, organization_request_data)
+
         # check user exists
         response = client.get("/user/configs?email=" + user_request_data["email"])
         assert_rules(response, user_request_data)
@@ -1114,90 +1238,6 @@ def test_store_get_delete_rules():
         # check user is deleted
         response = client.delete("/user/configs?email=" + user_request_data["email"])
         assert response.status_code == 204
-
-        organization_request_data = {
-            "id": "TEST_organization",
-            "name": "Witty Works",
-            "plan": "witty_teams",
-            "config_hash": "foobaz",
-            "config": {
-                "preferred_variants": {
-                    "value": ["en-GB"],
-                    "status": "force",
-                },
-                "store_context": {
-                    "value": True,
-                    "status": "force",
-                },
-                "gendered_roles_format": {
-                    "value": "binary_gender",
-                    "status": "force",
-                },
-                "german_gender_ending": {
-                    "value": "In",
-                    "status": "suggestion",
-                },
-                "categories": {
-                    "emotional_security": {"value": True, "status": "force"},
-                },
-            },
-            "false_positives": ["hello", "world", "dong"],
-            "term_replacements": {
-                "hello|en": {
-                    "alternatives": ["world"],
-                    "explanation": {
-                        "text": "better world",
-                        "icon": "🥰",
-                        "url": "https://witty.works/hello",
-                    },
-                    "proficiency_level": "unconscious_bias",
-                },
-                "hello|de": {
-                    "alternatives": ["world"],
-                    "explanation": {
-                        "text": "better world",
-                        "icon": "🥰",
-                        "url": "https://witty.works/hello",
-                    },
-                    "proficiency_level": "unconscious_bias",
-                },
-                "foo|en": {
-                    "alternatives": ["bar"],
-                    "word_type": "=",
-                    "explanation": {
-                        "text": "better bar",
-                        "icon": "🥰",
-                        "url": "https://witty.works/foo",
-                    },
-                },
-                "foo|de": {
-                    "alternatives": ["bar"],
-                    "word_type": "=",
-                    "explanation": {
-                        "text": "better bar",
-                        "icon": "🥰",
-                        "url": "https://witty.works/foo",
-                    },
-                },
-            },
-            "domains": {
-                "type": "allow",
-                "list": [
-                    "foo.bar",
-                    "hello.de",
-                ],
-            },
-        }
-
-        # check organization is missing
-        response = client.get(
-            "/organization/configs?organization_id=" + organization_request_data["id"]
-        )
-        assert response.status_code == 404
-
-        # check organization is created
-        response = client.post("/organization/configs", json=organization_request_data)
-        assert_rules(response, organization_request_data)
 
         # check organization is updated
         organization_request_data["config"]["gendered_roles_format"]["value"] = "both"
@@ -1234,7 +1274,7 @@ def test_store_get_delete_rules():
 
         # check deleted organization reverts to user rules
         response = client.get("/user/configs?email=" + user_request_data["email"])
-        assert_rules(response, user_request_data)
+        assert response.content == b'{"detail":"Organization configs not found"}'
 
 
 def test_german_gender_ending():
