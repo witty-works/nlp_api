@@ -16574,8 +16574,6 @@ INSERT INTO "rules_alternative" VALUES(16615,0,'präzise',NULL,0,1,NULL,NULL,480
 INSERT INTO "rules_alternative" VALUES(16616,1,'genau',NULL,0,1,NULL,NULL,4801,NULL,'["genau"]','[]','default',0,'default',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(16617,1,'eine umsetzungsfreudige Person',NULL,0,1,NULL,NULL,4438,NULL,'["eine", "umsetzungsfreudige", "Person"]','[]','default',0,'default',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(16618,2,'Geehrte Gäste',NULL,0,1,NULL,NULL,2759,NULL,'["Geehrte", "G\u00e4ste"]','[]','default',0,'default',0,0,'de',0);
-INSERT INTO "rules_alternative" VALUES(16619,0,'Accelerated Mobile Pages (AMP)',NULL,0,1,NULL,NULL,4802,NULL,'["Accelerated", "Mobile", "Pages", "(", "AMP", ")"]','[]','default',0,'default',0,0,'de',0);
-INSERT INTO "rules_alternative" VALUES(16620,1,'Accelerated Mobile Pages',NULL,0,1,NULL,NULL,4802,NULL,'["Accelerated", "Mobile", "Pages"]','[]','default',0,'default',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(16621,1,'im Zeitrahmen',NULL,0,1,NULL,NULL,3919,NULL,'["i", "m", "Zeitrahmen"]','[]','default',0,'default',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(16622,2,'person who is deeply engaged in his work',NULL,0,1,NULL,NULL,1715,NULL,'["person", "who", "is", "deeply", "engaged", "in", "his", "work"]','[]','default',0,'default',0,0,'en',0);
 INSERT INTO "rules_alternative" VALUES(16623,0,'-','',0,1,NULL,NULL,4804,NULL,'["-"]','[]','default',0,'default',0,1,'en',0);
@@ -23312,6 +23310,7 @@ INSERT INTO "rules_germannoun" VALUES(2444,'Trampelfard',NULL,NULL,'masculine','
 INSERT INTO "rules_germannoun" VALUES(2445,'Weiberfasnacht',NULL,NULL,'feminine','','Weiberfasnächten','Weiberfasnächte','Weiberfasnächte',0,'Weiberfasnacht','Weiberfasnacht','Weiberfasnächte',0,NULL,'Weiberfasnacht',NULL,NULL,'Weiberfasnacht');
 INSERT INTO "rules_germannoun" VALUES(2446,'Wachstum',NULL,NULL,'neuter','',NULL,NULL,NULL,0,'Wachstum','Wachstums',NULL,1,NULL,'Wachstum',NULL,NULL,'Wachstum');
 INSERT INTO "rules_germannoun" VALUES(2447,'Wald',NULL,NULL,'masculine','','Wäldern','Wälder','Wälder',0,'Wald','Waldes','Wälder',0,NULL,'Wald','Walde⁶','Walds','Wald');
+INSERT INTO "rules_germannoun" VALUES(2448,'Avantgarde',NULL,NULL,'feminine','','Avantgarden','Avantgarden','Avantgarden',0,'Avantgarde','Avantgarde','Avantgarden',0,NULL,'Avantgarde',NULL,NULL,'Avantgarde');
 CREATE TABLE "rules_germanverb" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "base_form" varchar(255) NOT NULL UNIQUE, "createdby_id" integer NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED, "conjunctive_ich" varchar(255) NULL, "helping_verb" varchar(255) NULL, "imperativ_plural" varchar(255) NULL, "imperativ_singular" varchar(255) NULL, "infinitiv_zu" varchar(255) NULL, "past_participle" varchar(255) NULL, "past_tense_ich" varchar(255) NULL, "present_du" varchar(255) NULL, "present_ich" varchar(255) NULL, "present_pronoun" varchar(255) NULL);
 INSERT INTO "rules_germanverb" VALUES(1,'abschachern',NULL,'schacherte ab','haben','schachert ab','schachere ab','abzuschachern','abgeschachert','schacherte ab','schacherst ab','schachere ab','schachert ab');
 INSERT INTO "rules_germanverb" VALUES(2,'abgewinnen',NULL,'gewänne ab','haben','gewinnt ab','gewinn ab','abzugewinnen','abgewonnen','gewann ab','gewinnst ab','gewinne ab','gewinnt ab');
@@ -28391,7 +28390,6 @@ INSERT INTO "rules_rule" VALUES(4798,'de','fest im Sattel sitzen','|~|~n|v',NULL
 INSERT INTO "rules_rule" VALUES(4799,'de','sitzen fest im Sattel','v|adv||~n',NULL,0,1,1,NULL,NULL,'["sitzen", "fest", "im", "Sattel"]','[{"word_type": "v", "lower_case": true, "lemmatize": true}, {"word_type": "adv", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "n", "lower_case": true, "lemmatize": false}]',0,NULL,NULL,NULL,'sitzen fest im Sattel','default','default',1,1,'sitzen','["sports_terms_advanced"]',1,21,NULL,'default','default',0,NULL,'v');
 INSERT INTO "rules_rule" VALUES(4800,'de','Blutgrätsche','n',NULL,0,1,3,NULL,NULL,'["Blutgr\u00e4tsche"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'Blutgrätsche','default','default',1,1,'blutgrätsche','["sports_terms"]',0,12,NULL,'default','default',0,NULL,'n');
 INSERT INTO "rules_rule" VALUES(4801,'de','zwanghaft','a',NULL,0,1,1,NULL,NULL,'["zwanghaft"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'zwanghaft','default','default',1,1,'zwanghaft','["mental_wellbeing"]',1,9,NULL,'default','default',0,NULL,'a');
-INSERT INTO "rules_rule" VALUES(4802,'de','AMP','=',NULL,0,1,2,NULL,NULL,'["AMP"]','[{"word_type": "", "lower_case": false, "lemmatize": false}]',0,NULL,NULL,NULL,'AMP','default','default',0,0,'AMP','["abbreviation_advanced"]',1,3,NULL,'default','default',0,NULL,'');
 INSERT INTO "rules_rule" VALUES(4803,'de','pünktlich Deutsche','a|n',NULL,0,1,1,NULL,NULL,'["p\u00fcnktlich", "Deutsche"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}, {"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'pünktliche Deutsche','default','default',1,1,'pünktlich','["culture"]',1,18,NULL,'default','default',0,NULL,'a');
 INSERT INTO "rules_rule" VALUES(4804,'en','under',NULL,NULL,0,1,2,NULL,NULL,'["under"]','[]',0,NULL,NULL,NULL,'under X','default','default',NULL,NULL,'under','["age"]',1,5,'l|num','default','default',1,NULL,NULL);
 INSERT INTO "rules_rule" VALUES(4805,'en','older than','~a|',NULL,0,1,2,NULL,NULL,'["older", "than"]','[{"word_type": "a", "lower_case": true, "lemmatize": false}, {"word_type": "", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'older than X','default','default',0,1,'older','["age_advanced"]',1,10,NULL,'default','default',1,NULL,'a');
@@ -28439,7 +28437,7 @@ CREATE INDEX "rules_rule_parent_id_a8865770" ON "rules_rule" ("parent_id");
 DELETE FROM "sqlite_sequence";
 INSERT INTO "sqlite_sequence" VALUES('rules_falsepositive',1244);
 INSERT INTO "sqlite_sequence" VALUES('rules_englishadjective',722);
-INSERT INTO "sqlite_sequence" VALUES('rules_germannoun',2447);
+INSERT INTO "sqlite_sequence" VALUES('rules_germannoun',2448);
 INSERT INTO "sqlite_sequence" VALUES('rules_germanadjective',852);
 INSERT INTO "sqlite_sequence" VALUES('rules_alternative',16709);
 INSERT INTO "sqlite_sequence" VALUES('rules_englishnoun',1211);
