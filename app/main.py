@@ -1162,9 +1162,7 @@ async def fetch_user_organization_configs(email: str) -> dict | None:
         )
 
         configs["organization_domains"] = (
-            organization_configs["domains"]
-            if "domains" in organization_configs
-            else {}
+            organization_configs["domains"] if "domains" in organization_configs else {}
         )
 
         configs["organization_config"] = organization_configs["config"]
@@ -3378,12 +3376,15 @@ async def find_form_verb_german(i: int, tokens: Doc):
             "vor",
             "voran",
             "weiter",
-            "zu",
         ]:
             text += " " + next_token.text
             lemma += " " + next_token.lemma_
 
     forms = await fetch_declensions(LangType.DE, WordType.VERB, text)
+    if forms is None and text != token.text:
+        text = token.text
+        lemma = token.lemma_
+        forms = await fetch_declensions(LangType.DE, WordType.VERB, text)
 
     target_form = find_matching_form(forms, text)
     if target_form is None and settings.log_missing_declension and not text.isupper():
