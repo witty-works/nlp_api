@@ -2979,7 +2979,7 @@ async def check_pattern(
 ) -> bool | int:
     count = 0
     for word_type in pattern:
-        if i_pattern_start < 0 or i_pattern_start > len(tokens):
+        if i_pattern_start < 0 or i_pattern_start >= len(tokens):
             return False
 
         allow_skip = word_type.endswith("*")
