@@ -5,51 +5,57 @@
         {
             "alternatives": [
                 {
-                    "text": "Abschachern"
+                    "text": "ausnehmen"
+                },
+                {
+                    "text": "prellen"
+                },
+                {
+                    "text": "abkassieren"
                 }
             ],
-            "category": "orthography",
-            "context": "Wir sind am abschachern.",
+            "category": "cultural-diversity",
+            "context": "Wir wollen das abzocken. Es hat behaupten ein Beitrag zu bringen.",
             "end": 23,
             "explanation": {
-                "icon": "❌",
-                "text": "„Abschachern“ scheint hier ein Nomen zu sein (am = an dem) und muss dann großgeschrieben werden."
+                "icon": "😒",
+                "text": "Abwertende Umdeutung eines neutralen oder positiven jiddischen Wortes",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/negative-verwendung-jiddischer-worte?reducedView=true"
             },
-            "gravity": 1.0,
-            "label": "Groß-/Kleinschreibung",
-            "start": 12,
-            "subcategory": "casing",
-            "text": "abschachern"
+            "gravity": 3.0,
+            "label": "Kulturelle Diversität: Negative Verwendung jiddischer Worte",
+            "proficiency_level": "unconscious_bias",
+            "start": 15,
+            "subcategory": "yiddish-pejoratives_advanced",
+            "text": "abzocken"
         },
         {
             "alternatives": [
                 {
-                    "text": "abgewinnen"
+                    "text": "sagen"
                 },
                 {
-                    "text": "abkaufen"
+                    "text": "darlegen"
                 },
                 {
-                    "text": "ablocken"
-                },
-                {
-                    "text": "abluchsen"
+                    "text": "feststellen"
                 }
             ],
-            "category": "religion",
-            "context": "Wir sind am abschachern.",
-            "end": 23,
+            "category": "social-motive",
+            "context": "Wir wollen das abzocken. Es hat behaupten ein Beitrag zu bringen.",
+            "end": 41,
             "explanation": {
-                "icon": "🚫",
-                "text": "Fällt unter antisemitische Verunglimpfungen",
-                "url": "https://www.witty.works/de/kategorien/glauben/antisemitismus?reducedView=true"
+                "content": "video",
+                "icon": "😒",
+                "text": "Spricht kooperativ denkende Menschen nicht an",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
             },
-            "gravity": 1.0,
-            "label": "Glauben: Antisemitismus",
-            "proficiency_level": "openly_discriminating",
-            "start": 12,
-            "subcategory": "antisemitism",
-            "text": "abschachern"
+            "gravity": 2.0,
+            "label": "Soziale Motivation: Agentische Sprache",
+            "proficiency_level": "unconscious_bias",
+            "start": 32,
+            "subcategory": "agentic",
+            "text": "behaupten"
         }
     ]
 }

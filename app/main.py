@@ -123,7 +123,7 @@ from app.query_definitions import (
     verb_form_map,
 )
 
-version = "2.2.0"
+version = "2.2.1"
 
 categories = get_categories()
 settings = get_settings()
@@ -689,15 +689,17 @@ async def get_config_debug(
 
     try:
         configs = await fetch_user_organization_configs(user_email)
-        result_configs = await fetch_configs_for_request(user_request_in, user_email)
-        del result_configs["organization_config"]
-        del result_configs["organization_domains"]
-        del result_configs["organization_false_positives"]
-        del result_configs["organization_term_replacements"]
-
     except HTTPException:
-        configs = None
-        result_configs = None
+        try:
+            configs = await fetch_user_configs_from_redis(user_email)
+        except HTTPException:
+            configs = {}
+
+    result_configs = await fetch_configs_for_request(user_request_in, user_email)
+    del result_configs["organization_config"]
+    del result_configs["organization_domains"]
+    del result_configs["organization_false_positives"]
+    del result_configs["organization_term_replacements"]
 
     return {
         "configs": configs,
@@ -1112,14 +1114,7 @@ async def get_user_configs(
     email: str,
     username: str = Depends(fetch_current_username),
 ):
-    configs = await fetch_user_organization_configs(email)
-
-    if not configs or type(configs) is not dict:
-        return JSONResponse(
-            status_code=404, content={"message": "User configs not found"}
-        )
-
-    return configs
+    return await fetch_user_organization_configs(email)
 
 
 # Functions
@@ -1138,15 +1133,12 @@ async def fetch_user_configs_from_redis(
 ) -> dict:
     configs = redis.get(get_user_id(email))
     if not configs:
-        # BC code
-        configs = redis.get(email.lower())
-        if not configs:
-            raise HTTPException(status_code=404, detail="User configs not found")
+        raise HTTPException(status_code=404, detail="User configs not found")
 
     return json.loads(configs)
 
 
-async def fetch_user_organization_configs(email: str) -> dict:
+async def fetch_user_organization_configs(email: str) -> dict | None:
     configs = await fetch_user_configs_from_redis(email)
 
     configs["plan"] = "witty_free"
@@ -1155,38 +1147,33 @@ async def fetch_user_organization_configs(email: str) -> dict:
     configs["organization_domains"] = None
 
     if "organization_id" in configs and configs["organization_id"] is not None:
-        try:
-            organization_configs = await fetch_organization_configs_from_redis(
-                configs["organization_id"]
-            )
+        organization_configs = await fetch_organization_configs_from_redis(
+            configs["organization_id"]
+        )
 
-            configs["plan"] = organization_configs["plan"]
+        configs["plan"] = organization_configs["plan"]
 
-            configs["organization_name"] = organization_configs["name"]
+        configs["organization_name"] = organization_configs["name"]
 
-            configs["organization_config_hash"] = (
-                organization_configs["config_hash"]
-                if "config_hash" in organization_configs
-                else None
-            )
+        configs["organization_config_hash"] = (
+            organization_configs["config_hash"]
+            if "config_hash" in organization_configs
+            else None
+        )
 
-            configs["organization_domains"] = (
-                organization_configs["domains"]
-                if "domains" in organization_configs
-                else {}
-            )
+        configs["organization_domains"] = (
+            organization_configs["domains"] if "domains" in organization_configs else {}
+        )
 
-            configs["organization_config"] = organization_configs["config"]
+        configs["organization_config"] = organization_configs["config"]
 
-            configs["organization_term_replacements"] = organization_configs[
-                "term_replacements"
-            ]
+        configs["organization_term_replacements"] = organization_configs[
+            "term_replacements"
+        ]
 
-            configs["organization_false_positives"] = organization_configs[
-                "false_positives"
-            ]
-        except HTTPException:
-            pass
+        configs["organization_false_positives"] = organization_configs[
+            "false_positives"
+        ]
     else:
         configs["organization_id"] = None
 
@@ -1274,9 +1261,6 @@ async def fetch_configs_for_request(
     try:
         configs = await fetch_user_organization_configs(user_email)
     except HTTPException:
-        configs = None
-
-    if not configs or type(configs) is not dict:
         return {}
 
     apply_configs(user_request_in, configs["config"], configs["plan"])
@@ -2993,7 +2977,7 @@ async def check_pattern(
 ) -> bool | int:
     count = 0
     for word_type in pattern:
-        if i_pattern_start < 0 or i_pattern_start > len(tokens):
+        if i_pattern_start < 0 or i_pattern_start >= len(tokens):
             return False
 
         allow_skip = word_type.endswith("*")
@@ -3392,12 +3376,15 @@ async def find_form_verb_german(i: int, tokens: Doc):
             "vor",
             "voran",
             "weiter",
-            "zu",
         ]:
             text += " " + next_token.text
             lemma += " " + next_token.lemma_
 
     forms = await fetch_declensions(LangType.DE, WordType.VERB, text)
+    if forms is None and text != token.text:
+        text = token.text
+        lemma = token.lemma_
+        forms = await fetch_declensions(LangType.DE, WordType.VERB, text)
 
     target_form = find_matching_form(forms, text)
     if target_form is None and settings.log_missing_declension and not text.isupper():
@@ -4203,6 +4190,7 @@ async def gendered_denom_analysis_de(
 ) -> (str | None, str | None, list[Alternative] | None):
     prefix_words = None
     prefix = ""
+    is_singular = True if is_singular is None else is_singular
 
     if "-" in text:
         words = text.split("-")
@@ -4982,9 +4970,6 @@ async def rule_check(
             continue
 
         if is_gendered_denom_rule(lang.lang, subcategory):
-            if is_singular is None:
-                continue
-
             (
                 text,
                 subcategory,

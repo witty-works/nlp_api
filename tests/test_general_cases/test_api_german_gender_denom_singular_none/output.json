@@ -1,0 +1,39 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "jugendlich"
+                },
+                {
+                    "text": "unbeschwert"
+                },
+                {
+                    "text": "lebhaft"
+                },
+                {
+                    "text": "frisch"
+                },
+                {
+                    "text": "zierlich"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Sei nicht mädchenhaft.",
+            "end": 21,
+            "explanation": {
+                "icon": "😟",
+                "text": "Reduziert Frauen auf traditionelle Rollenklischees",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/frauenklischee?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Frauenklischee",
+            "proficiency_level": "unconscious_bias",
+            "start": 10,
+            "subcategory": "female_stereotype",
+            "text": "mädchenhaft"
+        }
+    ]
+}
