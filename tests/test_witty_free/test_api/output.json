@@ -32,10 +32,14 @@
                     "text": "Mitarbeiterin/Mitarbeiter"
                 },
                 {
-                    "text": "Arbeitnehmer*in"
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Mitarbeiterschaft"
                 },
                 {
-                    "text": "Arbeitnehmerin/Arbeitnehmer"
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Mitarbeitende"
                 }
             ],
             "category": "cultural-diversity",

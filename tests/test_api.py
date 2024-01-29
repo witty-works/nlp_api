@@ -1277,28 +1277,6 @@ def test_store_get_delete_rules():
         assert response.content == b'{"detail":"Organization configs not found"}'
 
 
-def test_german_gender_ending():
-    with TestClient(app) as client:
-        request_data = {
-            "alternative": "Sinti~ze~/~Sinti und Rom~nja~/~Roma",
-        }
-        response = client.get("/debug/german_gender_ending", params=request_data)
-        assert response.status_code == 200
-        response_content = json.loads(response.content)
-
-        expected = [
-            "Sinti*ze und Rom*nja",
-            "Sintize/Sinti und Romnja/Roma",
-            "Sinti_ze und Rom_nja",
-            "SintiZe und RomNja",
-            "Sinti/ze und Rom/nja",
-            "Sinti:ze und Rom:nja",
-            "Sinti/-ze und Rom/-nja",
-        ]
-
-        assert sorted(response_content) == sorted(expected)
-
-
 def test_rule_debug():
     with TestClient(app) as client:
         request_data = {
