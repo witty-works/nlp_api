@@ -1,14 +1,4 @@
 import os
-
-if os.environ.get("BLACKFIRE_ENABLE_CONTINUOUS_PROFILING"):
-    try:
-        from blackfire_conprof.profiler import Profiler
-
-        profiler = Profiler()
-        profiler.start(application_name=os.environ.get("PLATFORM_APPLICATION_NAME"))
-    except:
-        pass
-
 import re
 import uvicorn
 import json
@@ -329,6 +319,19 @@ substring_rules = {}
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    if os.environ.get("BLACKFIRE_ENABLE_CONTINUOUS_PROFILING"):
+        try:
+            from blackfire_conprof.profiler import Profiler
+
+            app_name = os.environ.get("PLATFORM_APPLICATION_NAME")
+            app_name += "-worker-%d" % (os.getpid(),)
+            profiler = Profiler(application_name=app_name)
+            profiler.start()
+
+            print("Profiler started for %s" % app_name)
+        except:
+            pass
+
     global session
     global ssl_session
     global rules_db
@@ -338,7 +341,6 @@ async def lifespan(app: FastAPI):
     global model
 
     import logging
-
     logger = logging.getLogger("aiosqlite")
     logger.setLevel(logging.ERROR)
 
