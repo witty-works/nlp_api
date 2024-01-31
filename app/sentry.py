@@ -29,6 +29,9 @@ def sentry_clean_event_data(event, hint):  # pragma: no cover
         for frame in exception.get("stacktrace", {}).get("frames", []):
             frame = sentry_clean_sensitive_frame(frame, privacy_filter)
 
+    if "text" in event["request"]["data"]:
+        event["request"]["data"]["text"] = privacy_filter.clean_var(event["request"]["data"]["text"])
+
     return event
 
 
