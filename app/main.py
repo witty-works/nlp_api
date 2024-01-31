@@ -4139,6 +4139,7 @@ async def alternatives_declension(
         or rule.is_pattern_match
         or alternatives == None
         or len(alternatives) == 0
+        or (len(alternatives) == 1 and alternatives[0].is_remove)
     ):
         return text, tokens[i].idx, alternatives
 
