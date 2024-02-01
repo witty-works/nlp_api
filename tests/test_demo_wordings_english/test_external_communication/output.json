@@ -28,7 +28,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 3,
             "subcategory": "titles",
-            "text": "a manager"
+            "text": "a manager",
+            "text_id": "manager"
         },
         {
             "alternatives": [
@@ -50,7 +51,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 34,
             "subcategory": "binary_pronouns_advanced",
-            "text": "he has"
+            "text": "he has",
+            "text_id": "he"
         },
         {
             "alternatives": [
@@ -72,7 +74,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 44,
             "subcategory": "agentic",
-            "text": "go the extra mile"
+            "text": "go the extra mile",
+            "text_id": "go the extra mile"
         }
     ]
 }

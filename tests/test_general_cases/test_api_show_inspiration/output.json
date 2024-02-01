@@ -36,7 +36,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 19,
             "subcategory": "function",
-            "text": "a spokesman"
+            "text": "a spokesman",
+            "text_id": "spokesman"
         }
     ]
 }

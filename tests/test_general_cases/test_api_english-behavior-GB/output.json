@@ -21,7 +21,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 8,
             "subcategory": "behavior",
-            "text": "an addict"
+            "text": "an addict",
+            "text_id": "addict"
         },
         {
             "alternatives": [
@@ -42,7 +43,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 40,
             "subcategory": "racist_source",
-            "text": "coloured people"
+            "text": "coloured people",
+            "text_id": "colored people"
         },
         {
             "alternatives": [
@@ -77,7 +79,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 64,
             "subcategory": "abbreviation",
-            "text": "PoC"
+            "text": "PoC",
+            "text_id": "PoC"
         }
     ]
 }

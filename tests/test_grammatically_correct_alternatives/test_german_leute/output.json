@@ -25,7 +25,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 0,
             "subcategory": "titles",
-            "text": "Der Polizist"
+            "text": "Der Polizist",
+            "text_id": "Polizist"
         }
     ]
 }

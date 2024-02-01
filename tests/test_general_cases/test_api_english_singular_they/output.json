@@ -31,7 +31,8 @@
             "label": "Punctuation",
             "start": 29,
             "subcategory": "punctuation",
-            "text": "she"
+            "text": "she",
+            "text_id": "she"
         },
         {
             "alternatives": [
@@ -53,7 +54,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 12,
             "subcategory": "binary_pronouns_advanced",
-            "text": "he"
+            "text": "he",
+            "text_id": "he"
         },
         {
             "alternatives": [
@@ -75,7 +77,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 29,
             "subcategory": "binary_pronouns_advanced",
-            "text": "she"
+            "text": "she",
+            "text_id": "she"
         }
     ]
 }

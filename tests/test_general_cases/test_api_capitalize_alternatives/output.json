@@ -34,7 +34,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 28,
             "subcategory": "function",
-            "text": "Kunden"
+            "text": "Kunden",
+            "text_id": "Kunde"
         },
         {
             "alternatives": [
@@ -68,7 +69,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 36,
             "subcategory": "agentic_advanced",
-            "text": "Ehrgeiz"
+            "text": "Ehrgeiz",
+            "text_id": "Ehrgeiz"
         },
         {
             "alternatives": [
@@ -97,7 +99,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 67,
             "subcategory": "agentic_advanced",
-            "text": "Durchhaltevermögen"
+            "text": "Durchhaltevermögen",
+            "text_id": "Durchhaltevermögen"
         },
         {
             "alternatives": [
@@ -131,7 +134,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 106,
             "subcategory": "agentic_advanced",
-            "text": "Ehrgeiz"
+            "text": "Ehrgeiz",
+            "text_id": "Ehrgeiz"
         }
     ]
 }

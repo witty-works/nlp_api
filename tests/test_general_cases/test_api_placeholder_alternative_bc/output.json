@@ -22,7 +22,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 0,
             "subcategory": "binary_pronouns_advanced",
-            "text": "He is"
+            "text": "He is",
+            "text_id": "he"
         }
     ]
 }

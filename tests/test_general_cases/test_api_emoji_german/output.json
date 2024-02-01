@@ -19,7 +19,8 @@
             "label": "Groß-/Kleinschreibung",
             "start": 77,
             "subcategory": "casing",
-            "text": "Alles"
+            "text": "Alles",
+            "text_id": "Alles"
         },
         {
             "alternatives": [
@@ -59,7 +60,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 0,
             "subcategory": "gender_identity",
-            "text": "👨‍🚒"
+            "text": "👨‍🚒",
+            "text_id": "👨‍🚒"
         },
         {
             "alternatives": [
@@ -95,7 +97,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 6,
             "subcategory": "gender_identity",
-            "text": "👩‍🚒"
+            "text": "👩‍🚒",
+            "text_id": "👩‍🚒"
         },
         {
             "alternatives": [
@@ -135,7 +138,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 12,
             "subcategory": "gender_identity",
-            "text": "👨🏻‍🚒"
+            "text": "👨🏻‍🚒",
+            "text_id": "👨🏻‍🚒"
         },
         {
             "alternatives": [
@@ -159,7 +163,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 28,
             "subcategory": "gender_identity",
-            "text": "👨🏽‍🚒"
+            "text": "👨🏽‍🚒",
+            "text_id": "👨🏽‍🚒"
         },
         {
             "alternatives": [
@@ -198,7 +203,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 39,
             "subcategory": "culture",
-            "text": "🍟"
+            "text": "🍟",
+            "text_id": "🍟"
         },
         {
             "alternatives": [
@@ -237,7 +243,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 42,
             "subcategory": "culture",
-            "text": "👌🏻"
+            "text": "👌🏻",
+            "text_id": "👌🏻"
         },
         {
             "alternatives": [
@@ -277,7 +284,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 47,
             "subcategory": "gender_identity",
-            "text": "👩"
+            "text": "👩",
+            "text_id": "👩"
         },
         {
             "alternatives": [
@@ -316,7 +324,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 50,
             "subcategory": "sexual_orientation",
-            "text": "👫"
+            "text": "👫",
+            "text_id": "👫"
         },
         {
             "alternatives": [
@@ -343,7 +352,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 53,
             "subcategory": "sexual_orientation",
-            "text": "👨‍👩‍👧"
+            "text": "👨‍👩‍👧",
+            "text_id": "👨‍👩‍👧"
         }
     ]
 }

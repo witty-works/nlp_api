@@ -19,7 +19,8 @@
             "label": "Possible Typo",
             "start": 102,
             "subcategory": "typos",
-            "text": "metres"
+            "text": "metres",
+            "text_id": "metres"
         },
         {
             "alternatives": [
@@ -38,7 +39,8 @@
             "label": "Possible Typo",
             "start": 191,
             "subcategory": "typos",
-            "text": "metres"
+            "text": "metres",
+            "text_id": "metres"
         },
         {
             "alternatives": [
@@ -57,7 +59,8 @@
             "label": "Possible Typo",
             "start": 382,
             "subcategory": "typos",
-            "text": "metres"
+            "text": "metres",
+            "text_id": "metres"
         },
         {
             "alternatives": [
@@ -76,7 +79,8 @@
             "label": "Possible Typo",
             "start": 418,
             "subcategory": "typos",
-            "text": "metres"
+            "text": "metres",
+            "text_id": "metres"
         },
         {
             "alternatives": [
@@ -95,7 +99,8 @@
             "label": "Possible Typo",
             "start": 551,
             "subcategory": "typos",
-            "text": "metres"
+            "text": "metres",
+            "text_id": "metres"
         },
         {
             "alternatives": [
@@ -114,7 +119,8 @@
             "label": "Possible Typo",
             "start": 723,
             "subcategory": "typos",
-            "text": "metres"
+            "text": "metres",
+            "text_id": "metres"
         },
         {
             "alternatives": [
@@ -133,7 +139,8 @@
             "label": "Possible Typo",
             "start": 812,
             "subcategory": "typos",
-            "text": "metres"
+            "text": "metres",
+            "text_id": "metres"
         },
         {
             "alternatives": [
@@ -167,7 +174,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 4,
             "subcategory": "function",
-            "text": "guys"
+            "text": "guys",
+            "text_id": "guy"
         },
         {
             "alternatives": [],
@@ -184,7 +192,8 @@
             "proficiency_level": "inclusive",
             "start": 19,
             "subcategory": "communal",
-            "text": "team"
+            "text": "team",
+            "text_id": "team"
         },
         {
             "alternatives": [
@@ -218,7 +227,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 30,
             "subcategory": "agentic",
-            "text": "ambition"
+            "text": "ambition",
+            "text_id": "ambition"
         },
         {
             "alternatives": [
@@ -252,7 +262,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 43,
             "subcategory": "agentic_advanced",
-            "text": "perseverance"
+            "text": "perseverance",
+            "text_id": "perseverance"
         },
         {
             "alternatives": [
@@ -274,7 +285,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 321,
             "subcategory": "filler",
-            "text": "generally"
+            "text": "generally",
+            "text_id": "generally"
         },
         {
             "alternatives": [
@@ -308,7 +320,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 625,
             "subcategory": "function",
-            "text": "guys"
+            "text": "guys",
+            "text_id": "guy"
         },
         {
             "alternatives": [],
@@ -325,7 +338,8 @@
             "proficiency_level": "inclusive",
             "start": 640,
             "subcategory": "communal",
-            "text": "team"
+            "text": "team",
+            "text_id": "team"
         },
         {
             "alternatives": [
@@ -359,7 +373,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 651,
             "subcategory": "agentic",
-            "text": "ambition"
+            "text": "ambition",
+            "text_id": "ambition"
         },
         {
             "alternatives": [
@@ -393,7 +408,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 664,
             "subcategory": "agentic_advanced",
-            "text": "perseverance"
+            "text": "perseverance",
+            "text_id": "perseverance"
         },
         {
             "alternatives": [
@@ -415,7 +431,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 942,
             "subcategory": "filler",
-            "text": "generally"
+            "text": "generally",
+            "text_id": "generally"
         }
     ]
 }

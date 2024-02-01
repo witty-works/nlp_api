@@ -19,7 +19,8 @@
             "label": "Rechtschreibfehler",
             "start": 10,
             "subcategory": "typos",
-            "text": "aussergewöhnliche"
+            "text": "aussergewöhnliche",
+            "text_id": "aussergewöhnliche"
         },
         {
             "alternatives": [
@@ -53,7 +54,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 28,
             "subcategory": "agentic_advanced",
-            "text": "Herausforderungen"
+            "text": "Herausforderungen",
+            "text_id": "Herausforderung"
         }
     ]
 }

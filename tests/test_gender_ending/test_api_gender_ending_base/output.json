@@ -17,7 +17,8 @@
             "proficiency_level": "inclusive",
             "start": 4,
             "subcategory": "communal",
-            "text": "vertraue"
+            "text": "vertraue",
+            "text_id": "vertrauen"
         },
         {
             "alternatives": [
@@ -51,7 +52,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 17,
             "subcategory": "titles",
-            "text": "meinen Facharzt"
+            "text": "meinen Facharzt",
+            "text_id": "Arzt"
         }
     ]
 }

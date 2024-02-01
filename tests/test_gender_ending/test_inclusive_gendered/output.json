@@ -17,7 +17,8 @@
             "proficiency_level": "inclusive",
             "start": 25,
             "subcategory": "communal",
-            "text": "needs"
+            "text": "needs",
+            "text_id": "need"
         },
         {
             "alternatives": [],
@@ -34,7 +35,8 @@
             "proficiency_level": "inclusive",
             "start": 69,
             "subcategory": "communal",
-            "text": "team"
+            "text": "team",
+            "text_id": "team"
         }
     ]
 }

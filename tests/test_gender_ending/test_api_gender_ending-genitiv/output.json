@@ -28,7 +28,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 21,
             "subcategory": "titles",
-            "text": "Asset-Datenschutzbeauftragten"
+            "text": "Asset-Datenschutzbeauftragten",
+            "text_id": "Beauftragter"
         }
     ]
 }

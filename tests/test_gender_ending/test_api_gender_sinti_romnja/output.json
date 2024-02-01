@@ -33,7 +33,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 14,
             "subcategory": "racist_source",
-            "text": "Zigeuner"
+            "text": "Zigeuner",
+            "text_id": "Zigeuner"
         },
         {
             "alternatives": [
@@ -66,7 +67,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 36,
             "subcategory": "racist_source",
-            "text": "Zigeuner"
+            "text": "Zigeuner",
+            "text_id": "Zigeuner"
         },
         {
             "alternatives": [
@@ -99,7 +101,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 57,
             "subcategory": "racist_source",
-            "text": "Zigeunerin"
+            "text": "Zigeunerin",
+            "text_id": "Zigeuner"
         },
         {
             "alternatives": [],
@@ -116,7 +119,8 @@
             "proficiency_level": "inclusive",
             "start": 88,
             "subcategory": "d_and_i",
-            "text": "*in"
+            "text": "*in",
+            "text_id": "*in"
         },
         {
             "alternatives": [
@@ -140,7 +144,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 102,
             "subcategory": "culture",
-            "text": "Kopftuchträger*in"
+            "text": "Kopftuchträger*in",
+            "text_id": "Kopftuchträgerin"
         }
     ]
 }

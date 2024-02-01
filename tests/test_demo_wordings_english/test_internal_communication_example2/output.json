@@ -24,7 +24,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 6,
             "subcategory": "vision",
-            "text": "turn a blind eye"
+            "text": "turn a blind eye",
+            "text_id": "turn a blind eye"
         }
     ]
 }

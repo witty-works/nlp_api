@@ -21,7 +21,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 13,
             "subcategory": "age_old",
-            "text": "a fossil"
+            "text": "a fossil",
+            "text_id": "fossil"
         }
     ]
 }

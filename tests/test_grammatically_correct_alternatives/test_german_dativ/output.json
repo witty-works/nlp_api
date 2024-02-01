@@ -34,7 +34,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 25,
             "subcategory": "agentic_advanced",
-            "text": "Prinzip"
+            "text": "Prinzip",
+            "text_id": "Prinzip"
         }
     ]
 }

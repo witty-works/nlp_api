@@ -31,7 +31,8 @@
             "label": "Rechtschreibfehler",
             "start": 22,
             "subcategory": "typos",
-            "text": "ueber"
+            "text": "ueber",
+            "text_id": "ueber"
         },
         {
             "alternatives": [
@@ -62,7 +63,8 @@
             "label": "Rechtschreibfehler",
             "start": 32,
             "subcategory": "typos",
-            "text": "Strasse"
+            "text": "Strasse",
+            "text_id": "Strasse"
         },
         {
             "alternatives": [
@@ -81,7 +83,8 @@
             "label": "Zeichensetzung",
             "start": 39,
             "subcategory": "punctuation",
-            "text": "!!!"
+            "text": "!!!",
+            "text_id": "!!!"
         }
     ]
 }

@@ -27,7 +27,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 37,
             "subcategory": "yiddish-pejoratives_advanced",
-            "text": "abgezockt"
+            "text": "abgezockt",
+            "text_id": "abzocken"
         },
         {
             "alternatives": [
@@ -54,7 +55,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 51,
             "subcategory": "yiddish-pejoratives_advanced",
-            "text": "zockte ab"
+            "text": "zockte ab",
+            "text_id": "abzocken"
         },
         {
             "alternatives": [
@@ -81,7 +83,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 65,
             "subcategory": "yiddish-pejoratives_advanced",
-            "text": "zockte"
+            "text": "zockte",
+            "text_id": "abzocken"
         },
         {
             "alternatives": [
@@ -120,7 +123,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 83,
             "subcategory": "color",
-            "text": "siehst schwarz"
+            "text": "siehst schwarz",
+            "text_id": "schwarzsehen"
         },
         {
             "alternatives": [
@@ -160,7 +164,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 102,
             "subcategory": "color",
-            "text": "siehst"
+            "text": "siehst",
+            "text_id": "schwarzsehen"
         },
         {
             "alternatives": [
@@ -200,7 +205,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 115,
             "subcategory": "color",
-            "text": "schwarz"
+            "text": "schwarz",
+            "text_id": "schwarzsehen"
         },
         {
             "alternatives": [
@@ -239,7 +245,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 132,
             "subcategory": "color",
-            "text": "schwarzsehen"
+            "text": "schwarzsehen",
+            "text_id": "schwarzsehen"
         }
     ]
 }

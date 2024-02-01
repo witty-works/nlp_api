@@ -31,7 +31,8 @@
             "label": "Spelling mistake",
             "start": 2,
             "subcategory": "typos",
-            "text": "liki"
+            "text": "liki",
+            "text_id": "liki"
         }
     ]
 }

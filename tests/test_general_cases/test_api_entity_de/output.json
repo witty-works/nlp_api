@@ -23,7 +23,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 6,
             "subcategory": "gender_identity_advanced",
-            "text": "Herr"
+            "text": "Herr",
+            "text_id": "Herr"
         },
         {
             "alternatives": [
@@ -46,7 +47,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 58,
             "subcategory": "gender_identity_advanced",
-            "text": "Herr"
+            "text": "Herr",
+            "text_id": "Herr"
         },
         {
             "alternatives": [],
@@ -63,7 +65,8 @@
             "proficiency_level": "inclusive",
             "start": 70,
             "subcategory": "communal",
-            "text": "helfen"
+            "text": "helfen",
+            "text_id": "helfen"
         }
     ]
 }

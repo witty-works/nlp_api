@@ -32,7 +32,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 8,
             "subcategory": "agentic_advanced",
-            "text": "Dominant"
+            "text": "Dominant",
+            "text_id": "dominant"
         }
     ]
 }

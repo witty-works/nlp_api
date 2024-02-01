@@ -17,7 +17,8 @@
             "proficiency_level": "inclusive",
             "start": 3,
             "subcategory": "communal",
-            "text": "support"
+            "text": "support",
+            "text_id": "support"
         },
         {
             "alternatives": [
@@ -51,7 +52,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 16,
             "subcategory": "agentic",
-            "text": "performance"
+            "text": "performance",
+            "text_id": "performance"
         }
     ]
 }

@@ -19,7 +19,8 @@
             "label": "Punctuation",
             "start": 92,
             "subcategory": "punctuation",
-            "text": " and"
+            "text": " and",
+            "text_id": " and"
         },
         {
             "alternatives": [
@@ -50,7 +51,8 @@
             "label": "Punctuation",
             "start": 182,
             "subcategory": "punctuation",
-            "text": "Nadia"
+            "text": "Nadia",
+            "text_id": "Nadia"
         },
         {
             "alternatives": [
@@ -84,7 +86,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 4,
             "subcategory": "function",
-            "text": "guys"
+            "text": "guys",
+            "text_id": "guy"
         },
         {
             "alternatives": [],
@@ -101,7 +104,8 @@
             "proficiency_level": "inclusive",
             "start": 19,
             "subcategory": "communal",
-            "text": "team"
+            "text": "team",
+            "text_id": "team"
         },
         {
             "alternatives": [
@@ -135,7 +139,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 30,
             "subcategory": "agentic",
-            "text": "ambition"
+            "text": "ambition",
+            "text_id": "ambition"
         },
         {
             "alternatives": [
@@ -169,7 +174,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 43,
             "subcategory": "agentic_advanced",
-            "text": "perseverance"
+            "text": "perseverance",
+            "text_id": "perseverance"
         },
         {
             "alternatives": [
@@ -200,7 +206,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 111,
             "subcategory": "agentic",
-            "text": "challenged"
+            "text": "challenged",
+            "text_id": "challenge"
         },
         {
             "alternatives": [
@@ -234,7 +241,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 130,
             "subcategory": "exaggerating",
-            "text": "number 1"
+            "text": "number 1",
+            "text_id": "number 1"
         },
         {
             "alternatives": [
@@ -268,7 +276,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 143,
             "subcategory": "hollow_advanced",
-            "text": "innovation"
+            "text": "innovation",
+            "text_id": "innovation"
         },
         {
             "alternatives": [
@@ -293,7 +302,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 154,
             "subcategory": "agentic",
-            "text": "drives"
+            "text": "drives",
+            "text_id": "drive"
         }
     ]
 }

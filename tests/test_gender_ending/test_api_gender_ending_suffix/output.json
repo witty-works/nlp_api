@@ -25,7 +25,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 8,
             "subcategory": "titles",
-            "text": "ein Kopftuchträger"
+            "text": "ein Kopftuchträger",
+            "text_id": "Träger"
         }
     ]
 }

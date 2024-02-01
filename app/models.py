@@ -213,7 +213,8 @@ class Alternative:
 
 
 class Rule:
-    name: str
+    id: str
+    text_id: Optional[str]
     parent_id: Optional[int]
     lang: str
     lemma: str
@@ -235,7 +236,7 @@ class Rule:
 
     def __init__(
         self,
-        name: str,
+        id: str,
         lang: str,
         lemma: str,
         words,
@@ -243,7 +244,8 @@ class Rule:
         subcategories=None,
         alternatives=None,
     ):
-        self.name = name
+        self.id = id
+        self.text_id = id
         self.lang = lang
         self.lemma = lemma
         self.words = words
@@ -565,7 +567,7 @@ class ResultExplanation(BaseModel):
 
 class ResultOut(BaseModel):
     text: str
-    lemma: str | None = Field(default=None, exclude=True, title="lemma")
+    text_id: str
     context: Optional[str] = None
     category: Optional[str] = None
     subcategory: Optional[str] = None
@@ -583,7 +585,7 @@ class ResultOut(BaseModel):
         client: namedtuple,
         lang: Language,
         text: str,
-        lemma: str,
+        text_id: str,
         full_text: str,
         offsets: dict,
         subcategory: str,
@@ -713,7 +715,7 @@ class ResultOut(BaseModel):
 
         return ResultOut(
             text=text,
-            lemma=lemma,
+            text_id=text_id,
             context=context,
             category=category,
             subcategory=subcategory,

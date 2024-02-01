@@ -28,7 +28,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 8,
             "subcategory": "agentic_advanced",
-            "text": "pushing"
+            "text": "pushing",
+            "text_id": "push"
         }
     ]
 }

@@ -34,7 +34,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 0,
             "subcategory": "titles",
-            "text": "Unser Facharzt"
+            "text": "Unser Facharzt",
+            "text_id": "Arzt"
         },
         {
             "alternatives": [
@@ -68,7 +69,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 27,
             "subcategory": "titles",
-            "text": "Fachärzte"
+            "text": "Fachärzte",
+            "text_id": "Arzt"
         },
         {
             "alternatives": [
@@ -93,7 +95,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 69,
             "subcategory": "function",
-            "text": "Juden"
+            "text": "Juden",
+            "text_id": "Jude"
         },
         {
             "alternatives": [
@@ -124,7 +127,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 76,
             "subcategory": "binary_pronouns_advanced",
-            "text": "Er"
+            "text": "Er",
+            "text_id": "er"
         },
         {
             "alternatives": [
@@ -148,7 +152,8 @@
             "proficiency_level": "openly_discriminating",
             "start": 87,
             "subcategory": "antisemitism",
-            "text": "Judenei"
+            "text": "Judenei",
+            "text_id": "Judenei"
         },
         {
             "alternatives": [
@@ -169,7 +174,8 @@
             "proficiency_level": "openly_discriminating",
             "start": 96,
             "subcategory": "sexism",
-            "text": "Hure"
+            "text": "Hure",
+            "text_id": "Hure"
         },
         {
             "alternatives": [
@@ -190,7 +196,8 @@
             "proficiency_level": "openly_discriminating",
             "start": 102,
             "subcategory": "sexism",
-            "text": "Hurehund"
+            "text": "Hurehund",
+            "text_id": "Hure"
         },
         {
             "alternatives": [
@@ -211,7 +218,8 @@
             "proficiency_level": "openly_discriminating",
             "start": 112,
             "subcategory": "sexism",
-            "text": "Katzenhurehund"
+            "text": "Katzenhurehund",
+            "text_id": "Hure"
         },
         {
             "alternatives": [
@@ -232,7 +240,8 @@
             "proficiency_level": "openly_discriminating",
             "start": 128,
             "subcategory": "sexism",
-            "text": "Katzenhure"
+            "text": "Katzenhure",
+            "text_id": "Hure"
         },
         {
             "alternatives": [
@@ -253,7 +262,8 @@
             "proficiency_level": "openly_discriminating",
             "start": 152,
             "subcategory": "sexism",
-            "text": "Mandschurehuremhure"
+            "text": "Mandschurehuremhure",
+            "text_id": "Hure"
         },
         {
             "alternatives": [
@@ -287,7 +297,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 173,
             "subcategory": "titles",
-            "text": "Ein Ingenieur"
+            "text": "Ein Ingenieur",
+            "text_id": "Ingenieur"
         },
         {
             "alternatives": [
@@ -321,7 +332,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 197,
             "subcategory": "titles",
-            "text": "Ein Elektroingenieur"
+            "text": "Ein Elektroingenieur",
+            "text_id": "Ingenieur"
         }
     ]
 }

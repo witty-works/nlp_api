@@ -34,7 +34,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 9,
             "subcategory": "agentic_advanced",
-            "text": "Probleme"
+            "text": "Probleme",
+            "text_id": "Problem"
         }
     ]
 }

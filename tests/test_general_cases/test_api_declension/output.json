@@ -15,7 +15,8 @@
             "label": "Rechtschreibfehler",
             "start": 43,
             "subcategory": "typos",
-            "text": "Diversitätsdimensionen"
+            "text": "Diversitätsdimensionen",
+            "text_id": "Diversitätsdimensionen"
         },
         {
             "alternatives": [
@@ -51,7 +52,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 6,
             "subcategory": "agentic",
-            "text": "leistet"
+            "text": "leistet",
+            "text_id": "leisten"
         },
         {
             "alternatives": [],
@@ -68,7 +70,8 @@
             "proficiency_level": "inclusive",
             "start": 14,
             "subcategory": "communal",
-            "text": "Unterstützung"
+            "text": "Unterstützung",
+            "text_id": "Unterstützung"
         },
         {
             "alternatives": [
@@ -102,7 +105,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 76,
             "subcategory": "age_old_advanced",
-            "text": "alt"
+            "text": "alt",
+            "text_id": "alt"
         },
         {
             "alternatives": [
@@ -138,7 +142,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 96,
             "subcategory": "exaggerating_advanced",
-            "text": "beste"
+            "text": "beste",
+            "text_id": "beste"
         }
     ]
 }
