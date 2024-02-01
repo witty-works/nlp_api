@@ -291,7 +291,7 @@ async def fetch_false_positives(rule: Rule, rewrite_to: str = None) -> list[str]
 
 static_rules = fetch_static_rules()
 
-supported_word_types = [word_type.value for word_type in WordType]
+supported_word_types = list(WordType._member_map_.values())
 
 with open("./training_data/lookup.json", "r") as fp:
     lookup = json.load(fp)
@@ -324,7 +324,7 @@ async def lifespan(app: FastAPI):
             from blackfire_conprof.profiler import Profiler
 
             app_name = os.environ.get("PLATFORM_APPLICATION_NAME")
-            #app_name += "-worker-%d" % (os.getpid(),)
+            # app_name += "-worker-%d" % (os.getpid(),)
             profiler = Profiler(application_name=app_name)
             profiler.start()
 
@@ -341,6 +341,7 @@ async def lifespan(app: FastAPI):
     global model
 
     import logging
+
     logger = logging.getLogger("aiosqlite")
     logger.setLevel(logging.ERROR)
 
