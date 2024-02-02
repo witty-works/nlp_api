@@ -782,7 +782,11 @@ class ResultOut(BaseModel):
                     continue
 
                 if alternative.is_inspiration:
-                    if alternative.label is not None and len(alternative.label):
+                    if (
+                        alternative.label is not None
+                        and len(alternative.label)
+                        and "💡" not in alternative.label
+                    ):
                         alternative.label = "💡 " + alternative.label
                     else:
                         alternative.label = "💡"
