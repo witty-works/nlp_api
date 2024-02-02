@@ -22,7 +22,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 8,
             "subcategory": "binary_pronouns_advanced",
-            "text": "she decides"
+            "text": "she decides",
+            "text_id": "she"
         },
         {
             "alternatives": [
@@ -53,7 +54,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 12,
             "subcategory": "agentic",
-            "text": "decides"
+            "text": "decides",
+            "text_id": "decide"
         }
     ]
 }

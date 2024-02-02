@@ -21,7 +21,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 3,
             "subcategory": "mental_wellbeing",
-            "text": "hanged"
+            "text": "hanged",
+            "text_id": "hanged"
         },
         {
             "alternatives": [
@@ -49,7 +50,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 22,
             "subcategory": "agentic_advanced",
-            "text": "analyzed"
+            "text": "analyzed",
+            "text_id": "analyze"
         },
         {
             "alternatives": [
@@ -83,7 +85,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 54,
             "subcategory": "function",
-            "text": "a chairman"
+            "text": "a chairman",
+            "text_id": "chairman"
         },
         {
             "alternatives": [
@@ -104,7 +107,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 68,
             "subcategory": "behavior",
-            "text": "an addict"
+            "text": "an addict",
+            "text_id": "addict"
         },
         {
             "alternatives": [
@@ -132,7 +136,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 89,
             "subcategory": "exaggerating",
-            "text": "top performer"
+            "text": "top performer",
+            "text_id": "top performer"
         },
         {
             "alternatives": [
@@ -159,7 +164,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 112,
             "subcategory": "vision_advanced",
-            "text": "an eye-opener"
+            "text": "an eye-opener",
+            "text_id": "eye-opener"
         }
     ]
 }

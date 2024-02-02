@@ -34,7 +34,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 11,
             "subcategory": "exaggerating",
-            "text": "Ninja"
+            "text": "Ninja",
+            "text_id": "Ninja"
         },
         {
             "alternatives": [
@@ -65,7 +66,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 17,
             "subcategory": "titles",
-            "text": "Programmierer"
+            "text": "Programmierer",
+            "text_id": "Programmierer"
         },
         {
             "alternatives": [
@@ -99,7 +101,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 42,
             "subcategory": "function",
-            "text": "Kunden"
+            "text": "Kunden",
+            "text_id": "Kunde"
         }
     ]
 }

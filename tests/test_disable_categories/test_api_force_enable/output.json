@@ -34,7 +34,8 @@
             "label": "Spelling mistake",
             "start": 2,
             "subcategory": "typos",
-            "text": "ammmm"
+            "text": "ammmm",
+            "text_id": "ammmm"
         },
         {
             "alternatives": [
@@ -56,7 +57,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 8,
             "subcategory": "filler_advanced",
-            "text": "very"
+            "text": "very",
+            "text_id": "very"
         }
     ]
 }

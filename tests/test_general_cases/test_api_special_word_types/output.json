@@ -17,7 +17,8 @@
             "proficiency_level": "inclusive",
             "start": 2,
             "subcategory": "communal",
-            "text": "felt"
+            "text": "felt",
+            "text_id": "feel"
         },
         {
             "alternatives": [
@@ -39,7 +40,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 7,
             "subcategory": "filler_advanced",
-            "text": "very"
+            "text": "very",
+            "text_id": "very"
         },
         {
             "alternatives": [],
@@ -55,7 +57,8 @@
             "proficiency_level": "inclusive",
             "start": 12,
             "subcategory": "emotional_security",
-            "text": "encouraged"
+            "text": "encouraged",
+            "text_id": "encouraged"
         }
     ]
 }

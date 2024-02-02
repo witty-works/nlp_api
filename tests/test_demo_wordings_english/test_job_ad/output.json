@@ -25,7 +25,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 3,
             "subcategory": "agentic_advanced",
-            "text": "an independent"
+            "text": "an independent",
+            "text_id": "independent"
         },
         {
             "alternatives": [
@@ -50,7 +51,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 18,
             "subcategory": "titles",
-            "text": "project manager"
+            "text": "project manager",
+            "text_id": "project manager"
         },
         {
             "alternatives": [
@@ -84,7 +86,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 58,
             "subcategory": "exaggerating",
-            "text": "exceptional"
+            "text": "exceptional",
+            "text_id": "exceptional"
         },
         {
             "alternatives": [
@@ -109,7 +112,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 70,
             "subcategory": "agentic",
-            "text": "challenges"
+            "text": "challenges",
+            "text_id": "challenge"
         },
         {
             "alternatives": [],
@@ -126,7 +130,8 @@
             "proficiency_level": "inclusive",
             "start": 86,
             "subcategory": "communal",
-            "text": "together"
+            "text": "together",
+            "text_id": "together"
         },
         {
             "alternatives": [
@@ -149,7 +154,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 105,
             "subcategory": "agentic",
-            "text": "ambitious"
+            "text": "ambitious",
+            "text_id": "ambitious"
         },
         {
             "alternatives": [
@@ -174,7 +180,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 149,
             "subcategory": "exaggerating",
-            "text": "top performance"
+            "text": "top performance",
+            "text_id": "top performance"
         }
     ]
 }

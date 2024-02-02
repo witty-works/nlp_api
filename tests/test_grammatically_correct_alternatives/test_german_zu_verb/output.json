@@ -31,7 +31,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 14,
             "subcategory": "agentic_advanced",
-            "text": "sichergestellt"
+            "text": "sichergestellt",
+            "text_id": "sicherstellen"
         },
         {
             "alternatives": [
@@ -62,7 +63,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 50,
             "subcategory": "agentic_advanced",
-            "text": "sicherzustellen"
+            "text": "sicherzustellen",
+            "text_id": "sicherstellen"
         },
         {
             "alternatives": [
@@ -90,7 +92,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 85,
             "subcategory": "agentic_advanced",
-            "text": "auszufechten"
+            "text": "auszufechten",
+            "text_id": "ausfechten"
         },
         {
             "alternatives": [
@@ -124,7 +127,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 114,
             "subcategory": "agentic_advanced",
-            "text": "zu gewinnen"
+            "text": "zu gewinnen",
+            "text_id": "gewinnen"
         }
     ]
 }

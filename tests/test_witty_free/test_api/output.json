@@ -17,7 +17,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 48,
             "subcategory": "plain_language_advanced",
-            "text": "um"
+            "text": "um",
+            "text_id": "um"
         },
         {
             "alternatives": [
@@ -52,7 +53,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 16,
             "subcategory": "hollow_advanced",
-            "text": "Arbeitskraft"
+            "text": "Arbeitskraft",
+            "text_id": "Arbeitskraft"
         },
         {
             "alternatives": [
@@ -86,7 +88,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 41,
             "subcategory": "function",
-            "text": "Kunden"
+            "text": "Kunden",
+            "text_id": "Kunde"
         },
         {
             "alternatives": [
@@ -120,7 +123,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 51,
             "subcategory": "exaggerating_advanced",
-            "text": "Erfolg"
+            "text": "Erfolg",
+            "text_id": "Erfolg"
         }
     ]
 }

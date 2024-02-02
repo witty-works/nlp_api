@@ -19,7 +19,8 @@
             "label": "Rechtschreibfehler",
             "start": 170,
             "subcategory": "typos",
-            "text": "Grüsse"
+            "text": "Grüsse",
+            "text_id": "Grüsse"
         },
         {
             "alternatives": [
@@ -52,7 +53,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 0,
             "subcategory": "formality_advanced",
-            "text": "Sehr geehrte"
+            "text": "Sehr geehrte",
+            "text_id": "Sehr geehrte"
         },
         {
             "alternatives": [
@@ -83,7 +85,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 13,
             "subcategory": "function",
-            "text": "Kollegen"
+            "text": "Kollegen",
+            "text_id": "Kollege"
         },
         {
             "alternatives": [
@@ -111,7 +114,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 33,
             "subcategory": "hidden_image",
-            "text": "eine Mannschaft"
+            "text": "eine Mannschaft",
+            "text_id": "Mannschaft"
         },
         {
             "alternatives": [
@@ -145,7 +149,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 57,
             "subcategory": "agentic_advanced",
-            "text": "Ehrgeiz"
+            "text": "Ehrgeiz",
+            "text_id": "Ehrgeiz"
         },
         {
             "alternatives": [],
@@ -162,7 +167,8 @@
             "proficiency_level": "inclusive",
             "start": 100,
             "subcategory": "communal",
-            "text": "lieben"
+            "text": "lieben",
+            "text_id": "lieb"
         },
         {
             "alternatives": [
@@ -187,7 +193,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 111,
             "subcategory": "agentic_advanced",
-            "text": "herausgefordert"
+            "text": "herausgefordert",
+            "text_id": "herausgefordert"
         },
         {
             "alternatives": [
@@ -221,7 +228,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 142,
             "subcategory": "agentic_advanced",
-            "text": "zähle auf"
+            "text": "zähle auf",
+            "text_id": "zählen auf"
         },
         {
             "alternatives": [],
@@ -238,7 +246,8 @@
             "proficiency_level": "inclusive",
             "start": 158,
             "subcategory": "communal",
-            "text": "Freundliche"
+            "text": "Freundliche",
+            "text_id": "freundlich"
         }
     ]
 }

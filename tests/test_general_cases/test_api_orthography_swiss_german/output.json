@@ -19,7 +19,8 @@
             "label": "Gross-/Kleinschreibung",
             "start": 39,
             "subcategory": "casing",
-            "text": "Wie"
+            "text": "Wie",
+            "text_id": "Wie"
         }
     ]
 }

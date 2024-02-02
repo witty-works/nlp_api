@@ -31,7 +31,8 @@
             "label": "Rechtschreibfehler",
             "start": 42,
             "subcategory": "typos",
-            "text": "mitarbeiter"
+            "text": "mitarbeiter",
+            "text_id": "mitarbeiter"
         },
         {
             "alternatives": [
@@ -62,7 +63,8 @@
             "label": "Rechtschreibfehler",
             "start": 67,
             "subcategory": "typos",
-            "text": "Ärzt"
+            "text": "Ärzt",
+            "text_id": "Ärzt"
         },
         {
             "alternatives": [
@@ -93,7 +95,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 0,
             "subcategory": "binary_pronouns_advanced",
-            "text": "Sie"
+            "text": "Sie",
+            "text_id": "sie"
         },
         {
             "alternatives": [
@@ -114,7 +117,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 17,
             "subcategory": "gendered_denominations_ending_advanced",
-            "text": "/in"
+            "text": "/in",
+            "text_id": "/in"
         },
         {
             "alternatives": [
@@ -145,7 +149,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 35,
             "subcategory": "binary_pronouns_advanced",
-            "text": "Er"
+            "text": "Er",
+            "text_id": "er"
         },
         {
             "alternatives": [
@@ -179,7 +184,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 42,
             "subcategory": "titles",
-            "text": "mitarbeiter"
+            "text": "mitarbeiter",
+            "text_id": "Mitarbeiter"
         },
         {
             "alternatives": [
@@ -200,7 +206,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 71,
             "subcategory": "gendered_denominations_ending_advanced",
-            "text": "(-innen)"
+            "text": "(-innen)",
+            "text_id": "(-)"
         }
     ]
 }

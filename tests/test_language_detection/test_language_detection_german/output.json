@@ -17,7 +17,8 @@
             "proficiency_level": "inclusive",
             "start": 0,
             "subcategory": "communal",
-            "text": "liebe"
+            "text": "liebe",
+            "text_id": "lieb"
         }
     ]
 }

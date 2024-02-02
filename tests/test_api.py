@@ -1333,6 +1333,7 @@ def test_rule():
 
         expected = [
             {
+                "text_id": "test",
                 "text": "has special needs",
                 "context": "She has special needs",
                 "category": "corporate_rules",
@@ -1375,6 +1376,7 @@ def test_rule():
 
         expected = [
             {
+                "text_id": "test",
                 "text": "langsam",
                 "context": "Du arbeitest sehr sehr langsam",
                 "category": "corporate_rules",
@@ -1407,6 +1409,7 @@ def test_rule():
 
         expected = [
             {
+                "text_id": "test",
                 "text": "super schnelle Entwickler unter 30",
                 "context": "Wir suchen super schnelle Entwickler unter <NUMBER>",
                 "category": "corporate_rules",

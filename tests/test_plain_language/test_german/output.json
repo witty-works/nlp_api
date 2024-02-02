@@ -17,7 +17,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 30,
             "subcategory": "plain_language_advanced",
-            "text": "oder"
+            "text": "oder",
+            "text_id": "oder"
         },
         {
             "alternatives": [],
@@ -34,7 +35,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 107,
             "subcategory": "plain_language_advanced",
-            "text": "geschrieben"
+            "text": "geschrieben",
+            "text_id": "geschrieben"
         },
         {
             "alternatives": [],
@@ -51,7 +53,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 124,
             "subcategory": "plain_language_advanced",
-            "text": "Donaudampfschifffahrt"
+            "text": "Donaudampfschifffahrt",
+            "text_id": "Donaudampfschifffahrt"
         },
         {
             "alternatives": [],
@@ -68,7 +71,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 154,
             "subcategory": "plain_language_advanced",
-            "text": "nicht"
+            "text": "nicht",
+            "text_id": "nicht"
         },
         {
             "alternatives": [],
@@ -85,7 +89,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 176,
             "subcategory": "plain_language_advanced",
-            "text": "Nutzung"
+            "text": "Nutzung",
+            "text_id": "Nutzung"
         },
         {
             "alternatives": [],
@@ -102,7 +107,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 184,
             "subcategory": "plain_language_advanced",
-            "text": "des Genitivs"
+            "text": "des Genitivs",
+            "text_id": "des Genitivs"
         },
         {
             "alternatives": [],
@@ -119,7 +125,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 212,
             "subcategory": "plain_language_advanced",
-            "text": "wäre"
+            "text": "wäre",
+            "text_id": "wäre"
         },
         {
             "alternatives": [],
@@ -136,7 +143,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 232,
             "subcategory": "plain_language_advanced",
-            "text": "dass"
+            "text": "dass",
+            "text_id": "dass"
         },
         {
             "alternatives": [],
@@ -153,7 +161,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 241,
             "subcategory": "plain_language_advanced",
-            "text": "Glückspilze"
+            "text": "Glückspilze",
+            "text_id": "Glückspilze"
         },
         {
             "alternatives": [],
@@ -170,7 +179,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 307,
             "subcategory": "anglicism_advanced",
-            "text": "Briefing"
+            "text": "Briefing",
+            "text_id": "Briefing"
         },
         {
             "alternatives": [],
@@ -187,7 +197,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 333,
             "subcategory": "anglicism_advanced",
-            "text": "Performance"
+            "text": "Performance",
+            "text_id": "Performance"
         },
         {
             "alternatives": [],
@@ -204,7 +215,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 361,
             "subcategory": "plain_language_advanced",
-            "text": "wie"
+            "text": "wie",
+            "text_id": "wie"
         },
         {
             "alternatives": [],
@@ -221,7 +233,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 414,
             "subcategory": "plain_language_advanced",
-            "text": "Lösung"
+            "text": "Lösung",
+            "text_id": "Lösung"
         },
         {
             "alternatives": [],
@@ -238,7 +251,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 429,
             "subcategory": "anglicism_advanced",
-            "text": "Problem"
+            "text": "Problem",
+            "text_id": "Problem"
         },
         {
             "alternatives": [],
@@ -255,7 +269,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 444,
             "subcategory": "plain_language_advanced",
-            "text": "und"
+            "text": "und",
+            "text_id": "und"
         },
         {
             "alternatives": [],
@@ -272,7 +287,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 476,
             "subcategory": "plain_language_advanced",
-            "text": ", verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal wieder herausfinden müssen"
+            "text": ", verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal wieder herausfinden müssen",
+            "text_id": ", verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal wieder herausfinden müssen"
         },
         {
             "alternatives": [
@@ -300,7 +316,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 15,
             "subcategory": "binary_pronouns_advanced",
-            "text": "Ihren"
+            "text": "Ihren",
+            "text_id": "ihren"
         },
         {
             "alternatives": [
@@ -322,7 +339,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 92,
             "subcategory": "filler_advanced",
-            "text": "nur"
+            "text": "nur",
+            "text_id": "nur"
         },
         {
             "alternatives": [
@@ -344,7 +362,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 197,
             "subcategory": "filler_advanced",
-            "text": "auch"
+            "text": "auch",
+            "text_id": "auch"
         },
         {
             "alternatives": [
@@ -366,7 +385,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 217,
             "subcategory": "filler",
-            "text": "sogar"
+            "text": "sogar",
+            "text_id": "sogar"
         },
         {
             "alternatives": [
@@ -397,7 +417,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 237,
             "subcategory": "binary_pronouns_advanced",
-            "text": "Sie"
+            "text": "Sie",
+            "text_id": "sie"
         },
         {
             "alternatives": [
@@ -424,7 +445,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 278,
             "subcategory": "abbreviation_advanced",
-            "text": "KPI"
+            "text": "KPI",
+            "text_id": "KPI"
         },
         {
             "alternatives": [
@@ -451,7 +473,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 307,
             "subcategory": "anglicism_advanced",
-            "text": "Briefing"
+            "text": "Briefing",
+            "text_id": "Briefing"
         },
         {
             "alternatives": [
@@ -481,7 +504,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 333,
             "subcategory": "anglicism_advanced",
-            "text": "Performance"
+            "text": "Performance",
+            "text_id": "Performance"
         },
         {
             "alternatives": [],
@@ -498,7 +522,8 @@
             "proficiency_level": "inclusive",
             "start": 376,
             "subcategory": "d_and_i",
-            "text": "*innen"
+            "text": "*innen",
+            "text_id": "*in"
         },
         {
             "alternatives": [
@@ -532,7 +557,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 425,
             "subcategory": "binary_pronouns_advanced",
-            "text": "ihr"
+            "text": "ihr",
+            "text_id": "ihr"
         },
         {
             "alternatives": [
@@ -566,7 +592,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 429,
             "subcategory": "agentic_advanced",
-            "text": "Problem"
+            "text": "Problem",
+            "text_id": "Problem"
         },
         {
             "alternatives": [
@@ -600,7 +627,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 531,
             "subcategory": "binary_pronouns_advanced",
-            "text": "sie"
+            "text": "sie",
+            "text_id": "sie"
         },
         {
             "alternatives": [
@@ -622,7 +650,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 540,
             "subcategory": "filler_advanced",
-            "text": "einmal"
+            "text": "einmal",
+            "text_id": "einmal"
         },
         {
             "alternatives": [
@@ -644,7 +673,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 547,
             "subcategory": "filler_advanced",
-            "text": "wieder"
+            "text": "wieder",
+            "text_id": "wieder"
         }
     ]
 }

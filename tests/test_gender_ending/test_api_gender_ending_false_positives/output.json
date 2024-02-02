@@ -21,7 +21,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 85,
             "subcategory": "gendered_denominations_ending_advanced",
-            "text": "/in"
+            "text": "/in",
+            "text_id": "/in"
         },
         {
             "alternatives": [
@@ -52,7 +53,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 90,
             "subcategory": "binary_pronouns_advanced",
-            "text": "Er"
+            "text": "Er",
+            "text_id": "er"
         },
         {
             "alternatives": [
@@ -80,7 +82,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 97,
             "subcategory": "titles",
-            "text": "Arbeiter"
+            "text": "Arbeiter",
+            "text_id": "Arbeiter"
         },
         {
             "alternatives": [
@@ -114,7 +117,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 107,
             "subcategory": "titles",
-            "text": "Mitarbeiter"
+            "text": "Mitarbeiter",
+            "text_id": "Mitarbeiter"
         },
         {
             "alternatives": [
@@ -142,7 +146,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 123,
             "subcategory": "titles",
-            "text": "Lagerarbeiter"
+            "text": "Lagerarbeiter",
+            "text_id": "Arbeiter"
         },
         {
             "alternatives": [
@@ -173,7 +178,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 138,
             "subcategory": "binary_pronouns_advanced",
-            "text": "Sie"
+            "text": "Sie",
+            "text_id": "sie"
         },
         {
             "alternatives": [
@@ -207,7 +213,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 161,
             "subcategory": "titles",
-            "text": "Mitarbeiter"
+            "text": "Mitarbeiter",
+            "text_id": "Mitarbeiter"
         }
     ]
 }

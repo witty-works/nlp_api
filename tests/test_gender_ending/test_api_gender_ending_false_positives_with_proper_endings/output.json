@@ -34,7 +34,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 99,
             "subcategory": "titles",
-            "text": "Fachfrau"
+            "text": "Fachfrau",
+            "text_id": "Fachmann"
         },
         {
             "alternatives": [
@@ -68,7 +69,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 109,
             "subcategory": "titles",
-            "text": "Fachmann"
+            "text": "Fachmann",
+            "text_id": "Fachmann"
         }
     ]
 }

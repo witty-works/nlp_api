@@ -17,7 +17,8 @@
             "proficiency_level": "inclusive",
             "start": 3,
             "subcategory": "communal",
-            "text": "need"
+            "text": "need",
+            "text_id": "need"
         },
         {
             "alternatives": [
@@ -46,7 +47,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 8,
             "subcategory": "gender_specific_abbreviation",
-            "text": "w/m/v"
+            "text": "w/m/v",
+            "text_id": "(f/m..)"
         }
     ]
 }

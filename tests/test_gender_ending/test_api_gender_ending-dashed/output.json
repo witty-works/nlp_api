@@ -28,7 +28,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 0,
             "subcategory": "titles",
-            "text": "Bäcker-Confiseur-Konditor"
+            "text": "Bäcker-Confiseur-Konditor",
+            "text_id": "Konditor"
         },
         {
             "alternatives": [
@@ -56,7 +57,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 31,
             "subcategory": "titles",
-            "text": "Bäckerin-Confiseurin-Konditorin"
+            "text": "Bäckerin-Confiseurin-Konditorin",
+            "text_id": "Konditor"
         },
         {
             "alternatives": [
@@ -84,7 +86,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 68,
             "subcategory": "titles",
-            "text": "Bäcker-Confiseur-Konditorin"
+            "text": "Bäcker-Confiseur-Konditorin",
+            "text_id": "Konditor"
         },
         {
             "alternatives": [
@@ -112,7 +115,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 101,
             "subcategory": "titles",
-            "text": "Immobilien-Asset-Manager"
+            "text": "Immobilien-Asset-Manager",
+            "text_id": "Manager"
         }
     ]
 }

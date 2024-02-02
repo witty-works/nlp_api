@@ -19,7 +19,8 @@
             "label": "Typography",
             "start": 6,
             "subcategory": "typography",
-            "text": " ,"
+            "text": " ,",
+            "text_id": " ,"
         },
         {
             "alternatives": [
@@ -38,7 +39,8 @@
             "label": "Typography",
             "start": 8,
             "subcategory": "typography",
-            "text": "  "
+            "text": "  ",
+            "text_id": "  "
         },
         {
             "alternatives": [
@@ -60,7 +62,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 0,
             "subcategory": "filler_advanced",
-            "text": "Rather"
+            "text": "Rather",
+            "text_id": "rather"
         }
     ]
 }

@@ -6,6 +6,7 @@ def invert_list_to_dict(list_to_convert: list) -> dict:
 
 rule_columns = [
     "id",
+    "text_id",
     "parent_id",
     "lemma",
     "language",

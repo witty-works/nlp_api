@@ -28,7 +28,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 13,
             "subcategory": "titles",
-            "text": "der Manager"
+            "text": "der Manager",
+            "text_id": "Manager"
         },
         {
             "alternatives": [
@@ -56,7 +57,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 29,
             "subcategory": "leadership",
-            "text": "dein Boss"
+            "text": "dein Boss",
+            "text_id": "Boss"
         }
     ]
 }

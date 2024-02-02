@@ -31,7 +31,8 @@
             "label": "Rechtschreibfehler",
             "start": 0,
             "subcategory": "typos",
-            "text": "Einflußvermögen"
+            "text": "Einflußvermögen",
+            "text_id": "Einflußvermögen"
         },
         {
             "alternatives": [
@@ -65,7 +66,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 64,
             "subcategory": "agentic_advanced",
-            "text": "überlegen"
+            "text": "überlegen",
+            "text_id": "überlegen"
         }
     ]
 }

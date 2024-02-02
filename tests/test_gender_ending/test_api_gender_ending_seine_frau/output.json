@@ -28,7 +28,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 8,
             "subcategory": "gender_identity",
-            "text": "seine Frau"
+            "text": "seine Frau",
+            "text_id": "seine Frau"
         }
     ]
 }

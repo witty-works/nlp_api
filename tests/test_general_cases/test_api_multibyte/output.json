@@ -25,7 +25,8 @@
             "label": "Spelling mistake",
             "start": 19,
             "subcategory": "typos",
-            "text": "gooal"
+            "text": "gooal",
+            "text_id": "gooal"
         },
         {
             "alternatives": [
@@ -56,7 +57,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 3,
             "subcategory": "agentic_advanced",
-            "text": "Power"
+            "text": "Power",
+            "text_id": "power"
         },
         {
             "alternatives": [
@@ -81,7 +83,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 28,
             "subcategory": "exaggerating",
-            "text": "ninja"
+            "text": "ninja",
+            "text_id": "ninja"
         }
     ]
 }

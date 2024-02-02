@@ -34,7 +34,8 @@
             "label": "Rechtschreibfehler",
             "start": 116,
             "subcategory": "typos",
-            "text": "Indicator"
+            "text": "Indicator",
+            "text_id": "Indicator"
         },
         {
             "alternatives": [
@@ -59,7 +60,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 34,
             "subcategory": "hollow",
-            "text": "internationale"
+            "text": "internationale",
+            "text_id": "international"
         },
         {
             "alternatives": [],
@@ -76,7 +78,8 @@
             "proficiency_level": "inclusive",
             "start": 60,
             "subcategory": "communal",
-            "text": "unterstützen"
+            "text": "unterstützen",
+            "text_id": "unterstützen"
         },
         {
             "alternatives": [
@@ -106,7 +109,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 104,
             "subcategory": "anglicism_advanced",
-            "text": "Performance"
+            "text": "Performance",
+            "text_id": "Performance"
         },
         {
             "alternatives": [
@@ -133,7 +137,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 145,
             "subcategory": "abbreviation_advanced",
-            "text": "KPI"
+            "text": "KPI",
+            "text_id": "KPI"
         }
     ]
 }

@@ -21,7 +21,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 29,
             "subcategory": "gendered_denominations_ending_advanced",
-            "text": "*innen"
+            "text": "*innen",
+            "text_id": "*in"
         },
         {
             "alternatives": [
@@ -42,7 +43,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 44,
             "subcategory": "gendered_denominations_ending_advanced",
-            "text": "*in"
+            "text": "*in",
+            "text_id": "*in"
         },
         {
             "alternatives": [
@@ -63,7 +65,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 56,
             "subcategory": "gendered_denominations_ending_advanced",
-            "text": "die:der"
+            "text": "die:der",
+            "text_id": ":inarticle"
         },
         {
             "alternatives": [
@@ -84,7 +87,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 68,
             "subcategory": "gendered_denominations_ending_advanced",
-            "text": ":in"
+            "text": ":in",
+            "text_id": ":in"
         },
         {
             "alternatives": [],
@@ -101,7 +105,8 @@
             "proficiency_level": "inclusive",
             "start": 92,
             "subcategory": "d_and_i",
-            "text": "/-in"
+            "text": "/-in",
+            "text_id": "/-in"
         }
     ]
 }

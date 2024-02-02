@@ -31,7 +31,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 21,
             "subcategory": "agentic_advanced",
-            "text": "analytical"
+            "text": "analytical",
+            "text_id": "analytical"
         },
         {
             "alternatives": [
@@ -56,7 +57,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 32,
             "subcategory": "exaggerating",
-            "text": "ninja"
+            "text": "ninja",
+            "text_id": "ninja"
         },
         {
             "alternatives": [
@@ -77,7 +79,8 @@
             "proficiency_level": "openly_discriminating",
             "start": 77,
             "subcategory": "offensive_language",
-            "text": "ass"
+            "text": "ass",
+            "text_id": "ass"
         },
         {
             "alternatives": [],
@@ -94,7 +97,8 @@
             "proficiency_level": "inclusive",
             "start": 89,
             "subcategory": "communal",
-            "text": "servant leadership"
+            "text": "servant leadership",
+            "text_id": "servant leadership"
         }
     ]
 }

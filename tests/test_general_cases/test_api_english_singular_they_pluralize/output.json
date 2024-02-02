@@ -22,7 +22,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 0,
             "subcategory": "binary_pronouns_advanced",
-            "text": "He is"
+            "text": "He is",
+            "text_id": "he"
         },
         {
             "alternatives": [
@@ -44,7 +45,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 15,
             "subcategory": "binary_pronouns_advanced",
-            "text": "She builds, cleans and refurbishes"
+            "text": "She builds, cleans and refurbishes",
+            "text_id": "she"
         },
         {
             "alternatives": [
@@ -66,7 +68,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 70,
             "subcategory": "binary_pronouns_advanced",
-            "text": "hers"
+            "text": "hers",
+            "text_id": "hers"
         }
     ]
 }

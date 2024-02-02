@@ -17,7 +17,8 @@
             "proficiency_level": "inclusive",
             "start": 10,
             "subcategory": "communal",
-            "text": "team"
+            "text": "team",
+            "text_id": "team"
         },
         {
             "alternatives": [
@@ -40,7 +41,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 18,
             "subcategory": "agentic",
-            "text": "ambitious"
+            "text": "ambitious",
+            "text_id": "ambitious"
         },
         {
             "alternatives": [
@@ -65,7 +67,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 44,
             "subcategory": "exaggerating",
-            "text": "top performance"
+            "text": "top performance",
+            "text_id": "top performance"
         }
     ]
 }

@@ -255,6 +255,7 @@ def create_rule(lang, row, rewrite_to: str = None) -> Rule:
         rule.lemma = Language.convert_to(rule.lemma, LangVariantType.enGB)
         rule.words = Language.convert_to(rule.words, LangVariantType.enGB)
 
+    rule.text_id = row[rule_columns["text_id"]]
     rule.parent_id = row[rule_columns["parent_id"]]
     rule.pattern = row[rule_columns["pattern"]]
     rule.is_pattern_match = row[rule_columns["is_pattern_match"]]
@@ -275,7 +276,7 @@ async def fetch_false_positives(rule: Rule, rewrite_to: str = None) -> list[str]
         return list(rule.false_positives)
 
     query = "SELECT false_positive FROM rules_falsepositive WHERE rule_id = ?"
-    parameters = [rule.name]
+    parameters = [rule.id]
 
     false_positives = []
     rows = await fetch_rows(query, parameters)
@@ -2163,7 +2164,7 @@ def is_gendered_denom_rule(lang: LangType, subcategories) -> bool:
     return False
 
 
-async def context_false_positives(lang: LangType, tokens: Doc, list_results: list):
+async def context_false_positives(lang: LangType, tokens: Doc, list_results: list[ResultOut]):
     if (
         lang not in settings.context_checker
         or len(static_rules[lang]["context_check"]) == 0
@@ -2174,7 +2175,7 @@ async def context_false_positives(lang: LangType, tokens: Doc, list_results: lis
     sentences_to_check = defaultdict(list)
     for i in range(len(list_results)):
         result = list_results[i]
-        if result.lemma in static_rules[lang]["context_check"]:
+        if result.text_id in static_rules[lang]["context_check"]:
             if len(sentences) == 0:
                 for sentence in tokens.sents:
                     sentences[sentence.end_char] = sentence.text
@@ -2352,12 +2353,12 @@ async def fetch_rule_alternatives(
     show_inspiration_alternatives: bool,
     locale: str,
 ) -> list[Alternative]:
-    if isinstance(rule.name, str):
+    if isinstance(rule.id, str):
         return rule.alternatives
 
     query = f"SELECT {alternative_column_list} FROM rules_alternative WHERE rule_id = ?"
 
-    parameters = [rule.name]
+    parameters = [rule.id]
 
     if not show_inspiration_alternatives:
         query += " and is_inspiration = 0"
@@ -4407,7 +4408,7 @@ async def gendered_denom_analysis_de(
         if len(generated_alternatives) != 2:
             if generated_alternative in split_char:
                 logger.error(
-                    f"Rule '{rule.name}' has a malformed alternative '{alternative.lemma}' => '{generated_alternative}'."
+                    f"Rule '{rule.id}' has a malformed alternative '{alternative.lemma}' => '{generated_alternative}'."
                 )
             continue
 
@@ -4824,7 +4825,7 @@ async def regex_match(
                 client,
                 lang,
                 text,
-                token.lemma_,
+                rule.text_id,
                 full_text,
                 offsets,
                 subcategory,
@@ -5132,7 +5133,7 @@ async def rule_check(
                 client,
                 lang,
                 text,
-                token.lemma_,
+                rule.text_id,
                 full_text,
                 offsets,
                 subcategory,
@@ -5386,7 +5387,7 @@ def detect_non_inclusive_emoji(
                 client,
                 lang,
                 token.text,
-                token.lemma_,
+                token.text,
                 full_text,
                 offsets,
                 subcategory,

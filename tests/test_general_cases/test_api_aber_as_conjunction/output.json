@@ -22,7 +22,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 80,
             "subcategory": "filler_advanced",
-            "text": "so"
+            "text": "so",
+            "text_id": "so"
         },
         {
             "alternatives": [
@@ -44,7 +45,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 117,
             "subcategory": "filler_advanced",
-            "text": "aber"
+            "text": "aber",
+            "text_id": "aber"
         }
     ]
 }

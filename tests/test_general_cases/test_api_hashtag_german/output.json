@@ -17,7 +17,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 9,
             "subcategory": "plain_language",
-            "text": "#diebesten"
+            "text": "#diebesten",
+            "text_id": "#foobar"
         }
     ]
 }

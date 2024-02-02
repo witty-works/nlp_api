@@ -19,7 +19,8 @@
             "label": "Punctuation",
             "start": 121,
             "subcategory": "punctuation",
-            "text": "."
+            "text": ".",
+            "text_id": "."
         },
         {
             "alternatives": [
@@ -40,7 +41,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 0,
             "subcategory": "classism",
-            "text": "Lower-class"
+            "text": "Lower-class",
+            "text_id": "lower-class"
         },
         {
             "alternatives": [
@@ -61,7 +63,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 16,
             "subcategory": "classism",
-            "text": "low-class"
+            "text": "low-class",
+            "text_id": "low-class"
         },
         {
             "alternatives": [
@@ -96,7 +99,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 75,
             "subcategory": "exaggerating",
-            "text": "top-performing"
+            "text": "top-performing",
+            "text_id": "top-performing"
         },
         {
             "alternatives": [
@@ -140,7 +144,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 108,
             "subcategory": "exaggerating",
-            "text": "top-performer"
+            "text": "top-performer",
+            "text_id": "top-performer"
         },
         {
             "alternatives": [
@@ -175,7 +180,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 132,
             "subcategory": "exaggerating",
-            "text": "top-performing"
+            "text": "top-performing",
+            "text_id": "top-performing"
         },
         {
             "alternatives": [],
@@ -192,7 +198,8 @@
             "proficiency_level": "inclusive",
             "start": 147,
             "subcategory": "communal",
-            "text": "team"
+            "text": "team",
+            "text_id": "team"
         }
     ]
 }

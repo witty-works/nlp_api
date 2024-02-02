@@ -23,7 +23,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 15,
             "subcategory": "agentic",
-            "text": "an ambitious"
+            "text": "an ambitious",
+            "text_id": "ambitious"
         }
     ]
 }

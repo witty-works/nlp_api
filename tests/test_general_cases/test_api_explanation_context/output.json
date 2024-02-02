@@ -32,7 +32,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 8,
             "subcategory": "hollow_advanced",
-            "text": "hoch motiviert"
+            "text": "hoch motiviert",
+            "text_id": "hoch motiviert"
         }
     ]
 }
