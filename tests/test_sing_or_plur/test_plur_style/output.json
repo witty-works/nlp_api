@@ -29,7 +29,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 36,
             "subcategory": "exaggerating_advanced",
-            "text": "competitors"
+            "text": "competitors",
+            "text_id": "competitor"
         }
     ]
 }

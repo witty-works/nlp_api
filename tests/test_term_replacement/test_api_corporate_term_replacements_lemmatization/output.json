@@ -34,7 +34,8 @@
             "label": "Spelling mistake",
             "start": 64,
             "subcategory": "typos",
-            "text": "wELT"
+            "text": "wELT",
+            "text_id": "wELT"
         },
         {
             "alternatives": [
@@ -54,7 +55,8 @@
             "label": "Dictionary",
             "start": 2,
             "subcategory": "corporate_rules",
-            "text": "ran"
+            "text": "ran",
+            "text_id": "run"
         },
         {
             "alternatives": [
@@ -74,7 +76,8 @@
             "label": "Dictionary",
             "start": 23,
             "subcategory": "corporate_rules",
-            "text": "running"
+            "text": "running",
+            "text_id": "run"
         },
         {
             "alternatives": [
@@ -94,7 +97,8 @@
             "label": "Dictionary",
             "start": 44,
             "subcategory": "corporate_rules",
-            "text": "foo bar"
+            "text": "foo bar",
+            "text_id": "foo bar"
         }
     ]
 }

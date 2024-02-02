@@ -15,7 +15,7 @@
                 }
             ],
             "category": "cultural-diversity",
-            "context": "In der Vergangenheit wurden Menschen abgezockt. Er zockte ab. Er zockte uns ab.",
+            "context": "In der Vergangenheit wurden Menschen abgezockt. Es zockte ab. Es zockte uns ab. Du siehst schwarz. Du siehst total schwarz. Es wird schwarzsehen.",
             "end": 46,
             "explanation": {
                 "icon": "😒",
@@ -27,38 +27,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 37,
             "subcategory": "yiddish-pejoratives_advanced",
-            "text": "abgezockt"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "Sie*er"
-                },
-                {
-                    "text": "Sie/er"
-                },
-                {
-                    "text": "Du"
-                },
-                {
-                    "text": "Sie"
-                }
-            ],
-            "category": "gender-orientation",
-            "context": "In der Vergangenheit wurden Menschen abgezockt. Er zockte ab. Er zockte uns ab.",
-            "end": 50,
-            "explanation": {
-                "content": "advanced",
-                "icon": "😟",
-                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
-                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Geschlecht + Orientierung: Binäre Pronomen",
-            "proficiency_level": "unconscious_bias",
-            "start": 48,
-            "subcategory": "binary_pronouns_advanced",
-            "text": "Er"
+            "text": "abgezockt",
+            "text_id": "abzocken"
         },
         {
             "alternatives": [
@@ -73,7 +43,7 @@
                 }
             ],
             "category": "cultural-diversity",
-            "context": "In der Vergangenheit wurden Menschen abgezockt. Er zockte ab. Er zockte uns ab.",
+            "context": "In der Vergangenheit wurden Menschen abgezockt. Es zockte ab. Es zockte uns ab. Du siehst schwarz. Du siehst total schwarz. Es wird schwarzsehen.",
             "end": 60,
             "explanation": {
                 "icon": "😒",
@@ -85,53 +55,23 @@
             "proficiency_level": "unconscious_bias",
             "start": 51,
             "subcategory": "yiddish-pejoratives_advanced",
-            "text": "zockte ab"
+            "text": "zockte ab",
+            "text_id": "abzocken"
         },
         {
             "alternatives": [
                 {
-                    "text": "Sie*er"
+                    "text": "nahm aus"
                 },
                 {
-                    "text": "Sie/er"
+                    "text": "prellte"
                 },
                 {
-                    "text": "Du"
-                },
-                {
-                    "text": "Sie"
-                }
-            ],
-            "category": "gender-orientation",
-            "context": "In der Vergangenheit wurden Menschen abgezockt. Er zockte ab. Er zockte uns ab.",
-            "end": 64,
-            "explanation": {
-                "content": "advanced",
-                "icon": "😟",
-                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
-                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Geschlecht + Orientierung: Binäre Pronomen",
-            "proficiency_level": "unconscious_bias",
-            "start": 62,
-            "subcategory": "binary_pronouns_advanced",
-            "text": "Er"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "ausnehmen"
-                },
-                {
-                    "text": "prellen"
-                },
-                {
-                    "text": "abkassieren"
+                    "text": "kassierte ab"
                 }
             ],
             "category": "cultural-diversity",
-            "context": "In der Vergangenheit wurden Menschen abgezockt. Er zockte ab. Er zockte uns ab.",
+            "context": "In der Vergangenheit wurden Menschen abgezockt. Es zockte ab. Es zockte uns ab. Du siehst schwarz. Du siehst total schwarz. Es wird schwarzsehen.",
             "end": 71,
             "explanation": {
                 "icon": "😒",
@@ -143,7 +83,170 @@
             "proficiency_level": "unconscious_bias",
             "start": 65,
             "subcategory": "yiddish-pejoratives_advanced",
-            "text": "zockte"
+            "text": "zockte",
+            "text_id": "abzocken"
+        },
+        {
+            "alternatives": [
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Schlimmes befürchten"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "keine Perspektive sehen"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "keine Hoffnung sehen"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "fernsehen, ohne Rundfunkgebühren zu zahlen"
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "In der Vergangenheit wurden Menschen abgezockt. Es zockte ab. Es zockte uns ab. Du siehst schwarz. Du siehst total schwarz. Es wird schwarzsehen.",
+            "end": 97,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😒",
+                "text": "Beschreibe gut und schlecht nicht mit Farbwörtern",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/farbwörter?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Kulturelle Diversität: Farbwörter",
+            "proficiency_level": "unconscious_bias",
+            "start": 83,
+            "subcategory": "color",
+            "text": "siehst schwarz",
+            "text_id": "schwarzsehen"
+        },
+        {
+            "alternatives": [
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Schlimmes befürchten"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "keine Perspektive sehen"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "keine Hoffnung sehen"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "fernsehen, ohne Rundfunkgebühren zu zahlen"
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "der Vergangenheit wurden Menschen abgezockt. Es zockte ab. Es zockte uns ab. Du siehst schwarz. Du siehst total schwarz. Es wird schwarzsehen.",
+            "end": 108,
+            "explanation": {
+                "content": "advanced",
+                "context": "siehst .. schwarz",
+                "icon": "😒",
+                "text": "Beschreibe gut und schlecht nicht mit Farbwörtern",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/farbwörter?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Kulturelle Diversität: Farbwörter",
+            "proficiency_level": "unconscious_bias",
+            "start": 102,
+            "subcategory": "color",
+            "text": "siehst",
+            "text_id": "schwarzsehen"
+        },
+        {
+            "alternatives": [
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Schlimmes befürchten"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "keine Perspektive sehen"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "keine Hoffnung sehen"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "fernsehen, ohne Rundfunkgebühren zu zahlen"
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "nheit wurden Menschen abgezockt. Es zockte ab. Es zockte uns ab. Du siehst schwarz. Du siehst total schwarz. Es wird schwarzsehen.",
+            "end": 122,
+            "explanation": {
+                "content": "advanced",
+                "context": "siehst .. schwarz",
+                "icon": "😒",
+                "text": "Beschreibe gut und schlecht nicht mit Farbwörtern",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/farbwörter?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Kulturelle Diversität: Farbwörter",
+            "proficiency_level": "unconscious_bias",
+            "start": 115,
+            "subcategory": "color",
+            "text": "schwarz",
+            "text_id": "schwarzsehen"
+        },
+        {
+            "alternatives": [
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Schlimmes befürchten"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "keine Perspektive sehen"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "keine Hoffnung sehen"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "fernsehen, ohne Rundfunkgebühren zu zahlen"
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "chen abgezockt. Es zockte ab. Es zockte uns ab. Du siehst schwarz. Du siehst total schwarz. Es wird schwarzsehen.",
+            "end": 144,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😒",
+                "text": "Beschreibe gut und schlecht nicht mit Farbwörtern",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/farbwörter?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Kulturelle Diversität: Farbwörter",
+            "proficiency_level": "unconscious_bias",
+            "start": 132,
+            "subcategory": "color",
+            "text": "schwarzsehen",
+            "text_id": "schwarzsehen"
         }
     ]
 }

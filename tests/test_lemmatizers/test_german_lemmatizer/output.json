@@ -31,7 +31,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 18,
             "subcategory": "agentic_advanced",
-            "text": "hartgesotten"
+            "text": "hartgesotten",
+            "text_id": "hartgesotten"
         }
     ]
 }

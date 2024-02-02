@@ -34,7 +34,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 22,
             "subcategory": "titles",
-            "text": "eines Mitarbeiters"
+            "text": "eines Mitarbeiters",
+            "text_id": "Mitarbeiter"
         }
     ]
 }

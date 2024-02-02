@@ -20,6 +20,8 @@ applications:
       build: |
         set -e
 
+        curl -fsSL https://raw.githubusercontent.com/platformsh/cli/main/installer.sh | VENDOR=upsun bash
+
         ./install_dependencies.sh
 
         export FT_MODEL="lid.176.bin"
@@ -41,6 +43,26 @@ applications:
     relationships:
       rediscache: "rediscache:redis"
       languagetool: "languagetool:http"
+
+    timezone: "Europe/Zurich"
+    crons:
+        # “At 07:30 on every day-of-week from Monday through Friday.”
+        upscale:
+            spec: '30 7 * * 1-5'
+            commands:
+                start: |
+                    if [ -n "${UPSUN_CLI_TOKEN}" ]; then
+                      upsun e:curl /deployments/next -X PATCH -d "{\"webapps\": {\"app\": {\"instance_count\": \"${APP_UP_SCALE}\"}, \"languagetool\": {\"instance_count\": \"${LANGUAGE_UP_SCALE}\"}}}"
+                    fi
+
+        # “At 23:30 on every day-of-week from Monday through Friday.”
+        downscale:
+            spec: '30 23 * * 1-5'
+            commands:
+                start: |
+                    if [ -n "${UPSUN_CLI_TOKEN}" ]; then
+                      upsun e:curl /deployments/next -X PATCH -d "{\"webapps\": {\"app\": {\"instance_count\": \"${APP_DOWN_SCALE}\"}, \"languagetool\": {\"instance_count\": \"${LANGUAGE_DOWN_SCALE}\"}}}"
+                    fi
 
   languagetool:
     source:

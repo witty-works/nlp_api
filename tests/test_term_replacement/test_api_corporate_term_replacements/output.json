@@ -34,7 +34,8 @@
             "label": "Rechtschreibfehler",
             "start": 8,
             "subcategory": "typos",
-            "text": "foo"
+            "text": "foo",
+            "text_id": "foo"
         },
         {
             "alternatives": [
@@ -65,7 +66,8 @@
             "label": "Rechtschreibfehler",
             "start": 26,
             "subcategory": "typos",
-            "text": "foo"
+            "text": "foo",
+            "text_id": "foo"
         },
         {
             "alternatives": [
@@ -96,7 +98,8 @@
             "label": "Rechtschreibfehler",
             "start": 30,
             "subcategory": "typos",
-            "text": "barrr"
+            "text": "barrr",
+            "text_id": "barrr"
         },
         {
             "alternatives": [
@@ -127,7 +130,8 @@
             "label": "Rechtschreibfehler",
             "start": 73,
             "subcategory": "typos",
-            "text": "welt"
+            "text": "welt",
+            "text_id": "welt"
         },
         {
             "alternatives": [
@@ -158,7 +162,8 @@
             "label": "Rechtschreibfehler",
             "start": 105,
             "subcategory": "typos",
-            "text": "globus"
+            "text": "globus",
+            "text_id": "globus"
         },
         {
             "alternatives": [
@@ -189,7 +194,8 @@
             "label": "Rechtschreibfehler",
             "start": 113,
             "subcategory": "typos",
-            "text": "welt"
+            "text": "welt",
+            "text_id": "welt"
         },
         {
             "alternatives": [
@@ -208,7 +214,8 @@
             "label": "Wörterbuch",
             "start": 8,
             "subcategory": "corporate_rules",
-            "text": "foo bar"
+            "text": "foo bar",
+            "text_id": "foo bar"
         },
         {
             "alternatives": [
@@ -228,7 +235,8 @@
             "label": "Wörterbuch",
             "start": 73,
             "subcategory": "corporate_rules",
-            "text": "welt"
+            "text": "welt",
+            "text_id": "welt"
         },
         {
             "alternatives": [
@@ -248,7 +256,8 @@
             "label": "Wörterbuch",
             "start": 84,
             "subcategory": "corporate_rules",
-            "text": "WelT"
+            "text": "WelT",
+            "text_id": "welt"
         },
         {
             "alternatives": [
@@ -268,7 +277,8 @@
             "label": "Wörterbuch",
             "start": 95,
             "subcategory": "corporate_rules",
-            "text": "WELT"
+            "text": "WELT",
+            "text_id": "welt"
         }
     ]
 }

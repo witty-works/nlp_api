@@ -28,7 +28,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 4,
             "subcategory": "agentic",
-            "text": "selbstständiger"
+            "text": "selbstständiger",
+            "text_id": "selbstständig"
         },
         {
             "alternatives": [
@@ -56,7 +57,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 20,
             "subcategory": "leadership",
-            "text": "Projektleiter"
+            "text": "Projektleiter",
+            "text_id": "Leiter"
         },
         {
             "alternatives": [
@@ -87,7 +89,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 34,
             "subcategory": "agentic",
-            "text": "leisten"
+            "text": "leisten",
+            "text_id": "leisten"
         },
         {
             "alternatives": [
@@ -115,7 +118,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 46,
             "subcategory": "agentic_advanced",
-            "text": "anspruchsvolle"
+            "text": "anspruchsvolle",
+            "text_id": "anspruchsvoll"
         },
         {
             "alternatives": [],
@@ -132,7 +136,8 @@
             "proficiency_level": "inclusive",
             "start": 84,
             "subcategory": "communal",
-            "text": "gemeinsam"
+            "text": "gemeinsam",
+            "text_id": "gemeinsam"
         },
         {
             "alternatives": [
@@ -160,7 +165,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 98,
             "subcategory": "binary_pronouns_advanced",
-            "text": "Ihren"
+            "text": "Ihren",
+            "text_id": "ihren"
         },
         {
             "alternatives": [
@@ -185,7 +191,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 111,
             "subcategory": "agentic_advanced",
-            "text": "ambitionierten"
+            "text": "ambitionierten",
+            "text_id": "ambitioniert"
         },
         {
             "alternatives": [
@@ -216,7 +223,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 126,
             "subcategory": "function",
-            "text": "Kollegen"
+            "text": "Kollegen",
+            "text_id": "Kollege"
         },
         {
             "alternatives": [
@@ -244,7 +252,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 135,
             "subcategory": "agentic",
-            "text": "zielstrebig"
+            "text": "zielstrebig",
+            "text_id": "zielstrebig"
         },
         {
             "alternatives": [
@@ -275,7 +284,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 152,
             "subcategory": "exaggerating",
-            "text": "Höchstleistungen"
+            "text": "Höchstleistungen",
+            "text_id": "Höchstleistung"
         }
     ]
 }

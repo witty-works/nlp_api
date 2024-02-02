@@ -22,7 +22,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 0,
             "subcategory": "plain_language",
-            "text": "The children have been saved by the police"
+            "text": "The children have been saved by the police",
+            "text_id": "The children have been saved by the police"
         },
         {
             "alternatives": [],
@@ -39,7 +40,8 @@
             "proficiency_level": "inclusive",
             "start": 4,
             "subcategory": "communal",
-            "text": "children"
+            "text": "children",
+            "text_id": "child"
         }
     ]
 }

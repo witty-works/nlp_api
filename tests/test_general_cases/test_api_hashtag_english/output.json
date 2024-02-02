@@ -18,7 +18,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 7,
             "subcategory": "plain_language",
-            "text": "#beanallybe2022"
+            "text": "#beanallybe2022",
+            "text_id": "#foobar"
         },
         {
             "alternatives": [
@@ -40,7 +41,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 24,
             "subcategory": "filler_advanced",
-            "text": "Better"
+            "text": "Better",
+            "text_id": "well"
         }
     ]
 }

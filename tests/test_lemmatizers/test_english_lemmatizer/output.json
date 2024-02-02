@@ -34,7 +34,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 50,
             "subcategory": "exaggerating_advanced",
-            "text": "best"
+            "text": "best",
+            "text_id": "best"
         },
         {
             "alternatives": [
@@ -68,7 +69,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 55,
             "subcategory": "hollow",
-            "text": "state-of-the-art"
+            "text": "state-of-the-art",
+            "text_id": "state-of-the-art"
         }
     ]
 }

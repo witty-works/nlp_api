@@ -27,7 +27,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 10,
             "subcategory": "gendered_denominations_ending",
-            "text": "Bewerberinnen und Bewerber"
+            "text": "Bewerberinnen und Bewerber",
+            "text_id": "Bewerber"
         },
         {
             "alternatives": [
@@ -55,7 +56,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 60,
             "subcategory": "function",
-            "text": "Fachmann/Fachfrau"
+            "text": "Fachmann/Fachfrau",
+            "text_id": "Fachmann"
         },
         {
             "alternatives": [
@@ -83,7 +85,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 79,
             "subcategory": "titles",
-            "text": "Fachfrau"
+            "text": "Fachfrau",
+            "text_id": "Fachmann"
         },
         {
             "alternatives": [
@@ -111,7 +114,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 89,
             "subcategory": "titles",
-            "text": "Fachmann"
+            "text": "Fachmann",
+            "text_id": "Fachmann"
         }
     ]
 }

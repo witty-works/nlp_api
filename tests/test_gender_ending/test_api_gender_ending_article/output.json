@@ -29,7 +29,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 4,
             "subcategory": "function",
-            "text": "der Arbeitgeber"
+            "text": "der Arbeitgeber",
+            "text_id": "Arbeitgeber"
         },
         {
             "alternatives": [],
@@ -46,7 +47,8 @@
             "proficiency_level": "inclusive",
             "start": 51,
             "subcategory": "d_and_i",
-            "text": "die*den"
+            "text": "die*den",
+            "text_id": "*in article"
         },
         {
             "alternatives": [],
@@ -63,7 +65,8 @@
             "proficiency_level": "inclusive",
             "start": 72,
             "subcategory": "d_and_i",
-            "text": "*in"
+            "text": "*in",
+            "text_id": "*in"
         }
     ]
 }

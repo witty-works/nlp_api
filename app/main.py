@@ -1,14 +1,4 @@
 import os
-
-if os.environ.get("BLACKFIRE_ENABLE_CONTINUOUS_PROFILING"):
-    try:
-        from blackfire_conprof.profiler import Profiler
-
-        profiler = Profiler()
-        profiler.start(application_name=os.environ.get("PLATFORM_APPLICATION_NAME"))
-    except:
-        pass
-
 import re
 import uvicorn
 import json
@@ -123,7 +113,7 @@ from app.query_definitions import (
     verb_form_map,
 )
 
-version = "2.2.1"
+version = "2.2.2"
 
 categories = get_categories()
 settings = get_settings()
@@ -265,6 +255,7 @@ def create_rule(lang, row, rewrite_to: str = None) -> Rule:
         rule.lemma = Language.convert_to(rule.lemma, LangVariantType.enGB)
         rule.words = Language.convert_to(rule.words, LangVariantType.enGB)
 
+    rule.text_id = row[rule_columns["text_id"]]
     rule.parent_id = row[rule_columns["parent_id"]]
     rule.pattern = row[rule_columns["pattern"]]
     rule.is_pattern_match = row[rule_columns["is_pattern_match"]]
@@ -285,7 +276,7 @@ async def fetch_false_positives(rule: Rule, rewrite_to: str = None) -> list[str]
         return list(rule.false_positives)
 
     query = "SELECT false_positive FROM rules_falsepositive WHERE rule_id = ?"
-    parameters = [rule.name]
+    parameters = [rule.id]
 
     false_positives = []
     rows = await fetch_rows(query, parameters)
@@ -301,7 +292,7 @@ async def fetch_false_positives(rule: Rule, rewrite_to: str = None) -> list[str]
 
 static_rules = fetch_static_rules()
 
-supported_word_types = [word_type.value for word_type in WordType]
+supported_word_types = list(WordType._member_map_.values())
 
 with open("./training_data/lookup.json", "r") as fp:
     lookup = json.load(fp)
@@ -310,6 +301,15 @@ with open("./training_data/lemma_plural_lookup.json", "r") as fp:
     lemma_plural_lookup = json.load(fp)
 
 model = {}
+Token.set_extension("word_type", default=None)
+Token.set_extension("text", default=None)
+Token.set_extension("start", default=None)
+Token.set_extension("label", default=None)
+Token.set_extension("form", default=None)
+Token.set_extension("forms", default=None)
+Token.set_extension("i_offset", default=1)
+Token.set_extension("child_token", default=None)
+Token.set_extension("connected_token", default=None)
 for spacy_model in settings.models:
     lang = spacy_model[0:2]
 
@@ -329,6 +329,19 @@ substring_rules = {}
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    if os.environ.get("BLACKFIRE_ENABLE_CONTINUOUS_PROFILING"):
+        try:
+            from blackfire_conprof.profiler import Profiler
+
+            app_name = os.environ.get("PLATFORM_APPLICATION_NAME")
+            # app_name += "-worker-%d" % (os.getpid(),)
+            profiler = Profiler(application_name=app_name)
+            profiler.start()
+
+            print("Profiler started for %s" % app_name)
+        except:
+            pass
+
     global session
     global ssl_session
     global rules_db
@@ -648,14 +661,14 @@ async def get_align_form_debug(
     source_tokens = fetch_tokens(lang, source_text)
     target_tokens = fetch_tokens(lang, target_text)
 
-    _, text, lemma, target_form = await find_form(lang, word_type, i, source_tokens)
+    target_form = await find_form(lang, word_type, i, source_tokens)
 
     if WordType.VERB == word_type:
         return await align_form_verb(
             lang,
             target_form,
-            text,
-            lemma,
+            source_tokens[0].text,
+            source_tokens[0].lemma_,
             target_tokens[0],
         )
 
@@ -663,8 +676,8 @@ async def get_align_form_debug(
         return await align_form_adjective(
             lang,
             target_form,
-            text,
-            lemma,
+            source_tokens[0].text,
+            source_tokens[0].lemma_,
             target_tokens[0],
         )
 
@@ -2151,7 +2164,7 @@ def is_gendered_denom_rule(lang: LangType, subcategories) -> bool:
     return False
 
 
-async def context_false_positives(lang: LangType, tokens: Doc, list_results: list):
+async def context_false_positives(lang: LangType, tokens: Doc, list_results: list[ResultOut]):
     if (
         lang not in settings.context_checker
         or len(static_rules[lang]["context_check"]) == 0
@@ -2162,7 +2175,7 @@ async def context_false_positives(lang: LangType, tokens: Doc, list_results: lis
     sentences_to_check = defaultdict(list)
     for i in range(len(list_results)):
         result = list_results[i]
-        if result.lemma in static_rules[lang]["context_check"]:
+        if result.text_id in static_rules[lang]["context_check"]:
             if len(sentences) == 0:
                 for sentence in tokens.sents:
                     sentences[sentence.end_char] = sentence.text
@@ -2340,12 +2353,12 @@ async def fetch_rule_alternatives(
     show_inspiration_alternatives: bool,
     locale: str,
 ) -> list[Alternative]:
-    if isinstance(rule.name, str):
+    if isinstance(rule.id, str):
         return rule.alternatives
 
     query = f"SELECT {alternative_column_list} FROM rules_alternative WHERE rule_id = ?"
 
-    parameters = [rule.name]
+    parameters = [rule.id]
 
     if not show_inspiration_alternatives:
         query += " and is_inspiration = 0"
@@ -2430,8 +2443,11 @@ def get_target_declension_form(target_result: dict, target_form: str):
 
 
 async def fetch_declensions(
-    lang: LangType, word_type: BasicWordType, text: str
+    lang: LangType, word_type: BasicWordType, text: str, token: Token = None
 ) -> dict | None:
+    if token is not None and token._.forms is not None:
+        return token._.forms
+
     text = (
         text.capitalize()
         if lang == LangType.DE and word_type == BasicWordType.NOUN
@@ -2463,10 +2479,15 @@ async def fetch_declensions(
     query = f"SELECT {column_list} FROM {table_name} WHERE {filter_list} ORDER BY IIF(base_form = ?, 1, 0) DESC, LENGTH(base_form) DESC LIMIT 1"
 
     rows = await fetch_rows(query, parameters)
-    if len(rows):
-        return dict(zip(declensions_config[lang][word_type]["columns"], rows[0]))
+    forms = (
+        None
+        if len(rows) == 0
+        else dict(zip(declensions_config[lang][word_type]["columns"], rows[0]))
+    )
+    if token is not None:
+        token._.forms = forms
 
-    return None
+    return forms
 
 
 def is_gender_star_ending(text: str) -> bool | re.Match:
@@ -2488,14 +2509,15 @@ def remove_gender_ending(text: str) -> str:
 
 async def german_lemmatization(tokens: Doc, i: int):
     token = tokens[i]
-    if token.text != token.lemma_:
-        return token.lemma_
-
     word_type = await fetch_word_type(LangType.DE, token)
 
     match word_type:
         case WordType.NOUN:
-            if not token.text[0].isupper() or len(token.text) <= 3:
+            if (
+                token.text != token.lemma_
+                or not token.text[0].isupper()
+                or len(token.text) <= 3
+            ):
                 return token.lemma_
 
             word = remove_gender_ending(token.text)
@@ -2521,20 +2543,72 @@ async def german_lemmatization(tokens: Doc, i: int):
                     tense in verb_form_map[verb_form]
                     and person in verb_form_map[verb_form][tense]
                 ):
-                    parameters = [token.lemma_ + "%"]
+                    parameters = [token.text + "%"]
                     operator = "LIKE"
                     column_name = verb_form_map[verb_form][tense][person]
             else:
-                parameters = [token.lemma_]
+                if i > 0 and tokens[i - 1].text == "zu":
+                    parameters = ["zu " + token.text]
+                    prev = True
+                else:
+                    parameters = [token.text]
+                    prev = False
                 operator = "="
                 column_name = verb_form_map[verb_form]
 
             if column_name:
                 table_name = declensions_config[LangType.DE][WordType.VERB]["name"]
-                query = f"SELECT base_form FROM {table_name} WHERE {column_name} {operator} ? LIMIT 1"
+                query = f"SELECT base_form, {column_name} FROM {table_name} WHERE {column_name} {operator} ? LIMIT 1"
 
                 rows = await fetch_rows(query, parameters)
                 if len(rows):
+                    if operator == "LIKE":
+                        i_offset = 1
+                        for sentence_token in token.sent:
+                            if sentence_token.i > token.i:
+                                i_offset += 1
+                                if (
+                                    tokens[i].text + " " + sentence_token.text.lower()
+                                    == rows[0][1]
+                                ):
+                                    if (
+                                        sentence_token.text.lower() == "schwarz"
+                                        and i_offset > 2
+                                    ):
+                                        sentence_token._.connected_token = token
+                                        token._.child_token = sentence_token
+                                        token._.label = sentence_token._.label = (
+                                            tokens[i].text
+                                            + " .. "
+                                            + sentence_token.text.lower()
+                                        )
+                                    else:
+                                        token._.i_offset = i_offset
+
+                                    await fetch_declensions(
+                                        LangType.DE, WordType.VERB, rows[0][0], token
+                                    )
+
+                                    token._.form = column_name
+                                    if i_offset == 2:
+                                        token._.text = (
+                                            tokens[i].text
+                                            + tokens[i].whitespace_
+                                            + sentence_token.text
+                                        )
+                                    return rows[0][0]
+                        return token.lemma_
+
+                    if prev:
+                        token._.start = tokens[i - 1].idx
+                        token._.text = (
+                            tokens[i - 1].text
+                            + tokens[i - 1].whitespace_
+                            + tokens[i].text
+                        )
+                        token._.form = column_name
+
+                    await fetch_declensions(LangType.DE, WordType.VERB, rows[0][0])
                     return rows[0][0]
 
     return token.lemma_
@@ -2557,6 +2631,10 @@ async def german_rules(
         i = new_i
 
         token = tokens[i]
+        if token._.connected_token is not None:
+            new_i += 1
+            continue
+
         token.lemma_ = await german_lemmatization(tokens, i)
 
         if len(term_replacements.rules):
@@ -2810,6 +2888,9 @@ async def english_rules(
         i = new_i
 
         token = tokens[i]
+        if token._.connected_token is not None:
+            new_i += 1
+            continue
 
         if len(term_replacements.rules):
             new_i = await rule_check(
@@ -3114,10 +3195,41 @@ async def is_phrase_match(
 
             skip_i = i + token_count + 1
 
+    if i + tokens[i]._.i_offset > skip_i:
+        skip_i = i + tokens[i]._.i_offset
+
     return i, skip_i, text
 
 
 async def fetch_word_type(
+    lang: LangType,
+    token: Token,
+    word_type: str = None,
+    single_word: bool = False,
+    strict: bool = False,
+) -> str:
+    if word_type is None and single_word == False and strict == False:
+        cache = True
+        if token._.word_type is not None:
+            return token._.word_type
+    else:
+        cache = False
+
+    word_type = await _fetch_word_type(
+        lang,
+        token,
+        word_type,
+        single_word,
+        strict,
+    )
+
+    if cache:
+        token._.word_type = word_type
+
+    return word_type
+
+
+async def _fetch_word_type(
     lang: LangType,
     token: Token,
     word_type: str = None,
@@ -3203,7 +3315,9 @@ async def fetch_word_type(
     if token.pos_ == "NOUN" or token.tag_ == "NN":
         if lang == LangType.DE:
             if token.text[0].islower():
-                result = await fetch_declensions(LangType.DE, WordType.VERB, token.text)
+                result = await fetch_declensions(
+                    LangType.DE, WordType.VERB, token.text, token
+                )
                 if result is not None:
                     return WordType.VERB
         elif (
@@ -3342,67 +3456,38 @@ def fetch_flexion(token: Token) -> str | None:
 
 async def find_form_verb_german(i: int, tokens: Doc):
     token = tokens[i]
-    text = token.text
-    lemma = token.lemma_
-    start = token.idx
+    if token._.form is not None:
+        return token._.form
 
-    prev_token = None if i == 0 else tokens[i - 1]
-    if prev_token and prev_token.text == "zu":
-        text = prev_token.text + " " + text
-        lemma = prev_token.lemma_ + " " + text
-        start = prev_token.idx
-    else:
-        # TODO missing handling for "Er zockte uns ab"
-        next_token = None if i == len(tokens) - 1 else tokens[i + 1]
-        if next_token and next_token.text in [
-            "ab",
-            "an",
-            "auf",
-            "aus",
-            "dar",
-            "dazu",
-            "durch",
-            "ein",
-            "entgegen",
-            "fest",
-            "frei",
-            "hervor",
-            "hinzu",
-            "mit",
-            "nach",
-            "quer",
-            "schwarz",
-            "um",
-            "vor",
-            "voran",
-            "weiter",
-        ]:
-            text += " " + next_token.text
-            lemma += " " + next_token.lemma_
-
-    forms = await fetch_declensions(LangType.DE, WordType.VERB, text)
-    if forms is None and text != token.text:
-        text = token.text
-        lemma = token.lemma_
-        forms = await fetch_declensions(LangType.DE, WordType.VERB, text)
-
-    target_form = find_matching_form(forms, text)
-    if target_form is None and settings.log_missing_declension and not text.isupper():
+    forms = await fetch_declensions(LangType.DE, WordType.VERB, token.text, token)
+    if forms is None:
         logger.error(
-            f"German verb target form could not be determined for '{text}' (lemma: '{lemma}')."
+            f"German verb form could not be determined for '{token.text}' (lemma: '{token.lemma_}')."
         )
 
-    return start, text, lemma, target_form
+        return None
+
+    target_form = find_matching_form(forms, token.text)
+    if (
+        target_form is None
+        and settings.log_missing_declension
+        and not token.text.isupper()
+    ):
+        logger.error(
+            f"German verb target form could not be determined for '{token.text}' (lemma: '{token.lemma_}')."
+        )
+
+    return target_form
 
 
 async def find_form_verb_english(i: int, tokens: Doc):
     token = tokens[i]
-    forms = await fetch_declensions(LangType.EN, WordType.VERB, token.text)
+    forms = await fetch_declensions(LangType.EN, WordType.VERB, token.text, token)
 
     if forms is not None:
         target_form = find_matching_form(forms, token.text)
         if target_form is not None:
-            return token.idx, token.text, token.lemma_, target_form
+            return target_form
 
     # Fallback code
     verb = Verb(token.text)
@@ -3426,18 +3511,18 @@ async def find_form_verb_english(i: int, tokens: Doc):
             f"English verb target form could not be determined for '{token.text}' (lemma: '{token.lemma_}')."
         )
 
-    return token.idx, token.text, token.lemma_, target_form
+    return target_form
 
 
 async def find_form_adjective_german(i: int, tokens: Doc):
     token = tokens[i]
-    forms = await fetch_declensions(LangType.DE, WordType.ADJECTIVE, token.text)
+    forms = await fetch_declensions(LangType.DE, WordType.ADJECTIVE, token.text, token)
 
     if forms is not None and forms["is_absolute"] == False:
         target_form = find_matching_form(forms, token.text)
 
         if target_form is not None:
-            return token.idx, token.text, token.lemma_, target_form
+            return target_form
 
     if len(token.text) < 2:
         ending = ""
@@ -3450,20 +3535,20 @@ async def find_form_adjective_german(i: int, tokens: Doc):
         if ending[0] != "e":
             ending = ending[1:]
 
-    return token.idx, token.text, token.lemma_, ending
+    return ending
 
 
 async def find_form_adjective_english(i: int, tokens: Doc):
     token = tokens[i]
-    forms = await fetch_declensions(LangType.EN, WordType.ADJECTIVE, token.text)
+    forms = await fetch_declensions(LangType.EN, WordType.ADJECTIVE, token.text, token)
 
     if forms is not None:
         if forms["is_absolute"]:
-            return token.idx, token.text, token.lemma_, "no_change"
+            return "no_change"
 
         target_form = find_matching_form(forms, token.text)
         if target_form is not None:
-            return token.idx, token.text, token.lemma_, target_form
+            return target_form
 
     # Fallback code
     text_lower = token.text.lower()
@@ -3486,17 +3571,17 @@ async def find_form_adjective_english(i: int, tokens: Doc):
             f"English adjective target form could not be determined for '{token.text}' (lemma: '{token.lemma_}')."
         )
 
-    return token.idx, token.text, token.lemma_, target_form
+    return target_form
 
 
 async def find_form_noun_german(i: int, tokens: Doc):
     token = tokens[i]
 
     if token.text.lower() in static_rules[LangType.DE]["articles"]:
-        return token.idx, token.text, token.lemma_, "no_change"
+        return "no_change"
 
     text = remove_gender_ending(token.text)
-    forms = await fetch_declensions(LangType.DE, WordType.NOUN, text)
+    forms = await fetch_declensions(LangType.DE, WordType.NOUN, text, token)
     if forms is None:
         if (
             settings.log_missing_declension
@@ -3506,7 +3591,7 @@ async def find_form_noun_german(i: int, tokens: Doc):
         ):
             logger.error(f"German noun declension not found for '{token.text}'")
 
-        return token.idx, token.text, token.lemma_, None
+        return None
 
     target_form = find_matching_form(forms, text)
     if (
@@ -3518,16 +3603,16 @@ async def find_form_noun_german(i: int, tokens: Doc):
             f"German noun target form could not be determined for '{token.text}' (lemma: '{token.lemma_}')."
         )
 
-    return token.idx, token.text, token.lemma_, target_form
+    return target_form
 
 
 async def find_form_noun_english(i: int, tokens: Doc):
     token = tokens[i]
 
     if is_token_singular(LangType.EN, token) is not False:
-        return token.idx, token.text, token.lemma_, "no_change"
+        return "no_change"
 
-    return token.idx, token.text, token.lemma_, "plural"
+    return "plural"
 
 
 async def find_form(lang: LangType, word_type: WordType, i: int, tokens: Doc):
@@ -3607,7 +3692,9 @@ async def align_form_noun(lang: LangType, target_form: str, target_token: Token)
     if target_form == "no_change" or target_form is None:
         return target_token.text
 
-    target_result = await fetch_declensions(lang, WordType.NOUN, target_token.text)
+    target_result = await fetch_declensions(
+        lang, WordType.NOUN, target_token.text, target_token
+    )
 
     if lang == LangType.DE:
         return align_form_noun_german(target_form, target_token, target_result)
@@ -3728,7 +3815,9 @@ async def align_form_adjective(
     if target_form == "no_change" or target_form is None:
         return target_token.text
 
-    target_result = await fetch_declensions(lang, WordType.ADJECTIVE, target_token.text)
+    target_result = await fetch_declensions(
+        lang, WordType.ADJECTIVE, target_token.text, target_token
+    )
 
     if lang == LangType.DE:
         return align_form_adjective_german(target_form, target_token, target_result)
@@ -3976,7 +4065,9 @@ async def align_form_verb(
     if target_form == "no_change" or target_form is None:
         return target_token.text
 
-    target_result = await fetch_declensions(lang, WordType.VERB, target_token.text)
+    target_result = await fetch_declensions(
+        lang, WordType.VERB, target_token.text, target_token
+    )
 
     if lang == LangType.DE:
         return await align_form_verb_german(
@@ -4137,6 +4228,7 @@ async def alternatives_declension(
         or rule.is_pattern_match
         or alternatives == None
         or len(alternatives) == 0
+        or (len(alternatives) == 1 and alternatives[0].is_remove)
     ):
         return text, tokens[i].idx, alternatives
 
@@ -4146,17 +4238,21 @@ async def alternatives_declension(
         else await fetch_word_type(lang, tokens[i])
     )
 
-    start, text, lemma, target_form = await find_form(lang, word_type, i, tokens)
+    target_form = await find_form(lang, word_type, i, tokens)
 
     prepend_word = False
-    if lang == LangType.EN:
-        prev_token = None if i == 0 else tokens[i - 1]
-        if prev_token and (
-            prev_token.text.lower() == "a" or prev_token.text.lower() == "an"
-        ):
-            text = prev_token.text + " " + text
-            start = prev_token.idx
-            prepend_word = prev_token.text
+    if (
+        lang == LangType.EN
+        and i > 0
+        and (tokens[i - 1].text.lower() == "a" or tokens[i - 1].text.lower() == "an")
+    ):
+        text = tokens[i - 1].text + " " + text
+        start = tokens[i - 1].idx
+        prepend_word = tokens[i - 1].text
+    else:
+        start = tokens[i]._.start if tokens[i]._.start is not None else tokens[i].idx
+        if tokens[i]._.text is not None:
+            text = tokens[i]._.text
 
     return (
         text,
@@ -4166,7 +4262,7 @@ async def alternatives_declension(
                 lang,
                 target_form,
                 text,
-                lemma,
+                tokens[i].lemma_,
                 word_type,
                 prepend_word,
                 rule,
@@ -4312,7 +4408,7 @@ async def gendered_denom_analysis_de(
         if len(generated_alternatives) != 2:
             if generated_alternative in split_char:
                 logger.error(
-                    f"Rule '{rule.name}' has a malformed alternative '{alternative.lemma}' => '{generated_alternative}'."
+                    f"Rule '{rule.id}' has a malformed alternative '{alternative.lemma}' => '{generated_alternative}'."
                 )
             continue
 
@@ -4729,7 +4825,7 @@ async def regex_match(
                 client,
                 lang,
                 text,
-                token.lemma_,
+                rule.text_id,
                 full_text,
                 offsets,
                 subcategory,
@@ -4939,7 +5035,7 @@ async def rule_check(
             if count == 0:
                 continue
 
-            skip_token = i + 1
+            skip_token = i + token._.i_offset
         else:
             i, skip_token, text = await is_phrase_match(
                 lang.lang,
@@ -5029,13 +5125,15 @@ async def rule_check(
                             start + len(text),
                         )
 
+        label = token._.label if token._.label is not None else rule.label
+
         list_full.append(
             ResultOut.factory(
                 config,
                 client,
                 lang,
                 text,
-                token.lemma_,
+                rule.text_id,
                 full_text,
                 offsets,
                 subcategory,
@@ -5046,9 +5144,31 @@ async def rule_check(
                 rule.explanation,
                 rule.url,
                 rule.icon,
-                rule.label,
+                label,
             )
         )
+
+        if token._.child_token:
+            list_full.append(
+                ResultOut.factory(
+                    config,
+                    client,
+                    lang,
+                    token._.child_token.text,
+                    token.lemma_,
+                    full_text,
+                    offsets,
+                    subcategory,
+                    token._.child_token.idx,
+                    None,
+                    alternatives,
+                    None,
+                    rule.explanation,
+                    rule.url,
+                    rule.icon,
+                    label,
+                )
+            )
 
         return skip_token
 
@@ -5267,7 +5387,7 @@ def detect_non_inclusive_emoji(
                 client,
                 lang,
                 token.text,
-                token.lemma_,
+                token.text,
                 full_text,
                 offsets,
                 subcategory,

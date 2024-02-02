@@ -34,7 +34,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 10,
             "subcategory": "exaggerating",
-            "text": "exceptional"
+            "text": "exceptional",
+            "text_id": "exceptional"
         },
         {
             "alternatives": [
@@ -59,7 +60,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 22,
             "subcategory": "agentic",
-            "text": "challenges"
+            "text": "challenges",
+            "text_id": "challenge"
         }
     ]
 }

@@ -19,7 +19,8 @@
             "label": "Wrong article",
             "start": 55,
             "subcategory": "misc",
-            "text": "a"
+            "text": "a",
+            "text_id": "a"
         },
         {
             "alternatives": [
@@ -41,7 +42,8 @@
             "label": "Spelling mistake",
             "start": 134,
             "subcategory": "typos",
-            "text": "Riehenring"
+            "text": "Riehenring",
+            "text_id": "Riehenring"
         },
         {
             "alternatives": [
@@ -66,7 +68,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 55,
             "subcategory": "function",
-            "text": "a intern"
+            "text": "a intern",
+            "text_id": "intern"
         },
         {
             "alternatives": [
@@ -88,7 +91,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 76,
             "subcategory": "leadership_advanced",
-            "text": "Head of"
+            "text": "Head of",
+            "text_id": "head of"
         }
     ]
 }

@@ -5,16 +5,13 @@
         {
             "alternatives": [
                 {
-                    "text": "seinE PartnerIn"
+                    "text": "seine/sein PartnerIn"
                 },
                 {
                     "text": "seine/sein Partnerin/Partner"
                 },
                 {
-                    "text": "seinE Begleitung"
-                },
-                {
-                    "text": "seine/sein Begleitung"
+                    "text": "seine Begleitung"
                 }
             ],
             "category": "gender-orientation",
@@ -31,7 +28,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 8,
             "subcategory": "gender_identity",
-            "text": "seine Frau"
+            "text": "seine Frau",
+            "text_id": "seine Frau"
         }
     ]
 }

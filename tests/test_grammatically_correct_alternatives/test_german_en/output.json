@@ -34,7 +34,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 34,
             "subcategory": "exaggerating",
-            "text": "erfolgreichen"
+            "text": "erfolgreichen",
+            "text_id": "erfolgreich"
         },
         {
             "alternatives": [
@@ -68,7 +69,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 82,
             "subcategory": "exaggerating_advanced",
-            "text": "besten"
+            "text": "besten",
+            "text_id": "beste"
         },
         {
             "alternatives": [
@@ -99,7 +101,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 107,
             "subcategory": "exaggerating_advanced",
-            "text": "ausgeprägten"
+            "text": "ausgeprägten",
+            "text_id": "ausgeprägt"
         }
     ]
 }

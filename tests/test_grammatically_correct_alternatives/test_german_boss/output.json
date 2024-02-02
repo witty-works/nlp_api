@@ -28,7 +28,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 0,
             "subcategory": "leadership",
-            "text": "Unser Boss"
+            "text": "Unser Boss",
+            "text_id": "Boss"
         }
     ]
 }

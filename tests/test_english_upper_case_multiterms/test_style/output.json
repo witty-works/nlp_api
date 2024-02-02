@@ -43,7 +43,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 0,
             "subcategory": "formality_advanced",
-            "text": "Kind regards"
+            "text": "Kind regards",
+            "text_id": "kind regards"
         }
     ]
 }

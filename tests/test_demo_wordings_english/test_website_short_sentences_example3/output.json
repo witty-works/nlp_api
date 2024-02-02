@@ -24,7 +24,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 12,
             "subcategory": "agentic_advanced",
-            "text": "Work hard, play hard"
+            "text": "Work hard, play hard",
+            "text_id": "work hard, play hard"
         }
     ]
 }

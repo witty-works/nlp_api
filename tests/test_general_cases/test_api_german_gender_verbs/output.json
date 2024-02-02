@@ -27,7 +27,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 15,
             "subcategory": "yiddish-pejoratives_advanced",
-            "text": "abzocken"
+            "text": "abzocken",
+            "text_id": "abzocken"
         },
         {
             "alternatives": [
@@ -55,7 +56,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 32,
             "subcategory": "agentic",
-            "text": "behaupten"
+            "text": "behaupten",
+            "text_id": "behaupten"
         }
     ]
 }
