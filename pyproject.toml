@@ -53,12 +53,13 @@ dependencies = [
     "spacymoji>=3.0.1",
     "emoji>=0.6.0",
     "cmp-version>=3.0.0",
-    "python-jose>=3.3.0",
     "eng>=0.1.1",
     "blackfire<1.20.0,>=1.19.0",
     "blackfire-conprof>=1.0.0",
     "aiosqlite>=0.19.0",
     "Pyarrow>=15.0.0",
+    "pyjwt>=2.8.0",
+    "cryptography>=42.0.2",
 ]
 requires-python = ">3.12"
 license = "Proprietary"
