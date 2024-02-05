@@ -4855,13 +4855,13 @@ async def is_false_positive(full_text: str, i: int, tokens: Doc, rule: Rule) -> 
     partial_text = full_text[
         tokens[i_window_min].idx : tokens[i_window_max].idx
         + len(tokens[i_window_max].text)
-    ]
+    ].lower()
 
     start = tokens[i].idx - tokens[i_window_min].idx
     end = start + len(tokens[i].text)
 
     for false_positive in false_positives:
-        for m in re.finditer(re.escape(false_positive), partial_text):
+        for m in re.finditer(re.escape(false_positive.lower()), partial_text):
             if m.start() <= start and m.end() >= end:
                 return True
 
