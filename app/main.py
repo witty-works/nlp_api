@@ -2164,7 +2164,9 @@ def is_gendered_denom_rule(lang: LangType, subcategories) -> bool:
     return False
 
 
-async def context_false_positives(lang: LangType, tokens: Doc, list_results: list[ResultOut]):
+async def context_false_positives(
+    lang: LangType, tokens: Doc, list_results: list[ResultOut]
+):
     if (
         lang not in settings.context_checker
         or len(static_rules[lang]["context_check"]) == 0
@@ -2286,9 +2288,9 @@ async def fetch_rules(
             }
 
         if lemma_filter == lemma_filter_lower:
-            filters[
-                f"({first_token_check} AND first_is_word_type_lemmatize = 1)"
-            ] = lemma_filter
+            filters[f"({first_token_check} AND first_is_word_type_lemmatize = 1)"] = (
+                lemma_filter
+            )
         else:
             filters[
                 f"({first_token_check} AND first_is_word_type_lemmatize = 1 AND first_is_word_type_lower_case = 1)"
