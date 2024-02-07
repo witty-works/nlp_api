@@ -52,7 +52,7 @@ applications:
             commands:
                 start: |
                     if [ -n "${UPSUN_CLI_TOKEN}" ]; then
-                      upsun e:curl /deployments/next -X PATCH -d "{\"webapps\": {\"app\": {\"instance_count\": \"${APP_UP_SCALE}\"}, \"languagetool\": {\"instance_count\": \"${LANGUAGE_UP_SCALE}\"}}}"
+                      upsun resources:set -y --count app:${APP_UP_SCALE},languagetool:${LANGUAGE_UP_SCALE}
                     fi
 
         # “At 23:30 on every day-of-week from Monday through Friday.”
@@ -61,7 +61,7 @@ applications:
             commands:
                 start: |
                     if [ -n "${UPSUN_CLI_TOKEN}" ]; then
-                      upsun e:curl /deployments/next -X PATCH -d "{\"webapps\": {\"app\": {\"instance_count\": \"${APP_DOWN_SCALE}\"}, \"languagetool\": {\"instance_count\": \"${LANGUAGE_DOWN_SCALE}\"}}}"
+                      upsun resources:set -y --count app:${APP_DOWN_SCALE},languagetool:${LANGUAGE_DOWN_SCALE}
                     fi
 
   languagetool:
