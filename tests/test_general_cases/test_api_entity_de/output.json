@@ -5,7 +5,21 @@
         {
             "alternatives": [
                 {
+                    "text": "Erwachsene*r"
+                },
+                {
+                    "text": "Erwachsene/Erwachsener"
+                },
+                {
+                    "text": "Person"
+                },
+                {
                     "text": "höflicher Mensch"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "alle"
                 }
             ],
             "category": "gender-orientation",
@@ -29,7 +43,21 @@
         {
             "alternatives": [
                 {
+                    "text": "Erwachsene*r"
+                },
+                {
+                    "text": "Erwachsene/Erwachsener"
+                },
+                {
+                    "text": "Person"
+                },
+                {
                     "text": "höflicher Mensch"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "alle"
                 }
             ],
             "category": "gender-orientation",

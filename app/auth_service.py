@@ -23,8 +23,11 @@ SOFTWARE.
  """
 
 from fastapi import Request
-from jose import jwt
-import json
+import jwt
+import rsa as pyrsa
+import rsa.pem as pyrsa_pem
+import base64
+import struct
 
 
 class AuthError(Exception):
@@ -47,13 +50,14 @@ def get_unverified_token_claims(request: Request):
 
 async def get_rsa_key(redis, session, token, url):
     unverified_header = jwt.get_unverified_header(token)
-    key = "rsa_kid:" + unverified_header["kid"]
+    key = "rsa_pem:" + unverified_header["kid"]
     rsa_key = redis.get(key)
     if rsa_key:
-        return json.loads(rsa_key)
+        return rsa_key
 
     rsa_key = await get_rsa_key_(session, unverified_header["kid"], url)
-    redis.set(key, json.dumps(rsa_key))
+
+    redis.set(key, rsa_key)
 
     return rsa_key
 
@@ -104,10 +108,12 @@ def decode_jwt_(
         )
     except jwt.ExpiredSignatureError:
         raise AuthError("Token error: The token has expired", 401)
-    except jwt.JWTClaimsError:
-        raise AuthError("Token error: Please check the audience and issuer", 401)
-    except jwt.JWTError as e:
-        raise AuthError(str(e.args[0]), 401)
+    except jwt.InvalidIssuerError:
+        raise AuthError("Token error: Please check the issuer", 401)
+    except jwt.InvalidAudienceError:
+        raise AuthError("Token error: Please check the audience", 401)
+    except jwt.InvalidIssuedAtError:
+        raise AuthError("Token error: iat claim is not a number", 401)
     except Exception:
         raise AuthError("Token error: Unable to parse authentication", 401)
 
@@ -161,8 +167,29 @@ def get_token_(auth: str):
 
 
 def get_unverified_token_claims_(token: str):
-    unverified_claims = jwt.get_unverified_claims(token)
-    return unverified_claims
+    return jwt.decode(token, options={"verify_signature": False})
+
+
+# Copied from https://github.com/mpdavis/python-jose/blob/master/jose/utils.py - MIT License
+def int_arr_to_long(arr):
+    return int("".join(["%02x" % byte for byte in arr]), 16)
+
+
+# Copied from https://github.com/mpdavis/python-jose/blob/master/jose/utils.py - MIT License
+def base64_to_long(data):
+    if isinstance(data, str):
+        data = data.encode("ascii")
+
+    # urlsafe_b64decode will happily convert b64encoded data
+    _d = base64.urlsafe_b64decode(bytes(data) + b"==")
+    return int_arr_to_long(struct.unpack("%sB" % len(_d), _d))
+
+
+# Inspired by https://github.com/mpdavis/python-jose/blob/master/jose/backends/rsa_backend.py - MIT License
+def convert_to_pem(n, e):
+    rsa_key = pyrsa.PublicKey(e=base64_to_long(e), n=base64_to_long(n))
+    der = rsa_key.save_pkcs1(format="DER")
+    return pyrsa_pem.save_pem(der, pem_marker="RSA PUBLIC KEY")
 
 
 async def get_rsa_key_(session, kid, url):
@@ -174,12 +201,6 @@ async def get_rsa_key_(session, kid, url):
         jwks = await r.json()
         for key in jwks["keys"]:
             if key["kid"] == kid:
-                return {
-                    "kty": key["kty"],
-                    "kid": key["kid"],
-                    "use": key["use"],
-                    "n": key["n"],
-                    "e": key["e"],
-                }
+                return convert_to_pem(key["n"], key["e"])
 
     raise AuthError("Unable to fetch RSA key", 400)

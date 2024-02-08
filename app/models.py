@@ -290,6 +290,7 @@ class RuleIn(BaseModel):
     label: Optional[str] = None
     pattern: Optional[str] = None
     is_pattern_match: Optional[bool] = None
+    type: Optional[RuleType] = RuleType.DEFAULT
     entity_type: Optional[EntityType] = EntityType.DEFAULT
     pluralization: Optional[PluralizationType] = PluralizationType.DEFAULT
 

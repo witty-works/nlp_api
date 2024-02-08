@@ -113,7 +113,7 @@ from app.query_definitions import (
     verb_form_map,
 )
 
-version = "2.2.2"
+version = "2.2.3"
 
 categories = get_categories()
 settings = get_settings()
@@ -858,6 +858,7 @@ async def post_debug_rule(
     rule.alternatives = alternative_list
     rule.false_positives = rule_data.false_positives
     rule.label = rule_data.label
+    rule.type = rule_data.type
     rule.entity_type = rule_data.entity_type
     rule.pluralization = rule_data.pluralization
 
@@ -2164,7 +2165,9 @@ def is_gendered_denom_rule(lang: LangType, subcategories) -> bool:
     return False
 
 
-async def context_false_positives(lang: LangType, tokens: Doc, list_results: list[ResultOut]):
+async def context_false_positives(
+    lang: LangType, tokens: Doc, list_results: list[ResultOut]
+):
     if (
         lang not in settings.context_checker
         or len(static_rules[lang]["context_check"]) == 0
@@ -2286,9 +2289,9 @@ async def fetch_rules(
             }
 
         if lemma_filter == lemma_filter_lower:
-            filters[
-                f"({first_token_check} AND first_is_word_type_lemmatize = 1)"
-            ] = lemma_filter
+            filters[f"({first_token_check} AND first_is_word_type_lemmatize = 1)"] = (
+                lemma_filter
+            )
         else:
             filters[
                 f"({first_token_check} AND first_is_word_type_lemmatize = 1 AND first_is_word_type_lower_case = 1)"
@@ -4855,13 +4858,13 @@ async def is_false_positive(full_text: str, i: int, tokens: Doc, rule: Rule) -> 
     partial_text = full_text[
         tokens[i_window_min].idx : tokens[i_window_max].idx
         + len(tokens[i_window_max].text)
-    ]
+    ].lower()
 
     start = tokens[i].idx - tokens[i_window_min].idx
     end = start + len(tokens[i].text)
 
     for false_positive in false_positives:
-        for m in re.finditer(re.escape(false_positive), partial_text):
+        for m in re.finditer(re.escape(false_positive.lower()), partial_text):
             if m.start() <= start and m.end() >= end:
                 return True
 
