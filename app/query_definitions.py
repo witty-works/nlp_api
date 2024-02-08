@@ -1,5 +1,6 @@
 from app.models import BasicWordType, LangType
 
+
 def invert_list_to_dict(list_to_convert: list) -> dict:
     return dict(zip(list_to_convert, list(range(len(list_to_convert)))))
 
@@ -54,7 +55,10 @@ declensions_config = {
             "name": "rules_englishadjective",
             "columns": ["base_form", "comparative", "superlative", "is_absolute"],
         },
-        BasicWordType.NOUN: {"name": "rules_englishnoun", "columns": ["base_form", "plural"]},
+        BasicWordType.NOUN: {
+            "name": "rules_englishnoun",
+            "columns": ["base_form", "plural", "plural_2"],
+        },
     },
     LangType.DE: {
         BasicWordType.VERB: {
