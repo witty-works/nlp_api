@@ -5,12 +5,14 @@
         "proficiency_level": "openly_discriminating",
         "is_active": "1",
         "emoji": "\ud83d\udeab",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "gender-orientation",
         "related_subcategories": [
             "homophobia",
             "transphobia"
+        ],
+        "has_rules": [
+            "en",
+            "de"
         ]
     },
     "abbreviation": {
@@ -19,8 +21,6 @@
         "proficiency_level": "language-clarity",
         "is_active": "1",
         "emoji": "\ud83d\ude09",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "cultural-diversity",
         "related_subcategories": [
             "anglicism",
@@ -110,7 +110,11 @@
                 "read_on": "",
                 "anchor": "abk\u00fcrzung"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "ability": {
         "hs_path": "",
@@ -118,8 +122,6 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -205,7 +207,11 @@
                 "read_on": "",
                 "anchor": "f\u00e4higkeiten"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "ableism": {
         "hs_path": "",
@@ -213,8 +219,6 @@
         "proficiency_level": "openly_discriminating",
         "is_active": "1",
         "emoji": "\ud83d\udeab",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -295,7 +299,11 @@
                 "read_on": "",
                 "anchor": "behindertenfeindlichkeit"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "age": {
         "hs_path": "",
@@ -303,8 +311,6 @@
         "proficiency_level": "age",
         "is_active": "1",
         "emoji": "\ud83e\udd14",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "acquired-diversity",
         "related_subcategories": [],
         "translations": {
@@ -390,7 +396,11 @@
                 "read_on": "",
                 "anchor": "altersangabe"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "age_old": {
         "hs_path": "",
@@ -398,8 +408,6 @@
         "proficiency_level": "age",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "acquired-diversity",
         "related_subcategories": [],
         "translations": {
@@ -485,7 +493,11 @@
                 "read_on": "",
                 "anchor": "50_jahre_und_\u00e4lter"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "age_young": {
         "hs_path": "",
@@ -493,8 +505,6 @@
         "proficiency_level": "age",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "acquired-diversity",
         "related_subcategories": [],
         "translations": {
@@ -509,9 +519,9 @@
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/25%20years%20and%20younger-1.png",
+                    "src": "https:\/\/www.witty.works\/hubfs\/25%20years%20and%20younger-2.png",
                     "width": "605",
-                    "height": "402",
+                    "height": "425",
                     "alt": ""
                 },
                 "example_image_advanced": {
@@ -580,7 +590,11 @@
                 "read_on": "",
                 "anchor": "25_jahre_und_j\u00fcnger"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "agentic": {
         "hs_path": "",
@@ -588,8 +602,6 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "social-motive",
         "related_subcategories": [
             "communal",
@@ -620,7 +632,7 @@
                     "alt": ""
                 },
                 "example_image_advanced": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Agentic%20language%20Advanced.png",
+                    "src": "https:\/\/www.witty.works\/hubfs\/Agentic%20language%20Advanced-1.png",
                     "width": "605",
                     "height": "433",
                     "alt": ""
@@ -690,7 +702,11 @@
                 "read_on": "<span style=\"\"><a href=\"https:\/\/www.witty.works\/en\/blog\/gendered-wording-in-job-ads-scientific-findings\" rel=\"noopener\" target=\"_blank\">Gendered Wording in Job Ads - Scientific Findings<\/a><span style=\"color: #000000;\">, <\/span>witty.works blog<\/span>",
                 "anchor": "agentisch"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "anglicism": {
         "hs_path": "",
@@ -698,8 +714,6 @@
         "proficiency_level": "language-clarity",
         "is_active": "1",
         "emoji": "\ud83d\ude09",
-        "has_en_rules": false,
-        "has_de_rules": true,
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -775,7 +789,10 @@
                 "read_on": "",
                 "anchor": "anglizismen"
             }
-        }
+        },
+        "has_rules": [
+            "de"
+        ]
     },
     "antimuslim": {
         "hs_path": "",
@@ -783,8 +800,6 @@
         "proficiency_level": "openly_discriminating",
         "is_active": "1",
         "emoji": "\ud83d\udeab",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "religion",
         "related_subcategories": [],
         "translations": {
@@ -860,7 +875,11 @@
                 "read_on": "",
                 "anchor": "islamophobie"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "antisemitism": {
         "hs_path": "",
@@ -868,8 +887,6 @@
         "proficiency_level": "openly_discriminating",
         "is_active": "1",
         "emoji": "\ud83d\udeab",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "religion",
         "related_subcategories": [],
         "translations": {
@@ -945,7 +962,11 @@
                 "read_on": "",
                 "anchor": "anti-semitismus"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "behavior": {
         "hs_path": "",
@@ -953,8 +974,6 @@
         "proficiency_level": "visible",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -1040,7 +1059,11 @@
                 "read_on": "",
                 "anchor": "verhalten"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "belief": {
         "hs_path": "",
@@ -1048,8 +1071,6 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "religion",
         "related_subcategories": [],
         "translations": {
@@ -1135,7 +1156,11 @@
                 "read_on": "",
                 "anchor": "glauben"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "binary_pronouns": {
         "hs_path": "",
@@ -1143,8 +1168,6 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude1f",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -1240,7 +1263,11 @@
                 "read_on": "",
                 "anchor": "bin\u00e4re_pronomen"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "classism": {
         "hs_path": "",
@@ -1248,8 +1275,6 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "acquired-diversity",
         "related_subcategories": [],
         "translations": {
@@ -1270,9 +1295,9 @@
                     "alt": ""
                 },
                 "example_image_advanced": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/classism_advanced.png",
-                    "width": "652",
-                    "height": "413",
+                    "src": "https:\/\/www.witty.works\/hubfs\/classism_advanced-1.png",
+                    "width": "605",
+                    "height": "411",
                     "alt": ""
                 },
                 "soft_explanation": "",
@@ -1335,7 +1360,11 @@
                 "read_on": "",
                 "anchor": "klassismus"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "cognitive_ability": {
         "hs_path": "",
@@ -1343,8 +1372,6 @@
         "proficiency_level": "invisible",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -1430,7 +1457,11 @@
                 "read_on": "",
                 "anchor": "denkf\u00e4higkeit"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "cognitive_perception": {
         "hs_path": "",
@@ -1438,8 +1469,6 @@
         "proficiency_level": "invisible",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -1525,7 +1554,11 @@
                 "read_on": "",
                 "anchor": "wahrnehmung"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "color": {
         "hs_path": "",
@@ -1533,8 +1566,6 @@
         "proficiency_level": "ancestry",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "cultural-diversity",
         "related_subcategories": [
             "culture",
@@ -1625,7 +1656,11 @@
                 "read_on": "",
                 "anchor": "farbw\u00f6rter"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "communal": {
         "hs_path": "",
@@ -1633,8 +1668,6 @@
         "proficiency_level": "inclusive",
         "is_active": "1",
         "emoji": "\u2705",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "social-motive",
         "related_subcategories": [
             "agentic",
@@ -1725,7 +1758,11 @@
                 "read_on": "<a href=\"https:\/\/www.witty.works\/en\/blog\/gendered-wording-in-job-ads-scientific-findings\"><em><span>Gendered Wording in Job Ads - Scientific Findings<\/span><\/em><\/a><span>,&nbsp;<\/span><a href=\"https:\/\/www.witty.works\/blog\"><span>witty.works blog<\/span><\/a><span>&nbsp;2021<\/span>",
                 "anchor": "kommunal"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "culture": {
         "hs_path": "",
@@ -1733,8 +1770,6 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -1820,7 +1855,11 @@
                 "read_on": "",
                 "anchor": "kultur"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "d_and_i": {
         "hs_path": "",
@@ -1828,8 +1867,6 @@
         "proficiency_level": "inclusive",
         "is_active": "1",
         "emoji": "\u2705",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "social-motive",
         "related_subcategories": [
             "communal"
@@ -1917,7 +1954,11 @@
                 "read_on": "<p><a href=\"https:\/\/www.witty.works\/en\/blog\/how-tracking-language-patterns-can-help-create-a-more-inclusive-workplace\" rel=\"noopener\" target=\"_blank\">How Tracking Language Patterns Can Help Create a More Inclusive Workplace. Barbara Sch\u00fcl\u00e9 (March 13, 2023). Witty Works Blog.<\/a><\/p>",
                 "anchor": "diversit\u00e4t_&_inklusion"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "emotional_security": {
         "hs_path": "",
@@ -1925,8 +1966,6 @@
         "proficiency_level": "inclusive",
         "is_active": "1",
         "emoji": "\u2705",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "social-motive",
         "related_subcategories": [],
         "translations": {
@@ -2002,7 +2041,11 @@
                 "read_on": "",
                 "anchor": "positive_emotionen"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "exaggerating": {
         "hs_path": "",
@@ -2010,8 +2053,6 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude2e\u200d\ud83d\udca8",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "social-motive",
         "related_subcategories": [
             "filler",
@@ -2034,9 +2075,9 @@
                     "alt": "Illustration showing a person in pants who says, great, awesome, excellent, fantastic! All in upper case. A person in a skirt stands listening"
                 },
                 "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Exaggeration-2.png",
+                    "src": "https:\/\/www.witty.works\/hubfs\/Exaggeration-3.png",
                     "width": "605",
-                    "height": "428",
+                    "height": "468",
                     "alt": ""
                 },
                 "example_image_advanced": {
@@ -2110,7 +2151,11 @@
                 "read_on": "",
                 "anchor": "superlative"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "female_stereotype": {
         "hs_path": "",
@@ -2118,8 +2163,6 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude1f",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -2205,7 +2248,11 @@
                 "read_on": "",
                 "anchor": "weiblicher_stereotyp"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "filler": {
         "hs_path": "",
@@ -2213,8 +2260,6 @@
         "proficiency_level": "language-clarity",
         "is_active": "1",
         "emoji": "\ud83d\ude1f",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "cultural-diversity",
         "related_subcategories": [
             "exaggerating",
@@ -2313,7 +2358,11 @@
                 "read_on": "",
                 "anchor": "f\u00fcllw\u00f6rter"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "formality": {
         "hs_path": "",
@@ -2321,8 +2370,6 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83e\uddca",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "acquired-diversity",
         "related_subcategories": [],
         "translations": {
@@ -2332,7 +2379,7 @@
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/acquired-diversity\/formality",
                 "is_active": "1",
                 "name": "A less formal tone makes you sound more accessible",
-                "short_explanation": "Weniger F\u00f6rmlichkeit schafft mehr emotionale N\u00e4he",
+                "short_explanation": "A less formal tone makes you sound more accessible",
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
@@ -2373,7 +2420,7 @@
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/erworbene-diversit\u00e4t\/f\u00f6rmlichkeit",
                 "is_active": "1",
                 "name": "Weniger F\u00f6rmlichkeit schafft mehr emotionale N\u00e4he",
-                "short_explanation": "A less formal tone makes you sound more accessible",
+                "short_explanation": "Weniger F\u00f6rmlichkeit schafft mehr emotionale N\u00e4he",
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
@@ -2408,7 +2455,11 @@
                 "read_on": "",
                 "anchor": "formalit\u00e4t"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "function": {
         "hs_path": "",
@@ -2416,8 +2467,6 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\udca1",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "gender-orientation",
         "related_subcategories": [
             "female_stereotype",
@@ -2514,7 +2563,11 @@
                 "read_on": "<div><a href=\"https:\/\/www.witty.works\/en\/blog\/gendered-wording-in-job-ads-scientific-findings\" rel=\"noopener\" target=\"_blank\">Gendered Wording in Job Ads - Scientific Findings, Witty Blog<\/a><\/div>\n<div><a href=\"https:\/\/www.witty.works\/en\/blog\/gender-inclusive-writing-in-german\" rel=\"noopener\" target=\"_blank\">How to write inclusively in gendered languages like German, Witty Blog<\/a><\/div>\n<div><a href=\"https:\/\/www.witty.works\/en\/blog\/being-good-guy-doesn-t-cut-it\" rel=\"noopener\" target=\"_blank\">Being a \"good guy\" doesn't cut it, Witty Blog<\/a><\/div>",
                 "anchor": "spezielle_funktionen"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "gender_identity": {
         "hs_path": "",
@@ -2522,8 +2575,6 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "gender-orientation",
         "related_subcategories": [
             "d_and_i",
@@ -2624,7 +2675,11 @@
                 "read_on": "",
                 "anchor": "geschlechtsidentit\u00e4t"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "gender_specific_abbreviation": {
         "hs_path": "",
@@ -2632,8 +2687,6 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude2e",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -2719,7 +2772,11 @@
                 "read_on": "",
                 "anchor": "geschlechter_spezifische_abk\u00fcrzung"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "gendered_denominations_ending": {
         "hs_path": "",
@@ -2727,8 +2784,6 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\udcaf",
-        "has_en_rules": false,
-        "has_de_rules": true,
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -2742,8 +2797,18 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Inklusive%20Endung-1.png",
+                    "width": "605",
+                    "height": "381",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Inklusive%20Endung%20Advanced.png",
+                    "width": "605",
+                    "height": "381",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -2779,7 +2844,12 @@
                     "height": "381",
                     "alt": "Eine Illustration des Satzes \u2018Liebe Kund*innen und PartnerInnen [Partner*innen]\u2019. Die von Witty vorgeschlagene Alternative ist in Klammern."
                 },
-                "example_image_advanced": [],
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Inklusive%20Endung%20Advanced.png",
+                    "width": "605",
+                    "height": "381",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -2799,7 +2869,10 @@
                 "read_on": "",
                 "anchor": "inklusive_endung"
             }
-        }
+        },
+        "has_rules": [
+            "de"
+        ]
     },
     "hearing": {
         "hs_path": "",
@@ -2807,8 +2880,6 @@
         "proficiency_level": "invisible",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -2894,7 +2965,11 @@
                 "read_on": "",
                 "anchor": "h\u00f6rf\u00e4higkeit"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "hidden_image": {
         "hs_path": "",
@@ -2902,8 +2977,6 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude1f",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "gender-orientation",
         "related_subcategories": [
             "female_stereotype",
@@ -2999,7 +3072,11 @@
                 "read_on": "",
                 "anchor": "versteckter_ausdruck"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "hollow": {
         "hs_path": "",
@@ -3007,8 +3084,6 @@
         "proficiency_level": "language-clarity",
         "is_active": "1",
         "emoji": "\ud83d\ude44",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "cultural-diversity",
         "related_subcategories": [
             "exaggerating",
@@ -3107,7 +3182,11 @@
                 "read_on": "",
                 "anchor": "worth\u00fclsen"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "homophobia": {
         "hs_path": "",
@@ -3115,8 +3194,6 @@
         "proficiency_level": "openly_discriminating",
         "is_active": "1",
         "emoji": "\ud83d\udeab",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -3192,7 +3269,11 @@
                 "read_on": "",
                 "anchor": "homophobie"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "leadership": {
         "hs_path": "",
@@ -3200,8 +3281,6 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude1f",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "gender-orientation",
         "related_subcategories": [
             "agentic",
@@ -3303,7 +3382,11 @@
                 "read_on": "",
                 "anchor": "f\u00fchrungsstereotyp"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "learning": {
         "hs_path": "",
@@ -3311,8 +3394,6 @@
         "proficiency_level": "invisible",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -3393,7 +3474,11 @@
                 "read_on": "",
                 "anchor": "lernf\u00e4higkeit"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "male_stereotype": {
         "hs_path": "",
@@ -3401,8 +3486,6 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude1f",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -3488,7 +3571,11 @@
                 "read_on": "",
                 "anchor": "m\u00e4nnlicher_stereotyp"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "medical_state": {
         "hs_path": "",
@@ -3496,8 +3583,6 @@
         "proficiency_level": "visible",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -3583,7 +3668,11 @@
                 "read_on": "",
                 "anchor": "gesundheitsbild"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "mental_wellbeing": {
         "hs_path": "",
@@ -3591,8 +3680,6 @@
         "proficiency_level": "invisible",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -3678,7 +3765,11 @@
                 "read_on": "",
                 "anchor": "mentales_wohlbefinden"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "migration": {
         "hs_path": "",
@@ -3686,8 +3777,6 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -3773,7 +3862,11 @@
                 "read_on": "",
                 "anchor": "migrationshintergrund"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "military_source": {
         "hs_path": "",
@@ -3781,8 +3874,6 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83e\ude96",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "social-motive",
         "related_subcategories": [],
         "translations": {
@@ -3868,7 +3959,11 @@
                 "read_on": "",
                 "anchor": "milit\u00e4rische_wurzel"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "mobility": {
         "hs_path": "",
@@ -3876,8 +3971,6 @@
         "proficiency_level": "visible",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -3958,7 +4051,11 @@
                 "read_on": "",
                 "anchor": "mobilit\u00e4t"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "nazi_language": {
         "hs_path": "",
@@ -3966,8 +4063,6 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -4053,7 +4148,11 @@
                 "read_on": "",
                 "anchor": ""
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "offensive_language": {
         "hs_path": "",
@@ -4061,8 +4160,6 @@
         "proficiency_level": "openly_discriminating",
         "is_active": "1",
         "emoji": "\ud83d\udeab",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "social-motive",
         "related_subcategories": [],
         "translations": {
@@ -4148,7 +4245,11 @@
                 "read_on": "",
                 "anchor": "beleidigende_und_einsch\u00fcchternde_sprache"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "physicality": {
         "hs_path": "",
@@ -4156,8 +4257,6 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude1f",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -4238,7 +4337,11 @@
                 "read_on": "",
                 "anchor": ""
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "plain_language": {
         "hs_path": "",
@@ -4246,8 +4349,6 @@
         "proficiency_level": "language-clarity",
         "is_active": "1",
         "emoji": "\ud83d\ude44",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "cultural-diversity",
         "related_subcategories": [
             "abbreviation",
@@ -4312,9 +4413,9 @@
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Learning-1.png",
+                    "src": "https:\/\/www.witty.works\/hubfs\/Leichte%20Sprache-1.png",
                     "width": "605",
-                    "height": "403",
+                    "height": "467",
                     "alt": ""
                 },
                 "example_image_advanced": {
@@ -4342,7 +4443,11 @@
                 "read_on": "",
                 "anchor": "leichte_sprache"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "racism": {
         "hs_path": "",
@@ -4350,8 +4455,6 @@
         "proficiency_level": "openly_discriminating",
         "is_active": "1",
         "emoji": "\ud83d\udeab",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -4427,7 +4530,11 @@
                 "read_on": "",
                 "anchor": "rassismus"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "racist_source": {
         "hs_path": "",
@@ -4435,8 +4542,6 @@
         "proficiency_level": "ancestry",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -4517,7 +4622,11 @@
                 "read_on": "",
                 "anchor": "rassistische_wurzel"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "sexism": {
         "hs_path": "",
@@ -4525,8 +4634,6 @@
         "proficiency_level": "openly_discriminating",
         "is_active": "1",
         "emoji": "\ud83d\udeab",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -4602,7 +4709,11 @@
                 "read_on": "",
                 "anchor": "sexismus"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "sexual_orientation": {
         "hs_path": "",
@@ -4610,8 +4721,6 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -4626,7 +4735,7 @@
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/wives.png",
+                    "src": "https:\/\/www.witty.works\/hubfs\/Sexual%20orientation.png",
                     "width": "605",
                     "height": "404",
                     "alt": ""
@@ -4697,7 +4806,11 @@
                 "read_on": "",
                 "anchor": "sexuelle_orientierung"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "speech": {
         "hs_path": "",
@@ -4705,8 +4818,6 @@
         "proficiency_level": "invisible",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -4792,7 +4903,11 @@
                 "read_on": "",
                 "anchor": "sprech-f\u00e4higkeit"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "sports_terms": {
         "hs_path": "",
@@ -4800,8 +4915,6 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83c\udfc5",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "social-motive",
         "related_subcategories": [],
         "translations": {
@@ -4887,7 +5000,11 @@
                 "read_on": "",
                 "anchor": "sport_jargon"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "titles": {
         "hs_path": "",
@@ -4895,8 +5012,6 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude1f",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "gender-orientation",
         "related_subcategories": [
             "female_stereotype",
@@ -4997,7 +5112,11 @@
                 "read_on": "<div><a href=\"https:\/\/www.witty.works\/en\/blog\/gendered-wording-in-job-ads-scientific-findings\" rel=\"noopener\" target=\"_blank\">Gendered Wording in Job Ads - Scientific Findings, Witty Blog<\/a><\/div>\n<div><a href=\"https:\/\/www.witty.works\/en\/blog\/gender-inclusive-writing-in-german\" rel=\"noopener\" target=\"_blank\">How to write inclusively in gendered languages like German, Witty Blog<\/a><\/div>\n<div><a href=\"https:\/\/www.witty.works\/en\/blog\/being-good-guy-doesn-t-cut-it\" rel=\"noopener\" target=\"_blank\">Being a \"good guy\" doesn't cut it, Witty Blog<\/a><\/div>",
                 "anchor": "titel"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "transphobia": {
         "hs_path": "",
@@ -5005,8 +5124,6 @@
         "proficiency_level": "openly_discriminating",
         "is_active": "1",
         "emoji": "\ud83d\udeab",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -5082,7 +5199,11 @@
                 "read_on": "",
                 "anchor": "transphobie"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "vision": {
         "hs_path": "",
@@ -5090,8 +5211,6 @@
         "proficiency_level": "invisible",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -5106,7 +5225,7 @@
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Vision-1.png",
+                    "src": "https:\/\/www.witty.works\/hubfs\/Vision-2.png",
                     "width": "605",
                     "height": "403",
                     "alt": ""
@@ -5177,7 +5296,11 @@
                 "read_on": "",
                 "anchor": "seh-f\u00e4higkeit"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "xenophobia": {
         "hs_path": "",
@@ -5185,8 +5308,6 @@
         "proficiency_level": "openly_discriminating",
         "is_active": "1",
         "emoji": "\ud83d\udeab",
-        "has_en_rules": true,
-        "has_de_rules": true,
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -5262,7 +5383,11 @@
                 "read_on": "",
                 "anchor": "fremdenfeindlichkeit_xenophobie"
             }
-        }
+        },
+        "has_rules": [
+            "en",
+            "de"
+        ]
     },
     "yiddish-pejoratives": {
         "hs_path": "",
@@ -5270,8 +5395,6 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
-        "has_en_rules": false,
-        "has_de_rules": true,
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -5347,7 +5470,10 @@
                 "read_on": "",
                 "anchor": ""
             }
-        }
+        },
+        "has_rules": [
+            "de"
+        ]
     },
     "casing": {
         "category": "orthography",
