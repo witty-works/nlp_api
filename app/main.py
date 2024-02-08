@@ -858,6 +858,7 @@ async def post_debug_rule(
     rule.alternatives = alternative_list
     rule.false_positives = rule_data.false_positives
     rule.label = rule_data.label
+    rule.type = rule_data.type
     rule.entity_type = rule_data.entity_type
     rule.pluralization = rule_data.pluralization
 
