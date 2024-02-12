@@ -215,6 +215,9 @@
                     "text": "crucial"
                 },
                 {
+                    "text": "vital"
+                },
+                {
                     "text": "first-rate"
                 },
                 {
@@ -222,9 +225,6 @@
                 },
                 {
                     "text": "critical"
-                },
-                {
-                    "text": "vital"
                 }
             ],
             "category": "social-motive",
