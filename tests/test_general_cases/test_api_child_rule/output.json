@@ -1,0 +1,29 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "Guten Tag"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Sehr geehrter Herr",
+            "end": 18,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😒",
+                "text": "Bedient die heteronormative Sicht von Geschlechteridentität",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäres-geschlecht?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Binäres Geschlecht",
+            "proficiency_level": "unconscious_bias",
+            "start": 0,
+            "subcategory": "gender_identity",
+            "text": "Sehr geehrter Herr",
+            "text_id": "Sehr geehrter Herr"
+        }
+    ]
+}

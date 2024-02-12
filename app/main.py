@@ -113,7 +113,7 @@ from app.query_definitions import (
     verb_form_map,
 )
 
-version = "2.2.3"
+version = "2.2.4"
 
 categories = get_categories()
 settings = get_settings()
@@ -2361,7 +2361,7 @@ async def fetch_rule_alternatives(
 
     query = f"SELECT {alternative_column_list} FROM rules_alternative WHERE rule_id = ?"
 
-    parameters = [rule.id]
+    parameters = [rule.parent_id if rule.parent_id else rule.id]
 
     if not show_inspiration_alternatives:
         query += " and is_inspiration = 0"
