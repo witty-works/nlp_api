@@ -18897,6 +18897,7 @@ INSERT INTO "rules_englishverb" VALUES(284,'dysfluent','dysfluented','dysfluente
 INSERT INTO "rules_englishverb" VALUES(285,'defraud','defrauded','defrauded','defrauding','defrauds',NULL);
 INSERT INTO "rules_englishverb" VALUES(286,'fleece','fleeced','fleeced','fleecing','fleeces',NULL);
 INSERT INTO "rules_englishverb" VALUES(287,'scam','scammed','scammed','scamming','scams',NULL);
+INSERT INTO "rules_englishverb" VALUES(288,'swindle','swindled','swindled','swindling','swindles',NULL);
 CREATE TABLE "rules_falsepositive" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "createdby_id" integer NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED, "rule_id" integer NOT NULL REFERENCES "rules_rule" ("id") DEFERRABLE INITIALLY DEFERRED, "false_positive" varchar(255) NOT NULL);
 INSERT INTO "rules_falsepositive" VALUES(1,NULL,9,'(SCCE)');
 INSERT INTO "rules_falsepositive" VALUES(2,NULL,10,'(AP/AR)');
@@ -26922,7 +26923,7 @@ INSERT INTO "rules_rule" VALUES(3271,'de','Head of','|',NULL,0,1,1,NULL,NULL,'["
 INSERT INTO "rules_rule" VALUES(3272,'de','Heimatschutz','n',NULL,0,1,NULL,NULL,13,'["Heimatschutz"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'Heimatschutz','default','default',1,1,'heimatschutz','["racist_source_advanced"]',1,12,NULL,'default','singular_only',0,NULL,'n');
 INSERT INTO "rules_rule" VALUES(3273,'de','Heiminsasse','n',NULL,0,1,NULL,NULL,14,'["Heiminsasse"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'Heiminsasse','default','default',1,1,'heiminsasse','["ability_advanced"]',0,11,NULL,'default','default',0,NULL,'n');
 INSERT INTO "rules_rule" VALUES(3274,'de','heiter','a',NULL,0,1,NULL,NULL,NULL,'["heiter"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'heiter','default','default',1,1,'heiter','["communal", "culture"]',0,6,NULL,'default','default',0,NULL,'a');
-INSERT INTO "rules_rule" VALUES(3275,'de','Held','n',NULL,0,1,NULL,NULL,NULL,'["Held"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'Held','default','default',1,1,'held','["exaggerating"]',0,4,NULL,'default','default',0,NULL,'n');
+INSERT INTO "rules_rule" VALUES(3275,'de','Held','n',NULL,0,1,1,NULL,NULL,'["Held"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'Held','suffix','default',1,1,'held','["exaggerating"]',0,4,NULL,'default','default',0,NULL,'n');
 INSERT INTO "rules_rule" VALUES(3276,'de','helfen','v',NULL,0,1,NULL,NULL,NULL,'["helfen"]','[{"word_type": "v", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'helfen','default','default',1,1,'helfen','["communal"]',0,6,NULL,'default','default',0,NULL,'v');
 INSERT INTO "rules_rule" VALUES(3277,'de','Helfer','n',NULL,0,1,NULL,NULL,NULL,'["Helfer"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'Helfer','suffix','default',1,1,'helfer','["titles"]',0,6,NULL,'non_person','default',0,NULL,'n');
 INSERT INTO "rules_rule" VALUES(3278,'de','heller Geist','~a|n',NULL,0,1,1,NULL,NULL,'["heller", "Geist"]','[{"word_type": "a", "lower_case": true, "lemmatize": false}, {"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'heller Geist','default','default',0,1,'heller','["exaggerating_advanced"]',0,12,NULL,'default','default',0,NULL,'a');
@@ -27647,7 +27648,7 @@ INSERT INTO "rules_rule" VALUES(3997,'de','Popopirat','n',NULL,0,1,NULL,NULL,NUL
 INSERT INTO "rules_rule" VALUES(3998,'de','Powerfrau','n',NULL,0,1,NULL,NULL,NULL,'["Powerfrau"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'Powerfrau','default','default',1,1,'powerfrau','["agentic"]',1,9,NULL,'default','default',0,NULL,'n');
 INSERT INTO "rules_rule" VALUES(3999,'de','PPC','~',NULL,0,1,NULL,NULL,NULL,'["PPC"]','[{"word_type": "", "lower_case": true, "lemmatize": false}]',0,NULL,NULL,NULL,'PPC','default','default',0,1,'ppc','["abbreviation_advanced"]',0,3,NULL,'default','default',0,NULL,'');
 INSERT INTO "rules_rule" VALUES(4000,'de','PR','~',NULL,0,1,NULL,NULL,NULL,'["PR"]','[{"word_type": "", "lower_case": true, "lemmatize": false}]',0,NULL,NULL,NULL,'PR','default','default',0,1,'pr','["abbreviation_advanced"]',0,2,NULL,'default','default',0,NULL,'');
-INSERT INTO "rules_rule" VALUES(4001,'de','PR-Held','n',NULL,0,1,NULL,NULL,NULL,'["PR-Held"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'PR-Held','default','default',1,1,'pr-held','["exaggerating_advanced"]',0,7,NULL,'default','default',0,NULL,'n');
+INSERT INTO "rules_rule" VALUES(4001,'de','PR-Held','n',NULL,0,1,1,NULL,NULL,'["PR-Held"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'PR-Held','default','default',1,1,'pr-held','["exaggerating"]',0,7,NULL,'default','default',0,NULL,'n');
 INSERT INTO "rules_rule" VALUES(4002,'de','prahlen','v',NULL,0,1,NULL,NULL,NULL,'["prahlen"]','[{"word_type": "v", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'prahlen','default','default',1,1,'prahlen','["agentic"]',0,7,NULL,'default','default',0,NULL,'v');
 INSERT INTO "rules_rule" VALUES(4003,'de','Praktikant','n',NULL,0,1,NULL,NULL,NULL,'["Praktikant"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'Praktikant','suffix','default',1,1,'praktikant','["titles"]',0,10,NULL,'non_person','default',0,NULL,'n');
 INSERT INTO "rules_rule" VALUES(4004,'de','Praktiker','n',NULL,0,1,NULL,NULL,NULL,'["Praktiker"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'Praktiker','suffix','default',1,1,'praktiker','["function"]',0,9,NULL,'non_person','default',0,NULL,'n');
@@ -28512,7 +28513,7 @@ INSERT INTO "sqlite_sequence" VALUES('rules_germannoun',2460);
 INSERT INTO "sqlite_sequence" VALUES('rules_germanadjective',857);
 INSERT INTO "sqlite_sequence" VALUES('rules_alternative',16747);
 INSERT INTO "sqlite_sequence" VALUES('rules_englishnoun',1214);
-INSERT INTO "sqlite_sequence" VALUES('rules_englishverb',287);
+INSERT INTO "sqlite_sequence" VALUES('rules_englishverb',288);
 INSERT INTO "sqlite_sequence" VALUES('rules_germanverb',262);
 INSERT INTO "sqlite_sequence" VALUES('rules_rule',4838);
 COMMIT;
