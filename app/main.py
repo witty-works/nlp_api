@@ -1365,12 +1365,12 @@ async def fetch_user(request: Request) -> str | None:
                         config["domain"],
                         config["policy"],
                     )
-                else:
+                elif "tid" in unverified_claims:
                     claims = await decode_jwt(
                         redis,
                         ssl_session,
                         request,
-                        config["tenant_id"],
+                        unverified_claims["tid"],
                         config["client_id"],
                         config["expected_scope"],
                     )
