@@ -48,6 +48,10 @@ def get_category_name(category):
     return category.removesuffix("_advanced")
 
 
+def is_category_advanced(category):
+    return category.endswith("_advanced")
+
+
 def get_category(category):
     category = get_category_name(category)
 
@@ -111,7 +115,7 @@ def map_importance(category):
     ):
         return 1.0
 
-    if not category.endswith("_advanced"):
-        return 2.0
+    if is_category_advanced(category):
+        return 3.0
 
-    return 3.0
+    return 2.0

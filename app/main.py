@@ -75,7 +75,6 @@ from app.models import (
     Result,
     ResultOut,
     ResultsOut,
-    ResultAlternative,
     UserConfRequest,
     OrganizationConfRequest,
     ConfResponse,
@@ -99,6 +98,7 @@ from app.categories import (
     get_categories,
     get_category,
     get_category_name,
+    is_category_advanced,
 )
 from app.settings import get_settings
 from app.logger import set_up_logger
@@ -897,12 +897,15 @@ async def get_debug_spacy(
     results = []
     tokens = fetch_tokens(lang, text)
     word_type_rule = None
-    for token in tokens:
+    for i in range(len(tokens)):
+        token = tokens[i]
         if word_type_rule is None:
             word_type_rule = ""
         else:
             word_type_rule += "|"
 
+        if lang == LangType.DE:
+            token.lemma_ = await german_lemmatization(tokens, i)
         word_type = await fetch_word_type(lang, token)
         if token.text != token.lemma_:
             word_type_rule += "~"
@@ -2115,11 +2118,14 @@ def apply_false_positives(
     return list_results
 
 
-def is_sub_category_enabled(config: Config, subcategories: list[str]) -> bool | str:
+def is_sub_category_enabled(config: Config, subcategories: list[str], is_advanced: bool = False) -> bool | str:
     if isinstance(subcategories, str):
         subcategories = [subcategories]
 
     for subcategory in subcategories:
+        if is_advanced and not is_category_advanced(subcategory):
+            subcategory+= "_advanced"
+
         if subcategory in config.disabled_categories:
             continue
 
@@ -2532,6 +2538,9 @@ async def german_lemmatization(tokens: Doc, i: int):
                 return token.lemma_
 
             word = remove_gender_ending(token.text)
+            if word[-1] == "-":
+                word = word[0:-1]
+
             result = await german_noun_lookup(word)
             if result is not None:
                 target = "male_form" if result["male_form"] else "base_form"
@@ -3333,6 +3342,9 @@ async def _fetch_word_type(
         ):
             return WordType.ADJECTIVE
 
+        return WordType.NOUN
+
+    if lang == LangType.DE and token.text[0].isupper() and token.text[-1] == "-":
         return WordType.NOUN
 
     if token.tag_ == "KON" or token.pos_ == "CCONJ":
@@ -4720,6 +4732,9 @@ async def gendered_nouns(
         if alternative_variations is None:
             return None, None, []
 
+        if not is_sub_category_enabled(config, subcategory, True):
+            continue
+
         for alternative_variation in alternative_variations:
             new_alternative = deepcopy(alternative)
             new_alternative.lemma = alternative_variation
@@ -4749,6 +4764,12 @@ async def gendered_nouns(
             + tokens[i + 1].whitespace_
             + tokens[i + 2].text
         )
+
+    if text[-1] == "-":
+        for alternative in new_alternatives:
+            if alternative.lemma[-1] != "-":
+                alternative.lemma+= "-"
+
     return text, subcategory, new_alternatives
 
 
