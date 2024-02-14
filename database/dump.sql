@@ -8884,8 +8884,8 @@ INSERT INTO "rules_alternative" VALUES(8899,3,'Rechtsterrorismus','n',0,1,NULL,N
 INSERT INTO "rules_alternative" VALUES(8900,4,'Hasskriminalität','n',0,1,NULL,NULL,2503,NULL,'["Hasskriminalit\u00e4t"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(8901,0,'Kriminalität','n',0,1,NULL,NULL,2504,NULL,'["Kriminalit\u00e4t"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(8902,1,'((Straftat))',NULL,0,1,'''Straftat'' nennen',NULL,2504,NULL,'["(", "(", "Straftat", ")", ")"]','[]','default',0,'default',1,0,'de',0);
-INSERT INTO "rules_alternative" VALUES(8903,0,'ausländische~r Bürger~in~/~Bürger',NULL,0,1,NULL,NULL,2505,NULL,'["ausl\u00e4ndische~r", "B\u00fcrger~in~/~B\u00fcrger"]','[]','default',0,'singular_only',0,0,'de',0);
-INSERT INTO "rules_alternative" VALUES(8904,1,'ausländische Bürger~innen~ und ~Bürger',NULL,0,1,NULL,NULL,2505,NULL,'["ausl\u00e4ndische", "B\u00fcrger~innen~", "und", "~B\u00fcrger"]','[]','default',0,'plural_only',0,0,'de',0);
+INSERT INTO "rules_alternative" VALUES(8903,0,'Bürger~in~/~Bürger',NULL,0,1,NULL,NULL,2505,NULL,'["B\u00fcrger~in~/~B\u00fcrger"]','[]','default',0,'singular_only',0,0,'de',0);
+INSERT INTO "rules_alternative" VALUES(8904,1,'Bürger~innen~ und ~Bürger',NULL,0,1,NULL,NULL,2505,NULL,'["B\u00fcrger~innen~", "und", "~B\u00fcrger"]','[]','default',0,'plural_only',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(8905,0,'beseitigen','v',0,1,NULL,NULL,2506,NULL,'["beseitigen"]','[{"word_type": "v", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(8906,1,'meucheln','v',0,1,NULL,NULL,2506,NULL,'["meucheln"]','[{"word_type": "v", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(8907,2,'vernichten','v',0,1,NULL,NULL,2506,NULL,'["vernichten"]','[{"word_type": "v", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'de',0);
@@ -9218,11 +9218,11 @@ INSERT INTO "rules_alternative" VALUES(9237,1,'Rassisten',NULL,0,1,NULL,NULL,260
 INSERT INTO "rules_alternative" VALUES(9238,2,'Verfassungsfeinde Rechtsradikale',NULL,0,1,NULL,NULL,2600,NULL,'["Verfassungsfeinde", "Rechtsradikale"]','[]','default',0,'plural_only',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(9239,3,'Rechtsextreme',NULL,0,1,NULL,NULL,2600,NULL,'["Rechtsextreme"]','[]','default',0,'plural_only',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(9240,4,'Islamfeind~in~/~Islamfeind',NULL,0,1,NULL,NULL,2600,NULL,'["Islamfeind~in~/~Islamfeind"]','[]','default',0,'singular_only',0,0,'de',0);
-INSERT INTO "rules_alternative" VALUES(9241,5,'Rassist~in',NULL,0,1,NULL,NULL,2600,NULL,'["Rassist~in"]','[]','default',0,'singular_only',0,0,'de',0);
+INSERT INTO "rules_alternative" VALUES(9241,5,'Rassist~in~/~Rassist',NULL,0,1,NULL,NULL,2600,NULL,'["Rassist~in~/~Rassist"]','[]','default',0,'singular_only',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(9242,6,'Verfassungsfeind~in~/~Verfassungsfeind',NULL,0,1,NULL,NULL,2600,NULL,'["Verfassungsfeind~in~/~Verfassungsfeind"]','[]','default',0,'singular_only',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(9243,7,'Rechtsradikal~e~/~Rechtsradikaler',NULL,0,1,NULL,NULL,2600,NULL,'["Rechtsradikal~e~/~Rechtsradikaler"]','[]','default',0,'singular_only',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(9244,8,'Rechtsextrem~e~/~Rechtsextremer',NULL,0,1,NULL,NULL,2600,NULL,'["Rechtsextrem~e~/~Rechtsextremer"]','[]','default',0,'singular_only',0,0,'de',0);
-INSERT INTO "rules_alternative" VALUES(9245,9,'Rassist~innen~ und Rassisten',NULL,0,1,NULL,NULL,2600,NULL,'["Rassist~innen~", "und", "Rassisten"]','[]','default',0,'plural_only',0,0,'de',0);
+INSERT INTO "rules_alternative" VALUES(9245,9,'Rassist~innen~ und ~Rassisten',NULL,0,1,NULL,NULL,2600,NULL,'["Rassist~innen~", "und", "~Rassisten"]','[]','default',0,'plural_only',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(9246,10,'Verfassungsfeind~innen~ und ~Verfassungsfeinde',NULL,0,1,NULL,NULL,2600,NULL,'["Verfassungsfeind~innen~", "und", "~Verfassungsfeinde"]','[]','default',0,'plural_only',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(9247,0,'-','',0,1,NULL,NULL,2601,NULL,'["-"]','[]','default',0,'default',0,1,'de',0);
 INSERT INTO "rules_alternative" VALUES(9248,1,'Schweigen ist Gold',NULL,1,1,NULL,NULL,2601,NULL,'["Schweigen", "ist", "Gold"]','[]','default',0,'default',0,0,'de',0);
@@ -9824,10 +9824,10 @@ INSERT INTO "rules_alternative" VALUES(9844,0,'Diversity, Equity and Inclusion (
 INSERT INTO "rules_alternative" VALUES(9845,1,'Vielfalt, Gleichstellung und Inklusion',NULL,0,1,NULL,NULL,2772,NULL,'["Vielfalt", ",", "Gleichstellung", "und", "Inklusion"]','[]','default',0,'singular_only',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(9846,0,'Diversity, Equity, Inclusion and Belonging (DEIB)',NULL,0,1,NULL,NULL,2773,NULL,'["Diversity", ",", "Equity", ",", "Inclusion", "and", "Belonging", "(", "DEIB", ")"]','[]','default',0,'singular_only',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(9847,1,'Vielfalt, Gleichstellung, Inklusion und Zugehörigkeit',NULL,0,1,NULL,NULL,2773,NULL,'["Vielfalt", ",", "Gleichstellung", ",", "Inklusion", "und", "Zugeh\u00f6rigkeit"]','[]','default',0,'singular_only',0,0,'de',0);
-INSERT INTO "rules_alternative" VALUES(9848,0,'deine~dein Partner~in~/~Partner',NULL,0,1,NULL,NULL,2774,NULL,'["deine~dein", "Partner~in~/~Partner"]','[]','default',0,'singular_only',0,0,'de',0);
+INSERT INTO "rules_alternative" VALUES(9848,0,'dein~e Partner~in~/~Partner',NULL,0,1,NULL,NULL,2774,NULL,'["dein~e", "Partner~in~/~Partner"]','[]','default',0,'singular_only',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(9849,1,'dein Lieblingsmensch',NULL,0,1,NULL,NULL,2774,NULL,'["dein", "Lieblingsmensch"]','[]','default',0,'singular_only',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(9850,2,'deine bessere Hälfte',NULL,1,1,NULL,NULL,2774,NULL,'["deine", "bessere", "H\u00e4lfte"]','[]','default',0,'default',0,0,'de',0);
-INSERT INTO "rules_alternative" VALUES(9851,0,'deine~dein Partner~in~/~Partner',NULL,0,1,NULL,NULL,2775,NULL,'["deine~dein", "Partner~in~/~Partner"]','[]','default',0,'singular_only',0,0,'de',0);
+INSERT INTO "rules_alternative" VALUES(9851,0,'dein~e Partner~in~/~Partner',NULL,0,1,NULL,NULL,2775,NULL,'["dein~e", "Partner~in~/~Partner"]','[]','default',0,'singular_only',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(9852,1,'deine bessere Hälfte',NULL,0,1,NULL,NULL,2775,NULL,'["deine", "bessere", "H\u00e4lfte"]','[]','default',0,'singular_only',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(9853,2,'dein Lieblingsmensch',NULL,0,1,NULL,NULL,2775,NULL,'["dein", "Lieblingsmensch"]','[]','default',0,'singular_only',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(9854,0,'Dekorateur~in~/~Dekorateur','n',0,1,NULL,NULL,2776,NULL,'["Dekorateur~in~/~Dekorateur"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]','default',0,'singular_only',0,0,'de',0);
@@ -11946,7 +11946,7 @@ INSERT INTO "rules_alternative" VALUES(11968,1,'deine','~n',0,1,NULL,NULL,3368,N
 INSERT INTO "rules_alternative" VALUES(11969,2,'Ihre','~n',0,1,NULL,NULL,3368,NULL,'["Ihre"]','[{"word_type": "n", "lower_case": true, "lemmatize": false}]','default',0,'default',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(11970,3,'((Vorname))s',NULL,0,1,'''Vorname'' nennen',NULL,3368,NULL,'["(", "(", "Vorname))s"]','[]','default',0,'default',1,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(11971,4,'((Vorname Nachname))s',NULL,0,1,'''Vorname Nachname'' nennen',NULL,3368,NULL,'["(", "(", "Vorname", "Nachname))s"]','[]','default',0,'default',1,0,'de',0);
-INSERT INTO "rules_alternative" VALUES(11972,0,'ihre~ihr Partner~in~/~Partner',NULL,0,1,NULL,NULL,3369,NULL,'["ihre~ihr", "Partner~in~/~Partner"]','[]','default',0,'singular_only',0,0,'de',0);
+INSERT INTO "rules_alternative" VALUES(11972,0,'ihr~e Partner~in~/~Partner',NULL,0,1,NULL,NULL,3369,NULL,'["ihr~e", "Partner~in~/~Partner"]','[]','default',0,'singular_only',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(11973,1,'ihre Partner~innen~ und ~Partner',NULL,0,1,NULL,NULL,3369,NULL,'["ihre", "Partner~innen~", "und", "~Partner"]','[]','default',0,'plural_only',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(11974,2,'ihre bessere Hälfte',NULL,0,1,NULL,NULL,3369,NULL,'["ihre", "bessere", "H\u00e4lfte"]','[]','default',0,'singular_only',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(11975,3,'ihre Begleitung',NULL,0,1,NULL,NULL,3369,NULL,'["ihre", "Begleitung"]','[]','default',0,'singular_only',0,0,'de',0);
@@ -12539,7 +12539,7 @@ INSERT INTO "rules_alternative" VALUES(12573,2,'interessiert, mit anderen (...) 
 INSERT INTO "rules_alternative" VALUES(12574,3,'durch das Engagement von anderen motiviert',NULL,1,1,NULL,NULL,3547,NULL,'["durch", "das", "Engagement", "von", "anderen", "motiviert"]','[]','default',0,'default',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(12575,0,'Konditor~in~/~Konditor','n',0,1,NULL,NULL,3548,NULL,'["Konditor~in~/~Konditor"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]','default',0,'singular_only',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(12576,1,'Konditor~in~/~Konditor',NULL,0,1,NULL,NULL,3548,NULL,'["Konditor~in~/~Konditor"]','[]','default',0,'plural_only',0,0,'de',0);
-INSERT INTO "rules_alternative" VALUES(12577,2,'Konditorei',NULL,0,1,NULL,NULL,3548,NULL,'["Konditorei"]','[]','default',0,'default',0,0,'de',0);
+INSERT INTO "rules_alternative" VALUES(12577,2,'Konditorei',NULL,0,1,NULL,NULL,3548,NULL,'["Konditorei"]','[]','default',0,'default',0,0,'de',1);
 INSERT INTO "rules_alternative" VALUES(12578,0,'Konfirmationsunterricht','n',0,1,NULL,NULL,3549,NULL,'["Konfirmationsunterricht"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(12579,0,'Konkurrent~in~/~Konkurrent','n',0,1,NULL,NULL,3550,NULL,'["Konkurrent~in~/~Konkurrent"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]','default',0,'singular_only',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(12580,1,'Konkurrent~innen~ und ~Konkurrenten',NULL,0,1,NULL,NULL,3550,NULL,'["Konkurrent~innen~", "und", "~Konkurrenten"]','[]','default',0,'plural_only',0,0,'de',0);
@@ -14792,7 +14792,7 @@ INSERT INTO "rules_alternative" VALUES(14840,4,'((Vorname Nachname))s',NULL,0,1,
 INSERT INTO "rules_alternative" VALUES(14841,0,'organisiert ihr~sein Leben mit Behinderungen',NULL,1,1,NULL,NULL,4253,NULL,'["organisiert", "ihr~sein", "Leben", "mit", "Behinderungen"]','[]','default',0,'default',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(14842,1,'meistert Barrieren',NULL,1,1,NULL,NULL,4253,NULL,'["meistert", "Barrieren"]','[]','default',0,'default',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(14843,2,'meistert Barrieren, die sie~ihn in ihrer~seiner Teilhabe hindern',NULL,1,1,NULL,NULL,4253,NULL,'["meistert", "Barrieren", ",", "die", "sie~ihn", "in", "ihrer~seiner", "Teilhabe", "hindern"]','[]','default',0,'default',0,0,'de',0);
-INSERT INTO "rules_alternative" VALUES(14844,0,'seine~sein Partner~in~/~Partner',NULL,0,1,NULL,NULL,4254,NULL,'["seine~sein", "Partner~in~/~Partner"]','[]','default',0,'singular_only',0,0,'de',0);
+INSERT INTO "rules_alternative" VALUES(14844,0,'sein~e Partner~in~/~Partner',NULL,0,1,NULL,NULL,4254,NULL,'["sein~e", "Partner~in~/~Partner"]','[]','default',0,'singular_only',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(14845,1,'seine Begleitung',NULL,0,1,NULL,NULL,4254,NULL,'["seine", "Begleitung"]','[]','default',0,'singular_only',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(14846,0,'ihrem~seinem','~n',0,1,NULL,NULL,4255,NULL,'["ihrem~seinem"]','[{"word_type": "n", "lower_case": true, "lemmatize": false}]','default',0,'default',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(14847,1,'deinem','~n',0,1,NULL,NULL,4255,NULL,'["deinem"]','[{"word_type": "n", "lower_case": true, "lemmatize": false}]','default',0,'default',0,0,'de',0);
@@ -14816,7 +14816,7 @@ INSERT INTO "rules_alternative" VALUES(14864,3,'((Vorname))s',NULL,0,1,'''Vornam
 INSERT INTO "rules_alternative" VALUES(14865,4,'((Vorname Nachname))s',NULL,0,1,'''Vorname Nachname'' nennen',NULL,4258,NULL,'["(", "(", "Vorname", "Nachname))s"]','[]','default',0,'default',1,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(14866,0,'Sekretär~in~/~Sekretär','n',0,1,NULL,NULL,4259,NULL,'["Sekret\u00e4r~in~/~Sekret\u00e4r"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]','default',0,'singular_only',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(14867,1,'Sekretär~innen~ und ~Sekretäre',NULL,0,1,NULL,NULL,4259,NULL,'["Sekret\u00e4r~innen~", "und", "~Sekret\u00e4re"]','[]','default',0,'plural_only',0,0,'de',0);
-INSERT INTO "rules_alternative" VALUES(14868,2,'~Sekretariat',NULL,0,1,NULL,NULL,4259,NULL,'["~Sekretariat"]','[]','default',0,'default',0,0,'de',0);
+INSERT INTO "rules_alternative" VALUES(14868,2,'~Sekretariat',NULL,0,1,NULL,NULL,4259,NULL,'["~Sekretariat"]','[]','default',0,'default',0,0,'de',1);
 INSERT INTO "rules_alternative" VALUES(14869,0,'-','',0,1,NULL,NULL,4260,NULL,'["-"]','[]','default',0,'default',0,1,'de',0);
 INSERT INTO "rules_alternative" VALUES(14870,0,'verantwortungsfreudig','a',0,1,NULL,NULL,4261,NULL,'["verantwortungsfreudig"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'de',0);
 INSERT INTO "rules_alternative" VALUES(14871,1,'verantwortlich','a',0,1,NULL,NULL,4261,NULL,'["verantwortlich"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'de',0);
@@ -18609,6 +18609,9 @@ INSERT INTO "rules_englishnoun" VALUES(1211,'womanx','womenx',NULL,NULL);
 INSERT INTO "rules_englishnoun" VALUES(1212,'top-performer','top-performers',NULL,NULL);
 INSERT INTO "rules_englishnoun" VALUES(1213,'domestic','domestics',NULL,NULL);
 INSERT INTO "rules_englishnoun" VALUES(1214,'firm','firms',NULL,NULL);
+INSERT INTO "rules_englishnoun" VALUES(1215,'bosser','bossers',NULL,NULL);
+INSERT INTO "rules_englishnoun" VALUES(1216,'fiance','fiances',NULL,NULL);
+INSERT INTO "rules_englishnoun" VALUES(1217,'fiancee','fiancees',NULL,NULL);
 CREATE TABLE "rules_englishverb" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "base_form" varchar(255) NOT NULL UNIQUE, "past_tense" varchar(255) NULL, "past_participle" varchar(255) NULL, "present_participle" varchar(255) NULL, "third_person_singular" varchar(255) NULL, "createdby_id" integer NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED);
 INSERT INTO "rules_englishverb" VALUES(1,'have','had','had','having','has',NULL);
 INSERT INTO "rules_englishverb" VALUES(2,'be','were','been','being','is',NULL);
@@ -20948,6 +20951,7 @@ INSERT INTO "rules_germanadjective" VALUES(854,'abgeschlossen',NULL,'abgeschloss
 INSERT INTO "rules_germanadjective" VALUES(855,'systematisch',NULL,'systematischer',0,'systematischsten');
 INSERT INTO "rules_germanadjective" VALUES(856,'detailorientiert',NULL,'detailorientierter',0,'detailorientiertesten');
 INSERT INTO "rules_germanadjective" VALUES(857,'konzeptionell',NULL,'konzeptionell',1,'konzeptionell');
+INSERT INTO "rules_germanadjective" VALUES(858,'analytisch',NULL,'analytischer',0,'analytischsten');
 CREATE TABLE "rules_germannoun" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "base_form" varchar(255) NOT NULL UNIQUE, "createdby_id" integer NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED, "female_form" varchar(255) NULL, "gender_1" varchar(9) NULL, "gender_2" varchar(9) NULL, "pl_dat" varchar(255) NULL, "pl_gen" varchar(255) NULL, "pl_acc" varchar(255) NULL, "plural_only" bool NOT NULL, "sg_dat" varchar(255) NULL, "sg_gen" varchar(255) NULL, "pl_nom" varchar(255) NULL, "singular_only" bool NOT NULL, "male_form" varchar(255) NULL, "sg_acc" varchar(255) NULL, "sg_dat_2" varchar(255) NULL, "sg_gen_2" varchar(255) NULL, "sg_nom" varchar(255) NULL);
 INSERT INTO "rules_germannoun" VALUES(1,'Abgeordneter',NULL,'Abgeordnete','masculine',NULL,'Abgeordneten','Abgeordneter','Abgeordnete',0,'Abgeordnetem','Abgeordneten','Abgeordnete',0,NULL,'Abgeordneten',NULL,NULL,'Abgeordneter');
 INSERT INTO "rules_germannoun" VALUES(2,'Abgeordnete',NULL,NULL,'feminine',NULL,'Abgeordneten','Abgeordneter','Abgeordnete',0,'Abgeordneter','Abgeordneter','Abgeordnete',0,'Abgeordneter','Abgeordnete',NULL,NULL,'Abgeordnete');
@@ -22231,7 +22235,7 @@ INSERT INTO "rules_germannoun" VALUES(1302,'Befugnis',NULL,NULL,'feminine',NULL,
 INSERT INTO "rules_germannoun" VALUES(1303,'Position',NULL,NULL,'feminine',NULL,'Positionen','Positionen','Positionen',0,'Position','Position','Positionen',0,NULL,'Position',NULL,NULL,'Position');
 INSERT INTO "rules_germannoun" VALUES(1304,'Mittel',NULL,NULL,'neuter',NULL,'Mitteln','Mittel','Mittel',0,'Mittel','Mittels','Mittel',0,NULL,'Mittel',NULL,NULL,'Mittel');
 INSERT INTO "rules_germannoun" VALUES(1305,'Disziplin',NULL,NULL,'feminine',NULL,'Disziplinen','Disziplinen','Disziplinen',0,'Disziplin','Disziplin','Disziplinen',0,NULL,'Disziplin',NULL,NULL,'Disziplin');
-INSERT INTO "rules_germannoun" VALUES(1306,'Bevollmächtigung',NULL,NULL,'feminine',NULL,'Bevollmächtigungen⁴','Bevollmächtigungen⁴','Bevollmächtigungen⁴',0,'Bevollmächtigung','Bevollmächtigung','Bevollmächtigungen⁴',0,NULL,'Bevollmächtigung',NULL,NULL,'Bevollmächtigung');
+INSERT INTO "rules_germannoun" VALUES(1306,'Bevollmächtigung',NULL,NULL,'feminine','','Bevollmächtigungen','Bevollmächtigungen','Bevollmächtigungen',0,'Bevollmächtigung','Bevollmächtigung','Bevollmächtigungen',0,NULL,'Bevollmächtigung',NULL,NULL,'Bevollmächtigung');
 INSERT INTO "rules_germannoun" VALUES(1307,'Mädchenname',NULL,NULL,'masculine',NULL,'Mädchennamen','Mädchennamen','Mädchennamen',0,'Mädchennamen','Mädchennamens','Mädchennamen',0,NULL,'Mädchennamen',NULL,NULL,'Mädchenname');
 INSERT INTO "rules_germannoun" VALUES(1308,'Geburtsname',NULL,NULL,'masculine',NULL,'Geburtsnamen','Geburtsnamen','Geburtsnamen',0,'Geburtsnamen','Geburtsnamens','Geburtsnamen',0,NULL,'Geburtsnamen',NULL,NULL,'Geburtsname');
 INSERT INTO "rules_germannoun" VALUES(1309,'Magd',NULL,NULL,'feminine',NULL,'Mägden','Mägde','Mägde',0,'Magd','Magd','Mägde',0,NULL,'Magd',NULL,NULL,'Magd');
@@ -23001,7 +23005,7 @@ INSERT INTO "rules_germannoun" VALUES(2081,'Vermittlerin',NULL,NULL,'feminine',N
 INSERT INTO "rules_germannoun" VALUES(2082,'Vermittlung',NULL,NULL,'feminine',NULL,'Vermittlungen','Vermittlungen','Vermittlungen',0,'Vermittlung','Vermittlung','Vermittlungen',0,NULL,'Vermittlung',NULL,NULL,'Vermittlung');
 INSERT INTO "rules_germannoun" VALUES(2083,'Vernichtung',NULL,NULL,'feminine',NULL,'Vernichtungen','Vernichtungen','Vernichtungen',0,'Vernichtung','Vernichtung','Vernichtungen',0,NULL,'Vernichtung',NULL,NULL,'Vernichtung');
 INSERT INTO "rules_germannoun" VALUES(2084,'Verpflichtung',NULL,NULL,'feminine',NULL,'Verpflichtungen','Verpflichtungen','Verpflichtungen',0,'Verpflichtung','Verpflichtung','Verpflichtungen',0,NULL,'Verpflichtung',NULL,NULL,'Verpflichtung');
-INSERT INTO "rules_germannoun" VALUES(2085,'Verschạcherung',NULL,NULL,'feminine',NULL,'','','',0,'Verschạcherung','Verschạcherung','',1,NULL,'Verschạcherung',NULL,NULL,'Verschạcherung');
+INSERT INTO "rules_germannoun" VALUES(2085,'Verschacherung',NULL,NULL,'feminine','','Verschächerungen','Verschächerungen','Verschächerungen',0,'Verschacherungs','Verschacherung','Verschächerungen',0,NULL,'Verschacherung',NULL,NULL,'Verschacherung');
 INSERT INTO "rules_germannoun" VALUES(2086,'Verramschung',NULL,NULL,NULL,NULL,'Verramschungen','Verramschung','Verramschung',0,'Verramschungs','Verramschung','Verramschung',0,NULL,'Verramschung',NULL,NULL,'Verramschung');
 INSERT INTO "rules_germannoun" VALUES(2087,'Verscherbelung',NULL,NULL,NULL,NULL,'Verscherbelungen','Verscherbelung','Verscherbelung',0,'Verscherbelungs','Verscherbelung','Verscherbelung',0,NULL,'Verscherbelung',NULL,NULL,'Verscherbelung');
 INSERT INTO "rules_germannoun" VALUES(2088,'Veräußerung',NULL,NULL,'feminine',NULL,'Veräußerungen','Veräußerungen','Veräußerungen',0,'Veräußerung','Veräußerung','Veräußerungen',0,NULL,'Veräußerung',NULL,NULL,'Veräußerung');
@@ -23101,7 +23105,6 @@ INSERT INTO "rules_germannoun" VALUES(2183,'Balkan-Schnitzel',NULL,NULL,'masculi
 INSERT INTO "rules_germannoun" VALUES(2184,'Zigeunersprache',NULL,NULL,'feminine',NULL,'Zigeunersprachen','Zigeunersprachen','Zigeunersprachen',0,'Zigeunersprache','Zigeunersprache','Zigeunersprachen',0,NULL,'Zigeunersprache',NULL,NULL,'Zigeunersprache');
 INSERT INTO "rules_germannoun" VALUES(2185,'Romani',NULL,NULL,'neuter',NULL,NULL,NULL,NULL,0,'Romani','Romani',NULL,1,NULL,'Romani',NULL,'Romanis','Romani');
 INSERT INTO "rules_germannoun" VALUES(2186,'Romanes',NULL,NULL,'neuter',NULL,NULL,NULL,NULL,0,'Romanes','Romanes',NULL,1,NULL,'Romanes',NULL,NULL,'Romanes');
-INSERT INTO "rules_germannoun" VALUES(2187,'Sintikanes',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL);
 INSERT INTO "rules_germannoun" VALUES(2188,'Zimmerer',NULL,'Zimmerin','masculine',NULL,'Zimmerern','Zimmerer','Zimmerer',0,'Zimmerer','Zimmerers','Zimmerer',0,NULL,'Zimmerer',NULL,NULL,'Zimmerer');
 INSERT INTO "rules_germannoun" VALUES(2189,'Zimmerin',NULL,NULL,'feminine',NULL,'Zimmerinnen','Zimmerinnen','Zimmerinnen',0,'Zimmerin','Zimmerin','Zimmerinnen',0,'Zimmerer','Zimmerin',NULL,NULL,'Zimmerin');
 INSERT INTO "rules_germannoun" VALUES(2190,'Zimmereifachkraft',NULL,NULL,'feminine',NULL,'Zimmereifachkräften','Zimmereifachkräfte','Zimmereifachkräfte',0,'Zimmereifachkraft','Zimmereifachkraft','Zimmereifachkräfte',0,NULL,'Zimmereifachkraft',NULL,NULL,'Zimmereifachkraft');
@@ -23169,10 +23172,9 @@ INSERT INTO "rules_germannoun" VALUES(2251,'Buchhändler',NULL,NULL,'masculine',
 INSERT INTO "rules_germannoun" VALUES(2252,'Bundeskanzler',NULL,NULL,'masculine',NULL,'Bundeskanzlern','Bundeskanzler','Bundeskanzler',0,'Bundeskanzler','Bundeskanzlers','Bundeskanzler',0,NULL,'Bundeskanzler',NULL,NULL,'Bundeskanzler');
 INSERT INTO "rules_germannoun" VALUES(2253,'Bürokaufmann',NULL,NULL,'masculine',NULL,'Bürokaufleuten','Bürokaufleute','Bürokaufleute',0,'Bürokaufmann','Bürokaufmanns','Bürokaufleute',0,NULL,'Bürokaufmann',NULL,NULL,'Bürokaufmann');
 INSERT INTO "rules_germannoun" VALUES(2254,'Busfahrer',NULL,NULL,'masculine',NULL,'Busfahrern','Busfahrer','Busfahrer',0,'Busfahrer','Busfahrers','Busfahrer',0,NULL,'Busfahrer',NULL,NULL,'Busfahrer');
-INSERT INTO "rules_germannoun" VALUES(2255,'Callcenter Agent',NULL,NULL,'masculine',NULL,'Callcenter Agenten','Callcenter Agenten','Callcenter Agenten',0,'Callcenter Agenten','Callcenter Agenten','Callcenter Agenten',0,NULL,'Callcenter Agenten',NULL,NULL,'Callcenter Agent');
 INSERT INTO "rules_germannoun" VALUES(2256,'Callcenter-Agent',NULL,NULL,'masculine',NULL,'Callcenter-Agenten','Callcenter-Agenten','Callcenter-Agenten',0,'Callcenter-Agenten','Callcenter-Agenten','Callcenter-Agenten',0,NULL,'Callcenter-Agenten',NULL,NULL,'Callcenter-Agent');
 INSERT INTO "rules_germannoun" VALUES(2257,'Coiffeuse',NULL,NULL,'masculine',NULL,'Coiffeusen','Coiffeusen','Coiffeusen',0,'Coiffeuse','Coiffeuses','Coiffeusen',0,NULL,'Coiffeuse',NULL,NULL,'Coiffeuse');
-INSERT INTO "rules_germannoun" VALUES(2258,'Content Manager',NULL,NULL,'masculine',NULL,'Content Managern','Content Managers','Content Managers',0,'Content Manager','Content Managers','Content Managers',0,NULL,'Content Manager',NULL,NULL,'Content Manager');
+INSERT INTO "rules_germannoun" VALUES(2258,'Content',NULL,NULL,'masculine','','Contents','Contents','Contents',0,'Content','Contents','Contents',0,NULL,'Content',NULL,NULL,'Content');
 INSERT INTO "rules_germannoun" VALUES(2259,'Corporate-Influencer',NULL,NULL,'masculine',NULL,'Corporate-Influencern','Corporate-Influencer','Corporate-Influencer',0,'Corporate-Influencer','Corporate-Influencers','Corporate-Influencer',0,NULL,'Corporate-Influencer',NULL,NULL,'Corporate-Influencer');
 INSERT INTO "rules_germannoun" VALUES(2260,'Dachdecker',NULL,NULL,'masculine',NULL,'Dachdeckern','Dachdecker','Dachdecker',0,'Dachdecker','Dachdeckers','Dachdecker',0,NULL,'Dachdecker',NULL,NULL,'Dachdecker');
 INSERT INTO "rules_germannoun" VALUES(2261,'Dekorationsnäher',NULL,NULL,'masculine',NULL,'Dekorationsnähern','Dekorationsnäher','Dekorationsnäher',0,'Dekorationsnäher','Dekorationsnähers','Dekorationsnäher',0,NULL,'Dekorationsnäher',NULL,NULL,'Dekorationsnäher');
@@ -23217,7 +23219,7 @@ INSERT INTO "rules_germannoun" VALUES(2299,'Industriekaufmann',NULL,NULL,'mascul
 INSERT INTO "rules_germannoun" VALUES(2300,'Industriekeramiker',NULL,NULL,'masculine',NULL,'Industriekeramikern','Industriekeramiker','Industriekeramiker',0,'Industriekeramiker','Industriekeramikers','Industriekeramiker',0,NULL,'Industriekeramiker',NULL,NULL,'Industriekeramiker');
 INSERT INTO "rules_germannoun" VALUES(2301,'Industriemechaniker',NULL,NULL,'masculine',NULL,'Industriemechanikern','Industriemechaniker','Industriemechaniker',0,'Industriemechaniker','Industriemechanikers','Industriemechaniker',0,NULL,'Industriemechaniker',NULL,NULL,'Industriemechaniker');
 INSERT INTO "rules_germannoun" VALUES(2302,'Industriepolsterer',NULL,NULL,'masculine',NULL,'Industriepolsterern','Industriepolsterer','Industriepolsterer',0,'Industriepolsterer','Industriepolsterers','Industriepolsterer',0,NULL,'Industriepolsterer',NULL,NULL,'Industriepolsterer');
-INSERT INTO "rules_germannoun" VALUES(2303,'Ingenieur Elektrotechnik',NULL,NULL,'masculine',NULL,'Ingenieuren Elektrotechnik','Ingenieure Elektrotechnik','Ingenieure Elektrotechnik',0,'Ingenieur Elektrotechnik','Ingenieurs Elektrotechnik','Ingenieure Elektrotechnik',0,NULL,'Ingenieur Elektrotechnik',NULL,NULL,'Ingenieur Elektrotechnik');
+INSERT INTO "rules_germannoun" VALUES(2303,'Technik',NULL,NULL,'feminine','','Techniken','Techniken','Techniken',0,'Technik','Technik','Techniken',0,NULL,'Technik',NULL,NULL,'Technik');
 INSERT INTO "rules_germannoun" VALUES(2304,'Innendekorateur',NULL,NULL,'masculine',NULL,'Innendekorateuren','Innendekorateure','Innendekorateure',0,'Innendekorateur','Innendekorateurs','Innendekorateure',0,NULL,'Innendekorateur',NULL,NULL,'Innendekorateur');
 INSERT INTO "rules_germannoun" VALUES(2305,'IT-Projektleiter',NULL,NULL,'masculine',NULL,'IT-Projektleitern','IT-Projektleiter','IT-Projektleiter',0,'IT-Projektleiter','IT-Projektleiters','IT-Projektleiter',0,NULL,'IT-Projektleiter',NULL,NULL,'IT-Projektleiter');
 INSERT INTO "rules_germannoun" VALUES(2306,'Kaminfeger',NULL,NULL,'masculine',NULL,'Kaminfegern','Kaminfeger','Kaminfeger',0,'Kaminfeger','Kaminfegers','Kaminfeger',0,NULL,'Kaminfeger',NULL,NULL,'Kaminfeger');
@@ -23336,12 +23338,12 @@ INSERT INTO "rules_germannoun" VALUES(2422,'Primary',NULL,NULL,NULL,NULL,NULL,NU
 INSERT INTO "rules_germannoun" VALUES(2423,'Main',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL);
 INSERT INTO "rules_germannoun" VALUES(2424,'Default',NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL);
 INSERT INTO "rules_germannoun" VALUES(2425,'Ehegattin',NULL,NULL,'feminine',NULL,'Ehegattinnen','Ehegattinnen','Ehegattinnen',0,'Ehegattin','Ehegattin','Ehegattinnen',0,'Ehegatte','Ehegattin',NULL,NULL,'Ehegattin');
-INSERT INTO "rules_germannoun" VALUES(2426,'Resultat',NULL,NULL,'neuter','','Resultaten','Resultate','Resultate',0,'Resultat','Resultates','Resultate',0,NULL,'Resultat','Resultate⁶','Resultats','Resultat');
+INSERT INTO "rules_germannoun" VALUES(2426,'Resultat',NULL,NULL,'neuter','','Resultaten','Resultate','Resultate',0,'Resultat','Resultates','Resultate',0,NULL,'Resultat','Resultate','Resultats','Resultat');
 INSERT INTO "rules_germannoun" VALUES(2428,'Unterstützender',NULL,'Unterstützende','masculine','','Unterstützenden','Unterstützende','Unterstützende',0,'Unterstützender','Unterstützender','Unterstützende',0,NULL,'Unterstützender',NULL,NULL,'Unterstützender');
 INSERT INTO "rules_germannoun" VALUES(2430,'BIPoC',NULL,NULL,'','',NULL,NULL,NULL,0,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL);
 INSERT INTO "rules_germannoun" VALUES(2431,'Nation',NULL,NULL,'feminine','','Nationen','Nationen','Nationen',0,'Nation','Nation','Nationen',0,NULL,'Nation',NULL,NULL,'Nation');
 INSERT INTO "rules_germannoun" VALUES(2432,'Austesten',NULL,NULL,'neuter','',NULL,NULL,NULL,0,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL);
-INSERT INTO "rules_germannoun" VALUES(2433,'Belastbarkeit',NULL,NULL,'feminine','','Belastbarkeiten⁰','Belastbarkeiten⁰','Belastbarkeiten⁰',0,'Belastbarkeit','Belastbarkeit','Belastbarkeiten⁰',0,NULL,'Belastbarkeit',NULL,NULL,'Belastbarkeit');
+INSERT INTO "rules_germannoun" VALUES(2433,'Belastbarkeit',NULL,NULL,'feminine','','Belastbarkeiten','Belastbarkeiten','Belastbarkeiten',0,'Belastbarkeit','Belastbarkeit','Belastbarkeiten',0,NULL,'Belastbarkeit',NULL,NULL,'Belastbarkeit');
 INSERT INTO "rules_germannoun" VALUES(2434,'Eigentümer',NULL,NULL,'masculine','','Eigentümern','Eigentümer','Eigentümer',0,'Eigentümer','Eigentümers','Eigentümer',0,NULL,'Eigentümer',NULL,NULL,'Eigentümer');
 INSERT INTO "rules_germannoun" VALUES(2435,'Altweiber',NULL,NULL,'neuter','','Altweibern','Altweiber','Altweiber',0,'Altweib','Altweibes','Altweiber',0,NULL,'Altweib','Altweibe','Altweibs','Altweib');
 INSERT INTO "rules_germannoun" VALUES(2437,'Telefon',NULL,NULL,'neuter','','Telefonen','Telefone','Telefone',0,'Telefon','Telefons','Telefone',0,NULL,'Telefon',NULL,NULL,'Telefon');
@@ -23354,7 +23356,7 @@ INSERT INTO "rules_germannoun" VALUES(2443,'Geschmacksprobe',NULL,NULL,'feminine
 INSERT INTO "rules_germannoun" VALUES(2444,'Trampelfard',NULL,NULL,'masculine','','Trämpelfarden','Trämpelfarde','Trämpelfarde',0,'Trampelfards','Trampelfard','Trämpelfarde',0,NULL,'Trampelfard',NULL,NULL,'Trampelfard');
 INSERT INTO "rules_germannoun" VALUES(2445,'Weiberfasnacht',NULL,NULL,'feminine','','Weiberfasnächten','Weiberfasnächte','Weiberfasnächte',0,'Weiberfasnacht','Weiberfasnacht','Weiberfasnächte',0,NULL,'Weiberfasnacht',NULL,NULL,'Weiberfasnacht');
 INSERT INTO "rules_germannoun" VALUES(2446,'Wachstum',NULL,NULL,'neuter','',NULL,NULL,NULL,0,'Wachstum','Wachstums',NULL,1,NULL,'Wachstum',NULL,NULL,'Wachstum');
-INSERT INTO "rules_germannoun" VALUES(2447,'Wald',NULL,NULL,'masculine','','Wäldern','Wälder','Wälder',0,'Wald','Waldes','Wälder',0,NULL,'Wald','Walde⁶','Walds','Wald');
+INSERT INTO "rules_germannoun" VALUES(2447,'Wald',NULL,NULL,'masculine','','Wäldern','Wälder','Wälder',0,'Wald','Waldes','Wälder',0,NULL,'Wald','Walde','Walds','Wald');
 INSERT INTO "rules_germannoun" VALUES(2448,'Avantgarde',NULL,NULL,'feminine','','Avantgarden','Avantgarden','Avantgarden',0,'Avantgarde','Avantgarde','Avantgarden',0,NULL,'Avantgarde',NULL,NULL,'Avantgarde');
 INSERT INTO "rules_germannoun" VALUES(2449,'Fazit',NULL,NULL,'neuter','','Faziten','Fazite','Fazite',0,'Fazit','Fazits','Fazite',0,NULL,'Fazit',NULL,NULL,'Fazit');
 INSERT INTO "rules_germannoun" VALUES(2450,'Bürgerin',NULL,NULL,'feminine','','Bürgerinnen','Bürgerinnen','Bürgerinnen',0,'Bürgerin','Bürgerin','Bürgerinnen',0,'Bürger','Bürgerin',NULL,NULL,'Bürgerin');
@@ -23366,15 +23368,45 @@ INSERT INTO "rules_germannoun" VALUES(2455,'Mitarbeitendengespräch',NULL,NULL,'
 INSERT INTO "rules_germannoun" VALUES(2456,'Entwicklungsgespräch',NULL,NULL,'neuter','','Entwicklungsgesprächen','Entwicklungsgespräche','Entwicklungsgespräche',0,'Entwicklungsgespräch','Entwicklungsgesprächs','Entwicklungsgespräche',0,NULL,'Entwicklungsgespräch','Entwicklungsgespräche','Entwicklungsgespräches','Entwicklungsgespräch');
 INSERT INTO "rules_germannoun" VALUES(2457,'Ausbildung',NULL,NULL,'feminine','','Ausbildungen','Ausbildungen','Ausbildungen',0,'Ausbildung','Ausbildung','Ausbildungen',0,NULL,'Ausbildung',NULL,NULL,'Ausbildung');
 INSERT INTO "rules_germannoun" VALUES(2458,'Denken',NULL,NULL,'neuter','',NULL,NULL,NULL,0,'Denken','Denkens',NULL,0,NULL,'Denken',NULL,NULL,'Denken');
-INSERT INTO "rules_germannoun" VALUES(2459,'Fähigkeit',NULL,NULL,'feminine','','Fähigkeiten⁰','Fähigkeiten⁰','Fähigkeiten⁰',0,'Fähigkeit','Fähigkeit','Fähigkeiten⁰',0,NULL,'Fähigkeit',NULL,NULL,'Fähigkeit');
+INSERT INTO "rules_germannoun" VALUES(2459,'Fähigkeit',NULL,NULL,'feminine','','Fähigkeiten','Fähigkeiten','Fähigkeiten',0,'Fähigkeit','Fähigkeit','Fähigkeiten',0,NULL,'Fähigkeit',NULL,NULL,'Fähigkeit');
 INSERT INTO "rules_germannoun" VALUES(2460,'Datenanalyse',NULL,NULL,'feminine','','Datenanalysen','Datenanalysen','Datenanalysen',0,'Datenanalyse','Datenanalyse','Datenanalysen',0,NULL,'Datenanalyse',NULL,NULL,'Datenanalyse');
+INSERT INTO "rules_germannoun" VALUES(2461,'Regenwald',NULL,NULL,'masculine','','Regenwäldern','Regenwälder','Regenwälder',0,'Regenwald','Regenwaldes','Regenwälder',0,NULL,'Regenwald','Regenwalde','Regenwalds','Regenwald');
+INSERT INTO "rules_germannoun" VALUES(2462,'Autist',NULL,'Autistin','masculine','','Autisten','Autisten','Autisten',0,'Autisten','Autisten','Autisten',0,NULL,'Autisten',NULL,NULL,'Autist');
+INSERT INTO "rules_germannoun" VALUES(2463,'Autistin',NULL,NULL,'feminine','','Autistinnen','Autistinnen','Autistinnen',0,'Autistin','Autistin','Autistinnen',0,'Autist','Autistin',NULL,NULL,'Autistin');
+INSERT INTO "rules_germannoun" VALUES(2464,'Rechtsextremer',NULL,'Rechtsextreme','','','Rechtsextremen','Rechtsextreme','Rechtsextreme',0,'Rechtsextremers','Rechtsextremer','Rechtsextreme',0,NULL,'Rechtsextremer',NULL,NULL,'Rechtsextremer');
+INSERT INTO "rules_germannoun" VALUES(2465,'Rechtsextreme',NULL,NULL,'feminine','','Rechtsextremen','Rechtsextreme','Rechtsextreme',0,'Rechtsextremers','Rechtsextremer','Rechtsextreme',0,'Rechtsextremer','Rechtsextreme',NULL,NULL,'Rechtsextremer');
+INSERT INTO "rules_germannoun" VALUES(2466,'Feind',NULL,'Feindin','masculine','masculine','Feinden','Feinde','Feinde',0,'Feind','Feindes','Feinde',0,NULL,'Feind','Feinde','Feinds','Feind');
+INSERT INTO "rules_germannoun" VALUES(2467,'Feindin',NULL,NULL,'feminine','','Feindinnen','Feindinnen','Feindinnen',0,'Feindin','Feindin','Feindinnen',0,'Feind','Feindin',NULL,NULL,'Feindin');
+INSERT INTO "rules_germannoun" VALUES(2468,'Rassist',NULL,'Rassistin','masculine','','Rassisten','Rassisten','Rassisten',0,'Rassisten','Rassisten','Rassisten',0,NULL,'Rassisten',NULL,NULL,'Rassist');
+INSERT INTO "rules_germannoun" VALUES(2469,'Rassistin',NULL,NULL,'feminine','','Rassistinnen','Rassistinnen','Rassistinnen',0,'Rassistin','Rassistin','Rassistinnen',0,'Rassist','Rassistin',NULL,NULL,'Rassistin');
+INSERT INTO "rules_germannoun" VALUES(2470,'Lieber',NULL,'Liebe','masculine','','Liebern','Lieber','Lieber',0,'Lieber','Liebers','Lieber',0,NULL,'Lieber',NULL,NULL,'Lieber');
+INSERT INTO "rules_germannoun" VALUES(2471,'Liebe',NULL,NULL,'feminine','','Lieben','Lieben','Lieben',0,'Liebe','Liebe','Lieben',0,'Lieber','Liebe',NULL,NULL,'Liebe');
+INSERT INTO "rules_germannoun" VALUES(2472,'Verwalter',NULL,'Verwalterin','masculine','','Verwaltern','Verwalter','Verwalter',0,'Verwalter','Verwalters','Verwalter',0,NULL,'Verwalter',NULL,NULL,'Verwalter');
+INSERT INTO "rules_germannoun" VALUES(2473,'Verwalterin',NULL,NULL,'feminine','','Verwalterinnen','Verwalterinnen','Verwalterinnen',0,'Verwalterin','Verwalterin','Verwalterinnen',0,'Verwalter','Verwalterin',NULL,NULL,'Verwalterin');
+INSERT INTO "rules_germannoun" VALUES(2474,'Owner',NULL,'Ownerin','','','Ownern','Owner','Owner',0,'Owners','Owner','Owner',0,NULL,'Owner',NULL,NULL,'Owner');
+INSERT INTO "rules_germannoun" VALUES(2475,'Ownerin',NULL,NULL,'feminine','','Ownerinnen','Ownerinnen','Ownerinnen',0,'Ownerin','Ownerin','Ownerinnen',0,'Owner','Ownerin',NULL,NULL,'Ownerin');
+INSERT INTO "rules_germannoun" VALUES(2476,'Spieler',NULL,'Spielerin','masculine','','Spielern','Spieler','Spieler',0,'Spieler','Spielers','Spieler',0,NULL,'Spieler',NULL,NULL,'Spieler');
+INSERT INTO "rules_germannoun" VALUES(2477,'Spielerin',NULL,NULL,'feminine','','Spielerinnen','Spielerinnen','Spielerinnen',0,'Spielerin','Spielerin','Spielerinnen',0,'Spieler','Spielerin',NULL,NULL,'Spielerin');
+INSERT INTO "rules_germannoun" VALUES(2478,'Nachfahre',NULL,'Nachfahrin','masculine','','Nachfahren','Nachfahren','Nachfahren',0,'Nachfahren','Nachfahren','Nachfahren',0,NULL,'Nachfahren',NULL,NULL,'Nachfahre');
+INSERT INTO "rules_germannoun" VALUES(2479,'Nachfahrin',NULL,NULL,'feminine','','Nachfahrinnen','Nachfahrinnen','Nachfahrinnen',0,'Nachfahrin','Nachfahrin','Nachfahrinnen',0,'Nachfahre','Nachfahrin',NULL,NULL,'Nachfahrin');
+INSERT INTO "rules_germannoun" VALUES(2480,'Verantwortlicher',NULL,'Verantwortliche','masculine','','Verantwortlichen','Verantwortlichen','Verantwortlichen',0,'Verantwortlichen','Verantwortlichen','Verantwortlichen',0,NULL,'Verantwortlichen',NULL,NULL,'Verantwortliche');
+INSERT INTO "rules_germannoun" VALUES(2481,'Verantwortliche',NULL,NULL,'feminine','','Verantwortlichen','Verantwortlichen','Verantwortlichen',0,'Verantwortlichen','Verantwortlichen','Verantwortlichen',0,'Verantwortlicher','Verantwortliche',NULL,NULL,'Verantwortliche');
+INSERT INTO "rules_germannoun" VALUES(2482,'Bildnerin',NULL,NULL,'feminine','','Bildnerinnen','Bildnerinnen','Bildnerinnen',0,'Bildnerin','Bildnerin','Bildnerinnen',0,'Bildner','Bildnerin',NULL,NULL,'Bildnerin');
+INSERT INTO "rules_germannoun" VALUES(2483,'Innovator',NULL,'Innovatorin','neuter','','Innovatoren','Innovatore','Innovatore',0,'Innovator','Innovators','Innovatore',0,NULL,'Innovator','Innovatore','Innovatores','Innovator');
+INSERT INTO "rules_germannoun" VALUES(2484,'Innovatorin',NULL,NULL,'feminine','','Innovatorinnen','Innovatorinnen','Innovatorinnen',0,'Innovatorin','Innovatorin','Innovatorinnen',0,'Innovator','Innovatorin',NULL,NULL,'Innovatorin');
+INSERT INTO "rules_germannoun" VALUES(2485,'Vorreiter',NULL,'Vorreiterin','masculine','','Vorreitern','Vorreiter','Vorreiter',0,'Vorreiter','Vorreiters','Vorreiter',0,NULL,'Vorreiter',NULL,NULL,'Vorreiter');
+INSERT INTO "rules_germannoun" VALUES(2486,'Vorreiterin',NULL,NULL,'feminine','','Vorreiterinnen','Vorreiterinnen','Vorreiterinnen',0,'Vorreiterin','Vorreiterin','Vorreiterinnen',0,'Vorreiter','Vorreiterin',NULL,NULL,'Vorreiterin');
+INSERT INTO "rules_germannoun" VALUES(2487,'Masterin',NULL,NULL,'feminine','','Masterinnen','Masterinnen','Masterinnen',0,'Masterin','Masterin','Masterinnen',0,'Master','Masterin',NULL,NULL,'Masterin');
+INSERT INTO "rules_germannoun" VALUES(2488,'Chefin',NULL,NULL,'feminine','','Chefinnen','Chefinnen','Chefinnen',0,'Chefin','Chefin','Chefinnen',0,NULL,'Chefin',NULL,NULL,'Chefin');
+INSERT INTO "rules_germannoun" VALUES(2489,'Abteilung',NULL,NULL,'feminine','','Abteilungen','Abteilungen','Abteilungen',0,'Abteilung','Abteilung','Abteilungen',0,NULL,'Abteilung',NULL,NULL,'Abteilung');
+INSERT INTO "rules_germannoun" VALUES(2490,'Ziel',NULL,NULL,'neuter','','Zielen','Ziele','Ziele',0,'Ziel','Zieles','Ziele',0,NULL,'Ziel','Ziele','Ziels','Ziel');
+INSERT INTO "rules_germannoun" VALUES(2491,'Probe',NULL,NULL,'feminine','','Proben','Proben','Proben',0,'Probe','Probe','Proben',0,NULL,'Probe',NULL,NULL,'Probe');
 CREATE TABLE "rules_germanverb" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "base_form" varchar(255) NOT NULL UNIQUE, "createdby_id" integer NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED, "conjunctive_ich" varchar(255) NULL, "helping_verb" varchar(255) NULL, "imperativ_plural" varchar(255) NULL, "imperativ_singular" varchar(255) NULL, "infinitiv_zu" varchar(255) NULL, "past_participle" varchar(255) NULL, "past_tense_ich" varchar(255) NULL, "present_du" varchar(255) NULL, "present_ich" varchar(255) NULL, "present_pronoun" varchar(255) NULL);
 INSERT INTO "rules_germanverb" VALUES(1,'abschachern',NULL,'schacherte ab','haben','schachert ab','schachere ab','abzuschachern','abgeschachert','schacherte ab','schacherst ab','schachere ab','schachert ab');
 INSERT INTO "rules_germanverb" VALUES(2,'abgewinnen',NULL,'gewänne ab','haben','gewinnt ab','gewinn ab','abzugewinnen','abgewonnen','gewann ab','gewinnst ab','gewinne ab','gewinnt ab');
 INSERT INTO "rules_germanverb" VALUES(3,'abkaufen',NULL,'kaufte ab','haben','kauft ab','kauf ab','abzukaufen','abgekauft','kaufte ab','kaufst ab','kaufe ab','kauft ab');
 INSERT INTO "rules_germanverb" VALUES(4,'ablocken',NULL,'lockte ab','haben','locken ab','locke ab','abzulocken','abgelockt','lockte ab','lockst ab','locke ab','lockt ab');
-INSERT INTO "rules_germanverb" VALUES(5,'abluchsen',NULL,'luchste ab','haben','luchst ab','luchs ab','abzuluchsen
-','abgeluchst','luchste ab','luchst ab','luchse ab','luchst ab');
+INSERT INTO "rules_germanverb" VALUES(5,'abluchsen',NULL,'luchste ab','haben','luchst ab','luchs ab','abzuluchsen','abgeluchst','luchste ab','luchst ab','luchse ab','luchst ab');
 INSERT INTO "rules_germanverb" VALUES(6,'adden',NULL,'addete','haben','addet','adde','zu adden','geaddet','addete','addest','adde','addet');
 INSERT INTO "rules_germanverb" VALUES(7,'hinzufügen',NULL,'fügte hinzu','haben','fügt hinzu','füg hinzu','hinzuzufügen','hinzugefügt','fügte hinzu','fügst hinzu','füge hinzu','fügt hinzu');
 INSERT INTO "rules_germanverb" VALUES(8,'einladen',NULL,'lüde ein','haben','ladet ein','lade ein','einzuladen','eingeladen','lud ein','lädst ein','lade ein','lädt ein');
@@ -23451,8 +23483,7 @@ INSERT INTO "rules_germanverb" VALUES(79,'durchsetzen',NULL,'setzte durch','habe
 INSERT INTO "rules_germanverb" VALUES(80,'erwirken',NULL,'erwirkte','haben','erwirkt','erwirk','zu erwirken','erwirkt','erwirkte','erwirkst','erwirke','erwirkt');
 INSERT INTO "rules_germanverb" VALUES(81,'umsetzen',NULL,'setzte um','haben','setzt um','setze um','umzusetzen','umgesetzt','setzte um','setzt um','setze um','setzt um');
 INSERT INTO "rules_germanverb" VALUES(82,'finden',NULL,'fände','haben','findet','finde','zu finden','gefunden','fand','findest','finde','findet');
-INSERT INTO "rules_germanverb" VALUES(83,'einfühlen',NULL,'fühlte ein','haben','fühlt ein','fühl ein','einzufühlen
-','eingefühlt','fühlte ein','fühlst ein','fühle ein','fühlt ein');
+INSERT INTO "rules_germanverb" VALUES(83,'einfühlen',NULL,'fühlte ein','haben','fühlt ein','fühl ein','einzufühlen','eingefühlt','fühlte ein','fühlst ein','fühle ein','fühlt ein');
 INSERT INTO "rules_germanverb" VALUES(84,'engagieren',NULL,'engagierte','haben','engagiert','engagiere','engzuagieren','engagiert','engagierte','engagierst','engagiere','engagiert');
 INSERT INTO "rules_germanverb" VALUES(85,'ermutigen',NULL,'ermutigte','haben','ermutigt','ermutig','zu ermutigen','ermutigt','ermutigte','ermutigst','ermutige','ermutigt');
 INSERT INTO "rules_germanverb" VALUES(86,'erobern',NULL,'eroberte','haben','erobert','erobre','zu erobern','erobert','eroberte','eroberst','erobere','erobert');
@@ -23493,8 +23524,7 @@ INSERT INTO "rules_germanverb" VALUES(120,'kritisieren',NULL,'kritisierte','habe
 INSERT INTO "rules_germanverb" VALUES(121,'kämpfen',NULL,'kämpfte','haben','kämpft','kämpf','zu kämpfen','gekämpft','kämpfte','kämpfst','kämpfe','kämpft');
 INSERT INTO "rules_germanverb" VALUES(122,'einstehen',NULL,'stünde ein','haben','steht ein','stehe ein','einzustehen','eingestanden','stand ein','stehst ein','stehe ein','steht ein');
 INSERT INTO "rules_germanverb" VALUES(123,'befürworten',NULL,'befürwortete','haben','befürwortet','befürwort','zu befürworten','befürwortet','befürwortete','befürwortest','befürworte','befürwortet');
-INSERT INTO "rules_germanverb" VALUES(124,'entgegenwirken',NULL,'wirkte entgegen','haben','wirkt entgegen','wirke entgegen','entgegenzuwirken
-','entgegengewirkt','wirkte entgegen','wirkst entgegen','wirke entgegen','wirkt entgegen');
+INSERT INTO "rules_germanverb" VALUES(124,'entgegenwirken',NULL,'wirkte entgegen','haben','wirkt entgegen','wirke entgegen','entgegenzuwirken','entgegengewirkt','wirkte entgegen','wirkst entgegen','wirke entgegen','wirkt entgegen');
 INSERT INTO "rules_germanverb" VALUES(125,'werben',NULL,'würbe','haben','werbt','wirb','zu werben','geworben','warb','wirbst','werbe','wirbt');
 INSERT INTO "rules_germanverb" VALUES(126,'plädieren',NULL,'plädierte','haben','plädiert','plädiere','zu plädieren','plädiert','plädierte','plädierst','plädiere','plädiert');
 INSERT INTO "rules_germanverb" VALUES(127,'kommunizieren',NULL,'kommunizierte','haben','kommuniziert','kommuniziere','zu kommunizieren','kommuniziert','kommunizierte','kommunizierst','kommuniziere','kommuniziert');
@@ -23502,8 +23532,7 @@ INSERT INTO "rules_germanverb" VALUES(128,'kooperieren',NULL,'kooperierte','habe
 INSERT INTO "rules_germanverb" VALUES(129,'tragen',NULL,'trüge','haben','tragt','trag','zu tragen','getragen','trug','trägst','trage','trägt');
 INSERT INTO "rules_germanverb" VALUES(130,'kreieren',NULL,'kreierte','haben','kreiert','kreiere','zu kreieren','kreiert','kreierte','kreierst','kreiere','kreiert');
 INSERT INTO "rules_germanverb" VALUES(131,'kümmern',NULL,'kümmerte','haben','kümmert','kümmere','zu kümmern','gekümmert','kümmerte','kümmerst','kümmere','kümmert');
-INSERT INTO "rules_germanverb" VALUES(132,'lahmen',NULL,'lahmte','haben','lahmt','lahm','zu lahmen
-','gelahmt','lahmte','lahmst','lahme','lahmt');
+INSERT INTO "rules_germanverb" VALUES(132,'lahmen',NULL,'lahmte','haben','lahmt','lahm','zu lahmen','gelahmt','lahmte','lahmst','lahme','lahmt');
 INSERT INTO "rules_germanverb" VALUES(133,'lahmlegen',NULL,'legte lahm','haben','legt lahm','leg lahm','lahmzulegen','lahmgelegt','legte lahm','legst lahm','lege lahm','legt lahm');
 INSERT INTO "rules_germanverb" VALUES(134,'leiden',NULL,'litte','haben','leidet','leide','zu leiden','gelitten','litt','leidest','leide','leidet');
 INSERT INTO "rules_germanverb" VALUES(135,'leisten',NULL,'leistete','haben','leistet','leiste','zu leisten','geleistet','leistete','leistest','leiste','leistet');
@@ -23518,12 +23547,10 @@ INSERT INTO "rules_germanverb" VALUES(143,'betrügen',NULL,'betröge','haben','b
 INSERT INTO "rules_germanverb" VALUES(144,'irreführen',NULL,'führte irre','haben','führt irre','führ irre','irrezuführen','irregeführt','führte irre','führst irre','führe irre','führt irre');
 INSERT INTO "rules_germanverb" VALUES(145,'übervorteilen',NULL,'übervorteilte','haben','übervorteilt','übervorteil','zu übervorteilen','übervorteilt','übervorteilte','übervorteilst','übervorteile','übervorteilt');
 INSERT INTO "rules_germanverb" VALUES(146,'erreichen',NULL,'erreichte','haben','erreicht','erreich','zu erreichen','erreicht','erreichte','erreichst','erreiche','erreicht');
-INSERT INTO "rules_germanverb" VALUES(147,'schlagen',NULL,'schlüge','haben','schlagt','schlag','zu schlagen
-','geschlagen','schlug','schlägst','schlage','schlägt');
+INSERT INTO "rules_germanverb" VALUES(147,'schlagen',NULL,'schlüge','haben','schlagt','schlag','zu schlagen','geschlagen','schlug','schlägst','schlage','schlägt');
 INSERT INTO "rules_germanverb" VALUES(148,'mitarbeiten',NULL,'arbeitete mit','haben','arbeitet mit','arbeite mit','mitzuarbeiten','mitgearbeitet','arbeitete mit','arbeitest mit','arbeite mit','arbeitet mit');
 INSERT INTO "rules_germanverb" VALUES(149,'mitfühlen',NULL,'fühlte mit','haben','fühlt mit','fühl mit','mitzufühlen','mitgefühlt','fühlte mit','fühlst mit','fühle mit','fühlt mit');
-INSERT INTO "rules_germanverb" VALUES(150,'mitgestalten',NULL,'gestaltete mit','haben','gestaltet mit','gestalte mit','mitzugestalten
-','mitgestaltet','gestaltete mit','gestaltest mit','gestalte mit','gestaltet mit');
+INSERT INTO "rules_germanverb" VALUES(150,'mitgestalten',NULL,'gestaltete mit','haben','gestaltet mit','gestalte mit','mitzugestalten','mitgestaltet','gestaltete mit','gestaltest mit','gestalte mit','gestaltet mit');
 INSERT INTO "rules_germanverb" VALUES(151,'mitwirken',NULL,'wirkte mit','haben','wirkt mit','wirk mit','mitzuwirken','mitgewirkt','wirkte mit','wirkst mit','wirke mit','wirkt mit');
 INSERT INTO "rules_germanverb" VALUES(152,'nachfühlen',NULL,'fühlte nach','haben','fühlt nach','fühl nach','nachzufühlen','nachgefühlt','fühlte nach','fühlst nach','fühle nach','fühlt nach');
 INSERT INTO "rules_germanverb" VALUES(153,'nachgeben',NULL,'gäbe nach','haben','gebt nach','gib nach','nachzugeben','nachgegeben','gab nach','gibst nach','gebe nach','gibt nach');
@@ -23544,26 +23571,22 @@ INSERT INTO "rules_germanverb" VALUES(167,'reflektieren',NULL,'reflektierte','ha
 INSERT INTO "rules_germanverb" VALUES(168,'überdenken',NULL,'überdächte','haben','überdenkt','überdenke','zu überdenken','überdacht','überdachte','überdenkst','überdenke','überdenkt');
 INSERT INTO "rules_germanverb" VALUES(169,'betrachten',NULL,'betrachtete','haben','betrachtet','betrachte','zu betrachten','betrachtet','betrachtete','betrachtest','betrachte','betrachtet');
 INSERT INTO "rules_germanverb" VALUES(170,'reinstaffen',NULL,'stäffte rein','haben','stafft rein','staff rein','reinzustaffen','reingestafft','staffte rein','stäffst rein','staffe rein','stäfft rein');
-INSERT INTO "rules_germanverb" VALUES(171,'zuteilen',NULL,'teilte zu','haben','teilt zu','teil zu','zuzuteilen
-','zugeteilt','teilte zu','teilst zu','teile zu','teilt zu');
+INSERT INTO "rules_germanverb" VALUES(171,'zuteilen',NULL,'teilte zu','haben','teilt zu','teil zu','zuzuteilen','zugeteilt','teilte zu','teilst zu','teile zu','teilt zu');
 INSERT INTO "rules_germanverb" VALUES(172,'resyncen',NULL,'resyncte','sein','resynct','resync','zu resyncen','geresynct','resyncte','resyncst','resynce','resynct');
 INSERT INTO "rules_germanverb" VALUES(173,'abstimmen',NULL,'stimmte ab','haben','stimmt ab','stimm ab','abzustimmen','abgestimmt','stimmte ab','stimmst ab','stimme ab','stimmt ab');
 INSERT INTO "rules_germanverb" VALUES(174,'koordinieren',NULL,'koordinierte','haben','koordiniert','koordiniere','zu koordinieren','koordiniert','koordinierte','koordinierst','koordiniere','koordiniert');
-INSERT INTO "rules_germanverb" VALUES(175,'abgleichen',NULL,'gliche ab','haben','gleicht ab','gleiche ab','abzugleichen
-','abgeglichen','glich ab','gleichst ab','gleiche ab','gleicht ab');
+INSERT INTO "rules_germanverb" VALUES(175,'abgleichen',NULL,'gliche ab','haben','gleicht ab','gleiche ab','abzugleichen','abgeglichen','glich ab','gleichst ab','gleiche ab','gleicht ab');
 INSERT INTO "rules_germanverb" VALUES(176,'schachern',NULL,'schacherte','haben','schachert','schachere','zu schachern','geschachert','schacherte','schacherst','schachere','schachert');
 INSERT INTO "rules_germanverb" VALUES(177,'feilschen',NULL,'feilschte','haben','feilschet','feilsche','zu feilschen','gefeilscht','feilschte','feilschst','feilsche','feilscht');
 INSERT INTO "rules_germanverb" VALUES(178,'treiben',NULL,'triebe','haben','treibt','treib','zu treiben','getrieben','trieb','treibst','treibe','treibt');
 INSERT INTO "rules_germanverb" VALUES(179,'schwarzarbeiten',NULL,'arbeitete schwarz','haben','arbeitet schwarz','arbeit schwarz','schwarzzuarbeiten','schwarzgearbeitet','arbeitete schwarz','arbeitest schwarz','arbeite schwarz','arbeitet schwarz');
 INSERT INTO "rules_germanverb" VALUES(180,'pfuschen',NULL,'pfuschte','haben','pfuscht','pfusch','zu pfuschen','gepfuscht','pfuschte','pfuscht','pfusche','pfuscht');
 INSERT INTO "rules_germanverb" VALUES(181,'schwarzfahren',NULL,'führe schwarz','sein','fahrt schwarz','fahr schwarz','schwarzzufahren','schwarzgefahren','fuhr schwarz','fährst schwarz','fahre schwarz','fährt schwarz');
-INSERT INTO "rules_germanverb" VALUES(182,'schwarzmalen',NULL,'malte schwarz','haben','malt schwarz','mal schwarz','schwarzzumalen
-','schwarzgemalt','malte schwarz','malst schwarz','male schwarz','malt schwarz');
+INSERT INTO "rules_germanverb" VALUES(182,'schwarzmalen',NULL,'malte schwarz','haben','malt schwarz','mal schwarz','schwarzzumalen','schwarzgemalt','malte schwarz','malst schwarz','male schwarz','malt schwarz');
 INSERT INTO "rules_germanverb" VALUES(183,'schwarzsehen',NULL,'sähe schwarz','haben','seht schwarz','sieh schwarz','schwarzzusehen','schwarzgesehen','sah schwarz','siehst schwarz','sehe schwarz','sieht schwarz');
 INSERT INTO "rules_germanverb" VALUES(184,'auffahren',NULL,'führe auf','sein','fahrt auf','fahr auf','aufzufahren','aufgefahren','fuhr auf','fährst auf','fahre auf','fährt auf');
 INSERT INTO "rules_germanverb" VALUES(185,'shiften',NULL,'shiftete','haben','shiftet','shifte','zu shiften','geshiftet','shiftete','shiftest','shifte','shiftet');
-INSERT INTO "rules_germanverb" VALUES(186,'umverteilen',NULL,'verteilte um','haben','verteilt um','verteil um','umzuverteilen
-','umverteilt','verteilte um','verteilst um','verteile um','verteilt um');
+INSERT INTO "rules_germanverb" VALUES(186,'umverteilen',NULL,'verteilte um','haben','verteilt um','verteil um','umzuverteilen','umverteilt','verteilte um','verteilst um','verteile um','verteilt um');
 INSERT INTO "rules_germanverb" VALUES(187,'verschieben',NULL,'verschöbe','haben','verschiebt','verschiebe','zu verschieben','verschoben','verschob','verschiebst','verschiebe','verschiebt');
 INSERT INTO "rules_germanverb" VALUES(188,'versetzen',NULL,'versetzte','haben','versetzt','versetze','zu versetzen','versetzt','versetzte','versetzt','versetze','versetzt');
 INSERT INTO "rules_germanverb" VALUES(189,'reißen',NULL,'risse','haben','reißt','reiße','zu reißen','gerissen','riss','reißt','reiße','reißt');
@@ -23573,7 +23596,7 @@ INSERT INTO "rules_germanverb" VALUES(192,'ermöglichen',NULL,'ermöglichte','ha
 INSERT INTO "rules_germanverb" VALUES(193,'gewährleisten',NULL,'gewährleistete','haben','gewährleistet','gewährleist','zu gewährleisten','gewährleistet','gewährleistete','gewährleistest','gewährleiste','gewährleistet');
 INSERT INTO "rules_germanverb" VALUES(194,'skippen',NULL,'skippte','haben','skippt','skipp','zu skippen','geskippt','skippte','skippst','skippe','skippt');
 INSERT INTO "rules_germanverb" VALUES(195,'weglassen',NULL,'ließe weg','haben','lasst weg','lass weg','wegzulassen','weggelassen','ließ weg','lässt weg','lasse weg','lässt weg');
-INSERT INTO "rules_germanverb" VALUES(196,'überspringen',NULL,'überspränge','haben','überspringt!','überspring','zu überspringen','übersprungen','übersprang','überspringst','überspringe','überspringt');
+INSERT INTO "rules_germanverb" VALUES(196,'überspringen',NULL,'überspränge','haben','überspringt','überspring','zu überspringen','übersprungen','übersprang','überspringst','überspringe','überspringt');
 INSERT INTO "rules_germanverb" VALUES(197,'durchwinken',NULL,'winkte durch','haben','winkt durch','winke durch','zu durchwinken','durchgewinkt','winkte durch','winkst durch','winke durch','winkt durch');
 INSERT INTO "rules_germanverb" VALUES(198,'ignorieren',NULL,'ignorierte','haben','ignoriert','ignoriere','zu ignorieren','ignoriert','ignorierte','ignorierst','ignoriere','ignoriert');
 INSERT INTO "rules_germanverb" VALUES(199,'sorgen',NULL,'sorgte','haben','sorgt','sorg','zu sorgen','gesorgt','sorgte','sorgst','sorge','sorgt');
@@ -23599,15 +23622,13 @@ INSERT INTO "rules_germanverb" VALUES(218,'überzeugen',NULL,'überzeugte','habe
 INSERT INTO "rules_germanverb" VALUES(219,'denken',NULL,'dächte','haben','denkt','denk','zu denken','gedacht','dachte','denkst','denke','denkt');
 INSERT INTO "rules_germanverb" VALUES(220,'value-adden',NULL,'value-addete','haben','value-addet','value-adde','zu value-adden','value-geaddet','value-addete','value-addest','value-adde','value-addet');
 INSERT INTO "rules_germanverb" VALUES(221,'beitragen',NULL,'trüge bei','haben','tragt bei','trag bei','zu beitragen','beigetragen','trug bei','trägst bei','trage bei','trägt bei');
-INSERT INTO "rules_germanverb" VALUES(222,'verantworten',NULL,'verantwortete','haben','verantwortet','verantwort','zu verantworten
-','verantwortet','verantwortete','verantwortest','verantworte','verantwortet');
+INSERT INTO "rules_germanverb" VALUES(222,'verantworten',NULL,'verantwortete','haben','verantwortet','verantwort','zu verantworten','verantwortet','verantwortete','verantwortest','verantworte','verantwortet');
 INSERT INTO "rules_germanverb" VALUES(223,'verfechten',NULL,'verföchte','haben','verfechtet','verficht','zu verfechten','verfochten','verfocht','verfichtst','verfechte','verficht');
 INSERT INTO "rules_germanverb" VALUES(224,'vermitteln',NULL,'vermittelte','haben','vermittelt','vermittle','zu vermitteln','vermittelt','vermittelte','vermittelst','vermittle','vermittelt');
 INSERT INTO "rules_germanverb" VALUES(225,'verpflichten',NULL,'verpflichtete','haben','verpflichtet','verpflichte','zu verpflichten','verpflichtet','verpflichtete','verpflichtest','verpflichte','verpflichtet');
 INSERT INTO "rules_germanverb" VALUES(226,'verschachern',NULL,'verschacherte','haben','verschachert','verschachere','zu verschachern','verschachert','verschacherte','verschacherst','verschachere','verschachert');
 INSERT INTO "rules_germanverb" VALUES(227,'verhökern',NULL,'verhökerte','haben','verhökert','verhökere','zu verhökern','verhökert','verhökerte','verhökerst','verhökere','verhökert');
-INSERT INTO "rules_germanverb" VALUES(228,'verscheuern',NULL,'verscheuerte','haben','verscheuert','verscheuer','zu verscheuern
-','verscheuert','verscheuerte','verscheuerst','verscheuere','verscheuert');
+INSERT INTO "rules_germanverb" VALUES(228,'verscheuern',NULL,'verscheuerte','haben','verscheuert','verscheuer','zu verscheuern','verscheuert','verscheuerte','verscheuerst','verscheuere','verscheuert');
 INSERT INTO "rules_germanverb" VALUES(229,'veräußern',NULL,'veräußerte','haben','veräußert','veräußere','zu veräußern','veräußert','veräußerte','veräußerst','veräußere','veräußert');
 INSERT INTO "rules_germanverb" VALUES(230,'verstehen',NULL,'verstände','haben','versteht','verstehe','zu verstehen','verstanden','verstand','verstehst','verstehe','versteht');
 INSERT INTO "rules_germanverb" VALUES(231,'vertrauen',NULL,'vertraute','haben','vertraut','vertraue','zu vertrauen','vertraut','vertraute','vertraust','vertraue','vertraut');
@@ -23616,38 +23637,31 @@ INSERT INTO "rules_germanverb" VALUES(233,'verkleinern',NULL,'verkleinerte','hab
 INSERT INTO "rules_germanverb" VALUES(234,'verkümmern',NULL,'verkümmerte','sein','verkümmert','verkümmere','zu verkümmern','verkümmert','verkümmerte','verkümmerst','verkümmere','verkümmert');
 INSERT INTO "rules_germanverb" VALUES(235,'vermindern',NULL,'verminderte','haben','vermindert','verminder','zu vermindern','vermindert','verminderte','verminderst','vermindere','vermindert');
 INSERT INTO "rules_germanverb" VALUES(236,'verzwergen',NULL,'verzwergte','haben','verzwergt','verzwerge','zu verzwergen','verzwergt','verzwergte','verzwergst','verzwerge','verzwergt');
-INSERT INTO "rules_germanverb" VALUES(237,'vorantreiben',NULL,'trieb voran','haben','treibt voran','treib voran','voranzutreiben
-','vorangetrieben','trieb voran','treibst voran','treibe voran','treibt voran');
+INSERT INTO "rules_germanverb" VALUES(237,'vorantreiben',NULL,'trieb voran','haben','treibt voran','treib voran','voranzutreiben','vorangetrieben','trieb voran','treibst voran','treibe voran','treibt voran');
 INSERT INTO "rules_germanverb" VALUES(238,'wagen',NULL,'wagte','haben','wagt','wage','zu wagen','gewagt','wagte','wagst','wage','wagt');
 INSERT INTO "rules_germanverb" VALUES(239,'ausprobieren',NULL,'probierte aus','haben','probiert aus','probier aus','auszuprobieren','ausprobiert','probierte aus','probierst aus','probiere aus','probiert aus');
 INSERT INTO "rules_germanverb" VALUES(240,'wärmen',NULL,'wärmte','haben','wärmt','wärm','zu wärmen','gewärmt','wärmte','wärmst','wärme','wärmt');
 INSERT INTO "rules_germanverb" VALUES(241,'lernen',NULL,'lernte','haben','lernt','lerne','zu lernen','gelernt','lernte','lernst','lerne','lernt');
 INSERT INTO "rules_germanverb" VALUES(242,'wetteifern',NULL,'wetteiferte','haben','wetteifert','wetteifere','wettzueifern','gewetteifert','wetteiferte','wetteiferst','wetteifere','wetteifert');
-INSERT INTO "rules_germanverb" VALUES(243,'dürfen',NULL,'dürfte','haben','—','—','zu dürfen','gedurft','durfte','darfst','darf','darf');
+INSERT INTO "rules_germanverb" VALUES(243,'dürfen',NULL,'dürfte','haben',NULL,NULL,'zu dürfen','gedurft','durfte','darfst','darf','darf');
 INSERT INTO "rules_germanverb" VALUES(244,'wohlfühlen',NULL,'fühlte wohl','haben','fühlt wohl','fühl wohl','wohlzufühlen','wohlgefühlt','fühlte wohl','fühlst wohl','fühle wohl','fühlt wohl');
 INSERT INTO "rules_germanverb" VALUES(245,'zählen',NULL,'zählte','haben','zählt','zähle','zu zählen','gezählt','zählte','zählst','zähle','zählt');
 INSERT INTO "rules_germanverb" VALUES(246,'zensieren',NULL,'zensierte','haben','zensiert','zensier','zu zensieren','zensiert','zensierte','zensierst','zensiere','zensiert');
 INSERT INTO "rules_germanverb" VALUES(247,'zusammenarbeiten',NULL,'arbeitete zusammen','haben','arbeitet zusammen','arbeite zusammen','zuzusammenarbeiten','zusammengearbeitet','arbeitete zusammen','arbeitest zusammen','arbeite zusammen','arbeitet zusammen');
 INSERT INTO "rules_germanverb" VALUES(248,'zustimmen',NULL,'stimmte zu','haben','stimmt zu','stimme zu','zuzustimmen','zugestimmt','stimmte zu','stimmst zu','stimme zu','stimmt zu');
-INSERT INTO "rules_germanverb" VALUES(249,'ausloten',NULL,'lotete aus','haben','lotet aus','lot aus','auszuloten
-','ausgelotet','lotete aus','lotest aus','lote aus','lotet aus');
-INSERT INTO "rules_germanverb" VALUES(250,'weiterentwickeln',NULL,'entwickelte weiter','haben','entwickelt weiter','entwickle weiter','weiterzuentwickeln
-','weiterentwickelt','entwickelte weiter','entwickelst weiter','entwickle weiter','entwickelt weiter');
-INSERT INTO "rules_germanverb" VALUES(251,'einsetzen',NULL,'setzte ein','haben','setzt ein','setze ein','einzusetzen
-','eingesetzt','setzte ein','setzt ein','setze ein','setzt ein');
+INSERT INTO "rules_germanverb" VALUES(249,'ausloten',NULL,'lotete aus','haben','lotet aus','lot aus','auszuloten','ausgelotet','lotete aus','lotest aus','lote aus','lotet aus');
+INSERT INTO "rules_germanverb" VALUES(250,'weiterentwickeln',NULL,'entwickelte weiter','haben','entwickelt weiter','entwickle weiter','weiterzuentwickeln','weiterentwickelt','entwickelte weiter','entwickelst weiter','entwickle weiter','entwickelt weiter');
+INSERT INTO "rules_germanverb" VALUES(251,'einsetzen',NULL,'setzte ein','haben','setzt ein','setze ein','einzusetzen','eingesetzt','setzte ein','setzt ein','setze ein','setzt ein');
 INSERT INTO "rules_germanverb" VALUES(252,'abzocken',NULL,'zockte ab','haben','zockt ab','zocke ab','abzuzocken','abgezockt','zockte ab','zockst ab','zocke ab','zockt ab');
 INSERT INTO "rules_germanverb" VALUES(253,'ausnehmen',NULL,'nähme aus','haben','nehmt aus','nimm aus','auszunehmen','ausgenommen','nahm aus','nimmst aus','nehme aus','nimmt aus');
 INSERT INTO "rules_germanverb" VALUES(254,'prellen',NULL,'prellte','haben','prellt','prelle','zu prellen','geprellt','prellte','prellst','prelle','prellt');
-INSERT INTO "rules_germanverb" VALUES(255,'abkassieren',NULL,'kassierte ab','haben','kassiert ab','kassier ab','abzukassieren
-','abkassiert','kassierte ab','kassierst ab','kassiere ab','kassiert ab');
+INSERT INTO "rules_germanverb" VALUES(255,'abkassieren',NULL,'kassierte ab','haben','kassiert ab','kassier ab','abzukassieren','abkassiert','kassierte ab','kassierst ab','kassiere ab','kassiert ab');
 INSERT INTO "rules_germanverb" VALUES(256,'anschwärzen',NULL,'schwärzte an','haben','schwärzt an','schwärz an','anzuschwärzen','angeschwärzt','schwärzte an','schwärzt an','schwärze an','schwärzt an');
 INSERT INTO "rules_germanverb" VALUES(257,'verleumden',NULL,'verleumdete','haben','verleumdet','verleumde','zu verleumden','verleumdet','verleumdete','verleumdest','verleumde','verleumdet');
-INSERT INTO "rules_germanverb" VALUES(258,'diffamieren',NULL,'diffamierte','haben','diffamiert','diffamier','zu diffamieren
-','diffamiert','diffamierte','diffamierst','diffamiere','diffamiert');
+INSERT INTO "rules_germanverb" VALUES(258,'diffamieren',NULL,'diffamierte','haben','diffamiert','diffamier','zu diffamieren','diffamiert','diffamierte','diffamierst','diffamiere','diffamiert');
 INSERT INTO "rules_germanverb" VALUES(259,'beanspruchen',NULL,'beanspruchte','haben','beansprucht','beanspruche','zu beanspruchen','beansprucht','beanspruchte','beanspruchst','beanspruche','beansprucht');
 INSERT INTO "rules_germanverb" VALUES(261,'malen',NULL,'malte schwarz','haben','malt schwarz','male schwarz','schwarzzumalen','schwarzgemalt','malte schwarz','malst schwarz','male schwarz','malt schwarz');
-INSERT INTO "rules_germanverb" VALUES(262,'befürchten',NULL,'befürchtete','haben','befürchtet','befürchte','zu befürchten
-','befürchtet','befürchtete','befürchtest','befürchte','befürchtet');
+INSERT INTO "rules_germanverb" VALUES(262,'befürchten',NULL,'befürchtete','haben','befürchtet','befürchte','zu befürchten','befürchtet','befürchtete','befürchtest','befürchte','befürchtet');
 CREATE TABLE "rules_rule" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "language" varchar(2) NOT NULL, "lemma" varchar(255) NOT NULL, "word_types" varchar(255) NULL, "label" varchar(255) NULL, "is_context_aware" bool NOT NULL, "is_active" bool NOT NULL, "createdby_id" integer NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED, "ownedby_id" integer NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED, "source_id" integer NULL REFERENCES "rules_source" ("id") DEFERRABLE INITIALLY DEFERRED, "lemma_json" text NOT NULL CHECK ((JSON_VALID("lemma_json") OR "lemma_json" IS NULL)), "word_types_json" text NOT NULL CHECK ((JSON_VALID("word_types_json") OR "word_types_json" IS NULL)), "is_marked_for_review" bool NOT NULL, "emoji" varchar(5) NULL, "explanation" varchar(255) NULL, "url" varchar(255) NULL, "text_id" varchar(255) NOT NULL, "type" varchar(9) NOT NULL, "label_type" varchar(40) NOT NULL, "first_is_word_type_lemmatize" bool NULL, "first_is_word_type_lower_case" bool NULL, "first_token" varchar(255) NULL, "diversity_dimension_json" text NOT NULL CHECK ((JSON_VALID("diversity_dimension_json") OR "diversity_dimension_json" IS NULL)), "has_training_sentences" bool NULL, "lemma_length" integer unsigned NULL CHECK ("lemma_length" >= 0), "pattern" varchar(255) NULL, "entity_type" varchar(10) NOT NULL, "pluralization" varchar(13) NOT NULL, "is_pattern_match" bool NOT NULL, "parent_id" integer NULL REFERENCES "rules_rule" ("id") DEFERRABLE INITIALLY DEFERRED, "first_word_type" varchar(255) NULL);
 INSERT INTO "rules_rule" VALUES(1,'en','freak','n',NULL,0,1,NULL,NULL,NULL,'["freak"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'freak','default','default',1,1,'freak','["ableism"]',0,5,NULL,'default','default',0,NULL,'n');
 INSERT INTO "rules_rule" VALUES(2,'en','fucktard','n',NULL,0,1,NULL,NULL,NULL,'["fucktard"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'fucktard','default','default',1,1,'fucktard','["ableism"]',0,8,NULL,'default','default',0,NULL,'n');
@@ -25079,8 +25093,8 @@ INSERT INTO "rules_rule" VALUES(1427,'en','daughter','n',NULL,0,1,NULL,NULL,NULL
 INSERT INTO "rules_rule" VALUES(1428,'en','father','n','Only if gender identity is relevant',0,1,NULL,NULL,NULL,'["father"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'father','default','default',1,1,'father','["gender_identity_advanced"]',0,6,NULL,'default','default',0,NULL,'n');
 INSERT INTO "rules_rule" VALUES(1429,'en','female','a','Only if gender identity is relevant',0,1,NULL,NULL,NULL,'["female"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'female','default','default',1,1,'female','["gender_identity"]',0,6,NULL,'default','default',0,NULL,'a');
 INSERT INTO "rules_rule" VALUES(1430,'en','female','n',NULL,0,1,NULL,NULL,7,'["female"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'female','default','default',1,1,'female','["gender_identity"]',0,6,NULL,'default','default',0,NULL,'n');
-INSERT INTO "rules_rule" VALUES(1431,'en','fiancé','n',NULL,0,1,NULL,NULL,NULL,'["fianc\u00e9"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'fiancé','default','default',1,1,'fiancé','["gender_identity_advanced"]',0,6,NULL,'default','default',0,NULL,'n');
-INSERT INTO "rules_rule" VALUES(1432,'en','fiancée','n',NULL,0,1,NULL,NULL,NULL,'["fianc\u00e9e"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'fiancée','default','default',1,1,'fiancée','["gender_identity_advanced"]',0,7,NULL,'default','default',0,NULL,'n');
+INSERT INTO "rules_rule" VALUES(1431,'en','fiancé','n',NULL,0,1,1,NULL,NULL,'["fianc\u00e9"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'fiancé','default','default',1,1,'fiancé','["gender_identity_advanced"]',0,6,NULL,'default','default',0,NULL,'n');
+INSERT INTO "rules_rule" VALUES(1432,'en','fiancée','n',NULL,0,1,1,NULL,NULL,'["fianc\u00e9e"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'fiancée','default','default',1,1,'fiancée','["gender_identity_advanced"]',0,7,NULL,'default','default',0,1431,'n');
 INSERT INTO "rules_rule" VALUES(1433,'en','gent','n',NULL,0,1,NULL,NULL,7,'["gent"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'gent','default','default',1,1,'gent','["gender_identity_advanced"]',0,4,NULL,'default','default',0,NULL,'n');
 INSERT INTO "rules_rule" VALUES(1434,'en','gentleman','n',NULL,0,1,NULL,NULL,7,'["gentleman"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'gentleman','default','default',1,1,'gentleman','["gender_identity_advanced"]',0,9,NULL,'default','default',0,NULL,'n');
 INSERT INTO "rules_rule" VALUES(1435,'en','girl','n','Only if gender identity is relevant',0,1,NULL,NULL,NULL,'["girl"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'girl','default','default',1,1,'girl','["gender_identity_advanced"]',0,4,NULL,'default','default',0,NULL,'n');
@@ -25138,7 +25152,7 @@ INSERT INTO "rules_rule" VALUES(1486,'en','bent','a',NULL,0,1,NULL,NULL,NULL,'["
 INSERT INTO "rules_rule" VALUES(1487,'en','bentshot','n',NULL,0,1,1,NULL,NULL,'["bentshot"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'bentshot','default','default',1,1,'bentshot','["homophobia"]',0,8,NULL,'default','default',0,NULL,'n');
 INSERT INTO "rules_rule" VALUES(1488,'en','bone smuggler','~n|n',NULL,0,1,NULL,NULL,NULL,'["bone", "smuggler"]','[{"word_type": "n", "lower_case": true, "lemmatize": false}, {"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'bone smuggler','default','default',0,1,'bone','["homophobia"]',0,13,NULL,'default','default',0,NULL,'n');
 INSERT INTO "rules_rule" VALUES(1489,'en','booty buffer','~n|n',NULL,0,1,NULL,NULL,NULL,'["booty", "buffer"]','[{"word_type": "n", "lower_case": true, "lemmatize": false}, {"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'booty buffer','default','default',0,1,'booty','["homophobia"]',0,12,NULL,'default','default',0,NULL,'n');
-INSERT INTO "rules_rule" VALUES(1490,'en','bøsser','n',NULL,0,1,NULL,NULL,6,'["b\u00f8sser"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'bøsser','default','default',1,1,'bøsser','["homophobia"]',0,6,NULL,'default','default',0,NULL,'n');
+INSERT INTO "rules_rule" VALUES(1490,'en','bøsser','n',NULL,0,1,1,NULL,6,'["b\u00f8sser"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'bøsser','default','default',1,1,'bøsser','["homophobia"]',0,6,NULL,'default','default',0,NULL,'n');
 INSERT INTO "rules_rule" VALUES(1491,'en','brown piper','a|n',NULL,0,1,NULL,NULL,NULL,'["brown", "piper"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}, {"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'brown piper','default','default',1,1,'brown','["homophobia"]',0,11,NULL,'default','default',0,NULL,'a');
 INSERT INTO "rules_rule" VALUES(1492,'en','Brownie','n',NULL,0,1,NULL,NULL,6,'["Brownie"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'Brownie','default','default',1,1,'brownie','["homophobia"]',0,7,NULL,'default','default',0,NULL,'n');
 INSERT INTO "rules_rule" VALUES(1493,'en','brownie king','~n|n',NULL,0,1,NULL,NULL,NULL,'["brownie", "king"]','[{"word_type": "n", "lower_case": true, "lemmatize": false}, {"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'brownie king','default','default',0,1,'brownie','["homophobia"]',0,12,NULL,'default','default',0,NULL,'n');
@@ -26153,7 +26167,7 @@ INSERT INTO "rules_rule" VALUES(2501,'de','Ausländer','n',NULL,0,1,2,NULL,NULL,
 INSERT INTO "rules_rule" VALUES(2502,'de','Ausländerfeindlichkeit','n',NULL,0,1,NULL,NULL,NULL,'["Ausl\u00e4nderfeindlichkeit"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'Ausländerfeindlichkeit','default','default',1,1,'ausländerfeindlichkeit','["migration_advanced"]',0,22,NULL,'default','singular_only',0,NULL,'n');
 INSERT INTO "rules_rule" VALUES(2503,'de','Ausländerhass','n',NULL,0,1,NULL,NULL,NULL,'["Ausl\u00e4nderhass"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'Ausländerhass','default','default',1,1,'ausländerhass','["migration_advanced"]',0,13,NULL,'default','singular_only',0,NULL,'n');
 INSERT INTO "rules_rule" VALUES(2504,'de','Ausländerkriminalität','n',NULL,0,1,NULL,NULL,13,'["Ausl\u00e4nderkriminalit\u00e4t"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'Ausländerkriminalität','default','default',1,1,'ausländerkriminalität','["migration_advanced"]',1,21,NULL,'default','singular_only',0,NULL,'n');
-INSERT INTO "rules_rule" VALUES(2505,'de','ausländisch Mitbürger','a|n',NULL,0,1,NULL,NULL,NULL,'["ausl\u00e4ndisch", "Mitb\u00fcrger"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}, {"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'ausländisch Mitbürger','default','default',1,1,'ausländisch','["migration_advanced"]',0,21,NULL,'default','default',0,NULL,'a');
+INSERT INTO "rules_rule" VALUES(2505,'de','Mitbürger','n',NULL,0,1,1,NULL,NULL,'["Mitb\u00fcrger"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'Mitbürger','default','default',1,1,'mitbürger','["migration_advanced"]',0,9,NULL,'default','default',0,NULL,'n');
 INSERT INTO "rules_rule" VALUES(2506,'de','ausmerzen','v',NULL,0,1,2,NULL,13,'["ausmerzen"]','[{"word_type": "v", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'ausmerzen','default','default',1,1,'ausmerzen','["nazi_language"]',1,9,NULL,'default','default',0,NULL,'v');
 INSERT INTO "rules_rule" VALUES(2507,'de','ausnahmslos','adv',NULL,0,1,NULL,NULL,NULL,'["ausnahmslos"]','[{"word_type": "adv", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'ausnahmslos','default','default',1,1,'ausnahmslos','["filler_advanced"]',0,11,NULL,'default','default',0,NULL,'adv');
 INSERT INTO "rules_rule" VALUES(2508,'de','ausschlaggebend','a',NULL,0,1,NULL,NULL,NULL,'["ausschlaggebend"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'ausschlaggebend','default','default',1,1,'ausschlaggebend','["agentic_advanced"]',0,15,NULL,'default','default',0,NULL,'a');
@@ -26248,7 +26262,7 @@ INSERT INTO "rules_rule" VALUES(2596,'de','Besinnliches Fest','~a|n',NULL,0,1,NU
 INSERT INTO "rules_rule" VALUES(2597,'de','besondere Bedürfnisse haben','~a|~n|v','nur erwähnen, wenn relevant',0,1,NULL,NULL,NULL,'["besondere", "Bed\u00fcrfnisse", "haben"]','[{"word_type": "a", "lower_case": true, "lemmatize": false}, {"word_type": "n", "lower_case": true, "lemmatize": false}, {"word_type": "v", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'besondere Bedürfnisse haben','default','default',0,1,'besondere','["ability_advanced"]',0,27,NULL,'default','default',0,NULL,'a');
 INSERT INTO "rules_rule" VALUES(2598,'de','besonders','adv',NULL,0,1,NULL,NULL,NULL,'["besonders"]','[{"word_type": "adv", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'besonders','default','default',1,1,'besonders','["filler_advanced"]',0,9,NULL,'default','default',0,NULL,'adv');
 INSERT INTO "rules_rule" VALUES(2599,'de','besonnen','a',NULL,0,1,NULL,NULL,NULL,'["besonnen"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'besonnen','default','default',1,1,'besonnen','["communal"]',0,8,NULL,'default','default',0,NULL,'a');
-INSERT INTO "rules_rule" VALUES(2600,'de','besorgen Bürger','~a|n',NULL,0,1,NULL,NULL,13,'["besorgen", "B\u00fcrger"]','[{"word_type": "a", "lower_case": true, "lemmatize": false}, {"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'besorgen Bürger','default','default',0,1,'besorgen','["migration_advanced"]',1,15,NULL,'default','default',0,NULL,'a');
+INSERT INTO "rules_rule" VALUES(2600,'de','besorgen Bürger','~a|n',NULL,0,1,1,NULL,13,'["besorgen", "B\u00fcrger"]','[{"word_type": "a", "lower_case": true, "lemmatize": false}, {"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'besorgen Bürger','default','default',0,1,'besorgen','["migration_advanced"]',1,15,NULL,'default','default',0,NULL,'a');
 INSERT INTO "rules_rule" VALUES(2601,'de','besser stumm als dumm','~|a||a',NULL,0,1,NULL,NULL,NULL,'["besser", "stumm", "als", "dumm"]','[{"word_type": "", "lower_case": true, "lemmatize": false}, {"word_type": "a", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "a", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'besser stumm als dumm','default','default',0,1,'besser','["speech"]',0,21,NULL,'default','default',0,NULL,'');
 INSERT INTO "rules_rule" VALUES(2602,'de','best-of-breed','~',NULL,0,1,1,NULL,NULL,'["best-of-breed"]','[{"word_type": "", "lower_case": true, "lemmatize": false}]',0,NULL,NULL,NULL,'best-of-breed','default','default',0,1,'best-of-breed','["anglicism_advanced"]',0,13,NULL,'default','default',0,NULL,'');
 INSERT INTO "rules_rule" VALUES(2603,'de','beste','a',NULL,0,1,1,NULL,NULL,'["beste"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'beste','default','default',1,1,'beste','["exaggerating_advanced"]',0,5,NULL,'default','default',0,NULL,'a');
@@ -27196,7 +27210,7 @@ INSERT INTO "rules_rule" VALUES(3544,'de','Kommunikation','n',NULL,0,1,NULL,NULL
 INSERT INTO "rules_rule" VALUES(3545,'de','kommunikativ','a',NULL,0,1,NULL,NULL,NULL,'["kommunikativ"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'kommunikativ','default','default',1,1,'kommunikativ','["communal"]',0,12,NULL,'default','default',0,NULL,'a');
 INSERT INTO "rules_rule" VALUES(3546,'de','kommunizieren','v',NULL,0,1,NULL,NULL,NULL,'["kommunizieren"]','[{"word_type": "v", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'kommunizieren','default','default',1,1,'kommunizieren','["communal"]',0,13,NULL,'default','default',0,NULL,'v');
 INSERT INTO "rules_rule" VALUES(3547,'de','kompetitiv','a',NULL,0,1,NULL,NULL,NULL,'["kompetitiv"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'kompetitiv','default','default',1,1,'kompetitiv','["agentic_advanced"]',0,10,NULL,'default','default',0,NULL,'a');
-INSERT INTO "rules_rule" VALUES(3548,'de','Konditor','n',NULL,0,1,NULL,NULL,NULL,'["Konditor"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'Konditor','suffix','default',1,1,'konditor','["titles"]',0,8,NULL,'non_person','default',0,NULL,'n');
+INSERT INTO "rules_rule" VALUES(3548,'de','Konditor','n',NULL,0,1,1,NULL,NULL,'["Konditor"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'Konditor','suffix','default',1,1,'konditor','["titles"]',0,8,NULL,'non_person','default',0,NULL,'n');
 INSERT INTO "rules_rule" VALUES(3549,'de','Konfirmandenunterricht','n',NULL,0,1,NULL,NULL,NULL,'["Konfirmandenunterricht"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'Konfirmandenunterricht','default','default',1,1,'konfirmandenunterricht','["hidden_image"]',0,22,NULL,'non_person','singular_only',0,NULL,'n');
 INSERT INTO "rules_rule" VALUES(3550,'de','Konkurrent','n',NULL,0,1,NULL,NULL,NULL,'["Konkurrent"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'Konkurrent','default','default',1,1,'konkurrent','["agentic_advanced"]',0,10,NULL,'default','default',0,NULL,'n');
 INSERT INTO "rules_rule" VALUES(3551,'de','Konkurrenz','n',NULL,0,1,NULL,NULL,NULL,'["Konkurrenz"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'Konkurrenz','default','default',1,1,'konkurrenz','["agentic_advanced"]',0,10,NULL,'default','singular_only',0,NULL,'n');
@@ -27906,7 +27920,7 @@ INSERT INTO "rules_rule" VALUES(4255,'de','seinem','~pron',NULL,0,1,1,NULL,NULL,
 INSERT INTO "rules_rule" VALUES(4256,'de','seinen','~pron',NULL,0,1,1,NULL,NULL,'["seinen"]','[{"word_type": "pron", "lower_case": true, "lemmatize": false}]',0,NULL,NULL,NULL,'seinen','default','default',0,1,'seinen','["binary_pronouns_advanced"]',0,6,NULL,'default','default',0,NULL,'pron');
 INSERT INTO "rules_rule" VALUES(4257,'de','seiner','~pron',NULL,0,1,1,NULL,NULL,'["seiner"]','[{"word_type": "pron", "lower_case": true, "lemmatize": false}]',0,NULL,NULL,NULL,'seiner','default','default',0,1,'seiner','["binary_pronouns_advanced"]',0,6,NULL,'default','default',0,NULL,'pron');
 INSERT INTO "rules_rule" VALUES(4258,'de','seines','~pron',NULL,0,1,1,NULL,NULL,'["seines"]','[{"word_type": "pron", "lower_case": true, "lemmatize": false}]',0,NULL,NULL,NULL,'seines','default','default',0,1,'seines','["binary_pronouns_advanced"]',0,6,NULL,'default','default',0,NULL,'pron');
-INSERT INTO "rules_rule" VALUES(4259,'de','Sekretär','n',NULL,0,1,NULL,NULL,NULL,'["Sekret\u00e4r"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'Sekretär','suffix','default',1,1,'sekretär','["titles"]',0,8,NULL,'non_person','default',0,NULL,'n');
+INSERT INTO "rules_rule" VALUES(4259,'de','Sekretär','n',NULL,0,1,1,NULL,NULL,'["Sekret\u00e4r"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'Sekretär','suffix','default',1,1,'sekretär','["titles"]',0,8,NULL,'non_person','default',0,NULL,'n');
 INSERT INTO "rules_rule" VALUES(4260,'de','selbst','adv',NULL,0,1,NULL,NULL,NULL,'["selbst"]','[{"word_type": "adv", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'selbst','default','default',1,1,'selbst','["filler_advanced"]',0,6,NULL,'default','default',0,NULL,'adv');
 INSERT INTO "rules_rule" VALUES(4261,'de','selbständig','a',NULL,0,1,NULL,NULL,NULL,'["selbst\u00e4ndig"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'selbständig','default','default',1,1,'selbständig','["agentic"]',0,11,NULL,'default','default',0,NULL,'a');
 INSERT INTO "rules_rule" VALUES(4262,'de','Selbständigkeit','n',NULL,0,1,NULL,NULL,NULL,'["Selbst\u00e4ndigkeit"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'Selbständigkeit','default','default',1,1,'selbständigkeit','["agentic"]',0,15,NULL,'default','default',0,NULL,'n');
@@ -28484,6 +28498,9 @@ INSERT INTO "rules_rule" VALUES(4835,'de','Sehr verehrter Herr','|~a|n',NULL,0,1
 INSERT INTO "rules_rule" VALUES(4836,'de','Lieber Herr','~a|n',NULL,0,1,NULL,NULL,NULL,'["Lieber", "Herr"]','[{"word_type": "a", "lower_case": true, "lemmatize": false}, {"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'Lieber Herr','default','default',0,1,'lieber','["gender_identity"]',0,11,NULL,'default','default',0,4831,'a');
 INSERT INTO "rules_rule" VALUES(4837,'de','analytisch','a',NULL,0,1,1,NULL,NULL,'["analytisch"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'analytisch','default','default',1,1,'analytisch','["agentic_advanced"]',1,10,NULL,'default','default',0,NULL,'a');
 INSERT INTO "rules_rule" VALUES(4838,'de','abgeschlossen Ausbildung','a|n',NULL,0,1,1,NULL,NULL,'["abgeschlossen", "Ausbildung"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}, {"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'abgeschlossene Ausbildung','default','default',1,1,'abgeschlossen','["hollow_advanced"]',1,24,NULL,'default','default',0,NULL,'a');
+INSERT INTO "rules_rule" VALUES(4839,'en','bosser','n',NULL,0,1,NULL,NULL,NULL,'["bosser"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'bøsser','default','default',1,1,'bosser','[]',0,6,NULL,'default','default',0,1490,'n');
+INSERT INTO "rules_rule" VALUES(4840,'en','fiance','n',NULL,0,1,NULL,NULL,NULL,'["fiance"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'fiancé','default','default',1,1,'fiance','["gender_identity_advanced"]',0,6,NULL,'default','default',0,1431,'n');
+INSERT INTO "rules_rule" VALUES(4841,'en','fiancee','n',NULL,0,1,NULL,NULL,NULL,'["fiancee"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'fiancé','default','default',1,1,'fiancee','["gender_identity_advanced"]',0,7,NULL,'default','default',0,1431,'n');
 CREATE INDEX "rules_falsepositive_createdby_id_0fd6c5fc" ON "rules_falsepositive" ("createdby_id");
 CREATE INDEX "rules_falsepositive_rule_id_b806a78a" ON "rules_falsepositive" ("rule_id");
 CREATE UNIQUE INDEX "rules_falsepositive_rule_id_false_positive_90b7937b_uniq" ON "rules_falsepositive" ("rule_id", "false_positive");
@@ -28509,11 +28526,11 @@ CREATE INDEX "rules_rule_parent_id_a8865770" ON "rules_rule" ("parent_id");
 DELETE FROM "sqlite_sequence";
 INSERT INTO "sqlite_sequence" VALUES('rules_falsepositive',1246);
 INSERT INTO "sqlite_sequence" VALUES('rules_englishadjective',723);
-INSERT INTO "sqlite_sequence" VALUES('rules_germannoun',2460);
-INSERT INTO "sqlite_sequence" VALUES('rules_germanadjective',857);
+INSERT INTO "sqlite_sequence" VALUES('rules_germannoun',2491);
+INSERT INTO "sqlite_sequence" VALUES('rules_germanadjective',858);
 INSERT INTO "sqlite_sequence" VALUES('rules_alternative',16747);
-INSERT INTO "sqlite_sequence" VALUES('rules_englishnoun',1214);
+INSERT INTO "sqlite_sequence" VALUES('rules_englishnoun',1217);
 INSERT INTO "sqlite_sequence" VALUES('rules_englishverb',288);
 INSERT INTO "sqlite_sequence" VALUES('rules_germanverb',262);
-INSERT INTO "sqlite_sequence" VALUES('rules_rule',4838);
+INSERT INTO "sqlite_sequence" VALUES('rules_rule',4841);
 COMMIT;
