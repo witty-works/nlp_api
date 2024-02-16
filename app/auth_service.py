@@ -28,6 +28,7 @@ import rsa as pyrsa
 import rsa.pem as pyrsa_pem
 import base64
 import struct
+import uuid
 
 
 class AuthError(Exception):
@@ -85,12 +86,21 @@ async def decode_b2c_jwt(
 async def decode_jwt(
     redis, session, request: Request, tenant_id: str, client_id: str, scope: str
 ):
+    # https://learn.microsoft.com/en-us/entra/identity-platform/access-tokens#multi-tenant-applications
+
+    try:
+        uuid.UUID(tenant_id)
+    except ValueError:
+        raise AuthError(
+            "Token error: The 'tid' in the access token is not a valid GUID", 401
+        )
+
     token = get_token_auth_header(request)
+    key_url = f"https://login.microsoftonline.com/common/discovery/v2.0/keys"
+    rsa_key = await get_rsa_key(redis, session, token, key_url)
+
     issuer = f"https://login.microsoftonline.com/{tenant_id}/v2.0"
     audience = f"{client_id}"
-
-    key_url = f"https://login.microsoftonline.com/{tenant_id}/discovery/v2.0/keys"
-    rsa_key = await get_rsa_key(redis, session, token, key_url)
 
     return decode_jwt_(token, rsa_key, issuer, audience, scope)
 

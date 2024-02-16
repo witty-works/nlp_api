@@ -5,7 +5,19 @@
         {
             "alternatives": [
                 {
+                    "text": "Investor*innen"
+                },
+                {
                     "text": "Investorinnen und Investoren"
+                },
+                {
+                    "text": "Investierende"
+                },
+                {
+                    "text": "Investitionsgruppe"
+                },
+                {
+                    "text": "Geldgebende"
                 }
             ],
             "category": "gender-orientation",

@@ -38,7 +38,6 @@ class Settings(BaseSettings):
     aadb2c_domain: Optional[str] = ""
     aadb2c_expected_scope: Optional[str] = ""
 
-    office_sso_tenant_id: Optional[str] = ""
     office_sso_client_id: Optional[str] = ""
     office_sso_expected_scope: Optional[str] = ""
 
@@ -85,7 +84,6 @@ def get_settings():
             "expected_scope": settings.aadb2c_expected_scope,
         },
         "office_sso": {
-            "tenant_id": settings.office_sso_tenant_id,
             "client_id": settings.office_sso_client_id,
             "expected_scope": settings.office_sso_expected_scope,
         },

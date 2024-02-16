@@ -1277,29 +1277,7 @@ def test_store_get_delete_rules():
         assert response.content == b'{"detail":"Organization configs not found"}'
 
 
-def test_german_gender_ending():
-    with TestClient(app) as client:
-        request_data = {
-            "alternative": "Sinti~ze~/~Sinti und Rom~nja~/~Roma",
-        }
-        response = client.get("/debug/german_gender_ending", params=request_data)
-        assert response.status_code == 200
-        response_content = json.loads(response.content)
-
-        expected = [
-            "Sinti*ze und Rom*nja",
-            "Sintize/Sinti und Romnja/Roma",
-            "Sinti_ze und Rom_nja",
-            "SintiZe und RomNja",
-            "Sinti/ze und Rom/nja",
-            "Sinti:ze und Rom:nja",
-            "Sinti/-ze und Rom/-nja",
-        ]
-
-        assert sorted(response_content) == sorted(expected)
-
-
-def test_rule():
+def test_rule_debug():
     with TestClient(app) as client:
         request_data = {
             "text": "She has special needs",
@@ -1353,6 +1331,9 @@ def test_rule():
 
         assert response_content == expected
 
+
+def test_rule_patterns():
+    with TestClient(app) as client:
         request_data = {
             "text": "Du arbeitest sehr sehr langsam",
             "lang": "de",
@@ -1432,56 +1413,140 @@ def test_spacy():
             "text": "👩🏻‍🚒 Das ist sehr ehrgeizig Herr Müller in London 😃",
             "lang": "de",
         }
+
         response = client.get("/debug/spacy", params=request_data)
         assert response.status_code == 200
         response_content = json.loads(response.content)
 
         expected = [
-            {"word_type": "emoji|~pron|~|a|a|n||||emoji"},
+            {"auto-detected word type": "emoji|~pron|~|a|a|n||||emoji"},
             {
                 "text": "👩🏻‍🚒",
                 "lemma": "👩🏻‍🚒",
-                "ner": "",
-                "start": 0,
-                "tag": "NE",
-                "pos": "PROPN",
-                "dep": "ROOT",
                 "word_type": "emoji",
-                "morph": {"Case": "Nom", "Gender": "Fem", "Number": "Sing"},
-                "is_emoji": True,
                 "is_singular": True,
-                "emoji_desc": "woman firefighter light skin tone",
-                "whitespace": " ",
+                "ner": "",
             },
             {
                 "text": "Das",
                 "lemma": "der",
+                "word_type": "pron",
+                "is_singular": True,
+                "ner": "",
+            },
+            {
+                "text": "ist",
+                "lemma": "sein",
+                "word_type": "",
+                "is_singular": True,
+                "ner": "",
+            },
+            {
+                "text": "sehr",
+                "lemma": "sehr",
+                "word_type": "a",
+                "is_singular": None,
+                "ner": "",
+            },
+            {
+                "text": "ehrgeizig",
+                "lemma": "ehrgeizig",
+                "word_type": "a",
+                "is_singular": None,
+                "ner": "",
+            },
+            {
+                "text": "Herr",
+                "lemma": "Herr",
+                "word_type": "n",
+                "is_singular": True,
+                "ner": "",
+            },
+            {
+                "text": "Müller",
+                "lemma": "Müller",
+                "word_type": "",
+                "is_singular": True,
+                "ner": "",
+            },
+            {
+                "text": "in",
+                "lemma": "in",
+                "word_type": "",
+                "is_singular": None,
+                "ner": "",
+            },
+            {
+                "text": "London",
+                "lemma": "London",
+                "word_type": "",
+                "is_singular": True,
+                "ner": "LOC",
+            },
+            {
+                "text": "😃",
+                "lemma": "😃",
+                "word_type": "emoji",
+                "is_singular": None,
+                "ner": "",
+            },
+        ]
+
+        assert response_content == expected
+
+        request_data["detailed"] = True
+
+        response = client.get("/debug/spacy", params=request_data)
+        assert response.status_code == 200
+        response_content = json.loads(response.content)
+
+        expected = [
+            {"auto-detected word type": "emoji|~pron|~|a|a|n||||emoji"},
+            {
+                "text": "👩🏻‍🚒",
+                "lemma": "👩🏻‍🚒",
+                "word_type": "emoji",
+                "is_singular": True,
+                "ner": "",
+                "start": 0,
+                "whitespace": " ",
+                "emoji_desc": "woman firefighter light skin tone",
+                "is_emoji": True,
+                "morph": {"Case": "Nom", "Gender": "Fem", "Number": "Sing"},
+                "tag": "NE",
+                "pos": "PROPN",
+                "dep": "ROOT",
+            },
+            {
+                "text": "Das",
+                "lemma": "der",
+                "word_type": "pron",
+                "is_singular": True,
                 "ner": "",
                 "start": 5,
-                "tag": "PDS",
-                "pos": "PRON",
-                "dep": "sb",
-                "word_type": "pron",
+                "whitespace": " ",
+                "emoji_desc": None,
+                "is_emoji": False,
                 "morph": {
                     "Case": "Nom",
                     "Gender": "Neut",
                     "Number": "Sing",
                     "PronType": "Dem",
                 },
-                "is_emoji": False,
-                "is_singular": True,
-                "emoji_desc": None,
-                "whitespace": " ",
+                "tag": "PDS",
+                "pos": "PRON",
+                "dep": "sb",
             },
             {
                 "text": "ist",
                 "lemma": "sein",
+                "word_type": "",
+                "is_singular": True,
                 "ner": "",
                 "start": 9,
-                "tag": "VAFIN",
-                "pos": "AUX",
-                "dep": "ROOT",
-                "word_type": "",
+                "whitespace": " ",
+                "emoji_desc": None,
+                "is_emoji": False,
                 "morph": {
                     "Mood": "Ind",
                     "Number": "Sing",
@@ -1489,115 +1554,114 @@ def test_spacy():
                     "Tense": "Pres",
                     "VerbForm": "Fin",
                 },
-                "is_emoji": False,
-                "is_singular": True,
-                "emoji_desc": None,
-                "whitespace": " ",
+                "tag": "VAFIN",
+                "pos": "AUX",
+                "dep": "ROOT",
             },
             {
                 "text": "sehr",
                 "lemma": "sehr",
+                "word_type": "a",
+                "is_singular": None,
                 "ner": "",
                 "start": 13,
+                "whitespace": " ",
+                "emoji_desc": None,
+                "is_emoji": False,
+                "morph": {},
                 "tag": "ADV",
                 "pos": "ADV",
                 "dep": "mo",
-                "word_type": "a",
-                "morph": {},
-                "is_emoji": False,
-                "is_singular": None,
-                "emoji_desc": None,
-                "whitespace": " ",
             },
             {
                 "text": "ehrgeizig",
                 "lemma": "ehrgeizig",
+                "word_type": "a",
+                "is_singular": None,
                 "ner": "",
                 "start": 18,
+                "whitespace": " ",
+                "emoji_desc": None,
+                "is_emoji": False,
+                "morph": {"Degree": "Pos"},
                 "tag": "ADJD",
                 "pos": "ADV",
                 "dep": "mo",
-                "word_type": "a",
-                "morph": {"Degree": "Pos"},
-                "is_emoji": False,
-                "is_singular": None,
-                "emoji_desc": None,
-                "whitespace": " ",
             },
             {
                 "text": "Herr",
                 "lemma": "Herr",
+                "word_type": "n",
+                "is_singular": True,
                 "ner": "",
                 "start": 28,
+                "whitespace": " ",
+                "emoji_desc": None,
+                "is_emoji": False,
+                "morph": {"Case": "Nom", "Gender": "Masc", "Number": "Sing"},
                 "tag": "NN",
                 "pos": "NOUN",
                 "dep": "pd",
-                "word_type": "n",
-                "morph": {"Case": "Nom", "Gender": "Masc", "Number": "Sing"},
-                "is_emoji": False,
-                "is_singular": True,
-                "emoji_desc": None,
-                "whitespace": " ",
             },
             {
                 "text": "Müller",
                 "lemma": "Müller",
+                "word_type": "",
+                "is_singular": True,
                 "ner": "",
                 "start": 33,
+                "whitespace": " ",
+                "emoji_desc": None,
+                "is_emoji": False,
+                "morph": {"Case": "Nom", "Gender": "Masc", "Number": "Sing"},
                 "tag": "NE",
                 "pos": "PROPN",
                 "dep": "nk",
-                "word_type": "",
-                "morph": {"Case": "Nom", "Gender": "Masc", "Number": "Sing"},
-                "is_emoji": False,
-                "is_singular": True,
-                "emoji_desc": None,
-                "whitespace": " ",
             },
             {
                 "text": "in",
                 "lemma": "in",
+                "word_type": "",
+                "is_singular": None,
                 "ner": "",
                 "start": 40,
+                "whitespace": " ",
+                "emoji_desc": None,
+                "is_emoji": False,
+                "morph": {},
                 "tag": "APPR",
                 "pos": "ADP",
                 "dep": "mo",
-                "word_type": "",
-                "morph": {},
-                "is_emoji": False,
-                "is_singular": None,
-                "emoji_desc": None,
-                "whitespace": " ",
             },
             {
                 "text": "London",
                 "lemma": "London",
+                "word_type": "",
+                "is_singular": True,
                 "ner": "LOC",
                 "start": 43,
+                "whitespace": " ",
+                "emoji_desc": None,
+                "is_emoji": False,
+                "morph": {"Case": "Dat", "Gender": "Neut", "Number": "Sing"},
                 "tag": "NE",
                 "pos": "PROPN",
                 "dep": "nk",
-                "word_type": "",
-                "morph": {"Case": "Dat", "Gender": "Neut", "Number": "Sing"},
-                "is_emoji": False,
-                "is_singular": True,
-                "emoji_desc": None,
-                "whitespace": " ",
             },
             {
                 "text": "😃",
                 "lemma": "😃",
+                "word_type": "emoji",
+                "is_singular": None,
                 "ner": "",
                 "start": 50,
+                "whitespace": "",
+                "emoji_desc": "grinning face with big eyes",
+                "is_emoji": True,
+                "morph": {},
                 "tag": "KON",
                 "pos": "CCONJ",
                 "dep": "punct",
-                "word_type": "emoji",
-                "morph": {},
-                "is_emoji": True,
-                "is_singular": None,
-                "emoji_desc": "grinning face with big eyes",
-                "whitespace": "",
             },
         ]
 

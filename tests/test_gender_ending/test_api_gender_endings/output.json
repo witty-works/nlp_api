@@ -18,7 +18,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Hallo Kunde. Wir geben unseren Kunden alles. Ausbildnerinnen und Ausbildner.",
+            "context": "Hallo Kunde. Wir geben unseren Kunden alles. Ausbildner und Ausbildnerinnen.",
             "end": 11,
             "explanation": {
                 "content": "advanced",
@@ -53,7 +53,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Hallo Kunde. Wir geben unseren Kunden alles. Ausbildnerinnen und Ausbildner.",
+            "context": "Hallo Kunde. Wir geben unseren Kunden alles. Ausbildner und Ausbildnerinnen.",
             "end": 37,
             "explanation": {
                 "content": "advanced",
@@ -72,24 +72,29 @@
         {
             "alternatives": [
                 {
+                    "text": "Ausbildner*innen"
+                },
+                {
+                    "text": "Ausbildnerinnen und Ausbildner"
+                },
+                {
                     "text": "Ausbildende"
                 }
             ],
             "category": "gender-orientation",
-            "context": "Hallo Kunde. Wir geben unseren Kunden alles. Ausbildnerinnen und Ausbildner.",
+            "context": "Hallo Kunde. Wir geben unseren Kunden alles. Ausbildner und Ausbildnerinnen.",
             "end": 75,
             "explanation": {
-                "content": "advanced",
-                "icon": "💡",
-                "text": "Viele denken bei diesem Wort zuerst an einen Mann",
-                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
+                "icon": "💯",
+                "text": "Nicht konsistente Geschlechts-Schreibweise",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/inklusive-endung?reducedView=true"
             },
-            "gravity": 2.0,
-            "label": "Geschlecht + Orientierung: Generisches Maskulinum",
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Inklusive Endung",
             "proficiency_level": "unconscious_bias",
-            "start": 65,
-            "subcategory": "function",
-            "text": "Ausbildner",
+            "start": 45,
+            "subcategory": "gendered_denominations_ending_advanced",
+            "text": "Ausbildner und Ausbildnerinnen",
             "text_id": "Bildner"
         }
     ]

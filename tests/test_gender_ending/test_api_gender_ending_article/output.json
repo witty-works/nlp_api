@@ -11,6 +11,9 @@
                     "text": "die/der Arbeitgeberin/Arbeitgeber"
                 },
                 {
+                    "text": "die*der Arbeitgebende"
+                },
+                {
                     "context": "wenn GmbH, Einzelfirma oder AG",
                     "text": "die Arbeitgeberin"
                 }

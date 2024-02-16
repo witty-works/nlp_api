@@ -39,11 +39,12 @@
         {
             "alternatives": [
                 {
+                    "text": "Erwachsene"
+                },
+                {
                     "text": "Menschen"
                 },
                 {
-                    "context": "💡",
-                    "inspiration": true,
                     "text": "alle"
                 }
             ],
