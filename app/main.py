@@ -1449,9 +1449,11 @@ async def check(
         configs = await fetch_configs_for_request(user_request_in, user_email)
     else:
         # debug
-        if user_request_in.config.disabled_categories == []:
+        if "none" in user_request_in.config.disabled_categories:
+            user_request_in.config.__setattr__("disabled_categories", [])
+        elif user_request_in.config.disabled_categories == []:
             user_request_in.config.__setattr__(
-                "disabled_categories", "plain_language_advanced"
+                "disabled_categories", ["plain_language_advanced"]
             )
 
         configs = {"categories": {}}
