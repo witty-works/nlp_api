@@ -900,6 +900,7 @@ async def post_debug_rule(
 async def get_debug_spacy(
     text: str,
     lang: LangType,
+    detailed: bool = False,
     username: str = Depends(fetch_current_username),
 ):
     results = []
@@ -916,25 +917,27 @@ async def get_debug_spacy(
             word_type_rule += "~"
         word_type_rule += word_type
 
-        results.append(
-            {
-                "text": token.text,
-                "lemma": token.lemma_,
-                "ner": token.ent_type_,
-                "start": token.idx,
-                "tag": token.tag_,
-                "pos": token.pos_,
-                "dep": token.dep_,
-                "word_type": word_type,
-                "morph": token.morph.to_dict(),
-                "is_emoji": token._.is_emoji,
-                "is_singular": is_token_singular(lang, token),
-                "emoji_desc": token._.emoji_desc,
-                "whitespace": token.whitespace_,
-            }
-        )
+        token_info = {
+            "text": token.text,
+            "lemma": token.lemma_,
+            "word_type": word_type,
+            "is_singular": is_token_singular(lang, token),
+            "ner": token.ent_type_,
+        }
 
-    return [{"word_type": word_type_rule}] + results
+        if detailed:
+            token_info["start"] = token.idx
+            token_info["whitespace"] = token.whitespace_
+            token_info["emoji_desc"] = token._.emoji_desc
+            token_info["is_emoji"] = token._.is_emoji
+            token_info["morph"] = token.morph.to_dict()
+            token_info["tag"] = token.tag_
+            token_info["pos"] = token.pos_
+            token_info["dep"] = token.dep_
+
+        results.append(token_info)
+
+    return [{"auto-detected word type": word_type_rule}] + results
 
 
 @app.get(
