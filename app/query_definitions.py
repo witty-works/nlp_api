@@ -34,6 +34,7 @@ alternative_columns = [
     "is_inspiration",
     "is_advanced",
     "is_collective_noun",
+    "is_gendered_noun",
     "label",
 ]
 alternative_columns = invert_list_to_dict(alternative_columns)
@@ -44,16 +45,21 @@ declensions_config = {
         BasicWordType.VERB: {
             "name": "rules_englishverb",
             "columns": [
-                "base_form",
                 "past_tense",
                 "past_participle",
                 "present_participle",
                 "third_person_singular",
+                "base_form",
             ],
         },
         BasicWordType.ADJECTIVE: {
             "name": "rules_englishadjective",
-            "columns": ["base_form", "comparative", "superlative", "is_absolute"],
+            "columns": [
+                "comparative",
+                "superlative",
+                "is_absolute",
+                "base_form",
+            ],
         },
         BasicWordType.NOUN: {
             "name": "rules_englishnoun",
@@ -64,7 +70,6 @@ declensions_config = {
         BasicWordType.VERB: {
             "name": "rules_germanverb",
             "columns": [
-                "base_form",
                 "present_ich",
                 "present_du",
                 "present_pronoun",
@@ -75,19 +80,22 @@ declensions_config = {
                 "imperativ_plural",
                 "helping_verb",
                 "infinitiv_zu",
+                "base_form",
             ],
         },
         BasicWordType.ADJECTIVE: {
             "name": "rules_germanadjective",
-            "columns": ["base_form", "comparative", "superlative", "is_absolute"],
+            "columns": [
+                "comparative",
+                "superlative",
+                "is_absolute",
+                "base_form",
+            ],
         },
         BasicWordType.NOUN: {
             "name": "rules_germannoun",
             "columns": [
                 "gender_1",
-                "base_form",
-                "female_form",
-                "male_form",
                 "sg_nom",
                 "sg_dat",
                 "sg_gen",
@@ -96,8 +104,13 @@ declensions_config = {
                 "pl_dat",
                 "pl_gen",
                 "pl_acc",
+                "collective_noun",
+                "collective_noun_2",
                 "sg_dat_2",
                 "sg_gen_2",
+                "base_form",
+                "female_form",
+                "male_form",
             ],
         },
     },

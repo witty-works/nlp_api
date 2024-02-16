@@ -200,6 +200,7 @@ class Alternative:
     is_advanced: Optional[bool] = False
     is_collective_noun: Optional[bool] = False
     is_remove: Optional[bool] = False
+    is_gendered_noun: Optional[bool] = False
 
     def __init__(
         self,
@@ -794,22 +795,13 @@ class ResultOut(BaseModel):
                     else:
                         alternative.label = "💡"
 
-                if "~" in alternative.lemma:
-                    alternative_variations = ResultOut.getAlternativeVariations(
-                        config.gendered_roles_format,
-                        config.german_gender_ending,
-                        alternative,
-                    )
+                variation = ResultAlternative(
+                    text=alternative.lemma,
+                    inspiration=True if alternative.is_inspiration else None,
+                    context=alternative.label,
+                )
 
-                    cleaned_alternatives.update(alternative_variations)
-                else:
-                    variation = ResultAlternative(
-                        text=alternative.lemma,
-                        inspiration=True if alternative.is_inspiration else None,
-                        context=alternative.label,
-                    )
-
-                    cleaned_alternatives[alternative.lemma] = variation
+                cleaned_alternatives[alternative.lemma] = variation
 
             if (
                 alternatives_max_count is not None
@@ -855,154 +847,6 @@ class ResultOut(BaseModel):
                 return True
 
         return False
-
-    @staticmethod
-    def getAlternativeVariations(
-        gendered_roles_format: GenderedRolesFormatType,
-        german_gender_ending: GermanGenderEndingType,
-        alternative: Alternative,
-    ):
-        if gendered_roles_format == GenderedRolesFormatType.NONE:
-            return {}
-
-        return ResultOut.getGenderedRoleFormatVariations(
-            gendered_roles_format, german_gender_ending, alternative
-        )
-
-    @staticmethod
-    def getGenderedRoleFormatVariations(
-        gendered_roles_format: GenderedRolesFormatType,
-        german_gender_ending: GermanGenderEndingType,
-        alternative: Alternative,
-    ):
-        alternative_variations = []
-
-        words = alternative.lemma.replace("~ und ~", "~~und~~").split()
-        variations_count = 1
-        for i, word in enumerate(words):
-            if "~" in word:
-                word = word.replace("~~und~~", "~ und ~")
-                words[i] = ResultOut.getGenderedRoles(
-                    gendered_roles_format, german_gender_ending, word
-                )
-                variations_count = max(variations_count, len(words[i]))
-
-        for i in range(0, variations_count):
-            alternative_variations.append("")
-
-        for i, word in enumerate(words):
-            if isinstance(word, list) and len(word) < variations_count:
-                word = word * variations_count
-
-            if not isinstance(word, list) or len(word) < variations_count:
-                word = [word] * variations_count
-
-            for v, variation in enumerate(word):
-                alternative_variations[v] = alternative_variations[v] + variation
-                if i < len(words) - 1:
-                    alternative_variations[v] = alternative_variations[v] + " "
-
-        cleaned_alternatives = {}
-        for variation in alternative_variations:
-            key = variation
-            variation = ResultAlternative(
-                text=variation,
-                inspiration=True if alternative.is_inspiration else None,
-                context=alternative.label,
-            )
-
-            cleaned_alternatives[key] = variation
-
-        return cleaned_alternatives
-
-    @staticmethod
-    def getGenderedRolesFormatBinary(alternative: str):
-        if alternative.count("~") > 1 or alternative.find("~innenschaft") != -1:
-            return alternative.replace("~", "")
-
-        return alternative.replace("~", "/")
-
-    @staticmethod
-    def getGenderedRolesFormatInclusive(german_gender_ending: str, alternative: str):
-        if "-" in alternative:
-            alternatives = alternative.split("-")
-            new_alternatives = []
-            for new_alternative in alternatives:
-                if "~" in new_alternative:
-                    new_alternative = ResultOut.getGenderedRolesFormatInclusive(
-                        german_gender_ending, new_alternative
-                    )
-
-                new_alternatives.append(new_alternative)
-
-            return "-".join(new_alternatives)
-
-        variants = alternative.split("~")
-        beginning = str(variants[0])
-        if str(variants[1]) == "e" and len(variants) == 4 and variants[3][-1] == "r":
-            beginning += "e"
-            ending = "r"
-        else:
-            ending = str(variants[1])
-
-        if german_gender_ending == "In":
-            if (
-                alternative.count("~") > 1
-                or (variants[0] and variants[0][0].isupper())
-                and len(variants[1]) <= 3
-            ):
-                ending = ending[0:1].capitalize() + ending[1:]
-                separator = ""
-            else:
-                separator = "/"
-        elif german_gender_ending == "/-in":
-            separator = "/-" if alternative.count("~") > 1 else "/"
-        else:
-            separator = german_gender_ending[0:1]
-
-        if len(variants) == 3:
-            ending += separator + variants[2]
-
-        return beginning + separator + ending
-
-    @staticmethod
-    def genderedRolesFormatInclusive(gendered_roles_format: str):
-        return gendered_roles_format in [
-            GenderedRolesFormatType.BOTH,
-            GenderedRolesFormatType.INCLUSIVE_GENDER,
-        ]
-
-    @staticmethod
-    def genderedRolesFormatBinary(gendered_roles_format: str):
-        return gendered_roles_format in [
-            GenderedRolesFormatType.BOTH,
-            GenderedRolesFormatType.BINARY_GENDER,
-        ]
-
-    @staticmethod
-    def getGenderedRoles(
-        gendered_roles_format: GenderedRolesFormatType,
-        german_gender_ending: GermanGenderEndingType,
-        alternative: str,
-    ):
-        alternative_variations = []
-        if ResultOut.genderedRolesFormatInclusive(gendered_roles_format):
-            alternative_variations.append(
-                ResultOut.getGenderedRolesFormatInclusive(
-                    german_gender_ending,
-                    alternative,
-                )
-            )
-
-        if ResultOut.genderedRolesFormatBinary(gendered_roles_format):
-            alternative_variation = ResultOut.getGenderedRolesFormatBinary(
-                alternative,
-            )
-
-            if alternative_variation not in alternative_variations:
-                alternative_variations.append(alternative_variation)
-
-        return alternative_variations
 
 
 class ErrorMessage(BaseModel):

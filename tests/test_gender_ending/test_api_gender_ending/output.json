@@ -161,13 +161,13 @@
                     "text": "Mitarbeiterin/Mitarbeiter"
                 },
                 {
-                    "text": "Personal"
-                },
-                {
                     "text": "Mitarbeiterschaft"
                 },
                 {
-                    "text": "Belegschaft"
+                    "text": "Mitarbeitende"
+                },
+                {
+                    "text": "Personal"
                 }
             ],
             "category": "gender-orientation",

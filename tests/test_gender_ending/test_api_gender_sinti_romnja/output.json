@@ -5,19 +5,16 @@
         {
             "alternatives": [
                 {
-                    "text": "Sinti*ze und Rom*nja"
+                    "text": "Rom*nija"
                 },
                 {
-                    "text": "Sintize/Sinti und Romnja/Roma"
+                    "text": "Romnija und Roma"
                 },
                 {
-                    "text": "Rom*nja"
+                    "text": "Sint*ezas"
                 },
                 {
-                    "text": "Romnja und Roma"
-                },
-                {
-                    "text": "Sinti*ze"
+                    "text": "Sintezas und Sinti"
                 }
             ],
             "category": "cultural-diversity",
@@ -45,13 +42,10 @@
                     "text": "Romni/Rom"
                 },
                 {
-                    "text": "Sint*iza"
-                },
-                {
-                    "text": "Sintiza/Sinto"
-                },
-                {
                     "text": "Sint*eza"
+                },
+                {
+                    "text": "Sinteza/Sinto"
                 }
             ],
             "category": "cultural-diversity",
@@ -79,13 +73,10 @@
                     "text": "Romni/Rom"
                 },
                 {
-                    "text": "Sint*iza"
-                },
-                {
-                    "text": "Sintiza/Sinto"
-                },
-                {
                     "text": "Sint*eza"
+                },
+                {
+                    "text": "Sinteza/Sinto"
                 }
             ],
             "category": "cultural-diversity",

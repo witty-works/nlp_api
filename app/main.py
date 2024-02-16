@@ -8,6 +8,7 @@ from typing import Optional, Union
 from collections import defaultdict, namedtuple
 import fasttext
 import aiosqlite
+from copy import deepcopy
 
 from spacy.matcher import PhraseMatcher, Matcher
 from spacy import displacy
@@ -97,6 +98,7 @@ from app.categories import (
     get_categories,
     get_category,
     get_category_name,
+    is_category_advanced,
 )
 from app.settings import get_settings
 from app.logger import set_up_logger
@@ -598,39 +600,28 @@ def get_save_openapi_json(
     include_in_schema=not settings.is_prod,
     response_class=PrettyJSONResponse,
 )
-def get_german_gender_ending(
+async def get_german_gender_ending(
     alternative: str,
     german_gender_ending: GermanGenderEndingType = None,
     username: str = Depends(fetch_current_username),
 ):
-    alternative_variations = set()
-
-    if german_gender_ending == GermanGenderEndingType.BINARY:
-        alternative_variations.update(
-            ResultOut.getAlternativeVariations(
-                GenderedRolesFormatType.BINARY_GENDER,
-                german_gender_ending,
-                Alternative(alternative),
-            )
-        )
+    if german_gender_ending is None:
+        inclusive = True
+        binary = True
     else:
-        german_gender_endings = Config._gendereddenom_ending.default.keys()
-        if german_gender_ending is not None:
-            german_gender_endings = [german_gender_ending]
+        inclusive = gendered_roles_format_inclusive(german_gender_ending)
+        binary = gendered_roles_format_binary(german_gender_ending)
 
-        for german_gender_ending in german_gender_endings:
-            if german_gender_ending not in Config._gendereddenom_ending_article.default:
-                continue
+    alternatives, _ = await gendered_alternatives(
+        alternative,
+        LangType.DE,
+        inclusive,
+        binary,
+        GermanGenderEndingType.STAR[0],
+        GermanGenderEndingType.STAR[0],
+    )
 
-            alternative_variations.update(
-                ResultOut.getAlternativeVariations(
-                    GenderedRolesFormatType.BOTH,
-                    german_gender_ending,
-                    Alternative(alternative),
-                )
-            )
-
-    return alternative_variations
+    return alternatives
 
 
 @app.get(
@@ -906,12 +897,15 @@ async def get_debug_spacy(
     results = []
     tokens = fetch_tokens(lang, text)
     word_type_rule = None
-    for token in tokens:
+    for i in range(len(tokens)):
+        token = tokens[i]
         if word_type_rule is None:
             word_type_rule = ""
         else:
             word_type_rule += "|"
 
+        if lang == LangType.DE:
+            token.lemma_ = await german_lemmatization(tokens, i)
         word_type = await fetch_word_type(lang, token)
         if token.text != token.lemma_:
             word_type_rule += "~"
@@ -1592,9 +1586,8 @@ def languagetool_matches(
     list_results = []
     ignore = ["@", "#"]
 
-    gendered_denom = (
-        lang.lang == LangType.DE
-        and ResultOut.genderedRolesFormatInclusive(config.gendered_roles_format)
+    gendered_denom = lang.lang == LangType.DE and gendered_roles_format_inclusive(
+        config.gendered_roles_format
     )
 
     for match in matches:
@@ -2125,11 +2118,14 @@ def apply_false_positives(
     return list_results
 
 
-def is_sub_category_enabled(config: Config, subcategories: list[str]) -> bool | str:
+def is_sub_category_enabled(config: Config, subcategories: list[str], is_advanced: bool = False) -> bool | str:
     if isinstance(subcategories, str):
         subcategories = [subcategories]
 
     for subcategory in subcategories:
+        if is_advanced and not is_category_advanced(subcategory):
+            subcategory+= "_advanced"
+
         if subcategory in config.disabled_categories:
             continue
 
@@ -2425,6 +2421,7 @@ async def fetch_rule_alternatives(
         )
         alternative.is_advanced = row[alternative_columns["is_advanced"]]
         alternative.is_collective_noun = row[alternative_columns["is_collective_noun"]]
+        alternative.is_gendered_noun = row[alternative_columns["is_gendered_noun"]]
         alternative.label = row[alternative_columns["label"]]
 
         alternatives.append(alternative)
@@ -2451,7 +2448,11 @@ def get_target_declension_form(target_result: dict, target_form: str):
 
 
 async def fetch_declensions(
-    lang: LangType, word_type: BasicWordType, text: str, token: Token = None
+    lang: LangType,
+    word_type: BasicWordType,
+    text: str,
+    token: Token = None,
+    is_singular: bool | None = None,
 ) -> dict | None:
     if token is not None and token._.forms is not None:
         return token._.forms
@@ -2462,16 +2463,27 @@ async def fetch_declensions(
         else text.lower()
     )
 
-    column_list = ", ".join(declensions_config[lang][word_type]["columns"])
+    if is_singular is not None:
+        columns = []
+        prefix = "pl_" if is_singular else "sg_"
+        for column in declensions_config[lang][word_type]["columns"]:
+            if not column.startswith(prefix):
+                columns.append(column)
+    else:
+        columns = declensions_config[lang][word_type]["columns"]
+
+    column_list = ", ".join(columns)
     table_name = declensions_config[lang][word_type]["name"]
 
     filters = []
     parameters = []
-    for column in declensions_config[lang][word_type]["columns"]:
+    for column in columns:
         if column in [
             "is_absolute",
             "gender_1",
             "gender_2",
+            "collective_noun",
+            "collective_noun_2",
             "female_form",
             "male_form",
             "helping_verb",
@@ -2487,11 +2499,8 @@ async def fetch_declensions(
     query = f"SELECT {column_list} FROM {table_name} WHERE {filter_list} ORDER BY IIF(base_form = ?, 1, 0) DESC, LENGTH(base_form) DESC LIMIT 1"
 
     rows = await fetch_rows(query, parameters)
-    forms = (
-        None
-        if len(rows) == 0
-        else dict(zip(declensions_config[lang][word_type]["columns"], rows[0]))
-    )
+
+    forms = None if len(rows) == 0 else dict(zip(columns, rows[0]))
     if token is not None:
         token._.forms = forms
 
@@ -2529,6 +2538,9 @@ async def german_lemmatization(tokens: Doc, i: int):
                 return token.lemma_
 
             word = remove_gender_ending(token.text)
+            if word[-1] == "-":
+                word = word[0:-1]
+
             result = await german_noun_lookup(word)
             if result is not None:
                 target = "male_form" if result["male_form"] else "base_form"
@@ -2819,7 +2831,7 @@ async def german_rules(
         subcategory = "gendered_denominations_ending_advanced"
         if is_sub_category_enabled(
             config, subcategory
-        ) and ResultOut.genderedRolesFormatInclusive(config.gendered_roles_format):
+        ) and gendered_roles_format_inclusive(config.gendered_roles_format):
             endings = []
             for key, regexp in config._gendereddenom_ending.items():
                 if config.german_gender_ending == key:
@@ -3332,6 +3344,9 @@ async def _fetch_word_type(
 
         return WordType.NOUN
 
+    if lang == LangType.DE and token.text[0].isupper() and token.text[-1] == "-":
+        return WordType.NOUN
+
     if token.tag_ == "KON" or token.pos_ == "CCONJ":
         return WordType.CONJUNCTION
 
@@ -3356,11 +3371,19 @@ async def check_word_type(
     )
 
 
-def find_common_prefix(source_text: str, source_lemma: str) -> str:
-    prefix = source_text.replace("ä", "a").replace("ö", "o").replace("ü", "u").lower()
-    source_lemma = source_lemma.replace("ä", "a").replace("ö", "o").replace("ü", "u")
+def find_common_prefix(
+    text1: str, text2: str, lower: bool = True, ignore_umlauts: bool = True
+) -> str:
+    prefix = text1
+    if ignore_umlauts:
+        prefix = prefix.replace("ä", "a").replace("ö", "o").replace("ü", "u")
+    if lower:
+        prefix = prefix.lower()
 
-    while source_lemma[: len(prefix)] != prefix and prefix:
+    if ignore_umlauts:
+        text2 = text2.replace("ä", "a").replace("ö", "o").replace("ü", "u")
+
+    while text2[: len(prefix)] != prefix and prefix:
         prefix = prefix[: len(prefix) - 1]
         if not prefix:
             break
@@ -3579,7 +3602,7 @@ async def find_form_adjective_english(i: int, tokens: Doc):
     return target_form
 
 
-async def find_form_noun_german(i: int, tokens: Doc):
+async def find_form_noun_german(i: int, tokens: Doc, is_singular: bool):
     token = tokens[i]
 
     if token.text.lower() in static_rules[LangType.DE]["articles"]:
@@ -3608,19 +3631,50 @@ async def find_form_noun_german(i: int, tokens: Doc):
             f"German noun target form could not be determined for '{token.text}' (lemma: '{token.lemma_}')."
         )
 
+    target_form = (
+        "no_change"
+        if token.text.lower() in static_rules[LangType.DE]["articles"]
+        else await find_form_noun_german_text(token.text, is_singular)
+    )
+
     return target_form
 
 
-async def find_form_noun_english(i: int, tokens: Doc):
-    token = tokens[i]
+async def find_form_noun_german_text(text: str, is_singular: bool):
+    stripped_text = remove_gender_ending(text)
+    forms = await fetch_declensions(
+        LangType.DE, WordType.NOUN, stripped_text, None, is_singular
+    )
+    if forms is None:
+        if (
+            settings.log_missing_declension
+            and len(text) > 2
+            and text[0].isupper()
+            and not text.isupper()
+        ):
+            logger.error(f"German noun declension not found for '{text}'")
 
-    if is_token_singular(LangType.EN, token) is not False:
+        return None
+
+    target_form = find_matching_form(forms, stripped_text)
+    if target_form is None and settings.log_missing_declension and not text.isupper():
+        logger.error(
+            f"German noun target form could not be determined for '{text}' (lemma: '{token.lemma_}')."
+        )
+
+    return target_form
+
+
+async def find_form_noun_english(is_singular: bool):
+    if is_singular:
         return "no_change"
 
     return "plural"
 
 
-async def find_form(lang: LangType, word_type: WordType, i: int, tokens: Doc):
+async def find_form(
+    lang: LangType, word_type: WordType, i: int, tokens: Doc, is_singular: bool = None
+):
     match word_type:
         case WordType.VERB:
             if lang == LangType.DE:
@@ -3635,9 +3689,9 @@ async def find_form(lang: LangType, word_type: WordType, i: int, tokens: Doc):
 
         case WordType.NOUN | WordType.PRONOUN:
             if lang == LangType.DE:
-                return await find_form_noun_german(i, tokens)
+                return await find_form_noun_german(i, tokens, is_singular)
 
-            return await find_form_noun_english(i, tokens)
+            return await find_form_noun_english(is_singular)
 
     token = tokens[i]
     if (
@@ -4117,6 +4171,7 @@ async def alternative_declension(
     prepend_word: bool,
     rule: Rule,
     alternative: Alternative,
+    is_singular: bool,
 ) -> Alternative:
     if (
         alternative.is_remove
@@ -4181,6 +4236,7 @@ async def alternative_declension(
                         alternative_text = (
                             alternative_token.text
                             if alternative.is_collective_noun
+                            or alternative.is_gendered_noun
                             else await align_form_noun(
                                 lang,
                                 target_form,
@@ -4211,7 +4267,7 @@ async def alternative_declension(
     else:
         alternative.lemma = new_alternative
         if (
-            lang == LangType.DE
+            is_singular != False
             and is_plural_alternative
             and alternative.is_collective_noun
         ):
@@ -4227,7 +4283,8 @@ async def alternatives_declension(
     tokens: Doc,
     rule: Rule,
     alternatives: list[Alternative],
-) -> (str, int, list[Alternative]):
+    is_singular: bool,
+) -> tuple[str, int, list[Alternative]]:
     if (
         len(rule.words) > 1
         or rule.is_pattern_match
@@ -4243,7 +4300,7 @@ async def alternatives_declension(
         else await fetch_word_type(lang, tokens[i])
     )
 
-    target_form = await find_form(lang, word_type, i, tokens)
+    target_form = await find_form(lang, word_type, i, tokens, is_singular)
 
     prepend_word = False
     if (
@@ -4272,13 +4329,271 @@ async def alternatives_declension(
                 prepend_word,
                 rule,
                 alternative,
+                is_singular,
             )
             for alternative in alternatives
         ],
     )
 
 
-async def gendered_denom_analysis_de(
+def add_german_prefix(word: str, prefix: str) -> str:
+    if len(prefix) == 0:
+        return word
+
+    if not word.startswith("-") and not prefix.endswith("-"):
+        word = word[0].lower() + word[1:]
+
+    return prefix + word
+
+
+def handle_single_tilde(alternative: str, prefix: bool, is_singular: bool):
+    lemma = ""
+    words = alternative.split(" ")
+    for word in words:
+        if word.count("~") == 1:
+            if word.startswith("~"):
+                word = add_german_prefix(word[1:], prefix)
+            else:
+                position = word.find("~")
+                # Trans~gender => Trans*gender, qualifiziert~e => qualifiziert*e, ihr~e => ihr*e
+                if position + 3 < len(word) or is_singular:
+                    word = word.replace("~", "/")
+                # ihr~e => ihre
+                elif word.endswith("e"):
+                    word = word.replace("~", "")
+                # qualifizierte~r => qualifizierte
+                else:
+                    word = word[0:position]
+
+        lemma += " " + word
+
+    return lemma.strip()
+
+
+def inclusive_alternative(
+    word: str,
+    male_form: str,
+    female_form: str,
+    prefix: str,
+    separator: str,
+    noun_separator: str,
+):
+    short_gender_star = True
+    common_prefix = (
+        ""
+        if word.endswith("mann")
+        else find_common_prefix(male_form, female_form, False, False)
+    )
+    if len(male_form) - len(common_prefix) > 2:
+        common_prefix = female_form
+        suffix = add_german_prefix(male_form, prefix)
+        short_gender_star = False
+    elif len(female_form) >= len(male_form):
+        # Mitarbeiterin + Mitarbeiter = Mitarbeiter
+        suffix = female_form[len(common_prefix) :]
+    else:
+        # Vorgesetze + Vorgesetzter = Vorgesetze
+        suffix = male_form[len(common_prefix) :]
+
+    temp_separator = noun_separator
+    # In
+    if separator != noun_separator:
+        if short_gender_star:
+            suffix = suffix.capitalize()
+        else:
+            temp_separator = "/"
+
+    return add_german_prefix(common_prefix + temp_separator + suffix, prefix)
+
+
+async def gendered_alternatives(
+    alternative: str,
+    lang: str,
+    inclusive: bool,
+    binary: bool,
+    separator: str,
+    noun_separator: str,
+    additional_words: list = [],
+    is_singular: bool = True,
+    target_form: str = "base_form",
+    i: int | None = None,
+    tokens: Doc | None = None,
+    full_text: str | None = None,
+    prefix: str = "",
+    binary_case: bool = False,
+):
+    alternatives = {}
+    alternative_prefix = alternative_suffix = ""
+    forms = None
+
+    words = alternative.split(" ")
+    for word in words:
+        if word.startswith("~") and word.endswith("~"):
+            word = word.strip("~")
+            forms = await fetch_declensions(lang, WordType.NOUN, word)
+            if target_form is None or forms is None or target_form not in forms:
+                forms = None
+                logger.error(f"Declension '{target_form}' missing for '{word}'")
+                break
+
+            other_form = (
+                forms["male_form"]
+                if forms["female_form"] is None
+                else forms["female_form"]
+            )
+            if other_form is None:
+                logger.error(f"Declension data missing for other form in '{word}'")
+                return [], False
+
+            other_forms = await fetch_declensions(lang, WordType.NOUN, other_form)
+            if target_form not in other_forms:
+                forms = True
+                logger.error(f"Declension '{target_form}' missing for '{other_form}'")
+                return [], False
+
+        elif forms is None:
+            alternative_prefix += word + " "
+        else:
+            alternative_suffix += " " + word
+
+    if forms is None:
+        logger.error(f"Missing male_form '{word}' in '{alternative}'")
+        return [], binary_case
+
+    if forms["female_form"] is None:
+        female_form = forms[target_form]
+        male_form = other_forms[target_form]
+    else:
+        female_form = other_forms[target_form]
+        male_form = forms[target_form]
+
+    if male_form == female_form:
+        alternative = alternative_prefix + male_form + alternative_suffix
+        alternatives[alternative] = False
+        return alternatives, binary_case
+
+    if inclusive:
+        lemma = inclusive_alternative(
+            word,
+            male_form,
+            female_form,
+            prefix,
+            separator,
+            noun_separator,
+        )
+
+        if is_false_positive(
+            full_text,
+            i,
+            tokens,
+            [lemma],
+            len(lemma),
+        ):
+            return None, binary_case
+
+        additional_prefix = ""
+        for additional_word in additional_words:
+            additional_prefix += (
+                inclusive_alternative(
+                    additional_word["word"],
+                    additional_word["male_form"],
+                    additional_word["female_form"],
+                    "",
+                    separator,
+                    noun_separator,
+                )
+                + "-"
+            )
+
+        alternatives[
+            alternative_prefix.replace("/", separator)
+            + additional_prefix
+            + lemma
+            + alternative_suffix.replace("/", separator)
+        ] = False
+
+    female_form = add_german_prefix(female_form, prefix)
+    male_form = add_german_prefix(male_form, prefix)
+
+    separator = "/" if is_singular else " und "
+    lemma = female_form + separator + male_form
+    false_positive_check = [
+        lemma,
+        male_form + separator + female_form,
+    ]
+
+    # case text = Mitarbeiterinnen: Mitarbeiterinnen und Mitarbeiter
+    if is_false_positive(
+        full_text,
+        i,
+        tokens,
+        false_positive_check,
+        0,
+        len(lemma),
+    ):
+        # Suggest gender inclusive
+        if binary and tokens[i].text == female_form:
+            return None, binary_case
+
+        binary_case = True
+
+    form_max = max(len(female_form), len(male_form))
+
+    # case text = Mitarbeiter: Mitarbeiterinnen und Mitarbeiter
+    if is_false_positive(
+        full_text,
+        i,
+        tokens,
+        false_positive_check,
+        form_max + len(separator),
+        form_max,
+    ):
+        return None, binary_case
+
+    if binary:
+        additional_prefix = ""
+        for additional_word in additional_words:
+            additional_prefix += (
+                additional_word["female_form"]
+                + "/"
+                + additional_word["male_form"]
+                + "-"
+            )
+
+        new_alternative = (
+            alternative_prefix + additional_prefix + lemma + alternative_suffix
+        )
+        alternatives[new_alternative] = False
+
+    additional_prefix = ""
+    for additional_word in additional_words:
+        if additional_word["collective_noun"] is not None:
+            additional_prefix += additional_word["collective_noun"] + "-"
+
+    for form in ["collective_noun", "collective_noun_2"]:
+        if forms[form] is not None:
+            new_alternative = (
+                alternative_prefix
+                + additional_prefix
+                + add_german_prefix(forms[form], prefix)
+                + alternative_suffix
+            )
+            alternatives[new_alternative] = True
+
+    return alternatives, binary_case
+
+
+def get_german_noun_separator(config: Config):
+    if config.german_gender_ending == GermanGenderEndingType.CAPITAL_LETTER:
+        separator = "/"
+        noun_separator = ""
+    else:
+        separator = noun_separator = config.german_gender_ending[0:-2]
+
+    return separator, noun_separator
+
+
+async def gendered_nouns(
     config: Config,
     client: Client,
     lang: Language,
@@ -4288,54 +4603,25 @@ async def gendered_denom_analysis_de(
     subcategory: str,
     is_singular: bool | None,
     rule: Rule,
-) -> (str | None, str | None, list[Alternative] | None):
-    prefix_words = None
+    full_text: str,
+    target_form: str,
+) -> tuple[str | None, str | None, list[Alternative], None]:
+    alternatives = await fetch_rule_alternatives(
+        client, rule, is_singular, config.show_inspiration_alternatives, lang.locale
+    )
+
+    if LangType.EN == lang.lang or len(alternatives) == 0:
+        return text, subcategory, alternatives
+
     prefix = ""
     is_singular = True if is_singular is None else is_singular
 
-    if "-" in text:
-        words = text.split("-")
-        if len(words) > 1:
-            words = words[0:-1]
-            word_filter = ("?," * len(words)).removesuffix(",")
-            parameters = words.copy()
-
-            if "in" in text:
-                query = f"SELECT female_form, base_form FROM rules_germannoun WHERE female_form IN ({word_filter})"
-                rows = await fetch_rows(query, parameters)
-                word_lookup = {}
-                for row in rows:
-                    word_lookup[row[0]] = row[1]
-
-                parameters = []
-                for word in words:
-                    if word in word_lookup:
-                        word = word_lookup[word]
-
-                    parameters.append(word)
-
-                words = parameters.copy()
-
-            split_char = "/" if is_singular else " und "
-            query = f"SELECT DISTINCT r.lemma, a.lemma FROM rules_alternative as a INNER JOIN rules_rule as r on a.rule_id = r.id WHERE r.language = 'de' AND r.lemma IN ({word_filter}) and a.lemma LIKE ?"
-            parameters.append(f"%{split_char}%")
-
-            rows = await fetch_rows(query, parameters)
-            if len(rows) == len(words):
-                rule.type = RuleType.DEFAULT
-                word_lookup = {}
-                for row in rows:
-                    word_lookup[row[0]] = row[1]
-
-                prefix_words = []
-                for word in words:
-                    prefix_words.append(word_lookup[word])
-
-                prefix_words = "-".join(prefix_words) + "-"
-            else:
-                prefix = "-".join(words) + "-"
-
-    if rule.type == RuleType.SUFFIX and tokens[i].lemma_.endswith(rule.lemma.lower()):
+    if (
+        rule.type == RuleType.SUFFIX
+        and not tokens[i].lemma_.endswith("frau")
+        and not tokens[i].lemma_.endswith("mann")
+        and tokens[i].lemma_.lower().endswith(rule.lemma.lower())
+    ):
         # strip of last two chars to handle "Beauftragter" vs. "Beauftragten"
         prefix_end = (
             text.lower()
@@ -4345,119 +4631,119 @@ async def gendered_denom_analysis_de(
         prefix = text[0:prefix_end]
 
     binary_case = False
-    binary = ResultOut.genderedRolesFormatBinary(config.gendered_roles_format)
-    alternatives = await fetch_rule_alternatives(
-        client, rule, is_singular, config.show_inspiration_alternatives, lang.locale
+    inclusive = gendered_roles_format_inclusive(config.gendered_roles_format)
+    binary = gendered_roles_format_binary(config.gendered_roles_format)
+    separator, noun_separator = get_german_noun_separator(config)
+    additional_words = []
+
+    if prefix.endswith("-"):
+        words = prefix[:-1].split("-")
+        word_filter = ("?," * len(words)).removesuffix(",")
+
+        query = f"SELECT base_form, male_form, female_form, collective_noun FROM rules_germannoun WHERE base_form IN ({word_filter})"
+        rows = await fetch_rows(query, words.copy())
+
+        male_noun_map = {}
+        female_noun_map = {}
+        for row in rows:
+            if row[2] is not None:
+                male_noun_map[row[0]] = {
+                    "female_form": row[2],
+                    "collective_noun": row[3],
+                }
+            elif row[1] is not None:
+                female_noun_map[row[0]] = {
+                    "male_form": row[1],
+                    "collective_noun": row[3],
+                }
+
+        if len(male_noun_map) or len(female_noun_map):
+            prefixes = []
+            for word in words:
+                if word in male_noun_map:
+                    male_form = word
+                    female_form = male_noun_map[word]["female_form"]
+                    collective_noun = male_noun_map[word]["collective_noun"]
+                elif word in female_noun_map:
+                    female_form = word
+                    male_form = female_noun_map[word]["male_form"]
+                    collective_noun = female_noun_map[word]["collective_noun"]
+                else:
+                    prefixes.append(word)
+                    continue
+
+                prefix = ("-").join(prefixes) + "-" if len(prefixes) else ""
+                additional_words.append(
+                    {
+                        "word": word,
+                        "male_form": prefix + male_form,
+                        "female_form": prefix + female_form,
+                        "collective_noun": (
+                            prefix + collective_noun
+                            if collective_noun is not None
+                            else None
+                        ),
+                    }
+                )
+                prefixes = []
+
+            prefix = ("-").join(prefixes)
+
+    target_form = (
+        "base_form"
+        if target_form is None or target_form == "no_change"
+        else target_form
     )
+
     new_alternatives = []
-    if alternatives is None:
-        alternatives = []
     for alternative in alternatives:
-        if alternative.lemma[0] == "~":
-            alternative.lemma = alternative.lemma[1:]
-            if prefix:
-                lemma_first_char = (
-                    alternative.lemma[0]
-                    if prefix[-1] == "-"
-                    else alternative.lemma[0].lower()
-                )
-                alternative.lemma = prefix + lemma_first_char + alternative.lemma[1:]
-        elif "~" in alternative.lemma:
-            if prefix_words:
-                alternative.lemma = prefix_words + alternative.lemma
-            elif prefix:
-                lemma_first_char = (
-                    rule.lemma[0] if prefix[-1] == "-" else rule.lemma[0].lower()
-                )
-                # strip of last two chars to handle "Beauftragte" vs. "Beauftragter"
-                alternative.lemma = alternative.lemma.replace(
-                    rule.lemma[0:-2], prefix + lemma_first_char + rule.lemma[1:-2]
-                )
-                if rule.lemma[0] == "A":
-                    lemma = "Ä" + rule.lemma[1:]
-                    alternative.lemma = alternative.lemma.replace(
-                        lemma, prefix + lemma.lower()
-                    )
-
-            # handle "eines Mitarbeiters" => "Mitarbeiterin/Mitarbeiters"
-            if (
-                is_singular
-                and text[-1] == "s"
-                and alternative.lemma.startswith(text[:-1])
-            ):
-                alternative.lemma += "s"
-            # handle "Partnern" => "Partnerinnen und Partnern"
-            elif (
-                not is_singular
-                and text[-1] == "n"
-                and alternative.lemma.startswith(text[:-1])
-            ):
-                alternative.lemma += "n"
-
-        if binary or (
-            "frau" not in alternative.lemma.lower()
-            and "mann" not in alternative.lemma.lower()
-        ):
+        if alternative.is_remove or alternative.is_inspiration:
             new_alternatives.append(alternative)
-
-        if "~" not in alternative.lemma:
             continue
 
-        generated_alternative = ResultOut.getGenderedRolesFormatBinary(
-            alternative.lemma
+        alternative.lemma = handle_single_tilde(alternative.lemma, prefix, is_singular)
+        if not alternative.is_gendered_noun:
+            if inclusive and separator != "/":
+                new_alternative = deepcopy(alternative)
+                new_alternative.lemma = new_alternative.lemma.replace("/", separator)
+                new_alternatives.append(new_alternative)
+
+            new_alternatives.append(alternative)
+            continue
+
+        alternative_variations, binary_case = await gendered_alternatives(
+            alternative.lemma,
+            lang.lang,
+            inclusive,
+            binary,
+            separator,
+            noun_separator,
+            additional_words,
+            is_singular,
+            target_form,
+            i,
+            tokens,
+            full_text,
+            prefix,
+            binary_case,
         )
 
-        split_char = " und " if " und " in generated_alternative else "/"
-        generated_alternatives = generated_alternative.split(split_char)
+        # false positive
+        if alternative_variations is None:
+            return None, None, []
 
-        if len(generated_alternatives) != 2:
-            if generated_alternative in split_char:
-                logger.error(
-                    f"Rule '{rule.id}' has a malformed alternative '{alternative.lemma}' => '{generated_alternative}'."
-                )
+        if not is_sub_category_enabled(config, subcategory, True):
             continue
 
-        try:
-            index = generated_alternatives.index(text)
-        except ValueError:
-            continue
-
-        other_index = 0 if index == 1 else 1
-
-        # case text = Mitarbeiterinnen: Mitarbeiter und Mitarbeiterinnen
-        # case text = Mitarbeiter: Mitarbeiterinnen und Mitarbeiter
-        if (
-            i >= 2
-            and tokens[i - 1].text == split_char.strip()
-            and tokens[i - 2].text.startswith(generated_alternatives[other_index])
-        ):
-            return None, None, None
-
-        binary_case = (
-            len(tokens) >= i + 2
-            and tokens[i + 1].text == split_char.strip()
-            and tokens[i + 2].text.startswith(generated_alternatives[other_index])
-        )
-
-        # case text = Mitarbeiter: Mitarbeiter und Mitarbeiterinnen
-        # case text = Mitarbeiterinnen: Mitarbeiterinnen und Mitarbeiter
-        if binary and binary_case:
-            if index == 1:
-                # change order Mitarbeiter und Mitarbeiterinnen => Mitarbeiterinnen und Mitarbeiter
-                alternative.lemma = generated_alternative
-                new_alternatives = [alternative]
-                break
-
-            return None, None, None
+        for alternative_variation in alternative_variations:
+            new_alternative = deepcopy(alternative)
+            new_alternative.lemma = alternative_variation
+            new_alternative.is_collective_noun = alternative_variations[
+                alternative_variation
+            ]
+            new_alternatives.append(new_alternative)
 
     if binary_case:
-        text += (
-            tokens[i].whitespace_
-            + tokens[i + 1].text
-            + tokens[i + 1].whitespace_
-            + tokens[i + 2].text
-        )
-
         if binary:
             subcategory = "gendered_denominations_ending_advanced"
         else:
@@ -4469,12 +4755,27 @@ async def gendered_denom_analysis_de(
             if rule.is_advanced:
                 subcategory += "_advanced"
 
+        if not is_sub_category_enabled(config, subcategory):
+            return None, None, []
+
+        text += (
+            tokens[i].whitespace_
+            + tokens[i + 1].text
+            + tokens[i + 1].whitespace_
+            + tokens[i + 2].text
+        )
+
+    if text[-1] == "-":
+        for alternative in new_alternatives:
+            if alternative.lemma[-1] != "-":
+                alternative.lemma+= "-"
+
     return text, subcategory, new_alternatives
 
 
 def fetch_article_for_flexion(
     flexion: str, gender: str, article_text: str
-) -> (str, str, str, str):
+) -> tuple[str, str, str, str]:
     if flexion is None:
         return None, None, None, None
 
@@ -4485,8 +4786,22 @@ def fetch_article_for_flexion(
     return article_forms[1], article_forms[2], article_forms[3], article_forms[5]
 
 
+def gendered_roles_format_inclusive(gendered_roles_format: str):
+    return gendered_roles_format in [
+        GenderedRolesFormatType.BOTH,
+        GenderedRolesFormatType.INCLUSIVE_GENDER,
+    ]
+
+
+def gendered_roles_format_binary(gendered_roles_format: str):
+    return gendered_roles_format in [
+        GenderedRolesFormatType.BOTH,
+        GenderedRolesFormatType.BINARY_GENDER,
+    ]
+
+
 async def fetch_alternatives_with_article(
-    tokens: Doc, i: int, alternatives: list[Alternative]
+    config: Config, tokens: Doc, i: int, alternatives: list[Alternative]
 ) -> list[Alternative] | None:
     if alternatives is None:
         return []
@@ -4509,16 +4824,25 @@ async def fetch_alternatives_with_article(
     if match_alternative is None:
         return None
 
+    separator, _ = get_german_noun_separator(config)
+
     alternatives_with_article = []
     for alternative in alternatives:
-        if "~" in alternative.lemma:
+        if alternative.is_remove:
+            alternatives_with_article.append(alternative)
+            continue
+
+        if alternative.is_gendered_noun:
             article_alternative = (
                 match_alternative if match_alternative else article_text
             )
+            if alternative.is_collective_noun or separator in alternative.lemma:
+                # Mitarbeiter*in, Mitarbeitende
+                article_alternative = article_alternative.replace("~", separator)
+            else:
+                # Mitarbeiterin/Mitarbeiter
+                article_alternative = article_alternative.replace("~", "/")
         else:
-            if alternative.is_remove:
-                continue
-
             alternative_tokens = fetch_tokens(LangType.DE, alternative.words[-1])
             if is_token_plural(LangType.DE, alternative_tokens[0]):
                 article_alternative = ""
@@ -4849,20 +5173,41 @@ async def regex_match(
     return i
 
 
-async def is_false_positive(full_text: str, i: int, tokens: Doc, rule: Rule) -> bool:
+async def is_rule_false_positive(
+    full_text: str, i: int, tokens: Doc, rule: Rule
+) -> bool:
     false_positives = await fetch_false_positives(rule)
-    if len(false_positives) == 0:
+    return is_false_positive(full_text, i, tokens, false_positives)
+
+
+def is_false_positive(
+    full_text: str | None,
+    i: int | None,
+    tokens: Doc | None,
+    false_positives: list,
+    window_left: int = None,
+    window_right: int = None,
+) -> bool:
+    if len(false_positives) == 0 or full_text is None:
         return False
 
-    i_window_min = max(0, i - 5)
-    i_window_max = min(len(tokens) - 1, i + 5)
+    if window_left is None:
+        # previous 5 tokens
+        i_window_min = max(0, i - 5)
+        window_left = tokens[i_window_min].idx
+    else:
+        window_left = max(tokens[i].idx - window_left, 0)
 
-    partial_text = full_text[
-        tokens[i_window_min].idx : tokens[i_window_max].idx
-        + len(tokens[i_window_max].text)
-    ].lower()
+    if window_right is None:
+        # following 5 tokens
+        i_window_max = min(len(tokens) - 1, i + 5)
+        window_right = tokens[i_window_max].idx + len(tokens[i_window_max].text)
+    else:
+        window_right += tokens[i].idx
 
-    start = tokens[i].idx - tokens[i_window_min].idx
+    partial_text = full_text[window_left:window_right].lower()
+
+    start = tokens[i].idx - window_left
     end = start + len(tokens[i].text)
 
     for false_positive in false_positives:
@@ -5050,7 +5395,7 @@ async def rule_check(
                 false_positive_matcher,
             )
 
-            if not text or await is_false_positive(full_text, i, tokens, rule):
+            if not text or await is_rule_false_positive(full_text, i, tokens, rule):
                 continue
 
         is_singular = None
@@ -5070,48 +5415,51 @@ async def rule_check(
         ):
             continue
 
+        if lang.lang == LangType.DE and await check_word_type(
+            lang.lang, token, WordType.NOUN
+        ):
+            noun = tokens[i].text
+            if rule.type == RuleType.SUFFIX:
+                prefix = tokens[i].lemma_[0 : -1 * len(rule.lemma)]
+                noun = noun.removeprefix(prefix)
+            target_form = await find_form_noun_german_text(noun, is_singular)
+
+        else:
+            target_form = "base_form"
+
+        (
+            text,
+            subcategory,
+            alternatives,
+        ) = await gendered_nouns(
+            config,
+            client,
+            lang,
+            text,
+            tokens,
+            i,
+            subcategory,
+            is_singular,
+            rule,
+            full_text,
+            target_form,
+        )
+
+        if not text:
+            continue
+
+        start = token.idx
         if is_gendered_denom_rule(lang.lang, subcategory):
-            (
-                text,
-                subcategory,
-                alternatives,
-            ) = await gendered_denom_analysis_de(
-                config,
-                client,
-                lang,
-                text,
-                tokens,
-                i,
-                subcategory,
-                is_singular,
-                rule,
-            )
-
-            if not text:
-                continue
-
-            start = token.idx
             if i > 0 and is_singular:
                 alternatives_with_article = await fetch_alternatives_with_article(
-                    tokens, i, alternatives
+                    config, tokens, i, alternatives
                 )
 
                 if alternatives_with_article is not None:
                     alternatives = alternatives_with_article
                     start = tokens[i - 1].idx
                     text = tokens[i - 1].text + " " + text
-
         else:
-            start = token.idx
-
-            alternatives = await fetch_rule_alternatives(
-                client,
-                rule,
-                is_singular,
-                config.show_inspiration_alternatives,
-                lang.locale,
-            )
-
             if len(alternatives) > 0:
                 # TODO make it possible to handle cases with multiple alternatives
                 if len(alternatives) == 1 and alternatives[0].lemma == "they":
@@ -5119,7 +5467,7 @@ async def rule_check(
                     alternatives = [Alternative(alternative)]
                 elif not subcategory.startswith("abbreviation"):
                     text, start, alternatives = await alternatives_declension(
-                        lang.lang, text, i, tokens, rule, alternatives
+                        lang.lang, text, i, tokens, rule, alternatives, is_singular
                     )
 
                     if subcategory.startswith("filler"):

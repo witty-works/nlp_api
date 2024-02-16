@@ -33,6 +33,9 @@
         {
             "alternatives": [
                 {
+                    "text": "Fachfrau*Fachmann"
+                },
+                {
                     "text": "Fachpersonal"
                 },
                 {
@@ -62,6 +65,9 @@
         {
             "alternatives": [
                 {
+                    "text": "Fachfrau*Fachmann"
+                },
+                {
                     "text": "Fachpersonal"
                 },
                 {
@@ -90,6 +96,9 @@
         },
         {
             "alternatives": [
+                {
+                    "text": "Fachfrau*Fachmann"
+                },
                 {
                     "text": "Fachpersonal"
                 },
