@@ -1299,7 +1299,7 @@ def test_german_gender_ending():
         assert sorted(response_content) == sorted(expected)
 
 
-def test_rule():
+def test_rule_debug():
     with TestClient(app) as client:
         request_data = {
             "text": "She has special needs",
@@ -1353,6 +1353,9 @@ def test_rule():
 
         assert response_content == expected
 
+
+def test_rule_patterns():
+    with TestClient(app) as client:
         request_data = {
             "text": "Du arbeitest sehr sehr langsam",
             "lang": "de",
