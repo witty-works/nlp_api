@@ -1,0 +1,28 @@
+{
+    "language": "en",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "with suitable prior knowledge and experience"
+                }
+            ],
+            "category": "acquired-diversity",
+            "context": "We are looking for a person older than <NUMBER> years.",
+            "end": 47,
+            "explanation": {
+                "icon": "🤔",
+                "text": "Is age relevant to your message?",
+                "url": "https://www.witty.works/en/categories/acquired-diversity/age-information?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Acquired Diversity: Age information",
+            "proficiency_level": "unconscious_bias",
+            "start": 28,
+            "subcategory": "age_advanced",
+            "text": "older than 35 years",
+            "text_id": "older than X"
+        }
+    ]
+}

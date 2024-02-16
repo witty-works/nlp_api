@@ -3166,13 +3166,9 @@ async def is_phrase_match(
     if rule.pattern is not None:
         pattern = rule.pattern.split("|")
 
-        token_count = 1
+        token_count = word_count
         prefix_tokens_match_count = 0
-        lemma_position = 0
-        for word_type in pattern:
-            if word_type == "l":
-                break
-            lemma_position += 1
+        lemma_position = pattern.index("l")
 
         if lemma_position > 0:
             prefix_pattern = pattern[0:lemma_position]
@@ -3181,12 +3177,13 @@ async def is_phrase_match(
             if not tokens_match_count:
                 return i, None, None
 
-            token_count += tokens_match_count
             prefix_tokens_match_count += tokens_match_count
 
         suffix_pattern = pattern[lemma_position + 1 :]
         if len(suffix_pattern):
-            tokens_match_count = await check_pattern(tokens, suffix_pattern, i + 1, 1)
+            tokens_match_count = await check_pattern(
+                tokens, suffix_pattern, i + token_count, 1
+            )
             if not tokens_match_count:
                 return i, None, None
 
@@ -3195,7 +3192,7 @@ async def is_phrase_match(
         if rule.is_pattern_match:
             i -= prefix_tokens_match_count
             text = ""
-            for k in range(token_count):
+            for k in range(prefix_tokens_match_count + token_count):
                 if k > 0:
                     text += word_token.whitespace_
 
