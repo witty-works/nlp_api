@@ -1438,7 +1438,7 @@ async def check(
     request: Request,
     response: Response,
     user_request_in: RequestIn,
-    version: str,
+    version: str | None,
 ) -> Result | ResultsOut:
     client = parse_client(user_request_in.client)
     check_client_version(client)
@@ -5537,7 +5537,7 @@ async def rule_check(
 
 def detect_filler_words_at_sentence_start(
     alternatives: list[Alternative], text: str, full_text: str, end: int
-) -> (str, list[Alternative]):
+) -> tuple[str, list[Alternative]]:
     if alternatives == ["-"] and text[0].isupper():
         match = re.search(r"(\s*,\s*)(\S+)", full_text[end : end + 30])
         if isinstance(match, re.Match):
@@ -5551,7 +5551,7 @@ def token_is_conjunction(token: Token) -> bool:
     return token.text == "," or token.pos_ == "CCONJ"
 
 
-async def pluralize_they(text: str, tokens: Doc, i: int) -> (str, str):
+async def pluralize_they(text: str, tokens: Doc, i: int) -> tuple[str, str]:
     token = tokens[i]
     alternative = "they"
 
