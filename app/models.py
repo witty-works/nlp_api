@@ -275,6 +275,7 @@ class AlternativeIn(BaseModel):
     label: Optional[str] = None
     pluralization: Optional[str] = "default"
     is_inspiration: Optional[bool] = False
+    is_gendered_noun: Optional[bool] = False
     is_advanced: Optional[bool] = False
     is_collective_noun: Optional[bool] = False
     is_remove: Optional[bool] = False

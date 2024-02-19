@@ -827,6 +827,7 @@ async def post_debug_rule(
             alternative.label = alternative_in.label
             alternative.pluralization = alternative_in.pluralization
             alternative.is_inspiration = alternative_in.is_inspiration
+            alternative.is_gendered_noun = alternative_in.is_gendered_noun
             alternative.is_advanced = alternative_in.is_advanced
             alternative.is_collective_noun = alternative_in.is_collective_noun
             alternative.is_remove = alternative_in.is_remove
@@ -1200,6 +1201,9 @@ def is_token_singular(lang: LangType, token: Token) -> bool | None:
         return "Sing" in number
 
     if lang == LangType.EN and token.pos == "NOUN" and token.text.endswith("s"):
+        return False
+
+    if token.text.endswith("-"):
         return False
 
     return None
@@ -2118,13 +2122,15 @@ def apply_false_positives(
     return list_results
 
 
-def is_sub_category_enabled(config: Config, subcategories: list[str], is_advanced: bool = False) -> bool | str:
+def is_sub_category_enabled(
+    config: Config, subcategories: list[str], is_advanced: bool = False
+) -> bool | str:
     if isinstance(subcategories, str):
         subcategories = [subcategories]
 
     for subcategory in subcategories:
         if is_advanced and not is_category_advanced(subcategory):
-            subcategory+= "_advanced"
+            subcategory += "_advanced"
 
         if subcategory in config.disabled_categories:
             continue
@@ -2517,6 +2523,9 @@ def is_gender_star_ending(text: str) -> bool | re.Match:
 
 
 def remove_gender_ending(text: str) -> str:
+    if text[-1] == "-":
+        text = text[0:-1]
+
     match = is_gender_star_ending(text)
     if match:
         text = match[1] + match[2]
@@ -2538,8 +2547,6 @@ async def german_lemmatization(tokens: Doc, i: int):
                 return token.lemma_
 
             word = remove_gender_ending(token.text)
-            if word[-1] == "-":
-                word = word[0:-1]
 
             result = await german_noun_lookup(word)
             if result is not None:
@@ -3634,13 +3641,13 @@ async def find_form_noun_german(i: int, tokens: Doc, is_singular: bool):
     target_form = (
         "no_change"
         if token.text.lower() in static_rules[LangType.DE]["articles"]
-        else await find_form_noun_german_text(token.text, is_singular)
+        else await find_form_noun_german_text(token.text, is_singular, token.lemma_)
     )
 
     return target_form
 
 
-async def find_form_noun_german_text(text: str, is_singular: bool):
+async def find_form_noun_german_text(text: str, is_singular: bool, lemma: str):
     stripped_text = remove_gender_ending(text)
     forms = await fetch_declensions(
         LangType.DE, WordType.NOUN, stripped_text, None, is_singular
@@ -3659,7 +3666,7 @@ async def find_form_noun_german_text(text: str, is_singular: bool):
     target_form = find_matching_form(forms, stripped_text)
     if target_form is None and settings.log_missing_declension and not text.isupper():
         logger.error(
-            f"German noun target form could not be determined for '{text}' (lemma: '{token.lemma_}')."
+            f"German noun target form could not be determined for '{text}' (lemma: '{lemma}')."
         )
 
     return target_form
@@ -4768,7 +4775,7 @@ async def gendered_nouns(
     if text[-1] == "-":
         for alternative in new_alternatives:
             if alternative.lemma[-1] != "-":
-                alternative.lemma+= "-"
+                alternative.lemma += "-"
 
     return text, subcategory, new_alternatives
 
@@ -5422,7 +5429,7 @@ async def rule_check(
             if rule.type == RuleType.SUFFIX:
                 prefix = tokens[i].lemma_[0 : -1 * len(rule.lemma)]
                 noun = noun.removeprefix(prefix)
-            target_form = await find_form_noun_german_text(noun, is_singular)
+            target_form = await find_form_noun_german_text(noun, is_singular, tokens[i].lemma_)
 
         else:
             target_form = "base_form"
