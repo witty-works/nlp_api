@@ -5327,62 +5327,11 @@ async def rule_check(
             if count == 0:
                 continue
 
-            standard_words = [
-                "zusammen",
-                "schaft",
-                "nieder",
-                "hinter",
-                "wider",
-                "unter",
-                "reich",
-                "ismus",
-                "über",
-                "voll",
-                "nach",
-                "miss",
-                "ling",
-                "lich",
-                "lein",
-                "leer",
-                "keit",
-                "heit",
-                "haft",
-                "chen",
-                "zer",
-                "weg",
-                "vor",
-                "ver",
-                "ver",
-                "ung",
-                "tum",
-                "nis",
-                "mit",
-                "los",
-                "hin",
-                "her",
-                "ent",
-                "emp",
-                "ein",
-                "ein",
-                "dar",
-                "bei",
-                "aus",
-                "auf",
-                "arm",
-                "zu",
-                "un",
-                "um",
-                "ob",
-                "le",
-                "in",
-                "ge",
-                "er",
-                "be",
-                "an",
-                "ab",
-            ]
             if rule.false_positives is not None:
-                standard_words = rule.false_positives + standard_words
+                standard_words = (
+                    rule.false_positives
+                    + static_rules[LangType.DE]["standard_words"].copy()
+                )
 
             for standard_word in standard_words:
                 if standard_word.lower() not in rule_lemma_lower:
