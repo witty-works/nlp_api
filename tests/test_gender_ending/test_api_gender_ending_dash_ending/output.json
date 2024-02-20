@@ -5,55 +5,23 @@
         {
             "alternatives": [
                 {
-                    "text": "Technikgrabschluss"
+                    "text": "Meister*innen-"
                 },
                 {
-                    "text": "Technikabschluss"
-                },
-                {
-                    "text": "Technikgrobschluss"
-                },
-                {
-                    "text": "Technikvorabschluss"
-                },
-                {
-                    "text": "Technikuranschluss"
-                }
-            ],
-            "category": "orthography",
-            "context": "Meister- oder Technikerabschluss",
-            "end": 32,
-            "explanation": {
-                "icon": "❌",
-                "text": "Möglicher Tippfehler gefunden."
-            },
-            "gravity": 1.0,
-            "label": "Rechtschreibfehler",
-            "start": 14,
-            "subcategory": "typos",
-            "text": "Technikerabschluss",
-            "text_id": "Technikerabschluss"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "Meister*in-"
-                },
-                {
-                    "text": "Meisterin/Meister-"
-                },
-                {
-                    "text": "Ausbildungskraft-"
+                    "text": "Meisterinnen und Meister-"
                 },
                 {
                     "text": "Werkstattleitende-"
                 },
                 {
                     "text": "Ausbildende-"
+                },
+                {
+                    "text": "Werkstattleitung-"
                 }
             ],
             "category": "gender-orientation",
-            "context": "Meister- oder Technikerabschluss",
+            "context": "Meister- oder Technikerabschluss. Leser- bzw. Zuschauer:innenbrief.",
             "end": 8,
             "explanation": {
                 "content": "advanced",
@@ -62,12 +30,44 @@
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Geschlecht + Orientierung: Berufe",
+            "label": "Geschlecht + Orientierung: Berufstitel",
             "proficiency_level": "unconscious_bias",
             "start": 0,
             "subcategory": "titles",
             "text": "Meister-",
             "text_id": "Meister"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Leser*innen-"
+                },
+                {
+                    "text": "Leserinnen und Leser-"
+                },
+                {
+                    "text": "Lesende-"
+                },
+                {
+                    "text": "Lesepublikum-"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Meister- oder Technikerabschluss. Leser- bzw. Zuschauer:innenbrief.",
+            "end": 40,
+            "explanation": {
+                "content": "advanced",
+                "icon": "💡",
+                "text": "Viele denken bei diesem Wort zuerst an einen Mann",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Generisches Maskulinum",
+            "proficiency_level": "unconscious_bias",
+            "start": 34,
+            "subcategory": "function",
+            "text": "Leser-",
+            "text_id": "Leser"
         }
     ]
 }

@@ -5022,7 +5022,7 @@
         "translations": {
             "en": {
                 "hs_path": "jobs",
-                "hs_name": "Jobs",
+                "hs_name": "Job Titles",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/jobs",
                 "is_active": "1",
                 "name": "People are more likely to picture men",
@@ -5068,7 +5068,7 @@
             },
             "de": {
                 "hs_path": "berufe",
-                "hs_name": "Berufe",
+                "hs_name": "Berufstitel",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/berufe",
                 "is_active": "1",
                 "name": "Viele verbinden bestimmte Berufe mit einem bestimmten Geschlecht",

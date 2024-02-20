@@ -115,7 +115,7 @@ from app.query_definitions import (
     verb_form_map,
 )
 
-version = "2.2.5"
+version = "2.2.6"
 
 categories = get_categories()
 settings = get_settings()
@@ -827,6 +827,7 @@ async def post_debug_rule(
             alternative.label = alternative_in.label
             alternative.pluralization = alternative_in.pluralization
             alternative.is_inspiration = alternative_in.is_inspiration
+            alternative.is_gendered_noun = alternative_in.is_gendered_noun
             alternative.is_advanced = alternative_in.is_advanced
             alternative.is_collective_noun = alternative_in.is_collective_noun
             alternative.is_remove = alternative_in.is_remove
@@ -1202,6 +1203,9 @@ def is_token_singular(lang: LangType, token: Token) -> bool | None:
     if lang == LangType.EN and token.pos == "NOUN" and token.text.endswith("s"):
         return False
 
+    if token.text.endswith("-"):
+        return False
+
     return None
 
 
@@ -1434,7 +1438,7 @@ async def check(
     request: Request,
     response: Response,
     user_request_in: RequestIn,
-    version: str,
+    version: str | None,
 ) -> Result | ResultsOut:
     client = parse_client(user_request_in.client)
     check_client_version(client)
@@ -2118,13 +2122,15 @@ def apply_false_positives(
     return list_results
 
 
-def is_sub_category_enabled(config: Config, subcategories: list[str], is_advanced: bool = False) -> bool | str:
+def is_sub_category_enabled(
+    config: Config, subcategories: list[str], is_advanced: bool = False
+) -> bool | str:
     if isinstance(subcategories, str):
         subcategories = [subcategories]
 
     for subcategory in subcategories:
         if is_advanced and not is_category_advanced(subcategory):
-            subcategory+= "_advanced"
+            subcategory += "_advanced"
 
         if subcategory in config.disabled_categories:
             continue
@@ -2517,6 +2523,9 @@ def is_gender_star_ending(text: str) -> bool | re.Match:
 
 
 def remove_gender_ending(text: str) -> str:
+    if text[-1] == "-":
+        text = text[0:-1]
+
     match = is_gender_star_ending(text)
     if match:
         text = match[1] + match[2]
@@ -2538,10 +2547,8 @@ async def german_lemmatization(tokens: Doc, i: int):
                 return token.lemma_
 
             word = remove_gender_ending(token.text)
-            if word[-1] == "-":
-                word = word[0:-1]
 
-            result = await german_noun_lookup(word)
+            result = await german_noun_lookup(word, token)
             if result is not None:
                 target = "male_form" if result["male_form"] else "base_form"
                 return result[target]
@@ -3420,16 +3427,22 @@ async def german_noun_gender_lookup(word: str) -> str:
     return result["gender_1"]
 
 
-async def german_noun_lookup(text: str) -> dict:
+async def german_noun_lookup(
+    text: str, token: Token | None = None, is_singular: bool = None
+) -> dict:
     word = text
-    result = await fetch_declensions(LangType.DE, WordType.NOUN, word)
+    result = await fetch_declensions(
+        LangType.DE, WordType.NOUN, word, None, is_singular
+    )
     if result is not None:
         return result
 
     if "-" in word:
         words = word.split("-")
         word = words[-1]
-        result = await fetch_declensions(LangType.DE, WordType.NOUN, word)
+        result = await fetch_declensions(
+            LangType.DE, WordType.NOUN, word, token, is_singular
+        )
         lower = False
         prefix = "-".join(words[0:-1]) + "-"
     else:
@@ -3442,7 +3455,9 @@ async def german_noun_lookup(text: str) -> dict:
             break
 
         word = words[-1]
-        result = await fetch_declensions(LangType.DE, WordType.NOUN, word)
+        result = await fetch_declensions(
+            LangType.DE, WordType.NOUN, word, token, is_singular
+        )
         if result is not None:
             for form in result:
                 if result[form] is None:
@@ -3602,55 +3617,28 @@ async def find_form_adjective_english(i: int, tokens: Doc):
     return target_form
 
 
-async def find_form_noun_german(i: int, tokens: Doc, is_singular: bool):
+async def find_form_noun_german(i: int, tokens: Doc, is_singular: bool = None):
     token = tokens[i]
 
-    if token.text.lower() in static_rules[LangType.DE]["articles"]:
+    if await check_word_type(LangType.DE, token, WordType.PRONOUN, True, True):
         return "no_change"
 
-    text = remove_gender_ending(token.text)
-    forms = await fetch_declensions(LangType.DE, WordType.NOUN, text, token)
-    if forms is None:
-        if (
-            settings.log_missing_declension
-            and len(token.text) > 2
-            and token.text[0].isupper()
-            and not token.text.isupper()
-        ):
-            logger.error(f"German noun declension not found for '{token.text}'")
-
-        return None
-
-    target_form = find_matching_form(forms, text)
-    if (
-        target_form is None
-        and settings.log_missing_declension
-        and not token.text.isupper()
-    ):
-        logger.error(
-            f"German noun target form could not be determined for '{token.text}' (lemma: '{token.lemma_}')."
-        )
-
-    target_form = (
-        "no_change"
-        if token.text.lower() in static_rules[LangType.DE]["articles"]
-        else await find_form_noun_german_text(token.text, is_singular)
-    )
-
-    return target_form
+    return await find_form_noun_german_text(token.text, token, is_singular)
 
 
-async def find_form_noun_german_text(text: str, is_singular: bool):
+async def find_form_noun_german_text(text: str, token: Token, is_singular: bool):
     stripped_text = remove_gender_ending(text)
-    forms = await fetch_declensions(
-        LangType.DE, WordType.NOUN, stripped_text, None, is_singular
-    )
+    forms = await german_noun_lookup(stripped_text, token, is_singular)
     if forms is None:
         if (
             settings.log_missing_declension
+            and token.ent_type_ == ""
             and len(text) > 2
             and text[0].isupper()
             and not text.isupper()
+            and not await check_word_type(
+                LangType.DE, token, WordType.PRONOUN, True, True
+            )
         ):
             logger.error(f"German noun declension not found for '{text}'")
 
@@ -3689,7 +3677,7 @@ async def find_form(
 
         case WordType.NOUN | WordType.PRONOUN:
             if lang == LangType.DE:
-                return await find_form_noun_german(i, tokens, is_singular)
+                return await find_form_noun_german(i, tokens)
 
             return await find_form_noun_english(is_singular)
 
@@ -3707,13 +3695,12 @@ async def find_form(
     return token.idx, token.text, token.lemma_, None
 
 
-def align_form_noun_german(
+async def align_form_noun_german(
     target_form: str, target_token: Token, target_result: dict
 ) -> str:
     # TODO determine correct form
-    if (
-        target_token.text.islower()
-        or target_token.text.lower() in static_rules[LangType.DE]["articles"]
+    if target_token.text.islower() or await check_word_type(
+        LangType.DE, target_token, WordType.PRONOUN, True, True
     ):
         return target_token.text
 
@@ -3756,7 +3743,7 @@ async def align_form_noun(lang: LangType, target_form: str, target_token: Token)
     )
 
     if lang == LangType.DE:
-        return align_form_noun_german(target_form, target_token, target_result)
+        return await align_form_noun_german(target_form, target_token, target_result)
 
     return align_form_noun_english(target_form, target_token, target_result)
 
@@ -4768,7 +4755,7 @@ async def gendered_nouns(
     if text[-1] == "-":
         for alternative in new_alternatives:
             if alternative.lemma[-1] != "-":
-                alternative.lemma+= "-"
+                alternative.lemma += "-"
 
     return text, subcategory, new_alternatives
 
@@ -5320,62 +5307,11 @@ async def rule_check(
             if count == 0:
                 continue
 
-            standard_words = [
-                "zusammen",
-                "schaft",
-                "nieder",
-                "hinter",
-                "wider",
-                "unter",
-                "reich",
-                "ismus",
-                "über",
-                "voll",
-                "nach",
-                "miss",
-                "ling",
-                "lich",
-                "lein",
-                "leer",
-                "keit",
-                "heit",
-                "haft",
-                "chen",
-                "zer",
-                "weg",
-                "vor",
-                "ver",
-                "ver",
-                "ung",
-                "tum",
-                "nis",
-                "mit",
-                "los",
-                "hin",
-                "her",
-                "ent",
-                "emp",
-                "ein",
-                "ein",
-                "dar",
-                "bei",
-                "aus",
-                "auf",
-                "arm",
-                "zu",
-                "un",
-                "um",
-                "ob",
-                "le",
-                "in",
-                "ge",
-                "er",
-                "be",
-                "an",
-                "ab",
-            ]
             if rule.false_positives is not None:
-                standard_words = rule.false_positives + standard_words
+                standard_words = (
+                    rule.false_positives
+                    + static_rules[LangType.DE]["standard_words"].copy()
+                )
 
             for standard_word in standard_words:
                 if standard_word.lower() not in rule_lemma_lower:
@@ -5422,7 +5358,7 @@ async def rule_check(
             if rule.type == RuleType.SUFFIX:
                 prefix = tokens[i].lemma_[0 : -1 * len(rule.lemma)]
                 noun = noun.removeprefix(prefix)
-            target_form = await find_form_noun_german_text(noun, is_singular)
+            target_form = await find_form_noun_german_text(noun, token, is_singular)
 
         else:
             target_form = "base_form"
@@ -5530,7 +5466,7 @@ async def rule_check(
 
 def detect_filler_words_at_sentence_start(
     alternatives: list[Alternative], text: str, full_text: str, end: int
-) -> (str, list[Alternative]):
+) -> tuple[str, list[Alternative]]:
     if alternatives == ["-"] and text[0].isupper():
         match = re.search(r"(\s*,\s*)(\S+)", full_text[end : end + 30])
         if isinstance(match, re.Match):
@@ -5544,7 +5480,7 @@ def token_is_conjunction(token: Token) -> bool:
     return token.text == "," or token.pos_ == "CCONJ"
 
 
-async def pluralize_they(text: str, tokens: Doc, i: int) -> (str, str):
+async def pluralize_they(text: str, tokens: Doc, i: int) -> tuple[str, str]:
     token = tokens[i]
     alternative = "they"
 

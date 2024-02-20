@@ -488,6 +488,61 @@ def fetch_static_rules():
             "Gliederung",
         ]
 
+        static_rules[LangType.DE]["standard_words"] = [
+            "zusammen",
+            "schaft",
+            "nieder",
+            "hinter",
+            "wider",
+            "unter",
+            "reich",
+            "ismus",
+            "über",
+            "voll",
+            "nach",
+            "miss",
+            "ling",
+            "lich",
+            "lein",
+            "leer",
+            "keit",
+            "heit",
+            "haft",
+            "chen",
+            "zer",
+            "weg",
+            "vor",
+            "ver",
+            "ver",
+            "ung",
+            "tum",
+            "nis",
+            "mit",
+            "los",
+            "hin",
+            "her",
+            "ent",
+            "emp",
+            "ein",
+            "ein",
+            "dar",
+            "bei",
+            "aus",
+            "auf",
+            "arm",
+            "zu",
+            "un",
+            "um",
+            "ob",
+            "le",
+            "in",
+            "ge",
+            "er",
+            "be",
+            "an",
+            "ab",
+        ]
+
         # articles
         articles = list(
             zip(
@@ -508,12 +563,6 @@ def fetch_static_rules():
         )
         static_rules[LangType.DE]["neuter_articles"] = dict(
             zip(list(data[LangType.DE]["df_articles"]["Neuter"]), articles)
-        )
-
-        static_rules[LangType.DE]["articles"] = (
-            list(static_rules[LangType.DE]["feminine_articles"].keys())
-            + list(static_rules[LangType.DE]["masculine_articles"].keys())
-            + list(static_rules[LangType.DE]["neuter_articles"].keys())
         )
 
         static_rules[LangType.DE]["primary_german_gender_endings"] = {
