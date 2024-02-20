@@ -2548,7 +2548,7 @@ async def german_lemmatization(tokens: Doc, i: int):
 
             word = remove_gender_ending(token.text)
 
-            result = await german_noun_lookup(word)
+            result = await german_noun_lookup(word, token)
             if result is not None:
                 target = "male_form" if result["male_form"] else "base_form"
                 return result[target]
@@ -3427,7 +3427,9 @@ async def german_noun_gender_lookup(word: str) -> str:
     return result["gender_1"]
 
 
-async def german_noun_lookup(text: str, is_singular: bool = None) -> dict:
+async def german_noun_lookup(
+    text: str, token: Token | None = None, is_singular: bool = None
+) -> dict:
     word = text
     result = await fetch_declensions(
         LangType.DE, WordType.NOUN, word, None, is_singular
@@ -3439,7 +3441,7 @@ async def german_noun_lookup(text: str, is_singular: bool = None) -> dict:
         words = word.split("-")
         word = words[-1]
         result = await fetch_declensions(
-            LangType.DE, WordType.NOUN, word, None, is_singular
+            LangType.DE, WordType.NOUN, word, token, is_singular
         )
         lower = False
         prefix = "-".join(words[0:-1]) + "-"
@@ -3454,7 +3456,7 @@ async def german_noun_lookup(text: str, is_singular: bool = None) -> dict:
 
         word = words[-1]
         result = await fetch_declensions(
-            LangType.DE, WordType.NOUN, word, None, is_singular
+            LangType.DE, WordType.NOUN, word, token, is_singular
         )
         if result is not None:
             for form in result:
@@ -3618,21 +3620,25 @@ async def find_form_adjective_english(i: int, tokens: Doc):
 async def find_form_noun_german(i: int, tokens: Doc, is_singular: bool = None):
     token = tokens[i]
 
-    if token.text.lower() in static_rules[LangType.DE]["articles"]:
+    if await check_word_type(LangType.DE, token, WordType.PRONOUN, True, True):
         return "no_change"
 
-    return await find_form_noun_german_text(token.text, token.lemma_, is_singular)
+    return await find_form_noun_german_text(token.text, token, is_singular)
 
 
-async def find_form_noun_german_text(text: str, lemma: str, is_singular):
+async def find_form_noun_german_text(text: str, token: Token, is_singular: bool):
     stripped_text = remove_gender_ending(text)
-    forms = await german_noun_lookup(stripped_text, is_singular)
+    forms = await german_noun_lookup(stripped_text, token, is_singular)
     if forms is None:
         if (
             settings.log_missing_declension
+            and token.ent_type_ == ""
             and len(text) > 2
             and text[0].isupper()
             and not text.isupper()
+            and not await check_word_type(
+                LangType.DE, token, WordType.PRONOUN, True, True
+            )
         ):
             logger.error(f"German noun declension not found for '{text}'")
 
@@ -3641,7 +3647,7 @@ async def find_form_noun_german_text(text: str, lemma: str, is_singular):
     target_form = find_matching_form(forms, stripped_text)
     if target_form is None and settings.log_missing_declension and not text.isupper():
         logger.error(
-            f"German noun target form could not be determined for '{text}' (lemma: '{lemma}')."
+            f"German noun target form could not be determined for '{text}' (lemma: '{token.lemma_}')."
         )
 
     return target_form
@@ -3689,13 +3695,12 @@ async def find_form(
     return token.idx, token.text, token.lemma_, None
 
 
-def align_form_noun_german(
+async def align_form_noun_german(
     target_form: str, target_token: Token, target_result: dict
 ) -> str:
     # TODO determine correct form
-    if (
-        target_token.text.islower()
-        or target_token.text.lower() in static_rules[LangType.DE]["articles"]
+    if target_token.text.islower() or await check_word_type(
+        LangType.DE, target_token, WordType.PRONOUN, True, True
     ):
         return target_token.text
 
@@ -3738,7 +3743,7 @@ async def align_form_noun(lang: LangType, target_form: str, target_token: Token)
     )
 
     if lang == LangType.DE:
-        return align_form_noun_german(target_form, target_token, target_result)
+        return await align_form_noun_german(target_form, target_token, target_result)
 
     return align_form_noun_english(target_form, target_token, target_result)
 
@@ -5353,9 +5358,7 @@ async def rule_check(
             if rule.type == RuleType.SUFFIX:
                 prefix = tokens[i].lemma_[0 : -1 * len(rule.lemma)]
                 noun = noun.removeprefix(prefix)
-            target_form = await find_form_noun_german_text(
-                noun, tokens[i].lemma_, is_singular
-            )
+            target_form = await find_form_noun_german_text(noun, token, is_singular)
 
         else:
             target_form = "base_form"

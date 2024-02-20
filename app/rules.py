@@ -542,7 +542,7 @@ def fetch_static_rules():
             "an",
             "ab",
         ]
- 
+
         # articles
         articles = list(
             zip(
@@ -563,12 +563,6 @@ def fetch_static_rules():
         )
         static_rules[LangType.DE]["neuter_articles"] = dict(
             zip(list(data[LangType.DE]["df_articles"]["Neuter"]), articles)
-        )
-
-        static_rules[LangType.DE]["articles"] = (
-            list(static_rules[LangType.DE]["feminine_articles"].keys())
-            + list(static_rules[LangType.DE]["masculine_articles"].keys())
-            + list(static_rules[LangType.DE]["neuter_articles"].keys())
         )
 
         static_rules[LangType.DE]["primary_german_gender_endings"] = {
