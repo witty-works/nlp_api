@@ -2523,6 +2523,9 @@ def is_gender_star_ending(text: str) -> bool | re.Match:
 
 
 def remove_gender_ending(text: str) -> str:
+    if text[0].islower():
+        return text
+
     if text[-1] == "-":
         text = text[0:-1]
 
