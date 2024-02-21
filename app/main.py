@@ -4420,8 +4420,8 @@ async def gendered_alternatives(
     for word in words:
         if word.startswith("~") and word.endswith("~"):
             word = word.strip("~")
-            forms = await fetch_declensions(lang, WordType.NOUN, word)
-            if target_form is None or forms is None or target_form not in forms:
+            forms = await german_noun_lookup(word)
+            if forms is None or target_form not in forms:
                 forms = None
                 logger.error(f"Declension '{target_form}' missing for '{word}'")
                 break
@@ -4435,7 +4435,7 @@ async def gendered_alternatives(
                 logger.error(f"Declension data missing for other form in '{word}'")
                 return [], False
 
-            other_forms = await fetch_declensions(lang, WordType.NOUN, other_form)
+            other_forms = await german_noun_lookup(other_form)
             if target_form not in other_forms:
                 forms = True
                 logger.error(f"Declension '{target_form}' missing for '{other_form}'")
