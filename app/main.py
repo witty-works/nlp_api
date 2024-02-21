@@ -3385,6 +3385,10 @@ def find_common_prefix(
     text1: str, text2: str, lower: bool = True, ignore_umlauts: bool = True
 ) -> str:
     prefix = text1
+
+    if text1.lower().count("ä") != text2.lower().count("ä"):
+        return ""
+
     if ignore_umlauts:
         prefix = prefix.replace("ä", "a").replace("ö", "o").replace("ü", "u")
     if lower:
