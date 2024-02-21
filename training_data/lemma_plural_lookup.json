@@ -2523,7 +2523,6 @@
     "Techniken": null,
     "Innendekorateure": null,
     "Innendekorateuren": null,
-    "IT-Projektleitern": null,
     "Kaminfegern": null,
     "KFZ-Mechanikern": null,
     "KFZ-Mechatronikern": null,
@@ -2786,6 +2785,12 @@
     "Bereiche": null,
     "Bereichen": null,
     "Salesbereiche": null,
-    "Salesbereichen": null
+    "Salesbereichen": null,
+    "Products": null,
+    "Damen": null,
+    "Gr\u00fcndern": null,
+    "Gr\u00fcnderinnen": null,
+    "Werbegestaltern": null,
+    "Werbegestalterinnen": null
   }
 }
