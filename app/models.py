@@ -332,7 +332,7 @@ class Config(BaseModel):
             r"^([A-ZÄÖÜ][a-zäöü]+)/-(innen|in|r|nja|ze|iza|eza)$"
         ),
         GermanGenderEndingType.CAPITAL_LETTER: re.compile(
-            r"^([A-ZÄÖÜ][a-zäöü]+)(In(nen)|R|Nja|Ze)$"
+            r"^([A-ZÄÖÜ][a-zäöü]+)(In(nen)?|R|Nja|Ze)$"
         ),
         GermanGenderEndingType.PARENTHESIS_DASH: re.compile(
             r"^^([A-ZÄÖÜ][a-zäöü]+)\(-(innen|in|r|nja|ze|iza|eza)\)$"
