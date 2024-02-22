@@ -8,38 +8,6 @@
         {
             "alternatives": [
                 {
-                    "text": "Indikator"
-                },
-                {
-                    "text": "Indikators"
-                },
-                {
-                    "text": "Indikation"
-                },
-                {
-                    "text": "Indikativ"
-                },
-                {
-                    "text": "Induktor"
-                }
-            ],
-            "category": "orthography",
-            "context": "national ist eine internationale Firma. Wir unterstützen trans Personen mit unseren Key Performance Indicator (KPI). Dank diesen KPI wird es besser.",
-            "end": 125,
-            "explanation": {
-                "icon": "❌",
-                "text": "Möglicher Tippfehler gefunden."
-            },
-            "gravity": 1.0,
-            "label": "Rechtschreibfehler",
-            "start": 116,
-            "subcategory": "typos",
-            "text": "Indicator",
-            "text_id": "Indicator"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "in vielen Ländern vertretene"
                 },
                 {
