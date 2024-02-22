@@ -235,6 +235,26 @@ async def handle_command_witty(
     await respond(blocks=blocks)
 
 
+async def get_rules_db(import_from_dump: bool = True):
+    global rules_db
+
+    in_memory_url = "file:rules_db?mode=memory&cache=shared&uri=true"
+    rules_db = await aiosqlite.connect(in_memory_url, check_same_thread=False)
+
+    tables_exist = await fetch_rows(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='rules_rule'"
+    )
+    if len(tables_exist) == 0:
+        if import_from_dump:
+            await rules_db.executescript(open("./database/dump.sql", "r").read())
+        else:
+            source = await aiosqlite.connect("./database/db.sqlite3")
+            await source.backup(rules_db)
+            await source.close()
+
+    return rules_db
+
+
 async def fetch_rows(query, parameters=None) -> list:
     cursor = await rules_db.execute(query, parameters)
     rows = await cursor.fetchall()
@@ -360,19 +380,7 @@ async def lifespan(app: FastAPI):
     session = aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False))
     ssl_session = aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=True))
 
-    in_memory_url = "file:rules_db?mode=memory&cache=shared&uri=true"
-    rules_db = await aiosqlite.connect(in_memory_url, check_same_thread=False)
-
-    tables_exist = await fetch_rows(
-        "SELECT name FROM sqlite_master WHERE type='table' AND name='rules_rule'"
-    )
-    if len(tables_exist) == 0:
-        if settings.import_from_dump:
-            await rules_db.executescript(open("./database/dump.sql", "r").read())
-        else:
-            source = await aiosqlite.connect("./database/db.sqlite3")
-            await source.backup(rules_db)
-            await source.close()
+    rules_db = await get_rules_db(settings.import_from_dump)
 
     for lang in model:
         query = f"SELECT {rule_column_list} FROM rules_rule WHERE language = ? and type = ? ORDER BY lemma_length DESC, first_is_word_type_lemmatize ASC"

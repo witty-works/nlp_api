@@ -263,34 +263,19 @@ Unzip the file and move into the folder
 java -noverify -cp languagetool-server.jar org.languagetool.server.HTTPServer --public --allow-origin "*"
 ```
 
-3. Run the script to generate ignore words for German:
+3. Run the script to generate ignore words:
+
+for German:
 
 ```
-pdm run python -m bin.analyze_rules -p <path_to_ignore_file>
+pdm run python -m bin.analyze_rules -l de
 ```
 
 for English:
 
 ```
-pdm run python -m bin.analyze_rules -l en -p <path_to_ignore_file>
-```
-
-For example:
-
-```
 pdm run python -m bin.analyze_rules -l en
-pdm run python -m bin.analyze_rules -l de
 ```
-
-## Collect statistics
-
-Run `./statistics.sh` to fetch statistics locally and remotely. See
-`./statistics.sh -h` for instructions.
-
-## Incorrect German Noun Gender Detection
-
-Missing word needs to be added to https://de.wiktionary.org/ and then update
-https://github.com/gambolputty/german-nouns#compiling-the-list
 
 ## Incorrect/Missing German Articles
 
