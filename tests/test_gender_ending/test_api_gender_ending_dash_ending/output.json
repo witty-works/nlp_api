@@ -21,7 +21,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Meister- oder Technikerabschluss. Leser- bzw. Zuschauer:innenbrief.",
+            "context": "Meister- oder Technikerabschluss. Leser- bzw. Zuschauer:innenbrief. Kommunikations- und Motivationsstärke",
             "end": 8,
             "explanation": {
                 "content": "advanced",
@@ -53,7 +53,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Meister- oder Technikerabschluss. Leser- bzw. Zuschauer:innenbrief.",
+            "context": "Meister- oder Technikerabschluss. Leser- bzw. Zuschauer:innenbrief. Kommunikations- und Motivationsstärke",
             "end": 40,
             "explanation": {
                 "content": "advanced",
@@ -68,6 +68,24 @@
             "subcategory": "function",
             "text": "Leser-",
             "text_id": "Leser"
+        },
+        {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "Meister- oder Technikerabschluss. Leser- bzw. Zuschauer:innenbrief. Kommunikations- und Motivationsstärke",
+            "end": 83,
+            "explanation": {
+                "content": "video",
+                "icon": "✅",
+                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true"
+            },
+            "label": "Soziale Motivation: Kommunale Sprache",
+            "proficiency_level": "inclusive",
+            "start": 68,
+            "subcategory": "communal",
+            "text": "Kommunikations-",
+            "text_id": "Kommunikation"
         }
     ]
 }

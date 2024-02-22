@@ -115,7 +115,7 @@ from app.query_definitions import (
     verb_form_map,
 )
 
-version = "2.2.6"
+version = "2.2.7"
 
 categories = get_categories()
 settings = get_settings()
@@ -233,6 +233,26 @@ async def handle_command_witty(
                 )
 
     await respond(blocks=blocks)
+
+
+async def get_rules_db(import_from_dump: bool = True):
+    global rules_db
+
+    in_memory_url = "file:rules_db?mode=memory&cache=shared&uri=true"
+    rules_db = await aiosqlite.connect(in_memory_url, check_same_thread=False)
+
+    tables_exist = await fetch_rows(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='rules_rule'"
+    )
+    if len(tables_exist) == 0:
+        if import_from_dump:
+            await rules_db.executescript(open("./database/dump.sql", "r").read())
+        else:
+            source = await aiosqlite.connect("./database/db.sqlite3")
+            await source.backup(rules_db)
+            await source.close()
+
+    return rules_db
 
 
 async def fetch_rows(query, parameters=None) -> list:
@@ -360,19 +380,7 @@ async def lifespan(app: FastAPI):
     session = aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=False))
     ssl_session = aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=True))
 
-    in_memory_url = "file:rules_db?mode=memory&cache=shared&uri=true"
-    rules_db = await aiosqlite.connect(in_memory_url, check_same_thread=False)
-
-    tables_exist = await fetch_rows(
-        "SELECT name FROM sqlite_master WHERE type='table' AND name='rules_rule'"
-    )
-    if len(tables_exist) == 0:
-        if settings.import_from_dump:
-            await rules_db.executescript(open("./database/dump.sql", "r").read())
-        else:
-            source = await aiosqlite.connect("./database/db.sqlite3")
-            await source.backup(rules_db)
-            await source.close()
+    rules_db = await get_rules_db(settings.import_from_dump)
 
     for lang in model:
         query = f"SELECT {rule_column_list} FROM rules_rule WHERE language = ? and type = ? ORDER BY lemma_length DESC, first_is_word_type_lemmatize ASC"
@@ -2523,8 +2531,12 @@ def is_gender_star_ending(text: str) -> bool | re.Match:
 
 
 def remove_gender_ending(text: str) -> str:
-    if text[-1] == "-":
-        text = text[0:-1]
+    if text[0].islower():
+        return text
+
+    if text.endswith("-"):
+        ending = "s-" if text.endswith("s-") else "-"
+        text = text.removesuffix(ending)
 
     match = is_gender_star_ending(text)
     if match:
@@ -3351,7 +3363,7 @@ async def _fetch_word_type(
 
         return WordType.NOUN
 
-    if lang == LangType.DE and token.text[0].isupper() and token.text[-1] == "-":
+    if lang == LangType.DE and token.text[0].isupper() and token.text.endswith("-"):
         return WordType.NOUN
 
     if token.tag_ == "KON" or token.pos_ == "CCONJ":
@@ -3382,6 +3394,10 @@ def find_common_prefix(
     text1: str, text2: str, lower: bool = True, ignore_umlauts: bool = True
 ) -> str:
     prefix = text1
+
+    if text1.lower().count("ä") != text2.lower().count("ä"):
+        return ""
+
     if ignore_umlauts:
         prefix = prefix.replace("ä", "a").replace("ö", "o").replace("ü", "u")
     if lower:
@@ -4417,8 +4433,8 @@ async def gendered_alternatives(
     for word in words:
         if word.startswith("~") and word.endswith("~"):
             word = word.strip("~")
-            forms = await fetch_declensions(lang, WordType.NOUN, word)
-            if target_form is None or forms is None or target_form not in forms:
+            forms = await german_noun_lookup(word)
+            if forms is None or target_form not in forms:
                 forms = None
                 logger.error(f"Declension '{target_form}' missing for '{word}'")
                 break
@@ -4432,7 +4448,7 @@ async def gendered_alternatives(
                 logger.error(f"Declension data missing for other form in '{word}'")
                 return [], False
 
-            other_forms = await fetch_declensions(lang, WordType.NOUN, other_form)
+            other_forms = await german_noun_lookup(other_form)
             if target_form not in other_forms:
                 forms = True
                 logger.error(f"Declension '{target_form}' missing for '{other_form}'")
@@ -4752,10 +4768,12 @@ async def gendered_nouns(
             + tokens[i + 2].text
         )
 
-    if text[-1] == "-":
+    if text.endswith("-"):
+        ending = "s-" if text.endswith("s-") else "-"
+
         for alternative in new_alternatives:
-            if alternative.lemma[-1] != "-":
-                alternative.lemma += "-"
+            if alternative.lemma.endswith(ending) != ending:
+                alternative.lemma += ending
 
     return text, subcategory, new_alternatives
 

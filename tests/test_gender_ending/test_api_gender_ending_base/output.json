@@ -5,7 +5,7 @@
         {
             "alternatives": [],
             "category": "social-motive",
-            "context": "Ich vertraue auf meinen Facharzt. Ich gehe zur Fachärztin/Facharzt",
+            "context": "Ich vertraue auf meinen Facharzt. Ich gehe zur Fachärztin/Facharzt und Bundesrat",
             "end": 12,
             "explanation": {
                 "content": "video",
@@ -39,7 +39,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Ich vertraue auf meinen Facharzt. Ich gehe zur Fachärztin/Facharzt",
+            "context": "Ich vertraue auf meinen Facharzt. Ich gehe zur Fachärztin/Facharzt und Bundesrat",
             "end": 32,
             "explanation": {
                 "content": "advanced",
@@ -54,6 +54,35 @@
             "subcategory": "titles",
             "text": "meinen Facharzt",
             "text_id": "Arzt"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Bundesrätin*Bundesrat"
+                },
+                {
+                    "text": "Bundesrätin/Bundesrat"
+                },
+                {
+                    "text": "Bundesratsmitglied"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Ich vertraue auf meinen Facharzt. Ich gehe zur Fachärztin/Facharzt und Bundesrat",
+            "end": 80,
+            "explanation": {
+                "content": "advanced",
+                "icon": "💡",
+                "text": "Viele denken bei diesem Wort zuerst an einen Mann",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Generisches Maskulinum",
+            "proficiency_level": "unconscious_bias",
+            "start": 71,
+            "subcategory": "function",
+            "text": "Bundesrat",
+            "text_id": "Bundesrat"
         }
     ]
 }

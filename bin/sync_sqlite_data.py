@@ -4,7 +4,7 @@ import os
 import json
 
 from app.query_definitions import declensions_config
-from app.models import LangType, LangVariantType
+from app.models import LangType
 
 
 def parse_args():
