@@ -2534,8 +2534,9 @@ def remove_gender_ending(text: str) -> str:
     if text[0].islower():
         return text
 
-    if text[-1] == "-":
-        text = text[0:-1]
+    if text.endswith("-"):
+        ending = "s-" if text.endswith("s-") else "-"
+        text = text.removesuffix(ending)
 
     match = is_gender_star_ending(text)
     if match:
@@ -3362,7 +3363,7 @@ async def _fetch_word_type(
 
         return WordType.NOUN
 
-    if lang == LangType.DE and token.text[0].isupper() and token.text[-1] == "-":
+    if lang == LangType.DE and token.text[0].isupper() and token.text.endswith("-"):
         return WordType.NOUN
 
     if token.tag_ == "KON" or token.pos_ == "CCONJ":
@@ -4767,10 +4768,12 @@ async def gendered_nouns(
             + tokens[i + 2].text
         )
 
-    if text[-1] == "-":
+    if text.endswith("-"):
+        ending = "s-" if text.endswith("s-") else "-"
+
         for alternative in new_alternatives:
-            if alternative.lemma[-1] != "-":
-                alternative.lemma += "-"
+            if alternative.lemma.endswith(ending) != ending:
+                alternative.lemma += ending
 
     return text, subcategory, new_alternatives
 
