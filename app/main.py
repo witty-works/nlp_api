@@ -5592,8 +5592,9 @@ def detect_non_inclusive_emoji(
     explanation_context = get_emoji_context(token.text, lang.lang)
 
     emoji_description = token._.emoji_desc
-    emoji_base = emoji_description.replace(" light skin tone", "")
-    emoji_base = emoji_base.replace(" ", "_")
+    emoji_base = re.sub(r"\b[-a-z]+\b skin tone", "", emoji_description)
+
+    emoji_base = emoji_base.strip().replace(" ", "_")
 
     subcategory = None
     for emoji_config_name in static_rules["emoji"]:
@@ -5674,11 +5675,7 @@ def detect_non_inclusive_emoji(
         # match found
         break
 
-    if (
-        len(alternatives) == 0
-        and "light skin tone" in emoji_description
-        and "medium" not in emoji_description
-    ):
+    if len(alternatives) == 0 and "skin tone" in emoji_description:
         subcategory = "culture"
         for skin_tone in static_rules["skin_tones"]["all"]:
             alternative = get_emoji(emoji_base + skin_tone)
@@ -5686,6 +5683,15 @@ def detect_non_inclusive_emoji(
                 alternative = Alternative(alternative)
                 alternative.label = get_emoji_context(alternative.lemma, lang.lang)
                 alternatives.append(alternative)
+
+    if "skin tone" in emoji_description:
+        explanation = (
+            "Be mindful when using a skin tone that does not match your own"
+            if lang.lang == LangType.EN
+            else "Vorsicht beim Verwenden von Hauttönen, die nicht den eigenen entsprechen"
+        )
+    else:
+        explanation = None
 
     if subcategory and len(alternatives) >= 1:
         list_full.append(
@@ -5702,7 +5708,7 @@ def detect_non_inclusive_emoji(
                 None,
                 alternatives,
                 None,
-                None,
+                explanation,
                 None,
                 None,
                 explanation_context,
