@@ -3693,6 +3693,9 @@ async def find_form(
 
         case WordType.NOUN | WordType.PRONOUN:
             if lang == LangType.DE:
+                if tokens[i].text.endswith("-"):
+                    return "no_change"
+
                 return await find_form_noun_german(i, tokens)
 
             return await find_form_noun_english(is_singular)
@@ -5377,7 +5380,6 @@ async def rule_check(
                 prefix = tokens[i].lemma_[0 : -1 * len(rule.lemma)]
                 noun = noun.removeprefix(prefix)
             target_form = await find_form_noun_german_text(noun, token, is_singular)
-
         else:
             target_form = "base_form"
 

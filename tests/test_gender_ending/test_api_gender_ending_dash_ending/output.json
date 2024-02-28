@@ -21,7 +21,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Meister- oder Technikerabschluss. Leser- bzw. Zuschauer:innenbrief. Kommunikations- und Motivationsstärke",
+            "context": "Meister- oder Technikerabschluss. Leser- bzw. Zuschauer:innenbrief. Kommunikations- und Motivationsstärke. I",
             "end": 8,
             "explanation": {
                 "content": "advanced",
@@ -53,7 +53,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Meister- oder Technikerabschluss. Leser- bzw. Zuschauer:innenbrief. Kommunikations- und Motivationsstärke",
+            "context": "Meister- oder Technikerabschluss. Leser- bzw. Zuschauer:innenbrief. Kommunikations- und Motivationsstärke. Innovations- und Immobilienbranch",
             "end": 40,
             "explanation": {
                 "content": "advanced",
@@ -72,7 +72,7 @@
         {
             "alternatives": [],
             "category": "social-motive",
-            "context": "Meister- oder Technikerabschluss. Leser- bzw. Zuschauer:innenbrief. Kommunikations- und Motivationsstärke",
+            "context": "Meister- oder Technikerabschluss. Leser- bzw. Zuschauer:innenbrief. Kommunikations- und Motivationsstärke. Innovations- und Immobilienbranche miterleben",
             "end": 83,
             "explanation": {
                 "content": "video",
@@ -86,6 +86,41 @@
             "subcategory": "communal",
             "text": "Kommunikations-",
             "text_id": "Kommunikation"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Neugestaltungs-"
+                },
+                {
+                    "text": "Erfindungs-"
+                },
+                {
+                    "text": "Technischer Fortschritts-"
+                },
+                {
+                    "text": "Neuerungs-"
+                },
+                {
+                    "text": "Neuschöpfungs-"
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "- oder Technikerabschluss. Leser- bzw. Zuschauer:innenbrief. Kommunikations- und Motivationsstärke. Innovations- und Immobilienbranche miterleben",
+            "end": 119,
+            "explanation": {
+                "content": "advanced",
+                "icon": "🙄",
+                "text": "Schwächen die Wirkung deiner Botschaft",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/worthülsen?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Kulturelle Diversität: Worthülsen",
+            "proficiency_level": "unconscious_bias",
+            "start": 107,
+            "subcategory": "hollow",
+            "text": "Innovations-",
+            "text_id": "Innovation"
         }
     ]
 }
