@@ -41,8 +41,8 @@
                     "text": "👩🏾‍🚒"
                 },
                 {
-                    "context": "Feuerwehrfrau Mittelhelle Hautfarbe",
-                    "text": "👩🏼‍🚒"
+                    "context": "Feuerwehrfrau Helle Hautfarbe",
+                    "text": "👩🏻‍🚒"
                 }
             ],
             "category": "gender-orientation",
@@ -78,8 +78,8 @@
                     "text": "👩🏾‍🚒"
                 },
                 {
-                    "context": "Feuerwehrfrau Mittelhelle Hautfarbe",
-                    "text": "👩🏼‍🚒"
+                    "context": "Feuerwehrfrau Helle Hautfarbe",
+                    "text": "👩🏻‍🚒"
                 }
             ],
             "category": "gender-orientation",
@@ -119,8 +119,8 @@
                     "text": "👩🏾‍🚒"
                 },
                 {
-                    "context": "Feuerwehrfrau Mittelhelle Hautfarbe",
-                    "text": "👩🏼‍🚒"
+                    "context": "Feuerwehrfrau Helle Hautfarbe",
+                    "text": "👩🏻‍🚒"
                 }
             ],
             "category": "gender-orientation",
@@ -130,7 +130,7 @@
                 "content": "advanced",
                 "context": "Feuerwehrmann Helle Hautfarbe",
                 "icon": "😒",
-                "text": "Bedient die heteronormative Sicht von Geschlechteridentität",
+                "text": "Vorsicht beim Verwenden von Hauttönen, die nicht den eigenen entsprechen",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäres-geschlecht?reducedView=true"
             },
             "gravity": 2.0,
@@ -144,8 +144,61 @@
         {
             "alternatives": [
                 {
+                    "context": "Feuerwehrfrau",
+                    "text": "👩‍🚒"
+                },
+                {
                     "context": "Feuerwehrfrau Mittlere Hautfarbe",
                     "text": "👩🏽‍🚒"
+                },
+                {
+                    "context": "Feuerwehrfrau Mitteldunkle Hautfarbe",
+                    "text": "👩🏾‍🚒"
+                },
+                {
+                    "context": "Feuerwehrfrau Helle Hautfarbe",
+                    "text": "👩🏻‍🚒"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut.",
+            "end": 27,
+            "explanation": {
+                "content": "advanced",
+                "context": "Feuerwehrfrau Dunkle Hautfarbe",
+                "icon": "😒",
+                "text": "Vorsicht beim Verwenden von Hauttönen, die nicht den eigenen entsprechen",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäres-geschlecht?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Binäres Geschlecht",
+            "proficiency_level": "unconscious_bias",
+            "start": 20,
+            "subcategory": "gender_identity",
+            "text": "👩🏿‍🚒",
+            "text_id": "👩🏿‍🚒"
+        },
+        {
+            "alternatives": [
+                {
+                    "context": "Feuerwehrfrau",
+                    "text": "👩‍🚒"
+                },
+                {
+                    "context": "Feuerwehrfrau Dunkle Hautfarbe",
+                    "text": "👩🏿‍🚒"
+                },
+                {
+                    "context": "Feuerwehrfrau Mittlere Hautfarbe",
+                    "text": "👩🏽‍🚒"
+                },
+                {
+                    "context": "Feuerwehrfrau Mitteldunkle Hautfarbe",
+                    "text": "👩🏾‍🚒"
+                },
+                {
+                    "context": "Feuerwehrfrau Helle Hautfarbe",
+                    "text": "👩🏻‍🚒"
                 }
             ],
             "category": "gender-orientation",
@@ -155,7 +208,7 @@
                 "content": "advanced",
                 "context": "Feuerwehrmann Mittlere Hautfarbe",
                 "icon": "😒",
-                "text": "Bedient die heteronormative Sicht von Geschlechteridentität",
+                "text": "Vorsicht beim Verwenden von Hauttönen, die nicht den eigenen entsprechen",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäres-geschlecht?reducedView=true"
             },
             "gravity": 2.0,
@@ -235,7 +288,7 @@
             "explanation": {
                 "context": "Ok-Zeichen Helle Hautfarbe",
                 "icon": "😒",
-                "text": "Reduziert eine Person auf ein kulturelles Klischee",
+                "text": "Vorsicht beim Verwenden von Hauttönen, die nicht den eigenen entsprechen",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/kulturelles-stereotyp?reducedView=true"
             },
             "gravity": 2.0,
@@ -265,8 +318,8 @@
                     "text": "🧑🏾"
                 },
                 {
-                    "context": "Person Mittelhelle Hautfarbe",
-                    "text": "🧑🏼"
+                    "context": "Person Helle Hautfarbe",
+                    "text": "🧑🏻"
                 }
             ],
             "category": "gender-orientation",
