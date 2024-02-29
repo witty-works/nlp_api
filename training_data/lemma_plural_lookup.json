@@ -3,6 +3,7 @@
     "Euro-weenies": "Euro-weenie",
     "Euroweenies": "Euroweenie",
     "ages": "age",
+    "people": "person",
     "uterus-havers": "uterus-haver",
     "uterushavers": "uterushaver"
   },
@@ -959,9 +960,11 @@
     "Gewitterziegen": null,
     "Giftspritzen": null,
     "Gipsern": null,
+    "Gipserinnen": null,
     "Gipserei-Fachkr\u00e4fte": null,
     "Gipserei-Fachkr\u00e4ften": null,
     "Glasern": null,
+    "Glaserinnen": null,
     "Gleichstellungen": null,
     "Go-gettern": null,
     "Goal-gettern": null,
@@ -2757,7 +2760,7 @@
     "Fachexpertinnen": null,
     "Stimmb\u00fcrgerinnen": null,
     "Risikokapitalgebern": null,
-    "Risikokapitalgebende": null,
+    "Risikokapitalgeberinnen": null,
     "Islamfeinde": null,
     "Islamfeinden": null,
     "Islamfeindinnen": null,
@@ -2797,6 +2800,9 @@
     "R\u00e4ume": null,
     "R\u00e4umen": null,
     "Entscheidern": null,
-    "Entscheiderinnen": null
+    "Entscheiderinnen": null,
+    "Weiberchen": null,
+    "M\u00e4nnerchen": null,
+    "Bilanzen": null
   }
 }

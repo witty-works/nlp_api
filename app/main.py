@@ -4478,103 +4478,104 @@ async def gendered_alternatives(
         alternatives[alternative] = False
         return alternatives, binary_case
 
-    if inclusive:
-        lemma = inclusive_alternative(
-            word,
-            male_form,
-            female_form,
-            prefix,
-            separator,
-            noun_separator,
-        )
+    if female_form is not None and male_form is not None:
+        if inclusive:
+            lemma = inclusive_alternative(
+                word,
+                male_form,
+                female_form,
+                prefix,
+                separator,
+                noun_separator,
+            )
 
+            if is_false_positive(
+                full_text,
+                i,
+                tokens,
+                [lemma],
+                len(lemma),
+            ):
+                return None, binary_case
+
+            additional_prefix = ""
+            for additional_word in additional_words:
+                additional_prefix += (
+                    inclusive_alternative(
+                        additional_word["word"],
+                        additional_word["male_form"],
+                        additional_word["female_form"],
+                        "",
+                        separator,
+                        noun_separator,
+                    )
+                    + "-"
+                )
+
+            alternatives[
+                alternative_prefix.replace("/", separator)
+                + additional_prefix
+                + lemma
+                + alternative_suffix.replace("/", separator)
+            ] = False
+
+        female_form = add_german_prefix(female_form, prefix)
+        male_form = add_german_prefix(male_form, prefix)
+
+        separator = "/" if is_singular else " und "
+        lemma = female_form + separator + male_form
+        false_positive_check = [
+            lemma,
+            male_form + separator + female_form,
+        ]
+
+        # case text = Mitarbeiterinnen: Mitarbeiterinnen und Mitarbeiter
         if is_false_positive(
             full_text,
             i,
             tokens,
-            [lemma],
+            false_positive_check,
+            0,
             len(lemma),
+        ):
+            # Suggest gender inclusive
+            if binary and tokens[i].text == female_form:
+                return None, binary_case
+
+            binary_case = True
+
+        form_max = max(len(female_form), len(male_form))
+
+        # case text = Mitarbeiter: Mitarbeiterinnen und Mitarbeiter
+        if is_false_positive(
+            full_text,
+            i,
+            tokens,
+            false_positive_check,
+            form_max + len(separator),
+            form_max,
         ):
             return None, binary_case
 
-        additional_prefix = ""
-        for additional_word in additional_words:
-            additional_prefix += (
-                inclusive_alternative(
-                    additional_word["word"],
-                    additional_word["male_form"],
-                    additional_word["female_form"],
-                    "",
-                    separator,
-                    noun_separator,
+        if binary:
+            additional_prefix = ""
+            for additional_word in additional_words:
+                additional_prefix += (
+                    additional_word["female_form"]
+                    + "/"
+                    + additional_word["male_form"]
+                    + "-"
                 )
-                + "-"
+
+            new_alternative = (
+                alternative_prefix + additional_prefix + lemma + alternative_suffix
             )
+            alternatives[new_alternative] = False
 
-        alternatives[
-            alternative_prefix.replace("/", separator)
-            + additional_prefix
-            + lemma
-            + alternative_suffix.replace("/", separator)
-        ] = False
-
-    female_form = add_german_prefix(female_form, prefix)
-    male_form = add_german_prefix(male_form, prefix)
-
-    separator = "/" if is_singular else " und "
-    lemma = female_form + separator + male_form
-    false_positive_check = [
-        lemma,
-        male_form + separator + female_form,
-    ]
-
-    # case text = Mitarbeiterinnen: Mitarbeiterinnen und Mitarbeiter
-    if is_false_positive(
-        full_text,
-        i,
-        tokens,
-        false_positive_check,
-        0,
-        len(lemma),
-    ):
-        # Suggest gender inclusive
-        if binary and tokens[i].text == female_form:
-            return None, binary_case
-
-        binary_case = True
-
-    form_max = max(len(female_form), len(male_form))
-
-    # case text = Mitarbeiter: Mitarbeiterinnen und Mitarbeiter
-    if is_false_positive(
-        full_text,
-        i,
-        tokens,
-        false_positive_check,
-        form_max + len(separator),
-        form_max,
-    ):
-        return None, binary_case
-
-    if binary:
         additional_prefix = ""
         for additional_word in additional_words:
-            additional_prefix += (
-                additional_word["female_form"]
-                + "/"
-                + additional_word["male_form"]
-                + "-"
-            )
-
-        new_alternative = (
-            alternative_prefix + additional_prefix + lemma + alternative_suffix
-        )
-        alternatives[new_alternative] = False
-
-    additional_prefix = ""
-    for additional_word in additional_words:
-        if additional_word["collective_noun"] is not None:
-            additional_prefix += additional_word["collective_noun"] + "-"
+            if additional_word["collective_noun"] is not None:
+                additional_prefix += additional_word["collective_noun"] + "-"
 
     for form in ["collective_noun", "collective_noun_2"]:
         if forms[form] is not None:

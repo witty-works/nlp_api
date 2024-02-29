@@ -145,19 +145,19 @@
         {
             "alternatives": [
                 {
+                    "text": "they"
+                },
+                {
                     "text": "team"
                 },
                 {
-                    "text": "crowd"
+                    "text": "everyone"
                 },
                 {
-                    "text": "people"
+                    "text": "colleagues"
                 },
                 {
-                    "text": "folks"
-                },
-                {
-                    "text": "friends"
+                    "text": "co-workers"
                 }
             ],
             "category": "gender-orientation",
@@ -165,17 +165,17 @@
             "end": 8,
             "explanation": {
                 "content": "advanced",
-                "icon": "💡",
-                "text": "People tend to picture men",
-                "url": "https://www.witty.works/en/categories/gender-orientation/generic-masculine?reducedView=true"
+                "icon": "😒",
+                "text": "Impacts the visibility of marginalized genders",
+                "url": "https://www.witty.works/en/categories/gender-orientation/gender-binary?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Gender + Orientation: Generic masculine",
+            "label": "Gender + Orientation: Gender binary",
             "proficiency_level": "unconscious_bias",
             "start": 4,
-            "subcategory": "function",
+            "subcategory": "gender_identity",
             "text": "guys",
-            "text_id": "guy"
+            "text_id": "guys"
         },
         {
             "alternatives": [],
@@ -291,19 +291,19 @@
         {
             "alternatives": [
                 {
+                    "text": "they"
+                },
+                {
                     "text": "team"
                 },
                 {
-                    "text": "crowd"
+                    "text": "everyone"
                 },
                 {
-                    "text": "people"
+                    "text": "colleagues"
                 },
                 {
-                    "text": "folks"
-                },
-                {
-                    "text": "friends"
+                    "text": "co-workers"
                 }
             ],
             "category": "gender-orientation",
@@ -311,17 +311,17 @@
             "end": 629,
             "explanation": {
                 "content": "advanced",
-                "icon": "💡",
-                "text": "People tend to picture men",
-                "url": "https://www.witty.works/en/categories/gender-orientation/generic-masculine?reducedView=true"
+                "icon": "😒",
+                "text": "Impacts the visibility of marginalized genders",
+                "url": "https://www.witty.works/en/categories/gender-orientation/gender-binary?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Gender + Orientation: Generic masculine",
+            "label": "Gender + Orientation: Gender binary",
             "proficiency_level": "unconscious_bias",
             "start": 625,
-            "subcategory": "function",
+            "subcategory": "gender_identity",
             "text": "guys",
-            "text_id": "guy"
+            "text_id": "guys"
         },
         {
             "alternatives": [],
