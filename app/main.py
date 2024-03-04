@@ -2444,11 +2444,10 @@ async def fetch_rule_alternatives(
 
 
 def is_valid_text(text: str) -> bool:
-    allowed_chars = ["-", "_", ":", "*"]
-    for char in allowed_chars:
-        text = text.replace(char, "")
+    if text == "(":
+        return True
 
-    return text.isalpha()
+    return any(c.isalnum() for c in text)
 
 
 def get_target_declension_form(target_result: dict, target_form: str):
