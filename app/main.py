@@ -115,7 +115,7 @@ from app.query_definitions import (
     verb_form_map,
 )
 
-version = "2.2.7"
+version = "2.2.8"
 
 categories = get_categories()
 settings = get_settings()
@@ -2444,11 +2444,10 @@ async def fetch_rule_alternatives(
 
 
 def is_valid_text(text: str) -> bool:
-    allowed_chars = ["-", "_", ":", "*"]
-    for char in allowed_chars:
-        text = text.replace(char, "")
+    if text == "(":
+        return True
 
-    return text.isalpha()
+    return any(c.isalnum() for c in text)
 
 
 def get_target_declension_form(target_result: dict, target_form: str):
@@ -3693,6 +3692,9 @@ async def find_form(
 
         case WordType.NOUN | WordType.PRONOUN:
             if lang == LangType.DE:
+                if tokens[i].text.endswith("-"):
+                    return "no_change"
+
                 return await find_form_noun_german(i, tokens)
 
             return await find_form_noun_english(is_singular)
@@ -4475,103 +4477,104 @@ async def gendered_alternatives(
         alternatives[alternative] = False
         return alternatives, binary_case
 
-    if inclusive:
-        lemma = inclusive_alternative(
-            word,
-            male_form,
-            female_form,
-            prefix,
-            separator,
-            noun_separator,
-        )
+    if female_form is not None and male_form is not None:
+        if inclusive:
+            lemma = inclusive_alternative(
+                word,
+                male_form,
+                female_form,
+                prefix,
+                separator,
+                noun_separator,
+            )
 
+            if is_false_positive(
+                full_text,
+                i,
+                tokens,
+                [lemma],
+                len(lemma),
+            ):
+                return None, binary_case
+
+            additional_prefix = ""
+            for additional_word in additional_words:
+                additional_prefix += (
+                    inclusive_alternative(
+                        additional_word["word"],
+                        additional_word["male_form"],
+                        additional_word["female_form"],
+                        "",
+                        separator,
+                        noun_separator,
+                    )
+                    + "-"
+                )
+
+            alternatives[
+                alternative_prefix.replace("/", separator)
+                + additional_prefix
+                + lemma
+                + alternative_suffix.replace("/", separator)
+            ] = False
+
+        female_form = add_german_prefix(female_form, prefix)
+        male_form = add_german_prefix(male_form, prefix)
+
+        separator = "/" if is_singular else " und "
+        lemma = female_form + separator + male_form
+        false_positive_check = [
+            lemma,
+            male_form + separator + female_form,
+        ]
+
+        # case text = Mitarbeiterinnen: Mitarbeiterinnen und Mitarbeiter
         if is_false_positive(
             full_text,
             i,
             tokens,
-            [lemma],
+            false_positive_check,
+            0,
             len(lemma),
+        ):
+            # Suggest gender inclusive
+            if binary and tokens[i].text == female_form:
+                return None, binary_case
+
+            binary_case = True
+
+        form_max = max(len(female_form), len(male_form))
+
+        # case text = Mitarbeiter: Mitarbeiterinnen und Mitarbeiter
+        if is_false_positive(
+            full_text,
+            i,
+            tokens,
+            false_positive_check,
+            form_max + len(separator),
+            form_max,
         ):
             return None, binary_case
 
-        additional_prefix = ""
-        for additional_word in additional_words:
-            additional_prefix += (
-                inclusive_alternative(
-                    additional_word["word"],
-                    additional_word["male_form"],
-                    additional_word["female_form"],
-                    "",
-                    separator,
-                    noun_separator,
+        if binary:
+            additional_prefix = ""
+            for additional_word in additional_words:
+                additional_prefix += (
+                    additional_word["female_form"]
+                    + "/"
+                    + additional_word["male_form"]
+                    + "-"
                 )
-                + "-"
+
+            new_alternative = (
+                alternative_prefix + additional_prefix + lemma + alternative_suffix
             )
+            alternatives[new_alternative] = False
 
-        alternatives[
-            alternative_prefix.replace("/", separator)
-            + additional_prefix
-            + lemma
-            + alternative_suffix.replace("/", separator)
-        ] = False
-
-    female_form = add_german_prefix(female_form, prefix)
-    male_form = add_german_prefix(male_form, prefix)
-
-    separator = "/" if is_singular else " und "
-    lemma = female_form + separator + male_form
-    false_positive_check = [
-        lemma,
-        male_form + separator + female_form,
-    ]
-
-    # case text = Mitarbeiterinnen: Mitarbeiterinnen und Mitarbeiter
-    if is_false_positive(
-        full_text,
-        i,
-        tokens,
-        false_positive_check,
-        0,
-        len(lemma),
-    ):
-        # Suggest gender inclusive
-        if binary and tokens[i].text == female_form:
-            return None, binary_case
-
-        binary_case = True
-
-    form_max = max(len(female_form), len(male_form))
-
-    # case text = Mitarbeiter: Mitarbeiterinnen und Mitarbeiter
-    if is_false_positive(
-        full_text,
-        i,
-        tokens,
-        false_positive_check,
-        form_max + len(separator),
-        form_max,
-    ):
-        return None, binary_case
-
-    if binary:
         additional_prefix = ""
         for additional_word in additional_words:
-            additional_prefix += (
-                additional_word["female_form"]
-                + "/"
-                + additional_word["male_form"]
-                + "-"
-            )
-
-        new_alternative = (
-            alternative_prefix + additional_prefix + lemma + alternative_suffix
-        )
-        alternatives[new_alternative] = False
-
-    additional_prefix = ""
-    for additional_word in additional_words:
-        if additional_word["collective_noun"] is not None:
-            additional_prefix += additional_word["collective_noun"] + "-"
+            if additional_word["collective_noun"] is not None:
+                additional_prefix += additional_word["collective_noun"] + "-"
 
     for form in ["collective_noun", "collective_noun_2"]:
         if forms[form] is not None:
@@ -5377,7 +5380,6 @@ async def rule_check(
                 prefix = tokens[i].lemma_[0 : -1 * len(rule.lemma)]
                 noun = noun.removeprefix(prefix)
             target_form = await find_form_noun_german_text(noun, token, is_singular)
-
         else:
             target_form = "base_form"
 
@@ -5592,8 +5594,9 @@ def detect_non_inclusive_emoji(
     explanation_context = get_emoji_context(token.text, lang.lang)
 
     emoji_description = token._.emoji_desc
-    emoji_base = emoji_description.replace(" light skin tone", "")
-    emoji_base = emoji_base.replace(" ", "_")
+    emoji_base = re.sub(r"\b[-a-z]+\b skin tone", "", emoji_description)
+
+    emoji_base = emoji_base.strip().replace(" ", "_")
 
     subcategory = None
     for emoji_config_name in static_rules["emoji"]:
@@ -5674,11 +5677,7 @@ def detect_non_inclusive_emoji(
         # match found
         break
 
-    if (
-        len(alternatives) == 0
-        and "light skin tone" in emoji_description
-        and "medium" not in emoji_description
-    ):
+    if len(alternatives) == 0 and "skin tone" in emoji_description:
         subcategory = "culture"
         for skin_tone in static_rules["skin_tones"]["all"]:
             alternative = get_emoji(emoji_base + skin_tone)
@@ -5686,6 +5685,15 @@ def detect_non_inclusive_emoji(
                 alternative = Alternative(alternative)
                 alternative.label = get_emoji_context(alternative.lemma, lang.lang)
                 alternatives.append(alternative)
+
+    if "skin tone" in emoji_description:
+        explanation = (
+            "Be mindful when using a skin tone that does not match your own"
+            if lang.lang == LangType.EN
+            else "Vorsicht beim Verwenden von Hauttönen, die nicht den eigenen entsprechen"
+        )
+    else:
+        explanation = None
 
     if subcategory and len(alternatives) >= 1:
         list_full.append(
@@ -5702,7 +5710,7 @@ def detect_non_inclusive_emoji(
                 None,
                 alternatives,
                 None,
-                None,
+                explanation,
                 None,
                 None,
                 explanation_context,

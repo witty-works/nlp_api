@@ -82,16 +82,18 @@ def fetch_static_rules():
                 "_medium_skin_tone",
                 "_medium-dark_skin_tone",
                 "_medium-light_skin_tone",
+                "_light_skin_tone",
             ],
             "full": [
                 "_dark_skin_tone",
                 "_medium_skin_tone",
                 "_medium-dark_skin_tone",
-                "_medium-light_skin_tone",
+                "_light_skin_tone",
             ],
             "minimal": [
                 "_dark_skin_tone",
                 "_medium_skin_tone",
+                "_light_skin_tone",
             ],
         },
         "emoji": {
