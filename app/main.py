@@ -870,6 +870,9 @@ async def post_debug_rule(
     i = 0
     token_count = len(tokens)
     while i < token_count:
+        if tokens[i].text in rule_data.lemmatizations:
+            tokens[i].lemma_ = rule_data.lemmatizations[tokens[i].text]
+
         if rule_data.lang == LangType.DE:
             tokens[i].lemma_ = await german_lemmatization(tokens, i)
 
@@ -5275,7 +5278,7 @@ async def rule_check(
     false_positive_matcher: list = None,
 ) -> list:
     token = tokens[i]
-    if not is_valid_text(token.text):
+    if len(rules) == 0 or not is_valid_text(token.text):
         return i
 
     if token.lemma_ == "aber" and lang.lang == LangType.DE:

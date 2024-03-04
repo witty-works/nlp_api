@@ -295,6 +295,7 @@ class RuleIn(BaseModel):
     type: Optional[RuleType] = RuleType.DEFAULT
     entity_type: Optional[EntityType] = EntityType.DEFAULT
     pluralization: Optional[PluralizationType] = PluralizationType.DEFAULT
+    lemmatizations: Optional[dict[str, str]] = {}
 
 
 class Config(BaseModel):
