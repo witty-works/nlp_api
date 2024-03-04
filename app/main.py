@@ -115,7 +115,7 @@ from app.query_definitions import (
     verb_form_map,
 )
 
-version = "2.2.7"
+version = "2.2.8"
 
 categories = get_categories()
 settings = get_settings()
