@@ -4522,6 +4522,7 @@ async def gendered_alternatives(
             ] = False
 
         female_form = add_german_prefix(female_form, prefix)
+        male_form_without_prefix = male_form
         male_form = add_german_prefix(male_form, prefix)
 
         separator = "/" if is_singular else " und "
@@ -4530,6 +4531,12 @@ async def gendered_alternatives(
             lemma,
             male_form + separator + female_form,
         ]
+
+        if not is_singular:
+            # Arbeitskolleginnen und -kollegen
+            false_positive_check.append(
+                female_form + separator + "-" + male_form_without_prefix.lower()
+            )
 
         # case text = Mitarbeiterinnen: Mitarbeiterinnen und Mitarbeiter
         if is_false_positive(
