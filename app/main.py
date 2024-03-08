@@ -97,6 +97,7 @@ from app.categories import (
     get_category_keys,
     get_categories,
     get_category,
+    get_parent_category_name,
     get_category_name,
     is_category_advanced,
 )
@@ -1234,6 +1235,9 @@ def apply_configs(
     disabled_categories = user_request_in.config.disabled_categories
 
     for config in configs:
+        if config == "force_categories":
+            continue
+
         data = configs[config]
         if data is None:
             continue
@@ -1251,8 +1255,14 @@ def apply_configs(
                 if category_data["value"]:
                     if category in disabled_categories:
                         disabled_categories.remove(category)
-                elif force_disables and category not in disabled_categories:
-                    disabled_categories.append(category)
+                else:
+                    force_disables_category = force_disables
+                    if not force_disables_category and "force_categories" in configs and len(configs["force_categories"]):
+                        parent_category = get_parent_category_name(category)
+                        force_disables_category = parent_category in configs["force_categories"]
+
+                    if force_disables_category and category not in disabled_categories:
+                        disabled_categories.append(category)
         elif config == "store_context":
             if (
                 plan is not None

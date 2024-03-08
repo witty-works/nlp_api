@@ -62,6 +62,14 @@ def get_category(category):
     return categories[category]
 
 
+def get_parent_category_name(category):
+    parent_category = get_category(category)
+
+    if parent_category is None:
+        return None
+
+    return parent_category["category"]
+
 def is_category_inclusive(category):
     category_data = get_category(category)
     if category_data is None or "proficiency_level" not in category_data:

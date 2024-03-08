@@ -5,12 +5,14 @@
                 "status": "force",
                 "value": false
             }
-        }
+        },
+        "force_categories": []
     },
     "id": "test-default",
     "name": "Tests Default",
     "organization_config": {
-        "categories": {}
+        "categories": {},
+        "force_categories": []
     },
     "organization_name": "Default",
     "plan": "witty_teams"

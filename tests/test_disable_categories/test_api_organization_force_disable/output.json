@@ -1,0 +1,108 @@
+{
+    "config_changed": true,
+    "has_consented_to_mailing": true,
+    "language": "de",
+    "limit_reached": false,
+    "notifications": 5,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "jemand, der erfahren und fachkundig ist"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Person, die ihr Know-how und ihre Erfahrung kreativ einsetzt"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Mensch, der seine Fachkenntnis ständig vertieft"
+                }
+            ],
+            "category": "social-motive",
+            "context": "Wir suchen Ninja Programmierer für unsere Kunden. Wir sind lebendig.",
+            "end": 16,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😮‍💨",
+                "text": "Überzogene Aussagen wirken weniger vertrauenswürdig",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/übertreibung?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Soziale Motivation: Übertreibung",
+            "proficiency_level": "unconscious_bias",
+            "start": 11,
+            "subcategory": "exaggerating",
+            "text": "Ninja",
+            "text_id": "Ninja"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Programmiererinnen und Programmierer"
+                },
+                {
+                    "text": "Programmierende"
+                },
+                {
+                    "text": "Programmierung"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Wir suchen Ninja Programmierer für unsere Kunden. Wir sind lebendig.",
+            "end": 30,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Viele denken zuerst an ein bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufstitel",
+            "proficiency_level": "unconscious_bias",
+            "start": 17,
+            "subcategory": "titles",
+            "text": "Programmierer",
+            "text_id": "Programmierer"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Kundinnen und Kunden"
+                },
+                {
+                    "text": "Kundschaft"
+                },
+                {
+                    "text": "Klientel"
+                },
+                {
+                    "text": "Auftraggebende"
+                },
+                {
+                    "text": "Bestellende"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Wir suchen Ninja Programmierer für unsere Kunden. Wir sind lebendig.",
+            "end": 48,
+            "explanation": {
+                "content": "advanced",
+                "icon": "💡",
+                "text": "Viele denken bei diesem Wort zuerst an einen Mann",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/generisches-maskulinum?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Generisches Maskulinum",
+            "proficiency_level": "unconscious_bias",
+            "start": 42,
+            "subcategory": "function",
+            "text": "Kunden",
+            "text_id": "Kunde"
+        }
+    ]
+}

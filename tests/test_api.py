@@ -667,6 +667,7 @@ def set_redis():
                 "orthography": {"value": True, "status": "force"},
                 "belief": {"value": False, "status": "force"},
             },
+            "force_categories": ["social-motive"],
         },
         "false_positives": [
             "stark",

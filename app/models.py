@@ -450,6 +450,7 @@ class RuleConfig(BaseModel):
     german_gender_ending: Optional[GermanGenderEndingConfigType] = None
     gendered_roles_format: Optional[GenderedRolesFormatConfigType] = None
     categories: dict[str, BooleanConfigType] = {}
+    force_categories: list[str] = []
     show_inspiration_alternatives: Optional[BooleanConfigType] = None
 
     @field_validator("preferred_variants", mode="before")
