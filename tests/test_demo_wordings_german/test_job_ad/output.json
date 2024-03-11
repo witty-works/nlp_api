@@ -142,35 +142,6 @@
         {
             "alternatives": [
                 {
-                    "text": "ihren*seinen"
-                },
-                {
-                    "text": "ihren/seinen"
-                },
-                {
-                    "text": "deinen"
-                }
-            ],
-            "category": "gender-orientation",
-            "context": "Als selbstständiger Projektleiter leisten\nSie anspruchsvolle Arbeiten und erbringen gemeinsam\nmit Ihren ebenso ambitionierten Kollegen zielstrebig\nneue Höchstleistungen.",
-            "end": 103,
-            "explanation": {
-                "content": "advanced",
-                "icon": "😟",
-                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
-                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
-            },
-            "gravity": 3.0,
-            "label": "Geschlecht + Orientierung: Binäre Pronomen",
-            "proficiency_level": "unconscious_bias",
-            "start": 98,
-            "subcategory": "binary_pronouns_advanced",
-            "text": "Ihren",
-            "text_id": "ihren"
-        },
-        {
-            "alternatives": [
-                {
                     "text": "engagierten"
                 },
                 {

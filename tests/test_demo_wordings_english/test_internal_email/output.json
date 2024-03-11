@@ -180,34 +180,28 @@
         {
             "alternatives": [
                 {
-                    "text": "questioned"
+                    "text": "asked"
                 },
                 {
-                    "text": "cross-examined"
-                },
-                {
-                    "text": "re-evaluated"
-                },
-                {
-                    "text": "objected to"
+                    "text": "contested"
                 }
             ],
-            "category": "social-motive",
+            "category": "ability-physicality",
             "context": "e are a team where ambition and perseverance count.\nCompetition is our daily life and we love to be challenged.\nWe are number <NUMBER> and innovation drives us.\nSincere regards,\nNadia",
             "end": 121,
             "explanation": {
-                "content": "video",
+                "context": "Don't use this word to describe a person",
                 "icon": "😒",
-                "text": "Doesn’t resonate with team-minded people",
-                "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
+                "text": "Repeats ableist ideas about health, illness, and wellbeing",
+                "url": "https://www.witty.works/en/categories/ability-physicality/medical-state?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Social Motive: Agentic language",
+            "label": "Ability + Physicality: Medical state",
             "proficiency_level": "unconscious_bias",
             "start": 111,
-            "subcategory": "agentic",
+            "subcategory": "medical_state",
             "text": "challenged",
-            "text_id": "challenge"
+            "text_id": "challenged"
         },
         {
             "alternatives": [

@@ -115,7 +115,7 @@ from app.query_definitions import (
     verb_form_map,
 )
 
-version = "2.2.8"
+version = "2.2.9"
 
 categories = get_categories()
 settings = get_settings()
@@ -870,6 +870,9 @@ async def post_debug_rule(
     i = 0
     token_count = len(tokens)
     while i < token_count:
+        if tokens[i].text in rule_data.lemmatizations:
+            tokens[i].lemma_ = rule_data.lemmatizations[tokens[i].text]
+
         if rule_data.lang == LangType.DE:
             tokens[i].lemma_ = await german_lemmatization(tokens, i)
 
@@ -4519,6 +4522,7 @@ async def gendered_alternatives(
             ] = False
 
         female_form = add_german_prefix(female_form, prefix)
+        male_form_without_prefix = male_form
         male_form = add_german_prefix(male_form, prefix)
 
         separator = "/" if is_singular else " und "
@@ -4527,6 +4531,12 @@ async def gendered_alternatives(
             lemma,
             male_form + separator + female_form,
         ]
+
+        if not is_singular:
+            # Arbeitskolleginnen und -kollegen
+            false_positive_check.append(
+                female_form + separator + "-" + male_form_without_prefix.lower()
+            )
 
         # case text = Mitarbeiterinnen: Mitarbeiterinnen und Mitarbeiter
         if is_false_positive(
@@ -5275,7 +5285,7 @@ async def rule_check(
     false_positive_matcher: list = None,
 ) -> list:
     token = tokens[i]
-    if not is_valid_text(token.text):
+    if len(rules) == 0 or not is_valid_text(token.text):
         return i
 
     if token.lemma_ == "aber" and lang.lang == LangType.DE:

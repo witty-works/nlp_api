@@ -25,19 +25,19 @@
         {
             "alternatives": [
                 {
+                    "text": "Aufgaben"
+                },
+                {
+                    "text": "Gelegenheit"
+                },
+                {
+                    "text": "Projekte"
+                },
+                {
                     "text": "neue Hürden"
                 },
                 {
-                    "text": "Schwierigkeiten"
-                },
-                {
-                    "text": "komplexe Aufgaben"
-                },
-                {
                     "text": "brennende Fragen"
-                },
-                {
-                    "text": "Chancen, zu zeigen, was man kann"
                 }
             ],
             "category": "social-motive",
