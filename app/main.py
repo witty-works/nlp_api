@@ -1295,6 +1295,7 @@ async def fetch_configs_for_request(
         user_request_in.config.__setattr__(
             "disabled_categories", get_category_keys(True)
         )
+        user_request_in.config.__setattr__("plan", None)
 
         return {}
 
@@ -1421,7 +1422,7 @@ async def fetch_user(request: Request) -> str | None:
     return None
 
 
-def fetch_text(user_request_in: RequestIn) -> (str, str | None, bool):
+def fetch_text(user_request_in: RequestIn) -> tuple[str, str | None, bool]:
     text = user_request_in.text
     limit_reached = len(text) > settings.text_max_length
     if limit_reached:
@@ -1485,22 +1486,27 @@ async def check(
         configs = {"categories": {}}
         apply_configs(user_request_in, configs, "witty_teams")
 
-    text, lang, limit_reached = fetch_text(user_request_in)
+    if user_request_in.config.plan:
+        text, lang, limit_reached = fetch_text(user_request_in)
 
-    if lang is None:
-        response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
-        results = Result.factory("Language could not be determined")
-        language = None
-        configs = {}
+        if lang is None:
+            response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+            results = Result.factory("Language could not be determined")
+            language = None
+            configs = {}
+        else:
+            results = await apply_language_rules(
+                client, user_request_in.config, configs, lang, text
+            )
+
+            language = lang.lang
+
+        if isinstance(results, Result):
+            return results
     else:
-        results = await apply_language_rules(
-            client, user_request_in.config, configs, lang, text
-        )
-
-        language = lang.lang
-
-    if isinstance(results, Result):
-        return results
+        results = []
+        language = "en"
+        limit_reached = False
 
     notifications = None
     if "notifications" in configs and configs["notifications"] > 0:
