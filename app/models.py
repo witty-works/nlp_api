@@ -177,11 +177,6 @@ class GermanGenderEndingType(str, Enum):
     BINARY = "binary"
 
 
-class SingularTheyType(str, Enum):
-    HE_OR_SHE = "he_or_she"
-    ALL_PRONOUNS = "all_pronouns"
-
-
 class GenderedRolesFormatType(str, Enum):
     NONE = "none"
     BOTH = "both"
@@ -419,11 +414,6 @@ class BooleanConfigType(BaseModel):
     status: StatusType
 
 
-class IntegerConfigType(BaseModel):
-    value: int
-    status: StatusType
-
-
 class LangVariantConfigType(BaseModel):
     value: list[LangVariantType]
     status: StatusType
@@ -436,11 +426,6 @@ class GermanGenderEndingConfigType(BaseModel):
 
 class GenderedRolesFormatConfigType(BaseModel):
     value: GenderedRolesFormatType
-    status: StatusType
-
-
-class SingularTheyConfigType(BaseModel):
-    value: SingularTheyType
     status: StatusType
 
 
@@ -672,7 +657,6 @@ class ResultOut(BaseModel):
                 start,
                 alternatives,
             ) = ResultOut.clean_alternatives(
-                config,
                 lang,
                 text,
                 category,
@@ -734,7 +718,6 @@ class ResultOut(BaseModel):
 
     @staticmethod
     def clean_alternatives(
-        config: Config,
         lang: Language,
         text: str,
         category: str,
