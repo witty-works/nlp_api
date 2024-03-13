@@ -647,53 +647,38 @@ class ResultOut(BaseModel):
             explanation if explanation else lang._(subcategory_key, "short_explanation")
         )
 
-        # Not logged-in
-        hide_details = config.plan is None
-
-        if hide_details or alternatives is None or len(alternatives) == 0:
-            alternatives = []
-        else:
-            (
-                text,
-                start,
-                alternatives,
-            ) = ResultOut.clean_alternatives(
-                lang,
-                text,
-                category,
-                start,
-                ResultOut.isUpper(text, full_text, start, category, lang.lang),
-                alternatives,
-                config.alternatives_max_count,
-            )
+        (
+            text,
+            start,
+            alternatives,
+        ) = ResultOut.clean_alternatives(
+            lang,
+            text,
+            category,
+            start,
+            ResultOut.isUpper(text, full_text, start, category, lang.lang),
+            alternatives,
+            config.alternatives_max_count,
+        )
 
         if category == "orthography":
             label = lang.convert_sharp_ss(label)
             explanation = lang.convert_sharp_ss(explanation)
 
-        if hide_details:
-            category = None
-            subcategory = None
-            alternatives = None
-            label = None
-            explanation = None
-        else:
-            gravity = map_gravity(subcategory)
+        gravity = map_gravity(subcategory) if gravity is None else gravity
 
-            if lang.locale == "en-GB":
-                label = Language.convert_to(label, lang.locale)
-                explanation = Language.convert_to(explanation, lang.locale)
-                explanation_context = Language.convert_to(
-                    explanation_context, lang.locale
-                )
+        if lang.locale == "en-GB":
+            label = Language.convert_to(label, lang.locale)
+            explanation = Language.convert_to(explanation, lang.locale)
+            explanation_context = Language.convert_to(explanation_context, lang.locale)
 
-            explanation = {
-                "text": explanation,
-                "icon": icon,
-                "url": url,
-                "context": explanation_context,
-                "content": content,
-            }
+        explanation = {
+            "text": explanation,
+            "icon": icon,
+            "url": url,
+            "context": explanation_context,
+            "content": content,
+        }
 
         if offsets and len(offsets["chars"]) > end:
             utf16_start = offsets["chars"][start]

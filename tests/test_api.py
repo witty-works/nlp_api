@@ -466,6 +466,7 @@ def set_redis():
     user_object = {
         "id": "test-missing-org",
         "email": "test-missing-org@gmail.com",
+        "plan": "witty_free",
         "organization_id": "test-missing-org",
         "name": "Tests Missing Org",
         "config": {},
@@ -479,6 +480,7 @@ def set_redis():
     user_object = {
         "id": "test-2_2",
         "email": "2_2@gmail.com",
+        "plan": "witty_free",
         "organization_id": "test-2_2-org",
         "name": "Tests 2_2",
         "config": {},
@@ -503,6 +505,7 @@ def set_redis():
     user_object = {
         "id": "test-free",
         "email": "free@gmail.com",
+        "plan": "witty_free",
         "organization_id": "test-free-org",
         "name": "Tests Free",
         "config": {"categories": {}},
@@ -528,6 +531,7 @@ def set_redis():
     user_object = {
         "id": "test-default",
         "email": "default@gmail.com",
+        "plan": "witty_teams",
         "organization_id": "test-default-org",
         "name": "Tests Default",
         "config": {
@@ -562,6 +566,7 @@ def set_redis():
     user_object = {
         "id": "test-user",
         "email": "test@gmail.com",
+        "plan": "witty_teams",
         "organization_id": "test-org",
         "name": "Tests User",
         "config": {

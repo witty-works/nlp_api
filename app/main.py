@@ -1163,7 +1163,6 @@ async def fetch_user_configs_from_redis(
 async def fetch_user_organization_configs(email: str) -> dict | None:
     configs = await fetch_user_configs_from_redis(email)
 
-    configs["plan"] = "witty_free"
     configs["organization_name"] = None
     configs["organization_config_hash"] = None
     configs["organization_domains"] = None
@@ -1173,7 +1172,8 @@ async def fetch_user_organization_configs(email: str) -> dict | None:
             configs["organization_id"]
         )
 
-        configs["plan"] = organization_configs["plan"]
+        if "plan" not in configs or configs["plan"] is None:
+            configs["plan"] = organization_configs["plan"]
 
         configs["organization_name"] = organization_configs["name"]
 
