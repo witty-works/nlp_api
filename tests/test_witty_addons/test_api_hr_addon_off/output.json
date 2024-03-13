@@ -1,0 +1,67 @@
+{
+    "config_changed": true,
+    "has_consented_to_mailing": true,
+    "language": "de",
+    "limit_reached": false,
+    "notifications": 5,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "Personal"
+                },
+                {
+                    "text": "Mitarbeiterin/Mitarbeiter"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Mitarbeiterschaft"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Mitarbeitende"
+                },
+                {
+                    "text": "Arbeitnehmerin/Arbeitnehmer"
+                }
+            ],
+            "category": "cultural-diversity",
+            "context": "Wir suchen eine fachlich analytische Arbeitskraft für unser Team.",
+            "end": 49,
+            "explanation": {
+                "content": "advanced",
+                "context": "nicht für Einzelperson",
+                "icon": "🙄",
+                "text": "Schwächen die Wirkung deiner Botschaft",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/worthülsen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Kulturelle Diversität: Worthülsen",
+            "proficiency_level": "unconscious_bias",
+            "start": 37,
+            "subcategory": "hollow_advanced",
+            "text": "Arbeitskraft",
+            "text_id": "Arbeitskraft"
+        },
+        {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "Wir suchen eine fachlich analytische Arbeitskraft für unser Team.",
+            "end": 64,
+            "explanation": {
+                "content": "video",
+                "icon": "✅",
+                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true"
+            },
+            "label": "Soziale Motivation: Kommunale Sprache",
+            "proficiency_level": "inclusive",
+            "start": 60,
+            "subcategory": "communal",
+            "text": "Team",
+            "text_id": "Team"
+        }
+    ]
+}

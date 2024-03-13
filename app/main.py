@@ -2264,6 +2264,7 @@ async def fetch_rules(
     token: Token,
     text: str,
     lemma: str,
+    addons: list[str],
     suffix_check: bool = False,
     rewrite_to: str = None,
 ) -> list[Rule]:
@@ -2312,8 +2313,12 @@ async def fetch_rules(
                 f"({first_token_check} AND first_is_word_type_lemmatize = 1 AND first_is_word_type_lower_case = 0)"
             ] = lemma_filter
 
+    query = f"SELECT {rule_column_list} FROM rules_rule WHERE language = ? AND type = ? AND diversity_dimension_json != '[]'"
+    if addons is not None and "hr" not in addons:
+        query += " AND is_hr_rule = 0"
+
     filter_list = " OR ".join(filters.keys())
-    query = f"SELECT {rule_column_list} FROM rules_rule WHERE language = ? AND type = ? AND diversity_dimension_json != '[]' AND ({filter_list}) ORDER BY lemma_length DESC, first_is_word_type_lemmatize ASC"
+    query += f" AND ({filter_list}) ORDER BY lemma_length DESC, first_is_word_type_lemmatize ASC"
     parameters = [lang, RuleType.SUFFIX if suffix_check else RuleType.DEFAULT] + list(
         filters.values()
     )
@@ -2329,6 +2334,7 @@ async def fetch_rules(
                     token,
                     us_text,
                     Language.convert_to(lemma, rewrite_to),
+                    addons,
                     suffix_check,
                     "en-US",
                 )
@@ -2339,7 +2345,7 @@ async def fetch_rules(
         if not suffix_check and is_gender_star_ending_ and len(rows) == 0:
             new_text = is_gender_star_ending_[1] + is_gender_star_ending_[2]
             if new_text != text:
-                rules = await fetch_rules(lang, token, new_text, new_text)
+                rules = await fetch_rules(lang, token, new_text, new_text, addons)
                 if len(rules):
                     token.lemma_ = new_text
 
@@ -2767,6 +2773,7 @@ async def german_rules(
                     token,
                     token.text,
                     token.lemma_,
+                    config.addons,
                 ),
             )
 
@@ -2787,6 +2794,7 @@ async def german_rules(
                     token,
                     token.text,
                     token.lemma_,
+                    config.addons,
                     True,
                 ),
             )
@@ -3026,6 +3034,7 @@ async def english_rules(
                 token,
                 token.text,
                 token.lemma_,
+                config.addons,
             ),
             false_positive_matcher,
         )
@@ -3047,6 +3056,7 @@ async def english_rules(
                 token,
                 token.text,
                 token.lemma_,
+                config.addons,
                 True,
             ),
             false_positive_matcher,

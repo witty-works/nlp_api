@@ -296,6 +296,7 @@ class RuleIn(BaseModel):
 class Config(BaseModel):
     store_context: bool = True
     plan: Optional[str] = None
+    addons: Optional[list[str]] = None
     primary_language: Optional[LangVariantType] = None
     preferred_languages: list = [LangWithAutoType.EN, LangWithAutoType.DE]
     _supported_langs = [
@@ -434,8 +435,9 @@ class RuleConfig(BaseModel):
     preferred_variants: Optional[LangVariantConfigType] = None
     german_gender_ending: Optional[GermanGenderEndingConfigType] = None
     gendered_roles_format: Optional[GenderedRolesFormatConfigType] = None
-    categories: dict[str, BooleanConfigType] = {}
+    categories: Optional[dict[str, BooleanConfigType]] = {}
     force_categories: Optional[list[str]] = []
+    addons: Optional[list[str]] = None
     show_inspiration_alternatives: Optional[BooleanConfigType] = None
 
     @field_validator("preferred_variants", mode="before")

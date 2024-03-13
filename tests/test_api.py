@@ -737,6 +737,29 @@ def test_false_positive(test_false_positive_dir, snapshot, set_redis):
 
 
 @pytest.mark.parametrize(
+    "test_witty_addons_dir",
+    get_dirs("tests/test_witty_addons"),
+)
+def test_witty_addons(test_witty_addons_dir, snapshot, set_redis):
+    with TestClient(app) as client:
+        input_json = test_witty_addons_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.3/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "test@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(
+            response.json(), sort_keys=True, indent=4, ensure_ascii=False
+        )
+        # Snapshot the return value.
+        snapshot.snapshot_dir = test_witty_addons_dir
+        snapshot.assert_match(output, "output.json")
+
+
+@pytest.mark.parametrize(
     "test_not_logged_in_dir",
     get_dirs("tests/test_not_logged_in"),
 )
