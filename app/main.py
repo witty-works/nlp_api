@@ -293,8 +293,8 @@ def create_rule(lang, row, rewrite_to: str = None) -> Rule:
 
 
 async def fetch_false_positives(rule: Rule, rewrite_to: str = None) -> list[str]:
-    if len(rule.false_positives):
-        return list(rule.false_positives)
+    if rule.false_positives is not None:
+        return rule.false_positives
 
     query = "SELECT false_positive FROM rules_falsepositive WHERE rule_id = ?"
     parameters = [rule.id]
@@ -2001,19 +2001,9 @@ def fetch_phrase_matcher(lang: LangType, tokens: Doc, phrases: list) -> list:
 
 
 def fetch_false_positive_matchers(lang: LangType, tokens: Doc) -> list:
-    false_positive_matcher = fetch_phrase_matcher(
-        lang, tokens, static_rules[lang]["false_positives_phrases"]
-    )
-
-    # create false positives list
-    if "pattern_false_positives" not in static_rules[lang]:
-        return false_positive_matcher
-
-    phrase_false_positive_matcher = fetch_false_positive_matcher(
+    return fetch_false_positive_matcher(
         lang, tokens, static_rules[lang]["pattern_false_positives"]
     )
-
-    return list(set(phrase_false_positive_matcher + false_positive_matcher))
 
 
 def parse_client(client: str) -> Client:
@@ -2038,7 +2028,7 @@ async def apply_language_rules(
     tokens = fetch_tokens(lang.lang, text)
     offsets = utf16_offsets(text)
 
-    term_replacements = fetch_term_replacements(configs, tokens, lang.lang)
+    term_replacements = fetch_term_replacements(configs, lang.lang)
 
     match lang.lang:
         case LangType.DE:
@@ -2073,15 +2063,12 @@ async def apply_language_rules(
 
 def fetch_term_replacements(
     configs: dict,
-    tokens: Doc,
     lang: LangType,
-) -> namedtuple:
-    term_replacements = namedtuple("term_replacements", "rules false_positive_matcher")
+) -> list[Rule]:
     if "term_replacements" not in configs:
-        return term_replacements([], None)
+        return []
 
     term_replacement_rules = []
-    all_alternatives = []
     for lemma in configs["term_replacements"]:
         term_replacement = configs["term_replacements"][lemma]
 
@@ -2104,7 +2091,6 @@ def fetch_term_replacements(
             [{"word_type": word_type, "lower_case": lower_case, "lemmatize": lemmatize}]
             * len(words)
         )
-        all_alternatives += term_replacement["alternatives"]
 
         rule = Rule(
             lemma,
@@ -2120,12 +2106,11 @@ def fetch_term_replacements(
             rule.explanation = term_replacement["explanation"].get("text")
             rule.url = term_replacement["explanation"].get("url")
             rule.icon = term_replacement["explanation"].get("icon")
+            rule.false_positives = term_replacement["alternatives"]
 
         term_replacement_rules.append(rule)
 
-    false_positive_matcher = fetch_phrase_matcher(lang, tokens, all_alternatives)
-
-    return term_replacements(term_replacement_rules, false_positive_matcher)
+    return term_replacement_rules
 
 
 def apply_false_positives(
@@ -2666,7 +2651,7 @@ async def german_lemmatization(tokens: Doc, i: int):
 
 async def german_rules(
     config: Config,
-    term_replacements: namedtuple,
+    term_replacements: list[Rule],
     client: Client,
     tokens: Doc,
     offsets: dict,
@@ -2687,7 +2672,7 @@ async def german_rules(
 
         token.lemma_ = await german_lemmatization(tokens, i)
 
-        if len(term_replacements.rules):
+        if len(term_replacements):
             new_i = await rule_check(
                 config,
                 client,
@@ -2697,8 +2682,7 @@ async def german_rules(
                 tokens,
                 offsets,
                 list_full,
-                term_replacements.rules,
-                term_replacements.false_positive_matcher,
+                term_replacements,
             )
 
             if check_continue(i, new_i, tokens):
@@ -2922,7 +2906,7 @@ async def german_rules(
 
 async def english_rules(
     config: Config,
-    term_replacements: namedtuple,
+    term_replacements: list[Rule],
     client: Client,
     tokens: Doc,
     offsets: dict,
@@ -2942,7 +2926,7 @@ async def english_rules(
             new_i += 1
             continue
 
-        if len(term_replacements.rules):
+        if len(term_replacements):
             new_i = await rule_check(
                 config,
                 client,
@@ -2952,8 +2936,7 @@ async def english_rules(
                 tokens,
                 offsets,
                 list_full,
-                term_replacements.rules,
-                term_replacements.false_positive_matcher,
+                term_replacements,
             )
 
             if check_continue(i, new_i, tokens):
