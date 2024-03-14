@@ -98,7 +98,6 @@ from app.categories import (
     get_category,
     get_parent_category_name,
     get_category_name,
-    is_category_advanced,
 )
 from app.settings import get_settings
 from app.logger import set_up_logger
@@ -2148,16 +2147,11 @@ def apply_false_positives(
     return list_results
 
 
-def is_sub_category_enabled(
-    config: Config, subcategories: list[str], is_advanced: bool = False
-) -> bool | str:
+def is_sub_category_enabled(config: Config, subcategories: list[str]) -> bool | str:
     if isinstance(subcategories, str):
         subcategories = [subcategories]
 
     for subcategory in subcategories:
-        if is_advanced and not is_category_advanced(subcategory):
-            subcategory += "_advanced"
-
         if subcategory in config.disabled_categories:
             continue
 
@@ -4763,7 +4757,7 @@ async def gendered_nouns(
         if alternative_variations is None:
             return None, None, []
 
-        if not is_sub_category_enabled(config, subcategory, True):
+        if not is_sub_category_enabled(config, subcategory):
             continue
 
         for alternative_variation in alternative_variations:
