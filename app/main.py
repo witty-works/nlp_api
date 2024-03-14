@@ -3144,11 +3144,7 @@ async def is_word_match(
 
     token_word = token.lemma_ if word_type["lemmatize"] else token.text
 
-    if word_type["lower_case"] and (
-        lang == LangType.EN
-        or WordType.NOUN != word_type["word_type"]
-        or token.lemma_[0].islower()
-    ):
+    if word_type["lower_case"]:
         token_word = token_word.lower()
         word = word.lower()
 
