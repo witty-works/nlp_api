@@ -1257,9 +1257,15 @@ def apply_configs(
                         disabled_categories.remove(category)
                 else:
                     force_disables_category = force_disables
-                    if not force_disables_category and "force_categories" in configs and len(configs["force_categories"]):
+                    if (
+                        not force_disables_category
+                        and "force_categories" in configs
+                        and len(configs["force_categories"])
+                    ):
                         parent_category = get_parent_category_name(category)
-                        force_disables_category = parent_category in configs["force_categories"]
+                        force_disables_category = (
+                            parent_category in configs["force_categories"]
+                        )
 
                     if force_disables_category and category not in disabled_categories:
                         disabled_categories.append(category)
