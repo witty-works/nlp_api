@@ -219,7 +219,7 @@ class Rule:
     subcategories: Optional[list[str]] = []
     is_advanced: bool = False
     alternatives: Optional[list[Alternative]] = []
-    false_positives: Optional[list[str]] = []
+    false_positives: Optional[list[str]] = None
     explanation: Optional[str] = None
     url: Optional[str] = None
     icon: Optional[str] = None
