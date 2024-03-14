@@ -463,10 +463,10 @@
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/25%20Jahre%20und%20%C3%A4lter.png",
-                    "width": "671",
-                    "height": "469",
-                    "alt": "Eine Illustration von Witty des Satzes 'F\u00fcr unser neues Start-up-Unternehmen brauchen wir [Digital Natives].' Als Alternative wird 'Menschen, die sich in der digitalen Welt zuhause f\u00fchlen' vorgeschlagen.\u00a0"
+                    "src": "https:\/\/www.witty.works\/hubfs\/50%20Jahre%20und%20%C3%A4lter.png",
+                    "width": "663",
+                    "height": "458",
+                    "alt": ""
                 },
                 "example_image_advanced": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Altersangabe%20%20Advanced.png",
@@ -754,7 +754,7 @@
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/anglizismen",
                 "is_active": "1",
                 "name": "Werden alle diesen Anglizismus verstehen?",
-                "short_explanation": "Sicher, dass das alle Lesenden dieses Anglizismus verstehen?",
+                "short_explanation": "Sicher, dass das alle Lesenden diesen Anglizismus verstehen?",
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
@@ -2218,10 +2218,10 @@
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Frauenklischee.png",
+                    "src": "https:\/\/www.witty.works\/hubfs\/Frauenklischee-1.png",
                     "width": "605",
-                    "height": "389",
-                    "alt": "Eine Illustration des Satzes 'Aktuell haben wir in der Agentur zwei Lehrt\u00f6chter [Auszubildende].\u2019. Die von Witty vorgeschlagene Alternative ist in Klammern."
+                    "height": "359",
+                    "alt": ""
                 },
                 "example_image_advanced": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Frauenklischee%20Advanced.png",
@@ -2941,9 +2941,9 @@
                     "alt": ""
                 },
                 "example_image_advanced": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/H%C3%B6rf%C3%A4higkeit%20Advanced.png",
+                    "src": "https:\/\/www.witty.works\/hubfs\/H%C3%B6rf%C3%A4higkeit%20Advanced%20(1).png",
                     "width": "605",
-                    "height": "423",
+                    "height": "373",
                     "alt": ""
                 },
                 "soft_explanation": "",
@@ -3396,85 +3396,6 @@
         "emoji": "\ud83d\ude12",
         "category": "ability-physicality",
         "related_subcategories": [],
-        "translations": {
-            "en": {
-                "hs_path": "learning-ability",
-                "hs_name": "Learning ability",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/learning-ability",
-                "is_active": "1",
-                "name": "Fuels outdated ideas about the ability to learn",
-                "short_explanation": "Fuels outdated ideas about the ability to learn",
-                "sub_head": "",
-                "lead_video": "",
-                "lead_image": [],
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Learning-1.png",
-                    "width": "605",
-                    "height": "403",
-                    "alt": ""
-                },
-                "example_image_advanced": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Learning%20Advanced.png",
-                    "width": "605",
-                    "height": "430",
-                    "alt": ""
-                },
-                "soft_explanation": "",
-                "hard_facts": "",
-                "hero_figure": "",
-                "hero_figure_alt_text": "",
-                "hero_figure_url": "",
-                "hero_fact": "",
-                "hero_fact_alt_text": "",
-                "hero_fact_url": "",
-                "inclusive_sentence": "",
-                "non_inclusive_sentence": "",
-                "meme": "",
-                "meme_alt_text": "",
-                "meme_url": "",
-                "meme_2": "",
-                "meme_2_alt_text": "",
-                "meme_2_url": "",
-                "read_on": "",
-                "anchor": "learning_ability"
-            },
-            "de": {
-                "hs_path": "lernf\u00e4higkeit",
-                "hs_name": "Lernf\u00e4higkeit",
-                "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/lernf\u00e4higkeit",
-                "is_active": "1",
-                "name": "Bedient Vorurteile und Klischees \u00fcber Lernf\u00e4higkeit",
-                "short_explanation": "Bedient Vorurteile und Klischees \u00fcber Lernf\u00e4higkeit",
-                "sub_head": "",
-                "lead_video": "",
-                "lead_image": [],
-                "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Lernf%C3%A4higkeit.png",
-                    "width": "605",
-                    "height": "413",
-                    "alt": "Eine Illustration des Satzes 'F\u00fcr Auszubildende mit Lernbehinderungen [Seh- und Lesebehinderungen] entwickeln wir zur Zeit barrierefreie Lernmaterialien.'. Die von Witty vorgeschlagene Alternative ist in Klammern."
-                },
-                "example_image_advanced": [],
-                "soft_explanation": "",
-                "hard_facts": "",
-                "hero_figure": "",
-                "hero_figure_alt_text": "",
-                "hero_figure_url": "",
-                "hero_fact": "",
-                "hero_fact_alt_text": "",
-                "hero_fact_url": "",
-                "inclusive_sentence": "",
-                "non_inclusive_sentence": "",
-                "meme": "",
-                "meme_alt_text": "",
-                "meme_url": "",
-                "meme_2": "",
-                "meme_2_alt_text": "",
-                "meme_2_url": "",
-                "read_on": "",
-                "anchor": "lernf\u00e4higkeit"
-            }
-        },
         "has_rules": [
             "en",
             "de"
@@ -3603,7 +3524,7 @@
                     "alt": ""
                 },
                 "example_image_advanced": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Medical%20state%20advanced.png",
+                    "src": "https:\/\/www.witty.works\/hubfs\/Medical%20state%20advanced-1.png",
                     "width": "605",
                     "height": "426",
                     "alt": ""
@@ -4031,7 +3952,12 @@
                     "height": "435",
                     "alt": ""
                 },
-                "example_image_advanced": [],
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/mobility%20Advanced-1.png",
+                    "width": "639",
+                    "height": "380",
+                    "alt": ""
+                },
                 "soft_explanation": "<p>Ob bewundernd, staunend oder mitleidig, wenn \u00fcber Menschen gesprochen wird, die mit Mobilit\u00e4tseinschr\u00e4nkungen leben, kommen oft Begriffe zum Einsatz, die Menschen auf das reduzieren, was sie nicht gut oder gar nicht k\u00f6nnen. Ihre Bef\u00e4higung wird in Frage gestellt. Andere nehmen die Behinderung zum Anlass, \u00fcber das Leben oder der Person zu fabulieren, die mit dieser Behinderung lebt. Auf Begriffe aus dem Kontext k\u00f6rperlicher Behinderungen greifen wir auch zur\u00fcck, um Dinge, Systeme oder Technik als wertlos oder funktionsunf\u00e4hig zu beschreiben.<\/p>",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -4274,9 +4200,14 @@
                     "src": "https:\/\/www.witty.works\/hubfs\/Physicality.png",
                     "width": "605",
                     "height": "446",
-                    "alt": " An illustration of Witty shows the phrase 'The [heavy-set] guy next to the marketing manager is her new personal assistant.' The word in brackets should be removed.  "
+                    "alt": ""
                 },
-                "example_image_advanced": [],
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Physicality%20Advanced.png",
+                    "width": "605",
+                    "height": "379",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -4597,7 +4528,7 @@
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Abstammung%20(1).png",
+                    "src": "https:\/\/www.witty.works\/hubfs\/Abstammung-4.png",
                     "width": "605",
                     "height": "373",
                     "alt": ""
