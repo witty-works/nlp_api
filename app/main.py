@@ -2001,19 +2001,9 @@ def fetch_phrase_matcher(lang: LangType, tokens: Doc, phrases: list) -> list:
 
 
 def fetch_false_positive_matchers(lang: LangType, tokens: Doc) -> list:
-    false_positive_matcher = fetch_phrase_matcher(
-        lang, tokens, static_rules[lang]["false_positives_phrases"]
-    )
-
-    # create false positives list
-    if "pattern_false_positives" not in static_rules[lang]:
-        return false_positive_matcher
-
-    phrase_false_positive_matcher = fetch_false_positive_matcher(
+    return fetch_false_positive_matcher(
         lang, tokens, static_rules[lang]["pattern_false_positives"]
     )
-
-    return list(set(phrase_false_positive_matcher + false_positive_matcher))
 
 
 def parse_client(client: str) -> Client:
