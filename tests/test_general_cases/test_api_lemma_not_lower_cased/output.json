@@ -1,0 +1,41 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "Jede*r"
+                },
+                {
+                    "text": "Jede/r"
+                },
+                {
+                    "text": "Alle"
+                },
+                {
+                    "text": "Alle miteinander"
+                },
+                {
+                    "text": "Allerseits"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Jedermann ist Willkommen",
+            "end": 9,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Wortteil macht andere Geschlechter unsichtbar",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/angedeutetes-gender?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Angedeutetes Gender",
+            "proficiency_level": "unconscious_bias",
+            "start": 0,
+            "subcategory": "hidden_image",
+            "text": "Jedermann",
+            "text_id": "jedermann"
+        }
+    ]
+}
