@@ -25,6 +25,35 @@
         {
             "alternatives": [
                 {
+                    "text": "eindrucksvolle"
+                },
+                {
+                    "text": "auffällige"
+                },
+                {
+                    "text": "bemerkenswerte"
+                }
+            ],
+            "category": "social-motive",
+            "context": "Wir haben aussergewöhnliche Herausforderungen vor uns.",
+            "end": 27,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😮‍💨",
+                "text": "Überzogene Aussagen wirken weniger vertrauenswürdig",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/übertreibung?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Soziale Motivation: Übertreibung",
+            "proficiency_level": "unconscious_bias",
+            "start": 10,
+            "subcategory": "exaggerating_advanced",
+            "text": "aussergewöhnliche",
+            "text_id": "aussergewöhnlich"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "Aufgaben"
                 },
                 {
