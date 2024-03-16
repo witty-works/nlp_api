@@ -27,7 +27,7 @@ authors = [
     {name = "Lukas Kahwe Smith", email = "lukas.smith@witty.works"},
 ]
 dependencies = [
-    "fastapi<0.110.0,>=0.109.0",
+    "fastapi<0.111.0,>=0.110.0",
     "pydantic<3.0.0,>=2.0.0",
     "pydantic-settings>=2.0.3",
     "uvicorn[standard]",

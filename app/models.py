@@ -177,11 +177,6 @@ class GermanGenderEndingType(str, Enum):
     BINARY = "binary"
 
 
-class SingularTheyType(str, Enum):
-    HE_OR_SHE = "he_or_she"
-    ALL_PRONOUNS = "all_pronouns"
-
-
 class GenderedRolesFormatType(str, Enum):
     NONE = "none"
     BOTH = "both"
@@ -224,7 +219,7 @@ class Rule:
     subcategories: Optional[list[str]] = []
     is_advanced: bool = False
     alternatives: Optional[list[Alternative]] = []
-    false_positives: Optional[list[str]] = []
+    false_positives: Optional[list[str]] = None
     explanation: Optional[str] = None
     url: Optional[str] = None
     icon: Optional[str] = None
@@ -301,6 +296,7 @@ class RuleIn(BaseModel):
 class Config(BaseModel):
     store_context: bool = True
     plan: Optional[str] = None
+    addons: Optional[list[str]] = None
     primary_language: Optional[LangVariantType] = None
     preferred_languages: list = [LangWithAutoType.EN, LangWithAutoType.DE]
     _supported_langs = [
@@ -419,11 +415,6 @@ class BooleanConfigType(BaseModel):
     status: StatusType
 
 
-class IntegerConfigType(BaseModel):
-    value: int
-    status: StatusType
-
-
 class LangVariantConfigType(BaseModel):
     value: list[LangVariantType]
     status: StatusType
@@ -439,17 +430,14 @@ class GenderedRolesFormatConfigType(BaseModel):
     status: StatusType
 
 
-class SingularTheyConfigType(BaseModel):
-    value: SingularTheyType
-    status: StatusType
-
-
 class RuleConfig(BaseModel):
     store_context: Optional[BooleanConfigType] = None
     preferred_variants: Optional[LangVariantConfigType] = None
     german_gender_ending: Optional[GermanGenderEndingConfigType] = None
     gendered_roles_format: Optional[GenderedRolesFormatConfigType] = None
-    categories: dict[str, BooleanConfigType] = {}
+    categories: Optional[dict[str, BooleanConfigType]] = {}
+    force_categories: Optional[list[str]] = []
+    addons: Optional[list[str]] = None
     show_inspiration_alternatives: Optional[BooleanConfigType] = None
 
     @field_validator("preferred_variants", mode="before")
@@ -661,54 +649,38 @@ class ResultOut(BaseModel):
             explanation if explanation else lang._(subcategory_key, "short_explanation")
         )
 
-        # Not logged-in
-        hide_details = config.plan is None
-
-        if hide_details or alternatives is None or len(alternatives) == 0:
-            alternatives = []
-        else:
-            (
-                text,
-                start,
-                alternatives,
-            ) = ResultOut.clean_alternatives(
-                config,
-                lang,
-                text,
-                category,
-                start,
-                ResultOut.isUpper(text, full_text, start, category, lang.lang),
-                alternatives,
-                config.alternatives_max_count,
-            )
+        (
+            text,
+            start,
+            alternatives,
+        ) = ResultOut.clean_alternatives(
+            lang,
+            text,
+            category,
+            start,
+            ResultOut.isUpper(text, full_text, start, category, lang.lang),
+            alternatives,
+            config.alternatives_max_count,
+        )
 
         if category == "orthography":
             label = lang.convert_sharp_ss(label)
             explanation = lang.convert_sharp_ss(explanation)
 
-        if hide_details:
-            category = None
-            subcategory = None
-            alternatives = None
-            label = None
-            explanation = None
-        else:
-            gravity = map_gravity(subcategory)
+        gravity = map_gravity(subcategory) if gravity is None else gravity
 
-            if lang.locale == "en-GB":
-                label = Language.convert_to(label, lang.locale)
-                explanation = Language.convert_to(explanation, lang.locale)
-                explanation_context = Language.convert_to(
-                    explanation_context, lang.locale
-                )
+        if lang.locale == "en-GB":
+            label = Language.convert_to(label, lang.locale)
+            explanation = Language.convert_to(explanation, lang.locale)
+            explanation_context = Language.convert_to(explanation_context, lang.locale)
 
-            explanation = {
-                "text": explanation,
-                "icon": icon,
-                "url": url,
-                "context": explanation_context,
-                "content": content,
-            }
+        explanation = {
+            "text": explanation,
+            "icon": icon,
+            "url": url,
+            "context": explanation_context,
+            "content": content,
+        }
 
         if offsets and len(offsets["chars"]) > end:
             utf16_start = offsets["chars"][start]
@@ -734,7 +706,6 @@ class ResultOut(BaseModel):
 
     @staticmethod
     def clean_alternatives(
-        config: Config,
         lang: Language,
         text: str,
         category: str,

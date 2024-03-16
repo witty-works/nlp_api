@@ -466,6 +466,7 @@ def set_redis():
     user_object = {
         "id": "test-missing-org",
         "email": "test-missing-org@gmail.com",
+        "plan": "witty_free",
         "organization_id": "test-missing-org",
         "name": "Tests Missing Org",
         "config": {},
@@ -479,6 +480,7 @@ def set_redis():
     user_object = {
         "id": "test-2_2",
         "email": "2_2@gmail.com",
+        "plan": "witty_free",
         "organization_id": "test-2_2-org",
         "name": "Tests 2_2",
         "config": {},
@@ -503,6 +505,7 @@ def set_redis():
     user_object = {
         "id": "test-free",
         "email": "free@gmail.com",
+        "plan": "witty_free",
         "organization_id": "test-free-org",
         "name": "Tests Free",
         "config": {"categories": {}},
@@ -528,6 +531,7 @@ def set_redis():
     user_object = {
         "id": "test-default",
         "email": "default@gmail.com",
+        "plan": "witty_teams",
         "organization_id": "test-default-org",
         "name": "Tests Default",
         "config": {
@@ -562,6 +566,7 @@ def set_redis():
     user_object = {
         "id": "test-user",
         "email": "test@gmail.com",
+        "plan": "witty_teams",
         "organization_id": "test-org",
         "name": "Tests User",
         "config": {
@@ -667,6 +672,7 @@ def set_redis():
                 "orthography": {"value": True, "status": "force"},
                 "belief": {"value": False, "status": "force"},
             },
+            "force_categories": ["social-motive"],
         },
         "false_positives": [
             "stark",
@@ -732,6 +738,29 @@ def test_false_positive(test_false_positive_dir, snapshot, set_redis):
         )
         # Snapshot the return value.
         snapshot.snapshot_dir = test_false_positive_dir
+        snapshot.assert_match(output, "output.json")
+
+
+@pytest.mark.parametrize(
+    "test_witty_addons_dir",
+    get_dirs("tests/test_witty_addons"),
+)
+def test_witty_addons(test_witty_addons_dir, snapshot, set_redis):
+    with TestClient(app) as client:
+        input_json = test_witty_addons_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.3/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "test@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(
+            response.json(), sort_keys=True, indent=4, ensure_ascii=False
+        )
+        # Snapshot the return value.
+        snapshot.snapshot_dir = test_witty_addons_dir
         snapshot.assert_match(output, "output.json")
 
 

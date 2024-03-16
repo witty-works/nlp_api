@@ -24,6 +24,24 @@
             "alternatives": [],
             "category": "social-motive",
             "context": "We need to aid those who needs. The analysis team likes to work as a team.",
+            "end": 49,
+            "explanation": {
+                "content": "video",
+                "icon": "✅",
+                "text": "Strengthens collaboration and a sense of community",
+                "url": "https://www.witty.works/en/categories/social-motive/communal-language?reducedView=true"
+            },
+            "label": "Social Motive: Communal language",
+            "proficiency_level": "inclusive",
+            "start": 45,
+            "subcategory": "communal",
+            "text": "team",
+            "text_id": "team"
+        },
+        {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "We need to aid those who needs. The analysis team likes to work as a team.",
             "end": 73,
             "explanation": {
                 "content": "video",

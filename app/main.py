@@ -28,7 +28,6 @@ from fastapi import (
 
 from contextlib import asynccontextmanager
 from fastapi.encoders import jsonable_encoder
-from fastapi.responses import JSONResponse
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.openapi.utils import get_openapi
 from fastapi.security import (
@@ -97,8 +96,8 @@ from app.categories import (
     get_category_keys,
     get_categories,
     get_category,
+    get_parent_category_name,
     get_category_name,
-    is_category_advanced,
 )
 from app.settings import get_settings
 from app.logger import set_up_logger
@@ -115,7 +114,7 @@ from app.query_definitions import (
     verb_form_map,
 )
 
-version = "2.2.9"
+version = "2.2.10"
 
 categories = get_categories()
 settings = get_settings()
@@ -294,8 +293,8 @@ def create_rule(lang, row, rewrite_to: str = None) -> Rule:
 
 
 async def fetch_false_positives(rule: Rule, rewrite_to: str = None) -> list[str]:
-    if len(rule.false_positives):
-        return list(rule.false_positives)
+    if rule.false_positives is not None:
+        return rule.false_positives
 
     query = "SELECT false_positive FROM rules_falsepositive WHERE rule_id = ?"
     parameters = [rule.id]
@@ -1164,7 +1163,6 @@ async def fetch_user_configs_from_redis(
 async def fetch_user_organization_configs(email: str) -> dict | None:
     configs = await fetch_user_configs_from_redis(email)
 
-    configs["plan"] = "witty_free"
     configs["organization_name"] = None
     configs["organization_config_hash"] = None
     configs["organization_domains"] = None
@@ -1174,7 +1172,8 @@ async def fetch_user_organization_configs(email: str) -> dict | None:
             configs["organization_id"]
         )
 
-        configs["plan"] = organization_configs["plan"]
+        if "plan" not in configs or configs["plan"] is None:
+            configs["plan"] = organization_configs["plan"]
 
         configs["organization_name"] = organization_configs["name"]
 
@@ -1234,6 +1233,9 @@ def apply_configs(
     disabled_categories = user_request_in.config.disabled_categories
 
     for config in configs:
+        if config == "force_categories":
+            continue
+
         data = configs[config]
         if data is None:
             continue
@@ -1251,8 +1253,20 @@ def apply_configs(
                 if category_data["value"]:
                     if category in disabled_categories:
                         disabled_categories.remove(category)
-                elif force_disables and category not in disabled_categories:
-                    disabled_categories.append(category)
+                else:
+                    force_disables_category = force_disables
+                    if (
+                        not force_disables_category
+                        and "force_categories" in configs
+                        and len(configs["force_categories"])
+                    ):
+                        parent_category = get_parent_category_name(category)
+                        force_disables_category = (
+                            parent_category in configs["force_categories"]
+                        )
+
+                    if force_disables_category and category not in disabled_categories:
+                        disabled_categories.append(category)
         elif config == "store_context":
             if (
                 plan is not None
@@ -1281,6 +1295,7 @@ async def fetch_configs_for_request(
         user_request_in.config.__setattr__(
             "disabled_categories", get_category_keys(True)
         )
+        user_request_in.config.__setattr__("plan", None)
 
         return {}
 
@@ -1407,7 +1422,7 @@ async def fetch_user(request: Request) -> str | None:
     return None
 
 
-def fetch_text(user_request_in: RequestIn) -> (str, str | None, bool):
+def fetch_text(user_request_in: RequestIn) -> tuple[str, str | None, bool]:
     text = user_request_in.text
     limit_reached = len(text) > settings.text_max_length
     if limit_reached:
@@ -1471,22 +1486,27 @@ async def check(
         configs = {"categories": {}}
         apply_configs(user_request_in, configs, "witty_teams")
 
-    text, lang, limit_reached = fetch_text(user_request_in)
+    if user_request_in.config.plan:
+        text, lang, limit_reached = fetch_text(user_request_in)
 
-    if lang is None:
-        response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
-        results = Result.factory("Language could not be determined")
-        language = None
-        configs = {}
+        if lang is None:
+            response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+            results = Result.factory("Language could not be determined")
+            language = None
+            configs = {}
+        else:
+            results = await apply_language_rules(
+                client, user_request_in.config, configs, lang, text
+            )
+
+            language = lang.lang
+
+        if isinstance(results, Result):
+            return results
     else:
-        results = await apply_language_rules(
-            client, user_request_in.config, configs, lang, text
-        )
-
-        language = lang.lang
-
-    if isinstance(results, Result):
-        return results
+        results = []
+        language = "en"
+        limit_reached = False
 
     notifications = None
     if "notifications" in configs and configs["notifications"] > 0:
@@ -1987,19 +2007,9 @@ def fetch_phrase_matcher(lang: LangType, tokens: Doc, phrases: list) -> list:
 
 
 def fetch_false_positive_matchers(lang: LangType, tokens: Doc) -> list:
-    false_positive_matcher = fetch_phrase_matcher(
-        lang, tokens, static_rules[lang]["false_positives_phrases"]
-    )
-
-    # create false positives list
-    if "pattern_false_positives" not in static_rules[lang]:
-        return false_positive_matcher
-
-    phrase_false_positive_matcher = fetch_false_positive_matcher(
+    return fetch_false_positive_matcher(
         lang, tokens, static_rules[lang]["pattern_false_positives"]
     )
-
-    return list(set(phrase_false_positive_matcher + false_positive_matcher))
 
 
 def parse_client(client: str) -> Client:
@@ -2024,7 +2034,7 @@ async def apply_language_rules(
     tokens = fetch_tokens(lang.lang, text)
     offsets = utf16_offsets(text)
 
-    term_replacements = fetch_term_replacements(configs, tokens, lang.lang)
+    term_replacements = fetch_term_replacements(configs, lang.lang)
 
     match lang.lang:
         case LangType.DE:
@@ -2059,15 +2069,12 @@ async def apply_language_rules(
 
 def fetch_term_replacements(
     configs: dict,
-    tokens: Doc,
     lang: LangType,
-) -> namedtuple:
-    term_replacements = namedtuple("term_replacements", "rules false_positive_matcher")
+) -> list[Rule]:
     if "term_replacements" not in configs:
-        return term_replacements([], None)
+        return []
 
     term_replacement_rules = []
-    all_alternatives = []
     for lemma in configs["term_replacements"]:
         term_replacement = configs["term_replacements"][lemma]
 
@@ -2090,7 +2097,6 @@ def fetch_term_replacements(
             [{"word_type": word_type, "lower_case": lower_case, "lemmatize": lemmatize}]
             * len(words)
         )
-        all_alternatives += term_replacement["alternatives"]
 
         rule = Rule(
             lemma,
@@ -2106,12 +2112,11 @@ def fetch_term_replacements(
             rule.explanation = term_replacement["explanation"].get("text")
             rule.url = term_replacement["explanation"].get("url")
             rule.icon = term_replacement["explanation"].get("icon")
+            rule.false_positives = term_replacement["alternatives"]
 
         term_replacement_rules.append(rule)
 
-    false_positive_matcher = fetch_phrase_matcher(lang, tokens, all_alternatives)
-
-    return term_replacements(term_replacement_rules, false_positive_matcher)
+    return term_replacement_rules
 
 
 def apply_false_positives(
@@ -2133,16 +2138,11 @@ def apply_false_positives(
     return list_results
 
 
-def is_sub_category_enabled(
-    config: Config, subcategories: list[str], is_advanced: bool = False
-) -> bool | str:
+def is_sub_category_enabled(config: Config, subcategories: list[str]) -> bool | str:
     if isinstance(subcategories, str):
         subcategories = [subcategories]
 
     for subcategory in subcategories:
-        if is_advanced and not is_category_advanced(subcategory):
-            subcategory += "_advanced"
-
         if subcategory in config.disabled_categories:
             continue
 
@@ -2270,6 +2270,7 @@ async def fetch_rules(
     token: Token,
     text: str,
     lemma: str,
+    addons: list[str],
     suffix_check: bool = False,
     rewrite_to: str = None,
 ) -> list[Rule]:
@@ -2318,8 +2319,12 @@ async def fetch_rules(
                 f"({first_token_check} AND first_is_word_type_lemmatize = 1 AND first_is_word_type_lower_case = 0)"
             ] = lemma_filter
 
+    query = f"SELECT {rule_column_list} FROM rules_rule WHERE language = ? AND type = ? AND diversity_dimension_json != '[]'"
+    if addons is not None and "hr" not in addons:
+        query += " AND is_hr_rule = 0"
+
     filter_list = " OR ".join(filters.keys())
-    query = f"SELECT {rule_column_list} FROM rules_rule WHERE language = ? AND type = ? AND diversity_dimension_json != '[]' AND ({filter_list}) ORDER BY lemma_length DESC, first_is_word_type_lemmatize ASC"
+    query += f" AND ({filter_list}) ORDER BY lemma_length DESC, first_is_word_type_lemmatize ASC"
     parameters = [lang, RuleType.SUFFIX if suffix_check else RuleType.DEFAULT] + list(
         filters.values()
     )
@@ -2335,6 +2340,7 @@ async def fetch_rules(
                     token,
                     us_text,
                     Language.convert_to(lemma, rewrite_to),
+                    addons,
                     suffix_check,
                     "en-US",
                 )
@@ -2345,7 +2351,7 @@ async def fetch_rules(
         if not suffix_check and is_gender_star_ending_ and len(rows) == 0:
             new_text = is_gender_star_ending_[1] + is_gender_star_ending_[2]
             if new_text != text:
-                rules = await fetch_rules(lang, token, new_text, new_text)
+                rules = await fetch_rules(lang, token, new_text, new_text, addons)
                 if len(rules):
                     token.lemma_ = new_text
 
@@ -2657,7 +2663,7 @@ async def german_lemmatization(tokens: Doc, i: int):
 
 async def german_rules(
     config: Config,
-    term_replacements: namedtuple,
+    term_replacements: list[Rule],
     client: Client,
     tokens: Doc,
     offsets: dict,
@@ -2678,7 +2684,7 @@ async def german_rules(
 
         token.lemma_ = await german_lemmatization(tokens, i)
 
-        if len(term_replacements.rules):
+        if len(term_replacements):
             new_i = await rule_check(
                 config,
                 client,
@@ -2688,8 +2694,7 @@ async def german_rules(
                 tokens,
                 offsets,
                 list_full,
-                term_replacements.rules,
-                term_replacements.false_positive_matcher,
+                term_replacements,
             )
 
             if check_continue(i, new_i, tokens):
@@ -2774,6 +2779,7 @@ async def german_rules(
                     token,
                     token.text,
                     token.lemma_,
+                    config.addons,
                 ),
             )
 
@@ -2794,6 +2800,7 @@ async def german_rules(
                     token,
                     token.text,
                     token.lemma_,
+                    config.addons,
                     True,
                 ),
             )
@@ -2913,7 +2920,7 @@ async def german_rules(
 
 async def english_rules(
     config: Config,
-    term_replacements: namedtuple,
+    term_replacements: list[Rule],
     client: Client,
     tokens: Doc,
     offsets: dict,
@@ -2933,7 +2940,7 @@ async def english_rules(
             new_i += 1
             continue
 
-        if len(term_replacements.rules):
+        if len(term_replacements):
             new_i = await rule_check(
                 config,
                 client,
@@ -2943,8 +2950,7 @@ async def english_rules(
                 tokens,
                 offsets,
                 list_full,
-                term_replacements.rules,
-                term_replacements.false_positive_matcher,
+                term_replacements,
             )
 
             if check_continue(i, new_i, tokens):
@@ -3034,6 +3040,7 @@ async def english_rules(
                 token,
                 token.text,
                 token.lemma_,
+                config.addons,
             ),
             false_positive_matcher,
         )
@@ -3055,6 +3062,7 @@ async def english_rules(
                 token,
                 token.text,
                 token.lemma_,
+                config.addons,
                 True,
             ),
             false_positive_matcher,
@@ -3135,11 +3143,7 @@ async def is_word_match(
 
     token_word = token.lemma_ if word_type["lemmatize"] else token.text
 
-    if word_type["lower_case"] and (
-        lang == LangType.EN
-        or WordType.NOUN != word_type["word_type"]
-        or token.lemma_[0].islower()
-    ):
+    if word_type["lower_case"]:
         token_word = token_word.lower()
         word = word.lower()
 
@@ -4748,7 +4752,7 @@ async def gendered_nouns(
         if alternative_variations is None:
             return None, None, []
 
-        if not is_sub_category_enabled(config, subcategory, True):
+        if not is_sub_category_enabled(config, subcategory):
             continue
 
         for alternative_variation in alternative_variations:
