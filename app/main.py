@@ -1231,6 +1231,8 @@ def apply_configs(
     user_request_in: RequestIn, configs: dict, plan: str, force_disables: bool = True
 ):
     disabled_categories = user_request_in.config.disabled_categories
+    if "force_categories" not in configs or configs["force_categories"] is None:
+        configs["force_categories"] = []
 
     for config in configs:
         if config == "force_categories":
@@ -1255,11 +1257,7 @@ def apply_configs(
                         disabled_categories.remove(category)
                 else:
                     force_disables_category = force_disables
-                    if (
-                        not force_disables_category
-                        and "force_categories" in configs
-                        and len(configs["force_categories"])
-                    ):
+                    if not force_disables_category and len(configs["force_categories"]):
                         parent_category = get_parent_category_name(category)
                         force_disables_category = (
                             parent_category in configs["force_categories"]
