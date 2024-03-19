@@ -13,6 +13,7 @@
     "H\u00f6chstleistungen": null,
     "Kanus": null,
     "Manntage": null,
+    "Schwarztees": "Schwarztee",
     "Sch\u00e4digungen": null,
     "Abgeordnete": null,
     "Abgeordneten": null,
@@ -2829,6 +2830,11 @@
     "Schutzberechtigte": null,
     "Terrorverd\u00e4chtigen": null,
     "Senioren": null,
-    "Staatsangeh\u00f6rigen": null
+    "Staatsangeh\u00f6rigen": null,
+    "Bewerbungen": null,
+    "Investitionen": null,
+    "Untersuchungen": null,
+    "Praxen": null,
+    "Lagerarbeiten": null
   }
 }

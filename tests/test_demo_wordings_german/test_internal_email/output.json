@@ -173,10 +173,19 @@
         {
             "alternatives": [
                 {
+                    "context": "💡",
+                    "inspiration": true,
                     "text": "vor interessante Aufgaben gestellt"
                 },
                 {
+                    "context": "💡",
+                    "inspiration": true,
                     "text": "vor spannende Fragen gestellt"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "eine Chance, zu zeigen, was (...) kann"
                 }
             ],
             "category": "social-motive",
