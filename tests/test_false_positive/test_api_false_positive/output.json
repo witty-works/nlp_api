@@ -8,10 +8,29 @@
         {
             "alternatives": [
                 {
-                    "text": "in vielen Ländern vertretene"
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "in vielen Ländern vertreten"
                 },
                 {
-                    "text": "auf allen Kontinenten vertretene"
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "auf allen Kontinenten vertreten"
+                },
+                {
+                    "context": "💡 'Länder' nennen",
+                    "inspiration": true,
+                    "text": "in ((Länder)) tätig"
+                },
+                {
+                    "context": "💡 'Kontinente' nennen",
+                    "inspiration": true,
+                    "text": "in Ländern in ((Kontinente)) tätig"
+                },
+                {
+                    "context": "💡 'Zahl' nennen",
+                    "inspiration": true,
+                    "text": "mit ((Zahl)) Niederlassungen auf ((Zahl)) Kontinenten"
                 }
             ],
             "category": "cultural-diversity",

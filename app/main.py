@@ -114,7 +114,7 @@ from app.query_definitions import (
     verb_form_map,
 )
 
-version = "2.2.10"
+version = "2.2.11"
 
 categories = get_categories()
 settings = get_settings()
@@ -621,7 +621,6 @@ async def get_german_gender_ending(
 
     alternatives, _ = await gendered_alternatives(
         alternative,
-        LangType.DE,
         inclusive,
         binary,
         GermanGenderEndingType.STAR[0],
@@ -1231,6 +1230,8 @@ def apply_configs(
     user_request_in: RequestIn, configs: dict, plan: str, force_disables: bool = True
 ):
     disabled_categories = user_request_in.config.disabled_categories
+    if "force_categories" not in configs or configs["force_categories"] is None:
+        configs["force_categories"] = []
 
     for config in configs:
         if config == "force_categories":
@@ -1255,11 +1256,7 @@ def apply_configs(
                         disabled_categories.remove(category)
                 else:
                     force_disables_category = force_disables
-                    if (
-                        not force_disables_category
-                        and "force_categories" in configs
-                        and len(configs["force_categories"])
-                    ):
+                    if not force_disables_category and len(configs["force_categories"]):
                         parent_category = get_parent_category_name(category)
                         force_disables_category = (
                             parent_category in configs["force_categories"]
@@ -2169,6 +2166,7 @@ def is_gendered_denom_rule(lang: LangType, subcategories) -> bool:
         return get_category_name(subcategories) in [
             "titles",
             "function",
+            "gender_identity",
             "hidden_image",
             "leadership",
             "male_stereotype",
@@ -4420,7 +4418,6 @@ def inclusive_alternative(
 
 async def gendered_alternatives(
     alternative: str,
-    lang: str,
     inclusive: bool,
     binary: bool,
     separator: str,
@@ -4615,27 +4612,17 @@ def get_german_noun_separator(config: Config):
 
 async def gendered_nouns(
     config: Config,
-    client: Client,
     lang: Language,
     text: str,
     tokens: Doc,
     i: int,
+    alternatives: list[Alternative],
     subcategory: str,
     is_singular: bool | None,
     rule: Rule,
     full_text: str,
     target_form: str,
 ) -> tuple[str | None, str | None, list[Alternative], None]:
-    alternatives = await fetch_rule_alternatives(
-        client, rule, is_singular, config.show_inspiration_alternatives, lang.locale
-    )
-
-    if LangType.EN == lang.lang or len(alternatives) == 0:
-        return text, subcategory, alternatives
-
-    prefix = ""
-    is_singular = True if is_singular is None else is_singular
-
     if (
         rule.type == RuleType.SUFFIX
         and not tokens[i].lemma_.endswith("frau")
@@ -4649,12 +4636,15 @@ async def gendered_nouns(
             .find(rule.lemma.lower().replace("ä", "a")[0:-2])
         )
         prefix = text[0:prefix_end]
+    else:
+        prefix = ""
 
     binary_case = False
     inclusive = gendered_roles_format_inclusive(config.gendered_roles_format)
     binary = gendered_roles_format_binary(config.gendered_roles_format)
     separator, noun_separator = get_german_noun_separator(config)
     additional_words = []
+    is_singular = True if is_singular is None else is_singular
 
     if prefix.endswith("-"):
         words = prefix[:-1].split("-")
@@ -4723,6 +4713,18 @@ async def gendered_nouns(
 
         alternative.lemma = handle_single_tilde(alternative.lemma, prefix, is_singular)
         if not alternative.is_gendered_noun:
+            alternative = await alternative_declension(
+                lang.lang,
+                target_form,
+                text,
+                tokens[i].lemma_,
+                WordType.NOUN,
+                False,
+                rule,
+                alternative,
+                is_singular,
+            )
+
             if inclusive and separator != "/":
                 new_alternative = deepcopy(alternative)
                 new_alternative.lemma = new_alternative.lemma.replace("/", separator)
@@ -4733,7 +4735,6 @@ async def gendered_nouns(
 
         alternative_variations, binary_case = await gendered_alternatives(
             alternative.lemma,
-            lang.lang,
             inclusive,
             binary,
             separator,
@@ -4761,6 +4762,9 @@ async def gendered_nouns(
             new_alternative.is_collective_noun = alternative_variations[
                 alternative_variation
             ]
+            new_alternative.is_gendered_noun = not alternative_variations[
+                alternative_variation
+            ]
             new_alternatives.append(new_alternative)
 
     if binary_case:
@@ -4784,13 +4788,11 @@ async def gendered_nouns(
             + tokens[i + 1].whitespace_
             + tokens[i + 2].text
         )
-
-    if text.endswith("-"):
-        ending = "s-" if text.endswith("s-") else "-"
-
-        for alternative in new_alternatives:
-            if alternative.lemma.endswith(ending) != ending:
-                alternative.lemma += ending
+    elif subcategory == "function":
+        forms = await german_noun_lookup(tokens[i].text)
+        if forms is not None and forms["male_form"] is not None:
+            subcategory = "gender_identity"
+            rule.text_id = forms["base_form"]
 
     return text, subcategory, new_alternatives
 
@@ -4867,7 +4869,7 @@ async def fetch_alternatives_with_article(
         else:
             alternative_tokens = fetch_tokens(LangType.DE, alternative.words[-1])
             if is_token_plural(LangType.DE, alternative_tokens[0]):
-                article_alternative = ""
+                article_alternative = match_feminine
             else:
                 gender = await german_noun_gender_lookup(alternative.words[-1])
                 if gender is None:
@@ -5397,26 +5399,45 @@ async def rule_check(
         else:
             target_form = "base_form"
 
-        (
-            text,
-            subcategory,
-            alternatives,
-        ) = await gendered_nouns(
-            config,
-            client,
-            lang,
-            text,
-            tokens,
-            i,
-            subcategory,
-            is_singular,
-            rule,
-            full_text,
-            target_form,
+        alternatives = await fetch_rule_alternatives(
+            client, rule, is_singular, config.show_inspiration_alternatives, lang.locale
         )
 
-        if not text:
-            continue
+        if LangType.DE == lang.lang and len(alternatives):
+            gendered_noun = False
+            for alternative in alternatives:
+                if alternative.lemma is not None and "~" in alternative.lemma:
+                    gendered_noun = True
+                    break
+
+            if gendered_noun:
+                (
+                    text,
+                    subcategory,
+                    alternatives,
+                ) = await gendered_nouns(
+                    config,
+                    lang,
+                    text,
+                    tokens,
+                    i,
+                    alternatives,
+                    subcategory,
+                    is_singular,
+                    rule,
+                    full_text,
+                    target_form,
+                )
+
+            if text is None:
+                continue
+
+        if text.endswith("-"):
+            ending = "s-" if text.endswith("s-") else "-"
+
+            for alternative in alternatives:
+                if alternative.lemma.endswith(ending) != ending:
+                    alternative.lemma += ending
 
         start = token.idx
         if is_gendered_denom_rule(lang.lang, subcategory):
