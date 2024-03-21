@@ -114,7 +114,7 @@ from app.query_definitions import (
     verb_form_map,
 )
 
-version = "2.2.11"
+version = "2.2.12"
 
 categories = get_categories()
 settings = get_settings()
@@ -1483,7 +1483,10 @@ async def check(
         configs = {"categories": {}}
         apply_configs(user_request_in, configs, "witty_teams")
 
-    if user_request_in.config.plan:
+    if (
+        user_request_in.config.plan is not None
+        and user_request_in.config.plan.startswith("witty_")
+    ):
         text, lang, limit_reached = fetch_text(user_request_in)
 
         if lang is None:

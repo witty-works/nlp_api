@@ -483,6 +483,7 @@ class DomainConfig(BaseModel):
 class ConfRequest(BaseModel):
     id: str
     name: str
+    plan: Optional[str] = None
     config: RuleConfig
     false_positives: list[str] = []
     term_replacements: dict[str, TermReplacement] = {}

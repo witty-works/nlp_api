@@ -466,7 +466,7 @@ def set_redis():
     user_object = {
         "id": "test-missing-org",
         "email": "test-missing-org@gmail.com",
-        "plan": "witty_free",
+        "plan": "none",
         "organization_id": "test-missing-org",
         "name": "Tests Missing Org",
         "config": {},
