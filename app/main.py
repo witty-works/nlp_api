@@ -3721,14 +3721,14 @@ async def find_form(
     return token.idx, token.text, token.lemma_, None
 
 
-async def align_form_noun_german(
-    target_form: str, target_token: Token, target_result: dict
-) -> str:
+async def align_form_noun_german(target_form: str, target_token: Token) -> str:
     # TODO determine correct form
     if target_token.text.islower() or await check_word_type(
         LangType.DE, target_token, WordType.PRONOUN, True, True
     ):
         return target_token.text
+
+    target_result = await german_noun_lookup(target_token.text, target_token)
 
     text = get_target_declension_form(target_result, target_form)
     if text is None:
@@ -3742,11 +3742,13 @@ async def align_form_noun_german(
     return text
 
 
-def align_form_noun_english(
-    target_form: Token, target_token: Token, target_result: dict
-) -> str:
+async def align_form_noun_english(target_form: str, target_token: Token) -> str:
     if target_token.text == "they":
         return target_token.text
+
+    target_result = await fetch_declensions(
+        LangType.EN, WordType.NOUN, target_token.text, target_token
+    )
 
     text = get_target_declension_form(target_result, target_form)
     if text is None:
@@ -3764,14 +3766,10 @@ async def align_form_noun(lang: LangType, target_form: str, target_token: Token)
     if target_form == "no_change" or target_form is None:
         return target_token.text
 
-    target_result = await fetch_declensions(
-        lang, WordType.NOUN, target_token.text, target_token
-    )
-
     if lang == LangType.DE:
-        return await align_form_noun_german(target_form, target_token, target_result)
+        return await align_form_noun_german(target_form, target_token)
 
-    return align_form_noun_english(target_form, target_token, target_result)
+    return await align_form_noun_english(target_form, target_token)
 
 
 def align_form_adjective_english(
