@@ -5439,7 +5439,10 @@ async def rule_check(
             ending = "s-" if text.endswith("s-") else "-"
 
             for alternative in alternatives:
-                if alternative.lemma.endswith(ending) != ending:
+                if (
+                    alternative.lemma is not None
+                    and alternative.lemma.endswith(ending) != ending
+                ):
                     alternative.lemma += ending
 
         start = token.idx
