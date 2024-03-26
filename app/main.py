@@ -2276,6 +2276,11 @@ async def fetch_rules(
     rewrite_to: str = None,
 ) -> list[Rule]:
     if suffix_check:
+        upper_char_count = sum(1 for c in text if c.isupper())
+        # Elite-Partner (match) vs. ElitePartner (name -> ignore)
+        if upper_char_count > 1 and text.count("-") < upper_char_count - 1:
+            return []
+
         first_token_check = "first_token LIKE ?"
         text_filter = "%" + text[-4:]
         lemma_filter = "%" + lemma[-4:]
