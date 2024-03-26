@@ -1,7 +1,7 @@
 Form,Masculine,Feminine,Neuter,Plural,Alternative
 nominativ,der,die,das,die,die~der
-genitiv,des,der,des,der,des~der
-dativ,dem,der,dem,den,dem~der
+genitiv,des,der,des,der,der~des
+dativ,dem,der,dem,den,der~dem
 akkusativ,den,die,das,die,den~die
 nominativ,ein,eine,ein,einzelne,ein~e
 genitiv,eines,einer,eines,einzelne,einer~eines
