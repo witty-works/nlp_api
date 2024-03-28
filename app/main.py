@@ -4155,6 +4155,9 @@ def alternative_a_english(
     prepend_word: bool,
     is_plural_alternative: bool,
 ) -> str:
+    if alternative == "they":
+        return alternative
+
     if (
         prepend_word
         and is_plural_alternative is False
@@ -4212,15 +4215,24 @@ async def alternative_declension(
             if alternative_text != "," and token_is_conjunction(alternative_token):
                 previous = False
             else:
-                if len(alternative_tokens) == 1:
-                    # in this case we just assume it is the same to avoid issues with word type detection
-                    alternative_word_type = word_type
-                else:
-                    alternative_word_type = await fetch_word_type(
-                        lang, alternative_token, word_type, False
-                    )
+                declension = not previous
+                alternative_word_type = False
+                if alternative.word_types is not None and len(alternative.word_types) == i + 1:
+                    if not alternative.word_types[i]["lemmatize"]:
+                        declension = False
+                    elif alternative.word_types[i]["word_type"]:
+                        alternative_word_type = alternative.word_types[i]["word_type"]
 
-                if previous is False:
+                if alternative_word_type is False:
+                    if len(alternative_tokens) == 1:
+                        # in this case we just assume it is the same to avoid issues with word type detection
+                        alternative_word_type = word_type
+                    else:
+                        alternative_word_type = await fetch_word_type(
+                            lang, alternative_token, word_type, False
+                        )
+
+                if declension:
                     if WordType.VERB == word_type and (
                         (lang == LangType.EN and i == 0)
                         or WordType.VERB in alternative_word_type
@@ -4354,11 +4366,15 @@ def add_german_prefix(word: str, prefix: str) -> str:
     return prefix + word
 
 
-def handle_single_tilde(alternative: str, prefix: bool, is_singular: bool):
+def handle_single_tilde(alternative: Alternative, prefix: bool, is_singular: bool):
     lemma = ""
-    words = alternative.split(" ")
-    for word in words:
+    word_types = []
+    # ideally we use alternative.words here but we strip out the "~" in the rule editor
+    words = alternative.lemma.split()
+    for i in range(len(words)):
+        word = words[i]
         if word.count("~") == 1:
+            slash = False
             if word.startswith("~"):
                 word = add_german_prefix(word[1:], prefix)
             else:
@@ -4366,6 +4382,7 @@ def handle_single_tilde(alternative: str, prefix: bool, is_singular: bool):
                 # Trans~gender => Trans*gender, qualifiziert~e => qualifiziert*e, ihr~e => ihr*e
                 if position + 3 < len(word) or is_singular:
                     word = word.replace("~", "/")
+                    slash = True
                 # ihr~e => ihre
                 elif word.endswith("e"):
                     word = word.replace("~", "")
@@ -4373,9 +4390,19 @@ def handle_single_tilde(alternative: str, prefix: bool, is_singular: bool):
                 else:
                     word = word[0:position]
 
+                if len(alternative.word_types) == i + 1 and slash:
+                    word_types.append(alternative.word_types[i])
+                    word_types.append(
+                        {"word_type": "", "lower_case": True, "lemmatize": True}
+                    )
+
+        if len(alternative.word_types):
+            word_types.append(alternative.word_types[i])
         lemma += " " + word
 
-    return lemma.strip()
+    if len(word_types):
+        alternative.word_types = word_types
+    alternative.lemma = lemma.strip()
 
 
 def inclusive_alternative(
@@ -4709,7 +4736,9 @@ async def gendered_nouns(
             new_alternatives.append(alternative)
             continue
 
-        alternative.lemma = handle_single_tilde(alternative.lemma, prefix, is_singular)
+        if "~" in alternative.lemma:
+            handle_single_tilde(alternative, prefix, is_singular)
+
         if not alternative.is_gendered_noun:
             alternative = await alternative_declension(
                 lang.lang,
@@ -5389,7 +5418,9 @@ async def rule_check(
         if lang.lang == LangType.DE and await check_word_type(
             lang.lang, token, WordType.NOUN
         ):
-            target_form = await find_form_noun_german_text(token.text, token, is_singular)
+            target_form = await find_form_noun_german_text(
+                token.text, token, is_singular
+            )
         else:
             target_form = "base_form"
 
