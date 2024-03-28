@@ -17,6 +17,7 @@
     "ages": "age",
     "attention-seeking": "attention-seeking",
     "attentionseeking": "attentionseeking",
+    "awe-inspiring": "awe-inspiring",
     "battle-axe": "battle-axe",
     "bean-eater": "bean-eater",
     "bean-flicker": "bean-flicker",
@@ -109,6 +110,7 @@
     "inter-dependence": "inter-dependence",
     "inter-dependent": "inter-dependent",
     "inter-personal": "inter-personal",
+    "jaw-dropping": "jaw-dropping",
     "job-sharing": "job-sharing",
     "jobsharing": "jobsharing",
     "kitty-puncher": "kitty-puncher",
@@ -146,6 +148,7 @@
     "people": "person",
     "performance-based": "performance-based",
     "performancebased": "performancebased",
+    "person-sized": "person-sized",
     "pow-wow": "pow-wow",
     "pro-active": "pro-active",
     "pussy-puncher": "pussy-puncher",
@@ -172,6 +175,7 @@
     "spazzed": "spaz",
     "special-needs": "special-needs",
     "specialneeds": "specialneeds",
+    "startling": "startling",
     "state-of-the-art": "state-of-the-art",
     "stoplisting": "stoplist",
     "strong-minded": "strong-minded",
@@ -5526,6 +5530,8 @@
     "Rests": "Rest",
     "Reste": "Rest",
     "Resten": "Rest",
-    "Restes": "Rest"
+    "Restes": "Rest",
+    "Architekturen": "Architektur",
+    "Developments": "Development"
   }
 }

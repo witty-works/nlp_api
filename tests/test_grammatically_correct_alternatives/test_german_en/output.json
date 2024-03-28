@@ -75,6 +75,9 @@
         {
             "alternatives": [
                 {
+                    "remove": true
+                },
+                {
                     "text": "sichtbaren"
                 },
                 {
@@ -85,9 +88,6 @@
                 },
                 {
                     "text": "wahrnehmbaren"
-                },
-                {
-                    "text": "spürbaren"
                 }
             ],
             "category": "social-motive",
