@@ -186,7 +186,7 @@ class GenderedRolesFormatType(str, Enum):
 
 class Alternative:
     lemma: str
-    words: list
+    words: Optional[list] = None
     word_types: Optional[list] = None
     type: Optional[str] = None
     label: Optional[str] = None
@@ -204,7 +204,11 @@ class Alternative:
         word_types: list = None,
     ):
         self.lemma = lemma
-        self.words = [lemma] if words is None else words
+        if words is None:
+            words = [lemma]
+        self.words = words
+        if word_types is None or len(word_types) == 0:
+            word_types = [{"word_type": "", "lower_case": True, "lemmatize": True}] * len(self.words)
         self.word_types = word_types
 
 
@@ -252,13 +256,6 @@ class Rule:
         self.subcategories = subcategories
         if alternatives is None:
             alternatives = []
-        else:
-            alternatives = list(
-                filter(lambda alternative: "((" not in alternative, alternatives)
-            )
-            alternatives = list(
-                map(lambda alternative: Alternative(alternative), alternatives)
-            )
 
         self.alternatives = alternatives
 

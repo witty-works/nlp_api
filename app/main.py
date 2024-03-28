@@ -2098,6 +2098,10 @@ def fetch_term_replacements(
             * len(words)
         )
 
+        alternatives = []
+        for alternative in term_replacement["alternatives"]:
+            alternatives.append(Alternative(alternative, tokenize(alternative, lang)))
+
         rule = Rule(
             lemma,
             lang,
@@ -2105,7 +2109,7 @@ def fetch_term_replacements(
             words,
             word_types,
             "corporate_rules",
-            term_replacement["alternatives"],
+            alternatives,
         )
 
         if term_replacement["explanation"] is not None:
@@ -2869,7 +2873,7 @@ async def german_rules(
                     None,
                     config._gendereddenom_ending_word_type[key],
                     subcategory,
-                    (config.german_gender_ending,),
+                    [Alternative(config.german_gender_ending)],
                 )
 
                 endings.append(ending)
@@ -4215,16 +4219,11 @@ async def alternative_declension(
             if alternative_text != "," and token_is_conjunction(alternative_token):
                 previous = False
             else:
-                declension = not previous
-                alternative_word_type = False
-                if alternative.word_types is not None and len(alternative.word_types) == i + 1:
-                    if not alternative.word_types[i]["lemmatize"]:
-                        declension = False
-                    elif alternative.word_types[i]["word_type"]:
+                declension = not previous and alternative.word_types[i]["lemmatize"]
+                if declension:
+                    if alternative.word_types[i]["word_type"]:
                         alternative_word_type = alternative.word_types[i]["word_type"]
-
-                if alternative_word_type is False:
-                    if len(alternative_tokens) == 1:
+                    elif len(alternative_tokens) == 1:
                         # in this case we just assume it is the same to avoid issues with word type detection
                         alternative_word_type = word_type
                     else:
@@ -4232,7 +4231,6 @@ async def alternative_declension(
                             lang, alternative_token, word_type, False
                         )
 
-                if declension:
                     if WordType.VERB == word_type and (
                         (lang == LangType.EN and i == 0)
                         or WordType.VERB in alternative_word_type
@@ -4390,18 +4388,16 @@ def handle_single_tilde(alternative: Alternative, prefix: bool, is_singular: boo
                 else:
                     word = word[0:position]
 
-                if len(alternative.word_types) == i + 1 and slash:
+                if slash:
                     word_types.append(alternative.word_types[i])
                     word_types.append(
                         {"word_type": "", "lower_case": True, "lemmatize": True}
                     )
 
-        if len(alternative.word_types):
-            word_types.append(alternative.word_types[i])
+        word_types.append(alternative.word_types[i])
         lemma += " " + word
 
-    if len(word_types):
-        alternative.word_types = word_types
+    alternative.word_types = word_types
     alternative.lemma = lemma.strip()
 
 
@@ -4792,6 +4788,11 @@ async def gendered_nouns(
             new_alternative.is_gendered_noun = not alternative_variations[
                 alternative_variation
             ]
+
+            if ("/" in alternative_variation and not "/-" in alternative_variation) or " und " in alternative_variation:
+                new_alternative.word_types.append({"word_type": "", "lower_case": True, "lemmatize": True})
+                new_alternative.word_types.append({"word_type": "n", "lower_case": True, "lemmatize": True})
+
             new_alternatives.append(new_alternative)
 
     if binary_case:
