@@ -4788,6 +4788,8 @@ async def gendered_nouns(
             new_alternative.is_gendered_noun = not alternative_variations[
                 alternative_variation
             ]
+            if is_singular != False and new_alternative.is_collective_noun:
+                new_alternative.is_inspiration = True
 
             if ("/" in alternative_variation and not "/-" in alternative_variation) or " und " in alternative_variation:
                 new_alternative.word_types.append({"word_type": "", "lower_case": True, "lemmatize": True})
