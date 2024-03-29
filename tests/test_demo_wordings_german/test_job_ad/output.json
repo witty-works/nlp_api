@@ -63,6 +63,12 @@
         {
             "alternatives": [
                 {
+                    "text": "beitragen"
+                },
+                {
+                    "text": "machen"
+                },
+                {
                     "text": "lösen"
                 },
                 {
@@ -70,9 +76,6 @@
                 },
                 {
                     "text": "anpacken"
-                },
-                {
-                    "text": "erarbeiten"
                 }
             ],
             "category": "social-motive",

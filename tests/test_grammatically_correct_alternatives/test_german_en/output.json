@@ -75,16 +75,19 @@
         {
             "alternatives": [
                 {
+                    "remove": true
+                },
+                {
                     "text": "sichtbaren"
+                },
+                {
+                    "text": "umfassenden"
                 },
                 {
                     "text": "intensiven"
                 },
                 {
                     "text": "wahrnehmbaren"
-                },
-                {
-                    "text": "spürbaren"
                 }
             ],
             "category": "social-motive",

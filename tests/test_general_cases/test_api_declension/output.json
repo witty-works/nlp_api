@@ -21,6 +21,12 @@
         {
             "alternatives": [
                 {
+                    "text": "trägt bei"
+                },
+                {
+                    "text": "macht"
+                },
+                {
                     "text": "löst"
                 },
                 {
@@ -28,14 +34,6 @@
                 },
                 {
                     "text": "packt an"
-                },
-                {
-                    "text": "erarbeitet"
-                },
-                {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "enthusiastisch umsetzen"
                 }
             ],
             "category": "social-motive",

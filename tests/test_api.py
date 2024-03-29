@@ -381,8 +381,20 @@ def test_tokenize():
 
 def test_parse_word_types():
     with TestClient(app) as client:
+        url = "/parse-word-types?lang=en&text=over-the-hill&"
+
+        response = client.get(url + "word_types=")
+        result = response.json()
+
+        assert result == [
+            {"word_type": "", "lower_case": True, "lemmatize": True},
+        ]
+
         url = "/parse-word-types?lang=en&text=running is the best&"
         response = client.get(url)
+        assert response.status_code == 422
+
+        response = client.get(url + "word_types=")
         assert response.status_code == 422
 
         response = client.get(url + "word_types=n")
