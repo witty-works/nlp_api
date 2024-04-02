@@ -1202,12 +1202,16 @@ async def fetch_user_organization_configs(email: str) -> dict | None:
 
 
 def is_token_singular(lang: LangType, token: Token) -> bool | None:
-    if token.text in lemma_plural_lookup[lang]:
+    plural_lookup_first = False if token.text.endswith("e") and token.lemma_.endswith("er") else True
+    if plural_lookup_first and token.text in lemma_plural_lookup[lang]:
         return False
 
     number = token.morph.get("Number")
     if number:
         return "Sing" in number
+
+    if not plural_lookup_first and token.text in lemma_plural_lookup[lang]:
+        return False
 
     if lang == LangType.EN and token.pos == "NOUN" and token.text.endswith("s"):
         return False

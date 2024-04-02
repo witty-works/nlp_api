@@ -1,0 +1,67 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "Sie*er"
+                },
+                {
+                    "text": "Sie/er"
+                },
+                {
+                    "text": "Du"
+                },
+                {
+                    "text": "Dich"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Sie ist die Beauftragte für dieses Thema.",
+            "end": 3,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Binäre Pronomen",
+            "proficiency_level": "unconscious_bias",
+            "start": 0,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "Sie",
+            "text_id": "sie"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "den*die Beauftragte*r"
+                },
+                {
+                    "text": "den/die Beauftragte/Beauftragter"
+                },
+                {
+                    "text": "das Management"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Sie ist die Beauftragte für dieses Thema.",
+            "end": 23,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Viele denken zuerst an ein bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufstitel",
+            "proficiency_level": "unconscious_bias",
+            "start": 8,
+            "subcategory": "titles",
+            "text": "die Beauftragte",
+            "text_id": "Beauftragter"
+        }
+    ]
+}
