@@ -1202,7 +1202,9 @@ async def fetch_user_organization_configs(email: str) -> dict | None:
 
 
 def is_token_singular(lang: LangType, token: Token) -> bool | None:
-    plural_lookup_first = False if token.text.endswith("e") and token.lemma_.endswith("er") else True
+    plural_lookup_first = (
+        False if token.text.endswith("e") and token.lemma_.endswith("er") else True
+    )
     if plural_lookup_first and token.text in lemma_plural_lookup[lang]:
         return False
 
@@ -4795,9 +4797,15 @@ async def gendered_nouns(
             if is_singular != False and new_alternative.is_collective_noun:
                 new_alternative.is_inspiration = True
 
-            if ("/" in alternative_variation and not "/-" in alternative_variation) or " und " in alternative_variation:
-                new_alternative.word_types.append({"word_type": "", "lower_case": True, "lemmatize": True})
-                new_alternative.word_types.append({"word_type": "n", "lower_case": True, "lemmatize": True})
+            if (
+                "/" in alternative_variation and "/-" not in alternative_variation
+            ) or " und " in alternative_variation:
+                new_alternative.word_types.append(
+                    {"word_type": "", "lower_case": True, "lemmatize": True}
+                )
+                new_alternative.word_types.append(
+                    {"word_type": "n", "lower_case": True, "lemmatize": True}
+                )
 
             new_alternatives.append(new_alternative)
 
