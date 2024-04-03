@@ -114,7 +114,7 @@ from app.query_definitions import (
     verb_form_map,
 )
 
-version = "2.2.14"
+version = "2.2.15"
 
 categories = get_categories()
 settings = get_settings()
@@ -1202,12 +1202,18 @@ async def fetch_user_organization_configs(email: str) -> dict | None:
 
 
 def is_token_singular(lang: LangType, token: Token) -> bool | None:
-    if token.text in lemma_plural_lookup[lang]:
+    plural_lookup_first = (
+        False if token.text.endswith("e") and token.lemma_.endswith("er") else True
+    )
+    if plural_lookup_first and token.text in lemma_plural_lookup[lang]:
         return False
 
     number = token.morph.get("Number")
     if number:
         return "Sing" in number
+
+    if not plural_lookup_first and token.text in lemma_plural_lookup[lang]:
+        return False
 
     if lang == LangType.EN and token.pos == "NOUN" and token.text.endswith("s"):
         return False
@@ -3450,39 +3456,46 @@ async def german_noun_gender_lookup(word: str) -> str:
     return result["gender_1"]
 
 
-async def german_noun_lookup(text: str, token: Token | None = None) -> dict:
+async def german_noun_lookup(
+    text: str, token: Token | None = None, prefix: str | None = None
+) -> dict:
     word = text
     forms = await fetch_declensions(LangType.DE, WordType.NOUN, word, token)
     if forms is not None:
         return forms
 
-    if "-" in word:
-        words = word.split("-")
-        word = words[-1]
-        forms = await fetch_declensions(LangType.DE, WordType.NOUN, word, token)
-        lower = False
-        prefix = "-".join(words[0:-1]) + "-"
+    if prefix is None:
+        if "-" in word:
+            words = word.split("-")
+            word = words[-1]
+            forms = await fetch_declensions(LangType.DE, WordType.NOUN, word, token)
+            lower = False
+            prefix = "-".join(words[0:-1]) + "-"
+        else:
+            lower = True
+            prefix = ""
+
+        while len(word) > 3 and forms is None:
+            words = static_rules[LangType.DE]["german_nouns"].parse_compound(word)
+            if len(words) == 0:
+                break
+
+            word = words[-1]
+            forms = await fetch_declensions(LangType.DE, WordType.NOUN, word, token)
+            if forms is not None:
+                for form in forms:
+                    if forms[form] is None:
+                        continue
+
+                    ending_lower = forms[form].lower()
+                    if text.endswith(ending_lower):
+                        lower = True
+                        prefix += text.removesuffix(ending_lower)
+                        break
     else:
-        lower = True
-        prefix = ""
-
-    while len(word) > 3 and forms is None:
-        words = static_rules[LangType.DE]["german_nouns"].parse_compound(word)
-        if len(words) == 0:
-            break
-
-        word = words[-1]
+        word = word.removeprefix(prefix).capitalize()
+        lower = not prefix.endswith("-")
         forms = await fetch_declensions(LangType.DE, WordType.NOUN, word, token)
-        if forms is not None:
-            for form in forms:
-                if forms[form] is None:
-                    continue
-
-                ending_lower = forms[form].lower()
-                if text.endswith(ending_lower):
-                    lower = True
-                    prefix += text.removesuffix(ending_lower)
-                    break
 
     if prefix == "" or forms is None:
         return forms
@@ -3713,14 +3726,16 @@ async def find_form(
     return token.idx, token.text, token.lemma_, None
 
 
-async def align_form_noun_german(target_form: str, target_token: Token) -> str:
+async def align_form_noun_german(
+    target_form: str, target_token: Token, prefix: str | None = None
+) -> str:
     # TODO determine correct form
     if target_token.text.islower() or await check_word_type(
         LangType.DE, target_token, WordType.PRONOUN, True, True
     ):
         return target_token.text
 
-    target_result = await german_noun_lookup(target_token.text, target_token)
+    target_result = await german_noun_lookup(target_token.text, target_token, prefix)
 
     text = get_target_declension_form(target_result, target_form)
     if text is None:
@@ -3754,12 +3769,14 @@ async def align_form_noun_english(target_form: str, target_token: Token) -> str:
     return text
 
 
-async def align_form_noun(lang: LangType, target_form: str, target_token: Token) -> str:
+async def align_form_noun(
+    lang: LangType, target_form: str, target_token: Token, prefix: str | None = None
+) -> str:
     if target_form == "no_change" or target_form is None:
         return target_token.text
 
     if lang == LangType.DE:
-        return await align_form_noun_german(target_form, target_token)
+        return await align_form_noun_german(target_form, target_token, prefix)
 
     return await align_form_noun_english(target_form, target_token)
 
@@ -4187,6 +4204,7 @@ async def alternative_declension(
     rule: Rule,
     alternative: Alternative,
     is_singular: bool,
+    prefix: str | None = None,
 ) -> Alternative:
     if (
         alternative.is_remove
@@ -4259,6 +4277,7 @@ async def alternative_declension(
                                 lang,
                                 target_form,
                                 alternative_token,
+                                prefix,
                             )
                         )
                     elif (
@@ -4460,7 +4479,7 @@ async def gendered_alternatives(
     for word in words:
         if word.startswith("~") and word.endswith("~"):
             word = word.strip("~")
-            forms = await german_noun_lookup(word)
+            forms = await german_noun_lookup(word, None, prefix)
             if forms is None or target_form not in forms:
                 forms = None
                 logger.error(f"Declension '{target_form}' missing for '{word}'")
@@ -4475,7 +4494,7 @@ async def gendered_alternatives(
                 logger.error(f"Declension data missing for other form in '{word}'")
                 return [], False
 
-            other_forms = await german_noun_lookup(other_form)
+            other_forms = await german_noun_lookup(other_form, None, prefix)
             if target_form not in other_forms:
                 forms = True
                 logger.error(f"Declension '{target_form}' missing for '{other_form}'")
@@ -4746,6 +4765,7 @@ async def gendered_nouns(
                 rule,
                 alternative,
                 is_singular,
+                prefix,
             )
 
             if inclusive and separator != "/":
@@ -4791,9 +4811,15 @@ async def gendered_nouns(
             if is_singular != False and new_alternative.is_collective_noun:
                 new_alternative.is_inspiration = True
 
-            if ("/" in alternative_variation and not "/-" in alternative_variation) or " und " in alternative_variation:
-                new_alternative.word_types.append({"word_type": "", "lower_case": True, "lemmatize": True})
-                new_alternative.word_types.append({"word_type": "n", "lower_case": True, "lemmatize": True})
+            if (
+                "/" in alternative_variation and "/-" not in alternative_variation
+            ) or " und " in alternative_variation:
+                new_alternative.word_types.append(
+                    {"word_type": "", "lower_case": True, "lemmatize": True}
+                )
+                new_alternative.word_types.append(
+                    {"word_type": "n", "lower_case": True, "lemmatize": True}
+                )
 
             new_alternatives.append(new_alternative)
 

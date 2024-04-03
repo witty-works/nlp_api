@@ -2883,8 +2883,7 @@
     "Schreibassistenzen": null,
     "Terrassenplanungen": null,
     "Datenschutzmanagements": null,
-    "Fachkundigere": null,
-    "Fachkundigeren": null,
+    "Fachkundige": null,
     "M\u00fchlen": null,
     "Rechtsbeist\u00e4nde": null,
     "Rechtsbeist\u00e4nden": null,
@@ -2905,7 +2904,7 @@
     "Beobachtungen": null,
     "Transkulturalit\u00e4ten": null,
     "Verwandten": null,
-    "Sachkundigere": null,
+    "Sachkundige": null,
     "Sachkundigeren": null,
     "Ausl\u00e4nderinnen": null,
     "Verantwortungtragendern": null,
@@ -2913,6 +2912,11 @@
     "Reste": null,
     "Resten": null,
     "Architekturen": null,
-    "Developments": null
+    "Developments": null,
+    "Eink\u00e4ufe": null,
+    "Eink\u00e4ufen": null,
+    "Wartungen": null,
+    "Vorst\u00e4nde": null,
+    "Vorst\u00e4nden": null
   }
 }
