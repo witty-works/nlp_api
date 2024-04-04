@@ -3465,7 +3465,7 @@ async def german_noun_lookup(
     if forms is not None:
         return forms
 
-    if prefix is None:
+    if prefix is None or prefix == "":
         if "-" in word:
             words = word.split("-")
             word = words[-1]
@@ -4766,7 +4766,7 @@ async def gendered_nouns(
                 rule,
                 alternative,
                 is_singular,
-                prefix,
+                prefix if alternative.lemma.startswith(prefix) else None,
             )
 
             if inclusive and separator != "/":
