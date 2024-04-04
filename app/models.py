@@ -196,6 +196,7 @@ class Alternative:
     is_collective_noun: Optional[bool] = False
     is_remove: Optional[bool] = False
     is_gendered_noun: Optional[bool] = False
+    is_placeholder: Optional[bool] = False
 
     def __init__(
         self,
@@ -208,7 +209,9 @@ class Alternative:
             words = [lemma]
         self.words = words
         if word_types is None or len(word_types) == 0:
-            word_types = [{"word_type": "", "lower_case": True, "lemmatize": True}] * len(self.words)
+            word_types = [
+                {"word_type": "", "lower_case": True, "lemmatize": True}
+            ] * len(self.words)
         self.word_types = word_types
 
 

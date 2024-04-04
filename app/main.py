@@ -837,6 +837,7 @@ async def post_debug_rule(
             alternative.is_advanced = alternative_in.is_advanced
             alternative.is_collective_noun = alternative_in.is_collective_noun
             alternative.is_remove = alternative_in.is_remove
+            alternative.is_placeholder = alternative_in.is_placeholder
 
             alternative_list.append(alternative)
     else:
