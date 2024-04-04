@@ -274,6 +274,7 @@ class AlternativeIn(BaseModel):
     is_advanced: Optional[bool] = False
     is_collective_noun: Optional[bool] = False
     is_remove: Optional[bool] = False
+    is_placeholder: Optional[bool] = False
 
 
 class RuleIn(BaseModel):
