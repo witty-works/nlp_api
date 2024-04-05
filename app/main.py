@@ -4860,10 +4860,14 @@ def fetch_article_for_flexion(
     if flexion is None:
         return None, None, None, None
 
-    if article_text not in static_rules[LangType.DE][gender + "_articles"]:
+    form, _ = flexion.split()
+    if (
+        article_text not in static_rules[LangType.DE][gender + "_articles"]
+        or form not in static_rules[LangType.DE][gender + "_articles"][article_text]
+    ):
         return None, None, None, None
 
-    article_forms = static_rules[LangType.DE][gender + "_articles"][article_text]
+    article_forms = static_rules[LangType.DE][gender + "_articles"][article_text][form]
     return article_forms[1], article_forms[2], article_forms[3], article_forms[5]
 
 

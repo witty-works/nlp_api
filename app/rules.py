@@ -555,15 +555,28 @@ def fetch_static_rules():
             )
         )
 
-        static_rules[LangType.DE]["masculine_articles"] = dict(
-            zip(list(data[LangType.DE]["df_articles"]["Masculine"]), articles)
-        )
-        static_rules[LangType.DE]["feminine_articles"] = dict(
-            zip(list(data[LangType.DE]["df_articles"]["Feminine"]), articles)
-        )
-        static_rules[LangType.DE]["neuter_articles"] = dict(
-            zip(list(data[LangType.DE]["df_articles"]["Neuter"]), articles)
-        )
+        static_rules[LangType.DE]["masculine_articles"] = {}
+        static_rules[LangType.DE]["feminine_articles"] = {}
+        static_rules[LangType.DE]["neuter_articles"] = {}
+
+        for article in articles:
+            if article[1] not in static_rules[LangType.DE]["masculine_articles"]:
+                static_rules[LangType.DE]["masculine_articles"][article[1]] = {}
+            static_rules[LangType.DE]["masculine_articles"][article[1]][
+                article[0]
+            ] = article
+
+            if article[2] not in static_rules[LangType.DE]["feminine_articles"]:
+                static_rules[LangType.DE]["feminine_articles"][article[2]] = {}
+            static_rules[LangType.DE]["feminine_articles"][article[2]][
+                article[0]
+            ] = article
+
+            if article[3] not in static_rules[LangType.DE]["neuter_articles"]:
+                static_rules[LangType.DE]["neuter_articles"][article[2]] = {}
+            static_rules[LangType.DE]["neuter_articles"][article[2]][
+                article[0]
+            ] = article
 
         static_rules[LangType.DE]["primary_german_gender_endings"] = {
             "neuter": [
