@@ -112,6 +112,7 @@ from app.query_definitions import (
     alternative_column_list,
     declensions_config,
     verb_form_map,
+    noun_form_map,
 )
 
 version = "2.2.15"
@@ -3465,61 +3466,80 @@ async def german_noun_lookup(
     if forms is not None:
         return forms
 
-    if prefix is None or prefix == "":
-        if "-" in word:
-            words = word.split("-")
-            word = words[-1]
-            forms = await fetch_declensions(LangType.DE, WordType.NOUN, word, token)
-            lower = False
-            prefix = "-".join(words[0:-1]) + "-"
-        else:
-            lower = True
-            prefix = ""
-
-        while len(word) > 3 and forms is None:
-            words = static_rules[LangType.DE]["german_nouns"].parse_compound(word)
-            if len(words) == 0:
-                break
-
-            word = words[-1]
-            forms = await fetch_declensions(LangType.DE, WordType.NOUN, word, token)
-            if forms is not None:
-                for form in forms:
-                    if forms[form] is None:
-                        continue
-
-                    ending_lower = forms[form].lower()
-                    if text.endswith(ending_lower):
-                        lower = True
-                        prefix += text.removesuffix(ending_lower)
-                        break
-    else:
-        word = word.removeprefix(prefix).capitalize()
-        lower = not prefix.endswith("-")
+    if word.endswith("-"):
+        postfix = "s-" if word.endswith("s-") else "-"
+        word = word[0 : -1 * len(postfix)]
         forms = await fetch_declensions(LangType.DE, WordType.NOUN, word, token)
+    else:
+        postfix = ""
 
-    if prefix == "" or forms is None:
+    lower = False
+    if prefix is None:
+        prefix = ""
+
+    if forms is None:
+        if prefix == "":
+            if "-" in word:
+                words = word.split("-")
+                word = words[-1]
+                forms = await fetch_declensions(LangType.DE, WordType.NOUN, word, token)
+                prefix = "-".join(words[0:-1]) + "-"
+            else:
+                lower = True
+                prefix = ""
+
+            while len(word) > 3 and forms is None:
+                words = static_rules[LangType.DE]["german_nouns"].parse_compound(word)
+                if len(words) == 0:
+                    break
+
+                word = words[-1]
+                forms = await fetch_declensions(LangType.DE, WordType.NOUN, word, token)
+                if forms is not None:
+                    for form in forms:
+                        if forms[form] is None:
+                            continue
+
+                        ending_lower = forms[form].lower()
+                        if text.endswith(ending_lower + postfix):
+                            lower = True
+                            prefix += text.removesuffix(ending_lower + postfix)
+                            break
+        else:
+            word = word.removeprefix(prefix).capitalize()
+            lower = not prefix.endswith("-")
+            forms = await fetch_declensions(LangType.DE, WordType.NOUN, word, token)
+
+    if forms is None or (prefix == "" and postfix == ""):
         return forms
 
     for form in forms:
         if not form.startswith("gender") and forms[form] is not None:
-            forms[form] = prefix + (forms[form].lower() if lower else forms[form])
+            forms[form] = (
+                prefix + (forms[form].lower() if lower else forms[form]) + postfix
+            )
 
     return forms
 
 
-def fetch_flexion(token: Token) -> str | None:
+def fetch_case(token: Token) -> str | None:
     match token.morph.get("Case"):
         case ["Dat"]:
-            flexion = "dativ"
+            return "dativ"
         case ["Gen"]:
-            flexion = "genitiv"
+            return "genitiv"
         case ["Nom"]:
-            flexion = "nominativ"
+            return "nominativ"
         case ["Acc"]:
-            flexion = "akkusativ"
-        case _:
-            return None
+            return "akkusativ"
+
+    return None
+
+
+def fetch_flexion(token: Token) -> str | None:
+    flexion = fetch_case(token)
+    if flexion is None:
+        return None
 
     flexion += " singular" if token.morph.get("Number") == ["Sing"] else " plural"
 
@@ -3656,6 +3676,11 @@ async def find_form_noun_german(i: int, tokens: Doc, is_singular: bool = None):
 
 
 async def find_form_noun_german_text(text: str, token: Token, is_singular: bool):
+    case = fetch_case(token)
+    if case:
+        flexion = case + " " + ("plural" if is_singular is False else "singular")
+        return noun_form_map[flexion]
+
     stripped_text = remove_gender_ending(text)
     forms = await german_noun_lookup(stripped_text, token)
     if forms is None:
@@ -3692,6 +3717,7 @@ async def find_form_noun_english(is_singular: bool):
 async def find_form(
     lang: LangType, word_type: WordType, i: int, tokens: Doc, is_singular: bool = None
 ):
+    token = tokens[i]
     match word_type:
         case WordType.VERB:
             if lang == LangType.DE:
@@ -3706,14 +3732,13 @@ async def find_form(
 
         case WordType.NOUN | WordType.PRONOUN:
             if lang == LangType.DE:
-                if tokens[i].text.endswith("-"):
+                if token.text.endswith("-") and is_singular:
                     return "no_change"
 
-                return await find_form_noun_german(i, tokens)
+                return await find_form_noun_german(i, tokens, is_singular)
 
             return await find_form_noun_english(is_singular)
 
-    token = tokens[i]
     if (
         settings.log_missing_declension
         and len(word_type)
@@ -4319,6 +4344,7 @@ async def alternatives_declension(
     text: str,
     i: int,
     tokens: Doc,
+    target_form: str,
     rule: Rule,
     alternatives: list[Alternative],
     is_singular: bool,
@@ -4337,8 +4363,6 @@ async def alternatives_declension(
         if (len(rule.word_types) == 1 and rule.word_types[0]["word_type"] != "")
         else await fetch_word_type(lang, tokens[i])
     )
-
-    target_form = await find_form(lang, word_type, i, tokens, is_singular)
 
     prepend_word = False
     if (
@@ -4815,12 +4839,13 @@ async def gendered_nouns(
             if (
                 "/" in alternative_variation and "/-" not in alternative_variation
             ) or " und " in alternative_variation:
-                new_alternative.word_types.append(
-                    {"word_type": "", "lower_case": True, "lemmatize": True}
-                )
-                new_alternative.word_types.append(
-                    {"word_type": "n", "lower_case": True, "lemmatize": True}
-                )
+                for _ in range(text.count("-") + 1):
+                    new_alternative.word_types.append(
+                        {"word_type": "", "lower_case": True, "lemmatize": True}
+                    )
+                    new_alternative.word_types.append(
+                        {"word_type": "n", "lower_case": True, "lemmatize": True}
+                    )
 
             new_alternatives.append(new_alternative)
 
@@ -5449,21 +5474,17 @@ async def rule_check(
         ):
             continue
 
-        if lang.lang == LangType.DE and await check_word_type(
-            lang.lang, token, WordType.NOUN
-        ):
-            target_form = await find_form_noun_german_text(
-                token.text, token, is_singular
-            )
-        else:
-            target_form = "base_form"
+        word_type = await fetch_word_type(
+            lang.lang, token, rule.word_types[0]["word_type"]
+        )
+        target_form = await find_form(lang.lang, word_type, i, tokens, is_singular)
 
         alternatives = await fetch_rule_alternatives(
             client, rule, is_singular, config.show_inspiration_alternatives, lang.locale
         )
 
+        gendered_noun = False
         if LangType.DE == lang.lang and len(alternatives):
-            gendered_noun = False
             for alternative in alternatives:
                 if alternative.lemma is not None and "~" in alternative.lemma:
                     gendered_noun = True
@@ -5502,8 +5523,37 @@ async def rule_check(
                     alternative.lemma += ending
 
         start = token.idx
-        if is_gendered_denom_rule(lang.lang, subcategory):
-            if i > 0 and is_singular:
+        if len(alternatives) > 0:
+            # TODO make it possible to handle cases with multiple alternatives
+            if len(alternatives) == 1 and alternatives[0].lemma == "they":
+                text, alternative = await pluralize_they(text, tokens, i)
+                alternatives = [Alternative(alternative)]
+            elif not subcategory.startswith("abbreviation"):
+                text, start, alternatives = await alternatives_declension(
+                    lang.lang,
+                    text,
+                    i,
+                    tokens,
+                    target_form,
+                    rule,
+                    alternatives,
+                    is_singular,
+                )
+
+                if subcategory.startswith("filler"):
+                    text, alternatives = detect_filler_words_at_sentence_start(
+                        alternatives,
+                        text,
+                        full_text,
+                        start + len(text),
+                    )
+
+            if (
+                i > 0
+                and is_singular
+                and len(rule.word_types) == 1
+                and rule.word_types[0]["word_type"] == WordType.NOUN
+            ):
                 alternatives_with_article = await fetch_alternatives_with_article(
                     config, tokens, i, alternatives
                 )
@@ -5512,24 +5562,6 @@ async def rule_check(
                     alternatives = alternatives_with_article
                     start = tokens[i - 1].idx
                     text = tokens[i - 1].text + " " + text
-        else:
-            if len(alternatives) > 0:
-                # TODO make it possible to handle cases with multiple alternatives
-                if len(alternatives) == 1 and alternatives[0].lemma == "they":
-                    text, alternative = await pluralize_they(text, tokens, i)
-                    alternatives = [Alternative(alternative)]
-                elif not subcategory.startswith("abbreviation"):
-                    text, start, alternatives = await alternatives_declension(
-                        lang.lang, text, i, tokens, rule, alternatives, is_singular
-                    )
-
-                    if subcategory.startswith("filler"):
-                        text, alternatives = detect_filler_words_at_sentence_start(
-                            alternatives,
-                            text,
-                            full_text,
-                            start + len(text),
-                        )
 
         label = token._.label if token._.label is not None else rule.label
 

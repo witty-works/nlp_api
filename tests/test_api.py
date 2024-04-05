@@ -1422,7 +1422,9 @@ def test_rule_patterns():
             "is_pattern_match": 1,
             "label": "bar",
             "subcategories": ["corporate_rules"],
-            "word_types": [],
+            "word_types": [
+                {"word_type": "", "lower_case": True, "lemmatize": True},
+            ],
             "alternatives": [],
         }
         response = client.post("/debug/rule", json=request_data)

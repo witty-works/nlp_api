@@ -36,16 +36,16 @@
         {
             "alternatives": [
                 {
-                    "text": "RomNi"
+                    "text": "ein/e RomNi"
                 },
                 {
-                    "text": "Romni/Rom"
+                    "text": "ein/e Romni/Rom"
                 },
                 {
-                    "text": "SintEza"
+                    "text": "ein/e SintEza"
                 },
                 {
-                    "text": "Sinteza/Sinto"
+                    "text": "ein/e Sinteza/Sinto"
                 }
             ],
             "category": "cultural-diversity",
@@ -59,24 +59,24 @@
             "gravity": 2.0,
             "label": "Kulturelle Diversität: Abstammung",
             "proficiency_level": "unconscious_bias",
-            "start": 36,
+            "start": 32,
             "subcategory": "racist_source",
-            "text": "Zigeuner",
+            "text": "ein Zigeuner",
             "text_id": "Zigeuner"
         },
         {
             "alternatives": [
                 {
-                    "text": "RomNi"
+                    "text": "eine/n RomNi"
                 },
                 {
-                    "text": "Romni/Rom"
+                    "text": "eine/n Romni/Rom"
                 },
                 {
-                    "text": "SintEza"
+                    "text": "eine/n SintEza"
                 },
                 {
-                    "text": "Sinteza/Sinto"
+                    "text": "eine/n Sinteza/Sinto"
                 }
             ],
             "category": "cultural-diversity",
@@ -90,9 +90,9 @@
             "gravity": 2.0,
             "label": "Kulturelle Diversität: Abstammung",
             "proficiency_level": "unconscious_bias",
-            "start": 57,
+            "start": 52,
             "subcategory": "racist_source",
-            "text": "Zigeunerin",
+            "text": "eine Zigeunerin",
             "text_id": "Zigeuner"
         }
     ]
