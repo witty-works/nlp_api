@@ -131,3 +131,14 @@ verb_form_map = {
         },
     },
 }
+
+noun_form_map = {
+    "nominativ singular": "sg_nom",
+    "dativ singular": "sg_dat",
+    "akkusativ singular": "sg_acc",
+    "genitiv singular": "sg_gen",
+    "nominativ plural": "pl_nom",
+    "dativ plural": "pl_dat",
+    "akkusativ plural": "pl_acc",
+    "genitiv plural": "pl_gen",
+}

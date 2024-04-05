@@ -23,23 +23,23 @@
         {
             "alternatives": [
                 {
-                    "text": "Personal"
+                    "text": "ein Personal"
                 },
                 {
-                    "text": "Mitarbeiter*in"
+                    "text": "eine*n Mitarbeiter*in"
                 },
                 {
-                    "text": "Mitarbeiterin/Mitarbeiter"
-                },
-                {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "Mitarbeiterschaft"
+                    "text": "eine/n Mitarbeiterin/Mitarbeiter"
                 },
                 {
                     "context": "💡",
                     "inspiration": true,
-                    "text": "Mitarbeitende"
+                    "text": "eine Mitarbeiterschaft"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "eine Mitarbeitende"
                 }
             ],
             "category": "cultural-diversity",
@@ -55,9 +55,9 @@
             "gravity": 3.0,
             "label": "Kulturelle Diversität: Worthülsen",
             "proficiency_level": "unconscious_bias",
-            "start": 16,
+            "start": 11,
             "subcategory": "hollow_advanced",
-            "text": "Arbeitskraft",
+            "text": "eine Arbeitskraft",
             "text_id": "Arbeitskraft"
         },
         {
