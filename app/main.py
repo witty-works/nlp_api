@@ -4670,12 +4670,12 @@ async def gendered_nouns(
         and not tokens[i].lemma_.endswith("mann")
         and tokens[i].lemma_.lower().endswith(rule.lemma.lower())
     ):
+        lemma_lower = rule.lemma.lower().replace("ä", "a")
         # strip of last two chars to handle "Beauftragter" vs. "Beauftragten"
-        prefix_end = (
-            text.lower()
-            .replace("ä", "a")
-            .find(rule.lemma.lower().replace("ä", "a")[0:-2])
-        )
+        if lemma_lower.endswith("er") or lemma_lower.endswith("e"):
+            lemma_lower = lemma_lower[0:-2]
+
+        prefix_end = text.lower().replace("ä", "a").find(lemma_lower)
         prefix = text[0:prefix_end]
     else:
         prefix = ""
