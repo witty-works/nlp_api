@@ -5,6 +5,9 @@
         {
             "alternatives": [
                 {
+                    "remove": true
+                },
+                {
                     "text": "fähigen"
                 },
                 {
@@ -15,9 +18,6 @@
                 },
                 {
                     "text": "produktiven"
-                },
-                {
-                    "text": "zielführenden"
                 }
             ],
             "category": "social-motive",

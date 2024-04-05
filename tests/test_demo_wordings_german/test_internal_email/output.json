@@ -120,19 +120,19 @@
         {
             "alternatives": [
                 {
-                    "text": "Fleiß"
+                    "text": "der Fleiß"
                 },
                 {
-                    "text": "Eifer"
+                    "text": "der Eifer"
                 },
                 {
-                    "text": "Strebsamkeit"
+                    "text": "die Strebsamkeit"
                 },
                 {
-                    "text": "Engagement"
+                    "text": "das Engagement"
                 },
                 {
-                    "text": "Entwicklungsmotivation"
+                    "text": "die Entwicklungsmotivation"
                 }
             ],
             "category": "social-motive",
@@ -147,9 +147,9 @@
             "gravity": 3.0,
             "label": "Soziale Motivation: Agentische Sprache",
             "proficiency_level": "unconscious_bias",
-            "start": 57,
+            "start": 53,
             "subcategory": "agentic_advanced",
-            "text": "Ehrgeiz",
+            "text": "der Ehrgeiz",
             "text_id": "Ehrgeiz"
         },
         {
