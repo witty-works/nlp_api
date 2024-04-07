@@ -3085,7 +3085,7 @@ async def english_rules(
     return list_full
 
 
-def parse_word_type(word_type: str, lower_case: bool = True) -> (str, bool, bool):
+def parse_word_type(word_type: str, lower_case: bool = True) -> tuple[str, bool, bool]:
     lemmatize = True
 
     if word_type is None or word_type == "":
