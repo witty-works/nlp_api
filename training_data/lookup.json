@@ -567,6 +567,7 @@
     "mongoloide": "mongoloid",
     "motiviert": "motiviert",
     "motivierte": "motiviert",
+    "mutmasslicher": "mutmasslich",
     "m\u00e4nnliche": "m\u00e4nnlich",
     "nachgiebige": "nachgiebig",
     "nette": "nett",
@@ -716,6 +717,7 @@
     "zusammenh\u00e4ngend": "zusammenh\u00e4ngend",
     "zusammenwirkend": "zusammenwirkend",
     "zustimmend": "zustimmend",
+    "zus\u00e4tzliche": "zus\u00e4tzlich",
     "zweifelsohne": "zweifelsohne",
     "zwingend": "zwingend",
     "zwingenderma\u00dfene": "zwingenderma\u00dfen",
@@ -5548,6 +5550,8 @@
     "Gelegenheiten": "Gelegenheit",
     "Notrufzentralen": "Notrufzentrale",
     "Telefonzentralen": "Telefonzentrale",
-    "K\u00fcchen": "K\u00fcche"
+    "K\u00fcchen": "K\u00fcche",
+    "Verd\u00e4chtige": "Verd\u00e4chtiger",
+    "Verd\u00e4chtigen": "Verd\u00e4chtiger"
   }
 }
