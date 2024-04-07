@@ -1,0 +1,76 @@
+{
+    "language": "de",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "Technikingenieur*in"
+                },
+                {
+                    "text": "Technikingenieurin/Technikingenieur"
+                },
+                {
+                    "text": "Technikengineering-Team"
+                },
+                {
+                    "text": "Technikengineering"
+                },
+                {
+                    "text": "Technik"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Als Technikingenieur und Technikexperte.",
+            "end": 20,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Viele denken zuerst an ein bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufstitel",
+            "proficiency_level": "unconscious_bias",
+            "start": 4,
+            "subcategory": "titles",
+            "text": "Technikingenieur",
+            "text_id": "Ingenieur"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Technikexpert*innen"
+                },
+                {
+                    "text": "Technikexpertinnen und Technikexperten"
+                },
+                {
+                    "text": "Technikfachkräfte"
+                },
+                {
+                    "text": "Technikfachpersonen"
+                },
+                {
+                    "text": "Techniksachverständigen"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Als Technikingenieur und Technikexperte.",
+            "end": 39,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Viele denken zuerst an ein bestimmtes Geschlecht",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Geschlecht + Orientierung: Berufstitel",
+            "proficiency_level": "unconscious_bias",
+            "start": 25,
+            "subcategory": "titles",
+            "text": "Technikexperte",
+            "text_id": "Experte"
+        }
+    ]
+}

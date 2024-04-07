@@ -4399,7 +4399,7 @@ async def alternatives_declension(
 
 
 def add_german_prefix(word: str, prefix: str) -> str:
-    if len(prefix) == 0:
+    if len(prefix) == 0 or word.startswith(prefix):
         return word
 
     if not word.startswith("-") and not prefix.endswith("-"):
