@@ -20,6 +20,7 @@ rule_columns = [
     "label_type",
     "pluralization",
     "word_types_json",
+    "actual_word_types",
     "diversity_dimension_json",
 ]
 rule_columns = invert_list_to_dict(rule_columns)
