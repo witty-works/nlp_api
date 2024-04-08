@@ -3283,7 +3283,7 @@ async def fetch_word_type(
 async def _fetch_word_type(
     lang: LangType,
     token: Token,
-    word_type: str = None,
+    expected_word_type: str = None,
     single_word: bool = False,
     strict: bool = False,
 ) -> str:
@@ -3294,7 +3294,7 @@ async def _fetch_word_type(
         return WordType.EMOJI
 
     if token.pos_ == "NUM":
-        if WordType.NUMBER != word_type and token.tag_ in ["CARD", "CD"]:
+        if WordType.NUMBER != expected_word_type and token.tag_ in ["CARD", "CD"]:
             return WordType.CARDINAL
 
         return WordType.NUMBER
@@ -3302,10 +3302,10 @@ async def _fetch_word_type(
     if not is_valid_text(token.text):
         return ""
 
-    if word_type is None:
-        word_type = ""
+    if expected_word_type is None:
+        expected_word_type = ""
 
-    if "adv" == word_type and token.pos_ == "ADV":
+    if "adv" == expected_word_type and token.pos_ == "ADV":
         return WordType.ADVERB
 
     if (
@@ -3315,10 +3315,17 @@ async def _fetch_word_type(
         and not token.text.endswith("-")
     ):
         tokens = fetch_tokens(lang, token.text.replace("-", " "))
-        return await fetch_word_type(lang, tokens[0], word_type, single_word)
+        word_type = await fetch_word_type(lang, tokens[0], expected_word_type, single_word)
+        # Case: "one-eyed" => "one eyed"
+        if (word_type in [WordType.CARDINAL, WordType.NUMBER]
+            and expected_word_type not in [WordType.CARDINAL, WordType.NUMBER]
+        ):
+            return await fetch_word_type(lang, tokens[-1], expected_word_type, single_word)
+
+        return word_type
 
     if token.pos_ == "VERB":
-        if not strict and lang == LangType.DE and WordType.ADJECTIVE in word_type:
+        if not strict and lang == LangType.DE and WordType.ADJECTIVE in expected_word_type:
             return WordType.ADJECTIVE
 
         return WordType.VERB
@@ -3358,7 +3365,7 @@ async def _fetch_word_type(
         "WDT",
     ]
     if token.pos_ in pronoun_tags or token.tag_ in pronoun_tags:
-        if word_type == WordType.NOUN:
+        if expected_word_type == WordType.NOUN:
             return WordType.NOUN
 
         return WordType.PRONOUN
@@ -3372,7 +3379,7 @@ async def _fetch_word_type(
                 if result is not None:
                     return WordType.VERB
         elif (
-            not strict and WordType.ADJECTIVE in word_type and token.dep_ == "compound"
+            not strict and WordType.ADJECTIVE in expected_word_type and token.dep_ == "compound"
         ):
             return WordType.ADJECTIVE
 
@@ -3385,7 +3392,7 @@ async def _fetch_word_type(
         return WordType.CONJUNCTION
 
     if token.pos_ == "PROPN":
-        return word_type
+        return expected_word_type
 
     return ""
 
