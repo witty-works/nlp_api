@@ -5482,7 +5482,7 @@ async def rule_check(
             continue
 
         word_type = await fetch_word_type(
-            lang.lang, token, rule.word_types[0]["word_type"]
+            lang.lang, token, rule.word_types[0]["word_type"] if len(rule.word_types) else None
         )
         target_form = await find_form(lang.lang, word_type, i, tokens, is_singular)
 
