@@ -3315,17 +3315,26 @@ async def _fetch_word_type(
         and not token.text.endswith("-")
     ):
         tokens = fetch_tokens(lang, token.text.replace("-", " "))
-        word_type = await fetch_word_type(lang, tokens[0], expected_word_type, single_word)
+        word_type = await fetch_word_type(
+            lang, tokens[0], expected_word_type, single_word
+        )
         # Case: "one-eyed" => "one eyed"
-        if (word_type in [WordType.CARDINAL, WordType.NUMBER]
-            and expected_word_type not in [WordType.CARDINAL, WordType.NUMBER]
-        ):
-            return await fetch_word_type(lang, tokens[-1], expected_word_type, single_word)
+        if word_type in [
+            WordType.CARDINAL,
+            WordType.NUMBER,
+        ] and expected_word_type not in [WordType.CARDINAL, WordType.NUMBER]:
+            return await fetch_word_type(
+                lang, tokens[-1], expected_word_type, single_word
+            )
 
         return word_type
 
     if token.pos_ == "VERB":
-        if not strict and lang == LangType.DE and WordType.ADJECTIVE in expected_word_type:
+        if (
+            not strict
+            and lang == LangType.DE
+            and WordType.ADJECTIVE in expected_word_type
+        ):
             return WordType.ADJECTIVE
 
         return WordType.VERB
@@ -3379,7 +3388,9 @@ async def _fetch_word_type(
                 if result is not None:
                     return WordType.VERB
         elif (
-            not strict and WordType.ADJECTIVE in expected_word_type and token.dep_ == "compound"
+            not strict
+            and WordType.ADJECTIVE in expected_word_type
+            and token.dep_ == "compound"
         ):
             return WordType.ADJECTIVE
 
@@ -5482,7 +5493,9 @@ async def rule_check(
             continue
 
         word_type = await fetch_word_type(
-            lang.lang, token, rule.word_types[0]["word_type"] if len(rule.word_types) else None
+            lang.lang,
+            token,
+            rule.word_types[0]["word_type"] if len(rule.word_types) else None,
         )
         target_form = await find_form(lang.lang, word_type, i, tokens, is_singular)
 
