@@ -271,6 +271,8 @@ def create_rule(lang, row, rewrite_to: str = None) -> Rule:
         json.loads(row[rule_columns["lemma_json"]]),
         json.loads(row[rule_columns["word_types_json"]]),
         json.loads(row[rule_columns["diversity_dimension_json"]]),
+        None,
+        row[rule_columns["actual_word_types"]],
     )
 
     if rewrite_to:
@@ -851,11 +853,12 @@ async def post_debug_rule(
         tokenize(rule_data.lemma, rule_data.lang),
         rule_data.word_types,
         rule_data.subcategories,
+        alternative_list,
+        rule_data.actual_word_types,
     )
 
     rule.pattern = rule_data.pattern
     rule.is_pattern_match = rule_data.is_pattern_match
-    rule.alternatives = alternative_list
     rule.false_positives = rule_data.false_positives
     rule.label = rule_data.label
     rule.type = rule_data.type
@@ -3767,7 +3770,7 @@ async def find_form(
             f"Declension in '{lang}' not found for '{token.text}' (lemma: '{token.lemma_}', tag: '{token.tag_}, pos: '{token.pos_}')"
         )
 
-    return token.idx, token.text, token.lemma_, None
+    return None
 
 
 async def align_form_noun_german(
@@ -4376,9 +4379,10 @@ async def alternatives_declension(
     ):
         return text, tokens[i].idx, alternatives
 
+    word_types = rule.get_word_types()
     word_type = (
-        rule.word_types[0]["word_type"]
-        if (len(rule.word_types) == 1 and rule.word_types[0]["word_type"] != "")
+        word_types[0]
+        if (len(word_types) == 1 and word_types[0] != "")
         else await fetch_word_type(lang, tokens[i])
     )
 
@@ -5492,12 +5496,30 @@ async def rule_check(
         ):
             continue
 
+        word_types = rule.get_word_types()
+
+        expected_word_type = None
+        form_token_i = i
+        if LangType.DE == lang.lang and len(word_types) > 1:
+            form_token_offset = 0
+            for k in range(len(word_types)):
+                if word_types[k] == WordType.NOUN:
+                    expected_word_type = WordType.NOUN
+                    form_token_offset = k
+
+            form_token_i += form_token_offset
+
+        if expected_word_type is None:
+            expected_word_type = word_types[0] if len(word_types) else None
+
         word_type = await fetch_word_type(
             lang.lang,
-            token,
-            rule.word_types[0]["word_type"] if len(rule.word_types) else None,
+            tokens[form_token_i],
+            expected_word_type,
         )
-        target_form = await find_form(lang.lang, word_type, i, tokens, is_singular)
+        target_form = await find_form(
+            lang.lang, word_type, form_token_i, tokens, is_singular
+        )
 
         alternatives = await fetch_rule_alternatives(
             client, rule, is_singular, config.show_inspiration_alternatives, lang.locale
@@ -5571,8 +5593,8 @@ async def rule_check(
             if (
                 i > 0
                 and is_singular
-                and len(rule.word_types) == 1
-                and rule.word_types[0]["word_type"] == WordType.NOUN
+                and len(word_types) == 1
+                and word_types[0] == WordType.NOUN
             ):
                 alternatives_with_article = await fetch_alternatives_with_article(
                     config, tokens, i, alternatives
