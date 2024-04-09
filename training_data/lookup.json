@@ -101,6 +101,7 @@
     "hearingimpaired": "hearingimpaired",
     "herp-derp": "herp-derp",
     "high-flyer": "high-flyer",
+    "high-functioning": "high-functioning",
     "hooch-cooch": "hooch-cooch",
     "hyper-active": "hyper-active",
     "hyper-sensitive": "hyper-sensitive",
@@ -120,6 +121,7 @@
     "les": "les",
     "limp-wristed": "limp-wristed",
     "limpwristed": "limpwristed",
+    "low-hanging": "low-hanging",
     "man-bag": "man-bag",
     "man-bun": "man-bun",
     "man-day": "man-day",
@@ -5560,6 +5562,7 @@
     "Zeitrahmens": "Zeitrahmen",
     "Beziehungen": "Beziehung",
     "Controllings": "Controlling",
-    "Testings": "Testing"
+    "Testings": "Testing",
+    "Labors": "Labor"
   }
 }
