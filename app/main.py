@@ -115,7 +115,7 @@ from app.query_definitions import (
     noun_form_map,
 )
 
-version = "2.2.16"
+version = "2.2.17"
 
 categories = get_categories()
 settings = get_settings()
@@ -271,6 +271,8 @@ def create_rule(lang, row, rewrite_to: str = None) -> Rule:
         json.loads(row[rule_columns["lemma_json"]]),
         json.loads(row[rule_columns["word_types_json"]]),
         json.loads(row[rule_columns["diversity_dimension_json"]]),
+        None,
+        row[rule_columns["actual_word_types"]],
     )
 
     if rewrite_to:
@@ -851,11 +853,12 @@ async def post_debug_rule(
         tokenize(rule_data.lemma, rule_data.lang),
         rule_data.word_types,
         rule_data.subcategories,
+        alternative_list,
+        rule_data.actual_word_types,
     )
 
     rule.pattern = rule_data.pattern
     rule.is_pattern_match = rule_data.is_pattern_match
-    rule.alternatives = alternative_list
     rule.false_positives = rule_data.false_positives
     rule.label = rule_data.label
     rule.type = rule_data.type
@@ -3085,7 +3088,7 @@ async def english_rules(
     return list_full
 
 
-def parse_word_type(word_type: str, lower_case: bool = True) -> (str, bool, bool):
+def parse_word_type(word_type: str, lower_case: bool = True) -> tuple[str, bool, bool]:
     lemmatize = True
 
     if word_type is None or word_type == "":
@@ -3283,7 +3286,7 @@ async def fetch_word_type(
 async def _fetch_word_type(
     lang: LangType,
     token: Token,
-    word_type: str = None,
+    expected_word_type: str = None,
     single_word: bool = False,
     strict: bool = False,
 ) -> str:
@@ -3294,7 +3297,7 @@ async def _fetch_word_type(
         return WordType.EMOJI
 
     if token.pos_ == "NUM":
-        if WordType.NUMBER != word_type and token.tag_ in ["CARD", "CD"]:
+        if WordType.NUMBER != expected_word_type and token.tag_ in ["CARD", "CD"]:
             return WordType.CARDINAL
 
         return WordType.NUMBER
@@ -3302,10 +3305,10 @@ async def _fetch_word_type(
     if not is_valid_text(token.text):
         return ""
 
-    if word_type is None:
-        word_type = ""
+    if expected_word_type is None:
+        expected_word_type = ""
 
-    if "adv" == word_type and token.pos_ == "ADV":
+    if "adv" == expected_word_type and token.pos_ == "ADV":
         return WordType.ADVERB
 
     if (
@@ -3315,10 +3318,26 @@ async def _fetch_word_type(
         and not token.text.endswith("-")
     ):
         tokens = fetch_tokens(lang, token.text.replace("-", " "))
-        return await fetch_word_type(lang, tokens[0], word_type, single_word)
+        word_type = await fetch_word_type(
+            lang, tokens[0], expected_word_type, single_word
+        )
+        # Case: "one-eyed" => "one eyed"
+        if word_type in [
+            WordType.CARDINAL,
+            WordType.NUMBER,
+        ] and expected_word_type not in [WordType.CARDINAL, WordType.NUMBER]:
+            return await fetch_word_type(
+                lang, tokens[-1], expected_word_type, single_word
+            )
+
+        return word_type
 
     if token.pos_ == "VERB":
-        if not strict and lang == LangType.DE and WordType.ADJECTIVE in word_type:
+        if (
+            not strict
+            and lang == LangType.DE
+            and WordType.ADJECTIVE in expected_word_type
+        ):
             return WordType.ADJECTIVE
 
         return WordType.VERB
@@ -3358,7 +3377,7 @@ async def _fetch_word_type(
         "WDT",
     ]
     if token.pos_ in pronoun_tags or token.tag_ in pronoun_tags:
-        if word_type == WordType.NOUN:
+        if expected_word_type == WordType.NOUN:
             return WordType.NOUN
 
         return WordType.PRONOUN
@@ -3372,7 +3391,9 @@ async def _fetch_word_type(
                 if result is not None:
                     return WordType.VERB
         elif (
-            not strict and WordType.ADJECTIVE in word_type and token.dep_ == "compound"
+            not strict
+            and WordType.ADJECTIVE in expected_word_type
+            and token.dep_ == "compound"
         ):
             return WordType.ADJECTIVE
 
@@ -3385,7 +3406,7 @@ async def _fetch_word_type(
         return WordType.CONJUNCTION
 
     if token.pos_ == "PROPN":
-        return word_type
+        return expected_word_type
 
     return ""
 
@@ -3749,7 +3770,7 @@ async def find_form(
             f"Declension in '{lang}' not found for '{token.text}' (lemma: '{token.lemma_}', tag: '{token.tag_}, pos: '{token.pos_}')"
         )
 
-    return token.idx, token.text, token.lemma_, None
+    return None
 
 
 async def align_form_noun_german(
@@ -4358,9 +4379,10 @@ async def alternatives_declension(
     ):
         return text, tokens[i].idx, alternatives
 
+    word_types = rule.get_word_types()
     word_type = (
-        rule.word_types[0]["word_type"]
-        if (len(rule.word_types) == 1 and rule.word_types[0]["word_type"] != "")
+        word_types[0]
+        if (len(word_types) == 1 and word_types[0] != "")
         else await fetch_word_type(lang, tokens[i])
     )
 
@@ -4399,7 +4421,7 @@ async def alternatives_declension(
 
 
 def add_german_prefix(word: str, prefix: str) -> str:
-    if len(prefix) == 0:
+    if len(prefix) == 0 or word.startswith(prefix):
         return word
 
     if not word.startswith("-") and not prefix.endswith("-"):
@@ -5474,10 +5496,30 @@ async def rule_check(
         ):
             continue
 
+        word_types = rule.get_word_types()
+
+        expected_word_type = None
+        form_token_i = i
+        if LangType.DE == lang.lang and len(word_types) > 1:
+            form_token_offset = 0
+            for k in range(len(word_types)):
+                if word_types[k] == WordType.NOUN:
+                    expected_word_type = WordType.NOUN
+                    form_token_offset = k
+
+            form_token_i += form_token_offset
+
+        if expected_word_type is None:
+            expected_word_type = word_types[0] if len(word_types) else None
+
         word_type = await fetch_word_type(
-            lang.lang, token, rule.word_types[0]["word_type"]
+            lang.lang,
+            tokens[form_token_i],
+            expected_word_type,
         )
-        target_form = await find_form(lang.lang, word_type, i, tokens, is_singular)
+        target_form = await find_form(
+            lang.lang, word_type, form_token_i, tokens, is_singular
+        )
 
         alternatives = await fetch_rule_alternatives(
             client, rule, is_singular, config.show_inspiration_alternatives, lang.locale
@@ -5551,8 +5593,8 @@ async def rule_check(
             if (
                 i > 0
                 and is_singular
-                and len(rule.word_types) == 1
-                and rule.word_types[0]["word_type"] == WordType.NOUN
+                and len(word_types) == 1
+                and word_types[0] == WordType.NOUN
             ):
                 alternatives_with_article = await fetch_alternatives_with_article(
                     config, tokens, i, alternatives

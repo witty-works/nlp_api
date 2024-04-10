@@ -9,7 +9,7 @@
                 }
             ],
             "category": "orthography",
-            "context": "lass) families are not our target audience. Are you a top-performing person? Are you a top-performer. We are a top-performing team.",
+            "context": "lass) families are not our target audience. Are you a top-performing person? Are you a top-performer. We are a top-performing team. She considered herself the one-eyed among the blind in her beginner's",
             "end": 122,
             "explanation": {
                 "icon": "❌",
@@ -85,7 +85,7 @@
                 }
             ],
             "category": "social-motive",
-            "context": "Lower-class (or low-class) families are not our target audience. Are you a top-performing person? Are you a top-performer. We are a top-performing team.",
+            "context": "Lower-class (or low-class) families are not our target audience. Are you a top-performing person? Are you a top-performer. We are a top-performing team. She considered herself the one-eyed",
             "end": 89,
             "explanation": {
                 "content": "advanced",
@@ -131,7 +131,7 @@
                 }
             ],
             "category": "social-motive",
-            "context": "class (or low-class) families are not our target audience. Are you a top-performing person? Are you a top-performer. We are a top-performing team.",
+            "context": "class (or low-class) families are not our target audience. Are you a top-performing person? Are you a top-performer. We are a top-performing team. She considered herself the one-eyed among the blind in her beginner'",
             "end": 121,
             "explanation": {
                 "content": "advanced",
@@ -166,7 +166,7 @@
                 }
             ],
             "category": "social-motive",
-            "context": "ilies are not our target audience. Are you a top-performing person? Are you a top-performer. We are a top-performing team.",
+            "context": "ilies are not our target audience. Are you a top-performing person? Are you a top-performer. We are a top-performing team. She considered herself the one-eyed among the blind in her beginner's art class.",
             "end": 146,
             "explanation": {
                 "content": "advanced",
@@ -186,7 +186,7 @@
         {
             "alternatives": [],
             "category": "social-motive",
-            "context": "target audience. Are you a top-performing person? Are you a top-performer. We are a top-performing team.",
+            "context": "target audience. Are you a top-performing person? Are you a top-performer. We are a top-performing team. She considered herself the one-eyed among the blind in her beginner's art class.",
             "end": 151,
             "explanation": {
                 "content": "video",
@@ -200,6 +200,118 @@
             "subcategory": "communal",
             "text": "team",
             "text_id": "team"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "They"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "t audience. Are you a top-performing person? Are you a top-performer. We are a top-performing team. She considered herself the one-eyed among the blind in her beginner's art class.",
+            "end": 156,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Pronouns that exclude non-binary people",
+                "url": "https://www.witty.works/en/categories/gender-orientation/binary-pronouns?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Gender + Orientation: Binary pronouns",
+            "proficiency_level": "unconscious_bias",
+            "start": 153,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "She",
+            "text_id": "she"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "themself"
+                },
+                {
+                    "text": "theirself"
+                },
+                {
+                    "text": "self"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "you a top-performing person? Are you a top-performer. We are a top-performing team. She considered herself the one-eyed among the blind in her beginner's art class.",
+            "end": 175,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Pronouns that exclude non-binary people",
+                "url": "https://www.witty.works/en/categories/gender-orientation/binary-pronouns?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Gender + Orientation: Binary pronouns",
+            "proficiency_level": "unconscious_bias",
+            "start": 168,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "herself",
+            "text_id": "herself"
+        },
+        {
+            "alternatives": [
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "someone barely qualified advising the unqualified"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "someone incompetent offering guidance"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "untrained person training others"
+                }
+            ],
+            "category": "ability-physicality",
+            "context": "erforming person? Are you a top-performer. We are a top-performing team. She considered herself the one-eyed among the blind in her beginner's art class.",
+            "end": 204,
+            "explanation": {
+                "icon": "😒",
+                "text": "Repeats preconceived notions about the ability to see",
+                "url": "https://www.witty.works/en/categories/ability-physicality/vision?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Ability + Physicality: Vision",
+            "proficiency_level": "unconscious_bias",
+            "start": 180,
+            "subcategory": "vision",
+            "text": "one-eyed among the blind",
+            "text_id": "one-eyed among the blind"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "them"
+                },
+                {
+                    "text": "their"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "top-performer. We are a top-performing team. She considered herself the one-eyed among the blind in her beginner's art class.",
+            "end": 211,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Pronouns that exclude non-binary people",
+                "url": "https://www.witty.works/en/categories/gender-orientation/binary-pronouns?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Gender + Orientation: Binary pronouns",
+            "proficiency_level": "unconscious_bias",
+            "start": 208,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "her",
+            "text_id": "her"
         }
     ]
 }

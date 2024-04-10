@@ -223,6 +223,7 @@ class Rule:
     lemma: str
     words: tuple
     word_types: tuple
+    actual_word_types: Optional[str] = None
     subcategories: Optional[list[str]] = []
     is_advanced: bool = False
     alternatives: Optional[list[Alternative]] = []
@@ -246,6 +247,7 @@ class Rule:
         word_types,
         subcategories=None,
         alternatives=None,
+        actual_word_types=None,
     ):
         self.id = id
         self.text_id = id
@@ -261,6 +263,20 @@ class Rule:
             alternatives = []
 
         self.alternatives = alternatives
+
+        if actual_word_types is not None and actual_word_types != "":
+            self.actual_word_types = actual_word_types.split("|")
+
+    def get_word_types(self):
+        if self.actual_word_types is not None:
+            return self.actual_word_types
+
+        word_types = []
+        if self.word_types is not None:
+            for word_type in self.word_types:
+                word_types.append(word_type["word_type"])
+
+        return word_types
 
 
 class AlternativeIn(BaseModel):
@@ -282,6 +298,7 @@ class RuleIn(BaseModel):
     lang: LangType
     lemma: str
     word_types: list
+    actual_word_types: Optional[str] = None
     subcategories: list[str]
     alternatives: Optional[list[AlternativeIn]] = []
     false_positives: Optional[list[str]] = []
