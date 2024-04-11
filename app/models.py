@@ -520,12 +520,14 @@ class UserConfRequest(ConfRequest):
 
 class OrganizationConfRequest(ConfRequest):
     plan: str
+    trial_ends_at: Optional[str] = None
 
 
 class ConfResponse(BaseModel):
     id: str
     name: str
     plan: Optional[str] = None
+    trial_ends_at: Optional[str] = None
     config: RuleConfig
     false_positives: list[str] = []
     term_replacements: dict[str, TermReplacement] = {}

@@ -115,7 +115,7 @@ from app.query_definitions import (
     noun_form_map,
 )
 
-version = "2.2.17"
+version = "2.2.18"
 
 categories = get_categories()
 settings = get_settings()
@@ -5185,9 +5185,9 @@ async def regex_match(
                 without_v = False
 
             if "W" in letters:
-                for i in range(len(letters)):
-                    if letters[i] == "W":
-                        letters[i] = "F"
+                for letter_index in range(len(letters)):
+                    if letters[letter_index] == "W":
+                        letters[letter_index] = "F"
                         break
 
             if has_advanced:
