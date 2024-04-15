@@ -9,6 +9,7 @@ from collections import defaultdict, namedtuple
 import fasttext
 import aiosqlite
 from copy import deepcopy
+from inspect import currentframe
 
 from spacy.matcher import PhraseMatcher, Matcher
 from spacy import displacy
@@ -2269,12 +2270,25 @@ async def context_false_positives(
     return list_results
 
 
-def check_continue(i: int, new_i: int, tokens: Doc):
+def check_continue(list_full: list, i: int, new_i: int, tokens: Doc, func_name: str):
     if new_i == i:
         return False
 
     if new_i < i:
-        logger.error("Incorrect new_i: expected %i < %i for %s", i, new_i, tokens[i])
+        cf = currentframe()
+
+        text_id = list_full[-1].text_id if len(list_full) else ""
+
+        logger.error(
+            "Incorrect new_i on line %i using '%s': expected %i < %i for '%s' versus '%s' for text_id '%s'",
+            cf.f_back.f_lineno,
+            func_name,
+            i,
+            new_i,
+            tokens[i].text,
+            tokens[new_i].text,
+            text_id,
+        )
 
         return False
 
@@ -2709,7 +2723,7 @@ async def german_rules(
                 term_replacements,
             )
 
-            if check_continue(i, new_i, tokens):
+            if check_continue(list_full, i, new_i, tokens, "rule_check"):
                 continue
 
         if is_sub_category_enabled(config, "gender_specific_abbreviation"):
@@ -2725,7 +2739,7 @@ async def german_rules(
                 static_rules["m_f_regexes"],
             )
 
-            if check_continue(i, new_i, tokens):
+            if check_continue(list_full, i, new_i, tokens, "regex_match"):
                 continue
 
         if is_sub_category_enabled(config, "d_and_i"):
@@ -2741,7 +2755,7 @@ async def german_rules(
                 static_rules["d_f_m_regexes"],
             )
 
-            if check_continue(i, new_i, tokens):
+            if check_continue(list_full, i, new_i, tokens, "regex_match"):
                 continue
 
         new_i = detect_non_inclusive_emoji(
@@ -2755,7 +2769,7 @@ async def german_rules(
             list_full,
         )
 
-        if check_continue(i, new_i, tokens):
+        if check_continue(list_full, i, new_i, tokens, "detect_non_inclusive_emoji"):
             continue
 
         token_text = tokens[i].text
@@ -2773,7 +2787,7 @@ async def german_rules(
                 static_rules[LangType.DE]["hashtags"],
             )
 
-            if check_continue(i, new_i, tokens):
+            if check_continue(list_full, i, new_i, tokens, "regex_match"):
                 continue
 
         if is_valid_text(token_text) and len(token_text) > 1:
@@ -2795,7 +2809,7 @@ async def german_rules(
                 ),
             )
 
-            if check_continue(i, new_i, tokens):
+            if check_continue(list_full, i, new_i, tokens, "rule_check"):
                 continue
 
             new_i = await rule_check(
@@ -2817,7 +2831,7 @@ async def german_rules(
                 ),
             )
 
-            if check_continue(i, new_i, tokens):
+            if check_continue(list_full, i, new_i, tokens, "rule_check"):
                 continue
 
         subcategory = "d_and_i"
@@ -2865,7 +2879,7 @@ async def german_rules(
                 endings,
             )
 
-            if check_continue(i, new_i, tokens):
+            if check_continue(list_full, i, new_i, tokens, "regex_match"):
                 continue
 
         subcategory = "gendered_denominations_ending_advanced"
@@ -2922,7 +2936,7 @@ async def german_rules(
                 endings,
             )
 
-            if check_continue(i, new_i, tokens):
+            if check_continue(list_full, i, new_i, tokens, "regex_match"):
                 continue
 
         new_i += 1
@@ -2965,7 +2979,7 @@ async def english_rules(
                 term_replacements,
             )
 
-            if check_continue(i, new_i, tokens):
+            if check_continue(list_full, i, new_i, tokens, "rule_check"):
                 continue
 
         if is_sub_category_enabled(config, "gender_specific_abbreviation"):
@@ -2981,7 +2995,7 @@ async def english_rules(
                 static_rules["m_f_regexes"],
             )
 
-            if check_continue(i, new_i, tokens):
+            if check_continue(list_full, i, new_i, tokens, "regex_match"):
                 continue
 
         if is_sub_category_enabled(config, "d_and_i"):
@@ -2997,7 +3011,7 @@ async def english_rules(
                 static_rules["d_f_m_regexes"],
             )
 
-            if check_continue(i, new_i, tokens):
+            if check_continue(list_full, i, new_i, tokens, "regex_match"):
                 continue
 
         new_i = detect_non_inclusive_emoji(
@@ -3011,7 +3025,7 @@ async def english_rules(
             list_full,
         )
 
-        if check_continue(i, new_i, tokens):
+        if check_continue(list_full, i, new_i, tokens, "detect_non_inclusive_emoji"):
             continue
 
         token_text = tokens[i].text
@@ -3029,7 +3043,7 @@ async def english_rules(
                 static_rules[LangType.EN]["hashtags"],
             )
 
-            if check_continue(i, new_i, tokens):
+            if check_continue(list_full, i, new_i, tokens, "regex_match"):
                 continue
 
         if not is_valid_text(token_text) or (
@@ -3057,7 +3071,7 @@ async def english_rules(
             false_positive_matcher,
         )
 
-        if check_continue(i, new_i, tokens):
+        if check_continue(list_full, i, new_i, tokens, "rule_check"):
             continue
 
         new_i = await rule_check(
@@ -3080,7 +3094,7 @@ async def english_rules(
             false_positive_matcher,
         )
 
-        if check_continue(i, new_i, tokens):
+        if check_continue(list_full, i, new_i, tokens, "rule_check"):
             continue
 
         new_i += 1
@@ -5887,6 +5901,8 @@ def detect_non_inclusive_emoji(
                 explanation_context,
             )
         )
+
+        return i + 1
 
     return i
 
