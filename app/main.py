@@ -194,8 +194,8 @@ async def handle_command_witty(
     ]
 
     if len(results):
-        for i, result in enumerate(results):
-            issue_text = f"#{i+1} Matched Text: {result.text} (category {result.category}, proficiency_level {result.proficiency_level})\n"
+        for result_index, result in enumerate(results):
+            issue_text = f"#{result_index+1} Matched Text: {result.text} (category {result.category}, proficiency_level {result.proficiency_level})\n"
 
             if result.explanation.icon:
                 issue_text += f"{result.explanation.icon} "
@@ -210,7 +210,7 @@ async def handle_command_witty(
 
             blocks.append(
                 SectionBlock(
-                    block_id=f"match{i}",
+                    block_id=f"match{result_index}",
                     text=MarkdownTextObject(text=issue_text),
                 )
             )
@@ -228,7 +228,7 @@ async def handle_command_witty(
 
                 blocks.append(
                     SectionBlock(
-                        block_id=f"alternatives{i}",
+                        block_id=f"alternatives{result_index}",
                         text=MarkdownTextObject(text=alternatives),
                     )
                 )
@@ -332,7 +332,7 @@ Token.set_extension("start", default=None)
 Token.set_extension("label", default=None)
 Token.set_extension("form", default=None)
 Token.set_extension("forms", default=None)
-Token.set_extension("i_offset", default=1)
+Token.set_extension("token_index_offset", default=1)
 Token.set_extension("child_token", default=None)
 Token.set_extension("connected_token", default=None)
 for spacy_model in settings.models:
@@ -655,14 +655,14 @@ async def get_declension_debug(
 async def get_align_form_debug(
     lang: LangType,
     word_type: BasicWordType,
-    i: int,
+    index: int,
     source_text: str,
     target_text: str,
 ):
     source_tokens = fetch_tokens(lang, source_text)
     target_tokens = fetch_tokens(lang, target_text)
 
-    target_form = await find_form(lang, word_type, i, source_tokens)
+    target_form = await find_form(lang, word_type, index, source_tokens)
 
     if WordType.VERB == word_type:
         return await align_form_verb(
@@ -871,14 +871,14 @@ async def post_debug_rule(
     list_full = []
     client = parse_client("debug:" + version)
 
-    i = 0
+    token_index = 0
     token_count = len(tokens)
-    while i < token_count:
-        if tokens[i].text in rule_data.lemmatizations:
-            tokens[i].lemma_ = rule_data.lemmatizations[tokens[i].text]
+    while token_index < token_count:
+        if tokens[token_index].text in rule_data.lemmatizations:
+            tokens[token_index].lemma_ = rule_data.lemmatizations[tokens[token_index].text]
 
         if rule_data.lang == LangType.DE:
-            tokens[i].lemma_ = await german_lemmatization(tokens, i)
+            tokens[token_index].lemma_ = await german_lemmatization(tokens, token_index)
 
         for rule in rules:
             await rule_check(
@@ -886,7 +886,7 @@ async def post_debug_rule(
                 client,
                 lang,
                 rule_data.text,
-                i,
+                token_index,
                 tokens,
                 offsets,
                 list_full,
@@ -894,7 +894,7 @@ async def post_debug_rule(
                 false_positive_matcher,
             )
 
-        i += 1
+        token_index += 1
 
     return list_full
 
@@ -913,15 +913,15 @@ async def get_debug_spacy(
     results = []
     tokens = fetch_tokens(lang, text)
     word_type_rule = None
-    for i in range(len(tokens)):
-        token = tokens[i]
+    for token_index in range(len(tokens)):
+        token = tokens[token_index]
         if word_type_rule is None:
             word_type_rule = ""
         else:
             word_type_rule += "|"
 
         if lang == LangType.DE:
-            token.lemma_ = await german_lemmatization(tokens, i)
+            token.lemma_ = await german_lemmatization(tokens, token_index)
         word_type = await fetch_word_type(lang, token)
         if token.text != token.lemma_:
             word_type_rule += "~"
@@ -1979,9 +1979,9 @@ def utf16_offsets(text: str) -> dict:
 
 # matcher to false positives
 def is_false_positive_match(
-    false_positive_matcher: list, i: int, tokens: Doc, lemma: str
+    false_positive_matcher: list, token_index: int, tokens: Doc, lemma: str
 ) -> bool:
-    index = tokens[i].idx
+    index = tokens[token_index].idx
     for _, start, end in false_positive_matcher:
         span_false = tokens[start:end]
         if tokens[start:end].lemma_ != lemma and index in range(
@@ -2211,8 +2211,8 @@ async def context_false_positives(
 
     sentences = {}
     sentences_to_check = defaultdict(list)
-    for i in range(len(list_results)):
-        result = list_results[i]
+    for result_index in range(len(list_results)):
+        result = list_results[result_index]
         if result.text_id in static_rules[lang]["context_check"]:
             if len(sentences) == 0:
                 for sentence in tokens.sents:
@@ -2227,7 +2227,7 @@ async def context_false_positives(
             if sentence is None:
                 continue
 
-            sentences_to_check[sentence].append(i)
+            sentences_to_check[sentence].append(result_index)
 
     if sentences_to_check == {}:
         return list_results
@@ -2251,9 +2251,9 @@ async def context_false_positives(
     )
 
     keys_to_remove = []
-    for i in range(len(sentences)):
-        sentence = sentences[i]
-        if context_results[i] == "1":
+    for sentence_index in range(len(sentences)):
+        sentence = sentences[sentence_index]
+        if context_results[sentence_index] == "1":
             continue
 
         for result_key in sentences_to_check[sentence]:
@@ -2270,23 +2270,23 @@ async def context_false_positives(
     return list_results
 
 
-def check_continue(list_full: list, i: int, new_i: int, tokens: Doc, func_name: str):
-    if new_i == i:
+def check_continue(list_full: list, token_index: int, new_token_index: int, tokens: Doc, func_name: str):
+    if new_token_index == token_index:
         return False
 
-    if new_i < i:
+    if new_token_index < token_index:
         cf = currentframe()
 
         text_id = list_full[-1].text_id if len(list_full) else ""
 
         logger.error(
-            "Incorrect new_i on line %i using '%s': expected %i < %i for '%s' versus '%s' for text_id '%s'",
+            "Incorrect new_token_index on line %i using '%s': expected %i < %i for '%s' versus '%s' for text_id '%s'",
             cf.f_back.f_lineno,
             func_name,
-            i,
-            new_i,
-            tokens[i].text,
-            tokens[new_i].text,
+            token_index,
+            new_token_index,
+            tokens[token_index].text,
+            tokens[new_token_index].text,
             text_id,
         )
 
@@ -2579,8 +2579,8 @@ def remove_gender_ending(text: str) -> str:
     return text
 
 
-async def german_lemmatization(tokens: Doc, i: int):
-    token = tokens[i]
+async def german_lemmatization(tokens: Doc, token_index: int):
+    token = tokens[token_index]
     word_type = await fetch_word_type(LangType.DE, token)
 
     match word_type:
@@ -2620,7 +2620,7 @@ async def german_lemmatization(tokens: Doc, i: int):
                     operator = "LIKE"
                     column_name = verb_form_map[verb_form][tense][person]
             else:
-                if i > 0 and tokens[i - 1].text == "zu":
+                if token_index > 0 and tokens[token_index - 1].text == "zu":
                     parameters = ["zu " + token.text]
                     prev = True
                 else:
@@ -2636,48 +2636,48 @@ async def german_lemmatization(tokens: Doc, i: int):
                 rows = await fetch_rows(query, parameters)
                 if len(rows):
                     if operator == "LIKE":
-                        i_offset = 1
+                        token_index_offset = 1
                         for sentence_token in token.sent:
                             if sentence_token.i > token.i:
-                                i_offset += 1
+                                token_index_offset += 1
                                 if (
-                                    tokens[i].text + " " + sentence_token.text.lower()
+                                    tokens[token_index].text + " " + sentence_token.text.lower()
                                     == rows[0][1]
                                 ):
                                     if (
                                         sentence_token.text.lower() == "schwarz"
-                                        and i_offset > 2
+                                        and token_index_offset > 2
                                     ):
                                         sentence_token._.connected_token = token
                                         token._.child_token = sentence_token
                                         token._.label = sentence_token._.label = (
-                                            tokens[i].text
+                                            tokens[token_index].text
                                             + " .. "
                                             + sentence_token.text.lower()
                                         )
                                     else:
-                                        token._.i_offset = i_offset
+                                        token._.token_index_offset = token_index_offset
 
                                     await fetch_declensions(
                                         LangType.DE, WordType.VERB, rows[0][0], token
                                     )
 
                                     token._.form = column_name
-                                    if i_offset == 2:
+                                    if token_index_offset == 2:
                                         token._.text = (
-                                            tokens[i].text
-                                            + tokens[i].whitespace_
+                                            tokens[token_index].text
+                                            + tokens[token_index].whitespace_
                                             + sentence_token.text
                                         )
                                     return rows[0][0]
                         return token.lemma_
 
                     if prev:
-                        token._.start = tokens[i - 1].idx
+                        token._.start = tokens[token_index - 1].idx
                         token._.text = (
-                            tokens[i - 1].text
-                            + tokens[i - 1].whitespace_
-                            + tokens[i].text
+                            tokens[token_index - 1].text
+                            + tokens[token_index - 1].whitespace_
+                            + tokens[token_index].text
                         )
                         token._.form = column_name
 
@@ -2698,105 +2698,105 @@ async def german_rules(
 ) -> list:
     list_full = []
 
-    i = new_i = 0
+    token_index = new_token_index = 0
     token_count = len(tokens)
-    while new_i < token_count:
-        i = new_i
+    while new_token_index < token_count:
+        token_index = new_token_index
 
-        token = tokens[i]
+        token = tokens[token_index]
         if token._.connected_token is not None:
-            new_i += 1
+            new_token_index += 1
             continue
 
-        token.lemma_ = await german_lemmatization(tokens, i)
+        token.lemma_ = await german_lemmatization(tokens, token_index)
 
         if len(term_replacements):
-            new_i = await rule_check(
+            new_token_index = await rule_check(
                 config,
                 client,
                 lang,
                 text,
-                i,
+                token_index,
                 tokens,
                 offsets,
                 list_full,
                 term_replacements,
             )
 
-            if check_continue(list_full, i, new_i, tokens, "rule_check"):
+            if check_continue(list_full, token_index, new_token_index, tokens, "rule_check"):
                 continue
 
         if is_sub_category_enabled(config, "gender_specific_abbreviation"):
-            new_i = await regex_match(
+            new_token_index = await regex_match(
                 config,
                 client,
                 lang,
                 text,
-                i,
+                token_index,
                 tokens,
                 offsets,
                 list_full,
                 static_rules["m_f_regexes"],
             )
 
-            if check_continue(list_full, i, new_i, tokens, "regex_match"):
+            if check_continue(list_full, token_index, new_token_index, tokens, "regex_match"):
                 continue
 
         if is_sub_category_enabled(config, "d_and_i"):
-            new_i = await regex_match(
+            new_token_index = await regex_match(
                 config,
                 client,
                 lang,
                 text,
-                i,
+                token_index,
                 tokens,
                 offsets,
                 list_full,
                 static_rules["d_f_m_regexes"],
             )
 
-            if check_continue(list_full, i, new_i, tokens, "regex_match"):
+            if check_continue(list_full, token_index, new_token_index, tokens, "regex_match"):
                 continue
 
-        new_i = detect_non_inclusive_emoji(
+        new_token_index = detect_non_inclusive_emoji(
             config,
             client,
             lang,
             text,
-            i,
+            token_index,
             tokens,
             offsets,
             list_full,
         )
 
-        if check_continue(list_full, i, new_i, tokens, "detect_non_inclusive_emoji"):
+        if check_continue(list_full, token_index, new_token_index, tokens, "detect_non_inclusive_emoji"):
             continue
 
-        token_text = tokens[i].text
+        token_text = tokens[token_index].text
 
         if token_text[0] == "#":
-            new_i = await regex_match(
+            new_token_index = await regex_match(
                 config,
                 client,
                 lang,
                 text,
-                i,
+                token_index,
                 tokens,
                 offsets,
                 list_full,
                 static_rules[LangType.DE]["hashtags"],
             )
 
-            if check_continue(list_full, i, new_i, tokens, "regex_match"):
+            if check_continue(list_full, token_index, new_token_index, tokens, "regex_match"):
                 continue
 
         if is_valid_text(token_text) and len(token_text) > 1:
-            new_i = await rule_check(
+            new_token_index = await rule_check(
                 config,
                 client,
                 lang,
                 text,
-                i,
+                token_index,
                 tokens,
                 offsets,
                 list_full,
@@ -2809,15 +2809,15 @@ async def german_rules(
                 ),
             )
 
-            if check_continue(list_full, i, new_i, tokens, "rule_check"):
+            if check_continue(list_full, token_index, new_token_index, tokens, "rule_check"):
                 continue
 
-            new_i = await rule_check(
+            new_token_index = await rule_check(
                 config,
                 client,
                 lang,
                 text,
-                i,
+                token_index,
                 tokens,
                 offsets,
                 list_full,
@@ -2831,7 +2831,7 @@ async def german_rules(
                 ),
             )
 
-            if check_continue(list_full, i, new_i, tokens, "rule_check"):
+            if check_continue(list_full, token_index, new_token_index, tokens, "rule_check"):
                 continue
 
         subcategory = "d_and_i"
@@ -2867,19 +2867,19 @@ async def german_rules(
                     )
                 )
 
-            new_i = await regex_match(
+            new_token_index = await regex_match(
                 config,
                 client,
                 lang,
                 text,
-                i,
+                token_index,
                 tokens,
                 offsets,
                 list_full,
                 endings,
             )
 
-            if check_continue(list_full, i, new_i, tokens, "regex_match"):
+            if check_continue(list_full, token_index, new_token_index, tokens, "regex_match"):
                 continue
 
         subcategory = "gendered_denominations_ending_advanced"
@@ -2924,22 +2924,22 @@ async def german_rules(
 
                     endings.append(ending)
 
-            new_i = await regex_match(
+            new_token_index = await regex_match(
                 config,
                 client,
                 lang,
                 text,
-                i,
+                token_index,
                 tokens,
                 offsets,
                 list_full,
                 endings,
             )
 
-            if check_continue(list_full, i, new_i, tokens, "regex_match"):
+            if check_continue(list_full, token_index, new_token_index, tokens, "regex_match"):
                 continue
 
-        new_i += 1
+        new_token_index += 1
 
     return list_full
 
@@ -2956,108 +2956,108 @@ async def english_rules(
     false_positive_matcher = fetch_false_positive_matchers(lang.lang, tokens)
 
     list_full = []
-    i = new_i = 0
+    token_index = new_token_index = 0
     token_count = len(tokens)
-    while new_i < token_count:
-        i = new_i
+    while new_token_index < token_count:
+        token_index = new_token_index
 
-        token = tokens[i]
+        token = tokens[token_index]
         if token._.connected_token is not None:
-            new_i += 1
+            new_token_index += 1
             continue
 
         if len(term_replacements):
-            new_i = await rule_check(
+            new_token_index = await rule_check(
                 config,
                 client,
                 lang,
                 text,
-                i,
+                token_index,
                 tokens,
                 offsets,
                 list_full,
                 term_replacements,
             )
 
-            if check_continue(list_full, i, new_i, tokens, "rule_check"):
+            if check_continue(list_full, token_index, new_token_index, tokens, "rule_check"):
                 continue
 
         if is_sub_category_enabled(config, "gender_specific_abbreviation"):
-            new_i = await regex_match(
+            new_token_index = await regex_match(
                 config,
                 client,
                 lang,
                 text,
-                i,
+                token_index,
                 tokens,
                 offsets,
                 list_full,
                 static_rules["m_f_regexes"],
             )
 
-            if check_continue(list_full, i, new_i, tokens, "regex_match"):
+            if check_continue(list_full, token_index, new_token_index, tokens, "regex_match"):
                 continue
 
         if is_sub_category_enabled(config, "d_and_i"):
-            new_i = await regex_match(
+            new_token_index = await regex_match(
                 config,
                 client,
                 lang,
                 text,
-                i,
+                token_index,
                 tokens,
                 offsets,
                 list_full,
                 static_rules["d_f_m_regexes"],
             )
 
-            if check_continue(list_full, i, new_i, tokens, "regex_match"):
+            if check_continue(list_full, token_index, new_token_index, tokens, "regex_match"):
                 continue
 
-        new_i = detect_non_inclusive_emoji(
+        new_token_index = detect_non_inclusive_emoji(
             config,
             client,
             lang,
             text,
-            i,
+            token_index,
             tokens,
             offsets,
             list_full,
         )
 
-        if check_continue(list_full, i, new_i, tokens, "detect_non_inclusive_emoji"):
+        if check_continue(list_full, token_index, new_token_index, tokens, "detect_non_inclusive_emoji"):
             continue
 
-        token_text = tokens[i].text
+        token_text = tokens[token_index].text
 
         if token_text[0] == "#":
-            new_i = await regex_match(
+            new_token_index = await regex_match(
                 config,
                 client,
                 lang,
                 text,
-                i,
+                token_index,
                 tokens,
                 offsets,
                 list_full,
                 static_rules[LangType.EN]["hashtags"],
             )
 
-            if check_continue(list_full, i, new_i, tokens, "regex_match"):
+            if check_continue(list_full, token_index, new_token_index, tokens, "regex_match"):
                 continue
 
         if not is_valid_text(token_text) or (
             len(token_text) <= 1 or token_text.lower() == "i"
         ):
-            new_i += 1
+            new_token_index += 1
             continue
 
-        new_i = await rule_check(
+        new_token_index = await rule_check(
             config,
             client,
             lang,
             text,
-            i,
+            token_index,
             tokens,
             offsets,
             list_full,
@@ -3071,15 +3071,15 @@ async def english_rules(
             false_positive_matcher,
         )
 
-        if check_continue(list_full, i, new_i, tokens, "rule_check"):
+        if check_continue(list_full, token_index, new_token_index, tokens, "rule_check"):
             continue
 
-        new_i = await rule_check(
+        new_token_index = await rule_check(
             config,
             client,
             lang,
             text,
-            i,
+            token_index,
             tokens,
             offsets,
             list_full,
@@ -3094,10 +3094,10 @@ async def english_rules(
             false_positive_matcher,
         )
 
-        if check_continue(list_full, i, new_i, tokens, "rule_check"):
+        if check_continue(list_full, token_index, new_token_index, tokens, "rule_check"):
             continue
 
-        new_i += 1
+        new_token_index += 1
 
     return list_full
 
@@ -3183,7 +3183,7 @@ async def is_word_match(
 
 async def is_phrase_match(
     lang: LangType,
-    i: int,
+    token_index: int,
     tokens: Doc,
     rule: Rule,
     false_positive_matcher: list = None,
@@ -3195,36 +3195,36 @@ async def is_phrase_match(
     if word_count > 1:
         suffix = False
 
-    skip_i = i
+    skip_token_index = token_index
     text = ""
-    for k in range(word_count):
-        if k > 0:
+    for word_index in range(word_count):
+        if word_index > 0:
             text += word_token.whitespace_
 
         try:
-            word_token = tokens[i + k]
+            word_token = tokens[token_index + word_index]
         except IndexError:
-            return i, None, None
+            return token_index, None, None
 
-        word_type = rule.word_types[k] if k < word_types_count else None
+        word_type = rule.word_types[word_index] if word_index < word_types_count else None
 
         if not await is_word_match(
             lang,
             word_token,
-            rule.words[k],
+            rule.words[word_index],
             word_type,
             suffix,
         ):
-            return i, None, None
+            return token_index, None, None
 
         text += word_token.text
 
-        skip_i += 1
+        skip_token_index += 1
 
     if false_positive_matcher is not None and is_false_positive_match(
-        false_positive_matcher, i, tokens, rule.lemma
+        false_positive_matcher, token_index, tokens, rule.lemma
     ):
-        return i, None, None
+        return token_index, None, None
 
     if rule.pattern is not None:
         pattern = rule.pattern.split("|")
@@ -3236,37 +3236,37 @@ async def is_phrase_match(
         if lemma_position > 0:
             prefix_pattern = pattern[0:lemma_position]
             prefix_pattern.reverse()
-            tokens_match_count = await check_pattern(tokens, prefix_pattern, i - 1, -1)
+            tokens_match_count = await check_pattern(tokens, prefix_pattern, token_index - 1, -1)
             if not tokens_match_count:
-                return i, None, None
+                return token_index, None, None
 
             prefix_tokens_match_count += tokens_match_count
 
         suffix_pattern = pattern[lemma_position + 1 :]
         if len(suffix_pattern):
             tokens_match_count = await check_pattern(
-                tokens, suffix_pattern, i + token_count, 1
+                tokens, suffix_pattern, token_index + token_count, 1
             )
             if not tokens_match_count:
-                return i, None, None
+                return token_index, None, None
 
             token_count += tokens_match_count
 
         if rule.is_pattern_match:
-            i -= prefix_tokens_match_count
+            token_index -= prefix_tokens_match_count
             text = ""
             for k in range(prefix_tokens_match_count + token_count):
                 if k > 0:
                     text += word_token.whitespace_
 
-                text += tokens[i + k].text
+                text += tokens[token_index + k].text
 
-            skip_i = i + token_count + 1
+            skip_token_index = token_index + token_count + 1
 
-    if i + tokens[i]._.i_offset > skip_i:
-        skip_i = i + tokens[i]._.i_offset
+    if token_index + tokens[token_index]._.token_index_offset > skip_token_index:
+        skip_token_index = token_index + tokens[token_index]._.token_index_offset
 
-    return i, skip_i, text
+    return token_index, skip_token_index, text
 
 
 async def fetch_word_type(
@@ -3581,8 +3581,8 @@ def fetch_flexion(token: Token) -> str | None:
     return flexion
 
 
-async def find_form_verb_german(i: int, tokens: Doc):
-    token = tokens[i]
+async def find_form_verb_german(token_index: int, tokens: Doc):
+    token = tokens[token_index]
     if token._.form is not None:
         return token._.form
 
@@ -3607,8 +3607,8 @@ async def find_form_verb_german(i: int, tokens: Doc):
     return target_form
 
 
-async def find_form_verb_english(i: int, tokens: Doc):
-    token = tokens[i]
+async def find_form_verb_english(token_index: int, tokens: Doc):
+    token = tokens[token_index]
     forms = await fetch_declensions(LangType.EN, WordType.VERB, token.text, token)
 
     if forms is not None:
@@ -3641,8 +3641,8 @@ async def find_form_verb_english(i: int, tokens: Doc):
     return target_form
 
 
-async def find_form_adjective_german(i: int, tokens: Doc):
-    token = tokens[i]
+async def find_form_adjective_german(token_index: int, tokens: Doc):
+    token = tokens[token_index]
     forms = await fetch_declensions(LangType.DE, WordType.ADJECTIVE, token.text, token)
 
     if forms is not None and forms["is_absolute"] == False:
@@ -3665,8 +3665,8 @@ async def find_form_adjective_german(i: int, tokens: Doc):
     return ending
 
 
-async def find_form_adjective_english(i: int, tokens: Doc):
-    token = tokens[i]
+async def find_form_adjective_english(token_index: int, tokens: Doc):
+    token = tokens[token_index]
     forms = await fetch_declensions(LangType.EN, WordType.ADJECTIVE, token.text, token)
 
     if forms is not None:
@@ -3701,8 +3701,8 @@ async def find_form_adjective_english(i: int, tokens: Doc):
     return target_form
 
 
-async def find_form_noun_german(i: int, tokens: Doc, is_singular: bool = None):
-    token = tokens[i]
+async def find_form_noun_german(token_index: int, tokens: Doc, is_singular: bool = None):
+    token = tokens[token_index]
 
     if await check_word_type(LangType.DE, token, WordType.PRONOUN, True, True):
         return "no_change"
@@ -3750,27 +3750,27 @@ async def find_form_noun_english(is_singular: bool):
 
 
 async def find_form(
-    lang: LangType, word_type: WordType, i: int, tokens: Doc, is_singular: bool = None
+    lang: LangType, word_type: WordType, token_index: int, tokens: Doc, is_singular: bool = None
 ):
-    token = tokens[i]
+    token = tokens[token_index]
     match word_type:
         case WordType.VERB:
             if lang == LangType.DE:
-                return await find_form_verb_german(i, tokens)
+                return await find_form_verb_german(token_index, tokens)
 
-            return await find_form_verb_english(i, tokens)
+            return await find_form_verb_english(token_index, tokens)
         case WordType.ADJECTIVE | WordType.ADVERB:
             if lang == LangType.DE:
-                return await find_form_adjective_german(i, tokens)
+                return await find_form_adjective_german(token_index, tokens)
 
-            return await find_form_adjective_english(i, tokens)
+            return await find_form_adjective_english(token_index, tokens)
 
         case WordType.NOUN | WordType.PRONOUN:
             if lang == LangType.DE:
                 if token.text.endswith("-") and is_singular:
                     return "no_change"
 
-                return await find_form_noun_german(i, tokens, is_singular)
+                return await find_form_noun_german(token_index, tokens, is_singular)
 
             return await find_form_noun_english(is_singular)
 
@@ -4018,10 +4018,10 @@ async def german_verb_splittable(word: str) -> str | None:  # pragma: no cover
             return None
 
     # detect "adjective + verb" case
-    i = 2  # skip the first 2 letters
-    while i < len(word) - 2:  # skip the last 2 letters
-        prefix = word[0:i]
-        partial_word = word[i:]
+    letter_index = 2  # skip the first 2 letters
+    while letter_index < len(word) - 2:  # skip the last 2 letters
+        prefix = word[0:letter_index]
+        partial_word = word[letter_index:]
         partial_word_result = await fetch_declensions(
             LangType.DE, WordType.VERB, partial_word
         )
@@ -4032,7 +4032,7 @@ async def german_verb_splittable(word: str) -> str | None:  # pragma: no cover
             ) and WordType.VERB == await fetch_word_type(LangType.DE, tokens[1]):
                 return prefix
 
-        i += 1
+        letter_index += 1
 
     return None
 
@@ -4292,16 +4292,16 @@ async def alternative_declension(
         is_plural_alternative = False
 
         previous = False
-        for i in reversed(range(len(alternative_tokens))):
-            alternative_token = alternative_tokens[i]
+        for alternative_index in reversed(range(len(alternative_tokens))):
+            alternative_token = alternative_tokens[alternative_index]
             alternative_text = alternative_token.text
             if alternative_text != "," and token_is_conjunction(alternative_token):
                 previous = False
             else:
-                declension = not previous and alternative.word_types[i]["lemmatize"]
+                declension = not previous and alternative.word_types[alternative_index]["lemmatize"]
                 if declension:
-                    if alternative.word_types[i]["word_type"]:
-                        alternative_word_type = alternative.word_types[i]["word_type"]
+                    if alternative.word_types[alternative_index]["word_type"]:
+                        alternative_word_type = alternative.word_types[alternative_index]["word_type"]
                     elif len(alternative_tokens) == 1:
                         # in this case we just assume it is the same to avoid issues with word type detection
                         alternative_word_type = word_type
@@ -4311,7 +4311,7 @@ async def alternative_declension(
                         )
 
                     if WordType.VERB == word_type and (
-                        (lang == LangType.EN and i == 0)
+                        (lang == LangType.EN and alternative_index == 0)
                         or WordType.VERB in alternative_word_type
                     ):
                         previous = True
@@ -4377,7 +4377,7 @@ async def alternative_declension(
 async def alternatives_declension(
     lang: LangType,
     text: str,
-    i: int,
+    token_index: int,
     tokens: Doc,
     target_form: str,
     rule: Rule,
@@ -4391,28 +4391,28 @@ async def alternatives_declension(
         or len(alternatives) == 0
         or (len(alternatives) == 1 and alternatives[0].is_remove)
     ):
-        return text, tokens[i].idx, alternatives
+        return text, tokens[token_index].idx, alternatives
 
     word_types = rule.get_word_types()
     word_type = (
         word_types[0]
         if (len(word_types) == 1 and word_types[0] != "")
-        else await fetch_word_type(lang, tokens[i])
+        else await fetch_word_type(lang, tokens[token_index])
     )
 
     prepend_word = False
     if (
         lang == LangType.EN
-        and i > 0
-        and (tokens[i - 1].text.lower() == "a" or tokens[i - 1].text.lower() == "an")
+        and token_index > 0
+        and (tokens[token_index - 1].text.lower() == "a" or tokens[token_index - 1].text.lower() == "an")
     ):
-        text = tokens[i - 1].text + " " + text
-        start = tokens[i - 1].idx
-        prepend_word = tokens[i - 1].text
+        text = tokens[token_index - 1].text + " " + text
+        start = tokens[token_index - 1].idx
+        prepend_word = tokens[token_index - 1].text
     else:
-        start = tokens[i]._.start if tokens[i]._.start is not None else tokens[i].idx
-        if tokens[i]._.text is not None:
-            text = tokens[i]._.text
+        start = tokens[token_index]._.start if tokens[token_index]._.start is not None else tokens[token_index].idx
+        if tokens[token_index]._.text is not None:
+            text = tokens[token_index]._.text
 
     return (
         text,
@@ -4422,7 +4422,7 @@ async def alternatives_declension(
                 lang,
                 target_form,
                 text,
-                tokens[i].lemma_,
+                tokens[token_index].lemma_,
                 word_type,
                 prepend_word,
                 rule,
@@ -4449,8 +4449,8 @@ def handle_single_tilde(alternative: Alternative, prefix: bool, is_singular: boo
     word_types = []
     # ideally we use alternative.words here but we strip out the "~" in the rule editor
     words = alternative.lemma.split()
-    for i in range(len(words)):
-        word = words[i]
+    for word_index in range(len(words)):
+        word = words[word_index]
         if word.count("~") == 1:
             slash = False
             if word.startswith("~"):
@@ -4469,12 +4469,12 @@ def handle_single_tilde(alternative: Alternative, prefix: bool, is_singular: boo
                     word = word[0:position]
 
                 if slash:
-                    word_types.append(alternative.word_types[i])
+                    word_types.append(alternative.word_types[word_index])
                     word_types.append(
                         {"word_type": "", "lower_case": True, "lemmatize": True}
                     )
 
-        word_types.append(alternative.word_types[i])
+        word_types.append(alternative.word_types[word_index])
         lemma += " " + word
 
     alternative.word_types = word_types
@@ -4526,7 +4526,7 @@ async def gendered_alternatives(
     additional_words: list = [],
     is_singular: bool = True,
     target_form: str = "base_form",
-    i: int | None = None,
+    token_index: int | None = None,
     tokens: Doc | None = None,
     full_text: str | None = None,
     prefix: str = "",
@@ -4595,7 +4595,7 @@ async def gendered_alternatives(
 
             if is_false_positive(
                 full_text,
-                i,
+                token_index,
                 tokens,
                 [lemma],
                 len(lemma),
@@ -4643,14 +4643,14 @@ async def gendered_alternatives(
         # case text = Mitarbeiterinnen: Mitarbeiterinnen und Mitarbeiter
         if is_false_positive(
             full_text,
-            i,
+            token_index,
             tokens,
             false_positive_check,
             0,
             len(lemma),
         ):
             # Suggest gender inclusive
-            if binary and tokens[i].text == female_form:
+            if binary and tokens[token_index].text == female_form:
                 return None, binary_case
 
             binary_case = True
@@ -4660,7 +4660,7 @@ async def gendered_alternatives(
         # case text = Mitarbeiter: Mitarbeiterinnen und Mitarbeiter
         if is_false_positive(
             full_text,
-            i,
+            token_index,
             tokens,
             false_positive_check,
             form_max + len(separator),
@@ -4716,7 +4716,7 @@ async def gendered_nouns(
     lang: Language,
     text: str,
     tokens: Doc,
-    i: int,
+    token_index: int,
     alternatives: list[Alternative],
     subcategory: str,
     is_singular: bool | None,
@@ -4726,9 +4726,9 @@ async def gendered_nouns(
 ) -> tuple[str | None, str | None, list[Alternative], None]:
     if (
         rule.type == RuleType.SUFFIX
-        and not tokens[i].lemma_.endswith("frau")
-        and not tokens[i].lemma_.endswith("mann")
-        and tokens[i].lemma_.lower().endswith(rule.lemma.lower())
+        and not tokens[token_index].lemma_.endswith("frau")
+        and not tokens[token_index].lemma_.endswith("mann")
+        and tokens[token_index].lemma_.lower().endswith(rule.lemma.lower())
     ):
         lemma_lower = rule.lemma.lower().replace("ä", "a")
         # strip of last two chars to handle "Beauftragter" vs. "Beauftragten"
@@ -4820,7 +4820,7 @@ async def gendered_nouns(
                 lang.lang,
                 target_form,
                 text,
-                tokens[i].lemma_,
+                tokens[token_index].lemma_,
                 WordType.NOUN,
                 False,
                 rule,
@@ -4846,7 +4846,7 @@ async def gendered_nouns(
             additional_words,
             is_singular,
             target_form,
-            i,
+            token_index,
             tokens,
             full_text,
             prefix,
@@ -4901,13 +4901,13 @@ async def gendered_nouns(
             return None, None, []
 
         text += (
-            tokens[i].whitespace_
-            + tokens[i + 1].text
-            + tokens[i + 1].whitespace_
-            + tokens[i + 2].text
+            tokens[token_index].whitespace_
+            + tokens[token_index + 1].text
+            + tokens[token_index + 1].whitespace_
+            + tokens[token_index + 2].text
         )
     elif subcategory == "function":
-        forms = await german_noun_lookup(tokens[i].text)
+        forms = await german_noun_lookup(tokens[token_index].text)
         if forms is not None and forms["male_form"] is not None:
             subcategory = "gender_identity"
             rule.text_id = forms["base_form"]
@@ -4947,18 +4947,18 @@ def gendered_roles_format_binary(gendered_roles_format: str):
 
 
 async def fetch_alternatives_with_article(
-    config: Config, tokens: Doc, i: int, alternatives: list[Alternative]
+    config: Config, tokens: Doc, token_index: int, alternatives: list[Alternative]
 ) -> list[Alternative] | None:
     if alternatives is None:
         return []
 
-    token = tokens[i]
+    token = tokens[token_index]
     text = token.text
     gender = await german_noun_gender_lookup(text)
     if gender is None:
         return None
 
-    article_text = tokens[i - 1].text.lower()
+    article_text = tokens[token_index - 1].text.lower()
 
     (
         match_masculine,
@@ -4995,7 +4995,7 @@ async def fetch_alternatives_with_article(
             else:
                 gender = await german_noun_gender_lookup(alternative.words[-1])
                 if gender is None:
-                    article_alternative = tokens[i - 1].text
+                    article_alternative = tokens[token_index - 1].text
                 else:
                     match gender:
                         case "masculine":
@@ -5009,7 +5009,7 @@ async def fetch_alternatives_with_article(
                                 article_alternative = match_feminine
 
         if article_alternative != "":
-            article_alternative += tokens[i - 1].whitespace_
+            article_alternative += tokens[token_index - 1].whitespace_
             alternative.lemma = article_alternative + alternative.lemma
 
         alternatives_with_article.append(alternative)
@@ -5022,14 +5022,14 @@ async def regex_match(
     client: Client,
     lang: LangType,
     full_text: str,
-    i: int,
+    token_index: int,
     tokens: Doc,
     offsets: dict,
     list_full: list,
     rules: list[Rule],
     check_case=None,
 ) -> list:
-    token = tokens[i]
+    token = tokens[token_index]
 
     for rule in rules:
         subcategory = is_sub_category_enabled(config, rule.subcategories)
@@ -5045,12 +5045,12 @@ async def regex_match(
             if connector_string not in token.text:
                 continue
 
-            start_token = i
+            start_token = token_index
         else:
             try:
                 text = check_text = ""
-                start_token = rule.word_types[0] + i
-                max_end_token = rule.word_types[1] + i
+                start_token = rule.word_types[0] + token_index
+                max_end_token = rule.word_types[1] + token_index
 
                 if start_token == max_end_token:
                     check_text = token.text
@@ -5078,7 +5078,7 @@ async def regex_match(
                     offset_token = tokens[start_token]
 
                     check_text += offset_token.text
-                    if start_token >= i:
+                    if start_token >= token_index:
                         text += offset_token.text
 
                     if offset_token.whitespace_ != "":
@@ -5089,7 +5089,7 @@ async def regex_match(
                         break
 
                     check_text += connector_string
-                    if start_token >= i:
+                    if start_token >= token_index:
                         text += connector_string
 
                     if connector_string == "(":
@@ -5121,7 +5121,7 @@ async def regex_match(
         if text == ")" and "(" in check_text:
             ending_start = check_text.find("(")
             text = check_text[ending_start:]
-            start = tokens[i - 1].idx + ending_start
+            start = tokens[token_index - 1].idx + ending_start
 
         alternatives = rule.alternatives
         explanation = rule.explanation
@@ -5140,8 +5140,8 @@ async def regex_match(
 
         elif subcategory == "gendered_denominations_ending_advanced":
             if check_text.islower():
-                if connector_string == "/" and tokens[i - 1].text.islower():
-                    text = tokens[i - 1].text + text
+                if connector_string == "/" and tokens[token_index - 1].text.islower():
+                    text = tokens[token_index - 1].text + text
 
                 text_split = text.split(connector_string)
                 if (
@@ -5165,10 +5165,10 @@ async def regex_match(
             )
 
             parenthesis = (
-                i > 0
-                and tokens[i - 1].text == "("
-                and len(tokens) > i + len(text)
-                and tokens[i + len(text)].text == ")"
+                token_index > 0
+                and tokens[token_index - 1].text == "("
+                and len(tokens) > token_index + len(text)
+                and tokens[token_index + len(text)].text == ")"
             )
 
             letters = text
@@ -5316,19 +5316,19 @@ async def regex_match(
 
         return skip_token
 
-    return i
+    return token_index
 
 
 async def is_rule_false_positive(
-    full_text: str, i: int, tokens: Doc, rule: Rule
+    full_text: str, token_index: int, tokens: Doc, rule: Rule
 ) -> bool:
     false_positives = await fetch_false_positives(rule)
-    return is_false_positive(full_text, i, tokens, false_positives)
+    return is_false_positive(full_text, token_index, tokens, false_positives)
 
 
 def is_false_positive(
     full_text: str | None,
-    i: int | None,
+    token_index: int | None,
     tokens: Doc | None,
     false_positives: list,
     window_left: int = None,
@@ -5339,22 +5339,22 @@ def is_false_positive(
 
     if window_left is None:
         # previous 5 tokens
-        i_window_min = max(0, i - 5)
+        i_window_min = max(0, token_index - 5)
         window_left = tokens[i_window_min].idx
     else:
-        window_left = max(tokens[i].idx - window_left, 0)
+        window_left = max(tokens[token_index].idx - window_left, 0)
 
     if window_right is None:
         # following 5 tokens
-        i_window_max = min(len(tokens) - 1, i + 5)
+        i_window_max = min(len(tokens) - 1, token_index + 5)
         window_right = tokens[i_window_max].idx + len(tokens[i_window_max].text)
     else:
-        window_right += tokens[i].idx
+        window_right += tokens[token_index].idx
 
     partial_text = full_text[window_left:window_right].lower()
 
-    start = tokens[i].idx - window_left
-    end = start + len(tokens[i].text)
+    start = tokens[token_index].idx - window_left
+    end = start + len(tokens[token_index].text)
 
     for false_positive in false_positives:
         for m in re.finditer(re.escape(false_positive.lower()), partial_text):
@@ -5405,16 +5405,16 @@ async def rule_check(
     client: Client,
     lang: Language,
     full_text: str,
-    i: int,
+    token_index: int,
     tokens: Doc,
     offsets: dict,
     list_full: list,
     rules: list[Rule],
     false_positive_matcher: list = None,
 ) -> list:
-    token = tokens[i]
+    token = tokens[token_index]
     if len(rules) == 0 or not is_valid_text(token.text):
-        return i
+        return token_index
 
     if token.lemma_ == "aber" and lang.lang == LangType.DE:
         preceeding_text = full_text[max(0, token.idx - 5) : token.idx]
@@ -5422,7 +5422,7 @@ async def rule_check(
             re.search(r"^ *$", preceeding_text) is not None
             or re.search(r"[.!?:,]\s*$", preceeding_text, re.MULTILINE) is not None
         ):
-            return i
+            return token_index
 
     for rule in rules:
         subcategory = is_sub_category_enabled(config, rule.subcategories)
@@ -5480,22 +5480,22 @@ async def rule_check(
             if count == 0:
                 continue
 
-            skip_token = i + token._.i_offset
+            skip_token = token_index + token._.token_index_offset
         else:
-            i, skip_token, text = await is_phrase_match(
+            token_index, skip_token, text = await is_phrase_match(
                 lang.lang,
-                i,
+                token_index,
                 tokens,
                 rule,
                 false_positive_matcher,
             )
 
-            if not text or await is_rule_false_positive(full_text, i, tokens, rule):
+            if not text or await is_rule_false_positive(full_text, token_index, tokens, rule):
                 continue
 
         is_singular = None
         for k in range(len(rule.words)):
-            is_singular = is_token_singular(lang.lang, tokens[i + k])
+            is_singular = is_token_singular(lang.lang, tokens[token_index + k])
             if is_singular is None:
                 continue
 
@@ -5513,7 +5513,7 @@ async def rule_check(
         word_types = rule.get_word_types()
 
         expected_word_type = None
-        form_token_i = i
+        form_token_i = token_index
         if LangType.DE == lang.lang and len(word_types) > 1:
             form_token_offset = 0
             for k in range(len(word_types)):
@@ -5556,7 +5556,7 @@ async def rule_check(
                     lang,
                     text,
                     tokens,
-                    i,
+                    token_index,
                     alternatives,
                     subcategory,
                     is_singular,
@@ -5582,13 +5582,13 @@ async def rule_check(
         if len(alternatives) > 0:
             # TODO make it possible to handle cases with multiple alternatives
             if len(alternatives) == 1 and alternatives[0].lemma == "they":
-                text, alternative = await pluralize_they(text, tokens, i)
+                text, alternative = await pluralize_they(text, tokens, token_index)
                 alternatives = [Alternative(alternative)]
             elif not subcategory.startswith("abbreviation"):
                 text, start, alternatives = await alternatives_declension(
                     lang.lang,
                     text,
-                    i,
+                    token_index,
                     tokens,
                     target_form,
                     rule,
@@ -5605,19 +5605,19 @@ async def rule_check(
                     )
 
             if (
-                i > 0
+                token_index > 0
                 and is_singular
                 and len(word_types) == 1
                 and word_types[0] == WordType.NOUN
             ):
                 alternatives_with_article = await fetch_alternatives_with_article(
-                    config, tokens, i, alternatives
+                    config, tokens, token_index, alternatives
                 )
 
                 if alternatives_with_article is not None:
                     alternatives = alternatives_with_article
-                    start = tokens[i - 1].idx
-                    text = tokens[i - 1].text + " " + text
+                    start = tokens[token_index - 1].idx
+                    text = tokens[token_index - 1].text + " " + text
 
         label = token._.label if token._.label is not None else rule.label
 
@@ -5666,7 +5666,7 @@ async def rule_check(
 
         return skip_token
 
-    return i
+    return token_index
 
 
 def detect_filler_words_at_sentence_start(
@@ -5685,11 +5685,11 @@ def token_is_conjunction(token: Token) -> bool:
     return token.text == "," or token.pos_ == "CCONJ"
 
 
-async def pluralize_they(text: str, tokens: Doc, i: int) -> tuple[str, str]:
-    token = tokens[i]
+async def pluralize_they(text: str, tokens: Doc, token_index: int) -> tuple[str, str]:
+    token = tokens[token_index]
     alternative = "they"
 
-    next_i = i + 1
+    next_i = token_index + 1
     if len(tokens) <= next_i:
         return text, alternative
 
@@ -5709,7 +5709,7 @@ async def pluralize_they(text: str, tokens: Doc, i: int) -> tuple[str, str]:
             and token_is_conjunction(tokens[next_i])
             and tokens[next_i + 1].text[-1] == "s"
         ) or (
-            next_i == i + 1
+            next_i == token_index + 1
             and tokens[next_i].text[-1] == "s"
             and WordType.VERB == await fetch_word_type(LangType.EN, tokens[next_i])
         ):
@@ -5751,7 +5751,7 @@ def detect_non_inclusive_emoji(
     client: Client,
     lang: Language,
     full_text: str,
-    i: int,
+    token_index: int,
     tokens: Doc,
     offsets: dict,
     list_full: list,
@@ -5761,19 +5761,19 @@ def detect_non_inclusive_emoji(
         and client.version != "0.0.0"
         and client.version < VersionString("1.28.0.1")
     ):
-        return i
+        return token_index
 
-    token = tokens[i]
+    token = tokens[token_index]
     if not token._.is_emoji:
-        return i
+        return token_index
 
     token_count = len(tokens)
 
     # 👨🏽‍👩🏽‍👧🏽 case https://github.com/carpedm20/emoji/issues/204
-    if (i + 1 < token_count and tokens[i + 1].text.endswith("\u200d")) or (
-        i > 0 and tokens[i - 1].text.endswith("\u200d")
+    if (token_index + 1 < token_count and tokens[token_index + 1].text.endswith("\u200d")) or (
+        token_index > 0 and tokens[token_index - 1].text.endswith("\u200d")
     ):
-        return i
+        return token_index
 
     alternatives = []
     explanation_context = get_emoji_context(token.text, lang.lang)
@@ -5902,9 +5902,9 @@ def detect_non_inclusive_emoji(
             )
         )
 
-        return i + 1
+        return token_index + 1
 
-    return i
+    return token_index
 
 
 # want to server to run app.py in the folder app as main app, port=8000 is defaut port for the fast api
