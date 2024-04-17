@@ -3,9 +3,9 @@ name: run tests
 on: [push]
 
 env:
-  CONTEXT_CHECKER_URL: "https://setfit-english.westeurope.inference.ml.azure.com/score"
+  #CONTEXT_CHECKER_URL: "https://setfit-english.westeurope.inference.ml.azure.com/score"
   CONTEXT_CHECKER_API_KEY: ${{ secrets.CONTEXT_CHECKER_API_KEY }}
-  CONTEXT_CHECKER_URL_DE: "https://setfit-german.westeurope.inference.ml.azure.com/score"
+  #CONTEXT_CHECKER_URL_DE: "https://setfit-german.westeurope.inference.ml.azure.com/score"
   CONTEXT_CHECKER_API_KEY_DE: ${{ secrets.CONTEXT_CHECKER_API_KEY_DE }}
   AADB2C_TENANT_ID: "81932fe1-f25e-43fc-b674-002ff8235389"
   AADB2C_CLIENT_ID: "7e090308-575a-4e7d-84e4-78c83d083ab6"
