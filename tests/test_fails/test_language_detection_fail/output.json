@@ -10,7 +10,8 @@
                 "lang"
             ],
             "msg": "Input should be 'auto', 'en', 'de', 'de-DE', 'de-CH', 'de-AT', 'en-US' or 'en-GB'",
-            "type": "enum"
+            "type": "enum",
+            "url": "https://errors.pydantic.dev/2.7/v/enum"
         }
     ]
 }
