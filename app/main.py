@@ -875,7 +875,9 @@ async def post_debug_rule(
     token_count = len(tokens)
     while token_index < token_count:
         if tokens[token_index].text in rule_data.lemmatizations:
-            tokens[token_index].lemma_ = rule_data.lemmatizations[tokens[token_index].text]
+            tokens[token_index].lemma_ = rule_data.lemmatizations[
+                tokens[token_index].text
+            ]
 
         if rule_data.lang == LangType.DE:
             tokens[token_index].lemma_ = await german_lemmatization(tokens, token_index)
@@ -2270,7 +2272,9 @@ async def context_false_positives(
     return list_results
 
 
-def check_continue(list_full: list, token_index: int, new_token_index: int, tokens: Doc, func_name: str):
+def check_continue(
+    list_full: list, token_index: int, new_token_index: int, tokens: Doc, func_name: str
+):
     if new_token_index == token_index:
         return False
 
@@ -2641,7 +2645,9 @@ async def german_lemmatization(tokens: Doc, token_index: int):
                             if sentence_token.i > token.i:
                                 token_index_offset += 1
                                 if (
-                                    tokens[token_index].text + " " + sentence_token.text.lower()
+                                    tokens[token_index].text
+                                    + " "
+                                    + sentence_token.text.lower()
                                     == rows[0][1]
                                 ):
                                     if (
@@ -2723,7 +2729,9 @@ async def german_rules(
                 term_replacements,
             )
 
-            if check_continue(list_full, token_index, new_token_index, tokens, "rule_check"):
+            if check_continue(
+                list_full, token_index, new_token_index, tokens, "rule_check"
+            ):
                 continue
 
         if is_sub_category_enabled(config, "gender_specific_abbreviation"):
@@ -2739,7 +2747,9 @@ async def german_rules(
                 static_rules["m_f_regexes"],
             )
 
-            if check_continue(list_full, token_index, new_token_index, tokens, "regex_match"):
+            if check_continue(
+                list_full, token_index, new_token_index, tokens, "regex_match"
+            ):
                 continue
 
         if is_sub_category_enabled(config, "d_and_i"):
@@ -2755,7 +2765,9 @@ async def german_rules(
                 static_rules["d_f_m_regexes"],
             )
 
-            if check_continue(list_full, token_index, new_token_index, tokens, "regex_match"):
+            if check_continue(
+                list_full, token_index, new_token_index, tokens, "regex_match"
+            ):
                 continue
 
         new_token_index = detect_non_inclusive_emoji(
@@ -2769,7 +2781,13 @@ async def german_rules(
             list_full,
         )
 
-        if check_continue(list_full, token_index, new_token_index, tokens, "detect_non_inclusive_emoji"):
+        if check_continue(
+            list_full,
+            token_index,
+            new_token_index,
+            tokens,
+            "detect_non_inclusive_emoji",
+        ):
             continue
 
         token_text = tokens[token_index].text
@@ -2787,7 +2805,9 @@ async def german_rules(
                 static_rules[LangType.DE]["hashtags"],
             )
 
-            if check_continue(list_full, token_index, new_token_index, tokens, "regex_match"):
+            if check_continue(
+                list_full, token_index, new_token_index, tokens, "regex_match"
+            ):
                 continue
 
         if is_valid_text(token_text) and len(token_text) > 1:
@@ -2809,7 +2829,9 @@ async def german_rules(
                 ),
             )
 
-            if check_continue(list_full, token_index, new_token_index, tokens, "rule_check"):
+            if check_continue(
+                list_full, token_index, new_token_index, tokens, "rule_check"
+            ):
                 continue
 
             new_token_index = await rule_check(
@@ -2831,7 +2853,9 @@ async def german_rules(
                 ),
             )
 
-            if check_continue(list_full, token_index, new_token_index, tokens, "rule_check"):
+            if check_continue(
+                list_full, token_index, new_token_index, tokens, "rule_check"
+            ):
                 continue
 
         subcategory = "d_and_i"
@@ -2879,7 +2903,9 @@ async def german_rules(
                 endings,
             )
 
-            if check_continue(list_full, token_index, new_token_index, tokens, "regex_match"):
+            if check_continue(
+                list_full, token_index, new_token_index, tokens, "regex_match"
+            ):
                 continue
 
         subcategory = "gendered_denominations_ending_advanced"
@@ -2936,7 +2962,9 @@ async def german_rules(
                 endings,
             )
 
-            if check_continue(list_full, token_index, new_token_index, tokens, "regex_match"):
+            if check_continue(
+                list_full, token_index, new_token_index, tokens, "regex_match"
+            ):
                 continue
 
         new_token_index += 1
@@ -2979,7 +3007,9 @@ async def english_rules(
                 term_replacements,
             )
 
-            if check_continue(list_full, token_index, new_token_index, tokens, "rule_check"):
+            if check_continue(
+                list_full, token_index, new_token_index, tokens, "rule_check"
+            ):
                 continue
 
         if is_sub_category_enabled(config, "gender_specific_abbreviation"):
@@ -2995,7 +3025,9 @@ async def english_rules(
                 static_rules["m_f_regexes"],
             )
 
-            if check_continue(list_full, token_index, new_token_index, tokens, "regex_match"):
+            if check_continue(
+                list_full, token_index, new_token_index, tokens, "regex_match"
+            ):
                 continue
 
         if is_sub_category_enabled(config, "d_and_i"):
@@ -3011,7 +3043,9 @@ async def english_rules(
                 static_rules["d_f_m_regexes"],
             )
 
-            if check_continue(list_full, token_index, new_token_index, tokens, "regex_match"):
+            if check_continue(
+                list_full, token_index, new_token_index, tokens, "regex_match"
+            ):
                 continue
 
         new_token_index = detect_non_inclusive_emoji(
@@ -3025,7 +3059,13 @@ async def english_rules(
             list_full,
         )
 
-        if check_continue(list_full, token_index, new_token_index, tokens, "detect_non_inclusive_emoji"):
+        if check_continue(
+            list_full,
+            token_index,
+            new_token_index,
+            tokens,
+            "detect_non_inclusive_emoji",
+        ):
             continue
 
         token_text = tokens[token_index].text
@@ -3043,7 +3083,9 @@ async def english_rules(
                 static_rules[LangType.EN]["hashtags"],
             )
 
-            if check_continue(list_full, token_index, new_token_index, tokens, "regex_match"):
+            if check_continue(
+                list_full, token_index, new_token_index, tokens, "regex_match"
+            ):
                 continue
 
         if not is_valid_text(token_text) or (
@@ -3071,7 +3113,9 @@ async def english_rules(
             false_positive_matcher,
         )
 
-        if check_continue(list_full, token_index, new_token_index, tokens, "rule_check"):
+        if check_continue(
+            list_full, token_index, new_token_index, tokens, "rule_check"
+        ):
             continue
 
         new_token_index = await rule_check(
@@ -3094,7 +3138,9 @@ async def english_rules(
             false_positive_matcher,
         )
 
-        if check_continue(list_full, token_index, new_token_index, tokens, "rule_check"):
+        if check_continue(
+            list_full, token_index, new_token_index, tokens, "rule_check"
+        ):
             continue
 
         new_token_index += 1
@@ -3206,7 +3252,9 @@ async def is_phrase_match(
         except IndexError:
             return token_index, None, None
 
-        word_type = rule.word_types[word_index] if word_index < word_types_count else None
+        word_type = (
+            rule.word_types[word_index] if word_index < word_types_count else None
+        )
 
         if not await is_word_match(
             lang,
@@ -3236,7 +3284,9 @@ async def is_phrase_match(
         if lemma_position > 0:
             prefix_pattern = pattern[0:lemma_position]
             prefix_pattern.reverse()
-            tokens_match_count = await check_pattern(tokens, prefix_pattern, token_index - 1, -1)
+            tokens_match_count = await check_pattern(
+                tokens, prefix_pattern, token_index - 1, -1
+            )
             if not tokens_match_count:
                 return token_index, None, None
 
@@ -3701,7 +3751,9 @@ async def find_form_adjective_english(token_index: int, tokens: Doc):
     return target_form
 
 
-async def find_form_noun_german(token_index: int, tokens: Doc, is_singular: bool = None):
+async def find_form_noun_german(
+    token_index: int, tokens: Doc, is_singular: bool = None
+):
     token = tokens[token_index]
 
     if await check_word_type(LangType.DE, token, WordType.PRONOUN, True, True):
@@ -3750,7 +3802,11 @@ async def find_form_noun_english(is_singular: bool):
 
 
 async def find_form(
-    lang: LangType, word_type: WordType, token_index: int, tokens: Doc, is_singular: bool = None
+    lang: LangType,
+    word_type: WordType,
+    token_index: int,
+    tokens: Doc,
+    is_singular: bool = None,
 ):
     token = tokens[token_index]
     match word_type:
@@ -4298,10 +4354,15 @@ async def alternative_declension(
             if alternative_text != "," and token_is_conjunction(alternative_token):
                 previous = False
             else:
-                declension = not previous and alternative.word_types[alternative_index]["lemmatize"]
+                declension = (
+                    not previous
+                    and alternative.word_types[alternative_index]["lemmatize"]
+                )
                 if declension:
                     if alternative.word_types[alternative_index]["word_type"]:
-                        alternative_word_type = alternative.word_types[alternative_index]["word_type"]
+                        alternative_word_type = alternative.word_types[
+                            alternative_index
+                        ]["word_type"]
                     elif len(alternative_tokens) == 1:
                         # in this case we just assume it is the same to avoid issues with word type detection
                         alternative_word_type = word_type
@@ -4404,13 +4465,20 @@ async def alternatives_declension(
     if (
         lang == LangType.EN
         and token_index > 0
-        and (tokens[token_index - 1].text.lower() == "a" or tokens[token_index - 1].text.lower() == "an")
+        and (
+            tokens[token_index - 1].text.lower() == "a"
+            or tokens[token_index - 1].text.lower() == "an"
+        )
     ):
         text = tokens[token_index - 1].text + " " + text
         start = tokens[token_index - 1].idx
         prepend_word = tokens[token_index - 1].text
     else:
-        start = tokens[token_index]._.start if tokens[token_index]._.start is not None else tokens[token_index].idx
+        start = (
+            tokens[token_index]._.start
+            if tokens[token_index]._.start is not None
+            else tokens[token_index].idx
+        )
         if tokens[token_index]._.text is not None:
             text = tokens[token_index]._.text
 
@@ -5490,7 +5558,9 @@ async def rule_check(
                 false_positive_matcher,
             )
 
-            if not text or await is_rule_false_positive(full_text, token_index, tokens, rule):
+            if not text or await is_rule_false_positive(
+                full_text, token_index, tokens, rule
+            ):
                 continue
 
         is_singular = None
@@ -5770,9 +5840,10 @@ def detect_non_inclusive_emoji(
     token_count = len(tokens)
 
     # 👨🏽‍👩🏽‍👧🏽 case https://github.com/carpedm20/emoji/issues/204
-    if (token_index + 1 < token_count and tokens[token_index + 1].text.endswith("\u200d")) or (
-        token_index > 0 and tokens[token_index - 1].text.endswith("\u200d")
-    ):
+    if (
+        token_index + 1 < token_count
+        and tokens[token_index + 1].text.endswith("\u200d")
+    ) or (token_index > 0 and tokens[token_index - 1].text.endswith("\u200d")):
         return token_index
 
     alternatives = []
