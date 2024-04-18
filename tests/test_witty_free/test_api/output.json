@@ -49,7 +49,7 @@
                 "content": "advanced",
                 "context": "nicht für Einzelperson",
                 "icon": "🙄",
-                "text": "Schwächen die Wirkung deiner Botschaft",
+                "text": "Häufig verwendete Floskeln werden oft als nichtssagend empfunden.",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/worthülsen?reducedView=true"
             },
             "gravity": 3.0,
@@ -119,7 +119,7 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😮‍💨",
-                "text": "Überzogene Aussagen wirken weniger vertrauenswürdig",
+                "text": "Der Begriff wirkt überzogen und daher nicht einladend.",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/übertreibung?reducedView=true"
             },
             "gravity": 3.0,
