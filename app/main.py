@@ -5,7 +5,7 @@ import json
 import secrets
 import aiohttp
 from typing import Optional, Union
-from collections import defaultdict, namedtuple
+from collections import defaultdict
 import fasttext
 import aiosqlite
 from copy import deepcopy
@@ -149,7 +149,7 @@ async def handle_command_witty(
     await ack()
 
     user_request_in = RequestIn(client="slack:1.0.0", text=body["text"])
-    text, lang, limit_reached = fetch_text(user_request_in)
+    text, lang, limit_reached = fetch_text(user_request_in, model.keys())
 
     if lang is None:
         await respond(f"Witty could not determine a language for '{text}'.")
@@ -338,6 +338,10 @@ Token.set_extension("connected_token", default=None)
 for spacy_model in settings.models:
     lang = spacy_model[0:2]
 
+    lookup[lang] = lookup[lang] if lang in lookup else []
+    lemma_plural_lookup[lang] = (
+        lemma_plural_lookup[lang] if lang in lemma_plural_lookup else []
+    )
     model[lang] = fetch_nlp_model(lang, spacy_model, lookup[lang])
 
 lookup = None
@@ -1440,7 +1444,7 @@ async def fetch_user(request: Request) -> str | None:
     return None
 
 
-def fetch_text(user_request_in: RequestIn) -> tuple[str, str | None, bool]:
+def fetch_text(user_request_in: RequestIn, supported_langs: list) -> tuple[str, str | None, bool]:
     text = user_request_in.text
     limit_reached = len(text) > settings.text_max_length
     if limit_reached:
@@ -1449,6 +1453,7 @@ def fetch_text(user_request_in: RequestIn) -> tuple[str, str | None, bool]:
 
     lang_detection = get_lang_detection(fasttext_model)
     locale = lang_detection.get_locale(
+        supported_langs,
         text,
         user_request_in.lang,
         user_request_in.config.preferred_languages,
@@ -1508,7 +1513,7 @@ async def check(
         user_request_in.config.plan is not None
         and user_request_in.config.plan.startswith("witty_")
     ):
-        text, lang, limit_reached = fetch_text(user_request_in)
+        text, lang, limit_reached = fetch_text(user_request_in, model.keys())
 
         if lang is None:
             response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
@@ -2093,6 +2098,17 @@ async def apply_language_rules(
                 lang,
                 text,
             )
+        case LangType.FR:
+            # TODO implement french_rules()
+            list_results = await english_rules(
+                config,
+                term_replacements,
+                client,
+                tokens,
+                offsets,
+                lang,
+                text,
+            )
         case _:
             list_results = []
 
@@ -2407,7 +2423,7 @@ async def fetch_rules(
                 )
 
         is_gender_star_ending_ = False
-    else:
+    elif lang == LangType.DE:
         is_gender_star_ending_ = is_gender_star_ending(token.text)
         if not suffix_check and is_gender_star_ending_ and len(rows) == 0:
             new_text = is_gender_star_ending_[1] + is_gender_star_ending_[2]
