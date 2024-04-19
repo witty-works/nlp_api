@@ -4387,10 +4387,10 @@ async def alternative_declension(
     alternative_tokens = fetch_tokens(lang, alternative.lemma)
     if word_count > 1:
         # TODO figure out how to modify phrases
-        new_alternative = alternative.lemma
+        new_alternative_lemma = alternative.lemma
         is_plural_alternative = is_token_plural(lang, alternative_tokens[-1])
     else:
-        new_alternative = ""
+        new_alternative_lemma = ""
         is_plural_alternative = False
 
         previous = False
@@ -4461,24 +4461,25 @@ async def alternative_declension(
                             alternative_token,
                         )
 
-            new_alternative = (
-                alternative_text + alternative_token.whitespace_ + new_alternative
+            new_alternative_lemma = (
+                alternative_text + alternative_token.whitespace_ + new_alternative_lemma
             )
 
-    if lang == LangType.EN:
-        alternative.lemma = alternative_a_english(
-            new_alternative, prepend_word, is_plural_alternative
+    new_alternative = deepcopy(alternative)
+    if lang == LangType.EN and prepend_word:
+        new_alternative.lemma = alternative_a_english(
+            new_alternative_lemma, prepend_word, is_plural_alternative
         )
     else:
-        alternative.lemma = new_alternative
+        new_alternative.lemma = new_alternative_lemma
         if (
             is_singular != False
             and is_plural_alternative
-            and alternative.is_collective_noun
+            and new_alternative.is_collective_noun
         ):
-            alternative.is_inspiration = True
+            new_alternative.is_inspiration = True
 
-    return alternative
+    return new_alternative
 
 
 async def alternatives_declension(
