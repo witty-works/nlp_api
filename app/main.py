@@ -2154,7 +2154,13 @@ def fetch_term_replacements(
 
         alternatives = []
         for alternative in term_replacement["alternatives"]:
-            alternatives.append(Alternative(alternative, tokenize(alternative, lang)))
+            alternative_words = tokenize(alternative, lang)
+            alternative_word_types = tuple(
+                [{"word_type": word_type, "lower_case": lower_case, "lemmatize": lemmatize}]
+                * len(alternative_words)
+            )
+
+            alternatives.append(Alternative(alternative, alternative_words, alternative_word_types))
 
         rule = Rule(
             lemma,
