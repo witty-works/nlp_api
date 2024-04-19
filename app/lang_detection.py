@@ -28,6 +28,9 @@ class LangDetection:
         if lang == LangWithAutoType.DE:
             return LangWithAutoType.deDE
 
+        if lang == LangWithAutoType.FR:
+            return LangWithAutoType.frFR
+
         return None
 
     def get_locale_by_variant(self, langs, variant_preferences):
@@ -39,8 +42,8 @@ class LangDetection:
 
         return None
 
-    def get_locale_by_lang(self, langs, language_preferences):
-        if language_preferences:
+    def get_locale_by_lang(self, langs, language_preferences=None):
+        if language_preferences is not None:
             for lang in langs:
                 if lang in language_preferences:
                     return self.get_default_locale(lang)
@@ -52,13 +55,27 @@ class LangDetection:
 
         return None
 
-    def get_locale(self, text, lang, language_preferences=[], variant_preferences=[]):
+    def get_locale(
+        self,
+        supported_langs,
+        text,
+        lang,
+        language_preferences=None,
+        variant_preferences=None,
+    ):
         if lang == LangWithAutoType.AUTO:
             langs = self.predict_lang(text)
+            for i in range(len(langs)):
+                if langs[i][0:2] not in supported_langs:
+                    langs.remove(langs[i])
 
-            locale = self.get_locale_by_variant(langs, variant_preferences)
-            if locale is not None:
-                return locale
+            if len(langs) == 0:
+                return None
+
+            if variant_preferences is not None:
+                locale = self.get_locale_by_variant(langs, variant_preferences)
+                if locale is not None:
+                    return locale
 
             return self.get_locale_by_lang(langs, language_preferences)
 

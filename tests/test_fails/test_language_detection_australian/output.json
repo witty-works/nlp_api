@@ -18,13 +18,13 @@
             "ctx": {
                 "error": {}
             },
-            "input": "fr",
+            "input": "ch",
             "loc": [
                 "body",
                 "config",
                 "preferred_languages"
             ],
-            "msg": "Value error, Contains not supported preferred_languages: fr",
+            "msg": "Value error, Contains not supported preferred_languages: ch",
             "type": "value_error",
             "url": "https://errors.pydantic.dev/2.7/v/value_error"
         },

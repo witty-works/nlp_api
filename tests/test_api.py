@@ -1062,10 +1062,12 @@ def test_set_default_rules(event_loop):
     assert test_request.config.preferred_languages == [
         LangWithAutoType.EN,
         LangWithAutoType.DE,
+        LangWithAutoType.FR,
     ]
     assert test_request.config.preferred_variants == [
         LangWithAutoType.enUS,
         LangWithAutoType.deDE,
+        LangWithAutoType.frFR,
     ]
     assert test_request.config.german_gender_ending == "*in"
     assert test_request.config.gendered_roles_format == "both"

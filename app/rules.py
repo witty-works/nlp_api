@@ -11,6 +11,7 @@ def fetch_static_rules():
             "df_articles": "articles.csv",
         },
         LangType.EN: {},
+        LangType.FR: {},
     }
     langs = files.keys()
 
@@ -444,6 +445,7 @@ def fetch_static_rules():
     locales = {
         LangType.DE: [LangWithAutoType.DE],
         LangType.EN: [LangWithAutoType.enUS, LangWithAutoType.enGB],
+        LangType.FR: [LangWithAutoType.FR],
     }
 
     data = {}
@@ -456,6 +458,9 @@ def fetch_static_rules():
                     "training_data/" + locale + "/" + files[lang][csv],
                     keep_default_na=False,
                 )
+
+    if LangType.FR in langs:
+        static_rules[LangType.FR]["pattern_false_positives"] = []
 
     if LangType.DE in langs:
         rule = Rule(

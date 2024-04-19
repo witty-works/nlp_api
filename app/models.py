@@ -85,6 +85,7 @@ class ContentType(str, Enum):
 class LangType(str, Enum):
     EN = "en"
     DE = "de"
+    FR = "fr"
 
 
 class BasicWordType(str, Enum):
@@ -110,11 +111,13 @@ class LangWithAutoType(str, Enum):
     AUTO = "auto"
     EN = "en"
     DE = "de"
+    FR = "fr"
     deDE = "de-DE"
     deCH = "de-CH"
     deAT = "de-AT"
     enUS = "en-US"
     enGB = "en-GB"
+    frFR = "fr-FR"
 
 
 class RuleType(str, Enum):
@@ -316,18 +319,20 @@ class Config(BaseModel):
     plan: Optional[str] = None
     addons: Optional[list[str]] = None
     primary_language: Optional[LangVariantType] = None
-    preferred_languages: list = [LangWithAutoType.EN, LangWithAutoType.DE]
+    preferred_languages: list = [LangWithAutoType.EN, LangWithAutoType.DE, LangWithAutoType.FR]
     _supported_langs = [
         LangType.DE,
         LangType.EN,
+        LangType.FR,
     ]
-    preferred_variants: list = [LangWithAutoType.enUS, LangWithAutoType.deDE]
+    preferred_variants: list = [LangWithAutoType.enUS, LangWithAutoType.deDE, LangWithAutoType.frFR]
     _supported_locales = [
         LangWithAutoType.deDE,
         LangWithAutoType.deCH,
         LangWithAutoType.deAT,
         LangWithAutoType.enUS,
         LangWithAutoType.enGB,
+        LangWithAutoType.frFR,
     ]
     german_gender_ending: GermanGenderEndingType = GermanGenderEndingType.STAR
     _gendereddenom_ending = {
