@@ -1444,7 +1444,9 @@ async def fetch_user(request: Request) -> str | None:
     return None
 
 
-def fetch_text(user_request_in: RequestIn, supported_langs: list) -> tuple[str, str | None, bool]:
+def fetch_text(
+    user_request_in: RequestIn, supported_langs: list
+) -> tuple[str, str | None, bool]:
     text = user_request_in.text
     limit_reached = len(text) > settings.text_max_length
     if limit_reached:
