@@ -461,13 +461,20 @@ app.add_middleware(
 
 
 # https://languagetool.org/development/api/org/languagetool/rules/Categories.html
-lt_style_categories = [
-    "FALSE_FRIENDS",
-    "REDUNDANCY",
-    "REGIONALISMS",
-    "REPETITIONS_STYLE",
-    "SEMANTICS",
-    "STYLE",
+lt_style_categories_plain_language = [
+    "FALSE_FRIENDS",  # rubber vs. eraser
+    "REGIONALISMS",  # use of regional terms
+    "COLLOQUIALISMS",  # use of slang
+    "CONFUSED_WORDS",  # proscribed vs prescribed
+    "REDUNDANCY",  # f.e. "tuna fish" https://community.languagetool.org/rule/list?offset=0&max=10&lang=en&filter=&categoryFilter=Redundant+Phrases&_action_list=Filter
+    "STYLE",  # https://community.languagetool.org/rule/list?offset=0&max=10&lang=en&filter=&categoryFilter=Style&_action_list=Filter
+]
+
+
+lt_style = [
+    "REPETITIONS",  #
+    "REPETITIONS_STYLE",  # Start sentences with same word multiple times https://community.languagetool.org/rule/list?offset=0&max=10&lang=en&filter=&categoryFilter=Repetitions+%28Style%29&_action_list=Filter
+    "SEMANTICS",  # She will join us on the 34th of Nov. https://community.languagetool.org/rule/list?offset=0&max=10&lang=en&filter=&categoryFilter=Semantics&_action_list=Filter
 ]
 
 
@@ -1728,8 +1735,21 @@ def languagetool_matches(
 
             if match["rule"]["id"] in ["SONDERZEICHEN", "ROEMISCHE_ZAHL"]:
                 continue
-            elif subcategory in lt_style_categories:
-                subcategory = "plain_language"
+            elif subcategory in lt_style_categories_plain_language:
+                if (
+                    subcategory == "STYLE"
+                    and (
+                        match["rule"]["id"]
+                        in [
+                            "TWITTER_X",
+                            "SERIAL_COMMA_ON",
+                        ]
+                    )
+                    or match["rule"]["id"].endswith("REPEAT_BEGINNING_RULE")
+                ):
+                    subcategory = "orthography"
+                else:
+                    subcategory = "plain_language"
             elif subcategory == "PLAIN_ENGLISH":
                 subcategory = "plain_language_advanced"
             elif subcategory == "DIFFICULT_WORDS":
@@ -1747,9 +1767,7 @@ def languagetool_matches(
                 subcategory = "plain_language_advanced"
             else:
                 subcategory = subcategory.lower()
-                if subcategory == "style":
-                    subcategory = "plain_language"
-                elif subcategory not in categories:
+                if subcategory not in categories:
                     subcategory = "orthography"
         except KeyError:
             subcategory = "orthography"
@@ -1879,7 +1897,9 @@ async def apply_languagetool_rules(
     payload = {
         "text": text,
         "language": lang.locale,
-        "disabledCategories": ["GENDER_NEUTRALITY", "COLLOQUIALISMS"],
+        "disabledCategories": [
+            "GENDER_NEUTRALITY",  # Handled via Witty rules
+        ],
         "enabledCategories": [],
         "disabledRules": [
             # Ignore case issues at the start of sentence due to chunking issues
@@ -1890,6 +1910,8 @@ async def apply_languagetool_rules(
             # Ignore unpaired brackets like a)
             "EN_UNPAIRED_BRACKETS",
             "UNPAIRED_BRACKETS",
+            # Profanity
+            "PROFANITY_XML",
         ],
     }
 
@@ -1915,9 +1937,9 @@ async def apply_languagetool_rules(
             payload["disabledCategories"].append("CASING")
 
         if "plain_language" in config.disabled_categories:
-            payload["disabledCategories"] += lt_style_categories
+            payload["disabledCategories"] += lt_style_categories_plain_language
     elif is_sub_category_enabled(config, "plain_language"):
-        payload["enabledCategories"] += lt_style_categories
+        payload["enabledCategories"] += lt_style_categories_plain_language
     else:
         return []
 
