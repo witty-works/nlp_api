@@ -106,6 +106,24 @@
             "subcategory": "exaggerating_advanced",
             "text": "ausgeprägten",
             "text_id": "ausgeprägt"
+        },
+        {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "ren von einem erfolgreichen Management. Wie können wir das am besten machen? Mit einem ausgeprägten Gespür.",
+            "end": 126,
+            "explanation": {
+                "content": "video",
+                "icon": "✅",
+                "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true"
+            },
+            "label": "Soziale Motivation: Kommunale Sprache",
+            "proficiency_level": "inclusive",
+            "start": 120,
+            "subcategory": "communal",
+            "text": "Gespür",
+            "text_id": "Gespür"
         }
     ]
 }
