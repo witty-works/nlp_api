@@ -24,7 +24,8 @@ applications:
 
         ./install_dependencies.sh
 
-        if [[ $MODELS == *"fr_core_news_lg"* ]]; then
+        if [ -z "${MODELS##*"fr_core_news_lg"*}" ]; then
+          echo "Installing French model"
           pdm add "fr_core_news_lg @ https://github.com/explosion/spacy-models/releases/download/fr_core_news_lg-3.7.0/fr_core_news_lg-3.7.0-py3-none-any.whl"
         fi
 
