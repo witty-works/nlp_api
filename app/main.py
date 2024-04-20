@@ -126,6 +126,7 @@ logger.debug("app started with settings: %s", settings)
 sentry_sdk = set_up_sentry_sdk(version, settings)
 redis = set_up_redis(settings)
 
+
 if settings.slack_bot_token and settings.slack_signing_secret:  # pragma: no cover
     bolt = AsyncApp(
         token=settings.slack_bot_token, signing_secret=settings.slack_signing_secret
@@ -378,6 +379,7 @@ async def lifespan(app: FastAPI):
 
     global settings
     global model
+    global redis
 
     import logging
 
@@ -410,6 +412,20 @@ async def lifespan(app: FastAPI):
                 substring_rules[lang][rule.lemma.lower()] = rule
 
     logger.setLevel(logging.WARNING)
+
+    if settings.redis_default_rules:
+        rules = json.loads(settings.redis_default_rules)
+        rules["term_replacements"] = parse_term_replacements(rules["term_replacements"])
+        email = rules["email"]
+        redis.set(get_user_id(email), json.dumps(rules))
+
+    if settings.redis_default_organization_rules:
+        organization_rules = json.loads(settings.redis_default_organization_rules)
+        organization_rules["term_replacements"] = parse_term_replacements(
+            organization_rules["term_replacements"]
+        )
+        key = organization_rules["id"]
+        redis.set(key, json.dumps(organization_rules))
 
     yield
 
@@ -1084,16 +1100,17 @@ async def get_tokenize(
 
 @app.post(
     "/organization/configs",
-    response_model=ConfResponse,
-    response_model_exclude_none=True,
+    status_code=status.HTTP_204_NO_CONTENT,
 )
 async def post_organization_configs(
     organization_configs: OrganizationConfRequest,
     username: str = Depends(fetch_current_username),
 ):
-    redis.set(organization_configs.id, organization_configs.model_dump_json())
+    organization_configs.term_replacements = parse_term_replacements(
+        organization_configs.term_replacements
+    )
 
-    return organization_configs
+    redis.set(organization_configs.id, organization_configs.model_dump_json())
 
 
 @app.delete(
@@ -1122,15 +1139,16 @@ async def get_organization_configs(
 
 @app.post(
     "/user/configs",
-    response_model=UserConfResponse,
-    response_model_exclude_none=True,
+    status_code=status.HTTP_204_NO_CONTENT,
 )
 async def post_user_configs(
     user_configs: UserConfRequest, username: str = Depends(fetch_current_username)
 ):
-    redis.set(get_user_id(user_configs.email), user_configs.model_dump_json())
+    user_configs.term_replacements = parse_term_replacements(
+        user_configs.term_replacements
+    )
 
-    return user_configs
+    redis.set(get_user_id(user_configs.email), user_configs.model_dump_json())
 
 
 @app.delete(
@@ -1158,6 +1176,61 @@ async def get_user_configs(
 
 
 # Functions
+def parse_term_replacement(lemma, term_replacement: dict):
+    word_type = (
+        term_replacement["word_type"] if "word_type" in term_replacement else "~"
+    )
+
+    word_type, lower_case, lemmatize = parse_word_type(word_type)
+
+    word_type = tuple(
+        [
+            {
+                "word_type": word_type,
+                "lower_case": lower_case,
+                "lemmatize": lemmatize,
+            }
+        ]
+    )
+
+    if lower_case and not lemmatize:
+        lemma = lemma.lower()
+
+    if lemma.endswith("|en") or lemma.endswith("|de"):
+        term_replacement["lang"] = lemma[-2:]
+        term_replacement["lemma"] = lemma[0:-3]
+    else:
+        term_replacement["lang"] = None
+        term_replacement["lemma"] = lemma
+
+    term_replacement["words"] = tokenize(term_replacement["lemma"], lang)
+    term_replacement["word_types"] = word_type * len(term_replacement["words"])
+
+    term_replacement["false_positives"] = []
+    term_replacement["parsed_alternatives"] = []
+    for alternative in term_replacement["alternatives"]:
+        term_replacement["false_positives"].append(alternative)
+
+        alternative = {"lemma": alternative}
+        alternative["words"] = tokenize(alternative["lemma"], lang)
+        alternative["word_types"] = word_type * len(alternative["words"])
+        term_replacement["parsed_alternatives"].append(alternative)
+
+    return term_replacement
+
+
+def parse_term_replacements(term_replacements_source: dict | None = None):
+    term_replacements = {}
+    if term_replacements_source is not None:
+        for lemma in term_replacements_source:
+            term_replacement = dict(term_replacements_source[lemma])
+            term_replacement = parse_term_replacement(lemma, term_replacement)
+
+            term_replacements[lemma] = term_replacement
+
+    return term_replacements
+
+
 async def fetch_organization_configs_from_redis(
     organization_id: str,
 ) -> dict:
@@ -2130,44 +2203,32 @@ def fetch_term_replacements(
 
     term_replacement_rules = []
     for lemma in configs["term_replacements"]:
-        term_replacement = configs["term_replacements"][lemma]
-
         if lemma.endswith("|en") or lemma.endswith("|de"):
             if not lemma.endswith(lang):
                 continue
 
-            lemma = lemma[0:-3]
+        term_replacement = configs["term_replacements"][lemma]
 
-        word_type = (
-            term_replacement["word_type"] if "word_type" in term_replacement else "~"
-        )
-
-        word_type, lower_case, lemmatize = parse_word_type(word_type)
-        if lower_case and not lemmatize:
-            lemma = lemma.lower()
-
-        words = tokenize(lemma, lang)
-        word_types = tuple(
-            [{"word_type": word_type, "lower_case": lower_case, "lemmatize": lemmatize}]
-            * len(words)
-        )
+        # BC until all user/organization configs have been re-synced
+        if "parsed_alternatives" not in term_replacement:
+            term_replacement = parse_term_replacement(lemma, term_replacement)
 
         alternatives = []
-        for alternative in term_replacement["alternatives"]:
-            alternative_words = tokenize(alternative, lang)
-            alternative_word_types = tuple(
-                [{"word_type": word_type, "lower_case": lower_case, "lemmatize": lemmatize}]
-                * len(alternative_words)
+        for alternative in term_replacement["parsed_alternatives"]:
+            alternatives.append(
+                Alternative(
+                    alternative["lemma"],
+                    alternative["words"],
+                    alternative["word_types"],
+                )
             )
 
-            alternatives.append(Alternative(alternative, alternative_words, alternative_word_types))
-
         rule = Rule(
-            lemma,
+            term_replacement["lemma"],
             lang,
-            lemma,
-            words,
-            word_types,
+            term_replacement["lemma"],
+            term_replacement["words"],
+            term_replacement["word_types"],
             "corporate_rules",
             alternatives,
         )
@@ -2176,7 +2237,8 @@ def fetch_term_replacements(
             rule.explanation = term_replacement["explanation"].get("text")
             rule.url = term_replacement["explanation"].get("url")
             rule.icon = term_replacement["explanation"].get("icon")
-            rule.false_positives = term_replacement["alternatives"]
+
+        rule.false_positives = term_replacement["false_positives"]
 
         term_replacement_rules.append(rule)
 

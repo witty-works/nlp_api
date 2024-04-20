@@ -466,6 +466,9 @@ class RuleConfig(BaseModel):
     @field_validator("preferred_variants", mode="before")
     @classmethod
     def valid_preferred_variants(cls, v):
+        if v is None:
+            return
+
         if "value" in v and isinstance(v["value"], str) and v["value"] != "":
             v["value"] = [s.strip() for s in v.split(",")]
 
@@ -489,7 +492,6 @@ class TermReplacement(BaseModel):
     alternatives: list[str]
     explanation: Optional[Explanation] = None
     proficiency_level: Optional[str] = None
-    lang: Optional[LangType] = None
     word_type: Optional[str] = None
 
 
