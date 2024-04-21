@@ -24,6 +24,11 @@ applications:
 
         ./install_dependencies.sh
 
+        if [ -z "${MODELS##*"fr_core_news_lg"*}" ]; then
+          echo "Installing French model"
+          pdm add "fr_core_news_lg @ https://github.com/explosion/spacy-models/releases/download/fr_core_news_lg-3.7.0/fr_core_news_lg-3.7.0-py3-none-any.whl"
+        fi
+
         export FT_MODEL="lid.176.bin"
 
         if [ ! -f "${PLATFORM_CACHE_DIR}/$FT_MODEL" ]; then

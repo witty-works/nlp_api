@@ -1,6 +1,5 @@
 from redis import Redis
 from fakeredis import FakeStrictRedis
-import json
 from app.settings import Settings
 
 
@@ -22,16 +21,4 @@ def set_up_redis(settings: Settings):  # pragma: no cover
         except Exception as e:
             pass
 
-    redis = FakeStrictRedis()
-
-    if settings.redis_default_rules:
-        rules = json.loads(settings.redis_default_rules)
-        email = rules["email"]
-        redis.set(get_user_id(email), settings.redis_default_rules)
-
-    if settings.redis_default_organization_rules:
-        organization_rules = json.loads(settings.redis_default_organization_rules)
-        key = organization_rules["id"]
-        redis.set(key, settings.redis_default_organization_rules)
-
-    return redis
+    return FakeStrictRedis()

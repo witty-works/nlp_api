@@ -5,13 +5,13 @@
         {
             "alternatives": [
                 {
-                    "text": "they"
-                },
-                {
                     "text": "a management team"
                 },
                 {
                     "text": "a management"
+                },
+                {
+                    "text": "they"
                 }
             ],
             "category": "gender-orientation",

@@ -1,6 +1,7 @@
 import spacy
 from spacy.lang.en import English
 from spacy.lang.de import German
+from spacy.lang.fr import French
 
 from spacy.lang.char_classes import (
     ALPHA,
@@ -14,6 +15,7 @@ from spacy.tokenizer import Tokenizer
 from spacy.util import compile_infix_regex
 from spacy.lookups import Lookups
 from app.models import LangType
+
 
 class TokenLemmatizer:
     def __init__(self, lemma_table):
@@ -47,7 +49,7 @@ def custom_tokenizer(lang, nlp):
                 r"(?<=[0-9])-(?=[0-9])",
             ]
         )
-    else:
+    elif lang == LangType.EN:
         # https://spacy.io/usage/linguistic-features#tokenization
         infixes = (
             LIST_ELLIPSES
@@ -63,6 +65,8 @@ def custom_tokenizer(lang, nlp):
                 r"(?<=[{a}0-9])[:<>=/](?=[{a}])".format(a=ALPHA),
             ]
         )
+    elif lang == LangType.FR:
+        return None
 
     infix_re = compile_infix_regex(infixes)
 
@@ -80,7 +84,9 @@ def custom_tokenizer(lang, nlp):
         rules=nlp.Defaults.tokenizer_exceptions,
     )
 
+
 lemma_lookup = {}
+
 
 def custom_lemmatizer(lang):
     lemmatizer = TokenLemmatizer(lemma_lookup[lang])
@@ -94,6 +100,7 @@ def custom_lemmatizer(lang):
 
 @German.factory("custom_lemmatizer_factory")
 @English.factory("custom_lemmatizer_factory")
+@French.factory("custom_lemmatizer_factory")
 def custom_lemmatizer_factory(nlp, name):
     return custom_lemmatizer(nlp.lang)
 
@@ -103,7 +110,9 @@ def fetch_nlp_model(lang, spacy_model, lookup):
 
     model = spacy.load(spacy_model)
     model.add_pipe("emoji", first=True)
-    model.tokenizer = custom_tokenizer(lang, model)
+    tokenizer = custom_tokenizer(lang, model)
+    if tokenizer is not None:
+        model.tokenizer = tokenizer
 
     # Switch to non-trainable lemmatizer
     model.remove_pipe("lemmatizer")

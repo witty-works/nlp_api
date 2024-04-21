@@ -5,7 +5,7 @@ import json
 import secrets
 import aiohttp
 from typing import Optional, Union
-from collections import defaultdict, namedtuple
+from collections import defaultdict
 import fasttext
 import aiosqlite
 from copy import deepcopy
@@ -116,7 +116,7 @@ from app.query_definitions import (
     noun_form_map,
 )
 
-version = "2.2.19"
+version = "2.2.20"
 
 categories = get_categories()
 settings = get_settings()
@@ -125,6 +125,7 @@ logger.debug("app started with settings: %s", settings)
 
 sentry_sdk = set_up_sentry_sdk(version, settings)
 redis = set_up_redis(settings)
+
 
 if settings.slack_bot_token and settings.slack_signing_secret:  # pragma: no cover
     bolt = AsyncApp(
@@ -149,7 +150,7 @@ async def handle_command_witty(
     await ack()
 
     user_request_in = RequestIn(client="slack:1.0.0", text=body["text"])
-    text, lang, limit_reached = fetch_text(user_request_in)
+    text, lang, limit_reached = fetch_text(user_request_in, model.keys())
 
     if lang is None:
         await respond(f"Witty could not determine a language for '{text}'.")
@@ -338,6 +339,10 @@ Token.set_extension("connected_token", default=None)
 for spacy_model in settings.models:
     lang = spacy_model[0:2]
 
+    lookup[lang] = lookup[lang] if lang in lookup else []
+    lemma_plural_lookup[lang] = (
+        lemma_plural_lookup[lang] if lang in lemma_plural_lookup else []
+    )
     model[lang] = fetch_nlp_model(lang, spacy_model, lookup[lang])
 
 lookup = None
@@ -374,6 +379,7 @@ async def lifespan(app: FastAPI):
 
     global settings
     global model
+    global redis
 
     import logging
 
@@ -406,6 +412,20 @@ async def lifespan(app: FastAPI):
                 substring_rules[lang][rule.lemma.lower()] = rule
 
     logger.setLevel(logging.WARNING)
+
+    if settings.redis_default_rules:
+        rules = json.loads(settings.redis_default_rules)
+        rules["term_replacements"] = parse_term_replacements(rules["term_replacements"])
+        email = rules["email"]
+        redis.set(get_user_id(email), json.dumps(rules))
+
+    if settings.redis_default_organization_rules:
+        organization_rules = json.loads(settings.redis_default_organization_rules)
+        organization_rules["term_replacements"] = parse_term_replacements(
+            organization_rules["term_replacements"]
+        )
+        key = organization_rules["id"]
+        redis.set(key, json.dumps(organization_rules))
 
     yield
 
@@ -461,13 +481,20 @@ app.add_middleware(
 
 
 # https://languagetool.org/development/api/org/languagetool/rules/Categories.html
-lt_style_categories = [
-    "FALSE_FRIENDS",
-    "REDUNDANCY",
-    "REGIONALISMS",
-    "REPETITIONS_STYLE",
-    "SEMANTICS",
-    "STYLE",
+lt_style_categories_plain_language = [
+    "FALSE_FRIENDS",  # rubber vs. eraser
+    "REGIONALISMS",  # use of regional terms
+    "COLLOQUIALISMS",  # use of slang
+    "CONFUSED_WORDS",  # proscribed vs prescribed
+    "REDUNDANCY",  # f.e. "tuna fish" https://community.languagetool.org/rule/list?offset=0&max=10&lang=en&filter=&categoryFilter=Redundant+Phrases&_action_list=Filter
+    "STYLE",  # https://community.languagetool.org/rule/list?offset=0&max=10&lang=en&filter=&categoryFilter=Style&_action_list=Filter
+]
+
+
+lt_style = [
+    "REPETITIONS",  #
+    "REPETITIONS_STYLE",  # Start sentences with same word multiple times https://community.languagetool.org/rule/list?offset=0&max=10&lang=en&filter=&categoryFilter=Repetitions+%28Style%29&_action_list=Filter
+    "SEMANTICS",  # She will join us on the 34th of Nov. https://community.languagetool.org/rule/list?offset=0&max=10&lang=en&filter=&categoryFilter=Semantics&_action_list=Filter
 ]
 
 
@@ -1073,16 +1100,17 @@ async def get_tokenize(
 
 @app.post(
     "/organization/configs",
-    response_model=ConfResponse,
-    response_model_exclude_none=True,
+    status_code=status.HTTP_204_NO_CONTENT,
 )
 async def post_organization_configs(
     organization_configs: OrganizationConfRequest,
     username: str = Depends(fetch_current_username),
 ):
-    redis.set(organization_configs.id, organization_configs.model_dump_json())
+    organization_configs.term_replacements = parse_term_replacements(
+        organization_configs.term_replacements
+    )
 
-    return organization_configs
+    redis.set(organization_configs.id, organization_configs.model_dump_json())
 
 
 @app.delete(
@@ -1111,15 +1139,16 @@ async def get_organization_configs(
 
 @app.post(
     "/user/configs",
-    response_model=UserConfResponse,
-    response_model_exclude_none=True,
+    status_code=status.HTTP_204_NO_CONTENT,
 )
 async def post_user_configs(
     user_configs: UserConfRequest, username: str = Depends(fetch_current_username)
 ):
-    redis.set(get_user_id(user_configs.email), user_configs.model_dump_json())
+    user_configs.term_replacements = parse_term_replacements(
+        user_configs.term_replacements
+    )
 
-    return user_configs
+    redis.set(get_user_id(user_configs.email), user_configs.model_dump_json())
 
 
 @app.delete(
@@ -1147,6 +1176,61 @@ async def get_user_configs(
 
 
 # Functions
+def parse_term_replacement(lemma, term_replacement: dict):
+    word_type = (
+        term_replacement["word_type"] if "word_type" in term_replacement else "~"
+    )
+
+    word_type, lower_case, lemmatize = parse_word_type(word_type)
+
+    word_type = tuple(
+        [
+            {
+                "word_type": word_type,
+                "lower_case": lower_case,
+                "lemmatize": lemmatize,
+            }
+        ]
+    )
+
+    if lower_case and not lemmatize:
+        lemma = lemma.lower()
+
+    if lemma.endswith("|en") or lemma.endswith("|de"):
+        term_replacement["lang"] = lemma[-2:]
+        term_replacement["lemma"] = lemma[0:-3]
+    else:
+        term_replacement["lang"] = None
+        term_replacement["lemma"] = lemma
+
+    term_replacement["words"] = tokenize(term_replacement["lemma"], lang)
+    term_replacement["word_types"] = word_type * len(term_replacement["words"])
+
+    term_replacement["false_positives"] = []
+    term_replacement["parsed_alternatives"] = []
+    for alternative in term_replacement["alternatives"]:
+        term_replacement["false_positives"].append(alternative)
+
+        alternative = {"lemma": alternative}
+        alternative["words"] = tokenize(alternative["lemma"], lang)
+        alternative["word_types"] = word_type * len(alternative["words"])
+        term_replacement["parsed_alternatives"].append(alternative)
+
+    return term_replacement
+
+
+def parse_term_replacements(term_replacements_source: dict | None = None):
+    term_replacements = {}
+    if term_replacements_source is not None:
+        for lemma in term_replacements_source:
+            term_replacement = dict(term_replacements_source[lemma])
+            term_replacement = parse_term_replacement(lemma, term_replacement)
+
+            term_replacements[lemma] = term_replacement
+
+    return term_replacements
+
+
 async def fetch_organization_configs_from_redis(
     organization_id: str,
 ) -> dict:
@@ -1433,7 +1517,9 @@ async def fetch_user(request: Request) -> str | None:
     return None
 
 
-def fetch_text(user_request_in: RequestIn) -> tuple[str, str | None, bool]:
+def fetch_text(
+    user_request_in: RequestIn, supported_langs: list
+) -> tuple[str, str | None, bool]:
     text = user_request_in.text
     limit_reached = len(text) > settings.text_max_length
     if limit_reached:
@@ -1442,6 +1528,7 @@ def fetch_text(user_request_in: RequestIn) -> tuple[str, str | None, bool]:
 
     lang_detection = get_lang_detection(fasttext_model)
     locale = lang_detection.get_locale(
+        supported_langs,
         text,
         user_request_in.lang,
         user_request_in.config.preferred_languages,
@@ -1501,7 +1588,7 @@ async def check(
         user_request_in.config.plan is not None
         and user_request_in.config.plan.startswith("witty_")
     ):
-        text, lang, limit_reached = fetch_text(user_request_in)
+        text, lang, limit_reached = fetch_text(user_request_in, model.keys())
 
         if lang is None:
             response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
@@ -1728,8 +1815,21 @@ def languagetool_matches(
 
             if match["rule"]["id"] in ["SONDERZEICHEN", "ROEMISCHE_ZAHL"]:
                 continue
-            elif subcategory in lt_style_categories:
-                subcategory = "plain_language"
+            elif subcategory in lt_style_categories_plain_language:
+                if (
+                    subcategory == "STYLE"
+                    and (
+                        match["rule"]["id"]
+                        in [
+                            "TWITTER_X",
+                            "SERIAL_COMMA_ON",
+                        ]
+                    )
+                    or match["rule"]["id"].endswith("REPEAT_BEGINNING_RULE")
+                ):
+                    subcategory = "orthography"
+                else:
+                    subcategory = "plain_language"
             elif subcategory == "PLAIN_ENGLISH":
                 subcategory = "plain_language_advanced"
             elif subcategory == "DIFFICULT_WORDS":
@@ -1747,9 +1847,7 @@ def languagetool_matches(
                 subcategory = "plain_language_advanced"
             else:
                 subcategory = subcategory.lower()
-                if subcategory == "style":
-                    subcategory = "plain_language"
-                elif subcategory not in categories:
+                if subcategory not in categories:
                     subcategory = "orthography"
         except KeyError:
             subcategory = "orthography"
@@ -1879,7 +1977,9 @@ async def apply_languagetool_rules(
     payload = {
         "text": text,
         "language": lang.locale,
-        "disabledCategories": ["GENDER_NEUTRALITY", "COLLOQUIALISMS"],
+        "disabledCategories": [
+            "GENDER_NEUTRALITY",  # Handled via Witty rules
+        ],
         "enabledCategories": [],
         "disabledRules": [
             # Ignore case issues at the start of sentence due to chunking issues
@@ -1890,6 +1990,8 @@ async def apply_languagetool_rules(
             # Ignore unpaired brackets like a)
             "EN_UNPAIRED_BRACKETS",
             "UNPAIRED_BRACKETS",
+            # Profanity
+            "PROFANITY_XML",
         ],
     }
 
@@ -1915,9 +2017,9 @@ async def apply_languagetool_rules(
             payload["disabledCategories"].append("CASING")
 
         if "plain_language" in config.disabled_categories:
-            payload["disabledCategories"] += lt_style_categories
+            payload["disabledCategories"] += lt_style_categories_plain_language
     elif is_sub_category_enabled(config, "plain_language"):
-        payload["enabledCategories"] += lt_style_categories
+        payload["enabledCategories"] += lt_style_categories_plain_language
     else:
         return []
 
@@ -2071,6 +2173,17 @@ async def apply_language_rules(
                 lang,
                 text,
             )
+        case LangType.FR:
+            # TODO implement french_rules()
+            list_results = await english_rules(
+                config,
+                term_replacements,
+                client,
+                tokens,
+                offsets,
+                lang,
+                text,
+            )
         case _:
             list_results = []
 
@@ -2090,38 +2203,32 @@ def fetch_term_replacements(
 
     term_replacement_rules = []
     for lemma in configs["term_replacements"]:
-        term_replacement = configs["term_replacements"][lemma]
-
         if lemma.endswith("|en") or lemma.endswith("|de"):
             if not lemma.endswith(lang):
                 continue
 
-            lemma = lemma[0:-3]
+        term_replacement = configs["term_replacements"][lemma]
 
-        word_type = (
-            term_replacement["word_type"] if "word_type" in term_replacement else "~"
-        )
-
-        word_type, lower_case, lemmatize = parse_word_type(word_type)
-        if lower_case and not lemmatize:
-            lemma = lemma.lower()
-
-        words = tokenize(lemma, lang)
-        word_types = tuple(
-            [{"word_type": word_type, "lower_case": lower_case, "lemmatize": lemmatize}]
-            * len(words)
-        )
+        # BC until all user/organization configs have been re-synced
+        if "parsed_alternatives" not in term_replacement:
+            term_replacement = parse_term_replacement(lemma, term_replacement)
 
         alternatives = []
-        for alternative in term_replacement["alternatives"]:
-            alternatives.append(Alternative(alternative, tokenize(alternative, lang)))
+        for alternative in term_replacement["parsed_alternatives"]:
+            alternatives.append(
+                Alternative(
+                    alternative["lemma"],
+                    alternative["words"],
+                    alternative["word_types"],
+                )
+            )
 
         rule = Rule(
-            lemma,
+            term_replacement["lemma"],
             lang,
-            lemma,
-            words,
-            word_types,
+            term_replacement["lemma"],
+            term_replacement["words"],
+            term_replacement["word_types"],
             "corporate_rules",
             alternatives,
         )
@@ -2130,7 +2237,8 @@ def fetch_term_replacements(
             rule.explanation = term_replacement["explanation"].get("text")
             rule.url = term_replacement["explanation"].get("url")
             rule.icon = term_replacement["explanation"].get("icon")
-            rule.false_positives = term_replacement["alternatives"]
+
+        rule.false_positives = term_replacement["false_positives"]
 
         term_replacement_rules.append(rule)
 
@@ -2385,7 +2493,7 @@ async def fetch_rules(
                 )
 
         is_gender_star_ending_ = False
-    else:
+    elif lang == LangType.DE:
         is_gender_star_ending_ = is_gender_star_ending(token.text)
         if not suffix_check and is_gender_star_ending_ and len(rows) == 0:
             new_text = is_gender_star_ending_[1] + is_gender_star_ending_[2]
@@ -4341,10 +4449,10 @@ async def alternative_declension(
     alternative_tokens = fetch_tokens(lang, alternative.lemma)
     if word_count > 1:
         # TODO figure out how to modify phrases
-        new_alternative = alternative.lemma
+        new_alternative_lemma = alternative.lemma
         is_plural_alternative = is_token_plural(lang, alternative_tokens[-1])
     else:
-        new_alternative = ""
+        new_alternative_lemma = ""
         is_plural_alternative = False
 
         previous = False
@@ -4415,24 +4523,25 @@ async def alternative_declension(
                             alternative_token,
                         )
 
-            new_alternative = (
-                alternative_text + alternative_token.whitespace_ + new_alternative
+            new_alternative_lemma = (
+                alternative_text + alternative_token.whitespace_ + new_alternative_lemma
             )
 
-    if lang == LangType.EN:
-        alternative.lemma = alternative_a_english(
-            new_alternative, prepend_word, is_plural_alternative
+    new_alternative = deepcopy(alternative)
+    if lang == LangType.EN and prepend_word:
+        new_alternative.lemma = alternative_a_english(
+            new_alternative_lemma, prepend_word, is_plural_alternative
         )
     else:
-        alternative.lemma = new_alternative
+        new_alternative.lemma = new_alternative_lemma
         if (
             is_singular != False
             and is_plural_alternative
-            and alternative.is_collective_noun
+            and new_alternative.is_collective_noun
         ):
-            alternative.is_inspiration = True
+            new_alternative.is_inspiration = True
 
-    return alternative
+    return new_alternative
 
 
 async def alternatives_declension(
@@ -5225,7 +5334,7 @@ async def regex_match(
                     )
                 ]
             # Kundinnen -> Kund*innen
-            elif "innen" in text:
+            elif text.lower().endswith("innen") or text.lower().endswith("innen)"):
                 alternatives = [Alternative(alternatives[0].lemma + "nen")]
         elif subcategory == "gender_specific_abbreviation":
             has_advanced = is_sub_category_enabled(

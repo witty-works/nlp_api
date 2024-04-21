@@ -1062,10 +1062,12 @@ def test_set_default_rules(event_loop):
     assert test_request.config.preferred_languages == [
         LangWithAutoType.EN,
         LangWithAutoType.DE,
+        LangWithAutoType.FR,
     ]
     assert test_request.config.preferred_variants == [
         LangWithAutoType.enUS,
         LangWithAutoType.deDE,
+        LangWithAutoType.frFR,
     ]
     assert test_request.config.german_gender_ending == "*in"
     assert test_request.config.gendered_roles_format == "both"
@@ -1245,12 +1247,12 @@ def test_store_get_delete_rules():
 
         # create user rules
         response = client.post("/user/configs", json=user_request_data)
-        assert_rules(response, user_request_data)
+        assert response.status_code == 204
 
         # update user rules
         user_request_data["config"]["gendered_roles_format"]["value"] = "none"
         response = client.post("/user/configs", json=user_request_data)
-        assert_rules(response, user_request_data)
+        assert response.status_code == 204
 
         # check user is missing
         response = client.get("/user/configs?email=bar")
@@ -1258,6 +1260,7 @@ def test_store_get_delete_rules():
 
         # check user exists but org missing
         response = client.get("/user/configs?email=" + user_request_data["email"])
+        assert response.status_code == 404
         assert response.content == b'{"detail":"Organization configs not found"}'
 
         # check organization is missing
@@ -1268,6 +1271,11 @@ def test_store_get_delete_rules():
 
         # check organization is created
         response = client.post("/organization/configs", json=organization_request_data)
+        assert response.status_code == 204
+
+        response = client.get(
+            "/organization/configs?organization_id=" + organization_request_data["id"]
+        )
         assert_rules(response, organization_request_data)
 
         # check user exists
@@ -1285,6 +1293,11 @@ def test_store_get_delete_rules():
         # check organization is updated
         organization_request_data["config"]["gendered_roles_format"]["value"] = "both"
         response = client.post("/organization/configs", json=organization_request_data)
+        assert response.status_code == 204
+
+        response = client.get(
+            "/organization/configs?organization_id=" + organization_request_data["id"]
+        )
         assert_rules(response, organization_request_data)
 
         # check user is missing
@@ -1297,11 +1310,10 @@ def test_store_get_delete_rules():
 
         # check user is created
         response = client.post("/user/configs", json=user_request_data)
-        assert response.status_code == 200
+        assert response.status_code == 204
 
         # check user exists
         response = client.get("/user/configs?email=" + user_request_data["email"])
-
         assert_rules(response, user_request_data)
         assert_rules(response, organization_request_data, "organization_")
 

@@ -5,9 +5,6 @@
         {
             "alternatives": [
                 {
-                    "text": "they"
-                },
-                {
                     "text": "colleague in engineering"
                 },
                 {
@@ -15,6 +12,9 @@
                 },
                 {
                     "text": "development team"
+                },
+                {
+                    "text": "development"
                 },
                 {
                     "text": "engineering"
