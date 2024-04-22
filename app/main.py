@@ -2209,10 +2209,6 @@ def fetch_term_replacements(
 
         term_replacement = configs["term_replacements"][lemma]
 
-        # BC until all user/organization configs have been re-synced
-        if "parsed_alternatives" not in term_replacement:
-            term_replacement = parse_term_replacement(lemma, term_replacement)
-
         alternatives = []
         for alternative in term_replacement["parsed_alternatives"]:
             alternatives.append(

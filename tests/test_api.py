@@ -8,6 +8,7 @@ from app.main import (
     app,
     redis,
     fetch_configs_for_request,
+    parse_term_replacements,
 )
 from app.auth_service import (
     AuthError,
@@ -487,7 +488,12 @@ def set_redis():
         "notifications": 0,
     }
 
+
+    user_object["term_replacements"] = parse_term_replacements(
+        user_object["term_replacements"]
+    )
     redis.set(get_user_id(user_object["email"]), json.dumps(user_object))
+
     # 2_2@gmail.com
     user_object = {
         "id": "test-2_2",
@@ -514,6 +520,7 @@ def set_redis():
     }
 
     redis.set(organization_object["id"], json.dumps(organization_object))
+
     # free@gmail.com
     user_object = {
         "id": "test-free",
@@ -657,6 +664,9 @@ def set_redis():
         "team_analytics": True,
     }
 
+    user_object["term_replacements"] = parse_term_replacements(
+        user_object["term_replacements"]
+    )
     redis.set(get_user_id(user_object["email"]), json.dumps(user_object))
 
     organization_object = {
@@ -728,7 +738,9 @@ def set_redis():
         "config_hash": "foobaz",
     }
 
-    # Set a value
+    organization_object["term_replacements"] = parse_term_replacements(
+        organization_object["term_replacements"]
+    )
     redis.set(organization_object["id"], json.dumps(organization_object))
 
 
