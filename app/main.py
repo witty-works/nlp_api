@@ -3354,7 +3354,7 @@ async def is_phrase_match(
         try:
             word_token = tokens[token_index + word_index]
         except IndexError:
-            return token_index, None, None
+            return None, None
 
         word_type = (
             rule.word_types[word_index] if word_index < word_types_count else None
@@ -3367,7 +3367,7 @@ async def is_phrase_match(
             word_type,
             suffix,
         ):
-            return token_index, None, None
+            return None, None
 
         text += word_token.text
 
@@ -3376,10 +3376,18 @@ async def is_phrase_match(
     if false_positive_matcher is not None and is_false_positive_match(
         false_positive_matcher, token_index, tokens, rule.lemma
     ):
-        return token_index, None, None
+        return None, None
 
     if rule.pattern is not None:
         pattern = rule.pattern.split("|")
+        if pattern[0] == "*" or pattern[-1] == "*":
+            logger.error(
+                "Rule pattern may not start or end with '*' but is '%s', rule id %i",
+                rule.pattern,
+                rule.id,
+            )
+
+            return None, None
 
         token_count = word_count
         prefix_tokens_match_count = 0
@@ -3392,7 +3400,7 @@ async def is_phrase_match(
                 tokens, prefix_pattern, token_index - 1, -1
             )
             if not tokens_match_count:
-                return token_index, None, None
+                return None, None
 
             prefix_tokens_match_count += tokens_match_count
 
@@ -3402,7 +3410,7 @@ async def is_phrase_match(
                 tokens, suffix_pattern, token_index + token_count, 1
             )
             if not tokens_match_count:
-                return token_index, None, None
+                return None, None
 
             token_count += tokens_match_count
 
@@ -3411,7 +3419,7 @@ async def is_phrase_match(
             text = ""
             for k in range(prefix_tokens_match_count + token_count):
                 if k > 0:
-                    text += tokens[token_index + k].whitespace_
+                    text += tokens[token_index + k - 1].whitespace_
 
                 text += tokens[token_index + k].text
 
@@ -3420,7 +3428,7 @@ async def is_phrase_match(
     if token_index + tokens[token_index]._.token_index_offset > skip_token_index:
         skip_token_index = token_index + tokens[token_index]._.token_index_offset
 
-    return token_index, skip_token_index, text
+    return skip_token_index, text
 
 
 async def fetch_word_type(
@@ -5655,7 +5663,7 @@ async def rule_check(
 
             skip_token = token_index + token._.token_index_offset
         else:
-            token_index, skip_token, text = await is_phrase_match(
+            skip_token, text = await is_phrase_match(
                 lang.lang,
                 token_index,
                 tokens,
