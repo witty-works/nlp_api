@@ -3411,7 +3411,7 @@ async def is_phrase_match(
             text = ""
             for k in range(prefix_tokens_match_count + token_count):
                 if k > 0:
-                    text += word_token.whitespace_
+                    text += tokens[token_index + k].whitespace_
 
                 text += tokens[token_index + k].text
 
