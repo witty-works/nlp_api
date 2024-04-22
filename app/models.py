@@ -519,7 +519,7 @@ class ConfRequest(BaseModel):
     plan: Optional[str] = None
     config: RuleConfig
     false_positives: list[str] = []
-    term_replacements: dict[str, TermReplacement] = {}
+    term_replacements: dict[str, TermReplacement | dict] = {}
     domains: Optional[DomainConfig] = None
     config_hash: Optional[str] = None
     sync_date: Optional[str] = None
