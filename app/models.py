@@ -319,13 +319,21 @@ class Config(BaseModel):
     plan: Optional[str] = None
     addons: Optional[list[str]] = None
     primary_language: Optional[LangVariantType] = None
-    preferred_languages: list = [LangWithAutoType.EN, LangWithAutoType.DE, LangWithAutoType.FR]
+    preferred_languages: list = [
+        LangWithAutoType.EN,
+        LangWithAutoType.DE,
+        LangWithAutoType.FR,
+    ]
     _supported_langs = [
         LangType.DE,
         LangType.EN,
         LangType.FR,
     ]
-    preferred_variants: list = [LangWithAutoType.enUS, LangWithAutoType.deDE, LangWithAutoType.frFR]
+    preferred_variants: list = [
+        LangWithAutoType.enUS,
+        LangWithAutoType.deDE,
+        LangWithAutoType.frFR,
+    ]
     _supported_locales = [
         LangWithAutoType.deDE,
         LangWithAutoType.deCH,
