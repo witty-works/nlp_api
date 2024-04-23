@@ -3687,6 +3687,12 @@ async def german_noun_lookup(
 
                 word = words[-1]
                 forms = await fetch_declensions(LangType.DE, WordType.NOUN, word, token)
+                if forms is None and len(words) > 2:
+                    word = words[-2] + words[-1].lower()
+                    forms = await fetch_declensions(
+                        LangType.DE, WordType.NOUN, word, token
+                    )
+
                 if forms is not None:
                     for form in forms:
                         if forms[form] is None:
