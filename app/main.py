@@ -2851,24 +2851,6 @@ async def german_rules(
             ):
                 continue
 
-        if is_sub_category_enabled(config, "d_and_i"):
-            new_token_index = await regex_match(
-                config,
-                client,
-                lang,
-                text,
-                token_index,
-                tokens,
-                offsets,
-                list_full,
-                static_rules["d_f_m_regexes"],
-            )
-
-            if check_continue(
-                list_full, token_index, new_token_index, tokens, "regex_match"
-            ):
-                continue
-
         new_token_index = detect_non_inclusive_emoji(
             config,
             client,
@@ -3122,24 +3104,6 @@ async def english_rules(
                 offsets,
                 list_full,
                 static_rules["m_f_regexes"],
-            )
-
-            if check_continue(
-                list_full, token_index, new_token_index, tokens, "regex_match"
-            ):
-                continue
-
-        if is_sub_category_enabled(config, "d_and_i"):
-            new_token_index = await regex_match(
-                config,
-                client,
-                lang,
-                text,
-                token_index,
-                tokens,
-                offsets,
-                list_full,
-                static_rules["d_f_m_regexes"],
             )
 
             if check_continue(
@@ -3856,7 +3820,12 @@ async def find_form_adjective_english(token_index: int, tokens: Doc):
         else:
             target_form = None
 
-    if target_form is None and settings.log_missing_declension and len(token.text) > 2 and not token.text[0].isupper():
+    if (
+        target_form is None
+        and settings.log_missing_declension
+        and len(token.text) > 2
+        and not token.text[0].isupper()
+    ):
         logger.error(
             f"English adjective target form could not be determined for '{token.text}' (lemma: '{token.lemma_}')."
         )
@@ -5366,6 +5335,8 @@ async def regex_match(
             letters = list(map(lambda x: x.upper(), letters))
             is_lower = text[0].islower()
 
+            all_letters = deepcopy(letters)
+
             veteran_letter = "V"
             diverse_letter = "D"
             if diverse_letter not in letters and "*" not in letters:
@@ -5451,7 +5422,20 @@ async def regex_match(
             remove_alternative = Alternative("-")
             remove_alternative.is_remove = True
             remove_alternative.label = context_remove
-            alternatives = [remove_alternative, alternative]
+            alternatives = [
+                remove_alternative,
+                Alternative(
+                    "Alle Gender" if lang.lang == LangType.DE else "all gender"
+                ),
+            ]
+
+            # case "d/f/m/v" => do not suggest "d/v/f/m"
+            if (
+                len(all_letters) < len(alternative.lemma.split("/"))
+                or (all_letters[0] != "d" and all_letters[0] != "*")
+                or all_letters[-1] != "m"
+            ):
+                alternatives.append(alternative)
 
             if not has_advanced:
                 alternative_sorted = Alternative("/".join(sorted(letters)))
@@ -5473,10 +5457,6 @@ async def regex_match(
 
             if alternative_3 is not None:
                 alternatives.append(alternative_3)
-
-            alternatives.append(
-                Alternative("Alle Gender" if lang.lang == LangType.DE else "all gender")
-            )
 
         skip_token = start_token + 1
 

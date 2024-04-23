@@ -9,6 +9,9 @@
                     "remove": true
                 },
                 {
+                    "text": "Alle Gender"
+                },
+                {
                     "context": "Divers (EU) / m. Behinderung (NA)",
                     "text": "(m/f/d)"
                 },
@@ -18,9 +21,6 @@
                 },
                 {
                     "text": "(m/f/*)"
-                },
-                {
-                    "text": "Alle Gender"
                 }
             ],
             "category": "gender-orientation",
