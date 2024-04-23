@@ -856,19 +856,17 @@ async def post_debug_rule(
         alternative_list = []
         for alternative_in in rule_data.alternatives:
             alternative = Alternative(
-                lemma=alternative_in.lemma,
-                words=tokenize(alternative_in.lemma, rule_data.lang),
-                word_types=alternative_in.word_types,
+                alternative_in.lemma,
+                tokenize(alternative_in.lemma, rule_data.lang),
+                alternative_in.word_types,
+                alternative_in.is_remove,
+                alternative_in.is_inspiration,
+                alternative_in.is_placeholder,
+                alternative_in.is_advanced,
+                alternative_in.is_collective_noun,
+                alternative_in.is_gendered_noun,
+                alternative_in.label,
             )
-
-            alternative.label = alternative_in.label
-            alternative.pluralization = alternative_in.pluralization
-            alternative.is_inspiration = alternative_in.is_inspiration
-            alternative.is_gendered_noun = alternative_in.is_gendered_noun
-            alternative.is_advanced = alternative_in.is_advanced
-            alternative.is_collective_noun = alternative_in.is_collective_noun
-            alternative.is_remove = alternative_in.is_remove
-            alternative.is_placeholder = alternative_in.is_placeholder
 
             alternative_list.append(alternative)
     else:
@@ -2562,8 +2560,7 @@ async def fetch_rule_alternatives(
         if "^" in lemma:
             continue
 
-        is_remove = row[alternative_columns["is_remove"]]
-        if is_remove:
+        if row[alternative_columns["is_remove"]]:
             lemma = None
             lemma_json = ()
             word_types_json = ()
@@ -2579,16 +2576,14 @@ async def fetch_rule_alternatives(
             lemma,
             lemma_json,
             word_types_json,
+            row[alternative_columns["is_remove"]],
+            row[alternative_columns["is_inspiration"]],
+            row[alternative_columns["is_placeholder"]],
+            row[alternative_columns["is_advanced"]],
+            row[alternative_columns["is_collective_noun"]],
+            row[alternative_columns["is_gendered_noun"]],
+            row[alternative_columns["label"]],
         )
-        alternative.is_remove = is_remove
-        alternative.is_inspiration = (
-            row[alternative_columns["is_inspiration"]]
-            or row[alternative_columns["is_placeholder"]]
-        )
-        alternative.is_advanced = row[alternative_columns["is_advanced"]]
-        alternative.is_collective_noun = row[alternative_columns["is_collective_noun"]]
-        alternative.is_gendered_noun = row[alternative_columns["is_gendered_noun"]]
-        alternative.label = row[alternative_columns["label"]]
 
         alternatives.append(alternative)
 
