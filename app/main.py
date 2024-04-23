@@ -3963,7 +3963,11 @@ async def align_form_noun_german(
 
     text = get_target_declension_form(target_result, target_form)
     if text is None:
-        if settings.log_missing_declension and not target_token.text.isupper():
+        if (
+            settings.log_missing_declension
+            and not target_token.text.isupper()
+            and not target_token.text.endswith("-")
+        ):
             logger.error(
                 f"German noun target form '{str(target_form)}' for '{target_token.text}' (lemma: '{target_token.lemma_}') missing: '{json.dumps(target_result)}'."
             )
