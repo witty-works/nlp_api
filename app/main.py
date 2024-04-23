@@ -3850,7 +3850,7 @@ async def find_form_adjective_english(token_index: int, tokens: Doc):
         else:
             target_form = None
 
-    if target_form is None and settings.log_missing_declension and len(token.text) > 2:
+    if target_form is None and settings.log_missing_declension and len(token.text) > 2 and not token.text[0].isupper():
         logger.error(
             f"English adjective target form could not be determined for '{token.text}' (lemma: '{token.lemma_}')."
         )
