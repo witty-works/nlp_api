@@ -3561,12 +3561,6 @@ async def _fetch_word_type(
                 )
                 if result is not None:
                     return WordType.VERB
-        elif (
-            not strict
-            and WordType.ADJECTIVE in expected_word_type
-            and token.dep_ == "compound"
-        ):
-            return WordType.ADJECTIVE
 
         return WordType.NOUN
 
