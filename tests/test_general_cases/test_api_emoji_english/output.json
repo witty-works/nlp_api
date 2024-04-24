@@ -202,191 +202,27 @@
         {
             "alternatives": [
                 {
-                    "context": "Green Salad",
-                    "text": "🥗"
+                    "text": "😃"
                 },
                 {
-                    "context": "Falafel",
-                    "text": "🧆"
-                },
-                {
-                    "context": "Dumpling",
-                    "text": "🥟"
-                },
-                {
-                    "context": "Bento Box",
-                    "text": "🍱"
-                },
-                {
-                    "context": "Curry Rice",
-                    "text": "🍛"
+                    "remove": true
                 }
             ],
-            "category": "cultural-diversity",
+            "category": "ability-physicality",
             "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Everything is fine.",
-            "end": 41,
+            "end": 67,
             "explanation": {
-                "context": "French Fries",
                 "icon": "😒",
-                "text": "Suggests an idea of a person's culture defines their identity",
-                "url": "https://www.witty.works/en/categories/cultural-diversity/cultural-stereotype?reducedView=true"
+                "text": "Emoji overuse may exclude screen reader users",
+                "url": "https://www.witty.works/en/categories/ability-physicality/ability?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Cultural Diversity: Cultural stereotype",
+            "label": "Ability + Physicality: Ability",
             "proficiency_level": "unconscious_bias",
-            "start": 39,
-            "subcategory": "culture",
-            "text": "🍟",
-            "text_id": "🍟"
-        },
-        {
-            "alternatives": [
-                {
-                    "context": "Ok Hand",
-                    "text": "👌"
-                },
-                {
-                    "context": "Ok Hand Dark Skin Tone",
-                    "text": "👌🏿"
-                },
-                {
-                    "context": "Ok Hand Medium Skin Tone",
-                    "text": "👌🏽"
-                },
-                {
-                    "context": "Ok Hand Medium-Dark Skin Tone",
-                    "text": "👌🏾"
-                },
-                {
-                    "context": "Ok Hand Medium-Light Skin Tone",
-                    "text": "👌🏼"
-                }
-            ],
-            "category": "cultural-diversity",
-            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Everything is fine.",
-            "end": 46,
-            "explanation": {
-                "context": "Ok Hand Light Skin Tone",
-                "icon": "😒",
-                "text": "Be mindful when using a skin tone that does not match your own",
-                "url": "https://www.witty.works/en/categories/cultural-diversity/cultural-stereotype?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Cultural Diversity: Cultural stereotype",
-            "proficiency_level": "unconscious_bias",
-            "start": 42,
-            "subcategory": "culture",
-            "text": "👌🏻",
-            "text_id": "👌🏻"
-        },
-        {
-            "alternatives": [
-                {
-                    "context": "Person",
-                    "text": "🧑"
-                },
-                {
-                    "context": "Person Dark Skin Tone",
-                    "text": "🧑🏿"
-                },
-                {
-                    "context": "Person Medium Skin Tone",
-                    "text": "🧑🏽"
-                },
-                {
-                    "context": "Person Medium-Dark Skin Tone",
-                    "text": "🧑🏾"
-                },
-                {
-                    "context": "Person Light Skin Tone",
-                    "text": "🧑🏻"
-                }
-            ],
-            "category": "gender-orientation",
-            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Everything is fine.",
-            "end": 49,
-            "explanation": {
-                "content": "advanced",
-                "context": "Woman",
-                "icon": "😒",
-                "text": "Impacts the visibility of marginalized genders",
-                "url": "https://www.witty.works/en/categories/gender-orientation/gender-binary?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Gender + Orientation: Gender binary",
-            "proficiency_level": "unconscious_bias",
-            "start": 47,
-            "subcategory": "gender_identity",
-            "text": "👩",
-            "text_id": "👩"
-        },
-        {
-            "alternatives": [
-                {
-                    "context": "People Holding Hands",
-                    "text": "🧑‍🤝‍🧑"
-                },
-                {
-                    "context": "Women Holding Hands",
-                    "text": "👭"
-                },
-                {
-                    "context": "Men Holding Hands",
-                    "text": "👬"
-                },
-                {
-                    "context": "People Holding Hands Dark Skin Tone",
-                    "text": "🧑🏿‍🤝‍🧑🏿"
-                },
-                {
-                    "context": "People Holding Hands Medium Skin Tone",
-                    "text": "🧑🏽‍🤝‍🧑🏽"
-                }
-            ],
-            "category": "gender-orientation",
-            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Everything is fine.",
-            "end": 52,
-            "explanation": {
-                "context": "Woman And Man Holding Hands",
-                "icon": "😒",
-                "text": "Promotes a heterosexual value system and roles",
-                "url": "https://www.witty.works/en/categories/gender-orientation/sexual-orientation?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Gender + Orientation: Sexual orientation",
-            "proficiency_level": "unconscious_bias",
-            "start": 50,
-            "subcategory": "sexual_orientation",
-            "text": "👫",
-            "text_id": "👫"
-        },
-        {
-            "alternatives": [
-                {
-                    "context": "Family Woman Woman Girl",
-                    "text": "👩‍👩‍👧"
-                },
-                {
-                    "context": "Family Man Man Girl",
-                    "text": "👨‍👨‍👧"
-                }
-            ],
-            "category": "gender-orientation",
-            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Everything is fine.",
-            "end": 61,
-            "explanation": {
-                "context": "Family Man Woman Girl",
-                "icon": "😒",
-                "text": "Promotes a heterosexual value system and roles",
-                "url": "https://www.witty.works/en/categories/gender-orientation/sexual-orientation?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Gender + Orientation: Sexual orientation",
-            "proficiency_level": "unconscious_bias",
-            "start": 53,
-            "subcategory": "sexual_orientation",
-            "text": "👨‍👩‍👧",
-            "text_id": "👨‍👩‍👧"
+            "start": 36,
+            "subcategory": "ability",
+            "text": "😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍",
+            "text_id": "😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍"
         }
     ]
 }

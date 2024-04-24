@@ -9,15 +9,15 @@
                 }
             ],
             "category": "orthography",
-            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut.",
-            "end": 82,
+            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut. 😃😃 😃 🤩😍😛😍",
+            "end": 79,
             "explanation": {
                 "icon": "❌",
                 "text": "Außer am Satzanfang werden nur Nomen und Eigennamen großgeschrieben."
             },
             "gravity": 1.0,
             "label": "Groß-/Kleinschreibung",
-            "start": 77,
+            "start": 74,
             "subcategory": "casing",
             "text": "Alles",
             "text_id": "Alles"
@@ -46,7 +46,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut.",
+            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut. 😃😃 😃 🤩😍😛😍",
             "end": 5,
             "explanation": {
                 "content": "advanced",
@@ -83,7 +83,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut.",
+            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut. 😃😃 😃 🤩😍😛😍",
             "end": 11,
             "explanation": {
                 "content": "advanced",
@@ -124,7 +124,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut.",
+            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut. 😃😃 😃 🤩😍😛😍",
             "end": 19,
             "explanation": {
                 "content": "advanced",
@@ -161,7 +161,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut.",
+            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut. 😃😃 😃 🤩😍😛😍",
             "end": 27,
             "explanation": {
                 "content": "advanced",
@@ -202,7 +202,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut.",
+            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut. 😃😃 😃 🤩😍😛😍",
             "end": 35,
             "explanation": {
                 "content": "advanced",
@@ -243,8 +243,8 @@
                 }
             ],
             "category": "cultural-diversity",
-            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut.",
-            "end": 41,
+            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut. 😃😃 😃 🤩😍😛😍",
+            "end": 38,
             "explanation": {
                 "context": "Pommes Frites",
                 "icon": "😒",
@@ -254,7 +254,7 @@
             "gravity": 2.0,
             "label": "Kulturelle Diversität: Kulturelles Sterotyp",
             "proficiency_level": "unconscious_bias",
-            "start": 39,
+            "start": 36,
             "subcategory": "culture",
             "text": "🍟",
             "text_id": "🍟"
@@ -283,8 +283,8 @@
                 }
             ],
             "category": "cultural-diversity",
-            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut.",
-            "end": 46,
+            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut. 😃😃 😃 🤩😍😛😍",
+            "end": 43,
             "explanation": {
                 "context": "Ok-Zeichen Helle Hautfarbe",
                 "icon": "😒",
@@ -294,7 +294,7 @@
             "gravity": 2.0,
             "label": "Kulturelle Diversität: Kulturelles Sterotyp",
             "proficiency_level": "unconscious_bias",
-            "start": 42,
+            "start": 39,
             "subcategory": "culture",
             "text": "👌🏻",
             "text_id": "👌🏻"
@@ -323,8 +323,8 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut.",
-            "end": 49,
+            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut. 😃😃 😃 🤩😍😛😍",
+            "end": 46,
             "explanation": {
                 "content": "advanced",
                 "context": "Frau",
@@ -335,7 +335,7 @@
             "gravity": 2.0,
             "label": "Geschlecht + Orientierung: Binäres Geschlecht",
             "proficiency_level": "unconscious_bias",
-            "start": 47,
+            "start": 44,
             "subcategory": "gender_identity",
             "text": "👩",
             "text_id": "👩"
@@ -364,8 +364,8 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut.",
-            "end": 52,
+            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut. 😃😃 😃 🤩😍😛😍",
+            "end": 49,
             "explanation": {
                 "context": "Mann Und Frau Halten Hände",
                 "icon": "😒",
@@ -375,7 +375,7 @@
             "gravity": 2.0,
             "label": "Geschlecht + Orientierung: Sexuelle Orientierung",
             "proficiency_level": "unconscious_bias",
-            "start": 50,
+            "start": 47,
             "subcategory": "sexual_orientation",
             "text": "👫",
             "text_id": "👫"
@@ -392,8 +392,8 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut.",
-            "end": 61,
+            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut. 😃😃 😃 🤩😍😛😍",
+            "end": 58,
             "explanation": {
                 "context": "Familie Mann Frau Und Mädchen",
                 "icon": "😒",
@@ -403,10 +403,60 @@
             "gravity": 2.0,
             "label": "Geschlecht + Orientierung: Sexuelle Orientierung",
             "proficiency_level": "unconscious_bias",
-            "start": 53,
+            "start": 50,
             "subcategory": "sexual_orientation",
             "text": "👨‍👩‍👧",
             "text_id": "👨‍👩‍👧"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "😃"
+                },
+                {
+                    "remove": true
+                }
+            ],
+            "category": "ability-physicality",
+            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut. 😃😃 😃 🤩😍😛😍",
+            "end": 96,
+            "explanation": {
+                "icon": "😒",
+                "text": "Wiederholen von Emoji kann blinde Menschen ausschließen",
+                "url": "https://www.witty.works/de/kategorien/fähigkeiten-erkrankungen-körperlichkeit/fähigkeiten?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Fähigkeiten + Erkrankungen + Körperlichkeit: Fähigkeiten",
+            "proficiency_level": "unconscious_bias",
+            "start": 89,
+            "subcategory": "ability",
+            "text": "😃😃 😃",
+            "text_id": "😃😃 😃"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "🤩"
+                },
+                {
+                    "remove": true
+                }
+            ],
+            "category": "ability-physicality",
+            "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Alles ist gut. 😃😃 😃 🤩😍😛😍",
+            "end": 105,
+            "explanation": {
+                "icon": "😒",
+                "text": "Übermäßiger Gebrauch von Emoji kann blinde Menschen ausschließen",
+                "url": "https://www.witty.works/de/kategorien/fähigkeiten-erkrankungen-körperlichkeit/fähigkeiten?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Fähigkeiten + Erkrankungen + Körperlichkeit: Fähigkeiten",
+            "proficiency_level": "unconscious_bias",
+            "start": 97,
+            "subcategory": "ability",
+            "text": "🤩😍😛😍",
+            "text_id": "🤩😍😛😍"
         }
     ]
 }
