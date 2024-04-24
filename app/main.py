@@ -3332,7 +3332,7 @@ async def is_phrase_match(
     tokens: Doc,
     rule: Rule,
     false_positive_matcher: list = None,
-) -> (int | None, str | None):
+) -> tuple[int | None, str | None]:
     suffix = rule.type == RuleType.SUFFIX
 
     word_count = len(rule.words)
