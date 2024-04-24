@@ -5700,32 +5700,36 @@ async def rule_check(
 
         word_types = rule.get_word_types()
 
-        expected_word_type = None
-        form_token_i = token_index
-        if LangType.DE == lang.lang and len(word_types) > 1:
-            form_token_offset = 0
-            for k in range(len(word_types)):
-                if word_types[k] == WordType.NOUN:
-                    expected_word_type = WordType.NOUN
-                    form_token_offset = k
-
-            form_token_i += form_token_offset
-
-        if expected_word_type is None:
-            expected_word_type = word_types[0] if len(word_types) else None
-
-        word_type = await fetch_word_type(
-            lang.lang,
-            tokens[form_token_i],
-            expected_word_type,
-        )
-        target_form = await find_form(
-            lang.lang, word_type, form_token_i, tokens, is_singular
-        )
-
         alternatives = await fetch_rule_alternatives(
             client, rule, is_singular, config.show_inspiration_alternatives, lang.locale
         )
+
+        if len(alternatives):
+            form_token_i = token_index
+            if rule.actual_word_types:
+                word_type = rule.actual_word_types[0]
+            else:
+                expected_word_type = None
+                if LangType.DE == lang.lang and len(word_types) > 1:
+                    form_token_offset = 0
+                    for k in range(len(word_types)):
+                        if word_types[k] == WordType.NOUN:
+                            expected_word_type = WordType.NOUN
+                            form_token_offset = k
+
+                    form_token_i += form_token_offset
+
+                if expected_word_type is None:
+                    expected_word_type = word_types[0] if len(word_types) else None
+
+                word_type = await fetch_word_type(
+                    lang.lang,
+                    tokens[form_token_i],
+                    expected_word_type,
+                )
+            target_form = await find_form(
+                lang.lang, word_type, form_token_i, tokens, is_singular
+            )
 
         gendered_noun = False
         if LangType.DE == lang.lang and len(alternatives):
@@ -5767,7 +5771,7 @@ async def rule_check(
                     alternative.lemma += ending
 
         start = token.idx
-        if len(alternatives) > 0:
+        if len(alternatives):
             # TODO make it possible to handle cases with multiple alternatives
             if len(alternatives) == 1 and alternatives[0].lemma == "they":
                 text, alternative = await pluralize_they(text, tokens, token_index)
