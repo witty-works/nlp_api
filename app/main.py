@@ -6096,6 +6096,58 @@ def detect_non_inclusive_emoji(
 
         return token_index + 1
 
+    if token_index + 1 < len(tokens):
+        subcategory = "ability"
+        explanation = None
+        for emoji_index in range(token_index + 1, len(tokens)):
+            if not tokens[emoji_index]._.is_emoji:
+                break
+
+            if token.text == tokens[emoji_index].text:
+                if emoji_index - 1 == token_index:
+                    explanation = (
+                        "Wiederholen von Emoji kann blinde Menschen ausschließen"
+                        if lang.lang == LangType.DE
+                        else "Repeating emoji's may exclude screen reader users"
+                    )
+            elif explanation is not None:
+                emoji_index -= 1
+                break
+
+        if explanation is None and emoji_index >= token_index + 2:
+            explanation = (
+                "Übermäßiger Gebrauch von Emoji kann blinde Menschen ausschließen"
+                if lang.lang == LangType.DE
+                else "Emoji overuse may exclude screen reader users"
+            )
+
+        if explanation:
+            text = token.text
+            for text_index in range(token_index, emoji_index):
+                text+= tokens[text_index].whitespace_ + tokens[text_index + 1].text
+
+            alternatives = [Alternative(token.text), Alternative("-", None, None, True)]
+
+            list_full.append(
+                ResultOut.factory(
+                    config,
+                    client,
+                    lang,
+                    text,
+                    text,
+                    full_text,
+                    offsets,
+                    subcategory,
+                    token.idx,
+                    None,
+                    alternatives,
+                    None,
+                    explanation,
+                )
+            )
+
+            return emoji_index + 1
+
     return token_index
 
 
