@@ -27,11 +27,11 @@
                     "remove": true
                 },
                 {
-                    "context": "disabled (NA) / diverse (EU)",
-                    "text": "d/v/f/m"
+                    "text": "all gender"
                 },
                 {
-                    "text": "all gender"
+                    "context": "disabled (NA) / diverse (EU)",
+                    "text": "d/v/f/m"
                 }
             ],
             "category": "gender-orientation",

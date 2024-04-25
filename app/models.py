@@ -206,6 +206,13 @@ class Alternative:
         lemma: str,
         words: list = None,
         word_types: list = None,
+        is_remove: list = False,
+        is_inspiration: list = False,
+        is_placeholder: list = False,
+        is_advanced: list = False,
+        is_collective_noun: list = False,
+        is_gendered_noun: list = False,
+        label: str | None = None,
     ):
         self.lemma = lemma
         if words is None:
@@ -216,6 +223,14 @@ class Alternative:
                 {"word_type": "", "lower_case": True, "lemmatize": True}
             ] * len(self.words)
         self.word_types = word_types
+
+        self.is_remove = is_remove
+        self.is_inspiration = is_inspiration or is_placeholder
+        self.is_placeholder = is_placeholder
+        self.is_advanced = is_advanced
+        self.is_collective_noun = is_collective_noun
+        self.is_gendered_noun = is_gendered_noun
+        self.label = label
 
 
 class Rule:
@@ -319,13 +334,21 @@ class Config(BaseModel):
     plan: Optional[str] = None
     addons: Optional[list[str]] = None
     primary_language: Optional[LangVariantType] = None
-    preferred_languages: list = [LangWithAutoType.EN, LangWithAutoType.DE, LangWithAutoType.FR]
+    preferred_languages: list = [
+        LangWithAutoType.EN,
+        LangWithAutoType.DE,
+        LangWithAutoType.FR,
+    ]
     _supported_langs = [
         LangType.DE,
         LangType.EN,
         LangType.FR,
     ]
-    preferred_variants: list = [LangWithAutoType.enUS, LangWithAutoType.deDE, LangWithAutoType.frFR]
+    preferred_variants: list = [
+        LangWithAutoType.enUS,
+        LangWithAutoType.deDE,
+        LangWithAutoType.frFR,
+    ]
     _supported_locales = [
         LangWithAutoType.deDE,
         LangWithAutoType.deCH,
@@ -511,7 +534,7 @@ class ConfRequest(BaseModel):
     plan: Optional[str] = None
     config: RuleConfig
     false_positives: list[str] = []
-    term_replacements: dict[str, TermReplacement] = {}
+    term_replacements: dict[str, TermReplacement | dict] = {}
     domains: Optional[DomainConfig] = None
     config_hash: Optional[str] = None
     sync_date: Optional[str] = None
@@ -798,7 +821,11 @@ class ResultOut(BaseModel):
 
                 variation = ResultAlternative(
                     text=alternative.lemma,
-                    inspiration=True if alternative.is_inspiration else None,
+                    inspiration=(
+                        True
+                        if alternative.is_inspiration
+                        else None
+                    ),
                     context=alternative.label,
                 )
 

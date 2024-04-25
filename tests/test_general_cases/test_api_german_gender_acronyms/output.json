@@ -9,14 +9,14 @@
                     "remove": true
                 },
                 {
-                    "context": "Divers (EU) / m. Behinderung (NA)",
-                    "text": "d/f/m"
-                },
-                {
-                    "text": "*/f/m"
-                },
-                {
                     "text": "Alle Gender"
+                },
+                {
+                    "context": "Divers (EU) / m. Behinderung (NA)",
+                    "text": "d/w/m"
+                },
+                {
+                    "text": "*/w/m"
                 }
             ],
             "category": "gender-orientation",
@@ -42,14 +42,14 @@
                     "remove": true
                 },
                 {
-                    "context": "Divers (EU) / m. Behinderung (NA)",
-                    "text": "d/f/m"
-                },
-                {
-                    "text": "*/f/m"
-                },
-                {
                     "text": "Alle Gender"
+                },
+                {
+                    "context": "Divers (EU) / m. Behinderung (NA)",
+                    "text": "d/w/m"
+                },
+                {
+                    "text": "*/w/m"
                 }
             ],
             "category": "gender-orientation",
@@ -69,38 +69,71 @@
             "text_id": "(f/m..)"
         },
         {
-            "alternatives": [],
-            "category": "social-motive",
+            "alternatives": [
+                {
+                    "context": "Nutze geschlechtsneutrale Job-Titel",
+                    "remove": true
+                },
+                {
+                    "text": "Alle Gender"
+                },
+                {
+                    "context": "Divers (EU) / m. Behinderung (NA)",
+                    "text": "d/w/m"
+                },
+                {
+                    "text": "*/w/m"
+                }
+            ],
+            "category": "gender-orientation",
             "context": "Wir brauchen m/f Menschen. Besser ist f/m/d! Und noch besser d/f/m oder x/f/m.",
             "end": 66,
             "explanation": {
-                "content": "advanced",
-                "icon": "✅",
-                "text": "Fördere den Austausch über Vielfalt, Gleichheit, Teilhabe und Zugehörigkeit",
-                "url": "https://www.witty.works/de/kategorien/soziale-motivation/vielfalt-gleichheit-teilhabe-zugehörigkeit?reducedView=true"
+                "icon": "😮",
+                "text": "Nenne unterrepräsentierte Gruppen zuerst. Verlinke auf deine Leitlinie zur Gleichstellung.",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/geschlechter-spezifische-abkürzung?reducedView=true"
             },
-            "label": "Soziale Motivation: DEIB",
-            "proficiency_level": "inclusive",
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Geschlechter-Spezifische Abkürzung",
+            "proficiency_level": "unconscious_bias",
             "start": 61,
-            "subcategory": "d_and_i",
+            "subcategory": "gender_specific_abbreviation_advanced",
             "text": "d/f/m",
             "text_id": "(d/f/m/v)"
         },
         {
-            "alternatives": [],
-            "category": "social-motive",
+            "alternatives": [
+                {
+                    "context": "Nutze geschlechtsneutrale Job-Titel",
+                    "remove": true
+                },
+                {
+                    "text": "Alle Gender"
+                },
+                {
+                    "context": "Divers (EU) / m. Behinderung (NA)",
+                    "text": "d/w/m"
+                },
+                {
+                    "text": "*/w/m"
+                },
+                {
+                    "text": "x/w/m"
+                }
+            ],
+            "category": "gender-orientation",
             "context": "Wir brauchen m/f Menschen. Besser ist f/m/d! Und noch besser d/f/m oder x/f/m.",
             "end": 77,
             "explanation": {
-                "content": "advanced",
-                "icon": "✅",
-                "text": "Fördere den Austausch über Vielfalt, Gleichheit, Teilhabe und Zugehörigkeit",
-                "url": "https://www.witty.works/de/kategorien/soziale-motivation/vielfalt-gleichheit-teilhabe-zugehörigkeit?reducedView=true"
+                "icon": "😮",
+                "text": "Nenne unterrepräsentierte Gruppen zuerst. Verlinke auf deine Leitlinie zur Gleichstellung.",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/geschlechter-spezifische-abkürzung?reducedView=true"
             },
-            "label": "Soziale Motivation: DEIB",
-            "proficiency_level": "inclusive",
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Geschlechter-Spezifische Abkürzung",
+            "proficiency_level": "unconscious_bias",
             "start": 72,
-            "subcategory": "d_and_i",
+            "subcategory": "gender_specific_abbreviation_advanced",
             "text": "x/f/m",
             "text_id": "(d/f/m/v)"
         }

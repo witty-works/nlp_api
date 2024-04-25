@@ -65,15 +65,13 @@ def fetch_static_rules():
                 (0, 7, "/"),
                 "gender_specific_abbreviation",
             ),
-        ],
-        "d_f_m_regexes": [
             Rule(
                 "(d/f/m/v)",
                 None,
                 re.compile(r"^(d|x|\*)(/v)?/f(/v)?/m(/v)?$", re.IGNORECASE),
                 None,
                 (0, 7, "/"),
-                "d_and_i",
+                "gender_specific_abbreviation_advanced",
             ),
         ],
         "skin_tones": {
