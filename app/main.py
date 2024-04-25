@@ -5382,6 +5382,8 @@ async def regex_match(
                     context_d = "Divers (EU) / m. Behinderung (NA)"
                     context_remove = "Nutze geschlechtsneutrale Job-Titel"
                     explanation = "Nenne unterrepräsentierte Gruppen zuerst. Verlinke auf deine Leitlinie zur Gleichstellung."
+
+                    alternative = alternative.replace("f", "w")
                 case LangType.EN:
                     context_d = "disabled (NA) / diverse (EU)"
                     context_remove = "Use gender neutral job title"

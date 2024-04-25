@@ -13,10 +13,10 @@
                 },
                 {
                     "context": "Divers (EU) / m. Behinderung (NA)",
-                    "text": "d/f/m"
+                    "text": "d/w/m"
                 },
                 {
-                    "text": "*/f/m"
+                    "text": "*/w/m"
                 }
             ],
             "category": "gender-orientation",
@@ -46,10 +46,10 @@
                 },
                 {
                     "context": "Divers (EU) / m. Behinderung (NA)",
-                    "text": "d/f/m"
+                    "text": "d/w/m"
                 },
                 {
-                    "text": "*/f/m"
+                    "text": "*/w/m"
                 }
             ],
             "category": "gender-orientation",
@@ -78,7 +78,11 @@
                     "text": "Alle Gender"
                 },
                 {
-                    "text": "*/f/m"
+                    "context": "Divers (EU) / m. Behinderung (NA)",
+                    "text": "d/w/m"
+                },
+                {
+                    "text": "*/w/m"
                 }
             ],
             "category": "gender-orientation",
@@ -108,10 +112,13 @@
                 },
                 {
                     "context": "Divers (EU) / m. Behinderung (NA)",
-                    "text": "d/f/m"
+                    "text": "d/w/m"
                 },
                 {
-                    "text": "*/f/m"
+                    "text": "*/w/m"
+                },
+                {
+                    "text": "x/w/m"
                 }
             ],
             "category": "gender-orientation",
