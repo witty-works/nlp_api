@@ -9,18 +9,18 @@
                     "remove": true
                 },
                 {
+                    "text": "Alle Gender"
+                },
+                {
                     "context": "Divers (EU) / m. Behinderung (NA)",
-                    "text": "(m/f/d)"
+                    "text": "(m/w/d)"
                 },
                 {
                     "context": "Divers (EU) / m. Behinderung (NA)",
                     "text": "(d/f/m)"
                 },
                 {
-                    "text": "(m/f/*)"
-                },
-                {
-                    "text": "Alle Gender"
+                    "text": "(m/w/*)"
                 }
             ],
             "category": "gender-orientation",
