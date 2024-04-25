@@ -5314,7 +5314,7 @@ async def regex_match(
             # Kundinnen -> Kund*innen
             elif text.lower().endswith("innen") or text.lower().endswith("innen)"):
                 alternatives = [Alternative(alternatives[0].lemma + "nen")]
-        elif subcategory == "gender_specific_abbreviation":
+        elif subcategory.startswith("gender_specific_abbreviation"):
             has_advanced = is_sub_category_enabled(
                 config, "gender_specific_abbreviation_advanced"
             )
