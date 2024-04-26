@@ -5154,7 +5154,7 @@ async def fetch_alternatives_with_article(
                         case "feminine":
                             article_alternative = match_feminine
                         case _:
-                            if alternative.endswith("in"):
+                            if alternative.lemma.endswith("in"):
                                 article_alternative = match_feminine
 
         if article_alternative != "":
