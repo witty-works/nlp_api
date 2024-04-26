@@ -2613,6 +2613,9 @@ async def fetch_declensions(
     text: str,
     token: Token = None,
 ) -> dict | None:
+    if lang == LangType.FR:
+        return None
+
     if token is not None and token._.forms is not None:
         return token._.forms
 
@@ -3884,6 +3887,9 @@ async def find_form(
     tokens: Doc,
     is_singular: bool = None,
 ):
+    if lang == LangType.FR:
+        return None
+
     token = tokens[token_index]
     match word_type:
         case WordType.VERB:
@@ -3969,7 +3975,7 @@ async def align_form_noun_english(target_form: str, target_token: Token) -> str:
 async def align_form_noun(
     lang: LangType, target_form: str, target_token: Token, prefix: str | None = None
 ) -> str:
-    if target_form == "no_change" or target_form is None:
+    if target_form == "no_change" or target_form is None or lang == LangType.FR:
         return target_token.text
 
     if lang == LangType.DE:
@@ -4088,7 +4094,7 @@ async def align_form_adjective(
     source_lemma: str,
     target_token: Token,
 ) -> str:
-    if target_form == "no_change" or target_form is None:
+    if target_form == "no_change" or target_form is None or lang == LangType.FR:
         return target_token.text
 
     target_result = await fetch_declensions(
@@ -4347,7 +4353,7 @@ async def align_form_verb(
     source_lemma: str,
     target_token: Token,
 ) -> str:
-    if target_form == "no_change" or target_form is None:
+    if target_form == "no_change" or target_form is None or lang == LangType.FR:
         return target_token.text
 
     target_result = await fetch_declensions(
