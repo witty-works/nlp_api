@@ -459,6 +459,9 @@ def fetch_static_rules():
 
     if LangType.FR in langs:
         static_rules[LangType.FR]["pattern_false_positives"] = []
+        static_rules[LangType.FR]["salutations"] = []
+        static_rules[LangType.FR]["hashtags"] = []
+        static_rules[LangType.FR]["context_check"] = []
 
     if LangType.DE in langs:
         rule = Rule(
