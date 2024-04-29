@@ -3722,7 +3722,7 @@ async def find_form_verb_german(token_index: int, tokens: Doc):
     if (
         target_form is None
         and settings.log_missing_declension
-        and not token.text.isupper()
+        and check_word_case(token.text, False)
     ):
         logger.error(
             f"German verb target form could not be determined for '{token.text}' (lemma: '{token.lemma_}')."
@@ -3756,7 +3756,7 @@ async def find_form_verb_english(token_index: int, tokens: Doc):
     if (
         target_form is None
         and settings.log_missing_declension
-        and not token.text.isupper()
+        and check_word_case(token.text, False)
     ):
         logger.error(
             f"English verb target form could not be determined for '{token.text}' (lemma: '{token.lemma_}')."
@@ -3821,7 +3821,7 @@ async def find_form_adjective_english(token_index: int, tokens: Doc):
         target_form is None
         and settings.log_missing_declension
         and len(token.text) > 2
-        and not token.text[0].isupper()
+        and check_word_case(token.text, False)
     ):
         logger.error(
             f"English adjective target form could not be determined for '{token.text}' (lemma: '{token.lemma_}')."
@@ -3854,8 +3854,7 @@ async def find_form_noun_german_text(text: str, token: Token, is_singular: bool)
             settings.log_missing_declension
             and token.ent_type_ == ""
             and len(text) > 2
-            and text[0].isupper()
-            and not text.isupper()
+            and check_word_case(text, True)
             and not await check_word_type(
                 LangType.DE, token, WordType.PRONOUN, True, True
             )
@@ -3865,7 +3864,11 @@ async def find_form_noun_german_text(text: str, token: Token, is_singular: bool)
         return None
 
     target_form = find_matching_form(forms, stripped_text, is_singular)
-    if target_form is None and settings.log_missing_declension and not text.isupper():
+    if (
+        target_form is None
+        and settings.log_missing_declension
+        and check_word_case(text, True)
+    ):
         logger.error(
             f"German noun target form could not be determined for '{text}' (lemma: '{token.lemma_}')."
         )
@@ -3878,6 +3881,24 @@ async def find_form_noun_english(is_singular: bool):
         return "no_change"
 
     return "plural"
+
+
+def check_word_case(text: str, is_first_upper: bool = None):
+    words = text.split("-")
+    for word in words:
+        if len(word) == 0:
+            continue
+
+        if is_first_upper is not None:
+            if word[0].isupper() != is_first_upper:
+                return False
+
+            word = word[1:]
+
+        if not word.islower():
+            return False
+
+    return True
 
 
 async def find_form(
@@ -3916,7 +3937,7 @@ async def find_form(
         settings.log_missing_declension
         and len(word_type)
         and len(token.text) > 3
-        and not token.text.isupper()
+        and check_word_case(token.text)
     ):
         logger.error(
             f"Declension in '{lang}' not found for '{token.text}' (lemma: '{token.lemma_}', tag: '{token.tag_}, pos: '{token.pos_}')"
@@ -3938,10 +3959,8 @@ async def align_form_noun_german(
 
     text = get_target_declension_form(target_result, target_form)
     if text is None:
-        if (
-            settings.log_missing_declension
-            and not target_token.text.isupper()
-            and not target_token.text.endswith("-")
+        if settings.log_missing_declension and check_word_case(
+            target_token.text, True
         ):
             logger.error(
                 f"German noun target form '{str(target_form)}' for '{target_token.text}' (lemma: '{target_token.lemma_}') missing: '{json.dumps(target_result)}'."
@@ -3962,7 +3981,9 @@ async def align_form_noun_english(target_form: str, target_token: Token) -> str:
 
     text = get_target_declension_form(target_result, target_form)
     if text is None:
-        if settings.log_missing_declension and not target_token.text.isupper():
+        if settings.log_missing_declension and check_word_case(
+            target_token.text
+        ):
             logger.error(
                 f"English noun plural for '{target_token.text}' (lemma: '{target_token.lemma_}') missing: '{json.dumps(target_result)}'."
             )
@@ -4026,7 +4047,9 @@ def align_form_adjective_english(
         else:
             text = target_token.text
 
-        if settings.log_missing_declension and not target_token.text.isupper():
+        if settings.log_missing_declension and check_word_case(
+            target_token.text, False
+        ):
             logger.error(
                 f"English adjective data missing for '{target_token.text}' (lemma: '{target_token.lemma_}'), generated '{text}' for target form '{str(target_form)}'."
             )
@@ -6107,7 +6130,7 @@ def detect_non_inclusive_emoji(
         if explanation:
             text = token.text
             for text_index in range(token_index, emoji_index):
-                text+= tokens[text_index].whitespace_ + tokens[text_index + 1].text
+                text += tokens[text_index].whitespace_ + tokens[text_index + 1].text
 
             alternatives = [Alternative(token.text), Alternative("-", None, None, True)]
 
