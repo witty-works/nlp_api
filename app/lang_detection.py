@@ -64,10 +64,14 @@ class LangDetection:
         variant_preferences=None,
     ):
         if lang == LangWithAutoType.AUTO:
-            langs = self.predict_lang(text)
-            for i in range(len(langs)):
-                if langs[i][0:2] not in supported_langs:
-                    langs.remove(langs[i])
+            predict_langs = self.predict_lang(text)
+            langs = []
+            for i in range(len(predict_langs)):
+                if predict_langs[i] == "uk":
+                    predict_langs[i] = LangWithAutoType.enGB
+
+                if predict_langs[i][0:2] in supported_langs:
+                    langs.append(predict_langs[i])
 
             if len(langs) == 0:
                 return None
