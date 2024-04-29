@@ -18471,6 +18471,7 @@ INSERT INTO "rules_englishverb" VALUES(324,'emphasize','emphasized','emphasized'
 INSERT INTO "rules_englishverb" VALUES(325,'empathise','empathised','empathised','empathising','empathises',NULL);
 INSERT INTO "rules_englishverb" VALUES(326,'emphasise','emphasised','emphasised','emphasising','emphasises',NULL);
 INSERT INTO "rules_englishverb" VALUES(327,'process','processed','processed','processing','processes',NULL);
+INSERT INTO "rules_englishverb" VALUES(328,'organise','organised','organised','organising','organises',NULL);
 CREATE TABLE "rules_falsepositive" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "createdby_id" integer NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED, "rule_id" integer NOT NULL REFERENCES "rules_rule" ("id") DEFERRABLE INITIALLY DEFERRED, "false_positive" varchar(255) NOT NULL);
 INSERT INTO "rules_falsepositive" VALUES(1,NULL,9,'(SCCE)');
 INSERT INTO "rules_falsepositive" VALUES(2,NULL,10,'(AP/AR)');
@@ -22652,8 +22653,8 @@ INSERT INTO "rules_germannoun" VALUES(2076,'Vergolder',NULL,'Vergolderin','mascu
 INSERT INTO "rules_germannoun" VALUES(2077,'Vergolderin',NULL,NULL,'feminine',NULL,'Vergolderinnen','Vergolderinnen','Vergolderinnen',0,'Vergolderin','Vergolderin','Vergolderinnen',0,'Vergolder','Vergolderin',NULL,NULL,'Vergolderin',NULL,NULL,NULL);
 INSERT INTO "rules_germannoun" VALUES(2078,'Verkäufer',NULL,'Verkäuferin','masculine',NULL,'Verkäufern','Verkäufer','Verkäufer',0,'Verkäufer','Verkäufers','Verkäufer',0,NULL,'Verkäufer',NULL,NULL,'Verkäufer',NULL,NULL,NULL);
 INSERT INTO "rules_germannoun" VALUES(2079,'Verkäuferin',NULL,NULL,'feminine',NULL,'Verkäuferinnen','Verkäuferinnen','Verkäuferinnen',0,'Verkäuferin','Verkäuferin','Verkäuferinnen',0,'Verkäufer','Verkäuferin',NULL,NULL,'Verkäuferin',NULL,NULL,NULL);
-INSERT INTO "rules_germannoun" VALUES(2080,'Vermittler',NULL,'Vermittlerin','masculine',NULL,'Vermittlern','Vermittler','Vermittler',0,'Vermittler','Vermittlers','Vermittler',0,NULL,'Vermittler',NULL,NULL,'Vermittler',NULL,NULL,NULL);
-INSERT INTO "rules_germannoun" VALUES(2081,'Vermittlerin',NULL,NULL,'feminine',NULL,'Vermittlerinnen','Vermittlerinnen','Vermittlerinnen',0,'Vermittlerin','Vermittlerin','Vermittlerinnen',0,'Vermittler','Vermittlerin',NULL,NULL,'Vermittlerin',NULL,NULL,NULL);
+INSERT INTO "rules_germannoun" VALUES(2080,'Vermittler',NULL,'Vermittlerin','masculine','','Vermittlern','Vermittler','Vermittler',0,'Vermittler','Vermittlers','Vermittler',0,NULL,'Vermittler',NULL,NULL,'Vermittler','Vermittelnde',NULL,NULL);
+INSERT INTO "rules_germannoun" VALUES(2081,'Vermittlerin',NULL,NULL,'feminine',NULL,'Vermittlerinnen','Vermittlerinnen','Vermittlerinnen',0,'Vermittlerin','Vermittlerin','Vermittlerinnen',0,'Vermittler','Vermittlerin',NULL,NULL,'Vermittlerin','Vermittelnde',NULL,NULL);
 INSERT INTO "rules_germannoun" VALUES(2082,'Vermittlung',NULL,NULL,'feminine',NULL,'Vermittlungen','Vermittlungen','Vermittlungen',0,'Vermittlung','Vermittlung','Vermittlungen',0,NULL,'Vermittlung',NULL,NULL,'Vermittlung',NULL,NULL,NULL);
 INSERT INTO "rules_germannoun" VALUES(2083,'Vernichtung',NULL,NULL,'feminine',NULL,'Vernichtungen','Vernichtungen','Vernichtungen',0,'Vernichtung','Vernichtung','Vernichtungen',0,NULL,'Vernichtung',NULL,NULL,'Vernichtung',NULL,NULL,NULL);
 INSERT INTO "rules_germannoun" VALUES(2084,'Verpflichtung',NULL,NULL,'feminine',NULL,'Verpflichtungen','Verpflichtungen','Verpflichtungen',0,'Verpflichtung','Verpflichtung','Verpflichtungen',0,NULL,'Verpflichtung',NULL,NULL,'Verpflichtung',NULL,NULL,NULL);
@@ -23314,6 +23315,8 @@ INSERT INTO "rules_germannoun" VALUES(2778,'Schwäche',NULL,NULL,'feminine','','
 INSERT INTO "rules_germannoun" VALUES(2779,'Entwicklungsabteilung',NULL,NULL,'feminine',NULL,'Entwicklungsabteilungen','Entwicklungsabteilungen','Entwicklungsabteilungen',0,'Entwicklungsabteilung','Entwicklungsabteilung','Entwicklungsabteilungen',0,NULL,'Entwicklungsabteilung',NULL,NULL,'Entwicklungsabteilung',NULL,NULL,NULL);
 INSERT INTO "rules_germannoun" VALUES(2780,'Berufstätige',NULL,NULL,'feminine','','Berufstätigen','Berufstätiger','Berufstätige',0,'Berufstätige','Berufstätige','Berufstätige',0,'Berufstätiger','Berufstätige',NULL,NULL,'Berufstätige',NULL,NULL,NULL);
 INSERT INTO "rules_germannoun" VALUES(2781,'Montage',NULL,NULL,'feminine','','Montagen','Montagen','Montagen',0,'Montage','Montage','Montagen',0,NULL,'Montage',NULL,NULL,'Montage',NULL,NULL,NULL);
+INSERT INTO "rules_germannoun" VALUES(2782,'Vorsitzender',NULL,'Vorsitzende','masculine','','Vorsitzenden','Vorsitzenden','Vorsitzenden',0,'Vorsitzenden','Vorsitzenden','Vorsitzenden',0,NULL,'Vorsitzenden',NULL,NULL,'Vorsitzende',NULL,NULL,NULL);
+INSERT INTO "rules_germannoun" VALUES(2783,'Vorsitzende',NULL,NULL,'feminine','','Vorsitzenden','Vorsitzenden','Vorsitzenden',0,'Vorsitzenden','Vorsitzenden','Vorsitzenden',0,'Vorsitzender','Vorsitzende',NULL,NULL,'Vorsitzende',NULL,NULL,NULL);
 CREATE TABLE "rules_germanverb" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "base_form" varchar(255) NOT NULL UNIQUE, "createdby_id" integer NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED, "conjunctive_ich" varchar(255) NULL, "helping_verb" varchar(255) NULL, "imperativ_plural" varchar(255) NULL, "imperativ_singular" varchar(255) NULL, "infinitiv_zu" varchar(255) NULL, "past_participle" varchar(255) NULL, "past_tense_ich" varchar(255) NULL, "present_du" varchar(255) NULL, "present_ich" varchar(255) NULL, "present_pronoun" varchar(255) NULL);
 INSERT INTO "rules_germanverb" VALUES(1,'abschachern',NULL,'schacherte ab','haben','schachert ab','schachere ab','abzuschachern','abgeschachert','schacherte ab','schacherst ab','schachere ab','schachert ab');
 INSERT INTO "rules_germanverb" VALUES(2,'abgewinnen',NULL,'gewänne ab','haben','gewinnt ab','gewinn ab','abzugewinnen','abgewonnen','gewann ab','gewinnst ab','gewinne ab','gewinnt ab');
@@ -28601,10 +28604,10 @@ CREATE INDEX "rules_rule_is_auto_53ffb0_idx" ON "rules_rule" ("is_auto_generated
 DELETE FROM "sqlite_sequence";
 INSERT INTO "sqlite_sequence" VALUES('rules_falsepositive',1325);
 INSERT INTO "sqlite_sequence" VALUES('rules_englishadjective',750);
-INSERT INTO "sqlite_sequence" VALUES('rules_germannoun',2781);
+INSERT INTO "sqlite_sequence" VALUES('rules_germannoun',2783);
 INSERT INTO "sqlite_sequence" VALUES('rules_germanadjective',868);
 INSERT INTO "sqlite_sequence" VALUES('rules_englishnoun',1257);
-INSERT INTO "sqlite_sequence" VALUES('rules_englishverb',327);
+INSERT INTO "sqlite_sequence" VALUES('rules_englishverb',328);
 INSERT INTO "sqlite_sequence" VALUES('rules_germanverb',281);
 INSERT INTO "sqlite_sequence" VALUES('rules_alternative',18001);
 INSERT INTO "sqlite_sequence" VALUES('rules_rule',5193);
