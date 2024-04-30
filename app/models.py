@@ -549,7 +549,6 @@ class UserConfRequest(ConfRequest):
 
 
 class OrganizationConfRequest(ConfRequest):
-    plan: str
     trial_ends_at: Optional[str] = None
 
 
