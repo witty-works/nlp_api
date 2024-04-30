@@ -3959,9 +3959,7 @@ async def align_form_noun_german(
 
     text = get_target_declension_form(target_result, target_form)
     if text is None:
-        if settings.log_missing_declension and check_word_case(
-            target_token.text, True
-        ):
+        if settings.log_missing_declension and check_word_case(target_token.text, True):
             logger.error(
                 f"German noun target form '{str(target_form)}' for '{target_token.text}' (lemma: '{target_token.lemma_}') missing: '{json.dumps(target_result)}'."
             )
@@ -3981,9 +3979,7 @@ async def align_form_noun_english(target_form: str, target_token: Token) -> str:
 
     text = get_target_declension_form(target_result, target_form)
     if text is None:
-        if settings.log_missing_declension and check_word_case(
-            target_token.text
-        ):
+        if settings.log_missing_declension and check_word_case(target_token.text):
             logger.error(
                 f"English noun plural for '{target_token.text}' (lemma: '{target_token.lemma_}') missing: '{json.dumps(target_result)}'."
             )
