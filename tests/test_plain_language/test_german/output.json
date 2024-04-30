@@ -362,16 +362,16 @@
         {
             "alternatives": [
                 {
-                    "text": "sie*er"
+                    "text": "Sie*er"
                 },
                 {
-                    "text": "sie/er"
+                    "text": "Sie/er"
                 },
                 {
-                    "text": "du"
+                    "text": "Du"
                 },
                 {
-                    "text": "dich"
+                    "text": "Dich"
                 }
             ],
             "category": "gender-orientation",
