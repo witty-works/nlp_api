@@ -3646,7 +3646,14 @@ async def german_noun_lookup(
             while len(word) > 3 and forms is None:
                 words = static_rules[LangType.DE]["german_nouns"].parse_compound(word)
                 if len(words) == 0:
-                    break
+                    for substring in static_rules[LangType.DE]["german_nouns_substrings"]:
+                        position = text.find(substring)
+                        if position:
+                            words = [text[0:position], text[position:].capitalize()]
+                            break
+
+                    if len(words) == 0:
+                        break
 
                 word = words[-1]
                 forms = await fetch_declensions(LangType.DE, WordType.NOUN, word, token)

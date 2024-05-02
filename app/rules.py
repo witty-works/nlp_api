@@ -664,6 +664,8 @@ def fetch_static_rules():
 
         static_rules[LangType.DE]["german_nouns"] = Nouns()
 
+        static_rules[LangType.DE]["german_nouns_substrings"] = ["sachkundige"]
+
         static_rules[LangType.DE]["pattern_false_positives"] = []
 
         static_rules[LangType.DE]["gender_neutral_nouns"] = {
