@@ -548,6 +548,7 @@ async def get_health(check_external: bool = False):
     langs = {
         LangType.EN: "Hello guys",
         LangType.DE: "Hallo Kunde",
+        LangType.FR: "Je m'appelle Luc",
     }
 
     for spacy_model in settings.models:
