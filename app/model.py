@@ -110,6 +110,7 @@ def fetch_nlp_model(lang, spacy_model, lookup):
 
     model = spacy.load(spacy_model, disable=["textcat"])
     model.add_pipe("emoji", first=True)
+
     tokenizer = custom_tokenizer(lang, model)
     if tokenizer is not None:
         model.tokenizer = tokenizer

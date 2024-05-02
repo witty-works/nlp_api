@@ -959,6 +959,17 @@ async def post_debug_rule(
     return list_full
 
 
+def merge_phrases(doc):
+    with doc.retokenize() as retokenizer:
+        for np in list(doc.noun_chunks):
+            attrs = {
+                "tag": np.root.tag_,
+                "lemma": np.root.lemma_,
+                "ent_type": np.root.ent_type_,
+            }
+            retokenizer.merge(np, attrs=attrs)
+    return doc
+
 @app.get(
     "/debug/spacy",
     include_in_schema=not settings.is_prod,
@@ -972,6 +983,8 @@ async def get_debug_spacy(
 ):
     results = []
     tokens = fetch_tokens(lang, text)
+    tokens = merge_phrases(tokens)
+
     word_type_rule = None
     for token_index in range(len(tokens)):
         token = tokens[token_index]
@@ -1004,6 +1017,21 @@ async def get_debug_spacy(
             token_info["tag"] = token.tag_
             token_info["pos"] = token.pos_
             token_info["dep"] = token.dep_
+            token_info["head"] = token.head.text
+
+            dependent = None
+            children = []
+            for a in token.ancestors:
+                for atok in a.children:
+                    children.append(
+                        {"dep": atok.dep_, "token": atok.text, "ner": atok.ent_type_}
+                    )
+                    if dependent is None and atok.dep_ in ["pobj", "dobj"]:
+                        dependent = atok.text
+
+            #token_info["dependent"] = dependent
+            #token_info["children"] = children
+
 
         results.append(token_info)
 
