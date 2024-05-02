@@ -31,13 +31,13 @@
         {
             "alternatives": [
                 {
-                    "text": "capacity"
+                    "text": "Capacity"
                 },
                 {
-                    "text": "energy"
+                    "text": "Energy"
                 },
                 {
-                    "text": "aptitude"
+                    "text": "Aptitude"
                 }
             ],
             "category": "social-motive",

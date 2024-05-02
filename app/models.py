@@ -1,4 +1,4 @@
-from pydantic import field_validator, BaseModel, Field
+from pydantic import field_validator, BaseModel
 from typing import Optional
 from enum import Enum
 from collections import namedtuple
@@ -708,7 +708,7 @@ class ResultOut(BaseModel):
             text,
             category,
             start,
-            ResultOut.isUpper(text, full_text, start, category, lang.lang),
+            ResultOut.isUpper(text, text_id, full_text, start, category, lang.lang),
             alternatives,
             config.alternatives_max_count,
         )
@@ -799,8 +799,7 @@ class ResultOut(BaseModel):
                 if category != "orthography":
                     if is_upper and alternative.lemma:
                         alternative.lemma = (
-                            string.capwords(alternative.lemma[0:1])
-                            + alternative.lemma[1:]
+                            alternative.lemma[0].upper() + alternative.lemma[1:]
                         )
                 elif alternative.lemma is not None:
                     alternative.lemma = lang.convert_sharp_ss(alternative.lemma)
@@ -820,11 +819,7 @@ class ResultOut(BaseModel):
 
                 variation = ResultAlternative(
                     text=alternative.lemma,
-                    inspiration=(
-                        True
-                        if alternative.is_inspiration
-                        else None
-                    ),
+                    inspiration=(True if alternative.is_inspiration else None),
                     context=alternative.label,
                 )
 
@@ -860,8 +855,13 @@ class ResultOut(BaseModel):
         return text, start, cleaned_alternatives
 
     @staticmethod
-    def isUpper(text: str, full_text: str, start: int, category: str, lang: str):
-        if category != "orthography" and text[0:1].isupper():
+    def isUpper(
+        text: str, text_id: str, full_text: str, start: int, category: str, lang: str
+    ):
+        if category != "orthography" and text[0].isupper():
+            if text_id[0].islower():
+                return True
+
             punctuation = "[.!?:]" if lang == LangType.DE else "[.!?]"
 
             preceeding_text = full_text[max(0, start - 5) : start]

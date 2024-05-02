@@ -116,7 +116,7 @@ from app.query_definitions import (
     noun_form_map,
 )
 
-version = "2.2.22"
+version = "2.2.23"
 
 categories = get_categories()
 settings = get_settings()
@@ -548,6 +548,7 @@ async def get_health(check_external: bool = False):
     langs = {
         LangType.EN: "Hello guys",
         LangType.DE: "Hallo Kunde",
+        LangType.FR: "Je m'appelle Luc",
     }
 
     for spacy_model in settings.models:
@@ -2531,10 +2532,6 @@ async def fetch_rule_alternatives(
     if not show_inspiration_alternatives:
         query += " and is_inspiration = 0"
         query += " and is_placeholder = 0"
-    elif client.name != "web-ext" or (
-        client.version != "0.0.0" and client.version <= VersionString("1.30.2")
-    ):
-        query += " and is_placeholder = 0"
 
     # TODO ignore pluralization for inspirations?
     if is_singular is not None:
@@ -3631,7 +3628,12 @@ async def german_noun_lookup(
         prefix = ""
 
     if forms is None:
-        if prefix == "":
+        if prefix != "":
+            word = word.removeprefix(prefix).capitalize()
+            lower = not prefix.endswith("-")
+            forms = await fetch_declensions(LangType.DE, WordType.NOUN, word, token)
+
+        if forms is None:
             if "-" in word:
                 words = word.split("-")
                 word = words[-1]
@@ -3644,7 +3646,14 @@ async def german_noun_lookup(
             while len(word) > 3 and forms is None:
                 words = static_rules[LangType.DE]["german_nouns"].parse_compound(word)
                 if len(words) == 0:
-                    break
+                    for substring in static_rules[LangType.DE]["german_nouns_substrings"]:
+                        position = text.find(substring)
+                        if position:
+                            words = [text[0:position], text[position:].capitalize()]
+                            break
+
+                    if len(words) == 0:
+                        break
 
                 word = words[-1]
                 forms = await fetch_declensions(LangType.DE, WordType.NOUN, word, token)
@@ -3664,10 +3673,6 @@ async def german_noun_lookup(
                             lower = True
                             prefix += text.removesuffix(ending_lower + postfix)
                             break
-        else:
-            word = word.removeprefix(prefix).capitalize()
-            lower = not prefix.endswith("-")
-            forms = await fetch_declensions(LangType.DE, WordType.NOUN, word, token)
 
     if forms is None or (prefix == "" and postfix == ""):
         return forms
@@ -3884,6 +3889,9 @@ async def find_form_noun_english(is_singular: bool):
 
 
 def check_word_case(text: str, is_first_upper: bool = None):
+    if text.endswith("-"):
+        return False
+
     words = text.split("-")
     for word in words:
         if len(word) == 0:
@@ -3959,9 +3967,7 @@ async def align_form_noun_german(
 
     text = get_target_declension_form(target_result, target_form)
     if text is None:
-        if settings.log_missing_declension and check_word_case(
-            target_token.text, True
-        ):
+        if settings.log_missing_declension and check_word_case(target_token.text, True):
             logger.error(
                 f"German noun target form '{str(target_form)}' for '{target_token.text}' (lemma: '{target_token.lemma_}') missing: '{json.dumps(target_result)}'."
             )
@@ -3981,9 +3987,7 @@ async def align_form_noun_english(target_form: str, target_token: Token) -> str:
 
     text = get_target_declension_form(target_result, target_form)
     if text is None:
-        if settings.log_missing_declension and check_word_case(
-            target_token.text
-        ):
+        if settings.log_missing_declension and check_word_case(target_token.text):
             logger.error(
                 f"English noun plural for '{target_token.text}' (lemma: '{target_token.lemma_}') missing: '{json.dumps(target_result)}'."
             )
