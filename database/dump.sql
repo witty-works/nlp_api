@@ -23317,6 +23317,8 @@ INSERT INTO "rules_germannoun" VALUES(2780,'Berufstätige',NULL,NULL,'feminine',
 INSERT INTO "rules_germannoun" VALUES(2781,'Montage',NULL,NULL,'feminine','','Montagen','Montagen','Montagen',0,'Montage','Montage','Montagen',0,NULL,'Montage',NULL,NULL,'Montage',NULL,NULL,NULL);
 INSERT INTO "rules_germannoun" VALUES(2782,'Vorsitzender',NULL,'Vorsitzende','masculine','','Vorsitzenden','Vorsitzenden','Vorsitzenden',0,'Vorsitzenden','Vorsitzenden','Vorsitzenden',0,NULL,'Vorsitzenden',NULL,NULL,'Vorsitzende',NULL,NULL,NULL);
 INSERT INTO "rules_germannoun" VALUES(2783,'Vorsitzende',NULL,NULL,'feminine','','Vorsitzenden','Vorsitzenden','Vorsitzenden',0,'Vorsitzenden','Vorsitzenden','Vorsitzenden',0,'Vorsitzender','Vorsitzende',NULL,NULL,'Vorsitzende',NULL,NULL,NULL);
+INSERT INTO "rules_germannoun" VALUES(2784,'Zerebralparese',NULL,NULL,'','','Zerebralparesen',NULL,'Zerebralparesen',0,'Zerebralparese','Zerebralparese','Zerebralparesen',0,NULL,'Zerebralparese',NULL,NULL,'Zerebralparese',NULL,NULL,NULL);
+INSERT INTO "rules_germannoun" VALUES(2785,'Stelle',NULL,NULL,'feminine','','Stellen','Stellen','Stellen',0,'Stelle','Stelle','Stellen',0,NULL,'Stelle',NULL,NULL,'Stelle',NULL,NULL,NULL);
 CREATE TABLE "rules_germanverb" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "base_form" varchar(255) NOT NULL UNIQUE, "createdby_id" integer NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED, "conjunctive_ich" varchar(255) NULL, "helping_verb" varchar(255) NULL, "imperativ_plural" varchar(255) NULL, "imperativ_singular" varchar(255) NULL, "infinitiv_zu" varchar(255) NULL, "past_participle" varchar(255) NULL, "past_tense_ich" varchar(255) NULL, "present_du" varchar(255) NULL, "present_ich" varchar(255) NULL, "present_pronoun" varchar(255) NULL);
 INSERT INTO "rules_germanverb" VALUES(1,'abschachern',NULL,'schacherte ab','haben','schachert ab','schachere ab','abzuschachern','abgeschachert','schacherte ab','schacherst ab','schachere ab','schachert ab');
 INSERT INTO "rules_germanverb" VALUES(2,'abgewinnen',NULL,'gewänne ab','haben','gewinnt ab','gewinn ab','abzugewinnen','abgewonnen','gewann ab','gewinnst ab','gewinne ab','gewinnt ab');
@@ -28604,7 +28606,7 @@ CREATE INDEX "rules_rule_is_auto_53ffb0_idx" ON "rules_rule" ("is_auto_generated
 DELETE FROM "sqlite_sequence";
 INSERT INTO "sqlite_sequence" VALUES('rules_falsepositive',1325);
 INSERT INTO "sqlite_sequence" VALUES('rules_englishadjective',750);
-INSERT INTO "sqlite_sequence" VALUES('rules_germannoun',2783);
+INSERT INTO "sqlite_sequence" VALUES('rules_germannoun',2785);
 INSERT INTO "sqlite_sequence" VALUES('rules_germanadjective',868);
 INSERT INTO "sqlite_sequence" VALUES('rules_englishnoun',1257);
 INSERT INTO "sqlite_sequence" VALUES('rules_englishverb',328);
