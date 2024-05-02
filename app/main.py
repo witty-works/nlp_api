@@ -3628,7 +3628,12 @@ async def german_noun_lookup(
         prefix = ""
 
     if forms is None:
-        if prefix == "":
+        if prefix != "":
+            word = word.removeprefix(prefix).capitalize()
+            lower = not prefix.endswith("-")
+            forms = await fetch_declensions(LangType.DE, WordType.NOUN, word, token)
+
+        if forms is None:
             if "-" in word:
                 words = word.split("-")
                 word = words[-1]
@@ -3661,10 +3666,6 @@ async def german_noun_lookup(
                             lower = True
                             prefix += text.removesuffix(ending_lower + postfix)
                             break
-        else:
-            word = word.removeprefix(prefix).capitalize()
-            lower = not prefix.endswith("-")
-            forms = await fetch_declensions(LangType.DE, WordType.NOUN, word, token)
 
     if forms is None or (prefix == "" and postfix == ""):
         return forms
