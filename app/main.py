@@ -3882,6 +3882,9 @@ async def find_form_noun_english(is_singular: bool):
 
 
 def check_word_case(text: str, is_first_upper: bool = None):
+    if text.endswith("-"):
+        return False
+
     words = text.split("-")
     for word in words:
         if len(word) == 0:
