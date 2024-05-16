@@ -11,6 +11,11 @@
                     "text": "Bewerbende"
                 },
                 {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Personen, die sich bewerben"
+                },
+                {
                     "text": "Bewerbungen"
                 }
             ],
@@ -43,6 +48,11 @@
                 },
                 {
                     "text": "Fachkraft"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "jemand vom Fach"
                 }
             ],
             "category": "gender-orientation",
@@ -75,6 +85,11 @@
                 },
                 {
                     "text": "Fachkraft"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Jemand vom Fach"
                 }
             ],
             "category": "gender-orientation",
@@ -107,6 +122,11 @@
                 },
                 {
                     "text": "Fachkraft"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Jemand vom Fach"
                 }
             ],
             "category": "gender-orientation",
