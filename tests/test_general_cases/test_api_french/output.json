@@ -1,0 +1,127 @@
+{
+    "language": "fr",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "l'équipe"
+                },
+                {
+                    "text": "tout le monde"
+                },
+                {
+                    "text": "les gens"
+                },
+                {
+                    "text": "les ami∙es"
+                },
+                {
+                    "text": "les amies et amis"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Salut les gars. Nous sommes une équipe ambitieuse. C’est pourquoi nous avons besoin de personnes très performantes",
+            "end": 14,
+            "explanation": {
+                "icon": "😒",
+                "text": ""
+            },
+            "gravity": 2.0,
+            "label": "",
+            "proficiency_level": "unconscious_bias",
+            "start": 6,
+            "subcategory": "gender_identity",
+            "text": "les gars",
+            "text_id": "gars"
+        },
+        {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "Salut les gars. Nous sommes une équipe ambitieuse. C’est pourquoi nous avons besoin de personnes très performantes.",
+            "end": 38,
+            "explanation": {
+                "icon": "✅",
+                "text": ""
+            },
+            "label": "",
+            "proficiency_level": "inclusive",
+            "start": 32,
+            "subcategory": "communal",
+            "text": "équipe",
+            "text_id": "équipe"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "axée sur la croissance"
+                },
+                {
+                    "text": "enthousiaste"
+                },
+                {
+                    "text": "orientée vers la croissance"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "avec esprit de croissance"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "envie d'accomplir"
+                }
+            ],
+            "category": "social-motive",
+            "context": "Salut les gars. Nous sommes une équipe ambitieuse. C’est pourquoi nous avons besoin de personnes très performantes.",
+            "end": 49,
+            "explanation": {
+                "icon": "😒",
+                "text": ""
+            },
+            "gravity": 2.0,
+            "label": "",
+            "proficiency_level": "unconscious_bias",
+            "start": 39,
+            "subcategory": "agentic",
+            "text": "ambitieuse",
+            "text_id": "ambitieux"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "énergiques"
+                },
+                {
+                    "text": "engagés"
+                },
+                {
+                    "text": "efficaces"
+                },
+                {
+                    "text": "entrepreneuriales"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "vouloir atteindre des étapes clés"
+                }
+            ],
+            "category": "social-motive",
+            "context": "lut les gars. Nous sommes une équipe ambitieuse. C’est pourquoi nous avons besoin de personnes très performantes.",
+            "end": 114,
+            "explanation": {
+                "icon": "😒",
+                "text": ""
+            },
+            "gravity": 3.0,
+            "label": "",
+            "proficiency_level": "unconscious_bias",
+            "start": 102,
+            "subcategory": "agentic_advanced",
+            "text": "performantes",
+            "text_id": "performant"
+        }
+    ]
+}

@@ -2471,6 +2471,7 @@ async def fetch_rules(
         filters.values()
     )
 
+    is_gender_star_ending_ = False
     rows = await fetch_rows(query, parameters)
     if lang == LangType.EN:
         if rewrite_to is None and len(rows) == 0:
@@ -2486,8 +2487,6 @@ async def fetch_rules(
                     suffix_check,
                     "en-US",
                 )
-
-        is_gender_star_ending_ = False
     elif lang == LangType.DE:
         is_gender_star_ending_ = is_gender_star_ending(token.text)
         if not suffix_check and is_gender_star_ending_ and len(rows) == 0:
@@ -3646,7 +3645,9 @@ async def german_noun_lookup(
             while len(word) > 3 and forms is None:
                 words = static_rules[LangType.DE]["german_nouns"].parse_compound(word)
                 if len(words) == 0:
-                    for substring in static_rules[LangType.DE]["german_nouns_substrings"]:
+                    for substring in static_rules[LangType.DE][
+                        "german_nouns_substrings"
+                    ]:
                         position = text.find(substring)
                         if position:
                             words = [text[0:position], text[position:].capitalize()]
@@ -3917,7 +3918,7 @@ async def find_form(
     is_singular: bool = None,
 ):
     if lang == LangType.FR:
-        return None
+        return tokens[token_index].text
 
     token = tokens[token_index]
     match word_type:
@@ -4114,6 +4115,24 @@ def align_form_adjective_german(
     return text + ending
 
 
+def align_form_adjective_french(
+    target_form: str,
+    target_token: Token,
+) -> str:
+    text = target_token.text
+
+    if target_form == "performantes":
+        if text.endswith("l"):
+            text += "e"
+
+        text += "s"
+    elif target_form == "ambitieuse":
+        if text.endswith("é"):
+            text += "e"
+
+    return text
+
+
 async def align_form_adjective(
     lang: LangType,
     target_form: str,
@@ -4121,8 +4140,11 @@ async def align_form_adjective(
     source_lemma: str,
     target_token: Token,
 ) -> str:
-    if target_form == "no_change" or target_form is None or lang == LangType.FR:
+    if target_form == "no_change" or target_form is None:
         return target_token.text
+
+    if lang == LangType.FR:
+        return align_form_adjective_french(target_form, target_token)
 
     target_result = await fetch_declensions(
         lang, WordType.ADJECTIVE, target_token.text, target_token
@@ -5129,10 +5151,49 @@ def gendered_roles_format_binary(gendered_roles_format: str):
 
 
 async def fetch_alternatives_with_article(
-    config: Config, tokens: Doc, token_index: int, alternatives: list[Alternative]
+    config: Config,
+    lang: LangType,
+    tokens: Doc,
+    token_index: int,
+    is_singular: bool,
+    word_types: list,
+    alternatives: list[Alternative],
 ) -> list[Alternative] | None:
     if alternatives is None:
         return []
+
+    if (
+        lang == LangType.EN
+        or token_index == 0
+        or len(word_types) != 1
+        or word_types[0] != WordType.NOUN
+    ):
+        return None
+
+    if lang == LangType.FR:
+        article_text = tokens[token_index - 1].text.lower()
+        if article_text == "les":
+            alternatives_with_article = []
+            for alternative in alternatives:
+                article_alternative = ""
+                if " le " not in alternative.lemma:
+                    article_alternative = (
+                        "l'" if alternative.lemma.startswith("é") else "les"
+                    )
+
+                if article_alternative != "":
+                    if not article_alternative.endswith("'"):
+                        article_alternative += tokens[token_index - 1].whitespace_
+                    alternative.lemma = article_alternative + alternative.lemma
+
+                alternatives_with_article.append(alternative)
+
+            return alternatives_with_article
+
+        return None
+
+    if lang == LangType.DE and not is_singular:
+        return None
 
     token = tokens[token_index]
     text = token.text
@@ -5805,20 +5866,20 @@ async def rule_check(
                         start + len(text),
                     )
 
-            if (
-                token_index > 0
-                and is_singular
-                and len(word_types) == 1
-                and word_types[0] == WordType.NOUN
-            ):
-                alternatives_with_article = await fetch_alternatives_with_article(
-                    config, tokens, token_index, alternatives
-                )
+            alternatives_with_article = await fetch_alternatives_with_article(
+                config,
+                lang.lang,
+                tokens,
+                token_index,
+                is_singular,
+                word_types,
+                alternatives,
+            )
 
-                if alternatives_with_article is not None:
-                    alternatives = alternatives_with_article
-                    start = tokens[token_index - 1].idx
-                    text = tokens[token_index - 1].text + " " + text
+            if alternatives_with_article is not None:
+                alternatives = alternatives_with_article
+                start = tokens[token_index - 1].idx
+                text = tokens[token_index - 1].text + " " + text
 
         label = token._.label if token._.label is not None else rule.label
 
