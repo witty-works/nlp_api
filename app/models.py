@@ -36,7 +36,8 @@ class Language(object):
         try:
             category_data = get_category(category)
 
-            text = category_data["translations"][self.lang][key]
+            lang = "en" if self.lang == "fr" else self.lang
+            text = category_data["translations"][lang][key]
             text = self.convert_sharp_ss(text)
         except KeyError:
             text = ""
