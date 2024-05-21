@@ -4122,7 +4122,7 @@ def align_form_adjective_french(
     text = target_token.text
 
     if target_form == "performantes":
-        if text.endswith("l"):
+        if text.endswith("l") or text.endswith("é"):
             text += "e"
 
         text += "s"
