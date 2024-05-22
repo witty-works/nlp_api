@@ -6,7 +6,6 @@ import json, typing
 
 from starlette.responses import Response
 
-import string
 import re
 
 from eng import TextFixer, Target
@@ -168,6 +167,8 @@ class LangVariantType(str, Enum):
     deAT = "de-AT"
     enUS = "en-US"
     enGB = "en-GB"
+    frFR = "fr-FR"
+    frCH = "fr-CH"
 
 
 class GermanGenderEndingType(str, Enum):
