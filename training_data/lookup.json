@@ -5432,8 +5432,8 @@
     "Zulieferndes": "Zuliefernde",
     "Zuliefernden": "Zuliefernde",
     "Planungen": "Planung",
-    "Lieferndes": "Liefernde",
-    "Liefernden": "Liefernde",
+    "Lieferndes": "Liefernder",
+    "Liefernden": "Liefernder",
     "Zust\u00e4ndige": "Zust\u00e4ndiger",
     "Zust\u00e4ndigen": "Zust\u00e4ndiger",
     "Zust\u00e4ndigem": "Zust\u00e4ndiger",
@@ -5684,6 +5684,9 @@
     "Vorsitzenden": "Vorsitzender",
     "Zerebralparesen": "Zerebralparese",
     "Stellen": "Stelle",
-    "Trainings": "Training"
+    "Trainings": "Training",
+    "Audits": "Audit",
+    "Teilnehmende": "Teilnehmender",
+    "Liefernde": "Liefernder"
   }
 }
