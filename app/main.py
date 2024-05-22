@@ -4950,6 +4950,11 @@ async def gendered_nouns(
     separator, noun_separator = get_german_noun_separator(config)
     additional_words = []
     is_singular = True if is_singular is None else is_singular
+    if (
+        target_form
+        not in declensions_config[LangType.DE][BasicWordType.NOUN]["columns"]
+    ):
+        target_form = "sg_nom" if is_singular else "pl_nom"
 
     if prefix.endswith("-"):
         words = prefix[:-1].split("-")
