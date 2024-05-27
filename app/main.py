@@ -287,7 +287,7 @@ def create_rule(lang, row, rewrite_to: str = None) -> Rule:
     rule.is_pattern_match = row[rule_columns["is_pattern_match"]]
     rule.label = (
         row[rule_columns["label"]]
-        if row[rule_columns["label_type"]] == RuleLabelEnum.DEFAULT
+        if row[rule_columns["label"]]
         else map_rule_label_type(lang, row[rule_columns["label_type"]])
     )
     rule.type = row[rule_columns["type"]]
@@ -5655,7 +5655,7 @@ def map_rule_label_type(lang: LangType, label_type: str) -> str | None:
         },
     }
 
-    if label_type not in label_types[lang]:
+    if lang not in label_types or label_type not in label_types[lang]:
         return None
 
     return label_types[lang][label_type]
