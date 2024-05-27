@@ -37,6 +37,7 @@ alternative_columns = [
     "is_collective_noun",
     "is_gendered_noun",
     "label",
+    "type",
 ]
 alternative_columns = invert_list_to_dict(alternative_columns)
 alternative_column_list = ", ".join(alternative_columns.keys())

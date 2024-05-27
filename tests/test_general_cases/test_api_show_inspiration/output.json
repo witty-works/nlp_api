@@ -8,18 +8,29 @@
                     "text": "they"
                 },
                 {
-                    "context": "💡",
+                    "context": "💡 Person first",
                     "inspiration": true,
-                    "text": "person speaking for (...)"
+                    "text": "person speaking for (...)",
+                    "type": "person_first",
+                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 },
                 {
-                    "text": "a press officer"
+                    "context": "Identity first",
+                    "text": "a press officer",
+                    "type": "identity_first",
+                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 },
                 {
-                    "text": "a spokesperson"
+                    "context": "Identity first",
+                    "text": "a spokesperson",
+                    "type": "identity_first",
+                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 },
                 {
-                    "text": "a representative"
+                    "context": "Identity first",
+                    "text": "a representative",
+                    "type": "identity_first",
+                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 }
             ],
             "category": "gender-orientation",
