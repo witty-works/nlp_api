@@ -91,6 +91,7 @@ from app.models import (
     PluralizationType,
     BasicWordType,
     WordType,
+    AlternativeType,
 )
 from app.lang_detection import get_lang_detection
 from app.categories import (
@@ -1036,6 +1037,20 @@ async def post_check_v2_3(
     return await check(request, response, user_request_in, "2.3")
 
 
+@app.post(
+    "/v2.4/check",
+    response_model=Union[ResultsOut, Result],
+    response_model_exclude_none=True,
+    dependencies=[Depends(HTTPBearer(auto_error=False))],
+)
+async def post_check_v2_3(
+    request: Request,
+    response: Response,
+    user_request_in: RequestIn,
+):
+    return await check(request, response, user_request_in, "2.4")
+
+
 @app.get("/lemmatize")
 async def get_lemmatize(
     text: str,
@@ -1518,7 +1533,7 @@ async def fetch_user(request: Request) -> str | None:
 
 def fetch_text(
     user_request_in: RequestIn, supported_langs: list
-) -> tuple[str, str | None, bool]:
+) -> tuple[str, Language | None, bool]:
     text = user_request_in.text
     limit_reached = len(text) > settings.text_max_length
     if limit_reached:
@@ -1540,10 +1555,10 @@ def fetch_text(
 
 
 def check_api_version(version: str):
-    if version != "2.3":  # pragma: no cover
+    if version != "2.3" and version != "2.4":  # pragma: no cover
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"API version '{version}' not supported, please use version '2.3'.",
+            detail=f"API version '{version}' not supported, please use version '2.3' (deprecated) or '2.4'.",
         )
 
 
@@ -1615,6 +1630,12 @@ async def check(
     has_consented_to_mailing = None
     if "has_consented_to_mailing" in configs:
         has_consented_to_mailing = configs["has_consented_to_mailing"]
+
+    if version == "2.3":
+        for result in results:
+            for alternative in result.alternatives:
+                alternative.type = None
+                alternative.url = None
 
     return ResultsOut(
         results=results,
@@ -2580,6 +2601,13 @@ async def fetch_rule_alternatives(
             row[alternative_columns["is_gendered_noun"]],
             row[alternative_columns["label"]],
         )
+
+        if row[alternative_columns["type"]] == AlternativeType.DEFAULT:
+            alternative.type = AlternativeType.DEFAULT
+        elif row[alternative_columns["type"]] == AlternativeType.PERSON_FIRST:
+            alternative.type = AlternativeType.PERSON_FIRST
+        elif row[alternative_columns["type"]] == AlternativeType.IDENTITY_FIRST:
+            alternative.type = AlternativeType.IDENTITY_FIRST
 
         alternatives.append(alternative)
 

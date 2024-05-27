@@ -63,7 +63,10 @@
                     "text": "team"
                 },
                 {
-                    "text": "everyone"
+                    "context": "Identity first",
+                    "text": "everyone",
+                    "type": "identity_first",
+                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 },
                 {
                     "text": "colleagues"

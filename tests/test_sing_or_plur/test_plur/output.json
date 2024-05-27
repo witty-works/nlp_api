@@ -5,7 +5,10 @@
         {
             "alternatives": [
                 {
-                    "text": "colleague in engineering"
+                    "context": "Person first",
+                    "text": "colleague in engineering",
+                    "type": "person_first",
+                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 },
                 {
                     "text": "engineering team"

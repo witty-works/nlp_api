@@ -11,9 +11,11 @@
                     "text": "Bewerbende"
                 },
                 {
-                    "context": "💡",
+                    "context": "💡 Person zuerst",
                     "inspiration": true,
-                    "text": "Personen, die sich bewerben"
+                    "text": "Personen, die sich bewerben",
+                    "type": "person_first",
+                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 },
                 {
                     "text": "Bewerbungen"
@@ -50,9 +52,11 @@
                     "text": "Fachkraft"
                 },
                 {
-                    "context": "💡",
+                    "context": "💡 Person zuerst",
                     "inspiration": true,
-                    "text": "jemand vom Fach"
+                    "text": "jemand vom Fach",
+                    "type": "person_first",
+                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 }
             ],
             "category": "gender-orientation",
@@ -87,9 +91,11 @@
                     "text": "Fachkraft"
                 },
                 {
-                    "context": "💡",
+                    "context": "💡 Person zuerst",
                     "inspiration": true,
-                    "text": "Jemand vom Fach"
+                    "text": "Jemand vom Fach",
+                    "type": "person_first",
+                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 }
             ],
             "category": "gender-orientation",
@@ -124,9 +130,11 @@
                     "text": "Fachkraft"
                 },
                 {
-                    "context": "💡",
+                    "context": "💡 Person zuerst",
                     "inspiration": true,
-                    "text": "Jemand vom Fach"
+                    "text": "Jemand vom Fach",
+                    "type": "person_first",
+                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 }
             ],
             "category": "gender-orientation",

@@ -5,19 +5,25 @@
         {
             "alternatives": [
                 {
-                    "context": "💡",
+                    "context": "💡 Person zuerst",
                     "inspiration": true,
-                    "text": "jemand, der erfahren und fachkundig ist"
+                    "text": "jemand, der erfahren und fachkundig ist",
+                    "type": "person_first",
+                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 },
                 {
-                    "context": "💡",
+                    "context": "💡 Person zuerst",
                     "inspiration": true,
-                    "text": "Person, die ihr Know-how und ihre Erfahrung kreativ einsetzt"
+                    "text": "Person, die ihr Know-how und ihre Erfahrung kreativ einsetzt",
+                    "type": "person_first",
+                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 },
                 {
-                    "context": "💡",
+                    "context": "💡 Person zuerst",
                     "inspiration": true,
-                    "text": "Mensch, der seine Fachkenntnis ständig vertieft"
+                    "text": "Mensch, der seine Fachkenntnis ständig vertieft",
+                    "type": "person_first",
+                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 }
             ],
             "category": "social-motive",

@@ -128,6 +128,12 @@ class RuleType(str, Enum):
     SUBSTRING = "substring"
 
 
+class AlternativeType(str, Enum):
+    DEFAULT = "default"
+    PERSON_FIRST = "person_first"
+    IDENTITY_FIRST = "identity_first"
+
+
 class EntityType(str, Enum):
     DEFAULT = "default"
     NAME = "name"
@@ -194,7 +200,7 @@ class Alternative:
     lemma: str
     words: Optional[list] = None
     word_types: Optional[list] = None
-    type: Optional[str] = None
+    type: Optional[AlternativeType] = AlternativeType.DEFAULT
     label: Optional[str] = None
     pluralization: Optional[PluralizationType] = PluralizationType.DEFAULT
     is_inspiration: Optional[bool] = False
@@ -600,6 +606,8 @@ class ResultAlternative(BaseModel):
     text: Optional[str] = None
     remove: Optional[bool] = None
     inspiration: Optional[bool] = None
+    type: Optional[AlternativeType] = None
+    url: Optional[str] = None
     context: Optional[str] = None
 
 
@@ -811,6 +819,22 @@ class ResultOut(BaseModel):
                 if alternative.lemma == text:
                     continue
 
+                if alternative.type != AlternativeType.DEFAULT and (
+                    alternative.label is None or len(alternative.label) == 0
+                ):
+                    if alternative.type == AlternativeType.IDENTITY_FIRST:
+                        alternative.label = (
+                            "Identity first"
+                            if lang.lang == LangType.EN
+                            else "Identität zuerst"
+                        )
+                    elif alternative.type == AlternativeType.PERSON_FIRST:
+                        alternative.label = (
+                            "Person first"
+                            if lang.lang == LangType.EN
+                            else "Person zuerst"
+                        )
+
                 if alternative.is_inspiration:
                     if (
                         alternative.label is not None
@@ -826,6 +850,14 @@ class ResultOut(BaseModel):
                     inspiration=(True if alternative.is_inspiration else None),
                     context=alternative.label,
                 )
+
+                if alternative.type != AlternativeType.DEFAULT:
+                    variation.type = alternative.type
+                    variation.url = (
+                        "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
+                        if lang.lang == LangType.EN
+                        else "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
+                    )
 
                 cleaned_alternatives[alternative.lemma] = variation
 
