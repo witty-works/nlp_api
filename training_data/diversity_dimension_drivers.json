@@ -5,6 +5,8 @@
         "proficiency_level": "openly_discriminating",
         "is_active": "1",
         "emoji": "\ud83d\udeab",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "gender-orientation",
         "related_subcategories": [
             "homophobia",
@@ -21,6 +23,8 @@
         "proficiency_level": "language-clarity",
         "is_active": "1",
         "emoji": "\ud83d\ude09",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "cultural-diversity",
         "related_subcategories": [
             "anglicism",
@@ -122,6 +126,8 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -219,6 +225,8 @@
         "proficiency_level": "openly_discriminating",
         "is_active": "1",
         "emoji": "\ud83d\udeab",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -311,6 +319,8 @@
         "proficiency_level": "age",
         "is_active": "1",
         "emoji": "\ud83e\udd14",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "acquired-diversity",
         "related_subcategories": [],
         "translations": {
@@ -408,6 +418,8 @@
         "proficiency_level": "age",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "acquired-diversity",
         "related_subcategories": [],
         "translations": {
@@ -505,6 +517,8 @@
         "proficiency_level": "age",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "acquired-diversity",
         "related_subcategories": [],
         "translations": {
@@ -602,6 +616,8 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "social-motive",
         "related_subcategories": [
             "communal",
@@ -714,6 +730,8 @@
         "proficiency_level": "language-clarity",
         "is_active": "1",
         "emoji": "\ud83d\ude09",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -800,6 +818,8 @@
         "proficiency_level": "openly_discriminating",
         "is_active": "1",
         "emoji": "\ud83d\udeab",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "religion",
         "related_subcategories": [],
         "translations": {
@@ -887,6 +907,8 @@
         "proficiency_level": "openly_discriminating",
         "is_active": "1",
         "emoji": "\ud83d\udeab",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "religion",
         "related_subcategories": [],
         "translations": {
@@ -974,6 +996,8 @@
         "proficiency_level": "visible",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -1071,6 +1095,8 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "religion",
         "related_subcategories": [],
         "translations": {
@@ -1168,6 +1194,8 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude1f",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -1275,6 +1303,8 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "acquired-diversity",
         "related_subcategories": [],
         "translations": {
@@ -1372,6 +1402,8 @@
         "proficiency_level": "invisible",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -1469,6 +1501,8 @@
         "proficiency_level": "invisible",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -1566,6 +1600,8 @@
         "proficiency_level": "ancestry",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "cultural-diversity",
         "related_subcategories": [
             "culture",
@@ -1668,6 +1704,8 @@
         "proficiency_level": "inclusive",
         "is_active": "1",
         "emoji": "\u2705",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "social-motive",
         "related_subcategories": [
             "agentic",
@@ -1770,6 +1808,8 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -1867,6 +1907,8 @@
         "proficiency_level": "inclusive",
         "is_active": "1",
         "emoji": "\u2705",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "social-motive",
         "related_subcategories": [
             "communal"
@@ -1966,6 +2008,8 @@
         "proficiency_level": "inclusive",
         "is_active": "1",
         "emoji": "\u2705",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "social-motive",
         "related_subcategories": [],
         "translations": {
@@ -2053,6 +2097,8 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude2e\u200d\ud83d\udca8",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "social-motive",
         "related_subcategories": [
             "filler",
@@ -2163,6 +2209,8 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude1f",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -2260,6 +2308,8 @@
         "proficiency_level": "language-clarity",
         "is_active": "1",
         "emoji": "\ud83d\ude1f",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "cultural-diversity",
         "related_subcategories": [
             "exaggerating",
@@ -2370,6 +2420,8 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83e\uddca",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "acquired-diversity",
         "related_subcategories": [],
         "translations": {
@@ -2467,6 +2519,8 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\udca1",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "gender-orientation",
         "related_subcategories": [
             "female_stereotype",
@@ -2575,6 +2629,8 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "gender-orientation",
         "related_subcategories": [
             "d_and_i",
@@ -2687,6 +2743,8 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude2e",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -2742,13 +2800,13 @@
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Geschlechter-Spezifische%20Abk%C3%BCrzung-2.png",
+                    "src": "https:\/\/www.witty.works\/hubfs\/Geschlechter-Spezifische%20Abk%C3%BCrzung-3.png",
                     "width": "605",
                     "height": "407",
                     "alt": ""
                 },
                 "example_image_advanced": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Geschlechter-Spezifische%20Abk%C3%BCrzung%20Advanced.png",
+                    "src": "https:\/\/www.witty.works\/hubfs\/Geschlechter-Spezifische%20Abk%C3%BCrzung%20Advanced-1.png",
                     "width": "605",
                     "height": "407",
                     "alt": ""
@@ -2784,6 +2842,8 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\udcaf",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -2880,6 +2940,8 @@
         "proficiency_level": "invisible",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -2977,6 +3039,8 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude1f",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "gender-orientation",
         "related_subcategories": [
             "female_stereotype",
@@ -3084,6 +3148,8 @@
         "proficiency_level": "language-clarity",
         "is_active": "1",
         "emoji": "\ud83d\ude44",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "cultural-diversity",
         "related_subcategories": [
             "exaggerating",
@@ -3194,6 +3260,8 @@
         "proficiency_level": "openly_discriminating",
         "is_active": "1",
         "emoji": "\ud83d\udeab",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -3281,6 +3349,8 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude1f",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "gender-orientation",
         "related_subcategories": [
             "agentic",
@@ -3394,6 +3464,8 @@
         "proficiency_level": "invisible",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "ability-physicality",
         "related_subcategories": [],
         "has_rules": [
@@ -3407,6 +3479,8 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude1f",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -3504,6 +3578,8 @@
         "proficiency_level": "visible",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -3601,6 +3677,8 @@
         "proficiency_level": "invisible",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -3698,6 +3776,8 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -3795,6 +3875,8 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83e\ude96",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "social-motive",
         "related_subcategories": [],
         "translations": {
@@ -3892,6 +3974,8 @@
         "proficiency_level": "visible",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -3989,6 +4073,8 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -4086,6 +4172,8 @@
         "proficiency_level": "openly_discriminating",
         "is_active": "1",
         "emoji": "\ud83d\udeab",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "social-motive",
         "related_subcategories": [],
         "translations": {
@@ -4183,6 +4271,8 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude1f",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -4280,6 +4370,8 @@
         "proficiency_level": "language-clarity",
         "is_active": "1",
         "emoji": "\ud83d\ude44",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "cultural-diversity",
         "related_subcategories": [
             "abbreviation",
@@ -4386,6 +4478,8 @@
         "proficiency_level": "openly_discriminating",
         "is_active": "1",
         "emoji": "\ud83d\udeab",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -4473,6 +4567,8 @@
         "proficiency_level": "ancestry",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -4565,6 +4661,8 @@
         "proficiency_level": "openly_discriminating",
         "is_active": "1",
         "emoji": "\ud83d\udeab",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -4652,6 +4750,8 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -4749,6 +4849,8 @@
         "proficiency_level": "invisible",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -4846,6 +4948,8 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83c\udfc5",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "social-motive",
         "related_subcategories": [],
         "translations": {
@@ -4943,6 +5047,8 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude1f",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "gender-orientation",
         "related_subcategories": [
             "female_stereotype",
@@ -5055,6 +5161,8 @@
         "proficiency_level": "openly_discriminating",
         "is_active": "1",
         "emoji": "\ud83d\udeab",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -5142,6 +5250,8 @@
         "proficiency_level": "invisible",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -5239,6 +5349,8 @@
         "proficiency_level": "openly_discriminating",
         "is_active": "1",
         "emoji": "\ud83d\udeab",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -5326,6 +5438,8 @@
         "proficiency_level": "unconscious_bias",
         "is_active": "1",
         "emoji": "\ud83d\ude12",
+        "translation_fr": "",
+        "has_fr_rules": "false",
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
