@@ -13,6 +13,7 @@
     "H\u00f6chstleistungen": null,
     "Kanus": null,
     "Manntage": null,
+    "Natives": null,
     "Schwarztees": "Schwarztee",
     "Sch\u00e4digungen": null,
     "Abgeordnete": null,
@@ -2627,7 +2628,6 @@
     "Charts": null,
     "Insights": null,
     "Banden": null,
-    "Natives": null,
     "Fahrscheine": null,
     "Fahrscheinen": null,
     "Sachen": null,
@@ -3006,6 +3006,18 @@
     "Montagen": null,
     "Vorsitzenden": null,
     "Zerebralparesen": null,
-    "Stellen": null
+    "Stellen": null,
+    "Trainings": null,
+    "Audits": null,
+    "Liefernde": null,
+    "Forschungen": null,
+    "Programmierungen": null,
+    "Gebern": null,
+    "Geberinnen": null,
+    "Formungen": null,
+    "Verlegungen": null,
+    "Desastern": null,
+    "Fiaskos": null,
+    "Katastrophen": null
   }
 }

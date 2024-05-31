@@ -38,29 +38,39 @@
         {
             "alternatives": [
                 {
-                    "context": "💡",
+                    "context": "💡 Person zuerst",
                     "inspiration": true,
-                    "text": "Unternehmen, das im Markt Maßstäbe setzt"
+                    "text": "Unternehmen, das im Markt Maßstäbe setzt",
+                    "type": "person_first",
+                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 },
                 {
-                    "context": "💡",
+                    "context": "💡 Person zuerst",
                     "inspiration": true,
-                    "text": "wichtige Sache"
+                    "text": "wichtige Sache",
+                    "type": "person_first",
+                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 },
                 {
-                    "context": "💡",
+                    "context": "💡 Person zuerst",
                     "inspiration": true,
-                    "text": "Ziel, das das Team inspiriert"
+                    "text": "Ziel, das das Team inspiriert",
+                    "type": "person_first",
+                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 },
                 {
-                    "context": "💡",
+                    "context": "💡 Person zuerst",
                     "inspiration": true,
-                    "text": "inspirierendes Teammitglied"
+                    "text": "inspirierendes Teammitglied",
+                    "type": "person_first",
+                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 },
                 {
-                    "context": "💡",
+                    "context": "💡 Person zuerst",
                     "inspiration": true,
-                    "text": "Mensch, der dem Team mit Rat und Tat zur Seite steht"
+                    "text": "Mensch, der dem Team mit Rat und Tat zur Seite steht",
+                    "type": "person_first",
+                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 }
             ],
             "category": "social-motive",

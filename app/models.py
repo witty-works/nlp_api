@@ -6,7 +6,6 @@ import json, typing
 
 from starlette.responses import Response
 
-import string
 import re
 
 from eng import TextFixer, Target
@@ -36,7 +35,8 @@ class Language(object):
         try:
             category_data = get_category(category)
 
-            text = category_data["translations"][self.lang][key]
+            lang = "en" if self.lang == "fr" else self.lang
+            text = category_data["translations"][lang][key]
             text = self.convert_sharp_ss(text)
         except KeyError:
             text = ""
@@ -118,6 +118,7 @@ class LangWithAutoType(str, Enum):
     enUS = "en-US"
     enGB = "en-GB"
     frFR = "fr-FR"
+    frCH = "fr-CH"
 
 
 class RuleType(str, Enum):
@@ -125,6 +126,12 @@ class RuleType(str, Enum):
     PREFIX = "prefix"
     SUFFIX = "suffix"
     SUBSTRING = "substring"
+
+
+class AlternativeType(str, Enum):
+    DEFAULT = "default"
+    PERSON_FIRST = "person_first"
+    IDENTITY_FIRST = "identity_first"
 
 
 class EntityType(str, Enum):
@@ -166,6 +173,8 @@ class LangVariantType(str, Enum):
     deAT = "de-AT"
     enUS = "en-US"
     enGB = "en-GB"
+    frFR = "fr-FR"
+    frCH = "fr-CH"
 
 
 class GermanGenderEndingType(str, Enum):
@@ -191,7 +200,7 @@ class Alternative:
     lemma: str
     words: Optional[list] = None
     word_types: Optional[list] = None
-    type: Optional[str] = None
+    type: Optional[AlternativeType] = AlternativeType.DEFAULT
     label: Optional[str] = None
     pluralization: Optional[PluralizationType] = PluralizationType.DEFAULT
     is_inspiration: Optional[bool] = False
@@ -356,6 +365,7 @@ class Config(BaseModel):
         LangWithAutoType.enUS,
         LangWithAutoType.enGB,
         LangWithAutoType.frFR,
+        LangWithAutoType.frCH,
     ]
     german_gender_ending: GermanGenderEndingType = GermanGenderEndingType.STAR
     _gendereddenom_ending = {
@@ -596,6 +606,8 @@ class ResultAlternative(BaseModel):
     text: Optional[str] = None
     remove: Optional[bool] = None
     inspiration: Optional[bool] = None
+    type: Optional[AlternativeType] = None
+    url: Optional[str] = None
     context: Optional[str] = None
 
 
@@ -807,6 +819,22 @@ class ResultOut(BaseModel):
                 if alternative.lemma == text:
                     continue
 
+                if alternative.type != AlternativeType.DEFAULT and (
+                    alternative.label is None or len(alternative.label) == 0
+                ):
+                    if alternative.type == AlternativeType.IDENTITY_FIRST:
+                        alternative.label = (
+                            "Identity first"
+                            if lang.lang == LangType.EN
+                            else "Identität zuerst"
+                        )
+                    elif alternative.type == AlternativeType.PERSON_FIRST:
+                        alternative.label = (
+                            "Person first"
+                            if lang.lang == LangType.EN
+                            else "Person zuerst"
+                        )
+
                 if alternative.is_inspiration:
                     if (
                         alternative.label is not None
@@ -822,6 +850,14 @@ class ResultOut(BaseModel):
                     inspiration=(True if alternative.is_inspiration else None),
                     context=alternative.label,
                 )
+
+                if alternative.type != AlternativeType.DEFAULT:
+                    variation.type = alternative.type
+                    variation.url = (
+                        "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
+                        if lang.lang == LangType.EN
+                        else "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
+                    )
 
                 cleaned_alternatives[alternative.lemma] = variation
 

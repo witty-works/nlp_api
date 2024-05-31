@@ -2,6 +2,6 @@
     "text": "Haben wir Bewerberinnen und Bewerber? Oder haben wir eine/n Fachmann/Fachfrau? Fachfrau. Fachmann.",
     "config": {
         "gendered_roles_format": "inclusive_gender",
-        "show_inspirations": true
+        "show_inspiration_alternatives": true
     }
 }

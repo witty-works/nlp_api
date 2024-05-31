@@ -2,14 +2,14 @@
     "detail": [
         {
             "ctx": {
-                "expected": "'auto', 'en', 'de', 'fr', 'de-DE', 'de-CH', 'de-AT', 'en-US', 'en-GB' or 'fr-FR'"
+                "expected": "'auto', 'en', 'de', 'fr', 'de-DE', 'de-CH', 'de-AT', 'en-US', 'en-GB', 'fr-FR' or 'fr-CH'"
             },
             "input": "es",
             "loc": [
                 "body",
                 "lang"
             ],
-            "msg": "Input should be 'auto', 'en', 'de', 'fr', 'de-DE', 'de-CH', 'de-AT', 'en-US', 'en-GB' or 'fr-FR'",
+            "msg": "Input should be 'auto', 'en', 'de', 'fr', 'de-DE', 'de-CH', 'de-AT', 'en-US', 'en-GB', 'fr-FR' or 'fr-CH'",
             "type": "enum",
             "url": "https://errors.pydantic.dev/2.7/v/enum"
         }

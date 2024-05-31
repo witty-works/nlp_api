@@ -91,6 +91,7 @@ from app.models import (
     PluralizationType,
     BasicWordType,
     WordType,
+    AlternativeType,
 )
 from app.lang_detection import get_lang_detection
 from app.categories import (
@@ -116,7 +117,7 @@ from app.query_definitions import (
     noun_form_map,
 )
 
-version = "2.2.23"
+version = "2.2.24"
 
 categories = get_categories()
 settings = get_settings()
@@ -287,7 +288,7 @@ def create_rule(lang, row, rewrite_to: str = None) -> Rule:
     rule.is_pattern_match = row[rule_columns["is_pattern_match"]]
     rule.label = (
         row[rule_columns["label"]]
-        if row[rule_columns["label_type"]] == RuleLabelEnum.DEFAULT
+        if row[rule_columns["label"]]
         else map_rule_label_type(lang, row[rule_columns["label_type"]])
     )
     rule.type = row[rule_columns["type"]]
@@ -850,6 +851,10 @@ async def post_debug_rule(
     config = Config(plan="witty_teams")
 
     tokens = fetch_tokens(lang.lang, rule_data.text)
+    for token in tokens:
+        if token.text in rule_data.lemmatizations:
+            token.lemma_ = rule_data.lemmatizations[token.text]
+
     offsets = utf16_offsets(rule_data.text)
     false_positive_matcher = fetch_false_positive_matchers(lang.lang, tokens)
 
@@ -900,11 +905,6 @@ async def post_debug_rule(
     token_index = 0
     token_count = len(tokens)
     while token_index < token_count:
-        if tokens[token_index].text in rule_data.lemmatizations:
-            tokens[token_index].lemma_ = rule_data.lemmatizations[
-                tokens[token_index].text
-            ]
-
         if rule_data.lang == LangType.DE:
             tokens[token_index].lemma_ = await german_lemmatization(tokens, token_index)
 
@@ -1034,6 +1034,20 @@ async def post_check_v2_3(
     user_request_in: RequestIn,
 ):
     return await check(request, response, user_request_in, "2.3")
+
+
+@app.post(
+    "/v2.4/check",
+    response_model=Union[ResultsOut, Result],
+    response_model_exclude_none=True,
+    dependencies=[Depends(HTTPBearer(auto_error=False))],
+)
+async def post_check_v2_3(
+    request: Request,
+    response: Response,
+    user_request_in: RequestIn,
+):
+    return await check(request, response, user_request_in, "2.4")
 
 
 @app.get("/lemmatize")
@@ -1518,7 +1532,7 @@ async def fetch_user(request: Request) -> str | None:
 
 def fetch_text(
     user_request_in: RequestIn, supported_langs: list
-) -> tuple[str, str | None, bool]:
+) -> tuple[str, Language | None, bool]:
     text = user_request_in.text
     limit_reached = len(text) > settings.text_max_length
     if limit_reached:
@@ -1540,10 +1554,10 @@ def fetch_text(
 
 
 def check_api_version(version: str):
-    if version != "2.3":  # pragma: no cover
+    if version != "2.3" and version != "2.4":  # pragma: no cover
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"API version '{version}' not supported, please use version '2.3'.",
+            detail=f"API version '{version}' not supported, please use version '2.3' (deprecated) or '2.4'.",
         )
 
 
@@ -1615,6 +1629,12 @@ async def check(
     has_consented_to_mailing = None
     if "has_consented_to_mailing" in configs:
         has_consented_to_mailing = configs["has_consented_to_mailing"]
+
+    if version == "2.3":
+        for result in results:
+            for alternative in result.alternatives:
+                alternative.type = None
+                alternative.url = None
 
     return ResultsOut(
         results=results,
@@ -2471,6 +2491,7 @@ async def fetch_rules(
         filters.values()
     )
 
+    is_gender_star_ending_ = False
     rows = await fetch_rows(query, parameters)
     if lang == LangType.EN:
         if rewrite_to is None and len(rows) == 0:
@@ -2486,8 +2507,6 @@ async def fetch_rules(
                     suffix_check,
                     "en-US",
                 )
-
-        is_gender_star_ending_ = False
     elif lang == LangType.DE:
         is_gender_star_ending_ = is_gender_star_ending(token.text)
         if not suffix_check and is_gender_star_ending_ and len(rows) == 0:
@@ -2581,6 +2600,13 @@ async def fetch_rule_alternatives(
             row[alternative_columns["is_gendered_noun"]],
             row[alternative_columns["label"]],
         )
+
+        if row[alternative_columns["type"]] == AlternativeType.DEFAULT:
+            alternative.type = AlternativeType.DEFAULT
+        elif row[alternative_columns["type"]] == AlternativeType.PERSON_FIRST:
+            alternative.type = AlternativeType.PERSON_FIRST
+        elif row[alternative_columns["type"]] == AlternativeType.IDENTITY_FIRST:
+            alternative.type = AlternativeType.IDENTITY_FIRST
 
         alternatives.append(alternative)
 
@@ -3646,7 +3672,9 @@ async def german_noun_lookup(
             while len(word) > 3 and forms is None:
                 words = static_rules[LangType.DE]["german_nouns"].parse_compound(word)
                 if len(words) == 0:
-                    for substring in static_rules[LangType.DE]["german_nouns_substrings"]:
+                    for substring in static_rules[LangType.DE][
+                        "german_nouns_substrings"
+                    ]:
                         position = text.find(substring)
                         if position:
                             words = [text[0:position], text[position:].capitalize()]
@@ -3917,7 +3945,7 @@ async def find_form(
     is_singular: bool = None,
 ):
     if lang == LangType.FR:
-        return None
+        return tokens[token_index].text
 
     token = tokens[token_index]
     match word_type:
@@ -4114,6 +4142,24 @@ def align_form_adjective_german(
     return text + ending
 
 
+def align_form_adjective_french(
+    target_form: str,
+    target_token: Token,
+) -> str:
+    text = target_token.text
+
+    if target_form == "performantes":
+        if text.endswith("l") or text.endswith("é"):
+            text += "e"
+
+        text += "s"
+    elif target_form == "ambitieuse":
+        if text.endswith("é"):
+            text += "e"
+
+    return text
+
+
 async def align_form_adjective(
     lang: LangType,
     target_form: str,
@@ -4121,8 +4167,11 @@ async def align_form_adjective(
     source_lemma: str,
     target_token: Token,
 ) -> str:
-    if target_form == "no_change" or target_form is None or lang == LangType.FR:
+    if target_form == "no_change" or target_form is None:
         return target_token.text
+
+    if lang == LangType.FR:
+        return align_form_adjective_french(target_form, target_token)
 
     target_result = await fetch_declensions(
         lang, WordType.ADJECTIVE, target_token.text, target_token
@@ -4928,6 +4977,11 @@ async def gendered_nouns(
     separator, noun_separator = get_german_noun_separator(config)
     additional_words = []
     is_singular = True if is_singular is None else is_singular
+    if (
+        target_form
+        not in declensions_config[LangType.DE][BasicWordType.NOUN]["columns"]
+    ):
+        target_form = "sg_nom" if is_singular else "pl_nom"
 
     if prefix.endswith("-"):
         words = prefix[:-1].split("-")
@@ -5129,10 +5183,49 @@ def gendered_roles_format_binary(gendered_roles_format: str):
 
 
 async def fetch_alternatives_with_article(
-    config: Config, tokens: Doc, token_index: int, alternatives: list[Alternative]
+    config: Config,
+    lang: LangType,
+    tokens: Doc,
+    token_index: int,
+    is_singular: bool,
+    word_types: list,
+    alternatives: list[Alternative],
 ) -> list[Alternative] | None:
     if alternatives is None:
         return []
+
+    if (
+        lang == LangType.EN
+        or token_index == 0
+        or len(word_types) != 1
+        or word_types[0] != WordType.NOUN
+    ):
+        return None
+
+    if lang == LangType.FR:
+        article_text = tokens[token_index - 1].text.lower()
+        if article_text == "les":
+            alternatives_with_article = []
+            for alternative in alternatives:
+                article_alternative = ""
+                if " le " not in alternative.lemma:
+                    article_alternative = (
+                        "l'" if alternative.lemma.startswith("é") else "les"
+                    )
+
+                if article_alternative != "":
+                    if not article_alternative.endswith("'"):
+                        article_alternative += tokens[token_index - 1].whitespace_
+                    alternative.lemma = article_alternative + alternative.lemma
+
+                alternatives_with_article.append(alternative)
+
+            return alternatives_with_article
+
+        return None
+
+    if lang == LangType.DE and not is_singular:
+        return None
 
     token = tokens[token_index]
     text = token.text
@@ -5562,34 +5655,34 @@ def is_false_positive(
 def map_rule_label_type(lang: LangType, label_type: str) -> str | None:
     label_types = {
         LangType.DE: {
-            RuleLabelEnum.BE_SPECIFIC: "Describe the specific concern",
-            RuleLabelEnum.NOT_FOR_PEOPLE: "Don't use this word for people",
-            RuleLabelEnum.NAME_DISABILITY: "Name the disability or condition",
-            RuleLabelEnum.ONLY_IF_GENDER_IDENTITY_RELEVANT: "Only if gender identity is relevant",
-            RuleLabelEnum.NOT_FOR_NON_COMBAT: "Don't use in a non-combat context",
-            RuleLabelEnum.ASK_FOR_PREFERENCE: "Only if preference explicitly stated",
-            RuleLabelEnum.ONLY_WHEN_REFERENCING_RELIGIOUS_PRACTICE: "Only use in reference to religious practice",
-            RuleLabelEnum.USE_IN_TECH_ONLY: "Use in programming only",
-            RuleLabelEnum.DONT_USE_TO_DESCRIBE_QUALITY: "Don't use to describe value or quality",
-            RuleLabelEnum.DONT_USE_FOR_SUBSTANCE_USE: "Don't use in the context of substance use",
-            RuleLabelEnum.ASK_ABOUT_TRADITIONS: "Ask about their traditions, if possible",
+            RuleLabelEnum.BE_SPECIFIC: "Sei spezifisch",
+            RuleLabelEnum.NOT_FOR_PEOPLE: "nicht auf Menschen beziehen",
+            RuleLabelEnum.NAME_DISABILITY: "Nenne die Behinderung oder Zustand",
+            RuleLabelEnum.ONLY_IF_GENDER_IDENTITY_RELEVANT: "nur erwähnen, wenn relevant",
+            RuleLabelEnum.NOT_FOR_NON_COMBAT: "Nur in einen Kampf-Kontext verwenden",
+            RuleLabelEnum.ASK_FOR_PREFERENCE: "ur wenn die Person sich so bezeichnet",
+            RuleLabelEnum.ONLY_WHEN_REFERENCING_RELIGIOUS_PRACTICE: "Nur in Bezug auf die religiöse Praxis verwenden",
+            RuleLabelEnum.USE_IN_TECH_ONLY: "Nur im Programmier-Kontext verwenden",
+            RuleLabelEnum.DONT_USE_TO_DESCRIBE_QUALITY: "Nicht zur Beschreibung von Wert oder Qualität verwenden",
+            RuleLabelEnum.DONT_USE_FOR_SUBSTANCE_USE: "Nicht im Zusammenhang mit Drogenkonsum verwenden",
+            RuleLabelEnum.ASK_ABOUT_TRADITIONS: "Frage nach ihren Traditionen",
         },
         LangType.EN: {
-            RuleLabelEnum.BE_SPECIFIC: "Describe the specific concern",
-            RuleLabelEnum.NOT_FOR_PEOPLE: "Don't use this word for people",
+            RuleLabelEnum.BE_SPECIFIC: "Be specific",
+            RuleLabelEnum.NOT_FOR_PEOPLE: "Don't use this phrase for people",
             RuleLabelEnum.NAME_DISABILITY: "Name the disability or condition",
             RuleLabelEnum.ONLY_IF_GENDER_IDENTITY_RELEVANT: "Only if gender identity is relevant",
-            RuleLabelEnum.NOT_FOR_NON_COMBAT: "Don't use in a non-combat context",
+            RuleLabelEnum.NOT_FOR_NON_COMBAT: "Only use in a combat context",
             RuleLabelEnum.ASK_FOR_PREFERENCE: "Only if preference explicitly stated",
             RuleLabelEnum.ONLY_WHEN_REFERENCING_RELIGIOUS_PRACTICE: "Only use in reference to religious practice",
             RuleLabelEnum.USE_IN_TECH_ONLY: "Use in programming only",
             RuleLabelEnum.DONT_USE_TO_DESCRIBE_QUALITY: "Don't use to describe value or quality",
             RuleLabelEnum.DONT_USE_FOR_SUBSTANCE_USE: "Don't use in the context of substance use",
-            RuleLabelEnum.ASK_ABOUT_TRADITIONS: "Ask about their traditions, if possible",
+            RuleLabelEnum.ASK_ABOUT_TRADITIONS: "Ask about their traditions",
         },
     }
 
-    if label_type not in label_types[lang]:
+    if lang not in label_types or label_type not in label_types[lang]:
         return None
 
     return label_types[lang][label_type]
@@ -5805,20 +5898,20 @@ async def rule_check(
                         start + len(text),
                     )
 
-            if (
-                token_index > 0
-                and is_singular
-                and len(word_types) == 1
-                and word_types[0] == WordType.NOUN
-            ):
-                alternatives_with_article = await fetch_alternatives_with_article(
-                    config, tokens, token_index, alternatives
-                )
+            alternatives_with_article = await fetch_alternatives_with_article(
+                config,
+                lang.lang,
+                tokens,
+                token_index,
+                is_singular,
+                word_types,
+                alternatives,
+            )
 
-                if alternatives_with_article is not None:
-                    alternatives = alternatives_with_article
-                    start = tokens[token_index - 1].idx
-                    text = tokens[token_index - 1].text + " " + text
+            if alternatives_with_article is not None:
+                alternatives = alternatives_with_article
+                start = tokens[token_index - 1].idx
+                text = tokens[token_index - 1].text + " " + text
 
         label = token._.label if token._.label is not None else rule.label
 

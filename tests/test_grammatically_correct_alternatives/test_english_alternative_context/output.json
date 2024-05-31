@@ -59,16 +59,28 @@
                     "text": "they"
                 },
                 {
-                    "text": "a chair"
+                    "context": "Identity first",
+                    "text": "a chair",
+                    "type": "identity_first",
+                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 },
                 {
-                    "text": "a chairperson"
+                    "context": "Identity first",
+                    "text": "a chairperson",
+                    "type": "identity_first",
+                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 },
                 {
-                    "text": "a coordinator"
+                    "context": "Identity first",
+                    "text": "a coordinator",
+                    "type": "identity_first",
+                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 },
                 {
-                    "text": "a committee head"
+                    "context": "Identity first",
+                    "text": "a committee head",
+                    "type": "identity_first",
+                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 }
             ],
             "category": "gender-orientation",
@@ -91,7 +103,10 @@
         {
             "alternatives": [
                 {
-                    "text": "a substance user"
+                    "context": "Identity first",
+                    "text": "a substance user",
+                    "type": "identity_first",
+                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 }
             ],
             "category": "ability-physicality",
@@ -113,13 +128,22 @@
         {
             "alternatives": [
                 {
-                    "text": "mentor at heart"
+                    "context": "Identity first",
+                    "text": "mentor at heart",
+                    "type": "identity_first",
+                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 },
                 {
-                    "text": "inspiration to the team"
+                    "context": "Identity first",
+                    "text": "inspiration to the team",
+                    "type": "identity_first",
+                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 },
                 {
-                    "text": "entrepreneur at heart"
+                    "context": "Identity first",
+                    "text": "entrepreneur at heart",
+                    "type": "identity_first",
+                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                 }
             ],
             "category": "social-motive",

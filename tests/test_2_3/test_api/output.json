@@ -1,36 +1,27 @@
 {
-    "config_changed": true,
-    "has_consented_to_mailing": true,
     "language": "de",
     "limit_reached": false,
-    "notifications": 5,
     "results": [
         {
             "alternatives": [
                 {
                     "context": "💡 Person zuerst",
                     "inspiration": true,
-                    "text": "jemand, der erfahren und fachkundig ist",
-                    "type": "person_first",
-                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
+                    "text": "jemand, der erfahren und fachkundig ist"
                 },
                 {
                     "context": "💡 Person zuerst",
                     "inspiration": true,
-                    "text": "Person, die ihr Know-how und ihre Erfahrung kreativ einsetzt",
-                    "type": "person_first",
-                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
+                    "text": "Person, die ihr Know-how und ihre Erfahrung kreativ einsetzt"
                 },
                 {
                     "context": "💡 Person zuerst",
                     "inspiration": true,
-                    "text": "Mensch, der seine Fachkenntnis ständig vertieft",
-                    "type": "person_first",
-                    "url": "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
+                    "text": "Mensch, der seine Fachkenntnis ständig vertieft"
                 }
             ],
             "category": "social-motive",
-            "context": "Wir suchen Ninja Programmierer für unsere Kunden. Wir sind lebendig.",
+            "context": "Wir suchen Ninja Programmierer für unsere Kunden und keinen Armleuchter oder Luder. Wir machen ja kein Schindluder!",
             "end": 16,
             "explanation": {
                 "content": "advanced",
@@ -49,6 +40,9 @@
         {
             "alternatives": [
                 {
+                    "text": "Programmierer*innen"
+                },
+                {
                     "text": "Programmiererinnen und Programmierer"
                 },
                 {
@@ -59,7 +53,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Wir suchen Ninja Programmierer für unsere Kunden. Wir sind lebendig.",
+            "context": "Wir suchen Ninja Programmierer für unsere Kunden und keinen Armleuchter oder Luder. Wir machen ja kein Schindluder!",
             "end": 30,
             "explanation": {
                 "content": "advanced",
@@ -78,6 +72,9 @@
         {
             "alternatives": [
                 {
+                    "text": "Kund*innen"
+                },
+                {
                     "text": "Kundinnen und Kunden"
                 },
                 {
@@ -88,13 +85,10 @@
                 },
                 {
                     "text": "Auftraggebende"
-                },
-                {
-                    "text": "Bestellende"
                 }
             ],
             "category": "gender-orientation",
-            "context": "Wir suchen Ninja Programmierer für unsere Kunden. Wir sind lebendig.",
+            "context": "Wir suchen Ninja Programmierer für unsere Kunden und keinen Armleuchter oder Luder. Wir machen ja kein Schindluder!",
             "end": 48,
             "explanation": {
                 "content": "advanced",
@@ -109,6 +103,50 @@
             "subcategory": "function",
             "text": "Kunden",
             "text_id": "Kunde"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "social-motive",
+            "context": "Wir suchen Ninja Programmierer für unsere Kunden und keinen Armleuchter oder Luder. Wir machen ja kein Schindluder!",
+            "end": 71,
+            "explanation": {
+                "icon": "🚫",
+                "text": "Verletzt und schüchtert ein",
+                "url": "https://www.witty.works/de/kategorien/soziale-motivation/beleidigende-und-verletzende-sprache?reducedView=true"
+            },
+            "gravity": 1.0,
+            "label": "Soziale Motivation: Beleidigende und verletzende Sprache",
+            "proficiency_level": "openly_discriminating",
+            "start": 60,
+            "subcategory": "offensive_language",
+            "text": "Armleuchter",
+            "text_id": "Armleuchter"
+        },
+        {
+            "alternatives": [
+                {
+                    "remove": true
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Wir suchen Ninja Programmierer für unsere Kunden und keinen Armleuchter oder Luder. Wir machen ja kein Schindluder!",
+            "end": 82,
+            "explanation": {
+                "icon": "🚫",
+                "text": "Fällt unter sexistische Verunglimpfungen",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/sexismus?reducedView=true"
+            },
+            "gravity": 1.0,
+            "label": "Geschlecht + Orientierung: Sexismus",
+            "proficiency_level": "openly_discriminating",
+            "start": 77,
+            "subcategory": "sexism",
+            "text": "Luder",
+            "text_id": "Luder"
         }
     ]
 }
