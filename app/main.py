@@ -851,6 +851,10 @@ async def post_debug_rule(
     config = Config(plan="witty_teams")
 
     tokens = fetch_tokens(lang.lang, rule_data.text)
+    for token in tokens:
+        if token.text in rule_data.lemmatizations:
+            token.lemma_ = rule_data.lemmatizations[token.text]
+
     offsets = utf16_offsets(rule_data.text)
     false_positive_matcher = fetch_false_positive_matchers(lang.lang, tokens)
 
@@ -901,11 +905,6 @@ async def post_debug_rule(
     token_index = 0
     token_count = len(tokens)
     while token_index < token_count:
-        if tokens[token_index].text in rule_data.lemmatizations:
-            tokens[token_index].lemma_ = rule_data.lemmatizations[
-                tokens[token_index].text
-            ]
-
         if rule_data.lang == LangType.DE:
             tokens[token_index].lemma_ = await german_lemmatization(tokens, token_index)
 
