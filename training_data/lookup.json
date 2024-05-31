@@ -481,7 +481,7 @@
     "ger\u00fchrt": "ger\u00fchrt",
     "gesch\u00e4digt": "gesch\u00e4digt",
     "gestalterische": "gestalterisch",
-    "gestossen": "sto\u00dfen",
+    "gestossen": "stossen",
     "gestresst": "gestresst",
     "gestresste": "gestresst",
     "getrieben": "getrieben",
@@ -650,14 +650,14 @@
     "stellenweise": "stellenweise",
     "stilsicher": "stilsicher",
     "stilsichere": "stilsicher",
-    "stosst": "sto\u00dfen",
+    "stosst": "stossen",
     "straightactinge": "straightacting",
     "streitlustige": "streitlustig",
     "streits\u00fcchtige": "streits\u00fcchtig",
     "sture": "stur",
     "st\u00e4rker": "st\u00e4rker",
     "st\u00e4rkere": "st\u00e4rker",
-    "st\u00f6sst": "sto\u00dfen",
+    "st\u00f6sst": "stossen",
     "sympathische": "sympathisch",
     "taktvolle": "taktvoll",
     "taube": "taub",
@@ -5697,6 +5697,11 @@
     "Gebern": "Geber",
     "Geberin": "Geber",
     "Geberinnen": "Geber",
-    "Formungen": "Formung"
+    "Formungen": "Formung",
+    "Verlegungen": "Verlegung",
+    "Desasters": "Desaster",
+    "Desastern": "Desaster",
+    "Fiaskos": "Fiasko",
+    "Katastrophen": "Katastrophe"
   }
 }
