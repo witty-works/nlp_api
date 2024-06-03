@@ -1,6 +1,7 @@
 import re
 from functools import lru_cache
 
+
 class PrivacyFilter:
     """PrivacyFilter https://github.com/lmeulen/PrivacyFilter"""
 
@@ -33,6 +34,7 @@ class PrivacyFilter:
         hostname_re = (
             r"[a-z" + ul + r"0-9](?:[a-z" + ul + r"0-9-]{0,61}[a-z" + ul + r"0-9])?"
         )
+        # Max length for domain name labels is 63 characters per RFC 1034 sec. 3.1
         domain_re = r"(?:\.(?!-)[a-z" + ul + r"0-9-]{1,63}(?<!-))*"
         tld_re = (
             r"\."  # dot
@@ -89,6 +91,7 @@ class PrivacyFilter:
         elif isinstance(var, list):
             var = [self.clean_var(item) for item in var]
         return var
+
 
 @lru_cache()
 def get_privacy_filter():

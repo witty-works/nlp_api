@@ -102,8 +102,8 @@ from app.categories import (
     get_category_name,
 )
 from app.settings import get_settings
-from app.logger import set_up_logger
-from app.redis_setup import get_user_id, set_up_redis
+from app.logger import LoggerSetup
+from app.redis import get_user_id, RedisSetup
 from app.model import fetch_nlp_model
 from app.rules import fetch_static_rules
 from app.sentry import set_up_sentry_sdk
@@ -121,11 +121,11 @@ version = "2.2.24"
 
 categories = get_categories()
 settings = get_settings()
-logger = set_up_logger(settings)
+logger = LoggerSetup(settings).get_logger()
 logger.debug("app started with settings: %s", settings)
 
 sentry_sdk = set_up_sentry_sdk(version, settings)
-redis = set_up_redis(settings)
+redis = RedisSetup(settings).get_redis()
 
 
 if settings.slack_bot_token and settings.slack_signing_secret:  # pragma: no cover

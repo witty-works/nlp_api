@@ -2,13 +2,14 @@ from redis import Redis
 from fakeredis import FakeStrictRedis
 from app.settings import Settings
 
+
 class RedisSetup:
     """Class to handle Redis setup and provide Redis connection."""
 
     def __init__(self, settings: Settings):
         self.settings = settings
 
-    def get_redis_connection(self):
+    def get_redis(self):
         """Set up and return a Redis connection."""
         if self.settings.redis_host:
             try:
@@ -24,6 +25,7 @@ class RedisSetup:
                 print(f"Error setting up Redis: {e}")
 
         return FakeStrictRedis()
+
 
 def get_user_id(email: str):
     return "dashboard-user-email:" + email.lower()

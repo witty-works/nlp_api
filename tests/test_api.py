@@ -20,7 +20,7 @@ from app.models import (
     LangWithAutoType,
     RequestIn,
 )
-from app.redis_setup import get_user_id
+from app.redis import get_user_id
 
 
 tokens = {
