@@ -3,19 +3,29 @@ from functools import lru_cache
 
 
 @lru_cache()
-def get_categories():
-    categories_file = open("training_data/categories.json")
-    categories = json.load(categories_file)
+def load_json_data(file_name):
+    with open(file_name) as file:
+        return json.load(file)
 
-    diversity_dimensions_drivers_file = open(
-        "training_data/diversity_dimension_drivers.json"
-    )
-    categories.update(json.load(diversity_dimensions_drivers_file))
+
+@lru_cache()
+def get_categories():
+    categories = load_json_data("training_data/categories.json")
+    categories.update(get_diversity_dimensions_drivers())
 
     return categories
 
 
 @lru_cache()
+def get_diversity_dimensions_drivers():
+    return load_json_data("training_data/diversity_dimension_drivers.json")
+
+
+@lru_cache()
+def get_proficiency_levels():
+    return load_json_data("training_data/proficiency_levels.json")
+
+
 def get_category_keys(only_category_advanced_keys=False):
     categories = get_categories()
 
@@ -36,12 +46,6 @@ def get_category_keys(only_category_advanced_keys=False):
         return category_advanced_keys
 
     return category_keys + category_advanced_keys
-
-
-@lru_cache()
-def get_proficiency_levels():
-    proficiency_levels_file = open("training_data/proficiency_levels.json")
-    return json.load(proficiency_levels_file)
 
 
 def get_category_name(category):
@@ -70,16 +74,16 @@ def get_parent_category_name(category):
 
     return parent_category["category"]
 
+
 def is_category_inclusive(category):
     category_data = get_category(category)
-    if category_data is None or "proficiency_level" not in category_data:
-        return False
-
     proficiency_levels = get_proficiency_levels()
-    if category_data["proficiency_level"] not in proficiency_levels:
-        return False
 
-    return proficiency_levels[category_data["proficiency_level"]]["inclusive"]
+    return (
+        category_data
+        and category_data.get("proficiency_level") in proficiency_levels
+        and proficiency_levels[category_data["proficiency_level"]]["inclusive"]
+    )
 
 
 def get_proficiency_level(category):
