@@ -22,7 +22,7 @@
     "Zugriffe": null,
     "Zugriffen": null,
     "Achtsamkeiten": null,
-    "Actionables": null,
+    "Actions": null,
     "Aufgaben": null,
     "Teilaufgaben": null,
     "Administratoren": null,
@@ -3018,6 +3018,7 @@
     "Verlegungen": null,
     "Desastern": null,
     "Fiaskos": null,
-    "Katastrophen": null
+    "Katastrophen": null,
+    "Kreditgebern": null
   }
 }
