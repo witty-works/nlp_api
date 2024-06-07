@@ -3,14 +3,14 @@ from functools import lru_cache
 
 
 class PrivacyFilter:
-    """PrivacyFilter
-    Note:
-        * https://github.com/lmeulen/PrivacyFilter
-    """
+    """PrivacyFilter https://github.com/lmeulen/PrivacyFilter"""
 
     def __init__(self):
-        # Make the URL regular expression
-        # https://stackoverflow.com/questions/827557/how-do-you-validate-a-url-with-a-regular-expression-in-python
+        self.url_re = self.compile_url_regex()
+
+    @staticmethod
+    def compile_url_regex():
+        """https://stackoverflow.com/questions/827557/how-do-you-validate-a-url-with-a-regular-expression-in-python"""
         ul = "\u00a1-\uffff"  # Unicode letters range (must not be a raw string).
 
         # IP patterns
@@ -46,7 +46,7 @@ class PrivacyFilter:
         )
         host_re = "(" + hostname_re + domain_re + tld_re + "|localhost)"
 
-        self.url_re = re.compile(
+        return re.compile(
             r"([a-z0-9.+-]*:?//)?"  # scheme is validated separately
             r"(?:[^\s:@/]+(?::[^\s:@/]*)?@)?"  # user:pass authentication
             r"(?:" + ipv4_re + "|" + ipv6_re + "|" + host_re + ")"
@@ -67,8 +67,7 @@ class PrivacyFilter:
         )
 
     def remove_url(self, text):
-        text = re.sub(self.url_re, "<URL>", text)
-        return text
+        return re.sub(self.url_re, "<URL>", text)
 
     def filter_regular_expressions(self, text):
         text = self.remove_email(text)
@@ -82,20 +81,15 @@ class PrivacyFilter:
     def clean_dict(self, dict):
         for dict_key in dict.keys():
             dict[dict_key] = self.clean_var(dict[dict_key])
-
         return dict
 
     def clean_var(self, var):
         if isinstance(var, str):
             var = self.clean(var)
-
-        if isinstance(var, dict):
+        elif isinstance(var, dict):
             var = self.clean_dict(var)
-
-        if isinstance(var, list):
-            for key in range(len(var)):
-                var[key] = self.clean_var(var[key])
-
+        elif isinstance(var, list):
+            var = [self.clean_var(item) for item in var]
         return var
 
 

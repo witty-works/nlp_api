@@ -108,7 +108,7 @@ def custom_lemmatizer_factory(nlp, name):
 def fetch_nlp_model(lang, spacy_model, lookup):
     lemma_lookup[lang] = lookup
 
-    model = spacy.load(spacy_model)
+    model = spacy.load(spacy_model, disable=["textcat"])
     model.add_pipe("emoji", first=True)
     tokenizer = custom_tokenizer(lang, model)
     if tokenizer is not None:

@@ -102,8 +102,8 @@ from app.categories import (
     get_category_name,
 )
 from app.settings import get_settings
-from app.logger import set_up_logger
-from app.redis_setup import get_user_id, set_up_redis
+from app.logger import LoggerSetup
+from app.redis import get_user_id, RedisSetup
 from app.model import fetch_nlp_model
 from app.rules import fetch_static_rules
 from app.sentry import set_up_sentry_sdk
@@ -117,15 +117,15 @@ from app.query_definitions import (
     noun_form_map,
 )
 
-version = "2.2.24"
+version = "2.2.25"
 
 categories = get_categories()
 settings = get_settings()
-logger = set_up_logger(settings)
+logger = LoggerSetup(settings).get_logger()
 logger.debug("app started with settings: %s", settings)
 
 sentry_sdk = set_up_sentry_sdk(version, settings)
-redis = set_up_redis(settings)
+redis = RedisSetup(settings).get_redis()
 
 
 if settings.slack_bot_token and settings.slack_signing_secret:  # pragma: no cover
@@ -498,6 +498,38 @@ lt_style = [
     "SEMANTICS",  # She will join us on the 34th of Nov. https://community.languagetool.org/rule/list?offset=0&max=10&lang=en&filter=&categoryFilter=Semantics&_action_list=Filter
 ]
 
+adj_tags = {
+    "AFX",
+    "ADJA",
+    "ADJD",
+    "ADV",
+    "ADJ",
+    "JJ",
+    "JJR",
+    "JJS",
+    "VVPP",
+    "VAPP",
+    "VMPP",
+}
+
+pronoun_tags = [
+    "PDAT",
+    "PDS",
+    "PIAT",
+    "PIDAT",
+    "PIS",
+    "PPER",
+    "PPOSAT",
+    "PPOSS",
+    "PRELAT",
+    "PRELS",
+    "PRF",
+    "PRP$",
+    "PRON",
+    "PDT",
+    "WP$",
+    "WDT",
+]
 
 def fetch_current_username(
     credentials: Optional[HTTPBasicCredentials] = Depends(security),
@@ -3503,40 +3535,9 @@ async def _fetch_word_type(
 
         return WordType.VERB
 
-    adj_tags = {
-        "AFX",
-        "ADJA",
-        "ADJD",
-        "ADV",
-        "ADJ",
-        "JJ",
-        "JJR",
-        "JJS",
-        "VVPP",
-        "VAPP",
-        "VMPP",
-    }
     if token.tag_ in adj_tags or token.pos_ in adj_tags:
         return WordType.ADJECTIVE
 
-    pronoun_tags = [
-        "PDAT",
-        "PDS",
-        "PIAT",
-        "PIDAT",
-        "PIS",
-        "PPER",
-        "PPOSAT",
-        "PPOSS",
-        "PRELAT",
-        "PRELS",
-        "PRF",
-        "PRP$",
-        "PRON",
-        "PDT",
-        "WP$",
-        "WDT",
-    ]
     if token.pos_ in pronoun_tags or token.tag_ in pronoun_tags:
         if expected_word_type == WordType.NOUN:
             return WordType.NOUN

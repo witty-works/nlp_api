@@ -747,7 +747,7 @@
     "Zugriffen": "Zugriff",
     "Zugriffes": "Zugriff",
     "Achtsamkeiten": "Achtsamkeit",
-    "Actionables": "Actionable",
+    "Actions": "Action",
     "Aufgaben": "Aufgabe",
     "Teilaufgaben": "Teilaufgabe",
     "Administrators": "Administrator",
@@ -5702,6 +5702,8 @@
     "Desasters": "Desaster",
     "Desastern": "Desaster",
     "Fiaskos": "Fiasko",
-    "Katastrophen": "Katastrophe"
+    "Katastrophen": "Katastrophe",
+    "Kreditgebers": "Kreditgeber",
+    "Kreditgebern": "Kreditgeber"
   }
 }
