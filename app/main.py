@@ -4,7 +4,7 @@ import uvicorn
 import json
 import secrets
 import aiohttp
-from typing import Optional, Union
+from typing import Optional, Union, List
 from collections import defaultdict
 import fasttext
 import aiosqlite
@@ -25,6 +25,7 @@ from fastapi import (
     HTTPException,
     Depends,
     status,
+    Body,
 )
 
 from contextlib import asynccontextmanager
@@ -116,6 +117,7 @@ from app.query_definitions import (
     verb_form_map,
     noun_form_map,
 )
+from openai import AzureOpenAI
 
 version = "2.2.26"
 
@@ -619,6 +621,87 @@ def fetch_current_username(
 
     return credentials.username
 
+
+
+async def fetch_rephrased_sentences(sentence: str, alternatives: List[str]) -> List[str]:
+    AZURE_OPENAI_ENDPOINT = os.getenv("AZURE_OPENAI_ENDPOINT")
+    AZURE_OPENAI_KEY = os.getenv("AZURE_OPENAI_KEY")
+    AZURE_OPENAI_MODEL = os.getenv("AZURE_OPENAI_MODEL")
+    AZURE_OPENAI_VERSION = os.getenv("AZURE_OPENAI_VERSION")
+
+    client = AzureOpenAI(
+        azure_endpoint=AZURE_OPENAI_ENDPOINT,
+        api_key=AZURE_OPENAI_KEY,
+        api_version=AZURE_OPENAI_VERSION
+    )
+    instruction = """You are an assistant that rephrases sentences to be grammatically correct, incorporating a provided alternative word. 
+    Keep as many of the original words as possible, ensuring the sentence includes the alternative word. 
+    Return the rephrased sentence together with the alternative word in this format: 
+    [
+        {
+            "alternative": "cat",
+            "rephrased_sentence": "The quick brown fox jumps over the lazy cat."
+        },
+        {
+            "alternative": "frog",
+            "rephrased_sentence": "The quick brown fox jumps over the lazy frog."
+        },
+        {
+            "alternative": "rabbit",
+            "rephrased_sentence": "The quick brown fox jumps over the lazy rabbit."
+        }
+    ]"""
+
+    rule_formatted_for_translation = {
+        "sentence": sentence,
+        "alternatives": alternatives
+    }
+    
+    rule_formatted_for_translation = json.dumps(rule_formatted_for_translation, indent=2)
+    
+    prompt = [
+        {
+            "role": "system",
+            "content": instruction,
+        },
+        {
+            "role": "user",
+            "content": f"Rephrase the sentence '{sentence}' to fit each of these alternatives: {', '.join(alternatives)}.\n"
+        }
+    ]
+    
+    try:
+        chat_completion = client.chat.completions.create(
+            model=AZURE_OPENAI_MODEL,
+            messages=prompt,
+            temperature=0.7,
+            max_tokens=800,
+            top_p=0.95,
+            frequency_penalty=0,
+            presence_penalty=0,
+        )
+
+        result = chat_completion.choices[0].message.content.strip()
+        print(result)
+        return result.split("\n")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/rephrase")
+async def rephrase_sentence(
+    sentence: str = Body(..., embed=True),
+    alternatives: List[str] = Body(..., embed=True)
+):
+    if not isinstance(sentence, str):
+        raise HTTPException(status_code=400, detail="Invalid sentence format")
+    if not isinstance(alternatives, list) or not all(isinstance(item, str) for item in alternatives):
+        raise HTTPException(status_code=400, detail="Invalid alternatives format")
+
+    rephrased_responses = await fetch_rephrased_sentences(sentence, alternatives)
+    # if not isinstance(rephrased_responses, list) or not all(isinstance(item, dict) for item in rephrased_responses):
+    #     raise HTTPException(status_code=500, detail="Invalid rephrased_responses format")
+
+    return rephrased_responses 
 
 @app.post("/slack/commands")
 async def post_slack_commands(request: Request):  # pragma: no cover
