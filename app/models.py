@@ -854,8 +854,8 @@ class ResultOut(BaseModel):
                 if alternative.type != AlternativeType.DEFAULT:
                     variation.type = alternative.type
                     variation.url = (
-                        "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
-                        if lang.lang == LangType.EN
+                        "https://www.witty.works/de/blog/mensch-zuerst-vs.-identit%C3%A4t-zuerst-die-beiden-ans%C3%A4tze-verstehen"
+                        if lang.lang == LangType.DE
                         else "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                     )
 
