@@ -5,28 +5,27 @@
         {
             "alternatives": [
                 {
-                    "text": "ein*e Kopftuchträger*in"
+                    "text": "eine praktizierende Muslimin"
                 },
                 {
-                    "text": "ein/e Kopftuchträgerin/Kopftuchträger"
+                    "text": "eine praktizierende Muslima"
                 }
             ],
-            "category": "gender-orientation",
+            "category": "cultural-diversity",
             "context": "Du bist ein Kopftuchträger.",
             "end": 26,
             "explanation": {
-                "content": "advanced",
-                "icon": "😟",
-                "text": "Viele denken zuerst an ein bestimmtes Geschlecht",
-                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/berufe?reducedView=true"
+                "icon": "😒",
+                "text": "Reduziert eine Person auf ein kulturelles Klischee",
+                "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/kulturelles-stereotyp?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Geschlecht + Orientierung: Berufstitel",
+            "label": "Kulturelle Diversität: Kulturelles Sterotyp",
             "proficiency_level": "unconscious_bias",
             "start": 8,
-            "subcategory": "titles",
+            "subcategory": "culture",
             "text": "ein Kopftuchträger",
-            "text_id": "Träger"
+            "text_id": "Kopftuchträgerin"
         }
     ]
 }

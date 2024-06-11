@@ -5,6 +5,32 @@
         {
             "alternatives": [
                 {
+                    "text": "ihre/seine"
+                },
+                {
+                    "text": "deine"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Was ist seine Frau?",
+            "end": 13,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Binäre Pronomen",
+            "proficiency_level": "unconscious_bias",
+            "start": 8,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "seine",
+            "text_id": "seine"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "sein/e PartnerIn"
                 },
                 {
@@ -13,10 +39,13 @@
                 {
                     "context": "💡",
                     "inspiration": true,
-                    "text": "sein/e Partnerschaft"
+                    "text": "seine Partnerschaft"
                 },
                 {
-                    "text": "seine Begleitung"
+                    "text": "seine Person"
+                },
+                {
+                    "text": "seine jemand"
                 }
             ],
             "category": "gender-orientation",
@@ -24,17 +53,18 @@
             "end": 18,
             "explanation": {
                 "content": "advanced",
+                "context": "nur wenn die Person sich selbst so bezeichnet",
                 "icon": "😒",
                 "text": "Bedient die heteronormative Sicht von Geschlechteridentität",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäres-geschlecht?reducedView=true"
             },
-            "gravity": 2.0,
+            "gravity": 3.0,
             "label": "Geschlecht + Orientierung: Binäres Geschlecht",
             "proficiency_level": "unconscious_bias",
             "start": 8,
-            "subcategory": "gender_identity",
+            "subcategory": "gender_identity_advanced",
             "text": "seine Frau",
-            "text_id": "seine Frau"
+            "text_id": "Mann"
         }
     ]
 }
