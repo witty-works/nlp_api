@@ -357,6 +357,7 @@ session = None
 ssl_session = None
 rules_db = None
 substring_rules = {}
+male_to_female_normativ = {}
 person_words = {
     LangType.EN: [],
     LangType.DE: [],
@@ -453,6 +454,14 @@ async def lifespan(app: FastAPI):
 
             for row in rows:
                 person_words[lang].append(row[0].lower())
+
+            if lang == "de":
+                query = f"SELECT base_form, female_form FROM {declensions_config[lang][BasicWordType.NOUN]["name"]} WHERE female_form IS NOT NULL"
+                parameters = [lang, RuleType.SUBSTRING]
+                rows = await fetch_rows(query)
+
+                for row in rows:
+                    male_to_female_normativ[row[0]] = row[1]
 
     logger.setLevel(logging.WARNING)
 
@@ -2533,6 +2542,8 @@ async def fetch_rules(
     suffix_check: bool = False,
     rewrite_to: str = None,
 ) -> list[Rule]:
+    female_lemma_filter = None
+
     if suffix_check:
         upper_char_count = sum(1 for c in text if c.isupper())
         # Elite-Partner (match) vs. ElitePartner (name -> ignore)
@@ -2546,6 +2557,9 @@ async def fetch_rules(
         first_token_check = "first_token = ?"
         text_filter = text
         lemma_filter = lemma
+
+        if lemma in male_to_female_normativ:
+            female_lemma_filter = male_to_female_normativ[lemma]
 
     token_filter_lower = text_filter.lower()
     lemma_filter_lower = lemma_filter.lower()
@@ -2582,6 +2596,11 @@ async def fetch_rules(
             filters[
                 f"({first_token_check} AND first_is_word_type_lemmatize = 1 AND first_is_word_type_lower_case = 0)"
             ] = lemma_filter
+
+    if female_lemma_filter is not None:
+        filters[
+            f"({first_token_check} AND first_is_word_type_lemmatize = 1)"
+        ] = female_lemma_filter.lower()
 
     query = f"SELECT {rule_column_list} FROM rules_rule WHERE language = ? AND type = ? AND diversity_dimension_json != '[]'"
     if addons is not None and "hr" not in addons:
@@ -3396,6 +3415,7 @@ async def is_word_match(
     word: str,
     word_type: dict | None,
     suffix: str,
+    lemma: str | None = None,
 ) -> bool:
     if word_type is None:
         word_type = {
@@ -3404,7 +3424,8 @@ async def is_word_match(
             "lower_case": True,
         }
 
-    token_word = token.lemma_ if word_type["lemmatize"] else token.text
+    lemma_ = token.lemma_ if lemma is None else lemma
+    token_word = lemma_ if word_type["lemmatize"] else token.text
 
     if word_type["lower_case"]:
         token_word = token_word.lower()
@@ -3413,6 +3434,15 @@ async def is_word_match(
     if token_word != word and (
         not suffix or not token_word.lower().endswith(word.lower())
     ):
+        if lemma is None and word_type["lemmatize"] and lemma_ in male_to_female_normativ:
+            return await is_word_match(
+                lang,
+                token,
+                word,
+                word_type,
+                suffix,
+                male_to_female_normativ[lemma_]
+            )
         return False
 
     return await check_word_type(lang, token, word_type["word_type"], True)

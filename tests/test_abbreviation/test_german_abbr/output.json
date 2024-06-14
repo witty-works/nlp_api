@@ -51,7 +51,7 @@
                     "text": "Erwachsene"
                 },
                 {
-                    "text": "alle"
+                    "text": "Menschen"
                 }
             ],
             "category": "gender-orientation",
@@ -70,7 +70,7 @@
             "start": 25,
             "subcategory": "gender_identity_advanced",
             "text": "Frauen",
-            "text_id": "Mann"
+            "text_id": "Frau"
         }
     ]
 }

@@ -11,15 +11,15 @@
                     "text": "Erwachsene/Erwachsener"
                 },
                 {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Erwachsene"
+                },
+                {
                     "text": "Person"
                 },
                 {
                     "text": "höflicher Mensch"
-                },
-                {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "alle"
                 }
             ],
             "category": "gender-orientation",
@@ -49,15 +49,15 @@
                     "text": "Erwachsene/Erwachsener"
                 },
                 {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "Erwachsene"
+                },
+                {
                     "text": "Person"
                 },
                 {
                     "text": "höflicher Mensch"
-                },
-                {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "alle"
                 }
             ],
             "category": "gender-orientation",
