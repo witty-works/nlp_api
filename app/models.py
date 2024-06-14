@@ -260,6 +260,7 @@ class Rule:
     icon: Optional[str] = None
     type: Optional[RuleType] = RuleType.DEFAULT
     label: Optional[str] = None
+    label_type: Optional[str] = RuleLabelEnum.DEFAULT
     pattern: Optional[str] = None
     is_pattern_match: Optional[bool] = None
     entity_type: Optional[EntityType] = EntityType.DEFAULT

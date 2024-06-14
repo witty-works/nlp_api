@@ -13,8 +13,8 @@ from inspect import currentframe
 
 from spacy.matcher import PhraseMatcher, Matcher
 from spacy import displacy
-from spacy.tokens import Token
-from spacy.tokens import Doc
+from spacy.tokens import Token, Doc
+from spacy.tokens.span import Span
 
 from inflex import Noun, Verb, Adjective
 
@@ -291,6 +291,7 @@ def create_rule(lang, row, rewrite_to: str = None) -> Rule:
         if row[rule_columns["label"]]
         else map_rule_label_type(lang, row[rule_columns["label_type"]])
     )
+    rule.label_type = row[rule_columns["label_type"]]
     rule.type = row[rule_columns["type"]]
     rule.pluralization = row[rule_columns["pluralization"]]
     rule.entity_type = row[rule_columns["entity_type"]]
@@ -356,6 +357,38 @@ session = None
 ssl_session = None
 rules_db = None
 substring_rules = {}
+person_words = {
+    LangType.EN: [],
+    LangType.DE: [],
+}
+label_types = {
+    LangType.DE: {
+        RuleLabelEnum.BE_SPECIFIC: "Sei spezifisch",
+        RuleLabelEnum.NOT_FOR_PEOPLE: "Nicht auf Menschen beziehen",
+        RuleLabelEnum.NAME_DISABILITY: "Nenne die Behinderung oder Zustand",
+        RuleLabelEnum.ONLY_IF_GENDER_IDENTITY_RELEVANT: "Nur erwähnen, wenn relevant",
+        RuleLabelEnum.NOT_FOR_NON_COMBAT: "Nur in einen Kampf-Kontext verwenden",
+        RuleLabelEnum.ASK_FOR_PREFERENCE: "Nur wenn die Person sich so bezeichnet",
+        RuleLabelEnum.ONLY_WHEN_REFERENCING_RELIGIOUS_PRACTICE: "Nur in Bezug auf die religiöse Praxis verwenden",
+        RuleLabelEnum.USE_IN_TECH_ONLY: "Nur im Programmier-Kontext verwenden",
+        RuleLabelEnum.DONT_USE_TO_DESCRIBE_QUALITY: "Nicht zur Beschreibung von Wert oder Qualität verwenden",
+        RuleLabelEnum.DONT_USE_FOR_SUBSTANCE_USE: "Nicht im Zusammenhang mit Drogenkonsum verwenden",
+        RuleLabelEnum.ASK_ABOUT_TRADITIONS: "Frage nach ihren Traditionen",
+    },
+    LangType.EN: {
+        RuleLabelEnum.BE_SPECIFIC: "Be specific",
+        RuleLabelEnum.NOT_FOR_PEOPLE: "Don't use this phrase for people",
+        RuleLabelEnum.NAME_DISABILITY: "Name the disability or condition",
+        RuleLabelEnum.ONLY_IF_GENDER_IDENTITY_RELEVANT: "Only if gender identity is relevant",
+        RuleLabelEnum.NOT_FOR_NON_COMBAT: "Only use in a combat context",
+        RuleLabelEnum.ASK_FOR_PREFERENCE: "Only if preference explicitly stated",
+        RuleLabelEnum.ONLY_WHEN_REFERENCING_RELIGIOUS_PRACTICE: "Only use in reference to religious practice",
+        RuleLabelEnum.USE_IN_TECH_ONLY: "Use in programming only",
+        RuleLabelEnum.DONT_USE_TO_DESCRIBE_QUALITY: "Don't use to describe value or quality",
+        RuleLabelEnum.DONT_USE_FOR_SUBSTANCE_USE: "Don't use in the context of substance use",
+        RuleLabelEnum.ASK_ABOUT_TRADITIONS: "Ask about their traditions",
+    },
+}
 
 
 @asynccontextmanager
@@ -377,6 +410,7 @@ async def lifespan(app: FastAPI):
     global ssl_session
     global rules_db
     global substring_rules
+    global person_words
 
     global settings
     global model
@@ -411,6 +445,14 @@ async def lifespan(app: FastAPI):
                 rule = create_rule(lang, row, rewrite_to)
                 rule.false_positives = await fetch_false_positives(rule, rewrite_to)
                 substring_rules[lang][rule.lemma.lower()] = rule
+
+        if lang in declensions_config:
+            query = f"SELECT base_form FROM {declensions_config[lang][BasicWordType.NOUN]["name"]} WHERE ner IN (?, ?)"
+            parameters = ["person", "group"]
+            rows = await fetch_rows(query, parameters)
+
+            for row in rows:
+                person_words[lang].append(row[0].lower())
 
     logger.setLevel(logging.WARNING)
 
@@ -972,6 +1014,7 @@ async def get_debug_spacy(
 ):
     results = []
     tokens = fetch_tokens(lang, text)
+
     word_type_rule = None
     for token_index in range(len(tokens)):
         token = tokens[token_index]
@@ -1004,8 +1047,35 @@ async def get_debug_spacy(
             token_info["tag"] = token.tag_
             token_info["pos"] = token.pos_
             token_info["dep"] = token.dep_
+            token_info["head"] = token.head.text
+
+            dependent = None
+            children = []
+            for a in token.ancestors:
+                for atok in a.children:
+                    children.append(
+                        {"dep": atok.dep_, "token": atok.text, "ner": atok.ent_type_}
+                    )
+                    if dependent is None and atok.dep_ in ["pobj", "dobj"]:
+                        dependent = atok.text
+
+            token_info["dependent"] = dependent
+            token_info["children"] = children
 
         results.append(token_info)
+
+    if detailed:
+        noun_chunks = []
+        for chunk in tokens.noun_chunks:
+            noun_chunks.append(
+                {
+                    "text": chunk.text,
+                    "start": chunk.start,
+                    "end": chunk.end,
+                }
+            )
+
+        results = [{"noun chunks": noun_chunks}] + results
 
     return [{"auto-detected word type": word_type_rule}] + results
 
@@ -5654,39 +5724,18 @@ def is_false_positive(
 
 
 def map_rule_label_type(lang: LangType, label_type: str) -> str | None:
-    label_types = {
-        LangType.DE: {
-            RuleLabelEnum.BE_SPECIFIC: "Sei spezifisch",
-            RuleLabelEnum.NOT_FOR_PEOPLE: "nicht auf Menschen beziehen",
-            RuleLabelEnum.NAME_DISABILITY: "Nenne die Behinderung oder Zustand",
-            RuleLabelEnum.ONLY_IF_GENDER_IDENTITY_RELEVANT: "nur erwähnen, wenn relevant",
-            RuleLabelEnum.NOT_FOR_NON_COMBAT: "Nur in einen Kampf-Kontext verwenden",
-            RuleLabelEnum.ASK_FOR_PREFERENCE: "ur wenn die Person sich so bezeichnet",
-            RuleLabelEnum.ONLY_WHEN_REFERENCING_RELIGIOUS_PRACTICE: "Nur in Bezug auf die religiöse Praxis verwenden",
-            RuleLabelEnum.USE_IN_TECH_ONLY: "Nur im Programmier-Kontext verwenden",
-            RuleLabelEnum.DONT_USE_TO_DESCRIBE_QUALITY: "Nicht zur Beschreibung von Wert oder Qualität verwenden",
-            RuleLabelEnum.DONT_USE_FOR_SUBSTANCE_USE: "Nicht im Zusammenhang mit Drogenkonsum verwenden",
-            RuleLabelEnum.ASK_ABOUT_TRADITIONS: "Frage nach ihren Traditionen",
-        },
-        LangType.EN: {
-            RuleLabelEnum.BE_SPECIFIC: "Be specific",
-            RuleLabelEnum.NOT_FOR_PEOPLE: "Don't use this phrase for people",
-            RuleLabelEnum.NAME_DISABILITY: "Name the disability or condition",
-            RuleLabelEnum.ONLY_IF_GENDER_IDENTITY_RELEVANT: "Only if gender identity is relevant",
-            RuleLabelEnum.NOT_FOR_NON_COMBAT: "Only use in a combat context",
-            RuleLabelEnum.ASK_FOR_PREFERENCE: "Only if preference explicitly stated",
-            RuleLabelEnum.ONLY_WHEN_REFERENCING_RELIGIOUS_PRACTICE: "Only use in reference to religious practice",
-            RuleLabelEnum.USE_IN_TECH_ONLY: "Use in programming only",
-            RuleLabelEnum.DONT_USE_TO_DESCRIBE_QUALITY: "Don't use to describe value or quality",
-            RuleLabelEnum.DONT_USE_FOR_SUBSTANCE_USE: "Don't use in the context of substance use",
-            RuleLabelEnum.ASK_ABOUT_TRADITIONS: "Ask about their traditions",
-        },
-    }
-
     if lang not in label_types or label_type not in label_types[lang]:
         return None
 
     return label_types[lang][label_type]
+
+
+def fetch_sent_noun_chunks(sent: Span) -> list[Span]:
+    chunks = []
+    for chunk in sent.noun_chunks:
+        chunks.append(chunk)
+
+    return chunks
 
 
 async def rule_check(
@@ -5800,6 +5849,77 @@ async def rule_check(
             and rule.pluralization == PluralizationType.SINGULAR_ONLY
         ):
             continue
+
+        if rule.label_type == RuleLabelEnum.NOT_FOR_PEOPLE:
+            token_chunk = None
+
+            # TODO cache on the sentence?
+            chunks = fetch_sent_noun_chunks(tokens[token_index].sent)
+            for chunk in chunks:
+                if chunk.start <= token_index < chunk.end:
+                    token_chunk = chunk
+                    break
+                if chunk.start > token_index:
+                    break
+
+            skip = True
+            if token_chunk is None:
+                # No noun detected => assume false positive
+                if len(chunks) == 0:
+                    continue
+
+                # If there is only one noun: ie. *You* are flexible / Mitarbeiter sind flexibel
+                noun_token_index = chunks[0].start
+
+                if len(chunks) > 1:
+                    # Handle conjunctions
+                    # Competition is our daily life *and* we love to be >challenged<.
+
+                    sent_token_index = tokens[token_index].sent.start
+                    while sent_token_index < tokens[token_index].sent.end:
+                        if sent_token_index > token_index:
+                            break
+
+                        if token_is_conjunction(tokens[sent_token_index]):
+                            for chunk in chunks:
+                                if chunk.start < sent_token_index:
+                                    noun_token_index = chunk.start
+
+                        sent_token_index += 1
+
+            else:
+                noun_token_index = None
+                chunk_token_index = token_chunk.start
+                while chunk_token_index < token_chunk.end:
+                    if (
+                        tokens[chunk_token_index].lemma_.lower()
+                        in person_words[lang.lang]
+                    ):
+                        noun_token_index = chunk_token_index
+                        break
+
+                    chunk_token_index += 1
+
+
+            if noun_token_index is not None:
+                if (
+                    tokens[noun_token_index].lemma_.lower()
+                    in person_words[lang.lang]
+                ):
+                    skip = False
+                else:
+                    word_type = await fetch_word_type(
+                        lang.lang,
+                        tokens[noun_token_index],
+                        WordType.PRONOUN,
+                    )
+
+                    if word_type == WordType.PRONOUN:
+                        skip = False
+
+            # TODO cache on the token
+            if skip:
+                continue
 
         word_types = rule.get_word_types()
 
