@@ -512,7 +512,6 @@ def set_redis():
         "notifications": 0,
     }
 
-
     user_object["term_replacements"] = parse_term_replacements(
         user_object["term_replacements"]
     )
@@ -1596,6 +1595,14 @@ def test_spacy():
         expected = [
             {"auto-detected word type": "emoji|~pron|~|a|a|n||||emoji"},
             {
+                "noun chunks": [
+                    {"text": "👩🏻‍🚒", "start": 0, "end": 1},
+                    {"text": "Das", "start": 1, "end": 2},
+                    {"text": "Herr Müller", "start": 5, "end": 7},
+                    {"text": "London", "start": 8, "end": 9},
+                ]
+            },
+            {
                 "text": "👩🏻‍🚒",
                 "lemma": "👩🏻‍🚒",
                 "word_type": "emoji",
@@ -1609,6 +1616,9 @@ def test_spacy():
                 "tag": "NE",
                 "pos": "PROPN",
                 "dep": "ROOT",
+                "head": "👩🏻‍🚒",
+                "dependent": None,
+                "children": [],
             },
             {
                 "text": "Das",
@@ -1629,6 +1639,15 @@ def test_spacy():
                 "tag": "PDS",
                 "pos": "PRON",
                 "dep": "sb",
+                "head": "ist",
+                "dependent": None,
+                "children": [
+                    {"dep": "sb", "token": "Das", "ner": ""},
+                    {"dep": "mo", "token": "ehrgeizig", "ner": ""},
+                    {"dep": "pd", "token": "Herr", "ner": ""},
+                    {"dep": "mo", "token": "in", "ner": ""},
+                    {"dep": "punct", "token": "😃", "ner": ""},
+                ],
             },
             {
                 "text": "ist",
@@ -1650,6 +1669,9 @@ def test_spacy():
                 "tag": "VAFIN",
                 "pos": "AUX",
                 "dep": "ROOT",
+                "head": "ist",
+                "dependent": None,
+                "children": [],
             },
             {
                 "text": "sehr",
@@ -1665,6 +1687,16 @@ def test_spacy():
                 "tag": "ADV",
                 "pos": "ADV",
                 "dep": "mo",
+                "head": "ehrgeizig",
+                "dependent": None,
+                "children": [
+                    {"dep": "mo", "token": "sehr", "ner": ""},
+                    {"dep": "sb", "token": "Das", "ner": ""},
+                    {"dep": "mo", "token": "ehrgeizig", "ner": ""},
+                    {"dep": "pd", "token": "Herr", "ner": ""},
+                    {"dep": "mo", "token": "in", "ner": ""},
+                    {"dep": "punct", "token": "😃", "ner": ""},
+                ],
             },
             {
                 "text": "ehrgeizig",
@@ -1680,6 +1712,15 @@ def test_spacy():
                 "tag": "ADJD",
                 "pos": "ADV",
                 "dep": "mo",
+                "head": "ist",
+                "dependent": None,
+                "children": [
+                    {"dep": "sb", "token": "Das", "ner": ""},
+                    {"dep": "mo", "token": "ehrgeizig", "ner": ""},
+                    {"dep": "pd", "token": "Herr", "ner": ""},
+                    {"dep": "mo", "token": "in", "ner": ""},
+                    {"dep": "punct", "token": "😃", "ner": ""},
+                ],
             },
             {
                 "text": "Herr",
@@ -1695,6 +1736,15 @@ def test_spacy():
                 "tag": "NN",
                 "pos": "NOUN",
                 "dep": "pd",
+                "head": "ist",
+                "dependent": None,
+                "children": [
+                    {"dep": "sb", "token": "Das", "ner": ""},
+                    {"dep": "mo", "token": "ehrgeizig", "ner": ""},
+                    {"dep": "pd", "token": "Herr", "ner": ""},
+                    {"dep": "mo", "token": "in", "ner": ""},
+                    {"dep": "punct", "token": "😃", "ner": ""},
+                ],
             },
             {
                 "text": "Müller",
@@ -1710,6 +1760,16 @@ def test_spacy():
                 "tag": "NE",
                 "pos": "PROPN",
                 "dep": "nk",
+                "head": "Herr",
+                "dependent": None,
+                "children": [
+                    {"dep": "nk", "token": "Müller", "ner": ""},
+                    {"dep": "sb", "token": "Das", "ner": ""},
+                    {"dep": "mo", "token": "ehrgeizig", "ner": ""},
+                    {"dep": "pd", "token": "Herr", "ner": ""},
+                    {"dep": "mo", "token": "in", "ner": ""},
+                    {"dep": "punct", "token": "😃", "ner": ""},
+                ],
             },
             {
                 "text": "in",
@@ -1725,6 +1785,15 @@ def test_spacy():
                 "tag": "APPR",
                 "pos": "ADP",
                 "dep": "mo",
+                "head": "ist",
+                "dependent": None,
+                "children": [
+                    {"dep": "sb", "token": "Das", "ner": ""},
+                    {"dep": "mo", "token": "ehrgeizig", "ner": ""},
+                    {"dep": "pd", "token": "Herr", "ner": ""},
+                    {"dep": "mo", "token": "in", "ner": ""},
+                    {"dep": "punct", "token": "😃", "ner": ""},
+                ],
             },
             {
                 "text": "London",
@@ -1740,6 +1809,16 @@ def test_spacy():
                 "tag": "NE",
                 "pos": "PROPN",
                 "dep": "nk",
+                "head": "in",
+                "dependent": None,
+                "children": [
+                    {"dep": "nk", "token": "London", "ner": "LOC"},
+                    {"dep": "sb", "token": "Das", "ner": ""},
+                    {"dep": "mo", "token": "ehrgeizig", "ner": ""},
+                    {"dep": "pd", "token": "Herr", "ner": ""},
+                    {"dep": "mo", "token": "in", "ner": ""},
+                    {"dep": "punct", "token": "😃", "ner": ""},
+                ],
             },
             {
                 "text": "😃",
@@ -1755,6 +1834,15 @@ def test_spacy():
                 "tag": "KON",
                 "pos": "CCONJ",
                 "dep": "punct",
+                "head": "ist",
+                "dependent": None,
+                "children": [
+                    {"dep": "sb", "token": "Das", "ner": ""},
+                    {"dep": "mo", "token": "ehrgeizig", "ner": ""},
+                    {"dep": "pd", "token": "Herr", "ner": ""},
+                    {"dep": "mo", "token": "in", "ner": ""},
+                    {"dep": "punct", "token": "😃", "ner": ""},
+                ],
             },
         ]
 
@@ -1858,6 +1946,30 @@ def test_sing_or_plur(test_sing_or_plur_dir, snapshot, set_redis):
         )
         # Snapshot the return value.
         snapshot.snapshot_dir = test_sing_or_plur_dir
+        snapshot.assert_match(output, "output.json")
+
+
+@pytest.mark.parametrize(
+    "test_not_for_people_dir",
+    get_dirs("tests/test_not_for_people"),
+)
+def test_not_for_people(test_not_for_people_dir, snapshot, set_redis):
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = test_not_for_people_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/v2.3/check",
+            json=json.loads(input_json),
+            headers={"X-Auth": "default@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(
+            response.json(), sort_keys=True, indent=4, ensure_ascii=False
+        )
+        # Snapshot the return value.
+        snapshot.snapshot_dir = test_not_for_people_dir
         snapshot.assert_match(output, "output.json")
 
 

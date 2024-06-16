@@ -52,7 +52,7 @@ applications:
             commands:
                 start: |
                     if [ -n "${UPSUN_CLI_TOKEN}" ]; then
-                      upsun resources:set -y --count app:${APP_UP_SCALE},languagetool:${LANGUAGE_UP_SCALE}
+                      upsun resources:set -y --count app:${APP_UP_SCALE},languagetool:${LANGUAGE_UP_SCALE} --disk app:0,languagetool:0
                     fi
 
         # “At 23:30 on every day-of-week from Monday through Friday.”
@@ -61,7 +61,7 @@ applications:
             commands:
                 start: |
                     if [ -n "${UPSUN_CLI_TOKEN}" ]; then
-                      upsun resources:set -y --count app:${APP_DOWN_SCALE},languagetool:${LANGUAGE_DOWN_SCALE}
+                      upsun resources:set -y --count app:${APP_DOWN_SCALE},languagetool:${LANGUAGE_DOWN_SCALE} --disk app:0,languagetool:0
                     fi
 
   languagetool:

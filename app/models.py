@@ -260,6 +260,7 @@ class Rule:
     icon: Optional[str] = None
     type: Optional[RuleType] = RuleType.DEFAULT
     label: Optional[str] = None
+    label_type: Optional[str] = RuleLabelEnum.DEFAULT
     pattern: Optional[str] = None
     is_pattern_match: Optional[bool] = None
     entity_type: Optional[EntityType] = EntityType.DEFAULT
@@ -854,8 +855,8 @@ class ResultOut(BaseModel):
                 if alternative.type != AlternativeType.DEFAULT:
                     variation.type = alternative.type
                     variation.url = (
-                        "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
-                        if lang.lang == LangType.EN
+                        "https://www.witty.works/de/blog/mensch-zuerst-vs.-identit%C3%A4t-zuerst-die-beiden-ans%C3%A4tze-verstehen"
+                        if lang.lang == LangType.DE
                         else "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
                     )
 
