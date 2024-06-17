@@ -4077,9 +4077,11 @@ async def find_form(
         and len(token.text) > 3
         and check_word_case(token.text)
     ):
-        logger.error(
-            f"Declension in '{lang}' not found for '{token.text}' (lemma: '{token.lemma_}', tag: '{token.tag_}, pos: '{token.pos_}', idx: '{token.idx}')"
-        )
+        word_type = await fetch_word_type(lang, token)
+        if word_type in ['n', 'v', 'a']:
+            logger.error(
+                f"Declension in '{lang}' not found for '{token.text}' (lemma: '{token.lemma_}', tag: '{token.tag_}, pos: '{token.pos_}', idx: '{token.idx}')"
+            )
 
     return None
 
