@@ -3499,9 +3499,10 @@ async def is_phrase_match(
         pattern = rule.pattern.split("|")
         if pattern[0] == "*" or pattern[-1] == "*":
             logger.error(
-                "Rule pattern may not start or end with '*' but is '%s', rule id %i",
+                "Rule pattern may not start or end with '*' but is '%s', rule id %i, idx: '%s'",
                 rule.pattern,
                 rule.id,
+                tokens[token_index].idx,
             )
 
             return None, None
@@ -3847,7 +3848,7 @@ async def find_form_verb_german(token_index: int, tokens: Doc):
     forms = await fetch_declensions(LangType.DE, WordType.VERB, token.text, token)
     if forms is None:
         logger.error(
-            f"German verb form could not be determined for '{token.text}' (lemma: '{token.lemma_}')."
+            f"German verb form could not be determined for '{token.text}' (lemma: '{token.lemma_}', idx: '{token.idx}')."
         )
 
         return None
@@ -3859,7 +3860,7 @@ async def find_form_verb_german(token_index: int, tokens: Doc):
         and check_word_case(token.text, False)
     ):
         logger.error(
-            f"German verb target form could not be determined for '{token.text}' (lemma: '{token.lemma_}')."
+            f"German verb target form could not be determined for '{token.text}' (lemma: '{token.lemma_}', idx: '{token.idx}')."
         )
 
     return target_form
@@ -3893,7 +3894,7 @@ async def find_form_verb_english(token_index: int, tokens: Doc):
         and check_word_case(token.text, False)
     ):
         logger.error(
-            f"English verb target form could not be determined for '{token.text}' (lemma: '{token.lemma_}')."
+            f"English verb target form could not be determined for '{token.text}' (lemma: '{token.lemma_}', idx: '{token.idx}')."
         )
 
     return target_form
@@ -3958,7 +3959,7 @@ async def find_form_adjective_english(token_index: int, tokens: Doc):
         and check_word_case(token.text, False)
     ):
         logger.error(
-            f"English adjective target form could not be determined for '{token.text}' (lemma: '{token.lemma_}')."
+            f"English adjective target form could not be determined for '{token.text}' (lemma: '{token.lemma_}', idx: '{token.idx}')."
         )
 
     return target_form
@@ -3993,7 +3994,7 @@ async def find_form_noun_german_text(text: str, token: Token, is_singular: bool)
                 LangType.DE, token, WordType.PRONOUN, True, True
             )
         ):
-            logger.error(f"German noun declension not found for '{text}'")
+            logger.error(f"German noun declension not found for '{text}', idx: '{token.idx}'")
 
         return None
 
@@ -4004,7 +4005,7 @@ async def find_form_noun_german_text(text: str, token: Token, is_singular: bool)
         and check_word_case(text, True)
     ):
         logger.error(
-            f"German noun target form could not be determined for '{text}' (lemma: '{token.lemma_}')."
+            f"German noun target form could not be determined for '{text}' (lemma: '{token.lemma_}', idx: '{token.idx}')."
         )
 
     return target_form
@@ -4077,7 +4078,7 @@ async def find_form(
         and check_word_case(token.text)
     ):
         logger.error(
-            f"Declension in '{lang}' not found for '{token.text}' (lemma: '{token.lemma_}', tag: '{token.tag_}, pos: '{token.pos_}')"
+            f"Declension in '{lang}' not found for '{token.text}' (lemma: '{token.lemma_}', tag: '{token.tag_}, pos: '{token.pos_}', idx: '{token.idx}')"
         )
 
     return None
@@ -4867,6 +4868,7 @@ async def gendered_alternatives(
     alternatives = {}
     alternative_prefix = alternative_suffix = ""
     forms = None
+    token = tokens[token_index]
 
     words = alternative.split(" ")
     for word in words:
@@ -4875,7 +4877,7 @@ async def gendered_alternatives(
             forms = await german_noun_lookup(word, None, prefix)
             if forms is None or target_form not in forms:
                 forms = None
-                logger.error(f"Declension '{target_form}' missing for '{word}'")
+                logger.error(f"Declension '{target_form}' missing for '{word}', idx: '{token.idx}'")
                 break
 
             other_form = (
@@ -4884,13 +4886,13 @@ async def gendered_alternatives(
                 else forms["female_form"]
             )
             if other_form is None:
-                logger.error(f"Declension data missing for other form in '{word}'")
+                logger.error(f"Declension data missing for other form in '{word}', idx: '{token.idx}'")
                 return [], False
 
             other_forms = await german_noun_lookup(other_form, None, prefix)
             if target_form not in other_forms:
                 forms = True
-                logger.error(f"Declension '{target_form}' missing for '{other_form}'")
+                logger.error(f"Declension '{target_form}' missing for '{other_form}', idx: '{token.idx}'")
                 return [], False
 
         elif forms is None:
@@ -4899,7 +4901,7 @@ async def gendered_alternatives(
             alternative_suffix += " " + word
 
     if forms is None:
-        logger.error(f"Missing male_form '{word}' in '{alternative}'")
+        logger.error(f"Missing male_form '{word}' in '{alternative}', idx: '{token.idx}'")
         return [], binary_case
 
     if forms["female_form"] is None:
