@@ -4870,7 +4870,8 @@ async def gendered_alternatives(
     alternatives = {}
     alternative_prefix = alternative_suffix = ""
     forms = None
-    token = tokens[token_index]
+
+    token_debug = "" if token_index is None else f", idx: '{tokens[token_index].idx}'"
 
     words = alternative.split(" ")
     for word in words:
@@ -4879,7 +4880,7 @@ async def gendered_alternatives(
             forms = await german_noun_lookup(word, None, prefix)
             if forms is None or target_form not in forms:
                 forms = None
-                logger.error(f"Declension '{target_form}' missing for '{word}', idx: '{token.idx}'")
+                logger.error(f"Declension '{target_form}' missing for '{word}'{token_debug}")
                 break
 
             other_form = (
@@ -4888,13 +4889,13 @@ async def gendered_alternatives(
                 else forms["female_form"]
             )
             if other_form is None:
-                logger.error(f"Declension data missing for other form in '{word}', idx: '{token.idx}'")
+                logger.error(f"Declension data missing for other form in '{word}'{token_debug}")
                 return [], False
 
             other_forms = await german_noun_lookup(other_form, None, prefix)
             if target_form not in other_forms:
                 forms = True
-                logger.error(f"Declension '{target_form}' missing for '{other_form}', idx: '{token.idx}'")
+                logger.error(f"Declension '{target_form}' missing for '{other_form}'{token_debug}")
                 return [], False
 
         elif forms is None:
@@ -4903,7 +4904,7 @@ async def gendered_alternatives(
             alternative_suffix += " " + word
 
     if forms is None:
-        logger.error(f"Missing male_form '{word}' in '{alternative}', idx: '{token.idx}'")
+        logger.error(f"Missing male_form '{word}' in '{alternative}'{token_debug}")
         return [], binary_case
 
     if forms["female_form"] is None:
