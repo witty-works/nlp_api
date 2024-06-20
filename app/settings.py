@@ -68,6 +68,10 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
     import_from_dump: bool = True
     log_missing_declension: bool = True
+    aws_region_name: Optional[str] = ""
+    aws_key: Optional[str] = ""
+    aws_secret_key: Optional[str] = ""
+    aws_model_id: Optional[str] = "mistral.mixtral-8x7b-instruct-v0:1"
 
 
 @lru_cache()

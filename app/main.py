@@ -4,7 +4,7 @@ import uvicorn
 import json
 import secrets
 import aiohttp
-from typing import Optional, Union
+from typing import Optional, Union, List
 from collections import defaultdict
 import fasttext
 import aiosqlite
@@ -25,6 +25,7 @@ from fastapi import (
     HTTPException,
     Depends,
     status,
+    Body,
 )
 
 from contextlib import asynccontextmanager
@@ -116,6 +117,7 @@ from app.query_definitions import (
     verb_form_map,
     noun_form_map,
 )
+import boto3
 
 version = "2.2.26"
 
@@ -582,6 +584,7 @@ pronoun_tags = [
     "WDT",
 ]
 
+
 def fetch_current_username(
     credentials: Optional[HTTPBasicCredentials] = Depends(security),
 ):  # pragma: no cover
@@ -618,6 +621,86 @@ def fetch_current_username(
         )
 
     return credentials.username
+
+
+async def fetch_rephrased_sentences(
+    sentence: str, alternatives: List[str], word_to_replace: str
+):
+    # Initialize the Bedrock runtime client
+    client = boto3.client(
+        service_name="bedrock-runtime",
+        region_name=settings.aws_region_name,
+        aws_access_key_id=settings.aws_key,
+        aws_secret_access_key=settings.aws_secret_key,
+    )
+
+    # Set the model ID
+    model_id = settings.aws_model_id
+
+    system_prompt = """You are an assistant that rephrases sentences to be grammatically correct, incorporating a provided alternative word while replacing a specified word. Keep as many original words as possible, ensuring the new word is included and the old word is excluded.
+    Return the rephrased sentence together with the alternative word in this format:
+    [
+        {
+            "alternative": "cat",
+            "rephrased_sentence": "The quick brown fox jumps over the lazy cat."
+        },
+        {
+            "alternative": "frog",
+            "rephrased_sentence": "The quick brown fox jumps over the lazy frog."
+        },
+        {
+            "alternative": "rabbit",
+            "rephrased_sentence": "The quick brown fox jumps over the lazy rabbit."
+        }
+    ]"""
+
+    conversation = [
+        {
+            "role": "user",
+            "content": [
+                {
+                    "text": f"{system_prompt} \n Rephrase the sentence '{sentence}' to fit each of these alternatives: {', '.join(alternatives)}. Word to replace '{word_to_replace}'"
+                }
+            ],
+        }
+    ]
+
+    try:
+        streaming_response = client.converse_stream(
+            modelId=model_id,
+            messages=conversation,
+            inferenceConfig={"maxTokens": 300, "temperature": 0.7, "topP": 1},
+        )
+        result = ""
+        for chunk in streaming_response["stream"]:
+            if "contentBlockDelta" in chunk:
+                text = chunk["contentBlockDelta"]["delta"]["text"]
+                print(text, end="")
+                result += text
+
+        return result.split("\n")
+    except Exception as e:
+        print("An error occurred:", e)
+        return []
+
+
+@app.post("/rephrase")
+async def rephrase_sentence(
+    sentence: str = Body(..., embed=True),
+    alternatives: List[str] = Body(..., embed=True),
+    word_to_replace: str = Body(..., embed=True),
+):
+    if not isinstance(sentence, str):
+        raise HTTPException(status_code=400, detail="Invalid sentence format")
+    if not isinstance(alternatives, list) or not all(
+        isinstance(item, str) for item in alternatives
+    ):
+        raise HTTPException(status_code=400, detail="Invalid alternatives format")
+
+    rephrased_responses = await fetch_rephrased_sentences(
+        sentence, alternatives, word_to_replace
+    )
+    return rephrased_responses
 
 
 @app.post("/slack/commands")
