@@ -27,7 +27,7 @@ authors = [
     {name = "Lukas Kahwe Smith", email = "lukas.smith@witty.works"},
 ]
 dependencies = [
-    "fastapi<0.111.0,>=0.110.0",
+    "fastapi<0.112.0,>=0.111.0",
     "pydantic<3.0.0,>=2.0.0",
     "pydantic-settings>=2.0.3",
     "uvicorn[standard]",
@@ -54,7 +54,7 @@ dependencies = [
     "emoji>=0.6.0",
     "cmp-version>=3.0.0",
     "eng>=0.1.1",
-    "blackfire<1.20.0,>=1.19.0",
+    "blackfire",
     "blackfire-conprof>=1.0.0",
     "aiosqlite>=0.19.0",
     "Pyarrow>=15.0.0",
