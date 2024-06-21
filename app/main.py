@@ -364,6 +364,10 @@ person_words = {
     LangType.EN: [],
     LangType.DE: [],
 }
+misc_words = {
+    LangType.EN: [],
+    LangType.DE: [],
+}
 label_types = {
     LangType.DE: {
         RuleLabelEnum.BE_SPECIFIC: "Sei spezifisch",
@@ -414,6 +418,7 @@ async def lifespan(app: FastAPI):
     global rules_db
     global substring_rules
     global person_words
+    global misc_words
 
     global settings
     global model
@@ -456,6 +461,13 @@ async def lifespan(app: FastAPI):
 
             for row in rows:
                 person_words[lang].append(row[0].lower())
+
+            query = f"SELECT base_form FROM {declensions_config[lang][BasicWordType.NOUN]["name"]} WHERE ner = ?"
+            parameters = ["misc"]
+            rows = await fetch_rows(query, parameters)
+
+            for row in rows:
+                misc_words[lang].append(row[0].lower())
 
             if lang == "de":
                 query = f"SELECT base_form, female_form FROM {declensions_config[lang][BasicWordType.NOUN]["name"]} WHERE female_form IS NOT NULL"
@@ -5856,6 +5868,50 @@ def fetch_sent_noun_chunks(sent: Span) -> list[Span]:
     return chunks
 
 
+async def check_person_noun(
+    rule: Rule,
+    lang: LangType,
+    tokens: Doc,
+    chunks: list[str],
+    token_chunk: Span
+):
+    skip = True
+    noun_count = 0
+    chunk_token_index = token_chunk.end
+    while chunk_token_index >= token_chunk.start:
+        chunk_token_index -= 1
+
+        chunk_token = tokens[chunk_token_index]
+        chunk_word_type = await fetch_word_type(
+            lang,
+            chunk_token,
+        )
+
+        # ignore noun's that match the rule (ie. "The project has become a *vegetable*, showing no signs of progress.")
+        if (
+            chunk_word_type == WordType.NOUN
+            and (
+                tokens[chunk_token_index].lemma_ == rule.lemma
+                or tokens[chunk_token_index].text == rule.lemma
+            )
+        ):
+            continue
+
+        chunk_token_lemma_lower = chunk_token.lemma_.lower()
+        if chunk_word_type == WordType.NOUN and chunk_token_lemma_lower in misc_words[lang.lang]:
+            continue
+
+        if chunk_word_type == WordType.NOUN or chunk_word_type == WordType.PRONOUN:
+            noun_count += 1
+            skip = chunk_word_type != WordType.PRONOUN and chunk_token_lemma_lower not in person_words[lang.lang]
+            break
+
+    # *He* is *a vegetable*
+    if noun_count == 0 and token_chunk != chunks[0]:
+        return await check_person_noun(rule, lang, tokens, chunks, chunks[0])
+
+    return skip
+
 async def rule_check(
     config: Config,
     client: Client,
@@ -5980,14 +6036,13 @@ async def rule_check(
                 if chunk.start > token_index:
                     break
 
-            skip = True
             if token_chunk is None:
                 # No noun detected => assume false positive
                 if len(chunks) == 0:
                     continue
 
-                # If there is only one noun: ie. *You* are flexible / Mitarbeiter sind flexibel
-                noun_token_index = chunks[0].start
+                # If there is only one noun: ie. *You* are flexible / *Mitarbeiter* sind flexibel
+                token_chunk = chunks[0]
 
                 if len(chunks) > 1:
                     # Handle conjunctions
@@ -6001,39 +6056,11 @@ async def rule_check(
                         if token_is_conjunction(tokens[sent_token_index]):
                             for chunk in chunks:
                                 if chunk.start < sent_token_index:
-                                    noun_token_index = chunk.start
+                                    token_chunk = chunk
 
                         sent_token_index += 1
 
-            else:
-                noun_token_index = None
-                chunk_token_index = token_chunk.start
-                while chunk_token_index < token_chunk.end:
-                    if (
-                        tokens[chunk_token_index].lemma_.lower()
-                        in person_words[lang.lang]
-                    ):
-                        noun_token_index = chunk_token_index
-                        break
-
-                    chunk_token_index += 1
-
-
-            if noun_token_index is not None:
-                if (
-                    tokens[noun_token_index].lemma_.lower()
-                    in person_words[lang.lang]
-                ):
-                    skip = False
-                else:
-                    word_type = await fetch_word_type(
-                        lang.lang,
-                        tokens[noun_token_index],
-                        WordType.PRONOUN,
-                    )
-
-                    if word_type == WordType.PRONOUN:
-                        skip = False
+            skip = await check_person_noun(rule, lang, tokens, chunks, token_chunk)
 
             # TODO cache on the token
             if skip:
