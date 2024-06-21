@@ -11,8 +11,7 @@
                 "primary_language"
             ],
             "msg": "Input should be 'de-DE', 'de-CH', 'de-AT', 'en-US', 'en-GB', 'fr-FR' or 'fr-CH'",
-            "type": "enum",
-            "url": "https://errors.pydantic.dev/2.7/v/enum"
+            "type": "enum"
         },
         {
             "ctx": {
@@ -25,8 +24,7 @@
                 "preferred_languages"
             ],
             "msg": "Value error, Contains not supported preferred_languages: ch",
-            "type": "value_error",
-            "url": "https://errors.pydantic.dev/2.7/v/value_error"
+            "type": "value_error"
         },
         {
             "ctx": {
@@ -39,8 +37,7 @@
                 "preferred_variants"
             ],
             "msg": "Value error, Contains not supported preferred_variants: en-AU",
-            "type": "value_error",
-            "url": "https://errors.pydantic.dev/2.7/v/value_error"
+            "type": "value_error"
         }
     ]
 }

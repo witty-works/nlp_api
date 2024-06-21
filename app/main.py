@@ -4,7 +4,7 @@ import uvicorn
 import json
 import secrets
 import aiohttp
-from typing import Optional, Union
+from typing import Optional, Union, List
 from collections import defaultdict
 import fasttext
 import aiosqlite
@@ -25,6 +25,7 @@ from fastapi import (
     HTTPException,
     Depends,
     status,
+    Body,
 )
 
 from contextlib import asynccontextmanager
@@ -116,8 +117,9 @@ from app.query_definitions import (
     verb_form_map,
     noun_form_map,
 )
+import boto3
 
-version = "2.2.26"
+version = "2.2.27"
 
 categories = get_categories()
 settings = get_settings()
@@ -362,6 +364,10 @@ person_words = {
     LangType.EN: [],
     LangType.DE: [],
 }
+misc_words = {
+    LangType.EN: [],
+    LangType.DE: [],
+}
 label_types = {
     LangType.DE: {
         RuleLabelEnum.BE_SPECIFIC: "Sei spezifisch",
@@ -412,6 +418,7 @@ async def lifespan(app: FastAPI):
     global rules_db
     global substring_rules
     global person_words
+    global misc_words
 
     global settings
     global model
@@ -454,6 +461,13 @@ async def lifespan(app: FastAPI):
 
             for row in rows:
                 person_words[lang].append(row[0].lower())
+
+            query = f"SELECT base_form FROM {declensions_config[lang][BasicWordType.NOUN]["name"]} WHERE ner = ?"
+            parameters = ["misc"]
+            rows = await fetch_rows(query, parameters)
+
+            for row in rows:
+                misc_words[lang].append(row[0].lower())
 
             if lang == "de":
                 query = f"SELECT base_form, female_form FROM {declensions_config[lang][BasicWordType.NOUN]["name"]} WHERE female_form IS NOT NULL"
@@ -582,6 +596,7 @@ pronoun_tags = [
     "WDT",
 ]
 
+
 def fetch_current_username(
     credentials: Optional[HTTPBasicCredentials] = Depends(security),
 ):  # pragma: no cover
@@ -618,6 +633,86 @@ def fetch_current_username(
         )
 
     return credentials.username
+
+
+async def fetch_rephrased_sentences(
+    sentence: str, alternatives: List[str], word_to_replace: str
+):
+    # Initialize the Bedrock runtime client
+    client = boto3.client(
+        service_name="bedrock-runtime",
+        region_name=settings.aws_region_name,
+        aws_access_key_id=settings.aws_key,
+        aws_secret_access_key=settings.aws_secret_key,
+    )
+
+    # Set the model ID
+    model_id = settings.aws_model_id
+
+    system_prompt = """You are an assistant that rephrases sentences to be grammatically correct, incorporating a provided alternative word while replacing a specified word. Keep as many original words as possible, ensuring the new word is included and the old word is excluded.
+    Return the rephrased sentence together with the alternative word in this format:
+    [
+        {
+            "alternative": "cat",
+            "rephrased_sentence": "The quick brown fox jumps over the lazy cat."
+        },
+        {
+            "alternative": "frog",
+            "rephrased_sentence": "The quick brown fox jumps over the lazy frog."
+        },
+        {
+            "alternative": "rabbit",
+            "rephrased_sentence": "The quick brown fox jumps over the lazy rabbit."
+        }
+    ]"""
+
+    conversation = [
+        {
+            "role": "user",
+            "content": [
+                {
+                    "text": f"{system_prompt} \n Rephrase the sentence '{sentence}' to fit each of these alternatives: {', '.join(alternatives)}. Word to replace '{word_to_replace}'"
+                }
+            ],
+        }
+    ]
+
+    try:
+        streaming_response = client.converse_stream(
+            modelId=model_id,
+            messages=conversation,
+            inferenceConfig={"maxTokens": 300, "temperature": 0.7, "topP": 1},
+        )
+        result = ""
+        for chunk in streaming_response["stream"]:
+            if "contentBlockDelta" in chunk:
+                text = chunk["contentBlockDelta"]["delta"]["text"]
+                print(text, end="")
+                result += text
+
+        return result.split("\n")
+    except Exception as e:
+        print("An error occurred:", e)
+        return []
+
+
+@app.post("/rephrase")
+async def rephrase_sentence(
+    sentence: str = Body(..., embed=True),
+    alternatives: List[str] = Body(..., embed=True),
+    word_to_replace: str = Body(..., embed=True),
+):
+    if not isinstance(sentence, str):
+        raise HTTPException(status_code=400, detail="Invalid sentence format")
+    if not isinstance(alternatives, list) or not all(
+        isinstance(item, str) for item in alternatives
+    ):
+        raise HTTPException(status_code=400, detail="Invalid alternatives format")
+
+    rephrased_responses = await fetch_rephrased_sentences(
+        sentence, alternatives, word_to_replace
+    )
+    return rephrased_responses
 
 
 @app.post("/slack/commands")
@@ -3499,9 +3594,10 @@ async def is_phrase_match(
         pattern = rule.pattern.split("|")
         if pattern[0] == "*" or pattern[-1] == "*":
             logger.error(
-                "Rule pattern may not start or end with '*' but is '%s', rule id %i",
+                "Rule pattern may not start or end with '*' but is '%s', rule id %i, idx: '%s'",
                 rule.pattern,
                 rule.id,
+                tokens[token_index].idx,
             )
 
             return None, None
@@ -3847,7 +3943,7 @@ async def find_form_verb_german(token_index: int, tokens: Doc):
     forms = await fetch_declensions(LangType.DE, WordType.VERB, token.text, token)
     if forms is None:
         logger.error(
-            f"German verb form could not be determined for '{token.text}' (lemma: '{token.lemma_}')."
+            f"German verb form could not be determined for '{token.text}' (lemma: '{token.lemma_}', idx: '{token.idx}')."
         )
 
         return None
@@ -3859,7 +3955,7 @@ async def find_form_verb_german(token_index: int, tokens: Doc):
         and check_word_case(token.text, False)
     ):
         logger.error(
-            f"German verb target form could not be determined for '{token.text}' (lemma: '{token.lemma_}')."
+            f"German verb target form could not be determined for '{token.text}' (lemma: '{token.lemma_}', idx: '{token.idx}')."
         )
 
     return target_form
@@ -3893,7 +3989,7 @@ async def find_form_verb_english(token_index: int, tokens: Doc):
         and check_word_case(token.text, False)
     ):
         logger.error(
-            f"English verb target form could not be determined for '{token.text}' (lemma: '{token.lemma_}')."
+            f"English verb target form could not be determined for '{token.text}' (lemma: '{token.lemma_}', idx: '{token.idx}')."
         )
 
     return target_form
@@ -3958,7 +4054,7 @@ async def find_form_adjective_english(token_index: int, tokens: Doc):
         and check_word_case(token.text, False)
     ):
         logger.error(
-            f"English adjective target form could not be determined for '{token.text}' (lemma: '{token.lemma_}')."
+            f"English adjective target form could not be determined for '{token.text}' (lemma: '{token.lemma_}', idx: '{token.idx}')."
         )
 
     return target_form
@@ -3993,7 +4089,7 @@ async def find_form_noun_german_text(text: str, token: Token, is_singular: bool)
                 LangType.DE, token, WordType.PRONOUN, True, True
             )
         ):
-            logger.error(f"German noun declension not found for '{text}'")
+            logger.error(f"German noun declension not found for '{text}', idx: '{token.idx}'")
 
         return None
 
@@ -4004,7 +4100,7 @@ async def find_form_noun_german_text(text: str, token: Token, is_singular: bool)
         and check_word_case(text, True)
     ):
         logger.error(
-            f"German noun target form could not be determined for '{text}' (lemma: '{token.lemma_}')."
+            f"German noun target form could not be determined for '{text}' (lemma: '{token.lemma_}', idx: '{token.idx}')."
         )
 
     return target_form
@@ -4076,9 +4172,11 @@ async def find_form(
         and len(token.text) > 3
         and check_word_case(token.text)
     ):
-        logger.error(
-            f"Declension in '{lang}' not found for '{token.text}' (lemma: '{token.lemma_}', tag: '{token.tag_}, pos: '{token.pos_}')"
-        )
+        word_type = await fetch_word_type(lang, token)
+        if word_type in ['n', 'v', 'a']:
+            logger.error(
+                f"Declension in '{lang}' not found for '{token.text}' (lemma: '{token.lemma_}', tag: '{token.tag_}, pos: '{token.pos_}', idx: '{token.idx}')"
+            )
 
     return None
 
@@ -4868,6 +4966,8 @@ async def gendered_alternatives(
     alternative_prefix = alternative_suffix = ""
     forms = None
 
+    token_debug = "" if token_index is None else f", idx: '{tokens[token_index].idx}'"
+
     words = alternative.split(" ")
     for word in words:
         if word.startswith("~") and word.endswith("~"):
@@ -4875,7 +4975,7 @@ async def gendered_alternatives(
             forms = await german_noun_lookup(word, None, prefix)
             if forms is None or target_form not in forms:
                 forms = None
-                logger.error(f"Declension '{target_form}' missing for '{word}'")
+                logger.error(f"Declension '{target_form}' missing for '{word}'{token_debug}")
                 break
 
             other_form = (
@@ -4884,13 +4984,13 @@ async def gendered_alternatives(
                 else forms["female_form"]
             )
             if other_form is None:
-                logger.error(f"Declension data missing for other form in '{word}'")
+                logger.error(f"Declension data missing for other form in '{word}'{token_debug}")
                 return [], False
 
             other_forms = await german_noun_lookup(other_form, None, prefix)
             if target_form not in other_forms:
                 forms = True
-                logger.error(f"Declension '{target_form}' missing for '{other_form}'")
+                logger.error(f"Declension '{target_form}' missing for '{other_form}'{token_debug}")
                 return [], False
 
         elif forms is None:
@@ -4899,7 +4999,7 @@ async def gendered_alternatives(
             alternative_suffix += " " + word
 
     if forms is None:
-        logger.error(f"Missing male_form '{word}' in '{alternative}'")
+        logger.error(f"Missing male_form '{word}' in '{alternative}'{token_debug}")
         return [], binary_case
 
     if forms["female_form"] is None:
@@ -5768,6 +5868,50 @@ def fetch_sent_noun_chunks(sent: Span) -> list[Span]:
     return chunks
 
 
+async def check_person_noun(
+    rule: Rule,
+    lang: LangType,
+    tokens: Doc,
+    chunks: list[str],
+    token_chunk: Span
+):
+    skip = True
+    noun_count = 0
+    chunk_token_index = token_chunk.end
+    while chunk_token_index >= token_chunk.start:
+        chunk_token_index -= 1
+
+        chunk_token = tokens[chunk_token_index]
+        chunk_word_type = await fetch_word_type(
+            lang,
+            chunk_token,
+        )
+
+        # ignore noun's that match the rule (ie. "The project has become a *vegetable*, showing no signs of progress.")
+        if (
+            chunk_word_type == WordType.NOUN
+            and (
+                tokens[chunk_token_index].lemma_ == rule.lemma
+                or tokens[chunk_token_index].text == rule.lemma
+            )
+        ):
+            continue
+
+        chunk_token_lemma_lower = chunk_token.lemma_.lower()
+        if chunk_word_type == WordType.NOUN and chunk_token_lemma_lower in misc_words[lang.lang]:
+            continue
+
+        if chunk_word_type == WordType.NOUN or chunk_word_type == WordType.PRONOUN:
+            noun_count += 1
+            skip = chunk_word_type != WordType.PRONOUN and chunk_token_lemma_lower not in person_words[lang.lang]
+            break
+
+    # *He* is *a vegetable*
+    if noun_count == 0 and token_chunk != chunks[0]:
+        return await check_person_noun(rule, lang, tokens, chunks, chunks[0])
+
+    return skip
+
 async def rule_check(
     config: Config,
     client: Client,
@@ -5892,14 +6036,13 @@ async def rule_check(
                 if chunk.start > token_index:
                     break
 
-            skip = True
             if token_chunk is None:
                 # No noun detected => assume false positive
                 if len(chunks) == 0:
                     continue
 
-                # If there is only one noun: ie. *You* are flexible / Mitarbeiter sind flexibel
-                noun_token_index = chunks[0].start
+                # If there is only one noun: ie. *You* are flexible / *Mitarbeiter* sind flexibel
+                token_chunk = chunks[0]
 
                 if len(chunks) > 1:
                     # Handle conjunctions
@@ -5913,39 +6056,11 @@ async def rule_check(
                         if token_is_conjunction(tokens[sent_token_index]):
                             for chunk in chunks:
                                 if chunk.start < sent_token_index:
-                                    noun_token_index = chunk.start
+                                    token_chunk = chunk
 
                         sent_token_index += 1
 
-            else:
-                noun_token_index = None
-                chunk_token_index = token_chunk.start
-                while chunk_token_index < token_chunk.end:
-                    if (
-                        tokens[chunk_token_index].lemma_.lower()
-                        in person_words[lang.lang]
-                    ):
-                        noun_token_index = chunk_token_index
-                        break
-
-                    chunk_token_index += 1
-
-
-            if noun_token_index is not None:
-                if (
-                    tokens[noun_token_index].lemma_.lower()
-                    in person_words[lang.lang]
-                ):
-                    skip = False
-                else:
-                    word_type = await fetch_word_type(
-                        lang.lang,
-                        tokens[noun_token_index],
-                        WordType.PRONOUN,
-                    )
-
-                    if word_type == WordType.PRONOUN:
-                        skip = False
+            skip = await check_person_noun(rule, lang, tokens, chunks, token_chunk)
 
             # TODO cache on the token
             if skip:

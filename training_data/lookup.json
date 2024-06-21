@@ -6125,6 +6125,11 @@
     "Asyltouristinnen": "Asyltourist",
     "Back-Enderinnen": "Back-Ender",
     "Armutszuwanderinnen": "Armutszuwanderer",
-    "Altergenossinnen": "Altergenosse"
+    "Altergenossinnen": "Altergenosse",
+    "Informationen": "Information",
+    "CEOs": "CEO",
+    "CTOs": "CTO",
+    "CFOs": "CFO",
+    "CIOs": "CIO"
   }
 }
