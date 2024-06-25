@@ -1,6 +1,8 @@
 {
-    "text": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt)",
+    "text": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt). Es geht um die deutsche Natur.",
     "config": {
-        "disabled_categories": ["orthography"]
+        "disabled_categories": [
+            "orthography"
+        ]
     }
 }
