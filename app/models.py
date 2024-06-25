@@ -255,6 +255,7 @@ class Rule:
     is_advanced: bool = False
     alternatives: Optional[list[Alternative]] = []
     false_positives: Optional[list[str]] = None
+    case_sensitive_false_positives: Optional[list[str]] = None
     explanation: Optional[str] = None
     url: Optional[str] = None
     icon: Optional[str] = None

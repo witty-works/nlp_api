@@ -2459,7 +2459,10 @@ def fetch_term_replacements(
             rule.url = term_replacement["explanation"].get("url")
             rule.icon = term_replacement["explanation"].get("icon")
 
-        rule.false_positives = term_replacement["false_positives"]
+        if term_replacement["word_types"][0]["lower_case"]:
+            rule.false_positives = term_replacement["false_positives"]
+        else:
+            rule.case_sensitive_false_positives = term_replacement["false_positives"]
 
         term_replacement_rules.append(rule)
 
@@ -5812,7 +5815,19 @@ async def is_rule_false_positive(
     full_text: str, token_index: int, tokens: Doc, rule: Rule
 ) -> bool:
     false_positives = await fetch_false_positives(rule)
-    return is_false_positive(full_text, token_index, tokens, false_positives)
+    result = is_false_positive(full_text, token_index, tokens, false_positives)
+    if result is False and rule.case_sensitive_false_positives is not None:
+        result = is_false_positive(
+            full_text,
+            token_index,
+            tokens,
+            rule.case_sensitive_false_positives,
+            None,
+            None,
+            True
+        )
+
+    return result
 
 
 def is_false_positive(
@@ -5820,8 +5835,9 @@ def is_false_positive(
     token_index: int | None,
     tokens: Doc | None,
     false_positives: list,
-    window_left: int = None,
-    window_right: int = None,
+    window_left: int | None = None,
+    window_right: int | None = None,
+    case_sensitive: bool = False,
 ) -> bool:
     if len(false_positives) == 0 or full_text is None:
         return False
@@ -5841,12 +5857,15 @@ def is_false_positive(
         window_right += tokens[token_index].idx
 
     partial_text = full_text[window_left:window_right].lower()
+    if not case_sensitive:
+        partial_text = partial_text.lower()
+        false_positives = list(map(lambda false_positive: false_positive.lower(), false_positives))
 
     start = tokens[token_index].idx - window_left
     end = start + len(tokens[token_index].text)
 
     for false_positive in false_positives:
-        for m in re.finditer(re.escape(false_positive.lower()), partial_text):
+        for m in re.finditer(re.escape(false_positive), partial_text):
             if m.start() <= start and m.end() >= end:
                 return True
 
