@@ -634,9 +634,8 @@ def fetch_current_username(
 
     return credentials.username
 
-
 async def fetch_rephrased_sentences(
-    sentence: str, alternatives: List[str], word_to_replace: str
+    sentence: str, alternatives: List[str], word_to_replace: str, pos_of_word_to_replace: int = 0
 ):
     # Initialize the Bedrock runtime client
     client = boto3.client(
@@ -649,33 +648,56 @@ async def fetch_rephrased_sentences(
     # Set the model ID
     model_id = settings.aws_model_id
 
-    system_prompt = """You are an assistant that rephrases sentences to be grammatically correct, incorporating a provided alternative word while replacing a specified word. Keep as many original words as possible, ensuring the new word is included and the old word is excluded.
-    Return the rephrased sentence together with the alternative word in this format:
+    # The updated prompt specifies that the assistant should only replace the word at the specified position
+    system_prompt = f"""
+    You are an assistant that rephrases sentences to ensure grammatical correctness and clarity, incorporating a provided alternative word while explicitly replacing only the instance of the specified word.
+    The word to replace is starting at sentence char {pos_of_word_to_replace + 1}.
+    Keep as many original words as possible.
+    Return the rephrased sentence together with the alternative word. If there is only one alternative provided, return exactly one entry. If there are multiple alternatives, return an entry for each alternative. Format the results as follows:
     [
-        {
-            "alternative": "cat",
-            "rephrased_sentence": "The quick brown fox jumps over the lazy cat."
-        },
-        {
-            "alternative": "frog",
-            "rephrased_sentence": "The quick brown fox jumps over the lazy frog."
-        },
-        {
-            "alternative": "rabbit",
-            "rephrased_sentence": "The quick brown fox jumps over the lazy rabbit."
-        }
-    ]"""
+        {{
+            "alternative": "{alternatives[0]}",
+            "rephrased_sentence": "Generated example for {alternatives[0]}"
+        }}
+        {', ...' if len(alternatives) > 1 else ''}
+    ]
+
+    Example:
+    input: 
+    {{
+        "sentence": "Hey guys! how are you doing today? Your are my best guys.",
+        "alternatives": [
+            "people", "everyone", "all"
+        ],
+        "word_to_replace": "guys",
+        "pos_of_word_to_replace": {4}
+    }}
+    Output:
+    {{
+        "alternative": "people",
+        "rephrased_sentence": "Hey people! how are you doing today? You are my best guys.",
+    }},
+    {{
+        "alternative": "everyone",
+        "rephrased_sentence": "Hey everyone! how are you doing today? You are my best guys.",
+    }},
+    {{
+        "alternative": "all",
+        "rephrased_sentence": "Hey all! how are you doing today? You are my best guys.",
+    }}
+    """
 
     conversation = [
         {
             "role": "user",
             "content": [
                 {
-                    "text": f"{system_prompt} \n Rephrase the sentence '{sentence}' to fit each of these alternatives: {', '.join(alternatives)}. Word to replace '{word_to_replace}'"
+                    "text": f"{system_prompt} \n Rephrase the sentence '{sentence}' to fit each of these alternatives: {', '.join(alternatives)}. Word to replace '{word_to_replace}' starting at position {pos_of_word_to_replace}"
                 }
             ],
         }
     ]
+
 
     try:
         streaming_response = client.converse_stream(
@@ -701,6 +723,7 @@ async def rephrase_sentence(
     sentence: str = Body(..., embed=True),
     alternatives: List[str] = Body(..., embed=True),
     word_to_replace: str = Body(..., embed=True),
+    pos_of_word_to_replace: int = Body(0, embed=True),
 ):
     if not isinstance(sentence, str):
         raise HTTPException(status_code=400, detail="Invalid sentence format")
@@ -710,7 +733,7 @@ async def rephrase_sentence(
         raise HTTPException(status_code=400, detail="Invalid alternatives format")
 
     rephrased_responses = await fetch_rephrased_sentences(
-        sentence, alternatives, word_to_replace
+        sentence, alternatives, word_to_replace, pos_of_word_to_replace
     )
     return rephrased_responses
 
