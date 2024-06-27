@@ -72,6 +72,7 @@ class Settings(BaseSettings):
     aws_key: Optional[str] = ""
     aws_secret_key: Optional[str] = ""
     aws_model_id: Optional[str] = "mistral.mixtral-8x7b-instruct-v0:1"
+    log_metrics: Optional[bool] = False
 
 
 @lru_cache()
