@@ -1014,46 +1014,17 @@ async def post_auth_2_0(request: Request, user_request_in: BaseRequestIn = None)
     user_email = await fetch_user(request)
     configs = await fetch_configs_for_request(RequestIn(text=""), user_email) if user_email else {}
 
-    if settings.log_metrics:
-        redis.hincrby(MetricsType.AUTH_COUNTS, get_user_id(user_email), 1)
-        redis.hincrby(MetricsType.AUTH_PLANS, "none" if "plan" not in configs or configs["plan"] is None else configs["plan"], 1)
-        redis.hincrby(MetricsType.AUTH_HOST, request.headers.get("origin"), 1)
+    store_metrics(request, configs, 'auth')
 
     if configs == {}:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
         )
 
-    if "config" in configs:
-        configs["config"] = bc_old_categories(configs["config"])
-
-    if "organization_config" in configs:
-        configs["organization_config"] = bc_old_categories(
-            configs["organization_config"]
-        )
-
     config = fetch_result_conf(configs)
 
     if "team_analytics" in configs and not configs["team_analytics"]:
         config.organization_id = None
-
-    return config
-
-
-def bc_old_categories(config: dict) -> dict:
-    # BC code for browser version before 1.29.0
-    old_categories = ["style", "inclusive", "orthography"]
-    for old_category in old_categories:
-        if old_category in config:
-            continue
-
-        if old_category in config["categories"]:
-            config[old_category] = config["categories"][old_category]
-        else:
-            config[old_category] = {
-                "value": False,
-                "status": "suggestion",
-            }
 
     return config
 
@@ -1438,6 +1409,34 @@ async def get_user_configs(
 
 
 # Functions
+def store_metrics(request: Request, configs: dict, endpoint: str):
+    if not settings.log_metrics:
+        return
+
+    if "id" in configs:
+        user_id = configs["id"]
+        plan = None if "plan" not in configs else configs["plan"]
+        if (
+            "organization_config" in configs
+            and "trial_ends_at" in configs["organization_config"]
+            and configs["organization_config"]["trial_ends_at"] is not None
+        ):
+            plan = "witty_trial"
+    else:
+        user_id = "none"
+        plan = "none"
+
+    host = request.headers.get("origin", "none")
+
+    if endpoint == "auth":
+        redis.hincrby(MetricsType.AUTH_COUNTS, user_id, 1)
+        redis.hincrby(MetricsType.AUTH_PLANS, plan, 1)
+        redis.hincrby(MetricsType.AUTH_HOST, host, 1)
+    elif endpoint == "check":
+        redis.hincrby(MetricsType.CHECK_COUNTS, user_id, 1)
+        redis.hincrby(MetricsType.CHECK_PLANS, plan, 1)
+        redis.hincrby(MetricsType.CHECK_HOST, host, 1)
+
 def parse_term_replacement(lemma, term_replacement: dict):
     word_type = (
         term_replacement["word_type"] if "word_type" in term_replacement else "~"
@@ -1836,7 +1835,8 @@ async def check(
         configs = await fetch_configs_for_request(user_request_in, user_email)
     else:
         # debug
-        user_email = "none"
+        user_email = None
+
         if "none" in user_request_in.config.disabled_categories:
             user_request_in.config.__setattr__("disabled_categories", [])
         elif user_request_in.config.disabled_categories == []:
@@ -1847,10 +1847,7 @@ async def check(
         configs = {"categories": {}}
         apply_configs(user_request_in, configs, "witty_teams")
 
-    if settings.log_metrics:
-        redis.hincrby(MetricsType.CHECK_COUNTS, get_user_id(user_email), 1)
-        redis.hincrby(MetricsType.CHECK_PLANS, "none" if user_request_in.config.plan is None or user_email == "none" else user_request_in.config.plan, 1)
-        redis.hincrby(MetricsType.CHECK_HOST, request.headers.get("origin"), 1)
+    store_metrics(request, configs, 'check')
 
     if (
         user_request_in.config.plan is not None
