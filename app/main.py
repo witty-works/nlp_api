@@ -1017,7 +1017,7 @@ async def post_auth_2_0(request: Request, user_request_in: BaseRequestIn = None)
     if settings.log_metrics:
         redis.hincrby(MetricsType.AUTH_COUNTS, get_user_id(user_email), 1)
         redis.hincrby(MetricsType.AUTH_PLANS, "none" if user_request_in.config.plan is None or user_email == "none" else user_request_in.config.plan, 1)
-        redis.hincrby(MetricsType.AUTH_HOST, request.client.host, 1)
+        redis.hincrby(MetricsType.AUTH_HOST, request.headers.get("origin"), 1)
 
     if configs == {}:
         raise HTTPException(
@@ -1850,7 +1850,7 @@ async def check(
     if settings.log_metrics:
         redis.hincrby(MetricsType.CHECK_COUNTS, get_user_id(user_email), 1)
         redis.hincrby(MetricsType.CHECK_PLANS, "none" if user_request_in.config.plan is None or user_email == "none" else user_request_in.config.plan, 1)
-        redis.hincrby(MetricsType.CHECK_HOST, request.client.host, 1)
+        redis.hincrby(MetricsType.CHECK_HOST, request.headers.get("origin"), 1)
 
     if (
         user_request_in.config.plan is not None
