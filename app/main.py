@@ -93,6 +93,7 @@ from app.models import (
     BasicWordType,
     WordType,
     AlternativeType,
+    MetricsType,
 )
 from app.lang_detection import get_lang_detection
 from app.categories import (
@@ -957,6 +958,24 @@ async def post_auth_debug(
     }
 
 
+@app.get(
+    "/debug/metrics",
+    dependencies=[Depends(HTTPBearer(auto_error=False))],
+)
+async def get_user_configs(
+    key: MetricsType,
+    username: str = Depends(fetch_current_username),
+):
+    if key == MetricsType.ALL:
+        result = {}
+        for key in MetricsType:
+            result[key] = redis.hgetall(key)
+
+        return result
+
+    return redis.hgetall(key)
+
+
 @app.post(
     "/v2.0/auth",
     response_model=Union[ResultConf, dict, None],
@@ -970,12 +989,13 @@ async def post_auth_2_0(request: Request, user_request_in: BaseRequestIn = None)
     check_client_version(client)
 
     user_email = await fetch_user(request)
-    if not user_email:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-        )
+    configs = await fetch_configs_for_request(RequestIn(text=""), user_email) if user_email else {}
 
-    configs = await fetch_configs_for_request(RequestIn(text=""), user_email)
+    if settings.log_metrics:
+        redis.hincrby(MetricsType.AUTH_COUNTS, get_user_id(user_email), 1)
+        redis.hincrby(MetricsType.AUTH_PLANS, "none" if user_request_in.config.plan is None or user_email == "none" else user_request_in.config.plan, 1)
+        redis.hincrby(MetricsType.AUTH_HOST, request.client.host, 1)
+
     if configs == {}:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -1793,6 +1813,7 @@ async def check(
         configs = await fetch_configs_for_request(user_request_in, user_email)
     else:
         # debug
+        user_email = "none"
         if "none" in user_request_in.config.disabled_categories:
             user_request_in.config.__setattr__("disabled_categories", [])
         elif user_request_in.config.disabled_categories == []:
@@ -1802,6 +1823,11 @@ async def check(
 
         configs = {"categories": {}}
         apply_configs(user_request_in, configs, "witty_teams")
+
+    if settings.log_metrics:
+        redis.hincrby(MetricsType.CHECK_COUNTS, get_user_id(user_email), 1)
+        redis.hincrby(MetricsType.CHECK_PLANS, "none" if user_request_in.config.plan is None or user_email == "none" else user_request_in.config.plan, 1)
+        redis.hincrby(MetricsType.CHECK_HOST, request.client.host, 1)
 
     if (
         user_request_in.config.plan is not None
