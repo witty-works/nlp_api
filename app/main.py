@@ -3919,7 +3919,7 @@ async def german_noun_lookup(
                 words = static_rules[LangType.DE]["german_nouns"].parse_compound(word)
                 if len(words) == 0:
                     for substring in static_rules[LangType.DE][
-                        "german_nouns_substrings"
+                        "german_nouns_postfix"
                     ]:
                         position = text.find(substring)
                         if position >= 0:
