@@ -482,18 +482,6 @@ def fetch_static_rules():
             "entschieden",
         ]
 
-        # dictionaries to handle false positives
-        static_rules[LangType.DE]["exceptions"] = [
-            "Unternehmen",
-            "Firma",
-            "Gruppe",
-            "Gesellschaft",
-            "Kollektivgesellschaft",
-            "Team",
-            "Organization",
-            "Gliederung",
-        ]
-
         static_rules[LangType.DE]["standard_words"] = [
             "zusammen",
             "schaft",
