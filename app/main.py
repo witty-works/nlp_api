@@ -3922,7 +3922,7 @@ async def german_noun_lookup(
                         "german_nouns_substrings"
                     ]:
                         position = text.find(substring)
-                        if position:
+                        if position >= 0:
                             words = [text[0:position], text[position:].capitalize()]
                             break
 
