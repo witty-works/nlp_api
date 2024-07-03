@@ -93,6 +93,7 @@ from app.models import (
     BasicWordType,
     WordType,
     AlternativeType,
+    MetricsType,
 )
 from app.lang_detection import get_lang_detection
 from app.categories import (
@@ -119,7 +120,7 @@ from app.query_definitions import (
 )
 import boto3
 
-version = "2.2.27"
+version = "2.2.28"
 
 categories = get_categories()
 settings = get_settings()
@@ -634,9 +635,8 @@ def fetch_current_username(
 
     return credentials.username
 
-
 async def fetch_rephrased_sentences(
-    sentence: str, alternatives: List[str], word_to_replace: str
+    sentence: str, alternatives: List[str], word_to_replace: str, pos_of_word_to_replace: int = 0
 ):
     # Initialize the Bedrock runtime client
     client = boto3.client(
@@ -649,33 +649,56 @@ async def fetch_rephrased_sentences(
     # Set the model ID
     model_id = settings.aws_model_id
 
-    system_prompt = """You are an assistant that rephrases sentences to be grammatically correct, incorporating a provided alternative word while replacing a specified word. Keep as many original words as possible, ensuring the new word is included and the old word is excluded.
-    Return the rephrased sentence together with the alternative word in this format:
+    # The updated prompt specifies that the assistant should only replace the word at the specified position
+    system_prompt = f"""
+    You are an assistant that rephrases sentences to ensure grammatical correctness and clarity, incorporating a provided alternative word while explicitly replacing only the instance of the specified word.
+    The word to replace is starting at sentence char {pos_of_word_to_replace + 1}.
+    Keep as many original words as possible.
+    Return the rephrased sentence together with the alternative word. If there is only one alternative provided, return exactly one entry. If there are multiple alternatives, return an entry for each alternative. Format the results as follows:
     [
-        {
-            "alternative": "cat",
-            "rephrased_sentence": "The quick brown fox jumps over the lazy cat."
-        },
-        {
-            "alternative": "frog",
-            "rephrased_sentence": "The quick brown fox jumps over the lazy frog."
-        },
-        {
-            "alternative": "rabbit",
-            "rephrased_sentence": "The quick brown fox jumps over the lazy rabbit."
-        }
-    ]"""
+        {{
+            "alternative": "{alternatives[0]}",
+            "rephrased_sentence": "Generated example for {alternatives[0]}"
+        }}
+        {', ...' if len(alternatives) > 1 else ''}
+    ]
+
+    Example:
+    input: 
+    {{
+        "sentence": "Hey guys! how are you doing today? Your are my best guys.",
+        "alternatives": [
+            "people", "everyone", "all"
+        ],
+        "word_to_replace": "guys",
+        "pos_of_word_to_replace": {4}
+    }}
+    Output:
+    {{
+        "alternative": "people",
+        "rephrased_sentence": "Hey people! how are you doing today? You are my best guys.",
+    }},
+    {{
+        "alternative": "everyone",
+        "rephrased_sentence": "Hey everyone! how are you doing today? You are my best guys.",
+    }},
+    {{
+        "alternative": "all",
+        "rephrased_sentence": "Hey all! how are you doing today? You are my best guys.",
+    }}
+    """
 
     conversation = [
         {
             "role": "user",
             "content": [
                 {
-                    "text": f"{system_prompt} \n Rephrase the sentence '{sentence}' to fit each of these alternatives: {', '.join(alternatives)}. Word to replace '{word_to_replace}'"
+                    "text": f"{system_prompt} \n Rephrase the sentence '{sentence}' to fit each of these alternatives: {', '.join(alternatives)}. Word to replace '{word_to_replace}' starting at position {pos_of_word_to_replace}"
                 }
             ],
         }
     ]
+
 
     try:
         streaming_response = client.converse_stream(
@@ -701,6 +724,7 @@ async def rephrase_sentence(
     sentence: str = Body(..., embed=True),
     alternatives: List[str] = Body(..., embed=True),
     word_to_replace: str = Body(..., embed=True),
+    pos_of_word_to_replace: int = Body(0, embed=True),
 ):
     if not isinstance(sentence, str):
         raise HTTPException(status_code=400, detail="Invalid sentence format")
@@ -710,7 +734,7 @@ async def rephrase_sentence(
         raise HTTPException(status_code=400, detail="Invalid alternatives format")
 
     rephrased_responses = await fetch_rephrased_sentences(
-        sentence, alternatives, word_to_replace
+        sentence, alternatives, word_to_replace, pos_of_word_to_replace
     )
     return rephrased_responses
 
@@ -957,6 +981,24 @@ async def post_auth_debug(
     }
 
 
+@app.get(
+    "/debug/metrics",
+    dependencies=[Depends(HTTPBearer(auto_error=False))],
+)
+async def get_user_configs(
+    key: MetricsType,
+    username: str = Depends(fetch_current_username),
+):
+    if key == MetricsType.ALL:
+        result = {}
+        for key in MetricsType:
+            result[key] = redis.hgetall(key)
+
+        return result
+
+    return redis.hgetall(key)
+
+
 @app.post(
     "/v2.0/auth",
     response_model=Union[ResultConf, dict, None],
@@ -970,47 +1012,19 @@ async def post_auth_2_0(request: Request, user_request_in: BaseRequestIn = None)
     check_client_version(client)
 
     user_email = await fetch_user(request)
-    if not user_email:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-        )
+    configs = await fetch_configs_for_request(RequestIn(text=""), user_email) if user_email else {}
 
-    configs = await fetch_configs_for_request(RequestIn(text=""), user_email)
+    store_metrics(request, configs, 'auth')
+
     if configs == {}:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-        )
-
-    if "config" in configs:
-        configs["config"] = bc_old_categories(configs["config"])
-
-    if "organization_config" in configs:
-        configs["organization_config"] = bc_old_categories(
-            configs["organization_config"]
         )
 
     config = fetch_result_conf(configs)
 
     if "team_analytics" in configs and not configs["team_analytics"]:
         config.organization_id = None
-
-    return config
-
-
-def bc_old_categories(config: dict) -> dict:
-    # BC code for browser version before 1.29.0
-    old_categories = ["style", "inclusive", "orthography"]
-    for old_category in old_categories:
-        if old_category in config:
-            continue
-
-        if old_category in config["categories"]:
-            config[old_category] = config["categories"][old_category]
-        else:
-            config[old_category] = {
-                "value": False,
-                "status": "suggestion",
-            }
 
     return config
 
@@ -1395,6 +1409,34 @@ async def get_user_configs(
 
 
 # Functions
+def store_metrics(request: Request, configs: dict, endpoint: str):
+    if not settings.log_metrics:
+        return
+
+    if "id" in configs:
+        user_id = configs["id"]
+        plan = None if "plan" not in configs else configs["plan"]
+        if (
+            "organization_config" in configs
+            and "trial_ends_at" in configs["organization_config"]
+            and configs["organization_config"]["trial_ends_at"] is not None
+        ):
+            plan = "witty_trial"
+    else:
+        user_id = "none"
+        plan = "none"
+
+    host = request.headers.get("origin", "none")
+
+    if endpoint == "auth":
+        redis.hincrby(MetricsType.AUTH_COUNTS, user_id, 1)
+        redis.hincrby(MetricsType.AUTH_PLANS, plan, 1)
+        redis.hincrby(MetricsType.AUTH_HOST, host, 1)
+    elif endpoint == "check":
+        redis.hincrby(MetricsType.CHECK_COUNTS, user_id, 1)
+        redis.hincrby(MetricsType.CHECK_PLANS, plan, 1)
+        redis.hincrby(MetricsType.CHECK_HOST, host, 1)
+
 def parse_term_replacement(lemma, term_replacement: dict):
     word_type = (
         term_replacement["word_type"] if "word_type" in term_replacement else "~"
@@ -1793,6 +1835,8 @@ async def check(
         configs = await fetch_configs_for_request(user_request_in, user_email)
     else:
         # debug
+        user_email = None
+
         if "none" in user_request_in.config.disabled_categories:
             user_request_in.config.__setattr__("disabled_categories", [])
         elif user_request_in.config.disabled_categories == []:
@@ -1802,6 +1846,8 @@ async def check(
 
         configs = {"categories": {}}
         apply_configs(user_request_in, configs, "witty_teams")
+
+    store_metrics(request, configs, 'check')
 
     if (
         user_request_in.config.plan is not None
@@ -2459,7 +2505,10 @@ def fetch_term_replacements(
             rule.url = term_replacement["explanation"].get("url")
             rule.icon = term_replacement["explanation"].get("icon")
 
-        rule.false_positives = term_replacement["false_positives"]
+        if term_replacement["word_types"][0]["lower_case"]:
+            rule.false_positives = term_replacement["false_positives"]
+        else:
+            rule.case_sensitive_false_positives = term_replacement["false_positives"]
 
         term_replacement_rules.append(rule)
 
@@ -3870,10 +3919,10 @@ async def german_noun_lookup(
                 words = static_rules[LangType.DE]["german_nouns"].parse_compound(word)
                 if len(words) == 0:
                     for substring in static_rules[LangType.DE][
-                        "german_nouns_substrings"
+                        "german_nouns_postfix"
                     ]:
                         position = text.find(substring)
-                        if position:
+                        if position >= 0:
                             words = [text[0:position], text[position:].capitalize()]
                             break
 
@@ -5812,7 +5861,19 @@ async def is_rule_false_positive(
     full_text: str, token_index: int, tokens: Doc, rule: Rule
 ) -> bool:
     false_positives = await fetch_false_positives(rule)
-    return is_false_positive(full_text, token_index, tokens, false_positives)
+    result = is_false_positive(full_text, token_index, tokens, false_positives)
+    if result is False and rule.case_sensitive_false_positives is not None:
+        result = is_false_positive(
+            full_text,
+            token_index,
+            tokens,
+            rule.case_sensitive_false_positives,
+            None,
+            None,
+            True
+        )
+
+    return result
 
 
 def is_false_positive(
@@ -5820,8 +5881,9 @@ def is_false_positive(
     token_index: int | None,
     tokens: Doc | None,
     false_positives: list,
-    window_left: int = None,
-    window_right: int = None,
+    window_left: int | None = None,
+    window_right: int | None = None,
+    case_sensitive: bool = False,
 ) -> bool:
     if len(false_positives) == 0 or full_text is None:
         return False
@@ -5841,12 +5903,15 @@ def is_false_positive(
         window_right += tokens[token_index].idx
 
     partial_text = full_text[window_left:window_right].lower()
+    if not case_sensitive:
+        partial_text = partial_text.lower()
+        false_positives = list(map(lambda false_positive: false_positive.lower(), false_positives))
 
     start = tokens[token_index].idx - window_left
     end = start + len(tokens[token_index].text)
 
     for false_positive in false_positives:
-        for m in re.finditer(re.escape(false_positive.lower()), partial_text):
+        for m in re.finditer(re.escape(false_positive), partial_text):
             if m.start() <= start and m.end() >= end:
                 return True
 

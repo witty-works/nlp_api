@@ -70,6 +70,16 @@ class Language(object):
         return text
 
 
+class MetricsType(str, Enum):
+    ALL = "all"
+    AUTH_COUNTS = "auth_counts"
+    AUTH_PLANS = "auth_plans"
+    AUTH_HOST = "auth_host"
+    CHECK_COUNTS = "check_counts"
+    CHECK_PLANS = "check_plans"
+    CHECK_HOST = "check_host"
+
+
 class EventType(str, Enum):
     CHECK = "check"
     IGNORE = "ignore"
@@ -255,6 +265,7 @@ class Rule:
     is_advanced: bool = False
     alternatives: Optional[list[Alternative]] = []
     false_positives: Optional[list[str]] = None
+    case_sensitive_false_positives: Optional[list[str]] = None
     explanation: Optional[str] = None
     url: Optional[str] = None
     icon: Optional[str] = None

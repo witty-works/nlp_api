@@ -56,7 +56,7 @@
                 }
             ],
             "category": "orthography",
-            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt)",
+            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt). Es geht u",
             "end": 29,
             "explanation": {
                 "icon": "❌",
@@ -88,7 +88,7 @@
                 }
             ],
             "category": "orthography",
-            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt)",
+            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt). Es geht um die",
             "end": 35,
             "explanation": {
                 "icon": "❌",
@@ -120,7 +120,7 @@
                 }
             ],
             "category": "orthography",
-            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt)",
+            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt). Es geht um die deutsche Natur.",
             "end": 77,
             "explanation": {
                 "icon": "❌",
@@ -152,7 +152,7 @@
                 }
             ],
             "category": "orthography",
-            "context": "in foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt)",
+            "context": "in foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt). Es geht um die deutsche Natur.",
             "end": 111,
             "explanation": {
                 "icon": "❌",
@@ -184,7 +184,7 @@
                 }
             ],
             "category": "orthography",
-            "context": "ar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt)",
+            "context": "ar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt). Es geht um die deutsche Natur.",
             "end": 117,
             "explanation": {
                 "icon": "❌",
@@ -224,7 +224,7 @@
                 }
             ],
             "category": "corporate_rules",
-            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt)",
+            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt). Es geht um die deutsche Natur.",
             "end": 77,
             "explanation": {
                 "icon": "🥰",
@@ -245,7 +245,7 @@
                 }
             ],
             "category": "corporate_rules",
-            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt)",
+            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt). Es geht um die deutsche Natur.",
             "end": 88,
             "explanation": {
                 "icon": "🥰",
@@ -266,7 +266,7 @@
                 }
             ],
             "category": "corporate_rules",
-            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt)",
+            "context": "Ich bin foo bar! Und kein foo barrr. Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt). Es geht um die deutsche Natur.",
             "end": 99,
             "explanation": {
                 "icon": "🥰",
@@ -279,6 +279,26 @@
             "subcategory": "corporate_rules",
             "text": "WELT",
             "text_id": "welt"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Deutsche Natur"
+                }
+            ],
+            "category": "corporate_rules",
+            "context": ". Aber ich bin Foo Bar. Ich will eine welt, eine WelT, eine WELT, ein globus (welt). Es geht um die deutsche Natur.",
+            "end": 149,
+            "explanation": {
+                "icon": "❗",
+                "text": "capitalization"
+            },
+            "gravity": 0.9,
+            "label": "Wörterbuch",
+            "start": 135,
+            "subcategory": "corporate_rules",
+            "text": "deutsche Natur",
+            "text_id": "deutsche Natur"
         }
     ]
 }

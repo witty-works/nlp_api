@@ -482,18 +482,6 @@ def fetch_static_rules():
             "entschieden",
         ]
 
-        # dictionaries to handle false positives
-        static_rules[LangType.DE]["exceptions"] = [
-            "Unternehmen",
-            "Firma",
-            "Gruppe",
-            "Gesellschaft",
-            "Kollektivgesellschaft",
-            "Team",
-            "Organization",
-            "Gliederung",
-        ]
-
         static_rules[LangType.DE]["standard_words"] = [
             "zusammen",
             "schaft",
@@ -664,7 +652,12 @@ def fetch_static_rules():
 
         static_rules[LangType.DE]["german_nouns"] = Nouns()
 
-        static_rules[LangType.DE]["german_nouns_substrings"] = ["sachkundige"]
+        # Ensure a matching entry in the gemran nouns table before adding a new postfix
+        static_rules[LangType.DE]["german_nouns_postfix"] = [
+            "sachkundige",
+            "lead",
+            "head",
+        ]
 
         static_rules[LangType.DE]["pattern_false_positives"] = []
 

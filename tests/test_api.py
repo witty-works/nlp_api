@@ -665,6 +665,17 @@ def set_redis():
                 },
                 "proficiency_level": "unconscious_bias",
             },
+            "deutsche Natur|de": {
+                "alternatives": ["Deutsche Natur"],
+                "word_type": "=",
+                "explanation": {
+                    "text": "capitalization",
+                    "icon": None,
+                    "url": None,
+                },
+                "lang": "de",
+                "proficiency_level": "unconscious_bias",
+            },
             "run": {
                 "lang": "en",
                 "word_type": "v",
