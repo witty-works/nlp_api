@@ -120,7 +120,7 @@ from app.query_definitions import (
 )
 import boto3
 
-version = "2.2.28"
+version = "2.2.29"
 
 categories = get_categories()
 settings = get_settings()
