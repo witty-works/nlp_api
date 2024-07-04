@@ -1014,7 +1014,7 @@ async def post_auth_2_0(request: Request, user_request_in: BaseRequestIn = None)
     user_email = await fetch_user(request)
     configs = await fetch_configs_for_request(RequestIn(text=""), user_email) if user_email else {}
 
-    store_metrics(request, configs, 'auth')
+    store_metrics(request, configs, "2.0", 'auth')
 
     if configs == {}:
         raise HTTPException(
@@ -1409,9 +1409,11 @@ async def get_user_configs(
 
 
 # Functions
-def store_metrics(request: Request, configs: dict, endpoint: str):
+def store_metrics(request: Request, configs: dict, version: str | None, endpoint: str):
     if not settings.log_metrics:
         return
+
+    version = version + " - " if version is not None else "none - "
 
     if "id" in configs:
         user_id = configs["id"]
@@ -1429,13 +1431,13 @@ def store_metrics(request: Request, configs: dict, endpoint: str):
     host = request.headers.get("origin", "none")
 
     if endpoint == "auth":
-        redis.hincrby(MetricsType.AUTH_COUNTS, user_id, 1)
-        redis.hincrby(MetricsType.AUTH_PLANS, plan, 1)
-        redis.hincrby(MetricsType.AUTH_HOST, host, 1)
+        redis.hincrby(MetricsType.AUTH_COUNTS, version + user_id, 1)
+        redis.hincrby(MetricsType.AUTH_PLANS, version + plan, 1)
+        redis.hincrby(MetricsType.AUTH_HOST, version + host, 1)
     elif endpoint == "check":
-        redis.hincrby(MetricsType.CHECK_COUNTS, user_id, 1)
-        redis.hincrby(MetricsType.CHECK_PLANS, plan, 1)
-        redis.hincrby(MetricsType.CHECK_HOST, host, 1)
+        redis.hincrby(MetricsType.CHECK_COUNTS, version + user_id, 1)
+        redis.hincrby(MetricsType.CHECK_PLANS, version + plan, 1)
+        redis.hincrby(MetricsType.CHECK_HOST, version + host, 1)
 
 def parse_term_replacement(lemma, term_replacement: dict):
     word_type = (
@@ -1847,7 +1849,7 @@ async def check(
         configs = {"categories": {}}
         apply_configs(user_request_in, configs, "witty_teams")
 
-    store_metrics(request, configs, 'check')
+    store_metrics(request, configs, version, 'check')
 
     if (
         user_request_in.config.plan is not None
