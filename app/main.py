@@ -987,16 +987,28 @@ async def post_auth_debug(
 )
 async def get_user_configs(
     key: MetricsType,
+    top_x: int|None,
     username: str = Depends(fetch_current_username),
 ):
-    if key == MetricsType.ALL:
-        result = {}
-        for key in MetricsType:
-            result[key] = redis.hgetall(key)
+    result = {}    
+    keys = MetricsType if key == MetricsType.ALL else [key]
+    for _key in keys:
+        if _key == MetricsType.ALL:
+            continue
 
-        return result
+        metrics = redis.hgetall(_key)
 
-    return redis.hgetall(key)
+        for a in metrics:
+            metrics[a] = int(metrics[a])
+
+        result[_key] = {k: metrics[k] for k in sorted(metrics, key=metrics.get, reverse=True)}
+        if top_x is not None:
+            result[_key] = {dkey:value for dkey,value in list(result[_key].items())[0:top_x]}
+
+    if key != MetricsType.ALL:
+        return result[key]
+
+    return result
 
 
 @app.post(
