@@ -10,6 +10,7 @@ import fasttext
 import aiosqlite
 from copy import deepcopy
 from inspect import currentframe
+import json_repair
 
 from spacy.matcher import PhraseMatcher, Matcher
 from spacy import displacy
@@ -650,55 +651,64 @@ async def fetch_rephrased_sentences(
     model_id = settings.aws_model_id
 
     # The updated prompt specifies that the assistant should only replace the word at the specified position
-    system_prompt = f"""
-    You are an assistant that rephrases sentences to ensure grammatical correctness and clarity, incorporating a provided alternative word while explicitly replacing only the instance of the specified word.
-    The word to replace is starting at sentence char {pos_of_word_to_replace + 1}.
-    Keep as many original words as possible.
-    Return the rephrased sentence together with the alternative word. If there is only one alternative provided, return exactly one entry. If there are multiple alternatives, return an entry for each alternative. Format the results as follows:
-    [
-        {{
-            "alternative": "{alternatives[0]}",
-            "rephrased_sentence": "Generated example for {alternatives[0]}"
-        }}
-        {', ...' if len(alternatives) > 1 else ''}
-    ]
+    system_prompt = """
+    You are an assistant that rephrases sentences to ensure grammatical correctness and clarity, incorporating a provided alternative words while explicitly replacing only the instance of the specified words at the specified position.
+    The 'word_to_replace' (example: 'he') in the 'sentence' (example: 'What he has done is amazing as he is the best.') is starting at specified zero-based character count at 'start' (example input: 5) and 'end' (example input: 7).
+    Any additional occurance of the 'word_to_replace' from the actual input before the 'start' or after the 'end' in the sentence must remain unchanged.
+    Only replace exactly one occurance of 'word_to_replace' specified zero-based character count starting at 'start' and ending at 'end'.
+    So in the provided example, in the output, only the first instance of 'he' is replaced and the second occirance of 'he' is kept unchanged.
+    Return a rephrased 'sentence' for each of the 'alternatives' together with the specific 'alternative'.
+    If there is only one alternative provided, return exactly one entry.
+    If there are multiple alternatives, return an entry for each alternative.
+    Keep as many original words as possible when rephrasing the sentences to integrate the given alternative.
+    Change as little words as necessary in the rephrased sentences.
 
-    Example:
-    input: 
-    {{
-        "sentence": "Hey guys! how are you doing today? Your are my best guys.",
+    For the following example:  
+    {
+        "sentence": "What he has done is amazing as he is the best.",
         "alternatives": [
-            "people", "everyone", "all"
+            "they", "he or she", "((given name))"
         ],
-        "word_to_replace": "guys",
-        "pos_of_word_to_replace": {4}
-    }}
-    Output:
-    {{
-        "alternative": "people",
-        "rephrased_sentence": "Hey people! how are you doing today? You are my best guys.",
-    }},
-    {{
+        "word_to_replace": "he",
+        "start": 5,
+        "end": 7
+    }
+
+    Format the output as follows making sure it is valid JSON:
+    {
+        "alternative": "they",
+        "sentence": "What they have done is amazing as he is the best.",
+    },
+    {
         "alternative": "everyone",
-        "rephrased_sentence": "Hey everyone! how are you doing today? You are my best guys.",
-    }},
-    {{
+        "sentence": "What he or she has done is amazing as he is the best.",
+    },
+    {
         "alternative": "all",
-        "rephrased_sentence": "Hey all! how are you doing today? You are my best guys.",
-    }}
+        "sentence": "What ((given name)) has done is amazing as he is the best.",
+    }
     """
+
+    input_data = {
+        "sentence": sentence,
+        "alternatives": alternatives,
+        "word_to_replace": word_to_replace,
+        "start": pos_of_word_to_replace,
+        "end": pos_of_word_to_replace + len(word_to_replace),
+    }
 
     conversation = [
         {
             "role": "user",
             "content": [
                 {
-                    "text": f"{system_prompt} \n Rephrase the sentence '{sentence}' to fit each of these alternatives: {', '.join(alternatives)}. Word to replace '{word_to_replace}' starting at position {pos_of_word_to_replace}"
+                    "text": f"{system_prompt} \n Here is the actual input to rephrase into a JSON response:\n" + json.dumps(input_data)
                 }
             ],
         }
     ]
 
+    result = ""
 
     try:
         streaming_response = client.converse_stream(
@@ -706,17 +716,22 @@ async def fetch_rephrased_sentences(
             messages=conversation,
             inferenceConfig={"maxTokens": 300, "temperature": 0.7, "topP": 1},
         )
-        result = ""
+
         for chunk in streaming_response["stream"]:
             if "contentBlockDelta" in chunk:
                 text = chunk["contentBlockDelta"]["delta"]["text"]
-                print(text, end="")
                 result += text
 
-        return result.split("\n")
+        result = result[result.find("[") : result.rfind("]") + 1]
+
+        result = json_repair.loads(result)
+
+        result = list(filter(lambda x: x!=sentence, result))
+
+        return result
     except Exception as e:
         print("An error occurred:", e)
-        return []
+        return result
 
 
 @app.post(
@@ -758,8 +773,8 @@ async def review_prompt(
 async def rephrase_sentence(
     sentence: str = Body(..., embed=True),
     alternatives: List[str] = Body(..., embed=True),
-    word_to_replace: str = Body(..., embed=True),
-    pos_of_word_to_replace: int = Body(0, embed=True),
+    text: str = Body(..., embed=True),
+    start: int = Body(0, embed=True),
 ):
     if not isinstance(sentence, str):
         raise HTTPException(status_code=400, detail="Invalid sentence format")
@@ -769,7 +784,7 @@ async def rephrase_sentence(
         raise HTTPException(status_code=400, detail="Invalid alternatives format")
 
     rephrased_responses = await fetch_rephrased_sentences(
-        sentence, alternatives, word_to_replace, pos_of_word_to_replace
+        sentence, alternatives, text, start
     )
     return rephrased_responses
 

@@ -77,10 +77,10 @@ boto3==1.34.158 \
 botocore==1.34.158 \
     --hash=sha256:0e6fceba1e39bfa8feeba70ba3ac2af958b3387df4bd3b5f2db3f64c1754c756 \
     --hash=sha256:5934082e25ad726673afbf466092fb1223dafa250e6e756c819430ba6b1b3da5
-bytecode==0.15.1; python_version >= "3.12" \
+bytecode==0.15.1 \
     --hash=sha256:0a1dc340cac823cff605609b8b214f7f9bf80418c6b9e0fc8c6db1793c27137d \
     --hash=sha256:7263239a8d3f70fc7c303862b20cd2c6788052e37ce0a26e67309d280e985984
-cachetools==5.4.0; python_version >= "3.6" \
+cachetools==5.4.0 \
     --hash=sha256:3ae3b49a3d5e28a77a0be2b37dbcb89005058959cb2323858c2657c4a8cab474 \
     --hash=sha256:b8adc2e7c07f105ced7bc56dbb6dfbe7c4a00acce20e2227b3f355be89bc6827
 catalogue==2.0.10 \
@@ -318,13 +318,13 @@ frozenlist==1.4.1 \
 german-nouns==1.2.5 \
     --hash=sha256:0f113c59ea331aae750bc03c7b6c7217bae975c6677b4df8d8932093093f509f \
     --hash=sha256:1258f2917db364d3661a651a47d1089c8ef40bddbe061e43cb529dae5f13ce54
-google-api-core==2.19.1; python_version >= "3.6" \
+google-api-core==2.19.1 \
     --hash=sha256:f12a9b8309b5e21d92483bbd47ce2c445861ec7d269ef6784ecc0ea8c1fa6125 \
     --hash=sha256:f4695f1e3650b316a795108a76a1c416e6afb036199d1c1f1f110916df479ffd
-google-auth==2.33.0; python_version >= "3.6" \
+google-auth==2.33.0 \
     --hash=sha256:8eff47d0d4a34ab6265c50a106a3362de6a9975bb08998700e389f857e4d39df \
     --hash=sha256:d6a52342160d7290e334b4d47ba390767e4438ad0d45b7630774533e82655b95
-googleapis-common-protos==1.63.2; python_version >= "3.6" \
+googleapis-common-protos==1.63.2 \
     --hash=sha256:27a2499c7e8aff199665b22741997e485eccc8645aa9176c7c988e6fae507945 \
     --hash=sha256:27c5abdffc4911f28101e635de1533fb4cfd2c37fbaa9174587c799fac90aa87
 gunicorn==23.0.0 \
@@ -366,6 +366,9 @@ jinja2==3.1.4 \
 jmespath==1.0.1 \
     --hash=sha256:02e2e4cc71b5bcab88332eebf907519190dd9e6e82107fa7f83b1003a6252980 \
     --hash=sha256:90261b206d6defd58fdd5e85f478bf633a2901798906be2ad389150c5c60edbe
+json-repair==0.27.2 \
+    --hash=sha256:493ad22d9918ebc60661cf5f590d2c727a554f2ddddcc68953aeca83bde7ce68 \
+    --hash=sha256:8a22455b58a098c73c18c81c4efe3d77e27763b4e643715ae20dce31eb4a703e
 langcodes==3.4.0 \
     --hash=sha256:10a4cc078b8e8937d8485d3352312a0a89a3125190db9f2bb2074250eef654e9 \
     --hash=sha256:ae5a77d1a01d0d1e91854a671890892b7ce9abb601ab7327fc5c874f899e1979
@@ -512,7 +515,7 @@ preshed==3.0.9 \
     --hash=sha256:7de8f5138bcac7870424e09684dc3dd33c8e30e81b269f6c9ede3d8c7bb8e257 \
     --hash=sha256:b4fe6720012c62e6d550d6a5c1c7ad88cacef8388d186dad4bafea4140d9d198 \
     --hash=sha256:e04f05758875be9751e483bd3c519c22b00d3b07f5a64441ec328bb9e3c03700
-proto-plus==1.24.0; python_version >= "3.6" \
+proto-plus==1.24.0 \
     --hash=sha256:30b72a5ecafe4406b0d339db35b56c4059064e69227b8c3bda7462397f966445 \
     --hash=sha256:402576830425e5f6ce4c2a6702400ac79897dab0b4343821aa5188b0fab81a12
 protobuf==5.27.3 \
@@ -541,10 +544,10 @@ pyarrow==17.0.0 \
     --hash=sha256:9ba11c4f16976e89146781a83833df7f82077cdab7dc6232c897789343f7891a \
     --hash=sha256:b0c6ac301093b42d34410b187bba560b17c0330f64907bfa4f7f7f2444b0cf9b \
     --hash=sha256:f1e70de6cb5790a50b01d2b686d54aaf73da01266850b05e3af2a1bc89e16053
-pyasn1==0.6.0; python_version >= "3.6" \
+pyasn1==0.6.0 \
     --hash=sha256:3a35ab2c4b5ef98e17dfdec8ab074046fbda76e281c5a706ccd82328cfc8f64c \
     --hash=sha256:cca4bb0f2df5504f02f6f8a775b6e416ff9b0b3b16f7ee80b5a3153d9b804473
-pyasn1-modules==0.4.0; python_version >= "3.6" \
+pyasn1-modules==0.4.0 \
     --hash=sha256:831dbcea1b177b28c9baddf4c6d1013c24c3accd14a1873fffaa6a2e905f17b6 \
     --hash=sha256:be04f15b66c206eed667e0bb5ab27e2b1855ea54a842e5037738099e8ca4ae0b
 pybind11==2.13.1 \
@@ -654,7 +657,7 @@ requests==2.32.3 \
 rich==13.7.1 \
     --hash=sha256:4edbae314f59eb482f54e9e30bf00d33350aaa94f4bfcd4e9e3110e64d0d7222 \
     --hash=sha256:9be308cb1fe2f1f57d67ce99e95af38a1e2bc71ad9813b0e247cf7ffbcc3a432
-rsa==4.9; python_version >= "3.6" \
+rsa==4.9 \
     --hash=sha256:90260d9058e514786967344d0ef75fa8727eed8a7d2e43ce9f4bcf1b536174f7 \
     --hash=sha256:e38464a49c6c85d7f1351b0126661487a7e0a14a50f1675ec50eb34d4f20ef21
 s3transfer==0.10.2 \
