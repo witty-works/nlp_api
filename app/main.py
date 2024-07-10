@@ -637,7 +637,7 @@ def fetch_current_username(
     return credentials.username
 
 async def fetch_rephrased_sentences(
-    sentence: str, alternatives: List[str], word_to_replace: str, pos_of_word_to_replace: int = 0
+    sentence: str, alternatives: List[str], text: str, start: int
 ):
     # Initialize the Bedrock runtime client
     client = boto3.client(
@@ -647,72 +647,84 @@ async def fetch_rephrased_sentences(
         aws_secret_access_key=settings.aws_secret_key,
     )
 
-    # Set the model ID
-    model_id = settings.aws_model_id
-
     # The updated prompt specifies that the assistant should only replace the word at the specified position
     system_prompt = """
-    You are an assistant that rephrases sentences to ensure grammatical correctness and clarity, incorporating a provided alternative words while explicitly replacing only the instance of the specified words at the specified position.
-    The 'word_to_replace' (example: 'he') in the 'sentence' (example: 'What he has done is amazing as he is the best.') is starting at specified zero-based character count at 'start' (example input: 5) and 'end' (example input: 7).
-    Any additional occurance of the 'word_to_replace' from the actual input before the 'start' or after the 'end' in the sentence must remain unchanged.
-    Only replace exactly one occurance of 'word_to_replace' specified zero-based character count starting at 'start' and ending at 'end'.
-    So in the provided example, in the output, only the first instance of 'he' is replaced and the second occirance of 'he' is kept unchanged.
-    Return a rephrased 'sentence' for each of the 'alternatives' together with the specific 'alternative'.
-    If there is only one alternative provided, return exactly one entry.
-    If there are multiple alternatives, return an entry for each alternative.
-    Keep as many original words as possible when rephrasing the sentences to integrate the given alternative.
-    Change as little words as necessary in the rephrased sentences.
+    You are an expert in grammatical correctness.
+    For each of the provided 'rephrasings' make grammatical corrections to account for the changes made from the provided original 'sentence'.
+    Ensure the 'rephrasings' use the same grammatical tense.
+    Do not return the 'sentence' or corrections to the 'sentence' in the response, only return the provided 'rephrasings' with grammatical corrections.
+    Do not make stylistic or other unnecessary changes to the 'rephrasings'.
+    Make sure that any grammatical or spelling mistakes present in 'sentence' are still present in the rephrasings in the output.
+    So in the example below 'Wat' is spelled incorrectly in the 'sentence', so in the output 'Wat' is not corrected to 'What'.
+    Change as little as possible to make the 'rephrasings' grammatically correct.
+    For each 'rephrasing' provide exactly one sentence in the response, even if there are no changes from the provided rephrasing.
+    Leave double parenthesis unchanged.
 
     For the following example:  
     {
-        "sentence": "What he has done is amazing as he is the best.",
-        "alternatives": [
-            "they", "he or she", "((given name))"
-        ],
-        "word_to_replace": "he",
-        "start": 5,
-        "end": 7
+        "sentence": "Wat he had done is amazing as he is the best.",
+        "text": "he",
+        "rephrasings": [
+            "Wat they had done is amazing as he is the best.",
+            "Wat he or she had done is amazing as he is the best.",
+            "Wat ((given name)) had done is amazing as he is the best."
+        ]
     }
 
     Format the output as follows making sure it is valid JSON:
-    {
-        "alternative": "they",
-        "sentence": "What they have done is amazing as he is the best.",
-    },
-    {
-        "alternative": "everyone",
-        "sentence": "What he or she has done is amazing as he is the best.",
-    },
-    {
-        "alternative": "all",
-        "sentence": "What ((given name)) has done is amazing as he is the best.",
-    }
+    [
+        "Wat they have done is amazing as he is the best.",
+        "Wat he or she had done is amazing as he is the best.",
+        "Wat ((given name)) had done is amazing as he is the best."
+    ]
     """
 
+    end = start + len(text)
+
+    new_sentence_start = "" if start == 0 else sentence[0:start]
+    new_sentence_end = "" if end >= len(sentence) else sentence[end:]
+
+    rephrasings = []
+    for alternative in alternatives:
+        rephrasings.append(new_sentence_start + alternative + new_sentence_end)
+
     input_data = {
+        "text": text,
         "sentence": sentence,
-        "alternatives": alternatives,
-        "word_to_replace": word_to_replace,
-        "start": pos_of_word_to_replace,
-        "end": pos_of_word_to_replace + len(word_to_replace),
+        "rephrasings": rephrasings,
     }
 
-    conversation = [
-        {
-            "role": "user",
-            "content": [
-                {
-                    "text": f"{system_prompt} \n Here is the actual input to rephrase into a JSON response:\n" + json.dumps(input_data)
-                }
-            ],
-        }
-    ]
+    user_prompt = "Please process the following input into a valid JSON response:\n" + json.dumps(input_data)
+
+    conversation = []
+
+    if "mistral" in settings.aws_model_id:
+        user_prompt = f"{system_prompt}\n{user_prompt}"
+        system_prompt = []
+    else:
+        system_prompt = [
+            {
+                "text": system_prompt
+            }
+        ]
+
+    user_prompt = {
+        "role": "user",
+        "content": [
+            {
+                "text": user_prompt
+            }
+        ],
+    }
+
+    conversation.append(user_prompt)
 
     result = ""
 
     try:
         streaming_response = client.converse_stream(
-            modelId=model_id,
+            system=system_prompt,
+            modelId=settings.aws_model_id,
             messages=conversation,
             inferenceConfig={"maxTokens": 300, "temperature": 0.7, "topP": 1},
         )
@@ -726,7 +738,7 @@ async def fetch_rephrased_sentences(
 
         result = json_repair.loads(result)
 
-        result = list(filter(lambda x: x!=sentence, result))
+        #result = list(filter(lambda x: x!=sentence, result))
 
         return result
     except Exception as e:

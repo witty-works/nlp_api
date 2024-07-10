@@ -371,6 +371,29 @@ def test_language_detection_fail(fails_case_dir, snapshot, set_redis):
         snapshot.snapshot_dir = fails_case_dir
         snapshot.assert_match(output, "output.json")
 
+@pytest.mark.parametrize(
+    "rephrase_dir",
+    get_dirs("tests/test_rephrase"),
+)
+def test_language_detection_fail(rephrase_dir, snapshot, set_redis):
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = rephrase_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/rephrase",
+            json=json.loads(input_json),
+        )
+        assert response.status_code == 200
+
+        # output must be string
+        output = json.dumps(
+            response.json(), sort_keys=True, indent=4, ensure_ascii=False
+        )
+        # Snapshot the return value.
+        snapshot.snapshot_dir = rephrase_dir
+        snapshot.assert_match(output, "output.json")
+
 
 def test_lemmatize():
     with TestClient(app) as client:
