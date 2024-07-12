@@ -509,6 +509,8 @@ def set_redis():
         "config": {},
         "false_positives": [],
         "term_replacements": {},
+        "domains": None,
+        "config_hash": None,
         "notifications": 0,
     }
 
@@ -527,6 +529,8 @@ def set_redis():
         "config": {},
         "false_positives": [],
         "term_replacements": {},
+        "domains": None,
+        "config_hash": None,
         "notifications": 0,
     }
 
@@ -540,6 +544,8 @@ def set_redis():
         "config": {},
         "false_positives": [],
         "term_replacements": {},
+        "domains": None,
+        "config_hash": None,
     }
 
     redis.set(organization_object["id"], json.dumps(organization_object))
@@ -554,6 +560,8 @@ def set_redis():
         "config": {"categories": {}},
         "false_positives": [],
         "term_replacements": {},
+        "domains": None,
+        "config_hash": None,
         "notifications": 0,
     }
 
@@ -567,6 +575,8 @@ def set_redis():
         "config": {"categories": {}},
         "false_positives": [],
         "term_replacements": {},
+        "domains": None,
+        "config_hash": None,
     }
 
     redis.set(organization_object["id"], json.dumps(organization_object))
@@ -900,6 +910,13 @@ def test_auth_2_0(test_auth_2_0_dir, snapshot, set_redis):
 
         response = client.post("/v2.0/auth", headers={"X-Auth": "missing@gmail.com"})
         assert response.status_code == 403
+
+        response = client.post("/v2.0/auth", headers={"X-Auth": "2_2@gmail.com"})
+        assert response.status_code == 200
+
+        response = response.json()
+        assert "organization_trial_ends_at" in response
+        assert response["organization_trial_ends_at"] is not None
 
         response = client.post("/v2.0/auth", headers={"X-Auth": "test@gmail.com"})
         assert response.status_code == 200

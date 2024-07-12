@@ -578,7 +578,6 @@ class ConfResponse(BaseModel):
     id: str
     name: str
     plan: Optional[str] = None
-    trial_ends_at: Optional[str] = None
     config: RuleConfig
     false_positives: list[str] = []
     term_replacements: dict[str, TermReplacement] = {}
@@ -595,6 +594,7 @@ class UserConfResponse(ConfRequest):
     organization_term_replacements: Optional[dict[str, TermReplacement]] = {}
     organization_domains: Optional[DomainConfig] = None
     organization_config_hash: Optional[str] = None
+    organization_trial_ends_at: Optional[str] = None
     notifications: Optional[int] = None
     has_consented_to_mailing: Optional[bool] = None
     team_analytics: Optional[bool] = None
@@ -960,6 +960,7 @@ class ResultConf(BaseModel):
     organization_config: Optional[RuleConfig] = None
     domains: Optional[DomainConfig] = None
     organization_domains: Optional[DomainConfig] = None
+    organization_trial_ends_at: Optional[str] = None
     config_hash: Optional[str] = None
     organization_config_hash: Optional[str] = None
 
