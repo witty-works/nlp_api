@@ -31,7 +31,6 @@ subcategories.csv
 .python-version
 .blackfire.ini
 .pdm-python
-requirements.txt
 
 # Massdriver files to ignore
 **/schema-artifacts.json
