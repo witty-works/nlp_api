@@ -1532,6 +1532,7 @@ async def fetch_user_organization_configs(email: str) -> dict | None:
     configs["organization_name"] = None
     configs["organization_config_hash"] = None
     configs["organization_domains"] = None
+    configs["organization_trial_ends_at"] = None
 
     if "organization_id" in configs and configs["organization_id"] is not None:
         organization_configs = await fetch_organization_configs_from_redis(
@@ -1540,6 +1541,9 @@ async def fetch_user_organization_configs(email: str) -> dict | None:
 
         if "plan" not in configs or configs["plan"] is None:
             configs["plan"] = organization_configs["plan"]
+
+        if "trial_ends_at" in organization_configs:
+            configs["organization_trial_ends_at"] = organization_configs["trial_ends_at"]
 
         configs["organization_name"] = organization_configs["name"]
 
@@ -1961,6 +1965,7 @@ def fetch_result_conf(configs: dict) -> ResultConf | None:
         organization_domains=configs["organization_domains"],
         config_hash=configs["config_hash"],
         organization_config_hash=configs["organization_config_hash"],
+        organization_trial_ends_at=configs["organization_trial_ends_at"],
     )
 
 
