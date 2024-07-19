@@ -636,8 +636,12 @@ def fetch_current_username(
 
     return credentials.username
 
-async def fetch_rephrased_sentences(
-    sentence: str, alternatives: List[str], text: str, start: int
+@app.post("/rephrase")
+async def rephrase_sentence(
+    sentence: str,
+    text: str,
+    start: int,
+    alternatives: list[str]
 ):
     # Initialize the Bedrock runtime client
     client = boto3.client(
@@ -650,32 +654,50 @@ async def fetch_rephrased_sentences(
     # The updated prompt specifies that the assistant should only replace the word at the specified position
     system_prompt = """
     You are an expert in grammatical correctness.
-    For each of the provided 'rephrasings' make grammatical corrections to account for the changes made from the provided original 'sentence'.
-    Ensure the 'rephrasings' use the same grammatical tense.
-    Do not return the 'sentence' or corrections to the 'sentence' in the response, only return the provided 'rephrasings' with grammatical corrections.
-    Do not make stylistic or other unnecessary changes to the 'rephrasings'.
+    Only fix grammatical errors caused by replacing the 'alternative' in the 'sentence' starting at 'start' and ending at 'end'.
     Make sure that any grammatical or spelling mistakes present in 'sentence' are still present in the rephrasings in the output.
+    Do not make stylistic or other unnecessary changes to the output.
     So in the example below 'Wat' is spelled incorrectly in the 'sentence', so in the output 'Wat' is not corrected to 'What'.
-    Change as little as possible to make the 'rephrasings' grammatically correct.
-    For each 'rephrasing' provide exactly one sentence in the response, even if there are no changes from the provided rephrasing.
+    Change as little as possible to make the output sentences grammatically correct.
+    For each item in 'rephrasings' provide exactly one sentence in the response, even if there are no changes from the provided rephrasing.
     Leave double parenthesis unchanged.
 
     For the following example:  
     {
         "sentence": "Wat he had done is amazing as he is the best.",
         "text": "he",
+        "start": 4,
+        "end": 6,
         "rephrasings": [
-            "Wat they had done is amazing as he is the best.",
-            "Wat he or she had done is amazing as he is the best.",
-            "Wat ((given name)) had done is amazing as he is the best."
+            {
+                "alternative: "they",
+                "rephrasing": "Wat they has done is amazing as he is the best."
+            },
+            {
+                "alternative: "he or she",
+                "rephrasing": "Wat he or she have done is amazing as he is the best."
+            },
+            {
+                "alternative: "((given name))",
+                "rephrasing": "Wat ((given name)) have done is amazing as he is the best."
+            }
         ]
     }
 
     Format the output as follows making sure it is valid JSON:
     [
-        "Wat they have done is amazing as he is the best.",
-        "Wat he or she had done is amazing as he is the best.",
-        "Wat ((given name)) had done is amazing as he is the best."
+        {
+            "alternative: "they",
+            "rephrasing": "Wat they have done is amazing as he is the best."
+        },
+        {
+            "alternative: "he or she",
+            "rephrasing": "Wat he or she have done is amazing as he is the best."
+        },
+        {
+            "alternative: "((given name))",
+            "rephrasing": "Wat ((given name)) have done is amazing as he is the best."
+        }
     ]
     """
 
@@ -686,12 +708,14 @@ async def fetch_rephrased_sentences(
 
     rephrasings = []
     for alternative in alternatives:
-        rephrasings.append(new_sentence_start + alternative + new_sentence_end)
+        rephrasings.append({"alternative": alternative, "rephrasing": new_sentence_start + alternative + new_sentence_end})
 
     input_data = {
-        "text": text,
         "sentence": sentence,
-        "rephrasings": rephrasings,
+        "text": text,
+        "start": start,
+        "end": end,
+        "rephrasings": rephrasings
     }
 
     user_prompt = "Please process the following input into a valid JSON response:\n" + json.dumps(input_data)
@@ -779,26 +803,6 @@ async def review_prompt(
             prompt+= "* Remove the phrase from the text\n" if alternative.remove else f"* '{alternative.text}'\n"
 
     return prompt
-
-
-@app.post("/rephrase")
-async def rephrase_sentence(
-    sentence: str = Body(..., embed=True),
-    alternatives: List[str] = Body(..., embed=True),
-    text: str = Body(..., embed=True),
-    start: int = Body(0, embed=True),
-):
-    if not isinstance(sentence, str):
-        raise HTTPException(status_code=400, detail="Invalid sentence format")
-    if not isinstance(alternatives, list) or not all(
-        isinstance(item, str) for item in alternatives
-    ):
-        raise HTTPException(status_code=400, detail="Invalid alternatives format")
-
-    rephrased_responses = await fetch_rephrased_sentences(
-        sentence, alternatives, text, start
-    )
-    return rephrased_responses
 
 
 @app.post("/slack/commands")
@@ -6602,6 +6606,7 @@ def detect_non_inclusive_emoji(
                 config,
                 client,
                 lang,
+                token.text,
                 token.text,
                 token.text,
                 full_text,
