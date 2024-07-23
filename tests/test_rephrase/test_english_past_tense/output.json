@@ -1,5 +1,8 @@
-[
-    "When I am with the people, I feel like one of the guys",
-    "When I am with them, I feel like one of the guys",
-    "When I am with everyone, I feel like one of the guys"
-  ]
+{
+    "results": [
+        {
+            "alternative": "closely examine",
+            "rephrasing": "We closely examine if this works"
+        }
+    ]
+}

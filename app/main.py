@@ -26,7 +26,6 @@ from fastapi import (
     HTTPException,
     Depends,
     status,
-    Body,
 )
 
 from contextlib import asynccontextmanager
@@ -73,10 +72,12 @@ from app.models import (
     LangVariantType,
     Language,
     BaseRequestIn,
+    RephraseRequestIn,
     RequestIn,
     Result,
     ResultOut,
     ResultsOut,
+    RephrasesOut,
     UserConfRequest,
     OrganizationConfRequest,
     ConfResponse,
@@ -636,12 +637,12 @@ def fetch_current_username(
 
     return credentials.username
 
-@app.post("/rephrase")
+@app.post("/rephrase",
+    response_model=Union[RephrasesOut, Result]
+)
 async def rephrase_sentence(
-    sentence: str,
-    text: str,
-    start: int,
-    alternatives: list[str]
+    rephrase_request_in: RephraseRequestIn,
+    response: Response,
 ):
     # Initialize the Bedrock runtime client
     client = boto3.client(
@@ -651,71 +652,82 @@ async def rephrase_sentence(
         aws_secret_access_key=settings.aws_secret_key,
     )
 
-    # The updated prompt specifies that the assistant should only replace the word at the specified position
-    system_prompt = """
-    You are an expert in grammatical correctness.
-    Only fix grammatical errors caused by replacing the 'alternative' in the 'sentence' starting at 'start' and ending at 'end'.
-    Make sure that any grammatical or spelling mistakes present in 'sentence' are still present in the rephrasings in the output.
-    Do not make stylistic or other unnecessary changes to the output.
-    So in the example below 'Wat' is spelled incorrectly in the 'sentence', so in the output 'Wat' is not corrected to 'What'.
-    Change as little as possible to make the output sentences grammatically correct.
-    For each item in 'rephrasings' provide exactly one sentence in the response, even if there are no changes from the provided rephrasing.
-    Leave double parenthesis unchanged.
-
-    For the following example:  
-    {
-        "sentence": "Wat he had done is amazing as he is the best.",
-        "text": "he",
-        "start": 4,
-        "end": 6,
-        "rephrasings": [
-            {
-                "alternative: "they",
-                "rephrasing": "Wat they has done is amazing as he is the best."
-            },
-            {
-                "alternative: "he or she",
-                "rephrasing": "Wat he or she have done is amazing as he is the best."
-            },
-            {
-                "alternative: "((given name))",
-                "rephrasing": "Wat ((given name)) have done is amazing as he is the best."
-            }
-        ]
-    }
-
-    Format the output as follows making sure it is valid JSON:
-    [
-        {
-            "alternative: "they",
-            "rephrasing": "Wat they have done is amazing as he is the best."
-        },
-        {
-            "alternative: "he or she",
-            "rephrasing": "Wat he or she have done is amazing as he is the best."
-        },
-        {
-            "alternative: "((given name))",
-            "rephrasing": "Wat ((given name)) have done is amazing as he is the best."
-        }
-    ]
-    """
+    placeholder = "|---|"
+    sentence = rephrase_request_in.sentence
+    alternatives = rephrase_request_in.alternatives
+    text = rephrase_request_in.text
+    start = rephrase_request_in.start
 
     end = start + len(text)
 
+    # The updated prompt specifies that the assistant should only replace the word at the specified position
+    system_prompt = f"""
+    You are an expert in grammatical correctness.
+    Make sure that all grammatical and spelling mistakes present in 'sentence' are still present in each of the 'rephrasing' in the output.
+    So in the example below 'Wat' is spelled incorrectly in the 'sentence', so in the output 'Wat' is not corrected to 'What'.
+    Replace '{placeholder}' in 'sentence_with_placeholder' with each of the supplied items in 'alternatives'.
+    Before making the replacement ensure that the alternative matches the grammatical tense of the supplied 'text' (ie. if 'text' is past tense the 'alternatives' should all also be made past tense).
+    Do not make stylistic or other unnecessary changes in the output.
+    Change as little as possible to make the output grammatically correct.
+    For each item in 'alternatives' provide exactly one item ('alternative' + 'rephrasing') in the response.
+    Leave double parenthesis unchanged.
+
+    For the following example:  
+    {{
+        "sentence": "Wat he had done is amazing as he is the best.",
+        "sentence_with_placeholder": "Wat {placeholder} has done is amazing as he is the best.",
+        "text": "he",
+        "alternatives": [
+            "they",
+            "he or she",
+            "((given name))"
+        ]
+    }}
+
+    Format the output as follows making sure it is valid JSON:
+    [
+        {{
+            "alternative: "they",
+            "rephrasing": "Wat they have done is amazing as he is the best."
+        }},
+        {{
+            "alternative: "he or she",
+            "rephrasing": "Wat he or she have done is amazing as he is the best."
+        }},
+        {{
+            "alternative: "((given name))",
+            "rephrasing": "Wat ((given name)) have done is amazing as he is the best."
+        }}
+    ]
+
+    For the following example:
+    {{
+        "sentence": "We analyzed if this works",
+        "sentence_with_placeholder": "We {placeholder} if this works",
+        "text": "analyzed",
+        "alternatives": [
+            "closely examine"
+        ]
+    }}
+
+    Format the output as follows making sure it is valid JSON:
+    [
+        {{
+            "alternative": "closely examine",
+            "rephrasing": "We closely examined if this works"
+        }}
+    ]
+    """
+
     new_sentence_start = "" if start == 0 else sentence[0:start]
     new_sentence_end = "" if end >= len(sentence) else sentence[end:]
-
-    rephrasings = []
-    for alternative in alternatives:
-        rephrasings.append({"alternative": alternative, "rephrasing": new_sentence_start + alternative + new_sentence_end})
+    sentence_with_placeholder = new_sentence_start + placeholder + new_sentence_end
 
     input_data = {
         "sentence": sentence,
+        "sentence_with_placeholder": sentence_with_placeholder,
         "text": text,
-        "start": start,
-        "end": end,
-        "rephrasings": rephrasings
+        "alternatives": alternatives
     }
 
     user_prompt = "Please process the following input into a valid JSON response:\n" + json.dumps(input_data)
@@ -764,10 +776,10 @@ async def rephrase_sentence(
 
         #result = list(filter(lambda x: x!=sentence, result))
 
-        return result
+        return RephrasesOut.factory(result)
     except Exception as e:
-        print("An error occurred:", e)
-        return result
+        response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+        return Result.factory("An error occurred: " + str(e))
 
 
 @app.post(
@@ -6606,7 +6618,6 @@ def detect_non_inclusive_emoji(
                 config,
                 client,
                 lang,
-                token.text,
                 token.text,
                 token.text,
                 full_text,

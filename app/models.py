@@ -605,6 +605,13 @@ class BaseRequestIn(BaseModel):
     client: Optional[str] = None
 
 
+class RephraseRequestIn(BaseRequestIn):
+    sentence: str
+    text: str
+    start: int
+    alternatives: list[str]
+
+
 class RequestIn(BaseRequestIn):
     type: str = "check"
     text: str
@@ -970,6 +977,26 @@ class ResultConf(BaseModel):
     organization_trial_ends_at: Optional[str] = None
     config_hash: Optional[str] = None
     organization_config_hash: Optional[str] = None
+
+
+class RephraseOut(BaseModel):
+    alternative: str
+    rephrasing: str
+
+
+class RephrasesOut(BaseModel):
+    results: list[RephraseOut]
+
+    @staticmethod
+    def factory(result: list):
+        results = []
+
+        for item in result:
+            results.append(
+                RephraseOut(alternative=item["alternative"], rephrasing=item["rephrasing"])
+            )
+
+        return RephrasesOut(results=results)
 
 
 class ResultsOut(BaseModel):
