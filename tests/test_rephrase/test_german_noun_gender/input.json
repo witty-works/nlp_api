@@ -1,0 +1,15 @@
+{
+  "client": "string",
+  "sentence": "Mitarbeiter*innen helfen uns, damit es nicht jeder Mitarbeiter alleine machen muss",
+  "text": "Mitarbeiter",
+  "start": 51,
+  "alternatives": [
+    [
+      "Mitarbeiterin",
+      "*",
+      "Mitarbeiter"
+    ],
+    "Mitarbeitende"
+  ],
+  "lang": "de"
+}

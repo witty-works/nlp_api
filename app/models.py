@@ -606,10 +606,12 @@ class BaseRequestIn(BaseModel):
 
 
 class RephraseRequestIn(BaseRequestIn):
+    model: Optional[str] = None
     sentence: str
     text: str
     start: int
-    alternatives: list[str]
+    alternatives: list[str|list[str]]
+    lang: LangType
 
 
 class RequestIn(BaseRequestIn):
@@ -988,14 +990,7 @@ class RephrasesOut(BaseModel):
     results: list[RephraseOut]
 
     @staticmethod
-    def factory(result: list):
-        results = []
-
-        for item in result:
-            results.append(
-                RephraseOut(alternative=item["alternative"], rephrasing=item["rephrasing"])
-            )
-
+    def factory(results: list):
         return RephrasesOut(results=results)
 
 

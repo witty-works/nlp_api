@@ -77,6 +77,7 @@ from app.models import (
     Result,
     ResultOut,
     ResultsOut,
+    RephraseOut,
     RephrasesOut,
     UserConfRequest,
     OrganizationConfRequest,
@@ -599,6 +600,11 @@ pronoun_tags = [
     "WDT",
 ]
 
+lang_map = {
+    "en": "English",
+    "de": "German",
+    "fr": "French",
+}
 
 def fetch_current_username(
     credentials: Optional[HTTPBasicCredentials] = Depends(security),
@@ -654,71 +660,124 @@ async def rephrase_sentence(
 
     placeholder = "|---|"
     sentence = rephrase_request_in.sentence
-    alternatives = rephrase_request_in.alternatives
+    alternatives = []
+    genderstar = []
+    for alternative_index in range(len(rephrase_request_in.alternatives)):
+        alternative = rephrase_request_in.alternatives[alternative_index]
+        if isinstance(alternative, str):
+            alternatives.append(alternative)
+        else:
+            if len(alternative) != 3:
+                response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+                return Result.factory("An error occurred: alternative must be a string or a list of 3 strings")
+
+            genderstar.append(alternative_index)
+            alternatives.append(alternative[0])
+            alternatives.append(alternative[2])
+
     text = rephrase_request_in.text
     start = rephrase_request_in.start
+    lang = lang_map[rephrase_request_in.lang]
 
     end = start + len(text)
 
     # The updated prompt specifies that the assistant should only replace the word at the specified position
     system_prompt = f"""
-    You are an expert in grammatical correctness.
+    You are an expert in {lang} grammatical correctness.
     Make sure that all grammatical and spelling mistakes present in 'sentence' are still present in each of the 'rephrasing' in the output.
-    So in the example below 'Wat' is spelled incorrectly in the 'sentence', so in the output 'Wat' is not corrected to 'What'.
     Replace '{placeholder}' in 'sentence_with_placeholder' with each of the supplied items in 'alternatives'.
-    Before making the replacement ensure that the alternative matches the grammatical tense of the supplied 'text' (ie. if 'text' is past tense the 'alternatives' should all also be made past tense).
+    Before making the replacement ensure that the alternative matches the {lang} grammatical case (tense, pluralization etc.) of the supplied 'text' (ie. if 'text' is past tense the 'alternatives' should all also be made past tense).
     Do not make stylistic or other unnecessary changes in the output.
-    Change as little as possible to make the output grammatically correct.
+    Change as little as necessary to make the output grammatically correct in {lang} like correcting the gender of the article to match the 'alternative' preceeding '{placeholder}' it.
     For each item in 'alternatives' provide exactly one item ('alternative' + 'rephrasing') in the response.
     Leave double parenthesis unchanged.
-
-    For the following example:  
-    {{
-        "sentence": "Wat he had done is amazing as he is the best.",
-        "sentence_with_placeholder": "Wat {placeholder} has done is amazing as he is the best.",
-        "text": "he",
-        "alternatives": [
-            "they",
-            "he or she",
-            "((given name))"
-        ]
-    }}
-
-    Format the output as follows making sure it is valid JSON:
-    [
-        {{
-            "alternative: "they",
-            "rephrasing": "Wat they have done is amazing as he is the best."
-        }},
-        {{
-            "alternative: "he or she",
-            "rephrasing": "Wat he or she have done is amazing as he is the best."
-        }},
-        {{
-            "alternative: "((given name))",
-            "rephrasing": "Wat ((given name)) have done is amazing as he is the best."
-        }}
-    ]
-
-    For the following example:
-    {{
-        "sentence": "We analyzed if this works",
-        "sentence_with_placeholder": "We {placeholder} if this works",
-        "text": "analyzed",
-        "alternatives": [
-            "closely examine"
-        ]
-    }}
-
-    Format the output as follows making sure it is valid JSON:
-    [
-        {{
-            "alternative": "closely examine",
-            "rephrasing": "We closely examined if this works"
-        }}
-    ]
     """
 
+    match rephrase_request_in.lang:
+        case LangType.DE:
+            system_prompt+= f"""
+                Make sure to not remove any useage of the Genderstar.
+
+                For the following example:  
+                {{
+                    "sentence": "Einhaltung von ethischen Prinzipien.",
+                    "sentence_with_placeholder": "Einhaltung von ethischen {placeholder}.",
+                    "text": "Prinzipien",
+                    "alternatives": [
+                        "Ethik",
+                        "Methode",
+                        "Wert",
+                        "Richtlinie",
+                        "Regel"
+                    ]
+                }}
+
+                Format the output as follows making sure it is valid JSON:
+                {{
+                    "Ethik": "Einhaltung von ethischen Ethiken.",
+                    "Methode": "Einhaltung von ethischen Methoden.",
+                    "Wert": "Einhaltung von ethischen Werte.",
+                    "Richtlinie": "Einhaltung von ethischen Richtlinien.",
+                    "Regel": "Einhaltung von ethischen Regeln."
+                }}
+
+                For the following example:
+                {{
+                    "sentence": "Wir arbeiten für unsere Kund*innen, für uns ist der Kunde im Zentrum",
+                    "sentence_with_placeholder": "Wir arbeiten für unsere Kund*innen, für uns ist der {placeholder} im Zentrum",
+                    "text": "Kunden",
+                    "alternatives": [
+                        "Kunde",
+                        "Kundin",
+                        "Kundschaft"
+                    ]
+                }}
+
+                Format the output as follows making sure it is valid JSON:
+                {{
+                    "Kunde": "Wir arbeiten für unsere Kund*innen, für uns ist der Kunde im Zentrum",
+                    "Kundin": "Wir arbeiten für unsere Kund*innen, für uns ist die Kundin im Zentrum",
+                    "Kundschaft": "Wir arbeiten für unsere Kund*innen, für uns ist die Kundschaft im Zentrum",
+                }}
+                """
+        #case LangType.FR:
+        #case LangType.EN:
+        case _:
+            system_prompt+= f"""
+                For the following example:  
+                {{
+                    "sentence": "Wat he had done is amazing as he is the best.",
+                    "sentence_with_placeholder": "Wat {placeholder} has done is amazing as he is the best.",
+                    "text": "he",
+                    "alternatives": [
+                        "they",
+                        "he or she",
+                        "((given name))"
+                    ]
+                }}
+
+                Format the output as follows making sure it is valid JSON:
+                {{
+                    "they": "Wat they have done is amazing as he is the best.",
+                    "he or she": "Wat he or she have done is amazing as he is the best.",
+                    "((given name))": "Wat ((given name)) have done is amazing as he is the best."
+                }}
+
+                For the following example:
+                {{
+                    "sentence": "We analyzed if this works",
+                    "sentence_with_placeholder": "We {placeholder} if this works",
+                    "text": "analyzed",
+                    "alternatives": [
+                        "closely examine"
+                    ]
+                }}
+
+                Format the output as follows making sure it is valid JSON:
+                {{
+                    "closely examine": "We closely examined if this works"
+                }}
+                """
     new_sentence_start = "" if start == 0 else sentence[0:start]
     new_sentence_end = "" if end >= len(sentence) else sentence[end:]
     sentence_with_placeholder = new_sentence_start + placeholder + new_sentence_end
@@ -734,7 +793,10 @@ async def rephrase_sentence(
 
     conversation = []
 
-    if "mistral" in settings.aws_model_id:
+    # TODO remove or add check to only allow on 'dev'
+    aws_model_id = settings.aws_model_id if rephrase_request_in.model is None else rephrase_request_in.model
+
+    if "mistral" in aws_model_id:
         user_prompt = f"{system_prompt}\n{user_prompt}"
         system_prompt = []
     else:
@@ -760,7 +822,7 @@ async def rephrase_sentence(
     try:
         streaming_response = client.converse_stream(
             system=system_prompt,
-            modelId=settings.aws_model_id,
+            modelId=aws_model_id,
             messages=conversation,
             inferenceConfig={"maxTokens": 300, "temperature": 0.7, "topP": 1},
         )
@@ -770,13 +832,52 @@ async def rephrase_sentence(
                 text = chunk["contentBlockDelta"]["delta"]["text"]
                 result += text
 
-        result = result[result.find("[") : result.rfind("]") + 1]
-
+        result = result[result.find("{") : result.rfind("}") + 1]
         result = json_repair.loads(result)
 
-        #result = list(filter(lambda x: x!=sentence, result))
+        for alternative_index in genderstar:
+            alternative = rephrase_request_in.alternatives[alternative_index]
+            if alternative[0] in result and alternative[2] in result:
+                sentence_0_tokens = fetch_tokens(rephrase_request_in.lang, result[alternative[0]])
+                sentence_2_tokens = fetch_tokens(rephrase_request_in.lang, result[alternative[2]])
 
-        return RephrasesOut.factory(result)
+                if len(sentence_0_tokens) != len(sentence_2_tokens):
+                    return Result.factory("Failed to generate rephrasings")
+
+                del result[alternative[0]]
+                del result[alternative[2]]
+
+                separator = noun_separator = alternative[1]
+                if GermanGenderEndingType.CAPITAL_LETTER == alternative[1]:
+                    noun_separator = "/"
+
+                rephrasing = ""
+                for token_index in range(len(sentence_0_tokens)):
+                    if sentence_0_tokens[token_index].text != sentence_2_tokens[token_index].text:
+                        rephrasing+= inclusive_alternative(
+                            sentence_2_tokens[token_index].text,
+                            sentence_0_tokens[token_index].text,
+                            "",
+                            separator,
+                            noun_separator,
+                        )
+                    else:
+                        rephrasing+= sentence_0_tokens[token_index].text
+
+                    rephrasing+= sentence_0_tokens[token_index].whitespace_
+
+                result[separator] = rephrasing
+
+        results = []
+        for alternative, rephrasing in result.items():
+            if placeholder in rephrasing or placeholder in alternative:
+                return Result.factory("Failed to generate rephrasings")
+                
+            results.append(
+                RephraseOut(alternative=alternative, rephrasing=rephrasing)
+            )
+
+        return RephrasesOut.factory(results)
     except Exception as e:
         response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
         return Result.factory("An error occurred: " + str(e))
@@ -5064,17 +5165,19 @@ def handle_single_tilde(alternative: Alternative, prefix: bool, is_singular: boo
 
 
 def inclusive_alternative(
-    word: str,
     male_form: str,
     female_form: str,
     prefix: str,
     separator: str,
     noun_separator: str,
 ):
+    if male_form.lower() in static_rules[LangType.DE]["articles"]:
+        return female_form + separator + male_form
+
     short_gender_star = True
     common_prefix = (
         ""
-        if word.endswith("mann")
+        if male_form.endswith("mann")
         else find_common_prefix(male_form, female_form, False, False)
     )
     if len(male_form) - len(common_prefix) > 2:
@@ -5169,7 +5272,6 @@ async def gendered_alternatives(
     if female_form is not None and male_form is not None:
         if inclusive:
             lemma = inclusive_alternative(
-                word,
                 male_form,
                 female_form,
                 prefix,
@@ -5190,7 +5292,6 @@ async def gendered_alternatives(
             for additional_word in additional_words:
                 additional_prefix += (
                     inclusive_alternative(
-                        additional_word["word"],
                         additional_word["male_form"],
                         additional_word["female_form"],
                         "",
