@@ -5,19 +5,19 @@
         {
             "alternatives": [
                 {
-                    "text": "l'équipe"
+                    "remove": true
                 },
                 {
                     "text": "tout le monde"
                 },
                 {
+                    "text": "l’équipe"
+                },
+                {
                     "text": "les gens"
                 },
                 {
-                    "text": "les ami∙es"
-                },
-                {
-                    "text": "les amies et amis"
+                    "text": "vous"
                 }
             ],
             "category": "gender-orientation",
@@ -35,7 +35,7 @@
             "start": 6,
             "subcategory": "gender_identity",
             "text": "les gars",
-            "text_id": "gars"
+            "text_id": "les gars"
         },
         {
             "alternatives": [],
@@ -58,23 +58,16 @@
         {
             "alternatives": [
                 {
-                    "text": "axée sur la croissance"
-                },
-                {
                     "text": "enthousiaste"
                 },
                 {
-                    "text": "orientée vers la croissance"
+                    "text": "qui a envie de progresser"
                 },
                 {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "avec esprit de croissance"
+                    "text": "qui a envie d'apprendre"
                 },
                 {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "envie d'accomplir"
+                    "text": "qui cherche à réaliser ses objectifs"
                 }
             ],
             "category": "social-motive",
@@ -120,21 +113,23 @@
         {
             "alternatives": [
                 {
-                    "text": "énergiques"
-                },
-                {
-                    "text": "engagées"
-                },
-                {
                     "text": "efficaces"
                 },
                 {
-                    "text": "entrepreneuriales"
+                    "text": "compétent·compétentes"
                 },
                 {
                     "context": "💡",
                     "inspiration": true,
-                    "text": "vouloir atteindre des étapes clés"
+                    "text": "atteignant des résultats"
+                },
+                {
+                    "text": "engagé·engagées"
+                },
+                {
+                    "context": "💡",
+                    "inspiration": true,
+                    "text": "inspirant·inspirante"
                 }
             ],
             "category": "social-motive",
