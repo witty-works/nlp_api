@@ -737,11 +737,54 @@ async def rephrase_sentence(
                 {{
                     "Kunde": "Wir arbeiten für unsere Kund*innen, für uns ist der Kunde im Zentrum",
                     "Kundin": "Wir arbeiten für unsere Kund*innen, für uns ist die Kundin im Zentrum",
-                    "Kundschaft": "Wir arbeiten für unsere Kund*innen, für uns ist die Kundschaft im Zentrum",
+                    "Kundschaft": "Wir arbeiten für unsere Kund*innen, für uns ist die Kundschaft im Zentrum"
                 }}
                 """
-        #case LangType.FR:
-        #case LangType.EN:
+        case LangType.FR:
+            system_prompt+= f"""
+                Make sure to not remove any useage of the point médian.
+
+                For the following example:  
+                {{
+                    "sentence": "Face à la concurrence, il était handicapé par son jeune âge.",
+                    "sentence_with_placeholder": "Face à la concurrence, il {placeholder} par son jeune âge.",
+                    "text": "était handicapé",
+                    "alternatives": [
+                        "être désavantagée",
+                        "être désavantagé"
+                        "être pénalisée",
+                        "être pénalisé"
+                    ]
+                }}
+
+                Format the output as follows making sure it is valid JSON:
+                {{
+                    "être désavantagée": "Face à la concurrence, elle était désavantagée par son jeune âge.",
+                    "être désavantagé": "Face à la concurrence, il était désavantagé par son jeune âge.",
+                    "être pénalisée": "Face à la concurrence, elle était pénalisée par son jeune âge.",
+                    "être pénalisé": "Face à la concurrence, il était pénalisé par son jeune âge."
+                }}
+
+                For the following example:
+                {{
+                    "sentence": "Les traducteurs sont compétent.",
+                    "sentence_with_placeholder": "Les {placeholder} sont compétent.",
+                    "text": "traducteurs",
+                    "alternatives": [
+                        "traducteur,
+                        "traductrice",
+                        "traduction"
+                    ]
+                }}
+
+                Format the output as follows making sure it is valid JSON:
+                {{
+                    "traducteur": "Les traducteurs sont compétent.",
+                    "traductrice": "Les traductrices sont compétentes.",
+                    "traduction": "Le traduction est compétent"
+                }}
+                """
+            #case LangType.EN:
         case _:
             system_prompt+= f"""
                 For the following example:  
@@ -855,6 +898,7 @@ async def rephrase_sentence(
                 for token_index in range(len(sentence_0_tokens)):
                     if sentence_0_tokens[token_index].text != sentence_2_tokens[token_index].text:
                         rephrasing+= inclusive_alternative(
+                            rephrase_request_in.lang,
                             sentence_2_tokens[token_index].text,
                             sentence_0_tokens[token_index].text,
                             "",
@@ -866,7 +910,7 @@ async def rephrase_sentence(
 
                     rephrasing+= sentence_0_tokens[token_index].whitespace_
 
-                result[separator] = rephrasing
+                result["".join(alternative)] = rephrasing
 
         results = []
         for alternative, rephrasing in result.items():
@@ -5165,41 +5209,60 @@ def handle_single_tilde(alternative: Alternative, prefix: bool, is_singular: boo
 
 
 def inclusive_alternative(
+    lang: LangType,
     male_form: str,
     female_form: str,
     prefix: str,
     separator: str,
     noun_separator: str,
 ):
-    if male_form.lower() in static_rules[LangType.DE]["articles"]:
-        return female_form + separator + male_form
+    if lang == LangType.DE:
+        if male_form.lower() in static_rules[lang]["articles"]:
+            return female_form + separator + male_form
 
-    short_gender_star = True
-    common_prefix = (
-        ""
-        if male_form.endswith("mann")
-        else find_common_prefix(male_form, female_form, False, False)
-    )
-    if len(male_form) - len(common_prefix) > 2:
-        common_prefix = female_form
-        suffix = add_german_prefix(male_form, prefix)
-        short_gender_star = False
-    elif len(female_form) >= len(male_form):
-        # Mitarbeiterin + Mitarbeiter = Mitarbeiter
-        suffix = female_form[len(common_prefix) :]
-    else:
-        # Vorgesetze + Vorgesetzter = Vorgesetze
-        suffix = male_form[len(common_prefix) :]
-
-    temp_separator = noun_separator
-    # In
-    if separator != noun_separator:
-        if short_gender_star:
-            suffix = suffix.capitalize()
+        short_gender_star = True
+        common_prefix = (
+            ""
+            if male_form.endswith("mann")
+            else find_common_prefix(male_form, female_form, False, False)
+        )
+        if len(male_form) - len(common_prefix) > 2:
+            common_prefix = female_form
+            suffix = add_german_prefix(male_form, prefix)
+            short_gender_star = False
+        elif len(female_form) >= len(male_form):
+            # Mitarbeiterin + Mitarbeiter = Mitarbeiter
+            suffix = female_form[len(common_prefix) :]
         else:
-            temp_separator = "/"
+            # Vorgesetze + Vorgesetzter = Vorgesetze
+            suffix = male_form[len(common_prefix) :]
 
-    return add_german_prefix(common_prefix + temp_separator + suffix, prefix)
+        temp_separator = noun_separator
+        # In
+        if separator != noun_separator:
+            if short_gender_star:
+                suffix = suffix.capitalize()
+            else:
+                temp_separator = "/"
+
+        return add_german_prefix(common_prefix + temp_separator + suffix, prefix)
+
+    if lang == LangType.FR:
+        male_form_lower = male_form.lower()
+        if male_form_lower in static_rules[lang]["articles"]:
+            return static_rules[lang]["articles"][male_form_lower]
+
+        common_prefix = find_common_prefix(male_form, female_form, False, False)
+        if len(female_form) >= len(male_form):
+            suffix = female_form[len(common_prefix) :]
+            common_prefix = male_form
+        else:
+            suffix = male_form[len(common_prefix) :]
+            common_prefix = female_form
+
+        common_prefix = common_prefix[0:-1] if common_prefix[-1] == suffix[-1] else common_prefix
+
+        return prefix + common_prefix + separator + suffix
 
 
 async def gendered_alternatives(
@@ -5272,6 +5335,7 @@ async def gendered_alternatives(
     if female_form is not None and male_form is not None:
         if inclusive:
             lemma = inclusive_alternative(
+                LangType.DE,
                 male_form,
                 female_form,
                 prefix,
@@ -5292,6 +5356,7 @@ async def gendered_alternatives(
             for additional_word in additional_words:
                 additional_prefix += (
                     inclusive_alternative(
+                        LangType.DE,
                         additional_word["male_form"],
                         additional_word["female_form"],
                         "",

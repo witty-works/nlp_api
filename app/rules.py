@@ -462,6 +462,15 @@ def fetch_static_rules():
         static_rules[LangType.FR]["salutations"] = []
         static_rules[LangType.FR]["hashtags"] = []
         static_rules[LangType.FR]["context_check"] = []
+        static_rules[LangType.FR]["male_articles"] = {
+            "un": "un∙e",
+            "le": "la∙le",
+            "il": "iel",
+            "ils": "lels",
+            "lui": "ellui",
+            "celui": "cellui",
+            "ceux": "celleux",
+        }
 
     if LangType.DE in langs:
         rule = Rule(

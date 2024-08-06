@@ -1,0 +1,14 @@
+{
+  "sentence": "Les traducteurs sont compétent.",
+  "text": "traducteurs",
+  "start": 4,
+  "alternatives": [
+    "traduction",
+    [
+      "traductrice",
+      "∙",
+      "traducteur"
+    ]
+  ],
+  "lang": "fr"
+}
