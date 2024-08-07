@@ -719,6 +719,41 @@ async def fetch_rephrased_sentences(
         return []
 
 
+@app.post(
+    "/debug/review_prompt",
+    response_model=Union[str, Result],
+    response_model_exclude_none=True,
+    dependencies=[Depends(HTTPBearer(auto_error=False))],
+    include_in_schema=not settings.is_prod,
+)
+async def review_prompt(
+    request: Request,
+    response: Response,
+    user_request_in: RequestIn,
+) -> Result | str:
+    user_request_in.config.disabled_categories.append("communal")
+    user_request_in.config.disabled_categories.append("d_and_i")
+    user_request_in.config.disabled_categories.append("emotional_security")
+
+    check_result = await check(request, response, user_request_in, None)
+    if isinstance(check_result, Result):
+        return check_result
+
+    prompt = "You are an expert in inclusive language. You are tasked with editing the text and specifically take note of the following potential issues (pick which ever alternatives fits best in the given context):\n"
+    for result in check_result.results:
+        prompt+= f"In the text portion '{result.context}' consider replacing the phrase '{result.text}'"
+
+        if len(result.alternatives) == 0:
+            prompt+= ".\n"
+            continue
+
+        prompt+= "with one of the following options:\n"
+        for alternative in result.alternatives:
+            prompt+= "* Remove the phrase from the text\n" if alternative.remove else f"* '{alternative.text}'\n"
+
+    return prompt
+
+
 @app.post("/rephrase")
 async def rephrase_sentence(
     sentence: str = Body(..., embed=True),
