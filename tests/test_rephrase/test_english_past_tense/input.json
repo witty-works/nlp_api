@@ -1,7 +1,7 @@
 {
     "sentence": "We analyzed if this works",
     "alternatives": [
-      "closely examine"
+      ["closely examine"]
     ],
     "text": "analyzed",
     "start": 3,

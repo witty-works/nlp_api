@@ -1,8 +1,9 @@
 from pydantic import field_validator, BaseModel
-from typing import Optional
+from typing import Optional, Annotated, Any
+from annotated_types import Len
 from enum import Enum
 from collections import namedtuple
-import json, typing
+import json
 
 from starlette.responses import Response
 
@@ -80,13 +81,9 @@ class MetricsType(str, Enum):
     CHECK_COUNTS = "check_counts"
     CHECK_PLANS = "check_plans"
     CHECK_HOST = "check_host"
-
-
-class EventType(str, Enum):
-    CHECK = "check"
-    IGNORE = "ignore"
-    ALTERNATIVE = "alternative"
-    ERROR = "error"
+    REPHRASE_COUNTS = "rephrase_counts"
+    REPHRASE_PLANS = "rephrase_plans"
+    REPHRASE_HOST = "rephrase_host"
 
 
 class ContentType(str, Enum):
@@ -603,25 +600,26 @@ class UserConfResponse(ConfRequest):
 
 class BaseRequestIn(BaseModel):
     client: Optional[str] = None
+    config: Optional[Config] = Config()
+    config_hash: Optional[str] = None
+    organization_config_hash: Optional[str] = None
 
 
 class RephraseRequestIn(BaseRequestIn):
+    type: str = "rephrase"
     model: Optional[str] = None
-    sentence: str
+    sentence: Annotated[str, Len(min_length=1, max_length=300)]
     text: str
     start: int
-    alternatives: list[str|list[str]]
+    alternatives: Annotated[list[list[str]], Len(min_length=1, max_length=5)]
     lang: LangType
 
 
-class RequestIn(BaseRequestIn):
+class CheckRequestIn(BaseRequestIn):
     type: str = "check"
     text: str
     lang: Optional[LangWithAutoType] = LangWithAutoType.AUTO
     id: Optional[str] = None
-    config: Optional[Config] = Config()
-    config_hash: Optional[str] = None
-    organization_config_hash: Optional[str] = None
 
 
 class ResultAlternative(BaseModel):
@@ -1006,7 +1004,7 @@ class ResultsOut(BaseModel):
 class PrettyJSONResponse(Response):
     media_type = "application/json"
 
-    def render(self, content: typing.Any) -> bytes:
+    def render(self, content: Any) -> bytes:
         return json.dumps(
             content,
             ensure_ascii=False,

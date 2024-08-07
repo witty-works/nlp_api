@@ -73,7 +73,7 @@ from app.models import (
     Language,
     BaseRequestIn,
     RephraseRequestIn,
-    RequestIn,
+    CheckRequestIn,
     Result,
     ResultOut,
     ResultsOut,
@@ -156,8 +156,8 @@ async def handle_command_witty(
 ):  # pragma: no cover
     await ack()
 
-    user_request_in = RequestIn(client="slack:1.0.0", text=body["text"])
-    text, lang, limit_reached = fetch_text(user_request_in, model.keys())
+    check_request_in = CheckRequestIn(client="slack:1.0.0", text=body["text"])
+    text, lang, limit_reached = fetch_text(check_request_in, model.keys())
 
     if lang is None:
         await respond(f"Witty could not determine a language for '{text}'.")
@@ -168,20 +168,20 @@ async def handle_command_witty(
     try:
         user = await client.users_info(user=body["user_id"])
         configs = await fetch_configs_for_request(
-            user_request_in, user.data["user"]["profile"]["email"]
+            check_request_in, user.data["user"]["profile"]["email"]
         )
     except KeyError:
         pass
 
     if configs == {} and settings.slack_organization_id:
         configs = await fetch_organization_configs_for_request(
-            user_request_in, settings.slack_organization_id
+            check_request_in, settings.slack_organization_id
         )
 
-    user_request_in.config.__setattr__("alternatives_max_count", None)
-    client = parse_client(user_request_in.client)
+    check_request_in.config.__setattr__("alternatives_max_count", None)
+    client = parse_client(check_request_in.client)
     results = await apply_language_rules(
-        client, user_request_in.config, configs, lang, text
+        client, check_request_in.config, configs, lang, text
     )
 
     analyzed_text = f"*Analyzed*: {text}"
@@ -643,15 +643,66 @@ def fetch_current_username(
 
     return credentials.username
 
-@app.post("/rephrase",
-    response_model=Union[RephrasesOut, Result]
+@app.post(
+    "/debug/rephrase",
+    response_model=Union[RephrasesOut, Result],
+    response_model_exclude_none=True,
+    dependencies=[Depends(HTTPBearer(auto_error=False))],
+    include_in_schema=not settings.is_prod,
 )
-async def rephrase_sentence(
-    rephrase_request_in: RephraseRequestIn,
+async def post_debug_rephrase(
+    request: Request,
     response: Response,
+    rephrase_request_in: RephraseRequestIn,
+    username: str = Depends(fetch_current_username),
 ):
+    return await rephrase_sentence(request, response, rephrase_request_in)
+
+
+@app.post(
+    "/v1.0/rephrase",
+    response_model=Union[RephrasesOut, Result],
+    response_model_exclude_none=True,
+    dependencies=[Depends(HTTPBearer(auto_error=False))],
+)
+async def post_rephrase_v1_0(
+    request: Request,
+    response: Response,
+    rephrase_request_in: RephraseRequestIn,
+):
+    return await rephrase_sentence(request, response, rephrase_request_in, "1.0")
+
+
+async def rephrase_sentence(
+    request: Request,
+    response: Response,
+    rephrase_request_in: RephraseRequestIn,
+    version: str | None = None,
+):
+    client = parse_client(rephrase_request_in.client)
+    check_client_version(client)
+
+    if version is not None:
+        rephrase_api_version(version)
+        rephrase_request_in.model = None
+
+        user_email = await fetch_user(request)
+        configs = await fetch_configs_for_request(rephrase_request_in, user_email) if user_email else {}
+
+        if (
+            rephrase_request_in.config.plan is None
+            or not rephrase_request_in.config.plan.startswith("witty_")
+        ):
+            response.status_code = status.HTTP_401_UNAUTHORIZED
+            return Result.factory("An error occurred: No valid plan on user")
+    else:
+        # debug
+        configs = {}
+
+    store_metrics(request, configs, version, "rephrase")
+
     # Initialize the Bedrock runtime client
-    client = boto3.client(
+    aws_client = boto3.client(
         service_name="bedrock-runtime",
         region_name=settings.aws_region_name,
         aws_access_key_id=settings.aws_key,
@@ -664,16 +715,16 @@ async def rephrase_sentence(
     genderstar = []
     for alternative_index in range(len(rephrase_request_in.alternatives)):
         alternative = rephrase_request_in.alternatives[alternative_index]
-        if isinstance(alternative, str):
-            alternatives.append(alternative)
-        else:
-            if len(alternative) != 3:
-                response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
-                return Result.factory("An error occurred: alternative must be a string or a list of 3 strings")
-
+        if len(alternative) == 1:
+            alternatives.append(alternative[0])
+        elif len(alternative) == 3:
             genderstar.append(alternative_index)
             alternatives.append(alternative[0])
             alternatives.append(alternative[2])
+        else:
+            response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+            return Result.factory("An error occurred: alternative must be a list of 1 or 3 strings")
+
 
     text = rephrase_request_in.text
     start = rephrase_request_in.start
@@ -784,7 +835,7 @@ async def rephrase_sentence(
                     "traduction": "Le traduction est compétent"
                 }}
                 """
-            #case LangType.EN:
+        #case LangType.EN:
         case _:
             system_prompt+= f"""
                 For the following example:  
@@ -863,7 +914,7 @@ async def rephrase_sentence(
     result = ""
 
     try:
-        streaming_response = client.converse_stream(
+        streaming_response = aws_client.converse_stream(
             system=system_prompt,
             modelId=aws_model_id,
             messages=conversation,
@@ -937,13 +988,13 @@ async def rephrase_sentence(
 async def review_prompt(
     request: Request,
     response: Response,
-    user_request_in: RequestIn,
+    check_request_in: CheckRequestIn,
 ) -> Result | str:
-    user_request_in.config.disabled_categories.append("communal")
-    user_request_in.config.disabled_categories.append("d_and_i")
-    user_request_in.config.disabled_categories.append("emotional_security")
+    check_request_in.config.disabled_categories.append("communal")
+    check_request_in.config.disabled_categories.append("d_and_i")
+    check_request_in.config.disabled_categories.append("emotional_security")
 
-    check_result = await check(request, response, user_request_in, None)
+    check_result = await check(request, response, check_request_in, None)
     if isinstance(check_result, Result):
         return check_result
 
@@ -1153,7 +1204,7 @@ async def get_config_debug(
     user_email: str,
     username: str = Depends(fetch_current_username),
 ):  # pragma: no cover
-    user_request_in = RequestIn(text="")
+    check_request_in = CheckRequestIn(text="")
 
     try:
         configs = await fetch_user_organization_configs(user_email)
@@ -1163,7 +1214,7 @@ async def get_config_debug(
         except HTTPException:
             configs = {}
 
-    result_configs = await fetch_configs_for_request(user_request_in, user_email)
+    result_configs = await fetch_configs_for_request(check_request_in, user_email)
     del result_configs["organization_config"]
     del result_configs["organization_domains"]
     del result_configs["organization_false_positives"]
@@ -1172,7 +1223,7 @@ async def get_config_debug(
     return {
         "configs": configs,
         "result_configs": result_configs,
-        "user_request_in": user_request_in,
+        "check_request_in": check_request_in,
     }
 
 
@@ -1182,13 +1233,13 @@ async def get_config_debug(
     dependencies=[Depends(HTTPBearer(auto_error=False))],
 )
 async def post_auth_debug(
-    request: Request, user_request_in: RequestIn
+    request: Request, check_request_in: CheckRequestIn
 ):  # pragma: no cover
     user_email = await fetch_user(request)
     if not user_email:
         return user_email
 
-    configs = await fetch_configs_for_request(user_request_in, user_email)
+    configs = await fetch_configs_for_request(check_request_in, user_email)
 
     if "authorization" in request.headers and request.headers[
         "authorization"
@@ -1200,7 +1251,7 @@ async def post_auth_debug(
     return {
         "claim": unverified_claims,
         "configs": configs,
-        "user_request_in": user_request_in,
+        "check_request_in": check_request_in,
     }
 
 
@@ -1240,14 +1291,14 @@ async def get_user_configs(
     response_model_exclude_none=True,
     dependencies=[Depends(HTTPBearer(auto_error=False))],
 )
-async def post_auth_2_0(request: Request, user_request_in: BaseRequestIn = None):
+async def post_auth_2_0(request: Request, check_request_in: BaseRequestIn = None):
     client = parse_client(
-        user_request_in.client if user_request_in is not None else None
+        check_request_in.client if check_request_in is not None else None
     )
     check_client_version(client)
 
     user_email = await fetch_user(request)
-    configs = await fetch_configs_for_request(RequestIn(text=""), user_email) if user_email else {}
+    configs = await fetch_configs_for_request(CheckRequestIn(text=""), user_email) if user_email else {}
 
     store_metrics(request, configs, "2.0", 'auth')
 
@@ -1471,10 +1522,10 @@ async def get_debug_german_noun(
 async def post_debug_check(
     request: Request,
     response: Response,
-    user_request_in: RequestIn,
+    check_request_in: CheckRequestIn,
     username: str = Depends(fetch_current_username),
 ):
-    return await check(request, response, user_request_in, None)
+    return await check(request, response, check_request_in)
 
 
 @app.post(
@@ -1486,9 +1537,9 @@ async def post_debug_check(
 async def post_check_v2_3(
     request: Request,
     response: Response,
-    user_request_in: RequestIn,
+    check_request_in: CheckRequestIn,
 ):
-    return await check(request, response, user_request_in, "2.3")
+    return await check(request, response, check_request_in, "2.3")
 
 
 @app.post(
@@ -1500,9 +1551,9 @@ async def post_check_v2_3(
 async def post_check_v2_3(
     request: Request,
     response: Response,
-    user_request_in: RequestIn,
+    check_request_in: CheckRequestIn,
 ):
-    return await check(request, response, user_request_in, "2.4")
+    return await check(request, response, check_request_in, "2.4")
 
 
 @app.get("/lemmatize")
@@ -1673,6 +1724,10 @@ def store_metrics(request: Request, configs: dict, version: str | None, endpoint
         redis.hincrby(MetricsType.CHECK_COUNTS, version + user_id, 1)
         redis.hincrby(MetricsType.CHECK_PLANS, version + plan, 1)
         redis.hincrby(MetricsType.CHECK_HOST, version + host, 1)
+    elif endpoint == "rephrase":
+        redis.hincrby(MetricsType.REPHRASE_COUNTS, version + user_id, 1)
+        redis.hincrby(MetricsType.REPHRASE_PLANS, version + plan, 1)
+        redis.hincrby(MetricsType.REPHRASE_HOST, version + host, 1)
 
 def parse_term_replacement(lemma, term_replacement: dict):
     word_type = (
@@ -1827,9 +1882,9 @@ def is_token_plural(lang: LangType, token: Token) -> bool | None:
 
 
 def apply_configs(
-    user_request_in: RequestIn, configs: dict, plan: str, force_disables: bool = True
+    check_request_in: CheckRequestIn, configs: dict, plan: str, force_disables: bool = True
 ):
-    disabled_categories = user_request_in.config.disabled_categories
+    disabled_categories = check_request_in.config.disabled_categories
     if "force_categories" not in configs or configs["force_categories"] is None:
         configs["force_categories"] = []
 
@@ -1871,28 +1926,28 @@ def apply_configs(
                 and data["status"] == "force"
                 and not data["value"]
             ):
-                user_request_in.config.__setattr__("store_context", False)
+                check_request_in.config.__setattr__("store_context", False)
         elif data["status"] == "force":
-            user_request_in.config.__setattr__(config, data["value"])
+            check_request_in.config.__setattr__(config, data["value"])
 
-    user_request_in.config.__setattr__("disabled_categories", disabled_categories)
-    user_request_in.config.__setattr__("plan", plan)
+    check_request_in.config.__setattr__("disabled_categories", disabled_categories)
+    check_request_in.config.__setattr__("plan", plan)
 
 
 async def fetch_configs_for_request(
-    user_request_in: RequestIn, user_email=Optional[str]
+    request_in: BaseRequestIn, user_email=Optional[str]
 ) -> dict:
-    user_request_in.config.__setattr__("store_context", True)
-    user_request_in.config.__setattr__("plan", None)
-    user_request_in.config.__setattr__(
+    request_in.config.__setattr__("store_context", True)
+    request_in.config.__setattr__("plan", None)
+    request_in.config.__setattr__(
         "alternatives_max_count", settings.alternatives_max_count
     )
 
     if not user_email:
-        user_request_in.config.__setattr__(
+        request_in.config.__setattr__(
             "disabled_categories", get_category_keys(True)
         )
-        user_request_in.config.__setattr__("plan", None)
+        request_in.config.__setattr__("plan", None)
 
         return {}
 
@@ -1901,11 +1956,11 @@ async def fetch_configs_for_request(
     except HTTPException:
         return {}
 
-    apply_configs(user_request_in, configs["config"], configs["plan"])
+    apply_configs(request_in, configs["config"], configs["plan"])
 
     if "organization_config" in configs:
         apply_configs(
-            user_request_in,
+            request_in,
             configs["organization_config"],
             configs["plan"],
             False,
@@ -1920,9 +1975,9 @@ async def fetch_configs_for_request(
 
 
 async def fetch_organization_configs_for_request(
-    user_request_in: RequestIn, organization_id=Optional[str]
+    request_in: BaseRequestIn, organization_id=Optional[str]
 ) -> dict:
-    user_request_in.config.__setattr__("store_context", True)
+    request_in.config.__setattr__("store_context", True)
 
     if not organization_id:
         return {}
@@ -1936,7 +1991,7 @@ async def fetch_organization_configs_for_request(
         if configs["configs"][config]["status"] == "suggestion":
             configs["configs"][config]["status"] = "force"
 
-    apply_configs(user_request_in, configs["config"], configs["plan"])
+    apply_configs(request_in, configs["config"], configs["plan"])
 
     return configs
 
@@ -2020,9 +2075,9 @@ async def fetch_user(request: Request) -> str | None:
 
 
 def fetch_text(
-    user_request_in: RequestIn, supported_langs: list
+    check_request_in: CheckRequestIn, supported_langs: list
 ) -> tuple[str, Language | None, bool]:
-    text = user_request_in.text
+    text = check_request_in.text
     limit_reached = len(text) > settings.text_max_length
     if limit_reached:
         text = text[0 : settings.text_max_length]
@@ -2032,14 +2087,21 @@ def fetch_text(
     locale = lang_detection.get_locale(
         supported_langs,
         text,
-        user_request_in.lang,
-        user_request_in.config.preferred_languages,
-        user_request_in.config.preferred_variants,
+        check_request_in.lang,
+        check_request_in.config.preferred_languages,
+        check_request_in.config.preferred_variants,
     )
 
     lang = None if locale is None else Language(locale)
 
     return text, lang, limit_reached
+
+def rephrase_api_version(version: str):
+    if version != "1.0":  # pragma: no cover
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"API version '{version}' not supported, please use version '1.0'.",
+        )
 
 
 def check_api_version(version: str):
@@ -2063,38 +2125,38 @@ def check_client_version(client: Client):
 async def check(
     request: Request,
     response: Response,
-    user_request_in: RequestIn,
-    version: str | None,
+    check_request_in: CheckRequestIn,
+    version: str | None = None,
 ) -> Result | ResultsOut:
-    client = parse_client(user_request_in.client)
+    client = parse_client(check_request_in.client)
     check_client_version(client)
 
     if version is not None:
         check_api_version(version)
 
         user_email = await fetch_user(request)
-        configs = await fetch_configs_for_request(user_request_in, user_email)
+        configs = await fetch_configs_for_request(check_request_in, user_email)
     else:
         # debug
         user_email = None
 
-        if "none" in user_request_in.config.disabled_categories:
-            user_request_in.config.__setattr__("disabled_categories", [])
-        elif user_request_in.config.disabled_categories == []:
-            user_request_in.config.__setattr__(
+        if "none" in check_request_in.config.disabled_categories:
+            check_request_in.config.__setattr__("disabled_categories", [])
+        elif check_request_in.config.disabled_categories == []:
+            check_request_in.config.__setattr__(
                 "disabled_categories", ["plain_language_advanced"]
             )
 
         configs = {"categories": {}}
-        apply_configs(user_request_in, configs, "witty_teams")
+        apply_configs(check_request_in, configs, "witty_teams")
 
-    store_metrics(request, configs, version, 'check')
+    store_metrics(request, configs, version, "check")
 
     if (
-        user_request_in.config.plan is not None
-        and user_request_in.config.plan.startswith("witty_")
+        check_request_in.config.plan is not None
+        and check_request_in.config.plan.startswith("witty_")
     ):
-        text, lang, limit_reached = fetch_text(user_request_in, model.keys())
+        text, lang, limit_reached = fetch_text(check_request_in, model.keys())
 
         if lang is None:
             response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
@@ -2103,7 +2165,7 @@ async def check(
             configs = {}
         else:
             results = await apply_language_rules(
-                client, user_request_in.config, configs, lang, text
+                client, check_request_in.config, configs, lang, text
             )
 
             language = lang.lang
@@ -2133,7 +2195,7 @@ async def check(
         results=results,
         language=language,
         limit_reached=limit_reached,
-        config_changed=fetch_config_change(configs, user_request_in),
+        config_changed=fetch_config_change(configs, check_request_in),
         notifications=notifications,
         has_consented_to_mailing=has_consented_to_mailing,
     )
@@ -2141,20 +2203,20 @@ async def check(
 
 def fetch_config_change(
     configs: dict,
-    user_request_in: Optional[RequestIn] = None,
+    check_request_in: Optional[BaseRequestIn] = None,
 ) -> bool | None:
-    if not user_request_in:
+    if not check_request_in:
         return True
 
     if (
         "config_hash" in configs
-        and user_request_in.config_hash != configs["config_hash"]
+        and check_request_in.config_hash != configs["config_hash"]
     ):
         return True
 
     if (
         "organization_config_hash" in configs
-        and user_request_in.organization_config_hash
+        and check_request_in.organization_config_hash
         != configs["organization_config_hash"]
     ):
         return True
@@ -5249,8 +5311,8 @@ def inclusive_alternative(
 
     if lang == LangType.FR:
         male_form_lower = male_form.lower()
-        if male_form_lower in static_rules[lang]["articles"]:
-            return static_rules[lang]["articles"][male_form_lower]
+        if male_form_lower in static_rules[lang]["masculine_articles"]:
+            return static_rules[lang]["masculine_articles"][male_form_lower]
 
         common_prefix = find_common_prefix(male_form, female_form, False, False)
         if len(female_form) >= len(male_form):

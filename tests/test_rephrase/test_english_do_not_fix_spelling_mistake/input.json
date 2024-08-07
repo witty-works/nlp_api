@@ -1,11 +1,11 @@
 {
   "sentence": "I am, veeery ambitious",
   "alternatives": [
-    "growth-minded",
-    "inspired",
-    "keen and enthusiastic",
-    "resourceful",
-    "interested in taking on new responsibilities"
+    ["growth-minded"],
+    ["inspired"],
+    ["keen and enthusiastic"],
+    ["resourceful"],
+    ["interested in taking on new responsibilities"]
   ],
   "text": "ambitious",
   "start": 13,

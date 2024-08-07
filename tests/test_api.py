@@ -17,7 +17,7 @@ from app.auth_service import (
 )
 from app.models import (
     LangWithAutoType,
-    RequestIn,
+    CheckRequestIn,
 )
 from app.redis import get_user_id
 from app.settings import get_settings
@@ -383,8 +383,9 @@ def test_rephrase(rephrase_dir, snapshot, set_redis):
             input_json = rephrase_dir.joinpath("input.json").read_text()
             # Call the tested endpoint.
             response = client.post(
-                "/rephrase",
+                "/v1.0/rephrase",
                 json=json.loads(input_json),
+                headers={"X-Auth": "test@gmail.com"},
             )
             assert response.status_code == 200
 
@@ -1079,7 +1080,7 @@ def test_fetch_configs_for_request(event_loop, set_redis):
             "gendered_roles_format": "inclusive_gender",
         },
     }
-    test_request = RequestIn(**request_data)
+    test_request = CheckRequestIn(**request_data)
     event_loop.run_until_complete(
         fetch_configs_for_request(test_request, "test@gmail.com")
     )
@@ -1104,7 +1105,7 @@ def test_fetch_user_rules_suggestion(event_loop, set_redis):
             "gendered_roles_format": "inclusive_gender",
         },
     }
-    test_request = RequestIn(**request_data)
+    test_request = CheckRequestIn(**request_data)
     event_loop.run_until_complete(
         fetch_configs_for_request(test_request, "non_existant@gmail.com")
     )
@@ -1123,7 +1124,7 @@ def test_set_organization_rules(event_loop, set_redis):
     request_data = {
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
     }
-    test_request = RequestIn(**request_data)
+    test_request = CheckRequestIn(**request_data)
     event_loop.run_until_complete(
         fetch_configs_for_request(test_request, "test@gmail.com")
     )
@@ -1140,7 +1141,7 @@ def test_set_default_rules(event_loop):
     request_data = {
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
     }
-    test_request = RequestIn(**request_data)
+    test_request = CheckRequestIn(**request_data)
 
     event_loop.run_until_complete(
         fetch_configs_for_request(test_request, "non_existant@gmail.com")

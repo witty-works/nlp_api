@@ -462,7 +462,7 @@ def fetch_static_rules():
         static_rules[LangType.FR]["salutations"] = []
         static_rules[LangType.FR]["hashtags"] = []
         static_rules[LangType.FR]["context_check"] = []
-        static_rules[LangType.FR]["male_articles"] = {
+        static_rules[LangType.FR]["masculine_articles"] = {
             "un": "un∙e",
             "le": "la∙le",
             "il": "iel",
