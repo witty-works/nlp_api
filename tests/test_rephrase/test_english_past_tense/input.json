@@ -1,7 +1,9 @@
 {
     "sentence": "We analyzed if this works",
     "alternatives": [
-      ["closely examine"]
+      {
+        "lemma": "closely examine"
+      }
     ],
     "text": "analyzed",
     "start": 3,

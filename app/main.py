@@ -716,19 +716,17 @@ async def rephrase_sentence(
     placeholder = "|---|"
     sentence = rephrase_request_in.sentence
     alternatives = []
-    genderstar = []
+    genderstar = {}
     for alternative_index in range(len(rephrase_request_in.alternatives)):
         alternative = rephrase_request_in.alternatives[alternative_index]
-        if len(alternative) == 1:
-            alternatives.append(alternative[0])
-        elif len(alternative) == 3:
-            genderstar.append(alternative_index)
-            alternatives.append(alternative[0])
-            alternatives.append(alternative[2])
+        if alternative.types is None:
+            alternatives.append(alternative.lemma)
         else:
-            response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
-            return Result.factory("An error occurred: alternative must be a list of 1 or 3 strings")
+            genderstar[alternative_index] = alternative.types
+            alternatives.append(alternative.male_form)
+            alternatives.append(alternative.female_form)
 
+    alternatives = list(set(alternatives))
 
     text = rephrase_request_in.text
     start = rephrase_request_in.start
@@ -930,48 +928,41 @@ async def rephrase_sentence(
         result = result[result.find("{") : result.rfind("}") + 1]
         result = json_repair.loads(result)
 
-        for alternative_index in genderstar:
-            alternative = rephrase_request_in.alternatives[alternative_index]
-            if alternative[0] in result and alternative[2] in result:
-                sentence_0_tokens = fetch_tokens(rephrase_request_in.lang, result[alternative[0]])
-                sentence_2_tokens = fetch_tokens(rephrase_request_in.lang, result[alternative[2]])
-
-                if len(sentence_0_tokens) != len(sentence_2_tokens):
-                    return Result.factory("Failed to generate rephrasings")
-
-                del result[alternative[0]]
-                del result[alternative[2]]
-
-                separator = noun_separator = alternative[1]
-                if GermanGenderEndingType.CAPITAL_LETTER == alternative[1]:
-                    noun_separator = "/"
-
-                rephrasing = ""
-                for token_index in range(len(sentence_0_tokens)):
-                    if sentence_0_tokens[token_index].text != sentence_2_tokens[token_index].text:
-                        rephrasing+= inclusive_alternative(
-                            rephrase_request_in.lang,
-                            sentence_2_tokens[token_index].text,
-                            sentence_0_tokens[token_index].text,
-                            "",
-                            separator,
-                            noun_separator,
-                        )
-                    else:
-                        rephrasing+= sentence_0_tokens[token_index].text
-
-                    rephrasing+= sentence_0_tokens[token_index].whitespace_
-
-                result["".join(alternative)] = rephrasing
+        if rephrase_request_in.gender_separator is None:
+            separator = noun_separator = "∙"
+        else:
+            separator, noun_separator = get_german_noun_separator(rephrase_request_in.gender_separator)
 
         results = []
-        for alternative, rephrasing in result.items():
-            if placeholder in rephrasing or placeholder in alternative:
-                return Result.factory("Failed to generate rephrasings")
-                
-            results.append(
-                RephraseOut(alternative=alternative, rephrasing=rephrasing)
-            )
+        for alternative_index in range(len(rephrase_request_in.alternatives)):
+            alternative = rephrase_request_in.alternatives[alternative_index]
+            if alternative_index in genderstar:
+                if (alternative.male_form in result
+                    and placeholder not in result[alternative.male_form]
+                    and alternative.female_form in result
+                    and placeholder not in result[alternative.female_form]
+                ):
+                    rephrasings = await noun_alternatives(
+                        rephrase_request_in.lang,
+                        separator,
+                        noun_separator,
+                        result[alternative.male_form],
+                        result[alternative.female_form],
+                    )
+
+                    result_label = alternative.male_form + "/" + alternative.female_form
+                    for gendered_role_format in genderstar[alternative_index]:
+                        if gendered_role_format in rephrasings:
+                            results.append(
+                                RephraseOut(
+                                    alternative=gendered_role_format + ":" + result_label,
+                                    rephrasing=rephrasings[gendered_role_format],
+                                )
+                            )
+            elif alternative.lemma in result and placeholder not in result[alternative.lemma]:
+                results.append(
+                    RephraseOut(alternative=alternative.lemma, rephrasing=result[alternative.lemma])
+                )
 
         return RephrasesOut.factory(results)
     except Exception as e:
@@ -5271,6 +5262,47 @@ def handle_single_tilde(alternative: Alternative, prefix: bool, is_singular: boo
     alternative.lemma = lemma.strip()
 
 
+async def noun_alternatives(lang: LangType, separator: str, noun_separator: str, male_form: str, female_form: str) -> dict[str]:
+    sentence_male_tokens = fetch_tokens(lang, male_form)
+    sentence_female_tokens = fetch_tokens(lang, female_form)
+    if len(sentence_male_tokens) != len(sentence_female_tokens):
+        return {}
+
+    conjunction = "/" if lang == LangType.DE else " et "
+
+    inclusive_form = ""
+    binary_form = ""
+    for token_index in range(len(sentence_male_tokens)):
+        if sentence_male_tokens[token_index].text != sentence_female_tokens[token_index].text:
+            inclusive_form+= inclusive_alternative(
+                lang,
+                sentence_male_tokens[token_index].text,
+                sentence_female_tokens[token_index].text,
+                "",
+                separator,
+                noun_separator,
+            )
+            if lang == LangType.FR:
+                word_type = await _fetch_word_type(lang, sentence_male_tokens[token_index], WordType.NOUN, True, True)
+                if word_type == WordType.NOUN:
+                    binary_form+= sentence_male_tokens[token_index].text + conjunction
+
+                binary_form+= sentence_female_tokens[token_index].text
+            else:
+                binary_form+= sentence_female_tokens[token_index].text + conjunction + sentence_male_tokens[token_index].text
+        else:
+            inclusive_form+= sentence_male_tokens[token_index].text
+            binary_form+= sentence_male_tokens[token_index].text
+
+        inclusive_form+= sentence_male_tokens[token_index].whitespace_
+        binary_form+= sentence_male_tokens[token_index].whitespace_
+
+    return {
+        GenderedRolesFormatType.INCLUSIVE_GENDER: inclusive_form,
+        GenderedRolesFormatType.BINARY_GENDER: binary_form,
+    }
+
+
 def inclusive_alternative(
     lang: LangType,
     male_form: str,
@@ -5514,12 +5546,12 @@ async def gendered_alternatives(
     return alternatives, binary_case
 
 
-def get_german_noun_separator(config: Config):
-    if config.german_gender_ending == GermanGenderEndingType.CAPITAL_LETTER:
+def get_german_noun_separator(german_gender_ending: GermanGenderEndingType):
+    if german_gender_ending == GermanGenderEndingType.CAPITAL_LETTER:
         separator = "/"
         noun_separator = ""
     else:
-        separator = noun_separator = config.german_gender_ending[0:-2]
+        separator = noun_separator = german_gender_ending[0:-2]
 
     return separator, noun_separator
 
@@ -5556,7 +5588,7 @@ async def gendered_nouns(
     binary_case = False
     inclusive = gendered_roles_format_inclusive(config.gendered_roles_format)
     binary = gendered_roles_format_binary(config.gendered_roles_format)
-    separator, noun_separator = get_german_noun_separator(config)
+    separator, noun_separator = get_german_noun_separator(config.german_gender_ending)
     additional_words = []
     is_singular = True if is_singular is None else is_singular
     if (
@@ -5734,7 +5766,7 @@ async def gendered_nouns(
 
 
 def fetch_article_for_flexion(
-    flexion: str, gender: str, article_text: str
+    flexion: str|None, gender: str, article_text: str
 ) -> tuple[str, str, str, str]:
     if flexion is None:
         return None, None, None, None
@@ -5750,14 +5782,14 @@ def fetch_article_for_flexion(
     return article_forms[1], article_forms[2], article_forms[3], article_forms[5]
 
 
-def gendered_roles_format_inclusive(gendered_roles_format: str):
+def gendered_roles_format_inclusive(gendered_roles_format: GenderedRolesFormatType):
     return gendered_roles_format in [
         GenderedRolesFormatType.BOTH,
         GenderedRolesFormatType.INCLUSIVE_GENDER,
     ]
 
 
-def gendered_roles_format_binary(gendered_roles_format: str):
+def gendered_roles_format_binary(gendered_roles_format: GenderedRolesFormatType):
     return gendered_roles_format in [
         GenderedRolesFormatType.BOTH,
         GenderedRolesFormatType.BINARY_GENDER,
@@ -5830,7 +5862,7 @@ async def fetch_alternatives_with_article(
     if match_alternative is None:
         return None
 
-    separator, _ = get_german_noun_separator(config)
+    separator, _ = get_german_noun_separator(config.german_gender_ending)
 
     alternatives_with_article = []
     for alternative in alternatives:

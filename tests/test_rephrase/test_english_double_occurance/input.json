@@ -1,11 +1,17 @@
 {
-    "sentence": "When I am with the guys, I feel like one of the guys",
-    "alternatives": [
-      ["people"],
-      ["all"],
-      ["everyone"]
-    ],
-    "text": "guys",
-    "start": 19,
-    "lang": "en"
+  "sentence": "When I am with the guys, I feel like one of the guys",
+  "alternatives": [
+    {
+      "lemma": "people"
+    },
+    {
+      "lemma": "all"
+    },
+    {
+      "lemma": "everyone"
+    }
+  ],
+  "text": "guys",
+  "start": 19,
+  "lang": "en"
 }

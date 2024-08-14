@@ -1,12 +1,16 @@
 {
     "results": [
         {
-            "alternative": "traduction",
-            "rephrasing": "La traduction sont compétent."
+            "alternative": "inclusive_gender:traducteur/traductrice",
+            "rephrasing": "Les traducteur∙rices sont compétent∙es."
         },
         {
-            "alternative": "traductrice∙traducteur",
-            "rephrasing": "Les traducteur∙rices sont compétent∙es."
+            "alternative": "binary_gender:traducteur/traductrice",
+            "rephrasing": "Les traducteurs et traductrices sont compétentes."
+        },
+        {
+            "alternative": "traduction",
+            "rephrasing": "La traduction est compétente."
         }
     ]
 }

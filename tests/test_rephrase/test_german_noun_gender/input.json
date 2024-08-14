@@ -4,12 +4,18 @@
   "text": "Mitarbeiter",
   "start": 51,
   "alternatives": [
-    [
-      "Mitarbeiterin",
-      "*",
-      "Mitarbeiter"
-    ],
-    ["Mitarbeitende"]
+    {
+      "types": [
+        "inclusive_gender",
+        "binary_gender"
+      ],
+      "male_form": "Mitarbeiter",
+      "female_form": "Mitarbeiterin"
+    },
+    {
+      "lemma": "Mitarbeitende"
+    }
   ],
-  "lang": "de"
+  "lang": "de",
+  "gender_separator": "*in"
 }

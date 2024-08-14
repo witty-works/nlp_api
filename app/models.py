@@ -193,7 +193,6 @@ class GermanGenderEndingType(str, Enum):
     PARENTHESIS_DASH = "(-)"
     PARENTHESIS = "()"
     CAPITAL_LETTER = "In"
-    BINARY = "binary"
 
 
 class GenderedRolesFormatType(str, Enum):
@@ -605,13 +604,21 @@ class BaseRequestIn(BaseModel):
     organization_config_hash: Optional[str] = None
 
 
+class RephraseAlternative(BaseModel):
+    types: list[Optional[GenderedRolesFormatType]] = None
+    lemma: Optional[str] = None
+    male_form: Optional[str] = None
+    female_form: Optional[str] = None
+
+
 class RephraseRequestIn(BaseRequestIn):
     type: str = "rephrase"
     model: Optional[str] = None
     sentence: Annotated[str, Len(min_length=1, max_length=300)]
     text: str
     start: int
-    alternatives: Annotated[list[list[str]], Len(min_length=1, max_length=5)]
+    alternatives: Annotated[list[RephraseAlternative], Len(min_length=1, max_length=5)]
+    gender_separator: Optional[GermanGenderEndingType] = None
     lang: LangType
 
 
