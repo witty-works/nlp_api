@@ -683,8 +683,10 @@ async def rephrase_sentence(
     check_client_version(client)
 
     if version is not None:
+        if rephrase_request_in.model is not None:
+            return Result.factory("Model can only be set in debug mode")
+
         rephrase_api_version(version)
-        rephrase_request_in.model = None
 
         user_email = await fetch_user(request)
         configs = await fetch_configs_for_request(rephrase_request_in, user_email) if user_email else {}
@@ -698,6 +700,8 @@ async def rephrase_sentence(
     else:
         # debug
         configs = {}
+
+    aws_model_id = settings.aws_model_id if rephrase_request_in.model is None else rephrase_request_in.model
 
     store_metrics(request, configs, version, "rephrase")
 
@@ -886,9 +890,6 @@ async def rephrase_sentence(
     user_prompt = "Please process the following input into a valid JSON response:\n" + json.dumps(input_data)
 
     conversation = []
-
-    # TODO remove or add check to only allow on 'dev'
-    aws_model_id = settings.aws_model_id if rephrase_request_in.model is None else rephrase_request_in.model
 
     if "mistral" in aws_model_id:
         user_prompt = f"{system_prompt}\n{user_prompt}"
