@@ -3750,7 +3750,7 @@ async def is_phrase_match(
 async def fetch_word_type(
     lang: LangType,
     token: Token,
-    word_type: str = None,
+    word_type: str|None = None,
     single_word: bool = False,
     strict: bool = False,
 ) -> str:
