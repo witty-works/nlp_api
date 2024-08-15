@@ -4026,7 +4026,7 @@ async def fetch_word_type(
 async def _fetch_word_type(
     lang: LangType,
     token: Token,
-    expected_word_type: str = None,
+    expected_word_type: str|None = None,
     single_word: bool = False,
     strict: bool = False,
 ) -> str:
@@ -5268,7 +5268,8 @@ async def noun_alternatives(lang: LangType, separator: str, noun_separator: str,
     if len(sentence_male_tokens) != len(sentence_female_tokens):
         return {}
 
-    conjunction = "/" if lang == LangType.DE else " et "
+    singular_conjunction = "/"
+    plural_conjunction = " und " if lang == LangType.DE else " et "
 
     inclusive_form = ""
     binary_form = ""
@@ -5282,9 +5283,11 @@ async def noun_alternatives(lang: LangType, separator: str, noun_separator: str,
                 separator,
                 noun_separator,
             )
+            conjunction = singular_conjunction if is_token_singular(lang, sentence_male_tokens[token_index]) else plural_conjunction
             if lang == LangType.FR:
-                word_type = await _fetch_word_type(lang, sentence_male_tokens[token_index], WordType.NOUN, True, True)
-                if word_type == WordType.NOUN:
+                if (sentence_male_tokens[token_index].text.lower() in static_rules[lang]["masculine_articles"]
+                    or await _fetch_word_type(lang, sentence_male_tokens[token_index], WordType.NOUN, True, True) == WordType.NOUN
+                ):
                     binary_form+= sentence_male_tokens[token_index].text + conjunction
 
                 binary_form+= sentence_female_tokens[token_index].text
@@ -5312,7 +5315,7 @@ def inclusive_alternative(
     noun_separator: str,
 ):
     if lang == LangType.DE:
-        if male_form.lower() in static_rules[lang]["articles"]:
+        if male_form.lower() in static_rules[lang]["masculine_articles"]:
             return female_form + separator + male_form
 
         short_gender_star = True
@@ -5345,7 +5348,10 @@ def inclusive_alternative(
     if lang == LangType.FR:
         male_form_lower = male_form.lower()
         if male_form_lower in static_rules[lang]["masculine_articles"]:
-            return static_rules[lang]["masculine_articles"][male_form_lower]
+            inclusive_form = static_rules[lang]["masculine_articles"][male_form_lower]
+            if male_form != male_form_lower:
+                inclusive_form = inclusive_form.capitalize()
+            return inclusive_form
 
         common_prefix = find_common_prefix(male_form, female_form, False, False)
         if len(female_form) >= len(male_form):
@@ -6571,7 +6577,22 @@ async def rule_check(
                     alternative.lemma += ending
 
         start = token.idx
-        if len(alternatives):
+        if lang.lang == LangType.FR:
+            new_alternatives = []
+            for alternative in alternatives:
+                if alternative.lemma is not None and "·" in alternative.lemma:
+                    male_form, female_form = alternative.lemma.split("·")
+                    gendered_alternatives = await noun_alternatives(lang.lang, "·", "·", male_form, female_form)
+                    for gendered_alternative in gendered_alternatives:
+                        if config.gendered_roles_format == GenderedRolesFormatType.BOTH or config.gendered_roles_format == gendered_alternative:
+                            new_alternative = deepcopy(alternative)
+                            new_alternative.lemma = gendered_alternatives[gendered_alternative]
+                            new_alternatives.append(new_alternative)
+                else:
+                    new_alternatives.append(alternative)
+
+            alternatives = new_alternatives
+        elif len(alternatives):
             # TODO make it possible to handle cases with multiple alternatives
             if len(alternatives) == 1 and alternatives[0].lemma == "they":
                 text, alternative = await pluralize_they(text, tokens, token_index)

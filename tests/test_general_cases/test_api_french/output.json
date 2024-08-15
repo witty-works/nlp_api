@@ -131,10 +131,13 @@
         {
             "alternatives": [
                 {
-                    "text": "efficaces"
+                    "text": "efficace"
                 },
                 {
-                    "text": "compétent·compétentes"
+                    "text": "compétent·e"
+                },
+                {
+                    "text": "compétente"
                 },
                 {
                     "context": "💡",

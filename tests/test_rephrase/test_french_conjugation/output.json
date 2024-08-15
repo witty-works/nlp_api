@@ -6,7 +6,7 @@
         },
         {
             "alternative": "binary_gender:être désavantagé/être désavantagée",
-            "rephrasing": "Face à la concurrence, il et elle était désavantagée par son jeune âge."
+            "rephrasing": "Face à la concurrence, il/elle était désavantagée par son jeune âge."
         },
         {
             "alternative": "inclusive_gender:être pénalisé/être pénalisée",
@@ -14,7 +14,7 @@
         },
         {
             "alternative": "binary_gender:être pénalisé/être pénalisée",
-            "rephrasing": "Face à la concurrence, il et elle était pénalisée par son jeune âge."
+            "rephrasing": "Face à la concurrence, il/elle était pénalisée par son jeune âge."
         }
     ]
 }
