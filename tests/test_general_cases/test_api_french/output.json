@@ -88,6 +88,24 @@
             "text_id": "ambitieux"
         },
         {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "Salut les gars. Nous sommes une équipe ambitieuse. C’est pourquoi nous avons besoin de personnes très performantes.",
+            "end": 83,
+            "explanation": {
+                "content": "video",
+                "icon": "✅",
+                "text": "Strengthens collaboration and a sense of community",
+                "url": "https://www.witty.works/en/categories/social-motive/communal-language?reducedView=true"
+            },
+            "label": "Social Motive: Communal language",
+            "proficiency_level": "inclusive",
+            "start": 71,
+            "subcategory": "communal",
+            "text": "avons besoin",
+            "text_id": "avoir besoin"
+        },
+        {
             "alternatives": [
                 {
                     "remove": true
