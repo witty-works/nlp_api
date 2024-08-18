@@ -5956,7 +5956,7 @@ def is_false_positive(
     else:
         window_right += tokens[token_index].idx
 
-    partial_text = full_text[window_left:window_right].lower()
+    partial_text = full_text[window_left:window_right]
     if not case_sensitive:
         partial_text = partial_text.lower()
         false_positives = list(map(lambda false_positive: false_positive.lower(), false_positives))
