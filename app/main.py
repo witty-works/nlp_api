@@ -742,7 +742,7 @@ async def rephrase_sentence(
     Before making the replacement ensure that the alternative matches the {lang} grammatical case (tense, pluralization etc.) of the supplied 'text' (ie. if 'text' is past tense the 'alternatives' should all also be made past tense).
     Do not make stylistic or other unnecessary changes in the output.
     Change as little as necessary to make the output grammatically correct in {lang} like correcting the gender of the article to match the 'alternative' preceeding '{placeholder}' it.
-    For each item in 'alternatives' provide exactly one item ('alternative' + 'rephrasing') in the response.
+    For each item in 'alternatives' provide exactly one item ('alternative' + 'rephrasing') in the response with key in the dictionary matching exactly each of the 'alternative' provided.
     Leave double parenthesis unchanged.
     """
 
@@ -820,7 +820,7 @@ async def rephrase_sentence(
 
                 For the following example:
                 {{
-                    "sentence": "Les traducteurs sont compétent.",
+                    "sentence": "Les beaux traducteurs sont compétent.",
                     "sentence_with_placeholder": "Les {placeholder} sont compétent.",
                     "text": "traducteurs",
                     "alternatives": [
@@ -832,9 +832,9 @@ async def rephrase_sentence(
 
                 Format the output as follows making sure it is valid JSON:
                 {{
-                    "traducteur": "Les traducteurs sont compétent.",
-                    "traductrice": "Les traductrices sont compétentes.",
-                    "traduction": "Le traduction est compétent"
+                    "traducteur": "Les beaux traducteurs sont compétent.",
+                    "traductrice": "Les belles traductrices sont compétentes.",
+                    "traduction": "La beau traduction est compétente"
                 }}
                 """
         #case LangType.EN:
@@ -5268,11 +5268,15 @@ async def noun_alternatives(lang: LangType, separator: str, noun_separator: str,
     if len(sentence_male_tokens) != len(sentence_female_tokens):
         return {}
 
-    singular_conjunction = "/"
+    singular_conjunction = "/" if lang == LangType.DE else " ou "
     plural_conjunction = " und " if lang == LangType.DE else " et "
 
     inclusive_form = ""
     binary_form = ""
+    male_form_sub_sentence = ""
+    female_form_sub_sentence = ""
+    sub_sentence_contains_noun = False
+
     for token_index in range(len(sentence_male_tokens)):
         if sentence_male_tokens[token_index].text != sentence_female_tokens[token_index].text:
             inclusive_form+= inclusive_alternative(
@@ -5285,20 +5289,38 @@ async def noun_alternatives(lang: LangType, separator: str, noun_separator: str,
             )
             conjunction = singular_conjunction if is_token_singular(lang, sentence_male_tokens[token_index]) else plural_conjunction
             if lang == LangType.FR:
-                if (sentence_male_tokens[token_index].text.lower() in static_rules[lang]["masculine_articles"]
-                    or await _fetch_word_type(lang, sentence_male_tokens[token_index], WordType.NOUN, True, True) == WordType.NOUN
-                ):
-                    binary_form+= sentence_male_tokens[token_index].text + conjunction
+                if male_form_sub_sentence != "":
+                    male_form_sub_sentence+= sentence_male_tokens[token_index - 1].whitespace_
+                    female_form_sub_sentence+= sentence_female_tokens[token_index - 1].whitespace_
 
-                binary_form+= sentence_female_tokens[token_index].text
+                if sub_sentence_contains_noun == True or await _fetch_word_type(lang, sentence_male_tokens[token_index], WordType.NOUN, True, True) == WordType.NOUN:
+                    sub_sentence_contains_noun = True
+
+                male_form_sub_sentence+= sentence_male_tokens[token_index].text
+                female_form_sub_sentence+= sentence_female_tokens[token_index].text if token_index > 0 else sentence_female_tokens[token_index].text.lower()
             else:
                 binary_form+= sentence_female_tokens[token_index].text + conjunction + sentence_male_tokens[token_index].text
         else:
             inclusive_form+= sentence_male_tokens[token_index].text
+            if male_form_sub_sentence != "":
+                if sub_sentence_contains_noun:
+                    binary_form+= male_form_sub_sentence + conjunction + female_form_sub_sentence + sentence_female_tokens[token_index - 1].whitespace_
+                else:
+                    # TODO add user preference to choose male form over female form
+                    binary_form+= female_form_sub_sentence + sentence_male_tokens[token_index - 1].whitespace_
+                male_form_sub_sentence = ""
+                female_form_sub_sentence = ""
+                sub_sentence_contains_noun = False
+
             binary_form+= sentence_male_tokens[token_index].text
 
         inclusive_form+= sentence_male_tokens[token_index].whitespace_
-        binary_form+= sentence_male_tokens[token_index].whitespace_
+
+        if male_form_sub_sentence == "":
+            binary_form+= sentence_male_tokens[token_index].whitespace_
+
+    if male_form_sub_sentence != "":
+        binary_form+= male_form_sub_sentence + conjunction + female_form_sub_sentence
 
     return {
         GenderedRolesFormatType.INCLUSIVE_GENDER: inclusive_form,
@@ -5354,6 +5376,9 @@ def inclusive_alternative(
             return inclusive_form
 
         common_prefix = find_common_prefix(male_form, female_form, False, False)
+        if len(common_prefix) < 3:
+            return male_form + separator + female_form.lower()
+
         if len(female_form) >= len(male_form):
             suffix = female_form[len(common_prefix) :]
             common_prefix = male_form
@@ -6580,7 +6605,7 @@ async def rule_check(
         if lang.lang == LangType.FR:
             new_alternatives = []
             for alternative in alternatives:
-                if alternative.lemma is not None and "·" in alternative.lemma:
+                if alternative.is_gendered_noun:
                     male_form, female_form = alternative.lemma.split("·")
                     gendered_alternatives = await noun_alternatives(lang.lang, "·", "·", male_form, female_form)
                     for gendered_alternative in gendered_alternatives:

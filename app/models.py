@@ -605,7 +605,7 @@ class BaseRequestIn(BaseModel):
 
 
 class RephraseAlternative(BaseModel):
-    types: list[Optional[GenderedRolesFormatType]] = None
+    types: list[Optional[GenderedRolesFormatType]] | None = None
     lemma: Optional[str] = None
     male_form: Optional[str] = None
     female_form: Optional[str] = None

@@ -1,0 +1,25 @@
+{
+  "sentence": "L'athlète rapide est intelligent",
+  "text": "athlètes",
+  "start": 2,
+  "alternatives": [
+    {
+      "types": [
+        "inclusive_gender",
+        "binary_gender"
+      ],
+      "male_form": "sportif professionnel",
+      "female_form": "sportive professionnelle"
+    },
+    {
+      "lemma": "membre d'une équipe de sport"
+    },
+    {
+      "lemma": "équipe"
+    },
+    {
+      "lemma": "personne dynamique"
+    }
+  ],
+  "lang": "fr"
+}
