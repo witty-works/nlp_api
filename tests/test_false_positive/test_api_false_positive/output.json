@@ -39,6 +39,7 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "🙄",
+                "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png,160,160,face with rolling-eyes emoji,112750103745",
                 "text": "Häufig verwendete Floskeln werden oft als nichtssagend empfunden.",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/worthülsen?reducedView=true"
             },
@@ -58,6 +59,7 @@
             "explanation": {
                 "content": "video",
                 "icon": "✅",
+                "icon_image": "https://www.witty.works/hubfs/thumbs%20up%20emoji.png",
                 "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true"
             },
@@ -88,6 +90,7 @@
             "end": 115,
             "explanation": {
                 "icon": "😉",
+                "icon_image": "https://www.witty.works/hubfs/winking-face_1f609.png,160,160,winking-face_1f609,112748430274",
                 "text": "Sicher, dass das alle Lesenden verstehen?",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/anglizismen?reducedView=true"
             },
@@ -116,6 +119,7 @@
             "end": 148,
             "explanation": {
                 "icon": "😉",
+                "icon_image": "https://www.witty.works/hubfs/winking-face_1f609.png,160,160,winking face emoji,112748430274",
                 "text": "Werden alle Lesenden diese Abkürzung verstehen?",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/abkürzung?reducedView=true"
             },

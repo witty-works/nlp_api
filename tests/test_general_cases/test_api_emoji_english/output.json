@@ -32,6 +32,7 @@
                 "content": "advanced",
                 "context": "Man Firefighter",
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Enforces the traditional binary form of gender",
                 "url": "https://www.witty.works/en/categories/gender-orientation/gender-binary?reducedView=true"
             },
@@ -69,6 +70,7 @@
                 "content": "advanced",
                 "context": "Woman Firefighter",
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Enforces the traditional binary form of gender",
                 "url": "https://www.witty.works/en/categories/gender-orientation/gender-binary?reducedView=true"
             },
@@ -110,6 +112,7 @@
                 "content": "advanced",
                 "context": "Man Firefighter Light Skin Tone",
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Be mindful when using a skin tone that does not match your own",
                 "url": "https://www.witty.works/en/categories/gender-orientation/gender-binary?reducedView=true"
             },
@@ -147,6 +150,7 @@
                 "content": "advanced",
                 "context": "Woman Firefighter Dark Skin Tone",
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Be mindful when using a skin tone that does not match your own",
                 "url": "https://www.witty.works/en/categories/gender-orientation/gender-binary?reducedView=true"
             },
@@ -188,6 +192,7 @@
                 "content": "advanced",
                 "context": "Man Firefighter Medium Skin Tone",
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Be mindful when using a skin tone that does not match your own",
                 "url": "https://www.witty.works/en/categories/gender-orientation/gender-binary?reducedView=true"
             },
@@ -213,6 +218,7 @@
             "end": 67,
             "explanation": {
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Emoji overuse may exclude screen reader users",
                 "url": "https://www.witty.works/en/categories/ability-physicality/ability?reducedView=true"
             },
