@@ -3587,10 +3587,16 @@ async def check_pattern(
 ) -> bool | int:
     count = 0
     for word_type in pattern:
-        if i_pattern_start < 0 or i_pattern_start >= len(tokens):
+        allow_skip = word_type.endswith("*")
+        if i_pattern_start < 0:
             return False
 
-        allow_skip = word_type.endswith("*")
+        if i_pattern_start >= len(tokens):
+            if allow_skip:
+                continue
+
+            return False
+
         if allow_skip:
             word_type = word_type.removesuffix("*")
             while i_pattern_start >= 0 and await check_word_type(
