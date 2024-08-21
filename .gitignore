@@ -11,6 +11,7 @@ analyze_rules/*
 
 __pycache__/
 *.py[cod]
+*$py.class
 *.mo
 *Zone.Identifier
 .pdm.toml

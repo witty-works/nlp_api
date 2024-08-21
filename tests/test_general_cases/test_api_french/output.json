@@ -24,13 +24,12 @@
             "context": "Salut les gars. Nous sommes une équipe ambitieuse. C’est pourquoi nous avons besoin de personnes très performantes",
             "end": 14,
             "explanation": {
-                "content": "advanced",
                 "icon": "😒",
-                "text": "Enforces the traditional binary form of gender",
+                "text": "Entretient la vision traditionnelle binaire du genre",
                 "url": "https://www.witty.works/en/categories/gender-orientation/gender-binary?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Gender + Orientation: Gender binary",
+            "label": "Binarité de genre",
             "proficiency_level": "unconscious_bias",
             "start": 6,
             "subcategory": "gender_identity",
@@ -43,12 +42,11 @@
             "context": "Salut les gars. Nous sommes une équipe ambitieuse. C’est pourquoi nous avons besoin de personnes très performantes.",
             "end": 38,
             "explanation": {
-                "content": "video",
                 "icon": "✅",
-                "text": "Strengthens collaboration and a sense of community",
+                "text": "Renforce la collaboration et le sentiment d'appartenance au groupe",
                 "url": "https://www.witty.works/en/categories/social-motive/communal-language?reducedView=true"
             },
-            "label": "Social Motive: Communal language",
+            "label": "Coopération",
             "proficiency_level": "inclusive",
             "start": 32,
             "subcategory": "communal",
@@ -74,18 +72,34 @@
             "context": "Salut les gars. Nous sommes une équipe ambitieuse. C’est pourquoi nous avons besoin de personnes très performantes.",
             "end": 49,
             "explanation": {
-                "content": "video",
                 "icon": "😒",
-                "text": "Has a connotation of competition and performance. Deters cooperatively minded people.",
+                "text": "Évoque la compétition et la performance, ce qui dissuade les personnes privilégiant la coopération",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Social Motive: Agentic language",
+            "label": "Performance individuelle",
             "proficiency_level": "unconscious_bias",
             "start": 39,
             "subcategory": "agentic",
             "text": "ambitieuse",
             "text_id": "ambitieux"
+        },
+        {
+            "alternatives": [],
+            "category": "social-motive",
+            "context": "Salut les gars. Nous sommes une équipe ambitieuse. C’est pourquoi nous avons besoin de personnes très performantes.",
+            "end": 83,
+            "explanation": {
+                "icon": "✅",
+                "text": "Renforce la collaboration et le sentiment d'appartenance au groupe",
+                "url": "https://www.witty.works/en/categories/social-motive/communal-language?reducedView=true"
+            },
+            "label": "Coopération",
+            "proficiency_level": "inclusive",
+            "start": 71,
+            "subcategory": "communal",
+            "text": "avons besoin",
+            "text_id": "avoir besoin"
         },
         {
             "alternatives": [
@@ -97,13 +111,12 @@
             "context": "Salut les gars. Nous sommes une équipe ambitieuse. C’est pourquoi nous avons besoin de personnes très performantes.",
             "end": 101,
             "explanation": {
-                "content": "video",
                 "icon": "😟",
-                "text": "Adding complexity but no meaning",
+                "text": "Ajoute de la complexité sans précision de sens",
                 "url": "https://www.witty.works/en/categories/cultural-diversity/filler-words?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Cultural Diversity: Filler words",
+            "label": "Mot inutile",
             "proficiency_level": "unconscious_bias",
             "start": 97,
             "subcategory": "filler",
@@ -124,7 +137,7 @@
                     "text": "atteignant des résultats"
                 },
                 {
-                    "text": "engagé·engagées"
+                    "text": "engagé·engagée"
                 },
                 {
                     "context": "💡",
@@ -136,13 +149,12 @@
             "context": "lut les gars. Nous sommes une équipe ambitieuse. C’est pourquoi nous avons besoin de personnes très performantes.",
             "end": 114,
             "explanation": {
-                "content": "video",
                 "icon": "😒",
-                "text": "Has a connotation of competition and performance. Deters cooperatively minded people.",
+                "text": "Évoque la compétition et la performance, ce qui dissuade les personnes privilégiant la coopération",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
             "gravity": 3.0,
-            "label": "Social Motive: Agentic language",
+            "label": "Performance individuelle",
             "proficiency_level": "unconscious_bias",
             "start": 102,
             "subcategory": "agentic_advanced",

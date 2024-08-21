@@ -229,7 +229,9 @@ async def generate_ignore_file(lang, api_url):
     try:
         print("Checking if LanguageTool is running ..")
         response = requests.get(api_url.rstrip("/check") + "/languages")
-        assert response.status_code == 200
+        if response.status_code != 200:
+            raise Exception("LanguageTool returned status code: " + response.status_code)
+
         languagetool_running = True
 
         print("Checking alternatives for spelling mistakes and updating ignore file ..")

@@ -9,9 +9,10 @@
                 }
             ],
             "category": "acquired-diversity",
-            "context": "We are looking for a person older than <NUMBER> years.",
+            "context": "We are looking for a person older than <NUMBER> years",
             "end": 47,
             "explanation": {
+                "context": "USA/EU prohibit age requirements",
                 "icon": "🤔",
                 "text": "Is age relevant to your message?",
                 "url": "https://www.witty.works/en/categories/acquired-diversity/age-information?reducedView=true"

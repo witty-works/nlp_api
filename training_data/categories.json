@@ -2,7 +2,6 @@
     "cultural-diversity": {
         "hs_path": "",
         "hs_name": "Cultural Diversity",
-        "translation_fr": "",
         "icon": {
             "src": "https:\/\/www.witty.works\/hubfs\/icon%20-%20racial%20bias-1.svg",
             "width": "400",
@@ -73,7 +72,6 @@
     "gender-orientation": {
         "hs_path": "",
         "hs_name": "",
-        "translation_fr": "",
         "icon": {
             "src": "https:\/\/www.witty.works\/hubfs\/icon%20-%20gender%20bias.svg",
             "width": "400",
@@ -142,7 +140,6 @@
     "ability-physicality": {
         "hs_path": "",
         "hs_name": "",
-        "translation_fr": "",
         "icon": {
             "src": "https:\/\/www.witty.works\/hubfs\/icon%20-%20disabled%20bias-1.svg",
             "width": "400",
@@ -213,7 +210,6 @@
     "religion": {
         "hs_path": "",
         "hs_name": "",
-        "translation_fr": "",
         "icon": {
             "src": "https:\/\/www.witty.works\/hubfs\/icon%20-%20faith%20bias.svg",
             "width": "400",
@@ -270,7 +266,6 @@
     "acquired-diversity": {
         "hs_path": "",
         "hs_name": "",
-        "translation_fr": "",
         "icon": {
             "src": "https:\/\/www.witty.works\/hubfs\/icon%20-%20age%20bias-1.svg",
             "width": "400",
@@ -329,7 +324,6 @@
     "social-motive": {
         "hs_path": "",
         "hs_name": "",
-        "translation_fr": "",
         "icon": {
             "src": "https:\/\/www.witty.works\/hubfs\/icon%20-%20sexual%20orientation.svg",
             "width": "400",

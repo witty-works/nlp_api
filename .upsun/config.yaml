@@ -24,6 +24,8 @@ applications:
 
         ./install_dependencies.sh
 
+        python -m compileall app
+
         export FT_MODEL="lid.176.bin"
 
         if [ ! -f "${PLATFORM_CACHE_DIR}/$FT_MODEL" ]; then

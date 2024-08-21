@@ -120,7 +120,7 @@ from app.query_definitions import (
 )
 import boto3
 
-version = "2.2.31"
+version = "2.2.32"
 
 categories = get_categories()
 settings = get_settings()
@@ -717,6 +717,41 @@ async def fetch_rephrased_sentences(
     except Exception as e:
         print("An error occurred:", e)
         return []
+
+
+@app.post(
+    "/debug/review_prompt",
+    response_model=Union[str, Result],
+    response_model_exclude_none=True,
+    dependencies=[Depends(HTTPBearer(auto_error=False))],
+    include_in_schema=not settings.is_prod,
+)
+async def review_prompt(
+    request: Request,
+    response: Response,
+    user_request_in: RequestIn,
+) -> Result | str:
+    user_request_in.config.disabled_categories.append("communal")
+    user_request_in.config.disabled_categories.append("d_and_i")
+    user_request_in.config.disabled_categories.append("emotional_security")
+
+    check_result = await check(request, response, user_request_in, None)
+    if isinstance(check_result, Result):
+        return check_result
+
+    prompt = "You are an expert in inclusive language. You are tasked with editing the text and specifically take note of the following potential issues (pick which ever alternatives fits best in the given context):\n"
+    for result in check_result.results:
+        prompt+= f"In the text portion '{result.context}' consider replacing the phrase '{result.text}'"
+
+        if len(result.alternatives) == 0:
+            prompt+= ".\n"
+            continue
+
+        prompt+= "with one of the following options:\n"
+        for alternative in result.alternatives:
+            prompt+= "* Remove the phrase from the text\n" if alternative.remove else f"* '{alternative.text}'\n"
+
+    return prompt
 
 
 @app.post("/rephrase")
@@ -3552,10 +3587,16 @@ async def check_pattern(
 ) -> bool | int:
     count = 0
     for word_type in pattern:
-        if i_pattern_start < 0 or i_pattern_start >= len(tokens):
+        allow_skip = word_type.endswith("*")
+        if i_pattern_start < 0:
             return False
 
-        allow_skip = word_type.endswith("*")
+        if i_pattern_start >= len(tokens):
+            if allow_skip:
+                continue
+
+            return False
+
         if allow_skip:
             word_type = word_type.removesuffix("*")
             while i_pattern_start >= 0 and await check_word_type(
@@ -3715,7 +3756,7 @@ async def is_phrase_match(
 async def fetch_word_type(
     lang: LangType,
     token: Token,
-    word_type: str = None,
+    word_type: str|None = None,
     single_word: bool = False,
     strict: bool = False,
 ) -> str:
@@ -5921,7 +5962,7 @@ def is_false_positive(
     else:
         window_right += tokens[token_index].idx
 
-    partial_text = full_text[window_left:window_right].lower()
+    partial_text = full_text[window_left:window_right]
     if not case_sensitive:
         partial_text = partial_text.lower()
         false_positives = list(map(lambda false_positive: false_positive.lower(), false_positives))
