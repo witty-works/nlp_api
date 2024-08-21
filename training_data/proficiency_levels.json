@@ -2,7 +2,6 @@
     "unconscious_bias": {
         "hs_path": "",
         "hs_name": "",
-        "translation_fr": "",
         "inclusive": false,
         "sort": "0",
         "emoji": "\ud83d\udca1",
@@ -28,7 +27,6 @@
     "ancestry": {
         "hs_path": "",
         "hs_name": "",
-        "translation_fr": "",
         "inclusive": false,
         "sort": "1",
         "emoji": "",
@@ -54,7 +52,6 @@
     "visible": {
         "hs_path": "",
         "hs_name": "",
-        "translation_fr": "",
         "inclusive": false,
         "sort": "1",
         "emoji": "",
@@ -80,7 +77,6 @@
     "language-clarity": {
         "hs_path": "",
         "hs_name": "",
-        "translation_fr": "",
         "inclusive": false,
         "sort": "1",
         "emoji": "",
@@ -106,7 +102,6 @@
     "age": {
         "hs_path": "",
         "hs_name": "",
-        "translation_fr": "",
         "inclusive": false,
         "sort": "1",
         "emoji": "",
@@ -132,7 +127,6 @@
     "invisible": {
         "hs_path": "",
         "hs_name": "",
-        "translation_fr": "",
         "inclusive": false,
         "sort": "2",
         "emoji": "",
@@ -158,7 +152,6 @@
     "inclusive": {
         "hs_path": "",
         "hs_name": "",
-        "translation_fr": "",
         "inclusive": true,
         "sort": "4",
         "emoji": "\u2705",
@@ -184,7 +177,6 @@
     "openly_discriminating": {
         "hs_path": "",
         "hs_name": "",
-        "translation_fr": "",
         "inclusive": false,
         "sort": "5",
         "emoji": "\ud83d\udeab",
