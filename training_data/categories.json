@@ -43,6 +43,18 @@
                     "height": "373",
                     "alt": ""
                 }
+            },
+            "fr": {
+                "hs_path": "diversit\u00e9-culturelle",
+                "hs_name": "Diversit\u00e9 culturelle",
+                "name": "Diversit\u00e9 culturelle",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/cultural-diversity",
+                "is_active": "1",
+                "emoji": "",
+                "lead_title": "Witty signale les biais et les st\u00e9r\u00e9otypes qui concernent les origines ethniques et les nationalit\u00e9s. Il identifie \u00e9galement les mots et les expressions qui compliquent les communications dans les contextes multilingues. Ses suggestions vous aident \u00e0 d\u00e9velopper une culture d\u2019acceptation, de respect et d\u2019appr\u00e9ciation de l\u2019autre.",
+                "lead_text": "",
+                "lead_image": [],
+                "example_image": []
             }
         },
         "diversity_dimension_drivers": {
@@ -113,6 +125,18 @@
                     "height": "543",
                     "alt": "Eine Illustration von Witty des Satzes 'Wir haben f\u00fcr das Angebot vier [Manntage] kalkuliert.'. Als Alternative f\u00fcr\u00a0den Begriff in Klammern wird 'Tagess\u00e4tze' vorgeschlagen.\u00a0"
                 }
+            },
+            "fr": {
+                "hs_path": "genre-orientation-sexuelle",
+                "hs_name": "Genre + Orientation sexuelle",
+                "name": "Genre + Orientation sexuelle",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/gender-orientation",
+                "is_active": "1",
+                "emoji": "",
+                "lead_title": "Witty sensibilise vos \u00e9quipes au langage genr\u00e9 et propose des alternatives inclusives. Il vous aide \u00e0 r\u00e9diger des textes qui parlent aux personnes sous-repr\u00e9sent\u00e9es et aux personnes non binaires, et qui les rendent plus visibles.",
+                "lead_text": "",
+                "lead_image": [],
+                "example_image": []
             }
         },
         "diversity_dimension_drivers": {
@@ -181,6 +205,18 @@
                     "height": "389",
                     "alt": ""
                 }
+            },
+            "fr": {
+                "hs_path": "handicap",
+                "hs_name": "Handicap",
+                "name": "Handicap",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/ability-physicality",
+                "is_active": "1",
+                "emoji": "",
+                "lead_title": "Witty attire votre attention sur les expressions qui excluent certaines personnes d\u2019une d\u00e9finition de la normalit\u00e9 physique, psychique ou intellectuelle. Les suggestions de Witty vous aident \u00e0 cr\u00e9er un environnement dans lequel tout le monde se sent \u00e0 sa place, quels que soient sa corpulence, son apparence, sa couleur de peau, son type de cheveux, son handicap invisible ou ses obstacles \u00e0 la participation sociale.",
+                "lead_text": "",
+                "lead_image": [],
+                "example_image": []
             }
         },
         "diversity_dimension_drivers": {
@@ -251,6 +287,18 @@
                     "height": "551",
                     "alt": "Eine Illustration von Witty des Satzes 'Wir w\u00fcnschen Ihnen und Ihrem Team [ein frohes Osterfest]!' Als Alternative f\u00fcr\u00a0den Begriff in Klammern wird 'einen bunten Fr\u00fchlingsanfang' vorgeschlagen.\u00a0"
                 }
+            },
+            "fr": {
+                "hs_path": "_religion",
+                "hs_name": "Religion",
+                "name": "Religion",
+                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/religion",
+                "is_active": "1",
+                "emoji": "",
+                "lead_title": "Les grandes religions et les syst\u00e8mes de croyances ont fa\u00e7onn\u00e9, et fa\u00e7onnent encore aujourd\u2019hui en grande partie, la mani\u00e8re dont nous formulons nos id\u00e9es, notre \u00e9thique et nos valeurs. Witty d\u00e9tecte non seulement les termes antis\u00e9mites et islamophobes, mais aussi les expressions plus subtiles qui ne laissent pas place \u00e0 la diversit\u00e9 religieuse. ",
+                "lead_text": "",
+                "lead_image": [],
+                "example_image": []
             }
         },
         "diversity_dimension_drivers": {
@@ -307,6 +355,18 @@
                     "height": "469",
                     "alt": "Eine Illustration von Witty des Satzes 'F\u00fcr unser neues Start-up-Unternehmen brauchen wir [Digital Natives].' Als Alternative wird 'Menschen, die sich in der digitalen Welt zuhause f\u00fchlen' vorgeschlagen.\u00a0"
                 }
+            },
+            "fr": {
+                "hs_path": "diversit\u00e9-acquise",
+                "hs_name": "Diversit\u00e9 acquise",
+                "name": "Diversit\u00e9 acquise",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/acquired-diversity",
+                "is_active": "1",
+                "emoji": "",
+                "lead_title": "La diversit\u00e9 acquise d\u00e9signe les caract\u00e9ristiques d\u00e9velopp\u00e9es au cours de notre vie\u00a0: \u00e2ge, parcours scolaire, traumatismes, statut, etc. Les alternatives inclusives propos\u00e9es par Witty vous aident \u00e0 cr\u00e9er un environnement accessible, dans lequel tout le monde se sent \u00e0 sa place.",
+                "lead_text": "",
+                "lead_image": [],
+                "example_image": []
             }
         },
         "diversity_dimension_drivers": {
@@ -365,6 +425,18 @@
                     "height": "467",
                     "alt": "Eine Illustration von Witty des Satzes 'In der Nachbesprechung wurde vom auftraggebenden Unternehmen [schweres Gesch\u00fctz aufgefahren].  Als Alternative f\u00fcr den Begriff in Klammern wird 'heftige Kritik ge\u00e4u\u00dfert' vorgeschlagen. "
                 }
+            },
+            "fr": {
+                "hs_path": "motivation-sociale",
+                "hs_name": "Motivation sociale",
+                "name": "Motivation sociale",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/social-motive",
+                "is_active": "1",
+                "emoji": "",
+                "lead_title": "Nos motivations sociales sont les facteurs qui influent sur nos pens\u00e9es, nos ressentis et nos comportements dans nos interactions avec autrui. Witty identifie les mots qui vantent les performances personnelles, qui associent le lieu de travail \u00e0 un champ de bataille ou qui pr\u00e9sentent l\u2019esprit de comp\u00e9tition ou la capacit\u00e9 \u00e0 s\u2019affirmer comme des crit\u00e8res essentiels de r\u00e9ussite.",
+                "lead_text": "",
+                "lead_image": [],
+                "example_image": []
             }
         },
         "diversity_dimension_drivers": {

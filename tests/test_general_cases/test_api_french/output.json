@@ -29,7 +29,7 @@
                 "url": "https://www.witty.works/en/categories/gender-orientation/gender-binary?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Binarité de genre",
+            "label": "Genre + Orientation sexuelle: Binarité de genre",
             "proficiency_level": "unconscious_bias",
             "start": 6,
             "subcategory": "gender_identity",
@@ -46,7 +46,7 @@
                 "text": "Renforce la collaboration et le sentiment d'appartenance au groupe",
                 "url": "https://www.witty.works/en/categories/social-motive/communal-language?reducedView=true"
             },
-            "label": "Coopération",
+            "label": "Motivation sociale: Coopération",
             "proficiency_level": "inclusive",
             "start": 32,
             "subcategory": "communal",
@@ -77,7 +77,7 @@
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Performance individuelle",
+            "label": "Motivation sociale: Performance individuelle",
             "proficiency_level": "unconscious_bias",
             "start": 39,
             "subcategory": "agentic",
@@ -94,7 +94,7 @@
                 "text": "Renforce la collaboration et le sentiment d'appartenance au groupe",
                 "url": "https://www.witty.works/en/categories/social-motive/communal-language?reducedView=true"
             },
-            "label": "Coopération",
+            "label": "Motivation sociale: Coopération",
             "proficiency_level": "inclusive",
             "start": 71,
             "subcategory": "communal",
@@ -116,7 +116,7 @@
                 "url": "https://www.witty.works/en/categories/cultural-diversity/filler-words?reducedView=true"
             },
             "gravity": 2.0,
-            "label": "Mot inutile",
+            "label": "Diversité culturelle: Mot inutile",
             "proficiency_level": "unconscious_bias",
             "start": 97,
             "subcategory": "filler",
@@ -154,7 +154,7 @@
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
             "gravity": 3.0,
-            "label": "Performance individuelle",
+            "label": "Motivation sociale: Performance individuelle",
             "proficiency_level": "unconscious_bias",
             "start": 102,
             "subcategory": "agentic_advanced",
