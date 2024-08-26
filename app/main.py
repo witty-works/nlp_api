@@ -5517,6 +5517,9 @@ async def fetch_alternatives_with_article(
         if article_text == "les":
             alternatives_with_article = []
             for alternative in alternatives:
+                if alternative.is_remove:
+                    continue
+
                 article_alternative = ""
                 if " le " not in alternative.lemma:
                     article_alternative = (
