@@ -10,6 +10,7 @@ import fasttext
 import aiosqlite
 from copy import deepcopy
 from inspect import currentframe
+import json_repair
 
 from spacy.matcher import PhraseMatcher, Matcher
 from spacy import displacy
@@ -25,7 +26,6 @@ from fastapi import (
     HTTPException,
     Depends,
     status,
-    Body,
 )
 
 from contextlib import asynccontextmanager
@@ -72,10 +72,13 @@ from app.models import (
     LangVariantType,
     Language,
     BaseRequestIn,
-    RequestIn,
+    RephraseRequestIn,
+    CheckRequestIn,
     Result,
     ResultOut,
     ResultsOut,
+    RephraseOut,
+    RephrasesOut,
     UserConfRequest,
     OrganizationConfRequest,
     ConfResponse,
@@ -153,8 +156,8 @@ async def handle_command_witty(
 ):  # pragma: no cover
     await ack()
 
-    user_request_in = RequestIn(client="slack:1.0.0", text=body["text"])
-    text, lang, limit_reached = fetch_text(user_request_in, model.keys())
+    check_request_in = CheckRequestIn(client="slack:1.0.0", text=body["text"])
+    text, lang, limit_reached = fetch_text(check_request_in, model.keys())
 
     if lang is None:
         await respond(f"Witty could not determine a language for '{text}'.")
@@ -165,20 +168,20 @@ async def handle_command_witty(
     try:
         user = await client.users_info(user=body["user_id"])
         configs = await fetch_configs_for_request(
-            user_request_in, user.data["user"]["profile"]["email"]
+            check_request_in, user.data["user"]["profile"]["email"]
         )
     except KeyError:
         pass
 
     if configs == {} and settings.slack_organization_id:
         configs = await fetch_organization_configs_for_request(
-            user_request_in, settings.slack_organization_id
+            check_request_in, settings.slack_organization_id
         )
 
-    user_request_in.config.__setattr__("alternatives_max_count", None)
-    client = parse_client(user_request_in.client)
+    check_request_in.config.__setattr__("alternatives_max_count", None)
+    client = parse_client(check_request_in.client)
     results = await apply_language_rules(
-        client, user_request_in.config, configs, lang, text
+        client, check_request_in.config, configs, lang, text
     )
 
     analyzed_text = f"*Analyzed*: {text}"
@@ -597,6 +600,11 @@ pronoun_tags = [
     "WDT",
 ]
 
+lang_map = {
+    "en": "English",
+    "de": "German",
+    "fr": "French",
+}
 
 def fetch_current_username(
     credentials: Optional[HTTPBasicCredentials] = Depends(security),
@@ -635,88 +643,331 @@ def fetch_current_username(
 
     return credentials.username
 
-async def fetch_rephrased_sentences(
-    sentence: str, alternatives: List[str], word_to_replace: str, pos_of_word_to_replace: int = 0
+@app.post(
+    "/debug/rephrase",
+    response_model=Union[RephrasesOut, Result],
+    response_model_exclude_none=True,
+    dependencies=[Depends(HTTPBearer(auto_error=False))],
+    include_in_schema=not settings.is_prod,
+)
+async def post_debug_rephrase(
+    request: Request,
+    response: Response,
+    rephrase_request_in: RephraseRequestIn,
+    username: str = Depends(fetch_current_username),
 ):
+    return await rephrase_sentence(request, response, rephrase_request_in)
+
+
+@app.post(
+    "/v1.0/rephrase",
+    response_model=Union[RephrasesOut, Result],
+    response_model_exclude_none=True,
+    dependencies=[Depends(HTTPBearer(auto_error=False))],
+)
+async def post_rephrase_v1_0(
+    request: Request,
+    response: Response,
+    rephrase_request_in: RephraseRequestIn,
+):
+    return await rephrase_sentence(request, response, rephrase_request_in, "1.0")
+
+
+async def rephrase_sentence(
+    request: Request,
+    response: Response,
+    rephrase_request_in: RephraseRequestIn,
+    version: str | None = None,
+):
+    client = parse_client(rephrase_request_in.client)
+    check_client_version(client)
+
+    if version is not None:
+        if rephrase_request_in.model is not None:
+            return Result.factory("Model can only be set in debug mode")
+
+        rephrase_api_version(version)
+
+        user_email = await fetch_user(request)
+        configs = await fetch_configs_for_request(rephrase_request_in, user_email) if user_email else {}
+
+        if (
+            rephrase_request_in.config.plan is None
+            or not rephrase_request_in.config.plan.startswith("witty_")
+        ):
+            response.status_code = status.HTTP_401_UNAUTHORIZED
+            return Result.factory("An error occurred: No valid plan on user")
+    else:
+        # debug
+        configs = {}
+
+    aws_model_id = settings.aws_model_id if rephrase_request_in.model is None else rephrase_request_in.model
+
+    store_metrics(request, configs, version, "rephrase")
+
     # Initialize the Bedrock runtime client
-    client = boto3.client(
+    aws_client = boto3.client(
         service_name="bedrock-runtime",
         region_name=settings.aws_region_name,
         aws_access_key_id=settings.aws_key,
         aws_secret_access_key=settings.aws_secret_key,
     )
 
-    # Set the model ID
-    model_id = settings.aws_model_id
+    placeholder = "|---|"
+    sentence = rephrase_request_in.sentence
+    alternatives = []
+    genderstar = {}
+    for alternative_index in range(len(rephrase_request_in.alternatives)):
+        alternative = rephrase_request_in.alternatives[alternative_index]
+        if alternative.types is None:
+            alternatives.append(alternative.lemma)
+        else:
+            genderstar[alternative_index] = alternative.types
+            alternatives.append(alternative.male_form)
+            alternatives.append(alternative.female_form)
+
+    alternatives = list(set(alternatives))
+
+    text = rephrase_request_in.text
+    start = rephrase_request_in.start
+    lang = lang_map[rephrase_request_in.lang]
+
+    end = start + len(text)
 
     # The updated prompt specifies that the assistant should only replace the word at the specified position
     system_prompt = f"""
-    You are an assistant that rephrases sentences to ensure grammatical correctness and clarity, incorporating a provided alternative word while explicitly replacing only the instance of the specified word.
-    The word to replace is starting at sentence char {pos_of_word_to_replace + 1}.
-    Keep as many original words as possible.
-    Return the rephrased sentence together with the alternative word. If there is only one alternative provided, return exactly one entry. If there are multiple alternatives, return an entry for each alternative. Format the results as follows:
-    [
-        {{
-            "alternative": "{alternatives[0]}",
-            "rephrased_sentence": "Generated example for {alternatives[0]}"
-        }}
-        {', ...' if len(alternatives) > 1 else ''}
-    ]
-
-    Example:
-    input: 
-    {{
-        "sentence": "Hey guys! how are you doing today? Your are my best guys.",
-        "alternatives": [
-            "people", "everyone", "all"
-        ],
-        "word_to_replace": "guys",
-        "pos_of_word_to_replace": {4}
-    }}
-    Output:
-    {{
-        "alternative": "people",
-        "rephrased_sentence": "Hey people! how are you doing today? You are my best guys.",
-    }},
-    {{
-        "alternative": "everyone",
-        "rephrased_sentence": "Hey everyone! how are you doing today? You are my best guys.",
-    }},
-    {{
-        "alternative": "all",
-        "rephrased_sentence": "Hey all! how are you doing today? You are my best guys.",
-    }}
+    You are an expert in {lang} grammatical correctness.
+    Make sure that all grammatical and spelling mistakes present in 'sentence' are still present in each of the 'rephrasing' in the output.
+    Replace '{placeholder}' in 'sentence_with_placeholder' with each of the supplied items in 'alternatives'.
+    Before making the replacement ensure that the alternative matches the {lang} grammatical case (tense, pluralization etc.) of the supplied 'text' (ie. if 'text' is past tense the 'alternatives' should all also be made past tense).
+    Do not make stylistic or other unnecessary changes in the output.
+    Change as little as necessary to make the output grammatically correct in {lang} like correcting the gender of the article to match the 'alternative' preceeding '{placeholder}' it.
+    For each item in 'alternatives' provide exactly one item ('alternative' + 'rephrasing') in the response with key in the dictionary matching exactly each of the 'alternative' provided.
+    Leave double parenthesis unchanged.
     """
 
-    conversation = [
-        {
-            "role": "user",
-            "content": [
-                {
-                    "text": f"{system_prompt} \n Rephrase the sentence '{sentence}' to fit each of these alternatives: {', '.join(alternatives)}. Word to replace '{word_to_replace}' starting at position {pos_of_word_to_replace}"
-                }
-            ],
-        }
-    ]
+    match rephrase_request_in.lang:
+        case LangType.DE:
+            system_prompt+= f"""
+                Make sure to not remove any useage of the Genderstar.
 
+                For the following example:  
+                {{
+                    "sentence": "Einhaltung von ethischen Prinzipien.",
+                    "sentence_with_placeholder": "Einhaltung von ethischen {placeholder}.",
+                    "text": "Prinzipien",
+                    "alternatives": [
+                        "Ethik",
+                        "Methode",
+                        "Wert",
+                        "Richtlinie",
+                        "Regel"
+                    ]
+                }}
+
+                Format the output as follows making sure it is valid JSON:
+                {{
+                    "Ethik": "Einhaltung von ethischen Ethiken.",
+                    "Methode": "Einhaltung von ethischen Methoden.",
+                    "Wert": "Einhaltung von ethischen Werte.",
+                    "Richtlinie": "Einhaltung von ethischen Richtlinien.",
+                    "Regel": "Einhaltung von ethischen Regeln."
+                }}
+
+                For the following example:
+                {{
+                    "sentence": "Wir arbeiten für unsere Kund*innen, für uns ist der Kunde im Zentrum",
+                    "sentence_with_placeholder": "Wir arbeiten für unsere Kund*innen, für uns ist der {placeholder} im Zentrum",
+                    "text": "Kunden",
+                    "alternatives": [
+                        "Kunde",
+                        "Kundin",
+                        "Kundschaft"
+                    ]
+                }}
+
+                Format the output as follows making sure it is valid JSON:
+                {{
+                    "Kunde": "Wir arbeiten für unsere Kund*innen, für uns ist der Kunde im Zentrum",
+                    "Kundin": "Wir arbeiten für unsere Kund*innen, für uns ist die Kundin im Zentrum",
+                    "Kundschaft": "Wir arbeiten für unsere Kund*innen, für uns ist die Kundschaft im Zentrum"
+                }}
+                """
+        case LangType.FR:
+            system_prompt+= f"""
+                Make sure to not remove any useage of the point médian.
+
+                For the following example:  
+                {{
+                    "sentence": "Face à la concurrence, il était handicapé par son jeune âge.",
+                    "sentence_with_placeholder": "Face à la concurrence, il {placeholder} par son jeune âge.",
+                    "text": "était handicapé",
+                    "alternatives": [
+                        "être désavantagée",
+                        "être désavantagé"
+                        "être pénalisée",
+                        "être pénalisé"
+                    ]
+                }}
+
+                Format the output as follows making sure it is valid JSON:
+                {{
+                    "être désavantagée": "Face à la concurrence, elle était désavantagée par son jeune âge.",
+                    "être désavantagé": "Face à la concurrence, il était désavantagé par son jeune âge.",
+                    "être pénalisée": "Face à la concurrence, elle était pénalisée par son jeune âge.",
+                    "être pénalisé": "Face à la concurrence, il était pénalisé par son jeune âge."
+                }}
+
+                For the following example:
+                {{
+                    "sentence": "Les beaux traducteurs sont compétent.",
+                    "sentence_with_placeholder": "Les {placeholder} sont compétent.",
+                    "text": "traducteurs",
+                    "alternatives": [
+                        "traducteur,
+                        "traductrice",
+                        "traduction"
+                    ]
+                }}
+
+                Format the output as follows making sure it is valid JSON:
+                {{
+                    "traducteur": "Les beaux traducteurs sont compétent.",
+                    "traductrice": "Les belles traductrices sont compétentes.",
+                    "traduction": "La beau traduction est compétente"
+                }}
+                """
+        #case LangType.EN:
+        case _:
+            system_prompt+= f"""
+                For the following example:  
+                {{
+                    "sentence": "Wat he had done is amazing as he is the best.",
+                    "sentence_with_placeholder": "Wat {placeholder} has done is amazing as he is the best.",
+                    "text": "he",
+                    "alternatives": [
+                        "they",
+                        "he or she",
+                        "((given name))"
+                    ]
+                }}
+
+                Format the output as follows making sure it is valid JSON:
+                {{
+                    "they": "Wat they have done is amazing as he is the best.",
+                    "he or she": "Wat he or she have done is amazing as he is the best.",
+                    "((given name))": "Wat ((given name)) have done is amazing as he is the best."
+                }}
+
+                For the following example:
+                {{
+                    "sentence": "We analyzed if this works",
+                    "sentence_with_placeholder": "We {placeholder} if this works",
+                    "text": "analyzed",
+                    "alternatives": [
+                        "closely examine"
+                    ]
+                }}
+
+                Format the output as follows making sure it is valid JSON:
+                {{
+                    "closely examine": "We closely examined if this works"
+                }}
+                """
+    new_sentence_start = "" if start == 0 else sentence[0:start]
+    new_sentence_end = "" if end >= len(sentence) else sentence[end:]
+    sentence_with_placeholder = new_sentence_start + placeholder + new_sentence_end
+
+    input_data = {
+        "sentence": sentence,
+        "sentence_with_placeholder": sentence_with_placeholder,
+        "text": text,
+        "alternatives": alternatives
+    }
+
+    user_prompt = "Please process the following input into a valid JSON response:\n" + json.dumps(input_data)
+
+    conversation = []
+
+    if "mistral" in aws_model_id:
+        user_prompt = f"{system_prompt}\n{user_prompt}"
+        system_prompt = []
+    else:
+        system_prompt = [
+            {
+                "text": system_prompt
+            }
+        ]
+
+    user_prompt = {
+        "role": "user",
+        "content": [
+            {
+                "text": user_prompt
+            }
+        ],
+    }
+
+    conversation.append(user_prompt)
+
+    result = ""
 
     try:
-        streaming_response = client.converse_stream(
-            modelId=model_id,
+        streaming_response = aws_client.converse_stream(
+            system=system_prompt,
+            modelId=aws_model_id,
             messages=conversation,
             inferenceConfig={"maxTokens": 300, "temperature": 0.7, "topP": 1},
         )
-        result = ""
+
         for chunk in streaming_response["stream"]:
             if "contentBlockDelta" in chunk:
                 text = chunk["contentBlockDelta"]["delta"]["text"]
-                print(text, end="")
                 result += text
 
-        return result.split("\n")
+        result = result[result.find("{") : result.rfind("}") + 1]
+        result = json_repair.loads(result)
+
+        if rephrase_request_in.gender_separator is None:
+            separator = noun_separator = "∙"
+        else:
+            separator, noun_separator = get_german_noun_separator(rephrase_request_in.gender_separator)
+
+        results = []
+        for alternative_index in range(len(rephrase_request_in.alternatives)):
+            alternative = rephrase_request_in.alternatives[alternative_index]
+            if alternative_index in genderstar:
+                if (alternative.male_form in result
+                    and placeholder not in result[alternative.male_form]
+                    and alternative.female_form in result
+                    and placeholder not in result[alternative.female_form]
+                ):
+                    rephrasings = await noun_alternatives(
+                        rephrase_request_in.lang,
+                        separator,
+                        noun_separator,
+                        result[alternative.male_form],
+                        result[alternative.female_form],
+                    )
+
+                    result_label = alternative.male_form + "/" + alternative.female_form
+                    for gendered_role_format in genderstar[alternative_index]:
+                        if gendered_role_format in rephrasings:
+                            results.append(
+                                RephraseOut(
+                                    alternative=gendered_role_format + ":" + result_label,
+                                    rephrasing=rephrasings[gendered_role_format],
+                                )
+                            )
+            elif alternative.lemma in result and placeholder not in result[alternative.lemma]:
+                results.append(
+                    RephraseOut(alternative=alternative.lemma, rephrasing=result[alternative.lemma])
+                )
+
+        return RephrasesOut.factory(results)
     except Exception as e:
-        print("An error occurred:", e)
-        return []
+        response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+        return Result.factory("An error occurred: " + str(e))
 
 
 @app.post(
@@ -729,13 +980,13 @@ async def fetch_rephrased_sentences(
 async def review_prompt(
     request: Request,
     response: Response,
-    user_request_in: RequestIn,
+    check_request_in: CheckRequestIn,
 ) -> Result | str:
-    user_request_in.config.disabled_categories.append("communal")
-    user_request_in.config.disabled_categories.append("d_and_i")
-    user_request_in.config.disabled_categories.append("emotional_security")
+    check_request_in.config.disabled_categories.append("communal")
+    check_request_in.config.disabled_categories.append("d_and_i")
+    check_request_in.config.disabled_categories.append("emotional_security")
 
-    check_result = await check(request, response, user_request_in, None)
+    check_result = await check(request, response, check_request_in, None)
     if isinstance(check_result, Result):
         return check_result
 
@@ -752,26 +1003,6 @@ async def review_prompt(
             prompt+= "* Remove the phrase from the text\n" if alternative.remove else f"* '{alternative.text}'\n"
 
     return prompt
-
-
-@app.post("/rephrase")
-async def rephrase_sentence(
-    sentence: str = Body(..., embed=True),
-    alternatives: List[str] = Body(..., embed=True),
-    word_to_replace: str = Body(..., embed=True),
-    pos_of_word_to_replace: int = Body(0, embed=True),
-):
-    if not isinstance(sentence, str):
-        raise HTTPException(status_code=400, detail="Invalid sentence format")
-    if not isinstance(alternatives, list) or not all(
-        isinstance(item, str) for item in alternatives
-    ):
-        raise HTTPException(status_code=400, detail="Invalid alternatives format")
-
-    rephrased_responses = await fetch_rephrased_sentences(
-        sentence, alternatives, word_to_replace, pos_of_word_to_replace
-    )
-    return rephrased_responses
 
 
 @app.post("/slack/commands")
@@ -965,7 +1196,7 @@ async def get_config_debug(
     user_email: str,
     username: str = Depends(fetch_current_username),
 ):  # pragma: no cover
-    user_request_in = RequestIn(text="")
+    check_request_in = CheckRequestIn(text="")
 
     try:
         configs = await fetch_user_organization_configs(user_email)
@@ -975,7 +1206,7 @@ async def get_config_debug(
         except HTTPException:
             configs = {}
 
-    result_configs = await fetch_configs_for_request(user_request_in, user_email)
+    result_configs = await fetch_configs_for_request(check_request_in, user_email)
     del result_configs["organization_config"]
     del result_configs["organization_domains"]
     del result_configs["organization_false_positives"]
@@ -984,7 +1215,7 @@ async def get_config_debug(
     return {
         "configs": configs,
         "result_configs": result_configs,
-        "user_request_in": user_request_in,
+        "check_request_in": check_request_in,
     }
 
 
@@ -994,13 +1225,13 @@ async def get_config_debug(
     dependencies=[Depends(HTTPBearer(auto_error=False))],
 )
 async def post_auth_debug(
-    request: Request, user_request_in: RequestIn
+    request: Request, check_request_in: CheckRequestIn
 ):  # pragma: no cover
     user_email = await fetch_user(request)
     if not user_email:
         return user_email
 
-    configs = await fetch_configs_for_request(user_request_in, user_email)
+    configs = await fetch_configs_for_request(check_request_in, user_email)
 
     if "authorization" in request.headers and request.headers[
         "authorization"
@@ -1012,7 +1243,7 @@ async def post_auth_debug(
     return {
         "claim": unverified_claims,
         "configs": configs,
-        "user_request_in": user_request_in,
+        "check_request_in": check_request_in,
     }
 
 
@@ -1052,14 +1283,14 @@ async def get_user_configs(
     response_model_exclude_none=True,
     dependencies=[Depends(HTTPBearer(auto_error=False))],
 )
-async def post_auth_2_0(request: Request, user_request_in: BaseRequestIn = None):
+async def post_auth_2_0(request: Request, check_request_in: BaseRequestIn = None):
     client = parse_client(
-        user_request_in.client if user_request_in is not None else None
+        check_request_in.client if check_request_in is not None else None
     )
     check_client_version(client)
 
     user_email = await fetch_user(request)
-    configs = await fetch_configs_for_request(RequestIn(text=""), user_email) if user_email else {}
+    configs = await fetch_configs_for_request(CheckRequestIn(text=""), user_email) if user_email else {}
 
     store_metrics(request, configs, "2.0", 'auth')
 
@@ -1283,10 +1514,10 @@ async def get_debug_german_noun(
 async def post_debug_check(
     request: Request,
     response: Response,
-    user_request_in: RequestIn,
+    check_request_in: CheckRequestIn,
     username: str = Depends(fetch_current_username),
 ):
-    return await check(request, response, user_request_in, None)
+    return await check(request, response, check_request_in)
 
 
 @app.post(
@@ -1298,9 +1529,9 @@ async def post_debug_check(
 async def post_check_v2_3(
     request: Request,
     response: Response,
-    user_request_in: RequestIn,
+    check_request_in: CheckRequestIn,
 ):
-    return await check(request, response, user_request_in, "2.3")
+    return await check(request, response, check_request_in, "2.3")
 
 
 @app.post(
@@ -1312,9 +1543,9 @@ async def post_check_v2_3(
 async def post_check_v2_3(
     request: Request,
     response: Response,
-    user_request_in: RequestIn,
+    check_request_in: CheckRequestIn,
 ):
-    return await check(request, response, user_request_in, "2.4")
+    return await check(request, response, check_request_in, "2.4")
 
 
 @app.get("/lemmatize")
@@ -1485,6 +1716,10 @@ def store_metrics(request: Request, configs: dict, version: str | None, endpoint
         redis.hincrby(MetricsType.CHECK_COUNTS, version + user_id, 1)
         redis.hincrby(MetricsType.CHECK_PLANS, version + plan, 1)
         redis.hincrby(MetricsType.CHECK_HOST, version + host, 1)
+    elif endpoint == "rephrase":
+        redis.hincrby(MetricsType.REPHRASE_COUNTS, version + user_id, 1)
+        redis.hincrby(MetricsType.REPHRASE_PLANS, version + plan, 1)
+        redis.hincrby(MetricsType.REPHRASE_HOST, version + host, 1)
 
 def parse_term_replacement(lemma, term_replacement: dict):
     word_type = (
@@ -1639,9 +1874,9 @@ def is_token_plural(lang: LangType, token: Token) -> bool | None:
 
 
 def apply_configs(
-    user_request_in: RequestIn, configs: dict, plan: str, force_disables: bool = True
+    check_request_in: CheckRequestIn, configs: dict, plan: str, force_disables: bool = True
 ):
-    disabled_categories = user_request_in.config.disabled_categories
+    disabled_categories = check_request_in.config.disabled_categories
     if "force_categories" not in configs or configs["force_categories"] is None:
         configs["force_categories"] = []
 
@@ -1683,28 +1918,28 @@ def apply_configs(
                 and data["status"] == "force"
                 and not data["value"]
             ):
-                user_request_in.config.__setattr__("store_context", False)
+                check_request_in.config.__setattr__("store_context", False)
         elif data["status"] == "force":
-            user_request_in.config.__setattr__(config, data["value"])
+            check_request_in.config.__setattr__(config, data["value"])
 
-    user_request_in.config.__setattr__("disabled_categories", disabled_categories)
-    user_request_in.config.__setattr__("plan", plan)
+    check_request_in.config.__setattr__("disabled_categories", disabled_categories)
+    check_request_in.config.__setattr__("plan", plan)
 
 
 async def fetch_configs_for_request(
-    user_request_in: RequestIn, user_email=Optional[str]
+    request_in: BaseRequestIn, user_email=Optional[str]
 ) -> dict:
-    user_request_in.config.__setattr__("store_context", True)
-    user_request_in.config.__setattr__("plan", None)
-    user_request_in.config.__setattr__(
+    request_in.config.__setattr__("store_context", True)
+    request_in.config.__setattr__("plan", None)
+    request_in.config.__setattr__(
         "alternatives_max_count", settings.alternatives_max_count
     )
 
     if not user_email:
-        user_request_in.config.__setattr__(
+        request_in.config.__setattr__(
             "disabled_categories", get_category_keys(True)
         )
-        user_request_in.config.__setattr__("plan", None)
+        request_in.config.__setattr__("plan", None)
 
         return {}
 
@@ -1713,11 +1948,11 @@ async def fetch_configs_for_request(
     except HTTPException:
         return {}
 
-    apply_configs(user_request_in, configs["config"], configs["plan"])
+    apply_configs(request_in, configs["config"], configs["plan"])
 
     if "organization_config" in configs:
         apply_configs(
-            user_request_in,
+            request_in,
             configs["organization_config"],
             configs["plan"],
             False,
@@ -1732,9 +1967,9 @@ async def fetch_configs_for_request(
 
 
 async def fetch_organization_configs_for_request(
-    user_request_in: RequestIn, organization_id=Optional[str]
+    request_in: BaseRequestIn, organization_id=Optional[str]
 ) -> dict:
-    user_request_in.config.__setattr__("store_context", True)
+    request_in.config.__setattr__("store_context", True)
 
     if not organization_id:
         return {}
@@ -1748,7 +1983,7 @@ async def fetch_organization_configs_for_request(
         if configs["configs"][config]["status"] == "suggestion":
             configs["configs"][config]["status"] = "force"
 
-    apply_configs(user_request_in, configs["config"], configs["plan"])
+    apply_configs(request_in, configs["config"], configs["plan"])
 
     return configs
 
@@ -1832,9 +2067,9 @@ async def fetch_user(request: Request) -> str | None:
 
 
 def fetch_text(
-    user_request_in: RequestIn, supported_langs: list
+    check_request_in: CheckRequestIn, supported_langs: list
 ) -> tuple[str, Language | None, bool]:
-    text = user_request_in.text
+    text = check_request_in.text
     limit_reached = len(text) > settings.text_max_length
     if limit_reached:
         text = text[0 : settings.text_max_length]
@@ -1844,14 +2079,21 @@ def fetch_text(
     locale = lang_detection.get_locale(
         supported_langs,
         text,
-        user_request_in.lang,
-        user_request_in.config.preferred_languages,
-        user_request_in.config.preferred_variants,
+        check_request_in.lang,
+        check_request_in.config.preferred_languages,
+        check_request_in.config.preferred_variants,
     )
 
     lang = None if locale is None else Language(locale)
 
     return text, lang, limit_reached
+
+def rephrase_api_version(version: str):
+    if version != "1.0":  # pragma: no cover
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"API version '{version}' not supported, please use version '1.0'.",
+        )
 
 
 def check_api_version(version: str):
@@ -1875,38 +2117,38 @@ def check_client_version(client: Client):
 async def check(
     request: Request,
     response: Response,
-    user_request_in: RequestIn,
-    version: str | None,
+    check_request_in: CheckRequestIn,
+    version: str | None = None,
 ) -> Result | ResultsOut:
-    client = parse_client(user_request_in.client)
+    client = parse_client(check_request_in.client)
     check_client_version(client)
 
     if version is not None:
         check_api_version(version)
 
         user_email = await fetch_user(request)
-        configs = await fetch_configs_for_request(user_request_in, user_email)
+        configs = await fetch_configs_for_request(check_request_in, user_email)
     else:
         # debug
         user_email = None
 
-        if "none" in user_request_in.config.disabled_categories:
-            user_request_in.config.__setattr__("disabled_categories", [])
-        elif user_request_in.config.disabled_categories == []:
-            user_request_in.config.__setattr__(
+        if "none" in check_request_in.config.disabled_categories:
+            check_request_in.config.__setattr__("disabled_categories", [])
+        elif check_request_in.config.disabled_categories == []:
+            check_request_in.config.__setattr__(
                 "disabled_categories", ["plain_language_advanced"]
             )
 
         configs = {"categories": {}}
-        apply_configs(user_request_in, configs, "witty_teams")
+        apply_configs(check_request_in, configs, "witty_teams")
 
-    store_metrics(request, configs, version, 'check')
+    store_metrics(request, configs, version, "check")
 
     if (
-        user_request_in.config.plan is not None
-        and user_request_in.config.plan.startswith("witty_")
+        check_request_in.config.plan is not None
+        and check_request_in.config.plan.startswith("witty_")
     ):
-        text, lang, limit_reached = fetch_text(user_request_in, model.keys())
+        text, lang, limit_reached = fetch_text(check_request_in, model.keys())
 
         if lang is None:
             response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
@@ -1915,7 +2157,7 @@ async def check(
             configs = {}
         else:
             results = await apply_language_rules(
-                client, user_request_in.config, configs, lang, text
+                client, check_request_in.config, configs, lang, text
             )
 
             language = lang.lang
@@ -1945,7 +2187,7 @@ async def check(
         results=results,
         language=language,
         limit_reached=limit_reached,
-        config_changed=fetch_config_change(configs, user_request_in),
+        config_changed=fetch_config_change(configs, check_request_in),
         notifications=notifications,
         has_consented_to_mailing=has_consented_to_mailing,
     )
@@ -1953,20 +2195,20 @@ async def check(
 
 def fetch_config_change(
     configs: dict,
-    user_request_in: Optional[RequestIn] = None,
+    check_request_in: Optional[BaseRequestIn] = None,
 ) -> bool | None:
-    if not user_request_in:
+    if not check_request_in:
         return True
 
     if (
         "config_hash" in configs
-        and user_request_in.config_hash != configs["config_hash"]
+        and check_request_in.config_hash != configs["config_hash"]
     ):
         return True
 
     if (
         "organization_config_hash" in configs
-        and user_request_in.organization_config_hash
+        and check_request_in.organization_config_hash
         != configs["organization_config_hash"]
     ):
         return True
@@ -3784,7 +4026,7 @@ async def fetch_word_type(
 async def _fetch_word_type(
     lang: LangType,
     token: Token,
-    expected_word_type: str = None,
+    expected_word_type: str|None = None,
     single_word: bool = False,
     strict: bool = False,
 ) -> str:
@@ -5020,40 +5262,133 @@ def handle_single_tilde(alternative: Alternative, prefix: bool, is_singular: boo
     alternative.lemma = lemma.strip()
 
 
+async def noun_alternatives(lang: LangType, separator: str, noun_separator: str, male_form: str, female_form: str) -> dict[str]:
+    sentence_male_tokens = fetch_tokens(lang, male_form)
+    sentence_female_tokens = fetch_tokens(lang, female_form)
+    if len(sentence_male_tokens) != len(sentence_female_tokens):
+        return {}
+
+    singular_conjunction = "/" if lang == LangType.DE else " ou "
+    plural_conjunction = " und " if lang == LangType.DE else " et "
+
+    inclusive_form = ""
+    binary_form = ""
+    male_form_sub_sentence = ""
+    female_form_sub_sentence = ""
+    sub_sentence_contains_noun = False
+
+    for token_index in range(len(sentence_male_tokens)):
+        if sentence_male_tokens[token_index].text != sentence_female_tokens[token_index].text:
+            inclusive_form+= inclusive_alternative(
+                lang,
+                sentence_male_tokens[token_index].text,
+                sentence_female_tokens[token_index].text,
+                "",
+                separator,
+                noun_separator,
+            )
+            conjunction = singular_conjunction if is_token_singular(lang, sentence_male_tokens[token_index]) else plural_conjunction
+            if lang == LangType.FR:
+                if male_form_sub_sentence != "":
+                    male_form_sub_sentence+= sentence_male_tokens[token_index - 1].whitespace_
+                    female_form_sub_sentence+= sentence_female_tokens[token_index - 1].whitespace_
+
+                if sub_sentence_contains_noun == True or await _fetch_word_type(lang, sentence_male_tokens[token_index], WordType.NOUN, True, True) == WordType.NOUN:
+                    sub_sentence_contains_noun = True
+
+                male_form_sub_sentence+= sentence_male_tokens[token_index].text
+                female_form_sub_sentence+= sentence_female_tokens[token_index].text if token_index > 0 else sentence_female_tokens[token_index].text.lower()
+            else:
+                binary_form+= sentence_female_tokens[token_index].text + conjunction + sentence_male_tokens[token_index].text
+        else:
+            inclusive_form+= sentence_male_tokens[token_index].text
+            if male_form_sub_sentence != "":
+                if sub_sentence_contains_noun:
+                    binary_form+= male_form_sub_sentence + conjunction + female_form_sub_sentence + sentence_female_tokens[token_index - 1].whitespace_
+                else:
+                    # TODO add user preference to choose male form over female form
+                    binary_form+= female_form_sub_sentence + sentence_male_tokens[token_index - 1].whitespace_
+                male_form_sub_sentence = ""
+                female_form_sub_sentence = ""
+                sub_sentence_contains_noun = False
+
+            binary_form+= sentence_male_tokens[token_index].text
+
+        inclusive_form+= sentence_male_tokens[token_index].whitespace_
+
+        if male_form_sub_sentence == "":
+            binary_form+= sentence_male_tokens[token_index].whitespace_
+
+    if male_form_sub_sentence != "":
+        binary_form+= male_form_sub_sentence + conjunction + female_form_sub_sentence
+
+    return {
+        GenderedRolesFormatType.INCLUSIVE_GENDER: inclusive_form,
+        GenderedRolesFormatType.BINARY_GENDER: binary_form,
+    }
+
+
 def inclusive_alternative(
-    word: str,
+    lang: LangType,
     male_form: str,
     female_form: str,
     prefix: str,
     separator: str,
     noun_separator: str,
 ):
-    short_gender_star = True
-    common_prefix = (
-        ""
-        if word.endswith("mann")
-        else find_common_prefix(male_form, female_form, False, False)
-    )
-    if len(male_form) - len(common_prefix) > 2:
-        common_prefix = female_form
-        suffix = add_german_prefix(male_form, prefix)
-        short_gender_star = False
-    elif len(female_form) >= len(male_form):
-        # Mitarbeiterin + Mitarbeiter = Mitarbeiter
-        suffix = female_form[len(common_prefix) :]
-    else:
-        # Vorgesetze + Vorgesetzter = Vorgesetze
-        suffix = male_form[len(common_prefix) :]
+    if lang == LangType.DE:
+        if male_form.lower() in static_rules[lang]["masculine_articles"]:
+            return female_form + separator + male_form
 
-    temp_separator = noun_separator
-    # In
-    if separator != noun_separator:
-        if short_gender_star:
-            suffix = suffix.capitalize()
+        short_gender_star = True
+        common_prefix = (
+            ""
+            if male_form.endswith("mann")
+            else find_common_prefix(male_form, female_form, False, False)
+        )
+        if len(male_form) - len(common_prefix) > 2:
+            common_prefix = female_form
+            suffix = add_german_prefix(male_form, prefix)
+            short_gender_star = False
+        elif len(female_form) >= len(male_form):
+            # Mitarbeiterin + Mitarbeiter = Mitarbeiter
+            suffix = female_form[len(common_prefix) :]
         else:
-            temp_separator = "/"
+            # Vorgesetze + Vorgesetzter = Vorgesetze
+            suffix = male_form[len(common_prefix) :]
 
-    return add_german_prefix(common_prefix + temp_separator + suffix, prefix)
+        temp_separator = noun_separator
+        # In
+        if separator != noun_separator:
+            if short_gender_star:
+                suffix = suffix.capitalize()
+            else:
+                temp_separator = "/"
+
+        return add_german_prefix(common_prefix + temp_separator + suffix, prefix)
+
+    if lang == LangType.FR:
+        male_form_lower = male_form.lower()
+        if male_form_lower in static_rules[lang]["masculine_articles"]:
+            inclusive_form = static_rules[lang]["masculine_articles"][male_form_lower]
+            if male_form != male_form_lower:
+                inclusive_form = inclusive_form.capitalize()
+            return inclusive_form
+
+        common_prefix = find_common_prefix(male_form, female_form, False, False)
+        if len(common_prefix) < 3:
+            return male_form + separator + female_form.lower()
+
+        if len(female_form) >= len(male_form):
+            suffix = female_form[len(common_prefix) :]
+            common_prefix = male_form
+        else:
+            suffix = male_form[len(common_prefix) :]
+            common_prefix = female_form
+
+        common_prefix = common_prefix[0:-1] if common_prefix[-1] == suffix[-1] else common_prefix
+
+        return prefix + common_prefix + separator + suffix
 
 
 async def gendered_alternatives(
@@ -5126,7 +5461,7 @@ async def gendered_alternatives(
     if female_form is not None and male_form is not None:
         if inclusive:
             lemma = inclusive_alternative(
-                word,
+                LangType.DE,
                 male_form,
                 female_form,
                 prefix,
@@ -5147,7 +5482,7 @@ async def gendered_alternatives(
             for additional_word in additional_words:
                 additional_prefix += (
                     inclusive_alternative(
-                        additional_word["word"],
+                        LangType.DE,
                         additional_word["male_form"],
                         additional_word["female_form"],
                         "",
@@ -5242,12 +5577,12 @@ async def gendered_alternatives(
     return alternatives, binary_case
 
 
-def get_german_noun_separator(config: Config):
-    if config.german_gender_ending == GermanGenderEndingType.CAPITAL_LETTER:
+def get_german_noun_separator(german_gender_ending: GermanGenderEndingType):
+    if german_gender_ending == GermanGenderEndingType.CAPITAL_LETTER:
         separator = "/"
         noun_separator = ""
     else:
-        separator = noun_separator = config.german_gender_ending[0:-2]
+        separator = noun_separator = german_gender_ending[0:-2]
 
     return separator, noun_separator
 
@@ -5284,7 +5619,7 @@ async def gendered_nouns(
     binary_case = False
     inclusive = gendered_roles_format_inclusive(config.gendered_roles_format)
     binary = gendered_roles_format_binary(config.gendered_roles_format)
-    separator, noun_separator = get_german_noun_separator(config)
+    separator, noun_separator = get_german_noun_separator(config.german_gender_ending)
     additional_words = []
     is_singular = True if is_singular is None else is_singular
     if (
@@ -5462,7 +5797,7 @@ async def gendered_nouns(
 
 
 def fetch_article_for_flexion(
-    flexion: str, gender: str, article_text: str
+    flexion: str|None, gender: str, article_text: str
 ) -> tuple[str, str, str, str]:
     if flexion is None:
         return None, None, None, None
@@ -5478,14 +5813,14 @@ def fetch_article_for_flexion(
     return article_forms[1], article_forms[2], article_forms[3], article_forms[5]
 
 
-def gendered_roles_format_inclusive(gendered_roles_format: str):
+def gendered_roles_format_inclusive(gendered_roles_format: GenderedRolesFormatType):
     return gendered_roles_format in [
         GenderedRolesFormatType.BOTH,
         GenderedRolesFormatType.INCLUSIVE_GENDER,
     ]
 
 
-def gendered_roles_format_binary(gendered_roles_format: str):
+def gendered_roles_format_binary(gendered_roles_format: GenderedRolesFormatType):
     return gendered_roles_format in [
         GenderedRolesFormatType.BOTH,
         GenderedRolesFormatType.BINARY_GENDER,
@@ -5558,7 +5893,7 @@ async def fetch_alternatives_with_article(
     if match_alternative is None:
         return None
 
-    separator, _ = get_german_noun_separator(config)
+    separator, _ = get_german_noun_separator(config.german_gender_ending)
 
     alternatives_with_article = []
     for alternative in alternatives:
@@ -6267,7 +6602,22 @@ async def rule_check(
                     alternative.lemma += ending
 
         start = token.idx
-        if len(alternatives):
+        if lang.lang == LangType.FR:
+            new_alternatives = []
+            for alternative in alternatives:
+                if alternative.is_gendered_noun:
+                    male_form, female_form = alternative.lemma.split("·")
+                    gendered_alternatives = await noun_alternatives(lang.lang, "·", "·", male_form, female_form)
+                    for gendered_alternative in gendered_alternatives:
+                        if config.gendered_roles_format == GenderedRolesFormatType.BOTH or config.gendered_roles_format == gendered_alternative:
+                            new_alternative = deepcopy(alternative)
+                            new_alternative.lemma = gendered_alternatives[gendered_alternative]
+                            new_alternatives.append(new_alternative)
+                else:
+                    new_alternatives.append(alternative)
+
+            alternatives = new_alternatives
+        elif len(alternatives):
             # TODO make it possible to handle cases with multiple alternatives
             if len(alternatives) == 1 and alternatives[0].lemma == "they":
                 text, alternative = await pluralize_they(text, tokens, token_index)

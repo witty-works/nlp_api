@@ -1,8 +1,9 @@
 from pydantic import field_validator, BaseModel
-from typing import Optional
+from typing import Optional, Annotated, Any
+from annotated_types import Len
 from enum import Enum
 from collections import namedtuple
-import json, typing
+import json
 
 from starlette.responses import Response
 
@@ -80,13 +81,9 @@ class MetricsType(str, Enum):
     CHECK_COUNTS = "check_counts"
     CHECK_PLANS = "check_plans"
     CHECK_HOST = "check_host"
-
-
-class EventType(str, Enum):
-    CHECK = "check"
-    IGNORE = "ignore"
-    ALTERNATIVE = "alternative"
-    ERROR = "error"
+    REPHRASE_COUNTS = "rephrase_counts"
+    REPHRASE_PLANS = "rephrase_plans"
+    REPHRASE_HOST = "rephrase_host"
 
 
 class ContentType(str, Enum):
@@ -196,7 +193,6 @@ class GermanGenderEndingType(str, Enum):
     PARENTHESIS_DASH = "(-)"
     PARENTHESIS = "()"
     CAPITAL_LETTER = "In"
-    BINARY = "binary"
 
 
 class GenderedRolesFormatType(str, Enum):
@@ -603,16 +599,34 @@ class UserConfResponse(ConfRequest):
 
 class BaseRequestIn(BaseModel):
     client: Optional[str] = None
+    config: Optional[Config] = Config()
+    config_hash: Optional[str] = None
+    organization_config_hash: Optional[str] = None
 
 
-class RequestIn(BaseRequestIn):
+class RephraseAlternative(BaseModel):
+    types: list[Optional[GenderedRolesFormatType]] | None = None
+    lemma: Optional[str] = None
+    male_form: Optional[str] = None
+    female_form: Optional[str] = None
+
+
+class RephraseRequestIn(BaseRequestIn):
+    type: str = "rephrase"
+    model: Optional[str] = None
+    sentence: Annotated[str, Len(min_length=1, max_length=300)]
+    text: str
+    start: int
+    alternatives: Annotated[list[RephraseAlternative], Len(min_length=1, max_length=5)]
+    gender_separator: Optional[GermanGenderEndingType] = None
+    lang: LangType
+
+
+class CheckRequestIn(BaseRequestIn):
     type: str = "check"
     text: str
     lang: Optional[LangWithAutoType] = LangWithAutoType.AUTO
     id: Optional[str] = None
-    config: Optional[Config] = Config()
-    config_hash: Optional[str] = None
-    organization_config_hash: Optional[str] = None
 
 
 class ResultAlternative(BaseModel):
@@ -972,6 +986,19 @@ class ResultConf(BaseModel):
     organization_config_hash: Optional[str] = None
 
 
+class RephraseOut(BaseModel):
+    alternative: str
+    rephrasing: str
+
+
+class RephrasesOut(BaseModel):
+    results: list[RephraseOut]
+
+    @staticmethod
+    def factory(results: list):
+        return RephrasesOut(results=results)
+
+
 class ResultsOut(BaseModel):
     results: list[ResultOut]
     language: str
@@ -984,7 +1011,7 @@ class ResultsOut(BaseModel):
 class PrettyJSONResponse(Response):
     media_type = "application/json"
 
-    def render(self, content: typing.Any) -> bytes:
+    def render(self, content: Any) -> bytes:
         return json.dumps(
             content,
             ensure_ascii=False,
