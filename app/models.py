@@ -130,7 +130,6 @@ class LangWithAutoType(str, Enum):
     enUS = "en-US"
     enGB = "en-GB"
     frFR = "fr-FR"
-    frCH = "fr-CH"
 
 
 class RuleType(str, Enum):
@@ -186,7 +185,6 @@ class LangVariantType(str, Enum):
     enUS = "en-US"
     enGB = "en-GB"
     frFR = "fr-FR"
-    frCH = "fr-CH"
 
 
 class GermanGenderEndingType(str, Enum):
@@ -380,7 +378,6 @@ class Config(BaseModel):
         LangWithAutoType.enUS,
         LangWithAutoType.enGB,
         LangWithAutoType.frFR,
-        LangWithAutoType.frCH,
     ]
     german_gender_ending: GermanGenderEndingType = GermanGenderEndingType.STAR
     _gendereddenom_ending = {

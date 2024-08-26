@@ -2,14 +2,14 @@
     "detail": [
         {
             "ctx": {
-                "expected": "'auto', 'en', 'de', 'fr', 'de-DE', 'de-CH', 'de-AT', 'en-US', 'en-GB', 'fr-FR' or 'fr-CH'"
+                "expected": "'auto', 'en', 'de', 'fr', 'de-DE', 'de-CH', 'de-AT', 'en-US', 'en-GB' or 'fr-FR'"
             },
             "input": "en-AU",
             "loc": [
                 "body",
                 "lang"
             ],
-            "msg": "Input should be 'auto', 'en', 'de', 'fr', 'de-DE', 'de-CH', 'de-AT', 'en-US', 'en-GB', 'fr-FR' or 'fr-CH'",
+            "msg": "Input should be 'auto', 'en', 'de', 'fr', 'de-DE', 'de-CH', 'de-AT', 'en-US', 'en-GB' or 'fr-FR'",
             "type": "enum"
         }
     ]
