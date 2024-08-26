@@ -10,6 +10,7 @@
             "explanation": {
                 "content": "video",
                 "icon": "✅",
+                "icon_image": "https://www.witty.works/hubfs/thumbs%20up%20emoji.png",
                 "text": "Strengthens collaboration and a sense of community",
                 "url": "https://www.witty.works/en/categories/social-motive/communal-language?reducedView=true"
             },
@@ -39,6 +40,7 @@
             "end": 13,
             "explanation": {
                 "icon": "😮",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Put underrepresented groups first and link to your equal opportunity policy",
                 "url": "https://www.witty.works/en/categories/gender-orientation/gender-specific-abbreviation?reducedView=true"
             },

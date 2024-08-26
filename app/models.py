@@ -271,6 +271,7 @@ class Rule:
     explanation: Optional[str] = None
     url: Optional[str] = None
     icon: Optional[str] = None
+    icon_image: Optional[str] = None
     type: Optional[RuleType] = RuleType.DEFAULT
     label: Optional[str] = None
     label_type: Optional[str] = RuleLabelEnum.DEFAULT
@@ -532,6 +533,7 @@ class RuleConfig(BaseModel):
 class Explanation(BaseModel):
     text: str
     icon: Optional[str] = None
+    icon_image: Optional[str] = None
     url: Optional[str] = None
 
 
@@ -628,6 +630,7 @@ class ResultAlternative(BaseModel):
 class ResultExplanation(BaseModel):
     text: str
     icon: Optional[str] = None
+    icon_image: Optional[str] = None
     url: Optional[str] = None
     context: Optional[str] = None
     content: Optional[ContentType] = None
@@ -668,6 +671,7 @@ class ResultOut(BaseModel):
         content: str | None = None,
         gravity: float | None = None,
         proficiency_level: str | None = None,
+        icon_image: str | None = None,
     ):
         if end is None:
             end = start + len(text)
@@ -696,6 +700,9 @@ class ResultOut(BaseModel):
         if category_data is not None:
             if icon is None and "emoji" in category_data:
                 icon = category_data["emoji"]
+
+            if icon_image is None and "emoji_image" in category_data:
+                icon_image = category_data["emoji_image"]
 
             if proficiency_level is None and "proficiency_level" in category_data:
                 proficiency_level = get_proficiency_level(subcategory_key)
@@ -753,6 +760,7 @@ class ResultOut(BaseModel):
         explanation = {
             "text": explanation,
             "icon": icon,
+            "icon_image": icon_image,
             "url": url,
             "context": explanation_context,
             "content": content,
