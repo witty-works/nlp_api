@@ -5097,7 +5097,7 @@ async def gendered_alternatives(
                 return [], False
 
             other_forms = await german_noun_lookup(other_form, None, prefix)
-            if target_form not in other_forms:
+            if other_forms is None or target_form not in other_forms:
                 forms = True
                 logger.error(f"Declension '{target_form}' missing for '{other_form}'{token_debug}")
                 return [], False
