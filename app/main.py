@@ -3211,7 +3211,7 @@ async def fetch_declensions(
         return token._.forms
 
     text = (
-        text.capitalize()
+        upperfirst(text)
         if lang == LangType.DE and word_type == BasicWordType.NOUN
         else text.lower()
     )
@@ -4189,6 +4189,10 @@ async def german_noun_gender_lookup(word: str) -> str:
     return result["gender_1"]
 
 
+def upperfirst(x: str):
+    return x[0].upper() + x[1:]
+
+
 async def german_noun_lookup(
     text: str, token: Token | None = None, prefix: str | None = None
 ) -> dict:
@@ -4210,7 +4214,7 @@ async def german_noun_lookup(
 
     if forms is None:
         if prefix != "":
-            word = word.removeprefix(prefix).capitalize()
+            word = upperfirst(word.removeprefix(prefix))
             lower = not prefix.endswith("-")
             forms = await fetch_declensions(LangType.DE, WordType.NOUN, word, token)
 
@@ -4232,7 +4236,7 @@ async def german_noun_lookup(
                     ]:
                         position = text.find(substring)
                         if position >= 0:
-                            words = [text[0:position], text[position:].capitalize()]
+                            words = [text[0:position], upperfirst(text[position:])]
                             break
 
                     if len(words) == 0:
@@ -5368,7 +5372,7 @@ def inclusive_alternative(
         # In
         if separator != noun_separator:
             if short_gender_star:
-                suffix = suffix.capitalize()
+                suffix = upperfirst(suffix)
             else:
                 temp_separator = "/"
 
@@ -5379,7 +5383,7 @@ def inclusive_alternative(
         if male_form_lower in static_rules[lang]["masculine_articles"]:
             inclusive_form = static_rules[lang]["masculine_articles"][male_form_lower]
             if male_form != male_form_lower:
-                inclusive_form = inclusive_form.capitalize()
+                inclusive_form = upperfirst(inclusive_form)
             return inclusive_form
 
         common_prefix = find_common_prefix(male_form, female_form, False, False)
@@ -6043,7 +6047,7 @@ async def regex_match(
             continue
 
         if connector_string == "I":
-            check_text = check_text.lower().capitalize()
+            check_text = upperfirst(check_text.lower())
             if await german_noun_lookup(check_text) is None:
                 continue
 
@@ -6721,7 +6725,7 @@ def detect_filler_words_at_sentence_start(
         match = re.search(r"(\s*,\s*)(\S+)", full_text[end : end + 30])
         if isinstance(match, re.Match):
             text += match.group(0)
-            alternatives = [match.group(2).capitalize()]
+            alternatives = [upperfirst(match.group(2))]
 
     return text, alternatives
 
