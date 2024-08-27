@@ -917,7 +917,14 @@ async def rephrase_sentence(
             system=system_prompt,
             modelId=aws_model_id,
             messages=conversation,
-            inferenceConfig={"maxTokens": 300, "temperature": 0.7, "topP": 1},
+            inferenceConfig={
+                # This is the maximum number of tokens that the LLM generates.
+                "maxTokens": 300,
+                # Temperature is a hyperparameter that controls the randomness of language model output. (lower is more predictable)
+                "temperature": 0.1,
+                # Top p, also known as nucleus sampling, is another hyperparameter that controls the randomness of language model output.
+                "topP": 1
+            },
         )
 
         for chunk in streaming_response["stream"]:
