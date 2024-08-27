@@ -4242,13 +4242,18 @@ async def german_noun_lookup(
                     if len(words) == 0:
                         break
 
-                word = words[-1]
-                forms = await fetch_declensions(LangType.DE, WordType.NOUN, word, token)
-                if forms is None and len(words) > 2:
-                    word = words[-2] + words[-1].lower()
-                    forms = await fetch_declensions(
-                        LangType.DE, WordType.NOUN, word, token
-                    )
+                # Konzernverantwortlicher gets split into 'Konzern' + 'Verantwortliche'
+                if len(words[-1]) > 3 and word[-1] != words[-1][-1]:
+                    forms = await fetch_declensions(LangType.DE, WordType.NOUN, words[-1] + word[-1], token)
+
+                if forms is None:
+                    word = words[-1]
+                    forms = await fetch_declensions(LangType.DE, WordType.NOUN, word, token)
+                    if forms is None and len(words) > 2:
+                        word = words[-2] + words[-1].lower()
+                        forms = await fetch_declensions(
+                            LangType.DE, WordType.NOUN, word, token
+                        )
 
                 if forms is not None:
                     for form in forms:
