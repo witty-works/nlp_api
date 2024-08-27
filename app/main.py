@@ -6606,7 +6606,7 @@ async def rule_check(
             new_alternatives = []
             for alternative in alternatives:
                 if alternative.is_gendered_noun:
-                    male_form, female_form = alternative.lemma.split("·")
+                    male_form, female_form = alternative.lemma.split("~")
                     gendered_alternatives = await noun_alternatives(lang.lang, "·", "·", male_form, female_form)
                     for gendered_alternative in gendered_alternatives:
                         if config.gendered_roles_format == GenderedRolesFormatType.BOTH or config.gendered_roles_format == gendered_alternative:

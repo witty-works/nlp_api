@@ -134,7 +134,10 @@
                     "text": "efficace"
                 },
                 {
-                    "text": "compétent·compétente"
+                    "text": "compétent·e"
+                },
+                {
+                    "text": "compétent ou compétente"
                 },
                 {
                     "context": "💡",
@@ -142,12 +145,7 @@
                     "text": "atteignant des résultats"
                 },
                 {
-                    "text": "engagé·engagée"
-                },
-                {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "inspirant·inspirante"
+                    "text": "engagé·e"
                 }
             ],
             "category": "social-motive",
@@ -176,13 +174,13 @@
                     "text": "responsable"
                 },
                 {
-                    "text": "dirigeant·dirigeante"
+                    "text": "dirigeant·e"
+                },
+                {
+                    "text": "dirigeant ou dirigeante"
                 },
                 {
                     "text": "gestionnaire"
-                },
-                {
-                    "text": "directeur·directrice"
                 }
             ],
             "category": "gender-orientation",
