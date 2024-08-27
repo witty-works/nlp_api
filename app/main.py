@@ -5254,22 +5254,23 @@ def handle_single_tilde(alternative: Alternative, prefix: bool, is_singular: boo
                 word = add_german_prefix(word[1:], prefix)
             else:
                 position = word.find("~")
-                # Trans~gender => Trans*gender, qualifiziert~e => qualifiziert*e, ihr~e => ihr*e
-                if position + 3 < len(word) or is_singular:
-                    word = word.replace("~", "/")
-                    slash = True
-                # ihr~e => ihre
-                elif word.endswith("e"):
-                    word = word.replace("~", "")
-                # qualifizierte~r => qualifizierte
-                else:
-                    word = word[0:position]
+                if word[position+1].islower():
+                    # Trans~gender => Trans*gender, qualifiziert~e => qualifiziert*e, ihr~e => ihr*e
+                    if position + 3 < len(word) or is_singular:
+                        word = word.replace("~", "/")
+                        slash = True
+                    # ihr~e => ihre
+                    elif word.endswith("e"):
+                        word = word.replace("~", "")
+                    # qualifizierte~r => qualifizierte
+                    else:
+                        word = word[0:position]
 
-                if slash:
-                    word_types.append(alternative.word_types[word_index])
-                    word_types.append(
-                        {"word_type": "", "lower_case": True, "lemmatize": True}
-                    )
+                    if slash:
+                        word_types.append(alternative.word_types[word_index])
+                        word_types.append(
+                            {"word_type": "", "lower_case": True, "lemmatize": True}
+                        )
 
         word_types.append(alternative.word_types[word_index])
         lemma += " " + word
@@ -5424,50 +5425,41 @@ async def gendered_alternatives(
 ):
     alternatives = {}
     alternative_prefix = alternative_suffix = ""
-    forms = None
+    male_forms = None
 
     token_debug = "" if token_index is None else f", idx: '{tokens[token_index].idx}'"
 
     words = alternative.split(" ")
     for word in words:
-        if word.startswith("~") and word.endswith("~"):
-            word = word.strip("~")
-            forms = await german_noun_lookup(word, None, prefix)
-            if forms is None or target_form not in forms:
-                forms = None
+        if not word.startswith("~") and "~" in word:
+            male_form, female_form = word.split("~")
+            male_forms = await german_noun_lookup(male_form, None, prefix)
+            if male_forms is None or target_form not in male_forms:
+                male_forms = None
                 logger.error(f"Declension '{target_form}' missing for '{word}'{token_debug}")
                 break
 
-            other_form = (
-                forms["male_form"]
-                if forms["female_form"] is None
-                else forms["female_form"]
-            )
-            if other_form is None:
+            if female_form is None:
                 logger.error(f"Declension data missing for other form in '{word}'{token_debug}")
                 return [], False
 
-            other_forms = await german_noun_lookup(other_form, None, prefix)
-            if other_forms is None or target_form not in other_forms:
-                forms = True
-                logger.error(f"Declension '{target_form}' missing for '{other_form}'{token_debug}")
+            female_forms = await german_noun_lookup(female_form, None, prefix)
+            if female_forms is None or target_form not in female_forms:
+                male_forms = True
+                logger.error(f"Declension '{target_form}' missing for '{female_form}'{token_debug}")
                 return [], False
 
-        elif forms is None:
+        elif male_forms is None:
             alternative_prefix += word + " "
         else:
             alternative_suffix += " " + word
 
-    if forms is None:
+    if male_forms is None:
         logger.error(f"Missing male_form '{word}' in '{alternative}'{token_debug}")
         return [], binary_case
 
-    if forms["female_form"] is None:
-        female_form = forms[target_form]
-        male_form = other_forms[target_form]
-    else:
-        female_form = other_forms[target_form]
-        male_form = forms[target_form]
+    female_form = female_forms[target_form]
+    male_form = male_forms[target_form]
 
     if male_form == female_form:
         alternative = alternative_prefix + male_form + alternative_suffix
@@ -5581,11 +5573,11 @@ async def gendered_alternatives(
                 additional_prefix += additional_word["collective_noun"] + "-"
 
     for form in ["collective_noun", "collective_noun_2"]:
-        if forms[form] is not None:
+        if male_forms[form] is not None:
             new_alternative = (
                 alternative_prefix
                 + additional_prefix
-                + add_german_prefix(forms[form], prefix)
+                + add_german_prefix(male_forms[form], prefix)
                 + alternative_suffix
             )
             alternatives[new_alternative] = True
