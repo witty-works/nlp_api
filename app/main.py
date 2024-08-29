@@ -6952,31 +6952,32 @@ def detect_non_inclusive_emoji(
         return token_index + 1
 
     if token_index + 1 < len(tokens):
-        subcategory = "ability"
-        explanation = None
-        for emoji_index in range(token_index + 1, len(tokens)):
-            if not tokens[emoji_index]._.is_emoji:
-                break
+        subcategory = explanation = None
+        emoji_index = token_index
+        while emoji_index + 1 < len(tokens) and (tokens[emoji_index + 1]._.is_emoji or tokens[emoji_index+1].text.endswith("\u200d")):
+            emoji_index += 1
 
             if token.text == tokens[emoji_index].text:
-                if emoji_index - 1 == token_index:
-                    explanation = (
-                        "Wiederholen von Emoji kann blinde Menschen ausschließen"
-                        if lang.lang == LangType.DE
-                        else "Repeating emoji's may exclude screen reader users"
-                    )
+                subcategory = "ability"
+                explanation = (
+                    "Wiederholen von Emoji kann blinde Menschen ausschließen"
+                    if lang.lang == LangType.DE
+                    else "Repeating emoji's may exclude screen reader users"
+                )
             elif explanation is not None:
                 emoji_index -= 1
                 break
 
-        if explanation is None and emoji_index >= token_index + 2:
+        if subcategory is None and emoji_index >= token_index + 1:
+            subcategory = "ability" if emoji_index >= token_index + 2 else "ability_advanced"
+
             explanation = (
                 "Übermäßiger Gebrauch von Emoji kann blinde Menschen ausschließen"
                 if lang.lang == LangType.DE
                 else "Emoji overuse may exclude screen reader users"
             )
 
-        if explanation:
+        if subcategory is not None and is_sub_category_enabled(config, subcategory):
             text = token.text
             for text_index in range(token_index, emoji_index):
                 text += tokens[text_index].whitespace_ + tokens[text_index + 1].text

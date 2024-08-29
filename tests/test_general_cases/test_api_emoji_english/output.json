@@ -215,7 +215,7 @@
             ],
             "category": "ability-physicality",
             "context": "👨‍🚒 👩‍🚒 👨🏻‍🚒 👩🏿‍🚒 👨🏽‍🚒 😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽 Everything is fine.",
-            "end": 67,
+            "end": 76,
             "explanation": {
                 "icon": "😒",
                 "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
@@ -227,8 +227,8 @@
             "proficiency_level": "unconscious_bias",
             "start": 36,
             "subcategory": "ability",
-            "text": "😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍",
-            "text_id": "😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍"
+            "text": "😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽",
+            "text_id": "😃 🍟 👌🏻 👩 👫 👨‍👩‍👧 👨🏽‍👩🏽‍👧🏽"
         }
     ]
 }
