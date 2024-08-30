@@ -709,11 +709,16 @@ class ResultOut(BaseModel):
             category_data = get_category(category)
 
         if category_data is not None:
+            if icon_image is None and "emoji_image" in category_data:
+                # If the corporate_rules rule has an emoji set, use that in place of the emoji_image
+                icon_image = (
+                    category_data["emoji_image"]
+                    if subcategory != "corporate_rules" or icon is None
+                    else None
+                )
+
             if icon is None and "emoji" in category_data:
                 icon = category_data["emoji"]
-
-            if icon_image is None and "emoji_image" in category_data:
-                icon_image = category_data["emoji_image"]
 
             if proficiency_level is None and "proficiency_level" in category_data:
                 proficiency_level = get_proficiency_level(subcategory_key)
