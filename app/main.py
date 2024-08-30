@@ -272,7 +272,7 @@ async def fetch_rows(query, parameters=None) -> list:
     return rows
 
 
-def create_rule(lang, row, rewrite_to: str = None) -> Rule:
+def create_rule(lang, row, rewrite_to: str|None = None) -> Rule:
     rule = Rule(
         row[rule_columns["id"]],
         row[rule_columns["language"]],
@@ -305,7 +305,7 @@ def create_rule(lang, row, rewrite_to: str = None) -> Rule:
     return rule
 
 
-async def fetch_false_positives(rule: Rule, rewrite_to: str = None) -> list[str]:
+async def fetch_false_positives(rule: Rule, rewrite_to: str|None = None) -> list[str]:
     if rule.false_positives is not None:
         return rule.false_positives
 
@@ -1117,7 +1117,7 @@ def get_save_openapi_json(
 )
 async def get_german_gender_ending(
     alternative: str,
-    german_gender_ending: GermanGenderEndingType = None,
+    german_gender_ending: GermanGenderEndingType | None = None,
     username: str = Depends(fetch_current_username),
 ):
     if german_gender_ending is None:
@@ -1290,7 +1290,7 @@ async def get_user_configs(
     response_model_exclude_none=True,
     dependencies=[Depends(HTTPBearer(auto_error=False))],
 )
-async def post_auth_2_0(request: Request, check_request_in: BaseRequestIn = None):
+async def post_auth_2_0(request: Request, check_request_in: BaseRequestIn | None = None):
     client = parse_client(
         check_request_in.client if check_request_in is not None else None
     )
@@ -2987,7 +2987,7 @@ async def fetch_rules(
     lemma: str,
     addons: list[str],
     suffix_check: bool = False,
-    rewrite_to: str = None,
+    rewrite_to: str|None = None,
 ) -> list[Rule]:
     female_lemma_filter = None
 
@@ -3202,7 +3202,7 @@ async def fetch_declensions(
     lang: LangType,
     word_type: BasicWordType,
     text: str,
-    token: Token = None,
+    token: Token|None = None,
 ) -> dict | None:
     if lang == LangType.FR:
         return None
@@ -3906,7 +3906,7 @@ async def is_phrase_match(
     token_index: int,
     tokens: Doc,
     rule: Rule,
-    false_positive_matcher: list = None,
+    false_positive_matcher: list|None = None,
 ) -> tuple[int | None, str | None]:
     suffix = rule.type == RuleType.SUFFIX
 
@@ -4125,7 +4125,7 @@ async def check_word_type(
     lang: LangType,
     token: Token,
     word_type: str = "",
-    single_word: bool = None,
+    single_word: bool|None = None,
     strict: bool = False,
 ) -> bool:
     if len(word_type) == 0:
@@ -4428,7 +4428,7 @@ async def find_form_adjective_english(token_index: int, tokens: Doc):
 
 
 async def find_form_noun_german(
-    token_index: int, tokens: Doc, is_singular: bool = None
+    token_index: int, tokens: Doc, is_singular: bool|None = None
 ):
     token = tokens[token_index]
 
@@ -4480,7 +4480,7 @@ async def find_form_noun_english(is_singular: bool):
     return "plural"
 
 
-def check_word_case(text: str, is_first_upper: bool = None):
+def check_word_case(text: str, is_first_upper: bool|None = None):
     if text.endswith("-"):
         return False
 
@@ -4506,7 +4506,7 @@ async def find_form(
     word_type: WordType,
     token_index: int,
     tokens: Doc,
-    is_singular: bool = None,
+    is_singular: bool|None = None,
 ):
     if lang == LangType.FR:
         return tokens[token_index].text
@@ -4604,11 +4604,11 @@ async def align_form_noun(
 
 
 def align_form_adjective_english(
-    target_form: str,
+    target_form: str | None,
     source_text: str,
     source_lemma: str,
     target_token: Token,
-    target_result: dict,
+    target_result: dict | None,
 ) -> str:
     # use a_token.text to handle "consulting"
     source_text_lower = source_text.lower()
@@ -4931,7 +4931,7 @@ async def align_form_verb_german(
 
 
 def align_form_verb_english(
-    target_form: str, source_text: str, target_token: Token, target_result: list
+    target_form: str | None, source_text: str, target_token: Token, target_result: dict | None
 ) -> str:
     if target_form is None:
         # Fallback code
@@ -6393,7 +6393,7 @@ async def rule_check(
     offsets: dict,
     list_full: list,
     rules: list[Rule],
-    false_positive_matcher: list = None,
+    false_positive_matcher: list | None = None,
 ) -> list:
     token = tokens[token_index]
     if len(rules) == 0 or not is_valid_text(token.text):
