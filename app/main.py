@@ -3880,6 +3880,10 @@ async def is_word_match(
     lemma_ = token.lemma_ if lemma is None else lemma
     token_word = lemma_ if word_type["lemmatize"] else token.text
 
+    # ignore differences between ’ and '
+    token_word = token_word.replace("’", "'")
+    word = word.replace("’", "'")
+
     if word_type["lower_case"]:
         token_word = token_word.lower()
         word = word.lower()
