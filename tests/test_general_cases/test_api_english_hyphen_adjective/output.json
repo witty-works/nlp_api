@@ -13,6 +13,7 @@
             "end": 122,
             "explanation": {
                 "icon": "❌",
+                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "If this is a question, use a question mark."
             },
             "gravity": 1.0,

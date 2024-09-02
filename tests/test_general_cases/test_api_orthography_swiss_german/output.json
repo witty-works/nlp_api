@@ -13,6 +13,7 @@
             "end": 42,
             "explanation": {
                 "icon": "❌",
+                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Ausser am Satzanfang werden nur Nomen und Eigennamen grossgeschrieben."
             },
             "gravity": 1.0,

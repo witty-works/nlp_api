@@ -13,6 +13,7 @@
             "end": 96,
             "explanation": {
                 "icon": "❌",
+                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Use a comma before ‘and’ if it connects two independent clauses (unless they are closely connected and short)."
             },
             "gravity": 1.0,
@@ -45,6 +46,7 @@
             "end": 187,
             "explanation": {
                 "icon": "❌",
+                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Please add a punctuation mark at the end of paragraph."
             },
             "gravity": 1.0,

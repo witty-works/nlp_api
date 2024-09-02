@@ -13,6 +13,7 @@
             "end": 56,
             "explanation": {
                 "icon": "🤔",
+                "icon_image": "https:\\/\\/www.witty.works\\/hubfs\\/thinking%20face%20emoji.png",
                 "text": "Use “an” instead of ‘a’ if the following word starts with a vowel sound, e.g. ‘an article’, ‘an hour’."
             },
             "gravity": 1.0,
@@ -36,6 +37,7 @@
             "end": 144,
             "explanation": {
                 "icon": "❌",
+                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Possible spelling mistake found."
             },
             "gravity": 1.0,

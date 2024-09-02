@@ -1754,17 +1754,17 @@ INSERT INTO "rules_alternative" VALUES(1803,0,'setting your priorities',NULL,1,1
 INSERT INTO "rules_alternative" VALUES(1804,1,'based on your ideas',NULL,1,1,NULL,NULL,602,NULL,'["based", "on", "your", "ideas"]','[]','default',0,'default',0,0,'en',0,0);
 INSERT INTO "rules_alternative" VALUES(1805,2,'comfortable making decisions',NULL,1,1,NULL,NULL,602,NULL,'["comfortable", "making", "decisions"]','[]','default',0,'default',0,0,'en',0,0);
 INSERT INTO "rules_alternative" VALUES(1806,3,'on your own initiative',NULL,1,1,NULL,NULL,602,NULL,'["on", "your", "own", "initiative"]','[]','default',0,'default',0,0,'en',0,0);
-INSERT INTO "rules_alternative" VALUES(1807,0,'test','n',0,1,NULL,NULL,603,NULL,'["test"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]','default',0,'singular_only',0,0,'en',0,0);
-INSERT INTO "rules_alternative" VALUES(1808,1,'trial','n',0,1,NULL,NULL,603,NULL,'["trial"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]','default',0,'singular_only',0,0,'en',0,0);
-INSERT INTO "rules_alternative" VALUES(1809,2,'burning question',NULL,1,1,NULL,NULL,603,NULL,'["burning", "question"]','[]','default',0,'singular_only',0,0,'en',0,0);
-INSERT INTO "rules_alternative" VALUES(1810,3,'complex situation',NULL,1,1,NULL,NULL,603,NULL,'["complex", "situation"]','[]','default',0,'singular_only',0,0,'en',0,0);
+INSERT INTO "rules_alternative" VALUES(1807,3,'test','n',0,1,NULL,NULL,603,NULL,'["test"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]','default',0,'singular_only',0,0,'en',0,0);
+INSERT INTO "rules_alternative" VALUES(1808,2,'trial','n',0,1,NULL,NULL,603,NULL,'["trial"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]','default',0,'singular_only',0,0,'en',0,0);
+INSERT INTO "rules_alternative" VALUES(1809,5,'burning question',NULL,1,1,NULL,NULL,603,NULL,'["burning", "question"]','[]','default',0,'singular_only',0,0,'en',0,0);
+INSERT INTO "rules_alternative" VALUES(1810,0,'complex situation',NULL,1,1,NULL,NULL,603,NULL,'["complex", "situation"]','[]','default',0,'singular_only',0,0,'en',0,0);
 INSERT INTO "rules_alternative" VALUES(1811,4,'task that requires thought and skill to solve',NULL,1,1,NULL,NULL,603,NULL,'["task", "that", "requires", "thought", "and", "skill", "to", "solve"]','[]','default',0,'singular_only',0,0,'en',0,0);
-INSERT INTO "rules_alternative" VALUES(1812,5,'complex situations',NULL,1,1,NULL,NULL,603,NULL,'["complex", "situations"]','[]','default',0,'plural_only',0,0,'en',0,0);
-INSERT INTO "rules_alternative" VALUES(1813,6,'difficult tasks',NULL,1,1,NULL,NULL,603,NULL,'["difficult", "tasks"]','[]','default',0,'plural_only',0,0,'en',0,0);
-INSERT INTO "rules_alternative" VALUES(1814,7,'burning questions',NULL,1,1,NULL,NULL,603,NULL,'["burning", "questions"]','[]','default',0,'plural_only',0,0,'en',0,0);
-INSERT INTO "rules_alternative" VALUES(1815,8,'tasks that require thought and skill to solve',NULL,1,1,NULL,NULL,603,NULL,'["tasks", "that", "require", "thought", "and", "skill", "to", "solve"]','[]','default',0,'plural_only',0,0,'en',0,0);
-INSERT INTO "rules_alternative" VALUES(1816,9,'tests',NULL,0,1,NULL,NULL,603,NULL,'["tests"]','[]','default',0,'default',0,0,'en',0,0);
-INSERT INTO "rules_alternative" VALUES(1817,10,'trials',NULL,0,1,NULL,NULL,603,NULL,'["trials"]','[]','default',0,'default',0,0,'en',0,0);
+INSERT INTO "rules_alternative" VALUES(1812,6,'complex situations',NULL,1,1,NULL,NULL,603,NULL,'["complex", "situations"]','[]','default',0,'plural_only',0,0,'en',0,0);
+INSERT INTO "rules_alternative" VALUES(1813,7,'difficult tasks',NULL,1,1,NULL,NULL,603,NULL,'["difficult", "tasks"]','[]','default',0,'plural_only',0,0,'en',0,0);
+INSERT INTO "rules_alternative" VALUES(1814,8,'burning questions',NULL,1,1,NULL,NULL,603,NULL,'["burning", "questions"]','[]','default',0,'plural_only',0,0,'en',0,0);
+INSERT INTO "rules_alternative" VALUES(1815,9,'tasks that require thought and skill to solve',NULL,1,1,NULL,NULL,603,NULL,'["tasks", "that", "require", "thought", "and", "skill", "to", "solve"]','[]','default',0,'plural_only',0,0,'en',0,0);
+INSERT INTO "rules_alternative" VALUES(1816,10,'tests',NULL,0,1,NULL,NULL,603,NULL,'["tests"]','[]','default',0,'default',0,0,'en',0,0);
+INSERT INTO "rules_alternative" VALUES(1817,11,'trials',NULL,0,1,NULL,NULL,603,NULL,'["trials"]','[]','default',0,'default',0,0,'en',0,0);
 INSERT INTO "rules_alternative" VALUES(1818,0,'question','v',0,1,NULL,NULL,604,NULL,'["question"]','[{"word_type": "v", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'en',0,0);
 INSERT INTO "rules_alternative" VALUES(1819,1,'cross-examine','v',0,1,NULL,NULL,604,NULL,'["cross-examine"]','[{"word_type": "v", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'en',0,0);
 INSERT INTO "rules_alternative" VALUES(1820,2,'re-evaluate','v',0,1,NULL,NULL,604,NULL,'["re-evaluate"]','[{"word_type": "v", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'en',0,0);
@@ -9427,14 +9427,14 @@ INSERT INTO "rules_alternative" VALUES(9937,0,'Serviceorientierung','n',0,1,NULL
 INSERT INTO "rules_alternative" VALUES(9938,2,'Einfühlsamkeit im Umgang mit Kundschaft',NULL,1,1,NULL,NULL,2802,NULL,'["Einf\u00fchlsamkeit", "im", "Umgang", "mit", "Kundschaft"]','[]','default',0,'default',0,0,'de',0,0);
 INSERT INTO "rules_alternative" VALUES(9939,3,'Motivation, Kundschaft zu deren Zufriedenheit zu betreuen',NULL,1,1,NULL,NULL,2802,NULL,'["Motivation", ",", "Kundschaft", "zu", "deren", "Zufriedenheit", "zu", "betreuen"]','[]','default',0,'default',0,0,'de',0,0);
 INSERT INTO "rules_alternative" VALUES(9940,4,'Engagement im Erfüllen der Erwartungen der Kundschaft',NULL,1,1,NULL,NULL,2802,NULL,'["Engagement", "im", "Erf\u00fcllen", "der", "Erwartungen", "der", "Kundschaft"]','[]','default',0,'default',0,0,'de',0,0);
-INSERT INTO "rules_alternative" VALUES(9941,0,'digitale Generation',NULL,0,1,NULL,NULL,2803,NULL,'["digitale", "Generation"]','[]','default',1,'default',0,0,'de',1,0);
-INSERT INTO "rules_alternative" VALUES(9942,1,'Gen Y und Gen Z',NULL,0,1,NULL,NULL,2803,NULL,'["Gen", "Y", "und", "Gen", "Z"]','[]','default',1,'default',0,0,'de',1,0);
-INSERT INTO "rules_alternative" VALUES(9943,2,'jüngerer Mensch',NULL,0,1,NULL,NULL,2803,NULL,'["j\u00fcngerer", "Mensch"]','[]','identity_first',0,'singular_only',0,0,'de',0,0);
-INSERT INTO "rules_alternative" VALUES(9944,3,'jüngere Menschen',NULL,0,1,NULL,NULL,2803,NULL,'["j\u00fcngere", "Menschen"]','[]','identity_first',0,'plural_only',0,0,'de',0,0);
-INSERT INTO "rules_alternative" VALUES(9945,4,'Mensch, der sich in der digitalen Welt zuhause fühlt,',NULL,1,1,NULL,NULL,2803,NULL,'["Mensch", ",", "der", "sich", "in", "der", "digitalen", "Welt", "zuhause", "f\u00fchlt", ","]','[]','person_first',0,'singular_only',0,0,'de',0,0);
-INSERT INTO "rules_alternative" VALUES(9946,5,'jemand, der online lebt und liebt,',NULL,1,1,NULL,NULL,2803,NULL,'["jemand", ",", "der", "online", "lebt", "und", "liebt", ","]','[]','person_first',0,'singular_only',0,0,'de',0,0);
-INSERT INTO "rules_alternative" VALUES(9947,6,'Person, die Internet, neue Medien und digitale Technologien intuitiv einsetzt,',NULL,1,1,NULL,NULL,2803,NULL,'["Person", ",", "die", "Internet", ",", "neue", "Medien", "und", "digitale", "Technologien", "intuitiv", "einsetzt", ","]','[]','person_first',0,'singular_only',0,0,'de',0,0);
-INSERT INTO "rules_alternative" VALUES(9948,7,'jemand, der digitalen Innovationen offen gegenübersteht',NULL,1,1,NULL,NULL,2803,NULL,'["jemand", ",", "der", "digitalen", "Innovationen", "offen", "gegen\u00fcbersteht"]','[]','person_first',0,'singular_only',0,0,'de',0,0);
+INSERT INTO "rules_alternative" VALUES(9941,4,'digitale Generation',NULL,0,1,NULL,NULL,2803,NULL,'["digitale", "Generation"]','[]','default',1,'default',0,0,'de',1,0);
+INSERT INTO "rules_alternative" VALUES(9942,5,'Gen Y und Gen Z',NULL,0,1,NULL,NULL,2803,NULL,'["Gen", "Y", "und", "Gen", "Z"]','[]','default',1,'default',0,0,'de',1,0);
+INSERT INTO "rules_alternative" VALUES(9943,6,'jüngerer Mensch',NULL,0,1,NULL,NULL,2803,NULL,'["j\u00fcngerer", "Mensch"]','[]','identity_first',0,'singular_only',0,0,'de',0,0);
+INSERT INTO "rules_alternative" VALUES(9944,7,'jüngere Menschen',NULL,0,1,NULL,NULL,2803,NULL,'["j\u00fcngere", "Menschen"]','[]','identity_first',0,'plural_only',0,0,'de',0,0);
+INSERT INTO "rules_alternative" VALUES(9945,0,'Mensch, der sich in der digitalen Welt zuhause fühlt,',NULL,1,1,NULL,NULL,2803,NULL,'["Mensch", ",", "der", "sich", "in", "der", "digitalen", "Welt", "zuhause", "f\u00fchlt", ","]','[]','person_first',0,'singular_only',0,0,'de',0,0);
+INSERT INTO "rules_alternative" VALUES(9946,3,'jemand, der online lebt und liebt,',NULL,1,1,NULL,NULL,2803,NULL,'["jemand", ",", "der", "online", "lebt", "und", "liebt", ","]','[]','person_first',0,'singular_only',0,0,'de',0,0);
+INSERT INTO "rules_alternative" VALUES(9947,1,'Person, die Internet, neue Medien und digitale Technologien intuitiv einsetzt,',NULL,1,1,NULL,NULL,2803,NULL,'["Person", ",", "die", "Internet", ",", "neue", "Medien", "und", "digitale", "Technologien", "intuitiv", "einsetzt", ","]','[]','person_first',0,'singular_only',0,0,'de',0,0);
+INSERT INTO "rules_alternative" VALUES(9948,2,'jemand, der digitalen Innovationen offen gegenübersteht',NULL,1,1,NULL,NULL,2803,NULL,'["jemand", ",", "der", "digitalen", "Innovationen", "offen", "gegen\u00fcbersteht"]','[]','person_first',0,'singular_only',0,0,'de',0,0);
 INSERT INTO "rules_alternative" VALUES(9949,8,'Menschen, die in der digitalen Welt aufgewachsen sind,',NULL,1,1,NULL,NULL,2803,NULL,'["Menschen", ",", "die", "in", "der", "digitalen", "Welt", "aufgewachsen", "sind", ","]','[]','person_first',0,'plural_only',0,0,'de',0,0);
 INSERT INTO "rules_alternative" VALUES(9950,9,'Menschen, die online leben und lieben,',NULL,1,1,NULL,NULL,2803,NULL,'["Menschen", ",", "die", "online", "leben", "und", "lieben", ","]','[]','person_first',0,'plural_only',0,0,'de',0,0);
 INSERT INTO "rules_alternative" VALUES(9951,10,'Leute, die Internet, neue Medien und digitale Technologien intuitiv nutzen',NULL,1,1,NULL,NULL,2803,NULL,'["Leute", ",", "die", "Internet", ",", "neue", "Medien", "und", "digitale", "Technologien", "intuitiv", "nutzen"]','[]','person_first',0,'plural_only',0,0,'de',0,0);
@@ -18284,6 +18284,7 @@ INSERT INTO "rules_alternative" VALUES(28812,5,'difficile',NULL,0,1,NULL,7,6225,
 INSERT INTO "rules_alternative" VALUES(28813,6,'complexe',NULL,0,1,NULL,7,6225,NULL,'["complexe"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(28814,2,'responsables des ventes',NULL,0,1,NULL,7,6222,NULL,'["responsables", "des", "ventes"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(28815,0,'-','',0,1,NULL,1,7277,NULL,'["-"]','[]','default',0,'default',0,1,'en',0,0);
+INSERT INTO "rules_alternative" VALUES(28816,1,'opportunity','n',0,1,NULL,5,603,NULL,'["opportunity"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'en',0,0);
 CREATE TABLE "rules_englishadjective" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "base_form" varchar(255) NOT NULL UNIQUE, "comparative" varchar(255) NULL, "superlative" varchar(255) NULL, "createdby_id" integer NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED, "is_absolute" bool NOT NULL);
 INSERT INTO "rules_englishadjective" VALUES(1,'abnormal','more abnormal','most abnormal',NULL,0);
 INSERT INTO "rules_englishadjective" VALUES(2,'atypical','more atypical','most atypical',NULL,0);
@@ -26837,7 +26838,7 @@ INSERT INTO "rules_rule" VALUES(599,'en','autonomous','a',NULL,0,1,NULL,NULL,NUL
 INSERT INTO "rules_rule" VALUES(600,'en','autonomy','n',NULL,0,1,NULL,NULL,NULL,'["autonomy"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'autonomy','default','default',1,1,'autonomy','["agentic_advanced"]',1,8,NULL,'default','default',0,'n',0,1,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(601,'en','by themself','|pron',NULL,0,1,1,NULL,NULL,'["by", "themself"]','[{"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "pron", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'by themself','default','default',1,1,'by','["agentic_advanced"]',1,11,NULL,'default','default',0,'',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(602,'en','by yourself','|n',NULL,0,1,NULL,NULL,NULL,'["by", "yourself"]','[{"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'by yourself','default','default',1,1,'by','["agentic_advanced"]',1,11,NULL,'default','default',0,'',0,1,NULL,NULL,0,'','yes',NULL,NULL);
-INSERT INTO "rules_rule" VALUES(603,'en','challenge','n',NULL,0,1,NULL,NULL,NULL,'["challenge"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'challenge','default','default',1,1,'challenge','["agentic"]',1,9,NULL,'default','default',0,'n',0,1,NULL,NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(603,'en','challenge','n',NULL,0,1,5,NULL,NULL,'["challenge"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'challenge','default','default',1,1,'challenge','["agentic"]',1,9,NULL,'default','default',0,'n',0,1,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(604,'en','challenge','v',NULL,0,1,NULL,NULL,NULL,'["challenge"]','[{"word_type": "v", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'challenge','default','default',1,1,'challenge','["agentic"]',1,9,NULL,'default','default',0,'v',0,1,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(605,'en','champion','n',NULL,0,1,NULL,NULL,NULL,'["champion"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'champion','default','default',1,1,'champion','["agentic"]',1,8,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(606,'en','compete','v',NULL,0,1,NULL,NULL,NULL,'["compete"]','[{"word_type": "v", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'compete','default','default',1,1,'compete','["agentic_advanced"]',1,7,NULL,'default','default',0,'v',0,0,NULL,NULL,0,'','yes',NULL,NULL);
@@ -36954,7 +36955,7 @@ INSERT INTO "rules_rule" VALUES(5978,'fr','problème de comportement','n||n',NUL
     "true_positive_sentence_2": "The teacher suggested he might have a behavioral problem because he couldn''t sit still."
   }
 }','yes',NULL,806);
-INSERT INTO "rules_rule" VALUES(5993,'fr','manque d''expression','~a|~|n',NULL,0,1,7,NULL,NULL,'["manque", "d''", "expression"]','[{"word_type": "a", "lower_case": true, "lemmatize": false}, {"word_type": "", "lower_case": true, "lemmatize": false}, {"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'manque d''expression','default','default',0,1,'manque','["behavior_advanced"]',1,19,NULL,'default','default',0,'a',1,0,NULL,'2024-07-26 08:17:56.358230',1,'{
+INSERT INTO "rules_rule" VALUES(5993,'fr','manque de expression','~||n',NULL,0,1,1,NULL,NULL,'["manque", "de", "expression"]','[{"word_type": "", "lower_case": true, "lemmatize": false}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'manque d''expression','default','default',0,1,'manque','["behavior_advanced"]',1,20,NULL,'default','default',0,'',0,0,NULL,'2024-07-26 08:17:56.358230',1,'{
   "rule_category": "behavior",
   "rule_type": "unconscious_bias",
   "rule_specification": {
@@ -38241,7 +38242,7 @@ INSERT INTO "rules_rule" VALUES(6234,'fr','sourd-muet','a||a',NULL,0,1,7,NULL,NU
     "true_positive_sentence_2": "The old movie portrayed the character as a deaf-mute, overlooking the complexities of his condition."
   }
 }','yes',NULL,1463);
-INSERT INTO "rules_rule" VALUES(6235,'fr','tomber dans le oreille d''un sourd','v|||n|||n',NULL,0,1,2,NULL,NULL,'["tomber", "dans", "le", "oreille", "d''", "un", "sourd"]','[{"word_type": "v", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "n", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'tomber dans l''oreille d''un sourd','default','default',1,1,'tomber','["hearing"]',1,33,NULL,'default','default',0,'v',1,0,NULL,'2024-07-30 13:16:21.517359',1,'{
+INSERT INTO "rules_rule" VALUES(6235,'fr','tomber dans le oreille d''un sourd','v|||n|||n',NULL,0,1,1,NULL,NULL,'["tomber", "dans", "le", "oreille", "d''", "un", "sourd"]','[{"word_type": "v", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "n", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'tomber dans l''oreille d''un sourd','default','default',1,1,'tomber','["hearing"]',1,33,NULL,'default','default',0,'v',1,0,NULL,'2024-07-30 13:16:21.517359',1,'{
   "rule_category": "hearing",
   "rule_type": "unconscious_bias",
   "rule_specification": {
@@ -41183,7 +41184,7 @@ INSERT INTO "rules_rule" VALUES(6892,'fr','AMF','',NULL,0,1,7,NULL,NULL,'["AMF"]
     "true_positive_sentence_2": "She attended a seminar on the latest FMA regulations affecting the industry."
   }
 }','yes',NULL,20);
-INSERT INTO "rules_rule" VALUES(7085,'fr','surmonter son trouble de l''apprentissage',NULL,NULL,0,1,7,NULL,NULL,'["surmonter", "son", "trouble", "de", "l''", "apprentissage"]','[]',0,NULL,NULL,NULL,'surmonter son trouble de l''apprentissage','default','default',NULL,NULL,'surmonter','["ability"]',1,40,NULL,'default','default',0,NULL,1,0,NULL,NULL,0,'','yes',5400,366);
+INSERT INTO "rules_rule" VALUES(7085,'fr','surmonter son trouble de le apprentissage',NULL,NULL,0,1,7,NULL,NULL,'["surmonter", "son", "trouble", "de", "le", "apprentissage"]','[]',0,NULL,NULL,NULL,'surmonter son trouble de l''apprentissage','default','default',NULL,NULL,'surmonter','["ability"]',1,41,NULL,'default','default',0,NULL,0,0,NULL,NULL,0,'','yes',5400,366);
 INSERT INTO "rules_rule" VALUES(7086,'fr','être pionnier',NULL,NULL,0,1,7,NULL,NULL,'["\u00eatre", "pionnier"]','[]',0,NULL,NULL,NULL,'être pionnier','default','default',NULL,NULL,'être','["agentic"]',1,13,NULL,'default','default',0,NULL,0,0,NULL,NULL,0,'','yes',5579,633);
 INSERT INTO "rules_rule" VALUES(7111,'fr','C''est dingue','~pron|~|',NULL,0,1,2,NULL,NULL,'["C''", "est", "dingue"]','[{"word_type": "pron", "lower_case": true, "lemmatize": false}, {"word_type": "", "lower_case": true, "lemmatize": false}, {"word_type": "", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'C''est dingue','default','default',0,1,'c''','["cognitive_perception"]',1,12,NULL,'default','default',0,'pron',0,0,NULL,'2024-08-05 11:48:01.363593',1,'{
   "rule_category": "cognitive_perception",
@@ -41346,7 +41347,7 @@ INSERT INTO "sqlite_sequence" VALUES('rules_englishadjective',751);
 INSERT INTO "sqlite_sequence" VALUES('rules_germanadjective',869);
 INSERT INTO "sqlite_sequence" VALUES('rules_englishverb',333);
 INSERT INTO "sqlite_sequence" VALUES('rules_germanverb',284);
-INSERT INTO "sqlite_sequence" VALUES('rules_alternative',28815);
+INSERT INTO "sqlite_sequence" VALUES('rules_alternative',28816);
 INSERT INTO "sqlite_sequence" VALUES('rules_englishnoun',1529);
 INSERT INTO "sqlite_sequence" VALUES('rules_germannoun',3065);
 INSERT INTO "sqlite_sequence" VALUES('rules_rule',7277);

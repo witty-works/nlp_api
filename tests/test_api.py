@@ -372,6 +372,7 @@ def test_fails(fails_case_dir, snapshot, set_redis):
         snapshot.snapshot_dir = fails_case_dir
         snapshot.assert_match(output, "output.json")
 
+
 @pytest.mark.parametrize(
     "rephrase_dir",
     get_dirs("tests/test_rephrase"),
@@ -1468,7 +1469,11 @@ def test_rule_debug():
                     {"text": "ding", "context": "dong"},
                 ],
                 "label": "Dictionary",
-                "explanation": {"text": "", "icon": "❗"},
+                "explanation": {
+                    "text": "",
+                    "icon": "❗",
+                    "icon_image": "https://www.witty.works/hubfs/exclamation%20mark%20emoji.png",
+                },
                 "gravity": 0.9,
             }
         ]
@@ -1510,7 +1515,12 @@ def test_rule_patterns():
                 "end": 30,
                 "alternatives": [{"text": "foo"}],
                 "label": "Wörterbuch",
-                "explanation": {"text": "", "icon": "❗", "context": "bar"},
+                "explanation": {
+                    "text": "",
+                    "icon": "❗",
+                    "icon_image": "https://www.witty.works/hubfs/exclamation%20mark%20emoji.png",
+                    "context": "bar",
+                },
                 "gravity": 0.9,
             }
         ]
@@ -1545,7 +1555,12 @@ def test_rule_patterns():
                 "end": 71,
                 "alternatives": [],
                 "label": "Wörterbuch",
-                "explanation": {"text": "", "icon": "❗", "context": "bar"},
+                "explanation": {
+                    "text": "",
+                    "icon": "❗",
+                    "icon_image": "https://www.witty.works/hubfs/exclamation%20mark%20emoji.png",
+                    "context": "bar",
+                },
                 "gravity": 0.9,
             }
         ]

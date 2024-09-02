@@ -13,6 +13,7 @@
             "end": 8,
             "explanation": {
                 "icon": "❌",
+                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Put a space after the comma, but not before the comma."
             },
             "gravity": 1.0,
@@ -33,6 +34,7 @@
             "end": 10,
             "explanation": {
                 "icon": "❌",
+                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "It seems like there are too many consecutive spaces here."
             },
             "gravity": 1.0,

@@ -25,6 +25,7 @@
             "end": 53,
             "explanation": {
                 "icon": "❌",
+                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Möglicher Tippfehler gefunden."
             },
             "gravity": 1.0,
@@ -57,6 +58,7 @@
             "end": 71,
             "explanation": {
                 "icon": "❌",
+                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Möglicher Tippfehler gefunden."
             },
             "gravity": 1.0,

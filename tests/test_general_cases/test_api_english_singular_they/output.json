@@ -25,6 +25,7 @@
             "end": 32,
             "explanation": {
                 "icon": "❌",
+                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Please add a punctuation mark at the end of paragraph."
             },
             "gravity": 1.0,
