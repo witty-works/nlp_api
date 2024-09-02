@@ -1,0 +1,16 @@
+{
+    "results": [
+        {
+            "alternative": "inclusive_gender:Mitarbeiter/Mitarbeiterin",
+            "rephrasing": "Mitarbeiter*innen helfen uns, damit es nicht jede*jeder Mitarbeiter*in alleine machen muss"
+        },
+        {
+            "alternative": "binary_gender:Mitarbeiter/Mitarbeiterin",
+            "rephrasing": "Mitarbeiter*innen helfen uns, damit es nicht jede/jeder Mitarbeiterin/Mitarbeiter alleine machen muss"
+        },
+        {
+            "alternative": "Mitarbeitende",
+            "rephrasing": "Mitarbeiter*innen helfen uns, damit es nicht jede Mitarbeitende alleine machen muss"
+        }
+    ]
+}

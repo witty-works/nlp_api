@@ -27,7 +27,7 @@ authors = [
     {name = "Lukas Kahwe Smith", email = "lukas.smith@witty.works"},
 ]
 dependencies = [
-    "fastapi<0.112.0,>=0.111.0",
+    "fastapi<0.113.0,>=0.112.0",
     "pydantic<3.0.0,>=2.0.0",
     "pydantic-settings>=2.0.3",
     "uvicorn[standard]",
@@ -61,6 +61,7 @@ dependencies = [
     "pyjwt>=2.8.0",
     "cryptography>=42.0.2",
     "boto3>=1.34.130",
+    "json-repair>=0.28.3",
 ]
 requires-python = ">3.12"
 license = "Proprietary"

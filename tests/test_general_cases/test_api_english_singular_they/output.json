@@ -25,6 +25,7 @@
             "end": 32,
             "explanation": {
                 "icon": "❌",
+                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Please add a punctuation mark at the end of paragraph."
             },
             "gravity": 1.0,
@@ -46,6 +47,7 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Confident you're not excluding non-binary people?",
                 "url": "https://www.witty.works/en/categories/gender-orientation/binary-pronouns?reducedView=true"
             },
@@ -69,6 +71,7 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Confident you're not excluding non-binary people?",
                 "url": "https://www.witty.works/en/categories/gender-orientation/binary-pronouns?reducedView=true"
             },

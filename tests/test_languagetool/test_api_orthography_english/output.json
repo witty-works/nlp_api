@@ -25,6 +25,7 @@
             "end": 6,
             "explanation": {
                 "icon": "❌",
+                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Possible spelling mistake found."
             },
             "gravity": 1.0,

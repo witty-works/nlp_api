@@ -1,0 +1,23 @@
+{
+  "sentence": "I am, veeery ambitious",
+  "alternatives": [
+    {
+      "lemma": "growth-minded"
+    },
+    {
+      "lemma": "inspired"
+    },
+    {
+      "lemma": "keen and enthusiastic"
+    },
+    {
+      "lemma": "resourceful"
+    },
+    {
+      "lemma": "interested in taking on new responsibilities"
+    }
+  ],
+  "text": "ambitious",
+  "start": 13,
+  "lang": "en"
+}

@@ -13,6 +13,7 @@
             "end": 79,
             "explanation": {
                 "icon": "❌",
+                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Außer am Satzanfang werden nur Nomen und Eigennamen großgeschrieben."
             },
             "gravity": 1.0,
@@ -52,6 +53,7 @@
                 "content": "advanced",
                 "context": "Feuerwehrmann",
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Bedient die heteronormative Sicht von Geschlechteridentität",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäres-geschlecht?reducedView=true"
             },
@@ -89,6 +91,7 @@
                 "content": "advanced",
                 "context": "Feuerwehrfrau",
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Bedient die heteronormative Sicht von Geschlechteridentität",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäres-geschlecht?reducedView=true"
             },
@@ -130,6 +133,7 @@
                 "content": "advanced",
                 "context": "Feuerwehrmann Helle Hautfarbe",
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Vorsicht beim Verwenden von Hauttönen, die nicht den eigenen entsprechen",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäres-geschlecht?reducedView=true"
             },
@@ -167,6 +171,7 @@
                 "content": "advanced",
                 "context": "Feuerwehrfrau Dunkle Hautfarbe",
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Vorsicht beim Verwenden von Hauttönen, die nicht den eigenen entsprechen",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäres-geschlecht?reducedView=true"
             },
@@ -208,6 +213,7 @@
                 "content": "advanced",
                 "context": "Feuerwehrmann Mittlere Hautfarbe",
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Vorsicht beim Verwenden von Hauttönen, die nicht den eigenen entsprechen",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäres-geschlecht?reducedView=true"
             },
@@ -248,6 +254,7 @@
             "explanation": {
                 "context": "Pommes Frites",
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Reduziert eine Person auf ein kulturelles Klischee",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/kulturelles-stereotyp?reducedView=true"
             },
@@ -288,6 +295,7 @@
             "explanation": {
                 "context": "Ok-Zeichen Helle Hautfarbe",
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Vorsicht beim Verwenden von Hauttönen, die nicht den eigenen entsprechen",
                 "url": "https://www.witty.works/de/kategorien/kulturelle-diversität/kulturelles-stereotyp?reducedView=true"
             },
@@ -329,6 +337,7 @@
                 "content": "advanced",
                 "context": "Frau",
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Bedient die heteronormative Sicht von Geschlechteridentität",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäres-geschlecht?reducedView=true"
             },
@@ -369,6 +378,7 @@
             "explanation": {
                 "context": "Mann Und Frau Halten Hände",
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Vermittelt ein heterosexuelles Werte- und Rollen-System",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/sexuelle-orientierung?reducedView=true"
             },
@@ -397,6 +407,7 @@
             "explanation": {
                 "context": "Familie Mann Frau Und Mädchen",
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Vermittelt ein heterosexuelles Werte- und Rollen-System",
                 "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/sexuelle-orientierung?reducedView=true"
             },
@@ -422,6 +433,7 @@
             "end": 96,
             "explanation": {
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Wiederholen von Emoji kann blinde Menschen ausschließen",
                 "url": "https://www.witty.works/de/kategorien/fähigkeiten-erkrankungen-körperlichkeit/fähigkeiten?reducedView=true"
             },
@@ -447,6 +459,7 @@
             "end": 105,
             "explanation": {
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Übermäßiger Gebrauch von Emoji kann blinde Menschen ausschließen",
                 "url": "https://www.witty.works/de/kategorien/fähigkeiten-erkrankungen-körperlichkeit/fähigkeiten?reducedView=true"
             },

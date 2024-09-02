@@ -9,6 +9,7 @@
             "end": 65,
             "explanation": {
                 "icon": "❌",
+                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Möglicher Tippfehler gefunden."
             },
             "gravity": 1.0,
@@ -42,6 +43,7 @@
             "explanation": {
                 "content": "video",
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
             },
@@ -61,6 +63,7 @@
             "explanation": {
                 "content": "video",
                 "icon": "✅",
+                "icon_image": "https://www.witty.works/hubfs/thumbs%20up%20emoji.png",
                 "text": "Stärkt die Zusammenarbeit und den Sinn für Gemeinschaft",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/kommunale-sprache?reducedView=true"
             },
@@ -95,6 +98,7 @@
             "explanation": {
                 "context": "nur erwähnen, wenn relevant",
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Bedient Klischees über Menschen über 50",
                 "url": "https://www.witty.works/de/kategorien/erworbene-diversität/50-jahre-und-älter?reducedView=true"
             },
@@ -132,6 +136,7 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😮‍💨",
+                "icon_image": "https://www.witty.works/hubfs/face-exhaling_1f62e-200d-1f4a8.png,160,160,face-exhaling_1f62e-200d-1f4a8,112750101232",
                 "text": "Der Begriff wirkt überzogen und daher nicht einladend.",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/übertreibung?reducedView=true"
             },

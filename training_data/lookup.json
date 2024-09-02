@@ -15,6 +15,7 @@
     "ablebodied": "ablebodied",
     "afro-saxon": "afro-saxon",
     "ages": "age",
+    "alumna": "alumni",
     "attention-seeking": "attention-seeking",
     "attentionseeking": "attentionseeking",
     "awe-inspiring": "awe-inspiring",
@@ -85,6 +86,7 @@
     "gogetter": "gogetter",
     "good-looking": "good-looking",
     "gramps": "gramps",
+    "grand-p\u00e8re": "grand-p\u00e8re",
     "grandfathered": "grandfathered",
     "grandfathering": "grandfathering",
     "greaser": "greaser",
@@ -288,6 +290,7 @@
     "Mauerbl\u00fcmchen": "Mauerbl\u00fcmchen",
     "Meister": "Meister",
     "Mutterkonzern": "Mutterkonzern",
+    "Native": "Native",
     "Natives": "Native",
     "Neugierde": "Neugier",
     "No-Name-Product": "No-Name-Product",
@@ -6174,6 +6177,18 @@
     "Wagnissen": "Wagnis",
     "Kapitals": "Kapital",
     "Kapitale": "Kapital",
-    "Kapitalen": "Kapital"
+    "Kapitalen": "Kapital",
+    "Gegners": "Gegner",
+    "Gegnern": "Gegner",
+    "Gegnerin": "Gegner",
+    "Gegnerinnen": "Gegner",
+    "Kaufleuten": "Kaufleute",
+    "Aktion\u00e4rs": "Aktion\u00e4r",
+    "Aktion\u00e4re": "Aktion\u00e4r",
+    "Aktion\u00e4ren": "Aktion\u00e4r",
+    "Aktion\u00e4rin": "Aktion\u00e4r",
+    "Aktion\u00e4rinnen": "Aktion\u00e4r",
+    "H\u00f6rende": "H\u00f6render",
+    "Sehende": "Sehender"
   }
 }

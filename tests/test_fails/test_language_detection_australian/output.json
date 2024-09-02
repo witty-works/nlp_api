@@ -2,7 +2,7 @@
     "detail": [
         {
             "ctx": {
-                "expected": "'de-DE', 'de-CH', 'de-AT', 'en-US', 'en-GB', 'fr-FR' or 'fr-CH'"
+                "expected": "'de-DE', 'de-CH', 'de-AT', 'en-US', 'en-GB' or 'fr-FR'"
             },
             "input": "en-AU,en-DE",
             "loc": [
@@ -10,7 +10,7 @@
                 "config",
                 "primary_language"
             ],
-            "msg": "Input should be 'de-DE', 'de-CH', 'de-AT', 'en-US', 'en-GB', 'fr-FR' or 'fr-CH'",
+            "msg": "Input should be 'de-DE', 'de-CH', 'de-AT', 'en-US', 'en-GB' or 'fr-FR'",
             "type": "enum"
         },
         {

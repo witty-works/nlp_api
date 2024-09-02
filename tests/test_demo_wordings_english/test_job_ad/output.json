@@ -17,6 +17,7 @@
             "explanation": {
                 "content": "video",
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Has a connotation of competition and performance. Deters cooperatively minded people.",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
@@ -43,6 +44,7 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Generally provokes a mental image of men",
                 "url": "https://www.witty.works/en/categories/gender-orientation/jobs?reducedView=true"
             },
@@ -78,6 +80,7 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😮‍💨",
+                "icon_image": "https://www.witty.works/hubfs/face-exhaling_1f62e-200d-1f4a8.png,160,160,face-exhaling_1f62e-200d-1f4a8,112750101232",
                 "text": "This term is a over-the-top and not inviting.",
                 "url": "https://www.witty.works/en/categories/social-motive/exaggeration?reducedView=true"
             },
@@ -92,6 +95,9 @@
         {
             "alternatives": [
                 {
+                    "text": "opportunities"
+                },
+                {
                     "text": "tests"
                 },
                 {
@@ -104,6 +110,7 @@
             "explanation": {
                 "content": "video",
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Has a connotation of competition and performance. Deters cooperatively minded people.",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
@@ -123,6 +130,7 @@
             "explanation": {
                 "content": "video",
                 "icon": "✅",
+                "icon_image": "https://www.witty.works/hubfs/thumbs%20up%20emoji.png",
                 "text": "Strengthens collaboration and a sense of community",
                 "url": "https://www.witty.works/en/categories/social-motive/communal-language?reducedView=true"
             },
@@ -152,6 +160,7 @@
                 "content": "video",
                 "context": "Don't use this phrase for people",
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Has a connotation of competition and performance. Deters cooperatively minded people.",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
@@ -178,6 +187,7 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😮‍💨",
+                "icon_image": "https://www.witty.works/hubfs/face-exhaling_1f62e-200d-1f4a8.png,160,160,face-exhaling_1f62e-200d-1f4a8,112750101232",
                 "text": "This term is a over-the-top and not inviting.",
                 "url": "https://www.witty.works/en/categories/social-motive/exaggeration?reducedView=true"
             },

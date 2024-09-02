@@ -3,7 +3,6 @@ import logging
 import json
 from pathlib import Path
 from fastapi.testclient import TestClient
-from fastapi import Request
 from app.main import (
     app,
     redis,
@@ -18,10 +17,12 @@ from app.auth_service import (
 )
 from app.models import (
     LangWithAutoType,
-    RequestIn,
+    CheckRequestIn,
 )
 from app.redis import get_user_id
+from app.settings import get_settings
 
+settings = get_settings()
 
 tokens = {
     "azureadbc_valid_expired": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkN6d1lJSEUyNG5oRFNTdkhhT1pxaVNwTFV4UkFXZjluQ2kydEtnMXRCME0iLCJ0eXAiOiJKV1QifQ.eyJjdXJyZW50VGltZSI6MTY5NDU4OTkxMSwiZW1haWwiOiJsdWthcy5zbWl0aEB3aXR0eS53b3JrcyIsIm5hbWUiOiJmb28iLCJpZHAiOiJnb29nbGUuY29tIiwic3ViIjoiMjVlMDUwYTUtYTJmZC00MzZmLWE1YmUtM2I5NmZmZDAxOTU4Iiwib3RoZXJNYWlscyI6WyJsdWthcy5zbWl0aEB3aXR0eS53b3JrcyJdLCJleHRlbnNpb25fdGVybXNPZlVzZUNvbnNlbnREYXRlVGltZSI6MTY2Mjg5Mjk2OCwiZXh0ZW5zaW9uX01haWxpbmdDb25zZW50ZWQiOiJZZXMiLCJ0ZXJtc09mVXNlQ29uc2VudFJlcXVpcmVkIjpmYWxzZSwidGlkIjoiODE5MzJmZTEtZjI1ZS00M2ZjLWI2NzQtMDAyZmY4MjM1Mzg5Iiwic2NwIjoiYWNjZXNzX2FzX3VzZXIiLCJhenAiOiI3ZTA5MDMwOC01NzVhLTRlN2QtODRlNC03OGM4M2QwODNhYjYiLCJ2ZXIiOiIxLjAiLCJpYXQiOjE2OTQ1ODk5NjIsImF1ZCI6IjdlMDkwMzA4LTU3NWEtNGU3ZC04NGU0LTc4YzgzZDA4M2FiNiIsImV4cCI6MTY5NDY3NjM2MiwiaXNzIjoiaHR0cHM6Ly93aXR0eXdvcmtzZGV2LmIyY2xvZ2luLmNvbS84MTkzMmZlMS1mMjVlLTQzZmMtYjY3NC0wMDJmZjgyMzUzODkvdjIuMC8iLCJuYmYiOjE2OTQ1ODk5NjJ9.JtXTKr8pUEBQ5-hO1ak-L1IocXQdOW6rNaCS5DD1DAvt8ldo-n9APQVw8mqWlYmukrelqH48VwguYiCcD5-Lc8seWfX5lywXT4mnfsJscqGQr7iVL1s6GNBp2wsaRLNf6l8qzIVWa0UDREACdgUpJRmbvObILZa6z42E5ghOO9RxxVCsCKg6hwKKhtY2w6UEs1u26JF7BKHH7XFoX88CfG-kqVfhVw_zb_bOIhDrEGflWZzKdKx9LfaLS1VQjVY1I_IW1nL1EQaBo286MHpzLdxzeyLf6Jo9ASzgAeEqKD6v2PPEHrTbJDMkpNFtFw0XdQTT904vQNn8wml3Lck32w",
@@ -351,7 +352,7 @@ def test_language_detection(detection_case_dir, snapshot, set_redis):
     "fails_case_dir",
     get_dirs("tests/test_fails"),
 )
-def test_language_detection_fail(fails_case_dir, snapshot, set_redis):
+def test_fails(fails_case_dir, snapshot, set_redis):
     with TestClient(app) as client:
         # Read input files from the case directory.
         input_json = fails_case_dir.joinpath("input.json").read_text()
@@ -370,6 +371,32 @@ def test_language_detection_fail(fails_case_dir, snapshot, set_redis):
         # Snapshot the return value.
         snapshot.snapshot_dir = fails_case_dir
         snapshot.assert_match(output, "output.json")
+
+
+@pytest.mark.parametrize(
+    "rephrase_dir",
+    get_dirs("tests/test_rephrase"),
+)
+def test_rephrase(rephrase_dir, snapshot, set_redis):
+    if len(settings.aws_key):
+        with TestClient(app) as client:
+            # Read input files from the case directory.
+            input_json = rephrase_dir.joinpath("input.json").read_text()
+            # Call the tested endpoint.
+            response = client.post(
+                "/v1.0/rephrase",
+                json=json.loads(input_json),
+                headers={"X-Auth": "test@gmail.com"},
+            )
+            assert response.status_code == 200
+
+            # output must be string
+            output = json.dumps(
+                response.json(), sort_keys=True, indent=4, ensure_ascii=False
+            )
+            # Snapshot the return value.
+            snapshot.snapshot_dir = rephrase_dir
+            snapshot.assert_match(output, "output.json")
 
 
 def test_lemmatize():
@@ -1054,7 +1081,7 @@ def test_fetch_configs_for_request(event_loop, set_redis):
             "gendered_roles_format": "inclusive_gender",
         },
     }
-    test_request = RequestIn(**request_data)
+    test_request = CheckRequestIn(**request_data)
     event_loop.run_until_complete(
         fetch_configs_for_request(test_request, "test@gmail.com")
     )
@@ -1079,7 +1106,7 @@ def test_fetch_user_rules_suggestion(event_loop, set_redis):
             "gendered_roles_format": "inclusive_gender",
         },
     }
-    test_request = RequestIn(**request_data)
+    test_request = CheckRequestIn(**request_data)
     event_loop.run_until_complete(
         fetch_configs_for_request(test_request, "non_existant@gmail.com")
     )
@@ -1098,7 +1125,7 @@ def test_set_organization_rules(event_loop, set_redis):
     request_data = {
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
     }
-    test_request = RequestIn(**request_data)
+    test_request = CheckRequestIn(**request_data)
     event_loop.run_until_complete(
         fetch_configs_for_request(test_request, "test@gmail.com")
     )
@@ -1115,7 +1142,7 @@ def test_set_default_rules(event_loop):
     request_data = {
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
     }
-    test_request = RequestIn(**request_data)
+    test_request = CheckRequestIn(**request_data)
 
     event_loop.run_until_complete(
         fetch_configs_for_request(test_request, "non_existant@gmail.com")
@@ -1442,7 +1469,11 @@ def test_rule_debug():
                     {"text": "ding", "context": "dong"},
                 ],
                 "label": "Dictionary",
-                "explanation": {"text": "", "icon": "❗"},
+                "explanation": {
+                    "text": "",
+                    "icon": "❗",
+                    "icon_image": "https://www.witty.works/hubfs/exclamation%20mark%20emoji.png",
+                },
                 "gravity": 0.9,
             }
         ]
@@ -1484,7 +1515,12 @@ def test_rule_patterns():
                 "end": 30,
                 "alternatives": [{"text": "foo"}],
                 "label": "Wörterbuch",
-                "explanation": {"text": "", "icon": "❗", "context": "bar"},
+                "explanation": {
+                    "text": "",
+                    "icon": "❗",
+                    "icon_image": "https://www.witty.works/hubfs/exclamation%20mark%20emoji.png",
+                    "context": "bar",
+                },
                 "gravity": 0.9,
             }
         ]
@@ -1519,7 +1555,12 @@ def test_rule_patterns():
                 "end": 71,
                 "alternatives": [],
                 "label": "Wörterbuch",
-                "explanation": {"text": "", "icon": "❗", "context": "bar"},
+                "explanation": {
+                    "text": "",
+                    "icon": "❗",
+                    "icon_image": "https://www.witty.works/hubfs/exclamation%20mark%20emoji.png",
+                    "context": "bar",
+                },
                 "gravity": 0.9,
             }
         ]

@@ -1,0 +1,21 @@
+{
+  "client": "string",
+  "sentence": "Mitarbeiter*innen helfen uns, damit es nicht jeder Mitarbeiter alleine machen muss",
+  "text": "Mitarbeiter",
+  "start": 51,
+  "alternatives": [
+    {
+      "types": [
+        "inclusive_gender",
+        "binary_gender"
+      ],
+      "male_form": "Mitarbeiter",
+      "female_form": "Mitarbeiterin"
+    },
+    {
+      "lemma": "Mitarbeitende"
+    }
+  ],
+  "lang": "de",
+  "gender_separator": "*in"
+}

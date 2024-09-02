@@ -1,8 +1,9 @@
 from pydantic import field_validator, BaseModel
-from typing import Optional
+from typing import Optional, Annotated, Any
+from annotated_types import Len
 from enum import Enum
 from collections import namedtuple
-import json, typing
+import json
 
 from starlette.responses import Response
 
@@ -80,13 +81,9 @@ class MetricsType(str, Enum):
     CHECK_COUNTS = "check_counts"
     CHECK_PLANS = "check_plans"
     CHECK_HOST = "check_host"
-
-
-class EventType(str, Enum):
-    CHECK = "check"
-    IGNORE = "ignore"
-    ALTERNATIVE = "alternative"
-    ERROR = "error"
+    REPHRASE_COUNTS = "rephrase_counts"
+    REPHRASE_PLANS = "rephrase_plans"
+    REPHRASE_HOST = "rephrase_host"
 
 
 class ContentType(str, Enum):
@@ -130,7 +127,6 @@ class LangWithAutoType(str, Enum):
     enUS = "en-US"
     enGB = "en-GB"
     frFR = "fr-FR"
-    frCH = "fr-CH"
 
 
 class RuleType(str, Enum):
@@ -186,7 +182,6 @@ class LangVariantType(str, Enum):
     enUS = "en-US"
     enGB = "en-GB"
     frFR = "fr-FR"
-    frCH = "fr-CH"
 
 
 class GermanGenderEndingType(str, Enum):
@@ -198,7 +193,6 @@ class GermanGenderEndingType(str, Enum):
     PARENTHESIS_DASH = "(-)"
     PARENTHESIS = "()"
     CAPITAL_LETTER = "In"
-    BINARY = "binary"
 
 
 class GenderedRolesFormatType(str, Enum):
@@ -271,6 +265,7 @@ class Rule:
     explanation: Optional[str] = None
     url: Optional[str] = None
     icon: Optional[str] = None
+    icon_image: Optional[str] = None
     type: Optional[RuleType] = RuleType.DEFAULT
     label: Optional[str] = None
     label_type: Optional[str] = RuleLabelEnum.DEFAULT
@@ -379,7 +374,6 @@ class Config(BaseModel):
         LangWithAutoType.enUS,
         LangWithAutoType.enGB,
         LangWithAutoType.frFR,
-        LangWithAutoType.frCH,
     ]
     german_gender_ending: GermanGenderEndingType = GermanGenderEndingType.STAR
     _gendereddenom_ending = {
@@ -532,6 +526,7 @@ class RuleConfig(BaseModel):
 class Explanation(BaseModel):
     text: str
     icon: Optional[str] = None
+    icon_image: Optional[str] = None
     url: Optional[str] = None
 
 
@@ -604,16 +599,34 @@ class UserConfResponse(ConfRequest):
 
 class BaseRequestIn(BaseModel):
     client: Optional[str] = None
+    config: Optional[Config] = Config()
+    config_hash: Optional[str] = None
+    organization_config_hash: Optional[str] = None
 
 
-class RequestIn(BaseRequestIn):
+class RephraseAlternative(BaseModel):
+    types: list[Optional[GenderedRolesFormatType]] | None = None
+    lemma: Optional[str] = None
+    male_form: Optional[str] = None
+    female_form: Optional[str] = None
+
+
+class RephraseRequestIn(BaseRequestIn):
+    type: str = "rephrase"
+    model: Optional[str] = None
+    sentence: Annotated[str, Len(min_length=1, max_length=300)]
+    text: str
+    start: int
+    alternatives: Annotated[list[RephraseAlternative], Len(min_length=1, max_length=5)]
+    gender_separator: Optional[GermanGenderEndingType] = None
+    lang: LangType
+
+
+class CheckRequestIn(BaseRequestIn):
     type: str = "check"
     text: str
     lang: Optional[LangWithAutoType] = LangWithAutoType.AUTO
     id: Optional[str] = None
-    config: Optional[Config] = Config()
-    config_hash: Optional[str] = None
-    organization_config_hash: Optional[str] = None
 
 
 class ResultAlternative(BaseModel):
@@ -628,6 +641,7 @@ class ResultAlternative(BaseModel):
 class ResultExplanation(BaseModel):
     text: str
     icon: Optional[str] = None
+    icon_image: Optional[str] = None
     url: Optional[str] = None
     context: Optional[str] = None
     content: Optional[ContentType] = None
@@ -668,6 +682,7 @@ class ResultOut(BaseModel):
         content: str | None = None,
         gravity: float | None = None,
         proficiency_level: str | None = None,
+        icon_image: str | None = None,
     ):
         if end is None:
             end = start + len(text)
@@ -694,6 +709,14 @@ class ResultOut(BaseModel):
             category_data = get_category(category)
 
         if category_data is not None:
+            if icon_image is None and "emoji_image" in category_data:
+                # If the corporate_rules rule has an emoji set, use that in place of the emoji_image
+                icon_image = (
+                    category_data["emoji_image"]
+                    if subcategory != "corporate_rules" or icon is None
+                    else None
+                )
+
             if icon is None and "emoji" in category_data:
                 icon = category_data["emoji"]
 
@@ -753,6 +776,7 @@ class ResultOut(BaseModel):
         explanation = {
             "text": explanation,
             "icon": icon,
+            "icon_image": icon_image,
             "url": url,
             "context": explanation_context,
             "content": content,
@@ -967,6 +991,19 @@ class ResultConf(BaseModel):
     organization_config_hash: Optional[str] = None
 
 
+class RephraseOut(BaseModel):
+    alternative: str
+    rephrasing: str
+
+
+class RephrasesOut(BaseModel):
+    results: list[RephraseOut]
+
+    @staticmethod
+    def factory(results: list):
+        return RephrasesOut(results=results)
+
+
 class ResultsOut(BaseModel):
     results: list[ResultOut]
     language: str
@@ -979,7 +1016,7 @@ class ResultsOut(BaseModel):
 class PrettyJSONResponse(Response):
     media_type = "application/json"
 
-    def render(self, content: typing.Any) -> bytes:
+    def render(self, content: Any) -> bytes:
         return json.dumps(
             content,
             ensure_ascii=False,

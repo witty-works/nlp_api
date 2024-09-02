@@ -13,6 +13,7 @@
             "end": 27,
             "explanation": {
                 "icon": "❌",
+                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Möglicher Tippfehler gefunden."
             },
             "gravity": 1.0,
@@ -40,6 +41,7 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😮‍💨",
+                "icon_image": "https://www.witty.works/hubfs/face-exhaling_1f62e-200d-1f4a8.png,160,160,face-exhaling_1f62e-200d-1f4a8,112750101232",
                 "text": "Der Begriff wirkt überzogen und daher nicht einladend.",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/übertreibung?reducedView=true"
             },
@@ -75,6 +77,7 @@
             "explanation": {
                 "content": "video",
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Spricht kooperativ denkende Menschen nicht an",
                 "url": "https://www.witty.works/de/kategorien/soziale-motivation/agentische-sprache?reducedView=true"
             },

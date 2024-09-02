@@ -1,0 +1,30 @@
+{
+  "sentence": "Les experts rapides sont intelligents.",
+  "text": "experts",
+  "start": 4,
+  "alternatives": [
+    {
+      "types": [
+        "inclusive_gender",
+        "binary_gender"
+      ],
+      "male_form": "expert",
+      "female_form": "experte"
+    },
+    {
+      "types": [
+        "inclusive_gender",
+        "binary_gender"
+      ],
+      "male_form": "professionnel",
+      "female_form": "professionnelle"
+    },
+    {
+      "lemma": "pro"
+    },
+    {
+      "lemma": "scientifique"
+    }
+  ],
+  "lang": "fr"
+}

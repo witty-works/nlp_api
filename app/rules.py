@@ -462,6 +462,15 @@ def fetch_static_rules():
         static_rules[LangType.FR]["salutations"] = []
         static_rules[LangType.FR]["hashtags"] = []
         static_rules[LangType.FR]["context_check"] = []
+        static_rules[LangType.FR]["masculine_articles"] = {
+            "un": "un∙e",
+            "le": "la∙le",
+            "il": "iel",
+            "ils": "lels",
+            "lui": "ellui",
+            "celui": "cellui",
+            "ceux": "celleux",
+        }
 
     if LangType.DE in langs:
         rule = Rule(
@@ -552,8 +561,10 @@ def fetch_static_rules():
         static_rules[LangType.DE]["masculine_articles"] = {}
         static_rules[LangType.DE]["feminine_articles"] = {}
         static_rules[LangType.DE]["neuter_articles"] = {}
+        static_rules[LangType.DE]["articles"] = []
 
         for article in articles:
+            static_rules[LangType.DE]["articles"].extend(article)
             if article[1] not in static_rules[LangType.DE]["masculine_articles"]:
                 static_rules[LangType.DE]["masculine_articles"][article[1]] = {}
             static_rules[LangType.DE]["masculine_articles"][article[1]][

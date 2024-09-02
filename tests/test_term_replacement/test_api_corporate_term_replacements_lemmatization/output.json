@@ -28,6 +28,7 @@
             "end": 68,
             "explanation": {
                 "icon": "❌",
+                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Possible spelling mistake found."
             },
             "gravity": 1.0,
@@ -90,6 +91,7 @@
             "end": 51,
             "explanation": {
                 "icon": "❗",
+                "icon_image": "https://www.witty.works/hubfs/exclamation%20mark%20emoji.png",
                 "text": "better ding",
                 "url": "https://witty.works/foo bar"
             },

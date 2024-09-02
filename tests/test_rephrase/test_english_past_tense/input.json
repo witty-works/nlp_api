@@ -1,0 +1,11 @@
+{
+    "sentence": "We analyzed if this works",
+    "alternatives": [
+      {
+        "lemma": "closely examine"
+      }
+    ],
+    "text": "analyzed",
+    "start": 3,
+    "lang": "en"
+}

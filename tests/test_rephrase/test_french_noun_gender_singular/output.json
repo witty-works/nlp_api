@@ -1,0 +1,24 @@
+{
+    "results": [
+        {
+            "alternative": "inclusive_gender:sportif professionnel/sportive professionnelle",
+            "rephrasing": "La∙le sportif∙ve professionnel∙le rapide est intelligent∙e"
+        },
+        {
+            "alternative": "binary_gender:sportif professionnel/sportive professionnelle",
+            "rephrasing": "la sportive professionnelle rapide est intelligent ou intelligente"
+        },
+        {
+            "alternative": "membre d'une équipe de sport",
+            "rephrasing": "Les membres d'une équipe de sport rapides sont intelligents"
+        },
+        {
+            "alternative": "équipe",
+            "rephrasing": "L'équipe rapide est intelligente"
+        },
+        {
+            "alternative": "personne dynamique",
+            "rephrasing": "La personne dynamique rapide est intelligente"
+        }
+    ]
+}

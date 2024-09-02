@@ -13,6 +13,7 @@
             "end": 96,
             "explanation": {
                 "icon": "❌",
+                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Use a comma before ‘and’ if it connects two independent clauses (unless they are closely connected and short)."
             },
             "gravity": 1.0,
@@ -45,6 +46,7 @@
             "end": 187,
             "explanation": {
                 "icon": "❌",
+                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
                 "text": "Please add a punctuation mark at the end of paragraph."
             },
             "gravity": 1.0,
@@ -81,6 +83,7 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Enforces the traditional binary form of gender",
                 "url": "https://www.witty.works/en/categories/gender-orientation/gender-binary?reducedView=true"
             },
@@ -100,6 +103,7 @@
             "explanation": {
                 "content": "video",
                 "icon": "✅",
+                "icon_image": "https://www.witty.works/hubfs/thumbs%20up%20emoji.png",
                 "text": "Strengthens collaboration and a sense of community",
                 "url": "https://www.witty.works/en/categories/social-motive/communal-language?reducedView=true"
             },
@@ -134,6 +138,7 @@
             "explanation": {
                 "content": "video",
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Has a connotation of competition and performance. Deters cooperatively minded people.",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
@@ -169,6 +174,7 @@
             "explanation": {
                 "content": "video",
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Has a connotation of competition and performance. Deters cooperatively minded people.",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
@@ -195,6 +201,7 @@
             "explanation": {
                 "context": "Don't use this phrase for people",
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Repeats ableist ideas about health, illness, and wellbeing",
                 "url": "https://www.witty.works/en/categories/ability-physicality/medical-state?reducedView=true"
             },
@@ -230,6 +237,7 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "😮‍💨",
+                "icon_image": "https://www.witty.works/hubfs/face-exhaling_1f62e-200d-1f4a8.png,160,160,face-exhaling_1f62e-200d-1f4a8,112750101232",
                 "text": "This term is a over-the-top and not inviting.",
                 "url": "https://www.witty.works/en/categories/social-motive/exaggeration?reducedView=true"
             },
@@ -265,6 +273,7 @@
             "explanation": {
                 "content": "advanced",
                 "icon": "🙄",
+                "icon_image": "https://www.witty.works/hubfs/face-with-rolling-eyes_1f644.png,160,160,face with rolling-eyes emoji,112750103745",
                 "text": "It's overused and might distract from your message",
                 "url": "https://www.witty.works/en/categories/cultural-diversity/empty-words?reducedView=true"
             },
@@ -297,6 +306,7 @@
             "explanation": {
                 "content": "video",
                 "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Has a connotation of competition and performance. Deters cooperatively minded people.",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },

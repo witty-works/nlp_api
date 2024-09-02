@@ -6,44 +6,11 @@
         "is_active": "1",
         "emoji": "\ud83d\udeab",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/prohibited%20emoji.png",
-        "has_fr_rules": "true",
         "category": "gender-orientation",
         "related_subcategories": [
             "homophobia",
             "transphobia"
         ],
-        "translations": {
-            "fr": {
-                "hs_path": "discrimination-anti-lgbtqia",
-                "hs_name": "Discrimination anti-LGBTQIA+",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/lgbtqia-hate",
-                "is_active": "1",
-                "short_explanation": "Insulte ou d\u00e9nigre les personnes de la communaut\u00e9 LGBTQIA+",
-                "sub_head": "",
-                "lead_video": "",
-                "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
-                "soft_explanation": "",
-                "hard_facts": "",
-                "hero_figure": "",
-                "hero_figure_alt_text": "",
-                "hero_figure_url": "",
-                "hero_fact": "",
-                "hero_fact_alt_text": "",
-                "hero_fact_url": "",
-                "inclusive_sentence": "",
-                "non_inclusive_sentence": "",
-                "meme": "",
-                "meme_alt_text": "",
-                "meme_url": "",
-                "meme_2": "",
-                "meme_2_alt_text": "",
-                "meme_2_url": "",
-                "read_on": "",
-                "anchor": ""
-            }
-        },
         "has_rules": [
             "en",
             "de",
@@ -56,8 +23,7 @@
         "proficiency_level": "language-clarity",
         "is_active": "1",
         "emoji": "\ud83d\ude09",
-        "emoji_image": "https:\/\/www.witty.works\/hubfs\/winking-face_1f609.png,160,160,winking face emoji,112748430274",
-        "has_fr_rules": "true",
+        "emoji_image": "https:\/\/www.witty.works\/hubfs\/winking%20face%20emoji.png,160,160,winking face emoji,112748430274",
         "category": "cultural-diversity",
         "related_subcategories": [
             "anglicism",
@@ -148,13 +114,18 @@
             "fr": {
                 "hs_path": "abr\u00e9viation",
                 "hs_name": "Abr\u00e9viation",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/abbreviation",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-culturelle\/abr\u00e9viation",
                 "is_active": "1",
                 "short_explanation": "Votre lectorat sait-il ce que cela signifie ?",
-                "sub_head": "",
+                "sub_head": "Votre lectorat sait-il ce que cela signifie ?",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Abr%C3%A9viation.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -189,7 +160,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude12",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -276,7 +246,7 @@
             "fr": {
                 "hs_path": "handicap",
                 "hs_name": "Handicap",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/ability",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/handicap\/handicap",
                 "is_active": "1",
                 "short_explanation": "Comporte et entretient des pr\u00e9jug\u00e9s sur les handicaps",
                 "sub_head": "",
@@ -317,7 +287,6 @@
         "is_active": "1",
         "emoji": "\ud83d\udeab",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/prohibited%20emoji.png",
-        "has_fr_rules": "true",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -399,7 +368,7 @@
             "fr": {
                 "hs_path": "validisme",
                 "hs_name": "Validisme",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/ableist",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/handicap\/validisme",
                 "is_active": "1",
                 "short_explanation": "D\u00e9nigre ou insulte les personnes ayant un handicap",
                 "sub_head": "",
@@ -440,7 +409,6 @@
         "is_active": "1",
         "emoji": "\ud83e\udd14",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "acquired-diversity",
         "related_subcategories": [],
         "translations": {
@@ -527,7 +495,7 @@
             "fr": {
                 "hs_path": "information-sur-l\u00e2ge",
                 "hs_name": "Information sur l'\u00e2ge",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/acquired-diversity\/age-information",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-acquise\/information-sur-l\u00e2ge",
                 "is_active": "1",
                 "short_explanation": "Est-ce pertinent de mentionner l'\u00e2ge ?",
                 "sub_head": "",
@@ -568,7 +536,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude12",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "acquired-diversity",
         "related_subcategories": [],
         "translations": {
@@ -654,8 +621,8 @@
             },
             "fr": {
                 "hs_path": "\u00e2gisme-contre-les-de-50-ans",
-                "hs_name": "\u00c2gisme contre les + de 50 ans",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/acquired-diversity\/50-years-and-older",
+                "hs_name": "\u00c2gisme contre les de 50 ans",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-acquise\/\u00e2gisme-contre-les-de-50-ans",
                 "is_active": "1",
                 "short_explanation": "Comporte et entretient des pr\u00e9jug\u00e9s sur les personnes de plus de 50 ans",
                 "sub_head": "",
@@ -696,7 +663,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude12",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "acquired-diversity",
         "related_subcategories": [],
         "translations": {
@@ -782,8 +748,8 @@
             },
             "fr": {
                 "hs_path": "\u00e2gisme-contre-les-de-25-ans",
-                "hs_name": "\u00c2gisme contre les -de 25 ans",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/acquired-diversity\/25-years-and-younger",
+                "hs_name": "\u00c2gisme contre les de 25 ans",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-acquise\/\u00e2gisme-contre-les-de-25-ans",
                 "is_active": "1",
                 "short_explanation": "Comporte et entretient des pr\u00e9jug\u00e9s sur les personnes de moins de 25 ans",
                 "sub_head": "",
@@ -824,7 +790,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude12",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "social-motive",
         "related_subcategories": [
             "communal",
@@ -924,9 +889,9 @@
                 "anchor": "agentisch"
             },
             "fr": {
-                "hs_path": "performance-individuelle",
-                "hs_name": "Performance individuelle",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/social-motive\/agentic-language",
+                "hs_path": "langage-agentique",
+                "hs_name": "Langage agentique",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/motivation-sociale\/langage-agentique",
                 "is_active": "1",
                 "short_explanation": "\u00c9voque la comp\u00e9tition et la performance, ce qui dissuade les personnes privil\u00e9giant la coop\u00e9ration",
                 "sub_head": "",
@@ -967,7 +932,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude09",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/winking-face_1f609.png,160,160,winking-face_1f609,112748430274",
-        "has_fr_rules": "true",
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -1044,13 +1008,18 @@
             "fr": {
                 "hs_path": "anglicisme",
                 "hs_name": "Anglicisme",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/anglicism",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-culturelle\/anglicisme",
                 "is_active": "1",
                 "short_explanation": "L'ensemble de votre lectorat comprend-il ce mot ?",
-                "sub_head": "",
+                "sub_head": "L'ensemble de votre lectorat comprend-il ce mot ?",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Anglicisme.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -1084,7 +1053,6 @@
         "is_active": "1",
         "emoji": "\ud83d\udeab",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/prohibited%20emoji.png",
-        "has_fr_rules": "true",
         "category": "religion",
         "related_subcategories": [],
         "translations": {
@@ -1161,7 +1129,7 @@
             "fr": {
                 "hs_path": "islamophobie",
                 "hs_name": "Islamophobie ",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/religion\/islamophobia-and-anti-muslim-sentiment",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/_religion\/islamophobie",
                 "is_active": "1",
                 "short_explanation": "Est-ce insultant pour les personnes musulmanes ?",
                 "sub_head": "",
@@ -1202,7 +1170,6 @@
         "is_active": "1",
         "emoji": "\ud83d\udeab",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/prohibited%20emoji.png",
-        "has_fr_rules": "true",
         "category": "religion",
         "related_subcategories": [],
         "translations": {
@@ -1279,7 +1246,7 @@
             "fr": {
                 "hs_path": "antis\u00e9mitisme",
                 "hs_name": "Antis\u00e9mitisme",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/religion\/anti-semitism",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/_religion\/antis\u00e9mitisme",
                 "is_active": "1",
                 "short_explanation": "Est-ce insultant pour les personnes juives ?",
                 "sub_head": "",
@@ -1320,7 +1287,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude12",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -1407,7 +1373,7 @@
             "fr": {
                 "hs_path": "comportement",
                 "hs_name": "Comportement",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/behavior",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/handicap\/comportement",
                 "is_active": "1",
                 "short_explanation": "Pr\u00e9sente un comportement spontan\u00e9 comme ind\u00e9sirable et anormal",
                 "sub_head": "",
@@ -1448,7 +1414,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude12",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "religion",
         "related_subcategories": [],
         "translations": {
@@ -1535,7 +1500,7 @@
             "fr": {
                 "hs_path": "croyance",
                 "hs_name": "Croyance",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/religion\/belief",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/_religion\/croyance",
                 "is_active": "1",
                 "short_explanation": "Cette r\u00e9f\u00e9rence religieuse est-elle universelle ?",
                 "sub_head": "",
@@ -1576,7 +1541,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude1f",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -1673,7 +1637,7 @@
             "fr": {
                 "hs_path": "pronoms-binaires",
                 "hs_name": "Pronoms binaires",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/binary-pronouns",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/pronoms-binaires",
                 "is_active": "1",
                 "short_explanation": "Excluez-vous les personnes non binaires ?",
                 "sub_head": "",
@@ -1714,7 +1678,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude12",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "acquired-diversity",
         "related_subcategories": [],
         "translations": {
@@ -1801,7 +1764,7 @@
             "fr": {
                 "hs_path": "classisme",
                 "hs_name": "Classisme",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/acquired-diversity\/classism",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-acquise\/classisme",
                 "is_active": "1",
                 "short_explanation": "Sous-entend que le statut socio-\u00e9conomique d'une personne d\u00e9termine sa valeur",
                 "sub_head": "",
@@ -1842,7 +1805,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude12",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -1929,7 +1891,7 @@
             "fr": {
                 "hs_path": "fonctions-cognitives",
                 "hs_name": "Fonctions cognitives",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/cognitive-ability",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/handicap\/fonctions-cognitives",
                 "is_active": "1",
                 "short_explanation": "Entretient des pr\u00e9jug\u00e9s sur les fonctions cognitives",
                 "sub_head": "",
@@ -1970,7 +1932,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude12",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -2057,7 +2018,7 @@
             "fr": {
                 "hs_path": "perception",
                 "hs_name": "Perception",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/cognitive-perception",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/handicap\/perception",
                 "is_active": "1",
                 "short_explanation": "Insulte les personnes ayant des perceptions diff\u00e9rentes en renvoyant \u00e0 des troubles de la sant\u00e9 mentale",
                 "sub_head": "",
@@ -2098,7 +2059,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude12",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "cultural-diversity",
         "related_subcategories": [
             "culture",
@@ -2190,14 +2150,24 @@
             "fr": {
                 "hs_path": "couleur",
                 "hs_name": "Couleur",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/color",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-culturelle\/couleur",
                 "is_active": "1",
                 "short_explanation": "Cette couleur a-t-elle une connotation raciste ?",
-                "sub_head": "",
+                "sub_head": "Cette couleur a-t-elle une connotation raciste ?",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Couleur.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Couleur%20Advanced.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -2231,7 +2201,6 @@
         "is_active": "1",
         "emoji": "\u2705",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thumbs%20up%20emoji.png",
-        "has_fr_rules": "true",
         "category": "social-motive",
         "related_subcategories": [
             "agentic",
@@ -2323,7 +2292,7 @@
             "fr": {
                 "hs_path": "coop\u00e9ration",
                 "hs_name": "Coop\u00e9ration",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/social-motive\/communal-language",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/motivation-sociale\/coop\u00e9ration",
                 "is_active": "1",
                 "short_explanation": "Renforce la collaboration et le sentiment d'appartenance au groupe",
                 "sub_head": "",
@@ -2364,7 +2333,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude12",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -2451,14 +2419,24 @@
             "fr": {
                 "hs_path": "st\u00e9r\u00e9otype-culturel",
                 "hs_name": "St\u00e9r\u00e9otype culturel",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/cultural-stereotype",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-culturelle\/st\u00e9r\u00e9otype-culturel",
                 "is_active": "1",
                 "short_explanation": "S'agit-il d'un clich\u00e9 culturel ?",
-                "sub_head": "",
+                "sub_head": "S'agit-il d'un clich\u00e9 culturel ?",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/St%C3%A9r%C3%A9otype%20culturel-1.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/St%C3%A9r%C3%A9otype%20culturel%20Advanced.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -2492,7 +2470,6 @@
         "is_active": "1",
         "emoji": "\u2705",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thumbs%20up%20emoji.png",
-        "has_fr_rules": "true",
         "category": "social-motive",
         "related_subcategories": [
             "communal"
@@ -2581,7 +2558,7 @@
             "fr": {
                 "hs_path": "diversit\u00e9-\u00e9quit\u00e9-inclusion-et-sentiment-dappartenance",
                 "hs_name": "Diversit\u00e9, \u00e9quit\u00e9, inclusion et sentiment d'appartenance",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/social-motive\/diversity-equity-inclusion-belonging",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/motivation-sociale\/diversit\u00e9-\u00e9quit\u00e9-inclusion-et-sentiment-dappartenance",
                 "is_active": "1",
                 "short_explanation": "Ouvre un dialogue sur la diversit\u00e9, l'\u00e9quit\u00e9, l'inclusion et le sentiment d'appartenance",
                 "sub_head": "",
@@ -2622,7 +2599,6 @@
         "is_active": "1",
         "emoji": "\u2705",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thumbs%20up%20emoji.png",
-        "has_fr_rules": "true",
         "category": "social-motive",
         "related_subcategories": [],
         "translations": {
@@ -2699,7 +2675,7 @@
             "fr": {
                 "hs_path": "\u00e9motions-positives",
                 "hs_name": "\u00c9motions positives",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/social-motive\/positive-emotions",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/motivation-sociale\/\u00e9motions-positives",
                 "is_active": "1",
                 "short_explanation": "Cultive la s\u00e9curit\u00e9 \u00e9motionnelle",
                 "sub_head": "",
@@ -2740,7 +2716,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude2e\u200d\ud83d\udca8",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/face-exhaling_1f62e-200d-1f4a8.png,160,160,face-exhaling_1f62e-200d-1f4a8,112750101232",
-        "has_fr_rules": "true",
         "category": "social-motive",
         "related_subcategories": [
             "filler",
@@ -2840,7 +2815,7 @@
             "fr": {
                 "hs_path": "exag\u00e9ration",
                 "hs_name": "Exag\u00e9ration",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/social-motive\/exaggeration",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/motivation-sociale\/exag\u00e9ration",
                 "is_active": "1",
                 "short_explanation": "Ce terme est excessif et peu engageant",
                 "sub_head": "",
@@ -2881,7 +2856,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude1f",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -2968,7 +2942,7 @@
             "fr": {
                 "hs_path": "st\u00e9r\u00e9otype-f\u00e9minin",
                 "hs_name": "St\u00e9r\u00e9otype f\u00e9minin",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/female-stereotype",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/st\u00e9r\u00e9otype-f\u00e9minin",
                 "is_active": "1",
                 "short_explanation": "Rel\u00e8gue les femmes \u00e0 des r\u00f4les et comportements traditionnels",
                 "sub_head": "",
@@ -3009,7 +2983,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude1f",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/face-exhaling_1f62e-200d-1f4a8.png,160,160,face exhaling emoji,112750101232",
-        "has_fr_rules": "true",
         "category": "cultural-diversity",
         "related_subcategories": [
             "exaggerating",
@@ -3109,13 +3082,18 @@
             "fr": {
                 "hs_path": "mot-inutile",
                 "hs_name": "Mot inutile",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/filler-words",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-culturelle\/mot-inutile",
                 "is_active": "1",
                 "short_explanation": "Ajoute de la complexit\u00e9 sans pr\u00e9cision de sens",
-                "sub_head": "",
+                "sub_head": "Ajoute de la complexit\u00e9 sans pr\u00e9cision de sens",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Mot%20inutile.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -3150,7 +3128,6 @@
         "is_active": "1",
         "emoji": "\ud83e\uddca",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/ice_1f9ca.png,160,160,ice cube emoji,112750101230",
-        "has_fr_rules": "true",
         "category": "acquired-diversity",
         "related_subcategories": [],
         "translations": {
@@ -3237,7 +3214,7 @@
             "fr": {
                 "hs_path": "langage-formel",
                 "hs_name": "Langage formel",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/acquired-diversity\/formality",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-acquise\/langage-formel",
                 "is_active": "1",
                 "short_explanation": "Un ton moins formel rend votre message plus accessible",
                 "sub_head": "",
@@ -3278,7 +3255,6 @@
         "is_active": "1",
         "emoji": "\ud83d\udca1",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "gender-orientation",
         "related_subcategories": [
             "female_stereotype",
@@ -3376,7 +3352,7 @@
             "fr": {
                 "hs_path": "masculin-g\u00e9n\u00e9rique",
                 "hs_name": "Masculin g\u00e9n\u00e9rique",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/generic-masculine",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/masculin-g\u00e9n\u00e9rique",
                 "is_active": "1",
                 "short_explanation": "Fait g\u00e9n\u00e9ralement penser \u00e0 des hommes",
                 "sub_head": "",
@@ -3417,7 +3393,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude12",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "gender-orientation",
         "related_subcategories": [
             "d_and_i",
@@ -3519,7 +3494,7 @@
             "fr": {
                 "hs_path": "binarit\u00e9-de-genre",
                 "hs_name": "Binarit\u00e9 de genre",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/gender-binary",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/binarit\u00e9-de-genre",
                 "is_active": "1",
                 "short_explanation": "Entretient la vision traditionnelle binaire du genre",
                 "sub_head": "",
@@ -3560,7 +3535,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude2e",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -3647,7 +3621,7 @@
             "fr": {
                 "hs_path": "abr\u00e9viation-genr\u00e9e",
                 "hs_name": "Abr\u00e9viation genr\u00e9e",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/gender-specific-abbreviation",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/abr\u00e9viation-genr\u00e9e",
                 "is_active": "1",
                 "short_explanation": "Repr\u00e9sente les hommes par d\u00e9faut et exclut les personnes non binaires",
                 "sub_head": "",
@@ -3688,7 +3662,6 @@
         "is_active": "1",
         "emoji": "\ud83d\udcaf",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -3775,7 +3748,7 @@
             "fr": {
                 "hs_path": "terminaisons-genr\u00e9es",
                 "hs_name": "Terminaisons genr\u00e9es",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/gendered_denominations_ending",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/terminaisons-genr\u00e9es",
                 "is_active": "1",
                 "short_explanation": "Orthographe incoh\u00e9rente des terminaisons genr\u00e9es",
                 "sub_head": "",
@@ -3815,7 +3788,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude12",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -3902,7 +3874,7 @@
             "fr": {
                 "hs_path": "audition",
                 "hs_name": "Audition",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/hearing",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/handicap\/audition",
                 "is_active": "1",
                 "short_explanation": "Entretient des id\u00e9es d\u00e9pass\u00e9es sur la surdit\u00e9",
                 "sub_head": "",
@@ -3943,7 +3915,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude1f",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "gender-orientation",
         "related_subcategories": [
             "female_stereotype",
@@ -4040,7 +4011,7 @@
             "fr": {
                 "hs_path": "expression-genr\u00e9e",
                 "hs_name": "Expression genr\u00e9e",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/gender-cues",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/expression-genr\u00e9e",
                 "is_active": "1",
                 "short_explanation": "\u00c9voque une repr\u00e9sentation genr\u00e9e",
                 "sub_head": "",
@@ -4081,7 +4052,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude44",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/face-with-rolling-eyes_1f644.png,160,160,face with rolling-eyes emoji,112750103745",
-        "has_fr_rules": "true",
         "category": "cultural-diversity",
         "related_subcategories": [
             "exaggerating",
@@ -4181,13 +4151,18 @@
             "fr": {
                 "hs_path": "mot-creux",
                 "hs_name": "Mot creux",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/empty-words",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-culturelle\/mot-creux",
                 "is_active": "1",
                 "short_explanation": "Mot galvaud\u00e9 qui brouille votre message",
-                "sub_head": "",
+                "sub_head": "Mot galvaud\u00e9 qui brouille votre message",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Mot%20creux.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -4222,7 +4197,6 @@
         "is_active": "1",
         "emoji": "\ud83d\udeab",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/prohibited%20emoji.png",
-        "has_fr_rules": "true",
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -4299,7 +4273,7 @@
             "fr": {
                 "hs_path": "_homophobie",
                 "hs_name": "Homophobie",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/homophobia",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/_homophobie",
                 "is_active": "1",
                 "short_explanation": "Constitue une insulte homophobe",
                 "sub_head": "",
@@ -4340,7 +4314,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude1f",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "gender-orientation",
         "related_subcategories": [
             "agentic",
@@ -4443,7 +4416,7 @@
             "fr": {
                 "hs_path": "leadership-traditionnel",
                 "hs_name": "Leadership traditionnel",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/traditional-leadership",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/leadership-traditionnel",
                 "is_active": "1",
                 "short_explanation": "Entretient des id\u00e9es d\u00e9pass\u00e9es sur le leadership",
                 "sub_head": "",
@@ -4484,7 +4457,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude12",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "false",
         "category": "ability-physicality",
         "related_subcategories": [],
         "has_rules": [
@@ -4499,7 +4471,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude1f",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -4586,7 +4557,7 @@
             "fr": {
                 "hs_path": "st\u00e9r\u00e9otype-masculin",
                 "hs_name": "St\u00e9r\u00e9otype masculin",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/male-stereotype",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/st\u00e9r\u00e9otype-masculin",
                 "is_active": "1",
                 "short_explanation": "Rel\u00e8gue les hommes \u00e0 des r\u00f4les et comportements traditionnels",
                 "sub_head": "",
@@ -4627,7 +4598,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude12",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -4714,7 +4684,7 @@
             "fr": {
                 "hs_path": "\u00e9tat-de-sant\u00e9",
                 "hs_name": "\u00c9tat de sant\u00e9",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/medical-state",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/handicap\/\u00e9tat-de-sant\u00e9",
                 "is_active": "1",
                 "short_explanation": "Entretient des id\u00e9es validistes sur l'\u00e9tat de sant\u00e9 et le bien-\u00eatre",
                 "sub_head": "",
@@ -4755,7 +4725,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude12",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -4842,7 +4811,7 @@
             "fr": {
                 "hs_path": "sant\u00e9-mentale",
                 "hs_name": "Sant\u00e9 mentale",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/mental-wellbeing",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/handicap\/sant\u00e9-mentale",
                 "is_active": "1",
                 "short_explanation": "Entretient des id\u00e9es d\u00e9pass\u00e9es sur la sant\u00e9 mentale et le bien-\u00eatre",
                 "sub_head": "",
@@ -4883,7 +4852,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude12",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -4970,14 +4938,24 @@
             "fr": {
                 "hs_path": "immigration",
                 "hs_name": "Immigration",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/migration-background",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-culturelle\/immigration",
                 "is_active": "1",
                 "short_explanation": "Entretient des pr\u00e9jug\u00e9s sur les personnes issues de l'immigration",
-                "sub_head": "",
+                "sub_head": "Entretient des pr\u00e9jug\u00e9s sur les personnes issues de l'immigration",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Immigration.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Immigration%20Advanced.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -5011,7 +4989,6 @@
         "is_active": "1",
         "emoji": "\ud83e\ude96",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/military-helmet_1fa96.png,160,160,military helmet emoji,112750101231",
-        "has_fr_rules": "true",
         "category": "social-motive",
         "related_subcategories": [],
         "translations": {
@@ -5098,7 +5075,7 @@
             "fr": {
                 "hs_path": "jargon-militaire",
                 "hs_name": "Jargon militaire",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/social-motive\/military-inspired-lingo",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/motivation-sociale\/jargon-militaire",
                 "is_active": "1",
                 "short_explanation": "Compare le contexte professionnel \u00e0 un contexte de guerre",
                 "sub_head": "",
@@ -5139,7 +5116,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude12",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -5226,7 +5202,7 @@
             "fr": {
                 "hs_path": "mobilit\u00e9",
                 "hs_name": "Mobilit\u00e9",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/mobility",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/handicap\/mobilit\u00e9",
                 "is_active": "1",
                 "short_explanation": "Entretient des pr\u00e9jug\u00e9s sur la mobilit\u00e9",
                 "sub_head": "",
@@ -5267,7 +5243,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude12",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -5354,14 +5329,24 @@
             "fr": {
                 "hs_path": "langage-nazi",
                 "hs_name": "Langage nazi",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/nazi-language",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-culturelle\/langage-nazi",
                 "is_active": "1",
                 "short_explanation": "Mot utilis\u00e9 par le r\u00e9gime nazi pour promouvoir son id\u00e9ologie",
-                "sub_head": "",
+                "sub_head": "Mot utilis\u00e9 par le r\u00e9gime nazi pour promouvoir son id\u00e9ologie",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Langage%20nazi.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Langage%20nazi%20Advanced.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -5395,7 +5380,6 @@
         "is_active": "1",
         "emoji": "\ud83d\udeab",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/prohibited%20emoji.png",
-        "has_fr_rules": "true",
         "category": "social-motive",
         "related_subcategories": [],
         "translations": {
@@ -5482,7 +5466,7 @@
             "fr": {
                 "hs_path": "propos-injurieux",
                 "hs_name": "Propos injurieux",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/social-motive\/offensive-language",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/motivation-sociale\/propos-injurieux",
                 "is_active": "1",
                 "short_explanation": "Propos blessants, insultants et mena\u00e7ants",
                 "sub_head": "",
@@ -5523,7 +5507,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude1f",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -5610,7 +5593,7 @@
             "fr": {
                 "hs_path": "apparence-physique",
                 "hs_name": "Apparence physique",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/physicality",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/handicap\/apparence-physique",
                 "is_active": "1",
                 "short_explanation": "Sous-entend que l'apparence physique d'une personne d\u00e9termine sa valeur",
                 "sub_head": "",
@@ -5651,7 +5634,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude44",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/face-with-rolling-eyes_1f644.png,160,160,face with rolling eyes emoji,112750103745",
-        "has_fr_rules": "false",
         "category": "cultural-diversity",
         "related_subcategories": [
             "abbreviation",
@@ -5747,10 +5729,10 @@
             "fr": {
                 "hs_path": "langage-clair",
                 "hs_name": "Langage clair",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/plain-english",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-culturelle\/langage-clair",
                 "is_active": "1",
                 "short_explanation": "\u00c9vite les erreurs et les malentendus",
-                "sub_head": "",
+                "sub_head": "\u00c9vite les erreurs et les malentendus",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": [],
@@ -5777,7 +5759,8 @@
         },
         "has_rules": [
             "en",
-            "de"
+            "de",
+            "fr"
         ]
     },
     "racism": {
@@ -5787,7 +5770,6 @@
         "is_active": "1",
         "emoji": "\ud83d\udeab",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/prohibited%20emoji.png",
-        "has_fr_rules": "true",
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -5864,13 +5846,18 @@
             "fr": {
                 "hs_path": "racisme",
                 "hs_name": "Racisme",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/racism",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-culturelle\/racisme",
                 "is_active": "1",
-                "short_explanation": "Constitue une insulte raciste",
-                "sub_head": "",
+                "short_explanation": "A un sous-entendu raciste ou colonialiste",
+                "sub_head": "A un sous-entendu raciste ou colonialiste",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/racism.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": ""
+                },
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -5905,7 +5892,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude12",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -5987,14 +5973,24 @@
             "fr": {
                 "hs_path": "origines",
                 "hs_name": "Origines",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/ancestry",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-culturelle\/origines",
                 "is_active": "1",
                 "short_explanation": "A un sous-entendu raciste ou colonialiste",
-                "sub_head": "",
+                "sub_head": "A un sous-entendu raciste ou colonialiste",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Origines.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Origines%20Advanced.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -6028,7 +6024,6 @@
         "is_active": "1",
         "emoji": "\ud83d\udeab",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/prohibited_1f6ab.png,160,160,prohibited_1f6ab,112748310768",
-        "has_fr_rules": "false",
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -6105,7 +6100,7 @@
             "fr": {
                 "hs_path": "sexisme",
                 "hs_name": "Sexisme",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/sexism",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/sexisme",
                 "is_active": "1",
                 "short_explanation": "Constitue une insulte sexiste",
                 "sub_head": "",
@@ -6135,7 +6130,8 @@
         },
         "has_rules": [
             "en",
-            "de"
+            "de",
+            "fr"
         ]
     },
     "sexual_orientation": {
@@ -6145,7 +6141,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude12",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "false",
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -6232,7 +6227,7 @@
             "fr": {
                 "hs_path": "orientation-sexuelle",
                 "hs_name": "Orientation sexuelle",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/sexual-orientation",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/orientation-sexuelle",
                 "is_active": "1",
                 "short_explanation": "Promeut un syst\u00e8me de valeurs et des r\u00f4les h\u00e9t\u00e9rosexuels",
                 "sub_head": "",
@@ -6262,7 +6257,8 @@
         },
         "has_rules": [
             "en",
-            "de"
+            "de",
+            "fr"
         ]
     },
     "speech": {
@@ -6272,7 +6268,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude12",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "false",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -6359,7 +6354,7 @@
             "fr": {
                 "hs_path": "trouble-de-la-parole",
                 "hs_name": "Trouble de la parole",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/speech-ability",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/handicap\/trouble-de-la-parole",
                 "is_active": "1",
                 "short_explanation": "Entretient des pr\u00e9jug\u00e9s sur les troubles de la parole",
                 "sub_head": "",
@@ -6389,7 +6384,8 @@
         },
         "has_rules": [
             "en",
-            "de"
+            "de",
+            "fr"
         ]
     },
     "sports_terms": {
@@ -6399,7 +6395,6 @@
         "is_active": "1",
         "emoji": "\ud83c\udfc5",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/sports-medal_1f3c5.png,160,160,sports medal emoji,112748430273",
-        "has_fr_rules": "false",
         "category": "social-motive",
         "related_subcategories": [],
         "translations": {
@@ -6486,7 +6481,7 @@
             "fr": {
                 "hs_path": "termes-sportifs",
                 "hs_name": "Termes sportifs",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/social-motive\/sports-terms",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/motivation-sociale\/termes-sportifs",
                 "is_active": "1",
                 "short_explanation": "Exclut les personnes qui ne pratiquent pas ce sport et met trop en avant l'esprit de comp\u00e9tition",
                 "sub_head": "",
@@ -6516,7 +6511,8 @@
         },
         "has_rules": [
             "en",
-            "de"
+            "de",
+            "fr"
         ]
     },
     "titles": {
@@ -6526,7 +6522,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude1f",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "false",
         "category": "gender-orientation",
         "related_subcategories": [
             "female_stereotype",
@@ -6628,7 +6623,7 @@
             "fr": {
                 "hs_path": "nom-de-m\u00e9tier",
                 "hs_name": "Nom de m\u00e9tier",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/jobs",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/nom-de-m\u00e9tier",
                 "is_active": "1",
                 "short_explanation": "Fait g\u00e9n\u00e9ralement penser \u00e0 des hommes",
                 "sub_head": "",
@@ -6658,7 +6653,8 @@
         },
         "has_rules": [
             "en",
-            "de"
+            "de",
+            "fr"
         ]
     },
     "transphobia": {
@@ -6668,7 +6664,6 @@
         "is_active": "1",
         "emoji": "\ud83d\udeab",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/prohibited%20emoji.png",
-        "has_fr_rules": "true",
         "category": "gender-orientation",
         "related_subcategories": [],
         "translations": {
@@ -6745,7 +6740,7 @@
             "fr": {
                 "hs_path": "_transphobie",
                 "hs_name": "Transphobie",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/transphobia",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/_transphobie",
                 "is_active": "1",
                 "short_explanation": "Constitue une insulte transphobe",
                 "sub_head": "",
@@ -6786,7 +6781,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude12",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "ability-physicality",
         "related_subcategories": [],
         "translations": {
@@ -6873,7 +6867,7 @@
             "fr": {
                 "hs_path": "_vision",
                 "hs_name": "Vision",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/vision",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/handicap\/_vision",
                 "is_active": "1",
                 "short_explanation": "Entretient des pr\u00e9jug\u00e9s sur les troubles de la vision",
                 "sub_head": "",
@@ -6914,7 +6908,6 @@
         "is_active": "1",
         "emoji": "\ud83d\udeab",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/prohibited%20emoji.png",
-        "has_fr_rules": "true",
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -6991,13 +6984,18 @@
             "fr": {
                 "hs_path": "x\u00e9nophobie",
                 "hs_name": "X\u00e9nophobie",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/xenophobia",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-culturelle\/x\u00e9nophobie",
                 "is_active": "1",
                 "short_explanation": "Constitue une insulte x\u00e9nophobe",
-                "sub_head": "",
+                "sub_head": "Constitue une insulte x\u00e9nophobe",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/illustration%20of%20angry%20people.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": ""
+                },
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -7032,7 +7030,6 @@
         "is_active": "1",
         "emoji": "\ud83d\ude12",
         "emoji_image": "https:\/\/www.witty.works\/hubfs\/thinking%20face%20emoji.png",
-        "has_fr_rules": "true",
         "category": "cultural-diversity",
         "related_subcategories": [],
         "translations": {
@@ -7076,7 +7073,7 @@
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Negative%20Verwendung%20jiddischer%20Worte-2.png",
+                    "src": "https:\/\/www.witty.works\/hubfs\/Negative%20Verwendung%20jiddischer%20Worte-3.png",
                     "width": "605",
                     "height": "399",
                     "alt": ""
@@ -7109,10 +7106,10 @@
             "fr": {
                 "hs_path": "mots-yiddish-p\u00e9joratifs",
                 "hs_name": "Mots yiddish p\u00e9joratifs",
-                "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/yiddish-pejoratives",
+                "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-culturelle\/mots-yiddish-p\u00e9joratifs",
                 "is_active": "1",
                 "short_explanation": "R\u00e9interpr\u00e9tation p\u00e9jorative d'un mot yiddish neutre ou positif",
-                "sub_head": "",
+                "sub_head": "R\u00e9interpr\u00e9tation p\u00e9jorative d'un mot yiddish neutre ou positif",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": [],
@@ -7144,47 +7141,58 @@
     },
     "casing": {
         "category": "orthography",
-        "emoji": "\u274c"
+        "emoji": "\u274c",
+        "emoji_image": "https:\/\/www.witty.works\/hubfs\/cross%20mark%20emoji.png"
     },
     "compounding": {
         "category": "orthography",
-        "emoji": "\u26a0\ufe0f"
+        "emoji": "\u26a0\ufe0f",
+        "emoji_image": "https:\/\/www.witty.works\/hubfs\/warning%20emoji.png"
     },
     "confused_words": {
         "category": "orthography",
-        "emoji": "\u274c"
+        "emoji": "\u274c",
+        "emoji_image": "https:\/\/www.witty.works\/hubfs\/cross%20mark%20emoji.png"
     },
     "grammar": {
         "category": "orthography",
-        "emoji": "\u274c"
+        "emoji": "\u274c",
+        "emoji_image": "https:\/\/www.witty.works\/hubfs\/cross%20mark%20emoji.png"
     },
     "misc": {
         "category": "orthography",
-        "emoji": "\ud83e\udd14"
+        "emoji": "\ud83e\udd14",
+        "emoji_image": "https:\\\/\\\/www.witty.works\\\/hubfs\\\/thinking%20face%20emoji.png"
     },
     "orthography": {
         "category": "orthography",
-        "emoji": "\u274c"
+        "emoji": "\u274c",
+        "emoji_image": "https:\/\/www.witty.works\/hubfs\/cross%20mark%20emoji.png"
     },
     "punctuation": {
         "category": "orthography",
-        "emoji": "\u274c"
+        "emoji": "\u274c",
+        "emoji_image": "https:\/\/www.witty.works\/hubfs\/cross%20mark%20emoji.png"
     },
     "repetitions": {
         "category": "orthography",
-        "emoji": "\u26a0\ufe0f"
+        "emoji": "\u26a0\ufe0f",
+        "emoji_image": "https:\/\/www.witty.works\/hubfs\/warning%20emoji.png"
     },
     "typography": {
         "category": "orthography",
-        "emoji": "\u274c"
+        "emoji": "\u274c",
+        "emoji_image": "https:\/\/www.witty.works\/hubfs\/cross%20mark%20emoji.png"
     },
     "typos": {
         "category": "orthography",
-        "emoji": "\u274c"
+        "emoji": "\u274c",
+        "emoji_image": "https:\/\/www.witty.works\/hubfs\/cross%20mark%20emoji.png"
     },
     "corporate_rules": {
         "category": "corporate_rules",
         "emoji": "\u2757",
+        "emoji_image": "https:\/\/www.witty.works\/hubfs\/exclamation%20mark%20emoji.png",
         "translations": {
             "en": {
                 "hs_name": "Dictionary"
