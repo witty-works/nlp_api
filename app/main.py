@@ -992,24 +992,40 @@ async def review_prompt(
     check_request_in.config.disabled_categories.append("communal")
     check_request_in.config.disabled_categories.append("d_and_i")
     check_request_in.config.disabled_categories.append("emotional_security")
+    check_request_in.config.disabled_categories.append("orthography")
 
     check_result = await check(request, response, check_request_in, None)
     if isinstance(check_result, Result):
         return check_result
 
-    prompt = "You are an expert in inclusive language. You are tasked with editing the text and specifically take note of the following potential issues (pick which ever alternatives fits best in the given context):\n"
+    prompt = f"""You are an expert in inclusive language.
+You are tasked with editing the text that you just generated.
+Show the before and after and explain the changes using the explanation hints given below.
+
+For each item in the below "JSON issues list", replace the content provided in "issue" within the "text" using any of the provided alternatives.
+Pick which ever alternatives fits best in the given context either using the "alternative" or if "remove" is set to True, try to remove the given "issue" from the text entirely.
+If no "alternatives" are provided, try to rephrase the given text portion.
+Use content in "explanation" to explain your changes.
+"""
+
+    changes = []
     for result in check_result.results:
-        prompt+= f"In the text portion '{result.context}' consider replacing the phrase '{result.text}'"
+        change = {
+            "text": result.text,
+            "explanation": result.explanation.text,
+        }
+        
+        if len(result.alternatives):
+            alternatives = []
+            for alternative in result.alternatives:
+                if alternative.remove:
+                    alternatives.append({"remove": True})
+                else:
+                    alternatives.append({"alternative": alternative.text})
 
-        if len(result.alternatives) == 0:
-            prompt+= ".\n"
-            continue
+        changes.append(change)
 
-        prompt+= "with one of the following options:\n"
-        for alternative in result.alternatives:
-            prompt+= "* Remove the phrase from the text\n" if alternative.remove else f"* '{alternative.text}'\n"
-
-    return prompt
+    return prompt + "\nJSON issues list:\n" + json.dumps(changes)
 
 
 @app.post("/slack/commands")
