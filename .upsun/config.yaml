@@ -82,7 +82,7 @@ applications:
     hooks:
       build: |
         export SERVER="languagetool-server.jar"
-        export VERSION="6.2"
+        export VERSION="6.4"
         export LT="LanguageTool"
         if [ ! -d "${PLATFORM_CACHE_DIR}/${LT}-${VERSION}" ]; then
           echo "Downloading ${LT} ${VERSION} ..."
