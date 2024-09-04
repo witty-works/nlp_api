@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:85fe5cbfc5d54289fa057d928b9e77855948a0111ae879e12a44be1d07cb8486"
+content_hash = "sha256:a99835d143083a8b697a68213231fad4fea3704e07e7c7d326d9675a960eaf0c"
 
 [[metadata.targets]]
 requires_python = ">3.12"
@@ -764,6 +764,19 @@ files = [
     {file = "fasttext_wheel-0.9.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:5758d911a4e4539c75e93d58d9feee2c6de96a5addc4f4d7d76ed4e8953a4f35"},
     {file = "fasttext_wheel-0.9.2-cp312-cp312-win32.whl", hash = "sha256:79bfa9b168c115e3b4eab1f7694a80ca6a9ea96ee5e2e4d737e07f5b61812ae8"},
     {file = "fasttext_wheel-0.9.2-cp312-cp312-win_amd64.whl", hash = "sha256:8a0cc9e92377d27835a71862c68782e70c9bbd2a666a1a51b2c8261fc9892470"},
+]
+
+[[package]]
+name = "fr-core-news-lg"
+version = "3.7.0"
+url = "https://github.com/explosion/spacy-models/releases/download/fr_core_news_lg-3.7.0/fr_core_news_lg-3.7.0-py3-none-any.whl"
+summary = "French pipeline optimized for CPU. Components: tok2vec, morphologizer, parser, senter, ner, attribute_ruler, lemmatizer."
+groups = ["default"]
+dependencies = [
+    "spacy<3.8.0,>=3.7.0",
+]
+files = [
+    {file = "fr_core_news_lg-3.7.0-py3-none-any.whl", hash = "sha256:c2d98eb9073ff0f3d865179448e7f1868f27b2643c0e7215acc2438cd9eae554"},
 ]
 
 [[package]]

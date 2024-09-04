@@ -59,7 +59,7 @@ class Settings(BaseSettings):
     context_checker_api_key: Optional[str] = ""
     context_checker_url_de: Optional[str] = ""
     context_checker_api_key_de: Optional[str] = ""
-    models: list = ["en_core_web_lg", "de_core_news_lg"]
+    models: list = ["en_core_web_lg", "de_core_news_lg", "fr_core_news_lg"]
     fasttext: bool = True
     minimum_version_web_ext: Optional[str] = ""
     minimum_version_word_plugin: Optional[str] = ""
