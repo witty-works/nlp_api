@@ -5315,6 +5315,15 @@ async def noun_alternatives(lang: LangType, separator: str, noun_separator: str,
     sub_sentence_contains_noun = False
 
     for token_index in range(len(sentence_male_tokens)):
+        if lang == LangType.FR:
+            if token_index > 0 and sentence_male_tokens[token_index - 1].lemma_ in static_rules[lang]["masculine_articles"]:
+                is_noun = True
+                sub_sentence_contains_noun = True
+            else:
+                is_noun = await _fetch_word_type(lang, sentence_male_tokens[token_index], WordType.NOUN, True, True) == WordType.NOUN
+                if sub_sentence_contains_noun == True or is_noun:
+                    sub_sentence_contains_noun = True
+
         if sentence_male_tokens[token_index].text != sentence_female_tokens[token_index].text:
             inclusive_form+= inclusive_alternative(
                 lang,
@@ -5330,11 +5339,8 @@ async def noun_alternatives(lang: LangType, separator: str, noun_separator: str,
                     male_form_sub_sentence+= sentence_male_tokens[token_index - 1].whitespace_
                     female_form_sub_sentence+= sentence_female_tokens[token_index - 1].whitespace_
 
-                if sub_sentence_contains_noun == True or await _fetch_word_type(lang, sentence_male_tokens[token_index], WordType.NOUN, True, True) == WordType.NOUN:
-                    sub_sentence_contains_noun = True
-
                 male_form_sub_sentence+= sentence_male_tokens[token_index].text
-                female_form_sub_sentence+= sentence_female_tokens[token_index].text if token_index > 0 else sentence_female_tokens[token_index].text.lower()
+                female_form_sub_sentence+= sentence_female_tokens[token_index].text if token_index > 0 or is_noun else sentence_female_tokens[token_index].text.lower()
             else:
                 binary_form+= sentence_female_tokens[token_index].text + conjunction + sentence_male_tokens[token_index].text
         else:
