@@ -3,23 +3,6 @@
     "limit_reached": false,
     "results": [
         {
-            "alternatives": [],
-            "category": "orthography",
-            "context": "Witty leistet Unterstützung in mehr als <NUMBER> Diversitätsdimensionen. Sie sind alt. Das ist unsere beste Idee.",
-            "end": 65,
-            "explanation": {
-                "icon": "❌",
-                "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
-                "text": "Möglicher Tippfehler gefunden."
-            },
-            "gravity": 1.0,
-            "label": "Rechtschreibfehler",
-            "start": 43,
-            "subcategory": "typos",
-            "text": "Diversitätsdimensionen",
-            "text_id": "Diversitätsdimensionen"
-        },
-        {
             "alternatives": [
                 {
                     "text": "trägt bei"
