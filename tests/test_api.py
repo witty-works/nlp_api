@@ -55,6 +55,30 @@ def test_health():
 
 
 @pytest.mark.parametrize(
+    "review_prompt_dir",
+    get_dirs("tests/test_review_prompt"),
+)
+def test_review_prompt_dir(review_prompt_dir, snapshot, set_redis):
+    with TestClient(app) as client:
+        # Read input files from the case directory.
+        input_json = review_prompt_dir.joinpath("input.json").read_text()
+        # Call the tested endpoint.
+        response = client.post(
+            "/debug/review_prompt",
+            json=json.loads(input_json),
+            headers={"X-Auth": "default@gmail.com"},
+        )
+        assert response.status_code == 200
+        # output must be string
+        output = json.dumps(
+            response.json(), sort_keys=True, indent=4, ensure_ascii=False
+        )
+        # Snapshot the return value.
+        snapshot.snapshot_dir = review_prompt_dir
+        snapshot.assert_match(output, "output.json")
+
+
+@pytest.mark.parametrize(
     "version_2_3_dir",
     get_dirs("tests/test_2_3"),
 )

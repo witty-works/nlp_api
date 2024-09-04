@@ -1003,25 +1003,28 @@ You are tasked with editing the text that you just generated.
 Show the before and after and explain the changes using the explanation hints given below.
 
 For each item in the below "JSON issues list", replace the content provided in "issue" within the "text" using any of the provided alternatives.
-Pick which ever alternatives fits best in the given context either using the "alternative" or if "remove" is set to True, try to remove the given "issue" from the text entirely.
+Pick which ever element in the "alternatives" list fits best in the given context.
+Either using the "alternative" or if "remove" is set to True, try to remove the given "issue" from the text entirely.
 If no "alternatives" are provided, try to rephrase the given text portion.
 Use content in "explanation" to explain your changes.
 """
 
     changes = []
     for result in check_result.results:
+        if len(result.alternatives) == 0:
+            continue
+
         change = {
             "text": result.text,
             "explanation": result.explanation.text,
+            "alternatives": [],
         }
         
-        if len(result.alternatives):
-            alternatives = []
-            for alternative in result.alternatives:
-                if alternative.remove:
-                    alternatives.append({"remove": True})
-                else:
-                    alternatives.append({"alternative": alternative.text})
+        for alternative in result.alternatives:
+            if alternative.remove:
+                change["alternatives"].append({"remove": True})
+            else:
+                change["alternatives"].append({"alternative": alternative.text})
 
         changes.append(change)
 
