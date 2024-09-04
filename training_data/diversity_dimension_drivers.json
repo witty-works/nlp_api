@@ -252,8 +252,18 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Handicap.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Handicap%20Advanced.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -374,7 +384,12 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Ableist.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": ""
+                },
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -501,7 +516,12 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Information%20sur%20l%C3%A2ge.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -628,8 +648,18 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/%C3%82gisme%20contre%20les%20%2B%20de%2050%20ans.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/%C3%82gisme%20contre%20les%20%2B%20de%2050%20ans%20Advanced.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -755,8 +785,18 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/%C3%82gisme%20contre%20les%20-de%2025%20ans.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/%C3%82gisme%20contre%20les%20-de%2025%20ans%20Advanced.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -897,8 +937,18 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Langage%20agentique.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Langage%20agentique%20Advanced.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -1132,10 +1182,15 @@
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/_religion\/islamophobie",
                 "is_active": "1",
                 "short_explanation": "Est-ce insultant pour les personnes musulmanes ?",
-                "sub_head": "",
+                "sub_head": "\u00c9crivez-vous cette expression \u00e0 dessein ou en disant \u00ab c'est juste une blague \u00bb ? Essayez de vous mettre \u00e0 la place d'une personne de confession islamique : Cette expression est extr\u00eamement offensante pour eux car elle les diffame en tant qu'\u00eatres humains en raison de leur religion. L'\u00e9dition a des cons\u00e9quences pour l'ensemble du groupe social car elle cr\u00e9e ou renforce un pr\u00e9jug\u00e9 \u00e0 l'encontre des musulmans. ",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Islamophobia%20and%20anti-muslim%20sentiment%20.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": ""
+                },
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -1249,10 +1304,15 @@
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/_religion\/antis\u00e9mitisme",
                 "is_active": "1",
                 "short_explanation": "Est-ce insultant pour les personnes juives ?",
-                "sub_head": "",
+                "sub_head": "\u00c9crivez-vous cette expression \u00e0 dessein ou en disant \u00ab c'est juste une blague \u00bb ? Essayez de vous mettre \u00e0 la place d'une personne de confession juive : Cette expression est extr\u00eamement offensante pour eux car elle les diffame en tant qu'\u00eatres humains en raison de leur religion. Son utilisation a des cons\u00e9quences pour l'ensemble du groupe social, car elle cr\u00e9e ou renforce un pr\u00e9jug\u00e9 \u00e0 l'encontre du peuple juif. ",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/antisemitismus.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": ""
+                },
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -1379,8 +1439,18 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Comportement.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Comportement%20Advanced.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -1503,11 +1573,21 @@
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/_religion\/croyance",
                 "is_active": "1",
                 "short_explanation": "Cette r\u00e9f\u00e9rence religieuse est-elle universelle ?",
-                "sub_head": "",
+                "sub_head": "Il s'agit de formulations qui cataloguent les personnes ayant une certaine croyance ou qui expriment inconsciemment une croyance comme \u00e9tant la norme, d\u00e9valorisant ainsi les autres croyances. ",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Croyance.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Croyance%20Advanced.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -1640,10 +1720,15 @@
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/pronoms-binaires",
                 "is_active": "1",
                 "short_explanation": "Excluez-vous les personnes non binaires ?",
-                "sub_head": "",
+                "sub_head": "Excluez-vous les personnes non binaires ?",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Pronoms%20binaires.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -1770,8 +1855,18 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Classisme.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Classisme%20Advanced.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -1897,8 +1992,18 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Fonctions%20cognitives.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Fonctions%20cognitives%20Advanced.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -2024,8 +2129,18 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Perception.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Perception%20Advanced.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -2298,7 +2413,12 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Coop%C3%A9ration.png",
+                    "width": "605",
+                    "height": "319",
+                    "alt": ""
+                },
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -2564,7 +2684,12 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Diversit%C3%A9%2c%20%C3%A9quit%C3%A9%2c%20inclusion%20et%20sentiment%20dappartenance.png",
+                    "width": "605",
+                    "height": "319",
+                    "alt": ""
+                },
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -2681,7 +2806,12 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/%C3%89motions%20positives.png",
+                    "width": "605",
+                    "height": "319",
+                    "alt": ""
+                },
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -2821,8 +2951,18 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Exag%C3%A9ration.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Exag%C3%A9ration%20Advanced.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -2945,11 +3085,21 @@
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/st\u00e9r\u00e9otype-f\u00e9minin",
                 "is_active": "1",
                 "short_explanation": "Rel\u00e8gue les femmes \u00e0 des r\u00f4les et comportements traditionnels",
-                "sub_head": "",
+                "sub_head": "Rel\u00e8gue les femmes \u00e0 des r\u00f4les et comportements traditionnels",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/St%C3%A9r%C3%A9otype%20f%C3%A9minin.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/St%C3%A9r%C3%A9otype%20f%C3%A9minin%20Advanced.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -3220,8 +3370,18 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Langage%20formel.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Langage%20formel%20Advanced.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -3355,10 +3515,15 @@
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/masculin-g\u00e9n\u00e9rique",
                 "is_active": "1",
                 "short_explanation": "Fait g\u00e9n\u00e9ralement penser \u00e0 des hommes",
-                "sub_head": "",
+                "sub_head": "Fait g\u00e9n\u00e9ralement penser \u00e0 des hommes",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Masculin%20g%C3%A9n%C3%A9rique.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -3497,11 +3662,21 @@
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/binarit\u00e9-de-genre",
                 "is_active": "1",
                 "short_explanation": "Entretient la vision traditionnelle binaire du genre",
-                "sub_head": "",
+                "sub_head": "Entretient la vision traditionnelle binaire du genre",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Binarit%C3%A9%20de%20genre.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Binarit%C3%A9%20de%20genre%20Advanced.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -3624,7 +3799,7 @@
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/abr\u00e9viation-genr\u00e9e",
                 "is_active": "1",
                 "short_explanation": "Repr\u00e9sente les hommes par d\u00e9faut et exclut les personnes non binaires",
-                "sub_head": "",
+                "sub_head": "Repr\u00e9sente les hommes par d\u00e9faut et exclut les personnes non binaires",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": [],
@@ -3751,7 +3926,7 @@
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/terminaisons-genr\u00e9es",
                 "is_active": "1",
                 "short_explanation": "Orthographe incoh\u00e9rente des terminaisons genr\u00e9es",
-                "sub_head": "",
+                "sub_head": "Orthographe incoh\u00e9rente des terminaisons genr\u00e9es",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": [],
@@ -3880,8 +4055,18 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Audition-1.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Audition%20Advanced.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -4014,11 +4199,21 @@
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/expression-genr\u00e9e",
                 "is_active": "1",
                 "short_explanation": "\u00c9voque une repr\u00e9sentation genr\u00e9e",
-                "sub_head": "",
+                "sub_head": "\u00c9voque une repr\u00e9sentation genr\u00e9e",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Expression%20genr%C3%A9e.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Expression%20genr%C3%A9e%20Advanced.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -4276,10 +4471,15 @@
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/_homophobie",
                 "is_active": "1",
                 "short_explanation": "Constitue une insulte homophobe",
-                "sub_head": "",
+                "sub_head": "Constitue une insulte homophobe",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Homophobia%20.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": ""
+                },
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -4419,11 +4619,21 @@
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/leadership-traditionnel",
                 "is_active": "1",
                 "short_explanation": "Entretient des id\u00e9es d\u00e9pass\u00e9es sur le leadership",
-                "sub_head": "",
+                "sub_head": "Entretient des id\u00e9es d\u00e9pass\u00e9es sur le leadership",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Leadership%20traditionnel.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Leadership%20traditionnel%20Advanced-1.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -4560,11 +4770,21 @@
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/st\u00e9r\u00e9otype-masculin",
                 "is_active": "1",
                 "short_explanation": "Rel\u00e8gue les hommes \u00e0 des r\u00f4les et comportements traditionnels",
-                "sub_head": "",
+                "sub_head": "Rel\u00e8gue les hommes \u00e0 des r\u00f4les et comportements traditionnels",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/St%C3%A9r%C3%A9otype%20masculin.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/St%C3%A9r%C3%A9otype%20masculin%20Advanced.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -4690,8 +4910,18 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/%C3%89tat%20de%20sant%C3%A9.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/%C3%89tat%20de%20sant%C3%A9%20Advanced.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -4817,8 +5047,18 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Sant%C3%A9%20mentale.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Sant%C3%A9%20mentale%20Advanced.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -5081,8 +5321,18 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Jargon%20militaire.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Jargon%20militaire%20Advanced.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -5208,8 +5458,18 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Mobilit%C3%A9.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Mobilit%C3%A9%20Advanced.png",
+                    "width": "1193",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -5472,7 +5732,12 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/illustration%20of%20angry%20people.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": ""
+                },
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -5599,8 +5864,18 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Apparence%20physique.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Apparence%20physique%20Advanced.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -6103,10 +6378,15 @@
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/sexisme",
                 "is_active": "1",
                 "short_explanation": "Constitue une insulte sexiste",
-                "sub_head": "",
+                "sub_head": "Constitue une insulte sexiste",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/sexism-1.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": ""
+                },
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -6230,11 +6510,21 @@
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/orientation-sexuelle",
                 "is_active": "1",
                 "short_explanation": "Promeut un syst\u00e8me de valeurs et des r\u00f4les h\u00e9t\u00e9rosexuels",
-                "sub_head": "",
+                "sub_head": "Promeut un syst\u00e8me de valeurs et des r\u00f4les h\u00e9t\u00e9rosexuels",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Orientation%20sexuelle.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Orientation%20sexuelle%20Advanced.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -6487,8 +6777,18 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Termes%20sportifs.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Termes%20sportifs%20Advanced.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
@@ -6626,10 +6926,15 @@
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/nom-de-m\u00e9tier",
                 "is_active": "1",
                 "short_explanation": "Fait g\u00e9n\u00e9ralement penser \u00e0 des hommes",
-                "sub_head": "",
+                "sub_head": "Fait g\u00e9n\u00e9ralement penser \u00e0 des hommes",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Nom%20de%20m%C3%A9tier.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -6743,10 +7048,15 @@
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/_transphobie",
                 "is_active": "1",
                 "short_explanation": "Constitue une insulte transphobe",
-                "sub_head": "",
+                "sub_head": "Constitue une insulte transphobe",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Transphobia-1.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": ""
+                },
                 "example_image_advanced": [],
                 "soft_explanation": "",
                 "hard_facts": "",
@@ -6873,8 +7183,18 @@
                 "sub_head": "",
                 "lead_video": "",
                 "lead_image": [],
-                "example_image": [],
-                "example_image_advanced": [],
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Vision-3.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
+                "example_image_advanced": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Vision%20Advanced.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                },
                 "soft_explanation": "",
                 "hard_facts": "",
                 "hero_figure": "",
