@@ -19,16 +19,7 @@ class LoggerSetup:
                 "[%(asctime)s] %(name)s %(levelname)s - %(message)s"
             )
 
-            if self.settings.instrumentation_key:
-                from opencensus.ext.azure.log_exporter import AzureLogHandler
-
-                handler = AzureLogHandler(
-                    connection_string="InstrumentationKey={}".format(
-                        self.settings.instrumentation_key
-                    )
-                )
-                handler.setFormatter(formatter)
-            elif self.settings.logging_config_filename == "stdout":
+            if self.settings.logging_config_filename == "stdout":
                 handler = logging.StreamHandler(sys.stdout)
                 handler.setFormatter(formatter)
             else:

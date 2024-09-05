@@ -59,7 +59,7 @@
             "explanation": {
                 "icon": "❌",
                 "icon_image": "https://www.witty.works/hubfs/cross%20mark%20emoji.png",
-                "text": "Möglicher Tippfehler gefunden."
+                "text": "Nach einer lang gesprochenen Silbe (hier: a) schreibt man ‚ß‘ statt ‚ss‘."
             },
             "gravity": 1.0,
             "label": "Rechtschreibfehler",
