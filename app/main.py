@@ -1909,6 +1909,7 @@ def is_token_singular(lang: LangType, token: Token) -> bool | None:
     if token.text.endswith("-"):
         return False
 
+    # Likely to happen with nouns that are anglicisms, f.e. 'Store Manager Watch"
     return None
 
 
@@ -3027,6 +3028,10 @@ def check_continue(
     return True
 
 
+def is_addon_enabled(addon: str, addons: None|list[str]):
+    return addons is None or addon in addons    
+
+
 async def fetch_rules(
     lang: LangType,
     token: Token,
@@ -3097,7 +3102,7 @@ async def fetch_rules(
         ] = female_lemma_filter.lower()
 
     query = f"SELECT {rule_column_list} FROM rules_rule WHERE language = ? AND type = ? AND diversity_dimension_json != '[]'"
-    if addons is not None and "hr" not in addons:
+    if not is_addon_enabled("hr", addons):
         query += " AND is_hr_rule = 0"
 
     filter_list = " OR ".join(filters.keys())
@@ -6439,6 +6444,72 @@ async def check_person_noun(
 
     return skip
 
+
+def is_german_pronoun_check_required(lang: LangType, token: Token):
+    return lang == LangType.DE and token.text.lower() in static_rules[LangType.DE]["formal_shallow_signal_words"]
+
+
+def german_pronoun_check(config: Config, rule: Rule, token: Token):
+    is_formal = is_formal_check(config, token)
+    if is_formal is None:
+        return False
+
+    for subcategory in rule.subcategories:
+        if not is_sub_category_enabled(config, [subcategory]):
+            continue
+
+        if is_formal:
+            if subcategory.startswith("formality"):
+                return subcategory
+        elif subcategory.startswith("binary_pronouns"):
+            return subcategory
+
+    return None
+
+
+def is_formal_check(config: Config, token: Token):
+    if not token.text[0].isupper():
+        # "Er und sie"
+        # "Sie, gehen sie nach Hause"
+        #             ^^^
+        # "Sagen Sie ihnen, dass sie nach Hause gehen sollen"
+        #            ^^^
+        # "Sagen Sie ihnen, dass sie nach Hause gehen sollen"
+        #                        ^^^
+        return False
+    
+    # "Sie, gehen sie nach Hause"
+    #  ^^^
+    if not token.is_sent_start or (len(token.sent) > 1 and token.sent[1].text == ","):
+        return True
+
+    if is_token_singular(LangType.DE, token) != False:
+        # "Sie geht nach Hause"
+        return False
+
+    if is_addon_enabled("hr", config.addons) and len(token.sent) > 1 and token.sent[1].lemma_ in static_rules[LangType.DE]["hilf_verben"]:
+        # "Sie haben einen Master in .."
+        # "Sie sind Student*in .."
+        # "Sie sind zu schnell"
+        return True
+
+    # Check for the presence of informal pronouns
+    for sent_token in token.sent:
+        # If we encounter a formal signal words
+        if (sent_token.lemma_ in static_rules[LangType.DE]["formal_signal_words"]["lemma"]
+            or sent_token.text in static_rules[LangType.DE]["formal_signal_words"]["text"]
+        ) :
+        # "Gehen Sie nach Hause"
+        # "Sagen Sie ihnen, dass sie nach Hause gehen sollen"
+        #        ^^^
+            return True
+
+    # "Sie sagen ihnen, dass sie nach Hause gehen sollen"
+    #  ^^^
+    # "Sie sind zu schnell"
+    return None
+
+
 async def rule_check(
     config: Config,
     client: Client,
@@ -6528,6 +6599,11 @@ async def rule_check(
                 rule,
                 false_positive_matcher,
             )
+
+            if is_german_pronoun_check_required(lang.lang, token):
+                subcategory = german_pronoun_check(config, rule, token)
+                if not subcategory:
+                    continue
 
             if not text or await is_rule_false_positive(
                 full_text, token_index, tokens, rule

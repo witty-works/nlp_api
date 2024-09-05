@@ -491,6 +491,47 @@ def fetch_static_rules():
             "entschieden",
         ]
 
+        static_rules[LangType.DE]["hilf_verben"] = ["haben", "sind", "sein", "werden"]
+
+        static_rules[LangType.DE]["formal_shallow_signal_words"] = [
+            "sie",
+            "ihr",
+            "ihre",
+            "ihren",
+            "ihnen",
+            "ihrem",
+            "ihres",
+        ]
+
+        static_rules[LangType.DE]["formal_signal_words"] = {
+            "lemma": [
+                "geehrt",
+                "Herr",
+                "Frau",
+                "Dame",
+                "Bitte",
+                "bitten",
+                "gern",
+            ],
+            "text": [
+                "Sie",
+                "Ihr",
+                "Ihre",
+                "Ihren",
+                "Ihnen",
+                "Ihrem",
+                "Ihres",
+                "hätten",
+                "könnten",
+                "dürften",
+                "würden",
+                "sollten",
+                "müssten",
+                "müẞten",
+                "möchten",
+            ],
+        }
+
         static_rules[LangType.DE]["standard_words"] = [
             "zusammen",
             "schaft",
