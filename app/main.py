@@ -716,11 +716,15 @@ async def rephrase_sentence(
     placeholder = "|---|"
     sentence = rephrase_request_in.sentence
     alternatives = []
+    collective_nouns = []
     genderstar = {}
     for alternative_index in range(len(rephrase_request_in.alternatives)):
         alternative = rephrase_request_in.alternatives[alternative_index]
         if alternative.types is None:
             alternatives.append(alternative.lemma)
+            if alternative.collective_noun == True:
+                collective_nouns.append(alternative.lemma)
+
         else:
             genderstar[alternative_index] = alternative.types
             alternatives.append(alternative.male_form)
@@ -750,6 +754,8 @@ async def rephrase_sentence(
         case LangType.DE:
             system_prompt+= f"""
                 Make sure to not remove any useage of the Genderstar.
+                To avoid gendered nouns when possible prefer plural over singular.
+                For "alternatives" also listed under "collective_nouns" assume they contain a plural noun.
 
                 For the following example:  
                 {{
@@ -780,22 +786,29 @@ async def rephrase_sentence(
                     "sentence_with_placeholder": "Wir arbeiten für unsere Kund*innen, für uns ist der {placeholder} im Zentrum",
                     "text": "Kunden",
                     "alternatives": [
-                        "Kunde",
-                        "Kundin",
-                        "Kundschaft"
+                        "der Kunde",
+                        "die Kundin",
+                        "die Kundschaft",
+                        "die Konsumenten"
+                    ],
+                    "collective_nouns": [
+                        "die Kundschaft",
+                        "die Konsumenten"
                     ]
                 }}
 
                 Format the output as follows making sure it is valid JSON:
                 {{
-                    "Kunde": "Wir arbeiten für unsere Kund*innen, für uns ist der Kunde im Zentrum",
-                    "Kundin": "Wir arbeiten für unsere Kund*innen, für uns ist die Kundin im Zentrum",
-                    "Kundschaft": "Wir arbeiten für unsere Kund*innen, für uns ist die Kundschaft im Zentrum"
+                    "der Kunde": "Wir arbeiten für unsere Kund*innen, für uns ist der Kunde im Zentrum",
+                    "die Kundin": "Wir arbeiten für unsere Kund*innen, für uns ist die Kundin im Zentrum",
+                    "die Kundschaft": "Wir arbeiten für unsere Kund*innen, für uns ist die Kundschaft im Zentrum",
+                    "die Konsumenten": "Wir arbeiten für unsere Kund*innen, für uns sind die Konsumenten im Zentrum"
                 }}
                 """
         case LangType.FR:
             system_prompt+= f"""
                 Make sure to not remove any useage of the point médian.
+                For "alternatives" not listed under "collective_nouns" avoid gendered nouns when possible prefer plural over singular.
 
                 For the following example:  
                 {{
@@ -826,6 +839,9 @@ async def rephrase_sentence(
                     "alternatives": [
                         "traducteur,
                         "traductrice",
+                        "traduction"
+                    ],
+                    "collective_nouns": [
                         "traduction"
                     ]
                 }}
@@ -882,7 +898,8 @@ async def rephrase_sentence(
         "sentence": sentence,
         "sentence_with_placeholder": sentence_with_placeholder,
         "text": text,
-        "alternatives": alternatives
+        "alternatives": alternatives,
+        "collective_nouns": collective_nouns
     }
 
     user_prompt = "Please process the following input into a valid JSON response:\n" + json.dumps(input_data)
@@ -2178,15 +2195,13 @@ async def check(
 
         if lang is None:
             response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
-            results = Result.factory("Language could not be determined")
-            language = None
-            configs = {}
-        else:
-            results = await apply_language_rules(
-                client, check_request_in.config, configs, lang, text
-            )
+            return Result.factory("Language could not be determined")
 
-            language = lang.lang
+        results = await apply_language_rules(
+            client, check_request_in.config, configs, lang, text
+        )
+
+        language = lang.lang
 
         if isinstance(results, Result):
             return results
@@ -5318,15 +5333,6 @@ async def noun_alternatives(lang: LangType, separator: str, noun_separator: str,
     sub_sentence_contains_noun = False
 
     for token_index in range(len(sentence_male_tokens)):
-        if lang == LangType.FR:
-            if token_index > 0 and sentence_male_tokens[token_index - 1].lemma_ in static_rules[lang]["masculine_articles"]:
-                is_noun = True
-                sub_sentence_contains_noun = True
-            else:
-                is_noun = await _fetch_word_type(lang, sentence_male_tokens[token_index], WordType.NOUN, True, True) == WordType.NOUN
-                if sub_sentence_contains_noun == True or is_noun:
-                    sub_sentence_contains_noun = True
-
         if sentence_male_tokens[token_index].text != sentence_female_tokens[token_index].text:
             inclusive_form+= inclusive_alternative(
                 lang,
@@ -5338,6 +5344,14 @@ async def noun_alternatives(lang: LangType, separator: str, noun_separator: str,
             )
             conjunction = singular_conjunction if is_token_singular(lang, sentence_male_tokens[token_index]) else plural_conjunction
             if lang == LangType.FR:
+                if token_index > 0 and sentence_male_tokens[token_index - 1].lemma_ in static_rules[lang]["masculine_articles"]:
+                    is_noun = True
+                    sub_sentence_contains_noun = True
+                else:
+                    is_noun = await _fetch_word_type(lang, sentence_male_tokens[token_index], WordType.NOUN, True, True) == WordType.NOUN
+                    if sub_sentence_contains_noun == True or is_noun:
+                        sub_sentence_contains_noun = True
+
                 if male_form_sub_sentence != "":
                     male_form_sub_sentence+= sentence_male_tokens[token_index - 1].whitespace_
                     female_form_sub_sentence+= sentence_female_tokens[token_index - 1].whitespace_
