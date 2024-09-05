@@ -2143,6 +2143,11 @@ async def check(
     check_request_in: CheckRequestIn,
     version: str | None = None,
 ) -> Result | ResultsOut:
+    host = request.headers.get("origin", "none")
+    if host.endswith(".officeapps.live.com"):
+        response.status_code = status.HTTP_400_BAD_REQUEST
+        return Result.factory("Ignore requests from officeapps.live.com")
+
     client = parse_client(check_request_in.client)
     check_client_version(client)
 
