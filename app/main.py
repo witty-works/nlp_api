@@ -1564,20 +1564,6 @@ async def post_debug_check(
 
 
 @app.post(
-    "/v2.3/check",
-    response_model=Union[ResultsOut, Result],
-    response_model_exclude_none=True,
-    dependencies=[Depends(HTTPBearer(auto_error=False))],
-)
-async def post_check_v2_3(
-    request: Request,
-    response: Response,
-    check_request_in: CheckRequestIn,
-):
-    return await check(request, response, check_request_in, "2.3")
-
-
-@app.post(
     "/v2.4/check",
     response_model=Union[ResultsOut, Result],
     response_model_exclude_none=True,
@@ -2140,10 +2126,10 @@ def rephrase_api_version(version: str):
 
 
 def check_api_version(version: str):
-    if version != "2.3" and version != "2.4":  # pragma: no cover
+    if version != "2.4":  # pragma: no cover
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"API version '{version}' not supported, please use version '2.3' (deprecated) or '2.4'.",
+            detail=f"API version '{version}' not supported, please use version '2.4'.",
         )
 
 
@@ -2222,12 +2208,6 @@ async def check(
     has_consented_to_mailing = None
     if "has_consented_to_mailing" in configs:
         has_consented_to_mailing = configs["has_consented_to_mailing"]
-
-    if version == "2.3":
-        for result in results:
-            for alternative in result.alternatives:
-                alternative.type = None
-                alternative.url = None
 
     return ResultsOut(
         results=results,
