@@ -349,6 +349,7 @@ class RuleIn(BaseModel):
 
 class Config(BaseModel):
     store_context: bool = True
+    llm_alternatives: bool = False
     plan: Optional[str] = None
     addons: Optional[list[str]] = None
     primary_language: Optional[LangVariantType] = None
@@ -496,6 +497,7 @@ class GenderedRolesFormatConfigType(BaseModel):
 
 class RuleConfig(BaseModel):
     store_context: Optional[BooleanConfigType] = None
+    llm_alternatives: Optional[BooleanConfigType] = None
     preferred_variants: Optional[LangVariantConfigType] = None
     german_gender_ending: Optional[GermanGenderEndingConfigType] = None
     gendered_roles_format: Optional[GenderedRolesFormatConfigType] = None
