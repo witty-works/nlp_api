@@ -697,6 +697,10 @@ async def rephrase_sentence(
         ):
             response.status_code = status.HTTP_401_UNAUTHORIZED
             return Result.factory("An error occurred: No valid plan on user")
+
+        if not rephrase_request_in.config.llm_alternatives:
+            response.status_code = status.HTTP_403_FORBIDDEN
+            return Result.factory("An error occurred: Rephrasing via LLM not enabled on user")
     else:
         # debug
         configs = {}
@@ -1954,6 +1958,14 @@ def apply_configs(
                 and not data["value"]
             ):
                 check_request_in.config.__setattr__("store_context", False)
+        elif config == "llm_alternatives":
+            if (
+                plan is not None
+                and plan != "witty_free"
+                and data["status"] == "force"
+                and data["value"]
+            ):
+                check_request_in.config.__setattr__("llm_alternatives", True)
         elif data["status"] == "force":
             check_request_in.config.__setattr__(config, data["value"])
 
@@ -1965,6 +1977,7 @@ async def fetch_configs_for_request(
     request_in: BaseRequestIn, user_email=Optional[str]
 ) -> dict:
     request_in.config.__setattr__("store_context", True)
+    request_in.config.__setattr__("llm_alternatives", False)
     request_in.config.__setattr__("plan", None)
     request_in.config.__setattr__(
         "alternatives_max_count", settings.alternatives_max_count
@@ -2005,6 +2018,7 @@ async def fetch_organization_configs_for_request(
     request_in: BaseRequestIn, organization_id=Optional[str]
 ) -> dict:
     request_in.config.__setattr__("store_context", True)
+    request_in.config.__setattr__("llm_alternatives", False)
 
     if not organization_id:
         return {}

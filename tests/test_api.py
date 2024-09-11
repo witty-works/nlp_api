@@ -749,6 +749,10 @@ def set_redis():
                 "value": True,
                 "status": "force",
             },
+            "llm_alternatives": {
+                "value": True,
+                "status": "force",
+            },
             "preferred_variants": {
                 "value": ["en-GB"],
                 "status": "force",
@@ -1074,6 +1078,7 @@ def test_fetch_configs_for_request(event_loop, set_redis):
         "text": "Wir suchen Ninja Programmierer für unsere Kunden",
         "config": {
             "store_context": False,
+            "llm_alternatives": False,
             "primary_language": "de-DE",
             "preferred_languages": "de",
             "preferred_variants": "de-DE",
@@ -1087,6 +1092,8 @@ def test_fetch_configs_for_request(event_loop, set_redis):
     )
     assert hasattr(test_request.config, "store_context")
     assert test_request.config.store_context is True
+    assert hasattr(test_request.config, "llm_alternatives")
+    assert test_request.config.llm_alternatives is True
     assert test_request.config.preferred_variants == ["en-GB"]
     assert test_request.config.german_gender_ending == "In"
     assert test_request.config.gendered_roles_format == "binary_gender"
@@ -1111,6 +1118,7 @@ def test_fetch_user_rules_suggestion(event_loop, set_redis):
         fetch_configs_for_request(test_request, "non_existant@gmail.com")
     )
     assert test_request.config.store_context is True
+    assert test_request.config.llm_alternatives is False
     assert test_request.config.primary_language == "de-DE"
     assert test_request.config.preferred_languages == ["de"]
     assert test_request.config.preferred_variants == ["de-DE"]
@@ -1130,6 +1138,7 @@ def test_set_organization_rules(event_loop, set_redis):
         fetch_configs_for_request(test_request, "test@gmail.com")
     )
     assert test_request.config.store_context is True
+    assert test_request.config.llm_alternatives is True
     assert test_request.config.preferred_variants == ["en-GB"]
     assert test_request.config.german_gender_ending == "In"
     assert test_request.config.gendered_roles_format == "binary_gender"
@@ -1148,6 +1157,7 @@ def test_set_default_rules(event_loop):
         fetch_configs_for_request(test_request, "non_existant@gmail.com")
     )
     assert test_request.config.store_context is True
+    assert test_request.config.llm_alternatives is False
     assert test_request.config.primary_language is None
     assert test_request.config.preferred_languages == [
         LangWithAutoType.EN,
@@ -1198,6 +1208,10 @@ def test_store_get_delete_rules():
                 "status": "force",
             },
             "store_context": {
+                "value": True,
+                "status": "force",
+            },
+            "llm_alternatives": {
                 "value": True,
                 "status": "force",
             },
@@ -1267,6 +1281,10 @@ def test_store_get_delete_rules():
                 "status": "force",
             },
             "store_context": {
+                "value": True,
+                "status": "force",
+            },
+            "llm_alternatives": {
                 "value": True,
                 "status": "force",
             },
