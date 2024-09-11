@@ -333,7 +333,7 @@ class RuleIn(BaseModel):
     text: str
     lang: LangType
     lemma: str
-    word_types: list
+    word_types: list | dict
     actual_word_types: Optional[str] = None
     subcategories: list[str]
     alternatives: Optional[list[AlternativeIn]] = []
