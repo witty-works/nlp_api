@@ -141,7 +141,12 @@
                 "lead_title": "Witty sensibilise vos \u00e9quipes au langage genr\u00e9 et propose des alternatives inclusives. Il vous aide \u00e0 r\u00e9diger des textes qui parlent aux personnes sous-repr\u00e9sent\u00e9es et aux personnes non binaires, et qui les rendent plus visibles.",
                 "lead_text": "Witty sensibilise vos \u00e9quipes au langage genr\u00e9 et propose des alternatives inclusives. Il vous aide \u00e0 r\u00e9diger des textes qui parlent aux personnes sous-repr\u00e9sent\u00e9es et aux personnes non binaires, et qui les rendent plus visibles.",
                 "lead_image": [],
-                "example_image": []
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Expression%20genr%C3%A9e.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                }
             }
         },
         "diversity_dimension_drivers": {
@@ -221,7 +226,12 @@
                 "lead_title": "Witty attire votre attention sur les expressions qui excluent certaines personnes d\u2019une d\u00e9finition de la normalit\u00e9 physique, psychique ou intellectuelle. Les suggestions de Witty vous aident \u00e0 cr\u00e9er un environnement dans lequel tout le monde se sent \u00e0 sa place, quels que soient sa corpulence, son apparence, sa couleur de peau, son type de cheveux, son handicap invisible ou ses obstacles \u00e0 la participation sociale.",
                 "lead_text": "Witty attire votre attention sur les expressions qui excluent certaines personnes d\u2019une d\u00e9finition de la normalit\u00e9 physique, psychique ou intellectuelle. Les suggestions de Witty vous aident \u00e0 cr\u00e9er un environnement dans lequel tout le monde se sent \u00e0 sa place, quels que soient sa corpulence, son apparence, sa couleur de peau, son type de cheveux, son handicap invisible ou ses obstacles \u00e0 la participation sociale.",
                 "lead_image": [],
-                "example_image": []
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Audition.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                }
             }
         },
         "diversity_dimension_drivers": {
@@ -303,7 +313,12 @@
                 "lead_title": "Les grandes religions et les syst\u00e8mes de croyances ont fa\u00e7onn\u00e9, et fa\u00e7onnent encore aujourd\u2019hui en grande partie, la mani\u00e8re dont nous formulons nos id\u00e9es, notre \u00e9thique et nos valeurs. Witty d\u00e9tecte non seulement les termes antis\u00e9mites et islamophobes, mais aussi les expressions plus subtiles qui ne laissent pas place \u00e0 la diversit\u00e9 religieuse. ",
                 "lead_text": "Les grandes religions et les syst\u00e8mes de croyances ont fa\u00e7onn\u00e9, et fa\u00e7onnent encore aujourd\u2019hui en grande partie, la mani\u00e8re dont nous formulons nos id\u00e9es, notre \u00e9thique et nos valeurs. Witty d\u00e9tecte non seulement les termes antis\u00e9mites et islamophobes, mais aussi les expressions plus subtiles qui ne laissent pas place \u00e0 la diversit\u00e9 religieuse.&nbsp;",
                 "lead_image": [],
-                "example_image": []
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Croyance.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                }
             }
         },
         "diversity_dimension_drivers": {
@@ -371,7 +386,12 @@
                 "lead_title": "La diversit\u00e9 acquise d\u00e9signe les caract\u00e9ristiques d\u00e9velopp\u00e9es au cours de notre vie\u00a0: \u00e2ge, parcours scolaire, traumatismes, statut, etc. Les alternatives inclusives propos\u00e9es par Witty vous aident \u00e0 cr\u00e9er un environnement accessible, dans lequel tout le monde se sent \u00e0 sa place.",
                 "lead_text": "La diversit\u00e9 acquise d\u00e9signe les caract\u00e9ristiques d\u00e9velopp\u00e9es au cours de notre vie : \u00e2ge, parcours scolaire, traumatismes, statut, etc. Les alternatives inclusives propos\u00e9es par Witty vous aident \u00e0 cr\u00e9er un environnement accessible, dans lequel tout le monde se sent \u00e0 sa place.",
                 "lead_image": [],
-                "example_image": []
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Information%20sur%20l%C3%A2ge.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                }
             }
         },
         "diversity_dimension_drivers": {
@@ -441,7 +461,12 @@
                 "lead_title": "Nos motivations sociales sont les facteurs qui influent sur nos pens\u00e9es, nos ressentis et nos comportements dans nos interactions avec autrui. Witty identifie les mots qui vantent les performances personnelles, qui associent le lieu de travail \u00e0 un champ de bataille ou qui pr\u00e9sentent l\u2019esprit de comp\u00e9tition ou la capacit\u00e9 \u00e0 s\u2019affirmer comme des crit\u00e8res essentiels de r\u00e9ussite.",
                 "lead_text": "Nos motivations sociales sont les facteurs qui influent sur nos pens\u00e9es, nos ressentis et nos comportements dans nos interactions avec autrui. Witty identifie les mots qui vantent les performances personnelles, qui associent le lieu de travail \u00e0 un champ de bataille ou qui pr\u00e9sentent l\u2019esprit de comp\u00e9tition ou la capacit\u00e9 \u00e0 s\u2019affirmer comme des crit\u00e8res essentiels de r\u00e9ussite.",
                 "lead_image": [],
-                "example_image": []
+                "example_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Jargon%20militaire.png",
+                    "width": "605",
+                    "height": "455",
+                    "alt": ""
+                }
             }
         },
         "diversity_dimension_drivers": {

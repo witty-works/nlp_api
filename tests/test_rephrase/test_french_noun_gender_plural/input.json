@@ -20,10 +20,12 @@
       "female_form": "professionnelle"
     },
     {
-      "lemma": "pro"
+      "lemma": "pro",
+      "collective_noun": true
     },
     {
-      "lemma": "scientifique"
+      "lemma": "scientifique",
+      "collective_noun": true
     }
   ],
   "lang": "fr"

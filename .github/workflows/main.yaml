@@ -37,7 +37,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pdm add "fr_core_news_lg @ https://github.com/explosion/spacy-models/releases/download/fr_core_news_lg-3.7.0/fr_core_news_lg-3.7.0-py3-none-any.whl"
+          pdm sync --dev
 
       - name: Caching FastText models
         id: cache-fasttext

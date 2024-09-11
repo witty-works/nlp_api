@@ -294,6 +294,8 @@ fasttext-wheel==0.9.2 \
     --hash=sha256:ca27b054837168dd34b202ef59c903fd713d2307c9d27814ff67bc2d6beeadd2 \
     --hash=sha256:cc650bd6984ea15207ab09e56f20c2fd09fe90822f4663896185cedb79825d6d \
     --hash=sha256:e73457b66edd1fb893092c1717102e7e7d184a9413735801a4c39d0299846940
+fr-core-news-lg @ https://github.com/explosion/spacy-models/releases/download/fr_core_news_lg-3.7.0/fr_core_news_lg-3.7.0-py3-none-any.whl \
+    --hash=sha256:c2d98eb9073ff0f3d865179448e7f1868f27b2643c0e7215acc2438cd9eae554
 frozenlist==1.4.1 \
     --hash=sha256:04ced3e6a46b4cfffe20f9ae482818e34eba9b5fb0ce4056e4cc9b6e212d09b7 \
     --hash=sha256:1979bc0aeb89b33b588c51c54ab0161791149f2461ea7c7c946d95d5f93b56ae \

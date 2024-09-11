@@ -15,10 +15,12 @@
       "lemma": "membre d'une équipe de sport"
     },
     {
-      "lemma": "équipe"
+      "lemma": "équipe",
+      "collective_noun": true
     },
     {
-      "lemma": "personne dynamique"
+      "lemma": "personne dynamique",
+      "collective_noun": true
     }
   ],
   "lang": "fr"
