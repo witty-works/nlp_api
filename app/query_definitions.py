@@ -22,6 +22,7 @@ rule_columns = [
     "word_types_json",
     "actual_word_types",
     "diversity_dimension_json",
+    "source_id",
 ]
 rule_columns = invert_list_to_dict(rule_columns)
 rule_column_list = ", ".join(rule_columns.keys())

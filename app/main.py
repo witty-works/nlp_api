@@ -301,6 +301,7 @@ def create_rule(lang, row, rewrite_to: str|None = None) -> Rule:
     rule.type = row[rule_columns["type"]]
     rule.pluralization = row[rule_columns["pluralization"]]
     rule.entity_type = row[rule_columns["entity_type"]]
+    rule.source = source_map[row[rule_columns["source_id"]]] if row[rule_columns["source_id"]] and row[rule_columns["source_id"]] in source_map else None
 
     return rule
 
@@ -364,6 +365,7 @@ ssl_session = None
 rules_db = None
 substring_rules = {}
 male_to_female_normativ = {}
+source_map = {}
 person_words = {
     LangType.EN: [],
     LangType.DE: [],
@@ -423,6 +425,7 @@ async def lifespan(app: FastAPI):
     global substring_rules
     global person_words
     global misc_words
+    global source_map
 
     global settings
     global model
@@ -475,11 +478,16 @@ async def lifespan(app: FastAPI):
 
             if lang == "de":
                 query = f"SELECT base_form, female_form FROM {declensions_config[lang][BasicWordType.NOUN]["name"]} WHERE female_form IS NOT NULL"
-                parameters = [lang, RuleType.SUBSTRING]
                 rows = await fetch_rows(query)
 
                 for row in rows:
                     male_to_female_normativ[row[0]] = row[1]
+
+    query = f"SELECT id, citation_rendered FROM rules_source WHERE is_citation_shown = 1"
+    rows = await fetch_rows(query)
+
+    for row in rows:
+        source_map[row[0]] = row[1]
 
     logger.setLevel(logging.WARNING)
 
@@ -6733,6 +6741,7 @@ async def rule_check(
                 rule.url,
                 rule.icon,
                 label,
+                rule.source,
             )
         )
 
@@ -6755,6 +6764,7 @@ async def rule_check(
                     rule.url,
                     rule.icon,
                     label,
+                    rule.source,
                 )
             )
 

@@ -40,6 +40,7 @@ tables_to_keep = [
     "rules_falsepositive",
     "rules_alternative",
     "rules_rule",
+    "rules_source",
     "rules_lemmatization",
 ]
 columns = ["created_at", "updated_at", "comment"]
