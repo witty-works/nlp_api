@@ -309,6 +309,87 @@
         {
             "alternatives": [
                 {
+                    "text": "Du"
+                },
+                {
+                    "text": "Dich"
+                }
+            ],
+            "category": "acquired-diversity",
+            "context": "Fügen Sie hier Ihren Text ein oder benutzen Sie diesen Text als Beispiel. Dieser Text wurde nur zum Testen ge",
+            "end": 9,
+            "explanation": {
+                "icon": "🧊",
+                "icon_image": "https://www.witty.works/hubfs/ice_1f9ca.png,160,160,ice cube emoji,112750101230",
+                "text": "Weniger Förmlichkeit schafft mehr emotionale Nähe",
+                "url": "https://www.witty.works/de/kategorien/erworbene-diversität/förmlichkeit?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Erworbene Diversität: Förmlichkeit",
+            "proficiency_level": "unconscious_bias",
+            "start": 6,
+            "subcategory": "formality",
+            "text": "Sie",
+            "text_id": "sie"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Ihren*seinen"
+                },
+                {
+                    "text": "Ihren/seinen"
+                },
+                {
+                    "text": "Deinen"
+                }
+            ],
+            "category": "acquired-diversity",
+            "context": "Fügen Sie hier Ihren Text ein oder benutzen Sie diesen Text als Beispiel. Dieser Text wurde nur zum Testen geschrieben.",
+            "end": 20,
+            "explanation": {
+                "icon": "🧊",
+                "icon_image": "https://www.witty.works/hubfs/ice_1f9ca.png,160,160,ice cube emoji,112750101230",
+                "text": "Weniger Förmlichkeit schafft mehr emotionale Nähe",
+                "url": "https://www.witty.works/de/kategorien/erworbene-diversität/förmlichkeit?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Erworbene Diversität: Förmlichkeit",
+            "proficiency_level": "unconscious_bias",
+            "start": 15,
+            "subcategory": "formality",
+            "text": "Ihren",
+            "text_id": "ihren"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "Du"
+                },
+                {
+                    "text": "Dich"
+                }
+            ],
+            "category": "acquired-diversity",
+            "context": "Fügen Sie hier Ihren Text ein oder benutzen Sie diesen Text als Beispiel. Dieser Text wurde nur zum Testen geschrieben. Die Donaudampfschifffahrt d",
+            "end": 47,
+            "explanation": {
+                "icon": "🧊",
+                "icon_image": "https://www.witty.works/hubfs/ice_1f9ca.png,160,160,ice cube emoji,112750101230",
+                "text": "Weniger Förmlichkeit schafft mehr emotionale Nähe",
+                "url": "https://www.witty.works/de/kategorien/erworbene-diversität/förmlichkeit?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Erworbene Diversität: Förmlichkeit",
+            "proficiency_level": "unconscious_bias",
+            "start": 44,
+            "subcategory": "formality",
+            "text": "Sie",
+            "text_id": "sie"
+        },
+        {
+            "alternatives": [
+                {
                     "remove": true
                 }
             ],
@@ -393,9 +474,39 @@
                     "text": "Dich"
                 }
             ],
-            "category": "gender-orientation",
+            "category": "acquired-diversity",
             "context": "ifffahrt darf da nicht fehlen. Und die Nutzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing und eine bessere Perform",
             "end": 240,
+            "explanation": {
+                "icon": "🧊",
+                "icon_image": "https://www.witty.works/hubfs/ice_1f9ca.png,160,160,ice cube emoji,112750101230",
+                "text": "Weniger Förmlichkeit schafft mehr emotionale Nähe",
+                "url": "https://www.witty.works/de/kategorien/erworbene-diversität/förmlichkeit?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Erworbene Diversität: Förmlichkeit",
+            "proficiency_level": "unconscious_bias",
+            "start": 237,
+            "subcategory": "formality",
+            "text": "Sie",
+            "text_id": "sie"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "du"
+                },
+                {
+                    "context": "Höflichkeitsform wird großgeschrieben",
+                    "text": "Sie"
+                },
+                {
+                    "text": "dich"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Und die Nutzung des Genitivs auch nicht. Es wäre sogar möglich, dass Sie Glückspilze finden. Haben sie unsere KPI gesehen? Das braucht ein Briefing und eine bessere Performance. Stell dir vor, wie deine",
+            "end": 270,
             "explanation": {
                 "content": "advanced",
                 "icon": "😟",
@@ -406,9 +517,9 @@
             "gravity": 3.0,
             "label": "Geschlecht + Orientierung: Binäre Pronomen",
             "proficiency_level": "unconscious_bias",
-            "start": 237,
+            "start": 267,
             "subcategory": "binary_pronouns_advanced",
-            "text": "Sie",
+            "text": "sie",
             "text_id": "sie"
         },
         {
@@ -532,6 +643,10 @@
                     "text": "dir"
                 },
                 {
+                    "context": "Höflichkeitsform wird großgeschrieben",
+                    "text": "Ihr"
+                },
+                {
                     "text": "dein"
                 }
             ],
@@ -592,6 +707,37 @@
         {
             "alternatives": [
                 {
+                    "text": "du"
+                },
+                {
+                    "context": "Höflichkeitsform wird großgeschrieben",
+                    "text": "Sie"
+                },
+                {
+                    "text": "dich"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "wie deine Leser*innen in der Suchmaschine nach einer Lösung für ihr Problem suchen und dann finden sie eine Antwort, verpackt in labyrinthische Schachtelsätze, aus denen sie erst einmal wieder herausfin",
+            "end": 463,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Binäre Pronomen",
+            "proficiency_level": "unconscious_bias",
+            "start": 460,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "sie",
+            "text_id": "sie"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "sie*er"
                 },
                 {
@@ -601,6 +747,7 @@
                     "text": "du"
                 },
                 {
+                    "context": "Höflichkeitsform wird großgeschrieben",
                     "text": "Sie"
                 },
                 {

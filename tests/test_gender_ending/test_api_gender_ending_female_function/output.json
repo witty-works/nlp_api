@@ -20,7 +20,7 @@
                 }
             ],
             "category": "gender-orientation",
-            "context": "Liebe Kundin, wie geht es ihnen?",
+            "context": "Liebe Kundin, wie geht es Ihnen?",
             "end": 12,
             "explanation": {
                 "content": "advanced",
@@ -36,6 +36,29 @@
             "subcategory": "gender_identity",
             "text": "Kundin",
             "text_id": "Kundin"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "dir"
+                }
+            ],
+            "category": "acquired-diversity",
+            "context": "Liebe Kundin, wie geht es Ihnen?",
+            "end": 31,
+            "explanation": {
+                "icon": "🧊",
+                "icon_image": "https://www.witty.works/hubfs/ice_1f9ca.png,160,160,ice cube emoji,112750101230",
+                "text": "Weniger Förmlichkeit schafft mehr emotionale Nähe",
+                "url": "https://www.witty.works/de/kategorien/erworbene-diversität/förmlichkeit?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Erworbene Diversität: Förmlichkeit",
+            "proficiency_level": "unconscious_bias",
+            "start": 26,
+            "subcategory": "formality",
+            "text": "Ihnen",
+            "text_id": "Ihnen"
         }
     ]
 }
