@@ -61,7 +61,7 @@ source.execute("DELETE FROM rules_rule WHERE is_active = 0")
 
 lookup = {}
 lemma_plural_lookup = {}
-langs = [LangType.EN, LangType.DE]
+langs = [LangType.EN, LangType.DE, LangType.FR]
 for lang in langs:
     query = "SELECT text, lemma, is_plural FROM rules_lemmatization WHERE language = ?"
     parameters = [lang]
