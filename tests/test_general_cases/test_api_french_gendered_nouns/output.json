@@ -1,0 +1,41 @@
+{
+    "language": "fr",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "prof"
+                },
+                {
+                    "text": "enseignant·e"
+                },
+                {
+                    "text": "enseignant ou enseignante"
+                },
+                {
+                    "text": "corps enseignant"
+                },
+                {
+                    "text": "corps professoral"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Les professeures ont tendance à donner des devoirs difficiles",
+            "end": 16,
+            "explanation": {
+                "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "text": "Entretient la vision traditionnelle binaire du genre",
+                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/binarité-de-genre?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Genre + Orientation sexuelle: Binarité de genre",
+            "proficiency_level": "unconscious_bias",
+            "start": 4,
+            "subcategory": "gender_identity_advanced",
+            "text": "professeures",
+            "text_id": "professeur"
+        }
+    ]
+}
