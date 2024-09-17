@@ -70,6 +70,10 @@
             "status": "suggestion",
             "value": "*in"
         },
+        "llm_alternatives": {
+            "status": "force",
+            "value": true
+        },
         "preferred_variants": {
             "status": "force",
             "value": [

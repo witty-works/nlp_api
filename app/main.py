@@ -75,6 +75,7 @@ from app.models import (
     RephraseRequestIn,
     CheckRequestIn,
     Result,
+    ResultSource,
     ResultOut,
     ResultsOut,
     RephraseOut,
@@ -123,7 +124,7 @@ from app.query_definitions import (
 )
 import boto3
 
-version = "2.3.2"
+version = "2.3.3"
 
 categories = get_categories()
 settings = get_settings()
@@ -301,6 +302,7 @@ def create_rule(lang, row, rewrite_to: str|None = None) -> Rule:
     rule.type = row[rule_columns["type"]]
     rule.pluralization = row[rule_columns["pluralization"]]
     rule.entity_type = row[rule_columns["entity_type"]]
+    rule.source = source_map[row[rule_columns["source_id"]]] if row[rule_columns["source_id"]] and row[rule_columns["source_id"]] in source_map else None
 
     return rule
 
@@ -364,6 +366,7 @@ ssl_session = None
 rules_db = None
 substring_rules = {}
 male_to_female_normativ = {}
+source_map = {}
 person_words = {
     LangType.EN: [],
     LangType.DE: [],
@@ -423,6 +426,7 @@ async def lifespan(app: FastAPI):
     global substring_rules
     global person_words
     global misc_words
+    global source_map
 
     global settings
     global model
@@ -475,11 +479,16 @@ async def lifespan(app: FastAPI):
 
             if lang == "de":
                 query = f"SELECT base_form, female_form FROM {declensions_config[lang][BasicWordType.NOUN]["name"]} WHERE female_form IS NOT NULL"
-                parameters = [lang, RuleType.SUBSTRING]
                 rows = await fetch_rows(query)
 
                 for row in rows:
                     male_to_female_normativ[row[0]] = row[1]
+
+    query = f"SELECT id, citation, url FROM rules_source WHERE is_citation_shown = 1"
+    rows = await fetch_rows(query)
+
+    for row in rows:
+        source_map[row[0]] = ResultSource(text=row[1],url=row[2])
 
     logger.setLevel(logging.WARNING)
 
@@ -697,6 +706,10 @@ async def rephrase_sentence(
         ):
             response.status_code = status.HTTP_401_UNAUTHORIZED
             return Result.factory("An error occurred: No valid plan on user")
+
+        if not rephrase_request_in.config.llm_alternatives:
+            response.status_code = status.HTTP_403_FORBIDDEN
+            return Result.factory("An error occurred: Rephrasing via LLM not enabled on user")
     else:
         # debug
         configs = {}
@@ -1015,15 +1028,21 @@ async def review_prompt(
     if isinstance(check_result, Result):
         return check_result
 
-    prompt = f"""You are an expert in inclusive language.
-You are tasked with editing the text that you just generated.
-Show the before and after and explain the changes using the explanation hints given below.
+    if len(check_result.results) == 0:
+        return "WITTYNOCHANGES"
 
-For each item in the below "JSON issues list", replace the content provided in "issue" within the "text" using any of the provided alternatives.
+    prompt = f"""You are an expert in inclusive language.
+You are tasked with editing the "generated text" from your previous response.
+Show the "generated text" before and after the edits.
+Explain the changes in the edits using the "explanation" given for each "issue".
+
+For each item in the below "JSON issues list", replace the content provided in "issue" within the "generated text" using any of the provided "alternatives".
 Pick which ever element in the "alternatives" list fits best in the given context.
-Either using the "alternative" or if "remove" is set to True, try to remove the given "issue" from the text entirely.
+Either using the "alt" or if "remove" is set to True, try to remove the given "issue" from the text entirely.
 If no "alternatives" are provided, try to rephrase the given text portion.
 Use content in "explanation" to explain your changes.
+
+Do not include the "JSON issues list" or a "foreword message" (starting with words like "Certainly" or "Sure") in the response to this prompt.
 """
 
     changes = []
@@ -1032,7 +1051,7 @@ Use content in "explanation" to explain your changes.
             continue
 
         change = {
-            "text": result.text,
+            "issue": result.text,
             "explanation": result.explanation.text,
             "alternatives": [],
         }
@@ -1041,7 +1060,7 @@ Use content in "explanation" to explain your changes.
             if alternative.remove:
                 change["alternatives"].append({"remove": True})
             else:
-                change["alternatives"].append({"alternative": alternative.text})
+                change["alternatives"].append({"alt": alternative.text})
 
         changes.append(change)
 
@@ -1871,6 +1890,14 @@ async def fetch_user_organization_configs(email: str) -> dict | None:
     return configs
 
 
+def is_token_masculine(token: Token) -> bool | None:
+    gender = token.morph.get("Gender")
+    if gender is None:
+        return None
+
+    return "Masc" in gender
+
+
 def is_token_singular(lang: LangType, token: Token) -> bool | None:
     plural_lookup_first = (
         False if token.text.endswith("e") and token.lemma_.endswith("er") else True
@@ -1891,6 +1918,7 @@ def is_token_singular(lang: LangType, token: Token) -> bool | None:
     if token.text.endswith("-"):
         return False
 
+    # Likely to happen with nouns that are anglicisms, f.e. 'Store Manager Watch"
     return None
 
 
@@ -1948,6 +1976,14 @@ def apply_configs(
                 and not data["value"]
             ):
                 check_request_in.config.__setattr__("store_context", False)
+        elif config == "llm_alternatives":
+            if (
+                plan is not None
+                and plan != "witty_free"
+                and data["status"] == "force"
+                and data["value"]
+            ):
+                check_request_in.config.__setattr__("llm_alternatives", True)
         elif data["status"] == "force":
             check_request_in.config.__setattr__(config, data["value"])
 
@@ -1959,6 +1995,7 @@ async def fetch_configs_for_request(
     request_in: BaseRequestIn, user_email=Optional[str]
 ) -> dict:
     request_in.config.__setattr__("store_context", True)
+    request_in.config.__setattr__("llm_alternatives", False)
     request_in.config.__setattr__("plan", None)
     request_in.config.__setattr__(
         "alternatives_max_count", settings.alternatives_max_count
@@ -1999,6 +2036,7 @@ async def fetch_organization_configs_for_request(
     request_in: BaseRequestIn, organization_id=Optional[str]
 ) -> dict:
     request_in.config.__setattr__("store_context", True)
+    request_in.config.__setattr__("llm_alternatives", False)
 
     if not organization_id:
         return {}
@@ -2149,11 +2187,6 @@ async def check(
     check_request_in: CheckRequestIn,
     version: str | None = None,
 ) -> Result | ResultsOut:
-    host = request.headers.get("origin", "none")
-    if host.endswith(".officeapps.live.com"):
-        response.status_code = status.HTTP_400_BAD_REQUEST
-        return Result.factory("Ignore requests from officeapps.live.com")
-
     client = parse_client(check_request_in.client)
     check_client_version(client)
 
@@ -2757,7 +2790,7 @@ async def apply_language_rules(
                 text,
             )
         case LangType.EN:
-            list_results = await english_rules(
+            list_results = await generic_rules(
                 config,
                 term_replacements,
                 client,
@@ -2767,8 +2800,7 @@ async def apply_language_rules(
                 text,
             )
         case LangType.FR:
-            # TODO implement french_rules()
-            list_results = await english_rules(
+            list_results = await generic_rules(
                 config,
                 term_replacements,
                 client,
@@ -2999,6 +3031,10 @@ def check_continue(
     return True
 
 
+def is_addon_enabled(addon: str, addons: None|list[str]):
+    return addons is None or addon in addons    
+
+
 async def fetch_rules(
     lang: LangType,
     token: Token,
@@ -3069,7 +3105,7 @@ async def fetch_rules(
         ] = female_lemma_filter.lower()
 
     query = f"SELECT {rule_column_list} FROM rules_rule WHERE language = ? AND type = ? AND diversity_dimension_json != '[]'"
-    if addons is not None and "hr" not in addons:
+    if not is_addon_enabled("hr", addons):
         query += " AND is_hr_rule = 0"
 
     filter_list = " OR ".join(filters.keys())
@@ -3666,7 +3702,7 @@ async def german_rules(
     return list_full
 
 
-async def english_rules(
+async def generic_rules(
     config: Config,
     term_replacements: list[Rule],
     client: Client,
@@ -4078,8 +4114,12 @@ async def _fetch_word_type(
     if expected_word_type is None:
         expected_word_type = ""
 
-    if "adv" == expected_word_type and token.pos_ == "ADV":
-        return WordType.ADVERB
+    if token.pos_ == "ADV":
+        if WordType.ADVERB == expected_word_type:
+            return WordType.ADVERB
+
+        if lang == LangType.FR and WordType.ADJECTIVE == expected_word_type:
+            return WordType.ADJECTIVE
 
     if (
         lang == LangType.EN
@@ -6359,13 +6399,23 @@ def map_rule_label_type(lang: LangType, label_type: str) -> str | None:
     return label_types[lang][label_type]
 
 
-def fetch_sent_noun_chunks(sent: Span) -> list[Span]:
+# TODO cache on the sentence?
+def fetch_sentence_noun_chunks(sent: Span) -> list[Span]:
     chunks = []
     for chunk in sent.noun_chunks:
         chunks.append(chunk)
 
     return chunks
 
+
+def find_token_chunk(chunks: list[Span], token_index: int):
+    for chunk in chunks:
+        if chunk.start <= token_index < chunk.end:
+            return chunk
+        if chunk.start > token_index:
+            break
+
+    return None
 
 async def check_person_noun(
     rule: Rule,
@@ -6410,6 +6460,72 @@ async def check_person_noun(
         return await check_person_noun(rule, lang, tokens, chunks, chunks[0])
 
     return skip
+
+
+def is_german_pronoun_check_required(lang: LangType, token: Token):
+    return lang == LangType.DE and token.text.lower() in static_rules[LangType.DE]["formal_shallow_signal_words"]
+
+
+def german_pronoun_check(config: Config, rule: Rule, token: Token):
+    is_formal = is_formal_check(config, token)
+    if is_formal is None:
+        return False
+
+    for subcategory in rule.subcategories:
+        if not is_sub_category_enabled(config, [subcategory]):
+            continue
+
+        if is_formal:
+            if subcategory.startswith("formality"):
+                return subcategory
+        elif subcategory.startswith("binary_pronouns"):
+            return subcategory
+
+    return None
+
+
+def is_formal_check(config: Config, token: Token):
+    if not token.text[0].isupper():
+        # "Er und sie"
+        # "Sie, gehen sie nach Hause"
+        #             ^^^
+        # "Sagen Sie ihnen, dass sie nach Hause gehen sollen"
+        #            ^^^
+        # "Sagen Sie ihnen, dass sie nach Hause gehen sollen"
+        #                        ^^^
+        return False
+    
+    # "Sie, gehen sie nach Hause"
+    #  ^^^
+    if not token.is_sent_start or (len(token.sent) > 1 and token.sent[1].text == ","):
+        return True
+
+    if is_token_singular(LangType.DE, token) != False:
+        # "Sie geht nach Hause"
+        return False
+
+    if is_addon_enabled("hr", config.addons) and len(token.sent) > 1 and token.sent[1].lemma_ in static_rules[LangType.DE]["hilf_verben"]:
+        # "Sie haben einen Master in .."
+        # "Sie sind Student*in .."
+        # "Sie sind zu schnell"
+        return True
+
+    # Check for the presence of informal pronouns
+    for sent_token in token.sent:
+        # If we encounter a formal signal words
+        if (sent_token.lemma_ in static_rules[LangType.DE]["formal_signal_words"]["lemma"]
+            or sent_token.text in static_rules[LangType.DE]["formal_signal_words"]["text"]
+        ) :
+        # "Gehen Sie nach Hause"
+        # "Sagen Sie ihnen, dass sie nach Hause gehen sollen"
+        #        ^^^
+            return True
+
+    # "Sie sagen ihnen, dass sie nach Hause gehen sollen"
+    #  ^^^
+    # "Sie sind zu schnell"
+    return None
+
 
 async def rule_check(
     config: Config,
@@ -6501,6 +6617,11 @@ async def rule_check(
                 false_positive_matcher,
             )
 
+            if is_german_pronoun_check_required(lang.lang, token):
+                subcategory = german_pronoun_check(config, rule, token)
+                if not subcategory:
+                    continue
+
             if not text or await is_rule_false_positive(
                 full_text, token_index, tokens, rule
             ):
@@ -6524,17 +6645,8 @@ async def rule_check(
             continue
 
         if rule.label_type == RuleLabelEnum.NOT_FOR_PEOPLE:
-            token_chunk = None
-
-            # TODO cache on the sentence?
-            chunks = fetch_sent_noun_chunks(tokens[token_index].sent)
-            for chunk in chunks:
-                if chunk.start <= token_index < chunk.end:
-                    token_chunk = chunk
-                    break
-                if chunk.start > token_index:
-                    break
-
+            chunks = fetch_sentence_noun_chunks(tokens[token_index].sent)
+            token_chunk = find_token_chunk(chunks, token_index)
             if token_chunk is None:
                 # No noun detected => assume false positive
                 if len(chunks) == 0:
@@ -6639,6 +6751,30 @@ async def rule_check(
 
         start = token.idx
         if lang.lang == LangType.FR:
+            # très should skip the false positive detection
+            word_type = await fetch_word_type(lang.lang, token) if token.lemma_ != "très" else None
+            match word_type:
+                case WordType.ADJECTIVE:
+                    chunks = fetch_sentence_noun_chunks(tokens[token_index].sent)
+                    token_chunk = find_token_chunk(chunks, token_index)
+                    if token_chunk is not None:
+                        continue
+                case WordType.NOUN:
+                    if get_category_name(subcategory) in ["function", "gender_identity"]:
+                        subcategory_to_find = "function" if is_token_masculine(token) else "gender_identity"
+                        subcategory = None
+                        for search_subcategory in rule.subcategories:
+                            if get_category_name(search_subcategory) in subcategory_to_find:
+                                subcategory = search_subcategory
+                                break
+
+                        if subcategory is None:
+                            continue
+
+                        subcategory = is_sub_category_enabled(config, subcategory)
+                        if not subcategory:
+                            continue
+
             new_alternatives = []
             for alternative in alternatives:
                 if alternative.is_gendered_noun:
@@ -6713,6 +6849,7 @@ async def rule_check(
                 rule.url,
                 rule.icon,
                 label,
+                rule.source,
             )
         )
 
@@ -6735,6 +6872,7 @@ async def rule_check(
                     rule.url,
                     rule.icon,
                     label,
+                    rule.source,
                 )
             )
 

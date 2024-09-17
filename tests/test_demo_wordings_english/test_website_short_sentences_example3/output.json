@@ -5,9 +5,19 @@
         {
             "alternatives": [
                 {
-                    "context": "💡",
-                    "inspiration": true,
-                    "text": "Fun at work makes us happier, more productive, and more creative"
+                    "remove": true
+                },
+                {
+                    "text": "Strive and thrive together"
+                },
+                {
+                    "text": "Collaborate and celebrate"
+                },
+                {
+                    "text": "Excel and recharge"
+                },
+                {
+                    "text": "Work with passion, live with purpose"
                 }
             ],
             "category": "social-motive",
@@ -20,11 +30,11 @@
                 "text": "Has a connotation of competition and performance. Deters cooperatively minded people.",
                 "url": "https://www.witty.works/en/categories/social-motive/agentic-language?reducedView=true"
             },
-            "gravity": 3.0,
+            "gravity": 2.0,
             "label": "Social Motive: Agentic language",
             "proficiency_level": "unconscious_bias",
             "start": 12,
-            "subcategory": "agentic_advanced",
+            "subcategory": "agentic",
             "text": "Work hard, play hard",
             "text_id": "work hard, play hard"
         }

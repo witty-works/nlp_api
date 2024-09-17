@@ -200,6 +200,37 @@
         {
             "alternatives": [
                 {
+                    "text": "du"
+                },
+                {
+                    "context": "Höflichkeitsform wird großgeschrieben",
+                    "text": "Sie"
+                },
+                {
+                    "text": "dich"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Sie ist eine Kund/in auf LinkedIn. Er ist mitarbeiter und sie sind Ärzt(-innen). Du übst die Funktion des Sicherheitschefs.",
+            "end": 61,
+            "explanation": {
+                "content": "advanced",
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "text": "Pronomen, das nichtbinäre Menschen ausschließt",
+                "url": "https://www.witty.works/de/kategorien/geschlecht-orientierung/binäre-pronomen?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Geschlecht + Orientierung: Binäre Pronomen",
+            "proficiency_level": "unconscious_bias",
+            "start": 58,
+            "subcategory": "binary_pronouns_advanced",
+            "text": "sie",
+            "text_id": "sie"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "*innen"
                 }
             ],

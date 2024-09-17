@@ -248,6 +248,11 @@ class Alternative:
         self.label = label
 
 
+class ResultSource(BaseModel):
+    text: str
+    url: Optional[str] = None
+
+
 class Rule:
     id: str
     text_id: Optional[str]
@@ -273,6 +278,7 @@ class Rule:
     is_pattern_match: Optional[bool] = None
     entity_type: Optional[EntityType] = EntityType.DEFAULT
     pluralization: Optional[PluralizationType] = PluralizationType.DEFAULT
+    source: Optional[ResultSource] = None
 
     def __init__(
         self,
@@ -333,7 +339,7 @@ class RuleIn(BaseModel):
     text: str
     lang: LangType
     lemma: str
-    word_types: list
+    word_types: list | dict
     actual_word_types: Optional[str] = None
     subcategories: list[str]
     alternatives: Optional[list[AlternativeIn]] = []
@@ -349,6 +355,7 @@ class RuleIn(BaseModel):
 
 class Config(BaseModel):
     store_context: bool = True
+    llm_alternatives: bool = False
     plan: Optional[str] = None
     addons: Optional[list[str]] = None
     primary_language: Optional[LangVariantType] = None
@@ -496,6 +503,7 @@ class GenderedRolesFormatConfigType(BaseModel):
 
 class RuleConfig(BaseModel):
     store_context: Optional[BooleanConfigType] = None
+    llm_alternatives: Optional[BooleanConfigType] = None
     preferred_variants: Optional[LangVariantConfigType] = None
     german_gender_ending: Optional[GermanGenderEndingConfigType] = None
     gendered_roles_format: Optional[GenderedRolesFormatConfigType] = None
@@ -661,6 +669,7 @@ class ResultOut(BaseModel):
     explanation: Optional[ResultExplanation] = None
     gravity: Optional[float] = None
     proficiency_level: Optional[str] = None
+    source: Optional[ResultSource] = None
 
     @staticmethod
     def factory(
@@ -680,6 +689,7 @@ class ResultOut(BaseModel):
         url: str | None = None,
         icon: str | None = None,
         explanation_context: str | None = None,
+        source: Optional[ResultSource] = None,
         content: str | None = None,
         gravity: float | None = None,
         proficiency_level: str | None = None,
@@ -803,6 +813,7 @@ class ResultOut(BaseModel):
             explanation=explanation,
             gravity=gravity,
             proficiency_level=proficiency_level,
+            source=source,
         )
 
     @staticmethod

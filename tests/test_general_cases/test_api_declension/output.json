@@ -60,6 +60,42 @@
         {
             "alternatives": [
                 {
+                    "text": "Du"
+                },
+                {
+                    "text": "Dich"
+                },
+                {
+                    "context": "💡 'Vorname' nennen",
+                    "inspiration": true,
+                    "text": "((Vorname))"
+                },
+                {
+                    "context": "💡 'Vorname Nachname' nennen",
+                    "inspiration": true,
+                    "text": "((Vorname Nachname))"
+                }
+            ],
+            "category": "acquired-diversity",
+            "context": "Witty leistet Unterstützung in mehr als <NUMBER> Diversitätsdimensionen. Sie sind alt. Das ist unsere beste Idee.",
+            "end": 70,
+            "explanation": {
+                "icon": "🧊",
+                "icon_image": "https://www.witty.works/hubfs/ice_1f9ca.png,160,160,ice cube emoji,112750101230",
+                "text": "Weniger Förmlichkeit schafft mehr emotionale Nähe",
+                "url": "https://www.witty.works/de/kategorien/erworbene-diversität/förmlichkeit?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Erworbene Diversität: Förmlichkeit",
+            "proficiency_level": "unconscious_bias",
+            "start": 67,
+            "subcategory": "formality",
+            "text": "Sie",
+            "text_id": "sie"
+        },
+        {
+            "alternatives": [
+                {
                     "text": "älter"
                 },
                 {
