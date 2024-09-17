@@ -2781,7 +2781,7 @@ async def apply_language_rules(
                 text,
             )
         case LangType.EN:
-            list_results = await english_rules(
+            list_results = await generic_rules(
                 config,
                 term_replacements,
                 client,
@@ -2791,8 +2791,7 @@ async def apply_language_rules(
                 text,
             )
         case LangType.FR:
-            # TODO implement french_rules()
-            list_results = await english_rules(
+            list_results = await generic_rules(
                 config,
                 term_replacements,
                 client,
@@ -3694,7 +3693,7 @@ async def german_rules(
     return list_full
 
 
-async def english_rules(
+async def generic_rules(
     config: Config,
     term_replacements: list[Rule],
     client: Client,
