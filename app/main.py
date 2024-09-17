@@ -4113,8 +4113,12 @@ async def _fetch_word_type(
     if expected_word_type is None:
         expected_word_type = ""
 
-    if "adv" == expected_word_type and token.pos_ == "ADV":
-        return WordType.ADVERB
+    if token.pos_ == "ADV":
+        if WordType.ADVERB == expected_word_type:
+            return WordType.ADVERB
+
+        if lang == LangType.FR and WordType.ADJECTIVE == expected_word_type:
+            return WordType.ADJECTIVE
 
     if (
         lang == LangType.EN
@@ -6394,13 +6398,23 @@ def map_rule_label_type(lang: LangType, label_type: str) -> str | None:
     return label_types[lang][label_type]
 
 
-def fetch_sent_noun_chunks(sent: Span) -> list[Span]:
+# TODO cache on the sentence?
+def fetch_sentence_noun_chunks(sent: Span) -> list[Span]:
     chunks = []
     for chunk in sent.noun_chunks:
         chunks.append(chunk)
 
     return chunks
 
+
+def find_token_chunk(chunks: list[Span], token_index: int):
+    for chunk in chunks:
+        if chunk.start <= token_index < chunk.end:
+            return chunk
+        if chunk.start > token_index:
+            break
+
+    return None
 
 async def check_person_noun(
     rule: Rule,
@@ -6630,17 +6644,8 @@ async def rule_check(
             continue
 
         if rule.label_type == RuleLabelEnum.NOT_FOR_PEOPLE:
-            token_chunk = None
-
-            # TODO cache on the sentence?
-            chunks = fetch_sent_noun_chunks(tokens[token_index].sent)
-            for chunk in chunks:
-                if chunk.start <= token_index < chunk.end:
-                    token_chunk = chunk
-                    break
-                if chunk.start > token_index:
-                    break
-
+            chunks = fetch_sentence_noun_chunks(tokens[token_index].sent)
+            token_chunk = find_token_chunk(chunks, token_index)
             if token_chunk is None:
                 # No noun detected => assume false positive
                 if len(chunks) == 0:
@@ -6745,8 +6750,14 @@ async def rule_check(
 
         start = token.idx
         if lang.lang == LangType.FR:
-            word_type = await fetch_word_type(lang.lang, token)
+            # très should skip the false positive detection
+            word_type = await fetch_word_type(lang.lang, token) if token.lemma_ != "très" else None
             match word_type:
+                case WordType.ADJECTIVE:
+                    chunks = fetch_sentence_noun_chunks(tokens[token_index].sent)
+                    token_chunk = find_token_chunk(chunks, token_index)
+                    if token_chunk is not None:
+                        continue
                 case WordType.NOUN:
                     if get_category_name(subcategory) in ["function", "gender_identity"]:
                         subcategory_to_find = "function" if is_token_masculine(token) else "gender_identity"
