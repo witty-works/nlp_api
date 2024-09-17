@@ -709,6 +709,7 @@ def fetch_static_rules():
             "sachkundige",
             "lead",
             "head",
+            "tragende",
         ]
 
         static_rules[LangType.DE]["pattern_false_positives"] = []
