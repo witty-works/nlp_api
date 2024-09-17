@@ -75,6 +75,7 @@ from app.models import (
     RephraseRequestIn,
     CheckRequestIn,
     Result,
+    ResultSource,
     ResultOut,
     ResultsOut,
     RephraseOut,
@@ -483,11 +484,11 @@ async def lifespan(app: FastAPI):
                 for row in rows:
                     male_to_female_normativ[row[0]] = row[1]
 
-    query = f"SELECT id, citation_rendered FROM rules_source WHERE is_citation_shown = 1"
+    query = f"SELECT id, citation, url FROM rules_source WHERE is_citation_shown = 1"
     rows = await fetch_rows(query)
 
     for row in rows:
-        source_map[row[0]] = row[1]
+        source_map[row[0]] = ResultSource(text=row[1],url=row[2])
 
     logger.setLevel(logging.WARNING)
 

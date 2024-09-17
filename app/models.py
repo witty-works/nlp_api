@@ -248,6 +248,11 @@ class Alternative:
         self.label = label
 
 
+class ResultSource(BaseModel):
+    text: str
+    url: Optional[str] = None
+
+
 class Rule:
     id: str
     text_id: Optional[str]
@@ -273,7 +278,7 @@ class Rule:
     is_pattern_match: Optional[bool] = None
     entity_type: Optional[EntityType] = EntityType.DEFAULT
     pluralization: Optional[PluralizationType] = PluralizationType.DEFAULT
-    source: Optional[str] = None
+    source: Optional[ResultSource] = None
 
     def __init__(
         self,
@@ -664,7 +669,7 @@ class ResultOut(BaseModel):
     explanation: Optional[ResultExplanation] = None
     gravity: Optional[float] = None
     proficiency_level: Optional[str] = None
-    source: Optional[str] = None
+    source: Optional[ResultSource] = None
 
     @staticmethod
     def factory(
@@ -684,7 +689,7 @@ class ResultOut(BaseModel):
         url: str | None = None,
         icon: str | None = None,
         explanation_context: str | None = None,
-        source: Optional[str] = None,
+        source: Optional[ResultSource] = None,
         content: str | None = None,
         gravity: float | None = None,
         proficiency_level: str | None = None,

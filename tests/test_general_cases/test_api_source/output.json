@@ -32,7 +32,10 @@
             "gravity": 2.0,
             "label": "Genre + Orientation sexuelle: Nom de métier",
             "proficiency_level": "unconscious_bias",
-            "source": "<p>Language Portal of Canada, Translation Bureau, Public Services and Procurement Canda, <a href=\"http://www.canada.ca/our-languages\" target=\"_blank\" class=\" external\" rel=\"nofollow noopener noreferrer\">http://www.canada.ca/our-languages</a>.</p>",
+            "source": {
+                "text": "Language Portal of Canada, Translation Bureau, Public Services and Procurement Canada",
+                "url": "http://www.canada.ca/our-languages"
+            },
             "start": 4,
             "subcategory": "titles",
             "text": "visiteurs",

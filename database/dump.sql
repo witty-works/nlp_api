@@ -42438,7 +42438,7 @@ INSERT INTO "rules_source" VALUES(12,'Wikipedia (Ghetto)','https://en.wikipedia.
 INSERT INTO "rules_source" VALUES(13,'Diversity Kartell',NULL,NULL,NULL,NULL,0,NULL);
 INSERT INTO "rules_source" VALUES(14,'MyAbility',NULL,NULL,NULL,NULL,0,NULL);
 INSERT INTO "rules_source" VALUES(15,'dewiki.de türken (Verb)','https://dewiki.de/Lexikon/T%C3%BCrken_(Verb)','',1,NULL,0,NULL);
-INSERT INTO "rules_source" VALUES(16,'Language Portal of Canada','http://www.canada.ca/our-languages','',1,'<p>Language Portal of Canada, Translation Bureau, Public Services and Procurement Canda, <a href="http://www.canada.ca/our-languages" target="_blank" class=" external" rel="nofollow noopener noreferrer">http://www.canada.ca/our-languages</a>.</p>',1,'Language Portal of Canada, Translation Bureau, Public Services and Procurement Canda, http://www.canada.ca/our-languages.');
+INSERT INTO "rules_source" VALUES(16,'Language Portal of Canada','http://www.canada.ca/our-languages','',1,'<p>Language Portal of Canada, Translation Bureau, Public Services and Procurement Canada</p>',1,'Language Portal of Canada, Translation Bureau, Public Services and Procurement Canada');
 CREATE INDEX "rules_falsepositive_createdby_id_0fd6c5fc" ON "rules_falsepositive" ("createdby_id");
 CREATE INDEX "rules_falsepositive_rule_id_b806a78a" ON "rules_falsepositive" ("rule_id");
 CREATE UNIQUE INDEX "rules_falsepositive_rule_id_false_positive_90b7937b_uniq" ON "rules_falsepositive" ("rule_id", "false_positive");
