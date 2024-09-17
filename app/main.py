@@ -1889,6 +1889,14 @@ async def fetch_user_organization_configs(email: str) -> dict | None:
     return configs
 
 
+def is_token_masculine(token: Token) -> bool | None:
+    gender = token.morph.get("Gender")
+    if gender is None:
+        return None
+
+    return "Masc" in gender
+
+
 def is_token_singular(lang: LangType, token: Token) -> bool | None:
     plural_lookup_first = (
         False if token.text.endswith("e") and token.lemma_.endswith("er") else True
@@ -6737,6 +6745,24 @@ async def rule_check(
 
         start = token.idx
         if lang.lang == LangType.FR:
+            word_type = await fetch_word_type(lang.lang, token)
+            match word_type:
+                case WordType.NOUN:
+                    if get_category_name(subcategory) in ["function", "gender_identity"]:
+                        subcategory_to_find = "function" if is_token_masculine(token) else "gender_identity"
+                        subcategory = None
+                        for search_subcategory in rule.subcategories:
+                            if get_category_name(search_subcategory) in subcategory_to_find:
+                                subcategory = search_subcategory
+                                break
+
+                        if subcategory is None:
+                            continue
+
+                        subcategory = is_sub_category_enabled(config, subcategory)
+                        if not subcategory:
+                            continue
+
             new_alternatives = []
             for alternative in alternatives:
                 if alternative.is_gendered_noun:
