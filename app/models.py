@@ -37,7 +37,7 @@ class Language(object):
             category_data = get_category(category)
 
             lang = (
-                self.lang if key in category_data["translations"][self.lang] else "en"
+                self.lang if key in category_data["translations"][self.lang] else LangType.EN
             )
             text = category_data["translations"][lang][key]
             text = self.convert_sharp_ss(text)
@@ -62,7 +62,7 @@ class Language(object):
         if not isinstance(text, str):
             return [Language.convert_to(word, locale) for word in text]
 
-        if locale[0:2] == "en":
+        if locale[0:2] == LangType.EN:
             target = "uk" if locale == "en-GB" else "us"
             fixer = TextFixer(content=text, target=Target(target))
             return fixer.apply()
@@ -215,6 +215,7 @@ class Alternative:
     is_remove: Optional[bool] = False
     is_gendered_noun: Optional[bool] = False
     is_placeholder: Optional[bool] = False
+    url: Optional[str] = None
 
     def __init__(
         self,
@@ -869,22 +870,6 @@ class ResultOut(BaseModel):
                 if alternative.lemma == text:
                     continue
 
-                if alternative.type != AlternativeType.DEFAULT and (
-                    alternative.label is None or len(alternative.label) == 0
-                ):
-                    if alternative.type == AlternativeType.IDENTITY_FIRST:
-                        alternative.label = (
-                            "Identity first"
-                            if lang.lang == LangType.EN
-                            else "Identität zuerst"
-                        )
-                    elif alternative.type == AlternativeType.PERSON_FIRST:
-                        alternative.label = (
-                            "Person first"
-                            if lang.lang == LangType.EN
-                            else "Person zuerst"
-                        )
-
                 if alternative.is_inspiration:
                     if (
                         alternative.label is not None
@@ -903,11 +888,7 @@ class ResultOut(BaseModel):
 
                 if alternative.type != AlternativeType.DEFAULT:
                     variation.type = alternative.type
-                    variation.url = (
-                        "https://www.witty.works/de/blog/mensch-zuerst-vs.-identit%C3%A4t-zuerst-die-beiden-ans%C3%A4tze-verstehen"
-                        if lang.lang == LangType.DE
-                        else "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches"
-                    )
+                    variation.url = alternative.url
 
                 cleaned_alternatives[alternative.lemma] = variation
 
