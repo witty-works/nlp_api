@@ -459,6 +459,21 @@ translations = {
         LangType.DE: "https://www.witty.works/de/blog/mensch-zuerst-vs.-identit%C3%A4t-zuerst-die-beiden-ans%C3%A4tze-verstehen",
         LangType.FR: "https://www.witty.works/fr/blog/la-personne-dabord-ou-lidentite-dabord",
     },
+    "GENDERABBREVIATIONCONTEXT": {
+        LangType.EN: "disabled (NA) / diverse (EU)",
+        LangType.DE: "Divers (EU) / mit Behinderung (NA)",
+        LangType.FR: "divers (EU) / avec handicap (NA)",
+    },
+    "GENDERABBREVIATIONCONTEXTREMOVE": {
+        LangType.EN: "Use gender neutral job title",
+        LangType.DE: "Nutze geschlechtsneutrale Job-Titel",
+        LangType.FR: "Utilize des titres d'emploi non sexistes",
+    },
+    "GENDERABBREVIATIONEXPLANATION": {
+        LangType.EN: "Put underrepresented groups first and link to your equal opportunity policy",
+        LangType.DE: "Nenne unterrepräsentierte Gruppen zuerst. Verlinke auf deine Leitlinie zur Gleichstellung.",
+        LangType.FR: "Mettez en avant les groupes sous-représentés et reliez-les à votre politique d'égalité des chances.",
+    },
 }
 person_words = {
     LangType.EN: [],
@@ -6295,17 +6310,12 @@ async def regex_match(
                 alternative = f"({alternative})"
 
             context_v = "include veterans"
-            match lang.lang:
-                case LangType.DE:
-                    context_d = "Divers (EU) / m. Behinderung (NA)"
-                    context_remove = "Nutze geschlechtsneutrale Job-Titel"
-                    explanation = "Nenne unterrepräsentierte Gruppen zuerst. Verlinke auf deine Leitlinie zur Gleichstellung."
+            context_d = translations["GENDERABBREVIATIONCONTEXT"][lang.lang]
+            context_remove = translations["GENDERABBREVIATIONCONTEXTREMOVE"][lang.lang]
+            explanation = translations["GENDERABBREVIATIONEXPLANATION"][lang.lang]
 
-                    alternative = alternative.replace("f", "w")
-                case LangType.EN:
-                    context_d = "disabled (NA) / diverse (EU)"
-                    context_remove = "Use gender neutral job title"
-                    explanation = "Put underrepresented groups first and link to your equal opportunity policy"
+            if lang.lang == LangType.DE:
+                alternative = alternative.replace("f", "w")
 
             alternative_3 = None
             alternative = Alternative(alternative)
