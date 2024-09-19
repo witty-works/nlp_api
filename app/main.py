@@ -1617,7 +1617,7 @@ async def get_debug_spacy(
 
     sentence_spans = list(tokens.sents)
     data = displacy.render(sentence_spans, style="dep")
-    return Response(content=data, media_type="application/xml")
+    return Response(content=data, media_type="image/svg+xml")
 
 
 @app.get(
