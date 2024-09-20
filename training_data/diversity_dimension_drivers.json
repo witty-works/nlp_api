@@ -34,10 +34,11 @@
             "en": {
                 "hs_path": "abbreviation",
                 "hs_name": "Abbreviation",
+                "sub_head": "Spell out abbreviations and acronyms to avoid misunderstandings and make people feel at ease. ",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/abbreviation",
                 "is_active": "1",
                 "short_explanation": "Are you sure people know what this stands for? ",
-                "sub_head": "Spell out abbreviations and acronyms to avoid misunderstandings and make people feel at ease. ",
+                "sort_internal": "abbreviation",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -74,10 +75,11 @@
             "de": {
                 "hs_path": "abk\u00fcrzung",
                 "hs_name": "Abk\u00fcrzung",
+                "sub_head": "Schreib die Abk\u00fcrzungen und Akronyme aus. So vermeidest zu Missverst\u00e4ndnisse und vermittelst allen ein sicheres Gef\u00fchl.",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/abk\u00fcrzung",
                 "is_active": "1",
                 "short_explanation": "Werden alle Lesenden diese Abk\u00fcrzung verstehen?",
-                "sub_head": "Schreib die Abk\u00fcrzungen und Akronyme aus. So vermeidest zu Missverst\u00e4ndnisse und vermittelst allen ein sicheres Gef\u00fchl.",
+                "sort_internal": "abbreviation",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -114,10 +116,11 @@
             "fr": {
                 "hs_path": "abr\u00e9viation",
                 "hs_name": "Abr\u00e9viation",
+                "sub_head": "Expliquez ce que signifient les abr\u00e9viations pour que votre message soit compris du plus grand nombre.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-culturelle\/abr\u00e9viation",
                 "is_active": "1",
                 "short_explanation": "Votre lectorat sait-il ce que cela signifie ?",
-                "sub_head": "Votre lectorat sait-il ce que cela signifie ?",
+                "sort_internal": "abbreviation",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -166,10 +169,11 @@
             "en": {
                 "hs_path": "ability",
                 "hs_name": "Dis\/Ability",
+                "sub_head": "To respect everyone, avoid basing how you talk to, and about, people on your ideas of \"normal.\"",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/ability",
                 "is_active": "1",
                 "short_explanation": "Reveals and feeds biases against disabilities",
-                "sub_head": "To respect everyone, avoid basing how you talk to, and about, people on your ideas of \"normal.\"",
+                "sort_internal": "ability",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -206,10 +210,11 @@
             "de": {
                 "hs_path": "f\u00e4higkeiten",
                 "hs_name": "F\u00e4higkeiten",
+                "sub_head": "Um alle zu respektieren, vermeide es, Menschen und ihr Handeln nach (d)einer Auffassung von Normalit\u00e4t zu berurteilen.",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/f\u00e4higkeiten",
                 "is_active": "1",
                 "short_explanation": "N\u00e4hrt Voreingenommenheit gegen\u00fcber Behinderungen",
-                "sub_head": "Um alle zu respektieren, vermeide es, Menschen und ihr Handeln nach (d)einer Auffassung von Normalit\u00e4t zu berurteilen.",
+                "sort_internal": "ability",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -246,10 +251,11 @@
             "fr": {
                 "hs_path": "handicap",
                 "hs_name": "Handicap",
+                "sub_head": "Pour respecter tout le monde, \u00e9vitez d'\u00e9valuer les personnes et les comportements selon votre perception de la normalit\u00e9.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/handicap\/handicap",
                 "is_active": "1",
                 "short_explanation": "Comporte et entretient des pr\u00e9jug\u00e9s sur les handicaps",
-                "sub_head": "",
+                "sort_internal": "ability",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -303,16 +309,17 @@
             "en": {
                 "hs_path": "ableist",
                 "hs_name": "Ableism",
+                "sub_head": "Refrain from ableist slurs, even in jest. Failing to do so, can be considered grounds for legal or disciplinary action.",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/ableist",
                 "is_active": "1",
                 "short_explanation": "Constitutes a slur or hate speech against people with disabilities",
-                "sub_head": "Refrain from ableist slurs, even in jest. Failing to do so, can be considered grounds for legal or disciplinary action.",
+                "sort_internal": "ableism",
                 "lead_video": "",
                 "lead_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Witty%20Works%20Learning%20bites%20Offensive%20Language%20(1000%20%C3%97%20562%20px)%20(1).png",
                     "width": "875",
                     "height": "492",
-                    "alt": ""
+                    "alt": "Illustration: A person curses loudly into his cell phone. Two people stand expressionless next to it with question marks in a shared thought bubble."
                 },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Ableist.png",
@@ -343,12 +350,18 @@
             "de": {
                 "hs_path": "behindertenfeindlichkeit",
                 "hs_name": "Behindertenfeindlichkeit",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/behindertenfeindlichkeit",
                 "is_active": "1",
                 "short_explanation": "Feindlich gegen\u00fcber Menschen mit Behinderung",
-                "sub_head": "",
+                "sort_internal": "ableism",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Witty%20Works%20Learning%20bites%20Offensive%20Language%20(1000%20%C3%97%20562%20px)%20(1).png",
+                    "width": "875",
+                    "height": "492",
+                    "alt": "Illustration: Eine Person flucht laut ins Handy. Zwei Personen stehen ausdruckslos daneben mit Fragezeichen in einer gemeinsamen Denkblase."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Ableist.png",
                     "width": "900",
@@ -378,12 +391,18 @@
             "fr": {
                 "hs_path": "validisme",
                 "hs_name": "Validisme",
+                "sub_head": "\u00c9vitez les propos validistes, y compris les blagues, qui peuvent donner lieu \u00e0 des sanctions discplinaires ou des poursuites en justice.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/handicap\/validisme",
                 "is_active": "1",
                 "short_explanation": "D\u00e9nigre ou insulte les personnes ayant un handicap",
-                "sub_head": "",
+                "sort_internal": "ableism",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Witty%20Works%20Learning%20bites%20Offensive%20Language%20(1000%20%C3%97%20562%20px)%20(1).png",
+                    "width": "875",
+                    "height": "492",
+                    "alt": "Illustration: Une personne jure \u00e0 voix haute dans son t\u00e9l\u00e9phone portable. Deux personnes se tiennent \u00e0 c\u00f4t\u00e9, inexpressives, avec des points d'interrogation dans une bulle de r\u00e9flexion commune."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Ableist.png",
                     "width": "900",
@@ -430,10 +449,11 @@
             "en": {
                 "hs_path": "age-information",
                 "hs_name": "Age information",
+                "sub_head": "To foster trust across age groups, focus on strengths and needs, not chronological age.",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/acquired-diversity\/age-information",
                 "is_active": "1",
                 "short_explanation": "Is age relevant to your message?",
-                "sub_head": "To foster trust across age groups, focus on strengths and needs, not chronological age.",
+                "sort_internal": "age",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -470,10 +490,11 @@
             "de": {
                 "hs_path": "altersangabe",
                 "hs_name": "Altersangabe",
+                "sub_head": "Um das Vertrauen \u00fcber alle Altersgruppen hinweg zu f\u00f6rdern, konzentriere dich auf St\u00e4rken und F\u00e4higkeiten und nicht auf das chronologische Alter.",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/erworbene-diversit\u00e4t\/altersangabe",
                 "is_active": "1",
                 "short_explanation": "Spielt das Alter hier eine Rolle?",
-                "sub_head": "Um das Vertrauen \u00fcber alle Altersgruppen hinweg zu f\u00f6rdern, konzentriere dich auf St\u00e4rken und F\u00e4higkeiten und nicht auf das chronologische Alter.",
+                "sort_internal": "age",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -510,10 +531,11 @@
             "fr": {
                 "hs_path": "information-sur-l\u00e2ge",
                 "hs_name": "Information sur l'\u00e2ge",
+                "sub_head": "Focalisez-vous sur les comp\u00e9tences et les besoins des personnes, et non leur \u00e2ge, pour instaurer un climat de confiance entre toutes les g\u00e9n\u00e9rations.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-acquise\/information-sur-l\u00e2ge",
                 "is_active": "1",
                 "short_explanation": "Est-ce pertinent de mentionner l'\u00e2ge ?",
-                "sub_head": "",
+                "sort_internal": "age",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -562,10 +584,11 @@
             "en": {
                 "hs_path": "50-years-and-older",
                 "hs_name": "Age-bias against 50+",
+                "sub_head": "To show you value individuals of all ages equally, avoid generalizations about people aged 50 and above.",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/acquired-diversity\/50-years-and-older",
                 "is_active": "1",
                 "short_explanation": "Reveals and feeds biases against people aged 50+",
-                "sub_head": "To show you value individuals of all ages equally, avoid generalizations about people aged 50 and above.",
+                "sort_internal": "age_old",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -602,10 +625,11 @@
             "de": {
                 "hs_path": "50-jahre-und-\u00e4lter",
                 "hs_name": "50 Jahre und \u00e4lter",
+                "sub_head": "Verzichte auf Pauschalaussagen \u00fcber Menschen ab 50 Jahren, um zu zeigen, dass du Menschen aller Altersgruppen gleicherma\u00dfen wertsch\u00e4tzt.",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/erworbene-diversit\u00e4t\/50-jahre-und-\u00e4lter",
                 "is_active": "1",
                 "short_explanation": "Bedient Klischees \u00fcber Menschen \u00fcber 50",
-                "sub_head": "Verzichte auf Pauschalaussagen \u00fcber Menschen ab 50 Jahren, um zu zeigen, dass du Menschen aller Altersgruppen gleicherma\u00dfen wertsch\u00e4tzt.",
+                "sort_internal": "age_old",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -642,10 +666,11 @@
             "fr": {
                 "hs_path": "\u00e2gisme-contre-les-de-50-ans",
                 "hs_name": "\u00c2gisme contre les de 50 ans",
+                "sub_head": "Pour montrer que vous accordez la m\u00eame valeur \u00e0 toutes les personnes, quel que soit leur \u00e2ge, \u00e9vitez les g\u00e9n\u00e9ralisations sur les plus de 50 ans.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-acquise\/\u00e2gisme-contre-les-de-50-ans",
                 "is_active": "1",
                 "short_explanation": "Comporte et entretient des pr\u00e9jug\u00e9s sur les personnes de plus de 50 ans",
-                "sub_head": "",
+                "sort_internal": "age_old",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -699,10 +724,11 @@
             "en": {
                 "hs_path": "25-years-and-younger",
                 "hs_name": "Age-bias against 25-",
+                "sub_head": "To show you value individuals of all ages equally, avoid generalizations about people aged 25 and under.",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/acquired-diversity\/25-years-and-younger",
                 "is_active": "1",
                 "short_explanation": "Reveals and feeds biases against people under 25",
-                "sub_head": "To show you value individuals of all ages equally, avoid generalizations about people aged 25 and under.",
+                "sort_internal": "age_young",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -739,10 +765,11 @@
             "de": {
                 "hs_path": "25-jahre-und-j\u00fcnger",
                 "hs_name": "25 Jahre und j\u00fcnger",
+                "sub_head": "Zeige, dass du Menschen aller Altersgruppen gleicherma\u00dfen wertsch\u00e4tzt, indem du auf Pauschalaussagen \u00fcber Menschen unter 25 verzichtest.",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/erworbene-diversit\u00e4t\/25-jahre-und-j\u00fcnger",
                 "is_active": "1",
                 "short_explanation": "Bedient Klischees \u00fcber Menschen unter 25",
-                "sub_head": "Zeige, dass du Menschen aller Altersgruppen gleicherma\u00dfen wertsch\u00e4tzt, indem du auf Pauschalaussagen \u00fcber Menschen unter 25 verzichtest.",
+                "sort_internal": "age_young",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -779,10 +806,11 @@
             "fr": {
                 "hs_path": "\u00e2gisme-contre-les-de-25-ans",
                 "hs_name": "\u00c2gisme contre les de 25 ans",
+                "sub_head": "Pour montrer que vous accordez la m\u00eame valeur \u00e0 toutes les personnes, quel que soit leur \u00e2ge, \u00e9vitez les g\u00e9n\u00e9ralisations sur les moins de 25 ans.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-acquise\/\u00e2gisme-contre-les-de-25-ans",
                 "is_active": "1",
                 "short_explanation": "Comporte et entretient des pr\u00e9jug\u00e9s sur les personnes de moins de 25 ans",
-                "sub_head": "",
+                "sort_internal": "age_young",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -841,10 +869,11 @@
             "en": {
                 "hs_path": "agentic-language",
                 "hs_name": "Agentic language",
+                "sub_head": "To reach out to team-minded people, use words that put cooperation, collaboration, connection, and a shared purpose first.",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/social-motive\/agentic-language",
                 "is_active": "1",
                 "short_explanation": "Has a connotation of competition and performance. Deters cooperatively minded people.",
-                "sub_head": "To reach out to team-minded people, use words that put cooperation, collaboration, connection, and a shared purpose first.",
+                "sort_internal": "agentic",
                 "lead_video": "62987289559",
                 "lead_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Bildschirmfoto%202023-03-17%20um%2010.46.51.png",
@@ -886,10 +915,11 @@
             "de": {
                 "hs_path": "agentische-sprache",
                 "hs_name": "Agentische Sprache",
+                "sub_head": "Wenn du teamf\u00e4hige Menschen erreichen willst, verwende W\u00f6rter, die Kooperation, Zusammenarbeit, Verbindung und ein gemeinsames Ziel betonen.",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/soziale-motivation\/agentische-sprache",
                 "is_active": "1",
                 "short_explanation": "Spricht kooperativ denkende Menschen nicht an",
-                "sub_head": "Wenn du teamf\u00e4hige Menschen erreichen willst, verwende W\u00f6rter, die Kooperation, Zusammenarbeit, Verbindung und ein gemeinsames Ziel betonen.",
+                "sort_internal": "agentic",
                 "lead_video": "63619779304",
                 "lead_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Bildschirmfoto%202023-03-17%20um%2010.46.51.png",
@@ -931,10 +961,11 @@
             "fr": {
                 "hs_path": "langage-agentique",
                 "hs_name": "Langage agentique",
+                "sub_head": "Pour atteindre les personnes qui ont l'esprit d'\u00e9quipe, utilisez des mots qui mettent en avant la coop\u00e9ration, la collaboration, la connexion et un objectif commun.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/motivation-sociale\/langage-agentique",
                 "is_active": "1",
                 "short_explanation": "\u00c9voque la comp\u00e9tition et la performance, ce qui dissuade les personnes privil\u00e9giant la coop\u00e9ration",
-                "sub_head": "",
+                "sort_internal": "agentic",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -988,10 +1019,11 @@
             "en": {
                 "hs_path": "anglicism",
                 "hs_name": "Anglicism",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/anglicism",
                 "is_active": "1",
                 "short_explanation": "Sure that all readers understand this?",
-                "sub_head": "",
+                "sort_internal": "anglicism",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": [],
@@ -1018,10 +1050,11 @@
             "de": {
                 "hs_path": "anglizismen",
                 "hs_name": "Anglizismen",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/anglizismen",
                 "is_active": "1",
                 "short_explanation": "Sicher, dass das alle Lesenden verstehen?",
-                "sub_head": "",
+                "sort_internal": "anglicism",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -1058,10 +1091,11 @@
             "fr": {
                 "hs_path": "anglicisme",
                 "hs_name": "Anglicisme",
+                "sub_head": "Dans le jargon des affaires d'aujourd'hui, nous utilisons souvent des expressions issues de la langue anglaise des affaires. Or, selon le public vis\u00e9, ces expressions excluent certaines personnesDo you write this expression on purpose or as ",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-culturelle\/anglicisme",
                 "is_active": "1",
                 "short_explanation": "L'ensemble de votre lectorat comprend-il ce mot ?",
-                "sub_head": "L'ensemble de votre lectorat comprend-il ce mot ?",
+                "sort_internal": "anglicism",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -1109,12 +1143,18 @@
             "en": {
                 "hs_path": "islamophobia-and-anti-muslim-sentiment",
                 "hs_name": "Islamophobia",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/religion\/islamophobia-and-anti-muslim-sentiment",
                 "is_active": "1",
                 "short_explanation": "Does this insult the Islamic religion?",
-                "sub_head": "",
+                "sort_internal": "antimuslim",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Islamophobia%20and%20anti-muslim%20sentiment%20.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": "Illustration: A person curses at a person wearing a hijab."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Islamophobia%20and%20anti-muslim%20sentiment%20.png",
                     "width": "900",
@@ -1144,12 +1184,18 @@
             "de": {
                 "hs_path": "islam-und-muslimfeindlichkeit",
                 "hs_name": "Islam- und Muslimfeindlichkeit",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/glauben\/islam-und-muslimfeindlichkeit",
                 "is_active": "1",
                 "short_explanation": "F\u00e4llt unter Islam- und muslimfeindliche Verunglimpfungen",
-                "sub_head": "",
+                "sort_internal": "antimuslim",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Islamophobia%20and%20anti-muslim%20sentiment%20.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": "Illustration: Eine Person schimpft \u00fcber eine Person, die eine Hijab tr\u00e4gt."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Islamophobia%20and%20anti-muslim%20sentiment%20.png",
                     "width": "900",
@@ -1179,12 +1225,18 @@
             "fr": {
                 "hs_path": "islamophobie",
                 "hs_name": "Islamophobie ",
+                "sub_head": "Utilisez-vous cette expression \u00e0 dessein ou en vous disant \u00ab c'est juste une blague \u00bb ? Mettez-vous \u00e0 la place d'une personne musulmane. Cette expression est extr\u00eamement offensante  car elle la d\u00e9nigre en tant qu'\u00eatre humain en raison de sa religion. Vos mots ont des cons\u00e9quences pour l'ensemble du groupe social car elles cr\u00e9ent ou renforcent un pr\u00e9jug\u00e9.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/_religion\/islamophobie",
                 "is_active": "1",
                 "short_explanation": "Est-ce insultant pour les personnes musulmanes ?",
-                "sub_head": "\u00c9crivez-vous cette expression \u00e0 dessein ou en disant \u00ab c'est juste une blague \u00bb ? Essayez de vous mettre \u00e0 la place d'une personne de confession islamique : Cette expression est extr\u00eamement offensante pour eux car elle les diffame en tant qu'\u00eatres humains en raison de leur religion. L'\u00e9dition a des cons\u00e9quences pour l'ensemble du groupe social car elle cr\u00e9e ou renforce un pr\u00e9jug\u00e9 \u00e0 l'encontre des musulmans. ",
+                "sort_internal": "antimuslim",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Islamophobia%20and%20anti-muslim%20sentiment%20.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": "Illustration : Une personne insulte une personne portant une hijab."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Islamophobia%20and%20anti-muslim%20sentiment%20.png",
                     "width": "900",
@@ -1231,12 +1283,18 @@
             "en": {
                 "hs_path": "anti-semitism",
                 "hs_name": "Anti-semitism",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/religion\/anti-semitism",
                 "is_active": "1",
                 "short_explanation": "Does this insult the Jewish religion?",
-                "sub_head": "",
+                "sort_internal": "antisemitism",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/antisemitismus.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": "Illustration: A person curses at a person wearing a kippah."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/antisemitismus.png",
                     "width": "900",
@@ -1266,12 +1324,18 @@
             "de": {
                 "hs_path": "antisemitismus",
                 "hs_name": "Antisemitismus",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/glauben\/antisemitismus",
                 "is_active": "1",
                 "short_explanation": "F\u00e4llt unter antisemitische Verunglimpfungen",
-                "sub_head": "",
+                "sort_internal": "antisemitism",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/antisemitismus.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": "Illustration: Eine Person beschimpft eine Person, die eine Kippa tr\u00e4gt."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/antisemitismus.png",
                     "width": "900",
@@ -1301,12 +1365,18 @@
             "fr": {
                 "hs_path": "antis\u00e9mitisme",
                 "hs_name": "Antis\u00e9mitisme",
+                "sub_head": "Utilisez-vous cette expression \u00e0 dessein ou en vous disant \u00ab c'est juste une blague \u00bb ? Mettez-vous \u00e0 la place d'une personne juive. Cette expression est extr\u00eamement offensante  car elle la d\u00e9nigre en tant qu'\u00eatre humain en raison de sa religion. Vos mots ont des cons\u00e9quences pour l'ensemble du groupe social car elles cr\u00e9ent ou renforcent un pr\u00e9jug\u00e9.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/_religion\/antis\u00e9mitisme",
                 "is_active": "1",
                 "short_explanation": "Est-ce insultant pour les personnes juives ?",
-                "sub_head": "\u00c9crivez-vous cette expression \u00e0 dessein ou en disant \u00ab c'est juste une blague \u00bb ? Essayez de vous mettre \u00e0 la place d'une personne de confession juive : Cette expression est extr\u00eamement offensante pour eux car elle les diffame en tant qu'\u00eatres humains en raison de leur religion. Son utilisation a des cons\u00e9quences pour l'ensemble du groupe social, car elle cr\u00e9e ou renforce un pr\u00e9jug\u00e9 \u00e0 l'encontre du peuple juif. ",
+                "sort_internal": "antisemitism",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/antisemitismus.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": "Illustration : Une personne insulte une personne portant une kippa."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/antisemitismus.png",
                     "width": "900",
@@ -1353,10 +1423,11 @@
             "en": {
                 "hs_path": "behavior",
                 "hs_name": "Behavior",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/behavior",
                 "is_active": "1",
                 "short_explanation": "Frames authentic behavior as undesirable and other",
-                "sub_head": "",
+                "sort_internal": "behavior",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -1393,10 +1464,11 @@
             "de": {
                 "hs_path": "verhalten",
                 "hs_name": "Verhalten",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/verhalten",
                 "is_active": "1",
                 "short_explanation": "Stellt authentisches Verhalten als unerw\u00fcnscht dar",
-                "sub_head": "",
+                "sort_internal": "behavior",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -1433,10 +1505,11 @@
             "fr": {
                 "hs_path": "comportement",
                 "hs_name": "Comportement",
+                "sub_head": "Parfois, le comportement d'une personne est consid\u00e9r\u00e9 comme \u00ab autre \u00bb selon une vision st\u00e9r\u00e9otyp\u00e9e de la soci\u00e9t\u00e9, ce qui signifie que le comportement de la soci\u00e9t\u00e9 est \u00ab normal \u00bb et que celui de cette personne ne l'est pas. Mais cette fa\u00e7on de penser est d\u00e9pass\u00e9e. \u00ab La recherche sur la \u00ab neurodiversit\u00e9 \u00bb d\u00e9crit l'id\u00e9e que les gens vivent et interagissent avec le monde qui les entoure de diff\u00e9rentes mani\u00e8res ; il n'y a pas une seule \u00ab bonne \u00bb fa\u00e7on de penser, d'apprendre et de se comporter, et les diff\u00e9rences ne sont pas consid\u00e9r\u00e9es comme des \u00ab d\u00e9ficits \u00bb, comme le d\u00e9crit <a href=\"https:\/\/www.health.harvard.edu\/blog\/what-is-neurodiversity-202111232645\">cet article de Harvard Health<\/a>.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/handicap\/comportement",
                 "is_active": "1",
                 "short_explanation": "Pr\u00e9sente un comportement spontan\u00e9 comme ind\u00e9sirable et anormal",
-                "sub_head": "",
+                "sort_internal": "behavior",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -1490,10 +1563,11 @@
             "en": {
                 "hs_path": "belief",
                 "hs_name": "Belief",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/religion\/belief",
                 "is_active": "1",
                 "short_explanation": "Sure this religious reference is universally accepted?",
-                "sub_head": "",
+                "sort_internal": "belief",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -1530,10 +1604,11 @@
             "de": {
                 "hs_path": "glauben",
                 "hs_name": "Glauben",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/glauben\/glauben",
                 "is_active": "1",
                 "short_explanation": "Ausdruck eines Glaubens, dem nicht jede*r angeh\u00f6rt",
-                "sub_head": "",
+                "sort_internal": "belief",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -1570,10 +1645,11 @@
             "fr": {
                 "hs_path": "croyance",
                 "hs_name": "Croyance",
+                "sub_head": "Cette formulation d\u00e9finit les personnes ayant ou exprimant inconsciemment une certaine croyance comme \u00e9tant la norme, d\u00e9valorisant ainsi les autres croyances.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/_religion\/croyance",
                 "is_active": "1",
                 "short_explanation": "Cette r\u00e9f\u00e9rence religieuse est-elle universelle ?",
-                "sub_head": "Il s'agit de formulations qui cataloguent les personnes ayant une certaine croyance ou qui expriment inconsciemment une croyance comme \u00e9tant la norme, d\u00e9valorisant ainsi les autres croyances. ",
+                "sort_internal": "belief",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -1627,10 +1703,11 @@
             "en": {
                 "hs_path": "binary-pronouns",
                 "hs_name": "Binary pronouns",
+                "sub_head": "To include all genders, adress people directly or use the genderneutral \"they\"",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/binary-pronouns",
                 "is_active": "1",
                 "short_explanation": "Confident you're not excluding non-binary people?",
-                "sub_head": "To include all genders, adress people directly or use the genderneutral \"they\"",
+                "sort_internal": "binary_pronouns",
                 "lead_video": "",
                 "lead_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Witty%20works%20Learning%20Bite%20binary%20pronouns.png",
@@ -1672,10 +1749,11 @@
             "de": {
                 "hs_path": "bin\u00e4re-pronomen",
                 "hs_name": "Bin\u00e4re Pronomen",
+                "sub_head": "Verwende Sie und Du oder nutze genderneutrale Formen.",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/bin\u00e4re-pronomen",
                 "is_active": "1",
                 "short_explanation": "Pronomen, das nichtbin\u00e4re Menschen ausschlie\u00dft",
-                "sub_head": "Verwende Sie und Du oder nutze genderneutrale Formen.",
+                "sort_internal": "binary_pronouns",
                 "lead_video": "",
                 "lead_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Witty%20works%20Learning%20Bite%20bin%C3%A4re%20Pronomen.png",
@@ -1717,10 +1795,11 @@
             "fr": {
                 "hs_path": "pronoms-binaires",
                 "hs_name": "Pronoms binaires",
+                "sub_head": "Pour inclure des personnes de tous les genres, adressez-vous directement \u00e0 elles ou utilisez des mots non genr\u00e9s.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/pronoms-binaires",
                 "is_active": "1",
                 "short_explanation": "Excluez-vous les personnes non binaires ?",
-                "sub_head": "Excluez-vous les personnes non binaires ?",
+                "sort_internal": "binary_pronouns",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -1769,10 +1848,11 @@
             "en": {
                 "hs_path": "classism",
                 "hs_name": "Classism",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/acquired-diversity\/classism",
                 "is_active": "1",
                 "short_explanation": "Implies socioeconomic status sets the value of a person ",
-                "sub_head": "",
+                "sort_internal": "classism",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -1809,10 +1889,11 @@
             "de": {
                 "hs_path": "klassismus",
                 "hs_name": "Klassismus",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/erworbene-diversit\u00e4t\/klassismus",
                 "is_active": "1",
                 "short_explanation": "Impliziert sozio\u00f6konomischer Status bestimmt den Wert einer Person",
-                "sub_head": "",
+                "sort_internal": "classism",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -1849,10 +1930,11 @@
             "fr": {
                 "hs_path": "classisme",
                 "hs_name": "Classisme",
+                "sub_head": "Essayez d'imaginer une personne d'un niveau hi\u00e9rarchique ou socio-\u00e9conomique inf\u00e9rieur au v\u00f4tre : Que ressentiriez-vous en relisant vos propres mots ? Pour de nombreuses personnes, cette formulation communique implicitement un sentiment de condescendance. Elle est associ\u00e9e \u00e0 un d\u00e9s\u00e9quilibre de pouvoir et peut \u00eatre per\u00e7ue comme un \u00e9tat d'esprit \u00ab descendant \u00bb. Elle peut \u00e9galement exprimer un sentiment de diff\u00e9rence de classe sociale. ",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-acquise\/classisme",
                 "is_active": "1",
                 "short_explanation": "Sous-entend que le statut socio-\u00e9conomique d'une personne d\u00e9termine sa valeur",
-                "sub_head": "",
+                "sort_internal": "classism",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -1906,10 +1988,11 @@
             "en": {
                 "hs_path": "cognitive-ability",
                 "hs_name": "Cognitive ability",
+                "sub_head": "Steer clear of pandering to misconceptions and biases about the capacity to think and reason.",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/cognitive-ability",
                 "is_active": "1",
                 "short_explanation": "Fuels preconceived notions about cognitive ability ",
-                "sub_head": "Steer clear of pandering to misconceptions and biases about the capacity to think and reason.",
+                "sort_internal": "cognitive_ability",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -1946,10 +2029,11 @@
             "de": {
                 "hs_path": "denkf\u00e4higkeit",
                 "hs_name": "Denkf\u00e4higkeit",
+                "sub_head": "Verzichte darauf, Vorurteile und Klischees \u00fcber Denkf\u00e4higkeit bedienen.",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/denkf\u00e4higkeit",
                 "is_active": "1",
                 "short_explanation": "Bedient Vorurteile und Klischees \u00fcber Denkf\u00e4higkeit",
-                "sub_head": "Verzichte darauf, Vorurteile und Klischees \u00fcber Denkf\u00e4higkeit bedienen.",
+                "sort_internal": "cognitive_ability",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -1986,10 +2070,11 @@
             "fr": {
                 "hs_path": "fonctions-cognitives",
                 "hs_name": "Fonctions cognitives",
+                "sub_head": "\u00c9vitez les pr\u00e9jug\u00e9s et les clich\u00e9s sur les capacit\u00e9s cognitives.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/handicap\/fonctions-cognitives",
                 "is_active": "1",
                 "short_explanation": "Entretient des pr\u00e9jug\u00e9s sur les fonctions cognitives",
-                "sub_head": "",
+                "sort_internal": "cognitive_ability",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -2043,10 +2128,11 @@
             "en": {
                 "hs_path": "cognitive-perception",
                 "hs_name": "Misuses mental health",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/cognitive-perception",
                 "is_active": "1",
                 "short_explanation": "Discriminatory wording on the back of people with mental health issues",
-                "sub_head": "",
+                "sort_internal": "cognitive_perception",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -2083,10 +2169,11 @@
             "de": {
                 "hs_path": "wahrnehmung",
                 "hs_name": "Wahrnehmung",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/wahrnehmung",
                 "is_active": "1",
                 "short_explanation": "Bedient Vorurteile \u00fcber kognitive Wahrnehmungsf\u00e4higkeit",
-                "sub_head": "",
+                "sort_internal": "cognitive_perception",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -2123,10 +2210,11 @@
             "fr": {
                 "hs_path": "perception",
                 "hs_name": "Perception",
+                "sub_head": "Nous faisons tous l'exp\u00e9rience du monde par le biais de nos sens - voir, \u00e9couter, sentir, go\u00fbter et ressentir. C'est ce qu'on appelle la perception cognitive. Un autre aspect de la perception cognitive est la mani\u00e8re dont nous traitons les informations que nous recevons par les sens. Notre perception cognitive individuelle influence la mani\u00e8re dont nous r\u00e9pondons aux gens, \u00e9valuons les risques et nous comportons dans diff\u00e9rents contextes. Nous utilisons nos exp\u00e9riences personnelles et nos id\u00e9es de ce qui est \u00ab normal \u00bb pour \u00e9valuer les r\u00e9ponses et les comportements des autres. Mais nous vivons tous le monde diff\u00e9remment. Porter des jugements sur des personnes qui ne per\u00e7oivent pas le monde de la m\u00eame mani\u00e8re que nous peut avoir de graves cons\u00e9quences sociales pour la personne que nous jugeons. \u00c9tiqueter une personne comme \u00ab pas normale \u00bb et mettre en doute sa capacit\u00e9 \u00e0 percevoir la r\u00e9alit\u00e9 \u00ab correctement \u00bb peut la rendre vuln\u00e9rable \u00e0 la marginalisation, \u00e0 la stigmatisation et \u00e0 l'intimidation.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/handicap\/perception",
                 "is_active": "1",
                 "short_explanation": "Insulte les personnes ayant des perceptions diff\u00e9rentes en renvoyant \u00e0 des troubles de la sant\u00e9 mentale",
-                "sub_head": "",
+                "sort_internal": "cognitive_perception",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -2185,10 +2273,11 @@
             "en": {
                 "hs_path": "color",
                 "hs_name": "Color connotation bias",
+                "sub_head": "Avoid using colors and tones to describe value, values, quality, or skin. Using color words figuratively can be highly offensive to the people around you who live with racialized identities.",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/color",
                 "is_active": "1",
                 "short_explanation": "Does this color carry biased implications?",
-                "sub_head": "Avoid using colors and tones to describe value, values, quality, or skin. Using color words figuratively can be highly offensive to the people around you who live with racialized identities.",
+                "sort_internal": "color",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -2225,10 +2314,11 @@
             "de": {
                 "hs_path": "farbw\u00f6rter",
                 "hs_name": "Farbw\u00f6rter",
+                "sub_head": "Um alle ungeachtet ihrer Hautfarbe w\u00fcrdigend einzubeziehen, verzichte beim Beschreiben von Wert, Werten, Qualit\u00e4t oder Haut auf Farbw\u00f6rter.",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/farbw\u00f6rter",
                 "is_active": "1",
                 "short_explanation": "Beschreibe gut und schlecht nicht mit Farbw\u00f6rtern",
-                "sub_head": "Um alle ungeachtet ihrer Hautfarbe w\u00fcrdigend einzubeziehen, verzichte beim Beschreiben von Wert, Werten, Qualit\u00e4t oder Haut auf Farbw\u00f6rter.",
+                "sort_internal": "color",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -2265,10 +2355,11 @@
             "fr": {
                 "hs_path": "couleur",
                 "hs_name": "Couleur",
+                "sub_head": "\u00c9vitez d'utiliser des noms de couleurs pour d\u00e9crire des valeurs, des qualit\u00e9s ou des caract\u00e9ristiques. Ces mots peuvent \u00eatre insultants pour les personnes non blanches.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-culturelle\/couleur",
                 "is_active": "1",
                 "short_explanation": "Cette couleur a-t-elle une connotation raciste ?",
-                "sub_head": "Cette couleur a-t-elle une connotation raciste ?",
+                "sort_internal": "color",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -2327,16 +2418,17 @@
             "en": {
                 "hs_path": "communal-language",
                 "hs_name": "Communal language",
+                "sub_head": "Use communal words to signal you value an environment where everyone can get involved and thrive.",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/social-motive\/communal-language",
                 "is_active": "1",
                 "short_explanation": "Strengthens collaboration and a sense of community",
-                "sub_head": "Use communal words to signal you value an environment where everyone can get involved and thrive.",
+                "sort_internal": "communal",
                 "lead_video": "68997489891",
                 "lead_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Why%20(900%20%C3%97%20525%20px).png",
                     "width": "900",
                     "height": "525",
-                    "alt": "A diverse group of people being friendly with each other"
+                    "alt": "Illustration: A diverse group of people being friendly with each other"
                 },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/inclusive.png",
@@ -2367,10 +2459,11 @@
             "de": {
                 "hs_path": "kommunale-sprache",
                 "hs_name": "Kommunale Sprache",
+                "sub_head": "Mit kommunalen Begriffen signalisierst du, dass du Wert auf ein Umfeld legst, in dem sich alle einbringen und entfalten k\u00f6nnen",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/soziale-motivation\/kommunale-sprache",
                 "is_active": "1",
                 "short_explanation": "St\u00e4rkt die Zusammenarbeit und den Sinn f\u00fcr Gemeinschaft",
-                "sub_head": "Mit kommunalen Begriffen signalisierst du, dass du Wert auf ein Umfeld legst, in dem sich alle einbringen und entfalten k\u00f6nnen",
+                "sort_internal": "communal",
                 "lead_video": "68997490679",
                 "lead_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Why%20(900%20%C3%97%20525%20px).png",
@@ -2407,12 +2500,18 @@
             "fr": {
                 "hs_path": "coop\u00e9ration",
                 "hs_name": "Coop\u00e9ration",
+                "sub_head": "Utilisez des mots qui montrent que vous favorisez les environnements dans lesquels chaque personne peut s'impliquer et s'\u00e9panouir.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/motivation-sociale\/coop\u00e9ration",
                 "is_active": "1",
                 "short_explanation": "Renforce la collaboration et le sentiment d'appartenance au groupe",
-                "sub_head": "",
+                "sort_internal": "communal",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Why%20(900%20%C3%97%20525%20px).png",
+                    "width": "900",
+                    "height": "525",
+                    "alt": "Illustration : Un groupe diversifi\u00e9 de personnes sympathisant les unes avec les autres"
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Coop%C3%A9ration.png",
                     "width": "605",
@@ -2459,10 +2558,11 @@
             "en": {
                 "hs_path": "cultural-stereotype",
                 "hs_name": "Cultural stereotype",
+                "sub_head": "When talking about a person or a group, appreciate them as individuals with their own cultural identity.",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/cultural-stereotype",
                 "is_active": "1",
                 "short_explanation": "Are you relying on a cultural clich\u00e9?",
-                "sub_head": "When talking about a person or a group, appreciate them as individuals with their own cultural identity.",
+                "sort_internal": "culture",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -2499,10 +2599,11 @@
             "de": {
                 "hs_path": "kulturelles-stereotyp",
                 "hs_name": "Kulturelles Sterotyp",
+                "sub_head": "Wenn du \u00fcber eine Person oder eine Gruppe sprichst, w\u00fcrdige sie als komplexe Pers\u00f6nlichkeit(en) mit eigener Biografie.",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/kulturelles-stereotyp",
                 "is_active": "1",
                 "short_explanation": "Reduziert eine Person auf ein kulturelles Klischee",
-                "sub_head": "Wenn du \u00fcber eine Person oder eine Gruppe sprichst, w\u00fcrdige sie als komplexe Pers\u00f6nlichkeit(en) mit eigener Biografie.",
+                "sort_internal": "culture",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -2539,10 +2640,11 @@
             "fr": {
                 "hs_path": "st\u00e9r\u00e9otype-culturel",
                 "hs_name": "St\u00e9r\u00e9otype culturel",
+                "sub_head": "Lorsque vous parlez d'une personne ou d'un groupe, tenez compte des identit\u00e9s culturelles de chaque personne.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-culturelle\/st\u00e9r\u00e9otype-culturel",
                 "is_active": "1",
                 "short_explanation": "S'agit-il d'un clich\u00e9 culturel ?",
-                "sub_head": "S'agit-il d'un clich\u00e9 culturel ?",
+                "sort_internal": "culture",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -2598,10 +2700,11 @@
             "en": {
                 "hs_path": "diversity-equity-inclusion-belonging",
                 "hs_name": "DEIB",
+                "sub_head": "To help build acceptance and empathy, use a shared vocabulary in conversations around DEIB.  ",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/social-motive\/diversity-equity-inclusion-belonging",
                 "is_active": "1",
                 "short_explanation": "Engage in dialog about diversity, equity, inclusion, and belonging",
-                "sub_head": "To help build acceptance and empathy, use a shared vocabulary in conversations around DEIB.  ",
+                "sort_internal": "d_and_i",
                 "lead_video": "",
                 "lead_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/diversity-and-inclusion.png",
@@ -2638,10 +2741,11 @@
             "de": {
                 "hs_path": "vielfalt-gleichheit-teilhabe-zugeh\u00f6rigkeit",
                 "hs_name": "DEIB",
+                "sub_head": "Um Bewusstsein zu schaffen und Einf\u00fchlungsverm\u00f6gen zu st\u00e4rken, greife in Gespr\u00e4chen \u00fcber DEIB auf einen gemeinsamen Wortschatz zur\u00fcck.",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/soziale-motivation\/vielfalt-gleichheit-teilhabe-zugeh\u00f6rigkeit",
                 "is_active": "1",
                 "short_explanation": "F\u00f6rdere den Austausch \u00fcber Vielfalt, Gleichheit, Teilhabe und Zugeh\u00f6rigkeit",
-                "sub_head": "Um Bewusstsein zu schaffen und Einf\u00fchlungsverm\u00f6gen zu st\u00e4rken, greife in Gespr\u00e4chen \u00fcber DEIB auf einen gemeinsamen Wortschatz zur\u00fcck.",
+                "sort_internal": "d_and_i",
                 "lead_video": "",
                 "lead_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/diversity-and-inclusion.png",
@@ -2678,12 +2782,18 @@
             "fr": {
                 "hs_path": "diversit\u00e9-\u00e9quit\u00e9-inclusion-et-sentiment-dappartenance",
                 "hs_name": "Diversit\u00e9, \u00e9quit\u00e9, inclusion et sentiment d'appartenance",
+                "sub_head": "Pour sensibiliser les personnes et favoriser l'empathie, utilisez un vocabulaire commun dans vos conversation sur la DEI.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/motivation-sociale\/diversit\u00e9-\u00e9quit\u00e9-inclusion-et-sentiment-dappartenance",
                 "is_active": "1",
                 "short_explanation": "Ouvre un dialogue sur la diversit\u00e9, l'\u00e9quit\u00e9, l'inclusion et le sentiment d'appartenance",
-                "sub_head": "",
+                "sort_internal": "d_and_i",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/diversity-and-inclusion.png",
+                    "width": "900",
+                    "height": "525",
+                    "alt": "Illustration d'un groupe diversifi\u00e9 compos\u00e9 de 5 personnes d'\u00e2ges, de morphologies et d'origines ethniques diff\u00e9rents."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Diversit%C3%A9%2c%20%C3%A9quit%C3%A9%2c%20inclusion%20et%20sentiment%20dappartenance.png",
                     "width": "605",
@@ -2730,10 +2840,11 @@
             "en": {
                 "hs_path": "positive-emotions",
                 "hs_name": "Positive emotions",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/social-motive\/positive-emotions",
                 "is_active": "1",
                 "short_explanation": "Conveys emotional security",
-                "sub_head": "",
+                "sort_internal": "emotional_security",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -2765,10 +2876,11 @@
             "de": {
                 "hs_path": "positive-emotionen",
                 "hs_name": "Positive Emotionen",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/soziale-motivation\/positive-emotionen",
                 "is_active": "1",
                 "short_explanation": "Vermittelt emotionale Sicherheit",
-                "sub_head": "",
+                "sort_internal": "emotional_security",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -2800,10 +2912,11 @@
             "fr": {
                 "hs_path": "\u00e9motions-positives",
                 "hs_name": "\u00c9motions positives",
+                "sub_head": "Les sentiments, et les mots qui les d\u00e9crivent, sont des indicateurs. Ils indiquent si nos besoins sont satisfaits ou si nous sommes convaincus qu'ils le seront.  Communiquer ce que nous ressentons \u00e0 propos de quelque chose est un moyen puissant de nous connecter \u00e0 notre exp\u00e9rience et aux personnes qui interagissent avec nous. Partager ce que nous ressentons contribue \u00e0 am\u00e9liorer le bien-\u00eatre d'une \u00e9quipe et \u00e0 instaurer une confiance \u00e9motionnelle. Lorsqu'une personne vous fait confiance sur le plan \u00e9motionnel, elle sait que vous la soutenez et que vous la traitez avec respect.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/motivation-sociale\/\u00e9motions-positives",
                 "is_active": "1",
                 "short_explanation": "Cultive la s\u00e9curit\u00e9 \u00e9motionnelle",
-                "sub_head": "",
+                "sort_internal": "emotional_security",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -2855,16 +2968,17 @@
             "en": {
                 "hs_path": "exaggeration",
                 "hs_name": "Exaggeration",
+                "sub_head": "To show you are a credible voice, stay factual and use specific language to present ideas and arguments.",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/social-motive\/exaggeration",
                 "is_active": "1",
                 "short_explanation": "This term is a over-the-top and not inviting.",
-                "sub_head": "To show you are a credible voice, stay factual and use specific language to present ideas and arguments.",
+                "sort_internal": "exaggerating",
                 "lead_video": "",
                 "lead_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/witty-works-exaggeration.png",
                     "width": "900",
                     "height": "525",
-                    "alt": "Illustration showing a person in pants who says, great, awesome, excellent, fantastic! All in upper case. A person in a skirt stands listening"
+                    "alt": "Illustration: showing a person in pants who says, great, awesome, excellent, fantastic! All in upper case. A person in a skirt stands listening"
                 },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Exaggeration-3.png",
@@ -2900,17 +3014,13 @@
             "de": {
                 "hs_path": "\u00fcbertreibung",
                 "hs_name": "\u00dcbertreibung",
+                "sub_head": "Wenn du Ideen konkret und sachlich pr\u00e4sentierst, wirkst du seri\u00f6s, greifbar und authentisch.",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/soziale-motivation\/\u00fcbertreibung",
                 "is_active": "1",
                 "short_explanation": "Der Begriff wirkt \u00fcberzogen und daher nicht einladend.",
-                "sub_head": "Wenn du Ideen konkret und sachlich pr\u00e4sentierst, wirkst du seri\u00f6s, greifbar und authentisch.",
+                "sort_internal": "exaggerating",
                 "lead_video": "",
-                "lead_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/witty-works-exaggeration.png",
-                    "width": "900",
-                    "height": "525",
-                    "alt": "Illustration, die eine Person in Hosen zeigt, die sagt: \"TOTAL  GLOBAL! Die Nummer 1! UN\u00dcBERTROFFEN! UNSCHLAGBAR! WELTKLASSE! Alles in Gro\u00dfbuchstaben. Eine Person im Rock h\u00f6rt zu. "
-                },
+                "lead_image": [],
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/%C3%9Cbertreibung_advanced.png",
                     "width": "605",
@@ -2945,10 +3055,11 @@
             "fr": {
                 "hs_path": "exag\u00e9ration",
                 "hs_name": "Exag\u00e9ration",
+                "sub_head": "Pr\u00e9sentez vos id\u00e9es de mani\u00e8re claire et concr\u00e8te pour montrer votre cr\u00e9dibilit\u00e9 et votre auhenticit\u00e9.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/motivation-sociale\/exag\u00e9ration",
                 "is_active": "1",
                 "short_explanation": "Ce terme est excessif et peu engageant",
-                "sub_head": "",
+                "sort_internal": "exaggerating",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -3002,10 +3113,11 @@
             "en": {
                 "hs_path": "female-stereotype",
                 "hs_name": "Female stereotype",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/female-stereotype",
                 "is_active": "1",
                 "short_explanation": "Limits women to traditional roles and behaviors",
-                "sub_head": "",
+                "sort_internal": "female_stereotype",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -3042,10 +3154,11 @@
             "de": {
                 "hs_path": "frauenklischee",
                 "hs_name": "Frauenklischee",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/frauenklischee",
                 "is_active": "1",
                 "short_explanation": "Reduziert Frauen auf traditionelle Rollenklischees",
-                "sub_head": "",
+                "sort_internal": "female_stereotype",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -3082,10 +3195,11 @@
             "fr": {
                 "hs_path": "st\u00e9r\u00e9otype-f\u00e9minin",
                 "hs_name": "St\u00e9r\u00e9otype f\u00e9minin",
+                "sub_head": "Rel\u00e8gue les femmes \u00e0 des r\u00f4les et comportements traditionnels",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/st\u00e9r\u00e9otype-f\u00e9minin",
                 "is_active": "1",
                 "short_explanation": "Rel\u00e8gue les femmes \u00e0 des r\u00f4les et comportements traditionnels",
-                "sub_head": "Rel\u00e8gue les femmes \u00e0 des r\u00f4les et comportements traditionnels",
+                "sort_internal": "female_stereotype",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -3142,10 +3256,11 @@
             "en": {
                 "hs_path": "filler-words",
                 "hs_name": "Filler words",
+                "sub_head": "To make your message effective and easy to grasp, use filler words sparingly.",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/filler-words",
                 "is_active": "1",
                 "short_explanation": "Adding complexity but no meaning",
-                "sub_head": "To make your message effective and easy to grasp, use filler words sparingly.",
+                "sort_internal": "filler",
                 "lead_video": "65429849296",
                 "lead_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Witty-works-learning-bites-f%C3%BCllw%C3%B6rter.png",
@@ -3187,10 +3302,11 @@
             "de": {
                 "hs_path": "f\u00fcllw\u00f6rter",
                 "hs_name": "F\u00fcllw\u00f6rter",
+                "sub_head": "Wenn du deine Botschaft effektiv und leicht verst\u00e4ndlich r\u00fcberbringen willst, solltest du F\u00fcllw\u00f6rter sparsam einsetzen.",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/f\u00fcllw\u00f6rter",
                 "is_active": "1",
                 "short_explanation": "W\u00f6rter, die Text l\u00e4nger und weniger verst\u00e4ndlicher machen",
-                "sub_head": "Wenn du deine Botschaft effektiv und leicht verst\u00e4ndlich r\u00fcberbringen willst, solltest du F\u00fcllw\u00f6rter sparsam einsetzen.",
+                "sort_internal": "filler",
                 "lead_video": "65429849304",
                 "lead_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Witty-works-learning-bites-f%C3%BCllw%C3%B6rter.png",
@@ -3232,12 +3348,18 @@
             "fr": {
                 "hs_path": "mot-inutile",
                 "hs_name": "Mot inutile",
+                "sub_head": "\u00c9vitez d'utiliser des mots inutiles pour que votre message soit compris rapidement.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-culturelle\/mot-inutile",
                 "is_active": "1",
                 "short_explanation": "Ajoute de la complexit\u00e9 sans pr\u00e9cision de sens",
-                "sub_head": "Ajoute de la complexit\u00e9 sans pr\u00e9cision de sens",
+                "sort_internal": "filler",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Witty-works-learning-bites-f%C3%BCllw%C3%B6rter.png",
+                    "width": "921",
+                    "height": "500",
+                    "alt": "Illustration d'un groupe diversifi\u00e9 de personnes souriantes \u00e9coutant une personne. Leur bulle de dialogue est un m\u00e9lange de mots et de nuages."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Mot%20inutile.png",
                     "width": "605",
@@ -3284,10 +3406,11 @@
             "en": {
                 "hs_path": "formality",
                 "hs_name": "Formality",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/acquired-diversity\/formality",
                 "is_active": "1",
                 "short_explanation": "A less formal tone makes you sound more accessible",
-                "sub_head": "",
+                "sort_internal": "formality",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -3324,10 +3447,11 @@
             "de": {
                 "hs_path": "f\u00f6rmlichkeit",
                 "hs_name": "F\u00f6rmlichkeit",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/erworbene-diversit\u00e4t\/f\u00f6rmlichkeit",
                 "is_active": "1",
                 "short_explanation": "Weniger F\u00f6rmlichkeit schafft mehr emotionale N\u00e4he",
-                "sub_head": "",
+                "sort_internal": "formality",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -3364,10 +3488,11 @@
             "fr": {
                 "hs_path": "langage-formel",
                 "hs_name": "Langage formel",
+                "sub_head": "Le langage formel est souvent utilis\u00e9 dans un contexte diplomatique et exprime le respect entre les pays.  Cependant, dans les situations professionnelles quotidiennes, il peut sembler \u00e9trange. Il peut laisser entendre implicitement que l\u2019interlocuteur\u00b7rice est \u00ab quelque chose de mieux \u00bb. Les expressions formelles peuvent tuer l'\u00e9motivit\u00e9. Cela va \u00e0 l'encontre de ce que nous essayons de r\u00e9aliser : une culture inclusive o\u00f9 chacun peut apporter son point de vue \u00e0 la table et r\u00e9aliser son plein potentiel.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-acquise\/langage-formel",
                 "is_active": "1",
                 "short_explanation": "Un ton moins formel rend votre message plus accessible",
-                "sub_head": "",
+                "sort_internal": "formality",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -3427,10 +3552,11 @@
             "en": {
                 "hs_path": "generic-masculine",
                 "hs_name": "Generic masculine",
+                "sub_head": "To include everyone, use options that nudge people\u2019s brains into seeing all gender possibilities.",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/generic-masculine",
                 "is_active": "1",
                 "short_explanation": "Generally provokes a mental image of men",
-                "sub_head": "To include everyone, use options that nudge people\u2019s brains into seeing all gender possibilities.",
+                "sort_internal": "function",
                 "lead_video": "",
                 "lead_image": {
                     "src": "https:\/\/www.witty.works\/hs-fs\/hubfs\/witty-works-Generic-masculine-810x410.jpg.png?width=809&quality=high",
@@ -3467,10 +3593,11 @@
             "de": {
                 "hs_path": "generisches-maskulinum",
                 "hs_name": "Generisches Maskulinum",
+                "sub_head": "Um alle anzusprechen, solltest du Lesende anregen, alle Geschlechter mitzudenken",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/generisches-maskulinum",
                 "is_active": "1",
                 "short_explanation": "Viele denken bei diesem Wort tendentiell an einen Mann",
-                "sub_head": "Um alle anzusprechen, solltest du Lesende anregen, alle Geschlechter mitzudenken",
+                "sort_internal": "function",
                 "lead_video": "",
                 "lead_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/witty-works-Generic-masculine-810x410.jpg.png",
@@ -3512,12 +3639,18 @@
             "fr": {
                 "hs_path": "masculin-g\u00e9n\u00e9rique",
                 "hs_name": "Masculin g\u00e9n\u00e9rique",
+                "sub_head": "Pour inclure tout le monde, utilisez des mots qui cr\u00e9ent des images mentales de personnes de tous les genres.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/masculin-g\u00e9n\u00e9rique",
                 "is_active": "1",
                 "short_explanation": "Fait g\u00e9n\u00e9ralement penser \u00e0 des hommes",
-                "sub_head": "Fait g\u00e9n\u00e9ralement penser \u00e0 des hommes",
+                "sort_internal": "function",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/witty-works-Generic-masculine-810x410.jpg.png",
+                    "width": "810",
+                    "height": "409",
+                    "alt": "Illustration : Un homme en costume, les bras en l'air, sous les feux de la rampe, entour\u00e9 d'une foule h\u00e9t\u00e9roclite dans l'ombre."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Masculin%20g%C3%A9n%C3%A9rique.png",
                     "width": "605",
@@ -3569,10 +3702,11 @@
             "en": {
                 "hs_path": "gender-binary",
                 "hs_name": "Gender binary",
+                "sub_head": "To welcome people of all genders, avoid limiting people to traditional gender roles, gender identities, and gender expressions.",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/gender-binary",
                 "is_active": "1",
                 "short_explanation": "Enforces the traditional binary form of gender",
-                "sub_head": "To welcome people of all genders, avoid limiting people to traditional gender roles, gender identities, and gender expressions.",
+                "sort_internal": "gender_identity",
                 "lead_video": "",
                 "lead_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/gender%20identity.png",
@@ -3614,10 +3748,11 @@
             "de": {
                 "hs_path": "bin\u00e4res-geschlecht",
                 "hs_name": "Bin\u00e4res Geschlecht",
+                "sub_head": "Vermeide es, Menschen auf traditionelle Geschlechterrollen, Geschlechtsidentit\u00e4ten und Geschlechtsausdr\u00fccke zu beschr\u00e4nken",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/bin\u00e4res-geschlecht",
                 "is_active": "1",
                 "short_explanation": "Bedient die heteronormative Sicht von Geschlechteridentit\u00e4t",
-                "sub_head": "Vermeide es, Menschen auf traditionelle Geschlechterrollen, Geschlechtsidentit\u00e4ten und Geschlechtsausdr\u00fccke zu beschr\u00e4nken",
+                "sort_internal": "gender_identity",
                 "lead_video": "",
                 "lead_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/gender%20identity.png",
@@ -3659,12 +3794,18 @@
             "fr": {
                 "hs_path": "binarit\u00e9-de-genre",
                 "hs_name": "Binarit\u00e9 de genre",
+                "sub_head": "Pour inclure les personnes de tous les genres, ne limitez pas les personnes \u00e0 des r\u00f4les, des identit\u00e9s et des expressions de genre traditionnels.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/binarit\u00e9-de-genre",
                 "is_active": "1",
                 "short_explanation": "Entretient la vision traditionnelle binaire du genre",
-                "sub_head": "Entretient la vision traditionnelle binaire du genre",
+                "sort_internal": "gender_identity",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/gender%20identity-1.png",
+                    "width": "900",
+                    "height": "525",
+                    "alt": "Illustration d'un groupe diversifi\u00e9 de personnes d'identit\u00e9s de genre, d'\u00e2ges, d'origines ethniques et de morphologies diff\u00e9rentes qui sont toutes LGBTQUIA+."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Binarit%C3%A9%20de%20genre.png",
                     "width": "605",
@@ -3716,10 +3857,11 @@
             "en": {
                 "hs_path": "gender-specific-abbreviation",
                 "hs_name": "Gender-specific abbreviation",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/gender-specific-abbreviation",
                 "is_active": "1",
                 "short_explanation": "Men as default; non-binary persons are excluded",
-                "sub_head": "",
+                "sort_internal": "gender_specific_abbreviation",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -3756,10 +3898,11 @@
             "de": {
                 "hs_path": "geschlechter-spezifische-abk\u00fcrzung",
                 "hs_name": "Geschlechter-Spezifische Abk\u00fcrzung",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/geschlechter-spezifische-abk\u00fcrzung",
                 "is_active": "1",
                 "short_explanation": "M\u00e4nner als Standard; non-bin\u00e4re Menschen ausgeschlossen",
-                "sub_head": "",
+                "sort_internal": "gender_specific_abbreviation",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -3796,10 +3939,11 @@
             "fr": {
                 "hs_path": "abr\u00e9viation-genr\u00e9e",
                 "hs_name": "Abr\u00e9viation genr\u00e9e",
+                "sub_head": "Par habitude, nous mentionnons souvent le genre masculin en premier lorsque nous utilisons des abr\u00e9viations dans des offres d'emploi, des formulaires ou d'autres documents. Cela renforce l'id\u00e9e que le genre masculin est la norme, souvent sans m\u00eame que nous nous en rendions compte. Bien qu'un tel ordre dans une abr\u00e9viation puisse sembler insignifiant, il influence la\u00b7le lecteur\u00b7rice. En \u00e9criture latine, nous lisons de gauche \u00e0 droite, et cet ordre nous permet de reconna\u00eetre rapidement qui la\u00b7le r\u00e9dacteur\u00b7rice met en premier. ",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/abr\u00e9viation-genr\u00e9e",
                 "is_active": "1",
                 "short_explanation": "Repr\u00e9sente les hommes par d\u00e9faut et exclut les personnes non binaires",
-                "sub_head": "Repr\u00e9sente les hommes par d\u00e9faut et exclut les personnes non binaires",
+                "sort_internal": "gender_specific_abbreviation",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": [],
@@ -3843,10 +3987,11 @@
             "en": {
                 "hs_path": "gendered_denominations_ending",
                 "hs_name": "Gendered denominations ending",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/gendered_denominations_ending",
                 "is_active": "1",
                 "short_explanation": "Inconsistent gender ending spelling",
-                "sub_head": "",
+                "sort_internal": "gendered_denominations_ending",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -3883,10 +4028,11 @@
             "de": {
                 "hs_path": "inklusive-endung",
                 "hs_name": "Inklusive Endung",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/inklusive-endung",
                 "is_active": "1",
                 "short_explanation": "Nicht konsistente Geschlechts-Schreibweise",
-                "sub_head": "",
+                "sort_internal": "gendered_denomination_ending",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -3923,10 +4069,11 @@
             "fr": {
                 "hs_path": "terminaisons-genr\u00e9es",
                 "hs_name": "Terminaisons genr\u00e9es",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/terminaisons-genr\u00e9es",
                 "is_active": "1",
                 "short_explanation": "Orthographe incoh\u00e9rente des terminaisons genr\u00e9es",
-                "sub_head": "Orthographe incoh\u00e9rente des terminaisons genr\u00e9es",
+                "sort_internal": "gendered_demominations_ending",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": [],
@@ -3969,10 +4116,11 @@
             "en": {
                 "hs_path": "hearing",
                 "hs_name": "Hearing",
+                "sub_head": "To welcome and include everyone, stay mindful of myths and stereotypes about D\/deaf people",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/hearing",
                 "is_active": "1",
                 "short_explanation": "Fuels outdated ideas about the ability to hear",
-                "sub_head": "To welcome and include everyone, stay mindful of myths and stereotypes about D\/deaf people",
+                "sort_internal": "hearing",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -4009,10 +4157,11 @@
             "de": {
                 "hs_path": "h\u00f6rf\u00e4higkeit",
                 "hs_name": "H\u00f6rf\u00e4higkeit",
+                "sub_head": "Um alle einzubeziehen, verzichte auf Sprache, die Irrmeinungen und Vorurteile \u00fcber geh\u00f6rlose Menschen, verbreitet.",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/h\u00f6rf\u00e4higkeit",
                 "is_active": "1",
                 "short_explanation": "Bedient Vorurteile und Klischees \u00fcber H\u00f6rverm\u00f6gen",
-                "sub_head": "Um alle einzubeziehen, verzichte auf Sprache, die Irrmeinungen und Vorurteile \u00fcber geh\u00f6rlose Menschen, verbreitet.",
+                "sort_internal": "hearing",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -4049,10 +4198,11 @@
             "fr": {
                 "hs_path": "audition",
                 "hs_name": "Audition",
+                "sub_head": "Pour inclure tout le monde, faites attention aux id\u00e9es re\u00e7ues et aux pr\u00e9jug\u00e9s sur les personnes sourdes et malentendantes.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/handicap\/audition",
                 "is_active": "1",
                 "short_explanation": "Entretient des id\u00e9es d\u00e9pass\u00e9es sur la surdit\u00e9",
-                "sub_head": "",
+                "sort_internal": "hearing",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -4111,10 +4261,11 @@
             "en": {
                 "hs_path": "gender-cues",
                 "hs_name": "Gender cues",
+                "sub_head": "To show you want all genders to be seen and valued, choose gender-neutral expressions.",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/gender-cues",
                 "is_active": "1",
                 "short_explanation": "Word component provokes a gendered mental image",
-                "sub_head": "To show you want all genders to be seen and valued, choose gender-neutral expressions.",
+                "sort_internal": "hidden_image",
                 "lead_video": "",
                 "lead_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Witty%20Works%20Learning%20Bite%20Angedeutetes%20Gender.png",
@@ -4156,10 +4307,11 @@
             "de": {
                 "hs_path": "angedeutetes-gender",
                 "hs_name": "Angedeutetes Gender",
+                "sub_head": "Um zu zeigen, dass du alle Geschlechter siehst und wertsch\u00e4tzt, w\u00e4hle geschlechtsneutrale Ausdr\u00fccke.",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/angedeutetes-gender",
                 "is_active": "1",
                 "short_explanation": "Wortteil macht andere Geschlechter unsichtbar",
-                "sub_head": "Um zu zeigen, dass du alle Geschlechter siehst und wertsch\u00e4tzt, w\u00e4hle geschlechtsneutrale Ausdr\u00fccke.",
+                "sort_internal": "hidden_image",
                 "lead_video": "",
                 "lead_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Witty%20works%20Learning%20Bite%20Angedeutetes%20Gender%20EN.png",
@@ -4196,10 +4348,11 @@
             "fr": {
                 "hs_path": "expression-genr\u00e9e",
                 "hs_name": "Expression genr\u00e9e",
+                "sub_head": "Pour montrer que vous avez \u00e0 c\u0153ur de repr\u00e9senter tous les genres, uitilisez des expressions non genr\u00e9es.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/expression-genr\u00e9e",
                 "is_active": "1",
                 "short_explanation": "\u00c9voque une repr\u00e9sentation genr\u00e9e",
-                "sub_head": "\u00c9voque une repr\u00e9sentation genr\u00e9e",
+                "sort_internal": "hidden_image",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -4256,10 +4409,11 @@
             "en": {
                 "hs_path": "empty-words",
                 "hs_name": "Empty word",
+                "sub_head": "To connect and engage your audience, avoid empty words and generic messages.",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/empty-words",
                 "is_active": "1",
                 "short_explanation": "It's overused and might distract from your message",
-                "sub_head": "To connect and engage your audience, avoid empty words and generic messages.",
+                "sort_internal": "hollow",
                 "lead_video": "",
                 "lead_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Witty%20Works%20Empty%20words.png",
@@ -4301,17 +4455,13 @@
             "de": {
                 "hs_path": "worth\u00fclsen",
                 "hs_name": "Worth\u00fclsen",
+                "sub_head": "Setze auf konkete Aussagen und Beispiele. Worth\u00fclsen und Phrasen schw\u00e4chen deine Aussage oder lenken von ihr ab. ",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/worth\u00fclsen",
                 "is_active": "1",
                 "short_explanation": "H\u00e4ufig verwendete Floskeln werden oft als nichtssagend empfunden.",
-                "sub_head": "Setze auf konkete Aussagen und Beispiele. Worth\u00fclsen und Phrasen schw\u00e4chen deine Aussage oder lenken von ihr ab. ",
+                "sort_internal": "hollow",
                 "lead_video": "",
-                "lead_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Witty%20Works%20Empty%20words.png",
-                    "width": "900",
-                    "height": "525",
-                    "alt": "Illustration: Eine Person sagt, \"...den Druck rausnehmen und um die Ecke denken.\" Die andere Person sagt \"Klar!\", aber denkt \"Welche Ecke?\"  "
-                },
+                "lead_image": [],
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Worth%C3%BClsen-2.png",
                     "width": "605",
@@ -4346,10 +4496,11 @@
             "fr": {
                 "hs_path": "mot-creux",
                 "hs_name": "Mot creux",
+                "sub_head": "Utilisez des mots et des exemples concrets. Les mots creux brouillent votre message et le rendent moins percutant.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-culturelle\/mot-creux",
                 "is_active": "1",
                 "short_explanation": "Mot galvaud\u00e9 qui brouille votre message",
-                "sub_head": "Mot galvaud\u00e9 qui brouille votre message",
+                "sort_internal": "hollow",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -4398,17 +4549,23 @@
             "en": {
                 "hs_path": "homophobia",
                 "hs_name": "Homophobia",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/homophobia",
                 "is_active": "1",
                 "short_explanation": "Constitutes a homophobic slur",
-                "sub_head": "",
+                "sort_internal": "homophobia",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Homophobia%20.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": "Illustration a person cursing at two people with short hair holding each other."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Homophobia%20.png",
                     "width": "900",
                     "height": "450",
-                    "alt": ""
+                    "alt": "Illustration a person cursing at two people with short hair holding each other."
                 },
                 "example_image_advanced": [],
                 "soft_explanation": "",
@@ -4433,17 +4590,23 @@
             "de": {
                 "hs_path": "homophobie",
                 "hs_name": "Homophobie",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/homophobie",
                 "is_active": "1",
                 "short_explanation": "Stellt eine homophobe Verunglimpfung dar",
-                "sub_head": "",
+                "sort_internal": "homophobia",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Homophobia%20.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": "Illustration einer Person, die zwei Personen mit kurzen Haaren beschimpft, die sich gegenseitig umarmen."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Homophobia%20.png",
                     "width": "900",
                     "height": "450",
-                    "alt": ""
+                    "alt": "Illustration einer Person, die zwei Personen mit kurzen Haaren beschimpft, die sich gegenseitig umarmen."
                 },
                 "example_image_advanced": [],
                 "soft_explanation": "",
@@ -4468,17 +4631,23 @@
             "fr": {
                 "hs_path": "_homophobie",
                 "hs_name": "Homophobie",
+                "sub_head": "Pour soutenir les personnes de tous les genres dans les fonctions de direction, \u00e9vitez les st\u00e9r\u00e9otypes masculins et les hi\u00e9rarchies strictes lorsque vous parlez de leadership.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/_homophobie",
                 "is_active": "1",
                 "short_explanation": "Constitue une insulte homophobe",
-                "sub_head": "Constitue une insulte homophobe",
+                "sort_internal": "homophobia",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Homophobia%20.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": "Illustration d'une personne maudissant deux personnes aux cheveux courts se tenant l'une l'autre."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Homophobia%20.png",
                     "width": "900",
                     "height": "450",
-                    "alt": ""
+                    "alt": "Illustration d'une personne maudissant deux personnes aux cheveux courts se tenant l'une l'autre."
                 },
                 "example_image_advanced": [],
                 "soft_explanation": "",
@@ -4526,15 +4695,16 @@
             "en": {
                 "hs_path": "traditional-leadership",
                 "hs_name": "Traditional leadership",
+                "sub_head": "To support all gender identities in leading roles, avoid masculine stereotypes and rigid hierarchies when discussing leadership.",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/traditional-leadership",
                 "is_active": "1",
                 "short_explanation": "Repeats outdated ideas about leading",
-                "sub_head": "To support all gender identities in leading roles, avoid masculine stereotypes and rigid hierarchies when discussing leadership.",
+                "sort_internal": "leadership",
                 "lead_video": "",
                 "lead_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/diverse%20groupe%20.png",
+                    "src": "https:\/\/www.witty.works\/hubfs\/diversity-and-inclusion.png",
                     "width": "900",
-                    "height": "450",
+                    "height": "525",
                     "alt": "Illustration of a diverse group with 5 people of different ages, body shapes and ethnic background"
                 },
                 "example_image": {
@@ -4571,10 +4741,11 @@
             "de": {
                 "hs_path": "f\u00fchrungsbild",
                 "hs_name": "F\u00fchrungsbild",
+                "sub_head": "Um alle Geschlechteridentit\u00e4ten in F\u00fchrungsrollen zu unterst\u00fctzen, vermeide m\u00e4nnliche Stereotypen und starre Hierarchien, wenn du \u00fcber F\u00fchrung sprichst",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/f\u00fchrungsbild",
                 "is_active": "1",
                 "short_explanation": "Bedient altmodisches Konzept von F\u00fchrung",
-                "sub_head": "Um alle Geschlechteridentit\u00e4ten in F\u00fchrungsrollen zu unterst\u00fctzen, vermeide m\u00e4nnliche Stereotypen und starre Hierarchien, wenn du \u00fcber F\u00fchrung sprichst",
+                "sort_internal": "leadership",
                 "lead_video": "",
                 "lead_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/diversity-and-inclusion.png",
@@ -4616,12 +4787,18 @@
             "fr": {
                 "hs_path": "leadership-traditionnel",
                 "hs_name": "Leadership traditionnel",
+                "sub_head": "Pour soutenir les personnes de tous les genres dans les fonctions de direction, \u00e9vitez les st\u00e9r\u00e9otypes masculins et les hi\u00e9rarchies strictes lorsque vous parlez de leadership.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/leadership-traditionnel",
                 "is_active": "1",
                 "short_explanation": "Entretient des id\u00e9es d\u00e9pass\u00e9es sur le leadership",
-                "sub_head": "Entretient des id\u00e9es d\u00e9pass\u00e9es sur le leadership",
+                "sort_internal": "leadership",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/diversity-and-inclusion.png",
+                    "width": "900",
+                    "height": "525",
+                    "alt": "Illustration d'un groupe diversifi\u00e9 compos\u00e9 de 5 personnes d'\u00e2ges, de morphologies et d'origines ethniques diff\u00e9rents."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Leadership%20traditionnel.png",
                     "width": "605",
@@ -4687,10 +4864,11 @@
             "en": {
                 "hs_path": "male-stereotype",
                 "hs_name": "Male stereotype",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/male-stereotype",
                 "is_active": "1",
                 "short_explanation": "Limits men to traditional roles and behaviors",
-                "sub_head": "",
+                "sort_internal": "male_stereotype",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -4727,10 +4905,11 @@
             "de": {
                 "hs_path": "m\u00e4nnerklischee",
                 "hs_name": "M\u00e4nnerklischee",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/m\u00e4nnerklischee",
                 "is_active": "1",
                 "short_explanation": "Reduziert M\u00e4nner auf traditionelle Rollenbilder",
-                "sub_head": "",
+                "sort_internal": "male_stereotype",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -4767,10 +4946,11 @@
             "fr": {
                 "hs_path": "st\u00e9r\u00e9otype-masculin",
                 "hs_name": "St\u00e9r\u00e9otype masculin",
+                "sub_head": "Enferme les hommes dans des st\u00e9r\u00e9otypes d\u00e9pass\u00e9s. Ces st\u00e9r\u00e9otypes les emp\u00eachent de d\u00e9velopper pleinement leur potentiel, en fonction de leurs propres souhaits, talents et comp\u00e9tences.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/st\u00e9r\u00e9otype-masculin",
                 "is_active": "1",
                 "short_explanation": "Rel\u00e8gue les hommes \u00e0 des r\u00f4les et comportements traditionnels",
-                "sub_head": "Rel\u00e8gue les hommes \u00e0 des r\u00f4les et comportements traditionnels",
+                "sort_internal": "male_stereotype",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -4824,10 +5004,11 @@
             "en": {
                 "hs_path": "medical-state",
                 "hs_name": "Medical state",
+                "sub_head": "Help prevent the stigmatization of people with diseases: Avoid referring to them by their health status, and don't infer how and why they contracted, or are not recovering from, a disease.",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/medical-state",
                 "is_active": "1",
                 "short_explanation": "Repeats ableist ideas about health, illness, and wellbeing",
-                "sub_head": "Help prevent the stigmatization of people with diseases: Avoid referring to them by their health status, and don't infer how and why they contracted, or are not recovering from, a disease.",
+                "sort_internal": "medical_state",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -4864,10 +5045,11 @@
             "de": {
                 "hs_path": "gesundheitsbild",
                 "hs_name": "Gesundheitsbild",
+                "sub_head": "Setz dich gegen die Stigmatisierung von Menschen mit Krankheiten ein: Reduziere sie nicht auf ihre Krankheit, und verzichte auf Theorien, wie und warum sie krank wurden oder warum sie nicht genesen.",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/gesundheitsbild",
                 "is_active": "1",
                 "short_explanation": "Bedient Stereotypen von Gesundheit und Krankheit",
-                "sub_head": "Setz dich gegen die Stigmatisierung von Menschen mit Krankheiten ein: Reduziere sie nicht auf ihre Krankheit, und verzichte auf Theorien, wie und warum sie krank wurden oder warum sie nicht genesen.",
+                "sort_internal": "medical_state",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -4904,10 +5086,11 @@
             "fr": {
                 "hs_path": "\u00e9tat-de-sant\u00e9",
                 "hs_name": "\u00c9tat de sant\u00e9",
+                "sub_head": "Pour pr\u00e9venir la stigmatisation des personnes malades, \u00e9vitez de les d\u00e9signer par leur \u00e9tat de sant\u00e9 et de d\u00e9duire la mani\u00e8re dont elles ont contract\u00e9 leur maladie et ce pour quoi elles n'en gu\u00e9rissent pas.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/handicap\/\u00e9tat-de-sant\u00e9",
                 "is_active": "1",
                 "short_explanation": "Entretient des id\u00e9es validistes sur l'\u00e9tat de sant\u00e9 et le bien-\u00eatre",
-                "sub_head": "",
+                "sort_internal": "medical_state",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -4961,10 +5144,11 @@
             "en": {
                 "hs_path": "mental-wellbeing",
                 "hs_name": "Mental wellbeing",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/mental-wellbeing",
                 "is_active": "1",
                 "short_explanation": "Repeats outdated ideas about mental health and wellbeing",
-                "sub_head": "",
+                "sort_internal": "mental_wellbeing",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -5001,10 +5185,11 @@
             "de": {
                 "hs_path": "mentales-wohlbefinden",
                 "hs_name": "Mentales Wohlbefinden",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/mentales-wohlbefinden",
                 "is_active": "1",
                 "short_explanation": "Bedient \u00fcberholte Vorstellungen von mentaler Gesundheit oder Wohlbefinden",
-                "sub_head": "",
+                "sort_internal": "mental_wellbeing",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -5041,10 +5226,11 @@
             "fr": {
                 "hs_path": "sant\u00e9-mentale",
                 "hs_name": "Sant\u00e9 mentale",
+                "sub_head": "L'utilisation de mots li\u00e9s \u00e0 la sant\u00e9 mentale de mani\u00e8re d\u00e9sinvolte et avec des connotations n\u00e9gatives peut \u00eatre blessante et p\u00e9nible pour les personnes qui s'investissent dans la gestion de leur bien-\u00eatre mental et pour les personnes qui vivent avec un handicap invisible. Traiter la sant\u00e9 mentale comme une blague, une m\u00e9taphore ou un euph\u00e9misme et faire des suppositions sur ce que c'est que d'avoir des probl\u00e8mes de sant\u00e9 mentale permet aux autres d'int\u00e9rioriser la stigmatisation de la sant\u00e9 mentale.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/handicap\/sant\u00e9-mentale",
                 "is_active": "1",
                 "short_explanation": "Entretient des id\u00e9es d\u00e9pass\u00e9es sur la sant\u00e9 mentale et le bien-\u00eatre",
-                "sub_head": "",
+                "sort_internal": "mental_wellbeing",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -5098,10 +5284,11 @@
             "en": {
                 "hs_path": "migration-background",
                 "hs_name": "Migration background",
+                "sub_head": "Frame your ideas as if you were speaking to or about someone with your own cultural background.",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/migration-background",
                 "is_active": "1",
                 "short_explanation": "Feeds bias against people with an international biography",
-                "sub_head": "Frame your ideas as if you were speaking to or about someone with your own cultural background.",
+                "sort_internal": "migration",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -5138,10 +5325,11 @@
             "de": {
                 "hs_path": "migrationshintergrund",
                 "hs_name": "Migrationshintergrund",
+                "sub_head": "Formuliere deine Ideen so, als ob du mit oder \u00fcber jemanden mit deinem eigenen kulturellen Hintergrund sprechen w\u00fcrdest.",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/migrationshintergrund",
                 "is_active": "1",
                 "short_explanation": "N\u00e4hrt Klischees \u00fcber Menschen mit internationaler Biografie",
-                "sub_head": "Formuliere deine Ideen so, als ob du mit oder \u00fcber jemanden mit deinem eigenen kulturellen Hintergrund sprechen w\u00fcrdest.",
+                "sort_internal": "migration",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -5178,10 +5366,11 @@
             "fr": {
                 "hs_path": "immigration",
                 "hs_name": "Immigration",
+                "sub_head": "Formulez vos id\u00e9es comme si vous parliez avec ou \u00e0 propos de personnes de votre milieu culturel.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-culturelle\/immigration",
                 "is_active": "1",
                 "short_explanation": "Entretient des pr\u00e9jug\u00e9s sur les personnes issues de l'immigration",
-                "sub_head": "Entretient des pr\u00e9jug\u00e9s sur les personnes issues de l'immigration",
+                "sort_internal": "migration",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -5235,10 +5424,11 @@
             "en": {
                 "hs_path": "military-inspired-lingo",
                 "hs_name": "Military-inspired lingo",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/social-motive\/military-inspired-lingo",
                 "is_active": "1",
                 "short_explanation": "Reframes the business landscape as a theater of war",
-                "sub_head": "",
+                "sort_internal": "military_source",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -5275,10 +5465,11 @@
             "de": {
                 "hs_path": "milit\u00e4risch-inspirierter-jargon",
                 "hs_name": "Milit\u00e4risch-inspirierter Jargon",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/soziale-motivation\/milit\u00e4risch-inspirierter-jargon",
                 "is_active": "1",
                 "short_explanation": "Inszeniert den Berufsalltag als Kriegsschauplatz",
-                "sub_head": "",
+                "sort_internal": "military_source",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -5315,10 +5506,11 @@
             "fr": {
                 "hs_path": "jargon-militaire",
                 "hs_name": "Jargon militaire",
+                "sub_head": "Un jargon d'inspiration militaire fait partie de la communication d'entreprise dans de nombreuses organisations. Bien que de nombreux termes utilis\u00e9s dans le monde des affaires s'inspirent davantage des films de guerre que de la r\u00e9alit\u00e9 de la vie militaire, ce jargon est associ\u00e9 \u00e0 un environnement historiquement presque exclusivement masculin. En tant que tel, il perp\u00e9tue une culture de la masculinit\u00e9 qui emp\u00eache subtilement les femmes de participer aux conversations sur le lieu de travail.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/motivation-sociale\/jargon-militaire",
                 "is_active": "1",
                 "short_explanation": "Compare le contexte professionnel \u00e0 un contexte de guerre",
-                "sub_head": "",
+                "sort_internal": "military_source",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -5372,10 +5564,11 @@
             "en": {
                 "hs_path": "mobility",
                 "hs_name": "Mobility",
+                "sub_head": "Include people navigating mobility barriers by avoiding language that equates value with movement or makes assumptions about a person with disabilities.",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/mobility",
                 "is_active": "1",
                 "short_explanation": "Repeats preconceived ideas about motion or movement skills",
-                "sub_head": "Include people navigating mobility barriers by avoiding language that equates value with movement or makes assumptions about a person with disabilities.",
+                "sort_internal": "mobility",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -5412,10 +5605,11 @@
             "de": {
                 "hs_path": "mobilit\u00e4t",
                 "hs_name": "Mobilit\u00e4t",
+                "sub_head": "Beziehe alle, ungeachtet ihrer Mobilit\u00e4t, ein, indem du auf Formulierungen verzichtest, die Wert mit Bewegungsf\u00e4higkeit gleichsetzen oder Klischees \u00fcber Leben oder Eigenschaften von Menschen mit einer Behinderung verbreiten.",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/mobilit\u00e4t",
                 "is_active": "1",
                 "short_explanation": "N\u00e4hrt Klischees \u00fcber Beweglichkeit oder Bewegungsf\u00e4higkeit",
-                "sub_head": "Beziehe alle, ungeachtet ihrer Mobilit\u00e4t, ein, indem du auf Formulierungen verzichtest, die Wert mit Bewegungsf\u00e4higkeit gleichsetzen oder Klischees \u00fcber Leben oder Eigenschaften von Menschen mit einer Behinderung verbreiten.",
+                "sort_internal": "mobility",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -5452,10 +5646,11 @@
             "fr": {
                 "hs_path": "mobilit\u00e9",
                 "hs_name": "Mobilit\u00e9",
+                "sub_head": "\u00c9vitez les formulations qui associent la valeur d'une personne \u00e0 sa mobilit\u00e9 ou qui v\u00e9hiculent des pr\u00e9jug\u00e9s sur les personnes ayant un handicap.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/handicap\/mobilit\u00e9",
                 "is_active": "1",
                 "short_explanation": "Entretient des pr\u00e9jug\u00e9s sur la mobilit\u00e9",
-                "sub_head": "",
+                "sort_internal": "mobility",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -5509,10 +5704,11 @@
             "en": {
                 "hs_path": "nazi-language",
                 "hs_name": "Nazi Language",
+                "sub_head": "Steer clear of using Nazi vocabulary to avoid coming across as a sympathizer or as trivializing the experience of the people they victimized.",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/nazi-language",
                 "is_active": "1",
                 "short_explanation": "Words and phrases coined or reframed by the Nazi regime to support their ideology",
-                "sub_head": "Steer clear of using Nazi vocabulary to avoid coming across as a sympathizer or as trivializing the experience of the people they victimized.",
+                "sort_internal": "nazi_language",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -5549,10 +5745,11 @@
             "de": {
                 "hs_path": "nazi-sprache",
                 "hs_name": "Sprache des Nazis",
+                "sub_head": "Vermeide Nazi-Vokabular, um nicht als Sympathisant r\u00fcberzukommen, oder als jemand, der die Erfahrungen der vom Regime Verfolgten bagatellisiert.",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/nazi-sprache",
                 "is_active": "1",
                 "short_explanation": "Vom Nazi-Regime gepr\u00e4gte Begriffe zur Verbreitung seiner Ideologie ",
-                "sub_head": "Vermeide Nazi-Vokabular, um nicht als Sympathisant r\u00fcberzukommen, oder als jemand, der die Erfahrungen der vom Regime Verfolgten bagatellisiert.",
+                "sort_internal": "nazi_language",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -5589,10 +5786,11 @@
             "fr": {
                 "hs_path": "langage-nazi",
                 "hs_name": "Langage nazi",
+                "sub_head": "Mot utilis\u00e9 par le r\u00e9gime nazi pour promouvoir son id\u00e9ologie",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-culturelle\/langage-nazi",
                 "is_active": "1",
                 "short_explanation": "Mot utilis\u00e9 par le r\u00e9gime nazi pour promouvoir son id\u00e9ologie",
-                "sub_head": "Mot utilis\u00e9 par le r\u00e9gime nazi pour promouvoir son id\u00e9ologie",
+                "sort_internal": "nazi_language",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -5646,10 +5844,11 @@
             "en": {
                 "hs_path": "offensive-language",
                 "hs_name": "Offensive language",
+                "sub_head": "Don't use foul language. Using offensive language can be subject to legal \u2013 or disciplinary \u2013 action.",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/social-motive\/offensive-language",
                 "is_active": "1",
                 "short_explanation": "Language that hurts, offends, and intimidates",
-                "sub_head": "Don't use foul language. Using offensive language can be subject to legal \u2013 or disciplinary \u2013 action.",
+                "sort_internal": "offensive_language",
                 "lead_video": "",
                 "lead_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Witty%20Works%20Learning%20bites%20Offensive%20Language%20(1000%20%C3%97%20562%20px)%20(1).png",
@@ -5686,10 +5885,11 @@
             "de": {
                 "hs_path": "beleidigende-und-verletzende-sprache",
                 "hs_name": "Beleidigende und verletzende Sprache",
+                "sub_head": "Verzichte auf Kraftausdr\u00fccke, anst\u00f6\u00dfige Sprache und Beleidigungen. Sie k\u00f6nnen rechtliche oder disziplinarische Ma\u00dfnahmen nach sich ziehen.",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/soziale-motivation\/beleidigende-und-verletzende-sprache",
                 "is_active": "1",
                 "short_explanation": "Verletzt und sch\u00fcchtert ein",
-                "sub_head": "Verzichte auf Kraftausdr\u00fccke, anst\u00f6\u00dfige Sprache und Beleidigungen. Sie k\u00f6nnen rechtliche oder disziplinarische Ma\u00dfnahmen nach sich ziehen.",
+                "sort_internal": "offensive_language",
                 "lead_video": "",
                 "lead_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Witty%20Works%20Learning%20bites%20Offensive%20Language%20(1000%20%C3%97%20562%20px)%20(1).png",
@@ -5726,12 +5926,18 @@
             "fr": {
                 "hs_path": "propos-injurieux",
                 "hs_name": "Propos injurieux",
+                "sub_head": "\u00c9vitez les mots vulgaires et les insultes, qui peuvent donner lieu \u00e0 des sanctions disciplinaires ou des poursuites en justice.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/motivation-sociale\/propos-injurieux",
                 "is_active": "1",
                 "short_explanation": "Propos blessants, insultants et mena\u00e7ants",
-                "sub_head": "",
+                "sort_internal": "offensive_language",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Witty%20Works%20Learning%20bites%20Offensive%20Language%20(1000%20%C3%97%20562%20px)%20(1).png",
+                    "width": "875",
+                    "height": "492",
+                    "alt": "Illustration: Une personne jure \u00e0 voix haute dans son t\u00e9l\u00e9phone portable. Deux personnes se tiennent \u00e0 c\u00f4t\u00e9, inexpressives, avec des points d'interrogation dans une bulle de r\u00e9flexion commune."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/illustration%20of%20angry%20people.png",
                     "width": "900",
@@ -5778,10 +5984,11 @@
             "en": {
                 "hs_path": "physicality",
                 "hs_name": "Physicality",
+                "sub_head": "To help make everyone around you feel at ease about their body and appearance, avoid drawing attention to, or identifying people by, physical attributes.",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/physicality",
                 "is_active": "1",
                 "short_explanation": "Implies appearance or looks determine a person's value ",
-                "sub_head": "To help make everyone around you feel at ease about their body and appearance, avoid drawing attention to, or identifying people by, physical attributes.",
+                "sort_internal": "physicality",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -5818,10 +6025,11 @@
             "de": {
                 "hs_path": "k\u00f6rperlichkeit",
                 "hs_name": "K\u00f6rperlichkeit",
+                "sub_head": "Hilf allen in deiner Umgebung, sich mit ihrem K\u00f6rper und Aussehen wohlf\u00fchlen, indem du ihre k\u00f6rperlichen Merkmale ausblendest.",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/k\u00f6rperlichkeit",
                 "is_active": "1",
                 "short_explanation": "Reduziert Menschen auf \u00c4u\u00dferlichkeiten",
-                "sub_head": "Hilf allen in deiner Umgebung, sich mit ihrem K\u00f6rper und Aussehen wohlf\u00fchlen, indem du ihre k\u00f6rperlichen Merkmale ausblendest.",
+                "sort_internal": "physicality",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -5858,10 +6066,11 @@
             "fr": {
                 "hs_path": "apparence-physique",
                 "hs_name": "Apparence physique",
+                "sub_head": "Pour que toutes les personnes qui vous entourent soient \u00e0 l'aise avec leur corps et leur apparence physique, \u00e9vitez d'attirer l'attention sur leurs caract\u00e9ristiques physiques ou de les identifier par leur physique.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/handicap\/apparence-physique",
                 "is_active": "1",
                 "short_explanation": "Sous-entend que l'apparence physique d'une personne d\u00e9termine sa valeur",
-                "sub_head": "",
+                "sort_internal": "physicality",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -5919,16 +6128,17 @@
             "en": {
                 "hs_path": "plain-english",
                 "hs_name": "Plain English",
+                "sub_head": "To ensure everyone understands, keep language clear, short, and direct.",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/plain-english",
                 "is_active": "1",
                 "short_explanation": "Helps you avoid mistakes and misunderstandings",
-                "sub_head": "To ensure everyone understands, keep language clear, short, and direct.",
+                "sort_internal": "plain_language",
                 "lead_video": "",
                 "lead_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/plain%20language.png",
                     "width": "900",
                     "height": "525",
-                    "alt": "Illustration of a man and a woman with speech bubbles. One speech bubble shows a tangle of lines. The other speech bubble show a neatly roled up line "
+                    "alt": "Illustration of a two people with speech bubbles. One speech bubble shows a tangle of lines. The other speech bubble shows a neatly rolled up line."
                 },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Plain%20English-2.png",
@@ -5964,12 +6174,18 @@
             "de": {
                 "hs_path": "leichte-sprache",
                 "hs_name": "Leichte Sprache",
+                "sub_head": "Um sicherzugehen, dass dich alle verstehen, dr\u00fcck dich klar, kurz und direkt.",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/leichte-sprache",
                 "is_active": "1",
                 "short_explanation": "Kurze und klare Sprache beugt Fehlern und Missverst\u00e4ndnissen vor",
-                "sub_head": "Um sicherzugehen, dass dich alle verstehen, dr\u00fcck dich klar, kurz und direkt.",
+                "sort_internal": "plain_language",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/plain%20language.png",
+                    "width": "900",
+                    "height": "525",
+                    "alt": "Illustration von zwei Personen mit Sprechblasen. Eine Sprechblase zeigt ein Gewirr von Linien. Die andere Sprechblase zeigt eine sauber aufgerollte Linie."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Leichte%20Sprache-1.png",
                     "width": "605",
@@ -6004,12 +6220,18 @@
             "fr": {
                 "hs_path": "langage-clair",
                 "hs_name": "Langage clair",
+                "sub_head": "Exprimez-vous de mani\u00e8re claire, concise et directe pour que votre message soit compris du plus grand nombre.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-culturelle\/langage-clair",
                 "is_active": "1",
                 "short_explanation": "\u00c9vite les erreurs et les malentendus",
-                "sub_head": "\u00c9vite les erreurs et les malentendus",
+                "sort_internal": "plain_language",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/plain%20language.png",
+                    "width": "900",
+                    "height": "525",
+                    "alt": "Illustration de deux personnes avec des bulles de texte. L'une des bulles montre un enchev\u00eatrement de lignes. L'autre bulle montre une ligne soigneusement enroul\u00e9e."
+                },
                 "example_image": [],
                 "example_image_advanced": [],
                 "soft_explanation": "",
@@ -6051,17 +6273,23 @@
             "en": {
                 "hs_path": "racism",
                 "hs_name": "Racism",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/racism",
                 "is_active": "1",
                 "short_explanation": "Constitutes a racist slur ",
-                "sub_head": "",
+                "sort_internal": "racism",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/racism.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": "Illustration of a people cursing at a person of color."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/racism.png",
                     "width": "900",
                     "height": "450",
-                    "alt": ""
+                    "alt": "Illustration of a people cursing at a person of color."
                 },
                 "example_image_advanced": [],
                 "soft_explanation": "",
@@ -6086,17 +6314,23 @@
             "de": {
                 "hs_path": "rassismus",
                 "hs_name": "Rassismus",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/rassismus",
                 "is_active": "1",
                 "short_explanation": "F\u00e4llt unter rassistische Verunglimpfungen",
-                "sub_head": "",
+                "sort_internal": "racism",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/racism.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": "Illustration eines Menschen, der eine Person of Color beschimpft."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/racism.png",
                     "width": "900",
                     "height": "450",
-                    "alt": ""
+                    "alt": "Illustration eines Menschen, der eine Person of Color beschimpft."
                 },
                 "example_image_advanced": [],
                 "soft_explanation": "",
@@ -6121,17 +6355,23 @@
             "fr": {
                 "hs_path": "racisme",
                 "hs_name": "Racisme",
+                "sub_head": "Constitue une insulte raciste",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-culturelle\/racisme",
                 "is_active": "1",
                 "short_explanation": "A un sous-entendu raciste ou colonialiste",
-                "sub_head": "A un sous-entendu raciste ou colonialiste",
+                "sort_internal": "racism",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/racism.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": "Illustration d'une personne injuriant une personne de couleur."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/racism.png",
                     "width": "900",
                     "height": "450",
-                    "alt": ""
+                    "alt": "Illustration d'une personne injuriant une personne de couleur."
                 },
                 "example_image_advanced": [],
                 "soft_explanation": "",
@@ -6173,10 +6413,11 @@
             "en": {
                 "hs_path": "ancestry",
                 "hs_name": "Ancestry",
+                "sub_head": "To make everyone around you feel psychologically safe, respected, engaged, and valued, avoid language that others and devalues people based on their ancestry or ethnic background.",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/ancestry",
                 "is_active": "1",
                 "short_explanation": "Has a racist or colonialist undertone",
-                "sub_head": "To make everyone around you feel psychologically safe, respected, engaged, and valued, avoid language that others and devalues people based on their ancestry or ethnic background.",
+                "sort_internal": "racist_source",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -6213,10 +6454,11 @@
             "de": {
                 "hs_path": "abstammung",
                 "hs_name": "Abstammung",
+                "sub_head": "Damit sich alle in deinem Umfeld sicher, respektiert, engagiert und wertgesch\u00e4tzt f\u00fchlen, vermeide Sprache, die Menschen aufgrund ihrer Herkunft bewertet oder als anders definiert.",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/abstammung",
                 "is_active": "1",
                 "short_explanation": "Hat rassistische Hintergr\u00fcnde oder Konnotationen  ",
-                "sub_head": "Damit sich alle in deinem Umfeld sicher, respektiert, engagiert und wertgesch\u00e4tzt f\u00fchlen, vermeide Sprache, die Menschen aufgrund ihrer Herkunft bewertet oder als anders definiert.",
+                "sort_internal": "racist_source",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -6248,10 +6490,11 @@
             "fr": {
                 "hs_path": "origines",
                 "hs_name": "Origines",
+                "sub_head": "Pour que les personnes qui vous entourent se sentent respect\u00e9es, int\u00e9gr\u00e9es, valoris\u00e9es et en s\u00e9curit\u00e9 sur le plan psychologique, \u00e9vitez les mots qui stigmatisent et d\u00e9valorisent les personnes sur la base de leurs origines.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-culturelle\/origines",
                 "is_active": "1",
                 "short_explanation": "A un sous-entendu raciste ou colonialiste",
-                "sub_head": "A un sous-entendu raciste ou colonialiste",
+                "sort_internal": "racist_source",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -6305,17 +6548,23 @@
             "en": {
                 "hs_path": "sexism",
                 "hs_name": "Sexism",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/sexism",
                 "is_active": "1",
                 "short_explanation": "Constitutes a sexist slur",
-                "sub_head": "",
+                "sort_internal": "sexism",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/sexism-1.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": "Illustration of a people cursing at a person wearing a skirt."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/sexism.png",
                     "width": "900",
                     "height": "450",
-                    "alt": ""
+                    "alt": "Illustration of a people cursing at a person wearing a skirt."
                 },
                 "example_image_advanced": [],
                 "soft_explanation": "",
@@ -6340,17 +6589,23 @@
             "de": {
                 "hs_path": "sexismus",
                 "hs_name": "Sexismus",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/sexismus",
                 "is_active": "1",
                 "short_explanation": "F\u00e4llt unter sexistische Verunglimpfungen",
-                "sub_head": "",
+                "sort_internal": "sexism",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/sexism-1.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": "Illustration einer Person, die eine Person, die einen Rock tr\u00e4gt, beschimpft."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/sexism-1.png",
                     "width": "900",
                     "height": "450",
-                    "alt": ""
+                    "alt": "Illustration einer Person, die eine Person, die einen Rock tr\u00e4gt, beschimpft."
                 },
                 "example_image_advanced": [],
                 "soft_explanation": "",
@@ -6375,17 +6630,23 @@
             "fr": {
                 "hs_path": "sexisme",
                 "hs_name": "Sexisme",
+                "sub_head": "\u00c9crivez-vous cette expression \u00e0 dessein ou en disant \u00ab c'est juste une blague \u00bb ? Essayez de vous mettre \u00e0 la place d'une femme : Cette expression est extr\u00eamement offensante pour elles car elle les diffame en tant qu'\u00eatres humains en raison de leur sexe. Son utilisation a des cons\u00e9quences pour l'ensemble du groupe social, car elle cr\u00e9e ou renforce les pr\u00e9jug\u00e9s \u00e0 l'encontre des femmes.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/sexisme",
                 "is_active": "1",
                 "short_explanation": "Constitue une insulte sexiste",
-                "sub_head": "Constitue une insulte sexiste",
+                "sort_internal": "sexism",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/sexism-1.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": "Illustration d'une personne maudissant une personne portant une jupe."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/sexism-1.png",
                     "width": "900",
                     "height": "450",
-                    "alt": ""
+                    "alt": "Illustration d'une personne maudissant une personne portant une jupe."
                 },
                 "example_image_advanced": [],
                 "soft_explanation": "",
@@ -6427,10 +6688,11 @@
             "en": {
                 "hs_path": "sexual-orientation",
                 "hs_name": "Sexual orientation",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/sexual-orientation",
                 "is_active": "1",
                 "short_explanation": "Promotes a heterosexual value system and roles",
-                "sub_head": "",
+                "sort_internal": "sexual_orientation",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -6467,10 +6729,11 @@
             "de": {
                 "hs_path": "sexuelle-orientierung",
                 "hs_name": "Sexuelle Orientierung",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/sexuelle-orientierung",
                 "is_active": "1",
                 "short_explanation": "Vermittelt ein heterosexuelles Werte- und Rollen-System",
-                "sub_head": "",
+                "sort_internal": "sexual_orientation",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -6507,10 +6770,11 @@
             "fr": {
                 "hs_path": "orientation-sexuelle",
                 "hs_name": "Orientation sexuelle",
+                "sub_head": "Une conception d\u00e9pass\u00e9e, voire discriminatoire, de l'orientation sexuelle, qui enferme les personnes LGBTQIA+ et fait de l'h\u00e9t\u00e9rosexualit\u00e9 la norme.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/orientation-sexuelle",
                 "is_active": "1",
                 "short_explanation": "Promeut un syst\u00e8me de valeurs et des r\u00f4les h\u00e9t\u00e9rosexuels",
-                "sub_head": "Promeut un syst\u00e8me de valeurs et des r\u00f4les h\u00e9t\u00e9rosexuels",
+                "sort_internal": "sexual_orientation",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -6564,10 +6828,11 @@
             "en": {
                 "hs_path": "speech-ability",
                 "hs_name": "Speech ability",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/speech-ability",
                 "is_active": "1",
                 "short_explanation": "Repeats preconceived notions about the ability to speak",
-                "sub_head": "",
+                "sort_internal": "speech",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -6604,10 +6869,11 @@
             "de": {
                 "hs_path": "sprech-f\u00e4higkeit",
                 "hs_name": "Sprech-F\u00e4higkeit",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/sprech-f\u00e4higkeit",
                 "is_active": "1",
                 "short_explanation": "Bedient Vorurteile und Klischees \u00fcber Sprechf\u00e4higkeit",
-                "sub_head": "",
+                "sort_internal": "speech",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -6644,10 +6910,11 @@
             "fr": {
                 "hs_path": "trouble-de-la-parole",
                 "hs_name": "Trouble de la parole",
+                "sub_head": "Les termes d\u00e9crivant les personnes qui ne parlent pas ou qui vivent avec des troubles de la parole et du langage sont souvent \u00e9troitement li\u00e9s \u00e0 des st\u00e9r\u00e9otypes n\u00e9gatifs et \u00e0 des suppositions erron\u00e9es. ",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/handicap\/trouble-de-la-parole",
                 "is_active": "1",
                 "short_explanation": "Entretient des pr\u00e9jug\u00e9s sur les troubles de la parole",
-                "sub_head": "",
+                "sort_internal": "speech",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": [],
@@ -6691,10 +6958,11 @@
             "en": {
                 "hs_path": "sports-terms",
                 "hs_name": "Sports terms",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/social-motive\/sports-terms",
                 "is_active": "1",
                 "short_explanation": "Shuts out people not into this sport; overemphasizes competitiveness",
-                "sub_head": "",
+                "sort_internal": "sports_terms",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -6731,10 +6999,11 @@
             "de": {
                 "hs_path": "sport-jargon",
                 "hs_name": "Sport Jargon",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/soziale-motivation\/sport-jargon",
                 "is_active": "1",
                 "short_explanation": "Reduziert auf den Wettbewerbsaspekt; f\u00fcr Nicht-Sportinteressierte unverst\u00e4ndlich",
-                "sub_head": "",
+                "sort_internal": "sports_terms",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -6771,10 +7040,11 @@
             "fr": {
                 "hs_path": "termes-sportifs",
                 "hs_name": "Termes sportifs",
+                "sub_head": "Les m\u00e9taphores tir\u00e9es du monde du sport sont devenues un pilier de la communication d'entreprise, en particulier dans les messages visant \u00e0 motiver. Le fait de pr\u00e9senter les interactions professionnelles comme un sport met souvent trop l'accent sur leur aspect comp\u00e9titif. Si ce style de communication peut trouver un \u00e9cho aupr\u00e8s des personnes qui partagent votre amour du sport, d'autres peuvent avoir l'impression que vous banalisez la complexit\u00e9 des affaires ou que vous n'accordez pas d'importance \u00e0 un \u00e9tat d'esprit plus collaboratif.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/motivation-sociale\/termes-sportifs",
                 "is_active": "1",
                 "short_explanation": "Exclut les personnes qui ne pratiquent pas ce sport et met trop en avant l'esprit de comp\u00e9tition",
-                "sub_head": "",
+                "sort_internal": "sports_terms",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -6833,10 +7103,11 @@
             "en": {
                 "hs_path": "jobs",
                 "hs_name": "Job Titles",
+                "sub_head": "To reach out to all genders, use gender-inclusive options to describe how someone contributes to a company\u2019s mission.",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/jobs",
                 "is_active": "1",
                 "short_explanation": "Generally provokes a mental image of men",
-                "sub_head": "To reach out to all genders, use gender-inclusive options to describe how someone contributes to a company\u2019s mission.",
+                "sort_internal": "titles",
                 "lead_video": "",
                 "lead_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/wittyworks%20learning%20bite%20Berufe.png",
@@ -6878,10 +7149,11 @@
             "de": {
                 "hs_path": "berufe",
                 "hs_name": "Berufstitel",
+                "sub_head": "Rege Lesende an, alle Geschlechter mitzudenken",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/berufe",
                 "is_active": "1",
                 "short_explanation": "Viele denken zuerst an ein bestimmtes Geschlecht",
-                "sub_head": "Rege Lesende an, alle Geschlechter mitzudenken",
+                "sort_internal": "titles",
                 "lead_video": "",
                 "lead_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/wittyworks%20learning%20bite%20Berufe.png",
@@ -6923,12 +7195,18 @@
             "fr": {
                 "hs_path": "nom-de-m\u00e9tier",
                 "hs_name": "Nom de m\u00e9tier",
+                "sub_head": "Pour d\u00e9signer des personnes de tous les genres dans les diff\u00e9rentes fonctions, utilisez un langage inclusif.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/nom-de-m\u00e9tier",
                 "is_active": "1",
                 "short_explanation": "Fait g\u00e9n\u00e9ralement penser \u00e0 des hommes",
-                "sub_head": "Fait g\u00e9n\u00e9ralement penser \u00e0 des hommes",
+                "sort_internal": "titles",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/wittyworks%20learning%20bite%20Berufe.png",
+                    "width": "900",
+                    "height": "525",
+                    "alt": "Illustration de paires d'hommes et de femmes astronautes, artistes, soignants, professeurs, ouvriers du b\u00e2timent."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Nom%20de%20m%C3%A9tier.png",
                     "width": "605",
@@ -6975,17 +7253,23 @@
             "en": {
                 "hs_path": "transphobia",
                 "hs_name": "Transphobia",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/gender-orientation\/transphobia",
                 "is_active": "1",
                 "short_explanation": "Constitutes a trans hostile slur",
-                "sub_head": "",
+                "sort_internal": "transphobia",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Transphobia-1.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": "Illustration of a person cursing at a person wearing a shirt and short hair."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Transphobia.png",
                     "width": "900",
                     "height": "450",
-                    "alt": ""
+                    "alt": "Illustration of a person cursing at a person wearing a shirt and short hair."
                 },
                 "example_image_advanced": [],
                 "soft_explanation": "",
@@ -7010,17 +7294,23 @@
             "de": {
                 "hs_path": "transphobie",
                 "hs_name": "Transphobie",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/geschlecht-orientierung\/transphobie",
                 "is_active": "1",
                 "short_explanation": "Stellt eine transfeindliche Verunglimpfung dar",
-                "sub_head": "",
+                "sort_internal": "transphobia",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Transphobia-1.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": "Illustration einer Person, die eine Person mit einem Hemd und kurzen Haaren beschimpft."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Transphobia-1.png",
                     "width": "900",
                     "height": "450",
-                    "alt": ""
+                    "alt": "Illustration einer Person, die eine Person mit einem Hemd und kurzen Haaren beschimpft."
                 },
                 "example_image_advanced": [],
                 "soft_explanation": "",
@@ -7045,17 +7335,23 @@
             "fr": {
                 "hs_path": "_transphobie",
                 "hs_name": "Transphobie",
+                "sub_head": "Constitue une insulte transphobe",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/genre-orientation-sexuelle\/_transphobie",
                 "is_active": "1",
                 "short_explanation": "Constitue une insulte transphobe",
-                "sub_head": "Constitue une insulte transphobe",
+                "sort_internal": "transphobia",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/Transphobia-1.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": "Illustration d'une personne maudissant une personne portant une chemise et des cheveux courts."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Transphobia-1.png",
                     "width": "900",
                     "height": "450",
-                    "alt": ""
+                    "alt": "Illustration d'une personne maudissant une personne portant une chemise et des cheveux courts."
                 },
                 "example_image_advanced": [],
                 "soft_explanation": "",
@@ -7097,10 +7393,11 @@
             "en": {
                 "hs_path": "vision",
                 "hs_name": "Vision",
+                "sub_head": "To welcome and include everyone, stay mindful of myths and stereotypes about the ability to see.",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/ability-physicality\/vision",
                 "is_active": "1",
                 "short_explanation": "Repeats preconceived notions about the ability to see",
-                "sub_head": "To welcome and include everyone, stay mindful of myths and stereotypes about the ability to see.",
+                "sort_internal": "vision",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -7137,10 +7434,11 @@
             "de": {
                 "hs_path": "seh-f\u00e4higkeit",
                 "hs_name": "Seh-F\u00e4higkeit",
+                "sub_head": "Um alle einzubeziehen, verzichte auf Sprache, die Irrmeinungen und Vorurteile \u00fcber Sehf\u00e4higkeit, verbreitet.",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/f\u00e4higkeiten-erkrankungen-k\u00f6rperlichkeit\/seh-f\u00e4higkeit",
                 "is_active": "1",
                 "short_explanation": "N\u00e4hrt Vorurteile und Klischees \u00fcber Sehf\u00e4higkeit",
-                "sub_head": "Um alle einzubeziehen, verzichte auf Sprache, die Irrmeinungen und Vorurteile \u00fcber Sehf\u00e4higkeit, verbreitet.",
+                "sort_internal": "vision",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -7177,10 +7475,11 @@
             "fr": {
                 "hs_path": "_vision",
                 "hs_name": "Vision",
+                "sub_head": "Pour inclure tout le monde, \u00e9vitez les mots qui v\u00e9hiculent des pr\u00e9jug\u00e9s et des st\u00e9r\u00e9otypes sur les troubles de la vision.",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/handicap\/_vision",
                 "is_active": "1",
                 "short_explanation": "Entretient des pr\u00e9jug\u00e9s sur les troubles de la vision",
-                "sub_head": "",
+                "sort_internal": "vision",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -7234,17 +7533,23 @@
             "en": {
                 "hs_path": "xenophobia",
                 "hs_name": "Xenophobia",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/xenophobia",
                 "is_active": "1",
                 "short_explanation": "Constitutes a xenophobic slur",
-                "sub_head": "",
+                "sort_internal": "xenophobia",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/illustration%20of%20angry%20people.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": "Illustration two people cursing at a person with a beard."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/illustration%20of%20angry%20people.png",
                     "width": "900",
                     "height": "450",
-                    "alt": ""
+                    "alt": "Illustration two people cursing at a person with a beard."
                 },
                 "example_image_advanced": [],
                 "soft_explanation": "",
@@ -7269,17 +7574,23 @@
             "de": {
                 "hs_path": "fremdenfeindlichkeit-xenophobie",
                 "hs_name": "Fremdenfeindlichkeit \/ Xenophobie",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/fremdenfeindlichkeit-xenophobie",
                 "is_active": "1",
                 "short_explanation": "Fremdenfeindlich, xenophob",
-                "sub_head": "",
+                "sort_internal": "xenophobia",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/illustration%20of%20angry%20people.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": "Illustration: Zwei Personen beschimpfen eine Person mit Bart."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/illustration%20of%20angry%20people.png",
                     "width": "900",
                     "height": "450",
-                    "alt": ""
+                    "alt": "Illustration: Zwei Personen beschimpfen eine Person mit Bart."
                 },
                 "example_image_advanced": [],
                 "soft_explanation": "",
@@ -7304,17 +7615,23 @@
             "fr": {
                 "hs_path": "x\u00e9nophobie",
                 "hs_name": "X\u00e9nophobie",
+                "sub_head": "Constitue une insulte x\u00e9nophobe",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-culturelle\/x\u00e9nophobie",
                 "is_active": "1",
                 "short_explanation": "Constitue une insulte x\u00e9nophobe",
-                "sub_head": "Constitue une insulte x\u00e9nophobe",
+                "sort_internal": "xenophobia",
                 "lead_video": "",
-                "lead_image": [],
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/illustration%20of%20angry%20people.png",
+                    "width": "900",
+                    "height": "450",
+                    "alt": "Illustration de deux personnes injuriant une personne portant une barbe."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/illustration%20of%20angry%20people.png",
                     "width": "900",
                     "height": "450",
-                    "alt": ""
+                    "alt": "Illustration de deux personnes injuriant une personne portant une barbe."
                 },
                 "example_image_advanced": [],
                 "soft_explanation": "",
@@ -7356,10 +7673,11 @@
             "en": {
                 "hs_path": "yiddish-pejoratives",
                 "hs_name": "Yiddish Pejoratives",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/en\/categories\/cultural-diversity\/yiddish-pejoratives",
                 "is_active": "1",
                 "short_explanation": "Pejorative reinterpretation of a neutral or positive Yiddish word",
-                "sub_head": "",
+                "sort_internal": "yiddish-pejoratives",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": [],
@@ -7386,10 +7704,11 @@
             "de": {
                 "hs_path": "negative-verwendung-jiddischer-worte",
                 "hs_name": "Negative Verwendung jiddischer Worte",
+                "sub_head": "",
                 "canonical_url": "https:\/\/www.witty.works\/de\/kategorien\/kulturelle-diversit\u00e4t\/negative-verwendung-jiddischer-worte",
                 "is_active": "1",
                 "short_explanation": "Abwertende Umdeutung eines neutralen oder positiven jiddischen Wortes",
-                "sub_head": "",
+                "sort_internal": "yiddish-pejoratives",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": {
@@ -7426,10 +7745,11 @@
             "fr": {
                 "hs_path": "mots-yiddish-p\u00e9joratifs",
                 "hs_name": "Mots yiddish p\u00e9joratifs",
+                "sub_head": "R\u00e9interpr\u00e9tation p\u00e9jorative d'un mot yiddish neutre ou positif",
                 "canonical_url": "https:\/\/www.witty.works\/fr\/categories\/diversit\u00e9-culturelle\/mots-yiddish-p\u00e9joratifs",
                 "is_active": "1",
                 "short_explanation": "R\u00e9interpr\u00e9tation p\u00e9jorative d'un mot yiddish neutre ou positif",
-                "sub_head": "R\u00e9interpr\u00e9tation p\u00e9jorative d'un mot yiddish neutre ou positif",
+                "sort_internal": "yiddish-pejoratives",
                 "lead_video": "",
                 "lead_image": [],
                 "example_image": [],
