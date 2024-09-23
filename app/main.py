@@ -6836,7 +6836,8 @@ async def rule_check(
         start = token.idx
         if lang.lang == LangType.FR:
             word_types = rule.get_word_types()
-            match word_types[0]:
+            first_word_type = word_types[0] if len(word_types) else ""
+            match first_word_type:
                 case WordType.ADJECTIVE:
                     source_noun = None
 
@@ -6873,8 +6874,8 @@ async def rule_check(
                     ):
                         continue
                 case WordType.NOUN:
-                    if get_category_name(subcategory) in ["function", "gender_identity"]:
-                        subcategory_to_find = "function" if is_token_masculine(token) else "gender_identity"
+                    if get_category_name(subcategory) in ["function", "male_stereotype", "gender_identity"]:
+                        subcategory_to_find = ["function", "male_stereotype"] if is_token_masculine(token) else ["gender_identity"]
                         subcategory = None
                         for search_subcategory in rule.subcategories:
                             if get_category_name(search_subcategory) in subcategory_to_find:
