@@ -484,6 +484,25 @@ def fetch_static_rules():
             "ceux": "celleux",
         }
 
+        static_rules[LangType.FR]["gender_neutral_nouns"] = [
+            "nous",
+            "vous",
+            "tu",
+            "personnes",
+            "membres",
+            "collègues",
+            "individus",
+            "volontaires",
+            "cadres",
+            "gestionnaires",
+            "partenaires",
+            "actionnaires",
+            "stagiaires",
+            "responsables",
+            "spécialistes",
+            "prestataires",
+        ]
+
     if LangType.DE in langs:
         rule = Rule(
             "#zumbeispiel",

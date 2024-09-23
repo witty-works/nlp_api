@@ -3190,7 +3190,7 @@ async def fetch_rules(
         query += " AND is_hr_rule = 0"
 
     filter_list = " OR ".join(filters.keys())
-    query += f" AND ({filter_list}) ORDER BY lemma_length DESC, first_is_word_type_lemmatize ASC"
+    query += f" AND ({filter_list}) ORDER BY lemma_length DESC, first_word_type DESC, first_is_word_type_lemmatize ASC"
     parameters = [lang, RuleType.SUFFIX if suffix_check else RuleType.DEFAULT] + list(
         filters.values()
     )
@@ -6835,13 +6835,42 @@ async def rule_check(
 
         start = token.idx
         if lang.lang == LangType.FR:
-            # très should skip the false positive detection
-            word_type = await fetch_word_type(lang.lang, token) if token.lemma_ != "très" else None
-            match word_type:
+            word_types = rule.get_word_types()
+            match word_types[0]:
                 case WordType.ADJECTIVE:
-                    chunks = fetch_sentence_noun_chunks(tokens[token_index].sent)
-                    token_chunk = find_token_chunk(chunks, token_index)
-                    if token_chunk is not None:
+                    source_noun = None
+
+                    for a in token.ancestors:
+                        if a.dep_ == "nsubj":
+                            source_noun = a.text
+                            break
+
+                        for atok in a.children:
+                            if atok.dep_ == "nsubj":
+                                source_noun = atok.text
+                                break
+
+                    if source_noun is None:
+                        source_index = word_index = None
+                        for word in token.sent:
+                            if word.dep_ != "nsubj":
+                                continue
+
+                            if word.i < word.head.i:
+                                word_index = word.head.i
+                                source_index = word.i
+                            elif word.i > word.head.i:
+                                word_index = word.i
+                                source_index = word.head.i
+
+                            if word_index == token_index:
+                                source_noun = tokens[source_index].text
+                                break
+
+
+                    if (source_noun is None
+                        or source_noun.lower() not in static_rules[LangType.FR]["gender_neutral_nouns"]
+                    ):
                         continue
                 case WordType.NOUN:
                     if get_category_name(subcategory) in ["function", "gender_identity"]:
