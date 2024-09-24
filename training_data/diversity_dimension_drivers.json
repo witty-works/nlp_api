@@ -876,10 +876,10 @@
                 "sort_internal": "agentic",
                 "lead_video": "62987289559",
                 "lead_image": {
-                    "src": "https:\/\/www.witty.works\/hubfs\/Bildschirmfoto%202023-03-17%20um%2010.46.51.png",
-                    "width": "1836",
-                    "height": "1446",
-                    "alt": "Illustration: A man in a suit with his arms akimbo The image title says Agentic language."
+                    "src": "https:\/\/www.witty.works\/hubfs\/agentic.png",
+                    "width": "900",
+                    "height": "507",
+                    "alt": "Illustration: A man in a suit with his arms crossed in front of his chest. The image title says \"Agentic language\".: A man in a suit with his arms akimbo The image title says Agentic language."
                 },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Agentic%20language-2.png",
@@ -966,8 +966,13 @@
                 "is_active": "1",
                 "short_explanation": "\u00c9voque la comp\u00e9tition et la performance, ce qui dissuade les personnes privil\u00e9giant la coop\u00e9ration",
                 "sort_internal": "agentic",
-                "lead_video": "",
-                "lead_image": [],
+                "lead_video": "62987289559",
+                "lead_image": {
+                    "src": "https:\/\/www.witty.works\/hubfs\/agentic.png",
+                    "width": "900",
+                    "height": "507",
+                    "alt": "Illustration : Un homme en costume, les bras crois\u00e9s devant la poitrine. Le titre de l'image indique \u00ab Langage agentique \u00bb en anglais."
+                },
                 "example_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Langage%20agentique.png",
                     "width": "605",
@@ -2505,7 +2510,7 @@
                 "is_active": "1",
                 "short_explanation": "Renforce la collaboration et le sentiment d'appartenance au groupe",
                 "sort_internal": "communal",
-                "lead_video": "",
+                "lead_video": "68997489891",
                 "lead_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Why%20(900%20%C3%97%20525%20px).png",
                     "width": "900",
@@ -3353,7 +3358,7 @@
                 "is_active": "1",
                 "short_explanation": "Ajoute de la complexit\u00e9 sans pr\u00e9cision de sens",
                 "sort_internal": "filler",
-                "lead_video": "",
+                "lead_video": "65919079898",
                 "lead_image": {
                     "src": "https:\/\/www.witty.works\/hubfs\/Witty-works-learning-bites-f%C3%BCllw%C3%B6rter.png",
                     "width": "921",

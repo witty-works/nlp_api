@@ -43,6 +43,7 @@
             "context": "Salut les gars. Nous sommes une équipe ambitieuse. C’est pourquoi nous avons besoin de personnes très performantes. Notre directeur est le",
             "end": 38,
             "explanation": {
+                "content": "video",
                 "icon": "✅",
                 "icon_image": "https://www.witty.works/hubfs/thumbs%20up%20emoji.png",
                 "text": "Renforce la collaboration et le sentiment d'appartenance au groupe",
@@ -74,6 +75,7 @@
             "context": "Salut les gars. Nous sommes une équipe ambitieuse. C’est pourquoi nous avons besoin de personnes très performantes. Notre directeur est le meilleur",
             "end": 49,
             "explanation": {
+                "content": "video",
                 "icon": "😒",
                 "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Évoque la compétition et la performance, ce qui dissuade les personnes privilégiant la coopération",
@@ -93,6 +95,7 @@
             "context": "Salut les gars. Nous sommes une équipe ambitieuse. C’est pourquoi nous avons besoin de personnes très performantes. Notre directeur est le meilleur",
             "end": 83,
             "explanation": {
+                "content": "video",
                 "icon": "✅",
                 "icon_image": "https://www.witty.works/hubfs/thumbs%20up%20emoji.png",
                 "text": "Renforce la collaboration et le sentiment d'appartenance au groupe",
@@ -115,6 +118,7 @@
             "context": "Salut les gars. Nous sommes une équipe ambitieuse. C’est pourquoi nous avons besoin de personnes très performantes. Notre directeur est le meilleur",
             "end": 101,
             "explanation": {
+                "content": "video",
                 "icon": "😟",
                 "icon_image": "https://www.witty.works/hubfs/face-exhaling_1f62e-200d-1f4a8.png,160,160,face exhaling emoji,112750101232",
                 "text": "Ajoute de la complexité sans précision de sens",
@@ -152,6 +156,7 @@
             "context": "lut les gars. Nous sommes une équipe ambitieuse. C’est pourquoi nous avons besoin de personnes très performantes. Notre directeur est le meilleur",
             "end": 114,
             "explanation": {
+                "content": "video",
                 "icon": "😒",
                 "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
                 "text": "Évoque la compétition et la performance, ce qui dissuade les personnes privilégiant la coopération",
