@@ -460,7 +460,19 @@ def fetch_static_rules():
     if LangType.FR in langs:
         static_rules[LangType.FR]["pattern_false_positives"] = []
         static_rules[LangType.FR]["salutations"] = []
-        static_rules[LangType.FR]["hashtags"] = []
+
+        rule = Rule(
+            "#parexemple",
+            LangType.FR,
+            re.compile(r"^#(?!.*[A-Z])\w\w\w\w\w+$"),
+            None,
+            (1, 2, "#"),
+            "plain_language",
+        )
+
+        rule.explanation = "Lorsque vous mettez des majuscules, tout le monde sait immédiatement ce que vous voulez dire. #ParExemple"
+
+        static_rules[LangType.FR]["hashtags"] = [rule]
         static_rules[LangType.FR]["context_check"] = []
         static_rules[LangType.FR]["masculine_articles"] = {
             "un": "un∙e",
@@ -472,9 +484,28 @@ def fetch_static_rules():
             "ceux": "celleux",
         }
 
+        static_rules[LangType.FR]["gender_neutral_nouns"] = [
+            "nous",
+            "vous",
+            "tu",
+            "personnes",
+            "membres",
+            "collègues",
+            "individus",
+            "volontaires",
+            "cadres",
+            "gestionnaires",
+            "partenaires",
+            "actionnaires",
+            "stagiaires",
+            "responsables",
+            "spécialistes",
+            "prestataires",
+        ]
+
     if LangType.DE in langs:
         rule = Rule(
-            "#foobar",
+            "#zumbeispiel",
             LangType.DE,
             re.compile(r"^#(?!.*[A-Z])\w\w\w\w\w+$"),
             None,
@@ -1178,7 +1209,7 @@ def fetch_static_rules():
         ]
 
         rule = Rule(
-            "#foobar",
+            "#forexample",
             LangType.EN,
             re.compile(r"^#(?!.*[A-Z])\w\w\w\w\w+$"),
             None,

@@ -5,24 +5,63 @@
         {
             "alternatives": [
                 {
-                    "text": "clientèle"
+                    "text": "pas là"
                 },
                 {
-                    "text": "client·e"
+                    "text": "indisponible"
                 },
                 {
-                    "text": "client ou cliente"
+                    "text": "absent·e"
                 },
                 {
-                    "text": "entreprise cliente"
+                    "text": "absent et absente"
                 },
                 {
-                    "text": "public"
+                    "text": "absence"
                 }
             ],
             "category": "gender-orientation",
-            "context": "Les clients sont charmants. Il l'a dit d'une manière charmante.",
-            "end": 11,
+            "context": "Indiquez les dates auxquelles vous serez absent de votre domicile. Les participantes absentes sont malades.",
+            "end": 47,
+            "explanation": {
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "text": "Évoque une représentation genrée",
+                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/expression-genrée?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Genre + Orientation sexuelle: Expression genrée",
+            "proficiency_level": "unconscious_bias",
+            "source": {
+                "text": "Language Portal of Canada, Translation Bureau, Public Services and Procurement Canada",
+                "url": "http://www.canada.ca/our-languages"
+            },
+            "start": 41,
+            "subcategory": "hidden_image",
+            "text": "absent",
+            "text_id": "absent"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "personne participante"
+                },
+                {
+                    "text": "personne présente"
+                },
+                {
+                    "text": "personne invitée"
+                },
+                {
+                    "text": "membre"
+                },
+                {
+                    "text": "assemblée"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Indiquez les dates auxquelles vous serez absent de votre domicile. Les participantes absentes sont malades.",
+            "end": 84,
             "explanation": {
                 "icon": "😟",
                 "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
@@ -36,46 +75,10 @@
                 "text": "Language Portal of Canada, Translation Bureau, Public Services and Procurement Canada",
                 "url": "http://www.canada.ca/our-languages"
             },
-            "start": 4,
+            "start": 71,
             "subcategory": "titles",
-            "text": "clients",
-            "text_id": "client"
-        },
-        {
-            "alternatives": [
-                {
-                    "text": "agréable"
-                },
-                {
-                    "text": "adorable"
-                },
-                {
-                    "text": "sympathique"
-                },
-                {
-                    "text": "de bonne compagnie"
-                }
-            ],
-            "category": "gender-orientation",
-            "context": "Les clients sont charmants. Il l'a dit d'une manière charmante.",
-            "end": 26,
-            "explanation": {
-                "icon": "💡",
-                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
-                "text": "Fait généralement penser à des hommes",
-                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/masculin-générique?reducedView=true"
-            },
-            "gravity": 2.0,
-            "label": "Genre + Orientation sexuelle: Masculin générique",
-            "proficiency_level": "unconscious_bias",
-            "source": {
-                "text": "Language Portal of Canada, Translation Bureau, Public Services and Procurement Canada",
-                "url": "http://www.canada.ca/our-languages"
-            },
-            "start": 17,
-            "subcategory": "function",
-            "text": "charmants",
-            "text_id": "charmant"
+            "text": "participantes",
+            "text_id": "participant"
         }
     ]
 }

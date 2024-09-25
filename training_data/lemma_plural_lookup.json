@@ -3269,11 +3269,24 @@
     "Aktion\u00e4ren": null,
     "Aktion\u00e4rinnen": null,
     "H\u00f6rende": null,
-    "Sehende": null
+    "Sehende": null,
+    "Formen": null
   },
   "fr": {
     "camerawomen": "cameraman",
     "cam\u00e9rawomen": "cam\u00e9raman",
-    "professeures": "professeur"
+    "d\u00e9butantes": "d\u00e9butant",
+    "d\u00e9tenues": "d\u00e9tenu",
+    "expertes": "expert",
+    "femmes": "homme",
+    "interm\u00e9diaires": "interm\u00e9diaire",
+    "neurodivergentes": "neurodivergent",
+    "pionni\u00e8res": "pionnier",
+    "professeures": "professeur",
+    "prostitu\u00e9es": "prostitu\u00e9",
+    "pr\u00e9sidentes": "pr\u00e9sident",
+    "repr\u00e9sentantes": "repr\u00e9sentant",
+    "salari\u00e9es": "salari\u00e9",
+    "\u00e9boueuses": "\u00e9boueurs"
   }
 }

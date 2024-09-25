@@ -124,7 +124,7 @@ from app.query_definitions import (
 )
 import boto3
 
-version = "2.3.3"
+version = "2.3.4"
 
 categories = get_categories()
 settings = get_settings()
@@ -367,43 +367,124 @@ rules_db = None
 substring_rules = {}
 male_to_female_normativ = {}
 source_map = {}
+
+translations = {
+    RuleLabelEnum.BE_SPECIFIC: {
+        LangType.EN: "Be specific",
+        LangType.DE: "Sei spezifisch",
+        LangType.FR: "Soyez spécifique",
+    },
+    RuleLabelEnum.NOT_FOR_PEOPLE: {
+        LangType.EN: "Don't use this phrase for people",
+        LangType.DE: "Nicht auf Menschen beziehen",
+        LangType.FR: "N'utilisez pas ce terme pour les personnes",
+    },
+    RuleLabelEnum.NAME_DISABILITY: {
+        LangType.EN: "Name the disability or condition",
+        LangType.DE: "Nenne die Behinderung oder Zustand",
+        LangType.FR: "Nommez le handicap ou la condition",
+    },
+    RuleLabelEnum.ONLY_IF_GENDER_IDENTITY_RELEVANT: {
+        LangType.EN: "Only if gender identity is relevant",
+        LangType.DE: "Nur erwähnen, wenn relevant",
+        LangType.FR: "Seulement si l'identité de genre est pertinente",
+    },
+    RuleLabelEnum.NOT_FOR_NON_COMBAT: {
+        LangType.EN: "Only use in a combat context",
+        LangType.DE: "Nur in einen Kampf-Kontext verwenden",
+        LangType.FR: "Utilisez uniquement dans un contexte de combat",
+    },
+    RuleLabelEnum.ASK_FOR_PREFERENCE: {
+        LangType.EN: "Only if preference explicitly stated",
+        LangType.DE: "Nur wenn die Person sich so bezeichnet",
+        LangType.FR: "Seulement si la préférence est explicitement exprimée",
+    },
+    RuleLabelEnum.ONLY_WHEN_REFERENCING_RELIGIOUS_PRACTICE: {
+        LangType.EN: "Only use in reference to religious practice",
+        LangType.DE: "Nur in Bezug auf die religiöse Praxis verwenden",
+        LangType.FR: "Utilisez uniquement en référence à la pratique religieuse",
+    },
+    RuleLabelEnum.USE_IN_TECH_ONLY: {
+        LangType.EN: "Use in programming only",
+        LangType.DE: "Nur im Programmier-Kontext verwenden",
+        LangType.FR: "Utilisez uniquement dans un contexte de programmation",
+    },
+    RuleLabelEnum.DONT_USE_TO_DESCRIBE_QUALITY: {
+        LangType.EN: "Don't use to describe value or quality",
+        LangType.DE: "Nicht zur Beschreibung von Wert oder Qualität verwenden",
+        LangType.FR: "N'utilisez pas pour décrire la valeur ou la qualité",
+    },
+    RuleLabelEnum.DONT_USE_FOR_SUBSTANCE_USE: {
+        LangType.EN: "Don't use in the context of substance use",
+        LangType.DE: "Nicht im Zusammenhang mit Drogenkonsum verwenden",
+        LangType.FR: "N'utilisez pas dans le cadre de la consommation de substances",
+    },
+    RuleLabelEnum.ASK_ABOUT_TRADITIONS: {
+        LangType.EN: "Ask about their traditions",
+        LangType.DE: "Frage nach ihren Traditionen",
+        LangType.FR: "Demandez leurs traditions",
+    },
+    "ALLGENDER": {
+        LangType.EN: "all gender",
+        LangType.DE: "Alle Gender",
+        LangType.FR: "tous les genres",
+    },
+    "EMOJIREPETITION": {
+        LangType.EN: "Repeating emoji's may exclude screen reader users",
+        LangType.DE: "Wiederholen von Emoji kann blinde Menschen ausschließen",
+        LangType.FR: "La répétition des emojis peut exclure les utilisateurs·rices de lecteurs d'écran",
+    },
+    "EMOJISKINTONE": {
+        LangType.EN: "Be mindful when using a skin tone that does not match your own",
+        LangType.DE: "Vorsicht beim Verwenden von Hauttönen, die nicht den eigenen entsprechen",
+        LangType.FR: "Soyez attentif à l'utilisation d'une teinte de peau qui ne correspond pas à la vôtre",
+    },
+    "EMOJIOVERUSE": {
+        LangType.EN: "Emoji overuse may exclude screen reader users",
+        LangType.DE: "Übermäßiger Gebrauch von Emoji kann blinde Menschen ausschließen",
+        LangType.FR: "L'utilisation excessive d'emojis peut exclure les utilisateurs·rices de lecteurs d'écran",
+    },
+    "IDENTITYFIRST": {
+        LangType.EN: "Identity first",
+        LangType.DE: "Identität zuerst",
+        LangType.FR: "L'identité d'abord",
+    },
+    "PERSONFIRST": {
+        LangType.EN: "Person first",
+        LangType.DE: "Person zuerst",
+        LangType.FR: "La personne d'abord",
+    },
+    "IDENTITYVSPERSONURL": {
+        LangType.EN: "https://www.witty.works/en/blog/person-first-vs.-identity-first-understanding-the-approaches",
+        LangType.DE: "https://www.witty.works/de/blog/mensch-zuerst-vs.-identit%C3%A4t-zuerst-die-beiden-ans%C3%A4tze-verstehen",
+        LangType.FR: "https://www.witty.works/fr/blog/la-personne-dabord-ou-lidentite-dabord",
+    },
+    "GENDERABBREVIATIONCONTEXT": {
+        LangType.EN: "disabled (NA) / diverse (EU)",
+        LangType.DE: "Divers (EU) / mit Behinderung (NA)",
+        LangType.FR: "divers (EU) / avec handicap (NA)",
+    },
+    "GENDERABBREVIATIONCONTEXTREMOVE": {
+        LangType.EN: "Use gender neutral job title",
+        LangType.DE: "Nutze geschlechtsneutrale Job-Titel",
+        LangType.FR: "Utilize des titres d'emploi non sexistes",
+    },
+    "GENDERABBREVIATIONEXPLANATION": {
+        LangType.EN: "Put underrepresented groups first and link to your equal opportunity policy",
+        LangType.DE: "Nenne unterrepräsentierte Gruppen zuerst. Verlinke auf deine Leitlinie zur Gleichstellung.",
+        LangType.FR: "Mettez en avant les groupes sous-représentés et reliez-les à votre politique d'égalité des chances.",
+    },
+}
 person_words = {
     LangType.EN: [],
     LangType.DE: [],
+    LangType.FR: [],
 }
 misc_words = {
     LangType.EN: [],
     LangType.DE: [],
+    LangType.FR: [],
 }
-label_types = {
-    LangType.DE: {
-        RuleLabelEnum.BE_SPECIFIC: "Sei spezifisch",
-        RuleLabelEnum.NOT_FOR_PEOPLE: "Nicht auf Menschen beziehen",
-        RuleLabelEnum.NAME_DISABILITY: "Nenne die Behinderung oder Zustand",
-        RuleLabelEnum.ONLY_IF_GENDER_IDENTITY_RELEVANT: "Nur erwähnen, wenn relevant",
-        RuleLabelEnum.NOT_FOR_NON_COMBAT: "Nur in einen Kampf-Kontext verwenden",
-        RuleLabelEnum.ASK_FOR_PREFERENCE: "Nur wenn die Person sich so bezeichnet",
-        RuleLabelEnum.ONLY_WHEN_REFERENCING_RELIGIOUS_PRACTICE: "Nur in Bezug auf die religiöse Praxis verwenden",
-        RuleLabelEnum.USE_IN_TECH_ONLY: "Nur im Programmier-Kontext verwenden",
-        RuleLabelEnum.DONT_USE_TO_DESCRIBE_QUALITY: "Nicht zur Beschreibung von Wert oder Qualität verwenden",
-        RuleLabelEnum.DONT_USE_FOR_SUBSTANCE_USE: "Nicht im Zusammenhang mit Drogenkonsum verwenden",
-        RuleLabelEnum.ASK_ABOUT_TRADITIONS: "Frage nach ihren Traditionen",
-    },
-    LangType.EN: {
-        RuleLabelEnum.BE_SPECIFIC: "Be specific",
-        RuleLabelEnum.NOT_FOR_PEOPLE: "Don't use this phrase for people",
-        RuleLabelEnum.NAME_DISABILITY: "Name the disability or condition",
-        RuleLabelEnum.ONLY_IF_GENDER_IDENTITY_RELEVANT: "Only if gender identity is relevant",
-        RuleLabelEnum.NOT_FOR_NON_COMBAT: "Only use in a combat context",
-        RuleLabelEnum.ASK_FOR_PREFERENCE: "Only if preference explicitly stated",
-        RuleLabelEnum.ONLY_WHEN_REFERENCING_RELIGIOUS_PRACTICE: "Only use in reference to religious practice",
-        RuleLabelEnum.USE_IN_TECH_ONLY: "Use in programming only",
-        RuleLabelEnum.DONT_USE_TO_DESCRIBE_QUALITY: "Don't use to describe value or quality",
-        RuleLabelEnum.DONT_USE_FOR_SUBSTANCE_USE: "Don't use in the context of substance use",
-        RuleLabelEnum.ASK_ABOUT_TRADITIONS: "Ask about their traditions",
-    },
-}
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -477,7 +558,7 @@ async def lifespan(app: FastAPI):
             for row in rows:
                 misc_words[lang].append(row[0].lower())
 
-            if lang == "de":
+            if lang == LangType.DE:
                 query = f"SELECT base_form, female_form FROM {declensions_config[lang][BasicWordType.NOUN]["name"]} WHERE female_form IS NOT NULL"
                 rows = await fetch_rows(query)
 
@@ -610,9 +691,9 @@ pronoun_tags = [
 ]
 
 lang_map = {
-    "en": "English",
-    "de": "German",
-    "fr": "French",
+    LangType.EN: "English",
+    LangType.DE: "German",
+    LangType.FR: "French",
 }
 
 def fetch_current_username(
@@ -1551,7 +1632,7 @@ async def get_debug_spacy(
 
     sentence_spans = list(tokens.sents)
     data = displacy.render(sentence_spans, style="dep")
-    return Response(content=data, media_type="application/xml")
+    return Response(content=data, media_type="image/svg+xml")
 
 
 @app.get(
@@ -2231,7 +2312,7 @@ async def check(
             return results
     else:
         results = []
-        language = "en"
+        language = LangType.EN
         limit_reached = False
 
     notifications = None
@@ -3109,7 +3190,7 @@ async def fetch_rules(
         query += " AND is_hr_rule = 0"
 
     filter_list = " OR ".join(filters.keys())
-    query += f" AND ({filter_list}) ORDER BY lemma_length DESC, first_is_word_type_lemmatize ASC"
+    query += f" AND ({filter_list}) ORDER BY lemma_length DESC, first_word_type DESC, first_is_word_type_lemmatize ASC"
     parameters = [lang, RuleType.SUFFIX if suffix_check else RuleType.DEFAULT] + list(
         filters.values()
     )
@@ -3166,6 +3247,8 @@ async def fetch_rule_alternatives(
 ) -> list[Alternative]:
     if isinstance(rule.id, str):
         return rule.alternatives
+
+    lang = locale[0:2]
 
     query = f"SELECT {alternative_column_list} FROM rules_alternative WHERE rule_id = ?"
 
@@ -3228,8 +3311,14 @@ async def fetch_rule_alternatives(
             alternative.type = AlternativeType.DEFAULT
         elif row[alternative_columns["type"]] == AlternativeType.PERSON_FIRST:
             alternative.type = AlternativeType.PERSON_FIRST
+            if alternative.label is None or len(alternative.label) == 0:
+                alternative.label = translations["PERSONFIRST"][lang]
+            alternative.url = translations["IDENTITYVSPERSONURL"][lang]
         elif row[alternative_columns["type"]] == AlternativeType.IDENTITY_FIRST:
             alternative.type = AlternativeType.IDENTITY_FIRST
+            if alternative.label is None or len(alternative.label) == 0:
+                alternative.label = translations["IDENTITYFIRST"][lang]
+            alternative.url = translations["IDENTITYVSPERSONURL"][lang]
 
         alternatives.append(alternative)
 
@@ -3792,7 +3881,7 @@ async def generic_rules(
                 tokens,
                 offsets,
                 list_full,
-                static_rules[LangType.EN]["hashtags"],
+                static_rules[lang.lang]["hashtags"],
             )
 
             if check_continue(
@@ -6221,17 +6310,12 @@ async def regex_match(
                 alternative = f"({alternative})"
 
             context_v = "include veterans"
-            match lang.lang:
-                case LangType.DE:
-                    context_d = "Divers (EU) / m. Behinderung (NA)"
-                    context_remove = "Nutze geschlechtsneutrale Job-Titel"
-                    explanation = "Nenne unterrepräsentierte Gruppen zuerst. Verlinke auf deine Leitlinie zur Gleichstellung."
+            context_d = translations["GENDERABBREVIATIONCONTEXT"][lang.lang]
+            context_remove = translations["GENDERABBREVIATIONCONTEXTREMOVE"][lang.lang]
+            explanation = translations["GENDERABBREVIATIONEXPLANATION"][lang.lang]
 
-                    alternative = alternative.replace("f", "w")
-                case LangType.EN:
-                    context_d = "disabled (NA) / diverse (EU)"
-                    context_remove = "Use gender neutral job title"
-                    explanation = "Put underrepresented groups first and link to your equal opportunity policy"
+            if lang.lang == LangType.DE:
+                alternative = alternative.replace("f", "w")
 
             alternative_3 = None
             alternative = Alternative(alternative)
@@ -6271,7 +6355,7 @@ async def regex_match(
             alternatives = [
                 remove_alternative,
                 Alternative(
-                    "Alle Gender" if lang.lang == LangType.DE else "all gender"
+                    translations["ALLGENDER"][lang.lang]
                 ),
             ]
 
@@ -6393,10 +6477,10 @@ def is_false_positive(
 
 
 def map_rule_label_type(lang: LangType, label_type: str) -> str | None:
-    if lang not in label_types or label_type not in label_types[lang]:
+    if label_type not in translations or lang not in translations[label_type]:
         return None
 
-    return label_types[lang][label_type]
+    return translations[label_type][lang]
 
 
 # TODO cache on the sentence?
@@ -6751,17 +6835,47 @@ async def rule_check(
 
         start = token.idx
         if lang.lang == LangType.FR:
-            # très should skip the false positive detection
-            word_type = await fetch_word_type(lang.lang, token) if token.lemma_ != "très" else None
-            match word_type:
+            word_types = rule.get_word_types()
+            first_word_type = word_types[0] if len(word_types) else ""
+            match first_word_type:
                 case WordType.ADJECTIVE:
-                    chunks = fetch_sentence_noun_chunks(tokens[token_index].sent)
-                    token_chunk = find_token_chunk(chunks, token_index)
-                    if token_chunk is not None:
+                    source_noun = None
+
+                    for a in token.ancestors:
+                        if a.dep_ == "nsubj":
+                            source_noun = a.text
+                            break
+
+                        for atok in a.children:
+                            if atok.dep_ == "nsubj":
+                                source_noun = atok.text
+                                break
+
+                    if source_noun is None:
+                        source_index = word_index = None
+                        for word in token.sent:
+                            if word.dep_ != "nsubj":
+                                continue
+
+                            if word.i < word.head.i:
+                                word_index = word.head.i
+                                source_index = word.i
+                            elif word.i > word.head.i:
+                                word_index = word.i
+                                source_index = word.head.i
+
+                            if word_index == token_index:
+                                source_noun = tokens[source_index].text
+                                break
+
+
+                    if (source_noun is None
+                        or source_noun.lower() not in static_rules[LangType.FR]["gender_neutral_nouns"]
+                    ):
                         continue
                 case WordType.NOUN:
-                    if get_category_name(subcategory) in ["function", "gender_identity"]:
-                        subcategory_to_find = "function" if is_token_masculine(token) else "gender_identity"
+                    if get_category_name(subcategory) in ["function", "male_stereotype", "gender_identity"]:
+                        subcategory_to_find = ["function", "male_stereotype"] if is_token_masculine(token) else ["gender_identity"]
                         subcategory = None
                         for search_subcategory in rule.subcategories:
                             if get_category_name(search_subcategory) in subcategory_to_find:
@@ -7084,14 +7198,7 @@ def detect_non_inclusive_emoji(
                 alternative.label = get_emoji_context(alternative.lemma, lang.lang)
                 alternatives.append(alternative)
 
-    if "skin tone" in emoji_description:
-        explanation = (
-            "Be mindful when using a skin tone that does not match your own"
-            if lang.lang == LangType.EN
-            else "Vorsicht beim Verwenden von Hauttönen, die nicht den eigenen entsprechen"
-        )
-    else:
-        explanation = None
+    explanation = translations["EMOJISKINTONE"][lang.lang] if "skin tone" in emoji_description else None
 
     if subcategory and len(alternatives) >= 1:
         list_full.append(
@@ -7125,11 +7232,7 @@ def detect_non_inclusive_emoji(
 
             if token.text == tokens[emoji_index].text:
                 subcategory = "ability"
-                explanation = (
-                    "Wiederholen von Emoji kann blinde Menschen ausschließen"
-                    if lang.lang == LangType.DE
-                    else "Repeating emoji's may exclude screen reader users"
-                )
+                explanation = translations["EMOJIREPETITION"][lang.lang]
             elif explanation is not None:
                 emoji_index -= 1
                 break
@@ -7137,11 +7240,7 @@ def detect_non_inclusive_emoji(
         if subcategory is None and emoji_index >= token_index + 1:
             subcategory = "ability" if emoji_index >= token_index + 2 else "ability_advanced"
 
-            explanation = (
-                "Übermäßiger Gebrauch von Emoji kann blinde Menschen ausschließen"
-                if lang.lang == LangType.DE
-                else "Emoji overuse may exclude screen reader users"
-            )
+            explanation = translations["EMOJIOVERUSE"][lang.lang]
 
         if subcategory is not None and is_sub_category_enabled(config, subcategory):
             text = token.text
