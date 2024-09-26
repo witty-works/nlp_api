@@ -8,16 +8,16 @@
                     "text": "prof"
                 },
                 {
+                    "text": "professeur·se"
+                },
+                {
+                    "text": "professeur ou professeuse"
+                },
+                {
                     "text": "enseignant·e"
                 },
                 {
                     "text": "enseignant ou enseignante"
-                },
-                {
-                    "text": "corps enseignant"
-                },
-                {
-                    "text": "corps professoral"
                 }
             ],
             "category": "gender-orientation",
