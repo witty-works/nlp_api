@@ -59,8 +59,13 @@ class Settings(BaseSettings):
     context_checker_api_key: Optional[str] = ""
     context_checker_url_de: Optional[str] = ""
     context_checker_api_key_de: Optional[str] = ""
-    models: list = ["en_core_web_lg", "de_core_news_lg", "fr_core_news_lg"]
-    fasttext: bool = True
+    context_checker_url_fr: Optional[str] = ""
+    context_checker_api_key_fr: Optional[str] = ""
+    models: list = [
+        "en_core_web_lg",
+        "de_core_news_lg",
+        "fr_core_news_lg",
+    ]
     minimum_version_web_ext: Optional[str] = ""
     minimum_version_word_plugin: Optional[str] = ""
     minimum_versions: dict = {}
@@ -109,6 +114,12 @@ def get_settings():
         settings.context_checker[LangType.DE] = {
             "url": settings.context_checker_url_de,
             "api_key": settings.context_checker_api_key_de,
+        }
+
+    if settings.context_checker_url_fr and settings.context_checker_api_key_fr:
+        settings.context_checker[LangType.FR] = {
+            "url": settings.context_checker_url_fr,
+            "api_key": settings.context_checker_api_key_fr,
         }
 
     if settings.platform_relationships:

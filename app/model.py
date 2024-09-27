@@ -14,78 +14,428 @@ from spacy.lang.char_classes import (
 from spacy.tokenizer import Tokenizer
 from spacy.util import compile_infix_regex
 from spacy.lookups import Lookups
-from app.models import LangType
+from spacy.tokens import Token, Doc
+from spacy.matcher import PhraseMatcher, Matcher
+
+import re
+from logging import Logger
+import json
 
 
-class TokenLemmatizer:
-    def __init__(self, lemma_table):
-        self.lemma_table = lemma_table
+from app.models import LangType, WordType
+from app.helper import is_valid_text
+from app.db import Db
+from app.settings import Settings
 
-    def __call__(self, doc):
-        for token in doc:
-            # Overwrite the token.lemma_ if there's an entry in the data
-            if token.text in self.lemma_table:
-                token.lemma_ = self.lemma_table.get(token.text, token.lemma_)
+Token.set_extension("word_type", default=None)
+Token.set_extension("text", default=None)
+Token.set_extension("start", default=None)
+Token.set_extension("label", default=None)
+Token.set_extension("form", default=None)
+Token.set_extension("forms", default=None)
+Token.set_extension("token_index_offset", default=1)
+Token.set_extension("child_token", default=None)
+Token.set_extension("connected_token", default=None)
 
-        return doc
+with open("./training_data/lookup.json", "r") as fp:
+    lemma_lookup = json.load(fp)
 
 
-def custom_tokenizer(lang, nlp):
-    if lang == LangType.DE:
-        infixes = (
-            LIST_ELLIPSES
-            + LIST_ICONS
-            + [
-                r"(?<=[{al}])\\.(?=[{au}])".format(al=ALPHA_LOWER, au=ALPHA_UPPER),
-                r"(?<=[{a}])[,!?](?=[{a}])".format(a=ALPHA),
-                # removed : [:<>=]
-                r"(?<=[{a}])[<>=](?=[{a}])".format(a=ALPHA),
-                r"(?<=[{a}]),(?=[{a}])".format(a=ALPHA),
-                r"(?<=[0-9{a}])\/(?=[0-9{a}])".format(a=ALPHA),
-                r"(?<=[{a}])([{q}\)\]\(\[])(?=[{a}])".format(
-                    a=ALPHA, q=CONCAT_QUOTES.replace("'", "")
-                ),
-                r"(?<=[{a}])--(?=[{a}])".format(a=ALPHA),
-                r"(?<=[0-9])-(?=[0-9])",
-            ]
+class Model:
+    settings: Settings
+    loggger: Logger
+    static_rules: dict
+    lemma_plural_lookup: dict
+    db: Db
+
+    def __init__(
+        self,
+        settings: Settings,
+        logger: Logger,
+        static_rules: dict,
+        lemma_plural_lookup: dict,
+    ):
+        self.settings = settings
+        self.logger = logger
+        self.static_rules = static_rules
+        self.lemma_plural_lookup = lemma_plural_lookup
+
+    adj_tags = {
+        "AFX",
+        "ADJA",
+        "ADJD",
+        "ADV",
+        "ADJ",
+        "JJ",
+        "JJR",
+        "JJS",
+        "VVPP",
+        "VAPP",
+        "VMPP",
+    }
+
+    pronoun_tags = [
+        "PDAT",
+        "PDS",
+        "PIAT",
+        "PIDAT",
+        "PIS",
+        "PPER",
+        "PPOSAT",
+        "PPOSS",
+        "PRELAT",
+        "PRELS",
+        "PRF",
+        "PRP$",
+        "PRON",
+        "PDT",
+        "WP$",
+        "WDT",
+    ]
+
+    models = {}
+
+    def token_is_conjunction(self, token: Token) -> bool:
+        return token.text == "," or token.pos_ == "CCONJ"
+
+    async def fetch_word_type(
+        self,
+        lang: LangType,
+        token: Token,
+        word_type: str | None = None,
+        single_word: bool = False,
+        strict: bool = False,
+    ) -> str:
+        if word_type is None and single_word == False and strict == False:
+            cache = True
+            if token._.word_type is not None:
+                return token._.word_type
+        else:
+            cache = False
+
+        word_type = await self._fetch_word_type(
+            lang,
+            token,
+            word_type,
+            single_word,
+            strict,
         )
-    elif lang == LangType.EN:
-        # https://spacy.io/usage/linguistic-features#tokenization
-        infixes = (
-            LIST_ELLIPSES
-            + LIST_ICONS
-            + [
-                r"(?<=[0-9])[+\\-\\*^](?=[0-9-])",
-                r"(?<=[{al}{q}])\\.(?=[{au}{q}])".format(
-                    al=ALPHA_LOWER, au=ALPHA_UPPER, q=CONCAT_QUOTES
-                ),
-                r"(?<=[{a}]),(?=[{a}])".format(a=ALPHA),
-                # ✅ Commented out regex that splits on hyphens between letters:
-                # r"(?<=[{a}])(?:{h})(?=[{a}])".format(a=ALPHA, h=HYPHENS),
-                r"(?<=[{a}0-9])[:<>=/](?=[{a}])".format(a=ALPHA),
-            ]
+
+        if cache:
+            token._.word_type = word_type
+
+        return word_type
+
+    async def _fetch_word_type(
+        self,
+        lang: LangType,
+        token: Token,
+        expected_word_type: str | None = None,
+        single_word: bool = False,
+        strict: bool = False,
+    ) -> str:
+        # https://machinelearningknowledge.ai/tutorial-on-spacy-part-of-speech-pos-tagging/
+        # https://github.com/explosion/spaCy/blob/master/spacy/glossary.py
+
+        if token._.is_emoji:
+            return WordType.EMOJI
+
+        if token.pos_ == "NUM":
+            if WordType.NUMBER != expected_word_type and token.tag_ in ["CARD", "CD"]:
+                return WordType.CARDINAL
+
+            return WordType.NUMBER
+
+        if not is_valid_text(token.text):
+            return ""
+
+        if expected_word_type is None:
+            expected_word_type = ""
+
+        if token.pos_ == "ADV":
+            if WordType.ADVERB == expected_word_type:
+                return WordType.ADVERB
+
+            if lang == LangType.FR and WordType.ADJECTIVE == expected_word_type:
+                return WordType.ADJECTIVE
+
+        if (
+            lang == LangType.EN
+            and "-" in token.text
+            and not token.text.startswith("-")
+            and not token.text.endswith("-")
+        ):
+            tokens = self.fetch_tokens(lang, token.text.replace("-", " "))
+            word_type = await self.fetch_word_type(
+                lang, tokens[0], expected_word_type, single_word
+            )
+            # Case: "one-eyed" => "one eyed"
+            if word_type in [
+                WordType.CARDINAL,
+                WordType.NUMBER,
+            ] and expected_word_type not in [WordType.CARDINAL, WordType.NUMBER]:
+                return await self.fetch_word_type(
+                    lang, tokens[-1], expected_word_type, single_word
+                )
+
+            return word_type
+
+        if token.pos_ == "VERB":
+            if (
+                not strict
+                and lang == LangType.DE
+                and WordType.ADJECTIVE in expected_word_type
+            ):
+                return WordType.ADJECTIVE
+
+            return WordType.VERB
+
+        if token.tag_ in self.adj_tags or token.pos_ in self.adj_tags:
+            return WordType.ADJECTIVE
+
+        if token.pos_ in self.pronoun_tags or token.tag_ in self.pronoun_tags:
+            if expected_word_type == WordType.NOUN:
+                return WordType.NOUN
+
+            return WordType.PRONOUN
+
+        if token.pos_ == "NOUN" or token.tag_ == "NN":
+            if lang == LangType.DE:
+                if token.text[0].islower() and self.db:
+                    result = await self.db.fetch_declensions(
+                        LangType.DE, WordType.VERB, token.text, token
+                    )
+                    if result is not None:
+                        return WordType.VERB
+
+            return WordType.NOUN
+
+        if lang == LangType.DE and token.text[0].isupper() and token.text.endswith("-"):
+            return WordType.NOUN
+
+        if token.tag_ == "KON" or token.pos_ == "CCONJ":
+            return WordType.CONJUNCTION
+
+        if token.pos_ == "PROPN":
+            return expected_word_type
+
+        return ""
+
+    async def check_word_type(
+        self,
+        lang: LangType,
+        token: Token,
+        word_type: str = "",
+        single_word: bool | None = None,
+        strict: bool = False,
+    ) -> bool:
+        if len(word_type) == 0:
+            return True
+
+        return word_type == await self.fetch_word_type(
+            lang, token, word_type, single_word, strict
         )
-    elif lang == LangType.FR:
+
+    def tokenize(self, text: str, lang: LangType) -> tuple:
+        return tuple([i.text for i in self.models[lang].tokenizer(text)])
+
+    # matcher to false positives
+    def is_false_positive_match(
+        self, false_positive_matcher: list, token_index: int, tokens: Doc, lemma: str
+    ) -> bool:
+        index = tokens[token_index].idx
+        for _, start, end in false_positive_matcher:
+            span_false = tokens[start:end]
+            if tokens[start:end].lemma_ != lemma and index in range(
+                span_false.start_char, span_false.end_char
+            ):
+                return True
+
+        return False
+
+    def fetch_tokens(self, lang: LangType, text: str) -> Doc:
+        return self.models[lang](text.rstrip().replace("\n", " "))
+
+    # create false positives patterns based on false positives column
+    def fetch_false_positive_matcher(
+        self, lang: LangType, tokens: Doc, false_positives: list
+    ) -> list:
+        if len(false_positives) == 0:
+            return []
+
+        matcher = Matcher(self.models[lang].vocab)
+
+        for false_positive in false_positives:
+            matcher.add("FalsePositivesList", false_positive)
+
+        return matcher(tokens)
+
+    def fetch_phrase_matcher(self, lang: LangType, tokens: Doc, phrases: list) -> list:
+        # Phrase matcher part to handle False positives with two words and special symbols
+        matcher = PhraseMatcher(s[lang].vocab, attr="LOWER")
+
+        # Only run model.make_doc to speed things up
+        patterns = [self.models[lang].make_doc(text) for text in phrases]
+        matcher.add("TerminologyList", patterns)
+
+        return matcher(tokens)
+
+    def custom_tokenizer(self, lang, nlp):
+        if lang == LangType.DE:
+            infixes = (
+                LIST_ELLIPSES
+                + LIST_ICONS
+                + [
+                    r"(?<=[{al}])\\.(?=[{au}])".format(al=ALPHA_LOWER, au=ALPHA_UPPER),
+                    r"(?<=[{a}])[,!?](?=[{a}])".format(a=ALPHA),
+                    # removed : [:<>=]
+                    r"(?<=[{a}])[<>=](?=[{a}])".format(a=ALPHA),
+                    r"(?<=[{a}]),(?=[{a}])".format(a=ALPHA),
+                    r"(?<=[0-9{a}])\/(?=[0-9{a}])".format(a=ALPHA),
+                    r"(?<=[{a}])([{q}\)\]\(\[])(?=[{a}])".format(
+                        a=ALPHA, q=CONCAT_QUOTES.replace("'", "")
+                    ),
+                    r"(?<=[{a}])--(?=[{a}])".format(a=ALPHA),
+                    r"(?<=[0-9])-(?=[0-9])",
+                ]
+            )
+        elif lang == LangType.EN:
+            # https://spacy.io/usage/linguistic-features#tokenization
+            infixes = (
+                LIST_ELLIPSES
+                + LIST_ICONS
+                + [
+                    r"(?<=[0-9])[+\\-\\*^](?=[0-9-])",
+                    r"(?<=[{al}{q}])\\.(?=[{au}{q}])".format(
+                        al=ALPHA_LOWER, au=ALPHA_UPPER, q=CONCAT_QUOTES
+                    ),
+                    r"(?<=[{a}]),(?=[{a}])".format(a=ALPHA),
+                    # ✅ Commented out regex that splits on hyphens between letters:
+                    # r"(?<=[{a}])(?:{h})(?=[{a}])".format(a=ALPHA, h=HYPHENS),
+                    r"(?<=[{a}0-9])[:<>=/](?=[{a}])".format(a=ALPHA),
+                ]
+            )
+        elif lang == LangType.FR:
+            return None
+
+        infix_re = compile_infix_regex(infixes)
+
+        # https://github.com/explosion/spaCy/discussions/12930
+        suffixes = nlp.Defaults.suffixes + [r"\."]
+        suffix_regex = spacy.util.compile_suffix_regex(suffixes)
+        nlp.tokenizer.suffix_search = suffix_regex.search
+
+        return Tokenizer(
+            nlp.vocab,
+            prefix_search=nlp.tokenizer.prefix_search,
+            suffix_search=nlp.tokenizer.suffix_search,
+            infix_finditer=infix_re.finditer,
+            token_match=nlp.tokenizer.token_match,
+            rules=nlp.Defaults.tokenizer_exceptions,
+        )
+
+    def load_nlp_model(self, lang, spacy_model):
+        model = spacy.load(spacy_model, disable=["textcat"])
+        model.add_pipe("emoji", first=True)
+        tokenizer = self.custom_tokenizer(lang, model)
+        if tokenizer is not None:
+            model.tokenizer = tokenizer
+
+        # Switch to non-trainable lemmatizer
+        model.remove_pipe("lemmatizer")
+        # Add non-trainable lemmatizer from language defaults
+        # and load lemmatizer tables from spacy-lookups-data
+        model.add_pipe("lemmatizer").initialize()
+
+        model.add_pipe("custom_lemmatizer_factory", after="lemmatizer")
+
+        self.models[lang] = model
+
+    def is_token_masculine(self, token: Token) -> bool | None:
+        gender = token.morph.get("Gender")
+        if gender is None:
+            return None
+
+        return "Masc" in gender
+
+    def is_token_singular(self, lang: LangType, token: Token) -> bool | None:
+        plural_lookup_first = (
+            False if token.text.endswith("e") and token.lemma_.endswith("er") else True
+        )
+        if plural_lookup_first and token.text in self.lemma_plural_lookup[lang]:
+            return False
+
+        number = token.morph.get("Number")
+        if number:
+            return "Sing" in number
+
+        if not plural_lookup_first and token.text in self.lemma_plural_lookup[lang]:
+            return False
+
+        if lang == LangType.EN and token.pos == "NOUN" and token.text.endswith("s"):
+            return False
+
+        if token.text.endswith("-"):
+            return False
+
+        # Likely to happen with nouns that are anglicisms, f.e. 'Store Manager Watch"
         return None
 
-    infix_re = compile_infix_regex(infixes)
+    def is_token_plural(self, lang: LangType, token: Token) -> bool | None:
+        is_singular = self.is_token_singular(lang, token)
+        if is_singular is None:
+            return None
 
-    # https://github.com/explosion/spaCy/discussions/12930
-    suffixes = nlp.Defaults.suffixes + [r"\."]
-    suffix_regex = spacy.util.compile_suffix_regex(suffixes)
-    nlp.tokenizer.suffix_search = suffix_regex.search
+        return not is_singular
 
-    return Tokenizer(
-        nlp.vocab,
-        prefix_search=nlp.tokenizer.prefix_search,
-        suffix_search=nlp.tokenizer.suffix_search,
-        infix_finditer=infix_re.finditer,
-        token_match=nlp.tokenizer.token_match,
-        rules=nlp.Defaults.tokenizer_exceptions,
-    )
+    def is_false_positive(
+        self,
+        full_text: str | None,
+        token_index: int | None,
+        tokens: Doc | None,
+        false_positives: list,
+        window_left: int | None = None,
+        window_right: int | None = None,
+        case_sensitive: bool = False,
+    ) -> bool:
+        if len(false_positives) == 0 or full_text is None:
+            return False
 
+        if window_left is None:
+            # previous 5 tokens
+            i_window_min = max(0, token_index - 5)
+            window_left = tokens[i_window_min].idx
+        else:
+            window_left = max(tokens[token_index].idx - window_left, 0)
 
-lemma_lookup = {}
+        if window_right is None:
+            # following 5 tokens
+            i_window_max = min(len(tokens) - 1, token_index + 5)
+            window_right = tokens[i_window_max].idx + len(tokens[i_window_max].text)
+        else:
+            window_right += tokens[token_index].idx
+
+        partial_text = full_text[window_left:window_right]
+        if not case_sensitive:
+            partial_text = partial_text.lower()
+            false_positives = list(
+                map(lambda false_positive: false_positive.lower(), false_positives)
+            )
+
+        start = tokens[token_index].idx - window_left
+        end = start + len(tokens[token_index].text)
+
+        for false_positive in false_positives:
+            for m in re.finditer(re.escape(false_positive), partial_text):
+                if m.start() <= start and m.end() >= end:
+                    return True
+
+        return False
+
+    def fetch_false_positive_matchers(self, lang: LangType, tokens: Doc) -> list:
+        return self.fetch_false_positive_matcher(
+            lang, tokens, self.static_rules[lang]["pattern_false_positives"]
+        )
 
 
 def custom_lemmatizer(lang):
@@ -105,21 +455,14 @@ def custom_lemmatizer_factory(nlp, name):
     return custom_lemmatizer(nlp.lang)
 
 
-def fetch_nlp_model(lang, spacy_model, lookup):
-    lemma_lookup[lang] = lookup
+class TokenLemmatizer:
+    def __init__(self, lemma_table):
+        self.lemma_table = lemma_table
 
-    model = spacy.load(spacy_model, disable=["textcat"])
-    model.add_pipe("emoji", first=True)
-    tokenizer = custom_tokenizer(lang, model)
-    if tokenizer is not None:
-        model.tokenizer = tokenizer
+    def __call__(self, doc):
+        for token in doc:
+            # Overwrite the token.lemma_ if there's an entry in the data
+            if token.text in self.lemma_table:
+                token.lemma_ = self.lemma_table.get(token.text, token.lemma_)
 
-    # Switch to non-trainable lemmatizer
-    model.remove_pipe("lemmatizer")
-    # Add non-trainable lemmatizer from language defaults
-    # and load lemmatizer tables from spacy-lookups-data
-    model.add_pipe("lemmatizer").initialize()
-
-    model.add_pipe("custom_lemmatizer_factory", after="lemmatizer")
-
-    return model
+        return doc
