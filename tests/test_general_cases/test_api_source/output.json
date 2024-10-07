@@ -5,6 +5,9 @@
         {
             "alternatives": [
                 {
+                    "text": "personne"
+                },
+                {
                     "text": "personne en visite"
                 },
                 {
@@ -15,9 +18,6 @@
                 },
                 {
                     "text": "visiteur ou visiteuse"
-                },
-                {
-                    "text": "touristes"
                 }
             ],
             "category": "gender-orientation",

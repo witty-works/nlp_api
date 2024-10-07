@@ -16041,9 +16041,9 @@ INSERT INTO "rules_alternative" VALUES(17869,1,'s''investir',NULL,0,1,NULL,NULL,
 INSERT INTO "rules_alternative" VALUES(17870,2,'prendre des initiatives',NULL,0,1,NULL,NULL,5137,NULL,'["prendre", "des", "initiatives"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(17877,0,'homme',NULL,0,1,NULL,NULL,5142,NULL,'["homme"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(17884,0,'en situation irrégulière',NULL,0,1,NULL,NULL,5144,NULL,'["en", "situation", "irr\u00e9guli\u00e8re"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(17886,1,'prioritaire',NULL,0,1,NULL,NULL,5145,NULL,'["prioritaire"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(17887,2,'urgent',NULL,0,1,NULL,NULL,5145,NULL,'["urgent"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(17888,3,'essentiel',NULL,0,1,NULL,NULL,5145,NULL,'["essentiel"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(17886,2,'prioritaire',NULL,0,1,NULL,NULL,5145,NULL,'["prioritaire"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(17887,3,'urgent',NULL,0,1,NULL,NULL,5145,NULL,'["urgent"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(17888,4,'essentiel',NULL,0,1,NULL,NULL,5145,NULL,'["essentiel"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(17890,1,'liberté',NULL,0,1,NULL,NULL,5146,NULL,'["libert\u00e9"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(17892,0,'dans ((Nombre)) pays',NULL,0,1,'spécifier ''Nombre''',NULL,5147,NULL,'["dans", "(", "(", "Nombre", ")", ")", "pays"]','[]','default',0,'default',1,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(17893,1,'sur ((Nombre)) continent',NULL,0,1,'spécifier ''Nombre''',NULL,5147,NULL,'["sur", "(", "(", "Nombre", ")", ")", "continent"]','[]','default',0,'default',1,0,'fr',0,0);
@@ -16409,7 +16409,7 @@ INSERT INTO "rules_alternative" VALUES(19694,3,'responsable commercial',NULL,0,1
 INSERT INTO "rules_alternative" VALUES(19695,4,'équipe de vente',NULL,0,1,NULL,7,5524,NULL,'["\u00e9quipe", "de", "vente"]','[]','default',0,'default',0,0,'fr',1,0);
 INSERT INTO "rules_alternative" VALUES(19696,1,'personne chargée du déploiement',NULL,0,1,NULL,7,5523,NULL,'["personne", "charg\u00e9e", "du", "d\u00e9ploiement"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(19697,2,'déployeur~déployeuse',NULL,0,1,NULL,7,5523,NULL,'["d\u00e9ployeur", "~", "d\u00e9ployeuse"]','[]','default',0,'default',0,0,'fr',0,1);
-INSERT INTO "rules_alternative" VALUES(19698,2,'chef de projet~cheffe de projet',NULL,0,1,NULL,7,5522,NULL,'["chef", "de", "projet", "~", "cheffe", "de", "projet"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(19698,2,'chef de projet~cheffe de projet',NULL,0,1,NULL,7,5522,NULL,'["chef", "de", "projet", "~", "cheffe", "de", "projet"]','[]','default',0,'default',0,0,'fr',0,1);
 INSERT INTO "rules_alternative" VALUES(19699,3,'personne en charge du projet',NULL,0,1,NULL,7,5522,NULL,'["personne", "en", "charge", "du", "projet"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(19700,1,'chef de produit~cheffe de produit',NULL,0,1,NULL,7,5521,NULL,'["chef", "de", "produit", "~", "cheffe", "de", "produit"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(19701,0,'responsable de produit',NULL,0,1,NULL,7,5521,NULL,'["responsable", "de", "produit"]','[]','default',0,'default',0,0,'fr',0,0);
@@ -16450,7 +16450,7 @@ INSERT INTO "rules_alternative" VALUES(19741,2,'agent de la Poste~agente de la P
 INSERT INTO "rules_alternative" VALUES(19742,0,'personne chargée de la remise du courrier',NULL,0,1,NULL,7,5510,NULL,'["personne", "charg\u00e9e", "de", "la", "remise", "du", "courrier"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(19743,2,'domestique',NULL,0,1,NULL,7,5509,NULL,'["domestique"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(19744,1,'aide à domicile',NULL,0,1,NULL,7,5509,NULL,'["aide", "\u00e0", "domicile"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(19745,3,'employé de maison~employée de maison',NULL,0,1,NULL,7,5509,NULL,'["employ\u00e9", "de", "maison", "~", "employ\u00e9e", "de", "maison"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(19745,3,'employé de maison~employée de maison',NULL,0,1,NULL,7,5509,NULL,'["employ\u00e9", "de", "maison", "~", "employ\u00e9e", "de", "maison"]','[]','default',0,'default',0,0,'fr',0,1);
 INSERT INTO "rules_alternative" VALUES(19746,0,'aide-ménagère',NULL,0,1,NULL,7,5509,NULL,'["aide-m\u00e9nag\u00e8re"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(19747,1,'docker~dockeuse',NULL,0,1,NULL,7,5508,NULL,'["docker", "~", "dockeuse"]','[]','default',0,'default',0,0,'fr',0,1);
 INSERT INTO "rules_alternative" VALUES(19748,0,'responsable de formation',NULL,0,1,NULL,7,5507,NULL,'["responsable", "de", "formation"]','[]','default',0,'default',0,0,'fr',0,0);
@@ -16479,8 +16479,8 @@ INSERT INTO "rules_alternative" VALUES(19785,0,'développeur~développeuse',NULL
 INSERT INTO "rules_alternative" VALUES(19786,3,'spécialiste du développement',NULL,0,1,NULL,7,5503,NULL,'["sp\u00e9cialiste", "du", "d\u00e9veloppement"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(19787,2,'responsable du développement',NULL,0,1,NULL,7,5503,NULL,'["responsable", "du", "d\u00e9veloppement"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(19788,1,'équipe de développement',NULL,0,1,NULL,7,5503,NULL,'["\u00e9quipe", "de", "d\u00e9veloppement"]','[]','default',0,'default',0,0,'fr',1,0);
-INSERT INTO "rules_alternative" VALUES(19789,4,'scientifique',NULL,0,1,NULL,7,5496,NULL,'["scientifique"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(19790,3,'spécialiste d''ingénierie',NULL,0,1,NULL,7,5496,NULL,'["sp\u00e9cialiste", "d''", "ing\u00e9nierie"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(19789,3,'scientifique',NULL,0,1,NULL,7,5496,NULL,'["scientifique"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(19790,4,'ingénierie',NULL,0,1,NULL,7,5496,NULL,'["ing\u00e9nierie"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(19792,1,'spécialiste technique',NULL,0,1,NULL,7,5496,NULL,'["sp\u00e9cialiste", "technique"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(19793,2,'spécialiste informatique',NULL,0,1,NULL,7,5496,NULL,'["sp\u00e9cialiste", "informatique"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(19794,1,'portier~portière',NULL,0,1,NULL,7,5495,NULL,'["portier", "~", "porti\u00e8re"]','[]','default',0,'default',0,0,'fr',0,1);
@@ -16534,10 +16534,9 @@ INSERT INTO "rules_alternative" VALUES(19842,1,'contremaître~contremaîtresse',
 INSERT INTO "rules_alternative" VALUES(19843,1,'professeur~professeuse',NULL,0,1,NULL,7,5455,NULL,'["professeur", "~", "professeuse"]','[]','default',0,'default',0,0,'fr',0,1);
 INSERT INTO "rules_alternative" VALUES(19844,2,'intermédiaire',NULL,0,1,NULL,7,5463,NULL,'["interm\u00e9diaire"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(19845,4,'homme d''affaires~femme d''affaires',NULL,0,1,NULL,7,5433,NULL,'["homme", "d''", "affaires", "~", "femme", "d''", "affaires"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(19846,0,'acteur~actrice',NULL,0,1,NULL,7,5469,NULL,'["acteur", "~", "actrice"]','[]','default',0,'default',0,0,'fr',0,1);
-INSERT INTO "rules_alternative" VALUES(19847,1,'interprète',NULL,0,1,NULL,7,5469,NULL,'["interpr\u00e8te"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(19848,2,'comédien~comédienne',NULL,0,1,NULL,7,5469,NULL,'["com\u00e9dien", "~", "com\u00e9dienne"]','[]','default',0,'default',0,0,'fr',0,1);
-INSERT INTO "rules_alternative" VALUES(19849,3,'artiste',NULL,0,1,NULL,7,5469,NULL,'["artiste"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(19846,2,'acteur~actrice',NULL,0,1,'Arts',7,5469,NULL,'["acteur", "~", "actrice"]','[]','default',0,'default',0,0,'fr',0,1);
+INSERT INTO "rules_alternative" VALUES(19847,3,'interprète',NULL,0,1,'Arts',7,5469,NULL,'["interpr\u00e8te"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(19849,4,'artiste',NULL,0,1,'Arts',7,5469,NULL,'["artiste"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(19850,2,'administrateur~administratrice',NULL,0,1,NULL,7,5470,NULL,'["administrateur", "~", "administratrice"]','[]','default',0,'default',0,0,'fr',0,1);
 INSERT INTO "rules_alternative" VALUES(19851,0,'responsable de l''administration',NULL,0,1,NULL,7,5470,NULL,'["responsable", "de", "l''", "administration"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(19852,1,'agent~agente',NULL,0,1,NULL,7,5471,NULL,'["agent", "~", "agente"]','[]','default',0,'default',0,0,'fr',0,1);
@@ -16654,9 +16653,8 @@ INSERT INTO "rules_alternative" VALUES(19974,3,'ouverture d''esprit',NULL,0,1,NU
 INSERT INTO "rules_alternative" VALUES(19975,4,'ingéniosité',NULL,0,1,NULL,7,5580,NULL,'["ing\u00e9niosit\u00e9"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(19976,0,'inventivité',NULL,0,1,NULL,7,5580,NULL,'["inventivit\u00e9"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(19978,2,'prendre des initiatives',NULL,0,1,NULL,7,5579,NULL,'["prendre", "des", "initiatives"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(19980,3,'être curieux~être curieuse',NULL,0,1,NULL,7,5579,NULL,'["\u00eatre", "curieux", "~", "\u00eatre", "curieuse"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(19981,4,'être ouvert d''esprit~être ouverte d''esprit',NULL,0,1,NULL,7,5579,NULL,'["\u00eatre", "ouvert", "d''", "esprit", "~", "\u00eatre", "ouverte", "d''", "esprit"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(19982,5,'avoir un esprit inventif',NULL,0,1,NULL,7,5579,NULL,'["avoir", "un", "esprit", "inventif"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(19980,3,'être curieux~être curieuse',NULL,0,1,NULL,7,5579,NULL,'["\u00eatre", "curieux", "~", "\u00eatre", "curieuse"]','[]','default',0,'default',0,0,'fr',0,1);
+INSERT INTO "rules_alternative" VALUES(19982,4,'avoir un esprit inventif',NULL,0,1,NULL,7,5579,NULL,'["avoir", "un", "esprit", "inventif"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(19983,1,'ouvrir la voie',NULL,0,1,NULL,7,5579,NULL,'["ouvrir", "la", "voie"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(19984,0,'innover',NULL,0,1,NULL,7,5579,NULL,'["innover"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(19985,0,'atteindre de meilleurs résultats',NULL,0,1,NULL,7,5577,NULL,'["atteindre", "de", "meilleurs", "r\u00e9sultats"]','[]','default',0,'default',0,0,'fr',0,0);
@@ -17115,10 +17113,10 @@ INSERT INTO "rules_alternative" VALUES(21560,1,'tenue',NULL,0,1,NULL,7,5746,NULL
 INSERT INTO "rules_alternative" VALUES(21561,2,'mode',NULL,0,1,NULL,7,5746,NULL,'["mode"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(21562,3,'habit',NULL,0,1,NULL,7,5746,NULL,'["habit"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(21563,2,'couple',NULL,0,1,NULL,7,5738,NULL,'["couple"]','[]','default',0,'default',0,0,'fr',1,0);
-INSERT INTO "rules_alternative" VALUES(21564,3,'partenaire',NULL,0,1,'Dans le cas d''un couple',7,5719,NULL,'["partenaire"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(21565,4,'conjoint~conjointe',NULL,0,1,'Dans le cas d''un couple',7,5719,NULL,'["conjoint", "~", "conjointe"]','[]','default',0,'default',0,0,'fr',0,1);
-INSERT INTO "rules_alternative" VALUES(21566,5,'couple',NULL,0,1,'Dans le cas d''un couple',7,5719,NULL,'["couple"]','[]','default',0,'default',0,0,'fr',1,0);
-INSERT INTO "rules_alternative" VALUES(21568,1,'personne',NULL,0,1,NULL,7,5719,NULL,'["personne"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(21564,4,'partenaire',NULL,0,1,'Dans le cas d''un couple',7,5719,NULL,'["partenaire"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(21565,5,'conjoint~conjointe',NULL,0,1,'Dans le cas d''un couple',7,5719,NULL,'["conjoint", "~", "conjointe"]','[]','default',0,'default',0,0,'fr',0,1);
+INSERT INTO "rules_alternative" VALUES(21566,6,'couple',NULL,0,1,'Dans le cas d''un couple',7,5719,NULL,'["couple"]','[]','default',0,'default',0,0,'fr',1,0);
+INSERT INTO "rules_alternative" VALUES(21568,0,'personne',NULL,0,1,NULL,7,5719,NULL,'["personne"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(21569,0,'-','',0,1,NULL,7,5735,NULL,'["-"]','[]','default',0,'default',0,1,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(21570,4,'vous',NULL,0,1,NULL,7,5735,NULL,'["vous"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(21571,3,'ami~amie',NULL,0,1,NULL,7,5729,NULL,'["ami", "~", "amie"]','[]','default',0,'default',0,0,'fr',0,1);
@@ -17828,10 +17826,10 @@ INSERT INTO "rules_alternative" VALUES(24881,2,'expertise',NULL,0,1,NULL,7,5369,
 INSERT INTO "rules_alternative" VALUES(24882,0,'dans ((Nombre)) pays',NULL,0,1,'spécifier ''Nombre''',7,5335,NULL,'["dans", "(", "(", "Nombre", ")", ")", "pays"]','[]','default',0,'default',1,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(24883,1,'sur ((Nombre)) continent',NULL,0,1,'spécifier ''Nombre''',7,5335,NULL,'["sur", "(", "(", "Nombre", ")", ")", "continent"]','[]','default',0,'default',1,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(24884,2,'dans ((Liste de pays))',NULL,0,1,'spécifier ''Liste de pays''',7,5335,NULL,'["dans", "(", "(", "Liste", "de", "pays", ")", ")"]','[]','default',0,'default',1,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(24893,4,'déterminant',NULL,0,1,NULL,7,5145,NULL,'["d\u00e9terminant"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(24894,5,'central',NULL,0,1,NULL,7,5145,NULL,'["central"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(24895,0,'nécessaire',NULL,0,1,NULL,7,5145,NULL,'["n\u00e9cessaire"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(24896,6,'grand~grande',NULL,0,1,NULL,7,5145,NULL,'["grand", "~", "grande"]','[]','default',0,'default',0,0,'fr',0,1);
+INSERT INTO "rules_alternative" VALUES(24893,5,'déterminant',NULL,0,1,NULL,7,5145,NULL,'["d\u00e9terminant"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(24894,6,'central',NULL,0,1,NULL,7,5145,NULL,'["central"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(24895,1,'nécessaire',NULL,0,1,NULL,7,5145,NULL,'["n\u00e9cessaire"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(24896,0,'grand~grande',NULL,0,1,NULL,7,5145,NULL,'["grand", "~", "grande"]','[]','default',0,'default',0,0,'fr',0,1);
 INSERT INTO "rules_alternative" VALUES(24897,7,'ambitieux~ambitieuse',NULL,0,1,NULL,7,5145,NULL,'["ambitieux", "~", "ambitieuse"]','[]','default',0,'default',0,0,'fr',0,1);
 INSERT INTO "rules_alternative" VALUES(24899,0,'-','',0,1,NULL,7,5419,NULL,'["-"]','[]','default',0,'default',0,1,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(24900,0,'-','',0,1,NULL,7,5403,NULL,'["-"]','[]','default',0,'default',0,1,'fr',0,0);
@@ -17864,7 +17862,7 @@ INSERT INTO "rules_alternative" VALUES(24929,0,'délégué à la protection des 
 INSERT INTO "rules_alternative" VALUES(24930,1,'message direct',NULL,0,1,NULL,7,5098,NULL,'["message", "direct"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(24931,2,'personne ayant donné naissance à',NULL,0,1,NULL,7,5754,NULL,'["personne", "ayant", "donn\u00e9", "naissance", "\u00e0"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(24932,3,'celui qui a donné naissance à~celle qui a donné naissance à',NULL,0,1,NULL,7,5754,NULL,'["celui", "qui", "a", "donn\u00e9", "naissance", "\u00e0", "~", "celle", "qui", "a", "donn\u00e9", "naissance", "\u00e0"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(24933,2,'-','',0,1,NULL,7,5742,NULL,'["-"]','[]','default',0,'default',0,1,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(24933,3,'-','',0,1,NULL,7,5742,NULL,'["-"]','[]','default',0,'default',0,1,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(24934,3,'noble',NULL,0,1,NULL,7,5728,NULL,'["noble"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(24935,1,'les enfants',NULL,0,1,NULL,7,5726,NULL,'["les", "enfants"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(24936,2,'les jeunes',NULL,0,1,NULL,7,5726,NULL,'["les", "jeunes"]','[]','default',0,'default',0,0,'fr',0,0);
@@ -17969,8 +17967,8 @@ INSERT INTO "rules_alternative" VALUES(25678,0,'remarquable',NULL,0,1,NULL,NULL,
 INSERT INTO "rules_alternative" VALUES(25685,0,'faire la différence',NULL,0,1,NULL,NULL,6479,NULL,'["faire", "la", "diff\u00e9rence"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(25686,1,'améliorer le quotidien',NULL,0,1,NULL,NULL,6479,NULL,'["am\u00e9liorer", "le", "quotidien"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(25687,2,'transformer',NULL,0,1,NULL,NULL,6479,NULL,'["transformer"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(25708,0,'grande qualité',NULL,0,1,NULL,NULL,6483,NULL,'["grande", "qualit\u00e9"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(25714,0,'très bon~très bonne',NULL,0,1,NULL,NULL,6484,NULL,'["tr\u00e8s", "bon", "~", "tr\u00e8s", "bonne"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(25708,1,'grande qualité',NULL,0,1,NULL,NULL,6483,NULL,'["grande", "qualit\u00e9"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(25714,0,'très bon~très bonne',NULL,0,1,NULL,NULL,6484,NULL,'["tr\u00e8s", "bon", "~", "tr\u00e8s", "bonne"]','[]','default',0,'default',0,0,'fr',0,1);
 INSERT INTO "rules_alternative" VALUES(25715,1,'remarquable',NULL,0,1,NULL,NULL,6484,NULL,'["remarquable"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(25716,2,'inspirant~inspirante',NULL,0,1,NULL,NULL,6484,NULL,'["inspirant", "~", "inspirante"]','[]','default',0,'default',0,0,'fr',0,1);
 INSERT INTO "rules_alternative" VALUES(25717,3,'de grande qualité','',0,1,NULL,NULL,6484,NULL,'["de", "grande", "qualit\u00e9"]','[]','default',0,'default',0,0,'fr',0,0);
@@ -18024,9 +18022,9 @@ INSERT INTO "rules_alternative" VALUES(26186,2,'désormais',NULL,0,1,NULL,NULL,6
 INSERT INTO "rules_alternative" VALUES(26187,3,'-','',0,1,NULL,NULL,6657,NULL,'["-"]','[]','default',0,'default',0,1,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(26188,0,'à partir de ((date))',NULL,0,1,'Préciser la date',NULL,6657,NULL,'["\u00e0", "partir", "de", "(", "(", "date", ")", ")"]','[]','default',0,'default',1,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(26284,0,'en accord',NULL,0,1,NULL,NULL,6672,NULL,'["en", "accord"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(26287,2,'ayant la même opinion',NULL,0,1,NULL,NULL,6672,NULL,'["ayant", "la", "m\u00eame", "opinion"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(26288,3,'ayant le même point de vue',NULL,0,1,NULL,NULL,6672,NULL,'["ayant", "le", "m\u00eame", "point", "de", "vue"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(26289,4,'ayant des valeurs communes',NULL,0,1,NULL,NULL,6672,NULL,'["ayant", "des", "valeurs", "communes"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(26287,3,'ayant la même opinion',NULL,0,1,NULL,NULL,6672,NULL,'["ayant", "la", "m\u00eame", "opinion"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(26288,4,'ayant le même point de vue',NULL,0,1,NULL,NULL,6672,NULL,'["ayant", "le", "m\u00eame", "point", "de", "vue"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(26289,5,'ayant des valeurs communes',NULL,0,1,NULL,NULL,6672,NULL,'["ayant", "des", "valeurs", "communes"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(26330,3,'moderne',NULL,0,1,NULL,NULL,6678,NULL,'["moderne"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(26331,2,'innovant~innovante',NULL,0,1,NULL,NULL,6678,NULL,'["innovant", "~", "innovante"]','[]','default',0,'default',0,0,'fr',0,1);
 INSERT INTO "rules_alternative" VALUES(26332,4,'avancé~avancée',NULL,0,1,NULL,NULL,6678,NULL,'["avanc\u00e9", "~", "avanc\u00e9e"]','[]','default',0,'default',0,0,'fr',0,1);
@@ -18136,9 +18134,9 @@ INSERT INTO "rules_alternative" VALUES(28114,5,'C''est surprenant',NULL,0,1,NULL
 INSERT INTO "rules_alternative" VALUES(28115,6,'C''est absurde',NULL,0,1,NULL,NULL,7112,NULL,'["C''", "est", "absurde"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(28117,3,'Wahou !',NULL,0,1,NULL,NULL,7112,NULL,'["Wahou", "!"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(28118,1,'Je n''en reviens pas !',NULL,0,1,NULL,NULL,7112,NULL,'["Je", "n''", "en", "reviens", "pas", "!"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(28145,0,'-','',0,1,NULL,7,5719,NULL,'["-"]','[]','default',0,'default',0,1,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(28145,3,'-','',0,1,NULL,7,5719,NULL,'["-"]','[]','default',0,'default',0,1,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(28146,2,'adulte',NULL,0,1,NULL,7,5719,NULL,'["adulte"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(28147,6,'équipe',NULL,0,1,NULL,7,5719,NULL,'["\u00e9quipe"]','[]','default',0,'default',0,0,'fr',1,0);
+INSERT INTO "rules_alternative" VALUES(28147,7,'équipe',NULL,0,1,NULL,7,5719,NULL,'["\u00e9quipe"]','[]','default',0,'default',0,0,'fr',1,0);
 INSERT INTO "rules_alternative" VALUES(28151,1,'présentatrice~présentateur',NULL,0,1,NULL,NULL,7124,NULL,'["pr\u00e9sentatrice", "~", "pr\u00e9sentateur"]','[]','default',0,'default',0,0,'fr',0,1);
 INSERT INTO "rules_alternative" VALUES(28152,0,'journaliste',NULL,0,1,NULL,NULL,7124,NULL,'["journaliste"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(28153,2,'personne présentant l''émission',NULL,0,1,NULL,NULL,7124,NULL,'["personne", "pr\u00e9sentant", "l''", "\u00e9mission"]','[]','default',0,'default',0,0,'fr',0,0);
@@ -18175,7 +18173,7 @@ INSERT INTO "rules_alternative" VALUES(28349,0,'personne inspirante',NULL,0,1,NU
 INSERT INTO "rules_alternative" VALUES(28350,1,'exemple',NULL,0,1,NULL,7,6495,NULL,'["exemple"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(28351,0,'personne entreprenante',NULL,0,1,NULL,7,6493,NULL,'["personne", "entreprenante"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(28352,1,'personne qui prend des initiatives',NULL,0,1,NULL,7,6493,NULL,'["personne", "qui", "prend", "des", "initiatives"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(28353,1,'grandes compétences',NULL,0,1,NULL,7,6483,NULL,'["grandes", "comp\u00e9tences"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(28353,2,'grandes compétences',NULL,0,1,NULL,7,6483,NULL,'["grandes", "comp\u00e9tences"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(28354,4,'très bon~très bonne',NULL,0,1,NULL,7,6478,NULL,'["tr\u00e8s", "bon", "~", "tr\u00e8s", "bonne"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(28355,1,'de grande qualité',NULL,0,1,NULL,7,6478,NULL,'["de", "grande", "qualit\u00e9"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(28356,2,'talentueux~talentueuse',NULL,0,1,NULL,7,6478,NULL,'["talentueux", "~", "talentueuse"]','[]','default',0,'default',0,0,'fr',0,1);
@@ -18294,7 +18292,7 @@ INSERT INTO "rules_alternative" VALUES(28815,0,'-','',0,1,NULL,1,7277,NULL,'["-"
 INSERT INTO "rules_alternative" VALUES(28816,1,'opportunity','n',0,1,NULL,5,603,NULL,'["opportunity"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'en',0,0);
 INSERT INTO "rules_alternative" VALUES(28817,2,'population étudiante',NULL,0,1,NULL,7,5441,NULL,'["population", "\u00e9tudiante"]','[]','default',0,'default',0,0,'fr',1,0);
 INSERT INTO "rules_alternative" VALUES(28818,3,'classe',NULL,0,1,NULL,7,5441,NULL,'["classe"]','[]','default',0,'default',0,0,'fr',1,0);
-INSERT INTO "rules_alternative" VALUES(28819,4,'partie prenante',NULL,0,1,NULL,7,5469,NULL,'["partie", "prenante"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(28819,0,'partie prenante',NULL,0,1,NULL,7,5469,NULL,'["partie", "prenante"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(28820,2,'personnel de cabine',NULL,0,1,NULL,7,5527,NULL,'["personnel", "de", "cabine"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(28821,2,'membre de la direction',NULL,0,1,NULL,7,5513,NULL,'["membre", "de", "la", "direction"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(28822,0,'approach',NULL,0,1,NULL,1,7278,NULL,'["approach"]','[]','default',0,'default',0,0,'en',0,0);
@@ -18820,12 +18818,12 @@ INSERT INTO "rules_alternative" VALUES(29398,2,'personne',NULL,0,1,NULL,NULL,742
 INSERT INTO "rules_alternative" VALUES(29399,3,'locataire',NULL,0,1,NULL,NULL,7422,16,'["locataire"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(29400,4,'propriétaire',NULL,0,1,NULL,NULL,7422,16,'["propri\u00e9taire"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(29401,5,'famille',NULL,0,1,NULL,NULL,7422,16,'["famille"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(29405,0,'personne qui reçoit',NULL,0,1,NULL,NULL,7424,16,'["personne", "qui", "re\u00e7oit"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(29406,1,'hôte~hôtesse',NULL,0,1,NULL,NULL,7424,16,'["h\u00f4te", "~", "h\u00f4tesse"]','[]','default',0,'default',0,0,'fr',0,1);
-INSERT INTO "rules_alternative" VALUES(29407,2,'accueil',NULL,0,1,NULL,NULL,7424,16,'["accueil"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(29408,3,'personne reçue',NULL,0,1,NULL,NULL,7424,16,'["personne", "re\u00e7ue"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(29409,4,'convive',NULL,0,1,NULL,NULL,7424,16,'["convive"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(29410,5,'personne invitée',NULL,0,1,NULL,NULL,7424,16,'["personne", "invit\u00e9e"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29405,4,'personne qui reçoit',NULL,0,1,NULL,NULL,7424,16,'["personne", "qui", "re\u00e7oit"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29406,3,'hôte~hôtesse',NULL,0,1,NULL,NULL,7424,16,'["h\u00f4te", "~", "h\u00f4tesse"]','[]','default',0,'default',0,0,'fr',0,1);
+INSERT INTO "rules_alternative" VALUES(29407,5,'accueil',NULL,0,1,NULL,NULL,7424,16,'["accueil"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29408,1,'personne reçue',NULL,0,1,NULL,NULL,7424,16,'["personne", "re\u00e7ue"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29409,2,'convive',NULL,0,1,NULL,NULL,7424,16,'["convive"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29410,6,'personne invitée',NULL,0,1,NULL,NULL,7424,16,'["personne", "invit\u00e9e"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(29411,0,'artiste',NULL,0,1,NULL,NULL,7425,16,'["artiste"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(29412,1,'illustrateur~illustratrice',NULL,0,1,NULL,NULL,7425,16,'["illustrateur", "~", "illustratrice"]','[]','default',0,'default',0,0,'fr',0,1);
 INSERT INTO "rules_alternative" VALUES(29413,2,'spécialiste de l''illustration',NULL,0,1,NULL,NULL,7425,16,'["sp\u00e9cialiste", "de", "l''", "illustration"]','[]','default',0,'default',0,0,'fr',0,0);
@@ -19121,10 +19119,10 @@ INSERT INTO "rules_alternative" VALUES(29739,1,'équipe',NULL,0,1,NULL,NULL,7503
 INSERT INTO "rules_alternative" VALUES(29740,2,'personnel',NULL,0,1,NULL,NULL,7503,16,'["personnel"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(29741,3,'travailleur~travailleuse',NULL,0,1,NULL,NULL,7503,16,'["travailleur", "~", "travailleuse"]','[]','default',0,'default',0,0,'fr',0,1);
 INSERT INTO "rules_alternative" VALUES(29742,0,'personne utilisant ((outil))',NULL,0,1,NULL,NULL,7504,16,'["personne", "utilisant", "(", "(", "outil", ")", ")"]','[]','default',0,'default',1,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(29743,1,'personne concernée',NULL,0,1,NULL,NULL,7504,16,'["personne", "concern\u00e9e"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(29744,2,'vous',NULL,0,1,NULL,NULL,7504,16,'["vous"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(29745,3,'utilisateur~utilisatrice',NULL,0,1,NULL,NULL,7504,16,'["utilisateur", "~", "utilisatrice"]','[]','default',0,'default',0,0,'fr',0,1);
-INSERT INTO "rules_alternative" VALUES(29746,4,'utilisation',NULL,0,1,NULL,NULL,7504,16,'["utilisation"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29743,5,'personne concernée',NULL,0,1,NULL,NULL,7504,16,'["personne", "concern\u00e9e"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29744,3,'vous',NULL,0,1,NULL,NULL,7504,16,'["vous"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29745,4,'utilisateur~utilisatrice',NULL,0,1,NULL,NULL,7504,16,'["utilisateur", "~", "utilisatrice"]','[]','default',0,'default',0,0,'fr',0,1);
+INSERT INTO "rules_alternative" VALUES(29746,6,'utilisation',NULL,0,1,NULL,NULL,7504,16,'["utilisation"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(29747,0,'profil',NULL,0,1,NULL,NULL,7505,16,'["profil"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(29748,0,'compte',NULL,0,1,NULL,NULL,7506,16,'["compte"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(29749,0,'responsable de la vérification',NULL,0,1,NULL,NULL,7507,16,'["responsable", "de", "la", "v\u00e9rification"]','[]','default',0,'default',0,0,'fr',0,0);
@@ -19141,11 +19139,11 @@ INSERT INTO "rules_alternative" VALUES(29759,2,'veuf~veuve',NULL,0,1,NULL,NULL,7
 INSERT INTO "rules_alternative" VALUES(29760,0,'village',NULL,0,1,NULL,NULL,7510,16,'["village"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(29761,1,'villageois~villageoise',NULL,0,1,NULL,NULL,7510,16,'["villageois", "~", "villageoise"]','[]','default',0,'default',0,0,'fr',1,0);
 INSERT INTO "rules_alternative" VALUES(29762,2,'population du village',NULL,0,1,NULL,NULL,7510,16,'["population", "du", "village"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(29763,0,'personne en visite',NULL,0,1,NULL,NULL,7511,16,'["personne", "en", "visite"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(29764,1,'personne invitée',NULL,0,1,NULL,NULL,7511,16,'["personne", "invit\u00e9e"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(29765,2,'visiteur~visiteuse',NULL,0,1,NULL,NULL,7511,16,'["visiteur", "~", "visiteuse"]','[]','default',0,'default',0,0,'fr',0,1);
-INSERT INTO "rules_alternative" VALUES(29766,3,'touristes',NULL,0,1,NULL,NULL,7511,16,'["touristes"]','[]','default',0,'default',0,0,'fr',0,0);
-INSERT INTO "rules_alternative" VALUES(29767,4,'gens de passage',NULL,0,1,NULL,NULL,7511,16,'["gens", "de", "passage"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29763,1,'personne en visite',NULL,0,1,NULL,NULL,7511,16,'["personne", "en", "visite"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29764,2,'personne invitée',NULL,0,1,NULL,NULL,7511,16,'["personne", "invit\u00e9e"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29765,3,'visiteur~visiteuse',NULL,0,1,NULL,NULL,7511,16,'["visiteur", "~", "visiteuse"]','[]','default',0,'default',0,0,'fr',0,1);
+INSERT INTO "rules_alternative" VALUES(29766,4,'touristes',NULL,0,1,NULL,NULL,7511,16,'["touristes"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29767,5,'gens de passage',NULL,0,1,NULL,NULL,7511,16,'["gens", "de", "passage"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(29768,0,'[remove]',NULL,0,1,NULL,NULL,7512,16,'["[", "remove", "]"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(29769,1,'bonjour',NULL,0,1,NULL,NULL,7512,16,'["bonjour"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(29770,0,'gens du voisinage',NULL,0,1,NULL,NULL,7513,16,'["gens", "du", "voisinage"]','[]','default',0,'default',0,0,'fr',0,0);
@@ -19188,6 +19186,60 @@ INSERT INTO "rules_alternative" VALUES(29808,0,'[remove]',NULL,0,1,NULL,1,7647,1
 INSERT INTO "rules_alternative" VALUES(29809,1,'l''ensemble',NULL,0,1,NULL,1,7647,16,'["l''", "ensemble"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(29810,2,'le groupe',NULL,0,1,NULL,1,7647,16,'["le", "groupe"]','[]','default',0,'default',0,0,'fr',0,0);
 INSERT INTO "rules_alternative" VALUES(29816,1,'komplex',NULL,0,1,NULL,2,3281,NULL,'["komplex"]','[]','default',0,'default',0,0,'de',0,0);
+INSERT INTO "rules_alternative" VALUES(29817,3,'tous~toutes',NULL,0,1,NULL,2,7647,NULL,'["tous~toutes"]','[]','default',0,'default',0,0,'fr',0,1);
+INSERT INTO "rules_alternative" VALUES(29818,4,'tous~toutes',NULL,0,1,NULL,2,7500,NULL,'["tous~toutes"]','[]','default',0,'default',0,0,'fr',0,1);
+INSERT INTO "rules_alternative" VALUES(29819,1,'personne utilisatrice',NULL,0,1,NULL,7,7504,NULL,'["personne", "utilisatrice"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29820,0,'savoir-faire',NULL,0,1,NULL,7,6483,NULL,'["savoir-faire"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29821,2,'conforme',NULL,0,1,NULL,7,6672,NULL,'["conforme"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29822,2,'adulte',NULL,0,1,NULL,7,5742,NULL,'["adulte"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29823,1,'être humain',NULL,0,1,NULL,7,5719,NULL,'["\u00eatre", "humain"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29824,3,'chef~cheffe',NULL,0,1,NULL,7,6063,NULL,'["chef~cheffe"]','[]','default',0,'default',0,0,'fr',0,1);
+INSERT INTO "rules_alternative" VALUES(29825,0,'client~cliente',NULL,0,1,NULL,7,7424,NULL,'["client~cliente"]','[]','default',0,'default',0,0,'fr',0,1);
+INSERT INTO "rules_alternative" VALUES(29826,0,'personne',NULL,0,1,NULL,7,7511,NULL,'["personne"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29827,3,'tiers',NULL,0,1,NULL,7,7420,NULL,'["tiers"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29828,2,'métier',NULL,0,1,'Informatique',7,7504,NULL,'["m\u00e9tier"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29829,1,'organisation',NULL,0,1,NULL,7,5469,NULL,'["organisation"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29830,0,'cabinet de conseil',NULL,0,1,NULL,2,7649,16,'["cabinet", "de", "conseil"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29831,1,'service d''assistance',NULL,0,1,NULL,2,7649,16,'["service", "d''assistance"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29832,2,'comité consultatif',NULL,0,1,NULL,2,7649,16,'["comit\u00e9", "consultatif"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29833,3,'conseiller~conseillère',NULL,0,1,NULL,2,7649,16,'["conseiller~conseill\u00e8re"]','[]','default',0,'default',0,0,'fr',0,1);
+INSERT INTO "rules_alternative" VALUES(29834,4,'équipe de conseil',NULL,0,1,NULL,2,7649,16,'["\u00e9quipe", "de", "conseil"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29835,5,'conseil',NULL,0,1,NULL,2,7649,16,'["conseil"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29836,0,'grande entreprise','a|n',0,1,NULL,2,7650,NULL,'["grande", "entreprise"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}, {"word_type": "n", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29837,1,'figure','n',0,1,NULL,2,7650,NULL,'["figure"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29838,2,'responsable','n',0,1,NULL,2,7650,NULL,'["responsable"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29839,1,'personne en stage',NULL,0,1,NULL,2,7653,NULL,'["personne", "en", "stage"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29840,0,'un stagiaire~une stagiaire',NULL,0,1,NULL,2,7653,NULL,'["un", "stagiaire", "~", "une", "stagiaire"]','[]','default',0,'default',0,0,'fr',0,1);
+INSERT INTO "rules_alternative" VALUES(29841,0,'-','',0,1,NULL,2,7654,NULL,'["-"]','[]','default',0,'default',0,1,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29842,1,'grand~grande',NULL,0,1,NULL,2,7654,NULL,'["grand~grande"]','[]','default',0,'default',0,0,'fr',0,1);
+INSERT INTO "rules_alternative" VALUES(29843,2,'de qualité',NULL,0,1,NULL,2,7654,NULL,'["de", "qualit\u00e9"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29844,0,'partie prenante',NULL,0,1,NULL,2,7655,NULL,'["partie", "prenante"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29845,1,'personne concernée',NULL,0,1,NULL,2,7655,NULL,'["personne", "concern\u00e9e"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29846,2,'intervenant~intervenante',NULL,0,1,NULL,2,7655,NULL,'["intervenant~intervenante"]','[]','default',0,'default',0,0,'fr',0,1);
+INSERT INTO "rules_alternative" VALUES(29847,0,'connaissances approfondies',NULL,0,1,NULL,2,7656,NULL,'["connaissances", "approfondies"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29848,1,'compétences','n',0,1,NULL,2,7656,NULL,'["comp\u00e9tences"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29849,2,'spécialisation','n',0,1,NULL,2,7656,NULL,'["sp\u00e9cialisation"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29850,0,'activité',NULL,0,1,NULL,2,7657,NULL,'["activit\u00e9"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29851,1,'métier',NULL,0,1,NULL,2,7657,NULL,'["m\u00e9tier"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29852,2,'affaires',NULL,0,1,NULL,2,7657,NULL,'["affaires"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29853,3,'entreprise',NULL,0,1,NULL,2,7657,NULL,'["entreprise"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29854,0,'partie prenante',NULL,0,1,NULL,2,7658,NULL,'["partie", "prenante"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29855,1,'personne concernée',NULL,0,1,NULL,2,7658,NULL,'["personne", "concern\u00e9e"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29856,2,'personne de contact',NULL,0,1,NULL,2,7658,NULL,'["personne", "de", "contact"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29857,3,'collègue',NULL,0,1,NULL,2,7658,NULL,'["coll\u00e8gue"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29858,4,'interlocuteur~interlocutrice',NULL,0,1,NULL,2,7658,NULL,'["interlocuteur~interlocutrice"]','[]','default',0,'default',0,0,'fr',0,1);
+INSERT INTO "rules_alternative" VALUES(29859,0,'tableau',NULL,0,1,NULL,2,7659,NULL,'["tableau"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29860,1,'tableau de bord',NULL,0,1,NULL,2,7659,NULL,'["tableau", "de", "bord"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29861,2,'tableau de suivi',NULL,0,1,NULL,2,7659,NULL,'["tableau", "de", "suivi"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29862,0,'prêt~prête','a',0,1,NULL,2,7660,NULL,'["pr\u00eat~pr\u00eate"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'fr',0,1);
+INSERT INTO "rules_alternative" VALUES(29863,1,'disponible','a',0,1,NULL,2,7660,NULL,'["disponible"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29864,0,'vicitulture',NULL,0,1,NULL,2,7661,NULL,'["vicitulture"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29865,1,'exploitation viticole',NULL,0,1,NULL,2,7661,NULL,'["exploitation", "viticole"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29866,2,'viticulteur~viticultrice',NULL,0,1,NULL,2,7661,NULL,'["viticulteur", "~", "viticultrice"]','[]','default',0,'default',0,0,'fr',0,1);
+INSERT INTO "rules_alternative" VALUES(29867,0,'bonnes pratiques','a|n',0,1,NULL,2,7662,NULL,'["bonnes", "pratiques"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}, {"word_type": "n", "lower_case": true, "lemmatize": true}]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29868,0,'profils',NULL,0,1,NULL,2,7663,NULL,'["profils"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29869,1,'profilage',NULL,0,1,NULL,2,7663,NULL,'["profilage"]','[]','default',0,'default',0,0,'fr',0,0);
+INSERT INTO "rules_alternative" VALUES(29870,2,'segmentation',NULL,0,1,NULL,2,7663,NULL,'["segmentation"]','[]','default',0,'default',0,0,'fr',0,0);
 CREATE TABLE "rules_englishadjective" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "base_form" varchar(255) NOT NULL UNIQUE, "comparative" varchar(255) NULL, "superlative" varchar(255) NULL, "createdby_id" integer NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED, "is_absolute" bool NOT NULL);
 INSERT INTO "rules_englishadjective" VALUES(1,'abnormal','more abnormal','most abnormal',NULL,0);
 INSERT INTO "rules_englishadjective" VALUES(2,'atypical','more atypical','most atypical',NULL,0);
@@ -23054,6 +23106,16 @@ INSERT INTO "rules_falsepositive" VALUES(1338,1,1279,'customer success');
 INSERT INTO "rules_falsepositive" VALUES(1339,1,7017,'T/T');
 INSERT INTO "rules_falsepositive" VALUES(1340,1,1240,'best,');
 INSERT INTO "rules_falsepositive" VALUES(1342,2,6449,'J''aimerais juste');
+INSERT INTO "rules_falsepositive" VALUES(1343,2,7325,'chacun des');
+INSERT INTO "rules_falsepositive" VALUES(1344,2,5820,'belle aventure');
+INSERT INTO "rules_falsepositive" VALUES(1345,2,5295,'Pour pouvoir');
+INSERT INTO "rules_falsepositive" VALUES(1346,2,6474,'Maroquinerie Femme');
+INSERT INTO "rules_falsepositive" VALUES(1347,2,7320,'à la française');
+INSERT INTO "rules_falsepositive" VALUES(1348,2,5331,'génie des procédés');
+INSERT INTO "rules_falsepositive" VALUES(1349,2,6056,'directrices et directeurs');
+INSERT INTO "rules_falsepositive" VALUES(1350,2,7405,'marque employeur');
+INSERT INTO "rules_falsepositive" VALUES(1351,2,6056,'son Directeur');
+INSERT INTO "rules_falsepositive" VALUES(1352,2,6056,'son directeur');
 CREATE TABLE "rules_germanadjective" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "base_form" varchar(255) NOT NULL UNIQUE, "createdby_id" integer NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED, "comparative" varchar(255) NULL, "is_absolute" bool NOT NULL, "superlative" varchar(255) NULL);
 INSERT INTO "rules_germanadjective" VALUES(1,'abhängig',NULL,'abhängiger',0,'abhängigsten');
 INSERT INTO "rules_germanadjective" VALUES(2,'absolut',NULL,'absolut',1,'absolut');
@@ -28255,7 +28317,6 @@ INSERT INTO "rules_rule" VALUES(1113,'en','accessibility','n',NULL,0,1,NULL,NULL
 INSERT INTO "rules_rule" VALUES(1114,'en','affinity group','~n|n',NULL,0,1,NULL,NULL,NULL,'["affinity", "group"]','[{"word_type": "n", "lower_case": true, "lemmatize": false}, {"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'affinity group','default','default',0,1,'affinity','["d_and_i"]',1,14,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(1115,'en','ages','n',NULL,0,1,NULL,NULL,NULL,'["ages"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'ages','default','default',1,1,'ages','["d_and_i"]',1,4,NULL,'default','default',0,'n',1,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(1116,'en','ally','n',NULL,0,1,NULL,NULL,NULL,'["ally"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'ally','default','default',1,1,'ally','["d_and_i"]',1,4,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
-INSERT INTO "rules_rule" VALUES(1117,'en','amplification','n',NULL,0,1,NULL,NULL,NULL,'["amplification"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'amplification','default','default',1,1,'amplification','["d_and_i"]',1,13,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(1118,'en','belief','n',NULL,0,1,NULL,NULL,NULL,'["belief"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'belief','default','default',1,1,'belief','["d_and_i"]',1,6,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(1119,'en','belong','v',NULL,0,1,NULL,NULL,NULL,'["belong"]','[{"word_type": "v", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'belong','default','default',1,1,'belong','["d_and_i"]',1,6,NULL,'default','default',0,'v',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(1120,'en','cis-gender','a',NULL,0,1,NULL,NULL,NULL,'["cis-gender"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'cis-gender','default','default',1,1,'cis-gender','["d_and_i"]',1,10,NULL,'default','default',0,'a',1,0,NULL,NULL,0,'','yes',NULL,NULL);
@@ -33046,7 +33107,7 @@ INSERT INTO "rules_rule" VALUES(5144,'fr','clandestin','a',NULL,0,1,7,NULL,NULL,
     "true_positive_sentence_2": "The court deemed the company''s actions illegal and fined them."
   }
 }','yes',NULL,1729);
-INSERT INTO "rules_rule" VALUES(5145,'fr','important','a',NULL,0,1,2,NULL,NULL,'["important"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'important','default','default',1,1,'important','["hollow"]',1,9,NULL,'default','default',0,'a',1,0,NULL,'2024-04-11 00:00:00',1,'{
+INSERT INTO "rules_rule" VALUES(5145,'fr','important','a',NULL,0,1,7,NULL,NULL,'["important"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'important','default','default',1,1,'important','["hollow"]',1,9,NULL,'default','default',0,'a',1,0,NULL,'2024-04-11 00:00:00',1,'{
   "rule_category": "hollow",
   "rule_specification": {
     "rule_trigger": "important",
@@ -34271,7 +34332,7 @@ INSERT INTO "rules_rule" VALUES(5294,'fr','égalité','n',NULL,0,1,7,NULL,NULL,'
     "true_positive_sentence_2": "Achieving equality in the workplace remains a significant challenge."
   }
 }','yes',NULL,1131);
-INSERT INTO "rules_rule" VALUES(5295,'fr','pouvoir','n',NULL,0,1,7,NULL,NULL,'["pouvoir"]','[]',0,NULL,NULL,NULL,'pouvoir','default','default',NULL,NULL,'pouvoir','["agentic"]',1,7,NULL,'default','default',0,NULL,0,0,NULL,'2024-07-02 13:22:07.432552',1,'{
+INSERT INTO "rules_rule" VALUES(5295,'fr','pouvoir','n',NULL,0,1,2,NULL,NULL,'["pouvoir"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'pouvoir','default','default',1,1,'pouvoir','["agentic"]',1,7,NULL,'default','default',0,'n',1,0,NULL,'2024-07-02 13:22:07.432552',1,'{
   "rule_category": "agentic",
   "rule_type": "unconscious_bias",
   "rule_specification": {
@@ -34518,7 +34579,7 @@ INSERT INTO "rules_rule" VALUES(5330,'fr','CDC','=',NULL,0,1,7,NULL,NULL,'["EDT"
     "true_positive_sentence_2": "Before we begin, let''s review the SOW to ensure everyone''s on the same page."
   }
 }','yes',NULL,39);
-INSERT INTO "rules_rule" VALUES(5331,'fr','génie','n',NULL,0,1,7,NULL,NULL,'["g\u00e9nie"]','[]',0,NULL,NULL,NULL,'génie','default','default',NULL,NULL,'génie','["exaggerating"]',1,5,NULL,'default','default',0,NULL,0,0,NULL,'2024-07-02 14:00:11.437234',1,'{
+INSERT INTO "rules_rule" VALUES(5331,'fr','génie','n',NULL,0,1,2,NULL,NULL,'["g\u00e9nie"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'génie','default','default',1,1,'génie','["exaggerating"]',1,5,NULL,'person','default',0,'n',1,0,NULL,'2024-07-02 14:00:11.437234',1,'{
   "rule_category": "exaggerating",
   "rule_type": "unconscious_bias",
   "rule_specification": {
@@ -34544,7 +34605,7 @@ INSERT INTO "rules_rule" VALUES(5332,'fr','enjoué','a',NULL,0,1,2,NULL,NULL,'["
     "true_positive_sentence_2": "She wore a vibrant dress that stood out in the crowd."
   }
 }','yes',NULL,1238);
-INSERT INTO "rules_rule" VALUES(5333,'fr','patron','n',NULL,0,1,7,NULL,NULL,'["patron"]','[]',0,NULL,NULL,NULL,'patron','default','default',NULL,NULL,'patron','["leadership"]',1,6,NULL,'default','default',0,NULL,0,0,NULL,'2024-07-02 14:01:12.174570',1,'{
+INSERT INTO "rules_rule" VALUES(5333,'fr','patron','n',NULL,0,1,2,NULL,NULL,'["patron"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'patron','default','default',1,1,'patron','["leadership"]',1,6,NULL,'default','default',0,'n',0,0,NULL,'2024-07-02 14:01:12.174570',1,'{
   "rule_category": "leadership",
   "rule_type": "unconscious_bias",
   "rule_specification": {
@@ -35173,7 +35234,7 @@ INSERT INTO "rules_rule" VALUES(5438,'fr','monsieur tout-le-monde','n|',NULL,0,1
     "true_positive_sentence_2": "He''s seen as the every-man in politics, someone with no elite background."
   }
 }','yes',NULL,1380);
-INSERT INTO "rules_rule" VALUES(5441,'fr','étudiant',NULL,NULL,0,1,7,NULL,NULL,'["\u00e9tudiant"]','[]',0,NULL,NULL,NULL,'étudiant','default','default',NULL,NULL,'étudiant','["function"]',1,8,NULL,'default','default',0,NULL,0,0,'n','2024-07-07 13:29:07.363122',1,'{
+INSERT INTO "rules_rule" VALUES(5441,'fr','étudiant',NULL,NULL,0,1,2,NULL,NULL,'["\u00e9tudiant"]','[]',0,NULL,NULL,NULL,'étudiant','default','default',NULL,NULL,'étudiant','["function"]',1,8,NULL,'default','default',0,NULL,0,0,'n','2024-07-07 13:29:07.363122',1,'{
   "rule_category": "function",
   "rule_type": "unconscious_bias",
   "rule_specification": {
@@ -35677,7 +35738,7 @@ INSERT INTO "rules_rule" VALUES(5503,'fr','développeur','n',NULL,0,1,7,NULL,NUL
     "true_positive_sentence_2": "He''s been working as a front-end developer for over five years now."
   }
 }','yes',NULL,2155);
-INSERT INTO "rules_rule" VALUES(5506,'fr','homme à tout faire','n||a|v',NULL,0,1,7,NULL,NULL,'["homme", "\u00e0", "tout", "faire"]','[]',0,NULL,NULL,NULL,'homme à tout faire','default','default',NULL,NULL,'homme','["titles"]',1,18,NULL,'default','default',0,NULL,0,0,NULL,'2024-07-07 14:03:48.362564',1,'{
+INSERT INTO "rules_rule" VALUES(5506,'fr','homme à tout faire','n||a|v',NULL,0,1,7,NULL,NULL,'["homme", "\u00e0", "tout", "faire"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "a", "lower_case": true, "lemmatize": true}, {"word_type": "v", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'homme à tout faire','default','default',1,1,'homme','["titles"]',1,18,NULL,'default','default',0,'n',1,0,NULL,'2024-07-07 14:03:48.362564',1,'{
   "rule_category": "titles",
   "rule_type": "unconscious_bias",
   "rule_specification": {
@@ -35713,7 +35774,7 @@ INSERT INTO "rules_rule" VALUES(5508,'fr','docker','n',NULL,0,1,7,NULL,NULL,'["d
     "true_positive_sentence_2": "The longshoreman was known for his strength and skill in handling heavy containers."
   }
 }','yes',NULL,2159);
-INSERT INTO "rules_rule" VALUES(5509,'fr','bonne','~a',NULL,0,1,7,NULL,NULL,'["bonne"]','[{"word_type": "a", "lower_case": true, "lemmatize": false}]',0,NULL,NULL,NULL,'bonne','default','default',0,1,'bonne','["titles"]',1,5,NULL,'default','default',0,'a',1,0,NULL,'2024-07-07 14:05:17.388400',1,'{
+INSERT INTO "rules_rule" VALUES(5509,'fr','bonne','n',NULL,0,1,2,NULL,NULL,'["bonne"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'bonne','default','default',1,1,'bonne','["hidden_image"]',1,5,NULL,'default','default',0,'n',1,0,NULL,'2024-07-07 14:05:17.388400',1,'{
   "rule_category": "titles",
   "rule_type": "unconscious_bias",
   "rule_specification": {
@@ -35845,7 +35906,7 @@ INSERT INTO "rules_rule" VALUES(5521,'fr','chef de produit',NULL,NULL,0,1,7,NULL
     "true_positive_sentence_2": "As the product owner, she has a lot of responsibility for the project''s success."
   }
 }','yes',NULL,2181);
-INSERT INTO "rules_rule" VALUES(5522,'fr','chef de projet','n||n',NULL,0,1,7,NULL,NULL,'["chef", "de", "projet"]','[]',0,NULL,NULL,NULL,'chef de projet','default','default',NULL,NULL,'chef','["titles"]',1,14,NULL,'default','default',0,NULL,0,1,NULL,'2024-07-07 14:12:23.483479',1,'{
+INSERT INTO "rules_rule" VALUES(5522,'fr','chef de projet','n||n',NULL,0,1,2,NULL,NULL,'["chef", "de", "projet"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'chef de projet','default','default',1,1,'chef','["titles"]',1,14,NULL,'default','default',0,'n',0,1,NULL,'2024-07-07 14:12:23.483479',1,'{
   "rule_category": "titles",
   "rule_type": "unconscious_bias",
   "rule_specification": {
@@ -36361,7 +36422,7 @@ INSERT INTO "rules_rule" VALUES(5581,'fr','proactif','a',NULL,0,1,7,NULL,NULL,'[
     "true_positive_sentence_2": "Being pro-active in this project will definitely lead to its success."
   }
 }','yes',NULL,736);
-INSERT INTO "rules_rule" VALUES(5582,'fr','résolution','n',NULL,0,1,7,NULL,NULL,'["r\u00e9solution"]','[]',0,NULL,NULL,NULL,'résolution','default','default',NULL,NULL,'résolution','["agentic"]',1,10,NULL,'default','default',0,NULL,0,1,NULL,'2024-07-07 15:38:35.814974',1,'{
+INSERT INTO "rules_rule" VALUES(5582,'fr','détermination','n',NULL,0,1,2,NULL,NULL,'["d\u00e9termination"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'détermination','default','default',1,1,'détermination','["agentic"]',1,13,NULL,'default','default',0,'n',0,1,NULL,'2024-07-07 15:38:35.814974',1,'{
   "rule_category": "agentic",
   "rule_type": "unconscious_bias",
   "rule_specification": {
@@ -36901,7 +36962,7 @@ INSERT INTO "rules_rule" VALUES(5718,'fr','père','n',NULL,0,1,7,NULL,NULL,'["p\
     "true_positive_sentence_2": "My father is coming to visit next weekend."
   }
 }','yes',NULL,1428);
-INSERT INTO "rules_rule" VALUES(5719,'fr','femme','n',NULL,0,1,2,NULL,NULL,'["femme"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'femme','default','default',1,1,'femme','["gender_identity"]',1,5,NULL,'default','default',0,'n',1,0,NULL,'2024-07-24 06:44:20.015891',1,'{
+INSERT INTO "rules_rule" VALUES(5719,'fr','femme','n',NULL,0,1,7,NULL,NULL,'["femme"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'femme','default','default',1,1,'femme','["gender_identity"]',1,5,NULL,'default','default',0,'n',1,0,NULL,'2024-07-24 06:44:20.015891',1,'{
   "rule_category": "gender_identity",
   "rule_type": "unconscious_bias",
   "rule_specification": {
@@ -37093,7 +37154,7 @@ INSERT INTO "rules_rule" VALUES(5740,'fr','dame','n',NULL,0,1,7,NULL,NULL,'["dam
     "true_positive_sentence_2": "He said he was waiting for a lady friend."
   }
 }','yes',NULL,1444);
-INSERT INTO "rules_rule" VALUES(5742,'fr','homme','n',NULL,0,1,7,NULL,NULL,'["homme"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'homme','default','default',1,1,'homme','["gender_identity_advanced"]',1,5,NULL,'default','default',0,'n',1,0,NULL,'2024-07-24 06:56:32.338030',1,'{
+INSERT INTO "rules_rule" VALUES(5742,'fr','homme','n',NULL,0,1,7,NULL,NULL,'["homme"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'homme','default','default',1,1,'homme','["gender_identity"]',1,5,NULL,'default','default',0,'n',1,0,NULL,'2024-07-24 06:56:32.338030',1,'{
   "rule_category": "gender_identity",
   "rule_type": "unconscious_bias",
   "rule_specification": {
@@ -37453,7 +37514,7 @@ INSERT INTO "rules_rule" VALUES(5817,'fr','il/elle','pron|~|~pron',NULL,0,1,7,NU
     "true_positive_sentence_2": "If a student needs help, he/she should speak to the teacher."
   }
 }','yes',NULL,870);
-INSERT INTO "rules_rule" VALUES(5820,'fr','belle','~a','Précision inutile',0,1,7,NULL,NULL,'["belle"]','[{"word_type": "a", "lower_case": true, "lemmatize": false}]',0,NULL,NULL,NULL,'belle','default','default',0,1,'belle','["female_stereotype"]',1,5,NULL,'default','default',0,'a',1,0,NULL,'2024-07-24 08:02:10.563228',1,'{
+INSERT INTO "rules_rule" VALUES(5820,'fr','belle','~a','Précision inutile',0,1,2,NULL,NULL,'["belle"]','[{"word_type": "a", "lower_case": true, "lemmatize": false}]',0,NULL,NULL,NULL,'belle','default','default',0,1,'belle','["female_stereotype"]',1,5,NULL,'person','default',0,'a',1,0,NULL,'2024-07-24 08:02:10.563228',1,'{
   "rule_category": "female_stereotype",
   "rule_type": "unconscious_bias",
   "rule_specification": {
@@ -38153,7 +38214,7 @@ INSERT INTO "rules_rule" VALUES(6053,'fr','légume','n',NULL,0,1,7,NULL,NULL,'["
     "true_positive_sentence_2": "The recipe calls for every type of vegetable you can imagine."
   }
 }','yes',NULL,906);
-INSERT INTO "rules_rule" VALUES(6063,'fr','chef','n',NULL,0,1,7,NULL,NULL,'["chef"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'chef','default','default',1,1,'chef','["leadership_advanced"]',1,4,NULL,'default','default',0,'n',1,0,NULL,'2024-07-26 09:08:37.787068',1,'{
+INSERT INTO "rules_rule" VALUES(6063,'fr','chef','n',NULL,0,1,7,NULL,NULL,'["chef"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'chef','default','default',1,1,'chef','["leadership"]',1,4,NULL,'default','default',0,'n',1,0,NULL,'2024-07-26 09:08:37.787068',1,'{
   "rule_category": "leadership",
   "rule_type": "unconscious_bias",
   "rule_specification": {
@@ -39994,18 +40055,6 @@ INSERT INTO "rules_rule" VALUES(6434,'fr','allié','',NULL,0,1,7,NULL,NULL,'["al
     "true_positive_sentence_2": "He considers himself an ally in the fight for social justice."
   }
 }','yes',NULL,1116);
-INSERT INTO "rules_rule" VALUES(6435,'fr','amplification','n',NULL,0,1,7,NULL,NULL,'["amplification"]','[]',0,NULL,NULL,NULL,'amplification','default','default',NULL,NULL,'amplification','["d_and_i"]',1,13,NULL,'default','default',0,NULL,0,0,NULL,'2024-08-02 08:06:21.912766',1,'{
-  "rule_category": "d_and_i",
-  "rule_type": "inclusive",
-  "rule_specification": {
-    "rule_trigger": "amplification",
-    "lemma": "amplification"
-  },
-  "true_positive_examples": {
-    "true_positive_sentence_1": "The amplification of her voice during the speech was necessary for everyone to hear her clearly.",
-    "true_positive_sentence_2": "Due to the amplification in the room, the music was loud enough to be heard across the hall."
-  }
-}','yes',NULL,1117);
 INSERT INTO "rules_rule" VALUES(6436,'fr','conviction','n',NULL,0,1,7,NULL,NULL,'["conviction"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'conviction','default','default',1,1,'conviction','["d_and_i"]',1,10,NULL,'default','default',0,'n',0,0,NULL,'2024-08-02 08:06:28.735989',1,'{
   "rule_category": "d_and_i",
   "rule_type": "inclusive",
@@ -40150,18 +40199,6 @@ INSERT INTO "rules_rule" VALUES(6452,'fr','identité de genre','n||n',NULL,0,1,7
     "true_positive_sentence_2": "She talked about how her gender identity has evolved over the years."
   }
 }','yes',NULL,1136);
-INSERT INTO "rules_rule" VALUES(6453,'fr','impact','n',NULL,0,1,7,NULL,NULL,'["impact"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'impact','default','default',1,1,'impact','["d_and_i"]',1,6,NULL,'default','default',0,'n',0,0,NULL,'2024-08-02 08:15:31.977742',1,'{
-  "rule_category": "d_and_i",
-  "rule_type": "inclusive",
-  "rule_specification": {
-    "rule_trigger": "impact",
-    "lemma": "impact"
-  },
-  "true_positive_examples": {
-    "true_positive_sentence_1": "The new policy will impact the way we do business.",
-    "true_positive_sentence_2": "How does climate change impact the natural habitats of animals?"
-  }
-}','yes',NULL,1139);
 INSERT INTO "rules_rule" VALUES(6454,'fr','biais inconscient','n|a',NULL,0,1,7,NULL,NULL,'["biais", "implicite"]','[]',0,NULL,NULL,NULL,'biais inconscient','default','default',NULL,NULL,'biais','["d_and_i"]',1,15,NULL,'default','default',0,NULL,0,0,NULL,'2024-08-02 08:15:40.669998',1,'{
   "rule_category": "d_and_i",
   "rule_type": "inclusive",
@@ -40258,7 +40295,7 @@ INSERT INTO "rules_rule" VALUES(6463,'fr','microagression','a',NULL,0,1,7,NULL,N
     "true_positive_sentence_2": "Pointing out her accent every time she spoke was a subtle micro-aggression."
   }
 }','yes',NULL,1149);
-INSERT INTO "rules_rule" VALUES(6464,'fr','de tout âge','||n',NULL,0,1,7,NULL,NULL,'["de", "tout", "\u00e2ge"]','[]',0,NULL,NULL,NULL,'de tout âge','default','default',NULL,NULL,'de','["d_and_i"]',1,11,NULL,'default','default',0,NULL,0,0,NULL,'2024-08-02 08:20:44.868533',1,'{
+INSERT INTO "rules_rule" VALUES(6464,'fr','de tout âge','||n',NULL,0,1,7,NULL,NULL,'["de", "tout", "\u00e2ge"]','[{"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'de tout âge','default','default',1,1,'de','["d_and_i"]',1,11,NULL,'default','default',0,'',1,0,NULL,'2024-08-02 08:20:44.868533',1,'{
   "rule_category": "d_and_i",
   "rule_type": "inclusive",
   "rule_specification": {
@@ -40378,7 +40415,7 @@ INSERT INTO "rules_rule" VALUES(6483,'fr','excellence','n',NULL,0,1,7,NULL,NULL,
     "true_positive_sentence_2": "She received an award for her excellence in volunteer work."
   }
 }','yes',NULL,1246);
-INSERT INTO "rules_rule" VALUES(6484,'fr','excellent','a',NULL,0,1,7,NULL,NULL,'["excellent"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'excellent','default','default',1,1,'excellent','["exaggerating"]',1,9,NULL,'default','default',0,'a',1,0,NULL,'2024-08-02 14:03:22.143529',1,'{
+INSERT INTO "rules_rule" VALUES(6484,'fr','excellent','a',NULL,0,1,2,NULL,NULL,'["excellent"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'excellent','default','default',1,1,'excellent','["exaggerating"]',1,9,NULL,'default','default',0,'a',1,0,NULL,'2024-08-02 14:03:22.143529',1,'{
   "rule_category": "exaggerating",
   "rule_type": "unconscious_bias",
   "rule_specification": {
@@ -41362,18 +41399,6 @@ INSERT INTO "rules_rule" VALUES(6600,'fr','poli','',NULL,0,1,7,NULL,NULL,'["poli
     "true_positive_sentence_2": "She gave a polite nod in response to the question."
   }
 }','yes',NULL,1085);
-INSERT INTO "rules_rule" VALUES(6602,'fr','précision','n',NULL,0,1,7,NULL,NULL,'["pr\u00e9cision"]','[]',0,NULL,NULL,NULL,'précision','default','default',NULL,NULL,'précision','["communal"]',1,9,NULL,'default','default',0,NULL,0,0,NULL,'2024-08-02 19:21:16.339245',1,'{
-  "rule_category": "communal",
-  "rule_type": "inclusive",
-  "rule_specification": {
-    "rule_trigger": "precision",
-    "lemma": "precision"
-  },
-  "true_positive_examples": {
-    "true_positive_sentence_1": "The engineer admired the precision of the machine''s movements.",
-    "true_positive_sentence_2": "She demanded precision in every detail of the project."
-  }
-}','yes',NULL,1095);
 INSERT INTO "rules_rule" VALUES(6603,'fr','discret',NULL,NULL,0,1,2,NULL,NULL,'["discret"]','[]',0,NULL,NULL,NULL,'discret','default','default',NULL,NULL,'discret','["communal"]',1,7,NULL,'default','default',0,NULL,1,0,'a','2024-08-02 19:21:48.249232',1,'{
   "rule_category": "communal",
   "rule_type": "inclusive",
@@ -41422,18 +41447,6 @@ INSERT INTO "rules_rule" VALUES(6606,'fr','résilience','n',NULL,0,1,7,NULL,NULL
     "true_positive_sentence_2": "Her resilience in the face of adversity is truly admirable."
   }
 }','yes',NULL,1087);
-INSERT INTO "rules_rule" VALUES(6607,'fr','répondre','v',NULL,0,1,7,NULL,NULL,'["r\u00e9pondre"]','[]',0,NULL,NULL,NULL,'répondre','default','default',NULL,NULL,'répondre','["communal"]',1,8,NULL,'default','default',0,NULL,0,0,NULL,'2024-08-02 19:23:53.225787',1,'{
-  "rule_category": "communal",
-  "rule_type": "inclusive",
-  "rule_specification": {
-    "rule_trigger": "respond",
-    "lemma": "respond"
-  },
-  "true_positive_examples": {
-    "true_positive_sentence_1": "He did not respond to the email until the next day.",
-    "true_positive_sentence_2": "How did she respond when you told her the news?"
-  }
-}','yes',NULL,1097);
 INSERT INTO "rules_rule" VALUES(6608,'fr','responsabilité','n',NULL,0,1,7,NULL,NULL,'["responsabilit\u00e9"]','[]',0,NULL,NULL,NULL,'responsabilité','default','default',NULL,NULL,'responsabilité','["communal"]',1,14,NULL,'default','default',0,NULL,0,0,NULL,'2024-08-02 19:24:21.691393',1,'{
   "rule_category": "communal",
   "rule_type": "inclusive",
@@ -41626,7 +41639,7 @@ INSERT INTO "rules_rule" VALUES(6625,'fr','attentionné',NULL,NULL,0,1,2,NULL,NU
     "true_positive_sentence_2": "She was always thoughtful, considering others'' feelings before speaking."
   }
 }','yes',NULL,1009);
-INSERT INTO "rules_rule" VALUES(6626,'fr','ensemble','n',NULL,0,1,7,NULL,NULL,'["ensemble"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'ensemble','default','default',1,1,'ensemble','["communal"]',1,8,NULL,'default','default',0,'n',0,0,NULL,'2024-08-02 19:33:28.899865',1,'{
+INSERT INTO "rules_rule" VALUES(6626,'fr','ensemble','adv',NULL,0,1,2,NULL,NULL,'["ensemble"]','[{"word_type": "adv", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'ensemble','default','default',1,1,'ensemble','["communal"]',1,8,NULL,'default','default',0,'adv',1,0,NULL,'2024-08-02 19:33:28.899865',1,'{
   "rule_category": "communal",
   "rule_type": "inclusive",
   "rule_specification": {
@@ -41734,7 +41747,7 @@ INSERT INTO "rules_rule" VALUES(6657,'fr','à l''avenir','|~|n',NULL,0,1,2,NULL,
     "true_positive_sentence_2": "She mentioned that going forward, the team would have more remote working options."
   }
 }','yes',NULL,531);
-INSERT INTO "rules_rule" VALUES(6672,'fr','aligner','v',NULL,0,1,2,NULL,NULL,'["aligner"]','[{"word_type": "v", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'aligné','default','default',1,1,'aligner','["hollow"]',1,7,NULL,'default','default',0,'v',0,1,NULL,'2024-08-02 20:04:06.067630',1,'{
+INSERT INTO "rules_rule" VALUES(6672,'fr','aligner','a',NULL,0,1,7,NULL,NULL,'["aligner"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'aligné','default','default',1,1,'aligner','["hollow"]',1,7,NULL,'default','default',0,'a',1,1,NULL,'2024-08-02 20:04:06.067630',1,'{
   "rule_category": "hollow",
   "rule_type": "unconscious_bias",
   "rule_specification": {
@@ -42324,12 +42337,12 @@ INSERT INTO "rules_rule" VALUES(7316,'fr','avocat','n',NULL,0,1,1,NULL,16,'["avo
 INSERT INTO "rules_rule" VALUES(7317,'fr','beau-père','n',NULL,0,1,1,NULL,16,'["beau-p\u00e8re"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'beau-père','default','default',1,1,'beau-père','["titles"]',1,9,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7318,'fr','belle-mère','n',NULL,0,1,1,NULL,16,'["belle-m\u00e8re"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'belle-mère','default','default',1,1,'belle-mère','["titles"]',1,10,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',7317,NULL);
 INSERT INTO "rules_rule" VALUES(7319,'fr','boursier','n',NULL,0,1,1,NULL,16,'["boursier"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'boursier','default','default',1,1,'boursier','["titles"]',1,8,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
-INSERT INTO "rules_rule" VALUES(7320,'fr','français','~',NULL,0,1,7,NULL,16,'["fran\u00e7ais"]','[{"word_type": "", "lower_case": true, "lemmatize": false}]',1,NULL,NULL,NULL,'français','default','default',0,1,'français','["hidden_image"]',1,8,NULL,'default','default',0,'',1,0,'a',NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(7320,'fr','français','~',NULL,0,1,2,NULL,16,'["fran\u00e7ais"]','[{"word_type": "", "lower_case": true, "lemmatize": false}]',1,NULL,NULL,NULL,'français','default','default',0,1,'français','["hidden_image"]',1,8,NULL,'default','default',0,'',1,0,'a',NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7321,'fr','Français','n',NULL,0,1,1,NULL,16,'["Fran\u00e7ais"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'Français','default','default',1,1,'français','["titles"]',1,8,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7322,'fr','candidat','n',NULL,0,1,1,NULL,16,'["candidat"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'candidat','default','default',1,1,'candidat','["titles"]',1,8,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7323,'fr','candidat politique','n|a',NULL,0,1,1,NULL,16,'["candidat", "politique"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}, {"word_type": "a", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'candidat politique','default','default',1,1,'candidat','["titles"]',1,18,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7324,'fr','chacun des','pron|~',NULL,0,1,1,NULL,16,'["chacun", "des"]','[{"word_type": "pron", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": false}]',1,NULL,NULL,NULL,'chacun des','default','default',1,1,'chacun','["function"]',1,10,NULL,'default','default',0,'pron',0,0,NULL,NULL,0,'','yes',NULL,NULL);
-INSERT INTO "rules_rule" VALUES(7325,'fr','chacun','pron',NULL,0,1,1,NULL,16,'["chacun"]','[{"word_type": "pron", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'chacun','default','default',1,1,'chacun','["function"]',1,6,NULL,'default','default',0,'pron',0,0,NULL,NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(7325,'fr','chacun','pron',NULL,0,1,2,NULL,16,'["chacun"]','[{"word_type": "pron", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'chacun','default','default',1,1,'chacun','["function"]',1,6,NULL,'person','default',0,'pron',1,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7326,'fr','chargé','n',NULL,0,1,1,NULL,16,'["charg\u00e9"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'chargé','default','default',1,1,'chargé','["titles"]',1,6,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7327,'fr','charmant','~',NULL,0,1,1,NULL,16,'["charmant"]','[{"word_type": "", "lower_case": true, "lemmatize": false}]',1,NULL,NULL,NULL,'charmant','default','default',0,1,'charmant','["function"]',1,8,NULL,'default','default',0,'',1,0,'a',NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7328,'fr','charpentier','n',NULL,0,1,1,NULL,16,'["charpentier"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'charpentier','default','default',1,1,'charpentier','["titles"]',1,11,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
@@ -42340,7 +42353,7 @@ INSERT INTO "rules_rule" VALUES(7332,'fr','chroniqueur','n',NULL,0,1,1,NULL,16,'
 INSERT INTO "rules_rule" VALUES(7333,'fr','citadin','n',NULL,0,1,1,NULL,16,'["citadin"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'citadin','default','default',1,1,'citadin','["titles"]',1,7,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7334,'fr','citoyen','n',NULL,0,1,1,NULL,16,'["citoyen"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'citoyen','default','default',1,1,'citoyen','["titles"]',1,7,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7335,'fr','citoyen français','n|a',NULL,0,1,1,NULL,16,'["citoyen", "fran\u00e7ais"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}, {"word_type": "a", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'citoyen français','default','default',1,1,'citoyen','["titles"]',1,16,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
-INSERT INTO "rules_rule" VALUES(7336,'fr','client','n',NULL,0,1,1,NULL,16,'["client"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'client','default','default',1,1,'client','["titles"]',1,6,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(7336,'fr','client','n',NULL,0,1,2,NULL,16,'["client"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'client','default','default',1,1,'client','["function"]',1,6,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7337,'fr','coéquipier','n',NULL,0,1,1,NULL,16,'["co\u00e9quipier"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'coéquipier','default','default',1,1,'coéquipier','["titles"]',1,10,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7338,'fr','co-équipier','n',NULL,0,1,1,NULL,16,'["co-\u00e9quipier"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'co-équipier','default','default',1,1,'co-équipier','["titles"]',1,11,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7339,'fr','collaborateur','n',NULL,0,1,1,NULL,16,'["collaborateur"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'collaborateur','default','default',1,1,'collaborateur','["titles"]',1,13,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
@@ -42401,7 +42414,7 @@ INSERT INTO "rules_rule" VALUES(7400,'fr','éditeur','n',NULL,0,1,1,NULL,16,'["\
 INSERT INTO "rules_rule" VALUES(7401,'fr','électeur','n',NULL,0,1,1,NULL,16,'["\u00e9lecteur"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'électeur','default','default',1,1,'électeur','["titles"]',1,8,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7403,'fr','élu','n',NULL,0,1,1,NULL,16,'["\u00e9lu"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'élu','default','default',1,1,'élu','["titles"]',1,3,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7404,'fr','employé','n',NULL,0,1,1,NULL,16,'["employ\u00e9"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'employé','default','default',1,1,'employé','["titles"]',1,7,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
-INSERT INTO "rules_rule" VALUES(7405,'fr','employeur','n',NULL,0,1,1,NULL,16,'["employeur"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'employeur','default','default',1,1,'employeur','["titles"]',1,9,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(7405,'fr','employeur','n',NULL,0,1,2,NULL,16,'["employeur"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'employeur','default','default',1,1,'employeur','["titles"]',1,9,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7406,'fr','emprunteur','n',NULL,0,1,1,NULL,16,'["emprunteur"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'emprunteur','default','default',1,1,'emprunteur','["titles"]',1,10,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7408,'fr','enquêteur','n',NULL,0,1,1,NULL,16,'["enqu\u00eateur"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'enquêteur','default','default',1,1,'enquêteur','["titles"]',1,9,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7409,'fr','enseignant','n',NULL,0,1,1,NULL,16,'["enseignant"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'enseignant','default','default',1,1,'enseignant','["titles"]',1,10,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
@@ -42413,10 +42426,10 @@ INSERT INTO "rules_rule" VALUES(7414,'fr','examinateur','n',NULL,0,1,1,NULL,16,'
 INSERT INTO "rules_rule" VALUES(7415,'fr','expérimenté','~',NULL,0,1,7,NULL,16,'["exp\u00e9riment\u00e9"]','[{"word_type": "", "lower_case": true, "lemmatize": false}]',1,NULL,NULL,NULL,'expérimenté','default','default',0,1,'expérimenté','["hidden_image"]',1,11,NULL,'default','default',0,'',0,0,'a',NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7418,'fr','fédéral','~',NULL,0,1,7,NULL,16,'["f\u00e9d\u00e9ral"]','[{"word_type": "", "lower_case": true, "lemmatize": false}]',1,NULL,NULL,NULL,'fédéral','default','default',0,1,'fédéral','["hidden_image"]',1,7,NULL,'default','default',0,'',1,0,'a',NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7419,'fr','fier','~',NULL,0,1,7,NULL,16,'["fier"]','[{"word_type": "", "lower_case": true, "lemmatize": false}]',1,NULL,NULL,NULL,'fier','default','default',0,1,'fier','["hidden_image"]',1,4,NULL,'default','default',0,'',1,0,'a',NULL,0,'','yes',NULL,NULL);
-INSERT INTO "rules_rule" VALUES(7420,'fr','fournisseur','n',NULL,0,1,1,NULL,16,'["fournisseur"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'fournisseur','default','default',1,1,'fournisseur','["titles"]',1,11,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(7420,'fr','fournisseur','n',NULL,0,1,7,NULL,16,'["fournisseur"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'fournisseur','default','default',1,1,'fournisseur','["titles"]',1,11,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7421,'fr','gouverneur','n',NULL,0,1,1,NULL,16,'["gouverneur"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'gouverneur','default','default',1,1,'gouverneur','["titles"]',1,10,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7422,'fr','habitant','n',NULL,0,1,1,NULL,16,'["habitant"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'habitant','default','default',1,1,'habitant','["titles"]',1,8,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
-INSERT INTO "rules_rule" VALUES(7424,'fr','hôte','n',NULL,0,1,1,NULL,16,'["h\u00f4te"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'hôte','default','default',1,1,'hôte','["titles"]',1,4,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(7424,'fr','hôte','n',NULL,0,1,7,NULL,16,'["h\u00f4te"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'hôte','default','default',1,1,'hôte','["titles"]',1,4,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7425,'fr','illustrateur','n',NULL,0,1,1,NULL,16,'["illustrateur"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'illustrateur','default','default',1,1,'illustrateur','["titles"]',1,12,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7426,'fr','impartial','~',NULL,0,1,7,NULL,16,'["impartial"]','[{"word_type": "", "lower_case": true, "lemmatize": false}]',1,NULL,NULL,NULL,'impartial','default','default',0,1,'impartial','["hidden_image"]',1,9,NULL,'default','default',0,'',0,0,'a',NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7427,'fr','influenceur','n',NULL,0,1,1,NULL,16,'["influenceur"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'influenceur','default','default',1,1,'influenceur','["titles"]',1,11,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
@@ -42445,7 +42458,7 @@ INSERT INTO "rules_rule" VALUES(7451,'fr','médiateur','n',NULL,0,1,1,NULL,16,'[
 INSERT INTO "rules_rule" VALUES(7452,'fr','municipal','~',NULL,0,1,7,NULL,16,'["municipal"]','[{"word_type": "", "lower_case": true, "lemmatize": false}]',1,NULL,NULL,NULL,'municipal','default','default',0,1,'municipal','["hidden_image"]',1,9,NULL,'default','default',0,'',1,0,'a',NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7453,'fr','musicien','n',NULL,0,1,1,NULL,16,'["musicien"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'musicien','default','default',1,1,'musicien','["titles"]',1,8,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7454,'fr','négociateur','n',NULL,0,1,1,NULL,16,'["n\u00e9gociateur"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'négociateur','default','default',1,1,'négociateur','["titles"]',1,11,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
-INSERT INTO "rules_rule" VALUES(7455,'fr','de nombreux','|a',NULL,0,1,1,NULL,16,'["de", "nombreux"]','[{"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "a", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'de nombreux','default','default',1,1,'de','["function"]',1,11,NULL,'default','default',0,'',0,0,NULL,NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(7455,'fr','de nombreux','|a',NULL,0,1,2,NULL,16,'["de", "nombreux"]','[{"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "a", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'de nombreux','default','default',1,1,'de','["function"]',1,11,NULL,'person','default',0,'',1,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7457,'fr','occupant','n',NULL,0,1,1,NULL,16,'["occupant"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'occupant','default','default',1,1,'occupant','["titles"]',1,8,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7458,'fr','opposant','n',NULL,0,1,1,NULL,16,'["opposant"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'opposant','default','default',1,1,'opposant','["titles"]',1,8,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7459,'fr','participant','n',NULL,0,1,1,NULL,16,'["participant"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'participant','default','default',1,1,'participant','["titles"]',1,11,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
@@ -42482,18 +42495,18 @@ INSERT INTO "rules_rule" VALUES(7495,'fr','superviseur','n',NULL,0,1,1,NULL,16,'
 INSERT INTO "rules_rule" VALUES(7497,'fr','surveillant','n',NULL,0,1,1,NULL,16,'["surveillant"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'surveillant','default','default',1,1,'surveillant','["titles"]',1,11,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7498,'fr','territorial','~',NULL,0,1,7,NULL,16,'["territorial"]','[{"word_type": "", "lower_case": true, "lemmatize": false}]',1,NULL,NULL,NULL,'territorial','default','default',0,1,'territorial','["hidden_image"]',1,11,NULL,'default','default',0,'',1,0,'a',NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7499,'fr','bonjour à tous','||~',NULL,0,1,1,NULL,16,'["bonjour", "\u00e0", "tous"]','[{"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": false}]',1,NULL,NULL,NULL,'bonjour à tous','default','default',1,1,'bonjour','["function"]',1,14,NULL,'default','default',0,'',0,0,NULL,NULL,0,'','yes',NULL,NULL);
-INSERT INTO "rules_rule" VALUES(7500,'fr','tous','pron',NULL,0,1,7,NULL,16,'["tous"]','[{"word_type": "pron", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'tous','default','default',1,1,'tous','["function"]',1,4,NULL,'default','default',0,'pron',1,0,NULL,NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(7500,'fr','tous','pron',NULL,0,1,2,NULL,16,'["tous"]','[{"word_type": "pron", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'tous','default','default',1,1,'tous','["function"]',1,4,NULL,'default','plural_only',0,'pron',1,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7501,'fr','à la portée de tous','|~|n||~a',NULL,0,1,1,NULL,16,'["\u00e0", "la", "port\u00e9e", "de", "tous"]','[{"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": false}, {"word_type": "n", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "a", "lower_case": true, "lemmatize": false}]',1,NULL,NULL,NULL,'à la portée de tous','default','default',1,1,'à','["function"]',1,19,NULL,'default','default',0,'',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7502,'fr','traducteur','n',NULL,0,1,1,NULL,16,'["traducteur"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'traducteur','default','default',1,1,'traducteur','["titles"]',1,10,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7503,'fr','travailleur','n',NULL,0,1,1,NULL,16,'["travailleur"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'travailleur','default','default',1,1,'travailleur','["titles"]',1,11,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
-INSERT INTO "rules_rule" VALUES(7504,'fr','utilisateur','n',NULL,0,1,1,NULL,16,'["utilisateur"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'utilisateur','default','default',1,1,'utilisateur','["titles"]',1,11,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(7504,'fr','utilisateur','n',NULL,0,1,7,NULL,16,'["utilisateur"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'utilisateur','default','default',1,1,'utilisateur','["titles"]',1,11,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7505,'fr','profil utilisateur','n|a',NULL,0,1,1,NULL,16,'["profil", "utilisateur"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}, {"word_type": "a", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'profil utilisateur','default','default',1,1,'profil','["titles"]',1,18,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7506,'fr','compte utilisateur','n|a',NULL,0,1,1,NULL,16,'["compte", "utilisateur"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}, {"word_type": "a", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'compte utilisateur','default','default',1,1,'compte','["titles"]',1,18,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7507,'fr','vérificateur','n',NULL,0,1,1,NULL,16,'["v\u00e9rificateur"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'vérificateur','default','default',1,1,'vérificateur','["titles"]',1,12,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7508,'fr','vétéran','n',NULL,0,1,1,NULL,16,'["v\u00e9t\u00e9ran"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'vétéran','default','default',1,1,'vétéran','["titles"]',1,7,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7509,'fr','veuf','n',NULL,0,1,1,NULL,16,'["veuf"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'veuf','default','default',1,1,'veuf','["titles"]',1,4,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7510,'fr','villageois','n',NULL,0,1,1,NULL,16,'["villageois"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'villageois','default','default',1,1,'villageois','["titles"]',1,10,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
-INSERT INTO "rules_rule" VALUES(7511,'fr','visiteur','n',NULL,0,1,1,NULL,16,'["visiteur"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'visiteur','default','default',1,1,'visiteur','["titles"]',1,8,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(7511,'fr','visiteur','n',NULL,0,1,7,NULL,16,'["visiteur"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'visiteur','default','default',1,1,'visiteur','["titles"]',1,8,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7512,'fr','chers voisins','~a|~n',NULL,0,1,1,NULL,16,'["chers", "voisins"]','[{"word_type": "a", "lower_case": true, "lemmatize": false}, {"word_type": "n", "lower_case": true, "lemmatize": false}]',1,NULL,NULL,NULL,'chers voisins','default','default',0,1,'chers','["titles"]',1,13,NULL,'default','default',0,'a',1,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7513,'fr','voisin','n',NULL,0,1,1,NULL,16,'["voisin"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'voisin','default','default',1,1,'voisin','["titles"]',1,6,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7514,'fr','voyageur','n',NULL,0,1,1,NULL,16,'["voyageur"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'voyageur','default','default',1,1,'voyageur','["titles"]',1,8,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
@@ -42516,7 +42529,7 @@ INSERT INTO "rules_rule" VALUES(7531,'fr','nouveau riche','a|n',NULL,0,1,2,NULL,
 INSERT INTO "rules_rule" VALUES(7532,'fr','croquer un fruit défendu','v||n|~v',NULL,0,1,2,NULL,NULL,'["croquer", "un", "fruit", "d\u00e9fendu"]','[{"word_type": "v", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "n", "lower_case": true, "lemmatize": true}, {"word_type": "v", "lower_case": true, "lemmatize": false}]',0,NULL,NULL,NULL,'croquer un fruit défendu','default','default',1,1,'croquer','["belief_advanced"]',1,24,NULL,'default','default',0,'v',0,0,NULL,NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7533,'fr','handicapé',NULL,NULL,0,1,2,NULL,NULL,'["handicap\u00e9"]','[]',0,NULL,NULL,NULL,'handicapé','default','default',NULL,NULL,'handicapé','["ability_advanced"]',1,9,NULL,'default','default',0,NULL,0,0,'v',NULL,0,'','yes',NULL,NULL);
 INSERT INTO "rules_rule" VALUES(7535,'fr','de malade','|',NULL,0,1,2,NULL,NULL,'["de", "malade"]','[{"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'de malade','default','default',1,1,'de','["cognitive_perception_advanced"]',1,9,NULL,'default','default',0,'',0,0,NULL,NULL,0,'','yes',NULL,NULL);
-INSERT INTO "rules_rule" VALUES(7536,'fr','monsieur tout le monde','n|||n',NULL,0,1,1,NULL,NULL,'["monsieur", "tout", "le", "monde"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'monsieur Tout-le-monde','default','default',1,1,'monsieur','["male_stereotype", "gender_identity_advanced"]',1,22,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',5438,NULL);
+INSERT INTO "rules_rule" VALUES(7536,'fr','monsieur tout le monde','n|||n',NULL,0,1,1,NULL,NULL,'["monsieur", "tout", "le", "monde"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'monsieur Tout-le-monde','default','default',1,1,'monsieur','["male_stereotype", "gender_identity_advanced"]',1,22,NULL,'default','default',0,'n',1,0,NULL,NULL,0,'','yes',5438,NULL);
 INSERT INTO "rules_rule" VALUES(7537,'fr','absente','~',NULL,0,1,7,NULL,NULL,'["absente"]','[{"word_type": "", "lower_case": true, "lemmatize": false}]',0,NULL,NULL,NULL,'absent','default','default',0,1,'absente','["hidden_image"]',1,7,NULL,'default','default',0,'',1,0,'a',NULL,0,'','yes',7283,NULL);
 INSERT INTO "rules_rule" VALUES(7538,'fr','territoriale','~',NULL,0,1,7,NULL,NULL,'["territoriale"]','[{"word_type": "", "lower_case": true, "lemmatize": false}]',1,NULL,NULL,NULL,'territorial','default','default',0,1,'territoriale','["hidden_image"]',1,12,NULL,'default','default',0,'',1,0,'a',NULL,0,'','yes',7498,NULL);
 INSERT INTO "rules_rule" VALUES(7539,'fr','territoriales','~',NULL,0,1,7,NULL,NULL,'["territoriales"]','[{"word_type": "", "lower_case": true, "lemmatize": false}]',0,NULL,NULL,NULL,'territorial','default','default',0,1,'territoriales','["hidden_image"]',1,13,NULL,'default','default',0,'',0,0,'a',NULL,0,'','yes',7498,NULL);
@@ -42624,7 +42637,22 @@ INSERT INTO "rules_rule" VALUES(7643,'fr','amateurs','~',NULL,0,1,7,NULL,NULL,'[
 INSERT INTO "rules_rule" VALUES(7644,'fr','active','~',NULL,0,1,7,NULL,NULL,'["active"]','[{"word_type": "", "lower_case": true, "lemmatize": false}]',0,NULL,NULL,NULL,'actif','default','default',0,1,'active','["hidden_image"]',1,6,NULL,'default','default',0,'',0,0,'a',NULL,0,'','yes',7288,NULL);
 INSERT INTO "rules_rule" VALUES(7645,'fr','actives','~',NULL,0,1,7,NULL,NULL,'["actives"]','[{"word_type": "", "lower_case": true, "lemmatize": false}]',0,NULL,NULL,NULL,'actif','default','default',0,1,'actives','["hidden_image"]',1,7,NULL,'default','default',0,'',0,0,'a',NULL,0,'','yes',7288,NULL);
 INSERT INTO "rules_rule" VALUES(7646,'fr','actifs','~',NULL,0,1,7,NULL,NULL,'["actifs"]','[{"word_type": "", "lower_case": true, "lemmatize": false}]',0,NULL,NULL,NULL,'actif','default','default',0,1,'actifs','["hidden_image"]',1,6,NULL,'default','default',0,'',0,0,'a',NULL,0,'','yes',7288,NULL);
-INSERT INTO "rules_rule" VALUES(7647,'fr','tous','a',NULL,0,1,7,NULL,16,'["tous"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'tous','default','default',1,1,'tous','["function"]',1,4,NULL,'default','default',0,'a',1,0,NULL,NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(7647,'fr','tous','a',NULL,0,1,2,NULL,16,'["tous"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'tous','default','default',1,1,'tous','["function"]',1,4,NULL,'default','plural_only',0,'a',1,0,NULL,NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(7649,'fr','conseillère','n',NULL,0,1,2,NULL,16,'["conseill\u00e8re"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',1,NULL,NULL,NULL,'conseillère','default','default',1,1,'conseillère','["hidden_image"]',1,11,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(7650,'fr','leader',NULL,NULL,0,1,2,NULL,NULL,'["leader"]','[]',0,NULL,NULL,NULL,'leader','default','default',NULL,NULL,'leader','["titles"]',1,6,NULL,'default','default',0,NULL,0,0,'n',NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(7651,'fr','Chef de Projet','n||n',NULL,0,1,2,NULL,NULL,'["Chef", "de", "Projet"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}, {"word_type": "", "lower_case": true, "lemmatize": true}, {"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'Chef de Projet','default','default',1,1,'chef','["titles"]',1,14,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',5522,NULL);
+INSERT INTO "rules_rule" VALUES(7652,'fr','Étudiant',NULL,NULL,0,1,2,NULL,NULL,'["\u00c9tudiant"]','[]',0,NULL,NULL,NULL,'Étudiant','default','default',NULL,NULL,'Étudiant','["function"]',0,8,NULL,'default','default',0,NULL,0,0,NULL,NULL,0,'','yes',5441,NULL);
+INSERT INTO "rules_rule" VALUES(7653,'fr','un stagiaire',NULL,NULL,0,1,7,NULL,NULL,'["un", "stagiaire"]','[]',0,NULL,NULL,NULL,'un stagiaire','default','default',NULL,NULL,'un','["titles"]',1,12,NULL,'default','default',0,NULL,0,0,NULL,NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(7654,'fr','hors pair',NULL,NULL,0,1,2,NULL,NULL,'["hors", "pair"]','[]',0,NULL,NULL,NULL,'hors pair','default','default',NULL,NULL,'hors','["exaggerating"]',1,9,NULL,'default','default',0,NULL,0,0,NULL,NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(7655,'fr','intervenant','n',NULL,0,1,2,NULL,NULL,'["intervenant"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'intervenant','default','default',1,1,'intervenant','["function"]',1,11,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(7656,'fr','maîtrise','n',NULL,0,1,2,NULL,NULL,'["ma\u00eetrise"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'maîtrise','default','default',1,1,'maîtrise','["exaggerating"]',1,8,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(7657,'fr','business',NULL,NULL,0,1,2,NULL,NULL,'["business"]','[]',0,NULL,NULL,NULL,'business','default','default',NULL,NULL,'business','["anglicism"]',1,8,NULL,'default','default',0,NULL,1,0,NULL,NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(7658,'fr','interlocuteur',NULL,NULL,0,1,2,NULL,NULL,'["interlocuteur"]','[]',0,NULL,NULL,NULL,'interlocuteur','default','default',NULL,NULL,'interlocuteur','["function"]',1,13,NULL,'default','default',0,NULL,0,0,NULL,NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(7659,'fr','dashboard',NULL,NULL,0,1,2,NULL,NULL,'["dashboard"]','[]',0,NULL,NULL,NULL,'dashboard','default','default',NULL,NULL,'dashboard','["anglicism"]',1,9,NULL,'default','default',0,NULL,0,0,'n',NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(7660,'fr','prêt','a',NULL,0,1,2,NULL,NULL,'["pr\u00eat"]','[{"word_type": "a", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'prêt','default','default',1,1,'prêt','["function"]',1,4,NULL,'default','default',0,'a',1,0,NULL,NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(7661,'fr','viticulteur','n',NULL,0,1,2,NULL,NULL,'["viticulteur"]','[{"word_type": "n", "lower_case": true, "lemmatize": true}]',0,NULL,NULL,NULL,'viticulteur','default','default',1,1,'viticulteur','["titles"]',1,11,NULL,'default','default',0,'n',0,0,NULL,NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(7662,'fr','best practice',NULL,NULL,0,1,2,NULL,NULL,'["best", "practice"]','[]',0,NULL,NULL,NULL,'best practice','default','default',NULL,NULL,'best','["anglicism"]',1,13,NULL,'default','default',0,NULL,0,0,NULL,NULL,0,'','yes',NULL,NULL);
+INSERT INTO "rules_rule" VALUES(7663,'fr','profiling',NULL,NULL,0,1,2,NULL,NULL,'["profiling"]','[]',0,NULL,NULL,NULL,'profiling','default','default',NULL,NULL,'profiling','["anglicism"]',1,9,NULL,'default','default',0,NULL,0,0,NULL,NULL,0,'','yes',NULL,NULL);
 CREATE TABLE "rules_source" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "name" varchar(255) NOT NULL UNIQUE, "url" varchar(255) NULL, "reference" text NULL, "createdby_id" integer NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED, "is_citation_shown" bool NOT NULL, "citation" text NULL);
 INSERT INTO "rules_source" VALUES(1,'National Library of Medicine','https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1117148/','',1,0,NULL);
 INSERT INTO "rules_source" VALUES(2,'DCC',NULL,NULL,NULL,0,NULL);
@@ -42666,14 +42694,14 @@ CREATE INDEX "rules_rule_rule_translation_source_id_222530d9" ON "rules_rule" ("
 CREATE INDEX "rules_rule_is_auto_53ffb0_idx" ON "rules_rule" ("is_auto_generated", "is_active", "language", "type", "first_token", "first_is_word_type_lemmatize", "first_is_word_type_lower_case");
 CREATE INDEX "rules_source_createdby_id_ff518e76" ON "rules_source" ("createdby_id");
 DELETE FROM "sqlite_sequence";
-INSERT INTO "sqlite_sequence" VALUES('rules_falsepositive',1342);
+INSERT INTO "sqlite_sequence" VALUES('rules_falsepositive',1352);
 INSERT INTO "sqlite_sequence" VALUES('rules_englishadjective',751);
 INSERT INTO "sqlite_sequence" VALUES('rules_germanadjective',869);
 INSERT INTO "sqlite_sequence" VALUES('rules_englishverb',337);
 INSERT INTO "sqlite_sequence" VALUES('rules_germanverb',284);
-INSERT INTO "sqlite_sequence" VALUES('rules_alternative',29816);
+INSERT INTO "sqlite_sequence" VALUES('rules_alternative',29872);
 INSERT INTO "sqlite_sequence" VALUES('rules_englishnoun',1529);
 INSERT INTO "sqlite_sequence" VALUES('rules_germannoun',3066);
-INSERT INTO "sqlite_sequence" VALUES('rules_rule',7648);
+INSERT INTO "sqlite_sequence" VALUES('rules_rule',7663);
 INSERT INTO "sqlite_sequence" VALUES('rules_source',16);
 COMMIT;
