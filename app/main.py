@@ -124,7 +124,7 @@ from app.query_definitions import (
 )
 import boto3
 
-version = "2.3.5"
+version = "2.3.6"
 
 categories = get_categories()
 settings = get_settings()
@@ -6108,7 +6108,7 @@ async def fetch_alternatives_with_article(
 async def regex_match(
     config: Config,
     client: Client,
-    lang: LangType,
+    lang: Language,
     full_text: str,
     token_index: int,
     tokens: Doc,
@@ -6874,8 +6874,9 @@ async def rule_check(
                     ):
                         continue
                 case WordType.NOUN:
-                    if get_category_name(subcategory) in ["function", "male_stereotype", "gender_identity"]:
-                        subcategory_to_find = ["function", "male_stereotype"] if is_token_masculine(token) else ["gender_identity"]
+                    category_name = get_category_name(subcategory)
+                    if category_name == "gender_identity" or category_name in static_rules["male_specific_dimensions"]:
+                        subcategory_to_find = static_rules["male_specific_dimensions"] if is_token_masculine(token) else ["gender_identity"]
                         subcategory = None
                         for search_subcategory in rule.subcategories:
                             if get_category_name(search_subcategory) in subcategory_to_find:

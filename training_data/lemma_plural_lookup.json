@@ -3275,6 +3275,7 @@
   "fr": {
     "camerawomen": "cameraman",
     "cam\u00e9rawomen": "cam\u00e9raman",
+    "conseill\u00e8res": "conseill\u00e8re",
     "d\u00e9butantes": "d\u00e9butant",
     "d\u00e9tenues": "d\u00e9tenu",
     "expertes": "expert",
@@ -3287,6 +3288,7 @@
     "pr\u00e9sidentes": "pr\u00e9sident",
     "repr\u00e9sentantes": "repr\u00e9sentant",
     "salari\u00e9es": "salari\u00e9",
+    "tous": "tous",
     "\u00e9boueuses": "\u00e9boueurs"
   }
 }

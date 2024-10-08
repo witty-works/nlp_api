@@ -16,6 +16,7 @@ def fetch_static_rules():
     langs = files.keys()
 
     static_rules = {
+        "male_specific_dimensions": ["function", "titles", "male_stereotype"],
         "named_entity_labels": {
             EntityType.NAME: (
                 "PER",  # Named person or family
