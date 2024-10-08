@@ -6108,7 +6108,7 @@ async def fetch_alternatives_with_article(
 async def regex_match(
     config: Config,
     client: Client,
-    lang: LangType,
+    lang: Language,
     full_text: str,
     token_index: int,
     tokens: Doc,
