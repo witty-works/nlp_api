@@ -73,11 +73,12 @@ class RuleCheck:
         tokens: Doc,
         offsets: dict,
         list_full: list,
-        rules: list[Rule],
+        rules: list | None = None,
         false_positive_matcher: list | None = None,
+        suffix_check: bool = False,
     ) -> list:
         token = tokens[token_index]
-        if len(rules) == 0 or not is_valid_text(token.text):
+        if not is_valid_text(token.text):
             return token_index
 
         if token.lemma_ == "aber" and language.lang == LangType.DE:
@@ -87,6 +88,16 @@ class RuleCheck:
                 or re.search(r"[.!?:,]\s*$", preceeding_text, re.MULTILINE) is not None
             ):
                 return token_index
+
+        if rules is None:
+            rules = await self.db.fetch_rules(
+                language,
+                token,
+                token.text,
+                token.lemma_,
+                config.addons,
+                suffix_check,
+            )
 
         for rule in rules:
             subcategory = is_sub_category_enabled(
@@ -351,7 +362,8 @@ class RuleCheck:
                         category_name = get_category_name(subcategory)
                         if (
                             category_name == "gender_identity"
-                            or category_name in self.static_rules["male_specific_dimensions"]
+                            or category_name
+                            in self.static_rules["male_specific_dimensions"]
                         ):
                             subcategory_to_find = (
                                 self.static_rules["male_specific_dimensions"]

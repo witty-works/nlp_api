@@ -5,8 +5,7 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 from app.main import (
     app,
-    redis,
-    settings,
+    context,
     fetch_configs_for_request,
     parse_term_replacements,
 )
@@ -375,7 +374,7 @@ def test_fails(fails_case_dir, snapshot, set_redis):
     get_dirs("tests/test_rephrase"),
 )
 def test_rephrase(rephrase_dir, snapshot, set_redis):
-    if len(settings.aws_key):
+    if len(context.settings.aws_key):
         with TestClient(app) as client:
             # Read input files from the case directory.
             input_json = rephrase_dir.joinpath("input.json").read_text()
@@ -541,7 +540,7 @@ def set_redis():
     user_object["term_replacements"] = parse_term_replacements(
         user_object["term_replacements"]
     )
-    redis.db.set(redis.get_user_id(user_object["email"]), json.dumps(user_object))
+    context.redis.db.set(context.redis.get_user_id(user_object["email"]), json.dumps(user_object))
 
     # 2_2@gmail.com
     user_object = {
@@ -558,7 +557,7 @@ def set_redis():
         "notifications": 0,
     }
 
-    redis.db.set(redis.get_user_id(user_object["email"]), json.dumps(user_object))
+    context.redis.db.set(context.redis.get_user_id(user_object["email"]), json.dumps(user_object))
 
     organization_object = {
         "id": user_object["organization_id"],
@@ -572,7 +571,7 @@ def set_redis():
         "config_hash": None,
     }
 
-    redis.db.set(organization_object["id"], json.dumps(organization_object))
+    context.redis.db.set(organization_object["id"], json.dumps(organization_object))
 
     # free@gmail.com
     user_object = {
@@ -589,7 +588,7 @@ def set_redis():
         "notifications": 0,
     }
 
-    redis.db.set(redis.get_user_id(user_object["email"]), json.dumps(user_object))
+    context.redis.db.set(context.redis.get_user_id(user_object["email"]), json.dumps(user_object))
 
     organization_object = {
         "id": user_object["organization_id"],
@@ -603,7 +602,7 @@ def set_redis():
         "config_hash": None,
     }
 
-    redis.db.set(organization_object["id"], json.dumps(organization_object))
+    context.redis.db.set(organization_object["id"], json.dumps(organization_object))
 
     # default@gmail.com
     user_object = {
@@ -625,7 +624,7 @@ def set_redis():
         "team_analytics": False,
     }
 
-    redis.db.set(redis.get_user_id(user_object["email"]), json.dumps(user_object))
+    context.redis.db.set(context.redis.get_user_id(user_object["email"]), json.dumps(user_object))
 
     organization_object = {
         "id": user_object["organization_id"],
@@ -638,7 +637,7 @@ def set_redis():
         "config_hash": None,
     }
 
-    redis.db.set(organization_object["id"], json.dumps(organization_object))
+    context.redis.db.set(organization_object["id"], json.dumps(organization_object))
 
     # test@gmail.com
     user_object = {
@@ -735,7 +734,7 @@ def set_redis():
     user_object["term_replacements"] = parse_term_replacements(
         user_object["term_replacements"]
     )
-    redis.db.set(redis.get_user_id(user_object["email"]), json.dumps(user_object))
+    context.redis.db.set(context.redis.get_user_id(user_object["email"]), json.dumps(user_object))
 
     organization_object = {
         "id": user_object["organization_id"],
@@ -813,7 +812,7 @@ def set_redis():
     organization_object["term_replacements"] = parse_term_replacements(
         organization_object["term_replacements"]
     )
-    redis.db.set(organization_object["id"], json.dumps(organization_object))
+    context.redis.db.set(organization_object["id"], json.dumps(organization_object))
 
 
 @pytest.mark.parametrize(

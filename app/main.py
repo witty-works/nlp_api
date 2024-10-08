@@ -4,8 +4,8 @@ import json
 import secrets
 from typing import Optional, Union
 from collections import defaultdict
-import fasttext
 from inspect import currentframe
+import logging
 
 from spacy import displacy
 from spacy.tokens import Doc
@@ -47,7 +47,6 @@ from app.models import (
     Config,
     GermanGenderEndingType,
     LangType,
-    LangWithAutoType,
     Language,
     BaseRequestIn,
     RephraseRequestIn,
@@ -79,14 +78,10 @@ from app.regex_check import RegexCheck
 from app.nouns import Nouns
 from app.verbs import Verbs
 from app.adjectives import Adjectives
-from app.model import Model
-from app.translations import translations
 from app.llm_alternatives import LlmAlternatives
-from app.reivew_prompt import ReviewPrompt
-from app.lang_detection import LangDetection
+from app.review_prompt import ReviewPrompt
 from app.categories import (
     get_category_keys,
-    get_categories,
     get_parent_category_name,
     is_sub_category_enabled,
 )
@@ -94,65 +89,10 @@ from app.alternatives import Alternatives
 from app.llm_alternatives import LlmAlternatives
 from app.languagetool import LanguageTool
 from app.db import Db
-from app.settings import get_settings
-from app.logger import Logger
-from app.redis import Redis
-from app.rules import fetch_static_rules
-from app.sentry import set_up_sentry_sdk
-from app.query_definitions import (
-    declensions_config,
-    verb_form_map,
-)
 from app.http import Http
+from app.context import AppContext
 
-version = "2.3.6"
-
-categories = get_categories()
-settings = get_settings()
-logger = Logger.factory(settings)
-logger.debug("app started with settings: %s", settings)
-
-sentry_sdk = set_up_sentry_sdk(version, settings)
-static_rules = fetch_static_rules()
-
-supported_word_types = list(WordType._member_map_.values())
-
-term_replacement_langs = []
-for model_name in settings.models:
-    lang = model_name[0:2]
-    term_replacement_langs.append("|" + lang)
-
-with open("./training_data/lemma_plural_lookup.json", "r") as fp:
-    lemma_plural_lookup = json.load(fp)
-
-redis = Redis.factory(settings)
-
-pretrained_lang_model = os.getcwd() + "/training_data/lid.176.bin"
-fasttext_model = fasttext.load_model(pretrained_lang_model)
-lang_detection = LangDetection(fasttext_model)
-
-model = Model(settings, logger, static_rules, lemma_plural_lookup)
-for model_name in settings.models:
-    lang = model_name[0:2]
-    model.load_nlp_model(lang, model_name)
-
-languages = {}
-for locale in LangWithAutoType._member_map_.values():
-    if locale == LangWithAutoType.AUTO:
-        continue
-
-    languages[locale] = Language(locale, translations)
-
-http = None
-rules_db = None
-languagetool = None
-llm_alternatives = None
-rule_check = None
-regex_check = None
-emoji_check = None
-nouns = None
-verbs = None
-adjectives = None
+context = AppContext()
 
 
 @asynccontextmanager
@@ -170,91 +110,98 @@ async def lifespan(app: FastAPI):
         except:
             pass
 
-    global http
-    global rules_db
-    global settings
-    global redis
-    global logger
-    global model
-    global languagetool
-    global alternatives
-    global llm_alternatives
-    global rule_check
-    global regex_check
-    global emoji_check
-    global lemma_plural_lookup
-    global nouns
-    global verbs
-    global adjectives
-    global translations
-    global languages
+    global context
 
-    term_replacement_langs = []
-    for model_name in settings.models:
-        lang = model_name[0:2]
-        term_replacement_langs.append("|" + lang)
-
-    http = Http(settings, logger)
-
-    import logging
+    context.http = Http(context.settings, context.logger)
 
     sqlite_logger = logging.getLogger("aiosqlite")
     sqlite_logger.setLevel(logging.ERROR)
 
     sqlite_logger.setLevel(logging.WARNING)
 
-    rules_db = await Db.factory(settings, languages)
-    model.db = rules_db
+    context.db = await Db.factory(context.settings, context.languages)
+    context.model.db = context.db
 
-    if settings.redis_default_rules:
-        rules = json.loads(settings.redis_default_rules)
+    if context.settings.redis_default_rules:
+        rules = json.loads(context.settings.redis_default_rules)
         rules["term_replacements"] = parse_term_replacements(rules["term_replacements"])
         email = rules["email"]
-        redis.db.set(redis.get_user_id(email), json.dumps(rules))
+        context.redis.db.set(context.redis.get_user_id(email), json.dumps(rules))
 
-    if settings.redis_default_organization_rules:
-        organization_rules = json.loads(settings.redis_default_organization_rules)
+    if context.settings.redis_default_organization_rules:
+        organization_rules = json.loads(
+            context.settings.redis_default_organization_rules
+        )
         organization_rules["term_replacements"] = parse_term_replacements(
             organization_rules["term_replacements"]
         )
         key = organization_rules["id"]
-        redis.db.set(key, json.dumps(organization_rules))
+        context.redis.db.set(key, json.dumps(organization_rules))
 
-    nouns = Nouns(settings, logger, static_rules, model, rules_db)
-    verbs = Verbs(settings, logger, static_rules, model, rules_db)
-    adjectives = Adjectives(settings, logger, rules_db)
-    alternatives = Alternatives(
-        settings, logger, static_rules, rules_db, model, nouns, verbs, adjectives
+    context.nouns = Nouns(
+        context.settings,
+        context.logger,
+        context.static_rules,
+        context.model,
+        context.db,
     )
-    languagetool = LanguageTool(settings, static_rules, logger, categories, http)
-    llm_alternatives = LlmAlternatives(settings, alternatives)
-    rule_check = RuleCheck(
-        settings,
-        logger,
-        static_rules,
-        model,
-        rules_db,
-        nouns,
-        verbs,
-        adjectives,
-        alternatives,
+    context.verbs = Verbs(
+        context.settings,
+        context.logger,
+        context.static_rules,
+        context.model,
+        context.db,
     )
-    regex_check = RegexCheck(settings, logger, static_rules, nouns)
-    emoji_check = EmojiCheck(settings, logger, static_rules)
+    context.adjectives = Adjectives(context.settings, context.logger, context.db)
+    context.alternatives = Alternatives(
+        context.settings,
+        context.logger,
+        context.static_rules,
+        context.db,
+        context.model,
+        context.nouns,
+        context.verbs,
+        context.adjectives,
+    )
+    context.languagetool = LanguageTool(
+        context.settings,
+        context.static_rules,
+        context.logger,
+        context.categories,
+        context.http,
+    )
+    context.llm_alternatives = LlmAlternatives(context.settings, context.alternatives)
+    context.rule_check = RuleCheck(
+        context.settings,
+        context.logger,
+        context.static_rules,
+        context.model,
+        context.db,
+        context.nouns,
+        context.verbs,
+        context.adjectives,
+        context.alternatives,
+    )
+    context.regex_check = RegexCheck(
+        context.settings, context.logger, context.static_rules, context.nouns
+    )
+    context.emoji_check = EmojiCheck(
+        context.settings, context.logger, context.static_rules
+    )
 
     yield
 
-    await http.close()
-    await rules_db.close()
+    await context.http.close()
+    await context.db.close()
 
 
 application_name = "Witty NLP API"
 
 app = FastAPI(
     title=application_name,
-    version=version,
-    terms_of_service=settings.terms_of_service,
-    contact=settings.contact,
+    version=context.version,
+    terms_of_service=context.settings.terms_of_service,
+    contact=context.settings.contact,
     docs_url=None,
     redoc_url=None,
     openapi_url=None,
@@ -293,7 +240,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-bolt = get_bolt(settings)
+bolt = get_bolt(context.settings)
 bolt_handler = AsyncSlackRequestHandler(bolt)
 
 
@@ -303,7 +250,7 @@ def fetch_current_username(
     # Credentials are missing
     if credentials is None:
         # Auth is disabled, just proceed
-        if not settings.api_docs_auth_enabled:
+        if not context.settings.api_docs_auth_enabled:
             return "anon"
 
         # Auth is enabled, raise 401
@@ -313,17 +260,17 @@ def fetch_current_username(
         )
 
     # Verify the credentials as usual
-    if not settings.api_docs_username or not settings.api_docs_password:
+    if not context.settings.api_docs_username or not context.settings.api_docs_password:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Incorrect user configuration",
         )
 
     correct_username = secrets.compare_digest(
-        credentials.username, settings.api_docs_username
+        credentials.username, context.settings.api_docs_username
     )
     correct_password = secrets.compare_digest(
-        credentials.password, settings.api_docs_password
+        credentials.password, context.settings.api_docs_password
     )
     if not (correct_username and correct_password):
         raise HTTPException(
@@ -340,7 +287,7 @@ def fetch_current_username(
     response_model=Union[RephrasesOut, Result],
     response_model_exclude_none=True,
     dependencies=[Depends(HTTPBearer(auto_error=False))],
-    include_in_schema=not settings.is_prod,
+    include_in_schema=not context.settings.is_prod,
 )
 async def post_debug_rephrase(
     request: Request,
@@ -380,7 +327,9 @@ async def rephrase_sentence(
 
         rephrase_api_version(version)
 
-        user_email = await fetch_user(request, settings, redis, http)
+        user_email = await fetch_user(
+            request, context.settings, context.redis, context.http
+        )
         configs = (
             await fetch_configs_for_request(rephrase_request_in, user_email)
             if user_email
@@ -403,11 +352,11 @@ async def rephrase_sentence(
         # debug
         configs = {}
 
-    redis.store_metrics(request, configs, version, "rephrase")
+    context.redis.store_metrics(request, configs, version, "rephrase")
 
     try:
         results = RephrasesOut.factory(
-            await llm_alternatives.handle(rephrase_request_in)
+            await context.llm_alternatives.handle(rephrase_request_in)
         )
     except Exception as e:
         response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
@@ -421,7 +370,7 @@ async def rephrase_sentence(
     response_model=Union[str, Result],
     response_model_exclude_none=True,
     dependencies=[Depends(HTTPBearer(auto_error=False))],
-    include_in_schema=not settings.is_prod,
+    include_in_schema=not context.settings.is_prod,
 )
 async def review_prompt(
     request: Request,
@@ -450,7 +399,9 @@ async def handle_command_witty(
     await ack()
 
     check_request_in = CheckRequestIn(client="slack:1.0.0", text=body["text"])
-    text, language, limit_reached = fetch_text(check_request_in, model.models.keys())
+    text, language, limit_reached = fetch_text(
+        check_request_in, context.model.models.keys()
+    )
 
     if language is None:
         await respond(f"Witty could not determine a language for '{text}'.")
@@ -466,9 +417,9 @@ async def handle_command_witty(
     except KeyError:
         pass
 
-    if configs == {} and settings.slack_organization_id:
+    if configs == {} and context.settings.slack_organization_id:
         configs = await fetch_organization_configs_for_request(
-            check_request_in, settings.slack_organization_id
+            check_request_in, context.settings.slack_organization_id
         )
 
     check_request_in.config.__setattr__("alternatives_max_count", None)
@@ -495,26 +446,26 @@ async def get_health(check_external: bool = False):
         LangType.FR: "Je m'appelle Luc",
     }
 
-    for model_name in settings.models:
+    for model_name in context.settings.models:
         try:
             lang = model_name[0:2]
-            model.fetch_tokens(lang, langs[lang])
+            context.model.fetch_tokens(lang, langs[lang])
             health["model_" + lang] = True
         except Exception:
             health["model_" + lang] = False
 
     if check_external:
-        languagetool_health = await model.fetch_json_get(
-            settings.languagetool_api + "/healthcheck",
+        languagetool_health = await context.model.fetch_json_get(
+            context.settings.languagetool_api + "/healthcheck",
             {},
             {},
             "LanguageTool",
-            settings.languagetool_verify_ssl,
+            context.settings.languagetool_verify_ssl,
             False,
         )
 
         health["spelling"] = languagetool_health == "OK"
-        health["config"] = redis.db.ping()
+        health["config"] = context.redis.db.ping()
 
     content = jsonable_encoder(health)
 
@@ -528,20 +479,20 @@ async def get_health(check_external: bool = False):
     return content
 
 
-@app.get("/lt", include_in_schema=not settings.is_prod)
+@app.get("/lt", include_in_schema=not context.settings.is_prod)
 def get_lt(username: str = Depends(fetch_current_username)):
-    return settings.languagetool_api
+    return context.settings.languagetool_api
 
 
-@app.get("/settings", include_in_schema=not settings.is_prod)
+@app.get("/settings", include_in_schema=not context.settings.is_prod)
 def get_lt(username: str = Depends(fetch_current_username)):
-    return settings
+    return context.settings
 
 
 @app.get("/docs", include_in_schema=False)
 def get_swagger_documentation(
     username: str = Depends(fetch_current_username),
-    include_in_schema=not settings.is_prod,
+    include_in_schema=not context.settings.is_prod,
 ):  # pragma: no cover
     return get_swagger_ui_html(openapi_url="/openapi.json", title="docs")
 
@@ -556,7 +507,9 @@ def get_openapi_json(
 # public routes
 @app.get("/", include_in_schema=False)
 def get_root():
-    if not settings.is_prod and settings.testing is False:  # pragma: no cover
+    if (
+        not context.settings.is_prod and context.settings.testing is False
+    ):  # pragma: no cover
         return RedirectResponse(url="/docs", status_code=302)
 
     return application_name + ": https://witty.works"
@@ -564,7 +517,7 @@ def get_root():
 
 @app.get(
     "/save_openapi_json",
-    include_in_schema=not settings.is_prod,
+    include_in_schema=not context.settings.is_prod,
 )
 def get_save_openapi_json(
     username: str = Depends(fetch_current_username),
@@ -580,7 +533,7 @@ def get_save_openapi_json(
 
 @app.get(
     "/debug/german_gender_ending",
-    include_in_schema=not settings.is_prod,
+    include_in_schema=not context.settings.is_prod,
     response_class=PrettyJSONResponse,
 )
 async def get_german_gender_ending(
@@ -595,7 +548,7 @@ async def get_german_gender_ending(
         inclusive = Config.gendered_roles_format_inclusive(german_gender_ending)
         binary = Config.gendered_roles_format_binary(german_gender_ending)
 
-    alternatives, _ = await nouns.gendered_alternatives(
+    alternatives, _ = await context.nouns.gendered_alternatives(
         alternative,
         inclusive,
         binary,
@@ -608,7 +561,7 @@ async def get_german_gender_ending(
 
 @app.get(
     "/debug/declension",
-    include_in_schema=not settings.is_prod,
+    include_in_schema=not context.settings.is_prod,
     response_class=PrettyJSONResponse,
 )
 async def get_declension_debug(
@@ -616,12 +569,12 @@ async def get_declension_debug(
     word_type: BasicWordType,
     word: str,
 ):
-    return await rules_db.fetch_declensions(lang, word_type, word)
+    return await context.db.fetch_declensions(lang, word_type, word)
 
 
 @app.get(
     "/debug/align_form",
-    include_in_schema=not settings.is_prod,
+    include_in_schema=not context.settings.is_prod,
     response_class=PrettyJSONResponse,
 )
 async def get_align_form_debug(
@@ -631,13 +584,15 @@ async def get_align_form_debug(
     source_text: str,
     target_text: str,
 ):
-    source_tokens = model.fetch_tokens(lang, source_text)
-    target_tokens = model.fetch_tokens(lang, target_text)
+    source_tokens = context.model.fetch_tokens(lang, source_text)
+    target_tokens = context.model.fetch_tokens(lang, target_text)
 
-    target_form = await rule_check.find_form(lang, word_type, index, source_tokens)
+    target_form = await context.rule_check.find_form(
+        lang, word_type, index, source_tokens
+    )
 
     if WordType.VERB == word_type:
-        return await verbs.align_form_verb(
+        return await context.verbs.align_form_verb(
             lang,
             target_form,
             source_tokens[0].text,
@@ -646,7 +601,7 @@ async def get_align_form_debug(
         )
 
     if WordType.ADJECTIVE == word_type:
-        return await adjectives.align_form_adjective(
+        return await context.adjectives.align_form_adjective(
             lang,
             target_form,
             source_tokens[0].text,
@@ -655,7 +610,7 @@ async def get_align_form_debug(
         )
 
     # if WordType.NOUN == word_type:
-    return nouns.align_form_noun(
+    return context.nouns.align_form_noun(
         lang,
         target_form,
         target_tokens[0],
@@ -664,7 +619,7 @@ async def get_align_form_debug(
 
 @app.get(
     "/debug/configs",
-    include_in_schema=not settings.is_prod,
+    include_in_schema=not context.settings.is_prod,
     dependencies=[Depends(HTTPBearer(auto_error=False))],
 )
 async def get_config_debug(
@@ -677,7 +632,7 @@ async def get_config_debug(
         configs = await fetch_user_organization_configs(user_email)
     except HTTPException:
         try:
-            configs = await redis.fetch_user_configs_from_redis(user_email)
+            configs = await context.redis.fetch_user_configs_from_redis(user_email)
         except HTTPException:
             configs = {}
 
@@ -696,13 +651,15 @@ async def get_config_debug(
 
 @app.post(
     "/debug/auth",
-    include_in_schema=not settings.is_prod,
+    include_in_schema=not context.settings.is_prod,
     dependencies=[Depends(HTTPBearer(auto_error=False))],
 )
 async def post_auth_debug(
     request: Request, check_request_in: CheckRequestIn
 ):  # pragma: no cover
-    user_email = await fetch_user(request, settings, redis, http)
+    user_email = await fetch_user(
+        request, context.settings, context.redis, context.http
+    )
     if not user_email:
         return user_email
 
@@ -737,7 +694,7 @@ async def get_user_configs(
         if _key == MetricsType.ALL:
             continue
 
-        metrics = redis.db.hgetall(_key)
+        metrics = context.redis.db.hgetall(_key)
 
         for a in metrics:
             metrics[a] = int(metrics[a])
@@ -770,14 +727,16 @@ async def post_auth_2_0(
     )
     check_client_version(client)
 
-    user_email = await fetch_user(request, settings, redis, http)
+    user_email = await fetch_user(
+        request, context.settings, context.redis, context.http
+    )
     configs = (
         await fetch_configs_for_request(CheckRequestIn(text=""), user_email)
         if user_email
         else {}
     )
 
-    redis.store_metrics(request, configs, "2.0", "auth")
+    context.redis.store_metrics(request, configs, "2.0", "auth")
 
     if configs == {}:
         raise HTTPException(
@@ -794,7 +753,7 @@ async def post_auth_2_0(
 
 @app.post(
     "/debug/rule",
-    include_in_schema=not settings.is_prod,
+    include_in_schema=not context.settings.is_prod,
     response_model=list[ResultOut],
     response_model_exclude_none=True,
 )
@@ -802,23 +761,25 @@ async def post_debug_rule(
     rule_data: RuleIn,
     username: str = Depends(fetch_current_username),
 ):
-    language = languages[rule_data.lang]
+    language = context.languages[rule_data.lang]
     config = Config(plan="witty_teams")
 
-    tokens = model.fetch_tokens(language.lang, rule_data.text)
+    tokens = context.model.fetch_tokens(language.lang, rule_data.text)
     for token in tokens:
         if token.text in rule_data.lemmatizations:
             token.lemma_ = rule_data.lemmatizations[token.text]
 
     offsets = utf16_offsets(rule_data.text)
-    false_positive_matcher = model.fetch_false_positive_matchers(language.lang, tokens)
+    false_positive_matcher = context.model.fetch_false_positive_matchers(
+        language.lang, tokens
+    )
 
     if rule_data.alternatives is not None:
         alternative_list = []
         for alternative_in in rule_data.alternatives:
             alternative = Alternative(
                 alternative_in.lemma,
-                model.tokenize(alternative_in.lemma, rule_data.lang),
+                context.model.tokenize(alternative_in.lemma, rule_data.lang),
                 alternative_in.word_types,
                 alternative_in.is_remove,
                 alternative_in.is_inspiration,
@@ -837,7 +798,7 @@ async def post_debug_rule(
         "test",
         rule_data.lang,
         rule_data.lemma,
-        model.tokenize(rule_data.lemma, rule_data.lang),
+        context.model.tokenize(rule_data.lemma, rule_data.lang),
         rule_data.word_types,
         rule_data.subcategories,
         alternative_list,
@@ -855,7 +816,7 @@ async def post_debug_rule(
     rules = [rule]
 
     list_full = []
-    client = parse_client("debug:" + version)
+    client = parse_client("debug:" + context.version)
 
     token_index = 0
     token_count = len(tokens)
@@ -864,7 +825,7 @@ async def post_debug_rule(
             tokens[token_index].lemma_ = await german_lemmatization(tokens, token_index)
 
         for rule in rules:
-            await rule_check.handle(
+            await context.rule_check.handle(
                 config,
                 client,
                 language,
@@ -884,7 +845,7 @@ async def post_debug_rule(
 
 @app.get(
     "/debug/spacy",
-    include_in_schema=not settings.is_prod,
+    include_in_schema=not context.settings.is_prod,
     response_class=PrettyJSONResponse,
 )
 async def get_debug_spacy(
@@ -894,7 +855,7 @@ async def get_debug_spacy(
     username: str = Depends(fetch_current_username),
 ):
     results = []
-    tokens = model.fetch_tokens(lang, text)
+    tokens = context.model.fetch_tokens(lang, text)
 
     word_type_rule = None
     for token_index in range(len(tokens)):
@@ -906,7 +867,7 @@ async def get_debug_spacy(
 
         if lang == LangType.DE:
             token.lemma_ = await german_lemmatization(tokens, token_index)
-        word_type = await model.fetch_word_type(lang, token)
+        word_type = await context.model.fetch_word_type(lang, token)
         if token.text != token.lemma_:
             word_type_rule += "~"
         word_type_rule += word_type
@@ -915,7 +876,7 @@ async def get_debug_spacy(
             "text": token.text,
             "lemma": token.lemma_,
             "word_type": word_type,
-            "is_singular": model.is_token_singular(lang, token),
+            "is_singular": context.model.is_token_singular(lang, token),
             "ner": token.ent_type_,
         }
 
@@ -963,14 +924,14 @@ async def get_debug_spacy(
 
 @app.get(
     "/debug/displacy",
-    include_in_schema=not settings.is_prod,
+    include_in_schema=not context.settings.is_prod,
 )
 async def get_debug_spacy(
     text: str,
     lang: LangType,
     username: str = Depends(fetch_current_username),
 ):
-    tokens = model.fetch_tokens(lang, text)
+    tokens = context.model.fetch_tokens(lang, text)
 
     sentence_spans = list(tokens.sents)
     data = displacy.render(sentence_spans, style="dep")
@@ -979,14 +940,14 @@ async def get_debug_spacy(
 
 @app.get(
     "/debug/german_noun",
-    include_in_schema=not settings.is_prod,
+    include_in_schema=not context.settings.is_prod,
     response_class=PrettyJSONResponse,
 )
 async def get_debug_german_noun(
     word: str,
     username: str = Depends(fetch_current_username),
 ):
-    return await nouns.german_noun_lookup(word)
+    return await context.nouns.german_noun_lookup(word)
 
 
 @app.post(
@@ -994,7 +955,7 @@ async def get_debug_german_noun(
     response_model=Union[ResultsOut, Result],
     response_model_exclude_none=True,
     dependencies=[Depends(HTTPBearer(auto_error=False))],
-    include_in_schema=not settings.is_prod,
+    include_in_schema=not context.settings.is_prod,
 )
 async def post_debug_check(
     request: Request,
@@ -1026,7 +987,7 @@ async def get_lemmatize(
     all: bool = False,
     username: str = Depends(fetch_current_username),
 ):
-    tokens = model.fetch_tokens(lang, text)
+    tokens = context.model.fetch_tokens(lang, text)
     if all:
         return tuple([i.lemma_ for i in tokens])
 
@@ -1042,7 +1003,7 @@ async def get_tokenize(
     lang: LangType,
     username: str = Depends(fetch_current_username),
 ):
-    return model.tokenize(text, lang)
+    return context.model.tokenize(text, lang)
 
 
 @app.get("/parse-word-types")
@@ -1052,7 +1013,7 @@ async def get_tokenize(
     lang: LangType,
     username: str = Depends(fetch_current_username),
 ):
-    tokens = model.fetch_tokens(lang, text)
+    tokens = context.model.fetch_tokens(lang, text)
     word_type_list = word_types.split("|")
 
     if len(tokens) != len(word_type_list):
@@ -1064,7 +1025,10 @@ async def get_tokenize(
     for word_type in word_type_list:
         parsed_word_type, lower_case, lemmatize = parse_word_type(word_type)
 
-        if parsed_word_type != "" and parsed_word_type not in supported_word_types:
+        if (
+            parsed_word_type != ""
+            and parsed_word_type not in context.supported_word_types
+        ):
             raise RequestValidationError(
                 f"Word type '{word_type}' within '{word_types}' contains unsupported word type '{parsed_word_type}'"
             )
@@ -1092,7 +1056,9 @@ async def post_organization_configs(
         organization_configs.term_replacements
     )
 
-    redis.db.set(organization_configs.id, organization_configs.model_dump_json())
+    context.redis.db.set(
+        organization_configs.id, organization_configs.model_dump_json()
+    )
 
 
 @app.delete(
@@ -1103,7 +1069,7 @@ async def delete_organiztion_configs(
     organization_id: str,
     username: str = Depends(fetch_current_username),
 ):
-    redis.db.delete(organization_id)
+    context.redis.db.delete(organization_id)
 
 
 @app.get(
@@ -1116,7 +1082,7 @@ async def get_organization_configs(
     organization_id: str,
     username: str = Depends(fetch_current_username),
 ):
-    return await redis.fetch_organization_configs_from_redis(organization_id)
+    return await context.redis.fetch_organization_configs_from_redis(organization_id)
 
 
 @app.post(
@@ -1130,7 +1096,9 @@ async def post_user_configs(
         user_configs.term_replacements
     )
 
-    redis.db.set(redis.get_user_id(user_configs.email), user_configs.model_dump_json())
+    context.redis.db.set(
+        context.redis.get_user_id(user_configs.email), user_configs.model_dump_json()
+    )
 
 
 @app.delete(
@@ -1141,7 +1109,7 @@ async def delete_user_configs(
     email: str,
     username: str = Depends(fetch_current_username),
 ):
-    redis.db.delete(redis.get_user_id(email))
+    context.redis.db.delete(context.redis.get_user_id(email))
 
 
 @app.get(
@@ -1161,12 +1129,12 @@ def fetch_text(
     check_request_in: CheckRequestIn, supported_langs: list
 ) -> tuple[str, Language | None, bool]:
     text = check_request_in.text
-    limit_reached = len(text) > settings.text_max_length
+    limit_reached = len(text) > context.settings.text_max_length
     if limit_reached:
-        text = text[0 : settings.text_max_length]
+        text = text[0 : context.settings.text_max_length]
         text = text.rsplit(" ", 1)[0]
 
-    locale = lang_detection.get_locale(
+    locale = context.lang_detection.get_locale(
         supported_langs,
         text,
         check_request_in.lang,
@@ -1174,7 +1142,7 @@ def fetch_text(
         check_request_in.config.preferred_variants,
     )
 
-    language = None if locale is None else languages[locale]
+    language = None if locale is None else context.languages[locale]
 
     return text, language, limit_reached
 
@@ -1199,7 +1167,7 @@ def parse_term_replacement(lemma, term_replacement: dict):
     if lower_case and not lemmatize:
         lemma = lemma.lower()
 
-    if list(filter(lemma.endswith, term_replacement_langs)) != []:
+    if list(filter(lemma.endswith, context.term_replacement_langs)) != []:
         term_replacement["lang"] = lemma[-2:]
         term_replacement["lemma"] = lemma[0:-3]
     else:
@@ -1207,7 +1175,7 @@ def parse_term_replacement(lemma, term_replacement: dict):
         term_replacement["lemma"] = lemma
 
     lang = LangType.EN if term_replacement["lang"] is None else term_replacement["lang"]
-    term_replacement["words"] = model.tokenize(term_replacement["lemma"], lang)
+    term_replacement["words"] = context.model.tokenize(term_replacement["lemma"], lang)
     term_replacement["word_types"] = word_type * len(term_replacement["words"])
 
     term_replacement["false_positives"] = []
@@ -1216,7 +1184,7 @@ def parse_term_replacement(lemma, term_replacement: dict):
         term_replacement["false_positives"].append(alternative)
 
         alternative = {"lemma": alternative}
-        alternative["words"] = model.tokenize(alternative["lemma"], lang)
+        alternative["words"] = context.model.tokenize(alternative["lemma"], lang)
         alternative["word_types"] = word_type * len(alternative["words"])
         term_replacement["parsed_alternatives"].append(alternative)
 
@@ -1236,7 +1204,7 @@ def parse_term_replacements(term_replacements_source: dict | None = None):
 
 
 async def fetch_user_organization_configs(email: str) -> dict | None:
-    configs = await redis.fetch_user_configs_from_redis(email)
+    configs = await context.redis.fetch_user_configs_from_redis(email)
 
     configs["organization_name"] = None
     configs["organization_config_hash"] = None
@@ -1244,8 +1212,10 @@ async def fetch_user_organization_configs(email: str) -> dict | None:
     configs["organization_trial_ends_at"] = None
 
     if "organization_id" in configs and configs["organization_id"] is not None:
-        organization_configs = await redis.fetch_organization_configs_from_redis(
-            configs["organization_id"]
+        organization_configs = (
+            await context.redis.fetch_organization_configs_from_redis(
+                configs["organization_id"]
+            )
         )
 
         if "plan" not in configs or configs["plan"] is None:
@@ -1354,7 +1324,7 @@ async def fetch_configs_for_request(
     request_in.config.__setattr__("llm_alternatives", False)
     request_in.config.__setattr__("plan", None)
     request_in.config.__setattr__(
-        "alternatives_max_count", settings.alternatives_max_count
+        "alternatives_max_count", context.settings.alternatives_max_count
     )
 
     if not user_email:
@@ -1396,7 +1366,9 @@ async def fetch_organization_configs_for_request(
         return {}
 
     try:
-        configs = await redis.fetch_organization_configs_from_redis(organization_id)
+        configs = await context.redis.fetch_organization_configs_from_redis(
+            organization_id
+        )
     except HTTPException:
         return {}
 
@@ -1426,12 +1398,14 @@ def check_api_version(version: str):
 
 
 def check_client_version(client: Client):
-    if client.name in settings.minimum_versions and client.version < VersionString(
-        settings.minimum_versions[client.name]
+    if (
+        client.name in context.settings.minimum_versions
+        and client.version
+        < VersionString(context.settings.minimum_versions[client.name])
     ):  # pragma: no cover
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Client version '{client.version}' not supported, please use at least '{settings.minimum_versions[client.name]}'.",
+            detail=f"Client version '{client.version}' not supported, please use at least '{context.settings.minimum_versions[client.name]}'.",
         )
 
 
@@ -1447,7 +1421,9 @@ async def check(
     if version is not None:
         check_api_version(version)
 
-        user_email = await fetch_user(request, settings, redis, http)
+        user_email = await fetch_user(
+            request, context.settings, context.redis, context.http
+        )
         configs = await fetch_configs_for_request(check_request_in, user_email)
     else:
         # debug
@@ -1463,14 +1439,14 @@ async def check(
         configs = {"categories": {}}
         apply_configs(check_request_in, configs, "witty_teams")
 
-    redis.store_metrics(request, configs, version, "check")
+    context.redis.store_metrics(request, configs, version, "check")
 
     if (
         check_request_in.config.plan is not None
         and check_request_in.config.plan.startswith("witty_")
     ):
         text, language, limit_reached = fetch_text(
-            check_request_in, model.models.keys()
+            check_request_in, context.model.models.keys()
         )
 
         if language is None:
@@ -1580,7 +1556,7 @@ async def apply_language_rules(
     language: Language,
     text: str,
 ) -> list:
-    tokens = model.fetch_tokens(language.lang, text)
+    tokens = context.model.fetch_tokens(language.lang, text)
     offsets = utf16_offsets(text)
 
     term_replacements = fetch_term_replacements(configs, language.lang)
@@ -1619,7 +1595,7 @@ async def apply_language_rules(
         case _:
             list_results = []
 
-    list_results = await languagetool.apply_languagetool_rules(
+    list_results = await context.languagetool.apply_languagetool_rules(
         config, client, language, text, tokens, offsets
     ) + await context_false_positives(language.lang, tokens, list_results)
 
@@ -1699,8 +1675,8 @@ async def context_false_positives(
     lang: LangType, tokens: Doc, list_results: list[ResultOut]
 ):
     if (
-        lang not in settings.context_checker
-        or len(static_rules[lang]["context_check"]) == 0
+        lang not in context.settings.context_checker
+        or len(context.static_rules[lang]["context_check"]) == 0
     ):
         return list_results
 
@@ -1708,7 +1684,7 @@ async def context_false_positives(
     sentences_to_check = defaultdict(list)
     for result_index in range(len(list_results)):
         result = list_results[result_index]
-        if result.text_id in static_rules[lang]["context_check"]:
+        if result.text_id in context.static_rules[lang]["context_check"]:
             if len(sentences) == 0:
                 for sentence in tokens.sents:
                     sentences[sentence.end_char] = sentence.text
@@ -1731,15 +1707,17 @@ async def context_false_positives(
 
     headers = {
         "Content-Type": "application/json",
-        "Authorization": ("Bearer " + settings.context_checker[lang]["api_key"]),
+        "Authorization": (
+            "Bearer " + context.settings.context_checker[lang]["api_key"]
+        ),
     }
 
     payload = {
         "data": sentences,
     }
 
-    context_results = await http.fetch_json_post(
-        settings.context_checker[lang]["url"],
+    context_results = await context.http.fetch_json_post(
+        context.settings.context_checker[lang]["url"],
         json.dumps(payload),
         headers,
         "context checker",
@@ -1776,7 +1754,7 @@ def check_continue(
 
         text_id = list_full[-1].text_id if len(list_full) else ""
 
-        logger.error(
+        context.logger.error(
             "Incorrect new_token_index on line %i using '%s': expected %i < %i for '%s' versus '%s' for text_id '%s'",
             cf.f_back.f_lineno,
             func_name,
@@ -1794,7 +1772,7 @@ def check_continue(
 
 async def german_lemmatization(tokens: Doc, token_index: int):
     token = tokens[token_index]
-    word_type = await model.fetch_word_type(LangType.DE, token)
+    word_type = await context.model.fetch_word_type(LangType.DE, token)
 
     match word_type:
         case WordType.NOUN:
@@ -1807,7 +1785,7 @@ async def german_lemmatization(tokens: Doc, token_index: int):
 
             word = remove_gender_ending(token.text)
 
-            result = await nouns.german_noun_lookup(word, token)
+            result = await context.nouns.german_noun_lookup(word, token)
             if result is not None:
                 target = "male_form" if result["male_form"] else "base_form"
                 return result[target]
@@ -1815,23 +1793,23 @@ async def german_lemmatization(tokens: Doc, token_index: int):
             verb_form = token.morph.get("VerbForm")
             verb_form = verb_form[0] if len(verb_form) else ""
 
-            if verb_form not in verb_form_map:
+            if verb_form not in context.verb_form_map:
                 return token.lemma_
 
             column_name = False
-            if isinstance(verb_form_map[verb_form], dict):
+            if isinstance(context.verb_form_map[verb_form], dict):
                 tense = token.morph.get("Tense")
                 tense = tense[0] if len(tense) else ""
                 person = token.morph.get("Person")
                 person = person[0] if len(person) else ""
 
                 if (
-                    tense in verb_form_map[verb_form]
-                    and person in verb_form_map[verb_form][tense]
+                    tense in context.verb_form_map[verb_form]
+                    and person in context.verb_form_map[verb_form][tense]
                 ):
                     parameters = [token.text + "%"]
                     operator = "LIKE"
-                    column_name = verb_form_map[verb_form][tense][person]
+                    column_name = context.verb_form_map[verb_form][tense][person]
             else:
                 if token_index > 0 and tokens[token_index - 1].text == "zu":
                     parameters = ["zu " + token.text]
@@ -1840,13 +1818,15 @@ async def german_lemmatization(tokens: Doc, token_index: int):
                     parameters = [token.text]
                     prev = False
                 operator = "="
-                column_name = verb_form_map[verb_form]
+                column_name = context.verb_form_map[verb_form]
 
             if column_name:
-                table_name = declensions_config[LangType.DE][WordType.VERB]["name"]
+                table_name = context.declensions_config[LangType.DE][WordType.VERB][
+                    "name"
+                ]
                 query = f"SELECT base_form, {column_name} FROM {table_name} WHERE {column_name} {operator} ? LIMIT 1"
 
-                rows = await rules_db.fetch_rows(query, parameters)
+                rows = await context.db.fetch_rows(query, parameters)
                 if len(rows):
                     if operator == "LIKE":
                         token_index_offset = 1
@@ -1873,7 +1853,7 @@ async def german_lemmatization(tokens: Doc, token_index: int):
                                     else:
                                         token._.token_index_offset = token_index_offset
 
-                                    await rules_db.fetch_declensions(
+                                    await context.db.fetch_declensions(
                                         LangType.DE, WordType.VERB, rows[0][0], token
                                     )
 
@@ -1896,7 +1876,7 @@ async def german_lemmatization(tokens: Doc, token_index: int):
                         )
                         token._.form = column_name
 
-                    await rules_db.fetch_declensions(
+                    await context.db.fetch_declensions(
                         LangType.DE, WordType.VERB, rows[0][0]
                     )
                     return rows[0][0]
@@ -1928,7 +1908,7 @@ async def german_rules(
         token.lemma_ = await german_lemmatization(tokens, token_index)
 
         if len(term_replacements):
-            new_token_index = await rule_check.handle(
+            new_token_index = await context.rule_check.handle(
                 config,
                 client,
                 language,
@@ -1948,7 +1928,7 @@ async def german_rules(
         if is_sub_category_enabled(
             config.disabled_categories, "gender_specific_abbreviation"
         ):
-            new_token_index = await regex_check.handle(
+            new_token_index = await context.regex_check.handle(
                 config,
                 client,
                 language,
@@ -1957,7 +1937,7 @@ async def german_rules(
                 tokens,
                 offsets,
                 list_full,
-                static_rules["m_f_regexes"],
+                context.static_rules["m_f_regexes"],
             )
 
             if check_continue(
@@ -1965,11 +1945,10 @@ async def german_rules(
             ):
                 continue
 
-        new_token_index = emoji_check.handle(
+        new_token_index = context.emoji_check.handle(
             config,
             client,
             language,
-            static_rules,
             text,
             token_index,
             tokens,
@@ -1989,7 +1968,7 @@ async def german_rules(
         token_text = tokens[token_index].text
 
         if token_text[0] == "#":
-            new_token_index = await regex_check.handle(
+            new_token_index = await context.regex_check.handle(
                 config,
                 client,
                 language,
@@ -1998,7 +1977,7 @@ async def german_rules(
                 tokens,
                 offsets,
                 list_full,
-                static_rules[LangType.DE]["hashtags"],
+                context.static_rules[LangType.DE]["hashtags"],
             )
 
             if check_continue(
@@ -2007,7 +1986,7 @@ async def german_rules(
                 continue
 
         if is_valid_text(token_text) and len(token_text) > 1:
-            new_token_index = await rule_check.handle(
+            new_token_index = await context.rule_check.handle(
                 config,
                 client,
                 language,
@@ -2016,13 +1995,6 @@ async def german_rules(
                 tokens,
                 offsets,
                 list_full,
-                await rules_db.fetch_rules(
-                    language,
-                    token,
-                    token.text,
-                    token.lemma_,
-                    config.addons,
-                ),
             )
 
             if check_continue(
@@ -2030,7 +2002,7 @@ async def german_rules(
             ):
                 continue
 
-            new_token_index = await rule_check.handle(
+            new_token_index = await context.rule_check.handle(
                 config,
                 client,
                 language,
@@ -2039,14 +2011,9 @@ async def german_rules(
                 tokens,
                 offsets,
                 list_full,
-                await rules_db.fetch_rules(
-                    language,
-                    token,
-                    token.text,
-                    token.lemma_,
-                    config.addons,
-                    True,
-                ),
+                None,
+                None,
+                True,
             )
 
             if check_continue(
@@ -2087,7 +2054,7 @@ async def german_rules(
                     )
                 )
 
-            new_token_index = await regex_check.handle(
+            new_token_index = await context.regex_check.handle(
                 config,
                 client,
                 language,
@@ -2146,7 +2113,7 @@ async def german_rules(
 
                     endings.append(ending)
 
-            new_token_index = await regex_check.handle(
+            new_token_index = await context.regex_check.handle(
                 config,
                 client,
                 language,
@@ -2177,7 +2144,9 @@ async def generic_rules(
     language: Language,
     text: str,
 ) -> list:
-    false_positive_matcher = model.fetch_false_positive_matchers(language.lang, tokens)
+    false_positive_matcher = context.model.fetch_false_positive_matchers(
+        language.lang, tokens
+    )
 
     list_full = []
     token_index = new_token_index = 0
@@ -2191,7 +2160,7 @@ async def generic_rules(
             continue
 
         if len(term_replacements):
-            new_token_index = await rule_check.handle(
+            new_token_index = await context.rule_check.handle(
                 config,
                 client,
                 language,
@@ -2211,7 +2180,7 @@ async def generic_rules(
         if is_sub_category_enabled(
             config.disabled_categories, "gender_specific_abbreviation"
         ):
-            new_token_index = await regex_check.handle(
+            new_token_index = await context.regex_check.handle(
                 config,
                 client,
                 language,
@@ -2220,7 +2189,7 @@ async def generic_rules(
                 tokens,
                 offsets,
                 list_full,
-                static_rules["m_f_regexes"],
+                context.static_rules["m_f_regexes"],
             )
 
             if check_continue(
@@ -2228,11 +2197,10 @@ async def generic_rules(
             ):
                 continue
 
-        new_token_index = emoji_check.handle(
+        new_token_index = context.emoji_check.handle(
             config,
             client,
             language,
-            static_rules,
             text,
             token_index,
             tokens,
@@ -2252,7 +2220,7 @@ async def generic_rules(
         token_text = tokens[token_index].text
 
         if token_text[0] == "#":
-            new_token_index = await regex_check.handle(
+            new_token_index = await context.regex_check.handle(
                 config,
                 client,
                 language,
@@ -2261,7 +2229,7 @@ async def generic_rules(
                 tokens,
                 offsets,
                 list_full,
-                static_rules[language.lang]["hashtags"],
+                context.static_rules[language.lang]["hashtags"],
             )
 
             if check_continue(
@@ -2275,7 +2243,7 @@ async def generic_rules(
             new_token_index += 1
             continue
 
-        new_token_index = await rule_check.handle(
+        new_token_index = await context.rule_check.handle(
             config,
             client,
             language,
@@ -2284,13 +2252,7 @@ async def generic_rules(
             tokens,
             offsets,
             list_full,
-            await rules_db.fetch_rules(
-                language,
-                token,
-                token.text,
-                token.lemma_,
-                config.addons,
-            ),
+            None,
             false_positive_matcher,
         )
 
@@ -2299,7 +2261,7 @@ async def generic_rules(
         ):
             continue
 
-        new_token_index = await rule_check.handle(
+        new_token_index = await context.rule_check.handle(
             config,
             client,
             language,
@@ -2308,15 +2270,9 @@ async def generic_rules(
             tokens,
             offsets,
             list_full,
-            await rules_db.fetch_rules(
-                language,
-                token,
-                token.text,
-                token.lemma_,
-                config.addons,
-                True,
-            ),
+            None,
             false_positive_matcher,
+            True,
         )
 
         if check_continue(
@@ -2365,6 +2321,6 @@ if __name__ == "__main__":  # pragma: no cover
         app,
         host="0.0.0.0",
         port=8000,
-        log_level=settings.logger_config_level,
+        log_level=context.settings.logger_config_level,
         server_header=False,
     )

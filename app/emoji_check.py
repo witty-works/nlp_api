@@ -31,7 +31,6 @@ class EmojiCheck:
         config: Config,
         client: Client,
         language: Language,
-        static_rules: dict,
         full_text: str,
         token_index: int,
         tokens: Doc,
@@ -67,8 +66,8 @@ class EmojiCheck:
         emoji_base = emoji_base.strip().replace(" ", "_")
 
         subcategory = None
-        for emoji_config_name in static_rules["emoji"]:
-            emoji_config = static_rules["emoji"][emoji_config_name]
+        for emoji_config_name in self.static_rules["emoji"]:
+            emoji_config = self.static_rules["emoji"][emoji_config_name]
             included = False
             for rule in emoji_config["rules"]:
                 if rule in emoji_base:
@@ -92,9 +91,9 @@ class EmojiCheck:
                 and len(emojis) <= 3
             ):
                 skin_tones = (
-                    static_rules["skin_tones"]["full"]
+                    self.static_rules["skin_tones"]["full"]
                     if len(emojis) == 1
-                    else static_rules["skin_tones"]["minimal"]
+                    else self.static_rules["skin_tones"]["minimal"]
                 )
             else:
                 skin_tones = []
@@ -151,7 +150,7 @@ class EmojiCheck:
 
         if len(alternatives) == 0 and "skin tone" in emoji_description:
             subcategory = "culture"
-            for skin_tone in static_rules["skin_tones"]["all"]:
+            for skin_tone in self.static_rules["skin_tones"]["all"]:
                 alternative = self.get_emoji(emoji_base + skin_tone)
                 if ":" not in alternative and alternative != token.text:
                     alternative = Alternative(alternative)
