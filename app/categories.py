@@ -131,3 +131,26 @@ def map_importance(category):
         return 3.0
 
     return 2.0
+
+
+def is_sub_category_enabled(disabled_categories: list, subcategories: list[str]) -> bool | str:
+    if isinstance(subcategories, str):
+        subcategories = [subcategories]
+
+    for subcategory in subcategories:
+        if subcategory in disabled_categories:
+            continue
+
+        category_data = get_category(subcategory)
+        if category_data is None:
+            continue
+
+        if (
+            "category" in category_data
+            and category_data["category"] in disabled_categories
+        ):
+            continue
+
+        return subcategory
+
+    return False

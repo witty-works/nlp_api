@@ -1,5 +1,4 @@
 from app.models import LangWithAutoType, Config
-from functools import lru_cache
 
 
 class LangDetection:
@@ -90,8 +89,3 @@ class LangDetection:
             return self.get_default_locale(lang)
 
         return None
-
-
-@lru_cache()
-def get_lang_detection(model):
-    return LangDetection(model)

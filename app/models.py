@@ -27,17 +27,22 @@ class Client(BaseModel):
 
 
 class Language(object):
-    def __init__(self, locale: str):
+    translations = {}
+
+    def __init__(self, locale: str, translations: dict[str, dict[str, str]]):
         self.locale = locale
         self.lang = locale[0:2]
         self.gettext = None
+        self.translations = translations
 
     def _(self, category: str, key: str) -> str:
         try:
             category_data = get_category(category)
 
             lang = (
-                self.lang if key in category_data["translations"][self.lang] else LangType.EN
+                self.lang
+                if key in category_data["translations"][self.lang]
+                else LangType.EN
             )
             text = category_data["translations"][lang][key]
             text = self.convert_sharp_ss(text)
@@ -45,6 +50,12 @@ class Language(object):
             text = ""
 
         return text
+
+    def translate(self, key: str):
+        try:
+            return self.translations[key][self.lang]
+        except KeyError:
+            return None
 
     def convert_sharp_ss(self, text: str) -> str:
         if self.locale == LangVariantType.deCH:
@@ -321,6 +332,44 @@ class Rule:
 
         return word_types
 
+    @staticmethod
+    def factory(
+        language: Language,
+        source_map: dict[int, str],
+        row: dict,
+        rewrite_to: str | None = None,
+    ):
+        rule = Rule(
+            row["id"],
+            row["language"],
+            row["lemma"],
+            json.loads(row["lemma_json"]),
+            json.loads(row["word_types_json"]),
+            json.loads(row["diversity_dimension_json"]),
+            None,
+            row["actual_word_types"],
+        )
+
+        if rewrite_to:
+            rule.lemma = Language.convert_to(rule.lemma, LangVariantType.enGB)
+            rule.words = Language.convert_to(rule.words, LangVariantType.enGB)
+
+        rule.text_id = row["text_id"]
+        rule.parent_id = row["parent_id"]
+        rule.pattern = row["pattern"]
+        rule.is_pattern_match = row["is_pattern_match"]
+        rule.label = row["label"] if row["label"] else language.translate(row["label_type"])
+        rule.label_type = row["label_type"]
+        rule.type = row["type"]
+        rule.pluralization = row["pluralization"]
+        rule.entity_type = row["entity_type"]
+        try:
+            rule.source = source_map[row["source_id"]]
+        except KeyError:
+            pass
+
+        return rule
+
 
 class AlternativeIn(BaseModel):
     lemma: str
@@ -434,6 +483,30 @@ class Config(BaseModel):
     gendered_roles_format: GenderedRolesFormatType = GenderedRolesFormatType.BOTH
     show_inspiration_alternatives: bool = False
     alternatives_max_count: Optional[int] = None
+
+    @staticmethod
+    def gendered_roles_format_inclusive(gendered_roles_format: GenderedRolesFormatType):
+        return gendered_roles_format in [
+            GenderedRolesFormatType.BOTH,
+            GenderedRolesFormatType.INCLUSIVE_GENDER,
+        ]
+
+    @staticmethod
+    def gendered_roles_format_binary(gendered_roles_format: GenderedRolesFormatType):
+        return gendered_roles_format in [
+            GenderedRolesFormatType.BOTH,
+            GenderedRolesFormatType.BINARY_GENDER,
+        ]
+
+    @staticmethod
+    def get_german_noun_separator(german_gender_ending: GermanGenderEndingType):
+        if german_gender_ending == GermanGenderEndingType.CAPITAL_LETTER:
+            separator = "/"
+            noun_separator = ""
+        else:
+            separator = noun_separator = german_gender_ending[0:-2]
+
+        return separator, noun_separator
 
     @field_validator("preferred_languages", mode="before")
     @classmethod
@@ -676,7 +749,7 @@ class ResultOut(BaseModel):
     def factory(
         config: Config,
         client: namedtuple,
-        lang: Language,
+        language: Language,
         text: str,
         text_id: str,
         full_text: str,
@@ -736,20 +809,20 @@ class ResultOut(BaseModel):
                 proficiency_level = get_proficiency_level(subcategory_key)
 
             if category != "orthography":
-                label = lang._(subcategory_key, "hs_name")
-                category_label = lang._(category, "hs_name")
+                label = language._(subcategory_key, "hs_name")
+                category_label = language._(category, "hs_name")
                 if category_label != "" and category_label != label:
                     label = (
                         category_label if label == "" else category_label + ": " + label
                     )
 
-                if lang._(subcategory_key, "lead_video"):
+                if language._(subcategory_key, "lead_video"):
                     content = ContentType("video")
-                elif lang._(subcategory_key, "hard_facts"):
+                elif language._(subcategory_key, "hard_facts"):
                     content = ContentType("advanced")
 
         if category != "orthography" and category != "corporate_rules" and url is None:
-            url = lang._(subcategory, "canonical_url")
+            url = language._(subcategory, "canonical_url")
             if url is not None and len(url) == 0:
                 url = None
 
@@ -757,7 +830,7 @@ class ResultOut(BaseModel):
                 url += "?reducedView=true"
 
         explanation = (
-            explanation if explanation else lang._(subcategory_key, "short_explanation")
+            explanation if explanation else language._(subcategory_key, "short_explanation")
         )
 
         (
@@ -765,25 +838,25 @@ class ResultOut(BaseModel):
             start,
             alternatives,
         ) = ResultOut.clean_alternatives(
-            lang,
+            language,
             text,
             category,
             start,
-            ResultOut.isUpper(text, text_id, full_text, start, category, lang.lang),
+            ResultOut.isUpper(text, text_id, full_text, start, category, language.lang),
             alternatives,
             config.alternatives_max_count,
         )
 
         if category == "orthography":
-            label = lang.convert_sharp_ss(label)
-            explanation = lang.convert_sharp_ss(explanation)
+            label = language.convert_sharp_ss(label)
+            explanation = language.convert_sharp_ss(explanation)
 
         gravity = map_gravity(subcategory) if gravity is None else gravity
 
-        if lang.locale == "en-GB":
-            label = Language.convert_to(label, lang.locale)
-            explanation = Language.convert_to(explanation, lang.locale)
-            explanation_context = Language.convert_to(explanation_context, lang.locale)
+        if language.locale == "en-GB":
+            label = Language.convert_to(label, language.locale)
+            explanation = Language.convert_to(explanation, language.locale)
+            explanation_context = Language.convert_to(explanation_context, language.locale)
 
         explanation = {
             "text": explanation,
@@ -819,7 +892,7 @@ class ResultOut(BaseModel):
 
     @staticmethod
     def clean_alternatives(
-        lang: Language,
+        language: Language,
         text: str,
         category: str,
         start: int,
@@ -865,7 +938,7 @@ class ResultOut(BaseModel):
                             alternative.lemma[0].upper() + alternative.lemma[1:]
                         )
                 elif alternative.lemma is not None:
-                    alternative.lemma = lang.convert_sharp_ss(alternative.lemma)
+                    alternative.lemma = language.convert_sharp_ss(alternative.lemma)
 
                 if alternative.lemma == text:
                     continue
