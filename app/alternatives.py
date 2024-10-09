@@ -464,7 +464,7 @@ class Alternatives:
                             {"word_type": "", "lower_case": True, "lemmatize": True}
                         )
                         new_alternative.word_types.append(
-                            {"word_type": "n", "lower_case": True, "lemmatize": True}
+                            {"word_type": WordType.NOUN, "lower_case": True, "lemmatize": True}
                         )
 
                 new_alternatives.append(new_alternative)

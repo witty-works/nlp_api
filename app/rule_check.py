@@ -1102,7 +1102,7 @@ class RuleCheck:
             and check_word_case(token.text)
         ):
             word_type = await self.model.fetch_word_type(lang, token)
-            if word_type in ["n", "v", "a"]:
+            if word_type in [WordType.NOUN, WordType.VERB, WordType.ADJECTIVE]:
                 self.logger.error(
                     f"Declension in '{lang}' not found for '{token.text}' (lemma: '{token.lemma_}', tag: '{token.tag_}, pos: '{token.pos_}', idx: '{token.idx}')"
                 )
