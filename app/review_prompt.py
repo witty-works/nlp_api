@@ -16,7 +16,7 @@ Either using the "alt" or if "remove" is set to True, try to remove the given "i
 If no "alternatives" are provided, try to rephrase the given text portion.
 Use content in "explanation" to explain your changes.
 
-Do not include the "JSON issues list" or a "foreword message" (starting with words like "Certainly" or "Sure") in the response to this prompt.
+Do not include the "JSON issues list" or a "foreword message" in your response.
 """
 
         changes = []
@@ -37,5 +37,8 @@ Do not include the "JSON issues list" or a "foreword message" (starting with wor
                     change["alternatives"].append({"alt": alternative.text})
 
             changes.append(change)
+
+        while len(json.dumps(changes)) > 1900 - len(prompt):
+            changes.pop()
 
         return prompt + "\nJSON issues list:\n" + json.dumps(changes)
