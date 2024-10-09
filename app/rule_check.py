@@ -78,7 +78,7 @@ class RuleCheck:
         suffix_check: bool = False,
     ) -> list:
         token = tokens[token_index]
-        if not is_valid_text(token.text):
+        if not is_valid_text(language.lang, token.text):
             return token_index
 
         if token.lemma_ == "aber" and language.lang == LangType.DE:

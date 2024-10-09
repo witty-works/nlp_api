@@ -1,6 +1,7 @@
 import emoji
 import re
-from app.models import Config
+from app.models import Config, LangType
+
 
 def is_gender_star_ending(text: str) -> bool | re.Match:
     for regexp in Config._gendereddenom_ending.default:
@@ -107,9 +108,20 @@ def get_target_declension_form(target_result: dict, target_form: str):
     return target_result[target_form]
 
 
-def is_valid_text(text: str) -> bool:
+def is_valid_text(lang: LangType, text: str) -> bool:
     if text == "(":
         return True
+
+    match (lang):
+        case LangType.EN:
+            if text.lower() in ["a", "i", "o"]:
+                return True
+        case LangType.FR:
+            if text.lower() in ["a", "à", "y"]:
+                return True
+
+    if len(text) <= 1:
+        return False
 
     return any(c.isalnum() for c in text)
 
