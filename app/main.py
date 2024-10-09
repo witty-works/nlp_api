@@ -549,7 +549,7 @@ async def get_german_gender_ending(
         inclusive = Config.gendered_roles_format_inclusive(german_gender_ending)
         binary = Config.gendered_roles_format_binary(german_gender_ending)
 
-    alternatives, _ = await context.nouns.gendered_alternatives(
+    alternatives, _ = await context.alternatives.gendered_alternatives(
         alternative,
         inclusive,
         binary,
