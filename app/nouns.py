@@ -136,14 +136,12 @@ class Nouns:
                                 prefix += text.removesuffix(ending_lower + postfix)
                                 break
 
-        if forms is None or (prefix == "" and postfix == ""):
-            return forms
-
-        for form in forms:
-            if not form.startswith("gender") and forms[form] is not None:
-                forms[form] = (
-                    prefix + (forms[form].lower() if lower else forms[form]) + postfix
-                )
+        if forms is not None and (prefix != "" or postfix != ""):
+            for form in forms:
+                if not form.startswith("gender") and forms[form] is not None:
+                    forms[form] = (
+                        prefix + (forms[form].lower() if lower else forms[form]) + postfix
+                    )
 
         return forms
 
