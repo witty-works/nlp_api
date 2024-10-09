@@ -6,6 +6,7 @@ from typing import Optional, Union
 from collections import defaultdict
 from inspect import currentframe
 import logging
+import re
 
 from spacy import displacy
 from spacy.tokens import Doc
@@ -1561,39 +1562,15 @@ async def apply_language_rules(
 
     term_replacements = fetch_term_replacements(configs, language.lang)
 
-    match language.lang:
-        case LangType.DE:
-            list_results = await german_rules(
-                config,
-                term_replacements,
-                client,
-                tokens,
-                offsets,
-                language,
-                text,
-            )
-        case LangType.EN:
-            list_results = await generic_rules(
-                config,
-                term_replacements,
-                client,
-                tokens,
-                offsets,
-                language,
-                text,
-            )
-        case LangType.FR:
-            list_results = await generic_rules(
-                config,
-                term_replacements,
-                client,
-                tokens,
-                offsets,
-                language,
-                text,
-            )
-        case _:
-            list_results = []
+    list_results = await witty_rules(
+        config,
+        term_replacements,
+        client,
+        tokens,
+        offsets,
+        language,
+        text,
+    )
 
     list_results = await context.languagetool.apply_languagetool_rules(
         config, client, language, text, tokens, offsets
@@ -1884,68 +1861,52 @@ async def german_lemmatization(tokens: Doc, token_index: int):
     return token.lemma_
 
 
-async def german_rules(
+async def german_gender_endings(
     config: Config,
-    term_replacements: list[Rule],
     client: Client,
     tokens: Doc,
     offsets: dict,
     language: Language,
     text: str,
-) -> list:
-    list_full = []
+    token_index: int,
+    list_full: list,
+) -> int:
+    # shallow check to see if any of the delimeters is even contained
+    if not re.search("[/):_*I]", text):
+        return token_index
 
-    token_index = new_token_index = 0
-    token_count = len(tokens)
-    while new_token_index < token_count:
-        token_index = new_token_index
+    subcategory = "d_and_i"
+    if is_sub_category_enabled(config.disabled_categories, subcategory):
+        word_types = (
+            (-1, 1, config.german_gender_ending[0])
+            if config.german_gender_ending[0] == "/"
+            else (None, None, config.german_gender_ending[0])
+        )
 
-        token = tokens[token_index]
-        if token._.connected_token is not None:
-            new_token_index += 1
-            continue
+        endings = [
+            Rule(
+                config.german_gender_ending + "",
+                LangType.DE,
+                config._gendereddenom_ending[config.german_gender_ending],
+                None,
+                config._gendereddenom_ending_word_type[config.german_gender_ending],
+                subcategory,
+            ),
+        ]
 
-        token.lemma_ = await german_lemmatization(tokens, token_index)
-
-        if len(term_replacements):
-            new_token_index = await context.rule_check.handle(
-                config,
-                client,
-                language,
-                text,
-                token_index,
-                tokens,
-                offsets,
-                list_full,
-                term_replacements,
+        if config.german_gender_ending in config._gendereddenom_ending_article:
+            endings.append(
+                Rule(
+                    config.german_gender_ending + " article",
+                    LangType.DE,
+                    config._gendereddenom_ending_article[config.german_gender_ending],
+                    None,
+                    word_types,
+                    subcategory,
+                )
             )
 
-            if check_continue(
-                list_full, token_index, new_token_index, tokens, "rule_check"
-            ):
-                continue
-
-        if is_sub_category_enabled(
-            config.disabled_categories, "gender_specific_abbreviation"
-        ):
-            new_token_index = await context.regex_check.handle(
-                config,
-                client,
-                language,
-                text,
-                token_index,
-                tokens,
-                offsets,
-                list_full,
-                context.static_rules["m_f_regexes"],
-            )
-
-            if check_continue(
-                list_full, token_index, new_token_index, tokens, "regex_match"
-            ):
-                continue
-
-        new_token_index = context.emoji_check.handle(
+        new_token_index = await context.regex_check.handle(
             config,
             client,
             language,
@@ -1954,188 +1915,75 @@ async def german_rules(
             tokens,
             offsets,
             list_full,
+            endings,
         )
 
         if check_continue(
-            list_full,
-            token_index,
-            new_token_index,
-            tokens,
-            "detect_non_inclusive_emoji",
+            list_full, token_index, new_token_index, tokens, "regex_match"
         ):
-            continue
+            return new_token_index
 
-        token_text = tokens[token_index].text
-
-        if token_text[0] == "#":
-            new_token_index = await context.regex_check.handle(
-                config,
-                client,
-                language,
-                text,
-                token_index,
-                tokens,
-                offsets,
-                list_full,
-                context.static_rules[LangType.DE]["hashtags"],
-            )
-
-            if check_continue(
-                list_full, token_index, new_token_index, tokens, "regex_match"
-            ):
+    subcategory = "gendered_denominations_ending_advanced"
+    if is_sub_category_enabled(
+        config.disabled_categories, subcategory
+    ) and Config.gendered_roles_format_inclusive(config.gendered_roles_format):
+        endings = []
+        for key, regexp in config._gendereddenom_ending.items():
+            if config.german_gender_ending == key:
                 continue
 
-        if is_valid_text(token_text) and len(token_text) > 1:
-            new_token_index = await context.rule_check.handle(
-                config,
-                client,
-                language,
-                text,
-                token_index,
-                tokens,
-                offsets,
-                list_full,
-            )
-
-            if check_continue(
-                list_full, token_index, new_token_index, tokens, "rule_check"
-            ):
-                continue
-
-            new_token_index = await context.rule_check.handle(
-                config,
-                client,
-                language,
-                text,
-                token_index,
-                tokens,
-                offsets,
-                list_full,
+            ending = Rule(
+                key + "",
+                LangType.DE,
+                regexp,
                 None,
-                None,
-                True,
+                config._gendereddenom_ending_word_type[key],
+                subcategory,
+                [Alternative(config.german_gender_ending)],
             )
 
-            if check_continue(
-                list_full, token_index, new_token_index, tokens, "rule_check"
+            endings.append(ending)
+
+            if (
+                # GermanGenderEndingType.SLASH_DASH is redundant to GermanGenderEndingType.SLASH
+                key != GermanGenderEndingType.SLASH_DASH
+                # only check if relevant regexp is defined
+                and key in config._gendereddenom_ending_article
             ):
-                continue
-
-        subcategory = "d_and_i"
-        if is_sub_category_enabled(config.disabled_categories, subcategory):
-            word_types = (
-                (-1, 1, config.german_gender_ending[0])
-                if config.german_gender_ending[0] == "/"
-                else (None, None, config.german_gender_ending[0])
-            )
-
-            endings = [
-                Rule(
-                    config.german_gender_ending + "",
-                    LangType.DE,
-                    config._gendereddenom_ending[config.german_gender_ending],
-                    None,
-                    config._gendereddenom_ending_word_type[config.german_gender_ending],
-                    subcategory,
-                ),
-            ]
-
-            if config.german_gender_ending in config._gendereddenom_ending_article:
-                endings.append(
-                    Rule(
-                        config.german_gender_ending + " article",
-                        LangType.DE,
-                        config._gendereddenom_ending_article[
-                            config.german_gender_ending
-                        ],
-                        None,
-                        word_types,
-                        subcategory,
-                    )
-                )
-
-            new_token_index = await context.regex_check.handle(
-                config,
-                client,
-                language,
-                text,
-                token_index,
-                tokens,
-                offsets,
-                list_full,
-                endings,
-            )
-
-            if check_continue(
-                list_full, token_index, new_token_index, tokens, "regex_match"
-            ):
-                continue
-
-        subcategory = "gendered_denominations_ending_advanced"
-        if is_sub_category_enabled(
-            config.disabled_categories, subcategory
-        ) and Config.gendered_roles_format_inclusive(config.gendered_roles_format):
-            endings = []
-            for key, regexp in config._gendereddenom_ending.items():
-                if config.german_gender_ending == key:
-                    continue
+                word_types = (-1, 2, key[0]) if key[0] == "/" else (None, None, key[0])
 
                 ending = Rule(
-                    key + "",
+                    key + "article",
                     LangType.DE,
-                    regexp,
+                    config._gendereddenom_ending_article[key],
                     None,
-                    config._gendereddenom_ending_word_type[key],
+                    word_types,
                     subcategory,
-                    [Alternative(config.german_gender_ending)],
                 )
 
                 endings.append(ending)
 
-                if (
-                    # GermanGenderEndingType.SLASH_DASH is redundant to GermanGenderEndingType.SLASH
-                    key != GermanGenderEndingType.SLASH_DASH
-                    # only check if relevant regexp is defined
-                    and key in config._gendereddenom_ending_article
-                ):
-                    word_types = (
-                        (-1, 2, key[0]) if key[0] == "/" else (None, None, key[0])
-                    )
+        new_token_index = await context.regex_check.handle(
+            config,
+            client,
+            language,
+            text,
+            token_index,
+            tokens,
+            offsets,
+            list_full,
+            endings,
+        )
 
-                    ending = Rule(
-                        key + "article",
-                        LangType.DE,
-                        config._gendereddenom_ending_article[key],
-                        None,
-                        word_types,
-                        subcategory,
-                    )
+        if check_continue(
+            list_full, token_index, new_token_index, tokens, "regex_match"
+        ):
+            return new_token_index
 
-                    endings.append(ending)
-
-            new_token_index = await context.regex_check.handle(
-                config,
-                client,
-                language,
-                text,
-                token_index,
-                tokens,
-                offsets,
-                list_full,
-                endings,
-            )
-
-            if check_continue(
-                list_full, token_index, new_token_index, tokens, "regex_match"
-            ):
-                continue
-
-        new_token_index += 1
-
-    return list_full
+    return token_index
 
 
-async def generic_rules(
+async def witty_rules(
     config: Config,
     term_replacements: list[Rule],
     client: Client,
@@ -2144,11 +1992,14 @@ async def generic_rules(
     language: Language,
     text: str,
 ) -> list:
-    false_positive_matcher = context.model.fetch_false_positive_matchers(
-        language.lang, tokens
+    false_positive_matcher = (
+        None
+        if language.lang == LangType.DE
+        else context.model.fetch_false_positive_matchers(language.lang, tokens)
     )
 
     list_full = []
+
     token_index = new_token_index = 0
     token_count = len(tokens)
     while new_token_index < token_count:
@@ -2158,6 +2009,9 @@ async def generic_rules(
         if token._.connected_token is not None:
             new_token_index += 1
             continue
+
+        if language.lang == LangType.DE:
+            token.lemma_ = await german_lemmatization(tokens, token_index)
 
         if len(term_replacements):
             new_token_index = await context.rule_check.handle(
@@ -2237,48 +2091,61 @@ async def generic_rules(
             ):
                 continue
 
-        if not is_valid_text(token_text) or (
-            len(token_text) <= 1 or token_text.lower() == "i"
-        ):
-            new_token_index += 1
-            continue
+        valid_text = is_valid_text(language.lang, token_text)
+        if valid_text:
+            new_token_index = await context.rule_check.handle(
+                config,
+                client,
+                language,
+                text,
+                token_index,
+                tokens,
+                offsets,
+                list_full,
+                None,
+                false_positive_matcher,
+            )
 
-        new_token_index = await context.rule_check.handle(
-            config,
-            client,
-            language,
-            text,
-            token_index,
-            tokens,
-            offsets,
-            list_full,
-            None,
-            false_positive_matcher,
-        )
+            if check_continue(
+                list_full, token_index, new_token_index, tokens, "rule_check"
+            ):
+                continue
 
-        if check_continue(
-            list_full, token_index, new_token_index, tokens, "rule_check"
-        ):
-            continue
+            new_token_index = await context.rule_check.handle(
+                config,
+                client,
+                language,
+                text,
+                token_index,
+                tokens,
+                offsets,
+                list_full,
+                None,
+                false_positive_matcher,
+                True,
+            )
 
-        new_token_index = await context.rule_check.handle(
-            config,
-            client,
-            language,
-            text,
-            token_index,
-            tokens,
-            offsets,
-            list_full,
-            None,
-            false_positive_matcher,
-            True,
-        )
+            if check_continue(
+                list_full, token_index, new_token_index, tokens, "rule_check"
+            ):
+                continue
 
-        if check_continue(
-            list_full, token_index, new_token_index, tokens, "rule_check"
-        ):
-            continue
+        if language.lang == LangType.DE:
+            new_token_index = await german_gender_endings(
+                config,
+                client,
+                tokens,
+                offsets,
+                language,
+                text,
+                token_index,
+                list_full,
+            )
+
+            if check_continue(
+                list_full, token_index, new_token_index, tokens, "german_rule"
+            ):
+                continue
 
         new_token_index += 1
 

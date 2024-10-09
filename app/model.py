@@ -146,7 +146,7 @@ class Model:
 
             return WordType.NUMBER
 
-        if not is_valid_text(token.text):
+        if not is_valid_text(lang, token.text):
             return ""
 
         if expected_word_type is None:
