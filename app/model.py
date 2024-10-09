@@ -299,7 +299,7 @@ class Model:
                     r"(?<=[0-9])-(?=[0-9])",
                 ]
             )
-        elif lang == LangType.EN:
+        elif lang == LangType.EN or lang == LangType.FR:
             # https://spacy.io/usage/linguistic-features#tokenization
             infixes = (
                 LIST_ELLIPSES
@@ -315,8 +315,6 @@ class Model:
                     r"(?<=[{a}0-9])[:<>=/](?=[{a}])".format(a=ALPHA),
                 ]
             )
-        elif lang == LangType.FR:
-            return None
 
         infix_re = compile_infix_regex(infixes)
 
