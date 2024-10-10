@@ -365,9 +365,13 @@ class RuleCheck:
                             or category_name
                             in self.static_rules["male_specific_dimensions"]
                         ):
+                            gender = token.morph.get("Gender")
+                            if gender is None:
+                                gender = "Fem" if token_index > 0 and tokens[token_index - 1].lower() in ["une", "la"] else "Masc"
+
                             subcategory_to_find = (
                                 self.static_rules["male_specific_dimensions"]
-                                if self.model.is_token_masculine(token)
+                                if "Masc" in gender
                                 else ["gender_identity"]
                             )
                             subcategory = None

@@ -349,12 +349,6 @@ class Model:
 
         self.models[lang] = model
 
-    def is_token_masculine(self, token: Token) -> bool | None:
-        gender = token.morph.get("Gender")
-        if gender is None:
-            return None
-
-        return "Masc" in gender
 
     def is_token_singular(self, lang: LangType, token: Token) -> bool | None:
         plural_lookup_first = (
