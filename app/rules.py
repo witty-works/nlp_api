@@ -569,43 +569,6 @@ def fetch_static_rules():
 
         rule.explanation = "Wenn du Wörter großschreibst, wissen alle gleich, was du meinst. #ZumBeispiel"
 
-        # TODO extend and check if everything is lemmatized
-        static_rules[LangType.DE]["intensifiers"] = [
-            "so",
-            "dämlicher",
-            "idiotischer",
-            "verfluchter",
-            "armseliger",
-            "unnützer",
-            "widerlicher",
-            "schrecklicher",
-            "abscheulicher",
-            "feiger",
-            "hirnloser",
-            "dummer",
-            "erbärmlicher",
-            "ekelhafter",
-            "scheußlicher",
-            "verrückter",
-            "stinkender",
-            "hässlicher",
-            "unverschämter",
-            "überheblicher",
-            "abartiger",
-            "grotesker",
-            "lächerlicher",
-            "perverser",
-            "gemeiner",
-            "schmarotzender",
-            "ignoranter",
-            "zynischer",
-            "hochmütiger",
-            "gehässiger",
-            "primitiver",
-            "minderwertiger",
-            "jämmerlicher",
-        ]
-
         static_rules[LangType.DE]["hashtags"] = [rule]
 
         static_rules[LangType.DE]["context_check"] = [

@@ -15,7 +15,11 @@ from app.models import (
 )
 from app.logger import Logger
 from app.helper import is_valid_text, check_word_case, is_addon_enabled, upperfirst
-from app.categories import is_sub_category_enabled, get_category_name
+from app.categories import (
+    is_sub_category_enabled,
+    get_category_name,
+    get_proficiency_level,
+)
 from app.model import Model
 from app.db import Db
 from app.nouns import Nouns
@@ -180,35 +184,36 @@ class RuleCheck:
                         continue
 
                 if (
-                    subcategory == "offensive_language"
+                    get_proficiency_level(subcategory) == "openly_discriminating"
                     and language.lang == LangType.DE
-                    and token.text not in self.db.person_words
+                    and token.text.lower() not in self.db.person_words[language.lang]
                 ):
                     if token_index == 0:
                         continue
 
-                    previous_token = tokens[token_index - 1]
+                    contains_person = False
+                    for a in token.ancestors:
+                        for atok in a.children:
+                            if atok.dep_ != "sb":
+                                continue
 
-                    if (
-                        not await self.model.check_word_type(
-                            language.lang,
-                            previous_token,
-                            WordType.PRONOUN,
-                            True,
-                        )
-                    ):
-                        if (
-                            token_index > 1
-                            and previous_token.lemma_.lower()
-                            in self.static_rules[LangType.DE]["articles"]
-                        ):
-                            previous_token = tokens[token_index - 2]
+                            contains_person = await self.is_token_person(atok)
+                            if contains_person:
+                                break
 
-                        if (
-                            previous_token.lemma_.lower()
-                            not in self.static_rules[LangType.DE]["intensifiers"]
-                        ):
-                            continue
+                    if contains_person == False:
+                        chunks = self.fetch_sentence_noun_chunks(token.sent)
+                        token_chunk = self.find_token_chunk(chunks, token_index)
+                        if token_chunk:
+                            for token_in_chunk in token_chunk:
+                                contains_person = await self.is_token_person(
+                                    token_in_chunk
+                                )
+                                if contains_person:
+                                    break
+
+                    if not contains_person:
+                        continue
 
                 if not text or await self.is_rule_false_positive(
                     full_text, token_index, tokens, rule
@@ -804,6 +809,18 @@ class RuleCheck:
             return skip_token
 
         return token_index
+
+    async def is_token_person(self, token: Token):
+        return (
+            token.ent_type_
+            and token.ent_type_
+            in self.static_rules["named_entity_labels"][EntityType.PERSON]
+        ) or await self.model.check_word_type(
+            token.lang,
+            token,
+            WordType.PRONOUN,
+            True,
+        )
 
     async def pluralize_they(
         self, text: str, tokens: Doc, token_index: int
