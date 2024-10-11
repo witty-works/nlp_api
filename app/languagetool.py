@@ -14,6 +14,7 @@ from app.http import Http
 from app.settings import Settings
 from logging import Logger
 
+
 class LanguageTool:
     # https://languagetool.org/development/api/org/languagetool/rules/Categories.html
     lt_style_categories_plain_language = [
@@ -30,7 +31,14 @@ class LanguageTool:
     categories: list
     http: Http
 
-    def __init__(self, settings: Settings, static_rules: dict, logger: Logger, categories: list, http: Http):
+    def __init__(
+        self,
+        settings: Settings,
+        static_rules: dict,
+        logger: Logger,
+        categories: list,
+        http: Http,
+    ):
         self.settings = settings
         self.static_rules = static_rules
         self.logger = logger
@@ -264,7 +272,9 @@ class LanguageTool:
         ):
             payload["level"] = "picky"
 
-        if is_sub_category_enabled(config.disabled_categories, "plain_language_advanced"):
+        if is_sub_category_enabled(
+            config.disabled_categories, "plain_language_advanced"
+        ):
             if payload["language"] == LangVariantType.deDE:
                 payload["language"] += "-x-simple-language"
 

@@ -13,7 +13,11 @@ def sentry_clean_sensitive_frame(
     frame, privacy_filter: PrivacyFilter
 ):  # pragma: no cover
     for var_name in frame.get("vars", None):
-        if var_name in ["rule", "alternatives", "word_types", "word_type", "client"] or var_name.endswith("_index") or var_name.endswith("_form"):
+        if (
+            var_name in ["rule", "alternatives", "word_types", "word_type", "client"]
+            or var_name.endswith("_index")
+            or var_name.endswith("_form")
+        ):
             continue
 
         frame["vars"][var_name] = privacy_filter.clean_var(frame["vars"][var_name])

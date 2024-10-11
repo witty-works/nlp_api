@@ -8,6 +8,8 @@ from app.models import MetricsType
 
 
 """Class to handle Redis setup and provide Redis connection."""
+
+
 class Redis:
     settings: Settings
     db: RedisCache

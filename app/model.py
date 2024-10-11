@@ -349,7 +349,6 @@ class Model:
 
         self.models[lang] = model
 
-
     def is_token_singular(self, lang: LangType, token: Token) -> bool | None:
         plural_lookup_first = (
             False if token.text.endswith("e") and token.lemma_.endswith("er") else True

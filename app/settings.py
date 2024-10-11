@@ -101,7 +101,9 @@ class Settings(BaseSettings):
             settings.minimum_versions["web-ext"] = settings.minimum_version_web_ext
 
         if settings.minimum_version_word_plugin:
-            settings.minimum_versions["word-plugin"] = settings.minimum_version_word_plugin
+            settings.minimum_versions["word-plugin"] = (
+                settings.minimum_version_word_plugin
+            )
 
         if settings.context_checker_url and settings.context_checker_api_key:
             settings.context_checker[LangType.EN] = {
@@ -128,7 +130,9 @@ class Settings(BaseSettings):
 
             if "languagetool" in settings.platform_relationships:
                 endpoint = settings.platform_relationships["languagetool"][0]
-                settings.languagetool_api = "%(scheme)s://%(host)s:%(port)d/v2" % endpoint
+                settings.languagetool_api = (
+                    "%(scheme)s://%(host)s:%(port)d/v2" % endpoint
+                )
                 settings.languagetool_verify_ssl = False
 
         if (

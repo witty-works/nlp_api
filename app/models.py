@@ -358,7 +358,9 @@ class Rule:
         rule.parent_id = row["parent_id"]
         rule.pattern = row["pattern"]
         rule.is_pattern_match = row["is_pattern_match"]
-        rule.label = row["label"] if row["label"] else language.translate(row["label_type"])
+        rule.label = (
+            row["label"] if row["label"] else language.translate(row["label_type"])
+        )
         rule.label_type = row["label_type"]
         rule.type = row["type"]
         rule.pluralization = row["pluralization"]
@@ -830,7 +832,9 @@ class ResultOut(BaseModel):
                 url += "?reducedView=true"
 
         explanation = (
-            explanation if explanation else language._(subcategory_key, "short_explanation")
+            explanation
+            if explanation
+            else language._(subcategory_key, "short_explanation")
         )
 
         (
@@ -856,7 +860,9 @@ class ResultOut(BaseModel):
         if language.locale == "en-GB":
             label = Language.convert_to(label, language.locale)
             explanation = Language.convert_to(explanation, language.locale)
-            explanation_context = Language.convert_to(explanation_context, language.locale)
+            explanation_context = Language.convert_to(
+                explanation_context, language.locale
+            )
 
         explanation = {
             "text": explanation,

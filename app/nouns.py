@@ -140,7 +140,9 @@ class Nouns:
             for form in forms:
                 if not form.startswith("gender") and forms[form] is not None:
                     forms[form] = (
-                        prefix + (forms[form].lower() if lower else forms[form]) + postfix
+                        prefix
+                        + (forms[form].lower() if lower else forms[form])
+                        + postfix
                     )
 
         return forms

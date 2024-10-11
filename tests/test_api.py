@@ -540,7 +540,9 @@ def set_redis():
     user_object["term_replacements"] = parse_term_replacements(
         user_object["term_replacements"]
     )
-    context.redis.db.set(context.redis.get_user_id(user_object["email"]), json.dumps(user_object))
+    context.redis.db.set(
+        context.redis.get_user_id(user_object["email"]), json.dumps(user_object)
+    )
 
     # 2_2@gmail.com
     user_object = {
@@ -557,7 +559,9 @@ def set_redis():
         "notifications": 0,
     }
 
-    context.redis.db.set(context.redis.get_user_id(user_object["email"]), json.dumps(user_object))
+    context.redis.db.set(
+        context.redis.get_user_id(user_object["email"]), json.dumps(user_object)
+    )
 
     organization_object = {
         "id": user_object["organization_id"],
@@ -588,7 +592,9 @@ def set_redis():
         "notifications": 0,
     }
 
-    context.redis.db.set(context.redis.get_user_id(user_object["email"]), json.dumps(user_object))
+    context.redis.db.set(
+        context.redis.get_user_id(user_object["email"]), json.dumps(user_object)
+    )
 
     organization_object = {
         "id": user_object["organization_id"],
@@ -624,7 +630,9 @@ def set_redis():
         "team_analytics": False,
     }
 
-    context.redis.db.set(context.redis.get_user_id(user_object["email"]), json.dumps(user_object))
+    context.redis.db.set(
+        context.redis.get_user_id(user_object["email"]), json.dumps(user_object)
+    )
 
     organization_object = {
         "id": user_object["organization_id"],
@@ -734,7 +742,9 @@ def set_redis():
     user_object["term_replacements"] = parse_term_replacements(
         user_object["term_replacements"]
     )
-    context.redis.db.set(context.redis.get_user_id(user_object["email"]), json.dumps(user_object))
+    context.redis.db.set(
+        context.redis.get_user_id(user_object["email"]), json.dumps(user_object)
+    )
 
     organization_object = {
         "id": user_object["organization_id"],
