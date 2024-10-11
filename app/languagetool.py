@@ -94,30 +94,33 @@ class LanguageTool:
                 continue
 
             # Ignore typos on names
-            if match["rule"]["category"]["id"] == "TYPOS" and text[0:1].isupper():
-                is_entity = False
-                for entity in entities:
-                    if (
-                        entity.start_char >= start
-                        and entity.start_char < end
-                        and entity.end_char >= end
-                    ) or (
-                        entity.start_char <= start
-                        and entity.end_char > start
-                        and entity.end_char <= end
-                    ):
-                        is_entity = (
-                            entity.label_
-                            in self.static_rules["named_entity_labels"][EntityType.NAME]
-                        )
-                        break
-
-                if is_entity:
-                    continue
-
-            # Ignore capitalization after salutation
-            # TODO: Train NER to handle salutations better like "\n Hallo Konstantina\n\nWie geht es dir?"
             if match["rule"]["category"]["id"] == "TYPOS":
+                # Ignore spelling issues on name
+                if text[0:1].isupper():
+                    is_entity = False
+                    for entity in entities:
+                        if (
+                            entity.start_char >= start
+                            and entity.start_char < end
+                            and entity.end_char >= end
+                        ) or (
+                            entity.start_char <= start
+                            and entity.end_char > start
+                            and entity.end_char <= end
+                        ):
+                            is_entity = (
+                                entity.label_
+                                in self.static_rules["named_entity_labels"][
+                                    EntityType.NAME
+                                ]
+                            )
+                            break
+
+                    if is_entity:
+                        continue
+
+                # Ignore capitalization after salutation
+                # TODO: Train NER to handle salutations better like "\n Hallo Konstantina\n\nWie geht es dir?"
                 subtext = (
                     full_text[0:start]
                     .lstrip()
