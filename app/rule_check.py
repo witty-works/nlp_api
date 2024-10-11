@@ -179,6 +179,37 @@ class RuleCheck:
                     if not subcategory:
                         continue
 
+                if (
+                    subcategory == "offensive_language"
+                    and language.lang == LangType.DE
+                    and token.text not in self.db.person_words
+                ):
+                    if token_index == 0:
+                        continue
+
+                    previous_token = tokens[token_index - 1]
+
+                    if (
+                        not await self.model.check_word_type(
+                            language.lang,
+                            previous_token,
+                            WordType.PRONOUN,
+                            True,
+                        )
+                    ):
+                        if (
+                            token_index > 1
+                            and previous_token.lemma_.lower()
+                            in self.static_rules[LangType.DE]["articles"]
+                        ):
+                            previous_token = tokens[token_index - 2]
+
+                        if (
+                            previous_token.lemma_.lower()
+                            not in self.static_rules[LangType.DE]["intensifiers"]
+                        ):
+                            continue
+
                 if not text or await self.is_rule_false_positive(
                     full_text, token_index, tokens, rule
                 ):
