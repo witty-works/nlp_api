@@ -37,6 +37,7 @@ tables_to_keep = [
     "rules_englishverb",
     "rules_englishadjective",
     "rules_englishnoun",
+    "rules_frenchnoun",
     "rules_falsepositive",
     "rules_alternative",
     "rules_rule",
@@ -64,6 +65,9 @@ lemma_plural_lookup = {}
 langs = [LangType.EN, LangType.DE, LangType.FR]
 for lang in langs:
     query = "SELECT text, lemma, is_plural FROM rules_lemmatization WHERE language = ?"
+
+    if lang == LangType.FR:
+        query+= " UNION SELECT base_form, male_form, 0 FROM rules_frenchnoun WHERE male_form IS NOT NULL"
     parameters = [lang]
     lookup[lang] = {}
     lemma_plural_lookup[lang] = {}
@@ -71,10 +75,12 @@ for lang in langs:
     for row in rows:
         lookup[lang][row[0]] = row[1]
         if row[2]:
-            lemma_plural_lookup[lang][row[0]] = row[1]
+            lemma_plural_lookup[lang][row[0]] = None
 
-    if lang == LangType.DE:
-        columns = declensions_config[LangType.DE]["n"]["columns"]
+    if lang in [LangType.DE, LangType.FR]:
+        table_name = declensions_config[lang]["n"]["name"]
+
+        columns = declensions_config[lang]["n"]["columns"]
         columns.remove("gender_1")
 
         column_count = len(columns)
@@ -82,7 +88,7 @@ for lang in langs:
         base_form_i = columns.index("base_form")
         male_form_i = columns.index("male_form")
 
-        query = f"SELECT {column_filter} FROM rules_germannoun"
+        query = f"SELECT {column_filter} FROM {table_name}"
         rows = source.execute(query).fetchall()
         for row in rows:
             target = row[male_form_i] if row[male_form_i] else row[base_form_i]
@@ -93,7 +99,7 @@ for lang in langs:
                     continue
                 if row[i] and row[i] != target and row[i] != row[base_form_i]:
                     lookup[lang][row[i]] = target
-                    if columns[i].startswith("pl_"):
+                    if columns[i].startswith("pl_") or columns[i].startswith("plural"):
                         lemma_plural_lookup[lang][row[i]] = None
 
 with open("./training_data/lookup.json", "w") as fp:

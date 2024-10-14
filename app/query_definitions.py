@@ -117,6 +117,20 @@ declensions_config = {
             ],
         },
     },
+    LangType.FR: {
+        BasicWordType.NOUN: {
+            "name": "rules_frenchnoun",
+            "columns": [
+                "gender_1",
+                "base_form",
+                "plural",
+                "collective_noun",
+                "collective_noun_2",
+                "female_form",
+                "male_form",
+            ],
+        },
+    },
 }
 
 verb_form_map = {

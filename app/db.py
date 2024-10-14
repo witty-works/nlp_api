@@ -33,6 +33,7 @@ class Db:
     male_to_female_normativ: dict = {}
     person_words: dict = {}
     misc_words: dict = {}
+    french_feminine_nouns: dict = {}
 
     def __init__(
         self,
@@ -42,13 +43,14 @@ class Db:
         self.sqlite_db = sqlite_db
         self.languages = languages
 
-
     @staticmethod
     async def factory(settings: Settings, languages: dict[LangType, Language]):
         in_memory_url = "file:db?mode=memory&cache=shared&uri=true"
         sqlite_db = await aiosqlite.connect(in_memory_url, check_same_thread=False)
 
-        query = "SELECT name FROM sqlite_master WHERE type='table' AND name='rules_rule'"
+        query = (
+            "SELECT name FROM sqlite_master WHERE type='table' AND name='rules_rule'"
+        )
         cursor = await sqlite_db.execute(query)
         tables_exist = await cursor.fetchall()
         await cursor.close()
@@ -67,11 +69,20 @@ class Db:
         return db
 
     async def init(self, settings: Settings):
-        query = f"SELECT id, citation, url FROM rules_source WHERE is_citation_shown = 1"
+        query = f"SELECT base_form, plural FROM rules_frenchnoun WHERE male_form IS NOT NULL"
         rows = await self.fetch_rows(query)
 
         for row in rows:
-            self.source_map[row[0]] = ResultSource(text=row[1],url=row[2])
+            self.french_feminine_nouns[row[0]] = None
+            self.french_feminine_nouns[row[1]] = None
+
+        query = (
+            f"SELECT id, citation, url FROM rules_source WHERE is_citation_shown = 1"
+        )
+        rows = await self.fetch_rows(query)
+
+        for row in rows:
+            self.source_map[row[0]] = ResultSource(text=row[1], url=row[2])
 
         for model_name in settings.models:
             lang = model_name[0:2]
@@ -91,12 +102,16 @@ class Db:
                 self.substring_rules[lang][rule.lemma.lower()] = rule
 
                 rewrite_to = (
-                    LangVariantType.enGB if lang == LangType.EN else LangVariantType.deCH
+                    LangVariantType.enGB
+                    if lang == LangType.EN
+                    else LangVariantType.deCH
                 )
                 rewritten_lemma = Language.convert_to(rule.lemma, rewrite_to)
                 if rule.lemma != rewritten_lemma:
                     rule = Rule.factory(lang, self.source_map, row, rewrite_to)
-                    rule.false_positives = await self.fetch_false_positives(rule, rewrite_to)
+                    rule.false_positives = await self.fetch_false_positives(
+                        rule, rewrite_to
+                    )
                     self.substring_rules[lang][rule.lemma.lower()] = rule
 
             if lang in declensions_config:
@@ -378,7 +393,7 @@ class Db:
         text: str,
         token: Token | None = None,
     ) -> dict | None:
-        if lang == LangType.FR:
+        if lang == LangType.FR and word_type != BasicWordType.NOUN:
             return None
 
         if token is not None and token._.forms is not None:

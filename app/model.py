@@ -180,6 +180,16 @@ class Model:
 
             return word_type
 
+        if lang == LangType.FR and expected_word_type == WordType.NOUN:
+            if token.pos_ == "NOUN" or token.tag_ == "NN":
+                return WordType.NOUN
+
+            result = await self.db.fetch_declensions(
+                lang, WordType.NOUN, token.text, token
+            )
+            if result is not None:
+                return WordType.NOUN
+
         if token.pos_ == "VERB":
             if (
                 not strict
@@ -203,7 +213,7 @@ class Model:
             if lang == LangType.DE:
                 if token.text[0].islower() and self.db:
                     result = await self.db.fetch_declensions(
-                        LangType.DE, WordType.VERB, token.text, token
+                        lang, WordType.VERB, token.text, token
                     )
                     if result is not None:
                         return WordType.VERB

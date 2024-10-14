@@ -166,8 +166,9 @@ async def lifespan(app: FastAPI):
     )
     context.languagetool = LanguageTool(
         context.settings,
-        context.static_rules,
         context.logger,
+        context.static_rules,
+        context.db,
         context.categories,
         context.http,
     )

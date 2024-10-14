@@ -12,6 +12,7 @@ from app.models import (
 from app.categories import is_sub_category_enabled
 from app.http import Http
 from app.settings import Settings
+from app.db import Db
 from logging import Logger
 
 
@@ -26,22 +27,25 @@ class LanguageTool:
         "STYLE",  # https://community.languagetool.org/rule/list?offset=0&max=10&lang=en&filter=&categoryFilter=Style&_action_list=Filter
     ]
     settings: Settings
-    static_rules: dict
     logger: Logger
+    static_rules: dict
+    db: Db
     categories: list
     http: Http
 
     def __init__(
         self,
         settings: Settings,
-        static_rules: dict,
         logger: Logger,
+        static_rules: dict,
+        db: Db,
         categories: list,
         http: Http,
     ):
         self.settings = settings
-        self.static_rules = static_rules
         self.logger = logger
+        self.static_rules = static_rules
+        self.db = db
         self.categories = categories
         self.http = http
 
@@ -133,6 +137,10 @@ class LanguageTool:
                     substring.lower() + " " in subtext[0]
                     for substring in self.static_rules[language.lang]["salutations"]
                 ):
+                    continue
+
+                # Ignore typos in French female noun forms
+                if language.lang == LangType.FR and text in self.db.french_feminine_nouns:
                     continue
 
             if (

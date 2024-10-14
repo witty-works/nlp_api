@@ -365,9 +365,66 @@ class RuleCheck:
                             or category_name
                             in self.static_rules["male_specific_dimensions"]
                         ):
+                            # false positive check
+                            separator_options = ["et", "ou", "/"]
                             gender = token.morph.get("Gender")
-                            if gender is None:
-                                gender = "Fem" if token_index > 0 and tokens[token_index - 1].lower() in ["une", "la"] else "Masc"
+                            if len(gender):
+                                gender = gender[0]
+                            else:
+                                result = await self.db.fetch_declensions(
+                                    language.lang, WordType.NOUN, token.text, token
+                                )
+                                if result:
+                                    gender = "Masc" if result["female_form"] else "Fem"
+                                elif token_index > 0:
+                                    gender = (
+                                        "Fem"
+                                        if tokens[token_index - 1].text.lower()
+                                        in ["une", "la"]
+                                        else "Masc"
+                                    )
+                                else:
+                                    gender = "Masc"
+
+                            # check false positive in front
+                            if (
+                                token_index > 1
+                                and tokens[token_index - 1].lemma_.lower()
+                                in separator_options
+                                and tokens[token_index - 2].lemma_.lower()
+                                == tokens[token_index].lemma_.lower()
+                            ):
+                                other_token = tokens[token_index - 2]
+                            # check false positive behind
+                            elif (
+                                token_index + 1 < len(tokens)
+                                and tokens[token_index + 1].lemma_.lower()
+                                in separator_options
+                                and tokens[token_index + 2].lemma_.lower()
+                                == tokens[token_index].lemma_.lower()
+                            ):
+                                other_token = tokens[token_index + 2]
+                            else:
+                                other_token = None
+
+                            if other_token:
+                                male_form, female_form = (
+                                    (
+                                        token.text.lower(),
+                                        other_token.text.lower(),
+                                    )
+                                    if gender == "Masc"
+                                    else (
+                                        other_token.text.lower(),
+                                        token.text.lower(),
+                                    )
+                                )
+
+                                if (
+                                    male_form != female_form
+                                    and female_form in self.db.french_feminine_nouns
+                                ):
+                                    continue
 
                             subcategory_to_find = (
                                 self.static_rules["male_specific_dimensions"]
@@ -392,10 +449,38 @@ class RuleCheck:
                             if not subcategory:
                                 continue
 
+                is_plural = self.model.is_token_plural(language.lang, token)
+
                 new_alternatives = []
                 for alternative in alternatives:
                     if alternative.is_gendered_noun:
                         male_form, female_form = alternative.lemma.split("~")
+
+                        collective_nouns = []
+                        result = await self.db.fetch_declensions(
+                            language.lang, WordType.NOUN, male_form
+                        )
+                        if result is None:
+                            self.logger.error(
+                                f"French noun missing '{male_form}' (lemma: '{token.text}', lemma: '{token.lemma_}', idx: '{token.idx}')."
+                            )
+                        else:
+                            if result["collective_noun"] is not None:
+                                collective_nouns.append(result["collective_noun"])
+                            if result["collective_noun_2"] is not None:
+                                collective_nouns.append(result["collective_noun_2"])
+
+                        if is_plural:
+                            male_form = result["plural"] if result else male_form
+                            result = await self.db.fetch_declensions(
+                                language.lang, WordType.NOUN, female_form
+                            )
+                            if result is None:
+                                self.logger.error(
+                                    f"French noun missing '{female_form}' (lemma: '{token.text}', lemma: '{token.lemma_}', idx: '{token.idx}')."
+                                )
+                            female_form = result["plural"] if result else female_form
+
                         gendered_alternatives = (
                             await self.alternatives.noun_alternatives(
                                 language.lang, "·", "·", male_form, female_form
@@ -412,6 +497,13 @@ class RuleCheck:
                                     gendered_alternative
                                 ]
                                 new_alternatives.append(new_alternative)
+
+                        for collective_noun in collective_nouns:
+                            new_alternative = deepcopy(alternative)
+                            new_alternative.is_gendered_noun = False
+                            new_alternative.is_collective_noun = True
+                            new_alternative.lemma = collective_noun
+                            new_alternatives.append(new_alternative)
                     else:
                         new_alternatives.append(alternative)
 
