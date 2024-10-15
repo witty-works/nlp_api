@@ -122,6 +122,7 @@ declensions_config = {
             "name": "rules_frenchnoun",
             "columns": [
                 "gender_1",
+                "gender_2",
                 "base_form",
                 "plural",
                 "collective_noun",

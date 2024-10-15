@@ -366,7 +366,6 @@ class RuleCheck:
                             in self.static_rules["male_specific_dimensions"]
                         ):
                             # false positive check
-                            separator_options = ["et", "ou", "/"]
                             gender = token.morph.get("Gender")
                             if len(gender):
                                 gender = gender[0]
@@ -380,7 +379,9 @@ class RuleCheck:
                                     gender = (
                                         "Fem"
                                         if tokens[token_index - 1].text.lower()
-                                        in ["une", "la"]
+                                        in self.static_rules[language.lang][
+                                            "feminine_articles"
+                                        ]
                                         else "Masc"
                                     )
                                 else:

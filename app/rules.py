@@ -476,14 +476,67 @@ def fetch_static_rules():
         static_rules[LangType.FR]["hashtags"] = [rule]
         static_rules[LangType.FR]["context_check"] = []
         static_rules[LangType.FR]["masculine_articles"] = {
-            "un": "un∙e",
             "le": "la∙le",
+            "un": "un∙e",
             "il": "iel",
             "ils": "lels",
             "lui": "ellui",
             "celui": "cellui",
             "ceux": "celleux",
+            "les": "les",
         }
+        static_rules[LangType.FR]["feminine_articles"] = {
+            "la": "la∙le",
+            "une": "un∙e",
+            "elle": "iel",
+            "elles": "lels",
+            "lui": "ellui",
+            "celle": "cellui",
+            "celles": "celleux",
+            "les": "les",
+        }
+        static_rules[LangType.FR]["inclusive_articles"] = {
+            "la∙le": "la∙le",
+            "un∙e": "un∙e",
+            "iel": "iel",
+            "lels": "lels",
+            "ellui": "ellui",
+            "cellui": "cellui",
+            "celleux": "celleux",
+            "les": "les",
+        }
+        static_rules[LangType.FR]["articles"] = set(
+            list(static_rules[LangType.FR]["masculine_articles"].keys())
+            + list(static_rules[LangType.FR]["feminine_articles"].keys())
+            + list(static_rules[LangType.FR]["inclusive_articles"].keys())
+        )
+        static_rules[LangType.FR]["articles_inclusive_map"] = static_rules[LangType.FR][
+            "masculine_articles"
+        ]
+        static_rules[LangType.FR]["articles_inclusive_map"].update(
+            static_rules[LangType.FR]["feminine_articles"]
+        )
+        static_rules[LangType.FR]["articles_inclusive_map"].update(
+            static_rules[LangType.FR]["inclusive_articles"]
+        )
+
+        static_rules[LangType.FR]["articles_binary_map"] = dict(
+            zip(
+                static_rules[LangType.FR]["masculine_articles"].keys(),
+                static_rules[LangType.FR]["feminine_articles"].keys(),
+            )
+        )
+        static_rules[LangType.FR]["articles_binary_map"].update(
+            zip(
+                static_rules[LangType.FR]["feminine_articles"].keys(),
+                static_rules[LangType.FR]["masculine_articles"].keys(),
+            )
+        )
+        static_rules[LangType.FR]["articles_binary_map"].update(
+            static_rules[LangType.FR]["inclusive_articles"]
+        )
+
+        static_rules[LangType.FR]["noun_separator_options"] = ["et", "ou", "/"]
 
         static_rules[LangType.FR]["gender_neutral_nouns"] = [
             "nous",
@@ -637,7 +690,14 @@ def fetch_static_rules():
         static_rules[LangType.DE]["articles"] = []
 
         for article in articles:
-            static_rules[LangType.DE]["articles"].extend(article)
+            static_rules[LangType.DE]["articles"].append(article[1])
+            static_rules[LangType.DE]["articles"].append(article[2])
+            static_rules[LangType.DE]["articles"].append(article[3])
+            static_rules[LangType.DE]["articles"].append(article[4])
+            static_rules[LangType.DE]["articles"].append(article[5].replace("~", "*"))
+            static_rules[LangType.DE]["articles"].append(article[5].replace("~", "_"))
+            static_rules[LangType.DE]["articles"].append(article[5].replace("~", ":"))
+
             if article[1] not in static_rules[LangType.DE]["masculine_articles"]:
                 static_rules[LangType.DE]["masculine_articles"][article[1]] = {}
             static_rules[LangType.DE]["masculine_articles"][article[1]][
@@ -655,6 +715,10 @@ def fetch_static_rules():
             static_rules[LangType.DE]["neuter_articles"][article[2]][
                 article[0]
             ] = article
+
+        static_rules[LangType.DE]["articles"] = set(
+            static_rules[LangType.DE]["articles"]
+        )
 
         static_rules[LangType.DE]["primary_german_gender_endings"] = {
             "neuter": [

@@ -125,6 +125,7 @@ class WordType(str, Enum):
     CONJUNCTION = "conj"
     NUMBER = "num"
     CARDINAL = "card"
+    ARTICLE = "article"
 
 
 class LangWithAutoType(str, Enum):
