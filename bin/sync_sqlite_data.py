@@ -67,21 +67,22 @@ for lang in langs:
     query = "SELECT text, lemma, is_plural FROM rules_lemmatization WHERE language = ?"
 
     if lang == LangType.FR:
-        query+= " UNION SELECT base_form, male_form, 0 FROM rules_frenchnoun WHERE male_form IS NOT NULL"
+        query += " UNION SELECT base_form, male_form, 0 FROM rules_frenchnoun WHERE male_form IS NOT NULL"
     parameters = [lang]
     lookup[lang] = {}
-    lemma_plural_lookup[lang] = {}
+    lemma_plural_lookup[lang] = []
     rows = source.execute(query, parameters).fetchall()
     for row in rows:
         lookup[lang][row[0]] = row[1]
         if row[2]:
-            lemma_plural_lookup[lang][row[0]] = None
+            lemma_plural_lookup[lang].append(row[0])
 
     if lang in [LangType.DE, LangType.FR]:
         table_name = declensions_config[lang]["n"]["name"]
 
         columns = declensions_config[lang]["n"]["columns"]
         columns.remove("gender_1")
+        columns.remove("gender_2")
 
         column_count = len(columns)
         column_filter = ", ".join(columns)
@@ -95,12 +96,12 @@ for lang in langs:
             for i in range(column_count):
                 if columns[i].startswith("collective_noun"):
                     if row[i]:
-                        lemma_plural_lookup[lang][row[i]] = None
+                        lemma_plural_lookup[lang].append(row[i])
                     continue
                 if row[i] and row[i] != target and row[i] != row[base_form_i]:
                     lookup[lang][row[i]] = target
                     if columns[i].startswith("pl_") or columns[i].startswith("plural"):
-                        lemma_plural_lookup[lang][row[i]] = None
+                        lemma_plural_lookup[lang].append(row[i])
 
 with open("./training_data/lookup.json", "w") as fp:
     json.dump(lookup, fp, indent=2)

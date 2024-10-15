@@ -71,6 +71,9 @@ class AppContext:
 
         with open("./training_data/lemma_plural_lookup.json", "r") as fp:
             self.lemma_plural_lookup = json.load(fp)
+            for lang in self.lemma_plural_lookup:
+                self.lemma_plural_lookup[lang] = set(self.lemma_plural_lookup[lang])
+
         self.term_replacement_langs = []
         for model_name in self.settings.models:
             lang = model_name[0:2]

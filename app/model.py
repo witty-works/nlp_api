@@ -45,7 +45,7 @@ class Model:
     settings: Settings
     loggger: Logger
     static_rules: dict
-    lemma_plural_lookup: dict
+    lemma_plural_lookup: set
     db: Db
 
     def __init__(
@@ -53,7 +53,7 @@ class Model:
         settings: Settings,
         logger: Logger,
         static_rules: dict,
-        lemma_plural_lookup: dict,
+        lemma_plural_lookup: set,
     ):
         self.settings = settings
         self.logger = logger
