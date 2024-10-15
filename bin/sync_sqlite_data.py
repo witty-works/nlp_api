@@ -82,7 +82,8 @@ for lang in langs:
 
         columns = declensions_config[lang]["n"]["columns"]
         columns.remove("gender_1")
-        columns.remove("gender_2")
+        if lang == LangType.FR:
+            columns.remove("gender_2")
 
         column_count = len(columns)
         column_filter = ", ".join(columns)

@@ -44,19 +44,19 @@
         {
             "alternatives": [
                 {
-                    "text": "personne participante"
+                    "text": "Personne participante"
                 },
                 {
-                    "text": "personne présente"
+                    "text": "Personne présente"
                 },
                 {
-                    "text": "personne invitée"
+                    "text": "Personne invitée"
                 },
                 {
-                    "text": "membre"
+                    "text": "Membre"
                 },
                 {
-                    "text": "assemblée"
+                    "text": "Assemblée"
                 }
             ],
             "category": "gender-orientation",
@@ -75,9 +75,9 @@
                 "text": "Language Portal of Canada, Translation Bureau, Public Services and Procurement Canada",
                 "url": "http://www.canada.ca/our-languages"
             },
-            "start": 71,
+            "start": 67,
             "subcategory": "gender_identity_advanced",
-            "text": "participantes",
+            "text": "Les participantes",
             "text_id": "participant"
         },
         {

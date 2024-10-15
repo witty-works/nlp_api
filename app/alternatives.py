@@ -464,7 +464,11 @@ class Alternatives:
                             {"word_type": "", "lower_case": True, "lemmatize": True}
                         )
                         new_alternative.word_types.append(
-                            {"word_type": WordType.NOUN, "lower_case": True, "lemmatize": True}
+                            {
+                                "word_type": WordType.NOUN,
+                                "lower_case": True,
+                                "lemmatize": True,
+                            }
                         )
 
                 new_alternatives.append(new_alternative)
@@ -698,6 +702,22 @@ class Alternatives:
 
         return prefix + word
 
+    def get_noun_conjunction(self, lang: LangType, is_singular: bool):
+        if is_singular:
+            return "/" if lang == LangType.DE else " ou "
+
+        return " und " if lang == LangType.DE else " et "
+
+    def add_article(self, lang: LangType, text, article):
+        if (
+            lang == LangType.FR
+            and (article.endswith("le") or article == "la")
+            and text[0] in ["a", "e", "i", "o", "u", "h"]
+        ):
+            return "l'" + text
+
+        return article + " " + text
+
     async def noun_alternatives(
         self,
         lang: LangType,
@@ -705,14 +725,15 @@ class Alternatives:
         noun_separator: str,
         male_form: str,
         female_form: str,
+        article: str | None = None,
     ) -> dict[str]:
         sentence_male_tokens = self.model.fetch_tokens(lang, male_form)
         sentence_female_tokens = self.model.fetch_tokens(lang, female_form)
         if len(sentence_male_tokens) != len(sentence_female_tokens):
             return {}
 
-        singular_conjunction = "/" if lang == LangType.DE else " ou "
-        plural_conjunction = " und " if lang == LangType.DE else " et "
+        singular_conjunction = self.get_noun_conjunction(lang, True)
+        plural_conjunction = self.get_noun_conjunction(lang, False)
 
         inclusive_form = ""
         binary_form = ""
@@ -810,8 +831,37 @@ class Alternatives:
                 binary_form += sentence_male_tokens[token_index].whitespace_
 
         if male_form_sub_sentence != "":
+            if article:
+                if article in self.static_rules[lang]["articles_inclusive_map"]:
+                    male_article = article
+                    female_article = article
+                if article in self.static_rules[lang]["masculine_articles"]:
+                    male_article = article
+                    female_article = self.static_rules[lang]["articles_binary_map"][
+                        article
+                    ]
+                else:
+                    male_article = self.static_rules[lang]["articles_binary_map"][
+                        article
+                    ]
+                    female_article = article
+
+                male_form_sub_sentence = self.add_article(
+                    lang, male_form_sub_sentence, male_article
+                )
+                female_form_sub_sentence = self.add_article(
+                    lang, female_form_sub_sentence, female_article
+                )
+
             binary_form += (
                 male_form_sub_sentence + conjunction + female_form_sub_sentence
+            )
+
+        if article:
+            inclusive_form = self.add_article(
+                lang,
+                inclusive_form,
+                self.static_rules[lang]["articles_inclusive_map"][article],
             )
 
         return {
