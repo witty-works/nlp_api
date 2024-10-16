@@ -498,18 +498,32 @@ class RuleCheck:
 
                 new_alternatives = []
                 for alternative in alternatives:
+                    if alternative.is_remove is False:
+                        new_alternatives.append(alternative)
+                        continue
+
                     if alternative.is_gendered_noun:
                         male_form, female_form = alternative.lemma.split("~")
-
                         collective_nouns = []
+
+                        word = male_form
+                        if " " in male_form:
+                            word = word[: word.index(" ")]
+
                         result = await self.db.fetch_declensions(
-                            language.lang, WordType.NOUN, male_form
+                            language.lang, WordType.NOUN, word
                         )
                         if result is None:
                             self.logger.error(
-                                f"French noun missing '{male_form}' (lemma: '{token.text}', lemma: '{token.lemma_}', idx: '{token.idx}')."
+                                f"French noun missing '{word}' - '{male_form}' (lemma: '{token.text}', lemma: '{token.lemma_}', idx: '{token.idx}')."
                             )
                         else:
+                            if word != male_form:
+                                result["base_form"] = male_form
+                                result["plural"] = (
+                                    result["plural"] + male_form[len(word) :]
+                                )
+
                             if result["collective_noun"] is not None:
                                 collective_nouns.append(result["collective_noun"])
                             if result["collective_noun_2"] is not None:
@@ -520,7 +534,7 @@ class RuleCheck:
                             result = await self.db.fetch_declensions(
                                 language.lang, WordType.NOUN, female_form
                             )
-                            if result is None:
+                            if result is None and " " not in female_form:
                                 self.logger.error(
                                     f"French noun missing '{female_form}' (lemma: '{token.text}', lemma: '{token.lemma_}', idx: '{token.idx}')."
                                 )
@@ -588,6 +602,7 @@ class RuleCheck:
                                 language.lang, WordType.NOUN, word
                             )
                             if result is None:
+                                pass
                                 self.logger.error(
                                     f"French noun missing for '{word}' - '{alternative.lemma}' (lemma: '{token.text}', lemma: '{token.lemma_}', idx: '{token.idx}')."
                                 )

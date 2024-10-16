@@ -44,19 +44,19 @@
         {
             "alternatives": [
                 {
-                    "text": "Personne participante"
+                    "text": "Les personnes participante"
                 },
                 {
-                    "text": "Personne présente"
+                    "text": "Les personnes présente"
                 },
                 {
-                    "text": "Personne invitée"
+                    "text": "Les personnes invitée"
                 },
                 {
-                    "text": "Membre"
+                    "text": "Les membres"
                 },
                 {
-                    "text": "Assemblée"
+                    "text": "Les assemblées"
                 }
             ],
             "category": "gender-orientation",
