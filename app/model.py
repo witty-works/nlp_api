@@ -5,14 +5,10 @@ from spacy.lang.fr import French
 
 from spacy.lang.char_classes import (
     ALPHA,
-    ALPHA_LOWER,
-    ALPHA_UPPER,
-    CONCAT_QUOTES,
-    LIST_ELLIPSES,
-    LIST_ICONS,
+    HYPHENS,
 )
 from spacy.tokenizer import Tokenizer
-from spacy.util import compile_infix_regex
+from spacy.util import compile_infix_regex, compile_suffix_regex, compile_prefix_regex
 from spacy.lookups import Lookups
 from spacy.tokens import Token, Doc
 from spacy.matcher import PhraseMatcher, Matcher
@@ -300,56 +296,57 @@ class Model:
 
     def custom_tokenizer(self, lang, nlp):
         if lang == LangType.DE:
-            infixes = (
-                LIST_ELLIPSES
-                + LIST_ICONS
-                + [
-                    r"(?<=[{al}])\\.(?=[{au}])".format(al=ALPHA_LOWER, au=ALPHA_UPPER),
-                    r"(?<=[{a}])[,!?](?=[{a}])".format(a=ALPHA),
-                    # removed : [:<>=]
-                    r"(?<=[{a}])[<>=](?=[{a}])".format(a=ALPHA),
-                    r"(?<=[{a}]),(?=[{a}])".format(a=ALPHA),
-                    r"(?<=[0-9{a}])\/(?=[0-9{a}])".format(a=ALPHA),
-                    r"(?<=[{a}])([{q}\)\]\(\[])(?=[{a}])".format(
-                        a=ALPHA, q=CONCAT_QUOTES.replace("'", "")
-                    ),
-                    r"(?<=[{a}])--(?=[{a}])".format(a=ALPHA),
-                    r"(?<=[0-9])-(?=[0-9])",
-                ]
-            )
+            infixes = German.Defaults.infixes
+            for i in range(0, len(infixes)):
+                if ":<>=" in infixes[i]:
+                    # handle 'Kund:in' as one word
+                    infixes[i] = r"(?<=[{a}])[<>=](?=[{a}])".format(a=ALPHA)
+                    break
+
+            rules = German.Defaults.tokenizer_exceptions
+            suffixes = German.Defaults.suffixes
+            prefixes = German.Defaults.prefixes
+            token_match = German.Defaults.token_match
         elif lang == LangType.EN:
-            # https://spacy.io/usage/linguistic-features#tokenization
-            infixes = (
-                LIST_ELLIPSES
-                + LIST_ICONS
-                + [
-                    r"(?<=[0-9])[+\\-\\*^](?=[0-9-])",
-                    r"(?<=[{al}{q}])\\.(?=[{au}{q}])".format(
-                        al=ALPHA_LOWER, au=ALPHA_UPPER, q=CONCAT_QUOTES
-                    ),
-                    r"(?<=[{a}]),(?=[{a}])".format(a=ALPHA),
-                    # ✅ Commented out regex that splits on hyphens between letters:
-                    # r"(?<=[{a}])(?:{h})(?=[{a}])".format(a=ALPHA, h=HYPHENS),
-                    r"(?<=[{a}0-9])[:<>=/](?=[{a}])".format(a=ALPHA),
-                ]
-            )
+            infixes = English.Defaults.infixes
+            for i in range(0, len(infixes)):
+                if HYPHENS in infixes[i]:
+                    # https://spacy.io/usage/linguistic-features#tokenization
+                    # r"(?<=[{a}])(?:{h})(?=[{a}])".format(a=ALPHA, h=HYPHENS)
+                    infixes.pop(i)
+                    break
+
+            rules = English.Defaults.tokenizer_exceptions
+            suffixes = English.Defaults.suffixes
+            prefixes = English.Defaults.prefixes
+            token_match = English.Defaults.token_match
         elif lang == LangType.FR:
+            # return None
+            infixes = French.Defaults.infixes
+            for i in range(0, len(infixes)):
+                if HYPHENS in infixes[i]:
+                    # https://spacy.io/usage/linguistic-features#tokenization
+                    # r"(?<=[{a}])(?:{h})(?=[{a}])".format(a=ALPHA, h=HYPHENS)
+                    infixes.pop(i)
+                    break
+
+            rules = French.Defaults.tokenizer_exceptions
+            suffixes = French.Defaults.suffixes
+            prefixes = French.Defaults.prefixes
+            token_match = French.Defaults.token_match
+        else:
             return None
 
-        infix_re = compile_infix_regex(infixes)
-
         # https://github.com/explosion/spaCy/discussions/12930
-        suffixes = nlp.Defaults.suffixes + [r"\."]
-        suffix_regex = spacy.util.compile_suffix_regex(suffixes)
-        nlp.tokenizer.suffix_search = suffix_regex.search
+        suffixes += [r"\."]
 
         return Tokenizer(
-            nlp.vocab,
-            prefix_search=nlp.tokenizer.prefix_search,
-            suffix_search=nlp.tokenizer.suffix_search,
-            infix_finditer=infix_re.finditer,
-            token_match=nlp.tokenizer.token_match,
-            rules=nlp.Defaults.tokenizer_exceptions,
+            vocab=nlp.vocab,
+            rules=rules,
+            prefix_search=compile_prefix_regex(prefixes).search,
+            suffix_search=compile_suffix_regex(suffixes).search,
+            infix_finditer=compile_infix_regex(infixes).finditer,
+            token_match=token_match,
         )
 
     def load_nlp_model(self, lang, spacy_model):
