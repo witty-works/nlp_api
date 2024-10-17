@@ -4,26 +4,25 @@ import sys
 from app.settings import Settings
 
 
-class LoggerSetup:
-    """Logger setup class to simplify logging setup."""
+"""Logger setup class to simplify logging setup."""
 
-    def __init__(self, settings: Settings):
-        self.settings = settings
 
-    def get_logger(self):
+class Logger:
+    @staticmethod
+    def factory(settings: Settings) -> logging.Logger:
         logger = logging.getLogger("nlp_api")
         logger.handlers.clear()
 
-        if self.settings.logging_enabled:
+        if settings.logging_enabled:
             formatter = logging.Formatter(
                 "[%(asctime)s] %(name)s %(levelname)s - %(message)s"
             )
 
-            if self.settings.logging_config_filename == "stdout":
+            if settings.logging_config_filename == "stdout":
                 handler = logging.StreamHandler(sys.stdout)
                 handler.setFormatter(formatter)
             else:
-                filename = os.path.abspath(self.settings.logging_config_filename)
+                filename = os.path.abspath(settings.logging_config_filename)
                 os.makedirs(os.path.dirname(filename), exist_ok=True)
                 handler = logging.FileHandler(filename=filename)
                 handler.setFormatter(formatter)
@@ -31,6 +30,6 @@ class LoggerSetup:
             handler = logging.NullHandler()
 
         logger.addHandler(handler)
-        logger.setLevel(self.settings.logging_config_level)
+        logger.setLevel(settings.logging_config_level)
 
         return logger

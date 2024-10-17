@@ -117,6 +117,21 @@ declensions_config = {
             ],
         },
     },
+    LangType.FR: {
+        BasicWordType.NOUN: {
+            "name": "rules_frenchnoun",
+            "columns": [
+                "gender_1",
+                "gender_2",
+                "base_form",
+                "plural",
+                "collective_noun",
+                "collective_noun_2",
+                "female_form",
+                "male_form",
+            ],
+        },
+    },
 }
 
 verb_form_map = {
@@ -133,15 +148,4 @@ verb_form_map = {
             "3": "present_pronoun",
         },
     },
-}
-
-noun_form_map = {
-    "nominativ singular": "sg_nom",
-    "dativ singular": "sg_dat",
-    "akkusativ singular": "sg_acc",
-    "genitiv singular": "sg_gen",
-    "nominativ plural": "pl_nom",
-    "dativ plural": "pl_dat",
-    "akkusativ plural": "pl_acc",
-    "genitiv plural": "pl_gen",
 }

@@ -5,19 +5,19 @@
         {
             "alternatives": [
                 {
-                    "text": "personne"
+                    "text": "Les personnes"
                 },
                 {
-                    "text": "personne en visite"
+                    "text": "Les personnes en visite"
                 },
                 {
-                    "text": "personne invitée"
+                    "text": "Les personnes invitée"
                 },
                 {
-                    "text": "visiteur·se"
+                    "text": "Les visiteur·ses"
                 },
                 {
-                    "text": "visiteur ou visiteuse"
+                    "text": "Les visiteurs et les visiteuses"
                 }
             ],
             "category": "gender-orientation",
@@ -36,9 +36,9 @@
                 "text": "Language Portal of Canada, Translation Bureau, Public Services and Procurement Canada",
                 "url": "http://www.canada.ca/our-languages"
             },
-            "start": 4,
+            "start": 0,
             "subcategory": "titles",
-            "text": "visiteurs",
+            "text": "Les visiteurs",
             "text_id": "visiteur"
         }
     ]

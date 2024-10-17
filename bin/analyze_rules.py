@@ -230,7 +230,7 @@ async def generate_ignore_file(lang, api_url):
         print("Checking if LanguageTool is running ..")
         response = requests.get(api_url.rstrip("/check") + "/languages")
         if response.status_code != 200:
-            raise Exception("LanguageTool returned status code: " + response.status_code)
+            raise Exception("LanguageTool returned status code: " + str(response.status_code))
 
         languagetool_running = True
 
@@ -253,4 +253,3 @@ api_url = args.URL
 coroutine = generate_ignore_file(lang, api_url)
 asyncio.run(coroutine)
 print("Complete")
-exit

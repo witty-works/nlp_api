@@ -11,10 +11,10 @@
                     "text": "indisponible"
                 },
                 {
-                    "text": "absent·e"
+                    "text": "absent·es"
                 },
                 {
-                    "text": "absent et absente"
+                    "text": "absents et absentes"
                 },
                 {
                     "text": "absence"
@@ -44,19 +44,19 @@
         {
             "alternatives": [
                 {
-                    "text": "personne participante"
+                    "text": "Les personnes participante"
                 },
                 {
-                    "text": "personne présente"
+                    "text": "Les personnes présente"
                 },
                 {
-                    "text": "personne invitée"
+                    "text": "Les personnes invitée"
                 },
                 {
-                    "text": "membre"
+                    "text": "Les membres"
                 },
                 {
-                    "text": "assemblée"
+                    "text": "Les assemblées"
                 }
             ],
             "category": "gender-orientation",
@@ -75,10 +75,49 @@
                 "text": "Language Portal of Canada, Translation Bureau, Public Services and Procurement Canada",
                 "url": "http://www.canada.ca/our-languages"
             },
-            "start": 71,
+            "start": 67,
             "subcategory": "gender_identity_advanced",
-            "text": "participantes",
+            "text": "Les participantes",
             "text_id": "participant"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "personne absente"
+                },
+                {
+                    "text": "personne devant s'absenter"
+                },
+                {
+                    "text": "absent·es"
+                },
+                {
+                    "text": "absents et absentes"
+                },
+                {
+                    "text": "absence"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Indiquez les dates auxquelles vous serez absent de votre domicile. Les participantes absentes sont malades.",
+            "end": 93,
+            "explanation": {
+                "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "text": "Entretient la vision traditionnelle binaire du genre",
+                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/binarité-de-genre?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Genre + Orientation sexuelle: Binarité de genre",
+            "proficiency_level": "unconscious_bias",
+            "source": {
+                "text": "Language Portal of Canada, Translation Bureau, Public Services and Procurement Canada",
+                "url": "http://www.canada.ca/our-languages"
+            },
+            "start": 85,
+            "subcategory": "gender_identity_advanced",
+            "text": "absentes",
+            "text_id": "absent"
         }
     ]
 }

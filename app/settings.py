@@ -59,8 +59,13 @@ class Settings(BaseSettings):
     context_checker_api_key: Optional[str] = ""
     context_checker_url_de: Optional[str] = ""
     context_checker_api_key_de: Optional[str] = ""
-    models: list = ["en_core_web_lg", "de_core_news_lg", "fr_core_news_lg"]
-    fasttext: bool = True
+    context_checker_url_fr: Optional[str] = ""
+    context_checker_api_key_fr: Optional[str] = ""
+    models: list = [
+        "en_core_web_lg",
+        "de_core_news_lg",
+        "fr_core_news_lg",
+    ]
     minimum_version_web_ext: Optional[str] = ""
     minimum_version_word_plugin: Optional[str] = ""
     minimum_versions: dict = {}
@@ -73,63 +78,72 @@ class Settings(BaseSettings):
     aws_model_id: Optional[str] = "mistral.mixtral-8x7b-instruct-v0:1"
     log_metrics: Optional[bool] = False
 
+    @staticmethod
+    def factory():
+        settings = Settings()
+        settings.is_prod = settings.platform_environment_type == "production"
 
-@lru_cache()
-def get_settings():
-    settings = Settings()
-    settings.is_prod = settings.platform_environment_type == "production"
-
-    settings.sso_configs = {
-        "aadb2c": {
-            "tenant_id": settings.aadb2c_tenant_id,
-            "client_id": settings.aadb2c_client_id,
-            "policy": settings.aadb2c_policy,
-            "domain": settings.aadb2c_domain,
-            "expected_scope": settings.aadb2c_expected_scope,
-        },
-        "office_sso": {
-            "client_id": settings.office_sso_client_id,
-            "expected_scope": settings.office_sso_expected_scope,
-        },
-    }
-
-    if settings.minimum_version_web_ext:
-        settings.minimum_versions["web-ext"] = settings.minimum_version_web_ext
-
-    if settings.minimum_version_word_plugin:
-        settings.minimum_versions["word-plugin"] = settings.minimum_version_word_plugin
-
-    if settings.context_checker_url and settings.context_checker_api_key:
-        settings.context_checker[LangType.EN] = {
-            "url": settings.context_checker_url,
-            "api_key": settings.context_checker_api_key,
+        settings.sso_configs = {
+            "aadb2c": {
+                "tenant_id": settings.aadb2c_tenant_id,
+                "client_id": settings.aadb2c_client_id,
+                "policy": settings.aadb2c_policy,
+                "domain": settings.aadb2c_domain,
+                "expected_scope": settings.aadb2c_expected_scope,
+            },
+            "office_sso": {
+                "client_id": settings.office_sso_client_id,
+                "expected_scope": settings.office_sso_expected_scope,
+            },
         }
 
-    if settings.context_checker_url_de and settings.context_checker_api_key_de:
-        settings.context_checker[LangType.DE] = {
-            "url": settings.context_checker_url_de,
-            "api_key": settings.context_checker_api_key_de,
-        }
+        if settings.minimum_version_web_ext:
+            settings.minimum_versions["web-ext"] = settings.minimum_version_web_ext
 
-    if settings.platform_relationships:
-        settings.platform_relationships = json.loads(
-            base64.b64decode(settings.platform_relationships)
-        )
+        if settings.minimum_version_word_plugin:
+            settings.minimum_versions["word-plugin"] = (
+                settings.minimum_version_word_plugin
+            )
 
-        if "languagetool" in settings.platform_relationships:
-            endpoint = settings.platform_relationships["languagetool"][0]
-            settings.languagetool_api = "%(scheme)s://%(host)s:%(port)d/v2" % endpoint
-            settings.languagetool_verify_ssl = False
+        if settings.context_checker_url and settings.context_checker_api_key:
+            settings.context_checker[LangType.EN] = {
+                "url": settings.context_checker_url,
+                "api_key": settings.context_checker_api_key,
+            }
 
-    if (
-        settings.platform_relationships
-        and "rediscache" in settings.platform_relationships
-    ):
-        platform_config = Config()
-        redis_credentials = platform_config.credentials("rediscache")
+        if settings.context_checker_url_de and settings.context_checker_api_key_de:
+            settings.context_checker[LangType.DE] = {
+                "url": settings.context_checker_url_de,
+                "api_key": settings.context_checker_api_key_de,
+            }
 
-        settings.redis_host = redis_credentials["host"]
-        settings.redis_port = redis_credentials["port"]
-        settings.redis_verify_ssl = False
+        if settings.context_checker_url_fr and settings.context_checker_api_key_fr:
+            settings.context_checker[LangType.FR] = {
+                "url": settings.context_checker_url_fr,
+                "api_key": settings.context_checker_api_key_fr,
+            }
 
-    return settings
+        if settings.platform_relationships:
+            settings.platform_relationships = json.loads(
+                base64.b64decode(settings.platform_relationships)
+            )
+
+            if "languagetool" in settings.platform_relationships:
+                endpoint = settings.platform_relationships["languagetool"][0]
+                settings.languagetool_api = (
+                    "%(scheme)s://%(host)s:%(port)d/v2" % endpoint
+                )
+                settings.languagetool_verify_ssl = False
+
+        if (
+            settings.platform_relationships
+            and "rediscache" in settings.platform_relationships
+        ):
+            platform_config = Config()
+            redis_credentials = platform_config.credentials("rediscache")
+
+            settings.redis_host = redis_credentials["host"]
+            settings.redis_port = redis_credentials["port"]
+            settings.redis_verify_ssl = False
+
+        return settings

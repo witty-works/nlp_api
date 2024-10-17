@@ -29,6 +29,14 @@ import rsa.pem as pyrsa_pem
 import base64
 import struct
 import uuid
+from fastapi import (
+    Request,
+    HTTPException,
+    status,
+)
+from app.settings import Settings
+from app.redis import Redis
+from app.http import Http
 
 
 class AuthError(Exception):
@@ -49,22 +57,22 @@ def get_unverified_token_claims(request: Request):
     return get_unverified_token_claims_(token)
 
 
-async def get_rsa_key(redis, session, token, url):
+async def get_rsa_key(redis: Redis, session, token, url):
     unverified_header = jwt.get_unverified_header(token)
     key = "rsa_pem:" + unverified_header["kid"]
-    rsa_key = redis.get(key)
+    rsa_key = redis.db.get(key)
     if rsa_key:
         return rsa_key
 
     rsa_key = await get_rsa_key_(session, unverified_header["kid"], url)
 
-    redis.set(key, rsa_key)
+    redis.db.set(key, rsa_key)
 
     return rsa_key
 
 
 async def decode_b2c_jwt(
-    redis,
+    redis: Redis,
     session,
     request: Request,
     tenant_id: str,
@@ -84,7 +92,7 @@ async def decode_b2c_jwt(
 
 
 async def decode_jwt(
-    redis, session, request: Request, tenant_id: str, client_id: str, scope: str
+    redis: Redis, session, request: Request, tenant_id: str, client_id: str, scope: str
 ):
     # https://learn.microsoft.com/en-us/entra/identity-platform/access-tokens#multi-tenant-applications
 
@@ -214,3 +222,83 @@ async def get_rsa_key_(session, kid, url):
                 return convert_to_pem(key["n"], key["e"])
 
     raise AuthError("Unable to fetch RSA key", 400)
+
+
+def fetch_email_from_claims(claims: dict) -> str:
+    try:  # pragma: no cover
+        if "email" in claims:
+            return claims["email"]
+
+        if "emails" in claims and len(claims["emails"]) > 0:
+            return claims["emails"][0]
+
+        # Office SSO
+        if "preferred_username" in claims:
+            return claims["preferred_username"]
+    except KeyError:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="access token does not map to email",
+        )
+
+    raise HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail="no email found in claim",
+    )
+
+
+async def fetch_user(
+    request: Request, settings: Settings, redis: Redis, http: Http
+) -> str | None:
+    if "authorization" in request.headers and request.headers[
+        "authorization"
+    ].lower().startswith("bearer"):
+        try:
+            unverified_claims = get_unverified_token_claims(request)
+            for key in settings.sso_configs:
+                config = settings.sso_configs[key]
+                if (
+                    "aud" not in unverified_claims
+                    or unverified_claims["aud"] != config["client_id"]
+                ):
+                    continue
+
+                if "domain" in config:
+                    claims = await decode_b2c_jwt(
+                        redis,
+                        http.ssl_session,
+                        request,
+                        config["tenant_id"],
+                        config["client_id"],
+                        config["expected_scope"],
+                        config["domain"],
+                        config["policy"],
+                    )
+                elif "tid" in unverified_claims:
+                    claims = await decode_jwt(
+                        redis,
+                        http.ssl_session,
+                        request,
+                        unverified_claims["tid"],
+                        config["client_id"],
+                        config["expected_scope"],
+                    )
+
+                return fetch_email_from_claims(claims)
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN, detail=str(e.args[0])
+            )
+
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Token provided did not map to a valid client ID",
+        )
+
+    if settings.testing:
+        if "x-auth" in request.headers:
+            return request.headers["x-auth"]
+        if settings.redis_default_user:  # pragma: no cover
+            return settings.redis_default_user
+
+    return None

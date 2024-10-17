@@ -19,7 +19,6 @@ env:
   OFFICE_SSO_EXPECTED_SCOPE: "access_as_user"
   OFFICE_SSO_RSA_KID: "-KI3Q9nNR7bRofxmeZoXqbHZGew"
   OFFICE_SSO_RSA_N: "tJL6Wr2JUsxLyNezPQh1J6zn6wSoDAhgRYSDkaMuEHy75VikiB8wg25WuR96gdMpookdlRvh7SnRvtjQN9b5m4zJCMpSRcJ5DuXl4mcd7Cg3Zp1C5-JmMq8J7m7OS9HpUQbA1yhtCHqP7XA4UnQI28J-TnGiAa3viPLlq0663Cq6hQw7jYo5yNjdJcV5-FS-xNV7UHR4zAMRruMUHxte1IZJzbJmxjKoEjJwDTtcd6DkI3yrkmYt8GdQmu0YBHTJSZiz-M10CY3LbvLzf-tbBNKQ_gfnGGKF7MvRCmPA_YF_APynrIG7p4vPDRXhpG3_CIt317NyvGoIwiv0At83kQ"
-  MODELS: '["en_core_web_lg", "de_core_news_lg", "fr_core_news_lg"]'
 
 jobs:
   build:
