@@ -498,7 +498,7 @@ class RuleCheck:
 
                 new_alternatives = []
                 for alternative in alternatives:
-                    if alternative.is_remove is False:
+                    if alternative.is_remove:
                         new_alternatives.append(alternative)
                         continue
 
