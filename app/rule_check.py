@@ -514,9 +514,10 @@ class RuleCheck:
                             language.lang, WordType.NOUN, word
                         )
                         if result is None:
-                            self.logger.error(
-                                f"French noun missing '{word}' - '{male_form}' (lemma: '{token.text}', lemma: '{token.lemma_}', idx: '{token.idx}')."
-                            )
+                            if not word.isupper():
+                                self.logger.error(
+                                    f"French noun missing '{word}' - '{male_form}' (lemma: '{token.text}', lemma: '{token.lemma_}', idx: '{token.idx}')."
+                                )
                         else:
                             if word != male_form:
                                 result["base_form"] = male_form
@@ -535,9 +536,10 @@ class RuleCheck:
                                 language.lang, WordType.NOUN, female_form
                             )
                             if result is None and " " not in female_form:
-                                self.logger.error(
-                                    f"French noun missing '{female_form}' (lemma: '{token.text}', lemma: '{token.lemma_}', idx: '{token.idx}')."
-                                )
+                                if not word.isupper():
+                                    self.logger.error(
+                                        f"French noun missing '{female_form}' (lemma: '{token.text}', lemma: '{token.lemma_}', idx: '{token.idx}')."
+                                    )
                             female_form = result["plural"] if result else female_form
 
                         gendered_alternatives = (
@@ -567,9 +569,10 @@ class RuleCheck:
                                     language.lang, WordType.NOUN, male_form
                                 )
                                 if result is None:
-                                    self.logger.error(
-                                        f"French noun missing '{collective_noun}' (lemma: '{token.text}', lemma: '{token.lemma_}', idx: '{token.idx}')."
-                                    )
+                                    if not word.isupper():
+                                        self.logger.error(
+                                            f"French noun missing '{collective_noun}' (lemma: '{token.text}', lemma: '{token.lemma_}', idx: '{token.idx}')."
+                                        )
                                 else:
                                     articles_list = (
                                         "masculine_articles"
@@ -603,9 +606,10 @@ class RuleCheck:
                             )
                             if result is None:
                                 pass
-                                self.logger.error(
-                                    f"French noun missing for '{word}' - '{alternative.lemma}' (lemma: '{token.text}', lemma: '{token.lemma_}', idx: '{token.idx}')."
-                                )
+                                if not word.isupper():
+                                    self.logger.error(
+                                        f"French noun missing for '{word}' - '{alternative.lemma}' (lemma: '{token.text}', lemma: '{token.lemma_}', idx: '{token.idx}')."
+                                    )
                             else:
                                 if word != alternative.lemma:
                                     result["base_form"] = alternative.lemma
