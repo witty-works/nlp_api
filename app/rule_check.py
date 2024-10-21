@@ -613,10 +613,11 @@ class RuleCheck:
                             else:
                                 if word != alternative.lemma:
                                     result["base_form"] = alternative.lemma
-                                    result["plural"] = (
-                                        result["plural"]
-                                        + alternative.lemma[len(word) :]
-                                    )
+                                    if result["plural"] is not None:
+                                        result["plural"] = (
+                                            result["plural"]
+                                            + alternative.lemma[len(word) :]
+                                        )
                                 if is_plural:
                                     alternative.lemma = result["plural"]
 
