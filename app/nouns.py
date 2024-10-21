@@ -249,6 +249,27 @@ class Nouns:
 
         return target_form
 
+    async def french_noun_lookup(
+        self, text: str, token: Token | None = None, log: bool = True
+    ) -> dict:
+        word = text
+        if " " in word:
+            word = word[: word.index(" ")]
+
+        result = await self.db.fetch_declensions(LangType.FR, WordType.NOUN, word)
+        if result is None:
+            if log and not word[0].isupper():
+                message = f"French noun missing for '{word}' - '{text}'"
+                if token:
+                    message += f" (lemma: '{token.text}', lemma: '{token.lemma_}', idx: '{token.idx}')"
+                self.logger.error(message)
+        elif word != text:
+            result["base_form"] = text
+            if result["plural"] is not None:
+                result["plural"] = result["plural"] + text[len(word) :]
+
+        return result
+
     async def find_form_noun_english(self, is_singular: bool):
         if is_singular:
             return "no_change"

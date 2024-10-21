@@ -506,41 +506,22 @@ class RuleCheck:
                         male_form, female_form = alternative.lemma.split("~")
                         collective_nouns = []
 
-                        word = male_form
-                        if " " in male_form:
-                            word = word[: word.index(" ")]
-
-                        result = await self.db.fetch_declensions(
-                            language.lang, WordType.NOUN, word
-                        )
-                        if result is None:
-                            if not word.isupper():
-                                self.logger.error(
-                                    f"French noun missing '{word}' - '{male_form}' (lemma: '{token.text}', lemma: '{token.lemma_}', idx: '{token.idx}')."
-                                )
-                        else:
-                            if word != male_form:
-                                result["base_form"] = male_form
-                                result["plural"] = (
-                                    result["plural"] + male_form[len(word) :]
-                                )
-
+                        result = await self.nouns.french_noun_lookup(male_form, token)
+                        if result is not None:
                             if result["collective_noun"] is not None:
                                 collective_nouns.append(result["collective_noun"])
                             if result["collective_noun_2"] is not None:
                                 collective_nouns.append(result["collective_noun_2"])
 
-                        if is_plural:
-                            male_form = result["plural"] if result else male_form
-                            result = await self.db.fetch_declensions(
-                                language.lang, WordType.NOUN, female_form
-                            )
-                            if result is None and " " not in female_form:
-                                if not word.isupper():
-                                    self.logger.error(
-                                        f"French noun missing '{female_form}' (lemma: '{token.text}', lemma: '{token.lemma_}', idx: '{token.idx}')."
-                                    )
-                            female_form = result["plural"] if result else female_form
+                            if is_plural:
+                                male_form = result["plural"]
+
+                                result = await self.nouns.french_noun_lookup(
+                                    female_form, token
+                                )
+                                female_form = (
+                                    result["plural"] if result else female_form
+                                )
 
                         gendered_alternatives = (
                             await self.alternatives.noun_alternatives(
@@ -565,15 +546,8 @@ class RuleCheck:
                             new_alternative.is_gendered_noun = False
                             new_alternative.is_collective_noun = True
                             if article:
-                                result = await self.db.fetch_declensions(
-                                    language.lang, WordType.NOUN, male_form
-                                )
-                                if result is None:
-                                    if not word.isupper():
-                                        self.logger.error(
-                                            f"French noun missing '{collective_noun}' (lemma: '{token.text}', lemma: '{token.lemma_}', idx: '{token.idx}')."
-                                        )
-                                else:
+                                result = await self.nouns.french_noun_lookup(male_form, token)
+                                if result is not None:
                                     articles_list = (
                                         "masculine_articles"
                                         if result["gender_1"] == "masculine"
@@ -597,27 +571,10 @@ class RuleCheck:
                             new_alternatives.append(new_alternative)
                     else:
                         if article:
-                            word = alternative.lemma
-                            if " " in alternative.lemma:
-                                word = word[: word.index(" ")]
-
-                            result = await self.db.fetch_declensions(
-                                language.lang, WordType.NOUN, word
+                            result = await self.nouns.french_noun_lookup(
+                                alternative.lemma, token
                             )
-                            if result is None:
-                                pass
-                                if not word.isupper():
-                                    self.logger.error(
-                                        f"French noun missing for '{word}' - '{alternative.lemma}' (lemma: '{token.text}', lemma: '{token.lemma_}', idx: '{token.idx}')."
-                                    )
-                            else:
-                                if word != alternative.lemma:
-                                    result["base_form"] = alternative.lemma
-                                    if result["plural"] is not None:
-                                        result["plural"] = (
-                                            result["plural"]
-                                            + alternative.lemma[len(word) :]
-                                        )
+                            if result is not None:
                                 if is_plural:
                                     alternative.lemma = result["plural"]
 
