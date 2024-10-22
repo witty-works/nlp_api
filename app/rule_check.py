@@ -23,6 +23,7 @@ from app.verbs import Verbs
 from app.adjectives import Adjectives
 from app.alternatives import Alternatives
 from app.settings import Settings
+from app.pluralize_fr import pluralize
 
 import re
 from copy import deepcopy
@@ -506,22 +507,19 @@ class RuleCheck:
                         male_form, female_form = alternative.lemma.split("~")
                         collective_nouns = []
 
-                        result = await self.nouns.french_noun_lookup(male_form, token)
-                        if result is not None:
-                            if result["collective_noun"] is not None:
-                                collective_nouns.append(result["collective_noun"])
-                            if result["collective_noun_2"] is not None:
-                                collective_nouns.append(result["collective_noun_2"])
+                        if first_word_type == WordType.NOUN:
+                            result = await self.nouns.french_noun_lookup(
+                                male_form, token
+                            )
+                            if result is not None:
+                                if result["collective_noun"] is not None:
+                                    collective_nouns.append(result["collective_noun"])
+                                if result["collective_noun_2"] is not None:
+                                    collective_nouns.append(result["collective_noun_2"])
 
-                            if is_plural:
-                                male_form = result["plural"]
-
-                                result = await self.nouns.french_noun_lookup(
-                                    female_form, token
-                                )
-                                female_form = (
-                                    result["plural"] if result else female_form
-                                )
+                        if is_plural:
+                            male_form = pluralize(male_form)
+                            female_form = pluralize(female_form)
 
                         gendered_alternatives = (
                             await self.alternatives.noun_alternatives(
@@ -546,7 +544,9 @@ class RuleCheck:
                             new_alternative.is_gendered_noun = False
                             new_alternative.is_collective_noun = True
                             if article:
-                                result = await self.nouns.french_noun_lookup(male_form, token)
+                                result = await self.nouns.french_noun_lookup(
+                                    male_form, token
+                                )
                                 if result is not None:
                                     articles_list = (
                                         "masculine_articles"
@@ -1267,7 +1267,7 @@ class RuleCheck:
                 tokens_match_count = await self.check_pattern(
                     lang, tokens, prefix_pattern, token_index - 1, -1
                 )
-                if not tokens_match_count:
+                if tokens_match_count is False:
                     return None, None
 
                 prefix_tokens_match_count += tokens_match_count
@@ -1277,7 +1277,7 @@ class RuleCheck:
                 tokens_match_count = await self.check_pattern(
                     lang, tokens, suffix_pattern, token_index + token_count, 1
                 )
-                if not tokens_match_count:
+                if tokens_match_count is False:
                     return None, None
 
                 token_count += tokens_match_count
