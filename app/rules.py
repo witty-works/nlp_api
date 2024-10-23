@@ -1,6 +1,5 @@
 import pandas as pd
 import re
-from german_nouns.lookup import Nouns
 from app.models import LangWithAutoType, Rule, EntityType, LangType
 
 
@@ -797,8 +796,6 @@ def fetch_static_rules():
                 "el",
             ],
         }
-
-        static_rules[LangType.DE]["german_nouns"] = Nouns()
 
         # Ensure a matching entry in the gemran nouns table before adding a new postfix
         static_rules[LangType.DE]["german_nouns_postfix"] = [

@@ -17,6 +17,7 @@ from app.settings import Settings
 import json
 from spacy.tokens import Token, Doc
 from logging import Logger
+from german_nouns.lookup import Nouns as GermanNouns
 
 
 class Nouns:
@@ -39,6 +40,7 @@ class Nouns:
         self.static_rules = static_rules
         self.model = model
         self.db = db
+        self.nouns = GermanNouns()
 
         self.noun_form_map = {
             "nominativ singular": "sg_nom",
@@ -93,9 +95,7 @@ class Nouns:
                     prefix = ""
 
                 while len(word) > 3 and forms is None:
-                    words = self.static_rules[LangType.DE][
-                        "german_nouns"
-                    ].parse_compound(word)
+                    words = self.nouns.parse_compound(word)
                     if len(words) == 0:
                         for substring in self.static_rules[LangType.DE][
                             "german_nouns_postfix"
