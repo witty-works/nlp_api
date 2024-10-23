@@ -252,6 +252,9 @@ class Nouns:
     async def french_noun_lookup(
         self, text: str, token: Token | None = None, log: bool = True
     ) -> dict:
+        if text is None:
+            return None
+
         word = text
         if " " in word:
             word = word[: word.index(" ")]
