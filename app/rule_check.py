@@ -1115,7 +1115,7 @@ class RuleCheck:
         self,
         lang: LangType,
         tokens: Doc,
-        pattern: str,
+        pattern: list,
         i_pattern_start: int,
         offset: int,
     ) -> bool | int:

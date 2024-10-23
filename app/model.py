@@ -137,7 +137,9 @@ class Model:
             return WordType.EMOJI
 
         if token.pos_ == "NUM":
-            if WordType.NUMBER != expected_word_type and token.tag_ in ["CARD", "CD"]:
+            if WordType.NUMBER != expected_word_type and (
+                token.tag_ in ["CARD", "CD"] or "Card" in token.morph.get("NumType")
+            ):
                 return WordType.CARDINAL
 
             return WordType.NUMBER
