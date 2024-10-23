@@ -23,6 +23,7 @@ from app.verbs import Verbs
 from app.adjectives import Adjectives
 from app.alternatives import Alternatives
 from app.settings import Settings
+from app.pluralize_fr import pluralize
 
 import re
 from copy import deepcopy
@@ -498,7 +499,7 @@ class RuleCheck:
 
                 new_alternatives = []
                 for alternative in alternatives:
-                    if alternative.is_remove is False:
+                    if alternative.is_remove:
                         new_alternatives.append(alternative)
                         continue
 
@@ -506,39 +507,19 @@ class RuleCheck:
                         male_form, female_form = alternative.lemma.split("~")
                         collective_nouns = []
 
-                        word = male_form
-                        if " " in male_form:
-                            word = word[: word.index(" ")]
-
-                        result = await self.db.fetch_declensions(
-                            language.lang, WordType.NOUN, word
-                        )
-                        if result is None:
-                            self.logger.error(
-                                f"French noun missing '{word}' - '{male_form}' (lemma: '{token.text}', lemma: '{token.lemma_}', idx: '{token.idx}')."
+                        if first_word_type == WordType.NOUN:
+                            result = await self.nouns.french_noun_lookup(
+                                male_form, token
                             )
-                        else:
-                            if word != male_form:
-                                result["base_form"] = male_form
-                                result["plural"] = (
-                                    result["plural"] + male_form[len(word) :]
-                                )
-
-                            if result["collective_noun"] is not None:
-                                collective_nouns.append(result["collective_noun"])
-                            if result["collective_noun_2"] is not None:
-                                collective_nouns.append(result["collective_noun_2"])
+                            if result is not None:
+                                if result["collective_noun"] is not None:
+                                    collective_nouns.append(result["collective_noun"])
+                                if result["collective_noun_2"] is not None:
+                                    collective_nouns.append(result["collective_noun_2"])
 
                         if is_plural:
-                            male_form = result["plural"] if result else male_form
-                            result = await self.db.fetch_declensions(
-                                language.lang, WordType.NOUN, female_form
-                            )
-                            if result is None and " " not in female_form:
-                                self.logger.error(
-                                    f"French noun missing '{female_form}' (lemma: '{token.text}', lemma: '{token.lemma_}', idx: '{token.idx}')."
-                                )
-                            female_form = result["plural"] if result else female_form
+                            male_form = pluralize(male_form)
+                            female_form = pluralize(female_form)
 
                         gendered_alternatives = (
                             await self.alternatives.noun_alternatives(
@@ -563,14 +544,10 @@ class RuleCheck:
                             new_alternative.is_gendered_noun = False
                             new_alternative.is_collective_noun = True
                             if article:
-                                result = await self.db.fetch_declensions(
-                                    language.lang, WordType.NOUN, male_form
+                                result = await self.nouns.french_noun_lookup(
+                                    male_form, token
                                 )
-                                if result is None:
-                                    self.logger.error(
-                                        f"French noun missing '{collective_noun}' (lemma: '{token.text}', lemma: '{token.lemma_}', idx: '{token.idx}')."
-                                    )
-                                else:
+                                if result is not None:
                                     articles_list = (
                                         "masculine_articles"
                                         if result["gender_1"] == "masculine"
@@ -594,25 +571,10 @@ class RuleCheck:
                             new_alternatives.append(new_alternative)
                     else:
                         if article:
-                            word = alternative.lemma
-                            if " " in alternative.lemma:
-                                word = word[: word.index(" ")]
-
-                            result = await self.db.fetch_declensions(
-                                language.lang, WordType.NOUN, word
+                            result = await self.nouns.french_noun_lookup(
+                                alternative.lemma, token
                             )
-                            if result is None:
-                                pass
-                                self.logger.error(
-                                    f"French noun missing for '{word}' - '{alternative.lemma}' (lemma: '{token.text}', lemma: '{token.lemma_}', idx: '{token.idx}')."
-                                )
-                            else:
-                                if word != alternative.lemma:
-                                    result["base_form"] = alternative.lemma
-                                    result["plural"] = (
-                                        result["plural"]
-                                        + alternative.lemma[len(word) :]
-                                    )
+                            if result is not None:
                                 if is_plural:
                                     alternative.lemma = result["plural"]
 
@@ -1305,7 +1267,7 @@ class RuleCheck:
                 tokens_match_count = await self.check_pattern(
                     lang, tokens, prefix_pattern, token_index - 1, -1
                 )
-                if not tokens_match_count:
+                if tokens_match_count is False:
                     return None, None
 
                 prefix_tokens_match_count += tokens_match_count
@@ -1315,7 +1277,7 @@ class RuleCheck:
                 tokens_match_count = await self.check_pattern(
                     lang, tokens, suffix_pattern, token_index + token_count, 1
                 )
-                if not tokens_match_count:
+                if tokens_match_count is False:
                     return None, None
 
                 token_count += tokens_match_count

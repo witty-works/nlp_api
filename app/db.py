@@ -115,19 +115,19 @@ class Db:
                     self.substring_rules[lang][rule.lemma.lower()] = rule
 
             if lang in declensions_config:
-                query = f"SELECT base_form FROM {declensions_config[lang][BasicWordType.NOUN]["name"]} WHERE ner IN (?, ?)"
+                query = f"SELECT LOWER(base_form) FROM {declensions_config[lang][BasicWordType.NOUN]["name"]} WHERE ner IN (?, ?)"
                 parameters = ["person", "group"]
                 rows = await self.fetch_rows(query, parameters)
 
                 for row in rows:
-                    self.person_words[lang].append(row[0].lower())
+                    self.person_words[lang].append(row[0])
 
-                query = f"SELECT base_form FROM {declensions_config[lang][BasicWordType.NOUN]["name"]} WHERE ner = ?"
+                query = f"SELECT LOWER(base_form) FROM {declensions_config[lang][BasicWordType.NOUN]["name"]} WHERE ner = ?"
                 parameters = ["misc"]
                 rows = await self.fetch_rows(query, parameters)
 
                 for row in rows:
-                    self.misc_words[lang].append(row[0].lower())
+                    self.misc_words[lang].append(row[0])
 
                 if lang == LangType.DE:
                     query = f"SELECT base_form, female_form FROM {declensions_config[lang][BasicWordType.NOUN]["name"]} WHERE female_form IS NOT NULL"

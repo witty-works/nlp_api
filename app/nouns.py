@@ -17,6 +17,7 @@ from app.settings import Settings
 import json
 from spacy.tokens import Token, Doc
 from logging import Logger
+from german_nouns.lookup import Nouns as GermanNouns
 
 
 class Nouns:
@@ -39,6 +40,7 @@ class Nouns:
         self.static_rules = static_rules
         self.model = model
         self.db = db
+        self.nouns = GermanNouns()
 
         self.noun_form_map = {
             "nominativ singular": "sg_nom",
@@ -93,9 +95,7 @@ class Nouns:
                     prefix = ""
 
                 while len(word) > 3 and forms is None:
-                    words = self.static_rules[LangType.DE][
-                        "german_nouns"
-                    ].parse_compound(word)
+                    words = self.nouns.parse_compound(word)
                     if len(words) == 0:
                         for substring in self.static_rules[LangType.DE][
                             "german_nouns_postfix"
@@ -248,6 +248,30 @@ class Nouns:
             )
 
         return target_form
+
+    async def french_noun_lookup(
+        self, text: str, token: Token | None = None, log: bool = True
+    ) -> dict:
+        if text is None:
+            return None
+
+        word = text
+        if " " in word:
+            word = word[: word.index(" ")]
+
+        result = await self.db.fetch_declensions(LangType.FR, WordType.NOUN, word)
+        if result is None:
+            if log and not word[0].isupper():
+                message = f"French noun missing for '{word}' - '{text}'"
+                if token:
+                    message += f" (lemma: '{token.text}', lemma: '{token.lemma_}', idx: '{token.idx}')"
+                self.logger.error(message)
+        elif word != text:
+            result["base_form"] = text
+            if result["plural"] is not None:
+                result["plural"] = result["plural"] + text[len(word) :]
+
+        return result
 
     async def find_form_noun_english(self, is_singular: bool):
         if is_singular:
