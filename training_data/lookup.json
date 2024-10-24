@@ -6271,9 +6271,11 @@
     "attard\u00e9": "attard\u00e9",
     "attentionn\u00e9": "attentionn\u00e9",
     "auditrice": "auditeur",
+    "auteure": "auteur",
     "auto-motiv\u00e9e": "auto-motiv\u00e9",
     "automaticienne": "automaticien",
     "automaticiennes": "automaticien",
+    "autoresse": "auteur",
     "autrice": "auteur",
     "avanc\u00e9e": "avanc\u00e9",
     "aviatrice": "aviateur",
@@ -6472,6 +6474,7 @@
     "di\u00e9t\u00e9ticiennes": "di\u00e9t\u00e9ticien",
     "dockeuse": "docker",
     "docteure": "docteur",
+    "doctoresse": "docteur",
     "domoticienne": "domoticien",
     "domoticiennes": "domoticien",
     "donatrice": "donateur",
@@ -8595,6 +8598,16 @@
     "virtuoses": "virtuose",
     "cybers\u00e9curit\u00e9s": "cybers\u00e9curit\u00e9",
     "collectifs": "collectif",
-    "images": "image"
+    "images": "image",
+    "secr\u00e9taires": "secr\u00e9taire",
+    "transporteurs": "transporteur",
+    "transporteuse": "transporteur",
+    "recruteurs": "recruteur",
+    "recruteuse": "recruteur",
+    "r\u00e9f\u00e9rents": "r\u00e9f\u00e9rent",
+    "r\u00e9f\u00e9rente": "r\u00e9f\u00e9rent",
+    "doctoresses": "docteur",
+    "auteures": "auteur",
+    "autoresses": "auteur"
   }
 }
