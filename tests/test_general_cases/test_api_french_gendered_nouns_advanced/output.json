@@ -1,0 +1,68 @@
+{
+    "language": "fr",
+    "limit_reached": false,
+    "results": [
+        {
+            "alternatives": [
+                {
+                    "text": "un∙e peintre"
+                },
+                {
+                    "text": "un peintre ou une peintre"
+                }
+            ],
+            "category": "gender-orientation",
+            "context": "Il est un peintre. C’est pourquoi nous avons de personnes performantes.",
+            "end": 17,
+            "explanation": {
+                "icon": "😟",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "text": "Fait généralement penser à des hommes",
+                "url": "https://www.witty.works/fr/categories/genre-orientation-sexuelle/nom-de-métier?reducedView=true"
+            },
+            "gravity": 2.0,
+            "label": "Genre + Orientation sexuelle: Nom de métier",
+            "proficiency_level": "unconscious_bias",
+            "start": 7,
+            "subcategory": "titles",
+            "text": "un peintre",
+            "text_id": "peintre"
+        },
+        {
+            "alternatives": [
+                {
+                    "text": "efficace"
+                },
+                {
+                    "text": "compétent·es"
+                },
+                {
+                    "text": "compétents et compétentes"
+                },
+                {
+                    "text": "engagé·es"
+                },
+                {
+                    "text": "engagés et engagées"
+                }
+            ],
+            "category": "social-motive",
+            "context": "Il est un peintre. C’est pourquoi nous avons de personnes performantes.",
+            "end": 70,
+            "explanation": {
+                "content": "video",
+                "icon": "😒",
+                "icon_image": "https://www.witty.works/hubfs/thinking%20face%20emoji.png",
+                "text": "Évoque la compétition et la performance, ce qui dissuade les personnes privilégiant la coopération",
+                "url": "https://www.witty.works/fr/categories/motivation-sociale/langage-agentique?reducedView=true"
+            },
+            "gravity": 3.0,
+            "label": "Motivation sociale: Langage agentique",
+            "proficiency_level": "unconscious_bias",
+            "start": 58,
+            "subcategory": "agentic_advanced",
+            "text": "performantes",
+            "text_id": "performant"
+        }
+    ]
+}

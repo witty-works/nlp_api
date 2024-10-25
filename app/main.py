@@ -85,6 +85,7 @@ from app.categories import (
     get_category_keys,
     get_parent_category_name,
     is_sub_category_enabled,
+    make_category_advanced,
 )
 from app.alternatives import Alternatives
 from app.llm_alternatives import LlmAlternatives
@@ -1281,7 +1282,9 @@ def apply_configs(
 
                 # BC handling for old category names -> needs to be fixed in the dashboard
                 if category.startswith("advanced_"):
-                    category = category.removeprefix("advanced_") + "_advanced"
+                    category = make_category_advanced(
+                        category.removeprefix("advanced_")
+                    )
 
                 if category_data["value"]:
                     if category in disabled_categories:

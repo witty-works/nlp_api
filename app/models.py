@@ -333,6 +333,11 @@ class Rule:
 
         return word_types
 
+    def get_first_word_type(self):
+        word_types = self.get_word_types()
+        return word_types[0] if len(word_types) else ""
+
+
     @staticmethod
     def factory(
         language: Language,

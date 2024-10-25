@@ -13,6 +13,7 @@ from app.helper import (
 )
 from app.db import Db
 from app.settings import Settings
+from app.categories import is_sub_category_enabled, make_category_advanced
 
 import json
 from spacy.tokens import Token, Doc
@@ -249,8 +250,24 @@ class Nouns:
 
         return target_form
 
+    def is_gender_neutral(self, result: dict | None):
+        if result is None:
+            return False
+
+        return (
+            result["gender_1"] is not None
+            and result["gender_2"] is not None
+            and result["gender_1"] == "masculine"
+            and result["gender_2"] == "feminine"
+        )
+
     async def french_noun_lookup(
-        self, text: str, token: Token | None = None, log: bool = True
+        self,
+        disabled_categories,
+        subcategory: str,
+        text: str,
+        token: Token | None = None,
+        log: bool = True,
     ) -> dict:
         if text is None:
             return None
@@ -266,10 +283,22 @@ class Nouns:
                 if token:
                     message += f" (lemma: '{token.text}', lemma: '{token.lemma_}', idx: '{token.idx}')"
                 self.logger.error(message)
-        elif word != text:
-            result["base_form"] = text
-            if result["plural"] is not None:
-                result["plural"] = result["plural"] + text[len(word) :]
+        else:
+            if (
+                result["female_form"]
+                and self.is_gender_neutral(result)
+                and not is_sub_category_enabled(
+                    disabled_categories,
+                    make_category_advanced(subcategory),
+                )
+            ):
+                result["female_form"] = None
+
+            if word != text:
+                result["base_form"] = text
+                for key in ["plural", "male_form", "female_form"]:
+                    if result[key] is not None:
+                        result[key] = result[key] + text[len(word) :]
 
         return result
 

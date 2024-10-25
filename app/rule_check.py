@@ -15,7 +15,11 @@ from app.models import (
 )
 from app.logger import Logger
 from app.helper import is_valid_text, check_word_case, is_addon_enabled, upperfirst
-from app.categories import is_sub_category_enabled, get_category_name
+from app.categories import (
+    is_sub_category_enabled,
+    get_category_name,
+    make_category_advanced,
+)
 from app.model import Model
 from app.db import Db
 from app.nouns import Nouns
@@ -318,8 +322,7 @@ class RuleCheck:
 
             start = token.idx
             if language.lang == LangType.FR:
-                word_types = rule.get_word_types()
-                first_word_type = word_types[0] if len(word_types) else ""
+                first_word_type = rule.get_first_word_type()
                 match first_word_type:
                     case WordType.ADJECTIVE:
                         source_noun = None
@@ -476,7 +479,7 @@ class RuleCheck:
                                 continue
 
                 is_plural = self.model.is_token_plural(language.lang, token)
-                article = None
+                article = article_index = None
                 if (
                     token_index > 0
                     and tokens[token_index - 1].text.lower()
@@ -505,17 +508,43 @@ class RuleCheck:
 
                     if alternative.is_gendered_noun:
                         male_form, female_form = alternative.lemma.split("~")
-                        collective_nouns = []
-
-                        if first_word_type == WordType.NOUN:
-                            result = await self.nouns.french_noun_lookup(
-                                male_form, token
+                        result = (
+                            await self.nouns.french_noun_lookup(
+                                config.disabled_categories,
+                                subcategory,
+                                male_form,
+                                token,
                             )
-                            if result is not None:
-                                if result["collective_noun"] is not None:
-                                    collective_nouns.append(result["collective_noun"])
-                                if result["collective_noun_2"] is not None:
-                                    collective_nouns.append(result["collective_noun_2"])
+                            if WordType.NOUN == rule.get_first_word_type()
+                            else None
+                        )
+                        # should only happen for non "official" female nouns when advanced is not enabled
+                        if result is not None and result["female_form"] is None:
+                            alternative.is_gendered_noun = False
+                            if article:
+                                alternative.lemma = male_form
+                                new_alternatives = (
+                                    self.alternatives.nouns_with_articles(
+                                        config,
+                                        language.lang,
+                                        article,
+                                        article_index,
+                                        result,
+                                        is_plural,
+                                        alternative,
+                                        new_alternatives,
+                                    )
+                                )
+
+                            continue
+
+                    if alternative.is_gendered_noun:
+                        collective_nouns = []
+                        if result is not None:
+                            if result["collective_noun"] is not None:
+                                collective_nouns.append(result["collective_noun"])
+                            if result["collective_noun_2"] is not None:
+                                collective_nouns.append(result["collective_noun_2"])
 
                         if is_plural:
                             male_form = pluralize(male_form)
@@ -523,7 +552,12 @@ class RuleCheck:
 
                         gendered_alternatives = (
                             await self.alternatives.noun_alternatives(
-                                language.lang, "·", "·", male_form, female_form, article
+                                language.lang,
+                                "·",
+                                "·",
+                                male_form,
+                                female_form,
+                                article,
                             )
                         )
 
@@ -539,13 +573,30 @@ class RuleCheck:
                                 ]
                                 new_alternatives.append(new_alternative)
 
+                        # add gender neutral option on top of the male/female variation
+                        if self.nouns.is_gender_neutral(result):
+                            alternative.lemma = male_form
+                            new_alternatives = self.alternatives.nouns_with_articles(
+                                config,
+                                language.lang,
+                                article,
+                                article_index,
+                                result,
+                                is_plural,
+                                alternative,
+                                new_alternatives,
+                            )
+
                         for collective_noun in collective_nouns:
                             new_alternative = deepcopy(alternative)
                             new_alternative.is_gendered_noun = False
                             new_alternative.is_collective_noun = True
                             if article:
                                 result = await self.nouns.french_noun_lookup(
-                                    male_form, token
+                                    config.disabled_categories,
+                                    subcategory,
+                                    male_form,
+                                    token,
                                 )
                                 if result is not None:
                                     articles_list = (
@@ -561,7 +612,7 @@ class RuleCheck:
                                     collective_noun = self.alternatives.add_article(
                                         language.lang,
                                         collective_noun,
-                                        self.get_article_by_index(
+                                        self.alternatives.get_article_by_index(
                                             language.lang,
                                             articles_list,
                                             collective_article_index,
@@ -569,114 +620,34 @@ class RuleCheck:
                                     )
                             new_alternative.lemma = collective_noun
                             new_alternatives.append(new_alternative)
-                    else:
-                        if article:
-                            result = await self.nouns.french_noun_lookup(
-                                alternative.lemma, token
+                    elif article:
+                        result = await self.nouns.french_noun_lookup(
+                            config.disabled_categories,
+                            subcategory,
+                            alternative.lemma,
+                            token,
+                        )
+                        if result is not None:
+                            new_alternatives = (
+                                self.alternatives.nouns_with_articles(
+                                    config,
+                                    language.lang,
+                                    article,
+                                    article_index,
+                                    result,
+                                    is_plural,
+                                    alternative,
+                                    new_alternatives,
+                                )
                             )
-                            if result is not None:
-                                if is_plural:
-                                    alternative.lemma = result["plural"]
-
-                                # neutral noun but gendered
-                                if (
-                                    article != "les"
-                                    and result["gender_1"] is not None
-                                    and result["gender_2"] is not None
-                                    and result["gender_1"] == "masculine"
-                                    and result["gender_2"] == "feminine"
-                                ):
-                                    if (
-                                        config.gendered_roles_format
-                                        == GenderedRolesFormatType.BOTH
-                                    ):
-                                        new_alternative = deepcopy(alternative)
-                                        new_alternative.is_gendered_noun = True
-                                        new_alternative.lemma = (
-                                            self.alternatives.add_article(
-                                                language.lang,
-                                                new_alternative.lemma,
-                                                self.static_rules[LangType.FR][
-                                                    "articles_inclusive_map"
-                                                ][article],
-                                            )
-                                        )
-                                        new_alternatives.append(new_alternative)
-
-                                    if (
-                                        article_index == 0
-                                        and result["base_form"][0]
-                                        not in ["a", "e", "i", "o", "u", "h"]
-                                        and config.gendered_roles_format
-                                        == GenderedRolesFormatType.BOTH
-                                        or config.gendered_roles_format
-                                        == GenderedRolesFormatType.INCLUSIVE_GENDER
-                                    ):
-                                        new_alternative = deepcopy(alternative)
-                                        new_alternative.is_gendered_noun = True
-                                        new_alternative.lemma = (
-                                            "les " + result["plural"]
-                                        )
-                                        new_alternatives.append(new_alternative)
-
-                                    if (
-                                        config.gendered_roles_format
-                                        == GenderedRolesFormatType.INCLUSIVE_GENDER
-                                    ):
-                                        alternative.lemma = (
-                                            self.alternatives.add_article(
-                                                language.lang,
-                                                new_alternative.lemma,
-                                                (
-                                                    self.static_rules[LangType.FR][
-                                                        "articles_inclusive_map"
-                                                    ][article],
-                                                ),
-                                            )
-                                        )
-                                    else:
-                                        male_noun = self.alternatives.add_article(
-                                            language.lang,
-                                            alternative.lemma,
-                                            self.get_article_by_index(
-                                                language.lang,
-                                                "masculine_articles",
-                                                article_index,
-                                            ),
-                                        )
-                                        female_noun = self.alternatives.add_article(
-                                            language.lang,
-                                            alternative.lemma,
-                                            self.get_article_by_index(
-                                                language.lang,
-                                                "feminine_articles",
-                                                article_index,
-                                            ),
-                                        )
-                                        alternative.lemma = male_noun
-                                        if male_noun != female_noun:
-                                            alternative.lemma += (
-                                                self.alternatives.get_noun_conjunction(
-                                                    language.lang, not is_plural
-                                                )
-                                                + female_noun
-                                            )
-
-                                else:
-                                    articles_list = (
-                                        "masculine_articles"
-                                        if result["gender_1"] == "masculine"
-                                        else "feminine_articles"
-                                    )
-                                    alternative.lemma = self.alternatives.add_article(
-                                        language.lang,
-                                        alternative.lemma,
-                                        self.get_article_by_index(
-                                            language.lang, articles_list, article_index
-                                        ),
-                                    )
-
+                        else:
+                            new_alternatives.append(alternative)
+                    else:
                         new_alternatives.append(alternative)
+
+                if len(alternatives) and len(new_alternatives) == 0:
+                    # False positive due to a gender neutral noun without article while "advanced" is not enabled
+                    continue
 
                 alternatives = new_alternatives
             elif len(alternatives):
@@ -1350,8 +1321,3 @@ class RuleCheck:
                 )
 
         return None
-
-    def get_article_by_index(
-        self, lang: LangType, articles_list: str, article_index: int
-    ):
-        return list(self.static_rules[lang][articles_list].keys())[article_index]
