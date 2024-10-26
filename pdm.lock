@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:ddd18e3bbb131c36034023db71cc7ee2d77246d3b48c7d69af4b3792bdc6259b"
+content_hash = "sha256:c90269177f62182263553a5341c10d607ec7facc09b9705f9c7ce69ac68b7218"
 
 [[metadata.targets]]
 requires_python = ">3.12"
@@ -1366,6 +1366,17 @@ groups = ["dev"]
 files = [
     {file = "pluggy-1.5.0-py3-none-any.whl", hash = "sha256:44e1ad92c8ca002de6377e165f3e0f1be63266ab4d554740532335b9d75ea669"},
     {file = "pluggy-1.5.0.tar.gz", hash = "sha256:2cffa88e94fdc978c4c574f15f9e59b7f4201d439195c3715ca9e2486f1d0cf1"},
+]
+
+[[package]]
+name = "pluralizefr"
+version = "0.0.1"
+requires_python = ">=3.8"
+summary = "pluralize for french language"
+groups = ["default"]
+files = [
+    {file = "pluralizefr-0.0.1-py3-none-any.whl", hash = "sha256:dc3d2912b9b9ca8bf973178ae428f7affb505e0f1395e5ff1d965b1c518a58aa"},
+    {file = "pluralizefr-0.0.1.tar.gz", hash = "sha256:59163d5a40f5233f6e150b303cb667fdf26b3ad592d34aa122b376a63f0457cf"},
 ]
 
 [[package]]

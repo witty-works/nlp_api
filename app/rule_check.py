@@ -18,7 +18,6 @@ from app.helper import is_valid_text, check_word_case, is_addon_enabled, upperfi
 from app.categories import (
     is_sub_category_enabled,
     get_category_name,
-    make_category_advanced,
 )
 from app.model import Model
 from app.db import Db
@@ -27,7 +26,7 @@ from app.verbs import Verbs
 from app.adjectives import Adjectives
 from app.alternatives import Alternatives
 from app.settings import Settings
-from app.pluralize_fr import pluralize
+from pluralizefr import pluralize
 
 import re
 from copy import deepcopy
@@ -628,17 +627,15 @@ class RuleCheck:
                             token,
                         )
                         if result is not None:
-                            new_alternatives = (
-                                self.alternatives.nouns_with_articles(
-                                    config,
-                                    language.lang,
-                                    article,
-                                    article_index,
-                                    result,
-                                    is_plural,
-                                    alternative,
-                                    new_alternatives,
-                                )
+                            new_alternatives = self.alternatives.nouns_with_articles(
+                                config,
+                                language.lang,
+                                article,
+                                article_index,
+                                result,
+                                is_plural,
+                                alternative,
+                                new_alternatives,
                             )
                         else:
                             new_alternatives.append(alternative)
