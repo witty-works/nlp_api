@@ -501,6 +501,7 @@ def fetch_static_rules():
             "un∙e": "un∙e",
             "iel": "lels",
             "elle": "lels",
+            "lels": "lels",
             "ellui": "ellui",
             "cellui": "cellui",
             "celleux": "celleux",
